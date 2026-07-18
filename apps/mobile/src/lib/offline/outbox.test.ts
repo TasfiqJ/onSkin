@@ -5,6 +5,7 @@ import { RequestPolicyError } from '@/lib/network/requestPolicy';
 import {
   flushOutbox,
   hashOutboxOwner,
+  readNotificationPreferencesOutboxStatus,
   readOutbox,
   readOutboxChangeRevision,
   readShelfOutboxStatus,
@@ -17,6 +18,7 @@ import {
   decodeOutboxEnvelope,
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
+  enqueueNotificationPreferencesOutboxOperation,
   enqueueShelfOutboxOperation,
   type OutboxEnvelope,
 } from './outbox.pure';
@@ -132,6 +134,18 @@ function successfulResults(operations: readonly Record<string, unknown>[]) {
     status: 'applied',
     error_class: null,
   }));
+}
+
+function flushResult(leased: number, flushed: number, dead: number, notificationPreferences = 0) {
+  return {
+    leased,
+    flushed,
+    dead,
+    flushedByEntity: {
+      notificationPreferences,
+      shelfProducts: flushed - notificationPreferences,
+    },
+  };
 }
 
 describe('transactional outbox runtime', () => {
@@ -253,7 +267,7 @@ describe('transactional outbox runtime', () => {
       { operation_id: operations[1]?.operation_id, status: 'duplicate', error_class: null },
     ]);
 
-    await expect(first).resolves.toEqual({ leased: 2, flushed: 2, dead: 0 });
+    await expect(first).resolves.toEqual(flushResult(2, 2, 0));
     expect(storedEnvelope().rows).toEqual([]);
     expect(mocks.rpc).toHaveBeenCalledTimes(1);
   });
@@ -270,20 +284,26 @@ describe('transactional outbox runtime', () => {
     });
     mocks.rpcHandler = async () => pending;
 
-    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+    await expect(
+      readShelfOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
       status: 'available',
       value: { kind: 'saved_local', pendingCount: 1, attentionCount: 0 },
     });
     const flush = flushOutbox();
     await vi.waitFor(() => expect(mocks.rpc).toHaveBeenCalledTimes(1));
-    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+    await expect(
+      readShelfOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
       status: 'available',
       value: { kind: 'syncing', pendingCount: 1, attentionCount: 0 },
     });
 
     release(successfulResults(mocks.rpc.mock.calls[0]?.[1].p_operations));
-    await expect(flush).resolves.toEqual({ leased: 1, flushed: 1, dead: 0 });
-    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+    await expect(flush).resolves.toEqual(flushResult(1, 1, 0));
+    await expect(
+      readShelfOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
       status: 'available',
       value: { kind: 'idle', pendingCount: 0, attentionCount: 0 },
     });
@@ -304,7 +324,7 @@ describe('transactional outbox runtime', () => {
       }),
     );
 
-    await expect(flushOutbox()).resolves.toEqual({ leased: 1, flushed: 0, dead: 0 });
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 0));
     expect(storedEnvelope().rows[0]).toMatchObject({
       state: 'ready',
       attemptCount: 1,
@@ -314,11 +334,11 @@ describe('transactional outbox runtime', () => {
       leaseExpiresAt: null,
     });
 
-    await expect(flushOutbox()).resolves.toEqual({ leased: 0, flushed: 0, dead: 0 });
+    await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
     expect(mocks.rpc).toHaveBeenCalledTimes(0);
 
     vi.setSystemTime(new Date('2026-07-18T16:00:46.000Z'));
-    await expect(flushOutbox()).resolves.toEqual({ leased: 1, flushed: 1, dead: 0 });
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0));
     expect(mocks.rpc).toHaveBeenCalledTimes(1);
     expect(storedEnvelope().rows).toEqual([]);
   });
@@ -330,7 +350,7 @@ describe('transactional outbox runtime', () => {
       { operation_id: operations[1]?.operation_id, status: 'applied', error_class: null },
     ];
 
-    await expect(flushOutbox()).resolves.toEqual({ leased: 2, flushed: 1, dead: 1 });
+    await expect(flushOutbox()).resolves.toEqual(flushResult(2, 1, 1));
     expect(storedEnvelope().rows).toEqual([
       expect.objectContaining({
         operationId: uuid(10_001),
@@ -340,16 +360,16 @@ describe('transactional outbox runtime', () => {
       }),
     ]);
 
-    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+    await expect(
+      readShelfOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
       status: 'available',
       value: { kind: 'needs_attention', pendingCount: 1, attentionCount: 1 },
     });
     mocks.rpcHandler = async (operations) => successfulResults(operations);
-    await expect(retryShelfOutbox({ generation: 7 })).resolves.toEqual({
-      leased: 1,
-      flushed: 1,
-      dead: 0,
-    });
+    await expect(retryShelfOutbox({ generation: 7 }, 'raw-owner@example.com')).resolves.toEqual(
+      flushResult(1, 1, 0),
+    );
     expect(storedEnvelope().rows).toEqual([]);
   });
 
@@ -379,10 +399,54 @@ describe('transactional outbox runtime', () => {
   it('uses bounded 25-row batches while draining more than one batch', async () => {
     seedRows(30);
 
-    await expect(flushOutbox()).resolves.toEqual({ leased: 30, flushed: 30, dead: 0 });
+    await expect(flushOutbox()).resolves.toEqual(flushResult(30, 30, 0));
     expect(mocks.rpc).toHaveBeenCalledTimes(2);
     expect(mocks.rpc.mock.calls[0]?.[1].p_operations).toHaveLength(25);
     expect(mocks.rpc.mock.calls[1]?.[1].p_operations).toHaveLength(5);
     expect(storedEnvelope().rows).toEqual([]);
+  });
+
+  it('dispatches mixed entities to exact RPCs and reports domain-specific convergence', async () => {
+    let envelope = seedRows(1);
+    envelope = enqueueNotificationPreferencesOutboxOperation(envelope, {
+      operationId: uuid(40_001),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      payload: {
+        am_reminder_time: '07:30',
+        pm_reminder_time: '21:30',
+        am_reminder_enabled: true,
+        pm_reminder_enabled: false,
+        streak_nudges: false,
+        replenishment_alerts: false,
+        capture_reminders: false,
+        quiet_hours_start: '22:00',
+        quiet_hours_end: '07:00',
+        timezone: 'America/Toronto',
+        live_activity_enabled: false,
+        promotional_opt_in: false,
+        lockscreen_discreet: true,
+      },
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+
+    await expect(
+      readNotificationPreferencesOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toMatchObject({ value: { kind: 'saved_local', pendingCount: 1 } });
+    await expect(flushOutbox()).resolves.toEqual(flushResult(2, 2, 0, 1));
+
+    expect(mocks.rpc).toHaveBeenCalledTimes(2);
+    expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
+      'apply_shelf_outbox_batch',
+      'apply_notification_preferences_outbox_batch',
+    ]);
+    expect(mocks.rpc.mock.calls[0]?.[1].p_operations).toHaveLength(1);
+    expect(mocks.rpc.mock.calls[1]?.[1].p_operations).toEqual([
+      expect.objectContaining({
+        entity_type: 'notification_preferences',
+        idempotency_key: `notification_preferences:${uuid(40_001)}`,
+      }),
+    ]);
   });
 });

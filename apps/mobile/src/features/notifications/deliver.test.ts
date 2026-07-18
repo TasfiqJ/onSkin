@@ -5,6 +5,7 @@ import type { NotificationTier } from '@onskin/types';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  getAccountGeneration,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
@@ -24,6 +25,7 @@ const mocks = vi.hoisted(() => ({
   loadEntitlement: vi.fn(async (): Promise<unknown> => null),
   recordSentLocal: vi.fn(async () => {}),
   randomUUID: vi.fn(() => 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),
+  scheduleOutboxFlush: vi.fn(),
   saveNotifPrefs: vi.fn(),
   scheduleNotificationAsync: vi.fn(async (request: { identifier?: string }) =>
     Promise.resolve(request.identifier ?? 'notification-id'),
@@ -37,6 +39,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('expo-crypto', () => ({
   randomUUID: mocks.randomUUID,
+}));
+
+vi.mock('@/lib/offline/outbox', () => ({
+  scheduleOutboxFlush: mocks.scheduleOutboxFlush,
 }));
 
 vi.mock('expo-notifications', () => ({
@@ -154,6 +160,7 @@ describe('rescheduleReminders', () => {
     mocks.randomUUID.mockReturnValue('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
     mocks.saveNotifPrefs.mockClear();
     mocks.saveNotifPrefs.mockResolvedValue({ prefs, changed: true });
+    mocks.scheduleOutboxFlush.mockClear();
     mocks.scheduleNotificationAsync.mockClear();
     mocks.sentThisWeekForTierLocal.mockClear();
     mocks.sentThisWeekForTierLocal.mockResolvedValue({ status: 'available', count: 0 });
@@ -387,6 +394,33 @@ describe('rescheduleReminders', () => {
     );
     expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
     expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+  });
+
+  it('schedules durable convergence after an authenticated local commit', async () => {
+    const { saveAndRescheduleNotifPrefs } = await import('./deliver');
+    const owner = {
+      ownerId: 'user-1',
+      ownerGeneration: getAccountGeneration(),
+      assertCurrent: vi.fn(),
+    };
+
+    await expect(saveAndRescheduleNotifPrefs({ pmEnabled: true }, owner)).resolves.toEqual({
+      prefs,
+      changed: true,
+    });
+
+    expect(mocks.saveNotifPrefs).toHaveBeenCalledWith(
+      { pmEnabled: true },
+      expect.objectContaining({
+        ownerId: 'user-1',
+        ownerGeneration: getAccountGeneration(),
+        assertCurrent: expect.any(Function),
+      }),
+    );
+    expect(mocks.scheduleOutboxFlush).toHaveBeenCalledTimes(1);
+    expect(mocks.saveNotifPrefs.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.scheduleOutboxFlush.mock.invocationCallOrder[0]!,
+    );
   });
 
   it('cleans fixed IDs and surfaces a partial native scheduling failure', async () => {

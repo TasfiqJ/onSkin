@@ -6,6 +6,7 @@ import {
   decodeOutboxEnvelope,
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
+  enqueueNotificationPreferencesOutboxOperation,
   enqueueShelfOutboxOperation,
   leaseReadyOutboxRows,
   outboxCounts,
@@ -16,6 +17,7 @@ import {
 } from './outbox.pure';
 
 const OWNER = 'a'.repeat(64);
+const OWNER_B = 'b'.repeat(64);
 const ENTITY_A = '00000000-0000-4000-8000-000000000001';
 const ENTITY_B = '00000000-0000-4000-8000-000000000002';
 const OP_A1 = '00000000-0000-4000-8000-000000000101';
@@ -24,6 +26,21 @@ const OP_B1 = '00000000-0000-4000-8000-000000000201';
 const WORKER_A = '00000000-0000-4000-8000-000000000301';
 const WORKER_B = '00000000-0000-4000-8000-000000000302';
 const NOW = '2026-07-18T15:00:00.000Z';
+const NOTIFICATION_PAYLOAD = {
+  am_reminder_time: '07:30',
+  pm_reminder_time: '21:30',
+  am_reminder_enabled: true,
+  pm_reminder_enabled: true,
+  streak_nudges: false,
+  replenishment_alerts: false,
+  capture_reminders: false,
+  quiet_hours_start: '22:00',
+  quiet_hours_end: '07:00',
+  timezone: 'America/Toronto',
+  live_activity_enabled: false,
+  promotional_opt_in: false,
+  lockscreen_discreet: true,
+} as const;
 
 function enqueue(
   envelope: OutboxEnvelope,
@@ -162,13 +179,21 @@ describe('transactional outbox model', () => {
       operationId: OP_A1,
       entityId: ENTITY_A,
     }).envelope;
-    expect(selectOutboxOwnerStatus(queued, { ownerHash: OWNER, ownerGeneration: 7 })).toEqual({
+    expect(
+      selectOutboxOwnerStatus(queued, {
+        ownerHash: OWNER,
+        entityType: 'shelf_product',
+      }),
+    ).toEqual({
       kind: 'saved_local',
       pendingCount: 1,
       attentionCount: 0,
     });
     expect(
-      selectOutboxOwnerStatus(queued, { ownerHash: 'b'.repeat(64), ownerGeneration: 8 }),
+      selectOutboxOwnerStatus(queued, {
+        ownerHash: 'b'.repeat(64),
+        entityType: 'shelf_product',
+      }),
     ).toEqual({ kind: 'idle', pendingCount: 0, attentionCount: 0 });
 
     const leased = leaseReadyOutboxRows(queued, {
@@ -176,7 +201,12 @@ describe('transactional outbox model', () => {
       leaseOwner: WORKER_A,
       now: NOW,
     }).envelope;
-    expect(selectOutboxOwnerStatus(leased, { ownerHash: OWNER, ownerGeneration: 7 })).toEqual({
+    expect(
+      selectOutboxOwnerStatus(leased, {
+        ownerHash: OWNER,
+        entityType: 'shelf_product',
+      }),
+    ).toEqual({
       kind: 'syncing',
       pendingCount: 1,
       attentionCount: 0,
@@ -187,7 +217,12 @@ describe('transactional outbox model', () => {
       now: NOW,
       results: [{ operationId: OP_A1, status: 'permanent', errorClass: 'validation' }],
     });
-    expect(selectOutboxOwnerStatus(dead, { ownerHash: OWNER, ownerGeneration: 7 })).toEqual({
+    expect(
+      selectOutboxOwnerStatus(dead, {
+        ownerHash: OWNER,
+        entityType: 'shelf_product',
+      }),
+    ).toEqual({
       kind: 'needs_attention',
       pendingCount: 1,
       attentionCount: 1,
@@ -195,14 +230,14 @@ describe('transactional outbox model', () => {
 
     const wrongOwnerRetry = retryDeadOutboxRows(dead, {
       ownerHash: 'b'.repeat(64),
-      ownerGeneration: 8,
+      entityType: 'shelf_product',
       now: '2026-07-18T15:01:00.000Z',
     });
     expect(wrongOwnerRetry).toEqual({ envelope: dead, retried: 0 });
 
     const retry = retryDeadOutboxRows(dead, {
       ownerHash: OWNER,
-      ownerGeneration: 7,
+      entityType: 'shelf_product',
       now: '2026-07-18T15:01:00.000Z',
     });
     expect(retry.retried).toBe(1);
@@ -246,5 +281,124 @@ describe('transactional outbox model', () => {
         now: '2026-07-18T15:00:44.999Z',
       }).rows,
     ).toEqual([]);
+  });
+
+  it('keeps notification streams strict, entity-scoped, restart-durable, and ordered', () => {
+    const first = enqueueNotificationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: NOTIFICATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    expect(first.rows[0]).toMatchObject({
+      entityType: 'notification_preferences',
+      entityId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+      idempotencyKey: `notification_preferences:${OP_A1}`,
+    });
+    expect(
+      selectOutboxOwnerStatus(first, {
+        ownerHash: OWNER,
+        entityType: 'shelf_product',
+      }),
+    ).toEqual({ kind: 'idle', pendingCount: 0, attentionCount: 0 });
+    const restarted = decodeOutboxEnvelope(encodeOutboxEnvelope(first));
+    const leased = leaseReadyOutboxRows(restarted, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    });
+    expect(leased.rows[0]).toMatchObject({ operationId: OP_A1, ownerGeneration: 7 });
+    const newer = enqueueNotificationPreferencesOutboxOperation(leased.envelope, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      payload: { ...NOTIFICATION_PAYLOAD, pm_reminder_enabled: false },
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    expect(newer.revisions).toEqual([
+      {
+        entityType: 'notification_preferences',
+        entityId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        revision: 2,
+      },
+    ]);
+    expect(
+      leaseReadyOutboxRows(newer, {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_B,
+        now: '2026-07-18T15:00:29.999Z',
+      }).rows,
+    ).toEqual([]);
+    expect(
+      leaseReadyOutboxRows(newer, {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_B,
+        now: '2026-07-18T15:00:30.000Z',
+      }).rows.map((row) => row.operationId),
+    ).toEqual([OP_A2]);
+  });
+
+  it('never lets another owner compact or lease-block the current owner stream', () => {
+    const ownerA = enqueueNotificationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: NOTIFICATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    const leasedOwnerA = leaseReadyOutboxRows(ownerA, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const ownerB = enqueueNotificationPreferencesOutboxOperation(leasedOwnerA, {
+      operationId: OP_B1,
+      ownerHash: OWNER_B,
+      ownerGeneration: 8,
+      payload: { ...NOTIFICATION_PAYLOAD, am_reminder_enabled: false },
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+
+    const leasedOwnerB = leaseReadyOutboxRows(ownerB, {
+      ownerHash: OWNER_B,
+      leaseOwner: WORKER_B,
+      now: '2026-07-18T15:00:01.000Z',
+    });
+
+    expect(leasedOwnerB.rows.map((row) => row.operationId)).toEqual([OP_B1]);
+    expect(leasedOwnerB.envelope.rows.map((row) => row.operationId)).toEqual([OP_A1, OP_B1]);
+  });
+
+  it('retains ready notification snapshots for two owners and leases only the current owner', () => {
+    const ownerA = enqueueNotificationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: NOTIFICATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    const bothOwners = enqueueNotificationPreferencesOutboxOperation(ownerA, {
+      operationId: OP_B1,
+      ownerHash: OWNER_B,
+      ownerGeneration: 8,
+      payload: { ...NOTIFICATION_PAYLOAD, am_reminder_enabled: false },
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+
+    expect(bothOwners.rows).toHaveLength(2);
+    expect(bothOwners.revisions).toHaveLength(2);
+    expect(new Set(bothOwners.rows.map((row) => row.entityId)).size).toBe(2);
+
+    const leasedOwnerB = leaseReadyOutboxRows(bothOwners, {
+      ownerHash: OWNER_B,
+      leaseOwner: WORKER_B,
+      now: '2026-07-18T15:00:01.000Z',
+    });
+    expect(leasedOwnerB.rows.map((row) => row.operationId)).toEqual([OP_B1]);
+    expect(leasedOwnerB.envelope.rows).toHaveLength(2);
+    expect(leasedOwnerB.envelope.rows.find((row) => row.operationId === OP_A1)?.state).toBe(
+      'ready',
+    );
   });
 });

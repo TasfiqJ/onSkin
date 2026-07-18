@@ -265,7 +265,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     lifecycle: 'current',
     codec: jsonCodec('transactional_outbox', 1),
     typedRead: typedDomainRead,
-    export: include('shelf_and_routine', 'transactional_outbox'),
+    export: include('activity_and_app_state', 'transactional_outbox'),
   }),
   privateData({
     key: 'onskin.completions.v1',

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { SOFT_ASK } from '@/features/notifications/copy';
 import {
   acceptRoutineReminderSoftAsk,
@@ -35,6 +36,7 @@ function CheckRow({ label }: { label: string }) {
 
 export default function NotificationsScreen() {
   const ownerScope = useOwnerQueryScope();
+  const { user } = useAuth();
   const [busy, setBusy] = useState(false);
   const [failedChoice, setFailedChoice] = useState<'enable' | 'skip' | null>(null);
 
@@ -45,11 +47,33 @@ export default function NotificationsScreen() {
     try {
       if (choice === 'enable') {
         if (!retry) track('notification_prompt_shown');
-        const granted = await acceptRoutineReminderSoftAsk();
+        const granted = await acceptRoutineReminderSoftAsk(
+          undefined,
+          user?.id
+            ? {
+                ownerId: user.id,
+                ownerGeneration: ownerScope.generation,
+                assertCurrent: () => {
+                  if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('OWNER_CHANGED');
+                },
+              }
+            : undefined,
+        );
         if (granted) track('notification_prompt_granted');
         else track('notification_prompt_denied');
       } else {
-        await declineRoutineReminderSoftAsk();
+        await declineRoutineReminderSoftAsk(
+          undefined,
+          user?.id
+            ? {
+                ownerId: user.id,
+                ownerGeneration: ownerScope.generation,
+                assertCurrent: () => {
+                  if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('OWNER_CHANGED');
+                },
+              }
+            : undefined,
+        );
       }
     } catch {
       if (!isOwnerQueryScopeCurrent(ownerScope)) return;
@@ -72,10 +96,7 @@ export default function NotificationsScreen() {
 
   return (
     <Screen>
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <View className="flex-1 justify-center py-6">
           <View
             className="mb-6 h-14 w-14 items-center justify-center rounded-[18px]"

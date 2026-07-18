@@ -32,8 +32,16 @@ export function OfflineSync() {
               qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) }),
             ]);
           }
-          if (outbox.flushed > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
+          if (outbox.flushedByEntity.shelfProducts > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
             await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) });
+          }
+          if (
+            outbox.flushedByEntity.notificationPreferences > 0 &&
+            isOwnerQueryScopeCurrent(ownerScope)
+          ) {
+            await qc.invalidateQueries({
+              queryKey: ownerQueryPrefixes.notificationPreferences(ownerScope),
+            });
           }
           if (isOwnerQueryScopeCurrent(ownerScope)) {
             markStartupPhase('startup_reconciliation_complete');

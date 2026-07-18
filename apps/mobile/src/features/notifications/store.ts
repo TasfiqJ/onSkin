@@ -1,25 +1,33 @@
+import * as Crypto from 'expo-crypto';
+
 import {
-  awaitAccountGenerationLease,
+  AccountGenerationLeaseError,
   runAccountGenerationOperation,
-  type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
+import {
+  OUTBOX_STORAGE_KEY,
+  decodeOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueueNotificationPreferencesOutboxOperation,
+  type OutboxPayload,
+} from '@/lib/offline/outbox.pure';
 import {
   readPrivateItem,
   removePrivateItem,
   updatePrivateItem,
+  updatePrivateItemsTransactionally,
   type PrivateKVReadFailureReason,
   type PrivateKVReadResult,
 } from '@/lib/storage/privateKV';
-import { supabase } from '@/lib/supabase/client';
 
 /**
  * Local-first notification preferences (docs/07 §7, the D-029 shelf/photos pattern).
- * AsyncStorage is the v1 source of truth so the settings + scheduling work offline
- * and before the backend exists (B-SUPABASE); a best-effort `notification_preferences`
- * mirror keeps the row ready to reconcile. Times are "HH:MM" (24h) locally and
- * mapped to the DB `time` columns on mirror, with the current device timezone
- * carried in the DB `timezone` field. This is the single source of truth for the
+ * Private KV is the v1 source of truth so settings + scheduling work offline and
+ * before the backend exists (B-SUPABASE). Authenticated changes atomically append
+ * a sanitized full snapshot to the encrypted transactional outbox; signed-out
+ * changes remain local-only. Times are "HH:MM" (24h) and the current device
+ * timezone is carried explicitly. This is the single source of truth for the
  * AM/PM reminder schedule, the tier toggles, quiet hours, and discretion. It
  * supersedes the Slice-20 local photo-reminder flag (now `captureReminders`).
  */
@@ -68,6 +76,12 @@ export type NotifPrefsRead =
 export type NotifPrefsSaveResult = Readonly<{
   prefs: NotifPrefs;
   changed: boolean;
+}>;
+
+export type NotifPrefsOwner = Readonly<{
+  ownerId: string;
+  ownerGeneration: number;
+  assertCurrent?: () => void;
 }>;
 
 export const NOTIF_PREFS_INVALID = 'NOTIF_PREFS_INVALID';
@@ -455,82 +469,22 @@ export async function loadNotifPrefs(): Promise<NotifPrefs> {
   throw new Error(NOTIF_PREFS_UNAVAILABLE);
 }
 
-function toDbTime(hm: string | null): string | null {
-  return hm ? `${hm}:00` : null;
-}
-
-let mirrorTail: Promise<void> = Promise.resolve();
-
-async function runSerializedMirror<T>(
-  lease: AccountGenerationLease,
-  operation: () => Promise<T>,
-): Promise<T> {
-  const previous = mirrorTail.catch(() => undefined);
-  let release!: () => void;
-  const gate = new Promise<void>((resolve) => {
-    release = resolve;
+function notificationPreferencesOutboxPayload(prefs: NotifPrefs): OutboxPayload {
+  return Object.freeze({
+    am_reminder_time: prefs.amTime,
+    pm_reminder_time: prefs.pmTime,
+    am_reminder_enabled: prefs.amEnabled,
+    pm_reminder_enabled: prefs.pmEnabled,
+    streak_nudges: prefs.streakNudges,
+    replenishment_alerts: prefs.replenishmentAlerts,
+    capture_reminders: prefs.captureReminders,
+    quiet_hours_start: prefs.quietStart,
+    quiet_hours_end: prefs.quietEnd,
+    timezone: prefs.timezone,
+    live_activity_enabled: prefs.liveActivityEnabled,
+    promotional_opt_in: prefs.promotionalOptIn,
+    lockscreen_discreet: prefs.lockscreenDiscreet,
   });
-  const tail = previous.then(() => gate);
-  mirrorTail = tail;
-  try {
-    await awaitAccountGenerationLease(lease, () => previous);
-    lease.assertCurrent();
-    return await operation();
-  } catch (error) {
-    // Do not let an old queued/transport error replace owner-boundary
-    // cancellation, and always release the queue for the next generation.
-    lease.assertCurrent();
-    throw error;
-  } finally {
-    release();
-    if (mirrorTail === tail) mirrorTail = Promise.resolve();
-  }
-}
-
-/** Best-effort mirror to the owner-only `notification_preferences` row (B-SUPABASE). */
-async function mirror(p: NotifPrefs): Promise<void> {
-  const snapshot = Object.freeze({ ...p });
-  try {
-    await runAccountGenerationOperation(async (lease) => {
-      await runSerializedMirror(lease, async () => {
-        lease.assertCurrent();
-        const owner = await captureAuthenticatedAccountOwner(lease);
-        if (!owner) return;
-        lease.assertCurrent();
-        let result: { error: unknown };
-        try {
-          result = await awaitAccountGenerationLease(lease, () =>
-            supabase
-              .from('notification_preferences')
-              .upsert({
-                user_id: owner.userId,
-                am_reminder_time: toDbTime(snapshot.amTime),
-                pm_reminder_time: toDbTime(snapshot.pmTime),
-                am_reminder_enabled: snapshot.amEnabled,
-                pm_reminder_enabled: snapshot.pmEnabled,
-                streak_nudges: snapshot.streakNudges,
-                replenishment_alerts: snapshot.replenishmentAlerts,
-                capture_reminders: snapshot.captureReminders,
-                quiet_hours_start: toDbTime(snapshot.quietStart),
-                quiet_hours_end: toDbTime(snapshot.quietEnd),
-                timezone: snapshot.timezone,
-                live_activity_enabled: snapshot.liveActivityEnabled,
-                promotional_opt_in: snapshot.promotionalOptIn,
-                lockscreen_discreet: snapshot.lockscreenDiscreet,
-              })
-              .abortSignal(lease.signal),
-          );
-        } catch (error) {
-          lease.assertCurrent();
-          throw error;
-        }
-        lease.assertCurrent();
-        if (result.error) throw result.error;
-      });
-    });
-  } catch {
-    /* best-effort until backend configured */
-  }
 }
 
 function prefsEqual(left: NotifPrefs, right: NotifPrefs): boolean {
@@ -539,39 +493,82 @@ function prefsEqual(left: NotifPrefs, right: NotifPrefs): boolean {
 
 export async function saveNotifPrefs(
   patch: Partial<NotifPrefs>,
+  owner?: NotifPrefsOwner,
 ): Promise<NotifPrefsSaveResult> {
   const normalizedPatch = normalizeNotifPatch(patch);
   if (shouldSimulateDevNotifPrefsWriteFailure()) {
     throw new Error('E2E_NOTIF_PREFS_WRITE_FAILURE');
   }
   return runAccountGenerationOperation(async (lease) => {
+    if (owner && owner.ownerGeneration !== lease.generation) {
+      throw new AccountGenerationLeaseError();
+    }
+    const ownerId = owner?.ownerId.trim();
+    if (owner && (!ownerId || ownerId.length > 512)) throw new Error(NOTIF_PREFS_INVALID);
+    owner?.assertCurrent?.();
+    lease.assertCurrent();
+
     let next: NotifPrefs | null = null;
     let changed = false;
     let expectedRaw: string | null = null;
-    try {
-      await updatePrivateItem(KEY, (currentRaw) => {
-        const current =
-          currentRaw === null
-            ? normalizeNotifPrefs()
-            : decodeNotifPrefs(currentRaw).prefs;
-        const replenishmentOptInConfirmed =
-          'replenishmentAlerts' in normalizedPatch
-            ? normalizedPatch.replenishmentAlerts === true
-            : current.replenishmentAlerts;
-        next = normalizeNotifPrefs({
-          ...current,
-          ...normalizedPatch,
-          timezone: normalizedPatch.timezone ?? currentDeviceTimezone(),
-          [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
-        });
-        changed = currentRaw === null || !prefsEqual(current, next);
-        // For a semantic legacy no-op, privateKV still encrypts the returned
-        // legacy plaintext. Exact response-loss confirmation must therefore
-        // compare with the value actually returned to privateKV, not a v1
-        // envelope that this mutation never requested.
-        expectedRaw = changed ? encodeNotifPrefs(next) : currentRaw;
-        return expectedRaw;
+    let expectedOutboxRaw: string | null | undefined;
+    const updatePreferences = (currentRaw: string | null): string | null => {
+      const current =
+        currentRaw === null ? normalizeNotifPrefs() : decodeNotifPrefs(currentRaw).prefs;
+      const replenishmentOptInConfirmed =
+        'replenishmentAlerts' in normalizedPatch
+          ? normalizedPatch.replenishmentAlerts === true
+          : current.replenishmentAlerts;
+      next = normalizeNotifPrefs({
+        ...current,
+        ...normalizedPatch,
+        timezone: normalizedPatch.timezone ?? currentDeviceTimezone(),
+        [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
       });
+      changed = currentRaw === null || !prefsEqual(current, next);
+      // For a semantic legacy no-op, privateKV still encrypts the returned
+      // legacy plaintext. Exact response-loss confirmation must therefore
+      // compare with the value actually returned to privateKV, not a v1
+      // envelope that this mutation never requested.
+      expectedRaw = changed ? encodeNotifPrefs(next) : currentRaw;
+      return expectedRaw;
+    };
+
+    try {
+      if (owner && ownerId) {
+        const ownerHash = await hashOutboxOwner(ownerId);
+        owner.assertCurrent?.();
+        lease.assertCurrent();
+        const operationId = Crypto.randomUUID();
+        const enqueuedAt = new Date().toISOString();
+        await updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY], (current) => {
+          owner.assertCurrent?.();
+          lease.assertCurrent();
+          const nextRaw = updatePreferences(current.get(KEY) ?? null);
+          const currentOutboxRaw = current.get(OUTBOX_STORAGE_KEY) ?? null;
+          let nextOutboxRaw = currentOutboxRaw;
+          if (changed && next) {
+            const queued = enqueueNotificationPreferencesOutboxOperation(
+              decodeOutboxEnvelope(currentOutboxRaw),
+              {
+                operationId,
+                ownerHash,
+                ownerGeneration: lease.generation,
+                payload: notificationPreferencesOutboxPayload(next),
+                enqueuedAt,
+              },
+            );
+            nextOutboxRaw = encodeOutboxEnvelope(queued.envelope);
+          }
+          expectedOutboxRaw = nextOutboxRaw;
+          return new Map<string, string | null>([
+            [KEY, nextRaw],
+            [OUTBOX_STORAGE_KEY, nextOutboxRaw],
+          ]);
+        });
+      } else {
+        await updatePrivateItem(KEY, updatePreferences);
+      }
     } catch (error) {
       if (expectedRaw === null) throw error;
       let confirmation: Awaited<ReturnType<typeof readPrivateItem>>;
@@ -586,10 +583,26 @@ export async function saveNotifPrefs(
       if (confirmation.status !== 'available' || confirmation.value !== expectedRaw) {
         throw new Error(NOTIF_PREFS_WRITE_UNCERTAIN);
       }
+      if (owner && expectedOutboxRaw !== undefined) {
+        let outboxConfirmation: Awaited<ReturnType<typeof readPrivateItem>>;
+        try {
+          outboxConfirmation = await readPrivateItem(OUTBOX_STORAGE_KEY);
+        } catch {
+          lease.assertCurrent();
+          throw new Error(NOTIF_PREFS_WRITE_UNCERTAIN);
+        }
+        lease.assertCurrent();
+        const outboxMatches =
+          expectedOutboxRaw === null
+            ? outboxConfirmation.status === 'absent'
+            : outboxConfirmation.status === 'available' &&
+              outboxConfirmation.value === expectedOutboxRaw;
+        if (!outboxMatches) throw new Error(NOTIF_PREFS_WRITE_UNCERTAIN);
+      }
     }
     lease.assertCurrent();
+    owner?.assertCurrent?.();
     if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
-    if (changed) void mirror(next);
     return { prefs: next, changed };
   });
 }

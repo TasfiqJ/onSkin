@@ -10,6 +10,7 @@ import {
   NotificationPreferenceMutationFeedback,
   useNotificationPreferenceRouteState,
 } from '@/features/notifications/NotificationPreferenceState';
+import { NotificationPreferenceSyncStatus } from '@/features/notifications/NotificationPreferenceSyncStatus';
 import type { NotifPrefs } from '@/features/notifications/store';
 import {
   motionAwareModalAnimation,
@@ -222,6 +223,7 @@ export default function TimingScreen() {
               retrying={preference.mutationPending}
               onRetry={preference.retryLastPatch}
             />
+            <NotificationPreferenceSyncStatus className="mb-4" />
 
             {/* time pickers */}
             <View className="rounded-[18px] bg-paper-raised px-[18px]">

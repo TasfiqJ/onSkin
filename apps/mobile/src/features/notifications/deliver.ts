@@ -6,12 +6,14 @@ import type { NotificationKind, NotificationTier } from '@onskin/types';
 
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import {
+  AccountGenerationLeaseError,
   awaitAccountGenerationLease,
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { supabase } from '@/lib/supabase/client';
+import { scheduleOutboxFlush } from '@/lib/offline/outbox';
 
 import { notificationContentForLockScreen } from './copy';
 import {
@@ -25,6 +27,7 @@ import {
   readNotifPrefs,
   saveNotifPrefs,
   type NotifPrefs,
+  type NotifPrefsOwner,
   type NotifPrefsSaveResult,
 } from './store';
 
@@ -268,10 +271,27 @@ export async function rescheduleReminders(prefs: NotifPrefs): Promise<void> {
 /** Persist and reconcile under the same queue used by behavioural delivery. */
 export async function saveAndRescheduleNotifPrefs(
   patch: Partial<NotifPrefs>,
+  owner?: NotifPrefsOwner,
 ): Promise<NotifPrefsSaveResult> {
   return runSerializedNotificationOperation(async (lease) => {
-    const result = await saveNotifPrefs(patch);
+    owner?.assertCurrent?.();
+    if (owner && owner.ownerGeneration !== lease.generation) {
+      throw new AccountGenerationLeaseError();
+    }
+    const result = await saveNotifPrefs(
+      patch,
+      owner
+        ? {
+            ...owner,
+            assertCurrent: () => {
+              lease.assertCurrent();
+              owner.assertCurrent?.();
+            },
+          }
+        : undefined,
+    );
     lease.assertCurrent();
+    if (result.changed && owner) scheduleOutboxFlush();
     await reconcileRemindersUnderLease(result.prefs, lease);
     lease.assertCurrent();
     return result;

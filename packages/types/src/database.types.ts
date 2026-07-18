@@ -1151,6 +1151,10 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      apply_notification_preferences_outbox_batch: {
+        Args: { p_operations: Json };
+        Returns: Json;
+      };
       apply_shelf_outbox_batch: {
         Args: { p_operations: Json };
         Returns: Json;

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useAuth } from '@/lib/auth/AuthProvider';
 import {
   isOwnerQueryScopeCurrent,
   ownerQueryPrefixes,
@@ -10,11 +11,7 @@ import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { applyNotificationPreferencePatch } from './applyPreferences';
 import { saveAndRescheduleNotifPrefs } from './deliver';
-import {
-  readNotifPrefs,
-  type NotifPrefs,
-  type NotifPrefsRead,
-} from './store';
+import { readNotifPrefs, type NotifPrefs, type NotifPrefsRead } from './store';
 
 // Reads/writes the local-first notification preferences and reschedules the
 // utility reminders whenever they change (docs/07 §3.4). Visible state updates
@@ -37,6 +34,8 @@ export function useNotifPrefs() {
 export function useUpdateNotifPrefs() {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
+  const { user } = useAuth();
+  const ownerId = user?.id.trim();
   return useMutation({
     networkMode: 'always',
     mutationFn: (patch: Partial<NotifPrefs>) =>
@@ -44,7 +43,16 @@ export function useUpdateNotifPrefs() {
         applyNotificationPreferencePatch(patch, {
           saveAndReschedule: async (nextPatch) => {
             lease.assertCurrent();
-            return saveAndRescheduleNotifPrefs(nextPatch);
+            return saveAndRescheduleNotifPrefs(
+              nextPatch,
+              ownerId
+                ? {
+                    ownerId,
+                    ownerGeneration: lease.generation,
+                    assertCurrent: lease.assertCurrent,
+                  }
+                : undefined,
+            );
           },
         }),
       ),

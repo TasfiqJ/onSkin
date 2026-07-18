@@ -119,6 +119,7 @@ export const queryPrefixes = {
   monkBand: ['monkBand'] as const,
   noteHelped: ['noteHelped'] as const,
   notificationPreferences: ['notifPrefs'] as const,
+  notificationPreferencesOutboxStatus: ['notificationPreferencesOutboxStatus'] as const,
   onboarded: ['onboarded'] as const,
   photos: ['photos'] as const,
   progress: ['progress'] as const,
@@ -217,6 +218,8 @@ export const queryKeys = {
   noteHelped: (scope: OwnerQueryScope, noteId: string | undefined) =>
     ownerScopedQueryKey(scope, 'noteHelped', noteId),
   notificationPreferences: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'notifPrefs'),
+  notificationPreferencesOutboxStatus: (scope: OwnerQueryScope, revision: number) =>
+    ownerScopedQueryKey(scope, 'notificationPreferencesOutboxStatus', revision),
   onboarded: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'onboarded'),
   photos: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity, series: string) =>
     localDayQueryKey(scope, 'photos', boundary, series),
@@ -253,6 +256,8 @@ export const ownerQueryPrefixes = {
   monkBand: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'monkBand'),
   noteHelped: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'noteHelped'),
   notificationPreferences: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'notifPrefs'),
+  notificationPreferencesOutboxStatus: (scope: OwnerQueryScope) =>
+    ownerScopedQueryPrefix(scope, 'notificationPreferencesOutboxStatus'),
   onboarded: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'onboarded'),
   photos: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'photos'),
   progress: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'progress'),

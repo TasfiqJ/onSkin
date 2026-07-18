@@ -4,23 +4,23 @@ import { ActivityIndicator, Platform, View } from 'react-native';
 
 import { Button, StateNotice, Text } from '@/components/ui';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { cn } from '@/lib/cn';
 import {
+  readNotificationPreferencesOutboxStatus,
   readOutboxChangeRevision,
-  readShelfOutboxStatus,
-  retryShelfOutbox,
+  retryNotificationPreferencesOutbox,
   subscribeOutboxChanges,
-  type ShelfOutboxStatusRead,
+  type NotificationPreferencesOutboxStatusRead,
 } from '@/lib/offline/outbox';
 import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
-type DisplayState = ShelfOutboxStatusRead | { status: 'checking'; value: null };
+type DisplayState = NotificationPreferencesOutboxStatusRead | { status: 'checking'; value: null };
 
-function developmentFixture(): ShelfOutboxStatusRead | null {
+function developmentFixture(): NotificationPreferencesOutboxStatusRead | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__ || Platform.OS !== 'web') return null;
-  const fixture = process.env.EXPO_PUBLIC_E2E_SHELF_SYNC_STATUS?.trim().toLowerCase();
+  const fixture = process.env.EXPO_PUBLIC_E2E_NOTIFICATION_SYNC_STATUS?.trim().toLowerCase();
   if (!['saved_local', 'syncing', 'needs_attention'].includes(fixture ?? '')) return null;
   return {
     status: 'available',
@@ -32,7 +32,7 @@ function developmentFixture(): ShelfOutboxStatusRead | null {
   };
 }
 
-function useShelfSyncStatus(disabled: boolean) {
+function useNotificationPreferenceSyncStatus(disabled: boolean) {
   const ownerScope = useOwnerQueryScope();
   const { user } = useAuth();
   const ownerId = user?.id;
@@ -43,8 +43,8 @@ function useShelfSyncStatus(disabled: boolean) {
   );
   const [retrying, setRetrying] = useState(false);
   const statusQuery = useQuery({
-    queryKey: queryKeys.shelfOutboxStatus(ownerScope, revision),
-    queryFn: () => readShelfOutboxStatus(ownerScope, ownerId),
+    queryKey: queryKeys.notificationPreferencesOutboxStatus(ownerScope, revision),
+    queryFn: () => readNotificationPreferencesOutboxStatus(ownerScope, ownerId),
     enabled: !disabled,
     networkMode: 'always',
     retry: false,
@@ -66,11 +66,11 @@ function useShelfSyncStatus(disabled: boolean) {
     setRetrying(true);
     try {
       if (state.status === 'available' && state.value.kind === 'needs_attention') {
-        await retryShelfOutbox(ownerScope, ownerId);
+        await retryNotificationPreferencesOutbox(ownerScope, ownerId);
       }
       await refetch();
     } catch {
-      // The query publishes the bounded unavailable state without exposing raw errors.
+      // Keep raw queue/storage errors out of notification settings presentation.
     } finally {
       if (isOwnerQueryScopeCurrent(ownerScope)) setRetrying(false);
     }
@@ -79,12 +79,11 @@ function useShelfSyncStatus(disabled: boolean) {
   return { retry, retrying, state };
 }
 
-export function ShelfSyncStatus({ className }: { className?: string }) {
+export function NotificationPreferenceSyncStatus({ className }: { className?: string }) {
   const fixture = developmentFixture();
-  const { retry, retrying, state } = useShelfSyncStatus(fixture !== null);
+  const { retry, retrying, state } = useNotificationPreferenceSyncStatus(fixture !== null);
   const displayedState = fixture ?? state;
   if (displayedState.status === 'checking') return null;
-
   if (displayedState.status === 'available' && displayedState.value.kind === 'idle') return null;
 
   if (displayedState.status === 'available' && displayedState.value.kind === 'saved_local') {
@@ -98,7 +97,8 @@ export function ShelfSyncStatus({ className }: { className?: string }) {
           Saved locally
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-1">
-          Your Shelf changes are safe on this phone. We will sync them when a connection is ready.
+          Your notification choices are safe on this phone. We will sync them when a connection is
+          ready.
         </Text>
       </View>
     );
@@ -112,17 +112,17 @@ export function ShelfSyncStatus({ className }: { className?: string }) {
         style={{ backgroundColor: colors.greigeChip, borderColor: colors.hairline }}
       >
         <ActivityIndicator
-          accessibilityLabel="Syncing Shelf changes"
+          accessibilityLabel="Syncing notification settings"
           accessibilityState={{ busy: true }}
           color={colors.clay}
           size="small"
         />
         <View className="ml-3 flex-1">
           <Text variant="label" style={{ color: colors.clayDeep }}>
-            Syncing Shelf changes
+            Syncing notification settings
           </Text>
           <Text variant="bodySm" tone="muted" className="mt-1">
-            Your Shelf stays usable while this finishes.
+            Your notification controls stay usable while this finishes.
           </Text>
         </View>
       </View>
@@ -133,13 +133,13 @@ export function ShelfSyncStatus({ className }: { className?: string }) {
   const body =
     deadCount > 0
       ? `${deadCount} ${deadCount === 1 ? 'change is' : 'changes are'} still safe on this phone but could not sync.`
-      : 'We could not safely read the Shelf sync queue. Your Shelf data was not reset.';
+      : 'We could not safely read the notification sync queue. Your choices were not reset.';
 
   return (
     <StateNotice
       kind="error"
       compact
-      title="Shelf sync needs attention"
+      title="Notification sync needs attention"
       body={body}
       className={className}
     >

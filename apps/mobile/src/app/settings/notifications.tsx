@@ -9,6 +9,7 @@ import {
   NotificationPreferenceMutationFeedback,
   useNotificationPreferenceRouteState,
 } from '@/features/notifications/NotificationPreferenceState';
+import { NotificationPreferenceSyncStatus } from '@/features/notifications/NotificationPreferenceSyncStatus';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -207,6 +208,7 @@ export default function NotificationSettingsScreen() {
               retrying={preference.mutationPending}
               onRetry={preference.retryLastPatch}
             />
+            <NotificationPreferenceSyncStatus className="mb-4" />
 
             <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
               UTILITY · YOUR ROUTINE

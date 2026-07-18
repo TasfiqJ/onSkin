@@ -29,7 +29,6 @@ const SUPABASE_CLIENT_FILES = [
   'features/commerce/useCommerce.ts',
   'features/intelligence/conflictChoiceMirror.ts',
   'features/notifications/deliver.ts',
-  'features/notifications/store.ts',
   'features/onboarding/OnboardingContext.tsx',
   'features/onboarding/onboardingStatusQuery.ts',
   'features/photos/store.ts',

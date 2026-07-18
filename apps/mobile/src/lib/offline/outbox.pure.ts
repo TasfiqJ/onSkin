@@ -9,11 +9,14 @@ export const MAX_OUTBOX_ATTEMPTS = 8;
 export const OUTBOX_LEASE_MS = 30_000;
 export const OUTBOX_BASE_RETRY_MS = 1_000;
 export const OUTBOX_MAX_RETRY_MS = 5 * 60_000;
+export const NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE = 'notification_preferences';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SHA256_HEX = /^[0-9a-f]{64}$/;
+const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
+const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 
-export type OutboxEntityType = 'shelf_product';
+export type OutboxEntityType = 'notification_preferences' | 'shelf_product';
 export type OutboxOperationKind = 'delete' | 'upsert';
 export type OutboxState = 'dead' | 'leased' | 'ready';
 export type OutboxFailureClass =
@@ -147,8 +150,67 @@ function validPayload(value: unknown): value is OutboxPayload {
   }
 }
 
+function validNotificationPreferencesPayload(value: unknown): value is OutboxPayload {
+  if (
+    !isRecord(value) ||
+    !hasExactKeys(value, [
+      'am_reminder_time',
+      'pm_reminder_time',
+      'am_reminder_enabled',
+      'pm_reminder_enabled',
+      'streak_nudges',
+      'replenishment_alerts',
+      'capture_reminders',
+      'quiet_hours_start',
+      'quiet_hours_end',
+      'timezone',
+      'live_activity_enabled',
+      'promotional_opt_in',
+      'lockscreen_discreet',
+    ])
+  ) {
+    return false;
+  }
+  const optionalTime = (candidate: unknown) => candidate === null || HH_MM.test(String(candidate));
+  return (
+    HH_MM.test(String(value.am_reminder_time)) &&
+    HH_MM.test(String(value.pm_reminder_time)) &&
+    optionalTime(value.quiet_hours_start) &&
+    optionalTime(value.quiet_hours_end) &&
+    typeof value.timezone === 'string' &&
+    value.timezone.length > 0 &&
+    value.timezone.length <= 128 &&
+    TIMEZONE_TEXT.test(value.timezone) &&
+    [
+      value.am_reminder_enabled,
+      value.pm_reminder_enabled,
+      value.streak_nudges,
+      value.replenishment_alerts,
+      value.capture_reminders,
+      value.live_activity_enabled,
+      value.promotional_opt_in,
+    ].every((candidate) => typeof candidate === 'boolean') &&
+    value.lockscreen_discreet === true
+  );
+}
+
 function entityIdentity(value: Pick<OutboxRow, 'entityType' | 'entityId'>): string {
   return `${value.entityType}:${value.entityId}`;
+}
+
+function ownerEntityIdentity(
+  value: Pick<OutboxRow, 'ownerHash' | 'entityType' | 'entityId'>,
+): string {
+  return `${value.ownerHash}:${entityIdentity(value)}`;
+}
+
+function notificationPreferencesEntityId(ownerHash: string): string {
+  if (!SHA256_HEX.test(ownerHash)) fail();
+  const hex = ownerHash.slice(0, 32).split('');
+  hex[12] = '4';
+  hex[16] = '8';
+  const compact = hex.join('');
+  return `${compact.slice(0, 8)}-${compact.slice(8, 12)}-${compact.slice(12, 16)}-${compact.slice(16, 20)}-${compact.slice(20)}`;
 }
 
 function decodeRow(value: unknown): OutboxRow {
@@ -200,14 +262,17 @@ function decodeRow(value: unknown): OutboxRow {
     !SHA256_HEX.test(value.ownerHash) ||
     !Number.isSafeInteger(value.ownerGeneration) ||
     Number(value.ownerGeneration) < 0 ||
-    entityType !== 'shelf_product' ||
+    (entityType !== 'shelf_product' && entityType !== 'notification_preferences') ||
     typeof entityId !== 'string' ||
     !UUID.test(entityId) ||
     (operationKind !== 'upsert' && operationKind !== 'delete') ||
     !Number.isSafeInteger(value.clientRevision) ||
     Number(value.clientRevision) < 1 ||
     typeof value.idempotencyKey !== 'string' ||
-    value.idempotencyKey !== `${entityType}:${entityId}:${value.clientRevision}` ||
+    value.idempotencyKey !==
+      (entityType === 'notification_preferences'
+        ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
+        : `${entityType}:${entityId}:${value.clientRevision}`) ||
     value.dependencyGroupId !== `${entityType}:${entityId}` ||
     !canonicalIso(value.enqueuedAt) ||
     !Number.isSafeInteger(value.attemptCount) ||
@@ -226,8 +291,14 @@ function decodeRow(value: unknown): OutboxRow {
     fail();
   }
   if (
-    (operationKind === 'delete' && (value.payload !== null || value.tombstone !== true)) ||
-    (operationKind === 'upsert' && (!validPayload(value.payload) || value.tombstone !== false)) ||
+    (entityType === 'shelf_product' &&
+      ((operationKind === 'delete' && (value.payload !== null || value.tombstone !== true)) ||
+        (operationKind === 'upsert' &&
+          (!validPayload(value.payload) || value.tombstone !== false)))) ||
+    (entityType === 'notification_preferences' &&
+      (operationKind !== 'upsert' ||
+        !validNotificationPreferencesPayload(value.payload) ||
+        value.tombstone !== false)) ||
     (state === 'leased' && (!value.leaseOwner || !value.leaseExpiresAt)) ||
     (state !== 'leased' && (value.leaseOwner !== null || value.leaseExpiresAt !== null))
   ) {
@@ -261,7 +332,7 @@ function decodeRevision(value: unknown): OutboxRevision {
   if (
     !isRecord(value) ||
     !hasExactKeys(value, ['entityType', 'entityId', 'revision']) ||
-    value.entityType !== 'shelf_product' ||
+    (value.entityType !== 'shelf_product' && value.entityType !== 'notification_preferences') ||
     typeof value.entityId !== 'string' ||
     !UUID.test(value.entityId) ||
     !Number.isSafeInteger(value.revision) ||
@@ -356,7 +427,45 @@ export function enqueueShelfOutboxOperation(
     enqueuedAt: string;
   }>,
 ): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
-  const identity = `shelf_product:${input.entityId}`;
+  return enqueueOutboxOperation(envelope, {
+    ...input,
+    entityType: 'shelf_product',
+  });
+}
+
+export function enqueueNotificationPreferencesOutboxOperation(
+  envelope: OutboxEnvelope,
+  input: Readonly<{
+    operationId: string;
+    ownerHash: string;
+    ownerGeneration: number;
+    payload: OutboxPayload;
+    enqueuedAt: string;
+  }>,
+): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
+  return enqueueOutboxOperation(envelope, {
+    ...input,
+    entityId: notificationPreferencesEntityId(input.ownerHash),
+    entityType: 'notification_preferences',
+    operationKind: 'upsert',
+  });
+}
+
+function enqueueOutboxOperation(
+  envelope: OutboxEnvelope,
+  input: Readonly<{
+    operationId: string;
+    ownerHash: string;
+    ownerGeneration: number;
+    entityType: OutboxEntityType;
+    entityId: string;
+    operationKind: OutboxOperationKind;
+    payload: OutboxPayload | null;
+    enqueuedAt: string;
+  }>,
+): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
+  const identity = `${input.entityType}:${input.entityId}`;
+  const dependencyIdentity = identity;
   const previousRevision =
     envelope.revisions.find((revision) => entityIdentity(revision) === identity)?.revision ?? 0;
   const clientRevision = previousRevision + 1;
@@ -365,13 +474,16 @@ export function enqueueShelfOutboxOperation(
     operationId: input.operationId,
     ownerHash: input.ownerHash,
     ownerGeneration: input.ownerGeneration,
-    entityType: 'shelf_product',
+    entityType: input.entityType,
     entityId: input.entityId,
     operationKind: input.operationKind,
     payload: input.payload,
     clientRevision,
-    idempotencyKey: `${identity}:${clientRevision}`,
-    dependencyGroupId: identity,
+    idempotencyKey:
+      input.entityType === 'notification_preferences'
+        ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
+        : `${dependencyIdentity}:${clientRevision}`,
+    dependencyGroupId: dependencyIdentity,
     enqueuedAt: input.enqueuedAt,
     attemptCount: 0,
     nextAttemptAt: input.enqueuedAt,
@@ -382,13 +494,15 @@ export function enqueueShelfOutboxOperation(
     leaseExpiresAt: null,
   });
   const rows = envelope.rows.filter(
-    (existing) => entityIdentity(existing) !== identity || existing.state !== 'ready',
+    (existing) =>
+      ownerEntityIdentity(existing) !== `${input.ownerHash}:${identity}` ||
+      existing.state !== 'ready',
   );
   rows.push(row);
   if (rows.length > MAX_OUTBOX_ROWS) fail(OUTBOX_LIMIT_REACHED);
   const revisions = envelope.revisions.filter((revision) => entityIdentity(revision) !== identity);
   revisions.push({
-    entityType: 'shelf_product',
+    entityType: input.entityType,
     entityId: input.entityId,
     revision: clientRevision,
   });
@@ -433,14 +547,14 @@ export function leaseReadyOutboxRows(
   );
   const reclaimed = envelope.rows.map(
     (row): OutboxRow =>
-      expired(row, input.now)
+      row.ownerHash === input.ownerHash && expired(row, input.now)
         ? { ...row, state: 'ready', leaseOwner: null, leaseExpiresAt: null }
         : row,
   );
   const latestReady = new Map<string, OutboxRow>();
   for (const row of reclaimed) {
     if (row.state !== 'ready') continue;
-    const identity = entityIdentity(row);
+    const identity = ownerEntityIdentity(row);
     const existing = latestReady.get(identity);
     if (!existing || existing.clientRevision < row.clientRevision) latestReady.set(identity, row);
   }
@@ -449,14 +563,20 @@ export function leaseReadyOutboxRows(
       .filter(
         (row) =>
           row.state === 'ready' &&
-          latestReady.get(entityIdentity(row))?.operationId !== row.operationId,
+          latestReady.get(ownerEntityIdentity(row))?.operationId !== row.operationId,
       )
       .map((row) => row.operationId),
   );
   const compacted = reclaimed.filter((row) => !supersededReadyIds.has(row.operationId));
+  const leasedIdentities = new Set(
+    compacted.filter((row) => row.state === 'leased').map(ownerEntityIdentity),
+  );
   const eligible = sortRows(compacted).filter(
     (row) =>
-      row.ownerHash === input.ownerHash && row.state === 'ready' && row.nextAttemptAt <= input.now,
+      row.ownerHash === input.ownerHash &&
+      row.state === 'ready' &&
+      !leasedIdentities.has(ownerEntityIdentity(row)) &&
+      row.nextAttemptAt <= input.now,
   );
   const selected = new Set(eligible.slice(0, limit).map((row) => row.operationId));
   const leaseExpiresAt = new Date(Date.parse(input.now) + OUTBOX_LEASE_MS).toISOString();
@@ -559,23 +679,25 @@ export function settleOutboxLease(
   return Object.freeze({ ...envelope, rows: Object.freeze(sortRows(rows)) });
 }
 
-function assertOwnerIdentity(ownerHash: string, ownerGeneration: number): void {
-  if (
-    !SHA256_HEX.test(ownerHash) ||
-    !Number.isSafeInteger(ownerGeneration) ||
-    ownerGeneration < 0
-  ) {
-    fail();
-  }
+function assertOwnerHash(ownerHash: string): void {
+  if (!SHA256_HEX.test(ownerHash)) fail();
+}
+
+function assertEntityType(entityType: OutboxEntityType): void {
+  if (entityType !== 'shelf_product' && entityType !== 'notification_preferences') fail();
 }
 
 export function selectOutboxOwnerStatus(
   envelope: OutboxEnvelope,
-  input: Readonly<{ ownerHash: string; ownerGeneration: number }>,
+  input: Readonly<{
+    ownerHash: string;
+    entityType: OutboxEntityType;
+  }>,
 ): OutboxOwnerStatus {
-  assertOwnerIdentity(input.ownerHash, input.ownerGeneration);
+  assertOwnerHash(input.ownerHash);
+  assertEntityType(input.entityType);
   const rows = envelope.rows.filter(
-    (row) => row.ownerHash === input.ownerHash && row.ownerGeneration === input.ownerGeneration,
+    (row) => row.ownerHash === input.ownerHash && row.entityType === input.entityType,
   );
   const attentionCount = rows.filter((row) => row.state === 'dead').length;
   const syncingCount = rows.filter((row) => row.state === 'leased').length;
@@ -597,16 +719,21 @@ export function selectOutboxOwnerStatus(
 
 export function retryDeadOutboxRows(
   envelope: OutboxEnvelope,
-  input: Readonly<{ ownerHash: string; ownerGeneration: number; now: string }>,
+  input: Readonly<{
+    ownerHash: string;
+    entityType: OutboxEntityType;
+    now: string;
+  }>,
 ): Readonly<{ envelope: OutboxEnvelope; retried: number }> {
-  assertOwnerIdentity(input.ownerHash, input.ownerGeneration);
+  assertOwnerHash(input.ownerHash);
+  assertEntityType(input.entityType);
   if (!canonicalIso(input.now)) fail();
 
   let retried = 0;
   const rows = envelope.rows.map((row): OutboxRow => {
     if (
       row.ownerHash !== input.ownerHash ||
-      row.ownerGeneration !== input.ownerGeneration ||
+      row.entityType !== input.entityType ||
       row.state !== 'dead'
     ) {
       return row;

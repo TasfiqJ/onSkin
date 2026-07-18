@@ -4,6 +4,7 @@ import type { Json } from '@onskin/types/database';
 import {
   AccountGenerationLeaseError,
   runAccountGenerationOperation,
+  type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { isSupabaseConfigured } from '@/lib/env';
@@ -29,6 +30,7 @@ import {
   selectOutboxOwnerStatus,
   settleOutboxLease,
   type OutboxEnvelope,
+  type OutboxEntityType,
   type OutboxFailureClass,
   type OutboxOwnerStatus,
   type OutboxRow,
@@ -46,11 +48,18 @@ export type OutboxFlushResult = Readonly<{
   leased: number;
   flushed: number;
   dead: number;
+  flushedByEntity: Readonly<{
+    notificationPreferences: number;
+    shelfProducts: number;
+  }>;
 }>;
 
-export type ShelfOutboxStatusRead =
+export type OwnerOutboxStatusRead =
   | { status: 'available'; value: OutboxOwnerStatus }
   | { status: 'corrupt' | 'unavailable' | 'unsupported_version'; value: null };
+
+export type ShelfOutboxStatusRead = OwnerOutboxStatusRead;
+export type NotificationPreferencesOutboxStatusRead = OwnerOutboxStatusRead;
 
 type ServerWireResult = Readonly<{
   operation_id: string;
@@ -111,16 +120,29 @@ export async function readOutbox(): Promise<OutboxRead> {
   }
 }
 
-export function readShelfOutboxStatus(scope: OwnerQueryScope): Promise<ShelfOutboxStatusRead> {
+function emptyFlushResult(): OutboxFlushResult {
+  return Object.freeze({
+    leased: 0,
+    flushed: 0,
+    dead: 0,
+    flushedByEntity: Object.freeze({ notificationPreferences: 0, shelfProducts: 0 }),
+  });
+}
+
+function readOwnerOutboxStatus(
+  scope: OwnerQueryScope,
+  ownerId: string | null | undefined,
+  entityType: OutboxEntityType,
+): Promise<OwnerOutboxStatusRead> {
   return runOwnerQueryOperation(scope, async (lease) => {
-    const owner = await captureAuthenticatedAccountOwner(lease);
-    if (!owner) {
+    const normalizedOwnerId = ownerId?.trim();
+    if (!normalizedOwnerId) {
       return {
         status: 'available',
         value: Object.freeze({ kind: 'idle', pendingCount: 0, attentionCount: 0 }),
       };
     }
-    const ownerHash = await hashOutboxOwner(owner.userId);
+    const ownerHash = await hashOutboxOwner(normalizedOwnerId);
     lease.assertCurrent();
     const state = await readOutbox();
     lease.assertCurrent();
@@ -131,10 +153,24 @@ export function readShelfOutboxStatus(scope: OwnerQueryScope): Promise<ShelfOutb
       status: 'available',
       value: selectOutboxOwnerStatus(state.envelope, {
         ownerHash,
-        ownerGeneration: lease.generation,
+        entityType,
       }),
     };
   });
+}
+
+export function readShelfOutboxStatus(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<ShelfOutboxStatusRead> {
+  return readOwnerOutboxStatus(scope, ownerId, 'shelf_product');
+}
+
+export function readNotificationPreferencesOutboxStatus(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<NotificationPreferencesOutboxStatusRead> {
+  return readOwnerOutboxStatus(scope, ownerId, 'notification_preferences');
 }
 
 function wireOperation(row: OutboxRow): Json {
@@ -226,17 +262,51 @@ async function settleLease(
   publishOutboxChange();
 }
 
+async function sendOutboxEntityBatch(
+  lease: AccountGenerationLease,
+  entityType: OutboxEntityType,
+  rows: readonly OutboxRow[],
+): Promise<readonly OutboxServerResult[]> {
+  const data = await runRequestWithLease(
+    lease,
+    {
+      endpoint: 'outbox_sync',
+      deadlineMs: 12_000,
+      idempotent: true,
+      maxAttempts: 2,
+      maxResponseBytes: 64 * 1024,
+      maxRetryAfterMs: 5 * 60_000,
+    },
+    async ({ signal }) => {
+      const response = await supabase
+        .rpc(
+          entityType === 'shelf_product'
+            ? 'apply_shelf_outbox_batch'
+            : 'apply_notification_preferences_outbox_batch',
+          { p_operations: rows.map(wireOperation) },
+        )
+        .abortSignal(signal);
+      if (response.error) throw supabaseRequestFailure(response.error, response.status);
+      return response.data as Json;
+    },
+  );
+  lease.assertCurrent();
+  return decodeServerResults(data, rows);
+}
+
 async function flushOutboxOnce(): Promise<OutboxFlushResult> {
-  if (!isSupabaseConfigured) return Object.freeze({ leased: 0, flushed: 0, dead: 0 });
+  if (!isSupabaseConfigured) return emptyFlushResult();
 
   return runAccountGenerationOperation(async (lease) => {
     const owner = await captureAuthenticatedAccountOwner(lease);
-    if (!owner) return Object.freeze({ leased: 0, flushed: 0, dead: 0 });
+    if (!owner) return emptyFlushResult();
     const ownerHash = await hashOutboxOwner(owner.userId);
     lease.assertCurrent();
 
     let totalLeased = 0;
     let totalFlushed = 0;
+    let notificationPreferencesFlushed = 0;
+    let shelfProductsFlushed = 0;
     for (let batch = 0; batch < MAX_BATCHES_PER_FLUSH; batch += 1) {
       lease.assertCurrent();
       const leaseOwner = Crypto.randomUUID();
@@ -255,52 +325,52 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       if (leasedRows.length === 0) break;
       totalLeased += leasedRows.length;
 
-      try {
-        const data = await runRequestWithLease(
-          lease,
-          {
-            endpoint: 'outbox_sync',
-            deadlineMs: 12_000,
-            idempotent: true,
-            maxAttempts: 2,
-            maxResponseBytes: 64 * 1024,
-            maxRetryAfterMs: 5 * 60_000,
-          },
-          async ({ signal }) => {
-            const response = await supabase
-              .rpc('apply_shelf_outbox_batch', {
-                p_operations: leasedRows.map(wireOperation),
-              })
-              .abortSignal(signal);
-            if (response.error) {
-              throw supabaseRequestFailure(response.error, response.status);
-            }
-            return response.data;
-          },
-        );
-        lease.assertCurrent();
-        const results = decodeServerResults(data, leasedRows);
-        await settleLease(leaseOwner, results);
-        lease.assertCurrent();
-        totalFlushed += results.filter((result) => result.status !== 'permanent').length;
-      } catch (error) {
-        lease.assertCurrent();
-        const requestError =
-          error instanceof RequestPolicyError
-            ? error
-            : new RequestPolicyError({
-                endpoint: 'outbox_sync',
-                kind: 'validation',
-                attemptCount: 1,
-                statusClass: 'unknown',
-              });
-        await settleLease(leaseOwner, [], {
-          errorClass: failureClass(requestError),
-          retryAfterMs: requestError.retryAfterMs,
-        });
-        lease.assertCurrent();
-        break;
+      const results: OutboxServerResult[] = [];
+      let requestFailure: RequestPolicyError | null = null;
+      for (const entityType of ['shelf_product', 'notification_preferences'] as const) {
+        const rows = leasedRows.filter((row) => row.entityType === entityType);
+        if (rows.length === 0) continue;
+        try {
+          results.push(...(await sendOutboxEntityBatch(lease, entityType, rows)));
+        } catch (error) {
+          lease.assertCurrent();
+          requestFailure =
+            error instanceof RequestPolicyError
+              ? error
+              : new RequestPolicyError({
+                  endpoint: 'outbox_sync',
+                  kind: 'validation',
+                  attemptCount: 1,
+                  statusClass: 'unknown',
+                });
+          break;
+        }
       }
+      await settleLease(
+        leaseOwner,
+        results,
+        requestFailure
+          ? {
+              errorClass: failureClass(requestFailure),
+              retryAfterMs: requestFailure.retryAfterMs,
+            }
+          : undefined,
+      );
+      lease.assertCurrent();
+      const successfulIds = new Set(
+        results
+          .filter((result) => result.status !== 'permanent')
+          .map((result) => result.operationId),
+      );
+      const successfulRows = leasedRows.filter((row) => successfulIds.has(row.operationId));
+      totalFlushed += successfulRows.length;
+      shelfProductsFlushed += successfulRows.filter(
+        (row) => row.entityType === 'shelf_product',
+      ).length;
+      notificationPreferencesFlushed += successfulRows.filter(
+        (row) => row.entityType === 'notification_preferences',
+      ).length;
+      if (requestFailure) break;
     }
 
     const state = await readOutbox();
@@ -312,6 +382,10 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
         state.status === 'available' || state.status === 'absent'
           ? outboxCounts(state.envelope).dead
           : 0,
+      flushedByEntity: Object.freeze({
+        notificationPreferences: notificationPreferencesFlushed,
+        shelfProducts: shelfProductsFlushed,
+      }),
     });
   });
 }
@@ -348,17 +422,21 @@ export function scheduleOutboxFlush(): void {
   void flushOutbox().catch(() => undefined);
 }
 
-export function retryShelfOutbox(scope: OwnerQueryScope): Promise<OutboxFlushResult> {
+function retryOwnerOutbox(
+  scope: OwnerQueryScope,
+  ownerId: string | null | undefined,
+  entityType: OutboxEntityType,
+): Promise<OutboxFlushResult> {
   return runOwnerQueryOperation(scope, async (lease) => {
-    const owner = await captureAuthenticatedAccountOwner(lease);
-    if (!owner) return Object.freeze({ leased: 0, flushed: 0, dead: 0 });
-    const ownerHash = await hashOutboxOwner(owner.userId);
+    const normalizedOwnerId = ownerId?.trim();
+    if (!normalizedOwnerId) return emptyFlushResult();
+    const ownerHash = await hashOutboxOwner(normalizedOwnerId);
     lease.assertCurrent();
     let retried = 0;
     await updatePrivateItem(OUTBOX_STORAGE_KEY, (current) => {
       const retry = retryDeadOutboxRows(decodeOutboxEnvelope(current), {
         ownerHash,
-        ownerGeneration: lease.generation,
+        entityType,
         now: new Date().toISOString(),
       });
       retried = retry.retried;
@@ -368,6 +446,20 @@ export function retryShelfOutbox(scope: OwnerQueryScope): Promise<OutboxFlushRes
     if (retried > 0) publishOutboxChange();
     return flushOutbox();
   });
+}
+
+export function retryShelfOutbox(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<OutboxFlushResult> {
+  return retryOwnerOutbox(scope, ownerId, 'shelf_product');
+}
+
+export function retryNotificationPreferencesOutbox(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<OutboxFlushResult> {
+  return retryOwnerOutbox(scope, ownerId, 'notification_preferences');
 }
 
 export function readOutboxSyncDiagnostics(): typeof syncDiagnostics {

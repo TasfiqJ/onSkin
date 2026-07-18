@@ -333,10 +333,13 @@ Required delayed tests:
 Current state:
 
 - Shelf mutations commit the encrypted local Shelf snapshot and an owner-bound outbox intent through one crash-recoverable private-KV transaction.
+- Authenticated notification-preference writes now commit the complete sanitized preference snapshot and a content-free, owner-generation-bound operation into the same transaction instead of starting a detached best-effort Supabase mirror.
 - One account-generation-fenced, single-flight worker leases bounded batches and runs after mutation, foreground, and connectivity recovery with persisted jitter/backoff, safe failure classes, and poison-row isolation.
-- The authenticated batched RPC provides ordered idempotent application, duplicate/stale handling, and owner-scoped receipts.
-- Shelf now distinguishes `Saved locally`, `Syncing Shelf changes`, and `Shelf sync needs attention` without blocking local use. Status reads and manual dead-row retry remain current-owner-only and content-free.
-- Completion history remains intentionally outside this contract until authoritative server routine/step UUID mapping exists. Hosted RPC replay, physical-device process-kill/offline/reconnect/duplicate-worker proof, and broader entity adoption remain open.
+- Durable row ownership and the notification stream ID derive from the hashed account owner rather than the process-local generation, so same-owner work remains replayable after restart while different accounts cannot coalesce or lease-block one another.
+- Entity-scoped leasing, status, retry, and settlement prevent notification rows from contaminating Shelf state while retaining a single mixed-domain worker. An unexpired lease blocks a later operation from the same owner/entity stream, and expired work compacts to the latest complete snapshot.
+- The authenticated batched RPCs provide ordered Shelf revision application plus operation-idempotent notification application, duplicate handling, per-row validation isolation, and owner-scoped receipts without trusting client-supplied user identity or overwriting push tokens.
+- Shelf and Notification Settings/Timing now distinguish saved-local, syncing, and needs-attention states without blocking local use. Status reads and manual dead-row retry remain current-owner-only and content-free.
+- Completion history remains intentionally outside this contract until authoritative server routine/step UUID mapping exists. Hosted RPC replay, physical-device process-kill/offline/reconnect/duplicate-worker proof, and remaining legacy-entity adoption remain open.
 
 Required outbox fields:
 
@@ -2008,7 +2011,7 @@ The following register is intended to prevent small-but-important work from disa
 | OPT-007 | Make private-store read/modify/write atomic                          | Implemented locally; device proof pending                                       | simultaneous writer tests          |
 | OPT-008 | Return typed unavailable/corrupt/unsupported states                  | Implemented locally; native fault-path proof pending                            | store-by-store tests               |
 | OPT-009 | Bind async writes to owner/account generation                        | Implemented locally; physical account-switch proof pending                      | delayed A-to-B tests               |
-| OPT-010 | Create encrypted transactional outbox                                | In progress; core + Shelf implemented locally                                   | offline/reconnect/duplicate worker |
+| OPT-010 | Create encrypted transactional outbox                                | In progress; core + Shelf + notification preferences implemented locally        | offline/reconnect/duplicate worker |
 | OPT-011 | Verify iOS Keychain/file protection/backup exclusion                 | Partial local hardening; durable-file backup exclusion and signed proof pending | signed-device artifact/test        |
 | OPT-012 | Verify Android Keystore/backup/data extraction                       | Implemented locally; signed manifest/resource and physical proof pending        | merged manifest + device test      |
 | OPT-013 | Paginate/verify complete data exports                                | Implemented locally; snapshot/streaming/resume/table-coverage proof pending     | >1,000-row count/checksum          |

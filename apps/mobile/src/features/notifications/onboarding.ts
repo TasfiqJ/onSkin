@@ -4,14 +4,17 @@ import {
 } from '@/lib/auth/accountGeneration';
 
 import { requestPermission, saveAndRescheduleNotifPrefs } from './deliver';
-import type { NotifPrefs, NotifPrefsSaveResult } from './store';
+import type { NotifPrefs, NotifPrefsOwner, NotifPrefsSaveResult } from './store';
 
 const ROUTINE_REMINDERS_ON: Partial<NotifPrefs> = { amEnabled: true, pmEnabled: true };
 const ROUTINE_REMINDERS_OFF: Partial<NotifPrefs> = { amEnabled: false, pmEnabled: false };
 
 type NotificationOnboardingDeps = {
   requestPermission: () => Promise<boolean>;
-  saveAndReschedule: (patch: Partial<NotifPrefs>) => Promise<NotifPrefsSaveResult>;
+  saveAndReschedule: (
+    patch: Partial<NotifPrefs>,
+    owner?: NotifPrefsOwner,
+  ) => Promise<NotifPrefsSaveResult>;
 };
 
 const defaultDeps: NotificationOnboardingDeps = {
@@ -21,6 +24,7 @@ const defaultDeps: NotificationOnboardingDeps = {
 
 export async function acceptRoutineReminderSoftAsk(
   deps: NotificationOnboardingDeps = defaultDeps,
+  owner?: NotifPrefsOwner,
 ): Promise<boolean> {
   return runAccountGenerationOperation(async (lease) => {
     let granted: boolean;
@@ -31,9 +35,9 @@ export async function acceptRoutineReminderSoftAsk(
       throw error;
     }
     lease.assertCurrent();
-    await deps.saveAndReschedule(
-      granted ? ROUTINE_REMINDERS_ON : ROUTINE_REMINDERS_OFF,
-    );
+    const patch = granted ? ROUTINE_REMINDERS_ON : ROUTINE_REMINDERS_OFF;
+    if (owner) await deps.saveAndReschedule(patch, owner);
+    else await deps.saveAndReschedule(patch);
     lease.assertCurrent();
     return granted;
   });
@@ -41,9 +45,11 @@ export async function acceptRoutineReminderSoftAsk(
 
 export async function declineRoutineReminderSoftAsk(
   deps: Pick<NotificationOnboardingDeps, 'saveAndReschedule'> = defaultDeps,
+  owner?: NotifPrefsOwner,
 ): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await deps.saveAndReschedule(ROUTINE_REMINDERS_OFF);
+    if (owner) await deps.saveAndReschedule(ROUTINE_REMINDERS_OFF, owner);
+    else await deps.saveAndReschedule(ROUTINE_REMINDERS_OFF);
     lease.assertCurrent();
   });
 }
