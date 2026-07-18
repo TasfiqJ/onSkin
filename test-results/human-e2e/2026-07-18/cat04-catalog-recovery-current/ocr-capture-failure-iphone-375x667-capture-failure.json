@@ -1,0 +1,70 @@
+{
+  "alerts": [
+    "Label wasn't capturedUse manual text for now, or try the label photo again.Try label photo again"
+  ],
+  "bodyText": "< Read the label Label wasn't captured Use manual text for now, or try the label photo again. Label wasn't captured Use manual text for now, or try the label photo again. Try label photo again On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Editable label text Looks right. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Try label photo again",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 297,
+      "x": 39,
+      "y": 309
+    },
+    {
+      "disabled": false,
+      "fullyExposed": false,
+      "height": 132,
+      "hitOk": true,
+      "label": "Ingredient label text",
+      "scrollClipped": true,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 511
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Looks right. Continue",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 611
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Ingredient label text",
+      "value": ""
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8560/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-375x667-1784407373761",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

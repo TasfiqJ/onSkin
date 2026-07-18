@@ -1,0 +1,100 @@
+{
+  "alerts": [],
+  "bodyText": "x Add by hand Product name Brand Category Choose ▾ Barcode (optional) Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Product name",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 78
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Brand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 124.56,
+      "x": 24,
+      "y": 156
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Category",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 194.44,
+      "x": 156.56,
+      "y": 156
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Barcode, optional",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 234
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 603
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Product name",
+      "value": ""
+    },
+    {
+      "label": "Brand",
+      "value": ""
+    },
+    {
+      "label": "Barcode, optional",
+      "value": "012345678905"
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8480/shelf/manual",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

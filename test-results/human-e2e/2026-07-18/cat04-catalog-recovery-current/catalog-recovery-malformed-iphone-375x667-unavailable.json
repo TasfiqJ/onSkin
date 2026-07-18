@@ -1,0 +1,41 @@
+{
+  "alerts": [
+    "Match unavailableThis saved catalog match may have expired or already been reviewed. Your Shelf is unchanged.Back to Shelf"
+  ],
+  "bodyText": "< Match unavailable This saved catalog match may have expired or already been reviewed. Your Shelf is unchanged. Back to Shelf",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back to Shelf",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back to Shelf",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 295,
+      "x": 40,
+      "y": 386.5
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-375x667-1784407379322&barcode=not-a-barcode&productId=not-a-product-id",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

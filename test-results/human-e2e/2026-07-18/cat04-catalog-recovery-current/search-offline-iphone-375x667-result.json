@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "search-offline-iphone-375x667",
+  "completedAt": "2026-07-18T20:39:16.101Z",
+  "error": null,
+  "fixture": "offline",
+  "fixtureGroup": "offline",
+  "nativeDeviceProof": false,
+  "route": "/shelf/search",
+  "scenarioId": "search-offline",
+  "startedAt": "2026-07-18T20:39:12.767Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-375x667",
+    "width": 375,
+    "height": 667
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8500/shelf/manual"
+}

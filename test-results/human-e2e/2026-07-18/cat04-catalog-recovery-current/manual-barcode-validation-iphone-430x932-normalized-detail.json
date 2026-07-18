@@ -1,0 +1,135 @@
+{
+  "alerts": [],
+  "bodyText": "< Formatted barcode iphone-430x932 data / Added by you Catalog Added by you Manual Added by hand. It can support your shelf and routine, but not high-confidence product recommendations. barcode 036000291452 Report an issue Opened July 2026 · edit PAO unknown · edit Best used by not known · set date unknown Routine role Not placed in a routine yet. Build an AM/PM draft from your shelf. Replace Mark finished 🗑︎",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "More options",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 358,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Report an issue",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 105.48,
+      "x": 43,
+      "y": 295
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit opened date",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 344,
+      "x": 43,
+      "y": 375
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit period after opening",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 344,
+      "x": 43,
+      "y": 431
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Set printed best-before date",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 344,
+      "x": 43,
+      "y": 499
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 94,
+      "hitOk": true,
+      "label": "Build routine from shelf",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 578
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Replace",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 155,
+      "x": 24,
+      "y": 882
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Mark finished",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 157,
+      "x": 189,
+      "y": 882
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Remove or discard",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 50,
+      "x": 356,
+      "y": 882
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8560/shelf/c1f8136c-0228-4a3a-bd5d-5e1ac2168e8c",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

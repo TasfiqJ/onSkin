@@ -1,0 +1,17 @@
+{
+  "artifactPrefix": "bootstrap-matched-iphone-375x667",
+  "browserFailures": [],
+  "completedAt": "2026-07-18T20:36:42.267Z",
+  "error": null,
+  "fixtureGroup": "matched",
+  "nativeDeviceProof": false,
+  "startedAt": "2026-07-18T20:36:29.867Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-375x667",
+    "width": 375,
+    "height": 667
+  },
+  "endUrl": "http://localhost:8460/shelf/search?cat04ConsentProbe=matched-iphone-375x667-1784406999993"
+}

@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "ocr-camera-denied-settings-failure-iphone-430x932",
+  "completedAt": "2026-07-18T20:42:16.574Z",
+  "error": null,
+  "fixture": "denied_no_retry",
+  "fixtureGroup": "camera-recovery",
+  "nativeDeviceProof": false,
+  "route": "/shelf/ocr",
+  "scenarioId": "ocr-camera-denied-settings-failure",
+  "startedAt": "2026-07-18T20:42:13.887Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-430x932",
+    "width": 430,
+    "height": 932
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-430x932-1784407333887"
+}

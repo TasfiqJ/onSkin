@@ -1,0 +1,118 @@
+{
+  "alerts": [
+    "Enter a complete 8, 12, 13, or 14 digit barcode from the package."
+  ],
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. Product name Brand Category Choose ▾ Barcode (optional) Enter a complete 8, 12, 13, or 14 digit barcode from the package. Ingredients · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Product name",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Brand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 176.19,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Category",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 193.81,
+      "x": 212.19,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Barcode, optional",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 66,
+      "hitOk": true,
+      "label": "Ingredients",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 444
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 864
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Product name",
+      "value": "Formatted barcode iphone-430x932"
+    },
+    {
+      "label": "Brand",
+      "value": ""
+    },
+    {
+      "label": "Barcode, optional",
+      "value": "lot 036000291452"
+    },
+    {
+      "label": "Ingredients",
+      "value": ""
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8560/shelf/manual?cat04Audit=manual-barcode-validation-iphone-430x932-1784407420349",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

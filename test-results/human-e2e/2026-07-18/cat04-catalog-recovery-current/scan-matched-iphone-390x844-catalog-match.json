@@ -1,0 +1,99 @@
+{
+  "alerts": [],
+  "bodyText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Line up the barcode Decoding happens on your device Catalog match RoutineKind Fixture Mineral SPF 50 Add this Not this product = Scan ingredient label Capture label, then type from it S Search catalog Use reviewed matches + Add it by hand Always works offline",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "torch",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 57,
+      "x": 309,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add this",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 144.78,
+      "x": 44,
+      "y": 476
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not this product",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 149.22,
+      "x": 196.78,
+      "y": 476
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "Scan ingredient label. Capture label, then type from it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 556
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "Search catalog. Use reviewed matches",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 642
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "Add it by hand. Always works offline",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 728
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8460/shelf/scan?cat04Audit=scan-matched-iphone-390x844-1784407021666",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "alerts": [],
+  "bodyText": "? x Not the right product. S Search catalog Try name or brand instead I Add ingredients + Add it by hand Always works, even offline Report wrong match",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 314,
+      "y": 514
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Search catalog. Try name or brand instead",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 608
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add the ingredient list. Take a label photo or type it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 660
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add it by hand. Always works, even offline",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 712
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Report wrong match",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 772
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8460/shelf/no-match?barcode=012345678905&wrongProductId=00000000-0000-4000-8000-000000000044",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

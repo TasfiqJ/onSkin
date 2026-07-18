@@ -1,0 +1,87 @@
+{
+  "alerts": [],
+  "bodyText": "◴ x When did you open it? This starts the freshness clock. Not sure? We'll estimate from when you added it. ✓ Just opened it Clock starts today Pick a date I opened it earlier Not opened yet No clock. We'll show shelf life Lasts ~12 months opened from catalog · tap to change ✎ Add to shelf",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 314,
+      "y": 200
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 80,
+      "hitOk": true,
+      "label": "Just opened it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 378
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 78,
+      "hitOk": true,
+      "label": "Pick a date",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 468
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 78,
+      "hitOk": true,
+      "label": "Not opened yet",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 556
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 70,
+      "hitOk": true,
+      "label": "Edit period after opening",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 654
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add to shelf",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 748
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8460/shelf/opened",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}
