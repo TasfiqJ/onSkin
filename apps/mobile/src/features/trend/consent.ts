@@ -6,6 +6,10 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
+import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 import { supabase } from '@/lib/supabase/client';
@@ -27,18 +31,31 @@ export async function isTrendInsightsConsentedWithLease(
   lease.assertCurrent();
   if (isSupabaseConfigured) {
     try {
-      const { data, error } = await awaitAccountGenerationLease(lease, () =>
-        supabase
-          .from('consents')
-          .select('granted')
-          .eq('consent_type', 'photo_trend_insights')
-          .order('granted_at', { ascending: false })
-          .limit(1)
-          .abortSignal(lease.signal)
-          .maybeSingle(),
+      const data = await runRequestWithLease(
+        lease,
+        {
+          endpoint: 'trend_consent',
+          deadlineMs: 8_000,
+          idempotent: true,
+          maxAttempts: 2,
+          maxResponseBytes: 64 * 1024,
+        },
+        async ({ signal }) => {
+          const response = await supabase
+            .from('consents')
+            .select('granted')
+            .eq('consent_type', 'photo_trend_insights')
+            .order('granted_at', { ascending: false })
+            .limit(1)
+            .abortSignal(signal)
+            .maybeSingle();
+          if (response.error) {
+            throw supabaseRequestFailure(response.error, response.status);
+          }
+          return response.data;
+        },
       );
       lease.assertCurrent();
-      if (error) throw error;
       // A reachable ledger is authoritative. Missing is the default-off state;
       // never reuse a stale local grant for an installed-base user.
       return data?.granted === true;

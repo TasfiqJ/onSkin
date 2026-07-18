@@ -134,7 +134,12 @@ describe('owner-bound onboarding status query', () => {
     mocks.abortSignal.mockResolvedValue(serverResult(null, serverError));
     const options = onboardingStatusQueryOptions(createOwnerQueryScope());
 
-    await expect(options.queryFn()).rejects.toBe(serverError);
+    await expect(options.queryFn()).rejects.toMatchObject({
+      endpoint: 'onboarding_status',
+      kind: 'offline',
+      attemptCount: 2,
+      message: 'NETWORK_REQUEST_OFFLINE',
+    });
   });
 
   it.each([null, Number.NaN, Number.POSITIVE_INFINITY, -1, 1.5])(

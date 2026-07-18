@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-18",
+  "endpointCount": 17,
+  "centralizedEdgeFunctions": 7,
+  "boundedGroundedProviderOperations": 1,
+  "directReadOnlyPostgrestFiles": 8,
+  "directReadOnlyPostgrestOperations": 9,
+  "policyBoundDirectReadOperations": 9,
+  "rawEdgeInvokeFiles": 1,
+  "policyBoundAnonymousRpcFiles": 1,
+  "boundedPayloadFreeRawFetchExceptions": 1,
+  "deferredMutationPolicyFiles": 11,
+  "ownerScopedCommerceQuery": true,
+  "authorizationChanges": 0,
+  "telemetryPayloadFieldsAdded": 0
+}

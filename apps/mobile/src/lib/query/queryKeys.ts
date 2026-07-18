@@ -130,6 +130,7 @@ export const queryPrefixes = {
   skinProfile: ['skinProfileBits'] as const,
   subscriptionOffering: ['subscription-offering'] as const,
   trendConsent: ['trendConsent'] as const,
+  whereToBuy: ['whereToBuy'] as const,
 };
 
 export function ownerScopedQueryKey<
@@ -232,6 +233,8 @@ export const queryKeys = {
   subscriptionOffering: (scope: OwnerQueryScope) =>
     ownerScopedQueryKey(scope, 'subscription-offering'),
   trendConsent: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'trendConsent'),
+  whereToBuy: (scope: OwnerQueryScope, productType: string | null) =>
+    ownerScopedQueryKey(scope, 'whereToBuy', productType),
 };
 
 export const ownerQueryPrefixes = {
@@ -261,6 +264,7 @@ export const ownerQueryPrefixes = {
   subscriptionOffering: (scope: OwnerQueryScope) =>
     ownerScopedQueryPrefix(scope, 'subscription-offering'),
   trendConsent: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'trendConsent'),
+  whereToBuy: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'whereToBuy'),
 };
 
 export const DATE_SENSITIVE_QUERY_PREFIXES = [

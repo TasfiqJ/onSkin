@@ -4,9 +4,12 @@ import { useMemo } from 'react';
 import { usePhotos } from '@/features/photos/usePhotos';
 import {
   ACCOUNT_GENERATION_CHANGED,
-  awaitAccountGenerationLease,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
+import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
@@ -38,14 +41,28 @@ function isAbortOrAccountGenerationError(error: unknown): boolean {
 export async function readMonkBandWithLease(lease: AccountGenerationLease): Promise<number | null> {
   lease.assertCurrent();
   try {
-    const { data } = await awaitAccountGenerationLease(lease, () =>
-      supabase
-        .from('skin_profiles')
-        .select('monk_tone')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .abortSignal(lease.signal)
-        .maybeSingle(),
+    const data = await runRequestWithLease(
+      lease,
+      {
+        endpoint: 'trend_monk_band',
+        deadlineMs: 8_000,
+        idempotent: true,
+        maxAttempts: 2,
+        maxResponseBytes: 64 * 1024,
+      },
+      async ({ signal }) => {
+        const response = await supabase
+          .from('skin_profiles')
+          .select('monk_tone')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .abortSignal(signal)
+          .maybeSingle();
+        if (response.error) {
+          throw supabaseRequestFailure(response.error, response.status);
+        }
+        return response.data;
+      },
     );
     lease.assertCurrent();
     return data?.monk_tone ?? null;

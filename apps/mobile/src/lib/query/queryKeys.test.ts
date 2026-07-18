@@ -114,6 +114,12 @@ describe('owner-scoped query keys', () => {
       generation,
     ]);
     expect(queryKeys.monkBand(scope)).toEqual(['monkBand', OWNER_QUERY_NAMESPACE, generation]);
+    expect(queryKeys.whereToBuy(scope, 'cleanser')).toEqual([
+      'whereToBuy',
+      OWNER_QUERY_NAMESPACE,
+      generation,
+      'cleanser',
+    ]);
     expect(queryKeys.routineOrder(scope)).toEqual([
       'routineOrder',
       OWNER_QUERY_NAMESPACE,

@@ -8,6 +8,10 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { requireAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { isSupabaseConfigured } from '@/lib/env';
+import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 
 import { supabase } from '../supabase/client';
 
@@ -52,22 +56,45 @@ export async function getLatestConsentsWithLease(
   lease.assertCurrent();
   if (!isSupabaseConfigured) return {};
 
-  const { data, error } = await awaitAccountGenerationLease(lease, () =>
-    supabase
-      .from('consents')
-      .select('consent_type, granted, granted_at')
-      .order('granted_at', { ascending: false })
-      // Match public.has_current_consent: an equal-time revocation wins.
-      .order('granted', { ascending: true })
-      .abortSignal(lease.signal),
-  );
+  let data: Awaited<ReturnType<typeof getLatestConsentRows>>;
+  try {
+    data = await getLatestConsentRows(lease);
+  } catch (error) {
+    lease.assertCurrent();
+    throw error;
+  }
   lease.assertCurrent();
-  if (error) throw error;
   const latest: Record<string, boolean> = {};
   for (const row of data ?? []) {
     if (!(row.consent_type in latest)) latest[row.consent_type] = row.granted;
   }
   return latest;
+}
+
+async function getLatestConsentRows(lease: AccountGenerationLease) {
+  return runRequestWithLease(
+    lease,
+    {
+      endpoint: 'consent_ledger',
+      deadlineMs: 8_000,
+      idempotent: true,
+      maxAttempts: 2,
+      maxResponseBytes: 256 * 1024,
+    },
+    async ({ signal }) => {
+      const response = await supabase
+        .from('consents')
+        .select('consent_type, granted, granted_at')
+        .order('granted_at', { ascending: false })
+        // Match public.has_current_consent: an equal-time revocation wins.
+        .order('granted', { ascending: true })
+        .abortSignal(signal);
+      if (response.error) {
+        throw supabaseRequestFailure(response.error, response.status);
+      }
+      return response.data;
+    },
+  );
 }
 
 /** Compatibility entry point for non-query callers. Owner-bound queries reuse their lease. */

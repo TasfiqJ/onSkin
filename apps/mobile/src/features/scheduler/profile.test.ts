@@ -221,7 +221,12 @@ describe('skin profile axis mapping', () => {
     mocks.maybeSingle.mockRejectedValueOnce(
       Object.assign(new Error('aborted'), { name: 'AbortError' }),
     );
-    await expect(readProfileBits()).rejects.toMatchObject({ name: 'AbortError' });
+    await expect(readProfileBits()).rejects.toMatchObject({
+      endpoint: 'profile_server',
+      kind: 'cancelled',
+      attemptCount: 1,
+      message: 'NETWORK_REQUEST_CANCELLED',
+    });
   });
 
   it('maps sensitivity axis scores into coarse planner buckets', () => {

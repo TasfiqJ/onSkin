@@ -4,6 +4,10 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
 import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
+import {
   queryKeys,
   runOwnerQueryOperation,
   type OwnerQueryScope,
@@ -107,15 +111,34 @@ export async function readOnboardingStatusWithLease(
   if (localStatus === 'complete') return true;
   if (!isSupabaseConfigured) return false;
 
-  const { count, error } = await awaitAccountGenerationLease(lease, () =>
-    supabase
-      .from('skin_profiles')
-      .select('id', { count: 'exact', head: true })
-      .not('completed_at', 'is', null)
-      .abortSignal(lease.signal),
-  );
+  let count: number | null;
+  try {
+    count = await runRequestWithLease(
+      lease,
+      {
+        endpoint: 'onboarding_status',
+        deadlineMs: 8_000,
+        idempotent: true,
+        maxAttempts: 2,
+        maxResponseBytes: 16 * 1024,
+      },
+      async ({ signal }) => {
+        const response = await supabase
+          .from('skin_profiles')
+          .select('id', { count: 'exact', head: true })
+          .not('completed_at', 'is', null)
+          .abortSignal(signal);
+        if (response.error) {
+          throw supabaseRequestFailure(response.error, response.status);
+        }
+        return response.count;
+      },
+    );
+  } catch (error) {
+    lease.assertCurrent();
+    throw error;
+  }
   lease.assertCurrent();
-  if (error) throw error;
   if (typeof count !== 'number' || !Number.isSafeInteger(count) || count < 0) {
     throw new OnboardingStatusUnavailableError(
       'The server did not return an exact onboarding-status count.',

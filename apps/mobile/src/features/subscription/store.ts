@@ -7,6 +7,10 @@ import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccoun
 import { env, isSupabaseConfigured, type AppEnvironment } from '@/lib/env';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
+import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 import { supabase } from '@/lib/supabase/client';
 import {
   PRIVATE_KV_DECRYPTION_FAILED,
@@ -2301,16 +2305,31 @@ export async function fetchServerEntitlement(
     if (!owner) return { status: 'failure' };
     let entitlement: StoredEntitlement;
     try {
-      const { data, error } = await supabase
-        .from('entitlements')
-        .select('*')
-        .eq('user_id', owner.userId)
-        .limit(1)
-        .abortSignal(lease.signal)
-        .maybeSingle();
+      const data = await runRequestWithLease(
+        lease,
+        {
+          endpoint: 'entitlement_server',
+          deadlineMs: 10_000,
+          idempotent: true,
+          maxAttempts: 2,
+          maxResponseBytes: 256 * 1024,
+        },
+        async ({ signal }) => {
+          const response = await supabase
+            .from('entitlements')
+            .select('*')
+            .eq('user_id', owner.userId)
+            .limit(1)
+            .abortSignal(signal)
+            .maybeSingle();
+          if (response.error) {
+            throw supabaseRequestFailure(response.error, response.status);
+          }
+          return response.data;
+        },
+      );
       lease.assertCurrent();
       assertCurrentOwner();
-      if (error) return { status: 'failure' };
       if (!data) return { status: 'no_evidence' };
       const mapped = rowToStoredEntitlement(data as EntitlementRow);
       entitlement = isStoreBackedEntitlement(mapped)

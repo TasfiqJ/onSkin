@@ -17,6 +17,7 @@ import {
   resetRequestMetricSamplesForTests,
   runRequest,
   runRequestWithLease,
+  supabaseRequestFailure,
 } from './requestPolicy';
 
 function httpError(status: number, retryAfter?: string): Error {
@@ -314,6 +315,34 @@ describe('request policy network failure matrix', () => {
     ).resolves.toBe('ok');
     expect(operation).toHaveBeenCalledTimes(2);
     expect(JSON.stringify(readRequestMetricSamples())).not.toContain('private search content');
+  });
+
+  it('classifies a status-zero PostgREST transport wrapper without exposing it', async () => {
+    const sleep = vi.fn(async () => undefined);
+    const operation = vi
+      .fn<() => Promise<string>>()
+      .mockRejectedValueOnce(
+        supabaseRequestFailure(
+          new Error('FetchError: TypeError: Failed to fetch private profile value'),
+          0,
+        ),
+      )
+      .mockResolvedValueOnce('ok');
+
+    await expect(
+      runRequest(
+        {
+          endpoint: 'profile_server',
+          deadlineMs: 1_000,
+          idempotent: true,
+          ownerScoped: false,
+          runtime: { random: () => 0, sleep },
+        },
+        operation,
+      ),
+    ).resolves.toBe('ok');
+    expect(operation).toHaveBeenCalledTimes(2);
+    expect(JSON.stringify(readRequestMetricSamples())).not.toContain('private profile value');
   });
 
   it('unwraps production Supabase HTTP status and Retry-After metadata', async () => {

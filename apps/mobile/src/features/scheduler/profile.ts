@@ -21,6 +21,11 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
+import {
+  isRequestCancellation,
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
@@ -130,13 +135,29 @@ export async function readProfileBitsWithLease(
 
   try {
     lease.assertCurrent();
-    const { data } = await supabase
-      .from('skin_profiles')
-      .select('oily_dry, sensitive_resistant, goals')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .abortSignal(lease.signal)
-      .maybeSingle();
+    const data = await runRequestWithLease(
+      lease,
+      {
+        endpoint: 'profile_server',
+        deadlineMs: 8_000,
+        idempotent: true,
+        maxAttempts: 2,
+        maxResponseBytes: 256 * 1024,
+      },
+      async ({ signal }) => {
+        const response = await supabase
+          .from('skin_profiles')
+          .select('oily_dry, sensitive_resistant, goals')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .abortSignal(signal)
+          .maybeSingle();
+        if (response.error) {
+          throw supabaseRequestFailure(response.error, response.status);
+        }
+        return response.data;
+      },
+    );
     lease.assertCurrent();
     if (data) {
       return {
@@ -154,7 +175,7 @@ export async function readProfileBitsWithLease(
     // Preserve the existing offline/server fallback only while this exact
     // owner generation remains current. An account boundary must reject.
     lease.assertCurrent();
-    if (isAbortOrAccountGenerationError(error)) throw error;
+    if (isAbortOrAccountGenerationError(error) || isRequestCancellation(error)) throw error;
     /* offline / no DB */
   }
   lease.assertCurrent();

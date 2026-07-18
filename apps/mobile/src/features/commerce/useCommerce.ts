@@ -1,5 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
+import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
+import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
@@ -21,27 +26,47 @@ export function useCommerceConsent() {
 }
 
 export function useWhereToBuy(productType: string | null) {
+  const ownerScope = useOwnerQueryScope();
   return useQuery({
-    queryKey: ['whereToBuy', productType],
+    queryKey: queryKeys.whereToBuy(ownerScope, productType),
     enabled: !!productType,
-    queryFn: async () => {
-      if (!productType) return [];
-      let rows: AffiliateLinkRow[] = [];
-      try {
-        const { data } = await supabase
-          .from('affiliate_links')
-          .select(
-            'id, product_type, retailer, label, url, price_cents, currency, source, is_paid, is_active',
-          )
-          .eq('product_type', productType)
-          .eq('is_active', true);
-        rows = (data ?? []) as AffiliateLinkRow[];
-      } catch {
-        /* offline / no DB */
-      }
-      // Dev-only demo when the catalogue is empty; [] in production (honest empty).
-      if (rows.length === 0) rows = demoWhereToBuy(productType);
-      return resolveWhereToBuy(productType, rows);
-    },
+    queryFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        if (!productType) return [];
+        let rows: AffiliateLinkRow[] = [];
+        try {
+          const data = await runRequestWithLease(
+            lease,
+            {
+              endpoint: 'commerce_links',
+              deadlineMs: 8_000,
+              idempotent: true,
+              maxAttempts: 2,
+              maxResponseBytes: 512 * 1024,
+            },
+            async ({ signal }) => {
+              const response = await supabase
+                .from('affiliate_links')
+                .select(
+                  'id, product_type, retailer, label, url, price_cents, currency, source, is_paid, is_active',
+                )
+                .eq('product_type', productType)
+                .eq('is_active', true)
+                .abortSignal(signal);
+              if (response.error) {
+                throw supabaseRequestFailure(response.error, response.status);
+              }
+              return response.data;
+            },
+          );
+          rows = (data ?? []) as AffiliateLinkRow[];
+        } catch {
+          lease.assertCurrent();
+          /* offline / no DB */
+        }
+        // Dev-only demo when the catalogue is empty; [] in production (honest empty).
+        if (rows.length === 0) rows = demoWhereToBuy(productType);
+        return resolveWhereToBuy(productType, rows);
+      }),
   });
 }

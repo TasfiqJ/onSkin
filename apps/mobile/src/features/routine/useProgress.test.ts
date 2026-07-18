@@ -304,7 +304,7 @@ describe('useProgress local-first contract', () => {
     expect(source).toContain('deadlineMs: OPTIONAL_PROGRESS_READ_DEADLINE_MS');
     expect(source).toContain('maxResponseBytes: COMPLETIONS_RESPONSE_LIMIT_BYTES');
     expect(source).toContain('maxResponseBytes: LONGEST_STREAK_RESPONSE_LIMIT_BYTES');
-    expect(source).toContain('if (response.error) throw supabaseFailure(');
+    expect(source).toContain('if (response.error) throw supabaseRequestFailure(');
     expect(source).toContain(
       'awaitAccountGenerationLease(childLease, () => getCompletionSummary())',
     );

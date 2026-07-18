@@ -17,7 +17,11 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
-import { isRequestCancellation, runRequestWithLease } from '@/lib/network/requestPolicy';
+import {
+  isRequestCancellation,
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 import {
   useLocalDateBoundary,
   type LocalDateBoundaryIdentity,
@@ -68,23 +72,6 @@ const OPTIONAL_PROGRESS_READ_DEADLINE_MS = 8_000;
 const COMPLETIONS_RESPONSE_LIMIT_BYTES = 512 * 1024;
 const LONGEST_STREAK_RESPONSE_LIMIT_BYTES = 64 * 1024;
 
-function supabaseFailure(error: unknown, status: number): unknown {
-  if (status === 0 && error && typeof error === 'object') {
-    const message = (error as { message?: unknown }).message;
-    if (
-      typeof message === 'string' &&
-      /^(?:FetchError|TypeError):/i.test(message) &&
-      /(?:fetch|load failed|network)/i.test(message)
-    ) {
-      return {
-        cause: { cause: error, message, name: 'TypeError' },
-        status,
-      };
-    }
-  }
-  return { cause: error, status };
-}
-
 function isAbortOrAccountGenerationError(error: unknown): boolean {
   if (error === ACCOUNT_GENERATION_CHANGED) return true;
   if (!error || typeof error !== 'object') return false;
@@ -119,7 +106,7 @@ async function loadServerCompletions(
           .gte('completed_date', lookbackISO)
           .retry(false)
           .abortSignal(signal);
-        if (response.error) throw supabaseFailure(response.error, response.status);
+        if (response.error) throw supabaseRequestFailure(response.error, response.status);
         return response.data ?? [];
       },
     );
@@ -155,7 +142,7 @@ async function loadServerLongestStreak(lease: AccountGenerationLease): Promise<n
           .retry(false)
           .abortSignal(signal)
           .maybeSingle();
-        if (response.error) throw supabaseFailure(response.error, response.status);
+        if (response.error) throw supabaseRequestFailure(response.error, response.status);
         return response.data;
       },
     );

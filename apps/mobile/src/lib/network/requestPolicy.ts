@@ -10,11 +10,18 @@ export const REQUEST_ENDPOINTS = [
   'catalog_lookup',
   'catalog_report',
   'catalog_search',
+  'commerce_links',
+  'consent_ledger',
   'consent_withdrawal',
   'data_export',
+  'entitlement_server',
+  'onboarding_status',
+  'profile_server',
   'progress_completions',
   'progress_longest_streak',
   'subscription_grants',
+  'trend_consent',
+  'trend_monk_band',
 ] as const;
 
 export type RequestEndpoint = (typeof REQUEST_ENDPOINTS)[number];
@@ -250,6 +257,29 @@ function isAbortError(error: unknown): boolean {
   const names = errorFields(error, 'name');
   const codes = errorFields(error, 'code').map((code) => code.toUpperCase());
   return names.includes('AbortError') || codes.includes('ABORT_ERR');
+}
+
+/** Preserve HTTP status and transport shape without retaining private request
+ * inputs in the public error. PostgREST reports some offline failures as a
+ * status-zero wrapper whose message embeds the underlying TypeError. */
+export function supabaseRequestFailure(
+  error: unknown,
+  status: number | undefined,
+): Readonly<{ cause: unknown; status?: number }> {
+  if (status === 0 && error && typeof error === 'object') {
+    const message = (error as { message?: unknown }).message;
+    if (
+      typeof message === 'string' &&
+      /^(?:FetchError|TypeError):/i.test(message) &&
+      /(?:fetch|load failed|network)/i.test(message)
+    ) {
+      return Object.freeze({
+        cause: Object.freeze({ cause: error, message, name: 'TypeError' }),
+        status,
+      });
+    }
+  }
+  return Object.freeze(status === undefined ? { cause: error } : { cause: error, status });
 }
 
 function statusClassForStatus(status: number | null): RequestStatusClass {
