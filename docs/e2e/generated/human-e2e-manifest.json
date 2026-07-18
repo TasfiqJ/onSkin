@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-18T15:51:25.642Z",
-  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
-  "evidenceDate": "2026-07-15",
+  "generatedAt": "2026-07-18T20:59:44.866Z",
+  "gitSha": "495e646a98fb8e177e8d4f7437abab38436f9bfb",
+  "evidenceDate": "2026-07-18",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -656,6 +656,30 @@
       "evidenceSha256": "d3fc57f344cb407b85aae0ed9c0b66206ce10c0d212710e902852b41004e7a3d"
     },
     {
+      "id": "cat04-catalog-recovery-supported-phone",
+      "title": "CAT04 catalog search, scan, report, and recovery Expo-web pass",
+      "kind": "cat04-catalog-recovery",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current",
+      "evidence": "summary.json",
+      "requiredFiles": [
+        "report.md"
+      ],
+      "expected": "Fifteen deterministic catalog search, barcode, permission, reporting, manual-entry, offline, and recovery scenarios plus six consent bootstraps pass exactly once at 375 x 667, 390 x 844, and 430 x 932 with tracked result and screenshot provenance; native camera, physical-iPhone, restart-to-ready, staging, accessibility, legal, and App Store gates remain separate.",
+      "status": "pass",
+      "detail": "45 scenario executions and 18 explicit-consent bootstraps passed exactly once across the three supported Expo-web phone viewports with clean browser logs and tracked result, report, snapshot, and screenshot provenance.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "requirementFailures": [],
+      "folderExists": true,
+      "evidenceExists": true,
+      "evidenceTracked": true,
+      "fileCount": 365,
+      "bytes": 21795467,
+      "evidenceSha256": "621f026e881de97ae2beeed9ac08f2335abb6abfe1f9ed99da57102f9c154b78"
+    },
+    {
       "id": "progress-timelapse-supported-phone",
       "title": "390 x 844 local Progress time-lapse and reduced-motion pass",
       "kind": "summary-status",
@@ -1105,7 +1129,8 @@
     "Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence. Android-class, 360-wide, and sub-667-height folder names are retained resilience baselines, not Android release evidence; 320-wide browser sizes also remain resilience stress evidence unless tied to a supported physical iPhone.",
     "Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.",
     "The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance.",
-    "The health-consent withdrawal gate uses credential-free Expo web and placeholder Supabase configuration; it does not prove hosted cleanup, Storage deletion, worker scheduling, physical-iPhone lifecycle or accessibility behavior, professional legal approval, or App Store acceptance."
+    "The health-consent withdrawal gate uses credential-free Expo web and placeholder Supabase configuration; it does not prove hosted cleanup, Storage deletion, worker scheduling, physical-iPhone lifecycle or accessibility behavior, professional legal approval, or App Store acceptance.",
+    "The CAT04 catalog-recovery gate uses deterministic Expo web fixtures; it does not prove native camera hardware or permission sheets, a restart-to-ready offline worker cycle, hosted catalog/reporting behavior, physical-iPhone accessibility, professional legal approval, or App Store acceptance."
   ],
   "blockers": []
 }
