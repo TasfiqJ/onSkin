@@ -4,6 +4,10 @@ import {
   runAccountGenerationOperation,
 } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
@@ -239,20 +243,37 @@ async function flushCompletionsWithDiagnostics(
       }
       try {
         lease.assertCurrent();
-        const { error } = await supabase
-          .from('routine_completions')
-          .insert({
-            user_id: userId,
-            routine_id: rec.routineId,
-            step_id: rec.stepId,
-            completed_date: rec.completedDate,
-          })
-          .abortSignal(lease.signal);
+        await runRequestWithLease(
+          lease,
+          {
+            endpoint: 'completion_sync',
+            deadlineMs: 8_000,
+            idempotent: true,
+            maxAttempts: 2,
+            maxResponseBytes: 16 * 1024,
+          },
+          async ({ signal }) => {
+            const response = await supabase
+              .from('routine_completions')
+              .insert({
+                user_id: userId,
+                routine_id: rec.routineId,
+                step_id: rec.stepId,
+                completed_date: rec.completedDate,
+              })
+              .abortSignal(signal);
+            // The database uniqueness key is the durable operation identity.
+            // A response-lost retry that observes the existing row is success.
+            if (response.error?.code === '23505') return null;
+            if (response.error) {
+              throw supabaseRequestFailure(response.error, response.status);
+            }
+            return null;
+          },
+        );
         lease.assertCurrent();
-        if (!error || error.code === '23505') {
-          removeKeys.add(completionKey(rec));
-          flushed += 1; // landed, or already recorded (dedup)
-        }
+        removeKeys.add(completionKey(rec));
+        flushed += 1; // landed, or already recorded (dedup)
       } catch {
         lease.assertCurrent();
         // Network failure: leave the row in the latest queue for the next flush.

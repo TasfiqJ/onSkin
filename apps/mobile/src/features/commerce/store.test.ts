@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -133,6 +135,39 @@ describe('commerce consent store', () => {
       consented: true,
     });
     expect(mocks.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it('retries the same click token after a transient failure and accepts dedup receipt', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    mocks.abortSignal
+      .mockResolvedValueOnce({
+        error: { code: 'TEMPORARY_NETWORK_FAILURE', message: 'temporary server failure' },
+        status: 503,
+      })
+      .mockResolvedValueOnce({ error: { code: '23505' }, status: 409 });
+
+    await expect(recordClick(createOwnerQueryScope(), CLICK)).resolves.toBeUndefined();
+
+    expect(mocks.insert).toHaveBeenCalledTimes(2);
+    expect(mocks.insert.mock.calls[0]?.[0]).toEqual(mocks.insert.mock.calls[1]?.[0]);
+    vi.restoreAllMocks();
+  });
+
+  it('backs the click-token retry contract with an exact owner-scoped unique index', () => {
+    const migration = readFileSync(
+      fileURLToPath(
+        new URL(
+          '../../../../../supabase/migrations/20260718000044_commerce_click_event_idempotency.sql',
+          import.meta.url,
+        ),
+      ),
+      'utf8',
+    );
+
+    expect(migration).toContain('partition by user_id, click_token');
+    expect(migration).toContain('and ranked.duplicate_rank > 1');
+    expect(migration).toContain('create unique index commerce_click_events_user_token_uidx');
+    expect(migration).toContain('on public.commerce_click_events (user_id, click_token)');
   });
 
   it('does not attribute a delayed owner-A click after an A-to-B boundary starts', async () => {

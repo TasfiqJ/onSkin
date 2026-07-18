@@ -16,7 +16,12 @@ import type { NewShelfProduct, ShelfProduct } from './store';
 
 const mocks = vi.hoisted(() => {
   const upsertAbortSignal = vi.fn(async () => ({ error: null }));
-  const deleteAbortSignal = vi.fn(async () => ({ error: null }));
+  const deleteAbortSignal = vi.fn<
+    (signal: AbortSignal) => Promise<{
+      error: { code: string; message?: string } | null;
+      status?: number;
+    }>
+  >(async () => ({ error: null }));
   const upsert = vi.fn(() => ({ abortSignal: upsertAbortSignal }));
   const eqUser = vi.fn(() => ({ abortSignal: deleteAbortSignal }));
   const eqId = vi.fn(() => ({ eq: eqUser }));
@@ -222,6 +227,23 @@ describe('shelf owner-bound mirrors', () => {
 
     expect(mocks.eqUser).toHaveBeenCalledWith('user_id', 'owner-a');
     expect(mocks.deleteAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it('retries only the same idempotent owner-scoped delete after a transient failure', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    mocks.deleteAbortSignal
+      .mockResolvedValueOnce({
+        error: { code: 'TEMPORARY_NETWORK_FAILURE', message: 'temporary server failure' },
+        status: 503,
+      })
+      .mockResolvedValueOnce({ error: null, status: 204 });
+
+    await mirrorShelfDeleteForOwner(createOwnerQueryScope(), PRODUCT.id);
+
+    expect(mocks.remove).toHaveBeenCalledTimes(2);
+    expect(mocks.eqId).toHaveBeenNthCalledWith(1, 'id', PRODUCT.id);
+    expect(mocks.eqId).toHaveBeenNthCalledWith(2, 'id', PRODUCT.id);
+    vi.restoreAllMocks();
   });
 
   it('serializes two mirrors for the same product so an older upsert cannot finish last', async () => {

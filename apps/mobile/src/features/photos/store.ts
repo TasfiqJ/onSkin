@@ -11,6 +11,10 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
+import {
   cleanupPlaintextStagingOperation,
   lookupPlaintextStaging,
 } from '@/lib/storage/plaintextStaging';
@@ -1071,12 +1075,28 @@ export async function removePhoto(id: string): Promise<PhotoMutationCommit<void>
         const owner = await captureAuthenticatedAccountOwner(lease);
         if (owner) {
           lease.assertCurrent();
-          await supabase
-            .from('photos')
-            .delete()
-            .eq('id', id)
-            .eq('user_id', owner.userId)
-            .abortSignal(lease.signal);
+          await runRequestWithLease(
+            lease,
+            {
+              endpoint: 'photo_delete_mirror',
+              deadlineMs: 8_000,
+              idempotent: true,
+              maxAttempts: 2,
+              maxResponseBytes: 16 * 1024,
+            },
+            async ({ signal }) => {
+              const response = await supabase
+                .from('photos')
+                .delete()
+                .eq('id', id)
+                .eq('user_id', owner.userId)
+                .abortSignal(signal);
+              if (response.error) {
+                throw supabaseRequestFailure(response.error, response.status);
+              }
+              return null;
+            },
+          );
           lease.assertCurrent();
         }
       } catch {

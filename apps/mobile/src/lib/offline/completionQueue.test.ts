@@ -31,7 +31,8 @@ const mocks = vi.hoisted(() => ({
   insertSignals: [] as AbortSignal[],
   insertGate: null as Promise<void> | null,
   onInsert: null as (() => void) | null,
-  insertError: null as { code: string } | null,
+  insertError: null as { code: string; message?: string } | null,
+  insertStatus: 201,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -79,6 +80,8 @@ vi.mock('@/lib/supabase/client', () => ({
         abortSignal: vi.fn(async (signal: AbortSignal) => {
           mocks.insertCalls.push(payload);
           mocks.insertSignals.push(signal);
+          const error = mocks.insertError;
+          const status = mocks.insertStatus;
           mocks.onInsert?.();
           if (mocks.insertGate) {
             await new Promise<void>((resolve, reject) => {
@@ -90,7 +93,7 @@ vi.mock('@/lib/supabase/client', () => ({
               }, reject);
             });
           }
-          return { error: mocks.insertError };
+          return { error, status };
         }),
       })),
     })),
@@ -138,6 +141,7 @@ describe('offline completion queue (docs/01 §6)', () => {
     mocks.insertGate = null;
     mocks.onInsert = null;
     mocks.insertError = null;
+    mocks.insertStatus = 201;
     resetCompletionSyncDiagnosticsForTests();
     vi.clearAllMocks();
   });
@@ -370,6 +374,36 @@ describe('offline completion queue (docs/01 §6)', () => {
     expect(mocks.storage.get(KEY)).toBe(original);
     expect(mocks.writes).toBe(0);
     expect(readCompletionSyncDiagnostics()).toMatchObject({ result: 'pending' });
+  });
+
+  it('retries one transient insert and treats the durable uniqueness receipt as success', async () => {
+    const original = JSON.stringify({ version: 1, items: [base] });
+    mocks.storage.set(KEY, original);
+    mocks.currentUserId = 'u1';
+    mocks.insertError = {
+      code: 'TEMPORARY_NETWORK_FAILURE',
+      message: 'temporary server failure',
+    };
+    mocks.insertStatus = 503;
+    let attempts = 0;
+    mocks.onInsert = () => {
+      attempts += 1;
+      if (attempts === 1) {
+        mocks.insertError = { code: '23505' };
+        mocks.insertStatus = 409;
+      }
+    };
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    await expect(flushCompletions(new Date(2026, 5, 25, 9))).resolves.toEqual({
+      flushed: 1,
+      remaining: 0,
+    });
+
+    expect(mocks.insertCalls).toHaveLength(2);
+    expect(storedItems()).toEqual([]);
+    expect(readCompletionSyncDiagnostics()).toMatchObject({ result: 'synced' });
+    vi.restoreAllMocks();
   });
 
   it('records only a content-free sync result and timestamp', async () => {

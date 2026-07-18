@@ -860,6 +860,26 @@ describe('photo local store journal', () => {
     expect(mocks.deletePhotoAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
   });
 
+  it('retries the same commutative server delete after a transient failure', async () => {
+    const id = uuid(1);
+    seedSettled([storedPhoto(id)]);
+    mocks.finalFiles.add(photoUri(id));
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    mocks.deletePhotoAbortSignal
+      .mockResolvedValueOnce({
+        error: { code: 'TEMPORARY_NETWORK_FAILURE', message: 'temporary server failure' },
+        status: 503,
+      })
+      .mockResolvedValueOnce({ error: null, status: 204 });
+
+    await removePhoto(id);
+
+    expect(mocks.deletePhoto).toHaveBeenCalledTimes(2);
+    expect(mocks.eqPhotoId).toHaveBeenNthCalledWith(1, 'id', id);
+    expect(mocks.eqPhotoId).toHaveBeenNthCalledWith(2, 'id', id);
+    vi.restoreAllMocks();
+  });
+
   it('fails before destructive authority for an unsafe legacy ID', async () => {
     const unsafeId = 'photo/../other';
     const raw = JSON.stringify([

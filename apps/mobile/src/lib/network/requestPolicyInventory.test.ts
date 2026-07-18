@@ -40,21 +40,25 @@ const READ_ONLY_ENDPOINTS_BY_FILE = {
   'lib/consent/consent.ts': ['consent_ledger'],
 } as const;
 
-/** These direct mutations already carry owner abort fencing, but their exact
- * deadline/retry semantics remain coupled to the transactional-outbox work.
- * Freeze the list so a new bypass cannot appear silently. */
+const POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE = {
+  'features/commerce/store.ts': ['commerce_click_event'],
+  'features/photos/store.ts': ['photo_delete_mirror'],
+  'features/shelf/mutations.ts': ['shelf_delete_mirror'],
+  'lib/offline/completionQueue.ts': ['completion_sync'],
+} as const;
+
+/** These direct mutations already carry owner abort fencing, but at least one
+ * operation in each file lacks the exact identity/order contract required for
+ * a safe timeout race or retry. Freeze the list so a bypass cannot grow. */
 const DEFERRED_MUTATION_POLICY_FILES = [
-  'features/commerce/store.ts',
   'features/intelligence/conflictChoiceMirror.ts',
   'features/notifications/deliver.ts',
   'features/notifications/store.ts',
   'features/onboarding/OnboardingContext.tsx',
-  'features/photos/store.ts',
   'features/recommendations/store.ts',
   'features/shelf/mutations.ts',
   'features/shelf/scanLog.ts',
   'lib/consent/consent.ts',
-  'lib/offline/completionQueue.ts',
 ] as const;
 
 describe('production request-policy inventory', () => {
@@ -130,7 +134,25 @@ describe('production request-policy inventory', () => {
       .map(normalized)
       .sort();
 
-    expect(mutationFiles).toEqual([...DEFERRED_MUTATION_POLICY_FILES].sort());
+    const expectedMutationFiles = new Set([
+      ...Object.keys(POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE),
+      ...DEFERRED_MUTATION_POLICY_FILES,
+    ]);
+    expect(mutationFiles).toEqual([...expectedMutationFiles].sort());
+
+    for (const [relativePath, endpoints] of Object.entries(
+      POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE,
+    )) {
+      const text = source(join(SRC_DIR, relativePath));
+      expect(text, relativePath).toContain('runRequestWithLease');
+      expect(text, relativePath).toContain('idempotent: true');
+      expect(text, relativePath).toContain('maxAttempts: 2');
+      expect(text, relativePath).toContain('maxResponseBytes:');
+      for (const endpoint of endpoints) {
+        expect(text, relativePath).toContain(`endpoint: '${endpoint}'`);
+      }
+    }
+
     for (const relativePath of DEFERRED_MUTATION_POLICY_FILES) {
       const text = source(join(SRC_DIR, relativePath));
       expect(text, relativePath).toMatch(/run(?:AccountGeneration|OwnerQuery)Operation/);
@@ -140,7 +162,7 @@ describe('production request-policy inventory', () => {
 
   it('keeps endpoint names fixed, unique, and content-free', () => {
     expect(new Set(REQUEST_ENDPOINTS).size).toBe(REQUEST_ENDPOINTS.length);
-    expect(REQUEST_ENDPOINTS).toHaveLength(17);
+    expect(REQUEST_ENDPOINTS).toHaveLength(21);
     for (const endpoint of REQUEST_ENDPOINTS) {
       expect(endpoint).toMatch(/^[a-z][a-z0-9_]{2,63}$/);
       expect(endpoint).not.toMatch(/token|user|account_id|barcode|product|string|query|search_term/);

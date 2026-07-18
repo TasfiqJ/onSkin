@@ -5,6 +5,10 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
 import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { supabase } from '@/lib/supabase/client';
 import {
@@ -52,16 +56,35 @@ export async function runCommerceClickOperation<T>(
       const owner = await captureAuthenticatedAccountOwner(lease);
       if (owner) {
         lease.assertCurrent();
-        await supabase
-          .from('commerce_click_events')
-          .insert({
-            user_id: owner.userId,
-            click_token: payload.clickToken,
-            product_type: payload.productType,
-            source: payload.source,
-            consented: payload.consented,
-          })
-          .abortSignal(lease.signal);
+        await runRequestWithLease(
+          lease,
+          {
+            endpoint: 'commerce_click_event',
+            deadlineMs: 8_000,
+            idempotent: true,
+            maxAttempts: 2,
+            maxResponseBytes: 16 * 1024,
+          },
+          async ({ signal }) => {
+            const response = await supabase
+              .from('commerce_click_events')
+              .insert({
+                user_id: owner.userId,
+                click_token: payload.clickToken,
+                product_type: payload.productType,
+                source: payload.source,
+                consented: payload.consented,
+              })
+              .abortSignal(signal);
+            // The owner/token unique index turns a response-lost retry into an
+            // exact replay of the same content-free event.
+            if (response.error?.code === '23505') return null;
+            if (response.error) {
+              throw supabaseRequestFailure(response.error, response.status);
+            }
+            return null;
+          },
+        );
         lease.assertCurrent();
       }
     } catch (error) {

@@ -7,6 +7,10 @@ import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccoun
 import { isSupabaseConfigured } from '@/lib/env';
 import { devWarn } from '@/lib/observability/safeLog';
 import {
+  runRequestWithLease,
+  supabaseRequestFailure,
+} from '@/lib/network/requestPolicy';
+import {
   isOwnerQueryScopeCurrent,
   ownerQueryPrefixes,
   runOwnerQueryOperation,
@@ -133,14 +137,29 @@ async function performShelfMirrorDeleteForOwner(
       const owner = await captureAuthenticatedAccountOwner(lease);
       if (!owner) return;
       lease.assertCurrent();
-      const { error } = await supabase
-        .from('user_products')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', owner.userId)
-        .abortSignal(lease.signal);
+      await runRequestWithLease(
+        lease,
+        {
+          endpoint: 'shelf_delete_mirror',
+          deadlineMs: 8_000,
+          idempotent: true,
+          maxAttempts: 2,
+          maxResponseBytes: 16 * 1024,
+        },
+        async ({ signal }) => {
+          const response = await supabase
+            .from('user_products')
+            .delete()
+            .eq('id', id)
+            .eq('user_id', owner.userId)
+            .abortSignal(signal);
+          if (response.error) {
+            throw supabaseRequestFailure(response.error, response.status);
+          }
+          return null;
+        },
+      );
       lease.assertCurrent();
-      if (error) throw new Error('SUPABASE_USER_PRODUCT_DELETE_FAILED');
     });
   } catch (error) {
     devWarn('shelf_mirror_delete_failed', error);
