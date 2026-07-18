@@ -21,6 +21,7 @@ import {
   decodeOutboxEnvelope,
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
+  enqueueNotificationDeliveryOutboxOperation,
   enqueueNotificationPreferencesOutboxOperation,
   enqueueRecommendationPreferencesOutboxOperation,
   enqueueShelfOutboxOperation,
@@ -148,15 +149,18 @@ function flushResult(
   dead: number,
   notificationPreferences = 0,
   recommendationPreferences = 0,
+  notificationDeliveries = 0,
 ) {
   return {
     leased,
     flushed,
     dead,
     flushedByEntity: {
+      notificationDeliveries,
       notificationPreferences,
       recommendationPreferences,
-      shelfProducts: flushed - notificationPreferences - recommendationPreferences,
+      shelfProducts:
+        flushed - notificationDeliveries - notificationPreferences - recommendationPreferences,
     },
   };
 }
@@ -217,7 +221,7 @@ describe('transactional outbox runtime', () => {
   it('strictly reports corrupt, future, and unavailable reads without changing persisted bytes', async () => {
     for (const [raw, status] of [
       ['{not-json', 'corrupt'],
-      [JSON.stringify({ version: 3, rows: [], revisions: [] }), 'unsupported_version'],
+      [JSON.stringify({ version: 4, rows: [], revisions: [] }), 'unsupported_version'],
     ] as const) {
       mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
       await expect(readOutbox()).resolves.toEqual({ status, envelope: null });
@@ -558,6 +562,37 @@ describe('transactional outbox runtime', () => {
         }),
       ],
     });
+  });
+
+  it('dispatches one content-free notification delivery event without coalescing it', async () => {
+    const eventId = uuid(905);
+    const operationId = uuid(906);
+    const envelope = enqueueNotificationDeliveryOutboxOperation(emptyOutboxEnvelope(), {
+      operationId,
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: eventId,
+      payload: { kind: 'replenishment', tier: 'behavioural', sent_at: NOW },
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0, 0, 0, 1));
+    expect(mocks.rpc).toHaveBeenCalledOnce();
+    expect(mocks.rpc).toHaveBeenCalledWith('apply_notification_delivery_outbox_batch', {
+      p_operations: [
+        {
+          operation_id: operationId,
+          entity_type: 'notification_delivery',
+          entity_id: eventId,
+          operation_kind: 'upsert',
+          payload: { kind: 'replenishment', tier: 'behavioural', sent_at: NOW },
+          client_revision: 1,
+          idempotency_key: `notification_delivery:${operationId}:replenishment:${NOW}`,
+        },
+      ],
+    });
+    expect(storedEnvelope().rows).toEqual([]);
   });
 
   it('retries only the current owner recommendation dead row through the runtime API', async () => {

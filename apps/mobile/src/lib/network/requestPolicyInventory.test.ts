@@ -48,7 +48,6 @@ const POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE = {
  * a safe timeout race or retry. Freeze the list so a bypass cannot grow. */
 const DEFERRED_MUTATION_POLICY_FILES = [
   'features/intelligence/conflictChoiceMirror.ts',
-  'features/notifications/deliver.ts',
   'features/onboarding/OnboardingContext.tsx',
   'features/shelf/scanLog.ts',
   'lib/consent/consent.ts',

@@ -49,6 +49,7 @@ export type OutboxFlushResult = Readonly<{
   flushed: number;
   dead: number;
   flushedByEntity: Readonly<{
+    notificationDeliveries: number;
     notificationPreferences: number;
     recommendationPreferences: number;
     shelfProducts: number;
@@ -129,6 +130,7 @@ function emptyFlushResult(): OutboxFlushResult {
     flushed: 0,
     dead: 0,
     flushedByEntity: Object.freeze({
+      notificationDeliveries: 0,
       notificationPreferences: 0,
       recommendationPreferences: 0,
       shelfProducts: 0,
@@ -142,6 +144,9 @@ function mergeFlushResults(current: OutboxFlushResult, next: OutboxFlushResult):
     flushed: current.flushed + next.flushed,
     dead: next.dead,
     flushedByEntity: Object.freeze({
+      notificationDeliveries:
+        current.flushedByEntity.notificationDeliveries +
+        next.flushedByEntity.notificationDeliveries,
       notificationPreferences:
         current.flushedByEntity.notificationPreferences +
         next.flushedByEntity.notificationPreferences,
@@ -301,9 +306,11 @@ async function sendOutboxEntityBatch(
   const rpc =
     entityType === 'shelf_product'
       ? 'apply_shelf_outbox_batch'
-      : entityType === 'notification_preferences'
-        ? 'apply_notification_preferences_outbox_batch'
-        : 'apply_recommendation_preferences_outbox_batch';
+      : entityType === 'notification_delivery'
+        ? 'apply_notification_delivery_outbox_batch'
+        : entityType === 'notification_preferences'
+          ? 'apply_notification_preferences_outbox_batch'
+          : 'apply_recommendation_preferences_outbox_batch';
   const data = await runRequestWithLease(
     lease,
     {
@@ -337,6 +344,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
 
     let totalLeased = 0;
     let totalFlushed = 0;
+    let notificationDeliveriesFlushed = 0;
     let notificationPreferencesFlushed = 0;
     let recommendationPreferencesFlushed = 0;
     let shelfProductsFlushed = 0;
@@ -362,6 +370,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       let requestFailure: RequestPolicyError | null = null;
       for (const entityType of [
         'shelf_product',
+        'notification_delivery',
         'notification_preferences',
         'recommendation_preferences',
       ] as const) {
@@ -404,6 +413,9 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       shelfProductsFlushed += successfulRows.filter(
         (row) => row.entityType === 'shelf_product',
       ).length;
+      notificationDeliveriesFlushed += successfulRows.filter(
+        (row) => row.entityType === 'notification_delivery',
+      ).length;
       notificationPreferencesFlushed += successfulRows.filter(
         (row) => row.entityType === 'notification_preferences',
       ).length;
@@ -423,6 +435,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
           ? outboxCounts(state.envelope).dead
           : 0,
       flushedByEntity: Object.freeze({
+        notificationDeliveries: notificationDeliveriesFlushed,
         notificationPreferences: notificationPreferencesFlushed,
         recommendationPreferences: recommendationPreferencesFlushed,
         shelfProducts: shelfProductsFlushed,

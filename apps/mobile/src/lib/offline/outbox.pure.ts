@@ -1,5 +1,5 @@
 export const OUTBOX_STORAGE_KEY = 'onskin.outbox.v1';
-export const OUTBOX_SCHEMA_VERSION = 2 as const;
+export const OUTBOX_SCHEMA_VERSION = 3 as const;
 export const OUTBOX_ROW_SCHEMA_VERSION = 1 as const;
 export const MAX_OUTBOX_ROWS = 512;
 export const MAX_OUTBOX_REVISIONS = 1_024;
@@ -10,6 +10,7 @@ export const OUTBOX_LEASE_MS = 30_000;
 export const OUTBOX_BASE_RETRY_MS = 1_000;
 export const OUTBOX_MAX_RETRY_MS = 5 * 60_000;
 export const NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE = 'notification_preferences';
+export const NOTIFICATION_DELIVERY_ENTITY_NAMESPACE = 'notification_delivery';
 export const RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE = 'recommendation_preferences';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -19,6 +20,7 @@ const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
 
 export type OutboxEntityType =
+  | 'notification_delivery'
   | 'notification_preferences'
   | 'recommendation_preferences'
   | 'shelf_product';
@@ -238,6 +240,31 @@ function validRecommendationPreferencesPayload(value: unknown): value is OutboxP
   );
 }
 
+function validNotificationDeliveryPayload(value: unknown): value is OutboxPayload {
+  if (!isRecord(value) || !hasExactKeys(value, ['kind', 'tier', 'sent_at'])) return false;
+  const tierByKind: Readonly<Record<string, string>> = Object.freeze({
+    am_reminder: 'utility',
+    pm_step: 'utility',
+    capture: 'behavioural',
+    replenishment: 'behavioural',
+    rampup: 'behavioural',
+    deescalation: 'behavioural',
+    winback: 'promotional',
+  });
+  return (
+    typeof value.kind === 'string' &&
+    typeof value.tier === 'string' &&
+    tierByKind[value.kind] === value.tier &&
+    canonicalIso(value.sent_at) !== null
+  );
+}
+
+function notificationDeliveryIdempotencyKey(operationId: unknown, payload: unknown): string | null {
+  if (typeof operationId !== 'string' || !UUID.test(operationId)) return null;
+  if (!validNotificationDeliveryPayload(payload)) return null;
+  return `${NOTIFICATION_DELIVERY_ENTITY_NAMESPACE}:${operationId}:${String(payload.kind)}:${String(payload.sent_at)}`;
+}
+
 function entityIdentity(value: Pick<OutboxRow, 'entityType' | 'entityId'>): string {
   return `${value.entityType}:${value.entityId}`;
 }
@@ -311,6 +338,7 @@ function decodeRow(value: unknown): OutboxRow {
     !Number.isSafeInteger(value.ownerGeneration) ||
     Number(value.ownerGeneration) < 0 ||
     (entityType !== 'shelf_product' &&
+      entityType !== 'notification_delivery' &&
       entityType !== 'notification_preferences' &&
       entityType !== 'recommendation_preferences') ||
     typeof entityId !== 'string' ||
@@ -322,9 +350,11 @@ function decodeRow(value: unknown): OutboxRow {
     value.idempotencyKey !==
       (entityType === 'notification_preferences'
         ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
-        : entityType === 'recommendation_preferences'
-          ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
-          : `${entityType}:${entityId}:${value.clientRevision}`) ||
+        : entityType === 'notification_delivery'
+          ? notificationDeliveryIdempotencyKey(value.operationId, value.payload)
+          : entityType === 'recommendation_preferences'
+            ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
+            : `${entityType}:${entityId}:${value.clientRevision}`) ||
     value.dependencyGroupId !== `${entityType}:${entityId}` ||
     !canonicalIso(value.enqueuedAt) ||
     !Number.isSafeInteger(value.attemptCount) ||
@@ -350,6 +380,11 @@ function decodeRow(value: unknown): OutboxRow {
     (entityType === 'notification_preferences' &&
       (operationKind !== 'upsert' ||
         !validNotificationPreferencesPayload(value.payload) ||
+        value.tombstone !== false)) ||
+    (entityType === 'notification_delivery' &&
+      (operationKind !== 'upsert' ||
+        !validNotificationDeliveryPayload(value.payload) ||
+        value.clientRevision !== 1 ||
         value.tombstone !== false)) ||
     (entityType === 'recommendation_preferences' &&
       (operationKind !== 'upsert' ||
@@ -391,6 +426,7 @@ function decodeRevision(value: unknown): OutboxRevision {
     typeof value.ownerHash !== 'string' ||
     !SHA256_HEX.test(value.ownerHash) ||
     (value.entityType !== 'shelf_product' &&
+      value.entityType !== 'notification_delivery' &&
       value.entityType !== 'notification_preferences' &&
       value.entityType !== 'recommendation_preferences') ||
     typeof value.entityId !== 'string' ||
@@ -413,6 +449,7 @@ function decodeLegacyRevision(value: unknown, rows: readonly OutboxRow[]): Outbo
     !isRecord(value) ||
     !hasExactKeys(value, ['entityType', 'entityId', 'revision']) ||
     (value.entityType !== 'shelf_product' &&
+      value.entityType !== 'notification_delivery' &&
       value.entityType !== 'notification_preferences' &&
       value.entityType !== 'recommendation_preferences') ||
     typeof value.entityId !== 'string' ||
@@ -460,7 +497,7 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     fail(OUTBOX_UNSUPPORTED_VERSION);
   }
   if (
-    (parsed.version !== 1 && parsed.version !== OUTBOX_SCHEMA_VERSION) ||
+    (parsed.version !== 1 && parsed.version !== 2 && parsed.version !== OUTBOX_SCHEMA_VERSION) ||
     !hasExactKeys(parsed, ['version', 'rows', 'revisions']) ||
     !Array.isArray(parsed.rows) ||
     parsed.rows.length > MAX_OUTBOX_ROWS ||
@@ -562,6 +599,24 @@ export function enqueueRecommendationPreferencesOutboxOperation(
   });
 }
 
+export function enqueueNotificationDeliveryOutboxOperation(
+  envelope: OutboxEnvelope,
+  input: Readonly<{
+    operationId: string;
+    ownerHash: string;
+    ownerGeneration: number;
+    entityId: string;
+    payload: OutboxPayload;
+    enqueuedAt: string;
+  }>,
+): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
+  return enqueueOutboxOperation(envelope, {
+    ...input,
+    entityType: 'notification_delivery',
+    operationKind: 'upsert',
+  });
+}
+
 function enqueueOutboxOperation(
   envelope: OutboxEnvelope,
   input: Readonly<{
@@ -587,6 +642,7 @@ function enqueueOutboxOperation(
       )
       .map((revision) => revision.revision),
   );
+  if (input.entityType === 'notification_delivery' && previousRevision !== 0) fail();
   const clientRevision = previousRevision + 1;
   const row = decodeRow({
     schemaVersion: OUTBOX_ROW_SCHEMA_VERSION,
@@ -601,9 +657,11 @@ function enqueueOutboxOperation(
     idempotencyKey:
       input.entityType === 'notification_preferences'
         ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
-        : input.entityType === 'recommendation_preferences'
-          ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
-          : `${dependencyIdentity}:${clientRevision}`,
+        : input.entityType === 'notification_delivery'
+          ? (notificationDeliveryIdempotencyKey(input.operationId, input.payload) ?? '')
+          : input.entityType === 'recommendation_preferences'
+            ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
+            : `${dependencyIdentity}:${clientRevision}`,
     dependencyGroupId: dependencyIdentity,
     enqueuedAt: input.enqueuedAt,
     attemptCount: 0,
@@ -813,7 +871,20 @@ export function settleOutboxLease(
       },
     ];
   });
-  return Object.freeze({ ...envelope, rows: Object.freeze(sortRows(rows)) });
+  const revisions = envelope.revisions.filter((revision) => {
+    if (revision.entityType !== 'notification_delivery') return true;
+    return rows.some(
+      (row) =>
+        row.entityType === revision.entityType &&
+        row.entityId === revision.entityId &&
+        (revision.ownerHash === null || row.ownerHash === revision.ownerHash),
+    );
+  });
+  return Object.freeze({
+    ...envelope,
+    rows: Object.freeze(sortRows(rows)),
+    revisions: Object.freeze(revisions),
+  });
 }
 
 function assertOwnerHash(ownerHash: string): void {
@@ -823,6 +894,7 @@ function assertOwnerHash(ownerHash: string): void {
 function assertEntityType(entityType: OutboxEntityType): void {
   if (
     entityType !== 'shelf_product' &&
+    entityType !== 'notification_delivery' &&
     entityType !== 'notification_preferences' &&
     entityType !== 'recommendation_preferences'
   ) {

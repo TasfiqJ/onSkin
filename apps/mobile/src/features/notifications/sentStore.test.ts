@@ -2,12 +2,15 @@ import type { NotificationKind, NotificationTier } from '@onskin/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
+import { OUTBOX_STORAGE_KEY, decodeOutboxEnvelope } from '@/lib/offline/outbox.pure';
 
 import {
+  confirmSentLocalDelivery,
   MAX_SENT_LEDGER_CHARS,
   MAX_SENT_LEDGER_RECORDS,
   readSentLedger,
   recordSentLocal,
+  reserveSentLocal,
   SENT_LEDGER_INVALID,
   SENT_LEDGER_UNSUPPORTED_VERSION,
   SENT_LEDGER_WRITE_UNCERTAIN,
@@ -16,6 +19,7 @@ import {
 } from './sentStore';
 
 const mocks = vi.hoisted(() => ({
+  hashOutboxOwner: vi.fn(async () => 'a'.repeat(64)),
   readFailure: null as Error | null,
   readOverride: null as PrivateKVReadResult | null,
   storage: new Map<string, string>(),
@@ -23,6 +27,12 @@ const mocks = vi.hoisted(() => ({
   updateFailure: null as Error | null,
   updateFailureAfterCommit: null as Error | null,
   updateCalls: 0,
+  transactionFailureAfterCommit: null as Error | null,
+  transactionFailureBeforeCommit: null as Error | null,
+}));
+
+vi.mock('@/lib/offline/outboxIdentity', () => ({
+  hashOutboxOwner: mocks.hashOutboxOwner,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -57,12 +67,29 @@ vi.mock('@/lib/storage/privateKV', () => ({
       }
     },
   ),
+  updatePrivateItemsTransactionally: vi.fn(
+    async (
+      keys: readonly string[],
+      updater: (current: ReadonlyMap<string, string | null>) => ReadonlyMap<string, string | null>,
+    ) => {
+      const current = new Map(keys.map((key) => [key, mocks.storage.get(key) ?? null]));
+      const next = updater(current);
+      if (mocks.transactionFailureBeforeCommit) throw mocks.transactionFailureBeforeCommit;
+      for (const [key, value] of next) {
+        if (value === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, value);
+      }
+      if (mocks.transactionFailureAfterCommit) throw mocks.transactionFailureAfterCommit;
+    },
+  ),
 }));
 
 const KEY = 'onskin.notiflog.v1';
 const NOW = Date.parse('2026-07-07T12:00:00.000Z');
 
-function v1(records: SentRecord[]): string {
+type LegacySentRecord = Omit<SentRecord, 'eventId' | 'state'>;
+
+function v1(records: LegacySentRecord[]): string {
   return JSON.stringify({ version: 1, records });
 }
 
@@ -70,15 +97,23 @@ function parseStoredRecords(): SentRecord[] {
   return (JSON.parse(mocks.storage.get(KEY) ?? '{}') as { records: SentRecord[] }).records;
 }
 
+function recordSummaries(records: readonly SentRecord[]): LegacySentRecord[] {
+  return records.map(({ kind, tier, at }) => ({ kind, tier, at }));
+}
+
 describe('notification sent ledger', () => {
   beforeEach(() => {
     mocks.readFailure = null;
     mocks.readOverride = null;
+    mocks.hashOutboxOwner.mockClear();
+    mocks.hashOutboxOwner.mockResolvedValue('a'.repeat(64));
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.updateFailure = null;
     mocks.updateFailureAfterCommit = null;
     mocks.updateCalls = 0;
+    mocks.transactionFailureAfterCommit = null;
+    mocks.transactionFailureBeforeCommit = null;
   });
 
   it('distinguishes an absent ledger from an available empty ledger', async () => {
@@ -124,15 +159,18 @@ describe('notification sent ledger', () => {
       ledger: { status: 'unsupported_version', records: null },
       count: { status: 'unsupported_version', count: null },
     },
-  ])('propagates the private five-state read result without inventing history', async (testCase) => {
-    const original = v1([{ kind: 'rampup', tier: 'behavioural', at: NOW }]);
-    mocks.storage.set(KEY, original);
-    mocks.readOverride = testCase.stored;
+  ])(
+    'propagates the private five-state read result without inventing history',
+    async (testCase) => {
+      const original = v1([{ kind: 'rampup', tier: 'behavioural', at: NOW }]);
+      mocks.storage.set(KEY, original);
+      mocks.readOverride = testCase.stored;
 
-    await expect(readSentLedger()).resolves.toEqual(testCase.ledger);
-    await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toEqual(testCase.count);
-    expect(mocks.storage.get(KEY)).toBe(original);
-  });
+      await expect(readSentLedger()).resolves.toEqual(testCase.ledger);
+      await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toEqual(testCase.count);
+      expect(mocks.storage.get(KEY)).toBe(original);
+    },
+  );
 
   it('maps an unexpected typed-read rejection to unavailable without changing bytes', async () => {
     const original = v1([{ kind: 'rampup', tier: 'behavioural', at: NOW }]);
@@ -155,7 +193,7 @@ describe('notification sent ledger', () => {
         { status: 'corrupt', count: null, reason: 'invalid_payload' },
       ],
       [
-        JSON.stringify({ version: 2, records: [] }),
+        JSON.stringify({ version: 3, records: [] }),
         { status: 'unsupported_version', records: null },
         { status: 'unsupported_version', count: null },
       ],
@@ -175,14 +213,15 @@ describe('notification sent ledger', () => {
     ]);
     mocks.storage.set(KEY, original);
 
-    await expect(readSentLedger()).resolves.toEqual({
-      status: 'available',
-      format: 'v0',
-      records: [
-        { kind: 'replenishment', tier: 'behavioural', at: NOW - 1_000 },
-        { kind: 'winback', tier: 'promotional', at: NOW - 2_000 },
-      ],
-    });
+    const result = await readSentLedger();
+    expect(result.status).toBe('available');
+    if (result.status !== 'available') throw new Error('expected available ledger');
+    expect(result.format).toBe('v0');
+    expect(recordSummaries(result.records)).toEqual([
+      { kind: 'replenishment', tier: 'behavioural', at: NOW - 1_000 },
+      { kind: 'winback', tier: 'promotional', at: NOW - 2_000 },
+    ]);
+    expect(result.records.every((record) => record.state === 'delivered')).toBe(true);
     await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toEqual({
       status: 'available',
       count: 1,
@@ -227,6 +266,32 @@ describe('notification sent ledger', () => {
     }
   });
 
+  it('requires unique UUID event identity and exact reserved/delivered state in v2', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000120';
+    const valid = {
+      eventId,
+      kind: 'rampup',
+      tier: 'behavioural',
+      at: NOW,
+      state: 'reserved',
+    };
+    for (const records of [
+      [{ ...valid, eventId: 'not-a-uuid' }],
+      [{ ...valid, state: 'unknown' }],
+      [valid, { ...valid }],
+      [{ ...valid, extra: true }],
+    ]) {
+      const raw = JSON.stringify({ version: 2, records });
+      mocks.storage.set(KEY, raw);
+      await expect(readSentLedger()).resolves.toEqual({
+        status: 'corrupt',
+        records: null,
+        reason: 'invalid_payload',
+      });
+      expect(mocks.storage.get(KEY)).toBe(raw);
+    }
+  });
+
   it('ignores future rows on a read and prunes them only during an explicit append', async () => {
     const original = v1([
       { kind: 'capture', tier: 'behavioural', at: NOW + 30 * 86_400_000 },
@@ -241,7 +306,7 @@ describe('notification sent ledger', () => {
     expect(mocks.storage.get(KEY)).toBe(original);
 
     await recordSentLocal('rampup', NOW);
-    expect(parseStoredRecords()).toEqual([
+    expect(recordSummaries(parseStoredRecords())).toEqual([
       { kind: 'replenishment', tier: 'behavioural', at: NOW - 1_000 },
       { kind: 'rampup', tier: 'behavioural', at: NOW },
     ]);
@@ -259,11 +324,21 @@ describe('notification sent ledger', () => {
     await recordSentLocal('replenishment', NOW);
 
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      version: 1,
-      records: [
-        { kind: 'rampup', tier: 'behavioural', at: NOW - 2 * 86_400_000 },
-        { kind: 'replenishment', tier: 'behavioural', at: NOW },
-      ],
+      version: 2,
+      records: expect.arrayContaining([
+        expect.objectContaining({
+          kind: 'rampup',
+          tier: 'behavioural',
+          at: NOW - 2 * 86_400_000,
+          state: 'delivered',
+        }),
+        expect.objectContaining({
+          kind: 'replenishment',
+          tier: 'behavioural',
+          at: NOW,
+          state: 'delivered',
+        }),
+      ]),
     });
   });
 
@@ -280,7 +355,12 @@ describe('notification sent ledger', () => {
     const records = parseStoredRecords();
     expect(records).toHaveLength(MAX_SENT_LEDGER_RECORDS);
     expect(records[0]?.at).toBe(NOW - (MAX_SENT_LEDGER_RECORDS - 1));
-    expect(records.at(-1)).toEqual({ kind: 'replenishment', tier: 'behavioural', at: NOW });
+    expect(records.at(-1)).toMatchObject({
+      kind: 'replenishment',
+      tier: 'behavioural',
+      at: NOW,
+      state: 'delivered',
+    });
   });
 
   it('rejects oversized record counts and payloads without repairing them', async () => {
@@ -316,7 +396,7 @@ describe('notification sent ledger', () => {
     const result = await readSentLedger();
     expect(result.status).toBe('available');
     if (result.status !== 'available') throw new Error('expected available sent ledger');
-    expect(result.format).toBe('v1');
+    expect(result.format).toBe('v2');
     expect(result.records).toHaveLength(100);
     expect(new Set(result.records.map((record) => record.at))).toHaveLength(100);
     await expect(sentThisWeekForTierLocal('behavioural', NOW + 100)).resolves.toEqual({
@@ -327,6 +407,174 @@ describe('notification sent ledger', () => {
       status: 'available',
       count: 25,
     });
+  });
+
+  it('counts reserved rows and transitions only the exact event after native acceptance', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000111';
+    await reserveSentLocal(eventId, 'replenishment', NOW);
+
+    await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toEqual({
+      status: 'available',
+      count: 1,
+    });
+    expect(parseStoredRecords()).toEqual([
+      {
+        eventId,
+        kind: 'replenishment',
+        tier: 'behavioural',
+        at: NOW,
+        state: 'reserved',
+      },
+    ]);
+
+    await expect(
+      confirmSentLocalDelivery({
+        eventId,
+        operationId: '00000000-0000-4000-8000-000000000211',
+        kind: 'replenishment',
+        at: NOW,
+      }),
+    ).resolves.toEqual({ changed: true, outboxQueued: false });
+    expect(parseStoredRecords()[0]).toMatchObject({ eventId, state: 'delivered' });
+  });
+
+  it('atomically confirms an authenticated delivery with one exact content-free outbox event', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000112';
+    const operationId = '00000000-0000-4000-8000-000000000212';
+    const owner = { ownerId: 'owner-a', ownerGeneration: 7, assertCurrent: vi.fn() };
+    await reserveSentLocal(eventId, 'winback', NOW);
+
+    await expect(
+      confirmSentLocalDelivery({ eventId, operationId, kind: 'winback', at: NOW, owner }),
+    ).resolves.toEqual({ changed: true, outboxQueued: true });
+
+    expect(parseStoredRecords()[0]).toMatchObject({ eventId, state: 'delivered' });
+    expect(decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows).toEqual([
+      expect.objectContaining({
+        operationId,
+        ownerHash: 'a'.repeat(64),
+        ownerGeneration: 7,
+        entityType: 'notification_delivery',
+        entityId: eventId,
+        clientRevision: 1,
+        idempotencyKey: `notification_delivery:${operationId}:winback:${new Date(NOW).toISOString()}`,
+        payload: {
+          kind: 'winback',
+          tier: 'promotional',
+          sent_at: new Date(NOW).toISOString(),
+        },
+      }),
+    ]);
+
+    const ledgerBefore = mocks.storage.get(KEY);
+    const outboxBefore = mocks.storage.get(OUTBOX_STORAGE_KEY);
+    await expect(
+      confirmSentLocalDelivery({
+        eventId,
+        operationId: '00000000-0000-4000-8000-000000000213',
+        kind: 'winback',
+        at: NOW,
+        owner,
+      }),
+    ).resolves.toEqual({ changed: false, outboxQueued: false });
+    expect(mocks.storage.get(KEY)).toBe(ledgerBefore);
+    expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(outboxBefore);
+  });
+
+  it('confirms an authenticated commit only when both transaction values match after response loss', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000113';
+    await reserveSentLocal(eventId, 'rampup', NOW);
+    mocks.transactionFailureAfterCommit = new Error('PRIVATE_TRANSACTION_RESULT_UNKNOWN');
+
+    await expect(
+      confirmSentLocalDelivery({
+        eventId,
+        operationId: '00000000-0000-4000-8000-000000000214',
+        kind: 'rampup',
+        at: NOW,
+        owner: { ownerId: 'owner-a', ownerGeneration: 7 },
+      }),
+    ).resolves.toEqual({ changed: true, outboxQueued: true });
+    expect(parseStoredRecords()[0]).toMatchObject({ state: 'delivered' });
+    expect(decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows).toHaveLength(
+      1,
+    );
+  });
+
+  it('rejects a stale owner before hashing or changing reserved/outbox bytes', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000114';
+    const stale = new Error('ACCOUNT_GENERATION_CHANGED');
+    const assertCurrent = vi.fn(() => {
+      throw stale;
+    });
+    await reserveSentLocal(eventId, 'rampup', NOW);
+    const ledgerBefore = mocks.storage.get(KEY);
+
+    await expect(
+      confirmSentLocalDelivery({
+        eventId,
+        operationId: '00000000-0000-4000-8000-000000000215',
+        kind: 'rampup',
+        at: NOW,
+        owner: { ownerId: 'owner-a', ownerGeneration: 7, assertCurrent },
+      }),
+    ).rejects.toBe(stale);
+
+    expect(mocks.hashOutboxOwner).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(ledgerBefore);
+    expect(parseStoredRecords()[0]).toMatchObject({ state: 'reserved' });
+    expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+  });
+
+  it('rechecks the owner inside the transaction before changing either key', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000115';
+    const stale = new Error('ACCOUNT_GENERATION_CHANGED');
+    const assertCurrent = vi
+      .fn()
+      .mockImplementationOnce(() => undefined)
+      .mockImplementationOnce(() => undefined)
+      .mockImplementationOnce(() => {
+        throw stale;
+      });
+    await reserveSentLocal(eventId, 'rampup', NOW);
+    const ledgerBefore = mocks.storage.get(KEY);
+
+    await expect(
+      confirmSentLocalDelivery({
+        eventId,
+        operationId: '00000000-0000-4000-8000-000000000216',
+        kind: 'rampup',
+        at: NOW,
+        owner: { ownerId: 'owner-a', ownerGeneration: 7, assertCurrent },
+      }),
+    ).rejects.toBe(stale);
+
+    expect(mocks.hashOutboxOwner).toHaveBeenCalledOnce();
+    expect(mocks.storage.get(KEY)).toBe(ledgerBefore);
+    expect(parseStoredRecords()[0]).toMatchObject({ state: 'reserved' });
+    expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+  });
+
+  it('keeps the reserved row and prior outbox when the two-key commit fails', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000116';
+    await reserveSentLocal(eventId, 'replenishment', NOW);
+    const ledgerBefore = mocks.storage.get(KEY);
+    const outboxBefore = mocks.storage.get(OUTBOX_STORAGE_KEY);
+    mocks.transactionFailureBeforeCommit = new Error('PRIVATE_TRANSACTION_FAILED');
+
+    await expect(
+      confirmSentLocalDelivery({
+        eventId,
+        operationId: '00000000-0000-4000-8000-000000000217',
+        kind: 'replenishment',
+        at: NOW,
+        owner: { ownerId: 'owner-a', ownerGeneration: 7 },
+      }),
+    ).rejects.toThrow(SENT_LEDGER_WRITE_UNCERTAIN);
+
+    expect(mocks.storage.get(KEY)).toBe(ledgerBefore);
+    expect(parseStoredRecords()[0]).toMatchObject({ state: 'reserved' });
+    expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(outboxBefore);
   });
 
   it('leaves prior bytes intact when an atomic write fails', async () => {
@@ -344,7 +592,7 @@ describe('notification sent ledger', () => {
 
     await expect(recordSentLocal('rampup', NOW)).resolves.toBeUndefined();
 
-    expect(parseStoredRecords()).toEqual([
+    expect(recordSummaries(parseStoredRecords())).toEqual([
       { kind: 'rampup', tier: 'behavioural', at: NOW },
     ]);
   });
@@ -356,18 +604,14 @@ describe('notification sent ledger', () => {
     mocks.updateFailureAfterCommit = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
     mocks.readOverride = readback;
 
-    await expect(recordSentLocal('rampup', NOW)).rejects.toThrow(
-      SENT_LEDGER_WRITE_UNCERTAIN,
-    );
+    await expect(recordSentLocal('rampup', NOW)).rejects.toThrow(SENT_LEDGER_WRITE_UNCERTAIN);
   });
 
   it('rejects future-version mutation without replacing its bytes', async () => {
-    const original = JSON.stringify({ version: 2, records: [] });
+    const original = JSON.stringify({ version: 3, records: [] });
     mocks.storage.set(KEY, original);
 
-    await expect(recordSentLocal('capture', NOW)).rejects.toThrow(
-      SENT_LEDGER_UNSUPPORTED_VERSION,
-    );
+    await expect(recordSentLocal('capture', NOW)).rejects.toThrow(SENT_LEDGER_UNSUPPORTED_VERSION);
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 

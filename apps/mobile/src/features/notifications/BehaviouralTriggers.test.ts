@@ -3,6 +3,10 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 
 import { createOwnerQueryScope } from '@/lib/query/queryKeys';
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 import {
   anyBehaviouralTriggerEnabled,
@@ -18,6 +22,7 @@ const mocks = vi.hoisted(() => ({
   useEffect: vi.fn((effect: () => void | (() => void)) => {
     effect();
   }),
+  useAuth: vi.fn((): { user: { id: string } | null } => ({ user: { id: 'owner-a' } })),
   useNotifPrefs: vi.fn(),
   useOwnerQueryScope: vi.fn(),
 }));
@@ -31,6 +36,7 @@ vi.mock('./deliver', () => ({ notifyBehavioural: mocks.notifyBehavioural }));
 vi.mock('./behaviouralSnapshot', () => ({
   readBehaviouralTriggerSnapshot: mocks.readSnapshot,
 }));
+vi.mock('@/lib/auth/AuthProvider', () => ({ useAuth: mocks.useAuth }));
 vi.mock('@/lib/query/useOwnerQueryScope', () => ({
   useOwnerQueryScope: mocks.useOwnerQueryScope,
 }));
@@ -130,7 +136,39 @@ describe('behavioural trigger lifecycle gate', () => {
     await vi.waitFor(() => expect(mocks.notifyBehavioural).toHaveBeenCalledOnce());
 
     expect(mocks.readSnapshot).toHaveBeenCalledOnce();
-    expect(mocks.notifyBehavioural).toHaveBeenCalledWith('replenishment');
+    expect(mocks.notifyBehavioural).toHaveBeenCalledWith(
+      'replenishment',
+      undefined,
+      expect.objectContaining({ ownerId: 'owner-a', ownerGeneration: ownerScope.generation }),
+    );
+  });
+
+  it('keeps signed-out background delivery local-only', async () => {
+    mocks.addEventListener.mockReset();
+    mocks.notifyBehavioural.mockReset();
+    mocks.readSnapshot.mockReset();
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    mocks.useAuth.mockReturnValueOnce({ user: null });
+    mocks.useOwnerQueryScope.mockReturnValue(createOwnerQueryScope());
+    mocks.readSnapshot.mockResolvedValue({
+      replenishment: true,
+      ramp: false,
+      promotional: false,
+    });
+    let listener!: (state: string) => void;
+    mocks.addEventListener.mockImplementation((_event, nextListener) => {
+      listener = nextListener;
+      return { remove: vi.fn() };
+    });
+
+    EnabledBehaviouralTriggers({
+      enabled: { promotional: false, ramp: false, replenishment: true },
+    });
+    listener('background');
+    await vi.waitFor(() => expect(mocks.notifyBehavioural).toHaveBeenCalledOnce());
+
+    expect(mocks.notifyBehavioural).toHaveBeenCalledWith('replenishment', undefined, undefined);
   });
 
   it('contains no continuously mounted Shelf, Ramp, or Progress query hook', () => {

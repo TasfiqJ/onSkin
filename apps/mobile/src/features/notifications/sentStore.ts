@@ -4,19 +4,29 @@ import {
   readPrivateItem,
   removePrivateItem,
   updatePrivateItem,
+  updatePrivateItemsTransactionally,
   type PrivateKVReadFailureReason,
 } from '@/lib/storage/privateKV';
+import {
+  OUTBOX_STORAGE_KEY,
+  decodeOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueueNotificationDeliveryOutboxOperation,
+  type OutboxPayload,
+} from '@/lib/offline/outbox.pure';
+import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
 
 import { TIER_OF, tierOf } from './policy';
 
-// Local-first record of behavioural/promotional notifications actually sent
+// Local-first record of behavioural/promotional immediate schedules accepted by the OS
 // (docs/07 §9 frequency caps). The server `notification_log` table is the
 // deferred sync target (B-SUPABASE), but offline it returns 0, which would make
 // the per-tier weekly cap a no-op and let a foreground trigger fire on every app
 // open. This private ledger remains the local source of truth for the cap.
-const KEY = 'onskin.notiflog.v1';
-const SCHEMA_VERSION = 1 as const;
+export const SENT_LEDGER_KEY = 'onskin.notiflog.v1';
+const SCHEMA_VERSION = 2 as const;
 const RETENTION_MS = 30 * 86_400_000;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /** A defensive ceiling well above any legitimate 30-day notification cadence. */
 export const MAX_SENT_LEDGER_RECORDS = 512;
@@ -25,11 +35,14 @@ export const MAX_SENT_LEDGER_CHARS = 131_072;
 export const SENT_LEDGER_INVALID = 'SENT_LEDGER_INVALID';
 export const SENT_LEDGER_UNSUPPORTED_VERSION = 'SENT_LEDGER_UNSUPPORTED_VERSION';
 export const SENT_LEDGER_WRITE_UNCERTAIN = 'SENT_LEDGER_WRITE_UNCERTAIN';
+let compatibilityEventCounter = 0;
 
 export type SentRecord = {
+  eventId: string;
   kind: NotificationKind;
   tier: NotificationTier;
   at: number;
+  state: 'delivered' | 'reserved';
 };
 
 type SentLedgerEnvelope = {
@@ -37,7 +50,7 @@ type SentLedgerEnvelope = {
   records: SentRecord[];
 };
 
-type SentLedgerFormat = 'v0' | 'v1';
+type SentLedgerFormat = 'v0' | 'v1' | 'v2';
 type SentLedgerCorruptReason =
   | 'content_key_invalid'
   | 'envelope_invalid'
@@ -70,6 +83,17 @@ type DecodedSentLedger = {
   format: SentLedgerFormat | 'absent';
   records: SentRecord[];
 };
+
+export type NotificationDeliveryOwner = Readonly<{
+  ownerId: string;
+  ownerGeneration: number;
+  assertCurrent?: () => void;
+}>;
+
+export type ConfirmSentDeliveryResult = Readonly<{
+  changed: boolean;
+  outboxQueued: boolean;
+}>;
 
 function sentLedgerError(code: string): Error {
   return new Error(code);
@@ -111,10 +135,28 @@ function assertEpochMilliseconds(value: number): void {
   if (!isEpochMilliseconds(value)) throw sentLedgerError(SENT_LEDGER_INVALID);
 }
 
-function normalizeSentRecord(value: unknown, format: SentLedgerFormat): SentRecord | null {
+function legacyEventId(record: Readonly<{ kind: NotificationKind; at: number }>, index: number) {
+  const low = (record.at % 0x1_0000_0000).toString(16).padStart(8, '0');
+  const high = Math.floor(record.at / 0x1_0000_0000)
+    .toString(16)
+    .padStart(4, '0')
+    .slice(-4);
+  const kind = Object.keys(TIER_OF).indexOf(record.kind).toString(16);
+  const position = index.toString(16).padStart(3, '0').slice(-3);
+  return `${low}-${high}-4000-8${kind}${position.slice(-2)}-${position}000000000`;
+}
+
+function normalizeSentRecord(
+  value: unknown,
+  format: SentLedgerFormat,
+  index: number,
+): SentRecord | null {
+  const legacy = format === 'v0' || format === 'v1';
+  if (!isRecord(value)) return null;
   if (
-    !isRecord(value) ||
-    !hasExactKeys(value, ['kind', 'tier', 'at']) ||
+    (legacy
+      ? !hasExactKeys(value, ['kind', 'tier', 'at'])
+      : !hasExactKeys(value, ['eventId', 'kind', 'tier', 'at', 'state'])) ||
     !isNotificationKind(value.kind) ||
     !isNotificationTier(value.tier) ||
     !isEpochMilliseconds(value.at)
@@ -125,9 +167,25 @@ function normalizeSentRecord(value: unknown, format: SentLedgerFormat): SentReco
   const canonicalTier = tierOf(value.kind);
   // v0 persisted the tier redundantly and some released records carried the
   // wrong-but-valid tier. Preserve that compatibility while canonicalizing it
-  // in memory. The versioned v1 envelope is strict.
-  if (format === 'v1' && value.tier !== canonicalTier) return null;
-  return { kind: value.kind, tier: canonicalTier, at: value.at };
+  // in memory. Every versioned envelope is strict.
+  if (format !== 'v0' && value.tier !== canonicalTier) return null;
+  if (
+    !legacy &&
+    (typeof value.eventId !== 'string' ||
+      !UUID.test(value.eventId) ||
+      (value.state !== 'reserved' && value.state !== 'delivered'))
+  ) {
+    return null;
+  }
+  return {
+    eventId: legacy
+      ? legacyEventId({ kind: value.kind, at: value.at }, index)
+      : (value.eventId as string),
+    kind: value.kind,
+    tier: canonicalTier,
+    at: value.at,
+    state: legacy ? 'delivered' : (value.state as 'delivered' | 'reserved'),
+  };
 }
 
 function decodeRecords(value: unknown, format: SentLedgerFormat): SentRecord[] {
@@ -135,11 +193,15 @@ function decodeRecords(value: unknown, format: SentLedgerFormat): SentRecord[] {
     throw sentLedgerError(SENT_LEDGER_INVALID);
   }
 
-  return value.map((row) => {
-    const normalized = normalizeSentRecord(row, format);
+  const records = value.map((row, index) => {
+    const normalized = normalizeSentRecord(row, format, index);
     if (!normalized) throw sentLedgerError(SENT_LEDGER_INVALID);
     return normalized;
   });
+  if (new Set(records.map((record) => record.eventId)).size !== records.length) {
+    throw sentLedgerError(SENT_LEDGER_INVALID);
+  }
+  return records;
 }
 
 function decodeSentLedger(raw: string | null): DecodedSentLedger {
@@ -160,7 +222,7 @@ function decodeSentLedger(raw: string | null): DecodedSentLedger {
   }
   if (!isRecord(parsed)) throw sentLedgerError(SENT_LEDGER_INVALID);
 
-  if (parsed.version !== SCHEMA_VERSION) {
+  if (parsed.version !== 1 && parsed.version !== SCHEMA_VERSION) {
     if (
       typeof parsed.version === 'number' &&
       Number.isSafeInteger(parsed.version) &&
@@ -173,7 +235,8 @@ function decodeSentLedger(raw: string | null): DecodedSentLedger {
   if (!hasExactKeys(parsed, ['version', 'records'])) {
     throw sentLedgerError(SENT_LEDGER_INVALID);
   }
-  return { records: decodeRecords(parsed.records, 'v1'), format: 'v1' };
+  const format = parsed.version === 1 ? 'v1' : 'v2';
+  return { records: decodeRecords(parsed.records, format), format };
 }
 
 function encodeSentLedger(records: SentRecord[]): string {
@@ -189,7 +252,7 @@ function encodeSentLedger(records: SentRecord[]): string {
 export async function readSentLedger(): Promise<SentLedgerRead> {
   let stored: Awaited<ReturnType<typeof readPrivateItem>>;
   try {
-    stored = await readPrivateItem(KEY);
+    stored = await readPrivateItem(SENT_LEDGER_KEY);
   } catch {
     return {
       status: 'unavailable',
@@ -220,35 +283,170 @@ export async function readSentLedger(): Promise<SentLedgerRead> {
   }
 }
 
-/** Record a sent notification locally, pruning and bounding history atomically. */
-export async function recordSentLocal(kind: NotificationKind, now: number): Promise<void> {
+function confirmExactWrite(expectedRaw: string): Promise<void> {
+  return readPrivateItem(SENT_LEDGER_KEY).then((confirmation) => {
+    if (confirmation.status !== 'available' || confirmation.value !== expectedRaw) {
+      throw sentLedgerError(SENT_LEDGER_WRITE_UNCERTAIN);
+    }
+  });
+}
+
+function retainedRecords(current: string | null, now: number, reserve: number): SentRecord[] {
+  const cutoff = Math.max(0, now - RETENTION_MS);
+  return decodeSentLedger(current)
+    .records.filter((record) => record.at >= cutoff && record.at <= now)
+    .sort((left, right) => left.at - right.at || left.eventId.localeCompare(right.eventId))
+    .slice(-(MAX_SENT_LEDGER_RECORDS - reserve));
+}
+
+/** Reserve a cap slot before native delivery. Both reserved and delivered rows count. */
+export async function reserveSentLocal(
+  eventId: string,
+  kind: NotificationKind,
+  now: number,
+): Promise<void> {
+  if (!UUID.test(eventId)) throw sentLedgerError(SENT_LEDGER_INVALID);
   assertNotificationKind(kind);
   assertEpochMilliseconds(now);
-  const cutoff = Math.max(0, now - RETENTION_MS);
 
   let expectedRaw: string | null = null;
   try {
-    await updatePrivateItem(KEY, (current) => {
-      const retained = decodeSentLedger(current)
-        .records.filter((record) => record.at >= cutoff && record.at <= now)
-        .sort((left, right) => left.at - right.at)
-        .slice(-(MAX_SENT_LEDGER_RECORDS - 1));
-      retained.push({ kind, tier: tierOf(kind), at: now });
+    await updatePrivateItem(SENT_LEDGER_KEY, (current) => {
+      const retained = retainedRecords(current, now, 1);
+      const existing = retained.find((record) => record.eventId === eventId);
+      if (existing) {
+        if (existing.kind === kind && existing.at === now) {
+          expectedRaw = current;
+          return current;
+        }
+        throw sentLedgerError(SENT_LEDGER_INVALID);
+      }
+      retained.push({ eventId, kind, tier: tierOf(kind), at: now, state: 'reserved' });
       expectedRaw = encodeSentLedger(retained);
       return expectedRaw;
     });
   } catch (error) {
     if (expectedRaw === null) throw error;
-    let confirmation: Awaited<ReturnType<typeof readPrivateItem>>;
     try {
-      confirmation = await readPrivateItem(KEY);
+      await confirmExactWrite(expectedRaw);
     } catch {
       throw sentLedgerError(SENT_LEDGER_WRITE_UNCERTAIN);
     }
-    if (confirmation.status !== 'available' || confirmation.value !== expectedRaw) {
+  }
+}
+
+/** After the OS accepts a notification, confirm the local row and append its
+ * authenticated outbox event in one crash-recoverable encrypted transaction. */
+export async function confirmSentLocalDelivery(
+  input: Readonly<{
+    eventId: string;
+    operationId: string;
+    kind: NotificationKind;
+    at: number;
+    owner?: NotificationDeliveryOwner;
+  }>,
+): Promise<ConfirmSentDeliveryResult> {
+  if (!UUID.test(input.eventId) || !UUID.test(input.operationId)) {
+    throw sentLedgerError(SENT_LEDGER_INVALID);
+  }
+  assertNotificationKind(input.kind);
+  assertEpochMilliseconds(input.at);
+  const normalizedOwnerId = input.owner?.ownerId.trim();
+  if (
+    input.owner &&
+    (!normalizedOwnerId ||
+      input.owner.ownerId !== normalizedOwnerId ||
+      normalizedOwnerId.length > 512)
+  ) {
+    throw sentLedgerError(SENT_LEDGER_INVALID);
+  }
+  input.owner?.assertCurrent?.();
+  const ownerHash = normalizedOwnerId ? await hashOutboxOwner(normalizedOwnerId) : null;
+  input.owner?.assertCurrent?.();
+
+  let changed = false;
+  let outboxQueued = false;
+  let expectedLedgerRaw: string | null | undefined;
+  let expectedOutboxRaw: string | null | undefined;
+  const updateLedger = (current: string | null): string | null => {
+    const decoded = decodeSentLedger(current);
+    const index = decoded.records.findIndex((record) => record.eventId === input.eventId);
+    if (index < 0) throw sentLedgerError(SENT_LEDGER_WRITE_UNCERTAIN);
+    const record = decoded.records[index]!;
+    if (record.kind !== input.kind || record.at !== input.at) {
+      throw sentLedgerError(SENT_LEDGER_INVALID);
+    }
+    if (record.state === 'delivered' && decoded.format === 'v2') {
+      expectedLedgerRaw = current;
+      return current;
+    }
+    const records = [...decoded.records];
+    records[index] = { ...record, state: 'delivered' };
+    expectedLedgerRaw = encodeSentLedger(records);
+    changed = true;
+    return expectedLedgerRaw;
+  };
+
+  try {
+    if (input.owner && ownerHash) {
+      await updatePrivateItemsTransactionally([SENT_LEDGER_KEY, OUTBOX_STORAGE_KEY], (current) => {
+        input.owner?.assertCurrent?.();
+        const nextLedgerRaw = updateLedger(current.get(SENT_LEDGER_KEY) ?? null);
+        const currentOutboxRaw = current.get(OUTBOX_STORAGE_KEY) ?? null;
+        let nextOutboxRaw = currentOutboxRaw;
+        if (changed) {
+          const payload: OutboxPayload = Object.freeze({
+            kind: input.kind,
+            tier: tierOf(input.kind),
+            sent_at: new Date(input.at).toISOString(),
+          });
+          nextOutboxRaw = encodeOutboxEnvelope(
+            enqueueNotificationDeliveryOutboxOperation(decodeOutboxEnvelope(currentOutboxRaw), {
+              operationId: input.operationId,
+              ownerHash,
+              ownerGeneration: input.owner!.ownerGeneration,
+              entityId: input.eventId,
+              payload,
+              enqueuedAt: new Date(input.at).toISOString(),
+            }).envelope,
+          );
+          outboxQueued = true;
+        }
+        expectedOutboxRaw = nextOutboxRaw;
+        return new Map<string, string | null>([
+          [SENT_LEDGER_KEY, nextLedgerRaw],
+          [OUTBOX_STORAGE_KEY, nextOutboxRaw],
+        ]);
+      });
+    } else {
+      await updatePrivateItem(SENT_LEDGER_KEY, updateLedger);
+    }
+  } catch (error) {
+    if (typeof expectedLedgerRaw !== 'string') throw error;
+    try {
+      await confirmExactWrite(expectedLedgerRaw);
+      if (input.owner && expectedOutboxRaw !== undefined) {
+        const confirmation = await readPrivateItem(OUTBOX_STORAGE_KEY);
+        const matches =
+          expectedOutboxRaw === null
+            ? confirmation.status === 'absent'
+            : confirmation.status === 'available' && confirmation.value === expectedOutboxRaw;
+        if (!matches) throw sentLedgerError(SENT_LEDGER_WRITE_UNCERTAIN);
+      }
+    } catch {
       throw sentLedgerError(SENT_LEDGER_WRITE_UNCERTAIN);
     }
   }
+  input.owner?.assertCurrent?.();
+  return Object.freeze({ changed, outboxQueued });
+}
+
+/** Compatibility helper for local-only callers/tests. */
+export async function recordSentLocal(kind: NotificationKind, now: number): Promise<void> {
+  const eventId = legacyEventId({ kind, at: now }, compatibilityEventCounter % 4096);
+  compatibilityEventCounter += 1;
+  await reserveSentLocal(eventId, kind, now);
+  await confirmSentLocalDelivery({ eventId, operationId: eventId, kind, at: now });
 }
 
 /** Typed weekly count. Unreadable state is never converted into an empty count. */
@@ -282,5 +480,5 @@ export async function sentThisWeekForTierLocal(
 
 /** Test/seed reset. */
 export async function clearSentLocal(): Promise<void> {
-  await removePrivateItem(KEY);
+  await removePrivateItem(SENT_LEDGER_KEY);
 }

@@ -389,6 +389,7 @@ export type Database = {
           operation_id: string;
           idempotency_key: string;
           entity_type:
+            | 'notification_delivery'
             | 'notification_preferences'
             | 'recommendation_preferences'
             | 'shelf_product';
@@ -403,6 +404,7 @@ export type Database = {
           operation_id: string;
           idempotency_key: string;
           entity_type:
+            | 'notification_delivery'
             | 'notification_preferences'
             | 'recommendation_preferences'
             | 'shelf_product';
@@ -1158,6 +1160,10 @@ export type Database = {
     Views: Record<string, never>;
     Functions: {
       apply_notification_preferences_outbox_batch: {
+        Args: { p_operations: Json };
+        Returns: Json;
+      };
+      apply_notification_delivery_outbox_batch: {
         Args: { p_operations: Json };
         Returns: Json;
       };

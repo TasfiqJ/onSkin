@@ -2,7 +2,7 @@ import { randomUUID } from 'expo-crypto';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-import type { NotificationKind, NotificationTier } from '@onskin/types';
+import type { NotificationKind } from '@onskin/types';
 
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import {
@@ -11,8 +11,6 @@ import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
-import { supabase } from '@/lib/supabase/client';
 import { scheduleOutboxFlush } from '@/lib/offline/outbox';
 
 import { notificationContentForLockScreen } from './copy';
@@ -22,7 +20,12 @@ import {
   scheduleNativeNotificationExact,
 } from './nativeMutation';
 import { canSend, reminderTimeOutsideQuietHours, tierEnabled, tierOf, toMinutes } from './policy';
-import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
+import {
+  confirmSentLocalDelivery,
+  reserveSentLocal,
+  sentThisWeekForTierLocal,
+  type NotificationDeliveryOwner,
+} from './sentStore';
 import {
   readNotifPrefs,
   saveNotifPrefs,
@@ -347,35 +350,6 @@ export async function cancelTrialReminder(): Promise<void> {
   });
 }
 
-async function mirrorBehaviouralDelivery(
-  kind: NotificationKind,
-  tier: NotificationTier,
-): Promise<void> {
-  try {
-    await runAccountGenerationOperation(async (lease) => {
-      const owner = await captureAuthenticatedAccountOwner(lease);
-      if (!owner) return;
-      lease.assertCurrent();
-      let result: { error: unknown };
-      try {
-        result = await awaitAccountGenerationLease(lease, () =>
-          supabase
-            .from('notification_log')
-            .insert({ user_id: owner.userId, tier, kind })
-            .abortSignal(lease.signal),
-        );
-      } catch (error) {
-        lease.assertCurrent();
-        throw error;
-      }
-      lease.assertCurrent();
-      if (result.error) throw result.error;
-    });
-  } catch {
-    // Optional owner-bound backend mirror; local cap truth is already durable.
-  }
-}
-
 /**
  * Deliver a behavioural notification only when preferences and the local cap
  * ledger are authoritative. The read/decide/reserve/schedule pipeline is globally
@@ -383,8 +357,16 @@ async function mirrorBehaviouralDelivery(
  * weekly cap. `hhmm` exists only for deterministic callers/tests; production calls
  * evaluate the wall clock immediately before the policy decision.
  */
-export async function notifyBehavioural(kind: NotificationKind, hhmm?: string): Promise<boolean> {
-  const delivered = await runSerializedNotificationOperation(async (lease) => {
+export async function notifyBehavioural(
+  kind: NotificationKind,
+  hhmm?: string,
+  owner?: NotificationDeliveryOwner,
+): Promise<boolean> {
+  return runSerializedNotificationOperation(async (lease) => {
+    owner?.assertCurrent?.();
+    if (owner && owner.ownerGeneration !== lease.generation) {
+      throw new AccountGenerationLeaseError();
+    }
     if (Platform.OS === 'web') return false;
 
     const prefRead = await readNotifPrefs();
@@ -416,14 +398,18 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm?: string): 
     // native failure may conservatively consume a slot, but can never produce an
     // unlogged immediate banner that is free to repeat.
     let notificationIdentifier: string;
+    let eventId: string;
+    let operationId: string;
     try {
       lease.assertCurrent();
       // Avoid consuming a cap slot when a known prior native mutation prevents
       // this attempt from reaching the OS at all. The serialized delivery queue
       // keeps ordinary notification callers from racing this synchronous check.
       assertNativeNotificationMutationAvailable();
-      notificationIdentifier = `${BEHAVIOURAL_REMINDER_ID_PREFIX}${randomUUID()}`;
-      await recordSentLocal(kind, sentAt);
+      eventId = randomUUID();
+      operationId = randomUUID();
+      notificationIdentifier = `${BEHAVIOURAL_REMINDER_ID_PREFIX}${eventId}`;
+      await reserveSentLocal(eventId, kind, sentAt);
       lease.assertCurrent();
     } catch {
       lease.assertCurrent();
@@ -444,8 +430,31 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm?: string): 
       return false;
     }
 
+    try {
+      const result = await confirmSentLocalDelivery({
+        eventId,
+        operationId,
+        kind,
+        at: sentAt,
+        ...(owner
+          ? {
+              owner: {
+                ...owner,
+                assertCurrent: () => {
+                  lease.assertCurrent();
+                  owner.assertCurrent?.();
+                },
+              },
+            }
+          : {}),
+      });
+      lease.assertCurrent();
+      if (result.outboxQueued) scheduleOutboxFlush();
+    } catch {
+      // The OS already accepted the notification. Its reserved row continues
+      // to count toward the cap without inventing a server delivery event.
+      lease.assertCurrent();
+    }
     return true;
   });
-  if (delivered) void mirrorBehaviouralDelivery(kind, tierOf(kind));
-  return delivered;
 }

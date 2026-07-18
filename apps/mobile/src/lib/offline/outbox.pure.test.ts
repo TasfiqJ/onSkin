@@ -6,6 +6,7 @@ import {
   decodeOutboxEnvelope,
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
+  enqueueNotificationDeliveryOutboxOperation,
   enqueueNotificationPreferencesOutboxOperation,
   enqueueRecommendationPreferencesOutboxOperation,
   enqueueShelfOutboxOperation,
@@ -47,6 +48,15 @@ const RECOMMENDATION_PAYLOAD = {
   budget_band: 'mid',
   format_prefs: ['gel', 'cream'],
 } as const;
+const DELIVERY_PAYLOAD = {
+  kind: 'replenishment',
+  tier: 'behavioural',
+  sent_at: NOW,
+} as const;
+
+function uuid(value: number): string {
+  return `00000000-0000-4000-8000-${value.toString().padStart(12, '0')}`;
+}
 
 function enqueue(
   envelope: OutboxEnvelope,
@@ -84,9 +94,12 @@ describe('transactional outbox model', () => {
     legacy.version = 1;
     legacy.revisions = legacy.revisions.map(({ ownerHash: _ownerHash, ...revision }) => revision);
     expect(decodeOutboxEnvelope(JSON.stringify(legacy))).toEqual(queued);
+    const previous = JSON.parse(encodeOutboxEnvelope(queued)) as { version: number };
+    previous.version = 2;
+    expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
     expect(() => decodeOutboxEnvelope('{bad-json')).toThrow(OUTBOX_INVALID);
     expect(() =>
-      decodeOutboxEnvelope(JSON.stringify({ version: 3, rows: [], revisions: [] })),
+      decodeOutboxEnvelope(JSON.stringify({ version: 4, rows: [], revisions: [] })),
     ).toThrow(OUTBOX_UNSUPPORTED_VERSION);
   });
 
@@ -98,6 +111,107 @@ describe('transactional outbox model', () => {
         payload: { name: 'Cleanser', user_id: 'raw-owner' },
       }),
     ).toThrow(OUTBOX_INVALID);
+  });
+
+  it('keeps notification deliveries as strict unique revision-one events', () => {
+    const first = enqueueNotificationDeliveryOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_A,
+      payload: DELIVERY_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    const second = enqueueNotificationDeliveryOutboxOperation(first, {
+      operationId: OP_B1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_B,
+      payload: { kind: 'winback', tier: 'promotional', sent_at: NOW },
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(second.rows).toHaveLength(2);
+    expect(second.rows).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          entityType: 'notification_delivery',
+          entityId: ENTITY_A,
+          clientRevision: 1,
+          idempotencyKey: `notification_delivery:${OP_A1}:replenishment:${NOW}`,
+          payload: DELIVERY_PAYLOAD,
+        }),
+        expect.objectContaining({ entityId: ENTITY_B, clientRevision: 1 }),
+      ]),
+    );
+    expect(() =>
+      enqueueNotificationDeliveryOutboxOperation(second, {
+        operationId: OP_A2,
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: ENTITY_A,
+        payload: DELIVERY_PAYLOAD,
+        enqueuedAt: NOW,
+      }),
+    ).toThrow(OUTBOX_INVALID);
+
+    const replayWithDifferentPayload = JSON.parse(encodeOutboxEnvelope(first)) as {
+      rows: { payload: Record<string, unknown> }[];
+    };
+    replayWithDifferentPayload.rows[0]!.payload = {
+      kind: 'rampup',
+      tier: 'behavioural',
+      sent_at: NOW,
+    };
+    expect(() => decodeOutboxEnvelope(JSON.stringify(replayWithDifferentPayload))).toThrow(
+      OUTBOX_INVALID,
+    );
+  });
+
+  it.each([
+    { kind: 'replenishment', tier: 'promotional', sent_at: NOW },
+    { kind: 'unknown', tier: 'behavioural', sent_at: NOW },
+    { kind: 'replenishment', tier: 'behavioural', sent_at: 'not-an-iso' },
+    { ...DELIVERY_PAYLOAD, user_id: 'owner-a' },
+  ])('rejects a malformed notification delivery payload %#', (payload) => {
+    expect(() =>
+      enqueueNotificationDeliveryOutboxOperation(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: ENTITY_A,
+        payload,
+        enqueuedAt: NOW,
+      }),
+    ).toThrow(OUTBOX_INVALID);
+  });
+
+  it('reclaims settled immutable delivery revisions beyond the global revision bound', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= 1_025; index += 1) {
+      const operationId = uuid(10_000 + index);
+      envelope = enqueueNotificationDeliveryOutboxOperation(envelope, {
+        operationId,
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: uuid(20_000 + index),
+        payload: DELIVERY_PAYLOAD,
+        enqueuedAt: NOW,
+      }).envelope;
+      envelope = leaseReadyOutboxRows(envelope, {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_A,
+        now: NOW,
+      }).envelope;
+      envelope = settleOutboxLease(envelope, {
+        leaseOwner: WORKER_A,
+        now: NOW,
+        results: [{ operationId, status: 'applied' }],
+      });
+    }
+
+    expect(envelope.rows).toEqual([]);
+    expect(envelope.revisions).toEqual([]);
   });
 
   it('increments per-entity revisions and coalesces only unleased state mirrors', () => {

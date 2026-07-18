@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
@@ -29,10 +30,7 @@ export function createBehaviouralEvaluationCoordinator(
       if (inFlight?.generation === ownerScope.generation) return inFlight.promise;
 
       const startedAt = clock();
-      if (
-        lastGeneration === ownerScope.generation &&
-        startedAt - lastStartedAt < cooldownMs
-      ) {
+      if (lastGeneration === ownerScope.generation && startedAt - lastStartedAt < cooldownMs) {
         return Promise.resolve(false);
       }
       lastGeneration = ownerScope.generation;
@@ -61,6 +59,8 @@ export function anyBehaviouralTriggerEnabled(
 
 export function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEnables }) {
   const ownerScope = useOwnerQueryScope();
+  const { user } = useAuth();
+  const ownerId = user?.id;
 
   useEffect(() => {
     const currentEnabled: BehaviouralTriggerEnables = {
@@ -77,12 +77,19 @@ export function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTr
             lease.assertCurrent();
             const current = await readBehaviouralTriggerSnapshot(lease, currentEnabled);
             lease.assertCurrent();
+            const owner = ownerId
+              ? {
+                  ownerId,
+                  ownerGeneration: ownerScope.generation,
+                  assertCurrent: () => lease.assertCurrent(),
+                }
+              : undefined;
             if (current.replenishment) {
-              await notifyBehavioural('replenishment');
+              await notifyBehavioural('replenishment', undefined, owner);
             } else if (current.ramp) {
-              await notifyBehavioural('rampup');
+              await notifyBehavioural('rampup', undefined, owner);
             } else if (current.promotional) {
-              await notifyBehavioural('winback');
+              await notifyBehavioural('winback', undefined, owner);
             }
             lease.assertCurrent();
           }),
@@ -90,7 +97,7 @@ export function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTr
         .catch(() => undefined);
     });
     return () => sub.remove();
-  }, [enabled.promotional, enabled.ramp, enabled.replenishment, ownerScope]);
+  }, [enabled.promotional, enabled.ramp, enabled.replenishment, ownerId, ownerScope]);
 
   return null;
 }
