@@ -748,6 +748,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: local Shelf changes are pending, syncing, or need attention
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add or edit a Shelf product while server sync is unavailable, reconnect while the owner-bound outbox drains, then exercise a permanent/dead-letter result and its explicit retry.
+  - Expected result: The Shelf remains fully usable and names `Saved locally`, `Syncing Shelf changes`, and `Shelf sync needs attention` without exposing account, product, or error payloads. Only the current account generation contributes status. A retry is single-flight, requeues only that owner's dead rows, and never resets local Shelf data or flattens an unreadable/future outbox into success.
+  - Evidence: Supported-phone screenshots for all three states, visible role/text and live-region snapshots, retry control geometry and duplicate-activation result, refresh/relaunch behavior, browser logs, and focused owner/status/retry tests.
+  - Current local evidence: 2026-07-18 Codex in-app browser Expo web at requested 390 x 844 / observed 390 x 845 renders the empty Shelf with `Saved locally`, one named `Syncing Shelf changes` progress bar, and one `Shelf sync needs attention` alert plus a 308 x 56 px retry. A real manual `E2E Sync Cleanser` add returns to the populated Shelf without blocking local use, and reload preserves the product and syncing state. All captures have zero horizontal overflow, no JavaScript dialog, and no browser errors. The first syncing pass exposed duplicate nested progress-bar roles; the exact post-fix rerun exposes one. Evidence is in `test-results/human-e2e/2026-07-18/shelf-outbox-status-current/` and `docs/e2e-bug-reports/2026-07-18-shelf-sync-duplicate-progressbar.md`; signed iOS offline/reconnect/process-death and hosted RPC failure evidence remain release QA.
 - Branch: product detail routine role
   - Priority: Critical
   - Automate later: Yes

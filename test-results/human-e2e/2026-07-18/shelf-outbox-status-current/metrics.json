@@ -1,0 +1,37 @@
+{
+  "date": "2026-07-18",
+  "surface": "Expo web",
+  "requestedViewport": { "width": 390, "height": 844 },
+  "observedViewport": { "width": 390, "height": 845 },
+  "states": {
+    "saved_local": {
+      "savedLabels": 1,
+      "alerts": 0,
+      "progressbars": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "syncing": {
+      "progressbars": ["Syncing Shelf changes"],
+      "alerts": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "needs_attention": {
+      "alerts": 1,
+      "progressbars": 0,
+      "retryButtons": [{ "text": "Try sync again", "width": 308.3738098144531, "height": 55.99211502075195 }],
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "syncing_populated_reload": {
+      "product": "E2E Sync Cleanser",
+      "productButtons": 1,
+      "progressbars": ["Syncing Shelf changes"],
+      "scrollWidth": 390,
+      "clientWidth": 390
+    }
+  },
+  "dialog": null,
+  "browserErrors": []
+}

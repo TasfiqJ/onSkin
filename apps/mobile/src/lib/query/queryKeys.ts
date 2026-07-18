@@ -127,6 +127,7 @@ export const queryPrefixes = {
   recommendations: ['recPrefsAndDismissed'] as const,
   routineOrder: ['routineOrder'] as const,
   shelf: ['shelf'] as const,
+  shelfOutboxStatus: ['shelfOutboxStatus'] as const,
   skinProfile: ['skinProfileBits'] as const,
   subscriptionOffering: ['subscription-offering'] as const,
   trendConsent: ['trendConsent'] as const,
@@ -229,6 +230,8 @@ export const queryKeys = {
   routineOrder: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'routineOrder', 'v1'),
   shelf: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity) =>
     localDayQueryKey(scope, 'shelf', boundary),
+  shelfOutboxStatus: (scope: OwnerQueryScope, revision: number) =>
+    ownerScopedQueryKey(scope, 'shelfOutboxStatus', revision),
   skinProfile: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'skinProfileBits'),
   subscriptionOffering: (scope: OwnerQueryScope) =>
     ownerScopedQueryKey(scope, 'subscription-offering'),
@@ -260,6 +263,7 @@ export const ownerQueryPrefixes = {
     ownerScopedQueryPrefix(scope, 'recPrefsAndDismissed'),
   routineOrder: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'routineOrder'),
   shelf: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'shelf'),
+  shelfOutboxStatus: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'shelfOutboxStatus'),
   skinProfile: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'skinProfileBits'),
   subscriptionOffering: (scope: OwnerQueryScope) =>
     ownerScopedQueryPrefix(scope, 'subscription-offering'),

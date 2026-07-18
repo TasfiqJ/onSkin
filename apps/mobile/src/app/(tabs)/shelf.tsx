@@ -24,6 +24,7 @@ import { conflictDetailRoute } from '@/features/intelligence/conflictIdentity';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
 import { ShelfDataUnavailableNotice } from '@/features/shelf/ShelfDataAvailabilityGate';
+import { ShelfSyncStatus } from '@/features/shelf/ShelfSyncStatus';
 import { useShelfFromBoundary, type ShelfData, type ShelfItem } from '@/features/shelf/useShelf';
 import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import { haptics } from '@/theme/haptics';
@@ -490,6 +491,7 @@ const ShelfListHeader = memo(function ShelfListHeader({
   return (
     <View className="pb-4">
       <ShelfListTitle productCount={productCount} />
+      <ShelfSyncStatus className="mt-3" />
       <ShelfFilterControls compactFilterLabels={compactFilterLabels} />
       <ShelfListInsights banner={banner} productCount={productCount} />
     </View>
@@ -627,6 +629,7 @@ function FocusedShelfScreen() {
               empty for now
             </Text>
           </View>
+          <ShelfSyncStatus className="mt-3" />
           <EmptyShelf
             archiveCount={archiveCount}
             compact={compactShelf}

@@ -332,11 +332,11 @@ Required delayed tests:
 
 Current state:
 
-- Shelf mirror failures are fire-and-forget and not retried.
-- The completion queue is not fed by the current live completion source of truth.
-- Queue mutations can race.
-- Flush inserts one server row per network round trip.
-- Foreground flush can overlap and lacks one centralized error/backoff state.
+- Shelf mutations commit the encrypted local Shelf snapshot and an owner-bound outbox intent through one crash-recoverable private-KV transaction.
+- One account-generation-fenced, single-flight worker leases bounded batches and runs after mutation, foreground, and connectivity recovery with persisted jitter/backoff, safe failure classes, and poison-row isolation.
+- The authenticated batched RPC provides ordered idempotent application, duplicate/stale handling, and owner-scoped receipts.
+- Shelf now distinguishes `Saved locally`, `Syncing Shelf changes`, and `Shelf sync needs attention` without blocking local use. Status reads and manual dead-row retry remain current-owner-only and content-free.
+- Completion history remains intentionally outside this contract until authoritative server routine/step UUID mapping exists. Hosted RPC replay, physical-device process-kill/offline/reconnect/duplicate-worker proof, and broader entity adoption remain open.
 
 Required outbox fields:
 

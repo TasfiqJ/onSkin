@@ -2,7 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RequestPolicyError } from '@/lib/network/requestPolicy';
 
-import { flushOutbox, hashOutboxOwner, readOutbox, resetOutboxWorkerForTests } from './outbox';
+import {
+  flushOutbox,
+  hashOutboxOwner,
+  readOutbox,
+  readOutboxChangeRevision,
+  readShelfOutboxStatus,
+  resetOutboxWorkerForTests,
+  retryShelfOutbox,
+  subscribeOutboxChanges,
+} from './outbox';
 import {
   OUTBOX_STORAGE_KEY,
   decodeOutboxEnvelope,
@@ -249,6 +258,40 @@ describe('transactional outbox runtime', () => {
     expect(mocks.rpc).toHaveBeenCalledTimes(1);
   });
 
+  it('publishes owner-scoped saved, syncing, and synced status around one single-flight drain', async () => {
+    seedRows(1);
+    const publishedRevisions: number[] = [];
+    const unsubscribe = subscribeOutboxChanges(() => {
+      publishedRevisions.push(readOutboxChangeRevision());
+    });
+    let release!: (value: unknown) => void;
+    const pending = new Promise<unknown>((resolve) => {
+      release = resolve;
+    });
+    mocks.rpcHandler = async () => pending;
+
+    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'saved_local', pendingCount: 1, attentionCount: 0 },
+    });
+    const flush = flushOutbox();
+    await vi.waitFor(() => expect(mocks.rpc).toHaveBeenCalledTimes(1));
+    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'syncing', pendingCount: 1, attentionCount: 0 },
+    });
+
+    release(successfulResults(mocks.rpc.mock.calls[0]?.[1].p_operations));
+    await expect(flush).resolves.toEqual({ leased: 1, flushed: 1, dead: 0 });
+    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'idle', pendingCount: 0, attentionCount: 0 },
+    });
+    expect(publishedRevisions.length).toBeGreaterThanOrEqual(3);
+    expect(publishedRevisions).toEqual([...publishedRevisions].sort((a, b) => a - b));
+    unsubscribe();
+  });
+
   it('persists Retry-After backoff and drains the same ready row after reconnect time', async () => {
     seedRows(1);
     mocks.runRequestWithLease.mockRejectedValueOnce(
@@ -296,6 +339,18 @@ describe('transactional outbox runtime', () => {
         leaseOwner: null,
       }),
     ]);
+
+    await expect(readShelfOutboxStatus({ generation: 7 })).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'needs_attention', pendingCount: 1, attentionCount: 1 },
+    });
+    mocks.rpcHandler = async (operations) => successfulResults(operations);
+    await expect(retryShelfOutbox({ generation: 7 })).resolves.toEqual({
+      leased: 1,
+      flushed: 1,
+      dead: 0,
+    });
+    expect(storedEnvelope().rows).toEqual([]);
   });
 
   it('does not stale-settle a leased batch after the account generation changes', async () => {

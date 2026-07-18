@@ -9,6 +9,8 @@ import {
   enqueueShelfOutboxOperation,
   leaseReadyOutboxRows,
   outboxCounts,
+  retryDeadOutboxRows,
+  selectOutboxOwnerStatus,
   settleOutboxLease,
   type OutboxEnvelope,
 } from './outbox.pure';
@@ -153,6 +155,63 @@ describe('transactional outbox model', () => {
     expect(settled.rows).toHaveLength(1);
     expect(settled.rows[0]).toMatchObject({ operationId: OP_A1, state: 'dead' });
     expect(outboxCounts(settled)).toEqual({ ready: 0, inFlight: 0, dead: 1 });
+  });
+
+  it('derives owner-scoped saved, syncing, and needs-attention states and retries only that owner', () => {
+    const queued = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+    }).envelope;
+    expect(selectOutboxOwnerStatus(queued, { ownerHash: OWNER, ownerGeneration: 7 })).toEqual({
+      kind: 'saved_local',
+      pendingCount: 1,
+      attentionCount: 0,
+    });
+    expect(
+      selectOutboxOwnerStatus(queued, { ownerHash: 'b'.repeat(64), ownerGeneration: 8 }),
+    ).toEqual({ kind: 'idle', pendingCount: 0, attentionCount: 0 });
+
+    const leased = leaseReadyOutboxRows(queued, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    expect(selectOutboxOwnerStatus(leased, { ownerHash: OWNER, ownerGeneration: 7 })).toEqual({
+      kind: 'syncing',
+      pendingCount: 1,
+      attentionCount: 0,
+    });
+
+    const dead = settleOutboxLease(leased, {
+      leaseOwner: WORKER_A,
+      now: NOW,
+      results: [{ operationId: OP_A1, status: 'permanent', errorClass: 'validation' }],
+    });
+    expect(selectOutboxOwnerStatus(dead, { ownerHash: OWNER, ownerGeneration: 7 })).toEqual({
+      kind: 'needs_attention',
+      pendingCount: 1,
+      attentionCount: 1,
+    });
+
+    const wrongOwnerRetry = retryDeadOutboxRows(dead, {
+      ownerHash: 'b'.repeat(64),
+      ownerGeneration: 8,
+      now: '2026-07-18T15:01:00.000Z',
+    });
+    expect(wrongOwnerRetry).toEqual({ envelope: dead, retried: 0 });
+
+    const retry = retryDeadOutboxRows(dead, {
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      now: '2026-07-18T15:01:00.000Z',
+    });
+    expect(retry.retried).toBe(1);
+    expect(retry.envelope.rows[0]).toMatchObject({
+      state: 'ready',
+      attemptCount: 0,
+      nextAttemptAt: '2026-07-18T15:01:00.000Z',
+      lastErrorClass: null,
+    });
   });
 
   it('persists full-jitter backoff and honors a bounded Retry-After', () => {

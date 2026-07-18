@@ -13,6 +13,7 @@ import {
   supabaseRequestFailure,
 } from '@/lib/network/requestPolicy';
 import { supabase } from '@/lib/supabase/client';
+import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { hashOutboxOwner } from './outboxIdentity';
@@ -24,9 +25,12 @@ import {
   encodeOutboxEnvelope,
   leaseReadyOutboxRows,
   outboxCounts,
+  retryDeadOutboxRows,
+  selectOutboxOwnerStatus,
   settleOutboxLease,
   type OutboxEnvelope,
   type OutboxFailureClass,
+  type OutboxOwnerStatus,
   type OutboxRow,
   type OutboxServerResult,
 } from './outbox.pure';
@@ -44,6 +48,10 @@ export type OutboxFlushResult = Readonly<{
   dead: number;
 }>;
 
+export type ShelfOutboxStatusRead =
+  | { status: 'available'; value: OutboxOwnerStatus }
+  | { status: 'corrupt' | 'unavailable' | 'unsupported_version'; value: null };
+
 type ServerWireResult = Readonly<{
   operation_id: string;
   status: OutboxServerResult['status'];
@@ -51,10 +59,26 @@ type ServerWireResult = Readonly<{
 }>;
 
 let activeFlush: Promise<OutboxFlushResult> | null = null;
+let outboxChangeRevision = 0;
+const outboxChangeListeners = new Set<() => void>();
 let syncDiagnostics: Readonly<{
   result: 'cancelled' | 'failed' | 'idle' | 'not_run' | 'pending' | 'synced';
   at: string | null;
 }> = Object.freeze({ result: 'not_run', at: null });
+
+function publishOutboxChange(): void {
+  outboxChangeRevision += 1;
+  for (const listener of outboxChangeListeners) listener();
+}
+
+export function subscribeOutboxChanges(listener: () => void): () => void {
+  outboxChangeListeners.add(listener);
+  return () => outboxChangeListeners.delete(listener);
+}
+
+export function readOutboxChangeRevision(): number {
+  return outboxChangeRevision;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -85,6 +109,32 @@ export async function readOutbox(): Promise<OutboxRead> {
       ? { status: 'unsupported_version', envelope: null }
       : { status: 'corrupt', envelope: null };
   }
+}
+
+export function readShelfOutboxStatus(scope: OwnerQueryScope): Promise<ShelfOutboxStatusRead> {
+  return runOwnerQueryOperation(scope, async (lease) => {
+    const owner = await captureAuthenticatedAccountOwner(lease);
+    if (!owner) {
+      return {
+        status: 'available',
+        value: Object.freeze({ kind: 'idle', pendingCount: 0, attentionCount: 0 }),
+      };
+    }
+    const ownerHash = await hashOutboxOwner(owner.userId);
+    lease.assertCurrent();
+    const state = await readOutbox();
+    lease.assertCurrent();
+    if (state.envelope === null) {
+      return { status: state.status, value: null };
+    }
+    return {
+      status: 'available',
+      value: selectOutboxOwnerStatus(state.envelope, {
+        ownerHash,
+        ownerGeneration: lease.generation,
+      }),
+    };
+  });
 }
 
 function wireOperation(row: OutboxRow): Json {
@@ -173,6 +223,7 @@ async function settleLease(
       }),
     ),
   );
+  publishOutboxChange();
 }
 
 async function flushOutboxOnce(): Promise<OutboxFlushResult> {
@@ -200,6 +251,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
         return encodeOutboxEnvelope(leased.envelope);
       });
       lease.assertCurrent();
+      if (leasedRows.length > 0) publishOutboxChange();
       if (leasedRows.length === 0) break;
       totalLeased += leasedRows.length;
 
@@ -273,6 +325,7 @@ export function flushOutbox(): Promise<OutboxFlushResult> {
         result: result.leased > result.flushed ? 'pending' : result.flushed > 0 ? 'synced' : 'idle',
         at: new Date().toISOString(),
       });
+      publishOutboxChange();
       return result;
     })
     .catch((error: unknown) => {
@@ -280,6 +333,7 @@ export function flushOutbox(): Promise<OutboxFlushResult> {
         result: error instanceof AccountGenerationLeaseError ? 'cancelled' : 'failed',
         at: new Date().toISOString(),
       });
+      publishOutboxChange();
       throw error;
     })
     .finally(() => {
@@ -290,7 +344,30 @@ export function flushOutbox(): Promise<OutboxFlushResult> {
 }
 
 export function scheduleOutboxFlush(): void {
+  publishOutboxChange();
   void flushOutbox().catch(() => undefined);
+}
+
+export function retryShelfOutbox(scope: OwnerQueryScope): Promise<OutboxFlushResult> {
+  return runOwnerQueryOperation(scope, async (lease) => {
+    const owner = await captureAuthenticatedAccountOwner(lease);
+    if (!owner) return Object.freeze({ leased: 0, flushed: 0, dead: 0 });
+    const ownerHash = await hashOutboxOwner(owner.userId);
+    lease.assertCurrent();
+    let retried = 0;
+    await updatePrivateItem(OUTBOX_STORAGE_KEY, (current) => {
+      const retry = retryDeadOutboxRows(decodeOutboxEnvelope(current), {
+        ownerHash,
+        ownerGeneration: lease.generation,
+        now: new Date().toISOString(),
+      });
+      retried = retry.retried;
+      return retry.retried > 0 ? encodeOutboxEnvelope(retry.envelope) : current;
+    });
+    lease.assertCurrent();
+    if (retried > 0) publishOutboxChange();
+    return flushOutbox();
+  });
 }
 
 export function readOutboxSyncDiagnostics(): typeof syncDiagnostics {
@@ -299,6 +376,8 @@ export function readOutboxSyncDiagnostics(): typeof syncDiagnostics {
 
 export function resetOutboxWorkerForTests(): void {
   activeFlush = null;
+  outboxChangeRevision = 0;
+  outboxChangeListeners.clear();
   syncDiagnostics = Object.freeze({ result: 'not_run', at: null });
 }
 

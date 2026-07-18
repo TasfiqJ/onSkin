@@ -67,6 +67,12 @@ export type OutboxServerResult = Readonly<{
   errorClass?: 'validation';
 }>;
 
+export type OutboxOwnerStatus = Readonly<{
+  kind: 'idle' | 'needs_attention' | 'saved_local' | 'syncing';
+  pendingCount: number;
+  attentionCount: number;
+}>;
+
 export const OUTBOX_INVALID = 'OUTBOX_INVALID';
 export const OUTBOX_UNSUPPORTED_VERSION = 'OUTBOX_UNSUPPORTED_VERSION';
 export const OUTBOX_LIMIT_REACHED = 'OUTBOX_LIMIT_REACHED';
@@ -551,6 +557,76 @@ export function settleOutboxLease(
     ];
   });
   return Object.freeze({ ...envelope, rows: Object.freeze(sortRows(rows)) });
+}
+
+function assertOwnerIdentity(ownerHash: string, ownerGeneration: number): void {
+  if (
+    !SHA256_HEX.test(ownerHash) ||
+    !Number.isSafeInteger(ownerGeneration) ||
+    ownerGeneration < 0
+  ) {
+    fail();
+  }
+}
+
+export function selectOutboxOwnerStatus(
+  envelope: OutboxEnvelope,
+  input: Readonly<{ ownerHash: string; ownerGeneration: number }>,
+): OutboxOwnerStatus {
+  assertOwnerIdentity(input.ownerHash, input.ownerGeneration);
+  const rows = envelope.rows.filter(
+    (row) => row.ownerHash === input.ownerHash && row.ownerGeneration === input.ownerGeneration,
+  );
+  const attentionCount = rows.filter((row) => row.state === 'dead').length;
+  const syncingCount = rows.filter((row) => row.state === 'leased').length;
+  const savedCount = rows.filter((row) => row.state === 'ready').length;
+  const kind =
+    attentionCount > 0
+      ? 'needs_attention'
+      : syncingCount > 0
+        ? 'syncing'
+        : savedCount > 0
+          ? 'saved_local'
+          : 'idle';
+  return Object.freeze({
+    kind,
+    pendingCount: rows.length,
+    attentionCount,
+  });
+}
+
+export function retryDeadOutboxRows(
+  envelope: OutboxEnvelope,
+  input: Readonly<{ ownerHash: string; ownerGeneration: number; now: string }>,
+): Readonly<{ envelope: OutboxEnvelope; retried: number }> {
+  assertOwnerIdentity(input.ownerHash, input.ownerGeneration);
+  if (!canonicalIso(input.now)) fail();
+
+  let retried = 0;
+  const rows = envelope.rows.map((row): OutboxRow => {
+    if (
+      row.ownerHash !== input.ownerHash ||
+      row.ownerGeneration !== input.ownerGeneration ||
+      row.state !== 'dead'
+    ) {
+      return row;
+    }
+    retried += 1;
+    return Object.freeze({
+      ...row,
+      state: 'ready' as const,
+      attemptCount: 0,
+      nextAttemptAt: input.now,
+      lastErrorClass: null,
+      leaseOwner: null,
+      leaseExpiresAt: null,
+    });
+  });
+  if (retried === 0) return Object.freeze({ envelope, retried: 0 });
+  return Object.freeze({
+    envelope: Object.freeze({ ...envelope, rows: Object.freeze(sortRows(rows)) }),
+    retried,
+  });
 }
 
 export function outboxCounts(envelope: OutboxEnvelope): Readonly<{
