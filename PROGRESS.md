@@ -7334,22 +7334,25 @@ cannot silently change Shelf or discard promised retry state.
 
 The integrated local checks passed the combined 15-file / 200-test barcode,
 report, encrypted-queue, reconnect, export, label-photo, route,
-health-admission, and idempotent-store lane; 14/14 CAT-04 runner contracts;
+health-admission, and idempotent-store lane; 16/16 CAT-04 runner contracts;
 Phase 4 source-policy/import/QA/promotion/serving-Edge lanes at 27/27, 20/20,
 17/17, 23/23, and 23/23; the 35/35 focused report/export/health Deno lane; Phase
 2 source and Phase 9 policy/data-rights/RLS/security code gates, including 10/10
-RLS smoke assertions; mobile typecheck; and the full 289-file / 3,360-test
-mobile suite. The
-deterministic Expo-web runner declares 15 scenarios across 375 x 667, 390 x
-844, and 430 x 932 (45 executions) plus 18 fixture-group health-consent
-bootstraps. It explicitly cannot fake a persisted offline lookup becoming ready
-across restart, so generated exact-SHA web evidence and a real hosted ready-
-candidate accept/reject cycle remain separate gates.
+RLS smoke assertions; mobile typecheck; and the full 289-file / 3,361-test
+mobile suite. Governed exact-source Expo-web evidence passes 45/45 scenario
+executions and 18/18 explicit-consent bootstraps across 375 x 667, 390 x 844,
+and 430 x 932 with zero browser failures, 365 tracked files, and 144
+screenshots. The packet remains deterministic fixture evidence with
+`nativeDeviceProof=false`. It explicitly cannot fake a persisted offline
+lookup becoming ready across restart, so a real hosted ready-candidate
+accept/reject cycle remains a separate gate.
 
 CAT-04 remains blocked by `CAT-03`, `H-07`, and `H-08`. No active reviewed
 launch catalog, hosted `0059`/RLS/export/withdrawal/deletion/observability proof,
-physical-iPhone camera and accessibility matrix, native OCR, final App Privacy
+physical-iPhone camera and accessibility matrix, final App Privacy
 reconciliation, or qualified privacy/security/legal/source decision exists.
+Native OCR is the next catalog task under CAT-05 and remains a separate Shelf
+launch blocker; it is not a CAT-04 closure dependency.
 This checkpoint does not establish Apple acceptance, legal compliance, catalog
 accuracy, product-market fit, or revenue.
 

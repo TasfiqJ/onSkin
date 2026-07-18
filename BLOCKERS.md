@@ -1,6 +1,6 @@
 # Blockers - iOS All-Features Launch Gates
 
-Date: 2026-07-15
+Date: 2026-07-18
 
 Status reviewed: 2026-07-18
 
@@ -169,7 +169,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The current integrated source checkpoint
-on 2026-07-18 passes root typecheck, lint, and 289 mobile test files / 3360 tests.
+on 2026-07-18 passes root typecheck, lint, and 289 mobile test files / 3361 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -186,6 +186,14 @@ the `Account export local-photo scope disclosure` gate in
 `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`,
 and the `Combined account and current-device export` gate in
 `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
+The governed `CAT04 catalog search, scan, report, and recovery Expo-web pass`
+in `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/` adds
+45/45 scenario executions and 18/18 explicit-consent bootstraps across the
+375 x 667, 390 x 844, and 430 x 932 supported web viewports, with zero browser
+failures, 365 tracked files, and 144 screenshots. It uses deterministic Expo
+web fixtures and `nativeDeviceProof=false`; native camera/permission behavior,
+restart-to-ready persistence, hosted catalog/reporting, physical-iPhone
+accessibility, professional legal review, and App Store acceptance remain open.
 The `Account-generation-bound combined export` gate in
 `test-results/human-e2e/2026-07-11/data-export-account-generation-current/`
 also proves delayed-export sign-out, cleanup-failure gating, and recovery at

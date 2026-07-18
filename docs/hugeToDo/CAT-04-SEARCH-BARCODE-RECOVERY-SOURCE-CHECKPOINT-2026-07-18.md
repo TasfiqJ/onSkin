@@ -202,23 +202,28 @@ include:
 - combined barcode, report, encrypted-queue, reconnect, export, label-photo,
   route, health-admission, and idempotent-store mobile lane: 15 files / 200
   tests;
-- CAT-04 runner contracts: 14/14;
+- CAT-04 runner contracts: 16/16;
 - Phase 4 source-policy/import/QA/promotion/serving-Edge lanes: 27/27, 20/20,
   17/17, 23/23, and 23/23 respectively;
 - focused report/export/health Deno lane: 35/35;
 - Phase 2 local source contract and Phase 9 data-rights, policy, RLS, and
   security code gates: pass, including 10/10 RLS smoke assertions with expected
   warnings where live evidence is absent;
-- mobile typecheck and full mobile test suite: 289 files / 3,360
+- mobile typecheck and full mobile test suite: 289 files / 3,361
   tests.
 
-These are local source checks. The deterministic Expo-web runner declares 15
-scenarios across 375 x 667, 390 x 844, and 430 x 932 (45 scenario executions)
-plus 18 fixture-group consent bootstraps. It deliberately cannot fabricate a
-production lookup that turns a persisted offline request into a ready candidate
-across restart, so a real hosted ready-candidate accept/reject cycle remains
-outside that matrix. Generated evidence must bind to the exact committed source
-SHA and pass the human-E2E manifest gate before it is cited as current.
+These source checks are supplemented by governed local Expo-web evidence. The
+first exact-source pass bound the runner to
+`05539a8450dc1407eb00e7ee2dff78ed495a2d51` and passed 18/18 explicit-consent
+bootstraps plus 45/45 scenario executions across 375 x 667, 390 x 844, and
+430 x 932 with zero browser failures, 365 tracked files, and 144 screenshots.
+The retained packet is in
+`test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/`; the current
+source binding is enforced by `npm run e2e:human:manifest:check`. This is
+deterministic Expo web evidence with `nativeDeviceProof=false`. The runner
+deliberately cannot fabricate a production lookup that turns a persisted
+offline request into a ready candidate across restart, so a real hosted
+ready-candidate accept/reject cycle remains outside that matrix.
 
 ## Release gates that remain open
 
@@ -230,10 +235,9 @@ SHA and pass the human-E2E manifest gate before it is cited as current.
   prompt, denial and Settings return, preview indicator, barcode acquisition,
   UPC-E/UPC-A/EAN/GTIN reads, duplicate suppression, torch, interruptions,
   VoiceOver, keyboard, Dynamic Type, reduced motion, and supported devices.
-- Current web human-simulated E2E must pass all three declared launch viewports
-  for the deterministic 45-scenario/18-bootstrap contract without treating web
-  fixtures as native or backend proof. A real hosted restart/reconnect ready-
-  candidate accept/reject cycle remains separately required.
+- A real hosted restart/reconnect ready-candidate accept/reject cycle remains
+  required; the passing deterministic web matrix is not native or backend
+  proof.
 - App Store Connect privacy answers, privacy-policy/consumer-health-policy text,
   support and deletion URLs, review notes, non-expiring review access, and final
   archive metadata must be reconciled to observed production traffic and the

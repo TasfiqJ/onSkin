@@ -144,16 +144,18 @@ analytics table. Offline retry is an explicit encrypted,
 account/health-consent-bound, seven-day device queue whose reviewed result requires visible user confirmation
 before any Shelf change. Apple, FTC, Washington, Canadian, Quebec, and
 California primary-source analysis is recorded in the CAT-04 checkpoint. Local
-source checks pass 15 focused mobile files / 200 tests, 14/14 runner contracts,
+source checks pass 15 focused mobile files / 200 tests, 16/16 runner contracts,
 Phase 4 source-policy/import/QA/promotion/serving-Edge lanes at 27/27, 20/20,
 17/17, 23/23, and 23/23, the 35/35 focused report/export/health Deno lane, the
-data-rights/policy/RLS/security code gates, and the full 289-file / 3,360-test
-mobile baseline. No generated CAT-04 human-E2E evidence is current yet. The
-post-source-commit 45-scenario/18-bootstrap supported-viewport matrix, a real
-hosted ready-candidate reconnect cycle, live hosted owner/withdrawal/export/
-deletion evidence, active-catalog proof, physical-iPhone camera/accessibility
-matrix, App Privacy reconciliation, and professional privacy/security/legal
-review remain open; CAT-04 is not launch-clear.
+data-rights/policy/RLS/security code gates, and the full 289-file / 3,361-test
+mobile baseline. Governed CAT-04 Expo-web evidence passes all 45 scenario
+executions and all 18 consent bootstraps at 375 x 667, 390 x 844, and 430 x 932
+with zero browser failures, 365 tracked files, and 144 screenshots. It remains
+fixture-only evidence with `nativeDeviceProof=false`. A real hosted ready-
+candidate reconnect cycle, live hosted owner/withdrawal/export/deletion
+evidence, active-catalog proof, physical-iPhone camera/accessibility matrix,
+App Privacy reconciliation, and professional privacy/security/legal review
+remain open; CAT-04 is not launch-clear.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. The fresh-only source procedure now covers all 58 migrations through

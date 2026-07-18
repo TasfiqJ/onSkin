@@ -26,7 +26,7 @@ const outJson =
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
 const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 289);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 3360);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 3361);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -143,6 +143,8 @@ const allRequiredManifestNeedles = [
   'cycle-customization-current',
   'Shelf freshness and replacement provenance lifecycle',
   'shelf-freshness-provenance-current',
+  'CAT04 catalog search, scan, report, and recovery Expo-web pass',
+  'cat04-catalog-recovery-current',
   'Required-surface honest direct-entry and recovery pass',
   'required-surface-honesty-rerun',
   'Trend navigator privacy and exact-route recovery',

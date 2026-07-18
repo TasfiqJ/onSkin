@@ -799,10 +799,20 @@ FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
   Shelf bug where `View archive (1)` was covered by the floating tab bar, and
   reruns the archive path so `/shelf/archive` opens with the finished product
   visible. Evidence and the bug report are in
-  `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; this does
-  not replace native barcode camera/OCR QA, live Open Beauty Facts lookup,
-  Supabase `shelf_scans` insert/RLS evidence, or real-device safe-area and
-  screen-reader QA.
+  `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; this is
+  historical evidence and does not replace first-party hosted catalog,
+  migration `0059`, lookup-observability, physical barcode camera/OCR,
+  real-device safe-area, or screen-reader QA. Open Beauty Facts remains an
+  offline ingestion source only, and legacy `shelf_scans` is purged and sealed.
+- 2026-07-18: Governed deterministic Expo-web CAT-04 evidence passes 45/45
+  catalog search, scan, reporting, permission, validation, and recovery
+  scenario executions plus 18/18 explicit-consent bootstraps across 375 x 667,
+  390 x 844, and 430 x 932. The 365-file packet includes 144 screenshots and
+  reports zero browser failures. Evidence is in
+  `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/`. It has
+  `nativeDeviceProof=false` and does not clear hosted restart-to-ready,
+  migration/RLS/data-rights/observability, physical camera/OCR/accessibility,
+  professional review, or App Store gates.
 - 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the Shelf
   opened-date and replenishment boundary branch. `/shelf/opened` shows all three
   core opened-state choices before PAO/save controls on a short phone, a

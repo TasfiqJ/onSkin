@@ -666,10 +666,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   resilience-only under the current launch contract.
 - Launch-blocking web-compatible viewports: 375 x 667, 390 x 844, and 430 x 932. The 360-wide and 320-wide browser sizes are resilience/stress evidence,
   not the launch support floor.
-- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/cat04-catalog-recovery-current/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`
+- Evidence folder: `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/`
+- Current governed local evidence: the deterministic Expo-web matrix passes
+  45/45 matched, wrong-match, no-match, offline/error, permission/Settings
+  failure, malformed-identity, OCR-capture fallback, and manual-barcode
+  validation scenario executions plus 18/18 consent bootstraps at 375 x 667,
+  390 x 844, and 430 x 932. It retains 365 tracked files and 144 screenshots
+  with zero browser failures. `nativeDeviceProof=false`: native camera,
+  SecureStore/relaunch, hosted reconnect/reporting, physical-iPhone
+  accessibility, and backend behavior remain unproved.
+- Historical local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`,
+  `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`, and
+  `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`.
 
 ### Path A: Happy Path
 
@@ -850,7 +858,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history. `/shelf/add` must open the manual-add intake instead of being captured by the dynamic product-detail route. A missing/expired/malformed `/shelf/catalog-recovery` candidate must show `Match unavailable`, state that Shelf is unchanged, and expose retry when the encrypted read failed plus Back to Shelf. Stale `/shelf/[id]` entries must explain that the product is unavailable and provide `Back to Shelf` plus `Add a product` recovery actions. Stale `/shelf/replenish` entries must explain that the replacement prompt is no longer active, avoid reusing freshness or shopping prompts, and provide `Back to Shelf` plus `Add a product`. Direct `/shelf/opened` without an intake draft must recover to manual add instead of saving a generic product. Visible route exits meet the 44 pt phone touch target, `/shelf/search` keeps its manual fallback buffered above the phone bottom edge, add/replenish/recovery content stays scroll-reachable on supported phones, and sheets that can fill the viewport expose a visible Close control and dialog semantics instead of relying on a tiny backdrop.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone touch target measurements.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 and 390 x 568 covers direct `/shelf/add`, `/shelf/manual`, `/shelf/search`, `/shelf/ocr`, `/shelf/scan`, `/shelf/no-match`, `/shelf/opened`, `/shelf/archive`, stale `/shelf/[id]`, and stale `/shelf/replenish`. `/shelf/search` keeps the 56 px `Add by hand` fallback 32 px above the bottom edge, recovery clicks route to `/shelf/manual` or `/shelf`, every checked route has zero horizontal overflow, and focused `shelfRoutes.test.ts` route contracts pass.
-  - Required current evidence: The deterministic web matrix must cover missing/malformed `/shelf/catalog-recovery` route state at 375 x 667, 390 x 844, and 430 x 932. Because the checked-in runner deliberately does not fabricate a production offline lookup becoming ready across restart, linked, unlinked, expired, changed, offline-revalidation, accept, reject, cancel, and failed-save states still require a real hosted ready-candidate cycle plus native persistence/account-boundary evidence. Historical direct-entry evidence does not cover that new route.
+  - Current governed evidence and remaining gate: The 2026-07-18 deterministic web matrix covers missing/malformed `/shelf/catalog-recovery` route state at 375 x 667, 390 x 844, and 430 x 932. Because the checked-in runner deliberately does not fabricate a production offline lookup becoming ready across restart, linked, unlinked, expired, changed, offline-revalidation, accept, reject, cancel, and failed-save states still require a real hosted ready-candidate cycle plus native persistence/account-boundary evidence.
   - Current shared-sheet evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 verifies `/shelf/no-match` exposes exactly one modal dialog, a 48 px Close action, zero horizontal overflow, no sub-44 exposed controls, and a non-accessible 12 px backdrop strip with `aria-hidden=true` and `tabIndex=-1`; Close returns to `/shelf`. Shared `Sheet` safe-area padding now only overrides bottom padding when a real native bottom inset exists, preserving compact web sheet density.
 
 ## Flow: Photo Progress
