@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T10:59:46.494Z",
+  "generatedAt": "2026-07-18T15:52:11.590Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "f01fe110b3a225de70bf4ff7c585e2d772a38ddb",
+  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -278,8 +278,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 32606,
-      "sha256": "32d39d3ba7389bc0d968090df49590ddae46dd632cf0ef7cd7b840b581640211"
+      "bytes": 33306,
+      "sha256": "c4f416cd9674976509b8ad35f2cac43b06f6653de466aace35773d0642c41b2c"
     },
     {
       "path": "package-lock.json",
@@ -524,14 +524,14 @@
     {
       "path": "apps/mobile/src/features/today/routineProjection.ts",
       "exists": true,
-      "bytes": 7072,
-      "sha256": "713401d321f3fb938e0ad7c7005071fc2c16c8cf2f24b697452576b6bc32a1d6"
+      "bytes": 7275,
+      "sha256": "6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0"
     },
     {
       "path": "apps/mobile/src/features/today/routineProjection.test.ts",
       "exists": true,
-      "bytes": 6435,
-      "sha256": "20686de927a619d6bc8402f7e199e83201745773659e7ef50fbdaf617936fa4a"
+      "bytes": 7561,
+      "sha256": "da3894289743284f1b405b39b59d47c9de0633aba16ea58c1e8c5247d83bef0d"
     },
     {
       "path": "apps/mobile/src/features/widgets/actionRegistry.ts",
@@ -1196,26 +1196,26 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24601,
-      "sha256": "76b51c49b63d383bd8ab639536233d5ed52e088c71f8c4911944b2c06852eaf8"
+      "bytes": 25511,
+      "sha256": "bc01832bfadc1795b91bba0f137036f2e3fd29426593c073260bca4324ace57f"
     },
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",
       "exists": true,
-      "bytes": 88954,
-      "sha256": "6082167b051ca0d5d72758de4e55098d2e371b0102a619ddd2141bdfb5f1e861"
+      "bytes": 88978,
+      "sha256": "86d11748ea14e98d636fe0477fb2152c6d475eaeb667e03c10265fad6bce235f"
     },
     {
       "path": "scripts/phase9/rls-adversarial-smoke.mjs",
       "exists": true,
-      "bytes": 11441,
-      "sha256": "d65370be1fb57a7a10e34c95c57349aaaf6b98fcbf798fb714dc9a6ef36190a5"
+      "bytes": 12029,
+      "sha256": "55bbfebb905784424f827f305dd3e06a8e743b16403c6586d0e46201970bfa77"
     },
     {
       "path": "scripts/phase9/rls-adversarial.mjs",
       "exists": true,
-      "bytes": 21339,
-      "sha256": "548c568ade627640239cf8f1ac2de7dc9bda574b72036247693799680241704b"
+      "bytes": 23532,
+      "sha256": "9f556d14b53ad915ba9a0d95b458c749fe63bd7e00696ff4f65df8c246706399"
     },
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
@@ -1238,8 +1238,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 398658,
-      "sha256": "4ae6f3e4706026d040f89f487bb3782a76160f4f55cf117e07142cfa331db3a0"
+      "bytes": 399901,
+      "sha256": "4ebc6823f96d1a23b14658fb7219a78e676a524cce211613b8f5e06758848861"
     },
     {
       "path": "docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md",
@@ -1251,13 +1251,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "80b24c29816321fef57ee95e00c0e78030734a77a35d9a79bbe2146405d5be7b"
+      "sha256": "af581ac031031607df54e22ecae17f07dbe3e4cb0a438eff380dbfe2bfc806e7"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "71e49436132ed06985c74dbd765cbfe5363ee308d8004810938144b633e06dfb"
+      "sha256": "ec88830bc85ca4f130e5bc5f2abdb4fe9e4cf1bd4a84f416d8ae50b598f0ace2"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T10:59:46.706Z",
+  "generatedAt": "2026-07-18T15:52:12.715Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,7 +81,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "f01fe110b3a225de70bf4ff7c585e2d772a38ddb",
+  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
@@ -189,8 +189,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 32606,
-      "sha256": "32d39d3ba7389bc0d968090df49590ddae46dd632cf0ef7cd7b840b581640211"
+      "bytes": 33306,
+      "sha256": "c4f416cd9674976509b8ad35f2cac43b06f6653de466aace35773d0642c41b2c"
     },
     {
       "path": "package-lock.json",
@@ -669,8 +669,8 @@
     {
       "path": "scripts/phase9/supabase-policy-lint.mjs",
       "exists": true,
-      "bytes": 13721,
-      "sha256": "f9aec69c488609b67c9e721e33adc0ea2ec8cca500ae3133ff5036eace8587ea"
+      "bytes": 15377,
+      "sha256": "20c4f961577e14ecc43b703f13e65228989e472af30acf464f35006c82beccab"
     },
     {
       "path": "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
@@ -693,8 +693,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24601,
-      "sha256": "76b51c49b63d383bd8ab639536233d5ed52e088c71f8c4911944b2c06852eaf8"
+      "bytes": 25511,
+      "sha256": "bc01832bfadc1795b91bba0f137036f2e3fd29426593c073260bca4324ace57f"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -711,20 +711,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 398658,
-      "sha256": "4ae6f3e4706026d040f89f487bb3782a76160f4f55cf117e07142cfa331db3a0"
+      "bytes": 399901,
+      "sha256": "4ebc6823f96d1a23b14658fb7219a78e676a524cce211613b8f5e06758848861"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "80b24c29816321fef57ee95e00c0e78030734a77a35d9a79bbe2146405d5be7b"
+      "sha256": "af581ac031031607df54e22ecae17f07dbe3e4cb0a438eff380dbfe2bfc806e7"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "71e49436132ed06985c74dbd765cbfe5363ee308d8004810938144b633e06dfb"
+      "sha256": "ec88830bc85ca4f130e5bc5f2abdb4fe9e4cf1bd4a84f416d8ae50b598f0ace2"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",

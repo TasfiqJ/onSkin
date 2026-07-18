@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-17T10:59:44.910Z
+Generated: 2026-07-18T15:51:41.571Z
 Status: pass
-Git SHA: f01fe110b3a225de70bf4ff7c585e2d772a38ddb
+Git SHA: 2d5cb849ac0f926556df7a991be39074a1640fc8
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -12,8 +12,8 @@ reviewers must inspect before launch gates can close.
 
 ## Summary
 
-- Review items: 37
-- Source files hashed: 415
+- Review items: 38
+- Source files hashed: 398
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -31,6 +31,7 @@ reviewers must inspect before launch gates can close.
 | legalRegulatory   | Commerce and paid-link disclosure                 | Blocked     | TBD      | TBD  | not-applicable | 21      | 0               |
 | legalRegulatory   | Ask and AI disclosures                            | Blocked     | TBD      | TBD  | not-applicable | 19      | 0               |
 | clinical          | Ingredient interaction rules                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Routine application ordering                      | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
 | clinical          | Pregnancy safety and active cadence               | Not cleared | TBD      | TBD  | not-applicable | 5       | 0               |
 | clinical          | PAO defaults                                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | clinical          | Recommendation types                              | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
@@ -45,7 +46,7 @@ reviewers must inspect before launch gates can close.
 | cosmeticChemistry | PAO defaults                                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | cosmeticChemistry | Recommendation catalog                            | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | cosmeticChemistry | Shoppable stack item labels                       | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| cosmeticChemistry | Routine sequencing                                | Not cleared | TBD      | TBD  | not-applicable | 25      | 0               |
+| cosmeticChemistry | Routine sequencing                                | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
 | cosmeticChemistry | Active concentration and pregnancy-caution matrix | Not cleared | TBD      | TBD  | not-applicable | 20      | 0               |
 | cosmeticChemistry | Smart shelf labels                                | Not cleared | TBD      | TBD  | not-applicable | 23      | 0               |
 | privacySecurity   | Health-data consent and withdrawal                | Blocked     | TBD      | TBD  | not-applicable | 63      | 0               |
@@ -250,13 +251,31 @@ Sources:
 
 - `apps/mobile/src/features/intelligence/rules.ts` - 10189 bytes - sha256 `00a368beef8a4b59edbf5b5847868093bf402de4c65eabaa79ec7d0517116aa4`
 
+### clinical - Routine application ordering
+
+- Worklist ID: `clinical:routine-application-ordering`
+- Status: Not cleared
+- Required reviewer: board-certified dermatologist or equivalent qualified clinician
+- Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `e6d91eeb2c10c0f2f9710f7124e3001f42f29997ddcfa870316ab3a89480db0f`
+- Detached signoff: not-applicable
+- Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
+- Review-log notes: Review every role's phase, priority, exact full/compact display copy, rule version, and partial-review behavior. No manual add-to-AM/PM recovery exists.
+
+Sources:
+
+- `apps/mobile/src/features/routine/sequencing.ts` - 10036 bytes - sha256 `9f96c0395548df4780b68991599633bc919946832e3a811b0b1b43909559a06d`
+- `apps/mobile/src/features/routine/generate.ts` - 7889 bytes - sha256 `b95e242b8e14abbe555302c2be92d1a620a650addda359e0ca261cf907f6b314`
+- `apps/mobile/src/features/today/routineProjection.ts` - 7275 bytes - sha256 `6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0`
+- `apps/mobile/src/app/(tabs)/today.tsx` - 30507 bytes - sha256 `76da3fdb66337d118e8a5381a9cd8333e17aa02698595db5f30abcbc8510b935`
+
 ### clinical - Pregnancy safety and active cadence
 
 - Worklist ID: `clinical:pregnancy-safety-and-active-cadence`
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `728a8a589f36de6d7aa30e9429dfd79201823509568c79eb837ccccdc60c1191`
+- Review snapshot SHA-256: `bd7b7bb104b24e631494c7fab0c58dfdedc78336de0871d4830b87344406ca7d`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review statuses, retinoid/hydroquinone/BHA matrix and threshold, unknown-strength handling, cadence, replacement suppression, and every visible explanation together.
@@ -265,7 +284,7 @@ Sources:
 
 - `apps/mobile/src/features/intelligence/pregnancySafety.ts` - 1703 bytes - sha256 `ac39dca4dcc9f9cf19cdb695a42c8cc4c92df8abe2ea8838773d749b10de5c71`
 - `apps/mobile/src/features/intelligence/concentration.ts` - 7024 bytes - sha256 `a44ab1e6e6020e7e01a432d82c5aa8e8f941db4b4a870f8e0fa55e94bd8a6230`
-- `apps/mobile/src/features/routine/generate.ts` - 6622 bytes - sha256 `49df92d077bec632077c967fe0bb5626acc5fa7d4acb435a09a4abd671b0b403`
+- `apps/mobile/src/features/routine/generate.ts` - 7889 bytes - sha256 `b95e242b8e14abbe555302c2be92d1a620a650addda359e0ca261cf907f6b314`
 - `apps/mobile/src/features/scheduler/orchestrate.ts` - 12566 bytes - sha256 `cc78a6d95295d2dd3cf2db03e00401fcd01bf3142ca0a329e25d5e2e2e884a37`
 - `apps/mobile/src/features/recommendations/engine.ts` - 17809 bytes - sha256 `ccd83caffac064fa690bb5acbf67ec350a86398ce64f22e5f3ecc06ca691693d`
 
@@ -500,38 +519,17 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `04a769df56eff23f9cf60fdee28e4ebd8f07f2a055bab6da178148aa2f831920`
+- Review snapshot SHA-256: `6b56f47582752859ae205cb954cde396efc280edd6462d3c570a00e9a66a220e`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Confirm order labels and conflicts.
+- Review-log notes: Confirm every role's phase, priority, exact displayed instruction, and partial-review behavior. No manual add-to-AM/PM recovery exists.
 
 Sources:
 
-- `apps/mobile/src/features/routine/activationAnalytics.test.ts` - 6851 bytes - sha256 `ce2b53262a21163ff27df5a6823b902f4de85fa396e2535e32331dfd2d4d9889`
-- `apps/mobile/src/features/routine/activationAnalytics.ts` - 5528 bytes - sha256 `a79affb1332e22f7d9f4a6acbaa24066bbc4d0443de3ac40f72614e9ef4f78c4`
-- `apps/mobile/src/features/routine/cycleAnchor.test.ts` - 1817 bytes - sha256 `0354831b307d488e591c6d07814a81d07a27ad7233fca6d9f2bb21e297126af9`
-- `apps/mobile/src/features/routine/cycleAnchor.ts` - 3147 bytes - sha256 `8cffa3642312d7d596a316d2c720e237c59d922304a8d635c67218dc62f612f7`
-- `apps/mobile/src/features/routine/firstInsight.test.ts` - 5571 bytes - sha256 `39c0394d4e474a8b8419cc0751a3402657f1850a46e15dd755323cff7fb1d92a`
-- `apps/mobile/src/features/routine/firstInsight.ts` - 3670 bytes - sha256 `76bb211ba389eb77c425c8524637b3e1c738af4413be90d107fd30d87cb8f5b1`
-- `apps/mobile/src/features/routine/generate.test.ts` - 18990 bytes - sha256 `b8c491dcd1f80d78bca23ad66144602e5b5e4a0bd5c74606a2447730b08b5ed0`
-- `apps/mobile/src/features/routine/generate.ts` - 6622 bytes - sha256 `49df92d077bec632077c967fe0bb5626acc5fa7d4acb435a09a4abd671b0b403`
-- `apps/mobile/src/features/routine/orderRoutes.test.ts` - 3554 bytes - sha256 `93a2b5cc63a55823c0b6ac8eec51344f089ef20814ed82384f1572ad03bf2e6d`
-- `apps/mobile/src/features/routine/orderStore.test.ts` - 7926 bytes - sha256 `2ecc37b219b836fec5f0c3895d8b9f7691146d1082d26e44e0684bba02fe3640`
-- `apps/mobile/src/features/routine/orderStore.ts` - 7490 bytes - sha256 `d28a51b8047d5882f252c2de8dc7a2959b2f5af5b06e9f9d0468f1ca27be47dd`
-- `apps/mobile/src/features/routine/progressSanitizers.test.ts` - 1120 bytes - sha256 `bac657c445e5ac8a357299c341a20f45d24e53a21da1061b6eba021d61bfcf31`
-- `apps/mobile/src/features/routine/progressSanitizers.ts` - 843 bytes - sha256 `92aa1357f496178730496bd5b79a490a5c36e308503edadf3abfaf00756af1ef`
-- `apps/mobile/src/features/routine/ramp.ts` - 2685 bytes - sha256 `dca75dec56c3023227f121a35acbcbbedf1adf5e6dc972eeef5f791ac20909c4`
-- `apps/mobile/src/features/routine/rampStore.test.ts` - 6449 bytes - sha256 `5720b7504c44cd9e2939768276006b2694afafef433f8babfa8e50a48a55b087`
-- `apps/mobile/src/features/routine/rampStore.ts` - 8878 bytes - sha256 `aa6567bf049f5815ea5c17fcc0025827b3185c7241797ac3e08610fecd8cb01e`
-- `apps/mobile/src/features/routine/reviewGate.test.ts` - 1458 bytes - sha256 `9134ef0d3dee8aab7efab7e1de07bd1e041a82d42f57ff7b72435abac3fe589b`
-- `apps/mobile/src/features/routine/reviewGate.ts` - 586 bytes - sha256 `ab56e4d57c55e76af25ce35fe9a9d00d9b653f810cfab50b0caf126e1ec42acd`
-- `apps/mobile/src/features/routine/scheduleContract.test.ts` - 2486 bytes - sha256 `0495aab2fc8563e3a1fe1dffb757c836b44b2fc4983d38f8d53dab4bc58b8007`
-- `apps/mobile/src/features/routine/sequencing.ts` - 7732 bytes - sha256 `a4e8abd61e4cda24726699a24ecfe1ae1720b9012b6d98d52be4bffb6ac4a51e`
-- `apps/mobile/src/features/routine/usePlan.test.ts` - 1573 bytes - sha256 `6c7cbeb54eb3172dc688f31927f80a0b19d2ff06b003bc42780e2ae0f6eaf980`
-- `apps/mobile/src/features/routine/usePlan.ts` - 5509 bytes - sha256 `9c2c9f016081bacfd5ea599a9127b34ac242686fe1ded5a7322d12ade9e5217a`
-- `apps/mobile/src/features/routine/useProgress.test.ts` - 1321 bytes - sha256 `1b8315f9ee39e15b1b2146f1aa2699ee5c51c5a8598b2d5b3ad42175c786cfc6`
-- `apps/mobile/src/features/routine/useProgress.ts` - 6620 bytes - sha256 `93dbd9ebfbbc75affca696d4983f79dcfb2b1a46d70a3c3194efae594420b6bc`
-- `apps/mobile/src/features/routine/useRamp.ts` - 3113 bytes - sha256 `3648defb7ba0910823d8cefc2246c6d4752b4078778530f0371dce71f5e3bc7d`
+- `apps/mobile/src/features/routine/sequencing.ts` - 10036 bytes - sha256 `9f96c0395548df4780b68991599633bc919946832e3a811b0b1b43909559a06d`
+- `apps/mobile/src/features/routine/generate.ts` - 7889 bytes - sha256 `b95e242b8e14abbe555302c2be92d1a620a650addda359e0ca261cf907f6b314`
+- `apps/mobile/src/features/today/routineProjection.ts` - 7275 bytes - sha256 `6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0`
+- `apps/mobile/src/app/(tabs)/today.tsx` - 30507 bytes - sha256 `76da3fdb66337d118e8a5381a9cd8333e17aa02698595db5f30abcbc8510b935`
 
 ### cosmeticChemistry - Active concentration and pregnancy-caution matrix
 
@@ -610,15 +608,15 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `fabd4dfa9c4d4087256dc3b8dcac25a8bf17fef0e4bbad599f846901103c118d`
+- Review snapshot SHA-256: `b1840ccee9b88bb5d70524b60679e2d657e3c84341683ed1d076854dfcaffbc0`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review age -> consent -> goals ordering; immediate local/server freeze; exact deletion/preservation scope; legacy users; terminal-only fresh reconsent; installed-client rollout; minimized receipt retention; Supabase backup/restore; processor versioning; and final consumer-health notice.
 
 Sources:
 
-- `docs/phase-3/consent-matrix.md` - 10237 bytes - sha256 `a50b3b1baf6c996409b85df19899ac3e80482dbd2043b02677ccec4cccf38130`
-- `docs/store-privacy-inventory.md` - 23996 bytes - sha256 `c7ee117f25e7b225948cfd28a1e55e676601da6d70510cb503cc870d39a92104`
+- `docs/phase-3/consent-matrix.md` - 16199 bytes - sha256 `72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a`
+- `docs/store-privacy-inventory.md` - 31965 bytes - sha256 `620804f163e296ed0faac3bff466fe47f16c86ae5789b8f7bde687938a2342a7`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32996 bytes - sha256 `91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
 - `docs/hugeToDo/credential-inventory.json` - 22214 bytes - sha256 `8424ffa22560bc3a82d0b820cc79d509e2de54dea5c1a0ae353ad09ada160d3f`
@@ -734,7 +732,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ec67880637bd9c95cd9a8a62ac31d35c6ffa8c0e56ea2312005f70d85a40bc0e`
+- Review snapshot SHA-256: `036fb9237f9fc6049bf049b192dc3e68c25c151071abe162a840f0f89ff83d1e`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Vendor/partner sharing and withdrawal copy must be reviewed.
@@ -744,7 +742,7 @@ Sources:
 - `apps/mobile/src/features/ask/consent.ts` - 833 bytes - sha256 `ba732d8c83bd8951f2c33a11ef7555bd2d6ee23dd1b02d6bfb8de20cd219885b`
 - `apps/mobile/src/features/commerce/consent.ts` - 1227 bytes - sha256 `355ba414c9719156b12c5772e9550d986f64b312395f82dde8e313e20ab1b5ef`
 - `apps/mobile/src/features/community/consent.ts` - 1121 bytes - sha256 `9bacdd40ad62d380a482bb4de5f911c62b87a03002d95ac8b4f4fb7d6a2ae8c6`
-- `docs/phase-3/consent-matrix.md` - 10237 bytes - sha256 `a50b3b1baf6c996409b85df19899ac3e80482dbd2043b02677ccec4cccf38130`
+- `docs/phase-3/consent-matrix.md` - 16199 bytes - sha256 `72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a`
 
 ### privacySecurity - Account deletion and data export
 
@@ -811,7 +809,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `4c1bed154524d49dcca78196ebbf92c91a0abc502a2ff890c71f06e174befe6a`
+- Review snapshot SHA-256: `0de51e0bf775debe21fc339bd43bd954a9b06a4023e72e88e012c1317c7e718d`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Verify Apple/Google auth, Supabase DPA/region/backups, observed SDK traffic, processor/subprocessor contracts, HBNR posture, breach contacts, retention, deletion APIs, and RLS.
@@ -865,7 +863,7 @@ Sources:
 - `apps/mobile/src/lib/auth/sessionOwner.ts` - 7773 bytes - sha256 `b402808213bd63d665228e1ed013b62ce7781e0e3fc66b7985275836fccbda44`
 - `apps/mobile/src/lib/auth/sessionOwnerKey.ts` - 361 bytes - sha256 `8685503a2c910754e2baf87a5d86b5551004d64ecd2952d21800cc20ee2c5f6a`
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
-- `docs/phase-3/data-inventory.md` - 18228 bytes - sha256 `32d58bfd29e72e194abdb7dded742d9c09fa1af2f922bb5a00dbf3c1b61b0163`
+- `docs/phase-3/data-inventory.md` - 36362 bytes - sha256 `39cf1a9caf5c435fafa23f0074ad4934dfeab6243ef0764949a504b9382a2eda`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32996 bytes - sha256 `91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4`
 

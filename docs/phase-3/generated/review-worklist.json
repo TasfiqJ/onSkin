@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-17T10:59:44.910Z",
+  "generatedAt": "2026-07-18T15:51:41.571Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "f01fe110b3a225de70bf4ff7c585e2d772a38ddb",
+  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -19,16 +19,16 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "path": "docs/phase-3/clinical-review-log.md",
       "exists": true,
-      "bytes": 10231,
-      "sha256": "a1ce4bf751e837a14da727fb5bbfd7ab3ce53e1fd73f3518b29e06a99c8f009c"
+      "bytes": 10861,
+      "sha256": "9ef06b44eb34dcc9a43241ea81d7b2d616ce8f37f2e39fdbf8369213a1dbbff7"
     },
     {
       "domain": "cosmeticChemistry",
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "path": "docs/phase-3/cosmetic-chemistry-review-log.md",
       "exists": true,
-      "bytes": 6393,
-      "sha256": "e7b5dbf31423de83ad8bc802225022f85709a7415d4039260734b98a1380ac62"
+      "bytes": 6717,
+      "sha256": "4ae33d5df6ba102c9543f71c7387fdbdf63ec25f663a53d04ef993fa809017f6"
     },
     {
       "domain": "privacySecurity",
@@ -48,19 +48,19 @@
     }
   ],
   "summary": {
-    "itemCount": 37,
+    "itemCount": 38,
     "domainCounts": {
       "legalRegulatory": 6,
-      "clinical": 11,
+      "clinical": 12,
       "cosmeticChemistry": 7,
       "privacySecurity": 7,
       "ipFto": 6
     },
     "statusCounts": {
-      "notCleared": 22,
+      "notCleared": 23,
       "blocked": 15
     },
-    "sourcePathCount": 415,
+    "sourcePathCount": 398,
     "missingSourcePathCount": 0,
     "signedItemCount": 0,
     "unsignedReleaseDispositionCount": 0,
@@ -730,6 +730,49 @@
       "signoffStatus": "not-applicable"
     },
     {
+      "id": "clinical:routine-application-ordering",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Routine application ordering",
+      "sourceText": "`apps/mobile/src/features/routine/sequencing.ts`, `apps/mobile/src/features/routine/generate.ts`, `apps/mobile/src/features/today/routineProjection.ts`, `apps/mobile/src/app/(tabs)/today.tsx`",
+      "currentBehavior": "Each unreviewed role, placement, and instruction is withheld from Plan, Today, and cycle projection",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Review every role's phase, priority, exact full/compact display copy, rule version, and partial-review behavior. No manual add-to-AM/PM recovery exists.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/routine/sequencing.ts",
+          "exists": true,
+          "bytes": 10036,
+          "sha256": "9f96c0395548df4780b68991599633bc919946832e3a811b0b1b43909559a06d"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/generate.ts",
+          "exists": true,
+          "bytes": 7889,
+          "sha256": "b95e242b8e14abbe555302c2be92d1a620a650addda359e0ca261cf907f6b314"
+        },
+        {
+          "path": "apps/mobile/src/features/today/routineProjection.ts",
+          "exists": true,
+          "bytes": 7275,
+          "sha256": "6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0"
+        },
+        {
+          "path": "apps/mobile/src/app/(tabs)/today.tsx",
+          "exists": true,
+          "bytes": 30507,
+          "sha256": "76da3fdb66337d118e8a5381a9cd8333e17aa02698595db5f30abcbc8510b935"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "e6d91eeb2c10c0f2f9710f7124e3001f42f29997ddcfa870316ab3a89480db0f",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
+    },
+    {
       "id": "clinical:pregnancy-safety-and-active-cadence",
       "domain": "clinical",
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
@@ -757,8 +800,8 @@
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6622,
-          "sha256": "49df92d077bec632077c967fe0bb5626acc5fa7d4acb435a09a4abd671b0b403"
+          "bytes": 7889,
+          "sha256": "b95e242b8e14abbe555302c2be92d1a620a650addda359e0ca261cf907f6b314"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
@@ -774,7 +817,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "728a8a589f36de6d7aa30e9429dfd79201823509568c79eb837ccccdc60c1191",
+      "reviewSnapshotSha256": "bd7b7bb104b24e631494c7fab0c58dfdedc78336de0871d4830b87344406ca7d",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1288,167 +1331,41 @@
       "domain": "cosmeticChemistry",
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "area": "Routine sequencing",
-      "sourceText": "`apps/mobile/src/features/routine/*`",
-      "currentBehavior": "Core routine behavior",
+      "sourceText": "`apps/mobile/src/features/routine/sequencing.ts`, `apps/mobile/src/features/routine/generate.ts`, `apps/mobile/src/features/today/routineProjection.ts`, `apps/mobile/src/app/(tabs)/today.tsx`",
+      "currentBehavior": "Unreviewed roles, placements, and instructions are withheld from Plan, Today, and cycle projection",
       "reviewer": "TBD",
       "date": "TBD",
       "status": "Not cleared",
       "statusBucket": "notCleared",
-      "notes": "Confirm order labels and conflicts.",
+      "notes": "Confirm every role's phase, priority, exact displayed instruction, and partial-review behavior. No manual add-to-AM/PM recovery exists.",
       "sourcePaths": [
         {
-          "path": "apps/mobile/src/features/routine/activationAnalytics.test.ts",
+          "path": "apps/mobile/src/features/routine/sequencing.ts",
           "exists": true,
-          "bytes": 6851,
-          "sha256": "ce2b53262a21163ff27df5a6823b902f4de85fa396e2535e32331dfd2d4d9889"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/activationAnalytics.ts",
-          "exists": true,
-          "bytes": 5528,
-          "sha256": "a79affb1332e22f7d9f4a6acbaa24066bbc4d0443de3ac40f72614e9ef4f78c4"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/cycleAnchor.test.ts",
-          "exists": true,
-          "bytes": 1817,
-          "sha256": "0354831b307d488e591c6d07814a81d07a27ad7233fca6d9f2bb21e297126af9"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/cycleAnchor.ts",
-          "exists": true,
-          "bytes": 3147,
-          "sha256": "8cffa3642312d7d596a316d2c720e237c59d922304a8d635c67218dc62f612f7"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/firstInsight.test.ts",
-          "exists": true,
-          "bytes": 5571,
-          "sha256": "39c0394d4e474a8b8419cc0751a3402657f1850a46e15dd755323cff7fb1d92a"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/firstInsight.ts",
-          "exists": true,
-          "bytes": 3670,
-          "sha256": "76bb211ba389eb77c425c8524637b3e1c738af4413be90d107fd30d87cb8f5b1"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/generate.test.ts",
-          "exists": true,
-          "bytes": 18990,
-          "sha256": "b8c491dcd1f80d78bca23ad66144602e5b5e4a0bd5c74606a2447730b08b5ed0"
+          "bytes": 10036,
+          "sha256": "9f96c0395548df4780b68991599633bc919946832e3a811b0b1b43909559a06d"
         },
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6622,
-          "sha256": "49df92d077bec632077c967fe0bb5626acc5fa7d4acb435a09a4abd671b0b403"
+          "bytes": 7889,
+          "sha256": "b95e242b8e14abbe555302c2be92d1a620a650addda359e0ca261cf907f6b314"
         },
         {
-          "path": "apps/mobile/src/features/routine/orderRoutes.test.ts",
+          "path": "apps/mobile/src/features/today/routineProjection.ts",
           "exists": true,
-          "bytes": 3554,
-          "sha256": "93a2b5cc63a55823c0b6ac8eec51344f089ef20814ed82384f1572ad03bf2e6d"
+          "bytes": 7275,
+          "sha256": "6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0"
         },
         {
-          "path": "apps/mobile/src/features/routine/orderStore.test.ts",
+          "path": "apps/mobile/src/app/(tabs)/today.tsx",
           "exists": true,
-          "bytes": 7926,
-          "sha256": "2ecc37b219b836fec5f0c3895d8b9f7691146d1082d26e44e0684bba02fe3640"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/orderStore.ts",
-          "exists": true,
-          "bytes": 7490,
-          "sha256": "d28a51b8047d5882f252c2de8dc7a2959b2f5af5b06e9f9d0468f1ca27be47dd"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/progressSanitizers.test.ts",
-          "exists": true,
-          "bytes": 1120,
-          "sha256": "bac657c445e5ac8a357299c341a20f45d24e53a21da1061b6eba021d61bfcf31"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/progressSanitizers.ts",
-          "exists": true,
-          "bytes": 843,
-          "sha256": "92aa1357f496178730496bd5b79a490a5c36e308503edadf3abfaf00756af1ef"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/ramp.ts",
-          "exists": true,
-          "bytes": 2685,
-          "sha256": "dca75dec56c3023227f121a35acbcbbedf1adf5e6dc972eeef5f791ac20909c4"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/rampStore.test.ts",
-          "exists": true,
-          "bytes": 6449,
-          "sha256": "5720b7504c44cd9e2939768276006b2694afafef433f8babfa8e50a48a55b087"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/rampStore.ts",
-          "exists": true,
-          "bytes": 8878,
-          "sha256": "aa6567bf049f5815ea5c17fcc0025827b3185c7241797ac3e08610fecd8cb01e"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/reviewGate.test.ts",
-          "exists": true,
-          "bytes": 1458,
-          "sha256": "9134ef0d3dee8aab7efab7e1de07bd1e041a82d42f57ff7b72435abac3fe589b"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/reviewGate.ts",
-          "exists": true,
-          "bytes": 586,
-          "sha256": "ab56e4d57c55e76af25ce35fe9a9d00d9b653f810cfab50b0caf126e1ec42acd"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/scheduleContract.test.ts",
-          "exists": true,
-          "bytes": 2486,
-          "sha256": "0495aab2fc8563e3a1fe1dffb757c836b44b2fc4983d38f8d53dab4bc58b8007"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/sequencing.ts",
-          "exists": true,
-          "bytes": 7732,
-          "sha256": "a4e8abd61e4cda24726699a24ecfe1ae1720b9012b6d98d52be4bffb6ac4a51e"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/usePlan.test.ts",
-          "exists": true,
-          "bytes": 1573,
-          "sha256": "6c7cbeb54eb3172dc688f31927f80a0b19d2ff06b003bc42780e2ae0f6eaf980"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/usePlan.ts",
-          "exists": true,
-          "bytes": 5509,
-          "sha256": "9c2c9f016081bacfd5ea599a9127b34ac242686fe1ded5a7322d12ade9e5217a"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/useProgress.test.ts",
-          "exists": true,
-          "bytes": 1321,
-          "sha256": "1b8315f9ee39e15b1b2146f1aa2699ee5c51c5a8598b2d5b3ad42175c786cfc6"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/useProgress.ts",
-          "exists": true,
-          "bytes": 6620,
-          "sha256": "93dbd9ebfbbc75affca696d4983f79dcfb2b1a46d70a3c3194efae594420b6bc"
-        },
-        {
-          "path": "apps/mobile/src/features/routine/useRamp.ts",
-          "exists": true,
-          "bytes": 3113,
-          "sha256": "3648defb7ba0910823d8cefc2246c6d4752b4078778530f0371dce71f5e3bc7d"
+          "bytes": 30507,
+          "sha256": "76da3fdb66337d118e8a5381a9cd8333e17aa02698595db5f30abcbc8510b935"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "04a769df56eff23f9cf60fdee28e4ebd8f07f2a055bab6da178148aa2f831920",
+      "reviewSnapshotSha256": "6b56f47582752859ae205cb954cde396efc280edd6462d3c570a00e9a66a220e",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1764,14 +1681,14 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 10237,
-          "sha256": "a50b3b1baf6c996409b85df19899ac3e80482dbd2043b02677ccec4cccf38130"
+          "bytes": 16199,
+          "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 23996,
-          "sha256": "c7ee117f25e7b225948cfd28a1e55e676601da6d70510cb503cc870d39a92104"
+          "bytes": 31965,
+          "sha256": "620804f163e296ed0faac3bff466fe47f16c86ae5789b8f7bde687938a2342a7"
         },
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
@@ -2141,7 +2058,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "fabd4dfa9c4d4087256dc3b8dcac25a8bf17fef0e4bbad599f846901103c118d",
+      "reviewSnapshotSha256": "b1840ccee9b88bb5d70524b60679e2d657e3c84341683ed1d076854dfcaffbc0",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2331,12 +2248,12 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 10237,
-          "sha256": "a50b3b1baf6c996409b85df19899ac3e80482dbd2043b02677ccec4cccf38130"
+          "bytes": 16199,
+          "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "ec67880637bd9c95cd9a8a62ac31d35c6ffa8c0e56ea2312005f70d85a40bc0e",
+      "reviewSnapshotSha256": "036fb9237f9fc6049bf049b192dc3e68c25c151071abe162a840f0f89ff83d1e",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2862,8 +2779,8 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 18228,
-          "sha256": "32d58bfd29e72e194abdb7dded742d9c09fa1af2f922bb5a00dbf3c1b61b0163"
+          "bytes": 36362,
+          "sha256": "39cf1a9caf5c435fafa23f0074ad4934dfeab6243ef0764949a504b9382a2eda"
         },
         {
           "path": "docs/hugeToDo/health-processor-inventory-v1.json",
@@ -2879,7 +2796,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "4c1bed154524d49dcca78196ebbf92c91a0abc502a2ff890c71f06e174befe6a",
+      "reviewSnapshotSha256": "0de51e0bf775debe21fc339bd43bd954a9b06a4023e72e88e012c1317c7e718d",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
