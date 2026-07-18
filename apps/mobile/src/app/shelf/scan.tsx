@@ -393,9 +393,11 @@ export default function ScanScreen() {
               className={
                 splitShortScanSurface
                   ? 'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'
-                  : compactScanSurface
-                    ? 'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
-                    : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                  : supportFloorTextPressureScan && canShowPermissionRecovery
+                    ? 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                    : compactScanSurface
+                      ? 'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                      : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
               }
             >
               {canShowCamera ? (

@@ -492,6 +492,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('splitShortScanSurface ? { minHeight: 68 } : undefined');
     expect(source).toContain("{ position: 'relative', zIndex: 2 }");
     expect(source).toContain('{showScanPreview ? (');
+    expect(source).toContain('supportFloorTextPressureScan && canShowPermissionRecovery');
     expect(source).toContain("title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}");
     expect(source).toContain(
       'accessibilityLabel="Scan ingredient label. Capture label, then type from it"',
