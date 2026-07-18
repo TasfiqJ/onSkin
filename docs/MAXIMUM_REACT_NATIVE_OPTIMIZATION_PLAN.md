@@ -743,6 +743,8 @@ For store artifacts:
 - verify native libraries support Android 16 KB page-size requirements;
 - archive dSYMs, ProGuard/R8 mappings, Hermes source maps, and exact build metadata for every production release.
 
+Current local release-transport checkpoint (2026-07-18): the final app-owned Expo config plugin preserves development localhost allowances but forces staging and production to disable every iOS arbitrary-load escape hatch, remove ATS exception domains, and set Android `usesCleartextTraffic=false`. Pure policy tests and complete Expo plugin-chain introspection pass. Signed `Info.plist`/merged-manifest inspection and physical release traffic evidence remain required before verification; see `docs/optimization/evidence/2026-07-18_release-transport-security-checkpoint.md`.
+
 ### 7.6 Dependency lifecycle
 
 Maintain a dependency register containing owner, purpose, native-code status, privacy impact, binary impact, startup impact, update cadence, and exit plan. Run:

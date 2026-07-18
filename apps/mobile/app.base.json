@@ -92,7 +92,8 @@
         }
       ],
       "expo-localization",
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "./plugins/withReleaseTransportSecurity"
     ],
     "experiments": {
       "typedRoutes": true,
