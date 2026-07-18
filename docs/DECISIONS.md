@@ -108,6 +108,18 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ## Architecture Decisions
 
+### 2026-07-18 - Stage And Atomically Promote Versioned Catalog Imports
+
+- Decision: Import production Open Beauty Facts artifacts with a service-role-only, two-pass streaming worker. Bind every run to the source revision, complete artifact SHA-256, importer version, durable server checkpoint, idempotent per-batch receipt, content-free rejection manifest, and an optional mode-0600 local checkpoint. Normalize into version-isolated staging, deduplicate canonical GTIN identity by latest source line, and expose no staged row to clients. Only a complete, count-reconciled version from a production-approved source may atomically update source-owned catalog rows, retire missing rows, switch the active pointer, and retain the predecessor and prior staged rows for rollback reconstruction.
+- Type: Architecture
+- Alternatives: load the entire export into memory, write directly into client-readable products while parsing, crawl the public API for the bulk seed, retry batches without receipts, or replace curated rows on barcode conflict.
+- Criteria: bounded memory, deterministic provenance, safe restart after worker/process/transport failure, no partial visibility, exact replay semantics, curated-source precedence, and auditable rollback metadata.
+- Evidence: migration `20260718000045_catalog_import_pipeline.sql`; `catalog-import-core.mjs`; `import-obf-production.mjs`; deterministic restart/promotion smoke; and `docs/optimization/evidence/2026-07-18_restartable-catalog-ingestion-checkpoint.md`.
+- Risk: hosted migration syntax/RLS, full-scale import duration/storage, realistic search plans, and an operator rollback drill remain unverified until a production-like staging project and approved artifact are available.
+- Status: Accepted
+- Owner: Engineering and catalog operations
+- Review date: 2026-08-18
+
 ### 2026-07-11 - Make Shelf Freshness Provenance-Derived And Replenishment Opt-In
 
 - Decision: Normalize every Shelf lifecycle write through one freshness contract. A PAO clock exists only when `opened_at` is a valid, non-future local date; unopened units keep `opened_at=null`. `expirySource` follows the actual winning date candidate, with the earlier of printed expiry and opened date plus PAO controlling the surfaced state. PAO provenance becomes `label` only after the user explicitly confirms months printed beside the open-jar symbol. Ambiguous, unreviewed, stale, or region-mismatched catalog freshness evidence degrades to unknown instead of becoming a default. Re-add archives the prior package, creates a new UUID opened today, preserves product-level PAO provenance, and clears package-specific printed expiry. Replenishment uses only tracked PAO/printed-expiry state or an unsuperseded user-marked-finished unit; notification preferences default off and require explicit Settings opt-in.

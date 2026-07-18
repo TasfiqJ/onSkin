@@ -9,6 +9,7 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
 const obfImporterPath = resolve(scriptDir, 'import-obf-snapshot.mjs');
 const cosingImporterPath = resolve(scriptDir, 'import-cosing-dictionary.mjs');
+const productionCatalogSmokePath = resolve(scriptDir, 'catalog-import-production-smoke.mjs');
 const obfFixturePath = resolve(root, 'scripts/phase4/fixtures/obf-sample.jsonl');
 const cosingFixturePath = resolve(root, 'scripts/phase4/fixtures/cosing-sample.csv');
 
@@ -130,6 +131,15 @@ try {
     failed = true;
     console.error(`FAIL ${testCase.name}`);
     console.error(result.message);
+  }
+
+  const productionSmoke = runImporter([productionCatalogSmokePath]);
+  if (productionSmoke.status === 0) {
+    console.log('OK production catalog importer streams, resumes, deduplicates, and promotes');
+  } else {
+    failed = true;
+    console.error('FAIL production catalog importer streams, resumes, deduplicates, and promotes');
+    console.error(output(productionSmoke));
   }
 
   if (failed) process.exit(1);
