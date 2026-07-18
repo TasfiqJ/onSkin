@@ -77,7 +77,7 @@ describe('content-free local diagnostics', () => {
       vault: 'ready',
       appLock: 'unlocked',
       outbox: {
-        model: 'legacy_completion_queue',
+        model: 'transactional_outbox_v1',
         status: 'available',
         ready: 3,
         inFlight: 0,
@@ -148,9 +148,7 @@ describe('content-free local diagnostics', () => {
         readQueryCache: fail,
         readNotifications: fail,
         readCatalogEndpoint: fail,
-        readStartupPhases: () => [
-          { phase: forbidden[3], elapsedMs: Number.POSITIVE_INFINITY },
-        ],
+        readStartupPhases: () => [{ phase: forbidden[3], elapsedMs: Number.POSITIVE_INFINITY }],
         readTimings: () => [
           {
             name: forbidden[3],

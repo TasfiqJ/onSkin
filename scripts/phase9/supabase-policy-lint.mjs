@@ -49,6 +49,7 @@ for (const match of combined.matchAll(
 
 const clientCallableDefiners = new Set([
   'account_deletion_write_allowed()',
+  'apply_shelf_outbox_batch(jsonb)',
   'has_current_consent(text)',
   'owns_ask_turn_audit(uuid)',
   'owns_consent(uuid)',
@@ -63,11 +64,15 @@ const serviceCallableDefiners = new Set([
   'account_deletion_checkpoint(uuid, uuid, uuid, text, text)',
   'account_deletion_preflight(uuid, text)',
   'account_deletion_record_failure(uuid, uuid, uuid, text, text)',
+  'begin_catalog_import(text, text, text, text, text)',
   'consume_edge_rate_limit(text, text, integer, integer)',
   'erase_account_database_state(uuid, uuid, uuid)',
   'expire_app_granted_reverse_trials()',
   'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
+  'promote_catalog_import(uuid)',
   'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)',
+  'ready_catalog_import(uuid, text, bigint, bigint, bigint, jsonb)',
+  'stage_catalog_import_batch(uuid, bigint, bigint, jsonb, int, text)',
 ]);
 const capabilityCallableDefiners = new Set(['account_deletion_completion_status(text)']);
 

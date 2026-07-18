@@ -6,6 +6,8 @@ import {
 } from '@/lib/auth/sessionOwnerKey';
 import { ACCOUNT_DELETION_VENDOR_FREEZE_KEY } from '@/lib/auth/accountDeletionVendorFreezeKey';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
+import { PRIVATE_KV_TRANSACTION_JOURNAL_KEY } from '@/lib/storage/privateKVTransactionCore';
+import { OUTBOX_STORAGE_KEY } from '@/lib/offline/outbox.pure';
 
 export type LocalPrivateKeyCategory = 'data' | 'secure_store' | 'metadata' | 'control';
 export type LocalPrivateKeyLifecycle =
@@ -48,6 +50,7 @@ type TypedReadContract = Contract<{
 type MutationContract = Contract<{
   mode:
     | 'private_kv_atomic_transform'
+    | 'private_kv_transaction_journal'
     | 'photo_two_phase_journal'
     | 'serialized_verified_control'
     | 'single_flight_key_write'
@@ -98,6 +101,7 @@ type RecoveryContract = Contract<{
     | 'preserve_bytes_and_retry'
     | 'device_authenticated_setting_reset'
     | 'journal_replay_before_mount'
+    | 'transaction_roll_forward_before_read'
     | 'preserve_key_material_no_rotation'
     | 'fail_closed_control_retry'
     | 'authenticated_claim_repair'
@@ -255,6 +259,13 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     codec: jsonCodec('completion_queue', 1, [0]),
     typedRead: typedDomainRead,
     export: include('shelf_and_routine', 'pending_completion_sync'),
+  }),
+  privateData({
+    key: OUTBOX_STORAGE_KEY,
+    lifecycle: 'current',
+    codec: jsonCodec('transactional_outbox', 1),
+    typedRead: typedDomainRead,
+    export: include('shelf_and_routine', 'transactional_outbox'),
   }),
   privateData({
     key: 'onskin.completions.v1',
@@ -505,6 +516,24 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     }),
     reset: ACCOUNT_RESET,
     recovery: enforced({ mode: 'preserve_key_material_no_rotation' as const }),
+  },
+  {
+    key: PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
+    category: 'metadata',
+    storage: 'private_kv',
+    lifecycle: 'metadata',
+    discovery: 'production_literal',
+    codec: jsonCodec('private_kv_transaction_journal', 1),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'private_kv_transaction_journal' as const }),
+    ownerBinding: PRIVATE_KV_OWNER,
+    export: enforced({
+      mode: 'exclude' as const,
+      reason: 'encrypted_transaction_recovery_metadata',
+    }),
+    cleanup: PRIVATE_KV_CLEANUP,
+    reset: ACCOUNT_RESET,
+    recovery: enforced({ mode: 'transaction_roll_forward_before_read' as const }),
   },
   {
     key: 'onskin.photo.content_key_created.v1',

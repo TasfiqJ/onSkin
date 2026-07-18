@@ -34,13 +34,14 @@ const mocks = vi.hoisted(() => ({
     | { status: 'corrupt'; reason: 'envelope_invalid' }
     | { status: 'unsupported_version' },
   updateCalls: 0,
+  transactionCalls: 0,
   writeCalls: 0,
 }));
 
 vi.mock('expo-crypto', () => ({
   CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
   digestStringAsync: mocks.digestStringAsync,
-  randomUUID: vi.fn(() => `shelf-product-${++mocks.nextId}`),
+  randomUUID: vi.fn(() => `00000000-0000-4000-8000-${String(++mocks.nextId).padStart(12, '0')}`),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -73,6 +74,36 @@ vi.mock('@/lib/storage/privateKV', () => ({
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
+      }
+    },
+  ),
+  updatePrivateItemsTransactionally: vi.fn(
+    async (
+      keys: readonly string[],
+      updater: (current: ReadonlyMap<string, string | null>) => ReadonlyMap<string, string | null>,
+    ) => {
+      mocks.transactionCalls += 1;
+      const previous = mocks.tails.get('__transaction__') ?? Promise.resolve();
+      let release!: () => void;
+      const tail = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      mocks.tails.set('__transaction__', tail);
+      await previous;
+      try {
+        if (mocks.updateFailure) throw mocks.updateFailure;
+        const current = new Map(keys.map((key) => [key, mocks.storage.get(key) ?? null]));
+        const next = updater(current);
+        for (const key of keys) {
+          const value = next.get(key) ?? null;
+          if (value === current.get(key)) continue;
+          mocks.writeCalls += 1;
+          if (value === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, value);
+        }
+      } finally {
+        release();
+        if (mocks.tails.get('__transaction__') === tail) mocks.tails.delete('__transaction__');
       }
     },
   ),
@@ -118,6 +149,7 @@ describe('shelf local store recovery', () => {
     mocks.responseLossAfterCommit = 0;
     mocks.readOverride = null;
     mocks.updateCalls = 0;
+    mocks.transactionCalls = 0;
     mocks.writeCalls = 0;
     testAddOperationId = 0;
   });
@@ -126,6 +158,38 @@ describe('shelf local store recovery', () => {
     delete process.env.EXPO_PUBLIC_E2E_SHELF_STORAGE_FAILURE;
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
+  });
+
+  it('atomically appends an owner-bound encrypted outbox intent with an authenticated add', async () => {
+    const product = await addProductWithOperation(
+      { name: 'Atomic cleanser', addedVia: 'manual' },
+      {
+        ownerId: 'owner-a',
+        ownerGeneration: 7,
+        operationId: 'atomic-add-operation',
+      },
+    );
+
+    expect(mocks.transactionCalls).toBe(1);
+    expect(storedProducts()).toEqual([expect.objectContaining({ id: product.id })]);
+    const outboxRaw = mocks.storage.get('onskin.outbox.v1');
+    expect(outboxRaw).toBeDefined();
+    expect(outboxRaw).not.toContain('owner-a');
+    expect(JSON.parse(outboxRaw!) as unknown).toMatchObject({
+      version: 1,
+      rows: [
+        {
+          ownerGeneration: 7,
+          entityType: 'shelf_product',
+          entityId: product.id,
+          operationKind: 'upsert',
+          clientRevision: 1,
+          state: 'ready',
+          payload: { manual_name: 'Atomic cleanser' },
+        },
+      ],
+      revisions: [{ entityType: 'shelf_product', entityId: product.id, revision: 1 }],
+    });
   });
 
   it('requires caller-owned operation identity before entering private storage', async () => {
@@ -545,7 +609,10 @@ describe('shelf local store recovery', () => {
     mocks.storage.set(KEY, v2);
     mocks.writeCalls = 0;
 
-    await expect(readShelfState()).resolves.toMatchObject({ status: 'available', format: 'legacy' });
+    await expect(readShelfState()).resolves.toMatchObject({
+      status: 'available',
+      format: 'legacy',
+    });
     expect(mocks.storage.get(KEY)).toBe(v2);
     expect(mocks.writeCalls).toBe(0);
 
@@ -914,9 +981,7 @@ describe('shelf local store recovery', () => {
     mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
     mocks.readOverride = { status: 'absent' };
 
-    await expect(acknowledgeProductAdd(product.id, owner)).rejects.toThrow(
-      'PRIVATE_WRITE_FAILED',
-    );
+    await expect(acknowledgeProductAdd(product.id, owner)).rejects.toThrow('PRIVATE_WRITE_FAILED');
   });
 
   it('bounds pending add mappings and preserves the full prior envelope at the limit', async () => {

@@ -37,13 +37,13 @@ const SUPABASE_CLIENT_FILES = [
   'features/routine/useProgress.ts',
   'features/scheduler/profile.ts',
   'features/settings/actions.ts',
-  'features/shelf/mutations.ts',
   'features/shelf/scanLog.ts',
   'features/subscription/store.ts',
   'features/trend/consent.ts',
   'features/trend/useTrend.ts',
   'lib/network/edgeFunctions.ts',
   'lib/offline/completionQueue.ts',
+  'lib/offline/outbox.ts',
 ] as const;
 
 const ABORTABLE_ACCOUNT_DATA_FILES = SUPABASE_CLIENT_FILES.filter(

@@ -363,6 +363,52 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['user_products']['Insert']>;
         Relationships: [];
       };
+      shelf_mirror_versions: {
+        Row: {
+          user_id: string;
+          entity_id: string;
+          client_revision: number;
+          tombstone: boolean;
+          last_operation_id: string | null;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          user_id: string;
+          entity_id: string;
+          client_revision?: number;
+          tombstone?: boolean;
+          last_operation_id?: string | null;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['shelf_mirror_versions']['Insert']>;
+        Relationships: [];
+      };
+      mobile_outbox_receipts: {
+        Row: {
+          user_id: string;
+          operation_id: string;
+          idempotency_key: string;
+          entity_type: 'shelf_product';
+          entity_id: string;
+          operation_kind: 'delete' | 'upsert';
+          client_revision: number;
+          result_status: 'applied' | 'stale';
+          applied_at: Timestamptz;
+        };
+        Insert: {
+          user_id: string;
+          operation_id: string;
+          idempotency_key: string;
+          entity_type: 'shelf_product';
+          entity_id: string;
+          operation_kind: 'delete' | 'upsert';
+          client_revision: number;
+          result_status: 'applied' | 'stale';
+          applied_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['mobile_outbox_receipts']['Insert']>;
+        Relationships: [];
+      };
       shelf_scans: {
         Row: {
           id: string;
@@ -1105,6 +1151,10 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      apply_shelf_outbox_batch: {
+        Args: { p_operations: Json };
+        Returns: Json;
+      };
       owns_routine: {
         Args: { p_routine_id: string };
         Returns: boolean;

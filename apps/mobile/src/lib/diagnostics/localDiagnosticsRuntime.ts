@@ -4,14 +4,15 @@ import * as Crypto from 'expo-crypto';
 import { Paths } from 'expo-file-system';
 import { Platform } from 'react-native';
 
-import { readNotificationScheduleHealth, getPermissionStatus } from '@/features/notifications/deliver';
+import {
+  readNotificationScheduleHealth,
+  getPermissionStatus,
+} from '@/features/notifications/deliver';
 import { readPhotoMutationJournalDiagnostics } from '@/features/photos/store';
 import { getAccountGeneration } from '@/lib/auth/accountGeneration';
 import { env, isSupabaseConfigured } from '@/lib/env';
-import {
-  readCompletionQueue,
-  readCompletionSyncDiagnostics,
-} from '@/lib/offline/completionQueue';
+import { outboxCounts } from '@/lib/offline/outbox.pure';
+import { readOutbox, readOutboxSyncDiagnostics } from '@/lib/offline/outbox';
 import {
   readOperationTimingAggregates,
   readStartupPhaseSamples,
@@ -49,12 +50,13 @@ async function accountGenerationPrefix(userId: string | null): Promise<'none' | 
 }
 
 async function readOutboxDiagnostics() {
-  const result = await readCompletionQueue();
+  const result = await readOutbox();
+  const counts = result.envelope
+    ? outboxCounts(result.envelope)
+    : { ready: 0, inFlight: 0, dead: 0 };
   return {
     status: result.status,
-    ready: result.items?.length ?? 0,
-    inFlight: 0,
-    dead: 0,
+    ...counts,
   };
 }
 
@@ -104,7 +106,8 @@ export function createLocalDiagnosticsDependencies(
     now: () => new Date(),
     readBuild: () => ({
       environment: env.appEnvironment,
-      releaseVersion: Application.nativeApplicationVersion ?? Constants.expoConfig?.version ?? 'unknown',
+      releaseVersion:
+        Application.nativeApplicationVersion ?? Constants.expoConfig?.version ?? 'unknown',
       buildVersion: Application.nativeBuildVersion ?? 'unknown',
       runtimeVersion: runtimeVersion(),
       symbolConfig: symbolConfig(),
@@ -114,7 +117,7 @@ export function createLocalDiagnosticsDependencies(
     readAppLock: () =>
       context.appLockEnabled ? (context.appUnlocked ? 'unlocked' : 'locked') : 'disabled',
     readOutbox: readOutboxDiagnostics,
-    readLastSync: readCompletionSyncDiagnostics,
+    readLastSync: readOutboxSyncDiagnostics,
     readPhotoJournal: readPhotoMutationJournalDiagnostics,
     // Expo's web getter emits a warning before returning its unsupported
     // sentinel. Avoid touching it so the content-free fallback stays quiet.

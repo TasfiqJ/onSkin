@@ -27,13 +27,16 @@ import {
   multiRemovePrivateItems,
   privateKVEncryptionInfo,
   readPrivateItem,
+  recoverPendingPrivateKVTransaction,
   setPrivateItem,
   updatePrivateItem,
+  updatePrivateItemsTransactionally,
   waitForPrivateKVWritesToSettle,
   type PrivateKVCorruptReason,
   type PrivateKVReadResult,
   type PrivateKVUnavailableReason,
 } from './privateKV';
+import { PRIVATE_KV_TRANSACTION_JOURNAL_KEY } from './privateKVTransactionCore';
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
@@ -53,6 +56,8 @@ const mocks = vi.hoisted(() => ({
   secureStorage: new Map<string, string>(),
   setItemGate: null as Promise<void> | null,
   setItemStarted: null as (() => void) | null,
+  setItemFailures: new Map<string, number>(),
+  setItemCommitThenThrow: new Map<string, number>(),
 }));
 
 vi.mock('react-native', () => ({
@@ -67,9 +72,7 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
     getItem: vi.fn(async (key: string) => {
       const snapshotBeforeGate = mocks.getItemSnapshotBeforeGate;
-      const snapshot = snapshotBeforeGate
-        ? (mocks.asyncStorage.get(key) ?? null)
-        : null;
+      const snapshot = snapshotBeforeGate ? (mocks.asyncStorage.get(key) ?? null) : null;
       mocks.getItemStarted?.();
       if (mocks.getItemGate) await mocks.getItemGate;
       return snapshotBeforeGate ? snapshot : (mocks.asyncStorage.get(key) ?? null);
@@ -89,7 +92,17 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
     setItem: vi.fn(async (key: string, value: string) => {
       mocks.setItemStarted?.();
       if (mocks.setItemGate) await mocks.setItemGate;
+      const failures = mocks.setItemFailures.get(key) ?? 0;
+      if (failures > 0) {
+        mocks.setItemFailures.set(key, failures - 1);
+        throw new Error('ASYNC_STORAGE_SET_FAILED');
+      }
       mocks.asyncStorage.set(key, value);
+      const responseLosses = mocks.setItemCommitThenThrow.get(key) ?? 0;
+      if (responseLosses > 0) {
+        mocks.setItemCommitThenThrow.set(key, responseLosses - 1);
+        throw new Error('ASYNC_STORAGE_SET_RESPONSE_LOST');
+      }
     }),
     removeItem: vi.fn(async (key: string) => {
       mocks.removeItemStarted?.();
@@ -142,6 +155,8 @@ describe('private KV encrypted storage', () => {
     mocks.secureStorage.clear();
     mocks.setItemGate = null;
     mocks.setItemStarted = null;
+    mocks.setItemFailures.clear();
+    mocks.setItemCommitThenThrow.clear();
     endPrivateKVAccountBoundary();
   });
 
@@ -207,6 +222,110 @@ describe('private KV encrypted storage', () => {
     expect(raw).toContain(privateKVEncryptionInfo.version);
     expect(raw).not.toContain('routine-value');
     await expect(getPrivateItem('routine-key')).resolves.toBe('routine-value');
+  });
+
+  it('commits two registered private values through one encrypted transaction journal', async () => {
+    const shelfKey = 'onskin.shelf.v1';
+    const outboxKey = 'onskin.completions.pending';
+
+    await updatePrivateItemsTransactionally(
+      [shelfKey, outboxKey],
+      (current) =>
+        new Map([
+          [shelfKey, `${current.get(shelfKey) ?? ''}shelf`],
+          [outboxKey, `${current.get(outboxKey) ?? ''}outbox`],
+        ]),
+    );
+
+    await expect(getPrivateItems([shelfKey, outboxKey])).resolves.toEqual(
+      new Map([
+        [shelfKey, 'shelf'],
+        [outboxKey, 'outbox'],
+      ]),
+    );
+    expect(mocks.asyncStorage.has(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(false);
+    expect(mocks.asyncStorage.get(shelfKey)).not.toContain('shelf');
+    expect(mocks.asyncStorage.get(outboxKey)).not.toContain('outbox');
+  });
+
+  it('rolls a committed partial transaction forward before the next private read', async () => {
+    const shelfKey = 'onskin.shelf.v1';
+    const outboxKey = 'onskin.completions.pending';
+    await setPrivateItem(shelfKey, 'old-shelf');
+    await setPrivateItem(outboxKey, 'old-outbox');
+    mocks.setItemFailures.set(shelfKey, 1);
+
+    await expect(
+      updatePrivateItemsTransactionally(
+        [shelfKey, outboxKey],
+        () =>
+          new Map([
+            [shelfKey, 'new-shelf'],
+            [outboxKey, 'new-outbox'],
+          ]),
+      ),
+    ).rejects.toThrow('ASYNC_STORAGE_SET_FAILED');
+
+    expect(mocks.asyncStorage.has(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(true);
+    mocks.setItemFailures.clear();
+    await recoverPendingPrivateKVTransaction();
+    await expect(getPrivateItems([shelfKey, outboxKey])).resolves.toEqual(
+      new Map([
+        [shelfKey, 'new-shelf'],
+        [outboxKey, 'new-outbox'],
+      ]),
+    );
+    expect(mocks.asyncStorage.has(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('treats a committed journal acknowledgement loss as an exact successful write', async () => {
+    const shelfKey = 'onskin.shelf.v1';
+    const outboxKey = 'onskin.completions.pending';
+    mocks.setItemCommitThenThrow.set(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, 1);
+
+    await expect(
+      updatePrivateItemsTransactionally(
+        [shelfKey, outboxKey],
+        () =>
+          new Map([
+            [shelfKey, 'shelf-after-response-loss'],
+            [outboxKey, 'outbox-after-response-loss'],
+          ]),
+      ),
+    ).resolves.toBeUndefined();
+
+    await expect(getPrivateItems([shelfKey, outboxKey])).resolves.toEqual(
+      new Map([
+        [shelfKey, 'shelf-after-response-loss'],
+        [outboxKey, 'outbox-after-response-loss'],
+      ]),
+    );
+  });
+
+  it('serializes concurrent two-key transactions without losing either counter', async () => {
+    const shelfKey = 'onskin.shelf.v1';
+    const outboxKey = 'onskin.completions.pending';
+    const increment = (value: string | null) => String(Number(value ?? '0') + 1);
+
+    await Promise.all(
+      Array.from({ length: 100 }, () =>
+        updatePrivateItemsTransactionally(
+          [shelfKey, outboxKey],
+          (current) =>
+            new Map([
+              [shelfKey, increment(current.get(shelfKey) ?? null)],
+              [outboxKey, increment(current.get(outboxKey) ?? null)],
+            ]),
+        ),
+      ),
+    );
+
+    await expect(getPrivateItems([shelfKey, outboxKey])).resolves.toEqual(
+      new Map([
+        [shelfKey, '100'],
+        [outboxKey, '100'],
+      ]),
+    );
   });
 
   it('keeps unavailable and corrupt reasons on their own discriminants', () => {
@@ -522,9 +641,7 @@ describe('private KV encrypted storage', () => {
 
     const rawRead = getPrivateItem('onskin.account-a.raw');
     const typedRead = readPrivateItem('onskin.account-a.typed');
-    const rawRejection = expect(rawRead).rejects.toThrow(
-      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-    );
+    const rawRejection = expect(rawRead).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
     await readsStarted;
 
     beginPrivateKVAccountBoundary();
@@ -549,9 +666,7 @@ describe('private KV encrypted storage', () => {
     mocks.multiGetStarted = markReadStarted;
 
     const read = getPrivateItems(['onskin.account-a.batch']);
-    const rejection = expect(read).rejects.toThrow(
-      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-    );
+    const rejection = expect(read).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
     await readStarted;
 
     beginPrivateKVAccountBoundary();
@@ -572,9 +687,7 @@ describe('private KV encrypted storage', () => {
     mocks.getAllKeysStarted = markEnumerationStarted;
 
     const audit = assertPrivateKVReadable();
-    const rejection = expect(audit).rejects.toThrow(
-      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-    );
+    const rejection = expect(audit).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
     await enumerationStarted;
 
     beginPrivateKVAccountBoundary();

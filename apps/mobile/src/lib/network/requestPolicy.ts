@@ -18,12 +18,12 @@ export const REQUEST_ENDPOINTS = [
   'data_export',
   'entitlement_server',
   'onboarding_status',
+  'outbox_sync',
   'photo_delete_mirror',
   'profile_server',
   'progress_completions',
   'progress_longest_streak',
   'subscription_grants',
-  'shelf_delete_mirror',
   'trend_consent',
   'trend_monk_band',
 ] as const;
@@ -42,13 +42,7 @@ export type RequestFailureKind =
   | 'unknown'
   | 'validation';
 
-export type RequestStatusClass =
-  | '2xx'
-  | '4xx'
-  | '5xx'
-  | 'cancelled'
-  | 'network'
-  | 'unknown';
+export type RequestStatusClass = '2xx' | '4xx' | '5xx' | 'cancelled' | 'network' | 'unknown';
 
 export type RequestMetricSample = Readonly<{
   endpoint: RequestEndpoint;
@@ -62,12 +56,14 @@ export class RequestPolicyError extends Error {
   readonly kind: RequestFailureKind;
   readonly attemptCount: number;
   readonly statusClass: RequestStatusClass;
+  readonly retryAfterMs: number | null;
 
   constructor(input: {
     endpoint: RequestEndpoint;
     kind: RequestFailureKind;
     attemptCount: number;
     statusClass: RequestStatusClass;
+    retryAfterMs?: number | null;
   }) {
     super(`NETWORK_REQUEST_${input.kind.toUpperCase()}`);
     this.name = 'RequestPolicyError';
@@ -75,6 +71,7 @@ export class RequestPolicyError extends Error {
     this.kind = input.kind;
     this.attemptCount = input.attemptCount;
     this.statusClass = input.statusClass;
+    this.retryAfterMs = input.retryAfterMs ?? null;
   }
 }
 
@@ -242,7 +239,8 @@ function isOfflineError(error: unknown): boolean {
   if (names.includes('FunctionsFetchError')) return true;
   const messages = errorFields(error, 'message');
   return (
-    names.includes('TypeError') && messages.some((message) => /(fetch|network|load failed)/i.test(message))
+    names.includes('TypeError') &&
+    messages.some((message) => /(fetch|network|load failed)/i.test(message))
   );
 }
 
@@ -482,30 +480,26 @@ async function executeWithLease<T>(
   const maxResponseBytes = positiveInteger(policy.maxResponseBytes, DEFAULT_MAX_RESPONSE_BYTES);
   const requestedAttempts = positiveInteger(policy.maxAttempts, policy.idempotent ? 2 : 1);
   const maxAttempts = policy.idempotent ? Math.min(requestedAttempts, 4) : 1;
-  const baseRetryDelayMs = finiteNonNegative(
-    policy.baseRetryDelayMs,
-    DEFAULT_BASE_RETRY_DELAY_MS,
-  );
-  const maxRetryDelayMs = finiteNonNegative(
-    policy.maxRetryDelayMs,
-    DEFAULT_MAX_RETRY_DELAY_MS,
-  );
-  const maxRetryAfterMs = finiteNonNegative(
-    policy.maxRetryAfterMs,
-    DEFAULT_MAX_RETRY_AFTER_MS,
-  );
+  const baseRetryDelayMs = finiteNonNegative(policy.baseRetryDelayMs, DEFAULT_BASE_RETRY_DELAY_MS);
+  const maxRetryDelayMs = finiteNonNegative(policy.maxRetryDelayMs, DEFAULT_MAX_RETRY_DELAY_MS);
+  const maxRetryAfterMs = finiteNonNegative(policy.maxRetryAfterMs, DEFAULT_MAX_RETRY_AFTER_MS);
   const deadlineAtMs = Date.now() + deadlineMs;
   const requestAbort = createRequestAbort([policy.signal, lease?.signal], deadlineMs);
   let attempt = 0;
 
   const fail = (failure: NormalizedFailure | { kind: 'response_too_large' }): never => {
-    const statusClass =
-      failure.kind === 'response_too_large' ? 'unknown' : failure.statusClass;
+    const statusClass = failure.kind === 'response_too_large' ? 'unknown' : failure.statusClass;
     const error = new RequestPolicyError({
       endpoint: policy.endpoint,
       kind: failure.kind,
       attemptCount: attempt,
       statusClass,
+      retryAfterMs:
+        failure.kind === 'response_too_large'
+          ? null
+          : failure.retryAfterMs === null
+            ? null
+            : Math.min(failure.retryAfterMs, maxRetryAfterMs),
     });
     appendMetric({
       endpoint: policy.endpoint,
@@ -544,8 +538,7 @@ async function executeWithLease<T>(
           nowMs: Date.now(),
           ownerChanged: ownerChanged(lease),
         });
-        const canRetry =
-          policy.idempotent && attempt < maxAttempts && shouldRetry(normalized.kind);
+        const canRetry = policy.idempotent && attempt < maxAttempts && shouldRetry(normalized.kind);
         if (!canRetry) fail(normalized);
 
         const exponentialCap = Math.min(

@@ -160,7 +160,7 @@ describe('Shelf private-data availability contract', () => {
     expect(replenish).toContain('const { shelf } = useShelfRouteSources();');
   });
 
-  it('keeps replenishment atomic, retry-stable, and mirror-ordered', () => {
+  it('keeps replenishment atomic, retry-stable, and outbox-ordered', () => {
     const store = read('features/shelf/store.ts');
     const mutations = read('features/shelf/mutations.ts');
 
@@ -168,12 +168,14 @@ describe('Shelf private-data availability contract', () => {
     expect(store).toContain('replacementIdForSource(id)');
     expect(store).toContain('replacementId === id');
     expect(store).toContain('Crypto.CryptoDigestAlgorithm.SHA256');
-    expect(mutations).toContain('reAddProduct(id)');
-    expect(mutations).toContain('replaced.archived');
-    expect(mutations).toContain('replaced.fresh');
+    expect(mutations).toContain('const replaced = await reAddProduct(');
+    expect(store).toContain('shelfUpsertChange(archived)');
+    expect(store).toContain('shelfUpsertChange(fresh)');
+    expect(store).toContain('updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY]');
     expect(mutations).not.toContain('loadShelf');
-    expect(mutations).toContain('const shelfMirrorTails = new Map');
-    expect(mutations).toContain('enqueueShelfMirror(ownerScope, product.id');
+    expect(mutations).not.toContain('shelfMirrorTails');
+    expect(mutations).not.toContain('enqueueShelfMirror');
+    expect(mutations).toContain('scheduleOutboxFlush()');
     expect(mutations).toContain('const replenishmentAttempts = new Map');
     expect(mutations).toContain('const attemptKey = replenishmentAttemptKey(ownerScope, id)');
     expect(mutations).toContain('return runOwnerQueryOperation(ownerScope');

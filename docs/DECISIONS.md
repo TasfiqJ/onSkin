@@ -331,6 +331,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ## Release Delivery Decisions
 
+### 2026-07-18 - Use An Encrypted Owner-Bound Transactional Outbox For Shelf Sync
+
+- Decision: Replace Shelf's fire-and-forget Supabase mirror with one encrypted, bounded `onskin.outbox.v1` state machine. Authenticated local Shelf mutations and sanitized outbox intent append use a crash-recoverable encrypted two-key journal; the existing Shelf v3 bytes remain unchanged. Each row carries an operation UUID, domain-separated owner hash, captured account generation, stable Shelf UUID, monotonically increasing client revision/idempotency key, enqueue/retry/lease state, safe error class, and either a sanitized state mirror or deletion tombstone. Raw user IDs, credentials, ingredients, and device paths are not valid payload data. Ready state mirrors may coalesce; leased and dead-letter records remain. One account-generation-fenced worker drains bounded batches after mutation, reconnect, and foreground, with expired-lease takeover, full-jitter backoff, bounded `Retry-After`, duplicate/stale success, and poison-row isolation. The authenticated Postgres RPC derives its owner from `auth.uid()`, owns receipt/revision serialization, and never trusts an owner supplied by the client.
+- Alternatives: retain best-effort direct upsert/delete calls; retry individual requests in memory; store raw owner IDs in a plaintext queue; put server sync fields inside the Shelf codec; coalesce immutable event history; or adopt a new native database before proving the protocol.
+- Criteria: offline bathroom use, atomic local durability, response-loss safety, duplicate/reordered convergence, bounded work and storage, content-free diagnostics, account A-to-B isolation, rollback compatibility, and an extensible but strictly versioned protocol.
+- Evidence: `apps/mobile/src/lib/storage/privateKVTransactionCore.ts`, `apps/mobile/src/lib/offline/outbox.pure.ts`, `apps/mobile/src/lib/offline/outbox.ts`, `apps/mobile/src/features/shelf/store.ts`, the additive Shelf outbox migration, and `docs/optimization/evidence/2026-07-18_transactional-outbox.md`.
+- Risk: completion history remains on its legacy isolated path until authoritative server routine/step IDs exist; it must become a non-coalescing event entity rather than borrowing Shelf semantics. Private KV rewrites a bounded JSON snapshot, so the separately governed encrypted local-database decision remains open. Hosted Supabase and physical-iPhone process-kill/reconnect evidence plus user-facing sync/attention states remain release gates.
+- Status: Accepted as the technical architecture; locally implemented, release verification pending.
+
 ### 2026-07-17 - Ship Client Changes Only In Store-Bundled Binaries
 
 - Decision: V1 client JavaScript, assets, native code, plugins, permissions,

@@ -80,16 +80,18 @@ describe('conflict choice integration contracts', () => {
     expect(mirror).toContain('const conflictChoiceMirrorTails = new Map');
   });
 
-  it('mirrors shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {
+  it('queues shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {
     const mutations = readSource('features/shelf/mutations.ts');
+    const store = readSource('features/shelf/store.ts');
 
-    expect(mutations).toContain('id: p.id,');
-    expect(mutations).toContain('.upsert(');
-    expect(mutations).toContain("{ onConflict: 'id' }");
-    expect(mutations).toContain('status: p.status');
-    expect(mutations).toContain('finished_at: p.finishedAt');
-    expect(mutations).toContain('void mirrorShelfUpsertForOwner(ownerScope, product)');
-    expect(mutations).toContain('void mirrorShelfDeleteForOwner(ownerScope, id)');
-    expect(mutations).toContain('if (error) throw new Error');
+    expect(store).toContain('entityId: product.id');
+    expect(store).toContain("operationKind: 'upsert'");
+    expect(store).toContain('status: product.status');
+    expect(store).toContain('finished_at: product.finishedAt');
+    expect(store).toContain('enqueueShelfOutboxOperation(outbox, {');
+    expect(store).toContain('updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY]');
+    expect(mutations).toContain('scheduleOutboxFlush()');
+    expect(mutations).not.toContain('mirrorShelfUpsertForOwner');
+    expect(mutations).not.toContain('mirrorShelfDeleteForOwner');
   });
 });

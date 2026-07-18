@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { onlineManager, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
@@ -7,11 +7,11 @@ import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 
 import { flushCompletions } from './completionQueue';
+import { flushOutbox } from './outbox';
 
-// Drains the offline check-off queue (docs/01 §6) on mount and whenever the app
-// returns to the foreground: a dependency-free "queue-and-retry". On a successful
-// flush we refresh the Today completion and progress queries so synced server state
-// replaces the optimistic local state.
+// Drains the legacy check-off queue and the transactional outbox on mount,
+// foreground, and connectivity recovery. Successful drains refresh only the
+// owner-scoped queries backed by those server projections.
 // Renders nothing; mounted once at the app root inside the query + auth providers.
 //
 // The live v1 check-off path is the local-first log in completionsStore; this
@@ -22,8 +22,8 @@ export function OfflineSync() {
   const ownerScope = useOwnerQueryScope();
   useEffect(() => {
     const run = () => {
-      void flushCompletions()
-        .then(async ({ flushed }) => {
+      void Promise.all([flushCompletions(), flushOutbox()])
+        .then(async ([{ flushed }, outbox]) => {
           if (flushed > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
             await Promise.all([
               qc.invalidateQueries({
@@ -31,6 +31,9 @@ export function OfflineSync() {
               }),
               qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) }),
             ]);
+          }
+          if (outbox.flushed > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
+            await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) });
           }
           if (isOwnerQueryScopeCurrent(ownerScope)) {
             markStartupPhase('startup_reconciliation_complete');
@@ -42,7 +45,13 @@ export function OfflineSync() {
     const sub = AppState.addEventListener('change', (s) => {
       if (s === 'active') run();
     });
-    return () => sub.remove();
+    const unsubscribeOnline = onlineManager.subscribe((online) => {
+      if (online) run();
+    });
+    return () => {
+      sub.remove();
+      unsubscribeOnline();
+    };
   }, [ownerScope, qc]);
   return null;
 }

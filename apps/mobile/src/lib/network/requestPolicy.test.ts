@@ -177,6 +177,26 @@ describe('request policy network failure matrix', () => {
     expect(sleep).toHaveBeenCalledWith(5_000, expect.any(AbortSignal));
   });
 
+  it('exposes the bounded final Retry-After for durable schedulers', async () => {
+    await expect(
+      runRequest(
+        {
+          endpoint: 'outbox_sync',
+          deadlineMs: 10_000,
+          idempotent: true,
+          maxAttempts: 1,
+          maxRetryAfterMs: 45_000,
+          ownerScoped: false,
+        },
+        async () => Promise.reject(httpError(429, '120')),
+      ),
+    ).rejects.toMatchObject({
+      kind: 'rate_limit',
+      retryAfterMs: 45_000,
+      attemptCount: 1,
+    });
+  });
+
   it('enforces one absolute deadline across retry delay and later attempts', async () => {
     vi.useFakeTimers();
     vi.spyOn(Math, 'random').mockReturnValue(1);

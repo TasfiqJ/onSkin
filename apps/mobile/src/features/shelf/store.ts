@@ -2,15 +2,27 @@ import * as Crypto from 'expo-crypto';
 
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
-import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
+import {
+  OUTBOX_STORAGE_KEY,
+  decodeOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueueShelfOutboxOperation,
+  type OutboxOperationKind,
+  type OutboxPayload,
+} from '@/lib/offline/outbox.pure';
+import {
+  readPrivateItem,
+  updatePrivateItem,
+  updatePrivateItemsTransactionally,
+} from '@/lib/storage/privateKV';
 
 import { normalizeShelfFreshness, validLocalDate } from './freshness';
 
 // Local-first shelf store (docs/04 §8: the shelf must work in a bathroom with no
-// signal. View, manual-add, and queued lookups all offline). AsyncStorage is the
-// source of truth for v1 (single-user, last-write-wins is safe, DECISIONS D-029);
-// intake also fires a best-effort Supabase mirror (B-SUPABASE) so it's ready to
-// reconcile via the persisted mutation queue (D-007) once the project exists.
+// signal. View, manual-add, and queued lookups remain offline. The encrypted
+// Shelf v3 record is local authority; authenticated mutations atomically append
+// a sanitized owner-bound outbox state mirror for deferred server convergence.
 const KEY = 'onskin.shelf.v1';
 const SCHEMA_VERSION = 3 as const;
 const LEGACY_ENVELOPE_VERSION = 1 as const;
@@ -117,6 +129,7 @@ export type NewShelfProduct = {
 export type ShelfAddOwner = Readonly<{
   /** Raw owner identity is hashed before it enters encrypted Shelf state. */
   ownerId?: string;
+  ownerGeneration?: number;
   /** Captured account-generation assertion supplied by the public hook. */
   assertCurrent?: () => void;
   /** Stable caller-owned identity for one explicit add intent. */
@@ -125,7 +138,18 @@ export type ShelfAddOwner = Readonly<{
 
 type ShelfOperationOwner = Readonly<{
   ownerId?: string;
+  ownerGeneration?: number;
   assertCurrent?: () => void;
+}>;
+
+type ShelfOutboxChange = Readonly<
+  | { operationKind: 'delete'; entityId: string; payload: null }
+  | { operationKind: 'upsert'; entityId: string; payload: OutboxPayload }
+>;
+
+type ShelfStorageUpdate = Readonly<{
+  nextShelf: string | null;
+  outboxChanges: readonly ShelfOutboxChange[];
 }>;
 
 type ShelfAddOperation = {
@@ -335,10 +359,7 @@ function normalizeShelfAddOperations(
             'status',
             'acknowledgedAt',
           ];
-    if (
-      !isRecord(row) ||
-      !hasExactKeys(row, expectedKeys)
-    ) {
+    if (!isRecord(row) || !hasExactKeys(row, expectedKeys)) {
       return null;
     }
     const operationId = nonEmptyString(row.operationId);
@@ -359,8 +380,7 @@ function normalizeShelfAddOperations(
     }
     const ownerHash = String(row.ownerHash);
     const inputHash = String(row.inputHash);
-    const status =
-      version === LEGACY_ADD_OPERATION_ENVELOPE_VERSION ? 'pending' : row.status;
+    const status = version === LEGACY_ADD_OPERATION_ENVELOPE_VERSION ? 'pending' : row.status;
     const acknowledgedAt =
       version === LEGACY_ADD_OPERATION_ENVELOPE_VERSION
         ? null
@@ -601,6 +621,97 @@ async function shelfAddIdentity(
   return { ownerHash, inputHash };
 }
 
+function shelfServerPayload(product: ShelfProduct): OutboxPayload {
+  return Object.freeze({
+    catalog_product_id: product.catalogProductId,
+    catalog_source_id: product.catalogSourceId,
+    catalog_match_quality: product.catalogMatchQuality,
+    catalog_source_snapshot_date: product.catalogSourceSnapshotDate,
+    manual_name: product.name,
+    manual_brand: product.brand,
+    barcode: product.barcode,
+    opened_at: product.openedAt,
+    pao_months: product.paoMonths,
+    expiry_date: product.expiryDate,
+    is_opened: product.isOpened,
+    pao_source: product.paoSource,
+    expiry_source: product.expirySource,
+    added_via: product.addedVia,
+    source_disclosure_ack_at: product.sourceDisclosureAckAt,
+    status: product.status,
+    finished_at: product.finishedAt,
+  });
+}
+
+function shelfUpsertChange(product: ShelfProduct): ShelfOutboxChange {
+  return Object.freeze({
+    operationKind: 'upsert',
+    entityId: product.id,
+    payload: shelfServerPayload(product),
+  });
+}
+
+function shelfDeleteChange(entityId: string): ShelfOutboxChange {
+  return Object.freeze({ operationKind: 'delete', entityId, payload: null });
+}
+
+/**
+ * Authenticated mutations commit their unchanged Shelf v3 bytes and encrypted
+ * outbox rows through one crash-recoverable journal. Low-level callers without
+ * an account generation retain the local-only behavior used by signed-out and
+ * migration/test surfaces.
+ */
+async function updateShelfStorage(
+  owner: ShelfOperationOwner | undefined,
+  updater: (current: string | null) => ShelfStorageUpdate,
+): Promise<void> {
+  assertShelfAddOwnerCurrent(owner);
+  const ownerId = owner?.ownerId?.trim();
+  const ownerGeneration = owner?.ownerGeneration;
+  if (ownerId === undefined || ownerGeneration === undefined) {
+    await updatePrivateItem(KEY, (current) => updater(current).nextShelf);
+    assertShelfAddOwnerCurrent(owner);
+    return;
+  }
+  if (
+    !ownerId ||
+    ownerId.length > 512 ||
+    !Number.isSafeInteger(ownerGeneration) ||
+    ownerGeneration < 0
+  ) {
+    throw new Error(SHELF_STATE_INVALID);
+  }
+
+  const ownerHash = await hashOutboxOwner(ownerId);
+  assertShelfAddOwnerCurrent(owner);
+  await updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY], (current) => {
+    assertShelfAddOwnerCurrent(owner);
+    const shelfCurrent = current.get(KEY) ?? null;
+    const outboxCurrent = current.get(OUTBOX_STORAGE_KEY) ?? null;
+    const update = updater(shelfCurrent);
+    let outbox = decodeOutboxEnvelope(outboxCurrent);
+    for (const change of update.outboxChanges) {
+      outbox = enqueueShelfOutboxOperation(outbox, {
+        operationId: Crypto.randomUUID(),
+        ownerHash,
+        ownerGeneration,
+        entityId: change.entityId,
+        operationKind: change.operationKind as OutboxOperationKind,
+        payload: change.payload,
+        enqueuedAt: nowISO(),
+      }).envelope;
+    }
+    return new Map<string, string | null>([
+      [KEY, update.nextShelf],
+      [
+        OUTBOX_STORAGE_KEY,
+        update.outboxChanges.length > 0 ? encodeOutboxEnvelope(outbox) : outboxCurrent,
+      ],
+    ]);
+  });
+  assertShelfAddOwnerCurrent(owner);
+}
+
 /**
  * Atomically commits a product and an owner/operation mapping. A retry with the
  * same stable operation id and semantic input returns the original row. An
@@ -665,7 +776,7 @@ export async function addProduct(
   };
   let result: ShelfProduct | null = null;
   assertShelfAddOwnerCurrent(owner);
-  await updatePrivateItem(KEY, (current) => {
+  await updateShelfStorage(owner, (current) => {
     assertShelfAddOwnerCurrent(owner);
     const state = decodeShelfState(current, ts);
     const ownerConflict = state.addOperations.find((existing) => existing.ownerHash !== ownerHash);
@@ -680,7 +791,7 @@ export async function addProduct(
       result =
         state.products.find((existing) => existing.id === existingOperation.productId) ?? null;
       if (!result) throw new Error(SHELF_STATE_INVALID);
-      return current;
+      return { nextShelf: current, outboxChanges: [] };
     }
     let retainedOperations = state.addOperations;
     if (retainedOperations.length >= MAX_ADD_OPERATION_MAPPINGS) {
@@ -700,7 +811,10 @@ export async function addProduct(
     const items = state.products;
     if (items.some((item) => item.id === product.id)) throw new Error(SHELF_STATE_INVALID);
     result = product;
-    return encodeShelfState([product, ...items], [operation, ...retainedOperations]);
+    return {
+      nextShelf: encodeShelfState([product, ...items], [operation, ...retainedOperations]),
+      outboxChanges: [shelfUpsertChange(product)],
+    };
   });
   assertShelfAddOwnerCurrent(owner);
   if (!result) throw new Error(SHELF_STATE_INVALID);
@@ -787,10 +901,11 @@ export async function acknowledgeProductAdd(
 export async function updateProduct(
   id: string,
   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
+  owner?: ShelfOperationOwner,
 ): Promise<ShelfProduct | null> {
   const ts = nowISO();
   let updated: ShelfProduct | null = null;
-  await updatePrivateItem(KEY, (current) => {
+  await updateShelfStorage(owner, (current) => {
     const state = decodeShelfState(current, ts);
     const items = state.products;
     let changed = false;
@@ -830,23 +945,34 @@ export async function updateProduct(
       updated = candidate;
       return candidate;
     });
-    return changed ? encodeShelfState(next, state.addOperations) : current;
+    return changed && updated
+      ? {
+          nextShelf: encodeShelfState(next, state.addOperations),
+          outboxChanges: [shelfUpsertChange(updated)],
+        }
+      : { nextShelf: current, outboxChanges: [] };
   });
   return updated;
 }
 
-export async function removeProduct(id: string): Promise<ShelfProduct | null> {
+export async function removeProduct(
+  id: string,
+  owner?: ShelfOperationOwner,
+): Promise<ShelfProduct | null> {
   let removed: ShelfProduct | null = null;
-  await updatePrivateItem(KEY, (current) => {
+  await updateShelfStorage(owner, (current) => {
     const state = decodeShelfState(current);
     const items = state.products;
     removed = items.find((product) => product.id === id) ?? null;
     return removed
-      ? encodeShelfState(
-          items.filter((product) => product.id !== id),
-          state.addOperations.filter((operation) => operation.productId !== id),
-        )
-      : current;
+      ? {
+          nextShelf: encodeShelfState(
+            items.filter((product) => product.id !== id),
+            state.addOperations.filter((operation) => operation.productId !== id),
+          ),
+          outboxChanges: [shelfDeleteChange(id)],
+        }
+      : { nextShelf: current, outboxChanges: [] };
   });
   return removed;
 }
@@ -874,16 +1000,19 @@ async function replacementIdForSource(sourceId: string): Promise<string> {
  * resetting the opened-date clock and carrying the repurchase count forward
  * (docs/04 §6 "re-add the same one").
  */
-export async function reAddProduct(id: string): Promise<ReAddedShelfProduct | null> {
+export async function reAddProduct(
+  id: string,
+  owner?: ShelfOperationOwner,
+): Promise<ReAddedShelfProduct | null> {
   const ts = nowISO();
   const replacementId = await replacementIdForSource(id);
   if (!replacementId || replacementId === id) throw new Error(SHELF_STATE_INVALID);
   let result: ReAddedShelfProduct | null = null;
-  await updatePrivateItem(KEY, (current) => {
+  await updateShelfStorage(owner, (current) => {
     const state = decodeShelfState(current, ts);
     const items = state.products;
     const prev = items.find((product) => product.id === id);
-    if (!prev) return current;
+    if (!prev) return { nextShelf: current, outboxChanges: [] };
 
     const existingReplacement = items.find((product) => product.id === replacementId);
     if (existingReplacement) {
@@ -895,7 +1024,7 @@ export async function reAddProduct(id: string): Promise<ReAddedShelfProduct | nu
         throw new Error(SHELF_REPLENISHMENT_ALREADY_REPLACED);
       }
       result = { fresh: existingReplacement, archived: prev };
-      return current;
+      return { nextShelf: current, outboxChanges: [] };
     }
     const archived: ShelfProduct =
       prev.status === 'active'
@@ -926,10 +1055,13 @@ export async function reAddProduct(id: string): Promise<ReAddedShelfProduct | nu
       updatedAt: ts,
     };
     result = { fresh, archived };
-    return encodeShelfState(
-      [fresh, ...items.map((product) => (product.id === id ? archived : product))],
-      state.addOperations,
-    );
+    return {
+      nextShelf: encodeShelfState(
+        [fresh, ...items.map((product) => (product.id === id ? archived : product))],
+        state.addOperations,
+      ),
+      outboxChanges: [shelfUpsertChange(archived), shelfUpsertChange(fresh)],
+    };
   });
   return result;
 }

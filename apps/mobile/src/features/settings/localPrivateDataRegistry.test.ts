@@ -16,10 +16,10 @@ import {
 describe('local private-data contract registry', () => {
   it('is structurally valid and assigns every export destination once', () => {
     expect(validateLocalPrivateKeyRegistry()).toEqual([]);
-    expect(LOCAL_PRIVATE_KEY_REGISTRY).toHaveLength(47);
-    expect(LOCAL_PRIVATE_DATA_KEYS).toHaveLength(38);
+    expect(LOCAL_PRIVATE_KEY_REGISTRY).toHaveLength(49);
+    expect(LOCAL_PRIVATE_DATA_KEYS).toHaveLength(39);
     expect(LOCAL_PRIVATE_SECURE_STORE_KEYS).toHaveLength(2);
-    expect(LOCAL_PRIVATE_METADATA_KEYS).toHaveLength(4);
+    expect(LOCAL_PRIVATE_METADATA_KEYS).toHaveLength(5);
     expect(LOCAL_PRIVATE_CONTROL_KEYS).toHaveLength(3);
   });
 

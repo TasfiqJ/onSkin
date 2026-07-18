@@ -10,6 +10,9 @@ describe('OfflineSync query invalidation', () => {
 
     expect(source).toContain('ownerQueryPrefixes.completions(ownerScope)');
     expect(source).toContain('ownerQueryPrefixes.progress(ownerScope)');
+    expect(source).toContain('flushOutbox()');
+    expect(source).toContain('ownerQueryPrefixes.shelf(ownerScope)');
+    expect(source).toContain('onlineManager.subscribe');
     expect(source).not.toContain("invalidateQueries({ queryKey: ['today'] })");
     expect(source).toContain("markStartupPhase('startup_reconciliation_complete')");
     expect(source).toContain('if (isOwnerQueryScopeCurrent(ownerScope))');

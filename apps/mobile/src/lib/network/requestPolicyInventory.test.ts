@@ -29,10 +29,7 @@ function source(path: string): string {
 const READ_ONLY_ENDPOINTS_BY_FILE = {
   'features/commerce/useCommerce.ts': ['commerce_links'],
   'features/onboarding/onboardingStatusQuery.ts': ['onboarding_status'],
-  'features/routine/useProgress.ts': [
-    'progress_completions',
-    'progress_longest_streak',
-  ],
+  'features/routine/useProgress.ts': ['progress_completions', 'progress_longest_streak'],
   'features/scheduler/profile.ts': ['profile_server'],
   'features/subscription/store.ts': ['entitlement_server'],
   'features/trend/consent.ts': ['trend_consent'],
@@ -43,7 +40,6 @@ const READ_ONLY_ENDPOINTS_BY_FILE = {
 const POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE = {
   'features/commerce/store.ts': ['commerce_click_event'],
   'features/photos/store.ts': ['photo_delete_mirror'],
-  'features/shelf/mutations.ts': ['shelf_delete_mirror'],
   'lib/offline/completionQueue.ts': ['completion_sync'],
 } as const;
 
@@ -56,7 +52,6 @@ const DEFERRED_MUTATION_POLICY_FILES = [
   'features/notifications/store.ts',
   'features/onboarding/OnboardingContext.tsx',
   'features/recommendations/store.ts',
-  'features/shelf/mutations.ts',
   'features/shelf/scanLog.ts',
   'lib/consent/consent.ts',
 ] as const;
@@ -93,9 +88,7 @@ describe('production request-policy inventory', () => {
     const rawInvokeFiles = files
       .filter((path) => source(path).includes('supabase.functions.invoke'))
       .map(normalized);
-    const rawFetchFiles = files
-      .filter((path) => /\bfetch\(/.test(source(path)))
-      .map(normalized);
+    const rawFetchFiles = files.filter((path) => /\bfetch\(/.test(source(path))).map(normalized);
     const rawRpcFiles = files
       .filter((path) => source(path).includes('supabase') && source(path).includes('.rpc('))
       .map(normalized);
@@ -105,7 +98,7 @@ describe('production request-policy inventory', () => {
 
     expect(rawInvokeFiles).toEqual(['lib/network/edgeFunctions.ts']);
     expect(rawFetchFiles).toEqual(['lib/diagnostics/localDiagnosticsRuntime.ts']);
-    expect(rawRpcFiles).toEqual(['lib/auth/accountDeletionCompletion.ts']);
+    expect(rawRpcFiles).toEqual(['lib/auth/accountDeletionCompletion.ts', 'lib/offline/outbox.ts']);
     expect(rawStorageFiles).toEqual([]);
 
     const deletionCompletion = source(join(SRC_DIR, rawRpcFiles[0]!));
@@ -113,6 +106,13 @@ describe('production request-policy inventory', () => {
     expect(deletionCompletion).toContain("endpoint: 'account_deletion'");
     expect(deletionCompletion).toContain('ownerScoped: false');
     expect(deletionCompletion).toContain('.abortSignal(attemptSignal)');
+
+    const outbox = source(join(SRC_DIR, 'lib/offline/outbox.ts'));
+    expect(outbox).toContain('runRequestWithLease(');
+    expect(outbox).toContain("endpoint: 'outbox_sync'");
+    expect(outbox).toContain('idempotent: true');
+    expect(outbox).toContain('maxAttempts: 2');
+    expect(outbox).toContain('.abortSignal(signal)');
 
     const diagnostics = source(join(SRC_DIR, rawFetchFiles[0]!));
     expect(diagnostics).toContain("method: 'HEAD'");
@@ -165,7 +165,9 @@ describe('production request-policy inventory', () => {
     expect(REQUEST_ENDPOINTS).toHaveLength(21);
     for (const endpoint of REQUEST_ENDPOINTS) {
       expect(endpoint).toMatch(/^[a-z][a-z0-9_]{2,63}$/);
-      expect(endpoint).not.toMatch(/token|user|account_id|barcode|product|string|query|search_term/);
+      expect(endpoint).not.toMatch(
+        /token|user|account_id|barcode|product|string|query|search_term/,
+      );
     }
   });
 });

@@ -2003,10 +2003,10 @@ The following register is intended to prevent small-but-important work from disa
 | OPT-004 | Preserve ciphertext on missing/invalid key across every store        | In progress, unverified            | corruption/key-loss matrix         |
 | OPT-005 | Serialize and journal photo mutations                                | In progress, unverified            | race/failure injection             |
 | OPT-006 | Remove ordinary-read photo metadata rewrite                          | In progress, unverified            | read-only regression test          |
-| OPT-007 | Make private-store read/modify/write atomic                          | Not started                        | simultaneous writer tests          |
+| OPT-007 | Make private-store read/modify/write atomic                          | Implemented locally; device proof pending | simultaneous writer tests          |
 | OPT-008 | Return typed unavailable/corrupt/unsupported states                  | Partial                            | store-by-store tests               |
 | OPT-009 | Bind async writes to owner/account generation                        | Partial                            | delayed A-to-B tests               |
-| OPT-010 | Create encrypted transactional outbox                                | Not started; architecture approval | offline/reconnect/duplicate worker |
+| OPT-010 | Create encrypted transactional outbox                                | In progress; core + Shelf implemented locally | offline/reconnect/duplicate worker |
 | OPT-011 | Verify iOS Keychain/file protection/backup exclusion                 | Not started                        | signed-device artifact/test        |
 | OPT-012 | Verify Android Keystore/backup/data extraction                       | Partial config, unverified         | merged manifest + device test      |
 | OPT-013 | Paginate/verify complete data exports                                | Not started                        | >1,000-row count/checksum          |

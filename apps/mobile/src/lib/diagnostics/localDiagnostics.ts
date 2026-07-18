@@ -50,7 +50,7 @@ export type LocalDiagnosticsSnapshot = Readonly<{
   vault: 'locked' | 'ready' | 'unavailable';
   appLock: 'disabled' | 'locked' | 'unavailable' | 'unlocked';
   outbox: Readonly<{
-    model: 'legacy_completion_queue';
+    model: 'transactional_outbox_v1';
     status: DiagnosticsAvailability;
     ready: number;
     inFlight: number;
@@ -154,7 +154,8 @@ const TIMING_NAMES = new Set<string>(OPERATION_TIMING_NAMES);
 const STARTUP_PHASES = new Set<string>(STARTUP_PHASE_NAMES);
 const SAFE_RELEASE_VERSION = /^\d+(?:\.\d+){0,3}(?:[-+][A-Za-z0-9.-]{1,32})?$/;
 const SAFE_BUILD_VERSION = /^\d+(?:\.\d+){0,2}$/;
-const SAFE_RUNTIME_VERSION = /^(?:[a-f0-9]{32,64}|exposdk:\d+(?:\.\d+){1,3}|fingerprint:[a-f0-9]{6,64}|\d+(?:\.\d+){0,3}(?:[-+][A-Za-z0-9.-]{1,32})?)$/i;
+const SAFE_RUNTIME_VERSION =
+  /^(?:[a-f0-9]{32,64}|exposdk:\d+(?:\.\d+){1,3}|fingerprint:[a-f0-9]{6,64}|\d+(?:\.\d+){0,3}(?:[-+][A-Za-z0-9.-]{1,32})?)$/i;
 const ACCOUNT_GENERATION_PREFIX = /^[a-f0-9]{8}$/;
 const MAX_DIAGNOSTIC_COUNT = 1_000_000;
 const MAX_DIAGNOSTIC_DURATION_MS = 60 * 60 * 1000;
@@ -242,15 +243,18 @@ function normalizeStartupPhase(value: unknown): DiagnosticsStartupPhase | null {
   };
 }
 
-export function resolveLocalDiagnosticsAccess(
-  development: boolean,
-  environment: unknown,
-): boolean {
+export function resolveLocalDiagnosticsAccess(development: boolean, environment: unknown): boolean {
   return development && (environment === 'development' || environment === 'staging');
 }
 
-export function classifyStorageFreeSpace(availableBytes: unknown): LocalDiagnosticsSnapshot['storageFreeSpace'] {
-  if (typeof availableBytes !== 'number' || !Number.isFinite(availableBytes) || availableBytes < 0) {
+export function classifyStorageFreeSpace(
+  availableBytes: unknown,
+): LocalDiagnosticsSnapshot['storageFreeSpace'] {
+  if (
+    typeof availableBytes !== 'number' ||
+    !Number.isFinite(availableBytes) ||
+    availableBytes < 0
+  ) {
     return 'unavailable';
   }
   if (availableBytes < 100 * 1024 * 1024) return 'critical';
@@ -328,8 +332,7 @@ export async function loadLocalDiagnostics(
     schemaVersion: LOCAL_DIAGNOSTICS_SCHEMA_VERSION,
     capturedAt: safeCapturedAt(deps.now),
     build: {
-      environment:
-        buildRecord.environment === 'staging' ? 'staging' : 'development',
+      environment: buildRecord.environment === 'staging' ? 'staging' : 'development',
       releaseVersion: safeBuildValue(buildRecord.releaseVersion, SAFE_RELEASE_VERSION),
       buildVersion: safeBuildValue(buildRecord.buildVersion, SAFE_BUILD_VERSION),
       runtimeVersion: safeBuildValue(buildRecord.runtimeVersion, SAFE_RUNTIME_VERSION),
@@ -345,18 +348,14 @@ export async function loadLocalDiagnostics(
         : typeof accountPrefix === 'string' && ACCOUNT_GENERATION_PREFIX.test(accountPrefix)
           ? accountPrefix
           : 'unavailable',
-    vault: safeEnum(
-      vault,
-      new Set(['locked', 'ready', 'unavailable'] as const),
-      'unavailable',
-    ),
+    vault: safeEnum(vault, new Set(['locked', 'ready', 'unavailable'] as const), 'unavailable'),
     appLock: safeEnum(
       appLock,
       new Set(['disabled', 'locked', 'unavailable', 'unlocked'] as const),
       'unavailable',
     ),
     outbox: {
-      model: 'legacy_completion_queue',
+      model: 'transactional_outbox_v1',
       status: normalizeAvailability(rawOutbox.status),
       ready: safeCount(rawOutbox.ready),
       inFlight: safeCount(rawOutbox.inFlight),

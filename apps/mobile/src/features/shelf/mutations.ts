@@ -3,13 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
-import { isSupabaseConfigured } from '@/lib/env';
-import { devWarn } from '@/lib/observability/safeLog';
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
+import { scheduleOutboxFlush } from '@/lib/offline/outbox';
 import {
   isOwnerQueryScopeCurrent,
   ownerQueryPrefixes,
@@ -17,7 +11,6 @@ import {
   type OwnerQueryScope,
 } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { supabase } from '@/lib/supabase/client';
 
 import {
   acknowledgeProductAdd,
@@ -29,8 +22,6 @@ import {
   type ShelfProduct,
 } from './store';
 import { failClosedShelfQueriesAfterMutationFailure } from './mutationFailure';
-
-const shelfMirrorTails = new Map<string, Promise<void>>();
 
 type ReplenishmentAttempt = {
   pending: Promise<ShelfProduct | null>;
@@ -49,126 +40,9 @@ export function resetShelfMutationStateForTests(): void {
   replenishmentAttempts.clear();
 }
 
-function enqueueShelfMirror(
-  ownerScope: OwnerQueryScope,
-  productId: string,
-  operation: () => Promise<void>,
-): Promise<void> {
-  const key = `${ownerScope.generation}:${productId}`;
-  const previous = shelfMirrorTails.get(key) ?? Promise.resolve();
-  const current = previous.catch(() => undefined).then(operation);
-  const tail = current
-    .catch(() => undefined)
-    .finally(() => {
-      if (shelfMirrorTails.get(key) === tail) shelfMirrorTails.delete(key);
-    });
-  shelfMirrorTails.set(key, tail);
-  return current;
-}
-
-// Shelf lifecycle mutations (docs/04 §5.7). Each writes the local-first store
-// (source of truth, D-029) and best-effort-mirrors to Supabase so it's ready to
-// sync once the project exists (B-SUPABASE). PostHog funnel events per docs/04 §9.
-
-/** Best-effort mirror to user_products. Local and server rows deliberately share
- * one UUID so routine_conflicts foreign keys can reference the mirrored shelf. */
-async function performShelfMirrorUpsertForOwner(
-  ownerScope: OwnerQueryScope,
-  p: ShelfProduct,
-): Promise<void> {
-  if (!isSupabaseConfigured) return;
-  try {
-    await runOwnerQueryOperation(ownerScope, async (lease) => {
-      const owner = await captureAuthenticatedAccountOwner(lease);
-      if (!owner) return;
-      lease.assertCurrent();
-      const { error } = await supabase
-        .from('user_products')
-        .upsert(
-          {
-            id: p.id,
-            user_id: owner.userId,
-            catalog_product_id: p.catalogProductId,
-            catalog_source_id: p.catalogSourceId,
-            catalog_match_quality: p.catalogMatchQuality,
-            catalog_source_snapshot_date: p.catalogSourceSnapshotDate,
-            manual_name: p.name,
-            manual_brand: p.brand,
-            barcode: p.barcode,
-            opened_at: p.openedAt,
-            pao_months: p.paoMonths,
-            expiry_date: p.expiryDate,
-            is_opened: p.isOpened,
-            pao_source: p.paoSource,
-            expiry_source: p.expirySource,
-            added_via: p.addedVia,
-            source_disclosure_ack_at: p.sourceDisclosureAckAt,
-            status: p.status,
-            finished_at: p.finishedAt,
-          },
-          { onConflict: 'id' },
-        )
-        .abortSignal(lease.signal);
-      lease.assertCurrent();
-      if (error) throw new Error('SUPABASE_USER_PRODUCT_UPSERT_FAILED');
-    });
-  } catch (error) {
-    devWarn('shelf_mirror_upsert_failed', error);
-    /* offline / no DB. The local store already holds it (D-029) */
-  }
-}
-
-export function mirrorShelfUpsertForOwner(
-  ownerScope: OwnerQueryScope,
-  product: ShelfProduct,
-): Promise<void> {
-  return enqueueShelfMirror(ownerScope, product.id, () =>
-    performShelfMirrorUpsertForOwner(ownerScope, product),
-  );
-}
-
-async function performShelfMirrorDeleteForOwner(
-  ownerScope: OwnerQueryScope,
-  id: string,
-): Promise<void> {
-  if (!isSupabaseConfigured) return;
-  try {
-    await runOwnerQueryOperation(ownerScope, async (lease) => {
-      const owner = await captureAuthenticatedAccountOwner(lease);
-      if (!owner) return;
-      lease.assertCurrent();
-      await runRequestWithLease(
-        lease,
-        {
-          endpoint: 'shelf_delete_mirror',
-          deadlineMs: 8_000,
-          idempotent: true,
-          maxAttempts: 2,
-          maxResponseBytes: 16 * 1024,
-        },
-        async ({ signal }) => {
-          const response = await supabase
-            .from('user_products')
-            .delete()
-            .eq('id', id)
-            .eq('user_id', owner.userId)
-            .abortSignal(signal);
-          if (response.error) {
-            throw supabaseRequestFailure(response.error, response.status);
-          }
-          return null;
-        },
-      );
-      lease.assertCurrent();
-    });
-  } catch (error) {
-    devWarn('shelf_mirror_delete_failed', error);
-  }
-}
-
-export function mirrorShelfDeleteForOwner(ownerScope: OwnerQueryScope, id: string): Promise<void> {
-  return enqueueShelfMirror(ownerScope, id, () => performShelfMirrorDeleteForOwner(ownerScope, id));
-}
+// Shelf lifecycle mutations commit the local-first source of truth and an
+// encrypted owner-bound outbox state mirror as one transaction. Network
+// publication is restart-safe and never blocks the local write.
 
 export function useShelfMutations() {
   const qc = useQueryClient();
@@ -199,12 +73,13 @@ export function useShelfMutations() {
         runOwnerQueryOperation(ownerScope, async (lease) => {
           const product = await addProduct(input, {
             ...(ownerId ? { ownerId } : {}),
+            ownerGeneration: lease.generation,
             operationId,
             assertCurrent: lease.assertCurrent,
           });
           lease.assertCurrent();
           track('product_added', { added_via: input.addedVia });
-          void mirrorShelfUpsertForOwner(ownerScope, product);
+          scheduleOutboxFlush();
           await invalidate();
           lease.assertCurrent();
           return product;
@@ -218,6 +93,7 @@ export function useShelfMutations() {
         runOwnerQueryOperation(ownerScope, async (lease) => {
           await acknowledgeProductAdd(productId, {
             ...(ownerId ? { ownerId } : {}),
+            ownerGeneration: lease.generation,
             assertCurrent: lease.assertCurrent,
           });
           lease.assertCurrent();
@@ -232,13 +108,21 @@ export function useShelfMutations() {
     ): Promise<void> {
       await runWithFailureRecovery(() =>
         runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(id, {
-            openedAt: patch.openedAt,
-            isOpened: patch.isOpened,
-            ...(patch.paoMonths !== undefined ? { paoMonths: patch.paoMonths } : {}),
-          });
+          const product = await updateProduct(
+            id,
+            {
+              openedAt: patch.openedAt,
+              isOpened: patch.isOpened,
+              ...(patch.paoMonths !== undefined ? { paoMonths: patch.paoMonths } : {}),
+            },
+            {
+              ...(ownerId ? { ownerId } : {}),
+              ownerGeneration: lease.generation,
+              assertCurrent: lease.assertCurrent,
+            },
+          );
           lease.assertCurrent();
-          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          if (product) scheduleOutboxFlush();
           track('opened_date_set', { is_opened: patch.isOpened });
           await invalidate();
         }),
@@ -248,9 +132,13 @@ export function useShelfMutations() {
     async edit(id: string, patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>): Promise<void> {
       await runWithFailureRecovery(() =>
         runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(id, patch);
+          const product = await updateProduct(id, patch, {
+            ...(ownerId ? { ownerId } : {}),
+            ownerGeneration: lease.generation,
+            assertCurrent: lease.assertCurrent,
+          });
           lease.assertCurrent();
-          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          if (product) scheduleOutboxFlush();
           await invalidate();
         }),
       );
@@ -259,12 +147,20 @@ export function useShelfMutations() {
     async markFinished(id: string): Promise<void> {
       await runWithFailureRecovery(() =>
         runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(id, {
-            status: 'finished',
-            finishedAt: localDateString(),
-          });
+          const product = await updateProduct(
+            id,
+            {
+              status: 'finished',
+              finishedAt: localDateString(),
+            },
+            {
+              ...(ownerId ? { ownerId } : {}),
+              ownerGeneration: lease.generation,
+              assertCurrent: lease.assertCurrent,
+            },
+          );
           lease.assertCurrent();
-          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          if (product) scheduleOutboxFlush();
           track('product_finished', { source: 'shelf' });
           await invalidate();
         }),
@@ -274,12 +170,20 @@ export function useShelfMutations() {
     async markDiscarded(id: string): Promise<void> {
       await runWithFailureRecovery(() =>
         runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(id, {
-            status: 'discarded',
-            finishedAt: localDateString(),
-          });
+          const product = await updateProduct(
+            id,
+            {
+              status: 'discarded',
+              finishedAt: localDateString(),
+            },
+            {
+              ...(ownerId ? { ownerId } : {}),
+              ownerGeneration: lease.generation,
+              assertCurrent: lease.assertCurrent,
+            },
+          );
           lease.assertCurrent();
-          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          if (product) scheduleOutboxFlush();
           track('product_discarded', { source: 'shelf' });
           await invalidate();
         }),
@@ -289,9 +193,13 @@ export function useShelfMutations() {
     async remove(id: string): Promise<void> {
       await runWithFailureRecovery(() =>
         runOwnerQueryOperation(ownerScope, async (lease) => {
-          await removeProduct(id);
+          const removed = await removeProduct(id, {
+            ...(ownerId ? { ownerId } : {}),
+            ownerGeneration: lease.generation,
+            assertCurrent: lease.assertCurrent,
+          });
           lease.assertCurrent();
-          void mirrorShelfDeleteForOwner(ownerScope, id);
+          if (removed) scheduleOutboxFlush();
           await invalidate();
         }),
       );
@@ -314,12 +222,13 @@ export function useShelfMutations() {
       // data in module memory—makes any uncertain retry idempotent.
       const pending = runWithFailureRecovery(() =>
         runOwnerQueryOperation(ownerScope, async (lease) => {
-          const replaced = await reAddProduct(id);
+          const replaced = await reAddProduct(id, {
+            ...(ownerId ? { ownerId } : {}),
+            ownerGeneration: lease.generation,
+            assertCurrent: lease.assertCurrent,
+          });
           lease.assertCurrent();
-          if (replaced) {
-            void mirrorShelfUpsertForOwner(ownerScope, replaced.archived);
-            void mirrorShelfUpsertForOwner(ownerScope, replaced.fresh);
-          }
+          if (replaced) scheduleOutboxFlush();
           track('replenishment_nudge_tapped', { action: 're_add' });
           await invalidate();
           lease.assertCurrent();
