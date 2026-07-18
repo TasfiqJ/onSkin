@@ -1,11 +1,11 @@
 {
   "artifactPrefix": "bootstrap-scan-error-iphone-390x844",
   "browserFailures": [],
-  "completedAt": "2026-07-18T20:40:46.136Z",
+  "completedAt": "2026-07-18T21:22:13.306Z",
   "error": null,
   "fixtureGroup": "scan-error",
   "nativeDeviceProof": false,
-  "startedAt": "2026-07-18T20:40:41.217Z",
+  "startedAt": "2026-07-18T21:22:08.281Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -13,5 +13,5 @@
     "width": 390,
     "height": 844
   },
-  "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-390x844-1784407243830"
+  "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-390x844-1784409731007"
 }

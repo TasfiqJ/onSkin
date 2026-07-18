@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "scan-no-match-iphone-430x932",
-  "completedAt": "2026-07-18T20:38:36.544Z",
+  "completedAt": "2026-07-18T21:19:46.148Z",
   "error": null,
   "fixture": "no_match",
   "fixtureGroup": "no-match",
   "nativeDeviceProof": false,
   "route": "/shelf/scan",
   "scenarioId": "scan-no-match",
-  "startedAt": "2026-07-18T20:38:33.009Z",
+  "startedAt": "2026-07-18T21:19:42.659Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {

@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "search-matched-iphone-430x932",
-  "completedAt": "2026-07-18T20:37:17.581Z",
+  "completedAt": "2026-07-18T21:18:25.413Z",
   "error": null,
   "fixture": "matched",
   "fixtureGroup": "matched",
   "nativeDeviceProof": false,
   "route": "/shelf/search",
   "scenarioId": "search-matched",
-  "startedAt": "2026-07-18T20:37:14.341Z",
+  "startedAt": "2026-07-18T21:18:22.191Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {

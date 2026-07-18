@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "catalog-recovery-malformed-iphone-375x667",
-  "completedAt": "2026-07-18T20:43:01.736Z",
+  "completedAt": "2026-07-18T21:24:38.861Z",
   "error": null,
   "fixture": "malformed_params",
   "fixtureGroup": "ocr-capture-failure",
   "nativeDeviceProof": false,
   "route": "/shelf/catalog-recovery",
   "scenarioId": "catalog-recovery-malformed",
-  "startedAt": "2026-07-18T20:42:59.322Z",
+  "startedAt": "2026-07-18T21:24:36.504Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -16,5 +16,5 @@
     "height": 667
   },
   "browserFailures": [],
-  "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-375x667-1784407379322&barcode=not-a-barcode&productId=not-a-product-id"
+  "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-375x667-1784409876504&barcode=not-a-barcode&productId=not-a-product-id"
 }

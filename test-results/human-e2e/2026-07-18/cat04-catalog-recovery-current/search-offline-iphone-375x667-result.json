@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "search-offline-iphone-375x667",
-  "completedAt": "2026-07-18T20:39:16.101Z",
+  "completedAt": "2026-07-18T21:20:27.393Z",
   "error": null,
   "fixture": "offline",
   "fixtureGroup": "offline",
   "nativeDeviceProof": false,
   "route": "/shelf/search",
   "scenarioId": "search-offline",
-  "startedAt": "2026-07-18T20:39:12.767Z",
+  "startedAt": "2026-07-18T21:20:24.045Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {

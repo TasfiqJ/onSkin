@@ -1,11 +1,11 @@
 {
   "artifactPrefix": "bootstrap-ocr-capture-failure-iphone-375x667",
   "browserFailures": [],
-  "completedAt": "2026-07-18T20:42:53.760Z",
+  "completedAt": "2026-07-18T21:24:31.148Z",
   "error": null,
   "fixtureGroup": "ocr-capture-failure",
   "nativeDeviceProof": false,
-  "startedAt": "2026-07-18T20:42:41.059Z",
+  "startedAt": "2026-07-18T21:24:18.912Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -13,5 +13,5 @@
     "width": 375,
     "height": 667
   },
-  "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-375x667-1784407371515"
+  "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-375x667-1784409868937"
 }

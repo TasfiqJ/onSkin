@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "scan-matched-iphone-390x844",
-  "completedAt": "2026-07-18T20:37:04.609Z",
+  "completedAt": "2026-07-18T21:18:12.439Z",
   "error": null,
   "fixture": "matched",
   "fixtureGroup": "matched",
   "nativeDeviceProof": false,
   "route": "/shelf/scan",
   "scenarioId": "scan-matched",
-  "startedAt": "2026-07-18T20:37:01.665Z",
+  "startedAt": "2026-07-18T21:18:09.460Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {

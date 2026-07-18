@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "scan-offline-iphone-375x667",
-  "completedAt": "2026-07-18T20:39:22.900Z",
+  "completedAt": "2026-07-18T21:20:34.280Z",
   "error": null,
   "fixture": "offline",
   "fixtureGroup": "offline",
   "nativeDeviceProof": false,
   "route": "/shelf/scan",
   "scenarioId": "scan-offline",
-  "startedAt": "2026-07-18T20:39:16.102Z",
+  "startedAt": "2026-07-18T21:20:27.393Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {

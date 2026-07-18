@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "scan-error-iphone-375x667",
-  "completedAt": "2026-07-18T20:40:41.216Z",
+  "completedAt": "2026-07-18T21:22:08.280Z",
   "error": null,
   "fixture": "error",
   "fixtureGroup": "scan-error",
   "nativeDeviceProof": false,
   "route": "/shelf/scan",
   "scenarioId": "scan-error",
-  "startedAt": "2026-07-18T20:40:33.753Z",
+  "startedAt": "2026-07-18T21:22:00.812Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {

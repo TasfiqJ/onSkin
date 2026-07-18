@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "search-wrong-match-recovery-iphone-375x667",
-  "completedAt": "2026-07-18T20:40:33.753Z",
+  "completedAt": "2026-07-18T21:22:00.811Z",
   "error": null,
   "fixture": "wrong_match",
   "fixtureGroup": "scan-error",
   "nativeDeviceProof": false,
   "route": "/shelf/search",
   "scenarioId": "search-wrong-match-recovery",
-  "startedAt": "2026-07-18T20:40:29.058Z",
+  "startedAt": "2026-07-18T21:21:56.106Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {

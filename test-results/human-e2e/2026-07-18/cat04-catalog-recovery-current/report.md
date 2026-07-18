@@ -3,7 +3,7 @@
 - Verdict: pass
 - Surface: Expo web deterministic development fixtures
 - Native-device proof: No
-- Source Git SHA: 05539a8450dc1407eb00e7ee2dff78ed495a2d51
+- Source Git SHA: 48f2020060e3057d4608a9dae15548bc75b6ae8b
 - Limitation: This audit uses Expo web and deterministic development fixtures.
 - Limitation: It does not prove native camera hardware, OS permission sheets, or physical-iPhone behavior.
 - Limitation: The existing scan fixture seeds only the Scan screen; no production fixture drives lookupBarcode from an offline queued retry to a ready match. A restart-same-origin, Shelf-ready review accept/reject cycle therefore requires a real staging catalog and is deliberately not faked here.
