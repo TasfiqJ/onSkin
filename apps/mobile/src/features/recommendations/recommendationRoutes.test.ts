@@ -129,7 +129,8 @@ describe('Recommendation route contracts', () => {
     expect(source.indexOf('save: savePreferenceWithFixture')).toBeLessThan(
       source.indexOf("track('preference_set')"),
     );
-    expect(source).toContain('await savePreferences(ownerScope, next);');
+    expect(source).toContain('await savePreferences(ownerScope, next, user?.id);');
+    expect(source).toContain('<RecommendationPreferenceSyncStatus className="mb-12 mt-4" />');
     expect(source).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
     expect(source).toContain('const commitInFlight = useRef(false);');
     expect(source).toContain('if (controlsDisabled || commitInFlight.current) return;');

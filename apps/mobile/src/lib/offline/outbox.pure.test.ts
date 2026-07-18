@@ -7,6 +7,7 @@ import {
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
   enqueueNotificationPreferencesOutboxOperation,
+  enqueueRecommendationPreferencesOutboxOperation,
   enqueueShelfOutboxOperation,
   leaseReadyOutboxRows,
   outboxCounts,
@@ -41,6 +42,11 @@ const NOTIFICATION_PAYLOAD = {
   promotional_opt_in: false,
   lockscreen_discreet: true,
 } as const;
+const RECOMMENDATION_PAYLOAD = {
+  values_filters: ['fragrance_free', 'vegan'],
+  budget_band: 'mid',
+  format_prefs: ['gel', 'cream'],
+} as const;
 
 function enqueue(
   envelope: OutboxEnvelope,
@@ -71,9 +77,16 @@ describe('transactional outbox model', () => {
       entityId: ENTITY_A,
     }).envelope;
     expect(decodeOutboxEnvelope(encodeOutboxEnvelope(queued))).toEqual(queued);
+    const legacy = JSON.parse(encodeOutboxEnvelope(queued)) as {
+      version: number;
+      revisions: Record<string, unknown>[];
+    };
+    legacy.version = 1;
+    legacy.revisions = legacy.revisions.map(({ ownerHash: _ownerHash, ...revision }) => revision);
+    expect(decodeOutboxEnvelope(JSON.stringify(legacy))).toEqual(queued);
     expect(() => decodeOutboxEnvelope('{bad-json')).toThrow(OUTBOX_INVALID);
     expect(() =>
-      decodeOutboxEnvelope(JSON.stringify({ version: 2, rows: [], revisions: [] })),
+      decodeOutboxEnvelope(JSON.stringify({ version: 3, rows: [], revisions: [] })),
     ).toThrow(OUTBOX_UNSUPPORTED_VERSION);
   });
 
@@ -102,7 +115,7 @@ describe('transactional outbox model', () => {
     expect(second.rows).toHaveLength(1);
     expect(second.rows[0]).toMatchObject({ operationId: OP_A2, clientRevision: 2 });
     expect(second.revisions).toEqual([
-      { entityType: 'shelf_product', entityId: ENTITY_A, revision: 2 },
+      { ownerHash: OWNER, entityType: 'shelf_product', entityId: ENTITY_A, revision: 2 },
     ]);
   });
 
@@ -318,6 +331,7 @@ describe('transactional outbox model', () => {
     }).envelope;
     expect(newer.revisions).toEqual([
       {
+        ownerHash: OWNER,
         entityType: 'notification_preferences',
         entityId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         revision: 2,
@@ -370,6 +384,65 @@ describe('transactional outbox model', () => {
     expect(leasedOwnerB.envelope.rows.map((row) => row.operationId)).toEqual([OP_A1, OP_B1]);
   });
 
+  it('keeps same-entity revisions and settlement isolated across owners', () => {
+    const ownerA = enqueueShelfOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_A,
+      operationKind: 'upsert',
+      payload: { name: 'Owner A first' },
+      enqueuedAt: NOW,
+    }).envelope;
+    const bothOwners = enqueueShelfOutboxOperation(ownerA, {
+      operationId: OP_B1,
+      ownerHash: OWNER_B,
+      ownerGeneration: 8,
+      entityId: ENTITY_A,
+      operationKind: 'upsert',
+      payload: { name: 'Owner B' },
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    const leasedA = leaseReadyOutboxRows(bothOwners, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    const newerA = enqueueShelfOutboxOperation(leasedA, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_A,
+      operationKind: 'upsert',
+      payload: { name: 'Owner A newer' },
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+    const leasedB = leaseReadyOutboxRows(newerA, {
+      ownerHash: OWNER_B,
+      leaseOwner: WORKER_B,
+      now: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+    const settledA = settleOutboxLease(leasedB, {
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:03.000Z',
+      results: [{ operationId: OP_A1, status: 'permanent', errorClass: 'validation' }],
+    });
+
+    expect(settledA.rows.map((row) => row.operationId).sort()).toEqual([OP_A2, OP_B1].sort());
+    expect(
+      selectOutboxOwnerStatus(settledA, { ownerHash: OWNER, entityType: 'shelf_product' }),
+    ).toMatchObject({ kind: 'saved_local', pendingCount: 1 });
+    expect(
+      selectOutboxOwnerStatus(settledA, { ownerHash: OWNER_B, entityType: 'shelf_product' }),
+    ).toMatchObject({ kind: 'syncing', pendingCount: 1 });
+    expect(settledA.revisions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ ownerHash: OWNER, revision: 2 }),
+        expect.objectContaining({ ownerHash: OWNER_B, revision: 1 }),
+      ]),
+    );
+  });
+
   it('retains ready notification snapshots for two owners and leases only the current owner', () => {
     const ownerA = enqueueNotificationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
       operationId: OP_A1,
@@ -400,5 +473,238 @@ describe('transactional outbox model', () => {
     expect(leasedOwnerB.envelope.rows.find((row) => row.operationId === OP_A1)?.state).toBe(
       'ready',
     );
+  });
+
+  it('keeps recommendation preference snapshots strict, owner-scoped, and restart-durable', () => {
+    const first = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: RECOMMENDATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    expect(first.rows[0]).toMatchObject({
+      entityType: 'recommendation_preferences',
+      entityId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+      idempotencyKey: `recommendation_preferences:${OP_A1}`,
+      payload: RECOMMENDATION_PAYLOAD,
+    });
+    expect(
+      selectOutboxOwnerStatus(first, {
+        ownerHash: OWNER,
+        entityType: 'recommendation_preferences',
+      }),
+    ).toEqual({ kind: 'saved_local', pendingCount: 1, attentionCount: 0 });
+    expect(
+      selectOutboxOwnerStatus(first, {
+        ownerHash: OWNER,
+        entityType: 'notification_preferences',
+      }),
+    ).toEqual({ kind: 'idle', pendingCount: 0, attentionCount: 0 });
+
+    const restarted = decodeOutboxEnvelope(encodeOutboxEnvelope(first));
+    expect(
+      leaseReadyOutboxRows(restarted, {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_A,
+        now: NOW,
+      }).rows.map((row) => row.operationId),
+    ).toEqual([OP_A1]);
+
+    for (const payload of [
+      { ...RECOMMENDATION_PAYLOAD, values_filters: ['vegan', 'vegan'] },
+      { ...RECOMMENDATION_PAYLOAD, budget_band: 'luxury' },
+      { ...RECOMMENDATION_PAYLOAD, format_prefs: [' gel'] },
+      { ...RECOMMENDATION_PAYLOAD, format_prefs: ['\tgel'] },
+      { ...RECOMMENDATION_PAYLOAD, commission_weight: 1 },
+    ]) {
+      expect(() =>
+        enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+          operationId: OP_A2,
+          ownerHash: OWNER,
+          ownerGeneration: 8,
+          payload,
+          enqueuedAt: NOW,
+        }),
+      ).toThrow(OUTBOX_INVALID);
+    }
+
+    expect(
+      enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+        operationId: OP_A2,
+        ownerHash: OWNER,
+        ownerGeneration: 8,
+        payload: { ...RECOMMENDATION_PAYLOAD, format_prefs: ['é'.repeat(64)] },
+        enqueuedAt: NOW,
+      }).row.payload,
+    ).toMatchObject({ format_prefs: ['é'.repeat(64)] });
+  });
+
+  it('serializes newer recommendation snapshots and never coalesces another owner', () => {
+    const ownerA = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: RECOMMENDATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    const leasedA = leaseReadyOutboxRows(ownerA, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const newerA = enqueueRecommendationPreferencesOutboxOperation(leasedA, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      payload: { ...RECOMMENDATION_PAYLOAD, budget_band: 'premium' },
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    const bothOwners = enqueueRecommendationPreferencesOutboxOperation(newerA, {
+      operationId: OP_B1,
+      ownerHash: OWNER_B,
+      ownerGeneration: 9,
+      payload: { ...RECOMMENDATION_PAYLOAD, values_filters: ['sustainable'] },
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    expect(
+      leaseReadyOutboxRows(bothOwners, {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_B,
+        now: '2026-07-18T15:00:29.999Z',
+      }).rows,
+    ).toEqual([]);
+    expect(
+      leaseReadyOutboxRows(bothOwners, {
+        ownerHash: OWNER_B,
+        leaseOwner: WORKER_B,
+        now: '2026-07-18T15:00:02.000Z',
+      }).rows.map((row) => row.operationId),
+    ).toEqual([OP_B1]);
+    expect(
+      leaseReadyOutboxRows(bothOwners, {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_B,
+        now: '2026-07-18T15:00:30.000Z',
+      }).rows.map((row) => row.operationId),
+    ).toEqual([OP_A2]);
+  });
+
+  it('never retries an obsolete dead recommendation snapshot after a newer save', () => {
+    const first = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: RECOMMENDATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    const leasedFirst = leaseReadyOutboxRows(first, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const deadFirst = settleOutboxLease(leasedFirst, {
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:01.000Z',
+      results: [{ operationId: OP_A1, status: 'permanent', errorClass: 'validation' }],
+    });
+    const newer = enqueueRecommendationPreferencesOutboxOperation(deadFirst, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: { ...RECOMMENDATION_PAYLOAD, budget_band: 'premium' },
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    expect(newer.rows.map((row) => row.operationId)).toEqual([OP_A2]);
+    const leasedNewer = leaseReadyOutboxRows(newer, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_B,
+      now: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+    const synced = settleOutboxLease(leasedNewer, {
+      leaseOwner: WORKER_B,
+      now: '2026-07-18T15:00:03.000Z',
+      results: [{ operationId: OP_A2, status: 'applied' }],
+    });
+    const manualRetry = retryDeadOutboxRows(synced, {
+      ownerHash: OWNER,
+      entityType: 'recommendation_preferences',
+      now: '2026-07-18T15:01:00.000Z',
+    });
+
+    expect(manualRetry).toEqual({ envelope: synced, retried: 0 });
+    expect(manualRetry.envelope.rows).toEqual([]);
+  });
+
+  it('ignores a pre-fix obsolete dead row fenced by a newer persisted revision', () => {
+    const first = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: RECOMMENDATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    const leased = leaseReadyOutboxRows(first, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const dead = settleOutboxLease(leased, {
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:01.000Z',
+      results: [{ operationId: OP_A1, status: 'permanent', errorClass: 'validation' }],
+    });
+    const persisted = decodeOutboxEnvelope(
+      JSON.stringify({
+        ...dead,
+        revisions: dead.revisions.map((revision) => ({ ...revision, revision: 2 })),
+      }),
+    );
+
+    expect(
+      selectOutboxOwnerStatus(persisted, {
+        ownerHash: OWNER,
+        entityType: 'recommendation_preferences',
+      }),
+    ).toEqual({ kind: 'idle', pendingCount: 0, attentionCount: 0 });
+    expect(
+      retryDeadOutboxRows(persisted, {
+        ownerHash: OWNER,
+        entityType: 'recommendation_preferences',
+        now: '2026-07-18T15:01:00.000Z',
+      }),
+    ).toEqual({ envelope: persisted, retried: 0 });
+  });
+
+  it('drops an older leased snapshot when a newer full snapshot can take over', () => {
+    const first = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: RECOMMENDATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    const leasedFirst = leaseReadyOutboxRows(first, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const newer = enqueueRecommendationPreferencesOutboxOperation(leasedFirst, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: { ...RECOMMENDATION_PAYLOAD, format_prefs: ['fluid'] },
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    const settledOlder = settleOutboxLease(newer, {
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:02.000Z',
+      results: [{ operationId: OP_A1, status: 'permanent', errorClass: 'validation' }],
+    });
+
+    expect(settledOlder.rows.map((row) => row.operationId)).toEqual([OP_A2]);
+    expect(settledOlder.rows[0]).toMatchObject({ state: 'ready', clientRevision: 2 });
   });
 });

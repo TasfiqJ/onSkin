@@ -125,6 +125,7 @@ export const queryPrefixes = {
   progress: ['progress'] as const,
   ramp: ['ramp'] as const,
   recommendationPreferences: ['recPreferences'] as const,
+  recommendationPreferencesOutboxStatus: ['recommendationPreferencesOutboxStatus'] as const,
   recommendations: ['recPrefsAndDismissed'] as const,
   routineOrder: ['routineOrder'] as const,
   shelf: ['shelf'] as const,
@@ -229,6 +230,8 @@ export const queryKeys = {
     localDayQueryKey(scope, 'ramp', boundary, productIds),
   recommendationPreferences: (scope: OwnerQueryScope) =>
     ownerScopedQueryKey(scope, 'recPreferences'),
+  recommendationPreferencesOutboxStatus: (scope: OwnerQueryScope, revision: number) =>
+    ownerScopedQueryKey(scope, 'recommendationPreferencesOutboxStatus', revision),
   recommendations: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'recPrefsAndDismissed'),
   routineOrder: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'routineOrder', 'v1'),
   shelf: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity) =>
@@ -264,6 +267,8 @@ export const ownerQueryPrefixes = {
   ramp: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'ramp'),
   recommendationPreferences: (scope: OwnerQueryScope) =>
     ownerScopedQueryPrefix(scope, 'recPreferences'),
+  recommendationPreferencesOutboxStatus: (scope: OwnerQueryScope) =>
+    ownerScopedQueryPrefix(scope, 'recommendationPreferencesOutboxStatus'),
   recommendations: (scope: OwnerQueryScope) =>
     ownerScopedQueryPrefix(scope, 'recPrefsAndDismissed'),
   routineOrder: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'routineOrder'),

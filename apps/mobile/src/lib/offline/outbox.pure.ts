@@ -1,5 +1,5 @@
 export const OUTBOX_STORAGE_KEY = 'onskin.outbox.v1';
-export const OUTBOX_SCHEMA_VERSION = 1 as const;
+export const OUTBOX_SCHEMA_VERSION = 2 as const;
 export const OUTBOX_ROW_SCHEMA_VERSION = 1 as const;
 export const MAX_OUTBOX_ROWS = 512;
 export const MAX_OUTBOX_REVISIONS = 1_024;
@@ -10,13 +10,18 @@ export const OUTBOX_LEASE_MS = 30_000;
 export const OUTBOX_BASE_RETRY_MS = 1_000;
 export const OUTBOX_MAX_RETRY_MS = 5 * 60_000;
 export const NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE = 'notification_preferences';
+export const RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE = 'recommendation_preferences';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SHA256_HEX = /^[0-9a-f]{64}$/;
 const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
+const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
 
-export type OutboxEntityType = 'notification_preferences' | 'shelf_product';
+export type OutboxEntityType =
+  | 'notification_preferences'
+  | 'recommendation_preferences'
+  | 'shelf_product';
 export type OutboxOperationKind = 'delete' | 'upsert';
 export type OutboxState = 'dead' | 'leased' | 'ready';
 export type OutboxFailureClass =
@@ -53,6 +58,7 @@ export type OutboxRow = Readonly<{
 }>;
 
 export type OutboxRevision = Readonly<{
+  ownerHash: string | null;
   entityType: OutboxEntityType;
   entityId: string;
   revision: number;
@@ -194,6 +200,44 @@ function validNotificationPreferencesPayload(value: unknown): value is OutboxPay
   );
 }
 
+function validRecommendationPreferencesPayload(value: unknown): value is OutboxPayload {
+  if (
+    !isRecord(value) ||
+    !hasExactKeys(value, ['values_filters', 'budget_band', 'format_prefs']) ||
+    !Array.isArray(value.values_filters) ||
+    !Array.isArray(value.format_prefs)
+  ) {
+    return false;
+  }
+  const allowedValues = new Set([
+    'fragrance_free',
+    'vegan',
+    'cruelty_free',
+    'non_comedogenic',
+    'sustainable',
+  ]);
+  const values = value.values_filters;
+  const formats = value.format_prefs;
+  return (
+    values.length <= allowedValues.size &&
+    values.every((candidate) => typeof candidate === 'string' && allowedValues.has(candidate)) &&
+    new Set(values).size === values.length &&
+    (value.budget_band === null ||
+      value.budget_band === 'drugstore' ||
+      value.budget_band === 'mid' ||
+      value.budget_band === 'premium') &&
+    formats.length <= 16 &&
+    formats.every(
+      (candidate) =>
+        typeof candidate === 'string' &&
+        Array.from(candidate).length > 0 &&
+        Array.from(candidate).length <= 64 &&
+        !EDGE_WHITESPACE.test(candidate),
+    ) &&
+    new Set(formats).size === formats.length
+  );
+}
+
 function entityIdentity(value: Pick<OutboxRow, 'entityType' | 'entityId'>): string {
   return `${value.entityType}:${value.entityId}`;
 }
@@ -202,6 +246,10 @@ function ownerEntityIdentity(
   value: Pick<OutboxRow, 'ownerHash' | 'entityType' | 'entityId'>,
 ): string {
   return `${value.ownerHash}:${entityIdentity(value)}`;
+}
+
+function revisionIdentity(revision: OutboxRevision): string {
+  return `${revision.ownerHash ?? 'legacy'}:${entityIdentity(revision)}`;
 }
 
 function notificationPreferencesEntityId(ownerHash: string): string {
@@ -262,7 +310,9 @@ function decodeRow(value: unknown): OutboxRow {
     !SHA256_HEX.test(value.ownerHash) ||
     !Number.isSafeInteger(value.ownerGeneration) ||
     Number(value.ownerGeneration) < 0 ||
-    (entityType !== 'shelf_product' && entityType !== 'notification_preferences') ||
+    (entityType !== 'shelf_product' &&
+      entityType !== 'notification_preferences' &&
+      entityType !== 'recommendation_preferences') ||
     typeof entityId !== 'string' ||
     !UUID.test(entityId) ||
     (operationKind !== 'upsert' && operationKind !== 'delete') ||
@@ -272,7 +322,9 @@ function decodeRow(value: unknown): OutboxRow {
     value.idempotencyKey !==
       (entityType === 'notification_preferences'
         ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
-        : `${entityType}:${entityId}:${value.clientRevision}`) ||
+        : entityType === 'recommendation_preferences'
+          ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
+          : `${entityType}:${entityId}:${value.clientRevision}`) ||
     value.dependencyGroupId !== `${entityType}:${entityId}` ||
     !canonicalIso(value.enqueuedAt) ||
     !Number.isSafeInteger(value.attemptCount) ||
@@ -298,6 +350,10 @@ function decodeRow(value: unknown): OutboxRow {
     (entityType === 'notification_preferences' &&
       (operationKind !== 'upsert' ||
         !validNotificationPreferencesPayload(value.payload) ||
+        value.tombstone !== false)) ||
+    (entityType === 'recommendation_preferences' &&
+      (operationKind !== 'upsert' ||
+        !validRecommendationPreferencesPayload(value.payload) ||
         value.tombstone !== false)) ||
     (state === 'leased' && (!value.leaseOwner || !value.leaseExpiresAt)) ||
     (state !== 'leased' && (value.leaseOwner !== null || value.leaseExpiresAt !== null))
@@ -331,8 +387,12 @@ function decodeRow(value: unknown): OutboxRow {
 function decodeRevision(value: unknown): OutboxRevision {
   if (
     !isRecord(value) ||
-    !hasExactKeys(value, ['entityType', 'entityId', 'revision']) ||
-    (value.entityType !== 'shelf_product' && value.entityType !== 'notification_preferences') ||
+    !hasExactKeys(value, ['ownerHash', 'entityType', 'entityId', 'revision']) ||
+    typeof value.ownerHash !== 'string' ||
+    !SHA256_HEX.test(value.ownerHash) ||
+    (value.entityType !== 'shelf_product' &&
+      value.entityType !== 'notification_preferences' &&
+      value.entityType !== 'recommendation_preferences') ||
     typeof value.entityId !== 'string' ||
     !UUID.test(value.entityId) ||
     !Number.isSafeInteger(value.revision) ||
@@ -341,6 +401,34 @@ function decodeRevision(value: unknown): OutboxRevision {
     fail();
   }
   return Object.freeze({
+    ownerHash: value.ownerHash,
+    entityType: value.entityType,
+    entityId: value.entityId,
+    revision: Number(value.revision),
+  });
+}
+
+function decodeLegacyRevision(value: unknown, rows: readonly OutboxRow[]): OutboxRevision {
+  if (
+    !isRecord(value) ||
+    !hasExactKeys(value, ['entityType', 'entityId', 'revision']) ||
+    (value.entityType !== 'shelf_product' &&
+      value.entityType !== 'notification_preferences' &&
+      value.entityType !== 'recommendation_preferences') ||
+    typeof value.entityId !== 'string' ||
+    !UUID.test(value.entityId) ||
+    !Number.isSafeInteger(value.revision) ||
+    Number(value.revision) < 1
+  ) {
+    fail();
+  }
+  const owners = new Set(
+    rows
+      .filter((row) => row.entityType === value.entityType && row.entityId === value.entityId)
+      .map((row) => row.ownerHash),
+  );
+  return Object.freeze({
+    ownerHash: owners.size === 1 ? [...owners][0]! : null,
     entityType: value.entityType,
     entityId: value.entityId,
     revision: Number(value.revision),
@@ -372,7 +460,7 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     fail(OUTBOX_UNSUPPORTED_VERSION);
   }
   if (
-    parsed.version !== OUTBOX_SCHEMA_VERSION ||
+    (parsed.version !== 1 && parsed.version !== OUTBOX_SCHEMA_VERSION) ||
     !hasExactKeys(parsed, ['version', 'rows', 'revisions']) ||
     !Array.isArray(parsed.rows) ||
     parsed.rows.length > MAX_OUTBOX_ROWS ||
@@ -382,13 +470,18 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     fail();
   }
   const rows = parsed.rows.map(decodeRow);
-  const revisions = parsed.revisions.map(decodeRevision);
+  const revisions =
+    parsed.version === 1
+      ? parsed.revisions.map((revision) => decodeLegacyRevision(revision, rows))
+      : parsed.revisions.map(decodeRevision);
   if (
     new Set(rows.map((row) => row.operationId)).size !== rows.length ||
-    new Set(revisions.map(entityIdentity)).size !== revisions.length ||
+    new Set(revisions.map(revisionIdentity)).size !== revisions.length ||
     rows.some((row) => {
       const revision = revisions.find(
-        (candidate) => entityIdentity(candidate) === entityIdentity(row),
+        (candidate) =>
+          (candidate.ownerHash === null || candidate.ownerHash === row.ownerHash) &&
+          entityIdentity(candidate) === entityIdentity(row),
       );
       return !revision || revision.revision < row.clientRevision;
     })
@@ -451,6 +544,24 @@ export function enqueueNotificationPreferencesOutboxOperation(
   });
 }
 
+export function enqueueRecommendationPreferencesOutboxOperation(
+  envelope: OutboxEnvelope,
+  input: Readonly<{
+    operationId: string;
+    ownerHash: string;
+    ownerGeneration: number;
+    payload: OutboxPayload;
+    enqueuedAt: string;
+  }>,
+): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
+  return enqueueOutboxOperation(envelope, {
+    ...input,
+    entityId: notificationPreferencesEntityId(input.ownerHash),
+    entityType: 'recommendation_preferences',
+    operationKind: 'upsert',
+  });
+}
+
 function enqueueOutboxOperation(
   envelope: OutboxEnvelope,
   input: Readonly<{
@@ -466,8 +577,16 @@ function enqueueOutboxOperation(
 ): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
   const identity = `${input.entityType}:${input.entityId}`;
   const dependencyIdentity = identity;
-  const previousRevision =
-    envelope.revisions.find((revision) => entityIdentity(revision) === identity)?.revision ?? 0;
+  const previousRevision = Math.max(
+    0,
+    ...envelope.revisions
+      .filter(
+        (revision) =>
+          (revision.ownerHash === null || revision.ownerHash === input.ownerHash) &&
+          entityIdentity(revision) === identity,
+      )
+      .map((revision) => revision.revision),
+  );
   const clientRevision = previousRevision + 1;
   const row = decodeRow({
     schemaVersion: OUTBOX_ROW_SCHEMA_VERSION,
@@ -482,7 +601,9 @@ function enqueueOutboxOperation(
     idempotencyKey:
       input.entityType === 'notification_preferences'
         ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
-        : `${dependencyIdentity}:${clientRevision}`,
+        : input.entityType === 'recommendation_preferences'
+          ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
+          : `${dependencyIdentity}:${clientRevision}`,
     dependencyGroupId: dependencyIdentity,
     enqueuedAt: input.enqueuedAt,
     attemptCount: 0,
@@ -496,12 +617,15 @@ function enqueueOutboxOperation(
   const rows = envelope.rows.filter(
     (existing) =>
       ownerEntityIdentity(existing) !== `${input.ownerHash}:${identity}` ||
-      existing.state !== 'ready',
+      existing.state === 'leased',
   );
   rows.push(row);
   if (rows.length > MAX_OUTBOX_ROWS) fail(OUTBOX_LIMIT_REACHED);
-  const revisions = envelope.revisions.filter((revision) => entityIdentity(revision) !== identity);
+  const revisions = envelope.revisions.filter(
+    (revision) => revision.ownerHash !== input.ownerHash || entityIdentity(revision) !== identity,
+  );
   revisions.push({
+    ownerHash: input.ownerHash,
     entityType: input.entityType,
     entityId: input.entityId,
     revision: clientRevision,
@@ -513,7 +637,7 @@ function enqueueOutboxOperation(
       version: OUTBOX_SCHEMA_VERSION,
       rows: Object.freeze(sortRows(rows)),
       revisions: Object.freeze(
-        revisions.sort((a, b) => entityIdentity(a).localeCompare(entityIdentity(b))),
+        revisions.sort((a, b) => revisionIdentity(a).localeCompare(revisionIdentity(b))),
       ),
     }),
   };
@@ -638,8 +762,21 @@ export function settleOutboxLease(
   const resultByOperation = new Map(input.results.map((result) => [result.operationId, result]));
   if (resultByOperation.size !== input.results.length) fail();
   const random = input.random ?? 0.5;
+  const latestRevisionByOwnerEntity = new Map<string, number>(
+    envelope.revisions.flatMap((revision) =>
+      revision.ownerHash === null
+        ? []
+        : [[`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const],
+    ),
+  );
   const rows = envelope.rows.flatMap((row): OutboxRow[] => {
     if (row.state !== 'leased' || row.leaseOwner !== input.leaseOwner) return [row];
+    if (
+      (latestRevisionByOwnerEntity.get(ownerEntityIdentity(row)) ?? row.clientRevision) >
+      row.clientRevision
+    ) {
+      return [];
+    }
     const result = resultByOperation.get(row.operationId);
     if (result && ['applied', 'duplicate', 'stale'].includes(result.status)) return [];
     if (result?.status === 'permanent') {
@@ -684,7 +821,13 @@ function assertOwnerHash(ownerHash: string): void {
 }
 
 function assertEntityType(entityType: OutboxEntityType): void {
-  if (entityType !== 'shelf_product' && entityType !== 'notification_preferences') fail();
+  if (
+    entityType !== 'shelf_product' &&
+    entityType !== 'notification_preferences' &&
+    entityType !== 'recommendation_preferences'
+  ) {
+    fail();
+  }
 }
 
 export function selectOutboxOwnerStatus(
@@ -696,8 +839,22 @@ export function selectOutboxOwnerStatus(
 ): OutboxOwnerStatus {
   assertOwnerHash(input.ownerHash);
   assertEntityType(input.entityType);
+  const latestRevisionByOwnerEntity = new Map<string, number>(
+    envelope.revisions.flatMap((revision) =>
+      revision.ownerHash === null
+        ? []
+        : [[`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const],
+    ),
+  );
   const rows = envelope.rows.filter(
-    (row) => row.ownerHash === input.ownerHash && row.entityType === input.entityType,
+    (row) =>
+      row.ownerHash === input.ownerHash &&
+      row.entityType === input.entityType &&
+      !(
+        row.state === 'dead' &&
+        (latestRevisionByOwnerEntity.get(ownerEntityIdentity(row)) ?? row.clientRevision) >
+          row.clientRevision
+      ),
   );
   const attentionCount = rows.filter((row) => row.state === 'dead').length;
   const syncingCount = rows.filter((row) => row.state === 'leased').length;
@@ -729,12 +886,21 @@ export function retryDeadOutboxRows(
   assertEntityType(input.entityType);
   if (!canonicalIso(input.now)) fail();
 
+  const latestRevisionByOwnerEntity = new Map<string, number>(
+    envelope.revisions.flatMap((revision) =>
+      revision.ownerHash === null
+        ? []
+        : [[`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const],
+    ),
+  );
   let retried = 0;
   const rows = envelope.rows.map((row): OutboxRow => {
     if (
       row.ownerHash !== input.ownerHash ||
       row.entityType !== input.entityType ||
-      row.state !== 'dead'
+      row.state !== 'dead' ||
+      (latestRevisionByOwnerEntity.get(ownerEntityIdentity(row)) ?? row.clientRevision) >
+        row.clientRevision
     ) {
       return row;
     }

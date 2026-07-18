@@ -8,9 +8,12 @@ import {
   readNotificationPreferencesOutboxStatus,
   readOutbox,
   readOutboxChangeRevision,
+  readRecommendationPreferencesOutboxStatus,
   readShelfOutboxStatus,
   resetOutboxWorkerForTests,
+  retryRecommendationPreferencesOutbox,
   retryShelfOutbox,
+  scheduleOutboxFlush,
   subscribeOutboxChanges,
 } from './outbox';
 import {
@@ -19,6 +22,7 @@ import {
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
   enqueueNotificationPreferencesOutboxOperation,
+  enqueueRecommendationPreferencesOutboxOperation,
   enqueueShelfOutboxOperation,
   type OutboxEnvelope,
 } from './outbox.pure';
@@ -42,6 +46,7 @@ const mocks = vi.hoisted(() => ({
   runRequestWithLease: vi.fn(),
   storage: new Map<string, string>(),
   tails: new Map<string, Promise<void>>(),
+  afterUpdate: null as null | (() => void),
   updateCalls: 0,
 }));
 
@@ -88,6 +93,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
         const next = updater(current);
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
+        mocks.afterUpdate?.();
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -136,14 +142,21 @@ function successfulResults(operations: readonly Record<string, unknown>[]) {
   }));
 }
 
-function flushResult(leased: number, flushed: number, dead: number, notificationPreferences = 0) {
+function flushResult(
+  leased: number,
+  flushed: number,
+  dead: number,
+  notificationPreferences = 0,
+  recommendationPreferences = 0,
+) {
   return {
     leased,
     flushed,
     dead,
     flushedByEntity: {
       notificationPreferences,
-      shelfProducts: flushed - notificationPreferences,
+      recommendationPreferences,
+      shelfProducts: flushed - notificationPreferences - recommendationPreferences,
     },
   };
 }
@@ -155,6 +168,7 @@ describe('transactional outbox runtime', () => {
     resetOutboxWorkerForTests();
     mocks.storage.clear();
     mocks.tails.clear();
+    mocks.afterUpdate = null;
     mocks.updateCalls = 0;
     mocks.readOverride = null;
     mocks.nextUuid = 1;
@@ -203,7 +217,7 @@ describe('transactional outbox runtime', () => {
   it('strictly reports corrupt, future, and unavailable reads without changing persisted bytes', async () => {
     for (const [raw, status] of [
       ['{not-json', 'corrupt'],
-      [JSON.stringify({ version: 2, rows: [], revisions: [] }), 'unsupported_version'],
+      [JSON.stringify({ version: 3, rows: [], revisions: [] }), 'unsupported_version'],
     ] as const) {
       mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
       await expect(readOutbox()).resolves.toEqual({ status, envelope: null });
@@ -270,6 +284,71 @@ describe('transactional outbox runtime', () => {
     await expect(first).resolves.toEqual(flushResult(2, 2, 0));
     expect(storedEnvelope().rows).toEqual([]);
     expect(mocks.rpc).toHaveBeenCalledTimes(1);
+  });
+
+  it('reruns after a post-mutation wake-up lands while the active drain is finishing', async () => {
+    seedRows(1);
+    let queuedDuringFinalEmptyLease = false;
+    mocks.afterUpdate = () => {
+      if (queuedDuringFinalEmptyLease || mocks.updateCalls !== 3) return;
+      const current = storedEnvelope();
+      if (current.rows.length !== 0) return;
+      queuedDuringFinalEmptyLease = true;
+      const next = enqueueRecommendationPreferencesOutboxOperation(current, {
+        operationId: uuid(40_004),
+        ownerHash: OWNER_HASH,
+        ownerGeneration: 7,
+        payload: {
+          values_filters: ['vegan'],
+          budget_band: 'premium',
+          format_prefs: ['fluid'],
+        },
+        enqueuedAt: NOW,
+      }).envelope;
+      mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(next));
+      scheduleOutboxFlush();
+    };
+
+    const active = flushOutbox();
+    expect(flushOutbox()).toBe(active);
+    await expect(active).resolves.toEqual(flushResult(2, 2, 0, 0, 1));
+    expect(storedEnvelope().rows).toEqual([]);
+    expect(queuedDuringFinalEmptyLease).toBe(true);
+    expect(mocks.rpc.mock.calls[1]?.[0]).toBe('apply_recommendation_preferences_outbox_batch');
+  });
+
+  it('keeps the active promise open for a wake-up from terminal publication', async () => {
+    seedRows(1);
+    let queuedFromTerminalPublish = false;
+    const unsubscribe = subscribeOutboxChanges(() => {
+      if (
+        queuedFromTerminalPublish ||
+        mocks.rpc.mock.calls.length !== 1 ||
+        mocks.updateCalls !== 3 ||
+        storedEnvelope().rows.length !== 0
+      ) {
+        return;
+      }
+      queuedFromTerminalPublish = true;
+      const next = enqueueRecommendationPreferencesOutboxOperation(storedEnvelope(), {
+        operationId: uuid(40_005),
+        ownerHash: OWNER_HASH,
+        ownerGeneration: 7,
+        payload: {
+          values_filters: ['sustainable'],
+          budget_band: 'mid',
+          format_prefs: ['gel'],
+        },
+        enqueuedAt: NOW,
+      }).envelope;
+      mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(next));
+      scheduleOutboxFlush();
+    });
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(2, 2, 0, 0, 1));
+    expect(queuedFromTerminalPublish).toBe(true);
+    expect(storedEnvelope().rows).toEqual([]);
+    unsubscribe();
   });
 
   it('publishes owner-scoped saved, syncing, and synced status around one single-flight drain', async () => {
@@ -448,5 +527,68 @@ describe('transactional outbox runtime', () => {
         idempotency_key: `notification_preferences:${uuid(40_001)}`,
       }),
     ]);
+  });
+
+  it('dispatches recommendation preferences to their exact RPC without contaminating Shelf', async () => {
+    const envelope = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: uuid(40_003),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      payload: {
+        values_filters: ['fragrance_free', 'vegan'],
+        budget_band: 'mid',
+        format_prefs: ['gel'],
+      },
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0, 0, 1));
+    expect(mocks.rpc).toHaveBeenCalledOnce();
+    expect(mocks.rpc).toHaveBeenCalledWith('apply_recommendation_preferences_outbox_batch', {
+      p_operations: [
+        expect.objectContaining({
+          entity_type: 'recommendation_preferences',
+          idempotency_key: `recommendation_preferences:${uuid(40_003)}`,
+          payload: {
+            values_filters: ['fragrance_free', 'vegan'],
+            budget_band: 'mid',
+            format_prefs: ['gel'],
+          },
+        }),
+      ],
+    });
+  });
+
+  it('retries only the current owner recommendation dead row through the runtime API', async () => {
+    const envelope = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: uuid(40_006),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      payload: {
+        values_filters: ['vegan'],
+        budget_band: 'mid',
+        format_prefs: ['cream'],
+      },
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    mocks.rpcHandler = async (operations) =>
+      operations.map((operation) => ({
+        operation_id: operation.operation_id,
+        status: 'permanent',
+        error_class: 'validation',
+      }));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 1));
+    await expect(
+      readRecommendationPreferencesOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toMatchObject({ value: { kind: 'needs_attention', attentionCount: 1 } });
+
+    mocks.rpcHandler = async (operations) => successfulResults(operations);
+    await expect(
+      retryRecommendationPreferencesOutbox({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual(flushResult(1, 1, 0, 0, 1));
+    expect(storedEnvelope().rows).toEqual([]);
   });
 });

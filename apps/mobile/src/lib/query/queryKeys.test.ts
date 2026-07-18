@@ -348,6 +348,11 @@ describe('owner-scoped query keys', () => {
         prefixA: ownerQueryPrefixes.recommendationPreferences(scopeA),
       },
       {
+        keyA: queryKeys.recommendationPreferencesOutboxStatus(scopeA, 1),
+        keyB: queryKeys.recommendationPreferencesOutboxStatus(scopeB, 1),
+        prefixA: ownerQueryPrefixes.recommendationPreferencesOutboxStatus(scopeA),
+      },
+      {
         keyA: queryKeys.recommendations(scopeA),
         keyB: queryKeys.recommendations(scopeB),
         prefixA: ownerQueryPrefixes.recommendations(scopeA),

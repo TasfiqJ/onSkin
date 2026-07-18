@@ -176,7 +176,7 @@ describe('shelf local store recovery', () => {
     expect(outboxRaw).toBeDefined();
     expect(outboxRaw).not.toContain('owner-a');
     expect(JSON.parse(outboxRaw!) as unknown).toMatchObject({
-      version: 1,
+      version: 2,
       rows: [
         {
           ownerGeneration: 7,
@@ -188,7 +188,14 @@ describe('shelf local store recovery', () => {
           payload: { manual_name: 'Atomic cleanser' },
         },
       ],
-      revisions: [{ entityType: 'shelf_product', entityId: product.id, revision: 1 }],
+      revisions: [
+        {
+          ownerHash: expect.stringMatching(/^[a-f0-9]{64}$/),
+          entityType: 'shelf_product',
+          entityId: product.id,
+          revision: 1,
+        },
+      ],
     });
   });
 

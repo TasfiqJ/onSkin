@@ -388,7 +388,10 @@ export type Database = {
           user_id: string;
           operation_id: string;
           idempotency_key: string;
-          entity_type: 'shelf_product';
+          entity_type:
+            | 'notification_preferences'
+            | 'recommendation_preferences'
+            | 'shelf_product';
           entity_id: string;
           operation_kind: 'delete' | 'upsert';
           client_revision: number;
@@ -399,7 +402,10 @@ export type Database = {
           user_id: string;
           operation_id: string;
           idempotency_key: string;
-          entity_type: 'shelf_product';
+          entity_type:
+            | 'notification_preferences'
+            | 'recommendation_preferences'
+            | 'shelf_product';
           entity_id: string;
           operation_kind: 'delete' | 'upsert';
           client_revision: number;
@@ -1152,6 +1158,10 @@ export type Database = {
     Views: Record<string, never>;
     Functions: {
       apply_notification_preferences_outbox_batch: {
+        Args: { p_operations: Json };
+        Returns: Json;
+      };
+      apply_recommendation_preferences_outbox_batch: {
         Args: { p_operations: Json };
         Returns: Json;
       };

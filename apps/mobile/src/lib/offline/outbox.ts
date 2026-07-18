@@ -50,6 +50,7 @@ export type OutboxFlushResult = Readonly<{
   dead: number;
   flushedByEntity: Readonly<{
     notificationPreferences: number;
+    recommendationPreferences: number;
     shelfProducts: number;
   }>;
 }>;
@@ -60,6 +61,7 @@ export type OwnerOutboxStatusRead =
 
 export type ShelfOutboxStatusRead = OwnerOutboxStatusRead;
 export type NotificationPreferencesOutboxStatusRead = OwnerOutboxStatusRead;
+export type RecommendationPreferencesOutboxStatusRead = OwnerOutboxStatusRead;
 
 type ServerWireResult = Readonly<{
   operation_id: string;
@@ -68,6 +70,7 @@ type ServerWireResult = Readonly<{
 }>;
 
 let activeFlush: Promise<OutboxFlushResult> | null = null;
+let flushRerunRequested = false;
 let outboxChangeRevision = 0;
 const outboxChangeListeners = new Set<() => void>();
 let syncDiagnostics: Readonly<{
@@ -125,7 +128,28 @@ function emptyFlushResult(): OutboxFlushResult {
     leased: 0,
     flushed: 0,
     dead: 0,
-    flushedByEntity: Object.freeze({ notificationPreferences: 0, shelfProducts: 0 }),
+    flushedByEntity: Object.freeze({
+      notificationPreferences: 0,
+      recommendationPreferences: 0,
+      shelfProducts: 0,
+    }),
+  });
+}
+
+function mergeFlushResults(current: OutboxFlushResult, next: OutboxFlushResult): OutboxFlushResult {
+  return Object.freeze({
+    leased: current.leased + next.leased,
+    flushed: current.flushed + next.flushed,
+    dead: next.dead,
+    flushedByEntity: Object.freeze({
+      notificationPreferences:
+        current.flushedByEntity.notificationPreferences +
+        next.flushedByEntity.notificationPreferences,
+      recommendationPreferences:
+        current.flushedByEntity.recommendationPreferences +
+        next.flushedByEntity.recommendationPreferences,
+      shelfProducts: current.flushedByEntity.shelfProducts + next.flushedByEntity.shelfProducts,
+    }),
   });
 }
 
@@ -171,6 +195,13 @@ export function readNotificationPreferencesOutboxStatus(
   ownerId?: string | null,
 ): Promise<NotificationPreferencesOutboxStatusRead> {
   return readOwnerOutboxStatus(scope, ownerId, 'notification_preferences');
+}
+
+export function readRecommendationPreferencesOutboxStatus(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<RecommendationPreferencesOutboxStatusRead> {
+  return readOwnerOutboxStatus(scope, ownerId, 'recommendation_preferences');
 }
 
 function wireOperation(row: OutboxRow): Json {
@@ -267,6 +298,12 @@ async function sendOutboxEntityBatch(
   entityType: OutboxEntityType,
   rows: readonly OutboxRow[],
 ): Promise<readonly OutboxServerResult[]> {
+  const rpc =
+    entityType === 'shelf_product'
+      ? 'apply_shelf_outbox_batch'
+      : entityType === 'notification_preferences'
+        ? 'apply_notification_preferences_outbox_batch'
+        : 'apply_recommendation_preferences_outbox_batch';
   const data = await runRequestWithLease(
     lease,
     {
@@ -279,12 +316,7 @@ async function sendOutboxEntityBatch(
     },
     async ({ signal }) => {
       const response = await supabase
-        .rpc(
-          entityType === 'shelf_product'
-            ? 'apply_shelf_outbox_batch'
-            : 'apply_notification_preferences_outbox_batch',
-          { p_operations: rows.map(wireOperation) },
-        )
+        .rpc(rpc, { p_operations: rows.map(wireOperation) })
         .abortSignal(signal);
       if (response.error) throw supabaseRequestFailure(response.error, response.status);
       return response.data as Json;
@@ -306,6 +338,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
     let totalLeased = 0;
     let totalFlushed = 0;
     let notificationPreferencesFlushed = 0;
+    let recommendationPreferencesFlushed = 0;
     let shelfProductsFlushed = 0;
     for (let batch = 0; batch < MAX_BATCHES_PER_FLUSH; batch += 1) {
       lease.assertCurrent();
@@ -327,7 +360,11 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
 
       const results: OutboxServerResult[] = [];
       let requestFailure: RequestPolicyError | null = null;
-      for (const entityType of ['shelf_product', 'notification_preferences'] as const) {
+      for (const entityType of [
+        'shelf_product',
+        'notification_preferences',
+        'recommendation_preferences',
+      ] as const) {
         const rows = leasedRows.filter((row) => row.entityType === entityType);
         if (rows.length === 0) continue;
         try {
@@ -370,6 +407,9 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       notificationPreferencesFlushed += successfulRows.filter(
         (row) => row.entityType === 'notification_preferences',
       ).length;
+      recommendationPreferencesFlushed += successfulRows.filter(
+        (row) => row.entityType === 'recommendation_preferences',
+      ).length;
       if (requestFailure) break;
     }
 
@@ -384,6 +424,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
           : 0,
       flushedByEntity: Object.freeze({
         notificationPreferences: notificationPreferencesFlushed,
+        recommendationPreferences: recommendationPreferencesFlushed,
         shelfProducts: shelfProductsFlushed,
       }),
     });
@@ -392,33 +433,55 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
 
 /** Single-flight drain used by mount, foreground, reconnect, and post-mutation triggers. */
 export function flushOutbox(): Promise<OutboxFlushResult> {
-  if (activeFlush) return activeFlush;
-  const current = flushOutboxOnce()
-    .then((result) => {
-      syncDiagnostics = Object.freeze({
-        result: result.leased > result.flushed ? 'pending' : result.flushed > 0 ? 'synced' : 'idle',
-        at: new Date().toISOString(),
-      });
-      publishOutboxChange();
-      return result;
-    })
-    .catch((error: unknown) => {
+  if (activeFlush) {
+    flushRerunRequested = true;
+    return activeFlush;
+  }
+  let resolveCurrent!: (result: OutboxFlushResult) => void;
+  let rejectCurrent!: (error: unknown) => void;
+  const current = new Promise<OutboxFlushResult>((resolve, reject) => {
+    resolveCurrent = resolve;
+    rejectCurrent = reject;
+  });
+  activeFlush = current;
+  void (async () => {
+    let result = emptyFlushResult();
+    try {
+      do {
+        flushRerunRequested = false;
+        result = mergeFlushResults(result, await flushOutboxOnce());
+        syncDiagnostics = Object.freeze({
+          result:
+            result.leased > result.flushed ? 'pending' : result.flushed > 0 ? 'synced' : 'idle',
+          at: new Date().toISOString(),
+        });
+        publishOutboxChange();
+      } while (flushRerunRequested);
+      // No async boundary exists between the final request check and releasing
+      // ownership, so a later request either joins this loop or starts a new one.
+      activeFlush = null;
+      resolveCurrent(result);
+    } catch (error: unknown) {
       syncDiagnostics = Object.freeze({
         result: error instanceof AccountGenerationLeaseError ? 'cancelled' : 'failed',
         at: new Date().toISOString(),
       });
       publishOutboxChange();
-      throw error;
-    })
-    .finally(() => {
-      if (activeFlush === current) activeFlush = null;
-    });
-  activeFlush = current;
+      const rerunRequested = flushRerunRequested;
+      activeFlush = null;
+      rejectCurrent(error);
+      if (rerunRequested) void flushOutbox().catch(() => undefined);
+    }
+  })();
   return current;
 }
 
 export function scheduleOutboxFlush(): void {
   publishOutboxChange();
+  if (activeFlush) {
+    flushRerunRequested = true;
+    return;
+  }
   void flushOutbox().catch(() => undefined);
 }
 
@@ -462,12 +525,20 @@ export function retryNotificationPreferencesOutbox(
   return retryOwnerOutbox(scope, ownerId, 'notification_preferences');
 }
 
+export function retryRecommendationPreferencesOutbox(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<OutboxFlushResult> {
+  return retryOwnerOutbox(scope, ownerId, 'recommendation_preferences');
+}
+
 export function readOutboxSyncDiagnostics(): typeof syncDiagnostics {
   return { ...syncDiagnostics };
 }
 
 export function resetOutboxWorkerForTests(): void {
   activeFlush = null;
+  flushRerunRequested = false;
   outboxChangeRevision = 0;
   outboxChangeListeners.clear();
   syncDiagnostics = Object.freeze({ result: 'not_run', at: null });

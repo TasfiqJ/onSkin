@@ -3,8 +3,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  getAccountGeneration,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
+import { OUTBOX_STORAGE_KEY, decodeOutboxEnvelope } from '@/lib/offline/outbox.pure';
 import { createOwnerQueryScope } from '@/lib/query/queryKeys';
 import * as privateKV from '@/lib/storage/privateKV';
 
@@ -22,19 +24,34 @@ import {
   REC_PREFERENCES_INVALID,
   REC_PREFERENCES_UNAVAILABLE,
   REC_PREFERENCES_UNSUPPORTED_VERSION,
+  REC_PREFERENCES_WRITE_UNCERTAIN,
   savePreferences,
 } from './store';
 
 const mocks = vi.hoisted(() => ({
-  abortSignal: vi.fn<() => Promise<{ error: unknown }>>(),
   storage: new Map<string, string>(),
   readOverrides: new Map<string, unknown>(),
   readError: null as Error | null,
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
+  transactionFailureBeforeTransform: null as Error | null,
+  transactionFailureAfterTransform: null as Error | null,
+  transactionFailureAfterCommit: null as Error | null,
   writes: 0,
-  getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
-  upsert: vi.fn(),
+  nextUuid: 1,
+  digestStringAsync: vi.fn(),
+  randomUUID: vi.fn(),
+  scheduleOutboxFlush: vi.fn(),
+}));
+
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: mocks.digestStringAsync,
+  randomUUID: mocks.randomUUID,
+}));
+
+vi.mock('@/lib/offline/outbox', () => ({
+  scheduleOutboxFlush: mocks.scheduleOutboxFlush,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -72,15 +89,38 @@ vi.mock('@/lib/storage/privateKV', () => ({
       }
     },
   ),
-}));
-
-vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: {
-      getUser: mocks.getUser,
+  updatePrivateItemsTransactionally: vi.fn(
+    async (
+      keys: readonly string[],
+      updater: (current: ReadonlyMap<string, string | null>) => ReadonlyMap<string, string | null>,
+    ) => {
+      const queueKey = 'transaction';
+      const previous = mocks.tails.get(queueKey) ?? Promise.resolve();
+      let release!: () => void;
+      const tail = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      mocks.tails.set(queueKey, tail);
+      await previous;
+      try {
+        if (mocks.transactionFailureBeforeTransform) throw mocks.transactionFailureBeforeTransform;
+        const current = new Map(keys.map((key) => [key, mocks.storage.get(key) ?? null]));
+        const next = updater(current);
+        if (mocks.transactionFailureAfterTransform) throw mocks.transactionFailureAfterTransform;
+        for (const key of keys) {
+          const value = next.get(key) ?? null;
+          if (value === current.get(key)) continue;
+          mocks.writes += 1;
+          if (value === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, value);
+        }
+        if (mocks.transactionFailureAfterCommit) throw mocks.transactionFailureAfterCommit;
+      } finally {
+        release();
+        if (mocks.tails.get(queueKey) === tail) mocks.tails.delete(queueKey);
+      }
     },
-    from: vi.fn(() => ({ upsert: mocks.upsert })),
-  },
+  ),
 }));
 
 const PREF_KEY = 'onskin.recPrefs.v1';
@@ -123,16 +163,22 @@ describe('recommendation local store recovery', () => {
     mocks.readError = null;
     mocks.tails.clear();
     mocks.updateFailure = null;
+    mocks.transactionFailureBeforeTransform = null;
+    mocks.transactionFailureAfterTransform = null;
+    mocks.transactionFailureAfterCommit = null;
     mocks.writes = 0;
-    mocks.getUser.mockReset();
-    mocks.getUser.mockResolvedValue({ data: { user: null } });
-    mocks.upsert.mockReset();
-    mocks.abortSignal.mockReset();
-    mocks.abortSignal.mockResolvedValue({ error: null });
-    mocks.upsert.mockReturnValue({ abortSignal: mocks.abortSignal });
+    mocks.nextUuid = 1;
+    mocks.digestStringAsync.mockReset();
+    mocks.digestStringAsync.mockResolvedValue('a'.repeat(64));
+    mocks.randomUUID.mockReset();
+    mocks.randomUUID.mockImplementation(
+      () => `00000000-0000-4000-8000-${(mocks.nextUuid++).toString(16).padStart(12, '0')}`,
+    );
+    mocks.scheduleOutboxFlush.mockClear();
     vi.mocked(privateKV.readPrivateItem).mockClear();
     vi.mocked(privateKV.multiRemovePrivateItems).mockClear();
     vi.mocked(privateKV.updatePrivateItem).mockClear();
+    vi.mocked(privateKV.updatePrivateItemsTransactionally).mockClear();
   });
 
   afterEach(() => {
@@ -472,7 +518,7 @@ describe('recommendation local store recovery', () => {
       },
     });
     expect(mocks.writes).toBe(1);
-    expect(mocks.getUser).toHaveBeenCalledTimes(1);
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
 
     await savePreferences(scope, {
       values: ['fragrance_free'],
@@ -481,7 +527,7 @@ describe('recommendation local store recovery', () => {
     });
     await waitForAccountGenerationOperationsToSettle();
     expect(mocks.writes).toBe(1);
-    expect(mocks.getUser).toHaveBeenCalledTimes(1);
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 
   it('performs an identical legacy preference save as an exact zero-write no-op', async () => {
@@ -501,8 +547,7 @@ describe('recommendation local store recovery', () => {
 
     expect(mocks.storage.get(PREF_KEY)).toBe(legacy);
     expect(mocks.writes).toBe(0);
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 
   it('serializes 100 full-snapshot preference saves in invocation order', async () => {
@@ -523,7 +568,7 @@ describe('recommendation local store recovery', () => {
       version: 1,
       preferences: snapshots.at(-1),
     });
-    await vi.waitFor(() => expect(mocks.getUser).toHaveBeenCalledTimes(100));
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 
   it('rejects malformed runtime preference mutations without normalizing over prior bytes', async () => {
@@ -540,8 +585,7 @@ describe('recommendation local store recovery', () => {
 
     expect(mocks.storage.get(PREF_KEY)).toBe(original);
     expect(mocks.writes).toBe(0);
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 
   it('refuses preference and dismissal mutations over malformed domain bytes', async () => {
@@ -558,8 +602,7 @@ describe('recommendation local store recovery', () => {
     expect(mocks.storage.get(PREF_KEY)).toBe(preferences);
     expect(mocks.storage.get(DISMISSED_KEY)).toBe(dismissed);
     expect(mocks.writes).toBe(0);
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 
   it('performs repeated dismissal of the same id as a true no-op', async () => {
@@ -707,127 +750,162 @@ describe('recommendation local store recovery', () => {
     expect(mocks.storage.get(DISMISSED_KEY)).toBe(dismissed);
   });
 
-  it('pins the best-effort preference mirror to its owner lease signal', async () => {
-    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'owner-a' } } });
+  it('atomically commits an authenticated preference snapshot and sanitized outbox intent', async () => {
+    await expect(
+      savePreferences(
+        ownerScope(),
+        { values: ['vegan'], budget: 'mid', formats: ['gel'] },
+        'owner-a',
+      ),
+    ).resolves.toBeUndefined();
 
-    await savePreferences(ownerScope(), {
-      values: ['vegan'],
-      budget: 'mid',
-      formats: ['gel'],
+    expect(JSON.parse(mocks.storage.get(PREF_KEY) ?? '{}')).toEqual({
+      version: 1,
+      preferences: { values: ['vegan'], budget: 'mid', formats: ['gel'] },
     });
-    await waitForAccountGenerationOperationsToSettle();
-
-    expect(mocks.upsert).toHaveBeenCalledWith({
-      user_id: 'owner-a',
-      values_filters: ['vegan'],
-      budget_band: 'mid',
-      format_prefs: ['gel'],
-    });
-    expect(mocks.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
-  });
-
-  it('serializes mirrors so an older preference upsert cannot finish last', async () => {
-    const firstResponse = deferred<{ error: null }>();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'owner-a' } } });
-    mocks.abortSignal
-      .mockImplementationOnce(() => firstResponse.promise)
-      .mockResolvedValue({ error: null });
-    const scope = ownerScope();
-
-    await savePreferences(scope, { values: ['vegan'], budget: 'mid', formats: ['gel'] });
-    await vi.waitFor(() => expect(mocks.upsert).toHaveBeenCalledTimes(1));
-    await savePreferences(scope, {
-      values: ['fragrance_free'],
-      budget: 'premium',
-      formats: ['cream'],
-    });
-    expect(mocks.upsert).toHaveBeenCalledTimes(1);
-
-    firstResponse.resolve({ error: null });
-    await vi.waitFor(() => expect(mocks.upsert).toHaveBeenCalledTimes(2));
-    await waitForAccountGenerationOperationsToSettle();
-
-    expect(mocks.upsert.mock.calls.map(([value]) => value)).toEqual([
-      {
-        user_id: 'owner-a',
+    const outbox = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null);
+    expect(outbox.rows).toHaveLength(1);
+    expect(outbox.rows[0]).toMatchObject({
+      entityType: 'recommendation_preferences',
+      ownerGeneration: getAccountGeneration(),
+      operationKind: 'upsert',
+      clientRevision: 1,
+      payload: {
         values_filters: ['vegan'],
         budget_band: 'mid',
         format_prefs: ['gel'],
       },
-      {
-        user_id: 'owner-a',
-        values_filters: ['fragrance_free'],
-        budget_band: 'premium',
-        format_prefs: ['cream'],
-      },
-    ]);
-  });
-
-  it('drops queued owner-A mirrors after an A-to-B boundary', async () => {
-    const firstResponse = deferred<{ error: null }>();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'owner-a' } } });
-    mocks.abortSignal.mockImplementationOnce(() => firstResponse.promise);
-    const scopeA = ownerScope();
-
-    await savePreferences(scopeA, { values: ['vegan'], budget: 'mid', formats: ['gel'] });
-    await vi.waitFor(() => expect(mocks.upsert).toHaveBeenCalledTimes(1));
-    await savePreferences(scopeA, {
-      values: ['fragrance_free'],
-      budget: 'premium',
-      formats: ['cream'],
     });
-    expect(mocks.upsert).toHaveBeenCalledTimes(1);
-
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    firstResponse.resolve({ error: null });
-    await waitForAccountGenerationOperationsToSettle();
-
-    expect(mocks.getUser).toHaveBeenCalledTimes(1);
-    expect(mocks.upsert).toHaveBeenCalledTimes(1);
+    expect(JSON.stringify(outbox.rows[0]?.payload)).not.toMatch(
+      /user_id|owner|commission|affiliate|ranking/i,
+    );
+    expect(privateKV.updatePrivateItemsTransactionally).toHaveBeenCalledWith(
+      [PREF_KEY, OUTBOX_STORAGE_KEY],
+      expect.any(Function),
+    );
+    expect(mocks.scheduleOutboxFlush).toHaveBeenCalledOnce();
   });
 
-  it('releases a queued mirror after the prior mirror returns an error', async () => {
-    const firstResponse = deferred<{ error: { message: string } }>();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'owner-a' } } });
-    mocks.abortSignal
-      .mockImplementationOnce(() => firstResponse.promise)
-      .mockResolvedValue({ error: null });
+  it('keeps an authenticated semantic legacy no-op byte-identical and queues nothing', async () => {
+    const legacy = JSON.stringify({ values: ['vegan'], budget: 'mid', formats: ['gel'] });
+    mocks.storage.set(PREF_KEY, legacy);
+
+    await savePreferences(
+      ownerScope(),
+      { values: ['vegan'], budget: 'mid', formats: ['gel'] },
+      'owner-a',
+    );
+
+    expect(mocks.storage.get(PREF_KEY)).toBe(legacy);
+    expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+    expect(mocks.writes).toBe(0);
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
+  });
+
+  it('coalesces 100 authenticated saves into the latest full preference snapshot', async () => {
+    const snapshots: Parameters<typeof savePreferences>[1][] = Array.from(
+      { length: 100 },
+      (_, index) => ({
+        values: index % 2 === 0 ? ['vegan'] : ['fragrance_free'],
+        budget: index % 3 === 0 ? ('drugstore' as const) : ('premium' as const),
+        formats: [`format-${index}`],
+      }),
+    );
     const scope = ownerScope();
 
-    await savePreferences(scope, { values: ['vegan'], budget: 'mid', formats: ['gel'] });
-    await vi.waitFor(() => expect(mocks.upsert).toHaveBeenCalledTimes(1));
-    await savePreferences(scope, {
-      values: ['fragrance_free'],
-      budget: 'premium',
-      formats: ['cream'],
+    await Promise.all(snapshots.map((snapshot) => savePreferences(scope, snapshot, 'owner-a')));
+
+    expect(JSON.parse(mocks.storage.get(PREF_KEY) ?? '{}')).toEqual({
+      version: 1,
+      preferences: snapshots.at(-1),
     });
+    const outbox = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null);
+    expect(outbox.rows).toHaveLength(1);
+    expect(outbox.rows[0]).toMatchObject({
+      entityType: 'recommendation_preferences',
+      clientRevision: 100,
+      payload: {
+        values_filters: snapshots.at(-1)?.values,
+        budget_band: snapshots.at(-1)?.budget,
+        format_prefs: snapshots.at(-1)?.formats,
+      },
+    });
+    expect(mocks.scheduleOutboxFlush).toHaveBeenCalledTimes(100);
+  });
 
-    firstResponse.resolve({ error: { message: 'offline' } });
-    await vi.waitFor(() => expect(mocks.upsert).toHaveBeenCalledTimes(2));
-    await waitForAccountGenerationOperationsToSettle();
+  it('preserves invocation order when the first native owner hash is delayed', async () => {
+    const firstHash = deferred<string>();
+    mocks.digestStringAsync
+      .mockImplementationOnce(() => firstHash.promise)
+      .mockResolvedValue('a'.repeat(64));
+    const scope = ownerScope();
+    const first = savePreferences(
+      scope,
+      { values: ['vegan'], budget: 'mid', formats: ['gel'] },
+      'owner-a',
+    );
+    await vi.waitFor(() => expect(mocks.digestStringAsync).toHaveBeenCalledTimes(1));
+    const second = savePreferences(
+      scope,
+      { values: ['sustainable'], budget: 'premium', formats: ['fluid'] },
+      'owner-a',
+    );
+    await Promise.resolve();
+    expect(mocks.digestStringAsync).toHaveBeenCalledTimes(1);
 
-    expect(mocks.upsert.mock.calls.at(-1)?.[0]).toEqual({
-      user_id: 'owner-a',
-      values_filters: ['fragrance_free'],
+    firstHash.resolve('a'.repeat(64));
+    await Promise.all([first, second]);
+
+    expect(mocks.digestStringAsync).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(mocks.storage.get(PREF_KEY) ?? '{}')).toEqual({
+      version: 1,
+      preferences: { values: ['sustainable'], budget: 'premium', formats: ['fluid'] },
+    });
+    expect(
+      decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows[0]?.payload,
+    ).toEqual({
+      values_filters: ['sustainable'],
       budget_band: 'premium',
-      format_prefs: ['cream'],
+      format_prefs: ['fluid'],
     });
   });
 
-  it('keeps committed local preferences when the best-effort mirror returns an error', async () => {
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'owner-a' } } });
-    mocks.abortSignal.mockResolvedValue({ error: { message: 'offline' } });
+  it('preserves both prior keys when an authenticated transaction cannot commit', async () => {
+    const original = currentPreferences();
+    mocks.storage.set(PREF_KEY, original);
+    mocks.transactionFailureAfterTransform = new Error('PRIVATE_TRANSACTION_FAILED');
+
+    await expect(savePreferences(ownerScope(), DEFAULTS, 'owner-a')).rejects.toThrow(
+      REC_PREFERENCES_WRITE_UNCERTAIN,
+    );
+
+    expect(mocks.storage.get(PREF_KEY)).toBe(original);
+    expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+    expect(mocks.writes).toBe(0);
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
+  });
+
+  it('confirms both exact values after an authenticated commit response is lost', async () => {
+    mocks.transactionFailureAfterCommit = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
 
     await expect(
-      savePreferences(ownerScope(), { values: ['vegan'], budget: 'mid', formats: ['gel'] }),
+      savePreferences(
+        ownerScope(),
+        { values: ['sustainable'], budget: 'premium', formats: ['cream'] },
+        'owner-a',
+      ),
     ).resolves.toBeUndefined();
-    await waitForAccountGenerationOperationsToSettle();
+
+    expect(privateKV.readPrivateItem).toHaveBeenCalledTimes(2);
     await expect(loadPreferences()).resolves.toEqual({
-      values: ['vegan'],
-      budget: 'mid',
-      formats: ['gel'],
+      values: ['sustainable'],
+      budget: 'premium',
+      formats: ['cream'],
     });
+    expect(decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows).toHaveLength(
+      1,
+    );
+    expect(mocks.scheduleOutboxFlush).toHaveBeenCalledOnce();
   });
 
   it('keeps prior recommendation state intact on atomic write failure', async () => {
@@ -855,14 +933,17 @@ describe('recommendation local store recovery', () => {
     endAccountGenerationBoundary();
 
     await expect(
-      savePreferences(staleScope, { values: ['vegan'], budget: 'mid', formats: ['gel'] }),
+      savePreferences(
+        staleScope,
+        { values: ['vegan'], budget: 'mid', formats: ['gel'] },
+        'owner-a',
+      ),
     ).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
     await expect(dismissRecommendation(staleScope, 'gap:spf')).rejects.toMatchObject({
       code: 'ACCOUNT_GENERATION_CHANGED',
     });
     expect(mocks.storage.has(PREF_KEY)).toBe(false);
     expect(mocks.storage.has(DISMISSED_KEY)).toBe(false);
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 });

@@ -32,7 +32,6 @@ const SUPABASE_CLIENT_FILES = [
   'features/onboarding/OnboardingContext.tsx',
   'features/onboarding/onboardingStatusQuery.ts',
   'features/photos/store.ts',
-  'features/recommendations/store.ts',
   'features/routine/useProgress.ts',
   'features/scheduler/profile.ts',
   'features/settings/actions.ts',

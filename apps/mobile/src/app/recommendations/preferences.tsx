@@ -15,12 +15,14 @@ import {
 import type { RecPreferences } from '@/features/recommendations/preferences';
 import { failClosedRecommendationQueriesAfterMutationFailure } from '@/features/recommendations/mutationFailure';
 import { recommendationInputsQueryOptions } from '@/features/recommendations/recommendationInputsQuery';
+import { RecommendationPreferenceSyncStatus } from '@/features/recommendations/RecommendationPreferenceSyncStatus';
 import { savePreferences, type RecommendationInputs } from '@/features/recommendations/store';
 import {
   ShelfDataUnavailableNotice,
   type DataAvailabilityCopy,
 } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
@@ -128,6 +130,7 @@ export default function PreferencesScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
+  const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [manualRetrying, setManualRetrying] = useState(false);
@@ -286,7 +289,7 @@ export default function PreferencesScreen() {
       simulatedPreferenceFailureUsed.current = true;
       throw new Error('E2E_RECOMMENDATION_PREFERENCES_FAILURE');
     }
-    await savePreferences(ownerScope, next);
+    await savePreferences(ownerScope, next, user?.id);
   };
 
   const commit = async (next: RecPreferences) => {
@@ -387,6 +390,7 @@ export default function PreferencesScreen() {
             </Text>
           </View>
         ) : null}
+        <RecommendationPreferenceSyncStatus className="mb-12 mt-4" />
 
         <Text variant="label" tone="muted" className={valuesLabelClassName}>
           {REC_COPY.preferences.valuesLabel.toUpperCase()}

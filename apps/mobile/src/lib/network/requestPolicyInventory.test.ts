@@ -50,7 +50,6 @@ const DEFERRED_MUTATION_POLICY_FILES = [
   'features/intelligence/conflictChoiceMirror.ts',
   'features/notifications/deliver.ts',
   'features/onboarding/OnboardingContext.tsx',
-  'features/recommendations/store.ts',
   'features/shelf/scanLog.ts',
   'lib/consent/consent.ts',
 ] as const;

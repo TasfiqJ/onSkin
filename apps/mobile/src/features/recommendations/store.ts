@@ -1,14 +1,23 @@
 import type { BudgetBand, ValuesFilter } from '@onskin/types';
 import { VALUES_FILTERS } from '@onskin/types';
+import * as Crypto from 'expo-crypto';
 
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import { scheduleOutboxFlush } from '@/lib/offline/outbox';
+import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
+import {
+  OUTBOX_STORAGE_KEY,
+  decodeOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueueRecommendationPreferencesOutboxOperation,
+  type OutboxPayload,
+} from '@/lib/offline/outbox.pure';
 import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
-import { supabase } from '@/lib/supabase/client';
 import {
   multiRemovePrivateItems,
   readPrivateItem,
   type PrivateKVReadFailureReason,
   updatePrivateItem,
+  updatePrivateItemsTransactionally,
 } from '@/lib/storage/privateKV';
 import {
   decodePrivateStringSet,
@@ -19,10 +28,9 @@ import {
 import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
 
 // Local-first recommendation state (docs/09 §12, the D-029 pattern). v1 source of
-// truth is AsyncStorage (works offline; the For-you hub + gap prompts must render
-// before the backend exists, B-SUPABASE), with a best-effort `recommendation_
-// preferences` Supabase mirror. The mirror is best effort and serialized within
-// the running process; durable retry remains a separate D-007 outbox checkpoint.
+// truth is encrypted private KV (works offline; the For-you hub + gap prompts must
+// render before the backend exists, B-SUPABASE). Authenticated saves atomically
+// compose their full snapshot with the encrypted transactional outbox.
 // The `recommendations` cache table is NOT used as a source of truth. The pure
 // engine recomputes live (the doc: "never the source of truth"). We persist only
 // the user's PREFERENCES and which suggestions they have DISMISSED ("not for
@@ -38,10 +46,13 @@ const MAX_DISMISSED_RECORD_CHARS = 524_288;
 const MAX_DISMISSED_RECOMMENDATIONS = 1_024;
 const MAX_RECOMMENDATION_ID_CHARS = 256;
 const MAX_E2E_RECOMMENDATION_READ_DELAY_MS = 3_000;
+const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
+const preferenceMutationTails = new Map<number, Promise<void>>();
 
 export const REC_PREFERENCES_INVALID = 'REC_PREFERENCES_INVALID';
 export const REC_PREFERENCES_UNAVAILABLE = 'REC_PREFERENCES_UNAVAILABLE';
 export const REC_PREFERENCES_UNSUPPORTED_VERSION = 'REC_PREFERENCES_UNSUPPORTED_VERSION';
+export const REC_PREFERENCES_WRITE_UNCERTAIN = 'REC_PREFERENCES_WRITE_UNCERTAIN';
 export const REC_DISMISSED_INVALID = 'REC_DISMISSED_INVALID';
 export const REC_DISMISSED_UNAVAILABLE = 'REC_DISMISSED_UNAVAILABLE';
 export const REC_DISMISSED_UNSUPPORTED_VERSION = 'REC_DISMISSED_UNSUPPORTED_VERSION';
@@ -92,7 +103,6 @@ export type RecommendationInputs = {
 
 const BUDGET_BANDS = new Set<BudgetBand>(['drugstore', 'mid', 'premium']);
 const VALUES = new Set<ValuesFilter>(VALUES_FILTERS);
-const preferenceMirrorTails = new Map<number, Promise<void>>();
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -140,7 +150,7 @@ function normalizePreferences(value: unknown): RecPreferences | null {
   };
   return normalized.values.length <= VALUES_FILTERS.length &&
     normalized.formats.length <= MAX_FORMAT_PREFERENCES &&
-    normalized.formats.every((format) => format.length <= MAX_FORMAT_PREFERENCE_CHARS)
+    normalized.formats.every((format) => Array.from(format).length <= MAX_FORMAT_PREFERENCE_CHARS)
     ? normalized
     : null;
 }
@@ -168,9 +178,9 @@ function validatePreferencesForMutation(value: unknown): RecPreferences {
     formats.some(
       (item, index) =>
         typeof item !== 'string' ||
-        item.length === 0 ||
-        item.trim() !== item ||
-        item.length > MAX_FORMAT_PREFERENCE_CHARS ||
+        Array.from(item).length === 0 ||
+        EDGE_WHITESPACE.test(item) ||
+        Array.from(item).length > MAX_FORMAT_PREFERENCE_CHARS ||
         formats.indexOf(item) !== index,
     )
   ) {
@@ -421,56 +431,6 @@ function dismissedFromRead(state: DismissedRecommendationsRead): string[] {
   throw new Error(REC_DISMISSED_UNAVAILABLE);
 }
 
-async function performPreferenceMirror(
-  ownerScope: OwnerQueryScope,
-  snapshot: RecPreferences,
-): Promise<void> {
-  try {
-    await runOwnerQueryOperation(ownerScope, async (mirrorLease) => {
-      const owner = await captureAuthenticatedAccountOwner(mirrorLease);
-      if (!owner) return;
-      mirrorLease.assertCurrent();
-      const { error } = await supabase
-        .from('recommendation_preferences')
-        .upsert({
-          user_id: owner.userId,
-          values_filters: snapshot.values,
-          budget_band: snapshot.budget,
-          format_prefs: snapshot.formats,
-        })
-        .abortSignal(mirrorLease.signal);
-      mirrorLease.assertCurrent();
-      if (error) throw new Error('SUPABASE_RECOMMENDATION_PREFERENCES_UPSERT_FAILED');
-    });
-  } catch {
-    // The committed encrypted local state remains authoritative while this mirror is best effort.
-  }
-}
-
-function enqueuePreferenceMirror(
-  ownerScope: OwnerQueryScope,
-  preferences: RecPreferences,
-): Promise<void> {
-  const snapshot: RecPreferences = {
-    values: [...preferences.values],
-    budget: preferences.budget,
-    formats: [...preferences.formats],
-  };
-  const previous = preferenceMirrorTails.get(ownerScope.generation) ?? Promise.resolve();
-  const current = previous
-    .catch(() => undefined)
-    .then(() => performPreferenceMirror(ownerScope, snapshot));
-  const tail = current
-    .catch(() => undefined)
-    .finally(() => {
-      if (preferenceMirrorTails.get(ownerScope.generation) === tail) {
-        preferenceMirrorTails.delete(ownerScope.generation);
-      }
-    });
-  preferenceMirrorTails.set(ownerScope.generation, tail);
-  return current;
-}
-
 // --- preferences --------------------------------------------------------------
 /** Classify preference state without repairing, deleting, or migrating bytes. */
 export async function readRecommendationPreferences(): Promise<RecommendationPreferencesRead> {
@@ -510,25 +470,133 @@ export async function loadPreferences(): Promise<RecPreferences> {
   return preferencesFromRead(await readRecommendationPreferences());
 }
 
+function runSerializedPreferenceMutation<T>(
+  generation: number,
+  mutation: () => Promise<T>,
+): Promise<T> {
+  const previous = preferenceMutationTails.get(generation) ?? Promise.resolve();
+  const current = previous.catch(() => undefined).then(mutation);
+  const tail = current.then(
+    () => undefined,
+    () => undefined,
+  );
+  preferenceMutationTails.set(generation, tail);
+  void tail.finally(() => {
+    if (preferenceMutationTails.get(generation) === tail) {
+      preferenceMutationTails.delete(generation);
+    }
+  });
+  return current;
+}
+
 export async function savePreferences(
   ownerScope: OwnerQueryScope,
   prefs: RecPreferences,
+  ownerId?: string | null,
 ): Promise<void> {
   await runOwnerQueryOperation(ownerScope, async (lease) => {
-    const normalized = validatePreferencesForMutation(prefs);
-    let changed = false;
-    await updatePrivateItem(PREF_KEY, (current) => {
-      if (current !== null) {
-        const decoded = decodePreferences(current);
-        if (samePreferences(decoded.preferences, normalized)) {
-          return current;
+    await runSerializedPreferenceMutation(lease.generation, async () => {
+      lease.assertCurrent();
+      const normalized = validatePreferencesForMutation(prefs);
+      const normalizedOwnerId = ownerId?.trim();
+      if (
+        ownerId !== undefined &&
+        ownerId !== null &&
+        (!normalizedOwnerId || ownerId.length > 512)
+      ) {
+        throw new Error(REC_PREFERENCES_INVALID);
+      }
+      let changed = false;
+      let expectedRaw: string | null | undefined;
+      let expectedOutboxRaw: string | null | undefined;
+      const updatePreferences = (current: string | null): string | null => {
+        if (current !== null) {
+          const decoded = decodePreferences(current);
+          if (samePreferences(decoded.preferences, normalized)) {
+            expectedRaw = current;
+            return current;
+          }
+        }
+        changed = true;
+        expectedRaw = encodePreferences(normalized);
+        return expectedRaw;
+      };
+
+      try {
+        if (normalizedOwnerId) {
+          const ownerHash = await hashOutboxOwner(normalizedOwnerId);
+          lease.assertCurrent();
+          const operationId = Crypto.randomUUID();
+          const enqueuedAt = new Date().toISOString();
+          await updatePrivateItemsTransactionally([PREF_KEY, OUTBOX_STORAGE_KEY], (current) => {
+            lease.assertCurrent();
+            const nextRaw = updatePreferences(current.get(PREF_KEY) ?? null);
+            const currentOutboxRaw = current.get(OUTBOX_STORAGE_KEY) ?? null;
+            let nextOutboxRaw = currentOutboxRaw;
+            if (changed) {
+              const payload: OutboxPayload = Object.freeze({
+                values_filters: Object.freeze([...normalized.values]),
+                budget_band: normalized.budget,
+                format_prefs: Object.freeze([...normalized.formats]),
+              });
+              const queued = enqueueRecommendationPreferencesOutboxOperation(
+                decodeOutboxEnvelope(currentOutboxRaw),
+                {
+                  operationId,
+                  ownerHash,
+                  ownerGeneration: lease.generation,
+                  payload,
+                  enqueuedAt,
+                },
+              );
+              nextOutboxRaw = encodeOutboxEnvelope(queued.envelope);
+            }
+            expectedOutboxRaw = nextOutboxRaw;
+            return new Map<string, string | null>([
+              [PREF_KEY, nextRaw],
+              [OUTBOX_STORAGE_KEY, nextOutboxRaw],
+            ]);
+          });
+        } else {
+          await updatePrivateItem(PREF_KEY, updatePreferences);
+        }
+      } catch (error) {
+        if (expectedRaw === undefined) throw error;
+        lease.assertCurrent();
+        let confirmation: Awaited<ReturnType<typeof readPrivateItem>>;
+        try {
+          confirmation = await readPrivateItem(PREF_KEY);
+        } catch {
+          lease.assertCurrent();
+          throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
+        }
+        lease.assertCurrent();
+        const preferenceMatches =
+          expectedRaw === null
+            ? confirmation.status === 'absent'
+            : confirmation.status === 'available' && confirmation.value === expectedRaw;
+        if (!preferenceMatches) throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
+
+        if (normalizedOwnerId && expectedOutboxRaw !== undefined) {
+          let outboxConfirmation: Awaited<ReturnType<typeof readPrivateItem>>;
+          try {
+            outboxConfirmation = await readPrivateItem(OUTBOX_STORAGE_KEY);
+          } catch {
+            lease.assertCurrent();
+            throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
+          }
+          lease.assertCurrent();
+          const outboxMatches =
+            expectedOutboxRaw === null
+              ? outboxConfirmation.status === 'absent'
+              : outboxConfirmation.status === 'available' &&
+                outboxConfirmation.value === expectedOutboxRaw;
+          if (!outboxMatches) throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
         }
       }
-      changed = true;
-      return encodePreferences(normalized);
+      lease.assertCurrent();
+      if (changed && normalizedOwnerId) scheduleOutboxFlush();
     });
-    lease.assertCurrent();
-    if (changed) void enqueuePreferenceMirror(ownerScope, normalized);
   });
 }
 
