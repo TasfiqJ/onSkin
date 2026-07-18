@@ -14,6 +14,8 @@ Granular consent withdrawal is handled by the JWT-gated, POST-only `consent-with
 
 Service-role filtered coverage includes subscription webhook events, OBF contribution queue rows tied to the user, and order attribution rows matched by the user's opaque commerce click tokens.
 
+The RLS-enabled `shelf_mirror_versions`, `conflict_choice_mirror_versions`, and `mobile_outbox_receipts` tables are service-only outbox coordination state. Authenticated clients have no direct table privileges; owner-derived RPCs use them only for replay ordering, idempotency, and response-loss recovery. They are explicitly excluded from the account export because the underlying user state is already exported through `user_products` and `routine_conflicts`, while pending client operations are included by the encrypted local-device collector. All three are owner-linked with `on delete cascade`, so account deletion removes their coordination rows with the auth owner.
+
 External handoffs are guarded before opening or caching: commerce retailer links, policy links, and subscription management URLs must normalize to HTTPS, cannot contain embedded credentials or control characters, and fragments are stripped. Unsafe commerce links are filtered before rendering and do not receive click tokens or write click events.
 
 Notification exports include preferences and content-free delivery log metadata only. OS notification payloads use generic lock-screen copy; `lockscreen_discreet` is forced true in mobile code and constrained true in Supabase.

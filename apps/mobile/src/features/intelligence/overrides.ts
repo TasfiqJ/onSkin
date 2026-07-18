@@ -1,4 +1,20 @@
-import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  OUTBOX_STORAGE_KEY,
+  conflictChoiceIdentityHashInput,
+  conflictChoicePayloadHashInput,
+  decodeOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueueConflictChoiceOutboxOperation,
+  enqueueShelfOutboxOperation,
+  outboxEntityIdFromSha256,
+  type OutboxPayload,
+  type OutboxRow,
+} from '@/lib/offline/outbox.pure';
+import {
+  readPrivateItem,
+  updatePrivateItem,
+  updatePrivateItemsTransactionally,
+} from '@/lib/storage/privateKV';
 
 import {
   isConflictChoiceEligible,
@@ -22,6 +38,15 @@ export {
 // cleanup remain compatible. Legacy string arrays migrate as use-together
 // choices for rule version 1.
 const KEY = 'onskin.conflict.overrides';
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export type ConflictChoiceOwner = Readonly<{
+  ownerId?: string | null;
+  ownerGeneration?: number;
+  assertCurrent?: () => void;
+}>;
+
+const conflictChoiceMutationTails = new Map<number, Promise<void>>();
 
 export const CONFLICT_CHOICES_INVALID = 'CONFLICT_CHOICES_INVALID';
 export const CONFLICT_CHOICES_SCHEMA_UNSUPPORTED = 'CONFLICT_CHOICES_SCHEMA_UNSUPPORTED';
@@ -301,9 +326,10 @@ export async function getConflictChoices(): Promise<ConflictChoices> {
   return loadConflictChoices();
 }
 
-export async function setConflictChoice(
+async function setConflictChoiceInternal(
   conflict: DetectedConflict,
   choice: ConflictUserChoice,
+  owner?: ConflictChoiceOwner,
 ): Promise<ConflictChoices> {
   if (!isConflictChoiceEligible(conflict)) {
     throw new Error('CONFLICT_CHOICE_NOT_ELIGIBLE');
@@ -311,21 +337,192 @@ export async function setConflictChoice(
 
   const identity = normalizedIdentity(conflict.rule.id, [conflict.productAId, conflict.productBId]);
   if (!identity) throw new Error('CONFLICT_CHOICE_IDENTITY_INVALID');
+  const recordProductIds: [string, string] = [identity.productIds[0], identity.productIds[1]];
+  Object.freeze(recordProductIds);
+  const record: ConflictChoiceRecord = Object.freeze({
+    choice,
+    ruleId: identity.ruleId,
+    ruleVersion: conflict.rule.ruleVersion,
+    productIds: recordProductIds,
+  });
+  const computedSeverity = conflict.computedSeverity;
+
+  const suppliedOwnerId = owner?.ownerId;
+  const ownerId = suppliedOwnerId?.trim();
+  const ownerGeneration = owner?.ownerGeneration;
+  owner?.assertCurrent?.();
+  if (suppliedOwnerId === undefined || suppliedOwnerId === null) {
+    let next: ConflictChoices = {};
+    await updatePrivateItem(KEY, (raw) => {
+      next = {
+        ...choicesForMutation(raw),
+        [identity.key]: record,
+      };
+      return JSON.stringify({ schemaVersion: 1, choices: next });
+    });
+    owner?.assertCurrent?.();
+    return next;
+  }
+  if (
+    !ownerId ||
+    ownerId.length > 512 ||
+    ownerGeneration === undefined ||
+    !Number.isSafeInteger(ownerGeneration) ||
+    ownerGeneration < 0 ||
+    !UUID.test(identity.ruleId) ||
+    !identity.productIds.every((productId) => UUID.test(productId))
+  ) {
+    throw new Error('CONFLICT_CHOICE_IDENTITY_INVALID');
+  }
+
+  const ruleId = identity.ruleId.toLowerCase();
+  const productIds = identity.productIds.map((productId) => productId.toLowerCase()) as [
+    string,
+    string,
+  ];
+  const [Crypto, shelfStore, outboxRuntime] = await Promise.all([
+    import('expo-crypto'),
+    import('@/features/shelf/store'),
+    import('@/lib/offline/outbox'),
+  ]);
+  owner?.assertCurrent?.();
+  const { decodeShelfProductsForOutboxDependency, SHELF_STORAGE_KEY, shelfProductOutboxPayload } =
+    shelfStore;
+  const { hashOutboxOwner, scheduleOutboxFlush } = outboxRuntime;
+  const operationId = Crypto.randomUUID();
+  const enqueuedAt = new Date().toISOString();
+  const payload: OutboxPayload = Object.freeze({
+    rule_id: ruleId,
+    product_a_id: productIds[0],
+    product_b_id: productIds[1],
+    computed_severity: computedSeverity,
+    user_choice: choice,
+    rule_version: record.ruleVersion,
+  });
+
+  const ownerHash = await hashOutboxOwner(ownerId);
+  owner?.assertCurrent?.();
+  const identityHash = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    conflictChoiceIdentityHashInput(payload),
+  );
+  owner?.assertCurrent?.();
+  const payloadHash = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    conflictChoicePayloadHashInput(payload),
+  );
+  owner?.assertCurrent?.();
+  const entityId = outboxEntityIdFromSha256(identityHash);
 
   let next: ConflictChoices = {};
-  await updatePrivateItem(KEY, (raw) => {
-    next = {
-      ...choicesForMutation(raw),
-      [identity.key]: {
-        choice,
-        ruleId: identity.ruleId,
-        ruleVersion: conflict.rule.ruleVersion,
-        productIds: identity.productIds,
+  let expectedRow: OutboxRow | null = null;
+  try {
+    await updatePrivateItemsTransactionally(
+      [KEY, SHELF_STORAGE_KEY, OUTBOX_STORAGE_KEY],
+      (current) => {
+        owner?.assertCurrent?.();
+        const shelfRaw = current.get(SHELF_STORAGE_KEY) ?? null;
+        const products = decodeShelfProductsForOutboxDependency(shelfRaw);
+        const productsById = new Map(
+          products.map((product) => [product.id.toLowerCase(), product]),
+        );
+        const productA = productsById.get(productIds[0]);
+        const productB = productsById.get(productIds[1]);
+        if (!productA || !productB) throw new Error('CONFLICT_CHOICE_SHELF_DEPENDENCY_MISSING');
+
+        next = {
+          ...choicesForMutation(current.get(KEY) ?? null),
+          [identity.key]: record,
+        };
+        let outbox = decodeOutboxEnvelope(current.get(OUTBOX_STORAGE_KEY) ?? null);
+        for (const product of [productA, productB]) {
+          outbox = enqueueShelfOutboxOperation(outbox, {
+            operationId: Crypto.randomUUID(),
+            ownerHash,
+            ownerGeneration,
+            entityId: product.id,
+            operationKind: 'upsert',
+            payload: shelfProductOutboxPayload(product),
+            enqueuedAt,
+          }).envelope;
+        }
+        const queued = enqueueConflictChoiceOutboxOperation(outbox, {
+          operationId,
+          ownerHash,
+          ownerGeneration,
+          entityId,
+          payload,
+          identityHash,
+          payloadHash,
+          enqueuedAt,
+        });
+        expectedRow = queued.row;
+        return new Map<string, string | null>([
+          [KEY, JSON.stringify({ schemaVersion: 1, choices: next })],
+          [SHELF_STORAGE_KEY, shelfRaw],
+          [OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(queued.envelope)],
+        ]);
       },
-    };
-    return JSON.stringify({ schemaVersion: 1, choices: next });
-  });
+    );
+  } catch (error) {
+    owner?.assertCurrent?.();
+    if (!expectedRow) throw error;
+    const [choiceRead, outboxRead] = await Promise.all([
+      readPrivateItem(KEY),
+      readPrivateItem(OUTBOX_STORAGE_KEY),
+    ]);
+    owner?.assertCurrent?.();
+    if (choiceRead.status !== 'available' || outboxRead.status !== 'available') throw error;
+    const confirmedChoices = decodeChoices(choiceRead.value).choices;
+    const confirmedRecord = confirmedChoices[identity.key];
+    const confirmedOutbox = decodeOutboxEnvelope(outboxRead.value);
+    const expected = expectedRow as OutboxRow;
+    const revisionCommitted = confirmedOutbox.revisions.some(
+      (revision) =>
+        revision.ownerHash === ownerHash &&
+        revision.entityType === 'conflict_choice' &&
+        revision.entityId === entityId &&
+        revision.revision >= expected.clientRevision,
+    );
+    if (
+      confirmedRecord?.choice !== choice ||
+      confirmedRecord.ruleId !== record.ruleId ||
+      confirmedRecord.ruleVersion !== record.ruleVersion ||
+      confirmedRecord.productIds[0] !== record.productIds[0] ||
+      confirmedRecord.productIds[1] !== record.productIds[1] ||
+      !revisionCommitted
+    ) {
+      throw error;
+    }
+    next = confirmedChoices;
+  }
+  owner?.assertCurrent?.();
+  scheduleOutboxFlush();
   return next;
+}
+
+export function setConflictChoice(
+  conflict: DetectedConflict,
+  choice: ConflictUserChoice,
+  owner?: ConflictChoiceOwner,
+): Promise<ConflictChoices> {
+  const generation = owner?.ownerGeneration;
+  if (generation === undefined) return setConflictChoiceInternal(conflict, choice, owner);
+  const previous = conflictChoiceMutationTails.get(generation) ?? Promise.resolve();
+  const current = previous
+    .catch(() => undefined)
+    .then(() => setConflictChoiceInternal(conflict, choice, owner));
+  const tail = current.then(
+    () => undefined,
+    () => undefined,
+  );
+  conflictChoiceMutationTails.set(generation, tail);
+  void tail.finally(() => {
+    if (conflictChoiceMutationTails.get(generation) === tail) {
+      conflictChoiceMutationTails.delete(generation);
+    }
+  });
+  return current;
 }
 
 /** Compatibility adapter for existing badge helpers and older callers. */

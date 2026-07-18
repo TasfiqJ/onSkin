@@ -49,6 +49,7 @@ export type OutboxFlushResult = Readonly<{
   flushed: number;
   dead: number;
   flushedByEntity: Readonly<{
+    conflictChoices: number;
     notificationDeliveries: number;
     notificationPreferences: number;
     recommendationPreferences: number;
@@ -68,7 +69,7 @@ export type RecommendationPreferencesOutboxStatusRead = OwnerOutboxStatusRead;
 type ServerWireResult = Readonly<{
   operation_id: string;
   status: OutboxServerResult['status'];
-  error_class: 'validation' | null;
+  error_class: 'dependency' | 'validation' | null;
 }>;
 
 let activeFlush: Promise<OutboxFlushResult> | null = null;
@@ -131,6 +132,7 @@ function emptyFlushResult(): OutboxFlushResult {
     flushed: 0,
     dead: 0,
     flushedByEntity: Object.freeze({
+      conflictChoices: 0,
       notificationDeliveries: 0,
       notificationPreferences: 0,
       recommendationPreferences: 0,
@@ -146,6 +148,8 @@ function mergeFlushResults(current: OutboxFlushResult, next: OutboxFlushResult):
     flushed: current.flushed + next.flushed,
     dead: next.dead,
     flushedByEntity: Object.freeze({
+      conflictChoices:
+        current.flushedByEntity.conflictChoices + next.flushedByEntity.conflictChoices,
       notificationDeliveries:
         current.flushedByEntity.notificationDeliveries +
         next.flushedByEntity.notificationDeliveries,
@@ -164,7 +168,7 @@ function mergeFlushResults(current: OutboxFlushResult, next: OutboxFlushResult):
 function readOwnerOutboxStatus(
   scope: OwnerQueryScope,
   ownerId: string | null | undefined,
-  entityType: OutboxEntityType,
+  entityTypes: readonly OutboxEntityType[],
 ): Promise<OwnerOutboxStatusRead> {
   return runOwnerQueryOperation(scope, async (lease) => {
     const normalizedOwnerId = ownerId?.trim();
@@ -181,12 +185,22 @@ function readOwnerOutboxStatus(
     if (state.envelope === null) {
       return { status: state.status, value: null };
     }
+    const statuses = entityTypes.map((entityType) =>
+      selectOutboxOwnerStatus(state.envelope, { ownerHash, entityType }),
+    );
+    const pendingCount = statuses.reduce((total, status) => total + status.pendingCount, 0);
+    const attentionCount = statuses.reduce((total, status) => total + status.attentionCount, 0);
+    const kind: OutboxOwnerStatus['kind'] =
+      attentionCount > 0
+        ? 'needs_attention'
+        : pendingCount === 0
+          ? 'idle'
+          : statuses.some((status) => status.kind === 'syncing')
+            ? 'syncing'
+            : 'saved_local';
     return {
       status: 'available',
-      value: selectOutboxOwnerStatus(state.envelope, {
-        ownerHash,
-        entityType,
-      }),
+      value: Object.freeze({ kind, pendingCount, attentionCount }),
     };
   });
 }
@@ -195,21 +209,21 @@ export function readShelfOutboxStatus(
   scope: OwnerQueryScope,
   ownerId?: string | null,
 ): Promise<ShelfOutboxStatusRead> {
-  return readOwnerOutboxStatus(scope, ownerId, 'shelf_product');
+  return readOwnerOutboxStatus(scope, ownerId, ['shelf_product', 'conflict_choice']);
 }
 
 export function readNotificationPreferencesOutboxStatus(
   scope: OwnerQueryScope,
   ownerId?: string | null,
 ): Promise<NotificationPreferencesOutboxStatusRead> {
-  return readOwnerOutboxStatus(scope, ownerId, 'notification_preferences');
+  return readOwnerOutboxStatus(scope, ownerId, ['notification_preferences']);
 }
 
 export function readRecommendationPreferencesOutboxStatus(
   scope: OwnerQueryScope,
   ownerId?: string | null,
 ): Promise<RecommendationPreferencesOutboxStatusRead> {
-  return readOwnerOutboxStatus(scope, ownerId, 'recommendation_preferences');
+  return readOwnerOutboxStatus(scope, ownerId, ['recommendation_preferences']);
 }
 
 function wireOperation(row: OutboxRow): Json {
@@ -238,10 +252,15 @@ function decodeServerResults(
       !hasExactKeys(candidate, ['operation_id', 'status', 'error_class']) ||
       typeof candidate.operation_id !== 'string' ||
       !expected.delete(candidate.operation_id) ||
-      !['applied', 'duplicate', 'permanent', 'stale'].includes(String(candidate.status)) ||
-      (candidate.error_class !== null && candidate.error_class !== 'validation') ||
+      !['applied', 'duplicate', 'permanent', 'retry', 'stale'].includes(String(candidate.status)) ||
+      (candidate.error_class !== null &&
+        candidate.error_class !== 'dependency' &&
+        candidate.error_class !== 'validation') ||
       (candidate.status === 'permanent' && candidate.error_class !== 'validation') ||
-      (candidate.status !== 'permanent' && candidate.error_class !== null)
+      (candidate.status === 'retry' && candidate.error_class !== 'dependency') ||
+      (candidate.status !== 'permanent' &&
+        candidate.status !== 'retry' &&
+        candidate.error_class !== null)
     ) {
       throw new Error(OUTBOX_INVALID);
     }
@@ -311,13 +330,15 @@ async function sendOutboxEntityBatch(
   const rpc =
     entityType === 'shelf_product'
       ? 'apply_shelf_outbox_batch'
-      : entityType === 'shelf_scan'
-        ? 'apply_shelf_scan_outbox_batch'
-        : entityType === 'notification_delivery'
-          ? 'apply_notification_delivery_outbox_batch'
-          : entityType === 'notification_preferences'
-            ? 'apply_notification_preferences_outbox_batch'
-            : 'apply_recommendation_preferences_outbox_batch';
+      : entityType === 'conflict_choice'
+        ? 'apply_conflict_choice_outbox_batch'
+        : entityType === 'shelf_scan'
+          ? 'apply_shelf_scan_outbox_batch'
+          : entityType === 'notification_delivery'
+            ? 'apply_notification_delivery_outbox_batch'
+            : entityType === 'notification_preferences'
+              ? 'apply_notification_preferences_outbox_batch'
+              : 'apply_recommendation_preferences_outbox_batch';
   const data = await runRequestWithLease(
     lease,
     {
@@ -351,6 +372,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
 
     let totalLeased = 0;
     let totalFlushed = 0;
+    let conflictChoicesFlushed = 0;
     let notificationDeliveriesFlushed = 0;
     let notificationPreferencesFlushed = 0;
     let recommendationPreferencesFlushed = 0;
@@ -378,6 +400,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       let hadRequestFailure = false;
       for (const entityType of [
         'shelf_product',
+        'conflict_choice',
         'notification_preferences',
         'recommendation_preferences',
         'notification_delivery',
@@ -418,13 +441,16 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       }
       const successfulIds = new Set(
         results
-          .filter((result) => result.status !== 'permanent')
+          .filter((result) => ['applied', 'duplicate', 'stale'].includes(result.status))
           .map((result) => result.operationId),
       );
       const successfulRows = leasedRows.filter((row) => successfulIds.has(row.operationId));
       totalFlushed += successfulRows.length;
       shelfProductsFlushed += successfulRows.filter(
         (row) => row.entityType === 'shelf_product',
+      ).length;
+      conflictChoicesFlushed += successfulRows.filter(
+        (row) => row.entityType === 'conflict_choice',
       ).length;
       notificationDeliveriesFlushed += successfulRows.filter(
         (row) => row.entityType === 'notification_delivery',
@@ -449,6 +475,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
           ? outboxCounts(state.envelope).dead
           : 0,
       flushedByEntity: Object.freeze({
+        conflictChoices: conflictChoicesFlushed,
         notificationDeliveries: notificationDeliveriesFlushed,
         notificationPreferences: notificationPreferencesFlushed,
         recommendationPreferences: recommendationPreferencesFlushed,
@@ -516,7 +543,7 @@ export function scheduleOutboxFlush(): void {
 function retryOwnerOutbox(
   scope: OwnerQueryScope,
   ownerId: string | null | undefined,
-  entityType: OutboxEntityType,
+  entityTypes: readonly OutboxEntityType[],
 ): Promise<OutboxFlushResult> {
   return runOwnerQueryOperation(scope, async (lease) => {
     const normalizedOwnerId = ownerId?.trim();
@@ -525,13 +552,17 @@ function retryOwnerOutbox(
     lease.assertCurrent();
     let retried = 0;
     await updatePrivateItem(OUTBOX_STORAGE_KEY, (current) => {
-      const retry = retryDeadOutboxRows(decodeOutboxEnvelope(current), {
-        ownerHash,
-        entityType,
-        now: new Date().toISOString(),
-      });
-      retried = retry.retried;
-      return retry.retried > 0 ? encodeOutboxEnvelope(retry.envelope) : current;
+      let envelope = decodeOutboxEnvelope(current);
+      for (const entityType of entityTypes) {
+        const retry = retryDeadOutboxRows(envelope, {
+          ownerHash,
+          entityType,
+          now: new Date().toISOString(),
+        });
+        envelope = retry.envelope;
+        retried += retry.retried;
+      }
+      return retried > 0 ? encodeOutboxEnvelope(envelope) : current;
     });
     lease.assertCurrent();
     if (retried > 0) publishOutboxChange();
@@ -543,21 +574,21 @@ export function retryShelfOutbox(
   scope: OwnerQueryScope,
   ownerId?: string | null,
 ): Promise<OutboxFlushResult> {
-  return retryOwnerOutbox(scope, ownerId, 'shelf_product');
+  return retryOwnerOutbox(scope, ownerId, ['shelf_product', 'conflict_choice']);
 }
 
 export function retryNotificationPreferencesOutbox(
   scope: OwnerQueryScope,
   ownerId?: string | null,
 ): Promise<OutboxFlushResult> {
-  return retryOwnerOutbox(scope, ownerId, 'notification_preferences');
+  return retryOwnerOutbox(scope, ownerId, ['notification_preferences']);
 }
 
 export function retryRecommendationPreferencesOutbox(
   scope: OwnerQueryScope,
   ownerId?: string | null,
 ): Promise<OutboxFlushResult> {
-  return retryOwnerOutbox(scope, ownerId, 'recommendation_preferences');
+  return retryOwnerOutbox(scope, ownerId, ['recommendation_preferences']);
 }
 
 export function readOutboxSyncDiagnostics(): typeof syncDiagnostics {

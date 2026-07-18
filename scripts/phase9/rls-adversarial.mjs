@@ -9,6 +9,7 @@ const migrations = listFiles('supabase/migrations')
   .map((file) => read(file))
   .join('\n');
 const exportSource = read('supabase/functions/data-export/index.ts');
+const dataInventory = read('docs/phase-9/data-inventory.md');
 const packageJson = JSON.parse(read('package.json'));
 const liveHarness = read('scripts/phase9/live-supabase-adversarial.mjs');
 
@@ -72,6 +73,12 @@ const serviceOnlyTables = [
   'community_moderation_events',
 ];
 
+const internalOutboxCoordinationTables = [
+  'shelf_mirror_versions',
+  'conflict_choice_mirror_versions',
+  'mobile_outbox_receipts',
+];
+
 const publicCatalogTables = [
   'ingredients',
   'ingredient_synonyms',
@@ -98,7 +105,12 @@ const publicCatalogTables = [
   'product_pao_expiry',
 ];
 
-for (const table of [...requiredUserOrLinkedTables, ...serviceOnlyTables, ...publicCatalogTables]) {
+for (const table of [
+  ...requiredUserOrLinkedTables,
+  ...serviceOnlyTables,
+  ...internalOutboxCoordinationTables,
+  ...publicCatalogTables,
+]) {
   block(errors, createdTables.has(table), `Migration missing table ${table}.`);
   block(errors, rlsTables.has(table), `RLS is not enabled for ${table}.`);
 }
@@ -106,7 +118,9 @@ for (const table of [...requiredUserOrLinkedTables, ...serviceOnlyTables, ...pub
 for (const table of dynamicUserTables) {
   block(
     errors,
-    requiredUserOrLinkedTables.includes(table) || serviceOnlyTables.includes(table),
+    requiredUserOrLinkedTables.includes(table) ||
+      serviceOnlyTables.includes(table) ||
+      internalOutboxCoordinationTables.includes(table),
     `Discovered auth.users-linked table without Phase 9 RLS classification: ${table}.`,
   );
 }
@@ -132,6 +146,21 @@ for (const table of serviceOnlyTables) {
     `Service-only user-linked table is missing from data-export or exclusion coverage: ${table}.`,
   );
 }
+
+for (const table of internalOutboxCoordinationTables) {
+  block(
+    errors,
+    exportSource.includes(`'${table}'`) && dataInventory.includes(`\`${table}\``),
+    `Internal outbox coordination table is missing from the explicit data-export exclusion: ${table}.`,
+  );
+}
+block(
+  errors,
+  /service-only outbox coordination state/.test(dataInventory) &&
+    /owner-derived RPCs/.test(dataInventory) &&
+    /on delete cascade/.test(dataInventory),
+  'Phase 9 data inventory must document outbox coordination access, export exclusion, and deletion.',
+);
 
 block(
   errors,
@@ -243,6 +272,12 @@ block(
   /storage\.from\('photos'\)/.test(liveHarness) &&
     /PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL/.test(liveHarness),
   'Live Supabase adversarial harness must test private photo storage and require an explicit run flag.',
+);
+block(
+  errors,
+  /routine conflict direct owner insert/.test(liveHarness) &&
+    /apply_conflict_choice_outbox_batch/.test(liveHarness),
+  'Live Supabase adversarial harness must deny direct routine-conflict DML and prove the owner-derived outbox RPC.',
 );
 
 const requiredLiveHarnessTables = [

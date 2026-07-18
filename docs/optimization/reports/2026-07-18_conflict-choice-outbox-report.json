@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "checkpoint": "conflict_choice_outbox",
+  "date": "2026-07-18",
+  "branch": "optimization",
+  "parent_sha": "8966206d80eda056be1d2338964a67bff7a62e32",
+  "outbox": {
+    "schema_version": 5,
+    "entity_type_count": 6,
+    "global_row_cap": 512,
+    "revision_cap": 1024,
+    "batch_cap": 25,
+    "conflict_dependency_entity": "shelf_product",
+    "dependency_aware_leasing": true,
+    "entity_scoped_settlement": true
+  },
+  "conflict_choice": {
+    "atomic_storage_key_count": 3,
+    "referenced_shelf_snapshot_count": 2,
+    "operation_kind": "upsert",
+    "payload_field_count": 6,
+    "raw_owner_in_payload": false,
+    "identity_hash": "sha256",
+    "payload_hash": "sha256",
+    "missing_product_result": "retry_dependency",
+    "delete_prunes_projection_and_retains_revision": true,
+    "direct_authenticated_insert": false,
+    "direct_authenticated_update": false,
+    "direct_authenticated_delete": false
+  },
+  "verification": {
+    "focused_test_files": 10,
+    "focused_tests": 170,
+    "mobile_typecheck": "pass",
+    "full_test_files": 344,
+    "full_tests": 4094,
+    "root_typecheck": "pass",
+    "lint_zero_warning": "pass",
+    "independent_review_unresolved_p0_p1": 0,
+    "human_e2e": {
+      "surface": "expo_web",
+      "viewport": "390x844",
+      "choice": "use_together",
+      "exact_pair_prompt_suppressed": true,
+      "reload_persistence": true,
+      "authenticated_server_transport": false
+    }
+  },
+  "remaining_deferred_direct_mutation_files": [
+    "features/onboarding/OnboardingContext.tsx",
+    "lib/consent/consent.ts"
+  ],
+  "known_design_debts": ["cross_device_conflict_revision_policy", "long_lived_revision_cap_policy"],
+  "external_gates": [
+    "hosted_postgresql_rpc_rls_concurrency",
+    "signed_ios_offline_reconnect_process_kill_account_switch"
+  ]
+}

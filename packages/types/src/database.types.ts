@@ -383,12 +383,39 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['shelf_mirror_versions']['Insert']>;
         Relationships: [];
       };
+      conflict_choice_mirror_versions: {
+        Row: {
+          user_id: string;
+          entity_id: string;
+          rule_id: string;
+          product_a_id: string;
+          product_b_id: string;
+          client_revision: number;
+          operation_id: string;
+          payload_hash: string;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          user_id: string;
+          entity_id: string;
+          rule_id: string;
+          product_a_id: string;
+          product_b_id: string;
+          client_revision: number;
+          operation_id: string;
+          payload_hash: string;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['conflict_choice_mirror_versions']['Insert']>;
+        Relationships: [];
+      };
       mobile_outbox_receipts: {
         Row: {
           user_id: string;
           operation_id: string;
           idempotency_key: string;
           entity_type:
+            | 'conflict_choice'
             | 'notification_delivery'
             | 'notification_preferences'
             | 'recommendation_preferences'
@@ -406,6 +433,7 @@ export type Database = {
           operation_id: string;
           idempotency_key: string;
           entity_type:
+            | 'conflict_choice'
             | 'notification_delivery'
             | 'notification_preferences'
             | 'recommendation_preferences'
@@ -1163,6 +1191,10 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      apply_conflict_choice_outbox_batch: {
+        Args: { p_operations: Json };
+        Returns: Json;
+      };
       apply_notification_preferences_outbox_batch: {
         Args: { p_operations: Json };
         Returns: Json;

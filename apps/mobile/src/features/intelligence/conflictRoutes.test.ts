@@ -182,11 +182,8 @@ describe('Conflict route contracts', () => {
   it('persists before analytics/navigation and recovers failed encrypted writes inline', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
     const privateKV = readFileSync(`${APP_DIR}/../lib/storage/privateKV.ts`, 'utf8');
-    const mirror = readFileSync(
-      `${APP_DIR}/../features/intelligence/conflictChoiceMirror.ts`,
-      'utf8',
-    );
-    const writeIndex = source.indexOf('await setConflictChoice(c, userChoice);');
+    const choices = readFileSync(`${APP_DIR}/../features/intelligence/overrides.ts`, 'utf8');
+    const writeIndex = source.indexOf('await setConflictChoice(c, userChoice, {');
     const analyticsIndex = source.indexOf("track('conflict_resolution_chosen'", writeIndex);
     const cacheIndex = source.indexOf('qc.setQueryData<ShelfData>', analyticsIndex);
     const dismissIndex = source.indexOf('onDismiss();', analyticsIndex);
@@ -220,12 +217,12 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('It did not reset or remove');
     expect(source).not.toContain('Your previous schedule is unchanged');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('void mirrorConflictChoiceForOwner(ownerScope, c, userChoice);');
+    expect(source).not.toContain('mirrorConflictChoiceForOwner');
     expect(source).not.toContain('async function mirrorChoice');
     expect(source).not.toContain('.upsert(');
-    expect(mirror).toContain('.upsert(');
-    expect(mirror).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
-    expect(mirror).toContain('.abortSignal(lease.signal)');
+    expect(choices).toContain('updatePrivateItemsTransactionally(');
+    expect(choices).toContain('enqueueConflictChoiceOutboxOperation(outbox, {');
+    expect(choices).not.toContain('.upsert(');
   });
 
   it('names the exact shelf products before a timing choice is made', () => {

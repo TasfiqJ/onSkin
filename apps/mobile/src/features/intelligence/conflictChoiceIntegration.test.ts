@@ -58,26 +58,27 @@ describe('conflict choice integration contracts', () => {
     expect(detail).toContain("resolved ? 'Change →' : 'Review →'");
   });
 
-  it('gives the server mirror one canonical idempotent identity', () => {
+  it('gives the durable server projection one canonical owner-derived identity', () => {
     const migration = readFileSync(
-      `${ROOT_DIR}/supabase/migrations/20260710000037_routine_conflict_choice_identity.sql`,
+      `${ROOT_DIR}/supabase/migrations/20260718000051_conflict_choice_outbox_rpc.sql`,
       'utf8',
     );
     const route = readSource('app/conflict/[ruleId].tsx');
-    const mirror = readSource('features/intelligence/conflictChoiceMirror.ts');
+    const choices = readSource('features/intelligence/overrides.ts');
 
-    expect(migration).toContain('routine_conflicts_choice_pair_canonical');
-    expect(migration).toContain("status in ('accepted', 'overridden')");
-    expect(migration).toContain("'accept_suggested_timing'");
-    expect(migration).toContain('first_value(id) over');
-    expect(migration).toContain('from pg_constraint');
-    expect(migration).toContain('product_a_id::text < product_b_id::text');
-    expect(migration).toContain('create unique index if not exists');
-    expect(migration).toContain('(user_id, rule_id, product_a_id, product_b_id)');
-    expect(route).toContain('void mirrorConflictChoiceForOwner(ownerScope, c, userChoice);');
-    expect(mirror).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
-    expect(mirror).toContain('.abortSignal(lease.signal)');
-    expect(mirror).toContain('const conflictChoiceMirrorTails = new Map');
+    expect(migration).toContain('apply_conflict_choice_outbox_batch');
+    expect(migration).toContain('conflict_choice_mirror_versions');
+    expect(migration).toContain("v_status := 'retry'");
+    expect(migration).toContain("v_error_class := 'dependency'");
+    expect(migration).toContain("v_rule_interaction_type in ('safety', 'myth', 'synergy')");
+    expect(migration).toContain('for key share');
+    expect(migration).toContain('auth.uid()');
+    expect(route).not.toContain('mirrorConflictChoiceForOwner');
+    expect(choices).toContain(
+      'updatePrivateItemsTransactionally(\n      [KEY, SHELF_STORAGE_KEY, OUTBOX_STORAGE_KEY]',
+    );
+    expect(choices).toContain('enqueueShelfOutboxOperation(outbox, {');
+    expect(choices).toContain('enqueueConflictChoiceOutboxOperation(outbox, {');
   });
 
   it('queues shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {

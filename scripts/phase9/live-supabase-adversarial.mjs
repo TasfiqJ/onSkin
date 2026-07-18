@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
@@ -112,6 +112,58 @@ function publicClient() {
 
 function isoDate(offsetDays = 0) {
   return new Date(Date.now() + offsetDays * 86_400_000).toISOString().slice(0, 10);
+}
+
+function sha256Hex(value) {
+  return createHash('sha256').update(value, 'utf8').digest('hex');
+}
+
+function entityIdFromSha256(hash) {
+  assert(/^[0-9a-f]{64}$/.test(hash), 'Conflict-choice identity hash is invalid.');
+  const chars = hash.slice(0, 32).split('');
+  chars[12] = '4';
+  chars[16] = '8';
+  const compact = chars.join('');
+  return `${compact.slice(0, 8)}-${compact.slice(8, 12)}-${compact.slice(12, 16)}-${compact.slice(16, 20)}-${compact.slice(20)}`;
+}
+
+function conflictChoiceOutboxOperation({ productIds, ruleId, userChoice }) {
+  const [productAId, productBId] = productIds.map((id) => id.toLowerCase()).sort();
+  assert(productAId && productBId && productAId < productBId, 'Conflict product pair is invalid.');
+  const normalizedRuleId = ruleId.toLowerCase();
+  const operationId = randomUUID();
+  const payload = {
+    rule_id: normalizedRuleId,
+    product_a_id: productAId,
+    product_b_id: productBId,
+    computed_severity: 'mild',
+    user_choice: userChoice,
+    rule_version: 1,
+  };
+  const identityHash = sha256Hex(
+    ['onskin:conflict-choice-identity:v1', normalizedRuleId, productAId, productBId].join('\n'),
+  );
+  const payloadHash = sha256Hex(
+    [
+      'onskin:conflict-choice-payload:v1',
+      normalizedRuleId,
+      productAId,
+      productBId,
+      payload.computed_severity,
+      payload.user_choice,
+      String(payload.rule_version),
+    ].join('\n'),
+  );
+  const entityId = entityIdFromSha256(identityHash);
+  return {
+    operation_id: operationId,
+    entity_type: 'conflict_choice',
+    entity_id: entityId,
+    operation_kind: 'upsert',
+    payload,
+    client_revision: 1,
+    idempotency_key: `conflict_choice:${operationId}:${identityHash}:${payloadHash}`,
+  };
 }
 
 async function createLiveUser(admin, label) {
@@ -440,14 +492,58 @@ async function main() {
       );
       globalCleanup.conflictRuleIds.push(conflictRule.id);
 
-      const conflict = await insertOne(userA.client, 'routine_conflicts', {
+      const secondOwnerProduct = await insertOne(userA.client, 'user_products', {
         user_id: userA.id,
-        rule_id: conflictRule.id,
-        product_a_id: product.id,
-        computed_severity: 'mild',
-        status: 'suggested',
-        rule_version: 1,
+        manual_name: 'Phase 9 Owner Serum',
+        manual_brand: 'Security Smoke',
+        opened_at: isoDate(),
+        pao_months: 6,
       });
+
+      await expectBlockedInsert(
+        'routine conflict direct owner insert',
+        userA.client.from('routine_conflicts').insert({
+          user_id: userA.id,
+          rule_id: conflictRule.id,
+          product_a_id: product.id,
+          product_b_id: secondOwnerProduct.id,
+          computed_severity: 'mild',
+          status: 'accepted',
+          user_choice: 'accept_suggested_timing',
+          rule_version: 1,
+        }),
+      );
+
+      const operation = conflictChoiceOutboxOperation({
+        productIds: [product.id, secondOwnerProduct.id],
+        ruleId: conflictRule.id,
+        userChoice: 'accept_suggested_timing',
+      });
+      const applied = await userA.client.rpc('apply_conflict_choice_outbox_batch', {
+        p_operations: [operation],
+      });
+      if (applied.error) throw applied.error;
+      assert(
+        Array.isArray(applied.data) &&
+          applied.data.length === 1 &&
+          applied.data[0]?.operation_id === operation.operation_id &&
+          applied.data[0]?.status === 'applied' &&
+          applied.data[0]?.error_class === null,
+        'routine conflict owner-derived RPC did not apply the exact operation.',
+      );
+
+      const projected = await userA.client
+        .from('routine_conflicts')
+        .select('*')
+        .eq('rule_id', conflictRule.id)
+        .eq('product_a_id', operation.payload.product_a_id)
+        .eq('product_b_id', operation.payload.product_b_id);
+      if (projected.error) throw projected.error;
+      assert(
+        Array.isArray(projected.data) && projected.data.length === 1,
+        'routine conflict owner-derived RPC did not create one visible projection.',
+      );
+      const conflict = projected.data[0];
       await expectVisible(
         userA.client,
         'routine_conflicts',

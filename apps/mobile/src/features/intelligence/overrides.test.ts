@@ -17,16 +17,42 @@ import {
   unresolvedConflicts,
 } from './overrides';
 import { STARTER_RULES } from './rules';
+import { decodeOutboxEnvelope, OUTBOX_STORAGE_KEY } from '@/lib/offline/outbox.pure';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
+  decodeShelfProducts: vi.fn(),
+  digestStringAsync: vi.fn(async () => 'a'.repeat(64)),
+  hashOutboxOwner: vi.fn(async () => 'b'.repeat(64)),
+  nextUuid: 900,
+  randomUUID: vi.fn(),
   readPrivateItem: vi.fn(),
+  scheduleOutboxFlush: vi.fn(),
   updatePrivateItem: vi.fn(),
+  updatePrivateItemsTransactionally: vi.fn(),
+}));
+
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: mocks.digestStringAsync,
+  randomUUID: mocks.randomUUID,
+}));
+
+vi.mock('@/features/shelf/store', () => ({
+  SHELF_STORAGE_KEY: 'onskin.shelf.v1',
+  decodeShelfProductsForOutboxDependency: mocks.decodeShelfProducts,
+  shelfProductOutboxPayload: vi.fn((product: { id: string }) => ({ name: product.id })),
+}));
+
+vi.mock('@/lib/offline/outbox', () => ({
+  hashOutboxOwner: mocks.hashOutboxOwner,
+  scheduleOutboxFlush: mocks.scheduleOutboxFlush,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   readPrivateItem: mocks.readPrivateItem,
   updatePrivateItem: mocks.updatePrivateItem,
+  updatePrivateItemsTransactionally: mocks.updatePrivateItemsTransactionally,
 }));
 
 const KEY = 'onskin.conflict.overrides';
@@ -43,11 +69,47 @@ function conflict(): DetectedConflict {
   return result!;
 }
 
+function authenticatedConflict(): DetectedConflict {
+  return {
+    ...conflict(),
+    productAId: '00000000-0000-4000-8000-000000000102',
+    productBId: '00000000-0000-4000-8000-000000000101',
+  };
+}
+
 describe('conflict choice persistence', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    mocks.decodeShelfProducts.mockReset();
+    mocks.decodeShelfProducts.mockReturnValue([]);
+    mocks.digestStringAsync.mockReset();
+    mocks.digestStringAsync.mockResolvedValue('a'.repeat(64));
+    mocks.hashOutboxOwner.mockReset();
+    mocks.hashOutboxOwner.mockResolvedValue('b'.repeat(64));
+    mocks.nextUuid = 900;
+    mocks.randomUUID.mockReset();
+    mocks.randomUUID.mockImplementation(
+      () => `00000000-0000-4000-8000-${String(mocks.nextUuid++).padStart(12, '0')}`,
+    );
     mocks.readPrivateItem.mockReset();
+    mocks.scheduleOutboxFlush.mockClear();
     mocks.updatePrivateItem.mockReset();
+    mocks.updatePrivateItemsTransactionally.mockReset();
+    mocks.updatePrivateItemsTransactionally.mockImplementation(
+      async (
+        keys: readonly string[],
+        updater: (
+          current: ReadonlyMap<string, string | null>,
+        ) => ReadonlyMap<string, string | null>,
+      ) => {
+        const current = new Map(keys.map((key) => [key, mocks.storage.get(key) ?? null]));
+        const next = updater(current);
+        for (const [key, value] of next) {
+          if (value === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, value);
+        }
+      },
+    );
     mocks.readPrivateItem.mockImplementation(async (key: string) => {
       const value = mocks.storage.get(key);
       return value === undefined
@@ -430,6 +492,135 @@ describe('conflict choice persistence', () => {
 
     await expect(setConflictChoice(conflict(), 'use_together')).rejects.toThrow('write failed');
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('atomically commits an authenticated choice with both Shelf dependency snapshots', async () => {
+    const current = authenticatedConflict();
+    mocks.storage.set('onskin.shelf.v1', 'opaque-shelf');
+    mocks.decodeShelfProducts.mockReturnValue(
+      [current.productAId, current.productBId].map((id) => ({ id })),
+    );
+    const assertCurrent = vi.fn();
+
+    const choices = await setConflictChoice(current, 'use_together', {
+      ownerId: 'owner-a',
+      ownerGeneration: 7,
+      assertCurrent,
+    });
+
+    expect(choiceForConflict(choices, current)).toBe('use_together');
+    expect(mocks.updatePrivateItemsTransactionally).toHaveBeenCalledWith(
+      ['onskin.conflict.overrides', 'onskin.shelf.v1', OUTBOX_STORAGE_KEY],
+      expect.any(Function),
+    );
+    const envelope = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY)!);
+    expect(envelope.rows.filter((row) => row.entityType === 'shelf_product')).toHaveLength(2);
+    expect(envelope.rows).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ entityType: 'shelf_product', entityId: current.productAId }),
+        expect.objectContaining({ entityType: 'shelf_product', entityId: current.productBId }),
+        expect.objectContaining({
+          entityType: 'conflict_choice',
+          payload: expect.objectContaining({
+            product_a_id: current.productBId,
+            product_b_id: current.productAId,
+            user_choice: 'use_together',
+          }),
+        }),
+      ]),
+    );
+    expect(mocks.storage.get('onskin.shelf.v1')).toBe('opaque-shelf');
+    expect(mocks.scheduleOutboxFlush).toHaveBeenCalledOnce();
+    expect(assertCurrent).toHaveBeenCalled();
+  });
+
+  it('confirms a committed three-key transaction after its response is lost', async () => {
+    const current = authenticatedConflict();
+    mocks.storage.set('onskin.shelf.v1', 'opaque-shelf');
+    mocks.decodeShelfProducts.mockReturnValue(
+      [current.productAId, current.productBId].map((id) => ({ id })),
+    );
+    mocks.updatePrivateItemsTransactionally.mockImplementationOnce(
+      async (
+        keys: readonly string[],
+        updater: (
+          current: ReadonlyMap<string, string | null>,
+        ) => ReadonlyMap<string, string | null>,
+      ) => {
+        const next = updater(new Map(keys.map((key) => [key, mocks.storage.get(key) ?? null])));
+        for (const [key, value] of next) {
+          if (value === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, value);
+        }
+        throw new Error('commit response lost');
+      },
+    );
+
+    await expect(
+      setConflictChoice(current, 'accept_suggested_timing', {
+        ownerId: 'owner-a',
+        ownerGeneration: 7,
+      }),
+    ).resolves.toEqual(expect.any(Object));
+    expect(mocks.scheduleOutboxFlush).toHaveBeenCalledOnce();
+  });
+
+  it('snapshots every local and outbox field before an owner hash can yield', async () => {
+    const current = authenticatedConflict();
+    const expectedRuleVersion = current.rule.ruleVersion;
+    const expectedSeverity = current.computedSeverity;
+    const expectedProductIds = [current.productBId!, current.productAId!] as const;
+    mocks.storage.set('onskin.shelf.v1', 'opaque-shelf');
+    mocks.decodeShelfProducts.mockReturnValue(expectedProductIds.map((id) => ({ id })));
+    let releaseHash!: (hash: string) => void;
+    mocks.hashOutboxOwner.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          releaseHash = resolve;
+        }),
+    );
+
+    const pending = setConflictChoice(current, 'use_together', {
+      ownerId: 'owner-a',
+      ownerGeneration: 7,
+    });
+    await vi.waitFor(() => expect(mocks.hashOutboxOwner).toHaveBeenCalledOnce());
+    current.rule.ruleVersion = expectedRuleVersion + 10;
+    current.computedSeverity = 'high';
+    current.productAId = '00000000-0000-4000-8000-000000000199';
+    releaseHash('b'.repeat(64));
+    const choices = await pending;
+
+    const record = Object.values(choices)[0]!;
+    expect(record).toMatchObject({
+      ruleVersion: expectedRuleVersion,
+      productIds: expectedProductIds,
+    });
+    const conflictRow = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY)!).rows.find(
+      (row) => row.entityType === 'conflict_choice',
+    );
+    expect(conflictRow?.payload).toMatchObject({
+      rule_version: expectedRuleVersion,
+      computed_severity: expectedSeverity,
+      product_a_id: expectedProductIds[0],
+      product_b_id: expectedProductIds[1],
+    });
+  });
+
+  it('does not save or queue from a stale route whose Shelf dependency was deleted', async () => {
+    const current = authenticatedConflict();
+    mocks.storage.set('onskin.shelf.v1', 'opaque-shelf');
+    mocks.decodeShelfProducts.mockReturnValue([{ id: current.productAId }]);
+
+    await expect(
+      setConflictChoice(current, 'use_together', {
+        ownerId: 'owner-a',
+        ownerGeneration: 7,
+      }),
+    ).rejects.toThrow('CONFLICT_CHOICE_SHELF_DEPENDENCY_MISSING');
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 
   it('serializes concurrent decisions without dropping either product pair', async () => {

@@ -27,7 +27,6 @@ function source(path: string): string {
 const SUPABASE_CLIENT_FILES = [
   'features/commerce/store.ts',
   'features/commerce/useCommerce.ts',
-  'features/intelligence/conflictChoiceMirror.ts',
   'features/onboarding/OnboardingContext.tsx',
   'features/onboarding/onboardingStatusQuery.ts',
   'features/photos/store.ts',

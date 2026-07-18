@@ -6,6 +6,9 @@ import {
   OUTBOX_UNSUPPORTED_VERSION,
   MAX_SHELF_SCAN_OUTBOX_ROWS,
   decodeOutboxEnvelope,
+  conflictChoiceIdentityHashInput,
+  conflictChoicePayloadHashInput,
+  discardConflictChoiceOutboxDependencies,
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
   enqueueNotificationDeliveryOutboxOperation,
@@ -13,8 +16,10 @@ import {
   enqueueRecommendationPreferencesOutboxOperation,
   enqueueShelfScanOutboxOperation,
   enqueueShelfOutboxOperation,
+  enqueueConflictChoiceOutboxOperation,
   leaseReadyOutboxRows,
   outboxCounts,
+  outboxEntityIdFromSha256,
   retryDeadOutboxRows,
   selectOutboxOwnerStatus,
   shelfScanPayloadHashInput,
@@ -64,6 +69,17 @@ const SCAN_PAYLOAD = {
   matched_product_id: '00000000-0000-4000-8000-000000000043',
   scanned_at: NOW,
 } as const;
+const CONFLICT_IDENTITY_HASH = 'd'.repeat(64);
+const CONFLICT_PAYLOAD_HASH = 'e'.repeat(64);
+const CONFLICT_ENTITY_ID = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
+const CONFLICT_PAYLOAD = {
+  rule_id: '00000000-0000-4000-8000-000000000001',
+  product_a_id: '00000000-0000-4000-8000-000000000041',
+  product_b_id: '00000000-0000-4000-8000-000000000042',
+  computed_severity: 'moderate',
+  user_choice: 'use_together',
+  rule_version: 1,
+} as const;
 
 function uuid(value: number): string {
   return `00000000-0000-4000-8000-${value.toString().padStart(12, '0')}`;
@@ -110,9 +126,11 @@ describe('transactional outbox model', () => {
     expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
     previous.version = 3;
     expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
+    previous.version = 4;
+    expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
     expect(() => decodeOutboxEnvelope('{bad-json')).toThrow(OUTBOX_INVALID);
     expect(() =>
-      decodeOutboxEnvelope(JSON.stringify({ version: 5, rows: [], revisions: [] })),
+      decodeOutboxEnvelope(JSON.stringify({ version: 6, rows: [], revisions: [] })),
     ).toThrow(OUTBOX_UNSUPPORTED_VERSION);
   });
 
@@ -237,6 +255,131 @@ describe('transactional outbox model', () => {
         enqueuedAt: NOW,
       }),
     ).toThrow(OUTBOX_INVALID);
+  });
+
+  it('coalesces canonical conflict-choice state and binds identity plus payload hashes', () => {
+    expect(outboxEntityIdFromSha256(CONFLICT_IDENTITY_HASH)).toBe(CONFLICT_ENTITY_ID);
+    expect(conflictChoiceIdentityHashInput(CONFLICT_PAYLOAD)).toContain(
+      CONFLICT_PAYLOAD.product_a_id,
+    );
+    expect(conflictChoicePayloadHashInput(CONFLICT_PAYLOAD)).toContain('use_together');
+    const first = enqueueConflictChoiceOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_ENTITY_ID,
+      payload: CONFLICT_PAYLOAD,
+      identityHash: CONFLICT_IDENTITY_HASH,
+      payloadHash: CONFLICT_PAYLOAD_HASH,
+      enqueuedAt: NOW,
+    }).envelope;
+    const secondPayload = {
+      ...CONFLICT_PAYLOAD,
+      user_choice: 'accept_suggested_timing',
+    } as const;
+    const second = enqueueConflictChoiceOutboxOperation(first, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_ENTITY_ID,
+      payload: secondPayload,
+      identityHash: CONFLICT_IDENTITY_HASH,
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(second.rows).toHaveLength(1);
+    expect(second.rows[0]).toMatchObject({
+      entityType: 'conflict_choice',
+      clientRevision: 2,
+      payload: secondPayload,
+      idempotencyKey: `conflict_choice:${OP_A2}:${CONFLICT_IDENTITY_HASH}:${'f'.repeat(64)}`,
+    });
+    const tampered = JSON.parse(encodeOutboxEnvelope(second)) as {
+      rows: { payload: Record<string, unknown> }[];
+    };
+    tampered.rows[0]!.payload.product_a_id = CONFLICT_PAYLOAD.product_b_id;
+    expect(() => decodeOutboxEnvelope(JSON.stringify(tampered))).toThrow(OUTBOX_INVALID);
+  });
+
+  it('canonicalizes UUID identity casing and prunes conflicts whose Shelf dependency is deleted', () => {
+    const queued = enqueueConflictChoiceOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_ENTITY_ID.toUpperCase(),
+      payload: CONFLICT_PAYLOAD,
+      identityHash: CONFLICT_IDENTITY_HASH,
+      payloadHash: CONFLICT_PAYLOAD_HASH,
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(queued.rows[0]?.entityId).toBe(CONFLICT_ENTITY_ID);
+    const discarded = discardConflictChoiceOutboxDependencies(queued, {
+      ownerHash: OWNER,
+      productIds: [CONFLICT_PAYLOAD.product_a_id.toUpperCase()],
+    });
+
+    expect(discarded.discarded).toBe(1);
+    expect(discarded.envelope.rows).toEqual([]);
+    expect(discarded.envelope.revisions).toEqual(queued.revisions);
+  });
+
+  it('prioritizes Shelf dependencies before conflict state and retries dependency results', () => {
+    let envelope = enqueueNotificationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_B1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      payload: NOTIFICATION_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    envelope = enqueueConflictChoiceOutboxOperation(envelope, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_ENTITY_ID,
+      payload: CONFLICT_PAYLOAD,
+      identityHash: CONFLICT_IDENTITY_HASH,
+      payloadHash: CONFLICT_PAYLOAD_HASH,
+      enqueuedAt: NOW,
+    }).envelope;
+    envelope = enqueue(envelope, { operationId: OP_A1, entityId: ENTITY_A }).envelope;
+
+    const leased = leaseReadyOutboxRows(envelope, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+      limit: 1,
+    });
+    expect(leased.rows.map((row) => row.entityType)).toEqual(['shelf_product']);
+    const shelf = leased.rows[0]!;
+    const shelfSettled = settleOutboxLease(leased.envelope, {
+      leaseOwner: WORKER_A,
+      now: NOW,
+      operationIds: [shelf.operationId],
+      results: [{ operationId: shelf.operationId, status: 'applied' }],
+      random: 0,
+    });
+    const conflictLease = leaseReadyOutboxRows(shelfSettled, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_B,
+      now: NOW,
+      limit: 1,
+    });
+    expect(conflictLease.rows.map((row) => row.entityType)).toEqual(['conflict_choice']);
+    const conflict = conflictLease.rows[0]!;
+    const settled = settleOutboxLease(conflictLease.envelope, {
+      leaseOwner: WORKER_B,
+      now: NOW,
+      operationIds: [conflict.operationId],
+      results: [{ operationId: conflict.operationId, status: 'retry', errorClass: 'dependency' }],
+      random: 0,
+    });
+    expect(settled.rows.find((row) => row.operationId === conflict.operationId)).toMatchObject({
+      state: 'ready',
+      lastErrorClass: 'dependency',
+      attemptCount: 1,
+    });
   });
 
   it.each([

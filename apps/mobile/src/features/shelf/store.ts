@@ -6,6 +6,7 @@ import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
 import {
   OUTBOX_STORAGE_KEY,
   decodeOutboxEnvelope,
+  discardConflictChoiceOutboxDependencies,
   encodeOutboxEnvelope,
   enqueueShelfOutboxOperation,
   type OutboxOperationKind,
@@ -23,7 +24,8 @@ import { normalizeShelfFreshness, validLocalDate } from './freshness';
 // signal. View, manual-add, and queued lookups remain offline. The encrypted
 // Shelf v3 record is local authority; authenticated mutations atomically append
 // a sanitized owner-bound outbox state mirror for deferred server convergence.
-const KEY = 'onskin.shelf.v1';
+export const SHELF_STORAGE_KEY = 'onskin.shelf.v1';
+const KEY = SHELF_STORAGE_KEY;
 const SCHEMA_VERSION = 3 as const;
 const LEGACY_ENVELOPE_VERSION = 1 as const;
 const LEGACY_ADD_OPERATION_ENVELOPE_VERSION = 2 as const;
@@ -473,6 +475,12 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
   };
 }
 
+/** Strict snapshot used only while another encrypted mutation holds the Shelf
+ * key in the same private-KV transaction. It never repairs or rewrites bytes. */
+export function decodeShelfProductsForOutboxDependency(raw: string | null): ShelfProduct[] {
+  return decodeShelfState(raw).products;
+}
+
 function encodeShelfState(products: ShelfProduct[], addOperations: ShelfAddOperation[]): string {
   return JSON.stringify({
     version: SCHEMA_VERSION,
@@ -621,7 +629,7 @@ async function shelfAddIdentity(
   return { ownerHash, inputHash };
 }
 
-function shelfServerPayload(product: ShelfProduct): OutboxPayload {
+export function shelfProductOutboxPayload(product: ShelfProduct): OutboxPayload {
   return Object.freeze({
     catalog_product_id: product.catalogProductId,
     catalog_source_id: product.catalogSourceId,
@@ -647,7 +655,7 @@ function shelfUpsertChange(product: ShelfProduct): ShelfOutboxChange {
   return Object.freeze({
     operationKind: 'upsert',
     entityId: product.id,
-    payload: shelfServerPayload(product),
+    payload: shelfProductOutboxPayload(product),
   });
 }
 
@@ -691,6 +699,12 @@ async function updateShelfStorage(
     const update = updater(shelfCurrent);
     let outbox = decodeOutboxEnvelope(outboxCurrent);
     for (const change of update.outboxChanges) {
+      if (change.operationKind === 'delete') {
+        outbox = discardConflictChoiceOutboxDependencies(outbox, {
+          ownerHash,
+          productIds: [change.entityId],
+        }).envelope;
+      }
       outbox = enqueueShelfOutboxOperation(outbox, {
         operationId: Crypto.randomUUID(),
         ownerHash,

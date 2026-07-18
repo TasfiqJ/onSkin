@@ -15,14 +15,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Text } from '@/components/ui';
 import { InContextNote } from '@/features/community/InContextNote';
-import {
-  statusBarStyleForSurface,
-  type SystemSurfaceTone,
-} from '@/theme/systemBarPolicy';
+import { statusBarStyleForSurface, type SystemSurfaceTone } from '@/theme/systemBarPolicy';
 import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import type { ConflictChoices, ConflictUserChoice } from '@/features/intelligence/conflictChoices';
-import { mirrorConflictChoiceForOwner } from '@/features/intelligence/conflictChoiceMirror';
 import { conflictShareRoute } from '@/features/intelligence/conflictIdentity';
 import { setConflictChoice } from '@/features/intelligence/overrides';
 import {
@@ -48,6 +44,7 @@ import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlem
 import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
@@ -168,21 +165,25 @@ function persistedChoice(choice: 'keep' | 'use_together'): ConflictUserChoice {
 
 async function recordChoice(
   ownerScope: OwnerQueryScope,
+  ownerId: string | null | undefined,
   c: DetectedConflict,
   choice: 'keep' | 'use_together',
 ): Promise<ConflictChoices> {
-  // Local-first so the choice sticks offline and the app stops re-nagging
-  // immediately (docs/03 §7); the server mirror below is best-effort.
+  // The encrypted local choice remains authoritative. Authenticated saves add
+  // the Shelf dependencies and replay-safe mirror intent in the same commit.
   return runOwnerQueryOperation(ownerScope, async (lease) => {
     const userChoice = persistedChoice(choice);
-    const conflictChoices = await setConflictChoice(c, userChoice);
+    const conflictChoices = await setConflictChoice(c, userChoice, {
+      ownerId,
+      ownerGeneration: lease.generation,
+      assertCurrent: () => lease.assertCurrent(),
+    });
     lease.assertCurrent();
     track('conflict_resolution_chosen', {
       action: choice === 'use_together' ? 'use_together' : 'keep',
       source: 'detail',
     });
     if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
-    void mirrorConflictChoiceForOwner(ownerScope, c, userChoice);
     return conflictChoices;
   });
 }
@@ -259,8 +260,7 @@ export default function ConflictSheet() {
     conflictQuota?.status === 'missing' || conflictQuota?.status === 'available';
   const quotaRuleIds = conflictQuota?.ruleIds ?? [];
   const entitlementUncertain =
-    (!entitlement.data && entitlement.isError) ||
-    isEntitlementEvidenceUncertain(entitlement.data);
+    (!entitlement.data && entitlement.isError) || isEntitlementEvidenceUncertain(entitlement.data);
   const access =
     conflict &&
     entitlement.data &&
@@ -597,6 +597,7 @@ function StandardBody({
   onDismiss: () => void;
 }) {
   const ownerScope = useOwnerQueryScope();
+  const { user } = useAuth();
   const saveInFlight = useRef(false);
   const saveRequestId = useRef(0);
   const [savingChoice, setSavingChoice] = useState<'keep' | 'use_together' | null>(null);
@@ -627,7 +628,7 @@ function StandardBody({
     setSavingChoice(choice);
     setSaveFailed(false);
     try {
-      const conflictChoices = await recordChoice(ownerScope, conflict, choice);
+      const conflictChoices = await recordChoice(ownerScope, user?.id, conflict, choice);
       if (saveRequestId.current !== requestId || !isOwnerQueryScopeCurrent(ownerScope)) {
         return;
       }

@@ -258,6 +258,17 @@ export const SERVICE_ROLE_FILTERED_EXPORTS = [
   'order_attributions',
 ] as const;
 
+// These owner-linked rows are implementation-only replay/version evidence.
+// Their user-facing source state is exported through user_products and
+// routine_conflicts; pending client operations are included by the encrypted
+// local-device collector. Keeping this registry explicit prevents a new
+// coordination table from silently falling outside the data inventory.
+export const INTERNAL_OUTBOX_COORDINATION_EXPORT_EXCLUSIONS = [
+  'shelf_mirror_versions',
+  'conflict_choice_mirror_versions',
+  'mobile_outbox_receipts',
+] as const;
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -635,6 +646,7 @@ Deno.serve(async (req) => {
       export_coverage: {
         caller_rls_tables: CALLER_RLS_EXPORT_TABLES.map((item) => item.table),
         service_role_filtered_exports: SERVICE_ROLE_FILTERED_EXPORTS,
+        internal_outbox_coordination_exclusions: INTERNAL_OUTBOX_COORDINATION_EXPORT_EXCLUSIONS,
         storage_sources: ['photo_storage_objects'],
         derived_sources: ['photo_download_urls', 'photo_download_url_omissions'],
       },
@@ -648,6 +660,12 @@ Deno.serve(async (req) => {
           data_class: 'internal_commission_calculation',
           reason:
             'order_attributions rows linked by an exported user click token omit commission_cents as internal business accounting.',
+        },
+        {
+          data_class: 'internal_outbox_coordination',
+          sources: INTERNAL_OUTBOX_COORDINATION_EXPORT_EXCLUSIONS,
+          reason:
+            'Replay receipts and server mirror revision counters are internal coordination metadata. The underlying Shelf products and conflict choices are exported through user_products and routine_conflicts, while pending device operations are covered by the encrypted local-device export.',
         },
       ],
       ...sourcePayloads,

@@ -21,6 +21,7 @@ import {
   decodeOutboxEnvelope,
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
+  enqueueConflictChoiceOutboxOperation,
   enqueueNotificationDeliveryOutboxOperation,
   enqueueNotificationPreferencesOutboxOperation,
   enqueueRecommendationPreferencesOutboxOperation,
@@ -212,12 +213,14 @@ function flushResult(
   recommendationPreferences = 0,
   notificationDeliveries = 0,
   shelfScans = 0,
+  conflictChoices = 0,
 ) {
   return {
     leased,
     flushed,
     dead,
     flushedByEntity: {
+      conflictChoices,
       notificationDeliveries,
       notificationPreferences,
       recommendationPreferences,
@@ -227,7 +230,8 @@ function flushResult(
         notificationDeliveries -
         notificationPreferences -
         recommendationPreferences -
-        shelfScans,
+        shelfScans -
+        conflictChoices,
     },
   };
 }
@@ -288,7 +292,7 @@ describe('transactional outbox runtime', () => {
   it('strictly reports corrupt, future, and unavailable reads without changing persisted bytes', async () => {
     for (const [raw, status] of [
       ['{not-json', 'corrupt'],
-      [JSON.stringify({ version: 5, rows: [], revisions: [] }), 'unsupported_version'],
+      [JSON.stringify({ version: 6, rows: [], revisions: [] }), 'unsupported_version'],
     ] as const) {
       mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
       await expect(readOutbox()).resolves.toEqual({ status, envelope: null });
@@ -743,6 +747,186 @@ describe('transactional outbox runtime', () => {
       ],
     });
     expect(storedEnvelope().rows).toEqual([]);
+  });
+
+  it('dispatches conflict state only after its Shelf dependency batch succeeds', async () => {
+    const identityHash = 'd'.repeat(64);
+    const payloadHash = 'e'.repeat(64);
+    let envelope = seedRows(2);
+    envelope = enqueueConflictChoiceOutboxOperation(envelope, {
+      operationId: uuid(41_001),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+      payload: {
+        rule_id: uuid(1),
+        product_a_id: uuid(1),
+        product_b_id: uuid(2),
+        computed_severity: 'moderate',
+        user_choice: 'use_together',
+        rule_version: 1,
+      },
+      identityHash,
+      payloadHash,
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(3, 3, 0, 0, 0, 0, 0, 1));
+    expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
+      'apply_shelf_outbox_batch',
+      'apply_conflict_choice_outbox_batch',
+    ]);
+    expect(mocks.rpc.mock.calls[1]?.[1].p_operations).toEqual([
+      expect.objectContaining({
+        entity_type: 'conflict_choice',
+        idempotency_key: `conflict_choice:${uuid(41_001)}:${identityHash}:${payloadHash}`,
+      }),
+    ]);
+  });
+
+  it('backs conflict state off as a dependency without calling its RPC after Shelf failure', async () => {
+    let envelope = seedRows(2);
+    envelope = enqueueConflictChoiceOutboxOperation(envelope, {
+      operationId: uuid(41_002),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+      payload: {
+        rule_id: uuid(1),
+        product_a_id: uuid(1),
+        product_b_id: uuid(2),
+        computed_severity: 'moderate',
+        user_choice: 'accept_suggested_timing',
+        rule_version: 1,
+      },
+      identityHash: 'd'.repeat(64),
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    mocks.rpcHandler = async () => {
+      throw new RequestPolicyError({
+        endpoint: 'outbox_sync',
+        kind: 'server',
+        attemptCount: 2,
+        statusClass: '5xx',
+        retryAfterMs: 5 * 60_000,
+      });
+    };
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(2, 0, 0));
+    expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual(['apply_shelf_outbox_batch']);
+    expect(storedEnvelope().rows.find((row) => row.entityType === 'conflict_choice')).toMatchObject(
+      {
+        state: 'ready',
+        lastErrorClass: null,
+        attemptCount: 0,
+      },
+    );
+    for (let trigger = 0; trigger < 10; trigger += 1) {
+      await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
+    }
+    expect(storedEnvelope().rows.find((row) => row.entityType === 'conflict_choice')).toMatchObject(
+      {
+        state: 'ready',
+        attemptCount: 0,
+      },
+    );
+
+    vi.setSystemTime(new Date(Date.parse(NOW) + 5 * 60_000));
+    mocks.rpc.mockClear();
+    mocks.rpcHandler = async (operations) => successfulResults(operations);
+    await expect(flushOutbox()).resolves.toEqual(flushResult(3, 3, 0, 0, 0, 0, 0, 1));
+    expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
+      'apply_shelf_outbox_batch',
+      'apply_conflict_choice_outbox_batch',
+    ]);
+  });
+
+  it('still dispatches an unrelated conflict when a different Shelf request fails', async () => {
+    let envelope = seedRows(1);
+    envelope = enqueueConflictChoiceOutboxOperation(envelope, {
+      operationId: uuid(41_004),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+      payload: {
+        rule_id: uuid(1),
+        product_a_id: uuid(101),
+        product_b_id: uuid(102),
+        computed_severity: 'moderate',
+        user_choice: 'use_together',
+        rule_version: 1,
+      },
+      identityHash: 'd'.repeat(64),
+      payloadHash: 'a'.repeat(64),
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    mocks.rpcHandler = async (operations) => {
+      if (operations[0]?.entity_type === 'shelf_product') {
+        throw new RequestPolicyError({
+          endpoint: 'outbox_sync',
+          kind: 'server',
+          attemptCount: 2,
+          statusClass: '5xx',
+        });
+      }
+      return successfulResults(operations);
+    };
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(2, 1, 0, 0, 0, 0, 0, 1));
+    expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
+      'apply_shelf_outbox_batch',
+      'apply_conflict_choice_outbox_batch',
+    ]);
+    expect(storedEnvelope().rows).toEqual([
+      expect.objectContaining({ entityType: 'shelf_product', state: 'ready', attemptCount: 1 }),
+    ]);
+  });
+
+  it('surfaces and retries a dead conflict projection through Shelf sync status', async () => {
+    const queued = enqueueConflictChoiceOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: uuid(41_003),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+      payload: {
+        rule_id: uuid(1),
+        product_a_id: uuid(1),
+        product_b_id: uuid(2),
+        computed_severity: 'moderate',
+        user_choice: 'use_together',
+        rule_version: 1,
+      },
+      identityHash: 'd'.repeat(64),
+      payloadHash: 'e'.repeat(64),
+      enqueuedAt: NOW,
+    }).envelope;
+    const dead: OutboxEnvelope = {
+      ...queued,
+      rows: queued.rows.map((row) => ({
+        ...row,
+        state: 'dead' as const,
+        attemptCount: 1,
+        lastErrorClass: 'dependency' as const,
+      })),
+    };
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(dead));
+
+    await expect(
+      readShelfOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'needs_attention', pendingCount: 1, attentionCount: 1 },
+    });
+    await expect(retryShelfOutbox({ generation: 7 }, 'raw-owner@example.com')).resolves.toEqual(
+      flushResult(1, 1, 0, 0, 0, 0, 0, 1),
+    );
+    expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
+      'apply_conflict_choice_outbox_batch',
+    ]);
   });
 
   it('retries only the current owner recommendation dead row through the runtime API', async () => {

@@ -176,7 +176,7 @@ describe('shelf local store recovery', () => {
     expect(outboxRaw).toBeDefined();
     expect(outboxRaw).not.toContain('owner-a');
     expect(JSON.parse(outboxRaw!) as unknown).toMatchObject({
-      version: 4,
+      version: 5,
       rows: [
         {
           ownerGeneration: 7,
