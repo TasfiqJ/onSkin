@@ -29,6 +29,9 @@ const localDeviceExportTestSource = read(
 const localPrivateDataKeysSource = read(
   'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
 );
+const localPrivateDataRegistrySource = read(
+  'apps/mobile/src/features/settings/localPrivateDataRegistry.ts',
+);
 const localAccountIsolationSource = read('apps/mobile/src/lib/auth/localAccountIsolation.ts');
 const plaintextStagingSource = read('apps/mobile/src/lib/storage/plaintextStagingCore.ts');
 const plaintextStagingAdapterSource = read('apps/mobile/src/lib/storage/plaintextStaging.ts');
@@ -165,7 +168,7 @@ block(
 );
 block(
   errors,
-  /LOCAL_PRIVATE_DATA_KEYS/.test(localDeviceExportSource) &&
+  /LOCAL_PRIVATE_EXPORT_SPECS/.test(localDeviceExportSource) &&
     /LOCAL_DEVICE_EXPORT_STORAGE_KEYS/.test(localDeviceExportSource) &&
     /getPrivateItems\(LOCAL_DEVICE_EXPORT_STORAGE_KEYS\)/.test(localDeviceExportSource) &&
     /REDACTED_LOCAL_FIELD_NAMES/.test(localDeviceExportSource) &&
@@ -549,16 +552,15 @@ block(
     /AsyncStorage\.setItem/.test(deletionVendorFreezeSource) &&
     /ACCOUNT_DELETION_VENDOR_FREEZE_OWNER_MISMATCH/.test(deletionVendorFreezeSource) &&
     /let writesBlocked = true/.test(deletionVendorFreezeRuntimeSource) &&
+    /await hydrateAccountDeletionVendorFreeze\(\s*resolvedTargetUserId,?\s*\)/.test(
+      authProviderSource,
+    ) &&
     authProviderSource.indexOf(
-      'await hydrateAccountDeletionVendorFreeze(resolvedTargetUserId)',
-    ) !== -1 &&
-    authProviderSource.indexOf(
-      'await hydrateAccountDeletionVendorFreeze(resolvedTargetUserId)',
-    ) <
-      authProviderSource.indexOf('setSession(latestPendingSession)') &&
+      'const revenueCatFreezeState = await hydrateAccountDeletionVendorFreeze(',
+    ) < authProviderSource.indexOf('setSession(latestPendingSession)') &&
     authProviderSource.indexOf('await reconcileAccountDeletionCompletionReceipt()') <
       authProviderSource.indexOf('await invalidateLocalSupabaseSession()') &&
-    localPrivateDataSource.indexOf('clearAccountDeletionVendorFreezeAfterCleanup()') >
+    localPrivateDataSource.lastIndexOf('await clearAccountDeletionVendorFreezeAfterCleanup()') >
       localPrivateDataSource.indexOf('if (failed.length > 0) throw new Error'),
   'Mobile deletion freeze must survive relaunch and clear only after the final private cleanup.',
 );
@@ -666,9 +668,10 @@ block(
 );
 block(
   errors,
-  /LOCAL_PRIVATE_CONTROL_KEYS\s*=\s*\[[\s\S]*PLAINTEXT_STAGING_JOURNAL_KEY[\s\S]*\]\s*as const/.test(
-    localPrivateDataKeysSource,
-  ) &&
+  /LOCAL_PRIVATE_CONTROL_KEYS/.test(localPrivateDataKeysSource) &&
+    /key:\s*PLAINTEXT_STAGING_JOURNAL_KEY[\s\S]*category:\s*'control'[\s\S]*handler:\s*'scavengePlaintextStaging'/m.test(
+      localPrivateDataRegistrySource,
+    ) &&
     /clearPlaintextStaging/.test(localAccountIsolationSource) &&
     /scavengePlaintextStaging/.test(localAccountIsolationSource),
   'The plaintext journal must be a private control key and account-boundary cleanup must scavenge owned staging files.',

@@ -11,7 +11,13 @@ const scrubSource = read('apps/mobile/src/lib/observability/scrub.ts');
 const safeLogSource = read('apps/mobile/src/lib/observability/safeLog.ts');
 const authProviderSource = read('apps/mobile/src/lib/auth/AuthProvider.tsx');
 const localPrivateDataSource = read('apps/mobile/src/features/settings/localPrivateData.ts');
+const localPrivateDataRegistrySource = read(
+  'apps/mobile/src/features/settings/localPrivateDataRegistry.ts',
+);
 const revenueCatSource = read('apps/mobile/src/lib/iap/revenuecat.ts');
+const revenueCatOwnerCoordinatorSource = read(
+  'apps/mobile/src/lib/iap/revenuecatOwnerCoordinator.ts',
+);
 const shareCardSource = read('apps/mobile/src/features/growth/shareCard.ts');
 const encryptedPhotoSource = read('apps/mobile/src/features/photos/encryptedStorage.ts');
 const sharePhotoSource = read('apps/mobile/src/features/photos/sharePhoto.ts');
@@ -24,6 +30,10 @@ const photoDetailSource = read('apps/mobile/src/app/progress/[id].tsx');
 const photoCopySource = read('apps/mobile/src/features/photos/copy.ts');
 const photoSettingsSource = read('apps/mobile/src/app/(tabs)/you.tsx');
 const rootLayoutSource = read('apps/mobile/src/app/_layout.tsx');
+const plaintextStagingStartupGateSource = read(
+  'apps/mobile/src/lib/storage/PlaintextStagingStartupGate.tsx',
+);
+const privateStorageStartupSource = read('apps/mobile/src/lib/storage/privateStorageStartup.ts');
 const notificationCopySource = read('apps/mobile/src/features/notifications/copy.ts');
 const notificationDeliverSource = read('apps/mobile/src/features/notifications/deliver.ts');
 const notificationStoreSource = read('apps/mobile/src/features/notifications/store.ts');
@@ -289,36 +299,44 @@ block(
 block(
   errors,
   /export async function resetRevenueCatIdentity/.test(revenueCatSource) &&
-    /await Purchases\.logOut\(\)/.test(revenueCatSource) &&
-    /configuredForUserId = null/.test(revenueCatSource) &&
-    /cachedOfferings = null/.test(revenueCatSource),
+    /await resetRevenueCatSdkIdentity\(\)/.test(revenueCatSource) &&
+    /await ownerCoordinator\.reset\(loadRevenueCatIdentityAdapter\)/.test(revenueCatSource) &&
+    /cachedOfferings = null/.test(revenueCatSource) &&
+    /logOut:\s*\(\)\s*=>\s*Purchases\.logOut\(\)/.test(revenueCatSource) &&
+    /await this\.logOutAndProveAnonymous\(adapter\)/.test(revenueCatOwnerCoordinatorSource) &&
+    /this\.ready = null/.test(revenueCatOwnerCoordinatorSource),
   'RevenueCat client identity reset must log out and clear cached account/offering state.',
 );
 block(
   errors,
-  /resetAnalyticsIdentity\(\)/.test(localPrivateDataSource) &&
-    /resetRevenueCatIdentity\(\)/.test(localPrivateDataSource),
+  /resetVendorIdentityWithinBound\(resetAnalyticsIdentity\)/.test(localPrivateDataSource) &&
+    /resetVendorIdentityWithinBound\(resetRevenueCatIdentity\)/.test(localPrivateDataSource),
   'Local private-data cleanup must reset PostHog and RevenueCat client identities.',
 );
 block(
   errors,
-  /result:\s*'tmpfile'/.test(shareCardSource),
-  'Share-card export must keep using an OS tmpfile capture result.',
+  /result:\s*'base64'/.test(shareCardSource) &&
+    shareCardSource.indexOf("result: 'base64'") <
+      shareCardSource.indexOf("deps.reserve('conflict_share_png')") &&
+    /FileSystem\.writeAsStringAsync\(uri, value,[\s\S]*EncodingType\.Base64/.test(shareCardSource),
+  'Share-card capture must remain memory-first before writing journal-owned plaintext staging.',
 );
 block(
   errors,
-  /try\s*\{[\s\S]*Sharing\.isAvailableAsync\(\)[\s\S]*Sharing\.shareAsync\(uri[\s\S]*return true;[\s\S]*\}\s*finally\s*\{[\s\S]*FileSystem\.deleteAsync\(uri,\s*\{\s*idempotent:\s*true\s*\}\)\.catch\(\(\)\s*=>\s*\{\}\)/.test(
+  /try\s*\{[\s\S]*deps\.reserve\('conflict_share_png'\)[\s\S]*deps\.writeBase64\(staging\.uri, base64\)[\s\S]*deps\.markState\(staging, 'plaintext_written'\)[\s\S]*deps\.share\(staging\.uri, SHARE_OPTIONS\)[\s\S]*\}\s*finally\s*\{[\s\S]*await deps\.cleanup\(staging\)/.test(
     shareCardSource,
-  ),
-  'Share-card export must delete its generated tmpfile after the share attempt.',
+  ) && /cleanup:\s*cleanupPlaintextStaging/.test(shareCardSource),
+  'Share-card export must journal and clean its owned plaintext file after every share attempt.',
 );
 block(
   errors,
   /PHOTO_CLOUD_BACKUP_AVAILABLE\s*=\s*false/.test(photoConsentSource) &&
-    /clearUnavailableCloudBackupPreference/.test(photoConsentSource) &&
     !/setCloudBackupEnabled/.test(photoConsentSource) &&
-    /clearUnavailableCloudBackupPreference/.test(rootLayoutSource),
-  'Unavailable photo cloud backup must have no setter and must clear stale enablement at startup.',
+    !/getCloudBackupEnabled/.test(photoConsentSource) &&
+    /key:\s*'onskin\.photos\.cloudBackup'[\s\S]*lifecycle:\s*'legacy_retained'[\s\S]*mode:\s*'read_only'[\s\S]*legacy_unavailable_cloud_backup_preference/m.test(
+      localPrivateDataRegistrySource,
+    ),
+  'Unavailable photo cloud backup must have no runtime reader/setter and must retain its legacy preference only in the cleanup/export registry.',
 );
 block(
   errors,
@@ -392,10 +410,16 @@ block(
 );
 block(
   errors,
-  rootLayoutSource.indexOf('void scavengePlaintextStaging().catch(() => undefined);') !== -1 &&
-    rootLayoutSource.indexOf('void scavengePlaintextStaging().catch(() => undefined);') <
-      rootLayoutSource.indexOf('export default function RootLayout()'),
-  'Plaintext staging recovery must start before the root component can mount after relaunch.',
+  rootLayoutSource.indexOf('<SessionBoundaryGate>') <
+    rootLayoutSource.indexOf('<PlaintextStagingStartupGate>') &&
+    rootLayoutSource.indexOf('<PlaintextStagingStartupGate>') <
+      rootLayoutSource.indexOf('<AppLockProvider>') &&
+    /preparePrivateStorageForSession\(userId\)/.test(plaintextStagingStartupGateSource) &&
+    privateStorageStartupSource.indexOf('await dependencies.recoverPhotos(lease);') <
+      privateStorageStartupSource.indexOf('await dependencies.scavengePlaintext();') &&
+    /if \(status === 'ready'\) return children;/.test(plaintextStagingStartupGateSource) &&
+    !/\.catch\(\(\) => undefined\)/.test(plaintextStagingStartupGateSource),
+  'Plaintext staging recovery must remain a fail-closed owner-bound gate before App Lock and app content.',
 );
 block(
   errors,

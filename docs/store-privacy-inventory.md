@@ -47,6 +47,7 @@ configuration before store submission.
 - Supabase RLS smoke script verifies owner-only access before release.
 - RevenueCat is bound to Supabase user IDs to preserve entitlement continuity.
 - Native photo files are encrypted locally with authenticated encryption before storage.
+- Sensitive photo renderers disable Expo Image caching and transitions. Lock, background, deletion, and account isolation purge mounted plaintext data URIs and decoded memory; startup scrubs possible legacy disk-cache residue before encrypted display. Physical-device filesystem and memory verification remains required.
 - Native content keys remain in SecureStore; temporary/missing/invalid key reads preserve ciphertext and cannot silently rotate keys or rewrite the failed record with fallback state.
 - Opt-in app lock fails closed while its encrypted preference is unreadable; every sensitive Progress direct route shares a foreground-only timeline unlock and relocks after backgrounding.
 - Data-bearing Progress routes require a successful encrypted metadata read after entitlement/app-lock checks; read failure blocks route content and writes behind non-destructive retry instead of presenting an empty or missing-photo state.

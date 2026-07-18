@@ -620,12 +620,17 @@ export function useEntitlementActions() {
     );
     const won = persisted.actionEntitlement;
     if (won?.isActive) {
-      track(action === 'winback' ? 'winback_converted' : won.periodType === 'trial'
-        ? 'trial_started'
-        : 'purchase_completed', {
+      const analyticsProperties = {
         source: 'revenuecat',
         period_type: won.periodType,
-      });
+      } as const;
+      if (action === 'winback') {
+        track('winback_converted', analyticsProperties);
+      } else if (won.periodType === 'trial') {
+        track('trial_started', analyticsProperties);
+      } else {
+        track('purchase_completed', analyticsProperties);
+      }
     }
     return publishedActionResult(
       persisted.publishedState,
