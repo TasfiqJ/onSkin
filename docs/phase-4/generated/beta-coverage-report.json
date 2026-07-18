@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T15:52:00.193Z",
+  "generatedAt": "2026-07-18T21:29:20.829Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "docs/phase-4/beta-coverage-input.json",
-  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
+  "gitSha": "52107141867fbc9b8e683cfa7399ffdc6351d6d6",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -89,8 +89,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 33306,
-      "sha256": "c4f416cd9674976509b8ad35f2cac43b06f6653de466aace35773d0642c41b2c"
+      "bytes": 33803,
+      "sha256": "fcdd60b722b668df65a6714f6006014ea6ecc1ada7a50d056091c0936ce26206"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -161,32 +161,32 @@
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 26987,
-      "sha256": "44f66cf82c7676af4e89355726c396565bbc476271218c7c2e9b6e8954f24977"
+      "bytes": 27119,
+      "sha256": "c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09"
     },
     {
       "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
       "exists": true,
-      "bytes": 14607,
-      "sha256": "af9d98f4c991863605f93f8fc873834f0e618c642adcd28e89a7dbcd2ed47127"
+      "bytes": 16617,
+      "sha256": "d9a0f1a80b7716b822ef9ac970d9be9d75e01c85b7b55e3a445f75fae842c7dd"
     },
     {
       "path": "supabase/functions/catalog-report/index.ts",
       "exists": true,
-      "bytes": 9332,
-      "sha256": "c8dfe55ddfc44165a20822f9bfa1733c7ae116224d673822acce0c5c5318fecf"
+      "bytes": 10890,
+      "sha256": "00c15af1cac9a9cda6514d5c441b4c0b2420959a24727d697f7dce9ab8c4acbd"
     },
     {
       "path": "supabase/functions/catalog-report/privacy.ts",
       "exists": true,
-      "bytes": 3504,
-      "sha256": "9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e"
+      "bytes": 6403,
+      "sha256": "e81dfbdafe784f79503fc4ad03487040f6e2725fe63f5000df77d944c3e28eec"
     },
     {
       "path": "supabase/functions/catalog-report/privacy.test.ts",
       "exists": true,
-      "bytes": 4009,
-      "sha256": "db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac"
+      "bytes": 10228,
+      "sha256": "31411acef464f8e0dda16605ee3f0af769163f67ea920ae5c1f6156ee4508f1d"
     },
     {
       "path": "supabase/functions/deno.lock",
@@ -197,8 +197,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 25511,
-      "sha256": "bc01832bfadc1795b91bba0f137036f2e3fd29426593c073260bca4324ace57f"
+      "bytes": 25469,
+      "sha256": "5036b1121759918646f89e6ff914a4b7a55914437025f5f20dd2e9723ced1017"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -215,14 +215,14 @@
     {
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 36362,
-      "sha256": "39cf1a9caf5c435fafa23f0074ad4934dfeab6243ef0764949a504b9382a2eda"
+      "bytes": 52220,
+      "sha256": "083458969608d44dadee3611522d875caa9f20dcf59fa2f88e1beb963cd18496"
     },
     {
       "path": "docs/store-privacy-inventory.md",
       "exists": true,
-      "bytes": 31965,
-      "sha256": "620804f163e296ed0faac3bff466fe47f16c86ae5789b8f7bde687938a2342a7"
+      "bytes": 41372,
+      "sha256": "161d61fb6c01c8d326613635b94c36ab6f5c72feb30fad73658749ca213109a6"
     },
     {
       "path": "docs/phase-4/beta-coverage-input.template.json",
@@ -275,14 +275,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 86563,
-      "sha256": "2b0b0e20caff8b068a2d2e0734af7e3895551f8389a49ee5eb93f7aa964f32c2"
+      "bytes": 89176,
+      "sha256": "37591ebfa3497a3b2faf17415ec9bff0c8c14f76112ec60ff2f2d82267fb8dba"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 53302,
-      "sha256": "6994d2893814f0df625cb32e5e51459c71b5600a16250af476352a5484560582"
+      "bytes": 54958,
+      "sha256": "483506df4df1f610a7934792add52bd735fc6542baeb52c7936b86d0bab24f2a"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -311,14 +311,14 @@
     {
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
-      "bytes": 18703,
-      "sha256": "d4bf1a160197b1568cede5d983eaa35e90286db206cc8e33d3788c8621ac89e5"
+      "bytes": 18845,
+      "sha256": "5028e61556675f6bb98609731342f27672af591d6e2c00bbf48ec0fc6d45e2d1"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
-      "bytes": 11095,
-      "sha256": "0ddb53d01c07b23e68f516c26d342baba457b0bcf6a4f1e1d6df0df177709f39"
+      "bytes": 11215,
+      "sha256": "98f9a4cb46a212ee97e4b562f5d8eb8a28bb7af0248783ef33d95e3406cc349b"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",

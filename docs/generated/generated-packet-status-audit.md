@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-18T15:52:32.383Z
+Generated: 2026-07-18T21:30:02.175Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 53
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 2449
+- Hash references checked: 2483
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -29,11 +29,11 @@ being treated as trustworthy launch evidence.
 | docs/phase-10/generated/support-handoff-packet.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 42        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 399       | 0               |
+| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 410       | 0               |
 | docs/phase-3/generated/review-operator-queue.md           | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 141       | 0               |
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 403       | 0               |
+| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 414       | 0               |
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 44        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |
@@ -43,7 +43,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-4/generated/cosing-catalog-qa-report.md        | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/cosing-fixture-import.json         | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/obf-fixture-import.json            | json | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 256       | 0               |
+| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 267       | 0               |
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 171       | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
@@ -73,7 +73,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-9/generated/live-revenuecat-webhook.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.json     | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.md       | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 298       | 0               |
+| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 299       | 0               |
 | docs/phase-9/generated/release-engineering-qa-packet.md   | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 3         | 0               |
 

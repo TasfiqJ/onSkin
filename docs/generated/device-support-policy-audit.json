@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T20:02:50.023Z",
+  "generatedAt": "2026-07-18T21:28:28.553Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -175,7 +175,7 @@
       "skipped-routes-430-932-200-text-pressure"
     ],
     "legacyGateProblems": [],
-    "gateCount": 46
+    "gateCount": 47
   },
   "requiredPackageScripts": [
     "docs:device-support-policy-audit",

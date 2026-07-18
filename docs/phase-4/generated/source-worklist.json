@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-18T15:51:54.557Z",
+  "generatedAt": "2026-07-18T21:28:50.364Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
+  "gitSha": "52107141867fbc9b8e683cfa7399ffdc6351d6d6",
   "gitStatus": "",
   "summary": {
     "itemCount": 13,
@@ -17,7 +17,7 @@
       "blocked": 7,
       "local-scaffold": 6
     },
-    "sourcePathCount": 256,
+    "sourcePathCount": 267,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -73,8 +73,8 @@
         {
           "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
           "exists": true,
-          "bytes": 10698,
-          "sha256": "e9214896b57d59414865dd221ae14f8ca811a47190d1b1ab247781f389c424bf"
+          "bytes": 10932,
+          "sha256": "893e09f4ad7c59c814a134df224c104ba7f959849ed2f34d5e700c2ee2088397"
         },
         {
           "path": "docs/phase-4/catalog-source-memo-cosing.md",
@@ -92,7 +92,7 @@
           "path": "docs/phase-4/catalog-source-policy.json",
           "exists": true,
           "bytes": 7249,
-          "sha256": "79005f1111af670bb8ce11d128627ecde9a59a8f323e2cf9170dfe50c8c2a050"
+          "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
         },
         {
           "path": "docs/phase-4/catalog-source-trust-registry.json",
@@ -127,8 +127,8 @@
         {
           "path": "scripts/phase4/source-policy.mjs",
           "exists": true,
-          "bytes": 87622,
-          "sha256": "94053b1914ea094bc10b29d041c78cc71d62ed5ea7080981e0feef45695a110e"
+          "bytes": 88870,
+          "sha256": "8f3a60e94812556891e81a208737ce79c43fb2f9a34207207ea0ec204e25dfc9"
         },
         {
           "path": "docs/phase-4/phase-4-exit-review.md",
@@ -182,20 +182,20 @@
         {
           "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
           "exists": true,
-          "bytes": 10698,
-          "sha256": "e9214896b57d59414865dd221ae14f8ca811a47190d1b1ab247781f389c424bf"
+          "bytes": 10932,
+          "sha256": "893e09f4ad7c59c814a134df224c104ba7f959849ed2f34d5e700c2ee2088397"
         },
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
           "exists": true,
-          "bytes": 5099,
-          "sha256": "ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191"
+          "bytes": 5338,
+          "sha256": "cf202bd20819b0a8f5b84cc81e7bb2f2470d45ae257a800d4e72f7e88e5bda7d"
         },
         {
           "path": "docs/phase-4/catalog-source-policy.json",
           "exists": true,
           "bytes": 7249,
-          "sha256": "79005f1111af670bb8ce11d128627ecde9a59a8f323e2cf9170dfe50c8c2a050"
+          "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
         },
         {
           "path": "docs/phase-4/obf-source-approval.template.json",
@@ -230,26 +230,26 @@
         {
           "path": "scripts/phase4/import-obf-snapshot.mjs",
           "exists": true,
-          "bytes": 12929,
-          "sha256": "3efd8d761fec3fa19ec1fd90e0445c46c684382bb0624fd76f0fc5c4f49b2608"
+          "bytes": 12846,
+          "sha256": "8681784954382483d0c623e23b1e6fad2be337e377c74e229d8a92d9ebc91dae"
         },
         {
           "path": "scripts/phase4/source-policy.mjs",
           "exists": true,
-          "bytes": 87622,
-          "sha256": "94053b1914ea094bc10b29d041c78cc71d62ed5ea7080981e0feef45695a110e"
+          "bytes": 88870,
+          "sha256": "8f3a60e94812556891e81a208737ce79c43fb2f9a34207207ea0ec204e25dfc9"
         },
         {
           "path": "scripts/phase4/source-policy.test.mjs",
           "exists": true,
-          "bytes": 38524,
-          "sha256": "12c69f6082cd11f667f9c605713930b1f6c21f17c6c7042005173a20b7ce9f2f"
+          "bytes": 39752,
+          "sha256": "c8ff4534e7f7870930f1ee77e5aa7185f8cafea30e5aa87f5a50646383e4244f"
         },
         {
           "path": "scripts/phase4/catalog-qa-report.mjs",
           "exists": true,
-          "bytes": 26987,
-          "sha256": "44f66cf82c7676af4e89355726c396565bbc476271218c7c2e9b6e8954f24977"
+          "bytes": 27119,
+          "sha256": "c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09"
         },
         {
           "path": "supabase/migrations/20260614000026_phase4_catalog.sql",
@@ -260,20 +260,20 @@
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
           "exists": true,
-          "bytes": 10199,
-          "sha256": "231dd6175ac99232bf7b263e2152311e8d8ccbe9dd008dcdb12c5321926f27c1"
+          "bytes": 11843,
+          "sha256": "23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220"
         },
         {
           "path": "supabase/functions/catalog-search/index.ts",
           "exists": true,
-          "bytes": 9227,
-          "sha256": "640842b71581aac2f7a01870d27a8e951614bc282e5686cbf9d9564ad5c810fc"
+          "bytes": 10142,
+          "sha256": "b7187fee6fe8981d42219de31d1358d11db16bb8f40be530c4d2f838e5400494"
         },
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 9332,
-          "sha256": "c8dfe55ddfc44165a20822f9bfa1733c7ae116224d673822acce0c5c5318fecf"
+          "bytes": 10890,
+          "sha256": "00c15af1cac9a9cda6514d5c441b4c0b2420959a24727d697f7dce9ab8c4acbd"
         },
         {
           "path": "supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql",
@@ -332,7 +332,7 @@
           "path": "docs/phase-4/catalog-source-policy.json",
           "exists": true,
           "bytes": 7249,
-          "sha256": "79005f1111af670bb8ce11d128627ecde9a59a8f323e2cf9170dfe50c8c2a050"
+          "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
         },
         {
           "path": "docs/phase-4/cosing-source-approval.template.json",
@@ -373,14 +373,14 @@
         {
           "path": "scripts/phase4/source-policy.mjs",
           "exists": true,
-          "bytes": 87622,
-          "sha256": "94053b1914ea094bc10b29d041c78cc71d62ed5ea7080981e0feef45695a110e"
+          "bytes": 88870,
+          "sha256": "8f3a60e94812556891e81a208737ce79c43fb2f9a34207207ea0ec204e25dfc9"
         },
         {
           "path": "scripts/phase4/source-policy.test.mjs",
           "exists": true,
-          "bytes": 38524,
-          "sha256": "12c69f6082cd11f667f9c605713930b1f6c21f17c6c7042005173a20b7ce9f2f"
+          "bytes": 39752,
+          "sha256": "c8ff4534e7f7870930f1ee77e5aa7185f8cafea30e5aa87f5a50646383e4244f"
         },
         {
           "path": "apps/mobile/src/features/catalog/ingredientParser.ts",
@@ -409,8 +409,8 @@
         {
           "path": "scripts/phase4/catalog-qa-report.mjs",
           "exists": true,
-          "bytes": 26987,
-          "sha256": "44f66cf82c7676af4e89355726c396565bbc476271218c7c2e9b6e8954f24977"
+          "bytes": 27119,
+          "sha256": "c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09"
         }
       ]
     },
@@ -510,14 +510,14 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 36362,
-          "sha256": "39cf1a9caf5c435fafa23f0074ad4934dfeab6243ef0764949a504b9382a2eda"
+          "bytes": 52220,
+          "sha256": "083458969608d44dadee3611522d875caa9f20dcf59fa2f88e1beb963cd18496"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 31965,
-          "sha256": "620804f163e296ed0faac3bff466fe47f16c86ae5789b8f7bde687938a2342a7"
+          "bytes": 41372,
+          "sha256": "161d61fb6c01c8d326613635b94c36ab6f5c72feb30fad73658749ca213109a6"
         },
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
@@ -558,8 +558,8 @@
         {
           "path": "scripts/phase4/import-obf-snapshot.mjs",
           "exists": true,
-          "bytes": 12929,
-          "sha256": "3efd8d761fec3fa19ec1fd90e0445c46c684382bb0624fd76f0fc5c4f49b2608"
+          "bytes": 12846,
+          "sha256": "8681784954382483d0c623e23b1e6fad2be337e377c74e229d8a92d9ebc91dae"
         },
         {
           "path": "scripts/phase4/import-cosing-dictionary.mjs",
@@ -613,20 +613,20 @@
         {
           "path": "scripts/phase4/catalog-qa-report.mjs",
           "exists": true,
-          "bytes": 26987,
-          "sha256": "44f66cf82c7676af4e89355726c396565bbc476271218c7c2e9b6e8954f24977"
+          "bytes": 27119,
+          "sha256": "c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09"
         },
         {
           "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
           "exists": true,
-          "bytes": 14607,
-          "sha256": "af9d98f4c991863605f93f8fc873834f0e618c642adcd28e89a7dbcd2ed47127"
+          "bytes": 16617,
+          "sha256": "d9a0f1a80b7716b822ef9ac970d9be9d75e01c85b7b55e3a445f75fae842c7dd"
         },
         {
           "path": "scripts/phase4/import-obf-snapshot.mjs",
           "exists": true,
-          "bytes": 12929,
-          "sha256": "3efd8d761fec3fa19ec1fd90e0445c46c684382bb0624fd76f0fc5c4f49b2608"
+          "bytes": 12846,
+          "sha256": "8681784954382483d0c623e23b1e6fad2be337e377c74e229d8a92d9ebc91dae"
         },
         {
           "path": "scripts/phase4/import-cosing-dictionary.mjs",
@@ -643,20 +643,20 @@
         {
           "path": "scripts/phase4/source-policy.mjs",
           "exists": true,
-          "bytes": 87622,
-          "sha256": "94053b1914ea094bc10b29d041c78cc71d62ed5ea7080981e0feef45695a110e"
+          "bytes": 88870,
+          "sha256": "8f3a60e94812556891e81a208737ce79c43fb2f9a34207207ea0ec204e25dfc9"
         },
         {
           "path": "scripts/phase4/source-policy.test.mjs",
           "exists": true,
-          "bytes": 38524,
-          "sha256": "12c69f6082cd11f667f9c605713930b1f6c21f17c6c7042005173a20b7ce9f2f"
+          "bytes": 39752,
+          "sha256": "c8ff4534e7f7870930f1ee77e5aa7185f8cafea30e5aa87f5a50646383e4244f"
         },
         {
           "path": "docs/phase-4/catalog-source-policy.json",
           "exists": true,
           "bytes": 7249,
-          "sha256": "79005f1111af670bb8ce11d128627ecde9a59a8f323e2cf9170dfe50c8c2a050"
+          "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
         },
         {
           "path": "docs/phase-4/catalog-source-trust-registry.json",
@@ -770,14 +770,14 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 36362,
-          "sha256": "39cf1a9caf5c435fafa23f0074ad4934dfeab6243ef0764949a504b9382a2eda"
+          "bytes": 52220,
+          "sha256": "083458969608d44dadee3611522d875caa9f20dcf59fa2f88e1beb963cd18496"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 31965,
-          "sha256": "620804f163e296ed0faac3bff466fe47f16c86ae5789b8f7bde687938a2342a7"
+          "bytes": 41372,
+          "sha256": "161d61fb6c01c8d326613635b94c36ab6f5c72feb30fad73658749ca213109a6"
         },
         {
           "path": "scripts/phase4/beta-coverage-report.mjs",
@@ -869,14 +869,14 @@
         {
           "path": "scripts/phase4/catalog-promotion-contract.mjs",
           "exists": true,
-          "bytes": 121311,
-          "sha256": "b0e248aa0e7696357deb53bfd49b7a9da516f6d5818e7fc89d1fb0b91a54bad0"
+          "bytes": 121357,
+          "sha256": "e808b7707faad5fdc5dd0b065b463865aa225d663c0444014942ace46e89dc99"
         },
         {
           "path": "scripts/phase4/catalog-promotion-contract.test.mjs",
           "exists": true,
-          "bytes": 61364,
-          "sha256": "3e7631a11cfc2446d26041b447fd1b6b4687d37021517037be2fed9659b61c04"
+          "bytes": 61882,
+          "sha256": "2567fbb7f47cf2f62d481369998035efaf2cfe03cbf2febd6d44dbcb93b570e1"
         },
         {
           "path": "scripts/phase4/build-catalog-stage-envelope.mjs",
@@ -963,14 +963,14 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 33306,
-          "sha256": "c4f416cd9674976509b8ad35f2cac43b06f6653de466aace35773d0642c41b2c"
+          "bytes": 33803,
+          "sha256": "fcdd60b722b668df65a6714f6006014ea6ecc1ada7a50d056091c0936ce26206"
         },
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 9224,
-          "sha256": "5a38100532c58ecd9d9d414d0455bdf63912feef1e836d738ff4612096a06038"
+          "bytes": 9444,
+          "sha256": "9bdb6ea48fbaea893f53522a87281c531c99662d978bbdb745b2d1d41a1d6fbd"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
@@ -1017,14 +1017,14 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 36362,
-          "sha256": "39cf1a9caf5c435fafa23f0074ad4934dfeab6243ef0764949a504b9382a2eda"
+          "bytes": 52220,
+          "sha256": "083458969608d44dadee3611522d875caa9f20dcf59fa2f88e1beb963cd18496"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 31965,
-          "sha256": "620804f163e296ed0faac3bff466fe47f16c86ae5789b8f7bde687938a2342a7"
+          "bytes": 41372,
+          "sha256": "161d61fb6c01c8d326613635b94c36ab6f5c72feb30fad73658749ca213109a6"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
@@ -1107,16 +1107,22 @@
       ],
       "sourcePaths": [
         {
+          "path": "apps/mobile/src/features/catalog/CatalogReportConfirmation.tsx",
+          "exists": true,
+          "bytes": 4702,
+          "sha256": "2cfd1ff61e88ea74dfa8aca794cc114554edb704bd81f3ddad9c387a6f092a4d"
+        },
+        {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 12335,
-          "sha256": "92250d319ea33fc14bb57c0bf131e732847762036f9ed132788033aea0c78dbd"
+          "bytes": 23664,
+          "sha256": "059cf83ee9bb155a9c5f1dc54428d092bce07c75f6ca272eefc8e53a42024221"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 11357,
-          "sha256": "ac891d9253e2f2d81be440eda468ab02d0f9e3afddb84822be14f9a48f451438"
+          "bytes": 23836,
+          "sha256": "c8d0d42fbaca418df9a7c8ef51760538ab073b76a2a7bc587e1c19a1994a7061"
         },
         {
           "path": "apps/mobile/src/features/catalog/copy.ts",
@@ -1173,6 +1179,48 @@
           "sha256": "7156ff221071cf6ab90c3558c20d084c53e1f48d0025843ebea5275929103e53"
         },
         {
+          "path": "apps/mobile/src/features/catalog/recoveryReport.test.ts",
+          "exists": true,
+          "bytes": 1873,
+          "sha256": "b7e4593f9b49f40152266ff5f1ef68d45fc3d651fbaba7bc50bc10858c1a8e94"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/recoveryReport.ts",
+          "exists": true,
+          "bytes": 1449,
+          "sha256": "a1968787279dc1232a27426cf70724a5c8f0d7d65c3669fb462f7b0a25485912"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/reportOperation.test.ts",
+          "exists": true,
+          "bytes": 2745,
+          "sha256": "f306511b72663dfa01c24897a58ccdc6bdaba2081a28a64222e16e9f851c5752"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/reportOperation.ts",
+          "exists": true,
+          "bytes": 2796,
+          "sha256": "680cae013c853f82df16c3eec1c72c2623a752d1583204c1b7ecd917c83dfa37"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/reportPresentation.test.ts",
+          "exists": true,
+          "bytes": 5906,
+          "sha256": "226c050f99dae3e465fbf49da3c6618549bab261dccecb64773a8b3efaaaf4ab"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/reportPresentation.ts",
+          "exists": true,
+          "bytes": 5781,
+          "sha256": "6fbe26f5bfb254a22272603da403455763a4ac23f1966e998cf891fe36b7e615"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/reportTransport.ts",
+          "exists": true,
+          "bytes": 6607,
+          "sha256": "ef8e02518936fb1fd6bdbff03aebf4012d5fb84e2ef3467c948b727c420ff483"
+        },
+        {
           "path": "apps/mobile/src/features/shelf/analytics.test.ts",
           "exists": true,
           "bytes": 543,
@@ -1183,6 +1231,24 @@
           "exists": true,
           "bytes": 599,
           "sha256": "1e514f5fc1a96111a8b792dc8841ad41a11130dd6de7031eb08a353f85ef1050"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/catalogLookupRecovery.test.ts",
+          "exists": true,
+          "bytes": 8336,
+          "sha256": "267edfe752086358a8e934f820f59ddff1fd2f88fcd1b43de2063ab9ac10b533"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/catalogLookupRecovery.ts",
+          "exists": true,
+          "bytes": 7625,
+          "sha256": "aafbea137610e42b8d6df23c18f1e93731d78840a8017e3c577c02acf9ee0247"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/catalogRecoveryAsync.test.ts",
+          "exists": true,
+          "bytes": 13110,
+          "sha256": "2e627d4f74a97f23127ca5e40b3a18be7e49b9b836dca9171e958097d3bb9f25"
         },
         {
           "path": "apps/mobile/src/features/shelf/categories.test.ts",
@@ -1223,8 +1289,8 @@
         {
           "path": "apps/mobile/src/features/shelf/IntakeContext.tsx",
           "exists": true,
-          "bytes": 2833,
-          "sha256": "afc1156ac26b2a759511c95e8acc7f84ab8b6487d46f72c359c3dc4fee6c3252"
+          "bytes": 3076,
+          "sha256": "f62ba042c80b48accce6231f55386056642199316033d8db8885efabd20c071e"
         },
         {
           "path": "apps/mobile/src/features/shelf/labels.ts",
@@ -1247,8 +1313,8 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 7190,
-          "sha256": "0e7259ca6764665b6ca46ad82d3f9634d06d4a713966bbf54d95109443f439de"
+          "bytes": 7801,
+          "sha256": "7cf30e725fcb3ce4ba29a51f0a896246fbabd08fafea9732fe6254dccc743e17"
         },
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
@@ -1271,32 +1337,32 @@
         {
           "path": "apps/mobile/src/features/shelf/scanLog.test.ts",
           "exists": true,
-          "bytes": 5724,
-          "sha256": "ccf91fca6b913eeb1b5c46c29320a2fbf640bc66d0688a57a6632d505ce43ac5"
+          "bytes": 4009,
+          "sha256": "5fbd9506ee53dc6908b7839a4c4f2bcecfaeb6b2f7748ba49fc7a125b9e773c2"
         },
         {
           "path": "apps/mobile/src/features/shelf/scanLog.ts",
           "exists": true,
-          "bytes": 2544,
-          "sha256": "b573ee6ea5a07aca95196a3f9a2b25a0c5e38acad442a42c6172146a1b23d0fc"
+          "bytes": 1527,
+          "sha256": "4f27c7914c0147f85d4bc7f6a800e6bf013b808a17f3a5eea4dd574baf212f20"
         },
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 46944,
-          "sha256": "2f45fdbde9cd192859748f334866f575099991a691ad408b3937d15306ee16a5"
+          "bytes": 59080,
+          "sha256": "366abc3261c3f2769d1f0f1735a7c10ded295265baaa95b751e84e868a4b60d8"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 11630,
-          "sha256": "9f17b0e0fa83743dcdf058fc8dcf5bea2201e7c65537a75a9d4288de0c73b0c2"
+          "bytes": 16005,
+          "sha256": "9e3886447ec96393b377258551ce4fcb2158a96ef8a6f6c347eb048d082bfa10"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
           "exists": true,
-          "bytes": 16642,
-          "sha256": "2f155ccad6592e2381dacc525477bf862b81bc15597e61a01af0a28311861fa8"
+          "bytes": 20001,
+          "sha256": "a5fc172580b440af6c845c4ca53801386719f5cd9b641dc99e78c01f61811dd8"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
@@ -1313,20 +1379,20 @@
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
           "exists": true,
-          "bytes": 37135,
-          "sha256": "dfae778efed66e57e151c5bfc14e00c7ce473fd2b4ec02002d90ff27e18770fd"
+          "bytes": 43230,
+          "sha256": "1d3c7d2b8b6b1e595a9c53646fedfef2ebdaca4ccd616279e10577238b743c5c"
         },
         {
           "path": "apps/mobile/src/app/shelf/search.tsx",
           "exists": true,
-          "bytes": 15482,
-          "sha256": "01ae00b96fa0a378ae140b8f54c342a268e5b34c0e32e0a76349e4b9493176d6"
+          "bytes": 24023,
+          "sha256": "9e611454306cda227aab99c5eb0ebd7b1b5f563bbff15ecbb5750420f74b2d19"
         },
         {
           "path": "apps/mobile/src/app/shelf/manual.tsx",
           "exists": true,
-          "bytes": 13837,
-          "sha256": "52ca7524948f5ad3a7485ce7be8be97d14d25ae55119f010ff1513baef291227"
+          "bytes": 17688,
+          "sha256": "783206228e50ac36ea9fd7d897d34f2b7eda3301b7021b794af77617be418f92"
         },
         {
           "path": "apps/mobile/src/features/recommendations/applyPreferences.test.ts",
@@ -1451,20 +1517,20 @@
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 9332,
-          "sha256": "c8dfe55ddfc44165a20822f9bfa1733c7ae116224d673822acce0c5c5318fecf"
+          "bytes": 10890,
+          "sha256": "00c15af1cac9a9cda6514d5c441b4c0b2420959a24727d697f7dce9ab8c4acbd"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.ts",
           "exists": true,
-          "bytes": 3504,
-          "sha256": "9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e"
+          "bytes": 6403,
+          "sha256": "e81dfbdafe784f79503fc4ad03487040f6e2725fe63f5000df77d944c3e28eec"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.test.ts",
           "exists": true,
-          "bytes": 4009,
-          "sha256": "db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac"
+          "bytes": 10228,
+          "sha256": "31411acef464f8e0dda16605ee3f0af769163f67ea920ae5c1f6156ee4508f1d"
         }
       ]
     },
@@ -1519,14 +1585,14 @@
         {
           "path": "docs/04-smart-shelf.md",
           "exists": true,
-          "bytes": 57158,
-          "sha256": "c85628b675ec6880847ec2ad86f523885679634ca135b6911708e90086377981"
+          "bytes": 59888,
+          "sha256": "0b7912cd47ba7d8b5c883a91ca0964b00ed8666f50f4ae076efe23316dcfd47a"
         },
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 399901,
-          "sha256": "4ebc6823f96d1a23b14658fb7219a78e676a524cce211613b8f5e06758848861"
+          "bytes": 409032,
+          "sha256": "18d07ded129d688110c11f7500121493b71024b603688c90c202a4310ec66fdb"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -1537,14 +1603,14 @@
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
           "exists": true,
-          "bytes": 37135,
-          "sha256": "dfae778efed66e57e151c5bfc14e00c7ce473fd2b4ec02002d90ff27e18770fd"
+          "bytes": 43230,
+          "sha256": "1d3c7d2b8b6b1e595a9c53646fedfef2ebdaca4ccd616279e10577238b743c5c"
         },
         {
           "path": "apps/mobile/src/app/shelf/opened.tsx",
           "exists": true,
-          "bytes": 12059,
-          "sha256": "cac7cfabb2a28e50ebb8138cde5d7c38e0dfbb35a8142ad680697ff816e49cd0"
+          "bytes": 13752,
+          "sha256": "af48fb852216a2816432d33365a4438c9e1878b5b862f3cd2662ea4a073438d1"
         },
         {
           "path": "apps/mobile/src/app/shelf/replenish.tsx",
@@ -1555,26 +1621,26 @@
         {
           "path": "apps/mobile/src/app/shelf/scan.tsx",
           "exists": true,
-          "bytes": 23220,
-          "sha256": "81712f3391afccaadd7f86d1f3ccd546d696e842654fbd01fb3cc9cf9df0eb6c"
+          "bytes": 27561,
+          "sha256": "fd7c554939f6733d95942f401cc866a61f652c917dd96241cc76d605d1db6136"
         },
         {
           "path": "apps/mobile/src/app/shelf/search.tsx",
           "exists": true,
-          "bytes": 15482,
-          "sha256": "01ae00b96fa0a378ae140b8f54c342a268e5b34c0e32e0a76349e4b9493176d6"
+          "bytes": 24023,
+          "sha256": "9e611454306cda227aab99c5eb0ebd7b1b5f563bbff15ecbb5750420f74b2d19"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 11357,
-          "sha256": "ac891d9253e2f2d81be440eda468ab02d0f9e3afddb84822be14f9a48f451438"
+          "bytes": 23836,
+          "sha256": "c8d0d42fbaca418df9a7c8ef51760538ab073b76a2a7bc587e1c19a1994a7061"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 12335,
-          "sha256": "92250d319ea33fc14bb57c0bf131e732847762036f9ed132788033aea0c78dbd"
+          "bytes": 23664,
+          "sha256": "059cf83ee9bb155a9c5f1dc54428d092bce07c75f6ca272eefc8e53a42024221"
         },
         {
           "path": "apps/mobile/src/features/intelligence/pao.ts",
@@ -1651,20 +1717,20 @@
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
           "exists": true,
-          "bytes": 16642,
-          "sha256": "2f155ccad6592e2381dacc525477bf862b81bc15597e61a01af0a28311861fa8"
+          "bytes": 20001,
+          "sha256": "a5fc172580b440af6c845c4ca53801386719f5cd9b641dc99e78c01f61811dd8"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 11630,
-          "sha256": "9f17b0e0fa83743dcdf058fc8dcf5bea2201e7c65537a75a9d4288de0c73b0c2"
+          "bytes": 16005,
+          "sha256": "9e3886447ec96393b377258551ce4fcb2158a96ef8a6f6c347eb048d082bfa10"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
           "exists": true,
-          "bytes": 10199,
-          "sha256": "231dd6175ac99232bf7b263e2152311e8d8ccbe9dd008dcdb12c5321926f27c1"
+          "bytes": 11843,
+          "sha256": "23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220"
         },
         {
           "path": "supabase/functions/catalog-lookup/catalogContract.ts",
@@ -1681,8 +1747,8 @@
         {
           "path": "supabase/functions/catalog-search/index.ts",
           "exists": true,
-          "bytes": 9227,
-          "sha256": "640842b71581aac2f7a01870d27a8e951614bc282e5686cbf9d9564ad5c810fc"
+          "bytes": 10142,
+          "sha256": "b7187fee6fe8981d42219de31d1358d11db16bb8f40be530c4d2f838e5400494"
         },
         {
           "path": "supabase/functions/catalog-search/catalogContract.ts",
@@ -1769,8 +1835,8 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 31579,
-          "sha256": "a57fb8548176ca6874efeee9571beadebd542ac874658bff612e8c82f9046c48"
+          "bytes": 32421,
+          "sha256": "f8ec8968bd1e79ff593f2e4474e50a8d753d85a14acffacb9ffb27cd72d23e54"
         },
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -1787,14 +1853,14 @@
         {
           "path": "supabase/tests/database/schema_contract.test.sql",
           "exists": true,
-          "bytes": 21979,
-          "sha256": "519ded423a1b5fe7cca18eae9bbb5541ec64462f5872ebf4102ef74cd0e477ad"
+          "bytes": 31669,
+          "sha256": "f330fe265dc26f412020307dfa2720d4ab89939af4d8609c36b630c7e3ef286b"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
           "exists": true,
-          "bytes": 10199,
-          "sha256": "231dd6175ac99232bf7b263e2152311e8d8ccbe9dd008dcdb12c5321926f27c1"
+          "bytes": 11843,
+          "sha256": "23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220"
         },
         {
           "path": "supabase/functions/catalog-lookup/catalogContract.ts",
@@ -1811,8 +1877,8 @@
         {
           "path": "supabase/functions/catalog-search/index.ts",
           "exists": true,
-          "bytes": 9227,
-          "sha256": "640842b71581aac2f7a01870d27a8e951614bc282e5686cbf9d9564ad5c810fc"
+          "bytes": 10142,
+          "sha256": "b7187fee6fe8981d42219de31d1358d11db16bb8f40be530c4d2f838e5400494"
         },
         {
           "path": "supabase/functions/catalog-search/catalogContract.ts",
@@ -1842,7 +1908,7 @@
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
           "bytes": 14956,
-          "sha256": "83d8ef1637f9a09af70e2f0e7b1b03e8cbec6516fd08bf807776272751ab6aeb"
+          "sha256": "d9e21336318afc5efcf9f7a93a9dcc0cfae08a17bab6b849e96823916817c818"
         }
       ]
     },
@@ -1875,14 +1941,14 @@
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
           "exists": true,
-          "bytes": 5099,
-          "sha256": "ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191"
+          "bytes": 5338,
+          "sha256": "cf202bd20819b0a8f5b84cc81e7bb2f2470d45ae257a800d4e72f7e88e5bda7d"
         },
         {
           "path": "docs/04-smart-shelf.md",
           "exists": true,
-          "bytes": 57158,
-          "sha256": "c85628b675ec6880847ec2ad86f523885679634ca135b6911708e90086377981"
+          "bytes": 59888,
+          "sha256": "0b7912cd47ba7d8b5c883a91ca0964b00ed8666f50f4ae076efe23316dcfd47a"
         },
         {
           "path": "supabase/migrations/20260614000026_phase4_catalog.sql",
@@ -1893,20 +1959,20 @@
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 9332,
-          "sha256": "c8dfe55ddfc44165a20822f9bfa1733c7ae116224d673822acce0c5c5318fecf"
+          "bytes": 10890,
+          "sha256": "00c15af1cac9a9cda6514d5c441b4c0b2420959a24727d697f7dce9ab8c4acbd"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.ts",
           "exists": true,
-          "bytes": 3504,
-          "sha256": "9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e"
+          "bytes": 6403,
+          "sha256": "e81dfbdafe784f79503fc4ad03487040f6e2725fe63f5000df77d944c3e28eec"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.test.ts",
           "exists": true,
-          "bytes": 4009,
-          "sha256": "db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac"
+          "bytes": 10228,
+          "sha256": "31411acef464f8e0dda16605ee3f0af769163f67ea920ae5c1f6156ee4508f1d"
         },
         {
           "path": "supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql",
@@ -1917,14 +1983,14 @@
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 11357,
-          "sha256": "ac891d9253e2f2d81be440eda468ab02d0f9e3afddb84822be14f9a48f451438"
+          "bytes": 23836,
+          "sha256": "c8d0d42fbaca418df9a7c8ef51760538ab073b76a2a7bc587e1c19a1994a7061"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 12335,
-          "sha256": "92250d319ea33fc14bb57c0bf131e732847762036f9ed132788033aea0c78dbd"
+          "bytes": 23664,
+          "sha256": "059cf83ee9bb155a9c5f1dc54428d092bce07c75f6ca272eefc8e53a42024221"
         },
         {
           "path": "docs/FOR_TAS_TO_DO.md",
@@ -1990,14 +2056,14 @@
         {
           "path": "supabase/functions/catalog-report/privacy.ts",
           "exists": true,
-          "bytes": 3504,
-          "sha256": "9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e"
+          "bytes": 6403,
+          "sha256": "e81dfbdafe784f79503fc4ad03487040f6e2725fe63f5000df77d944c3e28eec"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.test.ts",
           "exists": true,
-          "bytes": 4009,
-          "sha256": "db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac"
+          "bytes": 10228,
+          "sha256": "31411acef464f8e0dda16605ee3f0af769163f67ea920ae5c1f6156ee4508f1d"
         },
         {
           "path": "docs/FOR_TAS_TO_DO.md",

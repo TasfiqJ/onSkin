@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T19:38:06.337Z",
+  "generatedAt": "2026-07-18T21:28:32.923Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -79,39 +79,39 @@
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
-  "evidenceDate": "2026-07-15",
+  "evidenceDate": "2026-07-18",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
   "expectedMobileTestFiles": 289,
-  "expectedMobileTests": 3360,
+  "expectedMobileTests": 3361,
   "actualMobileTestFiles": 289,
-  "expectedTestPhrase": "289 mobile test files / 3360 tests",
+  "expectedTestPhrase": "289 mobile test files / 3361 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-15",
-      "expectedDate": "2026-07-15",
+      "date": "2026-07-18",
+      "expectedDate": "2026-07-18",
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
           "testFiles": 289,
-          "tests": 3360,
-          "source": "289 mobile test files / 3360 tests"
+          "tests": 3361,
+          "source": "289 mobile test files / 3361 tests"
         },
         {
           "testFiles": 289,
-          "tests": 3360,
-          "source": "289 mobile test files / 3360 tests"
+          "tests": 3361,
+          "source": "289 mobile test files / 3361 tests"
         },
         {
           "testFiles": 289,
-          "tests": 3360,
-          "source": "289 mobile test files / 3360 tests"
+          "tests": 3361,
+          "source": "289 mobile test files / 3361 tests"
         },
         {
           "testFiles": 289,
-          "tests": 3360,
-          "source": "289 mobile test files / 3360 tests"
+          "tests": 3361,
+          "source": "289 mobile test files / 3361 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -122,14 +122,14 @@
     {
       "path": "BLOCKERS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-15",
-      "expectedDate": "2026-07-15",
+      "date": "2026-07-18",
+      "expectedDate": "2026-07-18",
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
           "testFiles": 289,
-          "tests": 3360,
-          "source": "289 mobile test files / 3360 tests"
+          "tests": 3361,
+          "source": "289 mobile test files / 3361 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -141,7 +141,7 @@
       "path": "docs/TESTING_STRATEGY.md",
       "requireCurrentEvidence": false,
       "date": null,
-      "expectedDate": "2026-07-15",
+      "expectedDate": "2026-07-18",
       "hasExpectedTestPhrase": false,
       "testBaselines": [
         {
@@ -208,6 +208,8 @@
         "cycle-customization-current",
         "Shelf freshness and replacement provenance lifecycle",
         "shelf-freshness-provenance-current",
+        "CAT04 catalog search, scan, report, and recovery Expo-web pass",
+        "cat04-catalog-recovery-current",
         "Required-surface honest direct-entry and recovery pass",
         "required-surface-honesty-rerun",
         "Trend navigator privacy and exact-route recovery",

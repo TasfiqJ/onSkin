@@ -1,6 +1,6 @@
 # Device Support Policy Audit
 
-Generated: 2026-07-16T20:02:50.023Z
+Generated: 2026-07-18T21:28:28.553Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ Android release evidence: not_applicable.
 
 - Config contracts: 2
 - Docs checked: 8
-- Human-E2E manifest gates: 46
+- Human-E2E manifest gates: 47
 - Blockers: 0
 - Warnings: 0
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T15:52:12.715Z",
+  "generatedAt": "2026-07-18T21:29:34.486Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,15 +81,12 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
+  "gitSha": "52107141867fbc9b8e683cfa7399ffdc6351d6d6",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
   "requiredFilesMissingFromHead": [],
-  "requiredFilesDifferFromHead": [
-    "docs/e2e/generated/human-e2e-manifest.json",
-    "docs/e2e/generated/human-e2e-manifest.md"
-  ],
+  "requiredFilesDifferFromHead": [],
   "trackedSecretEnvironmentFiles": [],
   "revenueCatV2AccessEvidence": {
     "valid": false,
@@ -189,8 +186,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 33306,
-      "sha256": "c4f416cd9674976509b8ad35f2cac43b06f6653de466aace35773d0642c41b2c"
+      "bytes": 33803,
+      "sha256": "fcdd60b722b668df65a6714f6006014ea6ecc1ada7a50d056091c0936ce26206"
     },
     {
       "path": "package-lock.json",
@@ -669,8 +666,8 @@
     {
       "path": "scripts/phase9/supabase-policy-lint.mjs",
       "exists": true,
-      "bytes": 15377,
-      "sha256": "20c4f961577e14ecc43b703f13e65228989e472af30acf464f35006c82beccab"
+      "bytes": 16274,
+      "sha256": "3faac8f26b03d91eee32d3c63a83af821509bc5e7b9e36ea19afc721196d9b9a"
     },
     {
       "path": "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
@@ -681,26 +678,26 @@
     {
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 65161,
-      "sha256": "0e6d7604437b35fa2e9f1fa2a6afbee6743cac829f58f0861e9aff46a28df13a"
+      "bytes": 71690,
+      "sha256": "b11ca191fd71fb3ffdd734e87e995b5e76db2b516e9fd347c2c623adc65dea47"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 75305,
-      "sha256": "15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7"
+      "bytes": 107141,
+      "sha256": "a6e1e2973ebd93367289b896c8fe7b24b4581765294c7ac78111da0c443488af"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 25511,
-      "sha256": "bc01832bfadc1795b91bba0f137036f2e3fd29426593c073260bca4324ace57f"
+      "bytes": 25469,
+      "sha256": "5036b1121759918646f89e6ff914a4b7a55914437025f5f20dd2e9723ced1017"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
       "exists": true,
-      "bytes": 10431,
-      "sha256": "db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8"
+      "bytes": 10407,
+      "sha256": "4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e"
     },
     {
       "path": "docs/E2E_TESTING_CHECKLIST.md",
@@ -711,20 +708,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 399901,
-      "sha256": "4ebc6823f96d1a23b14658fb7219a78e676a524cce211613b8f5e06758848861"
+      "bytes": 409032,
+      "sha256": "18d07ded129d688110c11f7500121493b71024b603688c90c202a4310ec66fdb"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 48121,
-      "sha256": "af581ac031031607df54e22ecae17f07dbe3e4cb0a438eff380dbfe2bfc806e7"
+      "bytes": 49808,
+      "sha256": "812072fe8197fd6770af625db9e2ef1c1245316ed4308c421285de6551e1a0e2"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 19687,
-      "sha256": "ec88830bc85ca4f130e5bc5f2abdb4fe9e4cf1bd4a84f416d8ae50b598f0ace2"
+      "bytes": 22808,
+      "sha256": "6b0807114d527c2b6e90a3a25c180e21cb29384b24b8150532d437f4f3c7b77a"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",
@@ -1226,8 +1223,6 @@
     }
   ],
   "blockers": [
-    "Phase 6 required input bytes differ from HEAD: docs/e2e/generated/human-e2e-manifest.json.",
-    "Phase 6 required input bytes differ from HEAD: docs/e2e/generated/human-e2e-manifest.md.",
     "Missing PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.",
     "Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.",
     "Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.",

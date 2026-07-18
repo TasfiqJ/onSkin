@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T15:51:59.041Z",
+  "generatedAt": "2026-07-18T21:29:18.530Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "docs/phase-4/generated/cosing-fixture-import.json",
-  "gitSha": "2d5cb849ac0f926556df7a991be39074a1640fc8",
+  "gitSha": "52107141867fbc9b8e683cfa7399ffdc6351d6d6",
   "buildSourceGitSha": null,
   "gitStatus": "",
   "source": "cosing",
@@ -112,14 +112,14 @@
     {
       "path": ".github/workflows/quality.yml",
       "exists": true,
-      "bytes": 9224,
-      "sha256": "5a38100532c58ecd9d9d414d0455bdf63912feef1e836d738ff4612096a06038"
+      "bytes": 9444,
+      "sha256": "9bdb6ea48fbaea893f53522a87281c531c99662d978bbdb745b2d1d41a1d6fbd"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 33306,
-      "sha256": "c4f416cd9674976509b8ad35f2cac43b06f6653de466aace35773d0642c41b2c"
+      "bytes": 33803,
+      "sha256": "fcdd60b722b668df65a6714f6006014ea6ecc1ada7a50d056091c0936ce26206"
     },
     {
       "path": "package-lock.json",
@@ -172,8 +172,8 @@
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 26987,
-      "sha256": "44f66cf82c7676af4e89355726c396565bbc476271218c7c2e9b6e8954f24977"
+      "bytes": 27119,
+      "sha256": "c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09"
     },
     {
       "path": "scripts/phase4/build-source-worklist.mjs",
@@ -226,8 +226,8 @@
     {
       "path": "scripts/phase4/import-obf-snapshot.mjs",
       "exists": true,
-      "bytes": 12929,
-      "sha256": "3efd8d761fec3fa19ec1fd90e0445c46c684382bb0624fd76f0fc5c4f49b2608"
+      "bytes": 12846,
+      "sha256": "8681784954382483d0c623e23b1e6fad2be337e377c74e229d8a92d9ebc91dae"
     },
     {
       "path": "scripts/phase4/import-cosing-dictionary.mjs",
@@ -238,8 +238,8 @@
     {
       "path": "scripts/phase4/import-fixture-smoke.mjs",
       "exists": true,
-      "bytes": 17697,
-      "sha256": "d2a79e6d4558b18a5dd02a69dfccb2133c764767d326b881ab39a0afd235d26b"
+      "bytes": 21057,
+      "sha256": "31c890b6cb838841e493ced0f7d251f52ac06b1681634c0c08a1c2611713cd56"
     },
     {
       "path": "scripts/phase4/check-source-env.mjs",
@@ -256,20 +256,20 @@
     {
       "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
       "exists": true,
-      "bytes": 14607,
-      "sha256": "af9d98f4c991863605f93f8fc873834f0e618c642adcd28e89a7dbcd2ed47127"
+      "bytes": 16617,
+      "sha256": "d9a0f1a80b7716b822ef9ac970d9be9d75e01c85b7b55e3a445f75fae842c7dd"
     },
     {
       "path": "scripts/phase4/catalog-promotion-contract.mjs",
       "exists": true,
-      "bytes": 121311,
-      "sha256": "b0e248aa0e7696357deb53bfd49b7a9da516f6d5818e7fc89d1fb0b91a54bad0"
+      "bytes": 121357,
+      "sha256": "e808b7707faad5fdc5dd0b065b463865aa225d663c0444014942ace46e89dc99"
     },
     {
       "path": "scripts/phase4/catalog-promotion-contract.test.mjs",
       "exists": true,
-      "bytes": 61364,
-      "sha256": "3e7631a11cfc2446d26041b447fd1b6b4687d37021517037be2fed9659b61c04"
+      "bytes": 61882,
+      "sha256": "2567fbb7f47cf2f62d481369998035efaf2cfe03cbf2febd6d44dbcb93b570e1"
     },
     {
       "path": "scripts/phase4/build-catalog-stage-envelope.mjs",
@@ -292,38 +292,38 @@
     {
       "path": "scripts/phase4/source-policy.mjs",
       "exists": true,
-      "bytes": 87622,
-      "sha256": "94053b1914ea094bc10b29d041c78cc71d62ed5ea7080981e0feef45695a110e"
+      "bytes": 88870,
+      "sha256": "8f3a60e94812556891e81a208737ce79c43fb2f9a34207207ea0ec204e25dfc9"
     },
     {
       "path": "scripts/phase4/source-policy.test.mjs",
       "exists": true,
-      "bytes": 38524,
-      "sha256": "12c69f6082cd11f667f9c605713930b1f6c21f17c6c7042005173a20b7ce9f2f"
+      "bytes": 39752,
+      "sha256": "c8ff4534e7f7870930f1ee77e5aa7185f8cafea30e5aa87f5a50646383e4244f"
     },
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
       "bytes": 5473,
-      "sha256": "b01de696e909265fc81df2ac4cd563474bc1155e7604d4cb11d02c4db2a21510"
+      "sha256": "683ed37bd434f6c2b37a1adb24a666a620091d1bb254c7311999e54da21b9aa4"
     },
     {
       "path": "scripts/phase2/local-supabase-reset.mjs",
       "exists": true,
       "bytes": 16736,
-      "sha256": "a92602b1445d8ab5d6109e571d8b3b81b82582becd7607e7043bf0b027030d0d"
+      "sha256": "4d8a470c8b0f317771690f83befabf5ab76f652aa59c6c9462267717e18904ea"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 25511,
-      "sha256": "bc01832bfadc1795b91bba0f137036f2e3fd29426593c073260bca4324ace57f"
+      "bytes": 25469,
+      "sha256": "5036b1121759918646f89e6ff914a4b7a55914437025f5f20dd2e9723ced1017"
     },
     {
       "path": "scripts/phase9/rls-adversarial-smoke.mjs",
       "exists": true,
       "bytes": 12029,
-      "sha256": "55bbfebb905784424f827f305dd3e06a8e743b16403c6586d0e46201970bfa77"
+      "sha256": "df660a2f69854d5466fef98ad39309c9f17cdfbb7fe1dbba7762a63e9cc3b1d2"
     },
     {
       "path": "scripts/phase9/supabase-function-acl.test.mjs",
@@ -334,8 +334,8 @@
     {
       "path": "scripts/phase9/supabase-policy-lint.mjs",
       "exists": true,
-      "bytes": 15377,
-      "sha256": "20c4f961577e14ecc43b703f13e65228989e472af30acf464f35006c82beccab"
+      "bytes": 16274,
+      "sha256": "3faac8f26b03d91eee32d3c63a83af821509bc5e7b9e36ea19afc721196d9b9a"
     },
     {
       "path": "supabase/migrations/20260614000026_phase4_catalog.sql",
@@ -364,8 +364,8 @@
     {
       "path": "supabase/tests/database/schema_contract.test.sql",
       "exists": true,
-      "bytes": 21979,
-      "sha256": "519ded423a1b5fe7cca18eae9bbb5541ec64462f5872ebf4102ef74cd0e477ad"
+      "bytes": 31669,
+      "sha256": "f330fe265dc26f412020307dfa2720d4ab89939af4d8609c36b630c7e3ef286b"
     },
     {
       "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -382,8 +382,8 @@
     {
       "path": "supabase/functions/catalog-lookup/index.ts",
       "exists": true,
-      "bytes": 10199,
-      "sha256": "231dd6175ac99232bf7b263e2152311e8d8ccbe9dd008dcdb12c5321926f27c1"
+      "bytes": 11843,
+      "sha256": "23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220"
     },
     {
       "path": "supabase/functions/catalog-lookup/catalogContract.ts",
@@ -400,8 +400,8 @@
     {
       "path": "supabase/functions/catalog-search/index.ts",
       "exists": true,
-      "bytes": 9227,
-      "sha256": "640842b71581aac2f7a01870d27a8e951614bc282e5686cbf9d9564ad5c810fc"
+      "bytes": 10142,
+      "sha256": "b7187fee6fe8981d42219de31d1358d11db16bb8f40be530c4d2f838e5400494"
     },
     {
       "path": "supabase/functions/catalog-search/catalogContract.ts",
@@ -418,20 +418,20 @@
     {
       "path": "supabase/functions/catalog-report/index.ts",
       "exists": true,
-      "bytes": 9332,
-      "sha256": "c8dfe55ddfc44165a20822f9bfa1733c7ae116224d673822acce0c5c5318fecf"
+      "bytes": 10890,
+      "sha256": "00c15af1cac9a9cda6514d5c441b4c0b2420959a24727d697f7dce9ab8c4acbd"
     },
     {
       "path": "supabase/functions/catalog-report/privacy.ts",
       "exists": true,
-      "bytes": 3504,
-      "sha256": "9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e"
+      "bytes": 6403,
+      "sha256": "e81dfbdafe784f79503fc4ad03487040f6e2725fe63f5000df77d944c3e28eec"
     },
     {
       "path": "supabase/functions/catalog-report/privacy.test.ts",
       "exists": true,
-      "bytes": 4009,
-      "sha256": "db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac"
+      "bytes": 10228,
+      "sha256": "31411acef464f8e0dda16605ee3f0af769163f67ea920ae5c1f6156ee4508f1d"
     },
     {
       "path": "supabase/functions/deno.lock",
@@ -454,14 +454,14 @@
     {
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 36362,
-      "sha256": "39cf1a9caf5c435fafa23f0074ad4934dfeab6243ef0764949a504b9382a2eda"
+      "bytes": 52220,
+      "sha256": "083458969608d44dadee3611522d875caa9f20dcf59fa2f88e1beb963cd18496"
     },
     {
       "path": "docs/store-privacy-inventory.md",
       "exists": true,
-      "bytes": 31965,
-      "sha256": "620804f163e296ed0faac3bff466fe47f16c86ae5789b8f7bde687938a2342a7"
+      "bytes": 41372,
+      "sha256": "161d61fb6c01c8d326613635b94c36ab6f5c72feb30fad73658749ca213109a6"
     },
     {
       "path": "docs/phase-4/beta-coverage-report.md",
@@ -526,8 +526,8 @@
     {
       "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
       "exists": true,
-      "bytes": 10698,
-      "sha256": "e9214896b57d59414865dd221ae14f8ca811a47190d1b1ab247781f389c424bf"
+      "bytes": 10932,
+      "sha256": "893e09f4ad7c59c814a134df224c104ba7f959849ed2f34d5e700c2ee2088397"
     },
     {
       "path": "docs/phase-4/catalog-import-promotion-runbook.md",
@@ -539,7 +539,7 @@
       "path": "docs/phase-4/catalog-source-policy.json",
       "exists": true,
       "bytes": 7249,
-      "sha256": "79005f1111af670bb8ce11d128627ecde9a59a8f323e2cf9170dfe50c8c2a050"
+      "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
     },
     {
       "path": "docs/phase-4/catalog-source-trust-registry.json",
@@ -562,8 +562,8 @@
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",
       "exists": true,
-      "bytes": 5099,
-      "sha256": "ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191"
+      "bytes": 5338,
+      "sha256": "cf202bd20819b0a8f5b84cc81e7bb2f2470d45ae257a800d4e72f7e88e5bda7d"
     },
     {
       "path": "docs/phase-4/phase-4-exit-review.md",
@@ -581,9 +581,11 @@
     "provenanceDrift": 0,
     "imageFields": 0
   },
-  "blockers": [],
+  "blockers": [
+    "Import manifest source-policy identity/hash is missing or stale."
+  ],
   "warnings": [],
-  "localQaClear": true,
+  "localQaClear": false,
   "launchClear": false,
   "launchClearReason": "No. Source-transform QA is only one gate; launch still requires final source identity/legal evidence, curated record review, beta coverage, signed binary/device evidence, deployment, and named signoff."
 }
