@@ -496,7 +496,10 @@ export default function PlanScreen() {
                     No night steps yet.
                   </Text>
                   <Text className="mt-1 text-[12px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
-                    Add a cleanser, moisturiser, or night product to build this out.
+                    {(plan?.sequencingWithheld.length ?? 0) > 0 ||
+                    (plan?.cadenceWithheld.length ?? 0) > 0
+                      ? 'Products awaiting reviewed order or timing stay on your shelf and out of this routine for now.'
+                      : 'Add a cleanser, moisturiser, or night product to build this out.'}
                   </Text>
                 </View>
               )}

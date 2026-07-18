@@ -40,47 +40,6 @@ const ROUTINE_CARD_SHADOW =
         shadowOffset: { width: 0, height: 1 },
       };
 
-// PM display sub overrides for the known retinoid-night roles (design 05). Display
-// only, the toggle key (stepKey) is unchanged. Falls back to the step's instruction.
-function pmDisplaySub(
-  step: { role?: string; instruction?: string },
-  hasScheduledRetinoid: boolean,
-): string | undefined {
-  if (step.role === 'cleanser' && hasScheduledRetinoid) {
-    return 'Dry skin fully before the retinoid';
-  }
-  if (step.role === 'treatment' && hasScheduledRetinoid) return 'Pea-sized · avoid eye area';
-  if (step.role === 'moisturiser') return 'Generous layer tonight';
-  return step.instruction;
-}
-
-function compactRoutineInstruction(instruction: string): string {
-  switch (instruction) {
-    case 'Start with a clean base.':
-      return 'Clean base first.';
-    case 'Vitamin C in the morning, under your SPF.':
-      return 'Under your SPF.';
-    case 'Always the last morning step. Reapply through the day.':
-      return 'Last step. Reapply later.';
-    case 'Use in the morning. Follow the product label directions.':
-      return 'Morning. Follow the label.';
-    case 'Seal everything in.':
-      return 'Seal it in.';
-    case 'Apply to dry skin · pea-sized · avoid the eye area.':
-      return 'Dry skin. Pea-sized.';
-    case 'Pea-sized · avoid eye area':
-      return 'Pea-sized. Avoid eyes.';
-    case 'A thin layer. Exfoliation night only.':
-      return 'Thin layer tonight.';
-    case 'Barrier support. Keep it simple.':
-      return 'Barrier support.';
-    case 'Dry skin fully before the retinoid':
-      return 'Dry skin first.';
-    default:
-      return instruction;
-  }
-}
-
 function streakLabel(days: number): string {
   return `${days} ${days === 1 ? 'day' : 'days'}`;
 }
@@ -209,6 +168,53 @@ function CadenceWithheldNotice({
   );
 }
 
+function SequencingWithheldNotice({
+  compact,
+  count,
+  dark,
+}: {
+  compact: boolean;
+  count: number;
+  dark: boolean;
+}) {
+  const productLabel = count === 1 ? 'product' : 'products';
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Review ${count} ${productLabel} without reviewed application order`}
+      className={cn(
+        'min-h-[48px] flex-row items-center gap-3 rounded-card px-5',
+        compact ? 'mt-3 py-3' : 'mt-4 py-3.5',
+      )}
+      style={{ backgroundColor: dark ? colors.nightSurface : colors.greigeChip }}
+      onPress={() => {
+        haptics.select();
+        router.push('/routine/plan');
+      }}
+    >
+      <View
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: dark ? colors.clayBright : colors.clayDeep }}
+      />
+      <Text
+        className="flex-1 text-[13.5px]"
+        style={{
+          color: dark ? 'rgba(244,239,231,0.8)' : colors.muted,
+          lineHeight: 19,
+        }}
+      >
+        {`Application order is not reviewed for ${count} ${productLabel}. ${
+          count === 1 ? 'It stays' : 'They stay'
+        } on your shelf and off Today for now.`}
+      </Text>
+      <Text aria-hidden style={{ color: dark ? colors.clayBright : colors.clayDeep }}>
+        ›
+      </Text>
+    </Pressable>
+  );
+}
+
 // Geometric checkmark (two rotated bars). No react-native-svg, per house rule.
 function Check({ color = colors.paper }: { color?: string }) {
   return (
@@ -259,9 +265,8 @@ function CheckRow({
   onPress: () => void;
 }) {
   const accent = dark ? colors.clayBright : colors.clay;
-  const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;
   const nameLineCount = compact ? 2 : undefined;
-  const subLineCount = compact ? 1 : undefined;
+  const subLineCount = compact ? 2 : undefined;
 
   return (
     <Pressable
@@ -317,7 +322,7 @@ function CheckRow({
         >
           {name}
         </Text>
-        {displaySub ? (
+        {sub ? (
           <Text
             numberOfLines={subLineCount}
             className="mt-0.5 text-[12.5px]"
@@ -326,7 +331,7 @@ function CheckRow({
               lineHeight: compact ? 16 : undefined,
             }}
           >
-            {displaySub}
+            {sub}
           </Text>
         ) : null}
       </View>
@@ -362,6 +367,7 @@ export default function TodayScreen() {
     hasRealRoutine,
     safetyExclusionCount,
     cadenceWithheldCount,
+    sequencingWithheldCount,
     cycle,
     tonight: cTonight,
     skippedTonight,
@@ -468,6 +474,14 @@ export default function TodayScreen() {
             <CadenceWithheldNotice
               compact={compactPhone}
               count={cadenceWithheldCount}
+              dark={false}
+            />
+          ) : null}
+
+          {sequencingWithheldCount > 0 ? (
+            <SequencingWithheldNotice
+              compact={compactPhone}
+              count={sequencingWithheldCount}
               dark={false}
             />
           ) : null}
@@ -590,8 +604,7 @@ export default function TodayScreen() {
   }
 
   // ---- PM (dark). Driven by the orchestrated, profile-aware cycle ----
-  const { nightNumber, nightTotal, hasScheduledRetinoid, suppressedAcidName, nextAcidISO } =
-    routine;
+  const { nightNumber, nightTotal, suppressedAcidName, nextAcidISO } = routine;
   const {
     steps: pmSteps,
     stepKeys: pmStepKeys,
@@ -698,6 +711,10 @@ export default function TodayScreen() {
           <CadenceWithheldNotice compact={compactPhone} count={cadenceWithheldCount} dark />
         ) : null}
 
+        {sequencingWithheldCount > 0 ? (
+          <SequencingWithheldNotice compact={compactPhone} count={sequencingWithheldCount} dark />
+        ) : null}
+
         {/* Skin-cycling strip. Taps through to the week overview (docs/05 §6.1) */}
         {cycle ? (
           <Pressable
@@ -778,7 +795,7 @@ export default function TodayScreen() {
                   <CheckRow
                     key={k}
                     name={s.name}
-                    sub={pmDisplaySub(s, hasScheduledRetinoid)}
+                    sub={s.instruction}
                     state={rowState(k, firstUndonePm)}
                     dark
                     compact={compactPhone}
@@ -799,7 +816,9 @@ export default function TodayScreen() {
                   No evening steps yet.
                 </Text>
                 <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
-                  Add a cleanser, moisturiser, or night product to build this out.
+                  {sequencingWithheldCount > 0 || cadenceWithheldCount > 0
+                    ? 'Products awaiting reviewed order or timing stay off Today for now.'
+                    : 'Add a cleanser, moisturiser, or night product to build this out.'}
                 </Text>
               </View>
             )}

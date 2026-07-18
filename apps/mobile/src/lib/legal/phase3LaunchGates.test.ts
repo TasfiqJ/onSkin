@@ -5,10 +5,11 @@ import { shippableStacks } from '@/features/commerce/stacks';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { shippableRecTypes } from '@/features/recommendations/catalog';
+import { SEQUENCING_RULES, shippableSequencingRules } from '@/features/routine/sequencing';
 
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
 
-describe('Phase 3 launch gates keep unreviewed clinical-adjacent content out of production', () => {
+describe('Phase 3 runtime gates withhold covered conflict, PAO, recommendation, note, and stack content', () => {
   beforeEach(() => {
     delete runtime.__DEV__;
   });
@@ -17,8 +18,9 @@ describe('Phase 3 launch gates keep unreviewed clinical-adjacent content out of 
     delete runtime.__DEV__;
   });
 
-  it('withholds unreviewed conflict rules, PAO defaults, notes, and stacks', () => {
+  it('withholds unreviewed conflict rules, sequencing, PAO defaults, notes, and stacks', () => {
     expect(shippableRules()).toHaveLength(0);
+    expect(shippableSequencingRules()).toEqual({});
     expect(reviewedCategoryPao('spf')).toBeNull();
     expect(shippableNotes()).toHaveLength(0);
     expect(shippableStacks()).toHaveLength(0);
@@ -36,6 +38,9 @@ describe('Phase 3 launch gates keep unreviewed clinical-adjacent content out of 
     runtime.__DEV__ = true;
 
     expect(shippableRules().length).toBeGreaterThan(0);
+    expect(Object.keys(shippableSequencingRules())).toHaveLength(
+      Object.keys(SEQUENCING_RULES).length,
+    );
     expect(reviewedCategoryPao('spf')).toBe(12);
     expect(shippableNotes().length).toBeGreaterThan(0);
     expect(shippableStacks().length).toBeGreaterThan(0);

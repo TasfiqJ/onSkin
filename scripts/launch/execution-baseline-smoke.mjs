@@ -122,6 +122,28 @@ for (const id of [
   );
 }
 
+assert(
+  !inventory.items.some((entry) => entry.id === 'data-store:postgres:private'),
+  'schema-qualified private tables must be inventoried by table name rather than schema name',
+);
+for (const id of [
+  'data-store:postgres:catalog_launch_curation_campaigns',
+  'data-store:postgres:catalog_launch_curation_records',
+  'data-store:postgres:catalog_launch_curation_product_mutations',
+  'data-store:postgres:catalog_launch_curation_events',
+  'data-store:postgres:catalog_launch_curation_heads',
+  'data-store:postgres:catalog_launch_curation_campaign_release_events',
+  'data-store:postgres:catalog_launch_curation_campaign_release_heads',
+]) {
+  const curationItem = inventory.items.find((entry) => entry.id === id);
+  assert(curationItem, `missing sealed catalog curation authority ${id}`);
+  assert.deepEqual(
+    curationItem.featureIds,
+    ['F-04'],
+    `${id} must remain mapped to the production catalog feature`,
+  );
+}
+
 console.log(
   'Execution baseline smoke passed: omission, addition, duplicate, feature, and surface guards reject incomplete sets.',
 );

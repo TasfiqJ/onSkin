@@ -8,7 +8,15 @@ import { tagsForIngredientList } from '@/features/intelligence/tags';
 
 import { generatePlan, type RoutineProduct } from './generate';
 import { applyTolerance, deEscalate, initRamp, shouldOfferStepUp } from './ramp';
-import { classifyRole, routineCadenceDisposition, sequencePhase } from './sequencing';
+import {
+  classifyRole,
+  instructionFor,
+  phasesFor,
+  routineCadenceDisposition,
+  SEQUENCING_RULES,
+  sequencePhase,
+  shippableSequencingRules,
+} from './sequencing';
 
 function product(
   id: string,
@@ -112,14 +120,48 @@ describe('role classification (docs/03 §3). Tags win over name keywords', () =>
     const bp = { id: 'bp', name: 'Benzoyl peroxide', tags: ['benzoyl_peroxide'] as const };
     const input = [{ ...bp, tags: [...bp.tags] }];
 
-    expect(sequencePhase(input, 'am')).toMatchObject([
-      {
-        productId: 'bp',
-        cadence: 'daily_am',
-        instruction: 'Use in the morning. Follow the product label directions.',
-      },
-    ]);
-    expect(sequencePhase(input, 'pm')).toEqual([]);
+    withDevFlag(true, () => {
+      expect(sequencePhase(input, 'am')).toMatchObject([
+        {
+          productId: 'bp',
+          cadence: 'daily_am',
+          instruction: 'Use in the morning. Follow the product label directions.',
+        },
+      ]);
+      expect(sequencePhase(input, 'pm')).toEqual([]);
+    });
+  });
+
+  it('does not allocate a phase or expose instructions without reviewed sequencing', () => {
+    const input = [product('cleanser', 'Cream cleanser')];
+
+    withDevFlag(false, () => {
+      expect(phasesFor('cleanser')).toEqual([]);
+      expect(instructionFor('cleanser', 'stable')).toBeNull();
+      expect(sequencePhase(input, 'am')).toEqual([]);
+      expect(sequencePhase(input, 'pm')).toEqual([]);
+      expect(sequencePhase(input, 'am', { cleanser: SEQUENCING_RULES.cleanser })).toEqual([]);
+    });
+  });
+
+  it('uses only the reviewed role subset in production', () => {
+    const reviewedCleanser = {
+      ...SEQUENCING_RULES.cleanser,
+      reviewedBy: 'B-DERM-REVIEW',
+    };
+    const rules = withDevFlag(false, () =>
+      shippableSequencingRules({
+        cleanser: reviewedCleanser,
+        moisturiser: SEQUENCING_RULES.moisturiser,
+      }),
+    );
+    const input = [
+      product('cleanser', 'Cream cleanser'),
+      product('moisturiser', 'Ceramide moisturiser'),
+    ];
+
+    expect(sequencePhase(input, 'am', rules).map((step) => step.productId)).toEqual(['cleanser']);
+    expect(sequencePhase(input, 'am', rules)[0]?.instruction).toBe(reviewedCleanser.notes);
   });
 });
 
@@ -244,10 +286,12 @@ describe('front-label shelf names', () => {
   });
 
   it('does not fabricate a night cycle for a sparse daytime-only shelf', () => {
-    const plan = generatePlan(
-      [shelfNameProduct('s', 'Mineral SPF 50')],
-      { sensitivity: 'neutral', pregnancy: false, goals: [] },
-      STARTER_RULES,
+    const plan = withDevFlag(true, () =>
+      generatePlan(
+        [shelfNameProduct('s', 'Mineral SPF 50')],
+        { sensitivity: 'neutral', pregnancy: false, goals: [] },
+        STARTER_RULES,
+      ),
     );
 
     expect(plan.am.map((s) => s.name)).toEqual(['Mineral SPF 50']);
@@ -279,12 +323,13 @@ describe('pregnancy safety exclusions', () => {
       });
 
       expect(plan.safetyExclusions).toEqual([]);
-      expect(plan.pm.map((step) => step.productId)).toEqual(['moisturiser']);
+      expect(plan.pm).toEqual([]);
       expect(plan.cadenceWithheld.map((item) => item.productId)).toEqual([
         'bha',
         'hydroquinone',
         'retinoid',
       ]);
+      expect(plan.sequencingWithheld.map((item) => item.productId)).toEqual(['moisturiser']);
     });
   });
 
@@ -302,7 +347,7 @@ describe('pregnancy safety exclusions', () => {
         shippableRules(reviewedSafetyRules),
       );
 
-      expect(plan.pm.map((step) => step.productId)).toEqual(['moisturiser']);
+      expect(plan.pm).toEqual([]);
       expect(plan.ramp).toEqual([]);
       expect(plan.cycle).toBeNull();
       expect(plan.safetyExclusions.map((item) => item.productId)).toEqual([
@@ -313,20 +358,23 @@ describe('pregnancy safety exclusions', () => {
       expect(
         plan.conflicts.filter((conflict) => conflict.rule.interactionType === 'safety'),
       ).toHaveLength(2);
+      expect(plan.sequencingWithheld.map((item) => item.productId)).toEqual(['moisturiser']);
     });
   });
 
   it('uses the same cautious plan without falsely asserting pregnancy for unknown status', () => {
-    const plan = generatePlan(
-      safetyShelf,
-      {
-        sensitivity: 'neutral',
-        pregnancy: false,
-        pregnancySafety: 'caution',
-        pregnancyStatus: 'unknown',
-        goals: [],
-      },
-      STARTER_RULES,
+    const plan = withDevFlag(true, () =>
+      generatePlan(
+        safetyShelf,
+        {
+          sensitivity: 'neutral',
+          pregnancy: false,
+          pregnancySafety: 'caution',
+          pregnancyStatus: 'unknown',
+          goals: [],
+        },
+        STARTER_RULES,
+      ),
     );
 
     expect(plan.pm.map((step) => step.productId)).toEqual(['moisturiser']);
@@ -446,6 +494,80 @@ describe('B-DERM-REVIEW routine launch gate', () => {
     shelfNameProduct('retinoid', 'Retinol 0.3% Night Serum'),
     shelfNameProduct('acid', 'Glycolic 7% Toner'),
   ];
+
+  it('keeps classifiable stable products on the shelf but withholds routine placement and instructions', () => {
+    withDevFlag(false, () => {
+      const plan = generatePlan(
+        [
+          product('cleanser', 'Cream cleanser'),
+          product('moisturiser', 'Ceramide moisturiser'),
+          product('spf', 'Mineral SPF', ['Zinc Oxide']),
+        ],
+        launchProfile,
+      );
+
+      expect(plan.am).toEqual([]);
+      expect(plan.pm).toEqual([]);
+      expect(plan.sequencingWithheld).toEqual([
+        {
+          productId: 'cleanser',
+          name: 'Cream cleanser',
+          role: 'cleanser',
+          placement: 'withheld',
+          reason: 'review_required',
+        },
+        {
+          productId: 'moisturiser',
+          name: 'Ceramide moisturiser',
+          role: 'moisturiser',
+          placement: 'withheld',
+          reason: 'review_required',
+        },
+        {
+          productId: 'spf',
+          name: 'Mineral SPF',
+          role: 'spf',
+          placement: 'withheld',
+          reason: 'review_required',
+        },
+      ]);
+      expect(plan.sequencingWithheld.every((item) => item.placement === 'withheld')).toBe(true);
+    });
+  });
+
+  it('auto-places only products whose role rule carries production review', () => {
+    const reviewedCleanser = {
+      ...SEQUENCING_RULES.cleanser,
+      reviewedBy: 'B-DERM-REVIEW',
+    };
+
+    withDevFlag(false, () => {
+      const reviewedRules = shippableSequencingRules({
+        cleanser: reviewedCleanser,
+        moisturiser: SEQUENCING_RULES.moisturiser,
+      });
+      const plan = generatePlan(
+        [product('cleanser', 'Cream cleanser'), product('moisturiser', 'Ceramide moisturiser')],
+        launchProfile,
+        [],
+        {},
+        reviewedRules,
+      );
+
+      expect(plan.am.map((step) => step.productId)).toEqual(['cleanser']);
+      expect(plan.pm.map((step) => step.productId)).toEqual(['cleanser']);
+      expect(plan.am[0]?.instruction).toBe(reviewedCleanser.notes);
+      expect(plan.sequencingWithheld).toEqual([
+        {
+          productId: 'moisturiser',
+          name: 'Ceramide moisturiser',
+          role: 'moisturiser',
+          placement: 'withheld',
+          reason: 'review_required',
+        },
+      ]);
+    });
+  });
 
   it('does not surface unreviewed conflict guidance through the default production generator', () => {
     withDevFlag(false, () => {

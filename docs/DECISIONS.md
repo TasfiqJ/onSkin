@@ -409,9 +409,71 @@ Use this format for every significant product, architecture, pricing, privacy, o
   contract, the Phase 4 promotion-envelope contract, and the CAT-02 runbook.
 - Risk: the conservative path creates a human review queue and does not solve
   launch coverage. Real dual-signed source approvals, dedicated operators,
-  representative beta data, hosted concurrency/rollback drills, and
+  genuine consented beta-corpus evidence with honest sampling limits, hosted concurrency/rollback drills, and
   professional review remain external gates.
 - Status: Accepted for the source architecture; production rollout gated.
+
+### 2026-07-17 - Require Signed Curation Before Catalog Serving
+
+- Decision: promoted catalog rows remain non-servable until an immutable CAT-03
+  release binds the predeclared target policy, minimized beta coverage corpus,
+  untouched holdout results, exact CAT-01 source approvals, exact CAT-02 projection
+  lineage and field-scope memberships, field provenance, complete reviewed
+  dependencies, independent reviewer roles, and a full-record decision witnessed
+  before holdout access. The released campaign must contain at least 2,000 reviewed/
+  eligible records, satisfy every signed category floor, and include at least 100
+  demand-prioritized eligible records. Product authorization is non-serving staging;
+  one exact-set global campaign flip changes serving atomically, and an independent
+  signed, point-in-time database readback is required for final clearance; any later
+  retirement, successor, dependency withdrawal, or review expiry makes it historical
+  until a new exact campaign/readback passes. Beta demand can prioritize
+  independently sourced products but cannot create or modify a product fact. Mutable
+  product flags and correction-count refreshes cannot grant serving authority.
+  Exactly one contributing artifact must match the target CAT-02 lineage, and all
+  barcode/category/regulatory memberships must bind its exact staged product row.
+  CAT-03 v1 authorizes only the reviewed primary barcode; aliases stay unavailable
+  until a versioned per-alias evidence contract exists. Four outcome reviewers sign
+  before activation, their exact signature-set root is part of the activation
+  authorization, and the independent operator signs only after every review and the
+  planned activation time. Every client-readable product/dependency field and exact
+  readable child-row set is sealed into the live roots. Drift fails closed, and the
+  record-insert guard uses the release path's global-then-campaign lock order before
+  rechecking state.
+  Every mutation of sealed served state appends a permanent per-product event
+  under that same global lock, including reviewed correction holds, production/
+  legal source withdrawal, and promoted-batch retirement. Correction evidence
+  uses only a bounded serving projection in that chain: correction and
+  product IDs, status, UTC review time, and reviewer/note-presence booleans. User
+  identity, barcode, free text, arbitrary JSON, assignment/resolution content,
+  and ambient timestamps are excluded. Whole-row snapshot and capture boundaries
+  canonicalize `timestamptz` values under UTC.
+  Outcome reviewers bind the current mutation root. Exact restoration, later closing the hold,
+  reapproving the source, or restoring the batch cannot resurrect the old
+  authorization; recovery requires a newly reviewed current-root record and
+  successor campaign/readback.
+  Market-specific sunscreen/OTC rows require dated classification, label/expiry
+  evidence, and a qualified regulatory review. Service-role catalog access is
+  RPC-only because that role bypasses RLS.
+  Unreviewed `conflict_rules`, `sequencing_rules`, `creator_stacks`, and
+  `creator_stack_items` have no API-role read policy or table privilege. They are
+  not product dependencies: future publication requires a separate B-DERM-reviewed,
+  evidence-bound authority, while production mobile bundles continue filtering out
+  content without review metadata.
+- Type: Architecture / Privacy / Legal / Launch
+- Alternatives: treat CAT-02 promotion as approval, accept a self-attested beta
+  dashboard packet, infer quality from mutable flags, use beta shelf labels as product
+  truth, or withdraw by deleting referenced catalog rows.
+- Criteria: exact lineage, least privilege, privacy minimization, externally witnessed
+  prospective targets/decisions, confidence-bound holdout evaluation, complete
+  dependency proof, role separation, exact-set atomic campaign release/retirement,
+  signed database readback, and fail-closed serving across every lookup path.
+- Evidence: `catalog-curation-contract.mjs`, the CAT-03 coverage-quality contract,
+  migration `20260717000058_catalog_launch_curation.sql`, its adversarial pgTAP
+  contract, and the Phase 4 curation release runbook.
+- Risk: source controls cannot make a self-selected beta cohort representative of a
+  market or replace consent, professional judgment, hosted database proof, legal
+  clearance, Apple review, or real launch data.
+- Status: Accepted for the source architecture; production activation gated.
 
 ### 2026-07-06 - Deterministic Rules Over AI For Safety
 

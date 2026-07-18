@@ -14,27 +14,52 @@ A real first batch requires:
 
 - approved source routes;
 - brand/legal attribution decisions;
-- beta shelf input;
+- separately consented, privacy-minimized input from a defined beta-shelf
+  coverage corpus, with a sealed holdout and no market-representative claim;
+- a signed coverage/quality target policy fixed before outcome access;
+- an externally witnessed full-record decision fixed before holdout access;
 - product identity review;
 - ingredient-list review;
-- sunscreen/OTC-adjacent handling;
-- import QA with zero blockers.
+- separate U.S.-market sunscreen/OTC-adjacent qualified review;
+- import QA with zero blockers or warnings;
+- complete CAT-01/CAT-02 lineage across every contributing batch and required
+  field scope; and
+- immutable CAT-03 non-serving authorization, exact-set atomic campaign
+  release, signed database readback, and retirement evidence.
 
 Creating 2,000 unverified rows locally would make the product look complete while lowering trust. That is the opposite of the Phase 4 requirement.
+
+The launch gate requires at least 2,000 independently sourced, reviewed,
+dependency-complete, activation-eligible records and the signed per-category
+floors, plus at least 100 demand-prioritized eligible records. Ineligible,
+rejected, fixture, duplicate, or merely imported rows do not count toward that
+inventory floor.
 
 ## Batch Acceptance Criteria
 
 Each production row must have:
 
-- source and source reference;
+- SKU identity bound to GTIN, market, and formula/package revision;
+- source and source reference plus exact CAT-01 approval/artifact/QA lineage;
+- exact CAT-02 membership for barcode identity, category, ingredients, and
+  regulatory classification across every contributing batch, plus staged-
+  record/projection/revision/receipt lineage;
 - snapshot date;
-- brand/name/category;
+- reviewed brand/name/category;
 - barcode when available;
 - raw ingredient text if the row can drive product-level guidance;
-- parser version and confidence;
+- parser version and confidence plus complete reviewed token/mapping
+  dependencies;
 - quality grade;
-- review status;
-- unresolved correction count of zero for recommendable rows.
+- qualified review status, signature, conditions, and exact evidence hashes;
+- unresolved operator correction holds of zero for recommendable rows;
+- separate current U.S. evidence for sunscreen/OTC-adjacent behavior where
+  applicable; and
+- an active exact-set CAT-03 campaign and campaign-scoped product authority.
+
+Beta demand can determine review priority only. It cannot populate or correct
+brand, name, barcode, category, ingredients, safety, regulatory status,
+efficacy, expiry, or recommendation facts.
 
 ## Fixture-only toolchain check
 
@@ -132,3 +157,25 @@ external contribution is authorized by this command. Migration `0056` then
 keeps every source that lacks production/legal approval, and every unreviewed,
 below-usable, ineligible, or operator-held product, out of barcode, search,
 recommendation, and direct authenticated serving paths.
+
+## CAT-03 curation and activation
+
+After CAT-01 and CAT-02 are real, follow the
+[CAT-03 catalog curation release runbook](./catalog-curation-release-runbook.md).
+The checked-in target, beta-corpus, and curation-review files are deliberately
+blocked templates. The CAT-03 contract must bind a target policy signed before
+outcomes, separate consent, minimized aggregate demand, curation/holdout split,
+an externally witnessed full-record decision before holdout access, confidence-
+bound quality decision, hard 2,000-record/category/priority inventory gates,
+exact CAT-01/CAT-02 memberships, qualified review, and the exact database
+snapshot. Dashboard URLs, a typed signoff name, or a `realBetaData` flag cannot
+authorize a release.
+
+Migration `0058` adds local campaign-scoped non-serving product authorization,
+one exact-set atomic global campaign release, independent signed readback,
+immutable retirement, and RPC-only `service_role` access, and makes the active global
+CAT-03 campaign a positive serving dependency. It does not create a real batch.
+No consented beta corpus, witnessed target/decision, qualified product review,
+2,000-record launch campaign, signed database readback, clean hosted `0058`
+lifecycle evidence, or active launch campaign exists yet. CAT-03 therefore
+remains `in_progress`, and no production row is launch-authorized.

@@ -1,0 +1,464 @@
+{
+  "schemaVersion": 1,
+  "contractId": "catalog-beta-shelf-corpus-v1",
+  "corpusId": "catalog-beta-shelf-corpus-pending",
+  "targetPolicySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "collectedAt": "2026-09-10T12:00:00.000Z",
+  "splitTimeline": {
+    "assignmentSeedCommitmentSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "curationFrozenAt": "2026-09-01T00:00:00.000Z",
+    "curationDecisionCommittedAt": "2026-09-03T00:00:00.000Z",
+    "curationDecisionCommitmentSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+    "holdoutOpenedAt": "2026-09-04T00:00:00.000Z",
+    "holdoutSealedAt": "2026-09-09T00:00:00.000Z"
+  },
+  "provenance": {
+    "aggregateExportSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+    "consentLedgerSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+    "deletionLedgerSha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+    "aggregationQuerySha256": "56789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234",
+    "splitAssignmentLedgerSha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "collectionBuildSha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+    "analysisPlanSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "metricImplementationSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "evaluationUnitDefinitionSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+    "rawEvidenceLocationSha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
+    "productDemandCommitmentKeyReceiptSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678"
+  },
+  "releaseControls": {
+    "releaseId": "aggregate-release-pending",
+    "priorReleaseRegistrySha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "updatedReleaseRegistrySha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "releaseRegistryExtensionProofSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "overlapPolicySha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+    "overlapAnalysisSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "suppressionAuditSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "cohortWindowQueryReleaseKeyCommitmentSha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
+    "cohortOverlapAuditSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "cohortOverlapCount": 0,
+    "cohortDisjointnessVerified": true,
+    "overlapDecision": "no_reconstructive_overlap",
+    "overlappingReleaseCount": 0,
+    "reconstructiveOverlapFound": false,
+    "releaseRegistryAppendOnly": true
+  },
+  "privacy": {
+    "consentVersionSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+    "noticeSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+    "retentionPolicySha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+    "deletionWorkflowSha256": "56789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234",
+    "aggregationOnly": true,
+    "oneParticipantPerSkuCapApplied": true,
+    "smallCellSuppressionApplied": true,
+    "complementarySuppressionApplied": true,
+    "rawShelfDataTracked": false,
+    "rawUserIdentifiersTracked": false,
+    "rawBarcodesTracked": false,
+    "rawProductNamesTracked": false,
+    "rawFreeTextTracked": false,
+    "deletionAppliedAt": "2026-09-09T12:00:00.000Z"
+  },
+  "cohorts": {
+    "curation": {
+      "name": "curation",
+      "participants": 50,
+      "eligibleParticipants": 50,
+      "contributors": 50,
+      "demandBuckets": [
+        {
+          "productDemandCommitmentSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+          "categoryCode": "sunscreen",
+          "demandReasonCode": "shelf_present",
+          "count": 5,
+          "suppression": "none"
+        }
+      ],
+      "outcomes": {
+        "lookupEvaluations": 200,
+        "correctMatches": 190,
+        "incorrectMatches": 0,
+        "noMatches": 10,
+        "matchedEvaluations": 190,
+        "ingredientEvaluations": 200,
+        "ingredientEvaluationsWithUnknownTokens": 20,
+        "recommendationEvaluations": 100,
+        "belowUsableRecommendations": 0,
+        "manualFallbackEvaluations": 100,
+        "manualFallbackCompletions": 90,
+        "shelfFlowEvaluations": 100,
+        "shelfFlowCompletions": 90,
+        "wrongMatchReports": 0,
+        "openWrongMatchReports": 0,
+        "openP0P1Incidents": 0
+      },
+      "categoryOutcomes": [
+        {
+          "categoryCode": "sunscreen",
+          "lookupEvaluations": 200,
+          "correctMatches": 190,
+          "incorrectMatches": 0,
+          "noMatches": 10,
+          "ingredientEvaluations": 200,
+          "ingredientEvaluationsWithUnknownTokens": 20,
+          "recommendationEvaluations": 100,
+          "belowUsableRecommendations": 0
+        }
+      ],
+      "operationalStratumOutcomes": [
+        {
+          "routeCode": "barcode",
+          "networkState": "offline",
+          "manualFallbackEvaluations": 100,
+          "manualFallbackCompletions": 90,
+          "shelfFlowEvaluations": 100,
+          "shelfFlowCompletions": 90
+        }
+      ]
+    },
+    "holdout": {
+      "name": "holdout",
+      "participants": 30,
+      "eligibleParticipants": 30,
+      "contributors": 30,
+      "demandBuckets": [
+        {
+          "productDemandCommitmentSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+          "categoryCode": "sunscreen",
+          "demandReasonCode": "shelf_present",
+          "count": 5,
+          "suppression": "none"
+        }
+      ],
+      "outcomes": {
+        "lookupEvaluations": 200,
+        "correctMatches": 190,
+        "incorrectMatches": 0,
+        "noMatches": 10,
+        "matchedEvaluations": 190,
+        "ingredientEvaluations": 200,
+        "ingredientEvaluationsWithUnknownTokens": 20,
+        "recommendationEvaluations": 100,
+        "belowUsableRecommendations": 0,
+        "manualFallbackEvaluations": 100,
+        "manualFallbackCompletions": 90,
+        "shelfFlowEvaluations": 100,
+        "shelfFlowCompletions": 90,
+        "wrongMatchReports": 0,
+        "openWrongMatchReports": 0,
+        "openP0P1Incidents": 0
+      },
+      "categoryOutcomes": [
+        {
+          "categoryCode": "sunscreen",
+          "lookupEvaluations": 200,
+          "correctMatches": 190,
+          "incorrectMatches": 0,
+          "noMatches": 10,
+          "ingredientEvaluations": 200,
+          "ingredientEvaluationsWithUnknownTokens": 20,
+          "recommendationEvaluations": 100,
+          "belowUsableRecommendations": 0
+        }
+      ],
+      "operationalStratumOutcomes": [
+        {
+          "routeCode": "barcode",
+          "networkState": "offline",
+          "manualFallbackEvaluations": 100,
+          "manualFallbackCompletions": 90,
+          "shelfFlowEvaluations": 100,
+          "shelfFlowCompletions": 90
+        }
+      ]
+    }
+  },
+  "evaluationUnitAudit": {
+    "contractId": "catalog-participant-evaluation-unit-audit-v1",
+    "wilsonEvaluationUnit": "one_distinct_participant_per_endpoint",
+    "maxWilsonEvaluationsPerParticipantPerEndpoint": 1,
+    "aggregateEndpointParticipantSetRootSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "categoryEndpointParticipantSetRootSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "operationalEndpointParticipantSetRootSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "participantAssignmentAuditSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+    "outcomeReconciliationSha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+    "allWilsonUnitsDistinctWithinEndpoint": true,
+    "allCategoryStrataDisjointWithinEndpoint": true,
+    "allOperationalStrataDisjointWithinEndpoint": true,
+    "clusteredWilsonInputsPresent": false
+  },
+  "holdoutControlReceipt": {
+    "schemaVersion": 1,
+    "contractId": "catalog-holdout-custody-evaluation-receipt-v1",
+    "signatureEnvelopeVersion": "catalog-holdout-custody-evaluation-receipt-signature-v1",
+    "signingDomain": "routinekind.catalog-holdout-custody-evaluation-receipt.v1",
+    "receiptId": "holdout-control-receipt-pending",
+    "targetPolicySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "analysisPlanSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "metricImplementationSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "collectionBuildSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "holdoutQuerySha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+    "evaluationUnitDefinitionSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+    "splitAssignmentLedgerSha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "holdoutParticipantSetRootSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "evaluationUnitAuditSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+    "aggregateOutcomeSetSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "categoryOutcomeSetSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+    "operationalOutcomeSetSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+    "accessLogSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+    "evaluationLedgerSha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+    "priorUseRegistryBeforeSha256": "56789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234",
+    "priorUseRegistryAfterSha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "priorUseRegistryExtensionProofSha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+    "holdoutOpenedAt": "2026-09-04T00:00:00.000Z",
+    "holdoutSealedAt": "2026-09-09T00:00:00.000Z",
+    "evaluatedAt": "2026-09-09T00:00:00.000Z",
+    "preOpenReadCount": 0,
+    "executedAnalysisLookCount": 1,
+    "priorHoldoutUseCount": 0,
+    "alternativeBuildLookCount": 0,
+    "alternativeQueryLookCount": 0,
+    "reusedParticipantCount": 0,
+    "collectionBuildMatchesPolicy": true,
+    "metricImplementationMatchesPolicy": true,
+    "queryMatchesPolicy": true,
+    "untouchedBeforeOpen": true,
+    "signers": [
+      {
+        "decisionRole": "holdout_data_custodian",
+        "reviewerId": "unassigned-holdout-data-custodian",
+        "trustRegistryKeyId": "unassigned-holdout-custodian-key",
+        "trustRegistryRole": "engineering",
+        "independenceGroup": "unassigned-holdout-custodian-group",
+        "publicKeySha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
+        "qualificationEvidenceSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678"
+      }
+    ],
+    "signatures": [
+      {
+        "decisionRole": "holdout_data_custodian",
+        "reviewerId": "unassigned-holdout-data-custodian",
+        "trustRegistryKeyId": "unassigned-holdout-custodian-key",
+        "algorithm": "Ed25519",
+        "signedAt": "2026-09-09T00:00:00.000Z",
+        "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+      }
+    ]
+  },
+  "privacyExecutionReceipt": {
+    "schemaVersion": 1,
+    "contractId": "catalog-privacy-execution-receipt-v1",
+    "signatureEnvelopeVersion": "catalog-privacy-execution-receipt-signature-v1",
+    "signingDomain": "routinekind.catalog-privacy-execution-receipt.v1",
+    "receiptId": "privacy-execution-receipt-pending",
+    "releaseId": "aggregate-release-pending",
+    "targetPolicySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "keyEpochId": "catalog-demand-key-epoch-pending",
+    "kmsKeyReceiptSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+    "hmacImplementationSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "canonicalInputDefinitionSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "domainSeparationContextSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "demandCommitmentOutputSetSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+    "suppressionAuditPolicySha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+    "suppressionAuditSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+    "overlapPolicySha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+    "overlapAnalysisSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "priorReleaseRegistrySha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "updatedReleaseRegistrySha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "releaseRegistryContractSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "releaseRegistryExtensionProofSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "verifiedAt": "2026-09-10T12:00:00.000Z",
+    "secretKeyMaterialPresent": false,
+    "allCommitmentsGeneratedByKmsHmacSha256": true,
+    "allPrimaryCellsBelowMinimum": true,
+    "allComplementaryCellsPreventReconstruction": true,
+    "noReconstructiveOverlap": true,
+    "releaseRegistryAppendOnly": true,
+    "signers": [
+      {
+        "decisionRole": "privacy_pipeline_verifier",
+        "reviewerId": "unassigned-privacy-pipeline-verifier",
+        "trustRegistryKeyId": "unassigned-privacy-pipeline-key",
+        "trustRegistryRole": "legal",
+        "independenceGroup": "unassigned-privacy-pipeline-group",
+        "publicKeySha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+        "qualificationEvidenceSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01"
+      }
+    ],
+    "signatures": [
+      {
+        "decisionRole": "privacy_pipeline_verifier",
+        "reviewerId": "unassigned-privacy-pipeline-verifier",
+        "trustRegistryKeyId": "unassigned-privacy-pipeline-key",
+        "algorithm": "Ed25519",
+        "signedAt": "2026-09-10T12:00:00.000Z",
+        "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+      }
+    ]
+  },
+  "curationDecisionAuthority": {
+    "schemaVersion": 1,
+    "contractId": "catalog-curation-preholdout-decision-commitment-v1",
+    "signatureEnvelopeVersion": "catalog-curation-preholdout-decision-signature-v1",
+    "signingDomain": "routinekind.catalog-curation-preholdout-decision.v1",
+    "decisionId": "catalog-curation-decision-pending",
+    "releaseId": "catalog-curation-release-pending",
+    "targetPolicySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "databaseEligibilityPolicySha256": "9b1fd33edaec8cf3c8582f3f9298ec9e70f5f4140b6426afb1e710eee4845e9d",
+    "reviewedRecordCount": 1,
+    "eligibleRecordCount": 1,
+    "prioritizedEligibleRecordCount": 1,
+    "curationDecisionCommitmentSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+    "candidateSetSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "cat02MembershipProofSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+    "cat02MembershipSetSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+    "databaseReviewAuthorization": {
+      "schemaVersion": 1,
+      "contractId": "catalog-curation-database-review-authorization-v1",
+      "signatureEnvelopeVersion": "catalog-curation-database-review-authorization-signature-v1",
+      "signingDomain": "routinekind.catalog-curation-database-review-authorization.v1",
+      "releaseId": "catalog-curation-release-pending",
+      "targetPolicySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "databaseEligibilityPolicySha256": "9b1fd33edaec8cf3c8582f3f9298ec9e70f5f4140b6426afb1e710eee4845e9d",
+      "curationDecisionCommitmentSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+      "candidateSetSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+      "cat02MembershipSetSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "reviewedRecordCount": 1,
+      "eligibleRecordCount": 1,
+      "prioritizedEligibleRecordCount": 1,
+      "authorizedAt": "2026-09-03T00:00:00.000Z",
+      "validUntil": "2027-05-01T00:00:00.000Z",
+      "signers": [
+        {
+          "decisionRole": "catalog_quality_reviewer",
+          "reviewerId": "unassigned-catalog-quality-reviewer",
+          "trustRegistryKeyId": "unassigned-catalog-quality-key",
+          "trustRegistryRole": "engineering",
+          "independenceGroup": "unassigned-catalog-quality-group",
+          "publicKeySha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+          "qualificationEvidenceSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"
+        },
+        {
+          "decisionRole": "data_quality_reviewer",
+          "reviewerId": "unassigned-data-quality-reviewer",
+          "trustRegistryKeyId": "unassigned-data-quality-key",
+          "trustRegistryRole": "engineering",
+          "independenceGroup": "unassigned-data-quality-group",
+          "publicKeySha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+          "qualificationEvidenceSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab"
+        },
+        {
+          "decisionRole": "regulatory_reviewer",
+          "reviewerId": "unassigned-regulatory-reviewer",
+          "trustRegistryKeyId": "unassigned-regulatory-key",
+          "trustRegistryRole": "legal",
+          "independenceGroup": "unassigned-regulatory-group",
+          "publicKeySha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+          "qualificationEvidenceSha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd"
+        }
+      ],
+      "signatures": [
+        {
+          "decisionRole": "catalog_quality_reviewer",
+          "reviewerId": "unassigned-catalog-quality-reviewer",
+          "trustRegistryKeyId": "unassigned-catalog-quality-key",
+          "algorithm": "Ed25519",
+          "signedAt": "2026-09-03T00:00:00.000Z",
+          "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+        },
+        {
+          "decisionRole": "data_quality_reviewer",
+          "reviewerId": "unassigned-data-quality-reviewer",
+          "trustRegistryKeyId": "unassigned-data-quality-key",
+          "algorithm": "Ed25519",
+          "signedAt": "2026-09-03T00:00:00.000Z",
+          "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+        },
+        {
+          "decisionRole": "regulatory_reviewer",
+          "reviewerId": "unassigned-regulatory-reviewer",
+          "trustRegistryKeyId": "unassigned-regulatory-key",
+          "algorithm": "Ed25519",
+          "signedAt": "2026-09-03T00:00:00.000Z",
+          "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+        }
+      ]
+    },
+    "databaseReviewAuthorizationSha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+    "databaseReviewerSignatureSetSha256": "56789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234",
+    "ledgerSequence": 1,
+    "ledgerUriSha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "externalTimestampAuthoritySha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+    "externalTimestampReceiptSha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
+    "externalWitnessReceipt": {
+      "contractId": "catalog-curation-external-timestamp-receipt-v1",
+      "logId": "pending-catalog-curation-transparency-log",
+      "logUriSha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+      "sequence": 1,
+      "requestNonceSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "witnessedDecisionCommitmentSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+      "priorCheckpointSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+      "checkpointSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+      "inclusionProofSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+      "observedAt": "2026-09-03T00:00:00.000Z"
+    },
+    "externalTimestampSigner": {
+      "decisionRole": "external_timestamp_authority",
+      "reviewerId": "unassigned-external-timestamp-authority",
+      "trustRegistryKeyId": "unassigned-external-timestamp-key",
+      "trustRegistryRole": "engineering",
+      "independenceGroup": "unassigned-external-timestamp-group",
+      "publicKeySha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+      "qualificationEvidenceSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc"
+    },
+    "externalTimestampSignature": {
+      "decisionRole": "external_timestamp_authority",
+      "reviewerId": "unassigned-external-timestamp-authority",
+      "trustRegistryKeyId": "unassigned-external-timestamp-key",
+      "algorithm": "Ed25519",
+      "signedAt": "2026-09-03T00:00:00.000Z",
+      "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    "priorLedgerRootSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+    "appendOnlyLedgerEntrySha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+    "appendOnlyLedgerRootSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+    "committedAt": "2026-09-03T00:00:00.000Z",
+    "signers": [
+      {
+        "decisionRole": "curation_decision_owner",
+        "reviewerId": "unassigned-curation-decision-owner",
+        "trustRegistryKeyId": "unassigned-curation-decision-key",
+        "trustRegistryRole": "engineering",
+        "independenceGroup": "unassigned-curation-decision-group",
+        "publicKeySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "qualificationEvidenceSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0"
+      },
+      {
+        "decisionRole": "commitment_ledger_witness",
+        "reviewerId": "unassigned-commitment-ledger-witness",
+        "trustRegistryKeyId": "unassigned-commitment-ledger-key",
+        "trustRegistryRole": "engineering",
+        "independenceGroup": "unassigned-commitment-ledger-group",
+        "publicKeySha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+        "qualificationEvidenceSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012"
+      }
+    ],
+    "signatures": [
+      {
+        "decisionRole": "curation_decision_owner",
+        "reviewerId": "unassigned-curation-decision-owner",
+        "trustRegistryKeyId": "unassigned-curation-decision-key",
+        "algorithm": "Ed25519",
+        "signedAt": "2026-09-03T00:00:00.000Z",
+        "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+      },
+      {
+        "decisionRole": "commitment_ledger_witness",
+        "reviewerId": "unassigned-commitment-ledger-witness",
+        "trustRegistryKeyId": "unassigned-commitment-ledger-key",
+        "algorithm": "Ed25519",
+        "signedAt": "2026-09-03T00:00:00.000Z",
+        "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+      }
+    ]
+  }
+}

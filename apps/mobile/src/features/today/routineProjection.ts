@@ -38,6 +38,7 @@ export type TodayRoutineProjection = {
   hasRealRoutine: boolean;
   safetyExclusionCount: number;
   cadenceWithheldCount: number;
+  sequencingWithheldCount: number;
   am: TodayRoutinePhaseProjection;
   pm: TodayRoutinePhaseProjection;
   cycle: TodayCycleSource['cycle'];
@@ -70,12 +71,6 @@ const EMPTY_COMPLETED_STEP_KEYS: ReadonlySet<string> = new Set();
  */
 export function todayRoutineStepKey(phase: 'AM' | 'PM', productId: string): string {
   return `${phase}:${productId}`;
-}
-
-function slotInstruction(slot: SchedulerSlot): string {
-  if (slot === 'retinoid') return 'Apply to dry skin · pea-sized · avoid the eye area.';
-  if (slot === 'exfoliate') return 'A thin layer. Exfoliation night only.';
-  return 'Barrier support. Keep it simple.';
 }
 
 function hasUseTogetherChoiceBetween(
@@ -127,8 +122,17 @@ export function projectTodayRoutine({
   );
   const safetyExclusionCount = plan?.safetyExclusions.length ?? 0;
   const cadenceWithheldCount = plan?.cadenceWithheld.length ?? 0;
+  const sequencingWithheldCount = plan?.sequencingWithheld.length ?? 0;
 
-  const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;
+  const rawCycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;
+  const amPlanIds = new Set(plan?.am.map((step) => step.productId) ?? []);
+  const pmPlanIds = new Set(plan?.pm.map((step) => step.productId) ?? []);
+  const cycleMatchesReviewedPlan = Boolean(
+    rawCycle &&
+    rawCycle.amDaily.every((item) => amPlanIds.has(item.productId)) &&
+    rawCycle.nights.every((night) => !night.productId || pmPlanIds.has(night.productId)),
+  );
+  const cycle = cycleMatchesReviewedPlan ? rawCycle : null;
   const tonight = cycle ? (cycleData?.tonight ?? null) : null;
   const skippedTonight = cycleData?.skippedTonight ?? false;
   const recoveryActive = cycleData?.recovery.active ?? false;
@@ -145,17 +149,16 @@ export function projectTodayRoutine({
     !recoveryActive &&
     !paused &&
     tonight?.night.productId &&
+    scheduledCyclePlanStep &&
     !stagedActiveIds.has(tonight.night.productId) &&
     !safetyExcludedIds.has(tonight.night.productId)
       ? {
           productId: tonight.night.productId,
-          name: tonight.night.productName ?? 'Tonight’s active',
-          instruction: slotInstruction(tonight.night.slot),
+          name: scheduledCyclePlanStep.name,
+          instruction: scheduledCyclePlanStep.instruction,
           cadence: 'cycle',
-          order: scheduledCyclePlanStep?.order ?? 40,
-          role:
-            scheduledCyclePlanStep?.role ??
-            (tonight.night.slot === 'retinoid' ? ('treatment' as const) : undefined),
+          order: scheduledCyclePlanStep.order,
+          role: scheduledCyclePlanStep.role,
         }
       : null;
   const dailyPm = (plan?.pm ?? []).filter(
@@ -184,6 +187,7 @@ export function projectTodayRoutine({
     hasRealRoutine,
     safetyExclusionCount,
     cadenceWithheldCount,
+    sequencingWithheldCount,
     am: projectPhase('AM', amSteps, completedStepKeys),
     pm: projectPhase('PM', pmSteps, completedStepKeys),
     cycle,

@@ -52,12 +52,16 @@ describe('persistent routine order route contracts', () => {
     expect(usePlan).toContain('applyRoutineOrderOverrides(canonicalPlan, orderOverrides)');
     expect(usePlan).toContain('canonicalPlan,');
     expect(todayProjection).toContain('const scheduledCyclePlanStep =');
-    expect(todayProjection).toContain('order: scheduledCyclePlanStep?.order ?? 40');
+    expect(todayProjection).toContain('scheduledCyclePlanStep &&');
+    expect(todayProjection).toContain('instruction: scheduledCyclePlanStep.instruction');
+    expect(todayProjection).toContain('order: scheduledCyclePlanStep.order');
+    expect(todayProjection).not.toContain('slotInstruction');
     expect(todayProjection).toContain('tonight?.night.productId');
     expect(todayProjection).toContain(
       "const hasScheduledRetinoid = cycledStep?.role === 'treatment';",
     );
-    expect(today).toContain('pmDisplaySub(s, hasScheduledRetinoid)');
+    expect(today).toContain('sub={s.instruction}');
+    expect(today).not.toContain('pmDisplaySub');
   });
 
   it('offers phase-specific editor entry points from the generated Plan', () => {

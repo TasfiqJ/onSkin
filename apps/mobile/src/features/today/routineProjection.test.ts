@@ -25,6 +25,14 @@ const retinoid: PlanStep = {
   order: 40,
   instruction: 'Apply to dry skin.',
 };
+const acid: PlanStep = {
+  productId: 'acid',
+  name: 'Lactic acid',
+  role: 'exfoliant',
+  cadence: 'cycle',
+  order: 45,
+  instruction: 'Use on reviewed exfoliation nights.',
+};
 const moisturiser: PlanStep = {
   productId: 'moisturiser',
   name: 'Moisturiser',
@@ -45,11 +53,12 @@ const spf: PlanStep = {
 function plan(overrides: Partial<GeneratedPlan> = {}): GeneratedPlan {
   return {
     am: [cleanser, spf],
-    pm: [cleanser, retinoid, moisturiser],
+    pm: [cleanser, retinoid, acid, moisturiser],
     cycle: null,
     ramp: [],
     safetyExclusions: [],
     cadenceWithheld: [],
+    sequencingWithheld: [],
     unplacedProducts: [],
     gaps: [],
     conflicts: [],
@@ -138,7 +147,7 @@ describe('projectTodayRoutine', () => {
     expect(projected.pm.firstUndoneKey).toBe('PM:retinoid');
     expect(projected.pm.steps[1]).toMatchObject({
       cadence: 'cycle',
-      instruction: 'Apply to dry skin · pea-sized · avoid the eye area.',
+      instruction: 'Apply to dry skin.',
       order: 40,
       role: 'treatment',
     });
@@ -172,6 +181,35 @@ describe('projectTodayRoutine', () => {
       cycleData: cycleSource({ stagedActiveIds: ['retinoid'] }),
     });
 
+    expect(projected.pm.steps.map((step) => step.productId)).toEqual(['cleanser', 'moisturiser']);
+    expect(projected.cycleActive).toBe(false);
+    expect(projected.suppressedAcidName).toBeNull();
+  });
+
+  it('rejects cycle data that is not backed by a reviewed generated-plan step', () => {
+    const projected = projectTodayRoutine({
+      planData: {
+        plan: plan({
+          pm: [cleanser, moisturiser],
+          sequencingWithheld: [
+            {
+              productId: 'retinoid',
+              name: 'Retinoid',
+              role: 'treatment',
+              placement: 'withheld',
+              reason: 'review_required',
+            },
+          ],
+        }),
+        isExample: false,
+      },
+      cycleData: cycleSource(),
+    });
+
+    expect(projected.sequencingWithheldCount).toBe(1);
+    expect(projected.cycle).toBeNull();
+    expect(projected.tonight).toBeNull();
+    expect(projected.cycleStripNights).toEqual([]);
     expect(projected.pm.steps.map((step) => step.productId)).toEqual(['cleanser', 'moisturiser']);
     expect(projected.cycleActive).toBe(false);
     expect(projected.suppressedAcidName).toBeNull();

@@ -7,9 +7,9 @@
 |   3 | Shelf intake: manual/search/barcode/OCR | Required   | High       | catalog, camera, local store    | needs device/catalog/OCR QA       | TBD        |
 |   4 | Product catalog import and quality      | Required   | High       | OBF/CosIng/source review        | source candidate / launch-blocked | TBD        |
 |   5 | Reviewed conflict engine                | Required   | High       | clinical/cosmetic review        | launch-blocked                    | TBD        |
-|   6 | Routine builder                         | Required   | High       | shelf, profile, rules           | implemented / needs review        | TBD        |
+|   6 | Routine builder                         | Required   | High       | shelf, profile, rules           | implemented / launch-blocked      | TBD        |
 |   7 | Today check-off and adherence           | Required   | Medium     | routine plan, local store       | implemented                       | TBD        |
-|   8 | Skin cycling and ramp scheduler         | Required   | High       | rules/review                    | implemented / needs review        | TBD        |
+|   8 | Skin cycling and ramp scheduler         | Required   | High       | rules/review                    | implemented / launch-blocked      | TBD        |
 |   9 | Private photo progress                  | Required   | High       | camera, encryption, consent     | needs-device-verification         | TBD        |
 |  10 | Reminders                               | Required   | Medium     | notification permissions        | needs-device-verification         | TBD        |
 |  11 | RevenueCat paywall and entitlements     | Required   | High       | final brand/store records       | stubbed                           | TBD        |

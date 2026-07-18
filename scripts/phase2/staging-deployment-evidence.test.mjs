@@ -259,12 +259,12 @@ function cutoverFixture(overrides = {}, trafficFreezeOverrides = {}) {
 test('current reviewed source inventory is deterministic and exact', () => {
   assertCurrentSourceContract(source);
   const second = buildSourceInventory(repoRoot);
-  assert.equal(source.migrationCount, 56);
-  assert.equal(source.latestMigrationId, '20260717000057');
+  assert.equal(source.migrationCount, 57);
+  assert.equal(source.latestMigrationId, '20260717000058');
   assert.equal(source.functionCount, 16);
   assert.equal(source.migrationSetSha256, second.migrationSetSha256);
   assert.equal(source.functionSetSha256, second.functionSetSha256);
-  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 56);
+  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 57);
 });
 
 test('schema parser accepts only one complete non-negative count row', () => {
@@ -788,7 +788,7 @@ test('generated-type summaries require a real Database surface and an exact loca
   );
 });
 
-test('completed deployment requires 56 migrations, all functions, 80 RLS tables, config, and type parity', () => {
+test('completed deployment requires 57 migrations, all functions, 80 RLS tables, config, and type parity', () => {
   const functions = parseFunctionInventory(JSON.stringify(functionRows()), source, {
     requireComplete: true,
   });
@@ -976,7 +976,7 @@ function passManifestInput(steps) {
       },
     },
     after: {
-      migrationCount: 56,
+      migrationCount: 57,
       migrationIds: source.migrations.map(({ id }) => id),
       functions,
       schema: afterSchema,

@@ -181,8 +181,15 @@ jobs:
           deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/revenuecat-webhook/webhookCore.test.ts
           npm run phase9:revenuecat-webhook-atomic-smoke
 
-      - name: Check catalog promotion and receipt contracts
-        run: npm run phase4:promotion-contract:test
+      - name: Check catalog promotion, curation, and receipt contracts
+        run: |
+          npm run phase4:source-policy-smoke
+          npm run phase4:qa-report-smoke
+          npm run phase4:beta-coverage-report-smoke
+          npm run phase4:source-worklist:check
+          npm run phase4:promotion-contract:test
+          npm run phase4:curation-contract:test
+          npm run phase4:catalog-serving-contract:test
 
       - name: Execute account service scrub migration rehearsal
         env:

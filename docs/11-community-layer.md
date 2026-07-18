@@ -146,7 +146,9 @@ human_pre_moderation(item):
 The community is a **new health-data class**, physically segregated from the recommendation path (the docs/09/10 "church and state" discipline) and from the photo store (docs/06). It reuses the docs/01 conventions exactly: `(select auth.uid())`, `TO authenticated`, `WITH CHECK` everywhere, indexed policy columns, `owns_*` security-definer helpers, append-only audit, and the immutable consent ledger.
 
 ```sql
--- Topic catalog (structured; world-readable to authenticated, service-role write — the docs/02 §3 catalog pattern, D-016)
+-- Non-clinical topic index: active rows are authenticated-readable. This is
+-- not the superseded D-016 broad catalog pattern and does not publish notes;
+-- note bodies remain behind their independent review/claim-safety policy.
 create table public.community_topics (
   id          uuid primary key default gen_random_uuid(),
   slug        text unique not null,          -- 'retinoids' | 'sunscreen' | 'sensitive-skin' | 'ingredient-myths'

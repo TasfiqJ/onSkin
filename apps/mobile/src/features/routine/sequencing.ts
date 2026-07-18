@@ -11,7 +11,12 @@ export type SequencingRule = {
   pmEligible: boolean;
   defaultPhase: RoutinePhase;
   notes: string;
+  ruleVersion: number;
+  /** Detached clinical/cosmetic-chemistry sign-off. Null starter rows are dev-only. */
+  reviewedBy: string | null;
 };
+
+export type ShippableSequencingRules = Partial<Record<SequencingRole, SequencingRule>>;
 
 // Mirrors supabase/migrations/...0014_sequencing_rules.sql.
 export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
@@ -22,6 +27,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: true,
     defaultPhase: 'either',
     notes: 'Start with a clean base.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
   toner: {
     role: 'toner',
@@ -30,6 +37,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: true,
     defaultPhase: 'either',
     notes: 'Optional. A hydrating or balancing layer.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
   antioxidant: {
     role: 'antioxidant',
@@ -38,6 +47,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: true,
     defaultPhase: 'am',
     notes: 'Vitamin C in the morning, under your SPF.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
   hydrating_serum: {
     role: 'hydrating_serum',
@@ -46,6 +57,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: true,
     defaultPhase: 'either',
     notes: 'A lightweight hydrating layer.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
   treatment: {
     role: 'treatment',
@@ -53,6 +66,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     amEligible: false,
     pmEligible: true,
     defaultPhase: 'pm',
+    ruleVersion: 1,
+    reviewedBy: null,
     notes: 'Apply to dry skin · pea-sized · avoid the eye area.',
   },
   exfoliant: {
@@ -62,6 +77,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: true,
     defaultPhase: 'pm',
     notes: 'On exfoliation nights only.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
   eye: {
     role: 'eye',
@@ -70,6 +87,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: true,
     defaultPhase: 'either',
     notes: 'A gentle pat around the eye area.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
   moisturiser: {
     role: 'moisturiser',
@@ -78,6 +97,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: true,
     defaultPhase: 'either',
     notes: 'Seal everything in.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
   oil: {
     role: 'oil',
@@ -85,6 +106,8 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     amEligible: false,
     pmEligible: true,
     defaultPhase: 'pm',
+    ruleVersion: 1,
+    reviewedBy: null,
     notes: 'Optional. A final nourishing layer at night.',
   },
   spf: {
@@ -94,8 +117,39 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
     pmEligible: false,
     defaultPhase: 'am',
     notes: 'Always the last morning step. Reapply through the day.',
+    ruleVersion: 1,
+    reviewedBy: null,
   },
 };
+
+export function isReviewedSequencingRule(rule: Pick<SequencingRule, 'reviewedBy'>): boolean {
+  return typeof rule.reviewedBy === 'string' && rule.reviewedBy.trim().length > 0;
+}
+
+/**
+ * Sequencing authority available to the current binary. Starter rules remain
+ * explicit development fixtures; production receives only individually reviewed
+ * rows, so a build flag cannot silently publish an unreviewed phase or instruction.
+ */
+export function shippableSequencingRules(
+  rules: ShippableSequencingRules = SEQUENCING_RULES,
+): ShippableSequencingRules {
+  const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
+  const forceClosedForE2E =
+    isDev && process.env.EXPO_PUBLIC_E2E_ROUTINE_SEQUENCING_REVIEW_GATE === 'closed';
+  if (forceClosedForE2E) return {};
+
+  const shippable: ShippableSequencingRules = {};
+
+  for (const role of Object.keys(rules) as SequencingRole[]) {
+    const rule = rules[role];
+    if (rule?.role === role && (isDev || isReviewedSequencingRule(rule))) {
+      shippable[role] = rule;
+    }
+  }
+
+  return shippable;
+}
 
 export type ClassifiableProduct = {
   id: string;
@@ -197,21 +251,28 @@ export type SequencedStep = {
   instruction: string;
 };
 
-function instructionFor(
+export function instructionFor(
   role: SequencingRole,
   cadence: Exclude<RoutineCadenceDisposition, 'withheld'>,
-): string {
+  rules: ShippableSequencingRules = shippableSequencingRules(),
+): string | null {
+  const rule = shippableSequencingRules(rules)[role];
+  if (!rule) return null;
   if (cadence === 'daily_am') {
     return 'Use in the morning. Follow the product label directions.';
   }
-  return SEQUENCING_RULES[role].notes;
+  return rule.notes;
 }
 
 /** Which phase(s) a role belongs to. `either` => appears in BOTH AM and PM
  *  (cleanser, moisturiser, toner). Resolution overrides (separate_am_pm) handled
  *  by the caller. */
-export function phasesFor(role: SequencingRole): RoutinePhase[] {
-  const rule = SEQUENCING_RULES[role];
+export function phasesFor(
+  role: SequencingRole,
+  rules: ShippableSequencingRules = shippableSequencingRules(),
+): RoutinePhase[] {
+  const rule = shippableSequencingRules(rules)[role];
+  if (!rule) return [];
   if (rule.defaultPhase === 'am') return ['am'];
   if (rule.defaultPhase === 'pm') return ['pm'];
   return ['am', 'pm'];
@@ -221,9 +282,19 @@ export function phasesFor(role: SequencingRole): RoutinePhase[] {
 export function sequencePhase(
   products: ClassifiableProduct[],
   phase: 'am' | 'pm',
+  rules: ShippableSequencingRules = shippableSequencingRules(),
 ): SequencedStep[] {
+  const availableRules = shippableSequencingRules(rules);
   const eligible = products
-    .map((p) => ({ p, role: classifyRole(p), cadence: routineCadenceDisposition(p) }))
+    .map((p) => {
+      const role = classifyRole(p);
+      return {
+        p,
+        role,
+        cadence: routineCadenceDisposition(p),
+        rule: role ? availableRules[role] : undefined,
+      };
+    })
     .filter(
       (
         item,
@@ -231,27 +302,29 @@ export function sequencePhase(
         p: ClassifiableProduct;
         role: SequencingRole;
         cadence: Exclude<RoutineCadenceDisposition, 'withheld'>;
-      } => item.role != null && item.cadence !== 'withheld',
+        rule: SequencingRule;
+      } => item.role != null && item.cadence !== 'withheld' && item.rule != null,
     )
-    .filter(({ role, cadence }) => {
+    .filter(({ role, cadence, rule }) => {
       if (cadence === 'daily_am') return phase === 'am';
-      const rule = SEQUENCING_RULES[role];
-      const inPhase = phasesFor(role).includes(phase);
+      const inPhase = phasesFor(role, availableRules).includes(phase);
       const phaseEligible = phase === 'am' ? rule.amEligible : rule.pmEligible;
       return inPhase && phaseEligible;
     })
-    .sort(
-      (a, b) =>
-        SEQUENCING_RULES[a.role].basePriority - SEQUENCING_RULES[b.role].basePriority ||
-        a.p.id.localeCompare(b.p.id),
-    );
+    .sort((a, b) => a.rule.basePriority - b.rule.basePriority || a.p.id.localeCompare(b.p.id));
 
-  return eligible.map(({ p, role, cadence }, i) => ({
-    productId: p.id,
-    name: p.name,
-    role,
-    cadence,
-    order: (i + 1) * 10,
-    instruction: instructionFor(role, cadence),
-  }));
+  return eligible.flatMap(({ p, role, cadence }, i) => {
+    const instruction = instructionFor(role, cadence, availableRules);
+    if (instruction == null) return [];
+    return [
+      {
+        productId: p.id,
+        name: p.name,
+        role,
+        cadence,
+        order: (i + 1) * 10,
+        instruction,
+      },
+    ];
+  });
 }

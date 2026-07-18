@@ -46,6 +46,7 @@ function plan(am: PlanStep[], pm: PlanStep[]): GeneratedPlan {
     ramp: [],
     safetyExclusions: [],
     cadenceWithheld: [],
+    sequencingWithheld: [],
     unplacedProducts: [],
     gaps: [],
     conflicts: [],

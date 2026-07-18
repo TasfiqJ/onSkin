@@ -26,8 +26,12 @@ Implemented locally:
 - OBF and CosIng fixture/candidate/production import and source-specific QA
   scripts; approved QA revalidates embedded approvals and current release
   evidence rather than checking output shape alone.
-- Beta coverage report generator and smoke gate that reject missing,
-  placeholder, or threshold-failing closed-beta catalog evidence.
+- Legacy beta coverage summary, now explicitly privacy-redacted and
+  non-authoritative, plus CAT-03 target/corpus/review templates and strict
+  contract/report source controls for a pre-outcome policy, consent boundary,
+  minimized aggregates, curation/holdout split, witnessed full-record decision,
+  confidence bounds, exact multi-batch/four-scope lineage, independent database
+  readback, and cryptographic review authority.
 - Product search, barcode lookup, and correction-report Edge Function scaffolds
   plus migration `0056`'s shared fail-closed serving gate for positive source,
   review, quality, eligibility, mapping, and live-correction evidence.
@@ -36,6 +40,14 @@ Implemented locally:
   exact-key conflict handling, immutable projection lineage, direct API-role
   catalog-DML denial, positive ingredient/reference read gates, and
   non-destructive batch retirement.
+- CAT-03's local curation-envelope/quality-report contracts and migration
+  `0058`: sealed curation campaigns, exact CAT-01/CAT-02 and database-snapshot
+  bindings, a hard 2,000-record/category/priority floor, owner-only replay-safe
+  non-serving product authorization, one exact-set atomic campaign release,
+  signed readback, immutable retirement history, RPC-only `service_role` access, and a
+  positive active-campaign requirement in the serving dependency chain.
+  Beta demand can prioritize independently sourced rows but can never become a
+  product fact.
 - Mobile shelf source/quality disclosure, search fallback, parser-backed OCR, and report issue flow.
 - Explicit exclusion of external contribution from the launch architecture;
   reports remain in the first-party correction operation, and restoring a
@@ -54,10 +66,34 @@ The implementation intentionally keeps production catalog use blocked until:
   approvals, and signed exact EAS/archive/App Store evidence exist for the same
   release;
 - curated launch batch is built from real approved sources;
+- a target policy is signed before outcome access, the self-selected beta input
+  is described only as a defined beta-shelf coverage corpus, and no market-
+  representative claim is made;
+- separate optional curation-use consent, restricted retention/deletion, and
+  privacy-minimized aggregate evidence exist with no raw shelf data in Git,
+  general analytics, OBF, CosIng, or AI providers;
+- the curation partition and untouched holdout are sealed, and every
+  predeclared minimum-denominator/confidence-bound gate passes;
+- the complete reviewed-record decision and CAT-02 membership set were
+  independently witnessed in an append-only/timestamped authority before the
+  holdout was opened;
+- at least 2,000 independently sourced, reviewed, activation-eligible records,
+  every required-category floor, and at least 100 demand-prioritized eligible
+  records pass the signed inventory policy;
 - exact row-review overlays and dedicated CAT-08 operator identities exist;
+- qualified catalog/cosmetic-chemistry review and separate current U.S.
+  sunscreen/OTC-adjacent review bind every applicable row;
 - the two-session hosted CAT-02 staging/promotion/serialization/rollback drill
   passes with complete redacted receipts and zero projection drift;
-- beta coverage report exists;
+- clean local and hosted CAT-03 migration-`0058` reset, pgTAP, two-connection
+  staging/release/supersession race, direct-service-role denial, serving,
+  retirement, and rollback evidence passes;
+- the authoritative CAT-03 coverage/quality report exists for the sealed
+  holdout and exact independently signed database readback; the legacy beta
+  summary or offline-only approval cannot satisfy this gate;
+- no later retirement, successor release, dependency withdrawal, or review
+  expiry has made that readback historical; any such transition requires a new
+  reviewed campaign and independent post-release readback;
 - clinical/legal/cosmetic-chemist review clears product guidance;
 - native barcode/OCR camera work is verified on devices.
 
@@ -75,6 +111,11 @@ The current build improves the seven-figure path by adding:
 
 The unresolved commercial risk is coverage. A polished catalog architecture does not prove users will pay unless beta users can add real products and receive useful, trustworthy guidance.
 
+The planned beta is self-selected. Its evidence can establish performance only
+for the exact declared corpus and holdout; it cannot establish population or
+market representativeness. Passing product guardrails does not establish legal,
+clinical, Apple, or commercial approval.
+
 ## Exit Criteria Still Open
 
 - Source/legal approval attached.
@@ -89,11 +130,30 @@ The unresolved commercial risk is coverage. A polished catalog architecture does
   transforms, and zero-warning source-specific QA reports are retained.
 - First curated batch reviewed and promoted through CAT-02; no fixture,
   candidate, direct table write, or unresolved conflict is present.
+- Pre-outcome signed target policy, independently witnessed full-record
+  decision, separate consent, restricted deletion/retention evidence, privacy-
+  minimized aggregate corpus, and deterministic curation/holdout split are
+  retained without raw beta data in Git.
+- Beta demand is used only for priority; all product facts retain independent
+  CAT-01/CAT-02 provenance.
 - Import QA report has zero blockers.
-- Product recommendations use only eligible products.
+- Qualified reviewers sign exact product/dependency rows; U.S. sunscreen/
+  OTC-adjacent rows carry separate current market/label/classification/expiry/
+  claim evidence.
+- The exact released campaign contains at least 2,000 eligible records, every
+  signed required-category floor, and at least 100 prioritized eligible rows.
+- Product recommendations use only active-curation, eligible, reviewed,
+  dependency-complete products.
 - Hosted database evidence through migration `0057` proves the import
   lifecycle, rollback/reference preservation, and barcode, search,
   recommendation, product, ingredient, synonym, and child reads fail closed
   for every held source/record.
-- Closed beta coverage meets threshold.
+- Hosted database evidence through migration `0058` proves immutable campaign
+  scoped staging, exact-set atomic release/supersession/retirement, signed
+  readback, exact lineage, replay/race handling, direct-table denial for
+  `service_role`, authenticated RLS allow/deny proof, and immediate fail-closed
+  serving after any retirement or dependency withdrawal.
+- The untouched holdout meets every signed confidence-bound and minimum-
+  denominator target with zero open P0/P1 and zero below-usable recommendation
+  exposure; missing/suppressed required strata fail closed.
 - App copy and attribution approved under final brand.

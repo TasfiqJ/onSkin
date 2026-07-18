@@ -112,24 +112,43 @@ export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
   'apple_auth_server_events',
 ]);
 
+// Global clinical/editorial content that has no reviewed publication authority.
+// These relations remain in the public schema for migration compatibility, but
+// migration 0058 removes every direct API-role SELECT path until a separate,
+// evidence-bound B-DERM release contract is installed.
+export const SEALED_GLOBAL_CONTENT_TABLES = Object.freeze([
+  'conflict_rules',
+  'sequencing_rules',
+  'creator_stacks',
+  'creator_stack_items',
+]);
+
+// Catalog dictionaries/legacy projections consumed only behind bounded serving
+// functions. Their historical RLS policies may remain for migration continuity,
+// but migration 0058 revokes SELECT from every API role, including service_role.
+export const SEALED_CATALOG_AUTHORITY_TABLES = Object.freeze([
+  'ingredient_tags',
+  'ingredient_pao_defaults',
+  'product_categories',
+  'ingredient_tag_definitions',
+]);
+
+export const SEALED_PUBLIC_TABLES = Object.freeze([
+  ...SEALED_SERVICE_PRIVATE_TABLES,
+  ...SEALED_GLOBAL_CONTENT_TABLES,
+  ...SEALED_CATALOG_AUTHORITY_TABLES,
+]);
+
 export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([
   'ingredients',
   'ingredient_synonyms',
-  'ingredient_tags',
   'products',
   'product_ingredients',
-  'conflict_rules',
-  'ingredient_pao_defaults',
-  'sequencing_rules',
   'affiliate_links',
-  'creator_stacks',
-  'creator_stack_items',
   'community_topics',
   'community_notes',
   'brands',
-  'product_categories',
   'product_barcodes',
-  'ingredient_tag_definitions',
   'ingredient_tag_assignments',
   'product_ingredient_lists',
   'product_ingredient_tokens',
@@ -141,6 +160,8 @@ export const PRIVATE_PUBLIC_TABLES = Object.freeze([
   ...OWNER_LINKED_PRIVATE_TABLES,
   ...SERVICE_ONLY_PRIVATE_TABLES,
   ...SEALED_SERVICE_PRIVATE_TABLES,
+  ...SEALED_GLOBAL_CONTENT_TABLES,
+  ...SEALED_CATALOG_AUTHORITY_TABLES,
 ]);
 
 export function tableClassificationIssues({ createdTables, rlsTables, classifications }) {

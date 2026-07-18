@@ -344,7 +344,7 @@ function discoverTables() {
   const tables = new Map();
   for (const path of walk('supabase/migrations').filter((entry) => entry.endsWith('.sql'))) {
     for (const match of readRepo(path).matchAll(
-      /create\s+table\s+(?:if\s+not\s+exists\s+)?(?:public\.)?([a-z_]+)/gi,
+      /create\s+table\s+(?:if\s+not\s+exists\s+)?(?:(?:public|private)\.)?([a-z_]+)/gi,
     )) {
       if (!tables.has(match[1])) tables.set(match[1], path);
     }

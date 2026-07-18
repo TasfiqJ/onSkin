@@ -110,6 +110,70 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   launch gates.
 - Status: implementation candidate; production rollout gated.
 
+### A-009: Signed Launch Curation Is A Positive Serving Authority
+
+- Decision: CAT-02 promotion creates traceable, non-servable source projections;
+  it does not authorize launch use. CAT-03 uses a separately signed target policy,
+  a privacy-minimized beta-shelf coverage corpus, an untouched holdout, exact
+  CAT-01/CAT-02 lineage, signed four-scope membership proofs, per-field provenance,
+  independent reviews, and a full-record decision witnessed before holdout access.
+  One and only one contributing artifact may match the target policy's CAT-02
+  lineage; barcode identity, category, and regulatory memberships must bind that
+  primary artifact and its exact staged product record. CAT-03 v1 serves only the
+  reviewed primary barcode. Alias serving requires a later versioned membership
+  contract and migration.
+  At least 2,000 reviewed/eligible records, all required-category floors, and at
+  least 100 demand-prioritized eligible records are hard release gates. Per-product
+  authorizations stage without serving; one exact-set territory campaign release
+  atomically changes the current catalog. Final clearance requires an independently
+  signed, point-in-time database readback of that release. A later retirement,
+  successor, dependency withdrawal, or review expiry makes that receipt historical
+  until a new exact campaign and readback pass. Every catalog read path must positively
+  find the current global campaign and its campaign-scoped product authority.
+  Mutable quality/review flags, a beta demand signal, or the absence of a correction
+  can never grant eligibility. The RLS-bypassing service role receives no direct
+  catalog-table lane and uses narrow guarded RPCs; authenticated direct reads are
+  limited to explicitly granted safe relations with positive serving RLS.
+  Legacy active-row policies do not publish unreviewed `conflict_rules`,
+  `sequencing_rules`, `creator_stacks`, or `creator_stack_items` to any API role.
+  Their production publication is a separate, evidence-bound B-DERM authority;
+  the app's bundled copies remain filtered to reviewed content in production and
+  are not part of a CAT-03 product root.
+  Outcome reviewers sign a pre-activation body before the activation operator;
+  their exact four-role signature-set root is then bound into the operator's
+  authorization, whose timestamp must follow every review and the planned time.
+  Live product and dependency roots cover every client-readable field and the
+  exact sorted set of every readable child row, so a mutation, insertion, or
+  deletion fails serving closed. Record insertion and campaign release take the
+  same global-then-campaign transaction advisory locks before checking lifecycle
+  state, preventing a record from entering a released campaign.
+  Every mutation of sealed served state appends an immutable per-product event
+  while holding the same global lock, including reviewed correction holds,
+  production/legal source withdrawal, and promoted-batch retirement. Correction-
+  hold evidence uses one bounded serving projection (correction/product ID,
+  status, UTC review time, and reviewer/note-presence booleans); user identity,
+  barcode, free text, arbitrary JSON, assignment/resolution content, and ambient
+  timestamps never enter the permanent CAT-03 digest chain. Product/dependency
+  snapshot functions and mutation capture fix `TimeZone` to UTC before whole-row
+  JSON canonicalization.
+  Outcome reviewers sign the current mutation root. Exact byte restoration, closing the
+  hold, reapproving the source, or restoring the batch cannot resurrect that
+  authorization; recovery requires a newly reviewed current-root record,
+  successor campaign, atomic release, and current signed readback.
+  Retirement, source withdrawal, projection drift, an active correction hold, an
+  incomplete reviewed ingredient dependency, or a required sunscreen/US-OTC
+  review gap closes serving without deleting user references.
+- Criteria: no self-attested launch evidence, no beta-derived product facts,
+  complete dependency proof, role separation, independently witnessed prospective
+  commitments, replay-safe staging plus exact-set atomic campaign release, signed
+  readback, privacy-safe aggregate evidence, and immediate fail-closed retirement.
+- Risk: a self-selected beta corpus describes only the defined tester shelves and
+  cannot substantiate population or market-representativeness claims. Real consented
+  beta data, approved source artifacts, qualified catalog/regulatory reviewers,
+  hosted concurrency/readback evidence, and counsel-approved market-specific policy
+  remain launch gates.
+- Status: source implementation candidate; production activation gated.
+
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
 - Decision: the encrypted local skin profile is the V1 authority for pregnancy/breastfeeding status, and it can be read or changed only with a granted consent record whose version and SHA-256 text hash match the current health-data copy. Malformed or unreadable local profile/consent records are preserved and fail closed; they never trigger a server fallback. When no local profile exists, the newest server profile may supply non-safety axes/goals, but its pregnancy status is always treated as unknown because a local V1 edit may be newer. Shelf, Plan, scheduler, Today, recommendations, and conflict explanations consume the shared `ProfileBits` reader. Only a successfully read explicit local `none` clears caution; affirmative, prefer-not, unknown, missing, and unavailable states remain cautious without an inferred pregnancy claim. Exclusions are derived from the launch-gated docs/02 safety rules, not a parallel table: production accepts only rules carrying recorded review metadata, while development/staging can exercise starter rules for review. Eligible reviewed rules remove retinoids and hydroquinone and remove BHA unless every threshold-bearing active percentage is unambiguously tag-associated and confirmed low, before sequence, cadence, cycle, ramp, replacement recommendations, or Today. If the separate cadence review gate is closed, all treatment/exfoliant placement is withheld instead of becoming an unassigned daily step. Writes persist locally first, disable competing selection input while pending, and invalidate every dependent query.

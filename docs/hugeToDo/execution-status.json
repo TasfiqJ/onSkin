@@ -80,7 +80,7 @@
       "id": "H-09",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Recruit genuine representative beta users, obtain required consent, and retain cohort, participation, support, and findings evidence without fabricating responses.",
+      "nextAction": "Recruit genuine users for the defined self-selected beta cohort, obtain separate purpose-specific consent where shelf data supports catalog curation, and retain minimized cohort, participation, support, withdrawal/deletion, and findings evidence without fabricating responses or claiming market representativeness.",
       "evidenceRefs": ["docs/phase-10/tester-recruitment-sheet.md", "docs/phase-10/tester-brief.md"]
     },
     {
@@ -838,7 +838,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The local source gate now covers 56 migrations through 0057, with 80 RLS tables and 58 private tables classified as 38 directly queryable plus 20 sealed. Catalog sources, lifecycle ledgers, exact-session Apple state, and other sealed authorities cannot be reached directly by API roles. Run the exhaustive 58-private-table matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile behavior, and the CAT-02 catalog RPC/serving boundary; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The local source candidate now covers 57 migrations through 0058. The passing static inventory classifies all 80 RLS-enabled public tables as 38 directly queryable private, 28 read-sealed private/authority, and 14 authenticated catalog/editorial tables; seven CAT-03 authorities are separately sealed in the private schema, including the append-only per-product served-state mutation ledger. Catalog sources, global clinical/editorial relations, catalog dictionary/legacy authorities, import/curation lifecycle ledgers, exact-session Apple state, and other sealed authorities must remain unreachable directly by every API role, including service_role. Run the current 66-table public-schema private/read-sealed matrix and seven-table private-schema denial lane against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile behavior, and CAT-02/CAT-03 authority-denial and serving probes; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -858,6 +858,8 @@
         "supabase/tests/database/apple_auth_lifecycle.test.sql",
         "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
+        "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+        "supabase/tests/database/catalog_launch_curation.test.sql",
         "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
@@ -866,7 +868,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Local source composes the migration-0052 publication lease, migration-0054 non-destructive health withdrawal, migration-0055 Sign in with Apple authority, migration-0056 catalog serving gate, and migration-0057 transactional catalog lifecycle. The Apple candidate implements nonce/state and one-use code capture, owner/subject/client-bound encrypted refresh tokens, daily validation, signed terminal events, no-retry terminal-event reconciliation before code exchange, native invalidation, deletion-vault reuse, and exact-session denial. CAT-02 adds sealed provenance, immutable projection lineage, dependency-closed serving, and non-destructive rollback. Prove the complete candidate end to end in reviewed staging and production: every publication path fenced; stale JWT/session denial; Apple recapture, signed events, Cron, key rotation and deletion; CAT-02 two-connection collision, replay, correction, source-withdrawal, promotion and rollback races; Storage/backup; provider interruption/recreation; post-delete denial; export expiry; and terminal fresh reconsent. Obtain the old/tampered-client control and complete physical-iPhone/TestFlight and professional-review matrices. Do not describe any end-to-end lifecycle as race-free or launch-ready before those gates pass.",
+      "nextAction": "Local source composes the migration-0052 publication lease, migration-0054 non-destructive health withdrawal, migration-0055 Sign in with Apple authority, migration-0056 catalog serving gate, migration-0057 transactional catalog lifecycle, and migration-0058 immutable catalog curation activation/retirement plus an append-only per-product served-state mutation ledger. The Apple candidate implements nonce/state and one-use code capture, owner/subject/client-bound encrypted refresh tokens, daily validation, signed terminal events, no-retry terminal-event reconciliation before code exchange, native invalidation, deletion-vault reuse, and exact-session denial. CAT-02 adds sealed provenance, immutable projection lineage, dependency-closed serving, and non-destructive rollback; CAT-03 adds exact-primary lineage, full served-state snapshot binding, reviewer-signed product mutation roots/campaign root set, staged reviewer/operator authority, and a positive active-curation serving dependency. Prove the complete candidate end to end in reviewed staging and production: every publication path fenced; stale JWT/session denial; Apple recapture, signed events, Cron, key rotation and deletion; CAT-02 collision/replay/correction/source-withdrawal/promotion/rollback races; CAT-03 register/seal/activate/replay/retire races, served-state-mutation-versus-record/release races, old-root rejection after exact restoration or pre-record mutation, successor-current-root recovery, authority denial, dependency withdrawal, consent/holdout evidence, and immediate serving suppression; Storage/backup; provider interruption/recreation; post-delete denial; export expiry; and terminal fresh reconsent. Obtain the old/tampered-client control and complete physical-iPhone/TestFlight and professional-review matrices. Do not describe any end-to-end lifecycle as race-free or launch-ready before those gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
@@ -921,7 +923,12 @@
         "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
         "docs/hugeToDo/health-processor-inventory-v1.json",
         "scripts/phase9/health-consent-work-lane-smoke.mjs",
-        "scripts/phase9/health-processor-inventory-smoke.mjs"
+        "scripts/phase9/health-processor-inventory-smoke.mjs",
+        "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+        "supabase/tests/database/catalog_import_lifecycle.test.sql",
+        "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+        "supabase/tests/database/catalog_launch_curation.test.sql",
+        "docs/phase-4/catalog-curation-release-runbook.md"
       ]
     },
     {
@@ -1092,10 +1099,30 @@
     },
     {
       "id": "CAT-03",
-      "status": "not_started",
-      "blockedBy": ["CAT-02"],
-      "nextAction": "Complete and capture acceptance evidence: Curate a production launch catalog from representative beta shelves",
-      "evidenceRefs": []
+      "status": "in_progress",
+      "blockedBy": ["CAT-01", "CAT-02", "DB-09", "DB-10", "H-07", "H-09", "REV-05"],
+      "nextAction": "The local source candidate now defines a CAT-03 target/corpus/review contract and migration 0058 for signed targets, an externally witnessed full-record decision before holdout access, separately consented privacy-minimized beta-shelf demand, deterministic curation/untouched-holdout separation, confidence-bound quality gates, exact multi-batch/four-scope CAT-01/CAT-02 membership with exactly one target-lineage primary artifact, primary-barcode-only serving, qualified row review, staged outcome-reviewer-root then operator authorization, full client-readable product/dependency snapshot sealing, reviewer-signed per-record served-state mutation roots and campaign root set, a hard floor of at least 2,000 eligible records with all category floors and at least 100 prioritized eligible rows, campaign-scoped non-serving authorization, exact-set atomic global campaign release, independent signed point-in-time database readback, immutable retirement, an append-only per-product mutation ledger, and RPC-only `service_role` access. Any sealed-state mutation advances the current root; exact restoration, hold closure, source reapproval, or batch restoration cannot reuse old review authority, and recovery requires a newly reviewed current-root successor record/campaign/readback. Beta demand prioritizes independently sourced products and never becomes a product fact; the self-selected cohort cannot support a market-representative claim. Obtain real CAT-01/CAT-02 evidence, genuine consented beta aggregates, witnessed targets/decisions, and qualified catalog/U.S. OTC-adjacent reviews; pass clean local and hosted 0058 pgTAP plus two-connection staging/release/supersession/retirement, mutation-versus-record/release, pre-record and exact-restoration old-root rejection, successor-current-root recovery, direct-service-role denial, serving, withdrawal, and rollback drills; then stage the exact non-serving campaign, atomically release it, and obtain a current independently signed post-release point-in-time database readback before treating that campaign as clear.",
+      "evidenceRefs": [
+        "docs/phase-4/catalog-curation-release-runbook.md",
+        "docs/phase-4/catalog-coverage-quality-targets.template.json",
+        "docs/phase-4/beta-shelf-corpus.template.json",
+        "docs/phase-4/catalog-curation-review.template.json",
+        "docs/phase-4/catalog-cat02-membership-proof.template.json",
+        "docs/phase-4/catalog-curation-database-readback.template.json",
+        "docs/phase-3/consent-matrix.md",
+        "docs/phase-3/data-inventory.md",
+        "docs/store-privacy-inventory.md",
+        "docs/phase-4/curated-product-curation-sheet.md",
+        "docs/phase-4/first-curated-product-batch.md",
+        "docs/phase-4/beta-coverage-report.md",
+        "scripts/phase4/catalog-curation-contract.mjs",
+        "scripts/phase4/catalog-curation-contract.test.mjs",
+        "scripts/phase4/build-catalog-curation-envelope.mjs",
+        "scripts/phase4/catalog-coverage-quality-report.mjs",
+        "scripts/phase4/catalog-coverage-quality-report.test.mjs",
+        "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+        "supabase/tests/database/catalog_launch_curation.test.sql"
+      ]
     },
     {
       "id": "CAT-04",
@@ -1867,7 +1894,7 @@
       "id": "BETA-03",
       "status": "not_started",
       "blockedBy": ["BETA-02"],
-      "nextAction": "Complete and capture acceptance evidence: Recruit and manage representative beta cohort",
+      "nextAction": "Recruit and manage the declared genuine self-selected beta cohort under approved consent and privacy controls; report its sampling limitations and do not claim market or population representativeness.",
       "evidenceRefs": []
     },
     {

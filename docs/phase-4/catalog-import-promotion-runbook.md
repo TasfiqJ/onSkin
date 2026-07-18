@@ -280,8 +280,10 @@ properties.
 
 This source architecture does not populate or clear the production catalog.
 CAT-02 remains externally gated by CAT-01's real approvals/build evidence and
-by hosted staging verification. CAT-03 still requires representative beta
-shelves, reviewed coverage/quality targets, product and ingredient curation,
+by hosted staging verification. CAT-03 still requires a defined, separately
+consented beta-shelf coverage corpus and sealed untouched holdout (with no
+market-representative claim), pre-outcome signed coverage/quality targets,
+product and ingredient curation,
 and sunscreen/OTC/clinical/cosmetic-chemistry review. Final brand, attribution,
 privacy/legal, physical-iPhone, TestFlight, operational staffing, and App
 Review gates also remain open. No part of this runbook guarantees legal

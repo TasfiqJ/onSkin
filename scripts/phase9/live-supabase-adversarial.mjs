@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 import {
   PRIVATE_PUBLIC_TABLES,
-  SEALED_SERVICE_PRIVATE_TABLES,
+  SEALED_PUBLIC_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   HarnessAssertionError,
   authUserMissing,
@@ -269,10 +269,7 @@ function registerPrivateTableProbe(table, column, value, crossClient = 'userB') 
 }
 
 function registerSealedPrivateTableProbe(table, column, value) {
-  assert(
-    SEALED_SERVICE_PRIVATE_TABLES.includes(table),
-    `Unknown sealed private-table probe: ${table}.`,
-  );
+  assert(SEALED_PUBLIC_TABLES.includes(table), `Unknown sealed private-table probe: ${table}.`);
   assert(!privateTableProbes.has(table), `Duplicate private-table probe: ${table}.`);
   assert(
     typeof column === 'string' && column.length > 0,
@@ -365,7 +362,6 @@ async function main() {
   const globalCleanup = {
     communityNoteIds: [],
     communityTopicIds: [],
-    conflictRuleIds: [],
   };
 
   try {
@@ -598,31 +594,15 @@ async function main() {
         product && secondProduct && crossUserProduct && routine,
         'routine prerequisite rows were not created.',
       );
-      const ruleToken = randomUUID().replace(/-/g, '_');
-      const conflictRule = await insertOne(
-        admin,
-        'conflict_rules',
-        {
-          tag_a: `phase9_a_${ruleToken}`,
-          tag_b: `phase9_b_${ruleToken}`,
-          interaction_type: 'irritation',
-          base_severity: 'mild',
-          evidence_grade: 'C',
-          evidence_label: 'plausible',
-          mechanism: 'Phase 9 synthetic RLS test rule.',
-          resolution_type: 'no_change',
-          resolution_copy: 'Phase 9 synthetic RLS test copy.',
-          source_citation: 'phase9-live-adversarial',
-          reviewed_by: 'phase9-live-adversarial',
-          is_active: true,
-        },
-        'id',
-      );
-      globalCleanup.conflictRuleIds.push(conflictRule.id);
+      // The global clinical rule table is deliberately unreadable even to the
+      // service role. Use the fixed migration seed only as an FK fixture; this
+      // test is about owner isolation of routine_conflicts, not publication of
+      // the unreviewed rule itself.
+      const conflictRuleId = '00000000-0000-4000-8000-000000000001';
 
       const firstConflictPayload = {
         user_id: userA.id,
-        rule_id: conflictRule.id,
+        rule_id: conflictRuleId,
         product_a_id: product.id,
         product_b_id: secondProduct.id,
         computed_severity: 'mild',
@@ -678,7 +658,7 @@ async function main() {
         .from('routine_conflicts')
         .select('id')
         .eq('user_id', userA.id)
-        .eq('rule_id', conflictRule.id)
+        .eq('rule_id', conflictRuleId)
         .eq('product_a_id', canonicalProductAId)
         .eq('product_b_id', canonicalProductBId);
       if (canonicalRows.error) throw canonicalRows.error;
@@ -704,7 +684,7 @@ async function main() {
         'routine conflict cross-user insert',
         userB.client.from('routine_conflicts').insert({
           user_id: userA.id,
-          rule_id: conflictRule.id,
+          rule_id: conflictRuleId,
           computed_severity: 'mild',
         }),
       );
@@ -712,7 +692,7 @@ async function main() {
         'routine conflict cross-user product insert',
         userA.client.from('routine_conflicts').insert({
           user_id: userA.id,
-          rule_id: conflictRule.id,
+          rule_id: conflictRuleId,
           product_a_id: crossUserProduct.id,
           computed_severity: 'mild',
         }),
@@ -2284,7 +2264,7 @@ async function main() {
       expectStorageDenied('storage upload after photo_cloud_backup revocation', revokedUpload);
     });
 
-    await runCheck('service-only private table positive controls', async () => {
+    await runCheck('sealed and directly queryable private table controls', async () => {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
       registerSealedPrivateTableProbe('catalog_sources', 'id', absentUuid);
@@ -2331,6 +2311,14 @@ async function main() {
       registerSealedPrivateTableProbe('apple_auth_lifecycles', 'user_id', absentUuid);
       registerSealedPrivateTableProbe('apple_auth_capture_operations', 'id', absentUuid);
       registerSealedPrivateTableProbe('apple_auth_server_events', 'jti_hmac', absentDigest);
+      registerSealedPrivateTableProbe('conflict_rules', 'id', absentUuid);
+      registerSealedPrivateTableProbe('sequencing_rules', 'id', absentUuid);
+      registerSealedPrivateTableProbe('creator_stacks', 'id', absentUuid);
+      registerSealedPrivateTableProbe('creator_stack_items', 'id', absentUuid);
+      registerSealedPrivateTableProbe('ingredient_tags', 'ingredient_id', absentUuid);
+      registerSealedPrivateTableProbe('ingredient_pao_defaults', 'category', '__phase9_absent__');
+      registerSealedPrivateTableProbe('product_categories', 'id', '__phase9_absent__');
+      registerSealedPrivateTableProbe('ingredient_tag_definitions', 'tag', '__phase9_absent__');
 
       const subscriptionEvent = await insertOne(admin, 'subscriptions_events', {
         rc_event_id: `phase9-${randomUUID()}`,
@@ -2391,7 +2379,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 58 private tables have access-control probes', async () => {
+    await runCheck('all 66 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(
@@ -2527,9 +2515,6 @@ async function main() {
     );
     await deleteByIds(admin, 'community_topics', globalCleanup.communityTopicIds).catch((error) =>
       errors.push(`Community topic cleanup failed: ${redactedErrorKind(error)}`),
-    );
-    await deleteByIds(admin, 'conflict_rules', globalCleanup.conflictRuleIds).catch((error) =>
-      errors.push(`Conflict rule cleanup failed: ${redactedErrorKind(error)}`),
     );
   }
 

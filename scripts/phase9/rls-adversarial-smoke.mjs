@@ -8,6 +8,9 @@ import {
   HarnessAssertionError,
   OWNER_LINKED_PRIVATE_TABLES,
   PRIVATE_PUBLIC_TABLES,
+  SEALED_CATALOG_AUTHORITY_TABLES,
+  SEALED_GLOBAL_CONTENT_TABLES,
+  SEALED_PUBLIC_TABLES,
   SEALED_SERVICE_PRIVATE_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   authUserMissing,
@@ -39,12 +42,16 @@ const canonicalClassifications = [
   ['owner-linked private', OWNER_LINKED_PRIVATE_TABLES],
   ['service-only private', SERVICE_ONLY_PRIVATE_TABLES],
   ['sealed service-only private', SEALED_SERVICE_PRIVATE_TABLES],
+  ['sealed global clinical/editorial', SEALED_GLOBAL_CONTENT_TABLES],
+  ['sealed catalog authority', SEALED_CATALOG_AUTHORITY_TABLES],
   ['authenticated catalog/editorial', AUTHENTICATED_CATALOG_TABLES],
 ];
 const canonicalTables = [
   ...OWNER_LINKED_PRIVATE_TABLES,
   ...SERVICE_ONLY_PRIVATE_TABLES,
   ...SEALED_SERVICE_PRIVATE_TABLES,
+  ...SEALED_GLOBAL_CONTENT_TABLES,
+  ...SEALED_CATALOG_AUTHORITY_TABLES,
   ...AUTHENTICATED_CATALOG_TABLES,
 ];
 
@@ -63,6 +70,10 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
   );
   assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 8);
   assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 20);
+  assert.equal(SEALED_GLOBAL_CONTENT_TABLES.length, 4);
+  assert.equal(SEALED_CATALOG_AUTHORITY_TABLES.length, 4);
+  assert.equal(SEALED_PUBLIC_TABLES.length, 28);
+  assert.equal(AUTHENTICATED_CATALOG_TABLES.length, 14);
   assert.deepEqual(
     [
       'catalog_sources',
@@ -83,10 +94,12 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
     ...OWNER_LINKED_PRIVATE_TABLES,
     ...SERVICE_ONLY_PRIVATE_TABLES,
     ...SEALED_SERVICE_PRIVATE_TABLES,
+    ...SEALED_GLOBAL_CONTENT_TABLES,
+    ...SEALED_CATALOG_AUTHORITY_TABLES,
   ]);
-  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 58);
+  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 66);
   assert.equal(
-    PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table)).length,
+    PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length,
     38,
   );
   assert.deepEqual(

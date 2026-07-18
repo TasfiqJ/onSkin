@@ -45,6 +45,15 @@ yarn-error.*
 test-results/
 /artifacts/phase4/
 
+# Private beta shelf and curation inputs can reveal product/health interests.
+# Only minimized templates and generated aggregate receipts belong in Git.
+/docs/phase-4/beta-coverage-input.json
+/docs/phase-4/beta-shelf-corpus.json
+/docs/phase-4/catalog-cat02-membership-proof.json
+/docs/phase-4/catalog-curation-review.json
+/docs/phase-4/catalog-curation-database-readback.json
+/docs/phase-4/catalog-coverage-quality-targets.json
+
 # Raw release-candidate archives/reports stay in the approved evidence store.
 # The committed RC JSON records their exact paths, sizes, hashes, and reviews.
 /docs/phase-9/release-candidates/*/evidence/

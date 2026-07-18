@@ -112,6 +112,11 @@ Format: `D-NNN — date — decision — rationale`.
   The Slice-1 docs/00 §2 catalog _sketch_ (migration 0003) was rewritten to the
   docs/02 §3 schema — it was a never-applied placeholder, so editing forward is
   clean (no deployed DB; B-SUPABASE).
+  **Superseded 2026-07-18:** migration `0058` removes direct API-role reads from
+  clinical/editorial and catalog-authority tables, including `conflict_rules`
+  and `sequencing_rules`. Clients use only bounded, positively eligible serving
+  projections; bundled rule mirrors retain review metadata and fail closed in
+  production until their separate qualified-review gate passes.
 
 - **D-017 — 2026-06-13 — Conflict rules match on FUNCTIONAL TAGS, not INCI ids**
   (docs/02 §2.4/§4). It's the acid-ness / retinoid-ness that interacts. A
@@ -146,11 +151,15 @@ Format: `D-NNN — date — decision — rationale`.
 ## Routine builder (docs/03, Slice 12+)
 
 - **D-022 — 2026-06-13 — Application order is versioned DATA, not hard-coded**
-  (docs/03 §3): `sequencing_rules` (catalog-style, world-readable) holds
-  role→priority/phase/eligibility; the engine sorts by it. Pure ordering is
-  low-risk cosmetic; the ramp/frequency/cycling on top are medical-adjacent and
-  fall under B-DERM-REVIEW. Roles classified by functional TAGS first, then name
-  keywords (a "glycolic toner" is an exfoliant, not a toner).
+  (docs/03 §3): `sequencing_rules` holds versioned
+  role→priority/phase/eligibility authority. Migration `0058` supersedes the
+  original catalog-style, world-readable posture: direct API-role reads are
+  sealed, and the client engine sorts only individually reviewed bundled rules
+  admitted by the production gate. Without an admitted rule, automatic phase
+  placement and rule-derived instructions are withheld. Ramp/frequency/cycling
+  remain medical-adjacent and fall under B-DERM-REVIEW. Roles are classified by
+  functional TAGS first, then name keywords (a "glycolic toner" is an
+  exfoliant, not a toner).
 
 - **D-023 — 2026-06-13 — Retinoid ramp is per-user recomputable state**
   (`active_ramp`, docs/03 §4): "start low and slow" — sensitive start 2×/wk,

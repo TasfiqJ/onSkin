@@ -470,6 +470,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The label reflects that profile state rather than hardcoding `dry, sensitive skin`.
   - Evidence: Screenshot and local profile fixture snapshot.
   - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 seeds the real local profile store with oily/resistant axes plus a real shelf, opens `/routine/plan`, and verifies `BUILT FOR OILY, RESISTANT SKIN`, `Gel cleanser`, `Mineral SPF 50`, no dry/sensitive copy, a complete compact PM suffix, zero horizontal overflow, and 44 px+ visible controls. Evidence is in `test-results/human-e2e/2026-07-08/routine-plan-profile-label-current/`.
+- Branch: sequencing review gate is closed or only partially reviewed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: In development, set `EXPO_PUBLIC_E2E_ROUTINE_SEQUENCING_REVIEW_GATE=closed`, add classifiable stable products, and inspect Reveal, Plan, Today AM, and Today PM. Repeat in a production-mode unit/integration fixture with only one role carrying review metadata and inject stale cycle data for a withheld active.
+  - Expected result: Unreviewed products remain visible on the Shelf but are absent from both generated phases, Today check-offs, and cycle projections. The UI says automatic order is not set and never promises manual placement. It surfaces no starter or synthesized use instruction. A partially reviewed role cannot authorize a different role, while an exact reviewed role may publish only its own phase, order, and instruction.
+  - Evidence: Reveal/Plan/Today screenshots and visible-text snapshots at supported phone sizes, browser logs, generated-plan and Today-projection snapshots, plus focused production-gate tests.
+  - Open external evidence: Current source has focused unit/static coverage; a post-fix human-simulated Expo web pass and physical-iPhone review-build verification remain required.
 - Branch: pregnancy and breastfeeding status stays consistent across settings, Plan, and Today
   - Priority: Critical
   - Automate later: Yes

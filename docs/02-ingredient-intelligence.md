@@ -96,10 +96,10 @@ A three-stage pipeline: **seed → curate → serve.**
 
 ### 3. Data model (the schema) — extends docs/01 §3
 
-All tables in `public`. **Catalog tables are world-readable to authenticated users (and to anonymous users, because product intake happens during the pre-account quiz — docs/01 §2 step 6); writes are service-role only.** Per-user tables are owner-only RLS exactly as docs/01 §3 prescribes (wrap `auth.uid()` in a subselect, `TO authenticated`, index policy columns, `WITH CHECK` on writes).
+All tables in `public`. **D-016's former broad-read model is superseded by the CAT-03 serving contract.** Only the bounded, product-scoped relations needed by the app are directly readable by the `authenticated` role, and every row must satisfy a positive active-campaign, reviewed-lineage, current-mutation-root serving predicate. A signed-anonymous Supabase user carries the `authenticated` role; a publishable-key client with no session has no catalog read lane. The `service_role` has no direct catalog-table read and may use only the bounded lookup/search RPCs. `conflict_rules`, `sequencing_rules`, `creator_stacks`, `creator_stack_items`, `ingredient_tags`, `ingredient_pao_defaults`, `product_categories`, and `ingredient_tag_definitions` are direct-read sealed until their applicable evidence-bound publication authority exists. Per-user tables are owner-only RLS exactly as docs/01 §3 prescribes (wrap `auth.uid()` in a subselect, `TO authenticated`, index policy columns, `WITH CHECK` on writes).
 
 ```sql
--- ============ CATALOG (service-role writes; authenticated/anon read) ============
+-- ============ CATALOG (operator writes; positive-RLS/RPC serving only) ============
 
 create table public.ingredients (
   id              uuid primary key default gen_random_uuid(),
@@ -201,18 +201,18 @@ create table public.routine_conflicts (
 create index on public.routine_conflicts (user_id);
 ```
 
-**RLS sketch (catalog read = open to the role that does product intake during onboarding):**
+**RLS sketch (positive serving authority, not role-wide publication):**
 
 ```sql
 alter table public.products enable row level security;
-create policy products_read on public.products
-  for select to authenticated using (true);            -- catalog is non-personal
--- (mirror for ingredients, ingredient_synonyms, ingredient_tags, product_ingredients,
---  conflict_rules (only is_active = true exposed), ingredient_pao_defaults)
--- NOTE: if product intake must work before sign-in (anon session), grant SELECT TO anon
---       on catalog tables too — these contain no personal data. Per docs/01 §1, anon users
---       hold the 'authenticated' role with is_anonymous=true, so `TO authenticated` already
---       covers them; verify at build time.
+create policy products_read_servable on public.products
+  for select to authenticated
+  using (private.catalog_product_is_servable(id));
+-- Safe dependent relations use equally narrow product/dependency predicates.
+-- Never substitute USING (true), is_active alone, or reviewed_by alone.
+-- PUBLIC, anon, and service_role SELECT are revoked. service_role reads through
+-- lookup_catalog_product_by_barcode/search_catalog_products only.
+-- The eight global/dictionary authority tables named above have no API read lane.
 
 alter table public.routine_conflicts enable row level security;
 create policy rc_owner_sel on public.routine_conflicts
@@ -224,7 +224,7 @@ create policy rc_owner_upd on public.routine_conflicts
                                 with check ((select auth.uid()) = user_id);
 ```
 
-> **Decision-log note (DECISIONS.md):** these catalog/rule tables are new and should be logged (e.g. **D-016 — catalog tables world-readable, service-role write**; **D-017 — conflict rules matched on functional tags, not INCI ids**; **D-018 — `routine_conflicts` as a recomputed per-user cache**). Anything touching consent/RLS/legal for the _personal_ layer (e.g., whether detected-conflict data counts as shared if exported) belongs in **BLOCKERS.md**, not here.
+> **Decision-log note (DECISIONS.md):** **D-016's world-readable catalog posture is superseded** by positive CAT-03 RLS, direct service-role denial, and bounded serving RPCs. **D-017** retains functional-tag conflict matching, while **D-018** retains `routine_conflicts` as a recomputed per-user cache. Global rule content must carry review metadata in bundled as well as database form and fail closed in production until its separate qualified-review gate passes. Anything touching consent/RLS/legal for the _personal_ layer (e.g., whether detected-conflict data counts as shared if exported) belongs in **BLOCKERS.md**, not here.
 
 ### 4. The conflict & synergy engine
 

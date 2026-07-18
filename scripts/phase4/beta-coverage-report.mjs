@@ -9,6 +9,7 @@ import {
   normalizeProductionUrl,
 } from '../phase9/lib.mjs';
 import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
+import { parseCatalogControlJson } from './source-policy.mjs';
 
 const root = process.cwd();
 const launchContract = loadLaunchContract(root);
@@ -37,6 +38,7 @@ const generatedOutputPaths = [
 ];
 
 const sourceHashPaths = [
+  '.gitignore',
   'package.json',
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
@@ -44,6 +46,11 @@ const sourceHashPaths = [
   'scripts/phase4/build-source-worklist.mjs',
   'scripts/phase4/beta-coverage-report.mjs',
   'scripts/phase4/beta-coverage-report-smoke.mjs',
+  'scripts/phase4/catalog-curation-contract.mjs',
+  'scripts/phase4/catalog-curation-contract.test.mjs',
+  'scripts/phase4/build-catalog-curation-envelope.mjs',
+  'scripts/phase4/catalog-coverage-quality-report.mjs',
+  'scripts/phase4/catalog-coverage-quality-report.test.mjs',
   'scripts/phase4/catalog-qa-report.mjs',
   'scripts/phase4/catalog-qa-report-smoke.mjs',
   'supabase/functions/catalog-report/index.ts',
@@ -52,12 +59,23 @@ const sourceHashPaths = [
   'supabase/functions/deno.lock',
   'scripts/phase9/lib.mjs',
   'docs/FOR_TAS_TO_DO.md',
+  'docs/phase-3/consent-matrix.md',
+  'docs/phase-3/data-inventory.md',
+  'docs/store-privacy-inventory.md',
   'docs/phase-4/beta-coverage-input.template.json',
+  'docs/phase-4/beta-shelf-corpus.template.json',
   'docs/phase-4/beta-coverage-report.md',
+  'docs/phase-4/catalog-coverage-quality-targets.template.json',
+  'docs/phase-4/catalog-curation-review.template.json',
+  'docs/phase-4/catalog-cat02-membership-proof.template.json',
+  'docs/phase-4/catalog-curation-database-readback.template.json',
+  'docs/phase-4/catalog-curation-release-runbook.md',
   'docs/phase-4/generated/source-worklist.json',
   'docs/phase-4/generated/source-worklist.md',
   'docs/phase-4/observability-dashboard.md',
   'docs/phase-4/phase-4-exit-review.md',
+  'supabase/migrations/20260717000058_catalog_launch_curation.sql',
+  'supabase/tests/database/catalog_launch_curation.test.sql',
   'docs/phase-4/generated/catalog-qa-report.json',
   'docs/phase-4/generated/catalog-qa-report.md',
   'docs/phase-10/beta-event-schema.md',
@@ -99,18 +117,13 @@ function asObject(value) {
 }
 
 function numberValue(value) {
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric : null;
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
-function booleanValue(value) {
-  if (typeof value === 'boolean') return value;
-  const normalized = String(value ?? '')
-    .trim()
-    .toLowerCase();
-  if (normalized === 'true') return true;
-  if (normalized === 'false') return false;
-  return null;
+function proportionValue(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1
+    ? value
+    : null;
 }
 
 function textValue(value) {
@@ -157,7 +170,7 @@ let parseError = null;
 
 if (existsSync(inputPath)) {
   try {
-    input = JSON.parse(readFileSync(inputPath, 'utf8'));
+    input = parseCatalogControlJson(readFileSync(inputPath), 'Legacy beta coverage input');
   } catch (error) {
     parseError = error instanceof Error ? error.message : String(error);
   }
@@ -210,7 +223,7 @@ const wrongMatchMatchedScans =
   numberValue(wrongMatch.matchedScans) ?? (barcodeMatched ?? 0) + (searchMatched ?? 0);
 const wrongMatchRate = rate(wrongMatchTotal, wrongMatchMatchedScans);
 const unknownTokenRate =
-  numberValue(parser.unknownTokenRate) ?? numberValue(catalog.parserUnknownTokenRate);
+  proportionValue(parser.unknownTokenRate) ?? proportionValue(catalog.parserUnknownTokenRate);
 const lowerThanUsableUsed =
   numberValue(recommendations.lowerThanUsableUsedInRecommendations) ??
   numberValue(catalog.lowerThanUsableUsedInRecommendations);
@@ -231,15 +244,20 @@ const topWrongMatches = arrayValue(catalog.topWrongMatches);
 const topUnknownTokens = arrayValue(parser.topUnknownTokens ?? catalog.topUnknownTokens);
 const categoryCoverage = arrayValue(catalog.categoryCoverage);
 const expectedRecommendationProducts = arrayValue(catalog.expectedRecommendationProducts);
-const realBetaData = booleanValue(evidence.realBetaData);
+const realBetaData = evidence.realBetaData === true;
 const signedOffBy = normalizeNamedSignoff(evidence.signedOffBy);
 const dashboardUrl = normalizeProductionUrl(evidence.dashboardUrl ?? evidence.catalogDashboardUrl);
 const supportDashboardUrl = normalizeProductionUrl(evidence.supportDashboardUrl);
 const analyticsDashboardUrl = normalizeProductionUrl(evidence.analyticsDashboardUrl);
-const sourceExportHash = cleanText(evidence.sourceExportHash);
+const sourceExportHash = /^[0-9a-f]{64}$/i.test(String(evidence.sourceExportHash ?? ''))
+  ? String(evidence.sourceExportHash).toLowerCase()
+  : null;
 
 if (input) {
-  if (realBetaData !== true) {
+  evidenceBlockers.push(
+    'Legacy beta coverage input is informational only and can never authorize CAT-03. Use the signed catalog-curation contract and privacy-minimized holdout report.',
+  );
+  if (!realBetaData) {
     evidenceBlockers.push(
       'Evidence must explicitly set evidence.realBetaData=true for real beta exports.',
     );
@@ -295,11 +313,17 @@ if (input) {
     if (!Number.isFinite(total) || total <= 0)
       evidenceBlockers.push(`Beta must exercise ${label}.`);
     if (!Number.isFinite(matched)) evidenceBlockers.push(`Missing matched count for ${label}.`);
+    if (Number.isFinite(total) && Number.isFinite(matched) && matched > total) {
+      evidenceBlockers.push(`${label} matched count cannot exceed its total.`);
+    }
   }
 
   if (!Number.isFinite(ocrAttempts) || ocrAttempts <= 0)
     evidenceBlockers.push('Beta must exercise OCR/label parsing.');
   if (!Number.isFinite(ocrParsed)) evidenceBlockers.push('Missing OCR parsed count.');
+  if (Number.isFinite(ocrAttempts) && Number.isFinite(ocrParsed) && ocrParsed > ocrAttempts) {
+    evidenceBlockers.push('OCR parsed count cannot exceed attempts.');
+  }
   if (!Number.isFinite(manualStarted) || manualStarted <= 0) {
     evidenceBlockers.push('Beta must exercise manual fallback start.');
   }
@@ -315,6 +339,13 @@ if (input) {
   }
 
   if (!Number.isFinite(wrongMatchTotal)) evidenceBlockers.push('Missing wrong-match report total.');
+  if (
+    Number.isFinite(wrongMatchTotal) &&
+    Number.isFinite(wrongMatchMatchedScans) &&
+    wrongMatchTotal > wrongMatchMatchedScans
+  ) {
+    evidenceBlockers.push('Wrong-match total cannot exceed the matched-scan denominator.');
+  }
   if (wrongMatchRate !== null && wrongMatchRate > 0.02) {
     evidenceBlockers.push('Wrong-match report rate exceeds the 2% Phase 4 alert threshold.');
   }
@@ -352,17 +383,25 @@ if (input) {
 
   if (categoryCoverage.length === 0)
     evidenceBlockers.push('Missing catalog.categoryCoverage rows.');
+  const seenCategories = new Set();
   for (const row of categoryCoverage) {
     const category = cleanText(row?.category) ?? 'unknown';
     const added = numberValue(row?.added);
     const matched = numberValue(row?.matched);
     if (!Number.isFinite(added) || !Number.isFinite(matched)) {
       evidenceBlockers.push(`Category ${category} is missing added/matched counts.`);
+    } else if (matched > added) {
+      evidenceBlockers.push(`Category ${category} matched count cannot exceed added count.`);
     } else if (added >= 5 && matched === 0) {
       evidenceBlockers.push(
         `Category ${category} has a beta catalog dead zone: 0 matches for ${added} added products.`,
       );
     }
+    const categoryKey = category.toLocaleLowerCase('en-US');
+    if (seenCategories.has(categoryKey)) {
+      evidenceBlockers.push(`Category ${category} appears more than once.`);
+    }
+    seenCategories.add(categoryKey);
   }
 
   if (topNoMatches.length === 0)
@@ -447,23 +486,29 @@ const report = {
   strict,
   metrics,
   evidence: {
-    realBetaData: realBetaData === true,
-    dashboardUrl: dashboardUrl ?? null,
-    supportDashboardUrl: supportDashboardUrl ?? null,
-    analyticsDashboardUrl: analyticsDashboardUrl ?? null,
-    sourceExportHash: sourceExportHash ?? null,
-    signedOffBy: signedOffBy ?? null,
+    realBetaDataClaimed: realBetaData,
+    dashboardEvidencePresent: Boolean(dashboardUrl),
+    supportDashboardEvidencePresent: Boolean(supportDashboardUrl),
+    analyticsDashboardEvidencePresent: Boolean(analyticsDashboardUrl),
+    sourceExportDigestPresent: Boolean(sourceExportHash),
+    namedSignoffPresent: Boolean(signedOffBy),
   },
-  categoryCoverage,
-  topNoMatches,
-  topWrongMatches,
-  topUnknownTokens,
-  expectedRecommendationProducts,
+  privacy: {
+    classification: 'minimized-aggregate-only',
+    rawShelfLabelsCommitted: false,
+    dashboardUrlsCommitted: false,
+  },
+  aggregateDetailCounts: {
+    categoryRows: categoryCoverage.length,
+    noMatchRows: topNoMatches.length,
+    wrongMatchRows: topWrongMatches.length,
+    unknownTokenRows: topUnknownTokens.length,
+    expectedRecommendationRows: expectedRecommendationProducts.length,
+  },
   codeErrors,
   evidenceBlockers,
   warnings,
-  localBetaCoverageClear:
-    codeErrors.length === 0 && evidenceBlockers.length === 0 && warnings.length === 0,
+  localBetaCoverageClear: false,
 };
 
 mkdirSync(dirname(jsonOutputPath), { recursive: true });
@@ -562,18 +607,18 @@ writeFileSync(
     '',
     `Local beta coverage clear: ${report.localBetaCoverageClear ? 'yes' : 'no'}`,
     '',
-    'This report is launch-clear only when it is generated from real closed-beta',
-    'exports, the worktree is clean, every evidence URL/signoff is real, and all',
-    'Phase 4 coverage thresholds below are satisfied.',
+    'This legacy aggregate report is informational and can never be launch-clear.',
+    'CAT-03 authority requires the signed catalog-curation contract, a minimized',
+    'sealed holdout report, and an active database curation revision.',
     '',
     '## Evidence',
     '',
-    `- Real beta data: ${report.evidence.realBetaData ? 'yes' : 'BLOCKED'}`,
-    `- Catalog/beta dashboard: ${report.evidence.dashboardUrl ?? 'BLOCKED'}`,
-    `- Analytics dashboard: ${report.evidence.analyticsDashboardUrl ?? 'BLOCKED'}`,
-    `- Support dashboard: ${report.evidence.supportDashboardUrl ?? 'BLOCKED'}`,
-    `- Source export hash: ${report.evidence.sourceExportHash ?? 'BLOCKED'}`,
-    `- Signed off by: ${report.evidence.signedOffBy ?? 'BLOCKED'}`,
+    `- Real beta data claimed: ${report.evidence.realBetaDataClaimed ? 'yes' : 'BLOCKED'}`,
+    `- Catalog/beta dashboard evidence present: ${report.evidence.dashboardEvidencePresent ? 'yes' : 'BLOCKED'}`,
+    `- Analytics dashboard evidence present: ${report.evidence.analyticsDashboardEvidencePresent ? 'yes' : 'BLOCKED'}`,
+    `- Support dashboard evidence present: ${report.evidence.supportDashboardEvidencePresent ? 'yes' : 'BLOCKED'}`,
+    `- Exact source export digest present: ${report.evidence.sourceExportDigestPresent ? 'yes' : 'BLOCKED'}`,
+    `- Named signoff present: ${report.evidence.namedSignoffPresent ? 'yes' : 'BLOCKED'}`,
     '',
     '## Metrics',
     '',

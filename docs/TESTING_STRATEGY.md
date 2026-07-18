@@ -68,6 +68,60 @@ Required for:
   transactional promotion -> serving verification -> non-destructive rollback,
   including exact replay, changed replay, duplicate keys, partial chunks,
   source withdrawal, and retained shelf/correction references
+- catalog promoted projection -> signed CAT-03 curation -> non-serving product
+  authorization staging -> exact-set atomic campaign release -> signed readback ->
+  positive serving authorization -> retirement, including target-policy and
+  pre-holdout commitment tampering, incomplete four-scope CAT-02 membership,
+  holdout tampering, privacy suppression/differencing, reviewer conflicts,
+  inventory/category-floor/priority shortfalls, incomplete ingredient dependencies,
+  sunscreen/US-OTC review gaps, direct flag mutation, direct service-role table
+  access, authenticated RLS allow/deny regressions, successor-campaign leakage,
+  omission/supersession races, projection drift,
+  correction/source-withdrawal races, and changed replay. Adversarial coverage must
+  also reject duplicate target-lineage artifacts, product-fact memberships assigned
+  to a secondary artifact, activation-first or backdated review signatures, a
+  tampered reviewer-signature-set root, reviewed barcode aliases, mutations and
+  insertions/deletions in every client-readable served-state relation, and a true
+  two-session record-insert-versus-release race. Correction-hold close, source
+  reapproval, and batch restoration must not resurrect an invalidated record.
+  Tests must race each invalidating mutation against record insertion and campaign
+  release under the global-then-campaign lock order, then prove that only a newly
+  reviewed successor record/campaign/readback can recover serving. The same rule
+  applies to arbitrary exact mutation-and-restoration of every sealed served-state
+  relation and to mutation/withdrawal that occurs before record insertion: an old
+  reviewer-signed mutation root must be rejected, while a newly reviewed current
+  root may recover.
+  Vary the database session `TimeZone` and require identical product, dependency,
+  campaign, record, and mutation authority hashes. Correction tests must prove
+  that user identity, barcode, free text, arbitrary JSON, and resolution-only
+  edits do not enter or advance the permanent mutation chain, while every change
+  to the bounded serving-hold projection does.
+  Direct `public`, `anon`, `authenticated`, and `service_role` probes must all
+  fail against unreviewed `conflict_rules`, `sequencing_rules`, `creator_stacks`,
+  and `creator_stack_items`; a future reviewed-content lane needs its own positive
+  publication contract and may not inherit any legacy active-row policy.
+
+CAT-03 report tests must use integer-only bounded aggregates, participant-capped
+observations, small-cell plus complementary suppression, a release-overlap guard,
+prospectively fixed targets, and one-sided confidence bounds with minimum sample
+sizes. Tests must prove that the legacy beta report, dashboard URLs, typed names,
+hash-shaped strings, raw shelf labels, and beta demand cannot authorize catalog
+facts or serving. Production acceptance additionally requires the sealed untouched
+holdout, real consented cohort evidence, at least 2,000 reviewed/eligible records
+with every category floor and at least 100 prioritized rows, an independently signed
+exact database readback, and a reviewed two-session hosted staging/release/
+supersession/retirement/concurrency drill.
+Tests must also prove that retirement, successor release, dependency withdrawal,
+or review expiry makes the prior point-in-time readback historical and requires a
+new exact campaign/readback before final-clear can be reported again.
+
+The checked-in `phase4:catalog-serving-contract:test` Deno gate must execute in
+local Phase 4 verification and CI. It statically proves that barcode/search use
+only the bounded service RPCs, every serving lane reconstructs the exact global
+campaign release plus product authorization, `service_role` has no direct-table
+read, authenticated safe-table reads retain their positive RLS grants, barcode
+access is primary-only, and every live served-state hash covers the complete exact
+readable projection rather than a hand-picked subset of fields.
 
 ## 2026-07-15 Source Checkpoint
 

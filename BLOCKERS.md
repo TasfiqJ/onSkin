@@ -2,6 +2,8 @@
 
 Date: 2026-07-15
 
+Status reviewed: 2026-07-18
+
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
 proof. The app has substantial implemented surfaces, but it is not
@@ -59,6 +61,7 @@ Read this with:
 - `docs/phase-4/first-curated-product-batch.md`
 - `docs/phase-4/observability-dashboard.md`
 - `docs/phase-4/beta-coverage-report.md`
+- `docs/phase-4/catalog-curation-release-runbook.md`
 - `docs/phase-4/phase-4-exit-review.md`
 
 ## Status Key
@@ -96,7 +99,9 @@ Read this with:
    owners and dates are recorded, one current detached signoff records the
    credential/role, conditions, and retained approval reference per release
    disposition, current hashes match, and the strict copy audit passes.
-7. Real catalog seed not imported and source/license review not complete.
+7. Real catalog seed not imported; source/license review, separately consented
+   beta-shelf coverage evidence, qualified curation, signed holdout-quality
+   targets, and immutable launch-catalog activation are not complete.
 8. Native camera/barcode/photo capture, encrypted keychain/keystore behavior,
    and app-wide/photo-timeline biometric prompt ordering, deep-link coverage,
    background relock, encrypted Progress read-failure recovery, and screen-reader
@@ -399,13 +404,20 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains 56 migrations through `20260717000057`, targeted hand-maintained
+The repo contains a 57-migration source candidate through
+`20260717000058`, targeted hand-maintained
 RPC types with DB-08 still open, 16 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
-source inventory is 80 RLS tables and 58 private tables: 38 directly queryable
-plus 20 sealed. The last executed CAT-02 Docker baseline passed a reset and the
+`0058` source inventory classifies all 80 RLS-enabled public tables: 38 directly
+queryable private tables, 28 read-sealed private/authority tables, and 14
+authenticated catalog/editorial tables. The 28 read-sealed tables comprise 20
+service-private authorities, four global clinical/editorial relations, and four
+catalog dictionary/legacy authorities; seven additional CAT-03 authorities are
+sealed in the `private` schema. This is a passing static/source classification,
+not hosted evidence. The last executed CAT-02 Docker baseline passed a reset and the
 then-current 35-assertion partial suite. The final source expands that contract
-to 214 statically matched assertions; a fresh 56-migration reset, the current
+to 214 statically matched CAT-02 assertions; a fresh 57-migration reset, the
+current CAT-02 and CAT-03
 pgTAP execution, error-level schema lint, migration-shadow drift check, and
 temporary type generation remain required before this revision can claim local
 database replay evidence.
@@ -466,6 +478,29 @@ one-transaction insert-only promotion, and non-destructive rollback. This is a
 local source candidate; no real source approval, hosted batch, concurrency
 drill, or production catalog is claimed.
 
+Migration `0058` adds the CAT-03 launch-curation source boundary: immutable
+campaign/record/event authority, exact CAT-01/CAT-02 and database-snapshot
+bindings, a hard 2,000-record/category/priority floor, owner-only campaign-
+scoped non-serving authorization, exact-set atomic campaign release, signed
+readback, immutable retirement, an append-only per-product served-state mutation
+ledger, RPC-only `service_role` access, and a positive active-campaign serving
+dependency.
+Exactly one artifact may match the target CAT-02 lineage, only its reviewed
+primary barcode is served, staged outcome-reviewer signatures bind the later
+operator authorization, and live roots seal every client-readable field and
+child-row set. Outcome reviewers bind the current product mutation root and
+campaign root set. Exact restoration, hold closure, source reapproval, or batch
+restoration cannot resurrect an old record; only a newly reviewed successor
+campaign and readback can recover. The offline contracts bind a target policy and
+full reviewed-record decision witnessed before holdout access, a separately
+consented/privacy-minimized beta-shelf coverage corpus, curation/holdout
+separation, exact multi-batch/four-scope CAT-02 memberships, confidence-bound
+quality gates, and qualified review. No clean reset or pgTAP execution of the
+exact `0058` revision, hosted staging/release/supersession race and serving
+drill, real beta corpus, witnessed target/decision, signed review/readback, or
+active catalog exists. Beta demand prioritizes independently sourced rows; it
+never becomes a product fact.
+
 This is not a hosted deployment or provider proof. Full generated-type parity,
 hosted RLS/Cron/Vault/concurrency, old/tampered-client containment,
 cross-owner community-handle cleanup, Sign in with Apple deployment and
@@ -488,9 +523,11 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 16-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 56 migrations
-  through `0057`, redeploys the manifest, retains linked types without changing
-  repository types, and leaves `DB06_TRAFFIC_FREEZE=frozen`;
+  immediately rereads the full empty-target boundary, applies all 57
+  migrations through `0058`, redeploys the manifest, retains linked types
+  without changing repository types, and leaves
+  `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
+  approved hosted target;
 - release the freeze only through a separately recorded downstream live gate;
 - after DB-06 live review, complete DB-08's deliberate
   `packages/types/src/database.types.ts` replacement;
@@ -498,7 +535,8 @@ Next action:
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
-  signed-anonymous user, the no-session client, all 58 private tables, exact
+  signed-anonymous user, the no-session client, the regenerated exact `0058`
+  private-table inventory, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
 - obtain an approved old/tampered-client control and prove the source-complete
@@ -942,8 +980,19 @@ Current implementation note:
 - `docs/phase-3/clinical-review-log.md` and
   `docs/phase-3/cosmetic-chemistry-review-log.md` are ready for reviewer
   signoff entries.
-- Production gates are tested so unreviewed rules, PAO defaults, stacks, and
-  Skin Notes stay hidden until reviewer metadata is recorded.
+- Production gates are tested so unreviewed conflict rules, medical-adjacent
+  cadence, sequencing roles/instructions, PAO defaults, stacks, and Skin Notes
+  stay hidden until reviewer metadata is recorded. An unreviewed sequencing
+  role stays on the Shelf but is withheld from the generated routine, Today,
+  and cycle projection. The current order editor only reorders already-generated
+  reviewed steps; there is no manual add-to-AM/PM path, and none may be claimed
+  until that flow is implemented and human-E2E verified. The bundled base
+  sequencing/order copy remains open and must not be described as clinically
+  reviewed.
+- Migration `0058` also removes the legacy broad database read policies and API-
+  role table privileges for unreviewed conflict/sequencing rules and creator-stack
+  content. A future server content lane must add a separately reviewed, evidence-
+  bound publication contract; `is_active` alone is not approval.
 
 Exit criteria:
 
@@ -1002,6 +1051,12 @@ Current implementation note:
   Migrations `0056`/`0057` supply fail-closed serving plus transactional
   promotion/correction/rollback with immutable lineage. Fixtures and local
   lifecycle tests are not a production catalog or hosted race proof.
+- CAT-03 target/corpus/review templates, offline curation-envelope and
+  confidence-bound quality-report contracts, and migration `0058` provide a
+  local non-serving authorization, exact-set atomic campaign release, signed
+  readback, and immutable retirement source candidate with hard inventory
+  floors. They do not supply real consented beta data, market-representative
+  evidence, professional review, hosted proof, or an activated launch batch.
 - External contribution is excluded from the current launch architecture. The
   legacy queue/flag are inert; a future source recipient requires a new reviewed
   privacy/legal/architecture decision.
@@ -1013,13 +1068,21 @@ Next action:
 - ingest barcode, brand, product name, category, INCI list, ingredient tags,
   PAO/expiry where available, and commerce links if commerce ships;
 - hand-curate top products for launch quality;
-- add match-rate observability.
+- predeclare quality targets before outcomes, seal a separately consented and
+  privacy-minimized curation/holdout corpus, externally witness the complete
+  record decision before holdout access, obtain qualified exact-row review,
+  build at least 2,000 eligible rows with category/priority floors, and add
+  confidence-bound match/quality observability plus signed database readback.
 
 Exit criteria:
 
 - beta users get meaningful barcode/OCR/manual match outcomes;
 - catalog miss/wrong-match reports are tracked;
 - recommendations can reference real products where appropriate;
+- beta demand affects review priority only and never supplies catalog facts;
+- tracked evidence contains bounded aggregates/commitments only, not raw
+  shelves, identifiers, searches, barcodes, labels, ingredients, notes, or
+  support text;
 - OBF attribution/share-alike/offer-of-data obligations are handled without
   treating user-report publication as an assumed duty; reports remain
   first-party and external contribution is not promised.
@@ -1061,16 +1124,41 @@ Status: `launch-blocked`
 
 Exit criteria:
 
-- first curated batch is built from approved sources and beta shelves;
-- product rows have source/ref/snapshot/provenance;
-- recommendable rows are `verified` or `usable`, reviewed, and correction-free;
-- sunscreen/OTC-adjacent products have separate review and expiry handling;
+- first curated batch is built from approved CAT-01 sources and CAT-02 rows,
+  prioritized by a separately consented, privacy-minimized defined beta-shelf
+  coverage corpus; no market-representative claim is made;
+- a signed target policy predates outcome access and fixes the cohort/window/
+  build, SKU definition, curation/holdout split, required strata, minimum
+  denominators, suppression, confidence methods, and pass/hold operators;
+- the complete reviewed-record decision and exact CAT-02 membership set are
+  externally witnessed before holdout access;
+- at least 2,000 independently sourced, reviewed, activation-eligible records,
+  every signed required-category floor, and at least 100 demand-prioritized
+  eligible records are in the exact campaign;
+- product rows bind exact CAT-01 approval/artifact/QA and CAT-02 batch/staged-
+  record/projection/revision/receipt lineage, including all four required field
+  scopes and contributing batches, plus source/ref/snapshot/per-field provenance;
+- beta demand is review priority only and never product identity, ingredient,
+  category, safety, regulatory, efficacy, expiry, or recommendation fact;
+- recommendable rows are `verified` or `usable`, qualified-reviewed,
+  dependency-complete, correction-free, and positively active under CAT-03;
+- U.S. sunscreen/OTC-adjacent products have separate market/label/
+  classification/expiry/claim review;
 - OBF and CosIng import QA have zero blockers/warnings;
 - migration `0056` is hosted-verified and serves only positive-eligible,
   correction-free rows from production/legal-approved sources;
 - migration `0057` passes the hosted two-connection replay, conflict,
   correction, source-withdrawal, promotion, dependency-serving, and rollback
-  drill for the exact reviewed batch.
+  drill for the exact reviewed batch;
+- migration `0058` passes clean local and hosted pgTAP, two-connection replay/
+  staging/release/supersession/retirement races, successor isolation, direct-
+  table denial including `service_role`, dependency-serving suppression, and
+  rollback drills for the exact signed campaign;
+- an independent database verifier signs the exact released campaign readback;
+  offline-only approval cannot be final-clear; and
+- the untouched holdout passes every predeclared confidence-bound and minimum-
+  denominator gate with zero open P0/P1 and zero below-usable recommendation
+  exposure.
 
 ## B-CATALOG-COVERAGE - Beta catalog usefulness
 
@@ -1078,11 +1166,25 @@ Status: `launch-blocked`
 
 Exit criteria:
 
-- closed beta captures barcode/search/OCR/manual add paths;
-- match rate, miss rate, wrong-match rate, parser unknown-token rate, and support
-  tickets are reviewed;
-- priority gaps are fed back into curation;
+- genuine beta participants separately consent to the exact optional curation
+  purpose, and withdrawal/deletion/retention evidence is retained;
+- the self-selected cohort is reported only as the exact defined beta-shelf
+  coverage corpus and holdout, not as market/population representative;
+- tracked evidence uses capped, small-cell/complementary-suppressed aggregates
+  and cryptographic commitments only; raw participant/shelf/search/barcode/
+  product/ingredient/photo/note/support data stays out of Git, general
+  analytics, OBF, CosIng, and AI providers;
+- the sealed holdout captures barcode/search/OCR/manual add paths;
+- the pre-holdout full-record commitment has independently observed append-only
+  or trusted-timestamp evidence; a self-declared timestamp does not qualify;
+- match, miss, wrong-match, parser-unknown, below-usable recommendation,
+  fallback completion, and support-severity results are reviewed with the
+  predeclared denominators and confidence bounds;
+- failed/gap findings feed a new target/corpus/curation revision with a new
+  untouched holdout; the opened holdout is never reused for a passing claim;
 - users can complete the shelf-to-routine loop even when catalog matching fails.
+- the final report is clear only after exact independently signed database
+  readback verifies the atomically released campaign.
 
 ## B-SHELF-CONTRIB - First-party missing-product and wrong-match operation
 
@@ -1404,7 +1506,8 @@ the complete iOS feature set.
 
 Exit criteria:
 
-- 50-100 real users complete beta;
+- 50-100 genuine users complete the declared beta; this self-selected cohort
+  is not described as market-representative;
 - onboarding completion, product add rate, first useful insight, routine
   generation, Today check-off, baseline photo, reminders, payments, cloud Ask,
   commerce, community/moderation, trends, widgets/Live Activities, links,

@@ -1,5 +1,7 @@
 {
-  "_templatePurpose": "Copy to docs/phase-4/beta-coverage-input.json only after replacing every placeholder with real closed-beta export data. This template is intentionally blocked evidence.",
+  "_templatePurpose": "Legacy informational aggregate only. A completed copy is ignored by Git and can never authorize CAT-03; use the signed catalog-curation contract for release evidence.",
+  "_privacyWarning": "Never place user IDs, raw searches, barcodes, product names, ingredient text, health/profile data, notes, support text, dashboard query tokens, or rare-cell labels in this file or in Git.",
+  "_authority": "Beta demand may prioritize independently sourced CAT-01/CAT-02 records but may never create or alter product facts or serving eligibility.",
   "cohort": {
     "invitedUsers": 0,
     "realTargetUsers": 0,

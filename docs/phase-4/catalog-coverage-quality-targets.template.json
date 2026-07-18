@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "contractId": "catalog-launch-target-policy-v1",
+  "signatureEnvelopeVersion": "catalog-launch-target-policy-signature-v1",
+  "signingDomain": "routinekind.catalog-launch-target-policy.v1",
+  "policyId": "catalog-launch-target-policy-pending",
+  "authoredAt": "2026-07-17T12:00:00.000Z",
+  "collectionWindow": {
+    "opensAt": "2026-08-01T00:00:00.000Z",
+    "closesAt": "2026-08-31T23:59:59.999Z"
+  },
+  "population": {
+    "corpusType": "consented_self_selected_beta_shelves",
+    "inferenceScope": "defined_beta_shelf_coverage_corpus_only",
+    "territories": ["US"]
+  },
+  "sampling": {
+    "method": "self_selected_non_probability",
+    "populationRepresentativenessClaimed": false,
+    "skuDefinition": "gtin_market_formula_package_revision",
+    "oneObservationPerParticipantSku": true,
+    "wilsonEvaluationUnit": "one_distinct_participant_per_endpoint",
+    "maxWilsonEvaluationsPerParticipantPerEndpoint": 1,
+    "clusteredWilsonInputsAllowed": false
+  },
+  "analysis": {
+    "analysisPlanSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "metricImplementationSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "collectionBuildSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "holdoutQuerySha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+    "evaluationUnitDefinitionSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+    "allowedAnalysisLookCount": 1,
+    "priorHoldoutUseCount": 0,
+    "holdoutReuseAllowed": false,
+    "alternativeBuildOrQueryLooksAllowed": false,
+    "confidenceBoundsAreMarginalNotSimultaneous": true,
+    "multipleComparisonDecisionRule": "intersection_union_all_gates_must_pass"
+  },
+  "split": {
+    "method": "sha256_committed_deterministic_assignment",
+    "curationBasisPoints": 7000,
+    "holdoutBasisPoints": 3000,
+    "assignmentSeedCommitmentSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+  },
+  "privacy": {
+    "consentPurpose": "optional_catalog_coverage_curation",
+    "consentVersionSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+    "noticeSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+    "queryDefinitionSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+    "retentionPolicySha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+    "deletionWorkflowSha256": "56789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234",
+    "aggregateReleaseRegistrySha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "overlapPolicySha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+    "cohortWindowQueryReleaseKeyCommitmentSha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
+    "productDemandCommitmentMethod": "hmac_sha256_secret_epoch_key_domain_separated_by_release_and_cohort",
+    "productDemandCommitmentKeyEpochId": "catalog-demand-key-epoch-pending",
+    "productDemandCommitmentKeyReceiptSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+    "productDemandCommitmentImplementationSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "productDemandCanonicalInputDefinitionSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "productDemandDomainSeparationContextSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "suppressionAuditPolicySha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+    "releaseRegistryContractSha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+    "rawShelfDataTracked": false,
+    "rawUserIdentifiersTracked": false,
+    "rawBarcodesTracked": false,
+    "rawProductNamesTracked": false,
+    "rawFreeTextTracked": false,
+    "minCellSize": 5,
+    "complementarySuppression": true,
+    "maxContributionsPerParticipantSku": 1
+  },
+  "lineage": {
+    "cat01PolicySha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345",
+    "cat01TrustRegistrySha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+    "cat01ApprovalSetSha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
+    "cat02StageEnvelopeSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+    "cat02DatabaseReceiptCompletionSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "cat02PromotionReceiptSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+    "cat02QaReportSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+    "buildSourceGitSha": "0123456789abcdef0123456789abcdef01234567"
+  },
+  "databaseEligibilityPolicy": {
+    "contractId": "catalog-launch-db-eligibility-policy-v1",
+    "territory": "US",
+    "requiredQualityGrade": "verified",
+    "minimumDataQualityScore": 95,
+    "minimumIngredientQualityScore": 95,
+    "minimumBarcodeQualityScore": 95,
+    "minimumCategoryQualityScore": 95,
+    "minimumParseConfidence": 0.98,
+    "minimumTokenMatchConfidence": 0.98,
+    "minimumMappedIngredientCount": 1,
+    "requireBarcode": true,
+    "regulatedCategoryMode": "qualified-review-required"
+  },
+  "databaseEligibilityPolicySha256": "9b1fd33edaec8cf3c8582f3f9298ec9e70f5f4140b6426afb1e710eee4845e9d",
+  "targets": {
+    "confidenceMethod": "wilson_score_one_sided",
+    "confidenceLevelBasisPoints": 9500,
+    "zScoreMillionths": 1644854,
+    "minimumParticipants": {
+      "curation": 300,
+      "holdout": 1200
+    },
+    "minimumContributors": {
+      "curation": 300,
+      "holdout": 1200
+    },
+    "minimumDenominators": {
+      "holdoutLookupEvaluations": 1200,
+      "holdoutMatchedEvaluations": 1200,
+      "holdoutIngredientEvaluations": 1200,
+      "holdoutRecommendationEvaluations": 1200,
+      "holdoutManualFallbackEvaluations": 400,
+      "holdoutShelfFlowEvaluations": 400
+    },
+    "minimumDistinctDemandDigests": {
+      "curation": 100,
+      "holdout": 6
+    },
+    "minimumCategoryDenominators": {
+      "lookupEvaluations": 200,
+      "matchedEvaluations": 200,
+      "ingredientEvaluations": 200,
+      "recommendationEvaluations": 200
+    },
+    "minimumOperationalStratumDenominators": {
+      "manualFallbackEvaluations": 100,
+      "shelfFlowEvaluations": 100
+    },
+    "inventory": {
+      "minimumEligibleCatalogRecords": 2000,
+      "minimumPrioritizedEligibleRecords": 100,
+      "minimumEligibleByRequiredCategory": {
+        "acne_treatment": 334,
+        "cleanser": 334,
+        "moisturizer": 333,
+        "serum": 333,
+        "sunscreen": 333,
+        "toner": 333
+      }
+    },
+    "thresholdsBasisPoints": {
+      "holdoutCorrectMatchLowerBoundMin": 9000,
+      "holdoutWrongMatchUpperBoundMax": 200,
+      "holdoutUnknownTokenUpperBoundMax": 1500,
+      "holdoutBelowUsableRecommendationUpperBoundMax": 200,
+      "holdoutManualFallbackCompletionLowerBoundMin": 8000,
+      "holdoutShelfFlowCompletionLowerBoundMin": 8000
+    },
+    "zeroTolerance": {
+      "belowUsableRecommendations": true,
+      "openWrongMatchReports": true,
+      "openP0P1Incidents": true
+    },
+    "requiredCategoryCodes": [
+      "acne_treatment",
+      "cleanser",
+      "moisturizer",
+      "serum",
+      "sunscreen",
+      "toner"
+    ],
+    "requiredOperationalStrata": [
+      { "routeCode": "barcode", "networkState": "offline" },
+      { "routeCode": "barcode", "networkState": "online" },
+      { "routeCode": "manual_recovery", "networkState": "offline" },
+      { "routeCode": "search_ocr", "networkState": "online" }
+    ]
+  },
+  "signers": [
+    {
+      "decisionRole": "quality_target_owner",
+      "reviewerId": "unassigned-quality-target-owner",
+      "trustRegistryKeyId": "unassigned-quality-target-key",
+      "trustRegistryRole": "engineering",
+      "independenceGroup": "unassigned-quality-target-group",
+      "publicKeySha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+      "qualificationEvidenceSha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd"
+    },
+    {
+      "decisionRole": "privacy_reviewer",
+      "reviewerId": "unassigned-privacy-reviewer",
+      "trustRegistryKeyId": "unassigned-privacy-key",
+      "trustRegistryRole": "legal",
+      "independenceGroup": "unassigned-privacy-group",
+      "publicKeySha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+      "qualificationEvidenceSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    }
+  ],
+  "signatures": [
+    {
+      "decisionRole": "quality_target_owner",
+      "reviewerId": "unassigned-quality-target-owner",
+      "trustRegistryKeyId": "unassigned-quality-target-key",
+      "algorithm": "Ed25519",
+      "signedAt": "2026-07-17T12:00:00.000Z",
+      "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    {
+      "decisionRole": "privacy_reviewer",
+      "reviewerId": "unassigned-privacy-reviewer",
+      "trustRegistryKeyId": "unassigned-privacy-key",
+      "algorithm": "Ed25519",
+      "signedAt": "2026-07-17T12:00:00.000Z",
+      "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+    }
+  ]
+}

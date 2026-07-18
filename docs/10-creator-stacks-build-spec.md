@@ -297,9 +297,12 @@ Centralised commerce copy (`features/commerce/copy.ts`) is scanned by
 ## 9. Data model (migration 0022 — commerce domain, church-and-state)
 
 All tables in `public` (consistent with prior migrations); **no commission/rate field in
-any ranking-path table.** Catalog-level commerce data is world-readable to
-`authenticated` (like `products`), service-role write; per-user telemetry is owner-RLS;
-order/commission data is service-role only (clients never read commission).
+any ranking-path table.** Generic active affiliate links are an independently governed
+commerce surface readable to `authenticated`; they are not product-fact or ranking
+authority. Migration `0058` supersedes the original broad creator-stack policies and
+revokes every API-role read of stacks/items until a separate evidence-bound B-DERM
+publication authority exists. Per-user telemetry is owner-RLS; order/commission data is
+service-role only (clients never read commission).
 
 - `affiliate_links` — catalog-level resolved links. `id`, `product_type`,
   `catalog_product_id?`, `retailer`, `label`, `url`, `price_cents?`, `currency?`,
@@ -309,10 +312,13 @@ order/commission data is service-role only (clients never read commission).
   only in `order_attributions`, service-role.)
 - `creator_stacks` — `id`, `slug` (unique), `title`, `subtitle`, `curator`,
   `curator_kind` (`editorial|derm|creator`), `reviewed_by?` (B-DERM-REVIEW), `is_active`,
-  `created_at`. SELECT → authenticated; write → service-role.
+  `created_at`. Direct SELECT → none of PUBLIC/anon/authenticated/service_role until the
+  evidence-bound review/publication contract is installed; operator writes do not make a
+  row publishable.
 - `creator_stack_items` — `id`, `stack_id` (fk), `position`, `product_type`,
-  `catalog_product_id?`, `role_label`, `note?`. SELECT → authenticated; write →
-  service-role.
+  `catalog_product_id?`, `role_label`, `note?`. Direct SELECT → none of
+  PUBLIC/anon/authenticated/service_role while the parent publication authority is
+  absent.
 - `commerce_click_events` — owner-scoped telemetry. `id`, `user_id` (fk auth.users),
   `click_token` (opaque), `product_type?`, `affiliate_link_id?`, `source`, `consented`
   (bool), `created_at`. Owner-only RLS (select/insert/delete own; no update). **No
@@ -323,7 +329,8 @@ order/commission data is service-role only (clients never read commission).
   **Service-role only** — RLS enabled, **no client policies** (clients can never read
   commission data; this is the church-and-state wall at the row level).
 
-`@onskin/types` + `database.types.ts` extended. No RLS weakened; no ranking table
+`@onskin/types` + `database.types.ts` extended. The original 0022 policy description is
+historical; migration `0058` is the effective direct-read authority. No ranking table is
 touched.
 
 ---

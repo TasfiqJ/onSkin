@@ -16,6 +16,10 @@ const importLifecycleMigrationUrl = new URL(
   '../../migrations/20260717000057_catalog_import_lifecycle.sql',
   import.meta.url,
 );
+const launchCurationMigrationUrl = new URL(
+  '../../migrations/20260717000058_catalog_launch_curation.sql',
+  import.meta.url,
+);
 
 Deno.test('catalog lookup uses the service-only production eligibility RPC', async () => {
   const sql = compact(await Deno.readTextFile(servingGateMigrationUrl));
@@ -154,6 +158,80 @@ Deno.test('barcode and direct catalog lanes cannot launder held child evidence',
     sql.includes('parent_product.id = product_barcodes.product_id') &&
       sql.includes('parent_product.source_id = product_barcodes.source_id'),
     'direct barcode RLS must bind the mapping source to its parent product source',
+  );
+});
+
+Deno.test('every catalog lane requires one exact active CAT-03 curation head', async () => {
+  const sql = compact(await Deno.readTextFile(launchCurationMigrationUrl));
+
+  assert(
+    sql.includes('create or replace function private.catalog_launch_curation_head_is_active(') &&
+      sql.includes("head.state = 'active'") &&
+      sql.includes('head.retired_at is null') &&
+      sql.includes("event.event_type in ('activation', 'supersession')") &&
+      sql.includes(
+        'event.database_activation_request_sha256 = record.database_activation_request_sha256',
+      ) &&
+      sql.includes('event.activation_signature_sha256 = record.activation_signature_sha256') &&
+      sql.includes('join private.catalog_launch_curation_campaign_release_heads as release_head') &&
+      sql.includes(
+        'join private.catalog_launch_curation_campaign_release_events as release_event',
+      ) &&
+      sql.includes("release_event.event_type in ('release', 'supersession')") &&
+      sql.includes('release_event.new_campaign_id = release_head.campaign_id') &&
+      sql.includes('release_event.record_set_sha256 = campaign.expected_record_set_sha256') &&
+      sql.includes(
+        'release_event.authorization_set_sha256 = campaign.activation_authorization_set_sha256',
+      ) &&
+      sql.includes('campaign.review_valid_until > pg_catalog.now()') &&
+      sql.includes('private.catalog_launch_curation_record_is_valid(record.id)'),
+    'serving must positively reconstruct the exact global campaign release, product head, signed activation, and live record',
+  );
+  assert(
+    sql.includes('create or replace function private.catalog_product_is_servable(') &&
+      sql.includes('private.catalog_launch_curation_head_is_active(product.id)'),
+    'mutable product flags must not serve without active CAT-03 authority',
+  );
+  assert(
+    sql.includes('create or replace view public.catalog_servable_products') &&
+      sql.includes('create or replace function public.lookup_catalog_product_by_barcode(') &&
+      sql.includes('create or replace function public.search_catalog_products('),
+    'the curation migration must redefine the shared view plus barcode and search RPCs',
+  );
+  for (const policy of [
+    'products_read_servable',
+    'product_barcodes_read_servable',
+    'ingredients_read_servable',
+    'ingredient_synonyms_read_servable',
+    'product_ingredient_lists_read_servable',
+    'product_ingredients_read_servable',
+    'product_ingredient_tokens_read_servable',
+    'product_active_bands_read_servable',
+    'product_pao_expiry_read_servable',
+    'brands_read_servable',
+    'ingredient_tag_assignments_read_servable',
+  ]) {
+    assert(sql.includes(`create policy "${policy}"`), `CAT-03 must reapply ${policy}`);
+  }
+  assert(
+    sql.includes('revoke select on table public.products,') &&
+      sql.includes('public.brands from public, anon, service_role;') &&
+      sql.includes('grant select on table public.products,') &&
+      sql.includes('public.brands to authenticated;'),
+    'service_role must have no direct catalog-table read while authenticated safe reads retain positive RLS grants',
+  );
+  assert(
+    sql.includes('revoke all on table private.catalog_launch_curation_campaigns,') &&
+      sql.includes(
+        'private.catalog_launch_curation_campaign_release_heads from public, anon, authenticated, service_role;',
+      ) &&
+      sql.includes(
+        'revoke all on function public.lookup_catalog_product_by_barcode(text) from public, anon, authenticated, service_role;',
+      ) &&
+      sql.includes(
+        'grant execute on function public.lookup_catalog_product_by_barcode(text) to service_role;',
+      ),
+    'sealed curation authority must be unreadable to API roles and service_role must use only the guarded serving RPC',
   );
 });
 

@@ -100,6 +100,16 @@ try {
           paths.has('scripts/phase4/complete-catalog-database-receipts.mjs') &&
           paths.has('supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql') &&
           paths.has('supabase/migrations/20260717000057_catalog_import_lifecycle.sql') &&
+          paths.has('supabase/migrations/20260717000058_catalog_launch_curation.sql') &&
+          paths.has('scripts/phase4/catalog-curation-contract.mjs') &&
+          paths.has('scripts/phase4/catalog-coverage-quality-report.mjs') &&
+          paths.has('supabase/functions/catalog-lookup/catalogContract.ts') &&
+          paths.has('supabase/functions/catalog-search/catalogContract.ts') &&
+          paths.has('docs/phase-4/catalog-cat02-membership-proof.template.json') &&
+          paths.has('docs/phase-4/catalog-curation-database-readback.template.json') &&
+          paths.has('docs/phase-3/consent-matrix.md') &&
+          paths.has('docs/phase-3/data-inventory.md') &&
+          paths.has('docs/store-privacy-inventory.md') &&
           result.markdown.includes('## Source Hashes')
         );
       },

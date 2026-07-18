@@ -1,5 +1,12 @@
 #!/usr/bin/env node
-import { block, listFiles, printResult, read } from './lib.mjs';
+import {
+  SEALED_CATALOG_AUTHORITY_TABLES,
+  SEALED_GLOBAL_CONTENT_TABLES,
+  block,
+  listFiles,
+  printResult,
+  read,
+} from './lib.mjs';
 import { publicFunctionCatalog, publicFunctionKey } from './supabase-function-acl.mjs';
 
 const errors = [];
@@ -11,6 +18,54 @@ const migrationFiles = listFiles('supabase/migrations')
 
 const combined = migrationFiles.map((file) => `\n-- FILE: ${file}\n${read(file)}\n`).join('\n');
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const globalContentPolicyNames = new Map([
+  ['conflict_rules', 'conflict_rules_read_active'],
+  ['sequencing_rules', 'sequencing_rules_read_active'],
+  ['creator_stacks', 'creator_stacks_select_active'],
+  ['creator_stack_items', 'creator_stack_items_select_all'],
+]);
+
+const tableSelectAclEvents = [
+  ...combined.matchAll(
+    /\b(grant|revoke)\s+select\s+on(?:\s+table)?\s+([\s\S]*?)\s+(?:to|from)\s+([^;]+);/gi,
+  ),
+];
+
+function statementListsTable(objects, table) {
+  return new RegExp(`(?:^|[,\\s])public\\.${escapeRegExp(table)}(?:$|[,\\s])`, 'i').test(objects);
+}
+
+for (const table of SEALED_GLOBAL_CONTENT_TABLES) {
+  const policyName = globalContentPolicyNames.get(table);
+  const policyEvents = [
+    ...combined.matchAll(
+      new RegExp(
+        `\\b(create|drop)\\s+policy(?:\\s+if\\s+exists)?\\s+"${escapeRegExp(policyName)}"\\s+on\\s+public\\.${escapeRegExp(table)}`,
+        'gi',
+      ),
+    ),
+  ];
+  block(
+    errors,
+    policyEvents.at(-1)?.[1].toLowerCase() === 'drop',
+    `${policyName} on public.${table} must remain effectively dropped.`,
+  );
+}
+
+for (const table of [...SEALED_GLOBAL_CONTENT_TABLES, ...SEALED_CATALOG_AUTHORITY_TABLES]) {
+  for (const role of ['public', 'anon', 'authenticated', 'service_role']) {
+    const roleEvents = tableSelectAclEvents.filter((event) => {
+      const roles = event[3].split(',').map((candidate) => candidate.trim().toLowerCase());
+      return statementListsTable(event[2], table) && roles.includes(role);
+    });
+    block(
+      errors,
+      roleEvents.at(-1)?.[1].toLowerCase() === 'revoke',
+      `public.${table} SELECT must remain revoked from ${role}.`,
+    );
+  }
+}
 
 const {
   functions: latestFunctions,
@@ -232,24 +287,16 @@ const publicCatalogTables = new Set([
   'affiliate_links',
   'brands',
   'catalog_sources',
-  'conflict_rules',
-  'creator_stack_items',
-  'creator_stacks',
-  'ingredient_pao_defaults',
   'ingredient_synonyms',
   'ingredient_tag_assignments',
-  'ingredient_tag_definitions',
-  'ingredient_tags',
   'ingredients',
   'product_active_bands',
   'product_barcodes',
-  'product_categories',
   'product_ingredient_lists',
   'product_ingredient_tokens',
   'product_ingredients',
   'product_pao_expiry',
   'products',
-  'sequencing_rules',
 ]);
 
 for (const match of combined.matchAll(
@@ -267,8 +314,11 @@ for (const match of combined.matchAll(
   );
   block(
     errors,
-    schema === 'public' && publicCatalogTables.has(table),
-    `${policyName} on ${schema}.${table} uses using (true) outside the public catalog allowlist.`,
+    schema === 'public' &&
+      (publicCatalogTables.has(table) ||
+        SEALED_GLOBAL_CONTENT_TABLES.includes(table) ||
+        SEALED_CATALOG_AUTHORITY_TABLES.includes(table)),
+    `${policyName} on ${schema}.${table} uses using (true) outside the catalog/history allowlist.`,
   );
   block(
     errors,

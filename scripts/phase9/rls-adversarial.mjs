@@ -3,6 +3,9 @@ import {
   AUTHENTICATED_CATALOG_TABLES,
   OWNER_LINKED_PRIVATE_TABLES,
   PRIVATE_PUBLIC_TABLES,
+  SEALED_CATALOG_AUTHORITY_TABLES,
+  SEALED_GLOBAL_CONTENT_TABLES,
+  SEALED_PUBLIC_TABLES,
   SEALED_SERVICE_PRIVATE_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   block,
@@ -30,6 +33,9 @@ const contractSmoke = read('scripts/phase9/rls-adversarial-smoke.mjs');
 const phase2Smoke = read('scripts/phase2/supabase-rls-smoke.mjs');
 const anonymousPhotoStorageGuard = read(
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
+);
+const catalogLaunchCuration = read(
+  'supabase/migrations/20260717000058_catalog_launch_curation.sql',
 );
 const photoMetadataInsertPolicy = sqlPolicyStatement(
   migrations,
@@ -69,6 +75,8 @@ const tableClassifications = [
   ['owner-linked private', OWNER_LINKED_PRIVATE_TABLES],
   ['service-only private', SERVICE_ONLY_PRIVATE_TABLES],
   ['sealed service-only private', SEALED_SERVICE_PRIVATE_TABLES],
+  ['sealed global clinical/editorial', SEALED_GLOBAL_CONTENT_TABLES],
+  ['sealed catalog authority', SEALED_CATALOG_AUTHORITY_TABLES],
   ['authenticated catalog/editorial', AUTHENTICATED_CATALOG_TABLES],
 ];
 
@@ -89,18 +97,32 @@ block(
 );
 block(
   errors,
-  AUTHENTICATED_CATALOG_TABLES.length === 22,
-  `Authenticated catalog/editorial inventory must contain 22 tables; found ${AUTHENTICATED_CATALOG_TABLES.length}.`,
+  SEALED_GLOBAL_CONTENT_TABLES.length === 4,
+  `Sealed global clinical/editorial inventory must contain 4 tables; found ${SEALED_GLOBAL_CONTENT_TABLES.length}.`,
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.length === 58,
-  `Combined private-table inventory must contain 58 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+  SEALED_CATALOG_AUTHORITY_TABLES.length === 4,
+  `Sealed catalog-authority inventory must contain 4 tables; found ${SEALED_CATALOG_AUTHORITY_TABLES.length}.`,
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table)).length ===
-    38,
+  SEALED_PUBLIC_TABLES.length === 28,
+  `Combined sealed public-schema inventory must contain 28 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
+);
+block(
+  errors,
+  AUTHENTICATED_CATALOG_TABLES.length === 14,
+  `Authenticated catalog/editorial inventory must contain 14 tables; found ${AUTHENTICATED_CATALOG_TABLES.length}.`,
+);
+block(
+  errors,
+  PRIVATE_PUBLIC_TABLES.length === 66,
+  `Combined private-table inventory must contain 66 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+);
+block(
+  errors,
+  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length === 38,
   'Directly queryable private-table inventory must contain 38 tables.',
 );
 
@@ -116,6 +138,44 @@ for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
       migrations,
     ),
     `Sealed service-only table must revoke direct service_role access: ${table}.`,
+  );
+}
+
+const globalContentPolicyNames = new Map([
+  ['conflict_rules', 'conflict_rules_read_active'],
+  ['sequencing_rules', 'sequencing_rules_read_active'],
+  ['creator_stacks', 'creator_stacks_select_active'],
+  ['creator_stack_items', 'creator_stack_items_select_all'],
+]);
+const selectRevokes = [
+  ...catalogLaunchCuration.matchAll(
+    /revoke\s+select\s+on(?:\s+table)?\s+([\s\S]*?)\s+from\s+([^;]+);/gi,
+  ),
+];
+for (const table of SEALED_GLOBAL_CONTENT_TABLES) {
+  const policyName = globalContentPolicyNames.get(table);
+  block(
+    errors,
+    new RegExp(
+      `drop\\s+policy\\s+if\\s+exists\\s+"${policyName}"\\s+on\\s+public\\.${table}\\s*;`,
+      'i',
+    ).test(catalogLaunchCuration),
+    `Migration 0058 must drop the broad ${policyName} policy on ${table}.`,
+  );
+}
+
+for (const table of [...SEALED_GLOBAL_CONTENT_TABLES, ...SEALED_CATALOG_AUTHORITY_TABLES]) {
+  block(
+    errors,
+    selectRevokes.some((match) => {
+      const objects = match[1];
+      const roles = new Set(match[2].split(',').map((role) => role.trim().toLowerCase()));
+      return (
+        new RegExp(`(?:^|[,\\s])public\\.${table}(?:$|[,\\s])`, 'i').test(objects) &&
+        ['public', 'anon', 'authenticated', 'service_role'].every((role) => roles.has(role))
+      );
+    }),
+    `Migration 0058 must revoke ${table} SELECT from PUBLIC and every API role.`,
   );
 }
 
@@ -142,7 +202,7 @@ for (const table of dynamicUserTables) {
     errors,
     OWNER_LINKED_PRIVATE_TABLES.includes(table) ||
       SERVICE_ONLY_PRIVATE_TABLES.includes(table) ||
-      SEALED_SERVICE_PRIVATE_TABLES.includes(table),
+      SEALED_PUBLIC_TABLES.includes(table),
     `Discovered auth.users-linked table without Phase 9 RLS classification: ${table}.`,
   );
 }
@@ -459,7 +519,7 @@ block(
 );
 
 const requiredLiveHarnessChecks = [
-  'all 58 private tables have access-control probes',
+  'all 66 private tables have access-control probes',
   'routine conflict swapped canonical pair',
   'routine conflict duplicate canonical identity',
   'Shelf provenance matrix',

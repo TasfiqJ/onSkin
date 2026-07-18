@@ -226,9 +226,10 @@ converts to a valid calendar date no later than the signed artifact snapshot.
 Missing, malformed, or post-snapshot record dates are rejected rather than
 replaced with the import time.
 
-Migrations `20260717000056_catalog_serving_eligibility_gate.sql` and
-`20260717000057_catalog_import_lifecycle.sql` must be present and pass their
-pgTAP contracts on the exact hosted revision. The former's service-only
+Migrations `20260717000056_catalog_serving_eligibility_gate.sql`,
+`20260717000057_catalog_import_lifecycle.sql`, and
+`20260717000058_catalog_launch_curation.sql` must be present and pass their
+pgTAP contracts on the exact hosted revision. The first migration's service-only
 barcode and search RPCs share one fail-closed eligibility boundary. A row is
 servable only when its source is production-approved and legal-approved; the
 product is active, reviewed, `verified` or `usable`, recommendation-eligible,
@@ -239,7 +240,9 @@ open intake remains owner-scoped and cannot become a cross-user denial
 mechanism. Direct authenticated reads cannot bypass source withdrawal.
 
 Unknown and held rows return the same no-match/manual fallback so internal
-review or legal status is not disclosed. Operator triage converts a credible
+review or legal status is not disclosed. Migration `0058` additionally requires
+an exact active, immutable CAT-03 curation head with complete reviewed dependencies;
+mutable product flags and beta demand cannot grant eligibility. Operator triage converts a credible
 first-party report into a global hold. Emergency containment sets the affected source
 to not production-approved, verifies both RPCs and direct reads return no rows,
 then follows the CAT-02 batch rollback procedure. No rollback step publishes a

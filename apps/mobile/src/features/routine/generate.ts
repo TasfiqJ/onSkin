@@ -17,13 +17,15 @@ import {
 } from '@/features/intelligence/pregnancySafety';
 
 import { initRamp, type RampState } from './ramp';
-import { canUseRoutineCadence } from './reviewGate';
+import { canUseRoutineCadence, canUseRoutineSequencing } from './reviewGate';
 import {
   classifyRole,
   routineCadenceDisposition,
   sequencePhase,
+  shippableSequencingRules,
   type ClassifiableProduct,
   type SequencedStep,
+  type ShippableSequencingRules,
 } from './sequencing';
 
 // The deterministic generation pipeline (docs/03 §2): classify → allocate AM/PM →
@@ -43,6 +45,13 @@ export type GeneratedPlan = {
     reason: PregnancySafetyReason;
   }[];
   cadenceWithheld: { productId: string; name: string }[];
+  sequencingWithheld: {
+    productId: string;
+    name: string;
+    role: SequencingRole;
+    placement: 'withheld';
+    reason: 'review_required';
+  }[];
   unplacedProducts: { productId: string; name: string }[];
   gaps: string[];
   conflicts: DetectedConflict[];
@@ -74,6 +83,7 @@ export function generatePlan(
   profile: RoutineGenerationProfile,
   rules: ConflictRule[] = shippableRules(),
   conflictChoices: ConflictChoices = {},
+  sequencingRules: ShippableSequencingRules = shippableSequencingRules(),
 ): GeneratedPlan {
   const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
   const safetyExclusions = products.flatMap((product) => {
@@ -104,14 +114,37 @@ export function generatePlan(
     .map(({ product }) => ({ productId: product.id, name: product.name }))
     .sort((a, b) => a.productId.localeCompare(b.productId));
   const cadenceWithheldIds = new Set(cadenceWithheld.map((item) => item.productId));
-  const cadenceEligibleProducts = routineProducts.filter(
-    (product) => !cadenceWithheldIds.has(product.id),
+  const availableSequencingRules = shippableSequencingRules(sequencingRules);
+  const allowSequencing = canUseRoutineSequencing(availableSequencingRules);
+  const sequencingWithheld = classifiedProducts
+    .filter(
+      ({ product, role }) =>
+        role != null &&
+        !cadenceWithheldIds.has(product.id) &&
+        (!allowSequencing || availableSequencingRules[role] == null),
+    )
+    .map(({ product, role }) => ({
+      productId: product.id,
+      name: product.name,
+      role: role!,
+      placement: 'withheld' as const,
+      reason: 'review_required' as const,
+    }))
+    .sort((a, b) => a.productId.localeCompare(b.productId));
+  const sequencingWithheldIds = new Set(sequencingWithheld.map((item) => item.productId));
+  const sequenceEligibleProducts = routineProducts.filter(
+    (product) => !cadenceWithheldIds.has(product.id) && !sequencingWithheldIds.has(product.id),
   );
-  const am = sequencePhase(cadenceEligibleProducts, 'am');
-  const pm = sequencePhase(cadenceEligibleProducts, 'pm') as PlanStep[];
+  const am = sequencePhase(sequenceEligibleProducts, 'am', availableSequencingRules);
+  const pm = sequencePhase(sequenceEligibleProducts, 'pm', availableSequencingRules) as PlanStep[];
   const cycleProductIds = new Set(
     classifiedProducts
-      .filter(({ product, cadence }) => cadence === 'cycle' && !cadenceWithheldIds.has(product.id))
+      .filter(
+        ({ product, cadence }) =>
+          cadence === 'cycle' &&
+          !cadenceWithheldIds.has(product.id) &&
+          !sequencingWithheldIds.has(product.id),
+      )
       .map(({ product }) => product.id),
   );
   const productById = new Map(routineProducts.map((product) => [product.id, product] as const));
@@ -170,6 +203,7 @@ export function generatePlan(
     ramp,
     safetyExclusions,
     cadenceWithheld,
+    sequencingWithheld,
     unplacedProducts,
     gaps,
     conflicts,

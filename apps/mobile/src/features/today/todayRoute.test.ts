@@ -65,11 +65,15 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('hasRealRoutine,');
     expect(source).toContain('safetyExclusionCount,');
     expect(source).toContain('cadenceWithheldCount,');
+    expect(source).toContain('sequencingWithheldCount,');
     expect(source).not.toContain('step.cyclingNight');
     expect(source).toContain('function CadenceWithheldNotice');
     expect(source).toContain('Timing is not set for ${count} ${productLabel}.');
     expect(source).toContain("router.push('/routine/plan')");
     expect(source.match(/<CadenceWithheldNotice/g)).toHaveLength(2);
+    expect(source).toContain('function SequencingWithheldNotice');
+    expect(source).toContain('Application order is not reviewed for ${count} ${productLabel}.');
+    expect(source.match(/<SequencingWithheldNotice/g)).toHaveLength(2);
     expect(source).toContain('Review pregnancy and breastfeeding setting');
     expect(source).toContain("router.push('/settings/skin-profile?returnTo=today')");
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
@@ -80,19 +84,11 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain(": 'mt-6 rounded-card bg-paper-raised'");
     expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
     expect(source).toContain('paddingBottom: compactPhone ? 8 : 12');
-    expect(source).toContain('function compactRoutineInstruction(instruction: string): string');
-    expect(source).toContain("case 'Vitamin C in the morning, under your SPF.':");
-    expect(source).toContain("return 'Under your SPF.';");
-    expect(source).toContain("case 'Always the last morning step. Reapply through the day.':");
-    expect(source).toContain("return 'Last step. Reapply later.';");
-    expect(source).toContain("case 'Use in the morning. Follow the product label directions.':");
-    expect(source).toContain("return 'Morning. Follow the label.';");
-    expect(source).toContain(
-      'const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;',
-    );
+    expect(source).not.toContain('compactRoutineInstruction');
+    expect(source).not.toContain('pmDisplaySub');
     expect(source).toContain('const nameLineCount = compact ? 2 : undefined;');
-    expect(source).toContain('const subLineCount = compact ? 1 : undefined;');
-    expect(source).toContain('{displaySub}');
+    expect(source).toContain('const subLineCount = compact ? 2 : undefined;');
+    expect(source).toContain('{sub}');
     expect(source).toContain('compact?: boolean;');
     expect(source).toContain(
       "className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}",
@@ -125,7 +121,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const compactCycleStrip = compactPhone || width < 430;');
     expect(source).toContain(
-      'const { nightNumber, nightTotal, hasScheduledRetinoid, suppressedAcidName, nextAcidISO } =',
+      'const { nightNumber, nightTotal, suppressedAcidName, nextAcidISO } = routine;',
     );
     expect(source).toContain('const label = cycleStripLabel(n.slot, compactCycleStrip);');
     expect(source).toContain('const accessibilityLabel = slotLabel(n.slot);');

@@ -36,6 +36,16 @@ Start here:
 - [CAT-02 Transactional Lifecycle Migration](../../supabase/migrations/20260717000057_catalog_import_lifecycle.sql)
 - [CAT-02 Adversarial Database Contract](../../supabase/tests/database/catalog_import_lifecycle.test.sql)
 - [CAT-02 Offline Promotion Contract](../../scripts/phase4/catalog-promotion-contract.mjs)
+- [CAT-03 Catalog Curation Release Runbook](../phase-4/catalog-curation-release-runbook.md)
+- [CAT-03 Coverage/Quality Target Template](../phase-4/catalog-coverage-quality-targets.template.json)
+- [CAT-03 Minimized Beta-Shelf Corpus Template](../phase-4/beta-shelf-corpus.template.json)
+- [CAT-03 Qualified Curation Review Template](../phase-4/catalog-curation-review.template.json)
+- [CAT-03 Exact CAT-02 Membership Proof Template](../phase-4/catalog-cat02-membership-proof.template.json)
+- [CAT-03 Signed Database Readback Template](../phase-4/catalog-curation-database-readback.template.json)
+- [CAT-03 Offline Curation Contract](../../scripts/phase4/catalog-curation-contract.mjs)
+- [CAT-03 Coverage/Quality Report](../../scripts/phase4/catalog-coverage-quality-report.mjs)
+- [CAT-03 Immutable Staging/Atomic Release/Retirement Migration](../../supabase/migrations/20260717000058_catalog_launch_curation.sql)
+- [CAT-03 Adversarial Database Contract](../../supabase/tests/database/catalog_launch_curation.test.sql)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -91,13 +101,42 @@ accurate source and health-information handling under current Apple App Review,
 FDA cosmetics-claim, and FTC health-claim guidance, but cannot guarantee App
 Review, legal compliance, or revenue.
 
+CAT-03 is now an `in_progress` source checkpoint. Its offline contract binds a
+target policy signed before outcomes, a separately consented and privacy-
+minimized **defined beta-shelf coverage corpus**, a deterministic curation/
+untouched-holdout split, an independently witnessed full-record decision,
+confidence-bound quality gates, exact multi-batch/four-scope CAT-01/CAT-02
+lineage with exactly one target-lineage primary artifact, primary-barcode-only
+serving, qualified row review, staged reviewer-root/operator signatures, and a
+database snapshot that seals every client-readable field and child-row set. A
+hard release floor now
+requires at least 2,000 independently sourced, reviewed, activation-eligible
+records, every required-category minimum, and at least 100 demand-prioritized
+eligible rows. Migration `0058` adds campaign-scoped non-serving product
+authorization, a single exact-set atomic global campaign release, independently
+signed point-in-time readback, immutable retirement, and RPC-only `service_role` access, and makes
+the active global campaign a positive serving dependency. Every mutation of
+sealed served state appends a per-product event under the release lock. Outcome
+reviewers bind each current `servedStateMutationRootSha256` and the campaign root
+set, so exact byte restoration, correction-hold closure, source reapproval, or
+batch restoration cannot resurrect old authority; recovery requires a newly
+reviewed successor campaign and readback. Beta demand
+prioritizes independently sourced rows; it never becomes a product fact. The
+planned self-selected beta cannot support a market-representative claim. The
+legacy beta coverage report and an offline-only approval are informational
+only. No real consented corpus, witnessed pre-outcome target/decision, qualified
+catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, exact local/
+hosted `0058` evidence, current signed database readback, sealed holdout result, or
+active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
+quality, market, or revenue outcome is implied.
+
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only path covers 56 migrations through `0057`, all 16 Edge
-functions, an active traffic/provider freeze, and an immediate pre-push reread
-of functions, public frozen responses, hosted Auth controls, migrations,
-schema, Storage, and all Cron jobs. It leaves `DB06_TRAFFIC_FREEZE=frozen` for a
-separate downstream live-gate release. No approved hosted target was used and
-no live DB-06 evidence directory exists.
+`ACCT-03`. The fresh-only source procedure now covers all 57 migrations through
+`0058`, all 16 Edge functions, an active traffic/provider freeze, and an
+immediate pre-push reread of functions, public frozen responses, hosted Auth
+controls, migrations, schema, Storage, and all Cron jobs. It leaves
+`DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No
+approved hosted target was used and no live DB-06 evidence directory exists.
 
 BRAND-03 is complete only for the governed 2026-07-16 preliminary public
 knockout scope. The sequence for counsel review remains `RoutineKind`,
