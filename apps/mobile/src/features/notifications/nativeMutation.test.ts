@@ -152,6 +152,61 @@ describe('NotificationNativeMutationCoordinator', () => {
     await expect(coordinator.cancelExact('later-id')).resolves.toBeUndefined();
   });
 
+  it('reconciles a synchronous commit-ambiguous throw before releasing the fence', async () => {
+    const backend = createBackend();
+    const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+    let resolveExactCancellation!: () => void;
+    const nativeError = new Error('synchronous bridge throw');
+    vi.mocked(backend.scheduleNotificationAsync).mockImplementationOnce(() => {
+      throw nativeError;
+    });
+    vi.mocked(backend.cancelScheduledNotificationAsync).mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveExactCancellation = resolve;
+        }),
+    );
+
+    const scheduled = coordinator.scheduleExact(
+      new AbortController().signal,
+      immediateRequest('sync-ambiguous-id'),
+    );
+
+    expect(backend.cancelScheduledNotificationAsync).toHaveBeenCalledWith('sync-ambiguous-id');
+    expect(backend.dismissNotificationAsync).toHaveBeenCalledWith('sync-ambiguous-id');
+    expect(() => coordinator.cancelExact('later-id')).toThrow(
+      NotificationNativeMutationFencedError,
+    );
+
+    resolveExactCancellation();
+    await expect(scheduled).rejects.toBe(nativeError);
+    await expect(coordinator.cancelExact('later-id')).resolves.toBeUndefined();
+  });
+
+  it('requires a full cleanup after synchronous-throw compensation fails', async () => {
+    const backend = createBackend();
+    const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+    vi.mocked(backend.scheduleNotificationAsync).mockImplementationOnce(() => {
+      throw new Error('synchronous bridge throw');
+    });
+    vi.mocked(backend.dismissNotificationAsync).mockRejectedValueOnce(
+      new Error('exact dismiss unavailable'),
+    );
+
+    await expect(
+      coordinator.scheduleExact(
+        new AbortController().signal,
+        immediateRequest('sync-unsafe-id'),
+      ),
+    ).rejects.toBeInstanceOf(NotificationNativeCompensationError);
+    expect(() => coordinator.cancelExact('later-id')).toThrow(
+      NotificationNativeMutationFencedError,
+    );
+
+    await expect(coordinator.clearAllWithinBound()).resolves.toBeUndefined();
+    await expect(coordinator.cancelExact('later-id')).resolves.toBeUndefined();
+  });
+
   it('bounds cleanup without releasing a never-settling owner-A mutation', async () => {
     vi.useFakeTimers();
     const backend = createBackend();

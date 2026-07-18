@@ -202,8 +202,19 @@ export class NotificationNativeMutationCoordinator {
     try {
       nativeSchedule = this.backend.scheduleNotificationAsync(request);
     } catch (error) {
-      finish(true);
-      result.reject(error);
+      // Treat a synchronous adapter/bridge throw as commit-ambiguous too. A
+      // native call may side-effect before its JavaScript wrapper throws, so
+      // keep the global mutation fence until the predeclared ID is reconciled.
+      void this.compensateExactIdentifiers([request.identifier]).then((compensated) => {
+        if (!compensated) {
+          this.unsafeCompensations.add(record);
+          finish(false);
+          result.reject(new NotificationNativeCompensationError());
+          return;
+        }
+        finish(true);
+        result.reject(error);
+      });
       return result.promise;
     }
 
