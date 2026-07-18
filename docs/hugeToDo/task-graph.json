@@ -609,8 +609,8 @@
       "id": "CAT-01",
       "owner": "C/R",
       "prerequisites": ["DB-03", "BRAND-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete OBF/CosIng licensing, attribution, image-rights, contribution, and correction posture",
-      "acceptance": "Approved source memos and production identifiers exist"
+      "nextAction": "Complete and capture acceptance evidence: Complete OBF/CosIng exact-artifact, attribution, image-rights, database-classification, no-runtime-recipient, and correction posture",
+      "acceptance": "Counsel-approved source decisions and production artifact identifiers exist; imports stay offline/hash-bound and runtime lookup/contribution stay absent"
     },
     {
       "id": "CAT-02",
@@ -623,8 +623,8 @@
       "id": "CAT-03",
       "owner": "C",
       "prerequisites": ["CAT-02"],
-      "nextAction": "Complete and capture acceptance evidence: Curate a production launch catalog from representative beta shelves",
-      "acceptance": "Catalog reaches signed coverage/quality targets"
+      "nextAction": "Complete and capture acceptance evidence: Curate a production launch catalog from a defined consented beta-shelf corpus and untouched holdout",
+      "acceptance": "Catalog reaches signed coverage/quality targets without a market-representativeness claim"
     },
     {
       "id": "CAT-04",
@@ -1260,8 +1260,8 @@
       "id": "BETA-03",
       "owner": "C/H",
       "prerequisites": ["BETA-02"],
-      "nextAction": "Complete and capture acceptance evidence: Recruit and manage representative beta cohort",
-      "acceptance": "Genuine target users and tested-device coverage exist"
+      "nextAction": "Complete and capture acceptance evidence: Recruit and manage the defined target beta cohort",
+      "acceptance": "Genuine target users and tested-device coverage exist; no market-representativeness claim"
     },
     {
       "id": "BETA-04",

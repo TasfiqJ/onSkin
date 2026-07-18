@@ -226,10 +226,10 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 104,
+    "data-store": 118,
     "edge-function": 16,
     "feature-flag": 16,
-    "generated-packet": 30,
+    "generated-packet": 31,
     "native-module": 44,
     "route": 90,
     "vendor-call": 13
@@ -516,9 +516,107 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:catalog_import_batch_effects",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:catalog_import_batches",
       "category": "data-store",
       "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_chunk_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_conflicts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_entity_revisions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_promotion_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_review_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_staged_records",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_campaign_release_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_campaign_release_heads",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_campaigns",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_heads",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_product_mutations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_records",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
       "featureIds": ["F-04"],
       "readiness": "implemented"
     },
@@ -1366,6 +1464,13 @@
       "id": "generated-packet:scripts/phase4/catalog-qa-report.mjs",
       "category": "generated-packet",
       "source": "scripts/phase4/catalog-qa-report.mjs",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase4/catalog-source-policy-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase4/catalog-source-policy-audit.mjs",
       "featureIds": ["F-04"],
       "readiness": "implemented"
     },
