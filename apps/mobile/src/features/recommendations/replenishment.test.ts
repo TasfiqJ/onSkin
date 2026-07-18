@@ -3,7 +3,11 @@ import { describe, expect, it } from 'vitest';
 
 import type { ShelfItem } from '@/features/shelf/useShelf';
 
-import { collectReplenishmentCandidates, hasReplenishmentSignal } from './replenishment';
+import {
+  collectReplenishmentCandidates,
+  hasReplenishmentSignal,
+  hasReplenishmentSignalForProducts,
+} from './replenishment';
 
 type ItemOptions = {
   id: string;
@@ -113,6 +117,41 @@ describe('replenishment signal selection', () => {
         ],
         archive: [],
       }),
+    ).toBe(false);
+  });
+
+  it('derives the same lightweight lifecycle signals from raw local Shelf rows', () => {
+    const active = item({
+      id: 'active',
+      catalogProductId: 'catalog-1',
+      badgeKind: 'expired',
+    });
+    active.product.expiryDate = '2026-06-01';
+    active.product.status = 'active';
+    const replaced = item({
+      id: 'old',
+      status: 'finished',
+      catalogProductId: 'catalog-1',
+    });
+
+    expect(
+      hasReplenishmentSignalForProducts(
+        [active.product, replaced.product],
+        '2026-07-18',
+      ),
+    ).toBe(true);
+    expect(
+      hasReplenishmentSignalForProducts(
+        [
+          {
+            ...active.product,
+            expiryDate: null,
+            isOpened: false,
+          },
+          replaced.product,
+        ],
+        '2026-07-18',
+      ),
     ).toBe(false);
   });
 });

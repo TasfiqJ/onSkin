@@ -73,6 +73,7 @@ describe('Shelf private-data availability contract', () => {
     const recommendations = read('features/recommendations/useRecommendations.ts');
     const teaser = read('features/recommendations/RecommendationsTeaser.tsx');
     const triggers = read('features/notifications/BehaviouralTriggers.tsx');
+    const triggerSnapshot = read('features/notifications/behaviouralSnapshot.ts');
 
     expect(plan).toContain('shelf.isError ||');
     expect(plan).toContain('!shelf.isSuccess ||');
@@ -86,9 +87,11 @@ describe('Shelf private-data availability contract', () => {
     );
     expect(recommendations).toContain('const isSuccess = inputIsSuccess && !manualRetrying;');
     expect(teaser).toContain('if (!isSuccess || isError) return null;');
-    expect(triggers).toContain('notifyReplenishmentFromFreshShelf(');
-    expect(triggers).toContain('latest.replenishment.refetch');
-    expect(triggers).toContain('if (!freshShelf.isSuccess || !hasReplenishmentSignal');
+    expect(triggers).toContain('readBehaviouralTriggerSnapshot(lease, currentEnabled)');
+    expect(triggerSnapshot).toContain('awaitAccountGenerationLease(lease, dependencies.readShelf)');
+    expect(triggerSnapshot).toContain('enabled.replenishment && input.shelf');
+    expect(triggerSnapshot).toContain('hasReplenishmentSignalForProducts(input.shelf, today)');
+    expect(triggerSnapshot).not.toContain('catch');
   });
 
   it('gates every Shelf-derived route before it can render an empty or stale state', () => {

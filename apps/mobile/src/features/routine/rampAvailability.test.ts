@@ -43,6 +43,7 @@ describe('ramp availability contract', () => {
     const streak = read('app/routine/streak.tsx');
     const detail = read('app/shelf/[id].tsx');
     const triggers = read('features/notifications/BehaviouralTriggers.tsx');
+    const triggerSnapshot = read('features/notifications/behaviouralSnapshot.ts');
 
     expect(layout).toContain('<CycleDataAvailabilityGate>');
     expect(gate).toContain('if (!query.isLoading && !query.isError) return children;');
@@ -67,7 +68,10 @@ describe('ramp availability contract', () => {
     expect(streak).toContain('cycleQuery.isSuccess');
     expect(streak).toContain('Number.POSITIVE_INFINITY');
     expect(detail).toContain('Active-night timing is unavailable right now.');
-    expect(triggers).toContain('ramp.isSuccess && ramp.items.some');
+    expect(triggers).toContain("await import('./behaviouralSnapshot')");
+    expect(triggerSnapshot).toContain('enabled.ramp && input.ramps');
+    expect(triggerSnapshot).toContain('activeProductIds.has(productId)');
+    expect(triggerSnapshot).toContain('shouldOfferStepUp({ ...state, today })');
   });
 
   it('keeps the typed read non-destructive and step-up retries desired-state idempotent', () => {
