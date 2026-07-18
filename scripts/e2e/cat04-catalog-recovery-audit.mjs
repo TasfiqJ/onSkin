@@ -221,6 +221,102 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+export function isExcludedFromInteractionTree(node) {
+  return Boolean(node?.closest?.('[aria-hidden="true"],[inert]'));
+}
+
+export function measureControlGeometry(node, viewport, styleFor) {
+  if (isExcludedFromInteractionTree(node)) return null;
+
+  const clippingValues = new Set(['auto', 'clip', 'hidden', 'scroll']);
+  const unsafeClippingValues = new Set(['clip', 'hidden']);
+  const rect = node.getBoundingClientRect();
+  let exposedLeft = Math.max(0, rect.left);
+  let exposedRight = Math.min(viewport.width, rect.right);
+  let exposedTop = Math.max(0, rect.top);
+  let exposedBottom = Math.min(viewport.height, rect.bottom);
+  let scrollClipped = false;
+  let unsafeClipped = false;
+
+  for (let ancestor = node; ancestor; ancestor = ancestor.parentElement) {
+    const style = styleFor(ancestor);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+      return null;
+    }
+    if (ancestor === node) continue;
+
+    const ancestorRect = ancestor.getBoundingClientRect();
+    const clientLeft = Number(ancestor.clientLeft);
+    const clientTop = Number(ancestor.clientTop);
+    const clientWidth = Number(ancestor.clientWidth);
+    const clientHeight = Number(ancestor.clientHeight);
+    const clipLeft = ancestorRect.left + (Number.isFinite(clientLeft) ? clientLeft : 0);
+    const clipTop = ancestorRect.top + (Number.isFinite(clientTop) ? clientTop : 0);
+    const clipRight = clipLeft + (Number.isFinite(clientWidth) ? clientWidth : ancestorRect.width);
+    const clipBottom =
+      clipTop + (Number.isFinite(clientHeight) ? clientHeight : ancestorRect.height);
+
+    if (clippingValues.has(style.overflowX)) {
+      const nextLeft = Math.max(exposedLeft, clipLeft);
+      const nextRight = Math.min(exposedRight, clipRight);
+      const reduced = nextLeft > exposedLeft + 1 || nextRight < exposedRight - 1;
+      if (reduced) {
+        if (unsafeClippingValues.has(style.overflowX)) unsafeClipped = true;
+        else scrollClipped = true;
+      }
+      exposedLeft = nextLeft;
+      exposedRight = nextRight;
+    }
+    if (clippingValues.has(style.overflowY)) {
+      const nextTop = Math.max(exposedTop, clipTop);
+      const nextBottom = Math.min(exposedBottom, clipBottom);
+      const reduced = nextTop > exposedTop + 1 || nextBottom < exposedBottom - 1;
+      if (reduced) {
+        if (unsafeClippingValues.has(style.overflowY)) unsafeClipped = true;
+        else scrollClipped = true;
+      }
+      exposedTop = nextTop;
+      exposedBottom = nextBottom;
+    }
+  }
+
+  const exposedWidth = Math.max(0, exposedRight - exposedLeft);
+  const exposedHeight = Math.max(0, exposedBottom - exposedTop);
+  if (rect.width <= 0 || rect.height <= 0 || exposedWidth <= 1 || exposedHeight <= 1) return null;
+
+  return {
+    exposedHeight,
+    exposedLeft,
+    exposedTop,
+    exposedWidth,
+    fullyExposed: exposedWidth >= rect.width - 1 && exposedHeight >= rect.height - 1,
+    rect,
+    scrollClipped,
+    unsafeClipped,
+  };
+}
+
+export function interactionTreeText(root, styleFor) {
+  if (!root) return '';
+  const walker = root.ownerDocument.createTreeWalker(root, 4);
+  const values = [];
+  for (let textNode = walker.nextNode(); textNode; textNode = walker.nextNode()) {
+    const parent = textNode.parentElement;
+    if (!parent || isExcludedFromInteractionTree(parent)) continue;
+    if (parent.closest('script,style,noscript')) continue;
+    let rendered = true;
+    for (let ancestor = parent; ancestor; ancestor = ancestor.parentElement) {
+      const style = styleFor(ancestor);
+      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+        rendered = false;
+        break;
+      }
+    }
+    if (rendered) values.push(textNode.nodeValue ?? '');
+  }
+  return values.join(' ');
+}
+
 async function withAuditTimeout(operation, timeoutMs, label) {
   let timeout = null;
   const timeoutPromise = new Promise((_, reject) => {
@@ -756,7 +852,11 @@ async function waitForCondition(client, expression, timeoutMs, label) {
 async function waitForText(client, text, timeoutMs = 30_000) {
   await waitForCondition(
     client,
-    `document.body && document.body.innerText.includes(${JSON.stringify(text)})`,
+    `(() => {
+      const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
+      const interactionTreeText = ${interactionTreeText.toString()};
+      return interactionTreeText(document.body, (node) => getComputedStyle(node)).replace(/\\s+/g, ' ').includes(${JSON.stringify(text)});
+    })()`,
     timeoutMs,
     `text ${JSON.stringify(text)}`,
   );
@@ -804,7 +904,9 @@ function controlExpression(label, exact, scroll) {
     const exact = ${JSON.stringify(exact)};
     const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
     const matches = (value) => exact ? value === wanted : value.includes(wanted);
-    const candidates = Array.from(document.querySelectorAll('button,[role="button"],[role="radio"],[role="checkbox"],[role="switch"],a,label'));
+    const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
+    const candidates = Array.from(document.querySelectorAll('button,[role="button"],[role="radio"],[role="checkbox"],[role="switch"],a,label'))
+      .filter((node) => !isExcludedFromInteractionTree(node));
     const target = candidates.find((node) => [
       node.getAttribute('aria-label'),
       node.getAttribute('accessibilitylabel'),
@@ -878,7 +980,9 @@ async function scrollTextIntoView(client, text, timeoutMs = 30_000) {
   const expression = `(() => {
     const wanted = ${JSON.stringify(text)};
     const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
+    const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
     const candidates = Array.from(document.querySelectorAll('body *'))
+      .filter((node) => !isExcludedFromInteractionTree(node))
       .filter((node) => normalize(node.textContent).includes(wanted))
       .sort((a, b) => normalize(a.textContent).length - normalize(b.textContent).length);
     const target = candidates[0];
@@ -895,7 +999,9 @@ function fillExpression(label, value) {
     const wanted = ${JSON.stringify(label)};
     const value = ${JSON.stringify(value)};
     const normalize = (next) => String(next ?? '').replace(/\\s+/g, ' ').trim();
-    const controls = Array.from(document.querySelectorAll('input,textarea'));
+    const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
+    const controls = Array.from(document.querySelectorAll('input,textarea'))
+      .filter((node) => !isExcludedFromInteractionTree(node));
     const target = controls.find((node) => [
       node.getAttribute('aria-label'),
       node.getAttribute('accessibilitylabel'),
@@ -930,10 +1036,14 @@ async function fillByLabel(client, label, value) {
 async function waitForInputValue(client, label, value, timeoutMs = 10_000) {
   await waitForCondition(
     client,
-    `Array.from(document.querySelectorAll('input,textarea')).some((node) => {
-      const candidate = node.getAttribute('aria-label') || node.getAttribute('accessibilitylabel') || node.getAttribute('placeholder');
-      return candidate === ${JSON.stringify(label)} && node.value === ${JSON.stringify(value)};
-    })`,
+    `(() => {
+      const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
+      return Array.from(document.querySelectorAll('input,textarea')).some((node) => {
+        if (isExcludedFromInteractionTree(node)) return false;
+        const candidate = node.getAttribute('aria-label') || node.getAttribute('accessibilitylabel') || node.getAttribute('placeholder');
+        return candidate === ${JSON.stringify(label)} && node.value === ${JSON.stringify(value)};
+      });
+    })()`,
     timeoutMs,
     `${label} value ${JSON.stringify(value)}`,
   );
@@ -943,7 +1053,9 @@ function enabledControlExpression(label) {
   return `(() => {
     const wanted = ${JSON.stringify(label)};
     const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
+    const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
     return Array.from(document.querySelectorAll('button,[role="button"]')).some((node) => {
+      if (isExcludedFromInteractionTree(node)) return false;
       const values = [node.getAttribute('aria-label'), node.textContent].map(normalize).filter(Boolean);
       return values.includes(wanted) && !node.disabled && node.getAttribute('aria-disabled') !== 'true';
     });
@@ -956,49 +1068,74 @@ function auditExpression() {
     const doc = document.documentElement;
     const body = document.body;
     const overflowX = Math.max(0, doc.scrollWidth - innerWidth, body.scrollWidth - innerWidth);
-    const visible = (node) => {
-      const rect = node.getBoundingClientRect();
-      const style = getComputedStyle(node);
-      return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && style.display !== 'none' && style.visibility !== 'hidden';
-    };
+    const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
+    const interactionTreeText = ${interactionTreeText.toString()};
+    const measureControlGeometry = ${measureControlGeometry.toString()};
     const controls = [];
     const issues = [];
     for (const node of document.querySelectorAll('button,[role="button"],[role="radio"],[role="checkbox"],[role="switch"],input,textarea,select')) {
-      if (!visible(node)) continue;
-      const rect = node.getBoundingClientRect();
+      const geometry = measureControlGeometry(
+        node,
+        { height: innerHeight, width: innerWidth },
+        (candidate) => getComputedStyle(candidate),
+      );
+      if (!geometry) continue;
+      const {
+        exposedHeight,
+        exposedLeft,
+        exposedTop,
+        exposedWidth,
+        fullyExposed,
+        rect,
+        scrollClipped,
+        unsafeClipped,
+      } = geometry;
       const label = normalize(node.getAttribute('aria-label') || node.getAttribute('accessibilitylabel') || node.textContent || node.getAttribute('placeholder'));
       if (!label) continue;
       const disabled = Boolean(node.disabled) || node.getAttribute('aria-disabled') === 'true';
       const center = {
-        x: Math.max(0, Math.min(innerWidth - 1, rect.left + rect.width / 2)),
-        y: Math.max(0, Math.min(innerHeight - 1, rect.top + rect.height / 2)),
+        x: Math.max(0, Math.min(innerWidth - 1, exposedLeft + exposedWidth / 2)),
+        y: Math.max(0, Math.min(innerHeight - 1, exposedTop + exposedHeight / 2)),
       };
       const hit = document.elementFromPoint(center.x, center.y);
       const hitOk = !hit || node === hit || node.contains(hit) || hit.contains(node);
       const control = {
         disabled,
+        fullyExposed,
         height: Number(rect.height.toFixed(2)),
         hitOk,
         label,
+        scrollClipped,
+        unsafeClipped,
         width: Number(rect.width.toFixed(2)),
         x: Number(rect.left.toFixed(2)),
         y: Number(rect.top.toFixed(2)),
       };
       controls.push(control);
-      if (rect.left < -1 || rect.right > innerWidth + 1 || rect.top < -1 || rect.bottom > innerHeight + 1) issues.push({ control, type: 'clippedVisibleControl' });
+      const horizontallyViewportClipped = rect.left < -1 || rect.right > innerWidth + 1;
+      if (horizontallyViewportClipped || unsafeClipped) {
+        issues.push({ control, type: 'clippedVisibleControl' });
+      }
+      if (horizontallyViewportClipped) {
+        issues.push({ control, type: 'horizontalControlClipping' });
+      }
+      if (!fullyExposed) continue;
       if (!disabled && (rect.width < 44 || rect.height < 44)) issues.push({ control, type: 'sub44VisibleControl' });
       if (!disabled && !hitOk) issues.push({ control, type: 'blockedCenterHitTest' });
-      if (rect.left < -1 || rect.right > innerWidth + 1) issues.push({ control, type: 'horizontalControlClipping' });
     }
     if (overflowX > 1) issues.push({ overflowX, type: 'horizontalOverflow' });
     return {
-      alerts: Array.from(document.querySelectorAll('[role="alert"]')).map((node) => normalize(node.textContent)),
-      bodyText: normalize(body?.innerText).slice(0, 8_000),
+      alerts: Array.from(document.querySelectorAll('[role="alert"]'))
+        .filter((node) => !isExcludedFromInteractionTree(node))
+        .map((node) => normalize(node.textContent)),
+      bodyText: normalize(interactionTreeText(body, (node) => getComputedStyle(node))).slice(0, 8_000),
       controls,
-      inputs: Array.from(document.querySelectorAll('input,textarea')).map((node) => ({
-        label: normalize(node.getAttribute('aria-label') || node.getAttribute('accessibilitylabel') || node.getAttribute('placeholder')),
-        value: node.value,
-      })),
+      inputs: Array.from(document.querySelectorAll('input,textarea'))
+        .filter((node) => !isExcludedFromInteractionTree(node))
+        .map((node) => ({
+          label: normalize(node.getAttribute('aria-label') || node.getAttribute('accessibilitylabel') || node.getAttribute('placeholder')),
+          value: node.value,
+        })),
       issues,
       overflowX,
       title: document.title,
@@ -1018,6 +1155,7 @@ function assertInteractiveControl(snapshot, label) {
   const control = snapshot.controls.find((candidate) => candidate.label.includes(label));
   assert(control, `${snapshot.url} does not expose an interactive ${label} control.`);
   assert(!control.disabled, `${label} is disabled at ${snapshot.url}.`);
+  assert(control.fullyExposed, `${label} is not fully exposed at ${snapshot.url}.`);
   assert(control.width >= 44 && control.height >= 44, `${label} is below the 44pt web proxy.`);
   assert(control.hitOk, `${label} is not center-hit-testable.`);
 }
@@ -1195,7 +1333,12 @@ async function openSearchAndSubmit(client, baseUrl, viewport, scenarioId) {
   await waitForText(client, 'Search catalog');
   await waitForCondition(
     client,
-    `Array.from(document.querySelectorAll('input,textarea')).some((node) => node.value === ${JSON.stringify(SEARCH_QUERY)})`,
+    `(() => {
+      const isExcludedFromInteractionTree = ${isExcludedFromInteractionTree.toString()};
+      return Array.from(document.querySelectorAll('input,textarea')).some(
+        (node) => !isExcludedFromInteractionTree(node) && node.value === ${JSON.stringify(SEARCH_QUERY)},
+      );
+    })()`,
     10_000,
     'seeded catalog query',
   );

@@ -15,8 +15,10 @@ import {
   cat04ServerEnvironment,
   classifyBrowserFailures,
   collectCat04UntrackedSourcePaths,
+  isExcludedFromInteractionTree,
   listEvidenceArtifacts,
   listCat04NonIgnoredUntrackedRepoFiles,
+  measureControlGeometry,
   readSourceGitSha,
   safeArtifactId,
   validateCat04AuditConfiguration,
@@ -26,6 +28,37 @@ const runnerPath = fileURLToPath(new URL('./cat04-catalog-recovery-audit.mjs', i
 const packagePath = fileURLToPath(new URL('../../package.json', import.meta.url));
 const source = readFileSync(runnerPath, 'utf8');
 const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
+
+function fakeElement({
+  rect,
+  parentElement = null,
+  overflowX = 'visible',
+  overflowY = 'visible',
+  clientLeft = 0,
+  clientTop = 0,
+  clientWidth = rect.width,
+  clientHeight = rect.height,
+  excluded = false,
+}) {
+  return {
+    clientHeight,
+    clientLeft,
+    clientTop,
+    clientWidth,
+    closest: () => (excluded ? {} : null),
+    getBoundingClientRect: () => rect,
+    parentElement,
+    testStyle: {
+      display: 'block',
+      opacity: '1',
+      overflowX,
+      overflowY,
+      visibility: 'visible',
+    },
+  };
+}
+
+const fakeStyle = (node) => node.testStyle;
 
 test('CAT04 audit matrix covers every deterministic lane at all required web viewports', () => {
   const configuration = validateCat04AuditConfiguration();
@@ -190,7 +223,92 @@ test('interaction audit includes non-button controls used by opened-date recover
   assert.match(source, /scrollControlIntoView\(client, 'Just opened it'\)/);
   assert.match(source, /clickByText\(client, 'Add it by hand', \{ exact: false \}\)/);
   assert.match(source, /scrollControlIntoView\(client, 'Add it by hand', \{ exact: false \}\)/);
+  assert.match(source, /isExcludedFromInteractionTree/);
+  assert.match(source, /measureControlGeometry/);
+  assert.match(source, /interactionTreeText/);
+  assert.match(source, /unsafeClipped/);
+  assert.match(source, /scrollClipped/);
+  assert.match(source, /if \(!fullyExposed\) continue/);
   assert.match(source, /type: 'clippedVisibleControl'/);
+});
+
+test('interaction geometry distinguishes safe scroll edges from unsafe clipping', () => {
+  const scrollAncestor = fakeElement({
+    rect: { bottom: 617, height: 517, left: 0, right: 375, top: 100, width: 375 },
+    overflowY: 'auto',
+  });
+  const partialScrollControl = fakeElement({
+    parentElement: scrollAncestor,
+    rect: { bottom: 692, height: 94, left: 24, right: 351, top: 598, width: 327 },
+  });
+  const scrolled = measureControlGeometry(
+    partialScrollControl,
+    { height: 667, width: 375 },
+    fakeStyle,
+  );
+
+  assert.equal(scrolled.fullyExposed, false);
+  assert.equal(scrolled.scrollClipped, true);
+  assert.equal(scrolled.unsafeClipped, false);
+  assert.equal(scrolled.exposedHeight, 19);
+
+  const hiddenAncestor = fakeElement({
+    rect: { bottom: 617, height: 517, left: 0, right: 375, top: 100, width: 375 },
+    overflowY: 'hidden',
+  });
+  const truncatedControl = fakeElement({
+    parentElement: hiddenAncestor,
+    rect: { bottom: 692, height: 94, left: 24, right: 351, top: 598, width: 327 },
+  });
+  const truncated = measureControlGeometry(
+    truncatedControl,
+    { height: 667, width: 375 },
+    fakeStyle,
+  );
+
+  assert.equal(truncated.fullyExposed, false);
+  assert.equal(truncated.scrollClipped, false);
+  assert.equal(truncated.unsafeClipped, true);
+});
+
+test('interaction geometry uses padding-box clips and rejects excluded routes', () => {
+  const borderedClip = fakeElement({
+    clientHeight: 400,
+    clientLeft: 4,
+    clientTop: 4,
+    clientWidth: 367,
+    overflowY: 'hidden',
+    rect: { bottom: 520, height: 420, left: 0, right: 375, top: 100, width: 375 },
+  });
+  const edgeControl = fakeElement({
+    parentElement: borderedClip,
+    rect: { bottom: 520, height: 20, left: 24, right: 351, top: 500, width: 327 },
+  });
+  const geometry = measureControlGeometry(edgeControl, { height: 667, width: 375 }, fakeStyle);
+
+  assert.equal(geometry.exposedHeight, 4);
+  assert.equal(geometry.unsafeClipped, true);
+
+  const collapsedClip = fakeElement({
+    clientHeight: 0,
+    overflowY: 'hidden',
+    rect: { bottom: 520, height: 420, left: 0, right: 375, top: 100, width: 375 },
+  });
+  const collapsedControl = fakeElement({
+    parentElement: collapsedClip,
+    rect: { bottom: 200, height: 48, left: 24, right: 351, top: 152, width: 327 },
+  });
+  assert.equal(
+    measureControlGeometry(collapsedControl, { height: 667, width: 375 }, fakeStyle),
+    null,
+  );
+
+  const excluded = fakeElement({
+    excluded: true,
+    rect: { bottom: 48, height: 48, left: 0, right: 48, top: 0, width: 48 },
+  });
+  assert.equal(isExcludedFromInteractionTree(excluded), true);
+  assert.equal(measureControlGeometry(excluded, { height: 667, width: 375 }, fakeStyle), null);
 });
 
 test('browser control is bounded and turns setup failures into machine-readable failures', () => {

@@ -637,7 +637,7 @@ export default function ScanScreen() {
         {state.kind === 'no_match' && (
           <Pressable
             accessibilityRole="button"
-            className="mt-5 items-center py-1"
+            className="mt-2.5 min-h-[48px] items-center justify-center py-1"
             onPress={() => {
               haptics.select();
               router.push(noMatchRoute(state.barcode));

@@ -471,6 +471,13 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('min-h-[44px] min-w-[44px] items-center justify-center px-2');
   });
 
+  it('keeps the Shelf scan no-match recovery action above the 44px target floor', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain('className="mt-2.5 min-h-[48px] items-center justify-center py-1"');
+    expect(source).not.toContain('className="mt-5 items-center py-1"');
+  });
+
   it('keeps the Shelf scan fallback readable on short phones without a fake reticle', () => {
     const source = readAppRoute('shelf/scan.tsx');
 
