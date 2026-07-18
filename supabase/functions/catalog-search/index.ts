@@ -5,6 +5,7 @@ import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/a
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import {
+  HEALTH_PROCESSING_EPOCH_HEADER,
   healthProcessingCallerHeaders,
   preflightActiveHealthProcessing,
   readHealthProcessingEpochHeader,
@@ -76,6 +77,12 @@ function intEnv(name: string, fallback: number, min: number, max: number): numbe
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasExactDatabaseError(error: unknown, message: string): boolean {
+  if (!isRecord(error)) return false;
+  const values = [error.message, error.details, error.hint];
+  return values.some((value) => typeof value === 'string' && value.trim() === message);
 }
 
 async function hmacSha256Hex(value: string): Promise<string> {
@@ -161,6 +168,9 @@ Deno.serve(async (req) => {
   if (initialHealthError) return initialHealthError;
 
   const admin = createClient(supabaseUrl, serviceKey, {
+    global: {
+      headers: { [HEALTH_PROCESSING_EPOCH_HEADER]: healthProcessingEpoch },
+    },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const rateLimitError = await enforceRateLimit(admin, 'catalog-search', userId);
@@ -235,15 +245,13 @@ Deno.serve(async (req) => {
   );
   if (persistAccountError) return persistAccountError;
 
-  // The direct-write trigger atomically rechecks active state and this exact epoch.
-  const { error: eventError } = await caller.from('catalog_lookup_events').insert({
-    user_id: userId,
-    lookup_type: 'search',
-    query,
-    result: data?.length ? 'matched' : 'no_match',
-    matched_product_id: data?.[0]?.id ?? null,
-    source_key: data?.[0]?.source ?? null,
-    quality_grade: data?.[0]?.quality_grade ?? null,
+  const { error: eventError } = await admin.rpc('record_catalog_lookup_event', {
+    p_user_id: userId,
+    p_expected_health_epoch: healthProcessingEpoch,
+    p_lookup_type: 'search',
+    p_result: data?.length ? 'matched' : 'no_match',
+    p_rate_limit: catalogRateLimitMax * 2,
+    p_window_seconds: catalogRateLimitWindowSeconds,
   });
 
   if (eventError) {
@@ -252,9 +260,27 @@ Deno.serve(async (req) => {
       userId,
       healthProcessingEpoch,
     );
-    return withdrawalError ?? json({ error: 'search_failed' }, 500);
+    if (withdrawalError) return withdrawalError;
+    const eventAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (eventAccountError) return eventAccountError;
+    if (hasExactDatabaseError(eventError, 'CATALOG_LOOKUP_EVENT_RATE_LIMITED')) {
+      return json({ error: 'rate_limited' }, 429, {
+        'Retry-After': String(catalogRateLimitWindowSeconds),
+      });
+    }
+    return json({ error: 'search_failed' }, 500);
   }
 
+  const responseHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (responseHealthError) return responseHealthError;
   const responseAccountError = await requireSameAccountAccess(
     caller,
     userId,

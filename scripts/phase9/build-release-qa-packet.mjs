@@ -313,6 +313,7 @@ const sourceFiles = [
   'scripts/phase9/account-publication-fence-postgres-rehearsal.sql',
   'scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql',
   'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-scan-minimization-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
   'scripts/phase9/security-ci-smoke.mjs',

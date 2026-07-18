@@ -517,7 +517,7 @@ export async function exportData(): Promise<boolean> {
     // The purpose-limited collector can read health-classified local bytes
     // while processing is paused only because this exact account generation
     // has just verified the durable local owner proof.
-    const localDeviceData = await collectLocalDeviceExportData(lease);
+    const localDeviceData = await collectLocalDeviceExportData(lease, expectedUserId);
     lease.assertCurrent();
     await waitForExportE2EDelay(lease.signal);
     lease.assertCurrent();

@@ -47,6 +47,9 @@ jobs:
           - name: entitlement-lanes
             database: entitlement_lanes_0053
             script: entitlement-authority-lanes-postgres-rehearsal.sql
+          - name: catalog-scan-minimization
+            database: catalog_scan_minimization_0059
+            script: catalog-scan-minimization-postgres-rehearsal.sql
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}
@@ -190,6 +193,7 @@ jobs:
           npm run phase4:promotion-contract:test
           npm run phase4:curation-contract:test
           npm run phase4:catalog-serving-contract:test
+          npm run phase4:catalog-report-privacy-smoke
 
       - name: Execute account service scrub migration rehearsal
         env:

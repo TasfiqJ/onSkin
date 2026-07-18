@@ -276,6 +276,7 @@ describe('settings data export', () => {
         signal: expect.any(AbortSignal),
         assertCurrent: expect.any(Function),
       }),
+      'user-1',
     );
     expect(mocks.getUser.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.collectLocalDeviceExportData.mock.invocationCallOrder[0]!,
@@ -392,6 +393,11 @@ describe('settings data export', () => {
     mocks.shareAsync.mockResolvedValueOnce(undefined);
 
     await expect(exportData()).resolves.toBe(true);
+
+    expect(mocks.collectLocalDeviceExportData).toHaveBeenCalledWith(
+      expect.objectContaining({ assertCurrent: expect.any(Function) }),
+      null,
+    );
 
     expect(mocks.invoke).not.toHaveBeenCalled();
     expect(mocks.getUser).not.toHaveBeenCalled();
@@ -562,7 +568,7 @@ describe('settings data export', () => {
     const actions = readSource('features/settings/actions.ts');
 
     expect(actions).toContain('if (isSupabaseConfigured)');
-    expect(actions).toContain('collectLocalDeviceExportData(lease)');
+    expect(actions).toContain('collectLocalDeviceExportData(lease, expectedUserId)');
     expect(actions).toContain('readLocalDataOwnership(expectedUserId)');
     expect(actions).toContain("serverAccountDataStatus = 'included'");
     expect(source).toContain('onSuccess: (shared)');

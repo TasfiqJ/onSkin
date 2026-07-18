@@ -11,15 +11,30 @@ import {
 } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { CatalogReportConfirmation } from '@/features/catalog/CatalogReportConfirmation';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import {
   catalogIntakeProvenance,
+  isCatalogProductId,
   reportCatalogIssue,
   searchCatalog,
+  type CatalogReportInput,
   type CatalogProductSummary,
 } from '@/features/catalog/client';
 import { catalogQualityLabel, sourceDisplayName } from '@/features/catalog/copy';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
+import {
+  catalogReportFeedback,
+  type CatalogReportFeedback,
+} from '@/features/catalog/reportPresentation';
+import {
+  cancelCatalogReportOperation,
+  createCatalogReportOperation,
+  editCatalogReportOperation,
+  finishCatalogReportOperation,
+  markCatalogReportOperationAttempted,
+  type CatalogReportOperation,
+} from '@/features/catalog/reportOperation';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
@@ -32,23 +47,6 @@ import { colors } from '@/theme/tokens';
 
 const categoryIds = new Set(PRODUCT_CATEGORIES.map((category) => category.id));
 const qualityGrades = new Set(['verified', 'usable', 'limited', 'unverified', 'blocked']);
-const CATALOG_MISSING_SENT = {
-  title: 'Report sent',
-  message: 'Thanks. Missing-product reports help prioritize catalog review before launch.',
-};
-const CATALOG_MISSING_NOT_SENT = {
-  title: 'Report not sent',
-  message: 'Catalog reporting is not configured on this build. Add it by hand for now.',
-};
-const CATALOG_WRONG_MATCH_SENT = {
-  title: 'Report sent',
-  message: 'Thanks. Wrong-match reports help keep the catalog trustworthy before launch.',
-};
-const CATALOG_WRONG_MATCH_NOT_SENT = {
-  title: 'Report not sent',
-  message:
-    'Catalog reporting is not configured on this build. Add by hand or choose another match.',
-};
 
 function normalizeCategory(value: string | null | undefined): ProductCategory | null {
   return value && categoryIds.has(value as ProductCategory) ? (value as ProductCategory) : null;
@@ -62,47 +60,123 @@ function productKey(product: CatalogProductSummary): string {
   return product.id ?? `${product.source}-${product.barcode}-${product.name}`;
 }
 
+function wrongMatchReportInput(product: CatalogProductSummary): CatalogReportInput | null {
+  if (!isCatalogProductId(product.id)) return null;
+  return {
+    correctionType: 'wrong_match',
+    productId: product.id,
+    barcode: product.barcode,
+    description: 'wrong_match reported from catalog search result',
+    proposedPayload: {
+      productName: product.name,
+      brand: product.brand,
+      category: product.category,
+      sourceName: sourceDisplayName(product.source),
+      sourceUrl: product.source_url ?? null,
+      qualityIssue: 'wrong_match',
+    },
+    clientContext: {
+      addedVia: 'search',
+      quality: normalizeQuality(product.quality_grade),
+      source: product.source,
+      platform: Platform.OS,
+      route: 'shelf_search',
+    },
+  };
+}
+
 export default function CatalogSearchScreen() {
-  const { update, reset } = useIntake();
+  const { draft, update, reset } = useIntake();
   const { e2eQuery } = useLocalSearchParams<{ e2eQuery?: string | string[] }>();
   const rawE2EQuery = Array.isArray(e2eQuery) ? e2eQuery[0] : (e2eQuery ?? '');
   const initialSearchQuery =
     typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web' ? rawE2EQuery : '';
   const autoSearchStarted = useRef(false);
+  const searchGeneration = useRef(0);
+  const activeSearch = useRef<{ generation: number; query: string } | null>(null);
+  const reportSubmissionInFlight = useRef(false);
+  const queryRef = useRef(initialSearchQuery.slice(0, 120));
   const [query, setQuery] = useState(() => initialSearchQuery.slice(0, 120));
   const [results, setResults] = useState<CatalogProductSummary[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [lastNoMatchQuery, setLastNoMatchQuery] = useState<string | null>(null);
+  const [confirmingMissingProduct, setConfirmingMissingProduct] = useState(false);
+  const [missingProductName, setMissingProductName] = useState('');
+  const [missingReportOperation, setMissingReportOperation] =
+    useState<CatalogReportOperation | null>(null);
   const [reportingMissingProduct, setReportingMissingProduct] = useState(false);
-  const [missingProductFeedback, setMissingProductFeedback] = useState<{
-    title: string;
-    message: string;
-  } | null>(null);
+  const [missingProductFeedback, setMissingProductFeedback] =
+    useState<CatalogReportFeedback | null>(null);
+  const [confirmingWrongMatchId, setConfirmingWrongMatchId] = useState<string | null>(null);
   const [reportingWrongMatchId, setReportingWrongMatchId] = useState<string | null>(null);
   const [wrongMatchFeedback, setWrongMatchFeedback] = useState<{
     productKey: string;
     title: string;
     message: string;
   } | null>(null);
+  const [wrongMatchReportOperations, setWrongMatchReportOperations] = useState(
+    () => new Map<string, CatalogReportOperation>(),
+  );
   const [searching, setSearching] = useState(false);
-  const canSearch = query.trim().length >= 2 && !searching;
+  const reportBusy = reportingMissingProduct || reportingWrongMatchId !== null;
+  const canSearch = query.trim().length >= 2 && !searching && !reportBusy;
+
+  const updateQuery = useCallback((next: string) => {
+    if (next === queryRef.current) return;
+
+    queryRef.current = next;
+    searchGeneration.current += 1;
+    activeSearch.current = null;
+    setQuery(next);
+    setSearching(false);
+    setResults([]);
+    setMessage(null);
+    setLastNoMatchQuery(null);
+    setConfirmingMissingProduct(false);
+    setMissingProductName('');
+    setMissingReportOperation(null);
+    setMissingProductFeedback(null);
+    setConfirmingWrongMatchId(null);
+    setWrongMatchReportOperations(new Map());
+    setWrongMatchFeedback(null);
+  }, []);
 
   const handleQueryChange = (
     event: NativeSyntheticEvent<TextInputChangeEventData> & { target?: { value?: string } },
   ) => {
     const next = event.nativeEvent.text ?? event.target?.value;
-    if (typeof next === 'string') setQuery(next);
+    if (typeof next === 'string') updateQuery(next);
   };
 
-  const runSearch = useCallback(
-    async (queryOverride?: string) => {
-      const cleaned = (queryOverride ?? query).trim();
-      if (cleaned.length < 2 || searching) return;
-      setSearching(true);
-      setLastNoMatchQuery(null);
-      setMissingProductFeedback(null);
-      setWrongMatchFeedback(null);
+  const runSearch = useCallback(async (queryOverride?: string) => {
+    const cleaned = (queryOverride ?? queryRef.current).trim();
+    if (
+      cleaned.length < 2 ||
+      activeSearch.current?.query === cleaned ||
+      reportSubmissionInFlight.current
+    ) {
+      return;
+    }
+
+    const generation = searchGeneration.current + 1;
+    searchGeneration.current = generation;
+    activeSearch.current = { generation, query: cleaned };
+    setSearching(true);
+    setResults([]);
+    setMessage(null);
+    setLastNoMatchQuery(null);
+    setConfirmingMissingProduct(false);
+    setMissingProductName('');
+    setMissingReportOperation(null);
+    setMissingProductFeedback(null);
+    setConfirmingWrongMatchId(null);
+    setWrongMatchReportOperations(new Map());
+    setWrongMatchFeedback(null);
+
+    try {
       const response = await searchCatalog(cleaned);
+      if (searchGeneration.current !== generation) return;
+
       setResults(response.products ?? []);
       const noProducts = !response.products?.length;
       setMessage(
@@ -112,11 +186,30 @@ export default function CatalogSearchScreen() {
             ? null
             : 'No catalog match yet. Add it by hand for now.',
       );
-      if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
-      if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
-      setSearching(false);
+      if (response.result === 'no_match' && noProducts) {
+        setLastNoMatchQuery(cleaned);
+        track('catalog_lookup_no_match', { lookup_type: 'search' });
+      }
+    } catch {
+      if (searchGeneration.current !== generation) return;
+
+      setResults([]);
+      setLastNoMatchQuery(null);
+      setMessage("Couldn't reach the product catalog. Add this product by hand for now.");
+    } finally {
+      if (searchGeneration.current === generation) {
+        activeSearch.current = null;
+        setSearching(false);
+      }
+    }
+  }, []);
+
+  useEffect(
+    () => () => {
+      searchGeneration.current += 1;
+      activeSearch.current = null;
     },
-    [query, searching],
+    [],
   );
 
   useEffect(() => {
@@ -125,64 +218,123 @@ export default function CatalogSearchScreen() {
     void runSearch(initialSearchQuery);
   }, [initialSearchQuery, runSearch]);
 
+  const missingReportDraft = (productName: string): CatalogReportInput => ({
+    correctionType: 'missing_product',
+    description: 'missing_product reported from catalog search',
+    proposedPayload: { productName: productName.trim() },
+    clientContext: {
+      addedVia: 'search',
+      platform: Platform.OS,
+      route: 'shelf_search',
+    },
+  });
+
+  const openMissingProductConfirmation = () => {
+    if (!lastNoMatchQuery || reportSubmissionInFlight.current) return;
+    setMissingProductName(lastNoMatchQuery);
+    setMissingReportOperation(
+      (current) => current ?? createCatalogReportOperation(missingReportDraft(lastNoMatchQuery)),
+    );
+    setMissingProductFeedback(null);
+    setConfirmingWrongMatchId(null);
+    setConfirmingMissingProduct(true);
+  };
+
   const reportMissingProduct = async () => {
-    if (!lastNoMatchQuery || reportingMissingProduct) return;
+    const productName = missingProductName.trim();
+    if (
+      productName.length < 2 ||
+      !missingReportOperation ||
+      reportSubmissionInFlight.current ||
+      reportingMissingProduct
+    ) {
+      return;
+    }
+    const attempted = markCatalogReportOperationAttempted(missingReportOperation);
+    setMissingReportOperation(attempted);
+    reportSubmissionInFlight.current = true;
     setReportingMissingProduct(true);
     setMissingProductFeedback(null);
-    const result = await reportCatalogIssue({
-      correctionType: 'missing_product',
-      description: 'missing_product reported from catalog search',
-      proposedPayload: { productName: lastNoMatchQuery },
-      clientContext: {
-        addedVia: 'search',
-        platform: Platform.OS,
-        route: 'shelf_search',
-      },
-    });
-    setMissingProductFeedback(result.ok ? CATALOG_MISSING_SENT : CATALOG_MISSING_NOT_SENT);
-    setReportingMissingProduct(false);
+    try {
+      const outcome = await reportCatalogIssue(attempted.input);
+      setMissingReportOperation(finishCatalogReportOperation(attempted, outcome));
+      setMissingProductFeedback(catalogReportFeedback(outcome));
+    } catch {
+      setMissingReportOperation(attempted);
+      setMissingProductFeedback(catalogReportFeedback({ result: 'offline_or_withdrawn' }));
+    } finally {
+      setConfirmingMissingProduct(false);
+      setReportingMissingProduct(false);
+      reportSubmissionInFlight.current = false;
+    }
+  };
+
+  const openWrongMatchConfirmation = (product: CatalogProductSummary) => {
+    const key = productKey(product);
+    const input = wrongMatchReportInput(product);
+    if (!input || reportSubmissionInFlight.current) return;
+    if (!wrongMatchReportOperations.has(key)) {
+      setWrongMatchReportOperations((current) => {
+        if (current.has(key)) return current;
+        const next = new Map(current);
+        next.set(key, createCatalogReportOperation(input));
+        return next;
+      });
+    }
+    setWrongMatchFeedback(null);
+    setConfirmingMissingProduct(false);
+    setConfirmingWrongMatchId(key);
   };
 
   const reportWrongMatch = async (product: CatalogProductSummary) => {
     const key = productKey(product);
-    if (reportingWrongMatchId) return;
+    const operation = wrongMatchReportOperations.get(key);
+    if (!operation || reportSubmissionInFlight.current || reportingWrongMatchId) return;
 
+    const attempted = markCatalogReportOperationAttempted(operation);
+    setWrongMatchReportOperations((current) => {
+      const next = new Map(current);
+      next.set(key, attempted);
+      return next;
+    });
+
+    reportSubmissionInFlight.current = true;
     setReportingWrongMatchId(key);
     setWrongMatchFeedback(null);
-    const sourceName = sourceDisplayName(product.source);
-    const result = await reportCatalogIssue({
-      correctionType: 'wrong_match',
-      productId: product.id,
-      barcode: product.barcode,
-      description: 'wrong_match reported from catalog search result',
-      proposedPayload: {
-        productName: product.name,
-        brand: product.brand,
-        barcode: product.barcode,
-        category: product.category,
-        sourceName,
-        sourceUrl: product.source_url ?? null,
-        qualityIssue: 'wrong_match',
-      },
-      clientContext: {
-        addedVia: 'search',
-        quality: normalizeQuality(product.quality_grade),
-        source: product.source,
-        platform: Platform.OS,
-        route: 'shelf_search',
-      },
-    });
-    setWrongMatchFeedback({
-      productKey: key,
-      ...(result.ok ? CATALOG_WRONG_MATCH_SENT : CATALOG_WRONG_MATCH_NOT_SENT),
-    });
-    setReportingWrongMatchId(null);
+    try {
+      const outcome = await reportCatalogIssue(attempted.input);
+      const retained = finishCatalogReportOperation(attempted, outcome);
+      setWrongMatchReportOperations((current) => {
+        const next = new Map(current);
+        if (retained) next.set(key, retained);
+        else next.delete(key);
+        return next;
+      });
+      setWrongMatchFeedback({
+        productKey: key,
+        ...catalogReportFeedback(outcome),
+      });
+    } catch {
+      setWrongMatchReportOperations((current) => {
+        const next = new Map(current);
+        next.set(key, attempted);
+        return next;
+      });
+      setWrongMatchFeedback({
+        productKey: key,
+        ...catalogReportFeedback({ result: 'offline_or_withdrawn' }),
+      });
+    } finally {
+      setConfirmingWrongMatchId(null);
+      setReportingWrongMatchId(null);
+      reportSubmissionInFlight.current = false;
+    }
   };
 
   const goManual = () => {
     haptics.select();
     trackProductAddStarted('catalog_manual');
-    reset({ addedVia: 'manual', name: query.trim() });
+    reset({ addedVia: 'manual', name: query.trim(), barcode: draft.barcode });
     router.replace('/shelf/manual');
   };
 
@@ -224,6 +376,7 @@ export default function CatalogSearchScreen() {
       <View className="mt-2 flex-row items-center justify-between">
         <RouteIconButton
           accessibilityLabel="Back"
+          disabled={reportBusy}
           onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
         />
         <Text variant="body" className="font-sans-semibold">
@@ -236,8 +389,9 @@ export default function CatalogSearchScreen() {
         <TextInput
           accessibilityLabel="Catalog search query"
           value={query}
+          editable={!reportBusy}
           onChange={handleQueryChange}
-          onChangeText={setQuery}
+          onChangeText={updateQuery}
           onSubmitEditing={() => void runSearch()}
           placeholder="Brand or product name"
           placeholderTextColor={colors.mutedLight}
@@ -277,15 +431,56 @@ export default function CatalogSearchScreen() {
             {lastNoMatchQuery ? (
               <Pressable
                 accessibilityRole="button"
-                accessibilityState={{ busy: reportingMissingProduct }}
+                accessibilityState={{
+                  busy: reportingMissingProduct,
+                  disabled: reportingMissingProduct,
+                }}
                 disabled={reportingMissingProduct}
-                onPress={reportMissingProduct}
+                onPress={openMissingProductConfirmation}
                 className="mt-3 min-h-[48px] self-start items-center justify-center rounded-pill px-1"
               >
                 <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-                  {reportingMissingProduct ? 'Sending report...' : 'Report missing product'}
+                  Report missing product
                 </Text>
               </Pressable>
+            ) : null}
+            {confirmingMissingProduct && missingReportOperation ? (
+              <View className="mt-2.5">
+                <CatalogReportConfirmation
+                  input={missingReportOperation.input}
+                  busy={reportingMissingProduct}
+                  confirmDisabled={missingProductName.trim().length < 2}
+                  onCancel={() => {
+                    setMissingReportOperation((current) => cancelCatalogReportOperation(current));
+                    setConfirmingMissingProduct(false);
+                  }}
+                  onConfirm={() => void reportMissingProduct()}
+                >
+                  <Text variant="label" tone="muted">
+                    Confirm or edit the name printed on the product.
+                  </Text>
+                  <TextInput
+                    accessibilityLabel="Product name for report"
+                    value={missingProductName}
+                    onChangeText={(next) => {
+                      if (reportingMissingProduct) return;
+                      setMissingProductName(next);
+                      setMissingProductFeedback(null);
+                      setMissingReportOperation((current) =>
+                        current
+                          ? editCatalogReportOperation(current, missingReportDraft(next))
+                          : current,
+                      );
+                    }}
+                    editable={!reportingMissingProduct}
+                    maxLength={120}
+                    autoCapitalize="words"
+                    placeholder="Product name"
+                    placeholderTextColor={colors.mutedLight}
+                    className="mt-2 min-h-[48px] rounded-[12px] border border-hairline bg-paper px-3 font-sans-medium text-[15px] text-ink"
+                  />
+                </CatalogReportConfirmation>
+              </View>
             ) : null}
             {missingProductFeedback ? (
               <View
@@ -310,6 +505,9 @@ export default function CatalogSearchScreen() {
         <View className="mt-4 gap-2.5">
           {results.map((product) => {
             const key = productKey(product);
+            const reportDraft = wrongMatchReportInput(product);
+            const reportOperation = wrongMatchReportOperations.get(key);
+            const confirmingThisMatch = confirmingWrongMatchId === key;
             const reportingThisMatch = reportingWrongMatchId === key;
             const feedback = wrongMatchFeedback?.productKey === key ? wrongMatchFeedback : null;
 
@@ -339,6 +537,8 @@ export default function CatalogSearchScreen() {
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={`Use ${product.name} match`}
+                    accessibilityState={{ disabled: reportBusy }}
+                    disabled={reportBusy}
                     onPress={() => chooseProduct(product)}
                     className="min-h-[48px] flex-1 basis-[148px] items-center justify-center rounded-pill bg-ink px-4 py-2"
                   >
@@ -346,18 +546,42 @@ export default function CatalogSearchScreen() {
                       Use this match
                     </Text>
                   </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityState={{ busy: reportingThisMatch, disabled: reportingThisMatch }}
-                    disabled={reportingThisMatch}
-                    onPress={() => reportWrongMatch(product)}
-                    className="min-h-[48px] flex-1 basis-[148px] items-center justify-center rounded-pill border border-hairline bg-paper px-4 py-2"
-                  >
-                    <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-                      {reportingThisMatch ? 'Sending report...' : 'Not this product'}
-                    </Text>
-                  </Pressable>
+                  {reportDraft ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityState={{
+                        busy: reportingThisMatch,
+                        disabled: reportBusy,
+                      }}
+                      disabled={reportBusy}
+                      onPress={() => openWrongMatchConfirmation(product)}
+                      className="min-h-[48px] flex-1 basis-[148px] items-center justify-center rounded-pill border border-hairline bg-paper px-4 py-2"
+                    >
+                      <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+                        Not this product
+                      </Text>
+                    </Pressable>
+                  ) : null}
                 </View>
+                {confirmingThisMatch && reportOperation ? (
+                  <View className="mt-2.5">
+                    <CatalogReportConfirmation
+                      input={reportOperation.input}
+                      busy={reportingThisMatch}
+                      onCancel={() => {
+                        const retained = cancelCatalogReportOperation(reportOperation);
+                        setWrongMatchReportOperations((current) => {
+                          const next = new Map(current);
+                          if (retained) next.set(key, retained);
+                          else next.delete(key);
+                          return next;
+                        });
+                        setConfirmingWrongMatchId(null);
+                      }}
+                      onConfirm={() => void reportWrongMatch(product)}
+                    />
+                  </View>
+                ) : null}
                 {feedback ? (
                   <View
                     accessibilityRole="alert"
@@ -382,7 +606,7 @@ export default function CatalogSearchScreen() {
       </ScrollView>
 
       <View className="pb-8 pt-2">
-        <Button label="Add by hand" variant="ghost" onPress={goManual} />
+        <Button label="Add by hand" variant="ghost" disabled={reportBusy} onPress={goManual} />
       </View>
     </Screen>
   );

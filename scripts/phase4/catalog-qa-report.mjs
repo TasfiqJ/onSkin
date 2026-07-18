@@ -9,10 +9,12 @@ import {
   CATALOG_QA_SOURCE_HASH_PATHS,
   CATALOG_TRANSFORMED_PAYLOAD_CONTRACT,
   assertSafeOutputPath,
+  canonicalizeCatalogGtin,
   canonicalJson,
   catalogReleaseIdentityFromRepository,
   catalogTransformedPayloadSha256,
   catalogTransformerDescriptor,
+  isCanonicalCatalogGtin,
   loadCatalogReleaseBuildEvidence,
   loadCatalogReleaseScope,
   loadCatalogSourcePolicy,
@@ -448,7 +450,10 @@ if (manifest.source === 'open_beauty_facts') {
     'sourceSnapshotDate',
   ];
   duplicateIdentifiers = duplicateValues(
-    products.map((product) => (product && typeof product === 'object' ? product.barcode : null)),
+    products.map((product) => {
+      if (!product || typeof product !== 'object') return null;
+      return canonicalizeCatalogGtin(product.barcode) ?? product.barcode;
+    }),
   );
   if (duplicateIdentifiers.length) {
     blockers.push(`Duplicate barcodes: ${duplicateIdentifiers.join(', ')}`);
@@ -464,7 +469,7 @@ if (manifest.source === 'open_beauty_facts') {
       !product ||
       typeof product !== 'object' ||
       !exactKeys(product, allowedKeys) ||
-      !/^\d{8,14}$/.test(product.barcode ?? '') ||
+      !isCanonicalCatalogGtin(product.barcode) ||
       !isBoundedText(product.name, 200) ||
       (product.brand !== null && !isBoundedText(product.brand, 300)) ||
       (product.category !== null && !isBoundedText(product.category, 100)) ||

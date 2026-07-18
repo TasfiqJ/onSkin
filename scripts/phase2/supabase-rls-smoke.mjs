@@ -279,11 +279,12 @@ async function main() {
       }),
     );
 
-    const missingBarcode = `9${Date.now().toString().slice(-13).padStart(13, '0')}`;
+    const missingBarcode = '10012345000017';
 
     const correctionWrite = await admin.rpc('submit_catalog_correction', {
       p_user_id: userA.id,
       p_expected_health_epoch: 1,
+      p_report_request_id: randomUUID(),
       p_product_id: null,
       p_barcode: missingBarcode,
       p_correction_type: 'missing_product',
@@ -298,11 +299,18 @@ async function main() {
     );
     const correction = correctionWrite.data[0];
     await expectOwnRead(
+      admin,
+      'catalog_corrections',
+      'id',
+      correction.id,
+      'catalog correction service export read',
+    );
+    await expectNoPrivateRead(
       userA.client,
       'catalog_corrections',
       'id',
       correction.id,
-      'catalog correction own read',
+      'catalog correction owner direct read',
     );
     await expectNoPrivateRead(
       userB.client,
@@ -330,34 +338,44 @@ async function main() {
       }),
     );
 
-    const lookupEvent = await insertOne(userA.client, 'catalog_lookup_events', {
-      user_id: userA.id,
-      lookup_type: 'search',
-      query: 'phase4 smoke',
-      result: 'no_match',
-      matched_product_id: null,
-      quality_grade: null,
+    const lookupWrite = await admin.rpc('record_catalog_lookup_event', {
+      p_user_id: userA.id,
+      p_expected_health_epoch: 1,
+      p_lookup_type: 'search',
+      p_result: 'no_match',
+      p_rate_limit: 240,
+      p_window_seconds: 900,
     });
+    if (lookupWrite.error) throw lookupWrite.error;
+    const lookupEventId = lookupWrite.data;
+    assert(typeof lookupEventId === 'string', 'catalog lookup RPC did not return an event id');
     await expectOwnRead(
       userA.client,
       'catalog_lookup_events',
       'id',
-      lookupEvent.id,
+      lookupEventId,
       'catalog lookup own read',
     );
     await expectNoPrivateRead(
       userB.client,
       'catalog_lookup_events',
       'id',
-      lookupEvent.id,
+      lookupEventId,
       'catalog lookup cross-user read',
+    );
+    await expectBlocked(
+      'catalog lookup owner direct insert',
+      userA.client.from('catalog_lookup_events').insert({
+        user_id: userA.id,
+        lookup_type: 'search',
+        result: 'no_match',
+      }),
     );
     await expectBlocked(
       'catalog lookup cross-user insert',
       userB.client.from('catalog_lookup_events').insert({
         user_id: userA.id,
         lookup_type: 'search',
-        query: 'bad',
         result: 'no_match',
       }),
     );

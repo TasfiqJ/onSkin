@@ -8,6 +8,11 @@ import type { ProductCategory } from './categories';
 // Transient draft shared across the intake funnel (docs/04 §4): manual / OCR /
 // no-match screens fill it, the opened-date linchpin (§4.5) finalises it into a
 // shelf row. In-memory only. Nothing is persisted until "Add to shelf".
+export type CatalogRecoveryToken = {
+  barcode: string;
+  productId: string;
+};
+
 export type IntakeDraft = {
   name: string;
   brand: string | null;
@@ -33,6 +38,8 @@ export type IntakeDraft = {
   paoMonths: number | null;
   paoSource: PaoSource;
   expiryDate: string | null;
+  /** Exact queued match to consume only after its Shelf add has committed. */
+  catalogRecoveryToken: CatalogRecoveryToken | null;
 };
 
 const EMPTY: IntakeDraft = {
@@ -58,6 +65,7 @@ const EMPTY: IntakeDraft = {
   paoMonths: null,
   paoSource: 'unknown',
   expiryDate: null,
+  catalogRecoveryToken: null,
 };
 
 type IntakeContextValue = {

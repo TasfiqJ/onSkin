@@ -46,6 +46,8 @@ Start here:
 - [CAT-03 Coverage/Quality Report](../../scripts/phase4/catalog-coverage-quality-report.mjs)
 - [CAT-03 Immutable Staging/Atomic Release/Retirement Migration](../../supabase/migrations/20260717000058_catalog_launch_curation.sql)
 - [CAT-03 Adversarial Database Contract](../../supabase/tests/database/catalog_launch_curation.test.sql)
+- [CAT-04 Search, Barcode, and Recovery Source Checkpoint](./CAT-04-SEARCH-BARCODE-RECOVERY-SOURCE-CHECKPOINT-2026-07-18.md)
+- [CAT-04 Scan/Lookup Minimization Migration](../../supabase/migrations/20260718000059_catalog_scan_minimization.sql)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -81,7 +83,7 @@ search share service-role-only positive eligibility rules, direct reads cannot
 bypass source withdrawal, operator-reviewed `triaged` or `accepted` correction
 holds suppress rows, and held reasons use
 the same no-match/manual fallback. Missing-product and wrong-match reports stay
-inside OnSkin's first-party correction operation; OBF/CosIng are not runtime
+inside the app's first-party correction operation; OBF/CosIng are not runtime
 recipients and the legacy contribution lane is inert. External legal/source
 decisions, cleared identity and live URLs, actual source artifacts, active
 reviewer keys, production EAS/archive/App Store evidence, hosted database
@@ -130,9 +132,32 @@ hosted `0058` evidence, current signed database readback, sealed holdout result,
 active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
 quality, market, or revenue outcome is implied.
 
+CAT-04 is now an `in_progress` source checkpoint, blocked by `CAT-03`, `H-07`,
+and `H-08`. The candidate normalizes UPC-E/manual package codes, rejects
+malformed or unreviewed network projections, prevents stale search results,
+requires identity-bearing first-party correction reports, preserves every
+failure fallback, and makes Shelf creation idempotent across an uncertain
+retry. Migration `0059` purges and seals the legacy raw `shelf_scans` relation
+and enforces outcome-only `catalog_lookup_events`; raw search terms, barcodes,
+matched-product IDs, source keys, and quality grades cannot be retained in that
+analytics table. Offline retry is an explicit encrypted,
+account/health-consent-bound, seven-day device queue whose reviewed result requires visible user confirmation
+before any Shelf change. Apple, FTC, Washington, Canadian, Quebec, and
+California primary-source analysis is recorded in the CAT-04 checkpoint. Local
+source checks pass 15 focused mobile files / 200 tests, 14/14 runner contracts,
+Phase 4 source-policy/import/QA/promotion/serving-Edge lanes at 27/27, 20/20,
+17/17, 23/23, and 23/23, the 35/35 focused report/export/health Deno lane, the
+data-rights/policy/RLS/security code gates, and the full 289-file / 3,360-test
+mobile baseline. No generated CAT-04 human-E2E evidence is current yet. The
+post-source-commit 45-scenario/18-bootstrap supported-viewport matrix, a real
+hosted ready-candidate reconnect cycle, live hosted owner/withdrawal/export/
+deletion evidence, active-catalog proof, physical-iPhone camera/accessibility
+matrix, App Privacy reconciliation, and professional privacy/security/legal
+review remain open; CAT-04 is not launch-clear.
+
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now covers all 57 migrations through
-`0058`, all 16 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now covers all 58 migrations through
+`0059`, all 16 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

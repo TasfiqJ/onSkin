@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T00:27:09.872Z",
+  "generatedAt": "2026-07-18T19:38:06.337Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -81,10 +81,10 @@
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-15",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 282,
-  "expectedMobileTests": 3251,
-  "actualMobileTestFiles": 282,
-  "expectedTestPhrase": "282 mobile test files / 3251 tests",
+  "expectedMobileTestFiles": 289,
+  "expectedMobileTests": 3360,
+  "actualMobileTestFiles": 289,
+  "expectedTestPhrase": "289 mobile test files / 3360 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -94,24 +94,24 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 282,
-          "tests": 3251,
-          "source": "282 test files / 3251 tests"
+          "testFiles": 289,
+          "tests": 3360,
+          "source": "289 mobile test files / 3360 tests"
         },
         {
-          "testFiles": 282,
-          "tests": 3251,
-          "source": "282 mobile test files / 3251 tests"
+          "testFiles": 289,
+          "tests": 3360,
+          "source": "289 mobile test files / 3360 tests"
         },
         {
-          "testFiles": 282,
-          "tests": 3251,
-          "source": "282 mobile test files / 3251 tests"
+          "testFiles": 289,
+          "tests": 3360,
+          "source": "289 mobile test files / 3360 tests"
         },
         {
-          "testFiles": 282,
-          "tests": 3251,
-          "source": "282 mobile test files / 3251 tests"
+          "testFiles": 289,
+          "tests": 3360,
+          "source": "289 mobile test files / 3360 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -127,9 +127,9 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 282,
-          "tests": 3251,
-          "source": "282 mobile test files / 3251 tests"
+          "testFiles": 289,
+          "tests": 3360,
+          "source": "289 mobile test files / 3360 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -152,7 +152,7 @@
         {
           "testFiles": 282,
           "tests": 3251,
-          "source": "282 test files /\n3251 tests"
+          "source": "282 test files / 3251 tests"
         }
       ],
       "unexpectedTestBaselines": [
@@ -160,6 +160,11 @@
           "testFiles": 266,
           "tests": 3026,
           "source": "266 test files / 3,026 tests"
+        },
+        {
+          "testFiles": 282,
+          "tests": 3251,
+          "source": "282 test files / 3251 tests"
         }
       ],
       "missingManifestNeedles": [
@@ -208,7 +213,10 @@
         "Trend navigator privacy and exact-route recovery",
         "trend-route-group-gate-current"
       ],
-      "stalePatterns": [],
+      "stalePatterns": [
+        "/\\b282\\s+(?:mobile\\s+)?test files?\\b/i",
+        "/\\b3,?251\\s+tests?\\b/i"
+      ],
       "missingCommands": []
     }
   ],

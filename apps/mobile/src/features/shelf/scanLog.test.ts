@@ -2,66 +2,29 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { recordShelfScan, shelfScanResultFromLookup } from './scanLog';
 
-const mocks = vi.hoisted(() => {
-  const insert = vi.fn(async () => ({ error: null }));
-  return {
-    get isSupabaseConfigured() {
-      return state.isSupabaseConfigured;
-    },
-    getUser: vi.fn(
-      async (): Promise<{ data: { user: { id: string } | null } }> => ({
-        data: { user: { id: 'user-1' } },
-      }),
-    ),
-    insert,
-    from: vi.fn(() => ({ insert })),
-    runHealthDataWriteOperation: vi.fn(),
-    track: vi.fn(),
-  };
-});
-
 const state = vi.hoisted(() => ({
-  isSupabaseConfigured: true,
+  ownerUserId: 'user-1' as string | null,
   leaseOpen: true,
 }));
 
-vi.mock('@/lib/env', () => ({
-  get isSupabaseConfigured() {
-    return mocks.isSupabaseConfigured;
-  },
+const mocks = vi.hoisted(() => ({
+  runHealthDataWriteOperation: vi.fn(),
+  track: vi.fn(),
 }));
 
-vi.mock('@/lib/analytics/track', () => ({
-  track: mocks.track,
-}));
-
+vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
 vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
-  activeHealthProcessingOwnerUserId: () => 'user-1',
+  activeHealthProcessingOwnerUserId: () => state.ownerUserId,
 }));
-
 vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
   runHealthDataWriteOperation: mocks.runHealthDataWriteOperation,
 }));
 
-vi.mock('@/lib/supabase/client', () => ({
-  getPersistedSupabaseUser: mocks.getUser,
-  supabase: {
-    auth: {
-      getUser: mocks.getUser,
-    },
-    from: mocks.from,
-  },
-}));
-
-describe('shelf scan intake log', () => {
+describe('shelf scan result-only analytics', () => {
   beforeEach(() => {
-    state.isSupabaseConfigured = true;
+    state.ownerUserId = 'user-1';
     state.leaseOpen = true;
-    mocks.getUser.mockReset();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
-    mocks.insert.mockReset();
-    mocks.insert.mockResolvedValue({ error: null });
-    mocks.from.mockClear();
+    mocks.track.mockReset();
     mocks.runHealthDataWriteOperation.mockReset();
     mocks.runHealthDataWriteOperation.mockImplementation(
       async (
@@ -75,25 +38,20 @@ describe('shelf scan intake log', () => {
           },
         }),
     );
-    mocks.track.mockClear();
   });
 
-  it('maps lookup outcomes onto the shelf_scans enum', () => {
+  it('maps lookup outcomes onto the bounded scan-result enum', () => {
     expect(shelfScanResultFromLookup('matched')).toBe('matched');
     expect(shelfScanResultFromLookup('external_candidate')).toBe('ambiguous');
     expect(shelfScanResultFromLookup('no_match')).toBe('no_match');
     expect(shelfScanResultFromLookup('too_short')).toBe('no_match');
-    expect(shelfScanResultFromLookup('offline')).toBe('offline_queued');
-    expect(shelfScanResultFromLookup('error')).toBe('offline_queued');
-    expect(shelfScanResultFromLookup('lookup_error')).toBe('offline_queued');
+    expect(shelfScanResultFromLookup('offline')).toBeNull();
+    expect(shelfScanResultFromLookup('error')).toBeNull();
+    expect(shelfScanResultFromLookup('lookup_error')).toBeNull();
   });
 
-  it('records a matched scan with master-plan funnel events and no barcode analytics leak', async () => {
-    await recordShelfScan({
-      barcode: ' 1234567890123 ',
-      result: 'matched',
-      matchedProductId: 'product-1',
-    });
+  it('records only bounded matched funnel properties', async () => {
+    await recordShelfScan({ result: 'matched' });
 
     expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
       source: 'scan',
@@ -104,80 +62,52 @@ describe('shelf scan intake log', () => {
       source: 'scan',
       result: 'matched',
     });
-    expect(mocks.track).not.toHaveBeenCalledWith('product_scanned', expect.anything());
-    expect(mocks.from).toHaveBeenCalledWith('shelf_scans');
-    expect(mocks.insert).toHaveBeenCalledWith({
-      user_id: 'user-1',
-      barcode: '1234567890123',
-      matched_product_id: 'product-1',
-      result: 'matched',
-      contributed_back: false,
-    });
+    for (const [, properties] of mocks.track.mock.calls) {
+      expect(Object.keys(properties as Record<string, unknown>)).not.toContain('barcode');
+      expect(Object.keys(properties as Record<string, unknown>)).not.toContain('product_id');
+    }
   });
 
-  it('tracks no-match scans and skips the database when Supabase is unavailable', async () => {
-    state.isSupabaseConfigured = false;
-
-    await recordShelfScan({
-      barcode: '9876543210987',
-      result: 'no_match',
-    });
-
-    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
-      source: 'scan',
-      matched: false,
-      result: 'no_match',
-    });
+  it('distinguishes no-match and does not over-count ambiguous or offline results', async () => {
+    await recordShelfScan({ result: 'no_match' });
     expect(mocks.track).toHaveBeenCalledWith('scan_no_match', {
       source: 'scan',
       result: 'no_match',
     });
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.insert).not.toHaveBeenCalled();
-  });
 
-  it('does not insert owner-scoped rows without an authenticated user', async () => {
-    mocks.getUser.mockResolvedValueOnce({ data: { user: null } });
-
-    await recordShelfScan({
-      barcode: '1234567890123',
-      result: 'offline_queued',
-    });
-
-    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
-      source: 'scan',
-      matched: false,
-      result: 'offline_queued',
-    });
-    expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
-    expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
-    expect(mocks.insert).not.toHaveBeenCalled();
-  });
-
-  it('does not over-count ambiguous external candidates as matches or no-matches', async () => {
-    await recordShelfScan({
-      barcode: '1234567890123',
-      result: 'ambiguous',
-      matchedProductId: 'external-product',
-    });
-
-    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
-      source: 'scan',
-      matched: false,
-      result: 'ambiguous',
-    });
+    mocks.track.mockClear();
+    await recordShelfScan({ result: 'ambiguous' });
+    await recordShelfScan({ result: 'offline_queued' });
     expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
     expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
   });
 
-  it('does not swallow lease invalidation after a stale insert response', async () => {
-    mocks.insert.mockImplementationOnce(async () => {
-      state.leaseOpen = false;
-      return { error: null };
-    });
+  it('does nothing while health processing has no active owner', async () => {
+    state.ownerUserId = null;
+    await recordShelfScan({ result: 'matched' });
+    expect(mocks.runHealthDataWriteOperation).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
 
-    await expect(
-      recordShelfScan({ barcode: '1234567890123', result: 'matched' }),
-    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+  it('does not publish after lease invalidation', async () => {
+    mocks.runHealthDataWriteOperation.mockImplementationOnce(
+      async (
+        ownerUserId: string,
+        operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => unknown,
+      ) => {
+        let assertions = 0;
+        return operation({
+          ownerUserId,
+          assertCurrent: () => {
+            assertions += 1;
+            if (assertions > 1) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+          },
+        });
+      },
+    );
+
+    await expect(recordShelfScan({ result: 'matched' })).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
   });
 });

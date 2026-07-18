@@ -13,6 +13,7 @@ import {
   catalogReleaseIdentityFromRepository,
   catalogTransformedPayloadSha256,
   catalogTransformerDescriptor,
+  isCanonicalCatalogGtin,
   loadCatalogReleaseBuildEvidence,
   loadCatalogReleaseScope,
   loadCatalogSourcePolicy,
@@ -783,8 +784,10 @@ function validateObfRecord(record, index, transform, contract) {
     ],
     `transform.products[${index}]`,
   );
-  if (typeof record.barcode !== 'string' || !/^\d{8,14}$/u.test(record.barcode)) {
-    fail(`transform.products[${index}].barcode must be an exact 8-14 digit natural key.`);
+  if (!isCanonicalCatalogGtin(record.barcode)) {
+    fail(
+      `transform.products[${index}].barcode must be a checksum-valid canonical GTIN-8, UPC-A, EAN-13, or GTIN-14 natural key.`,
+    );
   }
   assertText(record.name, `transform.products[${index}].name`, { max: 200 });
   if (record.brand !== null)

@@ -7294,6 +7294,65 @@ common-law, linguistic, priority, and goods/services analysis plus written
 decision. BRAND-07 remains the authenticated reservation gate after counsel and
 founder selection.
 
+### CAT-04 search, barcode, reporting, and reconnect source checkpoint (2026-07-18)
+
+Advanced CAT-04 to an `in_progress` local source candidate without treating a
+fixture, route, or local test as production catalog evidence. Search and lookup
+now accept only exact reviewed/currently servable first-party projections,
+discard stale search generations, preserve typed/manual recovery after failure,
+and use stable save-operation IDs so an uncertain retry does not create a
+second Shelf row. Barcode intake deterministically expands UPC-E, handles iOS
+leading-zero EAN-13 as UPC-A, requires an explicit interpretation for manual
+eight-digit input, checksum-gates supported UPC/EAN/GTIN shapes, and rejects
+Code 128 without a strict GS1 product parser.
+
+Missing-product and exact `Not this product` paths are separate user actions.
+Before `Send report`, the app shows the product-identity fields, account
+linkage, first-party catalog-review recipient, export/deletion treatment, and
+the fact that no report goes to Open Beauty Facts or another third-party
+catalog source. Outcome copy distinguishes confirmed delivery from unavailable,
+withdrawn/offline, rate-limited, and generic failure; only confirmed success is
+tracked as reported. Migration `0059` purges and force-RLS seals legacy
+`shelf_scans`, prohibits request identity in outcome-only
+`catalog_lookup_events`, read-seals correction rows, validates one canonical
+top-level GTIN lane, bounds report payloads/timestamps, and exposes only a
+sanitized exact-owner correction export.
+
+Offline retry is never automatic. An explicit action stores one encrypted,
+account/health-bound normalized lookup with a seven-day logical expiry, a
+64-item cap, bounded backoff/drain work, and foreground retry. Expired encrypted
+bytes are physically purged on the next activation, queue read/maintenance,
+local export, or account/consent lifecycle cleanup; source cannot guarantee
+wall-clock deletion while the OS suspends or terminates the app. Final retention
+wording and legal treatment remain open for qualified privacy/legal review.
+A ready item contains only a minimal reviewed candidate. The review route
+revalidates the live catalog, protects against stale Shelf writes, preserves
+ingredients/freshness by default, changes catalog identity only when selected,
+and consumes the exact item only after explicit rejection or a successful
+accepted Shelf mutation. Canceled, failed, changed, gone, or stale operations
+cannot silently change Shelf or discard promised retry state.
+
+The integrated local checks passed the combined 15-file / 200-test barcode,
+report, encrypted-queue, reconnect, export, label-photo, route,
+health-admission, and idempotent-store lane; 14/14 CAT-04 runner contracts;
+Phase 4 source-policy/import/QA/promotion/serving-Edge lanes at 27/27, 20/20,
+17/17, 23/23, and 23/23; the 35/35 focused report/export/health Deno lane; Phase
+2 source and Phase 9 policy/data-rights/RLS/security code gates, including 10/10
+RLS smoke assertions; mobile typecheck; and the full 289-file / 3,360-test
+mobile suite. The
+deterministic Expo-web runner declares 15 scenarios across 375 x 667, 390 x
+844, and 430 x 932 (45 executions) plus 18 fixture-group health-consent
+bootstraps. It explicitly cannot fake a persisted offline lookup becoming ready
+across restart, so generated exact-SHA web evidence and a real hosted ready-
+candidate accept/reject cycle remain separate gates.
+
+CAT-04 remains blocked by `CAT-03`, `H-07`, and `H-08`. No active reviewed
+launch catalog, hosted `0059`/RLS/export/withdrawal/deletion/observability proof,
+physical-iPhone camera and accessibility matrix, native OCR, final App Privacy
+reconciliation, or qualified privacy/security/legal/source decision exists.
+This checkpoint does not establish Apple acceptance, legal compliance, catalog
+accuracy, product-market fit, or revenue.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

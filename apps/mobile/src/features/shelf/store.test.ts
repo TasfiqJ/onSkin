@@ -7,6 +7,7 @@ import {
 
 import {
   addProduct,
+  applyCatalogRecoveryProductUpdate,
   clearShelf,
   loadShelf,
   reAddProduct,
@@ -14,6 +15,7 @@ import {
   SHELF_STATE_INVALID,
   SHELF_STATE_UNSUPPORTED_VERSION,
   updateProduct,
+  type CatalogRecoveryProductUpdate,
 } from './store';
 
 const mocks = vi.hoisted(() => ({
@@ -65,6 +67,31 @@ function storedProducts(): unknown[] {
     products?: unknown[];
   };
   return parsed.products ?? [];
+}
+
+function catalogRecoveryInput(
+  id: string,
+  expectedUpdatedAt: string,
+  useCatalogIdentity = false,
+): CatalogRecoveryProductUpdate {
+  return {
+    id,
+    expectedUpdatedAt,
+    useCatalogIdentity,
+    catalogProductId: '00000000-0000-4000-8000-000000000044',
+    catalogSourceId: '00000000-0000-4000-8000-000000000043',
+    catalogSource: 'routinekind_reviewed',
+    catalogSourceName: 'RoutineKind reviewed catalog',
+    catalogSourceRef: 'catalog-row-44',
+    catalogSourceUrl: 'https://example.invalid/catalog-row-44',
+    catalogSourceSnapshotDate: '2026-07-17',
+    catalogMatchQuality: 'usable',
+    dataQualityScore: 91,
+    sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
+    catalogName: 'Catalog Mineral SPF 50',
+    catalogBrand: 'Catalog Brand',
+    catalogCategory: 'sunscreen',
+  };
 }
 
 describe('shelf local store recovery', () => {
@@ -289,6 +316,92 @@ describe('shelf local store recovery', () => {
     expect(shelf[0]?.name).toBe('Mineral SPF 50');
   });
 
+  it('attaches revalidated catalog metadata without silently replacing user fields', async () => {
+    const product = await addProduct({
+      name: 'My handwritten sunscreen',
+      brand: 'My brand spelling',
+      category: 'spf',
+      ingredients: ['zinc oxide', 'water'],
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 6,
+      paoSource: 'label',
+      expiryDate: '2027-01-01',
+      expirySource: 'printed',
+    });
+
+    const result = await applyCatalogRecoveryProductUpdate(
+      catalogRecoveryInput(product.id, product.updatedAt),
+    );
+
+    expect(result).toMatchObject({ status: 'updated' });
+    const updated = (await loadShelf())[0];
+    expect(updated).toMatchObject({
+      name: 'My handwritten sunscreen',
+      brand: 'My brand spelling',
+      category: 'spf',
+      ingredients: ['zinc oxide', 'water'],
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 6,
+      paoSource: 'label',
+      expiryDate: '2027-01-01',
+      expirySource: 'printed',
+      catalogProductId: '00000000-0000-4000-8000-000000000044',
+      catalogSourceId: '00000000-0000-4000-8000-000000000043',
+      catalogSource: 'routinekind_reviewed',
+    });
+  });
+
+  it('changes catalog identity only after the explicit identity choice', async () => {
+    const product = await addProduct({
+      name: 'My sunscreen',
+      brand: 'My label',
+      category: 'spf',
+      ingredients: ['zinc oxide'],
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 6,
+      paoSource: 'label',
+    });
+
+    const result = await applyCatalogRecoveryProductUpdate(
+      catalogRecoveryInput(product.id, product.updatedAt, true),
+    );
+
+    expect(result.status).toBe('updated');
+    expect((await loadShelf())[0]).toMatchObject({
+      name: 'Catalog Mineral SPF 50',
+      brand: 'Catalog Brand',
+      category: 'sunscreen',
+      ingredients: ['zinc oxide'],
+      openedAt: '2026-07-01',
+      paoMonths: 6,
+      paoSource: 'label',
+    });
+  });
+
+  it('leaves the Shelf bytes unchanged when a recovery review is stale or missing', async () => {
+    const product = await addProduct({ name: 'Current name', addedVia: 'manual' });
+    const original = mocks.storage.get(KEY);
+
+    await expect(
+      applyCatalogRecoveryProductUpdate(
+        catalogRecoveryInput(product.id, '2000-01-01T00:00:00.000Z', true),
+      ),
+    ).resolves.toEqual({ status: 'stale' });
+    expect(mocks.storage.get(KEY)).toBe(original);
+
+    await expect(
+      applyCatalogRecoveryProductUpdate(
+        catalogRecoveryInput('missing-product', product.updatedAt, true),
+      ),
+    ).resolves.toEqual({ status: 'missing' });
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
   it('keeps a valid legacy shelf readable without rewriting until mutation', async () => {
     const original = JSON.stringify([
       {
@@ -335,6 +448,22 @@ describe('shelf local store recovery', () => {
     const shelf = await loadShelf();
     expect(shelf).toHaveLength(names.length);
     expect(new Set(shelf.map((product) => product.name))).toEqual(new Set(names));
+  });
+
+  it('deduplicates an uncertain intake retry by its stable operation id', async () => {
+    const operationId = '00000000-0000-4000-8000-000000000099';
+    const first = await addProduct({ operationId, name: 'Offline serum', addedVia: 'manual' });
+    const retried = await addProduct({ operationId, name: 'Offline serum', addedVia: 'manual' });
+
+    expect(retried).toEqual(first);
+    expect(await loadShelf()).toHaveLength(1);
+  });
+
+  it('rejects a malformed caller-supplied operation id before writing', async () => {
+    await expect(
+      addProduct({ operationId: 'not-a-uuid', name: 'Cleanser', addedVia: 'manual' }),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
   it('keeps the prior shelf intact when an atomic write fails', async () => {

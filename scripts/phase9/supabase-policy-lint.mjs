@@ -129,7 +129,6 @@ const serviceCallableDefiners = new Set([
   'defer_health_dependent_consent_withdrawal(uuid, text, text, integer)',
   'defer_apple_auth_validation(uuid, bigint, text, text, integer)',
   'defer_account_deletion_revenuecat_provider_capacity(uuid, text, text, timestamptz)',
-  'enqueue_obf_contribution_for_correction(uuid)',
   'establish_revenuecat_deletion_identity_barrier(uuid, text, smallint, text[], text[], timestamptz)',
   'expire_app_granted_reverse_trials()',
   'finalize_account_deletion(uuid, text, smallint, timestamptz)',
@@ -169,7 +168,8 @@ const serviceCallableDefiners = new Set([
   'scrub_account_service_rows(uuid)',
   'search_catalog_products(text, integer)',
   'stage_catalog_import_chunk(uuid, text, integer, integer, jsonb)',
-  'submit_catalog_correction(uuid, bigint, uuid, text, text, text, jsonb, jsonb)',
+  'submit_catalog_correction(uuid, bigint, uuid, uuid, text, text, text, jsonb, jsonb)',
+  'record_catalog_lookup_event(uuid, bigint, text, text, integer, integer)',
   'mark_apple_auth_capture_exchange_started(uuid, uuid, uuid)',
   'update_account_deletion_step_payload(uuid, text, text, bytea)',
   'verify_catalog_import(uuid, text, text, text)',
@@ -253,6 +253,32 @@ for (const fn of latestFunctions.values()) {
       `${key} service RPC must not grant execute to authenticated.`,
     );
   }
+}
+
+const disabledContributionEnqueue = latestFunctions.get(
+  'enqueue_obf_contribution_for_correction(uuid)',
+);
+block(
+  errors,
+  Boolean(disabledContributionEnqueue),
+  'the deprecated contribution enqueue compatibility stub must remain installed.',
+);
+if (disabledContributionEnqueue) {
+  for (const role of ['public', 'anon', 'authenticated', 'service_role']) {
+    block(
+      errors,
+      !disabledContributionEnqueue.effectiveGrantRoles.has(role),
+      `deprecated contribution enqueue must remain revoked from ${role}.`,
+    );
+  }
+  block(
+    errors,
+    /contribution_lane_disabled/.test(disabledContributionEnqueue.definition) &&
+      !/insert\s+into\s+public\.obf_contribution_queue/i.test(
+        disabledContributionEnqueue.definition,
+      ),
+    'deprecated contribution enqueue must remain an inert, non-writing compatibility stub.',
+  );
 }
 
 const fencedEntitlementProjection = latestFunctions.get('read_entitlement_projections()');

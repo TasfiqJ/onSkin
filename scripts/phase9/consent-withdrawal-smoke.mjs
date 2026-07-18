@@ -98,6 +98,9 @@ const phase9ConsentMigration = read(
 const healthLifecycleMigration = read(
   'supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql',
 );
+const catalogScanMinimizationMigration = read(
+  'supabase/migrations/20260718000059_catalog_scan_minimization.sql',
+);
 const healthLifecyclePgTap = read('supabase/tests/database/health_consent_lifecycle.test.sql');
 const dependentConsentRpc =
   healthLifecycleMigration.match(
@@ -114,11 +117,20 @@ const trendRevocation = exportedAsyncFunction(trend, 'revokeTrendInsightsConsent
 const communityRevocation = exportedAsyncFunction(community, 'withdrawCommunityConsent');
 const commerceDecline = exportedAsyncFunction(commerce, 'declineCommerceConsent');
 const askRevocation = exportedAsyncFunction(ask, 'revokeAskConsent');
+const retiredReadFenceTargets = new Set(
+  [
+    ...catalogScanMinimizationMigration.matchAll(
+      /drop policy if exists "health_processing_read_fence" on (public|storage)\.([a-z_]+)/g,
+    ),
+  ].map((match) => `${match[1]}.${match[2]}`),
+);
 const installedReadFenceTargets = [
   ...healthLifecycleMigration.matchAll(
     /create policy "health_processing_read_fence" on (public|storage)\.([a-z_]+)/g,
   ),
-].map((match) => `${match[1]}.${match[2]}`);
+]
+  .map((match) => `${match[1]}.${match[2]}`)
+  .filter((target) => !retiredReadFenceTargets.has(target));
 const readFencedOwnershipHelpers = Object.fromEntries(
   ['owns_routine', 'owns_user_product', 'owns_cycle', 'owns_photo', 'owns_ask_turn_audit'].map(
     (name) => [
@@ -538,7 +550,7 @@ block(
 );
 block(
   errors,
-  HEALTH_PURPOSE_READ_FENCED_TABLES.length === 27 &&
+  HEALTH_PURPOSE_READ_FENCED_TABLES.length === 25 &&
     JSON.stringify([...installedReadFenceTargets].sort()) ===
       JSON.stringify(
         [
@@ -549,7 +561,7 @@ block(
     !installedReadFenceTargets.some((target) =>
       ['public.profiles', 'public.consents', 'public.entitlements'].includes(target),
     ),
-  'The restrictive health read fence must cover the exact 27-table purpose inventory plus photo Storage while preserving account, policy, and billing rows.',
+  'The restrictive health read fence must cover the exact 25 current owner/client tables plus photo Storage while preserving sealed scan/correction, account, policy, and billing lanes.',
 );
 block(
   errors,

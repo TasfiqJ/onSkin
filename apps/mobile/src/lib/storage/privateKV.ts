@@ -553,29 +553,18 @@ export async function setPrivateItem(key: string, value: string): Promise<void> 
   return updatePrivateItem(key, () => value);
 }
 
-/** Atomically read, transform, and persist one private value under the same
- * account-generation guard and per-key mutation lock. The updater is
- * synchronous so no untracked work can cross an account boundary. */
-export async function updatePrivateItem(
+async function updatePrivateItemWithGuard(
   key: string,
   updater: (current: string | null) => string | null,
+  assertMutationCurrent: () => void,
 ): Promise<void> {
-  // Generic read/transform/update may expose plaintext to its callback, so a
-  // classified key requires exact health authority up front even if the
-  // callback later returns null. Privacy-reducing callers use the explicit
-  // remove APIs, which never decrypt or expose the prior value.
-  const healthWriteLease = captureHealthPurposePrivateDataWriteLease(key);
-  const assertHealthMutationCurrent = () => {
-    if (healthWriteLease !== null) assertHealthDataWriteLease(healthWriteLease);
-  };
-
   return withOperationTiming('private_kv_write', () =>
     runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
         assertPrivateDataKey(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         const existingRaw = await assertNoFailedReadRewrite(key);
-        assertHealthMutationCurrent();
+        assertMutationCurrent();
         const existingClassification = existingRaw ? classifyEnvelope(key, existingRaw) : null;
         if (
           existingRaw &&
@@ -595,7 +584,7 @@ export async function updatePrivateItem(
             rememberFailedRead(key, existingRaw);
             throw error;
           }
-          assertHealthMutationCurrent();
+          assertMutationCurrent();
           if (!contentKey) {
             rememberFailedRead(key, existingRaw);
             throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
@@ -610,9 +599,9 @@ export async function updatePrivateItem(
           currentValue = existingRaw;
         }
 
-        assertHealthMutationCurrent();
+        assertMutationCurrent();
         const nextValue = updater(currentValue);
-        assertHealthMutationCurrent();
+        assertMutationCurrent();
         if (
           nextValue === currentValue &&
           (nextValue === null || existingClassification?.kind === 'current')
@@ -621,7 +610,7 @@ export async function updatePrivateItem(
         }
 
         const latestRaw = await AsyncStorage.getItem(key);
-        assertHealthMutationCurrent();
+        assertMutationCurrent();
         if (latestRaw !== existingRaw) {
           if (latestRaw !== null) rememberFailedRead(key, latestRaw);
           throw new Error(PRIVATE_KV_WRITE_CONFLICT);
@@ -629,15 +618,15 @@ export async function updatePrivateItem(
         assertAccountScopedPrivateOperationAllowed(generation);
 
         if (nextValue === null) {
-          assertHealthMutationCurrent();
+          assertMutationCurrent();
           await AsyncStorage.removeItem(key);
-          assertHealthMutationCurrent();
+          assertMutationCurrent();
           failedReadSnapshots.delete(key);
           return;
         }
 
         contentKey ??= await getOrCreateContentKey();
-        assertHealthMutationCurrent();
+        assertMutationCurrent();
         const nonce = randomBytes(NONCE_BYTES);
         const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
         const envelope: PrivateEnvelope = {
@@ -646,40 +635,74 @@ export async function updatePrivateItem(
           ciphertextHex: bytesToHex(ciphertext),
         };
         await maybeRejectConflictChoiceWrite(key);
-        assertHealthMutationCurrent();
+        assertMutationCurrent();
         const committedRaw = JSON.stringify(envelope);
-        if (healthWriteLease !== null) assertHealthDataWriteLease(healthWriteLease);
+        assertMutationCurrent();
         await AsyncStorage.setItem(key, committedRaw);
-        if (healthWriteLease !== null) {
+        try {
+          assertMutationCurrent();
+        } catch (error) {
+          // The write crossed a withdrawal, expiry, owner change, re-grant, or
+          // purpose-limited account boundary. Roll back only while this account
+          // generation and serialized key slot still own the committed value.
           try {
-            assertHealthDataWriteLease(healthWriteLease);
-          } catch (error) {
-            // The write crossed a withdrawal, expiry, owner change, or re-grant.
-            // Roll back only while this account generation and serialized key
-            // slot still own the exact value just committed. An account cleanup
-            // that already invalidated us remains authoritative and must not be
-            // followed by restoration of prior-account bytes.
-            try {
-              assertAccountScopedPrivateOperationAllowed(generation);
-              const currentRaw = await AsyncStorage.getItem(key);
-              assertAccountScopedPrivateOperationAllowed(generation);
-              if (currentRaw === committedRaw) {
-                if (existingRaw === null) {
-                  await AsyncStorage.removeItem(key);
-                } else {
-                  await AsyncStorage.setItem(key, existingRaw);
-                }
+            assertAccountScopedPrivateOperationAllowed(generation);
+            const currentRaw = await AsyncStorage.getItem(key);
+            assertAccountScopedPrivateOperationAllowed(generation);
+            if (currentRaw === committedRaw) {
+              if (existingRaw === null) {
+                await AsyncStorage.removeItem(key);
+              } else {
+                await AsyncStorage.setItem(key, existingRaw);
               }
-            } catch {
-              // Account-boundary cleanup drains this tracked operation and then
-              // removes prior-owner state. Never write around that boundary.
             }
-            throw error;
+          } catch {
+            // Account-boundary cleanup drains this tracked operation and then
+            // removes prior-owner state. Never write around that boundary.
           }
+          throw error;
         }
         failedReadSnapshots.delete(key);
       }),
     ),
+  );
+}
+
+/** Atomically read, transform, and persist one private value under the same
+ * account-generation guard and per-key mutation lock. The updater is
+ * synchronous so no untracked work can cross an account boundary. */
+export async function updatePrivateItem(
+  key: string,
+  updater: (current: string | null) => string | null,
+): Promise<void> {
+  // Generic read/transform/update may expose plaintext to its callback, so a
+  // classified key requires exact health authority up front even if the
+  // callback later returns null. Privacy-reducing callers use the explicit
+  // remove APIs, which never decrypt or expose the prior value.
+  const healthWriteLease = captureHealthPurposePrivateDataWriteLease(key);
+  const assertHealthMutationCurrent = () => {
+    if (healthWriteLease !== null) assertHealthDataWriteLease(healthWriteLease);
+  };
+  return updatePrivateItemWithGuard(key, updater, assertHealthMutationCurrent);
+}
+
+const CATALOG_LOOKUP_QUEUE_STORAGE_KEY = 'routinekind.catalog.lookupQueue.v1';
+
+/**
+ * Narrow data-rights maintenance lane for physically removing expired or
+ * foreign-owner catalog retry bytes before export. It cannot write any other
+ * private-data key and is fenced by the export's exact account-generation
+ * lease; the queue layer supplies the separately verified owner filter.
+ */
+export function updateCatalogLookupQueueForPurposeLimitedExport(
+  accountLease: AccountGenerationLease,
+  updater: (current: string | null) => string | null,
+): Promise<void> {
+  accountLease.assertCurrent();
+  return updatePrivateItemWithGuard(
+    CATALOG_LOOKUP_QUEUE_STORAGE_KEY,
+    updater,
+    accountLease.assertCurrent,
   );
 }
 

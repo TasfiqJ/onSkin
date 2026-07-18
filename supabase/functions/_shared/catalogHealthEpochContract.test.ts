@@ -98,7 +98,9 @@ Deno.test(
         'const catalogHealthError = await requireActiveHealthProcessing(',
         'await admin.rpc(CATALOG_LOOKUP_RPC',
         'const persistHealthError = await requireActiveHealthProcessing(',
-        ".from('catalog_lookup_events')",
+        "admin.rpc('record_catalog_lookup_event'",
+        'const responseHealthError = await requireActiveHealthProcessing(',
+        'const responseAccountError = await requireSameAccountAccess(',
         "return json({ result: 'matched'",
       ],
       'catalog lookup local-match gate order',
@@ -118,7 +120,10 @@ Deno.test('catalog search rechecks after body and admin work before persistence'
       'const searchHealthError = await requireActiveHealthProcessing(',
       'await admin.rpc(CATALOG_SEARCH_RPC',
       'const persistHealthError = await requireActiveHealthProcessing(',
-      ".from('catalog_lookup_events')",
+      "admin.rpc('record_catalog_lookup_event'",
+      'const responseHealthError = await requireActiveHealthProcessing(',
+      'const responseAccountError = await requireSameAccountAccess(',
+      'return json({',
     ],
     'catalog search gate order',
   );
@@ -147,13 +152,17 @@ Deno.test(
         "await admin.rpc('submit_catalog_correction'",
         'noteSuppressedObfContributionRequest(correctionType)',
         'const responseHealthError = await requireActiveHealthProcessing(',
-        "return json({ result: 'reported'",
+        "return json({ result: correction.created ? 'reported' : 'already_received'",
       ],
       'catalog report gate order',
     );
     assert(
       source.includes('headers: { [HEALTH_PROCESSING_EPOCH_HEADER]: healthProcessingEpoch }'),
       'catalog report must forward the exact caller epoch to the service RPC trigger.',
+    );
+    assert(
+      source.includes('p_report_request_id: reportRequestId'),
+      'catalog report must forward the validated replay identity to the service RPC.',
     );
     assert(
       !source.includes("from('catalog_corrections')"),
@@ -180,7 +189,9 @@ Deno.test(
       [
         'await admin.rpc(CATALOG_LOOKUP_RPC',
         'const fallbackHealthError = await requireActiveHealthProcessing(',
-        ".from('catalog_lookup_events')",
+        "admin.rpc('record_catalog_lookup_event'",
+        'const responseHealthError = await requireActiveHealthProcessing(',
+        'const responseAccountError = await requireSameAccountAccess(',
         "return json({ result: 'no_match', manualFallback: true });",
       ],
       'catalog lookup manual-fallback gate order',
@@ -189,23 +200,40 @@ Deno.test(
 );
 
 for (const functionName of ['catalog-lookup', 'catalog-search'] as const) {
-  Deno.test(`${functionName} does not ignore guarded event-insert failures`, async () => {
+  Deno.test(`${functionName} does not ignore guarded event-RPC failures`, async () => {
     const source = (
       await Deno.readTextFile(new URL(`../${functionName}/index.ts`, import.meta.url))
     ).replace(/\s+/g, ' ');
     assert(
-      /const \{ error: eventError \} = await caller\.from\(["']catalog_lookup_events["']\)/.test(
+      /const \{ error: eventError \} = await admin\.rpc\(["']record_catalog_lookup_event["']/.test(
         source,
       ),
-      `${functionName} must capture the trigger-protected insert result`,
+      `${functionName} must capture the sealed RPC result`,
     );
     assert(
       source.includes('if (eventError) {'),
       `${functionName} must fail when the insert is rejected`,
     );
     assert(
-      source.includes('return withdrawalError ?? json('),
+      source.includes('if (withdrawalError) return withdrawalError;'),
       `${functionName} must map a raced withdrawal without hiding unrelated database failures`,
+    );
+    const expectedEventAccountRechecks = functionName === 'catalog-lookup' ? 2 : 1;
+    assert(
+      [...source.matchAll(/const eventAccountError = await requireSameAccountAccess\(/g)].length ===
+        expectedEventAccountRechecks &&
+        [...source.matchAll(/if \(eventAccountError\) return eventAccountError;/g)].length ===
+          expectedEventAccountRechecks,
+      `${functionName} must map every raced account-access transition before classifying the database failure`,
+    );
+    assert(
+      source.includes("hasExactDatabaseError(eventError, 'CATALOG_LOOKUP_EVENT_RATE_LIMITED')"),
+      `${functionName} must map the RPC rate ceiling truthfully`,
+    );
+    assert(
+      source.includes('p_rate_limit: catalogRateLimitMax * 2') &&
+        source.includes('p_window_seconds: catalogRateLimitWindowSeconds'),
+      `${functionName} must reconcile RPC bounds with validated runtime limits`,
     );
   });
 }

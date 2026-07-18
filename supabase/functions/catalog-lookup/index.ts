@@ -5,7 +5,9 @@ import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts
 import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
+import { normalizeCatalogBarcode } from '../_shared/catalogBarcode.ts';
 import {
+  HEALTH_PROCESSING_EPOCH_HEADER,
   healthProcessingCallerHeaders,
   preflightActiveHealthProcessing,
   readHealthProcessingEpochHeader,
@@ -69,13 +71,14 @@ function intEnv(name: string, fallback: number, min: number, max: number): numbe
   return value;
 }
 
-function normalizeBarcode(value: unknown): string | null {
-  const digits = String(value ?? '').replace(/\D/g, '');
-  return digits.length >= 8 && digits.length <= 14 ? digits : null;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasExactDatabaseError(error: unknown, message: string): boolean {
+  if (!isRecord(error)) return false;
+  const values = [error.message, error.details, error.hint];
+  return values.some((value) => typeof value === 'string' && value.trim() === message);
 }
 
 async function hmacSha256Hex(value: string): Promise<string> {
@@ -125,7 +128,7 @@ async function requestBarcode(req: Request): Promise<string | null | Response> {
   });
   if (parsed instanceof Response) return parsed;
   const body = isRecord(parsed) ? parsed : {};
-  return normalizeBarcode(body.barcode);
+  return normalizeCatalogBarcode(body.barcode);
 }
 
 Deno.serve(async (req) => {
@@ -170,6 +173,9 @@ Deno.serve(async (req) => {
   if (initialHealthError) return initialHealthError;
 
   const admin = createClient(supabaseUrl, serviceKey, {
+    global: {
+      headers: { [HEALTH_PROCESSING_EPOCH_HEADER]: healthProcessingEpoch },
+    },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const rateLimitError = await enforceRateLimit(admin, 'catalog-lookup', userId);
@@ -225,15 +231,15 @@ Deno.serve(async (req) => {
     );
     if (persistAccountError) return persistAccountError;
 
-    // The direct-write trigger atomically rechecks active state and this exact epoch.
-    const { error: eventError } = await caller.from('catalog_lookup_events').insert({
-      user_id: userId,
-      lookup_type: 'barcode',
-      barcode,
-      result: 'matched',
-      matched_product_id: product.id,
-      source_key: product.source,
-      quality_grade: product.quality_grade,
+    // The sealed service-only RPC atomically rechecks account state, this exact
+    // epoch, and the combined lookup-event ceiling without accepting identity.
+    const { error: eventError } = await admin.rpc('record_catalog_lookup_event', {
+      p_user_id: userId,
+      p_expected_health_epoch: healthProcessingEpoch,
+      p_lookup_type: 'barcode',
+      p_result: 'matched',
+      p_rate_limit: catalogRateLimitMax * 2,
+      p_window_seconds: catalogRateLimitWindowSeconds,
     });
 
     if (eventError) {
@@ -242,9 +248,27 @@ Deno.serve(async (req) => {
         userId,
         healthProcessingEpoch,
       );
-      return withdrawalError ?? json({ error: 'lookup_failed' }, 500);
+      if (withdrawalError) return withdrawalError;
+      const eventAccountError = await requireSameAccountAccess(
+        caller,
+        userId,
+        initialAccountAccess.snapshot,
+      );
+      if (eventAccountError) return eventAccountError;
+      if (hasExactDatabaseError(eventError, 'CATALOG_LOOKUP_EVENT_RATE_LIMITED')) {
+        return json({ error: 'rate_limited' }, 429, {
+          'Retry-After': String(catalogRateLimitWindowSeconds),
+        });
+      }
+      return json({ error: 'lookup_failed' }, 500);
     }
 
+    const responseHealthError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    if (responseHealthError) return responseHealthError;
     const responseAccountError = await requireSameAccountAccess(
       caller,
       userId,
@@ -268,14 +292,13 @@ Deno.serve(async (req) => {
   );
   if (fallbackAccountError) return fallbackAccountError;
 
-  // The direct-write trigger atomically rechecks active state and this exact epoch.
-  const { error: eventError } = await caller.from('catalog_lookup_events').insert({
-    user_id: userId,
-    lookup_type: 'barcode',
-    barcode,
-    result: 'no_match',
-    source_key: null,
-    quality_grade: null,
+  const { error: eventError } = await admin.rpc('record_catalog_lookup_event', {
+    p_user_id: userId,
+    p_expected_health_epoch: healthProcessingEpoch,
+    p_lookup_type: 'barcode',
+    p_result: 'no_match',
+    p_rate_limit: catalogRateLimitMax * 2,
+    p_window_seconds: catalogRateLimitWindowSeconds,
   });
 
   if (eventError) {
@@ -284,9 +307,27 @@ Deno.serve(async (req) => {
       userId,
       healthProcessingEpoch,
     );
-    return withdrawalError ?? json({ error: 'lookup_failed' }, 500);
+    if (withdrawalError) return withdrawalError;
+    const eventAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (eventAccountError) return eventAccountError;
+    if (hasExactDatabaseError(eventError, 'CATALOG_LOOKUP_EVENT_RATE_LIMITED')) {
+      return json({ error: 'rate_limited' }, 429, {
+        'Retry-After': String(catalogRateLimitWindowSeconds),
+      });
+    }
+    return json({ error: 'lookup_failed' }, 500);
   }
 
+  const responseHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (responseHealthError) return responseHealthError;
   const responseAccountError = await requireSameAccountAccess(
     caller,
     userId,

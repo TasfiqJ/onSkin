@@ -495,6 +495,12 @@ block(
 );
 block(
   errors,
+  /normalizeReportRequestId\(body\.reportRequestId\)/.test(catalogReport) &&
+    /p_report_request_id:\s*reportRequestId/.test(catalogReport),
+  'catalog-report must require and forward one random response-loss retry identity.',
+);
+block(
+  errors,
   !/p_proposed_payload:\s*body\.proposedPayload/.test(catalogReport),
   'catalog-report must not persist raw proposedPayload.',
 );
@@ -522,6 +528,14 @@ block(
     /rate_limited/.test(catalogReport) &&
     /Retry-After/.test(catalogReport),
   'catalog-report must map its account-serialized database limit to a stable 429 response.',
+);
+block(
+  errors,
+  /HEALTH_PROCESSING_BUSY/.test(catalogReport) &&
+    /report_busy/.test(catalogReport) &&
+    /423/.test(catalogReport) &&
+    /already_received/.test(catalogReport),
+  'catalog-report must distinguish owner-lock retry from a confirmed idempotent receipt.',
 );
 block(
   errors,

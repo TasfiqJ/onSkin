@@ -67,6 +67,8 @@ export type ShelfProduct = {
 };
 
 export type NewShelfProduct = {
+  /** Stable for one intake submission so an uncertain retry cannot duplicate the shelf row. */
+  operationId?: string;
   name: string;
   brand?: string | null;
   category?: string | null;
@@ -93,6 +95,29 @@ export type NewShelfProduct = {
   expirySource?: ExpirySource;
   addedVia: AddedVia;
 };
+
+export type CatalogRecoveryProductUpdate = {
+  id: string;
+  expectedUpdatedAt: string;
+  useCatalogIdentity: boolean;
+  catalogProductId: string;
+  catalogSourceId: string;
+  catalogSource: string;
+  catalogSourceName: string;
+  catalogSourceRef: string | null;
+  catalogSourceUrl: string | null;
+  catalogSourceSnapshotDate: string | null;
+  catalogMatchQuality: 'verified' | 'usable';
+  dataQualityScore: number | null;
+  sourceDisclosureAckAt: string;
+  catalogName: string;
+  catalogBrand: string | null;
+  catalogCategory: string | null;
+};
+
+export type CatalogRecoveryProductUpdateResult =
+  | { status: 'updated'; product: ShelfProduct }
+  | { status: 'missing' | 'stale' };
 
 type ShelfEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -309,9 +334,16 @@ function normalizeProductForWrite(
 export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
   return runCurrentHealthDataOperation(async (lease) => {
     const ts = nowISO();
+    const productId = input.operationId ?? randomUUID();
+    if (
+      input.operationId &&
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(productId)
+    ) {
+      throw new Error(SHELF_STATE_INVALID);
+    }
     const freshness = normalizeShelfFreshness(input, ts.slice(0, 10));
     const candidate: ShelfProduct = {
-      id: randomUUID(),
+      id: productId,
       name: input.name,
       brand: input.brand ?? null,
       category: input.category ?? null,
@@ -342,16 +374,21 @@ export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
     };
     const product = normalizeShelfProduct(candidate, ts);
     if (!product) throw new Error(SHELF_STATE_INVALID);
+    let committed = product;
     lease.assertCurrent();
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();
       const items = decodeShelfState(current, ts);
-      if (items.some((item) => item.id === product.id)) throw new Error(SHELF_STATE_INVALID);
+      const existing = items.find((item) => item.id === product.id);
+      if (existing) {
+        committed = existing;
+        return current;
+      }
       lease.assertCurrent();
       return encodeShelfState([product, ...items]);
     });
     lease.assertCurrent();
-    return product;
+    return committed;
   });
 }
 
@@ -386,6 +423,68 @@ export async function updateProduct(
     });
     lease.assertCurrent();
     return updated;
+  });
+}
+
+/**
+ * Attach a freshly revalidated catalog identity without racing a later manual
+ * edit. User ingredients and every freshness field are intentionally absent
+ * from this patch and therefore remain byte-for-byte owned by the Shelf row.
+ */
+export function applyCatalogRecoveryProductUpdate(
+  input: CatalogRecoveryProductUpdate,
+): Promise<CatalogRecoveryProductUpdateResult> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let result: CatalogRecoveryProductUpdateResult = { status: 'missing' };
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const items = decodeShelfState(current, ts);
+      const index = items.findIndex((product) => product.id === input.id);
+      if (index < 0) return current;
+
+      const existing = items[index]!;
+      if (existing.updatedAt !== input.expectedUpdatedAt) {
+        result = { status: 'stale' };
+        return current;
+      }
+
+      const updated = normalizeProductForWrite(
+        {
+          ...existing,
+          catalogProductId: input.catalogProductId,
+          catalogSourceId: input.catalogSourceId,
+          catalogSource: input.catalogSource,
+          catalogSourceName: input.catalogSourceName,
+          catalogSourceRef: input.catalogSourceRef,
+          catalogSourceUrl: input.catalogSourceUrl,
+          catalogSourceSnapshotDate: input.catalogSourceSnapshotDate,
+          catalogMatchQuality: input.catalogMatchQuality,
+          dataQualityScore: input.dataQualityScore,
+          sourceDisclosureAckAt: input.sourceDisclosureAckAt,
+          ...(input.useCatalogIdentity
+            ? {
+                name: input.catalogName,
+                brand: input.catalogBrand,
+                category: input.catalogCategory,
+              }
+            : {}),
+          id: existing.id,
+          createdAt: existing.createdAt,
+          updatedAt: ts,
+        },
+        ts,
+        existing,
+      );
+      const next = [...items];
+      next[index] = updated;
+      result = { status: 'updated', product: updated };
+      lease.assertCurrent();
+      return encodeShelfState(next);
+    });
+    lease.assertCurrent();
+    return result;
   });
 }
 

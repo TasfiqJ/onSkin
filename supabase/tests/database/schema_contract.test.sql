@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(46);
+select plan(49);
 
 select has_extension('citext', 'the case-insensitive email type dependency is installed');
 
@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  57::bigint,
-  'all 57 repository migrations are recorded'
+  58::bigint,
+  'all 58 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260717000058'::text,
-  'migration history reaches the catalog launch curation gate'
+  '20260718000059'::text,
+  'migration history reaches the catalog scan-minimization gate'
 );
 
 select is(
@@ -544,7 +544,6 @@ select results_eq(
     ('public'::name, 'ask_safety_audit'::name),
     ('public'::name, 'ask_sessions'::name),
     ('public'::name, 'ask_turn_audit'::name),
-    ('public'::name, 'catalog_corrections'::name),
     ('public'::name, 'catalog_lookup_events'::name),
     ('public'::name, 'commerce_click_events'::name),
     ('public'::name, 'community_blocks'::name),
@@ -563,7 +562,6 @@ select results_eq(
     ('public'::name, 'routine_conflicts'::name),
     ('public'::name, 'routine_steps'::name),
     ('public'::name, 'routines'::name),
-    ('public'::name, 'shelf_scans'::name),
     ('public'::name, 'skin_profiles'::name),
     ('public'::name, 'streak_freezes'::name),
     ('public'::name, 'user_products'::name),
@@ -584,8 +582,246 @@ select is(
          or qual like '%private.health_dependent_read_allowed%'
        )
   ),
-  28::bigint,
+  26::bigint,
   'every health read fence is restrictive, authenticated-only, and uses the sealed predicate'
+);
+
+select ok(
+  (select count(*) = 0 from public.shelf_scans)
+    and (select count(*) = 0 from public.obf_contribution_queue)
+    and (
+      select relation.relrowsecurity and relation.relforcerowsecurity
+        from pg_class as relation
+        join pg_namespace as namespace on namespace.oid = relation.relnamespace
+       where namespace.nspname = 'public'
+         and relation.relname = 'shelf_scans'
+         and relation.relkind in ('r', 'p')
+    )
+    and (
+      select relation.relrowsecurity and relation.relforcerowsecurity
+        from pg_class as relation
+        join pg_namespace as namespace on namespace.oid = relation.relnamespace
+       where namespace.nspname = 'public'
+         and relation.relname = 'obf_contribution_queue'
+         and relation.relkind in ('r', 'p')
+    )
+    and not pg_catalog.has_table_privilege('anon', 'public.shelf_scans', 'SELECT')
+    and not pg_catalog.has_table_privilege('anon', 'public.shelf_scans', 'INSERT')
+    and not pg_catalog.has_table_privilege('authenticated', 'public.shelf_scans', 'SELECT')
+    and not pg_catalog.has_table_privilege('authenticated', 'public.shelf_scans', 'INSERT')
+    and not pg_catalog.has_table_privilege('service_role', 'public.shelf_scans', 'SELECT')
+    and not pg_catalog.has_table_privilege('service_role', 'public.shelf_scans', 'INSERT')
+    and not pg_catalog.has_table_privilege(
+      'service_role', 'public.obf_contribution_queue', 'SELECT'
+    )
+    and not pg_catalog.has_table_privilege(
+      'service_role', 'public.obf_contribution_queue', 'INSERT'
+    )
+    and not pg_catalog.has_function_privilege(
+      'service_role',
+      'public.enqueue_obf_contribution_for_correction(uuid)',
+      'EXECUTE'
+    )
+    and not exists (
+      select 1
+        from pg_catalog.pg_policies
+       where schemaname = 'public'
+         and tablename = 'shelf_scans'
+    )
+    and not exists (
+      select 1
+        from pg_catalog.pg_policies
+       where schemaname = 'public'
+         and tablename = 'obf_contribution_queue'
+    ),
+  'legacy raw scan and external-contribution stores are purged, force-RLS sealed, policy-free, and inaccessible to every API role'
+);
+
+select ok(
+  not exists (
+    select 1
+      from public.catalog_lookup_events
+     where query is not null
+        or barcode is not null
+        or matched_product_id is not null
+        or source_key is not null
+        or quality_grade is not null
+  )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.catalog_lookup_events'::regclass
+         and constraint_record.conname = 'catalog_lookup_events_minimized_identity'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.products'::regclass
+         and constraint_record.conname = 'products_reviewed_active_barcode_gtin'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.product_barcodes'::regclass
+         and constraint_record.conname = 'product_barcodes_reviewed_barcode_gtin'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.catalog_lookup_events'::regclass
+         and constraint_record.conname = 'catalog_lookup_events_created_at_finite'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_trigger as trigger_record
+       where trigger_record.tgrelid = 'public.catalog_lookup_events'::regclass
+         and trigger_record.tgname = 'trg_catalog_lookup_events_health_write'
+         and not trigger_record.tgisinternal
+    )
+    and not pg_catalog.has_table_privilege(
+      'authenticated', 'public.catalog_lookup_events', 'INSERT'
+    )
+    and not pg_catalog.has_table_privilege(
+      'authenticated', 'public.catalog_lookup_events', 'TRUNCATE'
+    )
+    and not pg_catalog.has_table_privilege(
+      'service_role', 'public.catalog_lookup_events', 'TRUNCATE'
+    )
+    and not pg_catalog.has_table_privilege(
+      'service_role', 'public.catalog_lookup_events', 'TRIGGER'
+    )
+    and not pg_catalog.has_function_privilege(
+      'authenticated',
+      'public.record_catalog_lookup_event(uuid,bigint,text,text,integer,integer)',
+      'EXECUTE'
+    )
+    and pg_catalog.has_function_privilege(
+      'service_role',
+      'public.record_catalog_lookup_event(uuid,bigint,text,text,integer,integer)',
+      'EXECUTE'
+    )
+    and private.catalog_gtin_is_canonical('012345678905')
+    and private.catalog_gtin_is_canonical('10012345000017')
+    and not private.catalog_gtin_is_canonical('0036000291452')
+    and not private.catalog_gtin_is_canonical('04006381333931')
+    and not private.catalog_gtin_is_canonical('00012345678905')
+    and not private.catalog_gtin_is_canonical('00000096385074')
+    and not private.catalog_gtin_is_canonical('123456789')
+    and not exists (
+      select 1
+        from public.products as product
+       where product.status = 'active'
+         and product.review_status = 'reviewed'
+         and private.catalog_gtin_is_canonical(product.barcode) is not true
+    )
+    and not exists (
+      select 1
+        from public.product_barcodes as mapping
+       where mapping.review_status = 'reviewed'
+         and private.catalog_gtin_is_canonical(mapping.barcode) is not true
+    ),
+  'lookup analytics are identity-free and reviewed catalog lanes contain only canonical GTIN identities'
+);
+
+select ok(
+  (
+    select relation.relrowsecurity and relation.relforcerowsecurity
+      from pg_class as relation
+      join pg_namespace as namespace on namespace.oid = relation.relnamespace
+     where namespace.nspname = 'public'
+       and relation.relname = 'catalog_corrections'
+       and relation.relkind in ('r', 'p')
+  )
+    and not pg_catalog.has_table_privilege(
+      'authenticated', 'public.catalog_corrections', 'SELECT'
+    )
+    and not pg_catalog.has_table_privilege(
+      'authenticated', 'public.catalog_corrections', 'TRUNCATE'
+    )
+    and not pg_catalog.has_table_privilege(
+      'service_role', 'public.catalog_corrections', 'TRUNCATE'
+    )
+    and not pg_catalog.has_table_privilege(
+      'service_role', 'public.catalog_corrections', 'TRIGGER'
+    )
+    and pg_catalog.has_table_privilege('service_role', 'public.catalog_corrections', 'SELECT')
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.catalog_corrections'::regclass
+         and constraint_record.conname = 'catalog_corrections_barcode_gtin'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.catalog_corrections'::regclass
+         and constraint_record.conname = 'catalog_corrections_payloads_no_barcode'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.catalog_corrections'::regclass
+         and constraint_record.conname = 'catalog_corrections_description_sanitized'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.catalog_corrections'::regclass
+         and constraint_record.conname = 'catalog_corrections_created_at_finite'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_constraint as constraint_record
+       where constraint_record.conrelid = 'public.catalog_corrections'::regclass
+         and constraint_record.conname = 'catalog_corrections_intake_idempotency'
+         and constraint_record.contype = 'c'
+         and constraint_record.convalidated
+    )
+    and exists (
+      select 1
+        from pg_catalog.pg_indexes as index_record
+       where index_record.schemaname = 'public'
+         and index_record.tablename = 'catalog_corrections'
+         and index_record.indexname = 'catalog_corrections_owner_request_uidx'
+         and index_record.indexdef ~* 'unique index'
+         and index_record.indexdef ~* 'intake_request_id is not null'
+    )
+    and not exists (
+      select 1
+        from pg_catalog.pg_policies
+       where schemaname = 'public'
+         and tablename = 'catalog_corrections'
+    )
+    and not exists (
+      select 1
+        from public.catalog_corrections as correction
+       where correction.description is distinct from private.catalog_report_safe_text(
+               'description', correction.description
+             )
+          or correction.proposed_payload is distinct from private.catalog_sanitize_report_object(
+               correction.proposed_payload, 'proposed'
+             )
+          or correction.client_context is distinct from private.catalog_sanitize_report_object(
+               correction.client_context, 'context'
+             )
+    ),
+  'catalog correction operator fields are sealed from clients while sanitized service export remains available'
 );
 
 select ok(

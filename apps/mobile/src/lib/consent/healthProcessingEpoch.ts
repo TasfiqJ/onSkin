@@ -13,7 +13,6 @@ export const HEALTH_PROCESSING_POSTGREST_TABLES = [
   'ask_safety_audit',
   'ask_sessions',
   'ask_turn_audit',
-  'catalog_corrections',
   'catalog_lookup_events',
   'commerce_click_events',
   'community_blocks',
@@ -35,7 +34,6 @@ export const HEALTH_PROCESSING_POSTGREST_TABLES = [
   'routine_conflicts',
   'routine_steps',
   'routines',
-  'shelf_scans',
   'skin_profiles',
   'streak_freezes',
   'user_products',
@@ -58,10 +56,40 @@ type ActiveHealthProcessingLease = Readonly<{
   expiresAt: number | null;
 }>;
 
+export type ActiveHealthProcessingLeaseSnapshot = ActiveHealthProcessingLease;
+
+type ActiveHealthProcessingLeaseChangeListener = (
+  lease: ActiveHealthProcessingLeaseSnapshot | null,
+) => void;
+
 let activeLease: ActiveHealthProcessingLease | null = null;
 let nextLeaseGeneration = 0;
+const activeLeaseChangeListeners = new Set<ActiveHealthProcessingLeaseChangeListener>();
 
-export type ActiveHealthProcessingLeaseSnapshot = ActiveHealthProcessingLease;
+function sameVisibleLease(
+  left: ActiveHealthProcessingLeaseSnapshot | null,
+  right: ActiveHealthProcessingLeaseSnapshot | null,
+): boolean {
+  if (left === null || right === null) return left === right;
+  return left.generation === right.generation;
+}
+
+function publishActiveLeaseChange(lease: ActiveHealthProcessingLeaseSnapshot | null): void {
+  for (const listener of [...activeLeaseChangeListeners]) {
+    try {
+      listener(lease);
+    } catch {
+      // A worker listener must never interrupt the consent authority transition.
+    }
+  }
+}
+
+export function subscribeActiveHealthProcessingLeaseChanges(
+  listener: ActiveHealthProcessingLeaseChangeListener,
+): () => void {
+  activeLeaseChangeListeners.add(listener);
+  return () => activeLeaseChangeListeners.delete(listener);
+}
 
 function currentActiveLease(): ActiveHealthProcessingLease | null {
   const lease = activeLease;
@@ -156,7 +184,7 @@ export function setActiveHealthProcessingEpoch(
       : ++nextLeaseGeneration;
   // Invalid/future verification time is represented as an already closed
   // lease, never as an unbounded grant.
-  activeLease = Object.freeze({
+  const published = Object.freeze({
     generation,
     epoch,
     ownerUserId,
@@ -165,7 +193,10 @@ export function setActiveHealthProcessingEpoch(
     identityGeneration,
     expiresAt: serverVerifiedAt === null ? null : (expiresAt ?? 0),
   });
-  return activeLease;
+  activeLease = published;
+  const visiblePublished = currentActiveLease();
+  if (!sameVisibleLease(current, visiblePublished)) publishActiveLeaseChange(visiblePublished);
+  return published;
 }
 
 export type HealthProcessingLeaseClearExpectation = Readonly<{
@@ -192,7 +223,9 @@ export function clearActiveHealthProcessingEpoch(
       return false;
     }
   }
+  const previous = currentActiveLease();
   activeLease = null;
+  if (previous !== null) publishActiveLeaseChange(null);
   return true;
 }
 

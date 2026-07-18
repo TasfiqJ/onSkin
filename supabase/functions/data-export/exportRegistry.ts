@@ -15,6 +15,8 @@ export type ResolvedExportTable = Omit<ExportTable, 'filter'> & {
 };
 
 export const SERVICE_ONLY_EXPORT_DENYLIST = [
+  'shelf_scans',
+  'catalog_corrections',
   'reverse_trial_grants',
   'subscriptions_events',
   'order_attributions',
@@ -78,12 +80,6 @@ export const CALLER_RLS_EXPORT_TABLES: readonly ExportTable[] = [
     orderBy: ['id'],
   },
   {
-    table: 'shelf_scans',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
     table: 'cycles',
     filter: { column: 'user_id', value: 'USER_ID' },
     scope: 'caller_rls',
@@ -140,12 +136,6 @@ export const CALLER_RLS_EXPORT_TABLES: readonly ExportTable[] = [
   },
   {
     table: 'recommendations',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'catalog_corrections',
     filter: { column: 'user_id', value: 'USER_ID' },
     scope: 'caller_rls',
     orderBy: ['id'],
@@ -215,20 +205,20 @@ export const CALLER_RLS_EXPORT_TABLES: readonly ExportTable[] = [
 
 export const SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES: readonly ExportTable[] = [
   {
+    table: 'catalog_corrections',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'service_role_filtered',
+    orderBy: ['id'],
+    selectColumns:
+      'id, user_id, product_id, barcode, correction_type, status, description, proposed_payload, client_context, source_id, created_at, updated_at',
+    note: 'Matched only to the verified caller; internal assignment/reviewer fields, retry identity, intake epoch/digest, and operator notes are excluded.',
+  },
+  {
     table: 'reverse_trial_grants',
     filter: { column: 'user_id', value: 'USER_ID' },
     scope: 'service_role_filtered',
     orderBy: ['user_id'],
     selectColumns: 'user_id, granted_at, expires_at, source, metadata',
-    note: 'Matched only to the user ID verified from the caller JWT.',
-  },
-  {
-    table: 'obf_contribution_queue',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'service_role_filtered',
-    orderBy: ['id'],
-    selectColumns:
-      'id, correction_id, user_id, barcode, payload, status, submitted_at, created_at, updated_at',
     note: 'Matched only to the user ID verified from the caller JWT.',
   },
 ];
@@ -315,7 +305,9 @@ export function validateExportRegistry(options?: {
     if (serviceOnlySet.has(item.table)) {
       throw new Error(`EXPORT_REGISTRY_SERVICE_ONLY_IN_CALLER:${item.table}`);
     }
-    if (seen.has(item.table)) throw new Error(`EXPORT_REGISTRY_DUPLICATE:${item.table}`);
+    if (seen.has(item.table)) {
+      throw new Error(`EXPORT_REGISTRY_DUPLICATE:${item.table}`);
+    }
     seen.add(item.table);
   }
 
@@ -332,7 +324,9 @@ export function validateExportRegistry(options?: {
     if (!item.selectColumns?.trim()) {
       throw new Error(`EXPORT_REGISTRY_SERVICE_COLUMNS_REQUIRED:${item.table}`);
     }
-    if (seen.has(item.table)) throw new Error(`EXPORT_REGISTRY_DUPLICATE:${item.table}`);
+    if (seen.has(item.table)) {
+      throw new Error(`EXPORT_REGISTRY_DUPLICATE:${item.table}`);
+    }
     seen.add(item.table);
   }
 

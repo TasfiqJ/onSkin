@@ -138,6 +138,22 @@ const accountPublicationFencePostgresRehearsal = read(
 const entitlementAuthorityLanesPostgresRehearsal = read(
   'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
 );
+const catalogScanMinimizationPostgresRehearsal = read(
+  'scripts/phase9/catalog-scan-minimization-postgres-rehearsal.sql',
+);
+const catalogScanMinimizationMigration = read(
+  'supabase/migrations/20260718000059_catalog_scan_minimization.sql',
+);
+const catalogCorrectionIntakeStart = catalogScanMinimizationMigration.indexOf(
+  'create or replace function public.submit_catalog_correction(',
+);
+const catalogCorrectionIntakeSource = catalogScanMinimizationMigration.slice(
+  catalogCorrectionIntakeStart,
+  catalogScanMinimizationMigration.indexOf(
+    'create trigger trg_catalog_corrections_health_write',
+    catalogCorrectionIntakeStart,
+  ),
+);
 const orderAttributionCoreSource = read(
   'supabase/functions/order-report-poll/orderAttributionCore.ts',
 );
@@ -218,14 +234,18 @@ function tableNamesBetween(source, startMarker, endMarker) {
   const start = source.indexOf(startMarker);
   const end = source.indexOf(endMarker, start + startMarker.length);
   if (start < 0 || end < 0) return [];
-  return [...source.slice(start, end).matchAll(/table:\s*'([^']+)'/g)].map((match) => match[1]);
+  return [...source.slice(start, end).matchAll(/table:\s*(["'])([^"']+)\1/g)].map(
+    (match) => match[2],
+  );
 }
 
 function stringLiteralsBetween(source, startMarker, endMarker) {
   const start = source.indexOf(startMarker);
   const end = source.indexOf(endMarker, start + startMarker.length);
   if (start < 0 || end < 0) return [];
-  return [...source.slice(start, end).matchAll(/'([a-z][a-z0-9_]*)'/g)].map((match) => match[1]);
+  return [...source.slice(start, end).matchAll(/["']([a-z][a-z0-9_]*)["']/g)].map(
+    (match) => match[1],
+  );
 }
 
 const callerRegistryTables = tableNamesBetween(
@@ -272,7 +292,6 @@ const requiredExportTables = [
   'routine_completions',
   'routine_conflicts',
   'active_ramp',
-  'shelf_scans',
   'cycles',
   'cycle_nights',
   'streak_freezes',
@@ -296,7 +315,6 @@ const requiredExportTables = [
   'ask_turn_audit',
   'ask_safety_audit',
   'subscriptions_events',
-  'obf_contribution_queue',
   'order_attributions',
 ];
 
@@ -321,6 +339,8 @@ block(
   (() => {
     const expectedExportDenylist = [
       ...SERVICE_ONLY_PRIVATE_TABLES,
+      'shelf_scans',
+      'obf_contribution_queue',
       'catalog_import_batches',
       'catalog_quality_reports',
     ].sort();
@@ -330,13 +350,83 @@ block(
       serviceOnlyDenylist.length === expectedExportDenylist.length
     );
   })(),
-  'Runtime export denylist must exactly cover direct service-only tables and the two sealed global catalog ledgers.',
+  'Runtime export denylist must exactly cover direct service-only tables plus purged scan/contribution stores and sealed catalog ledgers.',
+);
+block(
+  errors,
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260718000059_catalog_scan_minimization\.sql/.test(
+    catalogScanMinimizationPostgresRehearsal,
+  ) &&
+    /insert into public\.shelf_scans/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /if exists \(select 1 from public\.shelf_scans\)/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /if exists \(select 1 from public\.obf_contribution_queue\)/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /legacy OBF contribution queue was not force-RLS sealed/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /legacy OBF contribution enqueue authority remains executable/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /0036000291452/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /barcode = '036000291452'/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /for v_index in 1\.\.96 loop/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /C:\\\\Users\\\\name\\\\photo\.jpg/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /deeply nested legacy correction was not minimized nonrecursively/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /CATALOG_LOOKUP_EVENT_RATE_LIMITED/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /from public\.submit_catalog_correction\(/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /sealed correction RPC did not persist the exact fixed-field contract/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /exact report retry did not return one immutable receipt/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /replayed report receipt did not expose current bounded status/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /CATALOG_REPORT_IDEMPOTENCY_CONFLICT/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /identity-free correction did not reject/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /nested case-folded proposed-payload barcode did not reject/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /nested case-folded client-context barcode did not reject/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ) &&
+    /catalog_corrections_payloads_no_barcode/.test(catalogScanMinimizationPostgresRehearsal) &&
+    /catalog-scan-minimization-postgres-rehearsal: pass/.test(
+      catalogScanMinimizationPostgresRehearsal,
+    ),
+  'Disposable PostgreSQL rehearsal must execute migration 0059 against legacy raw identity, prove canonical GTIN cleanup, bound hostile correction JSON, seal deprecated OBF state, and exercise both sealed lookup and correction RPC contracts.',
+);
+block(
+  errors,
+  /drop index if exists public\.catalog_corrections_owner_request_uidx;[\s\S]*create unique index catalog_corrections_owner_request_uidx\s+on public\.catalog_corrections \(user_id, intake_request_id\)\s+where intake_request_id is not null;/.test(
+    catalogScanMinimizationMigration,
+  ) &&
+    /catalog_report_request_digest/.test(catalogScanMinimizationMigration) &&
+    catalogCorrectionIntakeStart >= 0 &&
+    /on conflict \(user_id, intake_request_id\)/i.test(catalogCorrectionIntakeSource) &&
+    /intake_health_epoch is distinct from p_expected_health_epoch/.test(
+      catalogCorrectionIntakeSource,
+    ) &&
+    catalogCorrectionIntakeSource.indexOf(
+      'perform public._assert_health_processing_epoch_locked(',
+    ) >= 0 &&
+    catalogCorrectionIntakeSource.indexOf(
+      'perform public._assert_health_processing_epoch_locked(',
+    ) < catalogCorrectionIntakeSource.indexOf("recent.created_at >= v_now - interval '15 minutes'"),
+  'Catalog correction intake must serialize owner admission, bind request ID/epoch/body, and use an atomic ON CONFLICT replay path.',
 );
 block(
   errors,
   directServiceRegistryTables.filter((table) => table === 'reverse_trial_grants').length === 1 &&
-    directServiceRegistryTables.includes('obf_contribution_queue'),
-  'Direct service-role export registry must contain reverse_trial_grants exactly once and retain OBF coverage.',
+    !directServiceRegistryTables.includes('obf_contribution_queue') &&
+    serviceOnlyDenylist.includes('obf_contribution_queue'),
+  'Direct service-role export registry must contain reverse_trial_grants exactly once while purged OBF work stays denylisted and unexportable.',
 );
 block(
   errors,
@@ -348,7 +438,20 @@ block(
 );
 block(
   errors,
-  /table:\s*'reverse_trial_grants'[\s\S]*scope:\s*'service_role_filtered'[\s\S]*selectColumns:\s*'user_id, granted_at, expires_at, source, metadata'/.test(
+  /table:\s*["']catalog_corrections["'][\s\S]*?scope:\s*["']service_role_filtered["'][\s\S]*?selectColumns:\s*\n?\s*["']id, user_id, product_id, barcode, correction_type, status, description, proposed_payload, client_context, source_id, created_at, updated_at["']/.test(
+    exportRegistrySource,
+  ) &&
+    /catalog correction export excludes every internal operator field/.test(
+      exportRegistryTestSource,
+    ) &&
+    /intake_request_id/.test(exportRegistryTestSource) &&
+    /intake_health_epoch/.test(exportRegistryTestSource) &&
+    /intake_request_digest/.test(exportRegistryTestSource),
+  'Catalog-correction export must be service-role owner-filtered and exclude every internal operator field.',
+);
+block(
+  errors,
+  /table:\s*["']reverse_trial_grants["'][\s\S]*?scope:\s*["']service_role_filtered["'][\s\S]*?selectColumns:\s*["']user_id, granted_at, expires_at, source, metadata["']/.test(
     exportRegistrySource,
   ) &&
     /EXPORT_REGISTRY_SERVICE_ONLY_IN_CALLER/.test(exportRegistrySource) &&
@@ -378,10 +481,19 @@ block(
 );
 block(
   errors,
-  /table:\s*'obf_contribution_queue'[\s\S]*selectColumns:\s*\n?\s*'id, correction_id, user_id, barcode, payload, status, submitted_at, created_at, updated_at'/.test(
-    exportRegistrySource,
-  ) && /EXPORT_REGISTRY_SERVICE_COLUMNS_REQUIRED/.test(exportRegistrySource),
-  'Every direct service-role export must use an explicit reviewed column allowlist.',
+  !directServiceRegistryTables.includes('obf_contribution_queue') &&
+    serviceOnlyDenylist.includes('obf_contribution_queue') &&
+    /delete from public\.obf_contribution_queue;/.test(catalogScanMinimizationMigration) &&
+    /alter table public\.obf_contribution_queue force row level security;/.test(
+      catalogScanMinimizationMigration,
+    ) &&
+    /revoke all on table public\.obf_contribution_queue[\s\S]*from public, anon, authenticated, service_role;/.test(
+      catalogScanMinimizationMigration,
+    ) &&
+    /revoke all on function public\.enqueue_obf_contribution_for_correction\(uuid\)[\s\S]*from public, anon, authenticated, service_role;/.test(
+      catalogScanMinimizationMigration,
+    ),
+  'Purged OBF contribution work must be absent from executable export coverage and migration-sealed from every runtime role.',
 );
 
 for (const pattern of [
@@ -436,7 +548,7 @@ block(
 );
 block(
   errors,
-  /collectLocalDeviceExportData\(lease\)/.test(settingsActionsSource) &&
+  /collectLocalDeviceExportData\(lease, expectedUserId\)/.test(settingsActionsSource) &&
     /readLocalDataOwnership\(expectedUserId\)/.test(settingsActionsSource) &&
     /if \(isSupabaseConfigured\)/.test(settingsActionsSource) &&
     /serverAccountDataStatus = 'included'/.test(settingsActionsSource) &&
@@ -1298,6 +1410,12 @@ block(
     /data-export photo signed URLs expire after configured TTL/.test(liveHarness) &&
     /data-export returns 429 after configured data-rights rate limit/.test(liveHarness) &&
     /edge_rate_limits stores keyed hashes only for data-export scope/.test(liveHarness) &&
+    /serviceHealthClient\(consent\.epoch\)/.test(liveHarness) &&
+    /'submit_catalog_correction'/.test(liveHarness) &&
+    /catalog-correction export returned an internal operator field/.test(liveHarness) &&
+    /catalog-correction export manifest is incomplete or misclassified/.test(liveHarness) &&
+    /deleted catalog correction/.test(liveHarness) &&
+    /other user catalog correction retained/.test(liveHarness) &&
     /reverse_trial_grants/.test(liveHarness) &&
     /reverse-trial export manifest is incomplete or misclassified/.test(liveHarness) &&
     /other user reverse-trial grant retained/.test(liveHarness) &&
@@ -1311,7 +1429,7 @@ block(
     /\^sha256:\[a-f0-9\]\{64\}\$/.test(liveHarness) &&
     !/response\.text\.slice/.test(liveHarness) &&
     /RATE_LIMITED/.test(liveHarness),
-  'Live data-rights harness must be staging-only, bind the reviewed canonical Supabase target, and preserve export isolation, reverse-trial coverage, redacted evidence, blocking cleanup, and rate-limit behavior.',
+  'Live data-rights harness must be staging-only, bind the reviewed canonical Supabase target, and preserve catalog-correction/reverse-trial export isolation, redacted evidence, blocking cleanup, and rate-limit behavior.',
 );
 block(
   errors,

@@ -21,6 +21,8 @@ import {
   approvalSigningPayload,
   assertCatalogBuildSourceCommit,
   assertSafeOutputPath,
+  canonicalizeCatalogGtin,
+  catalogGtinChecksumIsValid,
   catalogReleaseIdentityFromRepository,
   catalogTransformedPayloadSha256,
   canonicalJson,
@@ -28,6 +30,7 @@ import {
   loadCatalogReleaseScope,
   loadCatalogSourcePolicy,
   loadCatalogSourceTrustRegistry,
+  isCanonicalCatalogGtin,
   normalizeCatalogCosingKey,
   parseCatalogControlJson,
   parseImportArgs,
@@ -58,6 +61,29 @@ test('CosIng authority normalization shares exact NFKC whitespace and uppercase 
   assert.equal(normalizeCatalogCosingKey('A\u030a'), normalizeCatalogCosingKey('\u00c5'));
   assert.equal(normalizeCatalogCosingKey('ß'), 'SS');
   assert.throws(() => normalizeCatalogCosingKey(null), /requires text/u);
+});
+
+test('catalog GTIN authority requires exact checksums and one canonical padded identity', () => {
+  for (const value of ['96385074', '036000291452', '4006381333931', '10012345000017']) {
+    assert.equal(catalogGtinChecksumIsValid(value), true, value);
+    assert.equal(isCanonicalCatalogGtin(value), true, value);
+  }
+  for (const value of [null, '', '96385075', '036000291453', '4006381333932', '10012345000018']) {
+    assert.equal(catalogGtinChecksumIsValid(value), false, String(value));
+    assert.equal(isCanonicalCatalogGtin(value), false, String(value));
+  }
+  assert.equal(canonicalizeCatalogGtin('0036000291452'), '036000291452');
+  assert.equal(isCanonicalCatalogGtin('0036000291452'), false);
+  for (const [padded, canonical] of [
+    ['00000096385074', '96385074'],
+    ['00012345678905', '012345678905'],
+    ['04006381333931', '4006381333931'],
+  ]) {
+    assert.equal(catalogGtinChecksumIsValid(padded), true, padded);
+    assert.equal(canonicalizeCatalogGtin(padded), canonical, padded);
+    assert.equal(isCanonicalCatalogGtin(padded), false, padded);
+  }
+  assert.equal(canonicalizeCatalogGtin('0360 0029 1452'), null);
 });
 
 function evidence(recordId) {

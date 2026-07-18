@@ -272,6 +272,7 @@ function dataFeatures(name) {
   }
   if (/cycle|ramp/.test(value)) return ['F-08'];
   if (/routine/.test(value)) return ['F-06'];
+  if (value.includes('/offline/cataloglookupqueue')) return ['F-03', 'F-04'];
   if (/conflict|sequencing|ingredient_tag/.test(value)) return ['F-05'];
   if (/user_product|shelf|opened|pao/.test(value)) return ['F-03'];
   if (/product|catalog|brand|ingredient|obf/.test(value)) return ['F-04'];
@@ -303,6 +304,7 @@ function edgeFeatures(name) {
 }
 
 function packetFeatures(path) {
+  if (path.includes('/e2e/cat04-catalog-recovery-audit.mjs')) return ['F-03', 'F-04'];
   if (path.includes('/phase3/')) return ['F-01', 'F-05', 'F-20'];
   if (path.includes('/phase4/')) return ['F-04'];
   if (path.includes('/phase5/')) return ['F-03', 'F-09', 'F-10', 'F-19'];
@@ -431,13 +433,19 @@ export function buildFeatureInventory() {
   );
 
   const localStores = walk('apps/mobile/src').filter((path) =>
-    /(?:store|storage|repository|database)\.(?:ts|tsx)$/i.test(path),
+    /(?:store|storage|repository|database|queue)\.(?:ts|tsx)$/i.test(path),
   );
   const storeItems = localStores.map((path) =>
     item('data-store', `local:${path}`, path, dataFeatures(path)),
   );
   const tableItems = discoverTables().map(([name, path]) =>
-    item('data-store', `postgres:${name}`, path, dataFeatures(name), 'implemented'),
+    item(
+      'data-store',
+      `postgres:${name}`,
+      path,
+      dataFeatures(name),
+      ['obf_contribution_queue', 'shelf_scans'].includes(name) ? 'inert' : 'implemented',
+    ),
   );
 
   const edgeItems = readdirSync(resolve(root, 'supabase/functions'), { withFileTypes: true })

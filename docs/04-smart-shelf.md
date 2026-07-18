@@ -8,7 +8,9 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 
 ## TL;DR
 
-- **The Smart Shelf is the product-data capture engine and one of the two activation magic-moments (the barcode scan).** It is where products _enter_ the system (by scan, search, OCR, or manual entry), where **PAO / expiry** lives, and where the conflict engine and the routine builder get their raw inputs. It is simultaneously the **activation moment** (scanning a product is fast, tactile, and immediately rewarding) and the **switching cost** (a fully-digitised cabinet, with opened-dates and history, is expensive to recreate elsewhere). Scanning is proven mass behaviour — **Yuka has ~80M users and ~6M referenced products** built almost entirely on "scan a barcode, get a verdict."
+> **Current implementation boundary (2026-07-18):** barcode decoding, reviewed-catalog lookup/search, manual intake, opened-date/PAO editing, and explicit recovery are source candidates. The label route can capture a reference photo and accepts user-typed or pasted INCI text, but no native text-recognition adapter currently converts that photo into text. The scan match card currently confirms catalog identity/source quality; it does not yet show parsed actives or a catalog-derived PAO. Ambiguous-match selection and non-beauty classification/confirmation are also unimplemented. Treat the richer OCR, result-card, and classification descriptions below as target behavior until source, native-device, and human evidence prove them.
+
+- **The Smart Shelf is intended to be the product-data capture engine, with barcode intake as a candidate activation moment.** Products can currently enter by reviewed-catalog scan/search or manual intake; the label path is capture-assisted manual text until native OCR exists. PAO/expiry lives on the Shelf, and downstream conflict/routine logic reads the stored products. Competitor adoption suggests that scanning can reduce intake friction, but OnSkin must measure scan-to-save activation, repeat use, and retention in a consented beta before claiming that this behavior or switching cost transfers to this app.
 
 - **Scope is deliberately narrow against docs/02.** docs/02 owns the **catalog** (`products`, `ingredients`, `product_ingredients`, `ingredient_pao_defaults`) and the **PAO _logic_** (the `expiry_computed` waterfall, the category-default table, the badge _taxonomy_). Document 4 owns the **shelf _feature and experience_** — the intake flows and all their edge cases, the Shelf screens, the product-detail management hub, the product lifecycle, and replenishment. The rule of thumb: **docs/02 decides what a product _is_ and when it expires; doc 4 decides how the user _adds, sees, manages, and replaces_ it.**
 
@@ -18,17 +20,17 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 
 - **`opened_at` is the linchpin of the whole feature — and the hardest datum to get — so capture it at intake.** PAO only starts counting at first opening, and docs/01's generated column is `expiry_computed = least(expiry_date, opened_at + pao_months)`. Without `opened_at`, there is no PAO clock. Every intake path therefore ends with a calm **"When did you open it?"** (Just opened it / Pick a date / Not opened yet), with an honest "not sure? we'll estimate" path. Unopened products show an estimated _shelf_ life, not a PAO countdown.
 
-- **Intake is a multi-path funnel with the scan as the hero and robust fallbacks behind it.** Barcode decoding happens on-device, then the app queries **OnSkin's reviewed catalog** → match → result sheet → opened-date → save. No barcode, search, or correction is sent to Open Beauty Facts (OBF) at runtime. Fallbacks, each fully specified for every edge case (no match, ambiguous match, unreadable/absent barcode, offline, non-beauty barcode): **Search** the same catalog → **Scan the INCI list (OCR)** → **Add manually** (the always-works path). Unknown/new products remain user-local and can create an owner-scoped OnSkin missing-product report; they are not published externally.
+- **Intake is a multi-path funnel with scan first and explicit fallbacks.** Barcode decoding happens on-device, then the app queries **OnSkin's reviewed catalog** → match → opened-date → save. No barcode, search, or correction is sent to Open Beauty Facts (OBF) at runtime. Current fallbacks are **Search** the same catalog → **capture a label as a reference and type/paste its INCI text** → **Add manually** (the always-works path). Unknown/new products remain user-local and can create an owner-scoped OnSkin missing-product report; they are not published externally. Ambiguous-match and non-beauty classification remain target behavior, not current claims.
 
 - **The Shelf surfaces are calm, evidence-graded, and exactly as the spec draws them.** Title + count, **All / Actives / Expiring** filter chips, the **clay, resolution-first conflict banner** (never red; absent when all-clear), product cards with the PAO/expiry **badge taxonomy** (future-date / countdown / "paired" / expired / unknown), and the **"Scan a barcode"** FAB (spec p12). Tapping a card opens the **product-detail management hub** — full active breakdown, PAO/expiry with its source, the conflicts the product is part of, the routines it's used in, and the lifecycle actions (mark opened, edit opened-date, mark finished/discarded, replace, remove).
 
-- **Seven-figure verdict: the shelf is king-making — it is the data engine, the lock-in, and a recurring commerce surface.** Scanning is the proven entry behaviour and the activation moment; the **shelf-as-managed-inventory with PAO + opened-dates + replenishment is the underserved wedge** (Yuka/EWG have no shelf; SkinSort and HadaBuddy organise or AI-generate but don't do PAO/replenishment well). The shelf is the input to everything monetisable (personalisation, conflict detection, routine building → activation), it is the switching cost (retention), and **replenishment is a recurring-value and affiliate surface** (beauty repeat-purchase rates run **25–35%**, higher with replenishment; ShopMy has facilitated **$500M+** in sales with an OAuth API and a 30-day cookie). The risks are **data coverage** (mitigated by reviewed curation + search/OCR/manual fallbacks + an OnSkin correction queue) and **staying honest/claim-safe** (mitigated by non-alarmist PAO copy, opt-in replenishment, and clinical sign-off of the defaults) — not demand.
+- **Commercial hypothesis, not a revenue verdict:** a well-populated Shelf could support activation, retention, and an optional replenishment surface because it supplies product context to the rest of the app. That thesis remains unvalidated for OnSkin. Catalog coverage, scan reliability, user willingness to maintain opened dates, professional review, commerce consent, partner approval, conversion, retention, and unit economics are all material risks. No feature or market statistic establishes a seven-figure outcome.
 
 ---
 
 ## Key Findings
 
-1. **The shelf is the product-data capture engine, and the scan is an activation magic-moment.** Everything downstream — the conflict engine (docs/02), the routine builder (docs/03), personalisation, and replenishment — depends on knowing what the user owns. Yuka's ~80M users and ~6M products prove that barcode scanning is mass-market, low-friction behaviour; the scan→add action is the shelf's equivalent of the first check-off (docs/01 §7) as a leading activation signal.
+1. **The shelf is the product-data capture engine, and scan-to-save is an activation hypothesis.** Everything downstream — the conflict engine (docs/02), the routine builder (docs/03), personalisation, and replenishment — depends on knowing what the user owns. Other products demonstrate familiarity with barcode scanning, but only OnSkin beta telemetry can establish acquisition speed, match rate, completion, repeat use, or retention impact here.
 
 2. **Skincare expires on two axes, and the honest framing is a trust asset.** _Efficacy_ loss is universal and is the primary, defensible reason to track freshness (vitamin C, retinol, SPF, peptides all degrade; AAD; Leslie Baumann MD; INKEY). _Safety_ (preservative decline → microbial contamination) is real and documented, **but** for products only slightly past PAO with no visible change the risk is usually low, and the genuinely higher-stakes exceptions are **eye-area products and sunscreen**. The shelf should be useful and calm ("time to replace"), never alarmist — consistent with the spec's "evidence-graded, never alarmist" mandate (p12).
 
@@ -40,13 +42,13 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 
 6. **Data sourcing is an offline, exact-artifact release process with hard constraints.** A candidate OBF export/snapshot can be transformed only after a detached approval manifest binds the source URL/date, exact SHA-256, projected fields, attribution surface, database-component separation, and named review. The importer performs no network I/O. The [current Product Opener API documentation](https://openfoodfacts.github.io/openfoodfacts-server/api/) identifies v3 as current and v2 as deprecated; OnSkin calls neither version at runtime. The [source license guide](https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/) distinguishes database, individual-content, and image rights, so OBF images stay disabled. Whether the exact OBF component is a derivative or collective database, and which attribution/share-alike/offer-of-data duties apply, remain counsel decisions under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). Coverage gaps make **search/OCR/manual fallbacks essential, not optional.** Ingredient parsing uses an equivalently reviewed offline CosIng component (docs/02).
 
-7. **Barcode scanning is on-device, and scan reliability is a competitive bar.** `react-native-vision-camera` with a barcode frame processor (docs/00 §1/§4) runs entirely on-device (supporting the "scanning happens on your device" promise). Yuka's scanner is the reliability benchmark; reviewers note SkinSort's scanner is _less_ reliable — so scan speed and forgiveness are a genuine differentiator worth investing in.
+7. **Barcode frame decoding is designed to stay on-device, and scan reliability is a release gate.** The current `expo-camera` integration sends the decoded package identifier—not a camera frame or image—to the first-party catalog request. The UI therefore says **“Decoding happens on your device”** rather than implying that the entire lookup is local. Physical-iPhone traffic inspection and camera QA must verify that behavior before it becomes a store claim.
 
 8. **The shelf is health-inference data and must be owner-only and on-device-friendly.** What a person owns reveals skin conditions, concerns, and even pregnancy (via product types) — so the shelf is downstream of the health-data-collection consent (docs/01 §4), is RLS-isolated per user (docs/02 §8), stores product thumbnails **on-device by default**, and is never sold, shared, or used to train AI (brand promise, spec p4).
 
 9. **Replenishment is a real retention and monetisation surface — and PAO makes the trigger honest.** Beauty repeat-purchase rates run **25–35%** (higher with replenishment/subscription), repeat buyers spend materially more, and replenishables "keep commissions flowing." A tracked PAO or printed expiry date, or a unit the user marked finished, gives an **honest** reason to offer replacement help rather than manufactured urgency. The nudge can route to **ShopMy** (docs/00 §5: OAuth API, 30-day cookie, $500M+ facilitated) **only behind the separate MHMDA data-sharing consent** (docs/01 §4) and with claim-safe copy.
 
-10. **Competitively, scanning and basic "organise your products" are table stakes; the smart-cabinet-with-PAO/opened-date/replenishment is the wedge.** Yuka/EWG: scan + score, **no shelf**. SkinSort: scan + skin-match + "organise all your cosmetics" + a routine/diary tracker + daily logging + incompatibility flags (but web-first, weaker scanner, **no PAO/expiry**). HadaBuddy: "**scan your shelf** → AI-built 7-day routine" — explicitly targeting the "what do I do with these 12 bottles" moment (but one-shot AI, no PAO/replenishment). Think Dirty: scan + lists. **None** combines a managed inventory with **opened-date + PAO/expiry intelligence + replenishment** _and_ conflict-resolved cycling _and_ privacy-first _and_ the compounding data lock-in. PAO/expiry/replenishment is the genuinely under-served dimension.
+10. **The proposed differentiation is managed opened-date/PAO context plus routine integration, not an uncontested-market claim.** Competitor features and positioning change quickly, and their implementation quality cannot be inferred from marketing pages alone. Re-run the competitive review before launch and validate whether users value this combination; do not publish “nobody does this,” scanner-quality comparisons, or category-leadership claims without dated substantiation and legal review.
 
 ---
 
@@ -86,7 +88,7 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 **Recap of the existing `user_products` (docs/01 §3) — unchanged, the spine of the shelf:**
 `id`, `user_id`, `catalog_product_id NULL FK` (→ docs/02 `products`), manual fallbacks `manual_name` / `manual_brand`, `barcode`, `opened_at date`, `pao_months int`, `expiry_date date`, and the generated column `expiry_computed date GENERATED ALWAYS AS (least(expiry_date, opened_at + (pao_months || ' months')::interval)) STORED`, plus `status text` (active/finished/discarded). Owner-only RLS; indexed on `user_id`, `catalog_product_id`.
 
-**Extensions this feature needs** (additive columns + one small intake/outcome log; they do **not** redefine the table):
+**Extensions this feature needs** (additive columns plus a device-local reconnect queue; they do **not** redefine the table):
 
 ```sql
 alter table public.user_products
@@ -101,25 +103,26 @@ alter table public.user_products
   add column expiry_source   text,    -- 'printed' | 'pao_computed' | 'estimated' | 'unknown'
   add column added_via       text;    -- 'barcode' | 'search' | 'ocr' | 'manual' | 'onboarding'
 
--- Optional: an owner-only intake/outcome log. It is not an external publication queue.
-create table public.shelf_scans (
-  id                uuid primary key default gen_random_uuid(),
-  user_id           uuid not null references auth.users(id) on delete cascade,
-  barcode           text,
-  matched_product_id uuid references public.products(id),     -- null = no catalog match
-  result            text not null,    -- 'matched' | 'no_match' | 'ambiguous' | 'offline_queued'
-  contributed_back  boolean not null default false,           -- legacy compatibility; must remain false
-  created_at        timestamptz not null default now()
-);
-create index on public.shelf_scans (user_id);
-
--- RLS (owner-only, exactly the docs/01 §3 pattern): wrap auth.uid() in a subselect,
--- TO authenticated, index policy columns, WITH CHECK on writes.
+-- Migration 0059 retires the historical raw account-linked scan log. It is
+-- neither analytics nor a reconnect queue: existing rows are purged, every
+-- API policy/grant is removed, and the compatibility relation is force-RLS
+-- sealed. Bounded scan-funnel analytics contain outcome buckets only.
+delete from public.shelf_scans;
+drop policy if exists "shelf_scans_select_own" on public.shelf_scans;
+drop policy if exists "shelf_scans_insert_own" on public.shelf_scans;
+drop policy if exists "shelf_scans_update_own" on public.shelf_scans;
+drop policy if exists "health_processing_read_fence" on public.shelf_scans;
 alter table public.shelf_scans enable row level security;
-create policy ss_owner_sel on public.shelf_scans
-  for select to authenticated using ((select auth.uid()) = user_id);
-create policy ss_owner_ins on public.shelf_scans
-  for insert to authenticated with check ((select auth.uid()) = user_id);
+alter table public.shelf_scans force row level security;
+revoke all on table public.shelf_scans from public, anon, authenticated, service_role;
+
+-- Offline lookup recovery instead uses the encrypted, account-bound
+-- `routinekind.catalog.lookupQueue.v1` device record: normalized barcode, optional
+-- local Shelf row id, bounded retry state, seven-day logical expiry, and a
+-- minimal reviewed candidate. Its bytes are purged on the next activation,
+-- read/export, or lifecycle cleanup; OS suspension/termination can delay that
+-- physical purge. It is deleted on withdrawal/account cleanup and cannot
+-- mutate a Shelf row until the user explicitly accepts the candidate.
 -- user_products already has owner-only RLS per docs/01; the new columns inherit it.
 create index on public.user_products (user_id, status, expiry_computed);  -- for the Expiring filter/sort
 ```
@@ -172,27 +175,27 @@ Intake is the most important _how-it-works_ surface in this document. There is *
 #### 4.1 Barcode scan (the hero)
 
 1. **Entry:** the **"Scan a barcode"** FAB (spec p12), the onboarding "current products" step (docs/01 §2 step 6), or an empty-shelf prompt.
-2. **Camera:** `react-native-vision-camera` with a barcode frame processor (docs/00 §4), **on-device**, with a clear framing reticle, a steadying hint ("Line up the barcode"), and privacy microcopy ("Scanning happens on your device"). Torch toggle for low light. A selection haptic on a successful read.
+2. **Camera:** the current `expo-camera` native barcode scanner (docs/00 §4) decodes barcode frames **on-device**, with a clear framing reticle, a steadying hint ("Line up the barcode"), privacy microcopy ("Decoding happens on your device"), a torch toggle, and a selection haptic on a successful read. The decoded identifier is then sent to the first-party catalog service; physical-device traffic proof remains required.
 3. **Lookup:** on a decoded barcode, query OnSkin's reviewed catalog service. The service queries only promoted catalog rows and has no OBF/OFF origin, request helper, live-API flag, or external candidate response.
-4. **Result sheet:** product name, brand, a rounded placeholder or user-supplied on-device thumbnail (never an unapproved OBF image), the **parsed actives** (from `product_ingredients` → tags, docs/02), and an **estimated PAO** with its source shown honestly ("est. 6 mo PAO"). A clear primary **"Add to shelf."**
-5. **Opened-date (§4.5)** → confirm/adjust PAO → **save** to `user_products` (`added_via='barcode'`, `catalog_product_id` set) and log a `shelf_scans` row.
+4. **Result card:** the current source confirms product name, brand, and reviewed catalog/source quality before **“Add this.”** Parsed actives and catalog-derived PAO are not currently rendered on this card; adding either requires strict served-field decoding, provenance copy, and UI/device evidence. Product detail and opened-date intake remain the places where available freshness/ingredient context is shown.
+5. **Opened-date (§4.5)** → confirm/adjust PAO → **save** to `user_products` (`added_via='barcode'`, `catalog_product_id` set). Emit only a bounded scan-outcome analytics event; never persist the raw barcode in analytics.
 
 **Edge cases (all handled, calmly):**
 
-- **No catalog match** → "We don't have this one yet" → offer **Search catalog**, **Scan the ingredient list (OCR)**, or **Add manually**, plus an optional owner-scoped **Report missing product** action (§4.6). Never a dead end.
-- **Ambiguous / multiple matches** → a short disambiguation list (name + brand + size) to pick from.
+- **No catalog match** → "We don't have this one yet" → offer **Search catalog**, **capture the ingredient label and type/paste its text**, or **Add manually**, plus an optional owner-scoped **Report missing product** action (§4.6). Never a dead end.
+- **Ambiguous / multiple matches (target, not implemented)** → a short disambiguation list (name + brand + size) to pick from. The current strict service contract returns one reviewed match or no match.
 - **Unreadable barcode** → "Can't read it? Enter the numbers" (manual barcode) or jump to OCR/manual.
 - **No barcode on the product** (common for unboxed minis/samples) → straight to OCR/manual.
-- **Offline** → save with a provisional name and **queue the lookup** (`result='offline_queued'`); reconcile and enrich when back online (docs/01 §6).
-- **Non-beauty barcode** (identified by an OnSkin catalog category or user confirmation) → gentle "This looks like a non-skincare product — want to add it anyway?" (don't hard-fail).
+- **Offline** → preserve the normalized barcode through manual intake and, after an explicit queue action, store an encrypted account-bound lookup request with a seven-day logical TTL. Encrypted bytes are purged on the next activation, read/export, or lifecycle cleanup; the source does not promise wall-clock physical deletion while the OS suspends or terminates the app. Reconnect may produce a minimal reviewed candidate, but the app must show it for explicit accept/reject; it never silently enriches or overwrites a Shelf row (docs/01 §6).
+- **Non-beauty barcode (target, not implemented)** → only after a reviewed category signal or explicit user classification, show a gentle confirmation rather than a safety verdict. The current source does not classify non-beauty products and must not claim this branch exists.
 
 #### 4.2 Search the catalog
 
 Typeahead over OnSkin's reviewed `products` rows (the GIN full-text index, docs/02 §3) by name/brand, biased to the user's locale/market. Select a result → opened-date → save (`added_via='search'`). For the long tail not in the catalog, the search empty-state offers OCR/manual plus an optional OnSkin missing-product report.
 
-#### 4.3 Scan the ingredient list (OCR)
+#### 4.3 Capture the ingredient list (manual text today; OCR target)
 
-Camera → **on-device OCR** (ML Kit Text Recognition / Apple Vision, docs/00 §4) of the printed INCI list → tokenise and match against `ingredients` + `ingredient_synonyms` (docs/02) → build a **user-local provisional product** (name/brand from the user, actives from the parsed list) → opened-date → save (`added_via='ocr'`). Because INCI lists are hard to OCR (small fonts, curved/reflective tubes), **always show the parsed result for confirmation/correction** and never block on a perfect parse. Corrections may be reported to OnSkin only; neither OCR text nor label imagery is sent to OBF. (Feasibility caveat in Caveats.)
+Current source can capture a temporary label photo as a visual reference, then asks the user to type or paste INCI text. The text parser matches that user-confirmed text against the local ingredient vocabulary and carries the editable result into manual intake. The photo is moved to an app-managed cache name; Back, Continue, retake, and capture-failure paths await idempotent deletion, unmount requests cleanup, and a bounded next-launch scavenger recovers managed files left by interruption or termination. The label image is never uploaded. **No ML Kit, Apple Vision, or other native text-recognition adapter is wired today, even if the legacy environment flag is set.** A future on-device OCR adapter must populate editable text only after native QA, retain manual correction, delete temporary imagery, and prove through traffic inspection that neither label imagery nor OCR text is sent to OBF or another undeclared recipient.
 
 #### 4.4 Add manually (the always-works fallback)
 
@@ -303,30 +306,30 @@ _Whether the shelf's product mix constitutes additional special-category inferen
 
 ### 8. Offline & sync
 
-The shelf must work in a bathroom with no signal (docs/01 §6): **view** the cached shelf; **add manually** (queued); and optionally queue an OnSkin-catalog lookup or owner-scoped missing-product report for reconnect. There is no third-party source lookup or contribution queue. The data layer is TanStack Query + a persisted mutation queue (DECISIONS **D-007**); writes are idempotent and last-write-wins is safe (single-user). The local **catalog mirror** caches matched promoted rows so previously seen items resolve offline.
+The shelf must work in a bathroom with no signal (docs/01 §6): **view** the cached shelf, **add manually**, and explicitly queue an OnSkin-catalog barcode lookup for reconnect. There is no third-party source lookup, report queue, or contribution queue. A correction report intentionally retains actionable identity and therefore requires a separate online user submission with inline failure recovery. The lookup queue is encrypted, health-consent and account-bound, limited to 64 unique normalized barcodes, marks entries ineligible after a seven-day logical TTL, uses bounded exponential backoff, and stores only a minimal reviewed candidate. Encrypted bytes are physically purged on the next activation, queue read/maintenance, local export, or account/consent lifecycle cleanup; mobile OS suspension or termination can delay that purge beyond the logical deadline. When an account owner is verified, local export removes foreign-owner residue before reading the exact-owner snapshot; a verified unclaimed local store preserves validated live records. Reconnect never mutates `user_products`: Shelf exposes the candidate, compares it with current user-entered details, and requires an explicit accept or reject. Acceptance revalidates the exact first-party product; catalog identity is opt-in, while ingredients and freshness are always preserved. Shelf creation uses a stable per-submission operation UUID so an uncertain retry cannot duplicate a row. Rejection removes the reviewed candidate immediately; acceptance removes it only after the confirmed Shelf save succeeds. Final retention wording and legal treatment remain open for qualified privacy/legal review. The data layer remains TanStack Query plus purpose-specific persisted queues (DECISIONS **D-007**).
 
 ### 9. Engineering / implementation notes
 
-- **Barcode scanning:** `react-native-vision-camera` + a barcode frame processor (docs/00 §1/§4), on-device; query only OnSkin's reviewed catalog and cache promoted matches into the local catalog mirror. Yuka-grade scan reliability is the bar (SkinSort's is weaker) — invest in fast acquisition, good low-light handling, and forgiving framing.
-- **OCR:** on-device ML Kit Text Recognition / Apple Vision → tokenise → match `ingredients`/`ingredient_synonyms` (docs/02); always confirmable/editable (INCI OCR is error-prone).
+- **Barcode scanning:** `expo-camera` native barcode scanning (docs/00 §1/§4), on-device; query only OnSkin's reviewed catalog. Yuka-grade scan reliability is the bar (SkinSort's is weaker) — invest in fast acquisition, good low-light handling, duplicate suppression, UPC-E expansion, and forgiving framing.
+- **OCR:** not implemented. The current route is label-photo-assisted manual text plus local token parsing. Any future ML Kit/Apple Vision adapter must remain confirmable/editable and pass native privacy, accuracy, failure, and temporary-file deletion QA before enablement or marketing.
 - **Corrections:** owner-scoped missing/wrong-match reports stay inside OnSkin's reviewed correction workflow. No source credential, OBF POST, environment flag, or queue may publish them externally. Show approved source attribution on each derived catalog row.
-- **New schema summary:** the `user_products` additive columns + `shelf_scans`; suggested DECISIONS **D-022/023/024**; BLOCKER ties — **B-DERM-REVIEW** (PAO category defaults) and **B-PRIVACY** (data-sharing consent for replenishment).
+- **New schema summary:** the `user_products` additive columns; migration `0059` purges and seals legacy `shelf_scans`; reconnect recovery lives in the encrypted account-bound device queue and requires user confirmation. Suggested DECISIONS **D-022/023/024**; BLOCKER ties — **B-DERM-REVIEW** (PAO category defaults) and **B-PRIVACY** (data-sharing consent for replenishment).
 - **PostHog instrumentation** (docs/01 §7): `product_add_started` (safe `source` bucket), `product_added` (with `added_via`), `barcode_scanned`, `scan_matched` / `scan_no_match`, `opened_date_set`, `product_finished` / `_discarded`, `replenishment_nudge_shown` / `_tapped`, `affiliate_link_tapped`. Wire the **scan→add** funnel as a shelf activation metric.
 - **Performance:** the `(user_id, status, expiry_computed)` index powers the Expiring filter/sort; recompute conflicts (`detect_conflicts`, docs/02) on any shelf change so the banner and "paired" badges stay current; the badge computation is pure and client-cached for offline.
 
 ---
 
-## Seven-Figure Validation (the shelf & the money)
+## Commercial Hypothesis And Validation Plan
 
-The Smart Shelf is a king-making feature because it sits at the intersection of activation, retention, and commerce:
+The Smart Shelf could contribute to activation, retention, and optional commerce, but source completeness and competitor scale do not establish business impact for OnSkin:
 
-- **The scan is an activation magic-moment, and scanning is proven mass behaviour.** Yuka's ~80M users and ~6M products were built on the scan; the scan→add action is fast, tactile, and immediately rewarding — the shelf's analogue to the first check-off (docs/01 §7) as a leading activation signal.
+- **Test scan-to-save as an activation hypothesis.** Measure permission acceptance, successful decode, eligible match, opened-date completion, save completion, time-to-value, and seven-/thirty-day retention in a consented beta. Do not call it a magic moment until those cohorts support the claim.
 - **The shelf is the input to everything monetisable.** Personalisation, conflict detection (docs/02), and routine building (docs/03) all depend on knowing what the user owns — so a well-populated shelf is the precondition for the value the paywall sells.
-- **It is the compounding switching cost.** A fully-digitised cabinet — products, opened-dates, PAO, repurchase history — is expensive to recreate elsewhere; combined with the routine and the photo timeline, it is the data lock-in behind annual retention (RevenueCat: ~44% one-year on annual vs ~17% monthly, docs/01 §9).
+- **Retention is plausible, not proven.** A maintained cabinet may increase continuity, but it may also impose upkeep. Measure Shelf maintenance, corrections, archive/re-add behavior, churn reasons, and incremental retention without describing user data as “lock-in.”
 - **Replenishment is a recurring-value and affiliate surface, made honest by PAO.** Beauty repeat-purchase runs **25–35%** (higher with replenishment); skincare is inherently replenishable; ShopMy has facilitated **$500M+** in sales with an OAuth API and a 30-day cookie (docs/00 §5). PAO/expiry gives an honest reason to surface a replacement, preserving trust while opening a commerce line — gated behind the data-sharing consent.
-- **The wedge is under-served.** Yuka/EWG have no shelf; SkinSort organises and logs but has **no PAO/expiry** and a weaker scanner; HadaBuddy AI-generates from your shelf but doesn't do PAO/replenishment; Think Dirty does lists. **Nobody does the smart cabinet — opened-dates + PAO/expiry + replenishment — combined with conflict-resolved cycling, privacy-first, and the data lock-in.** And the category mood is moving toward exactly this: trust, longevity, and "what do I do with what I already own" (the HadaBuddy use case), inside a ~**$169.9bn** skincare market (Euromonitor, docs/03).
+- **Differentiation requires a dated launch review.** Revalidate competitor product behavior, pricing, claims, privacy posture, and geographic availability from primary/current evidence before using comparisons. The working hypothesis is that opened-date/PAO context integrated with a reviewed routine is useful—not that no competitor can offer it.
 
-**Verdict: yes — the Smart Shelf is a seven-figure, king-of-the-category feature.** It is the data engine that makes the rest of the app valuable, the lock-in that retains, and a recurring commerce surface. The risks are **data coverage** (mitigated by reviewed curation, search/OCR/manual fallbacks, and the OnSkin correction loop) and **staying honest and claim-safe** (mitigated by non-alarmist PAO copy, opt-in/consented replenishment, and cosmetic-chemist sign-off of the defaults) — not demand.
+**Verdict: strategically promising, commercially unproven.** A seven-figure business outcome depends on product-market fit, catalog match quality, permission and scan performance, user trust, retention, pricing, acquisition costs, partner approval, professional review, and operating execution. Search/manual fallbacks and privacy controls reduce specific failure modes; they do not eliminate demand or revenue risk.
 
 ---
 
@@ -334,7 +337,7 @@ The Smart Shelf is a king-making feature because it sits at the intersection of 
 
 **(a) What it is:** the user's digital cabinet and the system's product-data capture engine — intake, PAO/expiry, source-of-truth for what the user owns, and the launch point for replenishment. Scoped narrowly against docs/02 (catalog/logic) and docs/03 (routine).
 
-**(b) Data model:** extends docs/01 `user_products` (additive columns for provenance, lifecycle, on-device thumbnail, and the unopened state) plus a small `shelf_scans` intake/outcome log; owner-only RLS throughout. Its legacy contribution field remains false and grants no transport authority.
+**(b) Data model:** extends docs/01 `user_products` (additive columns for provenance, lifecycle, on-device thumbnail, and the unopened state). Migration `0059` purges and force-RLS seals the legacy `shelf_scans` compatibility relation; reconnect state is encrypted, account-bound, short-lived device data, and its candidate cannot mutate Shelf state without explicit user acceptance.
 
 **(c) PAO/expiry science & rules:** two axes (efficacy + safety), honestly graded (efficacy universal; contamination proportionate; eye/SPF the exceptions); EU PAO vs US-none → a sourcing waterfall (label/catalog → category default → honest unknown) with provenance recorded; `expiry_computed = least(printed, opened+PAO)`, validated by the SPF "3 wks left" example; conservative category defaults under B-DERM-REVIEW.
 
@@ -344,7 +347,7 @@ The Smart Shelf is a king-making feature because it sits at the intersection of 
 
 **(f) Replenishment:** an honest PAO-triggered, opt-in, claim-safe surface that can route to ShopMy behind the data-sharing consent — a recurring-value and affiliate line that preserves trust.
 
-**(g) Privacy & offline:** health-inference data → owner-only RLS, on-device thumbnails, sharing only on the separate MHMDA consent; full offline view + manual add + queued OnSkin-catalog lookup/report, with no third-party source recipient.
+**(g) Privacy & offline:** health-inference data → owner-only RLS, on-device thumbnails, sharing only on the separate MHMDA consent; full offline view + manual add + an explicit encrypted OnSkin-catalog lookup queue, with no third-party source recipient. Catalog correction reports are separate online, identity-bearing user actions and are never silently queued.
 
 **(h) Composition & confidence:** the shelf consumes docs/02 (catalog/engine/PAO), feeds docs/03 (routine source), and connects forward to doc #7 (replenishment reminders) and doc #10 (ShopMy); PAO defaults and the replenishment/affiliate path are the items most needing review (B-DERM-REVIEW, B-PRIVACY).
 
@@ -360,7 +363,7 @@ The Smart Shelf is a king-making feature because it sits at the intersection of 
 6. **Make the product detail the management hub** — freshness with provenance, actives, the conflicts the product is in, where it's used, and the full lifecycle actions — with finishing/discarding archiving (not deleting) to preserve history and lock-in.
 7. **Treat replenishment as honest help, opt-in, and consented.** PAO-triggered, claim-safe, routed to ShopMy only behind the separate MHMDA data-sharing consent; never manufacture urgency (D-024-adjacent; B-PRIVACY).
 8. **Store product thumbnails on-device by default** (D-024) and keep the shelf owner-only RLS, consistent with the privacy-as-trust positioning.
-9. **Make the shelf fully offline-capable** — view, manual add, and queued OnSkin-catalog lookup/report — on the TanStack Query + persisted-queue layer (D-007), with no external source publication.
+9. **Make the shelf fully offline-capable** — view, manual add, and an explicitly queued OnSkin-catalog lookup — on the TanStack Query + persisted-queue layer (D-007), with no external source publication. Keep identity-bearing correction reports as separate online actions with visible failure recovery.
 10. **Instrument the scan→add funnel in PostHog** as a shelf activation metric, alongside opened-date capture, finishes, and replenishment taps.
 
 ---
@@ -373,7 +376,7 @@ The Smart Shelf is a king-making feature because it sits at the intersection of 
 - **`opened_at` is self-reported and frequently unknown,** so every expiry is an estimate and must be communicated as one; the unopened state must be handled explicitly. _High confidence._
 - **Open Beauty Facts coverage varies by market, and ODbL treatment depends on the exact database use.** Keep imports offline, hash-bound, image-free, and component-separated; counsel must classify the result and approve attribution/share-alike/offer-of-data duties before promotion. Runtime lookup and contribution are excluded. Scan match rates will vary by region. _High confidence on source constraints; medium on match rates; legal classification pending._
 - **OCR of INCI lists is genuinely hard** (small fonts, curved/reflective packaging) — treat it as a best-effort fallback that always allows manual correction and never blocks. _Medium confidence._
-- **Barcode scan reliability is a competitive bar** (Yuka sets it high; SkinSort is weaker) and depends on on-device camera performance, which can't be fully verified in this environment — re-verify `vision-camera` barcode performance on real devices. _Medium confidence pending device testing._
+- **Barcode scan reliability is a competitive bar** (Yuka sets it high; SkinSort is weaker) and depends on on-device camera performance, which can't be fully verified in this environment — re-verify the `expo-camera` scanner, supported symbologies, torch, duplicate suppression, and UPC-E/UPC-A behavior on physical iPhones. _Medium confidence pending device testing._
 - **Replenishment and affiliate must stay claim-safe, opt-in, and behind the separate MHMDA data-sharing consent;** never manufacture urgency or imply safety-necessity outside the genuine eye/SPF cases. The data-sharing consent for replenishment is effectively a launch gate (B-PRIVACY). _High confidence on the requirement._
 - **Affiliate economics and the post-Epic external-commission landscape are in flux** (docs/00 §5); the ShopMy integration and its monetisation should be revisited as that settles. _Medium confidence._
 - **The competitive set moves fast** — SkinSort organises/logs, HadaBuddy scans-your-shelf into an AI routine, Think Dirty does lists, and ingredient-scanner apps are crowded — so the wedge must remain the **opened-date + PAO/expiry + replenishment** combination fused with conflict-resolved cycling, privacy-first, and the data lock-in. _Medium confidence._

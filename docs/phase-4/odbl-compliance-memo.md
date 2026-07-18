@@ -60,8 +60,11 @@ Do not:
 - `catalog-release-build-evidence.json` binds the resolved production Expo
   config, EAS build/Git metadata, inspected IPA/Info.plist identity/hashes, and
   observed US App Store availability to a current engineering signature.
-- `obf_contribution_queue` is a legacy-held structure with no launch restoration
-  path; neither the client nor `catalog-report` publishes into it.
+- Migration `20260718000059_catalog_scan_minimization.sql` purges and force-RLS
+  seals the deprecated `obf_contribution_queue`, removes every policy, revokes
+  all runtime table and enqueue-RPC authority, and retains the empty relation
+  only for migration/account-erasure compatibility. There is no launch
+  restoration path; neither the client nor `catalog-report` publishes into it.
 - `catalog_corrections` lets users report wrong matches through OnSkin's
   owner-scoped first-party operation without exposing global import queues or
   forwarding reports to OBF.

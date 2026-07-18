@@ -17,9 +17,12 @@ import {
   allowedContextKeys,
   allowedPayloadKeys,
   allowedTopLevelKeys,
+  catalogReportIdentityError,
   correctionTypes,
   isPlainObject,
   normalizeBarcode,
+  normalizeProductId,
+  normalizeReportRequestId,
   safeString,
   sanitizeObject,
   validateAllowedKeys,
@@ -30,8 +33,6 @@ const publishableKey = readSupabasePublishableKey();
 const serviceKey = readSupabaseSecretKey();
 const maxBodyBytes = userEdgeBodyMaxBytes();
 const catalogReportRetryAfterSeconds = 15 * 60;
-
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -103,23 +104,38 @@ function hasExactDatabaseError(error: unknown, message: string): boolean {
 
 type CorrectionResult = {
   id: string;
-  status: 'open';
+  status: 'open' | 'triaged' | 'accepted' | 'rejected' | 'closed';
   created_at: string;
+  created: boolean;
 };
+
+const correctionStatuses = new Set<CorrectionResult['status']>([
+  'open',
+  'triaged',
+  'accepted',
+  'rejected',
+  'closed',
+]);
 
 function correctionResult(data: unknown): CorrectionResult | null {
   if (!Array.isArray(data) || data.length !== 1 || !isPlainObject(data[0])) return null;
   const row = data[0];
   if (
     typeof row.id !== 'string' ||
-    !UUID_RE.test(row.id) ||
-    row.status !== 'open' ||
+    !normalizeProductId(row.id) ||
+    !correctionStatuses.has(row.status as CorrectionResult['status']) ||
     typeof row.created_at !== 'string' ||
-    !row.created_at
+    !row.created_at ||
+    typeof row.created !== 'boolean'
   ) {
     return null;
   }
-  return { id: row.id, status: 'open', created_at: row.created_at };
+  return {
+    id: row.id,
+    status: row.status as CorrectionResult['status'],
+    created_at: row.created_at,
+    created: row.created,
+  };
 }
 
 Deno.serve(async (req) => {
@@ -170,8 +186,16 @@ Deno.serve(async (req) => {
   if (!correctionTypes.has(correctionType)) {
     return json({ error: 'invalid_correction_type' }, 400);
   }
-  const productId =
-    typeof body.productId === 'string' && UUID_RE.test(body.productId) ? body.productId : null;
+  const reportRequestId = normalizeReportRequestId(body.reportRequestId);
+  if (!reportRequestId) return json({ error: 'invalid_report_request_id' }, 400);
+  const productId = normalizeProductId(body.productId);
+  if (body.productId !== undefined && body.productId !== null && !productId) {
+    return json({ error: 'invalid_product_id' }, 400);
+  }
+  const barcode = normalizeBarcode(body.barcode);
+  if (body.barcode !== undefined && body.barcode !== null && !barcode) {
+    return json({ error: 'invalid_barcode' }, 400);
+  }
   const description = safeString(body.description, 500);
   const proposedPayload = sanitizeObject(
     body.proposedPayload,
@@ -189,6 +213,13 @@ Deno.serve(async (req) => {
   if (clientContext.errorCode) {
     return json({ error: clientContext.errorCode }, 400);
   }
+  const identityError = catalogReportIdentityError({
+    correctionType,
+    productId,
+    barcode,
+    productName: proposedPayload.value.productName,
+  });
+  if (identityError) return json({ error: identityError }, 400);
 
   const persistHealthError = await requireActiveHealthProcessing(
     caller,
@@ -215,8 +246,9 @@ Deno.serve(async (req) => {
   const { data, error } = await admin.rpc('submit_catalog_correction', {
     p_user_id: userId,
     p_expected_health_epoch: healthProcessingEpoch,
+    p_report_request_id: reportRequestId,
     p_product_id: productId,
-    p_barcode: normalizeBarcode(body.barcode),
+    p_barcode: barcode,
     p_correction_type: correctionType,
     p_description: description,
     p_proposed_payload: proposedPayload.value,
@@ -240,6 +272,18 @@ Deno.serve(async (req) => {
         'Retry-After': String(catalogReportRetryAfterSeconds),
       });
     }
+    if (hasExactDatabaseError(error, 'CATALOG_REPORT_IDEMPOTENCY_CONFLICT')) {
+      return json({ error: 'report_request_conflict' }, 422);
+    }
+    if (hasExactDatabaseError(error, 'HEALTH_PROCESSING_BUSY')) {
+      return json({ error: 'report_busy' }, 423, { 'Retry-After': '1' });
+    }
+    if (
+      hasExactDatabaseError(error, 'CATALOG_REPORT_INPUT_INVALID') ||
+      hasExactDatabaseError(error, 'CATALOG_REPORT_PRODUCT_INVALID')
+    ) {
+      return json({ error: 'invalid_report' }, 400);
+    }
     return json({ error: 'report_failed' }, 500);
   }
 
@@ -261,5 +305,5 @@ Deno.serve(async (req) => {
   );
   if (responseAccountError) return responseAccountError;
 
-  return json({ result: 'reported', correction });
+  return json({ result: correction.created ? 'reported' : 'already_received', correction });
 });

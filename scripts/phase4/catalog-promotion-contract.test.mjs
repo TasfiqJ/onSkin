@@ -127,15 +127,15 @@ function sourceConfig(source) {
 
 function obfRecord(overrides = {}) {
   return {
-    barcode: '12345678',
+    barcode: '12345670',
     name: 'Reviewed Moisturizer',
     brand: 'Example Brand',
     category: 'moisturiser_tube',
     ingredientsText: 'Water, Glycerin',
     source: 'open_beauty_facts',
     sourceComponentId: 'obf_odbl_component',
-    sourceRef: '12345678',
-    sourceUrl: 'https://world.openbeautyfacts.org/product/12345678',
+    sourceRef: '12345670',
+    sourceUrl: 'https://world.openbeautyfacts.org/product/12345670',
     sourceRecordModifiedDate: '2026-07-13',
     sourceArtifactSha256: digest('1'),
     qualityGrade: 'limited',
@@ -782,10 +782,10 @@ test('materializes exact database receipts, minimal evidence, and receipt-bound 
   const records = [
     obfRecord(),
     obfRecord({
-      barcode: '87654321',
+      barcode: '87654325',
       name: 'Second Reviewed Moisturizer',
-      sourceRef: '87654321',
-      sourceUrl: 'https://world.openbeautyfacts.org/product/87654321',
+      sourceRef: '87654325',
+      sourceUrl: 'https://world.openbeautyfacts.org/product/87654325',
     }),
   ];
   const value = cleanup(t, fixture({ records }));
@@ -1211,6 +1211,26 @@ test('requires a database-executable OBF source modification date', (t) => {
   }
 });
 
+test('rejects checksum-invalid and noncanonical padded OBF natural keys', (t) => {
+  for (const barcode of [
+    '12345678',
+    '0036000291452',
+    '00000096385074',
+    '00012345678905',
+    '04006381333931',
+  ]) {
+    const records = [
+      obfRecord({
+        barcode,
+        sourceRef: barcode,
+        sourceUrl: `https://world.openbeautyfacts.org/product/${barcode}`,
+      }),
+    ];
+    const value = cleanup(t, fixture({ records }));
+    rejectsFixture(value, /checksum-valid canonical GTIN/u);
+  }
+});
+
 test('preserves the governed 20,000-code-unit OBF ingredient-text boundary', (t) => {
   const maximum = 'I'.repeat(20_000);
   const accepted = cleanup(t, fixture({ records: [obfRecord({ ingredientsText: maximum })] }));
@@ -1368,8 +1388,8 @@ test('row reviewers resolve to current trust keys and cannot reuse source approv
     records: [
       {
         ordinal: 1,
-        sourceRef: '12345678',
-        naturalKey: '12345678',
+        sourceRef: '12345670',
+        naturalKey: '12345670',
         disposition: 'accepted',
         reasonCode: 'accepted_after_review',
         duplicateOfNaturalKey: null,

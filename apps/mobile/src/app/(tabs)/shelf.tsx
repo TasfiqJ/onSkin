@@ -1,4 +1,5 @@
-import { router } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
+import { router, type Href } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
@@ -15,6 +16,7 @@ import { conflictDetailRoute } from '@/features/intelligence/conflictIdentity';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
+import { readReadyCatalogLookups, type ReadyCatalogLookup } from '@/lib/offline/catalogLookupQueue';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -44,6 +46,74 @@ function ScanShelfButton({ source }: { source: ProductAddStartSource }) {
     >
       <Text className="font-sans-semibold text-[15px] text-paper">Scan a barcode</Text>
     </Pressable>
+  );
+}
+
+function CatalogRecoveryCard({
+  ready,
+  readyCount,
+}: {
+  ready: ReadyCatalogLookup;
+  readyCount: number;
+}) {
+  return (
+    <View
+      className="mt-4 rounded-[18px] bg-sage-tint p-4"
+      style={{ borderWidth: 1, borderColor: colors.sageMuted }}
+    >
+      <Text variant="label" tone="muted" className="font-mono uppercase">
+        Catalog match ready
+      </Text>
+      <Text variant="body" className="mt-1 font-sans-semibold">
+        {ready.candidate.brand ? `${ready.candidate.brand} ` : ''}
+        {ready.candidate.name}
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-1.5">
+        Compare it with your saved details before anything changes.
+        {readyCount > 1 ? ` ${readyCount} matches are ready.` : ''}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Review catalog match for ${ready.candidate.name}`}
+        onPress={() => {
+          haptics.select();
+          router.push({
+            pathname: '/shelf/catalog-recovery',
+            params: {
+              barcode: ready.barcode,
+              productId: ready.candidate.productId,
+            },
+          } as unknown as Href);
+        }}
+        className="mt-3 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2.5"
+      >
+        <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+          Review match
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function CatalogRecoveryUnavailable({ retry }: { retry: () => void }) {
+  return (
+    <View accessibilityRole="alert" className="mt-4 rounded-[18px] bg-clay-tint p-4">
+      <Text variant="body" className="font-sans-semibold">
+        Saved catalog retries unavailable
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-1">
+        Your Shelf is unchanged. Try loading saved retries again.
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        onPress={retry}
+        className="mt-2 min-h-[48px] self-start justify-center rounded-pill px-4 py-2"
+      >
+        <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+          Try again
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 
@@ -338,6 +408,12 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
 
 export default function ShelfScreen() {
   const { data, isLoading } = useShelf();
+  const catalogRecovery = useQuery({
+    queryKey: ['catalog-lookup-ready'],
+    queryFn: () => readReadyCatalogLookups(),
+    retry: false,
+    refetchOnMount: 'always',
+  });
   const [filter, setFilter] = useState<Filter>('all');
   const { height } = useWindowDimensions();
   const compactShelf = height < 640;
@@ -355,28 +431,57 @@ export default function ShelfScreen() {
 
   const showLoading = isLoading && items.length === 0;
   const isEmpty = !isLoading && items.length === 0;
+  const readyCatalogLookup = catalogRecovery.data?.[0] ?? null;
+  const recoverySurface = readyCatalogLookup ? (
+    <CatalogRecoveryCard
+      ready={readyCatalogLookup}
+      readyCount={catalogRecovery.data?.length ?? 1}
+    />
+  ) : catalogRecovery.isError ? (
+    <CatalogRecoveryUnavailable retry={() => void catalogRecovery.refetch()} />
+  ) : null;
 
   return (
     <Screen edges={['top']}>
       {showLoading ? (
         <SkeletonShelf compactFilterLabels={compactFilterLabels} />
       ) : isEmpty ? (
-        <>
-          <View className="mt-2">
-            <Text variant="title" className="text-[38px] leading-[40px]">
-              Shelf
-            </Text>
-            <Text variant="label" tone="muted" className="mt-1">
-              empty for now
-            </Text>
-          </View>
-          <EmptyShelf
-            archiveCount={archiveCount}
-            compact={compactShelf}
-            shortPhone={shortShelf}
-            splitShort={splitShortShelf}
-          />
-        </>
+        recoverySurface ? (
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
+            <View className="mt-2">
+              <Text variant="title" className="text-[38px] leading-[40px]">
+                Shelf
+              </Text>
+              <Text variant="label" tone="muted" className="mt-1">
+                empty for now
+              </Text>
+            </View>
+            {recoverySurface}
+            <EmptyShelf
+              archiveCount={archiveCount}
+              compact={compactShelf}
+              shortPhone={shortShelf}
+              splitShort={splitShortShelf}
+            />
+          </ScrollView>
+        ) : (
+          <>
+            <View className="mt-2">
+              <Text variant="title" className="text-[38px] leading-[40px]">
+                Shelf
+              </Text>
+              <Text variant="label" tone="muted" className="mt-1">
+                empty for now
+              </Text>
+            </View>
+            <EmptyShelf
+              archiveCount={archiveCount}
+              compact={compactShelf}
+              shortPhone={shortShelf}
+              splitShort={splitShortShelf}
+            />
+          </>
+        )
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
           <View className="mt-2 flex-row items-baseline justify-between">
@@ -414,6 +519,8 @@ export default function ShelfScreen() {
           <Text variant="bodySm" tone="muted" className="mt-3">
             {SUBHEAD[filter]}
           </Text>
+
+          {recoverySurface}
 
           {data?.banner ? (
             <ConflictBanner

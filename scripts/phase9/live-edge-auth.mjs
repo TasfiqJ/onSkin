@@ -266,7 +266,11 @@ function defaultBody(functionName) {
   if (functionName === 'catalog-search') return { query: 'phase9' };
   if (functionName === 'catalog-lookup') return { barcode: '012345678905' };
   if (functionName === 'catalog-report')
-    return { correctionType: 'wrong_match', barcode: '012345678905' };
+    return {
+      reportRequestId: randomUUID(),
+      correctionType: 'wrong_match',
+      barcode: '012345678905',
+    };
   if (functionName === 'consent-withdrawal') {
     return {
       consentType: 'marketing',
@@ -1060,7 +1064,11 @@ async function main() {
       const invalidPayload = await postFunction('catalog-report', {
         auth: 'valid',
         token: user.token,
-        body: { correctionType: 'wrong_match', proposedPayload: ['not-an-object'] },
+        body: {
+          reportRequestId: randomUUID(),
+          correctionType: 'wrong_match',
+          proposedPayload: ['not-an-object'],
+        },
       });
       assertStatus(
         invalidPayload.status,
@@ -1077,7 +1085,11 @@ async function main() {
       const invalidContext = await postFunction('catalog-report', {
         auth: 'valid',
         token: user.token,
-        body: { correctionType: 'wrong_match', clientContext: ['not-an-object'] },
+        body: {
+          reportRequestId: randomUUID(),
+          correctionType: 'wrong_match',
+          clientContext: ['not-an-object'],
+        },
       });
       assertStatus(
         invalidContext.status,
@@ -1093,39 +1105,87 @@ async function main() {
     });
 
     await runCheck('catalog-report valid JWT stores sanitized report payload only', async () => {
+      const reportRequestId = randomUUID();
+      const reportBody = {
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+        description: 'phase9 catalog correction',
+        proposedPayload: {
+          productName: 'Phase9 cleanser',
+          sourceUrl: 'https://example.org/catalog/product?token=must-not-persist',
+          defaultPaoMonths: 12,
+          suggestedCorrection: 'Use the reviewed catalog source',
+        },
+        clientContext: {
+          route: 'phase9_live_edge_auth',
+          platform: 'security',
+        },
+      };
       const response = await postFunction('catalog-report', {
         auth: 'valid',
         token: user.token,
-        body: {
-          correctionType: 'wrong_match',
-          barcode: '012345678905',
-          description: 'phase9 catalog correction',
-          proposedPayload: {
-            productName: 'Phase9 cleanser',
-            sourceUrl: 'https://example.org/catalog/product?token=must-not-persist',
-            defaultPaoMonths: 12,
-            suggestedCorrection: 'Use the reviewed catalog source',
-          },
-          clientContext: {
-            route: 'phase9_live_edge_auth',
-            platform: 'security',
-          },
-        },
+        body: reportBody,
       });
       assertStatus(response.status, 200, 'catalog-report sanitized payload', response.text);
       const body = parseJson(response.text);
       const correctionId = body?.correction?.id;
       assert(correctionId, 'catalog-report did not return a correction id.');
+      assert(
+        body.result === 'reported' && body.correction.created === true,
+        'catalog-report did not identify the first accepted request as newly created.',
+      );
+
+      const replay = await postFunction('catalog-report', {
+        auth: 'valid',
+        token: user.token,
+        body: reportBody,
+      });
+      assertStatus(replay.status, 200, 'catalog-report exact replay', replay.text);
+      const replayBody = parseJson(replay.text);
+      assert(
+        replayBody?.result === 'already_received' &&
+          replayBody.correction?.id === correctionId &&
+          replayBody.correction?.created === false &&
+          replayBody.correction?.status === body.correction.status &&
+          replayBody.correction?.created_at === body.correction.created_at,
+        'catalog-report exact replay did not return the existing current receipt.',
+      );
+
+      const conflictingReplay = await postFunction('catalog-report', {
+        auth: 'valid',
+        token: user.token,
+        body: { ...reportBody, description: 'changed phase9 catalog correction' },
+      });
+      assertStatus(
+        conflictingReplay.status,
+        422,
+        'catalog-report conflicting request replay',
+        conflictingReplay.text,
+      );
+      assertErrorCode(
+        conflictingReplay,
+        'report_request_conflict',
+        'catalog-report conflicting request replay',
+      );
 
       const { data, error } = await admin
         .from('catalog_corrections')
-        .select('id,user_id,barcode,correction_type,description,proposed_payload,client_context')
+        .select(
+          'id,user_id,barcode,correction_type,description,proposed_payload,client_context,intake_request_id,intake_health_epoch,intake_request_digest',
+        )
         .eq('id', correctionId)
         .single();
       if (error) throw error;
       assert(data.user_id === user.id, 'catalog-report correction row belongs to the wrong user.');
       assert(
-        data.correction_type === 'wrong_match',
+        data.intake_request_id === reportRequestId &&
+          data.intake_health_epoch === 1 &&
+          /^[a-f0-9]{64}$/.test(data.intake_request_digest),
+        'catalog-report did not bind its internal receipt to the exact request and health epoch.',
+      );
+      assert(
+        data.correction_type === 'missing_product',
         'catalog-report persisted the wrong correction type.',
       );
       assert(data.barcode === '012345678905', 'catalog-report persisted the wrong barcode.');
@@ -1156,10 +1216,6 @@ async function main() {
     });
   } finally {
     if (user?.id) {
-      for (const table of ['catalog_lookup_events', 'entitlements', 'reverse_trial_grants']) {
-        const { error } = await admin.from(table).delete().eq('user_id', user.id);
-        if (error) errors.push(`${table} cleanup failed: ${redactedErrorKind(error)}`);
-      }
       const { error } = await admin.auth.admin.deleteUser(user.id);
       if (error) errors.push(`Edge auth user cleanup failed: ${redactedErrorKind(error)}`);
       else {

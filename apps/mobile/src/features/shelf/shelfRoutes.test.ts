@@ -49,6 +49,7 @@ describe('Shelf route mobile contracts', () => {
       'shelf/manual.tsx',
       'shelf/ocr.tsx',
       'shelf/scan.tsx',
+      'shelf/catalog-recovery.tsx',
       'shelf/no-match.tsx',
       'shelf/opened.tsx',
       'shelf/replenish.tsx',
@@ -65,6 +66,7 @@ describe('Shelf route mobile contracts', () => {
       'shelf/manual.tsx',
       'shelf/ocr.tsx',
       'shelf/scan.tsx',
+      'shelf/catalog-recovery.tsx',
     ]) {
       expectTouchableRouteIcon(route);
     }
@@ -132,18 +134,31 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useLocalSearchParams');
     expect(source).toContain('reportCatalogIssue');
+    expect(source).toContain('barcodeRecoveryReportInput');
     expect(source).toContain('const barcode =');
+    expect(source).toContain('const wrongProductId =');
+    expect(source).toContain(
+      'const reportDraft = barcodeRecoveryReportInput({ barcode, wrongProductId });',
+    );
     expect(source).toContain("trackProductAddStarted('miss_search')");
-    expect(source).toContain("reset({ addedVia: 'search' })");
+    expect(source).toContain("reset({ addedVia: 'search', barcode })");
+    expect(source).toContain("reset({ addedVia: 'ocr', barcode })");
     expect(source).toContain("router.replace('/shelf/search')");
     expect(source).toContain("reset({ addedVia: 'manual', barcode })");
     expect(source).toContain('Search catalog');
-    expect(source).toContain('Scan the ingredient list');
+    expect(source).toContain('Add the ingredient list');
     expect(source).toContain('Add it by hand');
     expect(source).toContain('Report missing product');
-    expect(source).toContain("correctionType: 'missing_product'");
-    expect(source).toContain('missing_product reported from barcode no-match');
-    expect(source).toContain("route: 'shelf_no_match'");
+    expect(source).toContain('const reportSubmissionInFlight = useRef(false);');
+    expect(source).toContain('const [confirmingReport, setConfirmingReport] = useState(false);');
+    expect(source).toContain('openReportConfirmation');
+    expect(source).toContain('reportSubmissionInFlight.current = true;');
+    expect(source).toContain('createCatalogReportOperation(reportDraft)');
+    expect(source).toContain('reportCatalogIssue(attempted.input)');
+    expect(source).toContain('{reportDraft ? (');
+    expect(source).toContain('<CatalogReportConfirmation');
+    expect(source).toContain('tone="night"');
+    expect(source).toContain('onConfirm={() => void reportMissingProduct()}');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Alert.alert');
 
@@ -157,6 +172,7 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('reportCatalogIssue');
     expect(source).toContain('const reportWrongMatch = async (product: CatalogProductSummary)');
+    expect(source).toContain('const openWrongMatchConfirmation');
     expect(source).toContain('useLocalSearchParams');
     expect(source).toContain("typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web'");
     expect(source).toContain('initialSearchQuery.slice(0, 120)');
@@ -169,12 +185,16 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('sourceName');
     expect(source).toContain('sourceUrl: product.source_url ?? null');
     expect(source).toContain("route: 'shelf_search'");
-    expect(source).toContain('CATALOG_WRONG_MATCH_NOT_SENT');
+    expect(source).toContain('catalogReportFeedback(outcome)');
+    expect(source).toContain('<CatalogReportConfirmation');
+    expect(source).toContain('onConfirm={() => void reportWrongMatch(product)}');
     expect(source).toContain('Use this match');
     expect(source).toContain('Not this product');
     expect(source).toContain('min-h-[48px] flex-1 basis-[148px]');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain("reset({ addedVia: 'manual', name: query.trim() })");
+    expect(source).toContain(
+      "reset({ addedVia: 'manual', name: query.trim(), barcode: draft.barcode })",
+    );
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
   });
@@ -204,9 +224,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('{microShortPhone ? null : (');
     expect(source).toContain("ultraShortPhone\n              ? 'mb-0'");
     expect(source).toContain('{!shortPhone ? (');
-    expect(source).toContain(
-      "{compactPressurePhone ? 'Not found yet.' : 'We don&apos;t have this one yet.'}",
-    );
+    expect(source).toContain("? 'Not the right product.'");
+    expect(source).toContain("? 'Not found yet.'");
     expect(source).toContain("? 'pr-12 text-[19px] leading-[22px]'");
     expect(source).toContain("? 'text-[21px] leading-[24px]'");
     expect(source).toContain("? 'mt-1 gap-1'");
@@ -226,17 +245,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('translateY');
     expect(source).toContain('<View style={compactManualRecoveryStyle}>');
     expect(source).toContain('style={compactScanRecoveryStyle}');
-    expect(source).toContain("style={[{ backgroundColor: 'rgba(244,239,231,0.08)' }, style]}");
+    expect(source).toContain("backgroundColor: 'rgba(244,239,231,0.08)'");
+    expect(source).toContain('opacity: disabled ? 0.45 : 1');
+    expect(source).toContain('accessibilityState={{ disabled }}');
     expect(source).toContain('compact={shortPhone}');
     expect(source).toContain('ultraCompact={shortPhone}');
     expect(source).toContain('hideSubtitle={compactPressurePhone}');
     expect(source).toContain('hideSubtitle?: boolean;');
     expect(source).toContain('{hideSubtitle ? null : (');
     expect(source).toContain(
-      "title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}",
+      "title={compactPressurePhone ? 'Add ingredients' : 'Add the ingredient list'}",
     );
     expect(source).toContain(
-      'accessibilityLabel="Scan the ingredient list. We\'ll read the INCI text"',
+      'accessibilityLabel="Add the ingredient list. Take a label photo or type it"',
     );
     expect(source).toContain('accessibilityLabel?: string;');
     expect(source).toContain('accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}');
@@ -509,6 +530,40 @@ describe('Shelf route mobile contracts', () => {
     );
   });
 
+  it('requests the system camera prompt only from the focused user-entered Scan route', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain('const permissionRequestStarted = useRef(false);');
+    expect(source).toContain(
+      'Entering Scan is the user-initiated context for the system permission',
+    );
+    expect(source).toMatch(
+      /useEffect\(\(\) => \{[\s\S]*?!isFocused[\s\S]*?permission\?\.status !== 'undetermined'[\s\S]*?permissionRequestStarted\.current[\s\S]*?void requestPermission\(\)\.catch/,
+    );
+    expect(source).toContain('permissionRequestStarted.current = true;');
+    expect(source).toContain("canAskCameraPermission ? 'Continue' : 'Open settings'");
+    expect(source).not.toContain("'Allow camera'");
+    expect(source).not.toContain('>Allow camera<');
+  });
+
+  it('fails a development external-candidate fixture closed without an Add action', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+    const externalFixture = source.match(
+      /case 'external_candidate':([\s\S]*?)case 'no_match':/,
+    )?.[1];
+
+    expect(externalFixture).toBeDefined();
+    expect(externalFixture).toContain("kind: 'error'");
+    expect(externalFixture).toContain('This catalog response is not eligible. Add it another way.');
+    expect(externalFixture).not.toContain("kind: 'matched'");
+    expect(externalFixture).not.toContain('Add this');
+    expect(source).toContain("if (response.result === 'matched')");
+    expect(source).not.toContain(
+      "response.result === 'matched' || response.result === 'external_candidate'",
+    );
+    expect(source).toMatch(/state\.kind === 'matched'[\s\S]*?<Text[^>]*>Add this<\/Text>/);
+  });
+
   it('distinguishes true scan no-match from offline lookup recovery', () => {
     const source = readAppRoute('shelf/scan.tsx');
 
@@ -519,10 +574,13 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("return { kind: 'offline', barcode };");
     expect(source).toContain("if (response.result === 'offline')");
     expect(source).toContain("setState({ kind: 'offline', barcode: normalized.lookupValue });");
-    expect(source).toContain('function noMatchRoute(barcode: string)');
+    expect(source).toContain(
+      'function noMatchRoute(barcode: string, wrongProductId?: string | null)',
+    );
     expect(source).toContain("pathname: '/shelf/no-match' as const");
-    expect(source).toContain('params: { barcode }');
+    expect(source).toContain('...(wrongProductId ? { wrongProductId } : {})');
     expect(source).toContain('router.push(noMatchRoute(state.barcode))');
+    expect(source).toContain('router.push(noMatchRoute(state.barcode, state.product.id))');
     expect(source).toContain('Barcode {state.barcode} is not in the catalog yet.');
     expect(source).toContain(
       'Couldn&apos;t reach the product catalog for barcode {state.barcode}.',
@@ -552,11 +610,21 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('className="flex-1"');
     expect(source).toContain('<View className="pb-8 pt-2">');
-    expect(source).toContain('<Button label="Add by hand" variant="ghost" onPress={goManual} />');
+    expect(source).toContain('label="Add by hand"');
+    expect(source).toContain('variant="ghost"');
+    expect(source).toContain('disabled={reportBusy}');
+    expect(source).toContain('onPress={goManual}');
     expect(source).toContain('reportCatalogIssue');
     expect(source).toContain('lastNoMatchQuery');
     expect(source).toContain('Report missing product');
     expect(source).toContain('missing_product reported from catalog search');
+    expect(source).toContain('accessibilityLabel="Product name for report"');
+    expect(source).toContain('Confirm or edit the name printed on the product.');
+    expect(source).toContain(
+      'const missingReportDraft = (productName: string): CatalogReportInput => ({',
+    );
+    expect(source).toContain('proposedPayload: { productName: productName.trim() }');
+    expect(source).toContain('editCatalogReportOperation(current, missingReportDraft(next))');
     expect(source).toContain("route: 'shelf_search'");
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain(
@@ -667,6 +735,35 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain("'flex-row items-center justify-between px-4 py-3'");
   });
 
+  it('exposes an optional package barcode and blocks malformed manual values', () => {
+    const source = readAppRoute('shelf/manual.tsx');
+
+    expect(source).toContain('normalizeManualBarcode,');
+    expect(source).toContain("const initialBarcode = presetCategory ? '' : (draft.barcode ?? '');");
+    expect(source).toContain('const [barcode, setBarcode] = useState(initialBarcode);');
+    expect(source).toContain('const normalizedBarcode = barcode.trim()');
+    expect(source).toContain('normalizeManualBarcode(barcode, eightDigitFormat)');
+    expect(source).toContain('const barcodeInvalid =');
+    expect(source).toContain(
+      'barcode.trim().length > 0 && !barcodeNeedsFormat && normalizedBarcode === null;',
+    );
+    expect(source).toContain(
+      'const barcodeChecksumInvalid = normalizedBarcode?.validChecksum === false;',
+    );
+    expect(source).toContain(
+      'name.trim().length > 0 && !barcodeNeedsFormat && !barcodeInvalid && !barcodeChecksumInvalid;',
+    );
+    expect(source).toContain('<FieldLabel>Barcode (optional)</FieldLabel>');
+    expect(source).toContain('accessibilityLabel="Barcode, optional"');
+    expect(source).toContain('accessibilityHint="Enter the numbers printed below the barcode"');
+    expect(source).toContain('keyboardType="number-pad"');
+    expect(source).toContain('inputMode="numeric"');
+    expect(source).toContain('{barcodeInvalid || barcodeChecksumInvalid ? (');
+    expect(source).toContain('Check the numbers. This barcode checksum does not match.');
+    expect(source).toContain('Enter a complete 8, 12, 13, or 14 digit barcode from the package.');
+    expect(source).toContain('barcode: normalizedBarcode?.lookupValue ?? null,');
+  });
+
   it('keeps Shelf OCR manual review controls from overlapping on short phones', () => {
     const source = readAppRoute('shelf/ocr.tsx');
 
@@ -684,6 +781,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsTitle');
     expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsBody');
     expect(source).toContain('Try label photo again');
+    expect(source).toContain('const NATIVE_OCR_ADAPTER_AVAILABLE = false;');
+    expect(source).toContain('On-device OCR is not enabled in this build yet.');
+    expect(source).not.toContain('On-device OCR is enabled for this build.');
+    expect(source).not.toContain('native_ocr_enabled: env.nativeOcrEnabled');
     expect(source).toContain('alertOnFailure: false');
     expect(source).toContain('canShowPermissionRecovery');
     expect(source).toContain('canAskCameraPermission');
@@ -701,7 +802,11 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
     expect(source).toContain('{!splitShortPhone ? (');
     expect(source).toContain("{state === 'review' ? (");
-    expect(source).toMatch(/\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/);
+    expect(source).toContain(
+      "label={photoCleanupBusy ? 'Removing temporary photo...' : 'Looks right. Continue'}",
+    );
+    expect(source).toContain('onPress={() => void onContinue()}');
+    expect(source).toContain('disabled={!canContinue || photoCleanupBusy}');
     expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');
     expect(source).not.toContain('contentContainerClassName="pb-5"');
   });
@@ -714,7 +819,110 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain('const scanResult = shelfScanResultFromLookup(response.result)');
     expect(source).toContain('void recordShelfScan({');
-    expect(source).toContain("result: shelfScanResultFromLookup('lookup_error')");
+    expect(source).toContain(
+      'if (scanResult !== null) void recordShelfScan({ result: scanResult });',
+    );
+    expect(source).not.toContain("shelfScanResultFromLookup('lookup_error')");
+  });
+
+  it('makes offline catalog retry an explicit accessible scan action', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain("state.kind === 'offline' || state.kind === 'error'");
+    expect(source).toContain('const queueRetryWhenOnline = async () =>');
+    expect(source).toContain('await enqueueCatalogLookup({');
+    expect(source).toContain('onPress={() => void queueRetryWhenOnline()}');
+    expect(source).toContain('accessibilityLabel={`Retry barcode ${recoveryBarcode} when online`}');
+    expect(source).toContain(
+      'accessibilityHint="Saves an encrypted first-party catalog retry on this device"',
+    );
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('Retry when online');
+    expect(source).toContain('Nothing was added or changed. Try again.');
+    expect(source).toContain(
+      'className="min-h-[48px] flex-1 items-center justify-center rounded-pill bg-paper px-4 py-3"',
+    );
+    expect(source).toContain(
+      'className="min-h-[48px] items-center justify-center rounded-pill px-4 py-3"',
+    );
+  });
+
+  it('keeps ready catalog candidates visible and explicitly reviewable from Shelf', () => {
+    const shelf = readAppRoute('(tabs)/shelf.tsx');
+    const review = readAppRoute('shelf/catalog-recovery.tsx');
+
+    expect(shelf).toContain("queryKey: ['catalog-lookup-ready']");
+    expect(shelf).toContain('readReadyCatalogLookups');
+    expect(shelf).toContain('Catalog match ready');
+    expect(shelf).toContain('Review match');
+    expect(shelf).toContain("pathname: '/shelf/catalog-recovery'");
+
+    expect(review).toContain('Compare before saving');
+    expect(review).toContain('Reviewed catalog candidate');
+    expect(review).toContain('Currently on your Shelf');
+    expect(review).toContain('Use catalog name, brand, and category');
+    expect(review).toContain('Ingredients and freshness always stay as entered');
+    expect(review).toContain('Confirm catalog match');
+    expect(review).toContain('Not a match');
+    expect(review).toContain('accessibilityRole="checkbox"');
+    expect(review).toContain('accessibilityRole="alert"');
+  });
+
+  it('revalidates and mutates before consuming, while unlinked intake carries a recovery token', () => {
+    const review = readAppRoute('shelf/catalog-recovery.tsx');
+    const opened = readAppRoute('shelf/opened.tsx');
+    const recovery = readFeatureFile('catalogLookupRecovery.ts');
+    const queue = readFileSync(
+      fileURLToPath(new URL('../../lib/offline/catalogLookupQueue.ts', import.meta.url)),
+      'utf8',
+    );
+
+    const applyStart = review.indexOf('const applyLinkedMatch = async () =>');
+    const revalidateAt = review.indexOf('await revalidateCatalogRecovery(ready)', applyStart);
+    const mutateAt = review.indexOf('await mutations.applyCatalogRecovery({', applyStart);
+    const consumeAt = review.indexOf('await acceptReadyCatalogLookup({', applyStart);
+    expect(applyStart).toBeGreaterThan(-1);
+    expect(revalidateAt).toBeGreaterThan(applyStart);
+    expect(mutateAt).toBeGreaterThan(revalidateAt);
+    expect(consumeAt).toBeGreaterThan(mutateAt);
+    expect(review).toContain('expectedShelfProductId: linkedProduct.id');
+    expect(review).toContain('expectedShelfProductId: ready.shelfProductId');
+    expect(review).toContain('if (!accepted)');
+    expect(review).toContain('if (!rejected)');
+
+    expect(review).toContain('reset(catalogRecoveryIntakePatch(revalidated.product, token))');
+    expect(recovery).toContain('catalogRecoveryToken: token');
+    expect(review).toContain("router.push('/shelf/opened')");
+    expect(review).toContain('The match stays saved if you cancel or saving');
+    expect(review).toContain('fails.');
+
+    const addAt = opened.indexOf('const addedProduct = await m.add({');
+    const finalizeAt = opened.indexOf('await finalizeCatalogLookupAfterShelfSave({');
+    expect(addAt).toBeGreaterThan(-1);
+    expect(finalizeAt).toBeGreaterThan(addAt);
+
+    const finalizerAt = recovery.indexOf(
+      'export async function finalizeCatalogLookupAfterShelfSave',
+    );
+    const atomicAcceptAt = recovery.indexOf(
+      'await dependencies.acceptAfterShelfSave({',
+      finalizerAt,
+    );
+    expect(atomicAcceptAt).toBeGreaterThan(finalizerAt);
+
+    const queueFinalizerAt = queue.indexOf(
+      'export async function acceptReadyCatalogLookupAfterShelfSave',
+    );
+    const bindCandidateAt = queue.indexOf(
+      'consumed = { ...ready, shelfProductId };',
+      queueFinalizerAt,
+    );
+    const requireUnboundAt = queue.indexOf('ready.shelfProductId === null', queueFinalizerAt);
+    const consumeCandidateAt = queue.indexOf('return false;', bindCandidateAt);
+    expect(requireUnboundAt).toBeGreaterThan(queueFinalizerAt);
+    expect(bindCandidateAt).toBeGreaterThan(requireUnboundAt);
+    expect(bindCandidateAt).toBeGreaterThan(queueFinalizerAt);
+    expect(consumeCandidateAt).toBeGreaterThan(bindCandidateAt);
   });
 
   it('keeps opened-date and PAO chips buffered above sub-pixel 44px targets', () => {
@@ -801,29 +1009,46 @@ describe('Shelf route mobile contracts', () => {
   it('keeps product-detail lifecycle and catalog-report recovery route-owned', () => {
     const source = readAppRoute('shelf/[id].tsx');
 
-    expect(source).toContain("type ProductDetailSheet = 'manage' | 'report' | null;");
+    expect(source).toContain(
+      "type ProductDetailSheet = 'manage' | 'report' | 'report-confirm' | null;",
+    );
     expect(source).toContain('function ProductDetailActionSheet');
     expect(source).toContain('accessibilityLabel={title}');
     expect(source).toContain('const [activeSheet, setActiveSheet]');
     expect(source).toContain('const [catalogReportFeedback, setCatalogReportFeedback]');
     expect(source).toContain("setActiveSheet('manage')");
     expect(source).toContain("setActiveSheet('report')");
+    expect(source).toContain("setActiveSheet('report-confirm')");
     expect(source).toContain('Mark discarded');
     expect(source).toContain('Remove completely');
     expect(source).toContain('Wrong product match');
     expect(source).toContain('Missing catalog product');
-    expect(source).toContain("submitCatalogReport('missing_product')");
+    expect(source).toContain("openCatalogReportConfirmation('missing_product')");
     expect(source).toContain('Ingredient issue');
     expect(source).toContain('Expiry or PAO issue');
     expect(source).toContain('proposedPayload: {');
     expect(source).toContain('productName: p.name');
     expect(source).toContain('brand: p.brand');
-    expect(source).toContain('sourceName: catalogSourceLabel');
-    expect(source).toContain('sourceUrl: p.catalogSourceUrl');
+    expect(source).not.toContain(
+      'proposedPayload: {\n        productName: p.name,\n        brand: p.brand,\n        barcode:',
+    );
+    expect(source).toContain(
+      "sourceName: correctionType === 'missing_product' ? null : catalogSourceLabel",
+    );
+    expect(source).toContain(
+      "sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl",
+    );
     expect(source).toContain("p.paoSource === 'catalog' || p.paoSource === 'category_default'");
     expect(source).toContain('qualityIssue: correctionType');
     expect(source).toContain('platform: Platform.OS');
-    expect(source).toContain('CATALOG_REPORT_NOT_SENT');
+    expect(source).toContain('isCatalogProductId(p.catalogProductId)');
+    expect(source).toContain('catalogProductId === null');
+    expect(source).toContain('{canReportMissingProduct ? (');
+    expect(source).toContain('{catalogProductId ? (');
+    expect(source).toContain('reportSubmissionInFlight.current = true;');
+    expect(source).toContain('feedbackForCatalogReport(outcome)');
+    expect(source).toContain("activeSheet === 'report-confirm'");
+    expect(source).toContain('<CatalogReportConfirmation');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');

@@ -18,6 +18,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'onskin.appLock.enabled',
   'onskin.ask.consent.v1',
   'onskin.ask.groundedTurns.v1',
+  'routinekind.catalog.lookupQueue.v1',
   'onskin.commerceConsent.v1',
   'onskin.community.reactions.v1',
   'onskin.communityAge16.v1',

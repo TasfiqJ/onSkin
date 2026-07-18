@@ -61,9 +61,9 @@ are not features that a legal signoff or environment flag silently enables.
 
 ## Implementation Notes
 
-Schema support exists in `catalog_sources`, `catalog_import_batches`, `products`, `product_barcodes`, `product_ingredient_lists`, `catalog_corrections`, and the legacy-held `obf_contribution_queue`.
+Schema support exists in `catalog_sources`, `catalog_import_batches`, `products`, `product_barcodes`, `product_ingredient_lists`, and `catalog_corrections`. The deprecated `obf_contribution_queue` relation remains only for migration and account-erasure compatibility.
 
-Correction reporting remains enabled, but `catalog-report` does not enqueue contribution-back jobs. The queue is a legacy-held structure, not a launch feature or pending configuration step. Setting `OBF_CONTRIBUTION_ENABLED=true` emits a stable suppression warning and does not create a queue row. Restoring publication would require a new source-of-truth architecture decision, privacy/processor inventory, counsel approval, data-minimization and consent design, atomic withdrawal controls, and a separately reviewed implementation; the current launch contract provides no restoration path.
+Correction reporting remains enabled, but `catalog-report` does not enqueue contribution-back jobs. Migration `20260718000059_catalog_scan_minimization.sql` purges the legacy queue, removes every policy, force-RLS seals the retained relation, revokes all runtime table privileges, and replaces then revokes the enqueue RPC as an inert compatibility stub. Setting `OBF_CONTRIBUTION_ENABLED=true` emits a stable suppression warning and does not create a queue row. Restoring publication would require a new source-of-truth architecture decision, privacy/processor inventory, counsel approval, data-minimization and consent design, atomic withdrawal controls, and a separately reviewed implementation; the current launch contract provides no restoration path.
 
 `catalog-lookup` queries only reviewed Supabase catalog rows. It contains no Open Beauty Facts origin, request helper, response parser, live API flag, or external-candidate response; a miss records owner-scoped `no_match` telemetry and returns the manual-entry fallback. Development/UI fixtures and offline import mappers are explicitly non-network and use non-routable `.invalid` provenance in app source.
 

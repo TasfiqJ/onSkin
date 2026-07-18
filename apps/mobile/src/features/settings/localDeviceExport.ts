@@ -1,6 +1,7 @@
 import { decryptPhotoNoteForPurposeLimitedExport } from '@/features/photos/encryptedStorage';
 import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
 import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
+import { purgeExpiredCatalogLookupQueueForPurposeLimitedExport } from '@/lib/offline/catalogLookupQueue';
 import { getPrivateItemsForPurposeLimitedExport } from '@/lib/storage/privateKV';
 
 import { LOCAL_PRIVATE_DATA_KEYS } from './localPrivateDataKeys';
@@ -50,6 +51,11 @@ const LOCAL_EXPORT_SPECS = [
     key: 'onskin.commerceConsent.v1',
     section: 'account_and_privacy',
     field: 'commerce_consent',
+  },
+  {
+    key: 'routinekind.catalog.lookupQueue.v1',
+    section: 'shelf_and_routine',
+    field: 'pending_catalog_lookups',
   },
   {
     key: 'onskin.communityAge16.v1',
@@ -221,6 +227,7 @@ const REDACTED_LOCAL_FIELD_NAMES = new Set([
   'keyId',
   'localUri',
   'notesCiphertext',
+  'ownerUserId',
   'storagePath',
   'thumbnailLocalUri',
   'thumbnailPath',
@@ -360,8 +367,15 @@ function emptySections(): LocalDeviceExportData['sections'] {
 
 export async function collectLocalDeviceExportData(
   accountLease: AccountGenerationLease,
+  expectedUserId: string | null,
   collectedAt = new Date().toISOString(),
 ): Promise<LocalDeviceExportData> {
+  accountLease.assertCurrent();
+  await purgeExpiredCatalogLookupQueueForPurposeLimitedExport(
+    accountLease,
+    expectedUserId,
+    new Date(collectedAt),
+  );
   accountLease.assertCurrent();
   const sections = emptySections();
   const stored = await getPrivateItemsForPurposeLimitedExport(

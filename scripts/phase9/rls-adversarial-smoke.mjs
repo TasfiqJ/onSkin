@@ -57,9 +57,9 @@ const canonicalTables = [
 
 test('canonical table inventory is exhaustive and duplicate-free', () => {
   assert.equal(canonicalTables.length, 80);
-  assert.equal(OWNER_LINKED_PRIVATE_TABLES.length, 30);
-  assert.equal(HEALTH_PURPOSE_READ_FENCED_TABLES.length, 27);
-  assert.equal(new Set(HEALTH_PURPOSE_READ_FENCED_TABLES).size, 27);
+  assert.equal(OWNER_LINKED_PRIVATE_TABLES.length, 28);
+  assert.equal(HEALTH_PURPOSE_READ_FENCED_TABLES.length, 25);
+  assert.equal(new Set(HEALTH_PURPOSE_READ_FENCED_TABLES).size, 25);
   assert(
     HEALTH_PURPOSE_READ_FENCED_TABLES.every((table) => OWNER_LINKED_PRIVATE_TABLES.includes(table)),
   );
@@ -69,10 +69,10 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
     ),
   );
   assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 8);
-  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 20);
+  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 22);
   assert.equal(SEALED_GLOBAL_CONTENT_TABLES.length, 4);
   assert.equal(SEALED_CATALOG_AUTHORITY_TABLES.length, 4);
-  assert.equal(SEALED_PUBLIC_TABLES.length, 28);
+  assert.equal(SEALED_PUBLIC_TABLES.length, 30);
   assert.equal(AUTHENTICATED_CATALOG_TABLES.length, 14);
   assert.deepEqual(
     [
@@ -100,7 +100,7 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
   assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 66);
   assert.equal(
     PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length,
-    38,
+    36,
   );
   assert.deepEqual(
     tableClassificationIssues({

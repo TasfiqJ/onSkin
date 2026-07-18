@@ -13,6 +13,7 @@ export const HEALTH_DATA_WRITE_OWNER_MISMATCH = 'HEALTH_DATA_WRITE_OWNER_MISMATC
 export const HEALTH_PURPOSE_PRIVATE_DATA_KEYS = [
   'onskin.ask.consent.v1',
   'onskin.ask.groundedTurns.v1',
+  'routinekind.catalog.lookupQueue.v1',
   'onskin.commerceConsent.v1',
   'onskin.communityConsent.v1',
   'onskin.community.reactions.v1',

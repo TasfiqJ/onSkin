@@ -6,17 +6,19 @@ import {
   reportCatalogIssue,
   searchCatalog,
   type CatalogProductSummary,
+  type CatalogReportInput,
 } from './client';
 
 const mocks = vi.hoisted(() => ({
   isSupabaseConfigured: false,
   invoke: vi.fn(),
   leaseOpen: true,
+  ownerUserId: 'user-1' as string | null,
   track: vi.fn(),
 }));
 
 vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
-  activeHealthProcessingOwnerUserId: () => 'user-1',
+  activeHealthProcessingOwnerUserId: () => mocks.ownerUserId,
 }));
 
 vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
@@ -66,6 +68,37 @@ function catalogProduct(overrides: Partial<CatalogProductSummary> = {}): Catalog
     default_pao_months: 24,
     source: 'open_beauty_facts',
     source_ref: 'obf:012345678905',
+    ...overrides,
+  };
+}
+
+function networkCatalogProduct(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    id: '00000000-0000-4000-8000-000000000100',
+    barcode: '012345678905',
+    name: 'Catalog serum',
+    brand: 'Evidence Lab',
+    category: 'serum',
+    region: 'US',
+    default_pao_months: 12,
+    source: 'open_beauty_facts',
+    catalog_source_id: '00000000-0000-4000-8000-000000000042',
+    source_ref: 'obf:012345678905',
+    source_url: 'https://catalog.example/products/012345678905',
+    source_snapshot_date: '2026-07-09',
+    quality_grade: 'usable',
+    review_status: 'reviewed',
+    data_quality_score: 92,
+    ingredient_parse_status: 'complete',
+    ingredient_parse_confidence: 0.98,
+    catalog_sources: {
+      id: '00000000-0000-4000-8000-000000000042',
+      display_name: 'Reviewed offline catalog',
+      source_key: 'open_beauty_facts',
+      attribution_text: 'Source attribution',
+      attribution_url: 'https://catalog.example/attribution',
+    },
+    product_pao_expiry: [],
     ...overrides,
   };
 }
@@ -251,20 +284,45 @@ describe('catalog client E2E fixtures', () => {
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
+  it('supports a dev-only eligible reviewed catalog match fixture', async () => {
+    process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'matched';
+
+    await expect(searchCatalog('barrier serum')).resolves.toMatchObject({
+      result: 'matched',
+      manualFallback: false,
+      product: {
+        id: '00000000-0000-4000-8000-000000000044',
+        name: 'Reviewed Barrier Serum',
+        quality_grade: 'usable',
+        review_status: 'reviewed',
+      },
+      products: [
+        {
+          id: '00000000-0000-4000-8000-000000000044',
+          barcode: '036000291452',
+          catalog_source_id: '00000000-0000-4000-8000-000000000043',
+        },
+      ],
+    });
+
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'matched' });
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
   it('supports a dev-only catalog search wrong-match fixture', async () => {
     process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'wrong_match';
 
     await expect(searchCatalog('ceramide cleanser')).resolves.toMatchObject({
       result: 'matched',
       product: {
-        id: 'e2e-wrong-match-product',
+        id: '00000000-0000-4000-8000-000000000045',
         name: 'Wrong Catalog Serum',
         source: 'open_beauty_facts',
         catalog_source_id: '00000000-0000-4000-8000-000000000042',
       },
       products: [
         {
-          id: 'e2e-wrong-match-product',
+          id: '00000000-0000-4000-8000-000000000045',
           barcode: '012345678905',
           name: 'Wrong Catalog Serum',
           quality_grade: 'limited',
@@ -298,78 +356,191 @@ describe('catalog client E2E fixtures', () => {
   });
 });
 
+describe('catalog network response validation', () => {
+  beforeEach(() => {
+    runtime.__DEV__ = false;
+    mocks.isSupabaseConfigured = true;
+    mocks.leaseOpen = true;
+    mocks.invoke.mockReset();
+    mocks.track.mockClear();
+    delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT;
+  });
+
+  afterEach(() => {
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+  });
+
+  it('accepts only an exact reviewed and servable barcode response', async () => {
+    const product = networkCatalogProduct();
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'matched', product },
+      error: null,
+    });
+
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'matched',
+      product,
+    });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', { result: 'matched' });
+  });
+
+  it('fails closed for external, unreviewed, mismatched, and malformed barcode responses', async () => {
+    const invalidResponses = [
+      { result: 'external_candidate', product: networkCatalogProduct() },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ review_status: 'unreviewed' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ barcode: '4006381333931' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ barcode: '012345678906' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ barcode: '0012345678905' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct(),
+        unexpected: true,
+      },
+    ];
+
+    for (const data of invalidResponses) {
+      mocks.invoke.mockResolvedValueOnce({ data, error: null });
+      await expect(lookupBarcode('012345678905')).resolves.toEqual({
+        result: 'error',
+        manualFallback: true,
+      });
+    }
+
+    expect(mocks.track).toHaveBeenCalledTimes(invalidResponses.length);
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', { result: 'error' });
+  });
+
+  it('accepts an exact reviewed search response and rejects unsafe response shapes', async () => {
+    const product = networkCatalogProduct();
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'matched', products: [product], manualFallback: false },
+      error: null,
+    });
+    await expect(searchCatalog('catalog serum')).resolves.toEqual({
+      result: 'matched',
+      products: [product],
+      manualFallback: false,
+    });
+
+    const invalidResponses = [
+      { result: 'external_candidate', products: [product], manualFallback: false },
+      {
+        result: 'matched',
+        products: [networkCatalogProduct({ quality_grade: 'limited' })],
+        manualFallback: false,
+      },
+      {
+        result: 'matched',
+        products: [networkCatalogProduct({ barcode: '012345678906' })],
+        manualFallback: false,
+      },
+      {
+        result: 'matched',
+        products: [networkCatalogProduct({ barcode: '0012345678905' })],
+        manualFallback: false,
+      },
+      {
+        result: 'matched',
+        products: [product],
+        manualFallback: false,
+        unexpected: true,
+      },
+    ];
+    for (const data of invalidResponses) {
+      mocks.invoke.mockResolvedValueOnce({ data, error: null });
+      await expect(searchCatalog('catalog serum')).resolves.toEqual({
+        result: 'error',
+        products: [],
+        manualFallback: true,
+      });
+    }
+
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'matched' });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'error' });
+  });
+});
+
 describe('catalog issue reporting', () => {
+  const reportRequestId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  const reported = {
+    result: 'reported',
+    correction: {
+      id: '00000000-0000-4000-8000-000000000901',
+      status: 'open',
+      created_at: '2026-07-18T12:00:00.000Z',
+      created: true,
+    },
+  };
+
   beforeEach(() => {
     mocks.leaseOpen = true;
+    mocks.ownerUserId = 'user-1';
     mocks.isSupabaseConfigured = false;
     mocks.invoke.mockReset();
     mocks.track.mockClear();
   });
 
-  it('tracks only correction type and falls back safely while offline', async () => {
+  it('distinguishes an unconfigured build without claiming or tracking a report', async () => {
     await expect(
       reportCatalogIssue({
+        reportRequestId,
         correctionType: 'wrong_match',
-        productId: 'catalog-123',
+        productId: '00000000-0000-4000-8000-000000000123',
         barcode: '012345678905',
         description: 'wrong_match reported from product detail',
-        proposedPayload: {
-          productName: 'Private shelf product',
-          ingredientsText: 'Do not leak this into analytics',
-        },
-        clientContext: { route: 'shelf_detail' },
       }),
-    ).resolves.toEqual({ ok: false, offline: true });
+    ).resolves.toEqual({ result: 'not_configured' });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_correction_reported', {
-      correction_type: 'wrong_match',
-    });
-    expect(mocks.track).toHaveBeenCalledTimes(1);
+    expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
-  it('submits correction reports only to the catalog-report Edge Function when configured', async () => {
-    mocks.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({ error: null });
+  it('distinguishes closed or withdrawn health authority before transport', async () => {
+    mocks.ownerUserId = null;
 
     await expect(
       reportCatalogIssue({
-        correctionType: 'ingredient_issue',
-        productId: 'catalog-456',
-        barcode: null,
-        description: 'ingredient_issue reported from product detail',
-        clientContext: {
-          addedVia: 'search',
-          quality: 'usable',
-          route: 'shelf_detail',
-        },
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
       }),
-    ).resolves.toEqual({ ok: true });
+    ).resolves.toEqual({ result: 'offline_or_withdrawn' });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_correction_reported', {
-      correction_type: 'ingredient_issue',
-    });
-    expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
-      body: {
-        correctionType: 'ingredient_issue',
-        productId: 'catalog-456',
-        barcode: null,
-        description: 'ingredient_issue reported from product detail',
-        clientContext: {
-          addedVia: 'search',
-          quality: 'usable',
-          route: 'shelf_detail',
-        },
-      },
-    });
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalled();
   });
 
-  it('submits missing-product reports with product-only context when configured', async () => {
+  it('fails closed before transport when the UI did not supply a random request identity', async () => {
     mocks.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({ error: null });
+
+    await expect(
+      reportCatalogIssue({ correctionType: 'missing_product', barcode: '012345678905' }),
+    ).resolves.toEqual({ result: 'invalid_request' });
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('validates success, removes a duplicated payload barcode, then tracks only correction type', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({ data: reported, error: null });
 
     await expect(
       reportCatalogIssue({
+        reportRequestId,
         correctionType: 'missing_product',
         barcode: '012345678905',
         description: 'missing_product reported from barcode no-match',
@@ -381,8 +552,16 @@ describe('catalog issue reporting', () => {
           addedVia: 'barcode',
           route: 'shelf_no_match',
         },
-      }),
-    ).resolves.toEqual({ ok: true });
+      } as unknown as CatalogReportInput),
+    ).resolves.toEqual({
+      result: 'success',
+      correction: {
+        id: '00000000-0000-4000-8000-000000000901',
+        status: 'open',
+        createdAt: '2026-07-18T12:00:00.000Z',
+        created: true,
+      },
+    });
 
     expect(mocks.track).toHaveBeenCalledWith('catalog_correction_reported', {
       correction_type: 'missing_product',
@@ -390,19 +569,193 @@ describe('catalog issue reporting', () => {
     expect(mocks.track).toHaveBeenCalledTimes(1);
     expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
       body: {
+        reportRequestId,
         correctionType: 'missing_product',
         barcode: '012345678905',
         description: 'missing_product reported from barcode no-match',
-        proposedPayload: {
-          barcode: '012345678905',
-          productName: 'Unknown sunscreen',
-        },
+        proposedPayload: { productName: 'Unknown sunscreen' },
         clientContext: {
           addedVia: 'barcode',
           route: 'shelf_no_match',
         },
       },
     });
+  });
+
+  it('always strips a legacy nested barcode even without a top-level barcode', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({ data: reported, error: null });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        proposedPayload: {
+          barcode: '012345678905',
+          productName: 'Unknown sunscreen',
+        },
+      } as unknown as CatalogReportInput),
+    ).resolves.toMatchObject({ result: 'success' });
+
+    expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
+      body: {
+        reportRequestId,
+        correctionType: 'missing_product',
+        proposedPayload: { productName: 'Unknown sunscreen' },
+      },
+    });
+  });
+
+  it('sends the same sanitized catalog fields shown by confirmation', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({ data: reported, error: null });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        description: 'missing_product reported from catalog search',
+        proposedPayload: {
+          productName: '  Photoderm   Aquafluide  ',
+          brand: 'Image Skincare',
+          sourceUrl: 'https://catalog.example/products/123?token=private#review',
+        },
+        clientContext: { addedVia: 'search', route: 'shelf_search' },
+      }),
+    ).resolves.toMatchObject({ result: 'success' });
+
+    expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
+      body: {
+        reportRequestId,
+        correctionType: 'missing_product',
+        description: 'missing_product reported from catalog search',
+        proposedPayload: {
+          productName: 'Photoderm Aquafluide',
+          brand: 'Image Skincare',
+          sourceUrl: 'https://catalog.example/products/123',
+        },
+        clientContext: { addedVia: 'search', route: 'shelf_search' },
+      },
+    });
+  });
+
+  it('does not track an unvalidated success envelope', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'reported', correction: { status: 'open' } },
+      error: null,
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result: 'error' });
+
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('returns a truthful current receipt on replay without duplicating success analytics', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        result: 'already_received',
+        correction: {
+          id: '00000000-0000-4000-8000-000000000901',
+          status: 'triaged',
+          created_at: '2026-07-18T12:00:00.000Z',
+          created: false,
+        },
+      },
+      error: null,
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({
+      result: 'success',
+      correction: {
+        id: '00000000-0000-4000-8000-000000000901',
+        status: 'triaged',
+        createdAt: '2026-07-18T12:00:00.000Z',
+        created: false,
+      },
+    });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('detects backend rate limiting without emitting success analytics', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: { error: 'rate_limited' },
+      error: { name: 'FunctionsHttpError', context: { status: 429 } },
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result: 'rate_limited' });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('keeps a busy owner transaction explicitly retryable without success analytics', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: { error: 'report_busy' },
+      error: { name: 'FunctionsHttpError', context: { status: 423 } },
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result: 'retryable' });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [new Error('FunctionsFetchError: Failed to send a request'), 'offline_or_withdrawn'],
+    [new Error('unexpected invoke failure'), 'error'],
+  ] as const)('converts ordinary invoke rejection %s into %s', async (failure, result) => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockRejectedValueOnce(failure);
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('does not swallow a stale health lease behind an ordinary invoke failure', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockImplementationOnce(async () => {
+      mocks.leaseOpen = false;
+      throw new Error('network unavailable');
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.track).not.toHaveBeenCalled();
   });
 
   it('rejects a stale lookup response before analytics or result publication', async () => {

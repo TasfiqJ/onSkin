@@ -400,10 +400,12 @@ if (exists(liveEdgeAuthPath)) {
   );
   block(
     errors,
-    /errors\.push\(`Catalog correction cleanup failed/.test(liveEdgeAuth) &&
+    /await admin\.auth\.admin\.deleteUser\(user\.id\)[\s\S]*'catalog_corrections'[\s\S]*errors\.push\(`\$\{table\} cleanup left residual rows\.`\)/.test(
+      liveEdgeAuth,
+    ) &&
       /errors\.push\(`Edge auth user cleanup failed/.test(liveEdgeAuth) &&
       /strict && warnings\.length > 0/.test(liveEdgeAuth),
-    'Live Edge auth cleanup and strict warnings must block pass artifacts.',
+    'Live Edge auth must verify Auth-cascade cleanup for catalog corrections, and cleanup failures plus strict warnings must block pass artifacts.',
   );
 }
 

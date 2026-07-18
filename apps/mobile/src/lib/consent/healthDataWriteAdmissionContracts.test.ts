@@ -15,6 +15,12 @@ const HEALTH_LIFECYCLE_MIGRATION = fileURLToPath(
     import.meta.url,
   ),
 );
+const CATALOG_SCAN_MINIMIZATION_MIGRATION = fileURLToPath(
+  new URL(
+    '../../../../../supabase/migrations/20260718000059_catalog_scan_minimization.sql',
+    import.meta.url,
+  ),
+);
 
 function walk(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -27,10 +33,19 @@ function walk(dir: string): string[] {
 describe('health-purpose local write coverage', () => {
   it('keeps the canonical mobile PostgREST set aligned with every database read fence', () => {
     const migration = readFileSync(HEALTH_LIFECYCLE_MIGRATION, 'utf8');
+    const minimizationMigration = readFileSync(CATALOG_SCAN_MINIMIZATION_MIGRATION, 'utf8');
+    const retiredFences = new Set(
+      [
+        ...minimizationMigration.matchAll(
+          /drop policy if exists "health_processing_read_fence" on public\.([a-z_]+)/gu,
+        ),
+      ].map((match) => match[1]!),
+    );
     const migratedTables = [
       ...migration.matchAll(/create policy "health_processing_read_fence" on public\.([a-z_]+)/gu),
     ]
       .map((match) => match[1]!)
+      .filter((table) => !retiredFences.has(table))
       .sort();
     const mobileTables = HEALTH_PROCESSING_POSTGREST_TABLES.filter(
       (table) => table !== 'profiles',
@@ -88,7 +103,6 @@ describe('health-purpose local write coverage', () => {
       'features/scheduler/profile.ts:skin_profiles',
       'features/shelf/mutations.ts:user_products',
       'features/shelf/mutations.ts:user_products',
-      'features/shelf/scanLog.ts:shelf_scans',
       'features/trend/useTrend.ts:skin_profiles',
     ].sort();
     const explicitExemptions = [
@@ -180,7 +194,7 @@ describe('health-purpose local write coverage', () => {
     expect(localExport).not.toMatch(/\bdecryptPhotoNote\(/u);
     expect(localExport).toContain('accountLease.assertCurrent()');
     expect(actions).toContain('readLocalDataOwnership(expectedUserId)');
-    expect(actions).toContain('collectLocalDeviceExportData(lease)');
+    expect(actions).toContain('collectLocalDeviceExportData(lease, expectedUserId)');
 
     const validation = privateKV.slice(
       privateKV.indexOf('async function validatePrivateItemsWithoutRetainingPlaintext'),

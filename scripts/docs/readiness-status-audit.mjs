@@ -25,8 +25,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 282);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 3251);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 289);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 3360);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -47,6 +47,9 @@ const staleTestPatterns = [
   /\b205\s+(?:mobile\s+)?test files?\b/i,
   /\b209\s+(?:mobile\s+)?test files?\b/i,
   /\b210\s+(?:mobile\s+)?test files?\b/i,
+  /\b273\s+(?:mobile\s+)?test files?\b/i,
+  /\b282\s+(?:mobile\s+)?test files?\b/i,
+  /\b287\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -85,6 +88,9 @@ const staleTestPatterns = [
   /\b2,?250\s+tests?\b/i,
   /\b2,?251\s+tests?\b/i,
   /\b2,?780\s+tests?\b/i,
+  /\b3,?139\s+tests?\b/i,
+  /\b3,?251\s+tests?\b/i,
+  /\b3,?335\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];

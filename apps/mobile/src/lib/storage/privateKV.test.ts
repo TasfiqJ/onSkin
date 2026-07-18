@@ -33,6 +33,7 @@ import {
   multiRemovePrivateItems,
   privateKVEncryptionInfo,
   setPrivateItem,
+  updateCatalogLookupQueueForPurposeLimitedExport,
   updatePrivateItem,
   waitForPrivateKVWritesToSettle,
 } from './privateKV';
@@ -416,6 +417,22 @@ describe('private KV encrypted storage', () => {
         getPrivateItemsForPurposeLimitedExport(['onskin.skinprofile.v1'], accountLease),
       ),
     ).resolves.toEqual(new Map([['onskin.skinprofile.v1', 'exportable-profile']]));
+  });
+
+  it('allows only account-bound catalog queue TTL reduction after health processing closes', async () => {
+    const key = 'routinekind.catalog.lookupQueue.v1';
+    await setPrivateItem(key, 'expired-catalog-queue');
+    clearActiveHealthProcessingEpoch();
+
+    await runAccountGenerationOperation((accountLease) =>
+      updateCatalogLookupQueueForPurposeLimitedExport(accountLease, () => null),
+    );
+
+    await expect(
+      runAccountGenerationOperation((accountLease) =>
+        getPrivateItemsForPurposeLimitedExport([key], accountLease),
+      ),
+    ).resolves.toEqual(new Map([[key, null]]));
   });
 
   it('rejects a purpose-limited export read after an A-to-B-to-A account boundary', async () => {

@@ -1,11 +1,29 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import type { ReactNode } from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
-import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
+import { BRAND } from '@/lib/brand';
+import { CatalogReportConfirmation } from '@/features/catalog/CatalogReportConfirmation';
+import {
+  isCatalogProductId,
+  reportCatalogIssue,
+  type CatalogCorrectionType,
+  type CatalogReportInput,
+} from '@/features/catalog/client';
+import {
+  catalogReportFeedback as feedbackForCatalogReport,
+  type CatalogReportFeedback,
+} from '@/features/catalog/reportPresentation';
+import {
+  cancelCatalogReportOperation,
+  createCatalogReportOperation,
+  finishCatalogReportOperation,
+  markCatalogReportOperationAttempted,
+  type CatalogReportOperation,
+} from '@/features/catalog/reportOperation';
 import { conflictDetailRoute, conflictKey } from '@/features/intelligence/conflictIdentity';
 import { choiceForConflict } from '@/features/intelligence/conflictChoices';
 import {
@@ -60,19 +78,7 @@ const BEST_BEFORE: { label: string; monthsAhead: number }[] = [
 ];
 
 type RoutineUsage = { phase: string; cycleNightNumbers?: number[] };
-type ProductDetailSheet = 'manage' | 'report' | null;
-type CatalogReportFeedback = { title: string; message: string };
-
-const CATALOG_REPORT_SENT: CatalogReportFeedback = {
-  title: 'Report sent',
-  message: 'Thanks. Open catalog issues block product-specific recommendations until reviewed.',
-};
-
-const CATALOG_REPORT_NOT_SENT: CatalogReportFeedback = {
-  title: 'Report not sent',
-  message:
-    'The catalog backend is not configured on this build. You can still keep this product on your shelf.',
-};
+type ProductDetailSheet = 'manage' | 'report' | 'report-confirm' | null;
 
 function MoreOptionsGlyph() {
   return (
@@ -143,6 +149,7 @@ function ProductDetailActionSheet({
   body,
   viewportHeight,
   bottomInset,
+  closeDisabled = false,
   children,
   onClose,
 }: {
@@ -150,6 +157,7 @@ function ProductDetailActionSheet({
   body: string;
   viewportHeight: number;
   bottomInset: number;
+  closeDisabled?: boolean;
   children: ReactNode;
   onClose: () => void;
 }) {
@@ -166,6 +174,8 @@ function ProductDetailActionSheet({
         <Pressable
           accessibilityLabel={`Dismiss ${title}`}
           accessibilityRole="button"
+          accessibilityState={{ disabled: closeDisabled }}
+          disabled={closeDisabled}
           className="flex-1"
           onPress={onClose}
         />
@@ -193,7 +203,12 @@ function ProductDetailActionSheet({
             <Pressable
               accessibilityLabel="Close product options"
               accessibilityRole="button"
-              className="min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3"
+              accessibilityState={{ disabled: closeDisabled }}
+              disabled={closeDisabled}
+              className={cn(
+                'min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3',
+                closeDisabled && 'opacity-40',
+              )}
               onPress={onClose}
             >
               <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clay }}>
@@ -201,7 +216,13 @@ function ProductDetailActionSheet({
               </Text>
             </Pressable>
           </View>
-          <View className="gap-2">{children}</View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerClassName="gap-2 pb-1"
+          >
+            {children}
+          </ScrollView>
         </View>
       </View>
     </View>
@@ -212,19 +233,29 @@ function SheetAction({
   label,
   description,
   tone = 'default',
+  busy = false,
+  disabled = false,
   onPress,
 }: {
   label: string;
   description: string;
   tone?: 'default' | 'destructive';
+  busy?: boolean;
+  disabled?: boolean;
   onPress: () => void;
 }) {
   const destructive = tone === 'destructive';
+  const unavailable = busy || disabled;
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ busy, disabled: unavailable }}
+      disabled={unavailable}
       onPress={onPress}
-      className="min-h-[58px] rounded-[16px] border border-hairline bg-paper-raised px-4 py-3"
+      className={cn(
+        'min-h-[58px] rounded-[16px] border border-hairline bg-paper-raised px-4 py-3',
+        unavailable && 'opacity-40',
+      )}
     >
       <Text
         variant="bodySm"
@@ -248,12 +279,20 @@ export default function ProductDetailScreen() {
   const plan = usePlan();
   const { data: cycleData } = useCycle();
   const m = useShelfMutations();
+  const reportSubmissionInFlight = useRef(false);
+  const [catalogReportOperations, setCatalogReportOperations] = useState(
+    () => new Map<string, CatalogReportOperation>(),
+  );
   const [editOpen, setEditOpen] = useState(false);
   const [exactOpenedDate, setExactOpenedDate] = useState<string | null>(null);
   const [paoOpen, setPaoOpen] = useState(false);
   const [bestOpen, setBestOpen] = useState(false);
   const [exactExpiryDate, setExactExpiryDate] = useState<string | null>(null);
   const [activeSheet, setActiveSheet] = useState<ProductDetailSheet>(null);
+  const [pendingCorrectionType, setPendingCorrectionType] = useState<CatalogCorrectionType | null>(
+    null,
+  );
+  const [reportingCatalogIssue, setReportingCatalogIssue] = useState(false);
   const [catalogReportFeedback, setCatalogReportFeedback] = useState<CatalogReportFeedback | null>(
     null,
   );
@@ -369,26 +408,44 @@ export default function ProductDetailScreen() {
     setPaoOpen(false);
   };
 
-  const confirmRemove = () => {
-    setActiveSheet('manage');
-  };
+  const catalogSourceLabel =
+    p.catalogSourceName ??
+    sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
+  const qualityLabel = catalogQualityLabel(p.catalogMatchQuality);
+  const sourceDate = p.catalogSourceSnapshotDate
+    ? new Date(p.catalogSourceSnapshotDate).toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric',
+      })
+    : null;
+  const catalogProductId = isCatalogProductId(p.catalogProductId) ? p.catalogProductId : null;
+  const canReportMissingProduct =
+    catalogProductId === null && Boolean(p.barcode || p.name.trim().length > 0);
+  const catalogReportOperationKey = (correctionType: CatalogCorrectionType) =>
+    `${item.id}:${correctionType}`;
 
-  const submitCatalogReport = async (correctionType: CatalogCorrectionType) => {
-    setActiveSheet(null);
-    const result = await reportCatalogIssue({
+  const catalogReportInput = (correctionType: CatalogCorrectionType): CatalogReportInput | null => {
+    if (correctionType === 'missing_product') {
+      if (!canReportMissingProduct) return null;
+    } else if (!catalogProductId) {
+      return null;
+    }
+
+    return {
       correctionType,
-      productId: p.catalogProductId,
+      productId: catalogProductId ?? undefined,
       barcode: p.barcode,
       description: `${correctionType} reported from product detail`,
       proposedPayload: {
         productName: p.name,
         brand: p.brand,
-        barcode: p.barcode,
         category: p.category,
-        sourceName: catalogSourceLabel,
-        sourceUrl: p.catalogSourceUrl,
+        sourceName: correctionType === 'missing_product' ? null : catalogSourceLabel,
+        sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl,
         defaultPaoMonths:
-          p.paoMonths != null && (p.paoSource === 'catalog' || p.paoSource === 'category_default')
+          correctionType !== 'missing_product' &&
+          p.paoMonths != null &&
+          (p.paoSource === 'catalog' || p.paoSource === 'category_default')
             ? p.paoMonths
             : null,
         qualityIssue: correctionType,
@@ -400,25 +457,96 @@ export default function ProductDetailScreen() {
         platform: Platform.OS,
         route: 'shelf_detail',
       },
+    };
+  };
+
+  const confirmRemove = () => {
+    setActiveSheet('manage');
+  };
+
+  const openCatalogReportConfirmation = (correctionType: CatalogCorrectionType) => {
+    const input = catalogReportInput(correctionType);
+    if (!input || reportSubmissionInFlight.current) return;
+    const operationKey = catalogReportOperationKey(correctionType);
+    if (!catalogReportOperations.has(operationKey)) {
+      setCatalogReportOperations((current) => {
+        if (current.has(operationKey)) return current;
+        const next = new Map(current);
+        next.set(operationKey, createCatalogReportOperation(input));
+        return next;
+      });
+    }
+    setPendingCorrectionType(correctionType);
+    setActiveSheet('report-confirm');
+  };
+
+  const submitCatalogReport = async () => {
+    const operationKey = pendingCorrectionType
+      ? catalogReportOperationKey(pendingCorrectionType)
+      : null;
+    const operation = operationKey ? catalogReportOperations.get(operationKey) : null;
+    if (!operation || !operationKey || reportSubmissionInFlight.current || reportingCatalogIssue) {
+      return;
+    }
+
+    const attempted = markCatalogReportOperationAttempted(operation);
+    setCatalogReportOperations((current) => {
+      const next = new Map(current);
+      next.set(operationKey, attempted);
+      return next;
     });
-    setCatalogReportFeedback(result.ok ? CATALOG_REPORT_SENT : CATALOG_REPORT_NOT_SENT);
+    reportSubmissionInFlight.current = true;
+    setReportingCatalogIssue(true);
+    try {
+      const outcome = await reportCatalogIssue(attempted.input);
+      const retained = finishCatalogReportOperation(attempted, outcome);
+      setCatalogReportOperations((current) => {
+        const next = new Map(current);
+        if (retained) next.set(operationKey, retained);
+        else next.delete(operationKey);
+        return next;
+      });
+      setCatalogReportFeedback(feedbackForCatalogReport(outcome));
+    } catch {
+      setCatalogReportOperations((current) => {
+        const next = new Map(current);
+        next.set(operationKey, attempted);
+        return next;
+      });
+      setCatalogReportFeedback(feedbackForCatalogReport({ result: 'offline_or_withdrawn' }));
+    } finally {
+      setReportingCatalogIssue(false);
+      reportSubmissionInFlight.current = false;
+      setPendingCorrectionType(null);
+      setActiveSheet(null);
+    }
   };
 
   const reportIssue = () => {
+    if (reportSubmissionInFlight.current) return;
     setCatalogReportFeedback(null);
+    setPendingCorrectionType(null);
     setActiveSheet('report');
   };
-
-  const catalogSourceLabel =
-    p.catalogSourceName ??
-    sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
-  const qualityLabel = catalogQualityLabel(p.catalogMatchQuality);
-  const sourceDate = p.catalogSourceSnapshotDate
-    ? new Date(p.catalogSourceSnapshotDate).toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric',
-      })
+  const pendingReportInput = pendingCorrectionType
+    ? (catalogReportOperations.get(catalogReportOperationKey(pendingCorrectionType))?.input ?? null)
     : null;
+
+  const cancelPendingCatalogReport = () => {
+    if (pendingCorrectionType) {
+      const operationKey = catalogReportOperationKey(pendingCorrectionType);
+      const operation = catalogReportOperations.get(operationKey) ?? null;
+      const retained = cancelCatalogReportOperation(operation);
+      setCatalogReportOperations((current) => {
+        const next = new Map(current);
+        if (retained) next.set(operationKey, retained);
+        else next.delete(operationKey);
+        return next;
+      });
+    }
+    setPendingCorrectionType(null);
+    setActiveSheet(null);
+  };
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -513,6 +641,11 @@ export default function ProductDetailScreen() {
             </View>
             <Pressable
               accessibilityRole="button"
+              accessibilityState={{
+                busy: reportingCatalogIssue,
+                disabled: reportingCatalogIssue,
+              }}
+              disabled={reportingCatalogIssue}
               onPress={reportIssue}
               className="mt-3 min-h-[48px] self-start items-center justify-center px-1"
             >
@@ -521,12 +654,14 @@ export default function ProductDetailScreen() {
               </Text>
             </Pressable>
             {catalogReportFeedback ? (
-              <View className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3">
+              <View
+                accessibilityRole="alert"
+                className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3"
+              >
                 <Text variant="label" style={{ color: colors.clayDeep }}>
                   {catalogReportFeedback.title}
                 </Text>
                 <Text
-                  accessibilityRole="alert"
                   variant="bodySm"
                   className="mt-1"
                   style={{ color: colors.clayDeep, lineHeight: 19 }}
@@ -937,25 +1072,53 @@ export default function ProductDetailScreen() {
           bottomInset={insets.bottom}
           onClose={() => setActiveSheet(null)}
         >
-          <SheetAction
-            label="Missing catalog product"
-            description="This local shelf item should be added to the reviewed catalog."
-            onPress={() => submitCatalogReport('missing_product')}
-          />
-          <SheetAction
-            label="Wrong product match"
-            description="The product, brand, or barcode does not match this shelf item."
-            onPress={() => submitCatalogReport('wrong_match')}
-          />
-          <SheetAction
-            label="Ingredient issue"
-            description="The INCI list or active ingredient parsing looks wrong."
-            onPress={() => submitCatalogReport('ingredient_issue')}
-          />
-          <SheetAction
-            label="Expiry or PAO issue"
-            description="The printed date, PAO, or freshness source looks wrong."
-            onPress={() => submitCatalogReport('expiry_issue')}
+          {canReportMissingProduct ? (
+            <SheetAction
+              label="Missing catalog product"
+              description={`Send this local product name or barcode for ${BRAND.appName} catalog review.`}
+              onPress={() => openCatalogReportConfirmation('missing_product')}
+            />
+          ) : null}
+          {catalogProductId ? (
+            <>
+              <SheetAction
+                label="Wrong product match"
+                description="The product, brand, or barcode does not match this shelf item."
+                onPress={() => openCatalogReportConfirmation('wrong_match')}
+              />
+              <SheetAction
+                label="Ingredient issue"
+                description="The INCI list or active ingredient parsing looks wrong."
+                onPress={() => openCatalogReportConfirmation('ingredient_issue')}
+              />
+              <SheetAction
+                label="Expiry or PAO issue"
+                description="The printed date, PAO, or freshness source looks wrong."
+                onPress={() => openCatalogReportConfirmation('expiry_issue')}
+              />
+            </>
+          ) : null}
+        </ProductDetailActionSheet>
+      ) : null}
+      {activeSheet === 'report-confirm' && pendingReportInput ? (
+        <ProductDetailActionSheet
+          title="Confirm catalog report"
+          body="Review exactly what identifies this product before sending."
+          viewportHeight={height}
+          bottomInset={insets.bottom}
+          closeDisabled={reportingCatalogIssue}
+          onClose={() => {
+            if (reportingCatalogIssue) return;
+            cancelPendingCatalogReport();
+          }}
+        >
+          <CatalogReportConfirmation
+            input={pendingReportInput}
+            busy={reportingCatalogIssue}
+            onCancel={() => {
+              cancelPendingCatalogReport();
+            }}
+            onConfirm={() => void submitCatalogReport()}
           />
         </ProductDetailActionSheet>
       ) : null}

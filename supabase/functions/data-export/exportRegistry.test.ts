@@ -1,6 +1,7 @@
 import {
   buildDirectExportPlans,
   CALLER_RLS_EXPORT_TABLES,
+  type ExportTable,
   SERVICE_ONLY_EXPORT_DENYLIST,
   SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES,
   SERVICE_ROLE_FILTERED_EXPORTS,
@@ -8,7 +9,6 @@ import {
   SUBSCRIPTION_EVENT_EXPORT_COLUMNS,
   subscriptionEventOwnerFilter,
   validateExportRegistry,
-  type ExportTable,
 } from './exportRegistry.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -35,7 +35,7 @@ const OTHER_USER_ID = '00000000-0000-4000-8000-000000000002';
 Deno.test('actual export registry is duplicate-free and derives truthful coverage', () => {
   validateExportRegistry();
 
-  assert(CALLER_RLS_EXPORT_TABLES.length === 30, 'expected all 30 owner-client tables.');
+  assert(CALLER_RLS_EXPORT_TABLES.length === 28, 'expected all 28 active owner-client tables.');
   assert(
     new Set(CALLER_RLS_EXPORT_TABLES.map((item) => item.table)).size ===
       CALLER_RLS_EXPORT_TABLES.length,
@@ -45,8 +45,8 @@ Deno.test('actual export registry is duplicate-free and derives truthful coverag
     JSON.stringify(SERVICE_ROLE_FILTERED_EXPORTS) ===
       JSON.stringify([
         'subscriptions_events',
+        'catalog_corrections',
         'reverse_trial_grants',
-        'obf_contribution_queue',
         'order_attributions',
       ]),
     'service-role coverage was not derived from the executed registries.',
@@ -55,6 +55,42 @@ Deno.test('actual export registry is duplicate-free and derives truthful coverag
     !CALLER_RLS_EXPORT_TABLES.some((item) => item.table === 'reverse_trial_grants'),
     'reverse-trial grants returned to the caller-RLS registry.',
   );
+  assert(
+    !CALLER_RLS_EXPORT_TABLES.some((item) => item.table === 'shelf_scans'),
+    'sealed raw scan history returned to the caller-RLS registry.',
+  );
+  assert(
+    !CALLER_RLS_EXPORT_TABLES.some((item) => item.table === 'catalog_corrections'),
+    'sealed operator workflow returned to the caller-RLS registry.',
+  );
+  assert(
+    !SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES.some(
+      (item) => item.table === 'obf_contribution_queue',
+    ) && SERVICE_ONLY_EXPORT_DENYLIST.includes('obf_contribution_queue'),
+    'purged contribution work returned to an executable export registry.',
+  );
+});
+
+Deno.test('catalog correction export excludes every internal operator field', () => {
+  const plan = buildDirectExportPlans(VERIFIED_USER_ID).find(
+    (item) => item.table === 'catalog_corrections',
+  );
+  assert(plan?.clientKind === 'service_role', 'corrections must use service filtering.');
+  assert(plan.filter?.value === VERIFIED_USER_ID, 'correction owner filter was not resolved.');
+  const columns = new Set(plan.selectColumns?.split(',').map((value) => value.trim()));
+  for (const internal of [
+    'assigned_to',
+    'resolved_by',
+    'resolution_note',
+    'operator_reviewed_at',
+    'operator_reviewed_by',
+    'operator_review_note',
+    'intake_request_id',
+    'intake_health_epoch',
+    'intake_request_digest',
+  ]) {
+    assert(!columns.has(internal), `internal correction field leaked: ${internal}`);
+  }
 });
 
 Deno.test('every canonical service-only table is rejected from the caller registry', () => {
@@ -66,7 +102,10 @@ Deno.test('every canonical service-only table is rejected from the caller regist
       orderBy: ['id'],
     };
     assertThrowsReason(
-      () => validateExportRegistry({ callerTables: [...CALLER_RLS_EXPORT_TABLES, mutant] }),
+      () =>
+        validateExportRegistry({
+          callerTables: [...CALLER_RLS_EXPORT_TABLES, mutant],
+        }),
       `EXPORT_REGISTRY_SERVICE_ONLY_IN_CALLER:${table}`,
     );
   }
@@ -96,9 +135,12 @@ Deno.test('reverse-trial plan uses only the service-role client and verified-use
     'reverse-trial output columns must remain explicitly allowlisted.',
   );
 
-  const visibleRows = [{ user_id: VERIFIED_USER_ID }, { user_id: OTHER_USER_ID }].filter(
-    (row) => row[plan.filter!.column as 'user_id'] === plan.filter!.value,
-  );
+  const visibleRows = [
+    { user_id: VERIFIED_USER_ID },
+    {
+      user_id: OTHER_USER_ID,
+    },
+  ].filter((row) => row[plan.filter!.column as 'user_id'] === plan.filter!.value);
   assert(visibleRows.length === 1, 'verified-user filter did not isolate one reverse-trial row.');
   assert(
     visibleRows[0]?.user_id === VERIFIED_USER_ID,

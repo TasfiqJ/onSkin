@@ -217,7 +217,7 @@ try {
     const validRecord = JSON.parse(
       readFileSync(obfFixturePath, 'utf8').split(/\r?\n/u).find(Boolean),
     );
-    const invalidRecord = { ...validRecord, code: '9234567890123' };
+    const invalidRecord = { ...validRecord, code: '2234567890127' };
     delete invalidRecord.last_modified_t;
     writeFileSync(
       invalidModifiedFixturePath,
@@ -250,6 +250,47 @@ try {
     }
   } finally {
     rmSync(invalidModifiedFixturePath, { force: true });
+  }
+
+  const invalidGtinFixturePath = resolve(
+    dirname(obfFixturePath),
+    `.tmp-invalid-gtin-${process.pid}.jsonl`,
+  );
+  try {
+    const validRecord = JSON.parse(
+      readFileSync(obfFixturePath, 'utf8').split(/\r?\n/u).find(Boolean),
+    );
+    const invalidRecord = { ...validRecord, code: '1234567890123' };
+    writeFileSync(
+      invalidGtinFixturePath,
+      `${JSON.stringify(validRecord)}\n${JSON.stringify(invalidRecord)}\n`,
+      { flag: 'wx' },
+    );
+    const invalidGtinOutputPath = resolve(outDir, 'invalid-gtin-obf.json');
+    const invalidGtinResult = runImporter([
+      obfImporterPath,
+      '--fixture',
+      invalidGtinFixturePath,
+      invalidGtinOutputPath,
+    ]);
+    const invalidGtinManifest =
+      invalidGtinResult.status === 0
+        ? JSON.parse(readFileSync(invalidGtinOutputPath, 'utf8'))
+        : null;
+    if (
+      invalidGtinResult.status !== 0 ||
+      invalidGtinManifest?.totals?.acceptedProducts !== 1 ||
+      invalidGtinManifest?.totals?.rejectedRecords !== 1 ||
+      invalidGtinManifest?.rejected?.[0]?.reason !== 'invalid_barcode'
+    ) {
+      failed = true;
+      console.error('FAIL OBF transform did not reject a checksum-invalid GTIN.');
+      console.error(output(invalidGtinResult));
+    } else {
+      console.log('OK OBF transform rejects a checksum-invalid GTIN');
+    }
+  } finally {
+    rmSync(invalidGtinFixturePath, { force: true });
   }
 
   failed =
@@ -396,6 +437,61 @@ try {
       ],
       pattern: /duplicate barcode/,
     }) || failed;
+
+  const equivalentUpcPath = resolve(
+    dirname(obfFixturePath),
+    `.tmp-equivalent-upc-${process.pid}.jsonl`,
+  );
+  try {
+    const baseRecord = JSON.parse(obfLines[0]);
+    const upcARecord = { ...baseRecord, code: '036000291452' };
+    const ean13EquivalentRecord = { ...baseRecord, code: '0036000291452' };
+    writeFileSync(
+      equivalentUpcPath,
+      `${JSON.stringify(upcARecord)}\n${JSON.stringify(ean13EquivalentRecord)}\n`,
+      { flag: 'wx' },
+    );
+    failed =
+      !expectFailure({
+        name: 'OBF transform collapses leading-zero EAN-13 before duplicate detection',
+        message: 'Equivalent UPC-A and leading-zero EAN-13 identities were accepted separately.',
+        args: [
+          obfImporterPath,
+          '--fixture',
+          equivalentUpcPath,
+          resolve(outDir, 'equivalent-upc-output.json'),
+        ],
+        pattern: /duplicate barcode 036000291452/,
+      }) || failed;
+  } finally {
+    rmSync(equivalentUpcPath, { force: true });
+  }
+
+  const paddedGtinPath = resolve(dirname(obfFixturePath), `.tmp-padded-gtin-${process.pid}.jsonl`);
+  try {
+    const baseRecord = JSON.parse(obfLines[0]);
+    const canonicalRecord = { ...baseRecord, code: '96385074' };
+    const paddedRecord = { ...baseRecord, code: '00000096385074' };
+    writeFileSync(
+      paddedGtinPath,
+      `${JSON.stringify(canonicalRecord)}\n${JSON.stringify(paddedRecord)}\n`,
+      { flag: 'wx' },
+    );
+    failed =
+      !expectFailure({
+        name: 'OBF transform collapses fixed-length GTIN-14 padding before duplicate detection',
+        message: 'Equivalent GTIN-8 and padded GTIN-14 identities were accepted separately.',
+        args: [
+          obfImporterPath,
+          '--fixture',
+          paddedGtinPath,
+          resolve(outDir, 'padded-gtin-output.json'),
+        ],
+        pattern: /duplicate barcode 96385074/,
+      }) || failed;
+  } finally {
+    rmSync(paddedGtinPath, { force: true });
+  }
 
   const duplicateKeyObfPath = resolve(outDir, 'duplicate-key-obf.jsonl');
   writeFileSync(

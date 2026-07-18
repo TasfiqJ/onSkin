@@ -13,6 +13,7 @@ import {
   HEALTH_PROCESSING_STATUS_LEASE_MS,
   isHealthProcessingStatusLeaseCurrent,
   setActiveHealthProcessingEpoch,
+  subscribeActiveHealthProcessingLeaseChanges,
 } from './healthProcessingEpoch';
 
 const SUPABASE_URL = 'https://project.supabase.co';
@@ -461,6 +462,41 @@ describe('health processing epoch transport', () => {
     activate(7, 'owner-b', 5);
     expect(clearActiveHealthProcessingEpoch({ ownerUserId: 'owner-a' })).toBe(false);
     expect(activeHealthProcessingEpoch('owner-b')).toBe(7);
+  });
+
+  it('publishes visible grant, clear, and regrant transitions without duplicate wakes', () => {
+    const transitions: ReturnType<typeof activeHealthProcessingLeaseSnapshot>[] = [];
+    const stopThrowingListener = subscribeActiveHealthProcessingLeaseChanges(() => {
+      throw new Error('listener failure must not interrupt consent authority');
+    });
+    const unsubscribe = subscribeActiveHealthProcessingLeaseChanges((lease) => {
+      transitions.push(lease);
+    });
+
+    try {
+      const first = activate(23, 'owner-a', 8);
+      const duplicate = activate(23, 'owner-a', 8);
+      expect(duplicate.generation).toBe(first.generation);
+      expect(transitions).toEqual([first]);
+
+      expect(clearActiveHealthProcessingEpoch({ ownerUserId: 'owner-b' })).toBe(false);
+      expect(transitions).toEqual([first]);
+      expect(
+        clearActiveHealthProcessingEpoch({
+          ownerUserId: 'owner-a',
+          generation: first.generation,
+          accountGeneration: 8,
+        }),
+      ).toBe(true);
+      expect(transitions).toEqual([first, null]);
+
+      const regranted = activate(23, 'owner-a', 8);
+      expect(regranted.generation).not.toBe(first.generation);
+      expect(transitions).toEqual([first, null, regranted]);
+    } finally {
+      stopThrowingListener();
+      unsubscribe();
+    }
   });
 
   it('lets the exact deadline timer claim an expired raw lease even after a reader observed closure', () => {

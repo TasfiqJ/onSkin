@@ -13,11 +13,14 @@ import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import {
   addProduct,
+  applyCatalogRecoveryProductUpdate,
   loadShelf,
   reAddProduct,
   removeProduct,
   updateProduct,
   type NewShelfProduct,
+  type CatalogRecoveryProductUpdate,
+  type CatalogRecoveryProductUpdateResult,
   type ShelfProduct,
 } from './store';
 
@@ -106,6 +109,20 @@ export function useShelfMutations() {
         await invalidate();
         lease.assertCurrent();
         return product;
+      });
+    },
+
+    async applyCatalogRecovery(
+      input: CatalogRecoveryProductUpdate,
+    ): Promise<CatalogRecoveryProductUpdateResult> {
+      return runShelfMutation(async (lease) => {
+        const result = await applyCatalogRecoveryProductUpdate(input);
+        lease.assertCurrent();
+        if (result.status === 'updated') await mirrorUpsert(result.product, lease);
+        lease.assertCurrent();
+        await invalidate();
+        lease.assertCurrent();
+        return result;
       });
     },
 

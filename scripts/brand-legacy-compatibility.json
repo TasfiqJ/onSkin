@@ -108,6 +108,20 @@
       "rationale": "This historical migration defines persisted publication-lease capability digests."
     },
     {
+      "path": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "literal": "'onskin.catalog_import_transition'",
+      "expectedCount": 3,
+      "subtype": "migration-history",
+      "rationale": "This committed migration-local PostgreSQL setting is an internal transition guard; preserving its exact namespace avoids rewriting immutable migration history."
+    },
+    {
+      "path": "supabase/tests/database/catalog_launch_curation.test.sql",
+      "literal": "'onskin.catalog_import_transition'",
+      "expectedCount": 2,
+      "subtype": "test-fixture",
+      "rationale": "This database test mirrors migration 0057's immutable internal transition-setting namespace."
+    },
+    {
       "path": "scripts/phase9/account-publication-fence-postgres-rehearsal.sql",
       "literal": "'onskin-account-write:'",
       "expectedCount": 1,

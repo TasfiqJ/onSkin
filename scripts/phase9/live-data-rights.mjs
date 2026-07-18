@@ -274,6 +274,14 @@ function publicClient() {
   });
 }
 
+function serviceHealthClient(epoch) {
+  assert(Number.isSafeInteger(epoch) && epoch >= 1, 'service health epoch is invalid.');
+  return createClient(supabaseUrl, secretKey, {
+    global: { headers: { 'x-health-processing-epoch': String(epoch) } },
+    auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+  });
+}
+
 function functionUrl(name) {
   return `${supabaseUrl.replace(/\/+$/g, '')}/functions/v1/${name}`;
 }
@@ -328,6 +336,31 @@ const subscriptionIdentityFields = [
   'transferred_to',
 ];
 const subscriptionArrayIdentityFields = ['aliases', 'transferred_from', 'transferred_to'];
+const catalogCorrectionExportFields = [
+  'id',
+  'user_id',
+  'product_id',
+  'barcode',
+  'correction_type',
+  'status',
+  'description',
+  'proposed_payload',
+  'client_context',
+  'source_id',
+  'created_at',
+  'updated_at',
+];
+const catalogCorrectionInternalFields = [
+  'assigned_to',
+  'resolved_by',
+  'resolution_note',
+  'operator_reviewed_at',
+  'operator_reviewed_by',
+  'operator_review_note',
+  'intake_request_id',
+  'intake_health_epoch',
+  'intake_request_digest',
+];
 
 function subscriptionEventContainsIdentity(row, userId) {
   return (
@@ -942,8 +975,7 @@ async function main() {
         units: 'metric',
       });
       const healthConsentVersion = 'draft-v1-2026-07-10';
-      const healthConsentHash =
-        '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
+      const healthConsentHash = '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
       const { data: consentRows, error: consentError } = await user.client.rpc(
         'grant_health_data_consent',
         {
@@ -958,6 +990,46 @@ async function main() {
         consent?.user_id === user.id && consent?.state === 'active' && consent?.epoch === 1,
         `health consent activation failed for ${label}.`,
       );
+      const catalogCorrectionFixture = {
+        user_id: user.id,
+        product_id: null,
+        barcode: label === 'a' ? '012345678905' : '036000291452',
+        correction_type: 'missing_product',
+        description: `Phase 9 data-rights ${label} catalog correction`,
+        proposed_payload: {
+          productName: `Phase 9 Data ${label} Catalog Product`,
+          brand: 'Data Rights Smoke',
+        },
+        client_context: { route: 'phase9_live_data_rights' },
+        source_id: null,
+      };
+      const catalogCorrectionRequestId = randomUUID();
+      const correctionWriter = serviceHealthClient(consent.epoch);
+      const { data: correctionRows, error: correctionError } = await correctionWriter.rpc(
+        'submit_catalog_correction',
+        {
+          p_user_id: user.id,
+          p_expected_health_epoch: consent.epoch,
+          p_report_request_id: catalogCorrectionRequestId,
+          p_product_id: catalogCorrectionFixture.product_id,
+          p_barcode: catalogCorrectionFixture.barcode,
+          p_correction_type: catalogCorrectionFixture.correction_type,
+          p_description: catalogCorrectionFixture.description,
+          p_proposed_payload: catalogCorrectionFixture.proposed_payload,
+          p_client_context: catalogCorrectionFixture.client_context,
+        },
+      );
+      if (correctionError) throw correctionError;
+      const correctionReceipt = Array.isArray(correctionRows) ? correctionRows[0] : null;
+      assert(
+        correctionRows?.length === 1 &&
+          typeof correctionReceipt?.id === 'string' &&
+          correctionReceipt.status === 'open' &&
+          correctionReceipt.created === true &&
+          Number.isFinite(Date.parse(correctionReceipt.created_at)),
+        `sealed catalog-correction RPC failed for ${label}.`,
+      );
+      const catalogCorrection = { ...catalogCorrectionFixture, ...correctionReceipt };
       const skinProfile = await insertOne(user.client, 'skin_profiles', {
         user_id: user.id,
         oily_dry: label === 'a' ? 1 : 2,
@@ -1092,6 +1164,7 @@ async function main() {
         clickToken,
         externalOrderId,
         reverseTrialGrant,
+        catalogCorrection,
       };
     };
 
@@ -1208,6 +1281,70 @@ async function main() {
       expectBundleHasOnlyUser(data, 'commerce_click_events', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'entitlements', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'reverse_trial_grants', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'catalog_corrections', 'user_id', userA.id, userB.id);
+
+      const catalogCorrectionRows = rows(data, 'catalog_corrections');
+      assert(
+        catalogCorrectionRows.length === 1,
+        'catalog-correction export returned an unexpected row count.',
+      );
+      const catalogCorrection = catalogCorrectionRows.find(
+        (row) => row.id === seededA.catalogCorrection.id,
+      );
+      assert(catalogCorrection, 'catalog-correction export omitted the caller correction.');
+      assert(
+        !catalogCorrectionRows.some((row) => row.id === seededB.catalogCorrection.id),
+        'catalog-correction export leaked the other user correction.',
+      );
+      assert(
+        exactObjectKeys(catalogCorrection, catalogCorrectionExportFields),
+        'catalog-correction export returned a non-allowlisted column or omitted a required field.',
+      );
+      assert(
+        catalogCorrectionRows.every((row) =>
+          catalogCorrectionInternalFields.every((field) => !Object.hasOwn(row, field)),
+        ),
+        'catalog-correction export returned an internal operator field.',
+      );
+      assert(
+        catalogCorrection.user_id === userA.id &&
+          catalogCorrection.product_id === null &&
+          catalogCorrection.barcode === seededA.catalogCorrection.barcode &&
+          catalogCorrection.correction_type === seededA.catalogCorrection.correction_type &&
+          catalogCorrection.status === 'open' &&
+          catalogCorrection.description === seededA.catalogCorrection.description &&
+          catalogCorrection.source_id === null &&
+          catalogCorrection.created_at === seededA.catalogCorrection.created_at &&
+          Number.isFinite(Date.parse(catalogCorrection.updated_at)),
+        'catalog-correction export changed the caller correction fields.',
+      );
+      assert(
+        exactObjectKeys(catalogCorrection.proposed_payload, ['productName', 'brand']) &&
+          catalogCorrection.proposed_payload.productName ===
+            seededA.catalogCorrection.proposed_payload.productName &&
+          catalogCorrection.proposed_payload.brand ===
+            seededA.catalogCorrection.proposed_payload.brand &&
+          exactObjectKeys(catalogCorrection.client_context, ['route']) &&
+          catalogCorrection.client_context.route === seededA.catalogCorrection.client_context.route,
+        'catalog-correction export changed the sanitized reporter payload.',
+      );
+      const catalogCorrectionManifest = data.manifest?.sources?.catalog_corrections;
+      assert(
+        catalogCorrectionManifest?.scope === 'service_role_filtered' &&
+          catalogCorrectionManifest.complete === true &&
+          catalogCorrectionManifest.count === 1 &&
+          catalogCorrectionManifest.count_before === 1 &&
+          catalogCorrectionManifest.count_after === 1 &&
+          /^sha256:[a-f0-9]{64}$/.test(catalogCorrectionManifest.checksum),
+        'catalog-correction export manifest is incomplete or misclassified.',
+      );
+      assert(
+        !data.export_coverage?.caller_rls_tables?.includes('catalog_corrections') &&
+          data.export_coverage?.service_role_filtered_exports?.filter(
+            (table) => table === 'catalog_corrections',
+          ).length === 1,
+        'catalog-correction export coverage is incomplete, duplicated, or misclassified.',
+      );
 
       const reverseTrialRows = rows(data, 'reverse_trial_grants');
       assert(
@@ -1476,6 +1613,14 @@ async function main() {
           0,
           'deleted reverse-trial grant',
         );
+        await expectAdminRows(
+          admin,
+          'catalog_corrections',
+          'id',
+          seededA.catalogCorrection.id,
+          0,
+          'deleted catalog correction',
+        );
 
         await expectAdminRows(admin, 'profiles', 'id', userB.id, 1, 'other user profile retained');
         await expectAdminRows(
@@ -1501,6 +1646,14 @@ async function main() {
           userB.id,
           1,
           'other user reverse-trial grant retained',
+        );
+        await expectAdminRows(
+          admin,
+          'catalog_corrections',
+          'id',
+          seededB.catalogCorrection.id,
+          1,
+          'other user catalog correction retained',
         );
 
         const accountOnlySubscriptionIds = [

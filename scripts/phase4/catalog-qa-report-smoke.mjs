@@ -290,6 +290,68 @@ try {
       },
     },
     {
+      name: 'checksum-invalid and noncanonical OBF GTINs are hard QA blockers',
+      result: runReport({
+        name: 'invalid-obf-gtins',
+        manifest: {
+          ...obfManifest,
+          products: [
+            {
+              ...obfManifest.products[0],
+              barcode: '1234567890123',
+              sourceRef: '1234567890123',
+              sourceUrl: 'https://world.openbeautyfacts.org/product/1234567890123',
+            },
+            {
+              ...obfManifest.products[1],
+              barcode: '0036000291452',
+              sourceRef: '0036000291452',
+              sourceUrl: 'https://world.openbeautyfacts.org/product/0036000291452',
+            },
+          ],
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.totals.provenanceDrift === 2 &&
+          result.packet.blockers.some((blocker) =>
+            blocker.includes('records violate the exact content/provenance contract'),
+          )
+        );
+      },
+    },
+    {
+      name: 'fixed-length GTIN-14 aliases are canonical duplicate QA blockers',
+      result: runReport({
+        name: 'padded-obf-gtin-duplicate',
+        manifest: {
+          ...obfManifest,
+          products: [
+            {
+              ...obfManifest.products[0],
+              barcode: '96385074',
+              sourceRef: '96385074',
+              sourceUrl: 'https://world.openbeautyfacts.org/product/96385074',
+            },
+            {
+              ...obfManifest.products[1],
+              barcode: '00000096385074',
+              sourceRef: '00000096385074',
+              sourceUrl: 'https://world.openbeautyfacts.org/product/00000096385074',
+            },
+          ],
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.totals.duplicateIdentifiers === 1 &&
+          result.packet.blockers.some((blocker) => blocker.includes('Duplicate barcodes: 96385074'))
+        );
+      },
+    },
+    {
       name: 'unsigned candidate manifest is a hard nonzero promotion blocker',
       result: runReport({
         name: 'candidate-obf',

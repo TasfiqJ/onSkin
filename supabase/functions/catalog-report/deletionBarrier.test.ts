@@ -25,6 +25,7 @@ Deno.test(
     assert(
       source.includes('readSupabaseSecretKey') &&
         source.includes("await admin.rpc('submit_catalog_correction'") &&
+        source.includes('p_report_request_id: reportRequestId') &&
         !source.includes("from('catalog_corrections')"),
       'the service credential must be used only through the guarded correction RPC, never direct table DML.',
     );

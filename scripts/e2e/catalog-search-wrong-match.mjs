@@ -520,6 +520,24 @@ async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } =
   return rect;
 }
 
+async function scrollControlIntoView(client, label) {
+  const scrolled = await evaluate(
+    client,
+    `(() => {
+      const wanted = ${JSON.stringify(label)};
+      const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
+      const target = Array.from(document.querySelectorAll('button,[role="button"]')).find(
+        (node) => normalize(node.getAttribute('aria-label') || node.textContent) === wanted,
+      );
+      if (!target) return false;
+      target.scrollIntoView({ block: 'center', inline: 'nearest' });
+      return true;
+    })()`,
+  );
+  assert(scrolled, `Could not scroll control into view: ${label}`);
+  await delay(200);
+}
+
 function enabledButtonExpression(label) {
   return `(() => {
     const label = ${JSON.stringify(label)};
@@ -802,14 +820,27 @@ async function run() {
     assertInteractiveControl(result, 'Not this product');
 
     await clickByText(client, 'Not this product');
+    await waitForText(client, 'Confirm catalog report');
+    await scrollControlIntoView(client, 'Send report');
+    const confirmation = await captureStep(client, '03-wrong-match-confirmation-390x844');
+    assertInteractiveControl(confirmation, 'Send report');
+    assert(
+      confirmation.bodyText.includes('Catalog product ID') &&
+        confirmation.bodyText.includes('RoutineKind account ID') &&
+        confirmation.bodyText.includes('Nothing is sent to Open Beauty Facts'),
+      'Wrong-match confirmation did not disclose identity, account linkage, and recipients.',
+    );
+    await clickByText(client, 'Send report');
     await waitForText(client, 'Report not sent');
-    const reported = await captureStep(client, '03-wrong-match-inline-feedback-390x844');
+    const reported = await captureStep(client, '04-wrong-match-inline-feedback-390x844');
     assert(
       reported.alertText.includes('Report not sent'),
       'Wrong-match feedback was not an alert.',
     );
     assert(
-      reported.bodyText.includes('Catalog reporting is not configured on this build'),
+      reported.bodyText.includes(
+        'Catalog reporting is unavailable in this build, so nothing was sent.',
+      ),
       'Offline report fallback copy did not render.',
     );
     assert(!reported.dialogText, 'Wrong-match feedback opened a dialog.');
@@ -817,7 +848,7 @@ async function run() {
 
     await clickByText(client, 'Add by hand');
     await waitForPath(client, '/shelf/manual');
-    const manual = await captureStep(client, '04-manual-recovery-390x844');
+    const manual = await captureStep(client, '05-manual-recovery-390x844');
     assert(
       manual.inputs.some((input) => input.label === 'Product name'),
       'Manual add did not expose the Product name input.',
@@ -829,7 +860,7 @@ async function run() {
 
     await openSearch(client, supportFloorViewport);
     await searchForFixture(client);
-    const support = await captureStep(client, '05-wrong-match-result-360x640');
+    const support = await captureStep(client, '06-wrong-match-result-360x640');
     assertInteractiveControl(support, 'Back');
     assertInteractiveControl(support, 'Search');
     assertInteractiveControl(support, 'Use');

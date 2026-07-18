@@ -82,8 +82,8 @@ const tableClassifications = [
 
 block(
   errors,
-  OWNER_LINKED_PRIVATE_TABLES.length === 30,
-  `Owner-linked private-table inventory must contain 30 tables; found ${OWNER_LINKED_PRIVATE_TABLES.length}.`,
+  OWNER_LINKED_PRIVATE_TABLES.length === 28,
+  `Owner-linked private-table inventory must contain 28 tables; found ${OWNER_LINKED_PRIVATE_TABLES.length}.`,
 );
 block(
   errors,
@@ -92,8 +92,8 @@ block(
 );
 block(
   errors,
-  SEALED_SERVICE_PRIVATE_TABLES.length === 20,
-  `Sealed service-only private-table inventory must contain 20 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
+  SEALED_SERVICE_PRIVATE_TABLES.length === 22,
+  `Sealed service-only private-table inventory must contain 22 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
 );
 block(
   errors,
@@ -107,8 +107,8 @@ block(
 );
 block(
   errors,
-  SEALED_PUBLIC_TABLES.length === 28,
-  `Combined sealed public-schema inventory must contain 28 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
+  SEALED_PUBLIC_TABLES.length === 30,
+  `Combined sealed public-schema inventory must contain 30 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
 );
 block(
   errors,
@@ -122,8 +122,8 @@ block(
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length === 38,
-  'Directly queryable private-table inventory must contain 38 tables.',
+  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length === 36,
+  'Directly queryable private-table inventory must contain 36 tables.',
 );
 
 for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
@@ -232,7 +232,7 @@ block(
     callerRegistryTables.length === OWNER_LINKED_PRIVATE_TABLES.length &&
     JSON.stringify([...new Set(callerRegistryTables)].sort()) ===
       JSON.stringify([...OWNER_LINKED_PRIVATE_TABLES].sort()),
-  'Caller-RLS export registry must exactly match the 30 owner-linked private tables without duplicates.',
+  'Caller-RLS export registry must exactly match the 28 owner-linked private tables without duplicates.',
 );
 block(
   errors,
@@ -479,16 +479,20 @@ for (const table of staticProbeCounts.keys()) {
 for (const table of SERVICE_ONLY_PRIVATE_TABLES) {
   const cleanupMarker = `trackServiceCleanup('${table}'`;
   const probeMarker = `registerPrivateTableProbe('${table}'`;
-  if (table === 'reverse_trial_grants') {
+  if (table === 'reverse_trial_grants' || table === 'catalog_corrections') {
+    const guardedRpc =
+      table === 'reverse_trial_grants'
+        ? /admin\.rpc\('grant_app_granted_reverse_trial'/
+        : /admin\.rpc\('submit_catalog_correction'/;
     block(
       errors,
       !liveHarness.includes(cleanupMarker) &&
-        /admin\.rpc\('grant_app_granted_reverse_trial'/.test(liveHarness) &&
+        guardedRpc.test(liveHarness) &&
         liveHarness.indexOf(probeMarker) >= 0 &&
         /admin\.auth\.admin\.deleteUser\(user\.id\)[\s\S]*owner-cascade cleanup left a residual row/.test(
           liveHarness,
         ),
-      'Live harness must create reverse_trial_grants only through the guarded RPC and verify Auth-owner cascade cleanup.',
+      `Live harness must create ${table} only through its guarded RPC and verify Auth-owner cascade cleanup.`,
     );
     continue;
   }

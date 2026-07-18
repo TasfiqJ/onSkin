@@ -169,7 +169,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The current integrated source checkpoint
-on 2026-07-16 passes root typecheck, lint, and 282 mobile test files / 3251 tests.
+on 2026-07-18 passes root typecheck, lint, and 289 mobile test files / 3360 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -404,19 +404,19 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains a 57-migration source candidate through
-`20260717000058`, targeted hand-maintained
+The repo contains a 58-migration source candidate through
+`20260718000059`, targeted hand-maintained
 RPC types with DB-08 still open, 16 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
-`0058` source inventory classifies all 80 RLS-enabled public tables: 38 directly
-queryable private tables, 28 read-sealed private/authority tables, and 14
-authenticated catalog/editorial tables. The 28 read-sealed tables comprise 20
+`0059` source inventory classifies all 80 RLS-enabled public tables: 36 directly
+queryable private tables, 30 read-sealed private/authority tables, and 14
+authenticated catalog/editorial tables. The 30 read-sealed tables comprise 22
 service-private authorities, four global clinical/editorial relations, and four
 catalog dictionary/legacy authorities; seven additional CAT-03 authorities are
 sealed in the `private` schema. This is a passing static/source classification,
 not hosted evidence. The last executed CAT-02 Docker baseline passed a reset and the
 then-current 35-assertion partial suite. The final source expands that contract
-to 214 statically matched CAT-02 assertions; a fresh 57-migration reset, the
+to 214 statically matched CAT-02 assertions; a fresh 58-migration reset, the
 current CAT-02 and CAT-03
 pgTAP execution, error-level schema lint, migration-shadow drift check, and
 temporary type generation remain required before this revision can claim local
@@ -523,8 +523,8 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 16-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 57
-  migrations through `0058`, redeploys the manifest, retains linked types
+  immediately rereads the full empty-target boundary, applies all 58
+  migrations through `0059`, redeploys the manifest, retains linked types
   without changing repository types, and leaves
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
@@ -535,7 +535,7 @@ Next action:
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
-  signed-anonymous user, the no-session client, the regenerated exact `0058`
+  signed-anonymous user, the no-session client, the regenerated exact `0059`
   private-table inventory, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;

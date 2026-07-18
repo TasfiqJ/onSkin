@@ -15,6 +15,7 @@ import {
 const mocks = vi.hoisted(() => ({
   decryptPhotoNoteForPurposeLimitedExport: vi.fn(),
   getPrivateItemsForPurposeLimitedExport: vi.fn(),
+  purgeExpiredCatalogLookupQueueForPurposeLimitedExport: vi.fn(),
 }));
 
 vi.mock('@/features/photos/encryptedStorage', () => ({
@@ -25,7 +26,13 @@ vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItemsForPurposeLimitedExport: mocks.getPrivateItemsForPurposeLimitedExport,
 }));
 
+vi.mock('@/lib/offline/catalogLookupQueue', () => ({
+  purgeExpiredCatalogLookupQueueForPurposeLimitedExport:
+    mocks.purgeExpiredCatalogLookupQueueForPurposeLimitedExport,
+}));
+
 describe('local device data export', () => {
+  const expectedUserId = 'user-1';
   const controller = new AbortController();
   const accountLease = {
     generation: 0,
@@ -37,8 +44,15 @@ describe('local device data export', () => {
     accountLease.assertCurrent.mockReset();
     mocks.decryptPhotoNoteForPurposeLimitedExport.mockReset();
     mocks.getPrivateItemsForPurposeLimitedExport.mockReset();
+    mocks.purgeExpiredCatalogLookupQueueForPurposeLimitedExport.mockReset();
     mocks.decryptPhotoNoteForPurposeLimitedExport.mockResolvedValue(null);
     mocks.getPrivateItemsForPurposeLimitedExport.mockResolvedValue(new Map());
+    mocks.purgeExpiredCatalogLookupQueueForPurposeLimitedExport.mockResolvedValue({
+      expired: 0,
+      remaining: 0,
+      nextRetryAt: null,
+      nextExpiryAt: null,
+    });
   });
 
   it('accounts for every encrypted local private-data key exactly once', () => {
@@ -54,7 +68,7 @@ describe('local device data export', () => {
   });
 
   it('never reads or exports durable privacy-request recovery capabilities', async () => {
-    await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
+    await collectLocalDeviceExportData(accountLease, expectedUserId, '2026-07-10T12:00:00.000Z');
 
     const requested = mocks.getPrivateItemsForPurposeLimitedExport.mock
       .calls[0]?.[0] as readonly string[];
@@ -64,6 +78,27 @@ describe('local device data export', () => {
     for (const prefix of LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES) {
       expect(requested.some((key) => key.startsWith(prefix))).toBe(false);
     }
+  });
+
+  it('physically purges catalog TTL bytes before reading the export snapshot', async () => {
+    const order: string[] = [];
+    mocks.purgeExpiredCatalogLookupQueueForPurposeLimitedExport.mockImplementationOnce(async () => {
+      order.push('purge');
+      return { expired: 1, remaining: 0, nextRetryAt: null, nextExpiryAt: null };
+    });
+    mocks.getPrivateItemsForPurposeLimitedExport.mockImplementationOnce(async () => {
+      order.push('read');
+      return new Map();
+    });
+
+    await collectLocalDeviceExportData(accountLease, expectedUserId, '2026-07-10T12:00:00.000Z');
+
+    expect(order).toEqual(['purge', 'read']);
+    expect(mocks.purgeExpiredCatalogLookupQueueForPurposeLimitedExport).toHaveBeenCalledWith(
+      accountLease,
+      expectedUserId,
+      new Date('2026-07-10T12:00:00.000Z'),
+    );
   });
 
   it('exports device-authoritative records while redacting media paths and ciphertext', async () => {
@@ -123,6 +158,26 @@ describe('local device data export', () => {
         }),
       ],
       [
+        'routinekind.catalog.lookupQueue.v1',
+        JSON.stringify({
+          version: 1,
+          items: [
+            {
+              ownerUserId: 'user-1',
+              barcode: '036000291452',
+              shelfProductId: null,
+              state: 'pending',
+              enqueuedAt: '2026-07-10T11:00:00.000Z',
+              expiresAt: '2026-07-17T11:00:00.000Z',
+              attemptCount: 0,
+              nextAttemptAt: '2026-07-10T11:00:00.000Z',
+              lastAttemptAt: null,
+              candidate: null,
+            },
+          ],
+        }),
+      ],
+      [
         'onskin.photos.v1',
         JSON.stringify([
           {
@@ -146,7 +201,11 @@ describe('local device data export', () => {
     );
     mocks.decryptPhotoNoteForPurposeLimitedExport.mockResolvedValue('Less redness today');
 
-    const result = await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
+    const result = await collectLocalDeviceExportData(
+      accountLease,
+      expectedUserId,
+      '2026-07-10T12:00:00.000Z',
+    );
 
     expect(result.sections.profile_and_preferences.skin_profile).toEqual(
       expect.objectContaining({ goals: ['acne'] }),
@@ -174,6 +233,25 @@ describe('local device data export', () => {
       state: 'withdrawing',
       processingEpoch: 2,
       localCleanupComplete: true,
+    });
+    expect(result.sections.account_and_privacy.health_data_lifecycle).not.toHaveProperty(
+      'ownerUserId',
+    );
+    expect(result.sections.shelf_and_routine.pending_catalog_lookups).toEqual({
+      version: 1,
+      items: [
+        {
+          barcode: '036000291452',
+          shelfProductId: null,
+          state: 'pending',
+          enqueuedAt: '2026-07-10T11:00:00.000Z',
+          expiresAt: '2026-07-17T11:00:00.000Z',
+          attemptCount: 0,
+          nextAttemptAt: '2026-07-10T11:00:00.000Z',
+          lastAttemptAt: null,
+          candidate: null,
+        },
+      ],
     });
     expect(result.sections.shelf_and_routine.conflict_overrides).toEqual({
       schemaVersion: 1,
@@ -230,7 +308,11 @@ describe('local device data export', () => {
         ),
     );
 
-    const result = await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
+    const result = await collectLocalDeviceExportData(
+      accountLease,
+      expectedUserId,
+      '2026-07-10T12:00:00.000Z',
+    );
 
     expect(result.sections.progress.photo_records?.records[0]).toEqual({
       id: 'photo-1',
@@ -252,7 +334,11 @@ describe('local device data export', () => {
         ),
     );
 
-    const result = await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
+    const result = await collectLocalDeviceExportData(
+      accountLease,
+      expectedUserId,
+      '2026-07-10T12:00:00.000Z',
+    );
     expect(result.sections.shelf_and_routine.conflict_overrides).toEqual({
       export_status: 'unrecognized_conflict_choice_schema',
       stored_value: future,
@@ -264,7 +350,7 @@ describe('local device data export', () => {
       new Error('secure storage unavailable'),
     );
 
-    await expect(collectLocalDeviceExportData(accountLease)).rejects.toThrow(
+    await expect(collectLocalDeviceExportData(accountLease, expectedUserId)).rejects.toThrow(
       'secure storage unavailable',
     );
   });
@@ -272,6 +358,7 @@ describe('local device data export', () => {
   it('wraps server and local scopes in a versioned, explicit bundle', async () => {
     const localDeviceData = await collectLocalDeviceExportData(
       accountLease,
+      expectedUserId,
       '2026-07-10T12:00:00.000Z',
     );
 

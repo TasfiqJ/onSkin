@@ -9,6 +9,7 @@ export default function ShelfLayout() {
       <Stack.Screen name="search" />
       <Stack.Screen name="manual" />
       <Stack.Screen name="ocr" />
+      <Stack.Screen name="catalog-recovery" />
       <Stack.Screen name="[id]" />
       <Stack.Screen name="archive" />
       <Stack.Screen

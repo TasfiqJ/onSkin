@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 
 const root = process.cwd();
 const args = new Set(process.argv.slice(2));
@@ -27,9 +28,33 @@ const ignoredGeneratedOutputPatterns = [
   /^docs\/phase-(?:3|4|5|6|7|8|9|10|11)\/generated\/.+\.(?:json|md)$/,
 ];
 
+const ignoredUntrackedRuntimeOutputPatterns = [/^\.tmp(?:\/|$)/];
+
 function ignoredGeneratedOutputPath(path) {
   const normalized = normalizeRepoPath(path);
   return ignoredGeneratedOutputPatterns.some((pattern) => pattern.test(normalized));
+}
+
+function ignoredUntrackedRuntimeOutputPath(path) {
+  const normalized = normalizeRepoPath(path);
+  return ignoredUntrackedRuntimeOutputPatterns.some((pattern) => pattern.test(normalized));
+}
+
+function collectDisallowedUntrackedRepoFiles(
+  paths,
+  { allowedExactPaths = [], allowedPrefixes = [] } = {},
+) {
+  const exact = new Set([...allowedExactPaths].map(normalizeRepoPath));
+  const prefixes = [...allowedPrefixes].map(normalizeRepoPath);
+  return [...new Set(paths.map(normalizeRepoPath).filter(Boolean))]
+    .filter(
+      (path) =>
+        !exact.has(path) &&
+        !prefixes.some((prefix) => path.startsWith(prefix)) &&
+        !ignoredGeneratedOutputPath(path) &&
+        !ignoredUntrackedRuntimeOutputPath(path),
+    )
+    .sort();
 }
 
 function exists(path) {
@@ -176,6 +201,474 @@ function hasExactObjectKeys(value, expectedKeys) {
   const actual = Object.keys(value).sort();
   const expected = [...expectedKeys].sort();
   return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
+}
+
+const CAT04_CATALOG_VIEWPORTS = Object.freeze([
+  Object.freeze({ id: 'iphone-375x667', width: 375, height: 667 }),
+  Object.freeze({ id: 'iphone-390x844', width: 390, height: 844 }),
+  Object.freeze({ id: 'iphone-430x932', width: 430, height: 932 }),
+]);
+
+const CAT04_CATALOG_FIXTURE_GROUPS = Object.freeze([
+  'matched',
+  'no-match',
+  'offline',
+  'scan-error',
+  'camera-recovery',
+  'ocr-capture-failure',
+]);
+
+const CAT04_CATALOG_SCENARIOS = Object.freeze([
+  Object.freeze({
+    id: 'search-matched',
+    fixture: 'matched',
+    groupId: 'matched',
+    route: '/shelf/search',
+  }),
+  Object.freeze({
+    id: 'scan-matched',
+    fixture: 'matched',
+    groupId: 'matched',
+    route: '/shelf/scan',
+  }),
+  Object.freeze({
+    id: 'scan-wrong-match-recovery',
+    fixture: 'matched_wrong_match_recovery',
+    groupId: 'matched',
+    route: '/shelf/scan',
+  }),
+  Object.freeze({
+    id: 'search-no-match',
+    fixture: 'no_match',
+    groupId: 'no-match',
+    route: '/shelf/search',
+  }),
+  Object.freeze({
+    id: 'scan-no-match',
+    fixture: 'no_match',
+    groupId: 'no-match',
+    route: '/shelf/scan',
+  }),
+  Object.freeze({
+    id: 'search-wrong-match-recovery',
+    fixture: 'wrong_match',
+    groupId: 'scan-error',
+    route: '/shelf/search',
+  }),
+  Object.freeze({
+    id: 'search-offline',
+    fixture: 'offline',
+    groupId: 'offline',
+    route: '/shelf/search',
+  }),
+  Object.freeze({
+    id: 'scan-offline',
+    fixture: 'offline',
+    groupId: 'offline',
+    route: '/shelf/scan',
+  }),
+  Object.freeze({
+    id: 'scan-error',
+    fixture: 'error',
+    groupId: 'scan-error',
+    route: '/shelf/scan',
+  }),
+  Object.freeze({
+    id: 'scan-camera-denied-settings-failure',
+    fixture: 'denied_no_retry',
+    groupId: 'camera-recovery',
+    route: '/shelf/scan',
+  }),
+  Object.freeze({
+    id: 'ocr-camera-denied-settings-failure',
+    fixture: 'denied_no_retry',
+    groupId: 'camera-recovery',
+    route: '/shelf/ocr',
+  }),
+  Object.freeze({
+    id: 'ocr-capture-failure',
+    fixture: 'capture_failure_once',
+    groupId: 'ocr-capture-failure',
+    route: '/shelf/ocr',
+  }),
+  Object.freeze({
+    id: 'no-match-missing-barcode',
+    fixture: 'missing_barcode',
+    groupId: 'ocr-capture-failure',
+    route: '/shelf/no-match',
+  }),
+  Object.freeze({
+    id: 'catalog-recovery-malformed',
+    fixture: 'malformed_params',
+    groupId: 'ocr-capture-failure',
+    route: '/shelf/catalog-recovery',
+  }),
+  Object.freeze({
+    id: 'manual-barcode-validation',
+    fixture: 'manual_barcode_validation',
+    groupId: 'ocr-capture-failure',
+    route: '/shelf/manual',
+  }),
+]);
+
+function cat04ViewportKey(viewport) {
+  if (!hasExactObjectKeys(viewport, ['id', 'width', 'height'])) return null;
+  const expected = CAT04_CATALOG_VIEWPORTS.find(({ id }) => id === viewport.id);
+  if (!expected || viewport.width !== expected.width || viewport.height !== expected.height) {
+    return null;
+  }
+  return expected.id;
+}
+
+function collectCat04CatalogRecoveryFailures({
+  folder,
+  summary,
+  trackedRepoFiles,
+  sourceGitState,
+  fileExists = exists,
+  readJsonFile = readJson,
+  readTextFile = (path) => readFileSync(abs(path), 'utf8'),
+}) {
+  const failures = [];
+  const checkedFiles = new Set();
+  const requiredArtifacts = new Set(['report.md']);
+  const folderPrefix = `${normalizeRepoPath(folder).replace(/\/$/, '')}/`;
+  const trackedFolderFiles = [...trackedRepoFiles]
+    .filter((path) => normalizeRepoPath(path).startsWith(folderPrefix))
+    .map((path) => normalizeRepoPath(path).slice(folderPrefix.length));
+
+  const requireTrackedFile = (relativePath, label = relativePath) => {
+    const normalized = normalizeEvidenceRelativePath(relativePath);
+    if (!normalized || normalized !== relativePath) {
+      failures.push(`${label} uses an unsafe evidence path`);
+      return false;
+    }
+    requiredArtifacts.add(normalized);
+    if (checkedFiles.has(normalized)) {
+      return (
+        fileExists(`${folder}/${normalized}`) &&
+        trackedRepoFiles.has(normalizeRepoPath(`${folder}/${normalized}`))
+      );
+    }
+    checkedFiles.add(normalized);
+    const repoPath = normalizeRepoPath(`${folder}/${normalized}`);
+    if (!fileExists(repoPath)) {
+      failures.push(`missing CAT04 evidence file ${normalized}`);
+      return false;
+    }
+    if (!trackedRepoFiles.has(repoPath)) {
+      failures.push(`CAT04 evidence file is not Git-tracked: ${normalized}`);
+      return false;
+    }
+    return true;
+  };
+
+  if (summary?.schemaVersion !== 1) {
+    failures.push(
+      `schemaVersion must be 1, received ${String(summary?.schemaVersion ?? 'missing')}`,
+    );
+  }
+  if (summary?.surface !== 'expo-web') {
+    failures.push(`surface must be expo-web, received ${String(summary?.surface ?? 'missing')}`);
+  }
+  if (summary?.nativeDeviceProof !== false) {
+    failures.push('nativeDeviceProof must be false for this Expo-web compatibility gate');
+  }
+  if (summary?.verdict !== 'pass') {
+    failures.push(
+      `summary verdict must be pass, received ${String(summary?.verdict ?? 'missing')}`,
+    );
+  }
+  if (!isDeepStrictEqual(summary?.requiredViewports, CAT04_CATALOG_VIEWPORTS)) {
+    failures.push('requiredViewports must be exactly 375x667, 390x844, and 430x932');
+  }
+  if (!isDeepStrictEqual(summary?.fixtureGroups, CAT04_CATALOG_FIXTURE_GROUPS)) {
+    failures.push('fixtureGroups must match the six reviewed CAT04 fixture groups');
+  }
+  if (!isDeepStrictEqual(summary?.scenarioDefinitions, CAT04_CATALOG_SCENARIOS)) {
+    failures.push('scenarioDefinitions must match the 15 reviewed CAT04 recovery scenarios');
+  }
+
+  const expectedScenarioCount = CAT04_CATALOG_SCENARIOS.length * CAT04_CATALOG_VIEWPORTS.length;
+  const expectedBootstrapCount =
+    CAT04_CATALOG_FIXTURE_GROUPS.length * CAT04_CATALOG_VIEWPORTS.length;
+  if (summary?.expectedExecutionCount !== expectedScenarioCount) {
+    failures.push(
+      `expectedExecutionCount must be ${expectedScenarioCount}, received ${String(summary?.expectedExecutionCount ?? 'missing')}`,
+    );
+  }
+  if (summary?.expectedBootstrapCount !== expectedBootstrapCount) {
+    failures.push(
+      `expectedBootstrapCount must be ${expectedBootstrapCount}, received ${String(summary?.expectedBootstrapCount ?? 'missing')}`,
+    );
+  }
+
+  const expectedScenarioById = new Map(
+    CAT04_CATALOG_SCENARIOS.map((scenario) => [scenario.id, scenario]),
+  );
+  const scenarioKeys = new Set();
+  const bootstrapKeys = new Set();
+  const expectedPrefixes = [];
+
+  const validateResult = ({ result, expectedPrefix, resultFile, context }) => {
+    expectedPrefixes.push(expectedPrefix);
+    if (result?.artifactPrefix !== expectedPrefix) {
+      failures.push(
+        `${context} artifactPrefix must be ${expectedPrefix}, received ${String(result?.artifactPrefix ?? 'missing')}`,
+      );
+    }
+    if (result?.surface !== 'expo-web' || result?.nativeDeviceProof !== false) {
+      failures.push(`${context} must retain Expo-web surface and nativeDeviceProof false`);
+    }
+    if (result?.verdict !== 'pass' || result?.error != null || result?.timedOut === true) {
+      failures.push(`${context} must have a clean pass verdict`);
+    }
+    if (!Array.isArray(result?.browserFailures) || result.browserFailures.length !== 0) {
+      failures.push(`${context} browserFailures must be an empty array`);
+    }
+    if (requireTrackedFile(resultFile, `${context} result`)) {
+      try {
+        const persisted = readJsonFile(`${folder}/${resultFile}`);
+        if (!isDeepStrictEqual(persisted, result)) {
+          failures.push(`${resultFile} does not match its summary record`);
+        }
+      } catch (error) {
+        failures.push(
+          `${resultFile} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+  };
+
+  if (!Array.isArray(summary?.scenarios) || summary.scenarios.length !== expectedScenarioCount) {
+    failures.push(`scenarios must contain exactly ${expectedScenarioCount} executions`);
+  } else {
+    for (const result of summary.scenarios) {
+      const definition = expectedScenarioById.get(result?.scenarioId);
+      const viewportId = cat04ViewportKey(result?.viewport);
+      const key = `${String(result?.scenarioId)}::${String(viewportId)}`;
+      if (!definition || !viewportId) {
+        failures.push(`scenario result has an unknown scenario or viewport: ${key}`);
+        continue;
+      }
+      if (scenarioKeys.has(key)) failures.push(`duplicate scenario execution ${key}`);
+      scenarioKeys.add(key);
+      if (
+        result.fixture !== definition.fixture ||
+        result.fixtureGroup !== definition.groupId ||
+        result.route !== definition.route
+      ) {
+        failures.push(`${key} does not match its reviewed fixture, group, and route`);
+      }
+      const prefix = `${definition.id}-${viewportId}`;
+      validateResult({
+        result,
+        expectedPrefix: prefix,
+        resultFile: `${prefix}-result.json`,
+        context: `scenario ${key}`,
+      });
+    }
+  }
+  for (const scenario of CAT04_CATALOG_SCENARIOS) {
+    for (const viewport of CAT04_CATALOG_VIEWPORTS) {
+      const key = `${scenario.id}::${viewport.id}`;
+      if (!scenarioKeys.has(key)) failures.push(`missing scenario execution ${key}`);
+    }
+  }
+
+  if (
+    !Array.isArray(summary?.bootstrapResults) ||
+    summary.bootstrapResults.length !== expectedBootstrapCount
+  ) {
+    failures.push(`bootstrapResults must contain exactly ${expectedBootstrapCount} executions`);
+  } else {
+    for (const result of summary.bootstrapResults) {
+      const viewportId = cat04ViewportKey(result?.viewport);
+      const fixtureGroup = String(result?.fixtureGroup ?? '');
+      const key = `${fixtureGroup}::${String(viewportId)}`;
+      if (!CAT04_CATALOG_FIXTURE_GROUPS.includes(fixtureGroup) || !viewportId) {
+        failures.push(`bootstrap result has an unknown fixture group or viewport: ${key}`);
+        continue;
+      }
+      if (bootstrapKeys.has(key)) failures.push(`duplicate consent bootstrap ${key}`);
+      bootstrapKeys.add(key);
+      const prefix = `bootstrap-${fixtureGroup}-${viewportId}`;
+      validateResult({
+        result,
+        expectedPrefix: prefix,
+        resultFile: `${prefix}-result.json`,
+        context: `bootstrap ${key}`,
+      });
+    }
+  }
+  for (const fixtureGroup of CAT04_CATALOG_FIXTURE_GROUPS) {
+    for (const viewport of CAT04_CATALOG_VIEWPORTS) {
+      const key = `${fixtureGroup}::${viewport.id}`;
+      if (!bootstrapKeys.has(key)) failures.push(`missing consent bootstrap ${key}`);
+    }
+  }
+
+  const screenshots = Array.isArray(summary?.screenshots) ? summary.screenshots : [];
+  if (!Array.isArray(summary?.screenshots) || screenshots.length === 0) {
+    failures.push('screenshots must be a non-empty array');
+  }
+  const screenshotSet = new Set();
+  for (const screenshot of screenshots) {
+    const normalized = normalizeEvidenceRelativePath(screenshot);
+    if (
+      !normalized ||
+      normalized !== screenshot ||
+      screenshot.includes('/') ||
+      !screenshot.endsWith('.png')
+    ) {
+      failures.push(`screenshots contains an unsafe or non-PNG path: ${String(screenshot)}`);
+      continue;
+    }
+    if (screenshotSet.has(screenshot)) {
+      failures.push(`screenshots contains a duplicate path: ${screenshot}`);
+      continue;
+    }
+    screenshotSet.add(screenshot);
+    requireTrackedFile(screenshot, `screenshot ${screenshot}`);
+    requireTrackedFile(`${screenshot.slice(0, -4)}.json`, `snapshot for ${screenshot}`);
+  }
+  const trackedPngs = trackedFolderFiles.filter((path) => path.endsWith('.png')).sort();
+  if (!isDeepStrictEqual([...screenshotSet].sort(), trackedPngs)) {
+    failures.push('screenshots must enumerate every Git-tracked CAT04 PNG exactly once');
+  }
+  for (const prefix of expectedPrefixes) {
+    if (![...screenshotSet].some((screenshot) => screenshot.startsWith(`${prefix}-`))) {
+      failures.push(`${prefix} has no screenshot provenance`);
+    }
+  }
+
+  if (requireTrackedFile('report.md', 'CAT04 report')) {
+    try {
+      const report = readTextFile(`${folder}/report.md`);
+      for (const fragment of [
+        '# CAT04 Catalog Recovery Expo-Web Audit',
+        '- Verdict: pass',
+        '- Surface: Expo web deterministic development fixtures',
+        '- Native-device proof: No',
+        `- Source Git SHA: ${String(summary?.sourceGitSha ?? '')}`,
+        'Machine-readable result: `summary.json`',
+      ]) {
+        if (!report.includes(fragment))
+          failures.push(`report.md is missing required text: ${fragment}`);
+      }
+      for (const fixtureGroup of CAT04_CATALOG_FIXTURE_GROUPS) {
+        for (const viewport of CAT04_CATALOG_VIEWPORTS) {
+          const row = `| ${fixtureGroup} | ${viewport.width}x${viewport.height} | pass |`;
+          if (!report.includes(row)) failures.push(`report.md is missing bootstrap row: ${row}`);
+        }
+      }
+      for (const scenario of CAT04_CATALOG_SCENARIOS) {
+        for (const viewport of CAT04_CATALOG_VIEWPORTS) {
+          const row = `| ${scenario.id} | ${viewport.width}x${viewport.height} | pass |`;
+          if (!report.includes(row)) failures.push(`report.md is missing scenario row: ${row}`);
+        }
+      }
+    } catch (error) {
+      failures.push(
+        `report.md could not be read: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  const sourceGitSha = String(summary?.sourceGitSha ?? '');
+  if (!/^[a-f0-9]{40}$/.test(sourceGitSha)) {
+    failures.push('sourceGitSha must be a lowercase full 40-character Git SHA');
+  } else if (!sourceGitState) {
+    failures.push('sourceGitSha consistency state is unavailable');
+  } else {
+    if (sourceGitState.sourceGitSha !== sourceGitSha) {
+      failures.push('sourceGitSha consistency state does not match summary.sourceGitSha');
+    }
+    if (sourceGitState.commitExists !== true) {
+      failures.push('sourceGitSha does not identify a local Git commit');
+    }
+    if (sourceGitState.isAncestorOfHead !== true) {
+      failures.push('sourceGitSha must be an ancestor of the manifest HEAD');
+    }
+    if (sourceGitState.runnerMatchesSource !== true) {
+      failures.push('CAT04 runner source does not match the recorded sourceGitSha');
+    }
+    const allowedGeneratedPaths = new Set([
+      'docs/e2e/generated/human-e2e-manifest.json',
+      'docs/e2e/generated/human-e2e-manifest.md',
+    ]);
+    const sourceChangeAllowed = (path) => {
+      const normalized = normalizeRepoPath(path);
+      return (
+        normalized.startsWith(folderPrefix) ||
+        allowedGeneratedPaths.has(normalized) ||
+        ignoredGeneratedOutputPath(normalized)
+      );
+    };
+    const laterSourceChanges = (sourceGitState.changedRepoFilesSinceSource ?? []).filter(
+      (path) => !sourceChangeAllowed(path),
+    );
+    if (laterSourceChanges.length > 0) {
+      failures.push(`sourceGitSha predates later source changes: ${laterSourceChanges.join(', ')}`);
+    }
+    const dirtySourceChanges = (sourceGitState.dirtyTrackedRepoFiles ?? []).filter(
+      (path) => !sourceChangeAllowed(path),
+    );
+    if (dirtySourceChanges.length > 0) {
+      failures.push(
+        `tracked source files changed after the recorded sourceGitSha: ${dirtySourceChanges.join(', ')}`,
+      );
+    }
+    const untrackedSourceChanges = collectDisallowedUntrackedRepoFiles(
+      sourceGitState.untrackedRepoFiles ?? [],
+      {
+        allowedExactPaths: allowedGeneratedPaths,
+        allowedPrefixes: [folderPrefix],
+      },
+    );
+    if (untrackedSourceChanges.length > 0) {
+      failures.push(
+        `nonignored untracked source is not bound to sourceGitSha: ${untrackedSourceChanges.join(', ')}`,
+      );
+    }
+  }
+
+  if (!Array.isArray(summary?.artifacts)) {
+    failures.push('artifacts must be a deterministic evidence-relative array');
+  } else {
+    const artifacts = new Set();
+    for (const artifact of summary.artifacts) {
+      const normalized = normalizeEvidenceRelativePath(artifact);
+      if (!normalized || normalized !== artifact) {
+        failures.push(`artifacts contains an unsafe path: ${String(artifact)}`);
+        continue;
+      }
+      if (artifacts.has(normalized)) {
+        failures.push(`artifacts contains a duplicate path: ${normalized}`);
+        continue;
+      }
+      artifacts.add(normalized);
+      requireTrackedFile(normalized, `artifact ${normalized}`);
+    }
+    if (!isDeepStrictEqual(summary.artifacts, [...summary.artifacts].sort())) {
+      failures.push('artifacts must use deterministic lexical ordering');
+    }
+    for (const requiredArtifact of requiredArtifacts) {
+      if (!artifacts.has(requiredArtifact)) {
+        failures.push(`artifacts is missing required CAT04 evidence ${requiredArtifact}`);
+      }
+    }
+    const expectedTrackedArtifacts = trackedFolderFiles
+      .filter((trackedFile) => trackedFile !== 'summary.json')
+      .sort();
+    if (!isDeepStrictEqual([...artifacts].sort(), expectedTrackedArtifacts)) {
+      failures.push(
+        'artifacts must enumerate every Git-tracked CAT04 evidence file except summary.json exactly once',
+      );
+    }
+  }
+
+  return failures;
 }
 
 function collectAccountDeletionRecoveryObservationFailures(observations) {
@@ -395,6 +888,18 @@ function runEvidenceProvenanceSmoke() {
     'missing report claims must fail required-text provenance',
   );
 
+  assert(
+    isDeepStrictEqual(
+      collectDisallowedUntrackedRepoFiles([
+        '.tmp/browser-profile/runtime.json',
+        'apps/mobile/src/app/untracked-route.tsx',
+        'docs/generated/readiness-status-audit.json',
+      ]),
+      ['apps/mobile/src/app/untracked-route.tsx'],
+    ),
+    'manifest provenance must reject untracked source while allowing only declared outputs',
+  );
+
   const jpegHeader = Buffer.from([
     0xff, 0xd8, 0xff, 0xc0, 0x00, 0x11, 0x08, 0x02, 0xd0, 0x04, 0xff, 0x03, 0x01, 0x11, 0x00, 0x02,
     0x11, 0x00, 0x03, 0x11, 0x00,
@@ -413,6 +918,229 @@ function runEvidenceProvenanceSmoke() {
   assert(invalidJpegRejected, 'non-JPEG evidence must fail dimension parsing');
 }
 
+function runCat04CatalogRecoveryContractSmoke() {
+  const folder = 'test-results/human-e2e/2099-01-01/cat04-catalog-recovery-current';
+  const timestamp = '2099-01-01T00:00:00.000Z';
+  const files = new Map();
+  const screenshots = [];
+  const scenarios = [];
+  const bootstrapResults = [];
+  const reportLines = [
+    '# CAT04 Catalog Recovery Expo-Web Audit',
+    '- Verdict: pass',
+    '- Surface: Expo web deterministic development fixtures',
+    '- Native-device proof: No',
+    `- Source Git SHA: ${'a'.repeat(40)}`,
+    'Machine-readable result: `summary.json`',
+  ];
+
+  const persistResult = (prefix, result) => {
+    files.set(`${prefix}-result.json`, result);
+    const screenshot = `${prefix}-proof.png`;
+    screenshots.push(screenshot);
+    files.set(screenshot, '<png>');
+    files.set(`${prefix}-proof.json`, { url: 'http://localhost/proof' });
+  };
+
+  for (const fixtureGroup of CAT04_CATALOG_FIXTURE_GROUPS) {
+    for (const viewport of CAT04_CATALOG_VIEWPORTS) {
+      const prefix = `bootstrap-${fixtureGroup}-${viewport.id}`;
+      const result = {
+        artifactPrefix: prefix,
+        browserFailures: [],
+        completedAt: timestamp,
+        endUrl: 'http://localhost/shelf/search',
+        error: null,
+        fixtureGroup,
+        nativeDeviceProof: false,
+        startedAt: timestamp,
+        surface: 'expo-web',
+        verdict: 'pass',
+        viewport: { ...viewport },
+      };
+      bootstrapResults.push(result);
+      persistResult(prefix, result);
+      reportLines.push(`| ${fixtureGroup} | ${viewport.width}x${viewport.height} | pass |  |`);
+    }
+  }
+
+  for (const scenario of CAT04_CATALOG_SCENARIOS) {
+    for (const viewport of CAT04_CATALOG_VIEWPORTS) {
+      const prefix = `${scenario.id}-${viewport.id}`;
+      const result = {
+        artifactPrefix: prefix,
+        browserFailures: [],
+        completedAt: timestamp,
+        endUrl: `http://localhost${scenario.route}`,
+        error: null,
+        fixture: scenario.fixture,
+        fixtureGroup: scenario.groupId,
+        nativeDeviceProof: false,
+        route: scenario.route,
+        scenarioId: scenario.id,
+        startedAt: timestamp,
+        surface: 'expo-web',
+        verdict: 'pass',
+        viewport: { ...viewport },
+      };
+      scenarios.push(result);
+      persistResult(prefix, result);
+      reportLines.push(`| ${scenario.id} | ${viewport.width}x${viewport.height} | pass |  |`);
+    }
+  }
+
+  files.set('report.md', reportLines.join('\n'));
+  const summary = {
+    artifacts: [...files.keys()].sort(),
+    bootstrapResults,
+    completedAt: timestamp,
+    expectedBootstrapCount: 18,
+    expectedExecutionCount: 45,
+    fixtureGroups: [...CAT04_CATALOG_FIXTURE_GROUPS],
+    limitations: ['Expo web only.'],
+    nativeDeviceProof: false,
+    requiredViewports: CAT04_CATALOG_VIEWPORTS.map((viewport) => ({ ...viewport })),
+    scenarioDefinitions: CAT04_CATALOG_SCENARIOS.map((scenario) => ({ ...scenario })),
+    scenarios,
+    schemaVersion: 1,
+    screenshots: [...screenshots].sort(),
+    sourceGitSha: 'a'.repeat(40),
+    startedAt: timestamp,
+    surface: 'expo-web',
+    verdict: 'pass',
+  };
+  files.set('summary.json', summary);
+  const trackedRepoFiles = new Set([...files.keys()].map((file) => `${folder}/${file}`));
+  const sourceGitState = {
+    changedRepoFilesSinceSource: [],
+    commitExists: true,
+    dirtyTrackedRepoFiles: [],
+    isAncestorOfHead: true,
+    runnerMatchesSource: true,
+    sourceGitSha: summary.sourceGitSha,
+    untrackedRepoFiles: [],
+  };
+  const validate = (candidate = summary, overrides = {}) =>
+    collectCat04CatalogRecoveryFailures({
+      folder,
+      summary: candidate,
+      sourceGitState,
+      trackedRepoFiles,
+      fileExists: (path) => files.has(path.slice(`${folder}/`.length)),
+      readJsonFile: (path) => files.get(path.slice(`${folder}/`.length)),
+      readTextFile: (path) => files.get(path.slice(`${folder}/`.length)),
+      ...overrides,
+    });
+  const assert = (condition, message) => {
+    if (!condition) throw new Error(message);
+  };
+
+  assert(validate().length === 0, 'complete tracked CAT04 evidence should pass');
+
+  const browserFailure = structuredClone(summary);
+  browserFailure.scenarios[0].browserFailures = [{ kind: 'console-error' }];
+  assert(
+    validate(browserFailure).some((failure) =>
+      failure.includes('browserFailures must be an empty array'),
+    ),
+    'scenario browser failures must fail the CAT04 contract',
+  );
+
+  const duplicateScenario = structuredClone(summary);
+  duplicateScenario.scenarios[1] = duplicateScenario.scenarios[0];
+  const duplicateFailures = validate(duplicateScenario);
+  assert(
+    duplicateFailures.some((failure) => failure.includes('duplicate scenario execution')) &&
+      duplicateFailures.some((failure) => failure.includes('missing scenario execution')),
+    'duplicate scenario/viewport pairs must fail exact matrix coverage',
+  );
+
+  const missingArtifact = structuredClone(summary);
+  missingArtifact.artifacts = missingArtifact.artifacts.filter(
+    (artifact) => artifact !== 'report.md',
+  );
+  assert(
+    validate(missingArtifact).some((failure) =>
+      failure.includes('artifacts is missing required CAT04 evidence report.md'),
+    ),
+    'optional artifacts provenance must cover the CAT04 report when present',
+  );
+
+  const untrackedScreenshot = screenshots[0];
+  const reducedTracked = new Set(trackedRepoFiles);
+  reducedTracked.delete(`${folder}/${untrackedScreenshot}`);
+  assert(
+    validate(summary, { trackedRepoFiles: reducedTracked }).some((failure) =>
+      failure.includes(`CAT04 evidence file is not Git-tracked: ${untrackedScreenshot}`),
+    ),
+    'untracked CAT04 screenshots must fail provenance',
+  );
+
+  const invalidSourceSha = { ...summary, sourceGitSha: 'short' };
+  assert(
+    validate(invalidSourceSha).includes(
+      'sourceGitSha must be a lowercase full 40-character Git SHA',
+    ),
+    'sourceGitSha must be mandatory and validated',
+  );
+
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        changedRepoFilesSinceSource: ['apps/mobile/src/app/(tabs)/shelf.tsx'],
+      },
+    }).some((failure) => failure.includes('sourceGitSha predates later source changes')),
+    'later production changes must invalidate the recorded source SHA',
+  );
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        changedRepoFilesSinceSource: [`${folder}/report.md`],
+      },
+    }).length === 0,
+    'the evidence commit itself may descend from the recorded source SHA',
+  );
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        untrackedRepoFiles: ['apps/mobile/src/app/shelf/untracked-route.tsx'],
+      },
+    }).some((failure) => failure.includes('nonignored untracked source is not bound')),
+    'untracked app source must invalidate source-bound CAT04 evidence',
+  );
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        untrackedRepoFiles: [
+          `${folder}/rerun-screenshot.png`,
+          '.tmp/cat04-browser-profile/runtime.json',
+          'docs/generated/readiness-status-audit.json',
+        ],
+      },
+    }).length === 0,
+    'only declared CAT04 evidence, generated packets, and runtime scratch may remain untracked',
+  );
+  assert(
+    validate(summary, {
+      sourceGitState: { ...sourceGitState, runnerMatchesSource: false },
+    }).includes('CAT04 runner source does not match the recorded sourceGitSha'),
+    'runner drift must invalidate source-bound CAT04 evidence',
+  );
+
+  const missingArtifacts = { ...summary };
+  delete missingArtifacts.artifacts;
+  assert(
+    validate(missingArtifacts).includes(
+      'artifacts must be a deterministic evidence-relative array',
+    ),
+    'artifacts provenance must be mandatory',
+  );
+}
+
 if (args.has('--provenance-smoke')) {
   try {
     runEvidenceProvenanceSmoke();
@@ -421,6 +1149,21 @@ if (args.has('--provenance-smoke')) {
   } catch (error) {
     console.error(
       `FAIL Human-E2E evidence provenance smoke: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+}
+
+if (args.has('--cat04-contract-smoke')) {
+  try {
+    runCat04CatalogRecoveryContractSmoke();
+    console.log('PASS CAT04 catalog-recovery evidence contract smoke');
+    process.exit(0);
+  } catch (error) {
+    console.error(
+      `FAIL CAT04 catalog-recovery evidence contract smoke: ${
         error instanceof Error ? error.message : String(error)
       }`,
     );
@@ -454,6 +1197,79 @@ function commandRequired(name, commandArgs) {
   }).trim();
 }
 
+function commandLines(name, commandArgs) {
+  return commandRequired(name, commandArgs)
+    .split(/\r?\n/)
+    .map((line) => normalizeRepoPath(line.trim()))
+    .filter(Boolean);
+}
+
+function inspectCat04SourceGitState(sourceGitSha) {
+  const state = {
+    changedRepoFilesSinceSource: [],
+    commitExists: false,
+    dirtyTrackedRepoFiles: [],
+    isAncestorOfHead: false,
+    runnerMatchesSource: false,
+    sourceGitSha,
+    untrackedRepoFiles: [],
+  };
+  if (!/^[a-f0-9]{40}$/.test(sourceGitSha)) return state;
+
+  try {
+    commandRequired('git', ['cat-file', '-e', `${sourceGitSha}^{commit}`]);
+    state.commitExists = true;
+  } catch {
+    return state;
+  }
+
+  try {
+    commandRequired('git', ['merge-base', '--is-ancestor', sourceGitSha, 'HEAD']);
+    state.isAncestorOfHead = true;
+  } catch {
+    state.isAncestorOfHead = false;
+  }
+
+  const runnerPath = 'scripts/e2e/cat04-catalog-recovery-audit.mjs';
+  try {
+    commandRequired('git', ['cat-file', '-e', `${sourceGitSha}:${runnerPath}`]);
+    execFileSync('git', ['diff', '--quiet', sourceGitSha, '--', runnerPath], {
+      cwd: root,
+      stdio: 'ignore',
+    });
+    state.runnerMatchesSource = true;
+  } catch {
+    state.runnerMatchesSource = false;
+  }
+
+  try {
+    state.changedRepoFilesSinceSource = commandLines('git', [
+      'diff',
+      '--name-only',
+      `${sourceGitSha}..HEAD`,
+    ]);
+  } catch {
+    state.changedRepoFilesSinceSource = ['<unable-to-compare-source-sha>'];
+  }
+
+  try {
+    state.dirtyTrackedRepoFiles = [
+      ...commandLines('git', ['diff', '--name-only']),
+      ...commandLines('git', ['diff', '--cached', '--name-only']),
+    ].filter((path, index, paths) => paths.indexOf(path) === index);
+  } catch {
+    state.dirtyTrackedRepoFiles = ['<unable-to-enumerate-dirty-files>'];
+  }
+
+  try {
+    state.untrackedRepoFiles = listGitUntrackedRepoFiles();
+  } catch {
+    state.untrackedRepoFiles = ['<unable-to-enumerate-untracked-files>'];
+  }
+
+  return state;
+}
+
 function listGitTrackedRepoFiles() {
   return new Set(
     execFileSync('git', ['ls-files', '-z'], {
@@ -465,6 +1281,17 @@ function listGitTrackedRepoFiles() {
       .filter(Boolean)
       .map(normalizeRepoPath),
   );
+}
+
+function listGitUntrackedRepoFiles() {
+  return execFileSync('git', ['ls-files', '--others', '--exclude-standard', '-z'], {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
+    .split('\0')
+    .filter(Boolean)
+    .map(normalizeRepoPath);
 }
 
 function gateEvidencePath(gate) {
@@ -763,6 +1590,13 @@ if (!healthConsentWithdrawalEvidenceDate) {
   console.error('FAIL Missing health-consent withdrawal and reconsent evidence.');
   process.exit(1);
 }
+const cat04CatalogRecoveryEvidenceDate = latestEvidenceDateForFolder(
+  'cat04-catalog-recovery-current',
+);
+if (!cat04CatalogRecoveryEvidenceDate) {
+  console.error('FAIL Missing CAT04 catalog-recovery Expo-web evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -787,6 +1621,7 @@ const latestManifestEvidenceDate = [
   trendRouteGroupGateEvidenceDate,
   accountDeletionRecoveryEvidenceDate,
   healthConsentWithdrawalEvidenceDate,
+  cat04CatalogRecoveryEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -1124,6 +1959,18 @@ const gates = [
       'Credential-free Expo web proves consent-before-goals, decline/direct-route denial, non-destructive withdrawal, durable paused state, and stable fresh reconsent; hosted, native-iPhone, accessibility, and legal-review gates remain open.',
   },
   {
+    id: 'cat04-catalog-recovery-supported-phone',
+    title: 'CAT04 catalog search, scan, report, and recovery Expo-web pass',
+    kind: 'cat04-catalog-recovery',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${cat04CatalogRecoveryEvidenceDate}/cat04-catalog-recovery-current`,
+    evidence: 'summary.json',
+    requiredFiles: ['report.md'],
+    expected:
+      'Fifteen deterministic catalog search, barcode, permission, reporting, manual-entry, offline, and recovery scenarios plus six consent bootstraps pass exactly once at 375 x 667, 390 x 844, and 430 x 932 with tracked result and screenshot provenance; native camera, physical-iPhone, restart-to-ready, staging, accessibility, legal, and App Store gates remain separate.',
+  },
+  {
     id: 'progress-timelapse-supported-phone',
     title: '390 x 844 local Progress time-lapse and reduced-motion pass',
     kind: 'summary-status',
@@ -1398,6 +2245,7 @@ const warnings = [
   'Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.',
   'The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance.',
   'The health-consent withdrawal gate uses credential-free Expo web and placeholder Supabase configuration; it does not prove hosted cleanup, Storage deletion, worker scheduling, physical-iPhone lifecycle or accessibility behavior, professional legal approval, or App Store acceptance.',
+  'The CAT04 catalog-recovery gate uses deterministic Expo web fixtures; it does not prove native camera hardware or permission sheets, a restart-to-ready offline worker cycle, hosted catalog/reporting behavior, physical-iPhone accessibility, professional legal approval, or App Store acceptance.',
 ];
 const blockers = [];
 let trackedRepoFiles;
@@ -1527,6 +2375,23 @@ const gateResults = gates.map((gate) => {
         if (requirementFailures.length > 0) {
           detail = `${detail} ${requirementFailures.join('; ')}.`;
         }
+      } else if (gate.kind === 'cat04-catalog-recovery') {
+        const summary = readJson(evidencePath);
+        requirementFailures.push(
+          ...collectCat04CatalogRecoveryFailures({
+            folder: gate.folder,
+            summary,
+            sourceGitState: inspectCat04SourceGitState(String(summary?.sourceGitSha ?? '')),
+            trackedRepoFiles,
+          }),
+        );
+        failureCount = requirementFailures.length;
+        verdict = failureCount === 0 ? 'pass' : 'fail';
+        status = verdict;
+        detail =
+          failureCount === 0
+            ? '45 scenario executions and 18 explicit-consent bootstraps passed exactly once across the three supported Expo-web phone viewports with clean browser logs and tracked result, report, snapshot, and screenshot provenance.'
+            : `${failureCount} CAT04 evidence-contract failure${failureCount === 1 ? '' : 's'}: ${requirementFailures.join('; ')}.`;
       } else if (gate.kind === 'report-contract') {
         const report = readFileSync(abs(evidencePath), 'utf8');
         requirementFailures.push(
@@ -1711,6 +2576,7 @@ const gateResults = gates.map((gate) => {
       if (
         requirementFailures.length > 0 &&
         gate.kind !== 'summary-status' &&
+        gate.kind !== 'cat04-catalog-recovery' &&
         gate.kind !== 'report-contract' &&
         gate.kind !== 'required-surface-honesty'
       ) {
@@ -1736,7 +2602,8 @@ const gateResults = gates.map((gate) => {
     gate.requiredFailedRouteCount != null ||
     gate.requiredViewports ||
     gate.requiredVerified ||
-    gate.requiredReportText
+    gate.requiredReportText ||
+    gate.kind === 'cat04-catalog-recovery'
       ? { requirementFailures }
       : {}),
     folderExists,
@@ -1887,6 +2754,26 @@ if (check) {
   if (dirtyGeneratedOrTracked.length > 0) {
     console.error(
       `FAIL tracked files outside the generated manifest are dirty: ${dirtyGeneratedOrTracked.join(', ')}.`,
+    );
+    process.exit(1);
+  }
+
+  let untrackedSourceFiles;
+  try {
+    untrackedSourceFiles = collectDisallowedUntrackedRepoFiles(listGitUntrackedRepoFiles(), {
+      allowedExactPaths: allowedGeneratedPaths,
+    });
+  } catch (error) {
+    console.error(
+      `FAIL Could not enumerate nonignored untracked source files: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+  if (untrackedSourceFiles.length > 0) {
+    console.error(
+      `FAIL nonignored untracked source files are outside the declared generated/evidence/runtime outputs: ${untrackedSourceFiles.join(', ')}.`,
     );
     process.exit(1);
   }

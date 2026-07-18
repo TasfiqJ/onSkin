@@ -27,7 +27,7 @@
       "allowedImportModes": ["fixture", "approved_offline_export"],
       "maxSnapshotAgeDays": 31,
       "forbiddenProductionArtifactSha256": [
-        "c9a150c17cac824f78a85671544bea22fa04156dbbc4693b6ff3538a6205a8e5"
+        "af2a63f02ff50659565b050d298189c0298a846593c480bf822bed89b9001ebd"
       ],
       "transformLimits": {
         "maxArtifactBytes": 67108864,

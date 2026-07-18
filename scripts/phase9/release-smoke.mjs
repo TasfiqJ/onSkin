@@ -88,6 +88,7 @@ const localVerifierFiles = [
   'scripts/phase9/account-publication-fence-postgres-rehearsal.sql',
   'scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql',
   'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-scan-minimization-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/consent-withdrawal-evidence.mjs',
   'scripts/phase9/consent-withdrawal-evidence.test.mjs',
@@ -691,12 +692,16 @@ block(
       '.github/workflows/quality.yml',
       /database:\s*entitlement_lanes_0053[\s\S]{0,120}script:\s*entitlement-authority-lanes-postgres-rehearsal\.sql/,
     ) &&
+    has(
+      '.github/workflows/quality.yml',
+      /database:\s*catalog_scan_minimization_0059[\s\S]{0,140}script:\s*catalog-scan-minimization-postgres-rehearsal\.sql/,
+    ) &&
     has('.github/workflows/quality.yml', /image:\s*postgres:\$\{\{ matrix\.postgres \}\}/) &&
     has(
       '.github/workflows/quality.yml',
       /-f \"scripts\/phase9\/\$\{\{ matrix\.rehearsal\.script \}\}\"/,
     ),
-  'CI must execute migrations 0048-0053 in isolated PostgreSQL 15 and 17 rehearsals.',
+  'CI must execute the 0048-0053 lifecycle lanes and 0059 scan minimization in isolated PostgreSQL 15 and 17 rehearsals.',
 );
 block(
   errors,

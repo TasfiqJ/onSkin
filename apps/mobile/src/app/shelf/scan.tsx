@@ -1,6 +1,6 @@
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -24,19 +24,28 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';
 import { track } from '@/lib/analytics/track';
+import { BRAND } from '@/lib/brand';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
+import { enqueueCatalogLookup } from '@/lib/offline/catalogLookupQueue';
 import { haptics } from '@/theme/haptics';
 
 type ScanState =
   | { kind: 'idle' }
   | { kind: 'invalid'; reason: string }
   | { kind: 'looking_up'; barcode: string }
-  | { kind: 'matched'; barcode: string; product: CatalogProductSummary; external: boolean }
+  | { kind: 'matched'; barcode: string; product: CatalogProductSummary }
   | { kind: 'no_match'; barcode: string }
   | { kind: 'offline'; barcode: string }
   | { kind: 'error'; barcode: string; reason: string };
+
+type QueueFeedback =
+  | { kind: 'idle' }
+  | { kind: 'saving'; barcode: string }
+  | { kind: 'saved'; barcode: string; alreadyQueued: boolean }
+  | { kind: 'error'; barcode: string };
 
 function devShelfScanFixtureState(): ScanState | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
@@ -45,48 +54,47 @@ function devShelfScanFixtureState(): ScanState | null {
 
   switch (fixture) {
     case 'matched':
-    case 'external_candidate':
       return {
         kind: 'matched',
         barcode,
-        external: fixture === 'external_candidate',
         product: {
-          id: fixture === 'external_candidate' ? 'e2e-external-product' : 'e2e-catalog-product',
+          id: '00000000-0000-4000-8000-000000000044',
           barcode,
           name: 'Mineral SPF 50',
           brand: 'RoutineKind Fixture',
           category: 'sunscreen',
           region: 'US',
           default_pao_months: 12,
-          source: fixture === 'external_candidate' ? 'open_beauty_facts' : 'routinekind_fixture',
-          catalog_source_id:
-            fixture === 'external_candidate' ? null : '00000000-0000-4000-8000-000000000043',
+          source: 'routinekind_fixture',
+          catalog_source_id: '00000000-0000-4000-8000-000000000043',
           source_ref: fixture,
           source_url: null,
           source_snapshot_date: null,
-          quality_grade: fixture === 'external_candidate' ? 'unverified' : 'usable',
-          review_status: fixture === 'external_candidate' ? 'external_candidate' : 'reviewed',
-          data_quality_score: fixture === 'external_candidate' ? 45 : 82,
+          quality_grade: 'usable',
+          review_status: 'reviewed',
+          data_quality_score: 82,
           ingredient_parse_status: 'empty',
           ingredient_parse_confidence: null,
-          product_pao_expiry:
-            fixture === 'external_candidate'
-              ? []
-              : [
-                  {
-                    pao_months: 12,
-                    pao_source: 'catalog',
-                    expiry_date: null,
-                    expiry_source: 'unknown',
-                    region: 'US',
-                    source_id: '00000000-0000-4000-8000-000000000043',
-                    review_status: 'reviewed',
-                    created_at: '2026-07-09T00:00:00.000Z',
-                  },
-                ],
+          product_pao_expiry: [
+            {
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: null,
+              expiry_source: 'unknown',
+              region: 'US',
+              source_id: '00000000-0000-4000-8000-000000000043',
+              review_status: 'reviewed',
+              created_at: '2026-07-09T00:00:00.000Z',
+            },
+          ],
           rawIngredientsText: null,
-          external: fixture === 'external_candidate',
         },
+      };
+    case 'external_candidate':
+      return {
+        kind: 'error',
+        barcode,
+        reason: 'This catalog response is not eligible. Add it another way.',
       };
     case 'no_match':
       return { kind: 'no_match', barcode };
@@ -129,8 +137,14 @@ function activeIngredients(product: CatalogProductSummary): {
   };
 }
 
-function noMatchRoute(barcode: string) {
-  return { pathname: '/shelf/no-match' as const, params: { barcode } };
+function noMatchRoute(barcode: string, wrongProductId?: string | null) {
+  return {
+    pathname: '/shelf/no-match' as const,
+    params: {
+      barcode,
+      ...(wrongProductId ? { wrongProductId } : {}),
+    },
+  };
 }
 
 export default function ScanScreen() {
@@ -144,7 +158,10 @@ export default function ScanScreen() {
   );
   const [cameraReady, setCameraReady] = useState(false);
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
+  const [queueFeedback, setQueueFeedback] = useState<QueueFeedback>({ kind: 'idle' });
   const lastScan = useRef<DuplicateBarcodeGate | null>(null);
+  const queueRequestId = useRef(0);
+  const permissionRequestStarted = useRef(false);
 
   const cameraPermissionMode = devShelfCameraPermissionMode();
   const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
@@ -160,23 +177,50 @@ export default function ScanScreen() {
   const compactScanSurface = height < 640 || supportFloorTextPressureScan;
   const splitShortScanSurface = height < 460;
   const showScanPreview = !splitShortScanSurface || canShowCamera;
+  const recoveryBarcode = 'barcode' in state && state.barcode ? state.barcode : null;
+  const canQueueRetry =
+    recoveryBarcode !== null && (state.kind === 'offline' || state.kind === 'error');
+
+  // Entering Scan is the user-initiated context for the system permission
+  // request. Avoid a custom pre-alert that imitates Apple's Allow action.
+  useEffect(() => {
+    if (
+      !isFocused ||
+      !cameraEnabled ||
+      forceDeniedCameraPermission ||
+      permission?.status !== 'undetermined' ||
+      permissionRequestStarted.current
+    ) {
+      return;
+    }
+    permissionRequestStarted.current = true;
+    void requestPermission().catch(() => {
+      setState({ kind: 'error', barcode: '', reason: 'Camera permission could not be requested.' });
+    });
+  }, [
+    cameraEnabled,
+    forceDeniedCameraPermission,
+    isFocused,
+    permission?.status,
+    requestPermission,
+  ]);
 
   const goManual = () => {
     haptics.select();
     trackProductAddStarted('scan_manual');
-    reset({ addedVia: 'manual' });
+    reset({ addedVia: 'manual', barcode: recoveryBarcode });
     router.push('/shelf/manual');
   };
   const goOcr = () => {
     haptics.select();
     trackProductAddStarted('scan_label');
-    reset({ addedVia: 'ocr' });
+    reset({ addedVia: 'ocr', barcode: recoveryBarcode });
     router.push('/shelf/ocr');
   };
   const goSearch = () => {
     haptics.select();
     trackProductAddStarted('scan_search');
-    reset({ addedVia: 'search' });
+    reset({ addedVia: 'search', barcode: recoveryBarcode });
     router.push('/shelf/search');
   };
 
@@ -211,12 +255,41 @@ export default function ScanScreen() {
     router.replace('/shelf/opened');
   };
 
+  const queueRetryWhenOnline = async () => {
+    if (!canQueueRetry || !recoveryBarcode || queueFeedback.kind === 'saving') return;
+    haptics.select();
+    const requestId = ++queueRequestId.current;
+    setQueueFeedback({ kind: 'saving', barcode: recoveryBarcode });
+    try {
+      const ownerUserId = activeHealthProcessingOwnerUserId();
+      if (!ownerUserId) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      const result = await enqueueCatalogLookup({ ownerUserId, barcode: recoveryBarcode });
+      if (requestId !== queueRequestId.current) return;
+      setQueueFeedback({
+        kind: 'saved',
+        barcode: result.barcode,
+        alreadyQueued: !result.enqueued,
+      });
+      if (result.enqueued) void recordShelfScan({ result: 'offline_queued' });
+      track('catalog_lookup_retry_saved', {
+        result: result.enqueued ? 'queued' : 'already_queued',
+      });
+      haptics.success();
+    } catch {
+      if (requestId !== queueRequestId.current) return;
+      setQueueFeedback({ kind: 'error', barcode: recoveryBarcode });
+      track('catalog_lookup_retry_saved', { result: 'failed' });
+    }
+  };
+
   const onBarcodeScanned = (result: BarcodeScanningResult) => {
     const normalized = normalizeScannedBarcode(result.data, result.type);
     if (!normalized) return;
     const now = Date.now();
     if (shouldSuppressDuplicate(lastScan.current, normalized.lookupValue, now)) return;
     lastScan.current = { barcode: normalized.lookupValue, atMs: now };
+    queueRequestId.current += 1;
+    setQueueFeedback({ kind: 'idle' });
 
     if (normalized.validChecksum === false) {
       setState({
@@ -232,18 +305,13 @@ export default function ScanScreen() {
     void lookupBarcode(normalized.lookupValue)
       .then((response) => {
         const scanResult = shelfScanResultFromLookup(response.result);
-        void recordShelfScan({
-          barcode: normalized.lookupValue,
-          result: scanResult,
-          matchedProductId: 'product' in response ? response.product.id : null,
-        });
+        if (scanResult !== null) void recordShelfScan({ result: scanResult });
 
-        if (response.result === 'matched' || response.result === 'external_candidate') {
+        if (response.result === 'matched') {
           setState({
             kind: 'matched',
             barcode: normalized.lookupValue,
             product: response.product,
-            external: response.result === 'external_candidate',
           });
           return;
         }
@@ -262,10 +330,6 @@ export default function ScanScreen() {
         });
       })
       .catch(() => {
-        void recordShelfScan({
-          barcode: normalized.lookupValue,
-          result: shelfScanResultFromLookup('lookup_error'),
-        });
         setState({
           kind: 'error',
           barcode: normalized.lookupValue,
@@ -375,7 +439,7 @@ export default function ScanScreen() {
                       className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                     >
                       <Text className="font-sans-semibold text-night">
-                        {canAskCameraPermission ? 'Allow camera' : 'Open settings'}
+                        {canAskCameraPermission ? 'Continue' : 'Open settings'}
                       </Text>
                     </Pressable>
                   ) : null}
@@ -453,7 +517,7 @@ export default function ScanScreen() {
         ) : state.kind === 'matched' ? (
           <View className="mb-4 rounded-[16px] bg-paper/10 p-4">
             <Text variant="label" tone="inverseMuted">
-              {state.external ? 'External source candidate' : 'Catalog match'}
+              Catalog match
             </Text>
             <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
               {state.product.brand ? `${state.product.brand} ` : ''}
@@ -463,18 +527,18 @@ export default function ScanScreen() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => applyProduct(state.product, state.barcode)}
-                className="flex-1 items-center rounded-pill bg-paper px-4 py-3"
+                className="min-h-[48px] flex-1 items-center justify-center rounded-pill bg-paper px-4 py-3"
               >
                 <Text className="font-sans-semibold text-night">Add this</Text>
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                onPress={() => router.push(noMatchRoute(state.barcode))}
-                className="items-center rounded-pill px-4 py-3"
+                onPress={() => router.push(noMatchRoute(state.barcode, state.product.id))}
+                className="min-h-[48px] items-center justify-center rounded-pill px-4 py-3"
                 style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}
               >
                 <Text tone="inverseMuted" className="font-sans-semibold">
-                  Wrong
+                  Not this product
                 </Text>
               </Pressable>
             </View>
@@ -499,6 +563,49 @@ export default function ScanScreen() {
             from the app.
           </Text>
         )}
+
+        {canQueueRetry && queueFeedback.kind !== 'saved' ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Retry barcode ${recoveryBarcode} when online`}
+            accessibilityHint="Saves an encrypted first-party catalog retry on this device"
+            accessibilityState={{
+              disabled: queueFeedback.kind === 'saving',
+              busy: queueFeedback.kind === 'saving',
+            }}
+            disabled={queueFeedback.kind === 'saving'}
+            onPress={() => void queueRetryWhenOnline()}
+            className="mb-3 min-h-[48px] items-center justify-center rounded-pill border border-paper/20 bg-paper/10 px-4 py-2.5"
+          >
+            <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+              {queueFeedback.kind === 'saving' ? 'Saving retry...' : 'Retry when online'}
+            </Text>
+          </Pressable>
+        ) : null}
+
+        {queueFeedback.kind === 'saved' && queueFeedback.barcode === recoveryBarcode ? (
+          <View
+            accessibilityRole="alert"
+            className="mb-3 rounded-[14px] px-3.5 py-2.5"
+            style={{ backgroundColor: 'rgba(157,177,138,0.18)' }}
+          >
+            <Text variant="bodySm" tone="inverse">
+              {queueFeedback.alreadyQueued
+                ? 'This barcode is already saved for retry. Review its match from Shelf when it is ready.'
+                : `Retry saved on this device. We will check the ${BRAND.appName} catalog when the app is online.`}
+            </Text>
+          </View>
+        ) : queueFeedback.kind === 'error' && queueFeedback.barcode === recoveryBarcode ? (
+          <View
+            accessibilityRole="alert"
+            className="mb-3 rounded-[14px] px-3.5 py-2.5"
+            style={{ backgroundColor: 'rgba(217,161,131,0.16)' }}
+          >
+            <Text variant="bodySm" tone="inverse">
+              Couldn&apos;t save this retry. Nothing was added or changed. Try again.
+            </Text>
+          </View>
+        ) : null}
 
         <View className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}>
           <FallbackRow

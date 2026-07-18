@@ -14,6 +14,11 @@ import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import {
+  manualBarcodeRequiresEightDigitFormat,
+  normalizeManualBarcode,
+  type ManualEightDigitBarcodeFormat,
+} from '@/features/native/camera/barcode';
+import {
   categoryLabel,
   PRODUCT_CATEGORIES,
   type ProductCategory,
@@ -154,6 +159,13 @@ export default function ManualAddScreen() {
       : null;
   const [name, setName] = useState(presetCategory ? '' : draft.name);
   const [brand, setBrand] = useState(presetCategory ? '' : (draft.brand ?? ''));
+  const initialBarcode = presetCategory ? '' : (draft.barcode ?? '');
+  const [barcode, setBarcode] = useState(initialBarcode);
+  // A scanned UPC-E is already expanded to 12 digits. An eight-digit draft
+  // arriving from Scan is therefore a known EAN-8; new manual input must ask.
+  const [eightDigitFormat, setEightDigitFormat] = useState<ManualEightDigitBarcodeFormat | null>(
+    () => (manualBarcodeRequiresEightDigitFormat(initialBarcode) ? 'ean8' : null),
+  );
   const [category, setCategory] = useState<ProductCategory | null>(
     presetCategory ?? draft.category,
   );
@@ -176,7 +188,16 @@ export default function ManualAddScreen() {
 
   const paoFromCategory = reviewedCategoryPao(category);
 
-  const canContinue = name.trim().length > 0;
+  const barcodeNeedsFormat =
+    manualBarcodeRequiresEightDigitFormat(barcode) && eightDigitFormat === null;
+  const normalizedBarcode = barcode.trim()
+    ? normalizeManualBarcode(barcode, eightDigitFormat)
+    : null;
+  const barcodeInvalid =
+    barcode.trim().length > 0 && !barcodeNeedsFormat && normalizedBarcode === null;
+  const barcodeChecksumInvalid = normalizedBarcode?.validChecksum === false;
+  const canContinue =
+    name.trim().length > 0 && !barcodeNeedsFormat && !barcodeInvalid && !barcodeChecksumInvalid;
 
   const selectCategory = (nextCategory: ProductCategory) => {
     setCategory(nextCategory);
@@ -196,6 +217,7 @@ export default function ManualAddScreen() {
     update({
       name: name.trim(),
       brand: brand.trim() || null,
+      barcode: normalizedBarcode?.lookupValue ?? null,
       category,
       ingredients: tokens,
       ingredientParseStatus: parsed?.status ?? null,
@@ -290,6 +312,66 @@ export default function ManualAddScreen() {
                 </Text>
               </Pressable>
             </View>
+          </View>
+
+          <View>
+            <FieldLabel>Barcode (optional)</FieldLabel>
+            <TextInput
+              accessibilityLabel="Barcode, optional"
+              accessibilityHint="Enter the numbers printed below the barcode"
+              value={barcode}
+              onChangeText={(next) => {
+                setBarcode(next);
+                if (next !== barcode) setEightDigitFormat(null);
+              }}
+              placeholder="Enter the printed numbers"
+              placeholderTextColor={colors.mutedLight}
+              keyboardType="number-pad"
+              inputMode="numeric"
+              maxLength={20}
+              className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
+            />
+            {manualBarcodeRequiresEightDigitFormat(barcode) ? (
+              <View accessibilityRole="radiogroup" className="mt-2 flex-row gap-2">
+                {(
+                  [
+                    ['ean8', 'EAN-8'],
+                    ['upc_e', 'UPC-E'],
+                  ] as const
+                ).map(([value, label]) => {
+                  const selected = eightDigitFormat === value;
+                  return (
+                    <Pressable
+                      key={value}
+                      accessibilityRole="radio"
+                      accessibilityLabel={`Eight-digit barcode type, ${label}`}
+                      accessibilityState={{ checked: selected }}
+                      onPress={() => setEightDigitFormat(value)}
+                      className={cn(
+                        'min-h-[48px] flex-1 items-center justify-center rounded-pill border px-3 py-2',
+                        selected ? 'border-clay bg-clay-tint' : 'border-hairline bg-paper-raised',
+                      )}
+                    >
+                      <Text variant="bodySm" className="font-sans-semibold">
+                        {label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            ) : null}
+            {barcodeNeedsFormat ? (
+              <Text accessibilityRole="alert" variant="label" tone="clay" className="mt-1.5">
+                Choose EAN-8 or UPC-E as printed beside the barcode.
+              </Text>
+            ) : null}
+            {barcodeInvalid || barcodeChecksumInvalid ? (
+              <Text accessibilityRole="alert" variant="label" tone="clay" className="mt-1.5">
+                {barcodeChecksumInvalid
+                  ? 'Check the numbers. This barcode checksum does not match.'
+                  : 'Enter a complete 8, 12, 13, or 14 digit barcode from the package.'}
+              </Text>
+            ) : null}
           </View>
 
           {showManualIngredientsField ? (

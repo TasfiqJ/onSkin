@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(55);
+select plan(56);
 
 select ok(
   not has_function_privilege(
@@ -34,17 +34,17 @@ select ok(
 select ok(
   not has_function_privilege(
     'anon',
-    'public.submit_catalog_correction(uuid,bigint,uuid,text,text,text,jsonb,jsonb)',
+    'public.submit_catalog_correction(uuid,bigint,uuid,uuid,text,text,text,jsonb,jsonb)',
     'execute'
   )
     and not has_function_privilege(
       'authenticated',
-      'public.submit_catalog_correction(uuid,bigint,uuid,text,text,text,jsonb,jsonb)',
+      'public.submit_catalog_correction(uuid,bigint,uuid,uuid,text,text,text,jsonb,jsonb)',
       'execute'
     )
     and has_function_privilege(
       'service_role',
-      'public.submit_catalog_correction(uuid,bigint,uuid,text,text,text,jsonb,jsonb)',
+      'public.submit_catalog_correction(uuid,bigint,uuid,uuid,text,text,text,jsonb,jsonb)',
       'execute'
     )
     and not has_function_privilege(
@@ -83,7 +83,7 @@ select ok(
     select count(*) = 2
     from pg_catalog.pg_proc as functions
     where functions.oid = any(array[
-      'public.submit_catalog_correction(uuid,bigint,uuid,text,text,text,jsonb,jsonb)'::regprocedure,
+      'public.submit_catalog_correction(uuid,bigint,uuid,uuid,text,text,text,jsonb,jsonb)'::regprocedure,
       'public.review_catalog_correction(uuid,bigint,text,text,text)'::regprocedure
     ])
       and functions.prosecdef
@@ -112,6 +112,7 @@ select throws_ok(
   $$select * from public.submit_catalog_correction(
     '56000000-0000-4000-8000-000000000001'::uuid,
     1::bigint,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
     null::uuid,
     '012345678905',
     'missing_product',
@@ -272,18 +273,36 @@ select pg_catalog.set_config(
   true
 );
 set local role service_role;
-select lives_ok(
-  $$select * from public.submit_catalog_correction(
+select is(
+  (select submitted.created from public.submit_catalog_correction(
     '56000000-0000-4000-8000-000000000001'::uuid,
     1::bigint,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
     null::uuid,
     '012345678905',
     'missing_product',
     'Missing catalog product.',
     '{"productName":"Catalog RPC Fixture"}'::jsonb,
     '{"route":"catalog-report"}'::jsonb
-  )$$,
-  'service correction intake accepts one bounded report at an active exact epoch'
+  ) as submitted),
+  true,
+  'service correction intake creates one bounded report at an active exact epoch'
+);
+
+select is(
+  (select submitted.created from public.submit_catalog_correction(
+    '56000000-0000-4000-8000-000000000001'::uuid,
+    1::bigint,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
+    null::uuid,
+    '012345678905',
+    'missing_product',
+    'Missing catalog product.',
+    '{"productName":"Catalog RPC Fixture"}'::jsonb,
+    '{"route":"catalog-report"}'::jsonb
+  ) as submitted),
+  false,
+  'an exact correction retry returns the committed receipt without a duplicate row'
 );
 reset role;
 
@@ -304,6 +323,10 @@ select ok(
       and correction.resolved_by is null
       and correction.resolution_note is null
       and correction.source_id is null
+      and correction.intake_request_id =
+        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid
+      and correction.intake_health_epoch = 1
+      and correction.intake_request_digest ~ '^[0-9a-f]{64}$'
   ),
   'correction intake fixes workflow and operator-controlled fields server-side'
 );

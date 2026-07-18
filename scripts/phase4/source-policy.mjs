@@ -151,7 +151,7 @@ const SOURCE_SECURITY_INVARIANTS = {
     allowedImportModes: ['fixture', 'approved_offline_export'],
     maxSnapshotAgeDays: 31,
     forbiddenProductionArtifactSha256: [
-      'c9a150c17cac824f78a85671544bea22fa04156dbbc4693b6ff3538a6205a8e5',
+      'af2a63f02ff50659565b050d298189c0298a846593c480bf822bed89b9001ebd',
     ],
     transformLimits: {
       maxArtifactBytes: 67_108_864,
@@ -289,6 +289,42 @@ export function normalizeCatalogCosingKey(value) {
     .replace(CATALOG_CANONICAL_WHITESPACE_PATTERN, ' ')
     .replace(/^ +| +$/gu, '')
     .toUpperCase();
+}
+
+const CATALOG_GTIN_LENGTHS = new Set([8, 12, 13, 14]);
+
+/** Validate an exact GTIN-8, UPC-A, EAN-13, or GTIN-14 digit string. */
+export function catalogGtinChecksumIsValid(value) {
+  if (
+    typeof value !== 'string' ||
+    !/^\d+$/u.test(value) ||
+    !CATALOG_GTIN_LENGTHS.has(value.length)
+  ) {
+    return false;
+  }
+  const weightedSum = [...value]
+    .reverse()
+    .reduce((sum, digit, index) => sum + Number(digit) * (index % 2 === 0 ? 1 : 3), 0);
+  return weightedSum % 10 === 0;
+}
+
+/**
+ * Return the catalog natural key for a checksum-valid GTIN. Fixed-width
+ * GTIN-14 padding and iOS's leading-zero EAN-13 representation collapse to
+ * the shortest deterministic GTIN-8/12/13 identity defined by this contract.
+ */
+export function canonicalizeCatalogGtin(value) {
+  if (!catalogGtinChecksumIsValid(value)) return null;
+  if (value.length === 14) {
+    if (value.startsWith('000000')) return value.slice(6);
+    if (value.startsWith('00')) return value.slice(2);
+    if (value.startsWith('0')) return value.slice(1);
+  }
+  return value.length === 13 && value.startsWith('0') ? value.slice(1) : value;
+}
+
+export function isCanonicalCatalogGtin(value) {
+  return typeof value === 'string' && canonicalizeCatalogGtin(value) === value;
 }
 
 function decodeUtf8(bytes, label) {

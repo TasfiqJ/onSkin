@@ -794,24 +794,11 @@ async function main() {
           .select('cycle_id'),
       );
 
-      const shelfScan = await insertOne(userA.client, 'shelf_scans', {
-        user_id: userA.id,
-        barcode: `phase9-${randomUUID()}`,
-        result: 'no_match',
-      });
-      registerPrivateTableProbe('shelf_scans', 'id', shelfScan.id);
-      await expectVisible(userA.client, 'shelf_scans', 'id', shelfScan.id, 'shelf scan owner read');
-      await expectNotVisible(
-        userB.client,
-        'shelf_scans',
-        'id',
-        shelfScan.id,
-        'shelf scan cross-user read',
-      );
       await expectBlockedInsert(
-        'shelf scan cross-user insert',
-        userB.client.from('shelf_scans').insert({ user_id: userA.id, result: 'no_match' }),
+        'sealed shelf scan insert',
+        userA.client.from('shelf_scans').insert({ user_id: userA.id, result: 'no_match' }),
       );
+      registerSealedPrivateTableProbe('shelf_scans', 'id', randomUUID());
     });
 
     await runCheck('Shelf provenance matrix', async () => {
@@ -1335,6 +1322,7 @@ async function main() {
       const correctionWrite = await admin.rpc('submit_catalog_correction', {
         p_user_id: userA.id,
         p_expected_health_epoch: 1,
+        p_report_request_id: randomUUID(),
         p_product_id: null,
         p_barcode: null,
         p_correction_type: 'missing_product',
@@ -1349,12 +1337,12 @@ async function main() {
       );
       const catalogCorrection = correctionWrite.data[0];
       registerPrivateTableProbe('catalog_corrections', 'id', catalogCorrection.id);
-      await expectVisible(
+      await expectNotVisible(
         userA.client,
         'catalog_corrections',
         'id',
         catalogCorrection.id,
-        'catalog correction owner read',
+        'catalog correction owner direct read',
       );
       await expectNotVisible(
         userB.client,
@@ -1376,26 +1364,37 @@ async function main() {
           .insert({ user_id: userA.id, correction_type: 'missing_product' }),
       );
 
-      const lookupEvent = await insertOne(userA.client, 'catalog_lookup_events', {
-        user_id: userA.id,
-        lookup_type: 'search',
-        query: 'phase9 cleanser',
-        result: 'no_match',
+      const lookupWrite = await admin.rpc('record_catalog_lookup_event', {
+        p_user_id: userA.id,
+        p_expected_health_epoch: 1,
+        p_lookup_type: 'search',
+        p_result: 'no_match',
+        p_rate_limit: 240,
+        p_window_seconds: 900,
       });
-      registerPrivateTableProbe('catalog_lookup_events', 'id', lookupEvent.id);
+      if (lookupWrite.error) throw lookupWrite.error;
+      assert(typeof lookupWrite.data === 'string', 'catalog lookup RPC returned no event id.');
+      const lookupEventId = lookupWrite.data;
+      registerPrivateTableProbe('catalog_lookup_events', 'id', lookupEventId);
       await expectVisible(
         userA.client,
         'catalog_lookup_events',
         'id',
-        lookupEvent.id,
+        lookupEventId,
         'lookup event owner read',
       );
       await expectNotVisible(
         userB.client,
         'catalog_lookup_events',
         'id',
-        lookupEvent.id,
+        lookupEventId,
         'lookup event cross-user read',
+      );
+      await expectBlockedInsert(
+        'lookup event owner direct insert',
+        userA.client
+          .from('catalog_lookup_events')
+          .insert({ user_id: userA.id, lookup_type: 'search', result: 'no_match' }),
       );
       await expectBlockedInsert(
         'lookup event cross-user insert',
@@ -2268,6 +2267,7 @@ async function main() {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
       registerSealedPrivateTableProbe('catalog_sources', 'id', absentUuid);
+      registerSealedPrivateTableProbe('obf_contribution_queue', 'id', absentUuid);
       registerSealedPrivateTableProbe('health_processing_states', 'user_id', absentUuid);
       registerSealedPrivateTableProbe('catalog_import_batches', 'id', absentUuid);
       registerSealedPrivateTableProbe('catalog_quality_reports', 'id', absentUuid);
@@ -2340,16 +2340,6 @@ async function main() {
       });
       trackServiceCleanup('order_attributions', 'id', orderAttribution.id);
       registerPrivateTableProbe('order_attributions', 'id', orderAttribution.id);
-
-      const contribution = await insertOne(admin, 'obf_contribution_queue', {
-        user_id: userA.id,
-        payload: { phase9: true },
-        status: 'disabled',
-        hold_reason: 'phase9-live-adversarial',
-        source_snapshot: { phase9: true },
-      });
-      trackServiceCleanup('obf_contribution_queue', 'id', contribution.id);
-      registerPrivateTableProbe('obf_contribution_queue', 'id', contribution.id);
 
       const waitlistSignup = await insertOne(admin, 'waitlist_signups', {
         email: `phase9-${randomUUID()}@example.invalid`,

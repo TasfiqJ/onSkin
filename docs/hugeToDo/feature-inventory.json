@@ -226,12 +226,12 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 118,
+    "data-store": 120,
     "edge-function": 16,
     "feature-flag": 16,
-    "generated-packet": 31,
+    "generated-packet": 32,
     "native-module": 44,
-    "route": 90,
+    "route": 91,
     "vendor-call": 13
   },
   "items": [
@@ -394,6 +394,20 @@
       "category": "data-store",
       "source": "apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts",
       "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/offline/catalogLookupQueue.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/offline/catalogLookupQueue.ts",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/offline/completionQueue.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/offline/completionQueue.ts",
+      "featureIds": ["F-07"],
       "readiness": "implemented"
     },
     {
@@ -870,7 +884,7 @@
       "category": "data-store",
       "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
       "featureIds": ["F-04"],
-      "readiness": "implemented"
+      "readiness": "inert"
     },
     {
       "id": "data-store:postgres:order_attributions",
@@ -1024,7 +1038,7 @@
       "category": "data-store",
       "source": "supabase/migrations/20260613000016_smart_shelf.sql",
       "featureIds": ["F-03"],
-      "readiness": "implemented"
+      "readiness": "inert"
     },
     {
       "id": "data-store:postgres:skin_profiles",
@@ -1409,6 +1423,13 @@
       "category": "generated-packet",
       "source": "scripts/docs/tas-todo-audit.mjs",
       "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/e2e/cat04-catalog-recovery-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/e2e/cat04-catalog-recovery-audit.mjs",
+      "featureIds": ["F-03", "F-04"],
       "readiness": "implemented"
     },
     {
@@ -2382,6 +2403,13 @@
       "id": "route:shelf/archive.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/shelf/archive.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/catalog-recovery.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/catalog-recovery.tsx",
       "featureIds": ["F-03", "F-04"],
       "readiness": "needs-device-verification"
     },

@@ -8,6 +8,7 @@ import {
   assertProductionArtifactPath,
   assertSafeOutputPath,
   assertCatalogSourceTreeClean,
+  canonicalizeCatalogGtin,
   catalogTransformedPayloadSha256,
   catalogTransformerDescriptor,
   loadAndValidateProductionApproval,
@@ -82,10 +83,6 @@ const REJECT_TAGS = new Set([
   'en:hair-care',
 ]);
 
-function normalizeBarcode(value) {
-  return typeof value === 'string' && /^\d{8,14}$/.test(value) ? value : null;
-}
-
 function normalizeText(value, maxLength) {
   if (typeof value !== 'string') return null;
   const text = value.replace(/\s+/g, ' ').trim();
@@ -152,7 +149,7 @@ const products = [];
 const rejected = [];
 
 for (const record of records) {
-  const barcode = normalizeBarcode(record.code);
+  const barcode = canonicalizeCatalogGtin(record.code);
   const name = normalizeText(record.product_name, 200);
   const brand = normalizeText(record.brands, 300);
   const brandValid = record.brands == null || record.brands === '' || brand !== null;

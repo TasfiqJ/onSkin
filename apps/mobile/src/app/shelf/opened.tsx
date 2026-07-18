@@ -1,10 +1,12 @@
 import type { PaoSource } from '@onskin/types';
+import { randomUUID } from 'expo-crypto';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
+import { finalizeCatalogLookupAfterShelfSave } from '@/features/shelf/catalogLookupRecovery';
 import { PAO_MONTH_OPTIONS, shiftLocalDateMonths } from '@/features/shelf/freshness';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { paoSourceLabel } from '@/features/shelf/labels';
@@ -13,6 +15,7 @@ import { useShelfMutations } from '@/features/shelf/mutations';
 import { editedPaoSource } from '@/features/shelf/paoProvenance';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import {
   APP_ONBOARDING_PRODUCTS_ROUTE,
   APP_SHELF_ROUTE,
@@ -100,6 +103,9 @@ export default function OpenedDateScreen() {
   const [paoSource, setPaoSource] = useState<PaoSource>(draft.paoSource);
   const [paoEditOpen, setPaoEditOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [savedLocally, setSavedLocally] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const saveOperationId = useRef(randomUUID()).current;
   const fallbackRoute = origin === 'onboarding' ? APP_ONBOARDING_PRODUCTS_ROUTE : APP_SHELF_ROUTE;
   const today = localDateString();
 
@@ -111,42 +117,67 @@ export default function OpenedDateScreen() {
     const productName = draft.name.trim();
     if (!hasProductDraft || !productName || !canSave || saving) return;
     setSaving(true);
-    const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
-    const isOpened = mode !== 'unopened';
-    const addedProduct = await m.add({
-      name: productName,
-      brand: draft.brand,
-      category: draft.category,
-      barcode: draft.barcode,
-      catalogProductId: draft.catalogProductId,
-      catalogSourceId: draft.catalogSourceId,
-      catalogSource: draft.catalogSource,
-      catalogSourceName: draft.catalogSourceName,
-      catalogSourceRef: draft.catalogSourceRef,
-      catalogSourceUrl: draft.catalogSourceUrl,
-      catalogSourceSnapshotDate: draft.catalogSourceSnapshotDate,
-      catalogMatchQuality: draft.catalogMatchQuality,
-      dataQualityScore: draft.dataQualityScore,
-      ingredientParseStatus: draft.ingredientParseStatus,
-      ingredientParseConfidence: draft.ingredientParseConfidence,
-      parserVersion: draft.parserVersion,
-      sourceDisclosureAckAt: draft.sourceDisclosureAckAt,
-      ingredients: draft.ingredients,
-      openedAt,
-      isOpened,
-      paoMonths: pao,
-      paoSource,
-      expiryDate: draft.expiryDate,
-      addedVia: draft.addedVia,
-    });
-    reset();
-    if (origin === 'onboarding') {
-      router.replace({
-        pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
-        params: { addedProductId: addedProduct.id },
+    setSaveError(null);
+    let shelfWriteSucceeded = false;
+    try {
+      const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
+      const isOpened = mode !== 'unopened';
+      const addedProduct = await m.add({
+        operationId: saveOperationId,
+        name: productName,
+        brand: draft.brand,
+        category: draft.category,
+        barcode: draft.barcode,
+        catalogProductId: draft.catalogProductId,
+        catalogSourceId: draft.catalogSourceId,
+        catalogSource: draft.catalogSource,
+        catalogSourceName: draft.catalogSourceName,
+        catalogSourceRef: draft.catalogSourceRef,
+        catalogSourceUrl: draft.catalogSourceUrl,
+        catalogSourceSnapshotDate: draft.catalogSourceSnapshotDate,
+        catalogMatchQuality: draft.catalogMatchQuality,
+        dataQualityScore: draft.dataQualityScore,
+        ingredientParseStatus: draft.ingredientParseStatus,
+        ingredientParseConfidence: draft.ingredientParseConfidence,
+        parserVersion: draft.parserVersion,
+        sourceDisclosureAckAt: draft.sourceDisclosureAckAt,
+        ingredients: draft.ingredients,
+        openedAt,
+        isOpened,
+        paoMonths: pao,
+        paoSource,
+        expiryDate: draft.expiryDate,
+        addedVia: draft.addedVia,
       });
-    } else {
-      router.replace(APP_SHELF_ROUTE);
+      shelfWriteSucceeded = true;
+      setSavedLocally(true);
+      if (draft.barcode) {
+        const ownerUserId = activeHealthProcessingOwnerUserId();
+        if (!ownerUserId) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+        await finalizeCatalogLookupAfterShelfSave({
+          ownerUserId,
+          barcode: draft.barcode,
+          shelfProductId: addedProduct.id,
+          recoveryToken: draft.catalogRecoveryToken,
+        });
+      }
+      reset();
+      if (origin === 'onboarding') {
+        router.replace({
+          pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
+          params: { addedProductId: addedProduct.id },
+        });
+      } else {
+        router.replace(APP_SHELF_ROUTE);
+      }
+    } catch {
+      setSaveError(
+        shelfWriteSucceeded
+          ? 'Product saved, but its catalog retry still needs linking. Tap Finish setup to retry; your Shelf item will not be duplicated.'
+          : 'Could not save this product. Your choices are still here. Try again.',
+      );
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -335,10 +366,17 @@ export default function OpenedDateScreen() {
 
       <Button
         className="mt-6"
-        label="Add to shelf"
+        label={saving ? 'Saving...' : savedLocally ? 'Finish setup' : 'Add to shelf'}
         disabled={!canSave || saving}
         onPress={onSave}
       />
+      {saveError ? (
+        <View accessibilityRole="alert" className="mt-3 rounded-[14px] bg-clay-tint px-4 py-3">
+          <Text variant="bodySm" tone="clay">
+            {saveError}
+          </Text>
+        </View>
+      ) : null}
     </Sheet>
   );
 }

@@ -16,7 +16,6 @@ export const OWNER_LINKED_PRIVATE_TABLES = Object.freeze([
   'routine_completions',
   'routine_conflicts',
   'active_ramp',
-  'shelf_scans',
   'cycles',
   'cycle_nights',
   'streak_freezes',
@@ -27,7 +26,6 @@ export const OWNER_LINKED_PRIVATE_TABLES = Object.freeze([
   'entitlements',
   'recommendation_preferences',
   'recommendations',
-  'catalog_corrections',
   'catalog_lookup_events',
   'commerce_click_events',
   'community_blocks',
@@ -52,7 +50,6 @@ export const HEALTH_PURPOSE_READ_FENCED_TABLES = Object.freeze([
   'routine_completions',
   'routine_conflicts',
   'active_ramp',
-  'shelf_scans',
   'cycles',
   'cycle_nights',
   'streak_freezes',
@@ -61,7 +58,6 @@ export const HEALTH_PURPOSE_READ_FENCED_TABLES = Object.freeze([
   'photos',
   'recommendation_preferences',
   'recommendations',
-  'catalog_corrections',
   'catalog_lookup_events',
   'commerce_click_events',
   'community_blocks',
@@ -75,10 +71,10 @@ export const HEALTH_PURPOSE_READ_FENCED_TABLES = Object.freeze([
 ]);
 
 export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
+  'catalog_corrections',
   'reverse_trial_grants',
   'subscriptions_events',
   'order_attributions',
-  'obf_contribution_queue',
   'community_moderation_events',
   'waitlist_signups',
   'growth_events',
@@ -90,6 +86,8 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
 // evidence must prove they are sealed rather than pretending an admin client
 // can create or read a positive-control row.
 export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
+  'shelf_scans',
+  'obf_contribution_queue',
   'catalog_sources',
   'catalog_import_batches',
   'catalog_quality_reports',

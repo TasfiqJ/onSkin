@@ -838,7 +838,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The local source candidate now covers 57 migrations through 0058. The passing static inventory classifies all 80 RLS-enabled public tables as 38 directly queryable private, 28 read-sealed private/authority, and 14 authenticated catalog/editorial tables; seven CAT-03 authorities are separately sealed in the private schema, including the append-only per-product served-state mutation ledger. Catalog sources, global clinical/editorial relations, catalog dictionary/legacy authorities, import/curation lifecycle ledgers, exact-session Apple state, and other sealed authorities must remain unreachable directly by every API role, including service_role. Run the current 66-table public-schema private/read-sealed matrix and seven-table private-schema denial lane against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile behavior, and CAT-02/CAT-03 authority-denial and serving probes; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The local source candidate now covers 58 migrations through 0059. The passing static inventory classifies all 80 RLS-enabled public tables as 36 directly queryable private, 30 read-sealed private/authority, and 14 authenticated catalog/editorial tables; seven CAT-03 authorities are separately sealed in the private schema, including the append-only per-product served-state mutation ledger. Migration 0059 purges and read-seals legacy shelf_scans, purges and seals deprecated obf_contribution_queue work, and makes catalog_lookup_events outcome-only by purging and constraining all lookup identity columns to null. Catalog sources, global clinical/editorial relations, catalog dictionary/legacy authorities, import/curation lifecycle ledgers, exact-session Apple state, legacy scan/contribution history, and other sealed authorities must remain unreachable directly by every API role, including service_role. Run the current 66-table public-schema private/read-sealed matrix and seven-table private-schema denial lane against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile behavior, and CAT-02/CAT-03 authority-denial, lookup-minimization, and serving probes; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -860,6 +860,8 @@
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/migrations/20260717000058_catalog_launch_curation.sql",
         "supabase/tests/database/catalog_launch_curation.test.sql",
+        "supabase/migrations/20260718000059_catalog_scan_minimization.sql",
+        "supabase/functions/catalog-lookup/scanMinimization.test.ts",
         "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
@@ -1126,10 +1128,28 @@
     },
     {
       "id": "CAT-04",
-      "status": "not_started",
-      "blockedBy": ["CAT-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows",
-      "evidenceRefs": []
+      "status": "in_progress",
+      "blockedBy": ["CAT-03", "H-07", "H-08"],
+      "nextAction": "The source candidate normalizes and checksum-gates supported UPC/EAN/GTIN identifiers, rejects malformed or unreviewed catalog projections, prevents stale search responses, requires a visible identity-and-recipient confirmation before correction reports, preserves manual recovery through lookup failures, makes Shelf saves idempotent, and removes raw scan/search identity from retained analytics. The encrypted account/health-bound offline retry lane requires an explicit user request, revalidates a reviewed result, and requires explicit acceptance before any Shelf mutation. Run and retain the 15-scenario by three-viewport deterministic Expo-web matrix, while keeping its fixture limitation explicit: it does not prove a ready reconnect candidate across restart. Then complete a real hosted ready-candidate accept/reject cycle, migration/RLS/export/withdrawal/deletion and observability proof, plus physical-iPhone camera, permission, network-interruption, relaunch, accessibility, and barcode acquisition evidence. CAT-03 must supply an active reviewed catalog; H-07 must supply current professional privacy/security/legal/source decisions; and H-08 must supply the supported physical-iPhone evidence before CAT-04 can close.",
+      "evidenceRefs": [
+        "docs/hugeToDo/CAT-04-SEARCH-BARCODE-RECOVERY-SOURCE-CHECKPOINT-2026-07-18.md",
+        "supabase/migrations/20260718000059_catalog_scan_minimization.sql",
+        "apps/mobile/src/features/catalog/client.ts",
+        "apps/mobile/src/features/catalog/CatalogReportConfirmation.tsx",
+        "apps/mobile/src/features/catalog/recoveryReport.ts",
+        "apps/mobile/src/features/catalog/reportPresentation.ts",
+        "apps/mobile/src/features/native/camera/barcode.ts",
+        "apps/mobile/src/features/shelf/catalogLookupRecovery.ts",
+        "apps/mobile/src/lib/offline/catalogLookupQueue.ts",
+        "apps/mobile/src/app/shelf/catalog-recovery.tsx",
+        "apps/mobile/src/app/shelf/search.tsx",
+        "apps/mobile/src/app/shelf/scan.tsx",
+        "apps/mobile/src/app/shelf/no-match.tsx",
+        "apps/mobile/src/app/shelf/manual.tsx",
+        "apps/mobile/src/app/shelf/opened.tsx",
+        "supabase/functions/catalog-report/index.ts",
+        "scripts/e2e/cat04-catalog-recovery-audit.mjs"
+      ]
     },
     {
       "id": "CAT-05",
