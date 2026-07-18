@@ -30,8 +30,12 @@ class FakePhotoBucket {
   readonly objects: Set<string>;
   readonly listCalls: Array<{ prefix: string; options: ListOptions }> = [];
   readonly removeCalls: string[][] = [];
-  failListAtOffset: number | null = null;
+  readonly failedRemovePaths: string[][] = [];
+  failListAtCall: number | null = null;
   failRemoveAtCall: number | null = null;
+  servicePageCap = Number.POSITIVE_INFINITY;
+  activeRemoveCalls = 0;
+  maxActiveRemoveCalls = 0;
 
   constructor(paths: string[]) {
     this.objects = new Set(paths);
@@ -39,8 +43,11 @@ class FakePhotoBucket {
 
   list(prefix: string, options: ListOptions) {
     this.listCalls.push({ prefix, options });
-    if (this.failListAtOffset === options.offset) {
-      return Promise.resolve({ data: null, error: { message: 'list unavailable' } });
+    if (this.failListAtCall === this.listCalls.length) {
+      return Promise.resolve({
+        data: null,
+        error: { message: 'list unavailable' },
+      });
     }
 
     const childKinds = new Map<string, 'file' | 'folder'>();
@@ -60,18 +67,28 @@ class FakePhotoBucket {
         id: kind === 'folder' ? null : `id:${prefix}/${name}`,
       }));
     return Promise.resolve({
-      data: entries.slice(options.offset, options.offset + options.limit),
+      data: entries.slice(
+        options.offset,
+        options.offset + Math.min(options.limit, this.servicePageCap),
+      ),
       error: null,
     });
   }
 
-  remove(paths: string[]) {
+  async remove(paths: string[]) {
     this.removeCalls.push([...paths]);
-    if (this.failRemoveAtCall === this.removeCalls.length) {
-      return Promise.resolve({ error: { message: 'remove unavailable' } });
+    const callNumber = this.removeCalls.length;
+    this.activeRemoveCalls += 1;
+    this.maxActiveRemoveCalls = Math.max(this.maxActiveRemoveCalls, this.activeRemoveCalls);
+    await Promise.resolve();
+    this.activeRemoveCalls -= 1;
+
+    if (this.failRemoveAtCall === callNumber) {
+      this.failedRemovePaths.push([...paths]);
+      return { error: { message: 'remove unavailable' } };
     }
     for (const path of paths) this.objects.delete(path);
-    return Promise.resolve({ error: null });
+    return { error: null };
   }
 }
 
@@ -94,9 +111,13 @@ Deno.test('account deletion removes every owned object after the first 1,000', a
     (_, index) => `${USER_ID}/photo-${String(index).padStart(4, '0')}.enc`,
   );
   const bucket = new FakePhotoBucket(paths);
+  // A storage service may enforce a cap below the requested limit. Cleanup must
+  // keep probing until it observes an empty page, not treat a short page as EOF.
+  bucket.servicePageCap = 137;
 
-  await deletePhotoStorage(USER_ID, clientFor(bucket));
+  const result = await deletePhotoStorage(USER_ID, clientFor(bucket));
 
+  assert(result === 'deleted', 'expected the durable storage checkpoint result.');
   assert(bucket.objects.size === 0, 'expected every object to be removed.');
   const removed = bucket.removeCalls.flat();
   assert(removed.length === paths.length, 'expected each collected path to be removed once.');
@@ -108,31 +129,49 @@ Deno.test('account deletion removes every owned object after the first 1,000', a
     'expected bounded non-empty removal chunks.',
   );
   assert(
-    bucket.listCalls.some((call) => call.prefix === USER_ID && call.options.offset === 1000),
-    'expected root pagination beyond the first 1,000 entries.',
+    bucket.listCalls.length > 9 && bucket.listCalls.every((call) => call.options.offset === 0),
+    'expected repeated stable first-page drains beyond 1,000 entries.',
+  );
+  assert(
+    bucket.maxActiveRemoveCalls <= photoStorageCleanupLimits.removeConcurrency,
+    'expected removal concurrency to stay bounded.',
   );
 });
 
-Deno.test('account deletion resumes a failed removal beyond object 1,000', async () => {
+Deno.test('account deletion resumes an idempotent mid-page removal failure', async () => {
   const paths = Array.from(
     { length: 1_205 },
     (_, index) => `${USER_ID}/photo-${String(index).padStart(4, '0')}.enc`,
   );
   const bucket = new FakePhotoBucket(paths);
-  bucket.failRemoveAtCall = 11;
+  bucket.failRemoveAtCall = 5;
 
-  await assertRejectsCode(
-    () => deletePhotoStorage(USER_ID, clientFor(bucket)),
-    'STORAGE_REMOVE_FAILED',
+  let firstError: Error | null = null;
+  try {
+    await deletePhotoStorage(USER_ID, clientFor(bucket));
+  } catch (error) {
+    assert(error instanceof Error, 'expected an Error rejection.');
+    firstError = error;
+  }
+  assert(
+    firstError?.message === 'STORAGE_REMOVE_FAILED',
+    'expected a content-free removal failure code.',
   );
   assert(
-    bucket.objects.size === 205,
-    'expected the failed chunk and later objects to remain after object 1,000.',
+    !firstError.message.includes(USER_ID) && !firstError.message.includes('photo-'),
+    'expected the failure to omit owner IDs and private object paths.',
   );
+  assert(
+    bucket.objects.size > 0 && bucket.objects.size < paths.length,
+    'expected a mid-page failure after bounded partial progress.',
+  );
+  const failedPaths = bucket.failedRemovePaths[0]!;
+  assert(failedPaths.length > 0, 'expected an injected failed removal chunk.');
 
   bucket.failRemoveAtCall = null;
-  await deletePhotoStorage(USER_ID, clientFor(bucket));
+  const retryResult = await deletePhotoStorage(USER_ID, clientFor(bucket));
 
+  assert(retryResult === 'deleted', 'expected retry to produce the durable checkpoint result.');
   assert(
     Number(bucket.objects.size) === 0,
     'expected the multi-page retry to remove every object.',
@@ -140,6 +179,12 @@ Deno.test('account deletion resumes a failed removal beyond object 1,000', async
   assert(
     new Set(bucket.removeCalls.flat()).size === paths.length,
     'expected each of the 1,205 object paths to be removed without a skipped page.',
+  );
+  assert(
+    failedPaths.every(
+      (path) => bucket.removeCalls.filter((chunk) => chunk.includes(path)).length === 2,
+    ),
+    'expected every object from the failed chunk to be retried exactly once.',
   );
 });
 
@@ -189,15 +234,19 @@ Deno.test('account deletion photo cleanup is idempotent', async () => {
   await assertRejectsCode(() => deletePhotoStorage(USER_ID, client), 'STORAGE_REMOVE_FAILED');
   const remainingAfterFailure = bucket.objects.size;
   assert(
-    remainingAfterFailure === 105,
-    'expected a failed chunk to leave that chunk and later chunks available for retry.',
+    remainingAfterFailure > 0 && remainingAfterFailure < paths.length,
+    'expected a failed chunk to remain available after bounded partial progress.',
   );
 
   bucket.failRemoveAtCall = null;
-  await deletePhotoStorage(USER_ID, client);
+  const retryResult = await deletePhotoStorage(USER_ID, client);
   const removalCallsAfterSuccessfulRetry = bucket.removeCalls.length;
-  await deletePhotoStorage(USER_ID, client);
+  const emptyRetryResult = await deletePhotoStorage(USER_ID, client);
 
+  assert(
+    retryResult === 'deleted' && emptyRetryResult === 'deleted',
+    'expected both retries to preserve the checkpoint-compatible result.',
+  );
   assert(bucket.objects.size === 0, 'expected storage to remain empty.');
   assert(
     bucket.removeCalls.length === removalCallsAfterSuccessfulRetry,
@@ -205,25 +254,22 @@ Deno.test('account deletion photo cleanup is idempotent', async () => {
   );
 });
 
-Deno.test(
-  'account deletion collects every page before removal and fails closed on list errors',
-  async () => {
-    const paths = Array.from(
-      { length: 1_001 },
-      (_, index) => `${USER_ID}/photo-${String(index).padStart(4, '0')}.enc`,
-    );
-    const bucket = new FakePhotoBucket(paths);
-    bucket.failListAtOffset = 1000;
+Deno.test('account deletion fails closed before mutating an unreadable page', async () => {
+  const paths = Array.from(
+    { length: 1_001 },
+    (_, index) => `${USER_ID}/photo-${String(index).padStart(4, '0')}.enc`,
+  );
+  const bucket = new FakePhotoBucket(paths);
+  bucket.failListAtCall = 1;
 
-    await assertRejectsCode(
-      () => deletePhotoStorage(USER_ID, clientFor(bucket)),
-      'STORAGE_LIST_FAILED',
-    );
+  await assertRejectsCode(
+    () => deletePhotoStorage(USER_ID, clientFor(bucket)),
+    'STORAGE_LIST_FAILED',
+  );
 
-    assert(bucket.removeCalls.length === 0, 'expected no removals before collection completed.');
-    assert(bucket.objects.size === paths.length, 'expected list failure to preserve every object.');
-  },
-);
+  assert(bucket.removeCalls.length === 0, 'expected no removals before the page was validated.');
+  assert(bucket.objects.size === paths.length, 'expected list failure to preserve every object.');
+});
 
 Deno.test('account deletion rejects unsafe listed paths before any removal', async () => {
   const removeCalls: string[][] = [];
