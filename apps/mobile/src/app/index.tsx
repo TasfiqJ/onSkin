@@ -18,6 +18,7 @@ import { useAuth } from '@/lib/auth/AuthProvider';
 import { isSupabaseConfigured } from '@/lib/env';
 import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { markStartupPhase } from '@/lib/observability/operationTiming';
 
 function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
@@ -111,6 +112,12 @@ export default function WelcomeScreen() {
     resetting,
     shouldCheck: checkingOnboarding,
   });
+
+  useEffect(() => {
+    if (onboardingGate !== 'checking') {
+      markStartupPhase('first_critical_data_ready');
+    }
+  }, [onboardingGate]);
 
   useEffect(() => {
     if (!isFocused || !activeWelcomeRef.current) return;

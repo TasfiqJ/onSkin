@@ -12,7 +12,10 @@ import {
   readCompletionQueue,
   readCompletionSyncDiagnostics,
 } from '@/lib/offline/completionQueue';
-import { readOperationTimingAggregates } from '@/lib/observability/operationTiming';
+import {
+  readOperationTimingAggregates,
+  readStartupPhaseSamples,
+} from '@/lib/observability/operationTiming';
 import { queryClient } from '@/lib/query/queryClient';
 
 import type { LocalDiagnosticsDependencies } from './localDiagnostics';
@@ -119,6 +122,7 @@ export function createLocalDiagnosticsDependencies(
     readQueryCache: readQueryCacheDiagnostics,
     readNotifications: readNotificationDiagnostics,
     readCatalogEndpoint: readCatalogEndpointDiagnostics,
+    readStartupPhases: readStartupPhaseSamples,
     readTimings: readOperationTimingAggregates,
   };
 
@@ -143,6 +147,7 @@ export function createLocalDiagnosticsDependencies(
       readQueryCache: fail,
       readNotifications: fail,
       readCatalogEndpoint: fail,
+      readStartupPhases: fail,
       readTimings: fail,
     };
   }

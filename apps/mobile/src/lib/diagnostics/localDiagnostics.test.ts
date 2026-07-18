@@ -34,6 +34,10 @@ function dependencies(
     readQueryCache: () => ({ total: 9, active: 3, fetching: 1, stale: 4 }),
     readNotifications: async () => ({ permission: 'granted', schedule: 'healthy' }),
     readCatalogEndpoint: async () => 'gateway_reachable',
+    readStartupPhases: () => [
+      { phase: 'javascript_started', elapsedMs: 0.125 },
+      { phase: 'navigation_ready', elapsedMs: 187.5 },
+    ],
     readTimings: () => [
       {
         name: 'private_kv_read',
@@ -60,7 +64,7 @@ describe('content-free local diagnostics', () => {
     const snapshot = await loadLocalDiagnostics(dependencies());
 
     expect(snapshot).toEqual({
-      schemaVersion: 1,
+      schemaVersion: 2,
       capturedAt: '2026-07-17T15:00:00.000Z',
       build: {
         environment: 'development',
@@ -85,6 +89,10 @@ describe('content-free local diagnostics', () => {
       queryCache: { total: 9, active: 3, fetching: 1, stale: 4 },
       notifications: { permission: 'granted', schedule: 'healthy' },
       catalogEndpoint: 'gateway_reachable',
+      startupPhases: [
+        { phase: 'javascript_started', elapsedMs: 0.13 },
+        { phase: 'navigation_ready', elapsedMs: 187.5 },
+      ],
       timings: [
         {
           name: 'private_kv_read',
@@ -140,6 +148,9 @@ describe('content-free local diagnostics', () => {
         readQueryCache: fail,
         readNotifications: fail,
         readCatalogEndpoint: fail,
+        readStartupPhases: () => [
+          { phase: forbidden[3], elapsedMs: Number.POSITIVE_INFINITY },
+        ],
         readTimings: () => [
           {
             name: forbidden[3],
@@ -171,6 +182,7 @@ describe('content-free local diagnostics', () => {
       queryCache: { total: 0, active: 0, fetching: 0, stale: 0 },
       notifications: { permission: 'unavailable', schedule: 'unavailable' },
       catalogEndpoint: 'gateway_unreachable',
+      startupPhases: [],
       timings: [],
     });
     const serialized = JSON.stringify(snapshot);
@@ -182,6 +194,24 @@ describe('content-free local diagnostics', () => {
     expect(classifyStorageFreeSpace(100 * 1024 * 1024)).toBe('low');
     expect(classifyStorageFreeSpace(500 * 1024 * 1024)).toBe('ample');
     expect(classifyStorageFreeSpace(Number.NaN)).toBe('unavailable');
+  });
+
+  it('allowlists, deduplicates, bounds, and orders startup phases', async () => {
+    const snapshot = await loadLocalDiagnostics(
+      dependencies({
+        readStartupPhases: () => [
+          { phase: 'navigation_ready', elapsedMs: 35 },
+          { phase: 'javascript_started', elapsedMs: -20 },
+          { phase: 'navigation_ready', elapsedMs: 99 },
+          { phase: 'private_route_name', elapsedMs: 1 },
+        ],
+      }),
+    );
+
+    expect(snapshot.startupPhases).toEqual([
+      { phase: 'javascript_started', elapsedMs: 0 },
+      { phase: 'navigation_ready', elapsedMs: 35 },
+    ]);
   });
 
   it('bounds a source that never settles and still returns a safe snapshot', async () => {

@@ -19,6 +19,7 @@ import { SessionBoundaryGate } from '@/lib/auth/SessionBoundaryGate';
 import { OfflineSync } from '@/lib/offline/OfflineSync';
 import { initSentry } from '@/lib/observability/sentry';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
+import { StartupNavigationObserver } from '@/lib/observability/StartupNavigationObserver';
 import { QueryDateBoundaryObserver } from '@/lib/query/QueryDateBoundaryObserver';
 import { queryClient } from '@/lib/query/queryClient';
 import { PlaintextStagingStartupGate } from '@/lib/storage/PlaintextStagingStartupGate';
@@ -52,6 +53,7 @@ function RootContent() {
           <PlaintextStagingStartupGate>
             <AppLockProvider>
               <PrivateDataAvailabilityGate>
+                <StartupNavigationObserver />
                 <Suspense fallback={null}>
                   <NotificationPreferenceScheduleReconciler />
                 </Suspense>

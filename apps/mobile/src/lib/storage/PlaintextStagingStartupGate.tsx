@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import { Button, StateLoading, StateNotice } from '@/components/ui';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { colors } from '@/theme/tokens';
 
 import { preparePrivateStorageForSession } from './privateStorageStartup';
@@ -47,7 +48,10 @@ function PrivateStorageStartupAttempt({
   useEffect(() => {
     let active = true;
     void settledStartup(preparePrivateStorageForSession(userId)).then((result) => {
-      if (active) setStatus(result);
+      if (active) {
+        if (result === 'ready') markStartupPhase('plaintext_recovery_complete');
+        setStatus(result);
+      }
     });
     return () => {
       active = false;

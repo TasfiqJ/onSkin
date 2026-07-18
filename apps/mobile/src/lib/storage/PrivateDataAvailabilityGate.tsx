@@ -78,6 +78,7 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
     try {
       await verifyPrivateStorage(reason);
       if (checkId.current === id) {
+        markStartupPhase('vault_decision_complete');
         setRetrying(false);
         setAvailability(recoveryHrefRef.current ? 'restoring' : 'ready');
       }
@@ -133,12 +134,6 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
       if (revealTimer) clearTimeout(revealTimer);
     };
   }, [availability]);
-
-  useEffect(() => {
-    if (appUnlocked && (availability === 'ready' || availability === 'restoring')) {
-      markStartupPhase('vault_decision_complete');
-    }
-  }, [appUnlocked, availability]);
 
   if (appUnlocked && (availability === 'ready' || availability === 'restoring')) {
     const restoring = availability === 'restoring';

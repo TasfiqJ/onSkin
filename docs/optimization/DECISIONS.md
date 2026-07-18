@@ -1,9 +1,9 @@
 # Optimization Decision Index
 
-Date: 2026-07-17 (America/Toronto)
+Date: 2026-07-18 (America/Toronto)
 Branch: `optimization`
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
-Current checkpoint parent SHA: `6fbd8f8ea806b85d0ae2ffd46910921f4d5fbe54`
+Current checkpoint parent SHA: `878e145224197cee0a4fafb20d43484edf9a5d8d`
 
 This file records optimization-specific decision needs and links to authoritative decision updates. It does not approve product, privacy, architecture, device-support, release, or operational changes by itself. Current statuses derive only from the authoritative sources named in each row.
 
@@ -15,7 +15,7 @@ Consolidated decision input: [OPEN_DECISION_PACKET.md](./OPEN_DECISION_PACKET.md
 | OPT-DEC-001 | Photo-v2 envelope and narrow native photo/crypto module.                                                           | `not-started` | Master Plan Update, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, privacy/security review, migration and rollback plan.                      | Revalidate v1 behavior, add fixtures/failure tests, and document measurements.     |
 | OPT-DEC-002 | Encrypted transactional database for growing structured local data.                                                | `not-started` | Architecture/decision update, dependency review, key/migration/rollback/account-isolation plan.                                             | Make bounded private-KV records atomic and typed store by store.                   |
 | OPT-DEC-003 | Transactional encrypted outbox schema, conflict, ordering, and coalescing policy.                                  | `not-started` | Architecture/decision update and server idempotency contract.                                                                               | Inventory writes, add owner-generation tests, and define failure taxonomy.         |
-| OPT-DEC-004 | Mounted privacy shield versus full verification/remount bootstrap behavior.                                        | `not-started` | Architecture/privacy decision and bootstrap truth-table evidence.                                                                           | Instrument current startup phases without changing authorization gates.            |
+| OPT-DEC-004 | Mounted privacy shield versus full verification/remount bootstrap behavior.                                        | `not-started` | Architecture/privacy decision plus the implemented `SECURE_STARTUP_TRUTH_TABLE.md` and signed-device startup distributions.                  | Maintain current fixed instrumentation and collect distributions without changing authorization gates. |
 | OPT-DEC-005 | Production performance telemetry under current privacy constraints.                                                | `not-started` | Privacy/security decision and allowlisted content-free schema.                                                                              | Local monotonic markers and native offline profiling.                              |
 | OPT-DEC-006 | EAS Update adoption versus store-only releases and correction of OTA claims.                                       | `accepted` | `docs/UPDATE_DELIVERY_POLICY.md`, `docs/ARCHITECTURE.md` A-007, `docs/DECISIONS.md`, and `evidence/2026-07-17_store-only-update-delivery-policy.md` accept store-bundled client releases for V1. | Preserve store-build and migration compatibility evidence; future EAS Update adoption requires a new governed decision and complete reactivation proof. |
 | OPT-DEC-007 | Full dark mode versus explicit light-only launch.                                                                  | `accepted` | `docs/DECISIONS.md` accepts an explicit light-only launch with deterministic paper/night status contrast; `evidence/2026-07-17_theme-system-bar-and-predictive-back-scope.md` records the implementation boundary. | Retain intentional night routes and collect supported-iPhone screenshots in both device appearance settings; full dark mode requires a new reviewed token/route/accessibility matrix. |

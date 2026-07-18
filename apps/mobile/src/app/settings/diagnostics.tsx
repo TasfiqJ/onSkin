@@ -206,6 +206,20 @@ export default function LocalDiagnosticsScreen() {
             )}
           </DiagnosticsCard>
 
+          <DiagnosticsCard title="STARTUP MILESTONES">
+            {snapshot.startupPhases.length === 0 ? (
+              <DiagnosticsRow label="Phases" value="none" />
+            ) : (
+              snapshot.startupPhases.map((phase) => (
+                <DiagnosticsRow
+                  key={phase.phase}
+                  label={displayValue(phase.phase)}
+                  value={`${phase.elapsedMs} ms`}
+                />
+              ))
+            )}
+          </DiagnosticsCard>
+
           <DiagnosticsRow label="Captured" value={snapshot.capturedAt} />
           <Button
             className="mt-5"

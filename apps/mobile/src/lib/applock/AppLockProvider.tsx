@@ -220,9 +220,6 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   const [preferenceRetrying, setPreferenceRetrying] = useState(false);
   const [photoTimelineUnlocked, setPhotoTimelineUnlocked] = useState(false);
 
-  useEffect(() => {
-    if (loaded) markStartupPhase('app_lock_decision_complete');
-  }, [loaded]);
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
   const appUnlockLease = useRef<SingleFlightLease<void>>({ current: null });
   const photoTimelineUnlockLease = useRef<SingleFlightLease<AppLockAuthStatus>>({ current: null });
@@ -269,6 +266,7 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
       const decision = decideAppLockPreference(result);
       enabledRef.current = decision.enabled;
       preferenceReadInFlight.current = false;
+      markStartupPhase('app_lock_decision_complete');
       setPreferenceRetrying(false);
       setLoaded(true);
       setLockFeedback(

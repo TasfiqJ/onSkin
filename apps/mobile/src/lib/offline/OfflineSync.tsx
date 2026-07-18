@@ -4,6 +4,7 @@ import { AppState } from 'react-native';
 
 import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { markStartupPhase } from '@/lib/observability/operationTiming';
 
 import { flushCompletions } from './completionQueue';
 
@@ -22,16 +23,17 @@ export function OfflineSync() {
   useEffect(() => {
     const run = () => {
       void flushCompletions()
-        .then(({ flushed }) => {
+        .then(async ({ flushed }) => {
           if (flushed > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
-            void qc
-              .invalidateQueries({
+            await Promise.all([
+              qc.invalidateQueries({
                 queryKey: ownerQueryPrefixes.completions(ownerScope),
-              })
-              .catch(() => undefined);
-            void qc
-              .invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) })
-              .catch(() => undefined);
+              }),
+              qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) }),
+            ]);
+          }
+          if (isOwnerQueryScopeCurrent(ownerScope)) {
+            markStartupPhase('startup_reconciliation_complete');
           }
         })
         .catch(() => undefined);

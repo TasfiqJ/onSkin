@@ -1,9 +1,11 @@
 import {
   OPERATION_TIMING_NAMES,
+  STARTUP_PHASE_NAMES,
   type OperationTimingName,
+  type StartupPhaseName,
 } from '@/lib/observability/operationTiming';
 
-export const LOCAL_DIAGNOSTICS_SCHEMA_VERSION = 1 as const;
+export const LOCAL_DIAGNOSTICS_SCHEMA_VERSION = 2 as const;
 
 export type DiagnosticsAvailability =
   | 'absent'
@@ -27,6 +29,11 @@ export type DiagnosticsTimingAggregate = Readonly<{
   errorCount: number;
   p50Ms: number;
   p95Ms: number;
+}>;
+
+export type DiagnosticsStartupPhase = Readonly<{
+  phase: StartupPhaseName;
+  elapsedMs: number;
 }>;
 
 export type LocalDiagnosticsSnapshot = Readonly<{
@@ -69,6 +76,7 @@ export type LocalDiagnosticsSnapshot = Readonly<{
     schedule: 'healthy' | 'mismatch' | 'not_applicable' | 'unavailable';
   }>;
   catalogEndpoint: 'gateway_reachable' | 'gateway_unreachable' | 'not_configured';
+  startupPhases: readonly DiagnosticsStartupPhase[];
   timings: readonly DiagnosticsTimingAggregate[];
 }>;
 
@@ -122,6 +130,7 @@ export type LocalDiagnosticsDependencies = Readonly<{
   readQueryCache: () => RawQueryCacheDiagnostics;
   readNotifications: () => Promise<RawNotificationDiagnostics>;
   readCatalogEndpoint: () => Promise<unknown>;
+  readStartupPhases: () => readonly unknown[];
   readTimings: () => readonly unknown[];
 }>;
 
@@ -142,6 +151,7 @@ const SYNC_RESULTS = new Set<DiagnosticsSyncResult>([
   'synced',
 ]);
 const TIMING_NAMES = new Set<string>(OPERATION_TIMING_NAMES);
+const STARTUP_PHASES = new Set<string>(STARTUP_PHASE_NAMES);
 const SAFE_RELEASE_VERSION = /^\d+(?:\.\d+){0,3}(?:[-+][A-Za-z0-9.-]{1,32})?$/;
 const SAFE_BUILD_VERSION = /^\d+(?:\.\d+){0,2}$/;
 const SAFE_RUNTIME_VERSION = /^(?:[a-f0-9]{32,64}|exposdk:\d+(?:\.\d+){1,3}|fingerprint:[a-f0-9]{6,64}|\d+(?:\.\d+){0,3}(?:[-+][A-Za-z0-9.-]{1,32})?)$/i;
@@ -222,6 +232,16 @@ function normalizeTiming(value: unknown): DiagnosticsTimingAggregate | null {
   };
 }
 
+function normalizeStartupPhase(value: unknown): DiagnosticsStartupPhase | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const record = value as Record<string, unknown>;
+  if (typeof record.phase !== 'string' || !STARTUP_PHASES.has(record.phase)) return null;
+  return {
+    phase: record.phase as StartupPhaseName,
+    elapsedMs: safeDuration(record.elapsedMs),
+  };
+}
+
 export function resolveLocalDiagnosticsAccess(
   development: boolean,
   environment: unknown,
@@ -253,6 +273,7 @@ export async function loadLocalDiagnostics(
     queryCache,
     notifications,
     catalogEndpoint,
+    startupPhases,
     timings,
   ] = await Promise.all([
     isolated(deps.readBuild, {
@@ -277,6 +298,7 @@ export async function loadLocalDiagnostics(
     isolated(deps.readQueryCache, { total: 0, active: 0, fetching: 0, stale: 0 }),
     isolated(deps.readNotifications, { permission: 'unavailable', schedule: 'unavailable' }),
     isolated(deps.readCatalogEndpoint, 'gateway_unreachable'),
+    isolated(deps.readStartupPhases, []),
     isolated(deps.readTimings, []),
   ]);
 
@@ -292,6 +314,15 @@ export async function loadLocalDiagnostics(
         return normalized ? [normalized] : [];
       })
     : [];
+  const normalizedStartupByPhase = new Map<StartupPhaseName, DiagnosticsStartupPhase>();
+  if (Array.isArray(startupPhases)) {
+    for (const value of startupPhases) {
+      const normalized = normalizeStartupPhase(value);
+      if (normalized && !normalizedStartupByPhase.has(normalized.phase)) {
+        normalizedStartupByPhase.set(normalized.phase, normalized);
+      }
+    }
+  }
 
   return {
     schemaVersion: LOCAL_DIAGNOSTICS_SCHEMA_VERSION,
@@ -363,6 +394,10 @@ export async function loadLocalDiagnostics(
       new Set(['gateway_reachable', 'gateway_unreachable', 'not_configured'] as const),
       'gateway_unreachable',
     ),
+    startupPhases: STARTUP_PHASE_NAMES.flatMap((phase) => {
+      const sample = normalizedStartupByPhase.get(phase);
+      return sample ? [sample] : [];
+    }),
     timings: normalizedTimings,
   };
 }
