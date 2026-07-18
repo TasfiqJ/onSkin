@@ -1,7 +1,8 @@
 export const OUTBOX_STORAGE_KEY = 'onskin.outbox.v1';
-export const OUTBOX_SCHEMA_VERSION = 3 as const;
+export const OUTBOX_SCHEMA_VERSION = 4 as const;
 export const OUTBOX_ROW_SCHEMA_VERSION = 1 as const;
 export const MAX_OUTBOX_ROWS = 512;
+export const MAX_SHELF_SCAN_OUTBOX_ROWS = 128;
 export const MAX_OUTBOX_REVISIONS = 1_024;
 export const MAX_OUTBOX_PAYLOAD_BYTES = 64 * 1024;
 export const MAX_OUTBOX_BATCH_SIZE = 25;
@@ -12,17 +13,20 @@ export const OUTBOX_MAX_RETRY_MS = 5 * 60_000;
 export const NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE = 'notification_preferences';
 export const NOTIFICATION_DELIVERY_ENTITY_NAMESPACE = 'notification_delivery';
 export const RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE = 'recommendation_preferences';
+export const SHELF_SCAN_ENTITY_NAMESPACE = 'shelf_scan';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SHA256_HEX = /^[0-9a-f]{64}$/;
 const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
+const NUMERIC_BARCODE = /^[0-9]{6,14}$/;
 
 export type OutboxEntityType =
   | 'notification_delivery'
   | 'notification_preferences'
   | 'recommendation_preferences'
+  | 'shelf_scan'
   | 'shelf_product';
 export type OutboxOperationKind = 'delete' | 'upsert';
 export type OutboxState = 'dead' | 'leased' | 'ready';
@@ -259,10 +263,66 @@ function validNotificationDeliveryPayload(value: unknown): value is OutboxPayloa
   );
 }
 
+function validShelfScanPayload(value: unknown): value is OutboxPayload {
+  if (
+    !isRecord(value) ||
+    !hasExactKeys(value, ['barcode', 'result', 'matched_product_id', 'scanned_at'])
+  ) {
+    return false;
+  }
+  const matchedProductId = value.matched_product_id;
+  return (
+    typeof value.barcode === 'string' &&
+    NUMERIC_BARCODE.test(value.barcode) &&
+    (value.result === 'matched' ||
+      value.result === 'no_match' ||
+      value.result === 'ambiguous' ||
+      value.result === 'offline_queued') &&
+    (matchedProductId === null ||
+      (typeof matchedProductId === 'string' && UUID.test(matchedProductId))) &&
+    (value.result === 'matched' || matchedProductId === null) &&
+    canonicalIso(value.scanned_at) !== null
+  );
+}
+
 function notificationDeliveryIdempotencyKey(operationId: unknown, payload: unknown): string | null {
   if (typeof operationId !== 'string' || !UUID.test(operationId)) return null;
   if (!validNotificationDeliveryPayload(payload)) return null;
   return `${NOTIFICATION_DELIVERY_ENTITY_NAMESPACE}:${operationId}:${String(payload.kind)}:${String(payload.sent_at)}`;
+}
+
+function shelfScanIdempotencyKey(operationId: unknown, value: unknown): string | null {
+  if (typeof operationId !== 'string' || !UUID.test(operationId) || typeof value !== 'string') {
+    return null;
+  }
+  return new RegExp(`^${SHELF_SCAN_ENTITY_NAMESPACE}:${operationId}:[0-9a-f]{64}$`, 'i').test(value)
+    ? value.toLowerCase()
+    : null;
+}
+
+export function shelfScanPayloadHashInput(payload: OutboxPayload): string {
+  if (!validShelfScanPayload(payload)) fail();
+  return [
+    'onskin:shelf-scan-payload:v1',
+    String(payload.barcode),
+    String(payload.result),
+    payload.matched_product_id === null ? '-' : String(payload.matched_product_id).toLowerCase(),
+    String(payload.scanned_at),
+  ].join('\n');
+}
+
+function validEntityType(value: unknown): value is OutboxEntityType {
+  return (
+    value === 'shelf_product' ||
+    value === 'shelf_scan' ||
+    value === 'notification_delivery' ||
+    value === 'notification_preferences' ||
+    value === 'recommendation_preferences'
+  );
+}
+
+function isImmutableEventEntityType(entityType: OutboxEntityType): boolean {
+  return entityType === 'notification_delivery' || entityType === 'shelf_scan';
 }
 
 function entityIdentity(value: Pick<OutboxRow, 'entityType' | 'entityId'>): string {
@@ -337,10 +397,7 @@ function decodeRow(value: unknown): OutboxRow {
     !SHA256_HEX.test(value.ownerHash) ||
     !Number.isSafeInteger(value.ownerGeneration) ||
     Number(value.ownerGeneration) < 0 ||
-    (entityType !== 'shelf_product' &&
-      entityType !== 'notification_delivery' &&
-      entityType !== 'notification_preferences' &&
-      entityType !== 'recommendation_preferences') ||
+    !validEntityType(entityType) ||
     typeof entityId !== 'string' ||
     !UUID.test(entityId) ||
     (operationKind !== 'upsert' && operationKind !== 'delete') ||
@@ -352,9 +409,11 @@ function decodeRow(value: unknown): OutboxRow {
         ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
         : entityType === 'notification_delivery'
           ? notificationDeliveryIdempotencyKey(value.operationId, value.payload)
-          : entityType === 'recommendation_preferences'
-            ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
-            : `${entityType}:${entityId}:${value.clientRevision}`) ||
+          : entityType === 'shelf_scan'
+            ? shelfScanIdempotencyKey(value.operationId, value.idempotencyKey)
+            : entityType === 'recommendation_preferences'
+              ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
+              : `${entityType}:${entityId}:${value.clientRevision}`) ||
     value.dependencyGroupId !== `${entityType}:${entityId}` ||
     !canonicalIso(value.enqueuedAt) ||
     !Number.isSafeInteger(value.attemptCount) ||
@@ -384,6 +443,11 @@ function decodeRow(value: unknown): OutboxRow {
     (entityType === 'notification_delivery' &&
       (operationKind !== 'upsert' ||
         !validNotificationDeliveryPayload(value.payload) ||
+        value.clientRevision !== 1 ||
+        value.tombstone !== false)) ||
+    (entityType === 'shelf_scan' &&
+      (operationKind !== 'upsert' ||
+        !validShelfScanPayload(value.payload) ||
         value.clientRevision !== 1 ||
         value.tombstone !== false)) ||
     (entityType === 'recommendation_preferences' &&
@@ -425,10 +489,7 @@ function decodeRevision(value: unknown): OutboxRevision {
     !hasExactKeys(value, ['ownerHash', 'entityType', 'entityId', 'revision']) ||
     typeof value.ownerHash !== 'string' ||
     !SHA256_HEX.test(value.ownerHash) ||
-    (value.entityType !== 'shelf_product' &&
-      value.entityType !== 'notification_delivery' &&
-      value.entityType !== 'notification_preferences' &&
-      value.entityType !== 'recommendation_preferences') ||
+    !validEntityType(value.entityType) ||
     typeof value.entityId !== 'string' ||
     !UUID.test(value.entityId) ||
     !Number.isSafeInteger(value.revision) ||
@@ -448,10 +509,7 @@ function decodeLegacyRevision(value: unknown, rows: readonly OutboxRow[]): Outbo
   if (
     !isRecord(value) ||
     !hasExactKeys(value, ['entityType', 'entityId', 'revision']) ||
-    (value.entityType !== 'shelf_product' &&
-      value.entityType !== 'notification_delivery' &&
-      value.entityType !== 'notification_preferences' &&
-      value.entityType !== 'recommendation_preferences') ||
+    !validEntityType(value.entityType) ||
     typeof value.entityId !== 'string' ||
     !UUID.test(value.entityId) ||
     !Number.isSafeInteger(value.revision) ||
@@ -497,7 +555,10 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     fail(OUTBOX_UNSUPPORTED_VERSION);
   }
   if (
-    (parsed.version !== 1 && parsed.version !== 2 && parsed.version !== OUTBOX_SCHEMA_VERSION) ||
+    (parsed.version !== 1 &&
+      parsed.version !== 2 &&
+      parsed.version !== 3 &&
+      parsed.version !== OUTBOX_SCHEMA_VERSION) ||
     !hasExactKeys(parsed, ['version', 'rows', 'revisions']) ||
     !Array.isArray(parsed.rows) ||
     parsed.rows.length > MAX_OUTBOX_ROWS ||
@@ -617,6 +678,33 @@ export function enqueueNotificationDeliveryOutboxOperation(
   });
 }
 
+export function enqueueShelfScanOutboxOperation(
+  envelope: OutboxEnvelope,
+  input: Readonly<{
+    operationId: string;
+    ownerHash: string;
+    ownerGeneration: number;
+    entityId: string;
+    payload: OutboxPayload;
+    payloadHash: string;
+    enqueuedAt: string;
+  }>,
+): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
+  if (!SHA256_HEX.test(input.payloadHash)) fail();
+  if (
+    envelope.rows.filter((row) => row.entityType === 'shelf_scan').length >=
+    MAX_SHELF_SCAN_OUTBOX_ROWS
+  ) {
+    fail(OUTBOX_LIMIT_REACHED);
+  }
+  return enqueueOutboxOperation(envelope, {
+    ...input,
+    entityType: 'shelf_scan',
+    operationKind: 'upsert',
+    idempotencyKey: `${SHELF_SCAN_ENTITY_NAMESPACE}:${input.operationId}:${input.payloadHash}`,
+  });
+}
+
 function enqueueOutboxOperation(
   envelope: OutboxEnvelope,
   input: Readonly<{
@@ -627,6 +715,7 @@ function enqueueOutboxOperation(
     entityId: string;
     operationKind: OutboxOperationKind;
     payload: OutboxPayload | null;
+    idempotencyKey?: string;
     enqueuedAt: string;
   }>,
 ): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
@@ -642,7 +731,7 @@ function enqueueOutboxOperation(
       )
       .map((revision) => revision.revision),
   );
-  if (input.entityType === 'notification_delivery' && previousRevision !== 0) fail();
+  if (isImmutableEventEntityType(input.entityType) && previousRevision !== 0) fail();
   const clientRevision = previousRevision + 1;
   const row = decodeRow({
     schemaVersion: OUTBOX_ROW_SCHEMA_VERSION,
@@ -659,9 +748,11 @@ function enqueueOutboxOperation(
         ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
         : input.entityType === 'notification_delivery'
           ? (notificationDeliveryIdempotencyKey(input.operationId, input.payload) ?? '')
-          : input.entityType === 'recommendation_preferences'
-            ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
-            : `${dependencyIdentity}:${clientRevision}`,
+          : input.entityType === 'shelf_scan'
+            ? (shelfScanIdempotencyKey(input.operationId, input.idempotencyKey) ?? '')
+            : input.entityType === 'recommendation_preferences'
+              ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
+              : `${dependencyIdentity}:${clientRevision}`,
     dependencyGroupId: dependencyIdentity,
     enqueuedAt: input.enqueuedAt,
     attemptCount: 0,
@@ -753,13 +844,19 @@ export function leaseReadyOutboxRows(
   const leasedIdentities = new Set(
     compacted.filter((row) => row.state === 'leased').map(ownerEntityIdentity),
   );
-  const eligible = sortRows(compacted).filter(
-    (row) =>
-      row.ownerHash === input.ownerHash &&
-      row.state === 'ready' &&
-      !leasedIdentities.has(ownerEntityIdentity(row)) &&
-      row.nextAttemptAt <= input.now,
-  );
+  const eligible = sortRows(compacted)
+    .sort(
+      (left, right) =>
+        Number(isImmutableEventEntityType(left.entityType)) -
+        Number(isImmutableEventEntityType(right.entityType)),
+    )
+    .filter(
+      (row) =>
+        row.ownerHash === input.ownerHash &&
+        row.state === 'ready' &&
+        !leasedIdentities.has(ownerEntityIdentity(row)) &&
+        row.nextAttemptAt <= input.now,
+    );
   const selected = new Set(eligible.slice(0, limit).map((row) => row.operationId));
   const leaseExpiresAt = new Date(Date.parse(input.now) + OUTBOX_LEASE_MS).toISOString();
   const leasedRows: OutboxRow[] = [];
@@ -811,6 +908,7 @@ export function settleOutboxLease(
     leaseOwner: string;
     now: string;
     results: readonly OutboxServerResult[];
+    operationIds?: readonly string[];
     failureClass?: OutboxFailureClass;
     retryAfterMs?: number | null;
     random?: number;
@@ -819,6 +917,15 @@ export function settleOutboxLease(
   if (!UUID.test(input.leaseOwner) || !canonicalIso(input.now)) fail();
   const resultByOperation = new Map(input.results.map((result) => [result.operationId, result]));
   if (resultByOperation.size !== input.results.length) fail();
+  const operationIds = input.operationIds ? new Set(input.operationIds) : null;
+  if (
+    operationIds &&
+    (operationIds.size !== input.operationIds?.length ||
+      [...operationIds].some((operationId) => !UUID.test(operationId)) ||
+      [...resultByOperation.keys()].some((operationId) => !operationIds.has(operationId)))
+  ) {
+    fail();
+  }
   const random = input.random ?? 0.5;
   const latestRevisionByOwnerEntity = new Map<string, number>(
     envelope.revisions.flatMap((revision) =>
@@ -829,6 +936,7 @@ export function settleOutboxLease(
   );
   const rows = envelope.rows.flatMap((row): OutboxRow[] => {
     if (row.state !== 'leased' || row.leaseOwner !== input.leaseOwner) return [row];
+    if (operationIds && !operationIds.has(row.operationId)) return [row];
     if (
       (latestRevisionByOwnerEntity.get(ownerEntityIdentity(row)) ?? row.clientRevision) >
       row.clientRevision
@@ -872,7 +980,7 @@ export function settleOutboxLease(
     ];
   });
   const revisions = envelope.revisions.filter((revision) => {
-    if (revision.entityType !== 'notification_delivery') return true;
+    if (!isImmutableEventEntityType(revision.entityType)) return true;
     return rows.some(
       (row) =>
         row.entityType === revision.entityType &&
@@ -892,14 +1000,7 @@ function assertOwnerHash(ownerHash: string): void {
 }
 
 function assertEntityType(entityType: OutboxEntityType): void {
-  if (
-    entityType !== 'shelf_product' &&
-    entityType !== 'notification_delivery' &&
-    entityType !== 'notification_preferences' &&
-    entityType !== 'recommendation_preferences'
-  ) {
-    fail();
-  }
+  if (!validEntityType(entityType)) fail();
 }
 
 export function selectOutboxOwnerStatus(

@@ -52,6 +52,7 @@ export type OutboxFlushResult = Readonly<{
     notificationDeliveries: number;
     notificationPreferences: number;
     recommendationPreferences: number;
+    shelfScans: number;
     shelfProducts: number;
   }>;
 }>;
@@ -133,6 +134,7 @@ function emptyFlushResult(): OutboxFlushResult {
       notificationDeliveries: 0,
       notificationPreferences: 0,
       recommendationPreferences: 0,
+      shelfScans: 0,
       shelfProducts: 0,
     }),
   });
@@ -153,6 +155,7 @@ function mergeFlushResults(current: OutboxFlushResult, next: OutboxFlushResult):
       recommendationPreferences:
         current.flushedByEntity.recommendationPreferences +
         next.flushedByEntity.recommendationPreferences,
+      shelfScans: current.flushedByEntity.shelfScans + next.flushedByEntity.shelfScans,
       shelfProducts: current.flushedByEntity.shelfProducts + next.flushedByEntity.shelfProducts,
     }),
   });
@@ -275,6 +278,7 @@ function failureClass(error: RequestPolicyError): OutboxFailureClass {
 
 async function settleLease(
   leaseOwner: string,
+  operationIds: readonly string[],
   results: readonly OutboxServerResult[],
   failure?: Readonly<{ errorClass: OutboxFailureClass; retryAfterMs: number | null }>,
 ): Promise<void> {
@@ -285,6 +289,7 @@ async function settleLease(
         leaseOwner,
         now,
         results,
+        operationIds,
         ...(failure
           ? {
               failureClass: failure.errorClass,
@@ -306,11 +311,13 @@ async function sendOutboxEntityBatch(
   const rpc =
     entityType === 'shelf_product'
       ? 'apply_shelf_outbox_batch'
-      : entityType === 'notification_delivery'
-        ? 'apply_notification_delivery_outbox_batch'
-        : entityType === 'notification_preferences'
-          ? 'apply_notification_preferences_outbox_batch'
-          : 'apply_recommendation_preferences_outbox_batch';
+      : entityType === 'shelf_scan'
+        ? 'apply_shelf_scan_outbox_batch'
+        : entityType === 'notification_delivery'
+          ? 'apply_notification_delivery_outbox_batch'
+          : entityType === 'notification_preferences'
+            ? 'apply_notification_preferences_outbox_batch'
+            : 'apply_recommendation_preferences_outbox_batch';
   const data = await runRequestWithLease(
     lease,
     {
@@ -347,6 +354,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
     let notificationDeliveriesFlushed = 0;
     let notificationPreferencesFlushed = 0;
     let recommendationPreferencesFlushed = 0;
+    let shelfScansFlushed = 0;
     let shelfProductsFlushed = 0;
     for (let batch = 0; batch < MAX_BATCHES_PER_FLUSH; batch += 1) {
       lease.assertCurrent();
@@ -367,17 +375,21 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       totalLeased += leasedRows.length;
 
       const results: OutboxServerResult[] = [];
-      let requestFailure: RequestPolicyError | null = null;
+      let hadRequestFailure = false;
       for (const entityType of [
         'shelf_product',
-        'notification_delivery',
         'notification_preferences',
         'recommendation_preferences',
+        'notification_delivery',
+        'shelf_scan',
       ] as const) {
         const rows = leasedRows.filter((row) => row.entityType === entityType);
         if (rows.length === 0) continue;
+        let entityResults: readonly OutboxServerResult[] = [];
+        let requestFailure: RequestPolicyError | null = null;
         try {
-          results.push(...(await sendOutboxEntityBatch(lease, entityType, rows)));
+          entityResults = await sendOutboxEntityBatch(lease, entityType, rows);
+          results.push(...entityResults);
         } catch (error) {
           lease.assertCurrent();
           requestFailure =
@@ -389,20 +401,21 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
                   attemptCount: 1,
                   statusClass: 'unknown',
                 });
-          break;
+          hadRequestFailure = true;
         }
+        await settleLease(
+          leaseOwner,
+          rows.map((row) => row.operationId),
+          entityResults,
+          requestFailure
+            ? {
+                errorClass: failureClass(requestFailure),
+                retryAfterMs: requestFailure.retryAfterMs,
+              }
+            : undefined,
+        );
+        lease.assertCurrent();
       }
-      await settleLease(
-        leaseOwner,
-        results,
-        requestFailure
-          ? {
-              errorClass: failureClass(requestFailure),
-              retryAfterMs: requestFailure.retryAfterMs,
-            }
-          : undefined,
-      );
-      lease.assertCurrent();
       const successfulIds = new Set(
         results
           .filter((result) => result.status !== 'permanent')
@@ -422,7 +435,8 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       recommendationPreferencesFlushed += successfulRows.filter(
         (row) => row.entityType === 'recommendation_preferences',
       ).length;
-      if (requestFailure) break;
+      shelfScansFlushed += successfulRows.filter((row) => row.entityType === 'shelf_scan').length;
+      if (hadRequestFailure) break;
     }
 
     const state = await readOutbox();
@@ -438,6 +452,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
         notificationDeliveries: notificationDeliveriesFlushed,
         notificationPreferences: notificationPreferencesFlushed,
         recommendationPreferences: recommendationPreferencesFlushed,
+        shelfScans: shelfScansFlushed,
         shelfProducts: shelfProductsFlushed,
       }),
     });

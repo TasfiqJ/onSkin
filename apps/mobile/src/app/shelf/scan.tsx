@@ -26,6 +26,7 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';
 import { track } from '@/lib/analytics/track';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
@@ -139,6 +140,7 @@ function noMatchRoute(barcode: string) {
 }
 
 export default function ScanScreen() {
+  const { user } = useAuth();
   const ownerScope = useOwnerQueryScope();
   const isFocused = useIsFocused();
   const { height, width } = useWindowDimensions();
@@ -244,11 +246,15 @@ export default function ScanScreen() {
       .then((response) => {
         if (controller.signal.aborted || !isOwnerQueryScopeCurrent(ownerScope)) return;
         const scanResult = shelfScanResultFromLookup(response.result);
-        void recordShelfScan(ownerScope, {
-          barcode: normalized.lookupValue,
-          result: scanResult,
-          matchedProductId: 'product' in response ? response.product.id : null,
-        }).catch(() => undefined);
+        void recordShelfScan(
+          ownerScope,
+          {
+            barcode: normalized.lookupValue,
+            result: scanResult,
+            matchedProductId: response.result === 'matched' ? response.product.id : null,
+          },
+          user?.id,
+        ).catch(() => undefined);
 
         if (response.result === 'matched' || response.result === 'external_candidate') {
           setState({
@@ -279,10 +285,14 @@ export default function ScanScreen() {
           if (mounted.current) setState({ kind: 'idle' });
           return;
         }
-        void recordShelfScan(ownerScope, {
-          barcode: normalized.lookupValue,
-          result: shelfScanResultFromLookup('lookup_error'),
-        }).catch(() => undefined);
+        void recordShelfScan(
+          ownerScope,
+          {
+            barcode: normalized.lookupValue,
+            result: shelfScanResultFromLookup('lookup_error'),
+          },
+          user?.id,
+        ).catch(() => undefined);
         setState({
           kind: 'error',
           barcode: normalized.lookupValue,

@@ -4,50 +4,74 @@ import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
 } from '@/lib/auth/accountGeneration';
+import {
+  OUTBOX_STORAGE_KEY,
+  decodeOutboxEnvelope,
+  shelfScanPayloadHashInput,
+} from '@/lib/offline/outbox.pure';
 import { createOwnerQueryScope, type OwnerQueryScope } from '@/lib/query/queryKeys';
 
 import { recordShelfScan, shelfScanResultFromLookup } from './scanLog';
 
-const mocks = vi.hoisted(() => {
-  const abortSignal = vi.fn(async () => ({ error: null }));
-  const insert = vi.fn(() => ({ abortSignal }));
-  return {
-    get isSupabaseConfigured() {
-      return state.isSupabaseConfigured;
+const OWNER_HASH = 'a'.repeat(64);
+const PAYLOAD_HASH = 'b'.repeat(64);
+const NOW = '2026-07-18T16:00:00.000Z';
+const PRODUCT_ID = '00000000-0000-4000-8000-000000000043';
+
+function uuid(sequence: number): string {
+  return `00000000-0000-4000-8000-${sequence.toString(16).padStart(12, '0')}`;
+}
+
+const mocks = vi.hoisted(() => ({
+  hashOwner: vi.fn(),
+  nextUuid: 1,
+  payloadDigest: vi.fn(),
+  randomUUID: vi.fn(),
+  scheduleFlush: vi.fn(),
+  storage: new Map<string, string>(),
+  tails: new Map<string, Promise<void>>(),
+  track: vi.fn(),
+  updateAfterCommit: null as null | (() => void),
+}));
+
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: mocks.payloadDigest,
+  randomUUID: mocks.randomUUID,
+}));
+
+vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
+
+vi.mock('@/lib/offline/outbox', () => ({
+  hashOutboxOwner: mocks.hashOwner,
+  scheduleOutboxFlush: mocks.scheduleFlush,
+}));
+
+vi.mock('@/lib/storage/privateKV', () => ({
+  readPrivateItem: vi.fn(async (key: string) => {
+    const value = mocks.storage.get(key);
+    return value === undefined ? { status: 'absent' } : { status: 'available', value };
+  }),
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const previous = mocks.tails.get(key) ?? Promise.resolve();
+      let release!: () => void;
+      const tail = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      mocks.tails.set(key, tail);
+      await previous;
+      try {
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
+        mocks.updateAfterCommit?.();
+      } finally {
+        release();
+        if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
+      }
     },
-    getUser: vi.fn(
-      async (): Promise<{ data: { user: { id: string } | null } }> => ({
-        data: { user: { id: 'user-1' } },
-      }),
-    ),
-    insert,
-    abortSignal,
-    from: vi.fn(() => ({ insert })),
-    track: vi.fn(),
-  };
-});
-
-const state = vi.hoisted(() => ({
-  isSupabaseConfigured: true,
-}));
-
-vi.mock('@/lib/env', () => ({
-  get isSupabaseConfigured() {
-    return mocks.isSupabaseConfigured;
-  },
-}));
-
-vi.mock('@/lib/analytics/track', () => ({
-  track: mocks.track,
-}));
-
-vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: {
-      getUser: mocks.getUser,
-    },
-    from: mocks.from,
-  },
+  ),
 }));
 
 let boundaryActive = false;
@@ -55,11 +79,17 @@ let boundaryActive = false;
 function record(
   input: Parameters<typeof recordShelfScan>[1],
   ownerScope: OwnerQueryScope = createOwnerQueryScope(),
+  ownerId: string | null = 'user-1',
 ) {
-  return recordShelfScan(ownerScope, input);
+  return recordShelfScan(ownerScope, input, ownerId);
+}
+
+function storedRows() {
+  return decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows;
 }
 
 afterEach(() => {
+  vi.useRealTimers();
   if (boundaryActive) {
     endAccountGenerationBoundary();
     boundaryActive = false;
@@ -68,13 +98,20 @@ afterEach(() => {
 
 describe('shelf scan intake log', () => {
   beforeEach(() => {
-    state.isSupabaseConfigured = true;
-    mocks.getUser.mockReset();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
-    mocks.insert.mockClear();
-    mocks.abortSignal.mockClear();
-    mocks.from.mockClear();
-    mocks.track.mockClear();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(NOW));
+    mocks.storage.clear();
+    mocks.tails.clear();
+    mocks.updateAfterCommit = null;
+    mocks.nextUuid = 1;
+    mocks.hashOwner.mockReset();
+    mocks.hashOwner.mockResolvedValue(OWNER_HASH);
+    mocks.payloadDigest.mockReset();
+    mocks.payloadDigest.mockResolvedValue(PAYLOAD_HASH);
+    mocks.randomUUID.mockReset();
+    mocks.randomUUID.mockImplementation(() => uuid(mocks.nextUuid++));
+    mocks.scheduleFlush.mockReset();
+    mocks.track.mockReset();
   });
 
   it('maps lookup outcomes onto the shelf_scans enum', () => {
@@ -87,11 +124,11 @@ describe('shelf scan intake log', () => {
     expect(shelfScanResultFromLookup('lookup_error')).toBe('offline_queued');
   });
 
-  it('records a matched scan with master-plan funnel events and no barcode analytics leak', async () => {
+  it('queues a matched scan with owner hashing and no barcode analytics leak', async () => {
     await record({
       barcode: ' 1234567890123 ',
       result: 'matched',
-      matchedProductId: 'product-1',
+      matchedProductId: PRODUCT_ID.toUpperCase(),
     });
 
     expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
@@ -103,139 +140,158 @@ describe('shelf scan intake log', () => {
       source: 'scan',
       result: 'matched',
     });
-    expect(mocks.track).not.toHaveBeenCalledWith('product_scanned', expect.anything());
-    expect(mocks.from).toHaveBeenCalledWith('shelf_scans');
-    expect(mocks.insert).toHaveBeenCalledWith({
-      user_id: 'user-1',
-      barcode: '1234567890123',
-      matched_product_id: 'product-1',
-      result: 'matched',
-      contributed_back: false,
+    expect(JSON.stringify(mocks.track.mock.calls)).not.toContain('1234567890123');
+    expect(mocks.hashOwner).toHaveBeenCalledWith('user-1');
+    const row = storedRows()[0];
+    expect(row).toMatchObject({
+      operationId: uuid(1),
+      entityType: 'shelf_scan',
+      entityId: uuid(2),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: expect.any(Number),
+      clientRevision: 1,
+      idempotencyKey: `shelf_scan:${uuid(1)}:${PAYLOAD_HASH}`,
+      payload: {
+        barcode: '1234567890123',
+        result: 'matched',
+        matched_product_id: PRODUCT_ID,
+        scanned_at: NOW,
+      },
     });
-    expect(mocks.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+    expect(mocks.payloadDigest).toHaveBeenCalledWith(
+      'SHA-256',
+      shelfScanPayloadHashInput(row!.payload!),
+    );
+    expect(mocks.scheduleFlush).toHaveBeenCalledOnce();
   });
 
-  it('tracks no-match scans and skips the database when Supabase is unavailable', async () => {
-    state.isSupabaseConfigured = false;
+  it('queues offline outcomes without a configured backend or a remote owner lookup', async () => {
+    await record({ barcode: '9876543210987', result: 'offline_queued' });
 
+    expect(storedRows()[0]).toMatchObject({
+      entityType: 'shelf_scan',
+      payload: {
+        barcode: '9876543210987',
+        result: 'offline_queued',
+        matched_product_id: null,
+        scanned_at: NOW,
+      },
+    });
+    expect(mocks.scheduleFlush).toHaveBeenCalledOnce();
+  });
+
+  it('never binds an external candidate to an internal catalog product', async () => {
     await record({
-      barcode: '9876543210987',
-      result: 'no_match',
+      barcode: '1234567890123',
+      result: 'ambiguous',
+      matchedProductId: PRODUCT_ID,
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
-      source: 'scan',
-      matched: false,
-      result: 'no_match',
+    expect(storedRows()[0]?.payload).toMatchObject({
+      result: 'ambiguous',
+      matched_product_id: null,
     });
+    expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
+    expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
+  });
+
+  it('tracks but does not queue when no authenticated local owner is published', async () => {
+    await record({ barcode: '1234567890123', result: 'no_match' }, undefined, null);
+
     expect(mocks.track).toHaveBeenCalledWith('scan_no_match', {
       source: 'scan',
       result: 'no_match',
     });
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.insert).not.toHaveBeenCalled();
+    expect(mocks.hashOwner).not.toHaveBeenCalled();
+    expect(storedRows()).toEqual([]);
+    expect(mocks.scheduleFlush).not.toHaveBeenCalled();
   });
 
-  it('does not insert owner-scoped rows without an authenticated user', async () => {
-    mocks.getUser.mockResolvedValueOnce({ data: { user: null } });
+  it('rejects invalid barcode material before analytics, hashing, or storage', async () => {
+    for (const barcode of ['123-456', '12345', '123456789012345']) {
+      await record({ barcode, result: 'no_match' });
+    }
 
-    await record({
-      barcode: '1234567890123',
-      result: 'offline_queued',
-    });
-
-    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
-      source: 'scan',
-      matched: false,
-      result: 'offline_queued',
-    });
-    expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
-    expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
-    expect(mocks.insert).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalled();
+    expect(mocks.hashOwner).not.toHaveBeenCalled();
+    expect(mocks.payloadDigest).not.toHaveBeenCalled();
+    expect(storedRows()).toEqual([]);
   });
 
-  it('does not over-count ambiguous external candidates as matches or no-matches', async () => {
-    await record({
-      barcode: '1234567890123',
-      result: 'ambiguous',
-      matchedProductId: 'external-product',
-    });
+  it('serializes 100 simultaneous distinct scan events without coalescing', async () => {
+    await Promise.all(
+      Array.from({ length: 100 }, (_, index) =>
+        record({
+          barcode: (1_000_000_000_000 + index).toString(),
+          result: index % 2 === 0 ? 'matched' : 'no_match',
+          matchedProductId: index % 2 === 0 ? PRODUCT_ID : null,
+        }),
+      ),
+    );
 
-    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
-      source: 'scan',
-      matched: false,
-      result: 'ambiguous',
-    });
-    expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
-    expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
+    const rows = storedRows();
+    expect(rows).toHaveLength(100);
+    expect(new Set(rows.map((row) => row.operationId)).size).toBe(100);
+    expect(new Set(rows.map((row) => row.entityId)).size).toBe(100);
+    expect(rows.every((row) => row.entityType === 'shelf_scan' && row.clientRevision === 1)).toBe(
+      true,
+    );
+    expect(mocks.scheduleFlush).toHaveBeenCalledTimes(100);
   });
 
-  it('does not publish a delayed owner-A scan after an A-to-B boundary starts', async () => {
-    let releaseOwner!: (value: { data: { user: { id: string } } }) => void;
-    let markLookupStarted!: () => void;
-    const lookupStarted = new Promise<void>((resolve) => {
-      markLookupStarted = resolve;
-    });
-    mocks.getUser.mockImplementationOnce(() => {
-      markLookupStarted();
-      return new Promise((resolve) => {
-        releaseOwner = resolve;
-      });
-    });
-
-    const recording = record({
-      barcode: '1234567890123',
-      result: 'matched',
-      matchedProductId: 'product-a',
-    });
-    await lookupStarted;
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-    releaseOwner({ data: { user: { id: 'owner-a' } } });
-
-    await expect(recording).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(mocks.insert).not.toHaveBeenCalled();
+  it('preserves a corrupt or future outbox and keeps the visible scan path best effort', async () => {
+    for (const raw of ['{bad-json', JSON.stringify({ version: 5, rows: [], revisions: [] })]) {
+      mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
+      await expect(
+        record({ barcode: '1234567890123', result: 'no_match' }),
+      ).resolves.toBeUndefined();
+      expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(raw);
+    }
+    expect(mocks.scheduleFlush).not.toHaveBeenCalled();
   });
 
-  it('allows delayed work to finish when the authenticated owner remains unchanged', async () => {
-    let releaseOwner!: (value: { data: { user: { id: string } } }) => void;
-    mocks.getUser.mockImplementationOnce(
+  it('detaches a delayed payload hash and writes nothing after an owner boundary', async () => {
+    let releaseHash!: () => void;
+    mocks.payloadDigest.mockImplementationOnce(
       () =>
-        new Promise((resolve) => {
-          releaseOwner = resolve;
+        new Promise<string>((resolve) => {
+          releaseHash = () => resolve(PAYLOAD_HASH);
         }),
     );
 
-    const recording = record({
-      barcode: '1234567890123',
-      result: 'matched',
-      matchedProductId: 'product-a',
-    });
-    releaseOwner({ data: { user: { id: 'user-1' } } });
+    const recording = record({ barcode: '1234567890123', result: 'matched' });
+    await vi.waitFor(() => expect(mocks.payloadDigest).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
 
-    await expect(recording).resolves.toBeUndefined();
-    expect(mocks.insert).toHaveBeenCalledWith(
-      expect.objectContaining({ user_id: 'user-1', matched_product_id: 'product-a' }),
-    );
+    await expect(recording).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(storedRows()).toEqual([]);
+    expect(mocks.scheduleFlush).not.toHaveBeenCalled();
+    releaseHash();
+    await Promise.resolve();
   });
 
-  it('rejects an A payload that enters only after the A-to-B boundary completed', async () => {
+  it('confirms and schedules a committed row when storage confirmation is lost', async () => {
+    mocks.updateAfterCommit = () => {
+      mocks.updateAfterCommit = null;
+      throw new Error('confirmation lost');
+    };
+
+    await expect(record({ barcode: '1234567890123', result: 'no_match' })).resolves.toBeUndefined();
+
+    expect(storedRows()).toHaveLength(1);
+    expect(mocks.scheduleFlush).toHaveBeenCalledOnce();
+  });
+
+  it('rejects a payload that enters only after its owner scope became stale', async () => {
     const ownerAScope = createOwnerQueryScope();
     beginAccountGenerationBoundary();
     endAccountGenerationBoundary();
 
     await expect(
-      record(
-        {
-          barcode: '1234567890123',
-          result: 'matched',
-          matchedProductId: 'product-a',
-        },
-        ownerAScope,
-      ),
+      record({ barcode: '1234567890123', result: 'matched' }, ownerAScope),
     ).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.insert).not.toHaveBeenCalled();
     expect(mocks.track).not.toHaveBeenCalled();
+    expect(storedRows()).toEqual([]);
   });
 });

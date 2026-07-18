@@ -49,7 +49,6 @@ const POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE = {
 const DEFERRED_MUTATION_POLICY_FILES = [
   'features/intelligence/conflictChoiceMirror.ts',
   'features/onboarding/OnboardingContext.tsx',
-  'features/shelf/scanLog.ts',
   'lib/consent/consent.ts',
 ] as const;
 

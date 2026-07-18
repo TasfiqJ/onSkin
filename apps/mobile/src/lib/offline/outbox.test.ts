@@ -24,6 +24,7 @@ import {
   enqueueNotificationDeliveryOutboxOperation,
   enqueueNotificationPreferencesOutboxOperation,
   enqueueRecommendationPreferencesOutboxOperation,
+  enqueueShelfScanOutboxOperation,
   enqueueShelfOutboxOperation,
   type OutboxEnvelope,
 } from './outbox.pure';
@@ -131,6 +132,66 @@ function seedRows(count: number): OutboxEnvelope {
   return envelope;
 }
 
+function seedEveryEntity(): OutboxEnvelope {
+  let envelope = seedRows(1);
+  envelope = enqueueNotificationPreferencesOutboxOperation(envelope, {
+    operationId: uuid(40_011),
+    ownerHash: OWNER_HASH,
+    ownerGeneration: 7,
+    payload: {
+      am_reminder_time: '07:30',
+      pm_reminder_time: '21:30',
+      am_reminder_enabled: true,
+      pm_reminder_enabled: false,
+      streak_nudges: false,
+      replenishment_alerts: false,
+      capture_reminders: false,
+      quiet_hours_start: '22:00',
+      quiet_hours_end: '07:00',
+      timezone: 'America/Toronto',
+      live_activity_enabled: false,
+      promotional_opt_in: false,
+      lockscreen_discreet: true,
+    },
+    enqueuedAt: NOW,
+  }).envelope;
+  envelope = enqueueRecommendationPreferencesOutboxOperation(envelope, {
+    operationId: uuid(40_012),
+    ownerHash: OWNER_HASH,
+    ownerGeneration: 7,
+    payload: {
+      values_filters: ['fragrance_free'],
+      budget_band: 'mid',
+      format_prefs: ['gel'],
+    },
+    enqueuedAt: NOW,
+  }).envelope;
+  envelope = enqueueNotificationDeliveryOutboxOperation(envelope, {
+    operationId: uuid(40_013),
+    ownerHash: OWNER_HASH,
+    ownerGeneration: 7,
+    entityId: uuid(40_014),
+    payload: { kind: 'replenishment', tier: 'behavioural', sent_at: NOW },
+    enqueuedAt: NOW,
+  }).envelope;
+  envelope = enqueueShelfScanOutboxOperation(envelope, {
+    operationId: uuid(40_015),
+    ownerHash: OWNER_HASH,
+    ownerGeneration: 7,
+    entityId: uuid(40_016),
+    payload: {
+      barcode: '1234567890123',
+      result: 'no_match',
+      matched_product_id: null,
+      scanned_at: NOW,
+    },
+    payloadHash: 'c'.repeat(64),
+    enqueuedAt: NOW,
+  }).envelope;
+  mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+  return envelope;
+}
+
 function storedEnvelope(): OutboxEnvelope {
   return decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null);
 }
@@ -150,6 +211,7 @@ function flushResult(
   notificationPreferences = 0,
   recommendationPreferences = 0,
   notificationDeliveries = 0,
+  shelfScans = 0,
 ) {
   return {
     leased,
@@ -159,8 +221,13 @@ function flushResult(
       notificationDeliveries,
       notificationPreferences,
       recommendationPreferences,
+      shelfScans,
       shelfProducts:
-        flushed - notificationDeliveries - notificationPreferences - recommendationPreferences,
+        flushed -
+        notificationDeliveries -
+        notificationPreferences -
+        recommendationPreferences -
+        shelfScans,
     },
   };
 }
@@ -221,7 +288,7 @@ describe('transactional outbox runtime', () => {
   it('strictly reports corrupt, future, and unavailable reads without changing persisted bytes', async () => {
     for (const [raw, status] of [
       ['{not-json', 'corrupt'],
-      [JSON.stringify({ version: 4, rows: [], revisions: [] }), 'unsupported_version'],
+      [JSON.stringify({ version: 5, rows: [], revisions: [] }), 'unsupported_version'],
     ] as const) {
       mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
       await expect(readOutbox()).resolves.toEqual({ status, envelope: null });
@@ -533,6 +600,46 @@ describe('transactional outbox runtime', () => {
     ]);
   });
 
+  it.each([
+    ['shelf_product', flushResult(5, 4, 0, 1, 1, 1, 1)],
+    ['shelf_scan', flushResult(5, 4, 0, 1, 1, 1, 0)],
+  ] as const)(
+    'isolates a %s endpoint failure while later entities still converge',
+    async (failedEntityType, expectedResult) => {
+      seedEveryEntity();
+      mocks.rpcHandler = async (operations) => {
+        if (operations[0]?.entity_type === failedEntityType) {
+          throw new RequestPolicyError({
+            endpoint: 'outbox_sync',
+            kind: 'server',
+            attemptCount: 2,
+            statusClass: '5xx',
+          });
+        }
+        return successfulResults(operations);
+      };
+
+      await expect(flushOutbox()).resolves.toEqual(expectedResult);
+      expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
+        'apply_shelf_outbox_batch',
+        'apply_notification_preferences_outbox_batch',
+        'apply_recommendation_preferences_outbox_batch',
+        'apply_notification_delivery_outbox_batch',
+        'apply_shelf_scan_outbox_batch',
+      ]);
+      expect(storedEnvelope().rows).toEqual([
+        expect.objectContaining({
+          entityType: failedEntityType,
+          state: 'ready',
+          attemptCount: 1,
+          lastErrorClass: 'server',
+          leaseOwner: null,
+          leaseExpiresAt: null,
+        }),
+      ]);
+    },
+  );
+
   it('dispatches recommendation preferences to their exact RPC without contaminating Shelf', async () => {
     const envelope = enqueueRecommendationPreferencesOutboxOperation(emptyOutboxEnvelope(), {
       operationId: uuid(40_003),
@@ -589,6 +696,49 @@ describe('transactional outbox runtime', () => {
           payload: { kind: 'replenishment', tier: 'behavioural', sent_at: NOW },
           client_revision: 1,
           idempotency_key: `notification_delivery:${operationId}:replenishment:${NOW}`,
+        },
+      ],
+    });
+    expect(storedEnvelope().rows).toEqual([]);
+  });
+
+  it('dispatches one payload-bound Shelf scan event to its exact RPC', async () => {
+    const eventId = uuid(907);
+    const operationId = uuid(908);
+    const payloadHash = 'c'.repeat(64);
+    const envelope = enqueueShelfScanOutboxOperation(emptyOutboxEnvelope(), {
+      operationId,
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: eventId,
+      payload: {
+        barcode: '1234567890123',
+        result: 'matched',
+        matched_product_id: uuid(43),
+        scanned_at: NOW,
+      },
+      payloadHash,
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0, 0, 0, 0, 1));
+    expect(mocks.rpc).toHaveBeenCalledOnce();
+    expect(mocks.rpc).toHaveBeenCalledWith('apply_shelf_scan_outbox_batch', {
+      p_operations: [
+        {
+          operation_id: operationId,
+          entity_type: 'shelf_scan',
+          entity_id: eventId,
+          operation_kind: 'upsert',
+          payload: {
+            barcode: '1234567890123',
+            result: 'matched',
+            matched_product_id: uuid(43),
+            scanned_at: NOW,
+          },
+          client_revision: 1,
+          idempotency_key: `shelf_scan:${operationId}:${payloadHash}`,
         },
       ],
     });

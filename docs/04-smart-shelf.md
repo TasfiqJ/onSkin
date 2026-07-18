@@ -113,13 +113,13 @@ create table public.shelf_scans (
 );
 create index on public.shelf_scans (user_id);
 
--- RLS (owner-only, exactly the docs/01 §3 pattern): wrap auth.uid() in a subselect,
--- TO authenticated, index policy columns, WITH CHECK on writes.
+-- RLS protects owner reads; the SECURITY DEFINER intake RPC derives auth.uid(),
+-- validates the payload, and applies immutable writes.
 alter table public.shelf_scans enable row level security;
 create policy ss_owner_sel on public.shelf_scans
   for select to authenticated using ((select auth.uid()) = user_id);
-create policy ss_owner_ins on public.shelf_scans
-  for insert to authenticated with check ((select auth.uid()) = user_id);
+-- Authenticated writes use the owner-derived, payload-bound outbox RPC;
+-- clients cannot directly insert or mutate immutable scan rows.
 -- user_products already has owner-only RLS per docs/01; the new columns inherit it.
 create index on public.user_products (user_id, status, expiry_computed);  -- for the Expiring filter/sort
 ```
@@ -204,7 +204,7 @@ Every path converges here. A calm sheet: **"When did you open it?"** with **Just
 
 #### 4.6 Contribute-back pipeline (ODbL obligation)
 
-Any product the user adds that **wasn't** in Open Beauty Facts (no-match scans, OCR-built, manual with a barcode) is, after **light validation** (sane name/brand, a barcode, a legible INCI photo where available), **contributed back** to OBF via the authenticated POST endpoint (`code` + credentials + fields) — satisfying the ODbL **contribute-back** requirement and improving coverage for everyone. This runs as a queued, offline-tolerant job (an Edge Function or a client task), marks `shelf_scans.contributed_back=true`, and is privacy-safe (it sends _product_ data — barcode, label, INCI — never the user's personal shelf/profile). Source attribution to Open Beauty Facts is shown wherever catalog data is displayed (ODbL).
+Any product the user adds that **wasn't** in Open Beauty Facts (no-match scans, OCR-built, manual with a barcode) is, after **light validation** (sane name/brand, a barcode, a legible INCI photo where available), **contributed back** to OBF via the authenticated POST endpoint (`code` + credentials + fields) — satisfying the ODbL **contribute-back** requirement and improving coverage for everyone. This runs as a queued, offline-tolerant server job (an Edge Function or service-role worker), marks only `shelf_scans.contributed_back=true`, and is privacy-safe (it sends _product_ data — barcode, label, INCI — never the user's personal shelf/profile). Authenticated clients cannot mutate immutable scan rows after the owner-derived intake RPC applies them. Source attribution to Open Beauty Facts is shown wherever catalog data is displayed (ODbL).
 
 #### 4.7 First intake from onboarding
 
@@ -334,7 +334,7 @@ The Smart Shelf is a king-making feature because it sits at the intersection of 
 
 **(a) What it is:** the user's digital cabinet and the system's product-data capture engine — intake, PAO/expiry, source-of-truth for what the user owns, and the launch point for replenishment. Scoped narrowly against docs/02 (catalog/logic) and docs/03 (routine).
 
-**(b) Data model:** extends docs/01 `user_products` (additive columns for provenance, lifecycle, on-device thumbnail, and the unopened state) plus a small `shelf_scans` intake/contribute-back log; owner-only RLS throughout.
+**(b) Data model:** extends docs/01 `user_products` (additive columns for provenance, lifecycle, on-device thumbnail, and the unopened state) plus a small `shelf_scans` intake/contribute-back log; owners retain RLS-protected reads, intake uses an owner-derived payload-bound RPC, and only the server contribute-back worker may update immutable scan rows.
 
 **(c) PAO/expiry science & rules:** two axes (efficacy + safety), honestly graded (efficacy universal; contamination proportionate; eye/SPF the exceptions); EU PAO vs US-none → a sourcing waterfall (label/catalog → category default → honest unknown) with provenance recorded; `expiry_computed = least(printed, opened+PAO)`, validated by the SPF "3 wks left" example; conservative category defaults under B-DERM-REVIEW.
 

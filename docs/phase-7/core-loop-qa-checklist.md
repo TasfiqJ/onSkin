@@ -798,7 +798,7 @@ FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
   visible. Evidence and the bug report are in
   `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; this does
   not replace native barcode camera/OCR QA, live Open Beauty Facts lookup,
-  Supabase `shelf_scans` insert/RLS evidence, or real-device safe-area and
+  hosted Supabase `shelf_scans` outbox-RPC/RLS/replay evidence, or real-device safe-area and
   screen-reader QA.
 - 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the Shelf
   opened-date and replenishment boundary branch. `/shelf/opened` shows all three

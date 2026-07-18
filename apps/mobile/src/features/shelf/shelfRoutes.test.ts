@@ -876,8 +876,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       "import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';",
     );
+    expect(source).toContain("import { useAuth } from '@/lib/auth/AuthProvider';");
+    expect(source).toContain('const { user } = useAuth();');
     expect(source).toContain('const scanResult = shelfScanResultFromLookup(response.result)');
-    expect(source).toContain('void recordShelfScan(ownerScope, {');
+    expect(source).toContain('void recordShelfScan(');
+    expect(source).toContain(
+      "matchedProductId: response.result === 'matched' ? response.product.id : null",
+    );
+    expect(source).toContain('user?.id,');
     expect(source).toContain(
       'if (controller.signal.aborted || !isOwnerQueryScopeCurrent(ownerScope))',
     );

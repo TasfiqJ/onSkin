@@ -2,18 +2,22 @@ import { describe, expect, it } from 'vitest';
 
 import {
   OUTBOX_INVALID,
+  OUTBOX_LIMIT_REACHED,
   OUTBOX_UNSUPPORTED_VERSION,
+  MAX_SHELF_SCAN_OUTBOX_ROWS,
   decodeOutboxEnvelope,
   emptyOutboxEnvelope,
   encodeOutboxEnvelope,
   enqueueNotificationDeliveryOutboxOperation,
   enqueueNotificationPreferencesOutboxOperation,
   enqueueRecommendationPreferencesOutboxOperation,
+  enqueueShelfScanOutboxOperation,
   enqueueShelfOutboxOperation,
   leaseReadyOutboxRows,
   outboxCounts,
   retryDeadOutboxRows,
   selectOutboxOwnerStatus,
+  shelfScanPayloadHashInput,
   settleOutboxLease,
   type OutboxEnvelope,
 } from './outbox.pure';
@@ -52,6 +56,13 @@ const DELIVERY_PAYLOAD = {
   kind: 'replenishment',
   tier: 'behavioural',
   sent_at: NOW,
+} as const;
+const SCAN_PAYLOAD_HASH = 'c'.repeat(64);
+const SCAN_PAYLOAD = {
+  barcode: '1234567890123',
+  result: 'matched',
+  matched_product_id: '00000000-0000-4000-8000-000000000043',
+  scanned_at: NOW,
 } as const;
 
 function uuid(value: number): string {
@@ -97,9 +108,11 @@ describe('transactional outbox model', () => {
     const previous = JSON.parse(encodeOutboxEnvelope(queued)) as { version: number };
     previous.version = 2;
     expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
+    previous.version = 3;
+    expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
     expect(() => decodeOutboxEnvelope('{bad-json')).toThrow(OUTBOX_INVALID);
     expect(() =>
-      decodeOutboxEnvelope(JSON.stringify({ version: 4, rows: [], revisions: [] })),
+      decodeOutboxEnvelope(JSON.stringify({ version: 5, rows: [], revisions: [] })),
     ).toThrow(OUTBOX_UNSUPPORTED_VERSION);
   });
 
@@ -186,18 +199,130 @@ describe('transactional outbox model', () => {
     ).toThrow(OUTBOX_INVALID);
   });
 
-  it('reclaims settled immutable delivery revisions beyond the global revision bound', () => {
+  it('keeps Shelf scans as payload-bound unique revision-one events', () => {
+    const first = enqueueShelfScanOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_A,
+      payload: SCAN_PAYLOAD,
+      payloadHash: SCAN_PAYLOAD_HASH,
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(first.rows[0]).toMatchObject({
+      entityType: 'shelf_scan',
+      entityId: ENTITY_A,
+      clientRevision: 1,
+      idempotencyKey: `shelf_scan:${OP_A1}:${SCAN_PAYLOAD_HASH}`,
+      payload: SCAN_PAYLOAD,
+    });
+    expect(shelfScanPayloadHashInput(SCAN_PAYLOAD)).toBe(
+      [
+        'onskin:shelf-scan-payload:v1',
+        SCAN_PAYLOAD.barcode,
+        SCAN_PAYLOAD.result,
+        SCAN_PAYLOAD.matched_product_id,
+        NOW,
+      ].join('\n'),
+    );
+    expect(() =>
+      enqueueShelfScanOutboxOperation(first, {
+        operationId: OP_A2,
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: ENTITY_A,
+        payload: SCAN_PAYLOAD,
+        payloadHash: SCAN_PAYLOAD_HASH,
+        enqueuedAt: NOW,
+      }),
+    ).toThrow(OUTBOX_INVALID);
+  });
+
+  it.each([
+    { ...SCAN_PAYLOAD, barcode: '123-456' },
+    { ...SCAN_PAYLOAD, barcode: '123456789012345' },
+    { ...SCAN_PAYLOAD, result: 'unknown' },
+    { ...SCAN_PAYLOAD, result: 'ambiguous', matched_product_id: ENTITY_A },
+    { ...SCAN_PAYLOAD, matched_product_id: 'not-a-uuid' },
+    { ...SCAN_PAYLOAD, scanned_at: 'not-an-iso' },
+    { ...SCAN_PAYLOAD, user_id: 'raw-owner' },
+  ])('rejects a malformed Shelf scan payload %#', (payload) => {
+    expect(() =>
+      enqueueShelfScanOutboxOperation(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: ENTITY_A,
+        payload,
+        payloadHash: SCAN_PAYLOAD_HASH,
+        enqueuedAt: NOW,
+      }),
+    ).toThrow(OUTBOX_INVALID);
+  });
+
+  it('caps scan telemetry and leases state mirrors before older immutable events', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
+      envelope = enqueueShelfScanOutboxOperation(envelope, {
+        operationId: uuid(30_000 + index),
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: uuid(40_000 + index),
+        payload: { ...SCAN_PAYLOAD, scanned_at: NOW },
+        payloadHash: SCAN_PAYLOAD_HASH,
+        enqueuedAt: NOW,
+      }).envelope;
+    }
+    expect(() =>
+      enqueueShelfScanOutboxOperation(envelope, {
+        operationId: uuid(50_001),
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: uuid(50_002),
+        payload: SCAN_PAYLOAD,
+        payloadHash: SCAN_PAYLOAD_HASH,
+        enqueuedAt: NOW,
+      }),
+    ).toThrow(OUTBOX_LIMIT_REACHED);
+
+    const withState = enqueue(envelope, {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    const leased = leaseReadyOutboxRows(withState, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:02.000Z',
+      limit: 1,
+    });
+    expect(leased.rows[0]?.entityType).toBe('shelf_product');
+  });
+
+  it('reclaims settled immutable event revisions beyond the global revision bound', () => {
     let envelope = emptyOutboxEnvelope();
     for (let index = 1; index <= 1_025; index += 1) {
       const operationId = uuid(10_000 + index);
-      envelope = enqueueNotificationDeliveryOutboxOperation(envelope, {
-        operationId,
-        ownerHash: OWNER,
-        ownerGeneration: 7,
-        entityId: uuid(20_000 + index),
-        payload: DELIVERY_PAYLOAD,
-        enqueuedAt: NOW,
-      }).envelope;
+      envelope =
+        index % 2 === 0
+          ? enqueueShelfScanOutboxOperation(envelope, {
+              operationId,
+              ownerHash: OWNER,
+              ownerGeneration: 7,
+              entityId: uuid(20_000 + index),
+              payload: SCAN_PAYLOAD,
+              payloadHash: SCAN_PAYLOAD_HASH,
+              enqueuedAt: NOW,
+            }).envelope
+          : enqueueNotificationDeliveryOutboxOperation(envelope, {
+              operationId,
+              ownerHash: OWNER,
+              ownerGeneration: 7,
+              entityId: uuid(20_000 + index),
+              payload: DELIVERY_PAYLOAD,
+              enqueuedAt: NOW,
+            }).envelope;
       envelope = leaseReadyOutboxRows(envelope, {
         ownerHash: OWNER,
         leaseOwner: WORKER_A,
@@ -299,6 +424,58 @@ describe('transactional outbox model', () => {
     expect(settled.rows).toHaveLength(1);
     expect(settled.rows[0]).toMatchObject({ operationId: OP_A1, state: 'dead' });
     expect(outboxCounts(settled)).toEqual({ ready: 0, inFlight: 0, dead: 1 });
+  });
+
+  it('settles only the explicit operation scope within a shared lease', () => {
+    let envelope = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+    }).envelope;
+    envelope = enqueue(envelope, {
+      operationId: OP_B1,
+      entityId: ENTITY_B,
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    const leased = leaseReadyOutboxRows(envelope, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    const firstSettled = settleOutboxLease(leased, {
+      leaseOwner: WORKER_A,
+      operationIds: [OP_A1],
+      now: '2026-07-18T15:00:03.000Z',
+      results: [{ operationId: OP_A1, status: 'applied' }],
+    });
+    expect(firstSettled.rows).toEqual([
+      expect.objectContaining({ operationId: OP_B1, state: 'leased', leaseOwner: WORKER_A }),
+    ]);
+
+    const secondSettled = settleOutboxLease(firstSettled, {
+      leaseOwner: WORKER_A,
+      operationIds: [OP_B1],
+      now: '2026-07-18T15:00:04.000Z',
+      results: [],
+      failureClass: 'server',
+      random: 0,
+    });
+    expect(secondSettled.rows).toEqual([
+      expect.objectContaining({
+        operationId: OP_B1,
+        state: 'ready',
+        leaseOwner: null,
+        lastErrorClass: 'server',
+      }),
+    ]);
+    expect(() =>
+      settleOutboxLease(leased, {
+        leaseOwner: WORKER_A,
+        operationIds: [OP_A1],
+        now: '2026-07-18T15:00:03.000Z',
+        results: [{ operationId: OP_B1, status: 'applied' }],
+      }),
+    ).toThrow(OUTBOX_INVALID);
   });
 
   it('derives owner-scoped saved, syncing, and needs-attention states and retries only that owner', () => {

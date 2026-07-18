@@ -34,7 +34,6 @@ const SUPABASE_CLIENT_FILES = [
   'features/routine/useProgress.ts',
   'features/scheduler/profile.ts',
   'features/settings/actions.ts',
-  'features/shelf/scanLog.ts',
   'features/subscription/store.ts',
   'features/trend/consent.ts',
   'features/trend/useTrend.ts',

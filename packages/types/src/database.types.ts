@@ -392,11 +392,13 @@ export type Database = {
             | 'notification_delivery'
             | 'notification_preferences'
             | 'recommendation_preferences'
+            | 'shelf_scan'
             | 'shelf_product';
           entity_id: string;
           operation_kind: 'delete' | 'upsert';
           client_revision: number;
           result_status: 'applied' | 'stale';
+          payload_hash: string | null;
           applied_at: Timestamptz;
         };
         Insert: {
@@ -407,11 +409,13 @@ export type Database = {
             | 'notification_delivery'
             | 'notification_preferences'
             | 'recommendation_preferences'
+            | 'shelf_scan'
             | 'shelf_product';
           entity_id: string;
           operation_kind: 'delete' | 'upsert';
           client_revision: number;
           result_status: 'applied' | 'stale';
+          payload_hash?: string | null;
           applied_at?: Timestamptz;
         };
         Update: Partial<Database['public']['Tables']['mobile_outbox_receipts']['Insert']>;
@@ -1168,6 +1172,10 @@ export type Database = {
         Returns: Json;
       };
       apply_recommendation_preferences_outbox_batch: {
+        Args: { p_operations: Json };
+        Returns: Json;
+      };
+      apply_shelf_scan_outbox_batch: {
         Args: { p_operations: Json };
         Returns: Json;
       };
