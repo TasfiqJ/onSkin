@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-18T20:59:44.866Z",
-  "gitSha": "495e646a98fb8e177e8d4f7437abab38436f9bfb",
+  "generatedAt": "2026-07-18T21:26:34.913Z",
+  "gitSha": "14fdef94f69698b92b48a050e6380f632b67cab0",
   "evidenceDate": "2026-07-18",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -676,8 +676,8 @@
       "evidenceExists": true,
       "evidenceTracked": true,
       "fileCount": 365,
-      "bytes": 21795467,
-      "evidenceSha256": "621f026e881de97ae2beeed9ac08f2335abb6abfe1f9ed99da57102f9c154b78"
+      "bytes": 21792738,
+      "evidenceSha256": "46be4d2a1fdb9e0e3da3b8b8a8502f1f5197e55e6027761c9574cf38af608ccd"
     },
     {
       "id": "progress-timelapse-supported-phone",
