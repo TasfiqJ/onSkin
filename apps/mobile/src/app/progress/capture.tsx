@@ -3,7 +3,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { router, useIsFocused, useNavigation } from 'expo-router';
 import { usePreventRemove, type NavigationAction } from 'expo-router/react-navigation';
 import { randomUUID } from 'expo-crypto';
-import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -29,8 +29,11 @@ import {
   createProgressCaptureReviewLifecycle,
   trustedExpoCameraCaptureUri,
   trustedProgressCaptureSessionId,
-  type ProgressCaptureReviewLifecycle,
 } from '@/features/photos/progressCapturePrivacy';
+import {
+  createProgressCaptureRouteBoundary,
+  type ProgressCaptureReviewParams,
+} from '@/features/photos/progressCaptureRouteBoundary';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
@@ -47,21 +50,6 @@ const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)';
 const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)';
 const NIGHT_CONSENT_OVERLAY_BG = '#100D0A';
 
-type ProtectedCaptureNavigation =
-  | Readonly<{ kind: 'action'; action: NavigationAction }>
-  | Readonly<{ kind: 'progress' }>
-  | Readonly<{
-      kind: 'review';
-      params: Readonly<{
-        captureSessionId: string;
-        capturedUri: string;
-        photoHeight: string;
-        photoWidth: string;
-        takenLocalDate: string;
-        timeOfDay: string;
-      }>;
-    }>;
-
 type ProgressCaptureBoundary = Readonly<{
   adoptRawCapture: (uri: string) => void;
   beginShutter: () => boolean;
@@ -69,9 +57,7 @@ type ProgressCaptureBoundary = Readonly<{
   cleanupFailed: boolean;
   cleanupPending: boolean;
   finishShutter: () => void;
-  handoffToReview: (
-    params: Extract<ProtectedCaptureNavigation, { kind: 'review' }>['params'],
-  ) => void;
+  handoffToReview: (params: ProgressCaptureReviewParams) => void;
   registerCaptureInvalidator: (invalidate: (() => void) | null) => void;
   requestProgressExit: () => void;
   retryCleanup: () => Promise<boolean>;
@@ -692,229 +678,55 @@ function PermissionGate({
 
 function useProgressCaptureBoundary(): ProgressCaptureBoundary {
   const navigation = useNavigation();
-  const mountedRef = useRef(false);
-  const routeRemovalReadyRef = useRef(false);
-  const shutterInFlightRef = useRef(false);
-  const pendingRawCaptureLifecycleRef = useRef<ProgressCaptureReviewLifecycle | null>(null);
-  const rawCaptureCleanupInFlightRef = useRef<Promise<boolean> | null>(null);
-  const navigationInFlightRef = useRef(false);
-  const pendingNavigationRef = useRef<ProtectedCaptureNavigation | null>(null);
-  const invalidateCaptureRef = useRef<(() => void) | null>(null);
-  const [cleanupBusy, setCleanupBusy] = useState(false);
-  const [cleanupFailed, setCleanupFailed] = useState(false);
-  const [cleanupPending, setCleanupPending] = useState(false);
-  const [routeRemovalReady, setRouteRemovalReady] = useState(false);
-  const [shutterInFlight, setShutterInFlight] = useState(false);
-
-  const markRouteRemovalReady = useCallback(() => {
-    routeRemovalReadyRef.current = true;
-    if (mountedRef.current) setRouteRemovalReady(true);
-  }, []);
-
-  const retryCleanup = useCallback((): Promise<boolean> => {
-    const active = rawCaptureCleanupInFlightRef.current;
-    if (active !== null) return active;
-
-    const lifecycle = pendingRawCaptureLifecycleRef.current;
-    if (lifecycle === null || !lifecycle.hasPendingCleanup()) {
-      pendingRawCaptureLifecycleRef.current = null;
-      if (mountedRef.current) {
-        setCleanupPending(false);
-        setCleanupFailed(false);
-        setCleanupBusy(false);
-      }
-      if (pendingNavigationRef.current !== null && !shutterInFlightRef.current) {
-        markRouteRemovalReady();
-      }
-      return Promise.resolve(true);
-    }
-
-    if (mountedRef.current) {
-      setCleanupPending(true);
-      setCleanupBusy(true);
-    }
-
-    const operation = lifecycle.discard().then(
-      () => {
-        if (pendingRawCaptureLifecycleRef.current === lifecycle) {
-          pendingRawCaptureLifecycleRef.current = null;
-        }
-        if (mountedRef.current) {
-          setCleanupPending(false);
-          setCleanupFailed(false);
-        }
-        if (pendingNavigationRef.current !== null && !shutterInFlightRef.current) {
-          markRouteRemovalReady();
-        }
-        return true;
-      },
-      () => {
-        // Keep this exact trusted Camera child in the route owner until an
-        // idempotent retry succeeds. Raw native errors never reach UI or logs.
-        if (mountedRef.current && pendingRawCaptureLifecycleRef.current === lifecycle) {
-          setCleanupPending(true);
-          setCleanupFailed(true);
-        }
-        return false;
-      },
-    );
-    let trackedOperation: Promise<boolean>;
-    trackedOperation = operation.finally(() => {
-      if (rawCaptureCleanupInFlightRef.current === trackedOperation) {
-        rawCaptureCleanupInFlightRef.current = null;
-      }
-      if (mountedRef.current) setCleanupBusy(false);
-    });
-    rawCaptureCleanupInFlightRef.current = trackedOperation;
-    return trackedOperation;
-  }, [markRouteRemovalReady]);
-
-  const requestNavigation = useCallback(
-    (pending: ProtectedCaptureNavigation) => {
-      if (routeRemovalReadyRef.current) return;
-      if (navigationInFlightRef.current) {
-        // A prior protected exit may have discovered a delete failure. Keep
-        // the latest user intent and let every later Exit/back/close retry the
-        // same retained lifecycle instead of trapping the route.
-        pendingNavigationRef.current = pending;
-        if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
-          void retryCleanup();
-        }
-        return;
-      }
-      invalidateCaptureRef.current?.();
-      navigationInFlightRef.current = true;
-      pendingNavigationRef.current = pending;
-
-      if (shutterInFlightRef.current && pendingRawCaptureLifecycleRef.current === null) return;
-      if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
-        void retryCleanup();
-        return;
-      }
-      markRouteRemovalReady();
-    },
-    [markRouteRemovalReady, retryCleanup],
+  const [routeBoundary] = useState(() =>
+    createProgressCaptureRouteBoundary<NavigationAction>({
+      createRawCaptureLifecycle: (uri) =>
+        createProgressCaptureReviewLifecycle(FileSystem, { uri, disposable: true }),
+    }),
+  );
+  const boundaryState = useSyncExternalStore(
+    routeBoundary.subscribe,
+    routeBoundary.getSnapshot,
+    routeBoundary.getSnapshot,
   );
 
-  usePreventRemove(!routeRemovalReady, ({ data: eventData }) => {
-    requestNavigation({ kind: 'action', action: eventData.action });
+  usePreventRemove(!boundaryState.routeRemovalReady, ({ data: eventData }) => {
+    routeBoundary.requestNavigation({ kind: 'action', action: eventData.action });
   });
 
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-      invalidateCaptureRef.current?.();
-      invalidateCaptureRef.current = null;
-      const lifecycle = pendingRawCaptureLifecycleRef.current;
-      if (lifecycle !== null) void lifecycle.dispose().catch(() => undefined);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!routeRemovalReady) return;
-    const pending = pendingNavigationRef.current;
-    if (pending === null) return;
-    pendingNavigationRef.current = null;
-
-    if (pending.kind === 'review') {
-      // Transfer ownership atomically before the gate subtree unmounts. The
-      // review route constructs its own lifecycle from this trusted URI.
-      const transferredLifecycle = pendingRawCaptureLifecycleRef.current;
-      pendingRawCaptureLifecycleRef.current = null;
-      setCleanupPending(false);
-      try {
-        router.replace({ pathname: '/progress/review', params: pending.params });
-      } catch {
-        pendingRawCaptureLifecycleRef.current = transferredLifecycle;
-        navigationInFlightRef.current = false;
-        routeRemovalReadyRef.current = false;
-        queueMicrotask(() => {
-          if (!mountedRef.current) return;
-          setRouteRemovalReady(false);
-          setCleanupPending(transferredLifecycle?.hasPendingCleanup() ?? false);
-          setCleanupFailed(true);
-        });
-      }
-      return;
-    }
-
-    if (pending.kind === 'action') {
-      navigation.dispatch(pending.action);
-    } else {
-      backOrReplace(router, APP_PROGRESS_ROUTE);
-    }
-  }, [navigation, routeRemovalReady]);
-
-  const adoptRawCapture = useCallback((uri: string) => {
-    if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
-      throw new Error('PROGRESS_CAPTURE_CLEANUP_PENDING');
-    }
-    pendingRawCaptureLifecycleRef.current = createProgressCaptureReviewLifecycle(FileSystem, {
-      uri,
-      disposable: true,
-    });
-    if (mountedRef.current) setCleanupPending(true);
-  }, []);
-
-  const beginShutter = useCallback((): boolean => {
-    if (
-      shutterInFlightRef.current ||
-      pendingRawCaptureLifecycleRef.current?.hasPendingCleanup() ||
-      navigationInFlightRef.current ||
-      routeRemovalReadyRef.current
-    ) {
-      return false;
-    }
-    shutterInFlightRef.current = true;
-    if (mountedRef.current) setShutterInFlight(true);
-    return true;
-  }, []);
-
-  const finishShutter = useCallback(() => {
-    shutterInFlightRef.current = false;
-    if (mountedRef.current) setShutterInFlight(false);
-    if (pendingNavigationRef.current === null || routeRemovalReadyRef.current) return;
-    if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
-      void retryCleanup();
-    } else {
-      markRouteRemovalReady();
-    }
-  }, [markRouteRemovalReady, retryCleanup]);
-
-  const handoffToReview = useCallback(
-    (params: Extract<ProtectedCaptureNavigation, { kind: 'review' }>['params']) => {
-      if (!pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
-        throw new Error('PROGRESS_CAPTURE_SOURCE_MISSING');
-      }
-      navigationInFlightRef.current = true;
-      pendingNavigationRef.current = { kind: 'review', params };
-      markRouteRemovalReady();
+  useEffect(
+    () => () => {
+      void routeBoundary.dispose().catch(() => undefined);
     },
-    [markRouteRemovalReady],
+    [routeBoundary],
   );
 
-  const registerCaptureInvalidator = useCallback((invalidate: (() => void) | null) => {
-    invalidateCaptureRef.current = invalidate;
-  }, []);
-
-  const requestProgressExit = useCallback(() => {
-    requestNavigation({ kind: 'progress' });
-  }, [requestNavigation]);
+  useEffect(() => {
+    if (!boundaryState.routeRemovalReady) return;
+    routeBoundary.dispatchAuthorizedNavigation({
+      dispatchAction: (action) => navigation.dispatch(action),
+      exitProgress: () => backOrReplace(router, APP_PROGRESS_ROUTE),
+      replaceReview: (params) =>
+        router.replace({
+          pathname: '/progress/review',
+          params,
+        }),
+    });
+  }, [boundaryState.routeRemovalReady, navigation, routeBoundary]);
 
   return {
-    adoptRawCapture,
-    beginShutter,
-    cleanupBusy,
-    cleanupFailed,
-    cleanupPending,
-    finishShutter,
-    handoffToReview,
-    registerCaptureInvalidator,
-    requestProgressExit,
-    retryCleanup,
-    routeRemovalReady,
-    shutterInFlight,
+    adoptRawCapture: routeBoundary.adoptRawCapture,
+    beginShutter: routeBoundary.beginShutter,
+    cleanupBusy: boundaryState.cleanupBusy,
+    cleanupFailed: boundaryState.cleanupFailed,
+    cleanupPending: boundaryState.cleanupPending,
+    finishShutter: routeBoundary.finishShutter,
+    handoffToReview: routeBoundary.handoffToReview,
+    registerCaptureInvalidator: routeBoundary.registerCaptureInvalidator,
+    requestProgressExit: routeBoundary.requestProgressExit,
+    retryCleanup: routeBoundary.retryCleanup,
+    routeRemovalReady: boundaryState.routeRemovalReady,
+    shutterInFlight: boundaryState.shutterInFlight,
   };
 }
 

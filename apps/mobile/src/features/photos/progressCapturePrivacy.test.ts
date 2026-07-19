@@ -73,7 +73,7 @@ describe('Progress raw capture trust boundary', () => {
     expect(source).not.toContain('capturedUri: shot.uri');
   });
 
-  it('retains a stale native capture for visible cleanup retry before another shutter or exit', () => {
+  it('wires trusted capture adoption into the route owner outside replacing gates', () => {
     const source = readFileSync(CAPTURE_ROUTE, 'utf8');
     const validation = source.indexOf(
       'rawCaptureUri = trustedExpoCameraCaptureUri(shot.uri, FileSystem.cacheDirectory);',
@@ -83,21 +83,13 @@ describe('Progress raw capture trust boundary', () => {
 
     expect(adoption).toBeGreaterThan(validation);
     expect(adoption).toBeLessThan(handoff);
-    expect(source).toContain(
-      'const pendingRawCaptureLifecycleRef = useRef<ProgressCaptureReviewLifecycle | null>(null);',
-    );
-    expect(source).toContain('cleanupSucceeded = await captureBoundary.retryCleanup();');
-    expect(source).toContain('setCleanupFailed(true);');
-    expect(source).toContain('!captureBoundary.cleanupPending &&');
+    expect(source).toContain('createProgressCaptureRouteBoundary<NavigationAction>({');
+    expect(source).toContain('useSyncExternalStore(');
     expect(source).toContain('mountAllowed: consented === true && !captureBoundary.cleanupPending');
-    expect(source).toContain('usePreventRemove(!routeRemovalReady');
-    expect(source).toContain('if (!captureBoundary.beginShutter()) return;');
-    expect(source).toContain('captureBoundary.finishShutter();');
-    expect(source).toContain('registerCaptureInvalidator');
+    expect(source).toContain('usePreventRemove(!boundaryState.routeRemovalReady');
     expect(source).toContain('Temporary photo cleanup needs another try');
     expect(source).toContain('Finish cleanup');
     expect(source).toContain('Close after cleanup');
-    expect(source).toContain('pendingRawCaptureLifecycleRef.current = null;');
     const outerBoundary = source.indexOf('const captureBoundary = useProgressCaptureBoundary();');
     const outerRecovery = source.indexOf('if (captureBoundary.cleanupFailed) {');
     const gate = source.indexOf('<ProGate feature="photo_timeline">');
@@ -108,8 +100,6 @@ describe('Progress raw capture trust boundary', () => {
     expect(source.slice(outerRecovery, gate)).toContain('<PhotoTimelineLockGate>');
     expect(source.slice(outerRecovery, gate)).toContain('<RawCaptureCleanupGate');
     expect(source).toContain('<PhotoStorageGate onExit={captureBoundary.requestProgressExit}>');
-    expect(source).toContain('if (navigationInFlightRef.current) {');
-    expect(source).toContain('pendingNavigationRef.current = pending;');
     expect(source).not.toContain(
       'FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined)',
     );

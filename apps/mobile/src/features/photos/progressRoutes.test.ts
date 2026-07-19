@@ -239,13 +239,14 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('cameraAccess.beginCameraOperation()');
     expect(source).toContain('cameraAccess.isCameraOperationCurrent(cameraOperation)');
     expect(source).toContain('createProgressCaptureReviewLifecycle(FileSystem, {');
-    expect(source).toContain('pendingRawCaptureLifecycleRef');
+    expect(source).toContain('createProgressCaptureRouteBoundary<NavigationAction>({');
+    expect(source).toContain('useSyncExternalStore(');
     expect(source).toContain('captureBoundary.retryCleanup()');
     expect(source).toContain('captureBoundary.cleanupPending');
     expect(source).toContain('captureBoundary.beginShutter()');
     expect(source).toContain('captureBoundary.finishShutter()');
     expect(source).toContain('RawCaptureCleanupGate');
-    expect(source).toContain('usePreventRemove(!routeRemovalReady');
+    expect(source).toContain('usePreventRemove(!boundaryState.routeRemovalReady');
     expect(source).toContain('const captureBoundary = useProgressCaptureBoundary();');
     expect(source.indexOf('const captureBoundary = useProgressCaptureBoundary();')).toBeLessThan(
       source.indexOf('<ProGate feature="photo_timeline">'),

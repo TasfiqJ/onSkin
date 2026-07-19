@@ -27,6 +27,14 @@ const progressCapturePrivacyPath = resolve(
   root,
   'apps/mobile/src/features/photos/progressCapturePrivacy.ts',
 );
+const progressCaptureRouteBoundaryPath = resolve(
+  root,
+  'apps/mobile/src/features/photos/progressCaptureRouteBoundary.ts',
+);
+const progressCaptureRouteBoundaryTestPath = resolve(
+  root,
+  'apps/mobile/src/features/photos/progressCaptureRouteBoundary.test.ts',
+);
 
 function read(path) {
   return readFileSync(path, 'utf8').replaceAll('\r\n', '\n');
@@ -464,14 +472,15 @@ test('CAT05 label and Progress shutters await the shared boot drain before captu
   );
 });
 
-test('CAT05 Progress capture lease drains stale raw photos before returning', () => {
+test('CAT05 Progress capture lease delegates stale raw photos to its executable route boundary', () => {
   const source = read(progressCaptureRoutePath);
+  const routeBoundary = read(progressCaptureRouteBoundaryPath);
+  const routeBoundaryBehavior = read(progressCaptureRouteBoundaryTestPath);
 
   for (const declaration of [
     'const mountedRef = useRef(false);',
     'const captureLeaseGenerationRef = useRef(0);',
     'const captureInFlightRef = useRef<number | null>(null);',
-    'const pendingRawCaptureLifecycleRef = useRef<ProgressCaptureReviewLifecycle | null>(null);',
     'let rawCaptureUri: string | null = null;',
   ]) {
     assert.ok(source.includes(declaration), `Progress capture lease is missing ${declaration}`);
@@ -518,19 +527,36 @@ test('CAT05 Progress capture lease drains stale raw photos before returning', ()
     'The route must not swallow raw-photo deletion failure outside the retained lifecycle.',
   );
   assert.ok(
-    source.includes('usePreventRemove(!routeRemovalReady'),
+    source.includes('createProgressCaptureRouteBoundary<NavigationAction>({') &&
+      source.includes('usePreventRemove(!boundaryState.routeRemovalReady'),
     'Protected removal must remain armed until the route-owned boundary authorizes it.',
   );
   matches(
-    source,
-    /const operation = lifecycle\.discard\(\)\.then\([\s\S]*setCleanupFailed\(true\);[\s\S]*return false;/u,
+    routeBoundary,
+    /const lifecycle = pendingRawCaptureLifecycle;[\s\S]*const operation = lifecycle\.discard\(\)\.then\([\s\S]*cleanupFailed: true, cleanupPending: true[\s\S]*return false;/u,
     'Delete failure must retain the lifecycle and expose cleanup retry state.',
   );
   matches(
-    source,
-    /pendingRawCaptureLifecycleRef\.current\?\.hasPendingCleanup\(\)[\s\S]*void retryCleanup\(\);[\s\S]*return;[\s\S]*markRouteRemovalReady\(\);/u,
+    routeBoundary,
+    /pendingRawCaptureLifecycle\?\.hasPendingCleanup\(\)[\s\S]*void retryCleanup\(\);[\s\S]*return;[\s\S]*markRouteRemovalReady\(\);/u,
     'Protected navigation must retry retained cleanup before authorizing removal.',
   );
+  assert.ok(
+    routeBoundaryBehavior.includes("from './progressCaptureRouteBoundary';"),
+    'The executable boundary suite must import the production route coordinator.',
+  );
+  for (const executableContract of [
+    'blocks a back removal while the shutter is pending, invalidates capture, then dispatches once',
+    'retains a failed raw deletion, blocks navigation, then releases to the latest intent once',
+    'transfers a review handoff exactly once without deleting or disposing its raw source',
+    'returns route ownership after a non-review navigation handler throws',
+    'keeps route-owned shutter and raw state while a replacing gate swaps child invalidators',
+  ]) {
+    assert.ok(
+      routeBoundaryBehavior.includes(executableContract),
+      `Progress route-boundary behavior coverage is missing ${executableContract}`,
+    );
+  }
 });
 
 test('CAT05 Progress review admits trusted Camera URIs and drains before protected removal', () => {

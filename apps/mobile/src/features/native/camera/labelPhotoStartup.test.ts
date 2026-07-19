@@ -198,7 +198,7 @@ describe('Expo Camera startup-orphan scavenger', () => {
     );
   });
 
-  it('deletes a Progress raw capture that resolves after blur, close, or unmount', () => {
+  it('wires late Progress capture validation into the executable route owner', () => {
     const source = readFileSync(PROGRESS_CAPTURE_ROUTE, 'utf8');
 
     expect(source).toContain('const mountedRef = useRef(false);');
@@ -212,13 +212,8 @@ describe('Expo Camera startup-orphan scavenger', () => {
     expect(source).toContain(
       '(cameraOperation !== null && !cameraAccess.isCameraOperationCurrent(cameraOperation))',
     );
-    expect(source).toContain(
-      'pendingRawCaptureLifecycleRef.current = createProgressCaptureReviewLifecycle(FileSystem, {',
-    );
+    expect(source).toContain('createProgressCaptureRouteBoundary<NavigationAction>({');
     expect(source).toContain('captureBoundary.adoptRawCapture(rawCaptureUri);');
-    expect(source.split('await captureBoundary.retryCleanup();').length - 1).toBeGreaterThanOrEqual(
-      2,
-    );
     expect(source).not.toContain('FileSystem.deleteAsync(rawCaptureUri');
     expect(source).not.toContain(
       'FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined)',
