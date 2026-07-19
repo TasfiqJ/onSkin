@@ -250,7 +250,7 @@ export function sanitizeCat05DiagnosticText(
     sanitizeCat05EvidenceUrl(candidate),
   );
   sanitized = sanitized.replace(
-    /(?:assets-library|blob|content|data|file|filesystem|ph):[^\s<>"')\]}]*/giu,
+    /\b(?:assets-library|blob|content|data|file|filesystem|ph):[^\s<>"')\]}]*/giu,
     (candidate) => sanitizeCat05EvidenceUrl(candidate),
   );
   sanitized = sanitized.replace(

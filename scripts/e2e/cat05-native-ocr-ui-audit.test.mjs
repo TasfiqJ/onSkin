@@ -628,6 +628,15 @@ test('diagnostic evidence redacts host paths, external documentation URLs, ANSI,
     sanitizeCat05EvidenceUrl('https://analytics.example/private'),
     '<external-network-url>',
   );
+  assert.equal(
+    sanitizeCat05DiagnosticText(
+      '- Web fixture profile: `development-only-deterministic-expo-web`\n' +
+        '- Candidate source profile: `staging`',
+      { homePaths: [], maxBytes: 5_000, repoRootPath: '', temporaryDirectory: '' },
+    ),
+    '- Web fixture profile: `development-only-deterministic-expo-web`\n' +
+      '- Candidate source profile: `staging`',
+  );
 
   const safeDiagnostic = JSON.stringify(
     sanitizeCat05DiagnosticValue({
