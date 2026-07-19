@@ -32,6 +32,13 @@ const ignoredGeneratedOutputPatterns = [
 
 const ignoredUntrackedRuntimeOutputPatterns = [/^\.tmp(?:\/|$)/];
 
+const HUMAN_E2E_GENERATED_MANIFEST_PATHS = Object.freeze([
+  'docs/e2e/generated/human-e2e-manifest.json',
+  'docs/e2e/generated/human-e2e-manifest.md',
+]);
+const CAT04_CATALOG_RECOVERY_EVIDENCE_FOLDER_NAME = 'cat04-catalog-recovery-current';
+const CAT05_NATIVE_OCR_EVIDENCE_FOLDER_NAME = 'cat05-native-ocr-web-ui-current';
+
 function ignoredGeneratedOutputPath(path) {
   const normalized = normalizeRepoPath(path);
   return ignoredGeneratedOutputPatterns.some((pattern) => pattern.test(normalized));
@@ -57,6 +64,30 @@ function collectDisallowedUntrackedRepoFiles(
         !ignoredUntrackedRuntimeOutputPath(path),
     )
     .sort();
+}
+
+function governedHumanEvidenceFolderPrefix(
+  folder,
+  expectedFolderName,
+  governingFolder,
+  expectedGoverningFolderName,
+) {
+  const normalized = normalizeRepoPath(folder).replace(/\/$/, '');
+  const governingNormalized = normalizeRepoPath(governingFolder).replace(/\/$/, '');
+  const match = normalized.match(/^test-results\/human-e2e\/(\d{4}-\d{2}-\d{2})\/([^/]+)$/);
+  const governingMatch = governingNormalized.match(
+    /^test-results\/human-e2e\/(\d{4}-\d{2}-\d{2})\/([^/]+)$/,
+  );
+  if (
+    !match ||
+    match[2] !== expectedFolderName ||
+    !governingMatch ||
+    governingMatch[2] !== expectedGoverningFolderName ||
+    match[1] !== governingMatch[1]
+  ) {
+    return null;
+  }
+  return `${normalized}/`;
 }
 
 function exists(path) {
@@ -1035,6 +1066,7 @@ function buildExpectedCat05NativeOcrReport(summary) {
 
 function collectCat04CatalogRecoveryFailures({
   folder,
+  peerEvidenceFolder,
   summary,
   trackedRepoFiles,
   sourceGitState,
@@ -1046,6 +1078,17 @@ function collectCat04CatalogRecoveryFailures({
   const checkedFiles = new Set();
   const requiredArtifacts = new Set(['report.md']);
   const folderPrefix = `${normalizeRepoPath(folder).replace(/\/$/, '')}/`;
+  const peerEvidenceFolderPrefix = governedHumanEvidenceFolderPrefix(
+    peerEvidenceFolder,
+    CAT05_NATIVE_OCR_EVIDENCE_FOLDER_NAME,
+    folder,
+    CAT04_CATALOG_RECOVERY_EVIDENCE_FOLDER_NAME,
+  );
+  if (!peerEvidenceFolderPrefix) {
+    failures.push(
+      'CAT04 peer evidence folder must be the exact dated CAT05 evidence directory on the same date as CAT04',
+    );
+  }
   const trackedFolderFiles = [...trackedRepoFiles]
     .filter((path) => normalizeRepoPath(path).startsWith(folderPrefix))
     .map((path) => normalizeRepoPath(path).slice(folderPrefix.length));
@@ -1306,14 +1349,12 @@ function collectCat04CatalogRecoveryFailures({
     if (sourceGitState.runnerMatchesSource !== true) {
       failures.push('CAT04 runner source does not match the recorded sourceGitSha');
     }
-    const allowedGeneratedPaths = new Set([
-      'docs/e2e/generated/human-e2e-manifest.json',
-      'docs/e2e/generated/human-e2e-manifest.md',
-    ]);
+    const allowedGeneratedPaths = new Set(HUMAN_E2E_GENERATED_MANIFEST_PATHS);
     const sourceChangeAllowed = (path) => {
       const normalized = normalizeRepoPath(path);
       return (
         normalized.startsWith(folderPrefix) ||
+        (peerEvidenceFolderPrefix != null && normalized.startsWith(peerEvidenceFolderPrefix)) ||
         allowedGeneratedPaths.has(normalized) ||
         ignoredGeneratedOutputPath(normalized)
       );
@@ -1336,7 +1377,7 @@ function collectCat04CatalogRecoveryFailures({
       sourceGitState.untrackedRepoFiles ?? [],
       {
         allowedExactPaths: allowedGeneratedPaths,
-        allowedPrefixes: [folderPrefix],
+        allowedPrefixes: [folderPrefix, peerEvidenceFolderPrefix].filter(Boolean),
       },
     );
     if (untrackedSourceChanges.length > 0) {
@@ -1386,6 +1427,7 @@ function collectCat04CatalogRecoveryFailures({
 
 function collectCat05NativeOcrReviewFailures({
   folder,
+  peerEvidenceFolder,
   summary,
   trackedRepoFiles,
   sourceGitState,
@@ -1398,6 +1440,17 @@ function collectCat05NativeOcrReviewFailures({
   const checkedFiles = new Set();
   const bytesByArtifact = new Map();
   const folderPrefix = `${normalizeRepoPath(folder).replace(/\/$/, '')}/`;
+  const peerEvidenceFolderPrefix = governedHumanEvidenceFolderPrefix(
+    peerEvidenceFolder,
+    CAT04_CATALOG_RECOVERY_EVIDENCE_FOLDER_NAME,
+    folder,
+    CAT05_NATIVE_OCR_EVIDENCE_FOLDER_NAME,
+  );
+  if (!peerEvidenceFolderPrefix) {
+    failures.push(
+      'CAT05 peer evidence folder must be the exact dated CAT04 evidence directory on the same date as CAT05',
+    );
+  }
   const expectedArtifacts = expectedCat05NativeOcrArtifacts();
   const expectedScreenshots = expectedArtifacts.filter((artifact) => artifact.endsWith('.png'));
   const trackedFolderFiles = [...trackedRepoFiles]
@@ -1962,14 +2015,12 @@ function collectCat05NativeOcrReviewFailures({
     if (sourceGitState.runnerMatchesSource !== true) {
       failures.push('CAT05 runner source does not match the recorded sourceGitSha');
     }
-    const allowedGeneratedPaths = new Set([
-      'docs/e2e/generated/human-e2e-manifest.json',
-      'docs/e2e/generated/human-e2e-manifest.md',
-    ]);
+    const allowedGeneratedPaths = new Set(HUMAN_E2E_GENERATED_MANIFEST_PATHS);
     const sourceChangeAllowed = (path) => {
       const normalized = normalizeRepoPath(path);
       return (
         normalized.startsWith(folderPrefix) ||
+        (peerEvidenceFolderPrefix != null && normalized.startsWith(peerEvidenceFolderPrefix)) ||
         cat05DocumentationOnlyPath(normalized) ||
         allowedGeneratedPaths.has(normalized) ||
         ignoredGeneratedOutputPath(normalized)
@@ -1993,7 +2044,7 @@ function collectCat05NativeOcrReviewFailures({
       sourceGitState.untrackedRepoFiles ?? [],
       {
         allowedExactPaths: allowedGeneratedPaths,
-        allowedPrefixes: [folderPrefix, 'docs/'],
+        allowedPrefixes: [folderPrefix, peerEvidenceFolderPrefix, 'docs/'].filter(Boolean),
       },
     );
     if (untrackedSourceChanges.length > 0) {
@@ -2255,6 +2306,7 @@ function runEvidenceProvenanceSmoke() {
 
 function runCat04CatalogRecoveryContractSmoke() {
   const folder = 'test-results/human-e2e/2099-01-01/cat04-catalog-recovery-current';
+  const peerEvidenceFolder = 'test-results/human-e2e/2099-01-01/cat05-native-ocr-web-ui-current';
   const timestamp = '2099-01-01T00:00:00.000Z';
   const files = new Map();
   const screenshots = [];
@@ -2358,6 +2410,7 @@ function runCat04CatalogRecoveryContractSmoke() {
   const validate = (candidate = summary, overrides = {}) =>
     collectCat04CatalogRecoveryFailures({
       folder,
+      peerEvidenceFolder: overrides.peerEvidenceFolder ?? peerEvidenceFolder,
       summary: candidate,
       sourceGitState,
       trackedRepoFiles,
@@ -2441,6 +2494,53 @@ function runCat04CatalogRecoveryContractSmoke() {
     validate(summary, {
       sourceGitState: {
         ...sourceGitState,
+        changedRepoFilesSinceSource: [
+          `${peerEvidenceFolder}/report.md`,
+          'docs/e2e/generated/human-e2e-manifest.json',
+        ],
+        dirtyTrackedRepoFiles: [
+          `${peerEvidenceFolder}/summary.json`,
+          'docs/e2e/generated/human-e2e-manifest.md',
+        ],
+        untrackedRepoFiles: [`${peerEvidenceFolder}/rerun-screenshot.png`],
+      },
+    }).length === 0,
+    'an exact CAT05 sibling refresh and generated human manifest outputs may follow CAT04 source',
+  );
+  for (const unrelatedEvidencePath of [
+    'test-results/human-e2e/2099-01-01/cat06-camera-lifecycle-current/summary.json',
+    'test-results/human-e2e/2099-01-02/cat05-native-ocr-web-ui-current/summary.json',
+  ]) {
+    assert(
+      validate(summary, {
+        sourceGitState: {
+          ...sourceGitState,
+          changedRepoFilesSinceSource: [unrelatedEvidencePath],
+        },
+      }).some((failure) => failure.includes('sourceGitSha predates later source changes')),
+      `unrelated CAT04 evidence path must remain source-invalidating: ${unrelatedEvidencePath}`,
+    );
+  }
+  assert(
+    validate(summary, {
+      peerEvidenceFolder: 'test-results/human-e2e/2099-01-01',
+    }).some((failure) =>
+      failure.includes(
+        'CAT04 peer evidence folder must be the exact dated CAT05 evidence directory',
+      ),
+    ),
+    'CAT04 must reject a broad human-E2E peer evidence prefix',
+  );
+  assert(
+    validate(summary, {
+      peerEvidenceFolder: 'test-results/human-e2e/2099-01-02/cat05-native-ocr-web-ui-current',
+    }).some((failure) => failure.includes('on the same date as CAT04')),
+    'CAT04 must reject an exact CAT05 peer evidence folder from a different date',
+  );
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
         untrackedRepoFiles: ['apps/mobile/src/app/shelf/untracked-route.tsx'],
       },
     }).some((failure) => failure.includes('nonignored untracked source is not bound')),
@@ -2478,6 +2578,7 @@ function runCat04CatalogRecoveryContractSmoke() {
 
 function runCat05NativeOcrReviewContractSmoke() {
   const folder = 'test-results/human-e2e/2099-01-01/cat05-native-ocr-web-ui-current';
+  const peerEvidenceFolder = 'test-results/human-e2e/2099-01-01/cat04-catalog-recovery-current';
   const timestamp = '2099-01-01T00:00:00.000Z';
   const sourceGitSha = 'a'.repeat(40);
   const runId = '00000000-0000-4000-8000-000000000001';
@@ -2737,6 +2838,7 @@ function runCat05NativeOcrReviewContractSmoke() {
     const tracked = overrides.trackedRepoFiles ?? trackedRepoFiles;
     return collectCat05NativeOcrReviewFailures({
       folder,
+      peerEvidenceFolder: overrides.peerEvidenceFolder ?? peerEvidenceFolder,
       summary: candidate,
       sourceGitState: overrides.sourceGitState ?? sourceGitState,
       trackedRepoFiles: tracked,
@@ -3029,6 +3131,54 @@ function runCat05NativeOcrReviewContractSmoke() {
       },
     }).some((failure) => failure.includes('nonignored untracked source is not bound')),
     'untracked app source must invalidate CAT05 evidence',
+  );
+
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        changedRepoFilesSinceSource: [
+          `${peerEvidenceFolder}/report.md`,
+          'docs/e2e/generated/human-e2e-manifest.json',
+        ],
+        dirtyTrackedRepoFiles: [
+          `${peerEvidenceFolder}/summary.json`,
+          'docs/e2e/generated/human-e2e-manifest.md',
+        ],
+        untrackedRepoFiles: [`${peerEvidenceFolder}/rerun-screenshot.png`],
+      },
+    }).length === 0,
+    'an exact CAT04 sibling refresh and generated human manifest outputs may follow CAT05 source',
+  );
+  for (const unrelatedEvidencePath of [
+    'test-results/human-e2e/2099-01-01/cat06-camera-lifecycle-current/summary.json',
+    'test-results/human-e2e/2099-01-02/cat04-catalog-recovery-current/summary.json',
+  ]) {
+    assert(
+      validate(summary, {
+        sourceGitState: {
+          ...sourceGitState,
+          changedRepoFilesSinceSource: [unrelatedEvidencePath],
+        },
+      }).some((failure) => failure.includes('sourceGitSha predates later source changes')),
+      `unrelated CAT05 evidence path must remain source-invalidating: ${unrelatedEvidencePath}`,
+    );
+  }
+  assert(
+    validate(summary, {
+      peerEvidenceFolder: 'test-results/human-e2e/2099-01-01',
+    }).some((failure) =>
+      failure.includes(
+        'CAT05 peer evidence folder must be the exact dated CAT04 evidence directory',
+      ),
+    ),
+    'CAT05 must reject a broad human-E2E peer evidence prefix',
+  );
+  assert(
+    validate(summary, {
+      peerEvidenceFolder: 'test-results/human-e2e/2099-01-02/cat04-catalog-recovery-current',
+    }).some((failure) => failure.includes('on the same date as CAT05')),
+    'CAT05 must reject an exact CAT04 peer evidence folder from a different date',
   );
 
   assert(
@@ -3604,18 +3754,16 @@ if (!healthConsentWithdrawalEvidenceDate) {
   process.exit(1);
 }
 const cat04CatalogRecoveryEvidenceDate = latestEvidenceDateForFolder(
-  'cat04-catalog-recovery-current',
+  CAT04_CATALOG_RECOVERY_EVIDENCE_FOLDER_NAME,
 );
 if (!cat04CatalogRecoveryEvidenceDate) {
   console.error('FAIL Missing CAT04 catalog-recovery Expo-web evidence.');
   process.exit(1);
 }
 const cat05NativeOcrReviewEvidenceDate = CAT05_NATIVE_OCR_EVIDENCE_DATE;
-if (
-  !exists(
-    `test-results/human-e2e/${cat05NativeOcrReviewEvidenceDate}/cat05-native-ocr-web-ui-current/summary.json`,
-  )
-) {
+const cat04CatalogRecoveryEvidenceFolder = `test-results/human-e2e/${cat04CatalogRecoveryEvidenceDate}/${CAT04_CATALOG_RECOVERY_EVIDENCE_FOLDER_NAME}`;
+const cat05NativeOcrReviewEvidenceFolder = `test-results/human-e2e/${cat05NativeOcrReviewEvidenceDate}/${CAT05_NATIVE_OCR_EVIDENCE_FOLDER_NAME}`;
+if (!exists(`${cat05NativeOcrReviewEvidenceFolder}/summary.json`)) {
   console.error('FAIL Missing 2026-07-18 CAT05 native-OCR review Expo-web evidence.');
   process.exit(1);
 }
@@ -3987,7 +4135,7 @@ const gates = [
     kind: 'cat04-catalog-recovery',
     required: true,
     supportClass: 'supported-phone',
-    folder: `test-results/human-e2e/${cat04CatalogRecoveryEvidenceDate}/cat04-catalog-recovery-current`,
+    folder: cat04CatalogRecoveryEvidenceFolder,
     evidence: 'summary.json',
     requiredFiles: ['report.md'],
     expected:
@@ -3999,7 +4147,7 @@ const gates = [
     kind: 'cat05-native-ocr-review',
     required: true,
     supportClass: 'supported-phone',
-    folder: `test-results/human-e2e/${cat05NativeOcrReviewEvidenceDate}/cat05-native-ocr-web-ui-current`,
+    folder: cat05NativeOcrReviewEvidenceFolder,
     evidence: 'summary.json',
     requiredFiles: ['report.md', 'scope.json'],
     expected:
@@ -4416,6 +4564,7 @@ const gateResults = gates.map((gate) => {
         requirementFailures.push(
           ...collectCat04CatalogRecoveryFailures({
             folder: gate.folder,
+            peerEvidenceFolder: cat05NativeOcrReviewEvidenceFolder,
             summary,
             sourceGitState: inspectCat04SourceGitState(String(summary?.sourceGitSha ?? '')),
             trackedRepoFiles,
@@ -4433,6 +4582,7 @@ const gateResults = gates.map((gate) => {
         requirementFailures.push(
           ...collectCat05NativeOcrReviewFailures({
             folder: gate.folder,
+            peerEvidenceFolder: cat04CatalogRecoveryEvidenceFolder,
             summary,
             sourceGitState: inspectCat05SourceGitState(String(summary?.sourceGitSha ?? '')),
             trackedRepoFiles,
