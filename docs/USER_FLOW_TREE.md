@@ -667,14 +667,17 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Launch-blocking web-compatible viewports: 375 x 667, 390 x 844, and 430 x 932. The 360-wide and 320-wide browser sizes are resilience/stress evidence,
   not the launch support floor.
 - Evidence folder: `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/`
-- Current governed local evidence: the deterministic Expo-web matrix passes
-  45/45 matched, wrong-match, no-match, offline/error, permission/Settings
-  failure, malformed-identity, OCR-capture fallback, and manual-barcode
-  validation scenario executions plus 18/18 consent bootstraps at 375 x 667,
-  390 x 844, and 430 x 932. It retains 365 tracked files and 144 screenshots
-  with zero browser failures. `nativeDeviceProof=false`: native camera,
-  SecureStore/relaunch, hosted reconnect/reporting, physical-iPhone
-  accessibility, and backend behavior remain unproved.
+- Retained governed local evidence: the deterministic Expo-web matrix bound to
+  the pre-CAT-06 source passed 45/45 matched, wrong-match, no-match,
+  offline/error, permission/Settings failure, malformed-identity, OCR-capture
+  fallback, and manual-barcode validation scenario executions plus 18/18
+  consent bootstraps at 375 x 667, 390 x 844, and 430 x 932. It retains 365
+  tracked files and 144 screenshots with zero browser failures. The packet is
+  now historical/stale after the shared camera lifecycle changed and must be
+  regenerated against the accepted CAT-06 source. It records
+  `nativeDeviceProof=false`: neither the retained packet nor a regenerated web
+  packet proves native camera, SecureStore/relaunch, hosted
+  reconnect/reporting, physical-iPhone accessibility, or backend behavior.
 - Historical local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`,
   `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`, and
   `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`.
@@ -811,6 +814,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Inspect and exercise the label-recognition route from the exact EAS profile under test.
   - Expected result: Only the internal `staging` profile sets `EXPO_PUBLIC_NATIVE_OCR_ENABLED=true`; `development` and `production` remain false. A missing, unavailable, or contract-mismatched native module fails into explicit manual-entry recovery rather than implying OCR works. Enabling the flag alone does not satisfy the gate.
   - Evidence: Exact source/profile/build binding, native-module availability result, signed-archive inspection, and physical-iPhone route capture. The deterministic Expo-web fixture below may mirror enabled UI states but is not an EAS staging binary.
+- CAT-05 evidence freshness note: every CAT-05 deterministic Expo-web artifact
+  below is retained historical evidence bound to
+  `fec382eddd0e79f73b4c38b5de30d996928a8fc9`. CAT-06 subsequently changed
+  `/shelf/ocr` camera admission and Progress shutter ownership, so those
+  artifacts are stale for the current source until regenerated. The recorded
+  UI observations remain useful for comparison, but they are not current
+  exact-source evidence and never prove native behavior.
 - Branch: CAT-05 deterministic recognized review, Retake, and Continue
   - Priority: Critical
   - Automate later: Yes
@@ -852,7 +862,19 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Run the five CAT-05 deterministic scenarios across 375 x 667, 390 x 844, and 430 x 932 after the source checkpoint is committed.
   - Expected result: The governed run has 15 scenario executions and four consent bootstraps, records `nativeDeviceProof=false`, and labels itself development-only Expo-web UI-state evidence. It must not be cited as Apple Vision, Swift, camera, iOS binary, physical-iPhone, OCR accuracy/latency, privacy, zero-network, cleanup, VoiceOver, archive, App Review, legal, or release proof.
-  - Evidence: The provenance-valid packet at `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/` is bound to source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` and passes 15/15 scenarios plus 4/4 consent bootstraps with zero browser failures, 139 non-summary artifacts, and 55 PNGs. It records `nativeDeviceProof=false`; the macOS compile remains unverified/pending, the 375 x 667 manual-handoff PNG does not show Ingredients/prefill, and the multilingual fixture has no Arabic/Hebrew RTL sample. It is not Vision, Swift, camera, iOS-binary, physical-device, native privacy-cleanup, accuracy, latency, native-accessibility, archive, App Review, legal, release, or revenue proof.
+  - Evidence: The retained packet at `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/` is bound to source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` and passed 15/15 scenarios plus 4/4 consent bootstraps with zero browser failures, 139 non-summary artifacts, and 55 PNGs. It is stale for the current source after CAT-06 and must be regenerated. It records `nativeDeviceProof=false`; the macOS compile remains unverified/pending, the 375 x 667 manual-handoff PNG does not show Ingredients/prefill, and the multilingual fixture has no Arabic/Hebrew RTL sample. It is not Vision, Swift, camera, iOS-binary, physical-device, native privacy-cleanup, accuracy, latency, native-accessibility, archive, App Review, legal, release, or revenue proof.
+- Branch: CAT-06 shared permission, foreground, and preview lifecycle
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On each camera route, begin from undetermined permission, deny and retry, permanently deny and open Settings, make Settings opening fail once, grant in Settings, background/foreground, blur/refocus, trigger a native interruption, fail camera mount/ready, retry, and deliver a queued native callback from the invalidated camera generation.
+  - Expected result: No preview mounts before verified grant or while the app/route/business gate is inactive. The OS permission prompt can finish normally, but its explicit request result is invalidated when iOS reports `inactive`; the camera stays closed and a fresh foreground query is authoritative before remount. Only one preview is active; operations remain blocked until camera-ready; mount retry creates a fresh keyed generation; stale permission, ready, mount, barcode, and still-photo callbacks cannot navigate or mutate. Permanent denial exposes one Settings action, failure is visible/retryable, and Scan/OCR keep non-camera recovery reachable.
+  - Evidence: Shared lifecycle unit tests and route contracts; then the exact signed-archive CAT-06 packet with both required physical iPhones, permission-state timestamps, interruption video/logs, fresh-query ordering, mount-generation proof, and VoiceOver/Dynamic Type results. Expo web can cover only deterministic UI state and cannot close this branch.
+- Branch: CAT-06 exact-build evidence boundary
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete the schema-v1 camera-lifecycle artifact for `/shelf/scan`, `/shelf/ocr`, and `/progress/capture` on the supported-floor iOS 17.x and current flagship physical iPhones.
+  - Expected result: All nine governed suites run on every route/device: permission, Settings, lifecycle, mount, camera operation, offline, interruption, accessibility, and privacy. The two-phone floor contains 54 unique runs and proofs. The artifact binds the exact committed source, EAS build, signed archive, final `Info.plist` camera purpose string, device/install receipts, network and cleanup reports, accessibility report, scenario index, and three named signoffs. `PHASE5_CAMERA_PERMISSION_QA_PASS` is ignored.
+  - Evidence: `docs/phase-5/camera-lifecycle-evidence-runbook.md`, one validated evidence JSON under `docs/phase-5/evidence/camera-lifecycle/`, its hash-verified attachments, and passing strict camera/device packet commands. No completed artifact exists yet.
 - Branch: camera permission denied
   - Priority: Important
   - Automate later: Yes
@@ -950,7 +972,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Deny camera or photo permission.
   - Expected result: User sees a clear recovery path and no broken UI, including a visible alert if the OS Settings handoff fails.
   - Evidence: Screenshot, alert text, and permission state.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION=denied_no_retry`, `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies `/progress/capture` starts on the local-only consent gate, consent reaches the denied/no-retry permission gate with one `Open settings` action, no `Capture photo` control, and no JavaScript dialog, failed Settings handoff renders inline `Camera settings unavailable` alert copy with no dialog or raw fixture text, visible alert/actions are 48 px+ with zero horizontal overflow, and `Not now` returns to `/progress`. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-permission-denied-current/`.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION=denied_no_retry`, `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verified `/progress/capture` started on the local-only consent gate, consent reached the denied/no-retry permission gate with one `Open settings` action, no `Capture photo` control, and no JavaScript dialog, failed Settings handoff rendered inline `Camera settings unavailable` alert copy with no dialog or raw fixture text, visible alert/actions were 48 px+ with zero horizontal overflow, and `Not now` returned to `/progress`. Evidence is retained in `test-results/human-e2e/2026-07-08/progress-photo-permission-denied-current/`, but it predates CAT-06 and is stale for the current source. It does not prove the native iOS permission sheet or Settings round trip.
+- Branch: Progress shutter, gate replacement, and exact raw-photo cleanup
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Start a Progress shutter, then request Back/Close or replace the capture content with entitlement, app-lock, or storage recovery. Separately force raw-file deletion failure after capture, retry cleanup, background/foreground during capture, and transfer one successful still to review and encrypted save.
+  - Expected result: First-use photo consent is saved before the OS permission request. The route-level owner survives child-gate replacement, blocks route removal while the shutter or exact raw-file lifecycle is pending, invalidates the camera lease, drains the native operation, and then deletes or atomically transfers the same trusted URI. A deletion failure keeps a route-owned cleanup alert/retry reachable outside every replacing gate; navigation remains blocked until cleanup succeeds; retry does not duplicate encrypted storage. The preview remains mounted during an admitted shutter but unmounts on focus/background/consent/cleanup invalidation. No late callback navigates or mutates.
+  - Evidence: Progress capture privacy/routes/navigation contracts and shared lifecycle tests; exact signed-build Back/swipe/pop/reset, app-lock and storage-gate replacement, foreground/interruption, raw-file path/digest, cleanup-failure retry, encrypted-store count, network capture, and cold-relaunch evidence on both required physical iPhones. No completed CAT-06 artifact exists.
 - Branch: first-use photo consent save failure
   - Priority: Critical
   - Automate later: Yes
@@ -979,7 +1007,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress capture on a device where the camera cannot start, or force the still photo capture call to reject.
   - Expected result: The app shows stable camera-unavailable or photo-not-captured copy, keeps the timeline unchanged, and does not leave a tappable shutter that appears inert.
   - Evidence: Alert text, visible fallback state, and route snapshot.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` forces `/progress/capture` still-photo rejection from the capture surface. The route opens no dialog, renders inline `Photo wasn't captured` copy with `role="alert"`, foregrounds 56 px `Try photo again` and 48 px `Not now` controls while the background shutter is disabled, hides the raw fixture error, and logs no current-origin browser errors. Tapping retry consumes the fixture and shows the normal web permission gate with readable wrapped heading copy; `Not now` returns to `/progress`. Evidence and report are in `test-results/human-e2e/2026-07-08/progress-photo-capture-failure-current/`; physical iOS/Android camera mount, permission-denied, real `takePictureAsync` rejection, and encrypted image persistence QA remain open.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` forced `/progress/capture` still-photo rejection from the capture surface. The route opened no dialog, rendered inline `Photo wasn't captured` copy with `role="alert"`, foregrounded 56 px `Try photo again` and 48 px `Not now` controls while the background shutter was disabled, hid the raw fixture error, and logged no current-origin browser errors. Tapping retry consumed the fixture and showed the normal web permission gate with readable wrapped heading copy; `Not now` returned to `/progress`. Evidence and report are retained in `test-results/human-e2e/2026-07-08/progress-photo-capture-failure-current/`, but they predate CAT-06 and are stale for the current source. Physical-iPhone camera mount, permission, real `takePictureAsync` rejection, raw cleanup, and encrypted persistence remain open.
 - Branch: measured post-capture framing and lighting review
   - Priority: Critical
   - Automate later: Yes, with native image fixtures after the development build is installed on supported physical devices.

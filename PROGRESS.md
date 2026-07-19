@@ -7378,6 +7378,58 @@ revenue. The macOS/Xcode compile is still unverified/pending. CAT-05 remains
 two-iPhone, 25-label/50-run accuracy/RTL/network/cleanup/accessibility,
 performance, App Privacy, privacy/security/legal, and release gates.
 
+### CAT-06 camera lifecycle source candidate (2026-07-18)
+
+Centralized Shelf Scan, Shelf OCR, and Progress Capture behind one camera
+permission/AppState/focus/mount lifecycle. Preview admission now requires the
+native camera, current route focus, active AppState, an open route-specific
+business gate, a fresh granted permission result, and camera-ready. If the iOS
+permission prompt drives AppState to `inactive`, its explicit request result is
+invalidated; the OS prompt can finish, but the camera stays closed until the
+fresh foreground query becomes authoritative. Permission refresh/request
+failure, permanent denial, Settings-open failure, mount failure, and capture
+failure have stable recovery; retry keys a new preview generation. Camera
+operation leases make queued barcode/still callbacks inert after focus,
+foreground, permission, gate, retry, or unmount invalidation.
+
+Progress capture now persists dedicated local-photo consent before the OS
+request. A route-level owner outside entitlement, app-lock, photo-storage, and
+capture-content gates owns the shutter and exact disposable raw-photo lifecycle.
+Back/navigation waits for the shutter and cleanup, gate replacement cannot hide
+cleanup recovery, deletion failure remains explicitly retryable, and ownership
+transfers to review only at the deliberate handoff. Shelf Scan acquires its
+lease before interpreting a queued barcode; Shelf OCR unmounts its preview in
+review and retains manual entry through permission/mount/capture failures.
+
+Native config now derives one exact camera purpose string from the resolved
+display name into both `NSCameraUsageDescription` and the `expo-camera` plugin.
+Alternate environment wording, malformed/control-character/build-variable
+display names, and EAS profile overrides fail closed. This is still source
+configuration, not proof of the final signed archive's plist.
+
+Added the schema-v1 CAT-06 evidence contract, blocked template, adversarial
+smoke suite, runbook, Phase 5 packet wiring, and source checkpoint. The contract
+rejects `PHASE5_CAMERA_PERMISSION_QA_PASS` as clearance and requires the exact
+source/build/signed archive, extracted final purpose string, two supported
+physical iPhones, all three routes, nine scenario suites per route/device, 54
+runs, unique hash-verified proofs, install receipts, canonical network/privacy/
+cleanup/accessibility reports, and named QA, privacy/security, and accessibility
+signoffs.
+
+At the latest verified pre-CAT-07 integrated source checkpoint, the full mobile
+suite passed 301 files / 3,529 tests, the focused camera/privacy route lane
+passed 58/58, and the CAT-05 source contract passed 39/39. Source checks do not
+prove native compilation, archive linkage, the truth of future evidence, or
+physical-device behavior.
+
+CAT-06 remains `in_progress`, blocked by CAT-05 and H-08. The retained CAT-04
+and CAT-05 deterministic Expo-web packets predate these camera changes and are
+historical/stale until regenerated against the accepted CAT-06 source. Their
+prior results remain `nativeDeviceProof=false`; regeneration still cannot
+prove the iOS permission sheet, Settings return, CameraView, interruption,
+filesystem/cache cleanup, network behavior, VoiceOver, App Review acceptance,
+legal compliance, revenue, or product-market fit.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

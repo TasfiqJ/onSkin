@@ -1130,7 +1130,7 @@
       "id": "CAT-04",
       "status": "in_progress",
       "blockedBy": ["CAT-03", "H-07", "H-08"],
-      "nextAction": "The source candidate normalizes and checksum-gates supported UPC/EAN/GTIN identifiers, rejects malformed or unreviewed catalog projections, prevents stale search responses, requires a visible identity-and-recipient confirmation before correction reports, preserves manual recovery through lookup failures, makes Shelf saves idempotent, and removes raw scan/search identity from retained analytics. The encrypted account/health-bound offline retry lane requires an explicit user request, revalidates a reviewed result, and requires explicit acceptance before any Shelf mutation. Governed deterministic Expo-web evidence passes all 45 scenario executions and all 18 consent bootstraps across 375 x 667, 390 x 844, and 430 x 932; it remains fixture-only and does not prove native or hosted behavior. Complete a real hosted ready-candidate accept/reject cycle, migration/RLS/export/withdrawal/deletion and observability proof, plus physical-iPhone camera, permission, network-interruption, relaunch, accessibility, and barcode acquisition evidence. CAT-03 must supply an active reviewed catalog; H-07 must supply current professional privacy/security/legal/source decisions; and H-08 must supply the supported physical-iPhone evidence before CAT-04 can close.",
+      "nextAction": "The source candidate normalizes and checksum-gates supported UPC/EAN/GTIN identifiers, rejects malformed or unreviewed catalog projections, prevents stale search responses, requires a visible identity-and-recipient confirmation before correction reports, preserves manual recovery through lookup failures, makes Shelf saves idempotent, and removes raw scan/search identity from retained analytics. The encrypted account/health-bound offline retry lane requires an explicit user request, revalidates a reviewed result, and requires explicit acceptance before any Shelf mutation. The retained 45-scenario/18-bootstrap deterministic Expo-web packet predates the CAT-06 shared camera lifecycle and is now historical/stale for the current source; regenerate it after the CAT-06 source commit, still with nativeDeviceProof=false. Complete a real hosted ready-candidate accept/reject cycle, migration/RLS/export/withdrawal/deletion and observability proof, plus physical-iPhone camera, permission, network-interruption, relaunch, accessibility, and barcode acquisition evidence. CAT-03 must supply an active reviewed catalog; H-07 must supply current professional privacy/security/legal/source decisions; and H-08 must supply the supported physical-iPhone evidence before CAT-04 can close.",
       "evidenceRefs": [
         "docs/hugeToDo/CAT-04-SEARCH-BARCODE-RECOVERY-SOURCE-CHECKPOINT-2026-07-18.md",
         "supabase/migrations/20260718000059_catalog_scan_minimization.sql",
@@ -1155,7 +1155,7 @@
       "id": "CAT-05",
       "status": "in_progress",
       "blockedBy": ["CAT-04", "H-07", "H-08"],
-      "nextAction": "The governed deterministic Expo-web packet bound to source fec382eddd0e79f73b4c38b5de30d996928a8fc9 passes 15/15 scenarios and 4/4 explicit-consent bootstraps with zero browser failures, 139 non-summary artifacts, and 55 PNGs, but records nativeDeviceProof=false. Its 375 x 667 manual-handoff PNG omits Ingredients/prefill, and its multilingual fixture has no Arabic/Hebrew RTL sample. It proves no Apple Vision, Swift, camera, iOS-binary, physical-device, native privacy-cleanup, OCR accuracy/latency, native-accessibility, archive, App Review, legal, release, or revenue outcome; the macOS compile remains unverified/pending. Compile and inspect the exact candidate with the release Xcode toolchain, bind the signed staging archive, then pass the schema-v2 two-iPhone 25-label/50-run accuracy/RTL/network/cache-cleanup/accessibility contract and schema-v4 performance contract. Keep development and production disabled until the physical-device, archive, privacy/security/legal, and App Privacy reconciliation gates pass.",
+      "nextAction": "The retained deterministic Expo-web packet bound to source fec382eddd0e79f73b4c38b5de30d996928a8fc9 passed 15/15 scenarios and 4/4 explicit-consent bootstraps with nativeDeviceProof=false, but CAT-06 subsequently changed the Shelf OCR camera lifecycle and Progress shutter ownership. The packet is historical/stale for the current source and must be regenerated after the CAT-06 source commit; regeneration still cannot prove Apple Vision, Swift, camera, iOS-binary, physical-device, native privacy-cleanup, OCR accuracy/latency, native-accessibility, archive, App Review, legal, release, or revenue outcomes. Compile and inspect the exact candidate with the release Xcode toolchain, bind the signed staging archive, then pass the schema-v2 two-iPhone 25-label/50-run accuracy/RTL/network/cache-cleanup/accessibility contract and schema-v4 performance contract. Keep development and production disabled until the physical-device, archive, privacy/security/legal, and App Privacy reconciliation gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md",
         "test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/",
@@ -1172,10 +1172,27 @@
     },
     {
       "id": "CAT-06",
-      "status": "not_started",
-      "blockedBy": ["CAT-05"],
-      "nextAction": "Complete and capture acceptance evidence: Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior",
-      "evidenceRefs": []
+      "status": "in_progress",
+      "blockedBy": ["CAT-05", "H-08"],
+      "nextAction": "Accept a green committed source checkpoint, regenerate the now-stale CAT-04 and CAT-05 deterministic Expo-web packets against that source, then compile and inspect the exact signed staging candidate. Install that same archive on the supported-floor iOS 17.x and current flagship physical iPhones and complete the schema-v1 CAT-06 contract: all three camera routes, nine permission/Settings/lifecycle/mount/camera-operation/offline/interruption/accessibility/privacy suites per route/device, 54 required runs, final Info.plist purpose-string proof, network/cache cleanup reports, and named QA, privacy/security, and accessibility signoffs. PHASE5_CAMERA_PERMISSION_QA_PASS is ignored; CAT-06 stays in_progress until the artifact and strict Phase 5 packet pass.",
+      "evidenceRefs": [
+        "docs/hugeToDo/CAT-06-CAMERA-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-18.md",
+        "docs/phase-5/camera-lifecycle-evidence-runbook.md",
+        "docs/phase-5/camera-lifecycle-evidence.template.json",
+        "apps/mobile/src/features/native/camera/useCameraAccessLifecycle.ts",
+        "apps/mobile/src/features/native/camera/useCameraAccessLifecycle.test.ts",
+        "apps/mobile/src/app/shelf/scan.tsx",
+        "apps/mobile/src/app/shelf/ocr.tsx",
+        "apps/mobile/src/app/progress/capture.tsx",
+        "apps/mobile/src/features/photos/progressCaptureRouteBoundary.ts",
+        "apps/mobile/src/features/photos/progressCaptureRouteBoundary.test.ts",
+        "apps/mobile/app.base.json",
+        "apps/mobile/app.config.js",
+        "scripts/phase5/camera-lifecycle-evidence-contract.mjs",
+        "scripts/phase5/camera-lifecycle-evidence-smoke.mjs",
+        "scripts/phase5/check-camera-lifecycle-evidence.mjs",
+        "scripts/phase5/build-device-qa-packet.mjs"
+      ]
     },
     {
       "id": "CAT-07",

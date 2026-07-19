@@ -4,14 +4,22 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 
 > This is build-order document **#6** of the 15 named in docs/00 (§"Build order", item 6: _"Guided photo capture + slider comparison"_). It is the **Progress** tab (Today · Progress · Shelf · You) and the feature docs/00 mandates shipping **FIRST, with zero AI claims**, before any cloud "skin analysis." It _extends_ the `photos` table defined in docs/01 §3, and it _implements_ the on-device capture pipeline docs/00 §4 specifies (`react-native-vision-camera` + on-device face detection via Apple Vision / ML Kit in a frame processor). It renders the spec's **guided-capture screen** (live feed + alignment overlay + lighting check + the coaching line "Turn slightly left — almost there," spec p10) and the **Progress screen** (Compare / Timeline modes, the dated slider, the weekly film strip, "13 weeks · 26 photos · all on this phone," and the honest tagline _"Same light, same angle — guided capture keeps photos honestly comparable. No scores, no AI grades,"_ spec p11). It is the **privacy-as-trust thesis made tangible** ("photos that never leave your phone," spec welcome/paywall). Capture reminders feed doc #7; the deferred Phase-2 cloud analysis is doc #12. The longitudinal photo timeline is, per docs/01 §7, the **single highest-switching-cost dataset a user can accumulate** — the compounding retention moat.
 
-> **Current implementation boundary (2026-07-10):** the real-time and
+> **Current implementation boundary (2026-07-18):** the real-time and
 > auto-capture language below remains target specification, not a current launch
 > claim. The repo currently uses Expo Camera for a manual still, then runs
 > transient on-device static-photo ML Kit face framing/pose analysis and a
 > temporary downsampled luminance/balance check in review. The preview overlay
 > is static, analyzer failure stays explicitly unavailable, and thresholds are
-> provisional until physical-device calibration. See D-085 and the Phase 5 exit
-> review.
+> provisional until physical-device calibration. CAT-06 now saves dedicated
+> photo consent before the OS camera request; shares fresh permission,
+> foreground/focus, camera-ready, keyed-remount, and operation-lease handling
+> with the Shelf camera routes; and keeps the exact raw still owned by an outer
+> route boundary until cleanup or atomic review handoff. Navigation and gate
+> replacement cannot silently orphan a disposable still; failed cleanup remains
+> visibly retryable. These are source controls, not signed-archive or
+> physical-iPhone proof. The retained CAT-04/CAT-05 web packets predate this
+> source and are stale until regenerated. See D-085, the CAT-06 source
+> checkpoint, and the Phase 5 exit review.
 
 ---
 
@@ -133,6 +141,21 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 - **Low device storage** → warn before capture; photos are compressed (~150–400KB, docs/00).
 - **Front vs rear camera** → default front (selfie) for face; consistent across the series.
 
+**Current CAT-06 lifecycle, distinct from the target guidance above.** The
+implemented preview is Expo Camera with a manual shutter and static overlay.
+Dedicated photo consent must persist before the OS permission request. Preview
+admission then requires a focused route, active AppState, fresh granted
+permission, an open consent/cleanup gate, and camera-ready. An iOS
+permission-prompt `inactive` transition invalidates the request result and keeps
+the camera closed until the fresh foreground query. Mount failure and capture
+failure expose stable retry; retry uses a new keyed camera generation. A
+route-level owner blocks removal while shutter or exact raw-photo cleanup is
+pending, remains mounted outside entitlement/app-lock/storage/content gates,
+and either deletes the disposable still or transfers it atomically to review.
+This behavior still requires the exact signed-build CAT-06 two-iPhone/54-run
+permission, Settings, interruption, mount, offline, accessibility, network, and
+cleanup artifact.
+
 ### 4. The photo timeline & comparison — how it looks (the Progress tab, every detail)
 
 **The Progress screen (spec p11, the Progress tab).** Top to bottom:
@@ -223,7 +246,7 @@ Design tokens (docs/00 §8, D-005, docs/02 §7): Instrument Serif (the "Progress
 
 ### 10. Engineering / implementation notes
 
-- **Capture pipeline:** `react-native-vision-camera` + a **face-detection frame processor** (`react-native-vision-camera-face-detector`, ML Kit; or a custom Swift Vision plugin on iOS) for alignment/pose/quality; **on-device luminance/white-balance** from the frame buffer for the lighting check; **auto-capture** when all tolerances are met; the **ghost overlay** composited over the preview (docs/00 §4).
+- **Current capture pipeline:** Expo Camera manual still with a static preview overlay; the captured local file is analyzed in review using transient ML Kit face framing/pose and a temporary downsampled luminance/balance sample. There is no real-time frame-processor guidance or auto-capture in the current source. CAT-06 owns permission/foreground/mount/shutter/raw-file cleanup; the target `react-native-vision-camera` frame processor and ghost-driven auto-capture described above remain unimplemented.
 - **Comparison UI:** the **slider** as a Reanimated gesture with a Skia/clip-path reveal; the **film strip** as a virtualised list; the optional time-lapse as a frame sequence.
 - **Storage:** **on-device encrypted files** in the app sandbox (`local_uri`); compressed ~150–400KB each, ~50–200/user/year (docs/00). A future cloud implementation may use the private Supabase bucket on a Wi-Fi/charging queue, with Cloudflare R2/S3 behind signed URLs as a scale fallback, but current V1 exposes no backup path.
 - **Security:** client-side encryption; biometric app-lock (`expo-local-authentication`) on the gallery; owner-only RLS; signed URLs for any cloud photo.

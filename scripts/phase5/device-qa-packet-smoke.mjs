@@ -7,6 +7,8 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  rmdirSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -24,6 +26,12 @@ import {
   NATIVE_OCR_LABEL_CLASSES,
   NATIVE_OCR_REQUIRED_SOURCE_FILES,
 } from './native-ocr-evidence-contract.mjs';
+import {
+  CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES,
+  CAMERA_LIFECYCLE_REVIEWED_CURRENT_IOS_SOURCE_URL,
+  CAMERA_LIFECYCLE_REVIEWED_CURRENT_PUBLIC_IOS_VERSION,
+  createCameraLifecycleEvidenceTemplate,
+} from './camera-lifecycle-evidence-contract.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const sourceRoot = resolve(scriptDir, '..', '..');
@@ -532,6 +540,331 @@ function writeNativeOcrEvidenceFixture() {
 
 const nativeOcrEvidencePath = writeNativeOcrEvidenceFixture();
 
+const cameraEvidenceRelativeRoot = `docs/phase-5/evidence/camera-lifecycle/device-packet-smoke-${process.pid}`;
+
+function cameraSourceKindsForScenario(scenarioId) {
+  if (scenarioId === 'offline') {
+    return ['screen_recording', 'structured_device_log', 'network_trace'];
+  }
+  if (scenarioId === 'accessibility') return ['accessibility_recording'];
+  if (scenarioId === 'privacy') {
+    return ['screen_recording', 'structured_device_log', 'network_trace', 'filesystem_inspection'];
+  }
+  return ['screen_recording', 'structured_device_log'];
+}
+
+function writeCameraLifecycleEvidenceFixture() {
+  const evidence = createCameraLifecycleEvidenceTemplate();
+  const testStartedAt = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+  const completedAt = new Date(Date.now() - 90 * 60 * 1000).toISOString();
+  const installedAt = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString();
+  evidence.testStartedAt = testStartedAt;
+  evidence.completedAt = completedAt;
+  evidence.sourceGitSha = currentGitSha();
+  evidence.sourceHashes = Object.fromEntries(
+    CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES.map((path) => [
+      path,
+      sha256(readFileSync(resolve(root, path))),
+    ]),
+  );
+  Object.assign(evidence.build, {
+    easIosBuildId: iosBuildId,
+    profile: 'staging',
+    appBundleIdentifier,
+    appVersion: '1.0.0',
+    iosBuildNumber: '42',
+    displayName: 'RoutineKind Staging',
+    archiveSha256: '9'.repeat(64),
+    xcodeVersion: 'Xcode 26.4 (17E202)',
+    iosSdkVersion: 'iOS 26.4',
+  });
+  evidence.signedArchive = {
+    applicationIdentifier: `${appleTeamId}.${appBundleIdentifier}`,
+    bundleIdentifier: appBundleIdentifier,
+    teamIdentifier: appleTeamId,
+    provisioningProfileUuid: '3F2504E0-4F89-41D3-9A0C-0305E82C3301',
+    signingCertificateSha256: '8'.repeat(64),
+    executableSha256: '7'.repeat(64),
+    codeSignatureValid: true,
+    finalInfoPlist: {
+      bundleIdentifier: appBundleIdentifier,
+      displayName: 'RoutineKind Staging',
+      appVersion: '1.0.0',
+      iosBuildNumber: '42',
+      cameraUsageDescription:
+        'Allow RoutineKind Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.',
+      cameraUsageDescriptionOccurrenceCount: 1,
+      unresolvedBuildVariablesAbsent: true,
+    },
+  };
+  evidence.devicePolicy = {
+    reviewedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+    reviewedBy: 'Jordan Lee',
+    minimumIosVersion: '17.0',
+    currentPublicIosVersion: CAMERA_LIFECYCLE_REVIEWED_CURRENT_PUBLIC_IOS_VERSION,
+    currentIosReleaseSourceUrl: CAMERA_LIFECYCLE_REVIEWED_CURRENT_IOS_SOURCE_URL,
+    supportedFloorDeviceId: 'ios-floor-device',
+    currentFlagshipDeviceId: 'ios-current-device',
+  };
+  evidence.devices = [
+    {
+      id: 'ios-floor-device',
+      role: 'supported_floor_class',
+      physical: true,
+      model: 'iPhone SE 3rd generation',
+      hardwareModelIdentifier: 'iPhone14,6',
+      osVersion: 'iOS 17.7',
+      osBuild: '21H221',
+      identifierSha256: '6'.repeat(64),
+      viewportWidthPoints: 375,
+      freshInstall: true,
+      installedBundleIdentifier: appBundleIdentifier,
+      installedAppVersion: '1.0.0',
+      installedIosBuildNumber: '42',
+      installedArchiveSha256: evidence.build.archiveSha256,
+      installedAt,
+      installationMethod: 'eas_internal_distribution',
+      installationReceiptArtifactId: 'install_receipt-ios-floor-device',
+      inAppIdentityVerified: true,
+    },
+    {
+      id: 'ios-current-device',
+      role: 'current_flagship',
+      physical: true,
+      model: 'iPhone 17 Pro',
+      hardwareModelIdentifier: 'iPhone18,1',
+      osVersion: CAMERA_LIFECYCLE_REVIEWED_CURRENT_PUBLIC_IOS_VERSION,
+      osBuild: '23F5050',
+      identifierSha256: '5'.repeat(64),
+      viewportWidthPoints: 393,
+      freshInstall: true,
+      installedBundleIdentifier: appBundleIdentifier,
+      installedAppVersion: '1.0.0',
+      installedIosBuildNumber: '42',
+      installedArchiveSha256: evidence.build.archiveSha256,
+      installedAt,
+      installationMethod: 'eas_internal_distribution',
+      installationReceiptArtifactId: 'install_receipt-ios-current-device',
+      inAppIdentityVerified: true,
+    },
+  ];
+  evidence.runs = createCameraLifecycleEvidenceTemplate().runs.map((run, index) => ({
+    ...run,
+    startedAt: new Date(Date.now() - 3 * 60 * 60 * 1000 + index * 60_000).toISOString(),
+    completedAt: new Date(Date.now() - 3 * 60 * 60 * 1000 + index * 60_000 + 30_000).toISOString(),
+    result: 'pass',
+    observations: Object.fromEntries(Object.keys(run.observations).map((key) => [key, true])),
+    notes: null,
+  }));
+
+  const binding = {
+    sourceGitSha: evidence.sourceGitSha,
+    easIosBuildId: iosBuildId,
+    archiveSha256: evidence.build.archiveSha256,
+    appBundleIdentifier,
+    appVersion: '1.0.0',
+    iosBuildNumber: '42',
+  };
+  const cameraReport = (reportType, claims) => ({
+    schemaVersion: 1,
+    reportType,
+    capturedAt,
+    binding,
+    claims,
+  });
+  const privacy = () => ({
+    classification: 'synthetic_or_redacted_non_sensitive',
+    containsUserPhotoPixels: false,
+    containsLabelPhotoPixels: false,
+    containsRawBarcode: false,
+    containsRawTranscript: false,
+    containsRawDeviceIdentifier: false,
+    containsAbsoluteLocalPath: false,
+    reviewedBy: 'Alex Morgan',
+    reviewedAt: capturedAt,
+  });
+  const deviceIds = evidence.devices.map(({ id }) => id).sort();
+  const routeIds = ['progress_capture', 'shelf_ocr', 'shelf_scan'];
+  const offlineRunIds = evidence.runs
+    .filter(({ scenarioId }) => scenarioId === 'offline')
+    .map(({ id }) => id)
+    .sort();
+  const privacyRunIds = evidence.runs
+    .filter(({ scenarioId }) => scenarioId === 'privacy')
+    .map(({ id }) => id)
+    .sort();
+  const accessibilityRunIds = evidence.runs
+    .filter(({ scenarioId }) => scenarioId === 'accessibility')
+    .map(({ id }) => id)
+    .sort();
+  const artifactIds = createCameraLifecycleEvidenceTemplate()
+    .artifacts.map(({ id }) => id)
+    .sort();
+  const claimsById = {
+    archive_identity_report: {
+      applicationIdentifier: evidence.signedArchive.applicationIdentifier,
+      bundleIdentifier: appBundleIdentifier,
+      teamIdentifier: appleTeamId,
+      provisioningProfileUuid: evidence.signedArchive.provisioningProfileUuid,
+      signingCertificateSha256: evidence.signedArchive.signingCertificateSha256,
+      executableSha256: evidence.signedArchive.executableSha256,
+      codeSignatureVerifyExitCode: 0,
+      embeddedProvisioningProfilePresent: true,
+      extractedFromSignedArchive: true,
+    },
+    final_info_plist_report: {
+      extractedFromSignedArchive: true,
+      infoPlistRelativePath:
+        'RoutineKind.xcarchive/Products/Applications/RoutineKind.app/Info.plist',
+      finalInfoPlist: evidence.signedArchive.finalInfoPlist,
+    },
+    device_inventory_report: {
+      devices: evidence.devices,
+      allPhysical: true,
+      installedCandidateMatched: true,
+    },
+    network_privacy_report: {
+      captureTool: { name: 'Proxyman', version: '5.17.0', mode: 'physical_device_proxy' },
+      captureStartedAt: testStartedAt,
+      captureEndedAt: completedAt,
+      deviceIds,
+      routeIds,
+      offlineRunIds,
+      zeroBarcodeFrameUploads: true,
+      zeroLabelPhotoUploads: true,
+      zeroProgressPhotoUploads: true,
+      zeroTranscriptUploads: true,
+      zeroUnexpectedCameraNetworkRequests: true,
+      noRawBarcodeOrSensitiveCameraLogs: true,
+    },
+    privacy_cleanup_report: {
+      artifactIds,
+      deviceIds,
+      privacyRunIds,
+      managedLabelPhotoCleanupPass: true,
+      expoCameraStartupCleanupPass: true,
+      imageCacheDigestAbsencePass: true,
+      progressRawCaptureCleanupPass: true,
+      leaveRetakeSaveCleanupPass: true,
+      lateCaptureCleanupPass: true,
+      cleanupFailureRetryPass: true,
+      noUserPhotoBytesCommittedToGit: true,
+      allArtifactsReviewed: true,
+      allArtifactsSyntheticOrRedacted: true,
+      noUserPhotoPixels: true,
+      noLabelPhotoPixels: true,
+      noRawBarcodes: true,
+      noRawTranscripts: true,
+      noRawDeviceIdentifiers: true,
+      noAbsoluteLocalPaths: true,
+    },
+    accessibility_report: {
+      deviceIds,
+      routeIds,
+      accessibilityRunIds,
+      voiceOverPass: true,
+      dynamicTypeTwoHundredPercentPass: true,
+      minimumFortyFourPointTargetsPass: true,
+      reduceMotionPass: true,
+      noColorOnlyPass: true,
+    },
+    scenario_index: {
+      runIds: evidence.runs.map(({ id }) => id).sort(),
+      proofArtifactIds: evidence.runs.flatMap(({ proofArtifactIds }) => proofArtifactIds).sort(),
+      noOmittedOrDuplicateRuns: true,
+    },
+  };
+
+  const attach = (id, attached) => ({
+    id,
+    ...attached,
+    bytes: readFileSync(resolve(root, attached.path)).length,
+    privacy: privacy(),
+  });
+  evidence.artifacts = [
+    attach(
+      'eas_build_log',
+      textArtifact(
+        `${cameraEvidenceRelativeRoot}/eas-build-log.txt`,
+        [
+          'ROUTINEKIND_CAMERA_BUILD_BINDING_V1',
+          `sourceGitSha=${evidence.sourceGitSha}`,
+          `easIosBuildId=${iosBuildId}`,
+          'profile=staging',
+          'resolvedBuildImage=macos-tahoe-26.4-xcode-26.4',
+          'easCliVersion=21.0.1',
+          'xcodeVersion=Xcode 26.4 (17E202)',
+          'iosSdkVersion=iOS 26.4',
+          `appBundleIdentifier=${appBundleIdentifier}`,
+          'appVersion=1.0.0',
+          'iosBuildNumber=42',
+          `archiveSha256=${evidence.build.archiveSha256}`,
+        ].join('\n'),
+      ),
+    ),
+    ...Object.entries(claimsById).map(([id, claims]) =>
+      attach(
+        id,
+        jsonArtifact(`${cameraEvidenceRelativeRoot}/${id}.json`, cameraReport(id, claims)),
+      ),
+    ),
+    ...evidence.devices.map((device) => {
+      const id = `install_receipt-${device.id}`;
+      return attach(
+        id,
+        jsonArtifact(
+          `${cameraEvidenceRelativeRoot}/${id}.json`,
+          cameraReport('installation_receipt', {
+            artifactId: id,
+            deviceId: device.id,
+            deviceIdentifierSha256: device.identifierSha256,
+            installedAt: device.installedAt,
+            installationMethod: device.installationMethod,
+            archiveSha256: evidence.build.archiveSha256,
+            appBundleIdentifier,
+            appVersion: '1.0.0',
+            iosBuildNumber: '42',
+            inAppIdentityVerified: true,
+          }),
+        ),
+      );
+    }),
+    ...evidence.runs.map((run) => {
+      const id = run.proofArtifactIds[0];
+      return attach(
+        id,
+        jsonArtifact(
+          `${cameraEvidenceRelativeRoot}/${id}.json`,
+          cameraReport('camera_scenario_proof', {
+            artifactId: id,
+            run,
+            sourceEvidence: cameraSourceKindsForScenario(run.scenarioId).map((kind) => ({
+              kind,
+              sha256: sha256(`access-controlled-camera-source-${id}-${kind}`),
+              reference: `cat06/${run.deviceId}/${run.route}/${run.scenarioId}/${kind}`,
+              reviewedBy: 'Taylor Rivera',
+              reviewedAt: capturedAt,
+            })),
+          }),
+        ),
+      );
+    }),
+  ];
+  evidence.knownLimitations = [];
+  evidence.signoff = {
+    decision: 'pass',
+    qaSignedOffBy: 'Morgan Patel',
+    privacySecuritySignedOffBy: 'Casey Nguyen',
+    accessibilitySignedOffBy: 'Riley Thompson',
+    signedAt,
+  };
+  const relativePath = `${cameraEvidenceRelativeRoot}/evidence.json`;
+  writeFileSync(resolve(root, relativePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  return relativePath;
+}
+
+const cameraLifecycleEvidencePath = writeCameraLifecycleEvidenceFixture();
+
 const passthroughKeys = [
   'ComSpec',
   'HOME',
@@ -556,7 +889,7 @@ const validEvidence = {
   PHASE5_IOS_BUILD_PROFILE: 'staging',
   PHASE5_ANDROID_BUILD_ID:
     'https://expo.dev/accounts/routinekind/projects/mobile/builds/7a4d74ae-2acd-4af5-931f-b768565bcd64',
-  PHASE5_IOS_DEVICE: 'iPhone 15 Pro / iOS 18.5',
+  PHASE5_IOS_DEVICE: 'iPhone 17 Pro / iOS 26.5.2',
   PHASE5_ANDROID_DEVICE: 'Pixel 8 / Android 15',
   PHASE5_QA_SIGNOFF: 'true',
   PHASE5_SIGNED_OFF_BY: 'Tas Mohammed',
@@ -564,6 +897,7 @@ const validEvidence = {
   APPLE_TEAM_ID: appleTeamId,
   PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH: widgetEvidencePath,
   PHASE5_NATIVE_OCR_EVIDENCE_PATH: nativeOcrEvidencePath,
+  PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH: cameraLifecycleEvidencePath,
   PHASE5_DEVICE_QA_PASS: 'true',
   PHASE5_INSTALL_QA_PASS: 'true',
   PHASE5_CAMERA_PERMISSION_QA_PASS: 'true',
@@ -618,6 +952,35 @@ function runWithDirtyGeneratedEvidence(extraEnv, strict = true) {
     return run(extraEnv, strict);
   } finally {
     writeFileSync(generatedPath, original);
+  }
+}
+
+function runWithCameraEvidenceJunctionEscape() {
+  const outside = mkdtempSync(join(tmpdir(), 'routinekind-camera-packet-outside-'));
+  const linkRelative = `docs/phase-5/evidence/camera-lifecycle/packet-escape-${process.pid}`;
+  const link = resolve(root, linkRelative);
+  copyFileSync(resolve(root, cameraLifecycleEvidencePath), resolve(outside, 'evidence.json'));
+  let created = false;
+  try {
+    symlinkSync(outside, link, process.platform === 'win32' ? 'junction' : 'dir');
+    created = true;
+    return run({ PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH: `${linkRelative}/evidence.json` });
+  } catch (error) {
+    return {
+      indirectionUnsupported: ['EPERM', 'EACCES', 'ENOTSUP', 'UNKNOWN'].includes(error?.code),
+      status: null,
+      stdout: '',
+      stderr: '',
+    };
+  } finally {
+    if (created) {
+      try {
+        rmdirSync(link);
+      } catch {
+        // The case assertion covers a supported indirection that was not rejected.
+      }
+    }
+    rmSync(outside, { recursive: true, force: true });
   }
 }
 
@@ -717,12 +1080,78 @@ const cases = [
     },
   },
   {
+    name: 'strict Phase 5 QA packet rejects Boolean-only CAT-06 camera clearance',
+    result: run({
+      PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH: '',
+      PHASE5_CAMERA_PERMISSION_QA_PASS: 'true',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH; camera QA Booleans cannot substitute/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet accepts validated CAT-06 camera lifecycle evidence',
+    result: run({}),
+    expect(result) {
+      if (result.status !== 0 || /^FAIL /m.test(output(result))) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.cameraLifecycleEvidence.required === true &&
+        packet.cameraLifecycleEvidence.status === 'pass' &&
+        packet.cameraLifecycleEvidence.summary.devices === 2 &&
+        packet.cameraLifecycleEvidence.summary.routes === 3 &&
+        packet.cameraLifecycleEvidence.summary.scenarioDefinitions === 27 &&
+        packet.cameraLifecycleEvidence.summary.runs === 54 &&
+        packet.cameraLifecycleEvidence.summary.requiredRuns === 54 &&
+        packet.cameraLifecycleEvidence.summary.proofArtifacts === 54 &&
+        packet.cameraLifecycleEvidence.summary.artifacts === 64 &&
+        packet.cameraLifecycleEvidence.artifacts.length === 64
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects CAT-06 evidence through a junction escape',
+    result: runWithCameraEvidenceJunctionEscape(),
+    expect(result) {
+      return (
+        result.indirectionUnsupported === true ||
+        (result.status === 1 &&
+          /Camera lifecycle evidence file is missing, oversized, indirect, unreadable, or outside/.test(
+            output(result),
+          ))
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects and does not echo a secret-bearing EAS URL',
+    result: run({
+      PHASE5_IOS_BUILD_ID: `https://expo.dev/accounts/routinekind/projects/mobile/builds/${iosBuildId}?token=packet-secret-value`,
+    }),
+    expect(result) {
+      const text = output(result);
+      const packetText = existsSync(join(result.outDir, 'device-qa-packet.json'))
+        ? readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8')
+        : '';
+      return (
+        result.status === 1 &&
+        /strict expo\.dev build URL without credentials, port, query, or fragment/.test(text) &&
+        !text.includes('packet-secret-value') &&
+        !packetText.includes('packet-secret-value')
+      );
+    },
+  },
+  {
     name: 'strict Phase 5 QA packet rejects placeholder iOS build evidence',
     result: run({ PHASE5_IOS_BUILD_ID: 'pending-ios-build' }),
     expect(result) {
       return (
         result.status === 1 &&
-        /PHASE5_IOS_BUILD_ID must be a real EAS build UUID or expo\.dev build URL/.test(
+        /PHASE5_IOS_BUILD_ID must be a canonical EAS UUID or strict expo\.dev build URL/.test(
           output(result),
         )
       );
@@ -829,6 +1258,10 @@ const cases = [
         packet.nativeOcr.evidence.summary.runs === 50 &&
         packet.nativeOcr.evidence.artifacts.length === 7 &&
         /^[0-9a-f]{64}$/i.test(packet.nativeOcr.evidence.sha256) &&
+        packet.cameraLifecycleEvidence.status === 'pass' &&
+        packet.cameraLifecycleEvidence.summary.runs === 54 &&
+        packet.cameraLifecycleEvidence.summary.artifacts === 64 &&
+        /^[0-9a-f]{64}$/i.test(packet.cameraLifecycleEvidence.sha256) &&
         /^[0-9a-f]{40}$/i.test(packet.gitSha) &&
         typeof packet.gitStatus === 'string' &&
         Array.isArray(packet.warnings) &&
@@ -920,6 +1353,7 @@ const cases = [
           'apps/mobile/src/features/widgets/controllerCore.ts',
           'apps/mobile/src/features/widgets/controllerCore.test.ts',
           ...NATIVE_OCR_REQUIRED_SOURCE_FILES,
+          ...CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES,
           'scripts/cat05/native-label-ocr-source-contract.test.mjs',
           'scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift',
           'scripts/phase5/expo-widgets-56.0.23/AppIntent.swift',
@@ -961,7 +1395,7 @@ const cases = [
       return (
         packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
         packet.blockers.includes(
-          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle/OCR evidence; do not use it as final native-device evidence.',
+          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated widget/OCR/camera evidence; do not use it as final native-device evidence.',
         )
       );
     },
@@ -975,7 +1409,7 @@ const cases = [
       return (
         packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
         packet.warnings.includes(
-          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle/OCR evidence; do not use it as final native-device evidence.',
+          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated widget/OCR/camera evidence; do not use it as final native-device evidence.',
         )
       );
     },

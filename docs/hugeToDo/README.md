@@ -49,6 +49,8 @@ Start here:
 - [CAT-04 Search, Barcode, and Recovery Source Checkpoint](./CAT-04-SEARCH-BARCODE-RECOVERY-SOURCE-CHECKPOINT-2026-07-18.md)
 - [CAT-04 Scan/Lookup Minimization Migration](../../supabase/migrations/20260718000059_catalog_scan_minimization.sql)
 - [CAT-05 Native OCR Source Checkpoint](./CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md)
+- [CAT-06 Camera Lifecycle Source Checkpoint](./CAT-06-CAMERA-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-18.md)
+- [CAT-06 Camera Lifecycle Evidence Runbook](../phase-5/camera-lifecycle-evidence-runbook.md)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -142,14 +144,15 @@ retry. Migration `0059` purges and seals the legacy raw `shelf_scans` relation
 and enforces outcome-only `catalog_lookup_events`; raw search terms, barcodes,
 matched-product IDs, source keys, and quality grades cannot be retained in that
 analytics table. Offline retry is an explicit encrypted,
-account/health-consent-bound, seven-day device queue whose reviewed result requires visible user confirmation
-before any Shelf change. Apple, FTC, Washington, Canadian, Quebec, and
-California primary-source analysis is recorded in the CAT-04 checkpoint. Local
-source checks pass 15 focused mobile files / 200 tests, 16/16 runner contracts,
+account/health-consent-bound, seven-day device queue whose reviewed result
+requires visible user confirmation before any Shelf change. Apple, FTC,
+Washington, Canadian, Quebec, and California primary-source analysis is
+recorded in the CAT-04 checkpoint. At that checkpoint, local source checks
+passed 15 focused mobile files / 200 tests, 16/16 runner contracts,
 Phase 4 source-policy/import/QA/promotion/serving-Edge lanes at 27/27, 20/20,
 17/17, 23/23, and 23/23, the 35/35 focused report/export/health Deno lane, the
 data-rights/policy/RLS/security code gates, and the full 289-file / 3,361-test
-mobile baseline. Governed CAT-04 Expo-web evidence passes all 45 scenario
+mobile baseline. The governed CAT-04 Expo-web evidence passed all 45 scenario
 executions and all 18 consent bootstraps at 375 x 667, 390 x 844, and 430 x 932
 with zero browser failures, 365 tracked files, and 144 screenshots. It remains
 fixture-only evidence with `nativeDeviceProof=false`. A real hosted ready-
@@ -158,6 +161,12 @@ evidence, active-catalog proof, physical-iPhone camera/accessibility matrix,
 App Privacy reconciliation, and professional privacy/security/legal review
 remain open; CAT-04 is not launch-clear.
 
+The retained CAT-04 deterministic web packet is bound to a source commit that
+predates the CAT-06 shared camera lifecycle. It is historical/stale for the
+current camera source and must be regenerated after the CAT-06 source
+checkpoint is accepted. Its prior results do not become native evidence, and a
+fresh Expo-web packet will still record `nativeDeviceProof=false`.
+
 CAT-05 is now a `source candidate / launch-blocked` checkpoint. A strict local
 Expo module pins Apple Vision text recognition revision 3, `.accurate`
 recognition, automatic language detection, bounded request/response and image
@@ -165,8 +174,8 @@ inputs, cancellation/timeout handling, editable confidence-aware Unicode/RTL
 review, a user-edit fence, manual recovery, minimized categorical/coarse
 analytics, and bounded managed plus Expo Camera startup cleanup. Only the
 internal EAS `staging` profile enables the candidate; `development` and
-`production` remain disabled. The governed deterministic Expo-web packet bound
-to source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` passes 15/15 UI scenario
+`production` remain disabled. The retained deterministic Expo-web packet bound
+to source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` passed 15/15 UI scenario
 executions across the three supported viewports and 4/4 explicit-consent
 bootstraps with zero browser failures. It retains 139 non-summary artifacts,
 including 55 PNGs, at
@@ -183,6 +192,34 @@ archive linkage, two physical iPhones, the governed 25-label/50-run matrix,
 zero-network and cache-digest proof, VoiceOver/Dynamic Type, performance,
 corpus rights, and qualified privacy/security/legal review remain open. CAT-05
 remains `in_progress` and launch-blocked; no commercial outcome is implied.
+
+The retained CAT-05 packet is also stale for the current camera source because
+CAT-06 changed the Shelf OCR permission/preview lifecycle and Progress shutter
+ownership after its recorded source binding. Regeneration can restore only its
+deterministic web UI provenance. Apple Vision/Swift compilation, signed-archive
+linkage, native cleanup, OCR accuracy/latency, accessibility, and
+physical-iPhone behavior remain separate CAT-05 gates.
+
+CAT-06 is now an `in_progress` source candidate, blocked by `CAT-05` and
+`H-08`. Shelf Scan, Shelf OCR, and Progress Capture share one foreground/focus,
+permission-verification, camera-ready, keyed-remount, and generation-bound
+operation lifecycle. Progress keeps first-use photo consent ahead of the OS
+permission request and owns any disposable raw still outside entitlement,
+app-lock, storage, and content gates until exact cleanup or atomic review
+handoff succeeds. Dynamic native config derives one exact camera purpose
+string into both iOS configuration locations and rejects environment/config
+drift.
+
+The legacy camera-permission QA Boolean cannot clear CAT-06. The schema-v1
+artifact contract binds the exact committed source, EAS build, inspected
+signed archive and final `Info.plist`, two supported physical iPhones, all
+three camera routes, nine scenario suites per route/device, 54 required runs,
+hash-verified proofs, network/cache/privacy reports, and named QA,
+privacy/security, and accessibility signoffs. No completed artifact exists.
+Deterministic Expo-web UI testing remains useful but cannot prove the system
+permission sheet, Settings return, CameraView lifecycle, native interruption,
+temporary-file cleanup, observed traffic, VoiceOver, archive behavior, Apple
+acceptance, legal compliance, or revenue.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. The fresh-only source procedure now covers all 58 migrations through

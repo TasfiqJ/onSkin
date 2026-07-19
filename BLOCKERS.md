@@ -170,8 +170,9 @@ Phase 5 native-device packet has been refreshed for the current progress
 capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
-confirmation instead of requiring a native alert. The current integrated source checkpoint
-on 2026-07-18 passes root typecheck, lint, and 299 mobile test files / 3486 tests.
+confirmation instead of requiring a native alert. At the latest verified
+pre-CAT-07 integrated CAT-06 source checkpoint on 2026-07-18, mobile typecheck,
+changed-file ESLint, and 301 mobile test files / 3,529 tests passed.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -1288,11 +1289,42 @@ been removed. Native OCR has a staging-only Apple Vision source candidate while
 development and production remain disabled; real-time preview analysis is not
 implemented, and none of these paths is device-certified yet.
 
+CAT-06 now has a shared source lifecycle for Shelf Scan, Shelf OCR, and
+Progress Capture. It re-verifies permission after iOS AppState transitions,
+invalidates the explicit request result when the permission prompt drives iOS
+`inactive`, keeps the camera closed until a fresh foreground query, admits
+previews only while focused/foreground/business-gated, requires camera-ready,
+uses fresh keyed generations after mount failure, and invalidates queued native
+callbacks through operation leases. Progress saves
+first-use photo consent before requesting OS access and keeps an exact raw-photo
+cleanup owner outside entitlement, app-lock, storage, and content gates until
+cleanup or atomic review handoff succeeds. Native config derives one exact
+purpose string into both iOS locations and rejects drift.
+
+These are source controls only. The retained CAT-04 and CAT-05 deterministic
+web packets predate the shared lifecycle and are stale until regenerated; web
+regeneration still cannot prove native behavior. No completed schema-v1 CAT-06
+artifact, signed-archive `Info.plist` inspection, or two-physical-iPhone run
+exists. `PHASE5_CAMERA_PERMISSION_QA_PASS` is ignored.
+
 Exit criteria:
 
 - custom dev build exists;
-- camera permission, barcode, OCR, and progress photo capture work on supported
-  physical iPhones;
+- the exact committed staging or production source, EAS build, signed archive,
+  executable/signing identity, and final `NSCameraUsageDescription` are bound
+  and inspected;
+- `PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH` passes the schema-v1 contract across
+  Shelf Scan, Shelf OCR, and Progress Capture on the supported-floor iOS 17.x
+  and current flagship physical iPhones: nine scenario suites per route/device,
+  54 runs at the two-phone floor, unique hash-verified proofs, network/cache/
+  cleanup/accessibility reports, and named QA, privacy/security, and
+  accessibility signoffs;
+- camera permission, permanent denial/Settings recovery, foreground/focus and
+  interruption recovery, mount/ready failure, retry, offline behavior,
+  barcode, OCR, and Progress photo capture work on those exact devices;
+- Progress Back/Close/gate replacement drains an in-flight shutter and exact
+  raw-file cleanup; forced cleanup failure remains visibly retryable and cannot
+  duplicate encrypted storage;
 - post-capture one/no/multiple-face, pose/alignment, luminance, uneven-light,
   timeout, and unavailable states pass a calibrated physical-device matrix;
 - launch copy describes the current post-capture check, not real-time guidance
@@ -1538,11 +1570,23 @@ Status: `needs-device-verification`
 Phase 5 native code exists in repo, but no public or paid beta claim can rely on
 it until an installable iOS build passes the physical-device matrix.
 
+The generated packet now requires a validated CAT-06 camera-lifecycle artifact
+rather than a permission Boolean. At the two-phone floor, that artifact covers
+three camera routes by nine scenario suites on each phone (54 runs), the final
+signed-archive purpose string, source hashes, install receipts, network/privacy
+and cleanup reports, accessibility, and three named signoffs. The artifact has
+not been supplied. Current deterministic Expo-web camera evidence is
+non-native; the CAT-04/CAT-05 packets are also stale after the CAT-06 source
+changes until regenerated.
+
 Exit criteria:
 
 - EAS development and staging iOS builds have recorded build IDs;
 - supported physical iPhones install and run the app across the declared iOS
   floor/current-device matrix;
+- the exact build passes `phase5:camera-lifecycle-evidence:strict` and the same
+  evidence is accepted by `phase5:qa-packet:strict`; Boolean-only permission QA
+  is rejected;
 - barcode, label capture, progress photo, encrypted save/restart/delete,
   notifications, share sheet, RevenueCat native smoke, Sentry native smoke, and
   Supabase catalog calls pass;
@@ -1562,10 +1606,12 @@ profile enables the candidate for evidence collection; development and
 production remain disabled. See
 `docs/hugeToDo/CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md`.
 
-The governed `CAT05 native OCR review Expo-web pass` packet bound to source
-`fec382eddd0e79f73b4c38b5de30d996928a8fc9` passes 15/15 scenarios and 4/4
-explicit-consent bootstraps with zero browser failures. Its 139 non-summary
-artifacts, including 55 PNGs, are retained at
+The retained `CAT05 native OCR review Expo-web pass` packet bound to source
+`fec382eddd0e79f73b4c38b5de30d996928a8fc9` passed 15/15 scenarios and 4/4
+explicit-consent bootstraps with zero browser failures. CAT-06 subsequently
+changed the Shelf OCR camera lifecycle and Progress shutter ownership, so this
+packet is historical/stale until regenerated against the accepted source. Its
+139 non-summary artifacts, including 55 PNGs, are retained at
 `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. It records
 `nativeDeviceProof=false`. The 375 x 667 manual-handoff PNG omits the
 Ingredients field/prefill, and the fixture has multilingual Unicode but no

@@ -26,6 +26,16 @@ import {
   normalizeNativeOcrEvidencePath,
   validateNativeOcrEvidence,
 } from './native-ocr-evidence-contract.mjs';
+import {
+  CAMERA_LIFECYCLE_EVIDENCE_ROOT,
+  CAMERA_LIFECYCLE_MANIFEST_BYTES_MAX,
+  CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES,
+  CAMERA_LIFECYCLE_SCENARIOS,
+  normalizeCameraLifecycleEasBuildId,
+  normalizeCameraLifecycleEvidencePath,
+  readCameraLifecycleContainedFile,
+  validateCameraLifecycleEvidence,
+} from './camera-lifecycle-evidence-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -221,6 +231,12 @@ const requiredFiles = Array.from(
     'scripts/phase5/native-ocr-evidence-smoke.mjs',
     'docs/phase-5/native-ocr-evidence-runbook.md',
     'docs/phase-5/native-ocr-evidence.template.json',
+    ...CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES,
+    'scripts/phase5/camera-lifecycle-evidence-contract.mjs',
+    'scripts/phase5/check-camera-lifecycle-evidence.mjs',
+    'scripts/phase5/camera-lifecycle-evidence-smoke.mjs',
+    'docs/phase-5/camera-lifecycle-evidence-runbook.md',
+    'docs/phase-5/camera-lifecycle-evidence.template.json',
   ]),
 );
 
@@ -274,10 +290,6 @@ const scenarios = [
 const requiredQaEvidenceFlags = [
   ['PHASE5_DEVICE_QA_PASS', 'overall native-device QA matrix'],
   ['PHASE5_INSTALL_QA_PASS', 'fresh install, update, reinstall, and dev/staging variants'],
-  [
-    'PHASE5_CAMERA_PERMISSION_QA_PASS',
-    'native camera permission denial, retry, and settings recovery',
-  ],
   ['PHASE5_BARCODE_QA_PASS', 'physical-device barcode scan and checksum matrix'],
   ['PHASE5_LABEL_CAPTURE_QA_PASS', 'real label capture, editable text, and manual fallback'],
   ['PHASE5_PROGRESS_PHOTO_QA_PASS', 'progress still capture, retake, review, and recovery'],
@@ -369,7 +381,7 @@ function readJson(path) {
   return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 }
 
-function nativeOcrSourceLineage(sourceGitSha, currentGitSha) {
+function evidenceSourceLineage(sourceGitSha, currentGitSha) {
   if (
     !/^[0-9a-f]{40}$/i.test(String(sourceGitSha ?? '')) ||
     !/^[0-9a-f]{40}$/i.test(String(currentGitSha ?? ''))
@@ -398,17 +410,6 @@ function nativeOcrSourceLineage(sourceGitSha, currentGitSha) {
 
 function gitStatusExcludingGeneratedPacket(validatedEvidencePaths = []) {
   return gitStatusExcludingGeneratedEvidence([...packetOutputPaths, ...validatedEvidencePaths]);
-}
-
-function looksLikeEasBuildEvidence(value) {
-  const trimmed = String(value ?? '').trim();
-  if (placeholderEnvValue(trimmed) || /\b(local|simulator|emulator|fake|mock)\b/i.test(trimmed)) {
-    return false;
-  }
-  const easBuildId = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const easBuildUrl =
-    /^https:\/\/expo\.dev\/accounts\/[^/\s]+\/projects\/[^/\s]+\/builds\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?:[?#].*)?$/i;
-  return easBuildId.test(trimmed) || easBuildUrl.test(trimmed);
 }
 
 function looksLikePhysicalIosDevice(value) {
@@ -456,10 +457,14 @@ const nativeOcrEnabled =
     ? evidenceFlagEnabled(selectedBuildProfile.env?.EXPO_PUBLIC_NATIVE_OCR_ENABLED)
     : nativeOcrEnabledInAnyBuild);
 
+const rawIosBuildId = envValue('PHASE5_IOS_BUILD_ID');
+const rawAndroidBuildId = androidReleaseRequired ? envValue('PHASE5_ANDROID_BUILD_ID') : '';
 const buildEvidence = {
-  iosBuildId: envValue('PHASE5_IOS_BUILD_ID'),
+  iosBuildId: normalizeCameraLifecycleEasBuildId(rawIosBuildId),
   iosBuildProfile,
-  androidBuildId: androidReleaseRequired ? envValue('PHASE5_ANDROID_BUILD_ID') : null,
+  androidBuildId: androidReleaseRequired
+    ? normalizeCameraLifecycleEasBuildId(rawAndroidBuildId)
+    : null,
   iosDevice: envValue('PHASE5_IOS_DEVICE'),
   androidDevice: androidReleaseRequired ? envValue('PHASE5_ANDROID_DEVICE') : null,
   platformStatus: {
@@ -603,7 +608,7 @@ if (!rawNativeOcrEvidencePath) {
   } else {
     try {
       const evidence = readJson(normalizedNativeOcrEvidencePath);
-      const lineage = nativeOcrSourceLineage(evidence.sourceGitSha, gitSha);
+      const lineage = evidenceSourceLineage(evidence.sourceGitSha, gitSha);
       const validation = validateNativeOcrEvidence(evidence, {
         root,
         currentGitSha: gitSha,
@@ -651,23 +656,124 @@ if (envValue('PHASE5_NATIVE_OCR_QA_PASS')) {
     'PHASE5_NATIVE_OCR_QA_PASS is ignored; only PHASE5_NATIVE_OCR_EVIDENCE_PATH can provide native OCR QA evidence.',
   );
 }
+const rawCameraLifecycleEvidencePath = envValue('PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH');
+const normalizedCameraLifecycleEvidencePath = normalizeCameraLifecycleEvidencePath(
+  rawCameraLifecycleEvidencePath,
+);
+let cameraLifecycleEvidence = {
+  required: true,
+  path: normalizedCameraLifecycleEvidencePath,
+  status: 'blocked',
+  sha256: null,
+  artifacts: [],
+  summary: {
+    devices: 0,
+    routes: 0,
+    scenarioDefinitions: CAMERA_LIFECYCLE_SCENARIOS.length,
+    runs: 0,
+    requiredRuns: 0,
+    artifacts: 0,
+    proofArtifacts: 0,
+  },
+  binding: null,
+};
+let validatedCameraLifecycleEvidencePaths = [];
+if (!rawCameraLifecycleEvidencePath) {
+  blockers.push(
+    'Missing PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH; camera QA Booleans cannot substitute for exact-build, signed-archive, two-physical-iPhone lifecycle evidence.',
+  );
+} else if (!normalizedCameraLifecycleEvidencePath) {
+  blockers.push(
+    `PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH must be a normalized repo-relative JSON path under ${CAMERA_LIFECYCLE_EVIDENCE_ROOT}.`,
+  );
+} else {
+  const evidenceFile = readCameraLifecycleContainedFile(
+    root,
+    normalizedCameraLifecycleEvidencePath,
+    { maxBytes: CAMERA_LIFECYCLE_MANIFEST_BYTES_MAX },
+  );
+  if (!evidenceFile) {
+    blockers.push(
+      `Camera lifecycle evidence file is missing, oversized, indirect, unreadable, or outside the canonical repository root: ${normalizedCameraLifecycleEvidencePath}.`,
+    );
+  } else {
+    try {
+      const evidence = JSON.parse(evidenceFile.bytes.toString('utf8'));
+      const lineage = evidenceSourceLineage(evidence.sourceGitSha, gitSha);
+      const validation = validateCameraLifecycleEvidence(evidence, {
+        root,
+        currentGitSha: gitSha,
+        sourceGitShaIsAncestor: lineage.isAncestor,
+        changedPathsSinceSource: lineage.changedPaths,
+        evidencePath: normalizedCameraLifecycleEvidencePath,
+        expectedBuildId: buildEvidence.iosBuildId || null,
+        expectedBuildProfile: buildEvidence.iosBuildProfile || null,
+      });
+      for (const error of validation.errors) {
+        blockers.push(`Camera lifecycle evidence: ${error}`);
+      }
+      for (const warning of validation.warnings) {
+        warnings.push(`Camera lifecycle evidence: ${warning}`);
+      }
+      cameraLifecycleEvidence = {
+        required: true,
+        path: normalizedCameraLifecycleEvidencePath,
+        status: validation.errors.length === 0 ? 'pass' : 'blocked',
+        sha256: evidenceFile.sha256,
+        artifacts: validation.artifacts,
+        summary: validation.summary,
+        binding: {
+          sourceGitSha: evidence.sourceGitSha ?? null,
+          easIosBuildId: evidence.build?.easIosBuildId ?? null,
+          profile: evidence.build?.profile ?? null,
+          appBundleIdentifier: evidence.build?.appBundleIdentifier ?? null,
+          archiveSha256: evidence.build?.archiveSha256 ?? null,
+          cameraUsageDescription:
+            evidence.signedArchive?.finalInfoPlist?.cameraUsageDescription ?? null,
+          devices: evidence.devices ?? null,
+          qaSignedOffBy: evidence.signoff?.qaSignedOffBy ?? null,
+          privacySecuritySignedOffBy: evidence.signoff?.privacySecuritySignedOffBy ?? null,
+          accessibilitySignedOffBy: evidence.signoff?.accessibilitySignedOffBy ?? null,
+        },
+      };
+      if (validation.errors.length === 0) {
+        validatedCameraLifecycleEvidencePaths = [
+          normalizedCameraLifecycleEvidencePath,
+          ...validation.artifacts.map(({ path }) => path),
+        ];
+      }
+    } catch (error) {
+      blockers.push(
+        `Camera lifecycle evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
+      );
+    }
+  }
+}
+if (envValue('PHASE5_CAMERA_PERMISSION_QA_PASS')) {
+  warnings.push(
+    'PHASE5_CAMERA_PERMISSION_QA_PASS is ignored; only PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH can clear CAT-06 camera lifecycle QA.',
+  );
+}
 try {
   gitStatus = gitStatusExcludingGeneratedPacket([
     ...validatedWidgetEvidencePaths,
     ...validatedNativeOcrEvidencePaths,
+    ...validatedCameraLifecycleEvidencePaths,
   ]);
 } catch {
   warnings.push('Git status could not be captured.');
 }
 if (gitStatus.length > 0) {
   const dirtyMessage =
-    'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle/OCR evidence; do not use it as final native-device evidence.';
+    'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated widget/OCR/camera evidence; do not use it as final native-device evidence.';
   if (strict) blockers.push(dirtyMessage);
   else warnings.push(dirtyMessage);
 }
-if (!buildEvidence.iosBuildId) blockers.push('Missing PHASE5_IOS_BUILD_ID.');
-else if (!looksLikeEasBuildEvidence(buildEvidence.iosBuildId)) {
-  blockers.push('PHASE5_IOS_BUILD_ID must be a real EAS build UUID or expo.dev build URL.');
+if (!rawIosBuildId) blockers.push('Missing PHASE5_IOS_BUILD_ID.');
+else if (!buildEvidence.iosBuildId) {
+  blockers.push(
+    'PHASE5_IOS_BUILD_ID must be a canonical EAS UUID or strict expo.dev build URL without credentials, port, query, or fragment.',
+  );
 }
 if (!buildEvidence.iosBuildProfile) {
   blockers.push('Missing PHASE5_IOS_BUILD_PROFILE.');
@@ -675,9 +781,11 @@ if (!buildEvidence.iosBuildProfile) {
   blockers.push('PHASE5_IOS_BUILD_PROFILE must be development, staging, or production.');
 }
 if (androidReleaseRequired) {
-  if (!buildEvidence.androidBuildId) blockers.push('Missing PHASE5_ANDROID_BUILD_ID.');
-  else if (!looksLikeEasBuildEvidence(buildEvidence.androidBuildId)) {
-    blockers.push('PHASE5_ANDROID_BUILD_ID must be a real EAS build UUID or expo.dev build URL.');
+  if (!rawAndroidBuildId) blockers.push('Missing PHASE5_ANDROID_BUILD_ID.');
+  else if (!buildEvidence.androidBuildId) {
+    blockers.push(
+      'PHASE5_ANDROID_BUILD_ID must be a canonical EAS UUID or strict expo.dev build URL without credentials, port, query, or fragment.',
+    );
   }
 }
 if (!buildEvidence.iosDevice) blockers.push('Missing PHASE5_IOS_DEVICE.');
@@ -723,6 +831,7 @@ const packet = {
     qaRequired: nativeOcrEnabled,
     evidence: nativeOcrEvidence,
   },
+  cameraLifecycleEvidence,
   scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
   files,
   blockers,
@@ -752,6 +861,12 @@ const widgetArtifactRows = widgetLifecycleEvidence.artifacts.map((artifact) => [
   artifact.sha256,
 ]);
 const nativeOcrArtifactRows = nativeOcrEvidence.artifacts.map((artifact) => [
+  artifact.id,
+  artifact.path,
+  String(artifact.bytes),
+  artifact.sha256,
+]);
+const cameraLifecycleArtifactRows = cameraLifecycleEvidence.artifacts.map((artifact) => [
   artifact.id,
   artifact.path,
   String(artifact.bytes),
@@ -813,6 +928,23 @@ writeFileSync(
     nativeOcrArtifactRows.length > 0
       ? markdownTable(['Artifact', 'Path', 'Bytes', 'SHA-256'], nativeOcrArtifactRows)
       : 'No verified native OCR artifacts attached.',
+    '',
+    '## CAT-06 Camera Lifecycle Evidence',
+    '',
+    `- Required: yes`,
+    `- Status: ${cameraLifecycleEvidence.status === 'pass' ? 'PASS' : 'BLOCKED'}`,
+    `- Evidence path: ${cameraLifecycleEvidence.path ?? 'BLOCKED'}`,
+    `- Evidence SHA-256: ${cameraLifecycleEvidence.sha256 ?? 'BLOCKED'}`,
+    `- Physical iPhones: ${cameraLifecycleEvidence.summary.devices}/2 minimum`,
+    `- Camera routes: ${cameraLifecycleEvidence.summary.routes}/3`,
+    `- Route-scenario definitions: ${cameraLifecycleEvidence.summary.scenarioDefinitions}/27`,
+    `- Verified device-route-scenario runs: ${cameraLifecycleEvidence.summary.runs}/${cameraLifecycleEvidence.summary.requiredRuns}`,
+    `- Verified proof attachments: ${cameraLifecycleEvidence.summary.proofArtifacts}`,
+    `- Verified total artifacts: ${cameraLifecycleEvidence.summary.artifacts}`,
+    '',
+    cameraLifecycleArtifactRows.length > 0
+      ? markdownTable(['Artifact', 'Path', 'Bytes', 'SHA-256'], cameraLifecycleArtifactRows)
+      : 'No validated camera lifecycle artifacts attached.',
     '',
     '## Scenarios',
     '',

@@ -144,7 +144,7 @@ PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 26" \
 PHASE5_QA_SIGNOFF=true \
 PHASE5_DEVICE_QA_PASS=true \
 PHASE5_INSTALL_QA_PASS=true \
-PHASE5_CAMERA_PERMISSION_QA_PASS=true \
+PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH=docs/phase-5/evidence/camera-lifecycle/<candidate>/evidence.json \
 PHASE5_BARCODE_QA_PASS=true \
 PHASE5_LABEL_CAPTURE_QA_PASS=true \
 PHASE5_PROGRESS_PHOTO_QA_PASS=true \
@@ -207,6 +207,48 @@ build/profile/archive, unchanged runtime hashes, physical-device corpus,
 calculated metrics, accessibility, managed-photo and Expo
 Camera/Image/SDWebImage cache cleanup, zero-network capture, provenance, and
 named signoffs. Otherwise OCR remains hidden from launch claims.
+
+Camera lifecycle QA is also artifact-only.
+`PHASE5_CAMERA_PERMISSION_QA_PASS` is ignored. CAT-06 requires
+`PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH` and the schema-v1 exact-source,
+signed-archive/final-Info.plist, two-physical-iPhone, 54-run, accessibility,
+offline, interruption, privacy/cleanup, and redacted hash-verified attachment
+contract in `docs/phase-5/camera-lifecycle-evidence-runbook.md`. Strict CAT-06
+accepts only `staging` or `production`, binds the 2026-07-18 reviewed current
+floor (iOS 26.5.2 on iPhone 17 Pro/Pro Max), rejects same-device run overlap and
+indirect/ADS paths, and expires completion/signoff after seven days or a newer
+public iOS release.
+
+## CAT-06 Build And Archive Rule
+
+Shelf Scan, Shelf OCR, and Progress Capture now share the same source lifecycle.
+The preview remains closed until focus, active AppState, the route business gate,
+a fresh permission result, and camera-ready state all admit it. If the iOS
+permission prompt causes `inactive`, the OS prompt may finish, but the explicit
+request result is invalidated; the app waits for the fresh foreground query.
+Mount retry creates a new keyed preview generation, and camera-operation leases
+discard callbacks from an invalidated generation. Progress also requires saved
+photo consent before the OS request and retains exact raw-file cleanup outside
+any replacing entitlement/app-lock/storage gate.
+
+Create a new native binary for this source; it is not OTA-only behavior. The
+retained CAT-04 and CAT-05 deterministic web packets were built against earlier
+source and are stale until regenerated. Even a regenerated web packet cannot
+serve as archive or physical-iPhone evidence.
+
+Before device installation, extract the final app `Info.plist` from the same
+signed archive and verify this resolved value exactly in both the archive report
+and evidence JSON:
+
+```text
+Allow <resolved display name> to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.
+```
+
+Source config permits no alternate environment wording: legacy camera-purpose
+keys must be blank or exactly equal to the value derived from the resolved
+display name. A source/config pass is not an archive inspection. Run all 54
+governed route/device/scenario cases only after confirming the installed build,
+archive digest, bundle ID, version/build, source SHA, and install receipts match.
 
 ## Native Runtime Policy
 

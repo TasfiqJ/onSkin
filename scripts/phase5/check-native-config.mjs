@@ -12,6 +12,15 @@ const strict = process.argv.includes('--strict');
 const root = process.cwd();
 const launchContract = loadLaunchContract(root);
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
+const REVIEWED_CAMERA_PERMISSION_TEMPLATE =
+  'Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+const CAMERA_PERMISSION_OVERRIDE_KEYS = ['APP_CAMERA_USAGE_DESCRIPTION', 'APP_CAMERA_PERMISSION'];
+const CAMERA_PERMISSION_DRIFT_REJECTION =
+  'must be blank or exactly equal the reviewed camera permission copy';
+const CAMERA_PERMISSION_PRODUCT_NAME_REJECTION =
+  'resolved app display name used in camera permission copy must be non-empty';
+const UNREVIEWED_CAMERA_PERMISSION_COPY =
+  'Allow an unrelated app to use the camera for an unreviewed purpose.';
 
 function readJson(path) {
   return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
@@ -81,10 +90,59 @@ function resolveNonProductionExpoConfig(variant) {
   }
 }
 
+function assertCameraPermissionDriftRejected(variant, overrideKey) {
+  const probeEnv = { ...process.env };
+  for (const key of CAMERA_PERMISSION_OVERRIDE_KEYS) delete probeEnv[key];
+  probeEnv.APP_VARIANT = variant;
+  probeEnv.EXPO_PUBLIC_APP_ENV = variant;
+  probeEnv[overrideKey] = UNREVIEWED_CAMERA_PERMISSION_COPY;
+
+  const appConfigPath = resolve(root, 'apps/mobile/app.config.js');
+  const probe = spawnSync(process.execPath, ['-e', 'require(process.argv[1])() ', appConfigPath], {
+    cwd: root,
+    encoding: 'utf8',
+    env: probeEnv,
+    windowsHide: true,
+  });
+  const output = String(probe.stderr || probe.stdout || '').trim();
+  require(probe.status !== 0 &&
+    output.includes(
+      CAMERA_PERMISSION_DRIFT_REJECTION,
+    ), `${variant}: ${overrideKey} must fail closed before unreviewed camera purpose copy can resolve.`);
+}
+
+function assertMalformedCameraProductNameRejected(variant, label, appDisplayName) {
+  const probeEnv = { ...process.env };
+  for (const key of CAMERA_PERMISSION_OVERRIDE_KEYS) delete probeEnv[key];
+  probeEnv.APP_VARIANT = variant;
+  probeEnv.EXPO_PUBLIC_APP_ENV = variant;
+  probeEnv.APP_DISPLAY_NAME = appDisplayName;
+
+  const appConfigPath = resolve(root, 'apps/mobile/app.config.js');
+  const probe = spawnSync(process.execPath, ['-e', 'require(process.argv[1])()', appConfigPath], {
+    cwd: root,
+    encoding: 'utf8',
+    env: probeEnv,
+    windowsHide: true,
+  });
+  const output = String(probe.stderr || probe.stdout || '').trim();
+  require(probe.status !== 0 &&
+    output.includes(
+      CAMERA_PERMISSION_PRODUCT_NAME_REJECTION,
+    ), `${variant}: malformed resolved display name (${label}) must fail before camera permission copy can resolve.`);
+}
+
 const iosWidgetIdentities = [];
 for (const variant of ['development', 'staging']) {
   const resolvedConfig = resolveNonProductionExpoConfig(variant);
   if (!resolvedConfig) continue;
+  const resolvedCameraPermission = REVIEWED_CAMERA_PERMISSION_TEMPLATE.replace(
+    '$(PRODUCT_NAME)',
+    resolvedConfig.name,
+  );
+  require(resolvedConfig.ios?.infoPlist?.NSCameraUsageDescription === resolvedCameraPermission &&
+    pluginOptions(resolvedConfig.plugins, 'expo-camera').cameraPermission ===
+      resolvedCameraPermission, `${variant}: resolved iOS NSCameraUsageDescription and expo-camera cameraPermission must both equal the exact reviewed camera purpose string.`);
   const validation = validateIosExtensionConfig({
     config: resolvedConfig,
     packageJson: pkg,
@@ -97,6 +155,18 @@ for (const variant of ['development', 'staging']) {
 errors.push(...validateIosExtensionVariantIsolation(iosWidgetIdentities));
 require(iosWidgetIdentities.length ===
   2, 'Both development and staging iOS widget extension identities must resolve.');
+for (const variant of ['development', 'staging', 'production']) {
+  for (const overrideKey of CAMERA_PERMISSION_OVERRIDE_KEYS) {
+    assertCameraPermissionDriftRejected(variant, overrideKey);
+  }
+  for (const [label, appDisplayName] of [
+    ['whitespace and C1 control', ' RoutineKind\u0085'],
+    ['parenthesized Xcode variable', 'RoutineKind $(EXECUTABLE_NAME)'],
+    ['braced build variable', 'RoutineKind ${PRODUCT_NAME}'],
+  ]) {
+    assertMalformedCameraProductNameRejected(variant, label, appDisplayName);
+  }
+}
 
 const widgetPluginIndex = orderedPlugins.indexOf('expo-widgets');
 const widgetPrivacyPluginName = './plugins/withRoutineKindWidgetPrivacyManifest';
@@ -312,6 +382,9 @@ require(buildProperties.android?.targetSdkVersion ===
 require(Boolean(
   app.ios?.infoPlist?.NSCameraUsageDescription,
 ), 'iOS NSCameraUsageDescription is missing.');
+require(app.ios?.infoPlist?.NSCameraUsageDescription === REVIEWED_CAMERA_PERMISSION_TEMPLATE &&
+  pluginOptions(app.plugins, 'expo-camera').cameraPermission ===
+    REVIEWED_CAMERA_PERMISSION_TEMPLATE, 'Base iOS NSCameraUsageDescription and expo-camera cameraPermission must both equal the exact reviewed camera purpose string.');
 require(existsSync(
   resolve(root, 'apps/mobile/src/features/photos/encryptedStorage.ts'),
 ), 'Encrypted photo storage module is missing.');
@@ -386,6 +459,11 @@ for (const profile of ['development', 'staging', 'production']) {
     'true', `EAS profile ${profile} must enable native camera explicitly.`);
   require(env.EXPO_PUBLIC_CAMERA_STACK ===
     'expo-camera', `EAS profile ${profile} must declare EXPO_PUBLIC_CAMERA_STACK=expo-camera.`);
+  for (const overrideKey of CAMERA_PERMISSION_OVERRIDE_KEYS) {
+    require(!Object.hasOwn(env, overrideKey) ||
+      env[overrideKey] ===
+        '', `EAS profile ${profile} must leave ${overrideKey} unset or blank so reviewed camera copy is derived from the resolved display name.`);
+  }
   warn(
     env.EXPO_PUBLIC_NATIVE_OCR_ENABLED === 'true',
     `EAS profile ${profile} has native OCR disabled; label capture remains editable/manual until the reviewed Apple Vision module passes the exact-build PHASE5_NATIVE_OCR_EVIDENCE_PATH gate.`,
@@ -440,6 +518,22 @@ const qaPacketSmoke = readFileSync(
   resolve(root, 'scripts/phase5/device-qa-packet-smoke.mjs'),
   'utf8',
 );
+const cameraLifecycleContract = readFileSync(
+  resolve(root, 'scripts/phase5/camera-lifecycle-evidence-contract.mjs'),
+  'utf8',
+);
+const cameraLifecycleChecker = readFileSync(
+  resolve(root, 'scripts/phase5/check-camera-lifecycle-evidence.mjs'),
+  'utf8',
+);
+const cameraLifecycleRunbook = readFileSync(
+  resolve(root, 'docs/phase-5/camera-lifecycle-evidence-runbook.md'),
+  'utf8',
+);
+const deviceQaChecklist = readFileSync(
+  resolve(root, 'docs/phase-5/device-qa-checklist.md'),
+  'utf8',
+);
 require(/validateWidgetLifecycleEvidence/.test(qaPacketBuilder) &&
   /PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH/.test(qaPacketBuilder) &&
   /widgetLifecycleEvidence/.test(
@@ -456,9 +550,47 @@ require(/function gitStatusExcludingGeneratedPacket\(validatedEvidencePaths = \[
   /gitStatusExcludingGeneratedEvidence/.test(qaPacketBuilder) &&
   /device-qa-packet\.json/.test(qaPacketBuilder) &&
   /device-qa-packet\.md/.test(qaPacketBuilder) &&
-  /gitStatus = gitStatusExcludingGeneratedPacket\(\[\s*\.\.\.validatedWidgetEvidencePaths,\s*\.\.\.validatedNativeOcrEvidencePaths,\s*\]\)/.test(
+  /gitStatus = gitStatusExcludingGeneratedPacket\(\[\s*\.\.\.validatedWidgetEvidencePaths,\s*\.\.\.validatedNativeOcrEvidencePaths,\s*\.\.\.validatedCameraLifecycleEvidencePaths,\s*\]\)/.test(
     qaPacketBuilder,
-  ), 'Phase 5 device QA packet must ignore central generated evidence, its own outputs, and only fully validated lifecycle/OCR evidence when recording Git status.');
+  ), 'Phase 5 device QA packet must ignore central generated evidence, its own outputs, and only fully validated widget/OCR/camera evidence when recording Git status.');
+require(/validateCameraLifecycleEvidence/.test(qaPacketBuilder) &&
+  /PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH/.test(qaPacketBuilder) &&
+  /cameraLifecycleEvidence/.test(qaPacketBuilder) &&
+  /\.\.\.CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES/.test(qaPacketBuilder) &&
+  /apps\/mobile\/src\/features\/native\/camera\/useCameraAccessLifecycle\.ts/.test(
+    cameraLifecycleContract,
+  ) &&
+  /apps\/mobile\/src\/features\/photos\/progressCaptureRouteBoundary\.ts/.test(
+    cameraLifecycleContract,
+  ) &&
+  /apps\/mobile\/src\/features\/photos\/progressCaptureRouteBoundary\.test\.ts/.test(
+    cameraLifecycleContract,
+  ) &&
+  /scripts\/cat05\/native-label-ocr-source-contract\.test\.mjs/.test(cameraLifecycleContract) &&
+  /readCameraLifecycleContainedFile/.test(qaPacketBuilder) &&
+  /CAMERA_LIFECYCLE_MANIFEST_BYTES_MAX/.test(qaPacketBuilder) &&
+  /normalizeCameraLifecycleEasBuildId/.test(qaPacketBuilder) &&
+  /readCameraLifecycleContainedFile/.test(cameraLifecycleChecker) &&
+  /normalizeCameraLifecycleTemplatePath/.test(cameraLifecycleChecker) &&
+  /CAMERA_LIFECYCLE_REVIEWED_CURRENT_PUBLIC_IOS_VERSION = 'iOS 26\.5\.2'/.test(
+    cameraLifecycleContract,
+  ) &&
+  /requiredSourceEvidenceKinds/.test(cameraLifecycleContract) &&
+  /must not overlap/.test(cameraLifecycleContract) &&
+  /\[screen_recording, structured_device_log, network_trace, filesystem_inspection\]/.test(
+    cameraLifecycleRunbook,
+  ) &&
+  /PHASE5_IOS_BUILD_PROFILE=staging\|production/.test(deviceQaChecklist) &&
+  !/PHASE5_IOS_BUILD_PROFILE=development\|staging\|production/.test(
+    deviceQaChecklist,
+  ), 'Phase 5 device QA packet must validate CAT-06 artifact evidence and hash the shared hook plus the complete camera evidence source inventory.');
+require(/rejects Boolean-only CAT-06 camera clearance/.test(qaPacketSmoke) &&
+  /cameraLifecycleEvidence\.summary\.runs === 54/.test(qaPacketSmoke) &&
+  /rejects CAT-06 evidence through a junction escape/.test(qaPacketSmoke) &&
+  /does not echo a secret-bearing EAS URL/.test(qaPacketSmoke) &&
+  /PHASE5_CAMERA_PERMISSION_QA_PASS is ignored/.test(
+    qaPacketBuilder,
+  ), 'Phase 5 QA packet smoke must reject the legacy camera Boolean and require the 54-run artifact-bound CAT-06 matrix.');
 require(/Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
   /if \(strict\) blockers\.push\(dirtyMessage\)/.test(qaPacketBuilder) &&
   /strict Phase 5 QA packet rejects a dirty source worktree/.test(qaPacketSmoke) &&

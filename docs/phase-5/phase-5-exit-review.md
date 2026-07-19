@@ -47,6 +47,28 @@ Completed in repo:
 - Photo timeline/detail/compare render through encrypted-aware image loading.
 - Photo deletion removes local encrypted files.
 - Phase 5 config check and device QA packet generator added.
+- CAT-06 now has one source lifecycle across Shelf Scan, Shelf OCR, and Progress
+  Capture. It closes preview admission on unavailable/unfocused/inactive/
+  business-gated or unverified-permission state, waits for camera-ready,
+  replaces a failed preview with a fresh keyed generation, and invalidates
+  queued callbacks through camera-operation leases. When the iOS permission
+  prompt drives AppState `inactive`, its explicit request result is invalidated
+  and a fresh foreground permission query becomes authoritative. Progress saves
+  photo consent before the OS request and keeps exact raw-photo cleanup ownership
+  outside entitlement, app-lock, storage, and content gates until cleanup or
+  atomic review handoff.
+- Native config now derives one exact camera purpose string from the resolved
+  display name into both `NSCameraUsageDescription` and the `expo-camera`
+  plugin. Alternate environment wording, malformed display names, control
+  characters, unresolved build variables, and profile overrides fail closed.
+  Only extraction from the future signed archive can prove the final value.
+- A schema-v1 CAT-06 evidence contract replaces the legacy permission Boolean.
+  It binds exact source hashes, staging/production EAS build, signed archive and
+  final plist, two supported physical iPhones, three routes, nine scenario
+  suites per route/device (54 runs), unique hash-verified proofs, install
+  receipts, network/privacy/cleanup/accessibility reports, and three named
+  signoffs. The template/smoke/packet wiring validates shape and provenance; no
+  completed artifact has been supplied.
 - IOS-02 has a production-disabled iOS extension target foundation with one
   variant-derived WidgetKit/App Group target, exact reviewed Expo dependency
   locks, a closed privacy-minimized timeline/action contract, encrypted
@@ -78,9 +100,10 @@ Completed in repo:
   p50/p95/max, and calculated pass/fail instead of trust-only booleans or
   hand-entered summaries.
 - The generated QA packet now requires granular physical-device evidence flags
-  for install, camera permission recovery, barcode, label capture, progress
-  photos, encrypted photo storage, notifications, share sheet, RevenueCat,
-  Sentry, Supabase catalog calls, and accessibility. Conditional native OCR no
+  for install, barcode, label capture, progress photos, encrypted photo storage,
+  notifications, share sheet, RevenueCat, Sentry, Supabase catalog calls, and
+  accessibility. Camera permission/lifecycle is artifact-only; its legacy
+  Boolean is ignored. Conditional native OCR no
   longer accepts a Boolean: its separate schema-v2 artifact binds the EAS
   source ancestor, exact build/profile/archive, unchanged runtime hashes, two
   distinct physical iPhones, a 25-label five-class corpus, 50 device-label
@@ -110,6 +133,13 @@ Still blocked before beta:
 
 - EAS iOS builds with real build IDs and retained resolved-image/Xcode/SDK logs.
 - Physical-device installs and matrix results.
+- Exact-build CAT-06 evidence remains absent. The retained CAT-04 and CAT-05
+  deterministic Expo-web packets predate the shared camera lifecycle and are
+  stale until regenerated; both remain `nativeDeviceProof=false`. CAT-06 cannot
+  close until the same signed archive passes final purpose-string inspection
+  and all 54 governed two-iPhone runs for permission/Settings, AppState/focus,
+  mount/readiness, route-specific operations, offline, interruption,
+  accessibility, and privacy/cleanup.
 - Exact-build physical-iPhone OCR evidence remains absent. The Apple Vision
   source candidate cannot become a launch claim until
   `phase5:native-ocr-evidence:strict`, `phase5:performance-evidence:strict`, and
