@@ -1,7 +1,7 @@
 # Readiness Status Audit
 
-Generated: 2026-07-19T00:35:02.207Z
-Status: pass
+Generated: 2026-07-19T03:48:19.853Z
+Status: blocked
 Strict mode: yes
 
 This generated audit keeps the launch source-of-truth docs aligned with
@@ -16,7 +16,7 @@ Required release platforms: ios. Android release evidence: not_applicable.
 - Evidence date: 2026-07-18
 - Expected mobile test baseline: 299 mobile test files / 3486 tests
 - Actual mobile test files found: 299
-- Blockers: 0
+- Blockers: 1
 - Warnings: 0
 
 ## Docs
@@ -51,7 +51,7 @@ Required release platforms: ios. Android release evidence: not_applicable.
 
 ## Blockers
 
-- None.
+- docs/e2e/generated/human-e2e-manifest.json status is blocked.
 
 ## Warnings
 

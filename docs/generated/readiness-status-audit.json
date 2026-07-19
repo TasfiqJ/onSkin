@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T00:35:02.207Z",
+  "generatedAt": "2026-07-19T03:48:19.853Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -76,7 +76,7 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "status": "pass",
+  "status": "blocked",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-18",
@@ -210,6 +210,8 @@
         "shelf-freshness-provenance-current",
         "CAT04 catalog search, scan, report, and recovery Expo-web pass",
         "cat04-catalog-recovery-current",
+        "CAT05 native OCR review Expo-web pass",
+        "cat05-native-ocr-web-ui-current",
         "Required-surface honest direct-entry and recovery pass",
         "required-surface-honesty-rerun",
         "Trend navigator privacy and exact-route recovery",
@@ -291,10 +293,12 @@
     "test"
   ],
   "summary": {
-    "blockerCount": 0,
+    "blockerCount": 1,
     "warningCount": 0,
     "checkedDocCount": 3
   },
-  "blockers": [],
+  "blockers": [
+    "docs/e2e/generated/human-e2e-manifest.json status is blocked."
+  ],
   "warnings": []
 }
