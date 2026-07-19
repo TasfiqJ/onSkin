@@ -5,11 +5,12 @@ import { tagsForIngredient } from '@/features/intelligence/tags';
 import {
   displayIngredientToken,
   normalizeIngredientToken,
+  normalizeIngredientSeparators,
   normalizeWhitespace,
   parsePercent,
 } from './normalization';
 
-export const INGREDIENT_PARSER_VERSION = 'phase4-inci-parser-v1';
+export const INGREDIENT_PARSER_VERSION = 'phase4-inci-parser-v2';
 
 export type IngredientParserSection = 'main' | 'active' | 'inactive' | 'may_contain';
 export type IngredientMatchType = 'exact' | 'synonym' | 'fuzzy' | 'unknown';
@@ -101,12 +102,26 @@ function splitIngredientTokens(value: string): string[] {
   const tokens: string[] = [];
   let current = '';
   let depth = 0;
+  const characters = [...value];
+  const maximumLocantContextScalars = 48;
 
-  for (const char of value) {
+  for (const [index, char] of characters.entries()) {
     if (char === '(' || char === '[') depth += 1;
     if (char === ')' || char === ']') depth = Math.max(0, depth - 1);
 
-    if (depth === 0 && (char === ',' || char === ';' || char === '\n')) {
+    let numericChemicalComma = false;
+    if (char === ',') {
+      // Chemical locants are short. Bound both views so adversarial comma-heavy
+      // pasted text cannot turn tokenization into quadratic work.
+      const prefix = current.slice(-maximumLocantContextScalars * 2).trim();
+      const suffix = characters.slice(index + 1, index + 1 + maximumLocantContextScalars).join('');
+      const numericLocantPrefix =
+        /^\p{N}{1,3}(?:\s*,\s*\p{N}{1,3})*$/u.test(prefix) ||
+        /-\p{N}{1,3}(?:\s*,\s*\p{N}{1,3})*$/u.test(prefix);
+      const numericLocantSuffix = /^\s*\p{N}{1,3}(?:\s*,\s*\p{N}{1,3})*\s*-/u.test(suffix);
+      numericChemicalComma = numericLocantPrefix && numericLocantSuffix;
+    }
+    if (depth === 0 && !numericChemicalComma && (char === ',' || char === ';' || char === '\n')) {
       const trimmed = normalizeWhitespace(current);
       if (trimmed) tokens.push(trimmed);
       current = '';
@@ -143,7 +158,7 @@ function confidenceForToken(
 }
 
 export function parseIngredientText(rawText: string): IngredientParseResult {
-  const raw = rawText.replace(/\r\n/g, '\n').trim();
+  const raw = normalizeIngredientSeparators(rawText).replace(/\r\n/g, '\n').trim();
   const warnings: string[] = [];
 
   if (raw.length === 0) {

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { spawnSync } from 'node:child_process';
 import {
   block,
   blockPublicEnvSecrets,
@@ -55,6 +56,10 @@ const liveHarnessFiles = [
 ];
 
 const localVerifierFiles = [
+  'scripts/cat05/native-label-ocr-source-contract.test.mjs',
+  'scripts/phase5/check-native-ocr-evidence.mjs',
+  'scripts/phase5/native-ocr-evidence-contract.mjs',
+  'scripts/phase5/native-ocr-evidence-smoke.mjs',
   'scripts/postinstall.mjs',
   'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
   'scripts/phase5/patch-expo-widgets-lifecycle.test.mjs',
@@ -1259,10 +1264,19 @@ if (evidenceFlagEnabled(env.EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED)) {
   );
 }
 if (evidenceFlagEnabled(env.EXPO_PUBLIC_NATIVE_OCR_ENABLED)) {
+  const nativeOcrEvidenceCheck = spawnSync(
+    process.execPath,
+    ['scripts/phase5/check-native-ocr-evidence.mjs', '--strict'],
+    {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: { ...process.env, ...env },
+    },
+  );
   warn(
     warnings,
-    evidenceFlagEnabled(env.PHASE5_DEVICE_QA_PASS),
-    'Native OCR is enabled without native device QA evidence.',
+    nativeOcrEvidenceCheck.status === 0,
+    'Native OCR is enabled without a passing exact-source/build/profile PHASE5_NATIVE_OCR_EVIDENCE_PATH artifact.',
   );
 }
 if (env.EXPO_PUBLIC_APP_ENV === 'production') {

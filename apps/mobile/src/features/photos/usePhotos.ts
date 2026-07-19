@@ -14,7 +14,7 @@ import {
 } from './timeline';
 import { localDay } from './date';
 import {
-  addPhoto,
+  addPhotoWithOutcome,
   loadPhotos,
   removePhoto,
   setReference,
@@ -149,7 +149,7 @@ export function usePhotoActions() {
     });
 
   const add = useMutation({
-    mutationFn: (input: NewPhoto) => mutateAndInvalidate(() => addPhoto(input)),
+    mutationFn: (input: NewPhoto) => mutateAndInvalidate(() => addPhotoWithOutcome(input)),
   });
   const reference = useMutation({
     mutationFn: (id: string) => mutateAndInvalidate(() => setReference(id)),

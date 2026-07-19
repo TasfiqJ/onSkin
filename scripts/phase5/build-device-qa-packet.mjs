@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, posix, relative, resolve } from 'node:path';
 import {
@@ -19,6 +20,12 @@ import {
   validateWidgetLifecycleEvidence,
   WIDGET_LIFECYCLE_EVIDENCE_ROOT,
 } from './widget-lifecycle-evidence-contract.mjs';
+import {
+  NATIVE_OCR_EVIDENCE_ROOT,
+  NATIVE_OCR_REQUIRED_SOURCE_FILES,
+  normalizeNativeOcrEvidencePath,
+  validateNativeOcrEvidence,
+} from './native-ocr-evidence-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -31,179 +38,191 @@ const packetOutputPaths = [
   `${packetOutDir}/device-qa-packet.md`,
 ].map((path) => path.replace(/\\/g, '/'));
 
-const requiredFiles = [
-  '.env.example',
-  'package.json',
-  'package-lock.json',
-  'docs/hugeToDo/launch-contract.json',
-  'scripts/launch/contract.mjs',
-  'apps/mobile/app.base.json',
-  'apps/mobile/app.config.js',
-  'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js',
-  'apps/mobile/eas.json',
-  'apps/mobile/package.json',
-  'apps/mobile/src/app/_layout.tsx',
-  'apps/mobile/src/lib/appConfig.test.ts',
-  'apps/mobile/src/lib/launch/phase7.ts',
-  'apps/mobile/src/lib/launch/phase7.test.ts',
-  'apps/mobile/src/app/(tabs)/progress.tsx',
-  'apps/mobile/src/app/(tabs)/shelf.tsx',
-  'apps/mobile/src/app/(tabs)/you.tsx',
-  'apps/mobile/src/app/onboarding/products.tsx',
-  'apps/mobile/src/app/shelf/[id].tsx',
-  'apps/mobile/src/app/shelf/_layout.tsx',
-  'apps/mobile/src/app/shelf/opened.tsx',
-  'apps/mobile/src/app/shelf/replenish.tsx',
-  'apps/mobile/src/app/shelf/scan.tsx',
-  'apps/mobile/src/app/shelf/search.tsx',
-  'apps/mobile/src/app/shelf/ocr.tsx',
-  'apps/mobile/src/app/progress/capture.tsx',
-  'apps/mobile/src/app/progress/review.tsx',
-  'apps/mobile/src/app/progress/[id].tsx',
-  'apps/mobile/src/features/catalog/client.ts',
-  'apps/mobile/src/features/catalog/client.test.ts',
-  'apps/mobile/src/features/intelligence/pao.ts',
-  'apps/mobile/src/features/intelligence/pao.test.ts',
-  'apps/mobile/src/features/native/camera/barcode.ts',
-  'apps/mobile/src/features/notifications/BehaviouralTriggers.tsx',
-  'apps/mobile/src/features/notifications/claimsafety.test.ts',
-  'apps/mobile/src/features/notifications/copy.ts',
-  'apps/mobile/src/features/notifications/store.ts',
-  'apps/mobile/src/features/notifications/store.test.ts',
-  'apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts',
-  'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
-  'apps/mobile/src/features/today/completionsStore.ts',
-  'apps/mobile/src/features/today/completionsStore.test.ts',
-  'apps/mobile/src/features/today/routineProjection.ts',
-  'apps/mobile/src/features/today/routineProjection.test.ts',
-  'apps/mobile/src/features/widgets/actionRegistry.ts',
-  'apps/mobile/src/features/widgets/actionRegistry.test.ts',
-  'apps/mobile/src/features/widgets/contract.ts',
-  'apps/mobile/src/features/widgets/contract.test.ts',
-  'apps/mobile/src/features/widgets/controllerCore.ts',
-  'apps/mobile/src/features/widgets/controllerCore.test.ts',
-  'apps/mobile/src/features/widgets/nativeLifecycle.ts',
-  'apps/mobile/src/features/widgets/nativeLifecycle.ios.ts',
-  'apps/mobile/src/features/widgets/nativeLifecycleContract.ts',
-  'apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts',
-  'apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts',
-  'apps/mobile/src/features/widgets/nativeOutboxModel.ts',
-  'apps/mobile/src/features/widgets/nativeOutboxModel.test.ts',
-  'apps/mobile/src/features/widgets/ownerAuthority.ts',
-  'apps/mobile/src/features/widgets/ownerAuthority.test.ts',
-  'apps/mobile/src/features/widgets/lifecycleCoordinator.ts',
-  'apps/mobile/src/features/widgets/lifecycleCoordinator.test.ts',
-  'apps/mobile/src/features/widgets/lifecycleRuntime.ts',
-  'apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts',
-  'apps/mobile/src/features/widgets/lifecycleRuntime.test.ts',
-  'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.tsx',
-  'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.test.ts',
-  'apps/mobile/src/features/widgets/runtimeGate.ts',
-  'apps/mobile/src/features/widgets/runtimeGate.test.ts',
-  'apps/mobile/src/features/widgets/TodayWidget.ios.tsx',
-  'apps/mobile/src/features/widgets/TonightActivity.ios.tsx',
-  'apps/mobile/src/features/widgets/widgetViews.test.ts',
-  'apps/mobile/src/features/photos/analyzePhotoLighting.ts',
-  'apps/mobile/src/features/photos/CaptureAnalysisProvider.native.tsx',
-  'apps/mobile/src/features/photos/CaptureAnalysisProvider.tsx',
-  'apps/mobile/src/features/photos/captureAnalysis.ts',
-  'apps/mobile/src/features/photos/consent.ts',
-  'apps/mobile/src/features/photos/encryptedStorage.ts',
-  'apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx',
-  'apps/mobile/src/features/photos/PhotoStorageGate.tsx',
-  'apps/mobile/src/features/photos/store.ts',
-  'apps/mobile/src/features/photos/usePhotos.ts',
-  'apps/mobile/src/features/photos/useCaptureAnalysis.ts',
-  'apps/mobile/src/features/photos/useDetectedFaces.native.ts',
-  'apps/mobile/src/features/photos/useDetectedFaces.ts',
-  'apps/mobile/src/features/recommendations/replenishment.ts',
-  'apps/mobile/src/features/recommendations/replenishment.test.ts',
-  'apps/mobile/src/features/shelf/IntakeContext.tsx',
-  'apps/mobile/src/features/shelf/LocalDateField.tsx',
-  'apps/mobile/src/features/shelf/freshness.ts',
-  'apps/mobile/src/features/shelf/freshness.test.ts',
-  'apps/mobile/src/features/shelf/freshnessMigration.test.ts',
-  'apps/mobile/src/features/shelf/mutations.ts',
-  'apps/mobile/src/features/shelf/paoProvenance.ts',
-  'apps/mobile/src/features/shelf/paoProvenance.test.ts',
-  'apps/mobile/src/features/shelf/shelfRoutes.test.ts',
-  'apps/mobile/src/features/shelf/store.ts',
-  'apps/mobile/src/features/shelf/store.test.ts',
-  'apps/mobile/src/features/shelf/useShelf.ts',
-  'apps/mobile/src/features/shelf/useShelf.test.ts',
-  'packages/types/src/database.types.ts',
-  'supabase/migrations/20260710000036_photo_quality_provenance.sql',
-  'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
-  'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
-  'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
-  'apps/mobile/src/features/notifications/deliver.ts',
-  'apps/mobile/src/lib/iap/revenuecat.ts',
-  'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
-  'apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx',
-  'apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts',
-  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
-  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
-  'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
-  'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
-  'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
-  'apps/mobile/src/features/settings/accountDeletionRecovery.ts',
-  'apps/mobile/src/features/settings/accountDeletionRecovery.test.ts',
-  'apps/mobile/src/features/settings/localPrivateData.ts',
-  'apps/mobile/src/features/settings/localPrivateData.test.ts',
-  'apps/mobile/src/lib/auth/AuthProvider.tsx',
-  'apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts',
-  'apps/mobile/src/lib/auth/revokedCredentialActivity.ts',
-  'apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts',
-  'scripts/postinstall.mjs',
-  'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
-  'scripts/phase5/patch-expo-widgets-lifecycle.test.mjs',
-  'scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
-  'scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift',
-  'scripts/phase5/expo-widgets-56.0.23/AppIntent.swift',
-  'scripts/phase5/expo-widgets-56.0.23/EntryView.swift',
-  'scripts/phase5/expo-widgets-56.0.23/ExpoWidgets.podspec',
-  'scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift',
-  'scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift',
-  'scripts/phase5/expo-widgets-56.0.23/TimelineProvider.swift',
-  'scripts/phase5/expo-widgets-56.0.23/Utils.swift',
-  'scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift',
-  'scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift',
-  'scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift',
-  'apps/mobile/src/lib/applock/AppLockProvider.tsx',
-  'apps/mobile/src/lib/applock/authenticate.ts',
-  'scripts/phase5/build-device-qa-packet.mjs',
-  'scripts/phase5/check-native-config.mjs',
-  'scripts/phase5/ios-extension-contract.mjs',
-  'scripts/phase5/ios-extension-contract.test.mjs',
-  'scripts/phase5/widget-privacy-manifest.test.mjs',
-  'scripts/phase5/widget-lifecycle-evidence-contract.mjs',
-  'scripts/phase5/check-widget-lifecycle-evidence.mjs',
-  'scripts/phase5/widget-lifecycle-evidence-smoke.mjs',
-  'scripts/phase5/resolve-ios-extension-config.mjs',
-  'scripts/phase5/check-performance-evidence.mjs',
-  'scripts/phase5/device-qa-packet-smoke.mjs',
-  'scripts/phase5/performance-evidence-contract.mjs',
-  'scripts/phase5/performance-evidence-smoke.mjs',
-  'scripts/e2e/human-e2e-manifest.mjs',
-  'scripts/phase2/supabase-rls-smoke.mjs',
-  'scripts/phase9/lib.mjs',
-  'scripts/phase9/live-supabase-adversarial.mjs',
-  'scripts/phase9/rls-adversarial-smoke.mjs',
-  'scripts/phase9/rls-adversarial.mjs',
-  'docs/DEVICE_SUPPORT_POLICY.md',
-  'docs/HUMAN_SIMULATED_E2E_TESTING.md',
-  'docs/E2E_TESTING_CHECKLIST.md',
-  'docs/USER_FLOW_TREE.md',
-  'docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md',
-  'docs/e2e/generated/human-e2e-manifest.json',
-  'docs/e2e/generated/human-e2e-manifest.md',
-  'docs/phase-5/native-build-runbook.md',
-  'docs/phase-5/widget-lifecycle-evidence.template.json',
-  'docs/phase-5/device-qa-checklist.md',
-  'docs/phase-5/performance-evidence-runbook.md',
-  'docs/phase-5/performance-evidence.template.json',
-  'docs/phase-5/phase-5-exit-review.md',
-];
+const requiredFiles = Array.from(
+  new Set([
+    '.env.example',
+    'package.json',
+    'package-lock.json',
+    'docs/hugeToDo/launch-contract.json',
+    'scripts/launch/contract.mjs',
+    'apps/mobile/app.base.json',
+    'apps/mobile/app.config.js',
+    'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js',
+    'apps/mobile/eas.json',
+    'apps/mobile/package.json',
+    'apps/mobile/src/app/_layout.tsx',
+    'apps/mobile/src/lib/appConfig.test.ts',
+    'apps/mobile/src/lib/launch/phase7.ts',
+    'apps/mobile/src/lib/launch/phase7.test.ts',
+    'apps/mobile/src/app/(tabs)/progress.tsx',
+    'apps/mobile/src/app/(tabs)/shelf.tsx',
+    'apps/mobile/src/app/(tabs)/you.tsx',
+    'apps/mobile/src/app/onboarding/products.tsx',
+    'apps/mobile/src/app/shelf/[id].tsx',
+    'apps/mobile/src/app/shelf/_layout.tsx',
+    'apps/mobile/src/app/shelf/opened.tsx',
+    'apps/mobile/src/app/shelf/replenish.tsx',
+    'apps/mobile/src/app/shelf/scan.tsx',
+    'apps/mobile/src/app/shelf/search.tsx',
+    'apps/mobile/src/app/shelf/ocr.tsx',
+    'apps/mobile/src/app/progress/capture.tsx',
+    'apps/mobile/src/app/progress/review.tsx',
+    'apps/mobile/src/app/progress/[id].tsx',
+    'apps/mobile/src/features/catalog/client.ts',
+    'apps/mobile/src/features/catalog/client.test.ts',
+    'apps/mobile/src/features/intelligence/pao.ts',
+    'apps/mobile/src/features/intelligence/pao.test.ts',
+    'apps/mobile/src/features/native/camera/barcode.ts',
+    'apps/mobile/src/features/native/camera/labelPhotoStartup.ts',
+    'apps/mobile/src/features/notifications/BehaviouralTriggers.tsx',
+    'apps/mobile/src/features/notifications/claimsafety.test.ts',
+    'apps/mobile/src/features/notifications/copy.ts',
+    'apps/mobile/src/features/notifications/store.ts',
+    'apps/mobile/src/features/notifications/store.test.ts',
+    'apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts',
+    'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
+    'apps/mobile/src/features/today/completionsStore.ts',
+    'apps/mobile/src/features/today/completionsStore.test.ts',
+    'apps/mobile/src/features/today/routineProjection.ts',
+    'apps/mobile/src/features/today/routineProjection.test.ts',
+    'apps/mobile/src/features/widgets/actionRegistry.ts',
+    'apps/mobile/src/features/widgets/actionRegistry.test.ts',
+    'apps/mobile/src/features/widgets/contract.ts',
+    'apps/mobile/src/features/widgets/contract.test.ts',
+    'apps/mobile/src/features/widgets/controllerCore.ts',
+    'apps/mobile/src/features/widgets/controllerCore.test.ts',
+    'apps/mobile/src/features/widgets/nativeLifecycle.ts',
+    'apps/mobile/src/features/widgets/nativeLifecycle.ios.ts',
+    'apps/mobile/src/features/widgets/nativeLifecycleContract.ts',
+    'apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts',
+    'apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts',
+    'apps/mobile/src/features/widgets/nativeOutboxModel.ts',
+    'apps/mobile/src/features/widgets/nativeOutboxModel.test.ts',
+    'apps/mobile/src/features/widgets/ownerAuthority.ts',
+    'apps/mobile/src/features/widgets/ownerAuthority.test.ts',
+    'apps/mobile/src/features/widgets/lifecycleCoordinator.ts',
+    'apps/mobile/src/features/widgets/lifecycleCoordinator.test.ts',
+    'apps/mobile/src/features/widgets/lifecycleRuntime.ts',
+    'apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts',
+    'apps/mobile/src/features/widgets/lifecycleRuntime.test.ts',
+    'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.tsx',
+    'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.test.ts',
+    'apps/mobile/src/features/widgets/runtimeGate.ts',
+    'apps/mobile/src/features/widgets/runtimeGate.test.ts',
+    'apps/mobile/src/features/widgets/TodayWidget.ios.tsx',
+    'apps/mobile/src/features/widgets/TonightActivity.ios.tsx',
+    'apps/mobile/src/features/widgets/widgetViews.test.ts',
+    'apps/mobile/src/features/photos/analyzePhotoLighting.ts',
+    'apps/mobile/src/features/photos/CaptureAnalysisProvider.native.tsx',
+    'apps/mobile/src/features/photos/CaptureAnalysisProvider.tsx',
+    'apps/mobile/src/features/photos/captureAnalysis.ts',
+    'apps/mobile/src/features/photos/consent.ts',
+    'apps/mobile/src/features/photos/encryptedStorage.ts',
+    'apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx',
+    'apps/mobile/src/features/photos/PhotoStorageGate.tsx',
+    'apps/mobile/src/features/photos/store.ts',
+    'apps/mobile/src/features/photos/usePhotos.ts',
+    'apps/mobile/src/features/photos/useCaptureAnalysis.ts',
+    'apps/mobile/src/features/photos/useDetectedFaces.native.ts',
+    'apps/mobile/src/features/photos/useDetectedFaces.ts',
+    'apps/mobile/src/features/recommendations/replenishment.ts',
+    'apps/mobile/src/features/recommendations/replenishment.test.ts',
+    'apps/mobile/src/features/shelf/IntakeContext.tsx',
+    'apps/mobile/src/features/shelf/LocalDateField.tsx',
+    'apps/mobile/src/features/shelf/freshness.ts',
+    'apps/mobile/src/features/shelf/freshness.test.ts',
+    'apps/mobile/src/features/shelf/freshnessMigration.test.ts',
+    'apps/mobile/src/features/shelf/mutations.ts',
+    'apps/mobile/src/features/shelf/paoProvenance.ts',
+    'apps/mobile/src/features/shelf/paoProvenance.test.ts',
+    'apps/mobile/src/features/shelf/shelfRoutes.test.ts',
+    'apps/mobile/src/features/shelf/store.ts',
+    'apps/mobile/src/features/shelf/store.test.ts',
+    'apps/mobile/src/features/shelf/useShelf.ts',
+    'apps/mobile/src/features/shelf/useShelf.test.ts',
+    'packages/types/src/database.types.ts',
+    'supabase/migrations/20260710000036_photo_quality_provenance.sql',
+    'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
+    'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
+    'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
+    'apps/mobile/src/features/notifications/deliver.ts',
+    'apps/mobile/src/lib/iap/revenuecat.ts',
+    'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
+    'apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx',
+    'apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts',
+    'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
+    'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
+    'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
+    'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
+    'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
+    'apps/mobile/src/features/settings/accountDeletionRecovery.ts',
+    'apps/mobile/src/features/settings/accountDeletionRecovery.test.ts',
+    'apps/mobile/src/features/settings/localPrivateData.ts',
+    'apps/mobile/src/features/settings/localPrivateData.test.ts',
+    'apps/mobile/src/lib/auth/AuthProvider.tsx',
+    'apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts',
+    'apps/mobile/src/lib/auth/revokedCredentialActivity.ts',
+    'apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts',
+    'scripts/postinstall.mjs',
+    'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
+    'scripts/phase5/patch-expo-widgets-lifecycle.test.mjs',
+    'scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
+    'scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift',
+    'scripts/phase5/expo-widgets-56.0.23/AppIntent.swift',
+    'scripts/phase5/expo-widgets-56.0.23/EntryView.swift',
+    'scripts/phase5/expo-widgets-56.0.23/ExpoWidgets.podspec',
+    'scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift',
+    'scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift',
+    'scripts/phase5/expo-widgets-56.0.23/TimelineProvider.swift',
+    'scripts/phase5/expo-widgets-56.0.23/Utils.swift',
+    'scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift',
+    'scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift',
+    'scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift',
+    'apps/mobile/src/lib/applock/AppLockProvider.tsx',
+    'apps/mobile/src/lib/applock/authenticate.ts',
+    'scripts/phase5/build-device-qa-packet.mjs',
+    'scripts/phase5/check-native-config.mjs',
+    'scripts/phase5/ios-extension-contract.mjs',
+    'scripts/phase5/ios-extension-contract.test.mjs',
+    'scripts/phase5/widget-privacy-manifest.test.mjs',
+    'scripts/phase5/widget-lifecycle-evidence-contract.mjs',
+    'scripts/phase5/check-widget-lifecycle-evidence.mjs',
+    'scripts/phase5/widget-lifecycle-evidence-smoke.mjs',
+    'scripts/phase5/resolve-ios-extension-config.mjs',
+    'scripts/phase5/check-performance-evidence.mjs',
+    'scripts/phase5/device-qa-packet-smoke.mjs',
+    'scripts/phase5/performance-evidence-contract.mjs',
+    'scripts/phase5/performance-evidence-smoke.mjs',
+    'scripts/e2e/human-e2e-manifest.mjs',
+    'scripts/phase2/supabase-rls-smoke.mjs',
+    'scripts/phase9/lib.mjs',
+    'scripts/phase9/live-supabase-adversarial.mjs',
+    'scripts/phase9/rls-adversarial-smoke.mjs',
+    'scripts/phase9/rls-adversarial.mjs',
+    'docs/DEVICE_SUPPORT_POLICY.md',
+    'docs/HUMAN_SIMULATED_E2E_TESTING.md',
+    'docs/E2E_TESTING_CHECKLIST.md',
+    'docs/USER_FLOW_TREE.md',
+    'docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md',
+    'docs/e2e/generated/human-e2e-manifest.json',
+    'docs/e2e/generated/human-e2e-manifest.md',
+    'docs/phase-5/native-build-runbook.md',
+    'docs/phase-5/widget-lifecycle-evidence.template.json',
+    'docs/phase-5/device-qa-checklist.md',
+    'docs/phase-5/performance-evidence-runbook.md',
+    'docs/phase-5/performance-evidence.template.json',
+    'docs/phase-5/phase-5-exit-review.md',
+    ...NATIVE_OCR_REQUIRED_SOURCE_FILES,
+    'scripts/cat05/native-label-ocr-source-contract.test.mjs',
+    'scripts/e2e/cat05-native-ocr-ui-audit.mjs',
+    'scripts/e2e/cat05-native-ocr-ui-audit.test.mjs',
+    'scripts/phase5/check-native-ocr-evidence.mjs',
+    'scripts/phase5/native-ocr-evidence-contract.mjs',
+    'scripts/phase5/native-ocr-evidence-smoke.mjs',
+    'docs/phase-5/native-ocr-evidence-runbook.md',
+    'docs/phase-5/native-ocr-evidence.template.json',
+  ]),
+);
 
 const scenarios = [
   ['Install', 'fresh install, update, reinstall, side-by-side dev/staging variants'],
@@ -296,10 +315,6 @@ const requiredQaEvidenceFlags = [
   ],
 ];
 
-const optionalQaEvidenceFlags = [
-  ['PHASE5_NATIVE_OCR_QA_PASS', 'native OCR real-label text recognition'],
-];
-
 function hashFile(path) {
   const abs = resolve(root, path);
   if (!existsSync(abs)) return { path, exists: false };
@@ -354,6 +369,33 @@ function readJson(path) {
   return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 }
 
+function nativeOcrSourceLineage(sourceGitSha, currentGitSha) {
+  if (
+    !/^[0-9a-f]{40}$/i.test(String(sourceGitSha ?? '')) ||
+    !/^[0-9a-f]{40}$/i.test(String(currentGitSha ?? ''))
+  ) {
+    return { isAncestor: false, changedPaths: null };
+  }
+  const ancestor = spawnSync('git', ['merge-base', '--is-ancestor', sourceGitSha, currentGitSha], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  if (ancestor.status !== 0) return { isAncestor: false, changedPaths: null };
+  const diff = spawnSync(
+    'git',
+    ['-c', 'core.quotepath=false', 'diff', '--name-only', `${sourceGitSha}..${currentGitSha}`],
+    { cwd: root, encoding: 'utf8' },
+  );
+  if (diff.status !== 0) return { isAncestor: true, changedPaths: null };
+  return {
+    isAncestor: true,
+    changedPaths: String(diff.stdout ?? '')
+      .split(/\r?\n/)
+      .map((path) => path.trim().replaceAll('\\', '/'))
+      .filter(Boolean),
+  };
+}
+
 function gitStatusExcludingGeneratedPacket(validatedEvidencePaths = []) {
   return gitStatusExcludingGeneratedEvidence([...packetOutputPaths, ...validatedEvidencePaths]);
 }
@@ -403,14 +445,20 @@ function looksLikePhysicalAndroidDevice(value) {
 const rawSignedOffBy = envValue('PHASE5_SIGNED_OFF_BY');
 const normalizedSignedOffBy = normalizeNamedSignoff(rawSignedOffBy) ?? '';
 const eas = readJson('apps/mobile/eas.json');
+const iosBuildProfile = envValue('PHASE5_IOS_BUILD_PROFILE');
+const nativeOcrEnabledInAnyBuild = Object.values(eas.build ?? {}).some((profile) =>
+  evidenceFlagEnabled(profile?.env?.EXPO_PUBLIC_NATIVE_OCR_ENABLED),
+);
+const selectedBuildProfile = eas.build?.[iosBuildProfile];
 const nativeOcrEnabled =
   evidenceFlagEnabled(process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED) ||
-  Object.values(eas.build ?? {}).some((profile) =>
-    evidenceFlagEnabled(profile?.env?.EXPO_PUBLIC_NATIVE_OCR_ENABLED),
-  );
+  (selectedBuildProfile
+    ? evidenceFlagEnabled(selectedBuildProfile.env?.EXPO_PUBLIC_NATIVE_OCR_ENABLED)
+    : nativeOcrEnabledInAnyBuild);
 
 const buildEvidence = {
   iosBuildId: envValue('PHASE5_IOS_BUILD_ID'),
+  iosBuildProfile,
   androidBuildId: androidReleaseRequired ? envValue('PHASE5_ANDROID_BUILD_ID') : null,
   iosDevice: envValue('PHASE5_IOS_DEVICE'),
   androidDevice: androidReleaseRequired ? envValue('PHASE5_ANDROID_DEVICE') : null,
@@ -428,13 +476,6 @@ const qaEvidence = Object.fromEntries(
     { label, required: true, passed: evidenceFlagEnabled(process.env[key]) },
   ]),
 );
-for (const [key, label] of optionalQaEvidenceFlags) {
-  qaEvidence[key] = {
-    label,
-    required: key === 'PHASE5_NATIVE_OCR_QA_PASS' ? nativeOcrEnabled : false,
-    passed: evidenceFlagEnabled(process.env[key]),
-  };
-}
 
 const files = requiredFiles.map(hashFile);
 const blockers = [];
@@ -527,20 +568,111 @@ if (!rawWidgetLifecycleEvidencePath) {
     }
   }
 }
+const rawNativeOcrEvidencePath = envValue('PHASE5_NATIVE_OCR_EVIDENCE_PATH');
+const normalizedNativeOcrEvidencePath = normalizeNativeOcrEvidencePath(rawNativeOcrEvidencePath);
+let nativeOcrEvidence = {
+  required: nativeOcrEnabled,
+  path: normalizedNativeOcrEvidencePath,
+  status: nativeOcrEnabled ? 'blocked' : 'not_required_not_attached',
+  sha256: null,
+  artifacts: [],
+  summary: {
+    devices: 0,
+    corpusItems: 0,
+    rtlCorpusItems: 0,
+    runs: 0,
+    requiredRuns: 0,
+    labelClasses: 0,
+  },
+  binding: null,
+};
+let validatedNativeOcrEvidencePaths = [];
+if (!rawNativeOcrEvidencePath) {
+  const message =
+    'Missing PHASE5_NATIVE_OCR_EVIDENCE_PATH; a Boolean pass flag cannot substitute for exact-build physical-iPhone OCR evidence.';
+  if (nativeOcrEnabled) blockers.push(message);
+  else warnings.push(`${message} Native OCR must remain disabled for production claims.`);
+} else if (!normalizedNativeOcrEvidencePath) {
+  blockers.push(
+    `PHASE5_NATIVE_OCR_EVIDENCE_PATH must be a normalized repo-relative JSON path under ${NATIVE_OCR_EVIDENCE_ROOT}.`,
+  );
+} else {
+  const evidenceFile = hashFile(normalizedNativeOcrEvidencePath);
+  if (!evidenceFile.exists) {
+    blockers.push(`Native OCR evidence file does not exist: ${normalizedNativeOcrEvidencePath}.`);
+  } else {
+    try {
+      const evidence = readJson(normalizedNativeOcrEvidencePath);
+      const lineage = nativeOcrSourceLineage(evidence.sourceGitSha, gitSha);
+      const validation = validateNativeOcrEvidence(evidence, {
+        root,
+        currentGitSha: gitSha,
+        sourceGitShaIsAncestor: lineage.isAncestor,
+        changedPathsSinceSource: lineage.changedPaths,
+        evidencePath: normalizedNativeOcrEvidencePath,
+        expectedBuildId: buildEvidence.iosBuildId || null,
+        expectedBuildProfile: buildEvidence.iosBuildProfile || null,
+      });
+      for (const error of validation.errors) blockers.push(`Native OCR evidence: ${error}`);
+      for (const warning of validation.warnings) warnings.push(`Native OCR evidence: ${warning}`);
+      nativeOcrEvidence = {
+        required: nativeOcrEnabled,
+        path: normalizedNativeOcrEvidencePath,
+        status: validation.errors.length === 0 ? 'pass' : 'blocked',
+        sha256: evidenceFile.sha256,
+        artifacts: validation.artifacts,
+        summary: validation.summary,
+        binding: {
+          sourceGitSha: evidence.sourceGitSha ?? null,
+          easIosBuildId: evidence.build?.easIosBuildId ?? null,
+          profile: evidence.build?.profile ?? null,
+          appBundleIdentifier: evidence.build?.appBundleIdentifier ?? null,
+          archiveSha256: evidence.build?.archiveSha256 ?? null,
+          devices: evidence.devices ?? null,
+          qaSignedOffBy: evidence.signoff?.qaSignedOffBy ?? null,
+          privacySignedOffBy: evidence.signoff?.privacySignedOffBy ?? null,
+        },
+      };
+      if (validation.errors.length === 0) {
+        validatedNativeOcrEvidencePaths = [
+          normalizedNativeOcrEvidencePath,
+          ...validation.artifacts.map(({ path }) => path),
+        ];
+      }
+    } catch (error) {
+      blockers.push(
+        `Native OCR evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
+      );
+    }
+  }
+}
+if (envValue('PHASE5_NATIVE_OCR_QA_PASS')) {
+  warnings.push(
+    'PHASE5_NATIVE_OCR_QA_PASS is ignored; only PHASE5_NATIVE_OCR_EVIDENCE_PATH can provide native OCR QA evidence.',
+  );
+}
 try {
-  gitStatus = gitStatusExcludingGeneratedPacket(validatedWidgetEvidencePaths);
+  gitStatus = gitStatusExcludingGeneratedPacket([
+    ...validatedWidgetEvidencePaths,
+    ...validatedNativeOcrEvidencePaths,
+  ]);
 } catch {
   warnings.push('Git status could not be captured.');
 }
 if (gitStatus.length > 0) {
   const dirtyMessage =
-    'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle evidence; do not use it as final native-device evidence.';
+    'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle/OCR evidence; do not use it as final native-device evidence.';
   if (strict) blockers.push(dirtyMessage);
   else warnings.push(dirtyMessage);
 }
 if (!buildEvidence.iosBuildId) blockers.push('Missing PHASE5_IOS_BUILD_ID.');
 else if (!looksLikeEasBuildEvidence(buildEvidence.iosBuildId)) {
   blockers.push('PHASE5_IOS_BUILD_ID must be a real EAS build UUID or expo.dev build URL.');
+}
+if (!buildEvidence.iosBuildProfile) {
+  blockers.push('Missing PHASE5_IOS_BUILD_PROFILE.');
+} else if (!['development', 'staging', 'production'].includes(buildEvidence.iosBuildProfile)) {
+  blockers.push('PHASE5_IOS_BUILD_PROFILE must be development, staging, or production.');
 }
 if (androidReleaseRequired) {
   if (!buildEvidence.androidBuildId) blockers.push('Missing PHASE5_ANDROID_BUILD_ID.');
@@ -586,8 +718,10 @@ const packet = {
   qaEvidence,
   widgetLifecycleEvidence,
   nativeOcr: {
-    enabledInAnyBuild: nativeOcrEnabled,
+    enabledInAnyBuild: nativeOcrEnabledInAnyBuild,
+    enabledInCandidateBuild: nativeOcrEnabled,
     qaRequired: nativeOcrEnabled,
+    evidence: nativeOcrEvidence,
   },
   scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
   files,
@@ -617,6 +751,12 @@ const widgetArtifactRows = widgetLifecycleEvidence.artifacts.map((artifact) => [
   String(artifact.bytes),
   artifact.sha256,
 ]);
+const nativeOcrArtifactRows = nativeOcrEvidence.artifacts.map((artifact) => [
+  artifact.id,
+  artifact.path,
+  String(artifact.bytes),
+  artifact.sha256,
+]);
 const mdPath = join(outDir, 'device-qa-packet.md');
 writeFileSync(
   mdPath,
@@ -633,6 +773,7 @@ writeFileSync(
     '## Build Evidence',
     '',
     `- iOS build ID: ${buildEvidence.iosBuildId || 'BLOCKED'}`,
+    `- iOS build profile: ${buildEvidence.iosBuildProfile || 'BLOCKED'}`,
     `- Android build ID: ${buildEvidence.androidBuildId || 'NOT APPLICABLE'}`,
     `- iOS device: ${buildEvidence.iosDevice || 'BLOCKED'}`,
     `- Android device: ${buildEvidence.androidDevice || 'NOT APPLICABLE'}`,
@@ -656,6 +797,22 @@ writeFileSync(
     widgetArtifactRows.length > 0
       ? markdownTable(['Artifact', 'Path', 'Bytes', 'SHA-256'], widgetArtifactRows)
       : 'No verified widget lifecycle artifacts attached.',
+    '',
+    '## Native OCR Evidence',
+    '',
+    `- Required for this build: ${nativeOcrEvidence.required ? 'yes' : 'no'}`,
+    `- Status: ${nativeOcrEvidence.status === 'pass' ? 'PASS' : nativeOcrEvidence.status === 'not_required_not_attached' ? 'NOT ATTACHED / OCR DISABLED' : 'BLOCKED'}`,
+    `- Evidence path: ${nativeOcrEvidence.path ?? 'BLOCKED'}`,
+    `- Evidence SHA-256: ${nativeOcrEvidence.sha256 ?? 'BLOCKED'}`,
+    `- Physical iPhones: ${nativeOcrEvidence.summary.devices}`,
+    `- Governed corpus: ${nativeOcrEvidence.summary.corpusItems} labels across ${nativeOcrEvidence.summary.labelClasses}/5 classes`,
+    `- RTL reading-order corpus: ${nativeOcrEvidence.summary.rtlCorpusItems} labels (minimum 2)`,
+    `- Verified device-label runs: ${nativeOcrEvidence.summary.runs}/${nativeOcrEvidence.summary.requiredRuns}`,
+    `- Verified proof attachments: ${nativeOcrEvidence.artifacts.length}/7`,
+    '',
+    nativeOcrArtifactRows.length > 0
+      ? markdownTable(['Artifact', 'Path', 'Bytes', 'SHA-256'], nativeOcrArtifactRows)
+      : 'No verified native OCR artifacts attached.',
     '',
     '## Scenarios',
     '',

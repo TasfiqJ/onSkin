@@ -43,7 +43,7 @@ const requiredPerformanceMetrics = [
   'local photo loading',
   'memory use in photo timeline',
 ];
-const requiredPerformanceMetricIds = ['photo_capture_analysis_ms'];
+const requiredPerformanceMetricIds = ['native_ocr_recognition_ms', 'photo_capture_analysis_ms'];
 
 const docNeedles = [
   {
@@ -74,6 +74,7 @@ const docNeedles = [
       'Performance baseline and scale evidence',
       'docs:performance-readiness-audit:check',
       ...requiredPerformanceMetrics,
+      'native_ocr_recognition_ms',
       'photo_capture_analysis_ms',
     ],
   },
@@ -83,6 +84,7 @@ const docNeedles = [
       'B-PERFORMANCE',
       'Performance baseline and scale evidence',
       ...requiredPerformanceMetrics,
+      'native_ocr_recognition_ms',
       'photo_capture_analysis_ms',
     ],
   },
@@ -104,6 +106,7 @@ const docNeedles = [
       'define every threshold before measurement',
       'at least five raw samples',
       'at least 50 encrypted local photos',
+      'native_ocr_recognition_ms',
       'photo_capture_analysis_ms',
       'PHASE5_PERFORMANCE_EVIDENCE_PATH',
       'phase5:performance-evidence:summarize',
@@ -125,10 +128,11 @@ const docNeedles = [
     path: files.performanceContract,
     needles: [
       'PERFORMANCE_MIN_SAMPLE_COUNT = 5',
-      'PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 3',
+      'PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 4',
       'nearestRankPercentile',
       'sampleCount must equal samples.length',
       'post-hoc targets are rejected',
+      'native_ocr_recognition_ms',
       'photo_capture_analysis_ms',
       'photo_timeline_peak_memory_mb',
       'logicalWidth must be at least',
@@ -151,10 +155,11 @@ const docNeedles = [
   {
     path: files.performanceTemplate,
     needles: [
-      '"schemaVersion": 3',
+      '"schemaVersion": 4',
       '"platformStatus"',
       '"android": "not_applicable"',
       '"app_startup_cold_ms"',
+      '"native_ocr_recognition_ms"',
       '"photo_capture_analysis_ms"',
       '"photo_timeline_peak_memory_mb"',
       '"measurements"',

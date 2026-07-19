@@ -1,6 +1,6 @@
 # Performance Readiness Audit
 
-Generated: 2026-07-18T21:28:30.715Z
+Generated: 2026-07-18T22:39:57.625Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ Required performance platforms: ios. Android evidence: not_applicable.
 
 ## Summary
 
-- Performance metrics: 7
+- Performance metrics: 8
 - Docs checked: 12
 - Package scripts checked: 9
 - Blockers: 0
@@ -28,6 +28,7 @@ Required performance platforms: ios. Android evidence: not_applicable.
 - routine generation time
 - local photo loading
 - memory use in photo timeline
+- native_ocr_recognition_ms
 - photo_capture_analysis_ms
 
 ## Package Scripts
@@ -58,16 +59,16 @@ Required performance platforms: ios. Android evidence: not_applicable.
 | ------------------------------------------------ | ------- | ------- |
 | docs/TESTING_STRATEGY.md                         | 13      | none    |
 | docs/FOR_TAS_TO_DO.md                            | 3       | none    |
-| LAUNCH_READINESS.md                              | 10      | none    |
-| BLOCKERS.md                                      | 9       | none    |
+| LAUNCH_READINESS.md                              | 11      | none    |
+| BLOCKERS.md                                      | 10      | none    |
 | docs/00-architecture.md                          | 3       | none    |
 | docs/04-smart-shelf.md                           | 2       | none    |
 | docs/06-photo-progress.md                        | 2       | none    |
-| docs/phase-5/performance-evidence-runbook.md     | 9       | none    |
+| docs/phase-5/performance-evidence-runbook.md     | 10      | none    |
 | scripts/phase5/check-performance-evidence.mjs    | 4       | none    |
-| scripts/phase5/performance-evidence-contract.mjs | 10      | none    |
+| scripts/phase5/performance-evidence-contract.mjs | 11      | none    |
 | scripts/phase5/performance-evidence-smoke.mjs    | 7       | none    |
-| docs/phase-5/performance-evidence.template.json  | 7       | none    |
+| docs/phase-5/performance-evidence.template.json  | 8       | none    |
 
 ## Blockers
 

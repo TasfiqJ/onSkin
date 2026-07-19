@@ -494,9 +494,11 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('{showScanPreview ? (');
     expect(source).toContain('supportFloorTextPressureScan && canShowPermissionRecovery');
     expect(source).toContain("title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}");
-    expect(source).toContain(
-      'accessibilityLabel="Scan ingredient label. Capture label, then type from it"',
-    );
+    expect(source).toContain("labelOcrNativeAvailability() === 'configured'");
+    expect(source).toContain("'Read on this iPhone, then review'");
+    expect(source).toContain("'Capture label, then type from it'");
+    expect(source).toContain("'Scan ingredient label. Read text on this iPhone, then review it'");
+    expect(source).toContain("'Scan ingredient label. Capture label, then type from it'");
     expect(source).toContain("'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'");
     expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
     expect(source).toContain('{canShowCamera ? (');
@@ -507,7 +509,6 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("style={{ position: 'relative', zIndex: 1 }}");
     expect(source).toContain("state.kind === 'idle' && compactScanSurface ? null");
     expect(source).toContain("className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}");
-    expect(source).toContain('subtitle="Capture label, then type from it"');
     expect(source).not.toContain('Review editable OCR');
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
@@ -789,10 +790,54 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsTitle');
     expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsBody');
     expect(source).toContain('Try label photo again');
-    expect(source).toContain('const NATIVE_OCR_ADAPTER_AVAILABLE = false;');
+    expect(source).toContain('createLabelOcrCoordinator');
+    expect(source).toContain('labelOcrNativeAdapter');
+    expect(source).toContain('labelOcrNativeAvailability');
+    expect(source).toContain("| 'running'");
+    expect(source).toContain("| 'ready'");
+    expect(source).toContain("| 'no_text'");
+    expect(source).toContain("| 'timed_out'");
+    expect(source).toContain("| 'misconfigured'");
     expect(source).toContain('On-device OCR is not enabled in this build yet.');
-    expect(source).not.toContain('On-device OCR is enabled for this build.');
+    expect(source).toContain('Text is read on this iPhone.');
+    expect(source).toContain("Automatic label reading isn't available in this build.");
+    expect(source).toContain('native_ocr_enabled: recognitionAvailable()');
     expect(source).not.toContain('native_ocr_enabled: env.nativeOcrEnabled');
+    expect(source).toContain("cancelAndDrainRecognition('manual_continue')");
+    expect(source).toContain("cancelAndDrainRecognition('navigation')");
+    expect(source).toContain("cancelAndDrainRecognition('retake')");
+    expect(source).toContain('A Vision failure must');
+    expect(source).toContain('Your edits will not be replaced.');
+    expect(source).toContain('Use recognized text');
+    expect(source).toContain(
+      'const finalParsed = parseIngredientText(reviewStateRef.current.text)',
+    );
+    expect(source).toContain('editable={!photoCleanupBusy}');
+    expect(source).toContain('if (navigationInFlightRef.current) return;');
+    expect(source).toContain('No readable text found');
+    expect(source).toContain('Label reading took too long');
+    expect(source).toContain("result.status === 'cancelled' && result.reason === 'native'");
+    expect(source).toContain('Retake label photo');
+    expect(source).toContain('capturedUri && !photoCleanupBusy ? (');
+    expect(source).toContain('cachePolicy="none"');
+    expect(source).toContain('const shouldPreventRouteRemoval = !routeRemovalReady;');
+    expect(source).toContain('usePreventRemove(shouldPreventRouteRemoval');
+    expect(source).toContain('await captureDrainRef.current;');
+    expect(source).toContain("{ kind: 'action', action: data.action }");
+    expect(source).toContain('navigation.dispatch(pendingNavigation.action)');
+    expect(source).toContain('maxLength={32_768}');
+    expect(source).toContain('AccessibilityInfo.announceForAccessibilityWithOptions');
+    expect(source).toContain('labelOcrAccessibilityAnnouncement(recognitionState)');
+    expect(source).toContain('{ queue: true }');
+    expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_OCR_RESULT');
+    expect(source).toContain("!__DEV__ || Platform.OS !== 'web'");
+    expect(source).toContain(
+      '(!cameraRef.current && !simulateCaptureFailureOnce && devOcrResult === null)',
+    );
+    expect(source).toContain('Development-only deterministic OCR state.');
+    expect(source).toContain('It does not exercise Apple Vision or a device photo.');
+    expect(source).toContain("text: 'Aqua, Glycerin, Niacinamide, 水, Ниацинамид'");
+    expect(source).not.toContain('const NATIVE_OCR_ADAPTER_AVAILABLE = false');
     expect(source).toContain('alertOnFailure: false');
     expect(source).toContain('canShowPermissionRecovery');
     expect(source).toContain('canAskCameraPermission');
@@ -808,7 +853,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(": ultraShortPhone\n                ? 'mt-3 h-[176px]'");
     expect(source).toContain("ultraShortPhone ? 'top-[48px] h-[78px]' : 'top-[64px] h-[96px]'");
     expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
-    expect(source).toContain('{!splitShortPhone ? (');
+    expect(source).toContain("{!splitShortPhone || recognitionState !== 'disabled' ? (");
     expect(source).toContain("{state === 'review' ? (");
     expect(source).toContain(
       "label={photoCleanupBusy ? 'Removing temporary photo...' : 'Looks right. Continue'}",

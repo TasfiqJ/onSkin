@@ -805,6 +805,54 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot, visible-text snapshot, route snapshot, control-geometry snapshot, and browser logs.
   - Current local evidence: 2026-07-09 focused `shelfRoutes` contract coverage verifies the fallback copy says `Capture label, then type from it`, preserves the full accessibility label, and contains no `Review editable OCR` copy. The 320 x 480 full-route rerun also verifies `/shelf/scan` has zero clipped controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/current-main-short-phone-480-rerun/`.
   - Current focused evidence: 2026-07-09 Codex in-app browser Expo web at 360 x 640 opens `/shelf/scan`, verifies the compact `Scan label` fallback exposes the honest accessibility label `Scan ingredient label. Capture label, then type from it`, verifies the old `Review editable OCR` copy is absent, taps the fallback, reaches `/shelf/ocr`, and verifies `On-device OCR is not enabled in this build yet` with zero horizontal overflow and zero current-route warning/error logs. Evidence is in `test-results/human-e2e/2026-07-09/shelf-scan-native-ocr-disabled-copy-current/`.
+- Branch: CAT-05 staging-only source-candidate gate
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Inspect and exercise the label-recognition route from the exact EAS profile under test.
+  - Expected result: Only the internal `staging` profile sets `EXPO_PUBLIC_NATIVE_OCR_ENABLED=true`; `development` and `production` remain false. A missing, unavailable, or contract-mismatched native module fails into explicit manual-entry recovery rather than implying OCR works. Enabling the flag alone does not satisfy the gate.
+  - Evidence: Exact source/profile/build binding, native-module availability result, signed-archive inspection, and physical-iPhone route capture. The deterministic Expo-web fixture below may mirror enabled UI states but is not an EAS staging binary.
+- Branch: CAT-05 deterministic recognized review, Retake, and Continue
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: At 375 x 667, 390 x 844, and 430 x 932, use the development-only `recognized` fixture, tap Capture label, wait through the reading state, inspect the Unicode transcript and uncertainty/truncation cues, Retake, capture again, and Continue.
+  - Expected result: Reading stays visibly busy without blocking typing; the Unicode transcript is preserved exactly; ambiguous/review lines are named in words; incomplete output is disclosed; no confidence is called percent accurate; Retake returns to capture; and Continue carries only the reviewed editable text to manual entry.
+  - Evidence: Planned committed-source CAT-05 runner artifacts for `recognized-review-retake-continue` at all three viewports, accessible-name/alert/live-region snapshots, text-field value, control geometry, browser logs, and manual-route handoff.
+- Branch: CAT-05 edit fence and explicit suggestion adoption
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Type a Unicode correction while the deterministic recognized result is still pending, then inspect and explicitly adopt the recognized suggestion.
+  - Expected result: A late result never overwrites the user's text. The route says the edits were kept and exposes `Use recognized text`; only that explicit action replaces the edit, and the suggestion action then disappears.
+  - Evidence: Planned `edit-fence-suggestion-adoption` artifacts at all three supported viewports plus review-state/coordinator tests. Native cancellation and late-result races remain physical-device/exact-build evidence.
+- Branch: CAT-05 no-readable-text manual recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the deterministic `no_text` fixture, then type multilingual Unicode ingredient text and Continue.
+  - Expected result: `No readable text found` is an alert; Retake and the editable manual field remain available; the user-entered Unicode text reaches manual add without a fake match or automatic Shelf mutation.
+  - Evidence: Planned `no-text-manual-recovery` artifacts at all three supported viewports.
+- Branch: CAT-05 timeout manual recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the deterministic `timed_out` fixture, then type multilingual Unicode ingredient text and Continue.
+  - Expected result: A stable `Label reading took too long` alert appears; Retake and manual entry remain usable; no native error or transcript is logged or shown; and manual handoff succeeds.
+  - Evidence: Planned `timeout-manual-recovery` artifacts at all three supported viewports plus exact native 12-second timeout/cancellation evidence on physical iPhones.
+- Branch: CAT-05 generic failure manual recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the deterministic `failed` fixture, then type multilingual Unicode ingredient text and Continue.
+  - Expected result: A stable generic label-not-read alert appears; Retake and manual entry remain usable; raw native failure detail stays hidden; and manual handoff succeeds.
+  - Evidence: Planned `failure-manual-recovery` artifacts at all three supported viewports plus exact-build native failure and missing/misconfigured-module checks.
+- Branch: CAT-05 navigation, cancellation, and temporary-photo cleanup
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Leave during capture and recognition through the visible Back action and every supported navigation-removal gesture/action; separately Retake, Continue, force cleanup failure/retry, terminate after raw camera capture, cold relaunch, and attempt both Shelf-label and Progress shutters around a failed/then-successful startup listing.
+  - Expected result: The route guard is armed before capture, waits for capture completion, drains OCR cancellation, awaits idempotent deletion, and only then redispatches the original navigation action. Failed drain/deletion leaves the route blocked with retry instead of authorizing departure. Retake and Continue use the same drain-before-delete order. Both repository shutters await the shared startup drain before `takePictureAsync`. Snapshot acquisition may retry only while both shutters remain gated and before the first successful listing. That first app-boot snapshot is immutable; bounded deletion retries use only its remaining names and never relist a post-boot capture as stale. App exit/process death is outside `usePreventRemove` and therefore requires cold-relaunch cleanup proof.
+  - Evidence: Source lifecycle/navigation and Progress-capture tests plus exact-build Back/swipe/pop/reset, both-shutter startup gating, failed-listing retry, immutable-snapshot, interruption, process-death, bounded-delete retry, managed-cache, Expo Camera cache, and Expo Image/SDWebImage path/digest/signature reports. Expo web cannot prove this branch.
+- Branch: CAT-05 deterministic-web evidence boundary
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the five CAT-05 deterministic scenarios across 375 x 667, 390 x 844, and 430 x 932 after the source checkpoint is committed.
+  - Expected result: The governed run has 15 scenario executions and 12 consent bootstraps, records `nativeDeviceProof=false`, and labels itself development-only Expo-web UI-state evidence. It must not be cited as Apple Vision, Swift, camera, iOS binary, physical-iPhone, OCR accuracy/latency, privacy, zero-network, cleanup, VoiceOver, archive, App Review, legal, or release proof.
+  - Evidence: `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/` only after provenance validation. Until that committed-source run exists, this is a declared matrix rather than completed E2E evidence.
 - Branch: camera permission denied
   - Priority: Important
   - Automate later: Yes

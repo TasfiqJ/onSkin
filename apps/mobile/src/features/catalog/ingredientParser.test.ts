@@ -38,4 +38,64 @@ describe('ingredient parser', () => {
     expect(result.status).toBe('failed');
     expect(result.warnings).toContain('empty_ingredient_text');
   });
+
+  it('splits full-width and ideographic separators while preserving multilingual unknowns', () => {
+    const result = parseIngredientText('水，甘油；烟酰胺、Α-Τοκοφερόλη, ماء الورد');
+
+    expect(result.tokens.map((token) => token.normalizedToken)).toEqual([
+      '水',
+      '甘油',
+      '烟酰胺',
+      'α-τοκοφερόλη',
+      'ماء الورد',
+    ]);
+    expect(result.unknownTokens).toEqual(['水', '甘油', '烟酰胺', 'Α-Τοκοφερόλη', 'ماء الورد']);
+  });
+
+  it('splits Arabic label punctuation without compatibility-folding the ordered text', () => {
+    const result = parseIngredientText('ماء، جلسرين؛ نياسيناميد');
+
+    expect(result.tokens.map((token) => token.normalizedToken)).toEqual([
+      'ماء',
+      'جلسرين',
+      'نياسيناميد',
+    ]);
+    expect(result.unknownTokens).toEqual(['ماء', 'جلسرين', 'نياسيناميد']);
+  });
+
+  it('does not split numeric locants inside chemical ingredient names', () => {
+    const result = parseIngredientText(
+      'Water, 1,2-Hexanediol, 1,2-Pentanediol; 2,4-Diaminopyrimidine 3-Oxide',
+    );
+
+    expect(result.parserVersion).toBe('phase4-inci-parser-v2');
+    expect(result.tokens.map((token) => token.normalizedToken)).toEqual([
+      'water',
+      '1,2-hexanediol',
+      '1,2-pentanediol',
+      '2,4-diaminopyrimidine 3-oxide',
+    ]);
+  });
+
+  it('distinguishes numeric locants from no-space ingredient delimiters', () => {
+    const result = parseIngredientText(
+      'CI 77491,1,2-Hexanediol,77492,2,4-Diaminopyrimidine 3-Oxide',
+    );
+
+    expect(result.tokens.map((token) => token.normalizedToken)).toEqual([
+      'ci 77491',
+      '1,2-hexanediol',
+      '77492',
+      '2,4-diaminopyrimidine 3-oxide',
+    ]);
+  });
+
+  it('preserves multi-part and embedded numeric locants', () => {
+    const result = parseIngredientText('1, 2, 3-Propanetriol; Butane-1,3-diol');
+
+    expect(result.tokens.map((token) => token.normalizedToken)).toEqual([
+      '1,2,3-propanetriol',
+      'butane-1,3-diol',
+    ]);
+  });
 });

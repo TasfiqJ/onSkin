@@ -113,6 +113,15 @@ for (const measurement of unsummarizedEvidence.measurements) {
 }
 
 const template = createPerformanceEvidenceTemplate();
+assert.equal(template.schemaVersion, 4);
+assert.equal(Object.hasOwn(template.thresholds, 'native_ocr_recognition_ms'), true);
+assert.equal(
+  template.measurements.some(
+    (measurement) =>
+      measurement.platform === 'ios' && measurement.metric === 'native_ocr_recognition_ms',
+  ),
+  true,
+);
 assert.equal(template.platformStatus.ios, 'required');
 assert.equal(template.platformStatus.android, 'not_applicable');
 assert.equal(Object.hasOwn(template.devices, 'android'), false);

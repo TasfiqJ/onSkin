@@ -82,10 +82,39 @@ consent and withdrawal experience, legal basis, notices, access/export rights,
 processor and backup treatment, retention/purge schedule, and Apple privacy
 label classification require named privacy/legal review and live evidence.
 
+## CAT-05 Native OCR
+
+The CAT-05 source candidate recognizes a user-initiated label photo with Apple
+Vision on device. The photo remains a temporary local cache file and the
+recognized transcript, alternatives, confidence-ranking signals, and geometry
+remain local to the editable review/manual-entry handoff. No label image,
+transcript, candidate, confidence value, request ID, file URI, product identity,
+or raw native error is designed to leave the device.
+
+Recognition analytics are separate allowlisted derived-data contracts. The
+current direct mobile analytics transport is disabled. If a separately approved
+transport is later activated, `label_recognition_completed` permits only a
+bounded result enum, a coarse latency bucket, and `on_device: true`. After
+explicit Continue, the separate `ingredient_parse_completed` event permits the
+`label_capture` source, parser result, bounded token count, and native-enabled
+Boolean. Exact timing, transcript, candidates, confidence, and ingredient
+identities are prohibited.
+Apple App Privacy says data processed only on device is not "collected," but
+any derived data sent off device must be evaluated separately. Final category,
+purpose, linkage, retention, consent, policy, and consumer-health treatment
+therefore remain open for exact-binary traffic review and qualified privacy/
+legal approval.
+
+Only the internal EAS `staging` profile enables this source candidate;
+`development` and `production` remain disabled. Local source tests do not prove
+Swift compilation, signed-archive linkage, zero network disclosure, cache
+cleanup, physical-device accuracy, VoiceOver/Dynamic Type, performance, Apple
+acceptance, or legal compliance.
+
 ## Phase 5 Native Notes
 
 - Barcode scanning uses on-device camera decode, then sends the normalized package code to the first-party OnSkin catalog Edge Function for a real-time lookup. The function queries only reviewed Supabase catalog rows and returns manual fallback on a miss; it does not call Open Beauty Facts or another catalog recipient. Search phrases and barcodes are not retained in server lookup telemetry. An offline retry exists only after explicit user action in an encrypted, account/health-bound queue with seven-day logical expiry; physical byte purge waits for the next activation/read/export/lifecycle cleanup if the OS suspends or terminates the app. A reviewed result requires visible confirmation before any Shelf change. Retention and legal treatment remain open for qualified review.
-- Label capture stores an app-managed temporary cache image only while the user references it. Back, Continue, retake, and capture-failure paths await deletion; unmount requests cleanup and bounded startup scavenging recovers managed files after interruption. Native OCR is disabled until a reviewed ML Kit/Vision module passes device QA.
+- Label capture stores an app-managed temporary cache image only while the user references it. Back, Continue, retake, capture-failure, and intercepted navigation paths coordinate capture/OCR drain and idempotent deletion; unmount requests cleanup. Bounded startup recovery covers app-managed files plus canonical Expo Camera cache children present in the app-boot snapshot, and the preview opts out of Expo Image caching. Both Shelf label and Progress shutters await the shared startup drain. Snapshot acquisition may retry only while those shutters stay gated and before the first successful listing; that first snapshot is immutable and later retries never relist post-boot captures. These are source controls only: exact-build path/digest inspection of managed, Expo Camera, and Expo Image/SDWebImage caches remains required. The Apple Vision candidate is staging-only until native evidence and professional review pass.
 - Progress photos are encrypted into app-private `.onskinphoto` files using XChaCha20-Poly1305, with the content key in SecureStore. Renderers decrypt to memory for display.
 - Photo notes are encrypted before AsyncStorage persistence and are not mirrored to Supabase.
 - Native content-key failure is non-destructive: unreadable/missing/malformed keys and authentication failures preserve ciphertext, do not create replacement keys on reads, and block stale empty/default rewrites. Genuine OS key loss remains unrecoverable because V1 has no key escrow or cloud restore.

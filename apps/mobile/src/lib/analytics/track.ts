@@ -34,6 +34,21 @@ const PHOTO_QUALITY_RESULT_VALUES = new Set([
   'unmeasured',
   'darker',
 ]);
+const LABEL_RECOGNITION_RESULT_VALUES = new Set([
+  'recognized',
+  'no_text',
+  'timed_out',
+  'failed',
+  'cancelled',
+]);
+const LABEL_RECOGNITION_LATENCY_VALUES = new Set([
+  'lt_1s',
+  '1s_to_lt_3s',
+  '3s_to_lt_6s',
+  '6s_to_lt_12s',
+  'gte_12s',
+  'unknown',
+]);
 const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
 const SAFE_ANALYTICS_STRING_VALUE = /^[A-Za-z0-9_-]{1,80}$/;
 
@@ -81,6 +96,30 @@ export function sanitizeAnalyticsEventName(
   return isAllowedAnalyticsEventName(normalized) ? normalized : null;
 }
 
+/** Apply the narrowest event-specific schema after the global privacy filter. */
+export function sanitizeAnalyticsEventProps(
+  event: AnalyticsAllowedEventName,
+  props?: Record<string, unknown>,
+): AnalyticsProps {
+  const clean = sanitizeAnalyticsProps(props);
+  if (event !== 'label_recognition_completed') return clean;
+  if (
+    clean === undefined ||
+    typeof clean.result !== 'string' ||
+    !LABEL_RECOGNITION_RESULT_VALUES.has(clean.result) ||
+    typeof clean.latency_bucket !== 'string' ||
+    !LABEL_RECOGNITION_LATENCY_VALUES.has(clean.latency_bucket) ||
+    clean.on_device !== true
+  ) {
+    return undefined;
+  }
+  return {
+    result: clean.result,
+    latency_bucket: clean.latency_bucket,
+    on_device: true,
+  };
+}
+
 export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
   if (isAccountActivityBlockedForDeletion()) return;
   const safeEvent = sanitizeAnalyticsEventName(event);
@@ -89,7 +128,7 @@ export function track(event: OnboardingEvent | string, props?: Record<string, un
   // Direct mobile vendor capture is intentionally disabled until the approved
   // analytics configuration and consent state have loaded. Keep sanitization at
   // every call site so a future barrier-aware server transport cannot bypass it.
-  void sanitizeAnalyticsProps(props);
+  void sanitizeAnalyticsEventProps(safeEvent, props);
 }
 
 export async function resetAnalyticsIdentity(): Promise<void> {

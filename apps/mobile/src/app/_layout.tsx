@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/startup';
+import { startLabelPhotoStartupScavenge } from '@/features/native/camera/labelPhotoStartup';
 import { HealthDataLifecycleGate } from '@/features/healthConsent/HealthDataLifecycleGate';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
@@ -30,6 +31,7 @@ initSentry();
 markStartupPhase('javascript_started');
 void SplashScreen.preventAutoHideAsync();
 void scavengePlaintextStaging().catch(() => undefined);
+void startLabelPhotoStartupScavenge().catch(() => undefined);
 
 export default function RootLayout() {
   const fontDecisionComplete = useFontDecision();

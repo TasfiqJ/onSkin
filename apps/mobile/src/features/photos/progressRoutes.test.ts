@@ -272,17 +272,18 @@ describe('Progress route mobile contracts', () => {
     expect(review).toContain("? ('post_capture_measurement' as const)");
     expect(review).toContain('qualitySource,');
     expect(review).toContain("data?.reference?.qualitySource === 'post_capture_measurement'");
-    expect(review).toContain('onSuccess: () => {');
-    expect(review).toContain('const saveInFlightRef = useRef(false);');
-    expect(review).toContain('saveInFlightRef.current = true;');
-    expect(review).toContain('saveInFlightRef.current = false;');
-    expect(review).toContain('if (saveInFlightRef.current) return;');
-    expect(review).toContain('disabled={add.isPending}');
-    expect(review).toContain('onError: () => {');
+    expect(review).toContain('await add.mutateAsync({');
+    expect(review).toContain('await lifecycle.save(persist');
+    expect(review).toContain('navigationInFlightRef.current = true;');
+    expect(review).toContain('navigationInFlightRef.current = false;');
+    expect(review).toContain('if (navigationInFlightRef.current) return');
+    expect(review).toContain('disabled={add.isPending || actionBusy}');
+    expect(review).toContain("if (result === 'save_failed') setSaveFailed(true);");
     expect(review).toContain('setSaveFailed(true);');
-    expect(review).toContain('const discardCapturedPhoto = () => {');
-    expect(review).toContain('.catch(() => undefined)');
-    expect(review).not.toContain('onSettled: () => {');
+    expect(review).toContain('await lifecycle.discard();');
+    expect(review).toContain('usePreventRemove(source !== null && !routeRemovalReady');
+    expect(review).toContain('cachePolicy="none"');
+    expect(review).not.toContain('FileSystem.deleteAsync(capturedUri');
     expect(review).not.toContain('Number(params.alignment');
     expect(review).not.toContain('Number(params.lighting');
 
@@ -411,21 +412,25 @@ describe('Progress route mobile contracts', () => {
     expect(copy).toContain("missingTitle: 'No photo to review yet.'");
     expect(source).toContain('function isNonBlank(value: string | null): value is string');
     expect(source).toContain('const hasCapturedPhoto = isNonBlank(capturedUri);');
-    expect(source).toContain(
-      'if (!hasCapturedPhoto || add.isPending || saveInFlightRef.current) return;',
-    );
+    expect(source).toContain('if (!hasCapturedPhoto || add.isPending || actionBusy) return;');
     expect(source).toContain('if (!hasCapturedPhoto) {');
     expect(source).toContain('PHOTO_COPY.review.missingEyebrow');
     expect(source).toContain('PHOTO_COPY.review.missingCapture');
     expect(source).toContain('PHOTO_COPY.review.missingBack');
-    expect(source).toContain("router.replace('/progress/capture')");
+    expect(source).toContain("discardAndNavigate('retake')");
     expect(source).not.toContain('your photo');
   });
 
   it('keeps the first saved photo wired to both baseline analytics names', () => {
     const source = readAppRoute('progress/review.tsx');
+    const replayGuard = source.indexOf('if (!createdNow) return;');
+    const capturedEvent = source.indexOf("track('photo_captured', { on_device: true })");
 
     expect(source).toContain('const wasEmpty = (data?.count ?? 0) === 0;');
+    expect(source).toContain('const outcome = await add.mutateAsync({');
+    expect(source).toContain('createdNow = outcome.createdNow;');
+    expect(replayGuard).toBeGreaterThan(-1);
+    expect(replayGuard).toBeLessThan(capturedEvent);
     expect(source).toContain("track('photo_captured', { on_device: true })");
     expect(source).not.toContain('result: verdict.flag');
     expect(source).toContain("track('first_photo_captured')");

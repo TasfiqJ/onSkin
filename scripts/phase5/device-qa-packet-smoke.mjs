@@ -19,6 +19,11 @@ import {
   WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION,
   WIDGET_LIFECYCLE_SUPPORTED_FAMILIES,
 } from './widget-lifecycle-evidence-contract.mjs';
+import {
+  createNativeOcrEvidenceTemplate,
+  NATIVE_OCR_LABEL_CLASSES,
+  NATIVE_OCR_REQUIRED_SOURCE_FILES,
+} from './native-ocr-evidence-contract.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const sourceRoot = resolve(scriptDir, '..', '..');
@@ -49,7 +54,8 @@ const changedPaths = git(sourceRoot, [
   .filter(Boolean)
   .flatMap((line) => line.slice(3).split(' -> '))
   .map((path) => path.trim().replaceAll('\\', '/'));
-for (const path of changedPaths) {
+const filteredChangedPaths = changedPaths.filter((path) => !path.startsWith('.tmp/'));
+for (const path of filteredChangedPaths) {
   const source = resolve(sourceRoot, path);
   if (!existsSync(source)) continue;
   const target = resolve(fixtureRoot, path);
@@ -96,6 +102,7 @@ function sha256(bytes) {
 }
 
 function artifact(relativePath, bytes, mediaType) {
+  mkdirSync(dirname(resolve(root, relativePath)), { recursive: true });
   writeFileSync(resolve(root, relativePath), bytes);
   return { path: relativePath, sha256: sha256(bytes), mediaType };
 }
@@ -307,6 +314,224 @@ function writeWidgetEvidenceFixture() {
 
 const widgetEvidencePath = writeWidgetEvidenceFixture();
 
+const nativeOcrEvidenceRelativeRoot = `docs/phase-5/evidence/native-ocr/device-packet-smoke-${process.pid}`;
+
+function nearestRank(samples, percentile) {
+  const sorted = [...samples].sort((left, right) => left - right);
+  return sorted[Math.max(0, Math.ceil(percentile * sorted.length) - 1)];
+}
+
+function roundedRate(value) {
+  return Number(value.toFixed(6));
+}
+
+function fillNativeOcrResults(evidence) {
+  const classSummaries = {};
+  for (const labelClass of NATIVE_OCR_LABEL_CLASSES) {
+    const itemIds = new Set(
+      evidence.corpus.filter((item) => item.labelClass === labelClass).map((item) => item.id),
+    );
+    const runs = evidence.runs.filter((run) => itemIds.has(run.corpusItemId));
+    const expectedTokens = runs.reduce((sum, run) => sum + run.expectedTokenCount, 0);
+    const matchedTokens = runs.reduce((sum, run) => sum + run.matchedTokenCount, 0);
+    const outputTokens = runs.reduce((sum, run) => sum + run.outputTokenCount, 0);
+    const insertedTokens = runs.reduce((sum, run) => sum + run.insertedTokenCount, 0);
+    const sequenceEdits = runs.reduce((sum, run) => sum + run.sequenceEditDistance, 0);
+    const sequenceTokenFloor = runs.reduce(
+      (sum, run) => sum + Math.max(run.expectedTokenCount, run.outputTokenCount),
+      0,
+    );
+    classSummaries[labelClass] = {
+      runCount: runs.length,
+      expectedTokens,
+      matchedTokens,
+      outputTokens,
+      insertedTokens,
+      sequenceEdits,
+      tokenRecall: roundedRate(matchedTokens / expectedTokens),
+      insertedTokenRate: roundedRate(insertedTokens / Math.max(1, outputTokens)),
+      orderedSequenceSimilarity: roundedRate(
+        Math.max(0, 1 - sequenceEdits / Math.max(1, sequenceTokenFloor)),
+      ),
+      p95RecognitionMs: nearestRank(
+        runs.map((run) => run.recognitionMs),
+        0.95,
+      ),
+    };
+  }
+  evidence.results = {
+    totalRuns: evidence.runs.length,
+    totalDevices: evidence.devices.length,
+    totalCorpusItems: evidence.corpus.length,
+    classSummaries,
+    overallP95RecognitionMs: nearestRank(
+      evidence.runs.map((run) => run.recognitionMs),
+      0.95,
+    ),
+    allRunsCompleted: true,
+    thresholdDecision: 'pass',
+  };
+}
+
+function writeNativeOcrEvidenceFixture() {
+  const evidence = createNativeOcrEvidenceTemplate();
+  evidence.testStartedAt = '2026-07-18T12:00:00.000Z';
+  evidence.completedAt = '2026-07-18T16:00:00.000Z';
+  evidence.sourceGitSha = currentGitSha();
+  evidence.sourceHashes = Object.fromEntries(
+    NATIVE_OCR_REQUIRED_SOURCE_FILES.map((path) => [
+      path,
+      sha256(readFileSync(resolve(root, path))),
+    ]),
+  );
+  Object.assign(evidence.build, {
+    easIosBuildId: iosBuildId,
+    profile: 'staging',
+    appBundleIdentifier,
+    appVersion: '1.0.0',
+    iosBuildNumber: '42',
+    archiveSha256: 'a'.repeat(64),
+  });
+  Object.assign(evidence.thresholds, {
+    definedAt: '2026-07-18T11:00:00.000Z',
+    definedBy: 'Performance Owner',
+    rationale:
+      'Predeclared beta thresholds balance accurate editable INCI capture with bounded physical-device latency.',
+  });
+  evidence.devices = [
+    {
+      id: 'ios-floor-device',
+      physical: true,
+      model: 'iPhone SE 3rd generation',
+      osVersion: 'iOS 17.7',
+    },
+    {
+      id: 'ios-current-device',
+      physical: true,
+      model: 'iPhone 15 Pro',
+      osVersion: 'iOS 18.5',
+    },
+  ];
+  evidence.corpus.forEach((item, index) => {
+    item.languageTags =
+      item.labelClass === 'multilingual'
+        ? /-(?:1|2)$/.test(item.id)
+          ? ['en', 'ar']
+          : ['en', 'fr']
+        : ['en'];
+    item.rightsBasis = 'owned_physical_product';
+    item.provenanceNote = `Owned physical product label documented for device packet item ${index + 1}.`;
+    item.groundTruthSha256 = sha256(`reviewed-ground-truth-${item.id}`);
+    item.expectedTokenCount = 20;
+  });
+  evidence.runs = evidence.devices.flatMap((device, deviceIndex) =>
+    evidence.corpus.map((item, itemIndex) => ({
+      id: `${device.id}-${item.id}`,
+      deviceId: device.id,
+      corpusItemId: item.id,
+      capturedAt: `2026-07-18T1${2 + deviceIndex}:${String(itemIndex).padStart(2, '0')}:00.000Z`,
+      recognitionMs: 900 + deviceIndex * 100 + itemIndex * 20,
+      expectedTokenCount: 20,
+      matchedTokenCount: item.labelClass === 'clear' ? 20 : 18,
+      outputTokenCount: item.labelClass === 'clear' ? 20 : 19,
+      insertedTokenCount: 0,
+      sequenceEditDistance: item.labelClass === 'clear' ? 0 : 2,
+      lowConfidenceTokenCount: item.labelClass === 'clear' ? 0 : 2,
+      editable: true,
+      manualRecoveryAvailable: true,
+      uncertaintyCuesVisible: true,
+      transcriptNfc: true,
+      multilingualGlyphsPreserved: true,
+      readingOrderReviewed: true,
+      rtlReadingOrderPass: item.languageTags.some((tag) => tag === 'ar') ? true : null,
+      completedWithoutCrashOrHang: true,
+      timedOut: false,
+    })),
+  );
+  fillNativeOcrResults(evidence);
+  evidence.accessibility = {
+    testedDeviceIds: evidence.devices.map(({ id }) => id),
+    voiceOverEditingPass: true,
+    statusAnnouncementsPass: true,
+    noFocusStealPass: true,
+    dynamicType200Pass: true,
+    minimum48PointTargetsPass: true,
+    noColorOnlyUncertaintyPass: true,
+    manualFallbackReachablePass: true,
+    proofArtifactId: 'accessibility_report',
+  };
+  evidence.cleanup = {
+    cancellationDrainPass: true,
+    lateResultIgnoredPass: true,
+    temporaryPhotoRemovedAfterContinue: true,
+    temporaryPhotoRemovedAfterRetake: true,
+    temporaryPhotoRemovedAfterLeave: true,
+    noOrphanedManagedPhotos: true,
+    noOrphanedExpoCameraPhotosAfterColdRelaunch: true,
+    noLabelPhotoInImageCaches: true,
+    startupSnapshotRetryBeforeSuccessPass: true,
+    startupSnapshotFrozenAfterSuccessPass: true,
+    combinedStartupDrainCoordinationPass: true,
+    staleRawCaptureRemovedAfterLeaseInvalidation: true,
+    progressReviewRawCaptureLifecyclePass: true,
+    proofArtifactId: 'cleanup_report',
+  };
+  evidence.privacyNetwork = {
+    networkCaptureTool: 'Proxyman physical iPhone capture',
+    captureStartedAt: '2026-07-18T12:00:00.000Z',
+    captureEndedAt: '2026-07-18T15:30:00.000Z',
+    zeroOcrNetworkRequests: true,
+    zeroImageUploads: true,
+    zeroTranscriptUploads: true,
+    imagesRemainOnDevice: true,
+    transcriptsRemainOnDevice: true,
+    noSensitiveLogs: true,
+    proofArtifactId: 'network_capture',
+  };
+  evidence.provenance = {
+    reviewedAt: '2026-07-18T15:45:00.000Z',
+    reviewedBy: 'Corpus Rights Reviewer',
+    allItemsHaveDocumentedRightsBasis: true,
+    noThirdPartyLabelImagesCommitted: true,
+    proofArtifactId: 'corpus_provenance_report',
+  };
+  evidence.artifacts = [
+    ['eas_build_log', 'text/plain'],
+    ['archive_inspection', 'application/json'],
+    ['raw_run_export', 'application/json'],
+    ['network_capture', 'text/plain'],
+    ['accessibility_report', 'application/json'],
+    ['cleanup_report', 'text/plain'],
+    ['corpus_provenance_report', 'application/json'],
+  ].map(([id, mediaType]) => {
+    const path = `${nativeOcrEvidenceRelativeRoot}/${id}.${mediaType === 'application/json' ? 'json' : 'txt'}`;
+    const attached =
+      mediaType === 'application/json'
+        ? jsonArtifact(path, {
+            id,
+            sourceGitSha: evidence.sourceGitSha,
+            easIosBuildId: iosBuildId,
+            proof: `${id} physical-device proof`,
+          })
+        : textArtifact(path, `${id} physical-device proof for ${iosBuildId}`);
+    return { id, ...attached, bytes: readFileSync(resolve(root, path)).length };
+  });
+  evidence.knownLimitations = [
+    'Vision confidence is not a calibrated probability; every transcript remains editable.',
+  ];
+  evidence.signoff = {
+    decision: 'pass',
+    qaSignedOffBy: 'Physical Device Reviewer',
+    privacySignedOffBy: 'Privacy Evidence Reviewer',
+    signedAt: '2026-07-18T17:00:00.000Z',
+  };
+  const relativePath = `${nativeOcrEvidenceRelativeRoot}/evidence.json`;
+  writeFileSync(resolve(root, relativePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  return relativePath;
+}
+
+const nativeOcrEvidencePath = writeNativeOcrEvidenceFixture();
+
 const passthroughKeys = [
   'ComSpec',
   'HOME',
@@ -328,6 +553,7 @@ const processBaseEnv = Object.fromEntries(
 
 const validEvidence = {
   PHASE5_IOS_BUILD_ID: iosBuildId,
+  PHASE5_IOS_BUILD_PROFILE: 'staging',
   PHASE5_ANDROID_BUILD_ID:
     'https://expo.dev/accounts/routinekind/projects/mobile/builds/7a4d74ae-2acd-4af5-931f-b768565bcd64',
   PHASE5_IOS_DEVICE: 'iPhone 15 Pro / iOS 18.5',
@@ -337,6 +563,7 @@ const validEvidence = {
   APP_IOS_BUNDLE_IDENTIFIER: appBundleIdentifier,
   APPLE_TEAM_ID: appleTeamId,
   PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH: widgetEvidencePath,
+  PHASE5_NATIVE_OCR_EVIDENCE_PATH: nativeOcrEvidencePath,
   PHASE5_DEVICE_QA_PASS: 'true',
   PHASE5_INSTALL_QA_PASS: 'true',
   PHASE5_CAMERA_PERMISSION_QA_PASS: 'true',
@@ -354,7 +581,6 @@ const validEvidence = {
   PHASE5_WIDGET_DEVICE_QA_PASS: 'true',
   PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS: 'true',
   PHASE5_LIVE_ACTIVITY_QA_PASS: 'true',
-  PHASE5_NATIVE_OCR_QA_PASS: 'false',
 };
 
 function run(extraEnv, strict = true) {
@@ -457,22 +683,37 @@ const cases = [
     },
   },
   {
-    name: 'strict Phase 5 QA packet requires native OCR evidence only when OCR is enabled',
-    result: run({ EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true', PHASE5_NATIVE_OCR_QA_PASS: 'false' }),
+    name: 'strict Phase 5 QA packet rejects Boolean-only native OCR clearance',
+    result: run({
+      EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true',
+      PHASE5_NATIVE_OCR_EVIDENCE_PATH: '',
+      PHASE5_NATIVE_OCR_QA_PASS: 'true',
+    }),
     expect(result) {
       return (
         result.status === 1 &&
-        /Missing PHASE5_NATIVE_OCR_QA_PASS=true \(native OCR real-label text recognition\)/.test(
+        /Missing PHASE5_NATIVE_OCR_EVIDENCE_PATH; a Boolean pass flag cannot substitute/.test(
           output(result),
         )
       );
     },
   },
   {
-    name: 'strict Phase 5 QA packet accepts native OCR evidence when OCR is enabled',
-    result: run({ EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true', PHASE5_NATIVE_OCR_QA_PASS: ' TRUE ' }),
+    name: 'strict Phase 5 QA packet accepts validated native OCR evidence when OCR is enabled',
+    result: run({ EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true' }),
     expect(result) {
-      return result.status === 0 && !/^FAIL /m.test(output(result));
+      if (result.status !== 0 || /^FAIL /m.test(output(result))) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.nativeOcr.enabledInAnyBuild === true &&
+        packet.nativeOcr.qaRequired === true &&
+        packet.nativeOcr.evidence.status === 'pass' &&
+        packet.nativeOcr.evidence.summary.devices === 2 &&
+        packet.nativeOcr.evidence.summary.corpusItems === 25 &&
+        packet.nativeOcr.evidence.summary.rtlCorpusItems === 2 &&
+        packet.nativeOcr.evidence.summary.runs === 50 &&
+        packet.nativeOcr.evidence.artifacts.length === 7
+      );
     },
   },
   {
@@ -485,6 +726,13 @@ const cases = [
           output(result),
         )
       );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet requires the exact iOS build profile',
+    result: run({ PHASE5_IOS_BUILD_PROFILE: '' }),
+    expect(result) {
+      return result.status === 1 && /Missing PHASE5_IOS_BUILD_PROFILE/.test(output(result));
     },
   },
   {
@@ -570,12 +818,17 @@ const cases = [
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
         packet.buildEvidence.signedOffBy === 'Tas Mohammed' &&
+        packet.buildEvidence.iosBuildProfile === 'staging' &&
         packet.widgetLifecycleEvidence.status === 'pass' &&
         packet.widgetLifecycleEvidence.summary.artifactCount === 15 &&
         packet.widgetLifecycleEvidence.summary.baseArtifactCount === 11 &&
         packet.widgetLifecycleEvidence.summary.proofAttachmentCount === 4 &&
         packet.widgetLifecycleEvidence.summary.scenarioCount === 4 &&
         /^[0-9a-f]{64}$/i.test(packet.widgetLifecycleEvidence.sha256) &&
+        packet.nativeOcr.evidence.status === 'pass' &&
+        packet.nativeOcr.evidence.summary.runs === 50 &&
+        packet.nativeOcr.evidence.artifacts.length === 7 &&
+        /^[0-9a-f]{64}$/i.test(packet.nativeOcr.evidence.sha256) &&
         /^[0-9a-f]{40}$/i.test(packet.gitSha) &&
         typeof packet.gitStatus === 'string' &&
         Array.isArray(packet.warnings) &&
@@ -590,6 +843,13 @@ const cases = [
         ) &&
         packet.files.some(
           (file) => file.path === 'scripts/phase5/performance-evidence-smoke.mjs',
+        ) &&
+        packet.files.some(
+          (file) => file.path === 'scripts/phase5/native-ocr-evidence-contract.mjs',
+        ) &&
+        packet.files.some((file) => file.path === 'scripts/phase5/check-native-ocr-evidence.mjs') &&
+        packet.files.some(
+          (file) => file.path === 'docs/phase-5/native-ocr-evidence.template.json',
         ) &&
         packet.files.some((file) => file.path === 'docs/hugeToDo/launch-contract.json') &&
         packet.files.some((file) => file.path === 'scripts/launch/contract.mjs') &&
@@ -659,6 +919,8 @@ const cases = [
           'apps/mobile/src/features/widgets/runtimeGate.test.ts',
           'apps/mobile/src/features/widgets/controllerCore.ts',
           'apps/mobile/src/features/widgets/controllerCore.test.ts',
+          ...NATIVE_OCR_REQUIRED_SOURCE_FILES,
+          'scripts/cat05/native-label-ocr-source-contract.test.mjs',
           'scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift',
           'scripts/phase5/expo-widgets-56.0.23/AppIntent.swift',
           'scripts/phase5/expo-widgets-56.0.23/EntryView.swift',
@@ -699,7 +961,7 @@ const cases = [
       return (
         packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
         packet.blockers.includes(
-          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle evidence; do not use it as final native-device evidence.',
+          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle/OCR evidence; do not use it as final native-device evidence.',
         )
       );
     },
@@ -713,7 +975,7 @@ const cases = [
       return (
         packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
         packet.warnings.includes(
-          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle evidence; do not use it as final native-device evidence.',
+          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle/OCR evidence; do not use it as final native-device evidence.',
         )
       );
     },

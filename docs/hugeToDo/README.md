@@ -48,6 +48,7 @@ Start here:
 - [CAT-03 Adversarial Database Contract](../../supabase/tests/database/catalog_launch_curation.test.sql)
 - [CAT-04 Search, Barcode, and Recovery Source Checkpoint](./CAT-04-SEARCH-BARCODE-RECOVERY-SOURCE-CHECKPOINT-2026-07-18.md)
 - [CAT-04 Scan/Lookup Minimization Migration](../../supabase/migrations/20260718000059_catalog_scan_minimization.sql)
+- [CAT-05 Native OCR Source Checkpoint](./CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -156,6 +157,23 @@ candidate reconnect cycle, live hosted owner/withdrawal/export/deletion
 evidence, active-catalog proof, physical-iPhone camera/accessibility matrix,
 App Privacy reconciliation, and professional privacy/security/legal review
 remain open; CAT-04 is not launch-clear.
+
+CAT-05 is now a `source candidate / launch-blocked` checkpoint. A strict local
+Expo module pins Apple Vision text recognition revision 3, `.accurate`
+recognition, automatic language detection, bounded request/response and image
+inputs, cancellation/timeout handling, editable confidence-aware Unicode/RTL
+review, a user-edit fence, manual recovery, minimized categorical/coarse
+analytics, and bounded managed plus Expo Camera startup cleanup. Only the
+internal EAS `staging` profile enables the candidate; `development` and
+`production` remain disabled. The deterministic Expo-web runner defines 15 UI
+scenario executions at the three supported viewports, but it must remain
+`nativeDeviceProof=false` and cannot establish Vision, camera, privacy,
+cleanup, accuracy, latency, accessibility, archive, App Review, or release
+behavior. Xcode/Swift compilation, exact signed-archive linkage, two physical
+iPhones, the governed 25-label/50-run matrix, zero-network and cache-digest
+proof, VoiceOver/Dynamic Type, performance, corpus rights, and qualified
+privacy/security/legal review remain open. CAT-05 is not Apple- or
+legal-cleared and no commercial outcome is implied.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. The fresh-only source procedure now covers all 58 migrations through

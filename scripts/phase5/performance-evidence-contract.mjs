@@ -7,7 +7,7 @@ import {
   requiredReleasePlatforms,
 } from '../launch/contract.mjs';
 
-export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 3;
+export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 4;
 export const PERFORMANCE_MIN_SAMPLE_COUNT = 5;
 
 export const PERFORMANCE_METRICS = [
@@ -20,6 +20,7 @@ export const PERFORMANCE_METRICS = [
   { id: 'barcode_decode_ms', unit: 'ms' },
   { id: 'barcode_lookup_ms', unit: 'ms' },
   { id: 'barcode_no_match_recovery_ms', unit: 'ms' },
+  { id: 'native_ocr_recognition_ms', unit: 'ms' },
   { id: 'routine_generation_three_products_ms', unit: 'ms' },
   { id: 'routine_generation_five_products_ms', unit: 'ms' },
   { id: 'routine_generation_ten_products_ms', unit: 'ms' },

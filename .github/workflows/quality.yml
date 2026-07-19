@@ -153,6 +153,9 @@ jobs:
           npm run phase9:verification-wiring:test
           npm run phase9:store-build-inspect:check
 
+      - name: Verify iOS Simulator compile workflow contract
+        run: npm run phase5:ios-simulator-compile-workflow:test
+
       - name: Check Expo dependency compatibility
         working-directory: apps/mobile
         run: npx expo install --check

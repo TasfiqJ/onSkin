@@ -13,6 +13,8 @@ import {
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
+import { trustedProgressCaptureSessionId } from './progressCapturePrivacy';
+
 import {
   decryptPhotoNote,
   clearEncryptedPhotoStorage,
@@ -39,6 +41,9 @@ const KEY = 'onskin.photos.v1';
 const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
 const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
 export const PHOTO_METADATA_INVALID = 'PHOTO_METADATA_INVALID';
+export const PHOTO_CAPTURE_SESSION_INVALID = 'PHOTO_CAPTURE_SESSION_INVALID';
+export const PHOTO_CAPTURE_SESSION_CONFLICT = 'PHOTO_CAPTURE_SESSION_CONFLICT';
+export const PHOTO_CAPTURE_SESSION_DUPLICATE = 'PHOTO_CAPTURE_SESSION_DUPLICATE';
 
 let photoStoreMutationTail: Promise<void> = Promise.resolve();
 
@@ -140,6 +145,11 @@ export type NewPhoto = {
   notes?: string | null;
 };
 
+export type AddPhotoOutcome = Readonly<{
+  photo: PhotoRecord;
+  createdNow: boolean;
+}>;
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -184,6 +194,13 @@ function timeOfDayOrNull(value: unknown): TimeOfDay | null {
   return text && TIME_OF_DAY.has(text as TimeOfDay) ? (text as TimeOfDay) : null;
 }
 
+function captureSessionIdOrNull(value: unknown): string | null {
+  if (value === null || value === undefined) return null;
+  const captureSessionId = trustedProgressCaptureSessionId(value);
+  if (captureSessionId === null) throw new Error(PHOTO_METADATA_INVALID);
+  return captureSessionId;
+}
+
 async function normalizeStoredRecord(
   value: unknown,
   guard: PhotoOperationGuard,
@@ -192,6 +209,7 @@ async function normalizeStoredRecord(
   const id = stringOrNull(value.id);
   const takenLocalDate = localDateOrNull(value.takenLocalDate);
   if (!id || !takenLocalDate) return null;
+  const captureSessionId = captureSessionIdOrNull(value.captureSessionId);
 
   const localUri = stringOrNull(value.localUri);
   const explicitEncryptedUri = stringOrNull(value.encryptedLocalUri);
@@ -218,7 +236,7 @@ async function normalizeStoredRecord(
     referencePhotoId: stringOrNull(value.referencePhotoId),
     localUri: localUri ?? encryptedLocalUri,
     notes,
-    captureSessionId: stringOrNull(value.captureSessionId),
+    captureSessionId,
     headRoll: finiteNumberOrNull(value.headRoll),
     headYaw: finiteNumberOrNull(value.headYaw),
     headPitch: finiteNumberOrNull(value.headPitch),
@@ -242,11 +260,18 @@ async function normalizeStoredRecords(
 ): Promise<PhotoRecord[] | null> {
   if (!Array.isArray(value)) return null;
   const items: PhotoRecord[] = [];
+  const captureSessionIds = new Set<string>();
   for (const row of value) {
     guard.assertCurrent();
     const photo = await normalizeStoredRecord(row, guard);
     guard.assertCurrent();
     if (!photo) return null;
+    if (photo.captureSessionId !== null) {
+      if (captureSessionIds.has(photo.captureSessionId)) {
+        throw new Error(PHOTO_CAPTURE_SESSION_DUPLICATE);
+      }
+      captureSessionIds.add(photo.captureSessionId);
+    }
     items.push(photo);
   }
   return items;
@@ -363,14 +388,48 @@ async function finishQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<vo
   await Promise.allSettled(files.map((file) => deleteQuarantinedPhoto(file)));
 }
 
-export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
+function captureReplayMatches(existing: PhotoRecord, input: NewPhoto): boolean {
+  return (
+    existing.series === (input.series ?? 'front') &&
+    existing.takenLocalDate === input.takenLocalDate &&
+    existing.timeOfDay === (input.timeOfDay ?? null)
+  );
+}
+
+export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutcome> {
   return runPhotoStoreMutation(async (lease) => {
     const items = await loadPhotosUnlocked(lease);
     lease.assertCurrent();
+    const requestedCaptureSessionId = input.captureSessionId;
+    const captureSessionId =
+      requestedCaptureSessionId == null
+        ? null
+        : trustedProgressCaptureSessionId(requestedCaptureSessionId);
+    if (requestedCaptureSessionId != null && captureSessionId === null) {
+      throw new Error(PHOTO_CAPTURE_SESSION_INVALID);
+    }
+    const sourceNeedsCleanup = Boolean(input.localUri && !isEncryptedPhotoUri(input.localUri));
+
+    if (captureSessionId !== null) {
+      const replays = items.filter((photo) => photo.captureSessionId === captureSessionId);
+      if (replays.length > 1) throw new Error(PHOTO_CAPTURE_SESSION_DUPLICATE);
+      const replay = replays[0];
+      if (replay !== undefined) {
+        if (!captureReplayMatches(replay, input)) {
+          throw new Error(PHOTO_CAPTURE_SESSION_CONFLICT);
+        }
+        if (sourceNeedsCleanup) {
+          lease.assertCurrent();
+          await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+          lease.assertCurrent();
+        }
+        return { photo: replay, createdNow: false };
+      }
+    }
+
     const series = input.series ?? 'front';
     const hasReference = items.some((p) => p.series === series);
     const id = randomUUID();
-    const sourceNeedsCleanup = Boolean(input.localUri && !isEncryptedPhotoUri(input.localUri));
     lease.assertCurrent();
     const encrypted =
       input.localUri && !isEncryptedPhotoUri(input.localUri)
@@ -398,7 +457,7 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
       qualitySource: input.qualitySource ?? null,
       isReference: !hasReference,
       referencePhotoId: input.referencePhotoId ?? null,
-      captureSessionId: input.captureSessionId ?? null,
+      captureSessionId,
       localUri: encrypted?.encryptedLocalUri ?? null,
       notes: input.notes ?? null,
       localOnly: true,
@@ -434,8 +493,12 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
       await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
     }
     lease.assertCurrent();
-    return rec;
+    return { photo: rec, createdNow: true };
   });
+}
+
+export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
+  return (await addPhotoWithOutcome(input)).photo;
 }
 
 export async function updatePhoto(

@@ -2,7 +2,11 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { sanitizeAnalyticsEventName, sanitizeAnalyticsProps } from './track';
+import {
+  sanitizeAnalyticsEventName,
+  sanitizeAnalyticsEventProps,
+  sanitizeAnalyticsProps,
+} from './track';
 
 const TRACK_SOURCE = fileURLToPath(new URL('./track.ts', import.meta.url));
 
@@ -141,6 +145,67 @@ describe('analytics sanitizer', () => {
       matched: false,
       result: 'ambiguous',
     });
+  });
+
+  it('allows only content-free label-recognition buckets', () => {
+    expect(sanitizeAnalyticsEventName('label_recognition_completed')).toBe(
+      'label_recognition_completed',
+    );
+    expect(
+      sanitizeAnalyticsEventProps('label_recognition_completed', {
+        result: 'recognized',
+        latency_bucket: '3s_to_lt_6s',
+        on_device: true,
+        source: 'label_capture',
+        elapsed_ms: 3_421,
+        confidence: 0.91,
+        ingredient_text: 'Aqua, Glycerin',
+        local_uri: 'file:///var/mobile/private-label.jpg',
+      }),
+    ).toEqual({
+      result: 'recognized',
+      latency_bucket: '3s_to_lt_6s',
+      on_device: true,
+    });
+
+    expect(
+      sanitizeAnalyticsEventProps('label_recognition_completed', {
+        result: 'recognized',
+        latency_bucket: '3s_to_lt_6s',
+        on_device: true,
+        source: 'ocr_label_capture',
+      }),
+    ).toEqual({
+      result: 'recognized',
+      latency_bucket: '3s_to_lt_6s',
+      on_device: true,
+    });
+
+    for (const latency_bucket of [
+      'lt_1s',
+      '1s_to_lt_3s',
+      '3s_to_lt_6s',
+      '6s_to_lt_12s',
+      'gte_12s',
+      'unknown',
+    ]) {
+      expect(sanitizeAnalyticsProps({ latency_bucket })).toEqual({ latency_bucket });
+    }
+
+    expect(
+      sanitizeAnalyticsEventProps('label_recognition_completed', {
+        result: 'recognized',
+        latency_bucket: 'exact_3421ms',
+        on_device: true,
+      }),
+    ).toBeUndefined();
+    expect(
+      sanitizeAnalyticsEventProps('label_recognition_completed', {
+        result: 'recognized',
+        latency_bucket: 'lt_1s',
+        on_device: false,
+      }),
+    ).toBeUndefined();
   });
 
   it('allows V1 activation events without sensitive payload details', () => {

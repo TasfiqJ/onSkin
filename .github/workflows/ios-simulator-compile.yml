@@ -1,0 +1,177 @@
+name: iOS Simulator compile
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/ios-simulator-compile.yml
+      - .npmrc
+      - package.json
+      - package-lock.json
+      - apps/mobile/.npmrc
+      - apps/mobile/app.base.json
+      - apps/mobile/app.config.js
+      - apps/mobile/assets/**
+      - apps/mobile/babel.config.js
+      - apps/mobile/eas.json
+      - apps/mobile/font-assets.js
+      - apps/mobile/metro.config.js
+      - apps/mobile/modules/**
+      - apps/mobile/package.json
+      - apps/mobile/phase3-review-evidence.js
+      - apps/mobile/plugins/**
+      - apps/mobile/src/**
+      - '!apps/mobile/src/**/*.spec.*'
+      - '!apps/mobile/src/**/*.test.*'
+      - '!apps/mobile/src/**/__snapshots__/**'
+      - apps/mobile/tailwind.config.js
+      - packages/*/package.json
+      - packages/*/src/**
+      - docs/hugeToDo/launch-contract.json
+      - scripts/postinstall.mjs
+      - scripts/phase5/ios-simulator-compile-workflow.test.mjs
+      - scripts/phase5/patch-expo-widgets-lifecycle.mjs
+      - scripts/phase9/patch-react-native-view-shot-privacy.mjs
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ios-simulator-compile.yml
+      - .npmrc
+      - package.json
+      - package-lock.json
+      - apps/mobile/.npmrc
+      - apps/mobile/app.base.json
+      - apps/mobile/app.config.js
+      - apps/mobile/assets/**
+      - apps/mobile/babel.config.js
+      - apps/mobile/eas.json
+      - apps/mobile/font-assets.js
+      - apps/mobile/metro.config.js
+      - apps/mobile/modules/**
+      - apps/mobile/package.json
+      - apps/mobile/phase3-review-evidence.js
+      - apps/mobile/plugins/**
+      - apps/mobile/src/**
+      - '!apps/mobile/src/**/*.spec.*'
+      - '!apps/mobile/src/**/*.test.*'
+      - '!apps/mobile/src/**/__snapshots__/**'
+      - apps/mobile/tailwind.config.js
+      - packages/*/package.json
+      - packages/*/src/**
+      - docs/hugeToDo/launch-contract.json
+      - scripts/postinstall.mjs
+      - scripts/phase5/ios-simulator-compile-workflow.test.mjs
+      - scripts/phase5/patch-expo-widgets-lifecycle.mjs
+      - scripts/phase9/patch-react-native-view-shot-privacy.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-simulator-compile-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APP_VARIANT: staging
+  CI: 'true'
+  DEVELOPER_DIR: /Applications/Xcode_26.4.app/Contents/Developer
+  EXPO_NO_GIT_STATUS: '1'
+  EXPO_NO_TELEMETRY: '1'
+  EXPO_PUBLIC_APP_ENV: staging
+  EXPO_PUBLIC_CAMERA_STACK: expo-camera
+  EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'true'
+  EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true'
+  EXPO_USE_PRECOMPILED_MODULES: '1'
+  IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'false'
+  SENTRY_DISABLE_AUTO_UPLOAD: 'true'
+
+jobs:
+  simulator-compile:
+    name: Unsigned iOS Simulator compile and link
+    runs-on: macos-26
+    timeout-minutes: 50
+    steps:
+      - name: Checkout
+        # actions/checkout v6.0.3
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        # actions/setup-node v6.4.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.22.2
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Verify pinned build tools
+        run: |
+          test -d "$DEVELOPER_DIR"
+          node --version
+          npm --version
+          xcodebuild -version
+          xcrun --sdk iphonesimulator --show-sdk-version
+          pod --version
+
+      - name: Install from lockfile
+        run: npm ci
+
+      - name: Verify reviewed native inputs
+        run: |
+          npm run postinstall:check
+          npm run cat05:native-ocr-source-contract:test
+
+      - name: Generate a clean staging iOS project
+        working-directory: apps/mobile
+        run: >-
+          npx --no-install expo prebuild
+          --platform ios
+          --clean
+          --no-install
+          --template ../../node_modules/expo/template.tgz
+
+      - name: Install CocoaPods dependencies
+        working-directory: apps/mobile
+        run: pod install --project-directory=ios
+
+      - name: Verify native OCR autolinking
+        working-directory: apps/mobile
+        run: |
+          test -f ios/Podfile.lock
+          grep -Eq '^  - NativeLabelOcr \(1\.0\.0\)' ios/Podfile.lock
+
+      - name: Build and link an unsigned Simulator app
+        working-directory: apps/mobile
+        run: |
+          workspace_count="$(find ios -maxdepth 1 -type d -name '*.xcworkspace' -print | awk 'END { print NR + 0 }')"
+          test "$workspace_count" -eq 1
+          workspace="$(find ios -maxdepth 1 -type d -name '*.xcworkspace' -print -quit)"
+          scheme="$(basename "$workspace" .xcworkspace)"
+          xcodebuild \
+            -workspace "$workspace" \
+            -scheme "$scheme" \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/onskin-derived-data" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY= \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            build
+
+      - name: Verify the linked Simulator product
+        run: |
+          product_dir="$RUNNER_TEMP/onskin-derived-data/Build/Products/Release-iphonesimulator"
+          app_count="$(find "$product_dir" -maxdepth 1 -type d -name '*.app' -print | awk 'END { print NR + 0 }')"
+          test "$app_count" -eq 1
+          app="$(find "$product_dir" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          executable_name="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app/Info.plist")"
+          executable="$app/$executable_name"
+          test -f "$executable"
+          file "$executable" | grep -q 'Mach-O'
+          architectures="$(lipo -archs "$executable")"
+          test -n "$architectures"
+          printf 'Simulator Mach-O architectures: %s\n' "$architectures"

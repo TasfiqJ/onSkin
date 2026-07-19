@@ -30,6 +30,10 @@ The template requires iOS evidence for:
 - adding three products through manual, search, barcode, and OCR/manual
   fallback paths;
 - barcode camera acquisition, decode, lookup, and no-match recovery;
+- native OCR recognition from managed-photo handoff until a terminal
+  recognized, no-text, cancelled, timeout, or failure state
+  (`native_ocr_recognition_ms`); only successful recognized runs belong in the
+  latency baseline, while other terminal states remain functional QA failures;
 - routine generation with 3, 5, and 10 products;
 - Progress photo capture analysis from shutter confirmation until both framing
   and lighting labels reach terminal measured or unavailable states; and

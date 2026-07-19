@@ -111,7 +111,8 @@ Features:
 - catalog miss reporting
 - churn interviews
 - support workflow
-- native OCR and catalog coverage
+- staging-only Apple Vision OCR source candidate, exact-build native evidence,
+  and catalog coverage
 - photos and trend calibration
 - cloud Ask safety and cost
 - commerce and creator handoff
@@ -125,12 +126,17 @@ Done criteria:
 - D7/D14 data
 - catalog miss/wrong-match report
 - willingness-to-pay signal
+- CAT-05 passes its exact signed-build two-iPhone, 25-label/50-run accuracy,
+  RTL, zero-network, cleanup, accessibility, and performance contracts before
+  production OCR is enabled
 
 Risks:
 
 - weak first insight
 - low product-add completion
 - trust objections
+- source-only or deterministic web OCR evidence is mistaken for native privacy,
+  accuracy, accessibility, or release proof
 
 ## Phase 5: Public Launch
 

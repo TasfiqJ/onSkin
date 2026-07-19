@@ -65,6 +65,38 @@ and legal review required here.
 | Commerce clicks                 | Opaque click token and destination metadata if commerce ships                                                                                                                                                                                                                                                                         | Commerce rail and Supabase attribution logs                                                                                        | No skin/goal/pregnancy/photo fields may leave the app in affiliate URLs.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | Community/Ask                   | Consent-gated participation/audit metadata                                                                                                                                                                                                                                                                                            | Supabase if features ship                                                                                                          | Cloud Ask remains launch-blocked until vendor/privacy/legal gates clear.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
+### CAT-05 native label recognition note
+
+The staging-only CAT-05 source candidate processes the temporary label photo,
+recognized transcript, alternatives, geometry, and confidence-ranking signals
+on device for editable review. The current direct mobile analytics transport is
+disabled. If a separately approved transport is later activated, the
+recognition-completion boundary permits only `result`, a coarse
+`latency_bucket`, and `on_device: true`. After explicit Continue, the separate
+parser event permits `source: label_capture`, parser result, bounded token count,
+and the native-enabled Boolean. Photo bytes, paths, request IDs,
+transcript/ingredient content, candidates, confidence, exact timing, product
+identity, and raw failure detail are prohibited.
+
+Apple's App Privacy guidance says data processed only on device is not
+"collected," while derived data transmitted off device must be considered
+separately. Accordingly, the local image/transcript flow and the two minimized
+derived analytics flows must receive separate field-by-field answers. This draft does
+not decide their category, purpose, linkage, tracking, retention, or consumer-
+health treatment. Production remains disabled pending exact signed-binary
+traffic/storage inspection and named privacy/legal review.
+
+The cleanup design deletes app-managed label photos on normal exits, snapshots
+canonical Expo Camera cache children at app boot for bounded cold-relaunch
+recovery, and uses Expo Image `cachePolicy="none"`. Both Shelf label and
+Progress shutters await the shared startup drain. A failed initial listing may
+retry only while both remain gated; the first successful snapshot is immutable
+and later retries never relist post-boot captures. These are source controls,
+not cleanup evidence. The exact build must be inspected by path, image digest,
+and recognizable signature across the managed cache, Expo Camera cache, and
+Expo Image/SDWebImage caches after Continue, Retake, Leave, failure, bounded
+retry, and cold relaunch.
+
 ## Store Review Inputs Needed
 
 - Final privacy policy URL.
@@ -78,6 +110,9 @@ and legal review required here.
 - Confirmation that analytics/crash tools do not collect sensitive content.
 - Confirmation that current V1 photos are device-only unless the user explicitly
   shares one; cloud backup and automatic photo-metadata sync are unavailable.
+- Exact-build CAT-05 network and filesystem evidence confirming that label
+  photos/transcripts are not uploaded or logged, plus a separate decision for
+  the categorical/coarse recognition and downstream parse analytics events.
 - Counsel-approved disclosure and retention basis for the device-only store
   safety journal, including its pseudonymous owner binding, generic-record
   recovery retention, resolution-bound payment-pending/ownerless records, and
@@ -112,6 +147,14 @@ and legal review required here.
 - Data-bearing Progress routes require a successful encrypted metadata read after entitlement/app-lock checks; read failure blocks route content and writes behind non-destructive retry instead of presenting an empty or missing-photo state.
 - Analytics sanitization drops sensitive keys such as barcodes, OCR text, notes,
   photo paths, product IDs/names, receipts, and image/file paths.
+- CAT-05 recognition analytics use closed property allowlists and coarse
+  latency buckets. The downstream parse event is limited to source, parser
+  result, bounded count, and native-enabled state; recognized text, ingredient
+  identities, candidates, confidence, photo paths, exact timing, and raw errors
+  do not cross either boundary in source.
+- CAT-05 is enabled only in the internal staging EAS profile. Development and
+  production remain disabled until exact-build native/privacy/accessibility/
+  performance evidence and professional review pass.
 - Catalog Edge telemetry stores only owner-linked lookup type and bounded
   result. Database constraint `catalog_lookup_events_minimized_identity`
   prohibits raw search, barcode, product, source, and quality identity, while

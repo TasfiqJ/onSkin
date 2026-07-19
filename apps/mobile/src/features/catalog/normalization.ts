@@ -1,5 +1,13 @@
 export function normalizeWhitespace(value: string): string {
-  return value.replace(/\s+/g, ' ').trim();
+  return value.normalize('NFC').replace(/\s+/gu, ' ').trim();
+}
+
+/** Normalize common label separators without compatibility-folding OCR text. */
+export function normalizeIngredientSeparators(value: string): string {
+  return value
+    .normalize('NFC')
+    .replace(/[，、،]/gu, ',')
+    .replace(/[；؛]/gu, ';');
 }
 
 export function normalizeBarcode(value: string | null | undefined): string | null {
@@ -32,17 +40,18 @@ const INGREDIENT_SYNONYMS: Record<string, string> = {
 };
 
 export function normalizeIngredientToken(value: string): string {
-  const withoutPercent = value.replace(/\b\d+(?:\.\d+)?\s*%/g, ' ');
+  const withoutPercent = value.normalize('NFC').replace(/\b\d+(?:\.\d+)?\s*%/gu, ' ');
   const withoutDecorators = withoutPercent
-    .replace(/\([^)]*\)/g, ' ')
-    .replace(/^[\s*•\-–—\d.]+/g, ' ')
-    .replace(/\b(?:ingredients?|inci|active ingredients?|inactive ingredients?)\b\s*:?\s*/gi, ' ');
+    .replace(/\([^)]*\)/gu, ' ')
+    .replace(/^\s*(?:[*•\-–—]+|\p{N}+[.)]\s+)/gu, ' ')
+    .replace(/\b(?:ingredients?|inci|active ingredients?|inactive ingredients?)\b\s*:?\s*/giu, ' ');
   const normalized = normalizeWhitespace(
     withoutDecorators
       .toLowerCase()
-      .replace(/[’']/g, '')
-      .replace(/[^a-z0-9/+.\-\s]/g, ' ')
-      .replace(/\s*\/\s*/g, ' / '),
+      .replace(/[’']/gu, '')
+      .replace(/[^\p{L}\p{M}\p{N}/+.,\-\s]/gu, ' ')
+      .replace(/\s*,\s*/gu, ',')
+      .replace(/\s*\/\s*/gu, ' / '),
   );
   return INGREDIENT_SYNONYMS[normalized] ?? normalized;
 }
@@ -52,9 +61,12 @@ export function displayIngredientToken(value: string): string {
   if (/^ci\s+\d+/i.test(trimmed)) return trimmed.toUpperCase();
   return trimmed
     .toLowerCase()
-    .replace(/\b[a-z0-9]/g, (char) => char.toUpperCase())
-    .replace(/\bPh\b/g, 'pH')
-    .replace(/\bSpf\b/g, 'SPF');
+    .replace(
+      /(^|[\s/+\.\-])(\p{L}|\p{N})/gu,
+      (_match, prefix: string, char: string) => `${prefix}${char.toUpperCase()}`,
+    )
+    .replace(/\bPh\b/gu, 'pH')
+    .replace(/\bSpf\b/gu, 'SPF');
 }
 
 export function parsePercent(value: string): number | null {

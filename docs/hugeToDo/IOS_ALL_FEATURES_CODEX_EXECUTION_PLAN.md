@@ -354,7 +354,7 @@ shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
 | CAT-02 | C     | Build reviewed import, normalization, provenance, dedupe, QA, correction, and rollback pipelines                                     | Fixture data is excluded; every production record is traceable                                                                                           |
 | CAT-03 | C     | Curate a production launch catalog from a defined consented beta-shelf corpus and untouched holdout                                  | Catalog reaches signed coverage/quality targets without a market-representativeness claim                                                                |
 | CAT-04 | C     | Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows                                           | Every failure has a safe recovery and owner-scoped report                                                                                                |
-| CAT-05 | C     | Implement real iOS-native OCR with editable confidence-aware output                                                                  | Clear, curved, tiny, multilingual, and glare-heavy labels pass real-device QA                                                                            |
+| CAT-05 | C     | Implement real iOS-native OCR with bounded editable confidence-aware output and local-only photo handling                            | Exact signed-build evidence passes the governed two-iPhone, 25-label/50-run accuracy, RTL, privacy/cleanup, accessibility, and performance contracts     |
 | CAT-06 | C     | Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior          | Physical iPhone evidence passes                                                                                                                          |
 | CAT-07 | C/R   | Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior                    | Chemistry/legal review and live data evidence pass                                                                                                       |
 | CAT-08 | C     | Add catalog/admin correction tooling and operational queues                                                                          | Authorized operators can review sources/reports without direct database editing                                                                          |
@@ -602,6 +602,8 @@ Infrastructure and native:
     npm run phase2:check-env:strict
     npm run phase2:rls-smoke
     npm run phase5:check-native-config:strict
+    npm run cat05:native-ocr-source-contract:test
+    PHASE5_NATIVE_OCR_EVIDENCE_PATH=... npm run phase5:native-ocr-evidence:strict
     npm run phase5:performance-evidence:strict
     npm run phase5:qa-packet:strict
 
@@ -624,6 +626,10 @@ Release, beta, and launch:
 Human E2E:
 
     npm run e2e:human:manifest:check
+    npm run e2e:cat05-native-ocr-ui
+
+The CAT-05 Expo-web command is deterministic UI-state evidence only and must
+record `nativeDeviceProof=false`; it cannot satisfy the native evidence command.
 
 ## 31. Current Known State
 
@@ -645,7 +651,11 @@ As of this document date:
   widgets now have a RoutineKind-specific SQLite/CAS/outbox source candidate,
   but publication and Live Activity start remain disabled by literal signed
   flags and cannot be enabled by an environment or OTA flag alone.
-- Native OCR is disabled in every EAS profile.
+- Native OCR now has an Apple Vision revision-3 source candidate. Only the
+  internal `staging` EAS profile enables it for evidence collection;
+  `development` and `production` remain disabled. No Xcode/Swift compilation,
+  signed-archive linkage, physical-iPhone, real-label accuracy, zero-network,
+  cache cleanup, VoiceOver/Dynamic Type, or performance proof exists yet.
 - Cloud Ask lacks a completed production provider/gateway/safety contract.
 - Commerce lacks an approved live rail.
 - Community lacks complete live moderation operations.

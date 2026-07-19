@@ -72,14 +72,29 @@ Completed in repo:
   configuration `false`; no Windows check proves Swift compilation or runtime.
 - A structured performance-evidence template, strict validator, and smoke suite
   now require predeclared thresholds, supported physical-device/build proof,
-  repeated raw supported-iPhone measurements including post-capture analysis,
+  repeated raw supported-iPhone measurements including native OCR recognition
+  and post-capture analysis,
   encrypted-photo load/memory evidence, validator-calculated nearest-rank
   p50/p95/max, and calculated pass/fail instead of trust-only booleans or
   hand-entered summaries.
 - The generated QA packet now requires granular physical-device evidence flags
   for install, camera permission recovery, barcode, label capture, progress
   photos, encrypted photo storage, notifications, share sheet, RevenueCat,
-  Sentry, Supabase catalog calls, accessibility, and conditional native OCR.
+  Sentry, Supabase catalog calls, and accessibility. Conditional native OCR no
+  longer accepts a Boolean: its separate schema-v2 artifact binds the EAS
+  source ancestor, exact build/profile/archive, unchanged runtime hashes, two
+  distinct physical iPhones, a 25-label five-class corpus, 50 device-label
+  runs, an explicit two-label RTL floor, calculated unordered and
+  ordered-sequence accuracy plus latency targets, accessibility,
+  cancellation/temp-photo cleanup including Expo Camera/Image/SDWebImage
+  disk-cache absence,
+  zero-network capture, corpus rights/provenance, seven exact proof files, and
+  named QA/privacy signoffs.
+  Adversarial smoke coverage rejects non-ancestor/source-drift descendants,
+  Boolean-only clearance, path traversal/symlinks, duplicate/missing runs,
+  post-hoc/failed thresholds, impossible token-count/edit-distance arithmetic,
+  privacy/cleanup/accessibility failures, evidence tampering, placeholders, and
+  dirty state outside validated evidence.
 - Widget flags cannot clear the packet by themselves. A separate strict
   schema-v3 lifecycle artifact binds current source HEAD, exact EAS build,
   final app/extension/App Group/Team IDs, physical iPhone and named signoff to
@@ -95,7 +110,10 @@ Still blocked before beta:
 
 - EAS iOS builds with real build IDs and retained resolved-image/Xcode/SDK logs.
 - Physical-device installs and matrix results.
-- On-device OCR module selection and QA if OCR is a launch claim.
+- Exact-build physical-iPhone OCR evidence remains absent. The Apple Vision
+  source candidate cannot become a launch claim until
+  `phase5:native-ocr-evidence:strict`, `phase5:performance-evidence:strict`, and
+  the conditional device packet pass against the same signed build.
 - Physical-device validation and calibration of the post-capture face/pose and
   lighting heuristics, including diverse presentation/lighting conditions,
   analyzer failure, no network/template retention, and encrypted-save failure.

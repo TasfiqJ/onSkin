@@ -19,6 +19,7 @@ import {
   type DuplicateBarcodeGate,
 } from '@/features/native/camera/barcode';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
+import { labelOcrNativeAvailability } from '@/features/native/ocr';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
@@ -173,6 +174,7 @@ export default function ScanScreen() {
   const canShowPermissionRecovery =
     !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
   const canShowCamera = cameraEnabled && permissionGranted;
+  const labelOcrAvailable = env.nativeOcrEnabled && labelOcrNativeAvailability() === 'configured';
   const supportFloorTextPressureScan = width <= 430 && height >= 640 && height <= 700;
   const compactScanSurface = height < 640 || supportFloorTextPressureScan;
   const splitShortScanSurface = height < 460;
@@ -613,8 +615,16 @@ export default function ScanScreen() {
           <FallbackRow
             icon="="
             title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}
-            subtitle="Capture label, then type from it"
-            accessibilityLabel="Scan ingredient label. Capture label, then type from it"
+            subtitle={
+              labelOcrAvailable
+                ? 'Read on this iPhone, then review'
+                : 'Capture label, then type from it'
+            }
+            accessibilityLabel={
+              labelOcrAvailable
+                ? 'Scan ingredient label. Read text on this iPhone, then review it'
+                : 'Scan ingredient label. Capture label, then type from it'
+            }
             compact={compactScanSurface}
             hideSubtitle={compactScanSurface}
             onPress={goOcr}

@@ -1,4 +1,5 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as FileSystem from 'expo-file-system/legacy';
 import { router, useIsFocused } from 'expo-router';
 import { randomUUID } from 'expo-crypto';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
@@ -7,6 +8,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
+import {
+  retryLabelPhotoStartupScavenge,
+  startLabelPhotoStartupScavenge,
+} from '@/features/native/camera/labelPhotoStartup';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { applyPhotoCaptureConsent } from '@/features/photos/applyCaptureConsent';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
@@ -15,6 +20,10 @@ import { localDay, timeOfDayNow } from '@/features/photos/date';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
+import {
+  trustedExpoCameraCaptureUri,
+  trustedProgressCaptureSessionId,
+} from '@/features/photos/progressCapturePrivacy';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
@@ -508,6 +517,10 @@ function CaptureScreenContent() {
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const cameraRef = useRef<CameraView | null>(null);
+  const mountedRef = useRef(false);
+  const captureLeaseGenerationRef = useRef(0);
+  const captureInFlightRef = useRef<number | null>(null);
+  const labelPhotoStartupCleanupFailedRef = useRef(false);
   const [permission, requestPermission] = useCameraPermissions();
   const [consented, setConsented] = useState<boolean | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
@@ -529,6 +542,18 @@ function CaptureScreenContent() {
     void hasPhotoCaptureConsent().then(setConsented);
   }, []);
 
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      captureLeaseGenerationRef.current += 1;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isFocused) captureLeaseGenerationRef.current += 1;
+  }, [isFocused]);
+
   const canShowCamera =
     consented === true &&
     env.nativeCameraEnabled &&
@@ -541,17 +566,37 @@ function CaptureScreenContent() {
   const captureReady =
     (canShowCamera && cameraReady && !photoCaptureFailed) || simulateProgressCaptureFailureOnce;
   const referenceUri = data?.reference?.localUri ?? null;
-  const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
+  const closeToProgress = () => {
+    captureLeaseGenerationRef.current += 1;
+    backOrReplace(router, APP_PROGRESS_ROUTE);
+  };
+
+  async function waitForLabelPhotoStartupScavenge(): Promise<void> {
+    const startup = labelPhotoStartupCleanupFailedRef.current
+      ? retryLabelPhotoStartupScavenge()
+      : startLabelPhotoStartupScavenge();
+    try {
+      await startup;
+      labelPhotoStartupCleanupFailedRef.current = false;
+    } catch (error) {
+      labelPhotoStartupCleanupFailedRef.current = true;
+      throw error;
+    }
+  }
 
   async function capture() {
     if (
       consented !== true ||
       (!cameraRef.current && !simulateProgressCaptureFailureOnce) ||
       !canAttemptCapture ||
-      capturing
+      capturing ||
+      captureInFlightRef.current !== null
     ) {
       return;
     }
+    const captureLease = ++captureLeaseGenerationRef.current;
+    captureInFlightRef.current = captureLease;
+    let rawCaptureUri: string | null = null;
     setCapturing(true);
     setPhotoCaptureFailed(false);
     try {
@@ -559,29 +604,53 @@ function CaptureScreenContent() {
         setSimulateProgressCaptureFailureOnce(false);
         throw new Error('E2E_PROGRESS_CAPTURE_FAILURE');
       }
+      // App-boot cleanup owns one immutable snapshot of Expo Camera's raw
+      // cache. No new camera photo may be created until that snapshot drains.
+      await waitForLabelPhotoStartupScavenge();
+      if (!mountedRef.current || captureLeaseGenerationRef.current !== captureLease) return;
       const shot = await cameraRef.current!.takePictureAsync({
         quality: 0.76,
         base64: false,
         exif: false,
         shutterSound: true,
       });
+      rawCaptureUri = trustedExpoCameraCaptureUri(shot.uri, FileSystem.cacheDirectory);
+      if (rawCaptureUri === null) throw new Error('UNTRUSTED_PROGRESS_CAPTURE_URI');
+      if (!mountedRef.current || captureLeaseGenerationRef.current !== captureLease) {
+        await FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined);
+        rawCaptureUri = null;
+        return;
+      }
       haptics.success();
-      const captureSessionId = randomUUID();
+      const captureSessionId = trustedProgressCaptureSessionId(randomUUID());
+      if (captureSessionId === null) throw new Error('INVALID_PROGRESS_CAPTURE_SESSION');
       track('photo_capture_still_taken', { signal_source: 'post_capture_measurement' });
       router.replace({
         pathname: '/progress/review',
         params: {
           captureSessionId,
-          capturedUri: shot.uri,
+          capturedUri: rawCaptureUri,
           photoWidth: String(shot.width),
           photoHeight: String(shot.height),
           timeOfDay: timeOfDayNow(),
           takenLocalDate: localDay(),
         },
       });
+      rawCaptureUri = null;
     } catch {
-      setCapturing(false);
-      setPhotoCaptureFailed(true);
+      if (rawCaptureUri !== null) {
+        await FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined);
+        rawCaptureUri = null;
+      }
+      if (mountedRef.current && captureLeaseGenerationRef.current === captureLease) {
+        setCapturing(false);
+        setPhotoCaptureFailed(true);
+      }
+    } finally {
+      if (captureInFlightRef.current === captureLease) captureInFlightRef.current = null;
+      if (mountedRef.current && captureLeaseGenerationRef.current !== captureLease) {
+        setCapturing(false);
+      }
     }
   }
 

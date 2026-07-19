@@ -106,7 +106,9 @@ Read this with:
    and app-wide/photo-timeline biometric prompt ordering, deep-link coverage,
    background relock, encrypted Progress read-failure recovery, and screen-reader
    focus are implemented or specified but not physical-device verified; required
-   native iOS OCR is not implemented.
+   native iOS OCR now has a staging-only Apple Vision source candidate, but no
+   Xcode/Swift, signed-archive, physical-iPhone, privacy, accuracy,
+   accessibility, cleanup, or performance proof.
 9. Native notification/device verification incomplete.
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
@@ -169,7 +171,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The current integrated source checkpoint
-on 2026-07-18 passes root typecheck, lint, and 289 mobile test files / 3361 tests.
+on 2026-07-18 passes root typecheck, lint, and 299 mobile test files / 3486 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -1244,6 +1246,10 @@ Next action:
   paths;
 - measure barcode lookup latency separately from camera acquisition and
   no-match recovery;
+- measure native OCR recognition latency (`native_ocr_recognition_ms`) from
+  managed-photo handoff to a successful editable transcript; timeout/no-text/
+  failure branches remain functional failures rather than passing latency
+  samples;
 - measure routine generation time with 3, 5, and 10 product shelves;
 - measure Progress photo capture-analysis latency
   (`photo_capture_analysis_ms`) from shutter confirmation until both review
@@ -1265,7 +1271,7 @@ phase5:performance-evidence:strict`;
 
 Exit criteria:
 
-- a completed schema-v3 artifact passes
+- a completed schema-v4 artifact passes
   `npm run phase5:performance-evidence:strict`;
 - the artifact includes build IDs, device model/OS, at least five raw samples
   for every platform/metric pair, validator-calculated p50/p95/max, accepted
@@ -1278,7 +1284,8 @@ Status: `needs-device-verification`
 Barcode and still-photo capture use native camera paths. Progress review now
 uses on-device post-capture ML Kit face framing/pose analysis plus a temporary
 local luminance/balance sample; synthetic readiness and quality scores have
-been removed. Native OCR remains disabled, real-time preview analysis is not
+been removed. Native OCR has a staging-only Apple Vision source candidate while
+development and production remain disabled; real-time preview analysis is not
 implemented, and none of these paths is device-certified yet.
 
 Exit criteria:
@@ -1546,15 +1553,33 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-The current label path captures a real image and requires editable user text.
-It does not claim native OCR while `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false`.
+An Apple Vision revision-3 on-device source candidate and strict evidence
+contract exist, but no Windows/source check proves Swift compilation, signed
+archive linkage, physical-device behavior, or launch accuracy. Production
+claims remain gated while `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false` and the exact
+build has no validated native OCR artifact. Only the internal `staging` EAS
+profile enables the candidate for evidence collection; development and
+production remain disabled. See
+`docs/hugeToDo/CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md`.
 
 Exit criteria:
 
-- reviewed ML Kit or Apple Vision text-recognition module is selected;
-- the iOS native build includes the module without missing-native-module errors;
+- the reviewed Apple Vision module is compiled and present in the exact signed
+  candidate without missing-native-module errors;
 - clear, curved, tiny, multilingual, and glare-heavy INCI labels pass beta QA;
 - low-confidence words and user corrections remain visible;
+- `PHASE5_NATIVE_OCR_EVIDENCE_PATH` passes the schema-v2 exact-source/build/
+  profile/archive, two-device, 25-label/50-run, predeclared calculated
+  unordered plus ordered-sequence accuracy/latency, RTL reading order,
+  accessibility, managed-photo plus Expo Camera/Image/SDWebImage cache cleanup,
+  zero-network, provenance, and proof-attachment contract; the old Boolean flag
+  is ignored;
+- exact-build cleanup proves both Shelf-label and Progress shutters await the
+  shared startup drain, snapshot acquisition retries only while both remain
+  gated and before its first successful listing, and every later bounded retry
+  uses that immutable boot snapshot without relisting post-boot captures;
+- `native_ocr_recognition_ms` passes the separate schema-v4 physical-device
+  performance contract against the same source/build;
 - launch copy is updated only after device QA passes.
 
 ## B-FACE-POSE-SIGNALS - Reviewed guided-photo signal detector

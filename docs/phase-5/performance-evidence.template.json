@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "capturedAt": null,
   "gitSha": null,
   "thresholdsDefinedAt": null,
@@ -67,6 +67,11 @@
       "rationale": null
     },
     "barcode_no_match_recovery_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "native_ocr_recognition_ms": {
       "unit": "ms",
       "maxP95": null,
       "rationale": null
@@ -196,6 +201,16 @@
     {
       "platform": "ios",
       "metric": "barcode_no_match_recovery_ms",
+      "source": null,
+      "samples": [],
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "native_ocr_recognition_ms",
       "source": null,
       "samples": [],
       "sampleCount": null,

@@ -50,13 +50,71 @@ photo image or metadata request during local save.
 
 ## Build Profiles
 
-- `development`: internal dev client, `APP_VARIANT=development`, native camera enabled, native OCR disabled.
-- `staging`: internal beta candidate, `APP_VARIANT=staging`, native camera enabled, native OCR disabled until ML Kit/Vision is added and verified.
-- `production`: production channel only after brand/legal clearance and store credentials are complete.
+- `development`: internal dev client, `APP_VARIANT=development`, native camera enabled, native OCR disabled by default until an evidence build is intentionally selected.
+- `staging`: internal evidence candidate, `APP_VARIANT=staging`, native camera enabled, and native OCR enabled so the Apple Vision candidate can be compiled and subjected to the artifact-bound physical-device gate. This is not a release clearance or device-proof signal.
+- `production`: production channel only after brand/legal clearance and store credentials are complete; native OCR remains disabled until its exact artifact-bound evidence gate is complete.
 
 All three profiles use `macos-tahoe-26.4-xcode-26.4` for build/test parity.
 Production builds must not silently fall back to a different profile or
 toolchain.
+
+## Credential-Free Simulator Compile Gate
+
+`.github/workflows/ios-simulator-compile.yml` runs on pull requests and `main`
+pushes only when the mobile app, workspace packages, lockfiles, native patch
+inputs, launch config, or the gate itself changes. Manual dispatch remains
+available for maintenance diagnosis. Concurrency cancellation and a 50-minute
+job timeout bound macOS consumption.
+
+The gate uses the official `macos-26` runner and the reviewed Xcode 26.4
+path, installs JavaScript dependencies from `package-lock.json`, generates a
+clean staging iOS project from the lockfile-installed Expo SDK 56 template,
+installs CocoaPods, verifies `NativeLabelOcr` autolinking, and runs a Release
+build for the generic iOS Simulator destination. Code signing is explicitly
+disabled. The final check requires one linked Mach-O `.app` Simulator product
+without assuming the rolling runner's host architecture. The workflow has
+read-only repository permission, does not persist checkout credentials,
+references actions by full commit SHA, uses no secrets, uploads no app
+artifact, and invokes neither EAS nor App Store submission tooling.
+
+A passing run proves that the generated staging project and its native OCR pod
+compiled and linked for an iOS **Simulator** under that resolved runner. It
+does not produce or inspect an iPhoneOS archive, exercise Apple Vision with a
+camera, validate signing/entitlements, establish physical-device performance
+or cleanup evidence, prove App Review acceptance, or clear any legal/release
+gate. The artifact-bound physical-iPhone and signed-archive requirements below
+remain mandatory. The workflow logs must be retained through GitHub's normal
+run retention when used as supporting compile evidence; they are not a
+substitute for the governed native evidence packet.
+
+The workflow definition is fail-closed by
+`npm run phase5:ios-simulator-compile-workflow:test`, which is also wired into
+the ordinary Quality, Phase 5, and launch verification chains. The contract
+pins path scope, toolchain, action SHAs, timeout, unsigned Simulator settings,
+native-pod linkage checks, Bash 3 compatibility, and the absence of
+credentials, archive, artifact-upload, EAS, and submission behavior.
+
+Do not configure this path-filtered workflow itself as an unconditional
+required pull-request check: GitHub documents that a workflow skipped by path
+filtering can leave a required check pending and block an unrelated pull
+request. The ordinary Quality workflow still validates this gate's definition
+on every pull request. If governance later requires the native compile result
+before matching pull requests merge, review branch protection and replace this
+cost-saving trigger design with an always-triggered, fail-closed path dispatcher
+before marking the check required. GitHub also limits path-filter evaluation to
+the first 300 changed files, so unusually broad pull requests require a manual
+dispatch or a deliberately redesigned dispatcher; do not treat a missing run
+as a pass.
+
+Primary references: [Expo Continuous Native Generation](https://docs.expo.dev/workflow/continuous-native-generation/),
+[Expo local module setup](https://docs.expo.dev/modules/get-started/),
+[Expo SDK version/toolchain table](https://docs.expo.dev/versions/latest/),
+[GitHub-hosted runners](https://docs.github.com/en/actions/reference/runners/github-hosted-runners),
+[GitHub macOS 26 image inventory](https://github.com/actions/runner-images/blob/main/images/macos/macos-26-Readme.md),
+[GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax),
+[GitHub workflow-trigger filtering behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow),
+[Apple's Xcode command-line tool reference](https://developer.apple.com/documentation/xcode/xcode-command-line-tool-reference),
+and [Apple's Simulator/device limitations](https://developer.apple.com/documentation/xcode/running-your-app-on-simulated-or-physical-devices).
 
 ## Required Commands
 
@@ -81,6 +139,7 @@ Generate the evidence packet after installing on devices:
 
 ```bash
 PHASE5_IOS_BUILD_ID=... \
+PHASE5_IOS_BUILD_PROFILE=staging \
 PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 26" \
 PHASE5_QA_SIGNOFF=true \
 PHASE5_DEVICE_QA_PASS=true \
@@ -96,6 +155,7 @@ PHASE5_REVENUECAT_NATIVE_QA_PASS=true \
 PHASE5_SENTRY_NATIVE_QA_PASS=true \
 PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true \
 PHASE5_ACCESSIBILITY_QA_PASS=true \
+PHASE5_NATIVE_OCR_EVIDENCE_PATH=docs/phase-5/evidence/native-ocr/<candidate>/evidence.json \
 PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
@@ -137,9 +197,16 @@ that produced them.
 `PHASE5_QA_SIGNOFF` is trimmed and case-normalized, but only `true` passes.
 `PHASE5_SIGNED_OFF_BY` must be a real tester/reviewer name; placeholders and
 generic tester labels are rejected.
-Each granular `PHASE5_*_PASS` flag is also trimmed and case-normalized, but only
-`true` passes. `PHASE5_NATIVE_OCR_QA_PASS=true` is required only when native OCR
-is enabled in the build; otherwise OCR remains hidden from launch claims.
+Each remaining granular `PHASE5_*_PASS` flag is also trimmed and
+case-normalized, but only `true` passes. Native OCR is the exception:
+`PHASE5_NATIVE_OCR_QA_PASS` is ignored because it is forgeable. When OCR is
+enabled, `PHASE5_NATIVE_OCR_EVIDENCE_PATH` and `PHASE5_IOS_BUILD_PROFILE` must
+bind the schema-v2 evidence described in
+`docs/phase-5/native-ocr-evidence-runbook.md` to the exact EAS source ancestor,
+build/profile/archive, unchanged runtime hashes, physical-device corpus,
+calculated metrics, accessibility, managed-photo and Expo
+Camera/Image/SDWebImage cache cleanup, zero-network capture, provenance, and
+named signoffs. Otherwise OCR remains hidden from launch claims.
 
 ## Native Runtime Policy
 

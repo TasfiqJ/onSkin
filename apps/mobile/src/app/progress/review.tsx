@@ -1,8 +1,9 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { usePreventRemove, type NavigationAction } from 'expo-router/react-navigation';
 import { Image } from 'expo-image';
 import * as FileSystem from 'expo-file-system/legacy';
-import { useRef, useState } from 'react';
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -12,6 +13,14 @@ import { localDay } from '@/features/photos/date';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import type { FramingAssessment, LightingAssessment } from '@/features/photos/captureAnalysis';
+import {
+  createProgressCaptureReviewLifecycle,
+  trustedExpoCameraCaptureUri,
+  trustedProgressCaptureLocalDate,
+  trustedProgressCaptureSessionId,
+  trustedProgressCaptureTimeOfDay,
+  type ProgressCaptureSource,
+} from '@/features/photos/progressCapturePrivacy';
 import { reviewQuality } from '@/features/photos/quality';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { useCaptureAnalysis } from '@/features/photos/useCaptureAnalysis';
@@ -26,6 +35,39 @@ import type { TimeOfDay } from '@onskin/types';
 
 const BG = '#16130F';
 const SAGE = '#9DB18A';
+const MAX_E2E_DATA_URI_LENGTH = 256_000;
+
+type ReviewRouteParams = {
+  analysisFixture?: string;
+  captureSessionId?: string;
+  capturedUri?: string;
+  photoWidth?: string;
+  photoHeight?: string;
+  timeOfDay?: string;
+  takenLocalDate?: string;
+};
+
+type ProtectedReviewNavigation =
+  | Readonly<{ kind: 'action'; action: NavigationAction }>
+  | Readonly<{ kind: 'progress' }>
+  | Readonly<{ kind: 'retake' }>;
+
+type SaveCaptureResult = 'navigating' | 'save_failed' | 'cleanup_failed' | 'busy';
+
+type ReviewCaptureBoundaryState = Readonly<{
+  actionBusy: boolean;
+  captureSessionId: string | null;
+  capturePersisted: boolean;
+  capturedUri: string | null;
+  cleanupFailed: boolean;
+  takenLocalDate: string;
+  timeOfDay: TimeOfDay | null;
+  discardAndNavigate: (target: 'progress' | 'retake') => Promise<void>;
+  saveCapture: (
+    persist: (uri: string) => Promise<void>,
+    onPersisted: () => void,
+  ) => Promise<SaveCaptureResult>;
+}>;
 
 function fmt(ymd: string): string {
   return parseLocalDate(ymd).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
@@ -96,29 +138,64 @@ function isNonBlank(value: string | null): value is string {
   return value != null && value.trim().length > 0;
 }
 
-function positiveNumber(value: string | undefined): number | null {
+function positiveNumber(value: unknown): number | null {
+  if (typeof value !== 'string') return null;
   const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  return Number.isFinite(parsed) && parsed > 0 && parsed <= 20_000 ? parsed : null;
 }
 
-function ReviewScreenContent() {
+function devProgressReviewFixtureUri(value: unknown, fixtureName: unknown): string | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__ || Platform.OS !== 'web') return null;
+  if (process.env.EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_ANALYSIS !== 'enabled') return null;
+  if (
+    fixtureName !== 'matched' &&
+    fixtureName !== 'adjust' &&
+    fixtureName !== 'no_face' &&
+    fixtureName !== 'unavailable'
+  ) {
+    return null;
+  }
+  if (
+    typeof value !== 'string' ||
+    value.length > MAX_E2E_DATA_URI_LENGTH ||
+    !/^data:image\/(?:jpeg|png);base64,[A-Za-z0-9+/]+={0,2}$/u.test(value)
+  ) {
+    return null;
+  }
+  return value;
+}
+
+function progressCaptureSource(params: ReviewRouteParams): ProgressCaptureSource | null {
+  const nativeUri = trustedExpoCameraCaptureUri(params.capturedUri, FileSystem.cacheDirectory);
+  if (nativeUri !== null) return { uri: nativeUri, disposable: true };
+
+  const fixtureUri = devProgressReviewFixtureUri(params.capturedUri, params.analysisFixture);
+  return fixtureUri === null ? null : { uri: fixtureUri, disposable: false };
+}
+
+function ReviewScreenContent({
+  params,
+  boundary,
+}: {
+  params: ReviewRouteParams;
+  boundary: ReviewCaptureBoundaryState;
+}) {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const compact = height < 700;
   const photoHeight = compact ? Math.max(286, Math.min(330, Math.round(height * 0.54))) : 380;
-  const params = useLocalSearchParams<{
-    analysisFixture?: string;
-    captureSessionId?: string;
-    capturedUri?: string;
-    photoWidth?: string;
-    photoHeight?: string;
-    timeOfDay?: string;
-    takenLocalDate?: string;
-  }>();
-  const capturedUri = params.capturedUri ?? null;
+  const {
+    actionBusy,
+    captureSessionId,
+    capturePersisted,
+    capturedUri,
+    cleanupFailed,
+    discardAndNavigate,
+    saveCapture,
+    takenLocalDate,
+    timeOfDay,
+  } = boundary;
   const hasCapturedPhoto = isNonBlank(capturedUri);
-  const timeOfDay = (params.timeOfDay as TimeOfDay) ?? null;
-  const takenLocalDate = params.takenLocalDate ?? localDay();
   const analysis = useCaptureAnalysis({
     uri: hasCapturedPhoto ? capturedUri : null,
     width: positiveNumber(params.photoWidth),
@@ -129,7 +206,6 @@ function ReviewScreenContent() {
   const { data } = usePhotos('front');
   const { add } = usePhotoActions();
   const [saveFailed, setSaveFailed] = useState(false);
-  const saveInFlightRef = useRef(false);
   const refLighting =
     data?.reference?.qualitySource === 'post_capture_measurement'
       ? data.reference.lightingScore
@@ -155,51 +231,42 @@ function ReviewScreenContent() {
     analysis.framing.score != null || analysis.lighting.score != null
       ? ('post_capture_measurement' as const)
       : null;
-  const discardCapturedPhoto = () => {
-    if (capturedUri) {
-      void FileSystem.deleteAsync(capturedUri, { idempotent: true }).catch(() => undefined);
-    }
-  };
-  const closeToProgress = () => {
-    if (saveInFlightRef.current) return;
-    discardCapturedPhoto();
-    backOrReplace(router, APP_PROGRESS_ROUTE);
-  };
+  async function save() {
+    if (!hasCapturedPhoto || add.isPending || actionBusy) return;
 
-  function save() {
-    if (!hasCapturedPhoto || add.isPending || saveInFlightRef.current) return;
-
-    saveInFlightRef.current = true;
     setSaveFailed(false);
     const wasEmpty = (data?.count ?? 0) === 0;
-    add.mutate(
-      {
-        takenLocalDate,
-        timeOfDay,
-        alignmentScore: analysis.framing.score,
-        lightingScore: analysis.lighting.score,
-        headRoll: analysis.framing.headRoll,
-        headYaw: analysis.framing.headYaw,
-        headPitch: analysis.framing.headPitch,
-        qualitySource,
-        captureSessionId: params.captureSessionId ?? null,
-        localUri: capturedUri,
+    let createdNow = false;
+    const result = await saveCapture(
+      async (trustedUri) => {
+        const outcome = await add.mutateAsync({
+          takenLocalDate,
+          timeOfDay,
+          alignmentScore: analysis.framing.score,
+          lightingScore: analysis.lighting.score,
+          headRoll: analysis.framing.headRoll,
+          headYaw: analysis.framing.headYaw,
+          headPitch: analysis.framing.headPitch,
+          qualitySource,
+          captureSessionId,
+          localUri: trustedUri,
+        });
+        createdNow = outcome.createdNow;
       },
-      {
-        onSuccess: () => {
+      () => {
+        if (!createdNow) return;
+        try {
           track('photo_captured', { on_device: true });
           if (wasEmpty) {
             track('first_photo_captured');
             track('photo_baseline_added', { on_device: true });
           }
-          router.replace(APP_PROGRESS_ROUTE);
-        },
-        onError: () => {
-          saveInFlightRef.current = false;
-          setSaveFailed(true);
-        },
+        } catch {
+          // Telemetry cannot roll back a committed local photo.
+        }
       },
     );
+    if (result === 'save_failed') setSaveFailed(true);
   }
 
   if (!hasCapturedPhoto) {
@@ -210,7 +277,7 @@ function ReviewScreenContent() {
         <RouteIconButton
           accessibilityLabel="Close"
           glyph="x"
-          onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
+          onPress={() => void discardAndNavigate('progress')}
           tone="night"
           style={{
             position: 'absolute',
@@ -253,7 +320,7 @@ function ReviewScreenContent() {
         <View style={{ gap: 12, paddingBottom: insets.bottom + (compact ? 16 : 24) }}>
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.replace('/progress/capture')}
+            onPress={() => void discardAndNavigate('retake')}
             style={{
               height: 56,
               borderRadius: 999,
@@ -268,7 +335,7 @@ function ReviewScreenContent() {
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
+            onPress={() => void discardAndNavigate('progress')}
             style={{
               height: 56,
               borderRadius: 999,
@@ -316,7 +383,12 @@ function ReviewScreenContent() {
             backgroundColor: '#2A251E',
           }}
         >
-          <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
+          <Image
+            source={{ uri: capturedUri }}
+            style={{ flex: 1 }}
+            contentFit="cover"
+            cachePolicy="none"
+          />
           <View
             style={{
               position: 'absolute',
@@ -401,6 +473,44 @@ function ReviewScreenContent() {
           </View>
         ) : null}
 
+        {cleanupFailed ? (
+          <View
+            accessibilityRole="alert"
+            style={{
+              borderRadius: 14,
+              borderWidth: 1,
+              borderColor: 'rgba(217,161,131,0.42)',
+              backgroundColor: 'rgba(217,161,131,0.12)',
+              paddingHorizontal: 14,
+              paddingVertical: 10,
+              marginBottom: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: 'HankenGrotesk-SemiBold',
+                fontSize: 13.5,
+                color: '#F4EFE7',
+              }}
+            >
+              Temporary photo cleanup needs another try
+            </Text>
+            <Text
+              style={{
+                fontFamily: 'HankenGrotesk-Regular',
+                fontSize: 13,
+                lineHeight: 18,
+                color: 'rgba(244,239,231,0.78)',
+                marginTop: 2,
+              }}
+            >
+              {capturePersisted
+                ? 'Your encrypted photo is safe on this phone, but the temporary camera copy could not be removed yet. Try finishing cleanup again.'
+                : 'The photo has not been uploaded, but its temporary local copy could not be removed yet. Try the action again to finish cleanup.'}
+            </Text>
+          </View>
+        ) : null}
+
         <View style={{ flex: 1 }} />
 
         <View
@@ -412,12 +522,8 @@ function ReviewScreenContent() {
         >
           <Pressable
             accessibilityRole="button"
-            disabled={add.isPending}
-            onPress={() => {
-              if (saveInFlightRef.current) return;
-              discardCapturedPhoto();
-              router.replace('/progress/capture');
-            }}
+            disabled={add.isPending || actionBusy}
+            onPress={() => void discardAndNavigate('retake')}
             style={{
               flex: 1,
               height: 56,
@@ -425,17 +531,17 @@ function ReviewScreenContent() {
               backgroundColor: 'rgba(244,239,231,0.1)',
               alignItems: 'center',
               justifyContent: 'center',
-              opacity: add.isPending ? 0.6 : 1,
+              opacity: add.isPending || actionBusy ? 0.6 : 1,
             }}
           >
             <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: '#F4EFE7' }}>
-              {PHOTO_COPY.review.retake}
+              {capturePersisted ? 'Take another' : PHOTO_COPY.review.retake}
             </Text>
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            disabled={add.isPending}
-            onPress={save}
+            disabled={add.isPending || actionBusy}
+            onPress={() => void save()}
             style={{
               flex: 1.4,
               height: 56,
@@ -443,20 +549,20 @@ function ReviewScreenContent() {
               backgroundColor: '#F4EFE7',
               alignItems: 'center',
               justifyContent: 'center',
-              opacity: add.isPending ? 0.6 : 1,
+              opacity: add.isPending || actionBusy ? 0.6 : 1,
             }}
           >
             <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
-              {PHOTO_COPY.review.save}
+              {capturePersisted && cleanupFailed ? 'Finish cleanup' : PHOTO_COPY.review.save}
             </Text>
           </Pressable>
         </View>
       </ScrollView>
       <RouteIconButton
         accessibilityLabel="Close"
-        disabled={add.isPending}
+        disabled={add.isPending || actionBusy}
         glyph="x"
-        onPress={closeToProgress}
+        onPress={() => void discardAndNavigate('progress')}
         tone="night"
         style={{
           position: 'absolute',
@@ -472,12 +578,125 @@ function ReviewScreenContent() {
 }
 
 export default function ReviewScreen() {
+  const routeParams = useLocalSearchParams<ReviewRouteParams>();
+  const [params] = useState<ReviewRouteParams>(() => routeParams);
+  const [source] = useState<ProgressCaptureSource | null>(() => progressCaptureSource(params));
+  const [captureMetadata] = useState(() => {
+    const captureSessionId = source?.disposable
+      ? trustedProgressCaptureSessionId(params.captureSessionId)
+      : null;
+    const timeOfDay = trustedProgressCaptureTimeOfDay(params.timeOfDay);
+    const trustedTakenLocalDate = trustedProgressCaptureLocalDate(params.takenLocalDate);
+    return {
+      captureSessionId,
+      nativeMetadataValid:
+        source?.disposable !== true ||
+        (captureSessionId !== null && timeOfDay !== null && trustedTakenLocalDate !== null),
+      takenLocalDate: trustedTakenLocalDate ?? localDay(),
+      timeOfDay,
+    };
+  });
+  const [lifecycle] = useState(() => createProgressCaptureReviewLifecycle(FileSystem, source));
+  const navigation = useNavigation();
+  const mountedRef = useRef(false);
+  const navigationInFlightRef = useRef(false);
+  const pendingNavigationRef = useRef<ProtectedReviewNavigation | null>(null);
+  const [actionBusy, setActionBusy] = useState(false);
+  const [capturePersisted, setCapturePersisted] = useState(false);
+  const [cleanupFailed, setCleanupFailed] = useState(false);
+  const [routeRemovalReady, setRouteRemovalReady] = useState(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      void lifecycle.dispose().catch(() => undefined);
+    };
+  }, [lifecycle]);
+
+  const discardAndAuthorize = async (pending: ProtectedReviewNavigation): Promise<void> => {
+    if (routeRemovalReady || navigationInFlightRef.current) return;
+    navigationInFlightRef.current = true;
+    setActionBusy(true);
+    setCleanupFailed(false);
+    try {
+      await lifecycle.discard();
+      if (!mountedRef.current) return;
+      pendingNavigationRef.current = pending;
+      setRouteRemovalReady(true);
+    } catch {
+      navigationInFlightRef.current = false;
+      if (mountedRef.current) {
+        setCapturePersisted(lifecycle.hasPersisted());
+        setCleanupFailed(true);
+        setActionBusy(false);
+      }
+    }
+  };
+
+  // The guard lives outside entitlement, lock, storage, and analysis gates so
+  // every route exit owns the same raw-photo cleanup contract.
+  usePreventRemove(source !== null && !routeRemovalReady, ({ data }) => {
+    void discardAndAuthorize({ kind: 'action', action: data.action });
+  });
+
+  useEffect(() => {
+    if (!routeRemovalReady) return;
+    const pending = pendingNavigationRef.current;
+    if (pending === null) return;
+    pendingNavigationRef.current = null;
+    if (pending.kind === 'action') {
+      navigation.dispatch(pending.action);
+    } else if (pending.kind === 'retake') {
+      router.replace('/progress/capture');
+    } else {
+      backOrReplace(router, APP_PROGRESS_ROUTE);
+    }
+  }, [navigation, routeRemovalReady]);
+
+  const boundary: ReviewCaptureBoundaryState = {
+    actionBusy,
+    captureSessionId: captureMetadata.captureSessionId,
+    capturePersisted,
+    capturedUri: source !== null && captureMetadata.nativeMetadataValid ? source.uri : null,
+    cleanupFailed,
+    discardAndNavigate: (target) => discardAndAuthorize({ kind: target }),
+    saveCapture: async (persist, onPersisted) => {
+      if (navigationInFlightRef.current) return 'busy';
+      navigationInFlightRef.current = true;
+      setActionBusy(true);
+      setCleanupFailed(false);
+      try {
+        await lifecycle.save(persist, () => {
+          if (mountedRef.current) setCapturePersisted(true);
+          onPersisted();
+        });
+        if (mountedRef.current) {
+          pendingNavigationRef.current = { kind: 'progress' };
+          setRouteRemovalReady(true);
+        }
+        return 'navigating';
+      } catch {
+        const persisted = lifecycle.hasPersisted();
+        navigationInFlightRef.current = false;
+        if (mountedRef.current) {
+          setCapturePersisted(persisted);
+          setCleanupFailed(persisted);
+          setActionBusy(false);
+        }
+        return persisted ? 'cleanup_failed' : 'save_failed';
+      }
+    },
+    takenLocalDate: captureMetadata.takenLocalDate,
+    timeOfDay: captureMetadata.timeOfDay,
+  };
+
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
         <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
           <CaptureAnalysisProvider>
-            <ReviewScreenContent />
+            <ReviewScreenContent params={params} boundary={boundary} />
           </CaptureAnalysisProvider>
         </PhotoStorageGate>
       </PhotoTimelineLockGate>
