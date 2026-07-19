@@ -1,0 +1,57 @@
+# Maximized Closure Audit
+
+Date: 2026-07-18 (America/Toronto)
+
+Branch: `optimization`
+
+Audit parent SHA: `a53cfeca994e242b7e45fd43279909b1d59f2041`
+
+Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
+
+Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the complete repository gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
+
+## Requirement-By-Requirement Result
+
+| Section 19 requirement | Result on this SHA | Evidence boundary / remaining gate |
+| --- | --- | --- |
+| All P0 items complete with evidence | Not met | PERF-P0-002 is `not-started`; multiple PERF-P0 rows remain `investigating`; signed/native/hosted proof is absent. See `IMPLEMENTATION_STATUS.md`. |
+| No open release-blocking P1 item | Not met | OPT-101/102 remain decision-gated; OPT-103/104/105/115/118/120 and others retain explicit release evidence debt. |
+| Signed iOS and Android builds meet predeclared thresholds | Blocked external | No approved thresholds, canonical signed artifacts, repeated device samples, or authorized signoff packet exists. |
+| 50 encrypted photos pass crash/kill/residue/frame/memory gates | Partial local only | The 50-photo web stress run passes UI traversal, but it uses one tiny unencrypted development image. Signed encrypted-photo Instruments/filesystem/OS-kill proof is absent. |
+| Lowest supported device classes pass critical flows | Blocked external | Web phone viewports cover compatible behavior only; signed physical lowest-class runs are absent. |
+| Private data fails closed without destructive empty conversion | Locally implemented; release proof open | Typed unavailable/corrupt/unsupported store states and fault tests pass; physical protected-storage/key-loss evidence remains. |
+| Two simultaneous writes cannot lose a user action | Locally implemented; release proof open | Deterministic 100-way store matrices and atomic reducers pass; native process-kill/secure-store fault proof remains. |
+| Delayed old-account work cannot mutate the new account | Locally implemented; release proof open | Owner-generation and stale-work tests pass across registered gateways; physical provider/account-switch proof remains. |
+| Offline work converges idempotently | Partial | Transactional core plus six entities are implemented; completion-history adoption, two legacy direct mutations, native reconnect/process-kill, and hosted duplicate-worker proof remain. |
+| Catalog search uses a proven index at realistic scale | Strong local proof; hosted approval open | The 250,000-row PostgreSQL 15 plan/load run has no final-product sequential scans and 4,821 timed RPC samples; hosted staging replay and write-cost approval remain. |
+| Webhook events are atomic, idempotent, ordering-safe | Locally implemented; hosted proof open | RevenueCat insert/projection ordering logic and tests pass; staging duplicate/reorder/provider/alert exercise remains. |
+| Export is complete above platform row limits | Locally implemented; hosted proof open | Pagination, exact count/checksum, bounded concurrency, and fail-closed inventory exist; seeded >1,000-row hosted replay remains. |
+| Deletion is resumable across multiple pages | Locally implemented; hosted proof open | Leased resumable deletion and exhaustive storage pagination exist; hosted multi-page failure/recovery/provider completion remains. |
+| Privacy retention claims are enforced by jobs | Not met | Retention policy, scheduler, alert thresholds, and operations ownership remain externally unapproved. |
+| Every deployed function is declarative and smoke-tested | Local manifest complete; deployment proof open | Local manifest/source validation passes; authenticated hosted deployment/resource smoke is absent. |
+| Exact-release symbols/source maps/mappings are recoverable | Blocked external | No exact signed release artifact or authorized Sentry/Play/App Store symbol recovery exercise exists. |
+| Accessibility, Reduce Motion, large text, and critical errors pass human review | Partial | Extensive deterministic/web human evidence exists; signed native VoiceOver, physical Dynamic Type, Reduce Motion, and device error-state review remain. |
+| Update/rollback behavior is rehearsed | Partial | Store-only update policy and local incident exercise pass; signed binary canary/rollback plus provider/backend recovery identifiers and owners remain. |
+| Performance evidence is launch-linked and governance-approved | Not met | Local sanitized checkpoints exist, but no approved performance packet, thresholds, owners, signed matrix, or launch-readiness approval exists. |
+
+## Current Verification Snapshot
+
+- Implementation checkpoint: `a53cfeca994e242b7e45fd43279909b1d59f2041`.
+- Repository type-check: pass, two workspaces.
+- Repository lint: pass, two workspaces, zero warnings.
+- Repository tests: pass, 345 files / 4,102 tests.
+- Progress focused matrix: pass, 3 files / 38 tests.
+- Progress web stress: 50 and 100 photos traverse to unique oldest rows without blank viewports; 100-photo picker traverses and changes selection; 250-record pure derivations pass.
+- Latest evidence: `evidence/2026-07-18_progress-collection-stress-checkpoint.md`.
+
+## Remaining Work Classification
+
+No additional decision-free P0/P1/P2 repository implementation slice was identified by the independent audits after this checkpoint. Remaining work is one or more of:
+
+- decision-gated: photo v2/native handles, encrypted thumbnails/cache ceilings, startup-shield scope, retention/abuse/scheduler thresholds, and bundle/performance budgets;
+- hosted/provider-gated: Supabase deployment and seeded scale/recovery rehearsals, RevenueCat/provider replay, retention scheduling, alerting, and completion terminal reconciliation;
+- signed-artifact-gated: exact iOS/Android binaries, symbols/mappings/privacy manifests, artifact budgets, upgrade/canary/rollback, and store declaration inspection;
+- physical-device-gated: supported/lowest-class frame, memory, startup, encrypted-photo, filesystem, lifecycle, account-switch, keyboard, accessibility, and OS-kill evidence;
+- ownership/approval-gated: threshold owners, primary/backup responders, signoff, operations cadence, and launch-readiness approval.
+
+These are precise closure prerequisites, not permission requests and not claims that the local implementation is verified.
