@@ -1473,6 +1473,8 @@ Store trace templates, run instructions, screenshots/summaries, build hash, and 
 - test clean install, upgrade from last production, offline first launch, and migration interruption;
 - confirm App Store privacy answers match actual SDK/network/storage behavior.
 
+Current exact-release recovery checkpoint (2026-07-18): Phase 9 now has a fail-closed content-free artifact contract for one clean SHA and iOS EAS build. A macOS release host must validate Apple distribution trust, signed bundle/profile/entitlement identity for the root app and extensions, every shipped Mach-O UUID, canonical dSYM DWARF coverage, the exact external Hermes debug ID, and absence of shipped source maps. A claimed packet must also retrieve distinct live Sentry JavaScript/native events and verify exact source-map and Mach-O debug-file recovery before strict QA can pass. No signed artifact or live recovery result was fabricated; see `docs/optimization/evidence/2026-07-18_exact-release-artifact-recovery-contract.md`.
+
 ## 13. Android Optimization And Release Checklist
 
 ### 13.1 Supported-device matrix
