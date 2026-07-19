@@ -1562,6 +1562,20 @@ profile enables the candidate for evidence collection; development and
 production remain disabled. See
 `docs/hugeToDo/CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md`.
 
+The governed `CAT05 native OCR review Expo-web pass` packet bound to source
+`fec382eddd0e79f73b4c38b5de30d996928a8fc9` passes 15/15 scenarios and 4/4
+explicit-consent bootstraps with zero browser failures. Its 139 non-summary
+artifacts, including 55 PNGs, are retained at
+`test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. It records
+`nativeDeviceProof=false`. The 375 x 667 manual-handoff PNG omits the
+Ingredients field/prefill, and the fixture has multilingual Unicode but no
+Arabic/Hebrew RTL sample, so those visuals and RTL remain unproven. The packet
+does not execute or prove Apple Vision, Swift, a camera, an iOS binary,
+physical-device behavior, native privacy cleanup, OCR accuracy/latency, native
+accessibility, archive linkage, App Review, legal clearance, or revenue. The
+macOS compile remains unverified/pending, so `B-NATIVE-OCR` remains
+launch-blocking.
+
 Exit criteria:
 
 - the reviewed Apple Vision module is compiled and present in the exact signed

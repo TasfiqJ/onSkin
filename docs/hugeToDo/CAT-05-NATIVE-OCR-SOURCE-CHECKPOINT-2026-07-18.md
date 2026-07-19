@@ -4,6 +4,8 @@
 - Status: `source candidate / launch-blocked`
 - Release scope: iOS 17+
 - Runtime exposure: staging internal candidate only
+- Governed Expo-web source: `fec382eddd0e79f73b4c38b5de30d996928a8fc9`
+- Governed Expo-web evidence: `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`
 
 ## Decision
 
@@ -18,6 +20,13 @@ physical iPhone can run it, that label images or transcripts stay off the
 network in the exact build, or that accuracy, latency, cleanup, VoiceOver, or
 Dynamic Type meet the declared gates. It is not Apple approval, legal advice,
 legal clearance, a product-quality conclusion, or a revenue forecast.
+
+The governed deterministic Expo-web packet bound to
+`fec382eddd0e79f73b4c38b5de30d996928a8fc9` passes 15/15 scenario executions
+and 4/4 explicit-consent bootstraps with zero browser failures. It retains 139
+non-summary artifacts, including 55 PNGs, and records
+`nativeDeviceProof=false`. This closes only the declared deterministic web UI
+matrix; the macOS/Xcode compile remains unverified and pending.
 
 ## User And Product Boundary
 
@@ -188,6 +197,19 @@ latency, accessibility, archive linkage, App Review behavior, or release
 readiness. A governed run must be bound to the committed source checkpoint; an
 uncommitted or stale fixture run is not evidence.
 
+The current governed packet satisfies that narrow web contract: source
+`fec382eddd0e79f73b4c38b5de30d996928a8fc9`, 15/15 scenarios, 4/4 consent
+bootstraps, zero browser failures, 139 non-summary artifacts, and 55 PNGs at
+`test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. The
+375 x 667 manual-handoff PNG does not show the Ingredients field or its prefill,
+so compact visual handoff is not proven by that screenshot. Although the
+fixture includes multilingual Unicode, it contains no Arabic or Hebrew RTL
+sample, so RTL remains source/physical-device unproven. The packet does not
+execute or prove Apple Vision, the Swift module, camera behavior, an iOS binary,
+physical-device behavior, native privacy cleanup, OCR accuracy or latency,
+native accessibility, archive linkage, App Review acceptance, legal clearance,
+or revenue.
+
 ## Evidence Contract And Predeclared Floor
 
 The schema-v2 native OCR evidence contract intentionally rejects Boolean-only
@@ -217,16 +239,16 @@ physical-device contract.
 
 ## Local Verification At This Checkpoint
 
-| Check                                          | Recorded local result                           | Limit                                                     |
-| ---------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
-| Mobile TypeScript check                        | Passed                                          | Does not compile Swift or link an iOS archive             |
-| Focused native OCR/camera/Shelf/Progress tests | Passed: 14 files / 169 tests                    | Unit/source behavior only, not device behavior            |
-| CAT-05 native source plus web-runner contracts | Passed: 39/39                                   | Static/deterministic contract only                        |
-| Native evidence contract and smoke suites      | Passed: 38/38                                   | Validates artifact shape, not truth of future attachments |
-| Full mobile baseline                           | Passed: 299 files / 3,486 tests                 | Required before the source commit is accepted             |
-| Deterministic Expo-web UI run                  | Pending against the committed source checkpoint | Must remain `nativeDeviceProof=false`                     |
-| Xcode/Swift/archive build                      | Workflow contract passed 2/2; macOS run pending | Unsigned Simulator compile only; signed archive blocks    |
-| Physical-iPhone matrix                         | Not run                                         | Launch-blocking                                           |
+| Check                                          | Recorded local result                                                                                       | Limit                                                     |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Mobile TypeScript check                        | Passed                                                                                                      | Does not compile Swift or link an iOS archive             |
+| Focused native OCR/camera/Shelf/Progress tests | Passed: 14 files / 169 tests                                                                                | Unit/source behavior only, not device behavior            |
+| CAT-05 native source plus web-runner contracts | Passed: 39/39                                                                                               | Static/deterministic contract only                        |
+| Native evidence contract and smoke suites      | Passed: 38/38                                                                                               | Validates artifact shape, not truth of future attachments |
+| Full mobile baseline                           | Passed: 299 files / 3,486 tests                                                                             | Required before the source commit is accepted             |
+| Deterministic Expo-web UI run                  | Passed: 15/15 scenarios; 4/4 consent bootstraps; zero browser failures; 139 non-summary artifacts / 55 PNGs | Governed fixture packet only; `nativeDeviceProof=false`   |
+| Xcode/Swift/archive build                      | Workflow contract passed 2/2; macOS run unverified/pending                                                  | No Simulator compile or signed-archive proof              |
+| Physical-iPhone matrix                         | Not run                                                                                                     | Launch-blocking                                           |
 
 ## Current Blockers
 

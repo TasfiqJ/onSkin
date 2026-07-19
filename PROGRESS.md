@@ -7356,6 +7356,28 @@ launch blocker; it is not a CAT-04 closure dependency.
 This checkpoint does not establish Apple acceptance, legal compliance, catalog
 accuracy, product-market fit, or revenue.
 
+### CAT-05 governed deterministic Expo-web checkpoint (2026-07-18)
+
+Retained the provenance-valid CAT-05 deterministic Expo-web packet bound to
+source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` at
+`test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. The packet
+passes 15/15 scenario executions across 375 x 667, 390 x 844, and 430 x 932,
+passes 4/4 explicit-consent bootstraps, and records zero browser failures. It
+contains 139 non-summary artifacts, including 55 PNGs, with
+`nativeDeviceProof=false`.
+
+This is governed fixture UI-state evidence only. The 375 x 667 manual-handoff
+PNG does not show the Ingredients field or prefill, so compact visual handoff
+is unproven; the multilingual fixture has no Arabic/Hebrew RTL sample, so RTL
+remains source/physical-device unproven. The packet does not execute or prove
+Apple Vision, the Swift module, a camera, an iOS binary, physical-device
+behavior, native privacy cleanup, OCR accuracy or latency, native
+accessibility, archive linkage, App Review acceptance, legal clearance, or
+revenue. The macOS/Xcode compile is still unverified/pending. CAT-05 remains
+`in_progress` and launch-blocked pending exact-build compilation/archive,
+two-iPhone, 25-label/50-run accuracy/RTL/network/cleanup/accessibility,
+performance, App Privacy, privacy/security/legal, and release gates.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

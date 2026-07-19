@@ -165,15 +165,24 @@ inputs, cancellation/timeout handling, editable confidence-aware Unicode/RTL
 review, a user-edit fence, manual recovery, minimized categorical/coarse
 analytics, and bounded managed plus Expo Camera startup cleanup. Only the
 internal EAS `staging` profile enables the candidate; `development` and
-`production` remain disabled. The deterministic Expo-web runner defines 15 UI
-scenario executions at the three supported viewports, but it must remain
-`nativeDeviceProof=false` and cannot establish Vision, camera, privacy,
-cleanup, accuracy, latency, accessibility, archive, App Review, or release
-behavior. Xcode/Swift compilation, exact signed-archive linkage, two physical
-iPhones, the governed 25-label/50-run matrix, zero-network and cache-digest
-proof, VoiceOver/Dynamic Type, performance, corpus rights, and qualified
-privacy/security/legal review remain open. CAT-05 is not Apple- or
-legal-cleared and no commercial outcome is implied.
+`production` remain disabled. The governed deterministic Expo-web packet bound
+to source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` passes 15/15 UI scenario
+executions across the three supported viewports and 4/4 explicit-consent
+bootstraps with zero browser failures. It retains 139 non-summary artifacts,
+including 55 PNGs, at
+`test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. The packet
+records `nativeDeviceProof=false`: it does not execute or prove Apple Vision,
+the Swift module, a camera, an iOS binary, physical-device behavior, native
+privacy cleanup, OCR accuracy or latency, native accessibility, archive
+linkage, App Review acceptance, legal clearance, or revenue. The 375 x 667
+manual-handoff PNG does not show the Ingredients field or its prefill, so that
+compact visual handoff is unproven. The fixture includes multilingual Unicode
+but no Arabic or Hebrew RTL sample, so RTL remains source/physical-device
+unproven. The macOS/Xcode compile remains unverified and pending. Exact signed-
+archive linkage, two physical iPhones, the governed 25-label/50-run matrix,
+zero-network and cache-digest proof, VoiceOver/Dynamic Type, performance,
+corpus rights, and qualified privacy/security/legal review remain open. CAT-05
+remains `in_progress` and launch-blocked; no commercial outcome is implied.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. The fresh-only source procedure now covers all 58 migrations through

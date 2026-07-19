@@ -816,31 +816,31 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: At 375 x 667, 390 x 844, and 430 x 932, use the development-only `recognized` fixture, tap Capture label, wait through the reading state, inspect the Unicode transcript and uncertainty/truncation cues, Retake, capture again, and Continue.
   - Expected result: Reading stays visibly busy without blocking typing; the Unicode transcript is preserved exactly; ambiguous/review lines are named in words; incomplete output is disclosed; no confidence is called percent accurate; Retake returns to capture; and Continue carries only the reviewed editable text to manual entry.
-  - Evidence: Planned committed-source CAT-05 runner artifacts for `recognized-review-retake-continue` at all three viewports, accessible-name/alert/live-region snapshots, text-field value, control geometry, browser logs, and manual-route handoff.
+  - Evidence: Governed exact-source `recognized-review-retake-continue` artifacts at all three viewports, including accessible-name/alert/live-region snapshots, text-field value, control geometry, sanitized browser logs, and manual-route handoff, are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. The 375 x 667 manual-handoff PNG does not show the Ingredients field or prefill, so compact visual handoff is not proven by that screenshot.
 - Branch: CAT-05 edit fence and explicit suggestion adoption
   - Priority: Critical
   - Automate later: Yes
   - Action: Type a Unicode correction while the deterministic recognized result is still pending, then inspect and explicitly adopt the recognized suggestion.
   - Expected result: A late result never overwrites the user's text. The route says the edits were kept and exposes `Use recognized text`; only that explicit action replaces the edit, and the suggestion action then disappears.
-  - Evidence: Planned `edit-fence-suggestion-adoption` artifacts at all three supported viewports plus review-state/coordinator tests. Native cancellation and late-result races remain physical-device/exact-build evidence.
+  - Evidence: Governed exact-source `edit-fence-suggestion-adoption` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`, alongside review-state/coordinator tests. Native cancellation and late-result races remain physical-device/exact-build evidence.
 - Branch: CAT-05 no-readable-text manual recovery
   - Priority: Critical
   - Automate later: Yes
   - Action: Run the deterministic `no_text` fixture, then type multilingual Unicode ingredient text and Continue.
   - Expected result: `No readable text found` is an alert; Retake and the editable manual field remain available; the user-entered Unicode text reaches manual add without a fake match or automatic Shelf mutation.
-  - Evidence: Planned `no-text-manual-recovery` artifacts at all three supported viewports.
+  - Evidence: Governed exact-source `no-text-manual-recovery` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`.
 - Branch: CAT-05 timeout manual recovery
   - Priority: Critical
   - Automate later: Yes
   - Action: Run the deterministic `timed_out` fixture, then type multilingual Unicode ingredient text and Continue.
   - Expected result: A stable `Label reading took too long` alert appears; Retake and manual entry remain usable; no native error or transcript is logged or shown; and manual handoff succeeds.
-  - Evidence: Planned `timeout-manual-recovery` artifacts at all three supported viewports plus exact native 12-second timeout/cancellation evidence on physical iPhones.
+  - Evidence: Governed exact-source `timeout-manual-recovery` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. Exact native 12-second timeout/cancellation evidence on physical iPhones remains open.
 - Branch: CAT-05 generic failure manual recovery
   - Priority: Critical
   - Automate later: Yes
   - Action: Run the deterministic `failed` fixture, then type multilingual Unicode ingredient text and Continue.
   - Expected result: A stable generic label-not-read alert appears; Retake and manual entry remain usable; raw native failure detail stays hidden; and manual handoff succeeds.
-  - Evidence: Planned `failure-manual-recovery` artifacts at all three supported viewports plus exact-build native failure and missing/misconfigured-module checks.
+  - Evidence: Governed exact-source `failure-manual-recovery` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. Exact-build native failure and missing/misconfigured-module checks remain open.
 - Branch: CAT-05 navigation, cancellation, and temporary-photo cleanup
   - Priority: Critical
   - Automate later: Yes
@@ -852,7 +852,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Run the five CAT-05 deterministic scenarios across 375 x 667, 390 x 844, and 430 x 932 after the source checkpoint is committed.
   - Expected result: The governed run has 15 scenario executions and four consent bootstraps, records `nativeDeviceProof=false`, and labels itself development-only Expo-web UI-state evidence. It must not be cited as Apple Vision, Swift, camera, iOS binary, physical-iPhone, OCR accuracy/latency, privacy, zero-network, cleanup, VoiceOver, archive, App Review, legal, or release proof.
-  - Evidence: `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/` only after provenance validation. Until that committed-source run exists, this is a declared matrix rather than completed E2E evidence.
+  - Evidence: The provenance-valid packet at `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/` is bound to source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` and passes 15/15 scenarios plus 4/4 consent bootstraps with zero browser failures, 139 non-summary artifacts, and 55 PNGs. It records `nativeDeviceProof=false`; the macOS compile remains unverified/pending, the 375 x 667 manual-handoff PNG does not show Ingredients/prefill, and the multilingual fixture has no Arabic/Hebrew RTL sample. It is not Vision, Swift, camera, iOS-binary, physical-device, native privacy-cleanup, accuracy, latency, native-accessibility, archive, App Review, legal, release, or revenue proof.
 - Branch: camera permission denied
   - Priority: Important
   - Automate later: Yes

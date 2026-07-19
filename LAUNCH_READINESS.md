@@ -782,9 +782,18 @@ Re-run the relevant checks after any production-readiness change.
 8. Native camera, barcode, guided photo capture, and encrypted local photo file
    storage are implemented in repo but not verified in a custom dev build.
    Native OCR now has a staging-only Apple Vision revision-3 source candidate;
-   development and production stay disabled, and no Xcode/Swift, signed-
-   archive, physical-iPhone, privacy, accuracy, cleanup, accessibility, or
-   performance proof exists.
+   development and production stay disabled. Its governed
+   `CAT05 native OCR review Expo-web pass` packet is
+   bound to `fec382eddd0e79f73b4c38b5de30d996928a8fc9` and passes 15/15
+   scenarios plus 4/4 consent bootstraps with zero browser failures, 139
+   non-summary artifacts, and 55 PNGs at
+   `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`, but
+   records `nativeDeviceProof=false`. The 375 x 667 manual-handoff PNG omits
+   Ingredients/prefill, and the multilingual fixture contains no Arabic/Hebrew
+   RTL sample. It proves no Vision/Swift/camera/iOS-binary or physical-device
+   behavior, native privacy cleanup, accuracy, latency, native accessibility,
+   archive linkage, App Review acceptance, legal clearance, or revenue. The
+   macOS compile remains unverified/pending.
 9. Native iPhone notification delivery is not verified on physical devices.
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
@@ -804,6 +813,11 @@ Re-run the relevant checks after any production-readiness change.
 14. The exact release privacy report, live policy/support URLs, and a
     non-expiring production-like App Review demo account/instructions do not yet
     exist.
+
+CAT-05 therefore remains `in_progress` and launch-blocked. The current governed
+web packet closes only the deterministic Expo-web review-state matrix; it is
+not production or release evidence and does not change the native-OCR exit
+criteria below.
 
 ## Readiness Table
 
