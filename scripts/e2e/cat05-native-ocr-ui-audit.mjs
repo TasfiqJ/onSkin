@@ -891,7 +891,7 @@ async function waitForPath(client, prefix, timeoutMs = 30_000) {
   );
 }
 
-async function waitForNetworkIdle(client, timeoutMs = 10_000) {
+async function waitForNetworkIdle(client, timeoutMs = 60_000) {
   const startedAt = Date.now();
   let quietSince = null;
   while (Date.now() - startedAt < timeoutMs) {
@@ -905,6 +905,17 @@ async function waitForNetworkIdle(client, timeoutMs = 10_000) {
     await delay(100);
   }
   throw new Error(`Network did not become idle; ${client.inflight.size} request(s) remain.`);
+}
+
+export function prepareCat05Navigation(client) {
+  assert(
+    client?.inflight && typeof client.inflight.clear === 'function',
+    'CAT05 navigation requires request lifecycle tracking.',
+  );
+  // A top-level navigation cancels the previous document's request epoch. CDP
+  // can omit terminal events for those canceled development-server requests,
+  // so carrying them forward would make an otherwise settled page look busy.
+  client.inflight.clear();
 }
 
 async function setViewport(client, viewport) {
@@ -1140,10 +1151,29 @@ async function navigate(client, baseUrl, viewport, scenarioId) {
   const url = new URL('/shelf/ocr', baseUrl);
   url.searchParams.set('cat05Audit', `${scenarioId}-${viewport.id}-${Date.now()}`);
   assertCat05PageTarget(url, boundBase);
+  prepareCat05Navigation(client);
   await client.send('Page.navigate', { url: url.toString() });
   await waitForPath(client, '/shelf/ocr');
   await waitForText(client, 'Read the label');
   await waitForNetworkIdle(client);
+}
+
+export async function navigateToCat05OcrConsentProbe(
+  client,
+  { baseUrl, groupId, timeoutMs = 60_000 } = {},
+) {
+  const probeUrl = new URL('/shelf/ocr', baseUrl);
+  probeUrl.searchParams.set('cat05ConsentProbe', `${groupId}-${Date.now()}`);
+  assertCat05PageTarget(probeUrl, baseUrl, '/shelf/ocr');
+  prepareCat05Navigation(client);
+  await client.send('Page.navigate', { url: probeUrl.toString() });
+  await waitForCondition(
+    client,
+    `window.location.pathname === '/shelf/ocr' && document.body?.innerText.includes('Read the label')`,
+    timeoutMs,
+    'label-review route after explicit local consent',
+  );
+  return probeUrl.toString();
 }
 
 function writeJson(evidenceDir, name, value) {
@@ -1266,6 +1296,7 @@ async function establishLocalHealthConsent({ binding, client, baseUrl, evidenceD
     resetUrl.searchParams.set('e2eReset', 'local');
     resetUrl.searchParams.set('cat05Bootstrap', `${groupId}-${Date.now()}`);
     assertCat05PageTarget(resetUrl, baseUrl);
+    prepareCat05Navigation(client);
     await client.send('Page.navigate', { url: resetUrl.toString() });
     await waitForText(client, 'Begin', 60_000);
     await clickByText(client, 'Begin');
@@ -1285,20 +1316,7 @@ async function establishLocalHealthConsent({ binding, client, baseUrl, evidenceD
     await waitForPath(client, '/onboarding/goals');
     await waitForText(client, 'What brings you here?');
 
-    const probeDeadline = Date.now() + 30_000;
-    let ocrReady = false;
-    while (Date.now() < probeDeadline && !ocrReady) {
-      const probeUrl = new URL('/shelf/ocr', baseUrl);
-      probeUrl.searchParams.set('cat05ConsentProbe', `${groupId}-${Date.now()}`);
-      assertCat05PageTarget(probeUrl, baseUrl, '/shelf/ocr');
-      await client.send('Page.navigate', { url: probeUrl.toString() });
-      await delay(750);
-      ocrReady = await evaluate(
-        client,
-        `window.location.pathname === '/shelf/ocr' && document.body?.innerText.includes('Read the label')`,
-      );
-    }
-    assert(ocrReady, 'Explicit local consent did not release the label-review route.');
+    await navigateToCat05OcrConsentProbe(client, { baseUrl, groupId });
     await waitForNetworkIdle(client);
     await captureStep(client, evidenceDir, `${artifactPrefix}-ocr-ready`, {
       baseUrl,

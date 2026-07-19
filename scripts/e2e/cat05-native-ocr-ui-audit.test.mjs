@@ -30,6 +30,8 @@ import {
   collectCat05UndeclaredDirtyPaths,
   expectedCat05PassArtifacts,
   listCat05EvidenceArtifacts,
+  navigateToCat05OcrConsentProbe,
+  prepareCat05Navigation,
   resolveCat05AuditBinding,
   sanitizeBrowserEvents,
   stopActiveCat05Processes,
@@ -257,6 +259,42 @@ test('browser and page targets are pinned to explicit local HTTP origin and port
     () => assertCat05LocalTarget('http://localhost:8621/shelf/ocr', { expectedPort: 8620 }),
     /port/,
   );
+});
+
+test('cold consent probe navigates once and discards only the prior request epoch', async () => {
+  const calls = [];
+  const client = {
+    closed: false,
+    inflight: new Set(['request-from-previous-document']),
+    async send(method, params) {
+      calls.push({ method, params });
+      if (method === 'Runtime.evaluate') return { result: { value: true } };
+      return {};
+    },
+  };
+
+  const url = await navigateToCat05OcrConsentProbe(client, {
+    baseUrl: 'http://localhost:8620',
+    groupId: 'recognized',
+    timeoutMs: 100,
+  });
+
+  assert.equal(client.inflight.size, 0);
+  assert.equal(calls.filter(({ method }) => method === 'Page.navigate').length, 1);
+  assert.equal(calls.filter(({ method }) => method === 'Runtime.evaluate').length, 1);
+  assert.match(url, /^http:\/\/localhost:8620\/shelf\/ocr\?cat05ConsentProbe=recognized-\d+$/);
+  assert.doesNotMatch(
+    source.slice(
+      source.indexOf('export async function navigateToCat05OcrConsentProbe'),
+      source.indexOf('async function establishLocalHealthConsent'),
+    ),
+    /while\s*\([^)]*\)[\s\S]*Page\.navigate/,
+  );
+  assert.match(source, /async function waitForNetworkIdle\(client, timeoutMs = 60_000\)/);
+});
+
+test('navigation request reset fails closed without lifecycle tracking', () => {
+  assert.throws(() => prepareCat05Navigation({}), /request lifecycle tracking/);
 });
 
 test('group browser classification blocks console, page, process-surface, and untrusted network failures', () => {
