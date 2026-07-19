@@ -402,9 +402,15 @@ const CAT05_NATIVE_OCR_PRIVACY_FILES = Object.freeze([
   'apps/mobile/src/app/shelf/ocr.tsx',
   'apps/mobile/src/features/photos/progressCapturePrivacy.ts',
 ]);
+const CAT05_DOCUMENTATION_ONLY_ROOT_PATHS = new Set([
+  'BLOCKERS.md',
+  'LAUNCH_READINESS.md',
+  'PROGRESS.md',
+]);
 
 function cat05DocumentationOnlyPath(path) {
-  return normalizeRepoPath(path).startsWith('docs/');
+  const normalized = normalizeRepoPath(path);
+  return normalized.startsWith('docs/') || CAT05_DOCUMENTATION_ONLY_ROOT_PATHS.has(normalized);
 }
 const CAT05_NATIVE_OCR_SUMMARY_KEYS = Object.freeze([
   'artifactCount',
@@ -3031,7 +3037,7 @@ function runCat05NativeOcrReviewContractSmoke() {
       sourceGitState: {
         ...sourceGitState,
         changedRepoFilesSinceSource: ['docs/hugeToDo/CAT-05-closeout.md'],
-        dirtyTrackedRepoFiles: ['docs/PROGRESS.md'],
+        dirtyTrackedRepoFiles: ['BLOCKERS.md', 'LAUNCH_READINESS.md', 'PROGRESS.md'],
         untrackedRepoFiles: ['docs/e2e/cat05-review-notes.md'],
       },
     }).length === 0,
