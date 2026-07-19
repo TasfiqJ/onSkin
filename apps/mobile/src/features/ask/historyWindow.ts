@@ -46,3 +46,13 @@ export function nextAskLatestScrollAttempt(
     lastAttemptedHeight: contentHeight,
   };
 }
+
+export function measuredAskPrependHeight(rowHeights: readonly number[]): number | null {
+  if (
+    rowHeights.length === 0 ||
+    rowHeights.some((height) => !Number.isFinite(height) || height <= 0)
+  ) {
+    return null;
+  }
+  return rowHeights.reduce((total, height) => total + height, 0);
+}

@@ -77,4 +77,19 @@ describe('Ask stress history fixture', () => {
       }
     }
   });
+
+  it('includes deterministic mixed-height questions without identifiers or private content', () => {
+    const messages = buildAskStressHistory(22, FIXTURE_ANSWER);
+    const questions = messages.flatMap((message) =>
+      message.role === 'user' ? [message.text] : [],
+    );
+
+    expect(questions).toHaveLength(22);
+    expect(questions[4]).toContain('mixed-height row');
+    expect(questions[10]).toContain('substantially different row heights');
+    expect(Math.max(...questions.map((question) => question.length))).toBeGreaterThan(
+      Math.min(...questions.map((question) => question.length)) * 3,
+    );
+    expect(questions.join(' ')).not.toMatch(/email|barcode|ingredient|product|account/i);
+  });
 });

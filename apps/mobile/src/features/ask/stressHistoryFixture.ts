@@ -6,6 +6,17 @@ export type AskStressHistoryMessage =
   | { id: string; role: 'user'; text: string }
   | { id: string; role: 'assistant'; answer: AskAnswer; reported: boolean };
 
+function stressHistoryQuestion(turn: number, stableTurn: string): string {
+  const base = `Performance fixture turn ${stableTurn}.`;
+  if (turn % 11 === 0) {
+    return `${base} This intentionally long sanitized question wraps across several lines so repeated history pages contain substantially different row heights without using private content.`;
+  }
+  if (turn % 5 === 0) {
+    return `${base} This sanitized mixed-height row intentionally wraps once.`;
+  }
+  return base;
+}
+
 /**
  * Parses the development-only Ask history fixture size. Callers remain responsible
  * for checking `__DEV__` before exposing the fixture to the route.
@@ -33,7 +44,7 @@ export function buildAskStressHistory(turns: number, answer: AskAnswer): AskStre
       {
         id: `ask-stress-user-${stableTurn}`,
         role: 'user',
-        text: `Performance fixture turn ${stableTurn}.`,
+        text: stressHistoryQuestion(turn, stableTurn),
       },
       {
         id: `ask-stress-assistant-${stableTurn}`,

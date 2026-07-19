@@ -2,12 +2,16 @@ import { router } from 'expo-router';
 import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
+  Platform,
   Pressable,
   ScrollView,
   TextInput,
   View,
   useWindowDimensions,
+  type LayoutChangeEvent,
   type ListRenderItem,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   type ViewToken,
 } from 'react-native';
 
@@ -17,6 +21,7 @@ import { ASK_COPY } from '@/features/ask/copy';
 import {
   ASK_HISTORY_PAGE_SIZE,
   latestAskHistoryStart,
+  measuredAskPrependHeight,
   nextAskLatestScrollAttempt,
   previousAskHistoryPage,
   type AskLatestScrollProgress,
@@ -83,14 +88,18 @@ type PendingAskLatestScroll = AskLatestScrollProgress & {
 };
 
 type PendingAskPrependAnchor = {
-  retries: number;
-  targetIndex: number;
+  adjusted: boolean;
+  baselineContentHeight: number;
+  baselineScrollOffset: number;
+  lastMeasuredPrependHeight: number;
+  prependedMessageIds: readonly string[];
+  settlementAttempts: number;
+  targetScrollOffset: number;
 };
 
-type AskScrollToIndexFailure = {
-  averageItemLength: number;
-  index: number;
-};
+const ASK_MAINTAIN_VISIBLE_CONTENT_POSITION = { minIndexForVisible: 0 } as const;
+const MAX_ASK_PREPEND_SETTLE_ATTEMPTS = 8;
+const ASK_PREPEND_SETTLE_DELAY_MS = 100;
 
 function askMessageKey(message: Msg): string {
   return message.id;
@@ -112,6 +121,22 @@ function publishAskRenderDiagnostics(): void {
   list.setAttribute('data-ask-logical-messages', String(diagnostics.logicalMessages));
   list.setAttribute('data-ask-message-renders', String(diagnostics.messageRenders));
   list.setAttribute('data-ask-visible-messages', String(diagnostics.visibleMessages));
+}
+
+function publishAskHistoryWindowDiagnostics(input: {
+  adjustmentCount: number;
+  anchorActive: boolean;
+  anchorOffset: number;
+  visibleStartIndex: number;
+}): void {
+  if (typeof __DEV__ === 'undefined' || !__DEV__ || typeof document === 'undefined') return;
+
+  const list = document.getElementById('ask-history-list');
+  if (!list) return;
+  list.setAttribute('data-ask-history-start-index', String(input.visibleStartIndex));
+  list.setAttribute('data-ask-prepend-adjustments', String(input.adjustmentCount));
+  list.setAttribute('data-ask-prepend-anchor-active', String(input.anchorActive));
+  list.setAttribute('data-ask-prepend-anchor-offset', input.anchorOffset.toFixed(3));
 }
 
 function MonoBadge({ label, tone }: { label: string; tone: 'deterministic' | 'fit' | 'escalate' }) {
@@ -386,27 +411,38 @@ function UserBubble({ text, compact = false }: { text: string; compact?: boolean
 type AskMessageRowProps = {
   compact: boolean;
   message: Msg;
+  onLayout: (messageId: string, height: number) => void;
   onReport: (messageId: string, kind: AskAnswer['kind']) => void;
 };
 
 const AskMessageRow = memo(function AskMessageRow({
   compact,
   message,
+  onLayout,
   onReport,
 }: AskMessageRowProps) {
   recordAskMessageRender();
 
-  if (message.role === 'user') {
-    return <UserBubble text={message.text} compact={compact} />;
-  }
-
   return (
-    <AnswerCard
-      answer={message.answer}
-      compact={compact}
-      reported={message.reported === true}
-      onReport={() => onReport(message.id, message.answer.kind)}
-    />
+    <View
+      collapsable={Platform.OS === 'web' ? false : undefined}
+      onLayout={
+        Platform.OS === 'web'
+          ? (event: LayoutChangeEvent) => onLayout(message.id, event.nativeEvent.layout.height)
+          : undefined
+      }
+    >
+      {message.role === 'user' ? (
+        <UserBubble text={message.text} compact={compact} />
+      ) : (
+        <AnswerCard
+          answer={message.answer}
+          compact={compact}
+          reported={message.reported === true}
+          onReport={() => onReport(message.id, message.answer.kind)}
+        />
+      )}
+    </View>
   );
 });
 
@@ -531,8 +567,113 @@ export default function AskScreen() {
   const stressHistoryAppliedRef = useRef(false);
   const pendingScrollToLatestRef = useRef<PendingAskLatestScroll | null>(null);
   const pendingPrependAnchorRef = useRef<PendingAskPrependAnchor | null>(null);
+  const historyContentHeightRef = useRef(-1);
+  const historyRowHeightsRef = useRef(new Map<string, number>());
+  const historyScrollOffsetRef = useRef(0);
+  const prependAnchorAdjustmentCountRef = useRef(0);
+  const prependAnchorLastOffsetRef = useRef(0);
+  const prependAnchorSettleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const visibleStartIndexRef = useRef(visibleStartIndex);
   const latestWindowReadyRef = useRef(true);
   const scrollRef = useRef<FlatList<Msg>>(null);
+
+  const publishHistoryWindowDiagnostics = useCallback(() => {
+    publishAskHistoryWindowDiagnostics({
+      adjustmentCount: prependAnchorAdjustmentCountRef.current,
+      anchorActive: pendingPrependAnchorRef.current !== null,
+      anchorOffset: prependAnchorLastOffsetRef.current,
+      visibleStartIndex: visibleStartIndexRef.current,
+    });
+  }, []);
+
+  const clearPrependAnchorSettlement = useCallback(() => {
+    if (prependAnchorSettleTimerRef.current !== null) {
+      clearTimeout(prependAnchorSettleTimerRef.current);
+      prependAnchorSettleTimerRef.current = null;
+    }
+  }, []);
+
+  const schedulePrependAnchorSettlement = useCallback(
+    (pending: PendingAskPrependAnchor) => {
+      clearPrependAnchorSettlement();
+      // Position correction is immediate and row-measurement-driven. The bounded
+      // quiet period only holds the page-reentry guard across a final layout pass.
+      const settle = () => {
+        prependAnchorSettleTimerRef.current = null;
+        if (pendingPrependAnchorRef.current !== pending || !pending.adjusted) return;
+
+        const targetDrift = Math.abs(
+          historyScrollOffsetRef.current - pending.targetScrollOffset,
+        );
+        if (
+          Platform.OS === 'web' &&
+          targetDrift > 1 &&
+          pending.settlementAttempts < MAX_ASK_PREPEND_SETTLE_ATTEMPTS
+        ) {
+          pending.settlementAttempts += 1;
+          prependAnchorAdjustmentCountRef.current += 1;
+          scrollRef.current?.scrollToOffset({
+            animated: false,
+            offset: pending.targetScrollOffset,
+          });
+          publishHistoryWindowDiagnostics();
+          prependAnchorSettleTimerRef.current = setTimeout(settle, ASK_PREPEND_SETTLE_DELAY_MS);
+          return;
+        }
+
+        pendingPrependAnchorRef.current = null;
+        publishHistoryWindowDiagnostics();
+      };
+      prependAnchorSettleTimerRef.current = setTimeout(settle, ASK_PREPEND_SETTLE_DELAY_MS);
+    },
+    [clearPrependAnchorSettlement, publishHistoryWindowDiagnostics],
+  );
+
+  const applyMeasuredPrependAnchor = useCallback(
+    (pending: PendingAskPrependAnchor) => {
+      const measuredHeight = measuredAskPrependHeight(
+        pending.prependedMessageIds.map(
+          (messageId) => historyRowHeightsRef.current.get(messageId) ?? Number.NaN,
+        ),
+      );
+      if (measuredHeight === null) return;
+
+      const anchorOffset = pending.baselineScrollOffset + measuredHeight;
+      pending.adjusted = true;
+      pending.lastMeasuredPrependHeight = measuredHeight;
+      pending.settlementAttempts = 0;
+      pending.targetScrollOffset = anchorOffset;
+      prependAnchorAdjustmentCountRef.current += 1;
+      prependAnchorLastOffsetRef.current = anchorOffset;
+      scrollRef.current?.scrollToOffset({ animated: false, offset: anchorOffset });
+      publishHistoryWindowDiagnostics();
+      schedulePrependAnchorSettlement(pending);
+    },
+    [publishHistoryWindowDiagnostics, schedulePrependAnchorSettlement],
+  );
+
+  const handleHistoryRowLayout = useCallback(
+    (messageId: string, rowHeight: number) => {
+      if (!Number.isFinite(rowHeight) || rowHeight <= 0) return;
+      historyRowHeightsRef.current.set(messageId, rowHeight);
+      const pending = pendingPrependAnchorRef.current;
+      if (
+        Platform.OS === 'web' &&
+        pending &&
+        pending.prependedMessageIds.includes(messageId)
+      ) {
+        applyMeasuredPrependAnchor(pending);
+      }
+    },
+    [applyMeasuredPrependAnchor],
+  );
+
+  useEffect(
+    () => () => {
+      clearPrependAnchorSettlement();
+    },
+    [clearPrependAnchorSettlement],
+  );
 
   useEffect(() => {
     track('ask_opened');
@@ -542,6 +683,11 @@ export default function AskScreen() {
     recordAskLogicalMessageCount(messages.length);
     publishAskRenderDiagnostics();
   }, [messages.length]);
+
+  useEffect(() => {
+    visibleStartIndexRef.current = visibleStartIndex;
+    publishHistoryWindowDiagnostics();
+  }, [publishHistoryWindowDiagnostics, visibleStartIndex]);
 
   const nextId = useCallback(() => {
     idRef.current += 1;
@@ -582,86 +728,80 @@ export default function AskScreen() {
   );
 
   const handleHistoryContentSizeChange = useCallback((_width: number, contentHeight: number) => {
-    const pending = pendingScrollToLatestRef.current;
-    if (!pending) return;
+    const pendingPrepend = pendingPrependAnchorRef.current;
     if (!Number.isFinite(contentHeight) || contentHeight <= 0) {
       // React Native Web can briefly report a collapsed list while variable-height
       // rows settle. Never turn that transient measurement into a scroll-to-top,
       // and allow the prior positive height to be retried after recovery.
-      pending.lastAttemptedHeight = -1;
+      const pendingLatest = pendingScrollToLatestRef.current;
+      if (pendingLatest) pendingLatest.lastAttemptedHeight = -1;
+      if (pendingPrepend) {
+        clearPrependAnchorSettlement();
+        pendingPrepend.adjusted = false;
+        pendingPrepend.lastMeasuredPrependHeight = -1;
+      }
       return;
     }
-    const nextAttempt = nextAskLatestScrollAttempt(pending, contentHeight);
-    if (!nextAttempt) return;
-    pending.attempts = nextAttempt.attempts;
-    pending.lastAttemptedHeight = nextAttempt.lastAttemptedHeight;
-    // The validated content height is the exact current extent; the scroll view
-    // clamps this oversized offset to its real bottom. The latest page is bounded,
-    // so retries cannot walk the complete transcript.
-    scrollRef.current?.scrollToOffset({ animated: false, offset: contentHeight });
-    if (nextAttempt.exhausted) {
-      pendingScrollToLatestRef.current = null;
-      latestWindowReadyRef.current = true;
-    }
-  }, []);
 
-  useEffect(() => {
-    if (!pendingPrependAnchorRef.current) return;
+    historyContentHeightRef.current = contentHeight;
 
-    let secondFrame: number | null = null;
-    const firstFrame = requestAnimationFrame(() => {
-      secondFrame = requestAnimationFrame(() => {
-        const pending = pendingPrependAnchorRef.current;
-        if (pending) {
-          scrollRef.current?.scrollToIndex({
-            animated: false,
-            index: pending.targetIndex,
-            viewPosition: 0,
-          });
-          if (pendingPrependAnchorRef.current === pending && pending.retries === 0) {
-            pendingPrependAnchorRef.current = null;
-          }
+    const pendingLatest = pendingScrollToLatestRef.current;
+    if (pendingLatest) {
+      const nextAttempt = nextAskLatestScrollAttempt(pendingLatest, contentHeight);
+      if (nextAttempt) {
+        pendingLatest.attempts = nextAttempt.attempts;
+        pendingLatest.lastAttemptedHeight = nextAttempt.lastAttemptedHeight;
+        // The validated content height is the exact current extent; the scroll view
+        // clamps this oversized offset to its real bottom. The latest page is bounded,
+        // so retries cannot walk the complete transcript.
+        scrollRef.current?.scrollToOffset({ animated: false, offset: contentHeight });
+        if (nextAttempt.exhausted) {
+          pendingScrollToLatestRef.current = null;
+          latestWindowReadyRef.current = true;
         }
-      });
-    });
+      }
+    }
 
-    return () => {
-      cancelAnimationFrame(firstFrame);
-      if (secondFrame !== null) cancelAnimationFrame(secondFrame);
-    };
-  }, [visibleStartIndex]);
-
-  const handleHistoryScrollToIndexFailed = useCallback((failure: AskScrollToIndexFailure) => {
-    const pending = pendingPrependAnchorRef.current;
-    if (!pending || pending.targetIndex !== failure.index) return;
-
-    // Older pages prepend in one bounded batch. This fallback is therefore at most
-    // one page estimate, never an unbounded walk through the complete transcript.
-    scrollRef.current?.scrollToOffset({
-      animated: false,
-      offset: failure.averageItemLength * failure.index,
-    });
-
-    if (pending.retries >= 1) {
-      pendingPrependAnchorRef.current = null;
+    if (!pendingPrepend) return;
+    if (Platform.OS === 'web') {
+      // RN Web's virtual spacer estimate can shrink while a real older page is
+      // inserted. Exact row measurements, not aggregate content height, own web
+      // restoration once every prepended row has laid out.
+      applyMeasuredPrependAnchor(pendingPrepend);
       return;
     }
-    pending.retries += 1;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const retry = pendingPrependAnchorRef.current;
-        if (!retry) return;
-        scrollRef.current?.scrollToIndex({
-          animated: false,
-          index: retry.targetIndex,
-          viewPosition: 0,
-        });
-        if (pendingPrependAnchorRef.current === retry) {
-          pendingPrependAnchorRef.current = null;
-        }
-      });
-    });
-  }, []);
+
+    if (contentHeight <= pendingPrepend.baselineContentHeight) {
+      clearPrependAnchorSettlement();
+      pendingPrepend.adjusted = false;
+      pendingPrepend.lastMeasuredPrependHeight = -1;
+      return;
+    }
+
+    // Native ScrollView owns the exact visible-row preservation. Tracking the
+    // measured growth here only closes the one-page re-entry guard after layout.
+    pendingPrepend.adjusted = true;
+    pendingPrepend.settlementAttempts = 0;
+    pendingPrepend.targetScrollOffset = historyScrollOffsetRef.current;
+    prependAnchorLastOffsetRef.current = historyScrollOffsetRef.current;
+    publishHistoryWindowDiagnostics();
+    schedulePrependAnchorSettlement(pendingPrepend);
+  }, [
+    applyMeasuredPrependAnchor,
+    clearPrependAnchorSettlement,
+    schedulePrependAnchorSettlement,
+    publishHistoryWindowDiagnostics,
+  ]);
+
+  const handleHistoryScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const scrollOffset = event.nativeEvent.contentOffset.y;
+      if (Number.isFinite(scrollOffset) && scrollOffset >= 0) {
+        historyScrollOffsetRef.current = scrollOffset;
+      }
+    },
+    [],
+  );
 
   const [handleHistoryViewabilityChange] = useState(
     () =>
@@ -688,16 +828,34 @@ export default function AskScreen() {
       return;
     }
 
+    const contentHeight = historyContentHeightRef.current;
+    if (!Number.isFinite(contentHeight) || contentHeight <= 0) return;
+
     const previousPage = previousAskHistoryPage(visibleStartIndex);
+    clearPrependAnchorSettlement();
     pendingPrependAnchorRef.current = {
-      retries: 0,
-      targetIndex: previousPage.prependedMessages,
+      adjusted: false,
+      baselineContentHeight: contentHeight,
+      baselineScrollOffset: historyScrollOffsetRef.current,
+      lastMeasuredPrependHeight: -1,
+      prependedMessageIds: messages
+        .slice(previousPage.visibleStartIndex, visibleStartIndex)
+        .map(askMessageKey),
+      settlementAttempts: 0,
+      targetScrollOffset: historyScrollOffsetRef.current,
     };
+    prependAnchorLastOffsetRef.current = historyScrollOffsetRef.current;
+    publishHistoryWindowDiagnostics();
     setHistory((currentHistory) => ({
       ...currentHistory,
       visibleStartIndex: previousPage.visibleStartIndex,
     }));
-  }, [visibleStartIndex]);
+  }, [
+    clearPrependAnchorSettlement,
+    messages,
+    publishHistoryWindowDiagnostics,
+    visibleStartIndex,
+  ]);
 
   const reportAnswer = useCallback((messageId: string, kind: AskAnswer['kind']) => {
     if (reportedIdsRef.current.has(messageId)) return;
@@ -791,8 +949,15 @@ export default function AskScreen() {
         ? SHORT_PHONE_EMPTY_PROMPT_ORDER
         : EMPTY_PROMPT_ORDER;
   const renderMessage = useCallback<ListRenderItem<Msg>>(
-    ({ item }) => <AskMessageRow message={item} compact={shortPhone} onReport={reportAnswer} />,
-    [reportAnswer, shortPhone],
+    ({ item }) => (
+      <AskMessageRow
+        message={item}
+        compact={shortPhone}
+        onLayout={handleHistoryRowLayout}
+        onReport={reportAnswer}
+      />
+    ),
+    [handleHistoryRowLayout, reportAnswer, shortPhone],
   );
 
   return (
@@ -851,8 +1016,12 @@ export default function AskScreen() {
           maxToRenderPerBatch={8}
           windowSize={7}
           keyboardShouldPersistTaps="handled"
+          maintainVisibleContentPosition={
+            Platform.OS === 'web' ? undefined : ASK_MAINTAIN_VISIBLE_CONTENT_POSITION
+          }
           onContentSizeChange={handleHistoryContentSizeChange}
-          onScrollToIndexFailed={handleHistoryScrollToIndexFailed}
+          onScroll={handleHistoryScroll}
+          scrollEventThrottle={16}
           onStartReached={loadEarlierHistory}
           onStartReachedThreshold={0}
           onViewableItemsChanged={handleHistoryViewabilityChange}

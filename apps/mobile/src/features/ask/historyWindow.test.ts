@@ -4,6 +4,7 @@ import {
   ASK_HISTORY_PAGE_SIZE,
   MAX_ASK_SCROLL_TO_LATEST_ATTEMPTS,
   latestAskHistoryStart,
+  measuredAskPrependHeight,
   nextAskLatestScrollAttempt,
   previousAskHistoryPage,
 } from './historyWindow';
@@ -69,5 +70,28 @@ describe('Ask chronological history window', () => {
       exhausted: true,
       lastAttemptedHeight: 3262,
     });
+  });
+
+  it('sums exact mixed row heights instead of averaging them', () => {
+    expect(measuredAskPrependHeight([38, 426.5, 54, 401, 72, 389.25])).toBe(1380.75);
+  });
+
+  it('preserves repeated-page arithmetic with exact measured page totals', () => {
+    const pages = [
+      [38, 426.5, 54, 401],
+      [72, 389.25, 38, 426.5],
+      [54, 401, 72, 389.25],
+    ];
+    expect(pages.map(measuredAskPrependHeight)).toEqual([919.5, 925.75, 916.25]);
+    expect(pages.map(measuredAskPrependHeight).reduce<number>((total, height) => total + height!, 0)).toBe(
+      2761.5,
+    );
+  });
+
+  it('waits for every finite positive row height before restoring the anchor', () => {
+    expect(measuredAskPrependHeight([])).toBeNull();
+    expect(measuredAskPrependHeight([38, 0, 54])).toBeNull();
+    expect(measuredAskPrependHeight([38, -1, 54])).toBeNull();
+    expect(measuredAskPrependHeight([38, Number.NaN, 54])).toBeNull();
   });
 });
