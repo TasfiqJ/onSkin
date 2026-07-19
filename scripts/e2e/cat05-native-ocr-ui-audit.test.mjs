@@ -609,6 +609,16 @@ test('diagnostic evidence redacts host paths, external documentation URLs, ANSI,
   assert.match(credentialAssignments, new RegExp(`fixtureConfigurationSha256: ${'b'.repeat(64)}`));
   assert.match(credentialAssignments, /This secret is described without an assignment\./u);
 
+  assert.equal(
+    sanitizeCat05DiagnosticText('first \t\r\nsecond\t \nthird  ', {
+      homePaths: [],
+      maxBytes: 5_000,
+      repoRootPath: '',
+      temporaryDirectory: '',
+    }),
+    'first\nsecond\nthird',
+  );
+
   const tiny = sanitizeCat05DiagnosticText('multibyte-æ°´'.repeat(10), {
     homePaths: [],
     maxBytes: 7,

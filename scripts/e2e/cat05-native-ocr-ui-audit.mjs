@@ -273,6 +273,7 @@ export function sanitizeCat05DiagnosticText(
     /(?<![a-z0-9+/_-])[a-z0-9+/_-]{160,}={0,2}(?![a-z0-9+/_=-])/giu,
     '<redacted-long-base64>',
   );
+  sanitized = sanitized.replace(/[\t ]+(?=\n|$)/gu, '');
   return truncateCat05Utf8(sanitized, maxBytes);
 }
 
@@ -2311,7 +2312,6 @@ function writeReport(evidenceDir, summary) {
     '```text',
     'node scripts/e2e/cat05-native-ocr-ui-audit.mjs',
     '```',
-    '',
   ];
   writeFileSync(path.join(evidenceDir, 'report.md'), `${lines.join('\n')}\n`);
 }
