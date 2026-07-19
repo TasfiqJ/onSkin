@@ -386,6 +386,7 @@ test('audit executes user-like edit, suggestion, retake, fallback, and continue 
   assert.match(source, /Recognized text is ready\. Your edits were kept\./);
   assert.match(source, /clickByText\(client, 'Use recognized text'\)/);
   assert.match(source, /clickByText\(client, 'Retake label photo'\)/);
+  assert.match(source, /ready\.bodyText\.includes\('Retake label photo'\)/);
   assert.match(source, /clickByText\(client, 'Looks right\. Continue'\)/);
   assert.match(source, /waitForPath\(client, '\/shelf\/manual'\)/);
   assert.match(source, /No readable text found/);

@@ -1400,8 +1400,14 @@ async function executeScenario({
         'Recognized fixture review lost its explicit non-native scope boundary.',
       );
       assert(!ready.bodyText.includes('% accurate'), 'OCR UI must not claim percentage accuracy.');
-      assertInteractiveControl(ready, 'Retake label photo');
+      assert(
+        ready.bodyText.includes('Retake label photo'),
+        'Recognized review does not expose a Retake label photo action.',
+      );
       assertInteractiveControl(ready, 'Looks right. Continue');
+      // clickByText scrolls the secondary action into view, verifies its 44pt
+      // target, and taps it. A compact viewport cannot display both this action
+      // and the sticky primary CTA simultaneously, but both must be reachable.
       await clickByText(client, 'Retake label photo');
       await waitForText(client, 'Capture label');
       const retake = await capture(`${artifactPrefix}-retake-ready`);
