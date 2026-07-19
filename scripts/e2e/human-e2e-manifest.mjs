@@ -1029,7 +1029,6 @@ function buildExpectedCat05NativeOcrReport(summary) {
     '```text',
     'node scripts/e2e/cat05-native-ocr-ui-audit.mjs',
     '```',
-    '',
   ];
   return `${lines.join('\n')}\n`;
 }
