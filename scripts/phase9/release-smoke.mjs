@@ -20,6 +20,13 @@ import {
   warn,
 } from './lib.mjs';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
+import { validatePerformanceEvidence } from '../phase5/performance-evidence-contract.mjs';
+import { inspectIosArtifactIdentities } from './ios-artifact-inspection.mjs';
+import {
+  parseReleaseManifestIdentity,
+  validateReleaseArtifactEvidence,
+} from './release-artifact-contract.mjs';
+import { verifySentryRecovery } from './sentry-recovery-verification.mjs';
 
 const errors = [];
 const warnings = [];
@@ -57,6 +64,12 @@ const localVerifierFiles = [
   'scripts/phase9/release-contact-smoke.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase9/release-smoke.mjs',
+  'scripts/phase9/release-artifact-contract.mjs',
+  'scripts/phase9/release-artifact-contract-smoke.mjs',
+  'scripts/phase9/ios-artifact-inspection.mjs',
+  'scripts/phase9/ios-artifact-inspection-smoke.mjs',
+  'scripts/phase9/sentry-recovery-verification.mjs',
+  'scripts/phase9/sentry-recovery-verification-smoke.mjs',
   'scripts/phase9/rls-adversarial.mjs',
   'scripts/phase9/edge-auth-smoke.mjs',
   'scripts/phase9/edge-functions-check.mjs',
@@ -81,8 +94,10 @@ const requiredFiles = [
   'docs/phase-9/incident-response-plan.md',
   'docs/phase-9/beta-evidence-summary.md',
   'docs/phase-9/dependency-sbom.md',
+  'docs/phase-9/release-artifact-evidence.md',
   'docs/phase-9/release-candidates/README.md',
   'docs/phase-9/release-candidates/_template/manifest.md',
+  'docs/phase-9/release-candidates/_template/release-artifacts.json',
   'docs/phase-9/release-candidates/_template/commands.md',
   'docs/phase-9/release-candidates/_template/automated-verification.md',
   'docs/phase-9/release-candidates/_template/manual-qa-matrix.md',
@@ -149,8 +164,33 @@ const requiredFiles = [
 
 for (const file of requiredFiles) block(errors, exists(file), `${file} is missing.`);
 
+try {
+  for (const smoke of [
+    'scripts/phase9/release-artifact-contract-smoke.mjs',
+    'scripts/phase9/ios-artifact-inspection-smoke.mjs',
+    'scripts/phase9/sentry-recovery-verification-smoke.mjs',
+  ]) {
+    command(process.execPath, [smoke]);
+  }
+} catch {
+  block(errors, false, 'The exact-release artifact smokes must pass.');
+}
+
+const releaseArtifactEnvKeys = [
+  'PHASE5_PERFORMANCE_EVIDENCE_PATH',
+  'PHASE9_IOS_ARTIFACT',
+  'PHASE9_IOS_DSYM_ARCHIVE',
+  'PHASE9_IOS_HERMES_SOURCE_MAP',
+  'PHASE9_IOS_BINARY_UUID_EVIDENCE',
+  'PHASE9_IOS_DSYM_UUID_EVIDENCE',
+  'PHASE9_IOS_HERMES_DEBUG_ID_EVIDENCE',
+  'PHASE9_SENTRY_IOS_UPLOAD_RECEIPT',
+  'PHASE9_SENTRY_IOS_RECOVERY_RECEIPT',
+];
+
 for (const key of [
   'APPLE_SIWA_CLIENT_ID',
+  'SENTRY_API_URL',
   'POSTHOG_PROJECT_ID',
   'POSTHOG_API_HOST',
   'POSTHOG_DELETION_APPROVED_ALTERNATE',
@@ -193,6 +233,7 @@ for (const key of [
   'PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL',
   'PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL',
   'PHASE9_RELEASE_CANDIDATE_DIR',
+  ...releaseArtifactEnvKeys,
   ...phase7EvidenceKeys,
   ...requiredPhase9EvidenceKeys(),
   'PHASE9_SIGNED_OFF_BY',
@@ -497,6 +538,28 @@ function markdownTableValue(source, label) {
   );
 }
 
+function readJsonEvidenceEnv(key, label) {
+  const path = String(env[key] ?? '').trim();
+  block(errors, !placeholder(path), `${key} is required for ${label}.`);
+  if (placeholder(path)) return null;
+  block(errors, exists(path), `${key} must point to an existing ${label} file.`);
+  if (!exists(path)) return null;
+  try {
+    return JSON.parse(read(path));
+  } catch {
+    block(errors, false, `${key} must contain valid content-free JSON evidence.`);
+    return null;
+  }
+}
+
+function hashEvidenceEnv(key, label) {
+  const path = String(env[key] ?? '').trim();
+  block(errors, !placeholder(path), `${key} is required for ${label}.`);
+  if (placeholder(path)) return '';
+  block(errors, exists(path), `${key} must point to an existing ${label} file.`);
+  return exists(path) ? hash(path) : '';
+}
+
 for (const [key, validate] of [
   ['EXPO_PUBLIC_PRIVACY_URL', productionUrl],
   ['EXPO_PUBLIC_TERMS_URL', productionUrl],
@@ -531,8 +594,10 @@ const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '')
   .replace(/\/+$/g, '');
 if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
   let gitStatus = '';
+  let currentSha = '';
   try {
     gitStatus = command('git', ['status', '--short']).trim();
+    currentSha = command('git', ['rev-parse', 'HEAD']).trim();
   } catch {
     block(
       errors,
@@ -560,6 +625,7 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
 
     const rcFileNames = [
       'manifest.md',
+      'release-artifacts.json',
       'commands.md',
       'automated-verification.md',
       'manual-qa-matrix.md',
@@ -597,19 +663,11 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
     }
 
     const manifestPath = `${releaseCandidateDir}/manifest.md`;
+    let parsedManifestIdentity = {};
     if (exists(manifestPath)) {
       const manifestSource = read(manifestPath);
       const manifestSha = markdownTableValue(manifestSource, 'Git SHA');
-      let currentSha = '';
-      try {
-        currentSha = command('git', ['rev-parse', 'HEAD']).trim();
-      } catch {
-        block(
-          errors,
-          false,
-          'Current Git SHA could not be read for release-candidate verification.',
-        );
-      }
+      parsedManifestIdentity = parseReleaseManifestIdentity(manifestSource);
       block(
         errors,
         /^[a-f0-9]{40}$/i.test(manifestSha),
@@ -621,6 +679,139 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
           manifestSha.toLowerCase() === currentSha.toLowerCase(),
           `${manifestPath} Git SHA must match the current commit (${currentSha}).`,
         );
+      }
+    }
+
+    const releaseArtifactPath = `${releaseCandidateDir}/release-artifacts.json`;
+    if (exists(releaseArtifactPath)) {
+      let releaseArtifactEvidence = null;
+      try {
+        releaseArtifactEvidence = JSON.parse(read(releaseArtifactPath));
+      } catch {
+        block(errors, false, `${releaseArtifactPath} must contain valid JSON.`);
+      }
+
+      const performanceEvidence = readJsonEvidenceEnv(
+        'PHASE5_PERFORMANCE_EVIDENCE_PATH',
+        'Phase 5 performance evidence',
+      );
+      if (performanceEvidence) {
+        const performanceResult = validatePerformanceEvidence(performanceEvidence, launchContract);
+        for (const error of performanceResult.errors) {
+          block(errors, false, `Attached Phase 5 performance evidence: ${error}`);
+        }
+      }
+
+      const attachments = {
+        iosBinaryUuid: readJsonEvidenceEnv(
+          'PHASE9_IOS_BINARY_UUID_EVIDENCE',
+          'iOS binary UUID evidence',
+        ),
+        iosDsymUuids: readJsonEvidenceEnv(
+          'PHASE9_IOS_DSYM_UUID_EVIDENCE',
+          'iOS dSYM UUID evidence',
+        ),
+        iosHermesDebugId: readJsonEvidenceEnv(
+          'PHASE9_IOS_HERMES_DEBUG_ID_EVIDENCE',
+          'iOS Hermes debug-ID evidence',
+        ),
+        iosSentryUploadReceipt: readJsonEvidenceEnv(
+          'PHASE9_SENTRY_IOS_UPLOAD_RECEIPT',
+          'Sentry upload receipt',
+        ),
+        iosSentryRecoveryReceipt: readJsonEvidenceEnv(
+          'PHASE9_SENTRY_IOS_RECOVERY_RECEIPT',
+          'Sentry symbolication recovery receipt',
+        ),
+      };
+      const artifactHashes = {
+        performanceEvidence: hashEvidenceEnv(
+          'PHASE5_PERFORMANCE_EVIDENCE_PATH',
+          'Phase 5 performance evidence',
+        ),
+        iosBinary: hashEvidenceEnv('PHASE9_IOS_ARTIFACT', 'iOS binary'),
+        iosDsymArchive: hashEvidenceEnv('PHASE9_IOS_DSYM_ARCHIVE', 'iOS dSYM archive'),
+        iosHermesSourceMap: hashEvidenceEnv(
+          'PHASE9_IOS_HERMES_SOURCE_MAP',
+          'iOS Hermes source map',
+        ),
+        iosBinaryUuidEvidence: hashEvidenceEnv(
+          'PHASE9_IOS_BINARY_UUID_EVIDENCE',
+          'iOS binary UUID evidence',
+        ),
+        iosDsymUuidEvidence: hashEvidenceEnv(
+          'PHASE9_IOS_DSYM_UUID_EVIDENCE',
+          'iOS dSYM UUID evidence',
+        ),
+        iosHermesDebugIdEvidence: hashEvidenceEnv(
+          'PHASE9_IOS_HERMES_DEBUG_ID_EVIDENCE',
+          'iOS Hermes debug-ID evidence',
+        ),
+        iosSentryUploadReceipt: hashEvidenceEnv(
+          'PHASE9_SENTRY_IOS_UPLOAD_RECEIPT',
+          'Sentry upload receipt',
+        ),
+        iosSentryRecoveryReceipt: hashEvidenceEnv(
+          'PHASE9_SENTRY_IOS_RECOVERY_RECEIPT',
+          'Sentry symbolication recovery receipt',
+        ),
+      };
+
+      if (releaseArtifactEvidence && performanceEvidence) {
+        let inspectedIdentities = null;
+        try {
+          inspectedIdentities = inspectIosArtifactIdentities({
+            iosArtifactPath: String(env.PHASE9_IOS_ARTIFACT ?? '').trim(),
+            dsymArchivePath: String(env.PHASE9_IOS_DSYM_ARCHIVE ?? '').trim(),
+            sourceMapPath: String(env.PHASE9_IOS_HERMES_SOURCE_MAP ?? '').trim(),
+          });
+        } catch (error) {
+          block(
+            errors,
+            false,
+            `Exact iOS artifact inspection: ${error instanceof Error ? error.message : 'inspection failed.'}`,
+          );
+        }
+
+        let providerVerification = null;
+        if (inspectedIdentities) {
+          try {
+            providerVerification = await verifySentryRecovery({
+              env,
+              javascriptEventId: String(
+                releaseArtifactEvidence.ios?.sentry?.recoveryReceipt?.javascriptEventId ?? '',
+              ),
+              nativeEventId: String(
+                releaseArtifactEvidence.ios?.sentry?.recoveryReceipt?.nativeEventId ?? '',
+              ),
+              release: String(releaseArtifactEvidence.ios?.release ?? ''),
+              dist: String(releaseArtifactEvidence.ios?.dist ?? ''),
+              binaryUuids: inspectedIdentities.binaryUuids,
+              hermesDebugId: inspectedIdentities.hermesDebugId,
+            });
+          } catch (error) {
+            block(
+              errors,
+              false,
+              `Sentry provider recovery verification: ${error instanceof Error ? error.message : 'verification failed.'}`,
+            );
+          }
+        }
+
+        const artifactResult = validateReleaseArtifactEvidence(releaseArtifactEvidence, {
+          currentGitSha: currentSha,
+          performanceEvidence,
+          performanceEvidenceSha256: artifactHashes.performanceEvidence,
+          artifactHashes,
+          attachments,
+          inspectedIdentities: inspectedIdentities ?? {},
+          providerVerification,
+          manifestIdentity: parsedManifestIdentity,
+          launchContract,
+        });
+        for (const error of artifactResult.errors) {
+          block(errors, false, `Exact-release artifact evidence: ${error}`);
+        }
       }
     }
   }

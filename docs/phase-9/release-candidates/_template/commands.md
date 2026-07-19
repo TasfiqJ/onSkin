@@ -4,6 +4,10 @@ Record exact command output or CI links for the RC.
 
 ```bash
 npm run phase9:verify
+node scripts/phase9/ios-artifact-inspection.mjs
+node scripts/phase9/release-artifact-contract-smoke.mjs
+node scripts/phase9/ios-artifact-inspection-smoke.mjs
+node scripts/phase9/sentry-recovery-verification-smoke.mjs
 npm run phase9:release-smoke:strict
 npm run phase9:rls-adversarial:strict
 npm run phase9:edge-auth-smoke:strict

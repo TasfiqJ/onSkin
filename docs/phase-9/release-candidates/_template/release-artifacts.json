@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "gitSha": "TBD",
+  "performanceEvidence": {
+    "sha256": "TBD",
+    "gitSha": "TBD",
+    "iosBuildId": "TBD"
+  },
+  "ios": {
+    "status": "required",
+    "easBuildId": "TBD",
+    "bundleIdentifier": "TBD",
+    "appVersion": "TBD",
+    "buildNumber": "TBD",
+    "runtimeVersion": "TBD",
+    "signingTeamIdentifier": "TBD",
+    "release": "TBD",
+    "dist": "TBD",
+    "binary": {
+      "sha256": "TBD",
+      "uuids": ["TBD"],
+      "uuidEvidenceSha256": "TBD"
+    },
+    "dsym": {
+      "sha256": "TBD",
+      "uuids": ["TBD"],
+      "uuidEvidenceSha256": "TBD"
+    },
+    "hermesSourceMap": {
+      "sha256": "TBD",
+      "debugId": "TBD",
+      "debugIdEvidenceSha256": "TBD"
+    },
+    "sentry": {
+      "uploadReceipt": {
+        "receiptId": "TBD",
+        "sha256": "TBD",
+        "recordedAt": "TBD"
+      },
+      "recoveryReceipt": {
+        "javascriptEventId": "TBD",
+        "nativeEventId": "TBD",
+        "sha256": "TBD",
+        "recordedAt": "TBD",
+        "status": "TBD"
+      }
+    }
+  },
+  "android": {
+    "status": "not_applicable"
+  }
+}

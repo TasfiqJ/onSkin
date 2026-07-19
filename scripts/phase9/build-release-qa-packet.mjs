@@ -136,6 +136,12 @@ const sourceFiles = [
   'scripts/phase9/lib.mjs',
   'scripts/phase9/release-contact-smoke.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
+  'scripts/phase9/release-artifact-contract.mjs',
+  'scripts/phase9/release-artifact-contract-smoke.mjs',
+  'scripts/phase9/ios-artifact-inspection.mjs',
+  'scripts/phase9/ios-artifact-inspection-smoke.mjs',
+  'scripts/phase9/sentry-recovery-verification.mjs',
+  'scripts/phase9/sentry-recovery-verification-smoke.mjs',
   'scripts/phase9/release-smoke.mjs',
   'scripts/phase9/rls-adversarial.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
@@ -165,8 +171,10 @@ const sourceFiles = [
   'docs/phase-9/incident-response-plan.md',
   'docs/phase-9/beta-evidence-summary.md',
   'docs/phase-9/dependency-sbom.md',
+  'docs/phase-9/release-artifact-evidence.md',
   'docs/phase-9/release-candidates/README.md',
   'docs/phase-9/release-candidates/_template/manifest.md',
+  'docs/phase-9/release-candidates/_template/release-artifacts.json',
   'docs/phase-9/release-candidates/_template/commands.md',
   'docs/phase-9/release-candidates/_template/automated-verification.md',
   'docs/phase-9/release-candidates/_template/manual-qa-matrix.md',
@@ -222,6 +230,35 @@ const releaseCandidateFiles =
       )
     : [];
 
+const linkedEvidenceHashes = Object.fromEntries(
+  [
+    ['performanceEvidence', 'PHASE5_PERFORMANCE_EVIDENCE_PATH'],
+    ['iosBinary', 'PHASE9_IOS_ARTIFACT'],
+    ['iosDsymArchive', 'PHASE9_IOS_DSYM_ARCHIVE'],
+    ['iosHermesSourceMap', 'PHASE9_IOS_HERMES_SOURCE_MAP'],
+    ['iosBinaryUuidEvidence', 'PHASE9_IOS_BINARY_UUID_EVIDENCE'],
+    ['iosDsymUuidEvidence', 'PHASE9_IOS_DSYM_UUID_EVIDENCE'],
+    ['iosHermesDebugIdEvidence', 'PHASE9_IOS_HERMES_DEBUG_ID_EVIDENCE'],
+    ['iosSentryUploadReceipt', 'PHASE9_SENTRY_IOS_UPLOAD_RECEIPT'],
+    ['iosSentryRecoveryReceipt', 'PHASE9_SENTRY_IOS_RECOVERY_RECEIPT'],
+  ].map(([label, key]) => {
+    const path = String(env[key] ?? '').trim();
+    return [label, path && exists(path) ? hash(path) : null];
+  }),
+);
+const signedOffBy = normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY) ?? '';
+const exactReleaseClaimed = Object.values(evidence).some(Boolean) || Boolean(signedOffBy);
+if (exactReleaseClaimed) {
+  for (const [label, value] of Object.entries(linkedEvidenceHashes)) {
+    block(errors, Boolean(value), `Claimed release evidence requires ${label}.`);
+  }
+  try {
+    command(process.execPath, ['scripts/phase9/release-smoke.mjs', '--strict']);
+  } catch {
+    block(errors, false, 'Claimed release evidence must pass the exact-release artifact gate.');
+  }
+}
+
 const packet = {
   generatedAt: new Date().toISOString(),
   status: errors.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
@@ -248,7 +285,8 @@ const packet = {
   },
   evidence,
   notApplicableEvidence,
-  signedOffBy: normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY) ?? '',
+  signedOffBy,
+  linkedEvidenceHashes,
   sourceHashes: Object.fromEntries(
     [...sourceFiles, ...releaseCandidateFiles].filter(exists).map((file) => [file, hash(file)]),
   ),
@@ -290,6 +328,12 @@ write(
     '',
     ...Object.entries(evidence).map(([key, value]) => `- ${key}: ${value ? 'PASS' : 'BLOCKED'}`),
     ...Object.entries(notApplicableEvidence).map(([key, value]) => `- ${key}: ${value}`),
+    '',
+    '## Linked Exact-Release Evidence Hashes',
+    '',
+    ...Object.entries(linkedEvidenceHashes).map(
+      ([label, value]) => `- ${label}: ${value ? `\`${value}\`` : 'BLOCKED'}`,
+    ),
     '',
     '## Source Hashes',
     '',
