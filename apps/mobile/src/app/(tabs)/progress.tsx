@@ -287,6 +287,7 @@ function PairPicker({
             Any two captures. You decide what to compare.
           </Text>
           <FlatList
+            nativeID="progress-comparison-picker-list"
             horizontal
             data={latestFirstPhotos}
             keyExtractor={(photo) => photo.id}
@@ -587,6 +588,7 @@ function TimelineView({
   return (
     <>
       <SectionList
+        nativeID="progress-timeline-list"
         sections={sections}
         keyExtractor={(item) => item.key}
         extraData={visibleRowKeys}

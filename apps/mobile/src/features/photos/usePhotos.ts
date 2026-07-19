@@ -42,6 +42,10 @@ import {
   type PhotoMutationCommit,
   type PhotoRecord,
 } from './store';
+import {
+  buildProgressE2EPhotos,
+  parseProgressE2EPhotoCount,
+} from './progressStressFixture';
 
 // Reads the local-first photo store (docs/06 §6) and derives the Progress-tab
 // surfaces via the pure, tested timeline helpers. Resilient before the backend
@@ -53,63 +57,8 @@ const E2E_PROGRESS_PHOTO_URI =
 
 function e2eProgressPhotoFixture(): PhotoRecord[] | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
-  if (process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS !== 'populated') return null;
-
-  const base = {
-    series: 'front' as const,
-    timeOfDay: 'morning' as const,
-    notes: null,
-    captureSessionId: 'e2e-progress-compare-picker',
-    headRoll: null,
-    headYaw: null,
-    headPitch: null,
-    qualitySource: null,
-    localOnly: true,
-    storagePath: null,
-    faceRegionRedacted: false,
-    isEncrypted: false,
-    encryptedLocalUri: null,
-    thumbnailLocalUri: null,
-    encryptionVersion: 'none',
-    keyId: null,
-    localUri: null,
-  };
-
-  return [
-    {
-      ...base,
-      id: 'e2e-front-2026-04-01',
-      localUri: E2E_PROGRESS_PHOTO_URI,
-      takenLocalDate: '2026-04-01',
-      takenAt: '2026-04-01T12:00:00.000Z',
-      alignmentScore: 0.92,
-      lightingScore: 0.88,
-      isReference: true,
-      referencePhotoId: null,
-    },
-    {
-      ...base,
-      id: 'e2e-front-2026-05-12',
-      localUri: E2E_PROGRESS_PHOTO_URI,
-      takenLocalDate: '2026-05-12',
-      takenAt: '2026-05-12T12:00:00.000Z',
-      alignmentScore: 0.9,
-      lightingScore: 0.9,
-      isReference: false,
-      referencePhotoId: 'e2e-front-2026-04-01',
-    },
-    {
-      ...base,
-      id: 'e2e-front-2026-06-24',
-      localUri: E2E_PROGRESS_PHOTO_URI,
-      takenLocalDate: '2026-06-24',
-      takenAt: '2026-06-24T12:00:00.000Z',
-      alignmentScore: 0.94,
-      lightingScore: 0.91,
-      isReference: false,
-      referencePhotoId: 'e2e-front-2026-04-01',
-    },
-  ];
+  const count = parseProgressE2EPhotoCount(process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS);
+  return count === null ? null : buildProgressE2EPhotos(count, E2E_PROGRESS_PHOTO_URI);
 }
 
 function e2eProgressStorageFailure(): Error | null {

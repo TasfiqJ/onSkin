@@ -554,18 +554,21 @@ describe('Progress route mobile contracts', () => {
 
   it('keeps the populated progress fixture gated to explicit E2E runs', () => {
     const source = readSource('features/photos/usePhotos.ts');
+    const fixture = readSource('features/photos/progressStressFixture.ts');
     const entitlement = readSource('features/subscription/useEntitlement.ts');
 
     expect(source).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return null;");
-    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS !== 'populated'");
+    expect(source).toContain('parseProgressE2EPhotoCount(process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS)');
+    expect(source).toContain('buildProgressE2EPhotos(count, E2E_PROGRESS_PHOTO_URI)');
     expect(source).toContain("'data:image/png;base64,");
-    expect(source).toContain('localUri: E2E_PROGRESS_PHOTO_URI');
-    expect(source).toContain('e2e-front-2026-04-01');
-    expect(source).toContain('e2e-front-2026-05-12');
-    expect(source).toContain('e2e-front-2026-06-24');
     expect(source).toContain('const fixture = e2eProgressPhotoFixture();');
     expect(source).toContain('if (!fixture) await recoverPhotoStoreMutations();');
     expect(source).toContain('const photos = fixture ?? (await loadPhotos());');
+    expect(fixture).toContain("if (normalized === 'populated') return DEFAULT_PROGRESS_E2E_PHOTOS;");
+    expect(fixture).toContain('export const MAX_PROGRESS_E2E_PHOTOS = 250;');
+    expect(fixture).toContain('e2e-front-2026-04-01');
+    expect(fixture).toContain('e2e-front-2026-05-12');
+    expect(fixture).toContain('e2e-front-2026-06-24');
     expect(entitlement).toContain("fixture !== 'expired_store'");
     expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(entitlement).toContain("if (fixture === 'store_pro')");
@@ -620,6 +623,7 @@ describe('Progress route mobile contracts', () => {
       'const latestFirstPhotos = useMemo(() => photos.slice().reverse(), [photos]);',
     );
     expect(picker).toContain('data={latestFirstPhotos}');
+    expect(picker).toContain('nativeID="progress-comparison-picker-list"');
     expect(picker).toContain('keyExtractor={(photo) => photo.id}');
     expect(picker).toContain('showsHorizontalScrollIndicator={false}');
     expect(picker).toContain('contentContainerStyle={{ gap: 10 }}');
@@ -657,6 +661,7 @@ describe('Progress route mobile contracts', () => {
     expect(photosHook).toContain('export function usePhotosFromBoundary(');
     expect(photosHook).toContain('return usePhotosFromBoundary(boundary, series);');
     expect(source).toContain('<SectionList');
+    expect(source).toContain('nativeID="progress-timeline-list"');
     expect(source).toContain('sections={sections}');
     expect(source).toContain('keyExtractor={(item) => item.key}');
     expect(source).toContain('renderItem={renderTimelineRow}');
