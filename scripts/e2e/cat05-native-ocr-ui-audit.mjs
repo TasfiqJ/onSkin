@@ -1558,6 +1558,7 @@ async function establishLocalHealthConsent({ binding, client, baseUrl, evidenceD
     }),
     error: null,
     fixtureGroup: groupId,
+    kind: 'consent-bootstrap',
     nativeDeviceProof: false,
     startedAt: new Date().toISOString(),
     surface: 'expo-web',
@@ -2468,7 +2469,7 @@ export async function runCat05NativeOcrUiAudit({
           evidenceDir,
           groupId: group.id,
         });
-        summary.results.push({ ...bootstrap, kind: 'consent-bootstrap' });
+        summary.results.push(bootstrap);
         if (bootstrap.verdict !== 'pass') {
           throw new Error(
             `Explicit-consent bootstrap failed for fixture ${group.id}: ${bootstrap.error}`,

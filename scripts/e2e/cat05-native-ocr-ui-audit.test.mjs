@@ -429,6 +429,8 @@ test('audit labels its narrow proof boundary in code, scope JSON, report, and re
   assert.match(source, /sourceGitSha/);
   assert.match(source, /proofKind: 'source-assertions-only'/);
   assert.match(source, /easIosBuildId: null/);
+  assert.match(source, /fixtureGroup: groupId,\s*kind: 'consent-bootstrap'/u);
+  assert.match(source, /summary\.results\.push\(bootstrap\)/u);
 });
 
 test('audit executes user-like edit, suggestion, retake, fallback, and continue actions', () => {
