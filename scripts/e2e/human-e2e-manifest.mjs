@@ -5,6 +5,8 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSy
 import { join, relative, resolve } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 
+import { PNG } from 'pngjs';
+
 const root = process.cwd();
 const args = new Set(process.argv.slice(2));
 const dateArg = process.argv.find((arg) => arg.startsWith('--date='));
@@ -318,6 +320,712 @@ function cat04ViewportKey(viewport) {
     return null;
   }
   return expected.id;
+}
+
+const CAT05_NATIVE_OCR_EVIDENCE_DATE = '2026-07-18';
+const CAT05_NATIVE_OCR_SCHEMA_VERSION = 2;
+const CAT05_NATIVE_OCR_ARTIFACT_COUNT = 139;
+const CAT05_NATIVE_OCR_SCREENSHOT_COUNT = 55;
+const CAT05_NATIVE_OCR_MAX_EXPO_LOG_BYTES = 256 * 1024;
+const CAT05_NATIVE_OCR_MAX_DIAGNOSTIC_ARTIFACT_BYTES = 8 * 1024 * 1024;
+const CAT05_NATIVE_OCR_MAX_DIAGNOSTIC_STRING_BYTES = 128 * 1024;
+const CAT05_NATIVE_OCR_MAX_SCREENSHOT_BYTES = 16 * 1024 * 1024;
+const CAT05_NATIVE_OCR_MAX_RETAINED_BROWSER_EVENTS = 5_000;
+const CAT05_NATIVE_OCR_MAX_BROWSER_EVENT_BYTES = 4 * 1024 * 1024;
+const CAT05_NATIVE_OCR_VIEWPORTS = Object.freeze([
+  Object.freeze({ id: 'iphone-375x667', width: 375, height: 667 }),
+  Object.freeze({ id: 'iphone-390x844', width: 390, height: 844 }),
+  Object.freeze({ id: 'iphone-430x932', width: 430, height: 932 }),
+]);
+const CAT05_NATIVE_OCR_FIXTURE_GROUPS = Object.freeze([
+  'recognized',
+  'no-text',
+  'timed-out',
+  'failed',
+]);
+const CAT05_NATIVE_OCR_SCENARIOS = Object.freeze([
+  Object.freeze({
+    fixture: 'recognized',
+    groupId: 'recognized',
+    id: 'recognized-review-retake-continue',
+  }),
+  Object.freeze({
+    fixture: 'recognized',
+    groupId: 'recognized',
+    id: 'edit-fence-suggestion-adoption',
+  }),
+  Object.freeze({
+    fixture: 'no_text',
+    groupId: 'no-text',
+    id: 'no-text-manual-recovery',
+  }),
+  Object.freeze({
+    fixture: 'timed_out',
+    groupId: 'timed-out',
+    id: 'timeout-manual-recovery',
+  }),
+  Object.freeze({ fixture: 'failed', groupId: 'failed', id: 'failure-manual-recovery' }),
+]);
+const CAT05_NATIVE_OCR_CANDIDATE_BUILD = Object.freeze({
+  archiveSha256: null,
+  easIosBuildId: null,
+  executedByThisAudit: false,
+  profile: 'staging',
+  proofStatus: 'not_applicable_to_expo_web_ui_audit',
+});
+const CAT05_NATIVE_OCR_LIMITATIONS = Object.freeze([
+  'This is deterministic Expo-web UI-state evidence produced by a development-only fixture.',
+  'It does not execute Apple Vision, the Swift bridge, a camera, a real label image, or an iOS binary.',
+  'Its raw-photo cache and cleanup checks are source assertions only; they do not prove runtime deletion, cache behavior, or privacy on a native device.',
+  'It is not physical-iPhone, iOS Simulator, native accessibility, OCR accuracy, OCR latency, runtime cleanup, native privacy, zero-network, archive, App Review, or release evidence.',
+  'Its local-only browser-request assertion covers this synthetic web run only and must not be used as a native photo or transcript privacy claim.',
+]);
+const CAT05_NATIVE_OCR_PROVES = Object.freeze([
+  'The Expo-web route renders and permits user interaction with the declared deterministic OCR review states.',
+  'The route preserves a user edit against a late deterministic fixture result and requires explicit suggestion adoption.',
+  'The route preserves the fixture Unicode transcript through the editable review and supported manual handoff surface.',
+  'The supported web viewports pass the scripted control-name, 44px proxy, center-hit, clipping, and horizontal-overflow checks.',
+  'The synthetic browser run emitted no disallowed console/page/network/dialog failure under the local-only fixture environment.',
+  'The source candidate contains the declared no-cache preview, trusted-cache-URI, guarded-navigation, and awaited-cleanup assertions; this is source proof only.',
+]);
+const CAT05_NATIVE_OCR_PRIVACY_ASSERTIONS = Object.freeze([
+  'label-preview-hidden-during-cleanup-and-cache-disabled',
+  'label-route-removal-cancels-recognition-before-photo-cleanup',
+  'progress-capture-accepts-only-trusted-camera-cache-uri',
+  'progress-review-preview-cache-disabled',
+  'progress-review-route-removal-awaits-discard',
+  'progress-helper-restricts-and-deletes-owned-cache-source',
+]);
+const CAT05_NATIVE_OCR_PRIVACY_FILES = Object.freeze([
+  'apps/mobile/src/app/progress/capture.tsx',
+  'apps/mobile/src/app/progress/review.tsx',
+  'apps/mobile/src/app/shelf/ocr.tsx',
+  'apps/mobile/src/features/photos/progressCapturePrivacy.ts',
+]);
+
+function cat05DocumentationOnlyPath(path) {
+  return normalizeRepoPath(path).startsWith('docs/');
+}
+const CAT05_NATIVE_OCR_SUMMARY_KEYS = Object.freeze([
+  'artifactCount',
+  'artifactManifest',
+  'artifacts',
+  'browserFailureCount',
+  'browserPath',
+  'candidateNativeBuild',
+  'completedAt',
+  'evidenceBinding',
+  'evidenceSchemaVersion',
+  'expectedBootstrapCount',
+  'expectedExecutionCount',
+  'fixtureGroups',
+  'groupBrowserAudits',
+  'limitations',
+  'nativeDeviceProof',
+  'passedBootstrapCount',
+  'passedExecutionCount',
+  'privacySourceContract',
+  'results',
+  'runId',
+  'scenarioMatrix',
+  'screenshots',
+  'sourceGitSha',
+  'startedAt',
+  'surface',
+  'verdict',
+  'viewports',
+  'webFixtureBuild',
+]);
+const CAT05_NATIVE_OCR_BINDING_KEYS = Object.freeze([
+  'candidateNativeBuild',
+  'evidenceSchemaVersion',
+  'expectedSourceGitSha',
+  'fixtureConfigurationSha256',
+  'runId',
+  'scenarioMatrixSha256',
+  'sourceGitSha',
+  'viewportMatrixSha256',
+  'webFixtureBuild',
+]);
+const CAT05_NATIVE_OCR_ARTIFACT_BINDING_KEYS = Object.freeze([
+  ...CAT05_NATIVE_OCR_BINDING_KEYS,
+  'artifactName',
+  'fixtureGroup',
+  'scenarioId',
+  'viewport',
+]);
+
+function cat05Sha256(value) {
+  return createHash('sha256').update(value).digest('hex');
+}
+
+function cat05Sha256Json(value) {
+  return cat05Sha256(JSON.stringify(value));
+}
+
+function cat05ViewportKey(viewport) {
+  if (!hasExactObjectKeys(viewport, ['id', 'width', 'height'])) return null;
+  const expected = CAT05_NATIVE_OCR_VIEWPORTS.find(({ id }) => id === viewport.id);
+  if (!expected || viewport.width !== expected.width || viewport.height !== expected.height) {
+    return null;
+  }
+  return expected.id;
+}
+
+function cat05ArtifactPair(prefix) {
+  return [`${prefix}.json`, `${prefix}.png`];
+}
+
+function expectedCat05NativeOcrArtifacts() {
+  const artifacts = ['report.md', 'scope.json'];
+  const bootstrapViewport = CAT05_NATIVE_OCR_VIEWPORTS[1];
+  for (const fixtureGroup of CAT05_NATIVE_OCR_FIXTURE_GROUPS) {
+    const prefix = `bootstrap-${fixtureGroup}-${bootstrapViewport.id}`;
+    artifacts.push(
+      `browser-events-${fixtureGroup}.json`,
+      `expo-${fixtureGroup}.log`,
+      ...cat05ArtifactPair(`${prefix}-ocr-ready`),
+      `${prefix}-result.json`,
+    );
+  }
+  for (const scenario of CAT05_NATIVE_OCR_SCENARIOS) {
+    for (const viewport of CAT05_NATIVE_OCR_VIEWPORTS) {
+      const prefix = `${scenario.id}-${viewport.id}`;
+      artifacts.push(...cat05ArtifactPair(`${prefix}-initial`), `${prefix}-result.json`);
+      if (scenario.id === 'recognized-review-retake-continue') {
+        artifacts.push(
+          ...cat05ArtifactPair(`${prefix}-recognized-ready`),
+          ...cat05ArtifactPair(`${prefix}-retake-ready`),
+          ...cat05ArtifactPair(`${prefix}-manual-handoff`),
+        );
+      } else if (scenario.id === 'edit-fence-suggestion-adoption') {
+        artifacts.push(
+          ...cat05ArtifactPair(`${prefix}-edit-kept`),
+          ...cat05ArtifactPair(`${prefix}-suggestion-adopted`),
+          ...cat05ArtifactPair(`${prefix}-manual-handoff`),
+        );
+      } else {
+        const stateSuffix = {
+          'failure-manual-recovery': 'failed',
+          'no-text-manual-recovery': 'no-text',
+          'timeout-manual-recovery': 'timed-out',
+        }[scenario.id];
+        artifacts.push(
+          ...cat05ArtifactPair(`${prefix}-${stateSuffix}`),
+          ...cat05ArtifactPair(`${prefix}-manual-handoff`),
+        );
+      }
+    }
+  }
+  return [...new Set(artifacts)].sort();
+}
+
+function expectedCat05ArtifactBindingMetadata(artifact) {
+  if (artifact === 'scope.json') return null;
+  const artifactName = artifact.replace(/\.json$/u, '');
+  for (const scenario of CAT05_NATIVE_OCR_SCENARIOS) {
+    for (const viewport of CAT05_NATIVE_OCR_VIEWPORTS) {
+      if (!artifactName.startsWith(`${scenario.id}-${viewport.id}-`)) continue;
+      return {
+        artifactName,
+        fixtureGroup: scenario.groupId,
+        scenarioId: scenario.id,
+        viewport: { height: viewport.height, id: viewport.id, width: viewport.width },
+      };
+    }
+  }
+  const bootstrapViewport = CAT05_NATIVE_OCR_VIEWPORTS[1];
+  for (const fixtureGroup of CAT05_NATIVE_OCR_FIXTURE_GROUPS) {
+    if (artifactName.startsWith(`bootstrap-${fixtureGroup}-${bootstrapViewport.id}-`)) {
+      return {
+        artifactName,
+        fixtureGroup,
+        scenarioId: null,
+        viewport: {
+          height: bootstrapViewport.height,
+          id: bootstrapViewport.id,
+          width: bootstrapViewport.width,
+        },
+      };
+    }
+    if (artifactName === `browser-events-${fixtureGroup}`) {
+      return { artifactName, fixtureGroup, scenarioId: null, viewport: null };
+    }
+  }
+  return undefined;
+}
+
+function cat05ExpectedScreenshotDimensions(artifact) {
+  for (const viewport of CAT05_NATIVE_OCR_VIEWPORTS) {
+    if (artifact.includes(`-${viewport.id}-`)) {
+      return { height: viewport.height, width: viewport.width };
+    }
+  }
+  return null;
+}
+
+function parsePngDimensions(bytes) {
+  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  if (!Buffer.isBuffer(bytes) || bytes.length < 45 || !bytes.subarray(0, 8).equals(signature)) {
+    throw new Error('invalid PNG signature or complete chunk stream');
+  }
+  if (bytes.length > CAT05_NATIVE_OCR_MAX_SCREENSHOT_BYTES) {
+    throw new Error(`PNG exceeds ${CAT05_NATIVE_OCR_MAX_SCREENSHOT_BYTES} bytes`);
+  }
+
+  let offset = signature.length;
+  let chunkIndex = 0;
+  let sawHeader = false;
+  let sawImageData = false;
+  let sawEnd = false;
+  let headerDimensions = null;
+  while (offset < bytes.length) {
+    if (offset + 12 > bytes.length) throw new Error('truncated PNG chunk header');
+    const length = bytes.readUInt32BE(offset);
+    const type = bytes.subarray(offset + 4, offset + 8).toString('ascii');
+    const nextOffset = offset + 12 + length;
+    if (!/^[A-Za-z]{4}$/.test(type) || nextOffset > bytes.length) {
+      throw new Error('invalid or truncated PNG chunk');
+    }
+    if (type === 'IHDR') {
+      if (chunkIndex !== 0 || sawHeader || length !== 13) {
+        throw new Error('PNG must contain one leading 13-byte IHDR chunk');
+      }
+      const width = bytes.readUInt32BE(offset + 8);
+      const height = bytes.readUInt32BE(offset + 12);
+      if (width < 1 || height < 1 || width > 4096 || height > 4096) {
+        throw new Error('invalid or unsafe PNG dimensions');
+      }
+      headerDimensions = { height, width };
+      sawHeader = true;
+    } else if (type === 'IDAT') {
+      if (!sawHeader || sawEnd) throw new Error('PNG IDAT appears outside the image stream');
+      sawImageData = true;
+    } else if (type === 'IEND') {
+      if (!sawHeader || !sawImageData || sawEnd || length !== 0 || nextOffset !== bytes.length) {
+        throw new Error('PNG must end with one terminal zero-byte IEND chunk');
+      }
+      sawEnd = true;
+    }
+    offset = nextOffset;
+    chunkIndex += 1;
+  }
+  if (!sawHeader || !sawImageData || !sawEnd || !headerDimensions) {
+    throw new Error('PNG is missing IHDR, IDAT, or IEND');
+  }
+
+  let decoded;
+  try {
+    decoded = PNG.sync.read(bytes, { checkCRC: true });
+  } catch (error) {
+    throw new Error(
+      `PNG decode or CRC validation failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+  if (
+    decoded.width !== headerDimensions.width ||
+    decoded.height !== headerDimensions.height ||
+    !decoded.data ||
+    decoded.data.length !== decoded.width * decoded.height * 4
+  ) {
+    throw new Error('decoded PNG pixels do not match the declared IHDR dimensions');
+  }
+  return headerDimensions;
+}
+
+function cat05DiagnosticPolicyFailures(label, value) {
+  const failures = [];
+  const text = String(value ?? '');
+  const normalizedPathText = text.replaceAll('\\\\', '\\');
+  if (
+    /(?:^|[\s"'(])(?:[A-Za-z]:[\\/]|\\\\[^\\\s]+[\\/][^\\\s]+|\/(?:Users|home|private|root|tmp|workspace)\/)/iu.test(
+      normalizedPathText,
+    ) ||
+    /[\\/]AppData[\\/]Local[\\/]Temp[\\/]/iu.test(normalizedPathText) ||
+    /\/var\/folders\//iu.test(normalizedPathText) ||
+    /\.claude[\\/]worktrees[\\/]/iu.test(normalizedPathText)
+  ) {
+    failures.push(`${label} contains a user-profile, temporary, or worktree absolute path`);
+  }
+  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/u.test(text)) {
+    failures.push(`${label} contains a disallowed control character`);
+  }
+  if (/\b(?:assets-library|blob|content|data|file|filesystem|ph):[^\s<>"')\]}]*/iu.test(text)) {
+    failures.push(`${label} contains a sensitive URI literal`);
+  }
+  const urlLiterals = text.match(/\b(?:https?|wss?):\/\/[^\s<>"')\]}]+/giu) ?? [];
+  for (const literal of urlLiterals) {
+    let parsed;
+    try {
+      parsed = new URL(literal);
+    } catch {
+      failures.push(`${label} contains a malformed network URL literal`);
+      continue;
+    }
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'ws:') {
+      failures.push(`${label} contains a disallowed ${parsed.protocol} URL literal`);
+      continue;
+    }
+    if (parsed.hostname !== 'localhost') {
+      failures.push(`${label} contains a non-localhost network URL literal`);
+      continue;
+    }
+    if (parsed.username || parsed.password) {
+      failures.push(`${label} contains credentials in a localhost URL literal`);
+    }
+    if (parsed.hash) {
+      failures.push(`${label} contains an unredacted URL fragment`);
+    }
+    if (parsed.search && parsed.search !== '?redacted-query') {
+      failures.push(`${label} contains an unredacted URL query value`);
+    }
+  }
+  if (
+    /\b(?:authorization\s*[:=]\s*)?(?:basic|bearer|digest)\s+(?!<redacted(?:-[a-z0-9]+)*>)[^\s"',;}{]{4,}/iu.test(
+      text,
+    )
+  ) {
+    failures.push(`${label} contains an HTTP authorization credential literal`);
+  }
+  if (
+    /\b(?:(?:[a-z0-9]+[_-])*token|(?:x[_-]?)?api[_-]?key|apikey|authorization|(?:[a-z0-9]+[_-])*secret|passcode|password)\b["']?\s*[:=]\s*["']?(?!<redacted(?:-[a-z0-9]+)*>|null\b|false\b|true\b)[^"'\s,}\]]{4,}/iu.test(
+      text,
+    )
+  ) {
+    failures.push(`${label} contains an unredacted credential or token value`);
+  }
+  if (/(?<![a-z0-9+/_-])[a-z0-9+/_-]{160,}={0,2}(?![a-z0-9+/_=-])/iu.test(text)) {
+    failures.push(`${label} contains a long base64-like payload`);
+  }
+  return [...new Set(failures)];
+}
+
+function cat05DiagnosticValueFailures(label, value, seen = new WeakSet(), depth = 0) {
+  const failures = [];
+  if (typeof value === 'string') {
+    if (Buffer.byteLength(value, 'utf8') > CAT05_NATIVE_OCR_MAX_DIAGNOSTIC_STRING_BYTES) {
+      failures.push(
+        `${label} exceeds ${CAT05_NATIVE_OCR_MAX_DIAGNOSTIC_STRING_BYTES} diagnostic string bytes`,
+      );
+    }
+    failures.push(...cat05DiagnosticPolicyFailures(label, value));
+    return failures;
+  }
+  if (!value || typeof value !== 'object') return failures;
+  if (seen.has(value)) return failures;
+  if (depth > 20) return [`${label} exceeds the reviewed diagnostic nesting depth`];
+  seen.add(value);
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => {
+      failures.push(...cat05DiagnosticValueFailures(`${label}[${index}]`, item, seen, depth + 1));
+    });
+    return failures;
+  }
+  for (const [key, item] of Object.entries(value)) {
+    failures.push(...cat05DiagnosticValueFailures(`${label}.<key>`, key, seen, depth + 1));
+    failures.push(...cat05DiagnosticValueFailures(`${label}.${key}`, item, seen, depth + 1));
+  }
+  return failures;
+}
+
+function cat05TextArtifactHygieneFailures(label, bytes, maxBytes) {
+  if (!Buffer.isBuffer(bytes)) return [`${label} is not available as bytes`];
+  const failures = [];
+  if (bytes.length > maxBytes) failures.push(`${label} exceeds ${maxBytes} reviewed bytes`);
+  const text = bytes.toString('utf8');
+  if (!Buffer.from(text, 'utf8').equals(bytes)) {
+    failures.push(`${label} is not canonical UTF-8 text`);
+  }
+  failures.push(...cat05DiagnosticPolicyFailures(label, text));
+  return failures;
+}
+
+const CAT05_BROWSER_EVENT_KEYS = Object.freeze({
+  'Log.entryAdded': ['method', 'observedAt', 'params'],
+  'Network.requestWillBeSent': [
+    'documentURL',
+    'method',
+    'observedAt',
+    'requestId',
+    'requestMethod',
+    'type',
+    'url',
+  ],
+  'Network.responseReceived': [
+    'method',
+    'mimeType',
+    'observedAt',
+    'requestId',
+    'status',
+    'type',
+    'url',
+  ],
+  'Network.webSocketCreated': ['method', 'observedAt', 'params'],
+  'Runtime.consoleAPICalled': ['method', 'observedAt', 'text', 'type'],
+});
+
+const CAT05_REJECTED_BROWSER_EVENT_KEYS = Object.freeze({
+  'Inspector.targetCrashed': ['method', 'observedAt', 'params'],
+  'Network.loadingFailed': ['canceled', 'errorText', 'method', 'observedAt', 'requestId', 'type'],
+  'Network.webSocketFrameError': ['method', 'observedAt', 'params'],
+  'Page.crashed': ['method', 'observedAt', 'params'],
+  'Page.javascriptDialogOpening': ['method', 'observedAt', 'params'],
+  'Runtime.exceptionThrown': ['method', 'observedAt', 'params'],
+});
+
+function parseCat05ReviewedLocalUrl(label, value, expectedProtocol) {
+  try {
+    const parsed = new URL(String(value ?? ''));
+    if (
+      parsed.protocol !== expectedProtocol ||
+      parsed.hostname !== 'localhost' ||
+      !/^\d+$/.test(parsed.port) ||
+      parsed.username ||
+      parsed.password ||
+      parsed.hash ||
+      (parsed.search && parsed.search !== '?redacted-query')
+    ) {
+      return { failure: `${label} must be a sanitized localhost ${expectedProtocol} URL` };
+    }
+    return { parsed };
+  } catch {
+    return { failure: `${label} must be a valid sanitized localhost URL` };
+  }
+}
+
+function collectCat05BrowserEventFailures(artifact, contents) {
+  const failures = [];
+  if (
+    !hasExactObjectKeys(contents, ['evidenceBinding', 'events', 'retention']) ||
+    !Array.isArray(contents?.events)
+  ) {
+    return [`${artifact} must use the exact bound browser-event and retention schema`];
+  }
+
+  const { events, retention } = contents;
+  if (
+    !hasExactObjectKeys(retention, [
+      'ignoredEventCount',
+      'inputEventCount',
+      'limits',
+      'retainedEventCount',
+      'sanitizedBytes',
+      'truncated',
+    ]) ||
+    !hasExactObjectKeys(retention?.limits, ['maxRetainedBytes', 'maxRetainedEvents'])
+  ) {
+    failures.push(`${artifact} retention must use the exact reviewed schema`);
+  } else {
+    for (const key of [
+      'ignoredEventCount',
+      'inputEventCount',
+      'retainedEventCount',
+      'sanitizedBytes',
+    ]) {
+      if (!Number.isSafeInteger(retention[key]) || retention[key] < 0) {
+        failures.push(`${artifact} retention.${key} must be a non-negative safe integer`);
+      }
+    }
+    if (
+      retention.limits.maxRetainedBytes !== CAT05_NATIVE_OCR_MAX_BROWSER_EVENT_BYTES ||
+      retention.limits.maxRetainedEvents !== CAT05_NATIVE_OCR_MAX_RETAINED_BROWSER_EVENTS
+    ) {
+      failures.push(`${artifact} retention limits do not match the reviewed runner limits`);
+    }
+    if (
+      retention.retainedEventCount !== events.length ||
+      retention.inputEventCount !== retention.retainedEventCount + retention.ignoredEventCount
+    ) {
+      failures.push(`${artifact} retention event counts are inconsistent`);
+    }
+    const serializedBytes = Buffer.byteLength(JSON.stringify(events), 'utf8');
+    if (
+      retention.sanitizedBytes !== serializedBytes ||
+      serializedBytes > CAT05_NATIVE_OCR_MAX_BROWSER_EVENT_BYTES ||
+      events.length > CAT05_NATIVE_OCR_MAX_RETAINED_BROWSER_EVENTS
+    ) {
+      failures.push(`${artifact} retention byte or event limits are inconsistent`);
+    }
+    if (retention.truncated !== false) {
+      failures.push(`${artifact} retention.truncated must be false`);
+    }
+  }
+
+  const requestIds = [];
+  const responseIds = [];
+  const httpOrigins = new Set();
+  const websocketPorts = new Set();
+  for (let index = 0; index < events.length; index += 1) {
+    const event = events[index];
+    const label = `${artifact} event ${index + 1}`;
+    const expectedKeys =
+      CAT05_BROWSER_EVENT_KEYS[event?.method] ?? CAT05_REJECTED_BROWSER_EVENT_KEYS[event?.method];
+    if (!expectedKeys) {
+      failures.push(`${label} has an unreviewed method: ${String(event?.method ?? 'missing')}`);
+      continue;
+    }
+    if (!hasExactObjectKeys(event, expectedKeys)) {
+      failures.push(`${label} does not use the exact ${event.method} schema`);
+    }
+    if (!Number.isFinite(Date.parse(String(event?.observedAt ?? '')))) {
+      failures.push(`${label} must contain a valid observedAt timestamp`);
+    }
+    if (Object.hasOwn(CAT05_REJECTED_BROWSER_EVENT_KEYS, event.method)) {
+      failures.push(`${label} contains disallowed browser failure method ${event.method}`);
+      continue;
+    }
+
+    if (event.method === 'Network.requestWillBeSent') {
+      if (
+        typeof event.requestId !== 'string' ||
+        event.requestId.length === 0 ||
+        event.requestId.length > 256 ||
+        typeof event.requestMethod !== 'string' ||
+        !/^[A-Z]+$/.test(event.requestMethod) ||
+        typeof event.type !== 'string' ||
+        event.type.length === 0
+      ) {
+        failures.push(`${label} has invalid request identity metadata`);
+      }
+      requestIds.push(event.requestId);
+      for (const [field, value] of [
+        ['documentURL', event.documentURL],
+        ['url', event.url],
+      ]) {
+        const parsed = parseCat05ReviewedLocalUrl(`${label}.${field}`, value, 'http:');
+        if (parsed.failure) failures.push(parsed.failure);
+        else httpOrigins.add(parsed.parsed.origin);
+      }
+    } else if (event.method === 'Network.responseReceived') {
+      if (
+        typeof event.requestId !== 'string' ||
+        event.requestId.length === 0 ||
+        event.requestId.length > 256 ||
+        typeof event.mimeType !== 'string' ||
+        event.mimeType.length === 0 ||
+        typeof event.type !== 'string' ||
+        event.type.length === 0 ||
+        !Number.isFinite(event.status) ||
+        event.status < 100 ||
+        event.status >= 400
+      ) {
+        failures.push(`${label} has invalid response identity metadata`);
+      }
+      responseIds.push(event.requestId);
+      const parsed = parseCat05ReviewedLocalUrl(`${label}.url`, event.url, 'http:');
+      if (parsed.failure) failures.push(parsed.failure);
+      else httpOrigins.add(parsed.parsed.origin);
+    } else if (event.method === 'Network.webSocketCreated') {
+      if (!event.params || typeof event.params !== 'object' || Array.isArray(event.params)) {
+        failures.push(`${label}.params must be a sanitized object`);
+      } else {
+        const parsed = parseCat05ReviewedLocalUrl(`${label}.params.url`, event.params.url, 'ws:');
+        if (parsed.failure) failures.push(parsed.failure);
+        else websocketPorts.add(parsed.parsed.port);
+      }
+    } else if (event.method === 'Runtime.consoleAPICalled') {
+      if (
+        typeof event.text !== 'string' ||
+        typeof event.type !== 'string' ||
+        event.type.length === 0
+      ) {
+        failures.push(`${label} must contain bounded console text and type strings`);
+      }
+      if (['assert', 'error'].includes(String(event.type).toLowerCase())) {
+        failures.push(`${label} contains an error-class browser console event`);
+      }
+    } else if (event.method === 'Log.entryAdded') {
+      if (!event.params || typeof event.params !== 'object' || Array.isArray(event.params)) {
+        failures.push(`${label}.params must be a sanitized object`);
+      }
+      if (String(event.params?.entry?.level ?? '').toLowerCase() === 'error') {
+        failures.push(`${label} contains an error-level browser log`);
+      }
+    }
+  }
+
+  if (requestIds.length === 0 || responseIds.length === 0) {
+    failures.push(`${artifact} must contain nonzero localhost request and response coverage`);
+  }
+  if (
+    requestIds.length !== responseIds.length ||
+    !isDeepStrictEqual([...new Set(requestIds)].sort(), [...new Set(responseIds)].sort())
+  ) {
+    failures.push(`${artifact} request and response IDs are not coherent`);
+  }
+  if (httpOrigins.size !== 1) {
+    failures.push(`${artifact} must bind all HTTP traffic to one localhost origin`);
+  } else if ([...websocketPorts].some((port) => port !== new URL([...httpOrigins][0]).port)) {
+    failures.push(`${artifact} WebSocket traffic does not match the localhost HTTP port`);
+  }
+
+  return failures;
+}
+
+function buildExpectedCat05NativeOcrReport(summary) {
+  const lines = [
+    '# CAT05 Native OCR Review UI — Human-Simulated Expo-Web Audit',
+    '',
+    '## Scope Boundary',
+    '',
+    summary.verdict === 'pass'
+      ? '**PASS — deterministic Expo-web OCR review UI-state evidence only.**'
+      : '**FAIL — deterministic Expo-web OCR review UI-state audit.**',
+    '',
+    'This report is deliberately not native Vision, device, camera, label-image, OCR accuracy, runtime privacy, archive, App Review, or release evidence. Its cache/cleanup findings are source assertions only. A pass must never be used to enable or clear the native OCR launch gate.',
+    '',
+    ...CAT05_NATIVE_OCR_LIMITATIONS.map((limitation) => `- ${limitation}`),
+    '',
+    '## Run',
+    '',
+    `- Run ID: \`${summary.runId}\``,
+    `- Source Git SHA: \`${summary.sourceGitSha}\``,
+    `- Web fixture build ID: \`${summary.webFixtureBuild.buildId}\``,
+    `- Web fixture profile: \`${summary.webFixtureBuild.profile}\``,
+    `- Candidate source profile: \`${summary.candidateNativeBuild.profile}\``,
+    '- Native EAS build ID: not applicable (this audit does not execute an iOS binary)',
+    `- Started: ${summary.startedAt}`,
+    `- Completed: ${summary.completedAt}`,
+    `- Surface: ${summary.surface}`,
+    `- Browser: ${summary.browserPath ?? 'unavailable'}`,
+    `- Consent bootstraps: ${summary.passedBootstrapCount}/${summary.expectedBootstrapCount}`,
+    `- Scenario executions: ${summary.passedExecutionCount}/${summary.expectedExecutionCount}`,
+    `- Browser failures: ${summary.browserFailureCount}`,
+    '- Native device proof: false',
+    '',
+    '## Scenario Matrix',
+    '',
+    '| Scenario | Viewport | Result | Error |',
+    '| --- | --- | --- | --- |',
+    ...summary.results
+      .filter(({ kind }) => kind === 'scenario')
+      .map(
+        (result) =>
+          `| ${result.scenarioId} | ${result.viewport.width}x${result.viewport.height} | ${result.verdict} | ${String(result.error ?? '').replace(/\|/g, '\\|')} |`,
+      ),
+    '',
+    '## Human-Simulated Actions',
+    '',
+    '- Completed the real local age gate and explicit health-data consent UI for every fixture server.',
+    '- Tapped Capture label, observed the reading state, reviewed the resulting state, typed and corrected text, adopted a recognized suggestion explicitly, retook, continued, and followed the manual fallback.',
+    '- Exercised recognized, no-text, timeout, and failure branches at 375 x 667, 390 x 844, and 430 x 932.',
+    '- Inspected accessible names, alert/live-region semantics, touch-target geometry, center hit tests, clipping, horizontal overflow, browser console/page errors, dialogs, and remote requests.',
+    '',
+    '## Remaining Native Gates',
+    '',
+    '- Compile and sign the Swift/Expo module on the release macOS/Xcode toolchain.',
+    '- Exercise clear, curved, tiny, multilingual, and glare-heavy real labels on the required physical-iPhone matrix.',
+    '- Prove native cancellation, timeout, edit-fence, retake, background/foreground, memory, cleanup, and process-death behavior.',
+    '- Complete VoiceOver, Dynamic Type, traffic inspection, privacy/App Privacy reconciliation, performance thresholds, corpus rights, professional review, archive inspection, and exact-build evidence.',
+    '',
+    '## Command',
+    '',
+    '```text',
+    'node scripts/e2e/cat05-native-ocr-ui-audit.mjs',
+    '```',
+    '',
+  ];
+  return `${lines.join('\n')}\n`;
 }
 
 function collectCat04CatalogRecoveryFailures({
@@ -664,6 +1372,628 @@ function collectCat04CatalogRecoveryFailures({
     if (!isDeepStrictEqual([...artifacts].sort(), expectedTrackedArtifacts)) {
       failures.push(
         'artifacts must enumerate every Git-tracked CAT04 evidence file except summary.json exactly once',
+      );
+    }
+  }
+
+  return failures;
+}
+
+function collectCat05NativeOcrReviewFailures({
+  folder,
+  summary,
+  trackedRepoFiles,
+  sourceGitState,
+  fileExists = exists,
+  readJsonFile = readJson,
+  readTextFile = (path) => readFileSync(abs(path), 'utf8'),
+  readBytesFile = (path) => readFileSync(abs(path)),
+}) {
+  const failures = [];
+  const checkedFiles = new Set();
+  const bytesByArtifact = new Map();
+  const folderPrefix = `${normalizeRepoPath(folder).replace(/\/$/, '')}/`;
+  const expectedArtifacts = expectedCat05NativeOcrArtifacts();
+  const expectedScreenshots = expectedArtifacts.filter((artifact) => artifact.endsWith('.png'));
+  const trackedFolderFiles = [...trackedRepoFiles]
+    .filter((path) => normalizeRepoPath(path).startsWith(folderPrefix))
+    .map((path) => normalizeRepoPath(path).slice(folderPrefix.length))
+    .sort();
+
+  const requireTrackedFile = (relativePath, label = relativePath) => {
+    const normalized = normalizeEvidenceRelativePath(relativePath);
+    if (!normalized || normalized !== relativePath) {
+      failures.push(`${label} uses an unsafe evidence path`);
+      return false;
+    }
+    if (checkedFiles.has(normalized)) {
+      return (
+        fileExists(`${folder}/${normalized}`) &&
+        trackedRepoFiles.has(normalizeRepoPath(`${folder}/${normalized}`))
+      );
+    }
+    checkedFiles.add(normalized);
+    const repoPath = normalizeRepoPath(`${folder}/${normalized}`);
+    if (!fileExists(repoPath)) {
+      failures.push(`missing CAT05 evidence file ${normalized}`);
+      return false;
+    }
+    if (!trackedRepoFiles.has(repoPath)) {
+      failures.push(`CAT05 evidence file is not Git-tracked: ${normalized}`);
+      return false;
+    }
+    return true;
+  };
+
+  const artifactBytes = (artifact) => {
+    if (bytesByArtifact.has(artifact)) return bytesByArtifact.get(artifact);
+    try {
+      const raw = readBytesFile(`${folder}/${artifact}`);
+      const bytes = Buffer.isBuffer(raw) ? raw : Buffer.from(String(raw));
+      bytesByArtifact.set(artifact, bytes);
+      return bytes;
+    } catch (error) {
+      failures.push(
+        `${artifact} could not be read as bytes: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      return null;
+    }
+  };
+
+  if (expectedArtifacts.length !== CAT05_NATIVE_OCR_ARTIFACT_COUNT) {
+    failures.push('internal CAT05 artifact contract does not contain exactly 139 artifacts');
+  }
+  if (expectedScreenshots.length !== CAT05_NATIVE_OCR_SCREENSHOT_COUNT) {
+    failures.push('internal CAT05 artifact contract does not contain exactly 55 PNGs');
+  }
+  if (!hasExactObjectKeys(summary, CAT05_NATIVE_OCR_SUMMARY_KEYS)) {
+    failures.push('summary.json must use the exact reviewed CAT05 PASS schema');
+  }
+  if (summary?.evidenceSchemaVersion !== CAT05_NATIVE_OCR_SCHEMA_VERSION) {
+    failures.push(
+      `evidenceSchemaVersion must be ${CAT05_NATIVE_OCR_SCHEMA_VERSION}, received ${String(summary?.evidenceSchemaVersion ?? 'missing')}`,
+    );
+  }
+  if (summary?.surface !== 'Expo web / deterministic development-only OCR review fixture') {
+    failures.push('summary surface must remain the deterministic Expo-web OCR review fixture');
+  }
+  if (summary?.verdict !== 'pass') {
+    failures.push(
+      `summary verdict must be pass, received ${String(summary?.verdict ?? 'missing')}`,
+    );
+  }
+  if (summary?.nativeDeviceProof !== false) {
+    failures.push('nativeDeviceProof must be false for the CAT05 Expo-web compatibility gate');
+  }
+  if (!isDeepStrictEqual(summary?.candidateNativeBuild, CAT05_NATIVE_OCR_CANDIDATE_BUILD)) {
+    failures.push(
+      'candidateNativeBuild must be the exact staging source candidate with no native proof',
+    );
+  }
+  if (!isDeepStrictEqual(summary?.viewports, CAT05_NATIVE_OCR_VIEWPORTS)) {
+    failures.push('viewports must be exactly 375x667, 390x844, and 430x932');
+  }
+  if (!isDeepStrictEqual(summary?.fixtureGroups, CAT05_NATIVE_OCR_FIXTURE_GROUPS)) {
+    failures.push('fixtureGroups must match the four reviewed CAT05 fixture groups');
+  }
+  if (!isDeepStrictEqual(summary?.scenarioMatrix, CAT05_NATIVE_OCR_SCENARIOS)) {
+    failures.push('scenarioMatrix must match the five reviewed CAT05 scenarios');
+  }
+  if (!isDeepStrictEqual(summary?.limitations, CAT05_NATIVE_OCR_LIMITATIONS)) {
+    failures.push('limitations must retain the exact native-proof boundary');
+  }
+  if (
+    summary?.expectedExecutionCount !== 15 ||
+    summary?.passedExecutionCount !== 15 ||
+    summary?.expectedBootstrapCount !== 4 ||
+    summary?.passedBootstrapCount !== 4
+  ) {
+    failures.push('CAT05 must record exactly 15/15 scenario results and 4/4 consent bootstraps');
+  }
+  if (summary?.browserFailureCount !== 0) {
+    failures.push('browserFailureCount must be zero');
+  }
+  if (typeof summary?.browserPath !== 'string' || summary.browserPath.trim().length === 0) {
+    failures.push('browserPath must identify the browser used for the evidence run');
+  } else if (
+    summary.browserPath !== summary.browserPath.trim() ||
+    summary.browserPath.length > 256 ||
+    /[\\/]/u.test(summary.browserPath) ||
+    summary.browserPath === '.' ||
+    summary.browserPath === '..'
+  ) {
+    failures.push('browserPath must be a bounded browser executable basename, not a host path');
+  }
+  failures.push(...cat05DiagnosticValueFailures('summary.json', summary));
+  const summaryBytes = artifactBytes('summary.json');
+  if (summaryBytes) {
+    failures.push(
+      ...cat05TextArtifactHygieneFailures(
+        'summary.json',
+        summaryBytes,
+        CAT05_NATIVE_OCR_MAX_DIAGNOSTIC_ARTIFACT_BYTES,
+      ),
+    );
+  }
+  const startedAt = Date.parse(String(summary?.startedAt ?? ''));
+  const completedAt = Date.parse(String(summary?.completedAt ?? ''));
+  if (!Number.isFinite(startedAt) || !Number.isFinite(completedAt) || completedAt < startedAt) {
+    failures.push('summary timestamps must be valid and complete in chronological order');
+  }
+
+  const sourceGitSha = String(summary?.sourceGitSha ?? '');
+  const binding = summary?.evidenceBinding;
+  const fixtureConfigurationSha256 = String(binding?.fixtureConfigurationSha256 ?? '');
+  const scenarioMatrixSha256 = cat05Sha256Json(CAT05_NATIVE_OCR_SCENARIOS);
+  const viewportMatrixSha256 = cat05Sha256Json(CAT05_NATIVE_OCR_VIEWPORTS);
+  const webFixtureBuild = {
+    buildId: cat05Sha256Json({
+      evidenceSchemaVersion: CAT05_NATIVE_OCR_SCHEMA_VERSION,
+      fixtureConfigurationSha256,
+      scenarioMatrixSha256,
+      sourceGitSha,
+      viewportMatrixSha256,
+    }),
+    profile: 'development-only-deterministic-expo-web',
+  };
+  const expectedBinding = {
+    candidateNativeBuild: CAT05_NATIVE_OCR_CANDIDATE_BUILD,
+    evidenceSchemaVersion: CAT05_NATIVE_OCR_SCHEMA_VERSION,
+    expectedSourceGitSha: sourceGitSha,
+    fixtureConfigurationSha256,
+    runId: String(summary?.runId ?? ''),
+    scenarioMatrixSha256,
+    sourceGitSha,
+    viewportMatrixSha256,
+    webFixtureBuild,
+  };
+
+  if (!hasExactObjectKeys(binding, CAT05_NATIVE_OCR_BINDING_KEYS)) {
+    failures.push('summary evidenceBinding must use the exact CAT05 binding schema');
+  }
+  if (!/^[a-f0-9]{40}$/.test(sourceGitSha)) {
+    failures.push('sourceGitSha must be a lowercase full 40-character Git SHA');
+  }
+  if (!/^[a-f0-9]{64}$/.test(fixtureConfigurationSha256)) {
+    failures.push('fixtureConfigurationSha256 must be a lowercase SHA-256 digest');
+  }
+  if (
+    !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(
+      expectedBinding.runId,
+    )
+  ) {
+    failures.push('runId must be a lowercase UUID v4');
+  }
+  if (!isDeepStrictEqual(binding, expectedBinding)) {
+    failures.push(
+      'summary evidenceBinding does not match the reviewed source/matrix/build binding',
+    );
+  }
+  if (
+    summary?.runId !== expectedBinding.runId ||
+    summary?.sourceGitSha !== expectedBinding.sourceGitSha ||
+    !isDeepStrictEqual(summary?.webFixtureBuild, webFixtureBuild)
+  ) {
+    failures.push('summary duplicate run/source/web-build fields do not match evidenceBinding');
+  }
+
+  const validateArtifactBinding = (actual, artifact, metadata) => {
+    const label = `${artifact} evidenceBinding`;
+    if (!hasExactObjectKeys(actual, CAT05_NATIVE_OCR_ARTIFACT_BINDING_KEYS)) {
+      failures.push(`${label} must use the exact bound-artifact schema`);
+      return;
+    }
+    if (!isDeepStrictEqual(actual, { ...expectedBinding, ...metadata })) {
+      failures.push(`${label} does not match the summary run and artifact identity`);
+    }
+  };
+
+  const privacySourceContract = summary?.privacySourceContract;
+  if (
+    !hasExactObjectKeys(privacySourceContract, [
+      'assertionIds',
+      'files',
+      'nativeDeviceProof',
+      'proofKind',
+    ]) ||
+    privacySourceContract?.nativeDeviceProof !== false ||
+    privacySourceContract?.proofKind !== 'source-assertions-only' ||
+    !isDeepStrictEqual(privacySourceContract?.assertionIds, CAT05_NATIVE_OCR_PRIVACY_ASSERTIONS)
+  ) {
+    failures.push('privacySourceContract must retain the exact source-assertion-only schema');
+  }
+  if (
+    !Array.isArray(privacySourceContract?.files) ||
+    privacySourceContract.files.length !== CAT05_NATIVE_OCR_PRIVACY_FILES.length
+  ) {
+    failures.push('privacySourceContract must bind the four reviewed privacy source files');
+  } else {
+    privacySourceContract.files.forEach((file, index) => {
+      if (
+        !hasExactObjectKeys(file, ['bytes', 'path', 'sha256']) ||
+        file.path !== CAT05_NATIVE_OCR_PRIVACY_FILES[index] ||
+        !Number.isSafeInteger(file.bytes) ||
+        file.bytes < 1 ||
+        !/^[a-f0-9]{64}$/.test(String(file.sha256 ?? ''))
+      ) {
+        failures.push(`privacySourceContract file ${index + 1} is not exactly bound`);
+      }
+    });
+  }
+  const recordedPrivacyFiles = sourceGitState?.privacySourceFiles;
+  if (
+    !Array.isArray(recordedPrivacyFiles) ||
+    recordedPrivacyFiles.length !== CAT05_NATIVE_OCR_PRIVACY_FILES.length
+  ) {
+    failures.push('recorded CAT05 privacy source hashes are unavailable');
+  } else {
+    const expectedPrivacyFiles = [];
+    recordedPrivacyFiles.forEach((record, index) => {
+      const expectedPath = CAT05_NATIVE_OCR_PRIVACY_FILES[index];
+      if (
+        !hasExactObjectKeys(record, ['bytes', 'currentBytes', 'currentSha256', 'path', 'sha256']) ||
+        record.path !== expectedPath ||
+        !Number.isSafeInteger(record.bytes) ||
+        record.bytes < 1 ||
+        !/^[a-f0-9]{64}$/.test(String(record.sha256 ?? ''))
+      ) {
+        failures.push(`recorded CAT05 privacy source file ${index + 1} is unavailable or invalid`);
+        return;
+      }
+      expectedPrivacyFiles.push({ bytes: record.bytes, path: record.path, sha256: record.sha256 });
+      if (record.currentBytes !== record.bytes || record.currentSha256 !== record.sha256) {
+        failures.push(
+          `current CAT05 privacy source does not match ${sourceGitSha}: ${record.path}`,
+        );
+      }
+    });
+    if (
+      expectedPrivacyFiles.length === CAT05_NATIVE_OCR_PRIVACY_FILES.length &&
+      !isDeepStrictEqual(privacySourceContract?.files, expectedPrivacyFiles)
+    ) {
+      failures.push(
+        'privacySourceContract byte/hash records do not match the recorded sourceGitSha',
+      );
+    }
+  }
+
+  const expectedScenarioById = new Map(
+    CAT05_NATIVE_OCR_SCENARIOS.map((scenario) => [scenario.id, scenario]),
+  );
+  const scenarioKeys = new Set();
+  const bootstrapGroups = new Set();
+  if (!Array.isArray(summary?.results) || summary.results.length !== 19) {
+    failures.push('results must contain exactly 15 scenarios and 4 consent bootstraps');
+  } else {
+    for (const result of summary.results) {
+      const resultKind = result?.kind;
+      let expectedPrefix;
+      let resultFile;
+      let expectedMetadata;
+      if (resultKind === 'scenario') {
+        const definition = expectedScenarioById.get(result?.scenarioId);
+        const viewportId = cat05ViewportKey(result?.viewport);
+        const key = `${String(result?.scenarioId)}::${String(viewportId)}`;
+        if (!definition || !viewportId) {
+          failures.push(`scenario result has an unknown scenario or viewport: ${key}`);
+          continue;
+        }
+        if (scenarioKeys.has(key)) failures.push(`duplicate CAT05 scenario execution ${key}`);
+        scenarioKeys.add(key);
+        if (result.fixture !== definition.fixture || result.fixtureGroup !== definition.groupId) {
+          failures.push(`${key} does not match its reviewed fixture and group`);
+        }
+        expectedPrefix = `${definition.id}-${viewportId}`;
+        resultFile = `${expectedPrefix}-result.json`;
+        expectedMetadata = expectedCat05ArtifactBindingMetadata(resultFile);
+      } else if (resultKind === 'consent-bootstrap') {
+        const fixtureGroup = String(result?.fixtureGroup ?? '');
+        if (!CAT05_NATIVE_OCR_FIXTURE_GROUPS.includes(fixtureGroup)) {
+          failures.push(`bootstrap result has an unknown fixture group: ${fixtureGroup}`);
+          continue;
+        }
+        if (!isDeepStrictEqual(result?.viewport, CAT05_NATIVE_OCR_VIEWPORTS[1])) {
+          failures.push(`bootstrap ${fixtureGroup} must use the exact 390x844 viewport`);
+        }
+        if (bootstrapGroups.has(fixtureGroup)) {
+          failures.push(`duplicate CAT05 consent bootstrap ${fixtureGroup}`);
+        }
+        bootstrapGroups.add(fixtureGroup);
+        expectedPrefix = `bootstrap-${fixtureGroup}-${CAT05_NATIVE_OCR_VIEWPORTS[1].id}`;
+        resultFile = `${expectedPrefix}-result.json`;
+        expectedMetadata = expectedCat05ArtifactBindingMetadata(resultFile);
+      } else {
+        failures.push(`result has an unknown kind: ${String(resultKind ?? 'missing')}`);
+        continue;
+      }
+
+      if (result?.artifactPrefix !== expectedPrefix) {
+        failures.push(`${resultKind} ${expectedPrefix} has an incorrect artifactPrefix`);
+      }
+      if (
+        result?.nativeDeviceProof !== false ||
+        result?.verdict !== 'pass' ||
+        result?.error !== null ||
+        !Array.isArray(result?.browserFailures) ||
+        result.browserFailures.length !== 0
+      ) {
+        failures.push(`${resultKind} ${expectedPrefix} must retain a clean non-native pass`);
+      }
+      const expectedSurface =
+        resultKind === 'scenario' ? 'expo-web-deterministic-ui-fixture' : 'expo-web';
+      if (result?.surface !== expectedSurface) {
+        failures.push(`${resultKind} ${expectedPrefix} has an incorrect surface`);
+      }
+      validateArtifactBinding(result?.evidenceBinding, resultFile, expectedMetadata);
+      try {
+        const endUrl = new URL(String(result?.endUrl ?? ''));
+        if (
+          endUrl.protocol !== 'http:' ||
+          endUrl.hostname !== 'localhost' ||
+          !/^\d+$/.test(endUrl.port) ||
+          endUrl.username ||
+          endUrl.password
+        ) {
+          failures.push(`${resultKind} ${expectedPrefix} endUrl must remain local HTTP`);
+        }
+      } catch {
+        failures.push(`${resultKind} ${expectedPrefix} endUrl is not a valid local URL`);
+      }
+      if (requireTrackedFile(resultFile, `${resultKind} ${expectedPrefix} result`)) {
+        try {
+          if (!isDeepStrictEqual(readJsonFile(`${folder}/${resultFile}`), result)) {
+            failures.push(`${resultFile} does not match its summary record`);
+          }
+        } catch (error) {
+          failures.push(
+            `${resultFile} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        }
+      }
+    }
+  }
+  for (const scenario of CAT05_NATIVE_OCR_SCENARIOS) {
+    for (const viewport of CAT05_NATIVE_OCR_VIEWPORTS) {
+      const key = `${scenario.id}::${viewport.id}`;
+      if (!scenarioKeys.has(key)) failures.push(`missing CAT05 scenario execution ${key}`);
+    }
+  }
+  for (const fixtureGroup of CAT05_NATIVE_OCR_FIXTURE_GROUPS) {
+    if (!bootstrapGroups.has(fixtureGroup)) {
+      failures.push(`missing CAT05 consent bootstrap ${fixtureGroup}`);
+    }
+  }
+
+  if (
+    !Array.isArray(summary?.groupBrowserAudits) ||
+    summary.groupBrowserAudits.length !== CAT05_NATIVE_OCR_FIXTURE_GROUPS.length
+  ) {
+    failures.push('groupBrowserAudits must contain exactly four fixture-group audits');
+  } else {
+    const auditedGroups = new Set();
+    for (const audit of summary.groupBrowserAudits) {
+      const fixtureGroup = String(audit?.fixtureGroup ?? '');
+      if (!CAT05_NATIVE_OCR_FIXTURE_GROUPS.includes(fixtureGroup)) {
+        failures.push(`groupBrowserAudits contains an unknown fixture group: ${fixtureGroup}`);
+        continue;
+      }
+      if (auditedGroups.has(fixtureGroup)) {
+        failures.push(`groupBrowserAudits contains duplicate fixture group ${fixtureGroup}`);
+      }
+      auditedGroups.add(fixtureGroup);
+      if (!Array.isArray(audit.browserFailures) || audit.browserFailures.length !== 0) {
+        failures.push(`groupBrowserAudits ${fixtureGroup} must contain zero browser failures`);
+      }
+      const artifact = `browser-events-${fixtureGroup}.json`;
+      validateArtifactBinding(
+        audit.evidenceBinding,
+        artifact,
+        expectedCat05ArtifactBindingMetadata(artifact),
+      );
+    }
+  }
+
+  requireTrackedFile('summary.json', 'CAT05 summary');
+  for (const artifact of expectedArtifacts) requireTrackedFile(artifact, `artifact ${artifact}`);
+  if (!isDeepStrictEqual(trackedFolderFiles, ['summary.json', ...expectedArtifacts].sort())) {
+    failures.push(
+      'Git-tracked CAT05 evidence must contain summary.json plus the exact 139 non-summary artifacts',
+    );
+  }
+  if (
+    summary?.artifactCount !== CAT05_NATIVE_OCR_ARTIFACT_COUNT ||
+    !isDeepStrictEqual(summary?.artifacts, expectedArtifacts)
+  ) {
+    failures.push(
+      'artifacts must enumerate the exact 139 CAT05 non-summary files in lexical order',
+    );
+  }
+  if (
+    !Array.isArray(summary?.screenshots) ||
+    summary.screenshots.length !== CAT05_NATIVE_OCR_SCREENSHOT_COUNT ||
+    !isDeepStrictEqual(summary.screenshots, expectedScreenshots)
+  ) {
+    failures.push('screenshots must enumerate the exact 55 CAT05 PNG artifacts in lexical order');
+  }
+  if (
+    !Array.isArray(summary?.artifactManifest) ||
+    summary.artifactManifest.length !== CAT05_NATIVE_OCR_ARTIFACT_COUNT
+  ) {
+    failures.push('artifactManifest must contain exactly 139 byte/hash records');
+  } else {
+    summary.artifactManifest.forEach((manifestEntry, index) => {
+      const artifact = expectedArtifacts[index];
+      if (
+        !hasExactObjectKeys(manifestEntry, ['bytes', 'path', 'sha256']) ||
+        manifestEntry.path !== artifact ||
+        !Number.isSafeInteger(manifestEntry.bytes) ||
+        manifestEntry.bytes < 1 ||
+        !/^[a-f0-9]{64}$/.test(String(manifestEntry.sha256 ?? ''))
+      ) {
+        failures.push(`artifactManifest entry ${index + 1} is not exactly bound to ${artifact}`);
+        return;
+      }
+      const bytes = artifactBytes(artifact);
+      if (
+        bytes &&
+        (manifestEntry.bytes !== bytes.length || manifestEntry.sha256 !== cat05Sha256(bytes))
+      ) {
+        failures.push(`artifactManifest hash/byte mismatch for ${artifact}`);
+      }
+    });
+  }
+
+  for (const artifact of expectedArtifacts) {
+    if (artifact.endsWith('.png')) {
+      const bytes = artifactBytes(artifact);
+      const expectedDimensions = cat05ExpectedScreenshotDimensions(artifact);
+      try {
+        const actualDimensions = parsePngDimensions(bytes);
+        if (!isDeepStrictEqual(actualDimensions, expectedDimensions)) {
+          failures.push(
+            `${artifact} dimensions must be ${expectedDimensions.width} x ${expectedDimensions.height}`,
+          );
+        }
+      } catch (error) {
+        failures.push(
+          `${artifact} is not a readable CAT05 PNG: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+      continue;
+    }
+    const bytes = artifactBytes(artifact);
+    if (bytes) {
+      failures.push(
+        ...cat05TextArtifactHygieneFailures(
+          artifact,
+          bytes,
+          artifact.endsWith('.log')
+            ? CAT05_NATIVE_OCR_MAX_EXPO_LOG_BYTES
+            : CAT05_NATIVE_OCR_MAX_DIAGNOSTIC_ARTIFACT_BYTES,
+        ),
+      );
+    }
+    if (!artifact.endsWith('.json')) continue;
+    let contents;
+    try {
+      contents = readJsonFile(`${folder}/${artifact}`);
+    } catch (error) {
+      failures.push(
+        `${artifact} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      continue;
+    }
+    failures.push(...cat05DiagnosticValueFailures(artifact, contents));
+    if (artifact === 'scope.json') continue;
+    const metadata = expectedCat05ArtifactBindingMetadata(artifact);
+    if (metadata === undefined) {
+      failures.push(`${artifact} has no reviewed CAT05 artifact-binding identity`);
+    } else {
+      validateArtifactBinding(contents?.evidenceBinding, artifact, metadata);
+    }
+    if (artifact.startsWith('browser-events-')) {
+      failures.push(...collectCat05BrowserEventFailures(artifact, contents));
+    }
+  }
+
+  if (requireTrackedFile('scope.json', 'CAT05 scope')) {
+    try {
+      const scope = readJsonFile(`${folder}/scope.json`);
+      const expectedScope = {
+        candidateNativeBuild: CAT05_NATIVE_OCR_CANDIDATE_BUILD,
+        evidenceKind: 'deterministic_expo_web_ocr_review_ui_state',
+        evidenceSchemaVersion: CAT05_NATIVE_OCR_SCHEMA_VERSION,
+        fixtureConfigurationSha256,
+        nativeDeviceProof: false,
+        proves: CAT05_NATIVE_OCR_PROVES,
+        doesNotProve: CAT05_NATIVE_OCR_LIMITATIONS.slice(1),
+        evidenceBinding: expectedBinding,
+        fixtureEnvironmentVariable: 'EXPO_PUBLIC_E2E_SHELF_OCR_RESULT',
+        fixtureTranscript: 'Aqua, Glycerin, Niacinamide, 水, Ниацинамид',
+        privacySourceContract,
+        runId: expectedBinding.runId,
+        scenarioMatrix: CAT05_NATIVE_OCR_SCENARIOS,
+        scenarioMatrixSha256,
+        sourceGitSha,
+        surface: 'Expo web / headless Chromium / development-only deterministic fixture',
+        viewportMatrix: CAT05_NATIVE_OCR_VIEWPORTS,
+        viewportMatrixSha256,
+        webFixtureBuild,
+      };
+      if (!isDeepStrictEqual(scope, expectedScope)) {
+        failures.push('scope.json does not match the exact CAT05 source/build/proof boundary');
+      }
+    } catch (error) {
+      failures.push(
+        `scope.json is not valid JSON: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  if (requireTrackedFile('report.md', 'CAT05 report')) {
+    try {
+      if (readTextFile(`${folder}/report.md`) !== buildExpectedCat05NativeOcrReport(summary)) {
+        failures.push('report.md does not match the exact CAT05 PASS report contract');
+      }
+    } catch (error) {
+      failures.push(
+        `report.md could not be read: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  if (!sourceGitState) {
+    failures.push('sourceGitSha consistency state is unavailable');
+  } else {
+    if (sourceGitState.sourceGitSha !== sourceGitSha) {
+      failures.push('sourceGitSha consistency state does not match summary.sourceGitSha');
+    }
+    if (sourceGitState.commitExists !== true) {
+      failures.push('sourceGitSha does not identify a local Git commit');
+    }
+    if (sourceGitState.isAncestorOfHead !== true) {
+      failures.push('sourceGitSha must be an ancestor of the manifest HEAD');
+    }
+    if (sourceGitState.runnerMatchesSource !== true) {
+      failures.push('CAT05 runner source does not match the recorded sourceGitSha');
+    }
+    const allowedGeneratedPaths = new Set([
+      'docs/e2e/generated/human-e2e-manifest.json',
+      'docs/e2e/generated/human-e2e-manifest.md',
+    ]);
+    const sourceChangeAllowed = (path) => {
+      const normalized = normalizeRepoPath(path);
+      return (
+        normalized.startsWith(folderPrefix) ||
+        cat05DocumentationOnlyPath(normalized) ||
+        allowedGeneratedPaths.has(normalized) ||
+        ignoredGeneratedOutputPath(normalized)
+      );
+    };
+    const laterSourceChanges = (sourceGitState.changedRepoFilesSinceSource ?? []).filter(
+      (path) => !sourceChangeAllowed(path),
+    );
+    if (laterSourceChanges.length > 0) {
+      failures.push(`sourceGitSha predates later source changes: ${laterSourceChanges.join(', ')}`);
+    }
+    const dirtySourceChanges = (sourceGitState.dirtyTrackedRepoFiles ?? []).filter(
+      (path) => !sourceChangeAllowed(path),
+    );
+    if (dirtySourceChanges.length > 0) {
+      failures.push(
+        `tracked source files changed after the recorded sourceGitSha: ${dirtySourceChanges.join(', ')}`,
+      );
+    }
+    const untrackedSourceChanges = collectDisallowedUntrackedRepoFiles(
+      sourceGitState.untrackedRepoFiles ?? [],
+      {
+        allowedExactPaths: allowedGeneratedPaths,
+        allowedPrefixes: [folderPrefix, 'docs/'],
+      },
+    );
+    if (untrackedSourceChanges.length > 0) {
+      failures.push(
+        `nonignored untracked source is not bound to sourceGitSha: ${untrackedSourceChanges.join(', ')}`,
       );
     }
   }
@@ -1141,6 +2471,583 @@ function runCat04CatalogRecoveryContractSmoke() {
   );
 }
 
+function runCat05NativeOcrReviewContractSmoke() {
+  const folder = 'test-results/human-e2e/2099-01-01/cat05-native-ocr-web-ui-current';
+  const timestamp = '2099-01-01T00:00:00.000Z';
+  const sourceGitSha = 'a'.repeat(40);
+  const runId = '00000000-0000-4000-8000-000000000001';
+  const fixtureConfigurationSha256 = 'b'.repeat(64);
+  const scenarioMatrixSha256 = cat05Sha256Json(CAT05_NATIVE_OCR_SCENARIOS);
+  const viewportMatrixSha256 = cat05Sha256Json(CAT05_NATIVE_OCR_VIEWPORTS);
+  const webFixtureBuild = {
+    buildId: cat05Sha256Json({
+      evidenceSchemaVersion: CAT05_NATIVE_OCR_SCHEMA_VERSION,
+      fixtureConfigurationSha256,
+      scenarioMatrixSha256,
+      sourceGitSha,
+      viewportMatrixSha256,
+    }),
+    profile: 'development-only-deterministic-expo-web',
+  };
+  const binding = {
+    candidateNativeBuild: { ...CAT05_NATIVE_OCR_CANDIDATE_BUILD },
+    evidenceSchemaVersion: CAT05_NATIVE_OCR_SCHEMA_VERSION,
+    expectedSourceGitSha: sourceGitSha,
+    fixtureConfigurationSha256,
+    runId,
+    scenarioMatrixSha256,
+    sourceGitSha,
+    viewportMatrixSha256,
+    webFixtureBuild,
+  };
+  const privacySourceContract = {
+    assertionIds: [...CAT05_NATIVE_OCR_PRIVACY_ASSERTIONS],
+    files: CAT05_NATIVE_OCR_PRIVACY_FILES.map((path, index) => ({
+      bytes: index + 1,
+      path,
+      sha256: String(index + 1).repeat(64),
+    })),
+    nativeDeviceProof: false,
+    proofKind: 'source-assertions-only',
+  };
+  const artifactBinding = (artifact) => ({
+    ...binding,
+    ...expectedCat05ArtifactBindingMetadata(artifact),
+  });
+  const results = [];
+  const groupBrowserAudits = [];
+  const resultByFile = new Map();
+  const bootstrapViewport = CAT05_NATIVE_OCR_VIEWPORTS[1];
+
+  for (const fixtureGroup of CAT05_NATIVE_OCR_FIXTURE_GROUPS) {
+    const prefix = `bootstrap-${fixtureGroup}-${bootstrapViewport.id}`;
+    const resultFile = `${prefix}-result.json`;
+    const result = {
+      artifactPrefix: prefix,
+      browserFailures: [],
+      completedAt: timestamp,
+      evidenceBinding: artifactBinding(resultFile),
+      error: null,
+      fixtureGroup,
+      nativeDeviceProof: false,
+      startedAt: timestamp,
+      surface: 'expo-web',
+      verdict: 'pass',
+      viewport: { ...bootstrapViewport },
+      endUrl: 'http://localhost:8620/shelf/ocr',
+      kind: 'consent-bootstrap',
+    };
+    results.push(result);
+    resultByFile.set(resultFile, result);
+    groupBrowserAudits.push({
+      browserFailures: [],
+      evidenceBinding: artifactBinding(`browser-events-${fixtureGroup}.json`),
+      fixtureGroup,
+    });
+    for (const scenario of CAT05_NATIVE_OCR_SCENARIOS.filter(
+      ({ groupId }) => groupId === fixtureGroup,
+    )) {
+      for (const viewport of CAT05_NATIVE_OCR_VIEWPORTS) {
+        const scenarioPrefix = `${scenario.id}-${viewport.id}`;
+        const scenarioResultFile = `${scenarioPrefix}-result.json`;
+        const scenarioResult = {
+          artifactPrefix: scenarioPrefix,
+          browserFailures: [],
+          completedAt: timestamp,
+          evidenceBinding: artifactBinding(scenarioResultFile),
+          error: null,
+          fixture: scenario.fixture,
+          fixtureGroup,
+          kind: 'scenario',
+          nativeDeviceProof: false,
+          scenarioId: scenario.id,
+          startedAt: timestamp,
+          surface: 'expo-web-deterministic-ui-fixture',
+          verdict: 'pass',
+          viewport: { ...viewport },
+          endUrl: 'http://localhost:8620/shelf/manual',
+        };
+        results.push(scenarioResult);
+        resultByFile.set(scenarioResultFile, scenarioResult);
+      }
+    }
+  }
+
+  const artifacts = expectedCat05NativeOcrArtifacts();
+  const summary = {
+    artifactCount: CAT05_NATIVE_OCR_ARTIFACT_COUNT,
+    artifactManifest: [],
+    artifacts,
+    browserFailureCount: 0,
+    browserPath: 'chrome.exe',
+    candidateNativeBuild: { ...CAT05_NATIVE_OCR_CANDIDATE_BUILD },
+    completedAt: timestamp,
+    evidenceBinding: binding,
+    evidenceSchemaVersion: CAT05_NATIVE_OCR_SCHEMA_VERSION,
+    expectedBootstrapCount: 4,
+    expectedExecutionCount: 15,
+    fixtureGroups: [...CAT05_NATIVE_OCR_FIXTURE_GROUPS],
+    groupBrowserAudits,
+    limitations: [...CAT05_NATIVE_OCR_LIMITATIONS],
+    nativeDeviceProof: false,
+    passedBootstrapCount: 4,
+    passedExecutionCount: 15,
+    privacySourceContract,
+    results,
+    runId,
+    scenarioMatrix: CAT05_NATIVE_OCR_SCENARIOS.map((scenario) => ({ ...scenario })),
+    sourceGitSha,
+    startedAt: timestamp,
+    surface: 'Expo web / deterministic development-only OCR review fixture',
+    verdict: 'pass',
+    viewports: CAT05_NATIVE_OCR_VIEWPORTS.map((viewport) => ({ ...viewport })),
+    webFixtureBuild,
+    screenshots: artifacts.filter((artifact) => artifact.endsWith('.png')),
+  };
+  const scope = {
+    candidateNativeBuild: { ...CAT05_NATIVE_OCR_CANDIDATE_BUILD },
+    evidenceKind: 'deterministic_expo_web_ocr_review_ui_state',
+    evidenceSchemaVersion: CAT05_NATIVE_OCR_SCHEMA_VERSION,
+    fixtureConfigurationSha256,
+    nativeDeviceProof: false,
+    proves: [...CAT05_NATIVE_OCR_PROVES],
+    doesNotProve: CAT05_NATIVE_OCR_LIMITATIONS.slice(1),
+    evidenceBinding: binding,
+    fixtureEnvironmentVariable: 'EXPO_PUBLIC_E2E_SHELF_OCR_RESULT',
+    fixtureTranscript: 'Aqua, Glycerin, Niacinamide, 水, Ниацинамид',
+    privacySourceContract,
+    runId,
+    scenarioMatrix: CAT05_NATIVE_OCR_SCENARIOS.map((scenario) => ({ ...scenario })),
+    scenarioMatrixSha256,
+    sourceGitSha,
+    surface: 'Expo web / headless Chromium / development-only deterministic fixture',
+    viewportMatrix: CAT05_NATIVE_OCR_VIEWPORTS.map((viewport) => ({ ...viewport })),
+    viewportMatrixSha256,
+    webFixtureBuild,
+  };
+  const files = new Map();
+  const writeJsonFixture = (name, value) => {
+    files.set(name, Buffer.from(`${JSON.stringify(value, null, 2)}\n`));
+  };
+  const pngFixtures = new Map();
+  const pngFixture = ({ height, width }) => {
+    const key = `${width}x${height}`;
+    if (pngFixtures.has(key)) return pngFixtures.get(key);
+    const bytes = PNG.sync.write({
+      data: Buffer.alloc(width * height * 4, 255),
+      height,
+      width,
+    });
+    pngFixtures.set(key, bytes);
+    return bytes;
+  };
+
+  for (const artifact of artifacts) {
+    if (artifact === 'report.md' || artifact === 'scope.json') continue;
+    if (artifact.endsWith('.png')) {
+      files.set(artifact, pngFixture(cat05ExpectedScreenshotDimensions(artifact)));
+    } else if (artifact.endsWith('.log')) {
+      files.set(artifact, Buffer.from('Expo fixture ready at http://localhost:8620\n'));
+    } else if (resultByFile.has(artifact)) {
+      writeJsonFixture(artifact, resultByFile.get(artifact));
+    } else if (artifact.startsWith('browser-events-')) {
+      const browserEvents = [
+        {
+          documentURL: 'http://localhost:8620/shelf/ocr',
+          method: 'Network.requestWillBeSent',
+          observedAt: timestamp,
+          requestId: 'request-1',
+          requestMethod: 'GET',
+          type: 'Document',
+          url: 'http://localhost:8620/shelf/ocr',
+        },
+        {
+          method: 'Network.responseReceived',
+          mimeType: 'text/html',
+          observedAt: timestamp,
+          requestId: 'request-1',
+          status: 200,
+          type: 'Document',
+          url: 'http://localhost:8620/shelf/ocr',
+        },
+        {
+          method: 'Network.webSocketCreated',
+          observedAt: timestamp,
+          params: { requestId: 'socket-1', url: 'ws://localhost:8620/hot' },
+        },
+      ];
+      writeJsonFixture(artifact, {
+        evidenceBinding: artifactBinding(artifact),
+        events: browserEvents,
+        retention: {
+          ignoredEventCount: 1,
+          inputEventCount: browserEvents.length + 1,
+          limits: {
+            maxRetainedBytes: CAT05_NATIVE_OCR_MAX_BROWSER_EVENT_BYTES,
+            maxRetainedEvents: CAT05_NATIVE_OCR_MAX_RETAINED_BROWSER_EVENTS,
+          },
+          retainedEventCount: browserEvents.length,
+          sanitizedBytes: Buffer.byteLength(JSON.stringify(browserEvents), 'utf8'),
+          truncated: false,
+        },
+      });
+    } else {
+      const metadata = expectedCat05ArtifactBindingMetadata(artifact);
+      writeJsonFixture(artifact, {
+        issues: [],
+        url: 'http://localhost:8620/shelf/ocr',
+        viewport: metadata.viewport
+          ? { height: metadata.viewport.height, width: metadata.viewport.width }
+          : null,
+        evidenceBinding: artifactBinding(artifact),
+      });
+    }
+  }
+  writeJsonFixture('scope.json', scope);
+  files.set('report.md', Buffer.from(buildExpectedCat05NativeOcrReport(summary)));
+  summary.artifactManifest = artifacts.map((artifact) => ({
+    bytes: files.get(artifact).length,
+    path: artifact,
+    sha256: cat05Sha256(files.get(artifact)),
+  }));
+  writeJsonFixture('summary.json', summary);
+
+  const sourceGitState = {
+    changedRepoFilesSinceSource: [],
+    commitExists: true,
+    dirtyTrackedRepoFiles: [],
+    isAncestorOfHead: true,
+    privacySourceFiles: privacySourceContract.files.map((file) => ({
+      ...file,
+      currentBytes: file.bytes,
+      currentSha256: file.sha256,
+    })),
+    runnerMatchesSource: true,
+    sourceGitSha,
+    untrackedRepoFiles: [],
+  };
+  const trackedRepoFiles = new Set([...files.keys()].map((file) => `${folder}/${file}`));
+  const validate = (candidate = summary, overrides = {}) => {
+    const fixtureFiles = overrides.files ?? files;
+    const tracked = overrides.trackedRepoFiles ?? trackedRepoFiles;
+    return collectCat05NativeOcrReviewFailures({
+      folder,
+      summary: candidate,
+      sourceGitState: overrides.sourceGitState ?? sourceGitState,
+      trackedRepoFiles: tracked,
+      fileExists: (path) => fixtureFiles.has(path.slice(`${folder}/`.length)),
+      readBytesFile: (path) => fixtureFiles.get(path.slice(`${folder}/`.length)),
+      readJsonFile: (path) =>
+        JSON.parse(fixtureFiles.get(path.slice(`${folder}/`.length)).toString('utf8')),
+      readTextFile: (path) => fixtureFiles.get(path.slice(`${folder}/`.length)).toString('utf8'),
+    });
+  };
+  const assert = (condition, message) => {
+    if (!condition) throw new Error(message);
+  };
+
+  const completeFailures = validate();
+  assert(
+    completeFailures.length === 0,
+    `complete tracked CAT05 evidence should pass: ${completeFailures.join('; ')}`,
+  );
+
+  const forgedPrivacyContract = structuredClone(summary);
+  forgedPrivacyContract.privacySourceContract.files[0].sha256 = '0'.repeat(64);
+  assert(
+    validate(forgedPrivacyContract).some((failure) =>
+      failure.includes('do not match the recorded sourceGitSha'),
+    ),
+    'privacy source hashes must be recomputed from the recorded source commit',
+  );
+  const changedCurrentPrivacyState = structuredClone(sourceGitState);
+  changedCurrentPrivacyState.privacySourceFiles[0].currentSha256 = '0'.repeat(64);
+  assert(
+    validate(summary, { sourceGitState: changedCurrentPrivacyState }).some((failure) =>
+      failure.includes('current CAT05 privacy source does not match'),
+    ),
+    'current privacy source bytes must still match the recorded source commit',
+  );
+
+  const hostPathSummary = structuredClone(summary);
+  hostPathSummary.browserPath = 'C:\\Users\\person\\AppData\\chrome.exe';
+  assert(
+    validate(hostPathSummary).some(
+      (failure) =>
+        failure.includes('browser executable basename') ||
+        failure.includes('contains a user-profile'),
+    ),
+    'summary browser identity must not expose a host path',
+  );
+
+  const nativeClaim = structuredClone(summary);
+  nativeClaim.nativeDeviceProof = true;
+  assert(
+    validate(nativeClaim).includes(
+      'nativeDeviceProof must be false for the CAT05 Expo-web compatibility gate',
+    ),
+    'CAT05 Expo-web evidence must never claim native-device proof',
+  );
+
+  const changedManifest = structuredClone(summary);
+  changedManifest.artifactManifest[0].sha256 = '0'.repeat(64);
+  assert(
+    validate(changedManifest).some((failure) => failure.includes('hash/byte mismatch')),
+    'artifact bytes and hashes must be verified against committed evidence',
+  );
+
+  const changedBindingFiles = new Map(files);
+  const snapshotArtifact = artifacts.find(
+    (artifact) => artifact.endsWith('-initial.json') && !artifact.startsWith('bootstrap-'),
+  );
+  const changedSnapshot = JSON.parse(changedBindingFiles.get(snapshotArtifact).toString('utf8'));
+  changedSnapshot.evidenceBinding.runId = '00000000-0000-4000-8000-000000000002';
+  changedBindingFiles.set(snapshotArtifact, Buffer.from(`${JSON.stringify(changedSnapshot)}\n`));
+  assert(
+    validate(summary, { files: changedBindingFiles }).some((failure) =>
+      failure.includes(`${snapshotArtifact} evidenceBinding does not match`),
+    ),
+    'every JSON artifact must remain bound to the exact CAT05 run',
+  );
+
+  const externalNetworkFiles = new Map(files);
+  const browserArtifact = 'browser-events-recognized.json';
+  const externalBrowserEvents = JSON.parse(externalNetworkFiles.get(browserArtifact).toString());
+  externalBrowserEvents.events[0].url = 'https://api.example.com/private-label';
+  externalNetworkFiles.set(
+    browserArtifact,
+    Buffer.from(`${JSON.stringify(externalBrowserEvents)}\n`),
+  );
+  assert(
+    validate(summary, { files: externalNetworkFiles }).some((failure) =>
+      failure.includes('contains a disallowed https: URL literal'),
+    ),
+    'external HTTPS literals must fail CAT05 browser-event evidence',
+  );
+
+  const inconsistentRetentionFiles = new Map(files);
+  const inconsistentRetention = JSON.parse(
+    inconsistentRetentionFiles.get(browserArtifact).toString(),
+  );
+  inconsistentRetention.retention.retainedEventCount = 0;
+  inconsistentRetentionFiles.set(
+    browserArtifact,
+    Buffer.from(`${JSON.stringify(inconsistentRetention)}\n`),
+  );
+  assert(
+    validate(summary, { files: inconsistentRetentionFiles }).some((failure) =>
+      failure.includes('retention event counts are inconsistent'),
+    ),
+    'browser-event retention counts must be recomputed from stored events',
+  );
+
+  const browserFailureFiles = new Map(files);
+  const browserFailureEvidence = JSON.parse(browserFailureFiles.get(browserArtifact).toString());
+  browserFailureEvidence.events.push({
+    canceled: false,
+    errorText: 'net::ERR_FAILED',
+    method: 'Network.loadingFailed',
+    observedAt: timestamp,
+    requestId: 'request-1',
+    type: 'Document',
+  });
+  browserFailureEvidence.retention.inputEventCount += 1;
+  browserFailureEvidence.retention.retainedEventCount += 1;
+  browserFailureEvidence.retention.sanitizedBytes = Buffer.byteLength(
+    JSON.stringify(browserFailureEvidence.events),
+    'utf8',
+  );
+  browserFailureFiles.set(
+    browserArtifact,
+    Buffer.from(`${JSON.stringify(browserFailureEvidence)}\n`),
+  );
+  assert(
+    validate(summary, { files: browserFailureFiles }).some((failure) =>
+      failure.includes('disallowed browser failure method Network.loadingFailed'),
+    ),
+    'stored browser failures must invalidate a zero-failure summary',
+  );
+
+  const emptyNetworkFiles = new Map(files);
+  const emptyNetworkEvidence = JSON.parse(emptyNetworkFiles.get(browserArtifact).toString());
+  emptyNetworkEvidence.events = [];
+  emptyNetworkEvidence.retention = {
+    ignoredEventCount: 0,
+    inputEventCount: 0,
+    limits: {
+      maxRetainedBytes: CAT05_NATIVE_OCR_MAX_BROWSER_EVENT_BYTES,
+      maxRetainedEvents: CAT05_NATIVE_OCR_MAX_RETAINED_BROWSER_EVENTS,
+    },
+    retainedEventCount: 0,
+    sanitizedBytes: 2,
+    truncated: false,
+  };
+  emptyNetworkFiles.set(browserArtifact, Buffer.from(`${JSON.stringify(emptyNetworkEvidence)}\n`));
+  assert(
+    validate(summary, { files: emptyNetworkFiles }).some((failure) =>
+      failure.includes('nonzero localhost request and response coverage'),
+    ),
+    'an empty retained browser trace must not prove local network behavior',
+  );
+
+  const leakedPathFiles = new Map(files);
+  leakedPathFiles.set(
+    'expo-recognized.log',
+    Buffer.from('C:\\Users\\person\\Desktop\\onSkin\\private.log\n'),
+  );
+  assert(
+    validate(summary, { files: leakedPathFiles }).some((failure) =>
+      failure.includes('contains a user-profile'),
+    ),
+    'user-profile paths must fail CAT05 diagnostic evidence',
+  );
+
+  const sensitiveSnapshotFiles = new Map(files);
+  const sensitiveSnapshot = JSON.parse(sensitiveSnapshotFiles.get(snapshotArtifact).toString());
+  sensitiveSnapshot.privatePhoto = 'data:image/jpeg;base64,raw-photo-bytes';
+  sensitiveSnapshotFiles.set(
+    snapshotArtifact,
+    Buffer.from(`${JSON.stringify(sensitiveSnapshot)}\n`),
+  );
+  assert(
+    validate(summary, { files: sensitiveSnapshotFiles }).some((failure) =>
+      failure.includes('contains a sensitive URI literal'),
+    ),
+    'every JSON snapshot must reject sensitive photo URI schemes',
+  );
+
+  const credentialLogFiles = new Map(files);
+  credentialLogFiles.set(
+    'expo-recognized.log',
+    Buffer.from('NPM_TOKEN=must-not-survive Authorization: Basic dXNlcjpwYXNz\n'),
+  );
+  const credentialFailures = validate(summary, { files: credentialLogFiles });
+  assert(
+    credentialFailures.some(
+      (failure) =>
+        failure.includes('authorization credential') ||
+        failure.includes('credential or token value'),
+    ),
+    'environment tokens and HTTP authorization credentials must be rejected',
+  );
+
+  const queryLeakFiles = new Map(files);
+  const queryLeak = JSON.parse(queryLeakFiles.get(snapshotArtifact).toString());
+  queryLeak.url = 'http://localhost:8620/shelf/ocr?token=must-not-survive';
+  queryLeakFiles.set(snapshotArtifact, Buffer.from(`${JSON.stringify(queryLeak)}\n`));
+  assert(
+    validate(summary, { files: queryLeakFiles }).some((failure) =>
+      failure.includes('unredacted URL query value'),
+    ),
+    'localhost URLs must not retain query values',
+  );
+
+  const payloadLeakFiles = new Map(files);
+  payloadLeakFiles.set('expo-recognized.log', Buffer.from(`${'A'.repeat(200)}\n`));
+  assert(
+    validate(summary, { files: payloadLeakFiles }).some((failure) =>
+      failure.includes('long base64-like payload'),
+    ),
+    'long base64-like payloads must not survive in textual evidence',
+  );
+
+  const oversizedLogFiles = new Map(files);
+  oversizedLogFiles.set(
+    'expo-recognized.log',
+    Buffer.alloc(CAT05_NATIVE_OCR_MAX_EXPO_LOG_BYTES + 1, 120),
+  );
+  assert(
+    validate(summary, { files: oversizedLogFiles }).some((failure) =>
+      failure.includes(`exceeds ${CAT05_NATIVE_OCR_MAX_EXPO_LOG_BYTES} reviewed bytes`),
+    ),
+    'oversized diagnostic logs must fail the evidence contract',
+  );
+
+  const controlCharacterFiles = new Map(files);
+  const controlCharacterSnapshot = JSON.parse(
+    controlCharacterFiles.get(snapshotArtifact).toString(),
+  );
+  controlCharacterSnapshot.note = '\u0001';
+  controlCharacterFiles.set(
+    snapshotArtifact,
+    Buffer.from(`${JSON.stringify(controlCharacterSnapshot)}\n`),
+  );
+  assert(
+    validate(summary, { files: controlCharacterFiles }).some((failure) =>
+      failure.includes('disallowed control character'),
+    ),
+    'control characters inside parsed JSON strings must fail diagnostic hygiene',
+  );
+
+  const corruptPngFiles = new Map(files);
+  const corruptPngArtifact = summary.screenshots[0];
+  corruptPngFiles.set(corruptPngArtifact, corruptPngFiles.get(corruptPngArtifact).subarray(0, 24));
+  assert(
+    validate(summary, { files: corruptPngFiles }).some((failure) =>
+      failure.includes('is not a readable CAT05 PNG'),
+    ),
+    'truncated header-only PNG evidence must fail complete decode validation',
+  );
+
+  const duplicateScenario = structuredClone(summary);
+  const scenarioIndexes = duplicateScenario.results
+    .map((result, index) => (result.kind === 'scenario' ? index : null))
+    .filter((index) => index !== null);
+  duplicateScenario.results[scenarioIndexes[1]] = duplicateScenario.results[scenarioIndexes[0]];
+  const duplicateFailures = validate(duplicateScenario);
+  assert(
+    duplicateFailures.some((failure) => failure.includes('duplicate CAT05 scenario')) &&
+      duplicateFailures.some((failure) => failure.includes('missing CAT05 scenario')),
+    'CAT05 scenario coverage must be exact and duplicate-free',
+  );
+
+  const reducedTracked = new Set(trackedRepoFiles);
+  reducedTracked.delete(`${folder}/${summary.screenshots[0]}`);
+  assert(
+    validate(summary, { trackedRepoFiles: reducedTracked }).some((failure) =>
+      failure.includes('CAT05 evidence file is not Git-tracked'),
+    ),
+    'all CAT05 artifacts must be Git-tracked',
+  );
+
+  assert(
+    validate(summary, {
+      sourceGitState: { ...sourceGitState, runnerMatchesSource: false },
+    }).includes('CAT05 runner source does not match the recorded sourceGitSha'),
+    'CAT05 runner drift must invalidate source-bound evidence',
+  );
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        untrackedRepoFiles: ['apps/mobile/src/app/shelf/untracked-ocr.tsx'],
+      },
+    }).some((failure) => failure.includes('nonignored untracked source is not bound')),
+    'untracked app source must invalidate CAT05 evidence',
+  );
+
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        changedRepoFilesSinceSource: ['docs/hugeToDo/CAT-05-closeout.md'],
+        dirtyTrackedRepoFiles: ['docs/PROGRESS.md'],
+        untrackedRepoFiles: ['docs/e2e/cat05-review-notes.md'],
+      },
+    }).length === 0,
+    'documentation-only CAT05 closeout changes must not stale runtime evidence',
+  );
+  assert(
+    validate(summary, {
+      sourceGitState: {
+        ...sourceGitState,
+        changedRepoFilesSinceSource: ['scripts/docs/readiness-status-audit.mjs'],
+      },
+    }).some((failure) => failure.includes('sourceGitSha predates later source changes')),
+    'script changes must still invalidate CAT05 source-bound evidence',
+  );
+}
+
 if (args.has('--provenance-smoke')) {
   try {
     runEvidenceProvenanceSmoke();
@@ -1164,6 +3071,21 @@ if (args.has('--cat04-contract-smoke')) {
   } catch (error) {
     console.error(
       `FAIL CAT04 catalog-recovery evidence contract smoke: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+}
+
+if (args.has('--cat05-contract-smoke')) {
+  try {
+    runCat05NativeOcrReviewContractSmoke();
+    console.log('PASS CAT05 native-OCR review evidence contract smoke');
+    process.exit(0);
+  } catch (error) {
+    console.error(
+      `FAIL CAT05 native-OCR review evidence contract smoke: ${
         error instanceof Error ? error.message : String(error)
       }`,
     );
@@ -1231,6 +3153,92 @@ function inspectCat04SourceGitState(sourceGitSha) {
   }
 
   const runnerPath = 'scripts/e2e/cat04-catalog-recovery-audit.mjs';
+  try {
+    commandRequired('git', ['cat-file', '-e', `${sourceGitSha}:${runnerPath}`]);
+    execFileSync('git', ['diff', '--quiet', sourceGitSha, '--', runnerPath], {
+      cwd: root,
+      stdio: 'ignore',
+    });
+    state.runnerMatchesSource = true;
+  } catch {
+    state.runnerMatchesSource = false;
+  }
+
+  try {
+    state.changedRepoFilesSinceSource = commandLines('git', [
+      'diff',
+      '--name-only',
+      `${sourceGitSha}..HEAD`,
+    ]);
+  } catch {
+    state.changedRepoFilesSinceSource = ['<unable-to-compare-source-sha>'];
+  }
+
+  try {
+    state.dirtyTrackedRepoFiles = [
+      ...commandLines('git', ['diff', '--name-only']),
+      ...commandLines('git', ['diff', '--cached', '--name-only']),
+    ].filter((path, index, paths) => paths.indexOf(path) === index);
+  } catch {
+    state.dirtyTrackedRepoFiles = ['<unable-to-enumerate-dirty-files>'];
+  }
+
+  try {
+    state.untrackedRepoFiles = listGitUntrackedRepoFiles();
+  } catch {
+    state.untrackedRepoFiles = ['<unable-to-enumerate-untracked-files>'];
+  }
+
+  return state;
+}
+
+function inspectCat05SourceGitState(sourceGitSha) {
+  const state = {
+    changedRepoFilesSinceSource: [],
+    commitExists: false,
+    dirtyTrackedRepoFiles: [],
+    isAncestorOfHead: false,
+    privacySourceFiles: [],
+    runnerMatchesSource: false,
+    sourceGitSha,
+    untrackedRepoFiles: [],
+  };
+  if (!/^[a-f0-9]{40}$/.test(sourceGitSha)) return state;
+
+  try {
+    commandRequired('git', ['cat-file', '-e', `${sourceGitSha}^{commit}`]);
+    state.commitExists = true;
+  } catch {
+    return state;
+  }
+
+  try {
+    commandRequired('git', ['merge-base', '--is-ancestor', sourceGitSha, 'HEAD']);
+    state.isAncestorOfHead = true;
+  } catch {
+    state.isAncestorOfHead = false;
+  }
+
+  try {
+    state.privacySourceFiles = CAT05_NATIVE_OCR_PRIVACY_FILES.map((repoPath) => {
+      const committedBytes = execFileSync('git', ['show', `${sourceGitSha}:${repoPath}`], {
+        cwd: root,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+      const currentBytes = readFileSync(abs(repoPath));
+      return {
+        bytes: committedBytes.length,
+        currentBytes: currentBytes.length,
+        currentSha256: cat05Sha256(currentBytes),
+        path: repoPath,
+        sha256: cat05Sha256(committedBytes),
+      };
+    });
+  } catch {
+    state.privacySourceFiles = [];
+  }
+
+  const runnerPath = 'scripts/e2e/cat05-native-ocr-ui-audit.mjs';
   try {
     commandRequired('git', ['cat-file', '-e', `${sourceGitSha}:${runnerPath}`]);
     execFileSync('git', ['diff', '--quiet', sourceGitSha, '--', runnerPath], {
@@ -1597,6 +3605,15 @@ if (!cat04CatalogRecoveryEvidenceDate) {
   console.error('FAIL Missing CAT04 catalog-recovery Expo-web evidence.');
   process.exit(1);
 }
+const cat05NativeOcrReviewEvidenceDate = CAT05_NATIVE_OCR_EVIDENCE_DATE;
+if (
+  !exists(
+    `test-results/human-e2e/${cat05NativeOcrReviewEvidenceDate}/cat05-native-ocr-web-ui-current/summary.json`,
+  )
+) {
+  console.error('FAIL Missing 2026-07-18 CAT05 native-OCR review Expo-web evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -1622,6 +3639,7 @@ const latestManifestEvidenceDate = [
   accountDeletionRecoveryEvidenceDate,
   healthConsentWithdrawalEvidenceDate,
   cat04CatalogRecoveryEvidenceDate,
+  cat05NativeOcrReviewEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -1971,6 +3989,18 @@ const gates = [
       'Fifteen deterministic catalog search, barcode, permission, reporting, manual-entry, offline, and recovery scenarios plus six consent bootstraps pass exactly once at 375 x 667, 390 x 844, and 430 x 932 with tracked result and screenshot provenance; native camera, physical-iPhone, restart-to-ready, staging, accessibility, legal, and App Store gates remain separate.',
   },
   {
+    id: 'cat05-native-ocr-review-supported-phone',
+    title: 'CAT05 native OCR review Expo-web pass',
+    kind: 'cat05-native-ocr-review',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${cat05NativeOcrReviewEvidenceDate}/cat05-native-ocr-web-ui-current`,
+    evidence: 'summary.json',
+    requiredFiles: ['report.md', 'scope.json'],
+    expected:
+      'This dated, source-bound checkpoint records five deterministic OCR review and manual-recovery scenarios exactly once at 375 x 667, 390 x 844, and 430 x 932, with four clean consent bootstraps and exact source/build/artifact provenance; later runtime changes require new evidence, and Apple Vision, camera, native privacy, physical-iPhone, accessibility, legal, and App Store gates remain separate.',
+  },
+  {
     id: 'progress-timelapse-supported-phone',
     title: '390 x 844 local Progress time-lapse and reduced-motion pass',
     kind: 'summary-status',
@@ -2246,6 +4276,7 @@ const warnings = [
   'The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance.',
   'The health-consent withdrawal gate uses credential-free Expo web and placeholder Supabase configuration; it does not prove hosted cleanup, Storage deletion, worker scheduling, physical-iPhone lifecycle or accessibility behavior, professional legal approval, or App Store acceptance.',
   'The CAT04 catalog-recovery gate uses deterministic Expo web fixtures; it does not prove native camera hardware or permission sheets, a restart-to-ready offline worker cycle, hosted catalog/reporting behavior, physical-iPhone accessibility, professional legal approval, or App Store acceptance.',
+  'The CAT05 native-OCR review gate is a dated, source-bound checkpoint using deterministic Expo web fixtures and source assertions; it must be regenerated after later runtime changes and does not execute Apple Vision, a camera, an iOS binary, native cleanup/privacy behavior, physical-iPhone accessibility, professional legal approval, or App Store acceptance.',
 ];
 const blockers = [];
 let trackedRepoFiles;
@@ -2392,6 +4423,23 @@ const gateResults = gates.map((gate) => {
           failureCount === 0
             ? '45 scenario executions and 18 explicit-consent bootstraps passed exactly once across the three supported Expo-web phone viewports with clean browser logs and tracked result, report, snapshot, and screenshot provenance.'
             : `${failureCount} CAT04 evidence-contract failure${failureCount === 1 ? '' : 's'}: ${requirementFailures.join('; ')}.`;
+      } else if (gate.kind === 'cat05-native-ocr-review') {
+        const summary = readJson(evidencePath);
+        requirementFailures.push(
+          ...collectCat05NativeOcrReviewFailures({
+            folder: gate.folder,
+            summary,
+            sourceGitState: inspectCat05SourceGitState(String(summary?.sourceGitSha ?? '')),
+            trackedRepoFiles,
+          }),
+        );
+        failureCount = requirementFailures.length;
+        verdict = failureCount === 0 ? 'pass' : 'fail';
+        status = verdict;
+        detail =
+          failureCount === 0
+            ? 'This dated source-bound checkpoint has 15 scenario executions and 4 consent bootstraps exactly once across the three supported Expo-web phone viewports with zero browser failures and exact tracked source/build/result/report/scope/snapshot/screenshot byte provenance; nativeDeviceProof remains false and later runtime changes require a new run.'
+            : `${failureCount} CAT05 evidence-contract failure${failureCount === 1 ? '' : 's'}: ${requirementFailures.join('; ')}.`;
       } else if (gate.kind === 'report-contract') {
         const report = readFileSync(abs(evidencePath), 'utf8');
         requirementFailures.push(
@@ -2577,6 +4625,7 @@ const gateResults = gates.map((gate) => {
         requirementFailures.length > 0 &&
         gate.kind !== 'summary-status' &&
         gate.kind !== 'cat04-catalog-recovery' &&
+        gate.kind !== 'cat05-native-ocr-review' &&
         gate.kind !== 'report-contract' &&
         gate.kind !== 'required-surface-honesty'
       ) {
@@ -2603,7 +4652,8 @@ const gateResults = gates.map((gate) => {
     gate.requiredViewports ||
     gate.requiredVerified ||
     gate.requiredReportText ||
-    gate.kind === 'cat04-catalog-recovery'
+    gate.kind === 'cat04-catalog-recovery' ||
+    gate.kind === 'cat05-native-ocr-review'
       ? { requirementFailures }
       : {}),
     folderExists,

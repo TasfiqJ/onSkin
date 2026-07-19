@@ -1153,10 +1153,21 @@
     },
     {
       "id": "CAT-05",
-      "status": "not_started",
-      "blockedBy": ["CAT-04"],
-      "nextAction": "Complete and capture acceptance evidence: Implement real iOS-native OCR with editable confidence-aware output",
-      "evidenceRefs": []
+      "status": "in_progress",
+      "blockedBy": ["CAT-04", "H-07", "H-08"],
+      "nextAction": "The staging-only source candidate now wires a bounded Apple Vision revision-3 module to editable Unicode/RTL review, preserves late user edits, keeps manual recovery, minimizes analytics, and coordinates raw-photo cleanup across Shelf and Progress. Its governed deterministic Expo-web matrix covers 15 scenario executions across three supported viewports and four explicit-consent bootstraps, but remains nativeDeviceProof=false. Compile and inspect the exact candidate with the release Xcode toolchain, bind the signed staging archive, then pass the schema-v2 two-iPhone 25-label/50-run accuracy/RTL/network/cache-cleanup/accessibility contract and schema-v4 performance contract. Keep development and production disabled until the physical-device, archive, privacy/security/legal, and App Privacy reconciliation gates pass.",
+      "evidenceRefs": [
+        "docs/hugeToDo/CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md",
+        "apps/mobile/modules/native-label-ocr/ios/NativeLabelOcrModule.swift",
+        "apps/mobile/src/features/native/ocr/",
+        "apps/mobile/src/features/native/camera/labelPhotoLifecycle.ts",
+        "apps/mobile/src/features/native/camera/labelPhotoStartup.ts",
+        "apps/mobile/src/app/shelf/ocr.tsx",
+        "apps/mobile/src/app/progress/capture.tsx",
+        "scripts/cat05/native-label-ocr-source-contract.test.mjs",
+        "scripts/e2e/cat05-native-ocr-ui-audit.mjs",
+        "scripts/phase5/native-ocr-evidence-contract.mjs"
+      ]
     },
     {
       "id": "CAT-06",

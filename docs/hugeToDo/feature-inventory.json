@@ -229,7 +229,7 @@
     "data-store": 120,
     "edge-function": 16,
     "feature-flag": 16,
-    "generated-packet": 32,
+    "generated-packet": 33,
     "native-module": 44,
     "route": 91,
     "vendor-call": 13
@@ -1430,6 +1430,13 @@
       "category": "generated-packet",
       "source": "scripts/e2e/cat04-catalog-recovery-audit.mjs",
       "featureIds": ["F-03", "F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/e2e/cat05-native-ocr-ui-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/e2e/cat05-native-ocr-ui-audit.mjs",
+      "featureIds": ["F-20"],
       "readiness": "implemented"
     },
     {

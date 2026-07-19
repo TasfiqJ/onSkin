@@ -1,7 +1,6 @@
 import { execFileSync, spawn } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import {
-  appendFileSync,
   existsSync,
   lstatSync,
   mkdirSync,
@@ -38,6 +37,18 @@ export const CAT05_EVIDENCE_SCHEMA_VERSION = 2;
 
 const CAT05_GIT_SHA = /^[0-9a-f]{40}$/;
 const CAT05_ACTIVE_CHILDREN = new Set();
+const CAT05_MAX_EXPO_LOG_BYTES = 256 * 1024;
+const CAT05_MAX_RAW_EXPO_LOG_BYTES = 512 * 1024;
+const CAT05_MAX_CDP_EVENT_COUNT = 20_000;
+const CAT05_MAX_CDP_EVENT_BYTES = 16 * 1024 * 1024;
+const CAT05_MAX_CDP_MESSAGE_BYTES = 8 * 1024 * 1024;
+const CAT05_MAX_RETAINED_BROWSER_EVENTS = 5_000;
+const CAT05_MAX_BROWSER_EVENT_EVIDENCE_BYTES = 4 * 1024 * 1024;
+const CAT05_MAX_DIAGNOSTIC_ARTIFACT_BYTES = 8 * 1024 * 1024;
+const CAT05_MAX_DIAGNOSTIC_STRING_BYTES = 128 * 1024;
+const CAT05_LOG_TRUNCATION_MARKER = '\n[CAT05 log truncated after sanitization]\n';
+const CAT05_RAW_LOG_TRUNCATION_MARKER =
+  '\n[CAT05 raw Expo log collection truncated before sanitization]\n';
 
 const CAT05_PRIVACY_SOURCE_PATHS = Object.freeze({
   labelOcrRoute: 'apps/mobile/src/app/shelf/ocr.tsx',
@@ -116,6 +127,240 @@ function comparePaths(left, right) {
   if (left < right) return -1;
   if (left > right) return 1;
   return 0;
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function windowsPathVariants(value) {
+  const normalized = String(value)
+    .replace(/^[/\\]{2}\?[/\\]/u, '')
+    .replace(/\\/gu, '/')
+    .replace(/\/+$/u, '');
+  const driveMatch = /^([a-z]):\/(.*)$/iu.exec(normalized);
+  const variants = new Set([normalized, normalized.replaceAll('/', '\\')]);
+  if (driveMatch) {
+    const [, drive, remainder] = driveMatch;
+    variants.add(`/${drive.toLowerCase()}/${remainder}`);
+    variants.add(`/${drive.toUpperCase()}/${remainder}`);
+    variants.add(`\\\\?\\${drive}:\\${remainder.replaceAll('/', '\\')}`);
+    variants.add(`//?/${drive}:/${remainder}`);
+  }
+  return [...variants].filter(Boolean).sort((left, right) => right.length - left.length);
+}
+
+function replacePathLiteral(value, search, replacement) {
+  if (!search) return value;
+  const candidate = String(search).replace(/[\\/]+$/u, '');
+  if (!candidate) return value;
+  const windowsLike = /^(?:[a-z]:[\\/]|[/\\]{2})/iu.test(candidate);
+  const variants = windowsLike
+    ? windowsPathVariants(candidate)
+    : [candidate, candidate.replaceAll('\\', '/')];
+  let replaced = value;
+  for (const variant of variants) {
+    replaced = replaced.replace(
+      new RegExp(escapeRegExp(variant), windowsLike ? 'giu' : 'gu'),
+      replacement,
+    );
+  }
+  return replaced;
+}
+
+function isCat05LoopbackHostname(hostname) {
+  return ['localhost', '127.0.0.1', '[::1]'].includes(String(hostname).toLowerCase());
+}
+
+function sanitizeCat05LocalUrl(candidate) {
+  const authority = candidate.port ? `${candidate.hostname}:${candidate.port}` : candidate.hostname;
+  const query = candidate.search ? '?redacted-query' : '';
+  return `${candidate.protocol}//${authority}${candidate.pathname}${query}`;
+}
+
+export function sanitizeCat05EvidenceUrl(value) {
+  if (typeof value !== 'string' || value.length === 0) return value;
+  let candidate;
+  try {
+    candidate = new URL(value);
+  } catch {
+    return '<redacted-malformed-url>';
+  }
+  if (['http:', 'https:', 'ws:', 'wss:'].includes(candidate.protocol)) {
+    return isCat05LoopbackHostname(candidate.hostname)
+      ? sanitizeCat05LocalUrl(candidate)
+      : '<external-network-url>';
+  }
+  if (
+    ['assets-library:', 'blob:', 'content:', 'data:', 'file:', 'filesystem:', 'ph:'].includes(
+      candidate.protocol,
+    )
+  ) {
+    return `<redacted-${candidate.protocol.slice(0, -1)}-uri>`;
+  }
+  return '<redacted-non-network-uri>';
+}
+
+function truncateCat05Utf8(value, maxBytes) {
+  assert(
+    Number.isSafeInteger(maxBytes) && maxBytes >= 0,
+    'CAT05 diagnostic maxBytes must be a non-negative safe integer.',
+  );
+  const encoded = Buffer.from(value, 'utf8');
+  if (encoded.length <= maxBytes) return value;
+  const markerBytes = Buffer.byteLength(CAT05_LOG_TRUNCATION_MARKER);
+  if (maxBytes <= markerBytes) {
+    return Buffer.from(CAT05_LOG_TRUNCATION_MARKER, 'utf8')
+      .subarray(0, maxBytes)
+      .toString('utf8')
+      .replace(/\uFFFD$/u, '');
+  }
+  const prefixBytes = Math.max(0, maxBytes - markerBytes);
+  let prefix = encoded.subarray(0, prefixBytes).toString('utf8');
+  if (prefix.endsWith('\uFFFD')) prefix = prefix.slice(0, -1);
+  return `${prefix}${CAT05_LOG_TRUNCATION_MARKER}`;
+}
+
+export function sanitizeCat05DiagnosticText(
+  value,
+  {
+    homePaths = [process.env.USERPROFILE, process.env.HOME],
+    maxBytes = CAT05_MAX_EXPO_LOG_BYTES,
+    repoRootPath = repoRoot,
+    temporaryDirectory = tmpdir(),
+  } = {},
+) {
+  let sanitized = String(value ?? '')
+    .replace(/\u001b\][^\u0007\u001b]*(?:\u0007|\u001b\\)/gu, '')
+    .replace(/\u001b[P^_][\s\S]*?\u001b\\/gu, '')
+    .replace(/\u001b\[[0-?]*[ -/]*[@-~]/gu, '')
+    .replace(/\r\n?/gu, '\n')
+    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/gu, '');
+  const pathReplacements = [
+    [repoRootPath, '<repo-root>'],
+    ...homePaths.map((homePath) => [homePath, '<user-home>']),
+    [temporaryDirectory, '<temp-directory>'],
+  ]
+    .filter(([candidate]) => typeof candidate === 'string' && candidate.length > 0)
+    .sort(([left], [right]) => right.length - left.length);
+  for (const [candidate, replacement] of pathReplacements) {
+    sanitized = replacePathLiteral(sanitized, candidate, replacement);
+  }
+  sanitized = sanitized.replace(/(?:https?|wss?):\/\/[^\s<>"')\]}]+/giu, (candidate) =>
+    sanitizeCat05EvidenceUrl(candidate),
+  );
+  sanitized = sanitized.replace(
+    /(?:assets-library|blob|content|data|file|filesystem|ph):[^\s<>"')\]}]*/giu,
+    (candidate) => sanitizeCat05EvidenceUrl(candidate),
+  );
+  sanitized = sanitized.replace(
+    /\b(?:authorization\s*[:=]\s*)?bearer\s+[a-z0-9._~+/=-]{8,}/giu,
+    '<redacted-bearer-token>',
+  );
+  sanitized = sanitized.replace(
+    /(\bauthorization\b["']?\s*[:=]\s*)(?:"[^"\r\n]*"|'[^'\r\n]*'|[^\r\n]+)/giu,
+    '$1<redacted-credential>',
+  );
+  sanitized = sanitized.replace(
+    /((?:^|[\s,{;])["']?(?:[a-z0-9][a-z0-9.-]*(?:_[a-z0-9.-]+)*_token|token|password|passcode|secret|(?:x[-_])?api[-_]?key|apikey)["']?\s*[:=]\s*)(?:"[^"\r\n]*"|'[^'\r\n]*'|[^\r\n]+)/gimu,
+    '$1<redacted-credential>',
+  );
+  sanitized = sanitized.replace(
+    /([?&](?:access[_-]?token|api[_-]?key|apikey|auth|authorization|password|secret|token)=)[^&\s]+/giu,
+    '$1<redacted>',
+  );
+  sanitized = sanitized.replace(
+    /(?<![a-z0-9+/_-])[a-z0-9+/_-]{160,}={0,2}(?![a-z0-9+/_=-])/giu,
+    '<redacted-long-base64>',
+  );
+  return truncateCat05Utf8(sanitized, maxBytes);
+}
+
+export function createCat05ExpoLogCapture(maxRawBytes = CAT05_MAX_RAW_EXPO_LOG_BYTES) {
+  assert(
+    Number.isSafeInteger(maxRawBytes) && maxRawBytes >= 0,
+    'CAT05 Expo log maxRawBytes must be a non-negative safe integer.',
+  );
+  return { capturedBytes: 0, chunks: [], droppedBytes: 0, maxRawBytes, totalBytes: 0 };
+}
+
+export function appendCat05ExpoLogCapture(capture, chunk) {
+  const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk), 'utf8');
+  capture.totalBytes += buffer.length;
+  const remaining = Math.max(0, capture.maxRawBytes - capture.capturedBytes);
+  if (remaining > 0) {
+    const retained = buffer.subarray(0, remaining);
+    capture.chunks.push(retained);
+    capture.capturedBytes += retained.length;
+  }
+  capture.droppedBytes += Math.max(0, buffer.length - remaining);
+  return capture;
+}
+
+export function sanitizeCat05ExpoFixtureLog(evidenceDir, groupId, capture = null) {
+  const logPath = path.join(evidenceDir, `expo-${safeArtifactId(groupId)}.log`);
+  assert(existsSync(logPath), `Missing CAT05 Expo log for fixture ${groupId}.`);
+  let raw = capture
+    ? Buffer.concat(capture.chunks, capture.capturedBytes).toString('utf8')
+    : readFileSync(logPath, 'utf8');
+  if (capture?.droppedBytes > 0) {
+    const lastCompleteLine = raw.lastIndexOf('\n');
+    raw = lastCompleteLine >= 0 ? raw.slice(0, lastCompleteLine + 1) : '';
+  }
+  const truncationNotice = capture?.droppedBytes > 0 ? CAT05_RAW_LOG_TRUNCATION_MARKER : '';
+  const sanitized = sanitizeCat05DiagnosticText(`${raw}${truncationNotice}`);
+  writeFileSync(logPath, sanitized);
+  return sanitized;
+}
+
+export function sanitizeCat05DiagnosticValue(value, depth = 0) {
+  if (typeof value === 'string') {
+    return sanitizeCat05DiagnosticText(value, { maxBytes: 2_000 });
+  }
+  if (value === null || ['boolean', 'number'].includes(typeof value)) return value;
+  if (depth >= 5) return '<diagnostic-depth-limit>';
+  if (Array.isArray(value)) {
+    const retained = value
+      .slice(0, 50)
+      .map((item) => sanitizeCat05DiagnosticValue(item, depth + 1));
+    if (value.length > retained.length) {
+      retained.push(`<diagnostic-array-truncated:${value.length - retained.length}>`);
+    }
+    return retained;
+  }
+  if (typeof value !== 'object') return String(value);
+  const retainedEntries = Object.entries(value).filter(([key]) => {
+    const exactSensitiveKey =
+      /^(?:body|cookies?|data|headers?|postData|preview|requestHeaders|responseHeaders|value)$/iu.test(
+        key,
+      );
+    const credentialKey = /(?:authorization|credential|passcode|password|secret|token)/iu.test(key);
+    return !exactSensitiveKey && !credentialKey;
+  });
+  const sanitized = Object.fromEntries(
+    retainedEntries
+      .slice(0, 50)
+      .map(([key, item]) => [
+        sanitizeCat05DiagnosticText(key, { maxBytes: 128 }),
+        sanitizeCat05DiagnosticValue(item, depth + 1),
+      ]),
+  );
+  if (retainedEntries.length > 50) {
+    sanitized.cat05TruncatedFieldCount = retainedEntries.length - 50;
+  }
+  return sanitized;
+}
+
+function sanitizeCat05DiagnosticError(error) {
+  return sanitizeCat05DiagnosticText(error instanceof Error ? error.message : String(error), {
+    maxBytes: 2_000,
+  });
+}
+
+function sanitizeCat05BrowserFailures(failures) {
+  assert(Array.isArray(failures), 'CAT05 browser failures must be an array.');
+  assert(failures.length <= 100, 'CAT05 browser failure evidence exceeded 100 records.');
+  return failures.map((failure) => sanitizeCat05DiagnosticValue(failure));
 }
 
 function normalizeRepoPath(value) {
@@ -474,7 +719,11 @@ export function assertCat05SourceProvenance({ dirtyPaths = listCat05DirtyRepoPat
 export function cat05ServerEnvironment(group, inheritedEnvironment = process.env) {
   const environment = { ...inheritedEnvironment };
   for (const key of Object.keys(environment)) {
-    if (key.startsWith('EXPO_PUBLIC_')) delete environment[key];
+    const credentialNamed =
+      /(?:TOKEN|SECRET|PASSWORD|PASSCODE|API[_-]?KEY|AUTHORIZATION|COOKIE|PRIVATE[_-]?KEY|DSN)(?:_|$)/iu.test(
+        key,
+      );
+    if (key.startsWith('EXPO_PUBLIC_') || credentialNamed) delete environment[key];
   }
   return {
     ...environment,
@@ -597,13 +846,15 @@ function startExpoServer({ appPort, evidenceDir, group }) {
       ];
   const logPath = path.join(evidenceDir, `expo-${safeArtifactId(group.id)}.log`);
   writeFileSync(logPath, '');
+  const logCapture = createCat05ExpoLogCapture();
   const child = spawn(command, args, {
     cwd: repoRoot,
     env: cat05ServerEnvironment(group),
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
   });
-  const append = (chunk) => appendFileSync(logPath, chunk.toString());
+  child.cat05ExpoLogCapture = logCapture;
+  const append = (chunk) => appendCat05ExpoLogCapture(logCapture, chunk);
   child.stdout.on('data', append);
   child.stderr.on('data', append);
   return trackCat05Child(child);
@@ -722,6 +973,8 @@ export async function stopActiveCat05Processes() {
 class CdpClient {
   constructor(wsUrl) {
     this.closed = false;
+    this.eventBytes = 0;
+    this.evidenceBudgetError = null;
     this.events = [];
     this.inflight = new Set();
     this.nextId = 1;
@@ -768,7 +1021,8 @@ class CdpClient {
   }
 
   handleMessage(event) {
-    const message = JSON.parse(event.data.toString());
+    const wireMessage = event.data.toString();
+    const message = JSON.parse(wireMessage);
     if (message.id && this.pending.has(message.id)) {
       const { reject, resolve, timeout } = this.pending.get(message.id);
       this.pending.delete(message.id);
@@ -784,7 +1038,23 @@ class CdpClient {
     if (['Network.loadingFinished', 'Network.loadingFailed'].includes(message.method)) {
       this.inflight.delete(message.params.requestId);
     }
+    const messageBytes = Buffer.byteLength(wireMessage, 'utf8');
+    if (
+      messageBytes > CAT05_MAX_CDP_MESSAGE_BYTES ||
+      this.events.length >= CAT05_MAX_CDP_EVENT_COUNT ||
+      this.eventBytes + messageBytes > CAT05_MAX_CDP_EVENT_BYTES
+    ) {
+      this.evidenceBudgetError ??= new Error(
+        `CAT05 CDP event budget exceeded (${this.events.length} retained events, ${this.eventBytes} retained bytes, ${messageBytes} next-event bytes).`,
+      );
+      return;
+    }
+    this.eventBytes += messageBytes;
     this.events.push({ ...message, observedAt: new Date().toISOString() });
+  }
+
+  assertEvidenceBudget() {
+    if (this.evidenceBudgetError) throw this.evidenceBudgetError;
   }
 
   rejectPending(error) {
@@ -1217,7 +1487,11 @@ async function captureStep(client, evidenceDir, artifactName, context) {
     scenarioId: context.scenarioId,
     viewport: context.viewport,
   });
-  writeJson(evidenceDir, `${artifactName}.json`, { ...snapshot, evidenceBinding });
+  writeJson(evidenceDir, `${artifactName}.json`, {
+    ...snapshot,
+    evidenceBinding,
+    url: sanitizeCat05EvidenceUrl(snapshot.url),
+  });
   const screenshot = await client.send('Page.captureScreenshot', {
     captureBeyondViewport: false,
     format: 'png',
@@ -1243,6 +1517,7 @@ async function captureFailure(client, evidenceDir, artifactPrefix, context) {
         scenarioId: context.scenarioId,
         viewport: context.viewport,
       }),
+      url: sanitizeCat05EvidenceUrl(snapshot.url),
     });
     artifacts.push(snapshotName);
   } catch {
@@ -1325,17 +1600,23 @@ async function establishLocalHealthConsent({ binding, client, baseUrl, evidenceD
       scenarioId: null,
       viewport,
     });
-    result.browserFailures = classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl);
+    client.assertEvidenceBudget();
+    result.browserFailures = sanitizeCat05BrowserFailures(
+      classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl),
+    );
     assert(
       result.browserFailures.length === 0,
       `Consent bootstrap emitted ${result.browserFailures.length} browser failure(s).`,
     );
-    result.endUrl = await evaluate(client, 'location.href');
-    assertCat05PageTarget(result.endUrl, baseUrl);
+    const endUrl = await evaluate(client, 'location.href');
+    assertCat05PageTarget(endUrl, baseUrl);
+    result.endUrl = sanitizeCat05EvidenceUrl(endUrl);
     result.verdict = 'pass';
   } catch (error) {
-    result.error = error instanceof Error ? error.message : String(error);
-    result.browserFailures = classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl);
+    result.error = sanitizeCat05DiagnosticError(error);
+    result.browserFailures = sanitizeCat05BrowserFailures(
+      classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl),
+    );
     result.failureArtifacts = await captureFailure(client, evidenceDir, artifactPrefix, {
       baseUrl,
       binding,
@@ -1530,17 +1811,23 @@ async function runScenario(context) {
       'Fixture-enabled route lost its explicit non-native scope boundary.',
     );
     await executeScenario({ ...context, artifactPrefix });
-    result.browserFailures = classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl);
+    client.assertEvidenceBudget();
+    result.browserFailures = sanitizeCat05BrowserFailures(
+      classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl),
+    );
     assert(
       result.browserFailures.length === 0,
       `${scenario.id} emitted ${result.browserFailures.length} browser failure(s).`,
     );
-    result.endUrl = await evaluate(client, 'location.href');
-    assertCat05PageTarget(result.endUrl, baseUrl);
+    const endUrl = await evaluate(client, 'location.href');
+    assertCat05PageTarget(endUrl, baseUrl);
+    result.endUrl = sanitizeCat05EvidenceUrl(endUrl);
     result.verdict = 'pass';
   } catch (error) {
-    result.error = error instanceof Error ? error.message : String(error);
-    result.browserFailures = classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl);
+    result.error = sanitizeCat05DiagnosticError(error);
+    result.browserFailures = sanitizeCat05BrowserFailures(
+      classifyCat05BrowserFailures(client.events.slice(eventStart), baseUrl),
+    );
     result.failureArtifacts = await captureFailure(client, evidenceDir, artifactPrefix, {
       baseUrl,
       binding,
@@ -1559,33 +1846,42 @@ export function classifyCat05BrowserFailures(events, baseUrl) {
   const base = assertCat05LocalTarget(baseUrl);
   const failures = classifyBrowserFailures(events, [baseUrl]);
   for (const event of events) {
-    const url =
-      event.method === 'Network.requestWillBeSent'
-        ? event.params?.request?.url
-        : event.method === 'Network.webSocketCreated'
-          ? event.params?.url
-          : null;
-    if (!url) continue;
-    let candidate;
-    try {
-      candidate = new URL(url);
-    } catch {
-      failures.push({ method: event.method, type: 'malformed-network-target', url });
-      continue;
+    const targets = [];
+    if (event.method === 'Network.requestWillBeSent') {
+      targets.push({ role: 'request', url: event.params?.request?.url });
+      if (event.params?.documentURL) {
+        targets.push({ role: 'document', url: event.params.documentURL });
+      }
+    } else if (event.method === 'Network.responseReceived') {
+      targets.push({ role: 'response', url: event.params?.response?.url });
+    } else if (event.method === 'Network.webSocketCreated') {
+      targets.push({ role: 'websocket', url: event.params?.url });
     }
-    if (!['http:', 'https:', 'ws:', 'wss:'].includes(candidate.protocol)) continue;
-    const trustedProtocol =
-      event.method === 'Network.webSocketCreated'
-        ? candidate.protocol === 'ws:'
-        : candidate.protocol === 'http:';
-    if (
-      !trustedProtocol ||
-      candidate.hostname !== 'localhost' ||
-      candidate.port !== base.port ||
-      candidate.username ||
-      candidate.password
-    ) {
-      failures.push({ method: event.method, type: 'untrusted-network-target', url });
+    for (const { role, url } of targets) {
+      if (!url) continue;
+      let candidate;
+      try {
+        candidate = new URL(url);
+      } catch {
+        failures.push({ method: event.method, role, type: 'malformed-network-target' });
+        continue;
+      }
+      const trustedProtocol =
+        role === 'websocket' ? candidate.protocol === 'ws:' : candidate.protocol === 'http:';
+      if (
+        !trustedProtocol ||
+        candidate.hostname !== 'localhost' ||
+        candidate.port !== base.port ||
+        candidate.username ||
+        candidate.password
+      ) {
+        failures.push({
+          method: event.method,
+          role,
+          type: 'untrusted-network-target',
+          url: sanitizeCat05EvidenceUrl(url),
+        });
+      }
     }
   }
   return failures;
@@ -1593,46 +1889,66 @@ export function classifyCat05BrowserFailures(events, baseUrl) {
 
 export function sanitizeBrowserEvents(events) {
   const retained = [];
+  let retainedBytes = 0;
+  const retain = (event) => {
+    assert(
+      retained.length < CAT05_MAX_RETAINED_BROWSER_EVENTS,
+      `CAT05 browser-event evidence exceeded ${CAT05_MAX_RETAINED_BROWSER_EVENTS} retained events.`,
+    );
+    const eventBytes = Buffer.byteLength(JSON.stringify(event), 'utf8');
+    assert(
+      eventBytes <= CAT05_MAX_CDP_MESSAGE_BYTES,
+      `CAT05 sanitized browser event exceeded ${CAT05_MAX_CDP_MESSAGE_BYTES} bytes.`,
+    );
+    assert(
+      retainedBytes + eventBytes <= CAT05_MAX_BROWSER_EVENT_EVIDENCE_BYTES,
+      `CAT05 browser-event evidence exceeded ${CAT05_MAX_BROWSER_EVENT_EVIDENCE_BYTES} bytes.`,
+    );
+    retainedBytes += eventBytes;
+    retained.push(event);
+  };
   for (const event of events) {
     const { method, observedAt, params = {} } = event;
     if (method === 'Network.requestWillBeSent') {
-      retained.push({
-        documentURL: params.documentURL,
+      retain({
+        documentURL: sanitizeCat05EvidenceUrl(params.documentURL),
         method,
         observedAt,
-        requestId: params.requestId,
-        requestMethod: params.request?.method,
-        type: params.type,
-        url: params.request?.url,
+        requestId: sanitizeCat05DiagnosticText(params.requestId, { maxBytes: 256 }),
+        requestMethod: sanitizeCat05DiagnosticText(params.request?.method, { maxBytes: 32 }),
+        type: sanitizeCat05DiagnosticText(params.type, { maxBytes: 64 }),
+        url: sanitizeCat05EvidenceUrl(params.request?.url),
       });
     } else if (method === 'Network.responseReceived') {
-      retained.push({
+      retain({
         method,
-        mimeType: params.response?.mimeType,
+        mimeType: sanitizeCat05DiagnosticText(params.response?.mimeType, { maxBytes: 128 }),
         observedAt,
-        requestId: params.requestId,
+        requestId: sanitizeCat05DiagnosticText(params.requestId, { maxBytes: 256 }),
         status: params.response?.status,
-        type: params.type,
-        url: params.response?.url,
+        type: sanitizeCat05DiagnosticText(params.type, { maxBytes: 64 }),
+        url: sanitizeCat05EvidenceUrl(params.response?.url),
       });
     } else if (method === 'Network.loadingFailed') {
-      retained.push({
+      retain({
         canceled: params.canceled,
-        errorText: params.errorText,
+        errorText: sanitizeCat05DiagnosticText(params.errorText, { maxBytes: 1_000 }),
         method,
         observedAt,
-        requestId: params.requestId,
-        type: params.type,
+        requestId: sanitizeCat05DiagnosticText(params.requestId, { maxBytes: 256 }),
+        type: sanitizeCat05DiagnosticText(params.type, { maxBytes: 64 }),
       });
     } else if (method === 'Runtime.consoleAPICalled') {
-      retained.push({
+      retain({
         method,
         observedAt,
-        text: (params.args ?? [])
-          .map((argument) => argument.value ?? argument.description ?? '')
-          .join(' ')
-          .slice(0, 2_000),
-        type: params.type,
+        text: sanitizeCat05DiagnosticText(
+          (params.args ?? [])
+            .map((argument) => argument.value ?? argument.description ?? '')
+            .join(' '),
+          { maxBytes: 2_000 },
+        ),
+        type: sanitizeCat05DiagnosticText(params.type, { maxBytes: 64 }),
       });
     } else if (
       [
@@ -1645,10 +1961,28 @@ export function sanitizeBrowserEvents(events) {
         'Runtime.exceptionThrown',
       ].includes(method)
     ) {
-      retained.push({ method, observedAt, params });
+      retain({ method, observedAt, params: sanitizeCat05DiagnosticValue(params) });
     }
   }
   return retained;
+}
+
+export function buildCat05BrowserEventEvidence(events) {
+  const sanitizedEvents = sanitizeBrowserEvents(events);
+  return {
+    events: sanitizedEvents,
+    retention: {
+      ignoredEventCount: events.length - sanitizedEvents.length,
+      inputEventCount: events.length,
+      limits: {
+        maxRetainedBytes: CAT05_MAX_BROWSER_EVENT_EVIDENCE_BYTES,
+        maxRetainedEvents: CAT05_MAX_RETAINED_BROWSER_EVENTS,
+      },
+      retainedEventCount: sanitizedEvents.length,
+      sanitizedBytes: Buffer.byteLength(JSON.stringify(sanitizedEvents), 'utf8'),
+      truncated: false,
+    },
+  };
 }
 
 export function listCat05EvidenceArtifacts(evidenceDir) {
@@ -1826,6 +2160,56 @@ export function assertCat05ArtifactBindings(evidenceDir, artifacts, binding) {
   return true;
 }
 
+function assertCat05DiagnosticValueHygiene(value, label, seen = new WeakSet()) {
+  if (typeof value === 'string') {
+    const valueBytes = Buffer.byteLength(value, 'utf8');
+    assert(
+      valueBytes <= CAT05_MAX_DIAGNOSTIC_STRING_BYTES,
+      `CAT05 diagnostic string exceeds ${CAT05_MAX_DIAGNOSTIC_STRING_BYTES} bytes (${label}).`,
+    );
+    const sanitized = sanitizeCat05DiagnosticText(value, {
+      maxBytes: CAT05_MAX_DIAGNOSTIC_STRING_BYTES,
+    });
+    assert(sanitized === value, `CAT05 diagnostic hygiene violation (${label}).`);
+    return;
+  }
+  if (!value || typeof value !== 'object' || seen.has(value)) return;
+  seen.add(value);
+  if (Array.isArray(value)) {
+    for (let index = 0; index < value.length; index += 1) {
+      assertCat05DiagnosticValueHygiene(value[index], `${label}[${index}]`, seen);
+    }
+    return;
+  }
+  for (const [key, item] of Object.entries(value)) {
+    assertCat05DiagnosticValueHygiene(key, `${label}.<key>`, seen);
+    assertCat05DiagnosticValueHygiene(item, `${label}.${key}`, seen);
+  }
+}
+
+export function assertCat05DiagnosticPacketHygiene(evidenceDir, artifacts, summary = null) {
+  for (const artifact of artifacts) {
+    if (artifact.endsWith('.png')) continue;
+    const artifactPath = path.join(evidenceDir, artifact);
+    const artifactBytes = statSync(artifactPath).size;
+    const byteLimit = artifact.endsWith('.log')
+      ? CAT05_MAX_EXPO_LOG_BYTES
+      : CAT05_MAX_DIAGNOSTIC_ARTIFACT_BYTES;
+    assert(
+      artifactBytes <= byteLimit,
+      `CAT05 diagnostic artifact exceeds ${byteLimit} bytes (${artifact}).`,
+    );
+    const contents = readFileSync(artifactPath, 'utf8');
+    if (artifact.endsWith('.json')) {
+      assertCat05DiagnosticValueHygiene(JSON.parse(contents), artifact);
+    } else {
+      assertCat05DiagnosticValueHygiene(contents, artifact);
+    }
+  }
+  if (summary) assertCat05DiagnosticValueHygiene(summary, 'summary');
+  return true;
+}
+
 function clearPreviousEvidence(evidenceDir) {
   const safeEvidenceDir = assertCat05EvidenceDirectory(evidenceDir);
   if (existsSync(safeEvidenceDir)) rmSync(safeEvidenceDir, { force: true, recursive: true });
@@ -1888,7 +2272,7 @@ function writeReport(evidenceDir, summary) {
     `- Started: ${summary.startedAt}`,
     `- Completed: ${summary.completedAt}`,
     `- Surface: ${summary.surface}`,
-    `- Browser: ${summary.browserPath ?? 'unavailable'}`,
+    `- Browser: ${sanitizeCat05DiagnosticText(path.basename(summary.browserPath ?? 'unavailable'), { maxBytes: 256 })}`,
     `- Consent bootstraps: ${summary.passedBootstrapCount}/${summary.expectedBootstrapCount}`,
     `- Scenario executions: ${summary.passedExecutionCount}/${summary.expectedExecutionCount}`,
     `- Browser failures: ${summary.browserFailureCount}`,
@@ -1900,10 +2284,12 @@ function writeReport(evidenceDir, summary) {
     '| --- | --- | --- | --- |',
     ...summary.results
       .filter(({ kind }) => kind === 'scenario')
-      .map(
-        (result) =>
-          `| ${result.scenarioId} | ${result.viewport.width}x${result.viewport.height} | ${result.verdict} | ${String(result.error ?? '').replace(/\|/g, '\\|')} |`,
-      ),
+      .map((result) => {
+        const safeError = sanitizeCat05DiagnosticText(result.error ?? '', { maxBytes: 500 })
+          .replace(/\s+/gu, ' ')
+          .replace(/\|/g, '\\|');
+        return `| ${result.scenarioId} | ${result.viewport.width}x${result.viewport.height} | ${result.verdict} | ${safeError} |`;
+      }),
     '',
     '## Human-Simulated Actions',
     '',
@@ -1930,7 +2316,7 @@ function writeReport(evidenceDir, summary) {
 }
 
 function recordGroupFailure(summary, group, error, binding) {
-  const message = error instanceof Error ? error.message : String(error);
+  const message = sanitizeCat05DiagnosticError(error);
   for (const scenario of CAT05_SCENARIO_MATRIX.filter(({ groupId }) => groupId === group.id)) {
     for (const viewport of CAT05_REQUIRED_VIEWPORTS) {
       summary.results.push({
@@ -2043,8 +2429,10 @@ export async function runCat05NativeOcrUiAudit({
     webFixtureBuild: binding.webFixtureBuild,
   };
 
+  let browserExecutablePath = null;
   try {
-    summary.browserPath = findBrowserPath();
+    browserExecutablePath = findBrowserPath();
+    summary.browserPath = path.basename(browserExecutablePath);
     for (let groupIndex = 0; groupIndex < CAT05_FIXTURE_GROUPS.length; groupIndex += 1) {
       assertCat05AuditActive(signal);
       assertCat05SourceBinding({ expectedSourceGitSha: binding.sourceGitSha });
@@ -2064,7 +2452,7 @@ export async function runCat05NativeOcrUiAudit({
         expo = startExpoServer({ appPort, evidenceDir, group });
         await waitForUrl(baseUrl, 180_000, signal);
         assertCat05ProcessRunning(expo, `Expo fixture ${group.id}`);
-        browser = startBrowser({ browserPath: summary.browserPath, debugPort, userDataDir });
+        browser = startBrowser({ browserPath: browserExecutablePath, debugPort, userDataDir });
         await readJson(`http://127.0.0.1:${debugPort}/json/version`, debugPort, 30_000, signal);
         assertCat05ProcessRunning(browser, `Browser fixture ${group.id}`);
         client = await connectToPage(debugPort, baseUrl, signal);
@@ -2103,7 +2491,10 @@ export async function runCat05NativeOcrUiAudit({
         await delay(300);
         assertCat05ProcessRunning(expo, `Expo fixture ${group.id}`);
         assertCat05ProcessRunning(browser, `Browser fixture ${group.id}`);
-        const groupBrowserFailures = classifyCat05BrowserFailures(client.events, baseUrl);
+        client.assertEvidenceBudget();
+        const groupBrowserFailures = sanitizeCat05BrowserFailures(
+          classifyCat05BrowserFailures(client.events, baseUrl),
+        );
         summary.groupBrowserAudits.push({
           browserFailures: groupBrowserFailures,
           evidenceBinding: cat05ArtifactBinding(binding, {
@@ -2125,23 +2516,24 @@ export async function runCat05NativeOcrUiAudit({
             scenarioId: null,
             viewport: null,
           }),
-          events: sanitizeBrowserEvents(client.events),
+          ...buildCat05BrowserEventEvidence(client.events),
         });
       } catch (error) {
         const alreadyRecorded = summary.results.some(
           (result) => result.fixtureGroup === group.id && result.kind === 'scenario',
         );
         if (!alreadyRecorded) recordGroupFailure(summary, group, error, binding);
-        summary.fatalError ??= error instanceof Error ? error.message : String(error);
+        summary.fatalError ??= sanitizeCat05DiagnosticError(error);
       } finally {
         client?.close();
         await stopProcessBestEffort(browser);
         await stopProcessBestEffort(expo);
+        sanitizeCat05ExpoFixtureLog(evidenceDir, group.id, expo?.cat05ExpoLogCapture);
         if (userDataDir) rmSync(userDataDir, { force: true, recursive: true });
       }
     }
   } catch (error) {
-    summary.fatalError = error instanceof Error ? error.message : String(error);
+    summary.fatalError = sanitizeCat05DiagnosticError(error);
   }
 
   try {
@@ -2149,7 +2541,7 @@ export async function runCat05NativeOcrUiAudit({
     assertCat05AuditActive(signal);
     assertCat05SourceBinding({ expectedSourceGitSha: binding.sourceGitSha });
   } catch (error) {
-    summary.fatalError ??= error instanceof Error ? error.message : String(error);
+    summary.fatalError ??= sanitizeCat05DiagnosticError(error);
   }
 
   const bootstrapResults = summary.results.filter(({ kind }) => kind === 'consent-bootstrap');
@@ -2178,8 +2570,9 @@ export async function runCat05NativeOcrUiAudit({
     try {
       assertCat05PassArtifactSet(summary.artifacts);
       assertCat05ArtifactBindings(evidenceDir, summary.artifacts, binding);
+      assertCat05DiagnosticPacketHygiene(evidenceDir, summary.artifacts, summary);
     } catch (error) {
-      summary.fatalError = error instanceof Error ? error.message : String(error);
+      summary.fatalError = sanitizeCat05DiagnosticError(error);
       summary.verdict = 'fail';
       writeReport(evidenceDir, summary);
       summary.artifacts = listCat05EvidenceArtifacts(evidenceDir);

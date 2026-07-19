@@ -3,7 +3,7 @@
 - Date: 2026-07-18
 - Status: `source candidate / launch-blocked`
 - Release scope: iOS 17+
-Runtime exposure: staging internal candidate only
+- Runtime exposure: staging internal candidate only
 
 ## Decision
 
@@ -169,7 +169,7 @@ iPhones must pass the accessibility report in the exact-build evidence packet.
 ## Deterministic Web UI Matrix
 
 The CAT-05 web runner defines five scenarios over three supported iPhone-class
-viewports: 15 scenario executions and 12 consent bootstraps across four fixture
+viewports: 15 scenario executions and four consent bootstraps across four fixture
 groups.
 
 | Scenario                            | Required deterministic UI behavior                                                                                                                                      |
@@ -221,7 +221,7 @@ physical-device contract.
 | ---------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
 | Mobile TypeScript check                        | Passed                                          | Does not compile Swift or link an iOS archive             |
 | Focused native OCR/camera/Shelf/Progress tests | Passed: 14 files / 169 tests                    | Unit/source behavior only, not device behavior            |
-| CAT-05 native source plus web-runner contracts | Passed: 33/33                                   | Static/deterministic contract only                        |
+| CAT-05 native source plus web-runner contracts | Passed: 39/39                                   | Static/deterministic contract only                        |
 | Native evidence contract and smoke suites      | Passed: 38/38                                   | Validates artifact shape, not truth of future attachments |
 | Full mobile baseline                           | Passed: 299 files / 3,486 tests                 | Required before the source commit is accepted             |
 | Deterministic Expo-web UI run                  | Pending against the committed source checkpoint | Must remain `nativeDeviceProof=false`                     |

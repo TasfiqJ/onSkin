@@ -851,7 +851,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Run the five CAT-05 deterministic scenarios across 375 x 667, 390 x 844, and 430 x 932 after the source checkpoint is committed.
-  - Expected result: The governed run has 15 scenario executions and 12 consent bootstraps, records `nativeDeviceProof=false`, and labels itself development-only Expo-web UI-state evidence. It must not be cited as Apple Vision, Swift, camera, iOS binary, physical-iPhone, OCR accuracy/latency, privacy, zero-network, cleanup, VoiceOver, archive, App Review, legal, or release proof.
+  - Expected result: The governed run has 15 scenario executions and four consent bootstraps, records `nativeDeviceProof=false`, and labels itself development-only Expo-web UI-state evidence. It must not be cited as Apple Vision, Swift, camera, iOS binary, physical-iPhone, OCR accuracy/latency, privacy, zero-network, cleanup, VoiceOver, archive, App Review, legal, or release proof.
   - Evidence: `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/` only after provenance validation. Until that committed-source run exists, this is a declared matrix rather than completed E2E evidence.
 - Branch: camera permission denied
   - Priority: Important

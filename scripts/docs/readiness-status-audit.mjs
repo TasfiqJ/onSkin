@@ -145,6 +145,8 @@ const allRequiredManifestNeedles = [
   'shelf-freshness-provenance-current',
   'CAT04 catalog search, scan, report, and recovery Expo-web pass',
   'cat04-catalog-recovery-current',
+  'CAT05 native OCR review Expo-web pass',
+  'cat05-native-ocr-web-ui-current',
   'Required-surface honest direct-entry and recovery pass',
   'required-surface-honesty-rerun',
   'Trend navigator privacy and exact-route recovery',

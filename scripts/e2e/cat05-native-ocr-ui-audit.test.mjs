@@ -16,7 +16,9 @@ import {
   CAT05_MANUAL_UNICODE_TEXT,
   CAT05_REQUIRED_VIEWPORTS,
   CAT05_SCENARIO_MATRIX,
+  appendCat05ExpoLogCapture,
   assertCat05ArtifactBindings,
+  assertCat05DiagnosticPacketHygiene,
   assertCat05LocalTarget,
   assertCat05PassArtifactSet,
   assertCat05PrivacySourceContract,
@@ -24,15 +26,21 @@ import {
   assertCat05EvidenceDirectory,
   assertCat05SourceProvenance,
   buildCat05ArtifactManifest,
+  buildCat05BrowserEventEvidence,
   cat05ActiveChildCount,
   cat05ServerEnvironment,
   classifyCat05BrowserFailures,
   collectCat05UndeclaredDirtyPaths,
+  createCat05ExpoLogCapture,
   expectedCat05PassArtifacts,
   listCat05EvidenceArtifacts,
   navigateToCat05OcrConsentProbe,
   prepareCat05Navigation,
   resolveCat05AuditBinding,
+  sanitizeCat05DiagnosticValue,
+  sanitizeCat05DiagnosticText,
+  sanitizeCat05EvidenceUrl,
+  sanitizeCat05ExpoFixtureLog,
   sanitizeBrowserEvents,
   stopActiveCat05Processes,
   trackCat05Child,
@@ -144,7 +152,12 @@ test('fixture groups are isolated, allowlisted, local, and fail closed around li
     CAT05_FIXTURE_GROUPS.map((group) => [
       group.id,
       cat05ServerEnvironment(group, {
+        API_KEY: 'inherited-api-key',
+        Authorization: 'inherited-authorization',
+        ComSpec: 'preserved-command-shell',
+        DATABASE_PASSWORD: 'inherited-password',
         PATH: 'preserved',
+        DEPLOY_TOKEN: 'inherited-deploy-token',
         EXPO_PUBLIC_E2E_SHELF_OCR_RESULT: 'inherited-danger',
         EXPO_PUBLIC_NATIVE_UNREVIEWED_FLAG: 'inherited-danger',
         EXPO_PUBLIC_POSTHOG_KEY: 'inherited-live-key',
@@ -152,6 +165,14 @@ test('fixture groups are isolated, allowlisted, local, and fail closed around li
         EXPO_PUBLIC_SENTRY_DSN: 'https://inherited-live.example',
         EXPO_PUBLIC_SUPABASE_URL: 'https://inherited-live.supabase.co',
         EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'inherited-live-key',
+        GITHUB_TOKEN: 'inherited-github-token',
+        NPM_TOKEN: 'inherited-npm-token',
+        PASSWORDLESS_MODE: 'preserved-benign-name',
+        SESSION_COOKIE: 'inherited-cookie',
+        SIGNING_PRIVATE_KEY: 'inherited-private-key',
+        SENTRY_DSN: 'inherited-dsn',
+        TOKENIZERS_PARALLELISM: 'preserved-benign-name',
+        npm_config_cache: 'preserved-npm-cache',
       }),
     ]),
   );
@@ -161,7 +182,11 @@ test('fixture groups are isolated, allowlisted, local, and fail closed around li
   assert.equal(groupEnvironment['timed-out'].EXPO_PUBLIC_E2E_SHELF_OCR_RESULT, 'timed_out');
   assert.equal(groupEnvironment.failed.EXPO_PUBLIC_E2E_SHELF_OCR_RESULT, 'failed');
   for (const environment of Object.values(groupEnvironment)) {
+    assert.equal(environment.ComSpec, 'preserved-command-shell');
     assert.equal(environment.PATH, 'preserved');
+    assert.equal(environment.npm_config_cache, 'preserved-npm-cache');
+    assert.equal(environment.PASSWORDLESS_MODE, 'preserved-benign-name');
+    assert.equal(environment.TOKENIZERS_PARALLELISM, 'preserved-benign-name');
     assert.equal(environment.EXPO_NO_DOTENV, '1');
     assert.equal(environment.EXPO_PUBLIC_NATIVE_OCR_ENABLED, 'true');
     assert.equal(environment.EXPO_PUBLIC_POSTHOG_KEY, '');
@@ -170,6 +195,19 @@ test('fixture groups are isolated, allowlisted, local, and fail closed around li
     assert.equal(environment.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY, '__BLOCKED_PLACEHOLDER__');
     assert.equal(environment.EXPO_PUBLIC_NATIVE_UNREVIEWED_FLAG, undefined);
     assert.equal(environment.EXPO_PUBLIC_RANDOM_FEATURE, undefined);
+    for (const credentialName of [
+      'API_KEY',
+      'Authorization',
+      'DATABASE_PASSWORD',
+      'DEPLOY_TOKEN',
+      'GITHUB_TOKEN',
+      'NPM_TOKEN',
+      'SESSION_COOKIE',
+      'SIGNING_PRIVATE_KEY',
+      'SENTRY_DSN',
+    ]) {
+      assert.equal(environment[credentialName], undefined);
+    }
   }
 });
 
@@ -315,6 +353,14 @@ test('group browser classification blocks console, page, process-surface, and un
         method: 'Network.requestWillBeSent',
         params: { request: { url: 'https://analytics.example/collect' } },
       },
+      {
+        method: 'Network.requestWillBeSent',
+        params: { request: { url: `data:image/png;base64,${'A'.repeat(256)}` } },
+      },
+      {
+        method: 'Network.responseReceived',
+        params: { response: { status: 200, url: 'blob:http://localhost:8620/private-photo' } },
+      },
     ],
     'http://localhost:8620',
   );
@@ -345,6 +391,11 @@ test('group browser classification blocks console, page, process-surface, and un
       'http://localhost:8620',
     ),
     [],
+  );
+
+  assert.ok(
+    failures.filter(({ type }) => type === 'untrusted-network-target').length >= 3,
+    'Non-local and sensitive URI schemes must fail closed.',
   );
 });
 
@@ -415,12 +466,12 @@ test('browser-event evidence is bounded while preserving privacy-relevant reques
       method: 'Network.requestWillBeSent',
       observedAt: '2026-07-18T00:00:00.000Z',
       params: {
-        documentURL: 'http://localhost:8620/shelf/ocr',
+        documentURL: 'http://localhost:8620/shelf/ocr?token=document-secret#fragment',
         request: {
           headers: { Authorization: 'must-not-be-copied' },
           method: 'GET',
           postData: 'must-not-be-copied',
-          url: 'http://localhost:8620/bundle.js',
+          url: 'http://localhost:8620/bundle.js?platform=web&token=request-secret#fragment',
         },
         requestId: 'request-1',
         type: 'Script',
@@ -436,13 +487,13 @@ test('browser-event evidence is bounded while preserving privacy-relevant reques
 
   assert.deepEqual(sanitized, [
     {
-      documentURL: 'http://localhost:8620/shelf/ocr',
+      documentURL: 'http://localhost:8620/shelf/ocr?redacted-query',
       method: 'Network.requestWillBeSent',
       observedAt: '2026-07-18T00:00:00.000Z',
       requestId: 'request-1',
       requestMethod: 'GET',
       type: 'Script',
-      url: 'http://localhost:8620/bundle.js',
+      url: 'http://localhost:8620/bundle.js?redacted-query',
     },
     {
       method: 'Runtime.consoleAPICalled',
@@ -451,7 +502,235 @@ test('browser-event evidence is bounded while preserving privacy-relevant reques
       type: 'warning',
     },
   ]);
-  assert.doesNotMatch(JSON.stringify(sanitized), /Authorization|postData|must-not-be-copied/);
+  assert.doesNotMatch(
+    JSON.stringify(sanitized),
+    /Authorization|postData|must-not-be-copied|document-secret|request-secret|fragment/,
+  );
+});
+
+test('diagnostic evidence redacts host paths, external documentation URLs, ANSI, and excess bytes', () => {
+  const sanitized = sanitizeCat05DiagnosticText(
+    '\u001b[33mStarting project at C:\\Users\\local-user\\repo\\apps\\mobile. See https://react.dev/link/react-devtools.\u001b[0m ' +
+      'x '.repeat(500),
+    {
+      homePaths: ['C:\\Users\\local-user'],
+      maxBytes: 160,
+      repoRootPath: 'C:\\Users\\local-user\\repo',
+      temporaryDirectory: 'C:\\Users\\local-user\\Temp',
+    },
+  );
+
+  assert.match(sanitized, /Starting project at <repo-root>/);
+  assert.match(sanitized, /<external-network-url>/);
+  assert.match(sanitized, /CAT05 log truncated after sanitization/);
+  assert.ok(Buffer.byteLength(sanitized, 'utf8') <= 160);
+  assert.doesNotMatch(sanitized, /local-user|react\.dev|\u001b/);
+
+  const browserEvents = sanitizeBrowserEvents([
+    {
+      method: 'Runtime.consoleAPICalled',
+      params: {
+        args: [{ value: 'See https://react.dev/link/react-devtools' }],
+        type: 'info',
+      },
+    },
+  ]);
+  assert.equal(browserEvents[0].text, 'See <external-network-url>');
+
+  const hostHome = process.env.USERPROFILE ?? process.env.HOME ?? 'C:\\Users\\fixture-home';
+  const nested = sanitizeBrowserEvents([
+    {
+      method: 'Log.entryAdded',
+      params: {
+        entry: {
+          headers: { Authorization: 'must-not-survive' },
+          text: `${hostHome}\\private and https://docs.sentry.io/example`,
+        },
+      },
+    },
+  ]);
+  const nestedText = JSON.stringify(nested);
+  assert.ok(!nestedText.includes(hostHome));
+  assert.doesNotMatch(nestedText, /sentry\.io|Authorization|must-not-survive/);
+
+  const adversarial = sanitizeCat05DiagnosticText(
+    '\u001b]8;;https://tracking.example/secret\u0007linked\u001b]8;;\u0007\u0001 ' +
+      'c:\\users\\local-user\\repo\\secret.txt /c/Users/local-user/repo/second.txt ' +
+      '\\\\?\\C:\\Users\\local-user\\repo\\third.txt ' +
+      'http://docs.example.test/path?token=url-secret ' +
+      'Authorization: Bearer abcdefghijklmnopqrstuvwxyz.123456789 ' +
+      '?api_key=query-secret data:image/png;base64,private-photo ' +
+      'A'.repeat(200),
+    {
+      homePaths: ['C:\\Users\\local-user'],
+      maxBytes: 5_000,
+      repoRootPath: 'C:\\Users\\local-user\\repo',
+      temporaryDirectory: 'C:\\Users\\local-user\\Temp',
+    },
+  );
+  assert.doesNotMatch(
+    adversarial,
+    /local-user|tracking\.example|docs\.example|url-secret|query-secret|private-photo|abcdefghijkl|\u001b|\u0001|A{160}/i,
+  );
+  assert.match(adversarial, /<repo-root>|<user-home>/);
+  assert.match(adversarial, /<redacted-bearer-token>/);
+  assert.match(adversarial, /<redacted-data-uri>/);
+  assert.match(adversarial, /<redacted-long-base64>/);
+
+  const credentialAssignments = sanitizeCat05DiagnosticText(
+    [
+      'NPM_TOKEN=npm-value',
+      'gh_token: gh-value',
+      'GITHUB_TOKEN = "github value"',
+      'RELEASE_ACCESS_TOKEN=release-value',
+      'password=hunter2',
+      'passcode: 123456',
+      'secret = client-secret-value',
+      'api-key=api-key-value',
+      'x-api-key: x-api-key-value',
+      'apikey = generic-api-key-value',
+      'Authorization=Basic ZmFrZTpmYWtl',
+      'authorization: Digest username="fake", response="fake"',
+      'Authorization: Custom fake-authorization-value',
+      `sourceGitSha=${'a'.repeat(40)}`,
+      `fixtureConfigurationSha256: ${'b'.repeat(64)}`,
+      'This secret is described without an assignment.',
+    ].join('\n'),
+    { maxBytes: 10_000 },
+  );
+  assert.doesNotMatch(
+    credentialAssignments,
+    /npm-value|gh-value|github value|release-value|hunter2|123456|client-secret-value|api-key-value|ZmFrZTpmYWtl|username=|response=|fake-authorization-value/iu,
+  );
+  assert.ok((credentialAssignments.match(/<redacted-credential>/gu) ?? []).length >= 12);
+  assert.match(credentialAssignments, new RegExp(`sourceGitSha=${'a'.repeat(40)}`));
+  assert.match(credentialAssignments, new RegExp(`fixtureConfigurationSha256: ${'b'.repeat(64)}`));
+  assert.match(credentialAssignments, /This secret is described without an assignment\./u);
+
+  const tiny = sanitizeCat05DiagnosticText('multibyte-æ°´'.repeat(10), {
+    homePaths: [],
+    maxBytes: 7,
+    repoRootPath: '',
+    temporaryDirectory: '',
+  });
+  assert.ok(Buffer.byteLength(tiny, 'utf8') <= 7);
+  assert.doesNotMatch(tiny, /\uFFFD/u);
+
+  assert.equal(
+    sanitizeCat05EvidenceUrl('http://localhost:8620/shelf/ocr?token=secret#fragment'),
+    'http://localhost:8620/shelf/ocr?redacted-query',
+  );
+  assert.equal(
+    sanitizeCat05EvidenceUrl('file:///C:/Users/local-user/private.jpg'),
+    '<redacted-file-uri>',
+  );
+  assert.equal(
+    sanitizeCat05EvidenceUrl('https://analytics.example/private'),
+    '<external-network-url>',
+  );
+
+  const safeDiagnostic = JSON.stringify(
+    sanitizeCat05DiagnosticValue({
+      accessToken: 'must-not-survive',
+      message: 'Bearer abcdefghijklmnop and http://outside.example/private',
+    }),
+  );
+  assert.doesNotMatch(safeDiagnostic, /must-not-survive|abcdefghijklmnop|outside\.example/);
+});
+
+test('browser-event evidence fails closed on count and byte budgets with explicit retention facts', () => {
+  const retained = buildCat05BrowserEventEvidence([
+    {
+      method: 'Network.requestWillBeSent',
+      params: {
+        documentURL: 'http://localhost:8620/shelf/ocr',
+        request: { method: 'GET', url: 'http://localhost:8620/index.bundle?token=secret' },
+        requestId: 'one',
+        type: 'Script',
+      },
+    },
+    { method: 'Network.loadingFinished', params: { requestId: 'one' } },
+  ]);
+  assert.equal(retained.retention.inputEventCount, 2);
+  assert.equal(retained.retention.retainedEventCount, 1);
+  assert.equal(retained.retention.ignoredEventCount, 1);
+  assert.equal(retained.retention.truncated, false);
+  assert.doesNotMatch(JSON.stringify(retained), /secret/);
+
+  const event = {
+    method: 'Runtime.consoleAPICalled',
+    params: { args: [{ value: 'bounded' }], type: 'info' },
+  };
+  assert.throws(
+    () => sanitizeBrowserEvents(Array.from({ length: 5_001 }, () => event)),
+    /exceeded 5000 retained events/,
+  );
+  const largeEvent = {
+    method: 'Runtime.consoleAPICalled',
+    params: { args: [{ value: 'x '.repeat(1_500) }], type: 'info' },
+  };
+  assert.throws(
+    () => sanitizeBrowserEvents(Array.from({ length: 2_500 }, () => largeEvent)),
+    /browser-event evidence exceeded 4194304 bytes/,
+  );
+});
+
+test('Expo diagnostic collection is bounded before raw evidence persistence', () => {
+  const evidenceDir = mkdtempSync(path.join(tmpdir(), 'cat05-expo-log-'));
+  try {
+    writeFileSync(path.join(evidenceDir, 'expo-recognized.log'), '');
+    const capture = createCat05ExpoLogCapture(64);
+    appendCat05ExpoLogCapture(capture, 'safe complete line\n');
+    appendCat05ExpoLogCapture(
+      capture,
+      `Bearer must-not-survive ${'A'.repeat(500)} C:\\Users\\private-user\\secret`,
+    );
+    const sanitized = sanitizeCat05ExpoFixtureLog(evidenceDir, 'recognized', capture);
+    assert.equal(capture.capturedBytes, 64);
+    assert.ok(capture.droppedBytes > 0);
+    assert.match(sanitized, /safe complete line/);
+    assert.match(sanitized, /raw Expo log collection truncated before sanitization/);
+    assert.doesNotMatch(sanitized, /must-not-survive|private-user|A{100}/);
+    assert.equal(readFileSync(path.join(evidenceDir, 'expo-recognized.log'), 'utf8'), sanitized);
+  } finally {
+    rmSync(evidenceDir, { force: true, recursive: true });
+  }
+});
+
+test('whole-packet diagnostic hygiene fails closed and write boundaries use sanitized values', () => {
+  const evidenceDir = mkdtempSync(path.join(tmpdir(), 'cat05-hygiene-'));
+  try {
+    writeFileSync(
+      path.join(evidenceDir, 'diagnostic.json'),
+      `${JSON.stringify({ message: 'NPM_TOKEN=must-not-survive' })}\n`,
+    );
+    assert.throws(
+      () => assertCat05DiagnosticPacketHygiene(evidenceDir, ['diagnostic.json']),
+      /diagnostic hygiene violation/,
+    );
+    writeFileSync(
+      path.join(evidenceDir, 'diagnostic.json'),
+      `${JSON.stringify({ message: 'NPM_TOKEN=<redacted-credential>' })}\n`,
+    );
+    assert.equal(
+      assertCat05DiagnosticPacketHygiene(evidenceDir, ['diagnostic.json'], {
+        browserPath: 'chrome.exe',
+        fatalError: null,
+      }),
+      true,
+    );
+  } finally {
+    rmSync(evidenceDir, { force: true, recursive: true });
+  }
+
+  assert.match(source, /summary\.browserPath = path\.basename\(browserExecutablePath\)/);
+  assert.match(source, /summary\.fatalError \?\?= sanitizeCat05DiagnosticError\(error\)/);
+  assert.match(source, /result\.error = sanitizeCat05DiagnosticError\(error\)/);
+  assert.match(source, /sanitizeCat05BrowserFailures\(/);
+  assert.match(
+    source,
+    /assertCat05DiagnosticPacketHygiene\(evidenceDir, summary\.artifacts, summary\)/,
+  );
 });
 
 test('source provenance refuses uncommitted source but permits declared runtime and evidence output', () => {

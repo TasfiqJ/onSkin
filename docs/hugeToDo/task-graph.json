@@ -637,8 +637,8 @@
       "id": "CAT-05",
       "owner": "C",
       "prerequisites": ["CAT-04"],
-      "nextAction": "Complete and capture acceptance evidence: Implement real iOS-native OCR with editable confidence-aware output",
-      "acceptance": "Clear, curved, tiny, multilingual, and glare-heavy labels pass real-device QA"
+      "nextAction": "Complete and capture acceptance evidence: Validate and release-gate the iOS-native OCR source candidate with bounded editable output and local-only photo handling",
+      "acceptance": "Exact signed-build evidence passes the governed two-iPhone, 25-label/50-run accuracy, RTL, privacy/cleanup, accessibility, and performance contracts"
     },
     {
       "id": "CAT-06",
