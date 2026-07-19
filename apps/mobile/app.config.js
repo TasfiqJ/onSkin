@@ -52,6 +52,11 @@ const EXPORT_CLASSIFICATIONS = new Set(['exempt', 'non_exempt']);
 const MAX_APPLE_EXPORT_COMPLIANCE_CODE_LENGTH = 1024;
 const IOS_BUILD_NUMBER_PATTERN = /^[1-9]\d{0,17}$/;
 const SUPPORT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CAMERA_PERMISSION_PRODUCT_NAME_TOKEN = '$(PRODUCT_NAME)';
+const CAMERA_PERMISSION_PRODUCT_NAME_CONTROL_CHAR_RE = /[\u0000-\u001F\u007F-\u009F]/;
+const CAMERA_PERMISSION_PRODUCT_NAME_BUILD_VARIABLE_RE = /\$(?:\(|\{)/u;
+const REVIEWED_CAMERA_PERMISSION_TEMPLATE =
+  'Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
 
 const variantSuffix =
   {
@@ -205,6 +210,67 @@ function productionUrl(value) {
 
 function hasValue(value) {
   return String(value ?? '').trim().length > 0;
+}
+
+function assertCameraPermissionCompatibilityInput(name, value, reviewedCopy) {
+  // These legacy keys remain readable only so a blank documented dotenv
+  // assignment does not break local builds. They are not customization points:
+  // accepting arbitrary copy here would let an EAS environment silently replace
+  // the reviewed purpose string after source review.
+  if (value === undefined || value === '') return;
+  if (typeof value !== 'string' || value !== reviewedCopy) {
+    throw new Error(
+      `${name} must be blank or exactly equal the reviewed camera permission copy derived from the resolved app display name. Remove this legacy override to use the deterministic source-reviewed value.`,
+    );
+  }
+}
+
+function assertCameraPermissionProductName(appName) {
+  if (
+    typeof appName !== 'string' ||
+    !appName ||
+    appName.trim() !== appName ||
+    CAMERA_PERMISSION_PRODUCT_NAME_CONTROL_CHAR_RE.test(appName) ||
+    appName.includes(CAMERA_PERMISSION_PRODUCT_NAME_TOKEN) ||
+    CAMERA_PERMISSION_PRODUCT_NAME_BUILD_VARIABLE_RE.test(appName)
+  ) {
+    throw new Error(
+      'The resolved app display name used in camera permission copy must be non-empty, contain no surrounding whitespace or control characters, and contain no Xcode/build-variable syntax such as $(...) or ${...}.',
+    );
+  }
+}
+
+function resolveCameraPermissionCopy(appName) {
+  const baseCameraPlugin = (base.expo.plugins ?? []).find(
+    (plugin) => pluginName(plugin) === 'expo-camera',
+  );
+  const baseUsageDescription = base.expo.ios?.infoPlist?.NSCameraUsageDescription;
+  const basePluginPermission = pluginOptions(baseCameraPlugin).cameraPermission;
+  if (
+    baseUsageDescription !== REVIEWED_CAMERA_PERMISSION_TEMPLATE ||
+    basePluginPermission !== REVIEWED_CAMERA_PERMISSION_TEMPLATE
+  ) {
+    throw new Error(
+      'Base iOS NSCameraUsageDescription and expo-camera cameraPermission must both equal the reviewed camera permission template.',
+    );
+  }
+
+  assertCameraPermissionProductName(appName);
+  const reviewedCopy = REVIEWED_CAMERA_PERMISSION_TEMPLATE.replace(
+    CAMERA_PERMISSION_PRODUCT_NAME_TOKEN,
+    () => appName,
+  );
+  assertCameraPermissionCompatibilityInput(
+    'APP_CAMERA_USAGE_DESCRIPTION',
+    process.env.APP_CAMERA_USAGE_DESCRIPTION,
+    reviewedCopy,
+  );
+  assertCameraPermissionCompatibilityInput(
+    'APP_CAMERA_PERMISSION',
+    process.env.APP_CAMERA_PERMISSION,
+    reviewedCopy,
+  );
+  return reviewedCopy;
 }
 
 function placeholderEnvValue(value) {
@@ -364,16 +430,13 @@ module.exports = () => {
 
   expo.name = displayName(expo.name);
   const appName = expo.name;
+  const cameraPermission = resolveCameraPermissionCopy(appName);
   const permissionCopy = {
-    cameraUsageDescription:
-      process.env.APP_CAMERA_USAGE_DESCRIPTION ??
-      `${appName} uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.`,
+    cameraUsageDescription: cameraPermission,
     faceIDUsageDescription:
       process.env.APP_FACE_ID_USAGE_DESCRIPTION ??
       `${appName} uses Face ID to keep your private photo timeline for your eyes only.`,
-    cameraPermission:
-      process.env.APP_CAMERA_PERMISSION ??
-      `Allow ${appName} to scan barcodes, capture ingredient labels, and take guided progress photos.`,
+    cameraPermission,
     faceIDPermission:
       process.env.APP_FACE_ID_PERMISSION ??
       `${appName} uses Face ID to keep your private photo timeline for your eyes only.`,

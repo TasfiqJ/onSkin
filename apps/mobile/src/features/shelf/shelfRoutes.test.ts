@@ -501,7 +501,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("'Scan ingredient label. Capture label, then type from it'");
     expect(source).toContain("'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'");
     expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
-    expect(source).toContain('{canShowCamera ? (');
+    expect(source).toContain('{cameraUnavailable && canShowCamera ? (');
+    expect(source).toContain(': shouldMountCamera ? (');
     expect(source).toContain("'absolute left-8 right-8 top-[34px] h-8 rounded-[12px]'");
     expect(source).toContain("'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'");
     expect(source).toContain('!compactScanSurface ? (');
@@ -530,6 +531,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('alertOnFailure: false');
     expect(source).toContain('canShowPermissionRecovery');
     expect(source).toContain('canAskCameraPermission');
+    expect(source).toContain('canRetryCameraPermission');
     expect(source).toContain(
       'min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3',
     );
@@ -542,17 +544,92 @@ describe('Shelf route mobile contracts', () => {
   it('requests the system camera prompt only from the focused user-entered Scan route', () => {
     const source = readAppRoute('shelf/scan.tsx');
 
-    expect(source).toContain('const permissionRequestStarted = useRef(false);');
     expect(source).toContain(
-      'Entering Scan is the user-initiated context for the system permission',
+      "import { useCameraAccessLifecycle } from '@/features/native/camera/useCameraAccessLifecycle';",
     );
-    expect(source).toMatch(
-      /useEffect\(\(\) => \{[\s\S]*?!isFocused[\s\S]*?permission\?\.status !== 'undetermined'[\s\S]*?permissionRequestStarted\.current[\s\S]*?void requestPermission\(\)\.catch/,
+    expect(source).toContain('available: cameraEnabled && !forceDeniedCameraPermission,');
+    expect(source).toContain('mountAllowed: cameraEnabled && !forceDeniedCameraPermission,');
+    expect(source).toContain('autoRequestOnUndetermined: true,');
+    expect(source).toContain("permissionFailure === 'refresh_failed'");
+    expect(source).toContain("permissionFailure === 'refresh_failed' || canAskCameraPermission");
+    expect(source).toContain(
+      'permissionRecoveryFailed || (!permissionGranted && Boolean(permission))',
     );
-    expect(source).toContain('permissionRequestStarted.current = true;');
-    expect(source).toContain("canAskCameraPermission ? 'Continue' : 'Open settings'");
+    expect(source).toContain('await refreshCameraPermission();');
+    expect(source).toContain('await requestCameraPermission();');
+    expect(source).toContain('permissionBusy');
+    expect(source).toContain("? 'Try again'");
+    expect(source).toContain("? 'Continue'");
+    expect(source).toContain(": 'Open settings'");
+    expect(source).not.toContain('useCameraPermissions');
+    expect(source).not.toContain('permissionRequestStarted');
     expect(source).not.toContain("'Allow camera'");
     expect(source).not.toContain('>Allow camera<');
+    expect(source).toContain('CAMERA_PERMISSION_FAILURE_COPY[permissionFailure]');
+    expect(source).toContain('{permissionFailureCopy.title}');
+    expect(source).toContain('{permissionFailureCopy.body}');
+    expect(source).toContain('<View accessibilityRole="alert">');
+  });
+
+  it('fences the barcode camera across background, blur, mount retry, and stale lookup work', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain('key={cameraKey}');
+    expect(source).toContain('active={cameraActive}');
+    expect(source).toContain('enableTorch={torch && cameraActive}');
+    expect(source).toContain('onCameraReady={onCameraReady}');
+    expect(source).toContain('onMountError={onCameraMountError}');
+    expect(source).toContain('const canUseCameraControls = canShowCamera && canCapture;');
+    expect(source).toContain('disabled={!canUseCameraControls}');
+    expect(source).toContain('torchSession.cameraGeneration === cameraGeneration');
+    expect(source).toContain("scanState.kind === 'looking_up'");
+    expect(source).toContain('!cameraActive || lookupCameraGeneration !== cameraGeneration');
+    expect(source).toContain(
+      'lastScan.current?.cameraGeneration === cameraOperation.cameraGeneration',
+    );
+    expect(source).toContain('setLookupCameraGeneration(cameraOperation.cameraGeneration);');
+    expect(source).toContain('const cameraOperation = beginCameraOperation();');
+    expect(source).toContain('requestId === lookupRequestId.current');
+    expect(source).toContain('isCameraOperationCurrent(cameraOperation)');
+
+    const callbackStart = source.indexOf(
+      'const onBarcodeScanned = (result: BarcodeScanningResult) => {',
+    );
+    const leaseStart = source.indexOf(
+      'const cameraOperation = beginCameraOperation();',
+      callbackStart,
+    );
+    const normalizationStart = source.indexOf(
+      'normalizeScannedBarcode(result.data, result.type)',
+      callbackStart,
+    );
+    const duplicateMutation = source.indexOf('lastScan.current = {', callbackStart);
+    const invalidMutation = source.indexOf("kind: 'invalid'", callbackStart);
+    const rejectedAnalytics = source.indexOf("track('barcode_decode_rejected'", callbackStart);
+    expect(callbackStart).toBeGreaterThan(-1);
+    expect(leaseStart).toBeGreaterThan(callbackStart);
+    expect(normalizationStart).toBeGreaterThan(leaseStart);
+    expect(duplicateMutation).toBeGreaterThan(leaseStart);
+    expect(invalidMutation).toBeGreaterThan(leaseStart);
+    expect(rejectedAnalytics).toBeGreaterThan(leaseStart);
+
+    const lookupStart = source.indexOf('void lookupBarcode(normalized.lookupValue)');
+    const currentFence = source.indexOf('if (!lookupIsCurrent()) return;', lookupStart);
+    const scanLog = source.indexOf('shelfScanResultFromLookup(response.result)', lookupStart);
+    const stateCommit = source.indexOf("if (response.result === 'matched')", lookupStart);
+    expect(lookupStart).toBeGreaterThan(-1);
+    expect(currentFence).toBeGreaterThan(lookupStart);
+    expect(scanLog).toBeGreaterThan(currentFence);
+    expect(stateCommit).toBeGreaterThan(currentFence);
+
+    expect(source).toContain('retryCameraMount();');
+    expect(source).toContain('accessibilityLabel="Try barcode camera again"');
+    expect(source).toContain('Try camera again');
+    expect(source).toContain(
+      'The camera did not start. Search, label scan, and manual add still work.',
+    );
+    expect(source).not.toContain('console.error');
+    expect(source).not.toContain('console.warn');
   });
 
   it('fails a development external-candidate fixture closed without an Add action', () => {
@@ -841,6 +918,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('alertOnFailure: false');
     expect(source).toContain('canShowPermissionRecovery');
     expect(source).toContain('canAskCameraPermission');
+    expect(source).toContain('cameraAccess.permissionBusy');
+    expect(source).toContain('CAMERA_PERMISSION_FAILURE_COPY[cameraAccess.permissionFailure]');
+    expect(source).toContain('{permissionFailureCopy.title}');
+    expect(source).toContain('{permissionFailureCopy.body}');
+    expect(source).toContain('? permissionFailureCopy.retryLabel');
+    expect(source).toContain('const pendingCleanup = cleanupFailed ||');
+    expect(source).toContain('if (!staleCameraOperation || pendingCleanup)');
+    expect(source).toContain('cameraAccess.isCameraOperationLeaseCurrent(cameraLease)');
     expect(source).toContain(
       'min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3',
     );

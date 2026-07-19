@@ -464,15 +464,14 @@ test('CAT05 label and Progress shutters await the shared boot drain before captu
   );
 });
 
-test('CAT05 Progress capture lease deletes stale raw photos before returning', () => {
+test('CAT05 Progress capture lease drains stale raw photos before returning', () => {
   const source = read(progressCaptureRoutePath);
-  const awaitedRawDelete =
-    'await FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined);';
 
   for (const declaration of [
     'const mountedRef = useRef(false);',
     'const captureLeaseGenerationRef = useRef(0);',
     'const captureInFlightRef = useRef<number | null>(null);',
+    'const pendingRawCaptureLifecycleRef = useRef<ProgressCaptureReviewLifecycle | null>(null);',
     'let rawCaptureUri: string | null = null;',
   ]) {
     assert.ok(source.includes(declaration), `Progress capture lease is missing ${declaration}`);
@@ -484,38 +483,53 @@ test('CAT05 Progress capture lease deletes stale raw photos before returning', (
   );
   matches(
     source,
-    /if \(!isFocused\) captureLeaseGenerationRef\.current \+= 1;/u,
-    'Blur must invalidate the active capture generation.',
+    /if \(!cameraAccess\.isForegroundFocused\) captureLeaseGenerationRef\.current \+= 1;/u,
+    'Blur or background must invalidate the active capture generation.',
   );
   matches(
     source,
-    /const closeToProgress = \(\) => \{[\s\S]*captureLeaseGenerationRef\.current \+= 1;[\s\S]*backOrReplace\(router, APP_PROGRESS_ROUTE\);/u,
-    'Explicit close must invalidate capture before navigation.',
+    /function closeToProgress\(\) \{[\s\S]*captureLeaseGenerationRef\.current \+= 1;[\s\S]*captureBoundary\.requestProgressExit\(\);/u,
+    'Explicit close must invalidate capture before protected navigation.',
   );
   matches(
     source,
-    /const captureLease = \+\+captureLeaseGenerationRef\.current;[\s\S]*captureInFlightRef\.current = captureLease;/u,
-    'A capture must acquire one generation-bound single-flight lease.',
+    /const cameraOperation = usesNativeCamera \? cameraAccess\.beginCameraOperation\(\) : null;[\s\S]*if \(!captureBoundary\.beginShutter\(\)\) return;[\s\S]*const captureLease = \+\+captureLeaseGenerationRef\.current;[\s\S]*captureInFlightRef\.current = captureLease;/u,
+    'A capture must acquire camera-session, route-boundary, and generation single-flight leases.',
   );
   matches(
     source,
-    /await waitForLabelPhotoStartupScavenge\(\);[\s\S]*if \(!mountedRef\.current \|\| captureLeaseGenerationRef\.current !== captureLease\) return;[\s\S]*takePictureAsync\(/u,
-    'A stale lease must return before opening the shutter.',
+    /await waitForLabelPhotoStartupScavenge\(\);[\s\S]*captureLeaseGenerationRef\.current !== captureLease[\s\S]*!cameraAccess\.isCameraOperationCurrent\(cameraOperation\)[\s\S]*return;[\s\S]*takePictureAsync\(/u,
+    'A stale route or camera-session lease must return before opening the shutter.',
   );
   matches(
     source,
-    /rawCaptureUri = trustedExpoCameraCaptureUri\(shot\.uri, FileSystem\.cacheDirectory\);[\s\S]*if \(rawCaptureUri === null\)[\s\S]*if \(!mountedRef\.current \|\| captureLeaseGenerationRef\.current !== captureLease\) \{[\s\S]*await FileSystem\.deleteAsync\(rawCaptureUri, \{ idempotent: true \}\)\.catch\(\(\) => undefined\);[\s\S]*rawCaptureUri = null;[\s\S]*return;[\s\S]*\}[\s\S]*track\('photo_capture_still_taken'/u,
-    'A photo resolving after blur, close, or unmount must be awaited through deletion before return or analytics.',
-  );
-  assert.equal(
-    source.split(awaitedRawDelete).length - 1,
-    2,
-    'Both stale-resolution and exception paths must await idempotent raw-photo deletion.',
+    /rawCaptureUri = trustedExpoCameraCaptureUri\(shot\.uri, FileSystem\.cacheDirectory\);[\s\S]*if \(rawCaptureUri === null\)[\s\S]*captureBoundary\.adoptRawCapture\(rawCaptureUri\);[\s\S]*captureLeaseGenerationRef\.current !== captureLease[\s\S]*!cameraAccess\.isCameraOperationCurrent\(cameraOperation\)[\s\S]*await captureBoundary\.retryCleanup\(\);[\s\S]*rawCaptureUri = null;[\s\S]*return;[\s\S]*track\('photo_capture_still_taken'/u,
+    'A photo resolving after blur, background, close, or unmount must enter the retained cleanup lifecycle and drain before return or analytics.',
   );
   matches(
     source,
-    /catch \{[\s\S]*if \(rawCaptureUri !== null\) \{[\s\S]*await FileSystem\.deleteAsync[\s\S]*\}[\s\S]*if \(mountedRef\.current && captureLeaseGenerationRef\.current === captureLease\) \{[\s\S]*setPhotoCaptureFailed\(true\);/u,
-    'Capture failure may write UI state only while the matching lease remains mounted.',
+    /catch \{[\s\S]*if \(rawCaptureUri !== null\) \{[\s\S]*cleanupSucceeded = await captureBoundary\.retryCleanup\(\);[\s\S]*\}[\s\S]*if \(!cleanupSucceeded\)[\s\S]*return;[\s\S]*captureLeaseGenerationRef\.current === captureLease[\s\S]*!staleCameraOperation[\s\S]*setPhotoCaptureFailed\(true\);/u,
+    'Capture failure must drain retained cleanup and may write failure UI only for the current route and camera session.',
+  );
+  assert.ok(
+    !source.includes(
+      'FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined)',
+    ),
+    'The route must not swallow raw-photo deletion failure outside the retained lifecycle.',
+  );
+  assert.ok(
+    source.includes('usePreventRemove(!routeRemovalReady'),
+    'Protected removal must remain armed until the route-owned boundary authorizes it.',
+  );
+  matches(
+    source,
+    /const operation = lifecycle\.discard\(\)\.then\([\s\S]*setCleanupFailed\(true\);[\s\S]*return false;/u,
+    'Delete failure must retain the lifecycle and expose cleanup retry state.',
+  );
+  matches(
+    source,
+    /pendingRawCaptureLifecycleRef\.current\?\.hasPendingCleanup\(\)[\s\S]*void retryCleanup\(\);[\s\S]*return;[\s\S]*markRouteRemovalReady\(\);/u,
+    'Protected navigation must retry retained cleanup before authorizing removal.',
   );
 });
 

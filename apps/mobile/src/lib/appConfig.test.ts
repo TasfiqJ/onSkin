@@ -221,6 +221,154 @@ describe('Expo app identity config', () => {
     expect(pluginNames).toContain('expo-apple-authentication');
   });
 
+  it('uses one exact reviewed camera purpose string in both generated iOS locations', () => {
+    const expo = buildExpoConfig({});
+    const expected =
+      'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+
+    expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(expected);
+    expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(expected);
+  });
+
+  it('expands the exact reviewed camera template with the resolved staging display name', () => {
+    const expo = buildExpoConfig({
+      APP_VARIANT: 'staging',
+      EXPO_PUBLIC_APP_ENV: 'staging',
+    });
+    const expected =
+      'Allow RoutineKind Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+
+    expect(expo.name).toBe('RoutineKind Staging');
+    expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(expected);
+    expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(expected);
+  });
+
+  it.each([
+    ' RoutineKind',
+    'RoutineKind ',
+    'Routine\nKind',
+    'Routine\u007fKind',
+    'Routine\u0085Kind',
+    '$(PRODUCT_NAME)',
+    'Routine $(PRODUCT_NAME)',
+    'Routine $(EXECUTABLE_NAME)',
+    'Routine $(PRODUCT_NAME:rfc1034identifier)',
+    'Routine ${PRODUCT_NAME}',
+  ])('rejects malformed resolved camera-purpose display name %j', (appDisplayName) => {
+    expect(() => buildExpoConfig({ APP_DISPLAY_NAME: appDisplayName })).toThrow(
+      /resolved app display name used in camera permission copy must be non-empty/,
+    );
+  });
+
+  it('applies camera-purpose display-name validation to the public identity fallback', () => {
+    expect(() =>
+      buildExpoConfig({ EXPO_PUBLIC_APP_DISPLAY_NAME: 'RoutineKind\tCandidate' }),
+    ).toThrow(/resolved app display name used in camera permission copy must be non-empty/);
+  });
+
+  it('derives reviewed camera copy when documented optional env assignments are blank', () => {
+    const expo = buildExpoConfig({
+      APP_CAMERA_USAGE_DESCRIPTION: '',
+      APP_CAMERA_PERMISSION: '',
+    });
+    const expected =
+      'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+
+    expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(expected);
+    expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(expected);
+  });
+
+  it.each(['APP_CAMERA_USAGE_DESCRIPTION', 'APP_CAMERA_PERMISSION'] as const)(
+    'accepts the exact derived camera copy through legacy %s without changing either iOS location',
+    (key) => {
+      const reviewedCopy =
+        'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+      const expo = buildExpoConfig({ [key]: reviewedCopy });
+
+      expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(reviewedCopy);
+      expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(reviewedCopy);
+    },
+  );
+
+  it('accepts the exact derived camera copy through both legacy env keys', () => {
+    const reviewedCopy =
+      'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+    const expo = buildExpoConfig({
+      APP_CAMERA_USAGE_DESCRIPTION: reviewedCopy,
+      APP_CAMERA_PERMISSION: reviewedCopy,
+    });
+
+    expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(reviewedCopy);
+    expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(reviewedCopy);
+  });
+
+  it('derives the exact reviewed production camera copy from the resolved display name', () => {
+    const reviewedCopy =
+      'Allow RoutineKind to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+    const expo = buildExpoConfig(
+      {
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+        EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+        APP_ENCRYPTION_CLASSIFICATION: 'exempt',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+      },
+      { releaseReadyReviewEvidence: true },
+    );
+
+    expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(reviewedCopy);
+    expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(reviewedCopy);
+  });
+
+  it.each(['APP_CAMERA_USAGE_DESCRIPTION', 'APP_CAMERA_PERMISSION'] as const)(
+    'rejects unreviewed %s wording even when it is nonempty and well-formed',
+    (key) => {
+      expect(() =>
+        buildExpoConfig({
+          [key]:
+            'Allow RoutineKind Dev to use the camera for reviewed barcode, label, and local progress-photo capture.',
+        }),
+      ).toThrow(/must be blank or exactly equal the reviewed camera permission copy/);
+    },
+  );
+
+  it('fails closed when matching legacy camera values try to replace the reviewed wording', () => {
+    const alternateCopy = 'Allow RoutineKind Dev to use the camera for local capture flows.';
+    expect(() =>
+      buildExpoConfig({
+        APP_CAMERA_USAGE_DESCRIPTION: alternateCopy,
+        APP_CAMERA_PERMISSION: alternateCopy,
+      }),
+    ).toThrow(/must be blank or exactly equal the reviewed camera permission copy/);
+  });
+
+  it('rejects production camera-copy drift before later production clearance gates', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        APP_CAMERA_USAGE_DESCRIPTION: 'Allow an unrelated production camera purpose.',
+      }),
+    ).toThrow(/must be blank or exactly equal the reviewed camera permission copy/);
+  });
+
+  it('rejects malformed legacy camera inputs instead of trimming or normalizing them', () => {
+    expect(() => buildExpoConfig({ APP_CAMERA_USAGE_DESCRIPTION: '   ' })).toThrow(
+      /must be blank or exactly equal the reviewed camera permission copy/,
+    );
+    expect(() => buildExpoConfig({ APP_CAMERA_USAGE_DESCRIPTION: ' Reviewed purpose. ' })).toThrow(
+      /must be blank or exactly equal the reviewed camera permission copy/,
+    );
+    expect(() => buildExpoConfig({ APP_CAMERA_PERMISSION: 'Purpose\ncopy' })).toThrow(
+      /must be blank or exactly equal the reviewed camera permission copy/,
+    );
+  });
+
   it('keeps the unfinished iOS extension out of ordinary builds and requires an exact opt-in', () => {
     const ordinary = buildExpoConfig({});
     const qa = buildExpoConfig({ IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'true' });

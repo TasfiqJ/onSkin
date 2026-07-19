@@ -17,7 +17,7 @@
       "deploymentTarget": "17.0",
       "icon": "./assets/expo.icon",
       "infoPlist": {
-        "NSCameraUsageDescription": "RoutineKind uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.",
         "NSFaceIDUsageDescription": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only.",
         "NSSupportsLiveActivities": true
       },
@@ -74,7 +74,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to scan barcodes, capture ingredient labels, and take guided progress photos.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.",
           "recordAudioAndroid": false,
           "barcodeScannerEnabled": true
         }

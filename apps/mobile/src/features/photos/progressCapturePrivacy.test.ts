@@ -58,17 +58,61 @@ describe('Progress raw capture trust boundary', () => {
     expect(trustedExpoCameraCaptureUri(CAMERA_URI, 'https://example.com/cache/')).toBeNull();
   });
 
-  it('validates native output before any capture-route read, delete, or handoff', () => {
+  it('validates native output before any capture-route lifecycle or handoff', () => {
     const source = readFileSync(CAPTURE_ROUTE, 'utf8');
     const validation = source.indexOf(
       'rawCaptureUri = trustedExpoCameraCaptureUri(shot.uri, FileSystem.cacheDirectory);',
     );
 
     expect(validation).toBeGreaterThan(source.indexOf('takePictureAsync'));
-    expect(validation).toBeLessThan(source.indexOf('FileSystem.deleteAsync(rawCaptureUri'));
+    expect(validation).toBeLessThan(
+      source.indexOf('captureBoundary.adoptRawCapture(rawCaptureUri)'),
+    );
     expect(validation).toBeLessThan(source.indexOf('capturedUri: rawCaptureUri'));
     expect(source).toContain("throw new Error('UNTRUSTED_PROGRESS_CAPTURE_URI')");
     expect(source).not.toContain('capturedUri: shot.uri');
+  });
+
+  it('retains a stale native capture for visible cleanup retry before another shutter or exit', () => {
+    const source = readFileSync(CAPTURE_ROUTE, 'utf8');
+    const validation = source.indexOf(
+      'rawCaptureUri = trustedExpoCameraCaptureUri(shot.uri, FileSystem.cacheDirectory);',
+    );
+    const adoption = source.indexOf('captureBoundary.adoptRawCapture(rawCaptureUri)');
+    const handoff = source.indexOf('capturedUri: rawCaptureUri');
+
+    expect(adoption).toBeGreaterThan(validation);
+    expect(adoption).toBeLessThan(handoff);
+    expect(source).toContain(
+      'const pendingRawCaptureLifecycleRef = useRef<ProgressCaptureReviewLifecycle | null>(null);',
+    );
+    expect(source).toContain('cleanupSucceeded = await captureBoundary.retryCleanup();');
+    expect(source).toContain('setCleanupFailed(true);');
+    expect(source).toContain('!captureBoundary.cleanupPending &&');
+    expect(source).toContain('mountAllowed: consented === true && !captureBoundary.cleanupPending');
+    expect(source).toContain('usePreventRemove(!routeRemovalReady');
+    expect(source).toContain('if (!captureBoundary.beginShutter()) return;');
+    expect(source).toContain('captureBoundary.finishShutter();');
+    expect(source).toContain('registerCaptureInvalidator');
+    expect(source).toContain('Temporary photo cleanup needs another try');
+    expect(source).toContain('Finish cleanup');
+    expect(source).toContain('Close after cleanup');
+    expect(source).toContain('pendingRawCaptureLifecycleRef.current = null;');
+    const outerBoundary = source.indexOf('const captureBoundary = useProgressCaptureBoundary();');
+    const outerRecovery = source.indexOf('if (captureBoundary.cleanupFailed) {');
+    const gate = source.indexOf('<ProGate feature="photo_timeline">');
+    expect(outerBoundary).toBeGreaterThan(-1);
+    expect(outerRecovery).toBeGreaterThan(outerBoundary);
+    expect(outerRecovery).toBeLessThan(gate);
+    expect(outerBoundary).toBeLessThan(gate);
+    expect(source.slice(outerRecovery, gate)).toContain('<PhotoTimelineLockGate>');
+    expect(source.slice(outerRecovery, gate)).toContain('<RawCaptureCleanupGate');
+    expect(source).toContain('<PhotoStorageGate onExit={captureBoundary.requestProgressExit}>');
+    expect(source).toContain('if (navigationInFlightRef.current) {');
+    expect(source).toContain('pendingNavigationRef.current = pending;');
+    expect(source).not.toContain(
+      'FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined)',
+    );
   });
 
   it('canonicalizes only bounded UUIDv4 capture sessions', () => {
@@ -128,7 +172,9 @@ describe('Progress raw capture trust boundary', () => {
     );
     expect(sessionValidation).toBeLessThan(source.indexOf("track('photo_capture_still_taken'"));
     expect(sessionValidation).toBeLessThan(
-      source.indexOf('captureSessionId,\n          capturedUri'),
+      source.indexOf(
+        'captureBoundary.handoffToReview({\n        captureSessionId,\n        capturedUri',
+      ),
     );
   });
 

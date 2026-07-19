@@ -1,6 +1,6 @@
-import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
+import { CameraView, type BarcodeScanningResult } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,7 +18,11 @@ import {
   shouldSuppressDuplicate,
   type DuplicateBarcodeGate,
 } from '@/features/native/camera/barcode';
-import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
+import {
+  CAMERA_FAILURE_COPY,
+  CAMERA_PERMISSION_FAILURE_COPY,
+} from '@/features/native/camera/failureCopy';
+import { useCameraAccessLifecycle } from '@/features/native/camera/useCameraAccessLifecycle';
 import { labelOcrNativeAvailability } from '@/features/native/ocr';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
@@ -47,6 +51,16 @@ type QueueFeedback =
   | { kind: 'saving'; barcode: string }
   | { kind: 'saved'; barcode: string; alreadyQueued: boolean }
   | { kind: 'error'; barcode: string };
+
+type TorchSession = Readonly<{
+  cameraGeneration: number;
+  enabled: boolean;
+}>;
+
+type DuplicateScanSession = Readonly<{
+  cameraGeneration: number;
+  gate: DuplicateBarcodeGate;
+}>;
 
 function devShelfScanFixtureState(): ScanState | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
@@ -151,75 +165,101 @@ function noMatchRoute(barcode: string, wrongProductId?: string | null) {
 export default function ScanScreen() {
   const isFocused = useIsFocused();
   const { height, width } = useWindowDimensions();
-  const [permission, requestPermission] = useCameraPermissions();
-  const { reset } = useIntake();
-  const [torch, setTorch] = useState(false);
-  const [state, setState] = useState<ScanState>(
-    () => devShelfScanFixtureState() ?? { kind: 'idle' },
-  );
-  const [cameraReady, setCameraReady] = useState(false);
-  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
-  const [queueFeedback, setQueueFeedback] = useState<QueueFeedback>({ kind: 'idle' });
-  const lastScan = useRef<DuplicateBarcodeGate | null>(null);
-  const queueRequestId = useRef(0);
-  const permissionRequestStarted = useRef(false);
-
   const cameraPermissionMode = devShelfCameraPermissionMode();
   const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
-  const permissionGranted = forceDeniedCameraPermission ? false : Boolean(permission?.granted);
-  const canAskCameraPermission = forceDeniedCameraPermission
-    ? false
-    : (permission?.canAskAgain ?? true);
+  const {
+    permission,
+    permissionBusy,
+    permissionFailure,
+    permissionGranted: lifecyclePermissionGranted,
+    canAskAgain: lifecycleCanAskAgain,
+    shouldMountCamera,
+    cameraActive,
+    cameraReady,
+    cameraUnavailable,
+    canCapture,
+    cameraGeneration,
+    cameraKey,
+    refreshCameraPermission,
+    requestCameraPermission,
+    retryCameraMount,
+    onCameraReady,
+    onCameraMountError,
+    beginCameraOperation,
+    isCameraOperationCurrent,
+  } = useCameraAccessLifecycle({
+    available: cameraEnabled && !forceDeniedCameraPermission,
+    isFocused,
+    mountAllowed: cameraEnabled && !forceDeniedCameraPermission,
+    autoRequestOnUndetermined: true,
+  });
+  const { reset } = useIntake();
+  const [torchSession, setTorchSession] = useState<TorchSession>({
+    cameraGeneration: -1,
+    enabled: false,
+  });
+  const [scanState, setState] = useState<ScanState>(
+    () => devShelfScanFixtureState() ?? { kind: 'idle' },
+  );
+  const [lookupCameraGeneration, setLookupCameraGeneration] = useState<number | null>(null);
+  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
+  const [queueFeedback, setQueueFeedback] = useState<QueueFeedback>({ kind: 'idle' });
+  const lastScan = useRef<DuplicateScanSession | null>(null);
+  const queueRequestId = useRef(0);
+  const lookupRequestId = useRef(0);
+
+  const permissionGranted = forceDeniedCameraPermission ? false : lifecyclePermissionGranted;
+  const canAskCameraPermission = forceDeniedCameraPermission ? false : lifecycleCanAskAgain;
+  const permissionRecoveryFailed = permissionFailure !== null;
+  const canRetryCameraPermission = permissionFailure === 'refresh_failed' || canAskCameraPermission;
   const canShowPermissionRecovery =
-    !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
+    forceDeniedCameraPermission ||
+    (cameraEnabled && (permissionRecoveryFailed || (!permissionGranted && Boolean(permission))));
+  const permissionFailureCopy =
+    permissionFailure === null ? null : CAMERA_PERMISSION_FAILURE_COPY[permissionFailure];
   const canShowCamera = cameraEnabled && permissionGranted;
+  const canUseCameraControls = canShowCamera && canCapture;
   const labelOcrAvailable = env.nativeOcrEnabled && labelOcrNativeAvailability() === 'configured';
   const supportFloorTextPressureScan = width <= 430 && height >= 640 && height <= 700;
   const compactScanSurface = height < 640 || supportFloorTextPressureScan;
   const splitShortScanSurface = height < 460;
   const showScanPreview = !splitShortScanSurface || canShowCamera;
+  const torch =
+    cameraActive && torchSession.cameraGeneration === cameraGeneration && torchSession.enabled;
+  // A lookup belongs to the exact camera generation that decoded it. Route
+  // blur/background invalidates that generation in the shared lifecycle, so
+  // stale work becomes idle without an effect-driven state cascade.
+  const state: ScanState =
+    scanState.kind === 'looking_up' &&
+    (!cameraActive || lookupCameraGeneration !== cameraGeneration)
+      ? { kind: 'idle' }
+      : scanState;
   const recoveryBarcode = 'barcode' in state && state.barcode ? state.barcode : null;
   const canQueueRetry =
     recoveryBarcode !== null && (state.kind === 'offline' || state.kind === 'error');
 
-  // Entering Scan is the user-initiated context for the system permission
-  // request. Avoid a custom pre-alert that imitates Apple's Allow action.
-  useEffect(() => {
-    if (
-      !isFocused ||
-      !cameraEnabled ||
-      forceDeniedCameraPermission ||
-      permission?.status !== 'undetermined' ||
-      permissionRequestStarted.current
-    ) {
-      return;
-    }
-    permissionRequestStarted.current = true;
-    void requestPermission().catch(() => {
-      setState({ kind: 'error', barcode: '', reason: 'Camera permission could not be requested.' });
-    });
-  }, [
-    cameraEnabled,
-    forceDeniedCameraPermission,
-    isFocused,
-    permission?.status,
-    requestPermission,
-  ]);
+  const cancelActiveLookup = () => {
+    lookupRequestId.current += 1;
+    setState((current) => (current.kind === 'looking_up' ? { kind: 'idle' } : current));
+  };
 
   const goManual = () => {
+    cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_manual');
     reset({ addedVia: 'manual', barcode: recoveryBarcode });
     router.push('/shelf/manual');
   };
   const goOcr = () => {
+    cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_label');
     reset({ addedVia: 'ocr', barcode: recoveryBarcode });
     router.push('/shelf/ocr');
   };
   const goSearch = () => {
+    cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_search');
     reset({ addedVia: 'search', barcode: recoveryBarcode });
@@ -285,11 +325,23 @@ export default function ScanScreen() {
   };
 
   const onBarcodeScanned = (result: BarcodeScanningResult) => {
+    // Native callbacks can already be queued when AppState/focus invalidates
+    // the rendered closure. Acquire the ref-fenced session before parsing,
+    // analytics, duplicate bookkeeping, or any visible state mutation.
+    const cameraOperation = beginCameraOperation();
+    if (cameraOperation === null) return;
     const normalized = normalizeScannedBarcode(result.data, result.type);
     if (!normalized) return;
     const now = Date.now();
-    if (shouldSuppressDuplicate(lastScan.current, normalized.lookupValue, now)) return;
-    lastScan.current = { barcode: normalized.lookupValue, atMs: now };
+    const duplicateGate =
+      lastScan.current?.cameraGeneration === cameraOperation.cameraGeneration
+        ? lastScan.current.gate
+        : null;
+    if (shouldSuppressDuplicate(duplicateGate, normalized.lookupValue, now)) return;
+    lastScan.current = {
+      cameraGeneration: cameraOperation.cameraGeneration,
+      gate: { barcode: normalized.lookupValue, atMs: now },
+    };
     queueRequestId.current += 1;
     setQueueFeedback({ kind: 'idle' });
 
@@ -302,10 +354,16 @@ export default function ScanScreen() {
       return;
     }
 
+    const requestId = ++lookupRequestId.current;
+    const lookupIsCurrent = () =>
+      requestId === lookupRequestId.current && isCameraOperationCurrent(cameraOperation);
+
+    setLookupCameraGeneration(cameraOperation.cameraGeneration);
     setState({ kind: 'looking_up', barcode: normalized.lookupValue });
     track('barcode_decode_success', { barcode_type: normalized.type });
     void lookupBarcode(normalized.lookupValue)
       .then((response) => {
+        if (!lookupIsCurrent()) return;
         const scanResult = shelfScanResultFromLookup(response.result);
         if (scanResult !== null) void recordShelfScan({ result: scanResult });
 
@@ -332,6 +390,7 @@ export default function ScanScreen() {
         });
       })
       .catch(() => {
+        if (!lookupIsCurrent()) return;
         setState({
           kind: 'error',
           barcode: normalized.lookupValue,
@@ -340,10 +399,24 @@ export default function ScanScreen() {
       });
   };
 
-  const requestCamera = () => {
+  const requestCamera = async () => {
     haptics.select();
     setSettingsOpenFailed(false);
-    void requestPermission();
+    try {
+      if (permissionFailure === 'refresh_failed') {
+        await refreshCameraPermission();
+      } else {
+        await requestCameraPermission();
+      }
+    } catch {
+      // The shared lifecycle publishes claim-safe retry state; native details
+      // must never reach logs or route copy.
+    }
+  };
+
+  const retryCamera = () => {
+    haptics.select();
+    retryCameraMount();
   };
 
   const openShelfCameraSettings = async () => {
@@ -374,16 +447,24 @@ export default function ScanScreen() {
             accessibilityLabel="Close"
             glyph="x"
             tone="night"
-            onPress={() => router.replace(APP_SHELF_ROUTE)}
+            onPress={() => {
+              cancelActiveLookup();
+              router.replace(APP_SHELF_ROUTE);
+            }}
           />
           <Pressable
             accessibilityRole="switch"
             accessibilityState={{ checked: torch }}
-            disabled={!canShowCamera}
-            onPress={() => setTorch((value) => !value)}
+            disabled={!canUseCameraControls}
+            onPress={() =>
+              setTorchSession((current) => ({
+                cameraGeneration,
+                enabled: current.cameraGeneration === cameraGeneration ? !current.enabled : true,
+              }))
+            }
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           >
-            <Text variant="label" tone={canShowCamera ? 'inverseMuted' : 'muted'}>
+            <Text variant="label" tone={canUseCameraControls ? 'inverseMuted' : 'muted'}>
               torch
             </Text>
           </Pressable>
@@ -402,48 +483,85 @@ export default function ScanScreen() {
                       : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
               }
             >
-              {canShowCamera ? (
+              {cameraUnavailable && canShowCamera ? (
+                <View className="flex-1 items-center justify-center px-5">
+                  <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
+                    Camera couldn&apos;t start
+                  </Text>
+                </View>
+              ) : shouldMountCamera ? (
                 <CameraView
-                  active={isFocused}
+                  key={cameraKey}
+                  active={cameraActive}
                   animateShutter={false}
                   barcodeScannerSettings={{ barcodeTypes: PRODUCT_BARCODE_TYPES }}
-                  enableTorch={torch}
+                  enableTorch={torch && cameraActive}
                   facing="back"
                   onBarcodeScanned={
-                    state.kind === 'looking_up' || state.kind === 'matched'
+                    !canCapture || state.kind === 'looking_up' || state.kind === 'matched'
                       ? undefined
                       : onBarcodeScanned
                   }
-                  onCameraReady={() => setCameraReady(true)}
-                  onMountError={() =>
-                    setState({
-                      kind: 'error',
-                      barcode: '',
-                      reason: 'Camera could not start on this device.',
-                    })
-                  }
+                  onCameraReady={onCameraReady}
+                  onMountError={onCameraMountError}
                   style={{ flex: 1 }}
                 />
               ) : (
                 <View className="flex-1 items-center justify-center px-7">
-                  <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
-                    Camera permission is needed for barcode scanning.
-                  </Text>
-                  <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
-                    You can still search, scan the label path, or add by hand.
-                  </Text>
+                  {permissionFailureCopy ? (
+                    <View accessibilityRole="alert">
+                      <Text
+                        variant="body"
+                        tone="inverse"
+                        className="text-center font-sans-semibold"
+                      >
+                        {permissionFailureCopy.title}
+                      </Text>
+                      <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                        {permissionFailureCopy.body}
+                      </Text>
+                    </View>
+                  ) : (
+                    <>
+                      <Text
+                        variant="body"
+                        tone="inverse"
+                        className="text-center font-sans-semibold"
+                      >
+                        {permissionGranted
+                          ? 'Checking camera access.'
+                          : 'Camera permission is needed for barcode scanning.'}
+                      </Text>
+                      <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                        You can still search, scan the label path, or add by hand.
+                      </Text>
+                    </>
+                  )}
                   {canShowPermissionRecovery ? (
                     <Pressable
                       accessibilityRole="button"
+                      accessibilityState={{
+                        busy: permissionBusy,
+                        disabled: permissionBusy,
+                      }}
+                      disabled={permissionBusy}
                       onPress={
-                        canAskCameraPermission
-                          ? requestCamera
+                        canRetryCameraPermission
+                          ? () => void requestCamera()
                           : () => void openShelfCameraSettings()
                       }
                       className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                     >
                       <Text className="font-sans-semibold text-night">
-                        {canAskCameraPermission ? 'Continue' : 'Open settings'}
+                        {permissionBusy
+                          ? 'Checking...'
+                          : permissionFailure === 'refresh_failed'
+                            ? 'Try again'
+                            : permissionRecoveryFailed && canAskCameraPermission
+                              ? 'Try again'
+                              : canAskCameraPermission
+                                ? 'Continue'
+                                : 'Open settings'}
                       </Text>
                     </Pressable>
                   ) : null}
@@ -467,7 +585,7 @@ export default function ScanScreen() {
                   ) : null}
                 </View>
               )}
-              {canShowCamera ? (
+              {shouldMountCamera ? (
                 <View
                   className={
                     splitShortScanSurface
@@ -511,6 +629,27 @@ export default function ScanScreen() {
         }
         style={{ position: 'relative', zIndex: 1 }}
       >
+        {cameraUnavailable ? (
+          <View
+            accessibilityRole="alert"
+            className="mb-3 flex-row items-center gap-3 rounded-[14px] bg-paper/10 p-3"
+          >
+            <Text variant="bodySm" tone="inverseMuted" className="min-w-0 flex-1">
+              The camera did not start. Search, label scan, and manual add still work.
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Try barcode camera again"
+              onPress={retryCamera}
+              className="min-h-[48px] items-center justify-center rounded-pill bg-paper px-4 py-2"
+            >
+              <Text variant="bodySm" className="font-sans-semibold text-night">
+                Try camera again
+              </Text>
+            </Pressable>
+          </View>
+        ) : null}
+
         {state.kind === 'looking_up' ? (
           <View className="mb-4 flex-row items-center gap-3">
             <ActivityIndicator />

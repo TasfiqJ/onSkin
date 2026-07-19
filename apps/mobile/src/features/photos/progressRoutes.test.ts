@@ -80,14 +80,20 @@ describe('Progress route mobile contracts', () => {
     const provider = readSource('lib/applock/AppLockProvider.tsx');
     const gate = readSource('features/photos/PhotoTimelineLockGate.tsx');
 
-    for (const source of routes) {
+    routes.forEach((source, index) => {
       expect(source).toContain(
         "import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';",
       );
       expect(source).toContain('<PhotoTimelineLockGate>');
       expect(source).toContain('</PhotoTimelineLockGate>');
-      expect(source.indexOf('<ProGate')).toBeLessThan(source.indexOf('<PhotoTimelineLockGate>'));
-    }
+      const normalProGate =
+        index === 1 ? source.lastIndexOf('<ProGate') : source.indexOf('<ProGate');
+      const normalTimelineGate =
+        index === 1
+          ? source.lastIndexOf('<PhotoTimelineLockGate>')
+          : source.indexOf('<PhotoTimelineLockGate>');
+      expect(normalProGate).toBeLessThan(normalTimelineGate);
+    });
     expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoTimelineLockGate');
     expect(provider).toContain('photoTimelineUnlocked');
     expect(provider).toContain('setPhotoTimelineUnlocked(false);');
@@ -118,7 +124,10 @@ describe('Progress route mobile contracts', () => {
       );
     }
     expect(routeSources[0]).toContain('<PhotoStorageGate tone="paper">');
-    for (const source of routeSources.slice(1)) {
+    expect(routeSources[1]).toContain(
+      '<PhotoStorageGate onExit={captureBoundary.requestProgressExit}>',
+    );
+    for (const source of routeSources.slice(2)) {
       expect(source).toContain(
         '<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
       );
@@ -200,7 +209,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('fontSize: shortPhone ? 10 : compact ? 10.5 : 11');
     expect(source).toContain('lineHeight: shortPhone ? 13 : compact ? 15 : undefined');
     expect(source).toContain('marginBottom: shortPhone ? 6 : compact ? 8 : 14');
-    expect(source.match(/height: 48/g)).toHaveLength(5);
+    expect(source.match(/height: 48/g)).toHaveLength(6);
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)'");
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)'");
     expect(source).toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)'");
@@ -220,6 +229,30 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('{canAttemptCapture ? (');
     expect(source).toContain('Try photo again');
     expect(source).toContain('Open settings');
+    expect(source).toContain('canRetryCameraPermission');
+    expect(source).toContain('CAMERA_PERMISSION_FAILURE_COPY[cameraAccess.permissionFailure]');
+    expect(source).toContain('permissionFailureCopy={permissionFailureCopy}');
+    expect(source).toContain('{permissionFailureCopy.title}');
+    expect(source).toContain('{permissionFailureCopy.body}');
+    expect(source).toContain('permissionFailureCopy?.retryLabel ?? askLabel');
+    expect(source).toContain('askLabel="Allow camera"');
+    expect(source).toContain('cameraAccess.beginCameraOperation()');
+    expect(source).toContain('cameraAccess.isCameraOperationCurrent(cameraOperation)');
+    expect(source).toContain('createProgressCaptureReviewLifecycle(FileSystem, {');
+    expect(source).toContain('pendingRawCaptureLifecycleRef');
+    expect(source).toContain('captureBoundary.retryCleanup()');
+    expect(source).toContain('captureBoundary.cleanupPending');
+    expect(source).toContain('captureBoundary.beginShutter()');
+    expect(source).toContain('captureBoundary.finishShutter()');
+    expect(source).toContain('RawCaptureCleanupGate');
+    expect(source).toContain('usePreventRemove(!routeRemovalReady');
+    expect(source).toContain('const captureBoundary = useProgressCaptureBoundary();');
+    expect(source.indexOf('const captureBoundary = useProgressCaptureBoundary();')).toBeLessThan(
+      source.indexOf('<ProGate feature="photo_timeline">'),
+    );
+    expect(source).not.toContain(
+      'FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined)',
+    );
     expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle');
     expect(source).not.toContain('backgroundColor="rgba(10,8,6,0.92)"');
     expect(source).not.toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)'");
@@ -240,9 +273,14 @@ describe('Progress route mobile contracts', () => {
 
     expect(consentGateIndex).toBeGreaterThan(-1);
     expect(captureHeaderIndex).toBeGreaterThan(consentGateIndex);
+    expect(source).toContain('useCameraAccessLifecycle({');
+    expect(source).toContain('available: cameraEnabled && !forceDeniedCameraPermission');
+    expect(source).toContain('mountAllowed: consented === true && !captureBoundary.cleanupPending');
+    expect(source).toContain('const canShowCamera =');
     expect(source).toContain(
-      'const canShowCamera =\n    consented === true &&\n    env.nativeCameraEnabled',
+      'consented === true && !captureBoundary.cleanupPending && cameraAccess.cameraActive;',
     );
+    expect(source).toContain('requestPermission: cameraAccess.requestPermission');
   });
 
   it('uses measured post-capture quality and never timer-generated scores', () => {

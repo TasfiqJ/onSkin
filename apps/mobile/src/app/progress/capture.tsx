@@ -1,17 +1,22 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView } from 'expo-camera';
 import * as FileSystem from 'expo-file-system/legacy';
-import { router, useIsFocused } from 'expo-router';
+import { router, useIsFocused, useNavigation } from 'expo-router';
+import { usePreventRemove, type NavigationAction } from 'expo-router/react-navigation';
 import { randomUUID } from 'expo-crypto';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
-import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
+import {
+  CAMERA_FAILURE_COPY,
+  CAMERA_PERMISSION_FAILURE_COPY,
+} from '@/features/native/camera/failureCopy';
 import {
   retryLabelPhotoStartupScavenge,
   startLabelPhotoStartupScavenge,
 } from '@/features/native/camera/labelPhotoStartup';
+import { useCameraAccessLifecycle } from '@/features/native/camera/useCameraAccessLifecycle';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { applyPhotoCaptureConsent } from '@/features/photos/applyCaptureConsent';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
@@ -21,8 +26,10 @@ import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import {
+  createProgressCaptureReviewLifecycle,
   trustedExpoCameraCaptureUri,
   trustedProgressCaptureSessionId,
+  type ProgressCaptureReviewLifecycle,
 } from '@/features/photos/progressCapturePrivacy';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
@@ -39,6 +46,38 @@ const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)';
 const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)';
 const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)';
 const NIGHT_CONSENT_OVERLAY_BG = '#100D0A';
+
+type ProtectedCaptureNavigation =
+  | Readonly<{ kind: 'action'; action: NavigationAction }>
+  | Readonly<{ kind: 'progress' }>
+  | Readonly<{
+      kind: 'review';
+      params: Readonly<{
+        captureSessionId: string;
+        capturedUri: string;
+        photoHeight: string;
+        photoWidth: string;
+        takenLocalDate: string;
+        timeOfDay: string;
+      }>;
+    }>;
+
+type ProgressCaptureBoundary = Readonly<{
+  adoptRawCapture: (uri: string) => void;
+  beginShutter: () => boolean;
+  cleanupBusy: boolean;
+  cleanupFailed: boolean;
+  cleanupPending: boolean;
+  finishShutter: () => void;
+  handoffToReview: (
+    params: Extract<ProtectedCaptureNavigation, { kind: 'review' }>['params'],
+  ) => void;
+  registerCaptureInvalidator: (invalidate: (() => void) | null) => void;
+  requestProgressExit: () => void;
+  retryCleanup: () => Promise<boolean>;
+  routeRemovalReady: boolean;
+  shutterInFlight: boolean;
+}>;
 
 function devPhotoConsentFailureMode(): 'once' | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
@@ -400,14 +439,110 @@ function PhotoCaptureFailureGate({
   );
 }
 
+function RawCaptureCleanupGate({
+  cleanupBusy,
+  waitingForCapture,
+  onRetry,
+  onClose,
+}: {
+  cleanupBusy: boolean;
+  waitingForCapture: boolean;
+  onRetry: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <CaptureOverlay>
+      <View accessibilityRole="alert">
+        <Text
+          style={{
+            fontFamily: 'InstrumentSerif-Regular',
+            fontSize: 30,
+            lineHeight: 34,
+            color: '#F4EFE7',
+            marginBottom: 12,
+          }}
+        >
+          {waitingForCapture
+            ? 'Finishing the previous photo'
+            : 'Temporary photo cleanup needs another try'}
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk-Regular',
+            fontSize: 14.5,
+            color: 'rgba(244,239,231,0.78)',
+            lineHeight: 21,
+            marginBottom: 22,
+          }}
+        >
+          {waitingForCapture
+            ? 'The camera is finishing its current local operation. You can continue after the temporary copy is handed off or removed.'
+            : 'The photo was not saved or uploaded, but its temporary camera copy could not be removed yet. Finish cleanup before taking another photo or leaving this screen.'}
+        </Text>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ disabled: cleanupBusy, busy: cleanupBusy }}
+        disabled={cleanupBusy}
+        onPress={onRetry}
+        style={{
+          height: 56,
+          borderRadius: 999,
+          backgroundColor: '#F4EFE7',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: cleanupBusy ? 0.6 : 1,
+        }}
+      >
+        <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
+          {cleanupBusy ? 'Cleaning up' : 'Finish cleanup'}
+        </Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ disabled: cleanupBusy, busy: cleanupBusy }}
+        disabled={cleanupBusy}
+        onPress={onClose}
+        style={{
+          height: 48,
+          marginTop: 8,
+          borderRadius: 999,
+          backgroundColor: NIGHT_SECONDARY_ACTION_BG,
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: cleanupBusy ? 0.6 : 1,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk-Medium',
+            fontSize: 15,
+            color: NIGHT_SECONDARY_ACTION_TEXT,
+          }}
+        >
+          Close after cleanup
+        </Text>
+      </Pressable>
+    </CaptureOverlay>
+  );
+}
+
 function PermissionGate({
   canAskAgain,
+  permissionBusy,
+  permissionFailureCopy,
+  askLabel,
   settingsOpenFailed,
   onAsk,
   onOpenSettings,
   onCancel,
 }: {
   canAskAgain: boolean;
+  permissionBusy: boolean;
+  permissionFailureCopy:
+    | (typeof CAMERA_PERMISSION_FAILURE_COPY)[keyof typeof CAMERA_PERMISSION_FAILURE_COPY]
+    | null;
+  askLabel: string;
   settingsOpenFailed: boolean;
   onAsk: () => void;
   onOpenSettings: () => void;
@@ -432,11 +567,46 @@ function PermissionGate({
           fontSize: 14.5,
           color: 'rgba(244,239,231,0.78)',
           lineHeight: 21,
-          marginBottom: 22,
+          marginBottom: permissionFailureCopy ? 12 : 22,
         }}
       >
         The photo is captured on this device and saved into encrypted app-private storage.
       </Text>
+      {permissionFailureCopy ? (
+        <View
+          accessibilityRole="alert"
+          style={{
+            borderRadius: 14,
+            backgroundColor: 'rgba(217,161,131,0.13)',
+            borderWidth: 1,
+            borderColor: 'rgba(217,161,131,0.36)',
+            paddingHorizontal: 14,
+            paddingVertical: 10,
+            marginBottom: 14,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk-SemiBold',
+              fontSize: 13.5,
+              color: '#F4EFE7',
+              marginBottom: 2,
+            }}
+          >
+            {permissionFailureCopy.title}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk-Regular',
+              fontSize: 13,
+              color: 'rgba(244,239,231,0.86)',
+              lineHeight: 18,
+            }}
+          >
+            {permissionFailureCopy.body}
+          </Text>
+        </View>
+      ) : null}
       {settingsOpenFailed ? (
         <View
           accessibilityRole="alert"
@@ -474,6 +644,8 @@ function PermissionGate({
       ) : null}
       <Pressable
         accessibilityRole="button"
+        accessibilityState={{ disabled: permissionBusy, busy: permissionBusy }}
+        disabled={permissionBusy}
         onPress={canAskAgain ? onAsk : onOpenSettings}
         style={{
           height: 56,
@@ -481,10 +653,15 @@ function PermissionGate({
           backgroundColor: '#F4EFE7',
           alignItems: 'center',
           justifyContent: 'center',
+          opacity: permissionBusy ? 0.6 : 1,
         }}
       >
         <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
-          {canAskAgain ? 'Allow camera' : 'Open settings'}
+          {permissionBusy
+            ? 'Checking camera'
+            : canAskAgain
+              ? (permissionFailureCopy?.retryLabel ?? askLabel)
+              : 'Open settings'}
         </Text>
       </Pressable>
       <Pressable
@@ -513,7 +690,235 @@ function PermissionGate({
   );
 }
 
-function CaptureScreenContent() {
+function useProgressCaptureBoundary(): ProgressCaptureBoundary {
+  const navigation = useNavigation();
+  const mountedRef = useRef(false);
+  const routeRemovalReadyRef = useRef(false);
+  const shutterInFlightRef = useRef(false);
+  const pendingRawCaptureLifecycleRef = useRef<ProgressCaptureReviewLifecycle | null>(null);
+  const rawCaptureCleanupInFlightRef = useRef<Promise<boolean> | null>(null);
+  const navigationInFlightRef = useRef(false);
+  const pendingNavigationRef = useRef<ProtectedCaptureNavigation | null>(null);
+  const invalidateCaptureRef = useRef<(() => void) | null>(null);
+  const [cleanupBusy, setCleanupBusy] = useState(false);
+  const [cleanupFailed, setCleanupFailed] = useState(false);
+  const [cleanupPending, setCleanupPending] = useState(false);
+  const [routeRemovalReady, setRouteRemovalReady] = useState(false);
+  const [shutterInFlight, setShutterInFlight] = useState(false);
+
+  const markRouteRemovalReady = useCallback(() => {
+    routeRemovalReadyRef.current = true;
+    if (mountedRef.current) setRouteRemovalReady(true);
+  }, []);
+
+  const retryCleanup = useCallback((): Promise<boolean> => {
+    const active = rawCaptureCleanupInFlightRef.current;
+    if (active !== null) return active;
+
+    const lifecycle = pendingRawCaptureLifecycleRef.current;
+    if (lifecycle === null || !lifecycle.hasPendingCleanup()) {
+      pendingRawCaptureLifecycleRef.current = null;
+      if (mountedRef.current) {
+        setCleanupPending(false);
+        setCleanupFailed(false);
+        setCleanupBusy(false);
+      }
+      if (pendingNavigationRef.current !== null && !shutterInFlightRef.current) {
+        markRouteRemovalReady();
+      }
+      return Promise.resolve(true);
+    }
+
+    if (mountedRef.current) {
+      setCleanupPending(true);
+      setCleanupBusy(true);
+    }
+
+    const operation = lifecycle.discard().then(
+      () => {
+        if (pendingRawCaptureLifecycleRef.current === lifecycle) {
+          pendingRawCaptureLifecycleRef.current = null;
+        }
+        if (mountedRef.current) {
+          setCleanupPending(false);
+          setCleanupFailed(false);
+        }
+        if (pendingNavigationRef.current !== null && !shutterInFlightRef.current) {
+          markRouteRemovalReady();
+        }
+        return true;
+      },
+      () => {
+        // Keep this exact trusted Camera child in the route owner until an
+        // idempotent retry succeeds. Raw native errors never reach UI or logs.
+        if (mountedRef.current && pendingRawCaptureLifecycleRef.current === lifecycle) {
+          setCleanupPending(true);
+          setCleanupFailed(true);
+        }
+        return false;
+      },
+    );
+    let trackedOperation: Promise<boolean>;
+    trackedOperation = operation.finally(() => {
+      if (rawCaptureCleanupInFlightRef.current === trackedOperation) {
+        rawCaptureCleanupInFlightRef.current = null;
+      }
+      if (mountedRef.current) setCleanupBusy(false);
+    });
+    rawCaptureCleanupInFlightRef.current = trackedOperation;
+    return trackedOperation;
+  }, [markRouteRemovalReady]);
+
+  const requestNavigation = useCallback(
+    (pending: ProtectedCaptureNavigation) => {
+      if (routeRemovalReadyRef.current) return;
+      if (navigationInFlightRef.current) {
+        // A prior protected exit may have discovered a delete failure. Keep
+        // the latest user intent and let every later Exit/back/close retry the
+        // same retained lifecycle instead of trapping the route.
+        pendingNavigationRef.current = pending;
+        if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
+          void retryCleanup();
+        }
+        return;
+      }
+      invalidateCaptureRef.current?.();
+      navigationInFlightRef.current = true;
+      pendingNavigationRef.current = pending;
+
+      if (shutterInFlightRef.current && pendingRawCaptureLifecycleRef.current === null) return;
+      if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
+        void retryCleanup();
+        return;
+      }
+      markRouteRemovalReady();
+    },
+    [markRouteRemovalReady, retryCleanup],
+  );
+
+  usePreventRemove(!routeRemovalReady, ({ data: eventData }) => {
+    requestNavigation({ kind: 'action', action: eventData.action });
+  });
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      invalidateCaptureRef.current?.();
+      invalidateCaptureRef.current = null;
+      const lifecycle = pendingRawCaptureLifecycleRef.current;
+      if (lifecycle !== null) void lifecycle.dispose().catch(() => undefined);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!routeRemovalReady) return;
+    const pending = pendingNavigationRef.current;
+    if (pending === null) return;
+    pendingNavigationRef.current = null;
+
+    if (pending.kind === 'review') {
+      // Transfer ownership atomically before the gate subtree unmounts. The
+      // review route constructs its own lifecycle from this trusted URI.
+      const transferredLifecycle = pendingRawCaptureLifecycleRef.current;
+      pendingRawCaptureLifecycleRef.current = null;
+      setCleanupPending(false);
+      try {
+        router.replace({ pathname: '/progress/review', params: pending.params });
+      } catch {
+        pendingRawCaptureLifecycleRef.current = transferredLifecycle;
+        navigationInFlightRef.current = false;
+        routeRemovalReadyRef.current = false;
+        queueMicrotask(() => {
+          if (!mountedRef.current) return;
+          setRouteRemovalReady(false);
+          setCleanupPending(transferredLifecycle?.hasPendingCleanup() ?? false);
+          setCleanupFailed(true);
+        });
+      }
+      return;
+    }
+
+    if (pending.kind === 'action') {
+      navigation.dispatch(pending.action);
+    } else {
+      backOrReplace(router, APP_PROGRESS_ROUTE);
+    }
+  }, [navigation, routeRemovalReady]);
+
+  const adoptRawCapture = useCallback((uri: string) => {
+    if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
+      throw new Error('PROGRESS_CAPTURE_CLEANUP_PENDING');
+    }
+    pendingRawCaptureLifecycleRef.current = createProgressCaptureReviewLifecycle(FileSystem, {
+      uri,
+      disposable: true,
+    });
+    if (mountedRef.current) setCleanupPending(true);
+  }, []);
+
+  const beginShutter = useCallback((): boolean => {
+    if (
+      shutterInFlightRef.current ||
+      pendingRawCaptureLifecycleRef.current?.hasPendingCleanup() ||
+      navigationInFlightRef.current ||
+      routeRemovalReadyRef.current
+    ) {
+      return false;
+    }
+    shutterInFlightRef.current = true;
+    if (mountedRef.current) setShutterInFlight(true);
+    return true;
+  }, []);
+
+  const finishShutter = useCallback(() => {
+    shutterInFlightRef.current = false;
+    if (mountedRef.current) setShutterInFlight(false);
+    if (pendingNavigationRef.current === null || routeRemovalReadyRef.current) return;
+    if (pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
+      void retryCleanup();
+    } else {
+      markRouteRemovalReady();
+    }
+  }, [markRouteRemovalReady, retryCleanup]);
+
+  const handoffToReview = useCallback(
+    (params: Extract<ProtectedCaptureNavigation, { kind: 'review' }>['params']) => {
+      if (!pendingRawCaptureLifecycleRef.current?.hasPendingCleanup()) {
+        throw new Error('PROGRESS_CAPTURE_SOURCE_MISSING');
+      }
+      navigationInFlightRef.current = true;
+      pendingNavigationRef.current = { kind: 'review', params };
+      markRouteRemovalReady();
+    },
+    [markRouteRemovalReady],
+  );
+
+  const registerCaptureInvalidator = useCallback((invalidate: (() => void) | null) => {
+    invalidateCaptureRef.current = invalidate;
+  }, []);
+
+  const requestProgressExit = useCallback(() => {
+    requestNavigation({ kind: 'progress' });
+  }, [requestNavigation]);
+
+  return {
+    adoptRawCapture,
+    beginShutter,
+    cleanupBusy,
+    cleanupFailed,
+    cleanupPending,
+    finishShutter,
+    handoffToReview,
+    registerCaptureInvalidator,
+    requestProgressExit,
+    retryCleanup,
+    routeRemovalReady,
+    shutterInFlight,
+  };
+}
+
+function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCaptureBoundary }) {
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const cameraRef = useRef<CameraView | null>(null);
@@ -521,10 +926,8 @@ function CaptureScreenContent() {
   const captureLeaseGenerationRef = useRef(0);
   const captureInFlightRef = useRef<number | null>(null);
   const labelPhotoStartupCleanupFailedRef = useRef(false);
-  const [permission, requestPermission] = useCameraPermissions();
+  const registerCaptureInvalidator = captureBoundary.registerCaptureInvalidator;
   const [consented, setConsented] = useState<boolean | null>(null);
-  const [cameraReady, setCameraReady] = useState(false);
-  const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [photoCaptureFailed, setPhotoCaptureFailed] = useState(false);
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const [capturing, setCapturing] = useState(false);
@@ -536,6 +939,13 @@ function CaptureScreenContent() {
     () => devProgressCaptureFailureMode() === 'once',
   );
   const progressCameraPermissionMode = devProgressCameraPermissionMode();
+  const forceDeniedCameraPermission = progressCameraPermissionMode === 'denied_no_retry';
+  const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
+  const cameraAccess = useCameraAccessLifecycle({
+    available: cameraEnabled && !forceDeniedCameraPermission,
+    isFocused,
+    mountAllowed: consented === true && !captureBoundary.cleanupPending,
+  });
   const { data } = usePhotos('front');
 
   useEffect(() => {
@@ -544,32 +954,44 @@ function CaptureScreenContent() {
 
   useEffect(() => {
     mountedRef.current = true;
+    registerCaptureInvalidator(() => {
+      captureLeaseGenerationRef.current += 1;
+    });
     return () => {
       mountedRef.current = false;
       captureLeaseGenerationRef.current += 1;
+      registerCaptureInvalidator(null);
     };
-  }, []);
+  }, [registerCaptureInvalidator]);
 
   useEffect(() => {
-    if (!isFocused) captureLeaseGenerationRef.current += 1;
-  }, [isFocused]);
+    if (!cameraAccess.isForegroundFocused) captureLeaseGenerationRef.current += 1;
+  }, [cameraAccess.isForegroundFocused]);
 
   const canShowCamera =
-    consented === true &&
-    env.nativeCameraEnabled &&
-    Platform.OS !== 'web' &&
-    Boolean(permission?.granted) &&
-    !cameraUnavailable;
-  const canAttemptCapture = canShowCamera || simulateProgressCaptureFailureOnce;
-  const canAskCameraPermission =
-    progressCameraPermissionMode === 'denied_no_retry' ? false : (permission?.canAskAgain ?? true);
+    consented === true && !captureBoundary.cleanupPending && cameraAccess.cameraActive;
+  const canAttemptCapture =
+    !captureBoundary.cleanupPending &&
+    !captureBoundary.shutterInFlight &&
+    (canShowCamera || simulateProgressCaptureFailureOnce);
+  const canAskCameraPermission = forceDeniedCameraPermission ? false : cameraAccess.canAskAgain;
+  const canRetryCameraPermission =
+    cameraAccess.permissionFailure === 'refresh_failed' || canAskCameraPermission;
+  const permissionFailureCopy =
+    cameraAccess.permissionFailure === null
+      ? null
+      : CAMERA_PERMISSION_FAILURE_COPY[cameraAccess.permissionFailure];
   const captureReady =
-    (canShowCamera && cameraReady && !photoCaptureFailed) || simulateProgressCaptureFailureOnce;
+    !captureBoundary.cleanupPending &&
+    !captureBoundary.shutterInFlight &&
+    ((cameraAccess.canCapture && !photoCaptureFailed) || simulateProgressCaptureFailureOnce);
+  const cameraUnavailable = cameraAccess.cameraUnavailable;
   const referenceUri = data?.reference?.localUri ?? null;
-  const closeToProgress = () => {
+
+  function closeToProgress() {
     captureLeaseGenerationRef.current += 1;
-    backOrReplace(router, APP_PROGRESS_ROUTE);
-  };
+    captureBoundary.requestProgressExit();
+  }
 
   async function waitForLabelPhotoStartupScavenge(): Promise<void> {
     const startup = labelPhotoStartupCleanupFailedRef.current
@@ -585,15 +1007,19 @@ function CaptureScreenContent() {
   }
 
   async function capture() {
+    const usesNativeCamera = !simulateProgressCaptureFailureOnce;
+    const cameraOperation = usesNativeCamera ? cameraAccess.beginCameraOperation() : null;
     if (
       consented !== true ||
       (!cameraRef.current && !simulateProgressCaptureFailureOnce) ||
       !canAttemptCapture ||
+      (usesNativeCamera && cameraOperation === null) ||
       capturing ||
       captureInFlightRef.current !== null
     ) {
       return;
     }
+    if (!captureBoundary.beginShutter()) return;
     const captureLease = ++captureLeaseGenerationRef.current;
     captureInFlightRef.current = captureLease;
     let rawCaptureUri: string | null = null;
@@ -607,7 +1033,13 @@ function CaptureScreenContent() {
       // App-boot cleanup owns one immutable snapshot of Expo Camera's raw
       // cache. No new camera photo may be created until that snapshot drains.
       await waitForLabelPhotoStartupScavenge();
-      if (!mountedRef.current || captureLeaseGenerationRef.current !== captureLease) return;
+      if (
+        !mountedRef.current ||
+        captureLeaseGenerationRef.current !== captureLease ||
+        (cameraOperation !== null && !cameraAccess.isCameraOperationCurrent(cameraOperation))
+      ) {
+        return;
+      }
       const shot = await cameraRef.current!.takePictureAsync({
         quality: 0.76,
         base64: false,
@@ -616,8 +1048,13 @@ function CaptureScreenContent() {
       });
       rawCaptureUri = trustedExpoCameraCaptureUri(shot.uri, FileSystem.cacheDirectory);
       if (rawCaptureUri === null) throw new Error('UNTRUSTED_PROGRESS_CAPTURE_URI');
-      if (!mountedRef.current || captureLeaseGenerationRef.current !== captureLease) {
-        await FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined);
+      captureBoundary.adoptRawCapture(rawCaptureUri);
+      if (
+        !mountedRef.current ||
+        captureLeaseGenerationRef.current !== captureLease ||
+        (cameraOperation !== null && !cameraAccess.isCameraOperationCurrent(cameraOperation))
+      ) {
+        await captureBoundary.retryCleanup();
         rawCaptureUri = null;
         return;
       }
@@ -625,32 +1062,39 @@ function CaptureScreenContent() {
       const captureSessionId = trustedProgressCaptureSessionId(randomUUID());
       if (captureSessionId === null) throw new Error('INVALID_PROGRESS_CAPTURE_SESSION');
       track('photo_capture_still_taken', { signal_source: 'post_capture_measurement' });
-      router.replace({
-        pathname: '/progress/review',
-        params: {
-          captureSessionId,
-          capturedUri: rawCaptureUri,
-          photoWidth: String(shot.width),
-          photoHeight: String(shot.height),
-          timeOfDay: timeOfDayNow(),
-          takenLocalDate: localDay(),
-        },
+      captureBoundary.handoffToReview({
+        captureSessionId,
+        capturedUri: rawCaptureUri,
+        photoWidth: String(shot.width),
+        photoHeight: String(shot.height),
+        timeOfDay: timeOfDayNow(),
+        takenLocalDate: localDay(),
       });
       rawCaptureUri = null;
     } catch {
+      let cleanupSucceeded = true;
       if (rawCaptureUri !== null) {
-        await FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined);
+        cleanupSucceeded = await captureBoundary.retryCleanup();
         rawCaptureUri = null;
       }
-      if (mountedRef.current && captureLeaseGenerationRef.current === captureLease) {
+      if (!cleanupSucceeded) {
+        if (mountedRef.current) setCapturing(false);
+        return;
+      }
+      const staleCameraOperation =
+        cameraOperation !== null && !cameraAccess.isCameraOperationCurrent(cameraOperation);
+      if (
+        mountedRef.current &&
+        captureLeaseGenerationRef.current === captureLease &&
+        !staleCameraOperation
+      ) {
         setCapturing(false);
         setPhotoCaptureFailed(true);
       }
     } finally {
       if (captureInFlightRef.current === captureLease) captureInFlightRef.current = null;
-      if (mountedRef.current && captureLeaseGenerationRef.current !== captureLease) {
-        setCapturing(false);
-      }
+      captureBoundary.finishShutter();
+      if (mountedRef.current) setCapturing(false);
     }
   }
 
@@ -678,7 +1122,7 @@ function CaptureScreenContent() {
     try {
       await applyPhotoCaptureConsent({
         grant,
-        requestPermission: requestPermission as () => Promise<unknown>,
+        requestPermission: cameraAccess.requestPermission,
         onSaved: () => {
           setConsentSaveFailed(false);
           setConsented(true);
@@ -751,17 +1195,15 @@ function CaptureScreenContent() {
         <View style={{ position: 'absolute', width: '100%', height: '100%', overflow: 'hidden' }}>
           {canShowCamera ? (
             <CameraView
+              key={cameraAccess.cameraKey}
               ref={cameraRef}
-              active={isFocused}
+              active={cameraAccess.cameraActive}
               animateShutter
               facing="front"
               mirror
               mode="picture"
-              onCameraReady={() => setCameraReady(true)}
-              onMountError={() => {
-                setCameraReady(false);
-                setCameraUnavailable(true);
-              }}
+              onCameraReady={cameraAccess.onCameraReady}
+              onMountError={cameraAccess.onCameraMountError}
               style={{ flex: 1 }}
             />
           ) : null}
@@ -959,7 +1401,15 @@ function CaptureScreenContent() {
         </View>
       ) : null}
 
-      {photoCaptureFailed ? (
+      {(captureBoundary.cleanupPending || captureBoundary.shutterInFlight) &&
+      !captureBoundary.routeRemovalReady ? (
+        <RawCaptureCleanupGate
+          cleanupBusy={captureBoundary.cleanupBusy || captureBoundary.shutterInFlight}
+          waitingForCapture={captureBoundary.shutterInFlight}
+          onRetry={() => void captureBoundary.retryCleanup()}
+          onClose={closeToProgress}
+        />
+      ) : photoCaptureFailed ? (
         <PhotoCaptureFailureGate
           onRetry={() => {
             setPhotoCaptureFailed(false);
@@ -967,20 +1417,21 @@ function CaptureScreenContent() {
           onCancel={closeToProgress}
         />
       ) : cameraUnavailable ? (
-        <CameraUnavailableGate
-          onRetry={() => {
-            setCameraUnavailable(false);
-            setCameraReady(false);
-          }}
-          onCancel={closeToProgress}
-        />
+        <CameraUnavailableGate onRetry={cameraAccess.retryCameraMount} onCancel={closeToProgress} />
       ) : !canAttemptCapture ? (
         <PermissionGate
-          canAskAgain={canAskCameraPermission}
+          canAskAgain={canRetryCameraPermission}
+          permissionBusy={cameraAccess.permissionBusy}
+          permissionFailureCopy={permissionFailureCopy}
+          askLabel="Allow camera"
           settingsOpenFailed={settingsOpenFailed}
           onAsk={() => {
             setSettingsOpenFailed(false);
-            void requestPermission();
+            const permissionOperation =
+              cameraAccess.permissionFailure === 'refresh_failed'
+                ? cameraAccess.refreshPermission
+                : cameraAccess.requestPermission;
+            void permissionOperation();
           }}
           onOpenSettings={() => void openCameraSettings()}
           onCancel={closeToProgress}
@@ -991,11 +1442,30 @@ function CaptureScreenContent() {
 }
 
 export default function CaptureScreen() {
+  // This owner must remain mounted while entitlement, app-lock, or storage
+  // gates replace their children during backgrounding and recovery.
+  const captureBoundary = useProgressCaptureBoundary();
+
+  if (captureBoundary.cleanupFailed) {
+    return (
+      <PhotoTimelineLockGate>
+        <View style={{ flex: 1, backgroundColor: BG }}>
+          <RawCaptureCleanupGate
+            cleanupBusy={captureBoundary.cleanupBusy}
+            waitingForCapture={false}
+            onRetry={() => void captureBoundary.retryCleanup()}
+            onClose={captureBoundary.requestProgressExit}
+          />
+        </View>
+      </PhotoTimelineLockGate>
+    );
+  }
+
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
-          <CaptureScreenContent />
+        <PhotoStorageGate onExit={captureBoundary.requestProgressExit}>
+          <CaptureScreenContent captureBoundary={captureBoundary} />
         </PhotoStorageGate>
       </PhotoTimelineLockGate>
     </ProGate>

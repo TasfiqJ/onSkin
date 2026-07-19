@@ -205,19 +205,35 @@ describe('Expo Camera startup-orphan scavenger', () => {
     expect(source).toContain('const captureLeaseGenerationRef = useRef(0);');
     expect(source).toContain('const captureInFlightRef = useRef<number | null>(null);');
     expect(source).toContain('mountedRef.current = false;');
-    expect(source).toContain('if (!isFocused) captureLeaseGenerationRef.current += 1;');
     expect(source).toContain(
-      'if (!mountedRef.current || captureLeaseGenerationRef.current !== captureLease)',
+      'if (!cameraAccess.isForegroundFocused) captureLeaseGenerationRef.current += 1;',
+    );
+    expect(source).toContain('cameraAccess.beginCameraOperation()');
+    expect(source).toContain(
+      '(cameraOperation !== null && !cameraAccess.isCameraOperationCurrent(cameraOperation))',
     );
     expect(source).toContain(
-      'await FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined);',
+      'pendingRawCaptureLifecycleRef.current = createProgressCaptureReviewLifecycle(FileSystem, {',
     );
-    expect(source).toContain(
-      'if (mountedRef.current && captureLeaseGenerationRef.current === captureLease)',
+    expect(source).toContain('captureBoundary.adoptRawCapture(rawCaptureUri);');
+    expect(source.split('await captureBoundary.retryCleanup();').length - 1).toBeGreaterThanOrEqual(
+      2,
     );
-    expect(source.indexOf('rawCaptureUri = shot.uri;')).toBeLessThan(
-      source.indexOf("track('photo_capture_still_taken'"),
+    expect(source).not.toContain('FileSystem.deleteAsync(rawCaptureUri');
+    expect(source).not.toContain(
+      'FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined)',
     );
+
+    const operationFence = source.indexOf('cameraAccess.isCameraOperationCurrent(cameraOperation)');
+    const takePicture = source.indexOf('takePictureAsync');
+    const trustedCapture = source.indexOf('rawCaptureUri = trustedExpoCameraCaptureUri(');
+    const routeOwnedAdoption = source.indexOf('captureBoundary.adoptRawCapture(rawCaptureUri);');
+    const analytics = source.indexOf("track('photo_capture_still_taken'");
+    expect(operationFence).toBeGreaterThan(-1);
+    expect(operationFence).toBeLessThan(takePicture);
+    expect(takePicture).toBeLessThan(trustedCapture);
+    expect(trustedCapture).toBeLessThan(routeOwnedAdoption);
+    expect(routeOwnedAdoption).toBeLessThan(analytics);
   });
 });
 

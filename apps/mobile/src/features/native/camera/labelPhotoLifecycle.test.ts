@@ -251,8 +251,23 @@ describe('temporary label-photo lifecycle', () => {
     expect(source).toContain('cachePolicy="none"');
     expect(source).toContain('const recognitionStartedAt = performance.now();');
     expect(source).toContain('trackLabelRecognitionCompleted({');
-    expect(source).toContain('onCameraReady={() => setCameraReady(true)}');
-    expect(source).toContain('(canShowCamera && !cameraReady');
+    expect(source).toContain('key={cameraAccess.cameraKey}');
+    expect(source).toContain(
+      'onCameraReady={() => cameraAccess.markCameraReady(cameraAccess.cameraGeneration)}',
+    );
+    expect(source).toContain(
+      'onMountError={() => void handleCameraMountError(cameraAccess.cameraGeneration)}',
+    );
+    expect(source).toContain(
+      'const cameraLease = usesNativeCamera ? cameraAccess.acquireCameraOperationLease() : null;',
+    );
+    expect(source).toContain('(usesNativeCamera && cameraLease === null)');
+    expect(source.split('cameraAccess.isCameraOperationLeaseCurrent(cameraLease)').length - 1).toBe(
+      3,
+    );
+    expect(source.indexOf('cameraAccess.acquireCameraOperationLease()')).toBeLessThan(
+      source.indexOf('takePictureAsync'),
+    );
     expect(source).toContain('if (captureInFlightRef.current || photoCleanupBusy) return;');
     expect(source).toContain("disabled={state === 'capturing' || photoCleanupBusy}");
     expect(source).toContain('adoptCapturedPhoto(photo?.uri)');

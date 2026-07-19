@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView } from 'expo-camera';
 import { randomUUID } from 'expo-crypto';
 import { Image } from 'expo-image';
 import { router, useIsFocused, useNavigation } from 'expo-router';
@@ -21,7 +21,11 @@ import {
   type ParsedIngredientToken,
 } from '@/features/catalog/ingredientParser';
 import { tagLabel } from '@/features/intelligence/presentation';
-import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
+import {
+  CAMERA_FAILURE_COPY,
+  CAMERA_PERMISSION_FAILURE_COPY,
+} from '@/features/native/camera/failureCopy';
+import { useCameraAccessLifecycle } from '@/features/native/camera/useCameraAccessLifecycle';
 import {
   createLabelPhotoLifecycle,
   type LabelPhotoCleanupReason,
@@ -147,7 +151,6 @@ function recognitionAvailable(): boolean {
 export default function OcrScreen() {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
-  const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const labelPhotoLifecycleRef = useRef<LabelPhotoLifecycle | null>(null);
   const labelOcrCoordinatorRef = useRef<LabelOcrCoordinator | null>(null);
@@ -164,8 +167,6 @@ export default function OcrScreen() {
   const captureInFlightRef = useRef(false);
   const navigationInFlightRef = useRef(false);
   const [state, setState] = useState<CaptureState>('camera');
-  const [cameraReady, setCameraReady] = useState(false);
-  const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [labelCaptureFailed, setLabelCaptureFailed] = useState(false);
   const [photoCleanupBusy, setPhotoCleanupBusy] = useState(false);
   const [photoCleanupFailed, setPhotoCleanupFailed] = useState(false);
@@ -180,6 +181,14 @@ export default function OcrScreen() {
     () => devShelfOcrCaptureFailureMode() === 'once',
   );
   const { update } = useIntake();
+  const cameraPermissionMode = devShelfCameraPermissionMode();
+  const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
+  const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
+  const cameraAccess = useCameraAccessLifecycle({
+    available: cameraEnabled && !forceDeniedCameraPermission,
+    isFocused,
+    mountAllowed: state !== 'review',
+  });
 
   useEffect(() => {
     const lifecycle = createLabelPhotoLifecycle(labelPhotoFileSystem, randomUUID);
@@ -226,20 +235,25 @@ export default function OcrScreen() {
     }
   }, [recognitionState]);
 
-  const cameraPermissionMode = devShelfCameraPermissionMode();
-  const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
-  const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
-  const permissionGranted = forceDeniedCameraPermission ? false : Boolean(permission?.granted);
-  const canAskCameraPermission = forceDeniedCameraPermission
-    ? false
-    : (permission?.canAskAgain ?? true);
+  const permissionGranted = forceDeniedCameraPermission ? false : cameraAccess.permissionGranted;
+  const canAskCameraPermission = forceDeniedCameraPermission ? false : cameraAccess.canAskAgain;
+  const canRetryCameraPermission =
+    cameraAccess.permissionFailure === 'refresh_failed' || canAskCameraPermission;
   const canShowPermissionRecovery =
-    !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
-  const canShowCamera = cameraEnabled && permissionGranted && !cameraUnavailable;
+    forceDeniedCameraPermission ||
+    (cameraEnabled &&
+      (!permissionGranted || cameraAccess.permissionFailure !== null) &&
+      (cameraAccess.permission !== null || cameraAccess.permissionFailure !== null));
+  const permissionFailureCopy =
+    cameraAccess.permissionFailure === null
+      ? null
+      : CAMERA_PERMISSION_FAILURE_COPY[cameraAccess.permissionFailure];
+  const canShowCamera = cameraAccess.cameraActive;
+  const cameraUnavailable = cameraAccess.cameraUnavailable;
   const devOcrResult = devShelfOcrResultMode();
   const canAttemptCapture =
     !photoScavengeFailed &&
-    ((canShowCamera && cameraReady) || simulateCaptureFailureOnce || devOcrResult !== null);
+    (cameraAccess.canCapture || simulateCaptureFailureOnce || devOcrResult !== null);
   const rawText = reviewState.text;
   const parsed = useMemo(() => parseIngredientText(rawText), [rawText]);
   const activeTokens = parsed.tokens.filter((token) => token.tags.length > 0);
@@ -386,10 +400,12 @@ export default function OcrScreen() {
 
   const capture = async () => {
     const lifecycle = labelPhotoLifecycleRef.current;
+    const usesNativeCamera = !simulateCaptureFailureOnce && devOcrResult === null;
+    const cameraLease = usesNativeCamera ? cameraAccess.acquireCameraOperationLease() : null;
     if (
       !lifecycle ||
       (!cameraRef.current && !simulateCaptureFailureOnce && devOcrResult === null) ||
-      (canShowCamera && !cameraReady && !simulateCaptureFailureOnce && devOcrResult === null) ||
+      (usesNativeCamera && cameraLease === null) ||
       captureInFlightRef.current ||
       photoCleanupBusy
     ) {
@@ -410,7 +426,14 @@ export default function OcrScreen() {
         }
         return;
       }
-      if (!mountedRef.current || labelPhotoLifecycleRef.current !== lifecycle) return;
+      if (
+        !mountedRef.current ||
+        labelPhotoLifecycleRef.current !== lifecycle ||
+        (cameraLease !== null && !cameraAccess.isCameraOperationLeaseCurrent(cameraLease))
+      ) {
+        if (mountedRef.current) setState('camera');
+        return;
+      }
       const captureReviewState = commitReviewState(advanceLabelOcrCapture);
       if (devOcrResult !== null) {
         capturedUriRef.current = null;
@@ -431,8 +454,13 @@ export default function OcrScreen() {
         shutterSound: false,
       });
       const managedUri = await lifecycle.adoptCapturedPhoto(photo?.uri);
-      if (!mountedRef.current || labelPhotoLifecycleRef.current !== lifecycle) {
+      if (
+        !mountedRef.current ||
+        labelPhotoLifecycleRef.current !== lifecycle ||
+        (cameraLease !== null && !cameraAccess.isCameraOperationLeaseCurrent(cameraLease))
+      ) {
         await lifecycle.cleanup('cancel');
+        if (mountedRef.current) setState('camera');
         return;
       }
       capturedUriRef.current = managedUri;
@@ -445,14 +473,24 @@ export default function OcrScreen() {
       // retain the managed photo as a local reference and preserve manual text.
       void recognizeManagedPhoto(lifecycle, managedUri, captureReviewState);
     } catch {
-      await lifecycle?.cleanup('capture_failure').catch(() => undefined);
+      let cleanupFailed = false;
+      await lifecycle?.cleanup('capture_failure').catch(() => {
+        cleanupFailed = true;
+      });
+      const staleCameraOperation =
+        cameraLease !== null && !cameraAccess.isCameraOperationLeaseCurrent(cameraLease);
       if (mountedRef.current) {
         const retainedUri = lifecycle?.current() ?? null;
+        const pendingCleanup = cleanupFailed || Boolean(lifecycle?.hasPendingCleanup());
         capturedUriRef.current = retainedUri;
         setCapturedUri(retainedUri);
-        setPhotoCleanupFailed(Boolean(lifecycle?.hasPendingCleanup()));
-        setLabelCaptureFailed(true);
-        setState('review');
+        setPhotoCleanupFailed(pendingCleanup);
+        if (!staleCameraOperation || pendingCleanup) {
+          setLabelCaptureFailed(true);
+          setState('review');
+        } else {
+          setState('camera');
+        }
       }
     } finally {
       captureInFlightRef.current = false;
@@ -597,7 +635,8 @@ export default function OcrScreen() {
     if (!cleaned || !mountedRef.current) return;
     setLatestTranscript(null);
     setRecognitionState(initialRecognitionState());
-    setCameraReady(false);
+    if (cameraUnavailable) cameraAccess.retryCamera();
+    else cameraAccess.resetCameraSession();
     setState('camera');
     setLabelCaptureFailed(false);
   };
@@ -618,7 +657,8 @@ export default function OcrScreen() {
     }
   };
 
-  const handleCameraMountError = async () => {
+  const handleCameraMountError = async (cameraGeneration: number) => {
+    if (!cameraAccess.markCameraUnavailable(cameraGeneration)) return;
     setPhotoCleanupBusy(true);
     await captureDrainRef.current;
     if (!mountedRef.current) return;
@@ -626,8 +666,6 @@ export default function OcrScreen() {
     if (recognitionStopped) await cleanupLabelPhoto('capture_failure');
     if (!mountedRef.current) return;
     setPhotoCleanupBusy(false);
-    setCameraReady(false);
-    setCameraUnavailable(true);
     setLabelCaptureFailed(false);
     setState('review');
   };
@@ -635,7 +673,11 @@ export default function OcrScreen() {
   const requestCameraAccess = () => {
     haptics.select();
     setSettingsOpenFailed(false);
-    void requestPermission();
+    const permissionOperation =
+      cameraAccess.permissionFailure === 'refresh_failed'
+        ? cameraAccess.refreshCameraPermission
+        : cameraAccess.requestCameraPermission;
+    void permissionOperation();
   };
 
   const openShelfCameraSettings = async () => {
@@ -727,39 +769,72 @@ export default function OcrScreen() {
             )
           ) : canShowCamera ? (
             <CameraView
+              key={cameraAccess.cameraKey}
               ref={cameraRef}
-              active={isFocused}
+              active={cameraAccess.cameraActive}
               animateShutter
               facing="back"
               mode="picture"
-              onCameraReady={() => setCameraReady(true)}
-              onMountError={() => void handleCameraMountError()}
+              onCameraReady={() => cameraAccess.markCameraReady(cameraAccess.cameraGeneration)}
+              onMountError={() => void handleCameraMountError(cameraAccess.cameraGeneration)}
               style={{ flex: 1 }}
             />
           ) : (
             <View className="flex-1 items-center justify-center px-6">
-              <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
-                {cameraUnavailable
-                  ? CAMERA_FAILURE_COPY.labelUnavailableTitle
-                  : 'Capture the ingredient panel'}
-              </Text>
-              <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
-                {cameraUnavailable
-                  ? CAMERA_FAILURE_COPY.labelUnavailableBody
-                  : 'Camera permission lets you keep the label beside the editable text. Manual entry still works.'}
-              </Text>
+              {permissionFailureCopy ? (
+                <View
+                  accessibilityRole="alert"
+                  className="w-full rounded-[14px] p-3.5"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: 'rgba(217,161,131,0.45)',
+                    backgroundColor: 'rgba(217,161,131,0.14)',
+                  }}
+                >
+                  <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
+                    {permissionFailureCopy.title}
+                  </Text>
+                  <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                    {permissionFailureCopy.body}
+                  </Text>
+                </View>
+              ) : (
+                <>
+                  <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
+                    {cameraUnavailable
+                      ? CAMERA_FAILURE_COPY.labelUnavailableTitle
+                      : 'Capture the ingredient panel'}
+                  </Text>
+                  <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                    {cameraUnavailable
+                      ? CAMERA_FAILURE_COPY.labelUnavailableBody
+                      : 'Camera permission lets you keep the label beside the editable text. Manual entry still works.'}
+                  </Text>
+                </>
+              )}
               {canShowPermissionRecovery ? (
                 <Pressable
                   accessibilityRole="button"
+                  accessibilityState={{
+                    busy: cameraAccess.permissionBusy,
+                    disabled: cameraAccess.permissionBusy,
+                  }}
+                  disabled={cameraAccess.permissionBusy}
                   onPress={
-                    canAskCameraPermission
+                    canRetryCameraPermission
                       ? requestCameraAccess
                       : () => void openShelfCameraSettings()
                   }
                   className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                 >
                   <Text className="font-sans-semibold text-night">
-                    {canAskCameraPermission ? 'Allow camera' : 'Open settings'}
+                    {cameraAccess.permissionBusy
+                      ? 'Checking camera'
+                      : permissionFailureCopy
+                        ? permissionFailureCopy.retryLabel
+                        : canAskCameraPermission
+                          ? 'Allow camera'
+                          : 'Open settings'}
                   </Text>
                 </Pressable>
               ) : null}
@@ -813,14 +888,16 @@ export default function OcrScreen() {
                 ? CAMERA_FAILURE_COPY.labelCaptureBody
                 : CAMERA_FAILURE_COPY.labelUnavailableBody}
             </Text>
-            {labelCaptureFailed ? (
+            {labelCaptureFailed || cameraUnavailable ? (
               <Pressable
                 accessibilityRole="button"
                 disabled={photoCleanupBusy}
                 className="mt-3 min-h-[48px] items-center justify-center rounded-pill bg-paper-raised px-4 py-2"
                 onPress={() => void retryLabelCapture()}
               >
-                <Text className="font-sans-semibold text-ink">Try label photo again</Text>
+                <Text className="font-sans-semibold text-ink">
+                  {cameraUnavailable ? 'Try camera again' : 'Try label photo again'}
+                </Text>
               </Pressable>
             ) : null}
           </View>
