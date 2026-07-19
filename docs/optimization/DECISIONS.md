@@ -3,7 +3,7 @@
 Date: 2026-07-18 (America/Toronto)
 Branch: `optimization`
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
-Current checkpoint parent SHA: `4ee37e8fcdfceeb0d3e83c26c5d1d940891030ff`
+Current checkpoint parent SHA: `329ce0f6fa19fe2357b5ff562a8e3658f6b1187e`
 
 This file records optimization-specific decision needs and links to authoritative decision updates. It does not approve product, privacy, architecture, device-support, release, or operational changes by itself. Current statuses derive only from the authoritative sources named in each row.
 

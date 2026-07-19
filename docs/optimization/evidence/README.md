@@ -3,7 +3,7 @@
 Date established: 2026-07-12 (America/Toronto)
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
 
-Current checkpoint parent SHA: `4ee37e8fcdfceeb0d3e83c26c5d1d940891030ff`
+Current checkpoint parent SHA: `329ce0f6fa19fe2357b5ff562a8e3658f6b1187e`
 
 This directory is the index for sanitized, content-free optimization evidence. It contains deterministic dirty-worktree Expo export reports and a local verification summary. Native traces, signed artifacts, credentials, and private-content artifacts are not committed here.
 
