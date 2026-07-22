@@ -283,9 +283,10 @@ test('browser and page targets are pinned to explicit local HTTP origin and port
   assert.equal(CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS, 120_000);
   assert.match(source, /CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS/);
   assert.match(source, /--headless=old/);
-  assert.match(source, /--disable-gpu/);
+  assert.match(source, /--disable-gpu-sandbox/);
+  assert.match(source, /--in-process-gpu/);
   assert.doesNotMatch(source, /--headless=new/);
-  assert.doesNotMatch(source, /--disable-gpu-sandbox/);
+  assert.doesNotMatch(source, /--disable-gpu',/);
   assert.doesNotMatch(source, /--disable-features=UseSkiaRenderer,VizDisplayCompositor,CanvasOopRasterization/);
   assert.doesNotMatch(source, /--single-process/);
   assert.equal(

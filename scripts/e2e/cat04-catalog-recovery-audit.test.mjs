@@ -155,8 +155,10 @@ test('fixture groups force local deterministic data and avoid inherited live cat
 test('each fresh fixture profile passes the real age, explicit-consent, and activation gates', () => {
   assert.equal(CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS, 120_000);
   assert.match(source, /--headless=old/);
-  assert.match(source, /--disable-gpu/);
+  assert.match(source, /--disable-gpu-sandbox/);
+  assert.match(source, /--in-process-gpu/);
   assert.doesNotMatch(source, /--headless=new/);
+  assert.doesNotMatch(source, /--disable-gpu',/);
   assert.match(source, /new URL\('\/', baseUrl\)/);
   assert.match(source, /resetUrl\.searchParams\.set\('e2eReset', 'local'\)/);
   assert.match(source, /clickByText\(client, 'Begin'\)/);
