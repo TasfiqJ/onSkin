@@ -322,6 +322,7 @@ async function addFreshnessProduct({ client, baseUrl, evidenceDir, viewport, art
   await fillByLabel(client, 'Brand', 'Evidence Lab');
   await clickByText(client, 'Category');
   await waitForText(client, 'Product category');
+  await scrollControlIntoView(client, 'Treatment');
   await clickByText(client, 'Treatment');
   await scrollControlIntoView(client, 'Continue');
   const manual = await captureStep(client, evidenceDir, `${artifactPrefix}-01-manual`);

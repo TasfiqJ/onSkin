@@ -121,6 +121,7 @@ test('CAT07 provenance binds a requested full SHA to HEAD', () => {
 
 test('CAT07 runner drives the full truthful replacement lifecycle', () => {
   for (const required of [
+    "scrollControlIntoView(client, 'Treatment')",
     "fillByLabel(client, 'Exact opened date', localDatePlusDays(1))",
     "waitForText(client, 'Enter a real date no later than today')",
     "clickByText(client, '12 mo')",
