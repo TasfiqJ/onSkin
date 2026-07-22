@@ -31,7 +31,7 @@ const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
 
 export const CAT05_EVIDENCE_RELATIVE_DIR =
-  'test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current';
+  'test-results/human-e2e/2026-07-22/cat05-native-ocr-web-ui-current';
 const CAT05_EVIDENCE_DIRECTORY = path.resolve(repoRoot, CAT05_EVIDENCE_RELATIVE_DIR);
 export const CAT05_EVIDENCE_SCHEMA_VERSION = 2;
 

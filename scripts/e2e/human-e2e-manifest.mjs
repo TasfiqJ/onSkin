@@ -353,7 +353,7 @@ function cat04ViewportKey(viewport) {
   return expected.id;
 }
 
-const CAT05_NATIVE_OCR_EVIDENCE_DATE = '2026-07-18';
+const CAT05_NATIVE_OCR_EVIDENCE_DATE = '2026-07-22';
 const CAT05_NATIVE_OCR_SCHEMA_VERSION = 2;
 const CAT05_NATIVE_OCR_ARTIFACT_COUNT = 139;
 const CAT05_NATIVE_OCR_SCREENSHOT_COUNT = 55;
@@ -3764,7 +3764,7 @@ const cat05NativeOcrReviewEvidenceDate = CAT05_NATIVE_OCR_EVIDENCE_DATE;
 const cat04CatalogRecoveryEvidenceFolder = `test-results/human-e2e/${cat04CatalogRecoveryEvidenceDate}/${CAT04_CATALOG_RECOVERY_EVIDENCE_FOLDER_NAME}`;
 const cat05NativeOcrReviewEvidenceFolder = `test-results/human-e2e/${cat05NativeOcrReviewEvidenceDate}/${CAT05_NATIVE_OCR_EVIDENCE_FOLDER_NAME}`;
 if (!exists(`${cat05NativeOcrReviewEvidenceFolder}/summary.json`)) {
-  console.error('FAIL Missing 2026-07-18 CAT05 native-OCR review Expo-web evidence.');
+  console.error(`FAIL Missing ${cat05NativeOcrReviewEvidenceDate} CAT05 native-OCR review Expo-web evidence.`);
   process.exit(1);
 }
 const latestManifestEvidenceDate = [
