@@ -274,6 +274,23 @@ describe('plaintext staging journal', () => {
     expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
   });
 
+  it('scavenges a partially written reserved export after a simulated relaunch', async () => {
+    const harness = createHarness();
+    const handle = await harness.coordinator.reserve('data_export_json');
+    harness.files.add(handle.uri);
+    expect(readJournal(harness.storage)).toMatchObject({
+      entries: [{ operationId: FIRST_ID, state: 'reserved' }],
+    });
+
+    const relaunched = createPlaintextStagingCoordinator(harness.deps);
+    await expect(relaunched.scavenge()).resolves.toBe(1);
+
+    expect(harness.files.has(handle.uri)).toBe(false);
+    expect(harness.directories.has(STAGING_DIRECTORY)).toBe(false);
+    expect(readJournal(harness.storage)).toBeNull();
+    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
+  });
+
   it('keeps the journal intact when scavenger deletion fails so relaunch can retry', async () => {
     const harness = createHarness();
     const handle = await harness.coordinator.reserve('data_export_json');

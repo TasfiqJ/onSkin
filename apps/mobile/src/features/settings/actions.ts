@@ -1,4 +1,3 @@
-import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
@@ -36,6 +35,7 @@ import {
   collectLocalDeviceExportData,
   type MobileDataExportBundle,
 } from './localDeviceExport';
+import { writeMobileDataExportFile } from './mobileDataExportWriter';
 
 const DATA_RIGHTS_BACKEND_UNAVAILABLE = 'DATA_RIGHTS_BACKEND_UNAVAILABLE';
 const DATA_EXPORT_USER_UNAVAILABLE = 'DATA_EXPORT_USER_UNAVAILABLE';
@@ -342,17 +342,13 @@ export async function exportData(): Promise<boolean> {
 
     const staging = await reservePlaintextStaging('data_export_json');
     try {
-      const json = JSON.stringify(
-        buildMobileDataExportBundle({
-          localDeviceData,
-          serverAccountData,
-          serverAccountDataStatus,
-        }),
-        null,
-        2,
-      );
+      const bundle = buildMobileDataExportBundle({
+        localDeviceData,
+        serverAccountData,
+        serverAccountDataStatus,
+      });
       lease.assertCurrent();
-      await FileSystem.writeAsStringAsync(staging.uri, json);
+      await writeMobileDataExportFile(staging.uri, bundle, lease);
       lease.assertCurrent();
       await markPlaintextStagingState(staging, 'plaintext_written');
       lease.assertCurrent();

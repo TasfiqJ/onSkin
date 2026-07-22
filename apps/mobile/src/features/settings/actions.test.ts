@@ -41,7 +41,6 @@ const mocks = vi.hoisted(() => ({
   buildMobileDataExportBundle: vi.fn(),
   cleanupPlaintextStaging: vi.fn(),
   collectLocalDeviceExportData: vi.fn(),
-  deleteAsync: vi.fn(),
   freezeAnalyticsIdentityForAccountDeletion: vi.fn(),
   freezeRevenueCatIdentityForAccountDeletion: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
@@ -61,13 +60,7 @@ const mocks = vi.hoisted(() => ({
   signOut: vi.fn(),
   userHasAppleIdentity: vi.fn(),
   waitForRevenueCatOperationsToSettle: vi.fn(),
-  writeAsStringAsync: vi.fn(),
-}));
-
-vi.mock('expo-file-system/legacy', () => ({
-  cacheDirectory: 'file://cache/',
-  deleteAsync: mocks.deleteAsync,
-  writeAsStringAsync: mocks.writeAsStringAsync,
+  writeMobileDataExportFile: vi.fn(),
 }));
 
 vi.mock('expo-sharing', () => ({
@@ -134,6 +127,10 @@ vi.mock('./localDeviceExport', () => ({
   collectLocalDeviceExportData: mocks.collectLocalDeviceExportData,
 }));
 
+vi.mock('./mobileDataExportWriter', () => ({
+  writeMobileDataExportFile: mocks.writeMobileDataExportFile,
+}));
+
 describe('settings data export', () => {
   beforeEach(() => {
     delete process.env.EXPO_PUBLIC_E2E_DATA_EXPORT_DELAY_MS;
@@ -141,7 +138,6 @@ describe('settings data export', () => {
     mocks.armAccountDeletionVendorFreeze.mockReset();
     mocks.cleanupPlaintextStaging.mockReset();
     mocks.collectLocalDeviceExportData.mockReset();
-    mocks.deleteAsync.mockReset();
     mocks.freezeAnalyticsIdentityForAccountDeletion.mockReset();
     mocks.freezeRevenueCatIdentityForAccountDeletion.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
@@ -158,7 +154,7 @@ describe('settings data export', () => {
     mocks.signOut.mockReset();
     mocks.userHasAppleIdentity.mockReset();
     mocks.waitForRevenueCatOperationsToSettle.mockReset();
-    mocks.writeAsStringAsync.mockReset();
+    mocks.writeMobileDataExportFile.mockReset();
     mocks.buildMobileDataExportBundle.mockImplementation((params) => ({
       mobile_export_schema_version: 1,
       exported_at: '2026-07-10T12:01:00.000Z',
@@ -183,7 +179,6 @@ describe('settings data export', () => {
       exclusions: [],
     });
     mocks.cleanupPlaintextStaging.mockResolvedValue(undefined);
-    mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.freezeAnalyticsIdentityForAccountDeletion.mockResolvedValue(undefined);
     mocks.freezeRevenueCatIdentityForAccountDeletion.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
@@ -203,7 +198,7 @@ describe('settings data export', () => {
     mocks.signOut.mockResolvedValue(undefined);
     mocks.waitForRevenueCatOperationsToSettle.mockResolvedValue(undefined);
     mocks.userHasAppleIdentity.mockReturnValue(true);
-    mocks.writeAsStringAsync.mockResolvedValue(undefined);
+    mocks.writeMobileDataExportFile.mockResolvedValue({ chunksWritten: 2, bytesWritten: 512 });
   });
 
   it('writes, shares, and deletes a one-time export file when sharing is available', async () => {
@@ -222,31 +217,31 @@ describe('settings data export', () => {
     });
     expect(mocks.reservePlaintextStaging).toHaveBeenCalledWith('data_export_json');
     expect(mocks.reservePlaintextStaging.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.writeAsStringAsync.mock.invocationCallOrder[0]!,
-    );
-    expect(mocks.reservePlaintextStaging.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.buildMobileDataExportBundle.mock.invocationCallOrder[0]!,
     );
-    expect(mocks.writeAsStringAsync).toHaveBeenCalledWith(STAGED_EXPORT.uri, expect.any(String));
-    const written = JSON.parse(mocks.writeAsStringAsync.mock.calls[0]![1] as string) as Record<
-      string,
-      unknown
-    >;
-    expect(written).toEqual(
+    expect(mocks.buildMobileDataExportBundle.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.writeMobileDataExportFile.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.buildMobileDataExportBundle).toHaveBeenCalledWith(
       expect.objectContaining({
-        mobile_export_schema_version: 1,
-        server_account_data_status: 'included',
-        server_account_data: {
+        serverAccountDataStatus: 'included',
+        serverAccountData: {
           export_schema_version: 2,
           user_id: 'user-1',
           account: { id: 'user-1' },
         },
-        local_device_data: expect.objectContaining({
+        localDeviceData: expect.objectContaining({
           sections: expect.objectContaining({
             shelf_and_routine: { shelf_products: [{ id: 'local-1' }] },
           }),
         }),
       }),
+    );
+    const builtBundle = mocks.buildMobileDataExportBundle.mock.results[0]!.value;
+    expect(mocks.writeMobileDataExportFile).toHaveBeenCalledWith(
+      STAGED_EXPORT.uri,
+      builtBundle,
+      expect.objectContaining({ assertCurrent: expect.any(Function) }),
     );
     expect(mocks.shareAsync).toHaveBeenCalledWith(STAGED_EXPORT.uri, {
       mimeType: 'application/json',
@@ -258,6 +253,15 @@ describe('settings data export', () => {
       'plaintext_written',
     );
     expect(mocks.markPlaintextStagingState).toHaveBeenNthCalledWith(2, STAGED_EXPORT, 'sharing');
+    expect(mocks.writeMobileDataExportFile.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.markPlaintextStagingState.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.markPlaintextStagingState.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.sharingAvailable.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.markPlaintextStagingState.mock.invocationCallOrder[1]).toBeLessThan(
+      mocks.shareAsync.mock.invocationCallOrder[0]!,
+    );
     expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
   });
 
@@ -298,16 +302,54 @@ describe('settings data export', () => {
     await expect(exportData()).rejects.toThrow('journal unavailable');
 
     expect(mocks.buildMobileDataExportBundle).not.toHaveBeenCalled();
-    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.writeMobileDataExportFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
   });
 
   it('cleans the reserved entry when plaintext writing fails', async () => {
-    mocks.writeAsStringAsync.mockRejectedValueOnce(new Error('cache full'));
+    mocks.writeMobileDataExportFile.mockRejectedValueOnce(new Error('cache full'));
 
     await expect(exportData()).rejects.toThrow('cache full');
 
     expect(mocks.markPlaintextStagingState).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
+  });
+
+  it('does not mark or share the staging file before incremental writing finishes', async () => {
+    let finishWriting!: () => void;
+    mocks.writeMobileDataExportFile.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finishWriting = () => resolve({ chunksWritten: 3, bytesWritten: 768 });
+        }),
+    );
+    mocks.sharingAvailable.mockResolvedValueOnce(true);
+    mocks.shareAsync.mockResolvedValueOnce(undefined);
+
+    const pendingExport = exportData();
+    await vi.waitFor(() => expect(mocks.writeMobileDataExportFile).toHaveBeenCalledOnce());
+
+    expect(mocks.markPlaintextStagingState).not.toHaveBeenCalled();
+    expect(mocks.sharingAvailable).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+
+    finishWriting();
+    await expect(pendingExport).resolves.toBe(true);
+    expect(mocks.markPlaintextStagingState).toHaveBeenNthCalledWith(
+      1,
+      STAGED_EXPORT,
+      'plaintext_written',
+    );
+  });
+
+  it('cleans a completed file without probing sharing when its written marker cannot persist', async () => {
+    mocks.markPlaintextStagingState.mockRejectedValueOnce(new Error('journal unavailable'));
+
+    await expect(exportData()).rejects.toThrow('journal unavailable');
+
+    expect(mocks.writeMobileDataExportFile).toHaveBeenCalledOnce();
+    expect(mocks.sharingAvailable).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
     expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
   });
@@ -331,16 +373,21 @@ describe('settings data export', () => {
 
     expect(mocks.invoke).not.toHaveBeenCalled();
     expect(mocks.getUser).not.toHaveBeenCalled();
-    const written = JSON.parse(mocks.writeAsStringAsync.mock.calls[0]![1] as string) as Record<
-      string,
-      unknown
-    >;
-    expect(written).toEqual(
+    expect(mocks.buildMobileDataExportBundle).toHaveBeenCalledWith(
+      expect.objectContaining({
+        serverAccountDataStatus: 'backend_not_configured',
+        serverAccountData: null,
+        localDeviceData: expect.objectContaining({ schema_version: 1 }),
+      }),
+    );
+    expect(mocks.writeMobileDataExportFile).toHaveBeenCalledWith(
+      STAGED_EXPORT.uri,
       expect.objectContaining({
         server_account_data_status: 'backend_not_configured',
         server_account_data: null,
         local_device_data: expect.objectContaining({ schema_version: 1 }),
       }),
+      expect.objectContaining({ assertCurrent: expect.any(Function) }),
     );
   });
 
@@ -349,7 +396,7 @@ describe('settings data export', () => {
 
     await expect(exportData()).rejects.toThrow('NETWORK_REQUEST_UNKNOWN');
 
-    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.writeMobileDataExportFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
   });
 
@@ -358,7 +405,7 @@ describe('settings data export', () => {
 
     await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_INVALID');
 
-    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.writeMobileDataExportFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
   });
 
@@ -369,7 +416,7 @@ describe('settings data export', () => {
 
     expect(mocks.collectLocalDeviceExportData).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
-    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.writeMobileDataExportFile).not.toHaveBeenCalled();
   });
 
   it('rejects a valid server bundle owned by a different account', async () => {
@@ -380,7 +427,7 @@ describe('settings data export', () => {
 
     await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_OWNER_MISMATCH');
 
-    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.writeMobileDataExportFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
   });
 
@@ -404,14 +451,15 @@ describe('settings data export', () => {
       endAccountGenerationBoundary();
     }
 
-    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.writeMobileDataExportFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
   });
 
   it('deletes a written cache file without sharing when the account changes after the write', async () => {
     mocks.sharingAvailable.mockResolvedValueOnce(true);
-    mocks.writeAsStringAsync.mockImplementationOnce(async () => {
+    mocks.writeMobileDataExportFile.mockImplementationOnce(async () => {
       beginAccountGenerationBoundary();
+      return { chunksWritten: 1, bytesWritten: 128 };
     });
 
     try {
@@ -420,6 +468,24 @@ describe('settings data export', () => {
       endAccountGenerationBoundary();
     }
 
+    expect(mocks.sharingAvailable).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
+  });
+
+  it('cleans a partial reserved file when the incremental writer observes an account change', async () => {
+    mocks.writeMobileDataExportFile.mockImplementationOnce(async () => {
+      beginAccountGenerationBoundary();
+      throw new Error(ACCOUNT_GENERATION_CHANGED);
+    });
+
+    try {
+      await expect(exportData()).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.markPlaintextStagingState).not.toHaveBeenCalled();
     expect(mocks.sharingAvailable).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
     expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
@@ -449,7 +515,7 @@ describe('settings data export', () => {
     await expect(exportData()).rejects.toThrow('local export unavailable');
 
     expect(mocks.invoke).not.toHaveBeenCalled();
-    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.writeMobileDataExportFile).not.toHaveBeenCalled();
   });
 
   it('keeps the You tab from treating unavailable sharing as a successful export', () => {
@@ -464,6 +530,9 @@ describe('settings data export', () => {
     expect(actions).toContain('if (isSupabaseConfigured)');
     expect(actions).toContain('collectLocalDeviceExportData()');
     expect(actions).toContain("serverAccountDataStatus = 'included'");
+    expect(actions).toContain('writeMobileDataExportFile(staging.uri, bundle, lease)');
+    expect(actions).not.toContain('writeAsStringAsync');
+    expect(actions).not.toContain('JSON.stringify(bundle');
     const exportAction = actions.slice(actions.indexOf('export async function exportData()'));
     expect(exportAction.indexOf('await waitForExportE2EDelay(lease.signal);')).toBeLessThan(
       exportAction.indexOf('await collectLocalDeviceExportData();'),
@@ -514,7 +583,6 @@ describe('settings data export', () => {
 describe('settings account deletion and consent withdrawal', () => {
   beforeEach(() => {
     mocks.armAccountDeletionVendorFreeze.mockReset();
-    mocks.deleteAsync.mockReset();
     mocks.freezeAnalyticsIdentityForAccountDeletion.mockReset();
     mocks.freezeRevenueCatIdentityForAccountDeletion.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
@@ -532,7 +600,6 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.signOut.mockReset();
     mocks.userHasAppleIdentity.mockReset();
     mocks.waitForRevenueCatOperationsToSettle.mockReset();
-    mocks.writeAsStringAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.armAccountDeletionVendorFreeze.mockResolvedValue(ACCOUNT_DELETION_COMPLETION_TOKEN);
     mocks.freezeAnalyticsIdentityForAccountDeletion.mockResolvedValue(undefined);
@@ -743,9 +810,7 @@ describe('settings account deletion and consent withdrawal', () => {
 
   it('converges after a lost final response without replaying deletion or the Apple code', async () => {
     mocks.invoke.mockResolvedValueOnce({ data: null, error: new Error('response lost') });
-    mocks.lookupAccountDeletionCompletion.mockResolvedValueOnce(
-      VALID_ACCOUNT_DELETION_COMPLETION,
-    );
+    mocks.lookupAccountDeletionCompletion.mockResolvedValueOnce(VALID_ACCOUNT_DELETION_COMPLETION);
 
     await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
 
@@ -769,9 +834,7 @@ describe('settings account deletion and consent withdrawal', () => {
       ownerHash: 'a'.repeat(64),
       completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
     });
-    mocks.lookupAccountDeletionCompletion.mockResolvedValueOnce(
-      VALID_ACCOUNT_DELETION_COMPLETION,
-    );
+    mocks.lookupAccountDeletionCompletion.mockResolvedValueOnce(VALID_ACCOUNT_DELETION_COMPLETION);
 
     await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
 

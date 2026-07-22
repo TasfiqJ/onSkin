@@ -63,8 +63,8 @@ const RAW_FILE_SYSTEM_FILES = [
   'features/photos/analyzePhotoLighting.ts',
   'features/photos/captureStaging.ts',
   'features/photos/encryptedStorage.ts',
-  'features/settings/actions.ts',
   'features/settings/localPrivateData.ts',
+  'features/settings/mobileDataExportWriter.ts',
   'lib/analytics/posthogDurableStorage.ts',
   'lib/diagnostics/localDiagnosticsRuntime.ts',
   'lib/storage/plaintextStaging.ts',
@@ -153,6 +153,12 @@ describe('account-sensitive production gateway inventory', () => {
     expect(photos).toContain('runAccountScopedPhotoRead');
     expect(photos).toContain('runAccountScopedPhotoMutation');
     expect(photos).toContain('beginEncryptedPhotoAccountBoundary');
+
+    const mobileDataExportWriter = source(
+      join(SRC_DIR, 'features/settings/mobileDataExportWriter.ts'),
+    );
+    expect(mobileDataExportWriter).toContain('AccountGenerationLease');
+    expect(mobileDataExportWriter).toContain('lease.assertCurrent()');
 
     const sessionOwner = source(join(SRC_DIR, 'lib/auth/sessionOwner.ts'));
     expect(sessionOwner).toContain('LOCAL_DATA_OWNER_HASH_KEY');
