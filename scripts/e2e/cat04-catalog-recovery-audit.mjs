@@ -1652,7 +1652,7 @@ async function executeScenario({
     case 'scan-offline':
     case 'scan-error': {
       await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+        maxInflight: networkIdleMaxInflightForScenario(scenario),
       });
       const outcomeText =
         scenario.id === 'scan-offline' ? "Couldn't reach the product catalog" : 'Lookup failed.';
@@ -1676,7 +1676,9 @@ async function executeScenario({
       return;
     }
     case 'scan-camera-denied-settings-failure': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: networkIdleMaxInflightForScenario(scenario),
+      });
       await waitForText(client, 'Camera permission is needed for barcode scanning.');
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-denied`);
       assertInteractiveControl(snapshot, 'Open settings');
@@ -1690,7 +1692,9 @@ async function executeScenario({
       return;
     }
     case 'ocr-camera-denied-settings-failure': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: networkIdleMaxInflightForScenario(scenario),
+      });
       await waitForText(client, 'Open settings');
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-denied`);
       assertInteractiveControl(snapshot, 'Open settings');
@@ -1700,7 +1704,9 @@ async function executeScenario({
       return;
     }
     case 'ocr-capture-failure': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: networkIdleMaxInflightForScenario(scenario),
+      });
       await waitForText(client, 'Capture label');
       await clickByText(client, 'Capture label');
       await waitForText(client, "Label wasn't captured");
