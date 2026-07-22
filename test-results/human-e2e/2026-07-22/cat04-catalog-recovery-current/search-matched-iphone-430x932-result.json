@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "search-matched-iphone-430x932",
-  "completedAt": "2026-07-22T04:08:23.741Z",
+  "completedAt": "2026-07-22T05:25:26.235Z",
   "error": null,
   "fixture": "matched",
   "fixtureGroup": "matched",
   "nativeDeviceProof": false,
   "route": "/shelf/search",
   "scenarioId": "search-matched",
-  "startedAt": "2026-07-22T04:08:20.115Z",
+  "startedAt": "2026-07-22T05:25:23.050Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -16,5 +16,5 @@
     "height": 932
   },
   "browserFailures": [],
-  "endUrl": "http://localhost:8460/shelf/opened?intakeId=65d76f2c-70e5-4ffd-a297-646479a662d4"
+  "endUrl": "http://localhost:8460/shelf/opened?intakeId=e6871d0a-efe8-4e38-8d99-cd50795d7816"
 }

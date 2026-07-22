@@ -1,5 +1,5 @@
 {
-  "completedAt": "2026-07-22T04:18:19.392Z",
+  "completedAt": "2026-07-22T05:32:32.313Z",
   "expectedBootstrapCount": 18,
   "expectedExecutionCount": 45,
   "fixtureGroups": [
@@ -129,11 +129,11 @@
     {
       "artifactPrefix": "bootstrap-matched-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:07:46.394Z",
+      "completedAt": "2026-07-22T05:24:51.682Z",
       "error": null,
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:07:30.426Z",
+      "startedAt": "2026-07-22T05:24:38.723Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -141,16 +141,16 @@
         "width": 375,
         "height": 667
       },
-      "endUrl": "http://localhost:8460/shelf/search?cat04ConsentProbe=matched-iphone-375x667-1784693263696"
+      "endUrl": "http://localhost:8460/shelf/search?cat04ConsentProbe=matched-iphone-375x667-1784697889450"
     },
     {
       "artifactPrefix": "bootstrap-matched-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:08:03.667Z",
+      "completedAt": "2026-07-22T05:25:07.531Z",
       "error": null,
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:07:58.799Z",
+      "startedAt": "2026-07-22T05:25:02.869Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -158,16 +158,16 @@
         "width": 390,
         "height": 844
       },
-      "endUrl": "http://localhost:8460/shelf/search?cat04ConsentProbe=matched-iphone-390x844-1784693281410"
+      "endUrl": "http://localhost:8460/shelf/search?cat04ConsentProbe=matched-iphone-390x844-1784697905301"
     },
     {
       "artifactPrefix": "bootstrap-matched-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:08:20.115Z",
+      "completedAt": "2026-07-22T05:25:23.049Z",
       "error": null,
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:08:15.069Z",
+      "startedAt": "2026-07-22T05:25:18.410Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -175,16 +175,16 @@
         "width": 430,
         "height": 932
       },
-      "endUrl": "http://localhost:8460/shelf/search?cat04ConsentProbe=matched-iphone-430x932-1784693297600"
+      "endUrl": "http://localhost:8460/shelf/search?cat04ConsentProbe=matched-iphone-430x932-1784697920856"
     },
     {
       "artifactPrefix": "bootstrap-no-match-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:09:35.313Z",
+      "completedAt": "2026-07-22T05:26:12.048Z",
       "error": null,
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:09:04.321Z",
+      "startedAt": "2026-07-22T05:25:58.088Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -192,16 +192,16 @@
         "width": 375,
         "height": 667
       },
-      "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-375x667-1784693371935"
+      "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-375x667-1784697969667"
     },
     {
       "artifactPrefix": "bootstrap-no-match-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:10:03.716Z",
+      "completedAt": "2026-07-22T05:26:24.562Z",
       "error": null,
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:09:48.075Z",
+      "startedAt": "2026-07-22T05:26:20.106Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -209,16 +209,16 @@
         "width": 390,
         "height": 844
       },
-      "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-390x844-1784693401020"
+      "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-390x844-1784697982378"
     },
     {
       "artifactPrefix": "bootstrap-no-match-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:10:20.802Z",
+      "completedAt": "2026-07-22T05:26:36.830Z",
       "error": null,
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:10:12.727Z",
+      "startedAt": "2026-07-22T05:26:32.411Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -226,16 +226,16 @@
         "width": 430,
         "height": 932
       },
-      "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-430x932-1784693418204"
+      "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-430x932-1784697994670"
     },
     {
       "artifactPrefix": "bootstrap-offline-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:11:21.621Z",
+      "completedAt": "2026-07-22T05:27:30.812Z",
       "error": null,
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:11:02.237Z",
+      "startedAt": "2026-07-22T05:27:15.742Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -243,16 +243,16 @@
         "width": 375,
         "height": 667
       },
-      "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-375x667-1784693479290"
+      "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-375x667-1784698048455"
     },
     {
       "artifactPrefix": "bootstrap-offline-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:11:39.980Z",
+      "completedAt": "2026-07-22T05:27:45.358Z",
       "error": null,
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:11:33.891Z",
+      "startedAt": "2026-07-22T05:27:40.685Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -260,16 +260,16 @@
         "width": 390,
         "height": 844
       },
-      "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-390x844-1784693497341"
+      "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-390x844-1784698063152"
     },
     {
       "artifactPrefix": "bootstrap-offline-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:11:55.992Z",
+      "completedAt": "2026-07-22T05:27:59.593Z",
       "error": null,
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:11:51.280Z",
+      "startedAt": "2026-07-22T05:27:54.985Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -277,16 +277,16 @@
         "width": 430,
         "height": 932
       },
-      "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-430x932-1784693513775"
+      "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-430x932-1784698077463"
     },
     {
       "artifactPrefix": "bootstrap-scan-error-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:13:01.718Z",
+      "completedAt": "2026-07-22T05:28:53.039Z",
       "error": null,
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:12:46.926Z",
+      "startedAt": "2026-07-22T05:28:39.620Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -294,16 +294,16 @@
         "width": 375,
         "height": 667
       },
-      "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-375x667-1784693579077"
+      "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-375x667-1784698130844"
     },
     {
       "artifactPrefix": "bootstrap-scan-error-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:13:26.891Z",
+      "completedAt": "2026-07-22T05:29:09.089Z",
       "error": null,
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:13:18.228Z",
+      "startedAt": "2026-07-22T05:29:04.410Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -311,16 +311,16 @@
         "width": 390,
         "height": 844
       },
-      "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-390x844-1784693604270"
+      "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-390x844-1784698146902"
     },
     {
       "artifactPrefix": "bootstrap-scan-error-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:13:50.877Z",
+      "completedAt": "2026-07-22T05:29:24.473Z",
       "error": null,
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:13:43.516Z",
+      "startedAt": "2026-07-22T05:29:20.020Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -328,16 +328,16 @@
         "width": 430,
         "height": 932
       },
-      "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-430x932-1784693628583"
+      "endUrl": "http://localhost:8520/shelf/search?cat04ConsentProbe=scan-error-iphone-430x932-1784698162328"
     },
     {
       "artifactPrefix": "bootstrap-camera-recovery-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:14:59.442Z",
+      "completedAt": "2026-07-22T05:30:15.320Z",
       "error": null,
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:14:33.830Z",
+      "startedAt": "2026-07-22T05:30:01.688Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -345,16 +345,16 @@
         "width": 375,
         "height": 667
       },
-      "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-375x667-1784693696966"
+      "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-375x667-1784698213101"
     },
     {
       "artifactPrefix": "bootstrap-camera-recovery-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:15:10.257Z",
+      "completedAt": "2026-07-22T05:30:26.005Z",
       "error": null,
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:15:05.452Z",
+      "startedAt": "2026-07-22T05:30:21.226Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -362,16 +362,16 @@
         "width": 390,
         "height": 844
       },
-      "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-390x844-1784693708031"
+      "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-390x844-1784698223707"
     },
     {
       "artifactPrefix": "bootstrap-camera-recovery-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:15:20.913Z",
+      "completedAt": "2026-07-22T05:30:36.090Z",
       "error": null,
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:15:16.082Z",
+      "startedAt": "2026-07-22T05:30:31.346Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -379,16 +379,16 @@
         "width": 430,
         "height": 932
       },
-      "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-430x932-1784693718613"
+      "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-430x932-1784698233851"
     },
     {
       "artifactPrefix": "bootstrap-ocr-capture-failure-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:17:11.056Z",
+      "completedAt": "2026-07-22T05:31:30.500Z",
       "error": null,
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:16:50.716Z",
+      "startedAt": "2026-07-22T05:31:17.340Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -396,16 +396,16 @@
         "width": 375,
         "height": 667
       },
-      "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-375x667-1784693828689"
+      "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-375x667-1784698288292"
     },
     {
       "artifactPrefix": "bootstrap-ocr-capture-failure-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:17:34.534Z",
+      "completedAt": "2026-07-22T05:31:52.415Z",
       "error": null,
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:17:29.835Z",
+      "startedAt": "2026-07-22T05:31:46.755Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -413,16 +413,16 @@
         "width": 390,
         "height": 844
       },
-      "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-390x844-1784693852319"
+      "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-390x844-1784698309888"
     },
     {
       "artifactPrefix": "bootstrap-ocr-capture-failure-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T04:17:55.434Z",
+      "completedAt": "2026-07-22T05:32:14.899Z",
       "error": null,
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T04:17:50.693Z",
+      "startedAt": "2026-07-22T05:32:08.853Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -430,20 +430,20 @@
         "width": 430,
         "height": 932
       },
-      "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-430x932-1784693873169"
+      "endUrl": "http://localhost:8560/shelf/search?cat04ConsentProbe=ocr-capture-failure-iphone-430x932-1784698332434"
     }
   ],
   "scenarios": [
     {
       "artifactPrefix": "search-matched-iphone-375x667",
-      "completedAt": "2026-07-22T04:07:50.866Z",
+      "completedAt": "2026-07-22T05:24:54.972Z",
       "error": null,
       "fixture": "matched",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-matched",
-      "startedAt": "2026-07-22T04:07:46.394Z",
+      "startedAt": "2026-07-22T05:24:51.682Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -452,18 +452,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/opened?intakeId=9c20dfcd-49b8-4ed6-94eb-b9c180e96e9b"
+      "endUrl": "http://localhost:8460/shelf/opened?intakeId=b2fd1441-f589-4092-b1aa-b2ced3a6d47c"
     },
     {
       "artifactPrefix": "scan-matched-iphone-375x667",
-      "completedAt": "2026-07-22T04:07:53.857Z",
+      "completedAt": "2026-07-22T05:24:58.038Z",
       "error": null,
       "fixture": "matched",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-matched",
-      "startedAt": "2026-07-22T04:07:50.867Z",
+      "startedAt": "2026-07-22T05:24:54.972Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -472,18 +472,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/opened?intakeId=766c794f-d704-4860-86df-47877aa68418"
+      "endUrl": "http://localhost:8460/shelf/opened?intakeId=cc80bf81-c93b-4506-8866-2a5a90db8c04"
     },
     {
       "artifactPrefix": "scan-wrong-match-recovery-iphone-375x667",
-      "completedAt": "2026-07-22T04:07:58.799Z",
+      "completedAt": "2026-07-22T05:25:02.868Z",
       "error": null,
       "fixture": "matched_wrong_match_recovery",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-wrong-match-recovery",
-      "startedAt": "2026-07-22T04:07:53.857Z",
+      "startedAt": "2026-07-22T05:24:58.038Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -492,18 +492,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/manual?intakeId=48da3a1d-9135-4883-b0a0-be3128188a0c"
+      "endUrl": "http://localhost:8460/shelf/manual?intakeId=f4458a3a-cc55-4c15-919e-ced76b62b61a"
     },
     {
       "artifactPrefix": "search-matched-iphone-390x844",
-      "completedAt": "2026-07-22T04:08:07.115Z",
+      "completedAt": "2026-07-22T05:25:10.650Z",
       "error": null,
       "fixture": "matched",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-matched",
-      "startedAt": "2026-07-22T04:08:03.668Z",
+      "startedAt": "2026-07-22T05:25:07.531Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -512,18 +512,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/opened?intakeId=957d6024-8d18-424a-9679-2dd6e7486be6"
+      "endUrl": "http://localhost:8460/shelf/opened?intakeId=d717fbaf-1577-4e18-a240-0a9e1233fc63"
     },
     {
       "artifactPrefix": "scan-matched-iphone-390x844",
-      "completedAt": "2026-07-22T04:08:10.096Z",
+      "completedAt": "2026-07-22T05:25:13.551Z",
       "error": null,
       "fixture": "matched",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-matched",
-      "startedAt": "2026-07-22T04:08:07.116Z",
+      "startedAt": "2026-07-22T05:25:10.650Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -532,18 +532,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/opened?intakeId=c5585de8-fbe7-4839-9ae1-f315b88b2f62"
+      "endUrl": "http://localhost:8460/shelf/opened?intakeId=3721ff95-602d-4478-9bae-9fcbcef50497"
     },
     {
       "artifactPrefix": "scan-wrong-match-recovery-iphone-390x844",
-      "completedAt": "2026-07-22T04:08:15.069Z",
+      "completedAt": "2026-07-22T05:25:18.410Z",
       "error": null,
       "fixture": "matched_wrong_match_recovery",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-wrong-match-recovery",
-      "startedAt": "2026-07-22T04:08:10.097Z",
+      "startedAt": "2026-07-22T05:25:13.552Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -552,18 +552,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/manual?intakeId=daf3dd68-c218-4b33-b605-4ffe4fa2ff81"
+      "endUrl": "http://localhost:8460/shelf/manual?intakeId=b7409775-0914-4d55-be34-54c6633afef5"
     },
     {
       "artifactPrefix": "search-matched-iphone-430x932",
-      "completedAt": "2026-07-22T04:08:23.741Z",
+      "completedAt": "2026-07-22T05:25:26.235Z",
       "error": null,
       "fixture": "matched",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-matched",
-      "startedAt": "2026-07-22T04:08:20.115Z",
+      "startedAt": "2026-07-22T05:25:23.050Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -572,18 +572,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/opened?intakeId=65d76f2c-70e5-4ffd-a297-646479a662d4"
+      "endUrl": "http://localhost:8460/shelf/opened?intakeId=e6871d0a-efe8-4e38-8d99-cd50795d7816"
     },
     {
       "artifactPrefix": "scan-matched-iphone-430x932",
-      "completedAt": "2026-07-22T04:08:26.935Z",
+      "completedAt": "2026-07-22T05:25:29.094Z",
       "error": null,
       "fixture": "matched",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-matched",
-      "startedAt": "2026-07-22T04:08:23.742Z",
+      "startedAt": "2026-07-22T05:25:26.236Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -592,18 +592,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/opened?intakeId=ae81bb89-37a5-474c-8ead-98154c016d2a"
+      "endUrl": "http://localhost:8460/shelf/opened?intakeId=049674e3-930b-45cd-93de-c24709c855f1"
     },
     {
       "artifactPrefix": "scan-wrong-match-recovery-iphone-430x932",
-      "completedAt": "2026-07-22T04:08:31.885Z",
+      "completedAt": "2026-07-22T05:25:33.932Z",
       "error": null,
       "fixture": "matched_wrong_match_recovery",
       "fixtureGroup": "matched",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-wrong-match-recovery",
-      "startedAt": "2026-07-22T04:08:26.935Z",
+      "startedAt": "2026-07-22T05:25:29.094Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -612,18 +612,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8460/shelf/manual?intakeId=e925d3ee-ebcf-464e-9aa9-db8fcec16ce5"
+      "endUrl": "http://localhost:8460/shelf/manual?intakeId=0e05cfb2-5edd-41f4-9101-a026f3732118"
     },
     {
       "artifactPrefix": "search-no-match-iphone-375x667",
-      "completedAt": "2026-07-22T04:09:41.976Z",
+      "completedAt": "2026-07-22T05:26:16.657Z",
       "error": null,
       "fixture": "no_match",
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-no-match",
-      "startedAt": "2026-07-22T04:09:35.314Z",
+      "startedAt": "2026-07-22T05:26:12.049Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -632,18 +632,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8480/shelf/manual?intakeId=2a9650f4-dd14-48a0-82cf-933737e052e0"
+      "endUrl": "http://localhost:8480/shelf/manual?intakeId=5e6bc218-d0b5-4e78-a5e2-e1b0f619dcab"
     },
     {
       "artifactPrefix": "scan-no-match-iphone-375x667",
-      "completedAt": "2026-07-22T04:09:48.052Z",
+      "completedAt": "2026-07-22T05:26:20.105Z",
       "error": null,
       "fixture": "no_match",
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-no-match",
-      "startedAt": "2026-07-22T04:09:41.978Z",
+      "startedAt": "2026-07-22T05:26:16.658Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -652,18 +652,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8480/shelf/manual?intakeId=5b561425-faea-414d-ba4c-9e20e791f5db"
+      "endUrl": "http://localhost:8480/shelf/manual?intakeId=b8f21b44-4500-4763-947f-5c132ae81ff4"
     },
     {
       "artifactPrefix": "search-no-match-iphone-390x844",
-      "completedAt": "2026-07-22T04:10:08.828Z",
+      "completedAt": "2026-07-22T05:26:28.983Z",
       "error": null,
       "fixture": "no_match",
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-no-match",
-      "startedAt": "2026-07-22T04:10:03.717Z",
+      "startedAt": "2026-07-22T05:26:24.563Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -672,18 +672,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8480/shelf/manual?intakeId=dd0e5495-ded0-4774-bf4f-e313038d367a"
+      "endUrl": "http://localhost:8480/shelf/manual?intakeId=277ac3c9-72e4-46ee-90ba-3e78b1c6470e"
     },
     {
       "artifactPrefix": "scan-no-match-iphone-390x844",
-      "completedAt": "2026-07-22T04:10:12.727Z",
+      "completedAt": "2026-07-22T05:26:32.410Z",
       "error": null,
       "fixture": "no_match",
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-no-match",
-      "startedAt": "2026-07-22T04:10:08.828Z",
+      "startedAt": "2026-07-22T05:26:28.984Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -692,18 +692,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8480/shelf/manual?intakeId=3f69064f-347f-49a3-8a72-d693b31c4414"
+      "endUrl": "http://localhost:8480/shelf/manual?intakeId=99b88b20-1ac1-411a-953b-830e4ed190c7"
     },
     {
       "artifactPrefix": "search-no-match-iphone-430x932",
-      "completedAt": "2026-07-22T04:10:25.291Z",
+      "completedAt": "2026-07-22T05:26:41.276Z",
       "error": null,
       "fixture": "no_match",
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-no-match",
-      "startedAt": "2026-07-22T04:10:20.802Z",
+      "startedAt": "2026-07-22T05:26:36.831Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -712,18 +712,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8480/shelf/manual?intakeId=eeaf999e-3b41-4807-afeb-49a6cca46e8f"
+      "endUrl": "http://localhost:8480/shelf/manual?intakeId=78a3932e-e6b5-401f-86fb-e0bd2f7ae6f4"
     },
     {
       "artifactPrefix": "scan-no-match-iphone-430x932",
-      "completedAt": "2026-07-22T04:10:28.862Z",
+      "completedAt": "2026-07-22T05:26:44.712Z",
       "error": null,
       "fixture": "no_match",
       "fixtureGroup": "no-match",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-no-match",
-      "startedAt": "2026-07-22T04:10:25.292Z",
+      "startedAt": "2026-07-22T05:26:41.276Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -732,18 +732,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8480/shelf/manual?intakeId=cacc0211-e601-450f-a83a-944144b5fc93"
+      "endUrl": "http://localhost:8480/shelf/manual?intakeId=9cac1388-9c5f-4c1e-9cf5-b4db2d3d1463"
     },
     {
       "artifactPrefix": "search-offline-iphone-375x667",
-      "completedAt": "2026-07-22T04:11:25.481Z",
+      "completedAt": "2026-07-22T05:27:33.919Z",
       "error": null,
       "fixture": "offline",
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-offline",
-      "startedAt": "2026-07-22T04:11:21.621Z",
+      "startedAt": "2026-07-22T05:27:30.812Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -752,18 +752,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8500/shelf/manual?intakeId=b1b8e22f-107c-4dec-bb07-2a47559acf2f"
+      "endUrl": "http://localhost:8500/shelf/manual?intakeId=c5464f0b-66f6-46e1-9362-0d54d9d4e41b"
     },
     {
       "artifactPrefix": "scan-offline-iphone-375x667",
-      "completedAt": "2026-07-22T04:11:33.890Z",
+      "completedAt": "2026-07-22T05:27:40.685Z",
       "error": null,
       "fixture": "offline",
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-offline",
-      "startedAt": "2026-07-22T04:11:25.482Z",
+      "startedAt": "2026-07-22T05:27:33.919Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -772,18 +772,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8500/shelf/manual?intakeId=b657cf7f-73cd-44dd-88af-388224dcfa34"
+      "endUrl": "http://localhost:8500/shelf/manual?intakeId=bc9749df-73d2-4c46-8959-39687da8c1e6"
     },
     {
       "artifactPrefix": "search-offline-iphone-390x844",
-      "completedAt": "2026-07-22T04:11:43.903Z",
+      "completedAt": "2026-07-22T05:27:48.301Z",
       "error": null,
       "fixture": "offline",
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-offline",
-      "startedAt": "2026-07-22T04:11:39.981Z",
+      "startedAt": "2026-07-22T05:27:45.359Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -792,18 +792,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8500/shelf/manual?intakeId=188a248b-20b1-4053-8e0e-c5f50b8624af"
+      "endUrl": "http://localhost:8500/shelf/manual?intakeId=ef6fb3aa-af69-4f81-b34c-8af8df828b66"
     },
     {
       "artifactPrefix": "scan-offline-iphone-390x844",
-      "completedAt": "2026-07-22T04:11:51.279Z",
+      "completedAt": "2026-07-22T05:27:54.985Z",
       "error": null,
       "fixture": "offline",
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-offline",
-      "startedAt": "2026-07-22T04:11:43.904Z",
+      "startedAt": "2026-07-22T05:27:48.302Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -812,18 +812,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8500/shelf/manual?intakeId=f8a60789-f030-40d7-ae76-8034dccf2b30"
+      "endUrl": "http://localhost:8500/shelf/manual?intakeId=c0fbbe0c-8f5a-4f34-a2c7-d2a5408165ab"
     },
     {
       "artifactPrefix": "search-offline-iphone-430x932",
-      "completedAt": "2026-07-22T04:11:58.962Z",
+      "completedAt": "2026-07-22T05:28:02.548Z",
       "error": null,
       "fixture": "offline",
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-offline",
-      "startedAt": "2026-07-22T04:11:55.992Z",
+      "startedAt": "2026-07-22T05:27:59.593Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -832,18 +832,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8500/shelf/manual?intakeId=d02423a2-6bf4-4618-b15b-a099351b8e89"
+      "endUrl": "http://localhost:8500/shelf/manual?intakeId=c0c6a48e-4715-44ab-b5bd-2ad6fca1167e"
     },
     {
       "artifactPrefix": "scan-offline-iphone-430x932",
-      "completedAt": "2026-07-22T04:12:06.224Z",
+      "completedAt": "2026-07-22T05:28:09.188Z",
       "error": null,
       "fixture": "offline",
       "fixtureGroup": "offline",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-offline",
-      "startedAt": "2026-07-22T04:11:58.962Z",
+      "startedAt": "2026-07-22T05:28:02.548Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -852,18 +852,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8500/shelf/manual?intakeId=abf18289-a687-416d-9d9f-d8de7614cb09"
+      "endUrl": "http://localhost:8500/shelf/manual?intakeId=317fbd8e-fe62-4077-acba-0b6a78bb25c3"
     },
     {
       "artifactPrefix": "search-wrong-match-recovery-iphone-375x667",
-      "completedAt": "2026-07-22T04:13:08.098Z",
+      "completedAt": "2026-07-22T05:28:57.440Z",
       "error": null,
       "fixture": "wrong_match",
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-wrong-match-recovery",
-      "startedAt": "2026-07-22T04:13:01.719Z",
+      "startedAt": "2026-07-22T05:28:53.039Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -872,18 +872,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8520/shelf/manual?intakeId=f6a3c4a0-f98c-4f91-b234-5cb77a988aa6"
+      "endUrl": "http://localhost:8520/shelf/manual?intakeId=3ddc7e7a-8117-4d57-9e1b-c22c920526f0"
     },
     {
       "artifactPrefix": "scan-error-iphone-375x667",
-      "completedAt": "2026-07-22T04:13:18.228Z",
+      "completedAt": "2026-07-22T05:29:04.409Z",
       "error": null,
       "fixture": "error",
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-error",
-      "startedAt": "2026-07-22T04:13:08.099Z",
+      "startedAt": "2026-07-22T05:28:57.441Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -892,18 +892,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8520/shelf/manual?intakeId=92468ccf-f6b6-4fee-ac51-fa2e06c6138c"
+      "endUrl": "http://localhost:8520/shelf/manual?intakeId=35311d47-dbd9-41f5-a102-a1e2cd036930"
     },
     {
       "artifactPrefix": "search-wrong-match-recovery-iphone-390x844",
-      "completedAt": "2026-07-22T04:13:32.870Z",
+      "completedAt": "2026-07-22T05:29:13.375Z",
       "error": null,
       "fixture": "wrong_match",
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-wrong-match-recovery",
-      "startedAt": "2026-07-22T04:13:26.891Z",
+      "startedAt": "2026-07-22T05:29:09.089Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -912,18 +912,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8520/shelf/manual?intakeId=e9c2ffdf-3d04-4d6a-bc35-b9b545bdbc11"
+      "endUrl": "http://localhost:8520/shelf/manual?intakeId=78228151-08b4-476a-a4de-6800f7935656"
     },
     {
       "artifactPrefix": "scan-error-iphone-390x844",
-      "completedAt": "2026-07-22T04:13:43.515Z",
+      "completedAt": "2026-07-22T05:29:20.020Z",
       "error": null,
       "fixture": "error",
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-error",
-      "startedAt": "2026-07-22T04:13:32.871Z",
+      "startedAt": "2026-07-22T05:29:13.375Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -932,18 +932,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8520/shelf/manual?intakeId=0726b716-e40d-4feb-bea8-e0cafb8b409e"
+      "endUrl": "http://localhost:8520/shelf/manual?intakeId=c4a94664-c70d-41f8-9e46-150c64ffdef9"
     },
     {
       "artifactPrefix": "search-wrong-match-recovery-iphone-430x932",
-      "completedAt": "2026-07-22T04:13:56.195Z",
+      "completedAt": "2026-07-22T05:29:28.828Z",
       "error": null,
       "fixture": "wrong_match",
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
       "route": "/shelf/search",
       "scenarioId": "search-wrong-match-recovery",
-      "startedAt": "2026-07-22T04:13:50.878Z",
+      "startedAt": "2026-07-22T05:29:24.473Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -952,18 +952,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8520/shelf/manual?intakeId=1951c220-a6fa-4a8d-b4a4-256011ccd5f0"
+      "endUrl": "http://localhost:8520/shelf/manual?intakeId=ca434efe-d4b0-4e01-8e1a-000c02f18844"
     },
     {
       "artifactPrefix": "scan-error-iphone-430x932",
-      "completedAt": "2026-07-22T04:14:04.128Z",
+      "completedAt": "2026-07-22T05:29:35.485Z",
       "error": null,
       "fixture": "error",
       "fixtureGroup": "scan-error",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-error",
-      "startedAt": "2026-07-22T04:13:56.195Z",
+      "startedAt": "2026-07-22T05:29:28.829Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -972,18 +972,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8520/shelf/manual?intakeId=49b15b88-25c0-402c-9db1-01afe5624160"
+      "endUrl": "http://localhost:8520/shelf/manual?intakeId=8464b3c6-3615-4ab2-a20b-e8b2481bb3c8"
     },
     {
       "artifactPrefix": "scan-camera-denied-settings-failure-iphone-375x667",
-      "completedAt": "2026-07-22T04:15:02.524Z",
+      "completedAt": "2026-07-22T05:30:18.218Z",
       "error": null,
       "fixture": "denied_no_retry",
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-camera-denied-settings-failure",
-      "startedAt": "2026-07-22T04:14:59.443Z",
+      "startedAt": "2026-07-22T05:30:15.320Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -992,18 +992,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-375x667-1784693699444"
+      "endUrl": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-375x667-1784698215321"
     },
     {
       "artifactPrefix": "ocr-camera-denied-settings-failure-iphone-375x667",
-      "completedAt": "2026-07-22T04:15:05.451Z",
+      "completedAt": "2026-07-22T05:30:21.225Z",
       "error": null,
       "fixture": "denied_no_retry",
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
       "route": "/shelf/ocr",
       "scenarioId": "ocr-camera-denied-settings-failure",
-      "startedAt": "2026-07-22T04:15:02.525Z",
+      "startedAt": "2026-07-22T05:30:18.218Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1012,18 +1012,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-375x667-1784693702526"
+      "endUrl": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-375x667-1784698218219"
     },
     {
       "artifactPrefix": "scan-camera-denied-settings-failure-iphone-390x844",
-      "completedAt": "2026-07-22T04:15:13.158Z",
+      "completedAt": "2026-07-22T05:30:28.622Z",
       "error": null,
       "fixture": "denied_no_retry",
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-camera-denied-settings-failure",
-      "startedAt": "2026-07-22T04:15:10.257Z",
+      "startedAt": "2026-07-22T05:30:26.005Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1032,18 +1032,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-390x844-1784693710258"
+      "endUrl": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-390x844-1784698226006"
     },
     {
       "artifactPrefix": "ocr-camera-denied-settings-failure-iphone-390x844",
-      "completedAt": "2026-07-22T04:15:16.081Z",
+      "completedAt": "2026-07-22T05:30:31.346Z",
       "error": null,
       "fixture": "denied_no_retry",
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
       "route": "/shelf/ocr",
       "scenarioId": "ocr-camera-denied-settings-failure",
-      "startedAt": "2026-07-22T04:15:13.159Z",
+      "startedAt": "2026-07-22T05:30:28.623Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1052,18 +1052,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-390x844-1784693713159"
+      "endUrl": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-390x844-1784698228623"
     },
     {
       "artifactPrefix": "scan-camera-denied-settings-failure-iphone-430x932",
-      "completedAt": "2026-07-22T04:15:23.939Z",
+      "completedAt": "2026-07-22T05:30:38.788Z",
       "error": null,
       "fixture": "denied_no_retry",
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
       "route": "/shelf/scan",
       "scenarioId": "scan-camera-denied-settings-failure",
-      "startedAt": "2026-07-22T04:15:20.914Z",
+      "startedAt": "2026-07-22T05:30:36.090Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1072,18 +1072,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-430x932-1784693720915"
+      "endUrl": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-430x932-1784698236091"
     },
     {
       "artifactPrefix": "ocr-camera-denied-settings-failure-iphone-430x932",
-      "completedAt": "2026-07-22T04:15:29.164Z",
+      "completedAt": "2026-07-22T05:30:41.535Z",
       "error": null,
       "fixture": "denied_no_retry",
       "fixtureGroup": "camera-recovery",
       "nativeDeviceProof": false,
       "route": "/shelf/ocr",
       "scenarioId": "ocr-camera-denied-settings-failure",
-      "startedAt": "2026-07-22T04:15:23.940Z",
+      "startedAt": "2026-07-22T05:30:38.789Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1092,18 +1092,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-430x932-1784693723946"
+      "endUrl": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-430x932-1784698238789"
     },
     {
       "artifactPrefix": "ocr-capture-failure-iphone-375x667",
-      "completedAt": "2026-07-22T04:17:14.854Z",
+      "completedAt": "2026-07-22T05:31:33.387Z",
       "error": null,
       "fixture": "capture_failure_once",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/ocr",
       "scenarioId": "ocr-capture-failure",
-      "startedAt": "2026-07-22T04:17:11.057Z",
+      "startedAt": "2026-07-22T05:31:30.500Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1112,18 +1112,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-375x667-1784693831059"
+      "endUrl": "http://localhost:8560/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-375x667-1784698290501"
     },
     {
       "artifactPrefix": "no-match-missing-barcode-iphone-375x667",
-      "completedAt": "2026-07-22T04:17:18.146Z",
+      "completedAt": "2026-07-22T05:31:35.700Z",
       "error": null,
       "fixture": "missing_barcode",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/no-match",
       "scenarioId": "no-match-missing-barcode",
-      "startedAt": "2026-07-22T04:17:14.855Z",
+      "startedAt": "2026-07-22T05:31:33.387Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1132,18 +1132,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-375x667-1784693834860"
+      "endUrl": "http://localhost:8560/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-375x667-1784698293388"
     },
     {
       "artifactPrefix": "catalog-recovery-malformed-iphone-375x667",
-      "completedAt": "2026-07-22T04:17:21.277Z",
+      "completedAt": "2026-07-22T05:31:38.071Z",
       "error": null,
       "fixture": "malformed_params",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/catalog-recovery",
       "scenarioId": "catalog-recovery-malformed",
-      "startedAt": "2026-07-22T04:17:18.147Z",
+      "startedAt": "2026-07-22T05:31:35.701Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1152,18 +1152,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-375x667-1784693838148&barcode=not-a-barcode&productId=not-a-product-id"
+      "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-375x667-1784698295701&barcode=not-a-barcode&productId=not-a-product-id"
     },
     {
       "artifactPrefix": "manual-barcode-validation-iphone-375x667",
-      "completedAt": "2026-07-22T04:17:29.834Z",
+      "completedAt": "2026-07-22T05:31:46.754Z",
       "error": null,
       "fixture": "manual_barcode_validation",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/manual",
       "scenarioId": "manual-barcode-validation",
-      "startedAt": "2026-07-22T04:17:21.277Z",
+      "startedAt": "2026-07-22T05:31:38.072Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1172,18 +1172,18 @@
         "height": 667
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/ac1987ff-523f-4a80-a17c-6036634c7c22"
+      "endUrl": "http://localhost:8560/shelf/576201a8-5ef9-49b5-9461-145e1706733d"
     },
     {
       "artifactPrefix": "ocr-capture-failure-iphone-390x844",
-      "completedAt": "2026-07-22T04:17:37.185Z",
+      "completedAt": "2026-07-22T05:31:54.996Z",
       "error": null,
       "fixture": "capture_failure_once",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/ocr",
       "scenarioId": "ocr-capture-failure",
-      "startedAt": "2026-07-22T04:17:34.535Z",
+      "startedAt": "2026-07-22T05:31:52.415Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1192,18 +1192,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-390x844-1784693854535"
+      "endUrl": "http://localhost:8560/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-390x844-1784698312416"
     },
     {
       "artifactPrefix": "no-match-missing-barcode-iphone-390x844",
-      "completedAt": "2026-07-22T04:17:39.749Z",
+      "completedAt": "2026-07-22T05:31:57.317Z",
       "error": null,
       "fixture": "missing_barcode",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/no-match",
       "scenarioId": "no-match-missing-barcode",
-      "startedAt": "2026-07-22T04:17:37.186Z",
+      "startedAt": "2026-07-22T05:31:54.996Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1212,18 +1212,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-390x844-1784693857187"
+      "endUrl": "http://localhost:8560/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-390x844-1784698314997"
     },
     {
       "artifactPrefix": "catalog-recovery-malformed-iphone-390x844",
-      "completedAt": "2026-07-22T04:17:42.119Z",
+      "completedAt": "2026-07-22T05:31:59.597Z",
       "error": null,
       "fixture": "malformed_params",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/catalog-recovery",
       "scenarioId": "catalog-recovery-malformed",
-      "startedAt": "2026-07-22T04:17:39.750Z",
+      "startedAt": "2026-07-22T05:31:57.318Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1232,18 +1232,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-390x844-1784693859751&barcode=not-a-barcode&productId=not-a-product-id"
+      "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-390x844-1784698317319&barcode=not-a-barcode&productId=not-a-product-id"
     },
     {
       "artifactPrefix": "manual-barcode-validation-iphone-390x844",
-      "completedAt": "2026-07-22T04:17:50.693Z",
+      "completedAt": "2026-07-22T05:32:08.852Z",
       "error": null,
       "fixture": "manual_barcode_validation",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/manual",
       "scenarioId": "manual-barcode-validation",
-      "startedAt": "2026-07-22T04:17:42.120Z",
+      "startedAt": "2026-07-22T05:31:59.598Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1252,18 +1252,18 @@
         "height": 844
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/81b1e12b-9c05-45b2-9fa0-8a033b2f5ff1"
+      "endUrl": "http://localhost:8560/shelf/578e55c3-6e4f-41c0-8f3a-656828bebc5d"
     },
     {
       "artifactPrefix": "ocr-capture-failure-iphone-430x932",
-      "completedAt": "2026-07-22T04:17:58.735Z",
+      "completedAt": "2026-07-22T05:32:17.451Z",
       "error": null,
       "fixture": "capture_failure_once",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/ocr",
       "scenarioId": "ocr-capture-failure",
-      "startedAt": "2026-07-22T04:17:55.435Z",
+      "startedAt": "2026-07-22T05:32:14.900Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1272,18 +1272,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-430x932-1784693875436"
+      "endUrl": "http://localhost:8560/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-430x932-1784698334900"
     },
     {
       "artifactPrefix": "no-match-missing-barcode-iphone-430x932",
-      "completedAt": "2026-07-22T04:18:03.091Z",
+      "completedAt": "2026-07-22T05:32:19.786Z",
       "error": null,
       "fixture": "missing_barcode",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/no-match",
       "scenarioId": "no-match-missing-barcode",
-      "startedAt": "2026-07-22T04:17:58.736Z",
+      "startedAt": "2026-07-22T05:32:17.452Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1292,18 +1292,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-430x932-1784693878754"
+      "endUrl": "http://localhost:8560/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-430x932-1784698337453"
     },
     {
       "artifactPrefix": "catalog-recovery-malformed-iphone-430x932",
-      "completedAt": "2026-07-22T04:18:06.930Z",
+      "completedAt": "2026-07-22T05:32:22.194Z",
       "error": null,
       "fixture": "malformed_params",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/catalog-recovery",
       "scenarioId": "catalog-recovery-malformed",
-      "startedAt": "2026-07-22T04:18:03.091Z",
+      "startedAt": "2026-07-22T05:32:19.786Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1312,18 +1312,18 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-430x932-1784693883103&barcode=not-a-barcode&productId=not-a-product-id"
+      "endUrl": "http://localhost:8560/shelf/catalog-recovery?cat04Audit=catalog-recovery-malformed-iphone-430x932-1784698339787&barcode=not-a-barcode&productId=not-a-product-id"
     },
     {
       "artifactPrefix": "manual-barcode-validation-iphone-430x932",
-      "completedAt": "2026-07-22T04:18:17.473Z",
+      "completedAt": "2026-07-22T05:32:30.725Z",
       "error": null,
       "fixture": "manual_barcode_validation",
       "fixtureGroup": "ocr-capture-failure",
       "nativeDeviceProof": false,
       "route": "/shelf/manual",
       "scenarioId": "manual-barcode-validation",
-      "startedAt": "2026-07-22T04:18:06.931Z",
+      "startedAt": "2026-07-22T05:32:22.195Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1332,12 +1332,12 @@
         "height": 932
       },
       "browserFailures": [],
-      "endUrl": "http://localhost:8560/shelf/43a412ef-700c-4d94-9d27-a6f7a3902fa0"
+      "endUrl": "http://localhost:8560/shelf/3b689826-9773-4a6f-be3a-098e2b6dc397"
     }
   ],
   "schemaVersion": 1,
-  "sourceGitSha": "76c37080371999bc7a6c483aee03b804484fbe87",
-  "startedAt": "2026-07-22T04:06:35.239Z",
+  "sourceGitSha": "f643d1c05ff754208f164c134240be6b7ddf53ea",
+  "startedAt": "2026-07-22T05:24:15.671Z",
   "surface": "expo-web",
   "verdict": "pass",
   "artifacts": [

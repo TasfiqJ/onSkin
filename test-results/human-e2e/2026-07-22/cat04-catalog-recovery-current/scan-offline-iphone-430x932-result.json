@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "scan-offline-iphone-430x932",
-  "completedAt": "2026-07-22T04:12:06.224Z",
+  "completedAt": "2026-07-22T05:28:09.188Z",
   "error": null,
   "fixture": "offline",
   "fixtureGroup": "offline",
   "nativeDeviceProof": false,
   "route": "/shelf/scan",
   "scenarioId": "scan-offline",
-  "startedAt": "2026-07-22T04:11:58.962Z",
+  "startedAt": "2026-07-22T05:28:02.548Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -16,5 +16,5 @@
     "height": 932
   },
   "browserFailures": [],
-  "endUrl": "http://localhost:8500/shelf/manual?intakeId=abf18289-a687-416d-9d9f-d8de7614cb09"
+  "endUrl": "http://localhost:8500/shelf/manual?intakeId=317fbd8e-fe62-4077-acba-0b6a78bb25c3"
 }

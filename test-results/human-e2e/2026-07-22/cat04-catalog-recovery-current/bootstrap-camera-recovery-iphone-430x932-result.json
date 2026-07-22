@@ -1,11 +1,11 @@
 {
   "artifactPrefix": "bootstrap-camera-recovery-iphone-430x932",
   "browserFailures": [],
-  "completedAt": "2026-07-22T04:15:20.913Z",
+  "completedAt": "2026-07-22T05:30:36.090Z",
   "error": null,
   "fixtureGroup": "camera-recovery",
   "nativeDeviceProof": false,
-  "startedAt": "2026-07-22T04:15:16.082Z",
+  "startedAt": "2026-07-22T05:30:31.346Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -13,5 +13,5 @@
     "width": 430,
     "height": 932
   },
-  "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-430x932-1784693718613"
+  "endUrl": "http://localhost:8540/shelf/search?cat04ConsentProbe=camera-recovery-iphone-430x932-1784698233851"
 }
