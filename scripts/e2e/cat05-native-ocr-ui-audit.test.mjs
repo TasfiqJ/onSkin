@@ -489,6 +489,26 @@ test('browser-event evidence is bounded while preserving privacy-relevant reques
       observedAt: '2026-07-18T00:00:01.000Z',
       params: { args: [{ value: 'fixture warning' }], type: 'warning' },
     },
+    {
+      method: 'Network.loadingFailed',
+      observedAt: '2026-07-18T00:00:02.000Z',
+      params: {
+        canceled: true,
+        errorText: 'net::ERR_ABORTED',
+        requestId: 'initial-navigation',
+        type: 'Document',
+      },
+    },
+    {
+      method: 'Network.loadingFailed',
+      observedAt: '2026-07-18T00:00:03.000Z',
+      params: {
+        canceled: false,
+        errorText: 'net::ERR_FAILED',
+        requestId: 'request-2',
+        type: 'Script',
+      },
+    },
     { method: 'Network.loadingFinished', params: { requestId: 'request-1' } },
   ]);
 
@@ -507,6 +527,14 @@ test('browser-event evidence is bounded while preserving privacy-relevant reques
       observedAt: '2026-07-18T00:00:01.000Z',
       text: 'fixture warning',
       type: 'warning',
+    },
+    {
+      canceled: false,
+      errorText: 'net::ERR_FAILED',
+      method: 'Network.loadingFailed',
+      observedAt: '2026-07-18T00:00:03.000Z',
+      requestId: 'request-2',
+      type: 'Script',
     },
   ]);
   assert.doesNotMatch(

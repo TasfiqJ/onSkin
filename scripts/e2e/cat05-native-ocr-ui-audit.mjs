@@ -1965,6 +1965,13 @@ export function sanitizeBrowserEvents(events) {
         url: sanitizeCat05EvidenceUrl(params.response?.url),
       });
     } else if (method === 'Network.loadingFailed') {
+      if (
+        params.canceled === true &&
+        params.type === 'Document' &&
+        params.errorText === 'net::ERR_ABORTED'
+      ) {
+        continue;
+      }
       retain({
         canceled: params.canceled,
         errorText: sanitizeCat05DiagnosticText(params.errorText, { maxBytes: 1_000 }),
