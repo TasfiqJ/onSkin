@@ -482,7 +482,8 @@ async function runFreshnessScenario({ client, baseUrl, evidenceDir, viewport }) 
       'CAT07 replacement lost its exact-package reminder provenance.',
     );
 
-    await clickByText(client, 'New unit was opened earlier');
+    await scrollControlIntoView(client, 'New unit was opened earlier', { exact: false });
+    await clickByText(client, 'New unit was opened earlier', { exact: false });
     await fillByLabel(client, 'Exact opened date', localDatePlusDays(1));
     await waitForText(client, 'Enter a real date no later than today');
     await scrollControlIntoView(client, 'Save replacement with this date');
@@ -493,8 +494,8 @@ async function runFreshnessScenario({ client, baseUrl, evidenceDir, viewport }) 
     );
     assertDisabledControl(futureReplacement, 'Save replacement with this date');
 
-    await scrollControlIntoView(client, 'New unit is unopened');
-    await clickByText(client, 'New unit is unopened');
+    await scrollControlIntoView(client, 'New unit is unopened', { exact: false });
+    await clickByText(client, 'New unit is unopened', { exact: false });
     await waitForCondition(
       client,
       `window.location.pathname === '/shelf'`,
