@@ -311,6 +311,8 @@ test('browser and page targets are pinned to explicit local HTTP origin and port
   assert.match(source, /\/json\/new\?\$\{encodeURIComponent\(targetUrl\)\}/);
   assert.match(source, /method: 'PUT'/);
   assert.match(source, /assertCat05PageTarget\(target\.url, baseUrl\)/);
+  assert.match(source, /cat05BrowserLogCapture/);
+  assert.match(source, /browser-\$\{safeArtifactId\(groupId\)\}-failure\.log/);
 });
 
 test('cold consent probe navigates once and discards only the prior request epoch', async () => {

@@ -867,26 +867,41 @@ function startExpoServer({ appPort, evidenceDir, group }) {
 }
 
 function startBrowser({ browserPath, debugPort, userDataDir }) {
-  return trackCat05Child(
-    spawn(
-      browserPath,
-      [
-        '--headless=old',
-        `--remote-debugging-port=${debugPort}`,
-        `--user-data-dir=${userDataDir}`,
-        '--no-first-run',
-        '--no-default-browser-check',
-        '--disable-background-networking',
-        '--disable-component-update',
-        '--disable-extensions',
-        '--disable-gpu',
-        '--disable-sync',
-        '--hide-scrollbars',
-        'about:blank',
-      ],
-      { stdio: 'ignore', windowsHide: true },
-    ),
+  const child = spawn(
+    browserPath,
+    [
+      '--headless=old',
+      `--remote-debugging-port=${debugPort}`,
+      `--user-data-dir=${userDataDir}`,
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-background-networking',
+      '--disable-component-update',
+      '--disable-extensions',
+      '--disable-gpu',
+      '--disable-sync',
+      '--hide-scrollbars',
+      'about:blank',
+    ],
+    { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true },
   );
+  child.cat05BrowserLogCapture = createCat05ExpoLogCapture();
+  const append = (chunk) => appendCat05ExpoLogCapture(child.cat05BrowserLogCapture, chunk);
+  child.stdout.on('data', append);
+  child.stderr.on('data', append);
+  return trackCat05Child(child);
+}
+
+function writeCat05BrowserFailureLog(evidenceDir, groupId, capture = null) {
+  if (!capture?.chunks?.length && !capture?.droppedBytes) return null;
+  const raw = Buffer.concat(capture.chunks).toString('utf8');
+  const truncationNotice =
+    capture.droppedBytes > 0
+      ? `${CAT05_RAW_LOG_TRUNCATION_MARKER}Dropped raw browser log bytes: ${capture.droppedBytes}\n`
+      : '';
+  const logPath = path.join(evidenceDir, `browser-${safeArtifactId(groupId)}-failure.log`);
+  writeFileSync(logPath, sanitizeCat05DiagnosticText(`${raw}${truncationNotice}`));
+  return logPath;
 }
 
 export function trackCat05Child(child) {
@@ -2588,6 +2603,7 @@ export async function runCat05NativeOcrUiAudit({
           ...buildCat05BrowserEventEvidence(client.events),
         });
       } catch (error) {
+        writeCat05BrowserFailureLog(evidenceDir, group.id, browser?.cat05BrowserLogCapture);
         const alreadyRecorded = summary.results.some(
           (result) => result.fixtureGroup === group.id && result.kind === 'scenario',
         );
