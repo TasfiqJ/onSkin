@@ -1,0 +1,117 @@
+{
+  "alerts": [],
+  "bodyText": "< Read the label Deterministic OCR review fixture This development state proves only the review interface and interactions. Development-only deterministic OCR state. It does not exercise Apple Vision or a device photo. Text is ready to check. Compare it with the package before continuing. Check 2 unclear lines “Niacinamide, 水” or “Nicotinamide, 水” “Ниацинамид” The scan may be incomplete. Add any missing ingredients before continuing. Retake label photo Editable label text Aqua, Glycerin, Niacinamide, 水, Ниацинамид Ingredient parsing: check the highlighted text . Unknown tokens stay visible for correction. Parsed actives ✓ Glycerin humectant ✓ Niacinamide Niacinamide \" 水 \". Not sure Edit text Looks right. Continue",
+  "controls": [
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Retake label photo",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 626
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 132,
+      "hitOk": true,
+      "label": "Ingredient label text",
+      "role": "textarea",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 716
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Looks right. Continue",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 876
+    }
+  ],
+  "inputs": [
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "label": "Ingredient label text",
+      "value": "Aqua, Glycerin, Niacinamide, 水, Ниацинамид"
+    }
+  ],
+  "issues": [],
+  "liveRegions": [
+    {
+      "live": "polite",
+      "role": null,
+      "text": "Text is ready to check.Compare it with the package before continuing.Check 2 unclear lines“Niacinamide, 水” or “Nicotinamide, 水”“Ниацинамид”The scan may be incomplete. Add any missing ingredients before continuing."
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8620/shelf/ocr?redacted-query",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  },
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+      "profile": "development-only-deterministic-expo-web"
+    },
+    "artifactName": "recognized-review-retake-continue-iphone-430x932-recognized-ready",
+    "fixtureGroup": "recognized",
+    "scenarioId": "recognized-review-retake-continue",
+    "viewport": {
+      "height": 932,
+      "id": "iphone-430x932",
+      "width": 430
+    }
+  }
+}

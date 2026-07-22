@@ -1,0 +1,46 @@
+{
+  "artifactPrefix": "bootstrap-recognized-iphone-390x844",
+  "browserFailures": [],
+  "completedAt": "2026-07-22T02:58:24.584Z",
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+      "profile": "development-only-deterministic-expo-web"
+    },
+    "artifactName": "bootstrap-recognized-iphone-390x844-result",
+    "fixtureGroup": "recognized",
+    "scenarioId": null,
+    "viewport": {
+      "height": 844,
+      "id": "iphone-390x844",
+      "width": 390
+    }
+  },
+  "error": null,
+  "fixtureGroup": "recognized",
+  "kind": "consent-bootstrap",
+  "nativeDeviceProof": false,
+  "startedAt": "2026-07-22T02:57:59.370Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-390x844",
+    "width": 390,
+    "height": 844
+  },
+  "endUrl": "http://localhost:8620/shelf/ocr?redacted-query"
+}
