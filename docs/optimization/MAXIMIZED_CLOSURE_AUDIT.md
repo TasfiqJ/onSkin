@@ -4,11 +4,11 @@ Date: 2026-07-21 (America/Toronto)
 
 Branch: `optimization`
 
-Implementation checkpoint SHA: `1f200530763113cc802e0ad66cd36025fadf251f`
+Implementation checkpoint SHA: `3bf82f914f0c253e61a988ef8124f0c36a8122b7`
 
 Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
 
-Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the scoped data-export memory-bound gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
+Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced; the scoped data-export memory boundary and private-vault verify-only decrypt gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
 
 ## Requirement-By-Requirement Result
 
@@ -19,7 +19,7 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 | Signed iOS and Android builds meet predeclared thresholds                       | Blocked external                               | No approved thresholds, canonical signed artifacts, repeated device samples, or authorized signoff packet exists.                                                                                                                                                                                                             |
 | 50 encrypted photos pass crash/kill/residue/frame/memory gates                  | Partial local only                             | The 50-photo web stress run passes UI traversal, but it uses one tiny unencrypted development image. Signed encrypted-photo Instruments/filesystem/OS-kill proof is absent.                                                                                                                                                   |
 | Lowest supported device classes pass critical flows                             | Blocked external                               | Web phone viewports cover compatible behavior only; signed physical lowest-class runs are absent.                                                                                                                                                                                                                             |
-| Private data fails closed without destructive empty conversion                  | Locally implemented; release proof open        | Typed unavailable/corrupt/unsupported store states and fault tests pass; physical protected-storage/key-loss evidence remains.                                                                                                                                                                                                |
+| Private data fails closed without destructive empty conversion                  | Locally implemented; release proof open        | Typed unavailable/corrupt/unsupported store states and fault tests pass. Exhaustive startup authentication now avoids a complete plaintext result `Map` while retaining exact failed-read fencing; physical protected-storage/key-loss and native peak-heap evidence remain.                                                                                                                   |
 | Two simultaneous writes cannot lose a user action                               | Locally implemented; release proof open        | Deterministic 100-way store matrices and atomic reducers pass; native process-kill/secure-store fault proof remains.                                                                                                                                                                                                          |
 | Delayed old-account work cannot mutate the new account                          | Locally implemented; release proof open        | Owner-generation and stale-work tests pass across registered gateways; physical provider/account-switch proof remains.                                                                                                                                                                                                        |
 | Offline work converges idempotently                                             | Partial                                        | Transactional core plus six entities are implemented; completion-history adoption, two legacy direct mutations, native reconnect/process-kill, and hosted duplicate-worker proof remain.                                                                                                                                      |
@@ -36,10 +36,10 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 
 ## Current Verification Snapshot
 
-- Implementation checkpoint: `1f200530763113cc802e0ad66cd36025fadf251f`.
+- Implementation checkpoint: `3bf82f914f0c253e61a988ef8124f0c36a8122b7`.
 - Repository type-check: pass, two workspaces.
 - Repository lint: pass, two workspaces, zero warnings.
-- Repository tests in the preserved dirty worktree: 2 files failed / 348 passed; 4 tests failed / 4,158 passed. All four failures arise from unrelated preserved user-owned notification/Shelf metadata changes; the scoped Progress cache matrix passes.
+- Repository tests in the preserved dirty worktree: 2 files failed / 348 passed; 4 tests failed / 4,161 passed. All four failures arise from unrelated preserved user-owned notification/Shelf metadata changes; the scoped private-vault matrix passes.
 - Shelf focused matrix: pass, 6 files / 107 tests.
 - Shelf/archive web stress: 100 All, 34 Actives, 40 Expiring, and 100 Archive rows traverse exactly; independent filters and the semantic final-row boundary after Archive Back restore with zero sampled blanks, overflow, dialogs, or unexpected logs.
 - Progress focused matrix: pass, 5 files / 158 tests.
@@ -48,12 +48,13 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 - Progress sensitive-query cache matrix: pass, 4 files / 49 tests, including shared-observer retention, final-observer eviction, late non-cancellable completion cleanup, and unobserved mutation non-recreation.
 - Progress query-cache web recovery: query executions advance exactly `1 -> 2 -> 3` across two Progress -> Today -> Progress cycles; all 10 Timeline actions return each time with zero storage errors, overflow, dialogs, or unexpected logs.
 - Data-export memory matrix: pass, 14 Deno tests. The exact shared boundary passes across 34 synthetic sources; one byte over, one oversized private row, storage double-pass overflow, and tiny-item overflow fail closed with content-free codes.
-- Data-export code gates: Edge Deno check, focused Deno lint, and Phase 9 data-rights source gate pass. Root type-check/lint pass; the preserved dirty-worktree root test totals remain 348 files / 4,158 tests passing with the same unrelated four failures.
-- Latest evidence: `evidence/2026-07-21_data-export-memory-bound.md`.
+- Data-export code gates: Edge Deno check, focused Deno lint, and Phase 9 data-rights source gate pass. Root type-check/lint pass; the preserved dirty-worktree root test totals now contain 348 passing files / 4,161 passing tests with the same unrelated four failures.
+- Private-vault verification matrix: pass, 8 files / 153 tests. A 49-record, 32 KiB-per-value fixture uses one existing content-key read, performs zero writes, preserves ciphertext exactly, returns no plaintext collection, and still rejects later-record corruption and delayed owner-A key failures across account replacement.
+- Latest evidence: `evidence/2026-07-21_private-vault-verify-only-decrypt.md`.
 
 ## Remaining Work Classification
 
-The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery and inactive query eviction, Shelf/archive collection stress coverage, and fail-closed Edge export-memory bounds are now locally implemented. Complete exports above 8 MiB remain decision/operations-gated on durable archive/streaming policy, so the next decision-free slice requires a fresh plan audit. Separately, genuine closure gates remain one or more of:
+The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery and inactive query eviction, Shelf/archive collection stress coverage, fail-closed Edge export-memory bounds, and verification-only private-vault plaintext minimization are now locally implemented. Complete server exports above 8 MiB remain decision/operations-gated on durable archive/streaming policy. The next ranked decision-free slice is incremental mobile export-file assembly, which can remove the combined pretty-JSON memory duplicate without changing the export schema or server archive policy. Separately, genuine closure gates remain one or more of:
 
 - decision-gated: photo v2/native handles, encrypted thumbnails/cache ceilings, startup-shield scope, retention/abuse/scheduler thresholds, and bundle/performance budgets;
 - hosted/provider-gated: Supabase deployment and seeded scale/recovery rehearsals, RevenueCat/provider replay, retention scheduling, alerting, and completion terminal reconciliation;
