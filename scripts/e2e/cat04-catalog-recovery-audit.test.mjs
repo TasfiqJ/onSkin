@@ -200,6 +200,7 @@ test('extended recovery lanes exercise wrong matches, retry dedupe, guards, and 
 test('offline fixture permits its bounded unresolved lookup without hiding other network hangs', () => {
   assert.match(source, /maxInflight: groupId === 'offline' \? 1 : 0/);
   assert.match(source, /maxInflight: scenario\.fixture === 'offline' \? 1 : 0/);
+  assert.match(source, /fixtureGroup === 'camera-recovery' \? 30_000 : 10_000/);
   assert.match(source, /allowed \$\{maxInflight\}/);
 });
 

@@ -888,6 +888,10 @@ async function waitForNetworkIdle(client, timeoutMs = 10_000, { maxInflight = 0 
   );
 }
 
+function networkIdleTimeoutForFixtureGroup(fixtureGroup) {
+  return fixtureGroup === 'camera-recovery' ? 30_000 : 10_000;
+}
+
 async function setViewport(client, viewport) {
   await client.send('Emulation.setDeviceMetricsOverride', {
     deviceScaleFactor: 1,
@@ -1313,7 +1317,7 @@ async function establishLocalHealthConsent({ client, baseUrl, evidenceDir, group
       );
     }
     assert(catalogReady, 'Explicit local consent did not release the catalog route.');
-    await waitForNetworkIdle(client, 10_000, {
+    await waitForNetworkIdle(client, networkIdleTimeoutForFixtureGroup(groupId), {
       maxInflight: groupId === 'offline' ? 1 : 0,
     });
     await captureStep(client, evidenceDir, `${artifactPrefix}-catalog-ready`);
@@ -1340,8 +1344,8 @@ function inputValue(snapshot, label) {
   return snapshot.inputs.find((input) => input.label === label)?.value ?? null;
 }
 
-async function openSearchAndSubmit(client, baseUrl, viewport, scenarioId) {
-  await navigate(client, baseUrl, '/shelf/search', viewport, scenarioId);
+async function openSearchAndSubmit(client, baseUrl, viewport, scenarioId, options = {}) {
+  await navigate(client, baseUrl, '/shelf/search', viewport, scenarioId, {}, options);
   await waitForText(client, 'Search catalog');
   await waitForCondition(
     client,
@@ -1411,7 +1415,9 @@ async function exerciseQueuedRetry({
     'First retry did not expose its saved state.',
   );
 
-  await navigate(client, baseUrl, scenario.route, viewport, `${scenario.id}-repeat`);
+  await navigate(client, baseUrl, scenario.route, viewport, `${scenario.id}-repeat`, {}, {
+    maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+  });
   await waitForText(client, outcomeText);
   await scrollControlIntoView(client, 'Retry when online');
   await clickByText(client, 'Retry when online');
@@ -1527,7 +1533,9 @@ async function executeScenario({
       return;
     }
     case 'search-offline': {
-      await openSearchAndSubmit(client, baseUrl, viewport, scenario.id);
+      await openSearchAndSubmit(client, baseUrl, viewport, scenario.id, {
+        maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+      });
       await waitForText(client, "Couldn't reach the product catalog.");
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-offline`);
       assertInteractiveControl(snapshot, 'Add by hand');
@@ -1868,7 +1876,7 @@ async function runScenario(context) {
       120_000,
       `CAT04 scenario ${scenario.id} at ${viewport.width}x${viewport.height}`,
     );
-    await waitForNetworkIdle(client, 10_000, {
+    await waitForNetworkIdle(client, networkIdleTimeoutForFixtureGroup(scenario.groupId), {
       maxInflight: scenario.fixture === 'offline' ? 1 : 0,
     });
     const failures = classifyBrowserFailures(client.events.slice(eventStart), [baseUrl]);
