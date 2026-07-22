@@ -4,11 +4,11 @@ Date: 2026-07-21 (America/Toronto)
 
 Branch: `optimization`
 
-Implementation checkpoint SHA: `e917e37965cf6a1003ca338cdfd57598bd77bb9e`
+Implementation checkpoint SHA: `1f200530763113cc802e0ad66cd36025fadf251f`
 
 Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
 
-Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the scoped Progress sensitive-query cache gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
+Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the scoped data-export memory-bound gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
 
 ## Requirement-By-Requirement Result
 
@@ -25,7 +25,7 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 | Offline work converges idempotently                                             | Partial                                        | Transactional core plus six entities are implemented; completion-history adoption, two legacy direct mutations, native reconnect/process-kill, and hosted duplicate-worker proof remain.                                                                                                                                      |
 | Catalog search uses a proven index at realistic scale                           | Strong local proof; hosted approval open       | The 250,000-row PostgreSQL 15 plan/load run has no final-product sequential scans and 4,821 timed RPC samples; hosted staging replay and write-cost approval remain.                                                                                                                                                          |
 | Webhook events are atomic, idempotent, ordering-safe                            | Locally implemented; hosted proof open         | RevenueCat insert/projection ordering logic and tests pass; staging duplicate/reorder/provider/alert exercise remains.                                                                                                                                                                                                        |
-| Export is complete above platform row limits                                    | Locally implemented; hosted proof open         | Pagination, exact count/checksum, bounded concurrency, and fail-closed inventory exist; seeded >1,000-row hosted replay remains.                                                                                                                                                                                              |
+| Export is complete above platform row limits                                    | Locally implemented; hosted proof open         | Pagination, exact count/checksum, bounded concurrency, shared 8 MiB/100,000-item fail-closed assembly, and exact response caps exist; complete >8 MiB archive/streaming plus seeded hosted replay remain.                                                                                                                        |
 | Deletion is resumable across multiple pages                                     | Locally implemented; hosted proof open         | Leased resumable deletion and exhaustive storage pagination exist; hosted multi-page failure/recovery/provider completion remains.                                                                                                                                                                                            |
 | Privacy retention claims are enforced by jobs                                   | Not met                                        | Retention policy, scheduler, alert thresholds, and operations ownership remain externally unapproved.                                                                                                                                                                                                                         |
 | Every deployed function is declarative and smoke-tested                         | Local manifest complete; deployment proof open | Local manifest/source validation passes; authenticated hosted deployment/resource smoke is absent.                                                                                                                                                                                                                            |
@@ -36,7 +36,7 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 
 ## Current Verification Snapshot
 
-- Implementation checkpoint: `e917e37965cf6a1003ca338cdfd57598bd77bb9e`.
+- Implementation checkpoint: `1f200530763113cc802e0ad66cd36025fadf251f`.
 - Repository type-check: pass, two workspaces.
 - Repository lint: pass, two workspaces, zero warnings.
 - Repository tests in the preserved dirty worktree: 2 files failed / 348 passed; 4 tests failed / 4,158 passed. All four failures arise from unrelated preserved user-owned notification/Shelf metadata changes; the scoped Progress cache matrix passes.
@@ -47,11 +47,13 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 - Progress web stress: 50 and 100 photos traverse to unique oldest rows without blank viewports; 100-photo picker traverses and changes selection; 250-record pure derivations pass.
 - Progress sensitive-query cache matrix: pass, 4 files / 49 tests, including shared-observer retention, final-observer eviction, late non-cancellable completion cleanup, and unobserved mutation non-recreation.
 - Progress query-cache web recovery: query executions advance exactly `1 -> 2 -> 3` across two Progress -> Today -> Progress cycles; all 10 Timeline actions return each time with zero storage errors, overflow, dialogs, or unexpected logs.
-- Latest evidence: `evidence/2026-07-21_progress-sensitive-query-cache-eviction.md`.
+- Data-export memory matrix: pass, 14 Deno tests. The exact shared boundary passes across 34 synthetic sources; one byte over, one oversized private row, storage double-pass overflow, and tiny-item overflow fail closed with content-free codes.
+- Data-export code gates: Edge Deno check, focused Deno lint, and Phase 9 data-rights source gate pass. Root type-check/lint pass; the preserved dirty-worktree root test totals remain 348 files / 4,158 tests passing with the same unrelated four failures.
+- Latest evidence: `evidence/2026-07-21_data-export-memory-bound.md`.
 
 ## Remaining Work Classification
 
-The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery and inactive query eviction, and Shelf/archive collection stress coverage are now locally implemented. Export-memory bounding is the next audited decision-free local candidate. Separately, genuine closure gates remain one or more of:
+The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery and inactive query eviction, Shelf/archive collection stress coverage, and fail-closed Edge export-memory bounds are now locally implemented. Complete exports above 8 MiB remain decision/operations-gated on durable archive/streaming policy, so the next decision-free slice requires a fresh plan audit. Separately, genuine closure gates remain one or more of:
 
 - decision-gated: photo v2/native handles, encrypted thumbnails/cache ceilings, startup-shield scope, retention/abuse/scheduler thresholds, and bundle/performance budgets;
 - hosted/provider-gated: Supabase deployment and seeded scale/recovery rehearsals, RevenueCat/provider replay, retention scheduling, alerting, and completion terminal reconciliation;
