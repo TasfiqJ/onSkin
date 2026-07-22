@@ -4,6 +4,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   readdirSync,
   rmSync,
   writeFileSync,
@@ -30,6 +31,43 @@ const CAT04_DECLARED_UNTRACKED_OUTPUT_PATTERNS = Object.freeze([
 
 function normalizeRepoPath(value) {
   return String(value).replace(/\\/g, '/').replace(/^\.\//, '');
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function replacePathLiteral(value, search, replacement) {
+  if (!search) return value;
+  const candidate = String(search).replace(/[\\/]+$/u, '');
+  if (!candidate) return value;
+  return [candidate, candidate.replaceAll('\\', '/'), candidate.replaceAll('/', '\\')].reduce(
+    (current, variant) =>
+      current.replace(new RegExp(escapeRegExp(variant), 'giu'), replacement),
+    value,
+  );
+}
+
+export function sanitizeCat04DiagnosticText(value) {
+  let sanitized = String(value ?? '')
+    .replace(/\u001b\][^\u0007\u001b]*(?:\u0007|\u001b\\)/gu, '')
+    .replace(/\u001b[P^_][\s\S]*?\u001b\\/gu, '')
+    .replace(/\u001b\[[0-?]*[ -/]*[@-~]/gu, '')
+    .replace(/\r\n?/gu, '\n')
+    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/gu, '');
+  for (const [candidate, replacement] of [
+    [repoRoot, '<repo-root>'],
+    [process.env.USERPROFILE, '<user-home>'],
+    [process.env.HOME, '<user-home>'],
+    [tmpdir(), '<temp-directory>'],
+  ]) {
+    sanitized = replacePathLiteral(sanitized, candidate, replacement);
+  }
+  sanitized = sanitized.replace(
+    /(?<![a-z0-9])(?:[a-z]:[\\/](?:[^\\/\s"'<>|:*?\r\n]+[\\/])*[^\\/\s"'<>|:*?\r\n]*|\\\\[^\\/\s"'<>|:*?\r\n]+[\\/][^"'<>|:*?\r\n\s]+)(?![a-z0-9])/giu,
+    '<redacted-absolute-path>',
+  );
+  return sanitized.replace(/[\t ]+(?=\n|$)/gu, '');
 }
 
 function isDeclaredCat04UntrackedOutput(repoPath) {
@@ -725,6 +763,14 @@ function startBrowser({ browserPath, debugPort, userDataDir }) {
     ],
     { stdio: 'ignore', windowsHide: true },
   );
+}
+
+function sanitizeCat04ExpoLogs(evidenceDir) {
+  for (const group of CAT04_FIXTURE_GROUPS) {
+    const logPath = path.join(evidenceDir, `expo-${safeArtifactId(group.id)}.log`);
+    if (!existsSync(logPath)) continue;
+    writeFileSync(logPath, sanitizeCat04DiagnosticText(readFileSync(logPath, 'utf8')));
+  }
 }
 
 class CdpClient {
@@ -2154,6 +2200,7 @@ export async function runCat04CatalogRecoveryAudit({
     summary.scenarios.every(({ verdict }) => verdict === 'pass')
       ? 'pass'
       : 'fail';
+  sanitizeCat04ExpoLogs(evidenceDir);
   writeReport(evidenceDir, summary);
   summary.artifacts = listEvidenceArtifacts(evidenceDir);
   summary.screenshots = summary.artifacts.filter((name) => name.endsWith('.png'));

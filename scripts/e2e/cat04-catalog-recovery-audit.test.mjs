@@ -22,6 +22,7 @@ import {
   measureControlGeometry,
   readSourceGitSha,
   safeArtifactId,
+  sanitizeCat04DiagnosticText,
   validateCat04AuditConfiguration,
 } from './cat04-catalog-recovery-audit.mjs';
 
@@ -481,6 +482,7 @@ test('runner emits machine-readable evidence and explicitly withholds native-dev
   assert.match(source, /sourceGitSha: readSourceGitSha\(\)/);
   assert.match(source, /summary\.artifacts = listEvidenceArtifacts\(evidenceDir\)/);
   assert.match(source, /summary\.screenshots = summary\.artifacts\.filter/);
+  assert.match(source, /sanitizeCat04ExpoLogs\(evidenceDir\)/);
   const reportWrite = source.lastIndexOf('writeReport(evidenceDir, summary);');
   const artifactInventory = source.lastIndexOf(
     'summary.artifacts = listEvidenceArtifacts(evidenceDir);',
@@ -491,6 +493,15 @@ test('runner emits machine-readable evidence and explicitly withholds native-dev
   );
   assert.match(source, /Explicit-consent bootstrap/);
   assert.equal(safeArtifactId(' Search / No Match @ 390x844 '), 'search-no-match-390x844');
+});
+
+test('diagnostic log sanitizer redacts host paths before artifact inventory', () => {
+  const sanitized = sanitizeCat04DiagnosticText(
+    'Starting project at C:\\Users\\person\\Desktop\\onSkin\\.claude\\worktrees\\ios-privacy-source\\apps\\mobile\n',
+  );
+
+  assert.doesNotMatch(sanitized, /C:\\Users|\.claude\\worktrees/u);
+  assert.match(sanitized, /<redacted-absolute-path>|<user-home>|<repo-root>/u);
 });
 
 test('runner binds evidence to full source SHA and inventories every completed artifact deterministically', (t) => {
