@@ -213,6 +213,11 @@ test('offline fixture permits its bounded unresolved lookup without hiding other
   assert.match(source, /networkIdleMaxInflightForScenario\(scenario\)/);
   assert.match(source, /fixtureGroup === 'camera-recovery' \? 30_000 : 10_000/);
   assert.match(source, /allowed \$\{maxInflight\}/);
+  assert.ok(
+    (source.match(/maxInflight: networkIdleMaxInflightForScenario\(scenario\)/g) ?? []).length >=
+      7,
+    'All bounded camera/OCR navigation lanes should pass their network-idle allowance.',
+  );
 });
 
 test('browser failure classification ignores only local Expo dev HMR refusal noise', () => {

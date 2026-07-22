@@ -1769,7 +1769,9 @@ async function executeScenario({
       return;
     }
     case 'no-match-missing-barcode': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: networkIdleMaxInflightForScenario(scenario),
+      });
       await waitForText(client, 'Add it by hand');
       await scrollControlIntoView(client, 'Add it by hand', { exact: false });
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-report-hidden`);
@@ -1785,6 +1787,8 @@ async function executeScenario({
       await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {
         barcode: 'not-a-barcode',
         productId: 'not-a-product-id',
+      }, {
+        maxInflight: networkIdleMaxInflightForScenario(scenario),
       });
       await waitForText(client, 'Match unavailable');
       await waitForText(client, 'Your Shelf is unchanged.');
@@ -1800,7 +1804,9 @@ async function executeScenario({
     case 'manual-barcode-validation': {
       const productName = `Formatted barcode ${viewport.id}`;
       const formattedBarcode = '0 36000-29145 2';
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: networkIdleMaxInflightForScenario(scenario),
+      });
       await waitForText(client, 'Add by hand');
       await fillByLabel(client, 'Product name', productName);
 
