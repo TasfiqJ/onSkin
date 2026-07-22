@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   CAT04_AUDIT_LIMITATIONS,
+  CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS,
   CAT04_FIXTURE_GROUPS,
   CAT04_REQUIRED_VIEWPORTS,
   CAT04_SCENARIO_MATRIX,
@@ -151,6 +152,10 @@ test('fixture groups force local deterministic data and avoid inherited live cat
 });
 
 test('each fresh fixture profile passes the real age, explicit-consent, and activation gates', () => {
+  assert.equal(CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS, 120_000);
+  assert.match(source, /--headless=old/);
+  assert.match(source, /--disable-gpu/);
+  assert.doesNotMatch(source, /--headless=new/);
   assert.match(source, /new URL\('\/', baseUrl\)/);
   assert.match(source, /resetUrl\.searchParams\.set\('e2eReset', 'local'\)/);
   assert.match(source, /clickByText\(client, 'Begin'\)/);

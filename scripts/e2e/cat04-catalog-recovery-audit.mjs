@@ -19,6 +19,7 @@ const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
 const SEARCH_QUERY = 'ceramide cleanser';
 const FIXTURE_BARCODE = '012345678905';
+export const CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS = 120_000;
 
 const CAT04_DECLARED_UNTRACKED_OUTPUT_PATTERNS = Object.freeze([
   /^\.tmp(?:\/|$)/,
@@ -582,7 +583,7 @@ async function waitForUrl(url, timeoutMs = 120_000) {
   throw new Error(`Timed out waiting for ${url}: ${lastError?.message ?? 'no response'}`);
 }
 
-async function readJson(url, timeoutMs = 30_000) {
+async function readJson(url, timeoutMs = CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS) {
   const startedAt = Date.now();
   let lastError = null;
   while (Date.now() - startedAt < timeoutMs) {
@@ -710,13 +711,14 @@ function startBrowser({ browserPath, debugPort, userDataDir }) {
   return spawn(
     browserPath,
     [
-      '--headless=new',
+      '--headless=old',
       `--remote-debugging-port=${debugPort}`,
       `--user-data-dir=${userDataDir}`,
       '--no-first-run',
       '--no-default-browser-check',
       '--disable-background-networking',
       '--disable-extensions',
+      '--disable-gpu',
       '--disable-sync',
       '--hide-scrollbars',
       'about:blank',
