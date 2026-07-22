@@ -1,7 +1,7 @@
 # Phase 2 Production Infrastructure Runbook
 
 Date: 2026-07-15
-Updated: 2026-07-18 for migration `0059`
+Updated: 2026-07-22 for the 61-migration chain through `0062`
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `OnSkin` until
@@ -27,8 +27,8 @@ create irreversible production accounts under `OnSkin` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 59 migrations through
-  `0060` and all 16 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only deployment of 61 migrations through
+  `0062` and all 16 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
@@ -51,6 +51,16 @@ create irreversible production accounts under `OnSkin` until
    rejects any public schema object, remote migration ID, deployed function,
    Auth user/identity/session, Storage bucket/object, or Cron job; it is not an
    incremental migration path.
+
+   **Stop on remote `0059`:** the checked-in
+   `20260718000059_catalog_scan_minimization.sql` contains the single required
+   parser repair that closes its correction-intake validation `if`. If the
+   target reports migration `20260718000059` in remote history, stop before any
+   push. Do not assume its previously issued bytes match, do not repair it with
+   a later migration, and do not continue this fresh-only procedure. Preserve
+   the readback for incident review and use a newly verified empty target or a
+   separately approved forensic reconciliation plan.
+
 3. Fill `.env` from `.env.example` with staging values and run
    `npm run phase2:check-env:strict`.
 4. Configure every manifest-required hosted environment/secret name before the
@@ -95,7 +105,7 @@ create irreversible production accounts under `OnSkin` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 16-function manifest before migrations `0048`-`0060`, and proves
+   compatible 16-function manifest before migrations `0048`-`0062`, and proves
    all 16 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
@@ -105,7 +115,7 @@ create irreversible production accounts under `OnSkin` until
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
    the initial operator observations were recaptured. Only then does it apply
-   all 59 migrations in source order, redeploy the same manifest, and retain
+   all 61 migrations in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and
@@ -143,7 +153,7 @@ npm run phase2:rls-smoke
 The preparation helper requires a freshly fetched, clean `main` equal to
 `origin/main`. It reads the full 20-character project ref only from the
 environment and prints only its last four characters plus
-`sha256(utf8("db06-project-ref-v1\0" + fullProjectRef))`, the ordered 56
+`sha256(utf8("db06-project-ref-v1\0" + fullProjectRef))`, the ordered 61
 migration IDs, `sha256(utf8(canonical-json(ordered-migration-id-array)))`, and,
 when `--evidence-dir` is supplied, SHA-256 values for the exact six external
 artifact bytes. It never prints the raw project ref.

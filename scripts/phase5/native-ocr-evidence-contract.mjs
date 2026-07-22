@@ -29,21 +29,6 @@ export const NATIVE_OCR_REQUIRED_ARTIFACTS = Object.freeze([
   { id: 'corpus_provenance_report', mediaTypes: ['application/json', 'text/plain'] },
 ]);
 
-export const NATIVE_OCR_EVIDENCE_DESCENDANT_PACKET_PATHS = Object.freeze([
-  'docs/phase-5/generated/device-qa-packet.json',
-  'docs/phase-5/generated/device-qa-packet.md',
-  'docs/e2e/generated/human-e2e-manifest.json',
-  'docs/e2e/generated/human-e2e-manifest.md',
-  'docs/phase-9/generated/release-engineering-qa-packet.json',
-  'docs/phase-9/generated/release-engineering-qa-packet.md',
-  'docs/phase-10/generated/closed-beta-packet.json',
-  'docs/phase-10/generated/closed-beta-packet.md',
-  'docs/phase-11/generated/public-launch-packet.json',
-  'docs/phase-11/generated/public-launch-packet.md',
-  'docs/generated/generated-packet-status-audit.json',
-  'docs/generated/generated-packet-status-audit.md',
-]);
-
 // These are the release-behavior inputs that a completed physical-device
 // artifact must hash. Tests and this validator are packet inputs separately;
 // the evidence binding itself stays focused on the code shipped to the phone.
@@ -574,39 +559,6 @@ function validateSourceHashes(sourceHashes, root, errors) {
     }
     if (file.sha256.toLowerCase() !== String(declared).toLowerCase()) {
       errors.push(`sourceHashes.${path} does not match the exact source file bytes.`);
-    }
-  }
-}
-
-function validateSourceLineage(evidence, artifacts, options, errors) {
-  if (!options.currentGitSha) return;
-  if (!GIT_SHA.test(String(options.currentGitSha))) {
-    errors.push('The validator could not resolve a valid current Git SHA.');
-    return;
-  }
-  if (options.sourceGitShaIsAncestor !== true) {
-    errors.push(
-      'sourceGitSha must be a Git ancestor of the evidence commit/current HEAD; the EAS build must remain bound to the source candidate commit.',
-    );
-    return;
-  }
-  if (!Array.isArray(options.changedPathsSinceSource)) {
-    errors.push('The validator could not inspect sourceGitSha..HEAD changed paths.');
-    return;
-  }
-  const allowedPaths = new Set([
-    options.evidencePath,
-    ...artifacts.map(({ path }) => path),
-    ...NATIVE_OCR_EVIDENCE_DESCENDANT_PACKET_PATHS,
-  ]);
-  for (const path of options.changedPathsSinceSource) {
-    const normalized = String(path ?? '')
-      .replaceAll('\\', '/')
-      .replace(/^\.\//, '');
-    if (!allowedPaths.has(normalized)) {
-      errors.push(
-        `Source drift after the built candidate is not evidence-only: ${normalized}. Create a new EAS build from the changed source commit.`,
-      );
     }
   }
 }
@@ -1400,7 +1352,6 @@ export function validateNativeOcrEvidence(evidence, options = {}) {
   );
   validateGovernanceSections(evidence, deviceIds, testStartedAt, completedAt, errors);
   const artifacts = validateArtifacts(evidence.artifacts, root, errors);
-  validateSourceLineage(evidence, artifacts, options, errors);
   if (!Array.isArray(evidence.knownLimitations)) {
     errors.push('knownLimitations must be an array.');
   } else {

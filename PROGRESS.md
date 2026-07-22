@@ -7430,6 +7430,37 @@ prove the iOS permission sheet, Settings return, CameraView, interruption,
 filesystem/cache cleanup, network behavior, VoiceOver, App Review acceptance,
 legal compliance, revenue, or product-market fit.
 
+### Current catalog/database source-authority reconciliation (2026-07-22)
+
+Reconciled the launch/readiness documentation to the current 61-migration
+source chain through `20260722000062`. Foundational migration `0057` remains the
+CAT-02 transactional lifecycle authority; forward migration `0061` adds
+`benzoyl_peroxide` to the database staging allowlist while the offline v2
+envelope, not the RPC, remains responsible for dual-review signatures. It also
+repairs the shared health-write guard for clean installs and already-applied-
+`0060` upgrades and restricts authenticated PAO reads to bounded product-specific
+`label`, `brand_label`, or `catalog` evidence. Category-default and unknown PAO
+sources remain excluded.
+
+Foundational migration `0058` remains the CAT-03 campaign authority. Forward
+migration `0062` adds three covered authority indexes, pushes the already-
+required staged digest into the exact authority join, and adds the indexed
+`AFTER STATEMENT` guard: it rejects campaign-
+count overflow after every insert statement and validates the already-sealed
+complete root set only when stored rows reach the expected count; partial
+governed inserts remain allowed, and exact per-row authority checks remain in
+force. Current CAT-03 qualified-
+review and database-readback artifacts must attest exact latest migration
+`20260722000062`. The current source plans declare 50 schema, 218 CAT-02, 99
+CAT-03, 53 CAT-07, 58 catalog-serving, and 114 Apple-lifecycle assertions.
+Those declarations are source facts, not fresh execution evidence.
+
+No approved hosted target, real source-cleared batch, consented beta corpus,
+signed review/readback, active launch campaign, native-device clearance,
+professional acceptance, or App Store decision is claimed. DB-06 remains
+`in_progress` and blocked by `ACCT-03`; CAT-07 remains `in_progress`, blocked by
+`CAT-06` and its native, hosted/live, and external-review gates.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

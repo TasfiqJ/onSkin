@@ -140,6 +140,7 @@ Generate the evidence packet after installing on devices:
 ```bash
 PHASE5_IOS_BUILD_ID=... \
 PHASE5_IOS_BUILD_PROFILE=staging \
+PHASE9_RELEASE_CANDIDATE_DIR=docs/phase-9/release-candidates/<rc-id> \
 PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 26" \
 PHASE5_QA_SIGNOFF=true \
 PHASE5_DEVICE_QA_PASS=true \
@@ -178,7 +179,8 @@ first run, then validate the completed artifact:
 
 ```bash
 npm run phase5:performance-evidence:template
-PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
+PHASE5_PERFORMANCE_EVIDENCE_PATH=docs/phase-5/evidence/performance/<candidate>/evidence.json \
+PHASE9_RELEASE_CANDIDATE_DIR=docs/phase-9/release-candidates/<rc-id> \
 npm run phase5:performance-evidence:strict
 ```
 
@@ -200,13 +202,21 @@ generic tester labels are rejected.
 Each remaining granular `PHASE5_*_PASS` flag is also trimmed and
 case-normalized, but only `true` passes. Native OCR is the exception:
 `PHASE5_NATIVE_OCR_QA_PASS` is ignored because it is forgeable. When OCR is
-enabled, `PHASE5_NATIVE_OCR_EVIDENCE_PATH` and `PHASE5_IOS_BUILD_PROFILE` must
+enabled, `PHASE5_NATIVE_OCR_EVIDENCE_PATH`, `PHASE5_IOS_BUILD_PROFILE`, and
+`PHASE9_RELEASE_CANDIDATE_DIR` must
 bind the schema-v2 evidence described in
 `docs/phase-5/native-ocr-evidence-runbook.md` to the exact EAS source ancestor,
 build/profile/archive, unchanged runtime hashes, physical-device corpus,
 calculated metrics, accessibility, managed-photo and Expo
 Camera/Image/SDWebImage cache cleanup, zero-network capture, provenance, and
 named signoffs. Otherwise OCR remains hidden from launch claims.
+
+All widget, OCR, camera, and performance evidence is committed once in the
+governed evidence commit `E` directly on the build-source commit `S`. The
+selected RC ledger binds every direct-evidence path and digest. Later commits
+are limited to the centralized exact generated-output allowlist; raw evidence,
+source, config, dependency, or policy changes require a fresh source/build/
+evidence chain.
 
 Camera lifecycle QA is also artifact-only.
 `PHASE5_CAMERA_PERMISSION_QA_PASS` is ignored. CAT-06 requires

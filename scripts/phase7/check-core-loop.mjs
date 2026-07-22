@@ -137,17 +137,62 @@ require(has(
 ), 'phase7.ts must keep unimplemented community, Trend, and native-widget capabilities non-environment-driven.');
 const qaPacketBuilder = read('scripts/phase7/build-core-loop-qa-packet.mjs');
 const humanE2eManifestBuilder = read('scripts/e2e/human-e2e-manifest.mjs');
-require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
-  /core-loop-qa-packet\.json/.test(qaPacketBuilder) &&
-  /core-loop-qa-packet\.md/.test(qaPacketBuilder) &&
-  /gitStatusExcludingGeneratedEvidence\(packetOutputPaths\)/.test(qaPacketBuilder) &&
-  /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
+const coreLoopSmoke = read('scripts/phase7/check-core-loop-smoke.mjs');
+require(/const defaultPacketOutDir = 'docs\/phase-7\/generated'/.test(qaPacketBuilder) &&
+  /--test-fixture-output/.test(qaPacketBuilder) &&
+  /\.tmp\\\/phase7-packet-fixtures/.test(qaPacketBuilder) &&
+  /captureReleaseQaSnapshot\(\{[\s\S]*inputPaths: check \? \[\.\.\.requiredFiles, \.\.\.packetOutputPaths\] : requiredFiles,[\s\S]*outputPaths: check \? \[\] : packetOutputPaths,/.test(
     qaPacketBuilder,
-  ), 'Phase 7 core-loop QA packet must ignore central generated evidence and its own outputs when recording Git status.');
+  ) &&
+  /atomicWriteReleaseQaOutputs\(\{[\s\S]*snapshot: sourceSnapshot,[\s\S]*path: packetOutputPaths\[0\],[\s\S]*path: packetOutputPaths\[1\],/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 core-loop QA packet must use fixed normal outputs, a constrained test fixture, and atomic pinned-snapshot publication.');
+require(/record\?\.workingKind !== 'file'/.test(qaPacketBuilder) &&
+  /!record\.workingTreeMatchesHead/.test(qaPacketBuilder) &&
+  /canonicalJsonBytes\(recordedPacket\)\.equals\(jsonRecord\.workingBytes\)/.test(
+    qaPacketBuilder,
+  ) &&
+  /exactIsoTimestamp\(recordedPacket\.generatedAt\)/.test(qaPacketBuilder) &&
+  /phase7AssemblyStabilityErrors\(\{ includeSourceSnapshot: true \}\)/.test(qaPacketBuilder) &&
+  /PHASE7_QA_PACKET_CHECK_COMPARISON_COMPLETE/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 check mode must validate committed canonical output bytes and recheck its source snapshot after the adversarial drift window.');
 require(/Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+  /if \(strict\) blockers\.push\(dirtyMessage\)/.test(qaPacketBuilder) &&
   /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
     qaPacketBuilder,
-  ), 'Phase 7 core-loop QA packet must warn on dirty worktrees and expose Git status in Markdown.');
+  ), 'Phase 7 core-loop QA packet must block strict dirty worktrees and expose Git status in Markdown.');
+require(/validateCat07CommittedEvidence\(root, \{ expectedHeadSha: gitSha \}\)/.test(
+  qaPacketBuilder,
+) &&
+  /validateCat07FullEvidenceContract\(root, \{\s*expectedHeadSha: gitSha,\s*\}\)/.test(
+    qaPacketBuilder,
+  ) &&
+  /initialCommittedEvidenceJson/.test(qaPacketBuilder) &&
+  /initialFullEvidenceJson/.test(qaPacketBuilder) &&
+  /verifyAdditional\(\)/.test(qaPacketBuilder) &&
+  /CAT07 committed evidence:/.test(qaPacketBuilder) &&
+  /CAT07 full evidence contract:/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 core-loop QA packet must require byte-identical committed CAT07 inputs and the full manifest contract.');
+require(/auditGovernedEvidenceChain\(\{[\s\S]*sourceGitSha: governedSourceGitSha,[\s\S]*releaseCandidateDir: governedReleaseCandidateDir,[\s\S]*expectedHeadSha: gitSha,/.test(
+  qaPacketBuilder,
+) &&
+  /new Set\(packetOutputPaths\)/.test(qaPacketBuilder) &&
+  /humanManifestChain\?\.\[field\] !== expected/.test(qaPacketBuilder) &&
+  /sourcePacketCodeBoundToSourceCommit/.test(qaPacketBuilder) &&
+  /captureGovernedEvidenceWorkingBindings\([\s\S]*governedEvidenceChainAudit,[\s\S]*root,/.test(
+    qaPacketBuilder,
+  ) &&
+  /if \(!governedEvidenceBindings\) \{[\s\S]*no retained governed evidence file bindings/.test(
+    qaPacketBuilder,
+  ) &&
+  /verifyGovernedEvidenceWorkingBindings\(governedEvidenceBindings, root, \{[\s\S]*context: 'Phase 7 packet assembly'/.test(
+    qaPacketBuilder,
+  ) &&
+  /Governed Evidence Chain/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 packet must consume the central S-to-E-to-current audit, exclude only its own output pair from dirty status, retain pinned human-manifest/ledger binding, and recheck evidence at publication time.');
 for (const file of [
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
@@ -190,12 +235,36 @@ for (const file of [
   'scripts/phase7/check-core-loop.mjs',
   'scripts/phase7/check-core-loop-smoke.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
+  'scripts/e2e/human-e2e-manifest-render.mjs',
+  'scripts/e2e/evidence-diagnostic-hygiene.mjs',
+  'scripts/e2e/cat07-png-contract.mjs',
+  'scripts/e2e/cat07-committed-evidence.mjs',
+  'scripts/e2e/cat07-shelf-freshness-audit.mjs',
+  'scripts/e2e/cat07-shelf-freshness-audit.test.mjs',
+  'scripts/phase2/local-supabase-contract.mjs',
+  'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
   'scripts/phase9/lib.mjs',
+  'scripts/phase9/release-qa-integrity.mjs',
+  'scripts/launch/governed-evidence-chain.mjs',
+  'scripts/launch/governed-evidence-chain.test.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.test.mjs',
+  'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+  'supabase/tests/database/catalog_import_lifecycle.test.sql',
+  'supabase/tests/database/catalog_launch_curation.test.sql',
+  'supabase/tests/database/catalog_serving_gate.test.sql',
+  'supabase/tests/database/cat07_truthful_freshness.test.sql',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
   'docs/E2E_TESTING_CHECKLIST.md',
   'docs/USER_FLOW_TREE.md',
+  'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
   'docs/e2e/generated/human-e2e-manifest.json',
   'docs/e2e/generated/human-e2e-manifest.md',
+  'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json',
   'docs/phase-5/generated/device-qa-packet.json',
   'docs/phase-5/generated/device-qa-packet.md',
   'docs/phase-6/generated/payments-qa-packet.json',
@@ -204,16 +273,30 @@ for (const file of [
   'docs/phase-7/phase-7-exit-review.md',
 ]) {
   require(qaPacketBuilder.includes(`'${file}'`) ||
-    qaPacketBuilder.includes(`"${file}"`), `Phase 7 core-loop QA packet must hash ${file}.`);
+    qaPacketBuilder.includes(`"${file}"`) ||
+    (file === 'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json' &&
+      qaPacketBuilder.includes(
+        'cat07ShelfFreshnessSummaryPath',
+      )), `Phase 7 core-loop QA packet must hash ${file}.`);
 }
 require(/id: 'authored-cycle-customization-supported-phone'/.test(humanE2eManifestBuilder) &&
   /cycle-customization-current/.test(
     humanE2eManifestBuilder,
   ), 'The human E2E manifest must require authored-cycle customization evidence.');
-require(/id: 'shelf-freshness-provenance-supported-phone'/.test(humanE2eManifestBuilder) &&
-  /shelf-freshness-provenance-current/.test(
+require(/id: 'cat07-shelf-freshness-supported-phone'/.test(humanE2eManifestBuilder) &&
+  /kind: 'cat07-shelf-freshness'/.test(humanE2eManifestBuilder) &&
+  /cat07-shelf-freshness-current/.test(humanE2eManifestBuilder) &&
+  /else if \(gate\.kind === 'cat07-shelf-freshness'\) \{[\s\S]{0,800}collectCat07ShelfFreshnessFailures\(\{[\s\S]{0,800}inspectCat07SourceGitState\(String\(summary\?\.sourceGitSha/.test(
     humanE2eManifestBuilder,
-  ), 'The human E2E manifest must require Shelf freshness and replacement provenance evidence.');
+  ), 'The human E2E manifest must require the dedicated CAT07 Shelf freshness evidence contract.');
+require(/runHumanE2eCat07ContractSmoke/.test(coreLoopSmoke) &&
+  /--cat07-contract-smoke/.test(
+    coreLoopSmoke,
+  ), 'Phase 7 smoke must execute the dedicated CAT07 evidence contract.');
+require(/--cat07-committed-check/.test(humanE2eManifestBuilder) &&
+  /collectCat07CommittedHeadByteFailures/.test(
+    humanE2eManifestBuilder,
+  ), 'The CAT07 full manifest check must bind every evidence byte to HEAD.');
 require(has(
   'apps/mobile/src/lib/launch/phase7.test.ts',
   /keeps production Phase 7 surfaces disabled without a final brand domain/,

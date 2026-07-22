@@ -113,13 +113,15 @@ Completed in repo:
   disk-cache absence,
   zero-network capture, corpus rights/provenance, seven exact proof files, and
   named QA/privacy signoffs.
-  Adversarial smoke coverage rejects non-ancestor/source-drift descendants,
+  Adversarial smoke coverage rejects source drift, nonlinear/merge histories,
+  unledgered or post-evidence raw files, near-miss generated paths, dirty state,
   Boolean-only clearance, path traversal/symlinks, duplicate/missing runs,
   post-hoc/failed thresholds, impossible token-count/edit-distance arithmetic,
   privacy/cleanup/accessibility failures, evidence tampering, placeholders, and
   dirty state outside validated evidence.
 - Widget flags cannot clear the packet by themselves. A separate strict
-  schema-v3 lifecycle artifact binds current source HEAD, exact EAS build,
+  schema-v3 lifecycle artifact binds the exact build-source commit `S` through
+  the governed evidence ledger, exact EAS build,
   final app/extension/App Group/Team IDs, physical iPhone and named signoff to
   three typed raw signed ZIPs, four canonical parsed entitlement/privacy
   reports, four canonical scenario reports, and typed scenario proofs. Every

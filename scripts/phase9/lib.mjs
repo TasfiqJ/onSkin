@@ -3,6 +3,9 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
+import { GOVERNED_DOWNSTREAM_GENERATED_PATHS } from '../launch/governed-evidence-chain.mjs';
+
+export { GOVERNED_DOWNSTREAM_GENERATED_PATHS };
 
 export const root = process.cwd();
 export const strict = process.argv.includes('--strict');
@@ -581,75 +584,7 @@ export function command(commandName, args, options = {}) {
   });
 }
 
-export const generatedEvidenceOutputPaths = Object.freeze([
-  'docs/e2e/generated/human-e2e-manifest.json',
-  'docs/e2e/generated/human-e2e-manifest.md',
-  'docs/generated/generated-packet-status-audit.json',
-  'docs/generated/generated-packet-status-audit.md',
-  'docs/generated/device-support-policy-audit.json',
-  'docs/generated/device-support-policy-audit.md',
-  'docs/generated/performance-readiness-audit.json',
-  'docs/generated/performance-readiness-audit.md',
-  'docs/generated/readiness-status-audit.json',
-  'docs/generated/readiness-status-audit.md',
-  'docs/generated/source-packet-audit.json',
-  'docs/generated/source-packet-audit.md',
-  'docs/generated/tas-todo-audit.json',
-  'docs/generated/tas-todo-audit.md',
-  'docs/phase-3/generated/review-packet-manifest.json',
-  'docs/phase-3/generated/review-packet.md',
-  'docs/phase-3/generated/review-operator-queue.json',
-  'docs/phase-3/generated/review-operator-queue.md',
-  'docs/phase-3/generated/review-worklist.json',
-  'docs/phase-3/generated/review-worklist.md',
-  'docs/phase-4/generated/beta-coverage-report.json',
-  'docs/phase-4/generated/beta-coverage-report.md',
-  'docs/phase-4/generated/catalog-qa-report.json',
-  'docs/phase-4/generated/catalog-qa-report.md',
-  'docs/phase-4/generated/cosing-catalog-qa-report.json',
-  'docs/phase-4/generated/cosing-catalog-qa-report.md',
-  'docs/phase-4/generated/cosing-fixture-import.json',
-  'docs/phase-4/generated/obf-fixture-import.json',
-  'docs/phase-4/generated/source-worklist.json',
-  'docs/phase-4/generated/source-worklist.md',
-  'docs/phase-5/generated/device-qa-packet.json',
-  'docs/phase-5/generated/device-qa-packet.md',
-  'docs/phase-6/generated/payments-qa-packet.json',
-  'docs/phase-6/generated/payments-qa-packet.md',
-  'docs/phase-7/generated/core-loop-qa-packet.json',
-  'docs/phase-7/generated/core-loop-qa-packet.md',
-  'docs/phase-8/generated/growth-store-qa-packet.json',
-  'docs/phase-8/generated/growth-store-qa-packet.md',
-  'docs/phase-9/generated/dependency-inventory.json',
-  'docs/phase-9/generated/dependency-inventory.md',
-  'docs/phase-9/generated/ios-privacy-source-audit.json',
-  'docs/phase-9/generated/ios-privacy-source-audit.md',
-  'docs/phase-9/generated/live-catalog-rate-limit.json',
-  'docs/phase-9/generated/live-catalog-rate-limit.md',
-  'docs/phase-9/generated/live-consent-withdrawal.json',
-  'docs/phase-9/generated/live-consent-withdrawal.md',
-  'docs/phase-9/generated/live-data-rights.json',
-  'docs/phase-9/generated/live-data-rights.md',
-  'docs/phase-9/generated/live-edge-auth.json',
-  'docs/phase-9/generated/live-edge-auth.md',
-  'docs/phase-9/generated/live-order-report-poll.json',
-  'docs/phase-9/generated/live-order-report-poll.md',
-  'docs/phase-9/generated/live-public-forms.json',
-  'docs/phase-9/generated/live-public-forms.md',
-  'docs/phase-9/generated/live-revenuecat-webhook.json',
-  'docs/phase-9/generated/live-revenuecat-webhook.md',
-  'docs/phase-9/generated/live-supabase-adversarial.json',
-  'docs/phase-9/generated/live-supabase-adversarial.md',
-  'docs/phase-9/generated/release-engineering-qa-packet.json',
-  'docs/phase-9/generated/release-engineering-qa-packet.md',
-  'docs/phase-9/generated/store-build-inspection.json',
-  'docs/phase-10/generated/closed-beta-packet.json',
-  'docs/phase-10/generated/closed-beta-packet.md',
-  'docs/phase-10/generated/support-handoff-packet.json',
-  'docs/phase-10/generated/support-handoff-packet.md',
-  'docs/phase-11/generated/public-launch-packet.json',
-  'docs/phase-11/generated/public-launch-packet.md',
-]);
+export const generatedEvidenceOutputPaths = GOVERNED_DOWNSTREAM_GENERATED_PATHS;
 
 function normalizeRepoPath(path) {
   return String(path ?? '')

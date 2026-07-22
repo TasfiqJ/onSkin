@@ -20,14 +20,24 @@ import { fileURLToPath } from 'node:url';
 
 import { installSignalCleanup } from './local-supabase-signal-cleanup.mjs';
 import { assertLocalOnlyInvocation } from './local-supabase-target-guard.mjs';
-import { ContainedCommandError, runContainedCommand } from './contained-command.mjs';
+import {
+  ContainedCommandError,
+  runContainedCommand,
+  sanitizeBoundedCommandDiagnostic,
+} from './contained-command.mjs';
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 59;
-const EXPECTED_LATEST_MIGRATION = '20260718000060';
+const EXPECTED_MIGRATION_COUNT = 61;
+const EXPECTED_LATEST_MIGRATION = '20260722000062';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
+// CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
+// recomputes every sealed membership root. Keep ordinary CLI operations tightly
+// bounded while allowing that intentionally exhaustive structural suite to run.
+const STRUCTURAL_TEST_TIMEOUT_MS = 60 * 60_000;
 const LOCAL_CLI_MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
+const STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES = 256 * 1024;
+const STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES = 4_000;
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(SCRIPT_DIR, '..', '..');
 const sourceSupabaseOverride = process.env.DB05_SOURCE_SUPABASE_DIR?.trim();
@@ -197,18 +207,7 @@ async function allocatePortBlock() {
 }
 
 function sanitizedTail(value) {
-  return String(value ?? '')
-    .replace(/postgres(?:ql)?:\/\/[^\s"']+/giu, '[redacted-local-database-url]')
-    .replace(/https?:\/\/[^\s"']+/giu, '[redacted-local-url]')
-    .replace(/\bsb_(?:secret|publishable)_[A-Za-z0-9_-]+\b/gu, '[redacted-local-key]')
-    .replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/gu, '[redacted-local-jwt]')
-    .replace(
-      /("(?:anon_key|api_url|db_url|jwt_secret|publishable_key|secret_key|service_role_key)"\s*:\s*")[^"]+("?)/giu,
-      '$1[redacted]$2',
-    )
-    .split(/\r?\n/u)
-    .slice(-120)
-    .join('\n');
+  return sanitizeBoundedCommandDiagnostic({ stderr: value });
 }
 
 async function runLocalCli(
@@ -218,6 +217,9 @@ async function runLocalCli(
     quiet = false,
     timeoutMs = LOCAL_CLI_TIMEOUT_MS,
     maxOutputBytes = LOCAL_CLI_MAX_OUTPUT_BYTES,
+    failureDiagnosticProfile = 'tail',
+    failureDiagnosticMaxBytes,
+    failureDiagnosticMaxLines,
   } = {},
 ) {
   assertLocalOnlyInvocation(label, args);
@@ -241,6 +243,10 @@ async function runLocalCli(
     maxOutputBytes,
     signal: controller.signal,
     inheritParentProcessGroup: INHERIT_PARENT_PROCESS_GROUP,
+    retainSanitizedFailureDiagnostic: true,
+    failureDiagnosticProfile,
+    ...(failureDiagnosticMaxBytes === undefined ? {} : { failureDiagnosticMaxBytes }),
+    ...(failureDiagnosticMaxLines === undefined ? {} : { failureDiagnosticMaxLines }),
   });
   activeCliProcess = { abort: () => controller.abort(), done };
   let result;
@@ -248,7 +254,10 @@ async function runLocalCli(
     result = await done;
   } catch (error) {
     if (error instanceof ContainedCommandError) {
-      throw new Error(`Local Supabase CLI ${error.originReason}.`);
+      const diagnostic = error.diagnostic
+        ? `\nSanitized CLI output tail:\n${error.diagnostic}`
+        : '';
+      throw new Error(`Local Supabase CLI ${error.originReason}.${diagnostic}`);
     }
     throw error;
   } finally {
@@ -363,12 +372,16 @@ try {
       `[db05-local] migration history: PASS (${EXPECTED_MIGRATION_COUNT}, latest ${EXPECTED_LATEST_MIGRATION})\n`,
     );
 
-    await runLocalCli('run structural pgTAP tests', [
-      'test',
-      'db',
-      '--local',
-      'supabase/tests/database',
-    ]);
+    await runLocalCli(
+      'run structural pgTAP tests',
+      ['test', 'db', '--local', 'supabase/tests/database'],
+      {
+        timeoutMs: STRUCTURAL_TEST_TIMEOUT_MS,
+        failureDiagnosticProfile: 'tap',
+        failureDiagnosticMaxBytes: STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES,
+        failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
+      },
+    );
     await runLocalCli('lint migrated public schema', [
       'db',
       'lint',

@@ -1,6 +1,6 @@
 # Phase 9 Dependency And SBOM Review
 
-`npm run phase9:dependency-sbom` writes generated dependency inventory artifacts to `docs/phase-9/generated/`.
+`npm run phase9:dependency-sbom` writes generated dependency inventory artifacts to `docs/phase-9/generated/`. The JSON and Markdown record whether `npm audit` was not run, used only the local offline cache, or queried the registry. Offline-cache results remain warning-bearing even when they report zero advisories.
 
 The separate `npm run phase9:ios-privacy-source-audit:check` gate binds the
 reviewed Apple baseline, repository SDK mapping, lockfile, and installed native
@@ -33,7 +33,7 @@ Strict release signoff requires:
 - Sentry source maps/symbolication plan recorded
 - generated inventory attached to the RC packet
 
-Set `PHASE9_DEPENDENCY_AUDIT_PASS=true` only after the release owner has reviewed the generated inventory and vulnerability results.
+Set `PHASE9_DEPENDENCY_AUDIT_PASS=true` only after a registry-backed audit has completed and the release owner has reviewed the generated inventory, uploaded scanner evidence, and vulnerability results for the exact RC commit. The generator rejects a warning-free signoff when the audit was skipped, incomplete, or offline-only.
 The flag is review metadata only. It cannot replace the source audit, exact
 archive evidence, observed runtime reconciliation, or named professional and
 device signoffs.

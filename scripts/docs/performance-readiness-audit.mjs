@@ -182,7 +182,7 @@ const requiredPackageScripts = [
 const requiredLaunchVerifyParts = [
   'docs:performance-readiness-audit:check',
   'phase5:performance-evidence:template:check',
-  'phase5:performance-evidence',
+  'phase5:performance-evidence:smoke',
 ];
 
 function abs(path) {

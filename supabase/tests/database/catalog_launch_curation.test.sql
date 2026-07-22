@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(84);
+select plan(99);
 
 create temp table cat03_test_state (
   state_key text primary key,
@@ -549,6 +549,55 @@ where alias.state_key = 'alias_barcode'
     where state.state_key = 'test_product'
   );
 
+-- Seal one eligible same-territory PAO row alongside a category fallback and
+-- wrong-parent-source row. All three remain valid launch inputs, while the
+-- released lookup must expose only exact reviewed product-specific evidence.
+insert into public.product_pao_expiry (
+  id, product_id, pao_months, pao_source, region, source_id,
+  reviewed_by, review_status
+)
+select
+  '59000000-0000-4000-8000-000000000060'::uuid,
+  product.value_uuid,
+  12,
+  'catalog',
+  'US',
+  source.id,
+  'cat03.pao.reviewer',
+  'reviewed'
+from cat03_test_state as product
+cross join public.catalog_sources as source
+where product.state_key = 'test_product'
+  and source.source_key = 'open_beauty_facts'
+union all
+select
+  '59000000-0000-4000-8000-000000000061'::uuid,
+  product.value_uuid,
+  18,
+  'category_default',
+  'US',
+  source.id,
+  'cat03.pao.reviewer',
+  'reviewed'
+from cat03_test_state as product
+cross join public.catalog_sources as source
+where product.state_key = 'test_product'
+  and source.source_key = 'open_beauty_facts'
+union all
+select
+  '59000000-0000-4000-8000-000000000062'::uuid,
+  product.value_uuid,
+  24,
+  'catalog',
+  'US',
+  source.id,
+  'cat03.pao.reviewer',
+  'reviewed'
+from cat03_test_state as product
+cross join public.catalog_sources as source
+where product.state_key = 'test_product'
+  and source.source_key = 'cosing';
+
 select pg_catalog.set_config(
   'app.cat03_test_product_id',
   (select value_uuid::text from cat03_test_state where state_key = 'test_product'),
@@ -653,6 +702,59 @@ as $$
     from pg_temp.cat03_test_state as state
     where state.state_key in ('primary_batch', 'dependency_batch')
   )
+$$;
+
+create or replace function pg_temp.cat03_campaign_sha256_with_root(
+  p_campaign_id uuid,
+  p_served_state_mutation_root_set_sha256 text,
+  p_expected_reviewed_record_count integer default null
+)
+returns text
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select private.catalog_launch_curation_campaign_sha256(
+    campaign.release_id,
+    campaign.campaign_authority_sha256,
+    campaign.import_batch_id,
+    campaign.import_batch_evidence_sha256,
+    campaign.import_records_sha256,
+    campaign.import_candidates_sha256,
+    campaign.cat02_artifact_set_sha256,
+    campaign.cat02_membership_set_sha256,
+    campaign.cat02_membership_proof_sha256,
+    campaign.cat02_database_observation_sha256,
+    campaign.cat02_verifier_signature_set_sha256,
+    campaign.cat02_production_integrity_set_sha256,
+    campaign.curation_outcome_reviewer_signature_set_sha256,
+    campaign.contributing_batch_ids,
+    campaign.contributing_batch_set_sha256,
+    campaign.signed_target_policy_sha256,
+    campaign.eligibility_policy_sha256,
+    campaign.beta_corpus_sha256,
+    campaign.curation_manifest_sha256,
+    campaign.trust_registry_sha256,
+    campaign.corpus_consent_state_sha256,
+    campaign.review_valid_until,
+    coalesce(
+      p_expected_reviewed_record_count,
+      campaign.expected_reviewed_record_count
+    ),
+    campaign.expected_eligible_record_count,
+    campaign.expected_prioritized_eligible_record_count,
+    campaign.required_category_eligible_floors,
+    campaign.expected_record_set_sha256,
+    p_served_state_mutation_root_set_sha256,
+    campaign.activation_authorization_set_sha256,
+    campaign.reviewer_ids,
+    campaign.reviewer_evidence_sha256s,
+    campaign.reviewer_signature_set_sha256,
+    campaign.created_by
+  )
+  from private.catalog_launch_curation_campaigns as campaign
+  where campaign.id = p_campaign_id
 $$;
 
 create or replace function pg_temp.cat03_prepare_campaign(
@@ -819,6 +921,11 @@ begin
     select fixture.*, product.source_id
     from cat03_product_fixture as fixture
     join public.products as product on product.id = fixture.product_id
+    -- The false mode exists only for the deliberately incomplete campaign.
+    -- Its release-count proof needs no records, while the later stale-root
+    -- proof needs exactly fixture ordinal 5, whose dependency is mutated and
+    -- restored. Planning the other 2,000 rows would add no assertion coverage.
+    where p_insert_records or fixture.ordinal = 5
     order by fixture.ordinal
   loop
     v_snapshot :=
@@ -1121,8 +1228,8 @@ begin
     private.catalog_import_canonical_json(
       pg_catalog.jsonb_build_object(
         'projectRefSha256', private.catalog_import_sha256_text('cat03-project'),
-        'schemaMigrationVersion', '20260717000058',
-        'schemaMigrationSha256', private.catalog_import_sha256_text('cat03-0058'),
+        'schemaMigrationVersion', '20260722000062',
+        'schemaMigrationSha256', private.catalog_import_sha256_text('cat03-0062'),
         'verificationQuerySha256',
           private.catalog_import_sha256_text('cat03-membership-query-v2'),
         'observationMode', 'live_database_exact_set_receipt',
@@ -1407,7 +1514,7 @@ end;
 $$;
 
 create or replace function pg_temp.cat03_insert_planned_records(
-  p_campaign_id uuid
+  p_campaign_ids uuid[]
 )
 returns void
 language plpgsql
@@ -1485,9 +1592,21 @@ begin
     planned.reviewer_signature_set_sha256, 'cat03.curator',
     planned.curation_record_sha256
   from cat03_planned_records as planned
-  where planned.campaign_id = p_campaign_id
-  order by planned.product_record_sha256;
+  where planned.campaign_id = any(p_campaign_ids)
+  order by planned.campaign_id, planned.product_record_sha256;
 end;
+$$;
+
+create or replace function pg_temp.cat03_insert_planned_records(
+  p_campaign_id uuid
+)
+returns void
+language sql
+volatile
+security definer
+set search_path = ''
+as $$
+  select pg_temp.cat03_insert_planned_records(array[p_campaign_id])
 $$;
 
 create or replace function pg_temp.cat03_stage_product(
@@ -1883,6 +2002,92 @@ begin
 end;
 $$;
 
+create or replace function pg_temp.cat03_adversarial_validity_parity(
+  p_campaign_id uuid
+)
+returns jsonb
+language plpgsql
+volatile
+security definer
+set search_path = ''
+as $$
+declare
+  v_product_id uuid;
+  v_ingredient_list_id uuid;
+  v_matches boolean;
+  v_result jsonb := '{}'::jsonb;
+begin
+  select record.product_id, record.ingredient_list_id
+    into strict v_product_id, v_ingredient_list_id
+  from private.catalog_launch_curation_records as record
+  where record.campaign_id = p_campaign_id;
+
+  begin
+    update public.products
+       set name = name || ' CAT03 set-scalar parity drift'
+     where id = v_product_id;
+    select count(*) = 1 and pg_catalog.bool_and(
+      validity.structurally_valid is not distinct from
+        private.catalog_launch_curation_record_is_structurally_valid_v0058(
+          validity.record_id
+        )
+      and validity.live_valid is not distinct from
+        private.catalog_launch_curation_record_is_valid_v0058(
+          validity.record_id
+        )
+      and private.catalog_launch_curation_record_is_structurally_valid_v0058(
+        validity.record_id
+      ) is false
+      and private.catalog_launch_curation_record_is_valid_v0058(
+        validity.record_id
+      ) is false
+    ) into v_matches
+    from private.catalog_launch_curation_campaign_record_validity(
+      p_campaign_id
+    ) as validity;
+    v_result := v_result || pg_catalog.jsonb_build_object(
+      'productMutationParity', v_matches
+    );
+    raise exception 'CAT03_TEST_ROLLBACK';
+  exception when raise_exception then null;
+  end;
+
+  begin
+    update public.product_ingredient_tokens
+       set raw_token = raw_token || ' CAT03 set-scalar parity drift'
+     where product_id = v_product_id
+       and ingredient_list_id = v_ingredient_list_id
+       and position = 1;
+    select count(*) = 1 and pg_catalog.bool_and(
+      validity.structurally_valid is not distinct from
+        private.catalog_launch_curation_record_is_structurally_valid_v0058(
+          validity.record_id
+        )
+      and validity.live_valid is not distinct from
+        private.catalog_launch_curation_record_is_valid_v0058(
+          validity.record_id
+        )
+      and private.catalog_launch_curation_record_is_structurally_valid_v0058(
+        validity.record_id
+      ) is false
+      and private.catalog_launch_curation_record_is_valid_v0058(
+        validity.record_id
+      ) is false
+    ) into v_matches
+    from private.catalog_launch_curation_campaign_record_validity(
+      p_campaign_id
+    ) as validity;
+    v_result := v_result || pg_catalog.jsonb_build_object(
+      'tokenMutationParity', v_matches
+    );
+    raise exception 'CAT03_TEST_ROLLBACK';
+  exception when raise_exception then null;
+  end;
+
+  return v_result;
+end;
+$$;
+
 -- ---------------------------------------------------------------------------
 -- Schema, privilege, and execution-boundary contract
 -- ---------------------------------------------------------------------------
@@ -1967,6 +2172,12 @@ select throws_ok(
   'anon cannot address a private campaign relation at runtime'
 );
 reset role;
+
+select lives_ok(
+  $$insert into private.catalog_launch_curation_records
+    select * from private.catalog_launch_curation_records where false$$,
+  'the statement guard treats an empty INSERT source as a bounded no-op'
+);
 
 set local role authenticated;
 select throws_ok(
@@ -2145,10 +2356,19 @@ select ok(
     cross join (values
       ('public.activate_catalog_launch_curation(uuid,text,text,text,text,text,text)'),
       ('public.release_catalog_launch_curation_campaign(uuid,text,text,text,text,text,text,text)'),
+      ('public.release_catalog_launch_curation_campaign_v0058(uuid,text,text,text,text,text,text,text)'),
       ('public.retire_catalog_launch_curation_campaign(uuid,text,text,text,text)'),
       ('public.retire_catalog_launch_curation(uuid,text,text,text,text)'),
+      ('private.catalog_launch_curation_membership_evidence_sha256(uuid,uuid,text,text,text,text,uuid,text,text,text,text,text)'),
       ('private.catalog_launch_curation_record_membership_payload_is_valid(uuid,jsonb)'),
-      ('private.catalog_launch_curation_record_memberships_are_valid(uuid)')
+      ('private.catalog_launch_curation_record_memberships_are_valid(uuid)'),
+      ('private.catalog_launch_curation_campaign_record_validity(uuid)'),
+      ('private.catalog_launch_curation_record_is_structurally_valid(uuid)'),
+      ('private.catalog_launch_curation_record_is_structurally_valid_v0058(uuid)'),
+      ('private.catalog_launch_curation_record_is_valid(uuid)'),
+      ('private.catalog_launch_curation_record_is_valid_v0058(uuid)'),
+      ('private.guard_catalog_launch_curation_record_insert()'),
+      ('private.guard_catalog_launch_curation_record_insert_statement()')
     ) as function_matrix(function_name)
     where pg_catalog.has_function_privilege(
       role_matrix.role_name,
@@ -2230,11 +2450,11 @@ select is(
 select ok(
   (
     select
-      pg_catalog.position('dependencymemberships' in definition) > 0
-      and pg_catalog.position('cat02membershipreadbacksha256' in definition) > 0
-      and pg_catalog.position('manifestentrysha256' in definition) = 0
-      and pg_catalog.position('offlinebasesealedrecordsha256' in definition) = 0
-      and pg_catalog.position('signaturesetsha256' in definition) = 0
+      pg_catalog.strpos(definition, 'dependencymemberships') > 0
+      and pg_catalog.strpos(definition, 'cat02membershipreadbacksha256') > 0
+      and pg_catalog.strpos(definition, 'manifestentrysha256') = 0
+      and pg_catalog.strpos(definition, 'offlinebasesealedrecordsha256') = 0
+      and pg_catalog.strpos(definition, 'signaturesetsha256') = 0
     from (
       select pg_catalog.lower(pg_catalog.pg_get_functiondef(
         'private.catalog_launch_curation_database_base_record_sha256(text,text,text,text,text,uuid,uuid,uuid,uuid,text,text,text,text,text,jsonb,text,text,text,uuid,text,text,text,integer,text,text,text,text[],text)'::regprocedure
@@ -2297,22 +2517,22 @@ select throws_ok(
 select ok(
   (
     select
-      pg_catalog.position(
+      position(
         'array_lower(contributing_batch_ids, 1) = 1' in definitions
       ) > 0
-      and pg_catalog.position(
+      and position(
         'array_position(contributing_batch_ids, null::uuid) is null' in definitions
       ) > 0
-      and pg_catalog.position('array_lower(reviewer_ids, 1) = 1' in definitions) > 0
-      and pg_catalog.position(
+      and position('array_lower(reviewer_ids, 1) = 1' in definitions) > 0
+      and position(
         'array_lower(reviewer_evidence_sha256s, 1) = 1' in definitions
       ) > 0
     from (
       select pg_catalog.lower(pg_catalog.string_agg(
-        pg_catalog.pg_get_constraintdef(constraint.oid), ' '
+        pg_catalog.pg_get_constraintdef(constraint_record.oid), ' '
       )) as definitions
-      from pg_catalog.pg_constraint as constraint
-      where constraint.conrelid =
+      from pg_catalog.pg_constraint as constraint_record
+      where constraint_record.conrelid =
         'private.catalog_launch_curation_campaigns'::regclass
     ) as campaign_constraints
   ),
@@ -2322,21 +2542,21 @@ select ok(
 select ok(
   (
     select
-      pg_catalog.position(
+      position(
         'array_lower(regulatory_reviewer_ids, 1) = 1' in definitions
       ) > 0
-      and pg_catalog.position(
+      and position(
         'array_lower(reviewer_evidence_sha256s, 1) = 1' in definitions
       ) > 0
-      and pg_catalog.position('withhold_activation' in definitions) > 0
-      and pg_catalog.position('regulatory_review_evidence_sha256 is null' in definitions) > 0
-      and pg_catalog.position('demand_priority_rank is null' in definitions) > 0
+      and position('withhold_activation' in definitions) > 0
+      and position('regulatory_review_evidence_sha256 is null' in definitions) > 0
+      and position('demand_priority_rank is null' in definitions) > 0
     from (
       select pg_catalog.lower(pg_catalog.string_agg(
-        pg_catalog.pg_get_constraintdef(constraint.oid), ' '
+        pg_catalog.pg_get_constraintdef(constraint_record.oid), ' '
       )) as definitions
-      from pg_catalog.pg_constraint as constraint
-      where constraint.conrelid =
+      from pg_catalog.pg_constraint as constraint_record
+      where constraint_record.conrelid =
         'private.catalog_launch_curation_records'::regclass
     ) as record_constraints
   ),
@@ -2349,123 +2569,205 @@ select ok(
 select ok(
   (
     select
-      pg_catalog.position('productrow' in audit.product_definition) > 0
-      and pg_catalog.position(
+      position('productrow' in audit.product_definition) > 0
+      and position(
         'to_jsonb(product' in audit.product_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullproductsourcerow' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullreferencedsourcerows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullimportbatchrow' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullstagedrecordrow' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position('fullbrandrow' in audit.dependency_definition) > 0
-      and pg_catalog.position('fullcategoryrow' in audit.dependency_definition) > 0
-      and pg_catalog.position('fullbarcoderows' in audit.dependency_definition) > 0
-      and pg_catalog.position(
+      and position('fullbrandrow' in audit.dependency_definition) > 0
+      and position('fullcategoryrow' in audit.dependency_definition) > 0
+      and position('fullbarcoderows' in audit.dependency_definition) > 0
+      and position(
         'fullingredientlistrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position('fulltokenrows' in audit.dependency_definition) > 0
-      and pg_catalog.position(
+      and position('fulltokenrows' in audit.dependency_definition) > 0
+      and position(
         'fullingredientlinkrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullmappedingredientrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullingredientsynonymrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullingredienttagassignmentrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullingredienttagdefinitionrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullactivebandrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'fullpaoexpiryrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'operatorholdrows' in audit.dependency_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'mapping.barcode = product.barcode' in audit.lookup_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'parent_product.barcode = product_barcodes.barcode'
         in audit.barcode_policy
       ) > 0
-      and pg_catalog.position(
+      and position(
         'catalog-launch-curation-global' in audit.insert_guard_definition
       ) > 0
       and audit.insert_guard_is_volatile
-      and pg_catalog.position(
+      and position(
         'catalog-launch-curation-global' in audit.insert_guard_definition
-      ) < pg_catalog.position(
+      ) < position(
         'catalog-launch-curation-campaign:' in audit.insert_guard_definition
       )
-      and pg_catalog.position(
+      and position(
         'catalog-launch-curation-campaign:' in audit.insert_guard_definition
-      ) < pg_catalog.position(
+      ) < position(
         'catalog_launch_curation_campaign_release_events'
         in audit.insert_guard_definition
       )
-      and pg_catalog.position(
+      and position(
+        'catalog_launch_curation_campaign_release_events'
+        in audit.insert_guard_definition
+      ) < position(
+        'catalog_launch_current_served_state_mutation_root_sha256'
+        in audit.insert_guard_definition
+      )
+      and position(
+        'catalog_launch_curation_campaign_stored_mutation_root_set_sha25'
+        in audit.insert_guard_definition
+      ) = 0
+      and position(
+        'inserted_catalog_curation_records'
+        in audit.statement_guard_definition
+      ) > 0
+      and position(
+        'order by inserted_record.campaign_id'
+        in audit.statement_guard_definition
+      ) > 0
+      and position(
+        'catalog_launch_curation_campaign_stored_mutation_root_set_sha25'
+        in audit.statement_guard_definition
+      ) > 0
+      and audit.statement_guard_is_volatile
+      and audit.statement_trigger_is_exact
+      and audit.membership_lookup_index_is_exact
+      and audit.authority_lookup_index_is_exact
+      and audit.effect_lookup_index_is_exact
+      and position(
+        'catalog_launch_curation_release_validation_cache'
+        in audit.structural_wrapper_definition
+      ) > 0
+      and position(
+        'catalog_launch_curation_record_is_structurally_valid_v0058'
+        in audit.structural_wrapper_definition
+      ) > 0
+      and position(
+        'session_user' in audit.structural_wrapper_definition
+      ) > 0
+      and position(
+        'catalog_launch_curation_release_validation_cache'
+        in audit.live_wrapper_definition
+      ) > 0
+      and position(
+        'catalog_launch_curation_record_is_valid_v0058'
+        in audit.live_wrapper_definition
+      ) > 0
+      and position(
+        'campaign_authority as materialized'
+        in audit.campaign_validity_definition
+      ) > 0
+      and position(
+        'approved_sources as materialized'
+        in audit.campaign_validity_definition
+      ) > 0
+      and position(
+        'structurally_valid_records as materialized'
+        in audit.campaign_validity_definition
+      ) > 0
+      and position(
+        'live_valid_records as materialized'
+        in audit.campaign_validity_definition
+      ) > 0
+      and position(
+        'catalog-launch-curation-global'
+        in audit.release_wrapper_definition
+      ) > 0
+      and position(
+        'catalog-launch-curation-global'
+        in audit.release_wrapper_definition
+      ) < position(
+        'catalog-launch-curation-campaign:'
+        in audit.release_wrapper_definition
+      )
+      and position(
+        'catalog_launch_curation_campaign_record_validity'
+        in audit.release_wrapper_definition
+      ) > 0
+      and position(
+        'release_catalog_launch_curation_campaign_v0058'
+        in audit.release_wrapper_definition
+      ) > 0
+      and position(
         'catalog_launch_current_served_state_mutation_root_sha256'
         in audit.structural_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'current_date' in audit.structural_definition
       ) = 0
-      and pg_catalog.position(
+      and position(
         'at time zone ''utc''' in audit.structural_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'current_date' in audit.ingredient_serving_definition
       ) = 0
-      and pg_catalog.position(
+      and position(
         'at time zone ''utc''' in audit.ingredient_serving_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'current_date' in audit.product_serving_definition
       ) = 0
-      and pg_catalog.position(
+      and position(
         'at time zone ''utc''' in audit.product_serving_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'catalog-launch-curation-global'
         in audit.mutation_writer_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'triaged' in audit.mutation_capture_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'accepted' in audit.mutation_capture_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'correctionid' in audit.correction_projection_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'reviewerpresent' in audit.correction_projection_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'notepresent' in audit.correction_projection_definition
       ) > 0
-      and pg_catalog.position(
+      and position(
         'user_id' in audit.correction_projection_definition
       ) = 0
-      and pg_catalog.position(
+      and position(
         'description' in audit.correction_projection_definition
       ) = 0
-      and pg_catalog.position(
+      and position(
         'proposed_payload' in audit.correction_projection_definition
       ) = 0
       and audit.correction_projection_has_utc
@@ -2502,8 +2804,23 @@ select ok(
           'private.guard_catalog_launch_curation_record_insert()'::regprocedure
         )) as insert_guard_definition,
         pg_catalog.lower(pg_catalog.pg_get_functiondef(
-          'private.catalog_launch_curation_record_is_structurally_valid(uuid)'::regprocedure
+          'private.guard_catalog_launch_curation_record_insert_statement()'::regprocedure
+        )) as statement_guard_definition,
+        pg_catalog.lower(pg_catalog.pg_get_functiondef(
+          'private.catalog_launch_curation_record_is_structurally_valid_v0058(uuid)'::regprocedure
         )) as structural_definition,
+        pg_catalog.lower(pg_catalog.pg_get_functiondef(
+          'private.catalog_launch_curation_record_is_structurally_valid(uuid)'::regprocedure
+        )) as structural_wrapper_definition,
+        pg_catalog.lower(pg_catalog.pg_get_functiondef(
+          'private.catalog_launch_curation_record_is_valid(uuid)'::regprocedure
+        )) as live_wrapper_definition,
+        pg_catalog.lower(pg_catalog.pg_get_functiondef(
+          'private.catalog_launch_curation_campaign_record_validity(uuid)'::regprocedure
+        )) as campaign_validity_definition,
+        pg_catalog.lower(pg_catalog.pg_get_functiondef(
+          'public.release_catalog_launch_curation_campaign(uuid,text,text,text,text,text,text,text)'::regprocedure
+        )) as release_wrapper_definition,
         pg_catalog.lower(pg_catalog.pg_get_functiondef(
           'private.catalog_ingredient_is_servable(uuid)'::regprocedure
         )) as ingredient_serving_definition,
@@ -2529,6 +2846,91 @@ select ok(
           select procedure.provolatile = 'v'
           from pg_catalog.pg_proc as procedure
           where procedure.oid =
+            'private.guard_catalog_launch_curation_record_insert_statement()'::regprocedure
+        ) as statement_guard_is_volatile,
+        exists (
+          select 1
+          from pg_catalog.pg_trigger as trigger_row
+          where trigger_row.tgrelid =
+              'private.catalog_launch_curation_records'::regclass
+            and trigger_row.tgname =
+              'catalog_launch_curation_records_insert_statement_guard'
+            and trigger_row.tgnewtable = 'inserted_catalog_curation_records'
+            and (trigger_row.tgtype & 1) = 0
+            and (trigger_row.tgtype & 4) = 4
+            and trigger_row.tgenabled = 'O'
+            and not trigger_row.tgisinternal
+        ) as statement_trigger_is_exact,
+        exists (
+          select 1
+          from pg_catalog.pg_index as index_row
+          join pg_catalog.pg_class as index_relation
+            on index_relation.oid = index_row.indexrelid
+          join pg_catalog.pg_am as access_method
+            on access_method.oid = index_relation.relam
+          where index_row.indexrelid =
+              'private.catalog_import_staged_records_batch_record_sha256_idx'::regclass
+            and index_row.indrelid =
+              'private.catalog_import_staged_records'::regclass
+            and index_row.indisvalid
+            and index_row.indisready
+            and not index_row.indisunique
+            and index_row.indnkeyatts = 2
+            and index_row.indnatts = 2
+            and index_row.indpred is null
+            and index_row.indexprs is null
+            and access_method.amname = 'btree'
+            and pg_catalog.pg_get_indexdef(index_row.indexrelid) like
+              '%(batch_id, record_sha256)%'
+        ) as membership_lookup_index_is_exact,
+        exists (
+          select 1
+          from pg_catalog.pg_index as index_row
+          join pg_catalog.pg_class as index_relation
+            on index_relation.oid = index_row.indexrelid
+          join pg_catalog.pg_am as access_method
+            on access_method.oid = index_relation.relam
+          where index_row.indexrelid =
+              'private.catalog_import_entity_revisions_membership_authority_idx'::regclass
+            and index_row.indrelid =
+              'private.catalog_import_entity_revisions'::regclass
+            and index_row.indisvalid
+            and index_row.indisready
+            and not index_row.indisunique
+            and index_row.indnkeyatts = 5
+            and index_row.indnatts = 6
+            and index_row.indpred is null
+            and index_row.indexprs is null
+            and access_method.amname = 'btree'
+            and pg_catalog.pg_get_indexdef(index_row.indexrelid) like
+              '%(batch_id, staged_record_id, entity_type, entity_id, revision_action) INCLUDE (projection_sha256)%'
+        ) as authority_lookup_index_is_exact,
+        exists (
+          select 1
+          from pg_catalog.pg_index as index_row
+          join pg_catalog.pg_class as index_relation
+            on index_relation.oid = index_row.indexrelid
+          join pg_catalog.pg_am as access_method
+            on access_method.oid = index_relation.relam
+          where index_row.indexrelid =
+              'private.catalog_import_batch_effects_membership_authority_idx'::regclass
+            and index_row.indrelid =
+              'private.catalog_import_batch_effects'::regclass
+            and index_row.indisvalid
+            and index_row.indisready
+            and not index_row.indisunique
+            and index_row.indnkeyatts = 6
+            and index_row.indnatts = 7
+            and index_row.indpred is null
+            and index_row.indexprs is null
+            and access_method.amname = 'btree'
+            and pg_catalog.pg_get_indexdef(index_row.indexrelid) like
+              '%(staged_record_id, batch_id, promotion_event_id, entity_type, entity_id, effect_type) INCLUDE (after_sha256)%'
+        ) as effect_lookup_index_is_exact,
+        (
+          select procedure.provolatile = 'v'
+          from pg_catalog.pg_proc as procedure
+          where procedure.oid =
             'private.catalog_launch_append_product_mutations(uuid[],text,text,text,text,jsonb,jsonb)'::regprocedure
         ) as mutation_writer_is_volatile,
         (
@@ -2538,7 +2940,7 @@ select ok(
             'private.capture_catalog_launch_served_state_mutation()'::regprocedure
         ) as mutation_capture_is_volatile,
         (
-          select pg_catalog.position(
+          select position(
             'timezone=utc' in pg_catalog.lower(
               pg_catalog.array_to_string(procedure.proconfig, ',')
             )
@@ -2563,18 +2965,18 @@ select ok(
 select ok(
   (
     select
-      pg_catalog.position('2000' in definitions) > 0
-      and pg_catalog.position('100' in definitions) > 0
-      and pg_catalog.position('expected_eligible_record_count' in definitions) > 0
-      and pg_catalog.position(
+      position('2000' in definitions) > 0
+      and position('100' in definitions) > 0
+      and position('expected_eligible_record_count' in definitions) > 0
+      and position(
         'expected_prioritized_eligible_record_count' in definitions
       ) > 0
     from (
       select pg_catalog.lower(pg_catalog.string_agg(
-        pg_catalog.pg_get_constraintdef(constraint.oid), ' '
+        pg_catalog.pg_get_constraintdef(constraint_record.oid), ' '
       )) as definitions
-      from pg_catalog.pg_constraint as constraint
-      where constraint.conrelid =
+      from pg_catalog.pg_constraint as constraint_record
+      where constraint_record.conrelid =
         'private.catalog_launch_curation_campaigns'::regclass
     ) as campaign_constraints
   ),
@@ -2646,6 +3048,132 @@ select pg_temp.cat03_prepare_campaign(
   '58000000-0000-4000-8000-000000000080',
   'cat03-primary',
   true
+);
+
+create temp table cat03_statement_guard_record_backup on commit drop as
+select record.*
+from private.catalog_launch_curation_records as record
+where record.campaign_id = '58000000-0000-4000-8000-000000000080'
+order by record.product_record_sha256, record.id
+limit 2;
+
+create temp table cat03_released_guard_record_backup on commit drop as
+select record.*
+from private.catalog_launch_curation_records as record
+where record.campaign_id = '58000000-0000-4000-8000-000000000080'
+  and record.activation_decision = 'withhold_activation';
+
+select throws_ok(
+  $$do $cat03_wrong_root$
+  declare
+    v_campaign_id constant uuid :=
+      '58000000-0000-4000-8000-000000000080';
+    v_wrong_root constant text := pg_catalog.repeat('f', 64);
+  begin
+    execute 'alter table private.catalog_launch_curation_campaigns disable trigger catalog_launch_curation_campaigns_immutable';
+    update private.catalog_launch_curation_campaigns as campaign
+    set served_state_mutation_root_set_sha256 = v_wrong_root,
+        campaign_sha256 = pg_temp.cat03_campaign_sha256_with_root(
+          campaign.id, v_wrong_root
+        )
+    where campaign.id = v_campaign_id;
+    execute 'alter table private.catalog_launch_curation_campaigns enable trigger catalog_launch_curation_campaigns_immutable';
+
+    execute 'alter table private.catalog_launch_curation_records disable trigger catalog_launch_curation_records_immutable';
+    delete from private.catalog_launch_curation_records as record
+    using pg_temp.cat03_statement_guard_record_backup as backup
+    where record.id = backup.id;
+    execute 'alter table private.catalog_launch_curation_records enable trigger catalog_launch_curation_records_immutable';
+
+    insert into private.catalog_launch_curation_records
+    select backup.*
+    from pg_temp.cat03_statement_guard_record_backup as backup
+    order by backup.product_record_sha256, backup.id;
+  end
+  $cat03_wrong_root$;$$,
+  '55000',
+  'CATALOG_LAUNCH_CURATION_SERVED_STATE_MUTATION_ROOT_SET_INVALID',
+  'one bulk insert rejects a completed campaign whose sealed root set is wrong'
+);
+
+select is(
+  (
+    select pg_catalog.jsonb_build_object(
+      'count', count(*),
+      'rootMatches', pg_catalog.bool_and(
+        campaign.served_state_mutation_root_set_sha256 =
+          private.catalog_launch_curation_campaign_stored_mutation_root_set_sha256(
+            campaign.id
+          )
+      )
+    )
+    from private.catalog_launch_curation_campaigns as campaign
+    join private.catalog_launch_curation_records as record
+      on record.campaign_id = campaign.id
+    where campaign.id = '58000000-0000-4000-8000-000000000080'
+    group by campaign.id
+  ),
+  '{"count":2001,"rootMatches":true}'::jsonb,
+  'failed bulk root-set validation rolls back every inserted row and fixture mutation'
+);
+
+select throws_ok(
+  $$do $cat03_overfull$
+  declare
+    v_campaign_id constant uuid :=
+      '58000000-0000-4000-8000-000000000080';
+    v_root text;
+  begin
+    select campaign.served_state_mutation_root_set_sha256
+      into strict v_root
+    from private.catalog_launch_curation_campaigns as campaign
+    where campaign.id = v_campaign_id;
+
+    execute 'alter table private.catalog_launch_curation_campaigns disable trigger catalog_launch_curation_campaigns_immutable';
+    update private.catalog_launch_curation_campaigns as campaign
+    set expected_reviewed_record_count = 2000,
+        campaign_sha256 = pg_temp.cat03_campaign_sha256_with_root(
+          campaign.id, v_root, 2000
+        )
+    where campaign.id = v_campaign_id;
+    execute 'alter table private.catalog_launch_curation_campaigns enable trigger catalog_launch_curation_campaigns_immutable';
+
+    execute 'alter table private.catalog_launch_curation_records disable trigger catalog_launch_curation_records_immutable';
+    delete from private.catalog_launch_curation_records as record
+    where record.id = (
+      select backup.id
+      from pg_temp.cat03_statement_guard_record_backup as backup
+      order by backup.product_record_sha256, backup.id
+      limit 1
+    );
+    execute 'alter table private.catalog_launch_curation_records enable trigger catalog_launch_curation_records_immutable';
+
+    insert into private.catalog_launch_curation_records
+    select backup.*
+    from pg_temp.cat03_statement_guard_record_backup as backup
+    order by backup.product_record_sha256, backup.id
+    limit 1;
+  end
+  $cat03_overfull$;$$,
+  '55000',
+  'CATALOG_LAUNCH_CURATION_SERVED_STATE_MUTATION_ROOT_SET_INVALID',
+  'the statement guard rejects a campaign that exceeds its exact reviewed count'
+);
+
+select is(
+  (
+    select pg_catalog.jsonb_build_object(
+      'actual', count(*),
+      'expected', campaign.expected_reviewed_record_count
+    )
+    from private.catalog_launch_curation_campaigns as campaign
+    join private.catalog_launch_curation_records as record
+      on record.campaign_id = campaign.id
+    where campaign.id = '58000000-0000-4000-8000-000000000080'
+    group by campaign.id
+  ),
+  '{"actual":2001,"expected":2001}'::jsonb,
+  'overfull rejection is atomic and restores the exact sealed campaign ledger'
 );
 
 set local timezone = 'UTC';
@@ -2762,12 +3290,49 @@ select ok(
   'the rejected review row can never become positive serving authority'
 );
 
+create temp table cat03_campaign_validity_readback on commit drop as
+select
+  validity.record_id,
+  validity.activation_decision,
+  validity.structurally_valid as set_structurally_valid,
+  validity.live_valid as set_live_valid,
+  private.catalog_launch_curation_record_is_structurally_valid_v0058(
+    validity.record_id
+  ) as scalar_structurally_valid,
+  private.catalog_launch_curation_record_is_valid_v0058(
+    validity.record_id
+  ) as scalar_live_valid
+from private.catalog_launch_curation_campaign_record_validity(
+  '58000000-0000-4000-8000-000000000080'::uuid
+) as validity;
+
+select is(
+  (
+    select pg_catalog.jsonb_build_object(
+      'records', count(*),
+      'structuralMismatches', count(*) filter (
+        where validity.set_structurally_valid is distinct from
+          validity.scalar_structurally_valid
+      ),
+      'liveMismatches', count(*) filter (
+        where validity.set_live_valid is distinct from
+          validity.scalar_live_valid
+      )
+    )
+    from cat03_campaign_validity_readback as validity
+  ),
+  '{"liveMismatches":0,"records":2001,"structuralMismatches":0}'::jsonb,
+  'set-based release validation exactly matches both retained 0058 validators for every reviewed row'
+);
+
 select is(
   (
     select count(*)
-    from private.catalog_launch_curation_records as record
-    where record.campaign_id = '58000000-0000-4000-8000-000000000080'
-      and private.catalog_launch_curation_record_is_structurally_valid(record.id)
+    from cat03_campaign_validity_readback as validity
+    where validity.set_structurally_valid
+      and validity.scalar_structurally_valid
+      and validity.set_structurally_valid is not distinct from
+        validity.scalar_structurally_valid
   ),
   2001::bigint,
   'all reviewed rows independently revalidate their sealed structural contract'
@@ -2776,10 +3341,12 @@ select is(
 select is(
   (
     select count(*)
-    from private.catalog_launch_curation_records as record
-    where record.campaign_id = '58000000-0000-4000-8000-000000000080'
-      and record.activation_decision = 'approve_activation'
-      and private.catalog_launch_curation_record_is_valid(record.id)
+    from cat03_campaign_validity_readback as validity
+    where validity.activation_decision = 'approve_activation'
+      and validity.set_live_valid
+      and validity.scalar_live_valid
+      and validity.set_live_valid is not distinct from
+        validity.scalar_live_valid
   ),
   2000::bigint,
   'all and only 2,000 approved records pass the positive live-quality predicate'
@@ -2954,6 +3521,7 @@ select is(
           record.ingredient_list_id,
           record.product_snapshot_sha256,
           record.dependency_sha256,
+          record.served_state_mutation_root_sha256,
           record.demand_priority_rank,
           record.demand_priority_commitment_sha256,
           record.regulatory_classification,
@@ -2977,6 +3545,7 @@ select is(
         private.catalog_launch_curation_reviewed_record_mapping_sha256(
           campaign.release_id,
           record.product_record_sha256,
+          record.served_state_mutation_root_sha256,
           record.offline_base_sealed_record_sha256,
           record.database_base_record_sha256
         )
@@ -3097,6 +3666,7 @@ select is(
           record.offline_base_sealed_record_sha256,
           record.database_base_record_sha256,
           record.reviewed_record_mapping_sha256,
+          record.served_state_mutation_root_sha256,
           record.cat02_membership_proof_sha256,
           record.cat02_database_observation_sha256,
           record.cat02_verifier_signature_set_sha256,
@@ -3336,6 +3906,53 @@ select pg_temp.cat03_prepare_campaign(
   false
 );
 
+select pg_temp.cat03_prepare_campaign(
+  '58000000-0000-4000-8000-000000000083',
+  'cat03-multi-a',
+  false
+);
+select pg_temp.cat03_prepare_campaign(
+  '58000000-0000-4000-8000-000000000084',
+  'cat03-multi-b',
+  false
+);
+
+select lives_ok(
+  $$select pg_temp.cat03_insert_planned_records(array[
+    '58000000-0000-4000-8000-000000000084'::uuid,
+    '58000000-0000-4000-8000-000000000083'::uuid
+  ])$$,
+  'one INSERT may span two campaigns through the transition-table guard'
+);
+
+select is(
+  (
+    select pg_catalog.jsonb_object_agg(counts.campaign_id, counts.row_count)
+    from (
+      select record.campaign_id::text as campaign_id, count(*) as row_count
+      from private.catalog_launch_curation_records as record
+      where record.campaign_id in (
+        '58000000-0000-4000-8000-000000000083',
+        '58000000-0000-4000-8000-000000000084'
+      )
+      group by record.campaign_id
+    ) as counts
+  ),
+  '{
+    "58000000-0000-4000-8000-000000000083": 1,
+    "58000000-0000-4000-8000-000000000084": 1
+  }'::jsonb,
+  'the multi-campaign transition table preserves exactly one row per incomplete campaign'
+);
+
+select is(
+  pg_temp.cat03_adversarial_validity_parity(
+    '58000000-0000-4000-8000-000000000083'::uuid
+  ),
+  '{"productMutationParity":true,"tokenMutationParity":true}'::jsonb,
+  'set-based and retained 0058 validators fail closed identically during independent adversarial mutations'
+);
+
 select throws_ok(
   $$select pg_temp.cat03_release_campaign(
     '58000000-0000-4000-8000-000000000082'::uuid
@@ -3363,6 +3980,74 @@ select throws_ok(
   'CATALOG_LAUNCH_CURATION_CAMPAIGN_RELEASE_GATE_CLOSED',
   'a substituted expected record-set root closes release atomically'
 );
+
+select pg_catalog.set_config(
+  'app.cat03_cache_proof_record_id',
+  (
+    select record.id::text
+    from private.catalog_launch_curation_records as record
+    where record.campaign_id =
+        '58000000-0000-4000-8000-000000000080'::uuid
+      and record.product_id = pg_catalog.current_setting(
+        'app.cat03_test_product_id'
+      )::uuid
+  ),
+  true
+);
+
+create temporary table catalog_launch_curation_release_validation_cache (
+  cache_key text not null,
+  record_id uuid primary key,
+  activation_decision text not null,
+  structurally_valid boolean not null,
+  live_valid boolean not null
+) on commit drop;
+
+insert into pg_temp.catalog_launch_curation_release_validation_cache (
+  cache_key, record_id, activation_decision, structurally_valid, live_valid
+) values (
+  'cat03-owner-cache-proof',
+  pg_catalog.current_setting('app.cat03_cache_proof_record_id')::uuid,
+  'approve_activation',
+  false,
+  false
+);
+
+select pg_catalog.set_config(
+  'app.catalog_launch_curation_release_validation_cache',
+  'cat03-owner-cache-proof',
+  true
+);
+
+select is(
+  pg_catalog.jsonb_build_object(
+    'ownerSession', session_user = (
+      select role.rolname
+      from pg_catalog.pg_proc as procedure
+      join pg_catalog.pg_roles as role on role.oid = procedure.proowner
+      where procedure.oid =
+        'public.release_catalog_launch_curation_campaign(uuid,text,text,text,text,text,text,text)'::regprocedure
+    ),
+    'cachedStructural',
+      private.catalog_launch_curation_record_is_structurally_valid(
+        pg_catalog.current_setting('app.cat03_cache_proof_record_id')::uuid
+      ),
+    'cachedLive', private.catalog_launch_curation_record_is_valid(
+      pg_catalog.current_setting('app.cat03_cache_proof_record_id')::uuid
+    ),
+    'retainedStructural',
+      private.catalog_launch_curation_record_is_structurally_valid_v0058(
+        pg_catalog.current_setting('app.cat03_cache_proof_record_id')::uuid
+      )
+  ),
+  '{"cachedLive":false,"cachedStructural":false,"ownerSession":true,"retainedStructural":true}'::jsonb,
+  'the exact migration-owner session consumes only its keyed transaction-local release cache'
+);
+
+select pg_catalog.set_config(
+  'app.catalog_launch_curation_release_validation_cache', '', true
+);
+drop table pg_temp.catalog_launch_curation_release_validation_cache;
 
 select ok(
   (
@@ -3392,6 +4077,72 @@ select ok(
     where campaign.id = '58000000-0000-4000-8000-000000000080'
   ),
   'one exact primary release atomically opens the complete 2,000-product campaign'
+);
+
+select throws_ok(
+  $$do $cat03_released_insert$
+  begin
+    execute 'alter table private.catalog_launch_curation_records disable trigger catalog_launch_curation_records_immutable';
+    delete from private.catalog_launch_curation_records as record
+    where record.id = (
+      select backup.id
+      from pg_temp.cat03_released_guard_record_backup as backup
+      order by backup.product_record_sha256, backup.id
+      limit 1
+    );
+    execute 'alter table private.catalog_launch_curation_records enable trigger catalog_launch_curation_records_immutable';
+
+    insert into private.catalog_launch_curation_records
+    select backup.*
+    from pg_temp.cat03_released_guard_record_backup as backup
+    order by backup.product_record_sha256, backup.id
+    limit 1;
+  end
+  $cat03_released_insert$;$$,
+  '55000',
+  'CATALOG_LAUNCH_CURATION_RELEASED_CAMPAIGN_SEALED',
+  'the retained row guard rejects insertion into a globally released campaign'
+);
+
+select is(
+  (
+    select pg_catalog.jsonb_build_object(
+      'records', count(*),
+      'immutableTriggerEnabled', (
+        select trigger_row.tgenabled = 'O'
+        from pg_catalog.pg_trigger as trigger_row
+        where trigger_row.tgrelid =
+            'private.catalog_launch_curation_records'::regclass
+          and trigger_row.tgname =
+            'catalog_launch_curation_records_immutable'
+      ),
+      'rowGuardEnabled', (
+        select trigger_row.tgenabled = 'O'
+        from pg_catalog.pg_trigger as trigger_row
+        where trigger_row.tgrelid =
+            'private.catalog_launch_curation_records'::regclass
+          and trigger_row.tgname =
+            'catalog_launch_curation_records_insert_guard'
+      ),
+      'statementGuardEnabled', (
+        select trigger_row.tgenabled = 'O'
+        from pg_catalog.pg_trigger as trigger_row
+        where trigger_row.tgrelid =
+            'private.catalog_launch_curation_records'::regclass
+          and trigger_row.tgname =
+            'catalog_launch_curation_records_insert_statement_guard'
+      )
+    )
+    from private.catalog_launch_curation_records as record
+    where record.campaign_id = '58000000-0000-4000-8000-000000000080'
+  ),
+  '{
+    "immutableTriggerEnabled": true,
+    "records": 2001,
+    "rowGuardEnabled": true,
+    "statementGuardEnabled": true
+  }'::jsonb,
+  'released-insert failure rolls back the delete and leaves every guard enabled'
 );
 
 select is(
@@ -3454,7 +4205,111 @@ select is(
   '{"aliasLookup":0,"lookup":1,"search":1}'::jsonb,
   'bounded service reads expose only the exact live primary barcode after release'
 );
+
+select is(
+  (
+    select pg_catalog.jsonb_build_object(
+      'rowKeys', (
+        select pg_catalog.jsonb_agg(keys.key order by keys.key)
+        from pg_catalog.jsonb_object_keys(pg_catalog.to_jsonb(result)) as keys(key)
+      ),
+      'catalogSourceKeys', (
+        select pg_catalog.jsonb_agg(keys.key order by keys.key)
+        from pg_catalog.jsonb_object_keys(result.catalog_sources) as keys(key)
+      ),
+      'sourceIdMatches',
+        result.catalog_source_id = (result.catalog_sources ->> 'id')::uuid,
+      'sourceKey', result.catalog_sources ->> 'source_key'
+    )
+    from public.lookup_catalog_product_by_barcode(
+      pg_catalog.current_setting('app.cat03_test_barcode')
+    ) as result
+  ),
+  pg_catalog.jsonb_build_object(
+    'rowKeys', '["barcode","brand","catalog_source_id","catalog_sources","category","data_quality_score","default_pao_months","id","ingredient_parse_confidence","ingredient_parse_status","name","product_pao_expiry","quality_grade","region","review_status","source","source_ref","source_snapshot_date","source_url"]'::jsonb,
+    'catalogSourceKeys', '["attribution_text","attribution_url","display_name","id","source_key"]'::jsonb,
+    'sourceIdMatches', true,
+    'sourceKey', 'open_beauty_facts'
+  ),
+  'the active CAT-03 lookup returns the exact bounded row and source-attribution shape'
+);
+
+select is(
+  (
+    select pg_catalog.jsonb_build_object(
+      'count', pg_catalog.jsonb_array_length(result.product_pao_expiry),
+      'paoMonths', (result.product_pao_expiry -> 0 ->> 'pao_months')::integer,
+      'region', result.product_pao_expiry -> 0 ->> 'region',
+      'reviewStatus', result.product_pao_expiry -> 0 ->> 'review_status',
+      'sourceIdMatches',
+        (result.product_pao_expiry -> 0 ->> 'source_id')::uuid = result.catalog_source_id
+    )
+    from public.lookup_catalog_product_by_barcode(
+      pg_catalog.current_setting('app.cat03_test_barcode')
+    ) as result
+  ),
+  '{"count":1,"paoMonths":12,"region":"US","reviewStatus":"reviewed","sourceIdMatches":true}'::jsonb,
+  'the active CAT-03 lookup exposes only reviewed same-territory freshness from an approved source'
+);
 reset role;
+
+set session authorization service_role;
+create temporary table catalog_launch_curation_release_validation_cache (
+  cache_key text not null,
+  record_id uuid primary key,
+  activation_decision text not null,
+  structurally_valid boolean not null,
+  live_valid boolean not null
+) on commit drop;
+
+insert into pg_temp.catalog_launch_curation_release_validation_cache (
+  cache_key, record_id, activation_decision, structurally_valid, live_valid
+) values (
+  'cat03-service-role-forged-cache',
+  pg_catalog.current_setting('app.cat03_cache_proof_record_id')::uuid,
+  'approve_activation',
+  false,
+  false
+);
+
+select pg_catalog.set_config(
+  'app.catalog_launch_curation_release_validation_cache',
+  'cat03-service-role-forged-cache',
+  true
+);
+
+select pg_catalog.set_config(
+  'app.cat03_service_cache_poison_result',
+  pg_catalog.jsonb_build_object(
+    'sessionUser', session_user,
+    'currentUser', current_user,
+    'lookup', (
+      select count(*)
+      from public.lookup_catalog_product_by_barcode(
+        pg_catalog.current_setting('app.cat03_test_barcode')
+      )
+    ),
+    'search', (
+      select count(*)
+      from public.search_catalog_products('launch 0001', 20)
+    )
+  )::text,
+  true
+);
+
+select pg_catalog.set_config(
+  'app.catalog_launch_curation_release_validation_cache', '', true
+);
+drop table pg_temp.catalog_launch_curation_release_validation_cache;
+reset session authorization;
+
+select is(
+  pg_catalog.current_setting(
+    'app.cat03_service_cache_poison_result'
+  )::jsonb,
+  '{"currentUser":"service_role","lookup":1,"search":1,"sessionUser":"service_role"}'::jsonb,
+  'an actual service_role session cannot poison scalar validity through a forged temporary cache and GUC'
+);
 
 set local role authenticated;
 select is(
@@ -3485,6 +4340,21 @@ select is(
         'app.cat03_test_product_id'
       )::uuid
     ),
+    'liveFreshness', (
+      select count(*) from public.product_pao_expiry
+      where product_id = pg_catalog.current_setting(
+        'app.cat03_test_product_id'
+      )::uuid
+    ),
+    'mismatchedFreshness', (
+      select count(*)
+      from public.product_pao_expiry as freshness
+      join public.products as product on product.id = freshness.product_id
+      where freshness.product_id = pg_catalog.current_setting(
+        'app.cat03_test_product_id'
+      )::uuid
+        and freshness.source_id <> product.source_id
+    ),
     'heldProduct', (
       select count(*) from public.products
       where id = pg_catalog.current_setting(
@@ -3498,8 +4368,8 @@ select is(
       )::uuid
     )
   ),
-  '{"aliasBarcode":0,"heldList":0,"heldProduct":0,"liveBarcode":1,"liveList":1,"liveProduct":1,"liveToken":2}'::jsonb,
-  'authenticated RLS exposes live primary children, hides aliases, and withholds the rejected row'
+  '{"aliasBarcode":0,"heldList":0,"heldProduct":0,"liveBarcode":1,"liveFreshness":1,"liveList":1,"liveProduct":1,"liveToken":2,"mismatchedFreshness":0}'::jsonb,
+  'authenticated RLS exposes only same-source live freshness and children, hides aliases, and withholds the rejected row'
 );
 reset role;
 
@@ -3546,8 +4416,8 @@ from public.catalog_corrections
 where id = '58000000-0000-4000-8000-000000000090';
 update public.catalog_corrections
 set description = 'Reporter text that is irrelevant to the serving hold.',
-    proposed_payload = '{"untrusted":"personal-free-text"}'::jsonb,
-    client_context = '{"device":"irrelevant"}'::jsonb
+    proposed_payload = '{"qualityIssue":"packaging typo"}'::jsonb,
+    client_context = '{"platform":"ios"}'::jsonb
 where id = '58000000-0000-4000-8000-000000000090';
 insert into cat03_test_state (state_key, value_text)
 select 'hold_irrelevant_root_after',

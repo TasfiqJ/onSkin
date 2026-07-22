@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
+import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs';
 import {
   createNativeOcrEvidenceTemplate,
   normalizeNativeOcrEvidencePath,
   validateNativeOcrEvidence,
 } from './native-ocr-evidence-contract.mjs';
-import { gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 
 const root = process.cwd();
 const strict = process.argv.includes('--strict');
@@ -26,35 +26,43 @@ function normalizedJson(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
 
-function currentGitSha() {
-  try {
-    return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
-  } catch {
-    return null;
-  }
+function sha256(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
 }
 
-function sourceLineage(sourceGitSha, currentSha) {
-  if (!/^[0-9a-f]{40}$/i.test(String(sourceGitSha ?? '')) || !currentSha) {
-    return { isAncestor: false, changedPaths: null };
+function appendGovernedRoleErrors(result, chain, evidencePath, evidenceBytes) {
+  if (chain.status !== 'pass' || !chain.ledger) {
+    result.errors.push(`Governed evidence chain is invalid: ${chain.errors.join(' | ')}`);
+    return;
   }
-  const ancestor = spawnSync('git', ['merge-base', '--is-ancestor', sourceGitSha, currentSha], {
-    cwd: root,
-    encoding: 'utf8',
-  });
-  if (ancestor.status !== 0) return { isAncestor: false, changedPaths: null };
-  try {
-    const changedPaths = execFileSync(
-      'git',
-      ['-c', 'core.quotepath=false', 'diff', '--name-only', `${sourceGitSha}..${currentSha}`],
-      { cwd: root, encoding: 'utf8' },
-    )
-      .split(/\r?\n/)
-      .map((path) => path.trim().replaceAll('\\', '/'))
-      .filter(Boolean);
-    return { isAncestor: true, changedPaths };
-  } catch {
-    return { isAncestor: true, changedPaths: null };
+  const role = 'phase5-native-ocr';
+  const expected = [
+    { path: evidencePath, sha256: sha256(evidenceBytes) },
+    ...result.artifacts.map(({ path, sha256: digest }) => ({ path, sha256: digest })),
+  ];
+  const expectedByPath = new Map(expected.map((entry) => [entry.path, entry]));
+  if (expectedByPath.size !== expected.length) {
+    result.errors.push('Native OCR evidence references duplicate governed paths.');
+    return;
+  }
+  const roleEntries = chain.ledger.entries.filter((entry) => entry.role === role);
+  const ledgerByPath = new Map(roleEntries.map((entry) => [entry.path, entry]));
+  for (const expectedEntry of expected) {
+    const ledgerEntry = ledgerByPath.get(expectedEntry.path);
+    if (!ledgerEntry) {
+      result.errors.push(
+        `Native OCR evidence path is not an exact ${role} ledger entry: ${expectedEntry.path}.`,
+      );
+    } else if (ledgerEntry.sha256 !== expectedEntry.sha256) {
+      result.errors.push(`Native OCR ledger digest does not match ${expectedEntry.path}.`);
+    }
+  }
+  for (const ledgerEntry of roleEntries) {
+    if (!expectedByPath.has(ledgerEntry.path)) {
+      result.errors.push(
+        `Native OCR ledger contains an unreferenced ${role} entry: ${ledgerEntry.path}.`,
+      );
+    }
   }
 }
 
@@ -112,8 +120,10 @@ if (!existsSync(abs(evidencePath))) {
 }
 
 let evidence;
+let evidenceBytes;
 try {
-  evidence = JSON.parse(readFileSync(abs(evidencePath), 'utf8'));
+  evidenceBytes = readFileSync(abs(evidencePath));
+  evidence = JSON.parse(evidenceBytes.toString('utf8'));
 } catch (error) {
   console.error(
     `FAIL Native OCR evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
@@ -121,16 +131,10 @@ try {
   process.exit(1);
 }
 
-const currentSha = currentGitSha();
-const lineage = sourceLineage(evidence.sourceGitSha, currentSha);
 const expectedBuildId = String(process.env.PHASE5_IOS_BUILD_ID ?? '').trim();
 const expectedBuildProfile = String(process.env.PHASE5_IOS_BUILD_PROFILE ?? '').trim();
 const result = validateNativeOcrEvidence(evidence, {
   root,
-  currentGitSha: currentSha,
-  sourceGitShaIsAncestor: lineage.isAncestor,
-  changedPathsSinceSource: lineage.changedPaths,
-  evidencePath,
   expectedBuildId: expectedBuildId || null,
   expectedBuildProfile: expectedBuildProfile || null,
 });
@@ -148,21 +152,28 @@ for (const [value, message] of [
   if (strict) result.errors.push(message);
   else result.warnings.push(message);
 }
-let gitStatus = 'unknown';
-try {
-  gitStatus = gitStatusExcludingGeneratedEvidence([
-    evidencePath,
-    ...result.artifacts.map(({ path }) => path),
-  ]);
-  if (gitStatus) {
-    const message =
-      'Native OCR evidence was checked from a dirty worktree outside the evidence artifact and generated packet allowlist; it cannot clear strict release QA.';
-    if (strict) result.errors.push(message);
-    else result.warnings.push(message);
+
+const releaseCandidateDir = String(process.env.PHASE9_RELEASE_CANDIDATE_DIR ?? '').trim();
+let chain = null;
+if (!releaseCandidateDir) {
+  result.errors.push(
+    'PHASE9_RELEASE_CANDIDATE_DIR is required to validate the governed S-to-E evidence chain.',
+  );
+} else {
+  try {
+    chain = auditGovernedEvidenceChain({
+      root,
+      sourceGitSha: String(evidence.sourceGitSha ?? ''),
+      releaseCandidateDir,
+    });
+    appendGovernedRoleErrors(result, chain, evidencePath, evidenceBytes);
+  } catch (error) {
+    result.errors.push(
+      `Governed evidence chain could not be validated: ${error instanceof Error ? error.message : String(error)}.`,
+    );
   }
-} catch {
-  result.errors.push('Native OCR evidence could not inspect Git worktree cleanliness.');
 }
+
 for (const warning of result.warnings) console.warn(`WARN ${warning}`);
 for (const error of result.errors) console.error(`FAIL ${error}`);
 
@@ -172,7 +183,7 @@ console.log(
 );
 console.log(`RTL reading-order corpus: ${result.summary.rtlCorpusItems}/2 minimum labels.`);
 console.log(`Verified attachments: ${result.artifacts.length}/7.`);
-console.log(`Git status outside validated evidence: ${gitStatus || 'clean'}.`);
+console.log(`Governed evidence chain: ${chain?.status ?? 'not-validated'}.`);
 
 if (result.errors.length > 0) {
   console.error(

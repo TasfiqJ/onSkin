@@ -35,17 +35,26 @@ Implemented locally:
 - Product search, barcode lookup, and correction-report Edge Function scaffolds
   plus migration `0056`'s shared fail-closed serving gate for positive source,
   review, quality, eligibility, mapping, and live-correction evidence.
-- CAT-02's local content-addressed stage-envelope contract and migration
-  `0057`: sealed idempotent staging, owner-only review/promotion/rollback,
+- CAT-02's local content-addressed stage-envelope contract, foundational
+  migration `0057`, and forward migration `0061`: sealed idempotent staging,
+  owner-only review/promotion/rollback,
   exact-key conflict handling, immutable projection lineage, direct API-role
   catalog-DML denial, positive ingredient/reference read gates, and
   non-destructive batch retirement.
-- CAT-03's local curation-envelope/quality-report contracts and migration
-  `0058`: sealed curation campaigns, exact CAT-01/CAT-02 and database-snapshot
+- CAT-03's local curation-envelope/quality-report contracts, foundational
+  migration `0058`, and forward migration `0062`: sealed curation campaigns,
+  exact CAT-01/CAT-02 and database-snapshot
   bindings, a hard 2,000-record/category/priority floor, owner-only replay-safe
   non-serving product authorization, one exact-set atomic campaign release,
   signed readback, immutable retirement history, RPC-only `service_role` access, and a
-  positive active-campaign requirement in the serving dependency chain.
+  positive active-campaign requirement in the serving dependency chain, plus
+  three covered authority indexes, semantic-preserving staged-digest pushdown,
+  and an indexed `AFTER STATEMENT` overflow and expected-count completion-root
+  guard. The isolated PostgreSQL 15/17 forward-upgrade rehearsal constructs a
+  minimal pre-`0062` fixture and includes the exact `0062` bytes; it is not an
+  exact `0061`-schema, full-chain, or hosted equivalence proof.
+  Partial governed inserts remain allowed. Current review/readback
+  artifacts must attest exact latest migration `20260722000062`.
   Beta demand can prioritize independently sourced rows but can never become a
   product fact.
 - Mobile shelf source/quality disclosure, search fallback, parser-backed OCR, and report issue flow.
@@ -85,7 +94,7 @@ The implementation intentionally keeps production catalog use blocked until:
   sunscreen/OTC-adjacent review bind every applicable row;
 - the two-session hosted CAT-02 staging/promotion/serialization/rollback drill
   passes with complete redacted receipts and zero projection drift;
-- clean local and hosted CAT-03 migration-`0058` reset, pgTAP, two-connection
+- clean local and hosted full-chain reset through `0062`, current pgTAP, two-connection
   staging/release/supersession race, direct-service-role denial, serving,
   retirement, and rollback evidence passes;
 - the authoritative CAT-03 coverage/quality report exists for the sealed
@@ -144,11 +153,12 @@ clinical, Apple, or commercial approval.
   signed required-category floor, and at least 100 prioritized eligible rows.
 - Product recommendations use only active-curation, eligible, reviewed,
   dependency-complete products.
-- Hosted database evidence through migration `0057` proves the import
-  lifecycle, rollback/reference preservation, and barcode, search,
+- Hosted database evidence from the full current chain through `0062`, including
+  `0061`, proves the import lifecycle, rollback/reference preservation, and barcode, search,
   recommendation, product, ingredient, synonym, and child reads fail closed
   for every held source/record.
-- Hosted database evidence through migration `0058` proves immutable campaign
+- Hosted database evidence through migration `0062`, with `0058` retained as
+  the foundational CAT-03 authority, proves immutable campaign
   scoped staging, exact-set atomic release/supersession/retirement, signed
   readback, exact lineage, replay/race handling, direct-table denial for
   `service_role`, authenticated RLS allow/deny proof, and immediate fail-closed

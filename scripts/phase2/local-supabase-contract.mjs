@@ -18,9 +18,17 @@ const [
   runner,
   targetGuard,
   tests,
+  catalogImportLifecycleMigration,
+  catalogScanMinimizationMigration,
+  catalogCompatibilityMigration,
+  catalogCurationStatementGuardMigration,
+  catalogImportLifecycleTests,
+  catalogLaunchCurationTests,
+  catalogServingGateTests,
   freshnessTests,
   freshnessMigration,
   freshnessRehearsal,
+  catalogCurationRehearsal,
   accountDeletionMigration,
   readme,
   workflow,
@@ -31,9 +39,17 @@ const [
   read('scripts/phase2/local-supabase-reset.mjs'),
   read('scripts/phase2/local-supabase-target-guard.mjs'),
   read('supabase/tests/database/schema_contract.test.sql'),
+  read('supabase/migrations/20260717000057_catalog_import_lifecycle.sql'),
+  read('supabase/migrations/20260718000059_catalog_scan_minimization.sql'),
+  read('supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql'),
+  read('supabase/migrations/20260722000062_catalog_curation_statement_guard.sql'),
+  read('supabase/tests/database/catalog_import_lifecycle.test.sql'),
+  read('supabase/tests/database/catalog_launch_curation.test.sql'),
+  read('supabase/tests/database/catalog_serving_gate.test.sql'),
   read('supabase/tests/database/cat07_truthful_freshness.test.sql'),
   read('supabase/migrations/20260718000060_cat07_truthful_freshness.sql'),
   read('scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql'),
+  read('scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -46,19 +62,39 @@ const migrations = (await readdir(join(root, 'supabase', 'migrations')))
   .filter((name) => /^\d{14}_[a-z0-9_]+\.sql$/u.test(name))
   .sort((a, b) => a.localeCompare(b));
 
+function isCanonicalGtin(value) {
+  if (!/^\d{8}$|^\d{12,14}$/u.test(value)) return false;
+  if ((value.length === 13 || value.length === 14) && value.startsWith('0')) return false;
+  const digits = [...value].map(Number);
+  const actualCheckDigit = digits.pop();
+  let weightedSum = 0;
+  let weight = 3;
+  for (let index = digits.length - 1; index >= 0; index -= 1) {
+    weightedSum += digits[index] * weight;
+    weight = weight === 3 ? 1 : 3;
+  }
+  return actualCheckDigit === (10 - (weightedSum % 10)) % 10;
+}
+
 check(packageJson.devDependencies?.supabase === '2.109.1', 'Pin Supabase CLI 2.109.1 exactly.');
 check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 59, `Expected 59 migration files; found ${migrations.length}.`);
+check(migrations.length === 61, `Expected 61 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260718000060_'),
-  'The latest migration must remain 20260718000060.',
+  migrations.at(-1)?.startsWith('20260722000062_'),
+  'The latest migration must remain 20260722000062.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
   'Migration versions must be unique.',
+);
+check(
+  /or \(\s*p_correction_type = 'wrong_match'[\s\S]{0,220}?or \(p_barcode is null and v_product_name is null\)\s*\)\s*\)\s*\) then\s*raise exception 'CATALOG_REPORT_INPUT_INVALID'/u.test(
+    catalogScanMinimizationMigration,
+  ),
+  'Migration 0059 must keep the submit_catalog_correction outer input-validation IF syntactically closed.',
 );
 check(
   !/enable_leaked_password_protection\s*=/u.test(config),
@@ -132,9 +168,173 @@ check(
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
 check(/DB-08 remains open/u.test(runner), 'Temporary type output must not close DB-08.');
 
+const cat02ProductFixtureGtins = [
+  ...catalogImportLifecycleTests.matchAll(/pg_temp\.cat02_product\(\s*'(\d{8,14})'/gu),
+].map((match) => match[1]);
+check(
+  !/'benzoyl_peroxide'/u.test(catalogImportLifecycleMigration) &&
+    /v_record ->> 'category' not in \([\s\S]{0,180}'benzoyl_peroxide'/u.test(
+      catalogCompatibilityMigration,
+    ) &&
+    /else 'benzoyl_peroxide'/u.test(catalogLaunchCurationTests),
+  'Immutable migration 0057 must stay unchanged while forward migration 0061 admits signed benzoyl-peroxide candidates for later evidence-gated CAT-03 curation.',
+);
+check(
+  /foreach v_relation in array array\['shelf_scans', 'catalog_corrections'\]/u.test(
+    catalogCompatibilityMigration,
+  ) &&
+    /drop policy %I on public\.%I/u.test(catalogCompatibilityMigration) &&
+    /to_jsonb\(old\) ->> 'catalog_product_id'/u.test(catalogCompatibilityMigration) &&
+    /revoke all on table public\.shelf_scans[\s\S]*?service_role/u.test(
+      catalogCompatibilityMigration,
+    ) &&
+    /grant select on table public\.catalog_corrections to service_role/u.test(
+      catalogCompatibilityMigration,
+    ) &&
+    /freshness\.source_id = products\.source_id/u.test(catalogCompatibilityMigration) &&
+    (
+      catalogCompatibilityMigration.match(
+        /pao_source in \('label', 'brand_label', 'catalog'\)/gu,
+      ) ?? []
+    ).length === 2 &&
+    (catalogCompatibilityMigration.match(/pao_months between 1 and 120/gu) ?? []).length === 2 &&
+    /parent_product\.source_id = product_pao_expiry\.source_id/u.test(
+      catalogCompatibilityMigration,
+    ) &&
+    /^begin;[\s\S]*commit;\s*$/u.test(catalogCompatibilityMigration),
+  'Forward migration 0061 must converge the stage enum, shared trigger, exact PAO parent-source provenance, residual-policy cleanup, and sealed relation privileges.',
+);
+check(
+  /create index catalog_import_staged_records_batch_record_sha256_idx[\s\S]*?\(batch_id, record_sha256\)/u.test(
+    catalogCurationStatementGuardMigration,
+  ) &&
+    /create index catalog_import_entity_revisions_membership_authority_idx[\s\S]*?batch_id,[\s\S]*?staged_record_id,[\s\S]*?entity_type,[\s\S]*?entity_id,[\s\S]*?revision_action[\s\S]*?include \(projection_sha256\)/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /create index catalog_import_batch_effects_membership_authority_idx[\s\S]*?staged_record_id,[\s\S]*?batch_id,[\s\S]*?promotion_event_id,[\s\S]*?entity_type,[\s\S]*?entity_id,[\s\S]*?effect_type[\s\S]*?include \(after_sha256\)/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /staged\.record_sha256 = target\.record_sha256[\s\S]*?staged\.record_sha256 = p_cat02_stage_record_sha256/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /revoke all on function[\s\S]*?catalog_launch_curation_membership_evidence_sha256\([\s\S]*?uuid,[\s\S]*?uuid,[\s\S]*?text,[\s\S]*?text,[\s\S]*?text,[\s\S]*?text,[\s\S]*?uuid,[\s\S]*?text,[\s\S]*?text,[\s\S]*?text,[\s\S]*?text,[\s\S]*?text[\s\S]*?public, anon, authenticated, service_role/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /create or replace function[\s\S]*?guard_catalog_launch_curation_record_insert_statement\(\)/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /referencing new table as inserted_catalog_curation_records/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /tg_op <> 'INSERT' or tg_level <> 'ROW'/u.test(catalogCurationStatementGuardMigration) &&
+    /tg_op <> 'INSERT' or tg_level <> 'STATEMENT'/u.test(catalogCurationStatementGuardMigration) &&
+    /select distinct inserted_record\.campaign_id[\s\S]*?order by inserted_record\.campaign_id/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /v_actual_record_count > v_expected_record_count/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /v_expected_mutation_root_set_sha256 is distinct from[\s\S]*?v_actual_mutation_root_set_sha256/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /revoke all on function[\s\S]*?guard_catalog_launch_curation_record_insert_statement\(\)[\s\S]*?public, anon, authenticated, service_role/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /campaign_authority as materialized/u.test(catalogCurationStatementGuardMigration) &&
+    /approved_sources as materialized/u.test(catalogCurationStatementGuardMigration) &&
+    /structurally_valid_records as materialized/u.test(catalogCurationStatementGuardMigration) &&
+    /live_valid_records as materialized/u.test(catalogCurationStatementGuardMigration) &&
+    /rename to catalog_launch_curation_record_is_structurally_valid_v0058/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /catalog_launch_curation_release_validation_cache/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /session_user = v_release_owner/u.test(catalogCurationStatementGuardMigration) &&
+    /rename to release_catalog_launch_curation_campaign_v0058/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /catalog-launch-curation-global[\s\S]*?catalog-launch-curation-campaign:/u.test(
+      catalogCurationStatementGuardMigration,
+    ) &&
+    /^begin;[\s\S]*commit;\s*$/u.test(catalogCurationStatementGuardMigration),
+  'Forward migration 0062 must preserve per-row CAT-03 gates, validate each completed root once per statement, and reuse one owner-session-only materialized release validation pass.',
+);
+check(
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260722000062_catalog_curation_statement_guard\.sql/u.test(
+    catalogCurationRehearsal,
+  ) &&
+    /catalog_import_staged_records_batch_record_sha256_idx/u.test(catalogCurationRehearsal) &&
+    /catalog_import_entity_revisions_membership_authority_idx/u.test(catalogCurationRehearsal) &&
+    /catalog_import_batch_effects_membership_authority_idx/u.test(catalogCurationRehearsal) &&
+    /INSERT \.\.\. SELECT is a bounded statement-level no-op/u.test(catalogCurationRehearsal) &&
+    /CATALOG_0062_OVERFLOW_NOT_ROLLED_BACK/u.test(catalogCurationRehearsal) &&
+    /CATALOG_0062_ROOT_MISMATCH_NOT_ROLLED_BACK/u.test(catalogCurationRehearsal) &&
+    /CATALOG_0062_SET_VALIDATION_WRAPPER_INVALID/u.test(catalogCurationRehearsal) &&
+    /catalog-curation-0062-upgrade-postgres-rehearsal: pass/u.test(catalogCurationRehearsal) &&
+    /database:\s*catalog_curation_upgrade_0062[\s\S]{0,160}script:\s*catalog-curation-0062-upgrade-postgres-rehearsal\.sql/u.test(
+      workflow,
+    ),
+  '0062 exact-byte PostgreSQL 15/17 rehearsal must cover indexed authority, statement boundaries, rollback, ACL, and trigger metadata.',
+);
+check(
+  /select plan\(218\)/u.test(catalogImportLifecycleTests) &&
+    /latest forward migration admits the signed benzoyl-peroxide category override/u.test(
+      catalogImportLifecycleTests,
+    ) &&
+    /service staging RPC accepts an evidence-reviewed benzoyl-peroxide candidate/u.test(
+      catalogImportLifecycleTests,
+    ) &&
+    /staging RPC still rejects every unsupported category value/u.test(
+      catalogImportLifecycleTests,
+    ) &&
+    /p_category text default 'moisturiser_tube'/u.test(catalogImportLifecycleTests) &&
+    cat02ProductFixtureGtins.length > 0 &&
+    cat02ProductFixtureGtins.every(isCanonicalGtin),
+  'CAT-02 positive product fixtures must use the signed category taxonomy and canonical checksum-valid GTINs.',
+);
+check(
+  /select plan\(58\)/u.test(catalogServingGateTests) &&
+    catalogServingGateTests.includes("'56000000000016'") &&
+    !catalogServingGateTests.includes("'05600000000010'") &&
+    isCanonicalGtin('56000000000016') &&
+    /otherwise eligible product remains hidden without an exact active CAT-03 product and campaign head/u.test(
+      catalogServingGateTests,
+    ) &&
+    /product without CAT-03 serving authority cannot leak freshness evidence/u.test(
+      catalogServingGateTests,
+    ) &&
+    /authenticated PAO RLS excludes wrong-source, category-default, unknown, null, and out-of-range evidence/u.test(
+      catalogServingGateTests,
+    ) &&
+    !/from public\.recommendable_catalog_products/u.test(catalogServingGateTests),
+  'The legacy serving fixture must use a canonical GTIN and explicitly prove no-head fail-closed behavior without direct legacy-view reads.',
+);
+check(
+  /select plan\(99\)/u.test(catalogLaunchCurationTests) &&
+    /exact migration-owner session consumes only its keyed transaction-local release cache/u.test(
+      catalogLaunchCurationTests,
+    ) &&
+    /actual service_role session cannot poison scalar validity through a forged temporary cache and GUC/u.test(
+      catalogLaunchCurationTests,
+    ) &&
+    /\{"aliasLookup":0,"lookup":1,"search":1\}/u.test(catalogLaunchCurationTests) &&
+    /exact bounded row and source-attribution shape/u.test(catalogLaunchCurationTests) &&
+    /only reviewed same-territory freshness from an approved source/u.test(
+      catalogLaunchCurationTests,
+    ) &&
+    /authenticated RLS exposes only same-source live freshness/u.test(catalogLaunchCurationTests),
+  'CAT-03 must own positive active-head serving, exact payload-shape, attribution, and same-territory/same-source freshness coverage.',
+);
+
 check(/select plan\(50\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
 check(
-  /select plan\(46\)/u.test(freshnessTests) &&
+  /select plan\(53\)/u.test(freshnessTests) &&
+    (
+      freshnessTests.match(
+        /^select (?:cmp_ok|is|isnt|lives_ok|matches|ok|results_eq|throws_ok|unlike)\(/gmu,
+      ) ?? []
+    ).length === 53 &&
     /20260718000060/u.test(freshnessTests) &&
     /user_products_pao_source_coherent/u.test(freshnessTests) &&
     /user_products_expiry_source_coherent/u.test(freshnessTests) &&
@@ -145,9 +345,7 @@ check(
     /stale product relink from a mobile mirror replay is coerced back to NULL/u.test(
       freshnessTests,
     ) &&
-    /stale source relink from a mobile mirror replay is coerced back to NULL/u.test(
-      freshnessTests,
-    ),
+    /stale source relink from a mobile mirror replay is coerced back to NULL/u.test(freshnessTests),
   'The CAT-07 pgTAP truth table must remain explicit and migration-bound.',
 );
 check(

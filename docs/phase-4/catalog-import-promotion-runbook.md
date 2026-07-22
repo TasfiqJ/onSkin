@@ -43,8 +43,8 @@ directory:
    disposition and independent review evidence;
 4. the CAT-01 source approval, trust-registry, release-scope, and signed build
    evidence already embedded and hash-bound by the transform;
-5. a clean `origin/main` source revision containing migration `0057` and this
-   runbook.
+5. a clean `origin/main` source revision containing migration `0057` and
+   forward migrations `0061` and `0062`, plus this runbook.
 
 Never copy a fixture or candidate into a differently named file and treat it as
 production. The transform status, import mode, known fixture hashes, source
@@ -72,9 +72,39 @@ and reviewer overlay are all independently checked.
   this projection. It is never truncated or silently coerced.
 - Existing catalog keys and cross-batch collisions require an explicit future
   merge/precedence workflow. Migration `0057` is intentionally insert-only.
+- Do not infer `benzoyl_peroxide` from product names, ingredient text, or OBF
+  category tags. As reviewed on 2026-07-22, the upstream Open Food Facts
+  [beauty category taxonomy](https://github.com/openfoodfacts/openfoodfacts-server/blob/main/taxonomies/beauty/categories.txt)
+  contains no `benzoyl`, `acne`, or `anti-acne` category entry. An absent or
+  fuzzy upstream category is not regulated-product evidence.
+- The only CAT-02 exception is an OBF row with disposition `accepted`, reason
+  `accepted_with_category_override`, `categoryOverride` exactly
+  `benzoyl_peroxide`, a retained HTTPS `categoryOverrideEvidenceUri`, and its
+  exact lowercase SHA-256 in `categoryOverrideEvidenceSha256`. The evidence
+  URI must be a canonical HTTPS URL with no credentials, query, fragment,
+  whitespace, IP literal, or exact/subdomain match for a name in the
+  [IANA special-use domain](https://www.iana.org/assignments/special-use-domain-names/special-use-domain-names.xhtml)
+  registry (including its reverse-DNS entries), or the additional conservative
+  non-public names `.home` and `.internal`. IANA states that a special-use
+  designation covers the listed name and its subdomains. These structural rules
+  exclude credentials in the URL authority, every query and fragment, IP
+  literals, and known special-use/non-public hosts. They cannot prove that an
+  otherwise valid path segment contains no secret. Reviewers must verify that
+  the retained path is a stable, public, non-secret evidence location and that
+  no access token or other secret appears in any path segment. This is a retained
+  reference check, not DNS resolution or network reachability proof; the
+  promotion contract never fetches the URI. The URL or hash alone does not
+  authorize the override; both independent
+  reviewers must sign the complete v2 overlay and its post-override database
+  candidate digest.
 - Sunscreen and OTC-adjacent product review remains separate professional and
   CAT-03 work. CAT-02 must not infer market legality, safety, efficacy, or
-  recommendation eligibility.
+  recommendation eligibility. FDA OTC Monograph M006 identifies benzoyl
+  peroxide at 2.5% to 10% as an acne active ingredient, so ingredient-name
+  presence alone cannot prove that a particular formula and label satisfy the
+  monograph. CAT-03 must still bind independent product-level OTC/regulatory
+  evidence before any serving authorization. See the
+  [FDA OTC Monograph M006](https://www.accessdata.fda.gov/drugsatfda_docs/omuf/monographs/OTC%20Monograph_M006-Topical%20Acne%20drug%20products%20for%20OTC%20Human%20Use%2011.23.2021.pdf).
 
 ## Build The Content-Addressed Stage Envelope
 
@@ -92,12 +122,26 @@ npm run phase4:stage-envelope -- `
   --output artifacts/phase4/<source>-stage-envelope.json
 ```
 
-The review overlay must contain exactly two current, independent Ed25519
-reviewers from the trust registry. Both signatures cover the complete unsigned
-overlay, including every row assignment, the exact 20-field batch-provenance
-descriptor hash, and the database candidate digest. Neither reviewer may be a
-CAT-01 source approver. The later promote/rollback operator must be a third
-identity and differs from both reviewers case-insensitively.
+The review overlay is exclusively `catalog-row-review-overlay-v2` with schema
+version 2, signature envelope `catalog-row-review-signature-v2`, and signing
+domain `routinekind.catalog-row-review-overlay.v2`. Every record contains the
+three category-override fields, using explicit `null` values when there is no
+override. It must contain exactly two current, independent Ed25519 reviewers
+from the trust registry. Both signatures cover the complete unsigned overlay,
+including every row assignment, override category, evidence URI and digest,
+the exact 20-field batch-provenance descriptor hash, and the database candidate
+digest computed after any override. Neither reviewer may be a CAT-01 source
+approver. The later promote/rollback operator must be a third identity and
+differs from both reviewers case-insensitively.
+
+This is an explicit pre-production v2 cutover. Repository evidence records no
+production transform/review artifact, hosted CAT-02 deployment, or promoted
+production catalog, so legacy v1 review overlays, signature domains, stage
+envelopes, and `offline-reviewed-transform-record-v1` hashes are invalidated
+rather than ambiguously upgraded. Regenerate and re-sign them as v2. The stage
+envelope is `catalog-stage-envelope-v2`, schema version 2, and every audit row
+uses `offline-reviewed-transform-record-v2`. No v1 artifact is accepted even
+when all override fields would be null.
 
 The candidate digest is
 `SHA-256(concat(SHA-256(canonicalJson(candidate_i))))` in record order under
@@ -127,9 +171,29 @@ not a current-status query; reread the sealed batch through the separately
 approved operator evidence path before deciding the next operation.
 
 The generator is deliberately target- and credential-free. It does not contact
-Supabase or select staging versus production. An operator chooses one already
-approved project, verifies migration `0057` is deployed there, and submits only
-the exact RPC plan emitted in `databasePlan`. Do not hand-edit that plan.
+Supabase or select staging versus production. Before applying this migration
+chain to any project, capture and retain the approved read-only remote migration
+history. **Stop** if migration `0059` is already present, if the remote history
+differs from the reviewed source chain, or if the remote history cannot be
+verified; do not deploy until the discrepancy has an approved forward-remediation
+plan. After an approved clean-chain deployment, an operator verifies migrations
+`0057` through `0062` are present and submits only the exact RPC plan emitted in
+`databasePlan`. Do not hand-edit that plan.
+
+Migration `0057` remains byte-stable. Migration `0061` replaces only the exact
+stage RPC to add the new database enum member, repairs the shared health trigger
+for both clean-install and already-applied-`0060` environments, and removes any
+historically named policies from sealed scan/correction relations before
+reasserting privileges. Migration `0062` preserves those per-row curation
+decisions while adding three bounded authority lookup indexes and a deterministic
+statement-level count/root-set guard for governed bulk curation inserts. The
+sole historical-file exception is migration `0059`:
+the repository contains no retained hosted evidence that it was applied, but
+that absence does not prove remote state. The file contained a missing closing
+parenthesis that prevented a clean migration chain from parsing at all. Its
+source fix is exactly that one parenthesis; an additive migration cannot repair
+SQL that PostgreSQL cannot first parse. No other historical migration file is
+changed by this correction.
 
 ## Database Sequence
 

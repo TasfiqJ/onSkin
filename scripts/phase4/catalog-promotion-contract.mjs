@@ -1,6 +1,7 @@
 import { createPublicKey, verify as verifyCryptographicSignature } from 'node:crypto';
 import { lstatSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { isIP } from 'node:net';
 import { isAbsolute, relative, resolve, sep } from 'node:path';
 import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
 import {
@@ -26,10 +27,10 @@ import {
   writeJsonAtomically,
 } from './source-policy.mjs';
 
-export const CATALOG_STAGE_CONTRACT_ID = 'catalog-stage-envelope-v1';
-export const CATALOG_REVIEW_OVERLAY_ID = 'catalog-row-review-overlay-v1';
-export const CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE = 'catalog-row-review-signature-v1';
-export const CATALOG_ROW_REVIEW_SIGNING_DOMAIN = 'routinekind.catalog-row-review-overlay.v1';
+export const CATALOG_STAGE_CONTRACT_ID = 'catalog-stage-envelope-v2';
+export const CATALOG_REVIEW_OVERLAY_ID = 'catalog-row-review-overlay-v2';
+export const CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE = 'catalog-row-review-signature-v2';
+export const CATALOG_ROW_REVIEW_SIGNING_DOMAIN = 'routinekind.catalog-row-review-overlay.v2';
 export const CATALOG_DATABASE_RECEIPT_EVIDENCE_CONTRACT_ID =
   'catalog-import-database-receipt-evidence-v1';
 export const CATALOG_DATABASE_RECEIPT_COMPLETION_CONTRACT_ID =
@@ -50,7 +51,6 @@ const REVIEWER_ID_PATTERN = /^[a-z0-9][a-z0-9._:-]{2,127}$/u;
 const TRUST_KEY_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$/u;
 const UUID_PATTERN = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/u;
 const LIFECYCLE_OPERATOR_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._@:+/-]{2,199}$/u;
-const EVIDENCE_URI_PATTERN = /^https:\/\/[^\s/$.?#].[^\s]*$/u;
 const FORBIDDEN_SECRET_KEY_PATTERN =
   /^(?:api[-_]?key|authorization|cookie|password|private[-_]?key|refresh[-_]?token|secret|service[-_]?role[-_]?key)$/iu;
 
@@ -64,6 +64,87 @@ const MAXIMUM_BYTES = Object.freeze({
 const MAXIMUM_RECORDS = 100_000;
 const MAXIMUM_REVIEWERS = 16;
 const MAXIMUM_DATABASE_CHUNK_JSON_BYTES = 8_388_608;
+// IANA special-use names are not eligible retained evidence hosts. The registry
+// applies each designation to the listed name and every subdomain, so compare
+// whole hostname suffixes rather than only the final DNS label.
+// IANA Special-Use Domain Names registry, last updated 2026-05-22. The registry
+// designation applies to each listed name and all of its subdomains.
+const IANA_SPECIAL_USE_EVIDENCE_HOST_SUFFIXES = Object.freeze([
+  'alt',
+  '6tisch.arpa',
+  'eap.arpa',
+  'eap-noob.arpa',
+  'home.arpa',
+  '10.in-addr.arpa',
+  '254.169.in-addr.arpa',
+  ...Array.from({ length: 16 }, (_, index) => `${index + 16}.172.in-addr.arpa`),
+  '170.0.0.192.in-addr.arpa',
+  '171.0.0.192.in-addr.arpa',
+  '168.192.in-addr.arpa',
+  '8.e.f.ip6.arpa',
+  '9.e.f.ip6.arpa',
+  'a.e.f.ip6.arpa',
+  'b.e.f.ip6.arpa',
+  'ipv4only.arpa',
+  'resolver.arpa',
+  'service.arpa',
+  'example',
+  'example.com',
+  'example.net',
+  'example.org',
+  'invalid',
+  'local',
+  'localhost',
+  'onion',
+  'test',
+]);
+const CONSERVATIVE_NONPUBLIC_EVIDENCE_HOST_SUFFIXES = Object.freeze(['home', 'internal']);
+const SPECIAL_USE_OR_NONPUBLIC_EVIDENCE_HOST_SUFFIXES = Object.freeze([
+  ...IANA_SPECIAL_USE_EVIDENCE_HOST_SUFFIXES,
+  ...CONSERVATIVE_NONPUBLIC_EVIDENCE_HOST_SUFFIXES,
+]);
+
+function isSpecialUseOrNonPublicEvidenceHostname(hostname) {
+  return SPECIAL_USE_OR_NONPUBLIC_EVIDENCE_HOST_SUFFIXES.some(
+    (suffix) => hostname === suffix || hostname.endsWith(`.${suffix}`),
+  );
+}
+
+function isCanonicalRetainedHttpsEvidenceUri(value) {
+  if (
+    typeof value !== 'string' ||
+    value.length === 0 ||
+    value.length > 2048 ||
+    value.trim() !== value ||
+    CONTROL_PATTERN.test(value) ||
+    /\s/u.test(value)
+  ) {
+    return false;
+  }
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return false;
+  }
+  const hostname = parsed.hostname.replace(/^\[|\]$/gu, '');
+  const labels = hostname.split('.');
+  return (
+    parsed.protocol === 'https:' &&
+    parsed.username === '' &&
+    parsed.password === '' &&
+    parsed.search === '' &&
+    parsed.hash === '' &&
+    parsed.href === value &&
+    isIP(hostname) === 0 &&
+    labels.length >= 2 &&
+    labels.every(
+      (label) =>
+        label.length >= 1 && label.length <= 63 && /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/u.test(label),
+    ) &&
+    !isSpecialUseOrNonPublicEvidenceHostname(hostname)
+  );
+}
 const DATABASE_RECORD_RECEIPT_KEYS = Object.freeze([
   'recordOrdinal',
   'recordSha256',
@@ -203,12 +284,21 @@ const ALLOWED_ANNEX_STATUSES = new Set([
 ]);
 const ALLOWED_PRODUCT_CATEGORIES = new Set([
   null,
+  'benzoyl_peroxide',
   'cleanser',
   'toner',
   'serum',
   'moisturiser_tube',
   'spf',
 ]);
+const REVIEWED_CATEGORY_OVERRIDE = 'benzoyl_peroxide';
+const REVIEWED_CATEGORY_OVERRIDE_REASON = 'accepted_with_category_override';
+const ROW_REVIEW_CONTRACT = Object.freeze({
+  schemaVersion: 2,
+  contractId: CATALOG_REVIEW_OVERLAY_ID,
+  signatureEnvelopeVersion: CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE,
+  signingDomain: CATALOG_ROW_REVIEW_SIGNING_DOMAIN,
+});
 
 const SOURCE_CONTRACTS = Object.freeze({
   open_beauty_facts: Object.freeze({
@@ -398,12 +488,20 @@ export function catalogRowReviewSigningPayload(overlay, reviewerId) {
   if (typeof reviewerId !== 'string' || !REVIEWER_ID_PATTERN.test(reviewerId)) {
     fail('row-review signing payload reviewerId is malformed.');
   }
+  if (
+    overlay.schemaVersion !== ROW_REVIEW_CONTRACT.schemaVersion ||
+    overlay.contractId !== ROW_REVIEW_CONTRACT.contractId ||
+    overlay.signatureEnvelopeVersion !== ROW_REVIEW_CONTRACT.signatureEnvelopeVersion ||
+    overlay.signingDomain !== ROW_REVIEW_CONTRACT.signingDomain
+  ) {
+    fail('row-review signing payload requires the current v2 contract and signing domain.');
+  }
   const unsignedOverlay = { ...overlay };
   delete unsignedOverlay.signatures;
   return Buffer.from(
     canonicalJson({
-      signatureEnvelopeVersion: CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE,
-      signingDomain: CATALOG_ROW_REVIEW_SIGNING_DOMAIN,
+      signatureEnvelopeVersion: ROW_REVIEW_CONTRACT.signatureEnvelopeVersion,
+      signingDomain: ROW_REVIEW_CONTRACT.signingDomain,
       reviewerId,
       overlay: unsignedOverlay,
     }),
@@ -797,6 +895,11 @@ function validateObfRecord(record, index, transform, contract) {
   if (!ALLOWED_PRODUCT_CATEGORIES.has(record.category)) {
     fail(
       `transform.products[${index}].category is outside the frozen ASCII product-type vocabulary.`,
+    );
+  }
+  if (record.category === REVIEWED_CATEGORY_OVERRIDE) {
+    fail(
+      `transform.products[${index}].category is regulated and must enter through the signed row-review category override.`,
     );
   }
   if (record.ingredientsText !== null) {
@@ -1400,7 +1503,7 @@ function validateReviewers(reviewers) {
     assertDigest(reviewer.publicKeySha256, `review overlay.reviewers[${index}].publicKeySha256`);
     if (
       typeof reviewer.evidenceUri !== 'string' ||
-      !EVIDENCE_URI_PATTERN.test(reviewer.evidenceUri)
+      !isCanonicalRetainedHttpsEvidenceUri(reviewer.evidenceUri)
     ) {
       fail(`review overlay.reviewers[${index}].evidenceUri must be an HTTPS evidence URI.`);
     }
@@ -1645,10 +1748,10 @@ function validateReviews(overlay, reviewEvidence, transformState, qaEvidence, ba
   );
   assertNoSecretKeys(overlay, 'review overlay');
   if (
-    overlay.schemaVersion !== 1 ||
-    overlay.contractId !== CATALOG_REVIEW_OVERLAY_ID ||
-    overlay.signatureEnvelopeVersion !== CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE ||
-    overlay.signingDomain !== CATALOG_ROW_REVIEW_SIGNING_DOMAIN ||
+    overlay.schemaVersion !== ROW_REVIEW_CONTRACT.schemaVersion ||
+    overlay.contractId !== ROW_REVIEW_CONTRACT.contractId ||
+    overlay.signatureEnvelopeVersion !== ROW_REVIEW_CONTRACT.signatureEnvelopeVersion ||
+    overlay.signingDomain !== ROW_REVIEW_CONTRACT.signingDomain ||
     overlay.source !== transformState.transformEvidence.value.source ||
     overlay.sourceComponentId !== transformState.contract.componentId ||
     overlay.transformArtifactSha256 !== transformState.transformEvidence.sha256 ||
@@ -1668,19 +1771,6 @@ function validateReviews(overlay, reviewEvidence, transformState, qaEvidence, ba
     );
   }
   assertText(overlay.overlayId, 'review overlay.overlayId', { max: 200 });
-  const expectedDatabaseCandidatesSha256 = catalogDatabaseCandidatesSha256(
-    transformState.records.map((record, index) =>
-      databaseCandidate(
-        transformState.transformEvidence.value.source,
-        record,
-        transformState.recordMetadata[index].naturalKey,
-        transformState.transformEvidence.value,
-      ),
-    ),
-  );
-  if (overlay.databaseCandidatesSha256 !== expectedDatabaseCandidatesSha256) {
-    fail('review overlay databaseCandidatesSha256 does not bind the exact direct-stage records.');
-  }
   const reviewers = validateReviewers(overlay.reviewers);
   validateRowReviewSignatures(overlay, reviewers);
   const requiredReviewerIds = [...reviewers.values()].map((reviewer) => reviewer.reviewerId).sort();
@@ -1690,19 +1780,19 @@ function validateReviews(overlay, reviewEvidence, transformState, qaEvidence, ba
   });
   const reviewByOrdinal = new Map();
   for (const [index, review] of overlay.records.entries()) {
-    assertExactKeys(
-      review,
-      [
-        'ordinal',
-        'sourceRef',
-        'naturalKey',
-        'disposition',
-        'reasonCode',
-        'duplicateOfNaturalKey',
-        'reviewerIds',
-      ],
-      `review overlay.records[${index}]`,
-    );
+    const recordKeys = [
+      'ordinal',
+      'sourceRef',
+      'naturalKey',
+      'disposition',
+      'reasonCode',
+      'duplicateOfNaturalKey',
+      'categoryOverride',
+      'categoryOverrideEvidenceUri',
+      'categoryOverrideEvidenceSha256',
+      'reviewerIds',
+    ];
+    assertExactKeys(review, recordKeys, `review overlay.records[${index}]`);
     if (
       !Number.isInteger(review.ordinal) ||
       review.ordinal < 1 ||
@@ -1722,7 +1812,7 @@ function validateReviews(overlay, reviewEvidence, transformState, qaEvidence, ba
       fail(`review overlay ordinal ${review.ordinal} has a pending or unknown disposition.`);
     }
     const allowedReasons = {
-      accepted: ['accepted_after_review'],
+      accepted: ['accepted_after_review', REVIEWED_CATEGORY_OVERRIDE_REASON],
       rejected: [
         'invalid_annex_status',
         'content_quality_rejected',
@@ -1739,6 +1829,39 @@ function validateReviews(overlay, reviewEvidence, transformState, qaEvidence, ba
     };
     if (!allowedReasons[review.disposition].includes(review.reasonCode)) {
       fail(`review overlay ordinal ${review.ordinal} has a disposition/reason mismatch.`);
+    }
+    const categoryOverride = review.categoryOverride;
+    const categoryOverrideEvidenceUri = review.categoryOverrideEvidenceUri;
+    const categoryOverrideEvidenceSha256 = review.categoryOverrideEvidenceSha256;
+    const hasCategoryOverride = categoryOverride !== null;
+    if (transformState.transformEvidence.value.source !== 'open_beauty_facts') {
+      if (
+        hasCategoryOverride ||
+        categoryOverrideEvidenceUri !== null ||
+        categoryOverrideEvidenceSha256 !== null
+      ) {
+        fail(`review overlay ordinal ${review.ordinal} cannot override a non-product category.`);
+      }
+    } else if (hasCategoryOverride) {
+      if (
+        categoryOverride !== REVIEWED_CATEGORY_OVERRIDE ||
+        review.disposition !== 'accepted' ||
+        review.reasonCode !== REVIEWED_CATEGORY_OVERRIDE_REASON ||
+        typeof categoryOverrideEvidenceUri !== 'string' ||
+        !isCanonicalRetainedHttpsEvidenceUri(categoryOverrideEvidenceUri) ||
+        typeof categoryOverrideEvidenceSha256 !== 'string' ||
+        !SHA256_PATTERN.test(categoryOverrideEvidenceSha256)
+      ) {
+        fail(
+          `review overlay ordinal ${review.ordinal} has an invalid regulated category override or evidence binding.`,
+        );
+      }
+    } else if (
+      categoryOverrideEvidenceUri !== null ||
+      categoryOverrideEvidenceSha256 !== null ||
+      review.reasonCode === REVIEWED_CATEGORY_OVERRIDE_REASON
+    ) {
+      fail(`review overlay ordinal ${review.ordinal} has category evidence without an override.`);
     }
     if (review.disposition === 'duplicate') {
       assertText(
@@ -1768,7 +1891,12 @@ function validateReviews(overlay, reviewEvidence, transformState, qaEvidence, ba
         `review overlay ordinal ${review.ordinal} requires two distinct independent reviewer roles.`,
       );
     }
-    reviewByOrdinal.set(review.ordinal, review);
+    reviewByOrdinal.set(review.ordinal, {
+      ...review,
+      categoryOverride,
+      categoryOverrideEvidenceUri,
+      categoryOverrideEvidenceSha256,
+    });
   }
   const conflicts = collisionMembers(transformState.recordMetadata);
   const knownNaturalKeys = new Set(
@@ -1799,6 +1927,20 @@ function validateReviews(overlay, reviewEvidence, transformState, qaEvidence, ba
       );
     }
   }
+  const expectedDatabaseCandidatesSha256 = catalogDatabaseCandidatesSha256(
+    transformState.records.map((record, index) =>
+      databaseCandidate(
+        transformState.transformEvidence.value.source,
+        record,
+        transformState.recordMetadata[index].naturalKey,
+        transformState.transformEvidence.value,
+        reviewByOrdinal.get(index + 1),
+      ),
+    ),
+  );
+  if (overlay.databaseCandidatesSha256 !== expectedDatabaseCandidatesSha256) {
+    fail('review overlay databaseCandidatesSha256 does not bind the exact direct-stage records.');
+  }
   return { reviewByOrdinal, reviewers, reviewEvidence };
 }
 
@@ -1810,7 +1952,7 @@ function evidenceDescriptor(root, evidence) {
   };
 }
 
-function databaseCandidate(source, record, naturalKey, transform) {
+function databaseCandidate(source, record, naturalKey, transform, review) {
   if (source === 'open_beauty_facts') {
     return {
       recordKind: 'product',
@@ -1818,7 +1960,7 @@ function databaseCandidate(source, record, naturalKey, transform) {
       barcode: record.barcode,
       name: record.name,
       brand: record.brand,
-      category: record.category,
+      category: review?.categoryOverride ?? record.category,
       ingredientsText: record.ingredientsText,
       source: record.source,
       sourceComponentId: record.sourceComponentId,
@@ -2094,7 +2236,13 @@ function buildDatabasePlan({
   );
   const batchEvidenceSha256 = catalogBatchEvidenceSha256(batchEvidence);
   const candidates = transformState.records.map((record, index) =>
-    databaseCandidate(source, record, transformState.recordMetadata[index].naturalKey, transform),
+    databaseCandidate(
+      source,
+      record,
+      transformState.recordMetadata[index].naturalKey,
+      transform,
+      reviewState.reviewByOrdinal.get(index + 1),
+    ),
   );
   const databaseCandidatesSha256 = catalogDatabaseCandidatesSha256(candidates);
   const projectedExpandedReceiptBytes = catalogProjectedExpandedReceiptBytes(candidates);
@@ -2959,13 +3107,16 @@ export function buildCatalogStageEnvelope({
   const stageRecords = transformState.records.map((record, index) => {
     const review = reviewState.reviewByOrdinal.get(index + 1);
     const body = {
-      hashDomain: 'offline-reviewed-transform-record-v1',
+      hashDomain: 'offline-reviewed-transform-record-v2',
       ordinal: index + 1,
       sourceRef: record.sourceRef,
       naturalKey: transformState.recordMetadata[index].naturalKey,
       disposition: review.disposition,
       reasonCode: review.reasonCode,
       duplicateOfNaturalKey: review.duplicateOfNaturalKey,
+      categoryOverride: review.categoryOverride,
+      categoryOverrideEvidenceUri: review.categoryOverrideEvidenceUri,
+      categoryOverrideEvidenceSha256: review.categoryOverrideEvidenceSha256,
       reviewerIds: [...review.reviewerIds],
       transformRecordPayloadSha256: sha256(Buffer.from(canonicalJson(record), 'utf8')),
     };
@@ -3007,7 +3158,7 @@ export function buildCatalogStageEnvelope({
     operationSeed,
   });
   const body = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     contractId: CATALOG_STAGE_CONTRACT_ID,
     operation: 'stage_reviewed_catalog_batch',
     source: transformEvidence.value.source,
@@ -3122,7 +3273,7 @@ export function completeCatalogDatabaseReceiptsFromFiles({
   }
   const envelope = envelopeEvidence.value;
   if (
-    envelope.schemaVersion !== 1 ||
+    envelope.schemaVersion !== 2 ||
     envelope.contractId !== CATALOG_STAGE_CONTRACT_ID ||
     !isObject(envelope.evidence)
   ) {

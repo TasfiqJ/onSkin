@@ -254,7 +254,7 @@ Camera staging, Expo Image/SDWebImage cache locations, encrypted Progress
 storage, and cold-relaunch residue. Never use or commit a real user's sensitive
 photo. `noUserPhotoBytesCommittedToGit=true` is mandatory.
 
-## Validation and evidence-only descendant
+## Validation and governed evidence chain
 
 After completing and reviewing the matrix:
 
@@ -262,6 +262,7 @@ After completing and reviewing the matrix:
 PHASE5_IOS_BUILD_ID=<exact EAS UUID or build URL> \
 PHASE5_IOS_BUILD_PROFILE=staging \
 PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH=docs/phase-5/evidence/camera-lifecycle/<candidate>/evidence.json \
+PHASE9_RELEASE_CANDIDATE_DIR=docs/phase-9/release-candidates/<rc-id> \
 npm run phase5:camera-lifecycle-evidence:strict
 ```
 
@@ -270,11 +271,18 @@ Role labels and sample personas are rejected; QA and privacy/security must be
 independent people. Sign only after the final run. The validator records these
 as accountable attestations and does not independently verify civil identity.
 
-Commit the evidence as a descendant of the EAS source commit. Between the
-source commit and evidence commit, only the exact validated evidence files and
-explicit generated descendant packets may change. Any runtime/config/doc gate
+Stage the evidence JSON, every referenced attachment, the selected RC metadata,
+and all other direct evidence while `HEAD` is the exact build-source commit
+`S`. Build the selected RC ledger with
+`scripts/phase9/build-evidence-chain-ledger.mjs`, then commit the ledger and all
+of its entries together as the single non-merge evidence commit `E` directly
+on `S`. The strict checker requires the camera JSON and every attachment to be
+the exact `phase5-camera-lifecycle` ledger entries, verifies their digests and
+immutability through current `HEAD`, rejects source drift, nonlinear/merge
+history, unledgered or post-`E` raw evidence, and accepts later commits only at
+the centralized exact generated-output paths. Any runtime/config/doc gate
 change requires a new build and full rerun. Then pass the same build/profile/
-evidence variables to:
+evidence/RC variables to:
 
 ```bash
 npm run phase5:qa-packet:strict

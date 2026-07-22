@@ -1,8 +1,8 @@
 # Blockers - iOS All-Features Launch Gates
 
-Date: 2026-07-18
+Date: 2026-07-22
 
-Status reviewed: 2026-07-18
+Status reviewed: 2026-07-22
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -160,14 +160,18 @@ Broader launch-gate verification retained through 2026-07-15: `npm run typecheck
 `npm run docs:tas-todo-audit:check`,
 `npm run docs:readiness-status-audit:check`,
 `npm run docs:generated-packet-status-audit:check`, and
-`npm run e2e:human:manifest:check` pass non-strict code and documentation
-freshness gates. The generated-packet status audit now rejects dirty packet
-outputs and stale recorded source/file hashes. The Phase 7 core-loop packet has
-been refreshed for the current Today and Progress route hashes; the Phase 8
-growth/store packet has
-been refreshed for the current share-card and conflict-share route hashes; the
-Phase 5 native-device packet has been refreshed for the current progress
-capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
+`npm run e2e:human:manifest:check` passed their then-current non-strict code and
+documentation freshness gates. These results and generated packets are
+historical only: the retained human manifest records a different, non-ancestor
+Git SHA and no current governed-chain binding. The current source revision must
+republish and recheck every required unit through the governed `E -> ... -> F`
+sequence before any packet can be treated as current release evidence. The
+generated-packet status audit rejects dirty packet outputs and stale recorded
+source/file hashes. At that historical checkpoint, the Phase 7 core-loop packet
+covered the then-current Today and Progress route hashes; the Phase 8
+growth/store packet covered the then-current share-card and conflict-share
+route hashes; and the Phase 5 native-device packet covered the then-current
+progress capture route hash. Strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. At the latest verified
@@ -295,9 +299,10 @@ device, beta, accessibility, or store-review evidence elevates it.
 The Settings Privacy Terms-row spacer and contextual Progress
 tall-phone compact compliance header have fresh route evidence, including
 compact visible Explore-first copy with the full reverse-trial copy retained in
-the accessibility label. Phase 9 dependency/SBOM evidence now records 1073
-packages and zero npm vulnerabilities; strict release completion still needs
-release-owner dependency signoff. The earlier 2026-07-08 Expo web
+the accessibility label. Phase 9 dependency/SBOM evidence now records 1,100
+packages and zero advisories in the local offline cache; strict release
+completion still needs a current registry-backed CI audit and release-owner
+dependency signoff for the exact RC. The earlier 2026-07-08 Expo web
 shortest-phone rerun at 320 x 480 passed 49 direct-entry routes with zero
 failed routes, visible clipped controls, sub-44 user-facing controls, blocked
 hit-tests, horizontal overflow, or disallowed browser logs. The Shelf manual
@@ -415,21 +420,21 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains a 58-migration source candidate through
-`20260718000059`, targeted hand-maintained
+The repo contains a 61-migration source candidate through
+`20260722000062`, targeted hand-maintained
 RPC types with DB-08 still open, 16 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
-`0059` source inventory classifies all 80 RLS-enabled public tables: 36 directly
+current source inventory classifies all 80 RLS-enabled public tables: 36 directly
 queryable private tables, 30 read-sealed private/authority tables, and 14
 authenticated catalog/editorial tables. The 30 read-sealed tables comprise 22
 service-private authorities, four global clinical/editorial relations, and four
 catalog dictionary/legacy authorities; seven additional CAT-03 authorities are
-sealed in the `private` schema. This is a passing static/source classification,
-not hosted evidence. The last executed CAT-02 Docker baseline passed a reset and the
-then-current 35-assertion partial suite. The final source expands that contract
-to 214 statically matched CAT-02 assertions; a fresh 58-migration reset, the
-current CAT-02 and CAT-03
-pgTAP execution, error-level schema lint, migration-shadow drift check, and
+sealed in the `private` schema. This is a source-contract classification, not
+hosted evidence. The last recorded CAT-02 Docker baseline covered the then-
+current 35-assertion partial suite and remains historical. The current source
+plans contain 50 schema, 218 CAT-02, 99 CAT-03, 53 CAT-07, 58 catalog-serving,
+and 114 Apple-lifecycle assertions. A fresh 61-migration reset and execution of
+those current plans, error-level schema lint, migration-shadow drift check, and
 temporary type generation remain required before this revision can claim local
 database replay evidence.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system and
@@ -479,23 +484,35 @@ RPCs. The focused Apple Edge suite passes 20/20 and the complete Apple auth work
 lane passes 47 tests. This is local disposable evidence, not hosted or device
 proof.
 
-Migrations `0056` and `0057` add the catalog serving and transactional import
-boundaries. Runtime lookup/search and authenticated catalog reads require
+Migrations `0056`, `0057`, and forward migration `0061` add the catalog serving
+and transactional import boundaries. Runtime lookup/search and authenticated catalog reads require
 positive source, batch, projection, correction, quality, review, and dependency
 eligibility. Direct API-role catalog mutation is denied. The owner-only CAT-02
 lane provides signed provenance and receipt-bound review, bounded replay-safe
 staging, Unicode-aware collision detection, immutable projection lineage,
 one-transaction insert-only promotion, and non-destructive rollback. This is a
 local source candidate; no real source approval, hosted batch, concurrency
-drill, or production catalog is claimed.
+drill, or production catalog is claimed. `0061` adds `benzoyl_peroxide` to the
+database staging allowlist; the offline v2 envelope, not the RPC, remains
+responsible for dual-review signatures. It repairs the shared health-write
+guard across clean and already-applied-`0060` paths and exposes only bounded
+product-specific PAO evidence from `label`, `brand_label`, or `catalog` sources;
+category defaults and unknown sources remain excluded.
 
-Migration `0058` adds the CAT-03 launch-curation source boundary: immutable
+Migration `0058` remains the foundational CAT-03 launch-curation source
+boundary: immutable
 campaign/record/event authority, exact CAT-01/CAT-02 and database-snapshot
 bindings, a hard 2,000-record/category/priority floor, owner-only campaign-
 scoped non-serving authorization, exact-set atomic campaign release, signed
 readback, immutable retirement, an append-only per-product served-state mutation
 ledger, RPC-only `service_role` access, and a positive active-campaign serving
-dependency.
+dependency. Forward migration `0062` adds three covered authority indexes,
+pushes the already-required staged digest into the exact authority join without
+changing its returned contract, and adds an `AFTER STATEMENT` guard that rejects
+campaign-count overflow after every insert statement and validates
+the already-sealed complete root set only when stored rows reach the expected
+count; partial governed inserts remain allowed, and exact per-row authority
+checks remain in force.
 Exactly one artifact may match the target CAT-02 lineage, only its reviewed
 primary barcode is served, staged outcome-reviewer signatures bind the later
 operator authorization, and live roots seal every client-readable field and
@@ -506,8 +523,10 @@ campaign and readback can recover. The offline contracts bind a target policy an
 full reviewed-record decision witnessed before holdout access, a separately
 consented/privacy-minimized beta-shelf coverage corpus, curation/holdout
 separation, exact multi-batch/four-scope CAT-02 memberships, confidence-bound
-quality gates, and qualified review. No clean reset or pgTAP execution of the
-exact `0058` revision, hosted staging/release/supersession race and serving
+quality gates, and qualified review. Current CAT-03 review and database-readback
+artifacts must attest exact latest migration `20260722000062`. No clean reset or
+pgTAP execution of the complete current chain through `0062`, hosted staging/
+release/supersession race and serving
 drill, real beta corpus, witnessed target/decision, signed review/readback, or
 active catalog exists. Beta demand prioritizes independently sourced rows; it
 never becomes a product fact.
@@ -534,8 +553,8 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 16-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 58
-  migrations through `0059`, redeploys the manifest, retains linked types
+  immediately rereads the full empty-target boundary, applies all 61
+  migrations through `0062`, redeploys the manifest, retains linked types
   without changing repository types, and leaves
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
@@ -546,7 +565,7 @@ Next action:
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
-  signed-anonymous user, the no-session client, the regenerated exact `0059`
+  signed-anonymous user, the no-session client, the regenerated exact `0062`
   private-table inventory, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
@@ -1059,11 +1078,12 @@ Current implementation note:
   Function, and users can report catalog issues.
 - `scripts/phase4/*` can run fixture transforms and QA, construct a strict
   dual-signed stage envelope, and complete database-authoritative receipts.
-  Migrations `0056`/`0057` supply fail-closed serving plus transactional
-  promotion/correction/rollback with immutable lineage. Fixtures and local
+  Migrations `0056`/`0057` plus forward migration `0061` supply fail-closed
+  serving plus transactional promotion/correction/rollback with immutable lineage. Fixtures and local
   lifecycle tests are not a production catalog or hosted race proof.
 - CAT-03 target/corpus/review templates, offline curation-envelope and
-  confidence-bound quality-report contracts, and migration `0058` provide a
+  confidence-bound quality-report contracts, foundational migration `0058`,
+  and forward migration `0062` provide a
   local non-serving authorization, exact-set atomic campaign release, signed
   readback, and immutable retirement source candidate with hard inventory
   floors. They do not supply real consented beta data, market-representative
@@ -1161,7 +1181,8 @@ Exit criteria:
 - migration `0057` passes the hosted two-connection replay, conflict,
   correction, source-withdrawal, promotion, dependency-serving, and rollback
   drill for the exact reviewed batch;
-- migration `0058` passes clean local and hosted pgTAP, two-connection replay/
+- the complete migration chain through `0062`, with `0058` as its foundational
+  CAT-03 authority, passes clean local and hosted pgTAP, two-connection replay/
   staging/release/supersession/retirement races, successor isolation, direct-
   table denial including `service_role`, dependency-serving suppression, and
   rollback drills for the exact signed campaign;

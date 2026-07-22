@@ -171,11 +171,21 @@ exact CAT-01/CAT-02 memberships, qualified review, and the exact database
 snapshot. Dashboard URLs, a typed signoff name, or a `realBetaData` flag cannot
 authorize a release.
 
-Migration `0058` adds local campaign-scoped non-serving product authorization,
-one exact-set atomic global campaign release, independent signed readback,
-immutable retirement, and RPC-only `service_role` access, and makes the active global
-CAT-03 campaign a positive serving dependency. It does not create a real batch.
+Foundational migration `0058` adds local campaign-scoped non-serving product
+authorization, one exact-set atomic global campaign release, independent signed
+readback, immutable retirement, and RPC-only `service_role` access, and makes
+the active global CAT-03 campaign a positive serving dependency. It does not
+create a real batch.
+Forward migration `0062` adds three covered authority indexes, semantic-
+preserving staged-digest pushdown, and the indexed `AFTER STATEMENT` overflow
+and expected-count completion-root guard while allowing partial governed inserts;
+current review and readback artifacts must attest exact latest
+migration `20260722000062`.
+Its isolated PostgreSQL 15/17 rehearsal uses a minimal pre-`0062` authority
+fixture and includes the exact `0062` bytes; it is not exact full-chain or hosted
+evidence.
 No consented beta corpus, witnessed target/decision, qualified product review,
-2,000-record launch campaign, signed database readback, clean hosted `0058`
+2,000-record launch campaign, signed database readback, clean hosted full-chain
+evidence through `0062`,
 lifecycle evidence, or active launch campaign exists yet. CAT-03 therefore
 remains `in_progress`, and no production row is launch-authorized.

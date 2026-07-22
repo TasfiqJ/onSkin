@@ -228,8 +228,10 @@ replaced with the import time.
 
 Migrations `20260717000056_catalog_serving_eligibility_gate.sql`,
 `20260717000057_catalog_import_lifecycle.sql`, and
-`20260717000058_catalog_launch_curation.sql` must be present and pass their
-pgTAP contracts on the exact hosted revision. The first migration's service-only
+`20260717000058_catalog_launch_curation.sql`, plus forward migrations
+`20260722000061_catalog_import_benzoyl_review_override.sql` and
+`20260722000062_catalog_curation_statement_guard.sql`, must be present and pass
+their pgTAP contracts on the exact hosted revision. The first migration's service-only
 barcode and search RPCs share one fail-closed eligibility boundary. A row is
 servable only when its source is production-approved and legal-approved; the
 product is active, reviewed, `verified` or `usable`, recommendation-eligible,
@@ -258,7 +260,7 @@ Retain together:
 - dual-signed OBF/CosIng approvals and their reviewed evidence bytes;
 - exact production transform outputs and zero-warning QA reports;
 - signed EAS/archive/App Store release-build evidence;
-- hosted migration/reset/pgTAP/type/schema-diff evidence through `0057`;
+- hosted migration/reset/pgTAP/type/schema-diff evidence through `0062`;
 - catalog promotion, rollback, correction-SLA, and named reviewer/operator
   records.
 

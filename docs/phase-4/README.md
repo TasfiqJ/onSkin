@@ -47,6 +47,14 @@ catalog activation.
 - [Pending exact CAT-02 membership proof](./catalog-cat02-membership-proof.template.json)
 - [Pending signed database readback](./catalog-curation-database-readback.template.json)
 
+The legacy beta aggregate remains non-authoritative for CAT-03. When it is
+claimed as a Phase 9 upstream packet, generate it strictly from the ignored,
+mounted aggregate input, commit its exact JSON/Markdown pair alone, and run
+`npm run phase4:beta-coverage-report:check` from the later clean governed
+checkout. That check proves deterministic committed publication and source
+provenance; it does not convert dashboard presence or a typed signoff into
+consent, legal, catalog, clinical, or reviewer authority.
+
 The only launch source flow is: acquire offline source bytes; create a
 non-promotable candidate from a clean committed transformer; obtain an active
 externally root-signed and replay-pinned reviewer registry; approve the exact US
@@ -66,15 +74,19 @@ OBF/CosIng are not runtime recipients. Source images and external contribution
 are excluded. Missing-product and wrong-match reports remain first-party, and
 migration `0056` hides every source/product that lacks positive legal,
 production, review, quality, eligibility, mapping, and correction evidence.
-Migration `0057` adds the local source candidate for sealed, replay-safe
-staging; per-record review; exact-key conflict detection; immutable lineage;
+Migration `0057` plus forward migration `0061` add the local source candidate
+for sealed, replay-safe staging; per-record review; exact-key conflict detection; immutable lineage;
 transactional insert-only promotion; and non-destructive batch rollback. It
-also closes legacy broad ingredient/brand/category read paths and removes
-direct API-role global-catalog mutation. Real approved artifacts, dedicated
-CAT-08 operator identities, hosted concurrency/rollback evidence, and a
+also adds `benzoyl_peroxide` to the database staging allowlist while the offline
+v2 envelope, not the RPC, remains responsible for dual-review signatures,
+repairs the clean/post-`0060` health-write guard, exposes only bounded product-
+specific PAO evidence, closes legacy broad ingredient/brand/category read paths,
+and removes direct API-role global-catalog mutation. Real approved artifacts,
+dedicated CAT-08 operator identities, hosted concurrency/rollback evidence, and a
 reviewed launch catalog are still absent.
-Migration `0058` and the CAT-03 offline contracts add a local source candidate
-for pre-outcome target binding, privacy-minimized beta-shelf demand, curation/
+Foundational migration `0058`, forward migration `0062`, and the CAT-03 offline
+contracts add a local source candidate for pre-outcome target binding,
+privacy-minimized beta-shelf demand, curation/
 holdout separation, signed four-scope CAT-02 membership, qualified review, a
 hard floor of 2,000 eligible records plus category/priority minima, campaign-
 scoped non-serving authorization, one exact-set atomic release, independently
@@ -90,10 +102,18 @@ reapproval, or batch restoration cannot resurrect an old authorization.
 Direct catalog-table access is denied
 to `service_role`; service reads use guarded lookup/search RPCs, while
 authenticated direct reads remain limited to explicitly granted positive-RLS
-relations. Beta demand prioritizes review; it never becomes a product fact. The
-current self-selected beta design cannot support a market-representative claim.
+relations. `0062` adds three covered authority indexes, pushes the already-
+required staged digest into the exact authority join, and adds the indexed
+`AFTER STATEMENT` guard: it rejects count overflow after every insert statement and validates the already-sealed complete
+root set only when stored rows reach expected count; partial governed inserts
+remain allowed. Current review and database-readback artifacts must attest exact latest
+migration `20260722000062`. The isolated PostgreSQL 15/17 rehearsal constructs a
+minimal pre-`0062` fixture and includes the exact `0062` bytes; it is bounded
+forward-upgrade mechanics proof, not exact `0061`-schema, full-chain, hosted, or
+production evidence. Beta demand prioritizes review; it never becomes a
+product fact. The current self-selected beta design cannot support a market-representative claim.
 Real consented beta evidence, witnessed targets/decisions, signed reviews and
-readback, exact CAT-01/CAT-02 lineage, clean local/hosted `0058` verification,
-and an activated launch catalog are absent, so CAT-03 remains `in_progress`.
+readback, exact CAT-01/CAT-02 lineage, clean local/hosted full-chain verification
+through `0062`, and an activated launch catalog are absent, so CAT-03 remains `in_progress`.
 Passing these source controls does not guarantee Apple acceptance, legal
 compliance, product efficacy, or revenue.

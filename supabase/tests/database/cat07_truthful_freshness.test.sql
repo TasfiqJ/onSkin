@@ -3,18 +3,18 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(46);
+select plan(53);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  59::bigint,
-  'CAT-07 runs against the exact 59-migration source history'
+  61::bigint,
+  'CAT-07 behavior from 20260718000060 runs against the exact 61-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260718000060'::text,
-  'CAT-07 is the latest applied migration'
+  '20260722000062'::text,
+  'CAT-07 remains effective through the latest forward compatibility migration'
 );
 
 select is(
@@ -69,7 +69,8 @@ select ok(
     )
       and contype = 'c'
       and convalidated
-      and pg_catalog.pg_get_constraintdef(oid) like '%BETWEEN 1 AND 120%'
+      and pg_catalog.pg_get_constraintdef(oid) like '%>= 1%'
+      and pg_catalog.pg_get_constraintdef(oid) like '%<= 120%'
   ) = 4,
   'all four persisted PAO inputs share the 120-month technical ceiling'
 );
@@ -179,7 +180,7 @@ select ok(
   ) like '%freshness.source_id = p_catalog_source_id%'
   and pg_catalog.pg_get_functiondef(
     'private.resolve_catalog_pao_snapshot(uuid,uuid,integer)'::pg_catalog.regprocedure
-  ) like '%count(*) OVER ()%'
+  ) like '%pg_catalog.count(*) over ()%'
   and pg_catalog.pg_get_functiondef(
     'private.resolve_catalog_pao_snapshot(uuid,uuid,integer)'::pg_catalog.regprocedure
   ) like '%catalog_product_is_servable%'
@@ -198,8 +199,23 @@ select ok(
   ) like '%pg_trigger_depth() > 1%'
   and pg_catalog.pg_get_functiondef(
     'public._guard_direct_health_write()'::pg_catalog.regprocedure
+  ) like '%to_jsonb(old) ->> ''catalog_product_id''%'
+  and pg_catalog.pg_get_functiondef(
+    'public._guard_direct_health_write()'::pg_catalog.regprocedure
+  ) not like '%old.catalog_product_id%'
+  and pg_catalog.pg_get_functiondef(
+    'public._guard_direct_health_write()'::pg_catalog.regprocedure
+  ) not like '%old.catalog_source_id%'
+  and pg_catalog.pg_get_functiondef(
+    'public._guard_direct_health_write()'::pg_catalog.regprocedure
+  ) not like '%new.catalog_product_id%'
+  and pg_catalog.pg_get_functiondef(
+    'public._guard_direct_health_write()'::pg_catalog.regprocedure
+  ) not like '%new.catalog_source_id%'
+  and pg_catalog.pg_get_functiondef(
+    'public._guard_direct_health_write()'::pg_catalog.regprocedure
   ) like '%legacy_unverified_expiry_date%' = false,
-  'health guard has a nested catalog-FK detach lane without exempting the physical legacy date'
+  'health guard has a row-shape-safe nested catalog-FK detach lane without exempting the physical legacy date'
 );
 
 alter table public.catalog_sources disable trigger user;

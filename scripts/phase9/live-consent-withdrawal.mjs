@@ -7,7 +7,7 @@ import {
   block,
   command,
   envSnapshot,
-  gitStatusExcludingGeneratedEvidence,
+  gitStatusExcludingPaths,
   HarnessAssertionError,
   harnessErrorDetail,
   hash,
@@ -45,9 +45,13 @@ const supabaseTarget = resolveHostedSupabaseProjectTarget(
 const publishableKey =
   env.SUPABASE_PUBLISHABLE_KEY ?? env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? env.SUPABASE_ANON_KEY;
 const secretKey = env.SUPABASE_SECRET_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
+const outputPaths = [
+  'docs/phase-9/generated/live-consent-withdrawal.json',
+  'docs/phase-9/generated/live-consent-withdrawal.md',
+];
 const gitHead = command('git', ['rev-parse', 'HEAD']).trim();
 const sourceSha = exactValue(env.PHASE9_EVIDENCE_SOURCE_SHA ?? env.GITHUB_SHA, /^[a-f0-9]{40}$/i);
-const sourceTreeClean = gitStatusExcludingGeneratedEvidence() === '';
+const sourceTreeClean = gitStatusExcludingPaths(outputPaths) === '';
 const workerPollTimeoutSeconds = intEnv(
   'PHASE9_CONSENT_WITHDRAWAL_WORKER_POLL_TIMEOUT_SECONDS',
   180,

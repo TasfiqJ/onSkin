@@ -1,47 +1,367 @@
 #!/usr/bin/env node
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+
 import {
   block,
-  abs,
-  command,
-  envSnapshot,
   evidenceFlagEnabled,
   exists,
-  gitStatusExcludingGeneratedEvidence,
-  hash,
-  listFiles,
   markdownList,
   normalizeNamedSignoff,
   normalizeProductionDomain,
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
   notApplicablePhase9EvidenceKeys,
+  parseEnv,
   printResult,
   requiredPhase9EvidenceKeys,
   warn,
-  write,
 } from './lib.mjs';
+import {
+  CAT07_COMMITTED_INPUT_PATHS,
+  validateCat07CommittedEvidence,
+  validateCat07FullEvidenceContract,
+} from '../e2e/cat07-committed-evidence.mjs';
 import {
   isReleasePlatformRequired,
   launchContractSnapshot,
-  loadLaunchContract,
   platformRequirementStatus,
+  validateLaunchContract,
 } from '../launch/contract.mjs';
+import {
+  atomicWriteReleaseQaOutputs,
+  canonicalReleaseRepoPath,
+  captureReleaseCandidateRawEvidenceBindings,
+  captureReleaseQaSnapshot,
+  evaluateCat07ReleaseEvidence,
+  evaluateReleaseCandidateReadiness,
+  expectedReleaseCandidateMetadataPaths,
+  listPinnedHeadFiles,
+  PHASE9_CAT07_BOUND_INPUT_PATHS,
+  pinnedSourceHashes,
+  runTrustedGit,
+  verifyReleaseCandidateRawEvidenceBindings,
+  verifyReleaseQaSnapshot,
+} from './release-qa-integrity.mjs';
+import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
+import {
+  auditGovernedEvidenceChain,
+  captureGovernedEvidenceWorkingBindings,
+  renderGovernedEvidenceLedger,
+  validateGovernedEvidenceChainBinding,
+  validateGovernedGeneratedPublication,
+  verifyGovernedEvidenceWorkingBindings,
+} from '../launch/governed-evidence-chain.mjs';
+import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from '../phase5/device-qa-packet-contract.mjs';
+import { validatePhase7EvidenceInventory } from '../phase7/core-loop-qa-packet-contract.mjs';
+import {
+  validateClaimedBetaUpstreamPacket,
+  validatePhase5UpstreamPacket,
+  validatePhase7UpstreamPacket,
+} from './upstream-packet-contract.mjs';
+
+function activeConfiguredValue(value) {
+  return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
+function selectGovernedCoordinate(environment, canonicalName, aliasName, selectionErrors) {
+  const canonicalValue = activeConfiguredValue(environment[canonicalName]);
+  const aliasValue = activeConfiguredValue(environment[aliasName]);
+  if (canonicalValue !== null && aliasValue !== null && canonicalValue !== aliasValue) {
+    selectionErrors.push(`${canonicalName} and ${aliasName} select different governed evidence`);
+  }
+  return canonicalValue ?? aliasValue;
+}
+
+function invalidGovernedEvidenceChainAudit({
+  errors: auditErrors,
+  sourceGitSha = null,
+  releaseCandidateDir = null,
+  headGitSha = null,
+}) {
+  return Object.freeze({
+    schemaVersion: 1,
+    kind: 'governed_evidence_chain_audit',
+    status: 'invalid',
+    sourceGitSha,
+    headGitSha,
+    evidenceCommitSha: null,
+    releaseCandidateDir,
+    ledgerPath: null,
+    directEvidenceCommit: false,
+    evidenceOnlyCommit: false,
+    cleanWorktree: false,
+    normalIndexState: false,
+    ledgerValid: false,
+    hashesValid: false,
+    downstreamGeneratedOnly: false,
+    ledger: null,
+    downstreamCommits: [],
+    errors: [...auditErrors],
+  });
+}
+
+function verifyReplayInputsAtRecordedPrefix(snapshot, recordedCurrentGitSha, rootPath) {
+  const replayErrors = [];
+  for (const repoPath of [...sourceFiles, ...releaseCandidateExpectedFiles]) {
+    const currentHeadBytes = snapshot.records[repoPath]?.headBytes;
+    if (!Buffer.isBuffer(currentHeadBytes)) {
+      replayErrors.push(`${repoPath} has no pinned current-HEAD bytes`);
+      continue;
+    }
+    try {
+      const recordedBytes = runTrustedGit(
+        rootPath,
+        ['show', `${recordedCurrentGitSha}:${repoPath}`],
+        { maxBuffer: 64 * 1024 * 1024 },
+      );
+      if (!recordedBytes.equals(currentHeadBytes)) {
+        replayErrors.push(`${repoPath} differs from the recorded packet-input prefix`);
+      }
+    } catch {
+      replayErrors.push(`${repoPath} is missing from the recorded packet-input prefix`);
+    }
+  }
+  return replayErrors;
+}
+
+function governedEvidenceChainRecord(audit, consumerErrors) {
+  const ledgerBytes = audit.ledger ? renderGovernedEvidenceLedger(audit.ledger) : null;
+  return Object.freeze({
+    status: audit.status === 'pass' && consumerErrors.length === 0 ? 'pass' : 'blocked',
+    sourceGitSha: audit.sourceGitSha ?? null,
+    evidenceCommitSha: audit.evidenceCommitSha ?? null,
+    currentGitSha: audit.headGitSha ?? null,
+    releaseCandidateDir: audit.releaseCandidateDir ?? null,
+    ledgerPath: audit.ledgerPath ?? null,
+    ledgerSha256: ledgerBytes ? createHash('sha256').update(ledgerBytes).digest('hex') : null,
+    ledgerEntryCount: Array.isArray(audit.ledger?.entries) ? audit.ledger.entries.length : 0,
+    downstreamCommitCount: Array.isArray(audit.downstreamCommits)
+      ? audit.downstreamCommits.length
+      : 0,
+    sourcePacketCodeBoundToSourceCommit:
+      audit.status === 'pass' && audit.downstreamGeneratedOnly === true,
+    errors: [...audit.errors, ...consumerErrors],
+  });
+}
+
+function collectUpstreamChainBindingFailures(upstreamPacket, label, audit) {
+  const upstreamChain = upstreamPacket?.governedEvidenceChain;
+  const failures = validateGovernedEvidenceChainBinding(upstreamChain, audit).errors.map(
+    (error) => `${label} ${error}`,
+  );
+  if (upstreamPacket?.gitSha !== upstreamChain?.currentGitSha) {
+    failures.push(`${label} packet Git SHA does not match its governed current Git SHA`);
+  }
+  if (upstreamPacket?.gitStatus !== '') {
+    failures.push(`${label} was not generated from a clean worktree`);
+  }
+  return failures;
+}
+
+function readPinnedUpstreamPacket(snapshot, repoPath, label) {
+  const bytes = snapshot.records[repoPath]?.headBytes;
+  if (!Buffer.isBuffer(bytes)) throw new Error(`${label} is missing from pinned HEAD`);
+  const packet = JSON.parse(bytes.toString('utf8'));
+  if (packet === null || typeof packet !== 'object' || Array.isArray(packet)) {
+    throw new Error(`${label} must be one JSON object`);
+  }
+  return packet;
+}
+
+function inspectPinnedPhase5Packet(snapshot, audit) {
+  const label = 'pinned Phase 5 device QA packet';
+  const failures = [];
+  let packet;
+  try {
+    packet = readPinnedUpstreamPacket(
+      snapshot,
+      'docs/phase-5/generated/device-qa-packet.json',
+      label,
+    );
+  } catch (error) {
+    return Object.freeze({
+      status: 'blocked',
+      errors: [error instanceof Error ? error.message : `${label} could not be parsed`],
+    });
+  }
+  if (!Array.isArray(packet.blockers) || packet.blockers.length !== 0) {
+    failures.push(`${label} must contain an empty blockers array`);
+  }
+  const qaEvidence = packet.qaEvidence;
+  const qaEvidenceKeys =
+    qaEvidence !== null && typeof qaEvidence === 'object' && !Array.isArray(qaEvidence)
+      ? Object.keys(qaEvidence)
+      : [];
+  if (
+    qaEvidenceKeys.length !== PHASE5_REQUIRED_QA_EVIDENCE_KEYS.length ||
+    new Set(qaEvidenceKeys).size !== qaEvidenceKeys.length ||
+    qaEvidenceKeys.some((key) => !PHASE5_REQUIRED_QA_EVIDENCE_KEYS.includes(key)) ||
+    qaEvidenceKeys.some(
+      (key) => qaEvidence[key]?.required !== true || qaEvidence[key]?.passed !== true,
+    )
+  ) {
+    failures.push(`${label} required QA evidence inventory is not exact and passing`);
+  }
+  if (
+    packet.buildEvidence?.qaSignedOff !== true ||
+    typeof packet.buildEvidence?.signedOffBy !== 'string' ||
+    packet.buildEvidence.signedOffBy.length === 0
+  ) {
+    failures.push(`${label} does not contain completed named native-device signoff`);
+  }
+  for (const [field, value] of [
+    ['widgetLifecycleEvidence', packet.widgetLifecycleEvidence?.status],
+    ['cameraLifecycleEvidence', packet.cameraLifecycleEvidence?.status],
+    ['performanceEvidence', packet.performanceEvidence?.status],
+  ]) {
+    if (value !== 'pass') failures.push(`${label} ${field} is not pass`);
+  }
+  if (packet.nativeOcr?.qaRequired === true && packet.nativeOcr?.evidence?.status !== 'pass') {
+    failures.push(`${label} required native OCR evidence is not pass`);
+  }
+  failures.push(...collectUpstreamChainBindingFailures(packet, label, audit));
+  failures.push(...validatePhase5UpstreamPacket(packet, audit).errors);
+  return Object.freeze({
+    status: failures.length === 0 ? 'pass' : 'blocked',
+    gitSha: packet.gitSha ?? null,
+    errors: failures,
+  });
+}
+
+function inspectPinnedPhase7Packet(snapshot, audit) {
+  const label = 'pinned Phase 7 core-loop QA packet';
+  const failures = [];
+  let packet;
+  try {
+    packet = readPinnedUpstreamPacket(
+      snapshot,
+      'docs/phase-7/generated/core-loop-qa-packet.json',
+      label,
+    );
+  } catch (error) {
+    return Object.freeze({
+      status: 'blocked',
+      errors: [error instanceof Error ? error.message : `${label} could not be parsed`],
+    });
+  }
+  if (!Array.isArray(packet.blockers) || packet.blockers.length !== 0) {
+    failures.push(`${label} must contain an empty blockers array`);
+  }
+  failures.push(
+    ...validatePhase7EvidenceInventory(packet.evidence).errors.map((error) => `${label} ${error}`),
+  );
+  if (
+    packet.cat07CommittedEvidence?.status !== 'pass' ||
+    packet.cat07FullEvidenceContract?.status !== 'pass'
+  ) {
+    failures.push(`${label} CAT07 evidence is not pass`);
+  }
+  if (packet.upstreamPackets?.phase5DeviceQa?.status !== 'pass') {
+    failures.push(`${label} does not record a passing Phase 5 upstream role`);
+  }
+  if (packet.upstreamPackets?.humanE2e?.status !== 'pass') {
+    failures.push(`${label} does not record a passing human-E2E upstream role`);
+  }
+  failures.push(...collectUpstreamChainBindingFailures(packet, label, audit));
+  failures.push(...validatePhase7UpstreamPacket(packet, audit).errors);
+  return Object.freeze({
+    status: failures.length === 0 ? 'pass' : 'blocked',
+    gitSha: packet.gitSha ?? null,
+    errors: failures,
+  });
+}
+
+function inspectClaimedBetaPacket(snapshot, audit, claimed) {
+  const label = 'claimed pinned beta coverage packet';
+  if (!claimed) return Object.freeze({ status: 'not_claimed', errors: [] });
+  const failures = [];
+  let packet;
+  try {
+    packet = readPinnedUpstreamPacket(
+      snapshot,
+      'docs/phase-4/generated/beta-coverage-report.json',
+      label,
+    );
+  } catch (error) {
+    return Object.freeze({
+      status: 'blocked',
+      errors: [error instanceof Error ? error.message : `${label} could not be parsed`],
+    });
+  }
+  if (
+    packet.status !== 'ready' ||
+    !Array.isArray(packet.codeErrors) ||
+    packet.codeErrors.length !== 0 ||
+    !Array.isArray(packet.evidenceBlockers) ||
+    packet.evidenceBlockers.length !== 0 ||
+    !Array.isArray(packet.warnings) ||
+    packet.warnings.length !== 0 ||
+    Object.keys(packet.evidence ?? {}).length === 0 ||
+    Object.values(packet.evidence ?? {}).some((value) => value !== true)
+  ) {
+    failures.push(`${label} is not ready with empty blocker/warning sets and complete evidence`);
+  }
+  failures.push(...collectUpstreamChainBindingFailures(packet, label, audit));
+  failures.push(...validateClaimedBetaUpstreamPacket(packet, audit, true).errors);
+  return Object.freeze({
+    status: failures.length === 0 ? 'pass' : 'blocked',
+    gitSha: packet.gitSha ?? null,
+    errors: failures,
+  });
+}
 
 const errors = [];
 const warnings = [];
-const env = envSnapshot();
-const launchContract = loadLaunchContract();
-const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
-const packetOutDir = String(env.PHASE9_PACKET_OUT_DIR ?? '').trim();
-const outDir = packetOutDir || 'docs/phase-9/generated';
-const packetOutputPaths = [
-  `${outDir}/release-engineering-qa-packet.json`,
-  `${outDir}/release-engineering-qa-packet.md`,
-].map((path) => path.replace(/\\/g, '/'));
-
-function gitStatusExcludingGeneratedPacket() {
-  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
+const root = process.cwd();
+const check = process.argv.includes('--check');
+const defaultPacketOutputPaths = [
+  'docs/phase-9/generated/release-engineering-qa-packet.json',
+  'docs/phase-9/generated/release-engineering-qa-packet.md',
+];
+let environmentBootstrap;
+try {
+  environmentBootstrap = captureReleaseQaSnapshot({
+    root,
+    inputPaths: ['.env.example'],
+    outputPaths: defaultPacketOutputPaths,
+    workingInputPaths: ['.env'],
+  });
+} catch {
+  console.error('FAIL Phase 9 release QA packet could not pin its environment inputs.');
+  process.exit(1);
 }
+const processEnvironment = { ...process.env };
+function environmentBinding(value) {
+  return JSON.stringify(
+    Object.entries(value).sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0)),
+  );
+}
+const processEnvironmentBinding = environmentBinding(processEnvironment);
+function processEnvironmentStabilityErrors() {
+  return environmentBinding(process.env) === processEnvironmentBinding
+    ? []
+    : ['process environment changed during Phase 9 packet assembly'];
+}
+const pinnedEnvExampleBytes = environmentBootstrap.records['.env.example'].headBytes;
+if (!Buffer.isBuffer(pinnedEnvExampleBytes)) {
+  console.error('FAIL .env.example must exist as a regular blob in pinned HEAD.');
+  process.exit(1);
+}
+const env = {
+  ...parseEnv(pinnedEnvExampleBytes.toString('utf8')),
+  ...(environmentBootstrap.workingRecords['.env'].kind === 'file'
+    ? parseEnv(environmentBootstrap.workingRecords['.env'].bytes.toString('utf8'))
+    : {}),
+  ...processEnvironment,
+};
+if (String(env.PHASE9_PACKET_OUT_DIR ?? '').trim().length > 0) {
+  console.error(
+    'FAIL PHASE9_PACKET_OUT_DIR cannot redirect the governed Phase 9 release packet outputs.',
+  );
+  process.exit(1);
+}
+const packetOutputPaths = [...defaultPacketOutputPaths];
 
 const sourceFiles = [
   '.env.example',
@@ -277,6 +597,11 @@ const sourceFiles = [
   'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
   'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
   'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+  'supabase/tests/database/catalog_import_lifecycle.test.sql',
+  'supabase/tests/database/catalog_launch_curation.test.sql',
+  'supabase/tests/database/catalog_serving_gate.test.sql',
   'supabase/tests/database/cat07_truthful_freshness.test.sql',
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
   'supabase/migrations/20260713000046_account_service_row_scrub.sql',
@@ -299,6 +624,28 @@ const sourceFiles = [
   'scripts/phase9/edge-function-manifest-lib.mjs',
   'scripts/phase9/edge-function-manifest-smoke.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
+  'scripts/phase9/release-qa-integrity.mjs',
+  'scripts/phase9/release-qa-integrity.test.mjs',
+  'scripts/launch/governed-evidence-chain.mjs',
+  'scripts/launch/governed-evidence-chain.test.mjs',
+  'scripts/launch/governed-publication-coverage.mjs',
+  'scripts/launch/governed-publication-coverage.test.mjs',
+  'scripts/phase9/git-status-exclusion.test.mjs',
+  'scripts/docs/device-support-policy-audit.test.mjs',
+  'scripts/phase9/dependency-sbom-contract.mjs',
+  'scripts/phase9/dependency-sbom-contract.test.mjs',
+  'scripts/e2e/human-e2e-manifest-contract.test.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.test.mjs',
+  'scripts/phase5/device-qa-packet-contract.mjs',
+  'scripts/phase7/core-loop-qa-packet-contract.mjs',
+  'scripts/phase7/core-loop-qa-packet-contract.test.mjs',
+  'scripts/phase9/upstream-packet-contract.mjs',
+  'scripts/phase9/upstream-packet-contract.test.mjs',
+  'docs/phase-5/generated/device-qa-packet.json',
+  'docs/phase-7/generated/core-loop-qa-packet.json',
+  'docs/phase-4/generated/beta-coverage-report.json',
+  ...PHASE9_CAT07_BOUND_INPUT_PATHS,
   'scripts/phase9/live-supabase-adversarial.mjs',
   'scripts/phase9/live-edge-auth.mjs',
   'scripts/phase9/live-data-rights.mjs',
@@ -321,6 +668,8 @@ const sourceFiles = [
   'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
   'scripts/phase9/catalog-scan-minimization-postgres-rehearsal.sql',
   'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
   'scripts/phase9/security-ci-smoke.mjs',
@@ -355,22 +704,167 @@ const sourceFiles = [
 for (const file of sourceFiles)
   block(errors, exists(file), `${file} is missing from QA packet inputs.`);
 
-let gitSha = 'unknown';
-let gitStatus = 'unknown';
-try {
-  gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-  gitStatus = gitStatusExcludingGeneratedPacket();
-} catch {
-  warn(warnings, false, 'Git SHA/status could not be captured.');
+const gitSha = environmentBootstrap.headSha;
+
+const governedChainSelectionErrors = [];
+const governedSourceGitSha = selectGovernedCoordinate(
+  env,
+  'PHASE9_IOS_SOURCE_GIT_SHA',
+  'GOVERNED_EVIDENCE_SOURCE_GIT_SHA',
+  governedChainSelectionErrors,
+);
+const governedReleaseCandidateSelection = selectGovernedCoordinate(
+  env,
+  'PHASE9_RELEASE_CANDIDATE_DIR',
+  'GOVERNED_EVIDENCE_RC_DIR',
+  governedChainSelectionErrors,
+);
+if (!/^[0-9a-f]{40}$/u.test(String(governedSourceGitSha ?? ''))) {
+  governedChainSelectionErrors.push(
+    'PHASE9_IOS_SOURCE_GIT_SHA (or its exact governed alias) must select one lowercase source commit',
+  );
 }
+if (
+  !/^docs\/phase-9\/release-candidates\/rc-[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(
+    String(governedReleaseCandidateSelection ?? ''),
+  )
+) {
+  governedChainSelectionErrors.push(
+    'PHASE9_RELEASE_CANDIDATE_DIR (or its exact governed alias) must select one immutable release candidate',
+  );
+}
+
+const releaseCandidateDirValue = String(governedReleaseCandidateSelection ?? '')
+  .replace(/\\/g, '/')
+  .replace(/\/+$/g, '');
+let releaseCandidateDir = '';
+let releaseCandidateFiles = [];
+let releaseCandidateExpectedFiles = [];
+if (releaseCandidateDirValue) {
+  try {
+    releaseCandidateDir = canonicalReleaseRepoPath(root, releaseCandidateDirValue);
+    releaseCandidateExpectedFiles = expectedReleaseCandidateMetadataPaths(
+      root,
+      releaseCandidateDir,
+    );
+    releaseCandidateFiles = listPinnedHeadFiles(root, gitSha, releaseCandidateDir);
+  } catch {
+    block(
+      errors,
+      false,
+      'PHASE9_RELEASE_CANDIDATE_DIR must name a repository-confined directory in pinned HEAD.',
+    );
+  }
+}
+
+let sourceSnapshot;
+try {
+  sourceSnapshot = captureReleaseQaSnapshot({
+    root,
+    expectedHeadSha: gitSha,
+    inputPaths: check
+      ? [...sourceFiles, ...releaseCandidateExpectedFiles, ...packetOutputPaths]
+      : [...sourceFiles, ...releaseCandidateExpectedFiles],
+    outputPaths: check ? [] : packetOutputPaths,
+    workingInputPaths: ['.env'],
+  });
+} catch {
+  console.error('FAIL Phase 9 release QA packet could not capture its pinned source snapshot.');
+  process.exit(1);
+}
+if (verifyReleaseQaSnapshot(environmentBootstrap).status !== 'pass') {
+  console.error('FAIL Phase 9 release QA packet environment inputs drifted during assembly.');
+  process.exit(1);
+}
+let governedEvidenceChainAudit;
+if (governedChainSelectionErrors.length > 0) {
+  governedEvidenceChainAudit = invalidGovernedEvidenceChainAudit({
+    errors: governedChainSelectionErrors,
+    sourceGitSha: governedSourceGitSha,
+    releaseCandidateDir: governedReleaseCandidateSelection,
+    headGitSha: gitSha,
+  });
+} else {
+  try {
+    governedEvidenceChainAudit = auditGovernedEvidenceChain({
+      root,
+      sourceGitSha: governedSourceGitSha,
+      releaseCandidateDir: governedReleaseCandidateSelection,
+      expectedHeadSha: gitSha,
+    });
+  } catch (error) {
+    governedEvidenceChainAudit = invalidGovernedEvidenceChainAudit({
+      errors: [
+        `governed evidence chain could not be audited: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      ],
+      sourceGitSha: governedSourceGitSha,
+      releaseCandidateDir: governedReleaseCandidateSelection,
+      headGitSha: gitSha,
+    });
+  }
+}
+const governedChainConsumerErrors = [];
+let governedEvidenceBindings = null;
+if (governedEvidenceChainAudit.status === 'pass') {
+  try {
+    governedEvidenceBindings = captureGovernedEvidenceWorkingBindings(
+      governedEvidenceChainAudit,
+      root,
+    );
+  } catch (error) {
+    governedChainConsumerErrors.push(
+      error instanceof Error ? error.message : 'governed evidence files could not be bound',
+    );
+  }
+}
+const governedEvidenceChain = governedEvidenceChainRecord(
+  governedEvidenceChainAudit,
+  governedChainConsumerErrors,
+);
+for (const error of governedEvidenceChain.errors) {
+  block(errors, false, `Governed evidence chain: ${error}.`);
+}
+let launchContract;
+try {
+  launchContract = JSON.parse(
+    sourceSnapshot.records['docs/hugeToDo/launch-contract.json'].headBytes.toString('utf8'),
+  );
+  const contractErrors = validateLaunchContract(launchContract);
+  if (contractErrors.length > 0) throw new Error('invalid pinned launch contract');
+  launchContract = Object.freeze(launchContract);
+} catch {
+  console.error('FAIL Pinned launch contract is missing, malformed, or invalid.');
+  process.exit(1);
+}
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
+const gitStatus = sourceSnapshot.gitStatus;
 warn(
   warnings,
   gitStatus.length === 0,
   'Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.',
 );
+warn(
+  warnings,
+  sourceSnapshot.integrityIssues.length === 0,
+  'Release QA packet inputs do not all match regular, byte-identical blobs in pinned HEAD.',
+);
+
+const cat07Evidence = evaluateCat07ReleaseEvidence({
+  expectedHeadSha: gitSha,
+  snapshot: sourceSnapshot,
+  validateCommitted: (validationRoot, { expectedHeadSha }) =>
+    validateCat07CommittedEvidence(validationRoot, { expectedHeadSha }),
+  validateFull: (validationRoot, { expectedHeadSha }) =>
+    validateCat07FullEvidenceContract(validationRoot, { expectedHeadSha }),
+});
+for (const error of cat07Evidence.errors) {
+  block(errors, false, `CAT07 launch evidence: ${error}.`);
+}
 
 const evidence = Object.fromEntries(
-  requiredPhase9EvidenceKeys().map((key) => [key, evidenceFlagEnabled(env[key])]),
+  requiredPhase9EvidenceKeys(launchContract).map((key) => [key, evidenceFlagEnabled(env[key])]),
 );
 const notApplicableEvidence = Object.fromEntries(
   notApplicablePhase9EvidenceKeys(launchContract).map((key) => [key, 'not_applicable']),
@@ -384,19 +878,91 @@ warn(
   'External RC evidence missing: PHASE9_SIGNED_OFF_BY.',
 );
 
-const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '')
-  .replace(/\\/g, '/')
-  .replace(/\/+$/g, '');
-const releaseCandidateFiles =
-  releaseCandidateDir && exists(releaseCandidateDir)
-    ? listFiles(releaseCandidateDir).map((file) =>
-        file.replace(abs('.'), '').replace(/\\/g, '/').replace(/^\/+/, ''),
-      )
-    : [];
+const upstreamPackets = {
+  phase5DeviceQa: inspectPinnedPhase5Packet(sourceSnapshot, governedEvidenceChainAudit),
+  phase7CoreLoop: inspectPinnedPhase7Packet(sourceSnapshot, governedEvidenceChainAudit),
+  betaCoverage: inspectClaimedBetaPacket(
+    sourceSnapshot,
+    governedEvidenceChainAudit,
+    evidence.PHASE9_BETA_EVIDENCE_PASS === true,
+  ),
+};
+for (const [role, result] of Object.entries(upstreamPackets)) {
+  for (const error of result.errors) {
+    block(errors, false, `Upstream ${role}: ${error}.`);
+  }
+}
+
+const claimsComplete =
+  Object.values(evidence).every((passed) => passed === true) &&
+  Boolean(normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY));
+function runStrictIosArchiveCrossBinding() {
+  const result = spawnSync(
+    process.execPath,
+    ['scripts/phase9/store-build-inspect.mjs', '--check', '--strict'],
+    {
+      cwd: root,
+      env,
+      stdio: ['ignore', 'ignore', 'ignore'],
+      timeout: 10 * 60_000,
+      windowsHide: true,
+    },
+  );
+  return { status: result.status === 0 && !result.error ? 'pass' : 'blocked' };
+}
+const releaseCandidateEvaluation = evaluateReleaseCandidateReadiness({
+  root,
+  releaseCandidateDir,
+  observedTrackedFiles: releaseCandidateFiles,
+  snapshot: sourceSnapshot,
+  configuredArchiveEvidencePath: env.PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH,
+  configuredSourceGitSha: governedSourceGitSha,
+  claimsComplete,
+  auditGitContract: auditReleaseCandidateGitContract,
+  auditCrossBinding: runStrictIosArchiveCrossBinding,
+});
+let rawEvidenceBinding = null;
+const rawEvidenceErrors = [];
+if (releaseCandidateEvaluation.status === 'pass') {
+  try {
+    rawEvidenceBinding = captureReleaseCandidateRawEvidenceBindings({
+      root,
+      releaseCandidateDir: releaseCandidateEvaluation.dir,
+      indexBytes:
+        sourceSnapshot.records[
+          `${releaseCandidateEvaluation.dir}/ios-archive-privacy-evidence.json`
+        ].headBytes,
+    });
+  } catch {
+    rawEvidenceErrors.push('raw iOS archive/report files could not be hash-bound for publication');
+  }
+}
+const releaseCandidateEvidence = {
+  ...releaseCandidateEvaluation,
+  status:
+    releaseCandidateEvaluation.status === 'pass' && rawEvidenceBinding !== null
+      ? 'pass'
+      : 'blocked',
+  rawEvidenceBinding: {
+    status: rawEvidenceBinding === null ? 'blocked' : 'pass',
+    fileCount: rawEvidenceBinding === null ? 0 : Object.keys(rawEvidenceBinding.records).length,
+  },
+  errors: [...releaseCandidateEvaluation.errors, ...rawEvidenceErrors],
+};
+for (const error of releaseCandidateEvidence.errors) {
+  block(errors, false, `Release-candidate readiness: ${error}.`);
+}
 
 const packet = {
   generatedAt: new Date().toISOString(),
-  status: errors.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
+  status:
+    errors.length === 0 &&
+    warnings.length === 0 &&
+    cat07Evidence.status === 'pass' &&
+    releaseCandidateEvidence.status === 'pass' &&
+    governedEvidenceChain.status === 'pass'
+      ? 'ready'
+      : 'blocked',
   launchContract: launchContractSnapshot(launchContract),
   platformStatus: {
     ios: platformRequirementStatus('ios', launchContract),
@@ -404,6 +970,20 @@ const packet = {
   },
   gitSha,
   gitStatus,
+  sourceSnapshot: {
+    headSha: sourceSnapshot.headSha,
+    gitStatusSha256: sourceSnapshot.gitStatusSha256,
+    inputCount: sourceFiles.length + releaseCandidateExpectedFiles.length,
+    optionalWorkingInputCount: sourceSnapshot.workingInputPaths.length,
+    integrityStatus: sourceSnapshot.integrityIssues.length === 0 ? 'pass' : 'blocked',
+    integrityIssues: sourceSnapshot.integrityIssues,
+  },
+  cat07Evidence: {
+    ...cat07Evidence,
+    committedInputPaths: [...CAT07_COMMITTED_INPUT_PATHS],
+  },
+  governedEvidenceChain,
+  upstreamPackets,
   releaseIdentity: {
     appEnvironment: env.EXPO_PUBLIC_APP_ENV ?? null,
     finalBrandDomain: normalizeProductionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
@@ -414,60 +994,373 @@ const packet = {
       : null,
     supportEmail: normalizeProductionSupportEmail(env.EXPO_PUBLIC_SUPPORT_EMAIL),
   },
-  releaseCandidate: {
-    dir: releaseCandidateDir || null,
-    files: releaseCandidateFiles,
-  },
+  releaseCandidate: releaseCandidateEvidence,
   evidence,
   notApplicableEvidence,
   signedOffBy: normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY) ?? '',
-  sourceHashes: Object.fromEntries(
-    [...sourceFiles, ...releaseCandidateFiles].filter(exists).map((file) => [file, hash(file)]),
-  ),
+  sourceHashes: pinnedSourceHashes(sourceSnapshot, [
+    ...sourceFiles,
+    ...releaseCandidateExpectedFiles,
+  ]),
   blockers: errors,
   warnings,
 };
 
-write(`${outDir}/release-engineering-qa-packet.json`, `${JSON.stringify(packet, null, 2)}\n`);
-write(
-  `${outDir}/release-engineering-qa-packet.md`,
-  [
-    '# Phase 9 Release Engineering QA Packet',
-    '',
-    `Generated: ${packet.generatedAt}`,
-    `Status: ${packet.status}`,
-    `Git SHA: ${packet.gitSha}`,
-    `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
-    '',
-    '## Release Identity',
-    '',
-    `- Environment: ${packet.releaseIdentity.appEnvironment || 'BLOCKED'}`,
-    `- Final domain: ${packet.releaseIdentity.finalBrandDomain || 'BLOCKED'}`,
-    `- Marketing URL: ${packet.releaseIdentity.marketingUrl || 'BLOCKED'}`,
-    `- App Store URL: ${packet.releaseIdentity.appStoreUrl || 'BLOCKED'}`,
-    `- Play Store URL: ${androidReleaseRequired ? packet.releaseIdentity.playStoreUrl || 'BLOCKED' : 'NOT APPLICABLE'}`,
-    `- Support email: ${packet.releaseIdentity.supportEmail || 'BLOCKED'}`,
-    `- Signed off by: ${packet.signedOffBy || 'BLOCKED'}`,
-    `- Release candidate folder: ${packet.releaseCandidate.dir || 'BLOCKED'}`,
-    '',
-    '## Blockers',
-    '',
-    ...markdownList(errors, '- None from packet inputs.'),
-    '',
-    '## Warnings',
-    '',
-    ...markdownList(warnings),
-    '',
-    '## Evidence',
-    '',
-    ...Object.entries(evidence).map(([key, value]) => `- ${key}: ${value ? 'PASS' : 'BLOCKED'}`),
-    ...Object.entries(notApplicableEvidence).map(([key, value]) => `- ${key}: ${value}`),
-    '',
-    '## Source Hashes',
-    '',
-    ...Object.entries(packet.sourceHashes).map(([file, value]) => `- \`${file}\`: \`${value}\``),
-    '',
-  ].join('\n'),
-);
+const packetMarkdown = [
+  '# Phase 9 Release Engineering QA Packet',
+  '',
+  `Generated: ${packet.generatedAt}`,
+  `Status: ${packet.status}`,
+  `Git SHA: ${packet.gitSha}`,
+  `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
+  `NUL Git status SHA-256: ${packet.sourceSnapshot.gitStatusSha256}`,
+  `Pinned input integrity: ${packet.sourceSnapshot.integrityStatus}`,
+  '',
+  '## Governed Evidence Chain',
+  '',
+  `- Status: ${packet.governedEvidenceChain.status}`,
+  `- Source S: \`${packet.governedEvidenceChain.sourceGitSha ?? 'BLOCKED'}\``,
+  `- Evidence E: \`${packet.governedEvidenceChain.evidenceCommitSha ?? 'BLOCKED'}\``,
+  `- Current R/F HEAD: \`${packet.governedEvidenceChain.currentGitSha ?? 'BLOCKED'}\``,
+  `- Selected RC: \`${packet.governedEvidenceChain.releaseCandidateDir ?? 'BLOCKED'}\``,
+  `- Ledger path: \`${packet.governedEvidenceChain.ledgerPath ?? 'BLOCKED'}\``,
+  `- Ledger SHA-256: \`${packet.governedEvidenceChain.ledgerSha256 ?? 'BLOCKED'}\``,
+  `- Ledger entries: ${packet.governedEvidenceChain.ledgerEntryCount}`,
+  `- Audited generated descendants: ${packet.governedEvidenceChain.downstreamCommitCount}`,
+  `- Packet code bound to S: ${packet.governedEvidenceChain.sourcePacketCodeBoundToSourceCommit ? 'yes' : 'BLOCKED'}`,
+  '',
+  '## Upstream Packet Contracts',
+  '',
+  `- Phase 5 device QA: ${packet.upstreamPackets.phase5DeviceQa.status}`,
+  `- Phase 7 core loop: ${packet.upstreamPackets.phase7CoreLoop.status}`,
+  `- Beta coverage (when claimed): ${packet.upstreamPackets.betaCoverage.status}`,
+  '',
+  '## CAT07 Launch Evidence',
+  '',
+  `- Overall: ${packet.cat07Evidence.status}`,
+  `- Expected HEAD: \`${packet.cat07Evidence.expectedHeadSha}\``,
+  `- Committed validator: ${packet.cat07Evidence.committed.status}`,
+  `- Committed validator HEAD: \`${packet.cat07Evidence.committed.headSha ?? 'BLOCKED'}\``,
+  `- Full manifest validator: ${packet.cat07Evidence.full.status}`,
+  `- Full manifest validator HEAD: \`${packet.cat07Evidence.full.headSha ?? 'BLOCKED'}\``,
+  `- Summary SHA-256: \`${packet.cat07Evidence.committed.summarySha256 ?? 'BLOCKED'}\``,
+  `- Manifest JSON SHA-256: \`${packet.cat07Evidence.committed.manifestSha256 ?? 'BLOCKED'}\``,
+  `- Manifest Markdown SHA-256: \`${packet.cat07Evidence.committed.markdownSha256 ?? 'BLOCKED'}\``,
+  '',
+  '### CAT07 Bound Input Hashes',
+  '',
+  ...Object.entries(packet.cat07Evidence.boundInputHashes).map(
+    ([file, value]) => `- \`${file}\`: \`${value ?? 'BLOCKED'}\``,
+  ),
+  '',
+  '## Release Identity',
+  '',
+  `- Environment: ${packet.releaseIdentity.appEnvironment || 'BLOCKED'}`,
+  `- Final domain: ${packet.releaseIdentity.finalBrandDomain || 'BLOCKED'}`,
+  `- Marketing URL: ${packet.releaseIdentity.marketingUrl || 'BLOCKED'}`,
+  `- App Store URL: ${packet.releaseIdentity.appStoreUrl || 'BLOCKED'}`,
+  `- Play Store URL: ${androidReleaseRequired ? packet.releaseIdentity.playStoreUrl || 'BLOCKED' : 'NOT APPLICABLE'}`,
+  `- Support email: ${packet.releaseIdentity.supportEmail || 'BLOCKED'}`,
+  `- Signed off by: ${packet.signedOffBy || 'BLOCKED'}`,
+  `- Release candidate folder: ${packet.releaseCandidate.dir || 'BLOCKED'}`,
+  `- RC tracked inventory: ${packet.releaseCandidate.inventoryStatus}`,
+  `- RC pinned metadata: ${packet.releaseCandidate.pinnedMetadataStatus}`,
+  `- RC Git contract: ${packet.releaseCandidate.gitContract.status}`,
+  `- RC archive/store cross-binding: ${packet.releaseCandidate.crossBinding.status}`,
+  `- RC raw archive/report binding: ${packet.releaseCandidate.rawEvidenceBinding.status}`,
+  '',
+  '## Blockers',
+  '',
+  ...markdownList(errors, '- None from packet inputs.'),
+  '',
+  '## Warnings',
+  '',
+  ...markdownList(warnings),
+  '',
+  '## Evidence',
+  '',
+  ...Object.entries(evidence).map(([key, value]) => `- ${key}: ${value ? 'PASS' : 'BLOCKED'}`),
+  ...Object.entries(notApplicableEvidence).map(([key, value]) => `- ${key}: ${value}`),
+  '',
+  '## Source Hashes',
+  '',
+  ...Object.entries(packet.sourceHashes).map(([file, value]) => `- \`${file}\`: \`${value}\``),
+  '',
+].join('\n');
+
+function canonicalJsonBytes(value) {
+  return Buffer.from(`${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+function exactIsoTimestamp(value) {
+  if (typeof value !== 'string') return false;
+  const milliseconds = Date.parse(value);
+  return Number.isFinite(milliseconds) && new Date(milliseconds).toISOString() === value;
+}
+
+function replaceExactlyOnce(text, search, replacement, errors, label) {
+  const first = text.indexOf(search);
+  if (first < 0 || text.indexOf(search, first + search.length) >= 0) {
+    errors.push(`canonical Phase 9 Markdown does not contain exactly one ${label}`);
+    return text;
+  }
+  return `${text.slice(0, first)}${replacement}${text.slice(first + search.length)}`;
+}
+
+const initialCat07EvidenceJson = JSON.stringify(cat07Evidence);
+
+function phase9AssemblyStabilityErrors({ includeSourceSnapshot }) {
+  const stabilityErrors = processEnvironmentStabilityErrors();
+  if (includeSourceSnapshot) {
+    stabilityErrors.push(...verifyReleaseQaSnapshot(sourceSnapshot).errors);
+  }
+  stabilityErrors.push(...verifyReleaseQaSnapshot(environmentBootstrap).errors);
+  if (releaseCandidateEvidence.status === 'pass') {
+    const rawEvidenceCheck = verifyReleaseCandidateRawEvidenceBindings(rawEvidenceBinding);
+    if (rawEvidenceCheck.status !== 'pass') {
+      stabilityErrors.push(...rawEvidenceCheck.errors);
+    }
+  }
+  if (governedEvidenceChainAudit.status === 'pass') {
+    if (!governedEvidenceBindings) {
+      stabilityErrors.push(
+        'Phase 9 packet assembly has no retained governed evidence file bindings',
+      );
+    } else {
+      stabilityErrors.push(
+        ...verifyGovernedEvidenceWorkingBindings(governedEvidenceBindings, root, {
+          context: 'Phase 9 packet assembly',
+        }),
+      );
+    }
+  }
+  const finalCat07Evidence = evaluateCat07ReleaseEvidence({
+    expectedHeadSha: gitSha,
+    snapshot: sourceSnapshot,
+    validateCommitted: (validationRoot, { expectedHeadSha }) =>
+      validateCat07CommittedEvidence(validationRoot, { expectedHeadSha }),
+    validateFull: (validationRoot, { expectedHeadSha }) =>
+      validateCat07FullEvidenceContract(validationRoot, { expectedHeadSha }),
+  });
+  if (JSON.stringify(finalCat07Evidence) !== initialCat07EvidenceJson) {
+    stabilityErrors.push('CAT07 evidence result changed during Phase 9 packet assembly');
+  }
+  if (includeSourceSnapshot && governedEvidenceChainAudit.status === 'pass') {
+    try {
+      const finalAudit = auditGovernedEvidenceChain({
+        root,
+        sourceGitSha: governedSourceGitSha,
+        releaseCandidateDir: governedReleaseCandidateSelection,
+        expectedHeadSha: gitSha,
+      });
+      if (JSON.stringify(finalAudit) !== JSON.stringify(governedEvidenceChainAudit)) {
+        stabilityErrors.push(
+          'governed evidence-chain audit changed during Phase 9 packet assembly',
+        );
+      }
+    } catch (error) {
+      stabilityErrors.push(
+        `governed evidence chain could not be re-audited during Phase 9 packet assembly: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+  }
+  return stabilityErrors;
+}
+
+async function waitForCheckDriftTestWindow(checkErrors) {
+  if (!process.argv.includes('--test-check-drift-window')) return;
+  const rawMilliseconds = String(process.env.PHASE9_QA_PACKET_CHECK_TEST_PAUSE_MS ?? '');
+  const milliseconds = Number(rawMilliseconds);
+  if (
+    process.env.NODE_ENV !== 'test' ||
+    !/^[1-9][0-9]{2,4}$/u.test(rawMilliseconds) ||
+    !Number.isSafeInteger(milliseconds) ||
+    milliseconds < 100 ||
+    milliseconds > 10_000
+  ) {
+    checkErrors.push('Phase 9 check drift window is restricted to one bounded test-only pause');
+    return;
+  }
+  console.log('PHASE9_QA_PACKET_CHECK_COMPARISON_COMPLETE');
+  await new Promise((resolvePause) => setTimeout(resolvePause, milliseconds));
+}
+
+if (check) {
+  const checkErrors = [];
+  let recordedPacket = null;
+  let recordedMarkdown = null;
+  const jsonRecord = sourceSnapshot.records[packetOutputPaths[0]];
+  const markdownRecord = sourceSnapshot.records[packetOutputPaths[1]];
+  for (const [path, record] of [
+    [packetOutputPaths[0], jsonRecord],
+    [packetOutputPaths[1], markdownRecord],
+  ]) {
+    if (
+      record?.workingKind !== 'file' ||
+      !Buffer.isBuffer(record.workingBytes) ||
+      !record.workingTreeMatchesHead ||
+      !Buffer.isBuffer(record.headBytes) ||
+      !record.headBytes.equals(record.workingBytes)
+    ) {
+      checkErrors.push(`${path} must be one committed regular file whose working bytes match HEAD`);
+    }
+  }
+  try {
+    if (
+      !Buffer.isBuffer(jsonRecord?.workingBytes) ||
+      !Buffer.isBuffer(markdownRecord?.workingBytes)
+    ) {
+      throw new Error('committed Phase 9 packet output pair is missing from the pinned snapshot');
+    }
+    recordedPacket = JSON.parse(
+      new TextDecoder('utf-8', { fatal: true }).decode(jsonRecord.workingBytes),
+    );
+    recordedMarkdown = new TextDecoder('utf-8', { fatal: true }).decode(
+      markdownRecord.workingBytes,
+    );
+  } catch (error) {
+    checkErrors.push(error instanceof Error ? error.message : String(error));
+  }
+  if (recordedPacket && typeof recordedMarkdown === 'string') {
+    if (!canonicalJsonBytes(recordedPacket).equals(jsonRecord.workingBytes)) {
+      checkErrors.push('recorded Phase 9 JSON is not canonical generated JSON');
+    }
+    if (!exactIsoTimestamp(recordedPacket.generatedAt)) {
+      checkErrors.push('recorded Phase 9 generatedAt must be one canonical ISO timestamp');
+    }
+    checkErrors.push(
+      ...validateGovernedGeneratedPublication(
+        recordedPacket.governedEvidenceChain,
+        governedEvidenceChainAudit,
+        packetOutputPaths,
+      ).errors,
+    );
+    if (recordedPacket.gitSha !== recordedPacket.governedEvidenceChain?.currentGitSha) {
+      checkErrors.push('recorded Phase 9 gitSha does not match governed currentGitSha');
+    }
+    if (
+      recordedPacket.status !== 'ready' ||
+      !Array.isArray(recordedPacket.blockers) ||
+      recordedPacket.blockers.length !== 0 ||
+      !Array.isArray(recordedPacket.warnings) ||
+      recordedPacket.warnings.length !== 0
+    ) {
+      checkErrors.push('recorded Phase 9 packet is not ready and blocker-free');
+    }
+    if (
+      recordedPacket.cat07Evidence?.status !== 'pass' ||
+      recordedPacket.releaseCandidate?.status !== 'pass' ||
+      recordedPacket.upstreamPackets?.phase5DeviceQa?.status !== 'pass' ||
+      recordedPacket.upstreamPackets?.phase7CoreLoop?.status !== 'pass' ||
+      recordedPacket.upstreamPackets?.betaCoverage?.status !== 'pass'
+    ) {
+      checkErrors.push('recorded Phase 9 required upstream and release roles are not pass');
+    }
+    const requiredEvidenceKeys = requiredPhase9EvidenceKeys(launchContract);
+    const recordedEvidenceKeys = Object.keys(recordedPacket.evidence ?? {});
+    if (
+      recordedEvidenceKeys.length !== requiredEvidenceKeys.length ||
+      new Set(recordedEvidenceKeys).size !== recordedEvidenceKeys.length ||
+      recordedEvidenceKeys.some((key) => !requiredEvidenceKeys.includes(key)) ||
+      recordedEvidenceKeys.some((key) => recordedPacket.evidence[key] !== true)
+    ) {
+      checkErrors.push('recorded Phase 9 evidence inventory is not exact and passing');
+    }
+    if (/^[0-9a-f]{40}$/u.test(String(recordedPacket.gitSha ?? ''))) {
+      checkErrors.push(
+        ...verifyReplayInputsAtRecordedPrefix(sourceSnapshot, recordedPacket.gitSha, root),
+      );
+    }
+
+    const rewriteCurrentHead = (value) => {
+      if (Array.isArray(value)) return value.map(rewriteCurrentHead);
+      if (value && typeof value === 'object') {
+        return Object.fromEntries(
+          Object.entries(value).map(([key, child]) => [key, rewriteCurrentHead(child)]),
+        );
+      }
+      return value === packet.gitSha ? recordedPacket.gitSha : value;
+    };
+    const replayPacket = rewriteCurrentHead(JSON.parse(JSON.stringify(packet)));
+    replayPacket.generatedAt = '<generatedAt>';
+    replayPacket.governedEvidenceChain.downstreamCommitCount =
+      recordedPacket.governedEvidenceChain?.downstreamCommitCount;
+    const comparableRecordedPacket = JSON.parse(JSON.stringify(recordedPacket));
+    comparableRecordedPacket.generatedAt = '<generatedAt>';
+    if (JSON.stringify(comparableRecordedPacket) !== JSON.stringify(replayPacket)) {
+      checkErrors.push('recorded Phase 9 JSON is stale or forged');
+    }
+
+    let replayMarkdown = replaceExactlyOnce(
+      packetMarkdown,
+      `Generated: ${packet.generatedAt}`,
+      'Generated: <generatedAt>',
+      checkErrors,
+      'fresh generatedAt line',
+    );
+    replayMarkdown = replayMarkdown.split(packet.gitSha).join(recordedPacket.gitSha);
+    replayMarkdown = replaceExactlyOnce(
+      replayMarkdown,
+      `- Audited generated descendants: ${packet.governedEvidenceChain.downstreamCommitCount}`,
+      `- Audited generated descendants: ${recordedPacket.governedEvidenceChain?.downstreamCommitCount}`,
+      checkErrors,
+      'fresh governed downstream-count line',
+    );
+    const comparableRecordedMarkdown = replaceExactlyOnce(
+      recordedMarkdown,
+      `Generated: ${recordedPacket.generatedAt}`,
+      'Generated: <generatedAt>',
+      checkErrors,
+      'committed generatedAt line',
+    );
+    if (comparableRecordedMarkdown !== replayMarkdown) {
+      checkErrors.push('recorded Phase 9 Markdown is stale or forged');
+    }
+  }
+  if (checkErrors.length === 0) {
+    await waitForCheckDriftTestWindow(checkErrors);
+  }
+  checkErrors.push(...phase9AssemblyStabilityErrors({ includeSourceSnapshot: true }));
+  if (checkErrors.length > 0) {
+    console.error(`FAIL Phase 9 packet check: ${[...new Set(checkErrors)].join('; ')}.`);
+    process.exit(1);
+  }
+  console.log('Phase 9 release QA packet is current and governed.');
+  process.exit(0);
+}
+
+const prePublicationErrors = phase9AssemblyStabilityErrors({ includeSourceSnapshot: true });
+if (prePublicationErrors.length > 0) {
+  console.error(
+    `FAIL Phase 9 packet inputs changed before publication: ${[
+      ...new Set(prePublicationErrors),
+    ].join('; ')}.`,
+  );
+  process.exit(1);
+}
+
+try {
+  atomicWriteReleaseQaOutputs({
+    root,
+    snapshot: sourceSnapshot,
+    verifyAdditional() {
+      return phase9AssemblyStabilityErrors({ includeSourceSnapshot: false });
+    },
+    outputs: [
+      {
+        path: packetOutputPaths[0],
+        bytes: `${JSON.stringify(packet, null, 2)}\n`,
+      },
+      { path: packetOutputPaths[1], bytes: packetMarkdown },
+    ],
+  });
+} catch {
+  console.error(
+    'FAIL Phase 9 release QA packet inputs drifted or its atomic output publication failed; packet outputs were removed.',
+  );
+  process.exit(1);
+}
 
 printResult('Phase 9 release QA packet', errors, warnings);

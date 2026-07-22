@@ -82,12 +82,26 @@ for (const script of [
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+const phase10VerifyCommands = String(packageJson.scripts?.['phase10:verify'] ?? '').split(' && ');
 block(
   errors,
-  /phase10:support-handoff && npm run phase10:beta-packet && npm run phase11:launch-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
-    packageJson.scripts?.['phase10:verify'] ?? '',
-  ),
-  'phase10:verify must build the support handoff, closed beta, and public launch packets before running the strict generated-packet status audit.',
+  [
+    'npm run launch:contract:verify',
+    'npm run phase10-11:public-contact-smoke',
+    'npm run phase10:evidence-normalization-smoke',
+    'npm run phase10:beta-readiness',
+    'npm run phase10:beta-analytics-audit',
+  ].every((commandName) => phase10VerifyCommands.includes(commandName)) &&
+    [
+      'npm run phase10:support-handoff',
+      'npm run phase10:support-handoff:strict',
+      'npm run phase10:beta-packet',
+      'npm run phase10:beta-packet:strict',
+      'npm run phase11:launch-packet',
+      'npm run phase11:launch-packet:strict',
+      'npm run docs:generated-packet-status-audit:strict',
+    ].every((commandName) => !phase10VerifyCommands.includes(commandName)),
+  'phase10:verify must remain source-safe and non-writing; each governed packet must be published separately from a clean committed prefix.',
 );
 
 const closedBetaPacketSourceFiles = new Set(phase10SourceFiles());
@@ -101,6 +115,7 @@ for (const file of closedBetaPacketRequiredSourceFiles) {
 }
 
 const betaPacketBuilder = read('scripts/phase10/build-beta-packet.mjs');
+const supportHandoffBuilder = read('scripts/phase10/build-support-handoff-packet.mjs');
 const betaAnalyticsAudit = read('scripts/phase10/beta-analytics-audit.mjs');
 block(
   errors,
@@ -115,8 +130,16 @@ block(
   /function gitStatusExcludingGeneratedPacket\(\)/.test(betaPacketBuilder) &&
     /closed-beta-packet\.json/.test(betaPacketBuilder) &&
     /closed-beta-packet\.md/.test(betaPacketBuilder) &&
+    /gitStatusExcludingPaths\(packetOutputPaths\)/.test(betaPacketBuilder) &&
     /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(betaPacketBuilder),
   'Phase 10 closed beta packet must ignore only its own generated outputs when recording Git status.',
+);
+block(
+  errors,
+  /const outputPaths = \[outJson, outMd\]/.test(supportHandoffBuilder) &&
+    /gitStatusExcludingPaths\(outputPaths\)/.test(supportHandoffBuilder) &&
+    !/gitStatusExcludingGeneratedEvidence/.test(supportHandoffBuilder),
+  'Phase 10 support handoff packet must ignore only its own exact output pair when recording Git status.',
 );
 block(
   errors,

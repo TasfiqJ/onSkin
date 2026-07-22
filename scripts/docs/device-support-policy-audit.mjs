@@ -101,14 +101,17 @@ const docNeedles = [
 
 const requiredPackageScripts = [
   'docs:device-support-policy-audit',
+  'docs:device-support-policy-audit:test',
   'docs:device-support-policy-audit:strict',
   'docs:device-support-policy-audit:check',
+  'e2e:human:manifest:contract:test',
+  'release:governed-packets:check',
 ];
 
 const requiredLaunchVerifyParts = [
-  'docs:device-support-policy-audit:check',
+  'docs:device-support-policy-audit:test',
   'phase5:check-native-config',
-  'e2e:human:manifest:check',
+  'e2e:human:manifest:contract:test',
 ];
 
 const manifestScriptNeedles = [
@@ -379,6 +382,38 @@ for (const scriptPart of requiredLaunchVerifyParts) {
   if (!launchVerifyScript.includes(scriptPart)) {
     blockers.push(`${files.packageJson} launch:verify is missing ${scriptPart}.`);
   }
+}
+const launchVerifyCommands = new Set(launchVerifyScript.split(' && '));
+const governedPacketCheckCommands = String(
+  packageJson.scripts?.['release:governed-packets:check'] ?? '',
+).split(' && ');
+if (launchVerifyCommands.has('npm run e2e:human:manifest:check')) {
+  blockers.push(
+    `${files.packageJson} launch:verify must not require the post-E human-manifest committed check.`,
+  );
+}
+if (launchVerifyCommands.has('npm run docs:device-support-policy-audit:check')) {
+  blockers.push(
+    `${files.packageJson} launch:verify must not require the post-E device-support committed check.`,
+  );
+}
+if (
+  governedPacketCheckCommands.filter(
+    (commandName) => commandName === 'npm run e2e:human:manifest:check',
+  ).length !== 1
+) {
+  blockers.push(
+    `${files.packageJson} release:governed-packets:check must run the post-E human-manifest committed check exactly once.`,
+  );
+}
+if (
+  governedPacketCheckCommands.filter(
+    (commandName) => commandName === 'npm run docs:device-support-policy-audit:check',
+  ).length !== 1
+) {
+  blockers.push(
+    `${files.packageJson} release:governed-packets:check must run the post-E device-support committed check exactly once.`,
+  );
 }
 
 const audit = {

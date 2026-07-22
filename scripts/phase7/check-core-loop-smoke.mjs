@@ -1,9 +1,23 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import {
+  CAT07_COMMITTED_MANIFEST_JSON_PATH,
+  CAT07_COMMITTED_MANIFEST_MD_PATH,
+  CAT07_COMMITTED_SUMMARY_PATH,
+  validateCat07CommittedEvidence,
+} from '../e2e/cat07-committed-evidence.mjs';
+import {
+  buildCat07ChildEnvironment,
+  cat07BrowserArguments,
+} from '../e2e/cat07-shelf-freshness-audit.mjs';
+import { canonicalEvidenceJsonBytes } from '../e2e/evidence-diagnostic-hygiene.mjs';
+import { renderHumanE2eManifestMarkdown } from '../e2e/human-e2e-manifest-render.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
@@ -11,6 +25,7 @@ const checkPath = resolve(scriptDir, 'check-core-loop.mjs');
 const packetPath = resolve(scriptDir, 'build-core-loop-qa-packet.mjs');
 const humanE2eManifestPath = resolve(root, 'scripts/e2e/human-e2e-manifest.mjs');
 const upstreamGeneratedEvidencePath = resolve(root, 'docs/e2e/generated/human-e2e-manifest.json');
+const cat07ShelfFreshnessSummaryPath = CAT07_COMMITTED_SUMMARY_PATH;
 
 const passthroughKeys = [
   'ComSpec',
@@ -69,6 +84,23 @@ function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
 
+function packetMatchesCat07HeadBinding(packet) {
+  const expected = validateCat07CommittedEvidence(root);
+  const resultMatches = JSON.stringify(packet.cat07CommittedEvidence) === JSON.stringify(expected);
+  const exactHeadBinding =
+    packet.cat07CommittedEvidence?.headSha === packet.gitSha &&
+    packet.cat07FullEvidenceContract?.headSha === packet.gitSha;
+  const blockersMatch = expected.errors.every((error) =>
+    packet.blockers.includes(`CAT07 committed evidence: ${error}.`),
+  );
+  if (!resultMatches || !blockersMatch || !exactHeadBinding) {
+    console.error(
+      `CAT07 HEAD-binding mismatch: ${JSON.stringify({ blockersMatch, exactHeadBinding, expected, packet: packet.cat07CommittedEvidence })}`,
+    );
+  }
+  return resultMatches && blockersMatch && exactHeadBinding;
+}
+
 function run(extraEnv, args = []) {
   return spawnSync(process.execPath, [checkPath, ...args], {
     cwd: root,
@@ -85,26 +117,63 @@ function runHumanE2eProvenanceSmoke() {
   });
 }
 
-function runPacket(extraEnv) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase7-packet-'));
+function runHumanE2eCat07ContractSmoke() {
+  return spawnSync(process.execPath, [humanE2eManifestPath, '--cat07-contract-smoke'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+}
+
+function runHumanE2eGovernedChainSmoke() {
+  return spawnSync(process.execPath, [humanE2eManifestPath, '--governed-chain-smoke'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+}
+
+let packetFixtureCounter = 0;
+
+function runPacket(extraEnv, args = []) {
+  packetFixtureCounter += 1;
+  const fixtureId = `phase7-${process.pid}-${packetFixtureCounter}`;
+  const outDirRelative = `.tmp/phase7-packet-fixtures/${fixtureId}`;
+  const outDir = resolve(root, ...outDirRelative.split('/'));
   try {
-    const result = spawnSync(process.execPath, [packetPath], {
+    const result = spawnSync(process.execPath, [packetPath, ...args, '--test-fixture-output'], {
       cwd: root,
       encoding: 'utf8',
-      env: { ...processBaseEnv, PHASE7_PACKET_OUT_DIR: outDir, ...extraEnv },
+      env: {
+        ...processBaseEnv,
+        ...extraEnv,
+        NODE_ENV: 'test',
+        PHASE7_PACKET_OUT_DIR: outDirRelative,
+      },
     });
-    const packet = JSON.parse(readFileSync(resolve(outDir, 'core-loop-qa-packet.json'), 'utf8'));
+    const packetJsonPath = resolve(outDir, 'core-loop-qa-packet.json');
+    const packet = existsSync(packetJsonPath)
+      ? JSON.parse(readFileSync(packetJsonPath, 'utf8'))
+      : null;
     return { ...result, packet };
   } finally {
     rmSync(outDir, { force: true, recursive: true });
   }
 }
 
-function runPacketWithDirtyWorktree(extraEnv) {
+function runRejectedPacketOutput(outDir, args = [], extraEnv = {}) {
+  return spawnSync(process.execPath, [packetPath, ...args], {
+    cwd: root,
+    encoding: 'utf8',
+    env: { ...processBaseEnv, ...extraEnv, PHASE7_PACKET_OUT_DIR: outDir },
+  });
+}
+
+function runPacketWithDirtyWorktree(extraEnv, args = []) {
   const markerPath = join(root, `.phase7-smoke-dirty-${process.pid}.tmp`);
   writeFileSync(markerPath, 'temporary Phase 7 dirty-worktree smoke marker\n');
   try {
-    return runPacket(extraEnv);
+    return runPacket(extraEnv, args);
   } finally {
     rmSync(markerPath, { force: true });
   }
@@ -126,12 +195,301 @@ function runPacketWithDirtyUpstreamEvidence(extraEnv) {
   }
 }
 
+function gitFixture(cwd, args) {
+  const result = spawnSync('git', args, {
+    cwd,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+  if (result.status !== 0) {
+    throw new Error(`git ${args.join(' ')} failed: ${output(result)}`);
+  }
+  return String(result.stdout ?? '').trim();
+}
+
+function runCommittedCat07BindingSmoke() {
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-phase7-cat07-binding-'));
+  try {
+    gitFixture(fixtureRoot, ['init', '--quiet']);
+    gitFixture(fixtureRoot, ['config', 'user.email', 'phase7-smoke@example.invalid']);
+    gitFixture(fixtureRoot, ['config', 'user.name', 'Phase 7 Smoke']);
+    writeFileSync(resolve(fixtureRoot, 'source.txt'), 'CAT07 source fixture\n');
+    const packageLockBytes = Buffer.from(
+      '{"name":"cat07-fixture","lockfileVersion":3,"packages":{}}\n',
+      'utf8',
+    );
+    writeFileSync(resolve(fixtureRoot, 'package-lock.json'), packageLockBytes);
+    gitFixture(fixtureRoot, ['add', '-A']);
+    gitFixture(fixtureRoot, ['commit', '--quiet', '-m', 'CAT07 source fixture']);
+    const sourceGitSha = gitFixture(fixtureRoot, ['rev-parse', 'HEAD']);
+    const runId = 'cat07-11111111-1111-4111-8111-111111111111';
+    const viewports = [
+      { id: 'iphone-375x667', width: 375, height: 667 },
+      { id: 'iphone-390x844', width: 390, height: 844 },
+      { id: 'iphone-430x932', width: 430, height: 932 },
+    ];
+    const atSecond = (seconds) =>
+      new Date(Date.parse('2026-07-22T00:00:00.000Z') + seconds * 1_000).toISOString();
+    const summary = {
+      artifacts: Array.from({ length: 99 }, (_, index) => `artifact-${index}`),
+      bootstrapResults: viewports.map((viewport, index) => ({
+        browserFailures: [],
+        completedAt: atSecond(index * 20 + 5),
+        error: null,
+        nativeDeviceProof: false,
+        runId,
+        startedAt: atSecond(index * 20 + 1),
+        surface: 'expo-web',
+        verdict: 'pass',
+        viewport,
+      })),
+      completedAt: atSecond(65),
+      expectedBootstrapCount: 3,
+      expectedExecutionCount: 3,
+      nativeDeviceProof: false,
+      requiredViewports: viewports,
+      runId,
+      scenarios: viewports.map((viewport, index) => ({
+        browserFailures: [],
+        completedAt: atSecond(index * 20 + 19),
+        error: null,
+        nativeDeviceProof: false,
+        runId,
+        startedAt: atSecond(index * 20 + 6),
+        surface: 'expo-web',
+        verdict: 'pass',
+        viewport,
+      })),
+      schemaVersion: 2,
+      screenshots: Array.from({ length: 45 }, (_, index) => `screenshot-${index}.png`),
+      sourceGitSha,
+      startedAt: atSecond(0),
+      surface: 'expo-web',
+      verdict: 'pass',
+    };
+    const runtimePaths = Object.fromEntries(
+      ['appData', 'cache', 'home', 'npmGlobalConfig', 'npmUserConfig', 'temp'].map((name) => [
+        name,
+        resolve(fixtureRoot, '.tmp', name),
+      ]),
+    );
+    const childEnvironmentKeys = Object.keys(
+      buildCat07ChildEnvironment({
+        hostEnvironment: process.env,
+        platform: process.platform,
+        runtimePaths,
+      }),
+    ).sort();
+    summary.runtimeProvenance = {
+      browserLaunch: {
+        args: cat07BrowserArguments({ userDataDir: '<fresh-profile>' }),
+        schemaVersion: 1,
+      },
+      childEnvironment: { keys: childEnvironmentKeys, schemaVersion: 1 },
+      environmentBootstrap: { bytes: 1, schemaVersion: 1, sha256: '1'.repeat(64) },
+      installMode: 'isolated-npm-ci-offline-ignore-scripts-then-repo-postinstall',
+      packageLock: {
+        bytes: packageLockBytes.length,
+        sha256: createHash('sha256').update(packageLockBytes).digest('hex'),
+      },
+      runtimeTree: {
+        bytes: 1,
+        directoryCount: 1,
+        entryCount: 2,
+        fileCount: 1,
+        linkCount: 0,
+        rootCount: 1,
+        roots: [
+          {
+            bytes: 1,
+            directoryCount: 1,
+            entryCount: 2,
+            fileCount: 1,
+            linkCount: 0,
+            path: 'node_modules',
+            sha256: '2'.repeat(64),
+          },
+        ],
+        sha256: '3'.repeat(64),
+      },
+      schemaVersion: 1,
+      sourceTree: { bytes: 1, entryCount: 1, fileCount: 1, sha256: '4'.repeat(64) },
+      tools: Object.fromEntries(
+        ['browser', 'expoCli', 'git', 'node', 'npmCli'].map((name, index) => [
+          name,
+          {
+            basename: `${name}.fixture`,
+            bytes: index + 1,
+            sha256: String(index + 5).repeat(64),
+            version: 'fixture-version',
+          },
+        ]),
+      ),
+    };
+    const summaryPath = resolve(fixtureRoot, CAT07_COMMITTED_SUMMARY_PATH);
+    const manifestPath = resolve(fixtureRoot, CAT07_COMMITTED_MANIFEST_JSON_PATH);
+    const markdownPath = resolve(fixtureRoot, CAT07_COMMITTED_MANIFEST_MD_PATH);
+    mkdirSync(dirname(summaryPath), { recursive: true });
+    mkdirSync(dirname(manifestPath), { recursive: true });
+    const writeBinding = (candidate) => {
+      const summaryBytes = canonicalEvidenceJsonBytes(candidate);
+      writeFileSync(summaryPath, summaryBytes);
+      const manifest = {
+        baselineEvidenceDate: '2026-07-22',
+        blockers: [],
+        evidenceDate: '2026-07-22',
+        gateResults: [
+          {
+            detail: 'Synthetic committed CAT07 binding fixture.',
+            evidence: 'summary.json',
+            evidenceExists: true,
+            evidenceSha256: createHash('sha256').update(summaryBytes).digest('hex'),
+            evidenceTracked: true,
+            failureCount: 0,
+            fileCount: 100,
+            folder: CAT07_COMMITTED_SUMMARY_PATH.replace(/\/summary\.json$/u, ''),
+            folderExists: true,
+            id: 'cat07-shelf-freshness-supported-phone',
+            kind: 'cat07-shelf-freshness',
+            required: true,
+            requirementFailures: [],
+            status: 'pass',
+            supportClass: 'supported-phone',
+            title: 'CAT07 Shelf freshness and replacement provenance lifecycle',
+            verdict: 'pass',
+          },
+        ],
+        generatedAt: '2026-07-22T00:02:00.000Z',
+        gitSha: sourceGitSha,
+        purpose: 'Synthetic CAT07 committed binding fixture.',
+        status: 'pass',
+        warnings: [],
+      };
+      writeFileSync(manifestPath, canonicalEvidenceJsonBytes(manifest));
+      writeFileSync(markdownPath, renderHumanE2eManifestMarkdown(manifest));
+    };
+    writeBinding(summary);
+    gitFixture(fixtureRoot, ['add', '-A']);
+    gitFixture(fixtureRoot, ['commit', '--quiet', '-m', 'Valid CAT07 binding fixture']);
+    const valid = validateCat07CommittedEvidence(fixtureRoot);
+    if (valid.status !== 'pass' || valid.errors.length !== 0) {
+      throw new Error(`valid committed CAT07 fixture failed: ${valid.errors.join('; ')}`);
+    }
+    const boundHeadSha = gitFixture(fixtureRoot, ['rev-parse', 'HEAD']);
+    if (valid.headSha !== boundHeadSha) {
+      throw new Error('valid committed CAT07 fixture did not report its exact HEAD binding');
+    }
+    const wrongHead = validateCat07CommittedEvidence(fixtureRoot, {
+      expectedHeadSha: sourceGitSha,
+    });
+    if (wrongHead.status !== 'blocked') {
+      throw new Error('committed CAT07 fixture accepted a stale expected HEAD');
+    }
+
+    writeFileSync(markdownPath, '# Stale CAT07 fixture\nCookie: session_id=must-not-pass\n');
+    gitFixture(fixtureRoot, ['add', '-A']);
+    gitFixture(fixtureRoot, ['commit', '--quiet', '-m', 'Stale CAT07 Markdown fixture']);
+    const staleMarkdown = validateCat07CommittedEvidence(fixtureRoot);
+    if (
+      !staleMarkdown.errors.some(
+        (error) =>
+          error.includes('canonical rendering') || error.includes('cookie or session value'),
+      )
+    ) {
+      throw new Error('arbitrary committed CAT07 Markdown was accepted');
+    }
+    writeBinding(summary);
+    gitFixture(fixtureRoot, ['add', '-A']);
+    gitFixture(fixtureRoot, ['commit', '--quiet', '-m', 'Restore CAT07 Markdown binding']);
+    const restored = validateCat07CommittedEvidence(fixtureRoot);
+    if (restored.status !== 'pass') {
+      throw new Error(`restored CAT07 fixture failed: ${restored.errors.join('; ')}`);
+    }
+
+    writeFileSync(summaryPath, canonicalEvidenceJsonBytes({ ...summary, verdict: 'fail' }));
+    const mismatch = validateCat07CommittedEvidence(fixtureRoot);
+    if (!mismatch.errors.some((error) => error.includes('working bytes do not match HEAD'))) {
+      throw new Error('CAT07 working/HEAD byte mismatch was accepted');
+    }
+
+    writeBinding({ ...summary, verdict: 'fail' });
+    gitFixture(fixtureRoot, ['add', '-A']);
+    gitFixture(fixtureRoot, ['commit', '--quiet', '-m', 'Malformed CAT07 binding fixture']);
+    const malformed = validateCat07CommittedEvidence(fixtureRoot);
+    if (!malformed.errors.includes('committed CAT07 summary verdict must be pass')) {
+      throw new Error('malformed committed CAT07 summary was accepted');
+    }
+    return { status: 0, stderr: '', stdout: 'PASS committed CAT07 binding smoke' };
+  } catch (error) {
+    return {
+      status: 1,
+      stderr: error instanceof Error ? (error.stack ?? error.message) : String(error),
+      stdout: '',
+    };
+  } finally {
+    rmSync(fixtureRoot, { force: true, recursive: true });
+  }
+}
+
 const cases = [
+  {
+    name: 'Phase 7 packet rejects caller-selected normal output directories',
+    result: runRejectedPacketOutput('docs/phase-7/caller-selected'),
+    expect(result) {
+      return (
+        result.status !== 0 &&
+        /PHASE7_PACKET_OUT_DIR is reserved for an explicit repo-local Phase 7 test fixture/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 7 packet rejects traversal even in explicit test-fixture mode',
+    result: runRejectedPacketOutput('../outside-phase7', ['--test-fixture-output'], {
+      NODE_ENV: 'test',
+    }),
+    expect(result) {
+      return (
+        result.status !== 0 &&
+        /PHASE7_PACKET_OUT_DIR is reserved for an explicit repo-local Phase 7 test fixture/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'Committed CAT07 binding rejects working-tree drift and malformed HEAD semantics',
+    result: runCommittedCat07BindingSmoke(),
+    expect(result) {
+      return result.status === 0 && /PASS committed CAT07 binding smoke/.test(output(result));
+    },
+  },
   {
     name: 'Human-E2E provenance rejects missing, untracked, incomplete, and unsafe artifacts',
     result: runHumanE2eProvenanceSmoke(),
     expect(result) {
       return result.status === 0 && /PASS Human-E2E evidence provenance smoke/.test(output(result));
+    },
+  },
+  {
+    name: 'Human-E2E CAT07 contract rejects incomplete or unbound Shelf evidence',
+    result: runHumanE2eCat07ContractSmoke(),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        /PASS CAT07 shelf-freshness evidence contract smoke/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'Governed chain accepts S to E to R to F and rejects unledgered, mutated, and near-miss evidence',
+    result: runHumanE2eGovernedChainSmoke(),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        /PASS Human-E2E governed evidence-chain consumer smoke/.test(output(result))
+      );
     },
   },
   {
@@ -231,105 +589,133 @@ const cases = [
     name: 'Phase 7 packet writes normalized evidence and signoff',
     result: runPacket({ ...validPublicIdentity, ...validEvidence }),
     expect(result) {
-      return (
-        result.status === 0 &&
-        result.packet.evidence.brandReady === true &&
-        result.packet.evidence.clinicalReviewPass === true &&
-        result.packet.evidence.onboardingConsentQaPass === true &&
-        result.packet.evidence.analyticsQaPass === true &&
-        result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
-        /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
-        typeof result.packet.gitStatus === 'string' &&
-        result.packet.files.some(
-          (file) => file.path === 'scripts/phase7/build-core-loop-qa-packet.mjs',
-        ) &&
-        result.packet.files.some((file) => file.path === 'scripts/phase7/check-core-loop.mjs') &&
-        result.packet.files.some(
-          (file) => file.path === 'scripts/phase7/check-core-loop-smoke.mjs',
-        ) &&
-        result.packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/app/cycle/settings.tsx',
-        ) &&
-        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/cycle/week.tsx') &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/app/cycle/why-tonight.tsx',
-        ) &&
-        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/routine/plan.tsx') &&
-        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/trend/_layout.tsx') &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/app/trend/fairness.tsx',
-        ) &&
-        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/trend/optin.tsx') &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/routine/activationAnalytics.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/routine/activationAnalytics.test.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/today/completionsStore.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/today/completionsStore.test.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/today/cycleCompletion.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/today/cycleCompletion.test.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/today/routineProjection.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/today/routineProjection.test.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/today/todayRoute.test.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/trend/copy.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/trend/trendRoutes.test.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/trend/useTrend.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/scheduler/customCycle.ts',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'apps/mobile/src/features/scheduler/cycleStore.ts',
-        ) &&
-        result.packet.files.some((file) => file.path === 'docs/HUMAN_SIMULATED_E2E_TESTING.md') &&
-        result.packet.files.some((file) => file.path === 'docs/E2E_TESTING_CHECKLIST.md') &&
-        result.packet.files.some((file) => file.path === 'docs/USER_FLOW_TREE.md') &&
-        result.packet.files.some(
-          (file) => file.path === 'docs/e2e/generated/human-e2e-manifest.json',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'docs/e2e/generated/human-e2e-manifest.md',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'docs/phase-5/generated/device-qa-packet.json',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'docs/phase-5/generated/device-qa-packet.md',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'docs/phase-6/generated/payments-qa-packet.json',
-        ) &&
-        result.packet.files.some(
-          (file) => file.path === 'docs/phase-6/generated/payments-qa-packet.md',
-        ) &&
-        result.packet.scenarios.every((scenario) => scenario.evidencePass === true) &&
-        !result.packet.blockers.some((blocker) => /PHASE7_SIGNED_OFF_BY/.test(blocker))
+      const requiredPacketPaths = [
+        'scripts/phase7/build-core-loop-qa-packet.mjs',
+        'scripts/phase7/check-core-loop.mjs',
+        'scripts/phase7/check-core-loop-smoke.mjs',
+        'scripts/e2e/human-e2e-manifest.mjs',
+        'scripts/e2e/human-e2e-manifest-render.mjs',
+        'scripts/e2e/evidence-diagnostic-hygiene.mjs',
+        'scripts/e2e/cat07-png-contract.mjs',
+        'scripts/e2e/cat07-committed-evidence.mjs',
+        'scripts/e2e/cat07-shelf-freshness-audit.mjs',
+        'scripts/e2e/cat07-shelf-freshness-audit.test.mjs',
+        'scripts/phase2/local-supabase-contract.mjs',
+        'scripts/phase9/release-qa-integrity.mjs',
+        'scripts/launch/governed-evidence-chain.mjs',
+        'scripts/launch/governed-evidence-chain.test.mjs',
+        'scripts/phase9/build-evidence-chain-ledger.mjs',
+        'scripts/phase9/build-evidence-chain-ledger.test.mjs',
+        'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
+        'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+        'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
+        'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+        'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+        'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+        'supabase/tests/database/catalog_import_lifecycle.test.sql',
+        'supabase/tests/database/catalog_launch_curation.test.sql',
+        'supabase/tests/database/catalog_serving_gate.test.sql',
+        'supabase/tests/database/cat07_truthful_freshness.test.sql',
+        'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
+        'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json',
+        'apps/mobile/src/app/cycle/settings.tsx',
+        'apps/mobile/src/app/cycle/week.tsx',
+        'apps/mobile/src/app/cycle/why-tonight.tsx',
+        'apps/mobile/src/app/routine/plan.tsx',
+        'apps/mobile/src/app/trend/_layout.tsx',
+        'apps/mobile/src/app/trend/fairness.tsx',
+        'apps/mobile/src/app/trend/optin.tsx',
+        'apps/mobile/src/features/routine/activationAnalytics.ts',
+        'apps/mobile/src/features/routine/activationAnalytics.test.ts',
+        'apps/mobile/src/features/today/completionsStore.ts',
+        'apps/mobile/src/features/today/completionsStore.test.ts',
+        'apps/mobile/src/features/today/cycleCompletion.ts',
+        'apps/mobile/src/features/today/cycleCompletion.test.ts',
+        'apps/mobile/src/features/today/routineProjection.ts',
+        'apps/mobile/src/features/today/routineProjection.test.ts',
+        'apps/mobile/src/features/today/todayRoute.test.ts',
+        'apps/mobile/src/features/trend/copy.ts',
+        'apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts',
+        'apps/mobile/src/features/trend/trendRoutes.test.ts',
+        'apps/mobile/src/features/trend/useTrend.ts',
+        'apps/mobile/src/features/scheduler/customCycle.ts',
+        'apps/mobile/src/features/scheduler/cycleStore.ts',
+        'docs/HUMAN_SIMULATED_E2E_TESTING.md',
+        'docs/E2E_TESTING_CHECKLIST.md',
+        'docs/USER_FLOW_TREE.md',
+        'docs/e2e/generated/human-e2e-manifest.json',
+        'docs/e2e/generated/human-e2e-manifest.md',
+        'docs/phase-5/generated/device-qa-packet.json',
+        'docs/phase-5/generated/device-qa-packet.md',
+        'docs/phase-6/generated/payments-qa-packet.json',
+        'docs/phase-6/generated/payments-qa-packet.md',
+      ];
+      const missingPacketPaths = requiredPacketPaths.filter(
+        (path) => !result.packet.files.some((file) => file.path === path),
       );
+      const invalidCat07Hashes = requiredPacketPaths
+        .filter(
+          (path) =>
+            path.startsWith('scripts/e2e/cat07-') ||
+            path.includes('cat07_truthful_freshness') ||
+            path.includes('catalog-import-0061-upgrade-postgres-rehearsal') ||
+            path.includes('catalog-curation-0062-upgrade-postgres-rehearsal') ||
+            path.includes('20260722000061_catalog_import_benzoyl_review_override') ||
+            path.includes('20260722000062_catalog_curation_statement_guard') ||
+            path.endsWith('catalog_import_lifecycle.test.sql') ||
+            path.endsWith('catalog_launch_curation.test.sql') ||
+            path.endsWith('catalog_serving_gate.test.sql') ||
+            path.includes('CAT-07-SHELF-FRESHNESS') ||
+            path.endsWith('cat07-shelf-freshness-current/summary.json'),
+        )
+        .filter(
+          (path) =>
+            !result.packet.files.some(
+              (file) => file.path === path && /^[0-9a-f]{64}$/i.test(file.sha256 ?? ''),
+            ),
+        );
+      const checks = {
+        status: result.status === 0,
+        normalizedEvidence:
+          result.packet.evidence.brandReady === true &&
+          result.packet.evidence.clinicalReviewPass === true &&
+          result.packet.evidence.onboardingConsentQaPass === true &&
+          result.packet.evidence.analyticsQaPass === true,
+        normalizedSignoff: result.packet.evidence.signedOffBy === 'Tas Mohammed',
+        gitSha: /^[0-9a-f]{40}$/i.test(result.packet.gitSha),
+        gitStatus: typeof result.packet.gitStatus === 'string',
+        governedEvidenceChain:
+          ['pass', 'blocked'].includes(result.packet.governedEvidenceChain?.status) &&
+          typeof result.packet.governedEvidenceChain?.sourcePacketCodeBoundToSourceCommit ===
+            'boolean' &&
+          Array.isArray(result.packet.governedEvidenceChain?.errors) &&
+          result.packet.governedEvidenceChain.errors.every((error) =>
+            result.packet.blockers.includes(`Governed evidence chain: ${error}.`),
+          ),
+        cat07HeadBinding: packetMatchesCat07HeadBinding(result.packet),
+        cat07DiagnosticsAreRepoRelative: !result.packet.blockers
+          .filter((blocker) => blocker.startsWith('CAT07'))
+          .some((blocker) =>
+            /(?:[A-Za-z]:[\\/]|[\\/]Users[\\/]|[\\/]AppData[\\/]|\.claude[\\/]worktrees[\\/])/u.test(
+              blocker,
+            ),
+          ),
+        requiredPacketPaths: missingPacketPaths.length === 0,
+        cat07Hashes: invalidCat07Hashes.length === 0,
+        scenarios: result.packet.scenarios.every((scenario) => scenario.evidencePass === true),
+        signoffBlocker: !result.packet.blockers.some((blocker) =>
+          /PHASE7_SIGNED_OFF_BY/.test(blocker),
+        ),
+      };
+      const failedChecks = Object.entries(checks)
+        .filter(([, passed]) => !passed)
+        .map(([name]) => name);
+      if (failedChecks.length > 0) {
+        console.error(
+          `Phase 7 normalized packet predicate failures: ${failedChecks.join(', ')}; missing paths: ${missingPacketPaths.join(', ') || 'none'}; invalid CAT07 hashes: ${invalidCat07Hashes.join(', ') || 'none'}`,
+        );
+      }
+      return failedChecks.length === 0;
     },
   },
   {
@@ -340,6 +726,19 @@ const cases = [
         result.status === 0 &&
         result.packet.gitStatus.includes(`.phase7-smoke-dirty-${process.pid}.tmp`) &&
         result.packet.warnings.includes(
+          'Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Strict Phase 7 packet blocks a dirty worktree',
+    result: runPacketWithDirtyWorktree({ ...validPublicIdentity, ...validEvidence }, ['--strict']),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.packet.gitStatus.includes(`.phase7-smoke-dirty-${process.pid}.tmp`) &&
+        result.packet.blockers.includes(
           'Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.',
         )
       );

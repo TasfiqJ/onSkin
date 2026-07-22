@@ -797,6 +797,7 @@ begin
          p_product_id is null
          or (p_barcode is null and v_product_name is null)
        )
+     )
      ) then
     raise exception 'CATALOG_REPORT_INPUT_INVALID' using errcode = '22023';
   end if;

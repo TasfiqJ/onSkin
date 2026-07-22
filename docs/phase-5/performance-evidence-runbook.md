@@ -62,25 +62,38 @@ failure-state coverage.
    and rerunning the complete baseline.
 3. Fill real build/device/source evidence and every required iOS measurement in
    a separate JSON artifact based on
-   `docs/phase-5/performance-evidence.template.json`. Put every observation in
-   the measurement's `samples` array.
-4. Point the summarizer to the artifact. It atomically writes the calculated
+   `docs/phase-5/performance-evidence.template.json`. The artifact must use a
+   canonical repository-relative path under
+   `docs/phase-5/evidence/performance/`; arbitrary absolute paths are rejected.
+   Put every observation in the measurement's `samples` array.
+4. Point the summarizer to the artifact. It writes the calculated
    `sampleCount`, `p50`, `p95`, and `max` fields only when every measurement has
    at least five positive observations:
 
    ```bash
-   PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
+   PHASE5_PERFORMANCE_EVIDENCE_PATH=docs/phase-5/evidence/performance/<candidate>/evidence.json \
    npm run phase5:performance-evidence:summarize
    ```
 
-5. Run strict mode against that same artifact:
+5. While `HEAD` is the exact build-source commit `S`, stage the completed
+   performance JSON together with all selected RC and other direct evidence.
+   Build the selected RC ledger using
+   `scripts/phase9/build-evidence-chain-ledger.mjs`, then commit the ledger and
+   all entries together as the single evidence commit `E` directly on `S`.
+6. Run strict mode from the clean committed `E` checkout:
 
    ```bash
-   PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
+   PHASE5_PERFORMANCE_EVIDENCE_PATH=docs/phase-5/evidence/performance/<candidate>/evidence.json \
+   PHASE9_RELEASE_CANDIDATE_DIR=docs/phase-9/release-candidates/<rc-id> \
    npm run phase5:performance-evidence:strict
    ```
 
-6. Attach the passing artifact, raw profiler/timing exports, build IDs, and
+   The checker binds `gitSha` to `S`, requires the JSON to be the sole exact
+   `phase5-performance` ledger entry, and rejects dirty state, source drift,
+   merges/nonlinear ancestry, raw evidence added or changed after `E`, and any
+   downstream path outside the centralized exact generated allowlist.
+
+7. Retain the passing artifact, raw profiler/timing exports, build IDs, and
    named signoff to the beta evidence workspace. The JSON result is a summary,
    not a substitute for raw measurements.
 

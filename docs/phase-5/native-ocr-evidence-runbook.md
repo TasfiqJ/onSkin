@@ -163,24 +163,31 @@ non-color uncertainty cues, and manual fallback.
    and cleanup pass. Calculate the class summaries from the raw counts; do not
    omit failed or timed-out runs.
 5. Put the completed summary JSON and all seven attachments below the governed
-   evidence root, then run:
+   evidence root. Stage them with every other direct release-candidate evidence
+   file, build the selected RC `evidence-chain.json`, and commit the ledger plus
+   its entries together as the single evidence commit `E` whose sole parent is
+   the build-source commit `S`. Follow the exact builder procedure in
+   `docs/phase-9/release-candidates/README.md`; do not hand-edit the ledger.
+6. From the clean committed `E` checkout, run:
 
    ```bash
    PHASE5_IOS_BUILD_ID=<exact EAS UUID or expo.dev build URL> \
    PHASE5_IOS_BUILD_PROFILE=staging \
    PHASE5_NATIVE_OCR_EVIDENCE_PATH=docs/phase-5/evidence/native-ocr/<candidate>/evidence.json \
+   PHASE9_RELEASE_CANDIDATE_DIR=docs/phase-9/release-candidates/<rc-id> \
    npm run phase5:native-ocr-evidence:strict
    ```
 
-6. Commit only the completed evidence JSON/attachments and generated packets as
-   a descendant of the EAS source commit. The validator requires the source
-   commit to be an ancestor of current HEAD, re-hashes the current runtime files
-   against that source binding, and rejects any intervening change outside its
-   explicit evidence-only allowlist. This two-commit workflow keeps the
-   post-build evidence auditable without pretending it existed before EAS.
-7. Pass the same three values into `npm run phase5:qa-packet:strict`. The packet
-   revalidates the artifact, excludes only the validated evidence files from
-   its clean-worktree calculation, and rejects Boolean-only OCR clearance.
+   The checker requires the evidence JSON and all seven attachments to be the
+   exact `phase5-native-ocr` ledger entries at `E`, verifies their committed
+   SHA-256 values and unchanged working bytes, re-hashes the runtime source files
+   pinned to `S`, and rejects merges, nonlinear history, raw-evidence mutation,
+   source drift, unledgered files, and near-miss generated paths. Later commits
+   may change only the centralized exact generated-output allowlist.
+
+7. Pass the same four values into `npm run phase5:qa-packet:strict`. A failed
+   `E` is not repaired by appending another raw-evidence commit; correct the
+   packet and construct a fresh governed `S`/build/`E` chain.
 
 Outside strict mode, an absent artifact emits a warning and leaves OCR
 externally blocked. Never translate that zero exit code into a launch pass.

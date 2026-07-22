@@ -6,7 +6,7 @@ export {
   envFile,
   envSnapshot,
   exists,
-  gitStatusExcludingGeneratedEvidence,
+  gitStatusExcludingPaths,
   has,
   hash,
   listFiles,

@@ -278,8 +278,8 @@ select is(
        and roles = array['authenticated']::name[]
        and qual like '%account_access_allowed%'
   ),
-  30::bigint,
-  'all 30 canonical owner tables have the restrictive Apple read barrier'
+  28::bigint,
+  'all 28 client-readable canonical owner tables have the restrictive Apple read barrier while sealed scan/correction relations remain policy-free'
 );
 
 select is(

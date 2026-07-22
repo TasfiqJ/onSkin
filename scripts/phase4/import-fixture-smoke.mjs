@@ -252,6 +252,47 @@ try {
     rmSync(invalidModifiedFixturePath, { force: true });
   }
 
+  const regulatedTagFixturePath = resolve(
+    dirname(obfFixturePath),
+    `.tmp-regulated-tag-${process.pid}.jsonl`,
+  );
+  try {
+    const validRecord = JSON.parse(
+      readFileSync(obfFixturePath, 'utf8').split(/\r?\n/u).find(Boolean),
+    );
+    const regulatedTagRecord = {
+      ...validRecord,
+      categories_tags: ['en:skin-care', 'en:benzoyl-peroxide'],
+    };
+    writeFileSync(regulatedTagFixturePath, `${JSON.stringify(regulatedTagRecord)}\n`, {
+      flag: 'wx',
+    });
+    const regulatedTagOutputPath = resolve(outDir, 'regulated-tag-obf.json');
+    const regulatedTagResult = runImporter([
+      obfImporterPath,
+      '--fixture',
+      regulatedTagFixturePath,
+      regulatedTagOutputPath,
+    ]);
+    const regulatedTagManifest =
+      regulatedTagResult.status === 0
+        ? JSON.parse(readFileSync(regulatedTagOutputPath, 'utf8'))
+        : null;
+    if (
+      regulatedTagResult.status !== 0 ||
+      regulatedTagManifest?.totals?.acceptedProducts !== 1 ||
+      regulatedTagManifest?.products?.[0]?.category !== null
+    ) {
+      failed = true;
+      console.error('FAIL OBF transform inferred a regulated category from an ungoverned tag.');
+      console.error(output(regulatedTagResult));
+    } else {
+      console.log('OK OBF transform leaves ungoverned regulated-category tags for signed review');
+    }
+  } finally {
+    rmSync(regulatedTagFixturePath, { force: true });
+  }
+
   const invalidGtinFixturePath = resolve(
     dirname(obfFixturePath),
     `.tmp-invalid-gtin-${process.pid}.jsonl`,

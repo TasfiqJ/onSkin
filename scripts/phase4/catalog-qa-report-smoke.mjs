@@ -101,6 +101,16 @@ try {
           paths.has('supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql') &&
           paths.has('supabase/migrations/20260717000057_catalog_import_lifecycle.sql') &&
           paths.has('supabase/migrations/20260717000058_catalog_launch_curation.sql') &&
+          paths.has('supabase/migrations/20260718000059_catalog_scan_minimization.sql') &&
+          paths.has('supabase/migrations/20260718000060_cat07_truthful_freshness.sql') &&
+          paths.has(
+            'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+          ) &&
+          paths.has('supabase/migrations/20260722000062_catalog_curation_statement_guard.sql') &&
+          paths.has('scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql') &&
+          paths.has('scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql') &&
+          paths.has('supabase/tests/database/catalog_serving_gate.test.sql') &&
+          paths.has('supabase/tests/database/cat07_truthful_freshness.test.sql') &&
           paths.has('scripts/phase4/catalog-curation-contract.mjs') &&
           paths.has('scripts/phase4/catalog-coverage-quality-report.mjs') &&
           paths.has('supabase/functions/catalog-lookup/catalogContract.ts') &&

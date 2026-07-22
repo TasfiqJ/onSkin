@@ -32,6 +32,28 @@ import {
   CAMERA_LIFECYCLE_REVIEWED_CURRENT_PUBLIC_IOS_VERSION,
   createCameraLifecycleEvidenceTemplate,
 } from './camera-lifecycle-evidence-contract.mjs';
+import {
+  createPerformanceEvidenceTemplate,
+  summarizePerformanceSamples,
+} from './performance-evidence-contract.mjs';
+import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from './device-qa-packet-contract.mjs';
+import { renderHumanE2eManifestMarkdown } from '../e2e/human-e2e-manifest-render.mjs';
+import { canonicalEvidenceJsonBytes } from '../e2e/evidence-diagnostic-hygiene.mjs';
+import {
+  buildGovernedEvidenceLedger,
+  captureGovernedPublicationPolicy,
+  governedEvidenceLedgerPath,
+  governedEvidenceRoleForPath,
+  renderGovernedEvidenceLedger,
+} from '../launch/governed-evidence-chain.mjs';
+import {
+  publishGovernedFixtureTail,
+  publishGovernedFixtureUnit,
+} from '../launch/governed-evidence-test-fixture.mjs';
+import {
+  buildCat07ChildEnvironment,
+  cat07BrowserArguments,
+} from '../e2e/cat07-shelf-freshness-audit.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const sourceRoot = resolve(scriptDir, '..', '..');
@@ -72,10 +94,235 @@ for (const path of filteredChangedPaths) {
 }
 git(fixtureRoot, ['config', 'user.email', 'phase5-smoke@example.invalid']);
 git(fixtureRoot, ['config', 'user.name', 'Phase 5 Smoke']);
+const cat07SummaryFixtureRelativePath =
+  'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json';
+const cat07SummaryFixturePath = resolve(fixtureRoot, cat07SummaryFixtureRelativePath);
+mkdirSync(dirname(cat07SummaryFixturePath), { recursive: true });
+const cat07ManifestFixtureRelativePath = 'docs/e2e/generated/human-e2e-manifest.json';
+const cat07ManifestFixturePath = resolve(fixtureRoot, cat07ManifestFixtureRelativePath);
+const cat07ManifestMarkdownFixturePath = resolve(
+  fixtureRoot,
+  'docs/e2e/generated/human-e2e-manifest.md',
+);
+const cat07RunId = 'cat07-11111111-1111-4111-8111-111111111111';
+const cat07SourceSha = git(fixtureRoot, ['rev-parse', 'HEAD']);
+const cat07SourcePackageLockResult = spawnSync(
+  'git',
+  ['show', `${cat07SourceSha}:package-lock.json`],
+  { cwd: fixtureRoot, encoding: null, maxBuffer: 16 * 1024 * 1024 },
+);
+if (
+  cat07SourcePackageLockResult.status !== 0 ||
+  !Buffer.isBuffer(cat07SourcePackageLockResult.stdout)
+) {
+  throw new Error('Phase 5 smoke could not read the CAT07 source package-lock blob.');
+}
+const cat07SourcePackageLockBytes = cat07SourcePackageLockResult.stdout;
+const cat07Viewports = [
+  { id: 'iphone-375x667', width: 375, height: 667 },
+  { id: 'iphone-390x844', width: 390, height: 844 },
+  { id: 'iphone-430x932', width: 430, height: 932 },
+];
+const cat07AtSecond = (seconds) =>
+  new Date(Date.parse('2026-07-22T00:00:00.000Z') + seconds * 1_000).toISOString();
+const cat07Steps = [
+  '01-manual',
+  '02-opening-required',
+  '03-future-opened-date-blocked',
+  '04-label-pao-ready',
+  '05-shelf-countdown',
+  '06-label-pao-detail',
+  '07-package-date-recorded',
+  '08-replacement-choices',
+  '09-future-replacement-date-blocked',
+  '10-unopened-replacement-shelf',
+  '11-unopened-replacement-detail',
+  '12-unknown-excluded-from-expiring',
+  '13-archive-history',
+  '14-archived-provenance',
+];
+const cat07ExpectedArtifacts = [
+  'browser-events-cat07-freshness.json',
+  'expo-cat07-freshness.log',
+  'report.md',
+];
+for (const viewport of cat07Viewports) {
+  const bootstrapPrefix = `bootstrap-cat07-freshness-${viewport.id}`;
+  cat07ExpectedArtifacts.push(
+    `${bootstrapPrefix}-catalog-ready.json`,
+    `${bootstrapPrefix}-catalog-ready.png`,
+    `${bootstrapPrefix}-result.json`,
+  );
+  const scenarioPrefix = `freshness-lifecycle-${viewport.id}`;
+  for (const step of cat07Steps) {
+    cat07ExpectedArtifacts.push(`${scenarioPrefix}-${step}.json`, `${scenarioPrefix}-${step}.png`);
+  }
+  cat07ExpectedArtifacts.push(`${scenarioPrefix}-result.json`);
+}
+cat07ExpectedArtifacts.sort();
+const cat07SummaryFixture = {
+  artifacts: cat07ExpectedArtifacts,
+  bootstrapResults: cat07Viewports.map((viewport, index) => ({
+    browserFailures: [],
+    completedAt: cat07AtSecond(index * 20 + 5),
+    error: null,
+    nativeDeviceProof: false,
+    runId: cat07RunId,
+    startedAt: cat07AtSecond(index * 20 + 1),
+    surface: 'expo-web',
+    verdict: 'pass',
+    viewport,
+  })),
+  completedAt: cat07AtSecond(65),
+  expectedBootstrapCount: 3,
+  expectedExecutionCount: 3,
+  limitations: ['Synthetic packet-binding fixture; not release evidence.'],
+  nativeDeviceProof: false,
+  requiredViewports: cat07Viewports,
+  runId: cat07RunId,
+  scenarios: cat07Viewports.map((viewport, index) => ({
+    browserFailures: [],
+    completedAt: cat07AtSecond(index * 20 + 19),
+    error: null,
+    nativeDeviceProof: false,
+    runId: cat07RunId,
+    startedAt: cat07AtSecond(index * 20 + 6),
+    surface: 'expo-web',
+    verdict: 'pass',
+    viewport,
+  })),
+  schemaVersion: 2,
+  screenshots: cat07ExpectedArtifacts.filter((artifact) => artifact.endsWith('.png')),
+  sourceGitSha: cat07SourceSha,
+  startedAt: cat07AtSecond(0),
+  surface: 'expo-web',
+  verdict: 'pass',
+  verifiedOutcomes: ['Synthetic packet-binding fixture; not release evidence.'],
+};
+const cat07RuntimePaths = Object.fromEntries(
+  ['appData', 'cache', 'home', 'npmGlobalConfig', 'npmUserConfig', 'temp'].map((name) => [
+    name,
+    resolve(fixtureRoot, '.tmp', 'cat07-runtime', name),
+  ]),
+);
+cat07SummaryFixture.runtimeProvenance = {
+  browserLaunch: {
+    args: cat07BrowserArguments({ userDataDir: '<fresh-profile>' }),
+    schemaVersion: 1,
+  },
+  childEnvironment: {
+    keys: Object.keys(
+      buildCat07ChildEnvironment({
+        hostEnvironment: process.env,
+        platform: process.platform,
+        runtimePaths: cat07RuntimePaths,
+      }),
+    ).sort(),
+    schemaVersion: 1,
+  },
+  environmentBootstrap: { bytes: 1, schemaVersion: 1, sha256: '1'.repeat(64) },
+  installMode: 'isolated-npm-ci-offline-ignore-scripts-then-repo-postinstall',
+  packageLock: {
+    bytes: cat07SourcePackageLockBytes.length,
+    sha256: createHash('sha256').update(cat07SourcePackageLockBytes).digest('hex'),
+  },
+  runtimeTree: {
+    bytes: 1,
+    directoryCount: 1,
+    entryCount: 2,
+    fileCount: 1,
+    linkCount: 0,
+    rootCount: 1,
+    roots: [
+      {
+        bytes: 1,
+        directoryCount: 1,
+        entryCount: 2,
+        fileCount: 1,
+        linkCount: 0,
+        path: 'node_modules',
+        sha256: '2'.repeat(64),
+      },
+    ],
+    sha256: '3'.repeat(64),
+  },
+  schemaVersion: 1,
+  sourceTree: { bytes: 1, entryCount: 1, fileCount: 1, sha256: '4'.repeat(64) },
+  tools: Object.fromEntries(
+    ['browser', 'expoCli', 'git', 'node', 'npmCli'].map((name, index) => [
+      name,
+      {
+        basename: `${name}.fixture`,
+        bytes: index + 1,
+        sha256: String(index + 5).repeat(64),
+        version: 'fixture-version',
+      },
+    ]),
+  ),
+};
+const cat07ManifestScriptFixturePath = resolve(fixtureRoot, 'scripts/e2e/human-e2e-manifest.mjs');
+writeFileSync(
+  cat07ManifestScriptFixturePath,
+  `#!/usr/bin/env node
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+const summary = JSON.parse(readFileSync(${JSON.stringify(cat07SummaryFixtureRelativePath)}, 'utf8'));
+const expected = ${JSON.stringify(cat07ExpectedArtifacts)};
+const expectedHead = process.argv.find((argument) => argument.startsWith('--expected-head-sha='))?.slice('--expected-head-sha='.length);
+const currentHead = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const valid = process.argv.includes('--cat07-committed-check') &&
+  /^[a-f0-9]{40}$/.test(expectedHead ?? '') &&
+  currentHead === expectedHead &&
+  summary.schemaVersion === 2 &&
+  summary.verdict === 'pass' &&
+  summary.nativeDeviceProof === false &&
+  JSON.stringify(summary.artifacts) === JSON.stringify(expected) &&
+  JSON.stringify(summary.screenshots) === JSON.stringify(expected.filter((path) => path.endsWith('.png')));
+if (!valid) {
+  console.error('FAIL committed CAT07 full evidence contract: Phase 5 smoke rejected forged structure');
+  process.exit(1);
+}
+console.log(\`PASS committed CAT07 full evidence contract \${expectedHead}\`);
+`,
+);
+const writeCat07CommittedFixture = (summary) => {
+  const summaryBytes = canonicalEvidenceJsonBytes(summary);
+  writeFileSync(cat07SummaryFixturePath, summaryBytes);
+  const manifest = JSON.parse(readFileSync(cat07ManifestFixturePath, 'utf8'));
+  manifest.status = 'pass';
+  manifest.gitSha = cat07SourceSha;
+  manifest.gateResults = (manifest.gateResults ?? []).filter(
+    (gate) => gate?.id !== 'cat07-shelf-freshness-supported-phone',
+  );
+  manifest.gateResults.push({
+    detail: 'Synthetic Phase 5 CAT07 packet-binding fixture.',
+    evidence: 'summary.json',
+    evidenceExists: true,
+    evidenceSha256: createHash('sha256').update(summaryBytes).digest('hex'),
+    evidenceTracked: true,
+    failureCount: 0,
+    fileCount: 100,
+    folder: 'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current',
+    folderExists: true,
+    id: 'cat07-shelf-freshness-supported-phone',
+    kind: 'cat07-shelf-freshness',
+    required: true,
+    requirementFailures: [],
+    status: 'pass',
+    supportClass: 'supported-phone',
+    title: 'CAT07 Shelf freshness and replacement provenance lifecycle',
+    verdict: 'pass',
+  });
+  writeFileSync(cat07ManifestFixturePath, canonicalEvidenceJsonBytes(manifest));
+  writeFileSync(cat07ManifestMarkdownFixturePath, renderHumanE2eManifestMarkdown(manifest));
+};
+writeCat07CommittedFixture(cat07SummaryFixture);
 git(fixtureRoot, ['add', '-A']);
+git(fixtureRoot, ['add', '-f', '--', cat07SummaryFixtureRelativePath]);
 git(fixtureRoot, ['commit', '--quiet', '-m', 'Phase 5 smoke source']);
 
 const root = fixtureRoot;
+const phase5SourceGitSha = currentGitSha();
 const packetPath = resolve(root, 'scripts/phase5/build-device-qa-packet.mjs');
 const iosBuildId = '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5';
 const appBundleIdentifier = 'com.routinekind.phase5smoke';
@@ -109,9 +356,24 @@ function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
 }
 
+const governedPhase5EvidencePaths = new Set();
+const governedPhase5EvidencePrefixes = [
+  'docs/phase-5/evidence/widget-lifecycle/',
+  'docs/phase-5/evidence/native-ocr/',
+  'docs/phase-5/evidence/camera-lifecycle/',
+  'docs/phase-5/evidence/performance/',
+];
+
+function recordGovernedPhase5EvidencePath(relativePath) {
+  if (governedPhase5EvidencePrefixes.some((prefix) => relativePath.startsWith(prefix))) {
+    governedPhase5EvidencePaths.add(relativePath);
+  }
+}
+
 function artifact(relativePath, bytes, mediaType) {
   mkdirSync(dirname(resolve(root, relativePath)), { recursive: true });
   writeFileSync(resolve(root, relativePath), bytes);
+  recordGovernedPhase5EvidencePath(relativePath);
   return { path: relativePath, sha256: sha256(bytes), mediaType };
 }
 
@@ -161,7 +423,7 @@ function writeWidgetEvidenceFixture() {
   mkdirSync(widgetEvidenceAbsoluteRoot, { recursive: true });
   const evidence = createWidgetLifecycleEvidenceTemplate();
   evidence.capturedAt = capturedAt;
-  evidence.sourceGitSha = currentGitSha();
+  evidence.sourceGitSha = phase5SourceGitSha;
   evidence.build.easIosBuildId = iosBuildId;
   evidence.device.model = 'iPhone 15 Pro';
   evidence.device.osVersion = 'iOS 18.5';
@@ -317,6 +579,7 @@ function writeWidgetEvidenceFixture() {
   }
   const relativePath = `${widgetEvidenceRelativeRoot}/evidence.json`;
   writeFileSync(resolve(root, relativePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  recordGovernedPhase5EvidencePath(relativePath);
   return relativePath;
 }
 
@@ -385,7 +648,7 @@ function writeNativeOcrEvidenceFixture() {
   const evidence = createNativeOcrEvidenceTemplate();
   evidence.testStartedAt = '2026-07-18T12:00:00.000Z';
   evidence.completedAt = '2026-07-18T16:00:00.000Z';
-  evidence.sourceGitSha = currentGitSha();
+  evidence.sourceGitSha = phase5SourceGitSha;
   evidence.sourceHashes = Object.fromEntries(
     NATIVE_OCR_REQUIRED_SOURCE_FILES.map((path) => [
       path,
@@ -535,6 +798,7 @@ function writeNativeOcrEvidenceFixture() {
   };
   const relativePath = `${nativeOcrEvidenceRelativeRoot}/evidence.json`;
   writeFileSync(resolve(root, relativePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  recordGovernedPhase5EvidencePath(relativePath);
   return relativePath;
 }
 
@@ -560,7 +824,7 @@ function writeCameraLifecycleEvidenceFixture() {
   const installedAt = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString();
   evidence.testStartedAt = testStartedAt;
   evidence.completedAt = completedAt;
-  evidence.sourceGitSha = currentGitSha();
+  evidence.sourceGitSha = phase5SourceGitSha;
   evidence.sourceHashes = Object.fromEntries(
     CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES.map((path) => [
       path,
@@ -860,10 +1124,139 @@ function writeCameraLifecycleEvidenceFixture() {
   };
   const relativePath = `${cameraEvidenceRelativeRoot}/evidence.json`;
   writeFileSync(resolve(root, relativePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  recordGovernedPhase5EvidencePath(relativePath);
   return relativePath;
 }
 
 const cameraLifecycleEvidencePath = writeCameraLifecycleEvidenceFixture();
+
+const performanceEvidenceRelativeRoot = `docs/phase-5/evidence/performance/device-packet-smoke-${process.pid}`;
+
+function writePerformanceEvidenceFixture() {
+  const evidence = createPerformanceEvidenceTemplate();
+  evidence.thresholdsDefinedAt = '2026-07-18T12:00:00.000Z';
+  evidence.thresholdsDefinedBy = 'Performance Evidence Owner';
+  evidence.capturedAt = '2026-07-18T13:00:00.000Z';
+  evidence.gitSha = phase5SourceGitSha;
+  for (const [platform, device] of Object.entries(evidence.devices)) {
+    Object.assign(
+      device,
+      platform === 'ios'
+        ? {
+            physical: true,
+            buildId: iosBuildId,
+            deviceModel: 'iPhone 15 Pro',
+            osVersion: 'iOS 18.5',
+            logicalWidth: 393,
+            usableHeight: 852,
+          }
+        : {
+            physical: true,
+            buildId: '7a4d74ae-2acd-4af5-931f-b768565bcd64',
+            deviceModel: 'Pixel 8',
+            osVersion: 'Android 15',
+            logicalWidth: 412,
+            usableHeight: 892,
+          },
+    );
+  }
+  for (const [metric, threshold] of Object.entries(evidence.thresholds)) {
+    threshold.maxP95 = metric === 'photo_timeline_peak_memory_mb' ? 512 : 1_500;
+    threshold.rationale = `Owner-approved launch threshold for the ${metric} supported-device measurement.`;
+  }
+  evidence.measurements = evidence.measurements.map((measurement, index) => {
+    const samples =
+      measurement.metric === 'photo_timeline_peak_memory_mb'
+        ? [170, 175, 180, 185, 190]
+        : [100 + index, 110 + index, 120 + index, 130 + index, 140 + index];
+    return {
+      ...measurement,
+      source:
+        measurement.metric === 'photo_timeline_peak_memory_mb'
+          ? 'native_profiler'
+          : 'instrumented_timer',
+      samples,
+      ...summarizePerformanceSamples(samples),
+    };
+  });
+  evidence.photoDataset = {
+    encryptedPhotoCount: 50,
+    source: 'Synthetic non-sensitive encrypted photo performance fixture.',
+    plaintextDeletedAfterImport: true,
+    zeroCrashes: true,
+    zeroOsTerminations: true,
+  };
+  evidence.knownCaveats = [];
+  evidence.signoff = {
+    decision: 'pass',
+    signedOffBy: 'Performance QA Reviewer',
+    signedAt: '2026-07-18T14:00:00.000Z',
+  };
+  const relativePath = `${performanceEvidenceRelativeRoot}/evidence.json`;
+  mkdirSync(dirname(resolve(root, relativePath)), { recursive: true });
+  writeFileSync(resolve(root, relativePath), canonicalEvidenceJsonBytes(evidence));
+  recordGovernedPhase5EvidencePath(relativePath);
+  return relativePath;
+}
+
+const performanceEvidencePath = writePerformanceEvidenceFixture();
+const releaseCandidateDir = `docs/phase-9/release-candidates/rc-phase5-smoke-${process.pid}`;
+const releaseCandidateManifestPath = `${releaseCandidateDir}/manifest.md`;
+mkdirSync(resolve(root, releaseCandidateDir), { recursive: true });
+writeFileSync(
+  resolve(root, releaseCandidateManifestPath),
+  `# Synthetic Phase 5 governed evidence smoke RC\n\nSource: ${phase5SourceGitSha}\n`,
+);
+const governedLedgerEntries = [...governedPhase5EvidencePaths, releaseCandidateManifestPath].map(
+  (path) => ({
+    role: governedEvidenceRoleForPath(path, releaseCandidateDir),
+    path,
+    sha256: sha256(readFileSync(resolve(root, path))),
+  }),
+);
+const governedLedger = buildGovernedEvidenceLedger({
+  sourceGitSha: phase5SourceGitSha,
+  releaseCandidateDir,
+  publicationPolicy: captureGovernedPublicationPolicy(root, phase5SourceGitSha),
+  entries: governedLedgerEntries,
+});
+const governedLedgerRelativePath = governedEvidenceLedgerPath(releaseCandidateDir);
+writeFileSync(
+  resolve(root, governedLedgerRelativePath),
+  renderGovernedEvidenceLedger(governedLedger),
+);
+git(fixtureRoot, [
+  'add',
+  '-f',
+  '--',
+  widgetEvidenceRelativeRoot,
+  nativeOcrEvidenceRelativeRoot,
+  cameraEvidenceRelativeRoot,
+  performanceEvidenceRelativeRoot,
+  releaseCandidateDir,
+]);
+git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit governed Phase 5 evidence']);
+const governedEvidenceHead = currentGitSha();
+let phase5SmokeBaselineHead = governedEvidenceHead;
+if (git(fixtureRoot, ['status', '--short', '--untracked-files=all'])) {
+  throw new Error('Phase 5 governed evidence smoke fixture is not clean after E.');
+}
+const finalHumanManifest = JSON.parse(readFileSync(cat07ManifestFixturePath, 'utf8'));
+finalHumanManifest.generatedAt = '2026-07-22T00:01:30.000Z';
+writeFileSync(cat07ManifestFixturePath, canonicalEvidenceJsonBytes(finalHumanManifest));
+writeFileSync(cat07ManifestMarkdownFixturePath, renderHumanE2eManifestMarkdown(finalHumanManifest));
+git(fixtureRoot, [
+  'add',
+  '--',
+  'docs/e2e/generated/human-e2e-manifest.json',
+  'docs/e2e/generated/human-e2e-manifest.md',
+]);
+git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit final human-E2E manifest descendant']);
+const humanManifestPrefixHead = currentGitSha();
+publishGovernedFixtureUnit({
+  fixtureRoot,
+  unitId: 'docs/phase-4/generated/beta-coverage-report',
+});
 
 const passthroughKeys = [
   'ComSpec',
@@ -898,6 +1291,8 @@ const validEvidence = {
   PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH: widgetEvidencePath,
   PHASE5_NATIVE_OCR_EVIDENCE_PATH: nativeOcrEvidencePath,
   PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH: cameraLifecycleEvidencePath,
+  PHASE5_PERFORMANCE_EVIDENCE_PATH: performanceEvidencePath,
+  PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
   PHASE5_DEVICE_QA_PASS: 'true',
   PHASE5_INSTALL_QA_PASS: 'true',
   PHASE5_CAMERA_PERMISSION_QA_PASS: 'true',
@@ -915,12 +1310,38 @@ const validEvidence = {
   PHASE5_WIDGET_DEVICE_QA_PASS: 'true',
   PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS: 'true',
   PHASE5_LIVE_ACTIVITY_QA_PASS: 'true',
+  PHASE5_CAT07_SYNTHETIC_CHILD_WIRING: '1',
 };
 
+let packetFixtureCounter = 0;
+
 function run(extraEnv, strict = true) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase5-qa-'));
+  packetFixtureCounter += 1;
+  const fixtureId = `phase5-${process.pid}-${packetFixtureCounter}`;
+  const outDirRelative = `.tmp/phase5-packet-fixtures/${fixtureId}`;
+  const outDir = resolve(root, ...outDirRelative.split('/'));
   packetOutDirs.push(outDir);
-  const result = spawnSync(process.execPath, [packetPath, ...(strict ? ['--strict'] : [])], {
+  const result = spawnSync(
+    process.execPath,
+    [packetPath, ...(strict ? ['--strict'] : []), '--test-fixture-output'],
+    {
+      cwd: root,
+      encoding: 'utf8',
+      env: {
+        ...processBaseEnv,
+        ...validEvidence,
+        ...extraEnv,
+        NODE_ENV: 'test',
+        PHASE5_QA_PACKET_OUT_DIR: outDirRelative,
+      },
+    },
+  );
+  result.outDir = outDir;
+  return result;
+}
+
+function runRejectedPacketOutput(outDir, args = [], extraEnv = {}) {
+  return spawnSync(process.execPath, [packetPath, ...args], {
     cwd: root,
     encoding: 'utf8',
     env: {
@@ -930,8 +1351,113 @@ function run(extraEnv, strict = true) {
       PHASE5_QA_PACKET_OUT_DIR: outDir,
     },
   });
-  result.outDir = outDir;
+}
+
+const committedPacketJsonPath = resolve(root, 'docs/phase-5/generated/device-qa-packet.json');
+const committedPacketMarkdownPath = resolve(root, 'docs/phase-5/generated/device-qa-packet.md');
+
+function runCanonicalPacketGeneration() {
+  return spawnSync(process.execPath, [packetPath, '--strict'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: { ...processBaseEnv, ...validEvidence },
+  });
+}
+
+function runCheck(extraEnv = {}) {
+  const beforeJson = readFileSync(committedPacketJsonPath);
+  const beforeMarkdown = readFileSync(committedPacketMarkdownPath);
+  const result = spawnSync(process.execPath, [packetPath, '--strict', '--check'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: { ...processBaseEnv, ...validEvidence, ...extraEnv },
+  });
+  result.outputsUnchanged =
+    beforeJson.equals(readFileSync(committedPacketJsonPath)) &&
+    beforeMarkdown.equals(readFileSync(committedPacketMarkdownPath));
   return result;
+}
+
+const checkDriftHelperPath = resolve(root, '.tmp/phase5-check-drift-helper.mjs');
+mkdirSync(dirname(checkDriftHelperPath), { recursive: true });
+writeFileSync(
+  checkDriftHelperPath,
+  `import { spawn } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+const [packetPath, targetPath] = process.argv.slice(2);
+const original = readFileSync(targetPath);
+const child = spawn(process.execPath, [packetPath, '--strict', '--check', '--test-check-drift-window'], {
+  cwd: process.cwd(),
+  env: {
+    ...process.env,
+    NODE_ENV: 'test',
+    PHASE5_QA_PACKET_CHECK_TEST_PAUSE_MS: '3000',
+  },
+  stdio: ['ignore', 'pipe', 'pipe'],
+  windowsHide: true,
+});
+let stdout = '';
+let stderr = '';
+let mutated = false;
+child.stdout.on('data', (chunk) => {
+  stdout += chunk.toString('utf8');
+  if (!mutated && stdout.includes('PHASE5_QA_PACKET_CHECK_COMPARISON_COMPLETE')) {
+    mutated = true;
+    writeFileSync(targetPath, Buffer.concat([original, Buffer.from('\\n')]));
+  }
+});
+child.stderr.on('data', (chunk) => {
+  stderr += chunk.toString('utf8');
+});
+child.on('error', (error) => {
+  stderr += String(error?.stack ?? error);
+});
+child.on('close', (code) => {
+  writeFileSync(targetPath, original);
+  process.stdout.write(stdout);
+  process.stderr.write(stderr);
+  process.exitCode = code ?? 1;
+});
+`,
+);
+
+function runCheckWithLateDrift(relativeTargetPath) {
+  const beforeJson = readFileSync(committedPacketJsonPath);
+  const beforeMarkdown = readFileSync(committedPacketMarkdownPath);
+  const result = spawnSync(
+    process.execPath,
+    [checkDriftHelperPath, packetPath, resolve(root, relativeTargetPath)],
+    {
+      cwd: root,
+      encoding: 'utf8',
+      env: { ...processBaseEnv, ...validEvidence },
+      maxBuffer: 8 * 1024 * 1024,
+      timeout: 60_000,
+    },
+  );
+  result.outputsUnchanged =
+    beforeJson.equals(readFileSync(committedPacketJsonPath)) &&
+    beforeMarkdown.equals(readFileSync(committedPacketMarkdownPath));
+  return result;
+}
+
+const canonicalPacketGeneration = runCanonicalPacketGeneration();
+if (canonicalPacketGeneration.status !== 0) {
+  throw new Error(
+    `Phase 5 smoke could not generate the committed replay fixture:\n${canonicalPacketGeneration.stdout}\n${canonicalPacketGeneration.stderr}`,
+  );
+}
+git(fixtureRoot, [
+  'add',
+  '-f',
+  '--',
+  'docs/phase-5/generated/device-qa-packet.json',
+  'docs/phase-5/generated/device-qa-packet.md',
+]);
+git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit canonical Phase 5 QA packet']);
+phase5SmokeBaselineHead = currentGitSha();
+if (git(fixtureRoot, ['status', '--short', '--untracked-files=all'])) {
+  throw new Error('Phase 5 committed packet smoke fixture is not clean.');
 }
 
 function runWithDirtyWorktree(extraEnv, strict = true) {
@@ -953,6 +1479,223 @@ function runWithDirtyGeneratedEvidence(extraEnv, strict = true) {
   } finally {
     writeFileSync(generatedPath, original);
   }
+}
+
+function restoreGovernedEvidenceHead() {
+  git(fixtureRoot, ['switch', '--quiet', '--detach', phase5SmokeBaselineHead]);
+  const status = git(fixtureRoot, ['status', '--short', '--untracked-files=all']);
+  if (status) throw new Error(`Phase 5 smoke could not restore governed E:\n${status}`);
+}
+
+function runWithFinalReadinessDescendants() {
+  publishGovernedFixtureTail({
+    fixtureRoot,
+    alreadyPublishedUnitIds: [
+      'docs/e2e/generated/human-e2e-manifest',
+      'docs/phase-4/generated/beta-coverage-report',
+      'docs/phase-5/generated/device-qa-packet',
+    ],
+  });
+  try {
+    return run({});
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+function runWithNearMissGeneratedDescendant() {
+  const relativePath = 'docs/phase-7/generated/core-loop-qa-packet.txt';
+  mkdirSync(dirname(resolve(root, relativePath)), { recursive: true });
+  writeFileSync(resolve(root, relativePath), 'near-miss generated evidence path\n');
+  git(fixtureRoot, ['add', '-f', '--', relativePath]);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit near-miss generated descendant']);
+  try {
+    return run({});
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+function runWithUnledgeredRawEvidenceMutation() {
+  const absolutePath = resolve(root, performanceEvidencePath);
+  const original = readFileSync(absolutePath);
+  writeFileSync(absolutePath, Buffer.concat([original, Buffer.from('\n')]));
+  git(fixtureRoot, ['add', '-f', '--', performanceEvidencePath]);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit unledgered raw evidence mutation']);
+  try {
+    return run({});
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+function runWithMismatchedEvidenceSourceCommit() {
+  const absolutePath = resolve(root, performanceEvidencePath);
+  const evidence = JSON.parse(readFileSync(absolutePath, 'utf8'));
+  evidence.gitSha = cat07SourceSha;
+  writeFileSync(absolutePath, canonicalEvidenceJsonBytes(evidence));
+  git(fixtureRoot, ['add', '-f', '--', performanceEvidencePath]);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit mismatched evidence source binding']);
+  try {
+    return run({});
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+if (process.env.PHASE5_DEVICE_QA_SMOKE_GOVERNANCE_ONLY === '1') {
+  const result = runWithFinalReadinessDescendants();
+  const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+  if (
+    result.status !== 0 ||
+    /^FAIL /m.test(output(result)) ||
+    packet.governedEvidenceChain.status !== 'pass' ||
+    packet.governedEvidenceChain.sourceGitSha !== phase5SourceGitSha ||
+    packet.governedEvidenceChain.evidenceCommitSha !== governedEvidenceHead ||
+    packet.governedEvidenceChain.currentGitSha !== packet.gitSha ||
+    packet.governedEvidenceChain.currentGitSha === governedEvidenceHead ||
+    packet.governedEvidenceChain.downstreamGeneratedOnly !== true ||
+    packet.governedEvidenceChain.downstreamCommitCount !== 23
+  ) {
+    throw new Error(
+      `Phase 5 governance-only smoke failed:\n${output(result)}\n${JSON.stringify(packet.governedEvidenceChain, null, 2)}`,
+    );
+  }
+  console.log('OK strict Phase 5 QA packet accepts the exact 22-unit R DAG and final F');
+  process.exit(0);
+}
+
+function runCheckWithForgedGovernedFields() {
+  const packet = JSON.parse(readFileSync(committedPacketJsonPath, 'utf8'));
+  packet.governedEvidenceChain.sourceGitSha = cat07SourceSha;
+  packet.governedEvidenceChain.releaseCandidateDir =
+    'docs/phase-9/release-candidates/rc-forged-phase5-smoke';
+  packet.governedEvidenceChain.downstreamCommitCount = 999;
+  writeFileSync(committedPacketJsonPath, canonicalEvidenceJsonBytes(packet));
+  git(fixtureRoot, ['add', '--', 'docs/phase-5/generated/device-qa-packet.json']);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit forged Phase 5 governed fields']);
+  try {
+    return runCheck();
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+function runCheckWithBackwardHumanManifestPrefix() {
+  const packet = JSON.parse(readFileSync(committedPacketJsonPath, 'utf8'));
+  const recordedCurrent = packet.governedEvidenceChain.currentGitSha;
+  const recordedCount = packet.governedEvidenceChain.downstreamCommitCount;
+  packet.gitSha = governedEvidenceHead;
+  packet.governedEvidenceChain.currentGitSha = governedEvidenceHead;
+  packet.governedEvidenceChain.downstreamCommitCount = 0;
+  packet.cat07CommittedEvidence.headSha = governedEvidenceHead;
+  packet.cat07FullEvidenceContract.headSha = governedEvidenceHead;
+  writeFileSync(committedPacketJsonPath, canonicalEvidenceJsonBytes(packet));
+  const markdown = readFileSync(committedPacketMarkdownPath, 'utf8')
+    .replace(`Git SHA: ${recordedCurrent}`, `Git SHA: ${governedEvidenceHead}`)
+    .replace(`- Current commit: ${recordedCurrent}`, `- Current commit: ${governedEvidenceHead}`)
+    .replace(
+      `- Allowlisted downstream commits: ${recordedCount}`,
+      '- Allowlisted downstream commits: 0',
+    );
+  writeFileSync(committedPacketMarkdownPath, markdown);
+  git(fixtureRoot, [
+    'add',
+    '--',
+    'docs/phase-5/generated/device-qa-packet.json',
+    'docs/phase-5/generated/device-qa-packet.md',
+  ]);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Forge Phase 5 packet behind human manifest']);
+  try {
+    return runCheck();
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+function runCheckWithForgedPacketField() {
+  const packet = JSON.parse(readFileSync(committedPacketJsonPath, 'utf8'));
+  packet.purpose = 'Hand-edited forged Phase 5 packet purpose.';
+  writeFileSync(committedPacketJsonPath, canonicalEvidenceJsonBytes(packet));
+  git(fixtureRoot, ['add', '--', 'docs/phase-5/generated/device-qa-packet.json']);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit forged Phase 5 packet field']);
+  try {
+    return runCheck();
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+function runCheckWithStaleMarkdown() {
+  writeFileSync(
+    committedPacketMarkdownPath,
+    Buffer.concat([readFileSync(committedPacketMarkdownPath), Buffer.from('stale hand edit\n')]),
+  );
+  git(fixtureRoot, ['add', '--', 'docs/phase-5/generated/device-qa-packet.md']);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit stale Phase 5 packet Markdown']);
+  try {
+    return runCheck();
+  } finally {
+    restoreGovernedEvidenceHead();
+  }
+}
+
+function runCheckWithDirtyRawEvidence() {
+  const absolutePath = resolve(root, performanceEvidencePath);
+  const original = readFileSync(absolutePath);
+  writeFileSync(absolutePath, Buffer.concat([original, Buffer.from('\n')]));
+  try {
+    return runCheck();
+  } finally {
+    writeFileSync(absolutePath, original);
+  }
+}
+
+function runWithCat07WorkingTreeMismatch() {
+  const original = readFileSync(cat07SummaryFixturePath);
+  writeFileSync(
+    cat07SummaryFixturePath,
+    `${JSON.stringify({ ...cat07SummaryFixture, verdict: 'fail' }, null, 2)}\n`,
+  );
+  try {
+    return run({});
+  } finally {
+    writeFileSync(cat07SummaryFixturePath, original);
+  }
+}
+
+function runWithMalformedCommittedCat07Summary() {
+  writeCat07CommittedFixture({ ...cat07SummaryFixture, verdict: 'fail' });
+  git(fixtureRoot, ['add', '-A']);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit malformed CAT07 summary smoke']);
+  const result = run({});
+  writeCat07CommittedFixture(cat07SummaryFixture);
+  git(fixtureRoot, ['add', '-A']);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Restore valid CAT07 summary smoke']);
+  return result;
+}
+
+function runWithStructurallyPlausibleForgedCat07Summary() {
+  const forged = {
+    ...cat07SummaryFixture,
+    artifacts: cat07SummaryFixture.artifacts.map((artifact, index) =>
+      index === 0 ? 'forged-browser-events.json' : artifact,
+    ),
+  };
+  writeCat07CommittedFixture(forged);
+  git(fixtureRoot, ['add', '-A']);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit plausible forged CAT07 summary smoke']);
+  const result = run({});
+  writeCat07CommittedFixture(cat07SummaryFixture);
+  git(fixtureRoot, ['add', '-A']);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Restore full CAT07 summary smoke']);
+  return result;
+}
+
+function runWithCat07SummaryOutsideHead() {
+  git(fixtureRoot, ['rm', '--cached', '--', cat07SummaryFixtureRelativePath]);
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Remove tracked CAT07 smoke summary']);
+  return run({});
 }
 
 function runWithCameraEvidenceJunctionEscape() {
@@ -988,7 +1731,57 @@ function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
 
+function runRealCat07ContractSmoke() {
+  return spawnSync(
+    process.execPath,
+    [resolve(sourceRoot, 'scripts/e2e/human-e2e-manifest.mjs'), '--cat07-contract-smoke'],
+    {
+      cwd: sourceRoot,
+      encoding: 'utf8',
+      env: { ...processBaseEnv },
+      maxBuffer: 2 * 1024 * 1024,
+      timeout: 180_000,
+    },
+  );
+}
+
 const cases = [
+  {
+    name: 'Phase 5 packet rejects caller-selected normal output directories',
+    result: runRejectedPacketOutput('docs/phase-5/caller-selected'),
+    expect(result) {
+      return (
+        result.status !== 0 &&
+        /PHASE5_QA_PACKET_OUT_DIR is reserved for an explicit repo-local Phase 5 test fixture/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 5 packet rejects traversal even in explicit test-fixture mode',
+    result: runRejectedPacketOutput('../outside-phase5', ['--test-fixture-output'], {
+      NODE_ENV: 'test',
+    }),
+    expect(result) {
+      return (
+        result.status !== 0 &&
+        /PHASE5_QA_PACKET_OUT_DIR is reserved for an explicit repo-local Phase 5 test fixture/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'real CAT07 manifest contract passes before synthetic Phase 5 child wiring is exercised',
+    result: runRealCat07ContractSmoke(),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        /PASS CAT07 shelf-freshness evidence contract smoke/.test(output(result))
+      );
+    },
+  },
   {
     name: 'strict Phase 5 QA packet accepts real-looking EAS and device evidence',
     result: run({}),
@@ -1111,6 +1904,30 @@ const cases = [
         packet.cameraLifecycleEvidence.summary.proofArtifacts === 54 &&
         packet.cameraLifecycleEvidence.summary.artifacts === 64 &&
         packet.cameraLifecycleEvidence.artifacts.length === 64
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet requires governed supported-device performance evidence',
+    result: run({ PHASE5_PERFORMANCE_EVIDENCE_PATH: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing PHASE5_PERFORMANCE_EVIDENCE_PATH; real supported-device performance evidence is not attached/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects evidence claims without an explicit selected RC',
+    result: run({ PHASE9_RELEASE_CANDIDATE_DIR: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE9_RELEASE_CANDIDATE_DIR is required whenever Phase 5 evidence is claimed/.test(
+          output(result),
+        )
       );
     },
   },
@@ -1246,6 +2063,8 @@ const cases = [
       if (result.status !== 0) return false;
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
+        packet.schemaVersion === 1 &&
+        packet.kind === 'phase5_device_qa_packet' &&
         packet.buildEvidence.signedOffBy === 'Tas Mohammed' &&
         packet.buildEvidence.iosBuildProfile === 'staging' &&
         packet.widgetLifecycleEvidence.status === 'pass' &&
@@ -1262,10 +2081,93 @@ const cases = [
         packet.cameraLifecycleEvidence.summary.runs === 54 &&
         packet.cameraLifecycleEvidence.summary.artifacts === 64 &&
         /^[0-9a-f]{64}$/i.test(packet.cameraLifecycleEvidence.sha256) &&
+        packet.performanceEvidence.status === 'pass' &&
+        packet.performanceEvidence.summary.found ===
+          packet.performanceEvidence.summary.requiredMeasurements &&
+        /^[0-9a-f]{64}$/i.test(packet.performanceEvidence.sha256) &&
+        packet.governedEvidenceChain.status === 'pass' &&
+        packet.governedEvidenceChain.schemaVersion === 1 &&
+        packet.governedEvidenceChain.kind === 'phase5_governed_evidence_chain_binding' &&
+        JSON.stringify(Object.keys(packet.governedEvidenceChain).sort()) ===
+          JSON.stringify(
+            [
+              'schemaVersion',
+              'kind',
+              'status',
+              'sourceGitSha',
+              'evidenceCommitSha',
+              'currentGitSha',
+              'releaseCandidateDir',
+              'ledgerPath',
+              'ledgerSha256',
+              'ledgerEntryCount',
+              'directEvidenceCommit',
+              'evidenceOnlyCommit',
+              'cleanWorktree',
+              'normalIndexState',
+              'hashesValid',
+              'downstreamGeneratedOnly',
+              'downstreamCommitCount',
+              'roleInventories',
+              'errors',
+            ].sort(),
+          ) &&
+        packet.governedEvidenceChain.sourceGitSha === phase5SourceGitSha &&
+        packet.governedEvidenceChain.evidenceCommitSha === governedEvidenceHead &&
+        packet.governedEvidenceChain.currentGitSha === packet.gitSha &&
+        packet.governedEvidenceChain.releaseCandidateDir === releaseCandidateDir &&
+        packet.governedEvidenceChain.ledgerPath === governedLedgerRelativePath &&
+        /^[0-9a-f]{64}$/i.test(packet.governedEvidenceChain.ledgerSha256) &&
+        packet.governedEvidenceChain.ledgerEntryCount === governedLedgerEntries.length &&
+        packet.governedEvidenceChain.directEvidenceCommit === true &&
+        packet.governedEvidenceChain.evidenceOnlyCommit === true &&
+        packet.governedEvidenceChain.cleanWorktree === true &&
+        packet.governedEvidenceChain.hashesValid === true &&
+        packet.governedEvidenceChain.downstreamGeneratedOnly === true &&
+        packet.governedEvidenceChain.downstreamCommitCount === 2 &&
+        packet.governedEvidenceChain.roleInventories['phase5-widget-lifecycle'].entries.length ===
+          16 &&
+        packet.governedEvidenceChain.roleInventories['phase5-native-ocr'].entries.length === 8 &&
+        packet.governedEvidenceChain.roleInventories['phase5-camera-lifecycle'].entries.length ===
+          65 &&
+        packet.governedEvidenceChain.roleInventories['phase5-performance'].entries.length === 1 &&
+        Object.values(packet.governedEvidenceChain.roleInventories).every(
+          (inventory) =>
+            JSON.stringify(Object.keys(inventory).sort()) ===
+              JSON.stringify(['claimed', 'entries', 'ledgerEntryCount'].sort()) &&
+            inventory.claimed === true &&
+            inventory.ledgerEntryCount === inventory.entries.length &&
+            inventory.entries.every(
+              (entry) =>
+                JSON.stringify(Object.keys(entry).sort()) ===
+                  JSON.stringify(['path', 'sha256'].sort()) && /^[0-9a-f]{64}$/u.test(entry.sha256),
+            ),
+        ) &&
+        JSON.stringify(Object.keys(packet.qaEvidence).sort()) ===
+          JSON.stringify([...PHASE5_REQUIRED_QA_EVIDENCE_KEYS].sort()) &&
+        JSON.stringify(Object.keys(packet.evidenceStatuses).sort()) ===
+          JSON.stringify(
+            [
+              'widgetLifecycle',
+              'nativeOcr',
+              'cameraLifecycle',
+              'performance',
+              'governedEvidenceChain',
+            ].sort(),
+          ) &&
+        Object.values(packet.evidenceStatuses).every((status) => status === 'pass') &&
+        Array.isArray(packet.blockers) &&
+        packet.blockers.length === 0 &&
         /^[0-9a-f]{40}$/i.test(packet.gitSha) &&
+        packet.cat07CommittedEvidence.status === 'pass' &&
+        packet.cat07CommittedEvidence.headSha === packet.gitSha &&
+        packet.cat07FullEvidenceContract.status === 'pass' &&
+        packet.cat07FullEvidenceContract.headSha === packet.gitSha &&
         typeof packet.gitStatus === 'string' &&
         Array.isArray(packet.warnings) &&
         packet.files.some((file) => file.path === 'scripts/phase5/build-device-qa-packet.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/launch/governed-evidence-chain.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/phase9/release-qa-integrity.mjs') &&
         packet.files.some((file) => file.path === 'scripts/phase5/check-native-config.mjs') &&
         packet.files.some(
           (file) => file.path === 'scripts/phase5/check-performance-evidence.mjs',
@@ -1287,6 +2189,30 @@ const cases = [
         packet.files.some((file) => file.path === 'docs/hugeToDo/launch-contract.json') &&
         packet.files.some((file) => file.path === 'scripts/launch/contract.mjs') &&
         packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/e2e/evidence-diagnostic-hygiene.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/e2e/cat07-png-contract.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/e2e/cat07-committed-evidence.mjs') &&
+        [
+          'scripts/e2e/cat07-shelf-freshness-audit.mjs',
+          'scripts/e2e/cat07-shelf-freshness-audit.test.mjs',
+          'scripts/phase2/local-supabase-contract.mjs',
+          'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
+          'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+          'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
+          'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+          'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+          'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+          'supabase/tests/database/catalog_import_lifecycle.test.sql',
+          'supabase/tests/database/catalog_launch_curation.test.sql',
+          'supabase/tests/database/catalog_serving_gate.test.sql',
+          'supabase/tests/database/cat07_truthful_freshness.test.sql',
+          'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
+          'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json',
+        ].every((path) =>
+          packet.files.some(
+            (file) => file.path === path && /^[0-9a-f]{64}$/i.test(file.sha256 ?? ''),
+          ),
+        ) &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/_layout.tsx') &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/(tabs)/progress.tsx') &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/(tabs)/shelf.tsx') &&
@@ -1375,14 +2301,149 @@ const cases = [
     },
   },
   {
-    name: 'strict Phase 5 QA packet ignores central generated evidence changes',
+    name: 'Phase 5 QA packet check accepts the committed canonical publication without writing',
+    result: runCheck(),
+    expect(result) {
+      if (result.status !== 0 || result.outputsUnchanged !== true) return false;
+      const packet = JSON.parse(readFileSync(committedPacketJsonPath, 'utf8'));
+      return (
+        /PASS committed Phase 5 QA packet matches canonical replay inputs/.test(output(result)) &&
+        packet.gitSha === humanManifestPrefixHead &&
+        packet.governedEvidenceChain.currentGitSha === humanManifestPrefixHead &&
+        packet.governedEvidenceChain.downstreamCommitCount === 1
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check rejects missing replay evidence without writing',
+    result: runCheck({ PHASE5_PERFORMANCE_EVIDENCE_PATH: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        /replay inputs\/environment did not reproduce a blocker-free Phase 5 packet/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check rejects mismatched replay environment without writing',
+    result: runCheck({ PHASE5_SIGNED_OFF_BY: 'Different Replay Reviewer' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        /replay inputs\/environment did not reproduce a blocker-free Phase 5 packet/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check rejects forged S, RC, and prefix count without writing',
+    result: runCheckWithForgedGovernedFields(),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        text.includes('source commit S does not match the fresh governed audit') &&
+        text.includes(
+          'selected release-candidate directory does not match the fresh governed audit',
+        ) &&
+        text.includes('downstreamCommitCount is not one valid prefix')
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check rejects a backward prefix across newer human-manifest inputs',
+    result: runCheckWithBackwardHumanManifestPrefix(),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        (text.includes('governed publication commit does not change exactly the output pair') ||
+          text.includes('fresh replay input does not match recorded currentGitSha'))
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check rejects a forged nonvolatile JSON field without writing',
+    result: runCheckWithForgedPacketField(),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        /packet JSON does not match canonical replay inputs/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check rejects stale committed Markdown without writing',
+    result: runCheckWithStaleMarkdown(),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        /packet Markdown does not match canonical replay inputs/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check rejects dirty raw evidence without writing',
+    result: runCheckWithDirtyRawEvidence(),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        /fresh governed evidence audit did not pass/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check final snapshot rejects late source drift',
+    result: runCheckWithLateDrift('docs/DEVICE_SUPPORT_POLICY.md'),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        /docs\/DEVICE_SUPPORT_POLICY\.md working bytes changed during Phase 9 packet assembly/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 5 QA packet check evidence binding rejects late raw-artifact drift',
+    result: runCheckWithLateDrift(
+      JSON.parse(readFileSync(resolve(root, cameraLifecycleEvidencePath), 'utf8')).artifacts[0]
+        .path,
+    ),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.outputsUnchanged === true &&
+        /changed during Phase 5 packet assembly/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects dirty central generated evidence changes',
     result: runWithDirtyGeneratedEvidence({}),
     expect(result) {
-      if (result.status !== 0) return false;
+      if (result.status !== 1) return false;
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
-        !packet.gitStatus.includes('docs/phase-3/generated/review-worklist.json') &&
-        !packet.blockers.some((blocker) => /dirty Git worktree/.test(blocker))
+        packet.gitStatus.includes('docs/phase-3/generated/review-worklist.json') &&
+        packet.governedEvidenceChain.status === 'blocked' &&
+        packet.governedEvidenceChain.errors.some((error) =>
+          error.includes('governed evidence validation requires a clean worktree'),
+        ) &&
+        packet.blockers.includes(
+          'Phase 5 device QA packet requires a clean Git worktree for governed evidence validation; do not use it as final native-device evidence.',
+        )
       );
     },
   },
@@ -1394,8 +2455,9 @@ const cases = [
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
         packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
+        packet.governedEvidenceChain.status === 'blocked' &&
         packet.blockers.includes(
-          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated widget/OCR/camera evidence; do not use it as final native-device evidence.',
+          'Phase 5 device QA packet requires a clean Git worktree for governed evidence validation; do not use it as final native-device evidence.',
         )
       );
     },
@@ -1408,8 +2470,122 @@ const cases = [
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
         packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
+        packet.governedEvidenceChain.status === 'blocked' &&
         packet.warnings.includes(
-          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated widget/OCR/camera evidence; do not use it as final native-device evidence.',
+          'Phase 5 device QA packet requires a clean Git worktree for governed evidence validation; do not use it as final native-device evidence.',
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet accepts final Phase 7 and readiness descendants',
+    result: runWithFinalReadinessDescendants(),
+    expect(result) {
+      if (result.status !== 0 || /^FAIL /m.test(output(result))) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.governedEvidenceChain.status === 'pass' &&
+        packet.governedEvidenceChain.sourceGitSha === phase5SourceGitSha &&
+        packet.governedEvidenceChain.evidenceCommitSha === governedEvidenceHead &&
+        packet.governedEvidenceChain.currentGitSha === packet.gitSha &&
+        packet.governedEvidenceChain.currentGitSha !== governedEvidenceHead &&
+        packet.governedEvidenceChain.downstreamGeneratedOnly === true &&
+        packet.governedEvidenceChain.downstreamCommitCount === 23
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects a near-miss generated descendant path',
+    result: runWithNearMissGeneratedDescendant(),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.governedEvidenceChain.status === 'blocked' &&
+        packet.governedEvidenceChain.errors.some((error) =>
+          error.includes('changes a non-allowlisted downstream path'),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects an unledgered raw-evidence mutation after E',
+    result: runWithUnledgeredRawEvidenceMutation(),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.governedEvidenceChain.status === 'blocked' &&
+        packet.governedEvidenceChain.errors.some((error) =>
+          error.includes(`${performanceEvidencePath} changed after the evidence commit`),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects mismatched evidence source commits',
+    result: runWithMismatchedEvidenceSourceCommit(),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.governedEvidenceChain.status === 'blocked' &&
+        packet.governedEvidenceChain.sourceGitSha === null &&
+        packet.blockers.some((blocker) =>
+          blocker.includes('Governed Phase 5 evidence must share one coherent source Git SHA (S)'),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects CAT07 working bytes that differ from HEAD',
+    result: runWithCat07WorkingTreeMismatch(),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return packet.blockers.some((blocker) =>
+        blocker.includes(`${cat07SummaryFixtureRelativePath} working bytes do not match HEAD`),
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects a malformed committed CAT07 summary',
+    result: runWithMalformedCommittedCat07Summary(),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return packet.blockers.some((blocker) =>
+        blocker.includes('committed CAT07 summary verdict must be pass'),
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects a structurally plausible forged CAT07 summary',
+    result: runWithStructurallyPlausibleForgedCat07Summary(),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return packet.blockers.some(
+        (blocker) =>
+          blocker.includes('CAT07 full evidence contract') &&
+          blocker.includes('Phase 5 smoke rejected forged structure'),
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects an ignored CAT07 summary outside HEAD',
+    result: runWithCat07SummaryOutsideHead(),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      const cat07Diagnostics = packet.blockers
+        .filter((blocker) => blocker.startsWith('CAT07'))
+        .join('\n');
+      return (
+        cat07Diagnostics.includes(cat07SummaryFixtureRelativePath) &&
+        cat07Diagnostics.includes('must exist in HEAD') &&
+        !/(?:[A-Za-z]:[\\/]|[\\/]Users[\\/]|[\\/]AppData[\\/]|\.claude[\\/]worktrees[\\/])/u.test(
+          cat07Diagnostics,
         )
       );
     },

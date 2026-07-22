@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(214);
+select plan(218);
 
 create temp table cat02_test_state (
   state_key text primary key,
@@ -11,6 +11,13 @@ create temp table cat02_test_state (
   value_text text,
   value_json jsonb
 );
+
+-- SET ROLE changes the current database role even though this transaction's
+-- temporary fixture state remains owned by the pgTAP session owner. Grant the
+-- authenticated test role read-only access to that temporary relation so the
+-- assertions can resolve fixture UUIDs without granting any production table
+-- privilege.
+grant select on table cat02_test_state to authenticated;
 
 create or replace function pg_temp.cat02_manifest(
   p_source text,
@@ -111,7 +118,7 @@ create or replace function pg_temp.cat02_product(
   p_barcode text,
   p_name text default 'CAT-02 Product',
   p_brand text default 'CAT-02 Brand',
-  p_category text default 'moisturizer',
+  p_category text default 'moisturiser_tube',
   p_ingredients text default 'Water, Glycerin',
   p_source_ref text default null
 )
@@ -415,11 +422,101 @@ select ok(
 );
 
 select ok(
-  has_function_privilege('service_role', 'public.begin_catalog_import(text,text,text,date,text,text,text,text,jsonb,text,text,text,text,text,text,text,integer,integer,integer,text)', 'execute')
+  not exists (
+    select 1
+    from pg_catalog.pg_proc as function
+    cross join lateral pg_catalog.aclexplode(
+      coalesce(
+        function.proacl,
+        pg_catalog.acldefault('f', function.proowner)
+      )
+    ) as privilege
+    where function.oid =
+      'public.stage_catalog_import_chunk(uuid,text,integer,integer,jsonb)'::regprocedure
+      and privilege.grantee = 0
+      and privilege.privilege_type = 'EXECUTE'
+  )
+  and not has_function_privilege(
+    'anon',
+    'public.stage_catalog_import_chunk(uuid,text,integer,integer,jsonb)',
+    'execute'
+  )
+  and not has_function_privilege(
+    'authenticated',
+    'public.stage_catalog_import_chunk(uuid,text,integer,integer,jsonb)',
+    'execute'
+  )
+  and has_function_privilege('service_role', 'public.begin_catalog_import(text,text,text,date,text,text,text,text,jsonb,text,text,text,text,text,text,text,integer,integer,integer,text)', 'execute')
   and has_function_privilege('service_role', 'public.stage_catalog_import_chunk(uuid,text,integer,integer,jsonb)', 'execute')
   and has_function_privilege('service_role', 'public.finalize_catalog_import(uuid,text,integer)', 'execute')
   and has_function_privilege('service_role', 'public.verify_catalog_import(uuid,text,text,text)', 'execute'),
-  'service role can execute begin, stage, finalize, and verify only'
+  'PUBLIC, anon, and authenticated cannot execute staging while the service role retains the import lifecycle'
+);
+
+select ok(
+  pg_catalog.strpos(
+    pg_catalog.pg_get_functiondef(
+      'public.stage_catalog_import_chunk(uuid,text,integer,integer,jsonb)'::regprocedure
+    ),
+    $$'benzoyl_peroxide'$$
+  ) > 0,
+  'the latest forward migration admits the signed benzoyl-peroxide category override at staging'
+);
+
+insert into cat02_test_state (state_key, value_uuid)
+select 'benzoyl_override_batch', (receipt.value ->> 'batch_id')::uuid
+from (
+  select pg_temp.cat02_begin_receipt(
+    'cat02.benzoyl-override.begin', 'open_beauty_facts', 1
+  ) as value
+) as receipt;
+
+select lives_ok(
+  $$select pg_temp.cat02_stage(
+      (select value_uuid from cat02_test_state where state_key = 'benzoyl_override_batch'),
+      'cat02.benzoyl-override.chunk',
+      pg_catalog.jsonb_build_array(
+        pg_temp.cat02_product(
+          '12345670', 'CAT-02 Reviewed Benzoyl Product', 'CAT-02 Brand',
+          'benzoyl_peroxide'
+        )
+      )
+    )$$,
+  'the service staging RPC accepts an evidence-reviewed benzoyl-peroxide candidate'
+);
+
+select is(
+  (pg_temp.cat02_finalize(
+    (select value_uuid from cat02_test_state where state_key = 'benzoyl_override_batch'),
+    'cat02.benzoyl-override.finalize',
+    1
+  ) ->> 'batch_status'),
+  'finalized'::text,
+  'the benzoyl-peroxide candidate produces a complete finalized database receipt'
+);
+
+insert into cat02_test_state (state_key, value_uuid)
+select 'unsupported_category_batch', (receipt.value ->> 'batch_id')::uuid
+from (
+  select pg_temp.cat02_begin_receipt(
+    'cat02.unsupported-category.begin', 'open_beauty_facts', 1
+  ) as value
+) as receipt;
+
+select throws_ok(
+  $$select pg_temp.cat02_stage(
+      (select value_uuid from cat02_test_state where state_key = 'unsupported_category_batch'),
+      'cat02.unsupported-category.chunk',
+      pg_catalog.jsonb_build_array(
+        pg_temp.cat02_product(
+          '87654325', 'CAT-02 Unsupported Category', 'CAT-02 Brand',
+          'acne_treatment'
+        )
+      )
+    )$$,
+  '22023',
+  'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
+  'the staging RPC still rejects every unsupported category value'
 );
 
 select ok(
@@ -626,7 +723,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.extra-key',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001') || '{"unexpected":"field"}'::jsonb
+      pg_temp.cat02_product('990000000004') || '{"unexpected":"field"}'::jsonb
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -637,7 +734,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.brand',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001', 'Bounded Product', repeat('b', 301))
+      pg_temp.cat02_product('990000000004', 'Bounded Product', repeat('b', 301))
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -648,7 +745,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-ecmascript-trim',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001', U&'\00A0Bounded Product')
+      pg_temp.cat02_product('990000000004', U&'\00A0Bounded Product')
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -659,7 +756,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-control',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001', 'Bounded' || pg_catalog.chr(1) || 'Product')
+      pg_temp.cat02_product('990000000004', 'Bounded' || pg_catalog.chr(1) || 'Product')
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -671,7 +768,7 @@ select throws_ok(
     'cat02.stage-invalid.ingredients-20001',
     pg_catalog.jsonb_build_array(
       pg_temp.cat02_product(
-        '990000000001', 'Bounded Product', 'CAT-02 Brand', 'moisturizer',
+        '990000000004', 'Bounded Product', 'CAT-02 Brand', 'moisturiser_tube',
         pg_catalog.repeat('i', 20001)
       )
     )
@@ -685,7 +782,7 @@ select throws_ok(
     'cat02.stage-invalid.product-utf16-limit',
     pg_catalog.jsonb_build_array(
       pg_temp.cat02_product(
-        '990000000001', pg_catalog.repeat(U&'\+01F600', 101)
+        '990000000004', pg_catalog.repeat(U&'\+01F600', 101)
       )
     )
   )$$,
@@ -697,7 +794,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-null-url',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001') || pg_catalog.jsonb_build_object('sourceUrl', null)
+      pg_temp.cat02_product('990000000004') || pg_catalog.jsonb_build_object('sourceUrl', null)
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -708,7 +805,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-null-modified',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001') || pg_catalog.jsonb_build_object('sourceRecordModifiedDate', null)
+      pg_temp.cat02_product('990000000004') || pg_catalog.jsonb_build_object('sourceRecordModifiedDate', null)
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -719,7 +816,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-bad-calendar',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001') ||
+      pg_temp.cat02_product('990000000004') ||
         pg_catalog.jsonb_build_object('sourceRecordModifiedDate', '2026-02-31')
     )
   )$$,
@@ -731,7 +828,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-future-modified',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001') ||
+      pg_temp.cat02_product('990000000004') ||
         pg_catalog.jsonb_build_object('sourceRecordModifiedDate', (current_date + 1)::text)
     )
   )$$,
@@ -743,7 +840,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-null-review',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001') || pg_catalog.jsonb_build_object('reviewStatus', null)
+      pg_temp.cat02_product('990000000004') || pg_catalog.jsonb_build_object('reviewStatus', null)
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -754,7 +851,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.product-null-quality',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001') || pg_catalog.jsonb_build_object('qualityGrade', null)
+      pg_temp.cat02_product('990000000004') || pg_catalog.jsonb_build_object('qualityGrade', null)
     )
   )$$,
   '22023', 'CATALOG_IMPORT_PRODUCT_RECORD_INVALID',
@@ -765,7 +862,7 @@ select throws_ok(
     (select value_uuid from cat02_test_state where state_key = 'invalid_product_batch'),
     'cat02.stage-invalid.bytes',
     pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('990000000001', repeat('n', 8388609))
+      pg_temp.cat02_product('990000000004', repeat('n', 8388609))
     )
   )$$,
   '22023', 'CATALOG_IMPORT_CHUNK_INPUT_INVALID',
@@ -783,8 +880,8 @@ select lives_ok(
     'cat02.stage-valid.ingredients-20000',
     pg_catalog.jsonb_build_array(
       pg_temp.cat02_product(
-        '990000000001', pg_catalog.repeat(U&'\+01F600', 100),
-        'CAT-02 Brand', 'moisturizer',
+        '990000000004', pg_catalog.repeat(U&'\+01F600', 100),
+        'CAT-02 Brand', 'moisturiser_tube',
         pg_catalog.repeat('i', 20000)
       )
     )
@@ -902,7 +999,7 @@ select lives_ok(
   $$select pg_temp.cat02_stage(
     (select value_uuid from cat02_test_state where state_key = 'provenance_good'),
     'cat02.provenance.good.chunk',
-    pg_catalog.jsonb_build_array(pg_temp.cat02_product('990000000010', 'Provenance Product'))
+    pg_catalog.jsonb_build_array(pg_temp.cat02_product('990000000011', 'Provenance Product'))
   )$$,
   'approved-provenance candidate stages'
 );
@@ -910,7 +1007,7 @@ select lives_ok(
   $$select pg_temp.cat02_stage(
     (select value_uuid from cat02_test_state where state_key = 'provenance_bad'),
     'cat02.provenance.bad.chunk',
-    pg_catalog.jsonb_build_array(pg_temp.cat02_product('990000000010', 'Provenance Product'))
+    pg_catalog.jsonb_build_array(pg_temp.cat02_product('990000000011', 'Provenance Product'))
   )$$,
   'same candidate bytes can stage under a separately declared batch before owner review'
 );
@@ -1058,7 +1155,7 @@ insert into cat02_test_state (state_key, value_json)
 select 'product_stage', pg_temp.cat02_stage(
   (select value_uuid from cat02_test_state where state_key = 'product_batch'),
   'cat02.product.chunk',
-  pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567890', 'CAT-02 Lifecycle Cream'))
+  pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567899', 'CAT-02 Lifecycle Cream'))
 );
 
 select is(
@@ -1091,7 +1188,7 @@ select is(
   pg_temp.cat02_stage(
     (select value_uuid from cat02_test_state where state_key = 'product_batch'),
     'cat02.product.chunk',
-    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567890', 'CAT-02 Lifecycle Cream'))
+    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567899', 'CAT-02 Lifecycle Cream'))
   ) - 'replayed',
   (select value_json - 'replayed' from cat02_test_state where state_key = 'product_stage'),
   'stage replay preserves the original database byte bindings'
@@ -1100,7 +1197,7 @@ select throws_ok(
   $$select pg_temp.cat02_stage(
     (select value_uuid from cat02_test_state where state_key = 'product_batch'),
     'cat02.product.chunk',
-    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567890', 'Changed Replay Product'))
+    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567899', 'Changed Replay Product'))
   )$$,
   '22023', 'CATALOG_IMPORT_CHUNK_REPLAY_CHANGED',
   'changed stage replay is rejected'
@@ -1128,7 +1225,7 @@ select is(
   (select value_json ->> 'candidates_sha256' from cat02_test_state where state_key = 'product_finalize'),
   private.catalog_import_sha256_text(
     private.catalog_import_sha256_text(
-      private.catalog_import_canonical_json(pg_temp.cat02_product('991234567890', 'CAT-02 Lifecycle Cream'))
+      private.catalog_import_canonical_json(pg_temp.cat02_product('991234567899', 'CAT-02 Lifecycle Cream'))
     )
   ),
   'single-record candidates digest is the ordered fixed-width leaf chain'
@@ -1410,12 +1507,17 @@ select is(
 );
 
 insert into auth.users (id) values ('57000000-0000-4000-8000-000000000001');
+-- This fixture proves rollback preserves a pre-existing shelf reference; the
+-- health-consent admission trigger is independently covered by its lifecycle
+-- suite and is not the behavior under test here.
+alter table public.user_products disable trigger trg_user_products_health_write;
 insert into public.user_products (user_id, catalog_product_id, barcode)
 values (
   '57000000-0000-4000-8000-000000000001',
   (select value_uuid from cat02_test_state where state_key = 'product_id'),
-  '991234567890'
+  '991234567899'
 );
+alter table public.user_products enable trigger trg_user_products_health_write;
 
 select throws_ok(
   $$update private.catalog_import_review_events
@@ -1438,7 +1540,8 @@ select throws_ok(
   'sealed staged source bytes cannot be changed'
 );
 
--- Transaction-local curation proves source withdrawal gates every read lane.
+-- CAT-02 review elevation alone cannot bypass the independent CAT-03 launch
+-- curation head. Source withdrawal remains fail closed across every read lane.
 update public.products
 set review_status = 'reviewed', quality_grade = 'verified',
     recommendation_eligible = true, last_reviewed_at = pg_catalog.now()
@@ -1454,8 +1557,8 @@ set local role authenticated;
 select is(
   (select count(*) from public.products where id =
     (select value_uuid from cat02_test_state where state_key = 'product_id')),
-  1::bigint,
-  'explicit later curation can serve an active promoted product'
+  0::bigint,
+  'review elevation alone cannot serve a product without an active CAT-03 head'
 );
 reset role;
 
@@ -1465,12 +1568,12 @@ select is(
   (select count(*) from public.products where id =
     (select value_uuid from cat02_test_state where state_key = 'product_id')),
   0::bigint,
-  'source withdrawal hides a previously curated product from direct reads'
+  'source withdrawal keeps a CAT-03-uncurated product hidden from direct reads'
 );
 reset role;
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('991234567890')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('991234567899')),
   0::bigint,
   'source withdrawal hides a previously curated product from exact lookup'
 );
@@ -1547,7 +1650,7 @@ select is(
   pg_temp.cat02_stage(
     (select value_uuid from cat02_test_state where state_key = 'product_batch'),
     'cat02.product.chunk',
-    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567890', 'CAT-02 Lifecycle Cream'))
+    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567899', 'CAT-02 Lifecycle Cream'))
   ) - 'replayed',
   (select value_json - 'replayed' from cat02_test_state where state_key = 'product_stage'),
   'stage retry after retirement exactly reproduces its immutable original receipt'
@@ -1610,11 +1713,11 @@ select ok(
 update public.products
 set status = 'active', review_status = 'reviewed', quality_grade = 'verified',
     recommendation_eligible = true, last_reviewed_at = pg_catalog.now(),
-    barcode = '991234567890', source_ref = '991234567890',
+    barcode = '991234567899', source_ref = '991234567899',
     import_projection_status = 'active', retired_import_natural_key = null
 where id = (select value_uuid from cat02_test_state where state_key = 'product_id');
 update public.product_barcodes
-set barcode = '991234567890', review_status = 'reviewed',
+set barcode = '991234567899', review_status = 'reviewed',
     import_projection_status = 'active', retired_import_natural_key = null
 where import_batch_id = (select value_uuid from cat02_test_state where state_key = 'product_batch');
 
@@ -1628,7 +1731,7 @@ select is(
 reset role;
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('991234567890')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('991234567899')),
   0::bigint,
   'retired batch status blocks exact-lookup resurrection'
 );
@@ -1643,11 +1746,11 @@ update public.products
 set status = 'blocked', review_status = 'blocked', quality_grade = 'blocked',
     recommendation_eligible = false, barcode = null,
     source_ref = 'retired:' || id::text,
-    import_projection_status = 'retired', retired_import_natural_key = '991234567890'
+    import_projection_status = 'retired', retired_import_natural_key = '991234567899'
 where id = (select value_uuid from cat02_test_state where state_key = 'product_id');
 update public.product_barcodes
 set barcode = 'retired:' || import_entity_id::text, review_status = 'blocked',
-    import_projection_status = 'retired', retired_import_natural_key = '991234567890'
+    import_projection_status = 'retired', retired_import_natural_key = '991234567899'
 where import_batch_id = (select value_uuid from cat02_test_state where state_key = 'product_batch');
 
 with receipt as (
@@ -1659,7 +1762,7 @@ select lives_ok(
   $$select pg_temp.cat02_stage(
     (select value_uuid from cat02_test_state where state_key = 'product_corrected'),
     'cat02.product-corrected.chunk',
-    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567890', 'Corrected Lifecycle Cream'))
+    pg_catalog.jsonb_build_array(pg_temp.cat02_product('991234567899', 'Corrected Lifecycle Cream'))
   )$$,
   'a later corrected product reuses the retired barcode/sourceRef'
 );
@@ -1867,14 +1970,14 @@ set local role authenticated;
 select is(
   (select count(*) from public.ingredients where id =
     (select value_uuid from cat02_test_state where state_key = 'ingredient_id')),
-  1::bigint,
-  'explicit later ingredient curation can serve an active promoted ingredient'
+  0::bigint,
+  'review elevation alone cannot serve an ingredient without an active CAT-03 head'
 );
 select is(
   (select count(*) from public.ingredient_synonyms where ingredient_id =
     (select value_uuid from cat02_test_state where state_key = 'ingredient_id')),
-  2::bigint,
-  'only reviewed synonyms of a servable ingredient are readable'
+  0::bigint,
+  'reviewed synonyms remain hidden until their ingredient has an active CAT-03 head'
 );
 reset role;
 
@@ -1937,17 +2040,17 @@ insert into public.products (
   unresolved_correction_count
 )
 values (
-  '57000000-0000-4000-8000-000000000010', '992345678901',
+  '57000000-0000-4000-8000-000000000010', '992345678900',
   'CAT02 Unrelated Product', 'CAT02 Brand', 'cleanser',
   'CAT02 Unrelated Product', 'CAT02 Unrelated Product', 'cat02 brand',
   'cleanser', 'US', 'open_beauty_facts',
   (select id from public.catalog_sources where source_key = 'open_beauty_facts'),
-  '992345678901', 'https://world.openbeautyfacts.org/product/992345678901',
+  '992345678900', 'https://world.openbeautyfacts.org/product/992345678900',
   current_date, 'active', 'reviewed', pg_catalog.now(), 'verified', true, 0
 );
 insert into public.product_barcodes (barcode, product_id, source_id, review_status)
 values (
-  '992345678901', '57000000-0000-4000-8000-000000000010',
+  '992345678900', '57000000-0000-4000-8000-000000000010',
   (select id from public.catalog_sources where source_key = 'open_beauty_facts'),
   'reviewed'
 );
@@ -1959,21 +2062,21 @@ select is(
       (select value_uuid from cat02_test_state where state_key = 'product_corrected')),
     '57000000-0000-4000-8000-000000000010'::uuid
   )),
-  2::bigint,
-  'dependent and unrelated curated products are both servable before ingredient rollback'
+  0::bigint,
+  'reviewed products remain hidden before CAT-03 publishes active heads'
 );
 select is(
   (select count(*) from public.product_ingredients where ingredient_id =
     (select value_uuid from cat02_test_state where state_key = 'ingredient_id')),
-  1::bigint,
-  'linked product-ingredient relation is servable before rollback'
+  0::bigint,
+  'linked product-ingredient relation remains hidden without a CAT-03 head'
 );
 select ok(
   (select count(*) from public.product_ingredient_tokens where ingredient_id =
-    (select value_uuid from cat02_test_state where state_key = 'ingredient_id')) = 1
+    (select value_uuid from cat02_test_state where state_key = 'ingredient_id')) = 0
   and (select count(*) from public.product_active_bands where ingredient_id =
-    (select value_uuid from cat02_test_state where state_key = 'ingredient_id')) = 1,
-  'linked parsed token and active-band evidence are servable before rollback'
+    (select value_uuid from cat02_test_state where state_key = 'ingredient_id')) = 0,
+  'linked parsed-token and active-band evidence remain hidden without a CAT-03 head'
 );
 reset role;
 
@@ -2026,13 +2129,13 @@ select ok(
 );
 select is(
   (select count(*) from public.products where id = '57000000-0000-4000-8000-000000000010'),
-  1::bigint,
-  'ingredient rollback leaves an unrelated product servable'
+  0::bigint,
+  'ingredient rollback does not make an unrelated CAT-03-uncurated product servable'
 );
 reset role;
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('991234567890')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('991234567899')),
   0::bigint,
   'retired linked ingredient hides dependent exact-barcode lookup'
 );
@@ -2042,9 +2145,9 @@ select is(
   'retired linked ingredient hides dependent product search'
 );
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('992345678901')),
-  1::bigint,
-  'unrelated exact-barcode lookup remains available after ingredient rollback'
+  (select count(*) from public.lookup_catalog_product_by_barcode('992345678900')),
+  0::bigint,
+  'unrelated exact-barcode lookup remains closed without a CAT-03 head'
 );
 reset role;
 
@@ -2428,13 +2531,13 @@ insert into cat02_test_state (state_key, value_uuid)
 values (
   'toctou_product_a', pg_temp.cat02_prepare_reviewed(
     'cat02.toctou.product-a', 'open_beauty_facts', pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('993456789012', 'CAT02 TOCTOU Product A')
+      pg_temp.cat02_product('993456789011', 'CAT02 TOCTOU Product A')
     )
   )
 ), (
   'toctou_product_b', pg_temp.cat02_prepare_reviewed(
     'cat02.toctou.product-b', 'open_beauty_facts', pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('993456789012', 'CAT02 TOCTOU Product B')
+      pg_temp.cat02_product('993456789011', 'CAT02 TOCTOU Product B')
     )
   )
 );
@@ -2484,8 +2587,8 @@ insert into cat02_test_state (state_key, value_uuid)
 values (
   'midloop_batch', pg_temp.cat02_prepare_reviewed(
     'cat02.midloop', 'open_beauty_facts', pg_catalog.jsonb_build_array(
-      pg_temp.cat02_product('994567890123', 'CAT02 Midloop First'),
-      pg_temp.cat02_product('994567890124', 'CAT02 Midloop Second Fails')
+      pg_temp.cat02_product('994567890122', 'CAT02 Midloop First'),
+      pg_temp.cat02_product('994567890139', 'CAT02 Midloop Second Fails')
     )
   )
 );
@@ -2551,7 +2654,7 @@ select lives_ok(
   $$select pg_temp.cat02_stage(
     (select value_uuid from cat02_test_state where state_key = 'opkey_batch'),
     'cat02.opkey.chunk',
-    pg_catalog.jsonb_build_array(pg_temp.cat02_product('995678901234', 'CAT02 Operation Key Product'))
+    pg_catalog.jsonb_build_array(pg_temp.cat02_product('995678901233', 'CAT02 Operation Key Product'))
   )$$,
   'operation-key batch stages'
 );

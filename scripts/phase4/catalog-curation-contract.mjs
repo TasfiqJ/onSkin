@@ -66,6 +66,20 @@ export const CATALOG_DB_ELIGIBILITY_POLICY_GOLDEN_CANONICAL_JSON =
   '{"contractId":"catalog-launch-db-eligibility-policy-v1","minimumBarcodeQualityScore":95.00,"minimumCategoryQualityScore":95.00,"minimumDataQualityScore":95.00,"minimumIngredientQualityScore":95.00,"minimumMappedIngredientCount":1,"minimumParseConfidence":0.9800,"minimumTokenMatchConfidence":0.9800,"regulatedCategoryMode":"qualified-review-required","requireBarcode":true,"requiredQualityGrade":"verified","territory":"US"}';
 export const CATALOG_DB_ELIGIBILITY_POLICY_GOLDEN_SHA256 =
   '9b1fd33edaec8cf3c8582f3f9298ec9e70f5f4140b6426afb1e710eee4845e9d';
+export const CATALOG_CURATION_REQUIRED_SCHEMA_MIGRATION_VERSION = '20260722000062';
+export const CATALOG_CURATION_REQUIRED_MIGRATION_SHA256 = sha256(
+  readFileSync(
+    new URL(
+      '../../supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+      import.meta.url,
+    ),
+  ),
+);
+export const CATALOG_CURATION_REQUIRED_DATABASE_CONTRACT_TEST_SHA256 = sha256(
+  readFileSync(
+    new URL('../../supabase/tests/database/catalog_launch_curation.test.sql', import.meta.url),
+  ),
+);
 export const CATALOG_CURATION_REVIEWED_RECORD_AUTHORITY_ID =
   'catalog-launch-curation-offline-reviewed-record-authority-v1';
 export const CATALOG_CURATION_REVIEWED_RECORD_MAPPING_ID =
@@ -3630,8 +3644,21 @@ function validateDatabaseSnapshot(snapshot) {
   for (const [key, value] of Object.entries(snapshot)) {
     if (key === 'capturedAt') assertTimestamp(value, `curation review.databaseSnapshot.${key}`);
     else if (key === 'schemaMigrationVersion') {
-      if (value !== '20260717000058') fail('curation review schema migration version is invalid.');
+      if (value !== CATALOG_CURATION_REQUIRED_SCHEMA_MIGRATION_VERSION) {
+        fail('curation review schema migration version is invalid.');
+      }
     } else assertDigest(value, `curation review.databaseSnapshot.${key}`);
+  }
+  if (snapshot.cat03MigrationSha256 !== CATALOG_CURATION_REQUIRED_MIGRATION_SHA256) {
+    fail('curation review CAT-03 migration digest does not match the exact current 0062 bytes.');
+  }
+  if (
+    snapshot.cat03DatabaseContractTestSha256 !==
+    CATALOG_CURATION_REQUIRED_DATABASE_CONTRACT_TEST_SHA256
+  ) {
+    fail(
+      'curation review CAT-03 database-contract digest does not match the exact current pgTAP bytes.',
+    );
   }
 }
 
@@ -5517,7 +5544,8 @@ export function validateCatalogDatabaseReadback(
   assertTimestamp(readback.databaseState.capturedAt, 'database readback.databaseState.capturedAt');
   if (
     readback.databaseState.capturedAt !== readback.verifiedAt ||
-    readback.databaseState.schemaMigrationVersion !== '20260717000058' ||
+    readback.databaseState.schemaMigrationVersion !==
+      CATALOG_CURATION_REQUIRED_SCHEMA_MIGRATION_VERSION ||
     readback.databaseState.schemaMigrationSha256 !== review.databaseSnapshot.cat03MigrationSha256 ||
     readback.databaseState.contractTestSha256 !==
       review.databaseSnapshot.cat03DatabaseContractTestSha256 ||
@@ -5528,7 +5556,7 @@ export function validateCatalogDatabaseReadback(
     readback.databaseState.campaignStatus !== 'released' ||
     readback.databaseState.campaignReleaseHeadState !== 'active'
   ) {
-    fail('database readback does not match the signed 0058 campaign/release authority.');
+    fail('database readback does not match the signed current campaign/release authority.');
   }
   for (const key of [
     'atomicCampaignReleaseApplied',

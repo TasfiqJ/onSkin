@@ -92,6 +92,14 @@ The local source controls are:
   tests;
 - `supabase/migrations/20260717000058_catalog_launch_curation.sql`: sealed
   curation, activation, and retirement authority;
+- `supabase/migrations/20260722000062_catalog_curation_statement_guard.sql`:
+  three covered authority indexes, semantic-preserving staged-digest pushdown,
+  and an `AFTER STATEMENT` overflow/expected-count completion-root guard layered
+  on the exact per-row authority checks;
+- `scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql`: an
+  isolated PostgreSQL 15/17 mechanics rehearsal that constructs a minimal
+  pre-`0062` authority fixture and includes the exact `0062` migration bytes;
+  it is not an exact `0061`-schema or full-chain upgrade-equivalence proof;
 - `supabase/tests/database/catalog_launch_curation.test.sql`: database
   authorization, immutability, replay, dependency, serving, and retirement
   contract.
@@ -501,12 +509,25 @@ Dashboard URLs are navigation aids only. A URL, typed reviewer name,
 
 ## 10. Database activation and retirement
 
-Migration `0058` is the positive curation authority. Treat its campaign,
-records, per-product authorization events/heads, global campaign release
+Migration `0058` is the foundational positive curation authority. Treat its
+campaign, records, per-product authorization events/heads, global campaign release
 events/head, and lineage bindings as immutable. Only the migration-owner/
 operator lane may register, seal, review, verify, stage authorizations,
 atomically release, or retire a campaign. API roles cannot directly read or
 mutate sealed curation authority.
+
+The current source chain ends at migration `0062`. Three covered indexes bound
+the batch/record digest, retained revision, and retained promotion-effect
+authority lookups. The membership function pushes the already-required staged
+record digest equality into the exact staged-record join without changing the
+returned authority contract. Its `AFTER STATEMENT` trigger rejects campaign-
+count overflow after every insert statement. Partial governed inserts remain
+allowed; only when stored rows reach the expected count does it validate the
+already-sealed complete root set. The per-row structural checks remain in force. Every
+CAT-03 qualified-review and independent
+database-readback artifact for this source candidate must record
+`schemaMigrationVersion="20260722000062"`; an artifact naming only `0058` is
+historical and cannot authorize the current candidate.
 
 Each product authorization must be replay-safe and require the complete exact
 evidence chain, but staging one authorization must never affect current
@@ -548,9 +569,29 @@ account data, reporter identities, or user free text without adding a
 reconcilable serving guarantee. The review snapshot retains only narrow catalog
 digests: project binding, capture time and migration, active CAT-02 batch,
 candidate set, served-state mutation-root set, source-approval set, and the
-exact migration/test bytes. Current operator holds are bound per product only
+exact migration/test bytes. `cat03MigrationSha256` is the SHA-256 of the exact
+checked-in `20260722000062_catalog_curation_statement_guard.sql` bytes;
+`cat03DatabaseContractTestSha256` is the SHA-256 of the exact checked-in
+`catalog_launch_curation.test.sql` bytes. The contract recomputes both from the
+current source; `buildSourceGitSha` binds their foundational `0058` lineage and
+the rest of the reviewed source revision. Current operator holds are bound per product only
 through the database's bounded correction-serving projection inside the
 dependency/database-base hash and monotonic mutation root.
+
+Compute the two lowercase values from the same clean reviewed checkout before
+signing. Do not copy a digest from an earlier revision:
+
+```bash
+sha256sum supabase/migrations/20260722000062_catalog_curation_statement_guard.sql \
+  supabase/tests/database/catalog_launch_curation.test.sql
+```
+
+```powershell
+Get-FileHash -Algorithm SHA256 -LiteralPath `
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql', `
+  'supabase/tests/database/catalog_launch_curation.test.sql' |
+  ForEach-Object { "{0}  {1}" -f $_.Hash.ToLowerInvariant(), $_.Path }
+```
 
 Record insertion and campaign release use the same global-then-campaign
 transaction advisory-lock order. The insert guard rechecks release state only
@@ -568,6 +609,13 @@ RLS bypass and the need to use
 PostgreSQL grants as the first API-access layer. See
 [Supabase RLS](https://supabase.com/docs/guides/database/postgres/row-level-security)
 and [Securing your API](https://supabase.com/docs/guides/api/securing-your-api).
+PostgreSQL's primary documentation likewise requires a trusted `search_path`
+and selective `EXECUTE` grants for `SECURITY DEFINER` functions, defines
+`REFERENCING NEW TABLE` as the statement's inserted-row transition relation,
+and cautions that `INCLUDE` payloads trade index-only coverage for index size.
+See [CREATE FUNCTION](https://www.postgresql.org/docs/current/sql-createfunction.html),
+[CREATE TRIGGER](https://www.postgresql.org/docs/current/sql-createtrigger.html),
+and [index-only scans and covering indexes](https://www.postgresql.org/docs/current/indexes-index-only-scans.html).
 
 Retirement is append-only and fail closed. Source withdrawal, CAT-02 rollback,
 formula revision, correction hold, review expiry/revocation, consent or corpus
@@ -618,8 +666,12 @@ Source verification must include:
 - arbitrary non-HMAC digest, KMS execution receipt, output-set root, lone or
   ineffective complementary suppression, overlap audit, and release-registry
   extension-proof tampering;
-- a clean migration reset through `0058` and execution of the full pgTAP
-  contract; and
+- an isolated PostgreSQL 15/17 minimal pre-`0062` forward-upgrade mechanics
+  rehearsal that includes the exact `0062` bytes and tests its three indexes,
+  trigger/ACL metadata, zero/partial/exact/overflow/root/released-state guards,
+  and rollback; this does not replace exact full-chain reset evidence;
+- a clean migration reset through `0062` and execution of the current
+  99-assertion CAT-03 pgTAP contract; and
 - repository typecheck, lint, tests, and source-policy/worklist audits.
 
 Release verification additionally requires retained hosted evidence from the
@@ -685,7 +737,8 @@ CAT-03 stays `in_progress` until all are true:
   eligible records are present in the exact released campaign;
 - the holdout meets every predeclared confidence-bound and minimum-denominator
   gate, with zero open P0/P1 and zero below-usable recommendation exposure;
-- migration `0058` passes clean local and hosted reset, pgTAP, race, serving,
+- the complete migration chain through `0062`, with `0058` as its foundational
+  CAT-03 authority, passes clean local and hosted reset, pgTAP, race, serving,
   activation, retirement, and rollback verification; and
 - an independent database verifier signs the exact readback receipt after the
   atomic campaign release, and a named release owner signs the complete packet.

@@ -73,21 +73,6 @@ export const CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES = Object.freeze([
   'docs/phase-5/native-build-runbook.md',
 ]);
 
-export const CAMERA_LIFECYCLE_EVIDENCE_DESCENDANT_PACKET_PATHS = Object.freeze([
-  'docs/phase-5/generated/device-qa-packet.json',
-  'docs/phase-5/generated/device-qa-packet.md',
-  'docs/e2e/generated/human-e2e-manifest.json',
-  'docs/e2e/generated/human-e2e-manifest.md',
-  'docs/phase-9/generated/release-engineering-qa-packet.json',
-  'docs/phase-9/generated/release-engineering-qa-packet.md',
-  'docs/phase-10/generated/closed-beta-packet.json',
-  'docs/phase-10/generated/closed-beta-packet.md',
-  'docs/phase-11/generated/public-launch-packet.json',
-  'docs/phase-11/generated/public-launch-packet.md',
-  'docs/generated/generated-packet-status-audit.json',
-  'docs/generated/generated-packet-status-audit.md',
-]);
-
 const COMMON_PERMISSION_OBSERVATIONS = Object.freeze([
   'permissionStartedUndetermined',
   'requestWasTriggeredInContext',
@@ -2088,37 +2073,6 @@ function validateReports(evidence, artifactById, validRuns, errors) {
   }
 }
 
-function validateSourceLineage(evidence, artifacts, options, errors) {
-  if (!options.currentGitSha) return;
-  if (!GIT_SHA.test(String(options.currentGitSha))) {
-    errors.push('The validator could not resolve a valid current Git SHA.');
-    return;
-  }
-  if (options.sourceGitShaIsAncestor !== true) {
-    errors.push('sourceGitSha must be a Git ancestor of the evidence commit/current HEAD.');
-    return;
-  }
-  if (!Array.isArray(options.changedPathsSinceSource)) {
-    errors.push('The validator could not inspect sourceGitSha..HEAD changed paths.');
-    return;
-  }
-  const allowed = new Set([
-    options.evidencePath,
-    ...artifacts.map(({ path }) => path),
-    ...CAMERA_LIFECYCLE_EVIDENCE_DESCENDANT_PACKET_PATHS,
-  ]);
-  for (const rawPath of options.changedPathsSinceSource) {
-    const path = String(rawPath ?? '')
-      .replaceAll('\\', '/')
-      .replace(/^\.\//, '');
-    if (!allowed.has(path)) {
-      errors.push(
-        `Source drift after the built camera candidate is not evidence-only: ${path}. Create a new EAS build.`,
-      );
-    }
-  }
-}
-
 function validateSignoff(signoff, completedAt, now, errors) {
   if (!isObject(signoff)) {
     errors.push('signoff must be an object.');
@@ -2251,7 +2205,6 @@ export function validateCameraLifecycleEvidence(evidence, options = {}) {
     errors,
   );
   validateReports(evidence, artifactValidation.byId, runValidation.validRuns, errors);
-  validateSourceLineage(evidence, artifactValidation.validated, options, errors);
   if (!Array.isArray(evidence.knownLimitations)) {
     errors.push('knownLimitations must be an array.');
   } else {

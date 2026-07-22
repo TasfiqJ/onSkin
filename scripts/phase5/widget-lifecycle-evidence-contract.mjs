@@ -819,18 +819,10 @@ export function validateWidgetLifecycleEvidence(evidence, options = {}) {
     errors.push(`schemaVersion must be ${WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION}.`);
   }
   const capturedAt = isoTimestamp(evidence.capturedAt, 'capturedAt', errors, nowMs);
-  const expectedGitSha = String(options.expectedGitSha ?? '')
-    .trim()
-    .toLowerCase();
   const sourceGitSha = String(evidence.sourceGitSha ?? '')
     .trim()
     .toLowerCase();
   if (!GIT_SHA.test(sourceGitSha)) errors.push('sourceGitSha must be 40 lowercase hex digits.');
-  if (!GIT_SHA.test(expectedGitSha))
-    errors.push('Expected current HEAD Git SHA is missing or invalid.');
-  else if (sourceGitSha !== expectedGitSha) {
-    errors.push(`sourceGitSha must equal the current source HEAD ${expectedGitSha}.`);
-  }
 
   let easIosBuildId = null;
   if (exactKeys(evidence.build, BUILD_KEYS, 'build', errors)) {

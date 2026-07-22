@@ -53,6 +53,12 @@ jobs:
           - name: cat07-truthful-freshness
             database: cat07_truthful_freshness_0060
             script: cat07-truthful-freshness-postgres-rehearsal.sql
+          - name: catalog-import-0061-upgrade
+            database: catalog_import_upgrade_0061
+            script: catalog-import-0061-upgrade-postgres-rehearsal.sql
+          - name: catalog-curation-0062-upgrade
+            database: catalog_curation_upgrade_0062
+            script: catalog-curation-0062-upgrade-postgres-rehearsal.sql
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}
@@ -82,7 +88,7 @@ jobs:
   supabase-local-reset:
     name: Credential-free Supabase reset and database tests
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - name: Checkout
         # actions/checkout v6.0.3
@@ -156,6 +162,16 @@ jobs:
           npm run phase9:verification-wiring:test
           npm run phase9:store-build-inspect:check
 
+      - name: Verify governed release provenance
+        run: |
+          npm run phase9:release-qa-integrity:test
+          npm run phase9:governed-evidence-chain:test
+          npm run phase9:governed-publication-coverage:test
+          npm run phase9:git-status-exclusion:test
+          npm run phase9:dependency-sbom:test
+          npm run e2e:human:manifest:contract:test
+          npm run phase7:qa-packet:contract:test
+
       - name: Verify iOS Simulator compile workflow contract
         run: npm run phase5:ios-simulator-compile-workflow:test
 
@@ -195,6 +211,7 @@ jobs:
           npm run phase4:source-policy-smoke
           npm run phase4:qa-report-smoke
           npm run phase4:beta-coverage-report-smoke
+          npm run phase4:beta-coverage-contract:test
           npm run phase4:source-worklist:check
           npm run phase4:promotion-contract:test
           npm run phase4:curation-contract:test

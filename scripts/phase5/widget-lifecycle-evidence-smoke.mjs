@@ -13,6 +13,17 @@ import {
   WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION,
   WIDGET_LIFECYCLE_SUPPORTED_FAMILIES,
 } from './widget-lifecycle-evidence-contract.mjs';
+import {
+  buildGovernedEvidenceLedger,
+  captureGovernedPublicationPolicy,
+  governedEvidenceLedgerPath,
+  governedEvidenceRoleForPath,
+  renderGovernedEvidenceLedger,
+} from '../launch/governed-evidence-chain.mjs';
+import {
+  publishGovernedFixtureTail,
+  seedGovernedPublicationSourceFixture,
+} from '../launch/governed-evidence-test-fixture.mjs';
 
 const repoRoot = resolve(import.meta.dirname, '../..');
 const checker = resolve(import.meta.dirname, 'check-widget-lifecycle-evidence.mjs');
@@ -27,6 +38,7 @@ const CAPTURED_AT = new Date(CLOCK_NOW - 2 * 60 * 60 * 1000).toISOString();
 const SIGNED_AT = new Date(CLOCK_NOW - 60 * 60 * 1000).toISOString();
 const NOW_MS = CLOCK_NOW;
 const TEAM_ID = 'ABCDE12345';
+const RELEASE_CANDIDATE_DIR = 'docs/phase-9/release-candidates/rc-widget-smoke';
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -263,7 +275,6 @@ function createFixture(root, sourceGitSha = SOURCE_SHA) {
 function options(root, sourceGitSha = SOURCE_SHA) {
   return {
     root,
-    expectedGitSha: sourceGitSha,
     expectedBuildId: BUILD_ID,
     expectedSignedOffBy: SIGNOFF,
     expectedAppBundleIdentifier: APP_ID,
@@ -310,9 +321,56 @@ function runChecker(cwd, evidencePath, extraEnv = {}) {
       PHASE5_SIGNED_OFF_BY: SIGNOFF,
       APP_IOS_BUNDLE_IDENTIFIER: APP_ID,
       APPLE_TEAM_ID: TEAM_ID,
+      PHASE9_RELEASE_CANDIDATE_DIR: RELEASE_CANDIDATE_DIR,
       ...extraEnv,
     },
   });
+}
+
+function commitGovernedEvidence(
+  root,
+  evidence,
+  evidencePath,
+  sourceGitSha,
+  { omitLedgerPath = null, extraLedgerPaths = [] } = {},
+) {
+  writeFileSync(resolve(root, evidencePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  const validation = validateWidgetLifecycleEvidence(evidence, options(root, sourceGitSha));
+  assert.deepEqual(validation.errors, []);
+  const releaseCandidatePath = `${RELEASE_CANDIDATE_DIR}/manifest.md`;
+  writeText(
+    root,
+    releaseCandidatePath,
+    `Widget lifecycle release candidate bound to ${sourceGitSha}`,
+  );
+  const evidenceEntries = [
+    {
+      path: releaseCandidatePath,
+      sha256: sha256(readFileSync(resolve(root, releaseCandidatePath))),
+    },
+    { path: evidencePath, sha256: sha256(readFileSync(resolve(root, evidencePath))) },
+    ...validation.artifacts.map(({ path, sha256: digest }) => ({ path, sha256: digest })),
+    ...extraLedgerPaths.map((path) => ({
+      path,
+      sha256: sha256(readFileSync(resolve(root, path))),
+    })),
+  ]
+    .filter(({ path }) => path !== omitLedgerPath)
+    .map((entry) => ({
+      ...entry,
+      role: governedEvidenceRoleForPath(entry.path, RELEASE_CANDIDATE_DIR),
+    }));
+  const ledger = buildGovernedEvidenceLedger({
+    sourceGitSha,
+    releaseCandidateDir: RELEASE_CANDIDATE_DIR,
+    publicationPolicy: captureGovernedPublicationPolicy(root, sourceGitSha),
+    entries: evidenceEntries,
+  });
+  const ledgerPath = governedEvidenceLedgerPath(RELEASE_CANDIDATE_DIR);
+  mkdirSync(dirname(resolve(root, ledgerPath)), { recursive: true });
+  writeFileSync(resolve(root, ledgerPath), renderGovernedEvidenceLedger(ledger));
+  command(root, 'git', ['add', WIDGET_LIFECYCLE_EVIDENCE_ROOT, RELEASE_CANDIDATE_DIR]);
+  command(root, 'git', ['commit', '-m', 'Attach governed widget evidence']);
 }
 
 const temporaryRoots = [];
@@ -464,7 +522,7 @@ test('rejects source SHA, build ID, final identity, and signoff mismatches', () 
   const root = temporaryRoot();
   const source = createFixture(root);
   source.sourceGitSha = 'b'.repeat(40);
-  expectFailure(root, source, /must equal the current source HEAD/);
+  expectFailure(root, source, /sourceGitSha must match the evidence sourceGitSha/);
 
   const build = createFixture(root);
   build.build.easIosBuildId = 'your-build-id';
@@ -487,27 +545,125 @@ test('normalizes the existing expo.dev Phase 5 build URL contract to its exact U
   assert.deepEqual(result.errors, []);
 });
 
-test('strict CLI binds evidence to current HEAD and rejects unrelated dirty source', () => {
+test('strict CLI validates a governed source/evidence chain and rejects dirty state', () => {
+  const root = temporaryRoot();
+  command(root, 'git', ['init']);
+  command(root, 'git', ['config', 'user.email', 'widget-smoke@example.invalid']);
+  command(root, 'git', ['config', 'user.name', 'Widget Smoke']);
+  command(root, 'git', ['config', 'core.autocrlf', 'false']);
+  writeFileSync(join(root, 'source.txt'), 'source\n');
+  seedGovernedPublicationSourceFixture({ fixtureRoot: root, sourceRoot: repoRoot });
+  command(root, 'git', ['add', '-A']);
+  command(root, 'git', ['commit', '-m', 'source']);
+  const head = command(root, 'git', ['rev-parse', 'HEAD']).toLowerCase();
+  const evidence = createFixture(root, head);
+  const evidencePath = `${WIDGET_LIFECYCLE_EVIDENCE_ROOT}evidence.json`;
+  commitGovernedEvidence(root, evidence, evidencePath, head);
+
+  const valid = runChecker(root, evidencePath);
+  assert.equal(valid.status, 0, `${valid.stdout}\n${valid.stderr}`);
+  assert.match(valid.stdout, /Base reports\/artifacts: 11\/11; proof attachments: 4/);
+  assert.match(valid.stdout, /Governed evidence chain: pass/);
+
+  const missingRc = runChecker(root, evidencePath, { PHASE9_RELEASE_CANDIDATE_DIR: '' });
+  assert.equal(missingRc.status, 1);
+  assert.match(
+    `${missingRc.stdout}\n${missingRc.stderr}`,
+    /PHASE9_RELEASE_CANDIDATE_DIR is required/,
+  );
+
+  writeFileSync(join(root, 'dirty-source.txt'), 'not represented by sourceGitSha\n');
+  const dirty = runChecker(root, evidencePath);
+  assert.equal(dirty.status, 1);
+  assert.match(`${dirty.stdout}\n${dirty.stderr}`, /clean worktree/);
+});
+
+test('governed chain accepts Phase 7 and final readiness descendants but rejects near misses', () => {
   const root = temporaryRoot();
   command(root, 'git', ['init']);
   command(root, 'git', ['config', 'user.email', 'widget-smoke@example.invalid']);
   command(root, 'git', ['config', 'user.name', 'Widget Smoke']);
   writeFileSync(join(root, 'source.txt'), 'source\n');
-  command(root, 'git', ['add', 'source.txt']);
+  seedGovernedPublicationSourceFixture({ fixtureRoot: root, sourceRoot: repoRoot });
+  command(root, 'git', ['add', '-A']);
   command(root, 'git', ['commit', '-m', 'source']);
-  const head = command(root, 'git', ['rev-parse', 'HEAD']).toLowerCase();
-  const evidence = createFixture(root, head);
+  const sourceGitSha = command(root, 'git', ['rev-parse', 'HEAD']).toLowerCase();
+  const evidence = createFixture(root, sourceGitSha);
   const evidencePath = `${WIDGET_LIFECYCLE_EVIDENCE_ROOT}evidence.json`;
-  writeFileSync(resolve(root, evidencePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  commitGovernedEvidence(root, evidence, evidencePath, sourceGitSha);
 
-  const valid = runChecker(root, evidencePath);
-  assert.equal(valid.status, 0, `${valid.stdout}\n${valid.stderr}`);
-  assert.match(valid.stdout, /Base reports\/artifacts: 11\/11; proof attachments: 4/);
+  publishGovernedFixtureTail({ fixtureRoot: root });
+  const accepted = runChecker(root, evidencePath);
+  assert.equal(accepted.status, 0, `${accepted.stdout}\n${accepted.stderr}`);
 
-  writeFileSync(join(root, 'dirty-source.txt'), 'not represented by sourceGitSha\n');
-  const dirty = runChecker(root, evidencePath);
-  assert.equal(dirty.status, 1);
-  assert.match(`${dirty.stdout}\n${dirty.stderr}`, /Source worktree differs from sourceGitSha/);
+  const nearMiss = 'docs/generated/readiness-status-audit.json.bak';
+  writeText(root, nearMiss, 'Near-miss generated evidence path');
+  command(root, 'git', ['add', nearMiss]);
+  command(root, 'git', ['commit', '-m', 'Add near-miss generated path']);
+  const rejected = runChecker(root, evidencePath);
+  assert.equal(rejected.status, 1);
+  assert.match(
+    `${rejected.stdout}\n${rejected.stderr}`,
+    /unique final unit|non-allowlisted downstream path/,
+  );
+});
+
+test('governed chain rejects an attachment omitted from the evidence ledger', () => {
+  const root = temporaryRoot();
+  command(root, 'git', ['init']);
+  command(root, 'git', ['config', 'user.email', 'widget-smoke@example.invalid']);
+  command(root, 'git', ['config', 'user.name', 'Widget Smoke']);
+  writeFileSync(join(root, 'source.txt'), 'source\n');
+  seedGovernedPublicationSourceFixture({ fixtureRoot: root, sourceRoot: repoRoot });
+  command(root, 'git', ['add', '-A']);
+  command(root, 'git', ['commit', '-m', 'source']);
+  const sourceGitSha = command(root, 'git', ['rev-parse', 'HEAD']).toLowerCase();
+  const evidence = createFixture(root, sourceGitSha);
+  const evidencePath = `${WIDGET_LIFECYCLE_EVIDENCE_ROOT}evidence.json`;
+  commitGovernedEvidence(root, evidence, evidencePath, sourceGitSha, {
+    omitLedgerPath: evidence.signedArtifacts.archive.path,
+  });
+  const rejected = runChecker(root, evidencePath);
+  assert.equal(rejected.status, 1);
+  assert.match(
+    `${rejected.stdout}\n${rejected.stderr}`,
+    /S\.\.E changed paths do not exactly equal the evidence ledger plus ledger file/,
+  );
+});
+
+test('governed chain rejects merge history after the evidence commit', () => {
+  const root = temporaryRoot();
+  command(root, 'git', ['init']);
+  command(root, 'git', ['config', 'user.email', 'widget-smoke@example.invalid']);
+  command(root, 'git', ['config', 'user.name', 'Widget Smoke']);
+  command(root, 'git', ['config', 'core.autocrlf', 'false']);
+  writeFileSync(join(root, 'source.txt'), 'source\n');
+  seedGovernedPublicationSourceFixture({ fixtureRoot: root, sourceRoot: repoRoot });
+  command(root, 'git', ['add', '-A']);
+  command(root, 'git', ['commit', '-m', 'source']);
+  const sourceGitSha = command(root, 'git', ['rev-parse', 'HEAD']).toLowerCase();
+  const evidence = createFixture(root, sourceGitSha);
+  const evidencePath = `${WIDGET_LIFECYCLE_EVIDENCE_ROOT}evidence.json`;
+  commitGovernedEvidence(root, evidence, evidencePath, sourceGitSha);
+  const mainBranch = command(root, 'git', ['branch', '--show-current']);
+
+  command(root, 'git', ['checkout', '-b', 'generated-side']);
+  const sidePath = 'docs/generated/source-packet-audit.json';
+  writeText(root, sidePath, 'Side generated evidence');
+  command(root, 'git', ['add', sidePath]);
+  command(root, 'git', ['commit', '-m', 'Side generated evidence']);
+
+  command(root, 'git', ['checkout', mainBranch]);
+  const mainPath = 'docs/generated/tas-todo-audit.json';
+  writeText(root, mainPath, 'Main generated evidence');
+  command(root, 'git', ['add', mainPath]);
+  command(root, 'git', ['commit', '-m', 'Main generated evidence']);
+  command(root, 'git', ['merge', '--no-ff', 'generated-side', '-m', 'Merge generated evidence']);
+  assert.equal(command(root, 'git', ['status', '--short', '--untracked-files=all']), '');
+
+  const rejected = runChecker(root, evidencePath);
+  assert.equal(rejected.status, 1);
+  assert.match(`${rejected.stdout}\n${rejected.stderr}`, /strictly linear, non-merge/);
 });
 
 test('strict CLI rejects missing evidence and source/build/signoff environment mismatches', () => {

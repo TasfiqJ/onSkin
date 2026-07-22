@@ -29,6 +29,9 @@ import {
   catalogDatabaseCampaignPlanSha256,
   catalogDatabaseReadbackSigningPayload,
   catalogDatabaseReviewAuthorizationSigningPayload,
+  CATALOG_CURATION_REQUIRED_DATABASE_CONTRACT_TEST_SHA256,
+  CATALOG_CURATION_REQUIRED_MIGRATION_SHA256,
+  CATALOG_CURATION_REQUIRED_SCHEMA_MIGRATION_VERSION,
   CATALOG_DB_ELIGIBILITY_POLICY_GOLDEN_CANONICAL_JSON,
   CATALOG_DB_ELIGIBILITY_POLICY_GOLDEN_SHA256,
   catalogDbEligibilityPolicyCanonicalJson,
@@ -1156,13 +1159,13 @@ function makeReview(authority, policy, proof, corpus, records, sets) {
     databaseSnapshot: {
       projectRefSha256: proof.databaseObservation.projectRefSha256,
       capturedAt: '2026-09-02T14:00:00.000Z',
-      schemaMigrationVersion: '20260717000058',
+      schemaMigrationVersion: CATALOG_CURATION_REQUIRED_SCHEMA_MIGRATION_VERSION,
       activeCat02BatchSha256: h('active cat02 batch set'),
       candidateSetSha256: catalogCurationCandidateSetSha256(records),
       servedStateMutationRootSetSha256: catalogServedStateMutationRootSetSha256(records),
       sourceApprovalSetSha256: policy.lineage.cat01ApprovalSetSha256,
-      cat03MigrationSha256: h('cat03 migration 0058'),
-      cat03DatabaseContractTestSha256: h('cat03 pg tap contract'),
+      cat03MigrationSha256: CATALOG_CURATION_REQUIRED_MIGRATION_SHA256,
+      cat03DatabaseContractTestSha256: CATALOG_CURATION_REQUIRED_DATABASE_CONTRACT_TEST_SHA256,
     },
     authority: {
       productFactSources: ['cat01_signed_source_approval', 'cat02_transactional_promotion'],
@@ -1334,7 +1337,7 @@ function makeReadback(authority, envelope) {
     },
     databaseState: {
       projectRefSha256: review.databaseSnapshot.projectRefSha256,
-      schemaMigrationVersion: '20260717000058',
+      schemaMigrationVersion: CATALOG_CURATION_REQUIRED_SCHEMA_MIGRATION_VERSION,
       schemaMigrationSha256: review.databaseSnapshot.cat03MigrationSha256,
       contractTestSha256: review.databaseSnapshot.cat03DatabaseContractTestSha256,
       campaignId: '33333333-3333-4333-8333-333333333333',
@@ -1657,7 +1660,7 @@ test('append-only served-state mutation roots reject missing, tampered, and pre-
         envelope: fixture.envelope,
         ...fixture.verification,
       }),
-    /does not match the signed 0058 campaign/u,
+    /does not match the signed current campaign\/release authority/u,
   );
 });
 
@@ -2114,6 +2117,76 @@ test('database readback rejects subsets, extras, and current-serving mismatches'
       /authority|signature/u,
     );
   }
+});
+
+test('CAT-03 review and readback reject pre-0062 schema authority', () => {
+  const legacyReview = structuredClone(fixture.curationReview);
+  legacyReview.databaseSnapshot.schemaMigrationVersion = '20260717000058';
+  signOutcomeReview(legacyReview, fixture.authority);
+  legacyReview.activation.activationAuthorizationSetSha256 =
+    catalogCurationActivationAuthorizationSetSha256(legacyReview);
+  signActivation(legacyReview, fixture.authority);
+  assert.throws(
+    () =>
+      validateCatalogCurationReview(legacyReview, {
+        targetPolicy: fixture.targetPolicy,
+        betaShelfCorpus: fixture.betaShelfCorpus,
+        cat02MembershipProof: fixture.cat02MembershipProof,
+        trustRegistry: fixture.authority.trustRegistry,
+      }),
+    /schema migration version is invalid/u,
+  );
+
+  const legacyReadback = structuredClone(fixture.databaseReadback);
+  legacyReadback.databaseState.schemaMigrationVersion = '20260717000058';
+  signDocument(
+    legacyReadback,
+    [
+      {
+        ...fixture.authority.byRole.get('database_verifier'),
+        signedAt: legacyReadback.verifiedAt,
+      },
+    ],
+    catalogDatabaseReadbackSigningPayload,
+  );
+  assert.throws(
+    () =>
+      validateCatalogDatabaseReadback(legacyReadback, {
+        envelope: fixture.envelope,
+        ...fixture.verification,
+      }),
+    /current campaign\/release authority/u,
+  );
+});
+
+test('CAT-03 review binds the exact current migration and database-contract bytes', () => {
+  const wrongMigration = structuredClone(fixture.curationReview);
+  wrongMigration.databaseSnapshot.cat03MigrationSha256 = h('invented cat03 migration bytes');
+  assert.throws(
+    () =>
+      validateCatalogCurationReview(wrongMigration, {
+        targetPolicy: fixture.targetPolicy,
+        betaShelfCorpus: fixture.betaShelfCorpus,
+        cat02MembershipProof: fixture.cat02MembershipProof,
+        trustRegistry: fixture.authority.trustRegistry,
+      }),
+    /migration digest does not match the exact current 0062 bytes/u,
+  );
+
+  const wrongDatabaseContract = structuredClone(fixture.curationReview);
+  wrongDatabaseContract.databaseSnapshot.cat03DatabaseContractTestSha256 = h(
+    'invented cat03 pg tap bytes',
+  );
+  assert.throws(
+    () =>
+      validateCatalogCurationReview(wrongDatabaseContract, {
+        targetPolicy: fixture.targetPolicy,
+        betaShelfCorpus: fixture.betaShelfCorpus,
+        cat02MembershipProof: fixture.cat02MembershipProof,
+        trustRegistry: fixture.authority.trustRegistry,
+      }),
+    /database-contract digest does not match the exact current pgTAP bytes/u,
+  );
 });
 
 test('target inventory declaration cannot weaken 2,000/six-category consistency', () => {

@@ -19,6 +19,7 @@ import {
   CATALOG_STAGE_CONTRACT_ID,
   CATALOG_DATABASE_CANDIDATE_DIGEST_CONTRACT_ID,
   CATALOG_DATABASE_NORMALIZED_RECORD_HASH_CONTRACT_ID,
+  CATALOG_REVIEW_OVERLAY_ID,
   CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE,
   CATALOG_ROW_REVIEW_SIGNING_DOMAIN,
   REQUIRED_PROMOTION_QA_SOURCE_PATHS,
@@ -360,7 +361,7 @@ function reviewNaturalKey(source, record) {
     : normalizeCosingNaturalKey(record.inciName);
 }
 
-function fixtureDatabaseCandidate(source, record, transform) {
+function fixtureDatabaseCandidate(source, record, transform, review) {
   if (source === 'open_beauty_facts') {
     return {
       recordKind: 'product',
@@ -368,7 +369,7 @@ function fixtureDatabaseCandidate(source, record, transform) {
       barcode: record.barcode,
       name: record.name,
       brand: record.brand,
-      category: record.category,
+      category: review?.categoryOverride ?? record.category,
       ingredientsText: record.ingredientsText,
       source: record.source,
       sourceComponentId: record.sourceComponentId,
@@ -453,6 +454,7 @@ function fixture({
   source = 'open_beauty_facts',
   records = source === 'open_beauty_facts' ? [obfRecord()] : [cosingRecord()],
   dispositions = [],
+  categoryOverrides = [],
   transformMutate,
   qaMutate,
   reviewMutate,
@@ -536,9 +538,37 @@ function fixture({
       evidenceSha256: digest('a'),
     },
   ];
+  const reviewRecords = records.map((record, index) => {
+    const requested = dispositions[index] ?? { disposition: 'accepted' };
+    const categoryOverride = categoryOverrides[index] ?? null;
+    const disposition = requested.disposition;
+    return {
+      ordinal: index + 1,
+      sourceRef: record.sourceRef,
+      naturalKey: reviewNaturalKey(source, record),
+      disposition,
+      reasonCode:
+        requested.reasonCode ??
+        (categoryOverride
+          ? 'accepted_with_category_override'
+          : disposition === 'accepted'
+            ? 'accepted_after_review'
+            : disposition === 'rejected'
+              ? 'content_quality_rejected'
+              : 'duplicate_natural_key'),
+      duplicateOfNaturalKey:
+        disposition === 'duplicate'
+          ? (requested.duplicateOfNaturalKey ?? reviewNaturalKey(source, records[0]))
+          : null,
+      categoryOverride: categoryOverride?.category ?? null,
+      categoryOverrideEvidenceUri: categoryOverride?.evidenceUri ?? null,
+      categoryOverrideEvidenceSha256: categoryOverride?.evidenceSha256 ?? null,
+      reviewerIds: ['catalog-reviewer-1', 'quality-reviewer-1'],
+    };
+  });
   const review = {
-    schemaVersion: 1,
-    contractId: 'catalog-row-review-overlay-v1',
+    schemaVersion: 2,
+    contractId: CATALOG_REVIEW_OVERLAY_ID,
     signatureEnvelopeVersion: CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE,
     signingDomain: CATALOG_ROW_REVIEW_SIGNING_DOMAIN,
     overlayId: `review-overlay-${source}`,
@@ -552,32 +582,13 @@ function fixture({
     qaReportSha256: sha256(qaBytes),
     databaseCandidatesDigestContractId: CATALOG_DATABASE_CANDIDATE_DIGEST_CONTRACT_ID,
     databaseCandidatesSha256: catalogDatabaseCandidatesSha256(
-      records.map((record) => fixtureDatabaseCandidate(source, record, transform)),
+      records.map((record, index) =>
+        fixtureDatabaseCandidate(source, record, transform, reviewRecords[index]),
+      ),
     ),
     databaseBatchEvidenceSha256: catalogBatchEvidenceSha256(batchEvidence),
     reviewers,
-    records: records.map((record, index) => {
-      const requested = dispositions[index] ?? { disposition: 'accepted' };
-      const disposition = requested.disposition;
-      return {
-        ordinal: index + 1,
-        sourceRef: record.sourceRef,
-        naturalKey: reviewNaturalKey(source, record),
-        disposition,
-        reasonCode:
-          requested.reasonCode ??
-          (disposition === 'accepted'
-            ? 'accepted_after_review'
-            : disposition === 'rejected'
-              ? 'content_quality_rejected'
-              : 'duplicate_natural_key'),
-        duplicateOfNaturalKey:
-          disposition === 'duplicate'
-            ? (requested.duplicateOfNaturalKey ?? reviewNaturalKey(source, records[0]))
-            : null,
-        reviewerIds: ['catalog-reviewer-1', 'quality-reviewer-1'],
-      };
-    }),
+    records: reviewRecords,
     signatures: reviewers.map((reviewer, index) => ({
       reviewerId: reviewer.reviewerId,
       keyId: reviewer.trustRegistryKeyId,
@@ -668,7 +679,9 @@ test('builds deterministic content-addressed envelopes and exact per-record hash
   const first = buildCatalogStageEnvelope({ ...value, root });
   const second = buildCatalogStageEnvelope({ ...value, root });
   assert.deepEqual(second, first);
+  assert.equal(first.schemaVersion, 2);
   assert.equal(first.contractId, CATALOG_STAGE_CONTRACT_ID);
+  assert.equal(first.contractId, 'catalog-stage-envelope-v2');
   assert.equal(first.counts.accepted, 1);
   assert.match(first.stageDigestSha256, /^[a-f0-9]{64}$/u);
   assert.equal(
@@ -676,6 +689,7 @@ test('builds deterministic content-addressed envelopes and exact per-record hash
     `${CATALOG_STAGE_CONTRACT_ID}:open_beauty_facts:${first.stageDigestSha256}`,
   );
   assert.match(first.records[0].recordSha256, /^[a-f0-9]{64}$/u);
+  assert.equal(first.records[0].hashDomain, 'offline-reviewed-transform-record-v2');
   assert.match(first.records[0].transformRecordPayloadSha256, /^[a-f0-9]{64}$/u);
   assert.equal(Object.hasOwn(first.records[0], 'payload'), false);
   assert.equal(Object.hasOwn(first, 'generatedAt'), false);
@@ -776,6 +790,161 @@ test('builds deterministic content-addressed envelopes and exact per-record hash
   writeCatalogStageEnvelope(outputA, first, root);
   writeCatalogStageEnvelope(outputB, second, root);
   assert.deepEqual(readFileSync(outputB), readFileSync(outputA));
+});
+
+test('admits benzoyl peroxide only through a signed evidence-bound category override', (t) => {
+  const categoryOverride = {
+    category: 'benzoyl_peroxide',
+    evidenceUri: 'https://evidence.routinekind.app/products/12345670/category-review',
+    evidenceSha256: digest('7'),
+  };
+  const reviewed = cleanup(t, fixture({ categoryOverrides: [categoryOverride] }));
+  const envelope = buildCatalogStageEnvelope({ ...reviewed, root });
+  assert.equal(envelope.databasePlan.stage.chunks[0].records[0].category, 'benzoyl_peroxide');
+  assert.equal(envelope.records[0].categoryOverride, 'benzoyl_peroxide');
+  assert.equal(envelope.records[0].categoryOverrideEvidenceUri, categoryOverride.evidenceUri);
+  assert.equal(envelope.records[0].categoryOverrideEvidenceSha256, categoryOverride.evidenceSha256);
+  assert.equal(envelope.records[0].reasonCode, 'accepted_with_category_override');
+
+  const rawRegulatedCategory = cleanup(
+    t,
+    fixture({ records: [obfRecord({ category: 'benzoyl_peroxide' })] }),
+  );
+  rejectsFixture(rawRegulatedCategory, /signed row-review category override/u);
+
+  const invalidCases = [
+    (review) => {
+      review.records[0].categoryOverride = 'acne_treatment';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri = null;
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceSha256 = null;
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'https://evidence.routinekind.app/products/12345670/bad path';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'https://reviewer:secret@evidence.routinekind.app/products/12345670/category-review';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'https://localhost/products/12345670/category-review';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'https://127.0.0.1/products/12345670/category-review';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'http://evidence.routinekind.app/products/12345670/category-review';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'https://evidence.routinekind.app/products/12345670/category-review#mutable-fragment';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'https://evidence.routinekind.app/products/12345670/category-review?token=secret';
+    },
+    (review) => {
+      review.records[0].categoryOverrideEvidenceUri =
+        'https://evidence.routinekind.app/products/12345670/category-review?X-Amz-Signature=secret';
+    },
+    (review) => {
+      review.records[0].disposition = 'rejected';
+    },
+    (review) => {
+      review.records[0].categoryOverride = null;
+    },
+    ...[
+      'example.com',
+      'proof.example.com',
+      'example.net',
+      'proof.example.net',
+      'example.org',
+      'proof.example.org',
+      'home.arpa',
+      'proof.home.arpa',
+      '6tisch.arpa',
+      'eap.arpa',
+      'proof.eap.arpa',
+      'eap-noob.arpa',
+      '10.in-addr.arpa',
+      'proof.10.in-addr.arpa',
+      '254.169.in-addr.arpa',
+      ...Array.from({ length: 16 }, (_, index) => `${index + 16}.172.in-addr.arpa`),
+      '170.0.0.192.in-addr.arpa',
+      '171.0.0.192.in-addr.arpa',
+      '168.192.in-addr.arpa',
+      '8.e.f.ip6.arpa',
+      '9.e.f.ip6.arpa',
+      'a.e.f.ip6.arpa',
+      'b.e.f.ip6.arpa',
+      'ipv4only.arpa',
+      'resolver.arpa',
+      'service.arpa',
+      'proof.service.arpa',
+      'home',
+      'proof.home',
+      'internal',
+      'proof.internal',
+      'proof.alt',
+      'nested.proof.alt',
+      'proof.onion',
+      'nested.proof.onion',
+      'proof.localhost',
+      'proof.local',
+      'nested.proof.local',
+      'proof.test',
+      'nested.proof.test',
+      'proof.invalid',
+      'nested.proof.invalid',
+    ].map((hostname) => (review) => {
+      review.records[0].categoryOverrideEvidenceUri = `https://${hostname}/products/12345670/category-review`;
+    }),
+  ];
+  for (const reviewMutate of invalidCases) {
+    const invalid = cleanup(t, fixture({ categoryOverrides: [categoryOverride], reviewMutate }));
+    rejectsFixture(invalid, /category|disposition\/reason/u);
+  }
+
+  const nonProductOverride = cleanup(
+    t,
+    fixture({
+      source: 'cosing',
+      categoryOverrides: [categoryOverride],
+    }),
+  );
+  rejectsFixture(nonProductOverride, /cannot override a non-product category/u);
+});
+
+test('pre-production v2 cutover invalidates every legacy row-review and stage domain', (t) => {
+  const legacyWithoutOverride = cleanup(
+    t,
+    fixture({
+      reviewMutate(review) {
+        review.schemaVersion = 1;
+        review.contractId = 'catalog-row-review-overlay-v1';
+        review.signatureEnvelopeVersion = 'catalog-row-review-signature-v1';
+        review.signingDomain = 'routinekind.catalog-row-review-overlay.v1';
+        for (const record of review.records) {
+          delete record.categoryOverride;
+          delete record.categoryOverrideEvidenceUri;
+          delete record.categoryOverrideEvidenceSha256;
+        }
+      },
+    }),
+  );
+  rejectsFixture(legacyWithoutOverride, /does not exactly bind its signature domain/u);
+  const current = cleanup(t, fixture());
+  const envelope = buildCatalogStageEnvelope({ ...current, root });
+  assert.equal(envelope.schemaVersion, 2);
+  assert.equal(envelope.contractId, 'catalog-stage-envelope-v2');
+  assert.equal(envelope.records[0].hashDomain, 'offline-reviewed-transform-record-v2');
 });
 
 test('materializes exact database receipts, minimal evidence, and receipt-bound review decisions', (t) => {
@@ -1077,24 +1246,32 @@ test('receipt completion rejects drift in every normalized field and the canonic
     );
   }
 
-  const migrationSql = readFileSync(
+  const immutableLifecycleMigrationSql = readFileSync(
     resolve(root, 'supabase/migrations/20260717000057_catalog_import_lifecycle.sql'),
     'utf8',
   );
+  const categoryOverrideMigrationSql = readFileSync(
+    resolve(root, 'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql'),
+    'utf8',
+  );
   assert.match(
-    migrationSql,
+    immutableLifecycleMigrationSql,
     /v_record_sha256 := private\.catalog_import_sha256_text\(\s*private\.catalog_import_canonical_json\(v_normalized\)\s*\)/su,
   );
   assert.match(
-    migrationSql,
+    immutableLifecycleMigrationSql,
     /records\.record_sha256 <> private\.catalog_import_sha256_text\(\s*private\.catalog_import_canonical_json\(records\.normalized_payload\)\s*\)/su,
   );
-  assert.match(migrationSql, /synonyms\.value order by synonyms\.value collate pg_catalog\."C"/u);
   assert.match(
-    migrationSql,
-    /v_record ->> 'category' not in \(\s*'cleanser', 'toner', 'serum', 'moisturiser_tube', 'spf'\s*\)/su,
+    immutableLifecycleMigrationSql,
+    /synonyms\.value order by synonyms\.value collate pg_catalog\."C"/u,
   );
-  assert.match(migrationSql, /'category', v_record -> 'category'/u);
+  assert.doesNotMatch(immutableLifecycleMigrationSql, /'benzoyl_peroxide'/u);
+  assert.match(
+    categoryOverrideMigrationSql,
+    /v_record ->> 'category' not in \(\s*'benzoyl_peroxide', 'cleanser', 'toner', 'serum',\s*'moisturiser_tube', 'spf'\s*\)/su,
+  );
+  assert.match(categoryOverrideMigrationSql, /'category', v_record -> 'category'/u);
 });
 
 test('rejects fixture, candidate, forged, and missing approval bindings', (t) => {
@@ -1284,6 +1461,35 @@ test('requires complete explicit reviews, exact fields, and independent reviewer
       review.reviewers[1].trustRegistryRole = review.reviewers[0].trustRegistryRole;
     },
     (review) => {
+      review.reviewers[0].evidenceUri = 'https://evidence.routinekind.app/reviews/bad reviewer';
+    },
+    (review) => {
+      review.reviewers[0].evidenceUri =
+        'https://reviewer:secret@evidence.routinekind.app/reviews/catalog-reviewer-1';
+    },
+    (review) => {
+      review.reviewers[0].evidenceUri = 'https://localhost/reviews/catalog-reviewer-1';
+    },
+    (review) => {
+      review.reviewers[0].evidenceUri = 'https://127.0.0.1/reviews/catalog-reviewer-1';
+    },
+    (review) => {
+      review.reviewers[0].evidenceUri =
+        'http://evidence.routinekind.app/reviews/catalog-reviewer-1';
+    },
+    (review) => {
+      review.reviewers[0].evidenceUri =
+        'https://evidence.routinekind.app/reviews/catalog-reviewer-1#mutable-fragment';
+    },
+    (review) => {
+      review.reviewers[0].evidenceUri =
+        'https://evidence.routinekind.app/reviews/catalog-reviewer-1?token=secret';
+    },
+    (review) => {
+      review.reviewers[0].evidenceUri =
+        'https://evidence.routinekind.app/reviews/catalog-reviewer-1?X-Amz-Signature=secret';
+    },
+    (review) => {
       review.reviewers.push({
         ...review.reviewers[0],
         reviewerId: 'third-reviewer-1',
@@ -1313,7 +1519,7 @@ test('requires complete explicit reviews, exact fields, and independent reviewer
   }
 });
 
-test('row reviewers resolve to current trust keys and cannot reuse source approvers', () => {
+test('real Ed25519 row reviewers bind the v2 regulated override and cannot reuse source approvers', () => {
   const reviewerDefinitions = [
     {
       reviewerId: 'catalog-reviewer-1',
@@ -1372,8 +1578,8 @@ test('row reviewers resolve to current trust keys and cannot reuse source approv
     },
   };
   const overlay = {
-    schemaVersion: 1,
-    contractId: 'catalog-row-review-overlay-v1',
+    schemaVersion: 2,
+    contractId: CATALOG_REVIEW_OVERLAY_ID,
     signatureEnvelopeVersion: CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE,
     signingDomain: CATALOG_ROW_REVIEW_SIGNING_DOMAIN,
     overlayId: 'signed-overlay-unit-test',
@@ -1391,8 +1597,12 @@ test('row reviewers resolve to current trust keys and cannot reuse source approv
         sourceRef: '12345670',
         naturalKey: '12345670',
         disposition: 'accepted',
-        reasonCode: 'accepted_after_review',
+        reasonCode: 'accepted_with_category_override',
         duplicateOfNaturalKey: null,
+        categoryOverride: 'benzoyl_peroxide',
+        categoryOverrideEvidenceUri:
+          'https://evidence.routinekind.app/products/12345670/category-review',
+        categoryOverrideEvidenceSha256: digest('7'),
         reviewerIds: reviewers.map((reviewer) => reviewer.reviewerId),
       },
     ],
@@ -1420,6 +1630,37 @@ test('row reviewers resolve to current trust keys and cannot reuse source approv
     authority.reviewers.map((reviewer) => reviewer.reviewerId),
     ['catalog-reviewer-1', 'quality-reviewer-1'],
   );
+  assert.equal(authority.reviewers.length, 2);
+
+  const signedFieldTampering = [
+    (candidate) => {
+      candidate.records[0].categoryOverride = 'moisturiser_tube';
+    },
+    (candidate) => {
+      candidate.records[0].categoryOverrideEvidenceUri =
+        'https://evidence.routinekind.app/products/12345670/different-review';
+    },
+    (candidate) => {
+      candidate.records[0].categoryOverrideEvidenceSha256 = digest('8');
+    },
+    (candidate) => {
+      candidate.databaseCandidatesSha256 = digest('6');
+    },
+  ];
+  for (const tamper of signedFieldTampering) {
+    const tamperedSignedField = structuredClone(overlay);
+    tamper(tamperedSignedField);
+    assert.throws(
+      () =>
+        validateRowReviewTrustAuthority({
+          reviewers,
+          overlay: tamperedSignedField,
+          trustRegistry,
+          approval,
+        }),
+      /signature does not authorize/u,
+    );
+  }
 
   const mismatchedTrust = structuredClone(trustRegistry);
   mismatchedTrust.reviewers[0].publicKeySha256 = digest('f');

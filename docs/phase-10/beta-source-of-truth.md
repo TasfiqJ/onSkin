@@ -111,7 +111,12 @@ Strict Phase 10 verification requires these variables to be set in the release s
 - `PHASE10_PUBLIC_LAUNCH_DECISION=go` or `limited`
 - `PHASE10_SIGNED_OFF_BY=<owner>`
 
-Run `npm run phase10:verify` for code/artifact gates and `npm run phase10:beta-readiness:strict` only when the external evidence exists.
+`npm run phase10:verify` is source-safe and non-writing; it validates the local
+readiness contract but never publishes governed packets. After evidence commit
+`E`, publish `npm run phase10:support-handoff:strict` and then `npm run
+phase10:beta-packet:strict` as separate DAG-ordered units, committing the first
+before invoking the second. Run `npm run phase10:beta-readiness:strict` only
+when the external evidence exists.
 
 The generated closed-beta packet must hash the verifier scripts that decide
 readiness, not only the app and documentation inputs. Source hashes include the
@@ -122,3 +127,5 @@ Phase 9 generated release QA JSON and Markdown packets so the machine-readable
 status and human-reviewed evidence artifact cannot drift apart. The packet
 Markdown must also show whether it was generated from a clean or dirty Git
 worktree so reviewers can reject stale or mixed-worktree beta evidence.
+The builder excludes only its own exact JSON/Markdown output pair from Git
+status. Any other dirty governed output remains visible and blocks strict use.

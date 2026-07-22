@@ -85,12 +85,28 @@ for (const script of [
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+const phase11VerifyCommands = String(packageJson.scripts?.['phase11:verify'] ?? '').split(' && ');
 block(
   errors,
-  /phase10:evidence-normalization-smoke && npm run phase10:beta-readiness && npm run phase10:beta-analytics-audit && npm run phase10:support-handoff && npm run phase10:beta-packet && npm run phase11:launch-readiness && npm run phase11:ring-gates && npm run phase11:launch-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
-    packageJson.scripts?.['phase11:verify'] ?? '',
-  ),
-  'phase11:verify must rerun Phase 10 readiness, analytics, support handoff, and beta packet gates before Phase 11 readiness and the strict generated-packet status audit.',
+  [
+    'npm run launch:contract:verify',
+    'npm run phase10-11:public-contact-smoke',
+    'npm run phase10:evidence-normalization-smoke',
+    'npm run phase10:beta-readiness',
+    'npm run phase10:beta-analytics-audit',
+    'npm run phase11:launch-readiness',
+    'npm run phase11:ring-gates',
+  ].every((commandName) => phase11VerifyCommands.includes(commandName)) &&
+    [
+      'npm run phase10:support-handoff',
+      'npm run phase10:support-handoff:strict',
+      'npm run phase10:beta-packet',
+      'npm run phase10:beta-packet:strict',
+      'npm run phase11:launch-packet',
+      'npm run phase11:launch-packet:strict',
+      'npm run docs:generated-packet-status-audit:strict',
+    ].every((commandName) => !phase11VerifyCommands.includes(commandName)),
+  'phase11:verify must remain source-safe and non-writing; each governed packet must be published separately from a clean committed prefix.',
 );
 
 const publicLaunchPacketSourceFiles = new Set(phase11SourceFiles());
@@ -117,6 +133,7 @@ block(
   /function gitStatusExcludingGeneratedPacket\(\)/.test(launchPacketBuilder) &&
     /public-launch-packet\.json/.test(launchPacketBuilder) &&
     /public-launch-packet\.md/.test(launchPacketBuilder) &&
+    /gitStatusExcludingPaths\(packetOutputPaths\)/.test(launchPacketBuilder) &&
     /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(launchPacketBuilder),
   'Phase 11 public launch packet must ignore only its own generated outputs when recording Git status.',
 );

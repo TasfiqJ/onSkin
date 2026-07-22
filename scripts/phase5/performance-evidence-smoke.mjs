@@ -1,24 +1,58 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { dirname, join, resolve } from 'node:path';
+import { execFileSync, spawnSync } from 'node:child_process';
 
 import {
   createPerformanceEvidenceTemplate,
   summarizePerformanceSamples,
 } from './performance-evidence-contract.mjs';
+import {
+  buildGovernedEvidenceLedger,
+  captureGovernedPublicationPolicy,
+  governedEvidenceLedgerPath,
+  governedEvidenceRoleForPath,
+  renderGovernedEvidenceLedger,
+} from '../launch/governed-evidence-chain.mjs';
+import {
+  publishGovernedFixtureTail,
+  seedGovernedPublicationSourceFixture,
+} from '../launch/governed-evidence-test-fixture.mjs';
 
-const root = resolve(import.meta.dirname, '..', '..');
+const root = mkdtempSync(join(tmpdir(), 'routinekind-performance-evidence-'));
+const repoRoot = resolve(import.meta.dirname, '../..');
 const checker = resolve(import.meta.dirname, 'check-performance-evidence.mjs');
-const tempDir = mkdtempSync(join(tmpdir(), 'routinekind-performance-evidence-'));
-const evidencePath = join(tempDir, 'performance-evidence.json');
+const evidencePath = 'docs/phase-5/evidence/performance/smoke/evidence.json';
+const releaseCandidateDir = 'docs/phase-9/release-candidates/rc-performance-smoke';
+
+function git(cwd, args) {
+  return execFileSync('git', args, {
+    cwd,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
+}
+
+function sha256(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
+git(root, ['init']);
+git(root, ['config', 'user.email', 'performance-smoke@example.invalid']);
+git(root, ['config', 'user.name', 'Performance Smoke']);
+writeFileSync(resolve(root, 'source.txt'), 'performance build source\n');
+seedGovernedPublicationSourceFixture({ fixtureRoot: root, sourceRoot: repoRoot });
+git(root, ['add', '-A']);
+git(root, ['commit', '-m', 'Performance build source S']);
+const sourceGitSha = git(root, ['rev-parse', 'HEAD']).toLowerCase();
 
 function validEvidence() {
   const evidence = createPerformanceEvidenceTemplate();
   evidence.capturedAt = '2026-07-09T16:00:00.000Z';
-  evidence.gitSha = '1234567890abcdef1234567890abcdef12345678';
+  evidence.gitSha = sourceGitSha;
   evidence.thresholdsDefinedAt = '2026-07-09T12:00:00.000Z';
   evidence.thresholdsDefinedBy = 'Performance Owner';
   evidence.devices.ios.buildId = '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5';
@@ -45,8 +79,14 @@ function validEvidence() {
   return evidence;
 }
 
-function run(evidence, { strict = true, omitPath = false, summarize = false } = {}) {
-  if (evidence) writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+function run(
+  evidence,
+  { strict = true, omitPath = false, summarize = false, path = evidencePath, extraEnv = {} } = {},
+) {
+  if (evidence) {
+    mkdirSync(dirname(resolve(root, path)), { recursive: true });
+    writeFileSync(resolve(root, path), `${JSON.stringify(evidence, null, 2)}\n`);
+  }
   const result = spawnSync(
     process.execPath,
     [checker, ...(summarize ? ['--write-summaries'] : []), ...(strict ? ['--strict'] : [])],
@@ -55,12 +95,14 @@ function run(evidence, { strict = true, omitPath = false, summarize = false } = 
       encoding: 'utf8',
       env: {
         ...process.env,
-        PHASE5_PERFORMANCE_EVIDENCE_PATH: omitPath ? '' : evidencePath,
+        PHASE5_PERFORMANCE_EVIDENCE_PATH: omitPath ? '' : path,
+        PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
+        ...extraEnv,
       },
     },
   );
   if (summarize && result.status === 0) {
-    result.summarizedEvidence = JSON.parse(readFileSync(evidencePath, 'utf8'));
+    result.summarizedEvidence = JSON.parse(readFileSync(resolve(root, path), 'utf8'));
   }
   return result;
 }
@@ -68,6 +110,45 @@ function run(evidence, { strict = true, omitPath = false, summarize = false } = 
 function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
+
+function runWithFinalGeneratedTail() {
+  writeFileSync(resolve(root, evidencePath), `${JSON.stringify(committedEvidence, null, 2)}\n`);
+  publishGovernedFixtureTail({ fixtureRoot: root });
+  return spawnSync(process.execPath, [checker, '--strict'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      PHASE5_PERFORMANCE_EVIDENCE_PATH: evidencePath,
+      PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
+    },
+  });
+}
+
+const committedEvidence = validEvidence();
+mkdirSync(dirname(resolve(root, evidencePath)), { recursive: true });
+writeFileSync(resolve(root, evidencePath), `${JSON.stringify(committedEvidence, null, 2)}\n`);
+const releaseCandidatePath = `${releaseCandidateDir}/manifest.md`;
+mkdirSync(dirname(resolve(root, releaseCandidatePath)), { recursive: true });
+writeFileSync(
+  resolve(root, releaseCandidatePath),
+  `Performance release candidate bound to ${sourceGitSha}\n`,
+);
+const directEvidencePaths = [releaseCandidatePath, evidencePath];
+const ledger = buildGovernedEvidenceLedger({
+  sourceGitSha,
+  releaseCandidateDir,
+  publicationPolicy: captureGovernedPublicationPolicy(root, sourceGitSha),
+  entries: directEvidencePaths.map((path) => ({
+    role: governedEvidenceRoleForPath(path, releaseCandidateDir),
+    path,
+    sha256: sha256(readFileSync(resolve(root, path))),
+  })),
+});
+const ledgerPath = governedEvidenceLedgerPath(releaseCandidateDir);
+writeFileSync(resolve(root, ledgerPath), renderGovernedEvidenceLedger(ledger));
+git(root, ['add', 'docs/phase-5/evidence/performance', releaseCandidateDir]);
+git(root, ['commit', '-m', 'Performance evidence E']);
 
 const unsupportedDevice = validEvidence();
 unsupportedDevice.devices.ios.logicalWidth = 320;
@@ -148,6 +229,18 @@ const cases = [
       result.status === 1 && /Missing PHASE5_PERFORMANCE_EVIDENCE_PATH/.test(output(result)),
   },
   {
+    name: 'rejects arbitrary absolute evidence paths',
+    result: run(null, { path: 'C:/tmp/performance-evidence.json' }),
+    test: (result) =>
+      result.status === 1 && /normalized repo-relative JSON path/.test(output(result)),
+  },
+  {
+    name: 'requires the explicit release-candidate selector for governed evidence',
+    result: run(validEvidence(), { extraEnv: { PHASE9_RELEASE_CANDIDATE_DIR: '' } }),
+    test: (result) =>
+      result.status === 1 && /PHASE9_RELEASE_CANDIDATE_DIR is required/.test(output(result)),
+  },
+  {
     name: 'rejects devices below the accepted layout support floor',
     result: run(unsupportedDevice),
     test: (result) =>
@@ -213,6 +306,11 @@ const cases = [
     test: (result) =>
       result.status === 1 && /at least 5 positive raw observations/.test(output(result)),
   },
+  {
+    name: 'accepts Phase 7 and final readiness descendants from the central allowlist',
+    result: runWithFinalGeneratedTail(),
+    test: (result) => result.status === 0 && /Governed evidence chain: pass/.test(output(result)),
+  },
 ];
 
 let failed = false;
@@ -225,5 +323,5 @@ for (const testCase of cases) {
   }
 }
 
-rmSync(tempDir, { recursive: true, force: true });
+rmSync(root, { recursive: true, force: true });
 if (failed) process.exit(1);

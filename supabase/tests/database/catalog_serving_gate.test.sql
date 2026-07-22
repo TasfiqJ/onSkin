@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(56);
+select plan(58);
 
 select ok(
   not has_function_privilege(
@@ -363,7 +363,7 @@ insert into public.products (
 )
 values (
   '56000000-0000-4000-8000-000000000010',
-  '05600000000010',
+  '56000000000016',
   'Catalog Gate Serum',
   'Gate Brand',
   'serum',
@@ -388,7 +388,7 @@ insert into public.product_barcodes (
   review_status
 )
 values (
-  '05600000000010',
+  '56000000000016',
   '56000000-0000-4000-8000-000000000010',
   (select id from public.catalog_sources where source_key = 'curated'),
   1,
@@ -541,6 +541,12 @@ values
     'reviewed'
   );
 
+-- Simulate a legacy/corrupt out-of-range row so the serving view and RLS
+-- defense can be proven independently of the base-table CHECK. The entire
+-- pgTAP file is transactional, so rollback restores the constraint.
+alter table public.product_pao_expiry
+  drop constraint product_pao_expiry_pao_months_check;
+
 insert into public.product_pao_expiry (
   id,
   product_id,
@@ -571,50 +577,73 @@ values
     (select id from public.catalog_sources where source_key = 'open_beauty_facts'),
     'pgtap-catalog-gate',
     'reviewed'
+  ),
+  (
+    '56000000-0000-4000-8000-000000000062',
+    '56000000-0000-4000-8000-000000000010',
+    36,
+    'category_default',
+    'US',
+    (select id from public.catalog_sources where source_key = 'curated'),
+    'pgtap-catalog-gate',
+    'reviewed'
+  ),
+  (
+    '56000000-0000-4000-8000-000000000063',
+    '56000000-0000-4000-8000-000000000010',
+    18,
+    'unknown',
+    'US',
+    (select id from public.catalog_sources where source_key = 'curated'),
+    'pgtap-catalog-gate',
+    'reviewed'
+  ),
+  (
+    '56000000-0000-4000-8000-000000000064',
+    '56000000-0000-4000-8000-000000000010',
+    121,
+    'catalog',
+    'US',
+    (select id from public.catalog_sources where source_key = 'curated'),
+    'pgtap-catalog-gate',
+    'reviewed'
+  ),
+  (
+    '56000000-0000-4000-8000-000000000065',
+    '56000000-0000-4000-8000-000000000010',
+    null,
+    'label',
+    'US',
+    (select id from public.catalog_sources where source_key = 'curated'),
+    'pgtap-catalog-gate',
+    'reviewed'
   );
 
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
-  1::bigint,
-  'an exact barcode resolves when every positive eligibility gate is satisfied'
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
+  0::bigint,
+  'an otherwise eligible product remains hidden without an exact active CAT-03 product and campaign head'
 );
 select is(
   (select count(*) from public.search_catalog_products('gate serum', 20)),
-  1::bigint,
-  'indexed search returns a fully eligible product'
+  0::bigint,
+  'indexed search remains fail-closed without an exact active CAT-03 product and campaign head'
 );
 select is(
   (
     select pg_catalog.jsonb_array_length(product_pao_expiry)
-    from public.lookup_catalog_product_by_barcode('05600000000010')
+    from public.lookup_catalog_product_by_barcode('56000000000016')
   ),
-  1,
-  'catalog responses include only reviewed same-territory freshness evidence from an approved source'
+  null::integer,
+  'a product without CAT-03 serving authority cannot leak freshness evidence'
 );
 select ok(
-  coalesce(
-    (
-      select
-        catalog_sources ?& array[
-          'id',
-          'display_name',
-          'source_key',
-          'attribution_text',
-          'attribution_url'
-        ]::text[]
-        and catalog_sources - array[
-          'id',
-          'display_name',
-          'source_key',
-          'attribution_text',
-          'attribution_url'
-        ]::text[] = '{}'::jsonb
-      from public.lookup_catalog_product_by_barcode('05600000000010')
-    ),
-    false
+  not exists (
+    select 1
+    from public.lookup_catalog_product_by_barcode('56000000000016')
   ),
-  'catalog RPCs expose exactly the safe attribution projection and no review metadata'
+  'a missing CAT-03 head suppresses the entire attribution projection'
 );
 reset role;
 
@@ -623,7 +652,7 @@ set region = 'CA'
 where id = '56000000-0000-4000-8000-000000000010';
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup hides a product outside the signed US release territory'
 );
@@ -640,7 +669,7 @@ set region = 'US',
 where id = '56000000-0000-4000-8000-000000000010';
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup hides a product without row-level source provenance'
 );
@@ -659,17 +688,17 @@ update public.product_barcodes
 set source_id = (
   select id from public.catalog_sources where source_key = 'open_beauty_facts'
 )
-where barcode = '05600000000010';
+where barcode = '56000000000016';
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup hides a reviewed mapping whose own source is not production approved'
 );
 select is(
   (select count(*) from public.search_catalog_products('gate serum', 20)),
-  1::bigint,
-  'a held alias mapping does not suppress an independently eligible name search'
+  0::bigint,
+  'an independently eligible name still cannot bypass the missing CAT-03 head'
 );
 reset role;
 
@@ -677,7 +706,7 @@ update public.product_barcodes
 set source_id = (
   select id from public.catalog_sources where source_key = 'curated'
 )
-where barcode = '05600000000010';
+where barcode = '56000000000016';
 
 -- Supabase's hosted API bootstrap supplies these ordinary catalog SELECT
 -- grants. Rehearse the migration-owned RLS predicates explicitly in pgTAP.
@@ -692,19 +721,20 @@ grant select on
 to authenticated;
 
 set local role authenticated;
-select is(
-  pg_catalog.jsonb_build_object(
-    'products', (select count(*) from public.products),
-    'barcodes', (select count(*) from public.product_barcodes),
-    'ingredients', (select count(*) from public.product_ingredients),
-    'ingredient_lists', (select count(*) from public.product_ingredient_lists),
-    'ingredient_tokens', (select count(*) from public.product_ingredient_tokens),
-    'active_bands', (select count(*) from public.product_active_bands),
-    'freshness', (select count(*) from public.product_pao_expiry),
-    'recommendable', (select count(*) from public.recommendable_catalog_products)
-  ),
-  '{"active_bands": 1, "barcodes": 1, "freshness": 1, "ingredient_lists": 1, "ingredient_tokens": 1, "ingredients": 1, "products": 1, "recommendable": 1}'::jsonb,
-  'direct authenticated product, legacy recommendation, and child reads expose only independently approved evidence without source-table access'
+select ok(
+  not pg_catalog.has_table_privilege(
+    'authenticated', 'public.recommendable_catalog_products', 'SELECT'
+  )
+    and pg_catalog.jsonb_build_object(
+      'products', (select count(*) from public.products),
+      'barcodes', (select count(*) from public.product_barcodes),
+      'ingredients', (select count(*) from public.product_ingredients),
+      'ingredient_lists', (select count(*) from public.product_ingredient_lists),
+      'ingredient_tokens', (select count(*) from public.product_ingredient_tokens),
+      'active_bands', (select count(*) from public.product_active_bands),
+      'freshness', (select count(*) from public.product_pao_expiry)
+    ) = '{"active_bands": 0, "barcodes": 0, "freshness": 0, "ingredient_lists": 0, "ingredient_tokens": 0, "ingredients": 0, "products": 0}'::jsonb,
+  'authenticated reads remain CAT-03-head-gated and the legacy recommendation view stays sealed'
 );
 reset role;
 
@@ -721,7 +751,7 @@ update public.product_barcodes
 set source_id = (
   select id from public.catalog_sources where source_key = 'brand_label'
 )
-where barcode = '05600000000010';
+where barcode = '56000000000016';
 
 set local role authenticated;
 select is(
@@ -734,11 +764,11 @@ select is(
     'barcode', (
       select count(*)
       from public.product_barcodes
-      where barcode = '05600000000010'
+      where barcode = '56000000000016'
     )
   ),
-  '{"barcode": 0, "product": 1}'::jsonb,
-  'direct barcode RLS rejects an approved mapping source that differs from its eligible parent source'
+  '{"barcode": 0, "product": 0}'::jsonb,
+  'a mapping-source mismatch cannot open either direct lane while the CAT-03 head is absent'
 );
 reset role;
 
@@ -746,14 +776,14 @@ update public.product_barcodes
 set source_id = (
   select id from public.catalog_sources where source_key = 'curated'
 )
-where barcode = '05600000000010';
+where barcode = '56000000000016';
 
 update public.catalog_sources
 set production_approved = false
 where source_key = 'curated';
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup hides a source without production approval'
 );
@@ -770,7 +800,7 @@ set production_approved = true,
 where source_key = 'curated';
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup hides a source without legal approval'
 );
@@ -838,7 +868,7 @@ set recommendation_eligible = true,
 where id = '56000000-0000-4000-8000-000000000010';
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup hides a product with unresolved correction count'
 );
@@ -873,24 +903,34 @@ values (
 alter table public.catalog_corrections
   enable trigger trg_catalog_corrections_health_write;
 
+-- Inspect the internal projection as the pgTAP migration owner; service_role
+-- intentionally has no direct catalog table lane.
+select ok(
+  (
+    select product.recommendation_eligible
+      and product.unresolved_correction_count = 0
+      and correction.operator_reviewed_at is null
+      and correction.operator_reviewed_by is null
+    from public.products as product
+    join public.catalog_corrections as correction
+      on correction.product_id = product.id
+    where product.id = '56000000-0000-4000-8000-000000000010'
+  ),
+  'an untrusted open report does not mutate the reviewed serving projection'
+);
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
-  1::bigint,
-  'an untrusted open report cannot globally suppress exact barcode lookup'
-);
-select is(
   (select count(*) from public.search_catalog_products('gate serum', 20)),
-  1::bigint,
-  'an untrusted open report cannot globally suppress catalog search'
+  0::bigint,
+  'an untrusted open report cannot bypass the independently required CAT-03 head'
 );
 reset role;
 
 set local role authenticated;
 select is(
   (select count(*) from public.products where id = '56000000-0000-4000-8000-000000000010'),
-  1::bigint,
-  'an untrusted open report cannot suppress another caller direct catalog reads'
+  0::bigint,
+  'direct reads remain hidden because no CAT-03 head exists, independent of an untrusted open report'
 );
 reset role;
 
@@ -949,7 +989,7 @@ reset role;
 
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup rechecks live operator holds instead of trusting stale projection state'
 );
@@ -970,34 +1010,34 @@ alter table public.catalog_corrections
 
 update public.product_barcodes
 set review_status = 'needs_review'
-where barcode = '05600000000010';
+where barcode = '56000000000016';
 set local role service_role;
 select is(
-  (select count(*) from public.lookup_catalog_product_by_barcode('05600000000010')),
+  (select count(*) from public.lookup_catalog_product_by_barcode('56000000000016')),
   0::bigint,
   'barcode lookup hides an unreviewed barcode mapping'
 );
 select is(
   (select count(*) from public.search_catalog_products('gate serum', 20)),
-  1::bigint,
-  'mapping review does not suppress an otherwise eligible name search'
+  0::bigint,
+  'mapping review cannot bypass the missing CAT-03 head for name search'
 );
 reset role;
 
 update public.product_barcodes
 set review_status = 'reviewed'
-where barcode = '05600000000010';
+where barcode = '56000000000016';
 
 set local role authenticated;
 select is(
   (select count(*) from public.products where id = '56000000-0000-4000-8000-000000000010'),
-  1::bigint,
-  'direct authenticated product reads retain an eligible row'
+  0::bigint,
+  'direct authenticated product reads require the missing CAT-03 head'
 );
 select is(
-  (select count(*) from public.product_barcodes where barcode = '05600000000010'),
-  1::bigint,
-  'direct authenticated barcode reads retain an eligible reviewed mapping'
+  (select count(*) from public.product_barcodes where barcode = '56000000000016'),
+  0::bigint,
+  'direct authenticated barcode reads require the parent product CAT-03 head'
 );
 reset role;
 
@@ -1011,9 +1051,64 @@ select is(
   'direct authenticated product reads hide a source whose approval is withdrawn'
 );
 select is(
-  (select count(*) from public.product_barcodes where barcode = '05600000000010'),
+  (select count(*) from public.product_barcodes where barcode = '56000000000016'),
   0::bigint,
   'direct authenticated barcode reads cannot bypass withdrawn source approval'
+);
+reset role;
+
+-- Isolate the PAO predicates from the independently exercised CAT-03 head
+-- predicate. This replacement is transaction-local and the closing rollback
+-- restores the production definition byte-for-byte.
+update public.catalog_sources
+set production_approved = true,
+    review_status = 'legal_approved'
+where source_key = 'curated';
+
+create or replace function private.catalog_product_is_servable(
+  p_product_id uuid
+)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select p_product_id = '56000000-0000-4000-8000-000000000010'::uuid
+$$;
+revoke all on function private.catalog_product_is_servable(uuid)
+  from public, anon, authenticated, service_role;
+grant execute on function private.catalog_product_is_servable(uuid)
+  to authenticated;
+
+select is(
+  (
+    select pg_catalog.jsonb_build_object(
+      'count', pg_catalog.jsonb_array_length(product.product_pao_expiry),
+      'months', product.product_pao_expiry -> 0 ->> 'pao_months',
+      'source', product.product_pao_expiry -> 0 ->> 'pao_source'
+    )
+    from public.catalog_servable_products as product
+    where product.id = '56000000-0000-4000-8000-000000000010'
+  ),
+  '{"count":1,"months":"12","source":"catalog"}'::jsonb,
+  'the service projection exposes only reviewed exact-source product-specific PAO evidence in the 1..120 month range'
+);
+
+set local role authenticated;
+select is(
+  (
+    select pg_catalog.jsonb_agg(
+      pg_catalog.jsonb_build_object(
+        'months', freshness.pao_months,
+        'source', freshness.pao_source
+      ) order by freshness.id
+    )
+    from public.product_pao_expiry as freshness
+    where freshness.product_id = '56000000-0000-4000-8000-000000000010'
+  ),
+  '[{"months":12,"source":"catalog"}]'::jsonb,
+  'authenticated PAO RLS excludes wrong-source, category-default, unknown, null, and out-of-range evidence'
 );
 reset role;
 

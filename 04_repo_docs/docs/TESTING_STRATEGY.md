@@ -270,26 +270,26 @@ Apple-delivery evidence.
 ## Generated Evidence Checks
 
 Generated launch packets record whether source files were dirty when the packet
-was produced. Packet builders intentionally ignore other generated evidence
-outputs so Phase 3-11 packets can be refreshed together, but they still report
-non-generated source changes as dirty. After any multi-packet refresh, run:
+was produced. A packet builder may exclude only its own exact output path or
+pair; every other dirty governed output remains visible. Phase 3/4 source
+snapshot builders retain their dedicated pre-S semantics. After final
+readiness commit `F`, run:
 
 ```bash
 npm run docs:generated-packet-status-audit:check
 ```
 
-That audit is the gate that proves committed generated packet hashes are current
-and no packet records dirty source evidence.
+That audit is the final non-writing gate that proves committed generated packet
+hashes are current and no packet records dirty source evidence.
 
-Phase 9, Phase 10, and Phase 11 verification commands must also run the strict
-generated-packet status audit immediately after their release, closed-beta, or
-public-launch packet builders. This prevents RC/beta/launch verification from
-leaving a freshly generated packet set with stale recorded hashes.
-
-Standalone Phase 11 verification must rerun the Phase 10 local evidence
-normalization, beta readiness, beta analytics, support handoff, and beta packet
-gates before public-launch readiness. Public launch verification cannot rely on
-a previously built beta packet when the underlying beta contract has changed.
+The packet-writing `phase9:verify` workflow is pre-S evidence collection.
+`phase10:verify`, `phase11:verify`, and `phase10-11:verify` are source-safe,
+non-writing readiness workflows and never batch governed packet writers.
+Publish each Phase 10/11 post-E unit separately, in evidence-DAG order, from the
+required clean committed prefix: `phase10:support-handoff:strict`, then
+`phase10:beta-packet:strict`, then `phase11:launch-packet:strict`. Commit each
+unit before invoking its dependent writer so exact-own-output Git filtering
+cannot conceal a dirty upstream packet.
 
 ## Non-Mutating Launch Readiness Sweep
 
@@ -303,10 +303,10 @@ npm run launch:verify
 This command first checks the exact third-party privacy patch, installed-source
 audit, typed archive evidence index, release-candidate Git provenance, active
 package/CI wiring, and non-writing store inspector. It then runs the
-source-packet, Tas-owned blocker, readiness-status, strict brand,
-device-support-policy, performance-readiness, generated-packet, and human-E2E
-manifest checks; the Phase 5 native config guard; the Phase 7 core-loop and
-Phase 8 growth/store code gates; Phase 9 release smoke, Phase 10
+source-packet, Tas-owned blocker, strict brand, performance-readiness source
+snapshot, readiness/device/human source contracts, and Phase 5 evidence
+template/smoke checks; the Phase 5 native config guard; the Phase 7 core-loop
+and Phase 8 growth/store code gates; Phase 9 release smoke, Phase 10
 beta readiness, Phase 10 beta analytics audit, Phase 11 launch readiness, and
 launch ring gates; then typecheck, lint, and tests. It does not replace the
 phase packet builders after generated evidence changes.
@@ -323,21 +323,31 @@ The current root sweep must include these non-mutating gates:
 - `npm run phase9:verification-wiring:test`
 - `npm run phase9:store-build-inspect:check`
 - `npm run docs:tas-todo-audit:check`
-- `npm run docs:readiness-status-audit:check`
+- `npm run docs:readiness-status-audit:test`
 - `npm run brand:audit:strict`
-- `npm run docs:device-support-policy-audit:check`
+- `npm run docs:device-support-policy-audit:test`
 - `npm run docs:performance-readiness-audit:check`
-- `npm run docs:generated-packet-status-audit:check`
-- `npm run e2e:human:manifest:check`
+- `npm run e2e:human:manifest:contract:test`
 - `npm run phase5:check-native-config`
 - `npm run phase5:widget-runtime-contract:smoke`
-- `npm run phase5:widget-lifecycle-evidence`
+- `npm run phase5:native-ocr-evidence:smoke`
+- `npm run phase5:native-ocr-evidence:template:check`
+- `npm run phase5:camera-lifecycle-evidence:smoke`
+- `npm run phase5:camera-lifecycle-evidence:template:check`
+- `npm run phase5:performance-evidence:smoke`
+- `npm run phase5:performance-evidence:template:check`
 - `npm run phase5:widget-lifecycle-evidence:smoke`
 - `npm run phase5:widget-lifecycle-evidence:template:check`
 - `npm run phase7:check-core-loop`
 - `npm run phase8:check-growth-store`
 - `npm run phase10:beta-analytics-audit`
-- `npm run phase10-11:verify`
+
+After final readiness commit `F`, run
+`npm run release:governed-packets:check`. That aggregate performs all 16
+implemented deterministic non-writing replays in dependency order plus their
+focused contracts. It never reruns live/mutating evidence collection. Store
+build inspection remains a separately labelled current-state inspection,
+because its check mode does not replay the committed singleton bytes.
 
 ## Performance Checks
 

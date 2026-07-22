@@ -1,6 +1,9 @@
 #!/usr/bin/env node
+import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { execFileSync, spawnSync } from 'node:child_process';
 import {
+  copyFileSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -26,9 +29,30 @@ import {
   readCameraLifecycleContainedFile,
   validateCameraLifecycleEvidence,
 } from './camera-lifecycle-evidence-contract.mjs';
+import {
+  buildGovernedEvidenceLedger,
+  captureGovernedPublicationPolicy,
+  governedEvidenceLedgerPath,
+  governedEvidenceRoleForPath,
+  GOVERNED_DOWNSTREAM_GENERATED_PATHS,
+  renderGovernedEvidenceLedger,
+} from '../launch/governed-evidence-chain.mjs';
+import {
+  publishGovernedFixtureTail,
+  seedGovernedPublicationSourceFixture,
+} from '../launch/governed-evidence-test-fixture.mjs';
 
 const root = mkdtempSync(join(tmpdir(), 'routinekind-camera-lifecycle-'));
+const repoRoot = resolve(import.meta.dirname, '../..');
 process.on('exit', () => rmSync(root, { recursive: true, force: true }));
+
+function git(cwd, args) {
+  return execFileSync('git', args, {
+    cwd,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
+}
 
 function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
@@ -50,7 +74,7 @@ for (const path of CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES) {
 }
 
 const evidenceRoot = 'docs/phase-5/evidence/camera-lifecycle/smoke';
-const sourceGitSha = '1'.repeat(40);
+let sourceGitSha = '1'.repeat(40);
 const easIosBuildId = '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5';
 const archiveSha256 = 'a'.repeat(64);
 const appBundleIdentifier = 'com.routinekind.staging';
@@ -404,10 +428,6 @@ const validEvidence = createValidFixture();
 function validate(evidence, overrides = {}) {
   return validateCameraLifecycleEvidence(evidence, {
     root,
-    currentGitSha: sourceGitSha,
-    sourceGitShaIsAncestor: true,
-    changedPathsSinceSource: [],
-    evidencePath: `${evidenceRoot}/evidence.json`,
     expectedBuildId: easIosBuildId,
     expectedBuildProfile: 'staging',
     now: fixtureNow,
@@ -517,11 +537,14 @@ const cases = [
     },
   },
   {
-    name: 'rejects source drift after the built candidate',
+    name: 'uses the centralized generated-tail allowlist including Phase 7 and readiness',
     run() {
-      return validate(clone(), {
-        changedPathsSinceSource: ['apps/mobile/src/app/shelf/scan.tsx'],
-      }).errors.some((error) => /Source drift after the built camera candidate/.test(error));
+      return (
+        GOVERNED_DOWNSTREAM_GENERATED_PATHS.includes(
+          'docs/phase-7/generated/core-loop-qa-packet.json',
+        ) &&
+        GOVERNED_DOWNSTREAM_GENERATED_PATHS.includes('docs/generated/readiness-status-audit.json')
+      );
     },
   },
   {
@@ -1008,6 +1031,99 @@ for (const testCase of cases) {
 if (failures > 0) {
   console.error(`\nCamera lifecycle evidence smoke failed on ${failures}/${cases.length} cases.`);
   process.exit(1);
+}
+
+const governanceRoot = mkdtempSync(join(tmpdir(), 'routinekind-camera-governance-'));
+try {
+  git(governanceRoot, ['init']);
+  git(governanceRoot, ['config', 'user.email', 'camera-governance@example.invalid']);
+  git(governanceRoot, ['config', 'user.name', 'Camera Governance Smoke']);
+  for (const path of CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES) {
+    const destination = resolve(governanceRoot, path);
+    mkdirSync(dirname(destination), { recursive: true });
+    copyFileSync(resolve(root, path), destination);
+  }
+  seedGovernedPublicationSourceFixture({ fixtureRoot: governanceRoot, sourceRoot: repoRoot });
+  git(governanceRoot, ['add', '-A']);
+  git(governanceRoot, ['commit', '-m', 'Camera build source S']);
+  sourceGitSha = git(governanceRoot, ['rev-parse', 'HEAD']).toLowerCase();
+
+  const governedEvidence = createValidFixture();
+  const governedEvidencePath = `${evidenceRoot}/evidence.json`;
+  for (const { path } of governedEvidence.artifacts) {
+    const destination = resolve(governanceRoot, path);
+    mkdirSync(dirname(destination), { recursive: true });
+    copyFileSync(resolve(root, path), destination);
+  }
+  mkdirSync(dirname(resolve(governanceRoot, governedEvidencePath)), { recursive: true });
+  writeFileSync(
+    resolve(governanceRoot, governedEvidencePath),
+    `${JSON.stringify(governedEvidence, null, 2)}\n`,
+  );
+  const releaseCandidateDir = 'docs/phase-9/release-candidates/rc-camera-smoke';
+  const releaseCandidatePath = `${releaseCandidateDir}/manifest.md`;
+  mkdirSync(dirname(resolve(governanceRoot, releaseCandidatePath)), { recursive: true });
+  writeFileSync(
+    resolve(governanceRoot, releaseCandidatePath),
+    `Camera lifecycle release candidate bound to ${sourceGitSha}\n`,
+  );
+  const directEvidencePaths = [
+    releaseCandidatePath,
+    governedEvidencePath,
+    ...governedEvidence.artifacts.map(({ path }) => path),
+  ];
+  const ledger = buildGovernedEvidenceLedger({
+    sourceGitSha,
+    releaseCandidateDir,
+    publicationPolicy: captureGovernedPublicationPolicy(governanceRoot, sourceGitSha),
+    entries: directEvidencePaths.map((path) => ({
+      role: governedEvidenceRoleForPath(path, releaseCandidateDir),
+      path,
+      sha256: sha256(readFileSync(resolve(governanceRoot, path))),
+    })),
+  });
+  const ledgerPath = governedEvidenceLedgerPath(releaseCandidateDir);
+  writeFileSync(resolve(governanceRoot, ledgerPath), renderGovernedEvidenceLedger(ledger));
+  git(governanceRoot, ['add', evidenceRoot, releaseCandidateDir]);
+  git(governanceRoot, ['commit', '-m', 'Camera evidence E']);
+
+  const checker = resolve(import.meta.dirname, 'check-camera-lifecycle-evidence.mjs');
+  const runChecker = () =>
+    spawnSync(process.execPath, [checker, '--strict'], {
+      cwd: governanceRoot,
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH: governedEvidencePath,
+        PHASE5_IOS_BUILD_ID: easIosBuildId,
+        PHASE5_IOS_BUILD_PROFILE: 'staging',
+        PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
+      },
+    });
+  const initial = runChecker();
+  assert.equal(initial.status, 0, `${initial.stdout}\n${initial.stderr}`);
+  assert.match(initial.stdout, /Governed evidence chain: pass/);
+
+  publishGovernedFixtureTail({ fixtureRoot: governanceRoot });
+  const allowedTail = runChecker();
+  assert.equal(allowedTail.status, 0, `${allowedTail.stdout}\n${allowedTail.stderr}`);
+
+  const rawEvidence = readFileSync(resolve(governanceRoot, governedEvidencePath));
+  writeFileSync(
+    resolve(governanceRoot, governedEvidencePath),
+    Buffer.concat([rawEvidence, Buffer.from('\n')]),
+  );
+  git(governanceRoot, ['add', governedEvidencePath]);
+  git(governanceRoot, ['commit', '-m', 'Mutate camera evidence after E']);
+  const mutated = runChecker();
+  assert.equal(mutated.status, 1);
+  assert.match(
+    `${mutated.stdout}\n${mutated.stderr}`,
+    /changed after the evidence commit|non-allowlisted downstream path/,
+  );
+  console.log('PASS governed camera S-to-E chain, final generated tail, and raw-evidence lock');
+} finally {
+  rmSync(governanceRoot, { recursive: true, force: true });
 }
 
 console.log(`\nCamera lifecycle evidence smoke passed ${cases.length}/${cases.length} cases.`);

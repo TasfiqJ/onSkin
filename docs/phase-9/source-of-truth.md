@@ -19,13 +19,64 @@ but it does not sign off a later release candidate. Android release evidence is
 not applicable under the current iOS-only launch contract.
 
 The RC manifest `Build-source Git SHA` is the revision uploaded to EAS, not the
-later evidence commit. The clean checkout must be exactly one non-merge
-evidence commit whose direct parent is that source revision, and every changed
-path in the evidence commit must be confined to the selected RC folder. Every
-RC metadata file must be a normal tracked file matching HEAD. This permits
-hash/signoff evidence to be recorded after a build without allowing later code,
-dependency, config, policy, verifier, ignored-file, or RC mutation to inherit
-that binary's evidence.
+later evidence or generated-packet commit. The governed history has four
+explicit states:
+
+1. `S` is the immutable application/configuration/dependency/policy revision
+   used to build the binary.
+2. `E` is one non-merge evidence commit whose sole parent is `S`. The selected
+   RC `evidence-chain.json` binds `S` and every other `S..E` changed path by an
+   exact role, canonical repository path, and SHA-256. The ledger excludes
+   itself, and the `S..E` diff must equal the ledger plus its entries exactly.
+3. At least one strictly linear generated-packet commit must follow `E`; the
+   last pre-readiness commit is `R`. Every `E..R` commit may change only exact
+   governed generated-output paths. It cannot change direct evidence or any
+   source, dependency, configuration, script, or policy path.
+4. The readiness commit `F` is the sole direct child of `R`, is last, and
+   changes only the two readiness outputs; no later commit may inherit its
+   conclusion. A collapsed `S -> E -> F` chain is invalid.
+
+Generated packets are published in dependency order, one exact pair per
+single-parent commit: `E -> human manifest -> Phase 5 -> Phase 7 -> Phase 9
+prerequisites -> Phase 9/remaining packets -> R -> readiness F`. Phase 5 must
+consume the already committed human manifest, Phase 7 must consume the already
+committed Phase 5 packet, and Phase 9 must consume the already committed Phase
+5, Phase 7, and beta-coverage packets. Each packet's non-writing check proves
+that its JSON/Markdown pair is the complete diff of the direct child of the
+recorded pre-publication prefix, that replay inputs match that prefix, and that
+neither output was edited later.
+
+The Phase 4 beta prerequisite additionally binds the exact ignored mounted
+aggregate input bytes and an exact six-key, all-true evidence inventory. Run
+`npm run phase4:beta-coverage-report:check` after committing that pair and
+before generating Phase 9. After readiness `F` is committed, run
+`npm run release:governed-packets:check`; it executes all 16 implemented
+deterministic non-writing replays in dependency order plus their focused
+contracts. Units without a reviewed replay remain structurally verified only.
+The aggregate never reruns live/mutating evidence collection, and the store
+inspector remains a separately labelled current-state non-replay check. This is
+a post-publication RC verifier and is intentionally separate from pre-`S`
+source-health workflows that write new packets.
+
+The central contract lives in
+`scripts/launch/governed-evidence-chain.mjs`. The ledger is built from the exact
+staged index with `scripts/phase9/build-evidence-chain-ledger.mjs`; it is not
+assembled by trusting working-tree directory enumeration. The builder requires
+`HEAD == S`, a normal collision-free index, stable single-link working files
+matching their staged `100644` blobs, no unstaged tracked changes, and no
+nonignored untracked file other than the ledger output. It writes the ledger
+atomically and aborts on root, path, index, blob, worktree, or output drift.
+
+The chain verifier ignores inherited Git repository/configuration and replace
+selection, pins the real repository root and `HEAD`, rejects merges and
+nonlinear ancestry, proves the exact `S..E` ledger equality, reads bounded Git
+blobs, verifies every ledger digest and mode at `E` and `HEAD`, permits only the
+central exact generated allowlist afterward, and rechecks a clean worktree and
+normal complete index. Every required RC metadata file must also be an exact
+`release-candidate` ledger entry and a stable tracked file matching `HEAD`.
+This permits evidence and deterministic packets to be recorded after a build
+without allowing a later build input or raw-evidence mutation to inherit that
+binary's evidence.
 
 The RC's tracked `signoff.md` Security/privacy owner/date must match the archive
 JSON privacy review, and its Release manager owner/date must match the JSON
@@ -128,11 +179,11 @@ substitute for the evidence.
 
 ## RLS Evidence Contract
 
-The migration-derived public-schema inventory is 80 tables: 28 owner-client private tables, eight directly service-only private tables, 22 sealed service-private lifecycle/authority tables, four sealed global clinical/editorial tables, four sealed catalog-authority tables, and 14 authenticated catalog/editorial tables. Migration `0054` adds seven force-RLS, sealed health-consent lifecycle/copy tables; migration `0055` adds three force-RLS, sealed Apple lifecycle/capture/event tables; migration `0057` moves `catalog_import_batches` and `catalog_quality_reports` from direct service access behind the exact catalog-import RPC lifecycle and seals `catalog_sources` because its legal approval and reviewer fields are release authority rather than client catalog data. Migration `0058` removes the active-only read policies and every API-role SELECT grant from `conflict_rules`, `sequencing_rules`, `creator_stacks`, and `creator_stack_items` until a separate evidence-bound B-DERM publication authority exists. It also removes direct API-role reads from the legacy/dictionary authorities `ingredient_tags`, `ingredient_pao_defaults`, `product_categories`, and `ingredient_tag_definitions`; bounded serving functions consume the reviewed projections instead. Migration `0058` additionally creates seven `private`-schema sealed CAT-03 campaign/record/product-mutation/product-event/product-head/global-release-event/global-release-head authorities; they are outside the 80-public-table count and must deny every direct API-role path. Migration `0059` purges the legacy account-linked barcode history, removes all `shelf_scans` policies and API-role privileges, and force-RLS seals that relation. It also purges and seals `obf_contribution_queue`, revokes all runtime table/enqueue authority while retaining the empty relation for account-erasure compatibility, and purges/check-constrains every raw identity field in `catalog_lookup_events`; only its owner-linked lookup type, bounded result, and timestamps remain. Migration `0060` deletes every legacy `ingredient_pao_defaults` row, removes its read policy, force-RLS seals and revokes the relation, and validates an always-false check so it cannot be repopulated; reviewed `product_categories` plus an exact reviewed linked product are the sole category-estimate authority. Every public table must be classified exactly once and have RLS enabled. The current matrix source registers all 66 public-schema tables classified private exactly once: the 36 directly queryable tables receive row-positive owner/cross-user, real signed-anonymous, and publishable-key-with-no-session probes, while all 30 sealed public-schema tables deny direct access to every API role, including `service_role`. The regenerated hosted matrix must prove that 66-table posture and add the seven `private`-schema authorities as a separate exact ACL/denial lane. These identities and denial lanes are not interchangeable.
+The migration-derived public-schema inventory is 80 tables: 28 owner-client private tables, eight directly service-only private tables, 22 sealed service-private lifecycle/authority tables, four sealed global clinical/editorial tables, four sealed catalog-authority tables, and 14 authenticated catalog/editorial tables. Migration `0054` adds seven force-RLS, sealed health-consent lifecycle/copy tables; migration `0055` adds three force-RLS, sealed Apple lifecycle/capture/event tables; migration `0057` moves `catalog_import_batches` and `catalog_quality_reports` from direct service access behind the exact catalog-import RPC lifecycle and seals `catalog_sources` because its legal approval and reviewer fields are release authority rather than client catalog data. Migration `0058` removes the active-only read policies and every API-role SELECT grant from `conflict_rules`, `sequencing_rules`, `creator_stacks`, and `creator_stack_items` until a separate evidence-bound B-DERM publication authority exists. It also removes direct API-role reads from the legacy/dictionary authorities `ingredient_tags`, `ingredient_pao_defaults`, `product_categories`, and `ingredient_tag_definitions`; bounded serving functions consume reviewed projections instead. Migration `0058` additionally creates seven `private`-schema sealed CAT-03 campaign/record/product-mutation/product-event/product-head/global-release-event/global-release-head authorities; they are outside the 80-public-table count and must deny every direct API-role path. Migration `0059` purges the legacy account-linked barcode history, removes all `shelf_scans` policies and API-role privileges, and force-RLS seals that relation. It also purges and seals `obf_contribution_queue`, revokes all runtime table/enqueue authority while retaining the empty relation for account-erasure compatibility, and purges/check-constrains every raw identity field in `catalog_lookup_events`; only its owner-linked lookup type, bounded result, and timestamps remain. Migration `0060` deletes every legacy `ingredient_pao_defaults` row, removes its read policy, force-RLS seals and revokes the relation, and validates an always-false check so it cannot be repopulated. `product_categories` remains sealed editorial/future-candidate metadata and is not a serving estimate. Migration `0061` limits authenticated PAO reads to bounded, reviewed `label`, `brand_label`, or `catalog` evidence tied to the exact parent product source; `category_default` and `unknown` remain excluded. Migration `0062` adds covered CAT-03 authority indexes and a bounded statement-level count/root-set guard while retaining the per-row checks. Every public table must be classified exactly once and have RLS enabled. The current matrix source registers all 66 public-schema tables classified private exactly once: the 36 directly queryable tables receive row-positive owner/cross-user, real signed-anonymous, and publishable-key-with-no-session probes, while all 30 sealed public-schema tables deny direct access to every API role, including `service_role`. The regenerated hosted matrix must prove that 66-table posture and add the seven `private`-schema authorities as a separate exact ACL/denial lane. These identities and denial lanes are not interchangeable.
 
 Negative database assertions accept only the exact expected PostgreSQL/PostgREST code, or exact empty rows for operations whose RLS semantics permit that result. Negative Storage assertions accept only typed authorization outcomes, with operation-specific not-found or empty-result allowances plus state-preserving owner/admin reads. Network failures, invalid requests or JWTs, missing buckets, and server failures must fail the harness. Cleanup must verify that synthetic database rows, Auth users, and Storage objects are gone.
 
-The credential-free behavioral smoke and static contract prove the harness/source shape only. DB-09 and DB-10 remain live-blocked until all migrations through `20260718000059_catalog_scan_minimization.sql` pass a reviewed hosted reset and the 80-public-table/66-public-schema-private classification plus seven-`private`-schema-authority matrices produce redacted, clean-revision staging and production evidence. Evidence flags cannot substitute for those runs.
+The credential-free behavioral smoke and static contract prove the harness/source shape only. DB-09 and DB-10 remain live-blocked until the complete 61-migration chain through `20260722000062_catalog_curation_statement_guard.sql` passes a reviewed hosted reset and the 80-public-table/66-public-schema-private classification plus seven-`private`-schema-authority matrices produce redacted, clean-revision staging and production evidence. Evidence flags cannot substitute for those runs.
 
 ## Current Non-Code Blockers
 

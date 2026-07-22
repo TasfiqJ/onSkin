@@ -109,6 +109,14 @@ const requiredSourceHashes = [
   'supabase/functions/catalog-report/privacy.ts',
   'supabase/functions/catalog-report/privacy.test.ts',
   'supabase/functions/deno.lock',
+  'supabase/migrations/20260718000059_catalog_scan_minimization.sql',
+  'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
+  'supabase/tests/database/catalog_serving_gate.test.sql',
+  'supabase/tests/database/cat07_truthful_freshness.test.sql',
 ];
 
 function runReport({ input = validInput, strict = false, missingInput = false } = {}) {
@@ -148,8 +156,9 @@ const cases = [
         result.status === 0 &&
         result.packet.status === 'blocked' &&
         result.packet.localBetaCoverageClear === false &&
-        result.packet.evidenceBlockers.some((item) =>
-          item.includes('informational only and can never authorize CAT-03'),
+        result.packet.evidenceBlockers.some((item) => item.includes('Governed evidence chain')) &&
+        result.packet.authorityLimitations.some((item) =>
+          item.includes('cannot authorize CAT-03'),
         ) &&
         result.packet.metrics.completedUsers === 60 &&
         result.packet.metrics.usersAddedThreePlusRate === 1 &&

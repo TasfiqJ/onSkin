@@ -339,6 +339,7 @@ fail(
   /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
     /growth-store-qa-packet\.json/.test(qaPacketBuilder) &&
     /growth-store-qa-packet\.md/.test(qaPacketBuilder) &&
+    /gitStatusExcludingPaths\(packetOutputPaths\)/.test(qaPacketBuilder) &&
     /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
   'Phase 8 growth/store QA packet must ignore only its own generated outputs when recording Git status.',
 );

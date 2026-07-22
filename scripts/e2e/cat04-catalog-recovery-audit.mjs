@@ -1201,7 +1201,7 @@ export function enabledControlExpression(label) {
   })()`;
 }
 
-function auditExpression() {
+export function auditExpression() {
   return `(() => {
     const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
     const doc = document.documentElement;
@@ -1284,7 +1284,7 @@ function auditExpression() {
   })()`;
 }
 
-function assertSnapshotClean(snapshot, label) {
+export function assertSnapshotClean(snapshot, label) {
   assert(snapshot.viewport.width > 0 && snapshot.viewport.height > 0, `${label} has no viewport.`);
   assert(snapshot.overflowX <= 1, `${label} has ${snapshot.overflowX}px horizontal overflow.`);
   assert(snapshot.issues.length === 0, `${label} has ${snapshot.issues.length} control issue(s).`);

@@ -1,20 +1,27 @@
 #!/usr/bin/env node
-import { createHash } from 'node:crypto';
-import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { isAbsolute, join, posix, relative, resolve } from 'node:path';
+import { isAbsolute, posix, resolve } from 'node:path';
+import { evidenceFlagEnabled, normalizeNamedSignoff, placeholderEnvValue } from '../phase9/lib.mjs';
 import {
-  command,
-  evidenceFlagEnabled,
-  gitStatusExcludingGeneratedEvidence,
-  normalizeNamedSignoff,
-  placeholderEnvValue,
-} from '../phase9/lib.mjs';
+  atomicWriteReleaseQaOutputs,
+  canonicalReleaseRepoPath,
+  captureReleaseQaSnapshot,
+  hashStableRootBoundWorkingFile,
+  readStableRootBoundWorkingFile,
+  runTrustedGit,
+  verifyReleaseQaSnapshot,
+} from '../phase9/release-qa-integrity.mjs';
+import {
+  auditGovernedEvidenceChain,
+  captureGovernedEvidenceWorkingBindings,
+  GOVERNED_EVIDENCE_LEDGER_MAX_BYTES,
+  validateGovernedGeneratedPublication,
+  verifyGovernedEvidenceWorkingBindings,
+} from '../launch/governed-evidence-chain.mjs';
 import {
   isReleasePlatformRequired,
   launchContractSnapshot,
-  loadLaunchContract,
   platformRequirementStatus,
+  validateLaunchContract,
 } from '../launch/contract.mjs';
 import {
   validateWidgetLifecycleEvidence,
@@ -36,17 +43,50 @@ import {
   readCameraLifecycleContainedFile,
   validateCameraLifecycleEvidence,
 } from './camera-lifecycle-evidence-contract.mjs';
+import {
+  normalizePerformanceEvidencePath,
+  validatePerformanceEvidence,
+} from './performance-evidence-contract.mjs';
+import {
+  PHASE5_DEVICE_QA_PACKET_SCHEMA_VERSION,
+  PHASE5_REQUIRED_QA_EVIDENCE,
+} from './device-qa-packet-contract.mjs';
+import {
+  CAT07_COMMITTED_SUMMARY_PATH,
+  validateCat07CommittedEvidence,
+  validateCat07FullEvidenceContract,
+} from '../e2e/cat07-committed-evidence.mjs';
 
 const strict = process.argv.includes('--strict');
+const checkMode = process.argv.includes('--check');
 const root = process.cwd();
-const launchContract = loadLaunchContract(root);
-const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
-const packetOutDir = process.env.PHASE5_QA_PACKET_OUT_DIR ?? 'docs/phase-5/generated';
-const outDir = resolve(root, packetOutDir);
+const defaultPacketOutDir = 'docs/phase-5/generated';
+const requestedPacketOutDir = process.env.PHASE5_QA_PACKET_OUT_DIR;
+const testFixtureOutput = process.argv.includes('--test-fixture-output');
+let packetOutDir = defaultPacketOutDir;
+if (requestedPacketOutDir !== undefined) {
+  if (
+    !testFixtureOutput ||
+    process.env.NODE_ENV !== 'test' ||
+    !/^\.tmp\/phase5-packet-fixtures\/[a-z0-9][a-z0-9-]{0,95}$/u.test(requestedPacketOutDir)
+  ) {
+    console.error(
+      'FAIL PHASE5_QA_PACKET_OUT_DIR is reserved for an explicit repo-local Phase 5 test fixture.',
+    );
+    process.exit(1);
+  }
+  packetOutDir = requestedPacketOutDir;
+} else if (testFixtureOutput) {
+  console.error('FAIL --test-fixture-output requires one governed PHASE5_QA_PACKET_OUT_DIR.');
+  process.exit(1);
+}
 const packetOutputPaths = [
   `${packetOutDir}/device-qa-packet.json`,
   `${packetOutDir}/device-qa-packet.md`,
 ].map((path) => path.replace(/\\/g, '/'));
+const cat07ShelfFreshnessSummaryPath = CAT07_COMMITTED_SUMMARY_PATH;
+let launchContract;
+let androidReleaseRequired;
 
 const requiredFiles = Array.from(
   new Set([
@@ -155,6 +195,13 @@ const requiredFiles = Array.from(
     'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
     'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
     'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
+    'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+    'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+    'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+    'supabase/tests/database/catalog_import_lifecycle.test.sql',
+    'supabase/tests/database/catalog_launch_curation.test.sql',
+    'supabase/tests/database/catalog_serving_gate.test.sql',
+    'supabase/tests/database/cat07_truthful_freshness.test.sql',
     'apps/mobile/src/features/notifications/deliver.ts',
     'apps/mobile/src/lib/iap/revenuecat.ts',
     'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
@@ -191,6 +238,9 @@ const requiredFiles = Array.from(
     'apps/mobile/src/lib/applock/AppLockProvider.tsx',
     'apps/mobile/src/lib/applock/authenticate.ts',
     'scripts/phase5/build-device-qa-packet.mjs',
+    'scripts/phase5/device-qa-packet-contract.mjs',
+    'scripts/launch/governed-evidence-chain.mjs',
+    'scripts/phase9/release-qa-integrity.mjs',
     'scripts/phase5/check-native-config.mjs',
     'scripts/phase5/ios-extension-contract.mjs',
     'scripts/phase5/ios-extension-contract.test.mjs',
@@ -204,7 +254,16 @@ const requiredFiles = Array.from(
     'scripts/phase5/performance-evidence-contract.mjs',
     'scripts/phase5/performance-evidence-smoke.mjs',
     'scripts/e2e/human-e2e-manifest.mjs',
+    'scripts/e2e/evidence-diagnostic-hygiene.mjs',
+    'scripts/e2e/cat07-png-contract.mjs',
+    'scripts/e2e/cat07-committed-evidence.mjs',
+    'scripts/e2e/cat07-shelf-freshness-audit.mjs',
+    'scripts/e2e/cat07-shelf-freshness-audit.test.mjs',
+    'scripts/phase2/local-supabase-contract.mjs',
     'scripts/phase2/supabase-rls-smoke.mjs',
+    'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
+    'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+    'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
     'scripts/phase9/lib.mjs',
     'scripts/phase9/live-supabase-adversarial.mjs',
     'scripts/phase9/rls-adversarial-smoke.mjs',
@@ -213,9 +272,11 @@ const requiredFiles = Array.from(
     'docs/HUMAN_SIMULATED_E2E_TESTING.md',
     'docs/E2E_TESTING_CHECKLIST.md',
     'docs/USER_FLOW_TREE.md',
+    'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
     'docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md',
     'docs/e2e/generated/human-e2e-manifest.json',
     'docs/e2e/generated/human-e2e-manifest.md',
+    cat07ShelfFreshnessSummaryPath,
     'docs/phase-5/native-build-runbook.md',
     'docs/phase-5/widget-lifecycle-evidence.template.json',
     'docs/phase-5/device-qa-checklist.md',
@@ -287,55 +348,14 @@ const scenarios = [
   ],
 ];
 
-const requiredQaEvidenceFlags = [
-  ['PHASE5_DEVICE_QA_PASS', 'overall native-device QA matrix'],
-  ['PHASE5_INSTALL_QA_PASS', 'fresh install, update, reinstall, and dev/staging variants'],
-  ['PHASE5_BARCODE_QA_PASS', 'physical-device barcode scan and checksum matrix'],
-  ['PHASE5_LABEL_CAPTURE_QA_PASS', 'real label capture, editable text, and manual fallback'],
-  ['PHASE5_PROGRESS_PHOTO_QA_PASS', 'progress still capture, retake, review, and recovery'],
-  [
-    'PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS',
-    'encrypted photo save, restart, key-missing recovery, and delete',
-  ],
-  ['PHASE5_NOTIFICATION_QA_PASS', 'iOS reminder delivery and permission behavior'],
-  ['PHASE5_SHARE_SHEET_QA_PASS', 'native share sheet success, cancel, and unavailable states'],
-  [
-    'PHASE5_REVENUECAT_NATIVE_QA_PASS',
-    'RevenueCat native configure, offering, purchase, and restore smoke',
-  ],
-  ['PHASE5_SENTRY_NATIVE_QA_PASS', 'Sentry native crash/source-map smoke'],
-  [
-    'PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS',
-    'native Supabase catalog lookup and no-match/error fallback',
-  ],
-  ['PHASE5_ACCESSIBILITY_QA_PASS', 'VoiceOver labels, traversal, and 44 pt controls'],
-  [
-    'PHASE5_WIDGET_ARCHIVE_QA_PASS',
-    'signed archive extension, App Group entitlement, target privacy manifest, and capability inspection',
-  ],
-  [
-    'PHASE5_WIDGET_DEVICE_QA_PASS',
-    'physical-iPhone widget families, cold-start deep links, process death, and accessibility',
-  ],
-  [
-    'PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS',
-    'atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup',
-  ],
-  [
-    'PHASE5_LIVE_ACTIVITY_QA_PASS',
-    'physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior',
-  ],
-];
-
-function hashFile(path) {
-  const abs = resolve(root, path);
-  if (!existsSync(abs)) return { path, exists: false };
-  const bytes = readFileSync(abs);
+function hashFileFromSnapshot(path, snapshot) {
+  const record = snapshot.records[path];
+  if (record?.workingKind !== 'file' || !record.workingBytes) return { path, exists: false };
   return {
     path,
     exists: true,
-    bytes: bytes.length,
-    sha256: createHash('sha256').update(bytes).digest('hex'),
+    bytes: record.workingBytes.length,
+    sha256: record.workingSha256,
   };
 }
 
@@ -377,39 +397,159 @@ function normalizedWidgetEvidencePath(value) {
     : null;
 }
 
-function readJson(path) {
-  return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
-}
-
-function evidenceSourceLineage(sourceGitSha, currentGitSha) {
-  if (
-    !/^[0-9a-f]{40}$/i.test(String(sourceGitSha ?? '')) ||
-    !/^[0-9a-f]{40}$/i.test(String(currentGitSha ?? ''))
-  ) {
-    return { isAncestor: false, changedPaths: null };
-  }
-  const ancestor = spawnSync('git', ['merge-base', '--is-ancestor', sourceGitSha, currentGitSha], {
-    cwd: root,
-    encoding: 'utf8',
-  });
-  if (ancestor.status !== 0) return { isAncestor: false, changedPaths: null };
-  const diff = spawnSync(
-    'git',
-    ['-c', 'core.quotepath=false', 'diff', '--name-only', `${sourceGitSha}..${currentGitSha}`],
-    { cwd: root, encoding: 'utf8' },
-  );
-  if (diff.status !== 0) return { isAncestor: true, changedPaths: null };
+function readJsonRecord(path, maxBytes = 2 * 1024 * 1024) {
+  const normalized = canonicalReleaseRepoPath(root, path);
+  const record = readStableRootBoundWorkingFile(root, normalized, { maxBytes });
+  if (record.kind !== 'file' || !record.bytes) return null;
   return {
-    isAncestor: true,
-    changedPaths: String(diff.stdout ?? '')
-      .split(/\r?\n/)
-      .map((path) => path.trim().replaceAll('\\', '/'))
-      .filter(Boolean),
+    bytes: record.bytes.length,
+    path: normalized,
+    sha256: record.sha256,
+    value: JSON.parse(record.bytes.toString('utf8')),
   };
 }
 
-function gitStatusExcludingGeneratedPacket(validatedEvidencePaths = []) {
-  return gitStatusExcludingGeneratedEvidence([...packetOutputPaths, ...validatedEvidencePaths]);
+const GOVERNED_PHASE5_ROLES = Object.freeze([
+  'phase5-widget-lifecycle',
+  'phase5-native-ocr',
+  'phase5-camera-lifecycle',
+  'phase5-performance',
+]);
+
+const GOVERNED_PHASE5_ROLE_LABELS = Object.freeze({
+  'phase5-widget-lifecycle': 'Widget lifecycle',
+  'phase5-native-ocr': 'Native OCR',
+  'phase5-camera-lifecycle': 'Camera lifecycle',
+  'phase5-performance': 'Performance',
+});
+
+const governedRoleEvidence = new Map(
+  GOVERNED_PHASE5_ROLES.map((role) => [
+    role,
+    { claimed: false, sourceGitSha: null, expectedEntries: [] },
+  ]),
+);
+
+function claimGovernedRole(role, claimed) {
+  governedRoleEvidence.get(role).claimed = claimed;
+}
+
+function bindGovernedRole(role, sourceGitSha, records) {
+  const state = governedRoleEvidence.get(role);
+  state.sourceGitSha = String(sourceGitSha ?? '').trim();
+  state.expectedEntries = records.map((record) => ({
+    path: canonicalReleaseRepoPath(root, record.path),
+    sha256: String(record.sha256 ?? ''),
+  }));
+}
+
+function governedRoleInventoryErrors(chain) {
+  if (chain.status !== 'pass' || !chain.ledger) {
+    return [`Governed evidence chain is invalid: ${chain.errors.join(' | ')}`];
+  }
+  const errors = [];
+  for (const role of GOVERNED_PHASE5_ROLES) {
+    const label = GOVERNED_PHASE5_ROLE_LABELS[role];
+    const expected = governedRoleEvidence.get(role).expectedEntries;
+    const expectedByIdentity = new Map();
+    for (const entry of expected) {
+      const identity = entry.path.normalize('NFC').toLowerCase();
+      if (expectedByIdentity.has(identity)) {
+        errors.push(`${label} evidence references duplicate governed paths.`);
+      } else {
+        expectedByIdentity.set(identity, entry);
+      }
+    }
+    const ledgerEntries = chain.ledger.entries.filter((entry) => entry.role === role);
+    const ledgerByIdentity = new Map(
+      ledgerEntries.map((entry) => [entry.path.normalize('NFC').toLowerCase(), entry]),
+    );
+    for (const expectedEntry of expected) {
+      const ledgerEntry = ledgerByIdentity.get(expectedEntry.path.normalize('NFC').toLowerCase());
+      if (!ledgerEntry || ledgerEntry.path !== expectedEntry.path) {
+        errors.push(
+          `${label} evidence path is not an exact ${role} ledger entry: ${expectedEntry.path}.`,
+        );
+      } else if (ledgerEntry.sha256 !== expectedEntry.sha256) {
+        errors.push(`${label} evidence ledger digest does not match ${expectedEntry.path}.`);
+      }
+    }
+    for (const ledgerEntry of ledgerEntries) {
+      const expectedEntry = expectedByIdentity.get(ledgerEntry.path.normalize('NFC').toLowerCase());
+      if (!expectedEntry || expectedEntry.path !== ledgerEntry.path) {
+        errors.push(
+          `${label} evidence ledger contains an unreferenced ${role} entry: ${ledgerEntry.path}.`,
+        );
+      }
+    }
+  }
+  return errors;
+}
+
+function captureEvidenceBindings(records) {
+  const byPortablePath = new Map();
+  let totalBytes = 0;
+  for (const candidate of records) {
+    const path = canonicalReleaseRepoPath(root, candidate.path);
+    const portablePath = path.toLowerCase();
+    const previous = byPortablePath.get(portablePath);
+    if (previous) {
+      if (
+        previous.path !== path ||
+        previous.bytes !== candidate.bytes ||
+        previous.sha256 !== candidate.sha256
+      ) {
+        throw new Error(`conflicting evidence binding for ${path}`);
+      }
+      continue;
+    }
+    if (!Number.isSafeInteger(candidate.bytes) || candidate.bytes < 0) {
+      throw new Error(`invalid evidence byte length for ${path}`);
+    }
+    if (candidate.bytes > 512 * 1024 * 1024) {
+      throw new Error(`evidence file exceeds the 512 MiB binding ceiling: ${path}`);
+    }
+    totalBytes += candidate.bytes;
+    if (!Number.isSafeInteger(totalBytes) || totalBytes > 2 * 1024 * 1024 * 1024) {
+      throw new Error('validated evidence exceeds the 2 GiB aggregate binding ceiling');
+    }
+    const observed = hashStableRootBoundWorkingFile(root, path, {
+      expectedSizeBytes: candidate.bytes,
+    });
+    if (
+      observed.kind !== 'file' ||
+      observed.sha256 !== candidate.sha256 ||
+      observed.sizeBytes !== candidate.bytes ||
+      typeof observed.identity !== 'string'
+    ) {
+      throw new Error(`validated evidence changed before it could be bound: ${path}`);
+    }
+    byPortablePath.set(portablePath, {
+      identity: observed.identity,
+      path,
+      sha256: observed.sha256,
+      sizeBytes: observed.sizeBytes,
+    });
+  }
+  return [...byPortablePath.values()].sort((left, right) => left.path.localeCompare(right.path));
+}
+
+function verifyEvidenceBindings(bindings) {
+  const errors = [];
+  for (const binding of bindings) {
+    const current = hashStableRootBoundWorkingFile(root, binding.path, {
+      expectedSizeBytes: binding.sizeBytes,
+    });
+    if (
+      current.kind !== 'file' ||
+      current.identity !== binding.identity ||
+      current.sha256 !== binding.sha256 ||
+      current.sizeBytes !== binding.sizeBytes
+    ) {
+      errors.push(`${binding.path} changed during Phase 5 packet assembly`);
+    }
+  }
+  return errors;
 }
 
 function looksLikePhysicalIosDevice(value) {
@@ -443,9 +583,55 @@ function looksLikePhysicalAndroidDevice(value) {
   return /\bAndroid(?:\s+OS)?\s+\d{1,2}(?:\.\d+){0,2}\b/i.test(trimmed);
 }
 
+const blockers = [];
+const warnings = [];
+let sourceSnapshot;
+try {
+  sourceSnapshot = captureReleaseQaSnapshot({
+    root,
+    inputPaths: checkMode ? [...requiredFiles, ...packetOutputPaths] : requiredFiles,
+    outputPaths: checkMode ? [] : packetOutputPaths,
+    maxAggregateInputBytes: 512 * 1024 * 1024,
+    maxInputBytes: 64 * 1024 * 1024,
+  });
+} catch (error) {
+  console.error(
+    `FAIL Phase 5 source snapshot could not be captured safely: ${
+      error instanceof Error ? error.message : String(error)
+    }`,
+  );
+  process.exit(1);
+}
+const gitSha = sourceSnapshot.headSha;
+const files = requiredFiles.map((path) => hashFileFromSnapshot(path, sourceSnapshot));
+for (const issue of sourceSnapshot.integrityIssues) {
+  blockers.push(`Phase 5 source snapshot: ${issue}.`);
+}
+try {
+  const launchContractRecord = sourceSnapshot.records['docs/hugeToDo/launch-contract.json'];
+  if (launchContractRecord?.workingKind !== 'file' || !launchContractRecord.workingBytes) {
+    throw new Error('launch contract is not one snapshotted regular file');
+  }
+  launchContract = Object.freeze(JSON.parse(launchContractRecord.workingBytes.toString('utf8')));
+  const launchContractErrors = validateLaunchContract(launchContract);
+  if (launchContractErrors.length > 0) {
+    throw new Error(launchContractErrors.join('; '));
+  }
+  androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
+} catch (error) {
+  console.error(
+    `FAIL Phase 5 launch contract could not be loaded from the pinned source snapshot: ${
+      error instanceof Error ? error.message : String(error)
+    }`,
+  );
+  process.exit(1);
+}
+
 const rawSignedOffBy = envValue('PHASE5_SIGNED_OFF_BY');
 const normalizedSignedOffBy = normalizeNamedSignoff(rawSignedOffBy) ?? '';
-const eas = readJson('apps/mobile/eas.json');
+const eas = JSON.parse(
+  sourceSnapshot.records['apps/mobile/eas.json'].workingBytes.toString('utf8'),
+);
 const iosBuildProfile = envValue('PHASE5_IOS_BUILD_PROFILE');
 const nativeOcrEnabledInAnyBuild = Object.values(eas.build ?? {}).some((profile) =>
   evidenceFlagEnabled(profile?.env?.EXPO_PUBLIC_NATIVE_OCR_ENABLED),
@@ -476,23 +662,31 @@ const buildEvidence = {
 };
 
 const qaEvidence = Object.fromEntries(
-  requiredQaEvidenceFlags.map(([key, label]) => [
+  PHASE5_REQUIRED_QA_EVIDENCE.map(([key, label]) => [
     key,
     { label, required: true, passed: evidenceFlagEnabled(process.env[key]) },
   ]),
 );
 
-const files = requiredFiles.map(hashFile);
-const blockers = [];
-const warnings = [];
-let gitSha = 'unknown';
-let gitStatus = 'unknown';
-try {
-  gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-} catch {
-  warnings.push('Git SHA could not be captured.');
+let gitStatus = sourceSnapshot.gitStatus;
+const observedEvidenceRecords = [];
+function observeEvidenceRecord(record) {
+  if (
+    record &&
+    typeof record.path === 'string' &&
+    Number.isSafeInteger(record.bytes) &&
+    record.bytes >= 0 &&
+    /^[0-9a-f]{64}$/u.test(String(record.sha256 ?? ''))
+  ) {
+    observedEvidenceRecords.push({
+      bytes: record.bytes,
+      path: canonicalReleaseRepoPath(root, record.path),
+      sha256: record.sha256,
+    });
+  }
 }
 const rawWidgetLifecycleEvidencePath = envValue('PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH');
+claimGovernedRole('phase5-widget-lifecycle', Boolean(rawWidgetLifecycleEvidencePath));
 const normalizedWidgetLifecycleEvidencePath = normalizedWidgetEvidencePath(
   rawWidgetLifecycleEvidencePath,
 );
@@ -511,7 +705,6 @@ let widgetLifecycleEvidence = {
   },
   binding: null,
 };
-let validatedWidgetEvidencePaths = [];
 if (!rawWidgetLifecycleEvidencePath) {
   blockers.push(
     'Missing PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH; widget booleans do not substitute for artifact-bound archive/device/lifecycle evidence.',
@@ -521,17 +714,24 @@ if (!rawWidgetLifecycleEvidencePath) {
     `PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH must be a normalized repo-relative JSON path under ${WIDGET_LIFECYCLE_EVIDENCE_ROOT}.`,
   );
 } else {
-  const evidenceFile = hashFile(normalizedWidgetLifecycleEvidencePath);
-  if (!evidenceFile.exists) {
+  let evidenceFile = null;
+  let evidenceReadError = null;
+  try {
+    evidenceFile = readJsonRecord(normalizedWidgetLifecycleEvidencePath);
+  } catch (error) {
+    evidenceReadError = error;
+  }
+  if (!evidenceFile && !evidenceReadError) {
     blockers.push(
       `Widget lifecycle evidence file does not exist: ${normalizedWidgetLifecycleEvidencePath}.`,
     );
   } else {
     try {
-      const evidence = readJson(normalizedWidgetLifecycleEvidencePath);
+      if (evidenceReadError) throw evidenceReadError;
+      const evidence = evidenceFile.value;
+      observeEvidenceRecord(evidenceFile);
       const validation = validateWidgetLifecycleEvidence(evidence, {
         root,
-        expectedGitSha: gitSha,
         expectedBuildId: buildEvidence.iosBuildId,
         expectedSignedOffBy: rawSignedOffBy,
         expectedAppBundleIdentifier: envValue('APP_IOS_BUNDLE_IDENTIFIER'),
@@ -560,12 +760,11 @@ if (!rawWidgetLifecycleEvidencePath) {
           signedOffBy: evidence.signoff?.signedOffBy ?? null,
         },
       };
-      if (validation.errors.length === 0) {
-        validatedWidgetEvidencePaths = [
-          normalizedWidgetLifecycleEvidencePath,
-          ...validation.artifacts.map(({ path }) => path),
-        ];
-      }
+      for (const artifact of validation.artifacts) observeEvidenceRecord(artifact);
+      bindGovernedRole('phase5-widget-lifecycle', evidence.sourceGitSha, [
+        evidenceFile,
+        ...validation.artifacts,
+      ]);
     } catch (error) {
       blockers.push(
         `Widget lifecycle evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
@@ -574,6 +773,7 @@ if (!rawWidgetLifecycleEvidencePath) {
   }
 }
 const rawNativeOcrEvidencePath = envValue('PHASE5_NATIVE_OCR_EVIDENCE_PATH');
+claimGovernedRole('phase5-native-ocr', Boolean(rawNativeOcrEvidencePath));
 const normalizedNativeOcrEvidencePath = normalizeNativeOcrEvidencePath(rawNativeOcrEvidencePath);
 let nativeOcrEvidence = {
   required: nativeOcrEnabled,
@@ -591,7 +791,6 @@ let nativeOcrEvidence = {
   },
   binding: null,
 };
-let validatedNativeOcrEvidencePaths = [];
 if (!rawNativeOcrEvidencePath) {
   const message =
     'Missing PHASE5_NATIVE_OCR_EVIDENCE_PATH; a Boolean pass flag cannot substitute for exact-build physical-iPhone OCR evidence.';
@@ -602,19 +801,22 @@ if (!rawNativeOcrEvidencePath) {
     `PHASE5_NATIVE_OCR_EVIDENCE_PATH must be a normalized repo-relative JSON path under ${NATIVE_OCR_EVIDENCE_ROOT}.`,
   );
 } else {
-  const evidenceFile = hashFile(normalizedNativeOcrEvidencePath);
-  if (!evidenceFile.exists) {
+  let evidenceFile = null;
+  let evidenceReadError = null;
+  try {
+    evidenceFile = readJsonRecord(normalizedNativeOcrEvidencePath);
+  } catch (error) {
+    evidenceReadError = error;
+  }
+  if (!evidenceFile && !evidenceReadError) {
     blockers.push(`Native OCR evidence file does not exist: ${normalizedNativeOcrEvidencePath}.`);
   } else {
     try {
-      const evidence = readJson(normalizedNativeOcrEvidencePath);
-      const lineage = evidenceSourceLineage(evidence.sourceGitSha, gitSha);
+      if (evidenceReadError) throw evidenceReadError;
+      const evidence = evidenceFile.value;
+      observeEvidenceRecord(evidenceFile);
       const validation = validateNativeOcrEvidence(evidence, {
         root,
-        currentGitSha: gitSha,
-        sourceGitShaIsAncestor: lineage.isAncestor,
-        changedPathsSinceSource: lineage.changedPaths,
-        evidencePath: normalizedNativeOcrEvidencePath,
         expectedBuildId: buildEvidence.iosBuildId || null,
         expectedBuildProfile: buildEvidence.iosBuildProfile || null,
       });
@@ -638,12 +840,11 @@ if (!rawNativeOcrEvidencePath) {
           privacySignedOffBy: evidence.signoff?.privacySignedOffBy ?? null,
         },
       };
-      if (validation.errors.length === 0) {
-        validatedNativeOcrEvidencePaths = [
-          normalizedNativeOcrEvidencePath,
-          ...validation.artifacts.map(({ path }) => path),
-        ];
-      }
+      for (const artifact of validation.artifacts) observeEvidenceRecord(artifact);
+      bindGovernedRole('phase5-native-ocr', evidence.sourceGitSha, [
+        evidenceFile,
+        ...validation.artifacts,
+      ]);
     } catch (error) {
       blockers.push(
         `Native OCR evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
@@ -657,6 +858,7 @@ if (envValue('PHASE5_NATIVE_OCR_QA_PASS')) {
   );
 }
 const rawCameraLifecycleEvidencePath = envValue('PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH');
+claimGovernedRole('phase5-camera-lifecycle', Boolean(rawCameraLifecycleEvidencePath));
 const normalizedCameraLifecycleEvidencePath = normalizeCameraLifecycleEvidencePath(
   rawCameraLifecycleEvidencePath,
 );
@@ -677,7 +879,6 @@ let cameraLifecycleEvidence = {
   },
   binding: null,
 };
-let validatedCameraLifecycleEvidencePaths = [];
 if (!rawCameraLifecycleEvidencePath) {
   blockers.push(
     'Missing PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH; camera QA Booleans cannot substitute for exact-build, signed-archive, two-physical-iPhone lifecycle evidence.',
@@ -699,13 +900,13 @@ if (!rawCameraLifecycleEvidencePath) {
   } else {
     try {
       const evidence = JSON.parse(evidenceFile.bytes.toString('utf8'));
-      const lineage = evidenceSourceLineage(evidence.sourceGitSha, gitSha);
+      observeEvidenceRecord({
+        bytes: evidenceFile.bytes.length,
+        path: normalizedCameraLifecycleEvidencePath,
+        sha256: evidenceFile.sha256,
+      });
       const validation = validateCameraLifecycleEvidence(evidence, {
         root,
-        currentGitSha: gitSha,
-        sourceGitShaIsAncestor: lineage.isAncestor,
-        changedPathsSinceSource: lineage.changedPaths,
-        evidencePath: normalizedCameraLifecycleEvidencePath,
         expectedBuildId: buildEvidence.iosBuildId || null,
         expectedBuildProfile: buildEvidence.iosBuildProfile || null,
       });
@@ -736,12 +937,15 @@ if (!rawCameraLifecycleEvidencePath) {
           accessibilitySignedOffBy: evidence.signoff?.accessibilitySignedOffBy ?? null,
         },
       };
-      if (validation.errors.length === 0) {
-        validatedCameraLifecycleEvidencePaths = [
-          normalizedCameraLifecycleEvidencePath,
-          ...validation.artifacts.map(({ path }) => path),
-        ];
-      }
+      for (const artifact of validation.artifacts) observeEvidenceRecord(artifact);
+      bindGovernedRole('phase5-camera-lifecycle', evidence.sourceGitSha, [
+        {
+          bytes: evidenceFile.bytes.length,
+          path: normalizedCameraLifecycleEvidencePath,
+          sha256: evidenceFile.sha256,
+        },
+        ...validation.artifacts,
+      ]);
     } catch (error) {
       blockers.push(
         `Camera lifecycle evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
@@ -754,18 +958,240 @@ if (envValue('PHASE5_CAMERA_PERMISSION_QA_PASS')) {
     'PHASE5_CAMERA_PERMISSION_QA_PASS is ignored; only PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH can clear CAT-06 camera lifecycle QA.',
   );
 }
-try {
-  gitStatus = gitStatusExcludingGeneratedPacket([
-    ...validatedWidgetEvidencePaths,
-    ...validatedNativeOcrEvidencePaths,
-    ...validatedCameraLifecycleEvidencePaths,
-  ]);
-} catch {
-  warnings.push('Git status could not be captured.');
+const rawPerformanceEvidencePath = envValue('PHASE5_PERFORMANCE_EVIDENCE_PATH');
+claimGovernedRole('phase5-performance', Boolean(rawPerformanceEvidencePath));
+const normalizedPerformanceEvidencePath = normalizePerformanceEvidencePath(
+  rawPerformanceEvidencePath,
+);
+let performanceEvidence = {
+  required: true,
+  path: normalizedPerformanceEvidencePath,
+  status: 'blocked',
+  sha256: null,
+  summary: {
+    requiredMeasurements: 0,
+    found: 0,
+    metrics: 0,
+    platforms: 0,
+  },
+  binding: null,
+};
+if (!rawPerformanceEvidencePath) {
+  blockers.push(
+    'Missing PHASE5_PERFORMANCE_EVIDENCE_PATH; real supported-device performance evidence is not attached.',
+  );
+} else if (!normalizedPerformanceEvidencePath) {
+  blockers.push(
+    'PHASE5_PERFORMANCE_EVIDENCE_PATH must be a normalized repo-relative JSON path under docs/phase-5/evidence/performance/.',
+  );
+} else {
+  let evidenceFile = null;
+  let evidenceReadError = null;
+  try {
+    evidenceFile = readJsonRecord(normalizedPerformanceEvidencePath);
+  } catch (error) {
+    evidenceReadError = error;
+  }
+  if (!evidenceFile && !evidenceReadError) {
+    blockers.push(
+      `Performance evidence file does not exist: ${normalizedPerformanceEvidencePath}.`,
+    );
+  } else {
+    try {
+      if (evidenceReadError) throw evidenceReadError;
+      const evidence = evidenceFile.value;
+      observeEvidenceRecord(evidenceFile);
+      const validation = validatePerformanceEvidence(evidence, launchContract);
+      for (const error of validation.errors) blockers.push(`Performance evidence: ${error}`);
+      for (const warning of validation.warnings) warnings.push(`Performance evidence: ${warning}`);
+      performanceEvidence = {
+        required: true,
+        path: normalizedPerformanceEvidencePath,
+        status: validation.errors.length === 0 ? 'pass' : 'blocked',
+        sha256: evidenceFile.sha256,
+        summary: validation.summary,
+        binding: {
+          sourceGitSha: evidence.gitSha ?? null,
+          devices: evidence.devices ?? null,
+          thresholdsDefinedBy: evidence.thresholdsDefinedBy ?? null,
+          signedOffBy: evidence.signoff?.signedOffBy ?? null,
+          signedAt: evidence.signoff?.signedAt ?? null,
+        },
+      };
+      bindGovernedRole('phase5-performance', evidence.gitSha, [evidenceFile]);
+    } catch (error) {
+      blockers.push(
+        `Performance evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
+      );
+    }
+  }
 }
+
+const releaseCandidateDir = envValue('PHASE9_RELEASE_CANDIDATE_DIR');
+const claimedGovernedRoles = GOVERNED_PHASE5_ROLES.filter(
+  (role) => governedRoleEvidence.get(role).claimed,
+);
+const sourceGitShas = new Set();
+let sourceBindingsValid = true;
+for (const role of claimedGovernedRoles) {
+  const state = governedRoleEvidence.get(role);
+  if (!/^[0-9a-f]{40}$/u.test(state.sourceGitSha ?? '')) {
+    sourceBindingsValid = false;
+    blockers.push(
+      `${GOVERNED_PHASE5_ROLE_LABELS[role]} governed evidence must bind one lowercase 40-character source Git SHA.`,
+    );
+  } else {
+    sourceGitShas.add(state.sourceGitSha);
+  }
+}
+let coherentSourceGitSha = null;
+if (sourceBindingsValid && sourceGitShas.size === 1) {
+  coherentSourceGitSha = [...sourceGitShas][0];
+} else if (sourceBindingsValid && sourceGitShas.size > 1) {
+  blockers.push(
+    `Governed Phase 5 evidence must share one coherent source Git SHA (S); found ${[
+      ...sourceGitShas,
+    ].join(', ')}.`,
+  );
+}
+
+let governedEvidenceChain = {
+  schemaVersion: PHASE5_DEVICE_QA_PACKET_SCHEMA_VERSION,
+  kind: 'phase5_governed_evidence_chain_binding',
+  status: 'blocked',
+  sourceGitSha: coherentSourceGitSha,
+  evidenceCommitSha: null,
+  currentGitSha: gitSha,
+  releaseCandidateDir: null,
+  ledgerPath: null,
+  ledgerSha256: null,
+  ledgerEntryCount: 0,
+  directEvidenceCommit: false,
+  evidenceOnlyCommit: false,
+  cleanWorktree: false,
+  normalIndexState: false,
+  hashesValid: false,
+  downstreamGeneratedOnly: false,
+  downstreamCommitCount: 0,
+  roleInventories: Object.fromEntries(
+    GOVERNED_PHASE5_ROLES.map((role) => [
+      role,
+      {
+        claimed: governedRoleEvidence.get(role).claimed,
+        entries: governedRoleEvidence.get(role).expectedEntries,
+        ledgerEntryCount: 0,
+      },
+    ]),
+  ),
+  errors: [],
+};
+let governedEvidenceAudit = null;
+let governedWorkingBindings = null;
+
+if (claimedGovernedRoles.length > 0 && !releaseCandidateDir) {
+  blockers.push(
+    'PHASE9_RELEASE_CANDIDATE_DIR is required whenever Phase 5 evidence is claimed so the packet can validate one governed S-to-E evidence chain.',
+  );
+}
+if (claimedGovernedRoles.length > 0 && releaseCandidateDir && coherentSourceGitSha) {
+  let chain;
+  try {
+    chain = auditGovernedEvidenceChain({
+      root,
+      sourceGitSha: coherentSourceGitSha,
+      releaseCandidateDir,
+      expectedHeadSha: gitSha,
+    });
+  } catch (error) {
+    chain = {
+      status: 'invalid',
+      sourceGitSha: coherentSourceGitSha,
+      headGitSha: gitSha,
+      evidenceCommitSha: null,
+      releaseCandidateDir: null,
+      ledgerPath: null,
+      directEvidenceCommit: false,
+      evidenceOnlyCommit: false,
+      cleanWorktree: false,
+      normalIndexState: false,
+      hashesValid: false,
+      downstreamGeneratedOnly: false,
+      ledger: null,
+      downstreamCommits: [],
+      errors: [error instanceof Error ? error.message : String(error)],
+    };
+  }
+  governedEvidenceAudit = chain;
+
+  const governanceErrors = governedRoleInventoryErrors(chain);
+  let ledgerRecord = null;
+  if (chain.status === 'pass' && chain.ledgerPath) {
+    try {
+      const record = readStableRootBoundWorkingFile(root, chain.ledgerPath, {
+        maxBytes: GOVERNED_EVIDENCE_LEDGER_MAX_BYTES,
+      });
+      if (record.kind !== 'file' || !record.bytes || !record.sha256) {
+        throw new Error('governed evidence ledger is not a stable regular file');
+      }
+      ledgerRecord = {
+        bytes: record.bytes.length,
+        path: chain.ledgerPath,
+        sha256: record.sha256,
+      };
+      observeEvidenceRecord(ledgerRecord);
+    } catch (error) {
+      governanceErrors.push(
+        `Governed evidence ledger binding failed: ${error instanceof Error ? error.message : String(error)}.`,
+      );
+    }
+    try {
+      governedWorkingBindings = captureGovernedEvidenceWorkingBindings(chain, root);
+    } catch (error) {
+      governanceErrors.push(
+        `Governed evidence working-file binding failed: ${
+          error instanceof Error ? error.message : String(error)
+        }.`,
+      );
+    }
+  }
+  const roleInventories = Object.fromEntries(
+    GOVERNED_PHASE5_ROLES.map((role) => [
+      role,
+      {
+        claimed: governedRoleEvidence.get(role).claimed,
+        entries: governedRoleEvidence.get(role).expectedEntries,
+        ledgerEntryCount: chain.ledger?.entries.filter((entry) => entry.role === role).length ?? 0,
+      },
+    ]),
+  );
+  governedEvidenceChain = {
+    schemaVersion: PHASE5_DEVICE_QA_PACKET_SCHEMA_VERSION,
+    kind: 'phase5_governed_evidence_chain_binding',
+    status: governanceErrors.length === 0 ? 'pass' : 'blocked',
+    sourceGitSha: coherentSourceGitSha,
+    evidenceCommitSha: chain.evidenceCommitSha,
+    currentGitSha: chain.headGitSha ?? gitSha,
+    releaseCandidateDir: chain.releaseCandidateDir,
+    ledgerPath: chain.ledgerPath,
+    ledgerSha256: ledgerRecord?.sha256 ?? null,
+    ledgerEntryCount: chain.ledger?.entries.length ?? 0,
+    directEvidenceCommit: chain.directEvidenceCommit,
+    evidenceOnlyCommit: chain.evidenceOnlyCommit,
+    cleanWorktree: chain.cleanWorktree,
+    normalIndexState: chain.normalIndexState,
+    hashesValid: chain.hashesValid,
+    downstreamGeneratedOnly: chain.downstreamGeneratedOnly,
+    downstreamCommitCount: chain.downstreamCommits.length,
+    roleInventories,
+    errors: governanceErrors,
+  };
+  for (const error of governanceErrors) blockers.push(`Governed evidence chain: ${error}`);
+}
+
+gitStatus = sourceSnapshot.gitStatus;
 if (gitStatus.length > 0) {
   const dirtyMessage =
-    'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated widget/OCR/camera evidence; do not use it as final native-device evidence.';
+    'Phase 5 device QA packet requires a clean Git worktree for governed evidence validation; do not use it as final native-device evidence.';
   if (strict) blockers.push(dirtyMessage);
   else warnings.push(dirtyMessage);
 }
@@ -815,8 +1241,31 @@ for (const [key, evidence] of Object.entries(qaEvidence)) {
   }
 }
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
+let evidenceBindings;
+try {
+  evidenceBindings = captureEvidenceBindings(observedEvidenceRecords);
+} catch (error) {
+  console.error(
+    `FAIL Phase 5 evidence binding could not be captured safely: ${
+      error instanceof Error ? error.message : String(error)
+    }`,
+  );
+  process.exit(1);
+}
+const cat07CommittedEvidence = validateCat07CommittedEvidence(root, { expectedHeadSha: gitSha });
+for (const error of cat07CommittedEvidence.errors) {
+  blockers.push(`CAT07 committed evidence: ${error}.`);
+}
+const cat07FullEvidenceContract = validateCat07FullEvidenceContract(root, {
+  expectedHeadSha: gitSha,
+});
+for (const error of cat07FullEvidenceContract.errors) {
+  blockers.push(`CAT07 full evidence contract: ${error}.`);
+}
 
 const packet = {
+  schemaVersion: PHASE5_DEVICE_QA_PACKET_SCHEMA_VERSION,
+  kind: 'phase5_device_qa_packet',
   generatedAt: new Date().toISOString(),
   purpose: 'Phase 5 native device QA packet for contract-required release platforms.',
   launchContract: launchContractSnapshot(launchContract),
@@ -832,15 +1281,24 @@ const packet = {
     evidence: nativeOcrEvidence,
   },
   cameraLifecycleEvidence,
+  performanceEvidence,
+  governedEvidenceChain,
+  evidenceStatuses: {
+    widgetLifecycle: widgetLifecycleEvidence.status,
+    nativeOcr: nativeOcrEvidence.status,
+    cameraLifecycle: cameraLifecycleEvidence.status,
+    performance: performanceEvidence.status,
+    governedEvidenceChain: governedEvidenceChain.status,
+  },
+  cat07CommittedEvidence,
+  cat07FullEvidenceContract,
   scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
   files,
   blockers,
   warnings,
 };
 
-mkdirSync(outDir, { recursive: true });
-const jsonPath = join(outDir, 'device-qa-packet.json');
-writeFileSync(jsonPath, `${JSON.stringify(packet, null, 2)}\n`);
+const jsonBytes = Buffer.from(`${JSON.stringify(packet, null, 2)}\n`, 'utf8');
 
 const fileRows = files.map((file) =>
   file.exists
@@ -872,9 +1330,7 @@ const cameraLifecycleArtifactRows = cameraLifecycleEvidence.artifacts.map((artif
   String(artifact.bytes),
   artifact.sha256,
 ]);
-const mdPath = join(outDir, 'device-qa-packet.md');
-writeFileSync(
-  mdPath,
+const markdownBytes = Buffer.from(
   [
     '# Generated Phase 5 Device QA Packet',
     '',
@@ -895,6 +1351,18 @@ writeFileSync(
     `- QA signoff: ${buildEvidence.qaSignedOff ? 'yes' : 'BLOCKED'}`,
     `- Signed off by: ${buildEvidence.signedOffBy || 'BLOCKED'}`,
     `- Native OCR QA required: ${packet.nativeOcr.qaRequired ? 'yes' : 'no'}`,
+    '',
+    '## Governed Evidence Chain',
+    '',
+    `- Status: ${governedEvidenceChain.status === 'pass' ? 'PASS' : 'BLOCKED'}`,
+    `- Source commit (S): ${governedEvidenceChain.sourceGitSha ?? 'BLOCKED'}`,
+    `- Evidence commit (E): ${governedEvidenceChain.evidenceCommitSha ?? 'BLOCKED'}`,
+    `- Current commit: ${governedEvidenceChain.currentGitSha}`,
+    `- Release candidate: ${governedEvidenceChain.releaseCandidateDir ?? 'BLOCKED'}`,
+    `- Evidence ledger: ${governedEvidenceChain.ledgerPath ?? 'BLOCKED'}`,
+    `- Evidence ledger SHA-256: ${governedEvidenceChain.ledgerSha256 ?? 'BLOCKED'}`,
+    `- Evidence ledger entries: ${governedEvidenceChain.ledgerEntryCount}`,
+    `- Allowlisted downstream commits: ${governedEvidenceChain.downstreamCommitCount}`,
     '',
     '## QA Evidence',
     '',
@@ -946,6 +1414,16 @@ writeFileSync(
       ? markdownTable(['Artifact', 'Path', 'Bytes', 'SHA-256'], cameraLifecycleArtifactRows)
       : 'No validated camera lifecycle artifacts attached.',
     '',
+    '## Performance Evidence',
+    '',
+    `- Required: yes`,
+    `- Status: ${performanceEvidence.status === 'pass' ? 'PASS' : 'BLOCKED'}`,
+    `- Evidence path: ${performanceEvidence.path ?? 'BLOCKED'}`,
+    `- Evidence SHA-256: ${performanceEvidence.sha256 ?? 'BLOCKED'}`,
+    `- Required measurements: ${performanceEvidence.summary.found}/${performanceEvidence.summary.requiredMeasurements}`,
+    `- Metric definitions: ${performanceEvidence.summary.metrics}`,
+    `- Required release platforms measured: ${performanceEvidence.summary.platforms}`,
+    '',
     '## Scenarios',
     '',
     markdownTable(['Surface', 'Required scenario set'], scenarioRows),
@@ -963,10 +1441,362 @@ writeFileSync(
     warnings.length > 0 ? warnings.map((warning) => `- ${warning}`).join('\n') : '- none',
     '',
   ].join('\n'),
+  'utf8',
 );
 
-console.log(`Wrote ${relative(root, jsonPath).replaceAll('\\', '/')}`);
-console.log(`Wrote ${relative(root, mdPath).replaceAll('\\', '/')}`);
+function canonicalJsonBytes(value) {
+  return Buffer.from(`${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+function decodedUtf8(bytes, label) {
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    throw new Error(`${label} is not valid UTF-8`);
+  }
+}
+
+function exactIsoTimestamp(value) {
+  if (typeof value !== 'string') return false;
+  const milliseconds = Date.parse(value);
+  return Number.isFinite(milliseconds) && new Date(milliseconds).toISOString() === value;
+}
+
+function replaceExactlyOnce(text, search, replacement, errors, label) {
+  const first = text.indexOf(search);
+  if (first < 0 || text.indexOf(search, first + search.length) >= 0) {
+    errors.push(`canonical Markdown does not contain exactly one ${label}`);
+    return text;
+  }
+  return `${text.slice(0, first)}${replacement}${text.slice(first + search.length)}`;
+}
+
+function readReplayInputBlobsAtCommit(commitSha, repoPaths) {
+  if (!/^[0-9a-f]{40}$/u.test(String(commitSha ?? ''))) {
+    throw new Error('recorded replay-input commit is not one lowercase full Git SHA');
+  }
+  const input = Buffer.from(repoPaths.map((path) => `${commitSha}:${path}\n`).join(''), 'utf8');
+  const output = runTrustedGit(root, ['cat-file', '--batch'], {
+    input,
+    maxBuffer: 512 * 1024 * 1024 + input.length + repoPaths.length * 128,
+  });
+  const records = new Map();
+  let offset = 0;
+  let aggregateBytes = 0;
+  for (const path of repoPaths) {
+    const newline = output.indexOf(0x0a, offset);
+    if (newline < 0) throw new Error('recorded replay-input Git batch header is truncated');
+    const header = output.subarray(offset, newline).toString('utf8');
+    offset = newline + 1;
+    if (header.endsWith(' missing')) {
+      records.set(path, null);
+      continue;
+    }
+    const match = /^([0-9a-f]{40,64}) blob ([0-9]+)$/u.exec(header);
+    const size = Number(match?.[2] ?? Number.NaN);
+    if (!match || !Number.isSafeInteger(size) || size < 0 || size > 64 * 1024 * 1024) {
+      throw new Error(`recorded replay input is not one bounded normal blob: ${path}`);
+    }
+    aggregateBytes += size;
+    if (aggregateBytes > 512 * 1024 * 1024 || offset + size >= output.length) {
+      throw new Error('recorded replay inputs exceed their aggregate byte ceiling');
+    }
+    const bytes = Buffer.from(output.subarray(offset, offset + size));
+    offset += size;
+    if (output[offset] !== 0x0a) {
+      throw new Error('recorded replay-input Git batch body is truncated');
+    }
+    offset += 1;
+    records.set(path, bytes);
+  }
+  if (offset !== output.length) {
+    throw new Error('recorded replay-input Git batch contains trailing bytes');
+  }
+  return records;
+}
+
+function validateCommittedPacketReplay({ snapshot, freshPacket, freshMarkdown, chainAudit }) {
+  const errors = [];
+  const jsonRecord = snapshot.records[packetOutputPaths[0]];
+  const markdownRecord = snapshot.records[packetOutputPaths[1]];
+  for (const [path, record] of [
+    [packetOutputPaths[0], jsonRecord],
+    [packetOutputPaths[1], markdownRecord],
+  ]) {
+    if (
+      record?.workingKind !== 'file' ||
+      !record.workingBytes ||
+      !record.workingTreeMatchesHead ||
+      !record.headBytes?.equals(record.workingBytes)
+    ) {
+      errors.push(`${path} must be one committed regular file whose working bytes match HEAD`);
+    }
+  }
+  if (!jsonRecord?.workingBytes || !markdownRecord?.workingBytes) return errors;
+
+  let recordedPacket;
+  try {
+    recordedPacket = JSON.parse(decodedUtf8(jsonRecord.workingBytes, packetOutputPaths[0]));
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : String(error));
+    return errors;
+  }
+  if (!canonicalJsonBytes(recordedPacket).equals(jsonRecord.workingBytes)) {
+    errors.push(`${packetOutputPaths[0]} is not canonical generated JSON`);
+  }
+  if (!exactIsoTimestamp(recordedPacket?.generatedAt)) {
+    errors.push('committed Phase 5 packet generatedAt must be one canonical ISO timestamp');
+  }
+  if (freshPacket.blockers.length > 0) {
+    errors.push(
+      `replay inputs/environment did not reproduce a blocker-free Phase 5 packet: ${freshPacket.blockers.join(
+        ' | ',
+      )}`,
+    );
+  }
+  if (chainAudit?.status !== 'pass' || !chainAudit.ledger) {
+    errors.push('fresh governed evidence audit did not pass during Phase 5 packet replay');
+    return errors;
+  }
+
+  const recordedChain = recordedPacket?.governedEvidenceChain;
+  const freshChain = freshPacket.governedEvidenceChain;
+  if (recordedPacket?.schemaVersion !== PHASE5_DEVICE_QA_PACKET_SCHEMA_VERSION) {
+    errors.push('committed Phase 5 packet schemaVersion is unsupported');
+  }
+  if (recordedPacket?.kind !== 'phase5_device_qa_packet') {
+    errors.push('committed Phase 5 packet kind is invalid');
+  }
+  if (!recordedChain || typeof recordedChain !== 'object' || Array.isArray(recordedChain)) {
+    errors.push('committed Phase 5 packet governedEvidenceChain is missing');
+    return errors;
+  }
+  const publication = validateGovernedGeneratedPublication(
+    recordedChain,
+    chainAudit,
+    packetOutputPaths,
+  );
+  for (const error of publication.errors) {
+    errors.push(`committed Phase 5 governed publication: ${error}`);
+  }
+  for (const [field, label] of [
+    ['sourceGitSha', 'source commit S'],
+    ['evidenceCommitSha', 'evidence commit E'],
+    ['releaseCandidateDir', 'selected release-candidate directory'],
+    ['ledgerPath', 'governed ledger path'],
+    ['ledgerSha256', 'governed ledger SHA-256'],
+    ['ledgerEntryCount', 'governed ledger entry count'],
+  ]) {
+    if (recordedChain[field] !== freshChain[field]) {
+      errors.push(`committed Phase 5 packet ${label} does not match the fresh governed audit`);
+    }
+  }
+  if (recordedChain.status !== 'pass') {
+    errors.push('committed Phase 5 packet governedEvidenceChain status must be pass');
+  }
+  if (recordedPacket.gitSha !== recordedChain.currentGitSha) {
+    errors.push('committed packet gitSha and governed currentGitSha must be identical');
+  }
+  const recordedDownstreamCount = recordedChain.downstreamCommitCount;
+  const prefixShas = [
+    chainAudit.evidenceCommitSha,
+    ...chainAudit.downstreamCommits.map(({ commitSha }) => commitSha),
+  ];
+  if (
+    !Number.isSafeInteger(recordedDownstreamCount) ||
+    recordedDownstreamCount < 0 ||
+    recordedDownstreamCount >= prefixShas.length
+  ) {
+    errors.push(
+      'committed packet downstreamCommitCount is not one valid prefix of the fresh governed audit',
+    );
+  } else if (recordedChain.currentGitSha !== prefixShas[recordedDownstreamCount]) {
+    errors.push(
+      'committed packet currentGitSha is not the exact commit at its recorded governed prefix',
+    );
+  }
+  if (recordedPacket?.cat07CommittedEvidence?.headSha !== recordedPacket.gitSha) {
+    errors.push('committed CAT07 evidence headSha must match the packet gitSha prefix');
+  }
+  if (recordedPacket?.cat07FullEvidenceContract?.headSha !== recordedPacket.gitSha) {
+    errors.push('committed full CAT07 contract headSha must match the packet gitSha prefix');
+  }
+  try {
+    const replayInputs = readReplayInputBlobsAtCommit(recordedChain.currentGitSha, requiredFiles);
+    for (const path of requiredFiles) {
+      const recordedPrefixBytes = replayInputs.get(path);
+      const freshHeadBytes = snapshot.records[path]?.headBytes ?? null;
+      if (!recordedPrefixBytes || !freshHeadBytes || !recordedPrefixBytes.equals(freshHeadBytes)) {
+        errors.push(`${path} fresh replay input does not match recorded currentGitSha`);
+      }
+    }
+  } catch (error) {
+    errors.push(
+      `recorded-current replay input comparison failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+
+  const projectedPacket = JSON.parse(JSON.stringify(freshPacket));
+  const comparableRecordedPacket = JSON.parse(JSON.stringify(recordedPacket));
+  projectedPacket.generatedAt = '<generatedAt>';
+  comparableRecordedPacket.generatedAt = '<generatedAt>';
+  projectedPacket.gitSha = recordedPacket.gitSha;
+  projectedPacket.governedEvidenceChain.currentGitSha = recordedChain.currentGitSha;
+  projectedPacket.governedEvidenceChain.downstreamCommitCount = recordedDownstreamCount;
+  projectedPacket.cat07CommittedEvidence.headSha = recordedPacket.gitSha;
+  projectedPacket.cat07FullEvidenceContract.headSha = recordedPacket.gitSha;
+  if (JSON.stringify(projectedPacket) !== JSON.stringify(comparableRecordedPacket)) {
+    errors.push(
+      'committed Phase 5 packet JSON does not match canonical replay inputs and its validated governed prefix',
+    );
+  }
+
+  let expectedMarkdown = decodedUtf8(freshMarkdown, 'fresh canonical Phase 5 Markdown');
+  let recordedMarkdown = decodedUtf8(
+    markdownRecord.workingBytes,
+    'committed Phase 5 packet Markdown',
+  );
+  expectedMarkdown = replaceExactlyOnce(
+    expectedMarkdown,
+    `Generated at: ${freshPacket.generatedAt}`,
+    'Generated at: <generatedAt>',
+    errors,
+    'fresh generatedAt line',
+  );
+  recordedMarkdown = replaceExactlyOnce(
+    recordedMarkdown,
+    `Generated at: ${recordedPacket.generatedAt}`,
+    'Generated at: <generatedAt>',
+    errors,
+    'committed generatedAt line',
+  );
+  expectedMarkdown = replaceExactlyOnce(
+    expectedMarkdown,
+    `Git SHA: ${freshPacket.gitSha}`,
+    `Git SHA: ${recordedPacket.gitSha}`,
+    errors,
+    'fresh Git SHA line',
+  );
+  expectedMarkdown = replaceExactlyOnce(
+    expectedMarkdown,
+    `- Current commit: ${freshChain.currentGitSha}`,
+    `- Current commit: ${recordedChain.currentGitSha}`,
+    errors,
+    'fresh governed current-commit line',
+  );
+  expectedMarkdown = replaceExactlyOnce(
+    expectedMarkdown,
+    `- Allowlisted downstream commits: ${freshChain.downstreamCommitCount}`,
+    `- Allowlisted downstream commits: ${recordedDownstreamCount}`,
+    errors,
+    'fresh governed downstream-count line',
+  );
+  if (expectedMarkdown !== recordedMarkdown) {
+    errors.push(
+      'committed Phase 5 packet Markdown does not match canonical replay inputs and its validated governed prefix',
+    );
+  }
+  return errors;
+}
+
+const initialCommittedEvidenceJson = JSON.stringify(cat07CommittedEvidence);
+const initialFullEvidenceJson = JSON.stringify(cat07FullEvidenceContract);
+
+function verifyPhase5AssemblyBindings({ includeSourceSnapshot }) {
+  const errors = [];
+  if (includeSourceSnapshot) {
+    errors.push(...verifyReleaseQaSnapshot(sourceSnapshot).errors);
+  }
+  errors.push(...verifyEvidenceBindings(evidenceBindings));
+  if (governedWorkingBindings) {
+    errors.push(
+      ...verifyGovernedEvidenceWorkingBindings(governedWorkingBindings, root, {
+        context: 'Phase 5 packet assembly',
+      }),
+    );
+  } else if (governedEvidenceChain.status === 'pass') {
+    errors.push('Phase 5 packet assembly has no retained governed evidence working bindings');
+  }
+  const committed = validateCat07CommittedEvidence(root, { expectedHeadSha: gitSha });
+  const full = validateCat07FullEvidenceContract(root, { expectedHeadSha: gitSha });
+  if (JSON.stringify(committed) !== initialCommittedEvidenceJson) {
+    errors.push('CAT07 committed evidence result changed during Phase 5 packet assembly');
+  }
+  if (JSON.stringify(full) !== initialFullEvidenceJson) {
+    errors.push('CAT07 full evidence result changed during Phase 5 packet assembly');
+  }
+  return errors;
+}
+
+async function waitForCheckDriftTestWindow(errors) {
+  if (!process.argv.includes('--test-check-drift-window')) return;
+  const rawMilliseconds = String(process.env.PHASE5_QA_PACKET_CHECK_TEST_PAUSE_MS ?? '');
+  const milliseconds = Number(rawMilliseconds);
+  if (
+    process.env.NODE_ENV !== 'test' ||
+    !/^[1-9][0-9]{2,4}$/u.test(rawMilliseconds) ||
+    !Number.isSafeInteger(milliseconds) ||
+    milliseconds < 100 ||
+    milliseconds > 10_000
+  ) {
+    errors.push('Phase 5 check drift window is restricted to one bounded test-only pause');
+    return;
+  }
+  console.log('PHASE5_QA_PACKET_CHECK_COMPARISON_COMPLETE');
+  await new Promise((resolvePause) => setTimeout(resolvePause, milliseconds));
+}
+
+if (checkMode) {
+  const checkErrors = validateCommittedPacketReplay({
+    snapshot: sourceSnapshot,
+    freshPacket: packet,
+    freshMarkdown: markdownBytes,
+    chainAudit: governedEvidenceAudit,
+  });
+  if (checkErrors.length === 0) {
+    await waitForCheckDriftTestWindow(checkErrors);
+  }
+  checkErrors.push(...verifyPhase5AssemblyBindings({ includeSourceSnapshot: true }));
+  if (checkErrors.length > 0) {
+    for (const error of checkErrors) console.error(`FAIL ${error}`);
+    console.error(
+      `\nPhase 5 committed QA packet check has ${checkErrors.length} failure${
+        checkErrors.length === 1 ? '' : 's'
+      }.`,
+    );
+    process.exit(1);
+  }
+  console.log(
+    `PASS committed Phase 5 QA packet matches canonical replay inputs at governed prefix ${packetOutputPaths[0]}.`,
+  );
+  process.exit(0);
+}
+
+try {
+  atomicWriteReleaseQaOutputs({
+    root,
+    snapshot: sourceSnapshot,
+    outputs: [
+      { path: packetOutputPaths[0], bytes: jsonBytes },
+      { path: packetOutputPaths[1], bytes: markdownBytes },
+    ],
+    verifyAdditional() {
+      return verifyPhase5AssemblyBindings({ includeSourceSnapshot: false });
+    },
+  });
+} catch (error) {
+  console.error(
+    `FAIL Phase 5 packet publication was rejected: ${
+      error instanceof Error ? error.message : String(error)
+    }`,
+  );
+  process.exit(1);
+}
+
+console.log(`Wrote ${packetOutputPaths[0]}`);
+console.log(`Wrote ${packetOutputPaths[1]}`);
 
 if (strict && blockers.length > 0) {
   for (const blocker of blockers) console.error(`FAIL ${blocker}`);

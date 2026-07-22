@@ -30,7 +30,7 @@
   },
   "databaseState": {
     "projectRefSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
-    "schemaMigrationVersion": "20260717000058",
+    "schemaMigrationVersion": "20260722000062",
     "schemaMigrationSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
     "contractTestSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
     "campaignId": "33333333-3333-4333-8333-333333333333",

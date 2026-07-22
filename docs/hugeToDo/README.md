@@ -34,7 +34,9 @@ Start here:
 - [CAT-01 Pending Release-Build Evidence](../phase-4/catalog-release-build-evidence.json)
 - [CAT-02 Catalog Import, Promotion, and Rollback Runbook](../phase-4/catalog-import-promotion-runbook.md)
 - [CAT-02 Transactional Lifecycle Migration](../../supabase/migrations/20260717000057_catalog_import_lifecycle.sql)
+- [CAT-02 Reviewed Benzoyl Override and Freshness Boundary Migration](../../supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql)
 - [CAT-02 Adversarial Database Contract](../../supabase/tests/database/catalog_import_lifecycle.test.sql)
+- [CAT-02 0060-to-0061 PostgreSQL Upgrade Rehearsal](../../scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql)
 - [CAT-02 Offline Promotion Contract](../../scripts/phase4/catalog-promotion-contract.mjs)
 - [CAT-03 Catalog Curation Release Runbook](../phase-4/catalog-curation-release-runbook.md)
 - [CAT-03 Coverage/Quality Target Template](../phase-4/catalog-coverage-quality-targets.template.json)
@@ -45,6 +47,8 @@ Start here:
 - [CAT-03 Offline Curation Contract](../../scripts/phase4/catalog-curation-contract.mjs)
 - [CAT-03 Coverage/Quality Report](../../scripts/phase4/catalog-coverage-quality-report.mjs)
 - [CAT-03 Immutable Staging/Atomic Release/Retirement Migration](../../supabase/migrations/20260717000058_catalog_launch_curation.sql)
+- [CAT-03 Bounded Bulk-Curation Guard Migration](../../supabase/migrations/20260722000062_catalog_curation_statement_guard.sql)
+- [CAT-03 0062 Forward-Upgrade Mechanics Rehearsal](../../scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql)
 - [CAT-03 Adversarial Database Contract](../../supabase/tests/database/catalog_launch_curation.test.sql)
 - [CAT-04 Search, Barcode, and Recovery Source Checkpoint](./CAT-04-SEARCH-BARCODE-RECOVERY-SOURCE-CHECKPOINT-2026-07-18.md)
 - [CAT-04 Scan/Lookup Minimization Migration](../../supabase/migrations/20260718000059_catalog_scan_minimization.sql)
@@ -96,16 +100,21 @@ decisions, cleared identity and live URLs, actual source artifacts, active
 reviewer keys, production EAS/archive/App Store evidence, hosted database
 verification, beta coverage, device QA, and named signoffs remain open.
 
-Migration `0057` and the CAT-02 offline tooling now provide a local
-source-control candidate for signed provenance, exact receipt-bound review,
-bounded staging, Unicode-aware dedupe/conflict detection, one-transaction
-promotion, dependency-closed serving, immutable correction lineage, and
-non-destructive rollback. No real OBF/CosIng batch has been approved, staged,
-promoted, or rolled back, and local single-connection evidence cannot replace
-the required hosted two-connection race/retry drill. The current 214-assertion
-pgTAP contract is statically plan-matched but still requires a fresh Docker
-reset and execution; the last executed CAT-02 baseline covered only an earlier
-35-assertion revision. These controls support
+Migration `0057`, forward migration `0061`, and the CAT-02 offline tooling now
+provide a local source-control candidate for signed provenance, exact receipt-
+bound review, bounded staging, Unicode-aware dedupe/conflict detection, one-
+transaction promotion, dependency-closed serving, immutable correction
+lineage, and non-destructive rollback. `0061` adds `benzoyl_peroxide` to the
+database staging allowlist; the offline v2 envelope, not the RPC, remains
+responsible for dual-review signatures. It also repairs the shared health-write
+guard for clean installs and already-applied `0060` upgrades and exposes only
+bounded product-specific PAO evidence from `label`, `brand_label`, or `catalog`
+sources; category defaults and unknown sources remain excluded. No real
+OBF/CosIng batch has been approved, staged, promoted, or rolled back, and local
+single-connection evidence cannot replace the required hosted two-connection
+race/retry drill. The current CAT-02 pgTAP source plan contains 218 assertions
+and still requires a clean execution against the complete current migration
+chain; the earlier recorded 35-assertion run remains historical. These controls support
 accurate source and health-information handling under current Apple App Review,
 FDA cosmetics-claim, and FTC health-claim guidance, but cannot guarantee App
 Review, legal compliance, or revenue.
@@ -121,22 +130,32 @@ database snapshot that seals every client-readable field and child-row set. A
 hard release floor now
 requires at least 2,000 independently sourced, reviewed, activation-eligible
 records, every required-category minimum, and at least 100 demand-prioritized
-eligible rows. Migration `0058` adds campaign-scoped non-serving product
-authorization, a single exact-set atomic global campaign release, independently
-signed point-in-time readback, immutable retirement, and RPC-only `service_role` access, and makes
+eligible rows. Migration `0058` remains the foundational campaign authority: it
+adds campaign-scoped non-serving product authorization, a single exact-set
+atomic global campaign release, independently
+signed point-in-time readback, immutable retirement, and migration-owner-only
+execution of its activation and release RPCs, and makes
 the active global campaign a positive serving dependency. Every mutation of
 sealed served state appends a per-product event under the release lock. Outcome
 reviewers bind each current `servedStateMutationRootSha256` and the campaign root
 set, so exact byte restoration, correction-hold closure, source reapproval, or
 batch restoration cannot resurrect old authority; recovery requires a newly
-reviewed successor campaign and readback. Beta demand
+reviewed successor campaign and readback. Forward migration `0062` adds three
+covered authority indexes, pushes the already-required staged digest into the
+exact authority join, materializes the exact campaign record-validity set once
+for the migration-owner release transition, and adds the indexed `AFTER STATEMENT` guard: it rejects campaign-count overflow after every
+insert statement and, only when stored rows reach the expected count, validates
+the already-sealed complete root set; partial governed inserts remain allowed.
+It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
+must attest exact latest migration `20260722000062`; the current pgTAP source
+plan contains 99 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, exact local/
-hosted `0058` evidence, current signed database readback, sealed holdout result, or
-active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
+hosted full-chain evidence through `0062`, current signed database readback,
+sealed holdout result, or active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
 quality, market, or revenue outcome is implied.
 
 CAT-04 is now an `in_progress` source checkpoint, blocked by `CAT-03`, `H-07`,
@@ -264,8 +283,8 @@ health-targeted advertising remains unresolved; consent alone is not App Review
 or legal clearance.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now covers all 59 migrations through
-`0060`, all 16 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now covers all 61 migrations through
+`0062`, all 16 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

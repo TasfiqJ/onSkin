@@ -8,6 +8,7 @@ import {
   envSnapshot,
   evidenceFlagEnabled,
   exists,
+  generatedEvidenceOutputPaths,
   has,
   hash,
   normalizeNamedSignoff,
@@ -24,6 +25,8 @@ import {
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
 import { auditVerificationWiring } from './verification-wiring-contract.mjs';
+import { PHASE9_CAT07_BOUND_INPUT_PATHS } from './release-qa-integrity.mjs';
+import { GOVERNED_POST_F_COMMANDS } from '../launch/governed-publication-coverage.mjs';
 
 const errors = [];
 const warnings = [];
@@ -78,6 +81,20 @@ const localVerifierFiles = [
   'scripts/phase9/release-contact-smoke.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase9/release-smoke.mjs',
+  'scripts/phase9/release-qa-integrity.mjs',
+  'scripts/phase9/release-qa-integrity.test.mjs',
+  'scripts/launch/governed-evidence-chain.mjs',
+  'scripts/launch/governed-evidence-chain.test.mjs',
+  'scripts/launch/governed-publication-coverage.mjs',
+  'scripts/launch/governed-publication-coverage.test.mjs',
+  'scripts/phase9/git-status-exclusion.test.mjs',
+  'scripts/docs/device-support-policy-audit.test.mjs',
+  'scripts/phase9/dependency-sbom-contract.mjs',
+  'scripts/phase9/dependency-sbom-contract.test.mjs',
+  'scripts/e2e/human-e2e-manifest-contract.test.mjs',
+  'scripts/phase7/core-loop-qa-packet-contract.test.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.test.mjs',
   'scripts/phase9/rls-adversarial-smoke.mjs',
   'scripts/phase9/rls-adversarial.mjs',
   'scripts/phase9/edge-auth-smoke.mjs',
@@ -95,6 +112,8 @@ const localVerifierFiles = [
   'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
   'scripts/phase9/catalog-scan-minimization-postgres-rehearsal.sql',
   'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/consent-withdrawal-evidence.mjs',
   'scripts/phase9/consent-withdrawal-evidence.test.mjs',
@@ -284,6 +303,13 @@ const requiredFiles = [
   'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
   'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
   'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
+  'supabase/tests/database/catalog_import_lifecycle.test.sql',
+  'supabase/tests/database/catalog_launch_curation.test.sql',
+  'supabase/tests/database/catalog_serving_gate.test.sql',
   'supabase/tests/database/cat07_truthful_freshness.test.sql',
   'supabase/migrations/20260615000027_phase6_payments.sql',
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
@@ -298,6 +324,7 @@ const requiredFiles = [
   'scripts/phase9/lib.mjs',
   'scripts/phase2/supabase-rls-smoke.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
+  ...PHASE9_CAT07_BOUND_INPUT_PATHS,
   ...localVerifierFiles,
   ...liveHarnessFiles,
   'apps/mobile/src/lib/observability/scrub.ts',
@@ -407,6 +434,10 @@ for (const key of [
 
 const packageJson = JSON.parse(read('package.json'));
 const mobilePackageJson = JSON.parse(read('apps/mobile/package.json'));
+const qualityWorkflowText = read('.github/workflows/quality.yml');
+const phase7VerifyCommands = (packageJson.scripts?.['phase7:verify'] ?? '').split(' && ');
+const phase9VerifyCommands = new Set((packageJson.scripts?.['phase9:verify'] ?? '').split(' && '));
+const launchVerifyCommands = new Set((packageJson.scripts?.['launch:verify'] ?? '').split(' && '));
 const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
 const integerInRange = (value, min, max) => {
   const parsed = Number(value);
@@ -502,6 +533,11 @@ for (const script of [
   'phase5:expo-widgets-lifecycle:check',
   'phase5:expo-widgets-lifecycle:test',
   'phase9:release-smoke',
+  'phase9:release-qa-integrity:test',
+  'phase9:governed-evidence-chain:test',
+  'phase9:governed-publication-coverage:test',
+  'phase9:git-status-exclusion:test',
+  'phase9:dependency-sbom:test',
   'phase9:rls-adversarial-smoke',
   'phase9:rls-adversarial',
   'phase9:supabase-policy-lint',
@@ -537,12 +573,26 @@ for (const script of [
   'phase9:release-candidate-git-contract:test',
   'phase9:verification-wiring:test',
   'phase9:store-build-inspect',
+  'phase9:store-build-inspect:write:strict',
   'phase9:store-build-inspect:check',
   'phase9:store-build-inspect:strict',
   'phase9:dependency-sbom',
   'phase9:qa-packet',
+  'phase9:qa-packet:check',
   'phase9:verify',
+  'phase4:beta-coverage-report:check',
+  'phase4:beta-coverage-contract:test',
+  'phase5:qa-packet:check',
+  'phase7:qa-packet:check',
+  'phase7:qa-packet:contract:test',
+  'release:governed-packets:check',
+  'docs:readiness-status-audit:test',
+  'docs:readiness-status-audit:check',
+  'docs:generated-packet-status-audit:check',
   'docs:generated-packet-status-audit:strict',
+  'e2e:human:manifest:contract:test',
+  'e2e:human:manifest:check',
+  'docs:device-support-policy-audit:test',
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
@@ -564,6 +614,25 @@ const iosPrivacyVerifierDefinitions = {
     'node --test scripts/phase9/verification-wiring-contract.test.mjs',
   'phase9:store-build-inspect:check': 'node scripts/phase9/store-build-inspect.mjs --check',
 };
+const releaseProvenanceVerifierDefinitions = {
+  'phase9:release-qa-integrity:test': 'node --test scripts/phase9/release-qa-integrity.test.mjs',
+  'phase9:governed-evidence-chain:test':
+    'node --test scripts/launch/governed-evidence-chain.test.mjs scripts/phase9/build-evidence-chain-ledger.test.mjs',
+  'phase9:governed-publication-coverage:test':
+    'node --test scripts/launch/governed-publication-coverage.test.mjs',
+  'phase9:git-status-exclusion:test': 'node --test scripts/phase9/git-status-exclusion.test.mjs',
+  'phase9:dependency-sbom:test': 'node --test scripts/phase9/dependency-sbom-contract.test.mjs',
+  'e2e:human:manifest:contract:test':
+    'node --test scripts/e2e/human-e2e-manifest-contract.test.mjs',
+  'phase7:qa-packet:contract:test':
+    'node --test scripts/phase7/core-loop-qa-packet-contract.test.mjs',
+};
+block(
+  errors,
+  packageJson.scripts?.['phase9:store-build-inspect:write:strict'] ===
+    'node scripts/phase9/store-build-inspect.mjs --strict',
+  'Store inspection must expose a distinct strict writer for governed publication.',
+);
 block(
   errors,
   packageJson.scripts?.['phase9:store-build-inspect:strict'] ===
@@ -583,19 +652,35 @@ block(
 );
 const iosPrivacyWiring = auditVerificationWiring({
   packageJson,
-  workflowText: read('.github/workflows/quality.yml'),
+  workflowText: qualityWorkflowText,
   verifierDefinitions: iosPrivacyVerifierDefinitions,
 });
 for (const error of iosPrivacyWiring.errors) {
   block(errors, false, `iOS privacy verification wiring is invalid: ${error}`);
 }
+const releaseProvenanceWiring = auditVerificationWiring({
+  packageJson,
+  workflowText: qualityWorkflowText,
+  verifierDefinitions: releaseProvenanceVerifierDefinitions,
+  workflowStep: 'Verify governed release provenance',
+});
+for (const error of releaseProvenanceWiring.errors) {
+  block(errors, false, `Governed release provenance verification wiring is invalid: ${error}`);
+}
+block(
+  errors,
+  /\n  supabase-local-reset:\n[\s\S]*?\n    timeout-minutes:\s*120\n[\s\S]*?\n    steps:/.test(
+    qualityWorkflowText,
+  ),
+  'The credential-free Supabase reset and full pgTAP lane must retain its reviewed 120-minute CI timeout.',
+);
 for (const output of [
   'docs/phase-9/generated/ios-privacy-source-audit.json',
   'docs/phase-9/generated/ios-privacy-source-audit.md',
 ]) {
   block(
     errors,
-    read('scripts/phase9/lib.mjs').includes(`'${output}'`),
+    generatedEvidenceOutputPaths.includes(output),
     `Generated evidence exclusions must include ${output}.`,
   );
 }
@@ -708,12 +793,17 @@ block(
       '.github/workflows/quality.yml',
       /database:\s*cat07_truthful_freshness_0060[\s\S]{0,140}script:\s*cat07-truthful-freshness-postgres-rehearsal\.sql/,
     ) &&
+    has(
+      '.github/workflows/quality.yml',
+      /database:\s*catalog_import_upgrade_0061[\s\S]{0,140}script:\s*catalog-import-0061-upgrade-postgres-rehearsal\.sql/,
+      /database:\s*catalog_curation_upgrade_0062[\s\S]{0,140}script:\s*catalog-curation-0062-upgrade-postgres-rehearsal\.sql/,
+    ) &&
     has('.github/workflows/quality.yml', /image:\s*postgres:\$\{\{ matrix\.postgres \}\}/) &&
     has(
       '.github/workflows/quality.yml',
       /-f \"scripts\/phase9\/\$\{\{ matrix\.rehearsal\.script \}\}\"/,
     ),
-  'CI must execute the 0048-0053 lifecycle lanes plus 0059 scan minimization and 0060 truthful freshness in isolated PostgreSQL 15 and 17 rehearsals.',
+  'CI must execute the 0048-0053 lifecycle lanes plus the 0059, 0060, 0061, and 0062 catalog rehearsals in isolated PostgreSQL 15 and 17 databases.',
 );
 block(
   errors,
@@ -749,12 +839,85 @@ block(
     /phase6:subscription-reconciliation-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
   'Phase 6 and Phase 9 must run the bounded RevenueCat CustomerInfo and publication-lease contracts.',
 );
+const forbiddenPreSnapshotPhase9Commands = [
+  'npm run e2e:human:manifest:check',
+  'npm run phase9:qa-packet',
+  'npm run phase9:qa-packet:check',
+  'npm run docs:generated-packet-status-audit:check',
+  'npm run docs:generated-packet-status-audit:strict',
+];
+const forbiddenPreSnapshotLaunchCommands = [
+  'npm run e2e:human:manifest:check',
+  'npm run docs:readiness-status-audit:check',
+  'npm run docs:device-support-policy-audit:check',
+  'npm run docs:generated-packet-status-audit:check',
+  'npm run docs:generated-packet-status-audit:strict',
+  'npm run phase5:native-ocr-evidence',
+  'npm run phase5:camera-lifecycle-evidence',
+  'npm run phase5:performance-evidence',
+  'npm run phase5:widget-lifecycle-evidence',
+];
 block(
   errors,
-  /phase9:qa-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
-    packageJson.scripts?.['phase9:verify'] ?? '',
-  ),
-  'phase9:verify must run the strict generated-packet status audit after building the release QA packet.',
+  forbiddenPreSnapshotPhase9Commands.every(
+    (commandName) => !phase9VerifyCommands.has(commandName),
+  ) &&
+    forbiddenPreSnapshotLaunchCommands.every(
+      (commandName) => !launchVerifyCommands.has(commandName),
+    ),
+  'Pre-S phase9:verify and launch:verify must not depend on post-E/F committed-packet checks or packet publication.',
+);
+block(
+  errors,
+  phase7VerifyCommands.filter(
+    (commandName) => commandName === 'npm run phase7:qa-packet:contract:test',
+  ).length === 1 &&
+    phase7VerifyCommands.indexOf('npm run phase7:qa-packet:contract:test') <
+      phase7VerifyCommands.indexOf('npm run phase7:qa-packet'),
+  'phase7:verify must run the packet-builder contract exactly once before publishing the Phase 7 packet.',
+);
+block(
+  errors,
+  phase9VerifyCommands.has('npm run phase9:release-qa-integrity:test') &&
+    launchVerifyCommands.has('npm run phase9:release-qa-integrity:test') &&
+    phase9VerifyCommands.has('npm run phase9:governed-publication-coverage:test') &&
+    launchVerifyCommands.has('npm run phase9:governed-publication-coverage:test') &&
+    phase9VerifyCommands.has('npm run phase9:git-status-exclusion:test') &&
+    launchVerifyCommands.has('npm run phase9:git-status-exclusion:test') &&
+    phase9VerifyCommands.has('npm run phase9:dependency-sbom:test') &&
+    launchVerifyCommands.has('npm run phase9:dependency-sbom:test') &&
+    phase9VerifyCommands.has('npm run e2e:human:manifest:contract:test') &&
+    launchVerifyCommands.has('npm run e2e:human:manifest:contract:test') &&
+    phase9VerifyCommands.has('npm run phase7:qa-packet:contract:test') &&
+    launchVerifyCommands.has('npm run phase7:qa-packet:contract:test') &&
+    launchVerifyCommands.has('npm run docs:readiness-status-audit:test') &&
+    launchVerifyCommands.has('npm run docs:device-support-policy-audit:test') &&
+    launchVerifyCommands.has('npm run docs:performance-readiness-audit:check') &&
+    [
+      'native-ocr-evidence',
+      'camera-lifecycle-evidence',
+      'performance-evidence',
+      'widget-lifecycle-evidence',
+    ].every(
+      (name) =>
+        launchVerifyCommands.has(`npm run phase5:${name}:smoke`) &&
+        launchVerifyCommands.has(`npm run phase5:${name}:template:check`),
+    ),
+  'Pre-S Phase 9 and launch verification must run source-safe integrity, exact-status, publication coverage, dependency-SBOM, human/Phase 7/device contracts, performance source replay, and all Phase 5 evidence smoke/template gates.',
+);
+block(
+  errors,
+  packageJson.scripts?.['phase4:beta-coverage-report:check'] ===
+    'node scripts/phase4/beta-coverage-report.mjs --strict --check' &&
+    packageJson.scripts?.['phase4:beta-coverage-contract:test'] ===
+      'node --test scripts/phase4/beta-coverage-packet-contract.test.mjs scripts/phase4/beta-coverage-committed-check.test.mjs scripts/phase9/upstream-packet-contract.test.mjs',
+  'Phase 4 must expose the strict non-writing beta publication check and its focused contracts.',
+);
+block(
+  errors,
+  packageJson.scripts?.['release:governed-packets:check'] ===
+    GOVERNED_POST_F_COMMANDS.map((commandName) => `npm run ${commandName}`).join(' && '),
+  'The post-F governed packet verifier must run every reviewed deterministic replay and contract exactly once in dependency order.',
 );
 
 block(
@@ -860,10 +1023,46 @@ for (const file of liveHarnessFiles) {
 }
 
 const qaPacketBuilder = read('scripts/phase9/build-release-qa-packet.mjs');
+const releaseQaIntegrity = read('scripts/phase9/release-qa-integrity.mjs');
+const releaseQaIntegrityTests = read('scripts/phase9/release-qa-integrity.test.mjs');
+const redirectedPhase9Packet = spawnSync(
+  process.execPath,
+  ['scripts/phase9/build-release-qa-packet.mjs'],
+  {
+    cwd: process.cwd(),
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      PHASE9_PACKET_OUT_DIR: 'docs/phase-9/release-candidates/rc-redirection-probe',
+    },
+    maxBuffer: 2 * 1024 * 1024,
+    timeout: 60_000,
+    windowsHide: true,
+  },
+);
+block(
+  errors,
+  redirectedPhase9Packet.status !== 0 &&
+    /PHASE9_PACKET_OUT_DIR cannot redirect the governed Phase 9 release packet outputs/.test(
+      `${redirectedPhase9Packet.stdout ?? ''}\n${redirectedPhase9Packet.stderr ?? ''}`,
+    ),
+  'Phase 9 release QA packet must reject caller-selected output directories before publication.',
+);
 block(
   errors,
   /scripts\/phase9\/build-release-qa-packet\.mjs/.test(qaPacketBuilder),
   'Phase 9 release QA packet must include its own builder in source hashes.',
+);
+block(
+  errors,
+  /const defaultPacketOutputPaths = \[\s*'docs\/phase-9\/generated\/release-engineering-qa-packet\.json',\s*'docs\/phase-9\/generated\/release-engineering-qa-packet\.md',\s*\]/.test(
+    qaPacketBuilder,
+  ) &&
+    /PHASE9_PACKET_OUT_DIR cannot redirect the governed Phase 9 release packet outputs/.test(
+      qaPacketBuilder,
+    ) &&
+    /const packetOutputPaths = \[\.\.\.defaultPacketOutputPaths\]/.test(qaPacketBuilder),
+  'Phase 9 release QA packet must publish only the fixed governed output pair.',
 );
 block(
   errors,
@@ -873,16 +1072,127 @@ block(
 );
 block(
   errors,
-  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
-    /release-engineering-qa-packet\.json/.test(qaPacketBuilder) &&
-    /release-engineering-qa-packet\.md/.test(qaPacketBuilder) &&
-    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
-  'Phase 9 release QA packet must ignore only its own generated outputs when recording Git status.',
+  /captureReleaseQaSnapshot\(\{[\s\S]*?expectedHeadSha:\s*gitSha[\s\S]*?outputPaths: check \? \[\] : packetOutputPaths/.test(
+    qaPacketBuilder,
+  ) &&
+    /sourceSnapshot\.gitStatus/.test(qaPacketBuilder) &&
+    /NUL Git status SHA-256/.test(qaPacketBuilder),
+  'Phase 9 release QA packet must pin HEAD and expose the output-excluded NUL Git status binding.',
+);
+block(
+  errors,
+  /environmentBootstrap\.records\['\.env\.example'\]\.headBytes/.test(qaPacketBuilder) &&
+    /workingInputPaths:\s*\['\.env'\]/.test(qaPacketBuilder) &&
+    /validateLaunchContract\(launchContract\)/.test(qaPacketBuilder) &&
+    /sourceSnapshot\.records\['docs\/hugeToDo\/launch-contract\.json'\]\.headBytes/.test(
+      qaPacketBuilder,
+    ) &&
+    /verifyAdditional\(\) \{[\s\S]*phase9AssemblyStabilityErrors\(\{ includeSourceSnapshot: false \}\)/.test(
+      qaPacketBuilder,
+    ) &&
+    /phase9AssemblyStabilityErrors\(\{ includeSourceSnapshot: true \}\)/.test(qaPacketBuilder),
+  'Phase 9 packet inputs must cache pinned env defaults and launch contract, recheck optional .env bytes, and guard the process environment.',
+);
+block(
+  errors,
+  /validateCat07CommittedEvidence\(validationRoot, \{ expectedHeadSha \}\)/.test(qaPacketBuilder) &&
+    /validateCat07FullEvidenceContract\(validationRoot, \{ expectedHeadSha \}\)/.test(
+      qaPacketBuilder,
+    ) &&
+    /cat07Evidence\.status === 'pass'/.test(qaPacketBuilder) &&
+    /CAT07 Launch Evidence/.test(qaPacketBuilder) &&
+    /boundInputHashes/.test(qaPacketBuilder),
+  'Phase 9 release QA readiness must require both HEAD-pinned CAT07 validators and expose their exact hashes/statuses.',
+);
+block(
+  errors,
+  /evaluateReleaseCandidateReadiness\(\{/.test(qaPacketBuilder) &&
+    /releaseCandidateEvidence\.status === 'pass'/.test(qaPacketBuilder) &&
+    /expectedReleaseCandidateMetadataPaths/.test(qaPacketBuilder) &&
+    /auditGitContract:\s*auditReleaseCandidateGitContract/.test(qaPacketBuilder) &&
+    /store-build-inspect\.mjs', '--check', '--strict'/.test(qaPacketBuilder) &&
+    /captureReleaseCandidateRawEvidenceBindings/.test(qaPacketBuilder) &&
+    /verifyReleaseCandidateRawEvidenceBindings/.test(qaPacketBuilder) &&
+    /RC archive\/store cross-binding/.test(qaPacketBuilder),
+  'Phase 9 packet readiness must require the exact pinned RC inventory, Git contract, and strict archive/store cross-binding.',
+);
+block(
+  errors,
+  /auditGovernedEvidenceChain\(\{[\s\S]*sourceGitSha: governedSourceGitSha,[\s\S]*releaseCandidateDir: governedReleaseCandidateSelection,[\s\S]*expectedHeadSha: gitSha,/.test(
+    qaPacketBuilder,
+  ) &&
+    /PHASE9_IOS_SOURCE_GIT_SHA[\s\S]*GOVERNED_EVIDENCE_SOURCE_GIT_SHA/.test(qaPacketBuilder) &&
+    /PHASE9_RELEASE_CANDIDATE_DIR[\s\S]*GOVERNED_EVIDENCE_RC_DIR/.test(qaPacketBuilder) &&
+    /select different governed evidence/.test(qaPacketBuilder) &&
+    /governedEvidenceChain\.status === 'pass'/.test(qaPacketBuilder) &&
+    /sourcePacketCodeBoundToSourceCommit/.test(qaPacketBuilder) &&
+    /captureGovernedEvidenceWorkingBindings\([\s\S]*governedEvidenceChainAudit,[\s\S]*root,/.test(
+      qaPacketBuilder,
+    ) &&
+    /if \(!governedEvidenceBindings\) \{[\s\S]*no retained governed evidence file bindings/.test(
+      qaPacketBuilder,
+    ) &&
+    /verifyGovernedEvidenceWorkingBindings\(governedEvidenceBindings, root, \{[\s\S]*context: 'Phase 9 packet assembly'/.test(
+      qaPacketBuilder,
+    ) &&
+    /Governed Evidence Chain/.test(qaPacketBuilder),
+  'Phase 9 packet must consume and publish the central S-to-E-to-current ledger audit, reject conflicting aliases, bind packet code to S, and recheck immutable evidence during publication.',
+);
+block(
+  errors,
+  /inputPaths: check[\s\S]*\.\.\.packetOutputPaths/.test(qaPacketBuilder) &&
+    /outputPaths: check \? \[\] : packetOutputPaths/.test(qaPacketBuilder) &&
+    /record\?\.workingKind !== 'file'/.test(qaPacketBuilder) &&
+    /!record\.workingTreeMatchesHead/.test(qaPacketBuilder) &&
+    /canonicalJsonBytes\(recordedPacket\)\.equals\(jsonRecord\.workingBytes\)/.test(
+      qaPacketBuilder,
+    ) &&
+    /exactIsoTimestamp\(recordedPacket\.generatedAt\)/.test(qaPacketBuilder) &&
+    /phase9AssemblyStabilityErrors\(\{ includeSourceSnapshot: true \}\)/.test(qaPacketBuilder) &&
+    /PHASE9_QA_PACKET_CHECK_COMPARISON_COMPLETE/.test(qaPacketBuilder),
+  'Phase 9 check mode must validate committed canonical output bytes and recheck source, raw evidence, CAT07, environment, and governed bindings after its adversarial drift window.',
+);
+block(
+  errors,
+  !/governed-evidence-chain\.mjs/.test(releaseQaIntegrity),
+  'The low-level release QA integrity module must not import the governed evidence chain and create a dependency cycle.',
+);
+block(
+  errors,
+  /'status',[\s\S]{0,80}'--porcelain=v1',[\s\S]{0,80}'-z'/.test(releaseQaIntegrity) &&
+    /'cat-file', '--batch'/.test(releaseQaIntegrity) &&
+    /trustedGitExecutable/.test(releaseQaIntegrity) &&
+    /env:\s*trustedGitEnvironment\(executable\)/.test(releaseQaIntegrity) &&
+    /readStableRootBoundWorkingFile/.test(releaseQaIntegrity) &&
+    /PHASE9_RELEASE_INPUT_AGGREGATE_MAX_BYTES/.test(releaseQaIntegrity) &&
+    /verifyReleaseQaSnapshot\(snapshot\)/.test(releaseQaIntegrity) &&
+    /ReleaseQaSnapshotDriftError/.test(releaseQaIntegrity) &&
+    /atomicWriteReleaseQaOutputs/.test(qaPacketBuilder),
+  'Phase 9 packet publication must cache pinned HEAD blobs, use NUL status, recheck every input, and atomically delete/block on drift.',
+);
+block(
+  errors,
+  /rejects missing, untracked, forged, and stale evidence/.test(releaseQaIntegrityTests) &&
+    /rejects timeout, execution failure, and PASS-marker mismatch/.test(releaseQaIntegrityTests) &&
+    /removes both outputs when an input drifts after writing/.test(releaseQaIntegrityTests) &&
+    /uses an absolute executable, a minimal environment, and ignores repository redirection/.test(
+      releaseQaIntegrityTests,
+    ) &&
+    /reject oversized optional inputs and unsafe ancestors/.test(releaseQaIntegrityTests) &&
+    /detect path replacement after descriptor open/.test(releaseQaIntegrityTests) &&
+    /requires exact pinned metadata plus real gate results/.test(releaseQaIntegrityTests) &&
+    /removes outputs when ignored mounted raw RC evidence changes/.test(releaseQaIntegrityTests) &&
+    /validateCat07CommittedEvidence/.test(releaseQaIntegrityTests) &&
+    /validateCat07FullEvidenceContract/.test(releaseQaIntegrityTests),
+  'Phase 9 must retain real/synthetic CAT07 forgery, validator-failure, and packet-TOCTOU adversarial tests.',
 );
 for (const file of ['.env.example', ...requiredFiles]) {
   block(
     errors,
-    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
+    qaPacketBuilder.includes(`'${file}'`) ||
+      qaPacketBuilder.includes(`"${file}"`) ||
+      (PHASE9_CAT07_BOUND_INPUT_PATHS.includes(file) &&
+        /\.\.\.PHASE9_CAT07_BOUND_INPUT_PATHS/.test(qaPacketBuilder)),
     `Phase 9 release QA packet must hash ${file}.`,
   );
 }

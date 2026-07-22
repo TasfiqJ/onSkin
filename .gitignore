@@ -6,6 +6,9 @@ node_modules/
 # Turborepo
 .turbo/
 
+# Repository-local verification runtimes, caches, and isolated database trees
+/.tmp/
+
 # Expo
 .expo/
 dist/

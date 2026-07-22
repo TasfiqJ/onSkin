@@ -102,6 +102,11 @@ function sourceRecordModifiedDate(value) {
 
 function categoryFromTags(tags) {
   const lower = tags.map((tag) => tag.toLowerCase());
+  // OBF's governed beauty category taxonomy has no benzoyl-peroxide/acne
+  // category. Never derive that regulated product classification from a free
+  // tag or ingredient-name substring here; the signed CAT-02 row-review
+  // overlay is the only supported candidate override, and CAT-03 still
+  // requires its independent OTC/regulatory evidence before serving.
   if (lower.some((tag) => tag.includes('sunscreen') || tag.includes('sun-protection')))
     return 'spf';
   if (lower.some((tag) => tag.includes('cleanser'))) return 'cleanser';

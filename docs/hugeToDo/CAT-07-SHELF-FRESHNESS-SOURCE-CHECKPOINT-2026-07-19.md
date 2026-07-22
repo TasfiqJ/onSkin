@@ -1,8 +1,11 @@
 # CAT-07 Shelf Freshness Source Checkpoint
 
 - Date: 2026-07-19
+- Research last reverified: 2026-07-22
 - Status: `in_progress` source candidate / launch-blocked
-- Release scope: iPhone on iOS 17+, with U.S. and Canadian launch labeling subject to qualified legal review
+- Release scope: iPhone on iOS 17+, provisional U.S.-only Wave 1; Canadian
+  labeling research is forward-looking Wave 2 material and is not Canadian
+  launch authorization
 - Blocking dependency: `CAT-06`
 - External acceptance artifacts: not supplied
 
@@ -87,14 +90,14 @@ compliance, product-market fit, or revenue.
 
 ## Freshness Truth Table
 
-| Product state and evidence | Stored/surfaced source | UI truth | Countdown, expired, or replacement signal |
-| --- | --- | --- | --- |
-| Unopened with a physical-package date explicitly recorded/reconfirmed by the user | `expiry_source='printed'` | Show and identify the printed date | Eligible near or past that date |
-| Unopened without printed package date | `expiry_source='unknown'` | Unopened; no app-derived date | Not eligible |
-| Opened with a winning physical-package date explicitly recorded/reconfirmed by the user | `expiry_source='printed'` | Show and identify the printed date | Eligible near or past that date |
-| Opened with a winning explicit label PAO or reviewed catalog PAO | `expiry_source='pao_computed'`; `pao_source='label'|'catalog'` | Explain opened date plus source-specific PAO | Eligible near or past the computed date |
-| Reserved future state: externally reviewed, server-attested catalog-linked category fallback | `expiry_source='estimated'`; `pao_source='category_default'` | Unavailable at launch; every current claim becomes unknown | Not eligible |
-| No trustworthy candidate | `expiry_source='unknown'` | No date or estimate | Not eligible |
+| Product state and evidence                                                                   | Stored/surfaced source                                       | UI truth                                                   | Countdown, expired, or replacement signal    |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------- | -------------------------------------------- | --------------------------------------- |
+| Unopened with a physical-package date explicitly recorded/reconfirmed by the user            | `expiry_source='printed'`                                    | Show and identify the printed date                         | Eligible near or past that date              |
+| Unopened without printed package date                                                        | `expiry_source='unknown'`                                    | Unopened; no app-derived date                              | Not eligible                                 |
+| Opened with a winning physical-package date explicitly recorded/reconfirmed by the user      | `expiry_source='printed'`                                    | Show and identify the printed date                         | Eligible near or past that date              |
+| Opened with a winning explicit label PAO or reviewed catalog PAO                             | `expiry_source='pao_computed'`; `pao_source='label'          | 'catalog'`                                                 | Explain opened date plus source-specific PAO | Eligible near or past the computed date |
+| Reserved future state: externally reviewed, server-attested catalog-linked category fallback | `expiry_source='estimated'`; `pao_source='category_default'` | Unavailable at launch; every current claim becomes unknown | Not eligible                                 |
+| No trustworthy candidate                                                                     | `expiry_source='unknown'`                                    | No date or estimate                                        | Not eligible                                 |
 
 When printed and PAO-derived candidates both exist, the earlier actual
 candidate wins. An exact tie resolves to `printed`. No sunscreen-specific
@@ -139,9 +142,14 @@ The current candidate spans:
   isolated PostgreSQL rehearsal
   `scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql`, and the
   static binder `scripts/phase2/local-supabase-contract.mjs` for the exact
-  59-migration history through `0060`, legacy-table purge/sealing,
+  61-migration source history through `0062`, legacy-table purge/sealing,
   category-default quarantine, physical-package-date quarantine, and catalog
-  PAO source backfill.
+  PAO source backfill. Forward migration `0061` keeps authenticated PAO reads
+  product-specific and bounded to `label`, `brand_label`, or `catalog` sources
+  with 1-120 months; `category_default` and `unknown` remain excluded. Migration
+  `0062` adds three covered CAT-03 authority indexes, staged-digest pushdown,
+  and the bounded statement-level curation guard; it does not authorize
+  category estimates.
 
 The migration is a candidate, not hosted evidence. No migration result, source
 test result, or local fixture can establish the truth of a live catalog row or

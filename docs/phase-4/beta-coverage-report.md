@@ -12,6 +12,36 @@ prove source lineage, approve a product, or activate a catalog. A boolean such
 as `realBetaData`, an ordinary URL, a typed reviewer name, or a self-authored
 hash string is never release authority.
 
+For a selected release candidate, the same deterministic summary may be used as
+a Phase 9 upstream packet only through the governed committed-output contract.
+The ignored `docs/phase-4/beta-coverage-input.json` must be mounted as one
+bounded regular file. The report records its exact path, byte length, and
+SHA-256 without committing its dashboard URLs or detailed rows. Its `evidence`
+object is an exact six-key inventory: `realBetaDataClaimed`,
+`dashboardEvidencePresent`, `supportDashboardEvidencePresent`,
+`analyticsDashboardEvidencePresent`, `sourceExportDigestPresent`, and
+`namedSignoffPresent`. A claimed pass requires every value to be `true`, plus
+empty code-error, blocker, and warning arrays. Extra or missing keys fail
+closed. This shape check still does not authenticate the named person, the
+dashboards, consent, or the export.
+
+Generate the strict packet at a clean governed pre-publication prefix `P`, then
+commit exactly the JSON/Markdown pair as `P`'s sole child. From the later clean
+governed checkout, run:
+
+```text
+npm run phase4:beta-coverage-report:check
+```
+
+The check is non-writing. It treats both outputs as pinned `HEAD` inputs,
+requires canonical JSON and one exact ISO `generatedAt`, replays the report from
+the exact mounted aggregate bytes and every source blob at `P`, proves that the
+pair is the complete diff of the unique direct publication child, rejects any
+later edit to either output, and finishes by rechecking the worktree, complete
+index, source snapshot, governed ledger, and direct evidence identities. A
+backward prefix, split/JSON-only/widened commit, edited whitespace, replaced
+input, or late source/index drift is invalid.
+
 The CAT-03 release decision must instead use the signed, cross-bound artifact
 chain in the
 [catalog curation release runbook](./catalog-curation-release-runbook.md):
@@ -25,8 +55,10 @@ chain in the
 - qualified row and U.S. sunscreen/OTC-adjacent review;
 - confidence-bound quality report plus hard 2,000-record/category/priority
   inventory gates; and
-- immutable migration-`0058` non-serving authorization, exact-set atomic
-  campaign release, independently signed readback, and retirement evidence.
+- immutable foundational migration-`0058` non-serving authorization, forward-
+  `0062` covered authority indexes, staged-digest pushdown, and overflow/
+  completion-root curation guard, exact-set atomic campaign release,
+  independently signed readback, and retirement evidence.
 
 Generated CAT-03 JSON is a no-clobber retained artifact under
 `artifacts/phase4/`; it is not a raw-data or Markdown publishing lane. A
@@ -131,7 +163,7 @@ ingredient, safety, efficacy, regulatory, expiry, or recommendation evidence.
 - no qualified product/cosmetic-chemistry or U.S. OTC-adjacent reviews;
 - no 2,000-record/category/priority inventory or CAT-03 confidence-bound report
   over an untouched holdout; and
-- no clean local/hosted migration-`0058` pgTAP, staging/release/supersession
+- no clean local/hosted full-chain pgTAP through `0062`, staging/release/supersession
   race, direct-service-role denial, signed readback, serving, retirement, or
   rollback evidence.
 

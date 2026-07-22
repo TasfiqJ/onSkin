@@ -1,10 +1,13 @@
 #!/usr/bin/env node
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
+import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs';
 import {
   createPerformanceEvidenceTemplate,
   PERFORMANCE_MIN_SAMPLE_COUNT,
+  normalizePerformanceEvidencePath,
   summarizePerformanceSamples,
   validatePerformanceEvidence,
 } from './performance-evidence-contract.mjs';
@@ -16,7 +19,7 @@ const checkTemplate = process.argv.includes('--check-template');
 const writeSummaries = process.argv.includes('--write-summaries');
 const templatePath =
   process.env.PHASE5_PERFORMANCE_TEMPLATE_PATH ?? 'docs/phase-5/performance-evidence.template.json';
-const evidencePath = String(process.env.PHASE5_PERFORMANCE_EVIDENCE_PATH ?? '').trim();
+const rawEvidencePath = String(process.env.PHASE5_PERFORMANCE_EVIDENCE_PATH ?? '').trim();
 
 function abs(path) {
   return resolve(root, path);
@@ -24,6 +27,28 @@ function abs(path) {
 
 function normalizedJson(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
+}
+
+function sha256(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
+function appendGovernedRoleErrors(result, chain, evidencePath, evidenceBytes) {
+  if (chain.status !== 'pass' || !chain.ledger) {
+    result.errors.push(`Governed evidence chain is invalid: ${chain.errors.join(' | ')}`);
+    return;
+  }
+  const role = 'phase5-performance';
+  const roleEntries = chain.ledger.entries.filter((entry) => entry.role === role);
+  if (roleEntries.length !== 1 || roleEntries[0].path !== evidencePath) {
+    result.errors.push(
+      `Performance evidence must be the sole exact ${role} ledger entry: ${evidencePath}.`,
+    );
+    return;
+  }
+  if (roleEntries[0].sha256 !== sha256(evidenceBytes)) {
+    result.errors.push(`Performance evidence ledger digest does not match ${evidencePath}.`);
+  }
 }
 
 const expectedTemplate = normalizedJson(createPerformanceEvidenceTemplate());
@@ -55,7 +80,7 @@ if (checkTemplate) {
 
 console.log('Phase 5 performance evidence check');
 
-if (!evidencePath) {
+if (!rawEvidencePath) {
   const message =
     'Missing PHASE5_PERFORMANCE_EVIDENCE_PATH; real supported-device performance evidence is not attached.';
   if (strict || writeSummaries) {
@@ -67,14 +92,24 @@ if (!evidencePath) {
   process.exit(0);
 }
 
+const evidencePath = normalizePerformanceEvidencePath(rawEvidencePath);
+if (!evidencePath) {
+  console.error(
+    'FAIL PHASE5_PERFORMANCE_EVIDENCE_PATH must be a normalized repo-relative JSON path under docs/phase-5/evidence/performance/.',
+  );
+  process.exit(1);
+}
+
 if (!existsSync(abs(evidencePath))) {
   console.error(`FAIL Performance evidence file does not exist: ${evidencePath}.`);
   process.exit(1);
 }
 
 let evidence;
+let evidenceBytes;
 try {
-  evidence = JSON.parse(readFileSync(abs(evidencePath), 'utf8'));
+  evidenceBytes = readFileSync(abs(evidencePath));
+  evidence = JSON.parse(evidenceBytes.toString('utf8'));
 } catch (error) {
   console.error(
     `FAIL Performance evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
@@ -112,6 +147,26 @@ if (writeSummaries) {
 }
 
 const result = validatePerformanceEvidence(evidence);
+const releaseCandidateDir = String(process.env.PHASE9_RELEASE_CANDIDATE_DIR ?? '').trim();
+let chain = null;
+if (!releaseCandidateDir) {
+  result.errors.push(
+    'PHASE9_RELEASE_CANDIDATE_DIR is required to validate the governed S-to-E evidence chain.',
+  );
+} else {
+  try {
+    chain = auditGovernedEvidenceChain({
+      root,
+      sourceGitSha: String(evidence.gitSha ?? ''),
+      releaseCandidateDir,
+    });
+    appendGovernedRoleErrors(result, chain, evidencePath, evidenceBytes);
+  } catch (error) {
+    result.errors.push(
+      `Governed evidence chain could not be validated: ${error instanceof Error ? error.message : String(error)}.`,
+    );
+  }
+}
 for (const warning of result.warnings) console.warn(`WARN ${warning}`);
 for (const error of result.errors) console.error(`FAIL ${error}`);
 
@@ -119,6 +174,7 @@ console.log(`Evidence: ${evidencePath.replaceAll('\\', '/')}`);
 console.log(
   `Measurements: ${result.summary.found}/${result.summary.requiredMeasurements} across ${result.summary.platforms} platforms.`,
 );
+console.log(`Governed evidence chain: ${chain?.status ?? 'not-validated'}.`);
 
 if (result.errors.length > 0) {
   console.error(

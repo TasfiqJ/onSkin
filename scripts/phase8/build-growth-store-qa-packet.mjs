@@ -12,7 +12,7 @@ import {
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
   command,
-  gitStatusExcludingGeneratedEvidence,
+  gitStatusExcludingPaths,
 } from '../phase9/lib.mjs';
 import {
   isReleasePlatformRequired,
@@ -74,7 +74,7 @@ function block(condition, message) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
+  return gitStatusExcludingPaths(packetOutputPaths);
 }
 
 const exampleEnv = parseEnv(read('.env.example'));

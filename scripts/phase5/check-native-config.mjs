@@ -544,15 +544,19 @@ require(/rejects widget booleans without artifact-bound evidence/.test(qaPacketS
   /widgetLifecycleEvidence\.summary\.proofAttachmentCount === 4/.test(
     qaPacketSmoke,
   ), 'Phase 5 QA packet smoke must reject boolean-only widget claims and require all 11 parsed base artifacts/reports plus typed proofs.');
-require(/function gitStatusExcludingGeneratedPacket\(validatedEvidencePaths = \[\]\)/.test(
-  qaPacketBuilder,
-) &&
-  /gitStatusExcludingGeneratedEvidence/.test(qaPacketBuilder) &&
+require(/const defaultPacketOutDir = 'docs\/phase-5\/generated'/.test(qaPacketBuilder) &&
+  /--test-fixture-output/.test(qaPacketBuilder) &&
+  /\.tmp\\\/phase5-packet-fixtures/.test(qaPacketBuilder) &&
   /device-qa-packet\.json/.test(qaPacketBuilder) &&
   /device-qa-packet\.md/.test(qaPacketBuilder) &&
-  /gitStatus = gitStatusExcludingGeneratedPacket\(\[\s*\.\.\.validatedWidgetEvidencePaths,\s*\.\.\.validatedNativeOcrEvidencePaths,\s*\.\.\.validatedCameraLifecycleEvidencePaths,\s*\]\)/.test(
+  /captureReleaseQaSnapshot\(\{[\s\S]*inputPaths: requiredFiles,[\s\S]*outputPaths: packetOutputPaths,/.test(
     qaPacketBuilder,
-  ), 'Phase 5 device QA packet must ignore central generated evidence, its own outputs, and only fully validated widget/OCR/camera evidence when recording Git status.');
+  ) &&
+  /captureEvidenceBindings\(observedEvidenceRecords\)/.test(qaPacketBuilder) &&
+  /hashStableRootBoundWorkingFile/.test(qaPacketBuilder) &&
+  /atomicWriteReleaseQaOutputs\(\{[\s\S]*snapshot: sourceSnapshot,[\s\S]*path: packetOutputPaths\[0\],[\s\S]*path: packetOutputPaths\[1\],/.test(
+    qaPacketBuilder,
+  ), 'Phase 5 device QA packet must use fixed normal outputs, constrained fixtures, pinned source, streamed evidence bindings, and atomic pair publication.');
 require(/validateCameraLifecycleEvidence/.test(qaPacketBuilder) &&
   /PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH/.test(qaPacketBuilder) &&
   /cameraLifecycleEvidence/.test(qaPacketBuilder) &&

@@ -27,7 +27,7 @@
   "databaseSnapshot": {
     "projectRefSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
     "capturedAt": "2026-09-02T14:00:00.000Z",
-    "schemaMigrationVersion": "20260717000058",
+    "schemaMigrationVersion": "20260722000062",
     "activeCat02BatchSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
     "candidateSetSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
     "servedStateMutationRootSetSha256": "4324bbbddbfc58f0b62c50d1c80a95207321fe4e2fef3d603697605e1e85d3e5",

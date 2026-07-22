@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  59::bigint,
-  'all 59 repository migrations are recorded'
+  61::bigint,
+  'all 61 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260718000060'::text,
-  'migration history reaches the CAT-07 truthful-freshness gate'
+  '20260722000062'::text,
+  'migration history reaches the forward-only CAT-03 statement guard'
 );
 
 select is(

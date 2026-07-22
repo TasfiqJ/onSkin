@@ -660,6 +660,8 @@ block(
   /PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL/.test(liveHarness) &&
     /appEnv === 'staging'/.test(liveHarness) &&
     /resolveHostedSupabaseProjectTarget/.test(liveHarness) &&
+    /gitStatusExcludingPaths\(outputPaths\)/.test(liveHarness) &&
+    !/gitStatusExcludingGeneratedEvidence/.test(liveHarness) &&
     /sourceTreeClean/.test(liveHarness) &&
     /docs\/phase-9\/generated\/live-consent-withdrawal\.json/.test(liveHarness),
   'Live consent-withdrawal harness must be explicit-flagged, clean-revision staging-only, target-bound, and write evidence artifacts.',

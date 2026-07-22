@@ -20,12 +20,24 @@ import {
   NATIVE_OCR_LABEL_CLASSES,
   NATIVE_OCR_REQUIRED_SOURCE_FILES,
 } from './native-ocr-evidence-contract.mjs';
+import {
+  buildGovernedEvidenceLedger,
+  captureGovernedPublicationPolicy,
+  governedEvidenceLedgerPath,
+  governedEvidenceRoleForPath,
+  renderGovernedEvidenceLedger,
+} from '../launch/governed-evidence-chain.mjs';
+import {
+  publishGovernedFixtureTail,
+  seedGovernedPublicationSourceFixture,
+} from '../launch/governed-evidence-test-fixture.mjs';
 
 const sourceRoot = resolve(import.meta.dirname, '..', '..');
 const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-native-ocr-evidence-'));
 const evidenceRelativeRoot = `docs/phase-5/evidence/native-ocr/smoke-${process.pid}`;
 const evidenceRoot = resolve(fixtureRoot, evidenceRelativeRoot);
 const evidencePath = `${evidenceRelativeRoot}/evidence.json`;
+const releaseCandidateDir = 'docs/phase-9/release-candidates/rc-native-ocr-smoke';
 
 process.on('exit', () => rmSync(fixtureRoot, { recursive: true, force: true }));
 
@@ -55,10 +67,16 @@ for (const path of new Set([
   'scripts/phase5/native-ocr-evidence-contract.mjs',
   'scripts/phase5/check-native-ocr-evidence.mjs',
   'scripts/phase5/native-ocr-evidence-smoke.mjs',
+  'scripts/launch/governed-evidence-chain.mjs',
+  'scripts/phase9/release-qa-integrity.mjs',
+  'scripts/e2e/cat07-committed-evidence.mjs',
+  'scripts/e2e/evidence-diagnostic-hygiene.mjs',
+  'scripts/e2e/human-e2e-manifest-render.mjs',
   'package.json',
 ])) {
   copyCurrentSource(path);
 }
+seedGovernedPublicationSourceFixture({ fixtureRoot, sourceRoot });
 git(fixtureRoot, ['config', 'user.email', 'phase5-native-ocr-smoke@example.invalid']);
 git(fixtureRoot, ['config', 'user.name', 'Phase 5 Native OCR Smoke']);
 git(fixtureRoot, ['add', '-A']);
@@ -296,6 +314,7 @@ function run(evidence, { strict = true, path = evidencePath, extraEnv = {} } = {
       PHASE5_NATIVE_OCR_EVIDENCE_PATH: path,
       PHASE5_IOS_BUILD_ID: iosBuildId,
       PHASE5_IOS_BUILD_PROFILE: buildProfile,
+      PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
       ...extraEnv,
     },
   });
@@ -346,17 +365,40 @@ assert.match(packageScripts['phase5:verify'], /phase5:native-ocr-evidence:templa
 assert.match(packageScripts['phase5:verify'], /phase5:native-ocr-evidence(?:\s|$)/);
 assert.match(packageScripts['launch:verify'], /phase5:native-ocr-evidence:template:check/);
 assert.match(packageScripts['launch:verify'], /cat05:native-ocr-source-contract:test/);
-assert.match(packageScripts['launch:verify'], /phase5:native-ocr-evidence(?:\s|$)/);
+assert.match(packageScripts['launch:verify'], /phase5:native-ocr-evidence:smoke/);
 
-// Model the real two-commit workflow: A is the exact EAS source candidate;
-// B commits only the completed evidence and attachments after physical QA.
+// Model the governed two-commit workflow: S is the exact EAS source candidate;
+// E commits the selected RC, immutable ledger, completed evidence, and attachments.
 const committedEvidence = validEvidence();
 writeFileSync(
   resolve(fixtureRoot, evidencePath),
   `${JSON.stringify(committedEvidence, null, 2)}\n`,
 );
-git(fixtureRoot, ['add', evidenceRelativeRoot]);
-git(fixtureRoot, ['commit', '--quiet', '-m', 'Attach physical native OCR evidence']);
+const releaseCandidatePath = `${releaseCandidateDir}/manifest.md`;
+mkdirSync(dirname(resolve(fixtureRoot, releaseCandidatePath)), { recursive: true });
+writeFileSync(
+  resolve(fixtureRoot, releaseCandidatePath),
+  `Native OCR smoke release candidate bound to ${gitSha}\n`,
+);
+const directEvidencePaths = [
+  releaseCandidatePath,
+  evidencePath,
+  ...committedEvidence.artifacts.map(({ path }) => path),
+];
+const ledger = buildGovernedEvidenceLedger({
+  sourceGitSha: gitSha,
+  releaseCandidateDir,
+  publicationPolicy: captureGovernedPublicationPolicy(fixtureRoot, gitSha),
+  entries: directEvidencePaths.map((path) => ({
+    role: governedEvidenceRoleForPath(path, releaseCandidateDir),
+    path,
+    sha256: sha256(readFileSync(resolve(fixtureRoot, path))),
+  })),
+});
+const ledgerPath = governedEvidenceLedgerPath(releaseCandidateDir);
+writeFileSync(resolve(fixtureRoot, ledgerPath), renderGovernedEvidenceLedger(ledger));
+git(fixtureRoot, ['add', evidenceRelativeRoot, releaseCandidateDir]);
+git(fixtureRoot, ['commit', '--quiet', '-m', 'Attach governed physical native OCR evidence']);
 const evidenceGitSha = git(fixtureRoot, ['rev-parse', 'HEAD']);
 assert.notEqual(evidenceGitSha, gitSha);
 assert.equal(
@@ -512,6 +554,7 @@ function runWithCommittedSourceDrift() {
           PHASE5_NATIVE_OCR_EVIDENCE_PATH: evidencePath,
           PHASE5_IOS_BUILD_ID: iosBuildId,
           PHASE5_IOS_BUILD_PROFILE: buildProfile,
+          PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
         },
       },
     );
@@ -526,13 +569,19 @@ function runWithCommittedAllowedManifest() {
     git(dirname(manifestRoot), ['clone', '--quiet', '--no-local', fixtureRoot, manifestRoot]);
     git(manifestRoot, ['config', 'user.email', 'phase5-native-ocr-smoke@example.invalid']);
     git(manifestRoot, ['config', 'user.name', 'Phase 5 Native OCR Smoke']);
+    const manifestJsonPath = 'docs/e2e/generated/human-e2e-manifest.json';
     const manifestPath = 'docs/e2e/generated/human-e2e-manifest.md';
+    const originalJson = readFileSync(resolve(manifestRoot, manifestJsonPath));
     const original = readFileSync(resolve(manifestRoot, manifestPath));
+    writeFileSync(
+      resolve(manifestRoot, manifestJsonPath),
+      Buffer.concat([originalJson, Buffer.from('\n')]),
+    );
     writeFileSync(
       resolve(manifestRoot, manifestPath),
       Buffer.concat([original, Buffer.from('\n<!-- refreshed evidence manifest -->\n')]),
     );
-    git(manifestRoot, ['add', manifestPath]);
+    git(manifestRoot, ['add', manifestJsonPath, manifestPath]);
     git(manifestRoot, ['commit', '--quiet', '-m', 'Refresh human evidence manifest']);
     return spawnSync(
       process.execPath,
@@ -545,11 +594,54 @@ function runWithCommittedAllowedManifest() {
           PHASE5_NATIVE_OCR_EVIDENCE_PATH: evidencePath,
           PHASE5_IOS_BUILD_ID: iosBuildId,
           PHASE5_IOS_BUILD_PROFILE: buildProfile,
+          PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
         },
       },
     );
   } finally {
     rmSync(manifestRoot, { recursive: true, force: true });
+  }
+}
+
+function runWithGovernedTail({ mode }) {
+  const tailRoot = mkdtempSync(join(tmpdir(), `routinekind-native-ocr-${mode}-`));
+  try {
+    git(dirname(tailRoot), ['clone', '--quiet', '--no-local', fixtureRoot, tailRoot]);
+    git(tailRoot, ['config', 'user.email', 'phase5-native-ocr-smoke@example.invalid']);
+    git(tailRoot, ['config', 'user.name', 'Phase 5 Native OCR Smoke']);
+    if (mode === 'allowed-final-tail') {
+      publishGovernedFixtureTail({ fixtureRoot: tailRoot });
+    } else if (mode === 'near-miss') {
+      const path = 'docs/phase-7/generated/core-loop-qa-packet.json.bak';
+      mkdirSync(dirname(resolve(tailRoot, path)), { recursive: true });
+      writeFileSync(resolve(tailRoot, path), 'near-miss generated path\n');
+      git(tailRoot, ['add', path]);
+      git(tailRoot, ['commit', '--quiet', '-m', 'Add near-miss generated path']);
+    } else if (mode === 'raw-evidence-after-e') {
+      const original = readFileSync(resolve(tailRoot, evidencePath));
+      writeFileSync(resolve(tailRoot, evidencePath), Buffer.concat([original, Buffer.from('\n')]));
+      git(tailRoot, ['add', evidencePath]);
+      git(tailRoot, ['commit', '--quiet', '-m', 'Mutate raw evidence after E']);
+    } else {
+      throw new Error(`Unknown governed-tail mode: ${mode}`);
+    }
+    return spawnSync(
+      process.execPath,
+      [resolve(tailRoot, 'scripts/phase5/check-native-ocr-evidence.mjs'), '--strict'],
+      {
+        cwd: tailRoot,
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          PHASE5_NATIVE_OCR_EVIDENCE_PATH: evidencePath,
+          PHASE5_IOS_BUILD_ID: iosBuildId,
+          PHASE5_IOS_BUILD_PROFILE: buildProfile,
+          PHASE9_RELEASE_CANDIDATE_DIR: releaseCandidateDir,
+        },
+      },
+    );
+  } finally {
+    rmSync(tailRoot, { recursive: true, force: true });
   }
 }
 
@@ -603,7 +695,7 @@ const cases = [
       result.status === 1 && /normalized repo-relative JSON path/.test(output(result)),
   },
   {
-    name: 'accepts the committed evidence-only descendant of the EAS source commit',
+    name: 'accepts the committed governed evidence child of the EAS source commit',
     result: run(validEvidence()),
     pass: (result) => result.status === 0 && !/Source drift after/.test(output(result)),
   },
@@ -789,25 +881,43 @@ const cases = [
   {
     name: 'rejects a source SHA that is not an ancestor of the evidence commit',
     result: run(nonAncestor),
-    pass: (result) => result.status === 1 && /must be a Git ancestor/.test(output(result)),
+    pass: (result) => result.status === 1 && /Governed evidence chain/.test(output(result)),
   },
   {
     name: 'rejects dirty worktree state outside validated evidence',
     result: runWithDirtySource(),
-    pass: (result) => result.status === 1 && /dirty worktree outside/.test(output(result)),
+    pass: (result) => result.status === 1 && /clean worktree/.test(output(result)),
   },
   {
     name: 'rejects committed runtime source drift after the built candidate',
     result: runWithCommittedSourceDrift(),
     pass: (result) =>
       result.status === 1 &&
-      /Source drift after the built candidate is not evidence-only/.test(output(result)) &&
+      /non-allowlisted downstream path/.test(output(result)) &&
       /does not match the exact source file bytes/.test(output(result)),
   },
   {
     name: 'accepts an explicitly allowlisted committed human-evidence manifest refresh',
     result: runWithCommittedAllowedManifest(),
     pass: (result) => result.status === 0 && !/Source drift after/.test(output(result)),
+  },
+  {
+    name: 'accepts Phase 7 and final readiness commits in the centralized generated tail',
+    result: runWithGovernedTail({ mode: 'allowed-final-tail' }),
+    pass: (result) => result.status === 0 && /Governed evidence chain: pass/.test(output(result)),
+  },
+  {
+    name: 'rejects a near-miss generated path after E',
+    result: runWithGovernedTail({ mode: 'near-miss' }),
+    pass: (result) =>
+      result.status === 1 && /changes a non-allowlisted downstream path/.test(output(result)),
+  },
+  {
+    name: 'rejects raw native OCR evidence mutated after E',
+    result: runWithGovernedTail({ mode: 'raw-evidence-after-e' }),
+    pass: (result) =>
+      result.status === 1 &&
+      /changed after the evidence commit|non-allowlisted downstream path/.test(output(result)),
   },
 ];
 

@@ -172,10 +172,10 @@ const sharedLaunchLibrary = read('scripts/phase9/lib.mjs');
 require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
   /payments-qa-packet\.json/.test(qaPacketBuilder) &&
   /payments-qa-packet\.md/.test(qaPacketBuilder) &&
-  /gitStatusExcludingGeneratedEvidence\(packetOutputPaths\)/.test(qaPacketBuilder) &&
+  /gitStatusExcludingPaths\(packetOutputPaths\)/.test(qaPacketBuilder) &&
   /capturedGitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
     qaPacketBuilder,
-  ), 'Phase 6 payments QA packet must ignore central generated evidence and its own outputs when recording Git status.');
+  ), 'Phase 6 payments QA packet must ignore only its own outputs when recording Git status.');
 require(/--porcelain=v1/.test(sharedLaunchLibrary) &&
   /--untracked-files=all/.test(sharedLaunchLibrary) &&
   /--ignore-submodules=none/.test(

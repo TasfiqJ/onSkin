@@ -1,7 +1,7 @@
 # Commands
 
 Record exact command output or immutable CI/workflow links for the release
-candidate. This packet has three ordered stages. Do not mix generated source
+candidate. This packet has four ordered stages. Do not mix generated source
 packet writes into the final RC-only evidence commit.
 
 Every all-caps value prefixed with `REPLACE` below is an intentionally rejected
@@ -69,11 +69,12 @@ clean acceptance checkout.
 
 ## 3. Commit and validate the immutable RC packet
 
-Complete every RC metadata file and the archive evidence index, then create
-exactly one non-merge commit whose direct parent is the build-source SHA and
-whose changed paths are all inside the selected RC folder. Mount the ignored
-raw evidence at the hash-recorded `evidence/ios/` paths, then validate from a
-clean checkout of that evidence commit:
+Complete every RC metadata file and the archive evidence index, stage every
+required direct-evidence file, build and stage the canonical evidence-chain
+ledger as described in the release-candidate README, then create exactly one
+non-merge evidence commit `E` whose direct parent is the build-source SHA `S`.
+Mount the ignored raw evidence at the hash-recorded `evidence/ios/` paths, then
+validate from a clean checkout of that evidence commit:
 
 ```bash
 export PHASE9_RELEASE_CANDIDATE_DIR=docs/phase-9/release-candidates/REPLACE_WITH_RC_ID
@@ -105,3 +106,24 @@ The final status output must remain empty. `phase9:store-build-inspect:check`
 is the ordinary non-writing CI mode. It validates a real archive index only
 when the exact evidence context is supplied; without that context it reports
 the missing production evidence as a non-strict warning.
+
+## 4. Publish and replay governed packets
+
+Publish each generated JSON/Markdown pair as its own single-parent commit in
+the dependency order documented in the release-candidate README. The ignored
+Phase 4 aggregate must remain mounted at its recorded path while generating and
+checking the beta pair. After the final readiness-only commit `F`, run the
+complete post-publication verifier from clean `F`:
+
+```bash
+npm run release:governed-packets:check
+git status --short
+```
+
+The aggregate command runs all 16 implemented deterministic packet replays in
+dependency order, plus their focused contracts, without writing outputs or
+rerunning live/mutating evidence collection. Store-build inspection remains a
+separate current-state check because it does not replay the committed singleton
+bytes. The final status must be empty. Any source, input, index,
+direct-evidence, ledger, packet, or history drift requires a new governed
+chain; do not repair a published pair in place.

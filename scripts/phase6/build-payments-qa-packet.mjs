@@ -6,7 +6,7 @@ import ts from 'typescript';
 import {
   command,
   evidenceFlagEnabled,
-  gitStatusExcludingGeneratedEvidence,
+  gitStatusExcludingPaths,
   placeholderEnvValue,
   productionUrl,
 } from '../phase9/lib.mjs';
@@ -307,7 +307,7 @@ function readJson(path) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
+  return gitStatusExcludingPaths(packetOutputPaths);
 }
 
 function trackedSecretEnvironmentFile(path) {

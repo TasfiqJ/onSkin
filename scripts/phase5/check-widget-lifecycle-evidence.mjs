@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, posix, relative, resolve } from 'node:path';
 
+import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs';
 import {
   createWidgetLifecycleEvidenceTemplate,
   validateWidgetLifecycleEvidence,
   WIDGET_LIFECYCLE_EVIDENCE_ROOT,
-  widgetLifecycleArtifactReferences,
 } from './widget-lifecycle-evidence-contract.mjs';
 
 const root = process.cwd();
@@ -25,14 +25,6 @@ function normalizedJson(value) {
 
 function abs(path) {
   return resolve(root, path);
-}
-
-function command(name, args) {
-  return execFileSync(name, args, {
-    cwd: root,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  }).trim();
 }
 
 function normalizedEvidencePath(value) {
@@ -61,28 +53,44 @@ function normalizedEvidencePath(value) {
   return normalized;
 }
 
-function dirtySourcePaths(allowedEvidencePaths) {
-  const status = command('git', [
-    '-c',
-    `safe.directory=${resolve(root)}`,
-    '-c',
-    'core.quotepath=false',
-    'status',
-    '--short',
-    '--untracked-files=all',
-  ]);
-  if (!status) return [];
-  const allowed = new Set(allowedEvidencePaths);
-  return status
-    .split(/\r?\n/)
-    .filter(Boolean)
-    .filter((line) => {
-      const paths = line
-        .slice(3)
-        .split(' -> ')
-        .map((path) => path.trim().replaceAll('\\', '/'));
-      return paths.some((path) => !allowed.has(path));
-    });
+function sha256(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
+function appendGovernedRoleErrors(result, chain, evidencePath, evidenceBytes) {
+  if (chain.status !== 'pass' || !chain.ledger) {
+    result.errors.push(`Governed evidence chain is invalid: ${chain.errors.join(' | ')}`);
+    return;
+  }
+  const role = 'phase5-widget-lifecycle';
+  const expected = [
+    { path: evidencePath, sha256: sha256(evidenceBytes) },
+    ...result.artifacts.map(({ path, sha256: digest }) => ({ path, sha256: digest })),
+  ];
+  const expectedByPath = new Map(expected.map((entry) => [entry.path, entry]));
+  if (expectedByPath.size !== expected.length) {
+    result.errors.push('Widget lifecycle evidence references duplicate governed paths.');
+    return;
+  }
+  const roleEntries = chain.ledger.entries.filter((entry) => entry.role === role);
+  const ledgerByPath = new Map(roleEntries.map((entry) => [entry.path, entry]));
+  for (const expectedEntry of expected) {
+    const ledgerEntry = ledgerByPath.get(expectedEntry.path);
+    if (!ledgerEntry) {
+      result.errors.push(
+        `Widget lifecycle evidence path is not an exact ${role} ledger entry: ${expectedEntry.path}.`,
+      );
+    } else if (ledgerEntry.sha256 !== expectedEntry.sha256) {
+      result.errors.push(`Widget lifecycle ledger digest does not match ${expectedEntry.path}.`);
+    }
+  }
+  for (const ledgerEntry of roleEntries) {
+    if (!expectedByPath.has(ledgerEntry.path)) {
+      result.errors.push(
+        `Widget lifecycle ledger contains an unreferenced ${role} entry: ${ledgerEntry.path}.`,
+      );
+    }
+  }
 }
 
 const expectedTemplate = normalizedJson(createWidgetLifecycleEvidenceTemplate());
@@ -143,8 +151,10 @@ if (!existsSync(abs(normalizedPath))) {
 }
 
 let evidence;
+let evidenceBytes;
 try {
-  evidence = JSON.parse(readFileSync(abs(normalizedPath), 'utf8'));
+  evidenceBytes = readFileSync(abs(normalizedPath));
+  evidence = JSON.parse(evidenceBytes.toString('utf8'));
 } catch (error) {
   console.error(
     `FAIL Widget lifecycle evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
@@ -152,46 +162,33 @@ try {
   process.exit(1);
 }
 
-let currentHead = '';
-try {
-  currentHead = command('git', [
-    '-c',
-    `safe.directory=${resolve(root)}`,
-    'rev-parse',
-    'HEAD',
-  ]).toLowerCase();
-} catch {
-  console.error('FAIL Current Git HEAD could not be resolved.');
-  process.exit(1);
-}
-
 const result = validateWidgetLifecycleEvidence(evidence, {
   root,
-  expectedGitSha: currentHead,
   expectedBuildId: process.env.PHASE5_IOS_BUILD_ID,
   expectedSignedOffBy: process.env.PHASE5_SIGNED_OFF_BY,
   expectedAppBundleIdentifier: process.env.APP_IOS_BUNDLE_IDENTIFIER,
   expectedTeamIdentifier: process.env.APPLE_TEAM_ID,
 });
 
-const allowedEvidencePaths =
-  result.errors.length === 0
-    ? [
-        normalizedPath,
-        ...widgetLifecycleArtifactReferences(evidence, result.artifacts)
-          .map(({ path }) => normalizedEvidencePath(String(path ?? '')))
-          .filter(Boolean),
-      ]
-    : [];
-try {
-  const dirty = dirtySourcePaths(allowedEvidencePaths);
-  if (dirty.length > 0) {
+const releaseCandidateDir = String(process.env.PHASE9_RELEASE_CANDIDATE_DIR ?? '').trim();
+let chain = null;
+if (!releaseCandidateDir) {
+  result.errors.push(
+    'PHASE9_RELEASE_CANDIDATE_DIR is required to validate the governed S-to-E evidence chain.',
+  );
+} else {
+  try {
+    chain = auditGovernedEvidenceChain({
+      root,
+      sourceGitSha: String(evidence.sourceGitSha ?? ''),
+      releaseCandidateDir,
+    });
+    appendGovernedRoleErrors(result, chain, normalizedPath, evidenceBytes);
+  } catch (error) {
     result.errors.push(
-      `Source worktree differs from sourceGitSha outside the attached evidence paths: ${dirty.join(' | ')}.`,
+      `Governed evidence chain could not be validated: ${error instanceof Error ? error.message : String(error)}.`,
     );
   }
-} catch {
-  result.errors.push('Git source cleanliness could not be verified.');
 }
 
 for (const warning of result.warnings) console.warn(`WARN ${warning}`);
@@ -201,6 +198,7 @@ console.log(`Evidence: ${relative(root, abs(normalizedPath)).replaceAll('\\', '/
 console.log(
   `Base reports/artifacts: ${result.summary.baseArtifactCount}/${result.summary.requiredBaseArtifactCount}; proof attachments: ${result.summary.proofAttachmentCount} (minimum ${result.summary.minimumProofAttachmentCount}); scenarios: ${result.summary.scenarioCount}/4.`,
 );
+console.log(`Governed evidence chain: ${chain?.status ?? 'not-validated'}.`);
 
 if (result.errors.length > 0) {
   console.error(
