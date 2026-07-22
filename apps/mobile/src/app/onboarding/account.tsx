@@ -96,7 +96,7 @@ export default function AccountScreen() {
         const owner = await captureAuthenticatedAccountOwner(lease);
         if (!isCurrent()) return;
         if (owner) {
-          await identify(lease, owner.userId, { method: 'account_created' });
+          await identify(lease, owner.userId);
           if (!isCurrent()) return;
         }
       }

@@ -9,7 +9,7 @@ describe('shelf add-start analytics', () => {
     expect(sanitizeAnalyticsEventName('product_add_started')).toBe('product_add_started');
 
     for (const source of PRODUCT_ADD_START_SOURCES) {
-      expect(sanitizeAnalyticsProps({ source })).toEqual({ source });
+      expect(sanitizeAnalyticsProps('product_add_started', { source })).toEqual({ source });
     }
   });
 });

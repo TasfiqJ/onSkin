@@ -22,11 +22,7 @@ import {
   type AskAnswer,
   type AskContext,
 } from './answer';
-import {
-  askGate,
-  groundedReasonForCloudReadiness,
-  requiresTrialGroundedQuota,
-} from './gate';
+import { askGate, groundedReasonForCloudReadiness, requiresTrialGroundedQuota } from './gate';
 import { blockUnreservedGroundedAnswer } from './groundedDelivery';
 import { groundedTurnsQueryOptions } from './groundedTurnsQuery';
 import { guardClaim } from './guard';
@@ -62,9 +58,7 @@ export function useAskViewModel() {
   const period = boundary.localDate.slice(0, 7);
   const trialQuotaRequired =
     quotaFixtureEnabled ||
-    (cloudGateEnabled &&
-      entitlementResolved &&
-      requiresTrialGroundedQuota(ent));
+    (cloudGateEnabled && entitlementResolved && requiresTrialGroundedQuota(ent));
   const turnsOptions = useMemo(
     () => groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired),
     [ownerScope, period, trialQuotaRequired],
@@ -77,9 +71,7 @@ export function useAskViewModel() {
   });
   const { isSuccess, isError } = readiness;
   const cloudGroundingReady =
-    cloudGateEnabled &&
-    entitlementResolved &&
-    (!trialQuotaRequired || turns.isSuccess);
+    cloudGateEnabled && entitlementResolved && (!trialQuotaRequired || turns.isSuccess);
 
   const ctx = useMemo<AskContext>(() => {
     const gate = askGate({
@@ -126,11 +118,11 @@ export function useAskViewModel() {
       // cache publication, and delivery inside runGroundedTurnForOwner; post-answer
       // fire-and-forget accounting would permit quota and account-boundary races.
       const final = blockUnreservedGroundedAnswer(guarded);
-      track('ask_turn', {
-        kind: final.kind,
-        grounded: false,
-        refused: final.kind === 'refuse',
-      });
+      if (final.kind === 'refuse') {
+        track('ask_turn', { kind: final.kind, grounded: false, refused: true });
+      } else {
+        track('ask_turn', { kind: final.kind, grounded: false, refused: false });
+      }
       if (final.kind === 'escalate') track('ask_escalated_to_clinician');
       // The grounded (cloud) layer was gated. The Pro / trial-cap upsell funnel (docs/13 §15).
       if (final.kind === 'refuse' && final.intent === 'concern_q' && ctx.groundedReason) {

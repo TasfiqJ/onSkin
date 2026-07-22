@@ -37,11 +37,11 @@ export function shelfScanResultFromLookup(result: ShelfScanLookupResult): ShelfS
 }
 
 function trackScanFunnel(result: ShelfScanResult): void {
-  track('barcode_scanned', {
-    source: 'scan',
-    matched: result === 'matched',
-    result,
-  });
+  if (result === 'matched') {
+    track('barcode_scanned', { source: 'scan', matched: true, result });
+  } else {
+    track('barcode_scanned', { source: 'scan', matched: false, result });
+  }
   if (result === 'matched') {
     track('scan_matched', { source: 'scan', result });
   } else if (result === 'no_match') {

@@ -216,7 +216,7 @@ export function useTodayViewModel({ boundary, routineType, shelf }: TodayViewMod
           if (!publication.published || result.status !== 'committed' || !result.changed) return;
 
           committedInSession.current.add(operationId);
-          const moment = routineType.toLowerCase();
+          const moment = routineType === 'PM' ? 'pm' : 'am';
           track('routine_checkoff_completed', { moment });
           if (result.firstEver) track('first_checkoff_completed', { moment });
           const cycleNightReceipt = await reserveCycleNightCompletionAnalyticsForOwner({

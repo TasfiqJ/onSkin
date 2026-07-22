@@ -225,16 +225,20 @@ export default function BetaFeedbackScreen() {
       failureMessage: SUPPORT_FEEDBACK_UNAVAILABLE,
       alertOnFailure: false,
     });
-    const analyticsPayload = {
-      source: 'beta_feedback',
-      result: opened ? 'opened' : 'unavailable',
-      category,
-      severity,
-    } as const;
     if (opened) {
-      track('support_contact_opened', analyticsPayload);
+      track('support_contact_opened', {
+        source: 'beta_feedback',
+        result: 'opened',
+        category,
+        severity,
+      });
     } else {
-      track('support_contact_failed', analyticsPayload);
+      track('support_contact_failed', {
+        source: 'beta_feedback',
+        result: 'unavailable',
+        category,
+        severity,
+      });
     }
     if (!opened) setFeedback(SUPPORT_FEEDBACK_UNAVAILABLE);
     setOpening(false);

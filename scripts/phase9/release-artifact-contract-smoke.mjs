@@ -171,6 +171,8 @@ function validate(fixture, overrides = {}) {
       nativeEventId: NATIVE_EVENT_ID,
       release: fixture.evidence.ios.release,
       dist: fixture.evidence.ios.dist,
+      binaryUuids: [BINARY_UUID],
+      hermesDebugId: HERMES_DEBUG_ID,
     },
     manifestIdentity: {
       iosBuildId: BUILD_ID,
@@ -367,6 +369,38 @@ expectFailure(
   { providerVerification: { verified: false } },
 );
 expectFailure(
+  'provider binary UUID mismatch',
+  () => {},
+  /Provider-verified binary UUID inventory must match/,
+  {
+    providerVerification: {
+      verified: true,
+      javascriptEventId: JAVASCRIPT_EVENT_ID,
+      nativeEventId: NATIVE_EVENT_ID,
+      release: 'com.routinekind.app@1.2.3+42',
+      dist: '42',
+      binaryUuids: ['aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'],
+      hermesDebugId: HERMES_DEBUG_ID,
+    },
+  },
+);
+expectFailure(
+  'provider Hermes debug ID mismatch',
+  () => {},
+  /Provider-verified Hermes debug ID must match/,
+  {
+    providerVerification: {
+      verified: true,
+      javascriptEventId: JAVASCRIPT_EVENT_ID,
+      nativeEventId: NATIVE_EVENT_ID,
+      release: 'com.routinekind.app@1.2.3+42',
+      dist: '42',
+      binaryUuids: [BINARY_UUID],
+      hermesDebugId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    },
+  },
+);
+expectFailure(
   'same event used for JavaScript and native recovery',
   (fixture) => {
     fixture.evidence.ios.sentry.recoveryReceipt.nativeEventId = JAVASCRIPT_EVENT_ID;
@@ -434,4 +468,4 @@ expectFailure(
   },
 );
 
-console.log('Release artifact contract smoke passed (1 positive, 22 negative cases).');
+console.log('Release artifact contract smoke passed (1 positive, 24 negative cases).');

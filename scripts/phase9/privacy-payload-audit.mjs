@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 import { abs, block, evidenceFlagEnabled, listFiles, printResult, read, warn } from './lib.mjs';
+import { auditAnalyticsSource } from './analytics-source-audit.mjs';
+import { auditSentrySource } from './sentry-source-audit.mjs';
 
 const errors = [];
 const warnings = [];
+const analyticsSourceAudit = auditAnalyticsSource();
+errors.push(...analyticsSourceAudit.errors);
+const sentrySourceAudit = auditSentrySource();
+errors.push(...sentrySourceAudit.errors);
 
 const registrySource = read('apps/mobile/src/lib/analytics/eventRegistry.ts');
 const trackSource = read('apps/mobile/src/lib/analytics/track.ts');
@@ -41,19 +47,18 @@ const notificationTimingSource = read('apps/mobile/src/app/settings/timing.tsx')
 const notificationLockscreenMigrationSource = read(
   'supabase/migrations/20260705000033_phase9_notification_lock_screen_privacy.sql',
 );
+const sentrySdkAcquisitionFiles = sentrySourceAudit.acquisitionFiles;
+const sentrySdkMethods = sentrySourceAudit.methods;
 const photoShareFileSource = encryptedPhotoSource.slice(
   encryptedPhotoSource.indexOf('export async function createPhotoShareFile'),
   encryptedPhotoSource.indexOf('export async function deletePhotoShareFile'),
 );
 
-const eventRegistryBody =
-  registrySource.match(/ANALYTICS_ALLOWED_EVENTS\s*=\s*\[([\s\S]*?)\]\s*as const/)?.[1] ?? '';
-const allowedEvents = new Set(
-  [...eventRegistryBody.matchAll(/'([^']+)'/g)].map((match) => match[1]),
+const allowedEvents = analyticsSourceAudit.allowedEvents;
+const allowed = analyticsSourceAudit.allowedProps;
+const untrackedAllowedEvents = [...allowedEvents].filter(
+  (event) => !analyticsSourceAudit.trackedEvents.has(event),
 );
-const registryBody =
-  registrySource.match(/ANALYTICS_ALLOWED_PROP_KEYS\s*=\s*\[([\s\S]*?)\]\s*as const/)?.[1] ?? '';
-const allowed = new Set([...registryBody.matchAll(/'([^']+)'/g)].map((match) => match[1]));
 const sensitiveKey =
   /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|question_id|id$|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug)/i;
 const retiredAnalyticsProps = new Set(['intent', 'product_type', 'trigger']);
@@ -78,7 +83,7 @@ block(
 );
 block(
   errors,
-  /posthog\?\.capture\(safeEvent,\s*safeProps\)/.test(trackSource),
+  /posthog\?\.capture\(prepared\.event,\s*prepared\.props\)/.test(trackSource),
   'PostHog capture must use the sanitized event name.',
 );
 block(
@@ -93,38 +98,34 @@ block(
 );
 block(
   errors,
-  /SENSITIVE_ANALYTICS_KEY/.test(trackSource),
-  'Analytics sanitizer is missing sensitive-key guard.',
+  /analyticsSchemaForEvent/.test(trackSource) && /isAllowedAnalyticsPropValue/.test(trackSource),
+  'Analytics sanitizer is missing its exact event-key/value guard.',
 );
 block(
   errors,
-  /SENSITIVE_ANALYTICS_VALUE/.test(trackSource),
-  'Analytics sanitizer is missing sensitive-value guard.',
+  /analyticsSchemaForEvent/.test(trackSource) && /isAllowedAnalyticsPropValue/.test(trackSource),
+  'Analytics sanitizer must enforce the exact schema for the event.',
 );
 block(
   errors,
-  /SENSITIVE_ANALYTICS_VALUE\.test\(trimmed\)/.test(trackSource),
-  'Analytics sanitizer must check trimmed string values against the sensitive-value guard.',
+  /safeOwnDataEntries/.test(trackSource) && /Object\.getOwnPropertyDescriptor/.test(trackSource),
+  'Analytics sanitizer must reject accessors and hostile property containers without invoking them.',
 );
 block(
   errors,
-  /https\?:\\\/\\\//.test(trackSource) && /token\|jwt\|secret\|signed_url/.test(trackSource),
-  'Analytics sensitive-value guard must block URLs and token-like strings.',
+  /ANALYTICS_EVENT_SCHEMAS/.test(registrySource),
+  'Analytics registry must define an exact schema for every event.',
 );
 block(
   errors,
-  /SAFE_ANALYTICS_STRING_VALUE/.test(trackSource),
-  'Analytics sanitizer must require compact bucket-token string values.',
-);
-block(
-  errors,
-  /MAX_SAFE_ANALYTICS_INTEGER/.test(trackSource),
-  'Analytics sanitizer must cap numeric prop values.',
-);
-block(
-  errors,
-  /Number\.isSafeInteger\(value\)/.test(trackSource),
-  'Analytics sanitizer must drop non-integer numeric prop values.',
+  analyticsSourceAudit.callCount > 0 &&
+    analyticsSourceAudit.trackedEventCount > 0 &&
+    analyticsSourceAudit.allowedEventCount === allowedEvents.size &&
+    analyticsSourceAudit.trackedEventCount === analyticsSourceAudit.allowedEventCount &&
+    untrackedAllowedEvents.length === 0,
+  `Analytics source audit must inspect at least one valid literal runtime call for every registered event${
+    untrackedAllowedEvents.length ? ` (missing: ${untrackedAllowedEvents.join(', ')})` : ''
+  }.`,
 );
 block(
   errors,
@@ -155,6 +156,24 @@ block(
   errors,
   /sanitizeObservabilityContext/.test(sentrySource),
   'Sentry captureException must sanitize context.',
+);
+block(
+  errors,
+  sentrySdkAcquisitionFiles.length === 1 &&
+    sentrySdkAcquisitionFiles[0].endsWith('/apps/mobile/src/lib/observability/sentry.ts'),
+  'Only the fixed Sentry wrapper may import the Sentry SDK directly.',
+);
+block(
+  errors,
+  [...sentrySdkMethods].sort().join(',') === 'captureException,init,setTag,setUser',
+  'The Sentry wrapper may use only init, setTag, setUser, and captureException.',
+);
+block(
+  errors,
+  /context\?:\s*ObservabilityContext/.test(sentrySource) &&
+    /Sentry\.setTag\('app_environment',\s*env\.appEnvironment\)/.test(sentrySource) &&
+    /source:\s*'phase2-runbook'/.test(sentrySource),
+  'Sentry producers must use only the fixed app_environment tag and phase2-runbook context.',
 );
 block(
   errors,
@@ -214,7 +233,7 @@ block(
     /contexts:\s*undefined/.test(sentrySource) &&
     /fingerprint:\s*undefined/.test(sentrySource) &&
     /transaction:\s*undefined/.test(sentrySource) &&
-    /debug_meta:\s*undefined/.test(sentrySource) &&
+    /debug_meta:\s*sanitizeSentryDebugMeta/.test(sentrySource) &&
     /logentry:\s*undefined/.test(sentrySource) &&
     /measurements:\s*undefined/.test(sentrySource) &&
     /modules:\s*undefined/.test(sentrySource) &&
@@ -223,27 +242,21 @@ block(
     /spans:\s*undefined/.test(sentrySource) &&
     /threads:\s*undefined/.test(sentrySource) &&
     /transaction_info:\s*undefined/.test(sentrySource),
-  'Sentry global sanitizer must drop request, breadcrumb, context, fingerprint, transaction, and diagnostic metadata fields.',
+  'Sentry global sanitizer must drop unsafe metadata and strictly sanitize symbolication structure.',
 );
 block(
   errors,
-  /SENSITIVE_CONTEXT_KEY/.test(scrubSource),
-  'Sentry scrubber is missing sensitive-key guard.',
+  /sanitizeSentryStacktrace/.test(sentrySource) &&
+    /sanitizeSentryDebugImage/.test(sentrySource) &&
+    /SAFE_DEBUG_ID/.test(sentrySource) &&
+    /SAFE_GENERATED_BUNDLE_PATH/.test(sentrySource) &&
+    /imageType === 'sourcemap'/.test(sentrySource),
+  'Sentry must retain only fixed generated-bundle frames and exact Mach-O/source-map recovery IDs.',
 );
 block(
   errors,
-  /SENSITIVE_VALUE/.test(scrubSource),
-  'Sentry scrubber is missing sensitive-value guard.',
-);
-block(
-  errors,
-  /MAX_SAFE_CONTEXT_INTEGER/.test(scrubSource),
-  'Sentry scrubber must cap numeric context values.',
-);
-block(
-  errors,
-  /Number\.isSafeInteger\(value\)/.test(scrubSource),
-  'Sentry scrubber must drop non-integer numeric context values.',
+  /OBSERVABILITY_CONTEXT_VALUES/.test(scrubSource) && /source:\s*new Set/.test(scrubSource),
+  'Sentry scrubber must use a fixed context-key/value allowlist.',
 );
 block(
   errors,
@@ -257,8 +270,8 @@ block(
 );
 block(
   errors,
-  /route|query|url|receipt|ocr|barcode|free_text/i.test(scrubSource),
-  'Sentry scrubber must explicitly cover route/query/url/receipt/OCR/barcode/free text.',
+  /Object\.getOwnPropertyDescriptors/.test(scrubSource) && !/scrubValue/.test(scrubSource),
+  'Sentry context must reject nested values and skip accessors without invoking them.',
 );
 block(
   errors,
@@ -516,131 +529,11 @@ for (const key of allowed) {
   );
 }
 
-const seenDropped = new Set();
-function objectFromTrackSnippet(snippet) {
-  const start = snippet.indexOf('{');
-  if (start === -1) return '';
-  let depth = 0;
-  for (let index = start; index < snippet.length; index += 1) {
-    const char = snippet[index];
-    if (char === '{') depth += 1;
-    if (char === '}') depth -= 1;
-    if (depth === 0) return snippet.slice(start + 1, index);
-  }
-  return '';
-}
-
-function stripJsComments(source) {
-  let out = '';
-  let quote = null;
-  let escaped = false;
-  let lineComment = false;
-  let blockComment = false;
-
-  for (let index = 0; index < source.length; index += 1) {
-    const char = source[index];
-    const next = source[index + 1];
-
-    if (lineComment) {
-      if (char === '\n') {
-        lineComment = false;
-        out += char;
-      }
-      continue;
-    }
-
-    if (blockComment) {
-      if (char === '*' && next === '/') {
-        blockComment = false;
-        index += 1;
-      }
-      continue;
-    }
-
-    if (quote) {
-      out += char;
-      if (escaped) {
-        escaped = false;
-      } else if (char === '\\') {
-        escaped = true;
-      } else if (char === quote) {
-        quote = null;
-      }
-      continue;
-    }
-
-    if (char === '"' || char === "'" || char === '`') {
-      quote = char;
-      out += char;
-      continue;
-    }
-
-    if (char === '/' && next === '/') {
-      lineComment = true;
-      index += 1;
-      continue;
-    }
-
-    if (char === '/' && next === '*') {
-      blockComment = true;
-      index += 1;
-      continue;
-    }
-
-    out += char;
-  }
-
-  return out;
-}
-
-function maskJsStrings(source) {
-  let out = '';
-  let quote = null;
-  let escaped = false;
-
-  for (let index = 0; index < source.length; index += 1) {
-    const char = source[index];
-
-    if (quote) {
-      out += char === '\n' ? char : ' ';
-      if (escaped) {
-        escaped = false;
-      } else if (char === '\\') {
-        escaped = true;
-      } else if (char === quote) {
-        quote = null;
-      }
-      continue;
-    }
-
-    if (char === '"' || char === "'" || char === '`') {
-      quote = char;
-      out += ' ';
-      continue;
-    }
-
-    out += char;
-  }
-
-  return out;
-}
-
-function trackPayloadKeys(objectLiteral) {
-  const masked = maskJsStrings(stripJsComments(objectLiteral));
-  const keys = new Set();
-  for (const keyMatch of masked.matchAll(/([A-Za-z_$][A-Za-z0-9_$]*)\s*:/g)) {
-    keys.add(keyMatch[1]);
-  }
-  for (const shorthandMatch of masked.matchAll(
-    /(?:^|[,{]\s*)([A-Za-z_$][A-Za-z0-9_$]*)(?=\s*(?:,|$))/g,
-  )) {
-    keys.add(shorthandMatch[1]);
-  }
-  return keys;
-}
-
 for (const file of listFiles('apps/mobile/src').filter(
-  (item) => /\.(ts|tsx)$/.test(item) && !item.endsWith('.test.ts'),
+  (item) =>
+    /\.(ts|tsx)$/.test(item) &&
+    !/\.(?:test|spec)\.(?:ts|tsx)$/.test(item) &&
+    !item.replace(/\\/g, '/').includes('/__tests__/'),
 )) {
   const text = read(file);
   const normalizedFile = file.replace(/\\/g, '/');
@@ -654,56 +547,6 @@ for (const file of listFiles('apps/mobile/src').filter(
       `Raw exception object may be logged to console in ${file.replace(abs('.'), '.')}.`,
     );
   }
-  const lines = text.split(/\r?\n/);
-  const scanTrackCalls = !normalizedFile.endsWith('apps/mobile/src/lib/analytics/track.ts');
-  for (let index = 0; scanTrackCalls && index < lines.length; index += 1) {
-    if (!/\btrack\(/.test(lines[index])) continue;
-    const eventMatch = lines[index].match(/\btrack\(\s*(['"])([^'"]+)\1/);
-    block(
-      errors,
-      Boolean(eventMatch),
-      `Analytics track call must use a literal event name: ${file.replace(abs('.'), '.')}:${index + 1}.`,
-    );
-    if (eventMatch) {
-      block(
-        errors,
-        allowedEvents.has(eventMatch[2]),
-        `Analytics track event is not allowlisted: ${file.replace(abs('.'), '.')} -> ${eventMatch[2]}.`,
-      );
-    }
-
-    let snippet = lines[index];
-    for (
-      let next = index + 1;
-      next < Math.min(lines.length, index + 12) && !/\);/.test(snippet);
-      next += 1
-    ) {
-      snippet += `\n${lines[next]}`;
-    }
-    const objectLiteral = objectFromTrackSnippet(snippet);
-    if (!objectLiteral) continue;
-    for (const key of trackPayloadKeys(objectLiteral)) {
-      if (retiredAnalyticsProps.has(key)) {
-        block(
-          errors,
-          false,
-          `Retired sensitive analytics prop used in track payload: ${file.replace(abs('.'), '.')} -> ${key}.`,
-        );
-      } else if (sensitiveKey.test(key) && !approvedBucketExceptions.has(key)) {
-        block(
-          errors,
-          false,
-          `Sensitive analytics prop used in track payload: ${file.replace(abs('.'), '.')} -> ${key}.`,
-        );
-      } else if (!allowed.has(key)) {
-        seenDropped.add(`${file.replace(abs('.'), '.')} -> ${key}`);
-      }
-    }
-  }
-}
-
-for (const item of [...seenDropped].sort()) {
-  warn(warnings, false, `Track prop is not approved and will be dropped by sanitizer: ${item}.`);
 }
 
 warn(

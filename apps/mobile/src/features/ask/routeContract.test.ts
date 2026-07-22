@@ -415,7 +415,7 @@ describe('Ask route launch contracts', () => {
     expect(source).not.toContain(
       'entitlement.isSuccess && ent !== undefined && !entitlementUncertain',
     );
-    expect(source).toContain('cloudGateEnabled &&\n    entitlementResolved &&');
+    expect(source).toMatch(/cloudGateEnabled\s*&&\s*entitlementResolved\s*&&/);
     expect(source).toContain('requiresTrialGroundedQuota(ent)');
     expect(source).toContain('groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired)');
     expect(source).toContain('const cloudGroundingReady =');

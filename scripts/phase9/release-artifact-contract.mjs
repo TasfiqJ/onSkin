@@ -703,6 +703,23 @@ export function validateReleaseArtifactEvidence(
     if (normalize(providerVerification.dist) !== dist) {
       errors.push('Provider-verified Sentry dist must match the release candidate.');
     }
+    const providerBinaryUuids = validateUuidList(
+      providerVerification.binaryUuids,
+      'providerVerification.binaryUuids',
+      errors,
+    );
+    if (providerBinaryUuids.join('\0') !== binaryUuids.join('\0')) {
+      errors.push('Provider-verified binary UUID inventory must match the inspected app artifact.');
+    }
+    if (
+      requireUuid(
+        providerVerification.hermesDebugId,
+        'providerVerification.hermesDebugId',
+        errors,
+      ) !== hermesDebugId
+    ) {
+      errors.push('Provider-verified Hermes debug ID must match the inspected source map.');
+    }
   }
 
   return { errors, warnings };

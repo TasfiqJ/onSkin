@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { ANALYTICS_ALLOWED_EVENTS, ANALYTICS_EVENT_SCHEMAS } from '@/lib/analytics/eventRegistry';
 import {
   AccountGenerationLeaseError,
   type AccountGenerationLease,
@@ -7,222 +8,335 @@ import {
 
 import {
   identify,
+  prepareAnalyticsEvent,
   pseudonymousUserId,
   sanitizeAnalyticsEventName,
   sanitizeAnalyticsProps,
+  track,
 } from './track';
 
 vi.mock('@/lib/auth/accountDeletionVendorFreezeRuntime', () => ({
   accountDeletionVendorWritesBlocked: () => false,
 }));
 
-describe('analytics sanitizer', () => {
-  it('drops sensitive keys and complex payloads', () => {
-    expect(
-      sanitizeAnalyticsProps({
-        creative_variant: 'story-v1',
-        screen_name: 'reveal',
-        share_id: 'abcDEF_123456',
-        native_ocr_enabled: true,
-        rule_id: '00000000-0000-4000-8000-000000000001',
-        product_id: 'prod_123',
-        slug: 'retinoid-conflict',
-        step: 'irritation',
-        alignment_score: 0.91,
-        medium: 'organic_share',
-        campaign: 'shelf_conflict_card_v1',
-        content: 'conflict_card',
-        platform: 'ios',
-        app_version: '0.1.0',
-        build_number: '42',
-        product_name: 'Retinol',
-        pregnancy_status: 'pregnant',
-        product_type: 'mineral_spf',
-        trigger: 'gap',
-        intent: 'medical',
-        moment: new Date('2026-07-06T10:00:00.000Z'),
-        email: 'person@example.com',
-        nested: { unsafe: true },
-        change_state: 'consistent',
-      }),
-    ).toEqual({
-      creative_variant: 'story-v1',
-      screen_name: 'reveal',
-      share_id: 'abcDEF_123456',
-      native_ocr_enabled: true,
-      medium: 'organic_share',
-      campaign: 'shelf_conflict_card_v1',
-      content: 'conflict_card',
-      platform: 'ios',
-      app_version: '0.1.0',
-      build_number: '42',
-    });
+function compileTimeAnalyticsContract(): void {
+  track('catalog_search', { result: 'matched' });
+
+  // @ts-expect-error catalog_search does not own the globally valid source key.
+  track('catalog_search', { source: 'scan' });
+  // @ts-expect-error catalog_search accepts only its fixed result buckets.
+  track('catalog_search', { result: 'cerave' });
+  // @ts-expect-error no-property events cannot acquire payloads silently.
+  track('onboarding_started', {});
+  // @ts-expect-error events with a schema require an explicit payload object.
+  track('catalog_search');
+  // @ts-expect-error required event dimensions cannot be omitted.
+  track('barcode_scanned', {});
+  // @ts-expect-error a matched scan cannot report a no-match result.
+  track('barcode_scanned', { source: 'scan', matched: true, result: 'no_match' });
+  // @ts-expect-error only refused turns can set refused to true.
+  track('ask_turn', { kind: 'deterministic', grounded: false, refused: true });
+  // @ts-expect-error grounded turns are not emitted by the shipped reservation boundary.
+  track('ask_turn', { kind: 'grounded', grounded: false, refused: false });
+  // @ts-expect-error example plans return before routine-created analytics.
+  track('routine_created', { source: 'example' });
+  // @ts-expect-error paired support dimensions cannot be partially supplied.
+  track('support_contact_opened', {
+    source: 'beta_feedback',
+    result: 'opened',
+    category: 'catalog_match',
+  });
+  // @ts-expect-error beta feedback requires its category and severity dimensions.
+  track('support_contact_opened', { source: 'beta_feedback', result: 'opened' });
+  const settingsSupportWithBetaDimensions = {
+    source: 'settings',
+    result: 'opened',
+    category: 'catalog_match',
+    severity: 'p2',
+  } as const;
+  // @ts-expect-error settings support events cannot acquire beta feedback dimensions.
+  track('support_contact_opened', settingsSupportWithBetaDimensions);
+  // @ts-expect-error routine action and source values are a discriminated pair.
+  track('routine_edited', { action: 'reordered', source: 'cycle_settings', mode: 'am' });
+  // @ts-expect-error reordered routines require an affected mode.
+  track('routine_edited', { action: 'reordered', source: 'routine_reorder' });
+  // @ts-expect-error manual parsing cannot report the native OCR flag.
+  track('ingredient_parse_completed', {
+    source: 'manual',
+    result: 'parsed',
+    count: 1,
+    native_ocr_enabled: true,
+  });
+  // @ts-expect-error OCR parsing requires the native OCR flag.
+  track('ingredient_parse_completed', {
+    source: 'ocr_label_capture',
+    result: 'parsed',
+    count: 1,
+  });
+  // @ts-expect-error products intake screen views require their count.
+  track('screen_viewed', { screen_name: 'products_intake' });
+  // @ts-expect-error share-unavailable failures require the affected share ID.
+  track('share_card_export_failed', {
+    creative_variant: 'story-v1',
+    reason: 'share_unavailable',
+  });
+  // @ts-expect-error exception failures cannot acquire a share ID.
+  track('share_card_export_failed', {
+    creative_variant: 'story-v1',
+    reason: 'exception',
+    share_id: 'abcDEF_123456',
+  });
+  const nonFreshCrossEventPayload = { result: 'matched', source: 'scan' } as const;
+  // @ts-expect-error non-fresh objects still cannot carry a property owned by another event.
+  track('catalog_search', nonFreshCrossEventPayload);
+  // @ts-expect-error unsupported event names cannot reach the tracker.
+  track('routine_step_irritation');
+}
+void compileTimeAnalyticsContract;
+
+describe('analytics event schema', () => {
+  it('has exactly one runtime schema for every allowed event', () => {
+    expect(Object.keys(ANALYTICS_EVENT_SCHEMAS).sort()).toEqual(
+      [...ANALYTICS_ALLOWED_EVENTS].sort(),
+    );
   });
 
-  it('drops string values that look like contact or health context', () => {
+  it('accepts only the exact keys and values for an event', () => {
     expect(
-      sanitizeAnalyticsProps({
-        source: 'share_card',
-        medium: 'organic_share',
-        type: 'spf',
-        reason: 'irritation',
-        feature: 'conflict_checks',
-        campaign: 'retinol_hack',
-        contact: 'person@example.com',
-        content: 'skin_profile',
-      }),
-    ).toEqual({ source: 'share_card', medium: 'organic_share' });
-  });
-
-  it('drops string values that look like URLs, tokens, or local paths', () => {
-    expect(
-      sanitizeAnalyticsProps({
-        source: 'https://example.com/s/abc?token=secret',
-        medium: 'jwt_header.payload.signature',
-        type: 'content://photos/1',
-        reason: 'signed_url',
-        context: '/var/mobile/Containers/Data/photo.jpg',
-        feature: 'routine_builder',
-      }),
-    ).toEqual({ feature: 'routine_builder' });
-  });
-
-  it('keeps only compact bucket tokens for string props', () => {
-    expect(
-      sanitizeAnalyticsProps({
-        source: ' routine_builder ',
-        medium: 'organic share',
-        type: 'routine.builder',
-        reason: 'retry#1',
-        feature: 'cycle-recovery',
-        surface: 'in_context',
-      }),
-    ).toEqual({ source: 'routine_builder', feature: 'cycle-recovery', surface: 'in_context' });
-  });
-
-  it('drops photo quality result buckets while preserving generic result buckets', () => {
-    for (const result of [
-      'matched',
-      'lighting_varies',
-      'misaligned',
-      'low',
-      'unmeasured',
-      'darker',
-    ]) {
-      expect(sanitizeAnalyticsProps({ on_device: true, result })).toEqual({ on_device: true });
-    }
-
-    expect(sanitizeAnalyticsProps({ result: 'error' })).toEqual({ result: 'error' });
-  });
-
-  it('keeps only small integer analytics counters', () => {
-    expect(
-      sanitizeAnalyticsProps({
-        count: 2,
-        days: 10_000,
-        streak: -1,
-        matched: true,
-        result: 12_345_678_901,
-        variant: 0.91,
-        surface: Number.POSITIVE_INFINITY,
-      }),
-    ).toEqual({
-      count: 2,
-      days: 10_000,
-      streak: -1,
-      matched: true,
-    });
-  });
-
-  it('allows the privacy-safe scan activation events and metadata buckets', () => {
-    expect(sanitizeAnalyticsEventName('barcode_scanned')).toBe('barcode_scanned');
-    expect(sanitizeAnalyticsEventName('scan_matched')).toBe('scan_matched');
-    expect(sanitizeAnalyticsEventName('scan_no_match')).toBe('scan_no_match');
-    expect(
-      sanitizeAnalyticsProps({
+      sanitizeAnalyticsProps('barcode_scanned', {
         source: 'scan',
         matched: false,
         result: 'ambiguous',
-        barcode: '1234567890123',
+      }),
+    ).toEqual({ source: 'scan', matched: false, result: 'ambiguous' });
+
+    expect(
+      sanitizeAnalyticsProps('landing_viewed', {
+        source: 'share_card',
+        medium: 'organic_share',
+        campaign: 'shelf_conflict_card_v1',
+        content: 'conflict_card',
+        creative_variant: 'story-v1',
+        platform: 'ios',
+        app_version: '1.2.3',
+        build_number: '42',
+        share_id: 'abcDEF_123456',
+      }),
+    ).toEqual({
+      source: 'share_card',
+      medium: 'organic_share',
+      campaign: 'shelf_conflict_card_v1',
+      content: 'conflict_card',
+      creative_variant: 'story-v1',
+      platform: 'ios',
+      app_version: '1.2.3',
+      build_number: '42',
+      share_id: 'abcDEF_123456',
+    });
+  });
+
+  it('fails the entire property payload closed on cross-event or unknown keys', () => {
+    expect(sanitizeAnalyticsProps('catalog_search', { source: 'scan' })).toBeUndefined();
+    expect(
+      sanitizeAnalyticsProps('barcode_scanned', {
+        source: 'scan',
+        matched: true,
+        result: 'matched',
         product_id: 'product-1',
       }),
-    ).toEqual({
-      source: 'scan',
-      matched: false,
-      result: 'ambiguous',
+    ).toBeUndefined();
+    expect(sanitizeAnalyticsProps('onboarding_started', { source: 'scan' })).toBeUndefined();
+    expect(prepareAnalyticsEvent('catalog_search', { source: 'scan' })).toBeNull();
+    expect(prepareAnalyticsEvent('barcode_scanned', {})).toBeNull();
+    expect(prepareAnalyticsEvent('onboarding_started', {})).toBeNull();
+    expect(prepareAnalyticsEvent('onboarding_started')).toEqual({
+      event: 'onboarding_started',
+      props: undefined,
     });
   });
 
-  it('allows V1 activation events without sensitive payload details', () => {
-    expect(sanitizeAnalyticsEventName('first_useful_insight')).toBe('first_useful_insight');
-    expect(sanitizeAnalyticsEventName('product_add_started')).toBe('product_add_started');
-    expect(sanitizeAnalyticsEventName('conflict_detected')).toBe('conflict_detected');
-    expect(sanitizeAnalyticsEventName('routine_created')).toBe('routine_created');
-    expect(sanitizeAnalyticsEventName('routine_plan_viewed')).toBe('routine_plan_viewed');
-    expect(sanitizeAnalyticsEventName('routine_edited')).toBe('routine_edited');
-    expect(sanitizeAnalyticsEventName('cycle_night_completed')).toBe('cycle_night_completed');
-    expect(sanitizeAnalyticsEventName('step_reordered')).toBe('step_reordered');
-    expect(sanitizeAnalyticsEventName('ramp_step_up_offered')).toBe('ramp_step_up_offered');
-    expect(sanitizeAnalyticsEventName('ramp_step_up_accepted')).toBe('ramp_step_up_accepted');
-    expect(sanitizeAnalyticsEventName('conflict_resolution_chosen')).toBe(
-      'conflict_resolution_chosen',
-    );
-    expect(sanitizeAnalyticsEventName('conflict_overridden')).toBe('conflict_overridden');
-    expect(sanitizeAnalyticsEventName('routine_checkoff_completed')).toBe(
-      'routine_checkoff_completed',
-    );
-    expect(sanitizeAnalyticsEventName('landing_viewed')).toBe('landing_viewed');
-    expect(sanitizeAnalyticsEventName('paywall_dismissed')).toBe('paywall_dismissed');
-    expect(sanitizeAnalyticsEventName('subscription_cancel_intent')).toBe(
-      'subscription_cancel_intent',
-    );
-    expect(sanitizeAnalyticsEventName('support_contact_opened')).toBe('support_contact_opened');
-    expect(sanitizeAnalyticsEventName('support_contact_failed')).toBe('support_contact_failed');
-
+  it('rejects payload shapes whose dimensions contradict their discriminants', () => {
     expect(
-      sanitizeAnalyticsProps({
-        source: 'routine_plan',
-        action: 'reordered',
-        count: 3,
-        moment: 'pm',
-        rule_id: '00000000-0000-4000-8000-000000000001',
-        product_name: 'Retinol 0.3%',
-        goal: 'barrier_repair',
+      prepareAnalyticsEvent('barcode_scanned', {
+        source: 'scan',
+        matched: true,
+        result: 'no_match',
       }),
-    ).toEqual({ source: 'routine_plan', action: 'reordered', count: 3, moment: 'pm' });
-
+    ).toBeNull();
     expect(
-      sanitizeAnalyticsProps({
-        source: 'settings',
-        result: 'unavailable',
-        email: 'support@example.com',
-        message: 'my routine is broken',
+      prepareAnalyticsEvent('ask_turn', {
+        kind: 'deterministic',
+        grounded: false,
+        refused: true,
       }),
-    ).toEqual({ source: 'settings', result: 'unavailable' });
-
+    ).toBeNull();
     expect(
-      sanitizeAnalyticsProps({
+      prepareAnalyticsEvent('ask_turn', {
+        kind: 'grounded',
+        grounded: false,
+        refused: false,
+      }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('support_contact_opened', {
         source: 'beta_feedback',
         result: 'opened',
-        category: 'catalog_match',
-        severity: 'p1',
-        free_text: 'my exact issue',
       }),
-    ).toEqual({
-      source: 'beta_feedback',
-      result: 'opened',
-      category: 'catalog_match',
-      severity: 'p1',
-    });
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('support_contact_opened', {
+        source: 'settings',
+        result: 'opened',
+        category: 'catalog_match',
+        severity: 'p2',
+      }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('routine_edited', {
+        action: 'reordered',
+        source: 'cycle_settings',
+        mode: 'am',
+      }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('ingredient_parse_completed', {
+        source: 'ocr_label_capture',
+        result: 'parsed',
+        count: 1,
+      }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('ingredient_parse_completed', {
+        source: 'manual',
+        result: 'failed',
+        count: 1,
+      }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('ingredient_parse_completed', {
+        source: 'manual',
+        result: 'parsed',
+        count: 0,
+      }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('ingredient_parse_completed', {
+        source: 'ocr_label_capture',
+        native_ocr_enabled: true,
+        result: 'partial',
+        count: 0,
+      }),
+    ).toBeNull();
+    expect(prepareAnalyticsEvent('screen_viewed', { screen_name: 'products_intake' })).toBeNull();
+    expect(
+      prepareAnalyticsEvent('share_card_export_failed', {
+        creative_variant: 'story-v1',
+        reason: 'share_unavailable',
+      }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('share_card_export_failed', {
+        creative_variant: 'story-v1',
+        reason: 'exception',
+        share_id: 'abcDEF_123456',
+      }),
+    ).toBeNull();
   });
 
-  it('drops unapproved or user-derived event names', () => {
+  it('rejects raw-looking and out-of-domain values even under allowed keys', () => {
+    for (const value of [
+      'cerave',
+      'https://example.com/?token=secret',
+      'file:///var/mobile/photo.jpg',
+      'C:\\Users\\person\\photo.jpg',
+      '\\\\server\\share',
+      'person@example.com',
+      'eczema',
+      'breastfeeding',
+      'my routine is broken',
+    ]) {
+      expect(sanitizeAnalyticsProps('catalog_search', { result: value })).toBeUndefined();
+    }
+
+    expect(
+      sanitizeAnalyticsProps('landing_viewed', {
+        share_id: 'abcDEF_123456',
+        term: 'cerave',
+      }),
+    ).toBeUndefined();
+  });
+
+  it('rejects nested values, precise numbers, and oversized counters', () => {
+    expect(
+      sanitizeAnalyticsProps('catalog_search', { result: { bucket: 'matched' } }),
+    ).toBeUndefined();
+    expect(sanitizeAnalyticsProps('conflict_detected', { count: 0.91 })).toBeUndefined();
+    expect(sanitizeAnalyticsProps('conflict_detected', { count: -1 })).toBeUndefined();
+    expect(prepareAnalyticsEvent('conflict_detected', { count: 0 })).toBeNull();
+    expect(
+      prepareAnalyticsEvent('first_useful_insight', { count: 0, source: 'reveal' }),
+    ).toBeNull();
+    expect(prepareAnalyticsEvent('recommendation_shown', { count: 0 })).toBeNull();
+    expect(
+      prepareAnalyticsEvent('quiz_question_answered', { count: 0, type: 'single' }),
+    ).toBeNull();
+    expect(
+      prepareAnalyticsEvent('streak_milestone_reached', { milestone: 'd7', streak: 0 }),
+    ).toBeNull();
+    expect(prepareAnalyticsEvent('routine_created', { source: 'example' })).toBeNull();
+    expect(sanitizeAnalyticsProps('conflict_detected', { count: 10_001 })).toBeUndefined();
+    expect(
+      sanitizeAnalyticsProps('conflict_detected', { count: Number.POSITIVE_INFINITY }),
+    ).toBeUndefined();
+  });
+
+  it('does not invoke accessors and fails hostile property containers closed', () => {
+    const getter = Object.defineProperty({}, 'result', {
+      enumerable: true,
+      get: () => {
+        throw new Error('raw getter value');
+      },
+    });
+    const proxy = new Proxy(
+      {},
+      {
+        ownKeys: () => {
+          throw new Error('raw proxy value');
+        },
+      },
+    );
+
+    expect(() => sanitizeAnalyticsProps('catalog_search', getter)).not.toThrow();
+    expect(sanitizeAnalyticsProps('catalog_search', getter)).toBeUndefined();
+    expect(() => sanitizeAnalyticsProps('catalog_search', proxy)).not.toThrow();
+    expect(sanitizeAnalyticsProps('catalog_search', proxy)).toBeUndefined();
+  });
+
+  it('drops undefined optional values without widening the event schema', () => {
+    expect(
+      sanitizeAnalyticsProps('streak_milestone_reached', {
+        milestone: 'd7',
+        streak: undefined,
+      }),
+    ).toEqual({ milestone: 'd7' });
+    expect(
+      sanitizeAnalyticsProps('winback_converted', {
+        period_type: null,
+        source: 'revenuecat',
+      }),
+    ).toEqual({ period_type: null, source: 'revenuecat' });
+  });
+
+  it('allows only registered event names', () => {
     expect(sanitizeAnalyticsEventName('photo_captured')).toBe('photo_captured');
     expect(sanitizeAnalyticsEventName('photo_baseline_added')).toBe('photo_baseline_added');
+    expect(sanitizeAnalyticsEventName(' routine_created ')).toBe('routine_created');
     expect(sanitizeAnalyticsEventName('routine_step_irritation')).toBeNull();
     expect(sanitizeAnalyticsEventName('Acne concern: cheeks')).toBeNull();
   });
+});
 
+describe('analytics identity', () => {
   it('derives a stable pseudonymous user id without exposing the raw Supabase id', async () => {
     const raw = '00000000-0000-4000-8000-000000000001';
     const first = await pseudonymousUserId(raw);
@@ -246,10 +360,8 @@ describe('analytics sanitizer', () => {
       beginBoundaryHandoff: () => () => undefined,
     };
 
-    await expect(
-      identify(lease, '00000000-0000-4000-8000-000000000001', {
-        method: 'account_created',
-      }),
-    ).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    await expect(identify(lease, '00000000-0000-4000-8000-000000000001')).rejects.toMatchObject({
+      code: 'ACCOUNT_GENERATION_CHANGED',
+    });
   });
 });

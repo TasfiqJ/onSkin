@@ -14,12 +14,18 @@ describe('public share landing route analytics', () => {
 
     expect(source).toContain('import { isSafeOpaqueId, sanitizeAttribution }');
     expect(source).toContain('const attribution = useMemo(');
-    expect(source).toContain("track('landing_viewed', landingProps)");
-    expect(source).toContain("track('share_link_opened', landingProps)");
+    expect(source).toContain("track('landing_viewed', { reason: 'invalid_share_id' })");
+    expect(source).toContain("track('share_link_opened', { reason: 'invalid_share_id' })");
+    expect(source).toContain("track('landing_viewed', {");
+    expect(source).toContain("track('share_link_opened', {");
+    expect(source).not.toContain('landingProps');
     expect(source).toContain('source: firstParam(params.source)');
     expect(source).toContain('campaign: firstParam(params.campaign)');
     expect(source).toContain('creative_variant: firstParam(params.creative_variant)');
     expect(source).toContain('platform: firstParam(params.platform)');
+    expect(source).toContain("sanitized.source === 'share_card'");
+    expect(source).toContain("sanitized.medium === 'organic_share'");
+    expect(source).toContain("sanitized.campaign === 'shelf_conflict_card_v1'");
     expect(source).toContain('share_id: safeShareId');
   });
 

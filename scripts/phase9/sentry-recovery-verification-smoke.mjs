@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 
-import { validateSentryRecoveryResponses } from './sentry-recovery-verification.mjs';
+import {
+  validateSentryRecoveryResponses,
+  verifySentryRecovery,
+} from './sentry-recovery-verification.mjs';
 
 const javascriptEventId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const nativeEventId = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
@@ -188,4 +191,51 @@ for (const [label, mutate, pattern] of [
   );
 }
 
-console.log('Sentry recovery verification smoke passed (1 positive, 17 negative cases).');
+const providerInput = {
+  env: {
+    SENTRY_AUTH_TOKEN: 'sntrys_test_token',
+    SENTRY_ORG: 'routinekind',
+    SENTRY_PROJECT: 'mobile',
+    SENTRY_API_URL: 'https://sentry.io',
+  },
+  javascriptEventId,
+  nativeEventId,
+  release,
+  dist,
+  binaryUuids: [binaryUuid],
+  hermesDebugId,
+  now,
+  maxAgeMs: 30 * 24 * 60 * 60 * 1000,
+};
+
+for (const [label, override, pattern] of [
+  ['empty binary inventory', { binaryUuids: [] }, /non-empty UUID list/],
+  ['malformed binary UUID', { binaryUuids: ['not-a-uuid'] }, /Every binary UUID/],
+  [
+    'duplicate binary UUID',
+    { binaryUuids: [binaryUuid, binaryUuid] },
+    /must not contain duplicates/,
+  ],
+  ['malformed Hermes ID', { hermesDebugId: '' }, /Hermes source-map debug ID/],
+  ['malformed release', { release: 'owner@example.com' }, /bundle@version\+build/],
+  ['malformed dist', { dist: '../private' }, /distribution ID/],
+  ['invalid now', { now: Number.NaN }, /finite non-negative/],
+  ['invalid maximum age', { maxAgeMs: 0 }, /bounded positive duration/],
+]) {
+  let fetchCalls = 0;
+  await assert.rejects(
+    verifySentryRecovery({
+      ...providerInput,
+      ...override,
+      fetchImpl: async () => {
+        fetchCalls += 1;
+        throw new Error('must not fetch');
+      },
+    }),
+    pattern,
+    label,
+  );
+  assert.equal(fetchCalls, 0, `${label} reached the provider before validation`);
+}
+
+console.log('Sentry recovery verification smoke passed (1 positive, 25 negative cases).');

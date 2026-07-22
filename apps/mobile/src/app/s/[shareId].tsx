@@ -26,38 +26,73 @@ export default function PublicShareLinkScreen() {
   }>();
   const rawShareId = firstParam(params.shareId);
   const safeShareId = rawShareId && isSafeOpaqueId(rawShareId) ? rawShareId : null;
-  const attribution = useMemo(
-    () =>
-      sanitizeAttribution({
-        source: firstParam(params.source),
-        medium: firstParam(params.medium),
-        campaign: firstParam(params.campaign),
-        content: firstParam(params.content),
-        creative_variant: firstParam(params.creative_variant),
-        platform: firstParam(params.platform),
-        app_version: firstParam(params.app_version),
-        build_number: firstParam(params.build_number),
-        share_id: safeShareId,
-      }),
-    [
-      params.source,
-      params.medium,
-      params.campaign,
-      params.content,
-      params.creative_variant,
-      params.platform,
-      params.app_version,
-      params.build_number,
-      safeShareId,
-    ],
-  );
+  const attribution = useMemo(() => {
+    const sanitized = sanitizeAttribution({
+      source: firstParam(params.source),
+      medium: firstParam(params.medium),
+      campaign: firstParam(params.campaign),
+      content: firstParam(params.content),
+      creative_variant: firstParam(params.creative_variant),
+      platform: firstParam(params.platform),
+      app_version: firstParam(params.app_version),
+      build_number: firstParam(params.build_number),
+    });
+    return {
+      source: sanitized.source === 'share_card' ? sanitized.source : undefined,
+      medium: sanitized.medium === 'organic_share' ? sanitized.medium : undefined,
+      campaign: sanitized.campaign === 'shelf_conflict_card_v1' ? sanitized.campaign : undefined,
+      content: sanitized.content === 'conflict_card' ? sanitized.content : undefined,
+      creative_variant:
+        sanitized.creative_variant === 'story-v1' ? sanitized.creative_variant : undefined,
+      platform:
+        sanitized.platform === 'ios' ||
+        sanitized.platform === 'android' ||
+        sanitized.platform === 'web'
+          ? sanitized.platform
+          : undefined,
+      app_version: sanitized.app_version,
+      build_number: sanitized.build_number,
+    } as const;
+  }, [
+    params.source,
+    params.medium,
+    params.campaign,
+    params.content,
+    params.creative_variant,
+    params.platform,
+    params.app_version,
+    params.build_number,
+  ]);
 
   useEffect(() => {
-    const landingProps = safeShareId
-      ? { ...attribution, share_id: safeShareId }
-      : { reason: 'invalid_share_id' };
-    track('landing_viewed', landingProps);
-    track('share_link_opened', landingProps);
+    if (!safeShareId) {
+      track('landing_viewed', { reason: 'invalid_share_id' });
+      track('share_link_opened', { reason: 'invalid_share_id' });
+      return;
+    }
+
+    track('landing_viewed', {
+      source: attribution.source,
+      medium: attribution.medium,
+      campaign: attribution.campaign,
+      content: attribution.content,
+      creative_variant: attribution.creative_variant,
+      platform: attribution.platform,
+      app_version: attribution.app_version,
+      build_number: attribution.build_number,
+      share_id: safeShareId,
+    });
+    track('share_link_opened', {
+      source: attribution.source,
+      medium: attribution.medium,
+      campaign: attribution.campaign,
+      content: attribution.content,
+      creative_variant: attribution.creative_variant,
+      platform: attribution.platform,
+      app_version: attribution.app_version,
+      build_number: attribution.build_number,
+      share_id: safeShareId,
+    });
   }, [attribution, safeShareId]);
 
   return (

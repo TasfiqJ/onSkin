@@ -1103,11 +1103,15 @@ describe('paywall mobile contracts', () => {
     expect(actions).toContain('const revenueCatOwner = (lease: AccountGenerationLease) =>');
     expect(actions).toContain("if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');");
     expect(actions).toContain('const result = await purchasePackage(');
-    expect(actions).toContain("() => assertActionAtCommit(lease, input, ['onboarding_purchase']),");
-    expect(actions).toContain('() => assertActionAtCommit(lease, input, allowedKinds),');
+    expect(actions).toMatch(
+      /\(\)\s*=>\s*assertActionAtCommit\(lease, input, \['onboarding_purchase'\]\),/,
+    );
+    expect(actions).toMatch(/\(\)\s*=>\s*assertActionAtCommit\(lease, input, allowedKinds\),/);
     expect(actions).toContain('restorePurchases(revenueCatOwner(lease))');
     expect(actions).toContain('const result = await purchaseWinBackPackage(');
-    expect(actions).toContain("() => assertActionAtCommit(lease, input, ['winback_purchase']),");
+    expect(actions).toMatch(
+      /\(\)\s*=>\s*assertActionAtCommit\(lease, input, \['winback_purchase'\]\),/,
+    );
     expect(actions).toContain('showNativeManageSubscriptions(revenueCatOwner(lease))');
     expect(actions.match(/retry: 0,/g)?.length).toBeGreaterThanOrEqual(5);
 

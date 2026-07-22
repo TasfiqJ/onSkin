@@ -5,16 +5,17 @@ import {
   evidenceFlagEnabled,
   exists,
   has,
-  listFiles,
   printResult,
   read,
-  root,
   warn,
 } from './lib.mjs';
+import { auditAnalyticsSource } from '../phase9/analytics-source-audit.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const analyticsSourceAudit = auditAnalyticsSource();
+errors.push(...analyticsSourceAudit.errors);
 
 const registryPath = 'apps/mobile/src/lib/analytics/eventRegistry.ts';
 const trackerPath = 'apps/mobile/src/lib/analytics/track.ts';
@@ -44,13 +45,23 @@ block(
 );
 block(
   errors,
-  has(trackerPath, /SENSITIVE_ANALYTICS_KEY/),
-  'Analytics tracker must keep a sensitive-key guard.',
+  has(registryPath, /ANALYTICS_EVENT_SCHEMAS/),
+  'Exact per-event analytics schemas are missing.',
+);
+block(
+  errors,
+  has(trackerPath, /analyticsSchemaForEvent/) && has(trackerPath, /isAllowedAnalyticsPropValue/),
+  'Analytics tracker must keep an exact event-key/value guard.',
 );
 block(
   errors,
   has(trackerPath, /sanitizeAnalyticsProps/),
   'Analytics tracker must sanitize event properties.',
+);
+block(
+  errors,
+  has(trackerPath, /analyticsSchemaForEvent/) && has(trackerPath, /isAllowedAnalyticsPropValue/),
+  'Analytics tracker must apply the exact schema for the named event.',
 );
 block(
   errors,
@@ -73,58 +84,33 @@ block(
   'Beta event schema must reference the allowed property registry.',
 );
 
-const registryText = exists(registryPath) ? read(registryPath) : '';
 const schemaText = exists(schemaPath) ? read(schemaPath) : '';
-const propRegistry = registryText.match(
-  /ANALYTICS_ALLOWED_PROP_KEYS\s*=\s*\[([\s\S]*?)\]\s*as const/,
-);
-const allowed = new Set(
-  [...(propRegistry?.[1] ?? '').matchAll(/'([^']+)'/g)].map((match) => match[1]),
-);
-const eventRegistry = registryText.match(
-  /ANALYTICS_ALLOWED_EVENTS\s*=\s*\[([\s\S]*?)\]\s*as const/,
-);
-const allowedEvents = new Set(
-  [...(eventRegistry?.[1] ?? '').matchAll(/'([^']+)'/g)].map((match) => match[1]),
-);
-
-function stripComments(source) {
-  return source.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
-}
+const allowed = analyticsSourceAudit.allowedProps;
+const allowedEvents = analyticsSourceAudit.allowedEvents;
 
 function minimumBetaEvents() {
-  const section = schemaText.match(/## Minimum Event Coverage([\s\S]*?)(?:\n## |$)/);
-  return [...(section?.[1] ?? '').matchAll(/`([a-z0-9_]+)`/g)].map((match) => match[1]);
-}
-
-function runtimeTrackedEvents() {
-  const events = new Set();
-  const runtimeFiles = listFiles('apps/mobile/src').filter(
-    (file) =>
-      /\.(ts|tsx)$/.test(file) &&
-      !/\.(test|spec)\.(ts|tsx)$/.test(file) &&
-      !file.replaceAll('\\', '/').includes('/__tests__/'),
+  const section = schemaText.match(
+    /## Minimum Event Coverage([\s\S]*?)(?:\nRoutine event definitions:|\n## |$)/,
   );
-
-  for (const file of runtimeFiles) {
-    const relative = file.replace(`${root}\\`, '').replace(`${root}/`, '').replaceAll('\\', '/');
-    const text = stripComments(read(relative));
-    for (const match of text.matchAll(/\btrack\(\s*['"]([a-z0-9_]+)['"]/g)) {
-      events.add(match[1]);
-    }
-  }
-
-  return events;
+  return (section?.[1] ?? '').split(/\r?\n/).flatMap((line) => {
+    const match = line.match(/^\s*-\s+`([a-z0-9_]+)`\s*$/);
+    return match ? [match[1]] : [];
+  });
 }
 
 const betaEvents = minimumBetaEvents();
 const betaEventSet = new Set(betaEvents);
-const trackedEvents = runtimeTrackedEvents();
+const trackedEvents = analyticsSourceAudit.trackedEvents;
 
 block(
   errors,
   betaEvents.length >= 30,
   'Beta event schema must list the minimum V1 beta event coverage.',
+);
+block(
+  errors,
+  betaEventSet.size === betaEvents.length,
+  'Beta event schema Minimum Event Coverage must not contain duplicate events.',
 );
 for (const event of REQUIRED_PHASE_H_EVENTS) {
   block(
@@ -173,25 +159,6 @@ for (const key of allowed) {
       ['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id'].includes(key),
     `Sensitive-looking property is allowlisted: ${key}.`,
   );
-}
-
-const codeFiles = listFiles('apps/mobile/src').filter((file) => /\.(ts|tsx)$/.test(file));
-for (const file of codeFiles) {
-  const relative = file.replace(`${root}\\`, '').replace(`${root}/`, '').replaceAll('\\', '/');
-  const text = read(relative);
-  for (const match of text.matchAll(
-    /\b(?:track|identify)\(\s*['"][^'"]+['"]\s*,\s*\{([\s\S]*?)\}\s*\)/g,
-  )) {
-    const props = stripComments(match[1]);
-    for (const prop of props.matchAll(/([A-Za-z_$][\w$]*)\s*:/g)) {
-      const key = prop[1];
-      warn(
-        warnings,
-        allowed.has(key),
-        `${relative} uses analytics prop "${key}" that is not in ANALYTICS_ALLOWED_PROP_KEYS and will be dropped.`,
-      );
-    }
-  }
 }
 
 warn(

@@ -225,9 +225,12 @@ describe('Settings route contracts', () => {
     expect(route).toContain("['source', 'beta_feedback']");
     expect(route).toContain("['category', category]");
     expect(route).toContain("['severity', severity]");
-    expect(route).toContain("track('support_contact_opened', analyticsPayload)");
-    expect(route).toContain("track('support_contact_failed', analyticsPayload)");
+    expect(route).toContain("track('support_contact_opened', {");
+    expect(route).toContain("track('support_contact_failed', {");
+    expect(route).not.toContain('analyticsPayload');
     expect(route).toContain("source: 'beta_feedback'");
+    expect(route).toContain("result: 'opened'");
+    expect(route).toContain("result: 'unavailable'");
     expect(route).toContain('category,');
     expect(route).toContain('severity,');
     expect(route).toContain(

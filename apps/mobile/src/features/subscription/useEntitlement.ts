@@ -24,11 +24,7 @@ import {
 } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
-import {
-  deriveState,
-  type StoredEntitlement,
-  type SubscriptionState,
-} from './entitlement';
+import { deriveState, type StoredEntitlement, type SubscriptionState } from './entitlement';
 import {
   activeResult,
   publishedActionResult,
@@ -231,10 +227,7 @@ async function persistRevenueCatResult(
   configuredAppUserId: string,
 ): Promise<PersistedRevenueCatResult | null> {
   if (!input.customerInfo) return null;
-  const classified = classifyRevenueCatEntitlement(
-    input.customerInfo,
-    configuredAppUserId,
-  );
+  const classified = classifyRevenueCatEntitlement(input.customerInfo, configuredAppUserId);
   if (classified.status === 'untrusted') {
     assertCurrentOwner();
     const publishedState = publishVerificationFailure();
@@ -289,8 +282,7 @@ async function persistRevenueCatResult(
     acceptedEntitlement: acceptance.entitlement,
     publishedState: published,
     persisted: acceptance.persisted,
-    verificationPending:
-      !acceptance.persisted || !attributed.actionProductMatched,
+    verificationPending: !acceptance.persisted || !attributed.actionProductMatched,
   };
 }
 
@@ -428,15 +420,12 @@ export function useEntitlement(options: { enabled?: boolean } = {}) {
     if (!query.data || !isOwnerQueryScopeCurrent(ownerScope)) return;
     const nowMs = Date.now();
     let advancedRawCache = false;
-    queryClient.setQueryData<SubscriptionState>(
-      queryKeys.entitlement(ownerScope),
-      (current) => {
-        if (!current) return current;
-        const advanced = advanceEntitlementStateAtBoundary(current, nowMs);
-        advancedRawCache = advanced !== current;
-        return advanced;
-      },
-    );
+    queryClient.setQueryData<SubscriptionState>(queryKeys.entitlement(ownerScope), (current) => {
+      if (!current) return current;
+      const advanced = advanceEntitlementStateAtBoundary(current, nowMs);
+      advancedRawCache = advanced !== current;
+      return advanced;
+    });
     if (advancedRawCache) {
       void queryClient.invalidateQueries({
         queryKey: ownerQueryPrefixes.entitlement(ownerScope),
@@ -450,12 +439,8 @@ export function useEntitlement(options: { enabled?: boolean } = {}) {
       boundaryMs,
       (event) => {
         if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-        queryClient.setQueryData<SubscriptionState>(
-          queryKeys.entitlement(ownerScope),
-          (current) =>
-            current
-              ? advanceEntitlementStateAtBoundary(current, Date.now(), event)
-              : current,
+        queryClient.setQueryData<SubscriptionState>(queryKeys.entitlement(ownerScope), (current) =>
+          current ? advanceEntitlementStateAtBoundary(current, Date.now(), event) : current,
         );
         void queryClient.invalidateQueries({
           queryKey: ownerQueryPrefixes.entitlement(ownerScope),
@@ -486,11 +471,7 @@ export function useEntitlementActions() {
   };
   const publishVerificationFailure = () => {
     if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('ENTITLEMENT_OWNER_STALE');
-    return publishEntitlementVerificationFailure(
-      qc,
-      ownerScope,
-      new Date().toISOString(),
-    );
+    return publishEntitlementVerificationFailure(qc, ownerScope, new Date().toISOString());
   };
   const revenueCatOwner = (lease: AccountGenerationLease) => {
     if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');
@@ -510,9 +491,7 @@ export function useEntitlementActions() {
     if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('ENTITLEMENT_OWNER_STALE');
     const key = queryKeys.entitlement(ownerScope);
     const current = qc.getQueryData<SubscriptionState>(key);
-    const advanced = current
-      ? advanceEntitlementStateAtBoundary(current, Date.now())
-      : current;
+    const advanced = current ? advanceEntitlementStateAtBoundary(current, Date.now()) : current;
     if (advanced && advanced !== current) qc.setQueryData(key, advanced);
     assertEntitlementActionAllowed(advanced, input, allowedKinds, user?.id);
     return advanced;
@@ -585,21 +564,17 @@ export function useEntitlementActions() {
       : null;
     const actionProofWon = Boolean(
       result.purchased &&
-        persisted.persisted &&
-        actionIdentity &&
-        persisted.publishedState.isPro &&
-        actionIdentity === persisted.publishedState.evidenceIdentity,
+      persisted.persisted &&
+      actionIdentity &&
+      persisted.publishedState.isPro &&
+      actionIdentity === persisted.publishedState.evidenceIdentity,
     );
     if (result.purchaseMayHaveCompleted || persisted.verificationPending || !actionProofWon) {
       reconcileInBackground();
-      return publishedActionResult(
-        persisted.publishedState,
-        persisted.acceptedEntitlement,
-        {
-          verificationPending: true,
-          purchaseMayHaveCompleted: true,
-        },
-      );
+      return publishedActionResult(persisted.publishedState, persisted.acceptedEntitlement, {
+        verificationPending: true,
+        purchaseMayHaveCompleted: true,
+      });
     }
 
     const successReceiptId = mintPurchaseSuccessReceipt(
@@ -620,23 +595,26 @@ export function useEntitlementActions() {
     );
     const won = persisted.actionEntitlement;
     if (won?.isActive) {
-      const analyticsProperties = {
-        source: 'revenuecat',
-        period_type: won.periodType,
-      } as const;
       if (action === 'winback') {
-        track('winback_converted', analyticsProperties);
+        track('winback_converted', {
+          source: 'revenuecat',
+          period_type: won.periodType,
+        });
       } else if (won.periodType === 'trial') {
-        track('trial_started', analyticsProperties);
+        track('trial_started', {
+          source: 'revenuecat',
+          period_type: won.periodType,
+        });
       } else {
-        track('purchase_completed', analyticsProperties);
+        track('purchase_completed', {
+          source: 'revenuecat',
+          period_type: won.periodType,
+        });
       }
     }
-    return publishedActionResult(
-      persisted.publishedState,
-      persisted.acceptedEntitlement,
-      { ...(successReceiptId ? { successReceiptId } : {}) },
-    );
+    return publishedActionResult(persisted.publishedState, persisted.acceptedEntitlement, {
+      ...(successReceiptId ? { successReceiptId } : {}),
+    });
   };
 
   const startReverseTrial = useMutation({
@@ -644,10 +622,8 @@ export function useEntitlementActions() {
       runOwnerQueryOperation(ownerScope, async (lease) => {
         assertActionAtCommit(lease, input, ['reverse_trial']);
         const storeUserId = reverseTrialStoreUserId();
-        const started = await startReverseTrialOnServer(
-          lease.assertCurrent,
-          storeUserId,
-          () => assertActionAtCommit(lease, input, ['reverse_trial']),
+        const started = await startReverseTrialOnServer(lease.assertCurrent, storeUserId, () =>
+          assertActionAtCommit(lease, input, ['reverse_trial']),
         );
         lease.assertCurrent();
         const published = publishAcceptance(started);
@@ -666,10 +642,8 @@ export function useEntitlementActions() {
     mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
         assertActionAtCommit(lease, input, ['onboarding_purchase']);
-        const result = await purchasePackage(
-          revenueCatOwner(lease),
-          'annual',
-          () => assertActionAtCommit(lease, input, ['onboarding_purchase']),
+        const result = await purchasePackage(revenueCatOwner(lease), 'annual', () =>
+          assertActionAtCommit(lease, input, ['onboarding_purchase']),
         );
         return finishPaidAction(lease, result, 'purchase');
       }),
@@ -680,16 +654,10 @@ export function useEntitlementActions() {
   const purchase = useMutation({
     mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const allowedKinds = [
-          'upsell_purchase',
-          'downgrade_purchase',
-          'reoffer_purchase',
-        ] as const;
+        const allowedKinds = ['upsell_purchase', 'downgrade_purchase', 'reoffer_purchase'] as const;
         assertActionAtCommit(lease, input, allowedKinds);
-        const result = await purchasePackage(
-          revenueCatOwner(lease),
-          'annual',
-          () => assertActionAtCommit(lease, input, allowedKinds),
+        const result = await purchasePackage(revenueCatOwner(lease), 'annual', () =>
+          assertActionAtCommit(lease, input, allowedKinds),
         );
         return finishPaidAction(lease, result, 'purchase');
       }),
@@ -722,17 +690,13 @@ export function useEntitlementActions() {
         if (!persisted) return activeResult(null, { storePurchaseFound: false });
         if (persisted.verificationPending) {
           reconcileInBackground();
-          return publishedActionResult(
-            persisted.publishedState,
-            persisted.acceptedEntitlement,
-            { verificationPending: true },
-          );
+          return publishedActionResult(persisted.publishedState, persisted.acceptedEntitlement, {
+            verificationPending: true,
+          });
         }
-        return publishedActionResult(
-          persisted.publishedState,
-          persisted.acceptedEntitlement,
-          { storePurchaseFound: result.restored },
-        );
+        return publishedActionResult(persisted.publishedState, persisted.acceptedEntitlement, {
+          storePurchaseFound: result.restored,
+        });
       }),
     onSettled: invalidate,
     retry: 0,
@@ -741,9 +705,7 @@ export function useEntitlementActions() {
   const downgrade = useMutation({
     mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const state = assertActionAtCommit(lease, input, [
-          'decline_expired_reverse_trial',
-        ]);
+        const state = assertActionAtCommit(lease, input, ['decline_expired_reverse_trial']);
         if (!state.evidenceIdentity) {
           throw new Error('ENTITLEMENT_ACTION_PRECONDITION_FAILED');
         }
@@ -763,14 +725,11 @@ export function useEntitlementActions() {
     mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
         assertActionAtCommit(lease, input, ['winback_purchase']);
-        const result = await purchaseWinBackPackage(
-          revenueCatOwner(lease),
-          () => assertActionAtCommit(lease, input, ['winback_purchase']),
+        const result = await purchaseWinBackPackage(revenueCatOwner(lease), () =>
+          assertActionAtCommit(lease, input, ['winback_purchase']),
         );
         const settled = await finishPaidAction(lease, result, 'winback');
-        return result.offerUnavailable
-          ? { ...settled, offerUnavailable: true }
-          : settled;
+        return result.offerUnavailable ? { ...settled, offerUnavailable: true } : settled;
       }),
     onSettled: invalidate,
     retry: 0,

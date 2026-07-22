@@ -1,79 +1,83 @@
-const SENSITIVE_CONTEXT_KEY =
-  /(barcode|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug|url|uri|query|route|params|search)/i;
+const OBSERVABILITY_CONTEXT_VALUES = {
+  source: new Set(['phase2-runbook']),
+} as const;
 
-const SENSITIVE_VALUE =
-  /(@|https?:\/\/|file:\/\/|content:\/\/|\/data\/|\/var\/mobile\/|\/cache\/|\?.*=|barcode|ingredient|pregnan|diagnos|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|skin profile|free text|receipt)/i;
-const MAX_SAFE_CONTEXT_INTEGER = 10_000;
+const SAFE_GENERATED_BUNDLE_LOCATION =
+  /(?:(?:app|webpack):\/\/\/)?(?:index(?:\.(?:android|ios|native|web))?\.(?:bundle|js|jsbundle)|main\.(?:bundle|js|jsbundle)):[1-9]\d{0,9}:[1-9]\d{0,9}/;
+const MAX_STACK_SOURCE_LENGTH = 32_768;
+const MAX_STACK_FRAMES = 256;
 
-type ScrubbedPrimitive = string | number | boolean | null;
-type ScrubbedValue = ScrubbedPrimitive | ScrubbedPrimitive[] | ScrubbedContext;
-export interface ScrubbedContext {
-  [key: string]: ScrubbedValue;
+export type ObservabilityContext = {
+  source?: 'phase2-runbook';
+};
+
+export type ScrubbedContext = Partial<Record<keyof ObservabilityContext, string>>;
+
+function safeDataEntries(value: unknown): [string, unknown][] {
+  if (!value || typeof value !== 'object') return [];
+
+  try {
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    return Object.entries(descriptors).flatMap(([key, descriptor]) =>
+      'value' in descriptor && descriptor.enumerable ? [[key, descriptor.value]] : [],
+    );
+  } catch {
+    return [];
+  }
 }
 
-function safeErrorName(value: unknown): string {
-  if (typeof value !== 'string') return 'Error';
-  const trimmed = value.trim();
-  if (!trimmed || SENSITIVE_VALUE.test(trimmed) || SENSITIVE_CONTEXT_KEY.test(trimmed))
+function safeExceptionName(error: unknown): string {
+  try {
+    if (error instanceof AggregateError) return 'AggregateError';
+    if (error instanceof EvalError) return 'EvalError';
+    if (error instanceof RangeError) return 'RangeError';
+    if (error instanceof ReferenceError) return 'ReferenceError';
+    if (error instanceof SyntaxError) return 'SyntaxError';
+    if (error instanceof TypeError) return 'TypeError';
+    if (error instanceof URIError) return 'URIError';
+    if (error instanceof Error) return 'Error';
+  } catch {
     return 'Error';
-  const normalized = trimmed
-    .replace(/[^A-Za-z0-9_. -]/g, '')
-    .slice(0, 80)
-    .trim();
-  return normalized || 'Error';
+  }
+  return 'Error';
 }
 
-function scrubValue(
-  value: unknown,
-  depth: number,
-): ScrubbedPrimitive | ScrubbedPrimitive[] | ScrubbedContext | undefined {
-  if (value === undefined) return undefined;
-  if (value === null || typeof value === 'boolean') return value;
-  if (typeof value === 'number') {
-    if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_CONTEXT_INTEGER)
-      return undefined;
-    return value;
+function safeGeneratedBundleStack(error: unknown): string[] {
+  if (!error || (typeof error !== 'object' && typeof error !== 'function')) return [];
+
+  try {
+    const descriptor = Object.getOwnPropertyDescriptor(error, 'stack');
+    if (!descriptor || !('value' in descriptor) || typeof descriptor.value !== 'string') return [];
+
+    const frames: string[] = [];
+    for (const line of descriptor.value
+      .slice(0, MAX_STACK_SOURCE_LENGTH)
+      .split(/\r?\n/, MAX_STACK_FRAMES + 1)) {
+      const location = line.match(SAFE_GENERATED_BUNDLE_LOCATION)?.[0];
+      if (location) frames.push(`    at ${location}`);
+      if (frames.length === MAX_STACK_FRAMES) break;
+    }
+    return frames;
+  } catch {
+    return [];
   }
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    if (!trimmed || SENSITIVE_VALUE.test(trimmed)) return undefined;
-    return trimmed.slice(0, 120);
-  }
-  if (Array.isArray(value)) {
-    if (depth >= 2) return undefined;
-    const scrubbed = value
-      .map((item) => scrubValue(item, depth + 1))
-      .filter(
-        (item): item is ScrubbedPrimitive =>
-          item === null || ['string', 'number', 'boolean'].includes(typeof item),
-      );
-    return scrubbed.length ? scrubbed.slice(0, 10) : undefined;
-  }
-  if (typeof value === 'object') {
-    if (depth >= 2) return undefined;
-    const nested = sanitizeObservabilityContext(value as Record<string, unknown>, depth + 1);
-    return Object.keys(nested).length ? nested : undefined;
-  }
-  return undefined;
 }
 
-export function sanitizeObservabilityContext(
-  context?: Record<string, unknown>,
-  depth = 0,
-): ScrubbedContext {
-  if (!context) return {};
-
+export function sanitizeObservabilityContext(context?: unknown): ScrubbedContext {
   const clean: ScrubbedContext = {};
-  for (const [key, value] of Object.entries(context)) {
-    if (SENSITIVE_CONTEXT_KEY.test(key)) continue;
-    const scrubbed = scrubValue(value, depth);
-    if (scrubbed !== undefined) clean[key] = scrubbed;
+
+  for (const [key, value] of safeDataEntries(context)) {
+    if (key !== 'source' || typeof value !== 'string') continue;
+    if (OBSERVABILITY_CONTEXT_VALUES.source.has(value as 'phase2-runbook')) clean.source = value;
   }
+
   return clean;
 }
 
 export function sanitizeCapturedException(error: unknown): Error {
   const safe = new Error('redacted_exception');
-  safe.name = error instanceof Error ? safeErrorName(error.name) : safeErrorName(typeof error);
+  safe.name = safeExceptionName(error);
+  const frames = safeGeneratedBundleStack(error);
+  safe.stack = `${safe.name}: redacted_exception${frames.length ? `\n${frames.join('\n')}` : ''}`;
   return safe;
 }

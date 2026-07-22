@@ -3,6 +3,9 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const SENTRY_API_URL = /^https:\/\/(?:sentry\.io|(?:us|us2|de)\.sentry\.io)$/i;
 const PLACEHOLDER = /your[-_]|replace-with|x{4,}|pending|example/i;
 const SYMBOL_ERROR = /(?:sourcemap|source_map|symbol|dsym|debug_file|missing_dif)/i;
+const RELEASE = /^[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+\+[A-Za-z0-9_.-]+$/;
+const DIST = /^(?:dev|[A-Za-z0-9_.-]{1,40})$/;
+const MAX_BINARY_UUIDS = 4096;
 
 function normalize(value) {
   return String(value ?? '').trim();
@@ -263,12 +266,48 @@ export async function verifySentryRecovery({
   if (!project || PLACEHOLDER.test(project)) throw new Error('Sentry project is missing.');
   if (!SENTRY_API_URL.test(apiUrl))
     throw new Error('Sentry API URL is not an approved HTTPS host.');
-  if (!EVENT_ID.test(javascriptEventId) || !EVENT_ID.test(nativeEventId)) {
+  const normalizedJavascriptEventId = normalize(javascriptEventId).toLowerCase();
+  const normalizedNativeEventId = normalize(nativeEventId).toLowerCase();
+  if (!EVENT_ID.test(normalizedJavascriptEventId) || !EVENT_ID.test(normalizedNativeEventId)) {
     throw new Error('Both Sentry recovery event IDs must be 32 hexadecimal characters.');
   }
-  if (javascriptEventId.toLowerCase() === nativeEventId.toLowerCase()) {
+  if (normalizedJavascriptEventId === normalizedNativeEventId) {
     throw new Error('JavaScript and native recovery event IDs must be distinct.');
   }
+  const normalizedRelease = normalize(release);
+  const normalizedDist = normalize(dist);
+  if (!RELEASE.test(normalizedRelease) || normalizedRelease.length > 160) {
+    throw new Error('Sentry release must be an exact content-free bundle@version+build ID.');
+  }
+  if (!DIST.test(normalizedDist)) {
+    throw new Error('Sentry dist must be a content-free release distribution ID.');
+  }
+  if (
+    !Array.isArray(binaryUuids) ||
+    binaryUuids.length === 0 ||
+    binaryUuids.length > MAX_BINARY_UUIDS
+  ) {
+    throw new Error('Binary UUID inventory must contain a bounded non-empty UUID list.');
+  }
+  const normalizedBinaryUuids = binaryUuids.map((uuid) => normalizeDebugId(uuid));
+  if (normalizedBinaryUuids.some((uuid) => !uuid)) {
+    throw new Error('Every binary UUID must be a canonical UUID.');
+  }
+  if (new Set(normalizedBinaryUuids).size !== normalizedBinaryUuids.length) {
+    throw new Error('Binary UUID inventory must not contain duplicates.');
+  }
+  const normalizedHermesDebugId = normalizeDebugId(hermesDebugId);
+  if (!normalizedHermesDebugId) {
+    throw new Error('Hermes source-map debug ID must be a canonical UUID.');
+  }
+  if (!Number.isFinite(now) || now < 0) {
+    throw new Error('Sentry verification time must be a finite non-negative timestamp.');
+  }
+  if (!Number.isFinite(maxAgeMs) || maxAgeMs <= 0 || maxAgeMs > 365 * 24 * 60 * 60 * 1000) {
+    throw new Error('Sentry recovery maximum age must be a bounded positive duration.');
+  }
+  if (typeof fetchImpl !== 'function')
+    throw new Error('Sentry provider fetch implementation is invalid.');
 
   const projectRoot = `${apiUrl}/api/0/projects/${encodeURIComponent(org)}/${encodeURIComponent(project)}`;
   const headers = { Authorization: `Bearer ${authToken}` };
@@ -282,10 +321,13 @@ export async function verifySentryRecovery({
     return responseJson(response, label);
   };
   const [javascriptEvent, nativeEvent, sourceMapDebug, ...debugFileResponses] = await Promise.all([
-    get(`${projectRoot}/events/${javascriptEventId}/`, 'JavaScript event'),
-    get(`${projectRoot}/events/${nativeEventId}/`, 'native event'),
-    get(`${projectRoot}/events/${javascriptEventId}/source-map-debug/`, 'source-map debug'),
-    ...binaryUuids.map((uuid) =>
+    get(`${projectRoot}/events/${normalizedJavascriptEventId}/`, 'JavaScript event'),
+    get(`${projectRoot}/events/${normalizedNativeEventId}/`, 'native event'),
+    get(
+      `${projectRoot}/events/${normalizedJavascriptEventId}/source-map-debug/`,
+      'source-map debug',
+    ),
+    ...normalizedBinaryUuids.map((uuid) =>
       get(
         `${projectRoot}/files/dsyms/?debug_id=${encodeURIComponent(uuid)}`,
         'debug-file inventory',
@@ -293,17 +335,17 @@ export async function verifySentryRecovery({
     ),
   ]);
   const debugFilesByUuid = Object.fromEntries(
-    binaryUuids.map((uuid, index) => [uuid, debugFileResponses[index]]),
+    normalizedBinaryUuids.map((uuid, index) => [uuid, debugFileResponses[index]]),
   );
   const errors = validateSentryRecoveryResponses(
     { javascriptEvent, nativeEvent, sourceMapDebug, debugFilesByUuid },
     {
-      javascriptEventId,
-      nativeEventId,
-      release,
-      dist,
-      binaryUuids,
-      hermesDebugId,
+      javascriptEventId: normalizedJavascriptEventId,
+      nativeEventId: normalizedNativeEventId,
+      release: normalizedRelease,
+      dist: normalizedDist,
+      binaryUuids: normalizedBinaryUuids,
+      hermesDebugId: normalizedHermesDebugId,
       now,
       maxAgeMs,
     },
@@ -311,9 +353,11 @@ export async function verifySentryRecovery({
   if (errors.length > 0) throw new Error(errors.join(' '));
   return {
     verified: true,
-    javascriptEventId: javascriptEventId.toLowerCase(),
-    nativeEventId: nativeEventId.toLowerCase(),
-    release,
-    dist,
+    javascriptEventId: normalizedJavascriptEventId,
+    nativeEventId: normalizedNativeEventId,
+    release: normalizedRelease,
+    dist: normalizedDist,
+    binaryUuids: normalizedBinaryUuids,
+    hermesDebugId: normalizedHermesDebugId,
   };
 }

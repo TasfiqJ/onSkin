@@ -1366,6 +1366,8 @@ If transaction/performance sampling remains prohibited by the privacy decision, 
 
 ### 11.3 PostHog lifecycle
 
+Current local telemetry-boundary checkpoint (2026-07-21): PostHog now uses one exact per-event runtime/type schema with correlated payload branches, event-specific count floors, fail-closed no-property handling, and complete production-call coverage. Sentry now preserves only generated-bundle crash coordinates plus exact recovery identifiers while rejecting unsafe event fields, hostile/revoked containers, SDK acquisition/capture bypasses, and malformed recovery inputs before provider access. The code gates and isolated bypass matrices pass; live exact-release payload samples and provider/dashboard evidence remain external requirements. See `docs/optimization/evidence/2026-07-21_telemetry-boundary-hardening.md`.
+
 Preserve lazy initialization and disabled session replay. Add:
 
 - a strict event allowlist and typed property schema;

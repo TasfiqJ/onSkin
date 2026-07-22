@@ -1,8 +1,14 @@
-import type { OnboardingEvent } from '@onskin/types';
 import type { PostHog } from 'posthog-react-native';
 
-import type { AnalyticsAllowedEventName } from '@/lib/analytics/eventRegistry';
 import {
+  analyticsSchemaForEvent,
+  type AnalyticsAllowedEventName,
+  type AnalyticsEventWithoutProps,
+  type AnalyticsEventWithProps,
+  type AnalyticsEventProps,
+  type ExactAnalyticsEventProps,
+  isAllowedAnalyticsPayloadShape,
+  isAllowedAnalyticsPropValue,
   isAllowedAnalyticsEventName,
   isAllowedAnalyticsPropKey,
 } from '@/lib/analytics/eventRegistry';
@@ -22,11 +28,6 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { accountDeletionVendorWritesBlocked } from '@/lib/auth/accountDeletionVendorFreezeRuntime';
 import { env } from '@/lib/env';
-import {
-  GROWTH_ATTRIBUTION_KEYS,
-  sanitizeAttribution,
-  type GrowthAttributionKey,
-} from '@/lib/growth/attribution';
 import { devWarn } from '@/lib/observability/safeLog';
 
 interface PostHogHandle {
@@ -42,28 +43,6 @@ const LOCAL_DELETION_CLEANUP_API_KEY = 'onskin-local-deletion-cleanup';
 let posthogPromise: Promise<PostHogHandle | null> | null = null;
 let accountDeletionFreezeTail: Promise<void> = Promise.resolve();
 type AnalyticsProps = Parameters<PostHog['capture']>[1];
-
-export const SENSITIVE_ANALYTICS_KEY =
-  /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug)/i;
-export const SENSITIVE_ANALYTICS_VALUE =
-  /(@|https?:\/\/|file:\/\/|content:\/\/|\/data\/|\/var\/mobile\/|\/cache\/|\?.*=|token|jwt|secret|signed_url|barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|(?:^|[_\W])spf(?:$|[_\W])|peptide|dspt|fitzpatrick|monk|axis|step|score|slug|acne|rosacea|eczema|psoriasis|dermatitis|melasma|hyperpigmentation|irritation|procedure|medical|concern|conflict|product_fit|replenish|routine_q|conflict_q)/i;
-const APPROVED_BUCKET_KEYS = new Set([
-  'barcode_type',
-  'native_ocr_enabled',
-  'screen_name',
-  'share_id',
-]);
-const GROWTH_BUCKET_KEYS = new Set<string>(GROWTH_ATTRIBUTION_KEYS);
-const PHOTO_QUALITY_RESULT_VALUES = new Set([
-  'matched',
-  'lighting_varies',
-  'misaligned',
-  'low',
-  'unmeasured',
-  'darker',
-]);
-const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
-const SAFE_ANALYTICS_STRING_VALUE = /^[A-Za-z0-9_-]{1,80}$/;
 
 function bytesToHex(bytes: ArrayBuffer): string {
   return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
@@ -86,10 +65,23 @@ function canUsePostHog(): boolean {
   return env.posthogKey.length > 0 && env.posthogHost.length > 0;
 }
 
-function sanitizeAnalyticsNumber(value: number): number | undefined {
-  if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_ANALYTICS_INTEGER)
-    return undefined;
-  return value;
+function safeOwnDataEntries(value: unknown): [string, unknown][] | null {
+  if (!value || typeof value !== 'object') return null;
+
+  try {
+    const keys = Reflect.ownKeys(value);
+    if (keys.some((key) => typeof key !== 'string')) return null;
+
+    const entries: [string, unknown][] = [];
+    for (const key of keys as string[]) {
+      const descriptor = Object.getOwnPropertyDescriptor(value, key);
+      if (!descriptor || !descriptor.enumerable || !('value' in descriptor)) return null;
+      entries.push([key, descriptor.value]);
+    }
+    return entries;
+  } catch {
+    return null;
+  }
 }
 
 async function getPostHogHandle(forAccountDeletion = false): Promise<PostHogHandle | null> {
@@ -165,69 +157,91 @@ async function getPostHog(): Promise<PostHog | null> {
   return (await getPostHogHandle())?.posthog ?? null;
 }
 
-export function sanitizeAnalyticsProps(props?: Record<string, unknown>): AnalyticsProps {
-  if (!props) return undefined;
-
-  const clean: Record<string, string | number | boolean | null> = {};
-  for (const [key, value] of Object.entries(props)) {
-    if (!isAllowedAnalyticsPropKey(key)) continue;
-    if (!APPROVED_BUCKET_KEYS.has(key) && SENSITIVE_ANALYTICS_KEY.test(key)) continue;
-    if (value === undefined) continue;
-    if (value === null || typeof value === 'boolean') {
-      clean[key] = value;
-    } else if (typeof value === 'number') {
-      const safeNumber = sanitizeAnalyticsNumber(value);
-      if (safeNumber !== undefined) clean[key] = safeNumber;
-    } else if (typeof value === 'string') {
-      const trimmed = value.trim();
-      if (!trimmed || trimmed.includes('@')) continue;
-      if (GROWTH_BUCKET_KEYS.has(key)) {
-        const growthValue = sanitizeAttribution({ [key]: trimmed })[key as GrowthAttributionKey];
-        if (!growthValue) continue;
-        clean[key] = growthValue;
-        continue;
-      }
-      if (SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
-      if (!SAFE_ANALYTICS_STRING_VALUE.test(trimmed)) continue;
-      if (key === 'result' && PHOTO_QUALITY_RESULT_VALUES.has(trimmed)) continue;
-      clean[key] = trimmed;
-    }
-  }
-  return clean;
+export function sanitizeAnalyticsProps(
+  event: AnalyticsAllowedEventName,
+  props?: unknown,
+): AnalyticsProps {
+  return sanitizeAnalyticsPayload(event, props).props;
 }
 
-export function sanitizeAnalyticsEventName(
-  event: OnboardingEvent | string,
-): AnalyticsAllowedEventName | null {
+type SanitizedAnalyticsPayload = {
+  accepted: boolean;
+  props: AnalyticsProps;
+};
+
+function sanitizeAnalyticsPayload(
+  event: AnalyticsAllowedEventName,
+  props?: unknown,
+): SanitizedAnalyticsPayload {
+  const schema = analyticsSchemaForEvent(event);
+  if (Object.keys(schema).length === 0) {
+    return props === undefined
+      ? { accepted: true, props: undefined }
+      : { accepted: false, props: undefined };
+  }
+
+  const entries = props === undefined ? [] : safeOwnDataEntries(props);
+  if (!entries) return { accepted: false, props: undefined };
+
+  const clean: Record<string, string | number | boolean | null> = {};
+  for (const [key, value] of entries) {
+    if (!isAllowedAnalyticsPropKey(key)) return { accepted: false, props: undefined };
+    const rule = schema[key];
+    if (!rule) return { accepted: false, props: undefined };
+    if (value === undefined) continue;
+    if (!isAllowedAnalyticsPropValue(rule, value)) {
+      return { accepted: false, props: undefined };
+    }
+    clean[key] = value as string | number | boolean | null;
+  }
+
+  if (!isAllowedAnalyticsPayloadShape(event, clean)) {
+    return { accepted: false, props: undefined };
+  }
+  return {
+    accepted: true,
+    props: Object.keys(clean).length ? clean : undefined,
+  };
+}
+
+export function sanitizeAnalyticsEventName(event: string): AnalyticsAllowedEventName | null {
   const normalized = event.trim();
   return isAllowedAnalyticsEventName(normalized) ? normalized : null;
 }
 
-export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
-  if (accountDeletionVendorWritesBlocked()) return;
+export function prepareAnalyticsEvent(
+  event: string,
+  props?: unknown,
+): Readonly<{ event: AnalyticsAllowedEventName; props: AnalyticsProps }> | null {
   const safeEvent = sanitizeAnalyticsEventName(event);
-  if (!safeEvent) return;
+  if (!safeEvent) return null;
+  const payload = sanitizeAnalyticsPayload(safeEvent, props);
+  return payload.accepted ? { event: safeEvent, props: payload.props } : null;
+}
 
-  const safeProps = sanitizeAnalyticsProps(props);
+export function track<Event extends AnalyticsEventWithoutProps>(event: Event): void;
+export function track<
+  Event extends AnalyticsEventWithProps,
+  const Actual extends AnalyticsEventProps<NoInfer<Event>>,
+>(event: Event, props: ExactAnalyticsEventProps<NoInfer<Event>, Actual>): void;
+export function track(event: AnalyticsAllowedEventName, props?: unknown): void {
+  if (accountDeletionVendorWritesBlocked()) return;
+  const prepared = prepareAnalyticsEvent(event, props);
+  if (!prepared) return;
 
   void runAccountGenerationOperation(async (lease) => {
     const posthog = await awaitAccountGenerationLease(lease, getPostHog);
     lease.assertCurrent();
     if (accountDeletionVendorWritesBlocked()) return;
-    posthog?.capture(safeEvent, safeProps);
+    posthog?.capture(prepared.event, prepared.props);
   }).catch((error: unknown) => {
     devWarn('[analytics] capture failed', error);
   });
 }
 
 // Call at the anonymous-to-permanent conversion (account creation) per docs/01 section 7.
-export async function identify(
-  lease: AccountGenerationLease,
-  userId: string,
-  props?: Record<string, unknown>,
-): Promise<void> {
+export async function identify(lease: AccountGenerationLease, userId: string): Promise<void> {
   if (accountDeletionVendorWritesBlocked()) return;
-  const safeProps = sanitizeAnalyticsProps(props);
 
   try {
     lease.assertCurrent();
@@ -236,7 +250,7 @@ export async function identify(
     );
     lease.assertCurrent();
     if (accountDeletionVendorWritesBlocked()) return;
-    posthog?.identify(pseudonymousId, safeProps);
+    posthog?.identify(pseudonymousId);
     lease.assertCurrent();
   } catch (error) {
     if (error instanceof AccountGenerationLeaseError) throw error;

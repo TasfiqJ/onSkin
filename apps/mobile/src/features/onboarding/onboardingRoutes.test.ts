@@ -460,7 +460,7 @@ describe('onboarding route contracts', () => {
 
     expect(notifications).toContain('const ownerScope = useOwnerQueryScope();');
     expect(notifications).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(notifications.indexOf("await acceptRoutineReminderSoftAsk();")).toBeLessThan(
+    expect(notifications.indexOf('await acceptRoutineReminderSoftAsk();')).toBeLessThan(
       notifications.indexOf("router.push('/onboarding/account')"),
     );
     expect(notifications.indexOf('await declineRoutineReminderSoftAsk();')).toBeLessThan(
@@ -469,7 +469,7 @@ describe('onboarding route contracts', () => {
     expect(notifications).toContain('setFailedChoice(choice)');
     expect(notifications).toContain('Notification choice incomplete');
     expect(notifications).toContain('nothing was silently skipped');
-    expect(notifications).toContain("finish(failedChoice, true)");
+    expect(notifications).toContain('finish(failedChoice, true)');
     expect(notifications).toContain('<ScrollView');
     expect(notifications).toContain('contentContainerStyle={{ flexGrow: 1 }}');
     expect(notifications).not.toMatch(/finally\s*{[\s\S]*router\.push\('\/onboarding\/account'\)/);
@@ -524,9 +524,7 @@ describe('onboarding route contracts', () => {
     expect(context.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
       context.indexOf('setStoredSkinProfile({ result, goals, completedAt })'),
     );
-    expect(context).toContain(
-      'queryClient.setQueryData(queryKeys.onboarded(ownerScope), true)',
-    );
+    expect(context).toContain('queryClient.setQueryData(queryKeys.onboarded(ownerScope), true)');
     expect(context).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
     expect(context).toContain('ownerQueryPrefixes.shelf(ownerScope)');
     expect(context).toContain('ownerQueryPrefixes.ramp(ownerScope)');
@@ -611,7 +609,7 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('const ownerScope = useOwnerQueryScope();');
     expect(source).toContain('await runOwnerQueryOperation(ownerScope, async (lease) => {');
     expect(source).toContain('const owner = await captureAuthenticatedAccountOwner(lease);');
-    expect(source).toContain("await identify(lease, owner.userId, { method: 'account_created' })");
+    expect(source).toContain('await identify(lease, owner.userId)');
     expect(source).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
     expect(source).not.toContain('supabase.auth.getUser()');
     expect(source.indexOf('await recordAccountConsent()')).toBeLessThan(

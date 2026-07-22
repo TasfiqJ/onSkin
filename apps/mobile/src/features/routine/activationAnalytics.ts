@@ -238,7 +238,7 @@ export async function recordRoutinePlanAnalytics({
 }): Promise<void> {
   track('routine_plan_viewed', { source });
 
-  if (isExample) return;
+  if (isExample || source !== 'routine_plan') return;
 
   const hasRoutineSteps = routineStepCount > 0;
   if (hasRoutineSteps) {
