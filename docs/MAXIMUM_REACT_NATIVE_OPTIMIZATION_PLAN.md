@@ -579,6 +579,8 @@ Current global policy is a one-minute stale time and two retries. Required redes
 - Use short explicit photo-query `gcTime` and purge on lock/account change.
 - Pass TanStack cancellation signals through supported network operations.
 
+Current local photo-query cache checkpoint (2026-07-21): photo query results now set query-scoped `gcTime: 0` because each derived result retains complete `PhotoRecord` values, including notes and local/encrypted/thumbnail URIs. Real TanStack `QueryObserver` tests prove data remains while any observer exists, disappears after the last observer, a non-cancellable late storage completion leaves no residue after settling, and a later mutation cannot recreate an unobserved query. A content-free development counter contains one integer only; a 390 x 844 Expo-web run switched Progress to Today and back twice, observed exact query execution counts `1 -> 2 -> 3`, and recovered all 10 deterministic Timeline actions after each reread with zero storage errors, overflow, dialogs, or unexpected logs. Global account/lock clearing remains mandatory, and native SecureStore/filesystem/process-kill/memory evidence remains open. See `docs/optimization/evidence/2026-07-21_progress-sensitive-query-cache-eviction.md`.
+
 ### 6.2 Fast local entitlement, reviewed reconciliation
 
 Current `useEntitlement` waits for local storage and then the server mirror before returning; every `ProGate` also starts an offering query.

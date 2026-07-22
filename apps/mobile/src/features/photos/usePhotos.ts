@@ -46,6 +46,7 @@ import {
   buildProgressE2EPhotos,
   parseProgressE2EPhotoCount,
 } from './progressStressFixture';
+import { recordPhotoQueryExecution } from './photoQueryCacheDiagnostics';
 
 // Reads the local-first photo store (docs/06 §6) and derives the Progress-tab
 // surfaces via the pure, tested timeline helpers. Resilient before the backend
@@ -95,6 +96,11 @@ export function derivePhotosQueryData(
 
 export type PhotosQueryData = ReturnType<typeof derivePhotosQueryData>;
 
+// Photo query results contain private notes plus local/encrypted/thumbnail URIs.
+// Keep them only while a screen owns an observer; durable encrypted storage is
+// the source of truth and remounts intentionally reread it.
+export const SENSITIVE_PHOTO_QUERY_GC_TIME_MS = 0;
+
 const PHOTO_SERIES_SET = new Set<string>(PHOTO_SERIES);
 
 function photoQueryIdentity(queryKey: QueryKey): { series: PhotoSeries; todayYmd: string } | null {
@@ -136,18 +142,20 @@ export function publishPhotoMutationSnapshot(
  * the current route. This keeps nested storage/trend/presentation boundaries
  * from mounting duplicate photo observers and midnight subscriptions.
  */
-export function usePhotosFromBoundary(
+export function photoQueryOptions(
+  ownerScope: OwnerQueryScope,
   boundary: LocalDateBoundaryIdentity,
   series: PhotoSeries = 'front',
 ) {
-  const ownerScope = useOwnerQueryScope();
   const { localDate: todayYmd } = boundary;
-  return useQuery({
+  return {
+    gcTime: SENSITIVE_PHOTO_QUERY_GC_TIME_MS,
     queryKey: queryKeys.photos(ownerScope, boundary, series),
     refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
     refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
-    queryFn: () =>
-      runOwnerQueryOperation(ownerScope, async () => {
+    queryFn: () => {
+      recordPhotoQueryExecution();
+      return runOwnerQueryOperation(ownerScope, async () => {
         const storageFailure = e2eProgressStorageFailure();
         if (storageFailure) throw storageFailure;
         const fixture = e2eProgressPhotoFixture();
@@ -163,9 +171,18 @@ export function usePhotosFromBoundary(
           ).photos;
         }
         return derivePhotosQueryData(photos, series, todayYmd);
-      }),
+      });
+    },
     retry: 0,
-  });
+  } as const;
+}
+
+export function usePhotosFromBoundary(
+  boundary: LocalDateBoundaryIdentity,
+  series: PhotoSeries = 'front',
+) {
+  const ownerScope = useOwnerQueryScope();
+  return useQuery(photoQueryOptions(ownerScope, boundary, series));
 }
 
 /** Standalone photo consumer. Route view models should prefer the shared boundary. */

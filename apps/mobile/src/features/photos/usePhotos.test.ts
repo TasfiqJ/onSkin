@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryObserver } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -15,7 +15,12 @@ import {
 } from '@/lib/query/queryKeys';
 import type { LocalDateBoundaryIdentity } from '@/lib/query/localDateBoundaryStore';
 
-import { derivePhotosQueryData, usePhotoActions } from './usePhotos';
+import {
+  SENSITIVE_PHOTO_QUERY_GC_TIME_MS,
+  derivePhotosQueryData,
+  photoQueryOptions,
+  usePhotoActions,
+} from './usePhotos';
 import type { NewPhoto, PhotoMutationCommit, PhotoRecord } from './store';
 
 const mocks = vi.hoisted(() => ({
@@ -181,8 +186,8 @@ describe('owner-bound photo actions', () => {
     client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
     mocks.queryClient = client;
     mocks.addPhoto.mockReset().mockResolvedValue({ result: addedPhoto, photos: committedPhotos });
-    mocks.loadPhotos.mockReset();
-    mocks.recoverPhotoStoreMutations.mockReset();
+    mocks.loadPhotos.mockReset().mockResolvedValue(committedPhotos);
+    mocks.recoverPhotoStoreMutations.mockReset().mockResolvedValue(undefined);
     mocks.removePhoto.mockReset().mockResolvedValue({ result: undefined, photos: committedPhotos });
     mocks.setReference
       .mockReset()
@@ -353,5 +358,66 @@ describe('owner-bound photo actions', () => {
 
     expect(setQueryData).not.toHaveBeenCalled();
     expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
+  });
+
+  describe('sensitive photo query cache lifetime', () => {
+    it('uses immediate inactive collection only for photo query results', () => {
+      const options = photoQueryOptions(ownerA, boundary, 'front');
+
+      expect(SENSITIVE_PHOTO_QUERY_GC_TIME_MS).toBe(0);
+      expect(options.gcTime).toBe(0);
+      expect(client.getDefaultOptions().queries?.gcTime).toBeUndefined();
+    });
+
+    it('retains private photo data until the last observer releases it', async () => {
+      const options = photoQueryOptions(ownerA, boundary, 'front');
+      const first = new QueryObserver(client, options);
+      const second = new QueryObserver(client, options);
+      const unsubscribeFirst = first.subscribe(() => undefined);
+      const unsubscribeSecond = second.subscribe(() => undefined);
+
+      await expect(first.refetch()).resolves.toMatchObject({ status: 'success' });
+      expect(client.getQueryData(photoQueryKey(ownerA))).toMatchObject({
+        all: committedPhotos,
+      });
+
+      unsubscribeFirst();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(client.getQueryState(photoQueryKey(ownerA))).toBeDefined();
+
+      unsubscribeSecond();
+      await vi.waitFor(() => expect(client.getQueryState(photoQueryKey(ownerA))).toBeUndefined());
+    });
+
+    it('evicts a late storage completion after its final observer has left', async () => {
+      const pendingRead = deferred<PhotoRecord[]>();
+      mocks.loadPhotos.mockReturnValueOnce(pendingRead.promise);
+      const observer = new QueryObserver(client, photoQueryOptions(ownerA, boundary, 'front'));
+      const unsubscribe = observer.subscribe(() => undefined);
+      const outcome = observer.refetch();
+      await vi.waitFor(() => expect(mocks.loadPhotos).toHaveBeenCalledTimes(1));
+
+      unsubscribe();
+      pendingRead.resolve(committedPhotos);
+      await expect(outcome).resolves.toMatchObject({ status: 'success' });
+      await vi.waitFor(() => expect(client.getQueryState(photoQueryKey(ownerA))).toBeUndefined());
+    });
+
+    it('does not recreate an unobserved private cache after a mutation commits', async () => {
+      const observer = new QueryObserver(client, photoQueryOptions(ownerA, boundary, 'front'));
+      const unsubscribe = observer.subscribe(() => undefined);
+      await expect(observer.refetch()).resolves.toMatchObject({ status: 'success' });
+      unsubscribe();
+      await vi.waitFor(() => expect(client.getQueryState(photoQueryKey(ownerA))).toBeUndefined());
+      const setQueryData = vi.spyOn(client, 'setQueryData');
+
+      const actions = useCapturedPhotoActions();
+      await expect(actions.note.mutationFn(noteInput)).resolves.toBeUndefined();
+
+      expect(setQueryData).not.toHaveBeenCalled();
+      expect(
+        client.getQueriesData({ queryKey: ownerQueryPrefixes.photos(ownerA) }),
+      ).toEqual([]);
+    });
   });
 });
