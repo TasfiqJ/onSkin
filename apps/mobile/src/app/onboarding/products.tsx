@@ -11,7 +11,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
-import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { ONBOARDING_PRODUCT_CATEGORIES } from '@/features/onboarding/productCategories';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
@@ -192,18 +191,17 @@ function ProductsScreenContent() {
   function add() {
     const trimmed = name.trim();
     if (!trimmed) return;
-    const pao = category ? reviewedCategoryPao(category) : null;
-    resetIntake({
+    const intakeId = resetIntake({
       name: trimmed,
       category,
       addedVia: 'onboarding',
       catalogSource: 'user_local',
       catalogMatchQuality: 'manual',
-      paoMonths: pao,
-      paoSource: pao != null ? 'category_default' : 'unknown',
+      paoMonths: null,
+      paoSource: 'unknown',
     });
     setCategoryPickerOpen(false);
-    router.push({ pathname: '/shelf/opened', params: { origin: 'onboarding' } });
+    router.push({ pathname: '/shelf/opened', params: { intakeId, origin: 'onboarding' } });
   }
 
   function go() {

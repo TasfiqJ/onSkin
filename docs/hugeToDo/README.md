@@ -51,6 +51,10 @@ Start here:
 - [CAT-05 Native OCR Source Checkpoint](./CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md)
 - [CAT-06 Camera Lifecycle Source Checkpoint](./CAT-06-CAMERA-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-18.md)
 - [CAT-06 Camera Lifecycle Evidence Runbook](../phase-5/camera-lifecycle-evidence-runbook.md)
+- [CAT-07 Shelf Freshness Source Checkpoint](./CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md)
+- [CAT-07 Truthful Freshness Migration](../../supabase/migrations/20260718000060_cat07_truthful_freshness.sql)
+- [CAT-07 Database Contract](../../supabase/tests/database/cat07_truthful_freshness.test.sql)
+- [CAT-07 Isolated PostgreSQL Rehearsal](../../scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -221,9 +225,47 @@ permission sheet, Settings return, CameraView lifecycle, native interruption,
 temporary-file cleanup, observed traffic, VoiceOver, archive behavior, Apple
 acceptance, legal compliance, or revenue.
 
+CAT-07 is now an `in_progress` source candidate, blocked by `CAT-06`. The
+candidate preserves physical-package dates, explicit label PAO, reviewed catalog PAO,
+reserved future category estimate, and unknown as distinct
+states. Unknown is not an estimate. Only trusted printed or label/catalog-PAO
+evidence may drive countdown, expired, Expiring-filter, or replenishment UI;
+category estimates are unavailable at launch and non-actionable. Replacement requires
+an explicit opening-state choice, archives the prior package, creates a new
+UUID, preserves product/PAO provenance, and clears inherited physical-package dates.
+The local persistence candidate authenticates canonical v1 bytes, leaves them
+unchanged on read or failed mutation, and writes v2 only after a successful
+authorized atomic mutation.
+
+Migration `0060` keeps current `product_categories` as bounded editorial
+metadata/future candidates, not Shelf evidence. It fully purges the legacy
+`ingredient_pao_defaults` compatibility relation, removes its read policy,
+force-RLS seals and revokes it, and validates an always-false check so it cannot
+be repopulated. Its pgTAP contract and isolated PostgreSQL rehearsal are linked
+above; neither substitutes for fresh local or hosted execution evidence.
+
+EU Article 19(1)(c) and Annex VII point 2, ordinary U.S. cosmetic-label gaps,
+and classification-specific U.S./Canadian sunscreen rules are recorded with
+primary sources in the CAT-07 checkpoint. There is no universal printed
+sunscreen date or numeric sunscreen fallback. The prior 2026-07-11 Shelf
+Expo-web packet predates the new replacement, source, and v1→v2 contracts and
+is stale for CAT-07 acceptance. Integrated green source/static-policy checks,
+named cosmetic-chemistry and legal review, fresh local and hosted migration/RLS
+plus live-catalog truth-table evidence, exact signed-build physical-iPhone
+encrypted-storage/relaunch/accessibility/notification evidence, and refreshed
+human-simulated E2E remain open. CAT-07 is not complete, and no Apple, legal,
+product-quality, market, or revenue outcome is implied.
+
+Apple 1.4.1 health-accuracy scrutiny, 2.5.18's sensitive-data advertising ban,
+5.1/5.1.2 privacy and use limits, and the FTC health-products substantiation
+standard are recorded as launch gates in the checkpoint. Whether a user-
+initiated item-specific affiliate route is contextual shopping or prohibited
+health-targeted advertising remains unresolved; consent alone is not App Review
+or legal clearance.
+
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now covers all 58 migrations through
-`0059`, all 16 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now covers all 59 migrations through
+`0060`, all 16 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

@@ -69,22 +69,22 @@ export default function NoMatchScreen() {
     if (reportingMissingProduct) return;
     haptics.select();
     trackProductAddStarted('miss_label');
-    reset({ addedVia: 'ocr', barcode });
-    router.replace('/shelf/ocr');
+    const intakeId = reset({ addedVia: 'ocr', barcode });
+    router.replace({ pathname: '/shelf/ocr', params: { intakeId } });
   };
   const goSearch = () => {
     if (reportingMissingProduct) return;
     haptics.select();
     trackProductAddStarted('miss_search');
-    reset({ addedVia: 'search', barcode });
-    router.replace('/shelf/search');
+    const intakeId = reset({ addedVia: 'search', barcode });
+    router.replace({ pathname: '/shelf/search', params: { intakeId } });
   };
   const goManual = () => {
     if (reportingMissingProduct) return;
     haptics.select();
     trackProductAddStarted('miss_manual');
-    reset({ addedVia: 'manual', barcode });
-    router.replace('/shelf/manual');
+    const intakeId = reset({ addedVia: 'manual', barcode });
+    router.replace({ pathname: '/shelf/manual', params: { intakeId } });
   };
   const openReportConfirmation = () => {
     if (!reportDraft || reportSubmissionInFlight.current) return;

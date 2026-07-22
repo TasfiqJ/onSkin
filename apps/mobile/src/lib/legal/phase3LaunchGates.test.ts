@@ -2,14 +2,13 @@ import { describe, expect, it, afterEach, beforeEach } from 'vitest';
 
 import { shippableNotes } from '@/features/community/notes';
 import { shippableStacks } from '@/features/commerce/stacks';
-import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { shippableRecTypes } from '@/features/recommendations/catalog';
 import { SEQUENCING_RULES, shippableSequencingRules } from '@/features/routine/sequencing';
 
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
 
-describe('Phase 3 runtime gates withhold covered conflict, PAO, recommendation, note, and stack content', () => {
+describe('Phase 3 runtime gates withhold covered conflict, recommendation, note, and stack content', () => {
   beforeEach(() => {
     delete runtime.__DEV__;
   });
@@ -18,10 +17,9 @@ describe('Phase 3 runtime gates withhold covered conflict, PAO, recommendation, 
     delete runtime.__DEV__;
   });
 
-  it('withholds unreviewed conflict rules, sequencing, PAO defaults, notes, and stacks', () => {
+  it('withholds unreviewed conflict rules, sequencing, notes, and stacks', () => {
     expect(shippableRules()).toHaveLength(0);
     expect(shippableSequencingRules()).toEqual({});
-    expect(reviewedCategoryPao('spf')).toBeNull();
     expect(shippableNotes()).toHaveLength(0);
     expect(shippableStacks()).toHaveLength(0);
   });
@@ -41,7 +39,6 @@ describe('Phase 3 runtime gates withhold covered conflict, PAO, recommendation, 
     expect(Object.keys(shippableSequencingRules())).toHaveLength(
       Object.keys(SEQUENCING_RULES).length,
     );
-    expect(reviewedCategoryPao('spf')).toBe(12);
     expect(shippableNotes().length).toBeGreaterThan(0);
     expect(shippableStacks().length).toBeGreaterThan(0);
     expect(shippableRecTypes().some((rec) => rec.medicalAdjacent)).toBe(true);

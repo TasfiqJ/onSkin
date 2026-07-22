@@ -50,6 +50,9 @@ jobs:
           - name: catalog-scan-minimization
             database: catalog_scan_minimization_0059
             script: catalog-scan-minimization-postgres-rehearsal.sql
+          - name: cat07-truthful-freshness
+            database: cat07_truthful_freshness_0060
+            script: cat07-truthful-freshness-postgres-rehearsal.sql
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}

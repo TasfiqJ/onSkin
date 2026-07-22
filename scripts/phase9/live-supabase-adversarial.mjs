@@ -454,7 +454,7 @@ async function main() {
         opened_at: null,
         pao_months: null,
         pao_source: 'unknown',
-        expiry_source: 'estimated',
+        expiry_source: 'unknown',
       });
       registerPrivateTableProbe('user_products', 'id', product.id);
       secondProduct = await insertOne(userA.client, 'user_products', {
@@ -465,7 +465,7 @@ async function main() {
         opened_at: null,
         pao_months: null,
         pao_source: 'unknown',
-        expiry_source: 'estimated',
+        expiry_source: 'unknown',
       });
       crossUserProduct = await insertOne(userB.client, 'user_products', {
         user_id: userB.id,
@@ -475,7 +475,7 @@ async function main() {
         opened_at: null,
         pao_months: null,
         pao_source: 'unknown',
-        expiry_source: 'estimated',
+        expiry_source: 'unknown',
       });
       await expectVisible(userA.client, 'user_products', 'id', product.id, 'shelf owner read');
       await expectNotVisible(
@@ -501,7 +501,7 @@ async function main() {
           opened_at: null,
           pao_months: null,
           pao_source: 'unknown',
-          expiry_source: 'estimated',
+          expiry_source: 'unknown',
         }),
       );
 
@@ -818,9 +818,9 @@ async function main() {
           },
         },
         {
-          name: 'unopened estimated expiry',
-          expectedSource: 'estimated',
-          mismatchedSource: 'unknown',
+          name: 'unopened unknown expiry',
+          expectedSource: 'unknown',
+          mismatchedSource: 'estimated',
           expectedComputed: null,
           payload: {
             is_opened: false,
@@ -828,7 +828,7 @@ async function main() {
             pao_months: null,
             pao_source: 'unknown',
             expiry_date: null,
-            expiry_source: 'estimated',
+            expiry_source: 'unknown',
           },
         },
         {
@@ -923,7 +923,8 @@ async function main() {
         );
       }
 
-      for (const paoSource of ['label', 'catalog', 'category_default', 'unknown']) {
+      for (const paoSource of ['label', 'catalog']) {
+        const expectedExpirySource = 'pao_computed';
         const row = await insertOne(userA.client, 'user_products', {
           user_id: userA.id,
           manual_name: `Phase 9 PAO source ${paoSource}`,
@@ -933,36 +934,71 @@ async function main() {
           pao_months: 12,
           pao_source: paoSource,
           expiry_date: null,
-          expiry_source: 'pao_computed',
+          expiry_source: expectedExpirySource,
         });
         assert(
-          row.pao_source === paoSource && row.expiry_computed === '2025-01-15',
+          row.pao_source === paoSource &&
+            row.expiry_source === expectedExpirySource &&
+            row.expiry_computed === '2025-01-15',
           `Shelf PAO source ${paoSource}: stored provenance or computed expiry was wrong.`,
         );
 
-        const invalidSource = paoSource === 'unknown' ? 'label' : paoSource;
         await expectPostgresCode(
           `Shelf PAO source ${paoSource} null update`,
           '23514',
           userA.client
             .from('user_products')
-            .update({ pao_months: null, pao_source: invalidSource })
+            .update({ pao_months: null, pao_source: paoSource })
             .eq('id', row.id)
             .select('id'),
         );
         const unchanged = await admin
           .from('user_products')
-          .select('pao_months, pao_source, expiry_computed')
+          .select('pao_months, pao_source, expiry_source, expiry_computed')
           .eq('id', row.id)
           .single();
         if (unchanged.error) throw unchanged.error;
         assert(
           unchanged.data.pao_months === 12 &&
             unchanged.data.pao_source === paoSource &&
+            unchanged.data.expiry_source === expectedExpirySource &&
             unchanged.data.expiry_computed === '2025-01-15',
           `Shelf PAO source ${paoSource}: failed update changed the stored row.`,
         );
       }
+
+      await expectPostgresCode(
+        'Shelf non-null PAO with unknown provenance',
+        '23514',
+        userA.client.from('user_products').insert({
+          user_id: userA.id,
+          manual_name: 'Phase 9 invalid unknown PAO',
+          manual_brand: 'Phase 9 Shelf Provenance',
+          is_opened: true,
+          opened_at: '2024-01-15',
+          pao_months: 12,
+          pao_source: 'unknown',
+          expiry_date: null,
+          expiry_source: 'unknown',
+        }),
+      );
+
+      await expectPostgresCode(
+        'Shelf unlinked category estimate without catalog provenance',
+        '23514',
+        userA.client.from('user_products').insert({
+          user_id: userA.id,
+          manual_name: 'Phase 9 invalid unlinked category estimate',
+          manual_brand: 'Phase 9 Shelf Provenance',
+          catalog_product_id: null,
+          is_opened: true,
+          opened_at: '2024-01-15',
+          pao_months: 9,
+          pao_source: 'category_default',
+          expiry_date: null,
+          expiry_source: 'estimated',
+        }),
+      );
 
       for (const invalidSource of ['label', 'catalog', 'category_default']) {
         await expectPostgresCode(
@@ -977,7 +1013,7 @@ async function main() {
             pao_months: null,
             pao_source: invalidSource,
             expiry_date: null,
-            expiry_source: 'estimated',
+            expiry_source: 'unknown',
           }),
         );
       }

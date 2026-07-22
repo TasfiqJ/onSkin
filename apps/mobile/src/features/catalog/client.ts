@@ -1,6 +1,7 @@
 import type { PaoSource } from '@onskin/types';
 
 import type { ProductCategory } from '@/features/shelf/categories';
+import { MAX_PAO_MONTHS, validLocalDate } from '@/features/shelf/freshness';
 import { normalizeCanonicalProductBarcode } from '@/features/native/camera/barcode';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
@@ -70,7 +71,8 @@ export type CatalogIntakeProvenance = {
   catalogSourceId: string | null;
   paoMonths: number | null;
   paoSource: PaoSource;
-  expiryDate: string | null;
+  /** Catalog identity has no lot/package binding, so it cannot prove this unit's printed date. */
+  expiryDate: null;
 };
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -81,98 +83,67 @@ function uuidOrNull(value: unknown): string | null {
   return UUID_PATTERN.test(trimmed) ? trimmed : null;
 }
 
-function validLocalDate(value: unknown): string | null {
-  if (typeof value !== 'string') return null;
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
-  if (!match) return null;
-
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  return date.getUTCFullYear() === year &&
-    date.getUTCMonth() === month - 1 &&
-    date.getUTCDate() === day
-    ? `${match[1]}-${match[2]}-${match[3]}`
-    : null;
-}
-
 function normalizedRegion(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim().toUpperCase() : null;
 }
 
-function normalizedPaoSource(value: unknown): PaoSource {
-  switch (value) {
-    case 'label':
-    case 'brand_label':
-      return 'label';
-    case 'catalog':
-      return 'catalog';
-    case 'category_default':
-      return 'category_default';
-    default:
-      return 'unknown';
-  }
-}
+const PRODUCT_SPECIFIC_PAO_SOURCES = new Set(['label', 'brand_label', 'catalog']);
 
 function freshnessRows(product: CatalogProductSummary): CatalogPaoExpiryRecord[] {
+  const catalogProductId = uuidOrNull(product.id);
+  const catalogSourceId = uuidOrNull(product.catalog_source_id);
+  const productRegion = normalizedRegion(product.region);
+  if (
+    !catalogProductId ||
+    product.id !== catalogProductId ||
+    !catalogSourceId ||
+    product.catalog_source_id !== catalogSourceId ||
+    product.review_status !== 'reviewed' ||
+    (product.quality_grade !== 'verified' && product.quality_grade !== 'usable') ||
+    !productRegion
+  ) {
+    return [];
+  }
   const rawRows = Array.isArray(product.product_pao_expiry)
     ? product.product_pao_expiry
     : product.product_pao_expiry
       ? [product.product_pao_expiry]
       : [];
-  const reviewed = rawRows.filter((row) => row.review_status === 'reviewed');
-  const productRegion = normalizedRegion(product.region);
-  return productRegion
-    ? reviewed.filter((row) => normalizedRegion(row.region) === productRegion)
-    : reviewed;
+  const reviewed = rawRows.filter(
+    (row) =>
+      row.review_status === 'reviewed' &&
+      uuidOrNull(row.source_id) === catalogSourceId &&
+      row.source_id === catalogSourceId,
+  );
+  return reviewed.filter((row) => normalizedRegion(row.region) === productRegion);
 }
 
 function trustedPao(rows: CatalogPaoExpiryRecord[]): {
   months: number | null;
   source: PaoSource;
 } {
-  const candidates = rows.flatMap((row) => {
-    const source = normalizedPaoSource(row.pao_source);
-    return typeof row.pao_months === 'number' &&
+  const productSpecific = rows.filter(
+    (row) =>
+      PRODUCT_SPECIFIC_PAO_SOURCES.has(row.pao_source ?? '') &&
+      typeof row.pao_months === 'number' &&
       Number.isInteger(row.pao_months) &&
       row.pao_months > 0 &&
-      source !== 'unknown'
-      ? [{ months: row.pao_months, source }]
-      : [];
-  });
-  const months = [...new Set(candidates.map((candidate) => candidate.months))];
-  if (months.length !== 1) return { months: null, source: 'unknown' };
+      row.pao_months <= MAX_PAO_MONTHS,
+  );
 
-  const sources = new Set(candidates.map((candidate) => candidate.source));
-  const source: PaoSource = sources.has('label')
-    ? 'label'
-    : sources.has('catalog')
-      ? 'catalog'
-      : 'category_default';
-  return { months: months[0] ?? null, source };
-}
-
-function trustedPrintedExpiry(rows: CatalogPaoExpiryRecord[]): string | null {
-  const dates = [
-    ...new Set(
-      rows.flatMap((row) => {
-        // Shelf currently models this field specifically as a printed package
-        // date. Preserve richer label/manufacturer evidence in the catalog
-        // response instead of flattening it into a provenance claim it cannot
-        // represent.
-        if (row.expiry_source !== 'printed') return [];
-        const date = validLocalDate(row.expiry_date);
-        return date ? [date] : [];
-      }),
-    ),
-  ];
-  return dates.length === 1 ? (dates[0] ?? null) : null;
+  // Match the server admission snapshot: zero or multiple underlying reviewed
+  // product-specific rows are ambiguous even when their month values agree.
+  // Category rows do not make one product-specific row ambiguous, but this
+  // payload cannot prove product_categories authority when no such row exists.
+  if (productSpecific.length !== 1) return { months: null, source: 'unknown' };
+  return { months: productSpecific[0]!.pao_months!, source: 'catalog' };
 }
 
 /**
  * Converts reviewed catalog evidence into the coarser Shelf intake contract.
- * Ambiguous, unreviewed, region-mismatched, or source-less values stay unknown.
+ * Ambiguous, unreviewed, region-mismatched, or source-less PAO stays unknown.
+ * A product-level catalog row cannot establish the printed date on this user's
+ * physical package without a lot/package binding, which the payload lacks.
  */
 export function catalogIntakeProvenance(product: CatalogProductSummary): CatalogIntakeProvenance {
   const rows = freshnessRows(product);
@@ -181,7 +152,7 @@ export function catalogIntakeProvenance(product: CatalogProductSummary): Catalog
     catalogSourceId: uuidOrNull(product.catalog_source_id),
     paoMonths: pao.months,
     paoSource: pao.source,
-    expiryDate: trustedPrintedExpiry(rows),
+    expiryDate: null,
   };
 }
 
@@ -302,7 +273,8 @@ function isCatalogFreshnessNetworkValue(value: unknown): value is CatalogPaoExpi
     (value.pao_months === null ||
       (typeof value.pao_months === 'number' &&
         Number.isInteger(value.pao_months) &&
-        value.pao_months > 0)) &&
+        value.pao_months > 0 &&
+        value.pao_months <= MAX_PAO_MONTHS)) &&
     (value.pao_source === null ||
       value.pao_source === 'label' ||
       value.pao_source === 'brand_label' ||
@@ -349,7 +321,8 @@ function decodeCatalogProduct(value: unknown): CatalogProductSummary | null {
     (value.default_pao_months !== null &&
       (typeof value.default_pao_months !== 'number' ||
         !Number.isInteger(value.default_pao_months) ||
-        value.default_pao_months <= 0)) ||
+        value.default_pao_months <= 0 ||
+        value.default_pao_months > MAX_PAO_MONTHS)) ||
     !isNullableString(value.source_ref, 500) ||
     !isNullableString(value.source_url, 500) ||
     (value.source_snapshot_date !== null && validLocalDate(value.source_snapshot_date) === null) ||

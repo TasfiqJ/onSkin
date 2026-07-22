@@ -798,7 +798,7 @@
       "id": "DB-06",
       "status": "in_progress",
       "blockedBy": ["ACCT-03"],
-      "nextAction": "After ACCT-03 creates an approved empty staging project, prepare the full-target-bound cutover record, traffic/provider-freeze artifact, and five schema-v2 zero-cohort boundary files outside the worktree; close client/key distribution, hosted Auth, provider callback/retry, Apple notification, schedule, and Edge ingress; then execute the clean origin/main fresh-staging procedure. Review its mandatory before/immediate-pre-migration/after proofs, keep DB06_TRAFFIC_FREEZE=frozen, and release only through a separately recorded downstream live gate. No hosted run or live evidence exists yet.",
+      "nextAction": "The source procedure now binds the exact 59-migration history through 0060. After ACCT-03 creates an approved empty staging project, prepare the full-target-bound cutover record, traffic/provider-freeze artifact, and five schema-v2 zero-cohort boundary files outside the worktree; close client/key distribution, hosted Auth, provider callback/retry, Apple notification, schedule, and Edge ingress; then execute the clean origin/main fresh-staging procedure. Review its mandatory before/immediate-pre-migration/after proofs, keep DB06_TRAFFIC_FREEZE=frozen, and release only through a separately recorded downstream live gate. No hosted run or live evidence exists yet.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase2/deploy-supabase-staging.ps1",
@@ -808,7 +808,12 @@
         "docs/phase-2/staging-cutover-attestation.template.json",
         "docs/phase-2/staging-traffic-provider-freeze-attestation.template.json",
         "docs/phase-2/staging-zero-cohort-boundary-attestation.template.json",
-        "docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md"
+        "docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md",
+        "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
+        "supabase/tests/database/cat07_truthful_freshness.test.sql",
+        "scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql",
+        "scripts/phase2/local-supabase-contract.mjs",
+        "supabase/tests/database/schema_contract.test.sql"
       ]
     },
     {
@@ -838,7 +843,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The local source candidate now covers 58 migrations through 0059. The passing static inventory classifies all 80 RLS-enabled public tables as 36 directly queryable private, 30 read-sealed private/authority, and 14 authenticated catalog/editorial tables; seven CAT-03 authorities are separately sealed in the private schema, including the append-only per-product served-state mutation ledger. Migration 0059 purges and read-seals legacy shelf_scans, purges and seals deprecated obf_contribution_queue work, and makes catalog_lookup_events outcome-only by purging and constraining all lookup identity columns to null. Catalog sources, global clinical/editorial relations, catalog dictionary/legacy authorities, import/curation lifecycle ledgers, exact-session Apple state, legacy scan/contribution history, and other sealed authorities must remain unreachable directly by every API role, including service_role. Run the current 66-table public-schema private/read-sealed matrix and seven-table private-schema denial lane against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile behavior, and CAT-02/CAT-03 authority-denial, lookup-minimization, and serving probes; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The local source candidate now covers 59 migrations through 0060. The passing static inventory classifies all 80 RLS-enabled public tables as 36 directly queryable private, 30 read-sealed private/authority, and 14 authenticated catalog/editorial tables; seven CAT-03 authorities are separately sealed in the private schema, including the append-only per-product served-state mutation ledger. Migration 0059 purges and read-seals legacy shelf_scans, purges and seals deprecated obf_contribution_queue work, and makes catalog_lookup_events outcome-only by purging and constraining all lookup identity columns to null. Migration 0060 fully purges and permanently seals legacy ingredient_pao_defaults; reviewed product_categories plus the exact reviewed linked product are the sole supported category-estimate authority. Catalog sources, global clinical/editorial relations, catalog dictionary/legacy authorities, import/curation lifecycle ledgers, exact-session Apple state, legacy scan/contribution history, and other sealed authorities must remain unreachable directly by every API role, including service_role. Run the current 66-table public-schema private/read-sealed matrix and seven-table private-schema denial lane against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile behavior, and CAT-02/CAT-03 authority-denial, lookup-minimization, truthful-freshness, and serving probes; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -862,6 +867,9 @@
         "supabase/tests/database/catalog_launch_curation.test.sql",
         "supabase/migrations/20260718000059_catalog_scan_minimization.sql",
         "supabase/functions/catalog-lookup/scanMinimization.test.ts",
+        "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
+        "supabase/tests/database/cat07_truthful_freshness.test.sql",
+        "scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql",
         "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
@@ -1196,10 +1204,23 @@
     },
     {
       "id": "CAT-07",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["CAT-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior",
-      "evidenceRefs": []
+      "nextAction": "Finish a green integrated CAT-07 source/static-policy checkpoint, add a bounded server-attested catalog projection before enabling category-only estimates, then obtain named chemistry/legal review, resolve Apple 2.5.18/5.1.2 contextual-commerce versus sensitive-data-targeted-advertising classification for replenishment (consent is not sufficient), collect fresh local and hosted migration/RLS plus live-catalog truth-table evidence, and capture exact signed-build physical-iPhone encrypted-storage/relaunch/accessibility/notification evidence.",
+      "evidenceRefs": [
+        "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
+        "docs/02-ingredient-intelligence.md",
+        "docs/04-smart-shelf.md",
+        "docs/USER_FLOW_TREE.md",
+        "docs/phase-7/core-loop-qa-checklist.md",
+        "apps/mobile/src/features/shelf/freshness.ts",
+        "apps/mobile/src/features/shelf/store.ts",
+        "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
+        "supabase/tests/database/cat07_truthful_freshness.test.sql",
+        "scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql",
+        "scripts/phase2/local-supabase-contract.mjs",
+        "supabase/tests/database/schema_contract.test.sql"
+      ]
     },
     {
       "id": "CAT-08",

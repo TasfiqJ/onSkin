@@ -41,19 +41,47 @@ export function replacementCopy(
   reason: ReplenishmentReason,
 ): { what: string; why: string; gap: string; evidence: string } {
   switch (reason) {
-    case 'countdown':
+    case 'printed_expiry_countdown':
       return {
-        what: `Your ${name} is nearing its freshness date`,
-        why: `Your shelf shows ${name} is within 30 days of its tracked PAO or printed expiry date. You can repurchase it or consider a better-fit alternative.`,
-        gap: `${name} is within 30 days of its tracked freshness date`,
-        evidence: 'From your shelf. PAO or printed expiry',
+        what: `Your ${name} is nearing its recorded package date`,
+        why: `Your shelf shows ${name} is within 30 days of the package date you recorded. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} is within 30 days of its recorded package date`,
+        evidence: 'From your shelf. Recorded package date',
       };
-    case 'expired':
+    case 'printed_expiry_expired':
       return {
-        what: `Your ${name} has reached its freshness date`,
-        why: `Your shelf shows ${name} has passed its tracked PAO or printed expiry date. You can repurchase it or consider a better-fit alternative.`,
-        gap: `${name} has passed its tracked freshness date`,
-        evidence: 'From your shelf. PAO or printed expiry',
+        what: `Your ${name} has passed its recorded package date`,
+        why: `Your shelf shows ${name} has passed the package date you recorded. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} has passed its recorded package date`,
+        evidence: 'From your shelf. Recorded package date',
+      };
+    case 'label_pao_countdown':
+      return {
+        what: `Your ${name} is nearing its tracked PAO date`,
+        why: `Your shelf shows ${name} is within 30 days of the PAO date calculated from its opened date and the PAO recorded from the product label. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} is within 30 days of its tracked PAO date`,
+        evidence: 'From your shelf. Opened date + PAO recorded from the product label',
+      };
+    case 'label_pao_expired':
+      return {
+        what: `Your ${name} has passed its tracked PAO date`,
+        why: `Your shelf shows ${name} has passed the PAO date calculated from its opened date and the PAO recorded from the product label. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} has passed its tracked PAO date`,
+        evidence: 'From your shelf. Opened date + PAO recorded from the product label',
+      };
+    case 'catalog_pao_countdown':
+      return {
+        what: `Your ${name} is nearing its tracked PAO date`,
+        why: `Your shelf shows ${name} is within 30 days of the PAO date calculated from its opened date and a reviewed catalog PAO. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} is within 30 days of its tracked PAO date`,
+        evidence: 'From your shelf. Opened date + reviewed catalog PAO',
+      };
+    case 'catalog_pao_expired':
+      return {
+        what: `Your ${name} has passed its tracked PAO date`,
+        why: `Your shelf shows ${name} has passed the PAO date calculated from its opened date and a reviewed catalog PAO. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} has passed its tracked PAO date`,
+        evidence: 'From your shelf. Opened date + reviewed catalog PAO',
       };
     case 'finished':
       return {

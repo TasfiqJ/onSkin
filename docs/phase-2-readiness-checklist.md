@@ -57,7 +57,7 @@ clears the brand.
    `traffic-provider-freeze.json`, and five schema-v2 redacted zero-cohort
    boundary files for migrations `0048`/`0052`/`0053`/`0054`/`0055`. Bind them
    to the clean `origin/main` SHA, full target fingerprint, rollback point,
-   exact 58-migration plan hash where required, and explicit future
+   exact 59-migration plan hash where required, and explicit future
    retention-review checkpoint. At the initial pre-mutation gate, all
    observations must be no more than 30 minutes old. The freeze must cover the
    main record's `validUntil` and span no more than 24 hours. Both `validUntil`
@@ -83,7 +83,7 @@ clears the brand.
 7. Require the immediate pre-push gate to revalidate cutover bytes and reread
    the exact function inventory, public freeze canaries, Auth freeze, empty
    migration inventory, schema, Storage, and all Cron jobs before applying the
-   58 migrations through `0059`. That gate reparses the unchanged artifact bytes/hashes and
+   59 migrations through `0060`. That gate reparses the unchanged artifact bytes/hashes and
    proves their current `validUntil`/`holdUntil` plus the seven-hour remaining
    completion budget; it does not pretend the initial operator observations
    were recaptured. The procedure redeploys the

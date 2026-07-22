@@ -35,9 +35,10 @@ function shelfProduct(overrides: Partial<ShelfProduct> = {}): ShelfProduct {
     openedAt: '2026-07-06',
     isOpened: true,
     paoMonths: 6,
-    paoSource: 'category_default',
+    paoSource: 'label',
     expiryDate: null,
     expirySource: 'pao_computed',
+    legacyUnverifiedExpiryDate: null,
     status: 'active',
     finishedAt: null,
     addedVia: 'manual',
@@ -106,7 +107,7 @@ describe('shelf metadata formatting', () => {
     const meta = formatShelfMetaLine(shelfProduct());
 
     expect(meta).toBe(
-      ['added\u00A0by\u00A0hand', 'opened\u00A0Jul', 'est.\u00A06\u00A0mo'].join(
+      ['added\u00A0by\u00A0hand', 'opened\u00A0Jul', '6\u00A0mo\u00A0PAO'].join(
         SHELF_META_SEPARATOR,
       ),
     );
@@ -114,18 +115,29 @@ describe('shelf metadata formatting', () => {
     expect(meta).not.toContain(' · ');
   });
 
-  it('describes the winning PAO estimate when a later printed date does not win', () => {
+  it('describes a recorded package date without claiming who entered it', () => {
     const meta = formatShelfMetaLine(
       shelfProduct({
-        category: 'spf',
+        category: 'serum',
         expiryDate: '2027-01-01',
-        expirySource: 'pao_computed',
-        paoSource: 'category_default',
+        expirySource: 'printed',
       }),
     );
 
-    expect(meta).toContain('est.\u00A06\u00A0mo');
+    expect(meta).toContain('recorded\u00A0package\u00A0date');
     expect(meta).not.toContain('printed\u00A0expiry');
+  });
+
+  it('does not relabel unknown PAO provenance as an estimate', () => {
+    const meta = formatShelfMetaLine(
+      shelfProduct({
+        paoSource: 'unknown',
+        expirySource: 'unknown',
+      }),
+    );
+
+    expect(meta).toContain('Date\u00A0unknown');
+    expect(meta).not.toContain('est.');
   });
 });
 
@@ -134,9 +146,9 @@ describe('surfaced expiry estimate provenance', () => {
     expect(
       isEstimatedExpiry(
         shelfProduct({
-          category: 'spf',
+          category: 'serum',
           expiryDate: '2026-12-01',
-          expirySource: 'pao_computed',
+          expirySource: 'estimated',
           paoSource: 'category_default',
         }),
       ),

@@ -10,7 +10,8 @@ const h = vi.hoisted(() => ({
   reportCatalogIssue: vi.fn(),
   searchCatalog: vi.fn(),
   reset: vi.fn(),
-  update: vi.fn(),
+  clear: vi.fn(),
+  sessionId: null as string | null,
 }));
 
 vi.mock('expo-router', () => ({
@@ -54,7 +55,14 @@ vi.mock('@/features/catalog/ingredientParser', () => ({ parseIngredientText: vi.
 vi.mock('@/features/shelf/analytics', () => ({ trackProductAddStarted: vi.fn() }));
 vi.mock('@/features/shelf/categories', () => ({ PRODUCT_CATEGORIES: [{ id: 'cleanser' }] }));
 vi.mock('@/features/shelf/IntakeContext', () => ({
-  useIntake: () => ({ draft: { barcode: null }, reset: h.reset, update: h.update }),
+  isCurrentIntakeSession: (current: string | null, requested: string | null | undefined) =>
+    current != null && current === requested,
+  useIntake: () => ({
+    clear: h.clear,
+    draft: { barcode: null },
+    reset: h.reset,
+    sessionId: h.sessionId,
+  }),
 }));
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
 vi.mock('@/lib/brand', () => ({ BRAND: { appName: 'RoutineKind' } }));
@@ -113,8 +121,9 @@ beforeEach(() => {
   h.params = {};
   h.reportCatalogIssue.mockReset();
   h.searchCatalog.mockReset();
-  h.reset.mockReset();
-  h.update.mockReset();
+  h.reset.mockReset().mockReturnValue('intake-session');
+  h.clear.mockReset();
+  h.sessionId = null;
 });
 
 afterEach(async () => {

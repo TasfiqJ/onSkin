@@ -27,8 +27,8 @@ create irreversible production accounts under `OnSkin` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 58 migrations through
-  `0059` and all 16 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only deployment of 59 migrations through
+  `0060` and all 16 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
@@ -95,7 +95,7 @@ create irreversible production accounts under `OnSkin` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 16-function manifest before migrations `0048`-`0059`, and proves
+   compatible 16-function manifest before migrations `0048`-`0060`, and proves
    all 16 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
@@ -105,7 +105,7 @@ create irreversible production accounts under `OnSkin` until
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
    the initial operator observations were recaptured. Only then does it apply
-   all 58 migrations in source order, redeploy the same manifest, and retain
+   all 59 migrations in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and

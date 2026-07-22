@@ -26,10 +26,21 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - Wrong match and no match are understandable.
 - Source and confidence labels are visible where data is not first-party.
 - Impossible/future opened dates cannot save; unopened units retain no opened date.
-- PAO/expiry labels distinguish explicitly confirmed label, reviewed catalog, printed date, and unknown/estimate sources.
-- Printed expiry versus opened-date-plus-PAO uses the actual winning date source.
-- Re-add creates a new unit UUID, archives the old package, and does not inherit its printed expiry.
-- Replenishment uses tracked freshness or user-marked-finished history; alerts stay off until explicit Settings opt-in.
+- Unopened + printed date surfaces `printed`; unopened without one surfaces `unknown`, no date, and no freshness signal.
+- Opened + winning printed date surfaces `printed`; opened + winning explicit label or reviewed catalog PAO surfaces `pao_computed` with its exact `label` or `catalog` source.
+- Actionable `printed` means the user explicitly recorded or reconfirmed the date from this physical package. Product-level catalog expiry rows have no lot/package binding and never populate Shelf `expiryDate`.
+- V1/catalog-linked dates with ambiguous package origin survive only in the legacy-unverified quarantine for user reconfirmation; they must not drive badges, filters, recommendations, notifications, or replacement prompts.
+- Direct product-label entry alone persists Shelf `label`; reviewed catalog-delivered `label`, `brand_label`, or `catalog` evidence persists Shelf `catalog`, and historical label copy never claims who entered it.
+- New catalog/Shelf-v2 PAO accepts exact integer months `1..120`; `120` remains eligible and `121` fails closed. Treat the ceiling only as technical input validation, never a shelf-life claim.
+- Printed versus opened-date-plus-PAO uses the actual earlier candidate; an exact tie resolves to `printed`.
+- An externally reviewed catalog-linked category fallback surfaces `estimated` and visibly approximate; `unknown` remains a separate no-date/no-estimate state.
+- Current category-only catalog payloads and v1 upgrades fail to `unknown` because they cannot prove `product_categories` authority. Do not enable `estimated` intake until an exact bounded server-attested category marker retained locally, the database guard, and named cosmetic-chemistry review prove the exact reviewed non-sunscreen rule.
+- Exactly one reviewed matching-source/region product-specific catalog evidence row is required; same-month duplicates fail closed, while a category row does not invalidate one unique product-specific winner.
+- Provenance decoding independently rejects a noncanonical product/source UUID, unreviewed product, quality below `usable`, or missing normalized product region, even when called outside the production network decoder.
+- Category estimate and unknown never drive countdown, expired, Expiring-filter, or replenishment state. No sunscreen-specific numeric fallback or universal printed-date assumption exists.
+- Re-add creates a new unit UUID, archives the old package, retains product/PAO provenance, clears inherited package-specific date evidence, and requires an explicit **Just opened it / exact past date / Not opened yet** choice.
+- Canonical local schema-v1 bytes are unchanged after read and failed mutation; the first successful authorized atomic mutation writes canonical v2. Future/non-canonical envelopes remain byte-preserved and reject mutation.
+- Replenishment uses only trusted printed or label/catalog-PAO freshness, or user-marked-finished history; alerts stay off until explicit Settings opt-in.
 - Offline add/edit/delete does not corrupt local shelf.
 
 ## Intelligence and recommendations
@@ -103,14 +114,18 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   gates and upstream evidence packets that produced it.
 
 - 2026-07-11: Codex in-app browser Expo web at 360 x 640 and 390 x 844
-  completes the Shelf freshness and replacement provenance lifecycle. It covers
+  produced historical Shelf freshness/replacement UI evidence, including
   onboarding handoff, invalid/future dates, unopened state, explicit open-jar
-  PAO, winning expiry-source precedence, reload, new-UUID replacement, archived
-  package history, opt-in notification posture, and supported-floor geometry.
-  Two discovered UI defects were fixed and rerun. Evidence is in
-  `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`;
-  native encrypted storage/relaunch, notifications, accessibility, live
-  migration/RLS, reviewed catalog rows, and named chemistry review remain open.
+  PAO, precedence, reload, new-UUID replacement, archived package history, and
+  geometry. Evidence is in
+  `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
+  That packet predates CAT-07's explicit replacement opening choice,
+  non-actionable reviewed-category estimate, separate unknown state, and
+  byte-preserving v1→v2 local-envelope contract. It is stale for current
+  acceptance. Green integrated source checks, native encrypted-storage/relaunch
+  and physical-device accessibility evidence, hosted migration/RLS/live catalog
+  truth-table readback, notifications, and named chemistry/legal review remain
+  open. CAT-07 is `in_progress`, not complete.
 
 - 2026-07-06: Vitest covers `shippableRules()` production withholding/reviewed
   pass-through and `generatePlan()` default production behavior for an unreviewed

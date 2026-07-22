@@ -56,6 +56,8 @@ vi.mock('@/lib/supabase/client', () => ({
 
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
 const originalDev = runtime.__DEV__;
+const CATALOG_SOURCE_ID = '00000000-0000-4000-8000-000000000042';
+const OTHER_CATALOG_SOURCE_ID = '00000000-0000-4000-8000-000000000041';
 
 function catalogProduct(overrides: Partial<CatalogProductSummary> = {}): CatalogProductSummary {
   return {
@@ -67,7 +69,10 @@ function catalogProduct(overrides: Partial<CatalogProductSummary> = {}): Catalog
     region: 'US',
     default_pao_months: 24,
     source: 'open_beauty_facts',
+    catalog_source_id: CATALOG_SOURCE_ID,
     source_ref: 'obf:012345678905',
+    quality_grade: 'usable',
+    review_status: 'reviewed',
     ...overrides,
   };
 }
@@ -104,9 +109,9 @@ function networkCatalogProduct(overrides: Record<string, unknown> = {}): Record<
 }
 
 describe('catalog intake provenance', () => {
-  it('keeps the catalog source UUID separate from its upstream reference', () => {
+  it('keeps the catalog source UUID separate and never imports a product-level printed date', () => {
     const product = catalogProduct({
-      catalog_source_id: '00000000-0000-4000-8000-000000000042',
+      catalog_source_id: CATALOG_SOURCE_ID,
       source_ref: 'obf:012345678905',
       product_pao_expiry: [
         {
@@ -115,22 +120,23 @@ describe('catalog intake provenance', () => {
           expiry_date: '2028-04-30',
           expiry_source: 'printed',
           region: 'US',
+          source_id: CATALOG_SOURCE_ID,
           review_status: 'reviewed',
         },
       ],
     });
 
     expect(catalogIntakeProvenance(product)).toEqual({
-      catalogSourceId: '00000000-0000-4000-8000-000000000042',
+      catalogSourceId: CATALOG_SOURCE_ID,
       paoMonths: 12,
       paoSource: 'catalog',
-      expiryDate: '2028-04-30',
+      expiryDate: null,
     });
   });
 
   it('uses only explicit reviewed PAO evidence and never relabels a legacy default', () => {
     expect(catalogIntakeProvenance(catalogProduct())).toEqual({
-      catalogSourceId: null,
+      catalogSourceId: CATALOG_SOURCE_ID,
       paoMonths: null,
       paoSource: 'unknown',
       expiryDate: null,
@@ -144,6 +150,7 @@ describe('catalog intake provenance', () => {
               pao_months: 9,
               pao_source: 'label',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'unreviewed',
             },
           ],
@@ -152,22 +159,53 @@ describe('catalog intake provenance', () => {
     ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
   });
 
-  it('preserves explicit label evidence but rejects region-mismatched evidence', () => {
+  it.each([
+    ['unreviewed product', { review_status: 'unreviewed' }],
+    ['limited-quality product', { quality_grade: 'limited' }],
+    ['missing product region', { region: null }],
+  ] as const)('fails freshness closed for a %s', (_label, overrides) => {
     expect(
       catalogIntakeProvenance(
         catalogProduct({
+          ...overrides,
           product_pao_expiry: [
             {
-              pao_months: 6,
-              pao_source: 'brand_label',
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: '2028-04-30',
+              expiry_source: 'printed',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
           ],
         }),
       ),
-    ).toMatchObject({ paoMonths: 6, paoSource: 'label' });
+    ).toMatchObject({ paoMonths: null, paoSource: 'unknown', expiryDate: null });
+  });
 
+  it.each(['label', 'brand_label', 'catalog'] as const)(
+    'persists one reviewed catalog-delivered %s PAO as Shelf catalog provenance',
+    (paoSource) => {
+      expect(
+        catalogIntakeProvenance(
+          catalogProduct({
+            product_pao_expiry: [
+              {
+                pao_months: 6,
+                pao_source: paoSource,
+                region: 'US',
+                source_id: CATALOG_SOURCE_ID,
+                review_status: 'reviewed',
+              },
+            ],
+          }),
+        ),
+      ).toMatchObject({ paoMonths: 6, paoSource: 'catalog' });
+    },
+  );
+
+  it('fails closed for multiple matching product-specific rows even when months agree', () => {
     expect(
       catalogIntakeProvenance(
         catalogProduct({
@@ -175,7 +213,22 @@ describe('catalog intake provenance', () => {
             {
               pao_months: 6,
               pao_source: 'label',
-              region: 'CA',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+            {
+              pao_months: 6,
+              pao_source: 'brand_label',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+            {
+              pao_months: 6,
+              pao_source: 'catalog',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
           ],
@@ -184,15 +237,105 @@ describe('catalog intake provenance', () => {
     ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
   });
 
-  it('does not turn computed, manufacturer, or unknown expiry evidence into a printed date', () => {
+  it('accepts the 120-month engineering ceiling and rejects values above it', () => {
+    const provenanceFor = (paoMonths: number) =>
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: paoMonths,
+              pao_source: 'brand_label',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      );
+
+    expect(provenanceFor(120)).toMatchObject({ paoMonths: 120, paoSource: 'catalog' });
+    expect(provenanceFor(121)).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
+  });
+
+  it('rejects region-mismatched catalog freshness evidence', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 6,
+              pao_source: 'label',
+              region: 'CA',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
+  });
+
+  it('prefers matching product-specific evidence over a matching category estimate', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 6,
+              pao_source: 'brand_label',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+            {
+              pao_months: 6,
+              pao_source: 'category_default',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: 6, paoSource: 'catalog' });
+  });
+
+  it('fails category-only evidence closed because the payload cannot prove category authority', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          default_pao_months: 6,
+          product_pao_expiry: [
+            {
+              pao_months: 6,
+              pao_source: 'category_default',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
+  });
+
+  it('does not turn any catalog expiry evidence into this physical package\'s printed date', () => {
     const common = {
       pao_months: 12,
       pao_source: 'catalog' as const,
       expiry_date: '2028-04-30',
       region: 'US',
+      source_id: CATALOG_SOURCE_ID,
       review_status: 'reviewed',
     };
 
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [{ ...common, expiry_source: 'printed' }],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: 12, paoSource: 'catalog', expiryDate: null });
     expect(
       catalogIntakeProvenance(
         catalogProduct({
@@ -227,6 +370,7 @@ describe('catalog intake provenance', () => {
               expiry_date: '2027-06-01',
               expiry_source: 'printed',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
             {
@@ -235,6 +379,7 @@ describe('catalog intake provenance', () => {
               expiry_date: '2028-06-01',
               expiry_source: 'printed',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
           ],
@@ -252,6 +397,56 @@ describe('catalog intake provenance', () => {
         }),
       ).catalogSourceId,
     ).toBeNull();
+  });
+
+  it('rejects reviewed PAO when freshness source_id is null', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: '2028-04-30',
+              expiry_source: 'printed',
+              region: 'US',
+              source_id: null,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toEqual({
+      catalogSourceId: CATALOG_SOURCE_ID,
+      paoMonths: null,
+      paoSource: 'unknown',
+      expiryDate: null,
+    });
+  });
+
+  it('rejects reviewed PAO from a different catalog source', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: '2028-04-30',
+              expiry_source: 'printed',
+              region: 'US',
+              source_id: OTHER_CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toEqual({
+      catalogSourceId: CATALOG_SOURCE_ID,
+      paoMonths: null,
+      paoSource: 'unknown',
+      expiryDate: null,
+    });
   });
 });
 
@@ -383,6 +578,44 @@ describe('catalog network response validation', () => {
       product,
     });
     expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', { result: 'matched' });
+  });
+
+  it('accepts 120 and rejects 121 months at the catalog network boundary', async () => {
+    const freshnessRow = (paoMonths: number) => ({
+      pao_months: paoMonths,
+      pao_source: 'catalog',
+      expiry_date: null,
+      expiry_source: 'unknown',
+      region: 'US',
+      source_id: CATALOG_SOURCE_ID,
+      review_status: 'reviewed',
+      created_at: '2026-07-19T00:00:00.000Z',
+    });
+
+    const accepted = networkCatalogProduct({
+      default_pao_months: 120,
+      product_pao_expiry: [freshnessRow(120)],
+    });
+    mocks.invoke.mockResolvedValueOnce({ data: { result: 'matched', product: accepted }, error: null });
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'matched',
+      product: accepted,
+    });
+
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        result: 'matched',
+        product: networkCatalogProduct({
+          default_pao_months: 120,
+          product_pao_expiry: [freshnessRow(121)],
+        }),
+      },
+      error: null,
+    });
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'error',
+      manualFallback: true,
+    });
   });
 
   it('fails closed for external, unreviewed, mismatched, and malformed barcode responses', async () => {

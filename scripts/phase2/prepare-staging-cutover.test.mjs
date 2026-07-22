@@ -29,8 +29,8 @@ test('cutover preparation emits exact safe hashes without the raw project ref', 
       sourceGitCommit: 'a'.repeat(40),
       evidenceDirectory: root,
     });
-    assert.equal(summary.migrationCount, 58);
-    assert.equal(summary.migrationIds.at(-1), '20260718000059');
+    assert.equal(summary.migrationCount, 59);
+    assert.equal(summary.migrationIds.at(-1), '20260718000060');
     assert.equal(summary.projectRefLast4, 'qrst');
     assert.equal(
       summary.projectRefFingerprint,

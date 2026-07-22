@@ -18,6 +18,7 @@ import {
 } from './copy';
 import { recommend, type RecInput, type RecShelfItem } from './engine';
 import { DEFAULT_PREFERENCES } from './preferences';
+import { REPLENISHMENT_REASONS } from './replenishment';
 
 // Claim-safety guard for the recommendation copy (docs/09 §10, the Slice-11/20/21/22
 // pattern). Recommendations are health-adjacent and must stay claim-safe: recommend
@@ -91,7 +92,7 @@ const builderStrings: string[] = [
   whyCopy.gapMoisturiser,
   whyCopy.gapCleanser,
   whyCopy.routineCompletion,
-  ...(['countdown', 'expired', 'finished'] as const).flatMap((reason) =>
+  ...REPLENISHMENT_REASONS.flatMap((reason) =>
     Object.values(replacementCopy('Vitamin C serum', reason)),
   ),
   whyCopy.betterFit('your cleanser'),
@@ -135,7 +136,14 @@ function engineStrings(): string[] {
         shelfItem({ id: 'Cream', role: 'moisturiser', tags: ['ceramide'] }),
         shelfItem({ id: 'SPF', role: 'spf', tags: ['sunscreen'] }),
       ],
-      replenishment: [{ id: 'SPF', name: 'SPF', tags: ['sunscreen'], reason: 'countdown' }],
+      replenishment: [
+        {
+          id: 'SPF',
+          name: 'SPF',
+          tags: ['sunscreen'],
+          reason: 'printed_expiry_countdown',
+        },
+      ],
       conflicts: [],
       preferences: DEFAULT_PREFERENCES,
       rules: STARTER_RULES,
@@ -226,6 +234,17 @@ describe('the honest disclosures + the "you\'re set" stance are present (§3/§4
   });
   it('the hub subtitle states the cardinal rule (ranked by fit/evidence, never commission)', () => {
     expect(REC_COPY.hub.subtitle.toLowerCase()).toContain('never by commission');
+  });
+  it('keeps product-label PAO distinct from reviewed catalog PAO without attributing who recorded it', () => {
+    const label = replacementCopy('Vitamin C serum', 'label_pao_countdown');
+    const catalog = replacementCopy('Vitamin C serum', 'catalog_pao_countdown');
+    expect(label.why).toContain('PAO recorded from the product label');
+    expect(label.evidence).toContain('PAO recorded from the product label');
+    expect(label.why).not.toContain('you recorded');
+    expect(label.why).not.toContain('reviewed catalog');
+    expect(catalog.why).toContain('reviewed catalog PAO');
+    expect(catalog.evidence).toContain('reviewed catalog PAO');
+    expect(catalog.why).not.toContain('recorded from the product label');
   });
 });
 

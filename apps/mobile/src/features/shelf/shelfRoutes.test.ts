@@ -141,10 +141,12 @@ describe('Shelf route mobile contracts', () => {
       'const reportDraft = barcodeRecoveryReportInput({ barcode, wrongProductId });',
     );
     expect(source).toContain("trackProductAddStarted('miss_search')");
-    expect(source).toContain("reset({ addedVia: 'search', barcode })");
-    expect(source).toContain("reset({ addedVia: 'ocr', barcode })");
-    expect(source).toContain("router.replace('/shelf/search')");
-    expect(source).toContain("reset({ addedVia: 'manual', barcode })");
+    expect(source).toContain("const intakeId = reset({ addedVia: 'search', barcode })");
+    expect(source).toContain("pathname: '/shelf/search', params: { intakeId }");
+    expect(source).toContain("const intakeId = reset({ addedVia: 'ocr', barcode })");
+    expect(source).toContain("pathname: '/shelf/ocr', params: { intakeId }");
+    expect(source).toContain("const intakeId = reset({ addedVia: 'manual', barcode })");
+    expect(source).toContain("pathname: '/shelf/manual', params: { intakeId }");
     expect(source).toContain('Search catalog');
     expect(source).toContain('Add the ingredient list');
     expect(source).toContain('Add it by hand');
@@ -193,7 +195,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('min-h-[48px] flex-1 basis-[148px]');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain(
-      "reset({ addedVia: 'manual', name: query.trim(), barcode: draft.barcode })",
+      "router.replace({ pathname: '/shelf/manual', params: { intakeId: nextIntakeId } })",
     );
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
@@ -311,8 +313,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const compactFilterLabels = compactShelf;');
     expect(source).toContain('function SkeletonShelf({ compactFilterLabels }');
     expect(source).toContain('<SkeletonShelf compactFilterLabels={compactFilterLabels} />');
-    expect(source).toContain("label={compactFilterLabels && l === 'Expiring' ? '7d' : l}");
-    expect(source).toContain("? '7d'");
+    expect(source).toContain("label={compactFilterLabels && l === 'Expiring' ? 'Soon' : l}");
+    expect(source).toContain("? 'Soon'");
     expect(source).toContain('accessibilityLabel={f ===');
     expect(source).toContain("className={compactFilterLabels ? 'px-2.5' : undefined}");
     expect(source).toContain('const isEmpty = !isLoading && items.length === 0;');
@@ -402,13 +404,20 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain("const expired = item.badge.kind === 'expired';");
     expect(source).toContain("const countdown = item.badge.kind === 'countdown';");
-    expect(source).toContain('may be past its best');
-    expect(source).toContain('PAO or printed date');
-    expect(source).toContain('calm replacement reminder, not an alarm');
+    expect(source).toContain("const printedDate = item.product.expirySource === 'printed';");
+    expect(source).toContain("item.product.expirySource === 'pao_computed'");
+    expect(source).toContain('has passed its recorded package date');
+    expect(source).toContain('is nearing its tracked PAO date');
+    expect(source).toContain('the PAO recorded from the product label');
+    expect(source).toContain('the reviewed catalog PAO');
+    expect(source).not.toContain('PAO recorded from the label or catalog');
+    expect(source).toContain('You marked ${item.name} as finished.');
     expect(source).toContain('No urgency is added.');
+    expect(source).toContain('Options from available catalog data');
     expect(source).not.toContain('nearly finished');
     expect(source).not.toContain('running low');
     expect(source).not.toContain("don't run out");
+    expect(source).not.toMatch(/protection|safety|seriously|claim-safe/i);
   });
 
   it('keeps replenishment similar-options recovery inline after commerce consent', () => {
@@ -825,7 +834,7 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/manual.tsx');
 
     expect(source).toContain('normalizeManualBarcode,');
-    expect(source).toContain("const initialBarcode = presetCategory ? '' : (draft.barcode ?? '');");
+    expect(source).toContain("const initialBarcode = useIncomingDraft ? (draft.barcode ?? '') : '';");
     expect(source).toContain('const [barcode, setBarcode] = useState(initialBarcode);');
     expect(source).toContain('const normalizedBarcode = barcode.trim()');
     expect(source).toContain('normalizeManualBarcode(barcode, eightDigitFormat)');
@@ -1030,7 +1039,7 @@ describe('Shelf route mobile contracts', () => {
 
     expect(review).toContain('reset(catalogRecoveryIntakePatch(revalidated.product, token))');
     expect(recovery).toContain('catalogRecoveryToken: token');
-    expect(review).toContain("router.push('/shelf/opened')");
+    expect(review).toContain("router.push({ pathname: '/shelf/opened', params: { intakeId } })");
     expect(review).toContain('The match stays saved if you cancel or saving');
     expect(review).toContain('fails.');
 
@@ -1066,28 +1075,34 @@ describe('Shelf route mobile contracts', () => {
   it('keeps opened-date and PAO chips buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('shelf/opened.tsx');
 
-    expect(source).toContain("import { Pressable, View } from 'react-native';");
+    expect(source).toContain('TextInput');
     expect(source).toContain('const hasProductDraft =');
     expect(source).toContain('if (!hasProductDraft)');
     expect(source).toContain('accessibilityLabel="Add product by hand"');
     expect(source).toContain("router.replace('/shelf/manual')");
-    expect(source).toContain('if (!hasProductDraft || !productName || !canSave || saving) return;');
+    expect(source).toContain('const [mode, setMode] = useState<Mode | null>(null);');
+    expect(source).toContain('isCurrentIntakeSession(sessionId, intakeId)');
+    expect(source).toContain('!saveSessionId ||');
     expect(source).toContain('accessibilityRole="radio"');
     expect(source).toContain('accessibilityLabel={title}');
     expect(source).toContain('accessibilityHint={subtitle}');
     expect(source).toContain('name: productName');
     expect(source).toContain('const addedProduct = await m.add({');
-    expect(source).toContain('params: { addedProductId: addedProduct.id }');
+    expect(source).toContain('params: { addedProductId: completedProductId }');
     expect(source).not.toContain("name: draft.name || 'Product'");
-    expect(source).toContain('<Sheet fallbackRoute={fallbackRoute} backdropAccessible={false}>');
-    expect(source).toContain(
-      '<Sheet fallbackRoute={fallbackRoute} scroll backdropAccessible={false}>',
-    );
+    expect(source).toContain('dismissDisabled={saving}');
+    expect(source).toContain('usePreventRemove(saving && completedProductId === null');
+    expect(source).toContain('clearIfCurrent(saveSessionId)');
     expect(source).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
     expect(source).toContain('LocalDateField');
     expect(source).toContain('label="Exact opened date"');
     expect(source).toContain('confirmedFromLabel: true');
     expect(source).toContain('Choose the months printed beside the open-jar symbol.');
+    expect(source).toContain('parsePaoMonthInput(customPaoText)');
+    expect(source).toContain('accessibilityLabel="PAO months printed on label"');
+    expect(source).toContain('accessibilityLabel="Confirm label PAO value"');
+    expect(source).toContain('maxLength={3}');
+    expect(source).toContain('Enter whole months from 1 to 120 exactly as printed.');
     expect(source).toContain('Not on label');
     expect(source).toContain('className="mb-3 flex-row items-start justify-between"');
     expect(source).toContain('className="text-[28px] leading-[31px]"');
@@ -1129,6 +1144,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('className="h-[48px] w-[48px] items-center justify-center');
     expect(source).toContain('className="mt-3 min-h-[48px] self-start items-center');
     expect(source).toContain('accessibilityLabel="Edit opened date"');
+    expect(source).toContain('parsePaoMonthInput(customPaoText)');
+    expect(source).toContain('accessibilityLabel="PAO months printed on label"');
+    expect(source).toContain('accessibilityLabel="Confirm label PAO value"');
+    expect(source).toContain('Enter whole months from 1 to 120 exactly as printed.');
     expect(source).toContain(
       'className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"',
     );
@@ -1176,7 +1195,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       "sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl",
     );
-    expect(source).toContain("p.paoSource === 'catalog' || p.paoSource === 'category_default'");
+    expect(source).toContain("p.paoSource === 'catalog'");
+    expect(source).not.toContain("p.paoSource === 'catalog' || p.paoSource === 'category_default'");
     expect(source).toContain('qualityIssue: correctionType');
     expect(source).toContain('platform: Platform.OS');
     expect(source).toContain('isCatalogProductId(p.catalogProductId)');
@@ -1196,7 +1216,11 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/replenish.tsx');
 
     expect(source).toContain('...(data?.archive ?? [])');
-    expect(source).toContain('await m.replace(item.id)');
+    expect(source).toContain('const replacement = await m.replace(');
+    expect(source).toContain('{ isOpened: true, openedAt: localDateString() }');
+    expect(source).toContain('{ isOpened: false, openedAt: null }');
+    expect(source).toContain('New unit was opened earlier');
+    expect(source).toContain('replacementOperationId');
     expect(source).not.toMatch(/running low|running out|nearly finished/i);
   });
 

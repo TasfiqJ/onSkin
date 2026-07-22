@@ -356,9 +356,38 @@ shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
 | CAT-04 | C     | Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows                                           | Every failure has a safe recovery and owner-scoped report                                                                                                |
 | CAT-05 | C     | Validate and release-gate the iOS-native OCR source candidate with bounded editable output and local-only photo handling             | Exact signed-build evidence passes the governed two-iPhone, 25-label/50-run accuracy, RTL, privacy/cleanup, accessibility, and performance contracts     |
 | CAT-06 | C     | Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior          | Physical iPhone evidence passes                                                                                                                          |
-| CAT-07 | C/R   | Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior                    | Chemistry/legal review and live data evidence pass                                                                                                       |
+| CAT-07 | C/R   | Complete reviewed Shelf freshness, PAO, physical-package date, source precedence, provenance, and unknown-state behavior             | Chemistry/legal review and live data evidence pass                                                                                                       |
 | CAT-08 | C     | Add catalog/admin correction tooling and operational queues                                                                          | Authorized operators can review sources/reports without direct database editing                                                                          |
 | CAT-09 | C     | Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact                            | Dashboards and thresholds are production-ready                                                                                                           |
+
+2026-07-19 CAT-07 source checkpoint: the current candidate preserves physical-package dates,
+explicit label PAO, reviewed catalog PAO, reserved future catalog-linked
+category estimate, and unknown as distinct states. Unknown is not an estimate;
+only printed or label/catalog-PAO evidence can drive countdown, expired,
+Expiring-filter, or replenishment behavior. Replacement requires an explicit
+opening-state choice and clears inherited physical-package dates. Canonical local v1
+bytes remain unchanged on read and failed mutation; v2 is emitted only after a
+successful authorized atomic mutation. The regulatory basis is EU Article
+19(1)(c) plus Annex VII point 2, with ordinary U.S. cosmetic-label gaps and
+classification-specific U.S./Canadian sunscreen rules; no universal printed
+sunscreen date is assumed. Migration `0060` fully purges, force-RLS seals, and
+prevents repopulation of legacy `ingredient_pao_defaults`; current
+`product_categories` values are editorial/future metadata and every current
+category-default Shelf claim fails closed to unknown. See
+`docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md`.
+
+CAT-07 remains `in_progress`, blocked by CAT-06 and launch-blocked by a green
+integrated source/static-policy checkpoint, named chemistry/legal review, fresh
+local and hosted migration/RLS plus live catalog truth-table evidence, and
+exact signed-build physical-iPhone encrypted-storage/relaunch/accessibility/
+notification evidence. The retained 2026-07-11 Expo-web packet predates the
+current replacement and storage contracts and is stale for acceptance.
+
+CAT-07 also remains blocked on qualified classification of user-initiated,
+item-specific affiliate navigation under Apple 2.5.18 and 5.1.2. Treat consent
+as necessary but not sufficient; do not ship commerce sourced from Shelf data
+until App Review/privacy counsel approve the exact contextual-shopping versus
+sensitive-data-targeted-advertising boundary and the FTC-reviewed net impression.
 
 ## 15. Reviewed Guidance, Core Loop, and Recommendations
 

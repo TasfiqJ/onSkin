@@ -18,6 +18,9 @@ const [
   runner,
   targetGuard,
   tests,
+  freshnessTests,
+  freshnessMigration,
+  freshnessRehearsal,
   accountDeletionMigration,
   readme,
   workflow,
@@ -28,6 +31,9 @@ const [
   read('scripts/phase2/local-supabase-reset.mjs'),
   read('scripts/phase2/local-supabase-target-guard.mjs'),
   read('supabase/tests/database/schema_contract.test.sql'),
+  read('supabase/tests/database/cat07_truthful_freshness.test.sql'),
+  read('supabase/migrations/20260718000060_cat07_truthful_freshness.sql'),
+  read('scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -45,10 +51,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 58, `Expected 58 migration files; found ${migrations.length}.`);
+check(migrations.length === 59, `Expected 59 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260718000059_'),
-  'The latest migration must remain 20260718000059.',
+  migrations.at(-1)?.startsWith('20260718000060_'),
+  'The latest migration must remain 20260718000060.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -126,7 +132,72 @@ check(
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
 check(/DB-08 remains open/u.test(runner), 'Temporary type output must not close DB-08.');
 
-check(/select plan\(49\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
+check(/select plan\(50\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
+check(
+  /select plan\(46\)/u.test(freshnessTests) &&
+    /20260718000060/u.test(freshnessTests) &&
+    /user_products_pao_source_coherent/u.test(freshnessTests) &&
+    /user_products_expiry_source_coherent/u.test(freshnessTests) &&
+    /user_products_opened_state_coherent/u.test(freshnessTests) &&
+    /USER_PRODUCT_CATALOG_PAO_EVIDENCE_INVALID/u.test(freshnessTests) &&
+    /trg_user_products_catalog_pao_snapshot/u.test(freshnessTests) &&
+    /trg_user_products_category_default_evidence/u.test(freshnessTests) &&
+    /stale product relink from a mobile mirror replay is coerced back to NULL/u.test(
+      freshnessTests,
+    ) &&
+    /stale source relink from a mobile mirror replay is coerced back to NULL/u.test(
+      freshnessTests,
+    ),
+  'The CAT-07 pgTAP truth table must remain explicit and migration-bound.',
+);
+check(
+  !/pg_catalog\.coalesce/u.test(freshnessMigration) &&
+    /delete from public\.ingredient_pao_defaults;[\s\S]*ingredient_pao_defaults_legacy_empty check \(false\)/u.test(
+      freshnessMigration,
+    ) &&
+    /alter table public\.ingredient_pao_defaults force row level security/u.test(
+      freshnessMigration,
+    ) &&
+    /product_categories has no named reviewer, source snapshot, or retained[\s\S]*category-evidence identity/u.test(
+      freshnessMigration,
+    ) &&
+    /private\.resolve_catalog_pao_snapshot/u.test(freshnessMigration) &&
+    /statement_timestamp\(\) at time zone 'UTC'/u.test(freshnessMigration) &&
+    /freshness\.review_status = 'reviewed'/u.test(freshnessMigration) &&
+    /nullif\(pg_catalog\.btrim\(freshness\.reviewed_by\), ''\) is not null/u.test(
+      freshnessMigration,
+    ) &&
+    /source\.source_key = product\.source/u.test(freshnessMigration) &&
+    /snapshot\.match_count = 1/u.test(freshnessMigration) &&
+    /attempted category claim[\s\S]*?unknown/u.test(freshnessMigration) &&
+    /trg_user_products_category_default_evidence/u.test(freshnessMigration) &&
+    /trg_user_products_catalog_pao_snapshot/u.test(freshnessMigration) &&
+    !/trg_products_category_default_evidence/u.test(freshnessMigration) &&
+    !/trg_product_categories_category_default_evidence/u.test(freshnessMigration) &&
+    !/trg_product_categories_category_default_delete/u.test(freshnessMigration) &&
+    /legacy_unverified_expiry_date/u.test(freshnessMigration) &&
+    /disable trigger trg_user_products_health_write/u.test(freshnessMigration) &&
+    /enable trigger trg_user_products_health_write/u.test(freshnessMigration) &&
+    /^begin;[\s\S]*commit;\s*$/u.test(freshnessMigration),
+  'CAT-07 migration must require exact reviewed product PAO evidence, quarantine category defaults, and UTC-bound local-date tolerance.',
+);
+check(
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260718000060_cat07_truthful_freshness\.sql/u.test(
+    freshnessRehearsal,
+  ) &&
+    /CAT07_TRUTHFUL_FRESHNESS_POSTGRES_REHEARSAL_PASS/u.test(freshnessRehearsal) &&
+    /CAT07_LEGACY_DEFAULT_RELATION_NOT_EMPTY/u.test(freshnessRehearsal) &&
+    /CAT07_LEGACY_DEFAULT_RELATION_NOT_SEALED/u.test(freshnessRehearsal) &&
+    /CAT07_LEGACY_DEFAULT_REPOPULATION_ACCEPTED/u.test(freshnessRehearsal) &&
+    /CAT07_CATEGORY_DEFAULT_NOT_QUARANTINED/u.test(freshnessRehearsal) &&
+    /CAT07_CATALOG_PAO_SNAPSHOT_NOT_BACKFILLED/u.test(freshnessRehearsal) &&
+    /CAT07_CATALOG_SOURCE_DELETE_PINNED/u.test(freshnessRehearsal) &&
+    /CAT07_STALE_SOURCE_REPLAY_RELINKED/u.test(freshnessRehearsal) &&
+    /CAT07_STALE_PRODUCT_REPLAY_RELINKED/u.test(freshnessRehearsal) &&
+    /CAT07_LEGACY_QUARANTINE_NOT_EXCLUSIVE/u.test(freshnessRehearsal) &&
+    /CAT07_ARBITRARY_FUTURE_OPENING_ACCEPTED/u.test(freshnessRehearsal),
+  'CAT-07 PostgreSQL rehearsal must execute the real migration and isolate product PAO, quarantine, lifecycle, stale replay, and date failures.',
+);
 check(
   !/public\.(?:digest|gen_random_bytes)\s*\(/u.test(accountDeletionMigration),
   'pgcrypto functions must use the pinned image extension namespace.',
@@ -144,6 +215,11 @@ check(
   'pgTAP must cover Auth and Storage.',
 );
 check(/phase2:db-local-verify/u.test(workflow), 'Quality CI must run the full local DB gate.');
+check(
+  /cat07_truthful_freshness_0060/u.test(workflow) &&
+    /cat07-truthful-freshness-postgres-rehearsal\.sql/u.test(workflow),
+  'Quality CI must run the CAT-07 legacy upgrade rehearsal.',
+);
 
 if (errors.length > 0) {
   process.stderr.write(`DB-05 local Supabase contract: FAIL\n- ${errors.join('\n- ')}\n`);

@@ -223,7 +223,7 @@ const GOAL_ACTIVES: RecType[] = [
 export const REC_TYPES: RecType[] = [...STRUCTURAL, ...GOAL_ACTIVES];
 
 /**
- * Launch gate (B-DERM-REVIEW), mirroring `shippableRules()` / `reviewedCategoryPao()`.
+ * Launch gate (B-DERM-REVIEW), mirroring `shippableRules()`.
  * In production, the medically-adjacent goal-active types are withheld until a
  * board-certified dermatologist signs off (reviewedBy set); the engine then
  * degrades to type-first STRUCTURAL guidance only. In dev the full set is used so

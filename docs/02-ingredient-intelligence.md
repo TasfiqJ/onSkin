@@ -18,7 +18,7 @@ _Ingredient & product catalog · the conflict / synergy engine · evidence gradi
 
 - **Skin cycling is a dermatologist-originated _framework_, not an RCT-proven protocol.** The classic four-night cycle (Exfoliate → Retinoid → Recover → Recover, then repeat) was coined by **Dr. Whitney Bowe** and went viral on TikTok; its rationale is mechanistic (staggering irritating actives to protect the barrier) and expert-endorsed, with "gentle" (more recovery nights) and "advanced" (fewer) variants that map directly onto OnSkin's per-user personalization. Frame it honestly, personalize it by the user's sensitivity axis, and let the conflict engine _resolve into_ the cycle (the spec's PM screen shows exactly this).
 
-- **PAO is EU/UK law only; the US (FDA) does not mandate cosmetic expiry dates.** So PAO data from the catalog/label will be missing for a large share of US products — the shelf must degrade gracefully to **category-default PAO values** and an honest "PAO unknown" state, never a fabricated date.
+- **Freshness data is jurisdiction- and product-specific, so provenance is mandatory.** EU Regulation (EC) No 1223/2009 Article 19(1)(c) requires either a minimum-durability date or, where the minimum durability exceeds 30 months and durability after opening is relevant, a PAO indication using the symbol in Annex VII point 2. Ordinary U.S. cosmetics generally have no FDA expiration-date requirement. The FDA says sunscreen without a printed expiration date should be considered expired three years after purchase, but OnSkin neither captures nor verifies purchase date and therefore cannot perform that calculation. Canadian sunscreens can be non-prescription drugs or natural health products, with the applicable label regime depending on classification. The Shelf therefore records exact evidence and may remain unknown; it never invents a date merely from market or product type.
 
 - **Liability is two-sided and must be engineered against from line one.** _False reassurance_ (telling someone a combination is fine when it harms them) and _false alarm_ (scaring someone off a safe, beneficial combination) are both failures. Both are mitigated by the same design: evidence grades, conservative concentration/sensitivity-aware defaults, a separate and maximally-conservative **safety** rule class (pregnancy × retinoids), a clear **not-medical-advice** disclaimer, **dermatologist + cosmetic-chemist/pharmacist sign-off** of the rule set before launch, and versioned, auditable rules. Under the FD&C Act and FTC rules, **in-app copy is a "claim" surface** — the language must stay cosmetic ("reduces the appearance of," "may minimise irritation") and never drift into drug claims ("treats acne," "stimulates collagen").
 
@@ -41,13 +41,13 @@ _Ingredient & product catalog · the conflict / synergy engine · evidence gradi
 
 5. **Data sourcing requires exact-artifact review; it is not solved by source availability alone.** The [Commission's CosIng page](https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en) makes clear that the database is informative and does not replace the applicable regulation, annexes, or product safety assessment. Only an approved offline CosIng artifact bound to its exact SHA-256 may be transformed. OBF is considered only as a separable offline source component. Its [license guide](https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/) distinguishes database, contents, and image rights, and [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/) can trigger different duties depending on the resulting work/database. Images, request-time API access, and external contribution are excluded. Counsel must record the derivative-versus-collective classification and the exact attribution/share-alike/offer-of-data posture before production promotion. _Confidence: high on the cited source statements; legal classification remains pending counsel._
 
-6. **PAO is a EU/UK regulatory artefact with no US equivalent — the shelf must be built around the gap.** Under EU Reg. (EC) 1223/2009 (Art. 19, Annex VIIIa; first introduced by Directive 2003/15/EC), the open-jar "12M / 6M" symbol is mandatory **only** for products with a minimum durability **over 30 months** (products ≤30 months instead carry a best-before/hourglass date); sealed/single-dose/inherently-stable products are exempt. The US FDA does **not** require expiry or PAO on cosmetics (it _does_ require expiry on sunscreens, which are OTC drugs). Therefore much of a US user's shelf will have **no authoritative PAO**, and the system must fall back to **conservative category defaults** and an explicit "estimated / unknown" state.
+6. **Freshness evidence is incomplete by design, and jurisdiction does not justify a fabricated fallback.** [EU Regulation (EC) No 1223/2009](https://eur-lex.europa.eu/eli/reg/2009/1223/oj), Article 19(1)(c), requires a minimum-durability date for relevant products and, where minimum durability exceeds 30 months, a PAO indication unless durability after opening is not relevant; the open-jar symbol is Annex VII point 2, while Annex VII point 3 is the minimum-durability symbol. The [FDA says ordinary cosmetics have no U.S. shelf-life or expiration-date labeling requirement](https://www.fda.gov/cosmetics/cosmetics-labeling/shelf-life-and-expiration-dating-cosmetics). U.S. sunscreens are OTC drugs; the [FDA says a sunscreen without a printed expiration date should be considered expired three years after purchase](https://www.fda.gov/drugs/understanding-over-counter-medicines/sunscreen-how-help-protect-your-skin-sun). OnSkin does not capture or verify purchase date, so it cannot derive that date and must remain unknown absent exact package evidence. [Health Canada classifies sunscreens as non-prescription drugs or natural health products based on their active ingredients](https://www.canada.ca/en/health-canada/services/sun-safety/sunscreens.html); drug and NHP label duties apply by classification, while [general cosmetic labeling requirements](https://www.canada.ca/en/health-canada/services/consumer-product-safety/cosmetics/labelling.html) do not create a universal cosmetic expiry/PAO field. Preserve the actual source or remain unknown.
 
 7. **Skin cycling is a framework to be personalised, not a protocol to be asserted.** Dr. Whitney Bowe's classic four-night cycle is mechanistically sensible and widely endorsed, and it explicitly supports modification by skin type/concern ("gentle" = more recovery nights for sensitive skin like the spec's "Maya"; "advanced" = fewer). It has not, as a _cycle_, been validated in controlled trials; the honest claim is "a dermatologist-developed framework for staggering actives to protect the barrier," not "clinically proven to outperform." Personalise the cadence from `skin_profiles`, and let the conflict engine drive placement.
 
 8. **The liability is two-sided and symmetrical.** _False reassurance_ and _false alarm_ are equally damaging — one is a safety/legal risk, the other a trust/credibility risk and a misinformation harm. The mitigations are shared: evidence grades on every rule; concentration- and sensitivity-aware modulation; a distinct, maximally-conservative **safety** class for genuine medical contraindications (pregnancy/breastfeeding × retinoids, high-dose salicylic acid, hydroquinone) that routes to a clinician; a prominent not-medical-advice disclaimer; expert sign-off; and versioned rules with a user feedback path.
 
-9. **Barcode → product is the "magic moment" input, but coverage is the constraint.** A scan that resolves against OnSkin's reviewed catalog, parses its INCI list, and slots it onto the shelf with a PAO estimate is the activation hook for this layer (and the spec's "Scan a barcode" CTA). Because coverage is uneven, the flow must always offer **search and manual entry** fallbacks plus **OCR of the printed ingredient list** as a second-line capture. Unknown products stay user-local and may create an owner-scoped OnSkin missing-product/correction report; nothing is published to OBF.
+9. **Barcode → product is the "magic moment" input, but coverage is the constraint.** A scan that resolves against OnSkin's reviewed catalog, parses its INCI list, and slots it onto the shelf with exact catalog provenance is the activation hook for this layer (and the spec's "Scan a barcode" CTA). Freshness may still be unknown. Because coverage is uneven, the flow must always offer **search and manual entry** fallbacks plus **OCR of the printed ingredient list** as a second-line capture. Unknown products stay user-local and may create an owner-scoped OnSkin missing-product/correction report; nothing is published to OBF.
 
 10. **Cosmetic-claim discipline is a content-engineering requirement, not a legal footnote.** Under the FD&C Act §201(g)/(i), _intended use_ — and therefore whether something is a regulated drug claim — is judged by **claims**, including those "on the Internet, or in other promotional materials" (FDA). The FTC separately polices advertising. The intelligence layer generates a great deal of user-facing copy (resolutions, banners, reassurance). All of it must stay in cosmetic territory and avoid disease/structure-function verbs.
 
@@ -82,7 +82,7 @@ A three-stage pipeline: **seed → curate → serve.**
 
 **2.2 Products ← reviewed Open Beauty Facts offline component.** A separately acquired candidate export/snapshot may be transformed only when a detached approval manifest binds its source URL, snapshot date, exact SHA-256, projected fields, attribution surface, database-component separation, and named reviewers. The import tool never fetches a source. The [current Product Opener API documentation](https://openfoodfacts.github.io/openfoodfacts-server/api/) identifies v3 as current and v2 as deprecated; OnSkin calls neither at runtime, so a user's barcode/search is never disclosed to OBF. Candidate fields are barcode, product name, brand, raw INCI text, and categories; images are excluded because the [source license guide](https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/) distinguishes image rights and warns of additional packaging rights. There is no automatic or manual-in-app contribution to OBF. Attribution, share-alike, offer-of-data, and derivative-versus-collective classification remain counsel decisions, not assumptions encoded by the product spec. Coverage is volunteer-driven and must be treated as incomplete — hence stage 3.
 
-**2.3 Hand-curation (the quality floor).** Manually curate the **top ~2,000 products** — best-sellers across Sephora/Ulta/derm-favourites and the products our quiz cohort actually owns — to guarantee correct INCI parsing, brand normalisation, **concentration bands** for the actives that matter (e.g., "Retinol 0.3%", "Glycolic 7%" — exactly the precision the spec's product cards show), and a sensible default PAO. Curated/editorial rows remain independently provenance-tagged rather than being silently merged into the OBF component; reviewed precedence determines the user-visible record.
+**2.3 Hand-curation (the quality floor).** Manually curate the **top ~2,000 products** — best-sellers across Sephora/Ulta/derm-favourites and the products our quiz cohort actually owns — to guarantee correct INCI parsing, brand normalisation, **concentration bands** for the actives that matter (e.g., "Retinol 0.3%", "Glycolic 7%" — exactly the precision the spec's product cards show), and exact label/catalog PAO provenance where verified. Curated/editorial rows remain independently provenance-tagged rather than being silently merged into the OBF component; reviewed precedence determines the user-visible record.
 
 **2.4 INCI parsing & ingredient normalisation.** Ingredient strings from an approved OBF-derived offline artifact can be messy (OCR artefacts, translations, "/"-separated INCI, parenthetical common names). The pipeline:
 
@@ -96,7 +96,7 @@ A three-stage pipeline: **seed → curate → serve.**
 
 ### 3. Data model (the schema) — extends docs/01 §3
 
-All tables in `public`. **D-016's former broad-read model is superseded by the CAT-03 serving contract.** Only the bounded, product-scoped relations needed by the app are directly readable by the `authenticated` role, and every row must satisfy a positive active-campaign, reviewed-lineage, current-mutation-root serving predicate. A signed-anonymous Supabase user carries the `authenticated` role; a publishable-key client with no session has no catalog read lane. The `service_role` has no direct catalog-table read and may use only the bounded lookup/search RPCs. `conflict_rules`, `sequencing_rules`, `creator_stacks`, `creator_stack_items`, `ingredient_tags`, `ingredient_pao_defaults`, `product_categories`, and `ingredient_tag_definitions` are direct-read sealed until their applicable evidence-bound publication authority exists. Per-user tables are owner-only RLS exactly as docs/01 §3 prescribes (wrap `auth.uid()` in a subselect, `TO authenticated`, index policy columns, `WITH CHECK` on writes).
+All tables in `public`. **D-016's former broad-read model is superseded by the CAT-03 serving contract.** Only the bounded, product-scoped relations needed by the app are directly readable by the `authenticated` role, and every row must satisfy a positive active-campaign, reviewed-lineage, current-mutation-root serving predicate. A signed-anonymous Supabase user carries the `authenticated` role; a publishable-key client with no session has no catalog read lane. The `service_role` has no direct catalog-table read and may use only the bounded lookup/search RPCs. `conflict_rules`, `sequencing_rules`, `creator_stacks`, `creator_stack_items`, `ingredient_tags`, `product_categories`, and `ingredient_tag_definitions` are direct-read sealed until their applicable evidence-bound publication authority exists. `ingredient_pao_defaults` is different: migration `0060` purges every row, drops its legacy read policy, force-RLS seals it, revokes every API-role privilege, and installs a validated always-false check so it cannot be repopulated. It is a historical compatibility relation, never freshness authority. Current `product_categories` values remain bounded editorial metadata/future candidates; they do not authorize Shelf category estimates until an exact retained server marker, named reviewer/source evidence, and a versioned admission path exist. Per-user tables are owner-only RLS exactly as docs/01 §3 prescribes (wrap `auth.uid()` in a subselect, `TO authenticated`, index policy columns, `WITH CHECK` on writes).
 
 ```sql
 -- ============ CATALOG (operator writes; positive-RLS/RPC serving only) ============
@@ -136,7 +136,7 @@ create table public.products (                   -- the catalog user_products.ca
   name          text not null,
   brand         text,
   category      text,                            -- 'cleanser','serum','moisturiser','spf','toner','exfoliant', ...
-  default_pao_months int,                        -- from label, else category default (§6)
+  default_pao_months int,                        -- legacy/display convenience; never direct Shelf authority (§6)
   is_curated    boolean not null default false,
   source        text not null default 'open_beauty_facts',
   source_ref    text,
@@ -176,11 +176,15 @@ create table public.conflict_rules (
   unique (tag_a, tag_b, interaction_type, rule_version)
 );
 
-create table public.ingredient_pao_defaults (     -- category fallbacks where label PAO is unknown (§6)
-  category        text primary key,                -- 'vitamin_c_serum','mascara','spf','moisturiser', ...
+create table public.ingredient_pao_defaults (     -- legacy compatibility relation; never authority (§6)
+  category        text primary key,
   default_pao_months int not null,
   rationale       text
 );
+
+-- Migration 0060 deletes every row, removes the legacy read path, force-RLS
+-- seals and revokes the table, and validates CHECK (false). Current
+-- product_categories rows remain editorial/future metadata, not Shelf evidence.
 
 -- ============ PER-USER (owner-only RLS) ============
 
@@ -368,39 +372,53 @@ Engine behaviour for `safety` rules:
 
 ### 6. PAO / expiry / shelf intelligence
 
-**Regulatory basis (for data provenance, not a claim):** EU Reg. (EC) 1223/2009 Art. 19 / Annex VIIIa — the open-jar "12M / 6M" PAO symbol is mandatory only for products with minimum durability **>30 months**; products ≤30 months carry a best-before date; sealed/single-dose/inherently-stable products are exempt. **US FDA does not require cosmetic expiry/PAO** (sunscreens excepted, as OTC drugs).
+**Regulatory basis (for data provenance, not a compliance conclusion):** Under [EU Regulation (EC) No 1223/2009](https://eur-lex.europa.eu/eli/reg/2009/1223/oj), Article 19(1)(c), a relevant product carries a minimum-durability date; if minimum durability exceeds 30 months, it instead carries a PAO indication unless durability after opening is not relevant. The open-jar symbol is Annex VII point 2. The [FDA does not require expiration dating for ordinary cosmetics](https://www.fda.gov/industry/fda-basics-industry/do-i-need-label-my-cosmetics-products-expiration-dates). Sunscreens require classification-specific handling: U.S. OTC-drug rules allow a stability-supported three-year omission, and Canadian products may be drugs or NHPs. Canadian drug labels include an expiration date under [Food and Drug Regulations C.01.004](https://laws-lois.justice.gc.ca/eng/regulations/C.R.C.%2C_c._870/section-C.01.004.html), while NHP labels follow [Health Canada's NHP labeling guidance](https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-non-prescription/legislation-guidelines/guidance-documents/labelling.html). These sources do not support a universal printed-date assumption.
 
-**The data reality and the fallback:** `user_products` already computes `expiry_computed = least(expiry_date, opened_at + pao_months)` (docs/01 §3). The intelligence layer's job is to **populate `pao_months` well**:
+**Truth table (the only launch-eligible freshness waterfall):** `expiry_computed` may select the earlier of a printed date explicitly recorded or reconfirmed from this physical package and an opened-date-plus-PAO candidate, but the app must preserve which evidence created the winning candidate. A product catalog row is not bound to the user's lot, batch, or package, so its `expiry_date` remains catalog/correction evidence and never auto-populates Shelf `expiryDate`.
 
-1. label/catalog PAO if known (`products.default_pao_months`);
-2. else a **category default** from `ingredient_pao_defaults`;
-3. else **"PAO unknown / estimated"** — never a fabricated precise date.
+| Product state and evidence | Stored/surfaced source | User-visible truth | Countdown, expired, or replacement signal |
+| --- | --- | --- | --- |
+| Unopened with a printed package date | `expiry_source='printed'` | Show the printed date and identify it as printed | Eligible near or past that date |
+| Unopened without a printed package date | `expiry_source='unknown'` | Show unopened with no app-derived date | Not eligible |
+| Opened with a printed package date that wins | `expiry_source='printed'` | Show the printed date and identify it as printed | Eligible near or past that date |
+| Opened with an explicit label PAO or reviewed catalog PAO that wins | `expiry_source='pao_computed'`; `pao_source='label'|'catalog'` | Explain opened date plus label/catalog PAO | Eligible near or past the computed date |
+| Future-gated: opened with an externally reviewed, server-attested catalog-linked category fallback | `expiry_source='estimated'`; `pao_source='category_default'` | Unavailable at launch; if later approved, show explicitly approximate and never as a package/manufacturer date | Not eligible |
+| No trustworthy candidate | `expiry_source='unknown'` | Show no date or estimate | Not eligible |
 
-**Category-default PAO table (seed values; conservative):**
+If printed and PAO candidates both exist, the earlier actual candidate wins; an exact tie resolves to `printed`. Shelf `pao_source='label'` is reserved for direct product-label entry. Reviewed product-specific `label`, `brand_label`, or `catalog` evidence delivered through catalog intake persists to Shelf as `catalog`, while the catalog retains the finer origin; actor-neutral copy protects ambiguous historical v1 label rows. A category estimate is a separate future-gated state, not a synonym for unknown. Current `product_categories` rows lack a named reviewer/source snapshot and the served payload lacks an exact retained category-evidence marker, so neither those mutable fields nor `products.default_pao_months` authorize Shelf evidence. Mobile/v1 intake and migration `0060` fail every `category_default` claim closed to unknown. The purged, sealed `ingredient_pao_defaults` compatibility relation is never consulted. No sunscreen-specific numeric fallback is permitted.
 
-| Category                           | Default PAO (months)   | Rationale                                              |
-| ---------------------------------- | ---------------------- | ------------------------------------------------------ |
-| Vitamin C (L-AA) serum             | 3–6                    | ascorbic acid oxidises quickly once opened/air-exposed |
-| Mascara / liquid eye               | 3–6                    | eye-area microbial risk                                |
-| Benzoyl peroxide / actives in jars | 6                      | oxidiser; potency decay                                |
-| Sunscreen (SPF)                    | use **printed expiry** | OTC drug; regulated expiry exists                      |
-| Water-based serum/toner            | 6–12                   | preservative-dependent                                 |
-| Moisturiser (tube)                 | 12                     | typical                                                |
-| Moisturiser (jar)                  | 6–9                    | finger-dipping contamination                           |
-| Oil / anhydrous balm               | 12–24                  | low water activity                                     |
-| Cleanser                           | 12                     | rinse-off                                              |
+Historical catalog-linked Shelf dates cannot prove whether the value came from
+the physical unit or a product-level catalog import. V1/`0060` retains them
+only in app `legacyUnverifiedExpiryDate` / database
+`legacy_unverified_expiry_date` for possible user
+reconfirmation; it neither promotes them to trusted `printed` nor silently
+deletes the retained value. Replenishment and all time-pressure UI ignore that
+quarantine.
 
-(Final numbers to be confirmed with the cosmetic chemist — log under B-DERM-REVIEW.)
+PAO input is technically bounded to integer months `1..120` in new catalog,
+database, and Shelf-v2 paths. The ceiling limits malformed data and date math;
+it is not a legal threshold, a category default, or a product-lifetime claim.
+
+Catalog intake also requires exactly one reviewed matching-source/region
+product-specific `label`/`brand_label`/`catalog` row; matching duplicates fail
+closed. Category-only payloads remain unknown because the current projection
+cannot prove the reviewed `product_categories` authority. A category row is
+ignored when one valid product-specific row wins. Activating `estimated` from
+catalog intake requires an exact bounded server-attested category marker that
+is retained locally, named cosmetic-chemistry review, and a versioned database
+admission path replacing the current quarantine guard; mutable client fields are insufficient. Current
+mobile intake and v1 upgrade therefore fail `category_default` closed to
+`unknown`.
 
 **Badge logic (the shelf, spec p12):**
 
-- **Date badge** ("Sep 2026", "May 2027") — the `expiry_computed` month, shown neutrally when comfortably ahead.
-- **Countdown badge** ("3 wks left") — clay-tinted when within a threshold (e.g., ≤30 days) — the spec's Mineral SPF 50 card.
-- **"Expiring" filter** — the chip at top filters to products within threshold or past `expiry_computed`.
+- **Date badge** ("Sep 2026", "May 2027") — shown only for a trusted printed or label/catalog-PAO candidate that is comfortably ahead.
+- **Countdown badge** ("3 wks left") — shown only for a trusted printed or label/catalog-PAO candidate within the configured threshold.
+- **"Expiring" filter** — includes only trusted countdown or past-date states; reviewed category estimates and unknowns are excluded.
 - **"paired" badge** — when a product's conflict is _already resolved_ by the scheduler (the spec's Glycolic 7% card), signalling "handled," not "problem."
-- **Expired** — a gentle, non-alarmist "time to replace" state (and a replenishment nudge, doc #7).
+- **Expired** — a gentle, non-alarmist "time to replace" state only when trusted printed or label/catalog PAO evidence is past.
 
-**Barcode scan → shelf (the activation flow):** the spec's "Scan a barcode" CTA opens an on-device camera (vision-camera, docs/00 §4); on a successful barcode read, query OnSkin's reviewed catalog → match `products.barcode` → show name/brand/parsed actives → prompt **"When did you open it?"** (sets `opened_at`) and confirm/estimate PAO → write `user_products`. Fallbacks in order: **search** the same catalog, **OCR** the printed INCI list, **manual entry**. New/unknown products remain user-local and may be reported to OnSkin's owner-scoped correction queue. There is no request-time OBF recipient or external contribution path.
+**Barcode scan → shelf (the activation flow):** the spec's "Scan a barcode" CTA opens the app's `expo-camera` barcode surface (docs/00 §4); on a successful barcode read, query OnSkin's reviewed catalog → match `products.barcode` → show name/brand/parsed actives → prompt **"When did you open it?"** and preserve only freshness evidence valid for this unit: a physical-package date explicitly entered/reconfirmed by the user, explicit open-jar PAO, reviewed catalog PAO, or unknown. A product-level catalog expiry date is never imported into Shelf. A reviewed category estimate may appear only after its exact-marker and named-review gates. Fallbacks in order: **search** the same catalog, **OCR** the printed INCI list, **manual entry**. New/unknown products remain user-local and may be reported to OnSkin's owner-scoped correction queue. There is no request-time OBF recipient or external contribution path.
 
 ### 7. UI / UX specification (every surface — look, feel, and behaviour)
 
@@ -447,7 +465,7 @@ Accessibility: severity/evidence chips have text labels (not colour-only); Voice
 
 #### 7.5 Barcode scan & add-to-shelf
 
-On-device camera with a framing reticle; on read, resolve against OnSkin's reviewed catalog and show a result sheet (product, brand, parsed actives, estimated PAO); an "opened when?" prompt; confirm → shelf. Fallback chips: **Search**, **Scan ingredient list (OCR)**, **Add manually**. Privacy microcopy consistent with the brand voice ("Scanning happens on your device"). Unknown products remain local, with an optional OnSkin missing-product report; no third-party publication occurs.
+On-device camera with a framing reticle; on read, resolve against OnSkin's reviewed catalog and show a result sheet (product, brand, parsed actives, and exact freshness source when one exists); an "opened when?" prompt; confirm → shelf. Unknown freshness stays unknown. Fallback chips: **Search**, **Scan ingredient list (OCR)**, **Add manually**. Privacy microcopy consistent with the brand voice ("Scanning happens on your device"). Unknown products remain local, with an optional OnSkin missing-product report; no third-party publication occurs.
 
 #### 7.6 Product card states & badge taxonomy
 
@@ -527,7 +545,7 @@ The **catalog and rules are non-personal** and carry no privacy weight. The **pe
 
 **(d) Skin cycling:** Bowe's four-night framework, personalised by sensitivity, with conflicts _resolved into_ the cycle and rendered as the spec's calm PM banner + next-acid-night.
 
-**(e) PAO:** EU-law artefact, US gap; populate from label → category default → honest "unknown"; the badge taxonomy (date / countdown / paired / expired) on the shelf.
+**(e) PAO:** preserve printed, explicit label PAO, reviewed catalog PAO, future-gated category estimate, and unknown as distinct states; only physical-package printed or label/catalog-PAO candidates can drive date/countdown/expired/replacement UI. Current category metadata is insufficient authority, so every `category_default` intake/upgrade fails closed until an exact retained server marker, versioned database admission path, and named chemistry review exist; the legacy `ingredient_pao_defaults` relation is purged, sealed, and unusable.
 
 **(f) UI/feel:** Instrument Serif + Hanken Grotesk + mono labels; paper/greige/clay/ink/night; light for shelf/AM, dark for PM/capture; calm, non-alarmist, claim-safe, evidence-honest, resolution-first; user always in control ("Use together anyway"); reassurance surfaces for myths.
 
@@ -546,7 +564,7 @@ The **catalog and rules are non-personal** and carry no privacy weight. The **pe
 5. **Treat the `myth`/`synergy`/`reassure` behaviour as a first-class differentiator.** Most of the category only warns; OnSkin's ability to credibly say "this is fine / this is good together" is unique trust equity — design surfaces for it (§7.8).
 6. **Implement the skin-cycling scheduler as the place conflicts get resolved,** and invest in the PM auto-resolution screen (§7.4) — it is the highest-value, most-demoable moment in the layer.
 7. **Engineer the two-sided liability:** conservative concentration/sensitivity defaults; a separate maximally-conservative safety path that defers to clinicians; claim-safe copy everywhere; a standing not-medical-advice disclaimer; versioned rules; a user feedback loop.
-8. **Handle the PAO gap honestly:** category defaults + "estimated/unknown," never a fabricated date; use printed expiry for sunscreens.
+8. **Handle freshness gaps honestly:** preserve the truth table's distinct sources, never collapse unknown into an estimate, and never assume a sunscreen has a printed date or a universal numeric PAO.
 9. **Instrument the layer in PostHog** to prove it drives activation/retention (scan→add→conflict→resolution funnels), and wire it to the paywall value props.
 10. **Position the moat correctly in all messaging:** "personalised, evidence-graded routine intelligence that resolves conflicts into your daily plan and stays honest about the science" — not "a conflict checker."
 
@@ -555,11 +573,11 @@ The **catalog and rules are non-personal** and carry no privacy weight. The **pe
 ## Caveats (confidence flags)
 
 - **The ingredient-interaction evidence is genuinely contested and overwhelmingly disease-oriented (SORT grade C).** Reputable sources (Paula's Choice; dermatologists quoted by Glow Recipe) dispute the popular "rules." Every rule must carry an evidence grade and a non-alarmist resolution, and the matrix needs clinical sign-off. _Medium-low confidence on individual pairs; high confidence on the "curated rules engine, evidence-graded, resolution-first" architecture._
-- **Specific conflict-pair grades and the PAO category defaults are starting positions for the dermatologist/cosmetic-chemist review, not settled facts.** The benzoyl-peroxide × retinoid figures (Martin 1998) and the niacinamide × vitamin C refutation are well-supported; many other rows rest on cosmetic-chemistry consensus. _Medium confidence; re-grade at review._
+- **Specific conflict-pair grades and any category freshness fallback require dermatologist/cosmetic-chemist review; none is a settled launch fact.** Category estimates remain non-actionable and unavailable until the exact catalog-linked rule is approved. _Medium confidence on candidate architecture; external review pending._
 - **Skin cycling is a dermatologist-developed framework, not an RCT-validated protocol.** Frame and personalise it honestly; do not claim clinical superiority. _Medium-high confidence on the framework's provenance and rationale; low confidence in any "clinically proven" outcome claim._
 - **CosIng's exact bulk-download mechanics may have changed** with the Commission's relaunch/migration; the ~15,000 INCI figure and "no legal value" disclaimer are reliable, but verify the export route and consider whether a mirror is needed at build time. _Medium confidence._
 - **Open Beauty Facts coverage is uneven and volunteer-driven,** so scan-match rates will vary by market; reviewed curation + OCR + manual entry + the OnSkin correction queue are essential, not optional. OBF runtime lookup and contribution are excluded, and counsel must approve the exact ODbL posture before OBF-derived data is promoted. _High confidence on the constraint; medium on match rates; legal classification pending._
-- **PAO is EU/UK law with no US cosmetic equivalent;** US shelves will frequently lack authoritative PAO. The category-default + "unknown" approach is required. _High confidence._
+- **Freshness labeling differs by jurisdiction and product classification.** Ordinary U.S. cosmetics often lack authoritative dates; U.S. and Canadian sunscreens require classification-specific review and still do not justify a universal printed-date assumption. Launch preserves physical-package printed / label-or-catalog PAO / unknown states; category estimate remains a distinct but disabled future state. _High confidence on the cited regulatory gap; legal review remains pending._
 - **The cosmetic-vs-drug claims boundary is real and FDA/FTC-enforced;** in-app copy is a claims surface. The constraints in §9 should be reviewed by regulatory counsel, especially for the safety class. _High confidence on the principle; legal review recommended for wording._
 - **Competitive landscape moves fast** — SkinSort, Cosmily, and HadaBuddy already ship conflict checks in 2026, and new entrants will appear; the moat is the integration + grading + trust + data lock-in, and that positioning must be revisited periodically. _Medium confidence._
 - **Market-size figures are vendor-sourced and definition-dependent** (skincare-app vs beauty-tech vs skincare-products); treat the specific numbers as directional. The Yuka financials (its own accounts) are the most reliable proof point. _Medium confidence on market sizing; high on the Yuka reference._

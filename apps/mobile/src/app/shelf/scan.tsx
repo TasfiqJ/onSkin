@@ -248,28 +248,28 @@ export default function ScanScreen() {
     cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_manual');
-    reset({ addedVia: 'manual', barcode: recoveryBarcode });
-    router.push('/shelf/manual');
+    const intakeId = reset({ addedVia: 'manual', barcode: recoveryBarcode });
+    router.push({ pathname: '/shelf/manual', params: { intakeId } });
   };
   const goOcr = () => {
     cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_label');
-    reset({ addedVia: 'ocr', barcode: recoveryBarcode });
-    router.push('/shelf/ocr');
+    const intakeId = reset({ addedVia: 'ocr', barcode: recoveryBarcode });
+    router.push({ pathname: '/shelf/ocr', params: { intakeId } });
   };
   const goSearch = () => {
     cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_search');
-    reset({ addedVia: 'search', barcode: recoveryBarcode });
-    router.push('/shelf/search');
+    const intakeId = reset({ addedVia: 'search', barcode: recoveryBarcode });
+    router.push({ pathname: '/shelf/search', params: { intakeId } });
   };
 
   const applyProduct = (product: CatalogProductSummary, barcode: string) => {
     const parsed = activeIngredients(product);
     const provenance = catalogIntakeProvenance(product);
-    reset({
+    const intakeId = reset({
       name: product.name,
       brand: product.brand,
       category: (product.category as ProductCategory | null) ?? null,
@@ -294,7 +294,7 @@ export default function ScanScreen() {
       addedVia: 'barcode',
     });
     haptics.success();
-    router.replace('/shelf/opened');
+    router.replace({ pathname: '/shelf/opened', params: { intakeId } });
   };
 
   const queueRetryWhenOnline = async () => {

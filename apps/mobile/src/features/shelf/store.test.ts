@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   clearActiveHealthProcessingEpoch,
@@ -16,7 +16,9 @@ import {
   SHELF_STATE_UNSUPPORTED_VERSION,
   updateProduct,
   type CatalogRecoveryProductUpdate,
+  type ShelfProduct,
 } from './store';
+import { normalizeShelfFreshnessV1 } from './freshness';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -62,6 +64,27 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 const KEY = 'onskin.shelf.v1';
 
+function operationId(sequence: number): string {
+  return `00000000-0000-4000-8000-${String(sequence).padStart(12, '0')}`;
+}
+
+function v1Product(product: ShelfProduct): Omit<
+  ShelfProduct,
+  | 'replacementRootId'
+  | 'replacesProductId'
+  | 'replacementLineageAmbiguous'
+  | 'legacyUnverifiedExpiryDate'
+> {
+  const {
+    replacementRootId: _root,
+    replacesProductId: _predecessor,
+    replacementLineageAmbiguous: _ambiguous,
+    legacyUnverifiedExpiryDate: _legacyUnverifiedExpiryDate,
+    ...historical
+  } = product;
+  return { ...historical, ...normalizeShelfFreshnessV1(historical, '2026-07-19') };
+}
+
 function storedProducts(): unknown[] {
   const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
     products?: unknown[];
@@ -103,6 +126,10 @@ describe('shelf local store recovery', () => {
     mocks.updateGate = null;
     mocks.updateStarted = null;
     setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('preserves malformed persisted shelf JSON', async () => {
@@ -193,6 +220,46 @@ describe('shelf local store recovery', () => {
     });
   });
 
+  it('keeps canonical opened-date bytes readable across a westward date-line change', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-19T12:00:00.000Z'));
+    const product = await addProduct({
+      name: 'Travel cleanser',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-19',
+      paoMonths: 6,
+      paoSource: 'label',
+    });
+    const original = mocks.storage.get(KEY);
+
+    vi.setSystemTime(new Date('2026-07-18T12:00:00.000Z'));
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: product.id, isOpened: true, openedAt: '2026-07-19' },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(original);
+
+    await expect(updateProduct(product.id, { brand: 'Still intact' })).resolves.toMatchObject({
+      id: product.id,
+      brand: 'Still intact',
+      isOpened: true,
+      openedAt: '2026-07-19',
+    });
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: product.id, brand: 'Still intact', isOpened: true, openedAt: '2026-07-19' },
+    ]);
+  });
+
+  it('still rejects a newly submitted opened date after the current local date', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-18T12:00:00.000Z'));
+    const product = await addProduct({ name: 'Date guard serum', addedVia: 'manual' });
+
+    await expect(
+      updateProduct(product.id, { isOpened: true, openedAt: '2026-07-19' }),
+    ).resolves.toMatchObject({ isOpened: false, openedAt: null, expirySource: 'unknown' });
+  });
+
   it('clears opened date when a direct update marks a product unopened', async () => {
     const product = await addProduct({
       name: 'Ceramide Cream',
@@ -201,6 +268,7 @@ describe('shelf local store recovery', () => {
       openedAt: '2026-07-01',
       isOpened: true,
       paoMonths: 12,
+      paoSource: 'label',
     });
 
     await updateProduct(product.id, {
@@ -215,7 +283,7 @@ describe('shelf local store recovery', () => {
       isOpened: false,
       openedAt: null,
       paoMonths: 12,
-      expirySource: 'estimated',
+      expirySource: 'unknown',
     });
   });
 
@@ -223,7 +291,12 @@ describe('shelf local store recovery', () => {
     const product = await addProduct({
       name: 'Vitamin C Serum',
       category: 'serum',
-      addedVia: 'manual',
+      addedVia: 'search',
+      catalogProductId: operationId(601),
+      catalogSourceId: operationId(602),
+      catalogSource: 'routinekind_reviewed',
+      catalogMatchQuality: 'usable',
+      sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
       isOpened: true,
       openedAt: '2026-01-31',
       paoMonths: 3,
@@ -244,12 +317,78 @@ describe('shelf local store recovery', () => {
     });
   });
 
-  it('archives replacement history while clearing the old package printed expiry', async () => {
+  it('fails unlinked catalog PAO closed on add and update while retaining reviewed provenance', async () => {
+    const unlinked = await addProduct({
+      name: 'Unlinked catalog claim',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 36,
+      paoSource: 'catalog',
+    });
+    expect(unlinked).toMatchObject({
+      paoMonths: null,
+      paoSource: 'unknown',
+      expirySource: 'unknown',
+    });
+
+    await expect(
+      updateProduct(unlinked.id, { paoMonths: 36, paoSource: 'catalog' }),
+    ).resolves.toMatchObject({
+      paoMonths: null,
+      paoSource: 'unknown',
+      expirySource: 'unknown',
+    });
+
+    await expect(
+      addProduct({
+        name: 'Reviewed catalog claim',
+        addedVia: 'search',
+        catalogProductId: operationId(605),
+        catalogSourceId: operationId(606),
+        catalogSource: 'routinekind_reviewed',
+        catalogMatchQuality: 'usable',
+        sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
+        isOpened: true,
+        openedAt: '2026-07-01',
+        paoMonths: 36,
+        paoSource: 'catalog',
+      }),
+    ).resolves.toMatchObject({
+      paoMonths: 36,
+      paoSource: 'catalog',
+      expirySource: 'pao_computed',
+    });
+  });
+
+  it('retains an uncommon label PAO across unrelated edits', async () => {
+    const product = await addProduct({
+      name: '36M label serum',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 36,
+      paoSource: 'label',
+    });
+
+    await expect(updateProduct(product.id, { brand: 'Label unchanged' })).resolves.toMatchObject({
+      brand: 'Label unchanged',
+      paoMonths: 36,
+      paoSource: 'label',
+      expirySource: 'pao_computed',
+    });
+  });
+
+  it('archives replacement history while clearing the old physical package date', async () => {
     const previous = await addProduct({
       name: 'Mineral SPF 50',
       brand: 'Test Brand',
       category: 'spf',
-      catalogProductId: 'catalog-product-id',
+      catalogProductId: operationId(603),
+      catalogSourceId: operationId(604),
+      catalogSource: 'routinekind_reviewed',
+      catalogMatchQuality: 'verified',
+      sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
       addedVia: 'search',
       isOpened: true,
       openedAt: '2026-01-01',
@@ -259,15 +398,19 @@ describe('shelf local store recovery', () => {
       expirySource: 'printed',
     });
 
-    const fresh = await reAddProduct(previous.id);
+    const replacementOpenedAt = '2026-07-01';
+    const fresh = await reAddProduct(previous.id, {
+      isOpened: true,
+      openedAt: replacementOpenedAt,
+    }, operationId(1));
     const shelf = await loadShelf();
     const archived = shelf.find((product) => product.id === previous.id);
 
     expect(fresh).toMatchObject({
-      id: 'shelf-product-2',
+      id: operationId(1),
       name: 'Mineral SPF 50',
       brand: 'Test Brand',
-      catalogProductId: 'catalog-product-id',
+      catalogProductId: operationId(603),
       status: 'active',
       isOpened: true,
       paoMonths: 12,
@@ -276,13 +419,44 @@ describe('shelf local store recovery', () => {
       expirySource: 'pao_computed',
       repurchaseCount: 2,
     });
-    expect(fresh?.openedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(fresh?.openedAt).toBe(replacementOpenedAt);
     expect(archived).toMatchObject({
       status: 'finished',
       openedAt: '2026-01-01',
       expiryDate: '2026-07-01',
       expirySource: 'printed',
       repurchaseCount: 1,
+    });
+  });
+
+  it('does not carry a quarantined historical package date into a replacement unit', async () => {
+    const previous = await addProduct({
+      name: 'Legacy package-date serum',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 36,
+      paoSource: 'label',
+    });
+    const envelope = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+      version: 2;
+      products: ShelfProduct[];
+    };
+    envelope.products[0]!.legacyUnverifiedExpiryDate = '2028-01-01';
+    mocks.storage.set(KEY, JSON.stringify(envelope));
+
+    const replacement = await reAddProduct(
+      previous.id,
+      { isOpened: false, openedAt: null },
+      operationId(7),
+    );
+    expect(replacement).toMatchObject({
+      expiryDate: null,
+      expirySource: 'unknown',
+      legacyUnverifiedExpiryDate: null,
+    });
+    expect((await loadShelf()).find((product) => product.id === previous.id)).toMatchObject({
+      legacyUnverifiedExpiryDate: '2028-01-01',
     });
   });
 
@@ -295,10 +469,110 @@ describe('shelf local store recovery', () => {
     });
     await updateProduct(previous.id, { status: 'discarded', finishedAt: '2026-06-30' });
 
-    await reAddProduct(previous.id);
+    await reAddProduct(previous.id, { isOpened: false, openedAt: null }, operationId(2));
 
     const archived = (await loadShelf()).find((product) => product.id === previous.id);
     expect(archived).toMatchObject({ status: 'discarded', finishedAt: '2026-06-30' });
+  });
+
+  it('does not start a replacement PAO clock from repurchase alone', async () => {
+    const previous = await addProduct({
+      name: 'Labelled serum',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-01-01',
+      paoMonths: 12,
+      paoSource: 'label',
+      expiryDate: '2027-01-01',
+      expirySource: 'printed',
+    });
+
+    const replacement = await reAddProduct(
+      previous.id,
+      { isOpened: false, openedAt: null },
+      operationId(3),
+    );
+
+    expect(replacement).toMatchObject({
+      isOpened: false,
+      openedAt: null,
+      paoMonths: 12,
+      paoSource: 'label',
+      expiryDate: null,
+      expirySource: 'unknown',
+    });
+  });
+
+  it('rejects a replacement without an explicit opening state before writing', async () => {
+    const previous = await addProduct({ name: 'Cleanser', addedVia: 'manual' });
+    const original = mocks.storage.get(KEY);
+
+    await expect(
+      reAddProduct(previous.id, undefined as never, operationId(4)),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('deduplicates concurrent and retried replacements from the same source unit', async () => {
+    const previous = await addProduct({ name: 'Barrier cream', addedVia: 'manual' });
+    const opening = { isOpened: false, openedAt: null } as const;
+
+    const [first, retry, competing] = await Promise.all([
+      reAddProduct(previous.id, opening, operationId(10)),
+      reAddProduct(previous.id, opening, operationId(10)),
+      reAddProduct(previous.id, opening, operationId(11)),
+    ]);
+    const shelf = await loadShelf();
+
+    expect(first?.id).toBe(operationId(10));
+    expect(retry?.id).toBe(operationId(10));
+    expect(competing?.id).toBe(operationId(10));
+    expect(shelf.filter((product) => product.status === 'active')).toHaveLength(1);
+    expect(shelf).toHaveLength(2);
+  });
+
+  it('requires later repurchases to replace the newest unit rather than an ancestor', async () => {
+    const original = await addProduct({ name: 'Cleanser', addedVia: 'manual' });
+    const first = await reAddProduct(
+      original.id,
+      { isOpened: false, openedAt: null },
+      operationId(20),
+    );
+    expect(first).not.toBeNull();
+    await updateProduct(first!.id, { status: 'finished', finishedAt: '2026-07-01' });
+    const latest = await reAddProduct(
+      first!.id,
+      { isOpened: true, openedAt: '2026-07-01' },
+      operationId(21),
+    );
+
+    await expect(
+      reAddProduct(original.id, { isOpened: false, openedAt: null }, operationId(22)),
+    ).resolves.toMatchObject({ id: latest!.id, repurchaseCount: 3 });
+    expect((await loadShelf()).filter((product) => product.status === 'active')).toHaveLength(1);
+  });
+
+  it('keeps ancestor retry protection after the successor identity is edited', async () => {
+    const original = await addProduct({ name: 'Handwritten cream', addedVia: 'manual' });
+    const successor = await reAddProduct(
+      original.id,
+      { isOpened: false, openedAt: null },
+      operationId(30),
+    );
+    await updateProduct(successor!.id, {
+      name: 'Reviewed Barrier Cream',
+      brand: 'Catalog Brand',
+      catalogProductId: operationId(300),
+    });
+
+    const retry = await reAddProduct(
+      original.id,
+      { isOpened: false, openedAt: null },
+      operationId(31),
+    );
+
+    expect(retry?.id).toBe(successor!.id);
+    expect((await loadShelf()).filter((product) => product.status === 'active')).toHaveLength(1);
   });
 
   it('preserves the current row when a direct update blanks product identity', async () => {
@@ -420,13 +694,431 @@ describe('shelf local store recovery', () => {
 
     await updateProduct('retinol', { brand: 'Example' });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      version: 1,
+      version: 2,
       products: [{ id: 'retinol', brand: 'Example', ingredients: ['retinol'] }],
     });
   });
 
+  it('quarantines catalog dates from the oldest array shape without rewriting before success', async () => {
+    const original = JSON.stringify([
+      {
+        id: 'legacy-array-catalog',
+        name: 'Old catalog serum',
+        addedVia: 'search',
+        catalogProductId: operationId(620),
+        expiryDate: '2027-06-01',
+      },
+    ]);
+    mocks.storage.set(KEY, original);
+
+    await expect(loadShelf()).resolves.toMatchObject([
+      {
+        id: 'legacy-array-catalog',
+        expiryDate: null,
+        expirySource: 'unknown',
+        legacyUnverifiedExpiryDate: '2027-06-01',
+      },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(original);
+
+    mocks.updateFailure = new Error('storage unavailable');
+    await expect(
+      updateProduct('legacy-array-catalog', { brand: 'Not committed' }),
+    ).rejects.toThrow('storage unavailable');
+    expect(mocks.storage.get(KEY)).toBe(original);
+
+    mocks.updateFailure = null;
+    await expect(
+      updateProduct('legacy-array-catalog', { brand: 'Migrated' }),
+    ).resolves.toMatchObject({
+      brand: 'Migrated',
+      expiryDate: null,
+      expirySource: 'unknown',
+      legacyUnverifiedExpiryDate: '2027-06-01',
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 2 });
+  });
+
+  it('normalizes a mixed canonical v1 envelope in memory and upgrades on mutation', async () => {
+    const unopened = await addProduct({
+      name: 'Unopened cleanser',
+      addedVia: 'manual',
+      isOpened: false,
+      paoMonths: 12,
+      paoSource: 'label',
+    });
+    const categoryEstimate = await addProduct({
+      name: 'Category serum',
+      category: 'serum',
+      addedVia: 'search',
+      catalogProductId: operationId(501),
+      catalogSourceId: operationId(502),
+      catalogSource: 'routinekind_reviewed',
+      catalogMatchQuality: 'usable',
+      sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 9,
+      paoSource: 'category_default',
+    });
+    const sunscreen = await addProduct({
+      name: 'Legacy sunscreen',
+      category: 'spf',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 12,
+      paoSource: 'label',
+    });
+    const printed = await addProduct({
+      name: 'Printed package',
+      addedVia: 'manual',
+      isOpened: false,
+      expiryDate: '2027-06-01',
+    });
+    const v1Products = [
+      { ...v1Product(unopened), expirySource: 'estimated' },
+      {
+        ...v1Product(categoryEstimate),
+        paoMonths: 9,
+        paoSource: 'category_default' as const,
+        expirySource: 'pao_computed' as const,
+      },
+      {
+        ...v1Product(sunscreen),
+        paoMonths: 12,
+        paoSource: 'category_default',
+        expirySource: 'pao_computed',
+      },
+      v1Product(printed),
+    ];
+    const original = JSON.stringify({ version: 1, products: v1Products });
+    mocks.storage.set(KEY, original);
+
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: unopened.id, expirySource: 'unknown' },
+      {
+        id: categoryEstimate.id,
+        paoMonths: null,
+        paoSource: 'unknown',
+        expirySource: 'unknown',
+      },
+      {
+        id: sunscreen.id,
+        paoMonths: null,
+        paoSource: 'unknown',
+        expirySource: 'unknown',
+      },
+      { id: printed.id, expirySource: 'printed', expiryDate: '2027-06-01' },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(original);
+
+    await updateProduct(categoryEstimate.id, { brand: 'Still present' });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 2,
+      products: [
+        { id: unopened.id, expirySource: 'unknown' },
+        {
+          id: categoryEstimate.id,
+          brand: 'Still present',
+          paoMonths: null,
+          paoSource: 'unknown',
+          expirySource: 'unknown',
+        },
+        { id: sunscreen.id, expirySource: 'unknown' },
+        { id: printed.id, expirySource: 'printed' },
+      ],
+    });
+    await expect(loadShelf()).resolves.toHaveLength(4);
+  });
+
+  it('infers an unambiguous v1 replacement lineage before an archived-source retry', async () => {
+    const original = await addProduct({ name: 'Legacy cleanser', addedVia: 'manual' });
+    const successor = await reAddProduct(
+      original.id,
+      { isOpened: false, openedAt: null },
+      operationId(40),
+    );
+    const history = (await loadShelf()).map(v1Product);
+    const v1Bytes = JSON.stringify({ version: 1, products: history });
+    mocks.storage.set(KEY, v1Bytes);
+
+    const loaded = await loadShelf();
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+    expect(loaded.find((product) => product.id === successor!.id)).toMatchObject({
+      replacementRootId: original.id,
+      replacesProductId: original.id,
+      replacementLineageAmbiguous: false,
+    });
+
+    await expect(
+      reAddProduct(original.id, { isOpened: false, openedAt: null }, operationId(41)),
+    ).resolves.toMatchObject({ id: successor!.id });
+    expect((await loadShelf()).filter((product) => product.status === 'active')).toHaveLength(1);
+  });
+
+  it('keeps a v1 replacement chain joined after the successor gains catalog identity', async () => {
+    const original = await addProduct({ name: 'Handwritten legacy cream', addedVia: 'manual' });
+    const successor = await reAddProduct(
+      original.id,
+      { isOpened: false, openedAt: null },
+      operationId(42),
+    );
+    const enriched = await applyCatalogRecoveryProductUpdate(
+      catalogRecoveryInput(successor!.id, successor!.updatedAt, true),
+    );
+    expect(enriched.status).toBe('updated');
+
+    const v1Bytes = JSON.stringify({
+      version: 1,
+      products: (await loadShelf()).map(v1Product),
+    });
+    mocks.storage.set(KEY, v1Bytes);
+
+    const loaded = await loadShelf();
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+    expect(loaded.find((product) => product.id === successor!.id)).toMatchObject({
+      replacementRootId: original.id,
+      replacesProductId: original.id,
+      replacementLineageAmbiguous: false,
+    });
+    await expect(
+      reAddProduct(original.id, { isOpened: false, openedAt: null }, operationId(43)),
+    ).resolves.toMatchObject({ id: successor!.id });
+    expect((await loadShelf()).filter((product) => product.status === 'active')).toHaveLength(1);
+  });
+
+  it('conservatively groups ambiguous v1 identity collisions without duplicating an active unit', async () => {
+    const archived = await addProduct({ name: 'Same cleanser', addedVia: 'manual' });
+    const active = await addProduct({ name: 'Same cleanser', addedVia: 'manual' });
+    await updateProduct(archived.id, { status: 'finished', finishedAt: '2026-07-10' });
+    const v1Bytes = JSON.stringify({
+      version: 1,
+      products: (await loadShelf()).map(v1Product),
+    });
+    mocks.storage.set(KEY, v1Bytes);
+
+    const loaded = await loadShelf();
+    expect(loaded).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: archived.id,
+          replacementLineageAmbiguous: true,
+          replacesProductId: null,
+        }),
+        expect.objectContaining({
+          id: active.id,
+          replacementLineageAmbiguous: true,
+          replacesProductId: null,
+        }),
+      ]),
+    );
+    await expect(
+      reAddProduct(archived.id, { isOpened: false, openedAt: null }, operationId(44)),
+    ).resolves.toMatchObject({ id: active.id });
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+    expect((await loadShelf()).filter((product) => product.status === 'active')).toHaveLength(1);
+  });
+
+  it('keeps canonical v1 opened dates stable across westward travel and mutation outcomes', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-19T12:00:00.000Z'));
+    const product = await addProduct({
+      name: 'Legacy travel serum',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-19',
+      paoMonths: 6,
+      paoSource: 'label',
+    });
+    const historical = {
+      ...v1Product(product),
+      ...normalizeShelfFreshnessV1(
+        { ...product, isOpened: true, openedAt: '2026-07-20' },
+        '2026-07-20',
+      ),
+    };
+    const v1Bytes = JSON.stringify({ version: 1, products: [historical] });
+    mocks.storage.set(KEY, v1Bytes);
+
+    vi.setSystemTime(new Date('2026-07-18T12:00:00.000Z'));
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: product.id, isOpened: true, openedAt: '2026-07-20' },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+
+    mocks.updateFailure = new Error('storage unavailable');
+    await expect(updateProduct(product.id, { brand: 'Not committed' })).rejects.toThrow(
+      'storage unavailable',
+    );
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+
+    mocks.updateFailure = null;
+    await expect(updateProduct(product.id, { brand: 'Preserved' })).resolves.toMatchObject({
+      brand: 'Preserved',
+      isOpened: true,
+      openedAt: '2026-07-20',
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 2 });
+  });
+
+  it('authenticates historically unbounded v1 PAO before upgrading it fail-closed', async () => {
+    const product = await addProduct({
+      name: 'Legacy long PAO',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-01',
+      paoMonths: 12,
+      paoSource: 'label',
+    });
+    const historical = {
+      ...v1Product(product),
+      ...normalizeShelfFreshnessV1({ ...product, paoMonths: 121 }, '2026-07-19'),
+    };
+    const v1Bytes = JSON.stringify({ version: 1, products: [historical] });
+    mocks.storage.set(KEY, v1Bytes);
+
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: product.id, paoMonths: null, paoSource: 'unknown', expirySource: 'unknown' },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+
+    await expect(updateProduct(product.id, { brand: 'Upgraded safely' })).resolves.toMatchObject({
+      brand: 'Upgraded safely',
+      paoMonths: null,
+      paoSource: 'unknown',
+      expirySource: 'unknown',
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 2,
+      products: [
+        { id: product.id, paoMonths: null, paoSource: 'unknown', expirySource: 'unknown' },
+      ],
+    });
+  });
+
+  it('quarantines a catalog-linked v1 package date until the user reconfirms it', async () => {
+    const product = await addProduct({
+      name: 'Legacy catalog serum',
+      addedVia: 'search',
+      catalogProductId: operationId(610),
+      catalogSourceId: operationId(611),
+      catalogSource: 'routinekind_reviewed',
+      catalogMatchQuality: 'usable',
+      sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
+      isOpened: true,
+      openedAt: '2026-01-01',
+      paoMonths: 36,
+      paoSource: 'catalog',
+      expiryDate: '2027-01-01',
+    });
+    const v1Bytes = JSON.stringify({ version: 1, products: [v1Product(product)] });
+    mocks.storage.set(KEY, v1Bytes);
+
+    await expect(loadShelf()).resolves.toMatchObject([
+      {
+        id: product.id,
+        expiryDate: null,
+        expirySource: 'pao_computed',
+        legacyUnverifiedExpiryDate: '2027-01-01',
+      },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+
+    mocks.updateFailure = new Error('storage unavailable');
+    await expect(updateProduct(product.id, { brand: 'Not committed' })).rejects.toThrow(
+      'storage unavailable',
+    );
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+
+    mocks.updateFailure = null;
+    await expect(updateProduct(product.id, { brand: 'Migrated' })).resolves.toMatchObject({
+      brand: 'Migrated',
+      expiryDate: null,
+      expirySource: 'pao_computed',
+      legacyUnverifiedExpiryDate: '2027-01-01',
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 2 });
+
+    await expect(updateProduct(product.id, { expiryDate: '2028-01-01' })).resolves.toMatchObject({
+      expiryDate: '2028-01-01',
+      expirySource: 'printed',
+      legacyUnverifiedExpiryDate: null,
+    });
+  });
+
+  it('keeps canonical v1 bytes when the first real mutation write fails', async () => {
+    const product = await addProduct({
+      name: 'Unopened package',
+      addedVia: 'manual',
+      isOpened: false,
+    });
+    const original = JSON.stringify({
+      version: 1,
+      products: [{ ...v1Product(product), expirySource: 'estimated' }],
+    });
+    mocks.storage.set(KEY, original);
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: product.id, expirySource: 'unknown' },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(original);
+
+    mocks.updateFailure = new Error('storage unavailable');
+    await expect(updateProduct(product.id, { brand: 'Not committed' })).rejects.toThrow(
+      'storage unavailable',
+    );
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('preserves and rejects a noncanonical v1 envelope', async () => {
+    const product = await addProduct({
+      name: 'Unopened package',
+      addedVia: 'manual',
+      isOpened: false,
+    });
+    const original = JSON.stringify({
+      version: 1,
+      products: [{ ...v1Product(product), expirySource: 'unknown' }],
+    });
+    mocks.storage.set(KEY, original);
+
+    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(addProduct({ name: 'Must not overwrite', addedVia: 'manual' })).rejects.toThrow(
+      SHELF_STATE_INVALID,
+    );
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('rejects noncanonical raw serialization for both versioned envelopes', async () => {
+    const product = await addProduct({ name: 'Canonical cleanser', addedVia: 'manual' });
+    const canonicalV2 = mocks.storage.get(KEY)!;
+    const parsedV2 = JSON.parse(canonicalV2) as { version: 2; products: ShelfProduct[] };
+    const canonicalV1 = JSON.stringify({ version: 1, products: [v1Product(product)] });
+    const parsedV1 = JSON.parse(canonicalV1) as {
+      version: 1;
+      products: ReturnType<typeof v1Product>[];
+    };
+    const noncanonical = [
+      JSON.stringify(parsedV1, null, 2),
+      JSON.stringify({ products: parsedV1.products, version: 1 }),
+      canonicalV1.replace('{"version":1,', '{"version":1,"version":1,'),
+      JSON.stringify(parsedV2, null, 2),
+      JSON.stringify({ products: parsedV2.products, version: 2 }),
+      canonicalV2.replace('{"version":2,', '{"version":2,"version":2,'),
+    ];
+
+    for (const raw of noncanonical) {
+      mocks.storage.set(KEY, raw);
+      await expect(loadShelf()).resolves.toEqual([]);
+      await expect(updateProduct(product.id, { brand: 'Must not write' })).rejects.toThrow(
+        SHELF_STATE_INVALID,
+      );
+      expect(mocks.storage.get(KEY)).toBe(raw);
+    }
+  });
+
   it('preserves future-version shelf bytes and refuses every mutation', async () => {
-    const original = JSON.stringify({ version: 2, products: [] });
+    const original = JSON.stringify({ version: 3, products: [] });
     mocks.storage.set(KEY, original);
 
     await expect(loadShelf()).resolves.toEqual([]);

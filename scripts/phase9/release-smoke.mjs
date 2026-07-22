@@ -94,6 +94,7 @@ const localVerifierFiles = [
   'scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql',
   'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
   'scripts/phase9/catalog-scan-minimization-postgres-rehearsal.sql',
+  'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/consent-withdrawal-evidence.mjs',
   'scripts/phase9/consent-withdrawal-evidence.test.mjs',
@@ -282,6 +283,8 @@ const requiredFiles = [
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
   'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
+  'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/tests/database/cat07_truthful_freshness.test.sql',
   'supabase/migrations/20260615000027_phase6_payments.sql',
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
   'supabase/migrations/20260713000046_account_service_row_scrub.sql',
@@ -701,12 +704,16 @@ block(
       '.github/workflows/quality.yml',
       /database:\s*catalog_scan_minimization_0059[\s\S]{0,140}script:\s*catalog-scan-minimization-postgres-rehearsal\.sql/,
     ) &&
+    has(
+      '.github/workflows/quality.yml',
+      /database:\s*cat07_truthful_freshness_0060[\s\S]{0,140}script:\s*cat07-truthful-freshness-postgres-rehearsal\.sql/,
+    ) &&
     has('.github/workflows/quality.yml', /image:\s*postgres:\$\{\{ matrix\.postgres \}\}/) &&
     has(
       '.github/workflows/quality.yml',
       /-f \"scripts\/phase9\/\$\{\{ matrix\.rehearsal\.script \}\}\"/,
     ),
-  'CI must execute the 0048-0053 lifecycle lanes and 0059 scan minimization in isolated PostgreSQL 15 and 17 rehearsals.',
+  'CI must execute the 0048-0053 lifecycle lanes plus 0059 scan minimization and 0060 truthful freshness in isolated PostgreSQL 15 and 17 rehearsals.',
 );
 block(
   errors,

@@ -78,7 +78,7 @@ export function frequencyCap(cls: ActiveClass, sensitivity: SensitivityLevel): n
 
 // *** BLOCKED: B-DERM-REVIEW. FREQUENCY_CAPS (and the orchestration recovery
 // *** densities) are UNREVIEWED grade-C consensus starting positions (docs/05 §8).
-// *** Mirrors pao.ts PAO_DEFAULTS_REVIEWED / rules.ts shippableRules: until a
+// *** Mirrors rules.ts shippableRules: until a
 // *** board-certified dermatologist + cosmetic chemist sign off, PRODUCTION falls
 // *** back to the most conservative cap (the sensitive column) rather than
 // *** surfacing the per-type numbers as authoritative cadence. Flip after sign-off.

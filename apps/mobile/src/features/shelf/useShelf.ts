@@ -23,7 +23,7 @@ import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
-import { functionalTagsForCategory, isSafetyCriticalCategory } from './categories';
+import { functionalTagsForCategory } from './categories';
 import { isEstimatedExpiry, surfacedExpiry } from './expiry';
 import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
@@ -31,7 +31,7 @@ import { loadShelf, type ShelfProduct } from './store';
 
 // The Shelf data layer (docs/04 §5): reads the local-first store, tags products
 // via the client dictionary, runs the launch-gated conflict engine, and computes
-// the five-state PAO/expiry badge per card. usePlan + the conflict-detail sheet
+// the provenance-aware PAO/expiry badge per card. usePlan + the conflict-detail sheet
 // also read from here, so they reflect the user's real cabinet.
 
 export type ShelfItem = {
@@ -61,10 +61,6 @@ export type ShelfData = {
   banner: DetectedConflict | null;
 };
 
-/** True when the product's surfaced expiry is only an estimate (a category PAO
- *  default, not a label/catalog value or a printed expiry). Drives the honest
- *  two-line "est.\n{Mon}" badge (design frame 03, Vitamin C). Mirrors the "est."
- *  branch of formatShelfMetaLine so the badge and the meta line never disagree. */
 /** Apply a just-persisted choice to the shared Shelf cache without a second
  * private read. This prevents a transient post-write read failure from
  * resurrecting the advisory the user just resolved. */
@@ -102,7 +98,6 @@ export function applyConflictChoicesToShelfData(
       ...item,
       paired,
       badge: expiryBadge(surfacedExpiry(item.product), today, {
-        safetyCritical: isSafetyCriticalCategory(item.category),
         paired,
         synergy: synergyIds.has(item.id),
         estimate: isEstimatedExpiry(item.product),
@@ -206,7 +201,6 @@ export function useShelf() {
             tags: [...tagsForIngredientList([p.name, ...p.ingredients]).tags],
           };
           const badge = expiryBadge(surfacedExpiry(p), today, {
-            safetyCritical: isSafetyCriticalCategory(p.category),
             paired: pairedIds.has(p.id),
             synergy: synergyIds.has(p.id),
             estimate: isEstimatedExpiry(p),
@@ -260,7 +254,7 @@ function cmpExpiry(a: ShelfItem, b: ShelfItem): number {
   return 0;
 }
 
-/** Lower = surfaced first (expired, then countdown, then dated, then unknown). */
+/** Lower = surfaced first by supported tracked-date state, then unknown. */
 function sortWeight(i: ShelfItem): number {
   switch (i.badge.kind) {
     case 'expired':

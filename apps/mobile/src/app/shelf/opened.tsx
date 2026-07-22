@@ -1,14 +1,19 @@
 import type { PaoSource } from '@onskin/types';
 import { randomUUID } from 'expo-crypto';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { usePreventRemove } from 'expo-router/react-navigation';
+import { useEffect, useRef, useState } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
 
 import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { finalizeCatalogLookupAfterShelfSave } from '@/features/shelf/catalogLookupRecovery';
-import { PAO_MONTH_OPTIONS, shiftLocalDateMonths } from '@/features/shelf/freshness';
-import { useIntake } from '@/features/shelf/IntakeContext';
+import {
+  PAO_MONTH_OPTIONS,
+  parsePaoMonthInput,
+  shiftLocalDateMonths,
+} from '@/features/shelf/freshness';
+import { isCurrentIntakeSession, useIntake } from '@/features/shelf/IntakeContext';
 import { paoSourceLabel } from '@/features/shelf/labels';
 import { LocalDateField } from '@/features/shelf/LocalDateField';
 import { useShelfMutations } from '@/features/shelf/mutations';
@@ -51,11 +56,13 @@ function OptionRow({
   title,
   subtitle,
   selected,
+  disabled,
   onPress,
 }: {
   title: string;
   subtitle: string;
   selected: boolean;
+  disabled: boolean;
   onPress: () => void;
 }) {
   return (
@@ -63,7 +70,8 @@ function OptionRow({
       accessibilityRole="radio"
       accessibilityLabel={title}
       accessibilityHint={subtitle}
-      accessibilityState={{ selected }}
+      accessibilityState={{ selected, disabled }}
+      disabled={disabled}
       onPress={() => {
         haptics.select();
         onPress();
@@ -94,31 +102,61 @@ function OptionRow({
 }
 
 export default function OpenedDateScreen() {
-  const { origin } = useLocalSearchParams<{ origin?: string }>();
-  const { draft, reset } = useIntake();
+  const { intakeId, origin } = useLocalSearchParams<{ intakeId?: string; origin?: string }>();
+  const { clear, clearIfCurrent, draft, isSessionCurrent, sessionId } = useIntake();
   const m = useShelfMutations();
-  const [mode, setMode] = useState<Mode>('just');
+  const [mode, setMode] = useState<Mode | null>(null);
   const [pickIso, setPickIso] = useState<string | null>(null);
   const [pao, setPao] = useState<number | null>(draft.paoMonths);
   const [paoSource, setPaoSource] = useState<PaoSource>(draft.paoSource);
   const [paoEditOpen, setPaoEditOpen] = useState(false);
+  const [customPaoText, setCustomPaoText] = useState(() =>
+    draft.paoMonths != null && !PAO_MONTH_OPTIONS.some((months) => months === draft.paoMonths)
+      ? String(draft.paoMonths)
+      : '',
+  );
   const [saving, setSaving] = useState(false);
   const [savedLocally, setSavedLocally] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [completedProductId, setCompletedProductId] = useState<string | null>(null);
+  usePreventRemove(saving && completedProductId === null, () => undefined);
   const saveOperationId = useRef(randomUUID()).current;
   const fallbackRoute = origin === 'onboarding' ? APP_ONBOARDING_PRODUCTS_ROUTE : APP_SHELF_ROUTE;
   const today = localDateString();
+  useEffect(() => {
+    if (!completedProductId) return;
+    if (origin === 'onboarding') {
+      router.replace({
+        pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
+        params: { addedProductId: completedProductId },
+      });
+    } else {
+      router.replace(APP_SHELF_ROUTE);
+    }
+  }, [completedProductId, origin]);
 
   const hasProductDraft =
-    draft.name.trim().length > 0 || draft.catalogProductId != null || draft.barcode != null;
-  const canSave = mode !== 'pick' || pickIso != null;
+    isCurrentIntakeSession(sessionId, intakeId) &&
+    (draft.name.trim().length > 0 || draft.catalogProductId != null || draft.barcode != null);
+  const canSave = mode != null && (mode !== 'pick' || pickIso != null);
+  const customPaoMonths = parsePaoMonthInput(customPaoText);
 
   const onSave = async () => {
     const productName = draft.name.trim();
-    if (!hasProductDraft || !productName || !canSave || saving) return;
+    const saveSessionId = sessionId;
+    if (
+      !hasProductDraft ||
+      !productName ||
+      !saveSessionId ||
+      mode == null ||
+      !canSave ||
+      saving
+    )
+      return;
     setSaving(true);
     setSaveError(null);
     let shelfWriteSucceeded = false;
+    let navigationReady = false;
     try {
       const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
       const isOpened = mode !== 'unopened';
@@ -161,29 +199,29 @@ export default function OpenedDateScreen() {
           recoveryToken: draft.catalogRecoveryToken,
         });
       }
-      reset();
-      if (origin === 'onboarding') {
-        router.replace({
-          pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
-          params: { addedProductId: addedProduct.id },
-        });
-      } else {
-        router.replace(APP_SHELF_ROUTE);
-      }
+      if (!clearIfCurrent(saveSessionId)) return;
+      navigationReady = true;
+      setCompletedProductId(addedProduct.id);
     } catch {
-      setSaveError(
-        shelfWriteSucceeded
-          ? 'Product saved, but its catalog retry still needs linking. Tap Finish setup to retry; your Shelf item will not be duplicated.'
-          : 'Could not save this product. Your choices are still here. Try again.',
-      );
+      if (isSessionCurrent(saveSessionId)) {
+        setSaveError(
+          shelfWriteSucceeded
+            ? 'Product saved, but its catalog retry still needs linking. Tap Finish setup to retry; your Shelf item will not be duplicated.'
+            : 'Could not save this product. Your choices are still here. Try again.',
+        );
+      }
     } finally {
-      setSaving(false);
+      if (!navigationReady) setSaving(false);
     }
   };
 
   if (!hasProductDraft) {
     return (
-      <Sheet fallbackRoute={fallbackRoute} backdropAccessible={false}>
+      <Sheet
+        fallbackRoute={fallbackRoute}
+        backdropAccessible={false}
+        dismissDisabled={saving}
+      >
         <View className="mb-3 flex-row items-start justify-between">
           <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
             <Text className="text-[18px] text-clay">+</Text>
@@ -191,7 +229,12 @@ export default function OpenedDateScreen() {
           <RouteIconButton
             accessibilityLabel="Close"
             glyph="x"
-            onPress={() => backOrReplace(router, fallbackRoute)}
+            disabled={saving}
+            onPress={() => {
+              if (saving) return;
+              clear();
+              backOrReplace(router, fallbackRoute);
+            }}
           />
         </View>
         <Text variant="title" className="text-[28px] leading-[31px]" accessibilityRole="header">
@@ -204,9 +247,13 @@ export default function OpenedDateScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Add product by hand"
+          accessibilityState={{ disabled: saving }}
+          disabled={saving}
           className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"
           onPress={() => {
+            if (saving) return;
             haptics.select();
+            clear();
             trackProductAddStarted('opened_recovery');
             router.replace('/shelf/manual');
           }}
@@ -220,7 +267,12 @@ export default function OpenedDateScreen() {
   }
 
   return (
-    <Sheet fallbackRoute={fallbackRoute} scroll backdropAccessible={false}>
+    <Sheet
+      fallbackRoute={fallbackRoute}
+      scroll
+      backdropAccessible={false}
+      dismissDisabled={saving}
+    >
       <View className="mb-4 flex-row items-start justify-between">
         <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
           <Text className="text-[18px] text-clay">◴</Text>
@@ -228,14 +280,19 @@ export default function OpenedDateScreen() {
         <RouteIconButton
           accessibilityLabel="Close"
           glyph="x"
-          onPress={() => backOrReplace(router, fallbackRoute)}
+          disabled={saving}
+          onPress={() => {
+            if (saving) return;
+            clear();
+            backOrReplace(router, fallbackRoute);
+          }}
         />
       </View>
       <Text variant="title" className="text-[33px] leading-[34px]" accessibilityRole="header">
         When did you open it?
       </Text>
       <Text variant="body" tone="muted" className="mt-2">
-        This starts the freshness clock. Not sure? We&apos;ll estimate from when you added it.
+        Choose the state that matches this package. A PAO clock starts only after your choice.
       </Text>
 
       <View className="mt-6 gap-2.5">
@@ -243,6 +300,7 @@ export default function OpenedDateScreen() {
           title="Just opened it"
           subtitle="Clock starts today"
           selected={mode === 'just'}
+          disabled={saving}
           onPress={() => setMode('just')}
         />
         <OptionRow
@@ -253,6 +311,7 @@ export default function OpenedDateScreen() {
               : 'I opened it earlier'
           }
           selected={mode === 'pick'}
+          disabled={saving}
           onPress={() => setMode('pick')}
         />
         {mode === 'pick' ? (
@@ -261,12 +320,15 @@ export default function OpenedDateScreen() {
               label="Exact opened date"
               value={pickIso}
               maxDate={today}
+              disabled={saving}
               onChangeDate={setPickIso}
             />
             {PICK_OPTIONS.map((o) => (
               <Pressable
                 key={o.iso}
                 accessibilityRole="button"
+                accessibilityState={{ disabled: saving }}
+                disabled={saving}
                 onPress={() => {
                   haptics.select();
                   setPickIso(o.iso);
@@ -288,8 +350,9 @@ export default function OpenedDateScreen() {
         ) : null}
         <OptionRow
           title="Not opened yet"
-          subtitle="No clock. We'll show shelf life"
+          subtitle="No PAO clock; add a printed date if the pack has one"
           selected={mode === 'unopened'}
+          disabled={saving}
           onPress={() => setMode('unopened')}
         />
       </View>
@@ -298,6 +361,8 @@ export default function OpenedDateScreen() {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Edit period after opening"
+        accessibilityState={{ disabled: saving }}
+        disabled={saving}
         onPress={() => {
           haptics.select();
           setPaoEditOpen((o) => !o);
@@ -306,7 +371,7 @@ export default function OpenedDateScreen() {
       >
         <View>
           <Text variant="body" className="font-sans-semibold">
-            {pao != null ? `Lasts ~${pao} months opened` : 'PAO not set'}
+            {pao != null ? `PAO: ${pao} months after opening` : 'PAO not set'}
           </Text>
           <Text variant="label" tone="muted" className="mt-0.5">
             {pao != null ? `${paoSourceLabel(paoSource)} · tap to change` : 'tap to set'}
@@ -324,9 +389,12 @@ export default function OpenedDateScreen() {
             <Pressable
               key={n}
               accessibilityRole="button"
+              accessibilityState={{ disabled: saving }}
+              disabled={saving}
               onPress={() => {
                 haptics.select();
                 setPao(n);
+                setCustomPaoText('');
                 setPaoSource(
                   editedPaoSource({
                     currentMonths: draft.paoMonths,
@@ -347,12 +415,67 @@ export default function OpenedDateScreen() {
               </Text>
             </Pressable>
           ))}
+          <View className="w-full gap-2 rounded-[14px] border border-hairline bg-paper-raised p-3">
+            <Text variant="label" tone="muted">
+              Another value printed on the label
+            </Text>
+            <View className="flex-row items-center gap-2">
+              <TextInput
+                accessibilityLabel="PAO months printed on label"
+                accessibilityHint="Enter a whole number from 1 to 120"
+                editable={!saving}
+                keyboardType="number-pad"
+                inputMode="numeric"
+                maxLength={3}
+                value={customPaoText}
+                onChangeText={setCustomPaoText}
+                className="h-[48px] min-w-0 flex-1 rounded-[12px] border border-hairline bg-paper px-4 font-sans-medium text-[15px] text-ink"
+              />
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Confirm label PAO value"
+                accessibilityState={{ disabled: saving || customPaoMonths == null }}
+                disabled={saving || customPaoMonths == null}
+                onPress={() => {
+                  if (customPaoMonths == null) return;
+                  haptics.select();
+                  setPao(customPaoMonths);
+                  setPaoSource(
+                    editedPaoSource({
+                      currentMonths: draft.paoMonths,
+                      currentSource: draft.paoSource,
+                      nextMonths: customPaoMonths,
+                      confirmedFromLabel: true,
+                    }),
+                  );
+                  setPaoEditOpen(false);
+                }}
+                className={cn(
+                  'min-h-[48px] items-center justify-center rounded-pill px-4 py-2',
+                  customPaoMonths == null ? 'bg-greige' : 'bg-ink',
+                )}
+              >
+                <Text
+                  className="font-sans-semibold text-[13px]"
+                  tone={customPaoMonths == null ? 'muted' : 'inverse'}
+                >
+                  Use value
+                </Text>
+              </Pressable>
+            </View>
+            <Text variant="label" tone="muted">
+              Enter whole months from 1 to 120 exactly as printed.
+            </Text>
+          </View>
           <Pressable
             accessibilityRole="button"
+            accessibilityState={{ disabled: saving }}
+            disabled={saving}
             onPress={() => {
               haptics.select();
               setPao(null);
               setPaoSource('unknown');
+              setCustomPaoText('');
               setPaoEditOpen(false);
             }}
             className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"

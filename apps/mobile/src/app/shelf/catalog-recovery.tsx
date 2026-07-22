@@ -12,7 +12,9 @@ import {
   type CatalogRecoveryRevalidation,
 } from '@/features/shelf/catalogLookupRecovery';
 import { categoryLabel } from '@/features/shelf/categories';
+import { surfacedExpiry } from '@/features/shelf/expiry';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { expirySourceLabel, paoSourceLabel } from '@/features/shelf/labels';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -144,6 +146,7 @@ export default function CatalogRecoveryScreen() {
     : null;
   const linkedProduct = linkedItem?.product ?? null;
   const linkedArchived = linkedProduct !== null && linkedProduct.status !== 'active';
+  const linkedExpiry = linkedProduct ? surfacedExpiry(linkedProduct) : null;
 
   const verifyStillQueued = async (): Promise<ReadyCatalogLookup | null> => {
     const latest = await readReadyCatalogLookups();
@@ -171,8 +174,8 @@ export default function CatalogRecoveryScreen() {
         return;
       }
       const token = { barcode: ready.barcode, productId: ready.candidate.productId };
-      reset(catalogRecoveryIntakePatch(revalidated.product, token));
-      router.push('/shelf/opened');
+      const intakeId = reset(catalogRecoveryIntakePatch(revalidated.product, token));
+      router.push({ pathname: '/shelf/opened', params: { intakeId } });
     } catch {
       setFeedback({
         kind: 'error',
@@ -363,9 +366,12 @@ export default function CatalogRecoveryScreen() {
                 : 'not opened'}
             </Text>
             <Text variant="bodySm" tone="muted">
-              Freshness:{' '}
-              {linkedProduct.paoMonths ? `${linkedProduct.paoMonths} month PAO` : 'no PAO'}
-              {linkedProduct.expiryDate ? ` · printed date ${linkedProduct.expiryDate}` : ''}
+              PAO:{' '}
+              {linkedProduct.paoMonths != null ? `${linkedProduct.paoMonths} months · ` : ''}
+              {paoSourceLabel(linkedProduct.paoSource)}
+            </Text>
+            <Text variant="bodySm" tone="muted">
+              Date: {linkedExpiry ?? 'unknown'} · {expirySourceLabel(linkedProduct.expirySource)}
             </Text>
           </View>
         ) : (
@@ -384,7 +390,7 @@ export default function CatalogRecoveryScreen() {
           <Pressable
             accessibilityRole="checkbox"
             accessibilityLabel="Use catalog name, brand, and category"
-            accessibilityHint="Ingredients, opened date, PAO, and printed expiry will stay unchanged"
+            accessibilityHint="Ingredients, opened date, PAO, and the recorded package date will stay unchanged"
             accessibilityState={{
               checked: useCatalogIdentity,
               disabled: busy !== null,

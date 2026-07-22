@@ -21,6 +21,7 @@ import {
   type NewShelfProduct,
   type CatalogRecoveryProductUpdate,
   type CatalogRecoveryProductUpdateResult,
+  type ReplacementOpeningState,
   type ShelfProduct,
 } from './store';
 
@@ -35,8 +36,7 @@ async function mirrorUpsert(p: ShelfProduct, lease: HealthDataWriteOperationLeas
     const { data } = await getPersistedSupabaseUser();
     lease.assertCurrent();
     if (data.user?.id !== lease.ownerUserId) return;
-    const { error } = await supabase.from('user_products').upsert(
-      {
+    const payload = {
         id: p.id,
         user_id: lease.ownerUserId,
         catalog_product_id: p.catalogProductId,
@@ -49,6 +49,7 @@ async function mirrorUpsert(p: ShelfProduct, lease: HealthDataWriteOperationLeas
         opened_at: p.openedAt,
         pao_months: p.paoMonths,
         expiry_date: p.expiryDate,
+        legacy_unverified_expiry_date: p.legacyUnverifiedExpiryDate,
         is_opened: p.isOpened,
         pao_source: p.paoSource,
         expiry_source: p.expirySource,
@@ -56,9 +57,14 @@ async function mirrorUpsert(p: ShelfProduct, lease: HealthDataWriteOperationLeas
         source_disclosure_ack_at: p.sourceDisclosureAckAt,
         status: p.status,
         finished_at: p.finishedAt,
-      },
-      { onConflict: 'id' },
-    );
+      };
+    const userProducts = supabase.from('user_products') as unknown as {
+      upsert: (
+        values: typeof payload,
+        options: { onConflict: string },
+      ) => Promise<{ error: unknown }>;
+    };
+    const { error } = await userProducts.upsert(payload, { onConflict: 'id' });
     lease.assertCurrent();
     if (error) throw new Error('SUPABASE_USER_PRODUCT_UPSERT_FAILED');
   } catch (error) {
@@ -199,9 +205,13 @@ export function useShelfMutations() {
     },
 
     /** Replenish "re-add the same one". Archives the unit, resets the clock (§6). */
-    async replace(id: string): Promise<ShelfProduct | null> {
+    async replace(
+      id: string,
+      opening: ReplacementOpeningState,
+      operationId: string,
+    ): Promise<ShelfProduct | null> {
       return runShelfMutation(async (lease) => {
-        const fresh = await reAddProduct(id);
+        const fresh = await reAddProduct(id, opening, operationId);
         lease.assertCurrent();
         if (fresh) {
           const shelf = await loadShelf();

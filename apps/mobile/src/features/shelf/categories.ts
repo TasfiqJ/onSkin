@@ -1,6 +1,6 @@
 // Product categories for manual intake (docs/04 §4.4). The dropdown drives the
-// default PAO via CATEGORY_PAO_DEFAULTS (docs/04 §3 waterfall step 2) and the
-// safety-critical / printed-expiry exceptions. Labels are the UI strings.
+// category taxonomy used by shelf intake and functional tagging. Labels are the
+// UI strings; categories alone never establish a freshness date.
 
 import type { FunctionalTag } from '@onskin/types';
 
@@ -43,28 +43,21 @@ export function categoryLabel(category: string | null | undefined): string | nul
   return CATEGORY_LABEL.get(category as ProductCategory) ?? category;
 }
 
-// Eye-area products + sunscreen are the genuinely higher-stakes exceptions
-// (docs/04 §3): for these, an EXPIRED item gets the firmer "replace for safety"
-// copy. Everything else stays calm ("time to replace").
-const SAFETY_CRITICAL = new Set<ProductCategory>(['eye_cream', 'lash_brow', 'mascara', 'spf']);
-export function isSafetyCriticalCategory(category: string | null | undefined): boolean {
-  return !!category && SAFETY_CRITICAL.has(category as ProductCategory);
+/** Catalog data has used both names; normalize them at every freshness boundary. */
+export function isSunscreenCategory(category: unknown): boolean {
+  if (typeof category !== 'string') return false;
+  const normalized = category.trim().toLowerCase();
+  return normalized === 'spf' || normalized === 'sunscreen';
 }
 
-/** Sunscreen is an OTC drug carrying a regulated printed expiry. Prefer it over
- *  a PAO estimate (docs/04 §3). */
-export function usesPrintedExpiry(category: string | null | undefined): boolean {
-  return category === 'spf';
-}
-
+/** Functional tags may drive ingredient/routine rules, never freshness claims. */
 export function functionalTagsForCategory(category: string | null | undefined): FunctionalTag[] {
+  if (isSunscreenCategory(category)) return ['sunscreen'];
   switch (category) {
     case 'vitamin_c_serum':
       return ['vitamin_c'];
     case 'retinoid_serum':
       return ['retinoid'];
-    case 'spf':
-      return ['sunscreen'];
     case 'benzoyl_peroxide':
       return ['benzoyl_peroxide'];
     default:

@@ -439,7 +439,7 @@ block(
     /deniedReadOrMutationResult/.test(phase2Smoke) &&
     /signIn\.data\.user\?\.id === createdUser\.id/.test(phase2Smoke) &&
     /pao_source: 'unknown'/.test(phase2Smoke) &&
-    /expiry_source: 'estimated'/.test(phase2Smoke),
+    /expiry_source: 'unknown'/.test(phase2Smoke),
   'Phase 2 RLS smoke must share exact denial predicates, verify signed-in identity, and use coherent Shelf fixtures.',
 );
 block(
@@ -527,7 +527,9 @@ const requiredLiveHarnessChecks = [
   'routine conflict swapped canonical pair',
   'routine conflict duplicate canonical identity',
   'Shelf provenance matrix',
-  "for (const paoSource of ['label', 'catalog', 'category_default', 'unknown'])",
+  "for (const paoSource of ['label', 'catalog'])",
+  'Shelf non-null PAO with unknown provenance',
+  'Shelf unlinked category estimate without catalog provenance',
   'consent append-only admin update',
   'community moderation event client insert',
   'community question signed-anonymous insert',

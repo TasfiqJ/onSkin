@@ -16,7 +16,7 @@ vi.mock('@/features/catalog/client', () => ({
     catalogSourceId: value.catalog_source_id ?? null,
     paoMonths: 12,
     paoSource: 'catalog',
-    expiryDate: '2027-07-01',
+    expiryDate: null,
   }),
 }));
 vi.mock('@/lib/offline/catalogLookupQueue', () => ({
@@ -185,7 +185,7 @@ describe('catalog lookup recovery', () => {
       catalogRecoveryToken: token,
       paoMonths: 12,
       paoSource: 'catalog',
-      expiryDate: '2027-07-01',
+      expiryDate: null,
       addedVia: 'barcode',
     });
     expect(intake.ingredients).toEqual(['Water', 'Zinc Oxide']);

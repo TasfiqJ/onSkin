@@ -1,7 +1,7 @@
 import { CameraView } from 'expo-camera';
 import { randomUUID } from 'expo-crypto';
 import { Image } from 'expo-image';
-import { router, useIsFocused, useNavigation } from 'expo-router';
+import { router, useIsFocused, useLocalSearchParams, useNavigation } from 'expo-router';
 import { usePreventRemove, type NavigationAction } from 'expo-router/react-navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -52,7 +52,7 @@ import {
   type LabelOcrReviewState,
   type LabelOcrTranscript,
 } from '@/features/native/ocr';
-import { useIntake } from '@/features/shelf/IntakeContext';
+import { isCurrentIntakeSession, useIntake } from '@/features/shelf/IntakeContext';
 import { BRAND } from '@/lib/brand';
 import { cn } from '@/lib/cn';
 import { track } from '@/lib/analytics/track';
@@ -77,7 +77,7 @@ type LabelOcrCoordinator = ReturnType<typeof createLabelOcrCoordinator>;
 type DevShelfOcrResult = 'recognized' | 'no_text' | 'timed_out' | 'failed';
 type ProtectedOcrNavigation =
   | Readonly<{ kind: 'action'; action: NavigationAction }>
-  | Readonly<{ kind: 'manual' }>
+  | Readonly<{ kind: 'manual'; intakeId: string }>
   | Readonly<{ kind: 'back' }>;
 
 function devShelfOcrCaptureFailureMode(): 'once' | null {
@@ -149,6 +149,7 @@ function recognitionAvailable(): boolean {
 }
 
 export default function OcrScreen() {
+  const { intakeId } = useLocalSearchParams<{ intakeId?: string }>();
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const cameraRef = useRef<CameraView | null>(null);
@@ -180,7 +181,8 @@ export default function OcrScreen() {
   const [simulateCaptureFailureOnce, setSimulateCaptureFailureOnce] = useState(
     () => devShelfOcrCaptureFailureMode() === 'once',
   );
-  const { update } = useIntake();
+  const { clear, draft, reset, sessionId } = useIntake();
+  const incomingBarcode = isCurrentIntakeSession(sessionId, intakeId) ? draft.barcode : null;
   const cameraPermissionMode = devShelfCameraPermissionMode();
   const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
@@ -551,13 +553,18 @@ export default function OcrScreen() {
     if (pendingNavigation === null) return;
     protectedNavigationRef.current = null;
     if (pendingNavigation.kind === 'action') {
+      clear();
       navigation.dispatch(pendingNavigation.action);
     } else if (pendingNavigation.kind === 'manual') {
-      router.replace('/shelf/manual');
+      router.replace({
+        pathname: '/shelf/manual',
+        params: { intakeId: pendingNavigation.intakeId },
+      });
     } else {
+      clear();
       backOrReplace(router, APP_SHELF_ROUTE);
     }
-  }, [navigation, routeRemovalReady]);
+  }, [clear, navigation, routeRemovalReady]);
 
   const onContinue = async () => {
     if (!canContinue || navigationInFlightRef.current || photoCleanupBusy) return;
@@ -585,14 +592,15 @@ export default function OcrScreen() {
       result: finalParsed.status,
       count: finalParsed.tokens.length,
     });
-    update({
+    const nextIntakeId = reset({
+      barcode: incomingBarcode,
       ingredients: finalParsed.tokens.map((token) => token.displayName),
       addedVia: 'ocr',
       ingredientParseStatus: finalParsed.status,
       ingredientParseConfidence: finalParsed.confidence,
       parserVersion: finalParsed.parserVersion,
     });
-    protectedNavigationRef.current = { kind: 'manual' };
+    protectedNavigationRef.current = { kind: 'manual', intakeId: nextIntakeId };
     setRouteRemovalReady(true);
   };
 

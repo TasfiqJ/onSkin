@@ -173,7 +173,10 @@ describe('health lifecycle route contract', () => {
       'const [quizAnswers, setQuizAnswers] = useState<QuizAnswers>({});',
     );
     expect(onboarding).not.toContain('useEffect(');
-    expect(intake).toContain('const [draft, setDraft] = useState<IntakeDraft>(EMPTY);');
+    expect(intake).toContain(
+      'const [state, setState] = useState<IntakeSessionState>(() => createEmptyIntakeSession());',
+    );
+    expect(intake).toContain('const stateRef = useRef<IntakeSessionState>(state);');
     expect(intake).not.toContain('useEffect(');
     expect(intake).not.toContain('getPrivateItem(');
     expect(intake).not.toContain('setPrivateItem(');

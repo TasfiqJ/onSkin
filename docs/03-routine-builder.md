@@ -80,7 +80,7 @@ _Routine generation · application-order sequencing · frequency & the retinoid 
 - `user_products` (docs/01 §3) joined to docs/02's `product_ingredients` → `ingredient_tags` so each owned product resolves to **functional tags** (`retinoid`, `aha`, `vitamin_c`, `niacinamide`, …) and a **concentration band**.
 - docs/02's **engine**: `conflict_rules` (the matrix) + the `detect_conflicts(uid)` function + the resolution verbs (`separate_am_pm`, `alternate_nights`, `buffer`, `lower_frequency`, `no_change`, `reassure`, `avoid_refer`).
 - docs/02's **scheduler** (§5): the Bowe cycle definition + `cycling_night` mapping + the next-acid-night computation.
-- docs/02's **PAO** (§6): `ingredient_pao_defaults` + `expiry_computed`, for replenishment and "is this product still usable" awareness.
+- docs/02's **freshness truth table** (§6): provenance-bearing `expiry_computed` state for replenishment awareness. Actionable printed dates are exact physical-package entries/reconfirmations only; product-catalog expiry dates and the retained legacy-unverified quarantine are not routine or recommendation inputs. Category estimates remain disabled and non-actionable until an exact server-attested marker retained locally plus named review exists; migration `0060` purges, force-RLS seals, and permanently blocks repopulation of the legacy `ingredient_pao_defaults` relation, so it is not an input.
 
 **The generation pipeline (deterministic, ordered):**
 

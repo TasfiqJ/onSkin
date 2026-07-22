@@ -37,7 +37,7 @@ import {
 } from '@/features/catalog/reportOperation';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
-import { useIntake } from '@/features/shelf/IntakeContext';
+import { isCurrentIntakeSession, useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
 import { cn } from '@/lib/cn';
@@ -86,8 +86,12 @@ function wrongMatchReportInput(product: CatalogProductSummary): CatalogReportInp
 }
 
 export default function CatalogSearchScreen() {
-  const { draft, update, reset } = useIntake();
-  const { e2eQuery } = useLocalSearchParams<{ e2eQuery?: string | string[] }>();
+  const { clear, draft, reset, sessionId } = useIntake();
+  const { e2eQuery, intakeId } = useLocalSearchParams<{
+    e2eQuery?: string | string[];
+    intakeId?: string;
+  }>();
+  const incomingBarcode = isCurrentIntakeSession(sessionId, intakeId) ? draft.barcode : null;
   const rawE2EQuery = Array.isArray(e2eQuery) ? e2eQuery[0] : (e2eQuery ?? '');
   const initialSearchQuery =
     typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web' ? rawE2EQuery : '';
@@ -334,8 +338,12 @@ export default function CatalogSearchScreen() {
   const goManual = () => {
     haptics.select();
     trackProductAddStarted('catalog_manual');
-    reset({ addedVia: 'manual', name: query.trim(), barcode: draft.barcode });
-    router.replace('/shelf/manual');
+    const nextIntakeId = reset({
+      addedVia: 'manual',
+      name: query.trim(),
+      barcode: incomingBarcode,
+    });
+    router.replace({ pathname: '/shelf/manual', params: { intakeId: nextIntakeId } });
   };
 
   const chooseProduct = (product: CatalogProductSummary) => {
@@ -344,7 +352,7 @@ export default function CatalogSearchScreen() {
     const parsed = product.rawIngredientsText
       ? parseIngredientText(product.rawIngredientsText)
       : null;
-    update({
+    const nextIntakeId = reset({
       name: product.name,
       brand: product.brand,
       category: normalizeCategory(product.category),
@@ -368,7 +376,7 @@ export default function CatalogSearchScreen() {
       expiryDate: provenance.expiryDate,
       addedVia: 'search',
     });
-    router.push('/shelf/opened');
+    router.push({ pathname: '/shelf/opened', params: { intakeId: nextIntakeId } });
   };
 
   return (
@@ -377,7 +385,10 @@ export default function CatalogSearchScreen() {
         <RouteIconButton
           accessibilityLabel="Back"
           disabled={reportBusy}
-          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+          onPress={() => {
+            clear();
+            backOrReplace(router, APP_SHELF_ROUTE);
+          }}
         />
         <Text variant="body" className="font-sans-semibold">
           Search catalog

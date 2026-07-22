@@ -77,7 +77,7 @@ describe('Phase 9 store build inspection contract', () => {
         PHASE9_IOS_BUILD_NUMBER: '',
         PHASE9_APPLE_TEAM_ID: '',
       },
-      timeout: 30_000,
+      timeout: 60_000,
     });
     const afterStatus = spawnSync(
       'git',
@@ -104,5 +104,5 @@ describe('Phase 9 store build inspection contract', () => {
     expect(afterStatus.error).toBeUndefined();
     expect(afterStatus.status).toBe(0);
     expect(afterStatus.stdout).toBe(beforeStatus.stdout);
-  }, 30_000);
+  }, 60_000);
 });

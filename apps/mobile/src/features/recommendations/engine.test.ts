@@ -39,7 +39,7 @@ function item(over: Partial<RecShelfItem> & { id: string; role: SequencingRole }
 
 function replenishment(
   product: RecShelfItem,
-  reason: RecReplenishmentItem['reason'] = 'countdown',
+  reason: RecReplenishmentItem['reason'] = 'printed_expiry_countdown',
 ): RecReplenishmentItem {
   return {
     id: product.id,
@@ -332,11 +332,58 @@ describe('replacement. Only from tracked freshness or user-finished history (§4
     );
     const rep = res.recommendations.find((r) => r.trigger === 'replacement');
     expect(rep?.relatedProductId).toBe('p_vc');
-    expect(rep?.what.toLowerCase()).toContain('freshness date');
+    expect(rep?.what.toLowerCase()).toContain('recorded package date');
     expect([rep?.what, rep?.why, rep?.how.gap].join(' ').toLowerCase()).not.toMatch(
       /running low|running out|nearly finished/,
     );
     expect(rep?.footIsEvidence).toBe(false); // "From your shelf", not an evidence grade
+  });
+
+  it('identifies product-label PAO without attributing its recorder or calling it reviewed catalog data', () => {
+    const paoTracked = item({
+      id: 'p_label_pao',
+      name: 'Labelled serum',
+      role: 'hydrating_serum',
+    });
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
+        shelf: [cleanser, moisturiser, spf, paoTracked],
+        replenishment: [replenishment(paoTracked, 'label_pao_expired')],
+      }),
+    );
+
+    const rep = res.recommendations.find((r) => r.trigger === 'replacement');
+    expect(rep?.what).toContain('tracked PAO date');
+    expect(rep?.why).toContain('PAO recorded from the product label');
+    expect(rep?.how.evidence).toContain('Opened date + PAO recorded from the product label');
+    expect(rep?.why).not.toContain('you recorded');
+    const copy = [rep?.what, rep?.why, rep?.how.gap, rep?.how.evidence].join(' ');
+    expect(copy).not.toContain('printed expiry');
+    expect(copy).not.toContain('reviewed catalog');
+  });
+
+  it('identifies a reviewed catalog PAO without attributing it to the user label', () => {
+    const paoTracked = item({
+      id: 'p_catalog_pao',
+      name: 'Catalog serum',
+      role: 'hydrating_serum',
+    });
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
+        shelf: [cleanser, moisturiser, spf, paoTracked],
+        replenishment: [replenishment(paoTracked, 'catalog_pao_countdown')],
+      }),
+    );
+
+    const rep = res.recommendations.find((r) => r.trigger === 'replacement');
+    expect(rep?.what).toContain('tracked PAO date');
+    expect(rep?.why).toContain('reviewed catalog PAO');
+    expect(rep?.how.evidence).toContain('Opened date + reviewed catalog PAO');
+    const copy = [rep?.what, rep?.why, rep?.how.gap, rep?.how.evidence].join(' ');
+    expect(copy).not.toContain('printed expiry');
+    expect(copy).not.toContain('recorded from the product label');
   });
 
   it('surfaces an unsuperseded finished product without counting it as active inventory', () => {

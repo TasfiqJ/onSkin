@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
+import { calendarWeeksUsed, localDateMonthLabel } from '@/features/shelf/expiry';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -10,23 +11,10 @@ import { haptics } from '@/theme/haptics';
 // products live here. Never deleted. So repurchase history and replenishment
 // just work. Calm, no celebration, no alarm.
 
-function weeksUsed(createdAt: string, finishedAt: string | null): number | null {
-  if (!finishedAt) return null;
-  const start = new Date(createdAt).getTime();
-  const end = new Date(finishedAt).getTime();
-  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) return null;
-  return Math.max(1, Math.round((end - start) / (7 * 86_400_000)));
-}
-
-function monthLabel(iso: string | null): string | null {
-  if (!iso) return null;
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short' });
-}
-
 function ArchiveCard({ item }: { item: ShelfItem }) {
   const p = item.product;
-  const weeks = weeksUsed(p.createdAt, p.finishedAt);
-  const when = monthLabel(p.finishedAt);
+  const weeks = calendarWeeksUsed(p.createdAt, p.finishedAt);
+  const when = localDateMonthLabel(p.finishedAt);
   const meta =
     p.status === 'finished'
       ? `finished ${when ?? ''}${weeks ? ` · used ${weeks} week${weeks === 1 ? '' : 's'}` : ''}`.trim()

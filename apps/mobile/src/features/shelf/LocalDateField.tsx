@@ -12,12 +12,14 @@ export function LocalDateField({
   onChangeDate,
   minDate,
   maxDate,
+  disabled = false,
 }: {
   label: string;
   value: string | null;
   onChangeDate: (date: string | null) => void;
   minDate?: string;
   maxDate?: string;
+  disabled?: boolean;
 }) {
   const [text, setText] = useState(value ?? '');
 
@@ -35,7 +37,9 @@ export function LocalDateField({
       </Text>
       <TextInput
         accessibilityLabel={label}
+        accessibilityState={{ disabled }}
         value={text}
+        editable={!disabled}
         onChangeText={(next) => {
           setText(next);
           const date = validLocalDate(next);

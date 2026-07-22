@@ -337,10 +337,10 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('resetIntake({');
     expect(products).toContain("addedVia: 'onboarding'");
     expect(products).toContain("pathname: '/shelf/opened'");
-    expect(products).toContain("params: { origin: 'onboarding' }");
+    expect(products).toContain("params: { intakeId, origin: 'onboarding' }");
     expect(products).not.toContain('await m.add({');
     expect(opened).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
-    expect(opened).toContain('params: { addedProductId: addedProduct.id }');
+    expect(opened).toContain('params: { addedProductId: completedProductId }');
     expect(opened).toContain('router.replace(APP_SHELF_ROUTE)');
   });
 

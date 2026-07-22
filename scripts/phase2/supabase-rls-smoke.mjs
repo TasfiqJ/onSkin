@@ -244,7 +244,7 @@ async function main() {
       opened_at: null,
       pao_months: null,
       pao_source: 'unknown',
-      expiry_source: 'estimated',
+      expiry_source: 'unknown',
     });
     await expectOwnRead(userA.client, 'user_products', 'id', product.id, 'shelf own read');
     await expectNoPrivateRead(
@@ -263,7 +263,7 @@ async function main() {
         opened_at: null,
         pao_months: null,
         pao_source: 'unknown',
-        expiry_source: 'estimated',
+        expiry_source: 'unknown',
       }),
     );
 

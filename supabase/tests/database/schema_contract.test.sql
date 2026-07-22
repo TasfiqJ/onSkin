@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(49);
+select plan(50);
 
 select has_extension('citext', 'the case-insensitive email type dependency is installed');
 
@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  58::bigint,
-  'all 58 repository migrations are recorded'
+  59::bigint,
+  'all 59 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260718000059'::text,
-  'migration history reaches the catalog scan-minimization gate'
+  '20260718000060'::text,
+  'migration history reaches the CAT-07 truthful-freshness gate'
 );
 
 select is(
@@ -410,8 +410,58 @@ select is(
 
 select is(
   (select count(*) from public.ingredient_pao_defaults),
-  11::bigint,
-  'the starter PAO defaults are seeded by migrations'
+  0::bigint,
+  'the unreviewed legacy PAO-default relation is exactly empty'
+);
+
+select ok(
+  exists (
+    select 1
+    from pg_catalog.pg_class as relation
+    where relation.oid = 'public.ingredient_pao_defaults'::pg_catalog.regclass
+      and relation.relrowsecurity
+      and relation.relforcerowsecurity
+  )
+  and exists (
+    select 1
+    from pg_catalog.pg_constraint
+    where conrelid = 'public.ingredient_pao_defaults'::pg_catalog.regclass
+      and conname = 'ingredient_pao_defaults_legacy_empty'
+      and contype = 'c'
+      and convalidated
+      and pg_catalog.pg_get_expr(conbin, conrelid) = 'false'
+  )
+  and not exists (
+    select 1
+    from pg_catalog.pg_policy
+    where polrelid = 'public.ingredient_pao_defaults'::pg_catalog.regclass
+  )
+  and not exists (
+    select 1
+    from pg_catalog.unnest(array['anon', 'authenticated', 'service_role']::text[])
+      as grantee(role_name)
+    where pg_catalog.has_table_privilege(
+      grantee.role_name,
+      'public.ingredient_pao_defaults'::pg_catalog.regclass,
+      'SELECT'
+    )
+    or pg_catalog.has_table_privilege(
+      grantee.role_name,
+      'public.ingredient_pao_defaults'::pg_catalog.regclass,
+      'INSERT'
+    )
+    or pg_catalog.has_table_privilege(
+      grantee.role_name,
+      'public.ingredient_pao_defaults'::pg_catalog.regclass,
+      'UPDATE'
+    )
+    or pg_catalog.has_table_privilege(
+      grantee.role_name,
+      'public.ingredient_pao_defaults'::pg_catalog.regclass,
+      'DELETE'
+    )
+  ),
+  'the empty legacy PAO-default relation is force-RLS sealed with no serving policy or direct client privilege'
 );
 
 select is(

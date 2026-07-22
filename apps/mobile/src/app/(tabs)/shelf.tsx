@@ -22,14 +22,14 @@ import { colors } from '@/theme/tokens';
 
 // Shelf list (Smart Shelf design screen 05, docs/04 §5.1): title + count,
 // All/Actives/Expiring filters, the calm conflict banner, product cards with the
-// five-state badge taxonomy, and the "Scan a barcode" FAB. Light-mode, calm,
-// claim-safe. The cabinet that knows when to replace, never when to alarm.
+// provenance-aware freshness badges, and the "Scan a barcode" FAB. Light-mode
+// and calm, with unsupported dates left unknown.
 type Filter = 'all' | 'actives' | 'expiring';
 const ACTIVE_TAGS = new Set(['retinoid', 'aha', 'bha', 'benzoyl_peroxide', 'vitamin_c']);
 const SUBHEAD: Record<Filter, string> = {
-  all: 'Everything on your shelf, soonest to replace first.',
+  all: 'Everything on your shelf, ordered by supported tracked dates.',
   actives: 'The potent ingredients in your routine.',
-  expiring: 'Soonest first. The honest reasons to replace something.',
+  expiring: 'Printed or reviewed PAO dates, soonest first.',
 };
 
 function ScanShelfButton({ source }: { source: ProductAddStartSource }) {
@@ -119,8 +119,8 @@ function CatalogRecoveryUnavailable({ retry }: { retry: () => void }) {
 
 function ProductCard({ item }: { item: ShelfItem }) {
   // Only the countdown card carries the faint accent border (design screen 05);
-  // expired/safety cards stay on the neutral hairline. The firmer badge already
-  // signals attention.
+  // Other freshness states stay on the neutral hairline; their badge carries
+  // the source-bound status.
   const attention = item.badge.kind === 'countdown';
   return (
     <View
@@ -391,7 +391,7 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
           <SegmentChip
             key={l}
             accessibilityLabel={l}
-            label={compactFilterLabels && l === 'Expiring' ? '7d' : l}
+            label={compactFilterLabels && l === 'Expiring' ? 'Soon' : l}
             selected={i === 0}
             className={compactFilterLabels ? 'px-2.5' : undefined}
           />
@@ -506,7 +506,7 @@ export default function ShelfScreen() {
                     : f === 'actives'
                       ? 'Actives'
                       : compactFilterLabels
-                        ? '7d'
+                        ? 'Soon'
                         : 'Expiring'
                 }
                 selected={filter === f}

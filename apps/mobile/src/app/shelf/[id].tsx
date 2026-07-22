@@ -1,7 +1,14 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useRef, useState } from 'react';
-import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
@@ -33,9 +40,16 @@ import {
 } from '@/features/catalog/copy';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { bannerSubhead, tagLabel } from '@/features/intelligence/presentation';
-import { expiryMonthLabel, surfacedExpiry } from '@/features/shelf/expiry';
-import { PAO_MONTH_OPTIONS, shiftLocalDateMonths } from '@/features/shelf/freshness';
-import { expirySourceLabel, paoSourceLabel } from '@/features/shelf/labels';
+import {
+  expiryMonthLabel,
+  localDateMonthYearLabel,
+} from '@/features/shelf/expiry';
+import {
+  PAO_MONTH_OPTIONS,
+  parsePaoMonthInput,
+  shiftLocalDateMonths,
+} from '@/features/shelf/freshness';
+import { paoSourceLabel } from '@/features/shelf/labels';
 import { LocalDateField } from '@/features/shelf/LocalDateField';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { editedPaoSource } from '@/features/shelf/paoProvenance';
@@ -65,16 +79,6 @@ const RECENT_OPENS: { label: string; monthsAgo: number }[] = [
   { label: '1 mo ago', monthsAgo: 1 },
   { label: '3 mo ago', monthsAgo: 3 },
   { label: '6 mo ago', monthsAgo: 6 },
-];
-
-// Printed best-before is a FUTURE date (docs/04 §3. Wins for sunscreen). The
-// primary source is the catalog/scan path (OBF, B-CATALOG-SEED); this inline edit
-// lets the user record it by hand on the freshness block (§5.6 "editable inline").
-const BEST_BEFORE: { label: string; monthsAhead: number }[] = [
-  { label: 'in 3 mo', monthsAhead: 3 },
-  { label: 'in 6 mo', monthsAhead: 6 },
-  { label: 'in 1 yr', monthsAhead: 12 },
-  { label: 'in 2 yr', monthsAhead: 24 },
 ];
 
 type RoutineUsage = { phase: string; cycleNightNumbers?: number[] };
@@ -286,6 +290,7 @@ export default function ProductDetailScreen() {
   const [editOpen, setEditOpen] = useState(false);
   const [exactOpenedDate, setExactOpenedDate] = useState<string | null>(null);
   const [paoOpen, setPaoOpen] = useState(false);
+  const [customPaoText, setCustomPaoText] = useState('');
   const [bestOpen, setBestOpen] = useState(false);
   const [exactExpiryDate, setExactExpiryDate] = useState<string | null>(null);
   const [activeSheet, setActiveSheet] = useState<ProductDetailSheet>(null);
@@ -350,15 +355,15 @@ export default function ProductDetailScreen() {
   }
 
   const p = item.product;
+  const customPaoMonths = parsePaoMonthInput(customPaoText);
   const archived = p.status !== 'active';
-  const expiry = surfacedExpiry(p);
-  const best = expiryMonthLabel(expiry);
+  const printedDateLabel = expiryMonthLabel(p.expiryDate);
   const provenance = p.catalogSource
     ? `data / ${sourceDisplayName(p.catalogSource)}`
     : (PROVENANCE[p.addedVia] ?? 'added by hand');
   const openedLabel = p.isOpened
     ? p.openedAt
-      ? new Date(p.openedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+      ? localDateMonthYearLabel(p.openedAt, 'long')
       : 'date not set'
     : 'not opened yet';
 
@@ -413,10 +418,7 @@ export default function ProductDetailScreen() {
     sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
   const qualityLabel = catalogQualityLabel(p.catalogMatchQuality);
   const sourceDate = p.catalogSourceSnapshotDate
-    ? new Date(p.catalogSourceSnapshotDate).toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric',
-      })
+    ? localDateMonthYearLabel(p.catalogSourceSnapshotDate)
     : null;
   const catalogProductId = isCatalogProductId(p.catalogProductId) ? p.catalogProductId : null;
   const canReportMissingProduct =
@@ -436,20 +438,20 @@ export default function ProductDetailScreen() {
       productId: catalogProductId ?? undefined,
       barcode: p.barcode,
       description: `${correctionType} reported from product detail`,
-      proposedPayload: {
-        productName: p.name,
-        brand: p.brand,
-        category: p.category,
-        sourceName: correctionType === 'missing_product' ? null : catalogSourceLabel,
-        sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl,
-        defaultPaoMonths:
-          correctionType !== 'missing_product' &&
-          p.paoMonths != null &&
-          (p.paoSource === 'catalog' || p.paoSource === 'category_default')
+        proposedPayload: {
+          productName: p.name,
+          brand: p.brand,
+          category: p.category,
+          sourceName: correctionType === 'missing_product' ? null : catalogSourceLabel,
+          sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl,
+          defaultPaoMonths:
+            correctionType !== 'missing_product' &&
+            p.paoMonths != null &&
+            p.paoSource === 'catalog'
             ? p.paoMonths
             : null,
-        qualityIssue: correctionType,
-      },
+          qualityIssue: correctionType,
+        },
       clientContext: {
         addedVia: p.addedVia,
         quality: p.catalogMatchQuality,
@@ -591,7 +593,7 @@ export default function ProductDetailScreen() {
               <Text variant="bodySm" tone="muted">
                 {p.status === 'finished' ? 'Finished' : 'Discarded'}
                 {p.finishedAt
-                  ? ` · ${new Date(p.finishedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`
+                  ? ` · ${localDateMonthYearLabel(p.finishedAt)}`
                   : ''}
                 {p.repurchaseCount > 1 ? ` · bought ${p.repurchaseCount}×` : ''}
               </Text>
@@ -749,6 +751,14 @@ export default function ProductDetailScreen() {
               accessibilityLabel="Edit period after opening"
               onPress={() => {
                 haptics.select();
+                if (!paoOpen) {
+                  setCustomPaoText(
+                    p.paoMonths != null &&
+                      !PAO_MONTH_OPTIONS.some((months) => months === p.paoMonths)
+                      ? String(p.paoMonths)
+                      : '',
+                  );
+                }
                 setPaoOpen((open) => !open);
               }}
               className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"
@@ -792,10 +802,53 @@ export default function ProductDetailScreen() {
                     </Text>
                   </Pressable>
                 ))}
+                <View className="w-full gap-2 rounded-[14px] border border-hairline bg-paper-raised p-3">
+                  <Text variant="label" tone="muted">
+                    Another value printed on the label
+                  </Text>
+                  <View className="flex-row items-center gap-2">
+                    <TextInput
+                      accessibilityLabel="PAO months printed on label"
+                      accessibilityHint="Enter a whole number from 1 to 120"
+                      keyboardType="number-pad"
+                      inputMode="numeric"
+                      maxLength={3}
+                      value={customPaoText}
+                      onChangeText={setCustomPaoText}
+                      className="h-[48px] min-w-0 flex-1 rounded-[12px] border border-hairline bg-paper px-4 font-sans-medium text-[15px] text-ink"
+                    />
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Confirm label PAO value"
+                      accessibilityState={{ disabled: customPaoMonths == null }}
+                      disabled={customPaoMonths == null}
+                      onPress={() => {
+                        if (customPaoMonths == null) return;
+                        haptics.select();
+                        void setLabelPao(customPaoMonths);
+                      }}
+                      className={cn(
+                        'min-h-[48px] items-center justify-center rounded-pill px-4 py-2',
+                        customPaoMonths == null ? 'bg-greige' : 'bg-ink',
+                      )}
+                    >
+                      <Text
+                        className="font-sans-semibold text-[13px]"
+                        tone={customPaoMonths == null ? 'muted' : 'inverse'}
+                      >
+                        Use value
+                      </Text>
+                    </Pressable>
+                  </View>
+                  <Text variant="label" tone="muted">
+                    Enter whole months from 1 to 120 exactly as printed.
+                  </Text>
+                </View>
                 <Pressable
                   accessibilityRole="button"
                   onPress={async () => {
                     await m.edit(id, { paoMonths: null, paoSource: 'unknown' });
+                    setCustomPaoText('');
                     setPaoOpen(false);
                   }}
                   className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
@@ -809,36 +862,77 @@ export default function ProductDetailScreen() {
             <View className="py-3">
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Set printed best-before date"
+                accessibilityLabel="Set date printed on this package"
                 onPress={() => {
                   haptics.select();
-                  if (!bestOpen) setExactExpiryDate(p.expiryDate);
+                  if (!bestOpen) {
+                    setExactExpiryDate(p.expiryDate ?? p.legacyUnverifiedExpiryDate);
+                  }
                   setBestOpen((o) => !o);
                 }}
                 className="min-h-[56px] flex-row items-center justify-between"
               >
                 <Text variant="bodySm" tone="muted">
-                  {p.isOpened ? 'Best used by' : 'Shelf life'}
+                  Recorded package date
                 </Text>
                 <View className="flex-1 items-end pl-4">
                   <Text variant="bodySm" className="font-sans-bold text-clay-deep">
-                    {best ?? 'not known'}{' '}
+                    {printedDateLabel ?? 'not entered'}{' '}
                     <Text variant="bodySm" tone="clay">
-                      · {p.expirySource === 'printed' ? 'edit' : 'set'}
+                      · {p.expiryDate ? 'edit' : 'set'}
                     </Text>
                   </Text>
                   <Text variant="label" tone="muted" className="mt-0.5 text-right">
-                    {expirySourceLabel(p.expirySource)}
+                    {p.expiryDate ? 'recorded as printed' : 'Date unknown'}
                   </Text>
                 </View>
               </Pressable>
+              {p.legacyUnverifiedExpiryDate ? (
+                <View className="mt-2.5 gap-2 rounded-[14px] bg-greige px-4 py-3">
+                  <Text variant="bodySm" className="font-sans-semibold">
+                    Reconfirm a previous package date
+                  </Text>
+                  <Text variant="bodySm" tone="muted">
+                    {localDateMonthYearLabel(p.legacyUnverifiedExpiryDate, 'long')} came from older
+                    catalog data and is not tied to this exact package. It is not used for freshness
+                    reminders. Check this package before recording it.
+                  </Text>
+                  {!archived ? (
+                    <View className="flex-row flex-wrap gap-2">
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={() => {
+                          setExactExpiryDate(p.legacyUnverifiedExpiryDate);
+                          setBestOpen(true);
+                        }}
+                        className="min-h-[48px] items-center justify-center rounded-pill bg-ink px-3.5 py-2"
+                      >
+                        <Text className="font-sans-medium text-[13px]" tone="inverse">
+                          Check this package
+                        </Text>
+                      </Pressable>
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={async () => {
+                          await m.edit(id, { legacyUnverifiedExpiryDate: null });
+                        }}
+                        className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
+                      >
+                        <Text className="font-sans-medium text-[13px]" tone="muted">
+                          Remove old date
+                        </Text>
+                      </Pressable>
+                    </View>
+                  ) : null}
+                </View>
+              ) : null}
               {bestOpen ? (
                 <View className="mt-2.5 flex-row flex-wrap items-center gap-2">
                   <Text variant="label" tone="muted" className="w-full">
-                    Printed best-before on the pack?
+                    Date printed on this package?
                   </Text>
                   <LocalDateField
-                    label="Exact printed date"
+                    label="Exact package date"
                     value={exactExpiryDate}
                     onChangeDate={setExactExpiryDate}
                   />
@@ -860,24 +954,9 @@ export default function ProductDetailScreen() {
                       className="font-sans-medium text-[13px]"
                       tone={exactExpiryDate ? 'inverse' : 'muted'}
                     >
-                      Save printed date
+                      Save package date
                     </Text>
                   </Pressable>
-                  {BEST_BEFORE.map((b) => (
-                    <Pressable
-                      key={b.label}
-                      accessibilityRole="button"
-                      onPress={async () => {
-                        await m.edit(id, {
-                          expiryDate: shiftMonthsISO(b.monthsAhead),
-                        });
-                        setBestOpen(false);
-                      }}
-                      className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
-                    >
-                      <Text className="font-sans-medium text-[13px]">{b.label}</Text>
-                    </Pressable>
-                  ))}
                   {p.expiryDate ? (
                     <Pressable
                       accessibilityRole="button"
@@ -906,7 +985,7 @@ export default function ProductDetailScreen() {
               className="mt-2.5 min-h-[48px] items-center justify-center rounded-[14px] border border-hairline bg-paper-raised py-3"
             >
               <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
-                Mark as opened. Start the freshness clock
+                Record opening date
               </Text>
             </Pressable>
           ) : null}
@@ -994,10 +1073,7 @@ export default function ProductDetailScreen() {
       {archived ? (
         <Button
           label="Replace. Add a fresh one"
-          onPress={async () => {
-            await m.replace(id);
-            router.replace('/shelf');
-          }}
+          onPress={() => router.push(`/shelf/replenish?id=${id}`)}
         />
       ) : (
         <View className="flex-row gap-2.5">
