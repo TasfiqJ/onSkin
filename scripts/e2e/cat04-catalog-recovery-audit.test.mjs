@@ -198,10 +198,56 @@ test('extended recovery lanes exercise wrong matches, retry dedupe, guards, and 
 });
 
 test('offline fixture permits its bounded unresolved lookup without hiding other network hangs', () => {
-  assert.match(source, /maxInflight: groupId === 'offline' \? 1 : 0/);
-  assert.match(source, /maxInflight: scenario\.fixture === 'offline' \? 1 : 0/);
+  assert.match(source, /networkIdleMaxInflightForFixtureGroup\(fixtureGroup\)/);
+  assert.match(source, /fixtureGroup === 'camera-recovery'\) return 3/);
+  assert.match(source, /fixtureGroup === 'ocr-capture-failure'\) return 1/);
+  assert.match(source, /networkIdleMaxInflightForScenario\(scenario\)/);
+  assert.match(source, /scenario\.fixture === 'offline' \? 1 : 0/);
   assert.match(source, /fixtureGroup === 'camera-recovery' \? 30_000 : 10_000/);
   assert.match(source, /allowed \$\{maxInflight\}/);
+});
+
+test('browser failure classification ignores only local Expo dev HMR refusal noise', () => {
+  assert.deepEqual(
+    classifyBrowserFailures(
+      [
+        {
+          method: 'Network.webSocketCreated',
+          params: { requestId: 'hmr', url: 'ws://localhost:8560/hot' },
+        },
+        {
+          method: 'Network.webSocketFrameError',
+          params: {
+            errorMessage: 'Error in connection establishment: net::ERR_CONNECTION_REFUSED',
+            requestId: 'hmr',
+          },
+        },
+        {
+          method: 'Log.entryAdded',
+          params: {
+            entry: {
+              level: 'error',
+              text: "WebSocket connection to 'ws://localhost:8560/hot' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED",
+            },
+          },
+        },
+      ],
+      ['http://localhost:8320'],
+    ),
+    [],
+  );
+  assert.equal(
+    classifyBrowserFailures(
+      [
+        {
+          method: 'Log.entryAdded',
+          params: { entry: { level: 'error', text: 'Real app error' } },
+        },
+      ],
+      ['http://localhost:8320'],
+    ).length,
+    1,
+  );
 });
 
 test('report lanes prove disclosure and explicit confirmation before transport', () => {

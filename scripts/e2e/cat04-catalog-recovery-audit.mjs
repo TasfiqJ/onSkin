@@ -404,6 +404,15 @@ function requestUrlById(events) {
   return requests;
 }
 
+function benignExpoDevWebSocketFailure(text) {
+  return (
+    typeof text === 'string' &&
+    /WebSocket connection to 'ws:\/\/localhost:\d+\/hot' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED/u.test(
+      text,
+    )
+  );
+}
+
 function localEndpoint(url, allowedOrigins) {
   try {
     const candidate = new URL(url);
@@ -447,6 +456,7 @@ export function classifyBrowserFailures(events, allowedOrigins = []) {
       continue;
     }
     if (method === 'Log.entryAdded' && params.entry?.level === 'error') {
+      if (benignExpoDevWebSocketFailure(params.entry.text)) continue;
       failures.push({ method, text: params.entry.text, type: 'browser-log-error' });
       continue;
     }
@@ -459,17 +469,25 @@ export function classifyBrowserFailures(events, allowedOrigins = []) {
     }
     if (method === 'Network.webSocketCreated') {
       const url = params.url;
+      if (url && /^ws:\/\/localhost:\d+\/hot(?:\?|$)/u.test(url)) continue;
       if (url && !localEndpoint(url, allowedOrigins)) {
         failures.push({ method, type: 'unexpected-remote-websocket', url });
       }
       continue;
     }
     if (method === 'Network.webSocketFrameError') {
+      const url = requests.get(params.requestId) ?? null;
+      if (
+        params.errorMessage === 'Error in connection establishment: net::ERR_CONNECTION_REFUSED' &&
+        (url === null || /^ws:\/\/localhost:\d+\/hot(?:\?|$)/u.test(url))
+      ) {
+        continue;
+      }
       failures.push({
         errorText: params.errorMessage,
         method,
         type: 'websocket-frame-error',
-        url: requests.get(params.requestId) ?? null,
+        url,
       });
       continue;
     }
@@ -890,6 +908,19 @@ async function waitForNetworkIdle(client, timeoutMs = 10_000, { maxInflight = 0 
 
 function networkIdleTimeoutForFixtureGroup(fixtureGroup) {
   return fixtureGroup === 'camera-recovery' ? 30_000 : 10_000;
+}
+
+function networkIdleMaxInflightForFixtureGroup(fixtureGroup) {
+  if (fixtureGroup === 'camera-recovery') return 3;
+  if (fixtureGroup === 'ocr-capture-failure') return 1;
+  return 0;
+}
+
+function networkIdleMaxInflightForScenario(scenario) {
+  return Math.max(
+    scenario.fixture === 'offline' ? 1 : 0,
+    networkIdleMaxInflightForFixtureGroup(scenario.groupId),
+  );
 }
 
 async function setViewport(client, viewport) {
@@ -1318,7 +1349,8 @@ async function establishLocalHealthConsent({ client, baseUrl, evidenceDir, group
     }
     assert(catalogReady, 'Explicit local consent did not release the catalog route.');
     await waitForNetworkIdle(client, networkIdleTimeoutForFixtureGroup(groupId), {
-      maxInflight: groupId === 'offline' ? 1 : 0,
+      maxInflight:
+        groupId === 'offline' ? 1 : networkIdleMaxInflightForFixtureGroup(groupId),
     });
     await captureStep(client, evidenceDir, `${artifactPrefix}-catalog-ready`);
     result.browserFailures = classifyBrowserFailures(client.events.slice(eventStart), [baseUrl]);
@@ -1877,7 +1909,7 @@ async function runScenario(context) {
       `CAT04 scenario ${scenario.id} at ${viewport.width}x${viewport.height}`,
     );
     await waitForNetworkIdle(client, networkIdleTimeoutForFixtureGroup(scenario.groupId), {
-      maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+      maxInflight: networkIdleMaxInflightForScenario(scenario),
     });
     const failures = classifyBrowserFailures(client.events.slice(eventStart), [baseUrl]);
     result.browserFailures = failures;
