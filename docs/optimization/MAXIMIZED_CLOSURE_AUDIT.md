@@ -1,18 +1,18 @@
 # Maximized Closure Audit
 
-Date: 2026-07-18 (America/Toronto)
+Date: 2026-07-21 (America/Toronto)
 
 Branch: `optimization`
 
-Implementation checkpoint SHA: `95221abb74f602c1b9f00babf43cd22e368faf9a`
+Implementation checkpoint SHA: `d442089c0c297064cc8b14ee1d9a9fa2b147f8c1`
 
 Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
 
-Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the complete repository gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
+Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the scoped Progress gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
 
 ## Requirement-By-Requirement Result
 
-| Section 19 requirement                                                          | Result on this SHA                             | Evidence boundary / remaining gate                                                                                                                                                                                                                                                                                            |
+| Section 19 requirement                                                          | Result at this checkpoint                      | Evidence boundary / remaining gate                                                                                                                                                                                                                                                                                            |
 | ------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | All P0 items complete with evidence                                             | Not met                                        | PERF-P0-002 is `not-started`; multiple PERF-P0 rows remain `investigating`; signed/native/hosted proof is absent. See `IMPLEMENTATION_STATUS.md`.                                                                                                                                                                             |
 | No open release-blocking P1 item                                                | Not met                                        | OPT-101/102 remain decision-gated; OPT-103/104/105/115/118/120 and others retain explicit release evidence debt.                                                                                                                                                                                                              |
@@ -36,17 +36,18 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 
 ## Current Verification Snapshot
 
-- Implementation checkpoint: `95221abb74f602c1b9f00babf43cd22e368faf9a`.
+- Implementation checkpoint: `d442089c0c297064cc8b14ee1d9a9fa2b147f8c1`.
 - Repository type-check: pass, two workspaces.
 - Repository lint: pass, two workspaces, zero warnings.
-- Repository tests: pass, 345 files / 4,102 tests.
-- Progress focused matrix: pass, 3 files / 38 tests.
+- Repository tests in the preserved dirty worktree: 2 files failed / 345 passed; 4 tests failed / 4,142 passed. All four failures are in unrelated user-owned notification/Shelf changes and none touches the scoped Progress slice.
+- Progress focused matrix: pass, 5 files / 158 tests.
+- Progress note web recovery: deterministic pre-write failure retains the exact draft and accessible retry; retry succeeds; a fresh direct load restores the exact encrypted note through the real photo-metadata path using the exact development-only Expo-web content-key harness.
 - Progress web stress: 50 and 100 photos traverse to unique oldest rows without blank viewports; 100-photo picker traverses and changes selection; 250-record pure derivations pass.
-- Latest evidence: `evidence/2026-07-18_exact-release-artifact-recovery-contract.md`.
+- Latest evidence: `evidence/2026-07-21_progress-note-persistence-recovery.md`.
 
 ## Remaining Work Classification
 
-The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, and explicit PostHog persisted-queue expiry/caps are now locally implemented. Progress note persistence/failure recovery evidence and Shelf/archive collection stress coverage remain active follow-up work. Separately, genuine closure gates remain one or more of:
+The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, and Progress note persistence/failure recovery are now locally implemented. Shelf/archive collection stress coverage remains active follow-up work. Separately, genuine closure gates remain one or more of:
 
 - decision-gated: photo v2/native handles, encrypted thumbnails/cache ceilings, startup-shield scope, retention/abuse/scheduler thresholds, and bundle/performance budgets;
 - hosted/provider-gated: Supabase deployment and seeded scale/recovery rehearsals, RevenueCat/provider replay, retention scheduling, alerting, and completion terminal reconciliation;
