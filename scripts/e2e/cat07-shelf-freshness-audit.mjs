@@ -476,8 +476,10 @@ async function runFreshnessScenario({ client, baseUrl, evidenceDir, viewport }) 
       assert(choices.bodyText.includes(choice), `CAT07 replacement did not expose ${choice}.`);
     }
     assert(
-      choices.bodyText.includes('No urgency is added.'),
-      'CAT07 replacement lost its claim-safe no-urgency boundary.',
+      choices.bodyText.includes(
+        'This reminder comes from the package date recorded on your Shelf.',
+      ),
+      'CAT07 replacement lost its exact-package reminder provenance.',
     );
 
     await clickByText(client, 'New unit was opened earlier');

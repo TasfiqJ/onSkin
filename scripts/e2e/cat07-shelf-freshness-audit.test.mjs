@@ -130,6 +130,7 @@ test('CAT07 runner drives the full truthful replacement lifecycle', () => {
     "'New unit was opened earlier'",
     "'New unit is unopened'",
     "assertDisabledControl(futureReplacement, 'Save replacement with this date')",
+    'This reminder comes from the package date recorded on your Shelf.',
     'originalDetailPath !== replacementDetailPath',
     "clickByText(client, 'Expiring')",
     "waitForText(client, 'Nothing needs replacing right now.')",
