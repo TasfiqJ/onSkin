@@ -42,8 +42,7 @@ function replacePathLiteral(value, search, replacement) {
   const candidate = String(search).replace(/[\\/]+$/u, '');
   if (!candidate) return value;
   return [candidate, candidate.replaceAll('\\', '/'), candidate.replaceAll('/', '\\')].reduce(
-    (current, variant) =>
-      current.replace(new RegExp(escapeRegExp(variant), 'giu'), replacement),
+    (current, variant) => current.replace(new RegExp(escapeRegExp(variant), 'giu'), replacement),
     value,
   );
 }
@@ -572,7 +571,7 @@ async function portAvailable(port) {
   return (await hostPortAvailable('127.0.0.1', port)) && (await hostPortAvailable('::1', port));
 }
 
-async function findAvailablePort(preferred) {
+export async function findAvailablePort(preferred) {
   for (let offset = 0; offset <= 100; offset += 1) {
     const candidate = preferred + offset;
     if (await portAvailable(candidate)) return candidate;
@@ -598,7 +597,7 @@ function browserPathCandidates() {
   ].filter(Boolean);
 }
 
-function findBrowserPath() {
+export function findBrowserPath() {
   const candidate = browserPathCandidates().find((item) => existsSync(item));
   if (!candidate) {
     throw new Error('Chrome or Edge was not found. Set CHROME_PATH or BROWSER_PATH.');
@@ -606,7 +605,7 @@ function findBrowserPath() {
   return candidate;
 }
 
-async function waitForUrl(url, timeoutMs = 120_000) {
+export async function waitForUrl(url, timeoutMs = 120_000) {
   const startedAt = Date.now();
   let lastError = null;
   while (Date.now() - startedAt < timeoutMs) {
@@ -679,7 +678,7 @@ async function stopProcess(child) {
   detach();
 }
 
-async function stopProcessBestEffort(child) {
+export async function stopProcessBestEffort(child) {
   await Promise.race([stopProcess(child), delay(7_000)]);
 }
 
@@ -710,7 +709,7 @@ export function cat04ServerEnvironment(group, inheritedEnvironment = process.env
   };
 }
 
-function startExpoServer({ appPort, evidenceDir, group }) {
+export function startExpoServer({ appPort, evidenceDir, group }) {
   const command = isWindows ? (process.env.ComSpec ?? 'cmd.exe') : 'npm';
   const args = isWindows
     ? [
@@ -745,7 +744,7 @@ function startExpoServer({ appPort, evidenceDir, group }) {
   return child;
 }
 
-function startBrowser({ browserPath, debugPort, userDataDir }) {
+export function startBrowser({ browserPath, debugPort, userDataDir }) {
   return spawn(
     browserPath,
     [
@@ -875,7 +874,7 @@ class CdpClient {
   }
 }
 
-async function connectToPage(debugPort) {
+export async function connectToPage(debugPort) {
   const targets = await readJson(`http://127.0.0.1:${debugPort}/json`);
   const target = targets.find(
     (candidate) => candidate.type === 'page' && candidate.webSocketDebuggerUrl,
@@ -886,7 +885,7 @@ async function connectToPage(debugPort) {
   return client;
 }
 
-async function evaluate(client, expression, awaitPromise = false) {
+export async function evaluate(client, expression, awaitPromise = false) {
   const result = await client.send('Runtime.evaluate', {
     awaitPromise,
     expression,
@@ -902,7 +901,7 @@ async function evaluate(client, expression, awaitPromise = false) {
   return result.result?.value;
 }
 
-async function waitForCondition(client, expression, timeoutMs, label) {
+export async function waitForCondition(client, expression, timeoutMs, label) {
   const startedAt = Date.now();
   let lastError = null;
   while (Date.now() - startedAt < timeoutMs) {
@@ -916,7 +915,7 @@ async function waitForCondition(client, expression, timeoutMs, label) {
   throw new Error(`Timed out waiting for ${label}: ${lastError?.message ?? 'condition false'}`);
 }
 
-async function waitForText(client, text, timeoutMs = 30_000) {
+export async function waitForText(client, text, timeoutMs = 30_000) {
   await waitForCondition(
     client,
     `(() => {
@@ -929,7 +928,7 @@ async function waitForText(client, text, timeoutMs = 30_000) {
   );
 }
 
-async function waitForPath(client, prefix, timeoutMs = 30_000) {
+export async function waitForPath(client, prefix, timeoutMs = 30_000) {
   await waitForCondition(
     client,
     `window.location.pathname.startsWith(${JSON.stringify(prefix)})`,
@@ -938,7 +937,7 @@ async function waitForPath(client, prefix, timeoutMs = 30_000) {
   );
 }
 
-async function waitForNetworkIdle(client, timeoutMs = 10_000, { maxInflight = 0 } = {}) {
+export async function waitForNetworkIdle(client, timeoutMs = 10_000, { maxInflight = 0 } = {}) {
   const startedAt = Date.now();
   let quietSince = null;
   while (Date.now() - startedAt < timeoutMs) {
@@ -970,7 +969,7 @@ function networkIdleMaxInflightForScenario(scenario) {
   return networkIdleMaxInflightForFixtureGroup(scenario.groupId);
 }
 
-async function setViewport(client, viewport) {
+export async function setViewport(client, viewport) {
   await client.send('Emulation.setDeviceMetricsOverride', {
     deviceScaleFactor: 1,
     height: viewport.height,
@@ -1013,7 +1012,7 @@ function controlExpression(label, exact, scroll) {
   })()`;
 }
 
-async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+export async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
   const startedAt = Date.now();
   let target = null;
   while (Date.now() - startedAt < timeoutMs) {
@@ -1047,7 +1046,11 @@ async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } =
   await delay(250);
 }
 
-async function scrollControlIntoView(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+export async function scrollControlIntoView(
+  client,
+  label,
+  { exact = true, timeoutMs = 30_000 } = {},
+) {
   const startedAt = Date.now();
   let target = null;
   while (Date.now() - startedAt < timeoutMs) {
@@ -1060,7 +1063,7 @@ async function scrollControlIntoView(client, label, { exact = true, timeoutMs = 
   return target;
 }
 
-async function scrollTextIntoView(client, text, timeoutMs = 30_000) {
+export async function scrollTextIntoView(client, text, timeoutMs = 30_000) {
   const expression = `(() => {
     const wanted = ${JSON.stringify(text)};
     const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
@@ -1110,14 +1113,14 @@ function fillExpression(label, value) {
   })()`;
 }
 
-async function fillByLabel(client, label, value) {
+export async function fillByLabel(client, label, value) {
   const result = await evaluate(client, fillExpression(label, value));
   assert(result, `Could not find input ${JSON.stringify(label)}.`);
   assert(result.value === value, `${label} did not receive its deterministic value.`);
   await delay(150);
 }
 
-async function waitForInputValue(client, label, value, timeoutMs = 10_000) {
+export async function waitForInputValue(client, label, value, timeoutMs = 10_000) {
   await waitForCondition(
     client,
     `(() => {
@@ -1133,7 +1136,7 @@ async function waitForInputValue(client, label, value, timeoutMs = 10_000) {
   );
 }
 
-function enabledControlExpression(label) {
+export function enabledControlExpression(label) {
   return `(() => {
     const wanted = ${JSON.stringify(label)};
     const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
@@ -1235,7 +1238,7 @@ function assertSnapshotClean(snapshot, label) {
   assert(snapshot.issues.length === 0, `${label} has ${snapshot.issues.length} control issue(s).`);
 }
 
-function assertInteractiveControl(snapshot, label) {
+export function assertInteractiveControl(snapshot, label) {
   const control = snapshot.controls.find((candidate) => candidate.label.includes(label));
   assert(control, `${snapshot.url} does not expose an interactive ${label} control.`);
   assert(!control.disabled, `${label} is disabled at ${snapshot.url}.`);
@@ -1244,13 +1247,13 @@ function assertInteractiveControl(snapshot, label) {
   assert(control.hitOk, `${label} is not center-hit-testable.`);
 }
 
-function assertDisabledControl(snapshot, label) {
+export function assertDisabledControl(snapshot, label) {
   const control = snapshot.controls.find((candidate) => candidate.label.includes(label));
   assert(control, `${snapshot.url} does not expose a ${label} control.`);
   assert(control.disabled, `${label} should be disabled at ${snapshot.url}.`);
 }
 
-async function navigate(
+export async function navigate(
   client,
   baseUrl,
   route,
@@ -1272,7 +1275,7 @@ async function navigate(
   await waitForNetworkIdle(client, 10_000, { maxInflight });
 }
 
-function writeJson(evidenceDir, name, value) {
+export function writeJson(evidenceDir, name, value) {
   writeFileSync(path.join(evidenceDir, name), `${JSON.stringify(value, null, 2)}\n`);
 }
 
@@ -1323,7 +1326,7 @@ export function readSourceGitSha(root = repoRoot) {
   return sourceGitSha;
 }
 
-async function captureStep(client, evidenceDir, artifactName) {
+export async function captureStep(client, evidenceDir, artifactName) {
   await delay(250);
   const snapshot = await evaluate(client, auditExpression());
   assertSnapshotClean(snapshot, artifactName);
@@ -1336,7 +1339,13 @@ async function captureStep(client, evidenceDir, artifactName) {
   return snapshot;
 }
 
-async function establishLocalHealthConsent({ client, baseUrl, evidenceDir, groupId, viewport }) {
+export async function establishLocalHealthConsent({
+  client,
+  baseUrl,
+  evidenceDir,
+  groupId,
+  viewport,
+}) {
   const artifactPrefix = safeArtifactId(`bootstrap-${groupId}-${viewport.id}`);
   const eventStart = client.events.length;
   const result = {
@@ -1396,8 +1405,7 @@ async function establishLocalHealthConsent({ client, baseUrl, evidenceDir, group
     }
     assert(catalogReady, 'Explicit local consent did not release the catalog route.');
     await waitForNetworkIdle(client, networkIdleTimeoutForFixtureGroup(groupId), {
-      maxInflight:
-        groupId === 'offline' ? 1 : networkIdleMaxInflightForFixtureGroup(groupId),
+      maxInflight: groupId === 'offline' ? 1 : networkIdleMaxInflightForFixtureGroup(groupId),
     });
     await captureStep(client, evidenceDir, `${artifactPrefix}-catalog-ready`);
     result.browserFailures = classifyBrowserFailures(client.events.slice(eventStart), [baseUrl]);
@@ -1494,9 +1502,17 @@ async function exerciseQueuedRetry({
     'First retry did not expose its saved state.',
   );
 
-  await navigate(client, baseUrl, scenario.route, viewport, `${scenario.id}-repeat`, {}, {
-    maxInflight: scenario.fixture === 'offline' ? 1 : 0,
-  });
+  await navigate(
+    client,
+    baseUrl,
+    scenario.route,
+    viewport,
+    `${scenario.id}-repeat`,
+    {},
+    {
+      maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+    },
+  );
   await waitForText(client, outcomeText);
   await scrollControlIntoView(client, 'Retry when online');
   await clickByText(client, 'Retry when online');
@@ -1627,9 +1643,17 @@ async function executeScenario({
       return;
     }
     case 'scan-matched': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: scenario.fixture === 'offline' ? 1 : 0,
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+        },
+      );
       await waitForText(client, 'Mineral SPF 50');
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-catalog-match`);
       assertInteractiveControl(snapshot, 'Add this');
@@ -1639,9 +1663,17 @@ async function executeScenario({
       return;
     }
     case 'scan-wrong-match-recovery': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: scenario.fixture === 'offline' ? 1 : 0,
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+        },
+      );
       await waitForText(client, 'Mineral SPF 50');
       await clickByText(client, 'Not this product');
       await waitForPath(client, '/shelf/no-match');
@@ -1700,9 +1732,17 @@ async function executeScenario({
     }
     case 'scan-offline':
     case 'scan-error': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: networkIdleMaxInflightForScenario(scenario),
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: networkIdleMaxInflightForScenario(scenario),
+        },
+      );
       const outcomeText =
         scenario.id === 'scan-offline' ? "Couldn't reach the product catalog" : 'Lookup failed.';
       await waitForText(client, outcomeText);
@@ -1725,9 +1765,17 @@ async function executeScenario({
       return;
     }
     case 'scan-camera-denied-settings-failure': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: networkIdleMaxInflightForScenario(scenario),
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: networkIdleMaxInflightForScenario(scenario),
+        },
+      );
       await waitForText(client, 'Camera permission is needed for barcode scanning.');
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-denied`);
       assertInteractiveControl(snapshot, 'Open settings');
@@ -1741,9 +1789,17 @@ async function executeScenario({
       return;
     }
     case 'ocr-camera-denied-settings-failure': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: networkIdleMaxInflightForScenario(scenario),
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: networkIdleMaxInflightForScenario(scenario),
+        },
+      );
       await waitForText(client, 'Open settings');
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-denied`);
       assertInteractiveControl(snapshot, 'Open settings');
@@ -1753,9 +1809,17 @@ async function executeScenario({
       return;
     }
     case 'ocr-capture-failure': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: networkIdleMaxInflightForScenario(scenario),
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: networkIdleMaxInflightForScenario(scenario),
+        },
+      );
       await waitForText(client, 'Capture label');
       await clickByText(client, 'Capture label');
       await waitForText(client, "Label wasn't captured");
@@ -1769,9 +1833,17 @@ async function executeScenario({
       return;
     }
     case 'no-match-missing-barcode': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: networkIdleMaxInflightForScenario(scenario),
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: networkIdleMaxInflightForScenario(scenario),
+        },
+      );
       await waitForText(client, 'Add it by hand');
       await scrollControlIntoView(client, 'Add it by hand', { exact: false });
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-report-hidden`);
@@ -1784,12 +1856,20 @@ async function executeScenario({
       return;
     }
     case 'catalog-recovery-malformed': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {
-        barcode: 'not-a-barcode',
-        productId: 'not-a-product-id',
-      }, {
-        maxInflight: networkIdleMaxInflightForScenario(scenario),
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {
+          barcode: 'not-a-barcode',
+          productId: 'not-a-product-id',
+        },
+        {
+          maxInflight: networkIdleMaxInflightForScenario(scenario),
+        },
+      );
       await waitForText(client, 'Match unavailable');
       await waitForText(client, 'Your Shelf is unchanged.');
       await scrollControlIntoView(client, 'Back to Shelf');
@@ -1804,9 +1884,17 @@ async function executeScenario({
     case 'manual-barcode-validation': {
       const productName = `Formatted barcode ${viewport.id}`;
       const formattedBarcode = '0 36000-29145 2';
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
-        maxInflight: networkIdleMaxInflightForScenario(scenario),
-      });
+      await navigate(
+        client,
+        baseUrl,
+        scenario.route,
+        viewport,
+        scenario.id,
+        {},
+        {
+          maxInflight: networkIdleMaxInflightForScenario(scenario),
+        },
+      );
       await waitForText(client, 'Add by hand');
       await fillByLabel(client, 'Product name', productName);
 

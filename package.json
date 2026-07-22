@@ -243,6 +243,8 @@
     "e2e:cat04-catalog-recovery:test": "node --test scripts/e2e/cat04-catalog-recovery-audit.test.mjs",
     "e2e:cat05-native-ocr-ui": "node scripts/e2e/cat05-native-ocr-ui-audit.mjs",
     "e2e:cat05-native-ocr-ui:test": "node --test scripts/e2e/cat05-native-ocr-ui-audit.test.mjs",
+    "e2e:cat07-shelf-freshness": "node scripts/e2e/cat07-shelf-freshness-audit.mjs",
+    "e2e:cat07-shelf-freshness:test": "node --test scripts/e2e/cat07-shelf-freshness-audit.test.mjs",
     "e2e:public-site-support": "node scripts/e2e/public-site-support.mjs",
     "e2e:text-pressure": "node scripts/e2e/text-pressure-route-audit.mjs",
     "e2e:human:manifest": "node scripts/e2e/human-e2e-manifest.mjs",
