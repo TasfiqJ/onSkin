@@ -12,6 +12,8 @@ import {
   CAT04_FIXTURE_GROUPS,
   CAT04_REQUIRED_VIEWPORTS,
   CAT04_SCENARIO_MATRIX,
+  assertCat04LocalDebugTarget,
+  assertCat04LocalPageTarget,
   assertCat04SourceProvenance,
   cat04ServerEnvironment,
   classifyBrowserFailures,
@@ -170,9 +172,44 @@ test('each fresh fixture profile passes the real age, explicit-consent, and acti
   assert.match(source, /cat04ConsentProbe/);
   assert.match(source, /summary\.bootstrapResults\.push\(bootstrap\)/);
   assert.match(source, /bootstrap\.verdict === 'pass'/);
+  assert.match(source, /\/json\/new\?\$\{encodeURIComponent\(targetUrl\)\}/);
+  assert.match(source, /method: 'PUT'/);
+  assert.match(source, /connectToPage\(debugPort, baseUrl\)/);
   assert.match(
     source,
     /expectedBootstrapCount: CAT04_FIXTURE_GROUPS\.length \* CAT04_REQUIRED_VIEWPORTS\.length/,
+  );
+});
+
+test('browser page and CDP targets stay bound to the requested loopback processes', () => {
+  assert.equal(
+    assertCat04LocalPageTarget('http://localhost:8560/shelf/search', 'http://localhost:8560')
+      .pathname,
+    '/shelf/search',
+  );
+  assert.equal(
+    assertCat04LocalDebugTarget('ws://127.0.0.1:9560/devtools/page/target', 9560).pathname,
+    '/devtools/page/target',
+  );
+  assert.throws(
+    () => assertCat04LocalPageTarget('https://localhost:8560', 'http://localhost:8560'),
+    /local HTTP/u,
+  );
+  assert.throws(
+    () => assertCat04LocalPageTarget('http://127.0.0.1:8560', 'http://localhost:8560'),
+    /localhost exactly/u,
+  );
+  assert.throws(
+    () => assertCat04LocalPageTarget('http://localhost:8561', 'http://localhost:8560'),
+    /bound local origin/u,
+  );
+  assert.throws(
+    () => assertCat04LocalDebugTarget('ws://127.0.0.1:9561/devtools/page/target', 9560),
+    /port does not match/u,
+  );
+  assert.throws(
+    () => assertCat04LocalDebugTarget('wss://127.0.0.1:9560/devtools/page/target', 9560),
+    /local ws/u,
   );
 });
 
@@ -214,8 +251,7 @@ test('offline fixture permits its bounded unresolved lookup without hiding other
   assert.match(source, /fixtureGroup === 'camera-recovery' \? 30_000 : 10_000/);
   assert.match(source, /allowed \$\{maxInflight\}/);
   assert.ok(
-    (source.match(/maxInflight: networkIdleMaxInflightForScenario\(scenario\)/g) ?? []).length >=
-      7,
+    (source.match(/maxInflight: networkIdleMaxInflightForScenario\(scenario\)/g) ?? []).length >= 7,
     'All bounded camera/OCR navigation lanes should pass their network-idle allowance.',
   );
 });

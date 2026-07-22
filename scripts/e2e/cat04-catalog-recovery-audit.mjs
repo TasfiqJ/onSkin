@@ -620,12 +620,16 @@ export async function waitForUrl(url, timeoutMs = 120_000) {
   throw new Error(`Timed out waiting for ${url}: ${lastError?.message ?? 'no response'}`);
 }
 
-async function readJson(url, timeoutMs = CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS) {
+async function readJson(
+  url,
+  timeoutMs = CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS,
+  { method = 'GET' } = {},
+) {
   const startedAt = Date.now();
   let lastError = null;
   while (Date.now() - startedAt < timeoutMs) {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { method });
       if (response.ok) return await response.json();
     } catch (error) {
       lastError = error;
@@ -633,6 +637,48 @@ async function readJson(url, timeoutMs = CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS) {
     await delay(250);
   }
   throw new Error(`Timed out reading ${url}: ${lastError?.message ?? 'no response'}`);
+}
+
+export function assertCat04LocalPageTarget(value, baseUrl) {
+  let base;
+  let target;
+  try {
+    base = new URL(baseUrl);
+    target = new URL(value);
+  } catch {
+    throw new Error('CAT04 refuses a malformed browser target URL.');
+  }
+  for (const [label, candidate] of [
+    ['base', base],
+    ['page', target],
+  ]) {
+    assert(candidate.protocol === 'http:', `CAT04 ${label} target must use local HTTP.`);
+    assert(candidate.hostname === 'localhost', `CAT04 ${label} target must use localhost exactly.`);
+    assert(
+      !candidate.username && !candidate.password,
+      `CAT04 ${label} target must not contain credentials.`,
+    );
+    assert(/^\d+$/.test(candidate.port), `CAT04 ${label} target must include an explicit port.`);
+  }
+  assert(target.origin === base.origin, 'CAT04 page escaped the bound local origin.');
+  return target;
+}
+
+export function assertCat04LocalDebugTarget(value, expectedPort) {
+  let target;
+  try {
+    target = new URL(value);
+  } catch {
+    throw new Error('CAT04 refuses a malformed CDP target URL.');
+  }
+  assert(target.protocol === 'ws:', 'CAT04 CDP targets must use local ws.');
+  assert(
+    target.hostname === '127.0.0.1' || target.hostname === 'localhost',
+    'CAT04 CDP targets must remain on loopback.',
+  );
+  assert(!target.username && !target.password, 'CAT04 CDP targets must not contain credentials.');
+  assert(target.port === String(expectedPort), 'CAT04 CDP target port does not match the browser.');
+  return target;
 }
 
 async function stopProcess(child) {
@@ -874,12 +920,18 @@ class CdpClient {
   }
 }
 
-export async function connectToPage(debugPort) {
-  const targets = await readJson(`http://127.0.0.1:${debugPort}/json`);
-  const target = targets.find(
-    (candidate) => candidate.type === 'page' && candidate.webSocketDebuggerUrl,
+export async function connectToPage(debugPort, baseUrl) {
+  const targetUrl = String(assertCat04LocalPageTarget(baseUrl, baseUrl));
+  const createdTarget = await readJson(
+    `http://127.0.0.1:${debugPort}/json/new?${encodeURIComponent(targetUrl)}`,
+    CAT04_BROWSER_DEBUG_READY_TIMEOUT_MS,
+    { method: 'PUT' },
   );
+  const target =
+    createdTarget?.type === 'page' && createdTarget?.webSocketDebuggerUrl ? createdTarget : null;
   if (!target) throw new Error('No debuggable browser page was found.');
+  assertCat04LocalPageTarget(target.url, baseUrl);
+  assertCat04LocalDebugTarget(target.webSocketDebuggerUrl, debugPort);
   const client = new CdpClient(target.webSocketDebuggerUrl);
   await client.ready;
   return client;
@@ -2227,7 +2279,7 @@ export async function runCat04CatalogRecoveryAudit({
       server = startExpoServer({ appPort, evidenceDir, group });
       await waitForUrl(baseUrl);
       browser = startBrowser({ browserPath, debugPort, userDataDir });
-      client = await connectToPage(debugPort);
+      client = await connectToPage(debugPort, baseUrl);
       await client.send('Page.enable');
       await client.send('Runtime.enable');
       await client.send('Log.enable');

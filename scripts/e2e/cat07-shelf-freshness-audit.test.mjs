@@ -154,6 +154,9 @@ test('CAT07 audit inherits the stable local-only browser and consent harness', (
   assert.match(cat04RunnerSource, /--disable-gpu-sandbox/u);
   assert.match(cat04RunnerSource, /--in-process-gpu/u);
   assert.doesNotMatch(cat04RunnerSource, /--headless=new/u);
+  assert.match(cat04RunnerSource, /\/json\/new\?\$\{encodeURIComponent\(targetUrl\)\}/u);
+  assert.match(cat04RunnerSource, /method: 'PUT'/u);
+  assert.match(runnerSource, /connectToPage\(debugPort, baseUrl\)/u);
   assert.match(runnerSource, /classifyBrowserFailures\(client\.events\.slice\(eventStart\)/u);
   assert.match(runnerSource, /assertPacketHygiene\(evidenceDir, summary\.artifacts\)/u);
   assert.match(cat04RunnerSource, /EXPO_PUBLIC_SUPABASE_URL/u);

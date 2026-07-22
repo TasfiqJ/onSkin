@@ -670,7 +670,7 @@ export async function runCat07ShelfFreshnessAudit({
     }
     assert(serverReady, `CAT07 Expo server did not become ready at ${baseUrl}.`);
     browser = startBrowser({ browserPath, debugPort, userDataDir });
-    client = await connectToPage(debugPort);
+    client = await connectToPage(debugPort, baseUrl);
     await client.send('Page.enable');
     await client.send('Runtime.enable');
     await client.send('Log.enable');
