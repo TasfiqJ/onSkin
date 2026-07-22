@@ -474,6 +474,8 @@ describe('Progress route mobile contracts', () => {
 
   it('isolates single-photo note typing below the full detail image shell', () => {
     const source = readAppRoute('progress/[id].tsx');
+    const coordinator = readSource('features/photos/photoNoteSaveCoordinator.ts');
+    const copy = readSource('features/photos/copy.ts');
     const editorStart = source.indexOf('function PhotoNoteEditor({');
     const detailStart = source.indexOf('function PhotoDetailScreenContent({ photos }');
     const editor = source.slice(editorStart, detailStart);
@@ -482,14 +484,19 @@ describe('Progress route mobile contracts', () => {
     expect(editorStart).toBeGreaterThan(-1);
     expect(detailStart).toBeGreaterThan(editorStart);
     expect(editor).toContain('initialNotes: string;');
-    expect(editor).toContain('onCommit: (notes: string) => void;');
-    expect(editor).toContain('const [draft, setDraft] = useState(initialNotes);');
-    expect(editor).toContain('const draftRef = useRef(initialNotes);');
-    expect(editor).toContain('draftRef.current = notes;');
+    expect(editor).toContain('onCommit: (notes: string) => Promise<void>;');
+    expect(editor).toContain('createPhotoNoteSaveCoordinator({');
+    expect(editor).toContain('createPhotoNoteSaveCoordinator({ commit: onCommit, initialNotes })');
+    expect(editor).toContain('coordinator.setCommit(onCommit)');
+    expect(editor).toContain('const [noteState, setNoteState] = useState(coordinator.getSnapshot);');
+    expect(editor).toContain('coordinator.subscribe(setNoteState)');
+    expect(editor).toContain('coordinator.updateDraft(notes);');
     expect(editor).toContain('<TextInput');
-    expect(editor).toContain('value={draft}');
+    expect(editor).toContain('value={noteState.draft}');
     expect(editor).toContain('onChangeText={updateDraft}');
-    expect(editor).toContain('onBlur={() => onCommit(draftRef.current)}');
+    expect(editor).toContain('onBlur={() => void coordinator.requestSave()}');
+    expect(editor).toContain('onEndEditing={() => void coordinator.requestSave()}');
+    expect(editor).toContain('maxLength={MAX_PHOTO_NOTE_PLAINTEXT_CHARS}');
     expect(editor).toContain(
       'placeholder={pseudoLocalizeString(PHOTO_COPY.detail.notePlaceholder)}',
     );
@@ -503,8 +510,26 @@ describe('Progress route mobile contracts', () => {
     expect(editor).toContain('fontSize: 13.5');
     expect(editor).toContain('lineHeight: 20');
     expect(editor).toContain('minHeight: 24');
+    expect(editor).toContain("noteState.status === 'saving'");
+    expect(editor).toContain("noteState.status === 'saved'");
+    expect(editor).toContain("noteState.status === 'error'");
+    expect(editor).toContain('accessibilityRole="alert"');
+    expect(editor).toContain('{PHOTO_COPY.detail.noteSaveRetry}');
+    expect(editor).toContain('{PHOTO_COPY.detail.noteSave}');
+    expect(editor).toContain('noteState.draft !== noteState.persisted');
+    expect(editor).toContain("accessibilityState={{ disabled: noteState.status === 'saving' }}");
+    expect(editor).toContain('minHeight: 48');
     expect(editor).not.toContain('usePhotoActions');
     expect(editor).not.toContain('<PhotoImage');
+
+    expect(coordinator).toContain('if (savePromise) {');
+    expect(coordinator).toContain('if (requestedDraft !== inFlightDraft) queuedDraft = requestedDraft;');
+    expect(coordinator).toContain("publish({ ...snapshot, status: 'error' });");
+    expect(copy).toContain("noteSaving: 'Saving on this device…'");
+    expect(copy).toContain("noteSaved: 'Saved on this device'");
+    expect(copy).toContain("noteSave: 'Save note'");
+    expect(copy).toContain("noteSaveRetry: 'Try save again'");
+    expect(copy).toContain("We couldn't confirm this note was saved. Your text is still here.");
 
     expect(detail).toContain('const { reference, remove, note } = usePhotoActions();');
     expect(detail).toContain('uri={photo.localUri}');
@@ -514,8 +539,10 @@ describe('Progress route mobile contracts', () => {
     expect(detail).toContain('<PhotoNoteEditor');
     expect(detail).toContain('key={photo.id}');
     expect(detail).toContain("initialNotes={photo.notes ?? ''}");
-    expect(detail).toContain('onCommit={(notes) => note.mutate({ id: photo.id, notes })}');
-    expect(detail).not.toContain('const [draft, setDraft]');
+    expect(detail).toContain('await note.mutateAsync({ id, notes });');
+    expect(detail).toContain('onCommit={commitPhotoNote}');
+    expect(source).toContain('EXPO_PUBLIC_E2E_PHOTO_NOTE_SAVE_FAILURE');
+    expect(detail).not.toContain('const [noteState, setNoteState]');
     expect(detail).not.toContain('<TextInput');
     expect(source).not.toContain('memo(PhotoImage');
   });
@@ -563,7 +590,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("'data:image/png;base64,");
     expect(source).toContain('const fixture = e2eProgressPhotoFixture();');
     expect(source).toContain('if (!fixture) await recoverPhotoStoreMutations();');
-    expect(source).toContain('const photos = fixture ?? (await loadPhotos());');
+    expect(source).toContain('let photos = fixture ?? (await loadPhotos());');
     expect(fixture).toContain("if (normalized === 'populated') return DEFAULT_PROGRESS_E2E_PHOTOS;");
     expect(fixture).toContain('export const MAX_PROGRESS_E2E_PHOTOS = 250;');
     expect(fixture).toContain('e2e-front-2026-04-01');
@@ -575,6 +602,24 @@ describe('Progress route mobile contracts', () => {
     expect(entitlement).toContain("store: 'app_store'");
     expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
     expect(entitlement).toContain('function e2eEntitlementState(): SubscriptionState | null');
+  });
+
+  it('seeds persisted-note E2E evidence through the real store with a dev-only web key', () => {
+    const source = readSource('features/photos/usePhotos.ts');
+    const encryptedStorage = readSource('features/photos/encryptedStorage.ts');
+
+    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED === '1'");
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain("series === 'front' && photos.length === 0");
+    expect(source).toContain('photos = (');
+    expect(source).toContain('await addPhoto({');
+    expect(source).toContain('takenLocalDate: todayYmd');
+    expect(source).not.toContain('EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED=');
+    expect(encryptedStorage).toContain('function e2eWebPhotoContentKeyEnabled(): boolean');
+    expect(encryptedStorage).toContain("Platform.OS !== 'web'");
+    expect(encryptedStorage).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED === '1'");
+    expect(encryptedStorage).toContain('AsyncStorage.getItem(KEY_STORE_NAME)');
+    expect(encryptedStorage).toContain('AsyncStorage.setItem(KEY_STORE_NAME, value)');
   });
 
   it('keeps the compare photo picker dismissible without inert sheet buttons', () => {

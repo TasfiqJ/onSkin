@@ -777,6 +777,55 @@ describe('photo local store journal', () => {
     expect(mocks.writeAttempts).toBe(before);
   });
 
+  it('encrypts a note, reloads it exactly, preserves bytes on failure, and converges on retry', async () => {
+    const id = uuid(1);
+    const plaintextByCiphertext = new Map<string, string>();
+    let ciphertextSequence = 0;
+    seedSettled([storedPhoto(id, { notes: null, notesCiphertext: null })]);
+    mocks.encryptPhotoNote.mockImplementation(async (notes: string | null) => {
+      if (notes === null) return null;
+      const ciphertext = `opaque-note-${++ciphertextSequence}`;
+      plaintextByCiphertext.set(ciphertext, notes);
+      return ciphertext;
+    });
+    mocks.decryptPhotoNote.mockImplementation(async (ciphertext: string) => {
+      const plaintext = plaintextByCiphertext.get(ciphertext);
+      if (plaintext === undefined) throw new Error('PHOTO_DECRYPTION_FAILED');
+      return plaintext;
+    });
+
+    const firstNote = 'Started retinol after travel.';
+    await expect(updatePhoto(id, { notes: firstNote })).resolves.toMatchObject({
+      photos: [{ id, notes: firstNote }],
+    });
+    expect(mocks.storage.get(KEY)).not.toContain(firstNote);
+    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: firstNote }]);
+
+    const settledBeforeFailure = mocks.storage.get(KEY);
+    const failedWriteAttempt = mocks.writeAttempts + 1;
+    mocks.setFailureBefore.add(failedWriteAttempt);
+    await expect(updatePhoto(id, { notes: 'Draft retained for retry.' })).rejects.toThrow(
+      `WRITE_BEFORE_${failedWriteAttempt}`,
+    );
+    expect(mocks.storage.get(KEY)).toBe(settledBeforeFailure);
+    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: firstNote }]);
+
+    const retriedNote = 'Draft retained for retry.';
+    await expect(updatePhoto(id, { notes: retriedNote })).resolves.toMatchObject({
+      photos: [{ id, notes: retriedNote }],
+    });
+    expect(mocks.storage.get(KEY)).not.toContain(retriedNote);
+    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: retriedNote }]);
+
+    const ambiguousNote = 'The write completed before its response was lost.';
+    mocks.setFailureAfter.add(mocks.writeAttempts + 1);
+    await expect(updatePhoto(id, { notes: ambiguousNote })).resolves.toMatchObject({
+      photos: [{ id, notes: ambiguousNote }],
+    });
+    expect(mocks.storage.get(KEY)).not.toContain(ambiguousNote);
+    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: ambiguousNote }]);
+  });
+
   it('returns the exact post-commit snapshot for update, reference, and remove', async () => {
     const firstId = uuid(1);
     const secondId = uuid(2);

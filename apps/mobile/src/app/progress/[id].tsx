@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,7 +12,9 @@ import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { ProgressPhotoRouteSource } from '@/features/photos/ProgressPhotoRouteSource';
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
+import { MAX_PHOTO_NOTE_PLAINTEXT_CHARS } from '@/features/photos/store';
 import { parseLocalDate } from '@/features/photos/timeline';
+import { createPhotoNoteSaveCoordinator } from '@/features/photos/photoNoteSaveCoordinator';
 import { usePhotoActions, type PhotosQueryData } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import {
@@ -29,10 +31,23 @@ import { haptics } from '@/theme/haptics';
 
 const BG = '#16130F';
 const SAGE = '#9DB18A';
+let e2ePhotoNoteSaveFailureConsumed = false;
 
 function e2ePhotoDeleteFailure(): boolean {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
   return process.env.EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE === '1';
+}
+
+function e2ePhotoNoteSaveFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  if (
+    process.env.EXPO_PUBLIC_E2E_PHOTO_NOTE_SAVE_FAILURE !== 'once' ||
+    e2ePhotoNoteSaveFailureConsumed
+  ) {
+    return false;
+  }
+  e2ePhotoNoteSaveFailureConsumed = true;
+  return true;
 }
 
 function PhotoNoteEditor({
@@ -40,14 +55,21 @@ function PhotoNoteEditor({
   onCommit,
 }: {
   initialNotes: string;
-  onCommit: (notes: string) => void;
+  onCommit: (notes: string) => Promise<void>;
 }) {
-  const [draft, setDraft] = useState(initialNotes);
-  const draftRef = useRef(initialNotes);
+  const [coordinator] = useState(() =>
+    createPhotoNoteSaveCoordinator({ commit: onCommit, initialNotes }),
+  );
+  const [noteState, setNoteState] = useState(coordinator.getSnapshot);
+
+  useEffect(() => coordinator.setCommit(onCommit), [coordinator, onCommit]);
+  useEffect(
+    () => coordinator.subscribe(setNoteState),
+    [coordinator],
+  );
 
   const updateDraft = (notes: string) => {
-    draftRef.current = notes;
-    setDraft(notes);
+    coordinator.updateDraft(notes);
   };
 
   return (
@@ -63,11 +85,13 @@ function PhotoNoteEditor({
         {PHOTO_COPY.detail.noteLabel.toUpperCase()}
       </Text>
       <TextInput
-        value={draft}
+        value={noteState.draft}
         onChangeText={updateDraft}
-        onBlur={() => onCommit(draftRef.current)}
+        onBlur={() => void coordinator.requestSave()}
+        onEndEditing={() => void coordinator.requestSave()}
         placeholder={pseudoLocalizeString(PHOTO_COPY.detail.notePlaceholder)}
         placeholderTextColor="rgba(244,239,231,0.35)"
+        maxLength={MAX_PHOTO_NOTE_PLAINTEXT_CHARS}
         multiline
         style={{
           fontFamily: 'HankenGrotesk-Regular',
@@ -77,6 +101,70 @@ function PhotoNoteEditor({
           minHeight: 24,
         }}
       />
+      {noteState.draft !== noteState.persisted && noteState.status !== 'error' ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ disabled: noteState.status === 'saving' }}
+          disabled={noteState.status === 'saving'}
+          onPress={() => void coordinator.requestSave()}
+          style={{
+            alignItems: 'center',
+            alignSelf: 'flex-start',
+            backgroundColor: 'rgba(244,239,231,0.1)',
+            borderRadius: 12,
+            justifyContent: 'center',
+            marginTop: 8,
+            minHeight: 48,
+            opacity: noteState.status === 'saving' ? 0.62 : 1,
+            paddingHorizontal: 16,
+          }}
+        >
+          <Text style={{ color: '#F4EFE7', fontFamily: 'HankenGrotesk-SemiBold', fontSize: 13 }}>
+            {PHOTO_COPY.detail.noteSave}
+          </Text>
+        </Pressable>
+      ) : null}
+      {noteState.status === 'saving' ? (
+        <Text
+          accessibilityLiveRegion="polite"
+          style={{ color: 'rgba(244,239,231,0.56)', fontSize: 12, lineHeight: 18, marginTop: 8 }}
+        >
+          {PHOTO_COPY.detail.noteSaving}
+        </Text>
+      ) : null}
+      {noteState.status === 'saved' ? (
+        <Text
+          accessibilityLiveRegion="polite"
+          style={{ color: SAGE, fontSize: 12, lineHeight: 18, marginTop: 8 }}
+        >
+          {PHOTO_COPY.detail.noteSaved}
+        </Text>
+      ) : null}
+      {noteState.status === 'error' ? (
+        <View accessibilityRole="alert" style={{ gap: 8, marginTop: 8 }}>
+          <Text style={{ color: '#D9A183', fontSize: 12, lineHeight: 18 }}>
+            {PHOTO_COPY.detail.noteSaveUnavailable}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => void coordinator.requestSave()}
+            style={{
+              alignItems: 'center',
+              alignSelf: 'flex-start',
+              borderColor: 'rgba(244,239,231,0.18)',
+              borderRadius: 12,
+              borderWidth: 1,
+              justifyContent: 'center',
+              minHeight: 48,
+              paddingHorizontal: 16,
+            }}
+          >
+            <Text style={{ color: '#F4EFE7', fontFamily: 'HankenGrotesk-SemiBold', fontSize: 13 }}>
+              {PHOTO_COPY.detail.noteSaveRetry}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -261,6 +349,11 @@ function PhotoDetailScreenContent({ photos }: { photos: PhotosQueryData }) {
     setShareConfirmVisible(true);
   }
 
+  async function commitPhotoNote(notes: string) {
+    if (e2ePhotoNoteSaveFailure()) throw new Error('E2E_PHOTO_NOTE_SAVE_FAILURE');
+    await note.mutateAsync({ id, notes });
+  }
+
   return (
     <View
       style={{ flex: 1, backgroundColor: BG, paddingTop: insets.top + 12, paddingHorizontal: 24 }}
@@ -406,7 +499,7 @@ function PhotoDetailScreenContent({ photos }: { photos: PhotosQueryData }) {
         <PhotoNoteEditor
           key={photo.id}
           initialNotes={photo.notes ?? ''}
-          onCommit={(notes) => note.mutate({ id: photo.id, notes })}
+          onCommit={commitPhotoNote}
         />
 
         {!shareConfirmVisible && !deleteConfirmVisible ? (

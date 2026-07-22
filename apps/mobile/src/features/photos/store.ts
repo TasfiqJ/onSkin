@@ -85,7 +85,7 @@ const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
 const CAPTURE_OPERATION_ID = /^[0-9a-f]{32}$/;
 const CANONICAL_PHOTO_FILE_ID = /^[A-Za-z0-9_-]{1,128}$/;
 const MAX_PHOTO_FIELD_CHARS = 1_024;
-const MAX_PHOTO_NOTE_PLAINTEXT_CHARS = 262_144;
+export const MAX_PHOTO_NOTE_PLAINTEXT_CHARS = 262_144;
 const MAX_PHOTO_NOTE_CIPHERTEXT_CHARS = 1_048_576;
 const STORED_PHOTO_RECORD_KEYS = [
   'alignmentScore',

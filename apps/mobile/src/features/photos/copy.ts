@@ -108,6 +108,11 @@ export const PHOTO_COPY = {
     deleteUnavailable:
       "We couldn't delete this photo right now. It stays on this phone unless you try again.",
     notePlaceholder: 'Add a note. “started retinol”, “travel breakout”',
+    noteSaving: 'Saving on this device…',
+    noteSaved: 'Saved on this device',
+    noteSave: 'Save note',
+    noteSaveUnavailable: "We couldn't confirm this note was saved. Your text is still here.",
+    noteSaveRetry: 'Try save again',
   },
   // Privacy / app-lock (design screen 08, docs/06 §7).
   lock: {

@@ -70,6 +70,11 @@ function e2eProgressStorageFailure(): Error | null {
   return new Error('E2E_PROGRESS_STORAGE_UNAVAILABLE');
 }
 
+function e2eProgressNoteSeedEnabled(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  return process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED === '1';
+}
+
 export function derivePhotosQueryData(
   photos: PhotoRecord[],
   series: PhotoSeries,
@@ -147,7 +152,16 @@ export function usePhotosFromBoundary(
         if (storageFailure) throw storageFailure;
         const fixture = e2eProgressPhotoFixture();
         if (!fixture) await recoverPhotoStoreMutations();
-        const photos = fixture ?? (await loadPhotos());
+        let photos = fixture ?? (await loadPhotos());
+        if (!fixture && e2eProgressNoteSeedEnabled() && series === 'front' && photos.length === 0) {
+          photos = (
+            await addPhoto({
+              series: 'front',
+              takenLocalDate: todayYmd,
+              timeOfDay: 'morning',
+            })
+          ).photos;
+        }
         return derivePhotosQueryData(photos, series, todayYmd);
       }),
     retry: 0,

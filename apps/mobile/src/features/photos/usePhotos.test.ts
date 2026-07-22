@@ -319,4 +319,39 @@ describe('owner-bound photo actions', () => {
     expect(setQueryData).not.toHaveBeenCalled();
     expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
   });
+
+  it('drains a started note write without publishing owner-A text after an account boundary', async () => {
+    const ownerB = nextOwnerScope(ownerA);
+    seedOwnerCaches(client, ownerA, ownerB);
+    const setQueryData = vi.spyOn(client, 'setQueryData');
+    const pendingWrite = deferred<PhotoMutationCommit<void>>();
+    mocks.updatePhoto.mockReturnValueOnce(pendingWrite.promise);
+    const actions = useCapturedPhotoActions();
+    const outcome = actions.note.mutationFn(noteInput).then(
+      (value) => ({ status: 'resolved' as const, value }),
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
+    await vi.waitFor(() =>
+      expect(mocks.updatePhoto).toHaveBeenCalledWith('front-new', { notes: 'owner A note' }),
+    );
+
+    beginAccountGenerationBoundary();
+    let drained = false;
+    const drain = waitForAccountGenerationOperationsToSettle().then(() => {
+      drained = true;
+    });
+    await Promise.resolve();
+    expect(drained).toBe(false);
+
+    pendingWrite.resolve({ result: undefined, photos: committedPhotos });
+    await expect(outcome).resolves.toMatchObject({
+      status: 'rejected',
+      error: { message: ACCOUNT_GENERATION_CHANGED },
+    });
+    await expect(drain).resolves.toBeUndefined();
+    endAccountGenerationBoundary();
+
+    expect(setQueryData).not.toHaveBeenCalled();
+    expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
+  });
 });

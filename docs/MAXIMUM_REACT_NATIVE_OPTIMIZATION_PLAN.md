@@ -524,6 +524,8 @@ Required changes:
 - Prevent large form rerenders from changing camera or image subtrees.
 - Test fast typing with long INCI input and 100 Ask turns.
 
+Current local Progress-note checkpoint (2026-07-21): the single-photo editor remains below the full image shell and now owns a bounded single-flight save coordinator. Blur, end-editing, and an explicit dirty-state action share one idempotent path; concurrent requests coalesce to the newest explicitly requested draft, failure retains exact text and exposes accessible retry, and success advances the persisted baseline only after the exact store mutation resolves. Focused coordinator/store/owner-boundary tests cover unchanged input, same-draft event deduplication, coalescing, pre-write failure, commit-response loss, encrypted reload, retry convergence, late unmounted publication, and account replacement. A supported-phone Expo-web run through the real photo-metadata encryption/write/read path using the exact development-only web content-key harness retained the exact draft after deterministic failure, retried successfully, and restored the exact note after a fresh direct load. Native production-Hermes keystroke commits, frame/memory traces, keyboard/IME, VoiceOver, SecureStore, and process-kill proof remain required before OPT-115 can be verified. See `docs/optimization/evidence/2026-07-21_progress-note-persistence-recovery.md`.
+
 ### 5.4 Inactive-route lifecycle
 
 Required changes:

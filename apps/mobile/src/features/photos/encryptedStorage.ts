@@ -104,6 +104,11 @@ function assertPhotoWriteAllowed(generation: number): void {
   }
 }
 
+function e2eWebPhotoContentKeyEnabled(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__ || Platform.OS !== 'web') return false;
+  return process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED === '1';
+}
+
 async function runAccountScopedPhotoMutation<T>(
   operation: (generation: number) => Promise<T>,
 ): Promise<T> {
@@ -269,10 +274,27 @@ async function ensureDir(): Promise<void> {
 
 async function readStoredContentKey(): Promise<string | null> {
   try {
+    if (e2eWebPhotoContentKeyEnabled()) return await AsyncStorage.getItem(KEY_STORE_NAME);
     return await getPrivateSecureStoreItemAsync(KEY_STORE_NAME);
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
   }
+}
+
+async function writeStoredContentKey(value: string): Promise<void> {
+  if (e2eWebPhotoContentKeyEnabled()) {
+    await AsyncStorage.setItem(KEY_STORE_NAME, value);
+    return;
+  }
+  await setPrivateSecureStoreItemAsync(KEY_STORE_NAME, value);
+}
+
+async function deleteStoredContentKey(): Promise<void> {
+  if (e2eWebPhotoContentKeyEnabled()) {
+    await AsyncStorage.removeItem(KEY_STORE_NAME);
+    return;
+  }
+  await deletePrivateSecureStoreItemAsync(KEY_STORE_NAME);
 }
 
 type ContentKeyMarkerState =
@@ -439,7 +461,44 @@ async function getExistingContentKey(assertCurrent?: () => void): Promise<Uint8A
   return (await getExistingContentKeySnapshot(assertCurrent)).key;
 }
 
+async function getOrCreateE2EWebContentKey(): Promise<Uint8Array> {
+  let existing: string | null;
+  try {
+    existing = await AsyncStorage.getItem(KEY_STORE_NAME);
+  } catch {
+    throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+  }
+  const existingKey = contentKeyFromHex(existing);
+  if (existingKey) return existingKey;
+  if (existing) throw new Error(PHOTO_CONTENT_KEY_INVALID);
+
+  const key = randomBytes(32);
+  const keyHex = bytesToHex(key);
+  try {
+    await AsyncStorage.setItem(KEY_STORE_NAME, keyHex);
+  } catch {
+    // Exact readback below resolves a commit whose acknowledgement was lost.
+  }
+  let verified: string | null;
+  try {
+    verified = await AsyncStorage.getItem(KEY_STORE_NAME);
+  } catch {
+    throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+  }
+  if (verified !== keyHex) throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+  return key;
+}
+
 async function getOrCreateContentKey(): Promise<Uint8Array> {
+  if (e2eWebPhotoContentKeyEnabled()) {
+    contentKeyCreation ??= getOrCreateE2EWebContentKey();
+    try {
+      return await contentKeyCreation;
+    } finally {
+      contentKeyCreation = null;
+    }
+  }
+
   const existing = await readStoredContentKey();
   const existingKey = contentKeyFromHex(existing);
   if (existingKey) {
@@ -469,7 +528,7 @@ async function getOrCreateContentKey(): Promise<Uint8Array> {
       const fingerprint = await contentKeyFingerprint(keyHex);
       await writeAndVerifyPendingContentKeyMarker(fingerprint);
       try {
-        await setPrivateSecureStoreItemAsync(KEY_STORE_NAME, keyHex);
+        await writeStoredContentKey(keyHex);
       } catch {
         // SecureStore can commit and lose only the acknowledgement. Exact
         // readback below, not the native return value, is authoritative.
@@ -1187,7 +1246,9 @@ export async function clearEncryptedPhotoStorage(): Promise<void> {
     clearPhotoDirectory(),
     AsyncStorage.removeItem(KEY_CREATION_MARKER),
   ];
-  if (Platform.OS !== 'web') operations.push(deletePrivateSecureStoreItemAsync(KEY_STORE_NAME));
+  if (Platform.OS !== 'web' || e2eWebPhotoContentKeyEnabled()) {
+    operations.push(deleteStoredContentKey());
+  }
   const results = await Promise.allSettled(operations);
   const failures = results.filter((result) => result.status === 'rejected');
   if (failures.length > 0) {

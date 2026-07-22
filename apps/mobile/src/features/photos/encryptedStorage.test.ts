@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   ACCOUNT_GENERATION_CHANGED,
@@ -172,6 +172,8 @@ function encryptedAuthoritySnapshot() {
 
 describe('encrypted photo storage', () => {
   beforeEach(() => {
+    vi.stubGlobal('__DEV__', true);
+    delete process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED;
     mocks.asyncGetThrows = false;
     mocks.asyncSetCommitsThenThrows = false;
     mocks.asyncSetDrops = false;
@@ -259,6 +261,11 @@ describe('encrypted photo storage', () => {
       if (mocks.writeGate) await mocks.writeGate;
       mocks.files.set(uri, value);
     });
+  });
+
+  afterEach(() => {
+    delete process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED;
+    vi.unstubAllGlobals();
   });
 
   it('blocks new encrypted photo and note writes during an account boundary', async () => {
@@ -1514,5 +1521,50 @@ describe('encrypted photo storage', () => {
 
     expect(mocks.deleteItemAsync).not.toHaveBeenCalled();
     expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
+  });
+
+  it('uses a development-only AsyncStorage content key for persisted-note web evidence', async () => {
+    mocks.platformOS = 'web';
+    process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED = '1';
+
+    const ciphertext = await encryptPhotoNote('web evidence note');
+
+    expect(ciphertext).toBeTypeOf('string');
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('web evidence note');
+    expect(mocks.asyncStorage.get(CONTENT_KEY_NAME)).toMatch(/^[0-9a-f]{64}$/);
+    expect(mocks.getItemAsync).not.toHaveBeenCalled();
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
+
+    await clearEncryptedPhotoStorage();
+    expect(mocks.asyncStorage.has(CONTENT_KEY_NAME)).toBe(false);
+    expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
+    expect(mocks.deleteItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('accepts a development web-key write rejection only after exact readback proves commit', async () => {
+    mocks.platformOS = 'web';
+    mocks.asyncSetCommitsThenThrows = true;
+    process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED = '1';
+
+    const ciphertext = await encryptPhotoNote('web commit acknowledgement lost');
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_NAME)).toMatch(/^[0-9a-f]{64}$/);
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('web commit acknowledgement lost');
+    expect(mocks.getItemAsync).not.toHaveBeenCalled();
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('rejects a silently dropped development web-key write without publishing ciphertext', async () => {
+    mocks.platformOS = 'web';
+    mocks.asyncSetDrops = true;
+    process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED = '1';
+
+    await expect(encryptPhotoNote('web dropped key write')).rejects.toThrow(
+      PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+    );
+
+    expect(mocks.asyncStorage.has(CONTENT_KEY_NAME)).toBe(false);
+    expect(mocks.getItemAsync).not.toHaveBeenCalled();
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
   });
 });
