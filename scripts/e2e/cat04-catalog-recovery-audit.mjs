@@ -871,11 +871,11 @@ async function waitForPath(client, prefix, timeoutMs = 30_000) {
   );
 }
 
-async function waitForNetworkIdle(client, timeoutMs = 10_000) {
+async function waitForNetworkIdle(client, timeoutMs = 10_000, { maxInflight = 0 } = {}) {
   const startedAt = Date.now();
   let quietSince = null;
   while (Date.now() - startedAt < timeoutMs) {
-    if (client.inflight.size === 0) {
+    if (client.inflight.size <= maxInflight) {
       quietSince ??= Date.now();
       if (Date.now() - quietSince >= 400) return;
     } else {
@@ -883,7 +883,9 @@ async function waitForNetworkIdle(client, timeoutMs = 10_000) {
     }
     await delay(100);
   }
-  throw new Error(`Network did not become idle; ${client.inflight.size} request(s) remain.`);
+  throw new Error(
+    `Network did not become idle; ${client.inflight.size} request(s) remain; allowed ${maxInflight}.`,
+  );
 }
 
 async function setViewport(client, viewport) {
@@ -1166,7 +1168,15 @@ function assertDisabledControl(snapshot, label) {
   assert(control.disabled, `${label} should be disabled at ${snapshot.url}.`);
 }
 
-async function navigate(client, baseUrl, route, viewport, scenarioId, query = {}) {
+async function navigate(
+  client,
+  baseUrl,
+  route,
+  viewport,
+  scenarioId,
+  query = {},
+  { maxInflight = 0 } = {},
+) {
   await setViewport(client, viewport);
   const url = new URL(route, baseUrl);
   url.searchParams.set('cat04Audit', `${scenarioId}-${viewport.id}-${Date.now()}`);
@@ -1177,7 +1187,7 @@ async function navigate(client, baseUrl, route, viewport, scenarioId, query = {}
   await client.send('Page.navigate', { url: url.toString() });
   await waitForPath(client, route);
   await waitForCondition(client, 'document.readyState === "complete"', 30_000, 'document ready');
-  await waitForNetworkIdle(client);
+  await waitForNetworkIdle(client, 10_000, { maxInflight });
 }
 
 function writeJson(evidenceDir, name, value) {
@@ -1303,7 +1313,9 @@ async function establishLocalHealthConsent({ client, baseUrl, evidenceDir, group
       );
     }
     assert(catalogReady, 'Explicit local consent did not release the catalog route.');
-    await waitForNetworkIdle(client);
+    await waitForNetworkIdle(client, 10_000, {
+      maxInflight: groupId === 'offline' ? 1 : 0,
+    });
     await captureStep(client, evidenceDir, `${artifactPrefix}-catalog-ready`);
     result.browserFailures = classifyBrowserFailures(client.events.slice(eventStart), [baseUrl]);
     assert(
@@ -1528,7 +1540,9 @@ async function executeScenario({
       return;
     }
     case 'scan-matched': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+      });
       await waitForText(client, 'Mineral SPF 50');
       const snapshot = await captureStep(client, evidenceDir, `${artifactPrefix}-catalog-match`);
       assertInteractiveControl(snapshot, 'Add this');
@@ -1538,7 +1552,9 @@ async function executeScenario({
       return;
     }
     case 'scan-wrong-match-recovery': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+      });
       await waitForText(client, 'Mineral SPF 50');
       await clickByText(client, 'Not this product');
       await waitForPath(client, '/shelf/no-match');
@@ -1597,7 +1613,9 @@ async function executeScenario({
     }
     case 'scan-offline':
     case 'scan-error': {
-      await navigate(client, baseUrl, scenario.route, viewport, scenario.id);
+      await navigate(client, baseUrl, scenario.route, viewport, scenario.id, {}, {
+        maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+      });
       const outcomeText =
         scenario.id === 'scan-offline' ? "Couldn't reach the product catalog" : 'Lookup failed.';
       await waitForText(client, outcomeText);
@@ -1761,6 +1779,21 @@ async function executeScenario({
 
       await waitForPath(client, '/shelf/opened');
       await waitForText(client, 'When did you open it?');
+      await scrollControlIntoView(client, 'Just opened it');
+      await clickByText(client, 'Just opened it');
+      await waitForText(client, 'PAO not set');
+      await scrollControlIntoView(client, 'Edit period after opening');
+      await clickByText(client, 'Edit period after opening');
+      await waitForText(client, 'Choose the months printed beside the open-jar symbol.');
+      await scrollControlIntoView(client, '12 mo');
+      await clickByText(client, '12 mo');
+      await waitForText(client, 'PAO: 12 months after opening');
+      await waitForCondition(
+        client,
+        enabledControlExpression('Add to shelf'),
+        10_000,
+        'enabled Add to shelf after explicit opening state and label PAO',
+      );
       await clickByText(client, 'Add to shelf');
       await waitForCondition(
         client,
@@ -1835,7 +1868,9 @@ async function runScenario(context) {
       120_000,
       `CAT04 scenario ${scenario.id} at ${viewport.width}x${viewport.height}`,
     );
-    await waitForNetworkIdle(client);
+    await waitForNetworkIdle(client, 10_000, {
+      maxInflight: scenario.fixture === 'offline' ? 1 : 0,
+    });
     const failures = classifyBrowserFailures(client.events.slice(eventStart), [baseUrl]);
     result.browserFailures = failures;
     assert(failures.length === 0, `${scenario.id} emitted ${failures.length} browser failure(s).`);

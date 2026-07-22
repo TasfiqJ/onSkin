@@ -193,7 +193,14 @@ test('extended recovery lanes exercise wrong matches, retry dedupe, guards, and 
   assert.match(source, /036000291453/);
   assert.match(source, /0 36000-29145 2/);
   assert.match(source, /barcode 036000291452/);
+  assert.match(source, /enabled Add to shelf after explicit opening state/);
   assert.equal((source.match(/assertDisabledControl\([^\n]+, 'Continue'\)/g) ?? []).length, 4);
+});
+
+test('offline fixture permits its bounded unresolved lookup without hiding other network hangs', () => {
+  assert.match(source, /maxInflight: groupId === 'offline' \? 1 : 0/);
+  assert.match(source, /maxInflight: scenario\.fixture === 'offline' \? 1 : 0/);
+  assert.match(source, /allowed \$\{maxInflight\}/);
 });
 
 test('report lanes prove disclosure and explicit confirmation before transport', () => {
