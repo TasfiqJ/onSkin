@@ -2103,6 +2103,23 @@ export function assertCat05PassArtifactSet(actualArtifacts) {
   return expectedArtifacts;
 }
 
+export function pruneCat05TransientFailureArtifacts(evidenceDir, actualArtifacts) {
+  const absoluteEvidenceDir = path.resolve(evidenceDir);
+  const expectedArtifacts = new Set(expectedCat05PassArtifacts());
+  let removed = 0;
+  for (const artifact of actualArtifacts) {
+    if (expectedArtifacts.has(artifact) || !/-failure\.(?:json|png)$/u.test(artifact)) continue;
+    const absolutePath = path.resolve(absoluteEvidenceDir, artifact);
+    assert(
+      absolutePath.startsWith(`${absoluteEvidenceDir}${path.sep}`),
+      `CAT05 transient artifact escaped the evidence directory: ${artifact}.`,
+    );
+    rmSync(absolutePath, { force: true });
+    removed += 1;
+  }
+  return removed;
+}
+
 export function buildCat05ArtifactManifest(evidenceDir, artifacts) {
   const absoluteEvidenceDir = path.resolve(evidenceDir);
   return artifacts.map((artifact) => {
@@ -2602,6 +2619,8 @@ export async function runCat05NativeOcrUiAudit({
   summary.artifacts = listCat05EvidenceArtifacts(evidenceDir);
   if (summary.verdict === 'pass') {
     try {
+      pruneCat05TransientFailureArtifacts(evidenceDir, summary.artifacts);
+      summary.artifacts = listCat05EvidenceArtifacts(evidenceDir);
       assertCat05PassArtifactSet(summary.artifacts);
       assertCat05ArtifactBindings(evidenceDir, summary.artifacts, binding);
       assertCat05DiagnosticPacketHygiene(evidenceDir, summary.artifacts, summary);

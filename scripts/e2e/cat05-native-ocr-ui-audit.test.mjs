@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawn } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -36,6 +36,7 @@ import {
   listCat05EvidenceArtifacts,
   navigateToCat05OcrConsentProbe,
   prepareCat05Navigation,
+  pruneCat05TransientFailureArtifacts,
   removeCat05BrowserUserDataDirBestEffort,
   resolveCat05AuditBinding,
   sanitizeCat05DiagnosticValue,
@@ -855,6 +856,23 @@ test('PASS evidence requires the exact scenario/viewport artifact set and hashes
 
   const evidenceDir = mkdtempSync(path.join(tmpdir(), 'cat05-evidence-manifest-'));
   t.after(() => rmSync(evidenceDir, { force: true, recursive: true }));
+  writeFileSync(path.join(evidenceDir, 'recognized-review-retake-continue-iphone-390x844-failure.json'), '{}\n');
+  writeFileSync(path.join(evidenceDir, 'recognized-review-retake-continue-iphone-390x844-failure.png'), 'png');
+  assert.equal(
+    pruneCat05TransientFailureArtifacts(evidenceDir, [
+      ...expected,
+      'recognized-review-retake-continue-iphone-390x844-failure.json',
+      'recognized-review-retake-continue-iphone-390x844-failure.png',
+    ]),
+    2,
+  );
+  assert.equal(
+    existsSync(
+      path.join(evidenceDir, 'recognized-review-retake-continue-iphone-390x844-failure.json'),
+    ),
+    false,
+  );
+
   writeFileSync(path.join(evidenceDir, 'result.json'), '{"runId":"fresh"}\n');
   const manifest = buildCat05ArtifactManifest(evidenceDir, ['result.json']);
   assert.equal(manifest.length, 1);
