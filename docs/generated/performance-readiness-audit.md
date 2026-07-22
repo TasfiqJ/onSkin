@@ -1,6 +1,6 @@
 # Performance Readiness Audit
 
-Generated: 2026-07-18T22:39:57.625Z
+Generated: 2026-07-22T17:40:28.640Z
 Status: pass
 Strict mode: yes
 
@@ -51,7 +51,7 @@ Required performance platforms: ios. Android evidence: not_applicable.
 | ------------------------------------------ | ------- |
 | docs:performance-readiness-audit:check     | yes     |
 | phase5:performance-evidence:template:check | yes     |
-| phase5:performance-evidence                | yes     |
+| phase5:performance-evidence:smoke          | yes     |
 
 ## Docs
 

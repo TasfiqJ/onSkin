@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T22:39:57.625Z",
+  "generatedAt": "2026-07-22T17:40:28.640Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -143,7 +143,7 @@
       "present": true
     },
     {
-      "scriptPart": "phase5:performance-evidence",
+      "scriptPart": "phase5:performance-evidence:smoke",
       "present": true
     }
   ],

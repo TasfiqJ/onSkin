@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-17T07:44:53.813Z",
+  "generatedAt": "2026-07-22T17:40:37.702Z",
   "schemaVersion": 2,
   "status": "fixture",
   "source": "cosing",
   "sourceComponentId": "cosing_reference_component",
   "sourcePolicy": {
     "policyId": "catalog-source-policy-v1",
-    "sha256": "79005f1111af670bb8ce11d128627ecde9a59a8f323e2cf9170dfe50c8c2a050"
+    "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
   },
   "sourceApproval": null,
   "transformerCandidate": null,
