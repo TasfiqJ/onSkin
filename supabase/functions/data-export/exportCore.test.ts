@@ -1,7 +1,10 @@
 import {
   boundedMap,
   checksumRows,
+  createExportMemoryBudget,
+  encodeJsonWithinByteLimit,
   EXPORT_CONSISTENCY,
+  EXPORT_RETAINED_ITEM_OVERHEAD_BYTES,
   listStoragePathsVerified,
   paginateRows,
   type StorageListOptions,
@@ -247,6 +250,35 @@ Deno.test('bounded export concurrency preserves result order and respects the ca
   );
 });
 
+Deno.test(
+  'bounded export concurrency drains in-flight work and stops scheduling after failure',
+  async () => {
+    let releaseFirst!: () => void;
+    const firstGate = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    const starts: number[] = [];
+    let settled = false;
+    const outcome = boundedMap([0, 1, 2, 3], 2, async (value) => {
+      starts.push(value);
+      if (value === 0) await firstGate;
+      if (value === 1) throw new Error('EXPECTED_WORKER_FAILURE');
+      return value;
+    }).finally(() => {
+      settled = true;
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert(starts.includes(0) && starts.includes(1), 'expected both initial workers to start.');
+    assert(!starts.includes(2), 'expected no new task after the first worker failure.');
+    assert(!settled, 'expected the failed batch to wait for its in-flight sibling.');
+
+    releaseFirst();
+    await assertRejectsReason(() => outcome, 'EXPECTED_WORKER_FAILURE');
+    assert(settled, 'expected the batch to settle after its in-flight sibling drained.');
+  },
+);
+
 Deno.test('export consistency contract explicitly declines unsupported snapshot guarantees', () => {
   assert(
     EXPORT_CONSISTENCY.model === 'independent_count_guarded_reads',
@@ -259,5 +291,125 @@ Deno.test('export consistency contract explicitly declines unsupported snapshot 
   assert(
     EXPORT_CONSISTENCY.limitations.some((line) => line.includes('delete and insert')),
     'expected the count-guard replacement limitation to be explicit.',
+  );
+});
+
+Deno.test('export response byte limits use exact UTF-8 accounting', async () => {
+  const payload = { message: 'calm skin é✨' };
+  const exactBytes = new TextEncoder().encode(JSON.stringify(payload)).byteLength;
+  const encoded = encodeJsonWithinByteLimit(payload, exactBytes);
+
+  assert(encoded.byteLength === exactBytes, 'expected the exact compact UTF-8 byte length.');
+  assert(encoded.body === JSON.stringify(payload), 'expected one compact JSON representation.');
+  await assertRejectsReason(
+    () => Promise.resolve(encodeJsonWithinByteLimit(payload, exactBytes - 1)),
+    'EXPORT_RESPONSE_BYTE_LIMIT_EXCEEDED',
+  );
+});
+
+Deno.test('one shared memory budget bounds 34 individually valid sources', async () => {
+  const sourceRows = Array.from({ length: 34 }, (_, sourceIndex) =>
+    Array.from({ length: 25 }, (_, rowIndex) => ({
+      id: `${String(sourceIndex).padStart(2, '0')}-${String(rowIndex).padStart(2, '0')}`,
+      value: `fixture-${sourceIndex}-${rowIndex}`,
+    })),
+  );
+  const exactRetainedBytes = sourceRows
+    .flat()
+    .reduce(
+      (total, row) =>
+        total +
+        new TextEncoder().encode(JSON.stringify(row)).byteLength +
+        EXPORT_RETAINED_ITEM_OVERHEAD_BYTES +
+        1,
+      0,
+    );
+
+  const run = (maxBytes: number) => {
+    const memoryBudget = createExportMemoryBudget(maxBytes, 34 * 25);
+    return boundedMap(sourceRows, 4, (rows, sourceIndex) =>
+      paginateRows({
+        source: `source_${sourceIndex}`,
+        scope: 'caller_rls',
+        orderBy: ['id'],
+        pageSize: 10,
+        maxRows: 100,
+        memoryBudget,
+        fetchCount: () => Promise.resolve(rows.length),
+        fetchPage: (offset, limit) => Promise.resolve(rows.slice(offset, offset + limit)),
+      }),
+    ).then(() => memoryBudget.snapshot());
+  };
+
+  const exact = await run(exactRetainedBytes);
+  assert(exact.retainedBytes === exactRetainedBytes, 'expected the exact aggregate byte claim.');
+  assert(exact.retainedItems === 34 * 25, 'expected every retained row in the item claim.');
+  await assertRejectsReason(() => run(exactRetainedBytes - 1), 'MEMORY_BUDGET_EXCEEDED');
+});
+
+Deno.test('an oversized row fails closed and rolls back its source reservation', async () => {
+  const privatePayload = 'private-note-that-must-not-enter-the-error';
+  const memoryBudget = createExportMemoryBudget(64, 10);
+  let thrown: unknown;
+  try {
+    await paginateRows({
+      source: 'photos',
+      scope: 'caller_rls',
+      orderBy: ['id'],
+      pageSize: 10,
+      maxRows: 10,
+      memoryBudget,
+      fetchCount: () => Promise.resolve(1),
+      fetchPage: (offset) =>
+        Promise.resolve(offset === 0 ? [{ id: 'photo-1', notes: privatePayload }] : []),
+    });
+  } catch (error) {
+    thrown = error;
+  }
+
+  assert(thrown instanceof Error, 'expected the oversized source to reject.');
+  assert(thrown.message.includes('MEMORY_BUDGET_EXCEEDED'), 'expected a stable budget code.');
+  assert(!thrown.message.includes(privatePayload), 'expected no private content in the error.');
+  assert(
+    memoryBudget.snapshot().retainedBytes === 0,
+    'expected the failed source to release bytes.',
+  );
+  assert(
+    memoryBudget.snapshot().retainedItems === 0,
+    'expected the failed source to release items.',
+  );
+});
+
+Deno.test(
+  'storage verification budgets both passes and releases the discarded inventory',
+  async () => {
+    const paths = [`${USER_ID}/a.enc`, `${USER_ID}/b.enc`];
+    const memoryBudget = createExportMemoryBudget(1_000, 4);
+    const result = await listStoragePathsVerified({
+      userId: USER_ID,
+      bucket: new FakeStorageBucket(paths),
+      pageSize: 2,
+      maxObjects: 10,
+      memoryBudget,
+    });
+    const snapshot = memoryBudget.snapshot();
+
+    assert(result.paths.length === 2, 'expected the verified storage inventory.');
+    assert(snapshot.peakRetainedItems === 4, 'expected both verification passes to be bounded.');
+    assert(snapshot.retainedItems === 2, 'expected only the returned inventory to remain claimed.');
+  },
+);
+
+Deno.test('the aggregate item ceiling rejects tiny-row object overhead', async () => {
+  const memoryBudget = createExportMemoryBudget(10_000, 1);
+  memoryBudget.reserveJson('profiles', { id: 'a' });
+
+  await assertRejectsReason(
+    () => Promise.resolve(memoryBudget.reserveJson('profiles', { id: 'b' })),
+    'MEMORY_BUDGET_EXCEEDED',
+  );
+  assert(
+    memoryBudget.snapshot().retainedItems === 1,
+    'expected the rejected item not to enter memory.',
   );
 });

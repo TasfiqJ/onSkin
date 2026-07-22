@@ -8,9 +8,13 @@ import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
 import {
   boundedMap,
   checksumRows,
+  createExportMemoryBudget,
   derivedManifest,
+  encodeJsonWithinByteLimit,
   EXPORT_CONSISTENCY,
+  EXPORT_RETAINED_ITEM_OVERHEAD_BYTES,
   type ExportSourceManifest,
+  type ExportMemoryBudget,
   listStoragePathsVerified,
   paginateRows,
   type PaginatedRows,
@@ -42,6 +46,24 @@ const dataExportMaxStorageObjects = intEnv(
 );
 const dataExportConcurrency = intEnv('DATA_EXPORT_CONCURRENCY', 4, 1, 8);
 const dataExportFilterBatchSize = intEnv('DATA_EXPORT_FILTER_BATCH_SIZE', 50, 10, 100);
+const dataExportMaxResponseBytes = intEnv(
+  'DATA_EXPORT_MAX_RESPONSE_BYTES',
+  8 * 1024 * 1024,
+  1024 * 1024,
+  8 * 1024 * 1024,
+);
+const dataExportMaxRetainedBytes = intEnv(
+  'DATA_EXPORT_MAX_RETAINED_BYTES',
+  dataExportMaxResponseBytes,
+  1024 * 1024,
+  dataExportMaxResponseBytes,
+);
+const dataExportMaxRetainedItems = intEnv(
+  'DATA_EXPORT_MAX_RETAINED_ITEMS',
+  100_000,
+  1_000,
+  250_000,
+);
 const dataExportFileName = exportFileName();
 let rateLimitHmacKey: CryptoKey | null = null;
 
@@ -353,6 +375,7 @@ function paginateQuery(options: {
   scope: ExportTable['scope'];
   orderBy: readonly string[];
   decorate: QueryDecorator;
+  memoryBudget: ExportMemoryBudget;
   selectColumns?: string;
   note?: string;
 }): Promise<PaginatedRows> {
@@ -362,6 +385,7 @@ function paginateQuery(options: {
     orderBy: options.orderBy,
     pageSize: dataExportPageSize,
     maxRows: dataExportMaxRowsPerSource,
+    memoryBudget: options.memoryBudget,
     note: options.note,
     fetchCount: () => selectExactCount(options.client, options.table, options.decorate),
     fetchPage: (offset, limit) =>
@@ -453,6 +477,10 @@ Deno.serve(async (req) => {
   if (rateLimitError) return rateLimitError;
 
   try {
+    const memoryBudget = createExportMemoryBudget(
+      dataExportMaxRetainedBytes,
+      dataExportMaxRetainedItems,
+    );
     const sourcePayloads: Record<string, Record<string, unknown>[]> = {};
     const sourceManifest: Record<string, ExportSourceManifest> = {};
 
@@ -465,6 +493,7 @@ Deno.serve(async (req) => {
           scope: item.scope,
           orderBy: item.orderBy,
           decorate: (query) => applyFilter(query, item.filter, userId),
+          memoryBudget,
           note: item.note,
         }),
       }));
@@ -477,6 +506,7 @@ Deno.serve(async (req) => {
           table: 'subscriptions_events',
           scope: 'service_role_filtered',
           orderBy: ['id'],
+          memoryBudget,
           decorate: (query) =>
             query.or(
               `user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`,
@@ -491,43 +521,43 @@ Deno.serve(async (req) => {
           table: 'obf_contribution_queue',
           scope: 'service_role_filtered',
           orderBy: ['id'],
+          memoryBudget,
           decorate: (query) => query.eq('user_id', userId),
         }),
       }),
     );
 
-    const sourceResults = await boundedMap(sourceTasks, dataExportConcurrency, (task) => task());
-    for (const { source, result } of sourceResults) {
+    await boundedMap(sourceTasks, dataExportConcurrency, async (task) => {
+      const { source, result } = await task();
       sourcePayloads[source] = result.rows;
       sourceManifest[source] = result.manifest;
-    }
+    });
 
-    const clickTokens = [
-      ...new Set(
-        (sourcePayloads.commerce_click_events ?? [])
-          .map((row) => row.click_token)
-          .filter((token): token is string => typeof token === 'string' && token.length > 0),
-      ),
-    ].sort();
+    const clickTokenSet = new Set<string>();
+    for (const row of sourcePayloads.commerce_click_events ?? []) {
+      const token = row.click_token;
+      if (typeof token === 'string' && token.length > 0) clickTokenSet.add(token);
+    }
+    const clickTokens = [...clickTokenSet].sort();
     const attributionBatches = chunks(clickTokens, dataExportFilterBatchSize);
-    const attributionBatchResults = await boundedMap(
-      attributionBatches,
-      dataExportConcurrency,
-      (tokenBatch) =>
-        paginateQuery({
-          client: admin,
-          table: 'order_attributions',
-          scope: 'service_role_filtered',
-          orderBy: ['id'],
-          selectColumns:
-            'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at',
-          decorate: (query) => query.in('click_token', tokenBatch),
-          note: 'Matched only through click tokens present in the exported commerce_click_events rows.',
-        }),
-    );
-    const orderAttributions = attributionBatchResults
-      .flatMap((result) => result.rows)
-      .sort(compareIds);
+    const orderAttributions: Record<string, unknown>[] = [];
+    const attributionManifests: PaginatedRows['manifest'][] = [];
+    await boundedMap(attributionBatches, dataExportConcurrency, async (tokenBatch, batchIndex) => {
+      const result = await paginateQuery({
+        client: admin,
+        table: 'order_attributions',
+        scope: 'service_role_filtered',
+        orderBy: ['id'],
+        memoryBudget,
+        selectColumns:
+          'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at',
+        decorate: (query) => query.in('click_token', tokenBatch),
+        note: 'Matched only through click tokens present in the exported commerce_click_events rows.',
+      });
+      attributionManifests[batchIndex] = result.manifest;
+      orderAttributions.push(...result.rows);
+    });
+    orderAttributions.sort(compareIds);
     if (orderAttributions.length > dataExportMaxRowsPerSource) {
       throw new Error('EXPORT_SOURCE_INCOMPLETE:order_attributions:ROW_LIMIT_EXCEEDED');
     }
@@ -540,16 +570,16 @@ Deno.serve(async (req) => {
       scope: 'service_role_filtered',
       order_by: ['id'],
       count: orderAttributions.length,
-      count_before: attributionBatchResults.reduce(
-        (total, result) => total + result.manifest.count_before,
+      count_before: attributionManifests.reduce(
+        (total, manifest) => total + manifest.count_before,
         0,
       ),
-      count_after: attributionBatchResults.reduce(
-        (total, result) => total + result.manifest.count_after,
+      count_after: attributionManifests.reduce(
+        (total, manifest) => total + manifest.count_after,
         0,
       ),
-      page_requests: attributionBatchResults.reduce(
-        (total, result) => total + result.manifest.page_requests,
+      page_requests: attributionManifests.reduce(
+        (total, manifest) => total + manifest.page_requests,
         0,
       ),
       checksum: await checksumRows(orderAttributions),
@@ -564,22 +594,29 @@ Deno.serve(async (req) => {
       bucket: photoBucket,
       pageSize: dataExportStoragePageSize,
       maxObjects: dataExportMaxStorageObjects,
+      memoryBudget,
     });
     const storagePathSet = new Set(storageInventory.paths);
-    const cloudPhotos = (sourcePayloads.photos ?? []).filter(
-      (photo) => photo.local_only !== true && typeof photo.storage_path === 'string',
-    );
     const photoIdsByPath = new Map<string, string[]>();
     const photoUrlOmissions: Array<{ id: string | null; path: string | null; reason: string }> = [];
-    for (const photo of cloudPhotos) {
+    const retainPhotoUrlOmission = (omission: {
+      id: string | null;
+      path: string | null;
+      reason: string;
+    }) => {
+      memoryBudget.reserveJson('photo_download_url_omissions', omission);
+      photoUrlOmissions.push(omission);
+    };
+    for (const photo of sourcePayloads.photos ?? []) {
+      if (photo.local_only === true || typeof photo.storage_path !== 'string') continue;
       const id = typeof photo.id === 'string' ? photo.id : null;
       const path = photo.storage_path as string;
       if (!photoPathBelongsToUser(userId, path)) {
-        photoUrlOmissions.push({ id, path: null, reason: 'INVALID_STORAGE_PATH' });
+        retainPhotoUrlOmission({ id, path: null, reason: 'INVALID_STORAGE_PATH' });
         continue;
       }
       if (!storagePathSet.has(path)) {
-        photoUrlOmissions.push({ id, path, reason: 'STORAGE_OBJECT_NOT_LISTED' });
+        retainPhotoUrlOmission({ id, path, reason: 'STORAGE_OBJECT_NOT_LISTED' });
         continue;
       }
       const ids = photoIdsByPath.get(path) ?? [];
@@ -597,15 +634,21 @@ Deno.serve(async (req) => {
           dataExportPhotoUrlTtlSeconds,
         );
         if (error || !signed?.signedUrl) throw new Error('EXPORT_PHOTO_URL_FAILED');
-        return {
+        const result = {
           id: photoIdsByPath.get(path)?.[0] ?? null,
           path,
           url: signed.signedUrl,
           expires_in_seconds: dataExportPhotoUrlTtlSeconds,
         };
+        memoryBudget.reserveJson('photo_download_urls', result);
+        return result;
       },
     );
-    const photoStorageObjects = storageInventory.paths.map((path) => ({ path }));
+    const photoStorageObjects = storageInventory.paths.map((path) => {
+      const result = { path };
+      memoryBudget.reserveJson('photo_storage_objects', result);
+      return result;
+    });
     sourcePayloads.photo_storage_objects = photoStorageObjects;
     sourcePayloads.photo_download_urls = photoUrls;
     sourcePayloads.photo_download_url_omissions = photoUrlOmissions;
@@ -634,6 +677,10 @@ Deno.serve(async (req) => {
           database_page_size: dataExportPageSize,
           storage_page_size: dataExportStoragePageSize,
           max_concurrency: dataExportConcurrency,
+          max_retained_payload_bytes: dataExportMaxRetainedBytes,
+          max_retained_payload_items: dataExportMaxRetainedItems,
+          retained_item_overhead_bytes: EXPORT_RETAINED_ITEM_OVERHEAD_BYTES,
+          max_response_bytes: dataExportMaxResponseBytes,
           max_rows_per_database_source: dataExportMaxRowsPerSource,
           max_storage_objects: dataExportMaxStorageObjects,
         },
@@ -671,11 +718,25 @@ Deno.serve(async (req) => {
       ...sourcePayloads,
     };
 
-    return json(bundle, 200, {
-      'Content-Disposition': `attachment; filename="${dataExportFileName}"`,
+    const encoded = encodeJsonWithinByteLimit(bundle, dataExportMaxResponseBytes);
+    return new Response(encoded.body, {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        'Content-Disposition': `attachment; filename="${dataExportFileName}"`,
+        'Content-Length': String(encoded.byteLength),
+        'Content-Type': 'application/json',
+      },
     });
-  } catch (_error) {
+  } catch (error) {
     console.error('[data-export]', 'DATA_EXPORT_FAILED');
+    if (
+      error instanceof Error &&
+      (error.message.includes('MEMORY_BUDGET_EXCEEDED') ||
+        error.message === 'EXPORT_RESPONSE_BYTE_LIMIT_EXCEEDED')
+    ) {
+      return json({ error: 'DATA_EXPORT_TOO_LARGE' }, 413);
+    }
     return json({ error: 'DATA_EXPORT_FAILED' }, 500);
   }
 });

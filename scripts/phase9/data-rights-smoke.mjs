@@ -33,6 +33,7 @@ const localPrivateDataRegistrySource = read(
   'apps/mobile/src/features/settings/localPrivateDataRegistry.ts',
 );
 const localAccountIsolationSource = read('apps/mobile/src/lib/auth/localAccountIsolation.ts');
+const edgeFunctionsSource = read('apps/mobile/src/lib/network/edgeFunctions.ts');
 const plaintextStagingSource = read('apps/mobile/src/lib/storage/plaintextStagingCore.ts');
 const plaintextStagingAdapterSource = read('apps/mobile/src/lib/storage/plaintextStaging.ts');
 const packageJson = JSON.parse(read('package.json'));
@@ -145,6 +146,40 @@ for (const pattern of [
     `data-export is missing required coverage marker ${pattern}.`,
   );
 }
+for (const pattern of [
+  /DATA_EXPORT_MAX_RESPONSE_BYTES/,
+  /DATA_EXPORT_MAX_RETAINED_BYTES/,
+  /DATA_EXPORT_MAX_RETAINED_ITEMS/,
+  /EXPORT_RETAINED_ITEM_OVERHEAD_BYTES/,
+  /createExportMemoryBudget/,
+  /memoryBudget:\s*options\.memoryBudget/,
+  /memoryBudget,\s*\n?\s*\}\);/,
+  /reserveJson\('photo_download_urls'/,
+  /reserveJson\('photo_download_url_omissions'/,
+  /reserveJson\('photo_storage_objects'/,
+  /encodeJsonWithinByteLimit\(\s*bundle,\s*dataExportMaxResponseBytes\s*\)/,
+  /'Content-Length': String\(encoded\.byteLength\)/,
+  /DATA_EXPORT_TOO_LARGE/,
+]) {
+  block(
+    errors,
+    pattern.test(completeExportSource),
+    `data-export is missing aggregate memory/response bound ${pattern}.`,
+  );
+}
+block(
+  errors,
+  /8 \* 1024 \* 1024/.test(exportSource) &&
+    /dataExportMaxRetainedBytes[\s\S]*dataExportMaxResponseBytes/.test(exportSource) &&
+    /'data-export':[\s\S]*maxResponseBytes:\s*8 \* 1024 \* 1024/.test(edgeFunctionsSource),
+  'data-export must align its aggregate retained-byte ceiling with the existing 8 MiB mobile response contract.',
+);
+block(
+  errors,
+  /MEMORY_BUDGET_EXCEEDED/.test(exportCoreSource) &&
+    !/sourceFailure\(source, `[^`]*\$\{.*value/.test(exportCoreSource),
+  'data-export memory rejections must use a stable content-free code.',
+);
 block(
   errors,
   /Includes data saved to your account and on this device:/.test(settingsRouteSource) &&
