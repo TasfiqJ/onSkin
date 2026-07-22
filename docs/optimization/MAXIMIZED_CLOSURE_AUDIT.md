@@ -4,11 +4,11 @@ Date: 2026-07-21 (America/Toronto)
 
 Branch: `optimization`
 
-Implementation checkpoint SHA: `3b59788cddc133686b295c57336a8a219e8304ab`
+Implementation checkpoint SHA: `e917e37965cf6a1003ca338cdfd57598bd77bb9e`
 
 Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
 
-Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the scoped Shelf/archive gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
+Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced and the scoped Progress sensitive-query cache gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
 
 ## Requirement-By-Requirement Result
 
@@ -36,20 +36,22 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 
 ## Current Verification Snapshot
 
-- Implementation checkpoint: `3b59788cddc133686b295c57336a8a219e8304ab`.
+- Implementation checkpoint: `e917e37965cf6a1003ca338cdfd57598bd77bb9e`.
 - Repository type-check: pass, two workspaces.
 - Repository lint: pass, two workspaces, zero warnings.
-- Repository tests in the preserved dirty worktree: 2 files failed / 347 passed; 4 tests failed / 4,151 passed. All four failures arise from unrelated preserved user-owned notification/Shelf metadata changes; the scoped Shelf matrix passes.
+- Repository tests in the preserved dirty worktree: 2 files failed / 348 passed; 4 tests failed / 4,158 passed. All four failures arise from unrelated preserved user-owned notification/Shelf metadata changes; the scoped Progress cache matrix passes.
 - Shelf focused matrix: pass, 6 files / 107 tests.
 - Shelf/archive web stress: 100 All, 34 Actives, 40 Expiring, and 100 Archive rows traverse exactly; independent filters and the semantic final-row boundary after Archive Back restore with zero sampled blanks, overflow, dialogs, or unexpected logs.
 - Progress focused matrix: pass, 5 files / 158 tests.
 - Progress note web recovery: deterministic pre-write failure retains the exact draft and accessible retry; retry succeeds; a fresh direct load restores the exact encrypted note through the real photo-metadata path using the exact development-only Expo-web content-key harness.
 - Progress web stress: 50 and 100 photos traverse to unique oldest rows without blank viewports; 100-photo picker traverses and changes selection; 250-record pure derivations pass.
-- Latest evidence: `evidence/2026-07-21_shelf-archive-collection-stress.md`.
+- Progress sensitive-query cache matrix: pass, 4 files / 49 tests, including shared-observer retention, final-observer eviction, late non-cancellable completion cleanup, and unobserved mutation non-recreation.
+- Progress query-cache web recovery: query executions advance exactly `1 -> 2 -> 3` across two Progress -> Today -> Progress cycles; all 10 Timeline actions return each time with zero storage errors, overflow, dialogs, or unexpected logs.
+- Latest evidence: `evidence/2026-07-21_progress-sensitive-query-cache-eviction.md`.
 
 ## Remaining Work Classification
 
-The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery, and Shelf/archive collection stress coverage are now locally implemented. Progress sensitive-query cache eviction is the next decision-free local slice. Separately, genuine closure gates remain one or more of:
+The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery and inactive query eviction, and Shelf/archive collection stress coverage are now locally implemented. Export-memory bounding is the next audited decision-free local candidate. Separately, genuine closure gates remain one or more of:
 
 - decision-gated: photo v2/native handles, encrypted thumbnails/cache ceilings, startup-shield scope, retention/abuse/scheduler thresholds, and bundle/performance budgets;
 - hosted/provider-gated: Supabase deployment and seeded scale/recovery rehearsals, RevenueCat/provider replay, retention scheduling, alerting, and completion terminal reconciliation;
