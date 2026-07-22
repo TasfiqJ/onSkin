@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "search-matched-iphone-375x667",
-  "completedAt": "2026-07-22T02:06:51.138Z",
+  "completedAt": "2026-07-22T04:07:50.866Z",
   "error": null,
   "fixture": "matched",
   "fixtureGroup": "matched",
   "nativeDeviceProof": false,
   "route": "/shelf/search",
   "scenarioId": "search-matched",
-  "startedAt": "2026-07-22T02:06:47.460Z",
+  "startedAt": "2026-07-22T04:07:46.394Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -16,5 +16,5 @@
     "height": 667
   },
   "browserFailures": [],
-  "endUrl": "http://localhost:8460/shelf/opened?intakeId=1aaeae30-d4dc-4a0a-b3db-3cfc72869641"
+  "endUrl": "http://localhost:8460/shelf/opened?intakeId=9c20dfcd-49b8-4ed6-94eb-b9c180e96e9b"
 }

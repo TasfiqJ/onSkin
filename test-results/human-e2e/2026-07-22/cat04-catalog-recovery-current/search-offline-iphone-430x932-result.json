@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "search-offline-iphone-430x932",
-  "completedAt": "2026-07-22T02:10:51.202Z",
+  "completedAt": "2026-07-22T04:11:58.962Z",
   "error": null,
   "fixture": "offline",
   "fixtureGroup": "offline",
   "nativeDeviceProof": false,
   "route": "/shelf/search",
   "scenarioId": "search-offline",
-  "startedAt": "2026-07-22T02:10:48.001Z",
+  "startedAt": "2026-07-22T04:11:55.992Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -16,5 +16,5 @@
     "height": 932
   },
   "browserFailures": [],
-  "endUrl": "http://localhost:8501/shelf/manual?intakeId=06b63607-f9aa-466a-a914-a79a14632709"
+  "endUrl": "http://localhost:8500/shelf/manual?intakeId=d02423a2-6bf4-4618-b15b-a099351b8e89"
 }

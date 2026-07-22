@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "no-match-missing-barcode-iphone-390x844",
-  "completedAt": "2026-07-22T02:15:33.525Z",
+  "completedAt": "2026-07-22T04:17:39.749Z",
   "error": null,
   "fixture": "missing_barcode",
   "fixtureGroup": "ocr-capture-failure",
   "nativeDeviceProof": false,
   "route": "/shelf/no-match",
   "scenarioId": "no-match-missing-barcode",
-  "startedAt": "2026-07-22T02:15:31.168Z",
+  "startedAt": "2026-07-22T04:17:37.186Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -16,5 +16,5 @@
     "height": 844
   },
   "browserFailures": [],
-  "endUrl": "http://localhost:8561/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-390x844-1784686531169"
+  "endUrl": "http://localhost:8560/shelf/no-match?cat04Audit=no-match-missing-barcode-iphone-390x844-1784693857187"
 }
