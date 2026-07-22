@@ -328,8 +328,15 @@ describe('Shelf route mobile contracts', () => {
   it('virtualizes growing Shelf collections and releases the tab source on blur', () => {
     const main = readAppRoute('(tabs)/shelf.tsx');
     const archive = readAppRoute('shelf/archive.tsx');
+    const fixture = readFeatureFile('shelfStressFixture.ts');
+    const diagnostics = readFeatureFile('shelfRenderDiagnostics.ts');
 
     expect(main).toContain('<FlatList');
+    expect(main).toContain('nativeID="shelf-main-list"');
+    expect(main).toContain('id="shelf-main-list"');
+    expect(main).toContain('recordShelfMainListCommit(actualDuration)');
+    expect(main).toContain('recordShelfProductRowRender();');
+    expect(main).toContain('nativeID={`shelf-product-${id}`}');
     expect(main).toContain('keyExtractor={shelfRowKey}');
     expect(main).toContain('ListHeaderComponent={');
     expect(main).toContain('ListFooterComponent={');
@@ -339,11 +346,32 @@ describe('Shelf route mobile contracts', () => {
     expect(main).toContain('const boundary = useLocalDateBoundary();');
     expect(main).toContain('useShelfFromBoundary(boundary)');
     expect(main).toContain('const isFocused = useIsFocused();');
-    expect(main).toContain('<ShelfViewStateProvider>');
+    expect(main).toContain('<ShelfViewStateProvider isFocused={isFocused}>');
     expect(main).toContain('{isFocused ? <FocusedShelfScreen /> : null}');
-    expect(main).toContain('const scrollOffsets = useRef<Record<Filter, number>>');
+    expect(main).toContain('const shelfViewMemory:');
+    expect(main).toContain('const scrollOffsets = useRef(shelfViewMemory.scrollOffsets);');
+    expect(main).toContain('shelfViewMemory.filter = nextFilter;');
+    expect(main).toContain('focusedRef.current = isFocused;');
+    expect(main).toContain('}, [isFocused]);');
     expect(main).toContain('contentOffset={initialContentOffset}');
+    expect(main).toContain('const listRef = useRef<FlatList<ShelfListRow>>(null);');
+    expect(main).toContain('listRef.current?.scrollToOffset({ animated: false, offset });');
+    expect(main).toContain('useLayoutEffect(() => {');
+    expect(main).toContain('restoringFilter.current = nextFilter;');
+    expect(main).toContain('beginFilterEndRestore(filter);');
+    expect(main).toContain('onOpenArchive={openArchive}');
+    expect(main).toContain('filterRef.current !== filter');
+    expect(main).toContain('restoringFilter.current !== null');
+    expect(main).toContain('finishFilterOffsetRestore(filter);');
+    expect(main).toContain('restoreFrame.current = requestAnimationFrame(() => {');
     expect(main).toContain('onScroll={onScroll}');
+    expect(main).toContain('onContentSizeChange={handleContentSizeChange}');
+    expect(main).toContain('onViewableItemsChanged={handleViewableItemsChanged}');
+    expect(main).toContain('listRef.current?.scrollToEnd({ animated: false });');
+    expect(main).toContain('item.index === current.finalIndex');
+    expect(main).toContain('const viewabilityState = useRef({ filter, finalIndex:');
+    expect(main).toContain('if (isFilterOffsetRestorePending(filter)) restoreFilterOffset();');
+    expect(main).not.toContain('key={filter}');
     expect(main).toContain('const ShelfListTitle = memo(function ShelfListTitle');
     expect(main).toContain('const ShelfListInsights = memo(function ShelfListInsights');
     expect(main).toContain('const ShelfListFooter = memo(function ShelfListFooter');
@@ -353,10 +381,31 @@ describe('Shelf route mobile contracts', () => {
     expect(main).not.toContain('filteredRows.map(');
 
     expect(archive).toContain('<FlatList');
+    expect(archive).toContain('nativeID="shelf-archive-list"');
+    expect(archive).toContain('id="shelf-archive-list"');
+    expect(archive).toContain('recordShelfArchiveListCommit(actualDuration)');
+    expect(archive).toContain('recordShelfArchiveRowRender();');
+    expect(archive).toContain('nativeID={`shelf-archive-product-${productId}`}');
     expect(archive).toContain('keyExtractor={(item) => item.id}');
     expect(archive).toContain('ListEmptyComponent={ArchiveEmptyState}');
     expect(archive).toContain('const ArchiveCard = memo(function ArchiveCard({');
     expect(archive).not.toContain('archive.map(');
+    expect(main).toContain('readShelfE2EStressFixture');
+    expect(archive).toContain('readShelfE2EStressFixture');
+    expect(fixture).toContain('MAX_SHELF_E2E_STRESS_ITEMS = 250');
+    expect(fixture).toContain('EXPO_PUBLIC_E2E_SHELF_STRESS_ACTIVE_COUNT');
+    expect(fixture).toContain('EXPO_PUBLIC_E2E_SHELF_STRESS_ARCHIVE_COUNT');
+    expect(fixture).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(fixture).toContain("Platform.OS !== 'web'");
+    expect(main).toContain(
+      'const stressFixture = !isError && data ? stressFixtureCandidate : null;',
+    );
+    expect(archive).toContain(
+      'const stressFixture = !isError && data ? stressFixtureCandidate : null;',
+    );
+    expect(diagnostics).not.toContain('name: string');
+    expect(diagnostics).not.toContain('id: string');
+    expect(diagnostics).not.toContain('ShelfItem');
 
     for (const source of [main, archive]) {
       expect(source).not.toContain('getItemLayout=');
@@ -390,7 +439,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("filterOption === 'all'");
     expect(source).toContain("filterOption === 'actives'");
     expect(source).toContain("className={compactFilterLabels ? 'px-2.5' : undefined}");
-    expect(source).toContain('const isEmpty = !isLoading && items.length === 0;');
+    expect(source).toContain('const isEmpty = !showLoading && displayedItemCount === 0;');
     expect(source).toContain('splitShort: boolean;');
     expect(source).toContain('splitShort={splitShortShelf}');
     expect(source).toContain('const compactNoArchiveShort = compact && !hasArchive && shortPhone;');

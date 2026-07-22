@@ -1,9 +1,17 @@
 import { router } from 'expo-router';
-import { memo } from 'react';
+import { memo, Profiler, useMemo } from 'react';
 import { FlatList, Pressable, View, type ListRenderItem } from 'react-native';
 
 import { RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { useShelfRouteSources } from '@/features/shelf/ShelfRouteSources';
+import {
+  recordShelfArchiveListCommit,
+  recordShelfArchiveRowRender,
+} from '@/features/shelf/shelfRenderDiagnostics';
+import {
+  readShelfE2EStressFixture,
+  type ShelfStressArchiveRow,
+} from '@/features/shelf/shelfStressFixture';
 import type { ShelfItem } from '@/features/shelf/useShelf';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -25,14 +33,7 @@ function monthLabel(iso: string | null): string | null {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short' });
 }
 
-type ArchiveCardProps = {
-  createdAt: ShelfItem['product']['createdAt'];
-  finishedAt: ShelfItem['product']['finishedAt'];
-  name: ShelfItem['product']['name'];
-  productId: ShelfItem['product']['id'];
-  repurchaseCount: ShelfItem['product']['repurchaseCount'];
-  status: ShelfItem['product']['status'];
-};
+type ArchiveCardProps = Omit<ShelfStressArchiveRow, 'id'> & { productId: string };
 
 const ArchiveCard = memo(function ArchiveCard({
   createdAt,
@@ -42,6 +43,7 @@ const ArchiveCard = memo(function ArchiveCard({
   repurchaseCount,
   status,
 }: ArchiveCardProps) {
+  recordShelfArchiveRowRender();
   const weeks = weeksUsed(createdAt, finishedAt);
   const when = monthLabel(finishedAt);
   const meta =
@@ -51,6 +53,7 @@ const ArchiveCard = memo(function ArchiveCard({
 
   return (
     <Pressable
+      nativeID={`shelf-archive-product-${productId}`}
       accessibilityRole="button"
       accessibilityLabel={`${name}, ${meta}`}
       onPress={() => {
@@ -93,25 +96,39 @@ function ArchiveEmptyState() {
   );
 }
 
-const renderArchiveItem: ListRenderItem<ShelfItem> = ({ item }) => {
-  const product = item.product;
-
+const renderArchiveItem: ListRenderItem<ShelfStressArchiveRow> = ({ item }) => {
   return (
     <ArchiveCard
-      createdAt={product.createdAt}
-      finishedAt={product.finishedAt}
-      name={product.name}
-      productId={product.id}
-      repurchaseCount={product.repurchaseCount}
-      status={product.status}
+      createdAt={item.createdAt}
+      finishedAt={item.finishedAt}
+      name={item.name}
+      productId={item.id}
+      repurchaseCount={item.repurchaseCount}
+      status={item.status}
     />
   );
 };
 
+function archiveRow(item: ShelfItem): ShelfStressArchiveRow {
+  return {
+    createdAt: item.product.createdAt,
+    finishedAt: item.product.finishedAt,
+    id: item.product.id,
+    name: item.product.name,
+    repurchaseCount: item.product.repurchaseCount,
+    status: item.product.status === 'finished' ? 'finished' : 'discarded',
+  };
+}
+
 export default function ArchiveScreen() {
   const { shelf } = useShelfRouteSources();
-  const { data } = shelf;
-  const archive = data?.archive ?? [];
+  const { data, isError } = shelf;
+  const stressFixtureCandidate = useMemo(() => readShelfE2EStressFixture(), []);
+  const stressFixture = !isError && data ? stressFixtureCandidate : null;
+  const archive = useMemo(
+    () => stressFixture?.archiveRows ?? (data?.archive ?? []).map(archiveRow),
+    [data?.archive, stressFixture],
+  );
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -155,15 +172,21 @@ export default function ArchiveScreen() {
         </View>
       </View>
 
-      <FlatList
-        data={archive}
-        keyExtractor={(item) => item.id}
-        renderItem={renderArchiveItem}
-        ItemSeparatorComponent={ArchiveSeparator}
-        ListEmptyComponent={ArchiveEmptyState}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 32, paddingTop: archive.length === 0 ? 0 : 20 }}
-      />
+      <Profiler
+        id="shelf-archive-list"
+        onRender={(_id, _phase, actualDuration) => recordShelfArchiveListCommit(actualDuration)}
+      >
+        <FlatList
+          nativeID="shelf-archive-list"
+          data={archive}
+          keyExtractor={(item) => item.id}
+          renderItem={renderArchiveItem}
+          ItemSeparatorComponent={ArchiveSeparator}
+          ListEmptyComponent={ArchiveEmptyState}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 32, paddingTop: archive.length === 0 ? 0 : 20 }}
+        />
+      </Profiler>
     </Screen>
   );
 }

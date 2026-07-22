@@ -1,5 +1,15 @@
 import { router, useIsFocused } from 'expo-router';
-import { createContext, memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  memo,
+  Profiler,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   FlatList,
   Pressable,
@@ -9,6 +19,7 @@ import {
   type ListRenderItemInfo,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
+  type ViewToken,
 } from 'react-native';
 
 import {
@@ -24,6 +35,16 @@ import { conflictDetailRoute } from '@/features/intelligence/conflictIdentity';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
 import { ShelfDataUnavailableNotice } from '@/features/shelf/ShelfDataAvailabilityGate';
+import {
+  recordShelfFooterRender,
+  recordShelfHeaderRender,
+  recordShelfMainListCommit,
+  recordShelfProductRowRender,
+} from '@/features/shelf/shelfRenderDiagnostics';
+import {
+  readShelfE2EStressFixture,
+  type ShelfStressActiveRow,
+} from '@/features/shelf/shelfStressFixture';
 import { ShelfSyncStatus } from '@/features/shelf/ShelfSyncStatus';
 import { useShelfFromBoundary, type ShelfData, type ShelfItem } from '@/features/shelf/useShelf';
 import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
@@ -42,9 +63,25 @@ const SUBHEAD: Record<Filter, string> = {
   expiring: 'Soonest first. The honest reasons to replace something.',
 };
 
-type ShelfViewState = {
+// Preserve only bounded, non-sensitive view state while Expo Router releases the
+// focused Shelf subtree. Product rows and query data remain owned by React Query.
+const shelfViewMemory: {
   filter: Filter;
+  restoreToEnd: Filter | null;
+  scrollOffsets: Record<Filter, number>;
+} = {
+  filter: 'all',
+  restoreToEnd: null,
+  scrollOffsets: { all: 0, actives: 0, expiring: 0 },
+};
+
+type ShelfViewState = {
+  beginFilterEndRestore: (filter: Filter) => void;
+  filter: Filter;
+  finishFilterOffsetRestore: (filter: Filter) => void;
   getScrollOffset: () => number;
+  isFilterEndRestorePending: (filter: Filter) => boolean;
+  isFilterOffsetRestorePending: (filter: Filter) => boolean;
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   setFilter: (filter: Filter) => void;
 };
@@ -57,24 +94,82 @@ function useShelfViewState(): ShelfViewState {
   return state;
 }
 
-function ShelfViewStateProvider({ children }: { children: React.ReactNode }) {
-  const [filter, setFilter] = useState<Filter>('all');
-  const scrollOffsets = useRef<Record<Filter, number>>({ all: 0, actives: 0, expiring: 0 });
+function ShelfViewStateProvider({
+  children,
+  isFocused,
+}: {
+  children: React.ReactNode;
+  isFocused: boolean;
+}) {
+  const [filter, setFilterState] = useState<Filter>(() => shelfViewMemory.filter);
+  const filterRef = useRef<Filter>(shelfViewMemory.filter);
+  const focusedRef = useRef(isFocused);
+  const restoringFilter = useRef<Filter | null>(
+    shelfViewMemory.restoreToEnd ??
+      (shelfViewMemory.scrollOffsets[shelfViewMemory.filter] > 0 ? shelfViewMemory.filter : null),
+  );
+  const scrollOffsets = useRef(shelfViewMemory.scrollOffsets);
+  useLayoutEffect(() => {
+    focusedRef.current = isFocused;
+  }, [isFocused]);
   const onScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (
+        !focusedRef.current ||
+        filterRef.current !== filter ||
+        restoringFilter.current !== null
+      ) {
+        return;
+      }
       scrollOffsets.current[filter] = Math.max(0, event.nativeEvent.contentOffset.y);
     },
     [filter],
   );
+  const setFilter = useCallback((nextFilter: Filter) => {
+    if (filterRef.current === nextFilter) return;
+    filterRef.current = nextFilter;
+    shelfViewMemory.filter = nextFilter;
+    restoringFilter.current = nextFilter;
+    setFilterState(nextFilter);
+  }, []);
   const getScrollOffset = useCallback(() => scrollOffsets.current[filter], [filter]);
+  const beginFilterEndRestore = useCallback((candidate: Filter) => {
+    shelfViewMemory.restoreToEnd = candidate;
+    restoringFilter.current = candidate;
+  }, []);
+  const isFilterEndRestorePending = useCallback(
+    (candidate: Filter) => shelfViewMemory.restoreToEnd === candidate,
+    [],
+  );
+  const isFilterOffsetRestorePending = useCallback(
+    (candidate: Filter) => restoringFilter.current === candidate,
+    [],
+  );
+  const finishFilterOffsetRestore = useCallback((candidate: Filter) => {
+    if (restoringFilter.current === candidate) restoringFilter.current = null;
+    if (shelfViewMemory.restoreToEnd === candidate) shelfViewMemory.restoreToEnd = null;
+  }, []);
   const state = useMemo(
     () => ({
+      beginFilterEndRestore,
       filter,
+      finishFilterOffsetRestore,
       getScrollOffset,
+      isFilterEndRestorePending,
+      isFilterOffsetRestorePending,
       onScroll,
       setFilter,
     }),
-    [filter, getScrollOffset, onScroll],
+    [
+      filter,
+      beginFilterEndRestore,
+      finishFilterOffsetRestore,
+      getScrollOffset,
+      isFilterEndRestorePending,
+      isFilterOffsetRestorePending,
+      onScroll,
+      setFilter,
+    ],
   );
 
   return <ShelfViewStateContext.Provider value={state}>{children}</ShelfViewStateContext.Provider>;
@@ -100,12 +195,14 @@ function ScanShelfButton({ source }: { source: ProductAddStartSource }) {
 type ProductCardProps = Pick<ShelfItem, 'id' | 'name' | 'metaLine' | 'badge'>;
 
 const ProductCard = memo(function ProductCard({ id, name, metaLine, badge }: ProductCardProps) {
+  recordShelfProductRowRender();
   // Only the countdown card carries the faint accent border (design screen 05);
   // expired/safety cards stay on the neutral hairline. The firmer badge already
   // signals attention.
   const attention = badge.kind === 'countdown';
   return (
     <View
+      nativeID={`shelf-product-${id}`}
       style={[
         // The countdown card carries the faint amber accent border (design frame 03,
         // rgba(176,122,60,0.45)); everything else stays on the neutral hairline.
@@ -388,10 +485,7 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
   );
 }
 
-type ShelfListRow = ProductCardProps & {
-  active: boolean;
-  expiring: boolean;
-};
+type ShelfListRow = ShelfStressActiveRow;
 
 function shelfRowKey(item: ShelfListRow) {
   return item.id;
@@ -488,6 +582,7 @@ const ShelfListHeader = memo(function ShelfListHeader({
   compactFilterLabels: boolean;
   productCount: number;
 }) {
+  recordShelfHeaderRender();
   return (
     <View className="pb-4">
       <ShelfListTitle productCount={productCount} />
@@ -498,7 +593,14 @@ const ShelfListHeader = memo(function ShelfListHeader({
   );
 });
 
-const ShelfListFooter = memo(function ShelfListFooter({ archiveCount }: { archiveCount: number }) {
+const ShelfListFooter = memo(function ShelfListFooter({
+  archiveCount,
+  onOpenArchive,
+}: {
+  archiveCount: number;
+  onOpenArchive: () => void;
+}) {
+  recordShelfFooterRender();
   return (
     <>
       {archiveCount > 0 ? (
@@ -510,7 +612,7 @@ const ShelfListFooter = memo(function ShelfListFooter({ archiveCount }: { archiv
           className="mt-6 min-h-[48px] items-center justify-center py-2"
           onPress={() => {
             haptics.select();
-            router.push('/shelf/archive');
+            onOpenArchive();
           }}
         >
           <Text variant="label" tone="muted">
@@ -531,15 +633,28 @@ function LoadedShelf({
   banner,
   archiveCount,
   compactFilterLabels,
+  stressRows,
 }: {
   items: ShelfItem[];
   banner: ShelfData['banner'];
   archiveCount: number;
   compactFilterLabels: boolean;
+  stressRows?: ShelfListRow[];
 }) {
-  const { filter, getScrollOffset, onScroll } = useShelfViewState();
+  const {
+    beginFilterEndRestore,
+    filter,
+    finishFilterOffsetRestore,
+    getScrollOffset,
+    isFilterEndRestorePending,
+    isFilterOffsetRestorePending,
+    onScroll,
+  } = useShelfViewState();
+  const listRef = useRef<FlatList<ShelfListRow>>(null);
+  const restoreFrame = useRef<number | null>(null);
   const rows = useMemo<ShelfListRow[]>(
     () =>
+      stressRows ??
       items.map((item) => ({
         id: item.id,
         name: item.name,
@@ -548,7 +663,7 @@ function LoadedShelf({
         active: item.engineProduct.tags.some((tag) => ACTIVE_TAGS.has(tag)),
         expiring: item.badge.kind === 'countdown' || item.badge.kind === 'expired',
       })),
-    [items],
+    [items, stressRows],
   );
   const filteredRows = useMemo(() => {
     if (filter === 'actives') return rows.filter((item) => item.active);
@@ -556,40 +671,100 @@ function LoadedShelf({
     return rows;
   }, [filter, rows]);
   const initialContentOffset = useMemo(() => ({ x: 0, y: getScrollOffset() }), [getScrollOffset]);
+  const restoreFilterOffset = useCallback(() => {
+    if (restoreFrame.current !== null) cancelAnimationFrame(restoreFrame.current);
+    const offset = getScrollOffset();
+    const restoreToEnd = isFilterEndRestorePending(filter);
+    const restore = () => {
+      if (restoreToEnd) listRef.current?.scrollToEnd({ animated: false });
+      else listRef.current?.scrollToOffset({ animated: false, offset });
+    };
+    restore();
+    restoreFrame.current = requestAnimationFrame(() => {
+      restore();
+      restoreFrame.current = requestAnimationFrame(() => {
+        restore();
+        if (!restoreToEnd) finishFilterOffsetRestore(filter);
+        restoreFrame.current = null;
+      });
+    });
+  }, [filter, finishFilterOffsetRestore, getScrollOffset, isFilterEndRestorePending]);
+  useLayoutEffect(() => {
+    restoreFilterOffset();
+    return () => {
+      if (restoreFrame.current !== null) cancelAnimationFrame(restoreFrame.current);
+      restoreFrame.current = null;
+    };
+  }, [filter, filteredRows.length, restoreFilterOffset]);
+  const handleContentSizeChange = useCallback(() => {
+    if (isFilterOffsetRestorePending(filter)) restoreFilterOffset();
+  }, [filter, isFilterOffsetRestorePending, restoreFilterOffset]);
+  const viewabilityState = useRef({ filter, finalIndex: filteredRows.length - 1 });
+  useLayoutEffect(() => {
+    viewabilityState.current = { filter, finalIndex: filteredRows.length - 1 };
+  }, [filter, filteredRows.length]);
+  const handleViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken<ShelfListRow>[] }) => {
+      const current = viewabilityState.current;
+      if (
+        isFilterEndRestorePending(current.filter) &&
+        viewableItems.some((item) => item.index === current.finalIndex)
+      ) {
+        finishFilterOffsetRestore(current.filter);
+      }
+    },
+    [finishFilterOffsetRestore, isFilterEndRestorePending],
+  );
   const listHeader = useMemo(
     () => (
       <ShelfListHeader
         banner={banner}
         compactFilterLabels={compactFilterLabels}
-        productCount={items.length}
+        productCount={rows.length}
       />
     ),
-    [banner, compactFilterLabels, items.length],
+    [banner, compactFilterLabels, rows.length],
   );
-  const listFooter = useMemo(() => <ShelfListFooter archiveCount={archiveCount} />, [archiveCount]);
+  const openArchive = useCallback(() => {
+    beginFilterEndRestore(filter);
+    router.push('/shelf/archive');
+  }, [beginFilterEndRestore, filter]);
+  const listFooter = useMemo(
+    () => <ShelfListFooter archiveCount={archiveCount} onOpenArchive={openArchive} />,
+    [archiveCount, openArchive],
+  );
 
   return (
-    <FlatList
-      className="flex-1"
-      data={filteredRows}
-      keyExtractor={shelfRowKey}
-      renderItem={renderShelfRow}
-      ItemSeparatorComponent={ShelfRowSeparator}
-      showsVerticalScrollIndicator={false}
-      contentContainerClassName="pb-32"
-      contentOffset={initialContentOffset}
-      onScroll={onScroll}
-      scrollEventThrottle={32}
-      ListHeaderComponent={listHeader}
-      ListEmptyComponent={
-        <Text variant="bodySm" tone="muted" className="mt-4 text-center">
-          {filter === 'expiring'
-            ? 'Nothing needs replacing right now.'
-            : 'No products match this filter.'}
-        </Text>
-      }
-      ListFooterComponent={listFooter}
-    />
+    <Profiler
+      id="shelf-main-list"
+      onRender={(_id, _phase, actualDuration) => recordShelfMainListCommit(actualDuration)}
+    >
+      <FlatList
+        ref={listRef}
+        nativeID="shelf-main-list"
+        className="flex-1"
+        data={filteredRows}
+        keyExtractor={shelfRowKey}
+        renderItem={renderShelfRow}
+        ItemSeparatorComponent={ShelfRowSeparator}
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-32"
+        contentOffset={initialContentOffset}
+        onScroll={onScroll}
+        onContentSizeChange={handleContentSizeChange}
+        onViewableItemsChanged={handleViewableItemsChanged}
+        scrollEventThrottle={32}
+        ListHeaderComponent={listHeader}
+        ListEmptyComponent={
+          <Text variant="bodySm" tone="muted" className="mt-4 text-center">
+            {filter === 'expiring'
+              ? 'Nothing needs replacing right now.'
+              : 'No products match this filter.'}
+          </Text>
+        }
+        ListFooterComponent={listFooter}
+      />
+    </Profiler>
   );
 }
 
@@ -601,12 +776,15 @@ function FocusedShelfScreen() {
   const shortShelf = height < 520;
   const splitShortShelf = height < 410;
   const compactFilterLabels = compactShelf;
+  const stressFixtureCandidate = useMemo(() => readShelfE2EStressFixture(), []);
+  const stressFixture = !isError && data ? stressFixtureCandidate : null;
 
   const items = data?.items ?? [];
-  const archiveCount = data?.archive.length ?? 0;
+  const displayedItemCount = stressFixture?.activeRows.length ?? items.length;
+  const archiveCount = stressFixture?.archiveRows.length ?? data?.archive.length ?? 0;
 
-  const showLoading = isLoading && items.length === 0;
-  const isEmpty = !isLoading && items.length === 0;
+  const showLoading = !stressFixture && isLoading && items.length === 0;
+  const isEmpty = !showLoading && displayedItemCount === 0;
 
   return (
     <Screen edges={['top']}>
@@ -640,9 +818,10 @@ function FocusedShelfScreen() {
       ) : (
         <LoadedShelf
           items={items}
-          banner={data?.banner ?? null}
+          banner={stressFixture ? null : (data?.banner ?? null)}
           archiveCount={archiveCount}
           compactFilterLabels={compactFilterLabels}
+          stressRows={stressFixture?.activeRows}
         />
       )}
     </Screen>
@@ -653,6 +832,8 @@ export default function ShelfScreen() {
   const isFocused = useIsFocused();
 
   return (
-    <ShelfViewStateProvider>{isFocused ? <FocusedShelfScreen /> : null}</ShelfViewStateProvider>
+    <ShelfViewStateProvider isFocused={isFocused}>
+      {isFocused ? <FocusedShelfScreen /> : null}
+    </ShelfViewStateProvider>
   );
 }

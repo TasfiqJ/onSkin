@@ -483,6 +483,8 @@ For each virtualized list:
 - verify VoiceOver/TalkBack order and focus restoration;
 - record blank-cell, recycling, and keyboard behavior.
 
+Current local Shelf/archive checkpoint (2026-07-21): both growing collections retain `FlatList`, stable domain keys, memoized narrow rows, and list-owned header/footer boundaries. A development-web-only deterministic fixture is capped at 250 rows per collection and overlays only after the real Shelf availability query succeeds. Content-free Profiler counters and stable native IDs support exact traversal without retaining row content. A 390 x 844 Expo-web run traversed all 100 Shelf rows, exact 34-row Actives and 40-row Expiring subsets, and all 100 Archive rows without a blank sampled viewport; filter anchors and the semantic final-row boundary after Archive Back restored with zero horizontal overflow, dialogs, or unexpected logs. The run found and fixed stale outgoing-filter scroll callbacks and variable-height bottom-offset clamping without adding `getItemLayout`, filter remounts, or unmeasured window/clipping parameters. Signed supported-iOS frame, memory, focus/background, Dynamic Type, VoiceOver, and oldest-device tuning remain required before OPT-105 can be verified. See `docs/optimization/evidence/2026-07-21_shelf-archive-collection-stress.md`.
+
 ### 5.2 Build route-level view models
 
 Current routes often compose hooks that recursively subscribe to the same domain queries. React Query deduplicates fetching but not observers, object construction, derivation, or React commits.
