@@ -1,0 +1,75 @@
+{
+  "alerts": [],
+  "bodyText": "? x Not found yet. S Search catalog Try name or brand instead I Add ingredients + Add it by hand Always works, even offline Report missing product",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 299,
+      "y": 337
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Search catalog. Try name or brand instead",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 319,
+      "x": 28,
+      "y": 431
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add the ingredient list. Take a label photo or type it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 319,
+      "x": 28,
+      "y": 483
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add it by hand. Always works, even offline",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 319,
+      "x": 28,
+      "y": 535
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Report missing product",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 319,
+      "x": 28,
+      "y": 595
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8480/shelf/no-match?barcode=012345678905",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

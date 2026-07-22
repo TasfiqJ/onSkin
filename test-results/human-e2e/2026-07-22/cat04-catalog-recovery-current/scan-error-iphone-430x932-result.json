@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "scan-error-iphone-430x932",
+  "completedAt": "2026-07-22T02:12:47.568Z",
+  "error": null,
+  "fixture": "error",
+  "fixtureGroup": "scan-error",
+  "nativeDeviceProof": false,
+  "route": "/shelf/scan",
+  "scenarioId": "scan-error",
+  "startedAt": "2026-07-22T02:12:40.278Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-430x932",
+    "width": 430,
+    "height": 932
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8521/shelf/manual?intakeId=7e284b92-738b-4d7d-a68e-6ac8d83193b0"
+}

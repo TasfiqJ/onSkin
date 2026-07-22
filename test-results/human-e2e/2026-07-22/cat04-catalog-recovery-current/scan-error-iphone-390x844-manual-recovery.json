@@ -1,0 +1,116 @@
+{
+  "alerts": [],
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. Product name Brand Category Choose ▾ Barcode (optional) Ingredients · optional, we’ll find the actives On the next step, record PAO only when it is printed beside the open-jar symbol. Otherwise leave it unknown. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Product name",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 342,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Brand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 157.14,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Category",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 172.86,
+      "x": 193.14,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Barcode, optional",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 342,
+      "x": 24,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 66,
+      "hitOk": true,
+      "label": "Ingredients",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 342,
+      "x": 24,
+      "y": 406
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 342,
+      "x": 24,
+      "y": 776
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Product name",
+      "value": ""
+    },
+    {
+      "label": "Brand",
+      "value": ""
+    },
+    {
+      "label": "Barcode, optional",
+      "value": "012345678905"
+    },
+    {
+      "label": "Ingredients",
+      "value": ""
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8521/shelf/manual?intakeId=cb17d2d4-c48d-4c6a-a2f2-5ae5450d639d",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

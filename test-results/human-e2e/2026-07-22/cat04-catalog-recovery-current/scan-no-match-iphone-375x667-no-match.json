@@ -1,0 +1,87 @@
+{
+  "alerts": [],
+  "bodyText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Barcode 012345678905 is not in the catalog yet. Add it another way, then report the miss if you want. = Scan label S Search catalog + Add it by hand Product not found",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "torch",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 57,
+      "x": 294,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Scan ingredient label. Capture label, then type from it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 335,
+      "x": 20,
+      "y": 437
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Search catalog. Use reviewed matches",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 335,
+      "x": 20,
+      "y": 491
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add it by hand. Always works offline",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 335,
+      "x": 20,
+      "y": 545
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Product not found",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 335,
+      "x": 20,
+      "y": 603
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8480/shelf/scan?cat04Audit=scan-no-match-iphone-375x667-1784686115205",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

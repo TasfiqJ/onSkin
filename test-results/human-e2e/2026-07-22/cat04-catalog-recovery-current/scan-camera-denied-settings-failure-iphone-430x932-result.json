@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "scan-camera-denied-settings-failure-iphone-430x932",
+  "completedAt": "2026-07-22T02:14:17.333Z",
+  "error": null,
+  "fixture": "denied_no_retry",
+  "fixtureGroup": "camera-recovery",
+  "nativeDeviceProof": false,
+  "route": "/shelf/scan",
+  "scenarioId": "scan-camera-denied-settings-failure",
+  "startedAt": "2026-07-22T02:14:14.616Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-430x932",
+    "width": 430,
+    "height": 932
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-430x932-1784686454618"
+}

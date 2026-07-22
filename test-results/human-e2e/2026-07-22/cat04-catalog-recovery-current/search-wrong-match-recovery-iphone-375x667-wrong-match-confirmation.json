@@ -1,0 +1,92 @@
+{
+  "alerts": [],
+  "bodyText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Wrong Catalog Serum Mismatch Lab / Open Beauty Facts / Limited barcode 012345678905 Use this match Not this product Confirm catalog report Report details to send Selected issue : wrong_match Catalog product ID : 00000000-0000-4000-8000-000000000045 Barcode : 012345678905 Product name : Wrong Catalog Serum Brand : Mismatch Lab Category : serum Catalog source name : Open Beauty Facts Catalog source URL : https://offline-fixture.invalid/open-beauty-facts/product/012345678905 Quality issue : wrong_match Report reason : wrong_match reported from catalog search result Intake method : search Catalog quality : limited Catalog source : open_beauty_facts Platform : web Intake route : shelf_search Your current RoutineKind account ID links this report to you. It is stored in RoutineKind's Supabase backend and is available to RoutineKind's catalog-review team and authorized operators. It is included in your RoutineKind data export. Account deletion or health-data consent withdrawal starts deletion from active RoutineKind systems; backup or legally required retention may not be immediate. Nothing is sent to Open Beauty Facts or any other third-party catalog provider. The list above is the sanitized product and report detail. A separate random retry ID with no product or account content prevents duplicate submissions. Your signed-in session and current health-data consent are checked separately to authorize it. Send report Cancel Add by hand",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Catalog search query",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 244.91,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Search",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 74.09,
+      "x": 276.91,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Send report",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 140.5,
+      "x": 58,
+      "y": 477
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 110.5,
+      "x": 206.5,
+      "y": 477
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add by hand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 579
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Catalog search query",
+      "value": "ceramide cleanser"
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8521/shelf/search?cat04Audit=search-wrong-match-recovery-iphone-375x667-1784686318251&e2eQuery=ceramide+cleanser",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

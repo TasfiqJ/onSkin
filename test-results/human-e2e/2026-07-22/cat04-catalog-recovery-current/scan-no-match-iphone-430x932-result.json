@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "scan-no-match-iphone-430x932",
+  "completedAt": "2026-07-22T02:09:06.577Z",
+  "error": null,
+  "fixture": "no_match",
+  "fixtureGroup": "no-match",
+  "nativeDeviceProof": false,
+  "route": "/shelf/scan",
+  "scenarioId": "scan-no-match",
+  "startedAt": "2026-07-22T02:09:02.736Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-430x932",
+    "width": 430,
+    "height": 932
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8480/shelf/manual?intakeId=b0de5e6b-407d-4386-9390-379f8f5df203"
+}

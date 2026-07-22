@@ -1,0 +1,87 @@
+{
+  "alerts": [],
+  "bodyText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Open settings Line up the barcode Decoding happens on your device Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Capture label, then type from it S Search catalog Use reviewed matches + Add it by hand Always works offline",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "torch",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 57,
+      "x": 349,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Open settings",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 139.11,
+      "x": 145.44,
+      "y": 308
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "Scan ingredient label. Capture label, then type from it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 374,
+      "x": 28,
+      "y": 644
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "Search catalog. Use reviewed matches",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 374,
+      "x": 28,
+      "y": 730
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "Add it by hand. Always works offline",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 374,
+      "x": 28,
+      "y": 816
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8540/shelf/scan?cat04Audit=scan-camera-denied-settings-failure-iphone-430x932-1784686454618",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

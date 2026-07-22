@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "ocr-capture-failure-iphone-390x844",
+  "completedAt": "2026-07-22T02:15:31.168Z",
+  "error": null,
+  "fixture": "capture_failure_once",
+  "fixtureGroup": "ocr-capture-failure",
+  "nativeDeviceProof": false,
+  "route": "/shelf/ocr",
+  "scenarioId": "ocr-capture-failure",
+  "startedAt": "2026-07-22T02:15:28.246Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-390x844",
+    "width": 390,
+    "height": 844
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8561/shelf/ocr?cat04Audit=ocr-capture-failure-iphone-390x844-1784686528246"
+}

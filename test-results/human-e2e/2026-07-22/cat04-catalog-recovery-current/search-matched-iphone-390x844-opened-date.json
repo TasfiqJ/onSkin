@@ -1,0 +1,87 @@
+{
+  "alerts": [],
+  "bodyText": "◴ x When did you open it? Choose the state that matches this package. A PAO clock starts only after your choice. Just opened it Clock starts today Pick a date I opened it earlier Not opened yet No PAO clock; add a printed date if the pack has one PAO: 12 months after opening from catalog · tap to change ✎ Add to shelf",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 314,
+      "y": 182
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 78,
+      "hitOk": true,
+      "label": "Just opened it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 360
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 78,
+      "hitOk": true,
+      "label": "Pick a date",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 448
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 98,
+      "hitOk": true,
+      "label": "Not opened yet",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 536
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 70,
+      "hitOk": true,
+      "label": "Edit period after opening",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 654
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add to shelf",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 334,
+      "x": 28,
+      "y": 748
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8460/shelf/opened?intakeId=3806a0f2-cb36-4f1f-8797-c8d96ef4237f",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}
