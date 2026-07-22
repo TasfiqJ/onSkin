@@ -871,7 +871,7 @@ function startBrowser({ browserPath, debugPort, userDataDir }) {
     spawn(
       browserPath,
       [
-        '--headless=new',
+        '--headless=old',
         `--remote-debugging-port=${debugPort}`,
         `--user-data-dir=${userDataDir}`,
         '--no-first-run',
@@ -879,10 +879,7 @@ function startBrowser({ browserPath, debugPort, userDataDir }) {
         '--disable-background-networking',
         '--disable-component-update',
         '--disable-extensions',
-        '--disable-features=UseSkiaRenderer,VizDisplayCompositor,CanvasOopRasterization',
         '--disable-gpu',
-        '--disable-gpu-sandbox',
-        '--disable-gpu-compositing',
         '--disable-sync',
         '--hide-scrollbars',
         'about:blank',
