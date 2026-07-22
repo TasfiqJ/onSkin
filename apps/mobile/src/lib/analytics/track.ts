@@ -21,6 +21,10 @@ import {
   type DeletionAwarePostHogStorage,
 } from '@/lib/analytics/posthogDurableStorage';
 import {
+  createPostHogRuntimeOptions,
+  installPostHogQueueRetention,
+} from '@/lib/analytics/posthogRuntimePolicy';
+import {
   AccountGenerationLeaseError,
   awaitAccountGenerationLease,
   runAccountGenerationOperation,
@@ -39,7 +43,6 @@ interface PostHogHandle {
 
 const ACCOUNT_DELETION_ANALYTICS_FREEZE_WAIT_MS = 1_500;
 const LOCAL_DELETION_CLEANUP_API_KEY = 'onskin-local-deletion-cleanup';
-
 let posthogPromise: Promise<PostHogHandle | null> | null = null;
 let accountDeletionFreezeTail: Promise<void> = Promise.resolve();
 type AnalyticsProps = Parameters<PostHog['capture']>[1];
@@ -118,16 +121,12 @@ async function getPostHogHandle(forAccountDeletion = false): Promise<PostHogHand
       const posthog = new PostHogClient(
         configured ? env.posthogKey : LOCAL_DELETION_CLEANUP_API_KEY,
         {
-          host: env.posthogHost,
+          ...createPostHogRuntimeOptions(storage, disabledForLocalCleanup),
           captureAppLifecycleEvents: false,
-          customStorage: storage,
-          disableRemoteFeatureFlags: true,
-          disableSurveys: true,
-          disabled: disabledForLocalCleanup,
           enableSessionReplay: false,
-          persistence: 'file',
         },
       );
+      installPostHogQueueRetention(posthog, PostHogPersistedProperty.Queue);
 
       if (resumeAfterCompletedDeletion) {
         // The persisted opt-out belongs to the deleted owner. Register these

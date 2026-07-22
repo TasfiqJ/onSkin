@@ -46,7 +46,7 @@ Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free i
 
 ## Remaining Work Classification
 
-The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint: exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery evidence, and Shelf/archive collection stress coverage. The exact-release artifact/recovery slice is now implemented; the other local slices remain active follow-up work. Separately, genuine closure gates remain one or more of:
+The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, and explicit PostHog persisted-queue expiry/caps are now locally implemented. Progress note persistence/failure recovery evidence and Shelf/archive collection stress coverage remain active follow-up work. Separately, genuine closure gates remain one or more of:
 
 - decision-gated: photo v2/native handles, encrypted thumbnails/cache ceilings, startup-shield scope, retention/abuse/scheduler thresholds, and bundle/performance budgets;
 - hosted/provider-gated: Supabase deployment and seeded scale/recovery rehearsals, RevenueCat/provider replay, retention scheduling, alerting, and completion terminal reconciliation;
