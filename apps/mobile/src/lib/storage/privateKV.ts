@@ -402,6 +402,12 @@ function decryptEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): str
   return bytesToUtf8(plaintext);
 }
 
+function authenticateEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): void {
+  void xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
+    hexToBytes(envelope.ciphertextHex),
+  );
+}
+
 function encryptPrivateValue(value: string, contentKey: Uint8Array): string {
   const nonce = randomBytes(NONCE_BYTES);
   const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(value));
@@ -797,6 +803,73 @@ async function getPrivateItemsForGeneration(
   return result;
 }
 
+async function verifyPrivateItemsForGeneration(
+  keys: readonly string[],
+  generation: number,
+): Promise<void> {
+  for (const key of keys) assertPrivateDataKey(key);
+  const entries = await AsyncStorage.multiGet([...keys]);
+  assertAccountScopedPrivateOperationAllowed(generation);
+  let hasEncryptedEntries = false;
+
+  // Classify the complete snapshot before consulting the content key. This
+  // preserves the batch reader's fail-closed malformed/future-envelope
+  // precedence without collecting decrypted values in a result Map.
+  for (const [key, raw] of entries) {
+    if (raw === null) {
+      failedReadSnapshots.delete(key);
+      continue;
+    }
+    const classification = classifyEnvelope(key, raw);
+    if (classification.kind === 'current') {
+      hasEncryptedEntries = true;
+    } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+      rememberFailedRead(key, raw);
+      throw envelopeClassificationError(classification.kind);
+    } else {
+      failedReadSnapshots.delete(key);
+    }
+  }
+
+  if (!hasEncryptedEntries) return;
+  let contentKey: Uint8Array | null;
+  try {
+    contentKey = await getExistingContentKey();
+  } catch (error) {
+    assertAccountScopedPrivateOperationAllowed(generation);
+    for (const [key, raw] of entries) {
+      if (raw !== null && classifyEnvelope(key, raw).kind === 'current') {
+        rememberFailedRead(key, raw);
+      }
+    }
+    throw error;
+  }
+  assertAccountScopedPrivateOperationAllowed(generation);
+  if (!contentKey) {
+    for (const [key, raw] of entries) {
+      if (raw !== null && classifyEnvelope(key, raw).kind === 'current') {
+        rememberFailedRead(key, raw);
+      }
+    }
+    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+  }
+
+  for (const [key, raw] of entries) {
+    if (raw === null) continue;
+    const classification = classifyEnvelope(key, raw);
+    if (classification.kind !== 'current') continue;
+    try {
+      // Authentication is the only required result. Avoiding UTF-8 conversion
+      // prevents the startup verifier from retaining plaintext strings.
+      authenticateEnvelope(classification.envelope, contentKey);
+      failedReadSnapshots.delete(key);
+    } catch {
+      rememberFailedRead(key, raw);
+      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+    }
+  }
+}
+
 export async function getPrivateItems(
   keys: readonly string[],
 ): Promise<Map<string, string | null>> {
@@ -819,7 +892,7 @@ export async function assertPrivateKVReadable(): Promise<void> {
         (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
       );
       if (keys.length === 0) return;
-      await getPrivateItemsForGeneration(keys, generation);
+      await verifyPrivateItemsForGeneration(keys, generation);
       assertAccountScopedPrivateOperationAllowed(generation);
     });
   });

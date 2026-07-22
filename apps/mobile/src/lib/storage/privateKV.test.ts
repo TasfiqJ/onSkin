@@ -50,12 +50,14 @@ const mocks = vi.hoisted(() => ({
   platformOS: 'ios',
   removeItemGate: null as Promise<void> | null,
   removeItemStarted: null as (() => void) | null,
+  secureGetCount: 0,
   secureGetThrows: false,
   secureGetGate: null as Promise<void> | null,
   secureGetStarted: null as (() => void) | null,
   secureStorage: new Map<string, string>(),
   setItemGate: null as Promise<void> | null,
   setItemStarted: null as (() => void) | null,
+  setItemCount: 0,
   setItemFailures: new Map<string, number>(),
   setItemCommitThenThrow: new Map<string, number>(),
 }));
@@ -90,6 +92,7 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
       );
     }),
     setItem: vi.fn(async (key: string, value: string) => {
+      mocks.setItemCount += 1;
       mocks.setItemStarted?.();
       if (mocks.setItemGate) await mocks.setItemGate;
       const failures = mocks.setItemFailures.get(key) ?? 0;
@@ -123,6 +126,7 @@ vi.mock('expo-secure-store', () => ({
   WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
   isAvailableAsync: vi.fn(async () => true),
   getItemAsync: vi.fn(async (key: string) => {
+    mocks.secureGetCount += 1;
     mocks.secureGetStarted?.();
     if (mocks.secureGetGate) await mocks.secureGetGate;
     if (mocks.secureGetThrows) throw new Error('secure read failed');
@@ -149,12 +153,14 @@ describe('private KV encrypted storage', () => {
     mocks.platformOS = 'ios';
     mocks.removeItemGate = null;
     mocks.removeItemStarted = null;
+    mocks.secureGetCount = 0;
     mocks.secureGetThrows = false;
     mocks.secureGetGate = null;
     mocks.secureGetStarted = null;
     mocks.secureStorage.clear();
     mocks.setItemGate = null;
     mocks.setItemStarted = null;
+    mocks.setItemCount = 0;
     mocks.setItemFailures.clear();
     mocks.setItemCommitThenThrow.clear();
     endPrivateKVAccountBoundary();
@@ -480,6 +486,59 @@ describe('private KV encrypted storage', () => {
     expect(mocks.asyncStorage.get(foreignKey)).toBe(foreignRaw);
   });
 
+  it('authenticates a large vault without returning plaintext or writing storage', async () => {
+    const plaintext = `private-startup-verification:${'x'.repeat(32 * 1024)}`;
+    const seedKey = 'onskin.verify.seed';
+    await setPrivateItem(seedKey, plaintext);
+    const encrypted = mocks.asyncStorage.get(seedKey);
+    expect(encrypted).toBeDefined();
+    expect(encrypted).not.toContain(plaintext);
+
+    const encryptedKeys = [
+      seedKey,
+      ...Array.from({ length: 48 }, (_, index) => `onskin.verify.${index}`),
+    ];
+    for (const key of encryptedKeys.slice(1)) mocks.asyncStorage.set(key, encrypted!);
+    const ciphertextSnapshot = new Map(mocks.asyncStorage);
+    mocks.secureGetCount = 0;
+    mocks.setItemCount = 0;
+
+    await expect(assertPrivateKVReadable()).resolves.toBeUndefined();
+
+    expect(mocks.secureGetCount).toBe(1);
+    expect(mocks.setItemCount).toBe(0);
+    expect(mocks.asyncStorage).toEqual(ciphertextSnapshot);
+    await expect(getPrivateItems(encryptedKeys.slice(0, 2))).resolves.toEqual(
+      new Map([
+        [encryptedKeys[0], plaintext],
+        [encryptedKeys[1], plaintext],
+      ]),
+    );
+  });
+
+  it('preserves and fences a later ciphertext that fails verification', async () => {
+    await setPrivateItem('onskin.verify.first', 'first-value');
+    await setPrivateItem('onskin.verify.last', 'last-value');
+    const lastEnvelope = JSON.parse(mocks.asyncStorage.get('onskin.verify.last')!) as {
+      ciphertextHex: string;
+    };
+    lastEnvelope.ciphertextHex = `${lastEnvelope.ciphertextHex.slice(0, -2)}${
+      lastEnvelope.ciphertextHex.endsWith('00') ? '01' : '00'
+    }`;
+    mocks.asyncStorage.set('onskin.verify.last', JSON.stringify(lastEnvelope));
+    const ciphertextSnapshot = new Map(mocks.asyncStorage);
+    mocks.setItemCount = 0;
+
+    await expect(assertPrivateKVReadable()).rejects.toThrow(PRIVATE_KV_DECRYPTION_FAILED);
+
+    expect(mocks.setItemCount).toBe(0);
+    expect(mocks.asyncStorage).toEqual(ciphertextSnapshot);
+    await expect(setPrivateItem('onskin.verify.last', 'replacement')).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
+    );
+    expect(mocks.asyncStorage).toEqual(ciphertextSnapshot);
+  });
+
   it('rejects reads, writes, and removals against reserved storage authorities', async () => {
     const foreignKey = 'sb-placeholder-auth-token';
     const contentKey = privateKVEncryptionInfo.secureStoreKey;
@@ -697,6 +756,41 @@ describe('private KV encrypted storage', () => {
     } finally {
       endPrivateKVAccountBoundary();
     }
+  });
+
+  it('invalidates a delayed full-audit content-key read without leaving stale failure state', async () => {
+    const key = 'onskin.account-a.audit';
+    await setPrivateItem(key, 'owner-a-value');
+    let releaseSecureRead!: () => void;
+    let markSecureReadStarted!: () => void;
+    mocks.secureGetGate = new Promise<void>((resolve) => {
+      releaseSecureRead = resolve;
+    });
+    const secureReadStarted = new Promise<void>((resolve) => {
+      markSecureReadStarted = resolve;
+    });
+    mocks.secureGetStarted = markSecureReadStarted;
+    mocks.secureGetThrows = true;
+
+    const audit = assertPrivateKVReadable();
+    const rejection = expect(audit).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    await secureReadStarted;
+    beginPrivateKVAccountBoundary();
+    try {
+      await rejection;
+      await expect(waitForPrivateKVWritesToSettle()).resolves.toBeUndefined();
+      releaseSecureRead();
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
+
+    mocks.secureGetGate = null;
+    mocks.secureGetStarted = null;
+    mocks.secureGetThrows = false;
+    mocks.asyncStorage.set(key, 'owner-b-value');
+    await expect(setPrivateItem(key, 'owner-b-replacement')).resolves.toBeUndefined();
+    await expect(getPrivateItem(key)).resolves.toBe('owner-b-replacement');
   });
 
   it('blocks reads until the outermost nested account boundary ends', async () => {

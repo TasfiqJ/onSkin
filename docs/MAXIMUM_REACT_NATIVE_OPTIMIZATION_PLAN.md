@@ -427,6 +427,8 @@ Required startup states:
 - offline;
 - low-storage/low-memory device.
 
+Current local private-vault verification checkpoint (2026-07-21): the exhaustive startup gate still enumerates and authenticates every app-owned private-KV record before route admission, but it no longer routes that verification through the ordinary batch reader that materializes a `Map` of every decrypted plaintext value. A dedicated generation-bound verifier classifies the complete encrypted snapshot first, reads the existing content key once without creating key material, authenticates each current envelope one at a time without UTF-8 string conversion, and immediately discards the decrypted bytes. Malformed/future-envelope precedence, exact failed-read fencing, ciphertext preservation, foreign-key exclusion, and account-boundary invalidation remain unchanged. A 49-record stress case with 32 KiB plaintext values proves one content-key read, zero writes, unchanged ciphertext, and a void-only audit result; later-record corruption and delayed owner-A key reads remain fail closed. This reduces simultaneous decrypted-data retention without weakening or replacing the exhaustive scan, changing startup authorization, or adopting the unapproved manifest/database/shield architecture. Native peak-heap, protected-storage interruption, and signed-device startup distributions remain open. See `docs/optimization/evidence/2026-07-21_private-vault-verify-only-decrypt.md`.
+
 ### PERF-P0-010 — Remove the font asset explosion
 
 Confirmed issue: root imports from the three font package indexes cause Metro to export every family weight/style.
