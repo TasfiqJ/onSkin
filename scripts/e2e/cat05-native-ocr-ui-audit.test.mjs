@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   CAT05_AUDIT_LIMITATIONS,
+  CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS,
   CAT05_EDIT_FENCE_TEXT,
   CAT05_EVIDENCE_SCHEMA_VERSION,
   CAT05_EVIDENCE_RELATIVE_DIR,
@@ -279,6 +280,8 @@ test('source-only privacy assertions pin no-cache previews, trusted raw captures
 });
 
 test('browser and page targets are pinned to explicit local HTTP origin and port', () => {
+  assert.equal(CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS, 120_000);
+  assert.match(source, /CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS/);
   assert.equal(
     assertCat05LocalTarget('http://localhost:8620/shelf/ocr', {
       expectedPort: 8620,

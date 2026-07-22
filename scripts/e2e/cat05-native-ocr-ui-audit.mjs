@@ -46,6 +46,7 @@ const CAT05_MAX_RETAINED_BROWSER_EVENTS = 5_000;
 const CAT05_MAX_BROWSER_EVENT_EVIDENCE_BYTES = 4 * 1024 * 1024;
 const CAT05_MAX_DIAGNOSTIC_ARTIFACT_BYTES = 8 * 1024 * 1024;
 const CAT05_MAX_DIAGNOSTIC_STRING_BYTES = 128 * 1024;
+export const CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS = 120_000;
 const CAT05_LOG_TRUNCATION_MARKER = '\n[CAT05 log truncated after sanitization]\n';
 const CAT05_RAW_LOG_TRUNCATION_MARKER =
   '\n[CAT05 raw Expo log collection truncated before sanitization]\n';
@@ -2515,7 +2516,12 @@ export async function runCat05NativeOcrUiAudit({
         await waitForUrl(baseUrl, 180_000, signal);
         assertCat05ProcessRunning(expo, `Expo fixture ${group.id}`);
         browser = startBrowser({ browserPath: browserExecutablePath, debugPort, userDataDir });
-        await readJson(`http://127.0.0.1:${debugPort}/json/version`, debugPort, 30_000, signal);
+        await readJson(
+          `http://127.0.0.1:${debugPort}/json/version`,
+          debugPort,
+          CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS,
+          signal,
+        );
         assertCat05ProcessRunning(browser, `Browser fixture ${group.id}`);
         client = await connectToPage(debugPort, baseUrl, signal);
         await client.send('Page.enable');
