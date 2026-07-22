@@ -283,9 +283,10 @@ test('browser and page targets are pinned to explicit local HTTP origin and port
   assert.equal(CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS, 120_000);
   assert.match(source, /CAT05_BROWSER_DEBUG_READY_TIMEOUT_MS/);
   assert.match(source, /--disable-gpu/);
+  assert.match(source, /--disable-gpu-sandbox/);
   assert.match(source, /--disable-gpu-compositing/);
   assert.match(source, /--disable-features=UseSkiaRenderer,VizDisplayCompositor,CanvasOopRasterization/);
-  assert.match(source, /--single-process/);
+  assert.doesNotMatch(source, /--single-process/);
   assert.equal(
     assertCat05LocalTarget('http://localhost:8620/shelf/ocr', {
       expectedPort: 8620,
