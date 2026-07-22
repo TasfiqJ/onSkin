@@ -14,14 +14,14 @@ This report is deliberately not native Vision, device, camera, label-image, OCR 
 
 ## Run
 
-- Run ID: `344c7f52-b567-426c-ae5a-d0658b2971f6`
-- Source Git SHA: `356bab99bdce80cb3e26e256e0e277996a192dbe`
-- Web fixture build ID: `3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53`
+- Run ID: `df96bbaf-57b6-477c-95c5-825db030f5d6`
+- Source Git SHA: `b61328ea0c3b53a2c211ccfb69728fc7df7864ca`
+- Web fixture build ID: `69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112`
 - Web fixture profile: `development-only-deterministic-expo-web`
 - Candidate source profile: `staging`
 - Native EAS build ID: not applicable (this audit does not execute an iOS binary)
-- Started: 2026-07-22T02:57:10.545Z
-- Completed: 2026-07-22T03:02:21.514Z
+- Started: 2026-07-22T05:03:06.043Z
+- Completed: 2026-07-22T05:06:47.630Z
 - Surface: Expo web / deterministic development-only OCR review fixture
 - Browser: chrome.exe
 - Consent bootstraps: 4/4

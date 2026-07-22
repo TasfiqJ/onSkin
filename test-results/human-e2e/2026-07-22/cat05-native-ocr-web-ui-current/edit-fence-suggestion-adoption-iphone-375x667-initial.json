@@ -52,14 +52,14 @@
       "proofStatus": "not_applicable_to_expo_web_ui_audit"
     },
     "evidenceSchemaVersion": 2,
-    "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
     "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-    "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+    "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
     "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-    "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
     "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
     "webFixtureBuild": {
-      "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+      "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
       "profile": "development-only-deterministic-expo-web"
     },
     "artifactName": "edit-fence-suggestion-adoption-iphone-375x667-initial",

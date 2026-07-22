@@ -4,697 +4,697 @@
     {
       "bytes": 2315,
       "path": "bootstrap-failed-iphone-390x844-ocr-ready.json",
-      "sha256": "b56a826b16c636f200884048db6f488d5c5e05fec3eca4d164afd3ea8244f390"
+      "sha256": "aa43ebf775d71c5150331f2e8090d8412abb79b0c8e8c045de557e27c3fafd4d"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "bootstrap-failed-iphone-390x844-ocr-ready.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 1617,
       "path": "bootstrap-failed-iphone-390x844-result.json",
-      "sha256": "e60debc58d15d331d7f902799acd85886b1c94ef0f5fb997e40ae4cc2c59454d"
+      "sha256": "6aaa6eecb9650963a598a37021ceb9e00565c1f86b6b72038b58ab9fd1331cca"
     },
     {
       "bytes": 2317,
       "path": "bootstrap-no-text-iphone-390x844-ocr-ready.json",
-      "sha256": "db338e993b5b5a2af4ec5a636d6c59564eb78d59cd273e14ade6be77b3279ffb"
+      "sha256": "adc527404d21e6a3f04a9ba34e02e143b017949660fd4fb9598893ae2bb31dc8"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "bootstrap-no-text-iphone-390x844-ocr-ready.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 1621,
       "path": "bootstrap-no-text-iphone-390x844-result.json",
-      "sha256": "87701bf60e7bda3f9bf92156bda28f4c4bbc1725bd9206a01baabbc7c697862a"
+      "sha256": "7f1415486aa12250b1eaf83bf1ee9a06002e9c6aef7a6bac64af7ed84a298472"
     },
     {
       "bytes": 2323,
       "path": "bootstrap-recognized-iphone-390x844-ocr-ready.json",
-      "sha256": "16b1d214d537d0b3cd91ae789b186cd077dc85b1878402ba797287bbd021638f"
+      "sha256": "f3f8ff8be011845e317fe8a1167709cfbacd11c73be1b801f531222edd66d316"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "bootstrap-recognized-iphone-390x844-ocr-ready.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 1633,
       "path": "bootstrap-recognized-iphone-390x844-result.json",
-      "sha256": "4e77cfbd0d72230f896f56a026d9336ef9e4c0d6fbb9f1d41c5ca0658d53153a"
+      "sha256": "3ffb5beabb43839f3e156e4989fda18135cffedb18fe8fd2ba6100f1dc556943"
     },
     {
       "bytes": 2321,
       "path": "bootstrap-timed-out-iphone-390x844-ocr-ready.json",
-      "sha256": "577c5116d5520df0b876774824d6b30fe4019f9457f9b96baff860d678d39869"
+      "sha256": "cda794a607451a0a3d6661d0096f5c4a55afb78afb9f1d1ff849372fcd59ae2c"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "bootstrap-timed-out-iphone-390x844-ocr-ready.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 1629,
       "path": "bootstrap-timed-out-iphone-390x844-result.json",
-      "sha256": "514c8b6812d2958ed93ffcc43d2c276425fabdac1c2acb0b8f3d5eb53db6602a"
+      "sha256": "1d47e9e4e79c061b790c9b37d6bbed2bc16a55139a0b383e8f4ad539c753c804"
     },
     {
-      "bytes": 95237,
+      "bytes": 94672,
       "path": "browser-events-failed.json",
-      "sha256": "0ab1eb49a9eb991744d305383db1e124220f1b838f2569aef20325ceabc9070d"
+      "sha256": "7e7e769bde3279f935bbe130ecda84cae8c11da253ccb69ba9993ba7618ad31c"
     },
     {
-      "bytes": 95239,
+      "bytes": 94674,
       "path": "browser-events-no-text.json",
-      "sha256": "237e5adad8826b03a18000b8a7887a44e08b4c4dbd87f565951ce7d4c15edfee"
+      "sha256": "018fb25c3f54924788ad6bb70657d4d5587708ed7766270ebfe0754a5067f3b5"
     },
     {
       "bytes": 150704,
       "path": "browser-events-recognized.json",
-      "sha256": "2074118eec6369a4c851a0a443a7895377e51059ce2ddc073e8cc01f9024e339"
+      "sha256": "fe04db8483b2c4b88655836b74dc2025ce75da3cca73894b66402d334bc32b67"
     },
     {
-      "bytes": 95243,
+      "bytes": 94678,
       "path": "browser-events-timed-out.json",
-      "sha256": "554fb5cc1a03c10f3edaf17a20a4e8f026a6be874e164c57e4e89526d1786fe5"
+      "sha256": "b176db74cc650933f103c375e6296a0754d7d6bdb62305929a8baff653b1b4c2"
     },
     {
       "bytes": 4408,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-edit-kept.json",
-      "sha256": "f713c6139eb3c5eee92951c8336eb1bdc2905b5c769a6b72ffcf51cd0f2c25d6"
+      "sha256": "061ba5bf2fa02ec5ba966ebf274eb59224752acf1fcfd202405c7cbc82843933"
     },
     {
-      "bytes": 47135,
+      "bytes": 47151,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-edit-kept.png",
-      "sha256": "a0a2183aac9f2a52c2df9849a4f0368db3c4e3e0639b9590bc2a3b1f9f6db5db"
+      "sha256": "35a15706b966a475b9d6ef145c462c85637e3abb688991a06d2eeea20fade532"
     },
     {
       "bytes": 2359,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-initial.json",
-      "sha256": "c7d39fe61c8929d300e4e365e8d98d6816393715b6f7f408cf5b778db80ab6db"
+      "sha256": "6a37ad3d60a3a23e1d4d7cf1c7a5b09754d9fb4f7d6983daf482c745bc05872a"
     },
     {
-      "bytes": 25686,
+      "bytes": 25869,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-initial.png",
-      "sha256": "5879f2a97f4651a9064c8c8dfaea8bfa500b23b2999b1aaef22473085f03cadf"
+      "sha256": "50d1913e5989c7fc9d95aa00cfe76226f30510e7ca8605cdeda50f2196520ed1"
     },
     {
       "bytes": 4014,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-manual-handoff.json",
-      "sha256": "b5831d1dd78ad67667ba92c5151dc6b1c06e46fa5b46ca840495bad8c3c5739b"
+      "sha256": "83ed2c827a9db69ef1b3516f33218cc3bfac8dad158d7e037efb4b6c0b4d7b59"
     },
     {
-      "bytes": 28585,
+      "bytes": 28648,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-manual-handoff.png",
-      "sha256": "d622348746b126082445e6ae429cb4bafe4a3d793ce720d594e4955f2d9fda09"
+      "sha256": "af349c2e405f62901d17b4584b54921411830098a079a689e8ea5cf44f4e2e2a"
     },
     {
       "bytes": 1777,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-result.json",
-      "sha256": "51aef9263a79b6061bb5756ce1692268707dd5c73d7568178b51eb7aeb613c03"
+      "sha256": "0b793b1532f913c2553dcf3d961e28f771d16e397e01b1d2eacaf7c24a319cca"
     },
     {
       "bytes": 4088,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-suggestion-adopted.json",
-      "sha256": "eb9048c1dc0508455513c588b7671176380f958f895a4648cf9cd0389c7acd84"
+      "sha256": "add0e33f43d2f83f64664d410208ffb160cca552d87bed024611db479f92a395"
     },
     {
-      "bytes": 43186,
+      "bytes": 43131,
       "path": "edit-fence-suggestion-adoption-iphone-375x667-suggestion-adopted.png",
-      "sha256": "78551c20c41341587a784a33ecc8fed405fed4965c42b0bb92299586d33870b1"
+      "sha256": "15ffaacebce434d030ee7e4cd695eae261f29447be0b075c5c3389339cb26e20"
     },
     {
       "bytes": 4408,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-edit-kept.json",
-      "sha256": "93edb8406db3b4de96c89514c3880d2a90d4068915620493ee8fef31165b20c3"
+      "sha256": "9442efb451b0d72aae0183a8950c9c5321bf9aa139da729164d0171ab6ac9f9b"
     },
     {
-      "bytes": 56633,
+      "bytes": 56636,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-edit-kept.png",
-      "sha256": "333d9f43cdae557b147e7c24fbbd01a35f69ced136700586891ee1db5eb0426b"
+      "sha256": "78b6dcdd9d6e8c66b4be95ec2db7caa09133e746f43e418041646b70d7fadd25"
     },
     {
       "bytes": 2359,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-initial.json",
-      "sha256": "5a7c94d92ae9ca30a9c8a9d7d0fbbcd4a0cfb85d815f7530f437b3205f8dbbdb"
+      "sha256": "e974179bd090ea4240fd0833498a9c00ce8dc3c4ace9634d8f5510639862aab7"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-initial.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 4705,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-manual-handoff.json",
-      "sha256": "165c2e5dc37117e4c95aae57d9f161e94930b8146883644e1d9fd59801c139e3"
+      "sha256": "88cf1da0bc517ce499040b43c36abd64e04a1edabb660335f13399855b89eeb5"
     },
     {
-      "bytes": 42003,
+      "bytes": 42132,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-manual-handoff.png",
-      "sha256": "98a907eefa9c902e5f8d40ea6c301afe13d30ee45ea73e0e78d60f8be6081d73"
+      "sha256": "6afd6b86711f6f1d22bd14e6ca613ebb71952f159ea8f0e3dba3a89eadbd6b32"
     },
     {
       "bytes": 1777,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-result.json",
-      "sha256": "8ace77046742b41a3634ef13005d755420d85d8942d0e7c0d5e308263d8b31fe"
+      "sha256": "6c4f54a6131785109aba9ea9d3b5dcf2ac252b7a23f2343dfa717f5a10991f92"
     },
     {
       "bytes": 4088,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-suggestion-adopted.json",
-      "sha256": "bc838abd99a493f8e7a338a3b6c1d4cc61eccd0e8dd6a8f551c1bb66eda70cfa"
+      "sha256": "7c11a66f7c634e67c51d11799f78d4a86a16de56d8bbb871faa44b81f9a4c092"
     },
     {
-      "bytes": 52811,
+      "bytes": 52597,
       "path": "edit-fence-suggestion-adoption-iphone-390x844-suggestion-adopted.png",
-      "sha256": "a5e6ae308da74c5f7682bf23c8616abed9104f17bdc4687470a39304bf6d5d9a"
+      "sha256": "8abb93692535034bd7058e3eb1e50dd9291401948596cf2d173dcc007c84735a"
     },
     {
       "bytes": 4408,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-edit-kept.json",
-      "sha256": "de971fe347d85e9f9aca5d34bc4f11b2b6ec8efcd58b20e12d63cff51813a3c2"
+      "sha256": "79a370499c01503713377c25a4af337ce1107977ab5146f798e3c1b4c20badf3"
     },
     {
-      "bytes": 57634,
+      "bytes": 57637,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-edit-kept.png",
-      "sha256": "175f2af94024df8b5db24e974d185afbbb3c543e235e1dcbbba059ef3850d224"
+      "sha256": "e8230e7efbee58235c514fc34d43f1175cf2969b7db0a11d2e60d02a3ca6f866"
     },
     {
       "bytes": 2359,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-initial.json",
-      "sha256": "99182d2d7c8862644d1da002657e8f286ac358be3ff69695fdf25d166084d592"
+      "sha256": "6de9b7fc2d964cac3bfd4070de591f14c7f54751a02db6af621918f49298685b"
     },
     {
-      "bytes": 27001,
+      "bytes": 27117,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-initial.png",
-      "sha256": "c4d6c924a224637317e400059bcab475e4db9ba9cd70f1df03d208e8b381436d"
+      "sha256": "c9b19f4ff91c523f279aacd87ef559b34647d21d3685debde6d7e745e5c6dd24"
     },
     {
       "bytes": 4705,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-manual-handoff.json",
-      "sha256": "99ad1a350e7726f55ed4fd51bd3bfe42ff6d3243fc8369825e994271d1c6f666"
+      "sha256": "1891b358166542b0367f35cb259625310ab40281a95ead72f8798fc4f6e729f5"
     },
     {
-      "bytes": 42244,
+      "bytes": 42381,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-manual-handoff.png",
-      "sha256": "f1cd2514adb91b19d5a336fd10a63bc59a19cc0e71600ea162b954b2b0583dcd"
+      "sha256": "d5f1360dd2cbad5089479488ceab85e2e0d9d41f7f8a554a27869aa7c61d10c4"
     },
     {
       "bytes": 1777,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-result.json",
-      "sha256": "5d3e33809d83accafbdcd6a046d91a48b675b69281ccec73fffe4941dd5e9deb"
+      "sha256": "cdf0e7af3cbc1abdac144f6ae84a185917c159da4c3cee070269fe3aaece7269"
     },
     {
       "bytes": 4088,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-suggestion-adopted.json",
-      "sha256": "dfc02d7ab7afa4c1669551c9249a2dedebf410f98b9774f625687dbbafeedf9d"
+      "sha256": "fca681b8dc6e5f0e83353defb9fbec0e70127940b5f310c036008ce2a29fcb35"
     },
     {
-      "bytes": 59472,
+      "bytes": 59392,
       "path": "edit-fence-suggestion-adoption-iphone-430x932-suggestion-adopted.png",
-      "sha256": "e9f4aad1ebf02a72a842202cb9b4e67d4aa89dbc72d0e9248065ec2d0e16c0b1"
+      "sha256": "7306b35b87ca5d5ee2c3581cbfbf1ba3628d3af047c80585e6a5d3523ad82138"
     },
     {
-      "bytes": 10156,
+      "bytes": 10134,
       "path": "expo-failed.log",
-      "sha256": "6260ea4452036ca11d4ffb7442343a799210a4a057494e7cb928733f6633a747"
+      "sha256": "5c48c8e933b51cb27bfc6eb4ffa9d90281aa277ed98611c43567a6f616937307"
     },
     {
-      "bytes": 9979,
+      "bytes": 10144,
       "path": "expo-no-text.log",
-      "sha256": "eb5f4e7b159034efeeefb314167bb98ec2d846b30c30d6fe3520d08c20c529c5"
+      "sha256": "632992db961d890ef966120511959e128733afb2a89cfc15ce686a34c1a32a91"
     },
     {
-      "bytes": 13947,
+      "bytes": 13937,
       "path": "expo-recognized.log",
-      "sha256": "b0ff32ac05ba9b2d63df6a46f0cd426816bf746595b341e7befdaa4287292979"
+      "sha256": "c4de90cbc5ada8de13461e292b2bc069e0cd049fb9db41fd518951f49452a5e3"
     },
     {
-      "bytes": 10152,
+      "bytes": 9978,
       "path": "expo-timed-out.log",
-      "sha256": "4a46075f487d0958f7499390044626ed7991fcb8a6dd9327fc3009489e1b8739"
+      "sha256": "1fa91453f9349bb390a53a1b3f837f3aa32a0a5bd85c252195228b187e929c5f"
     },
     {
       "bytes": 3223,
       "path": "failure-manual-recovery-iphone-375x667-failed.json",
-      "sha256": "a8e6984faddbb31ed47524b26724f05efd90b2c162a865ab9ea2e56169fad9f3"
+      "sha256": "39783eb143b8025b7016c1d9195d33cd67b8fd64e1d3b4f9ca4a1a228fa7b6bc"
     },
     {
-      "bytes": 37123,
+      "bytes": 37375,
       "path": "failure-manual-recovery-iphone-375x667-failed.png",
-      "sha256": "408191999f77de0915a251b40de5f0ebb9bdcfb0a9fb9b3d6920a2cd07525e1b"
+      "sha256": "e09842199af2b75f2a68e5829f630196961e18e54d1252c3d3ad0e0c288c9d35"
     },
     {
       "bytes": 2341,
       "path": "failure-manual-recovery-iphone-375x667-initial.json",
-      "sha256": "128da64f2d92509af1b06aaa5820106184b1f994198cbba5919cb13bb6d4fc9c"
+      "sha256": "a7729ba81ec3a99cd4df1e588bcf9177fa611d4bc0f5a62d44c91f722b41d72c"
     },
     {
-      "bytes": 25686,
+      "bytes": 25869,
       "path": "failure-manual-recovery-iphone-375x667-initial.png",
-      "sha256": "5879f2a97f4651a9064c8c8dfaea8bfa500b23b2999b1aaef22473085f03cadf"
+      "sha256": "50d1913e5989c7fc9d95aa00cfe76226f30510e7ca8605cdeda50f2196520ed1"
     },
     {
       "bytes": 3996,
       "path": "failure-manual-recovery-iphone-375x667-manual-handoff.json",
-      "sha256": "867c2eee01070b56464e2a3a5dc74872213801d90c279d88a10d9fe8d8a2dd6b"
+      "sha256": "8b5cdb257725d84b1ffa8d19801ca8c242edb8a13f506ccbfcda069f8d76f08f"
     },
     {
-      "bytes": 28585,
+      "bytes": 28648,
       "path": "failure-manual-recovery-iphone-375x667-manual-handoff.png",
-      "sha256": "d622348746b126082445e6ae429cb4bafe4a3d793ce720d594e4955f2d9fda09"
+      "sha256": "af349c2e405f62901d17b4584b54921411830098a079a689e8ea5cf44f4e2e2a"
     },
     {
       "bytes": 1737,
       "path": "failure-manual-recovery-iphone-375x667-result.json",
-      "sha256": "59137e8e4906de9cb2d6a0640122a29bb0aa869a883bb6ab017de58573924cb1"
+      "sha256": "d4b6a7c51a928d17c43f269acbefe24d16593a410d04365bc87949dd1d258b70"
     },
     {
       "bytes": 3569,
       "path": "failure-manual-recovery-iphone-390x844-failed.json",
-      "sha256": "aaefc01d6a12837dd6c215a0002d99c042db58e5cb2370aded4e26b6f4ef8881"
+      "sha256": "282916ec2d466647d0d4ab3da8462c2baaca4afdbb902b1c60e66f29cd4adae0"
     },
     {
-      "bytes": 41408,
+      "bytes": 41569,
       "path": "failure-manual-recovery-iphone-390x844-failed.png",
-      "sha256": "01b83364efc5246e444c1b80bfa35de64738ba394fe77e63ee733c15fec773f1"
+      "sha256": "4bb66b3a6aa0931d3d89ee63e681507859be2545adb0c64854fd9258f1e7911f"
     },
     {
       "bytes": 2341,
       "path": "failure-manual-recovery-iphone-390x844-initial.json",
-      "sha256": "1728150a5d68f9cfc17d2ad41b8b7eda484bf45b3df5a8b9eb445c1f18aa5b64"
+      "sha256": "b66edc207519a8699bc87f56b854bf4929f96fc4d2292571a0ccee74e8fc2831"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "failure-manual-recovery-iphone-390x844-initial.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 4673,
       "path": "failure-manual-recovery-iphone-390x844-manual-handoff.json",
-      "sha256": "17b959296717bf08953648ea67aba6e724f7cf0fc6b8588fd1c50b1656975666"
+      "sha256": "714b8cfc6825b150d427099969c32a9b058be2301bb7014380bb18daf9012ed0"
     },
     {
-      "bytes": 41139,
+      "bytes": 41305,
       "path": "failure-manual-recovery-iphone-390x844-manual-handoff.png",
-      "sha256": "d1b72bb6e95399887372a3f16273ce2483c71902bc2c1f6ba23f33a1345e942f"
+      "sha256": "a88d6c0a82689066f16f767c8c6a8fdcc547c29835fa060f76b9362f650dd932"
     },
     {
       "bytes": 1737,
       "path": "failure-manual-recovery-iphone-390x844-result.json",
-      "sha256": "cf0fd9611af5fe9b308998e4f5c8a42e3799ca41f34d062a17e8751d0383a006"
+      "sha256": "91708ec7a8ad9c7d3b9970f14d3a7ef3581fb6c5b95aa2a9ff8f20a89de4fb2f"
     },
     {
       "bytes": 3569,
       "path": "failure-manual-recovery-iphone-430x932-failed.json",
-      "sha256": "fcacc364fd5c168af4d91cd4e4bd237b65290948ef9ee4be197fa32d5dfb88c1"
+      "sha256": "15a385fa039cbf063874dd3000239156f3ce8b21683b292f85c7bf8f554eb980"
     },
     {
-      "bytes": 41993,
+      "bytes": 42142,
       "path": "failure-manual-recovery-iphone-430x932-failed.png",
-      "sha256": "2800c74336b1a069cafb7d736bee5b4578e6cb3eed63d9ae5c4de017b4badb41"
+      "sha256": "974ce8b9e4735d9c7f3b31a9b610960533f0a50edeb4fc631eefbded5e89ca0c"
     },
     {
       "bytes": 2341,
       "path": "failure-manual-recovery-iphone-430x932-initial.json",
-      "sha256": "25157efd965b4c19c45c0e0575de907ac1e79244eff96218570d6f0ff8be1367"
+      "sha256": "44ae94145d07ec602ac17bf9543cdf37131f2d3a283ed1711d2edf7b1635c137"
     },
     {
-      "bytes": 27001,
+      "bytes": 27117,
       "path": "failure-manual-recovery-iphone-430x932-initial.png",
-      "sha256": "c4d6c924a224637317e400059bcab475e4db9ba9cd70f1df03d208e8b381436d"
+      "sha256": "c9b19f4ff91c523f279aacd87ef559b34647d21d3685debde6d7e745e5c6dd24"
     },
     {
       "bytes": 4673,
       "path": "failure-manual-recovery-iphone-430x932-manual-handoff.json",
-      "sha256": "3c95bea4f6af935bba47f2c1df269e1564a20aa0a05a39fd0e274891b6848b3e"
+      "sha256": "457f912c4dba5d4be54662ab5356007dfd9acbf39106558a7c34c1ba510b2823"
     },
     {
-      "bytes": 41378,
+      "bytes": 41536,
       "path": "failure-manual-recovery-iphone-430x932-manual-handoff.png",
-      "sha256": "6f17afb92d4d47a693b734d2c1392b1fe12f3bf98a650ac8b4e03c04d913c3bc"
+      "sha256": "67ae103b5b6cc4c5c01d34b809504427a1d20897dbfdf36524bcbab8624375cb"
     },
     {
       "bytes": 1737,
       "path": "failure-manual-recovery-iphone-430x932-result.json",
-      "sha256": "c356959f5c4ce5b459b6c26b735fa85166718fd65a1ad9d6d5d184f099d3a72d"
+      "sha256": "93780c9df2d4c349ec374374e59a910a5cd297f2aae56984b841e38e4109a946"
     },
     {
       "bytes": 2342,
       "path": "no-text-manual-recovery-iphone-375x667-initial.json",
-      "sha256": "3afb8a878a510650fe1a40cdb0738d91e2f8ae587f53987d10bfe25c71a04a5f"
+      "sha256": "d5f5ec072cacbe703cb725280ab8736f608443decdd30982c1ef72e02ae7118e"
     },
     {
-      "bytes": 25686,
+      "bytes": 25869,
       "path": "no-text-manual-recovery-iphone-375x667-initial.png",
-      "sha256": "5879f2a97f4651a9064c8c8dfaea8bfa500b23b2999b1aaef22473085f03cadf"
+      "sha256": "50d1913e5989c7fc9d95aa00cfe76226f30510e7ca8605cdeda50f2196520ed1"
     },
     {
       "bytes": 3997,
       "path": "no-text-manual-recovery-iphone-375x667-manual-handoff.json",
-      "sha256": "a728df19e212c3d1f310c9cf6a59c9e6d77f62574a9107add70bea4b825bf335"
+      "sha256": "a5529b4abe1844891642476aeabf8ed964616bb13fc6034fbe808dfd3abb7194"
     },
     {
-      "bytes": 28585,
+      "bytes": 28648,
       "path": "no-text-manual-recovery-iphone-375x667-manual-handoff.png",
-      "sha256": "d622348746b126082445e6ae429cb4bafe4a3d793ce720d594e4955f2d9fda09"
+      "sha256": "af349c2e405f62901d17b4584b54921411830098a079a689e8ea5cf44f4e2e2a"
     },
     {
       "bytes": 3174,
       "path": "no-text-manual-recovery-iphone-375x667-no-text.json",
-      "sha256": "68ca3f26f27cdceb71683d387e007f663888907b76ef99a6246eae5613bbafd7"
+      "sha256": "79af0ee2d43d82528e63b0bf501b8808d923f58a192233bdb83bdeecf5905b9e"
     },
     {
-      "bytes": 36177,
+      "bytes": 36511,
       "path": "no-text-manual-recovery-iphone-375x667-no-text.png",
-      "sha256": "a3f2d626037106a5ad9c9ad688ea89bee1567e69057e0b08c96aa8b94c26cbec"
+      "sha256": "d0bc3b2c5f628345b4eeb937898fd293f72fe863e1d89fe9ad52e018bf004060"
     },
     {
       "bytes": 1740,
       "path": "no-text-manual-recovery-iphone-375x667-result.json",
-      "sha256": "4696c1618ef613099e36a72d8be89dea98e7b8cb0d62ba5a10dbeb9f40520ac4"
+      "sha256": "374f4323d9c3c3a67406c4cf2221926a1384ab55ca3493d63728a335b76ca930"
     },
     {
       "bytes": 2342,
       "path": "no-text-manual-recovery-iphone-390x844-initial.json",
-      "sha256": "4234789c8e13cf56b1c606d4248c5dd47d51af166e7dfbd436ecac3374ed6a73"
+      "sha256": "b135a8aab34e1fa3da6f65733fd4c20a7e6caba0b30353df7c240d3d98dd1f36"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "no-text-manual-recovery-iphone-390x844-initial.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 4674,
       "path": "no-text-manual-recovery-iphone-390x844-manual-handoff.json",
-      "sha256": "553ff316e53f41cb79ac6e8f64d4f37ece6685f5ca7b8d4cb442ee1a6ba1e95a"
+      "sha256": "44f8634ccf06f7ee7d240e86f09a852d914e0d85bf3a417eb14830b65a6942ab"
     },
     {
-      "bytes": 41139,
+      "bytes": 41305,
       "path": "no-text-manual-recovery-iphone-390x844-manual-handoff.png",
-      "sha256": "d1b72bb6e95399887372a3f16273ce2483c71902bc2c1f6ba23f33a1345e942f"
+      "sha256": "a88d6c0a82689066f16f767c8c6a8fdcc547c29835fa060f76b9362f650dd932"
     },
     {
       "bytes": 3520,
       "path": "no-text-manual-recovery-iphone-390x844-no-text.json",
-      "sha256": "3ed1123e5d886249edfd726acda260118ff55a9670106f7bb25c511e94f2d4c1"
+      "sha256": "5a5efb8977886e264abd1f0a5728b0ee683ac7aaebf91769ab2c5e6dcc9d6812"
     },
     {
-      "bytes": 40453,
+      "bytes": 40700,
       "path": "no-text-manual-recovery-iphone-390x844-no-text.png",
-      "sha256": "fa666524b5d3eaf82ada0bc0fd10798ecd56709aeb1da5f515504938b3809f0f"
+      "sha256": "9215dbab8935081cea85b56b30891f6c42cfd1d21df277e208cb1bc3b10d1603"
     },
     {
       "bytes": 1740,
       "path": "no-text-manual-recovery-iphone-390x844-result.json",
-      "sha256": "961e48a7de11c952b78a48ca6cdb2f2e9e4b8b2bce9f62cd434b286886e551a9"
+      "sha256": "cf21affcd756b0ce2554f64836dac289302012ef7a85dccdd3943e891751ac3a"
     },
     {
       "bytes": 2342,
       "path": "no-text-manual-recovery-iphone-430x932-initial.json",
-      "sha256": "1dea3190739514e48cf6cfde36250ecb8fe408ad7c022774630090a4913c1ca1"
+      "sha256": "7a4c37870b8f47ef395a1fbe350f320aff50e8ca81371b86e10b53af5bf589d3"
     },
     {
-      "bytes": 27001,
+      "bytes": 27117,
       "path": "no-text-manual-recovery-iphone-430x932-initial.png",
-      "sha256": "c4d6c924a224637317e400059bcab475e4db9ba9cd70f1df03d208e8b381436d"
+      "sha256": "c9b19f4ff91c523f279aacd87ef559b34647d21d3685debde6d7e745e5c6dd24"
     },
     {
       "bytes": 4674,
       "path": "no-text-manual-recovery-iphone-430x932-manual-handoff.json",
-      "sha256": "ee618821c70c868aa61953f93ae5a2a49e08f499424701dd610f85f64ca0d8d5"
+      "sha256": "9923134245c06741d49555fc7575bb771650521f2f24236dc3b1ba8ce721cc5c"
     },
     {
-      "bytes": 41378,
+      "bytes": 41536,
       "path": "no-text-manual-recovery-iphone-430x932-manual-handoff.png",
-      "sha256": "6f17afb92d4d47a693b734d2c1392b1fe12f3bf98a650ac8b4e03c04d913c3bc"
+      "sha256": "67ae103b5b6cc4c5c01d34b809504427a1d20897dbfdf36524bcbab8624375cb"
     },
     {
       "bytes": 3520,
       "path": "no-text-manual-recovery-iphone-430x932-no-text.json",
-      "sha256": "08380a5040056b751d87f2212e2f29892fd46e8db21d7bd74e5d3e0a354ea58e"
+      "sha256": "b19037a44c704ff4ad488c44f2d00ae712b720eeaea763ea1c9c6d2f30fc2a59"
     },
     {
-      "bytes": 41015,
+      "bytes": 41179,
       "path": "no-text-manual-recovery-iphone-430x932-no-text.png",
-      "sha256": "c6b3535d14ac1996d1d030dddc31258ab92fe3554df2f8ef5a967090735a4424"
+      "sha256": "c21aa0eeb4aa9e46e2e861d1becc870d25fb267b8905dc8aecfdb267163411c0"
     },
     {
       "bytes": 1740,
       "path": "no-text-manual-recovery-iphone-430x932-result.json",
-      "sha256": "f34b02a17465b58e0d35fada8ef6bd3c823316a391dd995a73e27819faab3bdb"
+      "sha256": "62dac6c6a4b71676dcc7a283c92ed3dd68fbe32140e7f74e1a3ece212153a6cf"
     },
     {
       "bytes": 2365,
       "path": "recognized-review-retake-continue-iphone-375x667-initial.json",
-      "sha256": "7b9c6a55efe549314049ab3486db70d3d9645628bd0951ef76633b615470d37c"
+      "sha256": "80194fbc4595cb2e6d0b4222d59df8e55299fd03391fd5baeb1cb73bc5068e39"
     },
     {
-      "bytes": 25686,
+      "bytes": 25869,
       "path": "recognized-review-retake-continue-iphone-375x667-initial.png",
-      "sha256": "5879f2a97f4651a9064c8c8dfaea8bfa500b23b2999b1aaef22473085f03cadf"
+      "sha256": "50d1913e5989c7fc9d95aa00cfe76226f30510e7ca8605cdeda50f2196520ed1"
     },
     {
       "bytes": 4020,
       "path": "recognized-review-retake-continue-iphone-375x667-manual-handoff.json",
-      "sha256": "129d9a3f7dbee404b0bed77a49a547fb2d713c736f1078bc602fcc74404443b6"
+      "sha256": "f6928352a2971577fe296e0f406222677c881fe5d868d99a93e498e3f7e224a0"
     },
     {
-      "bytes": 28585,
+      "bytes": 28648,
       "path": "recognized-review-retake-continue-iphone-375x667-manual-handoff.png",
-      "sha256": "d622348746b126082445e6ae429cb4bafe4a3d793ce720d594e4955f2d9fda09"
+      "sha256": "af349c2e405f62901d17b4584b54921411830098a079a689e8ea5cf44f4e2e2a"
     },
     {
       "bytes": 3406,
       "path": "recognized-review-retake-continue-iphone-375x667-recognized-ready.json",
-      "sha256": "d431ee4826bf03a8bea957d8f8690ec32c0e8d755341531e56b1b5e58930795c"
+      "sha256": "bb07c3f2b805ae287f68ae48830aad12fd6f46f7ca13203ad183327885ff90e5"
     },
     {
-      "bytes": 43874,
+      "bytes": 43795,
       "path": "recognized-review-retake-continue-iphone-375x667-recognized-ready.png",
-      "sha256": "4de999499f1ad1fc4eef6a40fc4abb6194cedb878e4b62a3dc7efc407c469bdf"
+      "sha256": "b497219f0dcd1244bc8cd73d4a5ac87cd1ab03f4336ebc3b1efcf69f759ff040"
     },
     {
       "bytes": 1789,
       "path": "recognized-review-retake-continue-iphone-375x667-result.json",
-      "sha256": "2b7bee446de2b5fd6180ef5aefedc8f80934ec49b7d5dbb263c73ac9b168265b"
+      "sha256": "4445696ea7d1700c33328821bd6b29b5bb9c1917aa99d44aae4f73895b550c9b"
     },
     {
       "bytes": 2370,
       "path": "recognized-review-retake-continue-iphone-375x667-retake-ready.json",
-      "sha256": "2504020913323e8a2fc2a19a1900bcc7955a40fdd028705ed6c9179c6e3ad956"
+      "sha256": "68284c7f336262a44af83614df4110f8f0ef22dd85bc8971d8d7bdd91f74f9d7"
     },
     {
-      "bytes": 25686,
+      "bytes": 25869,
       "path": "recognized-review-retake-continue-iphone-375x667-retake-ready.png",
-      "sha256": "5879f2a97f4651a9064c8c8dfaea8bfa500b23b2999b1aaef22473085f03cadf"
+      "sha256": "50d1913e5989c7fc9d95aa00cfe76226f30510e7ca8605cdeda50f2196520ed1"
     },
     {
       "bytes": 2365,
       "path": "recognized-review-retake-continue-iphone-390x844-initial.json",
-      "sha256": "2937fc45af58d26eddc437ff5c1a3e6f1d1dba8ffb1b30afad6be29f7f3bb6d9"
+      "sha256": "59df00c3bc46a4a54f3272b0809696bee66afd94a840c355fa72a03378cbeed4"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "recognized-review-retake-continue-iphone-390x844-initial.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 4711,
       "path": "recognized-review-retake-continue-iphone-390x844-manual-handoff.json",
-      "sha256": "052b9239047511f9c8518ec9dbfb95c3dd477c077587096b2881a80501e66ed4"
+      "sha256": "7428b4eff43fff8df9cba87ad2e897a587cc42f19074e8e7c762f3c964678fb5"
     },
     {
-      "bytes": 42003,
+      "bytes": 42132,
       "path": "recognized-review-retake-continue-iphone-390x844-manual-handoff.png",
-      "sha256": "98a907eefa9c902e5f8d40ea6c301afe13d30ee45ea73e0e78d60f8be6081d73"
+      "sha256": "6afd6b86711f6f1d22bd14e6ca613ebb71952f159ea8f0e3dba3a89eadbd6b32"
     },
     {
       "bytes": 4092,
       "path": "recognized-review-retake-continue-iphone-390x844-recognized-ready.json",
-      "sha256": "69939c1e1b7f2b4f7b8ca558a8a420987d8ce6b1db817f3cc623896507aa489d"
+      "sha256": "74f9354494480c5bd8ce1a9c89339edda604d5d2422d50048884d4ae9bf94638"
     },
     {
-      "bytes": 52775,
+      "bytes": 52611,
       "path": "recognized-review-retake-continue-iphone-390x844-recognized-ready.png",
-      "sha256": "cf628b7d6755197394129aa86fe60825b52bda7f8bf5bab547216705abc63c94"
+      "sha256": "6b6e70a2cb9d9d268d93223d089833ed7c7b4414004eb16bae8e99fb8868e91e"
     },
     {
       "bytes": 1789,
       "path": "recognized-review-retake-continue-iphone-390x844-result.json",
-      "sha256": "cea5dc190d9160c0c6b6db271db2d99b694209edc7e50f622f86b595bc18f2d5"
+      "sha256": "ba27954da464f9cc319a2df83cd777c330d4333d24de29b8d4764b8c76f457d7"
     },
     {
       "bytes": 2370,
       "path": "recognized-review-retake-continue-iphone-390x844-retake-ready.json",
-      "sha256": "38675a8de918dbc46a5a72d9467bf8395251dc7cd35ffe298ed677cc828e88d3"
+      "sha256": "db7642ab53f7c3f860785ab83881487904268a80170b475c8fa8aef7d42f9527"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "recognized-review-retake-continue-iphone-390x844-retake-ready.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 2365,
       "path": "recognized-review-retake-continue-iphone-430x932-initial.json",
-      "sha256": "c178b658287a9d578d0ea4df641e07381406bc03e73176c87827896ceba66acb"
+      "sha256": "343c3e8ef322ab1ed5b474bde4934b42cb496e2025282fdf5f1c3e459d4c56ab"
     },
     {
-      "bytes": 27001,
+      "bytes": 27117,
       "path": "recognized-review-retake-continue-iphone-430x932-initial.png",
-      "sha256": "c4d6c924a224637317e400059bcab475e4db9ba9cd70f1df03d208e8b381436d"
+      "sha256": "c9b19f4ff91c523f279aacd87ef559b34647d21d3685debde6d7e745e5c6dd24"
     },
     {
       "bytes": 4711,
       "path": "recognized-review-retake-continue-iphone-430x932-manual-handoff.json",
-      "sha256": "328035996babb6f9cb1a1dee4e876dd7accd10baac6e1e60e9e21a05cd08c528"
+      "sha256": "e1b2b2f3680c3d71b28473efa16ea85b7a7484c7ef552955b02233a20ef3c16e"
     },
     {
-      "bytes": 42244,
+      "bytes": 42381,
       "path": "recognized-review-retake-continue-iphone-430x932-manual-handoff.png",
-      "sha256": "f1cd2514adb91b19d5a336fd10a63bc59a19cc0e71600ea162b954b2b0583dcd"
+      "sha256": "d5f1360dd2cbad5089479488ceab85e2e0d9d41f7f8a554a27869aa7c61d10c4"
     },
     {
       "bytes": 4092,
       "path": "recognized-review-retake-continue-iphone-430x932-recognized-ready.json",
-      "sha256": "be3abb5cee96a6893d529ccbdd28304987536a774d1cd0b6012ee783084ab8d9"
+      "sha256": "f348031490b361cf64fae7bca367a11885c6a79cc4ff5f16edbc0f7499879fb9"
     },
     {
-      "bytes": 57659,
+      "bytes": 57414,
       "path": "recognized-review-retake-continue-iphone-430x932-recognized-ready.png",
-      "sha256": "9f390be4d23b1f15e6fa6aab43bffc063a778fa47058656347e3ed949e113422"
+      "sha256": "71523f69e01be06d3d8b7b7a8572f31cf681ff2be5310e64f2ab153530b4ba4b"
     },
     {
       "bytes": 1789,
       "path": "recognized-review-retake-continue-iphone-430x932-result.json",
-      "sha256": "e726ce6a36c1861cc159a29aaf8db8993491e2815dd0e3e32ee0bce33681cab7"
+      "sha256": "32aa7b765888f48ae706737bd22b283c31c2030495197764488d57733016a681"
     },
     {
       "bytes": 2370,
       "path": "recognized-review-retake-continue-iphone-430x932-retake-ready.json",
-      "sha256": "6f850fcaf59d8ba0e528fb567f5f77431ef66d4bb2f80f33e810f844d6d8fb52"
+      "sha256": "d441a04ce766b59b9d9f857c7d678bcfd740b4ed390f2083493e42d436223391"
     },
     {
-      "bytes": 27001,
+      "bytes": 27117,
       "path": "recognized-review-retake-continue-iphone-430x932-retake-ready.png",
-      "sha256": "c4d6c924a224637317e400059bcab475e4db9ba9cd70f1df03d208e8b381436d"
+      "sha256": "c9b19f4ff91c523f279aacd87ef559b34647d21d3685debde6d7e745e5c6dd24"
     },
     {
       "bytes": 3877,
       "path": "report.md",
-      "sha256": "6f7c11e945e345201e298cfcda36f86c1ddafc3f53c6c9fd94e9ab4289e617ca"
+      "sha256": "53bbacfbdc7b3ab51d9df76dea85cdcbf63297e521ca615e54c7ebb728e7328f"
     },
     {
       "bytes": 5653,
       "path": "scope.json",
-      "sha256": "196ee1da602658a34ff38c5a4ae111d96242ed7179ac97b863dfa91af60a7961"
+      "sha256": "78cf2464f35e2f395f67babda31769caeec5db8e74c39f3f8d3462183a87dab5"
     },
     {
       "bytes": 2344,
       "path": "timeout-manual-recovery-iphone-375x667-initial.json",
-      "sha256": "0d9b74a824f6393dd061e596a2909cb7cb948ec9a3707fd8aa53a1385ea5ee26"
+      "sha256": "2ce9b228c43d094ba516f2a940265a147b3922bb66a207423c8d30bc92ad65f6"
     },
     {
-      "bytes": 25686,
+      "bytes": 25869,
       "path": "timeout-manual-recovery-iphone-375x667-initial.png",
-      "sha256": "5879f2a97f4651a9064c8c8dfaea8bfa500b23b2999b1aaef22473085f03cadf"
+      "sha256": "50d1913e5989c7fc9d95aa00cfe76226f30510e7ca8605cdeda50f2196520ed1"
     },
     {
       "bytes": 3999,
       "path": "timeout-manual-recovery-iphone-375x667-manual-handoff.json",
-      "sha256": "8f7f90690e41847e84e83ec0829f18e4e2ec84c65241cb7c93743460e235c57b"
+      "sha256": "3f6ab5da8eb6e5e63fbf2ea758900bd3ca56734a68659ec38dc8f108cec59c6d"
     },
     {
-      "bytes": 28585,
+      "bytes": 28648,
       "path": "timeout-manual-recovery-iphone-375x667-manual-handoff.png",
-      "sha256": "d622348746b126082445e6ae429cb4bafe4a3d793ce720d594e4955f2d9fda09"
+      "sha256": "af349c2e405f62901d17b4584b54921411830098a079a689e8ea5cf44f4e2e2a"
     },
     {
       "bytes": 1746,
       "path": "timeout-manual-recovery-iphone-375x667-result.json",
-      "sha256": "f1de42c83e181abfcff013cf6af424a98d50c9b5c5ec8dc53cee7e13d62f485c"
+      "sha256": "67fbd68ea5c7dd80540dd51e620a43e78f1433c1eebcc40ce9d829c1175b7f3d"
     },
     {
       "bytes": 3506,
       "path": "timeout-manual-recovery-iphone-375x667-timed-out.json",
-      "sha256": "6d6cbc5b70464c9db7bf01b3a1ea1d6151c0c6c5e516fd478d70226a06864d54"
+      "sha256": "4083ed6b022fc75aa618e1ba4f9f72dd62dc87149596f22948ae234a40933115"
     },
     {
-      "bytes": 36923,
+      "bytes": 37207,
       "path": "timeout-manual-recovery-iphone-375x667-timed-out.png",
-      "sha256": "5aed3eadb53be487e1ee0ae886f5af13da79e564ede9a5263624d0034e9471de"
+      "sha256": "88c77e7d74ac94b0b07ad55449516ee60e0acb9f18dbcdc1d20281ea87b55d22"
     },
     {
       "bytes": 2344,
       "path": "timeout-manual-recovery-iphone-390x844-initial.json",
-      "sha256": "cbe62eb85856f67a1e3ccb3e3b6a6cbd81929975718b09014fb6abe700b473d4"
+      "sha256": "819f32ff75c32f04622fa0eef83073e88df1dfe71e2d3584c09950aa32865881"
     },
     {
-      "bytes": 26395,
+      "bytes": 26676,
       "path": "timeout-manual-recovery-iphone-390x844-initial.png",
-      "sha256": "2f099436bc2c336a3c5f9867dbc2c975ee71f0588e96d7d0867c6a94e96192f0"
+      "sha256": "8b9615e71d4ef367699b10ebdabd7eabd0acefd86713c95c958abca4caf41c73"
     },
     {
       "bytes": 4676,
       "path": "timeout-manual-recovery-iphone-390x844-manual-handoff.json",
-      "sha256": "88f8159e2812abbb2ab783e517cb25636a1e6e42ec72c1e998e2fe5a0d8ba7db"
+      "sha256": "922ad0308c4f6949a0a9ba8ba7144bc159a0d3e434baeb47a6983f9585008966"
     },
     {
-      "bytes": 41139,
+      "bytes": 41305,
       "path": "timeout-manual-recovery-iphone-390x844-manual-handoff.png",
-      "sha256": "d1b72bb6e95399887372a3f16273ce2483c71902bc2c1f6ba23f33a1345e942f"
+      "sha256": "a88d6c0a82689066f16f767c8c6a8fdcc547c29835fa060f76b9362f650dd932"
     },
     {
       "bytes": 1746,
       "path": "timeout-manual-recovery-iphone-390x844-result.json",
-      "sha256": "6bbc458acd4f1012bd5cf89e17e8b0e8d69c2064afbbc0add62ffbdf07e40d1f"
+      "sha256": "84290c42e2225819ad881f561ca8630b2d86b819c1e020a49b4a7cb6ce2fcf92"
     },
     {
       "bytes": 3506,
       "path": "timeout-manual-recovery-iphone-390x844-timed-out.json",
-      "sha256": "29d9cbbd0d0d6f09f0c05831628ab44291e813dde5012218ff8c9bd5fef1782b"
+      "sha256": "07516bc9b0d975f091ca39abecf4876dee450e56a9692208b88f63ae2963135f"
     },
     {
-      "bytes": 40898,
+      "bytes": 41063,
       "path": "timeout-manual-recovery-iphone-390x844-timed-out.png",
-      "sha256": "6d31f7d68cc0e72ad7f6c4684d608847005bca393dce88975dfc72f0a4821a79"
+      "sha256": "1060809a6b8e790d7562b0e7ff7e6449c3839725088a19d54370229f92770cee"
     },
     {
       "bytes": 2344,
       "path": "timeout-manual-recovery-iphone-430x932-initial.json",
-      "sha256": "0acced48d638b957bac7006f38b6a2b56642b2bf59cb9583b29920a7b0b33fd9"
+      "sha256": "206d49177eaa4410ac6a80b023c85759356db7f6f1e2ed7e4fc52acf06958d2b"
     },
     {
-      "bytes": 27001,
+      "bytes": 27117,
       "path": "timeout-manual-recovery-iphone-430x932-initial.png",
-      "sha256": "c4d6c924a224637317e400059bcab475e4db9ba9cd70f1df03d208e8b381436d"
+      "sha256": "c9b19f4ff91c523f279aacd87ef559b34647d21d3685debde6d7e745e5c6dd24"
     },
     {
       "bytes": 4676,
       "path": "timeout-manual-recovery-iphone-430x932-manual-handoff.json",
-      "sha256": "12dcfe5cc82f23fd8800e45700e7de9cc973b17652f70d0594e70deb9599764e"
+      "sha256": "65eb46c1eef111d57e7eab88c09f3c9978d3a45183a4f014bae7cc4ddec60117"
     },
     {
-      "bytes": 41378,
+      "bytes": 41536,
       "path": "timeout-manual-recovery-iphone-430x932-manual-handoff.png",
-      "sha256": "6f17afb92d4d47a693b734d2c1392b1fe12f3bf98a650ac8b4e03c04d913c3bc"
+      "sha256": "67ae103b5b6cc4c5c01d34b809504427a1d20897dbfdf36524bcbab8624375cb"
     },
     {
       "bytes": 1746,
       "path": "timeout-manual-recovery-iphone-430x932-result.json",
-      "sha256": "31291ae5e1eec32120a5d725b18e61b8255f46a6b5288dbf90d4800fd78e9e51"
+      "sha256": "5d754476661e0b8c410eca5b478ced0975c17b91191f14f20098866441109382"
     },
     {
       "bytes": 3506,
       "path": "timeout-manual-recovery-iphone-430x932-timed-out.json",
-      "sha256": "e9e18ccb81fca7571fd4fa5aad7a12c186c9b1ca653008cf0221bc6e5e3cbb97"
+      "sha256": "cdf7f171163f072359fdcc16f0f35536b5c3edaa1c8eb5b09adb0167c91443aa"
     },
     {
-      "bytes": 41414,
+      "bytes": 41557,
       "path": "timeout-manual-recovery-iphone-430x932-timed-out.png",
-      "sha256": "68441cf4552a509bf12617c786bd5f2fb6ffe18e6eb049feda33cd20a5d70200"
+      "sha256": "479f9972fdd9b8fd1fc1b32b8af9cb2c9e000ccd31490d4ff1aa902f4779b4dd"
     }
   ],
   "artifacts": [
@@ -847,7 +847,7 @@
     "profile": "staging",
     "proofStatus": "not_applicable_to_expo_web_ui_audit"
   },
-  "completedAt": "2026-07-22T03:02:21.514Z",
+  "completedAt": "2026-07-22T05:06:47.630Z",
   "evidenceBinding": {
     "candidateNativeBuild": {
       "archiveSha256": null,
@@ -857,14 +857,14 @@
       "proofStatus": "not_applicable_to_expo_web_ui_audit"
     },
     "evidenceSchemaVersion": 2,
-    "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
     "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-    "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+    "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
     "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-    "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
     "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
     "webFixtureBuild": {
-      "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+      "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
       "profile": "development-only-deterministic-expo-web"
     }
   },
@@ -889,14 +889,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "browser-events-recognized",
@@ -917,14 +917,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "browser-events-no-text",
@@ -945,14 +945,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "browser-events-timed-out",
@@ -973,14 +973,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "browser-events-failed",
@@ -1039,7 +1039,7 @@
     {
       "artifactPrefix": "bootstrap-recognized-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:58:24.584Z",
+      "completedAt": "2026-07-22T05:03:53.104Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1049,14 +1049,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "bootstrap-recognized-iphone-390x844-result",
@@ -1072,7 +1072,7 @@
       "fixtureGroup": "recognized",
       "kind": "consent-bootstrap",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T02:57:59.370Z",
+      "startedAt": "2026-07-22T05:03:36.183Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1085,7 +1085,7 @@
     {
       "artifactPrefix": "recognized-review-retake-continue-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:58:29.955Z",
+      "completedAt": "2026-07-22T05:03:57.200Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1095,14 +1095,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "recognized-review-retake-continue-iphone-375x667-result",
@@ -1120,7 +1120,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "recognized-review-retake-continue",
-      "startedAt": "2026-07-22T02:58:24.972Z",
+      "startedAt": "2026-07-22T05:03:53.329Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1133,7 +1133,7 @@
     {
       "artifactPrefix": "recognized-review-retake-continue-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:58:35.590Z",
+      "completedAt": "2026-07-22T05:04:01.521Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1143,14 +1143,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "recognized-review-retake-continue-iphone-390x844-result",
@@ -1168,7 +1168,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "recognized-review-retake-continue",
-      "startedAt": "2026-07-22T02:58:30.906Z",
+      "startedAt": "2026-07-22T05:03:57.641Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1181,7 +1181,7 @@
     {
       "artifactPrefix": "recognized-review-retake-continue-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:58:40.109Z",
+      "completedAt": "2026-07-22T05:04:05.936Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1191,14 +1191,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "recognized-review-retake-continue-iphone-430x932-result",
@@ -1216,7 +1216,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "recognized-review-retake-continue",
-      "startedAt": "2026-07-22T02:58:36.054Z",
+      "startedAt": "2026-07-22T05:04:01.942Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1229,7 +1229,7 @@
     {
       "artifactPrefix": "edit-fence-suggestion-adoption-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:58:44.140Z",
+      "completedAt": "2026-07-22T05:04:09.501Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1239,14 +1239,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "edit-fence-suggestion-adoption-iphone-375x667-result",
@@ -1264,7 +1264,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "edit-fence-suggestion-adoption",
-      "startedAt": "2026-07-22T02:58:40.610Z",
+      "startedAt": "2026-07-22T05:04:06.395Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1277,7 +1277,7 @@
     {
       "artifactPrefix": "edit-fence-suggestion-adoption-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:58:48.113Z",
+      "completedAt": "2026-07-22T05:04:13.085Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1287,14 +1287,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "edit-fence-suggestion-adoption-iphone-390x844-result",
@@ -1312,7 +1312,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "edit-fence-suggestion-adoption",
-      "startedAt": "2026-07-22T02:58:44.708Z",
+      "startedAt": "2026-07-22T05:04:09.952Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1325,7 +1325,7 @@
     {
       "artifactPrefix": "edit-fence-suggestion-adoption-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:58:52.283Z",
+      "completedAt": "2026-07-22T05:04:16.656Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1335,14 +1335,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "edit-fence-suggestion-adoption-iphone-430x932-result",
@@ -1360,7 +1360,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "edit-fence-suggestion-adoption",
-      "startedAt": "2026-07-22T02:58:48.630Z",
+      "startedAt": "2026-07-22T05:04:13.533Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1373,7 +1373,7 @@
     {
       "artifactPrefix": "bootstrap-no-text-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:59:49.516Z",
+      "completedAt": "2026-07-22T05:04:55.381Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1383,14 +1383,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "bootstrap-no-text-iphone-390x844-result",
@@ -1406,7 +1406,7 @@
       "fixtureGroup": "no-text",
       "kind": "consent-bootstrap",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T02:59:32.275Z",
+      "startedAt": "2026-07-22T05:04:43.659Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1419,7 +1419,7 @@
     {
       "artifactPrefix": "no-text-manual-recovery-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:59:53.893Z",
+      "completedAt": "2026-07-22T05:04:58.713Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1429,14 +1429,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "no-text-manual-recovery-iphone-375x667-result",
@@ -1454,7 +1454,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "no-text-manual-recovery",
-      "startedAt": "2026-07-22T02:59:49.860Z",
+      "startedAt": "2026-07-22T05:04:55.617Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1467,7 +1467,7 @@
     {
       "artifactPrefix": "no-text-manual-recovery-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T02:59:58.403Z",
+      "completedAt": "2026-07-22T05:05:02.084Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1477,14 +1477,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "no-text-manual-recovery-iphone-390x844-result",
@@ -1502,7 +1502,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "no-text-manual-recovery",
-      "startedAt": "2026-07-22T02:59:54.533Z",
+      "startedAt": "2026-07-22T05:04:59.205Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1515,7 +1515,7 @@
     {
       "artifactPrefix": "no-text-manual-recovery-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:00:02.542Z",
+      "completedAt": "2026-07-22T05:05:05.452Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1525,14 +1525,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "no-text-manual-recovery-iphone-430x932-result",
@@ -1550,7 +1550,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "no-text-manual-recovery",
-      "startedAt": "2026-07-22T02:59:58.971Z",
+      "startedAt": "2026-07-22T05:05:02.531Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1563,7 +1563,7 @@
     {
       "artifactPrefix": "bootstrap-timed-out-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:00:56.843Z",
+      "completedAt": "2026-07-22T05:05:42.797Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1573,14 +1573,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "bootstrap-timed-out-iphone-390x844-result",
@@ -1596,7 +1596,7 @@
       "fixtureGroup": "timed-out",
       "kind": "consent-bootstrap",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T03:00:38.804Z",
+      "startedAt": "2026-07-22T05:05:31.419Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1609,7 +1609,7 @@
     {
       "artifactPrefix": "timeout-manual-recovery-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:01:00.321Z",
+      "completedAt": "2026-07-22T05:05:46.128Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1619,14 +1619,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "timeout-manual-recovery-iphone-375x667-result",
@@ -1644,7 +1644,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "timeout-manual-recovery",
-      "startedAt": "2026-07-22T03:00:57.107Z",
+      "startedAt": "2026-07-22T05:05:43.052Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1657,7 +1657,7 @@
     {
       "artifactPrefix": "timeout-manual-recovery-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:01:04.219Z",
+      "completedAt": "2026-07-22T05:05:49.530Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1667,14 +1667,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "timeout-manual-recovery-iphone-390x844-result",
@@ -1692,7 +1692,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "timeout-manual-recovery",
-      "startedAt": "2026-07-22T03:01:00.875Z",
+      "startedAt": "2026-07-22T05:05:46.625Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1705,7 +1705,7 @@
     {
       "artifactPrefix": "timeout-manual-recovery-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:01:07.754Z",
+      "completedAt": "2026-07-22T05:05:52.947Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1715,14 +1715,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "timeout-manual-recovery-iphone-430x932-result",
@@ -1740,7 +1740,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "timeout-manual-recovery",
-      "startedAt": "2026-07-22T03:01:04.713Z",
+      "startedAt": "2026-07-22T05:05:49.999Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1753,7 +1753,7 @@
     {
       "artifactPrefix": "bootstrap-failed-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:02:02.417Z",
+      "completedAt": "2026-07-22T05:06:34.877Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1763,14 +1763,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "bootstrap-failed-iphone-390x844-result",
@@ -1786,7 +1786,7 @@
       "fixtureGroup": "failed",
       "kind": "consent-bootstrap",
       "nativeDeviceProof": false,
-      "startedAt": "2026-07-22T03:01:45.324Z",
+      "startedAt": "2026-07-22T05:06:22.622Z",
       "surface": "expo-web",
       "verdict": "pass",
       "viewport": {
@@ -1799,7 +1799,7 @@
     {
       "artifactPrefix": "failure-manual-recovery-iphone-375x667",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:02:06.915Z",
+      "completedAt": "2026-07-22T05:06:38.175Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1809,14 +1809,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "failure-manual-recovery-iphone-375x667-result",
@@ -1834,7 +1834,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "failure-manual-recovery",
-      "startedAt": "2026-07-22T03:02:02.864Z",
+      "startedAt": "2026-07-22T05:06:35.209Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1847,7 +1847,7 @@
     {
       "artifactPrefix": "failure-manual-recovery-iphone-390x844",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:02:12.169Z",
+      "completedAt": "2026-07-22T05:06:41.595Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1857,14 +1857,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "failure-manual-recovery-iphone-390x844-result",
@@ -1882,7 +1882,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "failure-manual-recovery",
-      "startedAt": "2026-07-22T03:02:07.885Z",
+      "startedAt": "2026-07-22T05:06:38.653Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1895,7 +1895,7 @@
     {
       "artifactPrefix": "failure-manual-recovery-iphone-430x932",
       "browserFailures": [],
-      "completedAt": "2026-07-22T03:02:17.415Z",
+      "completedAt": "2026-07-22T05:06:44.962Z",
       "evidenceBinding": {
         "candidateNativeBuild": {
           "archiveSha256": null,
@@ -1905,14 +1905,14 @@
           "proofStatus": "not_applicable_to_expo_web_ui_audit"
         },
         "evidenceSchemaVersion": 2,
-        "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-        "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+        "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
         "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-        "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+        "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
         "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
         "webFixtureBuild": {
-          "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+          "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
           "profile": "development-only-deterministic-expo-web"
         },
         "artifactName": "failure-manual-recovery-iphone-430x932-result",
@@ -1930,7 +1930,7 @@
       "kind": "scenario",
       "nativeDeviceProof": false,
       "scenarioId": "failure-manual-recovery",
-      "startedAt": "2026-07-22T03:02:13.150Z",
+      "startedAt": "2026-07-22T05:06:42.059Z",
       "surface": "expo-web-deterministic-ui-fixture",
       "verdict": "pass",
       "viewport": {
@@ -1941,7 +1941,7 @@
       "endUrl": "http://localhost:8680/shelf/manual?redacted-query"
     }
   ],
-  "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+  "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
   "scenarioMatrix": [
     {
       "fixture": "recognized",
@@ -1969,8 +1969,8 @@
       "id": "failure-manual-recovery"
     }
   ],
-  "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
-  "startedAt": "2026-07-22T02:57:10.545Z",
+  "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
+  "startedAt": "2026-07-22T05:03:06.043Z",
   "surface": "Expo web / deterministic development-only OCR review fixture",
   "verdict": "pass",
   "viewports": [
@@ -1991,7 +1991,7 @@
     }
   ],
   "webFixtureBuild": {
-    "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+    "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
     "profile": "development-only-deterministic-expo-web"
   },
   "screenshots": [

@@ -8,14 +8,14 @@
       "proofStatus": "not_applicable_to_expo_web_ui_audit"
     },
     "evidenceSchemaVersion": 2,
-    "expectedSourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "expectedSourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
     "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
-    "runId": "344c7f52-b567-426c-ae5a-d0658b2971f6",
+    "runId": "df96bbaf-57b6-477c-95c5-825db030f5d6",
     "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
-    "sourceGitSha": "356bab99bdce80cb3e26e256e0e277996a192dbe",
+    "sourceGitSha": "b61328ea0c3b53a2c211ccfb69728fc7df7864ca",
     "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
     "webFixtureBuild": {
-      "buildId": "3f567e07defd00854bef404823ceb771eced9cbace8beaf45bba373005240e53",
+      "buildId": "69070214181576a405ff512db3edbb988fceae784db439df3758702f401f6112",
       "profile": "development-only-deterministic-expo-web"
     },
     "artifactName": "browser-events-timed-out",
@@ -27,8 +27,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:38.813Z",
-      "requestId": "B0D42BC8302BE313B98B2E56C5D85507",
+      "observedAt": "2026-07-22T05:05:31.425Z",
+      "requestId": "C6B6EA9E329FEC1BED6B3C1251E45F43",
       "requestMethod": "GET",
       "type": "Document",
       "url": "http://localhost:8660/?redacted-query"
@@ -36,8 +36,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "text/html",
-      "observedAt": "2026-07-22T03:00:40.136Z",
-      "requestId": "B0D42BC8302BE313B98B2E56C5D85507",
+      "observedAt": "2026-07-22T05:05:32.393Z",
+      "requestId": "C6B6EA9E329FEC1BED6B3C1251E45F43",
       "status": 200,
       "type": "Document",
       "url": "http://localhost:8660/?redacted-query"
@@ -45,8 +45,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.142Z",
-      "requestId": "40500.2",
+      "observedAt": "2026-07-22T05:05:32.400Z",
+      "requestId": "35996.2",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -54,8 +54,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.142Z",
-      "requestId": "40500.3",
+      "observedAt": "2026-07-22T05:05:32.400Z",
+      "requestId": "35996.3",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -63,8 +63,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.143Z",
-      "requestId": "40500.4",
+      "observedAt": "2026-07-22T05:05:32.400Z",
+      "requestId": "35996.4",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -72,8 +72,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.143Z",
-      "requestId": "40500.5",
+      "observedAt": "2026-07-22T05:05:32.400Z",
+      "requestId": "35996.5",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -81,8 +81,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.143Z",
-      "requestId": "40500.6",
+      "observedAt": "2026-07-22T05:05:32.400Z",
+      "requestId": "35996.6",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -90,8 +90,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.143Z",
-      "requestId": "40500.7",
+      "observedAt": "2026-07-22T05:05:32.400Z",
+      "requestId": "35996.7",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -99,8 +99,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.143Z",
-      "requestId": "40500.8",
+      "observedAt": "2026-07-22T05:05:32.401Z",
+      "requestId": "35996.8",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -108,8 +108,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.143Z",
-      "requestId": "40500.9",
+      "observedAt": "2026-07-22T05:05:32.401Z",
+      "requestId": "35996.9",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -117,8 +117,8 @@
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:40.143Z",
-      "requestId": "40500.10",
+      "observedAt": "2026-07-22T05:05:32.401Z",
+      "requestId": "35996.10",
       "requestMethod": "GET",
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
@@ -126,8 +126,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.151Z",
-      "requestId": "40500.4",
+      "observedAt": "2026-07-22T05:05:32.406Z",
+      "requestId": "35996.4",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -135,8 +135,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.152Z",
-      "requestId": "40500.5",
+      "observedAt": "2026-07-22T05:05:32.407Z",
+      "requestId": "35996.2",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -144,8 +144,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.153Z",
-      "requestId": "40500.2",
+      "observedAt": "2026-07-22T05:05:32.408Z",
+      "requestId": "35996.3",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -153,8 +153,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.154Z",
-      "requestId": "40500.6",
+      "observedAt": "2026-07-22T05:05:32.408Z",
+      "requestId": "35996.5",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -162,8 +162,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.155Z",
-      "requestId": "40500.3",
+      "observedAt": "2026-07-22T05:05:32.409Z",
+      "requestId": "35996.7",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -171,8 +171,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.156Z",
-      "requestId": "40500.7",
+      "observedAt": "2026-07-22T05:05:32.409Z",
+      "requestId": "35996.6",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -180,8 +180,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.157Z",
-      "requestId": "40500.9",
+      "observedAt": "2026-07-22T05:05:32.410Z",
+      "requestId": "35996.8",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -189,8 +189,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:40.180Z",
-      "requestId": "40500.8",
+      "observedAt": "2026-07-22T05:05:32.411Z",
+      "requestId": "35996.9",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -198,17 +198,17 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "application/javascript",
-      "observedAt": "2026-07-22T03:00:53.065Z",
-      "requestId": "40500.10",
+      "observedAt": "2026-07-22T05:05:39.804Z",
+      "requestId": "35996.10",
       "status": 200,
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:00:53.282Z",
+      "observedAt": "2026-07-22T05:05:39.940Z",
       "params": {
-        "requestId": "40500.28",
+        "requestId": "35996.28",
         "url": "ws://localhost:8660/hot",
         "initiator": {
           "type": "script",
@@ -354,9 +354,9 @@
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:00:53.282Z",
+      "observedAt": "2026-07-22T05:05:39.940Z",
       "params": {
-        "requestId": "40500.29",
+        "requestId": "35996.29",
         "url": "ws://localhost:8660/message",
         "initiator": {
           "type": "script",
@@ -488,54 +488,54 @@
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:53.283Z",
+      "observedAt": "2026-07-22T05:05:39.941Z",
       "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
       "type": "info"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:53.369Z",
+      "observedAt": "2026-07-22T05:05:39.989Z",
       "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
       "type": "log"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:53.401Z",
+      "observedAt": "2026-07-22T05:05:40.011Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:53.401Z",
+      "observedAt": "2026-07-22T05:05:40.011Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:53.421Z",
+      "observedAt": "2026-07-22T05:05:40.024Z",
       "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
       "type": "warning"
     },
     {
       "documentURL": "http://localhost:8660/?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:53.630Z",
-      "requestId": "40500.30",
+      "observedAt": "2026-07-22T05:05:40.161Z",
+      "requestId": "35996.30",
       "requestMethod": "GET",
       "type": "Other",
       "url": "http://localhost:8660/favicon.ico"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:53.697Z",
+      "observedAt": "2026-07-22T05:05:40.198Z",
       "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
       "type": "warning"
     },
     {
       "documentURL": "http://localhost:8660/",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:53.762Z",
-      "requestId": "40500.31",
+      "observedAt": "2026-07-22T05:05:40.237Z",
+      "requestId": "35996.31",
       "requestMethod": "GET",
       "type": "Other",
       "url": "http://localhost:8660/favicon.ico"
@@ -543,26 +543,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "image/x-icon",
-      "observedAt": "2026-07-22T03:00:53.763Z",
-      "requestId": "40500.30",
-      "status": 200,
-      "type": "Other",
-      "url": "http://localhost:8660/favicon.ico"
-    },
-    {
-      "documentURL": "http://localhost:8660/onboarding/age",
-      "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:53.849Z",
-      "requestId": "40500.32",
-      "requestMethod": "GET",
-      "type": "Other",
-      "url": "http://localhost:8660/favicon.ico"
-    },
-    {
-      "method": "Network.responseReceived",
-      "mimeType": "image/x-icon",
-      "observedAt": "2026-07-22T03:00:53.855Z",
-      "requestId": "40500.31",
+      "observedAt": "2026-07-22T05:05:40.247Z",
+      "requestId": "35996.30",
       "status": 200,
       "type": "Other",
       "url": "http://localhost:8660/favicon.ico"
@@ -570,8 +552,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "image/x-icon",
-      "observedAt": "2026-07-22T03:00:53.951Z",
-      "requestId": "40500.32",
+      "observedAt": "2026-07-22T05:05:40.301Z",
+      "requestId": "35996.31",
       "status": 200,
       "type": "Other",
       "url": "http://localhost:8660/favicon.ico"
@@ -579,8 +561,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:54.771Z",
-      "requestId": "88486249342A21857FC936FAC57C9412",
+      "observedAt": "2026-07-22T05:05:41.229Z",
+      "requestId": "069685BCC0D0D4F844063491D47E1FFA",
       "requestMethod": "GET",
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -588,8 +570,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "text/html",
-      "observedAt": "2026-07-22T03:00:55.509Z",
-      "requestId": "88486249342A21857FC936FAC57C9412",
+      "observedAt": "2026-07-22T05:05:41.692Z",
+      "requestId": "069685BCC0D0D4F844063491D47E1FFA",
       "status": 200,
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -597,8 +579,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.522Z",
-      "requestId": "40500.34",
+      "observedAt": "2026-07-22T05:05:41.704Z",
+      "requestId": "35996.33",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -606,8 +588,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.522Z",
-      "requestId": "40500.35",
+      "observedAt": "2026-07-22T05:05:41.704Z",
+      "requestId": "35996.34",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -615,8 +597,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.522Z",
-      "requestId": "40500.36",
+      "observedAt": "2026-07-22T05:05:41.704Z",
+      "requestId": "35996.35",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -624,8 +606,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.522Z",
-      "requestId": "40500.37",
+      "observedAt": "2026-07-22T05:05:41.705Z",
+      "requestId": "35996.36",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -633,8 +615,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.522Z",
-      "requestId": "40500.38",
+      "observedAt": "2026-07-22T05:05:41.705Z",
+      "requestId": "35996.37",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -642,8 +624,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.522Z",
-      "requestId": "40500.39",
+      "observedAt": "2026-07-22T05:05:41.705Z",
+      "requestId": "35996.38",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -651,8 +633,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.523Z",
-      "requestId": "40500.40",
+      "observedAt": "2026-07-22T05:05:41.705Z",
+      "requestId": "35996.39",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -660,8 +642,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.523Z",
-      "requestId": "40500.41",
+      "observedAt": "2026-07-22T05:05:41.705Z",
+      "requestId": "35996.40",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -669,8 +651,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:55.523Z",
-      "requestId": "40500.42",
+      "observedAt": "2026-07-22T05:05:41.705Z",
+      "requestId": "35996.41",
       "requestMethod": "GET",
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
@@ -678,8 +660,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.529Z",
-      "requestId": "40500.35",
+      "observedAt": "2026-07-22T05:05:41.723Z",
+      "requestId": "35996.34",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -687,8 +669,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.530Z",
-      "requestId": "40500.34",
+      "observedAt": "2026-07-22T05:05:41.723Z",
+      "requestId": "35996.33",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -696,8 +678,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.530Z",
-      "requestId": "40500.36",
+      "observedAt": "2026-07-22T05:05:41.724Z",
+      "requestId": "35996.35",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -705,8 +687,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.531Z",
-      "requestId": "40500.37",
+      "observedAt": "2026-07-22T05:05:41.724Z",
+      "requestId": "35996.37",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -714,8 +696,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.531Z",
-      "requestId": "40500.38",
+      "observedAt": "2026-07-22T05:05:41.725Z",
+      "requestId": "35996.38",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -723,8 +705,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.637Z",
-      "requestId": "40500.39",
+      "observedAt": "2026-07-22T05:05:41.725Z",
+      "requestId": "35996.36",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -732,8 +714,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.637Z",
-      "requestId": "40500.40",
+      "observedAt": "2026-07-22T05:05:41.809Z",
+      "requestId": "35996.40",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -741,8 +723,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:55.638Z",
-      "requestId": "40500.41",
+      "observedAt": "2026-07-22T05:05:41.809Z",
+      "requestId": "35996.39",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -750,17 +732,17 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "application/javascript",
-      "observedAt": "2026-07-22T03:00:55.947Z",
-      "requestId": "40500.42",
+      "observedAt": "2026-07-22T05:05:42.088Z",
+      "requestId": "35996.41",
       "status": 200,
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:00:55.962Z",
+      "observedAt": "2026-07-22T05:05:42.098Z",
       "params": {
-        "requestId": "40500.60",
+        "requestId": "35996.59",
         "url": "ws://localhost:8660/hot",
         "initiator": {
           "type": "script",
@@ -906,9 +888,9 @@
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:00:55.962Z",
+      "observedAt": "2026-07-22T05:05:42.098Z",
       "params": {
-        "requestId": "40500.61",
+        "requestId": "35996.60",
         "url": "ws://localhost:8660/message",
         "initiator": {
           "type": "script",
@@ -1040,45 +1022,45 @@
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:55.962Z",
+      "observedAt": "2026-07-22T05:05:42.098Z",
       "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
       "type": "info"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:55.982Z",
+      "observedAt": "2026-07-22T05:05:42.114Z",
       "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
       "type": "log"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:55.990Z",
+      "observedAt": "2026-07-22T05:05:42.120Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:55.990Z",
+      "observedAt": "2026-07-22T05:05:42.120Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:55.994Z",
+      "observedAt": "2026-07-22T05:05:42.123Z",
       "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:56.073Z",
+      "observedAt": "2026-07-22T05:05:42.174Z",
       "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
       "type": "warning"
     },
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.116Z",
-      "requestId": "5C29427693A2C58141E15EC86D642BE2",
+      "observedAt": "2026-07-22T05:05:43.058Z",
+      "requestId": "643A7BB01C47AF62FE3D6F7026F58063",
       "requestMethod": "GET",
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -1086,8 +1068,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "text/html",
-      "observedAt": "2026-07-22T03:00:57.700Z",
-      "requestId": "5C29427693A2C58141E15EC86D642BE2",
+      "observedAt": "2026-07-22T05:05:43.524Z",
+      "requestId": "643A7BB01C47AF62FE3D6F7026F58063",
       "status": 200,
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -1095,8 +1077,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.710Z",
-      "requestId": "40500.63",
+      "observedAt": "2026-07-22T05:05:43.534Z",
+      "requestId": "35996.62",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1104,8 +1086,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.710Z",
-      "requestId": "40500.64",
+      "observedAt": "2026-07-22T05:05:43.534Z",
+      "requestId": "35996.63",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1113,8 +1095,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.710Z",
-      "requestId": "40500.65",
+      "observedAt": "2026-07-22T05:05:43.534Z",
+      "requestId": "35996.64",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1122,8 +1104,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.710Z",
-      "requestId": "40500.66",
+      "observedAt": "2026-07-22T05:05:43.534Z",
+      "requestId": "35996.65",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1131,8 +1113,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.711Z",
-      "requestId": "40500.67",
+      "observedAt": "2026-07-22T05:05:43.534Z",
+      "requestId": "35996.66",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1140,8 +1122,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.711Z",
-      "requestId": "40500.68",
+      "observedAt": "2026-07-22T05:05:43.534Z",
+      "requestId": "35996.67",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1149,8 +1131,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.711Z",
-      "requestId": "40500.69",
+      "observedAt": "2026-07-22T05:05:43.535Z",
+      "requestId": "35996.68",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1158,8 +1140,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.711Z",
-      "requestId": "40500.70",
+      "observedAt": "2026-07-22T05:05:43.535Z",
+      "requestId": "35996.69",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1167,8 +1149,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:00:57.711Z",
-      "requestId": "40500.71",
+      "observedAt": "2026-07-22T05:05:43.535Z",
+      "requestId": "35996.70",
       "requestMethod": "GET",
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
@@ -1176,8 +1158,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.714Z",
-      "requestId": "40500.65",
+      "observedAt": "2026-07-22T05:05:43.537Z",
+      "requestId": "35996.63",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1185,8 +1167,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.715Z",
-      "requestId": "40500.66",
+      "observedAt": "2026-07-22T05:05:43.539Z",
+      "requestId": "35996.62",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1194,8 +1176,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.716Z",
-      "requestId": "40500.64",
+      "observedAt": "2026-07-22T05:05:43.539Z",
+      "requestId": "35996.64",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1203,8 +1185,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.717Z",
-      "requestId": "40500.63",
+      "observedAt": "2026-07-22T05:05:43.539Z",
+      "requestId": "35996.65",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1212,8 +1194,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.717Z",
-      "requestId": "40500.67",
+      "observedAt": "2026-07-22T05:05:43.540Z",
+      "requestId": "35996.66",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1221,8 +1203,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.717Z",
-      "requestId": "40500.68",
+      "observedAt": "2026-07-22T05:05:43.540Z",
+      "requestId": "35996.67",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1230,8 +1212,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.806Z",
-      "requestId": "40500.70",
+      "observedAt": "2026-07-22T05:05:43.620Z",
+      "requestId": "35996.69",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1239,8 +1221,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:00:57.806Z",
-      "requestId": "40500.69",
+      "observedAt": "2026-07-22T05:05:43.621Z",
+      "requestId": "35996.68",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1248,17 +1230,17 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "application/javascript",
-      "observedAt": "2026-07-22T03:00:58.110Z",
-      "requestId": "40500.71",
+      "observedAt": "2026-07-22T05:05:43.934Z",
+      "requestId": "35996.70",
       "status": 200,
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:00:58.121Z",
+      "observedAt": "2026-07-22T05:05:43.946Z",
       "params": {
-        "requestId": "40500.89",
+        "requestId": "35996.88",
         "url": "ws://localhost:8660/hot",
         "initiator": {
           "type": "script",
@@ -1404,9 +1386,9 @@
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:00:58.121Z",
+      "observedAt": "2026-07-22T05:05:43.946Z",
       "params": {
-        "requestId": "40500.90",
+        "requestId": "35996.89",
         "url": "ws://localhost:8660/message",
         "initiator": {
           "type": "script",
@@ -1538,45 +1520,45 @@
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:58.122Z",
+      "observedAt": "2026-07-22T05:05:43.946Z",
       "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
       "type": "info"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:58.138Z",
+      "observedAt": "2026-07-22T05:05:43.965Z",
       "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
       "type": "log"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:58.145Z",
+      "observedAt": "2026-07-22T05:05:43.972Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:58.145Z",
+      "observedAt": "2026-07-22T05:05:43.973Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:58.148Z",
+      "observedAt": "2026-07-22T05:05:43.976Z",
       "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:00:58.216Z",
+      "observedAt": "2026-07-22T05:05:44.039Z",
       "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
       "type": "warning"
     },
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:00.882Z",
-      "requestId": "1DB9DF3E3532EC30D1D7FA73EAC6C149",
+      "observedAt": "2026-07-22T05:05:46.631Z",
+      "requestId": "CA04B99EBE1D08098B8C7CCCF9FCD625",
       "requestMethod": "GET",
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -1584,8 +1566,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "text/html",
-      "observedAt": "2026-07-22T03:01:01.611Z",
-      "requestId": "1DB9DF3E3532EC30D1D7FA73EAC6C149",
+      "observedAt": "2026-07-22T05:05:47.125Z",
+      "requestId": "CA04B99EBE1D08098B8C7CCCF9FCD625",
       "status": 200,
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -1593,8 +1575,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.92",
+      "observedAt": "2026-07-22T05:05:47.134Z",
+      "requestId": "35996.91",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1602,8 +1584,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.93",
+      "observedAt": "2026-07-22T05:05:47.134Z",
+      "requestId": "35996.92",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1611,8 +1593,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.94",
+      "observedAt": "2026-07-22T05:05:47.134Z",
+      "requestId": "35996.93",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1620,8 +1602,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.95",
+      "observedAt": "2026-07-22T05:05:47.134Z",
+      "requestId": "35996.94",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1629,8 +1611,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.96",
+      "observedAt": "2026-07-22T05:05:47.134Z",
+      "requestId": "35996.95",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1638,8 +1620,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.97",
+      "observedAt": "2026-07-22T05:05:47.135Z",
+      "requestId": "35996.96",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1647,8 +1629,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.98",
+      "observedAt": "2026-07-22T05:05:47.135Z",
+      "requestId": "35996.97",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1656,8 +1638,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.99",
+      "observedAt": "2026-07-22T05:05:47.135Z",
+      "requestId": "35996.98",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1665,8 +1647,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:01.622Z",
-      "requestId": "40500.100",
+      "observedAt": "2026-07-22T05:05:47.135Z",
+      "requestId": "35996.99",
       "requestMethod": "GET",
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
@@ -1674,8 +1656,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.627Z",
-      "requestId": "40500.93",
+      "observedAt": "2026-07-22T05:05:47.137Z",
+      "requestId": "35996.92",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1683,8 +1665,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.627Z",
-      "requestId": "40500.92",
+      "observedAt": "2026-07-22T05:05:47.138Z",
+      "requestId": "35996.94",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1692,8 +1674,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.627Z",
-      "requestId": "40500.94",
+      "observedAt": "2026-07-22T05:05:47.138Z",
+      "requestId": "35996.91",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1701,8 +1683,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.628Z",
-      "requestId": "40500.95",
+      "observedAt": "2026-07-22T05:05:47.139Z",
+      "requestId": "35996.93",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1710,8 +1692,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.628Z",
-      "requestId": "40500.97",
+      "observedAt": "2026-07-22T05:05:47.139Z",
+      "requestId": "35996.96",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1719,8 +1701,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.628Z",
-      "requestId": "40500.96",
+      "observedAt": "2026-07-22T05:05:47.139Z",
+      "requestId": "35996.95",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1728,8 +1710,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.734Z",
-      "requestId": "40500.98",
+      "observedAt": "2026-07-22T05:05:47.224Z",
+      "requestId": "35996.97",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1737,8 +1719,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:01.735Z",
-      "requestId": "40500.99",
+      "observedAt": "2026-07-22T05:05:47.224Z",
+      "requestId": "35996.98",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -1746,17 +1728,17 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "application/javascript",
-      "observedAt": "2026-07-22T03:01:02.123Z",
-      "requestId": "40500.100",
+      "observedAt": "2026-07-22T05:05:47.481Z",
+      "requestId": "35996.99",
       "status": 200,
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:01:02.134Z",
+      "observedAt": "2026-07-22T05:05:47.490Z",
       "params": {
-        "requestId": "40500.118",
+        "requestId": "35996.117",
         "url": "ws://localhost:8660/hot",
         "initiator": {
           "type": "script",
@@ -1902,9 +1884,9 @@
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:01:02.134Z",
+      "observedAt": "2026-07-22T05:05:47.490Z",
       "params": {
-        "requestId": "40500.119",
+        "requestId": "35996.118",
         "url": "ws://localhost:8660/message",
         "initiator": {
           "type": "script",
@@ -2036,45 +2018,45 @@
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:02.134Z",
+      "observedAt": "2026-07-22T05:05:47.490Z",
       "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
       "type": "info"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:02.150Z",
+      "observedAt": "2026-07-22T05:05:47.503Z",
       "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
       "type": "log"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:02.156Z",
+      "observedAt": "2026-07-22T05:05:47.509Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:02.156Z",
+      "observedAt": "2026-07-22T05:05:47.509Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:02.159Z",
+      "observedAt": "2026-07-22T05:05:47.512Z",
       "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:02.228Z",
+      "observedAt": "2026-07-22T05:05:47.557Z",
       "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
       "type": "warning"
     },
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:04.720Z",
-      "requestId": "03E08E9F09475F79D122F9768F8FCE5E",
+      "observedAt": "2026-07-22T05:05:50.005Z",
+      "requestId": "6C51A9568831F40EE4377219C98D158F",
       "requestMethod": "GET",
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -2082,8 +2064,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "text/html",
-      "observedAt": "2026-07-22T03:01:05.270Z",
-      "requestId": "03E08E9F09475F79D122F9768F8FCE5E",
+      "observedAt": "2026-07-22T05:05:50.493Z",
+      "requestId": "6C51A9568831F40EE4377219C98D158F",
       "status": 200,
       "type": "Document",
       "url": "http://localhost:8660/shelf/ocr?redacted-query"
@@ -2091,8 +2073,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.121",
+      "observedAt": "2026-07-22T05:05:50.502Z",
+      "requestId": "35996.120",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2100,8 +2082,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.122",
+      "observedAt": "2026-07-22T05:05:50.502Z",
+      "requestId": "35996.121",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2109,8 +2091,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.123",
+      "observedAt": "2026-07-22T05:05:50.503Z",
+      "requestId": "35996.122",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2118,8 +2100,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.124",
+      "observedAt": "2026-07-22T05:05:50.503Z",
+      "requestId": "35996.123",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2127,8 +2109,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.125",
+      "observedAt": "2026-07-22T05:05:50.503Z",
+      "requestId": "35996.124",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2136,8 +2118,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.126",
+      "observedAt": "2026-07-22T05:05:50.503Z",
+      "requestId": "35996.125",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2145,8 +2127,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.127",
+      "observedAt": "2026-07-22T05:05:50.503Z",
+      "requestId": "35996.126",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2154,8 +2136,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.280Z",
-      "requestId": "40500.128",
+      "observedAt": "2026-07-22T05:05:50.503Z",
+      "requestId": "35996.127",
       "requestMethod": "GET",
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2163,8 +2145,8 @@
     {
       "documentURL": "http://localhost:8660/shelf/ocr?redacted-query",
       "method": "Network.requestWillBeSent",
-      "observedAt": "2026-07-22T03:01:05.281Z",
-      "requestId": "40500.129",
+      "observedAt": "2026-07-22T05:05:50.503Z",
+      "requestId": "35996.128",
       "requestMethod": "GET",
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
@@ -2172,8 +2154,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.283Z",
-      "requestId": "40500.122",
+      "observedAt": "2026-07-22T05:05:50.506Z",
+      "requestId": "35996.120",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2181,8 +2163,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.284Z",
-      "requestId": "40500.121",
+      "observedAt": "2026-07-22T05:05:50.506Z",
+      "requestId": "35996.122",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2190,8 +2172,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.284Z",
-      "requestId": "40500.123",
+      "observedAt": "2026-07-22T05:05:50.507Z",
+      "requestId": "35996.121",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2199,8 +2181,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.285Z",
-      "requestId": "40500.124",
+      "observedAt": "2026-07-22T05:05:50.507Z",
+      "requestId": "35996.123",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2208,8 +2190,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.285Z",
-      "requestId": "40500.125",
+      "observedAt": "2026-07-22T05:05:50.507Z",
+      "requestId": "35996.125",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2217,8 +2199,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.286Z",
-      "requestId": "40500.126",
+      "observedAt": "2026-07-22T05:05:50.508Z",
+      "requestId": "35996.124",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2226,8 +2208,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.378Z",
-      "requestId": "40500.127",
+      "observedAt": "2026-07-22T05:05:50.591Z",
+      "requestId": "35996.126",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2235,8 +2217,8 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "font/ttf",
-      "observedAt": "2026-07-22T03:01:05.379Z",
-      "requestId": "40500.128",
+      "observedAt": "2026-07-22T05:05:50.591Z",
+      "requestId": "35996.127",
       "status": 200,
       "type": "Font",
       "url": "http://localhost:8660/assets/?redacted-query"
@@ -2244,17 +2226,17 @@
     {
       "method": "Network.responseReceived",
       "mimeType": "application/javascript",
-      "observedAt": "2026-07-22T03:01:05.667Z",
-      "requestId": "40500.129",
+      "observedAt": "2026-07-22T05:05:50.825Z",
+      "requestId": "35996.128",
       "status": 200,
       "type": "Script",
       "url": "http://localhost:8660/node_modules/expo-router/entry.bundle?redacted-query"
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:01:05.677Z",
+      "observedAt": "2026-07-22T05:05:50.835Z",
       "params": {
-        "requestId": "40500.147",
+        "requestId": "35996.146",
         "url": "ws://localhost:8660/hot",
         "initiator": {
           "type": "script",
@@ -2400,9 +2382,9 @@
     },
     {
       "method": "Network.webSocketCreated",
-      "observedAt": "2026-07-22T03:01:05.677Z",
+      "observedAt": "2026-07-22T05:05:50.835Z",
       "params": {
-        "requestId": "40500.148",
+        "requestId": "35996.147",
         "url": "ws://localhost:8660/message",
         "initiator": {
           "type": "script",
@@ -2534,50 +2516,50 @@
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:05.678Z",
+      "observedAt": "2026-07-22T05:05:50.835Z",
       "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
       "type": "info"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:05.692Z",
+      "observedAt": "2026-07-22T05:05:50.855Z",
       "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
       "type": "log"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:05.699Z",
+      "observedAt": "2026-07-22T05:05:50.860Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:05.699Z",
+      "observedAt": "2026-07-22T05:05:50.860Z",
       "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:05.702Z",
+      "observedAt": "2026-07-22T05:05:50.863Z",
       "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
       "type": "warning"
     },
     {
       "method": "Runtime.consoleAPICalled",
-      "observedAt": "2026-07-22T03:01:05.764Z",
+      "observedAt": "2026-07-22T05:05:50.918Z",
       "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
       "type": "warning"
     }
   ],
   "retention": {
-    "ignoredEventCount": 526,
-    "inputEventCount": 672,
+    "ignoredEventCount": 513,
+    "inputEventCount": 657,
     "limits": {
       "maxRetainedBytes": 4194304,
       "maxRetainedEvents": 5000
     },
-    "retainedEventCount": 146,
-    "sanitizedBytes": 62631,
+    "retainedEventCount": 144,
+    "sanitizedBytes": 62198,
     "truncated": false
   }
 }
