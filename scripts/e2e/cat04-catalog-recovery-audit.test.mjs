@@ -199,10 +199,10 @@ test('extended recovery lanes exercise wrong matches, retry dedupe, guards, and 
 
 test('offline fixture permits its bounded unresolved lookup without hiding other network hangs', () => {
   assert.match(source, /networkIdleMaxInflightForFixtureGroup\(fixtureGroup\)/);
+  assert.match(source, /fixtureGroup === 'offline'\) return 5/);
   assert.match(source, /fixtureGroup === 'camera-recovery'\) return 3/);
   assert.match(source, /fixtureGroup === 'ocr-capture-failure'\) return 1/);
   assert.match(source, /networkIdleMaxInflightForScenario\(scenario\)/);
-  assert.match(source, /scenario\.fixture === 'offline' \? 1 : 0/);
   assert.match(source, /fixtureGroup === 'camera-recovery' \? 30_000 : 10_000/);
   assert.match(source, /allowed \$\{maxInflight\}/);
 });

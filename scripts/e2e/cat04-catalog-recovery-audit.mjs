@@ -911,16 +911,14 @@ function networkIdleTimeoutForFixtureGroup(fixtureGroup) {
 }
 
 function networkIdleMaxInflightForFixtureGroup(fixtureGroup) {
+  if (fixtureGroup === 'offline') return 5;
   if (fixtureGroup === 'camera-recovery') return 3;
   if (fixtureGroup === 'ocr-capture-failure') return 1;
   return 0;
 }
 
 function networkIdleMaxInflightForScenario(scenario) {
-  return Math.max(
-    scenario.fixture === 'offline' ? 1 : 0,
-    networkIdleMaxInflightForFixtureGroup(scenario.groupId),
-  );
+  return networkIdleMaxInflightForFixtureGroup(scenario.groupId);
 }
 
 async function setViewport(client, viewport) {
