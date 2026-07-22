@@ -137,6 +137,8 @@ test('CAT07 runner drives the full truthful replacement lifecycle', () => {
   ]) {
     assert.ok(runnerSource.includes(required), `Missing CAT07 interaction: ${required}`);
   }
+  assert.match(runnerSource, /ready\.bodyText\.includes\('from label'\)/u);
+  assert.doesNotMatch(runnerSource, /recorded from product label/u);
   assert.match(runnerSource, /nativeDeviceProof:\s*false/gu);
   assert.doesNotMatch(runnerSource, /nativeDeviceProof:\s*true/gu);
 });

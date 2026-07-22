@@ -368,7 +368,8 @@ async function addFreshnessProduct({ client, baseUrl, evidenceDir, viewport, art
   const ready = await captureStep(client, evidenceDir, `${artifactPrefix}-04-label-pao-ready`);
   assertInteractiveControl(ready, 'Add to shelf');
   assert(
-    ready.bodyText.includes('recorded from product label'),
+    ready.bodyText.includes('PAO: 12 months after opening') &&
+      ready.bodyText.includes('from label'),
     'CAT07 intake did not identify the user-confirmed label PAO.',
   );
   await clickByText(client, 'Add to shelf');
@@ -432,7 +433,7 @@ async function runFreshnessScenario({ client, baseUrl, evidenceDir, viewport }) 
     );
     assert(
       initialDetail.bodyText.includes('PAO 12 months') &&
-        initialDetail.bodyText.includes('recorded from product label'),
+        initialDetail.bodyText.includes('from label'),
       'CAT07 detail lost label PAO provenance.',
     );
     assert(
@@ -525,7 +526,7 @@ async function runFreshnessScenario({ client, baseUrl, evidenceDir, viewport }) 
     assert(
       replacementDetail.bodyText.includes('Not opened') &&
         replacementDetail.bodyText.includes('PAO 12 months') &&
-        replacementDetail.bodyText.includes('recorded from product label') &&
+        replacementDetail.bodyText.includes('from label') &&
         replacementDetail.bodyText.includes('Date unknown'),
       'CAT07 unopened replacement did not preserve PAO while clearing the PAO clock and package date.',
     );
@@ -568,7 +569,7 @@ async function runFreshnessScenario({ client, baseUrl, evidenceDir, viewport }) 
     );
     assert(
       archivedDetail.bodyText.includes('PAO 12 months') &&
-        archivedDetail.bodyText.includes('recorded from product label') &&
+        archivedDetail.bodyText.includes('from label') &&
         archivedDetail.bodyText.includes('recorded as printed'),
       'CAT07 archived package lost its opening/PAO/printed-date provenance.',
     );
