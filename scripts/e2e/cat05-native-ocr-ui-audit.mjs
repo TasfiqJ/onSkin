@@ -246,6 +246,10 @@ export function sanitizeCat05DiagnosticText(
   for (const [candidate, replacement] of pathReplacements) {
     sanitized = replacePathLiteral(sanitized, candidate, replacement);
   }
+  sanitized = sanitized.replace(
+    /(?<![a-z0-9])(?:[a-z]:[\\/](?:[^\\/\s"'<>|:*?\r\n]+[\\/])*[^\\/\s"'<>|:*?\r\n]*|\\\\[^\\/\s"'<>|:*?\r\n]+[\\/][^"'<>|:*?\r\n\s]+)(?![a-z0-9])/giu,
+    '<redacted-absolute-path>',
+  );
   sanitized = sanitized.replace(/(?:https?|wss?):\/\/[^\s<>"')\]}]+/giu, (candidate) =>
     sanitizeCat05EvidenceUrl(candidate),
   );
