@@ -527,9 +527,10 @@ async function runFreshnessScenario({ client, baseUrl, evidenceDir, viewport }) 
       `${artifactPrefix}-11-unopened-replacement-detail`,
     );
     assert(
-      replacementDetail.bodyText.includes('Not opened') &&
+      replacementDetail.bodyText.includes('Opened not opened yet') &&
         replacementDetail.bodyText.includes('PAO 12 months') &&
         replacementDetail.bodyText.includes('from label') &&
+        replacementDetail.bodyText.includes('Recorded package date not entered') &&
         replacementDetail.bodyText.includes('Date unknown'),
       'CAT07 unopened replacement did not preserve PAO while clearing the PAO clock and package date.',
     );

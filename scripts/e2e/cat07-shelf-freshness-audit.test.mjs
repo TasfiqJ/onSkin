@@ -133,6 +133,8 @@ test('CAT07 runner drives the full truthful replacement lifecycle', () => {
     "clickByText(client, 'New unit was opened earlier', { exact: false })",
     "clickByText(client, 'New unit is unopened', { exact: false })",
     'This reminder comes from the package date recorded on your Shelf.',
+    "replacementDetail.bodyText.includes('Opened not opened yet')",
+    "replacementDetail.bodyText.includes('Recorded package date not entered')",
     'originalDetailPath !== replacementDetailPath',
     "clickByText(client, 'Expiring')",
     "waitForText(client, 'Nothing needs replacing right now.')",
