@@ -958,6 +958,31 @@ async function stopProcessBestEffort(child) {
   if (!cat05ChildRunning(child)) CAT05_ACTIVE_CHILDREN.delete(child);
 }
 
+export async function removeCat05BrowserUserDataDirBestEffort(
+  userDataDir,
+  { attempts = isWindows ? 8 : 2, retryDelayMs = isWindows ? 250 : 25 } = {},
+) {
+  if (!userDataDir) return { removed: true };
+  const resolved = path.resolve(userDataDir);
+  const temporaryRoot = path.resolve(tmpdir());
+  const prefix = `${temporaryRoot}${path.sep}`;
+  assert(
+    resolved.startsWith(prefix) && path.basename(resolved).startsWith('cat05-browser-'),
+    'CAT05 refuses to remove an untrusted browser user-data directory.',
+  );
+  let lastError = null;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      rmSync(resolved, { force: true, maxRetries: 2, recursive: true, retryDelay: retryDelayMs });
+      return { removed: !existsSync(resolved) };
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts - 1) await delay(retryDelayMs, undefined, { ref: false });
+    }
+  }
+  return { error: sanitizeCat05DiagnosticError(lastError), removed: !existsSync(resolved) };
+}
+
 export async function stopActiveCat05Processes() {
   const children = [...CAT05_ACTIVE_CHILDREN];
   await Promise.allSettled(children.map(stopProcessBestEffort));
@@ -2538,7 +2563,7 @@ export async function runCat05NativeOcrUiAudit({
         await stopProcessBestEffort(browser);
         await stopProcessBestEffort(expo);
         sanitizeCat05ExpoFixtureLog(evidenceDir, group.id, expo?.cat05ExpoLogCapture);
-        if (userDataDir) rmSync(userDataDir, { force: true, recursive: true });
+        await removeCat05BrowserUserDataDirBestEffort(userDataDir);
       }
     }
   } catch (error) {

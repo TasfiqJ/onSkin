@@ -36,6 +36,7 @@ import {
   listCat05EvidenceArtifacts,
   navigateToCat05OcrConsentProbe,
   prepareCat05Navigation,
+  removeCat05BrowserUserDataDirBestEffort,
   resolveCat05AuditBinding,
   sanitizeCat05DiagnosticValue,
   sanitizeCat05DiagnosticText,
@@ -890,6 +891,20 @@ test('PASS evidence requires the exact scenario/viewport artifact set and hashes
   assert.throws(
     () => assertCat05ArtifactBindings(evidenceDir, [boundArtifact], binding),
     /binding mismatch.*runId/,
+  );
+});
+
+test('browser profile cleanup is scoped and non-fatal for stale locked directories', async () => {
+  const trustedUserDataDir = mkdtempSync(path.join(tmpdir(), 'cat05-browser-test-'));
+  const result = await removeCat05BrowserUserDataDirBestEffort(trustedUserDataDir, {
+    attempts: 1,
+    retryDelayMs: 1,
+  });
+
+  assert.equal(result.removed, true);
+  await assert.rejects(
+    () => removeCat05BrowserUserDataDirBestEffort(path.join(tmpdir(), 'cat05-untrusted-output')),
+    /CAT05 refuses to remove an untrusted browser user-data directory/,
   );
 });
 
