@@ -807,14 +807,14 @@ async function waitForUrl(url, timeoutMs = 120_000, signal) {
   throw new Error(`Timed out waiting for ${url}: ${lastError?.message ?? 'no response'}`);
 }
 
-async function readJson(url, expectedPort, timeoutMs = 30_000, signal) {
+async function readJson(url, expectedPort, timeoutMs = 30_000, signal, { method = 'GET' } = {}) {
   assertCat05LoopbackHttpTarget(url, expectedPort);
   const startedAt = Date.now();
   let lastError = null;
   while (Date.now() - startedAt < timeoutMs) {
     assertCat05AuditActive(signal);
     try {
-      const response = await fetch(url, { signal });
+      const response = await fetch(url, { method, signal });
       if (response.ok) return await response.json();
     } catch (error) {
       lastError = error;
@@ -1097,12 +1097,20 @@ class CdpClient {
 }
 
 async function connectToPage(debugPort, baseUrl, signal) {
-  const targets = await readJson(`http://127.0.0.1:${debugPort}/json`, debugPort, 30_000, signal);
-  const target = targets.find(
-    (candidate) => candidate.type === 'page' && candidate.webSocketDebuggerUrl,
+  const targetUrl = String(assertCat05PageTarget(baseUrl, baseUrl));
+  const createdTarget = await readJson(
+    `http://127.0.0.1:${debugPort}/json/new?${encodeURIComponent(targetUrl)}`,
+    debugPort,
+    30_000,
+    signal,
+    { method: 'PUT' },
   );
+  const target =
+    createdTarget?.type === 'page' && createdTarget?.webSocketDebuggerUrl
+      ? createdTarget
+      : null;
   if (!target) throw new Error('No debuggable browser page was found.');
-  if (target.url !== 'about:blank') assertCat05PageTarget(target.url, baseUrl);
+  assertCat05PageTarget(target.url, baseUrl);
   assertCat05DebugTarget(target.webSocketDebuggerUrl, debugPort);
   const client = new CdpClient(target.webSocketDebuggerUrl);
   await client.ready;

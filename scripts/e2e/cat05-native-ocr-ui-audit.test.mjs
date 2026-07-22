@@ -297,6 +297,9 @@ test('browser and page targets are pinned to explicit local HTTP origin and port
     () => assertCat05LocalTarget('http://localhost:8621/shelf/ocr', { expectedPort: 8620 }),
     /port/,
   );
+  assert.match(source, /\/json\/new\?\$\{encodeURIComponent\(targetUrl\)\}/);
+  assert.match(source, /method: 'PUT'/);
+  assert.match(source, /assertCat05PageTarget\(target\.url, baseUrl\)/);
 });
 
 test('cold consent probe navigates once and discards only the prior request epoch', async () => {
