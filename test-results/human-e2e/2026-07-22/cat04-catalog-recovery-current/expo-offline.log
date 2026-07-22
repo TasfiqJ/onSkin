@@ -15,38 +15,39 @@ Waiting on http://localhost:8500
 An update for expo is available: 56.0.15 → ~56.0.16
 8 other packages may need updating. Run npx expo install --check for details.
 Logs for your project will appear below.
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
-| (node:31964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (node:14060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 | (Use `node --trace-warnings ...` to show where the warning was created)
 | › [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
-λ Bundled 23762ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (2544 modules)
+| › [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
+λ Bundled 21227ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (2545 modules)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 25126ms node_modules\expo-router\entry.js (2483 modules)
-λ Bundled 182ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 21962ms node_modules\expo-router\entry.js (2476 modules)
+λ Bundled 99ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 762ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 9620ms node_modules\expo-router\entry.js (2488 modules)
+Web Bundled 496ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 7608ms node_modules\expo-router\entry.js (2488 modules)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -56,12 +57,12 @@ Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using pla
 Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
 Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 88ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+λ Bundled 66ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 558ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 96ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 426ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 83ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -71,12 +72,12 @@ Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using pla
 Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
 Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 58ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+λ Bundled 134ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 429ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 101ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 592ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 112ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -86,12 +87,12 @@ Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using pla
 Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
 Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 108ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+λ Bundled 70ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 546ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 106ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 480ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 83ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -101,12 +102,12 @@ Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using pla
 Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
 Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 60ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+λ Bundled 292ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 408ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 80ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 1583ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 247ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -116,12 +117,12 @@ Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using pla
 Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
 Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 64ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+λ Bundled 209ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 445ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 86ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 1194ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 179ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -131,12 +132,57 @@ Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using pla
 Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
 Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 63ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+λ Bundled 163ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 447ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 84ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 1120ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 208ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+λ Bundled 221ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 1156ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 219ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 218ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 1178ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 185ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+λ Bundled 238ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 818ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 77ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -150,82 +196,7 @@ Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 509ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 81ms node_modules\expo-router\entry.js (1 module)
-Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-Web  LOG  Running application "main" with appParams:
- {"hydrate": undefined, "rootTag": "#root"}
-Development-level warnings: ON.
-Performance optimizations: OFF.
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 73ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
-[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 441ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 79ms node_modules\expo-router\entry.js (1 module)
-Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-Web  LOG  Running application "main" with appParams:
- {"hydrate": undefined, "rootTag": "#root"}
-Development-level warnings: ON.
-Performance optimizations: OFF.
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 63ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
-[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 423ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 77ms node_modules\expo-router\entry.js (1 module)
-Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-Web  LOG  Running application "main" with appParams:
- {"hydrate": undefined, "rootTag": "#root"}
-Development-level warnings: ON.
-Performance optimizations: OFF.
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 73ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
-[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 420ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 75ms node_modules\expo-router\entry.js (1 module)
-Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-Web  LOG  Running application "main" with appParams:
- {"hydrate": undefined, "rootTag": "#root"}
-Development-level warnings: ON.
-Performance optimizations: OFF.
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 60ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
-[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 388ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 82ms node_modules\expo-router\entry.js (1 module)
-Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-Web  LOG  Running application "main" with appParams:
- {"hydrate": undefined, "rootTag": "#root"}
-Development-level warnings: ON.
-Performance optimizations: OFF.
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 58ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
-[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
-[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
-[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 445ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 402ms node_modules\expo-router\entry.js (1 module)
 Web Bundled 76ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
@@ -236,12 +207,87 @@ Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using pla
 Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
 Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
-λ Bundled 68ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+λ Bundled 104ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 388ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 72ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 452ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 91ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+λ Bundled 71ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 449ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 79ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+λ Bundled 89ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 414ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 81ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+λ Bundled 62ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 405ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 81ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+λ Bundled 66ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 433ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 83ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+λ Bundled 85ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 454ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 74ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}
@@ -255,8 +301,8 @@ Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 465ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 77ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 456ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 79ms node_modules\expo-router\entry.js (1 module)
 Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 Web  LOG  Running application "main" with appParams:
  {"hydrate": undefined, "rootTag": "#root"}

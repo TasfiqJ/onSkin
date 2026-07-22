@@ -1,13 +1,13 @@
 {
   "artifactPrefix": "scan-wrong-match-recovery-iphone-430x932",
-  "completedAt": "2026-07-22T05:25:33.932Z",
+  "completedAt": "2026-07-22T05:58:14.734Z",
   "error": null,
   "fixture": "matched_wrong_match_recovery",
   "fixtureGroup": "matched",
   "nativeDeviceProof": false,
   "route": "/shelf/scan",
   "scenarioId": "scan-wrong-match-recovery",
-  "startedAt": "2026-07-22T05:25:29.094Z",
+  "startedAt": "2026-07-22T05:58:09.882Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -16,5 +16,5 @@
     "height": 932
   },
   "browserFailures": [],
-  "endUrl": "http://localhost:8460/shelf/manual?intakeId=0e05cfb2-5edd-41f4-9101-a026f3732118"
+  "endUrl": "http://localhost:8460/shelf/manual?intakeId=751b71a1-c27b-4e3c-bf91-1d62fc434295"
 }

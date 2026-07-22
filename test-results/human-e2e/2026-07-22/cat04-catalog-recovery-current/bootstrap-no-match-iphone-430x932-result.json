@@ -1,11 +1,11 @@
 {
   "artifactPrefix": "bootstrap-no-match-iphone-430x932",
   "browserFailures": [],
-  "completedAt": "2026-07-22T05:26:36.830Z",
+  "completedAt": "2026-07-22T05:59:22.804Z",
   "error": null,
   "fixtureGroup": "no-match",
   "nativeDeviceProof": false,
-  "startedAt": "2026-07-22T05:26:32.411Z",
+  "startedAt": "2026-07-22T05:59:18.128Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -13,5 +13,5 @@
     "width": 430,
     "height": 932
   },
-  "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-430x932-1784697994670"
+  "endUrl": "http://localhost:8480/shelf/search?cat04ConsentProbe=no-match-iphone-430x932-1784699960570"
 }

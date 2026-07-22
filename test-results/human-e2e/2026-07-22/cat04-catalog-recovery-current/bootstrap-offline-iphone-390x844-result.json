@@ -1,11 +1,11 @@
 {
   "artifactPrefix": "bootstrap-offline-iphone-390x844",
   "browserFailures": [],
-  "completedAt": "2026-07-22T05:27:45.358Z",
+  "completedAt": "2026-07-22T06:00:37.652Z",
   "error": null,
   "fixtureGroup": "offline",
   "nativeDeviceProof": false,
-  "startedAt": "2026-07-22T05:27:40.685Z",
+  "startedAt": "2026-07-22T06:00:24.122Z",
   "surface": "expo-web",
   "verdict": "pass",
   "viewport": {
@@ -13,5 +13,5 @@
     "width": 390,
     "height": 844
   },
-  "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-390x844-1784698063152"
+  "endUrl": "http://localhost:8500/shelf/search?cat04ConsentProbe=offline-iphone-390x844-1784700035030"
 }
