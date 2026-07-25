@@ -27,6 +27,14 @@ import {
   type NotificationDeliveryOwner,
 } from './sentStore';
 import {
+  getNotificationPermissionSnapshot,
+  NotificationPermissionRequestUnavailableError,
+  NotificationPermissionUnavailableError,
+  requestNotificationPermissionSnapshot,
+  type NotificationPermissionSnapshot,
+  type NotificationPermissionStatus,
+} from './permission';
+import {
   readNotifPrefs,
   saveNotifPrefs,
   type NotifPrefs,
@@ -109,13 +117,8 @@ export function nowHHMM(d = new Date()): string {
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
-export async function getPermissionStatus(): Promise<'granted' | 'denied' | 'undetermined'> {
-  try {
-    const { status } = await Notifications.getPermissionsAsync();
-    return status === 'granted' ? 'granted' : status === 'denied' ? 'denied' : 'undetermined';
-  } catch {
-    return 'undetermined';
-  }
+export async function getPermissionStatus(): Promise<NotificationPermissionStatus> {
+  return (await getNotificationPermissionSnapshot()).status;
 }
 
 export async function readNotificationScheduleHealth(): Promise<
@@ -138,12 +141,21 @@ export async function readNotificationScheduleHealth(): Promise<
 
 /** The OS prompt. Fired only after the in-app soft ask is accepted. */
 export async function requestPermission(): Promise<boolean> {
-  try {
-    const { status } = await Notifications.requestPermissionsAsync();
-    return status === 'granted';
-  } catch {
-    return false;
+  const snapshot = await requestNotificationPermissionSnapshot();
+  if (snapshot.status === 'granted') return true;
+  if (snapshot.status === 'denied') return false;
+  if (snapshot.status === 'unavailable') {
+    throw new NotificationPermissionRequestUnavailableError(snapshot.reason);
   }
+  throw new NotificationPermissionRequestUnavailableError('unresolved');
+}
+
+async function readPermissionUnderLease(
+  lease: AccountGenerationLease,
+): Promise<NotificationPermissionSnapshot> {
+  const snapshot = await awaitAccountGenerationLease(lease, getNotificationPermissionSnapshot);
+  lease.assertCurrent();
+  return snapshot;
 }
 
 async function cancelPreferenceRemindersUnderLease(lease: AccountGenerationLease): Promise<void> {
@@ -157,6 +169,30 @@ async function cancelPreferenceRemindersUnderLease(lease: AccountGenerationLease
     } catch (error) {
       failures.push(error);
     }
+  }
+  lease.assertCurrent();
+  if (failures.length > 0) throw failures[0];
+}
+
+async function cancelTrialReminderUnderLease(lease: AccountGenerationLease): Promise<void> {
+  lease.assertCurrent();
+  await awaitAccountGenerationLease(lease, () =>
+    cancelNativeScheduledNotificationExact(TRIAL_REMINDER_ID),
+  );
+  lease.assertCurrent();
+}
+
+async function cancelAllOwnedRemindersUnderLease(lease: AccountGenerationLease): Promise<void> {
+  const failures: unknown[] = [];
+  try {
+    await cancelPreferenceRemindersUnderLease(lease);
+  } catch (error) {
+    failures.push(error);
+  }
+  try {
+    await cancelTrialReminderUnderLease(lease);
+  } catch (error) {
+    failures.push(error);
   }
   lease.assertCurrent();
   if (failures.length > 0) throw failures[0];
@@ -184,8 +220,19 @@ export async function suspendPreferenceOwnedReminders(): Promise<void> {
 async function reconcileRemindersUnderLease(
   prefs: NotifPrefs,
   lease: AccountGenerationLease,
-): Promise<void> {
-  if (Platform.OS === 'web') return;
+  knownPermission?: NotificationPermissionSnapshot,
+): Promise<NotificationScheduleReconcileOutcome> {
+  if (Platform.OS === 'web') return 'not_applicable';
+
+  const permission = knownPermission ?? (await readPermissionUnderLease(lease));
+  if (permission.status !== 'granted') {
+    lastReminderScheduleSignature = null;
+    await cancelPreferenceRemindersUnderLease(lease);
+    if (permission.status === 'unavailable') {
+      throw new NotificationPermissionUnavailableError(permission.reason);
+    }
+    return permission.status === 'denied' ? 'suspended_denied' : 'suspended_undetermined';
+  }
 
   const signature = JSON.stringify([
     lease.generation,
@@ -202,7 +249,7 @@ async function reconcileRemindersUnderLease(
     lastReminderScheduleSignature === signature &&
     (await preferenceScheduleIdentifiersAreHealthy(prefs, lease))
   ) {
-    return;
+    return 'scheduled';
   }
 
   lastReminderScheduleSignature = null;
@@ -260,6 +307,7 @@ async function reconcileRemindersUnderLease(
       }
     }
     lastReminderScheduleSignature = signature;
+    return 'scheduled';
   } catch (error) {
     if (!lease.signal.aborted) await cancelPreferenceRemindersUnderLease(lease);
     lease.assertCurrent();
@@ -267,8 +315,55 @@ async function reconcileRemindersUnderLease(
   }
 }
 
-export async function rescheduleReminders(prefs: NotifPrefs): Promise<void> {
-  await runSerializedNotificationOperation((lease) => reconcileRemindersUnderLease(prefs, lease));
+export type NotificationScheduleReconcileOutcome =
+  | 'scheduled'
+  | 'suspended_denied'
+  | 'suspended_undetermined'
+  | 'not_applicable';
+
+export async function rescheduleReminders(
+  prefs: NotifPrefs,
+): Promise<NotificationScheduleReconcileOutcome> {
+  return runSerializedNotificationOperation((lease) =>
+    reconcileRemindersUnderLease(prefs, lease),
+  );
+}
+
+/**
+ * Deferred-root convergence for fixed preferences plus the global trial ID.
+ * The mounted owner generation is supplied explicitly so a stale React effect
+ * can never acquire the next account's lease and mutate its schedules.
+ */
+export async function reconcileRootNotificationSchedules(
+  prefs: NotifPrefs | null,
+  expectedGeneration: number,
+): Promise<NotificationScheduleReconcileOutcome> {
+  return runSerializedNotificationOperation(async (lease) => {
+    if (lease.generation !== expectedGeneration) throw new AccountGenerationLeaseError();
+    if (Platform.OS === 'web') return 'not_applicable';
+
+    if (prefs === null) {
+      lastReminderScheduleSignature = null;
+      await cancelPreferenceRemindersUnderLease(lease);
+    }
+
+    const permission = await readPermissionUnderLease(lease);
+    if (permission.status !== 'granted') {
+      lastReminderScheduleSignature = null;
+      if (prefs === null) {
+        await cancelTrialReminderUnderLease(lease);
+      } else {
+        await cancelAllOwnedRemindersUnderLease(lease);
+      }
+      if (permission.status === 'unavailable') {
+        throw new NotificationPermissionUnavailableError(permission.reason);
+      }
+      return permission.status === 'denied' ? 'suspended_denied' : 'suspended_undetermined';
+    }
+
+    if (prefs === null) return 'scheduled';
+    return reconcileRemindersUnderLease(prefs, lease, permission);
+  });
 }
 
 /** Persist and reconcile under the same queue used by behavioural delivery. */
@@ -311,16 +406,18 @@ export type TrialReminderInput = Readonly<{
   priceLabel: string | null;
 }>;
 
-export async function scheduleTrialReminder(input: TrialReminderInput): Promise<void> {
-  await runSerializedNotificationOperation(async (lease) => {
-    if (Platform.OS === 'web') return;
-    await awaitAccountGenerationLease(lease, () =>
-      cancelNativeScheduledNotificationExact(TRIAL_REMINDER_ID),
-    );
-    lease.assertCurrent();
+export async function scheduleTrialReminder(input: TrialReminderInput): Promise<boolean> {
+  return runSerializedNotificationOperation(async (lease) => {
+    if (Platform.OS === 'web') return false;
+    await cancelTrialReminderUnderLease(lease);
     const expiresAt = input.expiresAt;
     const fireAt = new Date(expiresAt).getTime() - 2 * 86_400_000;
-    if (fireAt <= Date.now()) return;
+    if (fireAt <= Date.now()) return false;
+    const permission = await readPermissionUnderLease(lease);
+    if (permission.status === 'unavailable') {
+      throw new NotificationPermissionUnavailableError(permission.reason);
+    }
+    if (permission.status !== 'granted') return false;
     await awaitAccountGenerationLease(lease, () =>
       scheduleNativeNotificationExact(lease.signal, {
         identifier: TRIAL_REMINDER_ID,
@@ -336,6 +433,7 @@ export async function scheduleTrialReminder(input: TrialReminderInput): Promise<
       }),
     );
     lease.assertCurrent();
+    return true;
   });
 }
 
@@ -343,10 +441,7 @@ export async function scheduleTrialReminder(input: TrialReminderInput): Promise<
 export async function cancelTrialReminder(): Promise<void> {
   await runSerializedNotificationOperation(async (lease) => {
     if (Platform.OS === 'web') return;
-    await awaitAccountGenerationLease(lease, () =>
-      cancelNativeScheduledNotificationExact(TRIAL_REMINDER_ID),
-    );
-    lease.assertCurrent();
+    await cancelTrialReminderUnderLease(lease);
   });
 }
 
@@ -393,6 +488,9 @@ export async function notifyBehavioural(
       quietEnd: prefs.quietEnd,
     });
     if (!decision.allowed) return false;
+
+    const permission = await readPermissionUnderLease(lease);
+    if (permission.status !== 'granted') return false;
 
     // Reserve the local cap slot before asking the OS to present anything. A
     // native failure may conservatively consume a slot, but can never produce an

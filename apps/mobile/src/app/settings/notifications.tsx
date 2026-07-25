@@ -4,12 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
 import { SETTINGS_COPY } from '@/features/notifications/copy';
+import { NotificationPermissionState } from '@/features/notifications/NotificationPermissionState';
 import {
   NotificationPreferenceAvailability,
   NotificationPreferenceMutationFeedback,
   useNotificationPreferenceRouteState,
 } from '@/features/notifications/NotificationPreferenceState';
 import { NotificationPreferenceSyncStatus } from '@/features/notifications/NotificationPreferenceSyncStatus';
+import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -142,8 +144,20 @@ function Row({
 export default function NotificationSettingsScreen() {
   const { height, width } = useWindowDimensions();
   const preference = useNotificationPreferenceRouteState();
+  const entitlement = useEntitlement();
   const p = preference.preferenceState.status === 'ready' ? preference.preferenceState.prefs : null;
   const set = preference.applyPatch;
+  const activeTrialReminderIntent = Boolean(
+    entitlement.data?.isPro && entitlement.data.inTrial && entitlement.data.expiresAt,
+  );
+  const deliveryIntent =
+    p?.amEnabled === true ||
+    p?.pmEnabled === true ||
+    p?.streakNudges === true ||
+    p?.replenishmentAlerts === true ||
+    p?.captureReminders === true ||
+    p?.promotionalOptIn === true ||
+    activeTrialReminderIntent;
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 600;
@@ -300,6 +314,11 @@ export default function NotificationSettingsScreen() {
               </View>
             </View>
 
+            <NotificationPermissionState
+              deliveryIntent={deliveryIntent}
+              onPermissionRecovered={preference.retryRead}
+            />
+
             <Text
               variant="label"
               tone="muted"
@@ -310,11 +329,17 @@ export default function NotificationSettingsScreen() {
             </Text>
           </>
         ) : (
-          <NotificationPreferenceAvailability
-            state={preference.preferenceState.status === 'loading' ? 'loading' : 'unavailable'}
-            retrying={preference.readRetrying}
-            onRetry={preference.retryRead}
-          />
+          <>
+            <NotificationPreferenceAvailability
+              state={preference.preferenceState.status === 'loading' ? 'loading' : 'unavailable'}
+              retrying={preference.readRetrying}
+              onRetry={preference.retryRead}
+            />
+            <NotificationPermissionState
+              deliveryIntent={activeTrialReminderIntent}
+              onPermissionRecovered={preference.retryRead}
+            />
+          </>
         )}
       </ScrollView>
     </SafeAreaView>

@@ -132,4 +132,22 @@ describe('notification onboarding choice', () => {
     await expect(acceptRoutineReminderSoftAsk(d)).rejects.toBe(permissionError);
     expect(d.saveAndReschedule).not.toHaveBeenCalled();
   });
+
+  it('keeps typed request unavailability retryable instead of persisting a denial', async () => {
+    const d = deps(true);
+    const permissionError = Object.assign(
+      new Error('Notification permission request is unavailable.'),
+      {
+        code: 'NOTIFICATION_PERMISSION_REQUEST_UNAVAILABLE' as const,
+        reason: 'invalid_response' as const,
+      },
+    );
+    d.requestPermission.mockRejectedValueOnce(permissionError);
+
+    await expect(acceptRoutineReminderSoftAsk(d)).rejects.toMatchObject({
+      code: 'NOTIFICATION_PERMISSION_REQUEST_UNAVAILABLE',
+      reason: 'invalid_response',
+    });
+    expect(d.saveAndReschedule).not.toHaveBeenCalled();
+  });
 });

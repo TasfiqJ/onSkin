@@ -6,16 +6,41 @@ import NotificationPreferenceScheduleReconciler from './NotificationPreferenceSc
 import type { NotifPrefs } from './store';
 
 const mocks = vi.hoisted(() => ({
-  rescheduleReminders: vi.fn(async () => undefined),
-  suspendPreferenceOwnedReminders: vi.fn(async () => undefined),
+  NotificationPermissionUnavailableError: class NotificationPermissionUnavailableError extends Error {
+    readonly code = 'NOTIFICATION_PERMISSION_UNAVAILABLE';
+
+    constructor(readonly reason: 'bridge_failure' | 'invalid_response') {
+      super(`Notification permission is unavailable: ${reason}`);
+      this.name = 'NotificationPermissionUnavailableError';
+    }
+  },
+  devWarn: vi.fn(),
+  reconcileLocalEntitlementTrialReminder: vi.fn<
+    () => Promise<'cancelled' | 'failed' | 'scheduled'>
+  >(async () => 'scheduled'),
+  reconcileRootNotificationSchedules: vi.fn<
+    (_prefs: unknown, _generation: number) => Promise<
+      'not_applicable' | 'scheduled' | 'suspended_denied' | 'suspended_undetermined'
+    >
+  >(async () => 'scheduled'),
   useEffect: vi.fn((effect: () => void) => effect()),
   useNotifPrefs: vi.fn(),
+  useOwnerQueryScope: vi.fn(),
 }));
 
 vi.mock('react', () => ({ useEffect: mocks.useEffect }));
+vi.mock('@/features/subscription/entitlementReminder', () => ({
+  reconcileLocalEntitlementTrialReminder: mocks.reconcileLocalEntitlementTrialReminder,
+}));
+vi.mock('@/lib/observability/safeLog', () => ({ devWarn: mocks.devWarn }));
+vi.mock('@/lib/query/useOwnerQueryScope', () => ({
+  useOwnerQueryScope: mocks.useOwnerQueryScope,
+}));
 vi.mock('./deliver', () => ({
-  rescheduleReminders: mocks.rescheduleReminders,
-  suspendPreferenceOwnedReminders: mocks.suspendPreferenceOwnedReminders,
+  reconcileRootNotificationSchedules: mocks.reconcileRootNotificationSchedules,
+}));
+vi.mock('./permission', () => ({
+  NotificationPermissionUnavailableError: mocks.NotificationPermissionUnavailableError,
 }));
 vi.mock('./useNotifications', () => ({ useNotifPrefs: mocks.useNotifPrefs }));
 
@@ -35,20 +60,26 @@ const prefs: NotifPrefs = {
   lockscreenDiscreet: true,
 };
 
+let nextGeneration = 100;
+
 describe('root notification preference schedule reconciliation', () => {
   beforeEach(() => {
-    mocks.rescheduleReminders.mockReset();
-    mocks.rescheduleReminders.mockResolvedValue(undefined);
-    mocks.suspendPreferenceOwnedReminders.mockReset();
-    mocks.suspendPreferenceOwnedReminders.mockResolvedValue(undefined);
+    nextGeneration += 1;
+    mocks.devWarn.mockReset();
+    mocks.reconcileLocalEntitlementTrialReminder.mockReset();
+    mocks.reconcileLocalEntitlementTrialReminder.mockResolvedValue('scheduled');
+    mocks.reconcileRootNotificationSchedules.mockReset();
+    mocks.reconcileRootNotificationSchedules.mockResolvedValue('scheduled');
     mocks.useNotifPrefs.mockReset();
+    mocks.useOwnerQueryScope.mockReset();
+    mocks.useOwnerQueryScope.mockReturnValue({ generation: nextGeneration });
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('reconciles only an authoritative available snapshot', () => {
+  it('reconciles an authoritative snapshot and audits the trial once per generation', async () => {
     mocks.useNotifPrefs.mockReturnValue({
       data: { status: 'available', prefs, format: 'current' },
       dataUpdatedAt: 1,
@@ -57,9 +88,19 @@ describe('root notification preference schedule reconciliation', () => {
     });
 
     expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.waitFor(() => {
+      expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledWith(
+        prefs,
+        nextGeneration,
+      );
+      expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledWith({
+        generation: nextGeneration,
+      });
+    });
 
-    expect(mocks.rescheduleReminders).toHaveBeenCalledWith(prefs);
-    expect(mocks.suspendPreferenceOwnedReminders).not.toHaveBeenCalled();
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await Promise.resolve();
+    expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledTimes(1);
   });
 
   it.each([
@@ -71,13 +112,19 @@ describe('root notification preference schedule reconciliation', () => {
       isError: false,
     },
     { data: undefined, isError: true },
-  ])('suspends fixed schedules for every non-authoritative settled state', (state) => {
+  ])('passes no invented preferences for every non-authoritative settled state', async (state) => {
     mocks.useNotifPrefs.mockReturnValue({ ...state, dataUpdatedAt: 2, isFetched: true });
 
     expect(NotificationPreferenceScheduleReconciler()).toBeNull();
-
-    expect(mocks.suspendPreferenceOwnedReminders).toHaveBeenCalledTimes(1);
-    expect(mocks.rescheduleReminders).not.toHaveBeenCalled();
+    await vi.waitFor(() => {
+      expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledWith(
+        null,
+        nextGeneration,
+      );
+      expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledWith({
+        generation: nextGeneration,
+      });
+    });
   });
 
   it('waits for the first read and keys retries to every completed refetch', () => {
@@ -89,7 +136,7 @@ describe('root notification preference schedule reconciliation', () => {
     });
 
     expect(NotificationPreferenceScheduleReconciler()).toBeNull();
-    expect(mocks.suspendPreferenceOwnedReminders).not.toHaveBeenCalled();
+    expect(mocks.reconcileRootNotificationSchedules).not.toHaveBeenCalled();
 
     const source = readFileSync(
       fileURLToPath(new URL('./NotificationPreferenceScheduleReconciler.tsx', import.meta.url)),
@@ -103,9 +150,9 @@ describe('root notification preference schedule reconciliation', () => {
 
   it('retries a transient native convergence failure without waiting for another query fetch', async () => {
     vi.useFakeTimers();
-    mocks.rescheduleReminders
+    mocks.reconcileRootNotificationSchedules
       .mockRejectedValueOnce(new Error('NATIVE_RECONCILIATION_FAILED'))
-      .mockResolvedValueOnce(undefined);
+      .mockResolvedValueOnce('scheduled');
     mocks.useNotifPrefs.mockReturnValue({
       data: { status: 'available', prefs, format: 'current' },
       dataUpdatedAt: 3,
@@ -114,10 +161,145 @@ describe('root notification preference schedule reconciliation', () => {
     });
 
     expect(NotificationPreferenceScheduleReconciler()).toBeNull();
-    expect(mocks.rescheduleReminders).toHaveBeenCalledTimes(1);
+    expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(1);
 
     await vi.advanceTimersByTimeAsync(1_000);
 
-    expect(mocks.rescheduleReminders).toHaveBeenCalledTimes(2);
+    expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(2);
+    expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['suspended_denied', 'suspended_undetermined'] as const)(
+    'remembers terminal permission outcome %s without retrying',
+    async (outcome) => {
+      mocks.reconcileRootNotificationSchedules.mockResolvedValue(outcome);
+      mocks.useNotifPrefs.mockReturnValue({
+        data: { status: 'available', prefs, format: 'current' },
+        dataUpdatedAt: 4,
+        isError: false,
+        isFetched: true,
+      });
+
+      expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+
+      await vi.waitFor(() => {
+        expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(1);
+      });
+      expect(mocks.reconcileLocalEntitlementTrialReminder).not.toHaveBeenCalled();
+      expect(mocks.devWarn).not.toHaveBeenCalled();
+    },
+  );
+
+  it('keeps the bounded retry sequence for unavailable permission', async () => {
+    vi.useFakeTimers();
+    mocks.reconcileRootNotificationSchedules.mockRejectedValue(
+      new mocks.NotificationPermissionUnavailableError('bridge_failure'),
+    );
+    mocks.useNotifPrefs.mockReturnValue({
+      data: { status: 'available', prefs, format: 'current' },
+      dataUpdatedAt: 5,
+      isError: false,
+      isFetched: true,
+    });
+
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1_000);
+    expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(4_000);
+    expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(3);
+    expect(mocks.devWarn).toHaveBeenCalledTimes(1);
+    expect(mocks.reconcileLocalEntitlementTrialReminder).not.toHaveBeenCalled();
+  });
+
+  it('restores the local trial only after the same blocked generation becomes scheduled', async () => {
+    mocks.reconcileRootNotificationSchedules.mockResolvedValueOnce('suspended_denied');
+    mocks.useNotifPrefs.mockReturnValue({
+      data: { status: 'available', prefs, format: 'current' },
+      dataUpdatedAt: 6,
+      isError: false,
+      isFetched: true,
+    });
+
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.waitFor(() => {
+      expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(1);
+    });
+
+    mocks.reconcileRootNotificationSchedules.mockResolvedValue('scheduled');
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+
+    await vi.waitFor(() => {
+      expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledWith({
+        generation: nextGeneration,
+      });
+    });
+    expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledTimes(1);
+
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await Promise.resolve();
+    expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledTimes(1);
+  });
+
+  it('retries a failed blocked-to-granted trial restoration before marking recovery', async () => {
+    mocks.reconcileRootNotificationSchedules.mockResolvedValueOnce('suspended_undetermined');
+    mocks.useNotifPrefs.mockReturnValue({
+      data: { status: 'available', prefs, format: 'current' },
+      dataUpdatedAt: 7,
+      isError: false,
+      isFetched: true,
+    });
+
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.waitFor(() => {
+      expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(1);
+    });
+
+    vi.useFakeTimers();
+    mocks.reconcileRootNotificationSchedules.mockResolvedValue('scheduled');
+    mocks.reconcileLocalEntitlementTrialReminder
+      .mockResolvedValueOnce('failed')
+      .mockResolvedValueOnce('cancelled');
+
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1_000);
+    expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledTimes(2);
+
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledTimes(2);
+  });
+
+  it('audits the new account without replaying the prior generation scope', async () => {
+    mocks.reconcileRootNotificationSchedules.mockResolvedValueOnce('suspended_denied');
+    mocks.useNotifPrefs.mockReturnValue({
+      data: { status: 'available', prefs, format: 'current' },
+      dataUpdatedAt: 8,
+      isError: false,
+      isFetched: true,
+    });
+
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.waitFor(() => {
+      expect(mocks.reconcileRootNotificationSchedules).toHaveBeenCalledTimes(1);
+    });
+
+    mocks.reconcileRootNotificationSchedules.mockResolvedValue('scheduled');
+    mocks.useOwnerQueryScope.mockReturnValue({ generation: nextGeneration + 1 });
+    expect(NotificationPreferenceScheduleReconciler()).toBeNull();
+    await vi.waitFor(() => {
+      expect(mocks.reconcileLocalEntitlementTrialReminder).toHaveBeenCalledWith({
+        generation: nextGeneration + 1,
+      });
+    });
+    expect(mocks.reconcileLocalEntitlementTrialReminder).not.toHaveBeenCalledWith({
+      generation: nextGeneration,
+    });
   });
 });

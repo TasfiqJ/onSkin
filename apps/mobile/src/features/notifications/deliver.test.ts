@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   dismissAllNotificationsAsync: vi.fn(async () => {}),
   dismissNotificationAsync: vi.fn(async () => {}),
   getAllScheduledNotificationsAsync: vi.fn(async () => [] as { identifier: string }[]),
+  getPermissionsAsync: vi.fn(),
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
   insertNotificationLog: vi.fn(),
   insertNotificationLogAbortSignal: vi.fn(async () => ({ error: null })),
@@ -26,6 +27,7 @@ const mocks = vi.hoisted(() => ({
   loadEntitlement: vi.fn(async (): Promise<unknown> => null),
   reserveSentLocal: vi.fn(async () => {}),
   randomUUID: vi.fn(() => 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),
+  requestPermissionsAsync: vi.fn(),
   scheduleOutboxFlush: vi.fn(),
   saveNotifPrefs: vi.fn(),
   scheduleNotificationAsync: vi.fn(async (request: { identifier?: string }) =>
@@ -58,8 +60,8 @@ vi.mock('expo-notifications', () => ({
   dismissAllNotificationsAsync: mocks.dismissAllNotificationsAsync,
   dismissNotificationAsync: mocks.dismissNotificationAsync,
   getAllScheduledNotificationsAsync: mocks.getAllScheduledNotificationsAsync,
-  getPermissionsAsync: vi.fn(async () => ({ status: 'undetermined' })),
-  requestPermissionsAsync: vi.fn(async () => ({ status: 'denied' })),
+  getPermissionsAsync: mocks.getPermissionsAsync,
+  requestPermissionsAsync: mocks.requestPermissionsAsync,
   scheduleNotificationAsync: mocks.scheduleNotificationAsync,
   setNotificationChannelAsync: mocks.setNotificationChannelAsync,
   setNotificationHandler: mocks.setNotificationHandler,
@@ -129,6 +131,23 @@ const prefs: NotifPrefs = {
 
 let boundaryActive = false;
 
+beforeEach(() => {
+  mocks.getPermissionsAsync.mockReset();
+  mocks.getPermissionsAsync.mockResolvedValue({
+    status: 'granted',
+    granted: true,
+    canAskAgain: true,
+    expires: 'never',
+  });
+  mocks.requestPermissionsAsync.mockReset();
+  mocks.requestPermissionsAsync.mockResolvedValue({
+    status: 'denied',
+    granted: false,
+    canAskAgain: true,
+    expires: 'never',
+  });
+});
+
 afterEach(() => {
   if (boundaryActive) {
     endAccountGenerationBoundary();
@@ -189,6 +208,71 @@ describe('rescheduleReminders', () => {
     mocks.readNotifPrefs.mockRejectedValueOnce(new Error('private schedule payload'));
 
     await expect(readNotificationScheduleHealth()).resolves.toBe('unavailable');
+  });
+
+  it('distinguishes denial from an unavailable permission bridge', async () => {
+    const { getPermissionStatus, requestPermission } = await import('./deliver');
+    mocks.getPermissionsAsync.mockResolvedValueOnce({
+      status: 'denied',
+      granted: false,
+      canAskAgain: false,
+      expires: 'never',
+    });
+    await expect(getPermissionStatus()).resolves.toBe('denied');
+
+    mocks.getPermissionsAsync.mockRejectedValueOnce(new Error('raw permission provider detail'));
+    await expect(getPermissionStatus()).resolves.toBe('unavailable');
+
+    mocks.requestPermissionsAsync.mockResolvedValueOnce({
+      status: 'undetermined',
+      granted: false,
+      canAskAgain: true,
+      expires: 'never',
+    });
+    await expect(requestPermission()).rejects.toMatchObject({
+      code: 'NOTIFICATION_PERMISSION_REQUEST_UNAVAILABLE',
+      reason: 'unresolved',
+    });
+
+    mocks.requestPermissionsAsync.mockRejectedValueOnce(new Error('raw request provider detail'));
+    const rejected = requestPermission().catch((error: unknown) => error);
+    await expect(rejected).resolves.toMatchObject({
+      code: 'NOTIFICATION_PERMISSION_REQUEST_UNAVAILABLE',
+      reason: 'bridge_failure',
+    });
+    await expect(rejected).resolves.not.toHaveProperty(
+      'message',
+      expect.stringContaining('provider detail'),
+    );
+  });
+
+  it('rejects a malformed active permission response without reporting a denial or leaking provider data', async () => {
+    const { requestPermission } = await import('./deliver');
+    const privateProviderDetail = 'private native permission payload';
+    mocks.requestPermissionsAsync.mockResolvedValueOnce({
+      status: 'granted',
+      granted: false,
+      canAskAgain: true,
+      expires: 'never',
+      privateProviderDetail,
+    });
+
+    const rejected = await requestPermission().then(
+      (value) => ({ kind: 'resolved' as const, value }),
+      (error: unknown) => ({ kind: 'rejected' as const, error }),
+    );
+
+    expect(rejected.kind).toBe('rejected');
+    if (rejected.kind !== 'rejected') {
+      expect(rejected.value).not.toBe(false);
+      return;
+    }
+    expect(rejected.error).toMatchObject({
+      code: 'NOTIFICATION_PERMISSION_REQUEST_UNAVAILABLE',
+      reason: 'invalid_response',
+    });
+    expect(String(rejected.error)).not.toContain(privateProviderDetail);
+    expect(JSON.stringify(rejected.error)).not.toContain(privateProviderDetail);
   });
 
   it('shifts scheduled reminders inside quiet hours to the quiet-hours end', async () => {
@@ -295,6 +379,179 @@ describe('rescheduleReminders', () => {
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledTimes(3);
   });
 
+  it('bypasses the signature fast path on revocation, cleans exact IDs, and restores from intent', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    const revocationPrefs = { ...prefs, timezone: 'America/Halifax' };
+
+    await expect(rescheduleReminders(revocationPrefs)).resolves.toBe('scheduled');
+    mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.getAllScheduledNotificationsAsync.mockClear();
+    mocks.scheduleNotificationAsync.mockClear();
+    mocks.getPermissionsAsync.mockResolvedValueOnce({
+      status: 'denied',
+      granted: false,
+      canAskAgain: false,
+      expires: 'never',
+    });
+
+    await expect(rescheduleReminders(revocationPrefs)).resolves.toBe('suspended_denied');
+    expect(mocks.cancelScheduledNotificationAsync.mock.calls).toEqual([
+      ['onskin-am-reminder'],
+      ['onskin-pm-reminder'],
+      ['onskin-capture-reminder'],
+    ]);
+    expect(mocks.getAllScheduledNotificationsAsync).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+
+    mocks.cancelScheduledNotificationAsync.mockClear();
+    await expect(rescheduleReminders(revocationPrefs)).resolves.toBe('scheduled');
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledTimes(3);
+    expect(mocks.scheduleNotificationAsync).toHaveBeenCalledTimes(3);
+  });
+
+  it('cleans exact fixed IDs and surfaces unavailable permission as retryable', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    mocks.getPermissionsAsync.mockRejectedValueOnce(new Error('native bridge raw message'));
+
+    const rejected = rescheduleReminders({ ...prefs, timezone: 'America/Winnipeg' }).catch(
+      (error: unknown) => error,
+    );
+
+    await expect(rejected).resolves.toMatchObject({
+      code: 'NOTIFICATION_PERMISSION_UNAVAILABLE',
+      reason: 'bridge_failure',
+    });
+    expect(mocks.cancelScheduledNotificationAsync.mock.calls.slice(-3)).toEqual([
+      ['onskin-am-reminder'],
+      ['onskin-pm-reminder'],
+      ['onskin-capture-reminder'],
+    ]);
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it('audits trial permission without inventing preferences and fences the mounted generation', async () => {
+    const { reconcileRootNotificationSchedules } = await import('./deliver');
+    mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.getPermissionsAsync.mockClear();
+
+    await expect(
+      reconcileRootNotificationSchedules(null, getAccountGeneration()),
+    ).resolves.toBe('scheduled');
+
+    expect(mocks.getPermissionsAsync).toHaveBeenCalledOnce();
+    expect(mocks.cancelScheduledNotificationAsync.mock.calls).toEqual([
+      ['onskin-am-reminder'],
+      ['onskin-pm-reminder'],
+      ['onskin-capture-reminder'],
+    ]);
+
+    mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.getPermissionsAsync.mockClear();
+    await expect(
+      reconcileRootNotificationSchedules(null, getAccountGeneration() + 1),
+    ).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(mocks.getPermissionsAsync).not.toHaveBeenCalled();
+    expect(mocks.cancelScheduledNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['denied', false],
+    ['undetermined', true],
+  ] as const)(
+    'globally cleans exact fixed and trial IDs for trial-only %s permission',
+    async (status, canAskAgain) => {
+      const { reconcileRootNotificationSchedules } = await import('./deliver');
+      mocks.cancelScheduledNotificationAsync.mockClear();
+      mocks.getPermissionsAsync.mockResolvedValueOnce({
+        status,
+        granted: false,
+        canAskAgain,
+        expires: 'never',
+      });
+
+      await expect(
+        reconcileRootNotificationSchedules(null, getAccountGeneration()),
+      ).resolves.toBe(
+        status === 'denied' ? 'suspended_denied' : 'suspended_undetermined',
+      );
+
+      expect(mocks.cancelScheduledNotificationAsync.mock.calls).toEqual([
+        ['onskin-am-reminder'],
+        ['onskin-pm-reminder'],
+        ['onskin-capture-reminder'],
+        ['onskin-trial-reminder'],
+      ]);
+      expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    },
+  );
+
+  it('cleans trial-only schedules before surfacing unavailable root permission', async () => {
+    const { reconcileRootNotificationSchedules } = await import('./deliver');
+    mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.getPermissionsAsync.mockRejectedValueOnce(new Error('private provider failure'));
+
+    await expect(
+      reconcileRootNotificationSchedules(null, getAccountGeneration()),
+    ).rejects.toMatchObject({
+      code: 'NOTIFICATION_PERMISSION_UNAVAILABLE',
+      reason: 'bridge_failure',
+    });
+
+    expect(mocks.cancelScheduledNotificationAsync.mock.calls).toEqual([
+      ['onskin-am-reminder'],
+      ['onskin-pm-reminder'],
+      ['onskin-capture-reminder'],
+      ['onskin-trial-reminder'],
+    ]);
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it('detaches a pending permission read at an account boundary before any native mutation', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    let resolvePermission!: (value: {
+      status: string;
+      granted: boolean;
+      canAskAgain: boolean;
+      expires: string;
+    }) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    mocks.getPermissionsAsync.mockImplementationOnce(() => {
+      markStarted();
+      return new Promise((resolve) => {
+        resolvePermission = resolve;
+      });
+    });
+
+    const reconciliation = rescheduleReminders({
+      ...prefs,
+      timezone: 'America/Regina',
+    });
+    const rejected = reconciliation.catch((error: unknown) => error);
+    await started;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    await waitForAccountGenerationOperationsToSettle();
+
+    await expect(rejected).resolves.toMatchObject({
+      code: 'ACCOUNT_GENERATION_CHANGED',
+    });
+    expect(mocks.cancelScheduledNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+
+    resolvePermission({
+      status: 'granted',
+      granted: true,
+      canAskAgain: true,
+      expires: 'never',
+    });
+    await Promise.resolve();
+    endAccountGenerationBoundary();
+    boundaryActive = false;
+  });
+
   it('detaches a never-settling schedule inventory read and queued owner-A work at the boundary', async () => {
     const { rescheduleReminders } = await import('./deliver');
     const ownerAPrefs = { ...prefs, timezone: 'Etc/GMT+7' };
@@ -348,7 +605,7 @@ describe('rescheduleReminders', () => {
         captureReminders: false,
         timezone: 'America/Edmonton',
       }),
-    ).resolves.toBeUndefined();
+    ).resolves.toBe('scheduled');
   });
 
   it('keeps preference persistence and reconciliation in one queue before later delivery', async () => {
@@ -512,6 +769,47 @@ describe('scheduleTrialReminder', () => {
     }
   });
 
+  it.each([
+    ['denied', false],
+    ['undetermined', true],
+  ] as const)('cancels the old trial ID and returns false when permission is %s', async (status, canAskAgain) => {
+    const { scheduleTrialReminder } = await import('./deliver');
+    mocks.getPermissionsAsync.mockResolvedValueOnce({
+      status,
+      granted: false,
+      canAskAgain,
+      expires: 'never',
+    });
+
+    await expect(
+      scheduleTrialReminder({
+        expiresAt: '2099-07-12T12:00:00.000Z',
+        priceLabel: 'CA$69.99',
+      }),
+    ).resolves.toBe(false);
+
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('onskin-trial-reminder');
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it('cancels the old trial ID and surfaces an unavailable permission read', async () => {
+    const { scheduleTrialReminder } = await import('./deliver');
+    mocks.getPermissionsAsync.mockRejectedValueOnce(new Error('permission bridge provider detail'));
+
+    await expect(
+      scheduleTrialReminder({
+        expiresAt: '2099-07-12T12:00:00.000Z',
+        priceLabel: 'CA$69.99',
+      }),
+    ).rejects.toMatchObject({
+      code: 'NOTIFICATION_PERMISSION_UNAVAILABLE',
+      reason: 'bridge_failure',
+    });
+
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('onskin-trial-reminder');
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
   it('surfaces a native trial scheduling failure to its caller', async () => {
     const { scheduleTrialReminder } = await import('./deliver');
     const nativeError = new Error('trial schedule unavailable');
@@ -603,6 +901,39 @@ describe('notifyBehavioural', () => {
     expect(mocks.reserveSentLocal.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.scheduleNotificationAsync.mock.invocationCallOrder[0]!,
     );
+  });
+
+  it.each([
+    ['denied', false],
+    ['undetermined', true],
+  ] as const)('does not consume a cap slot when permission is %s', async (status, canAskAgain) => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.getPermissionsAsync.mockResolvedValueOnce({
+      status,
+      granted: false,
+      canAskAgain,
+      expires: 'never',
+    });
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+
+    expect(mocks.randomUUID).not.toHaveBeenCalled();
+    expect(mocks.reserveSentLocal).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.confirmSentLocalDelivery).not.toHaveBeenCalled();
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
+  });
+
+  it('fails closed before cap reservation when permission status is unavailable', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.getPermissionsAsync.mockRejectedValueOnce(new Error('permission provider raw detail'));
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+
+    expect(mocks.randomUUID).not.toHaveBeenCalled();
+    expect(mocks.reserveSentLocal).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.confirmSentLocalDelivery).not.toHaveBeenCalled();
   });
 
   it('never asks the OS to present when the cap reservation cannot be persisted', async () => {

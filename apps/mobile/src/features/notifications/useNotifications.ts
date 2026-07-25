@@ -28,6 +28,7 @@ export function useNotifPrefs() {
       }),
     networkMode: 'always',
     retry: 0,
+    refetchOnWindowFocus: 'always',
   });
 }
 

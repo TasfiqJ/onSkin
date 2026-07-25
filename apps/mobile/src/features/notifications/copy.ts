@@ -109,4 +109,19 @@ export const SETTINGS_COPY = {
   discreetLabel: 'Lock screen privacy',
   discreetHint: 'Always generic; product, photo, and condition details stay inside the app',
   quietLabel: 'Nothing fires',
+  permissionRecovery: {
+    askTitle: 'Notifications need your permission',
+    askBody:
+      'Your reminder choices are saved. Allow notifications to deliver them on this device.',
+    deniedTitle: 'Reminders paused by device settings',
+    deniedBody:
+      'Your reminder choices are still saved. Open this device’s settings to allow notifications.',
+    unavailableTitle: 'Notification access unavailable',
+    unavailableBody:
+      'Your reminder choices are still saved. This device could not confirm notification access.',
+    promptFailure:
+      'Notification access did not change. Try again, or allow notifications from your system Settings app.',
+    settingsFailure:
+      'Device settings could not be opened. Try again from your system Settings app.',
+  },
 } as const;

@@ -460,10 +460,12 @@ describe('onboarding route contracts', () => {
 
     expect(notifications).toContain('const ownerScope = useOwnerQueryScope();');
     expect(notifications).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(notifications.indexOf('await acceptRoutineReminderSoftAsk();')).toBeLessThan(
+    expect(notifications).toContain('await acceptRoutineReminderSoftAsk(');
+    expect(notifications.indexOf('await acceptRoutineReminderSoftAsk(')).toBeLessThan(
       notifications.indexOf("router.push('/onboarding/account')"),
     );
-    expect(notifications.indexOf('await declineRoutineReminderSoftAsk();')).toBeLessThan(
+    expect(notifications).toContain('await declineRoutineReminderSoftAsk(');
+    expect(notifications.indexOf('await declineRoutineReminderSoftAsk(')).toBeLessThan(
       notifications.indexOf("router.push('/onboarding/account')"),
     );
     expect(notifications).toContain('setFailedChoice(choice)');
