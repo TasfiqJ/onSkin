@@ -15,6 +15,12 @@ const deletionMigrationSource = read(
   'supabase/migrations/20260713000043_account_deletion_resumable.sql',
 );
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
+const mobileDataExportWriterSource = read(
+  'apps/mobile/src/features/settings/mobileDataExportWriter.ts',
+);
+const incrementalJsonWriterSource = read(
+  'apps/mobile/src/features/settings/incrementalJsonWriter.ts',
+);
 const deletionVendorFreezeSource = read('apps/mobile/src/lib/auth/accountDeletionVendorFreeze.ts');
 const deletionVendorFreezeRuntimeSource = read(
   'apps/mobile/src/lib/auth/accountDeletionVendorFreezeRuntime.ts',
@@ -689,10 +695,43 @@ block(
   errors,
   settingsActionsSource.indexOf("reservePlaintextStaging('data_export_json')") !== -1 &&
     settingsActionsSource.indexOf("reservePlaintextStaging('data_export_json')") <
-      settingsActionsSource.indexOf('const json = JSON.stringify') &&
-    settingsActionsSource.indexOf('const json = JSON.stringify') <
-      settingsActionsSource.indexOf('await FileSystem.writeAsStringAsync(staging.uri, json);'),
-  'Mobile data export must persist its content-free journal reservation before JSON plaintext is created or written.',
+      settingsActionsSource.indexOf('buildMobileDataExportBundle({') &&
+    settingsActionsSource.indexOf('buildMobileDataExportBundle({') <
+      settingsActionsSource.indexOf('await writeMobileDataExportFile(staging.uri, bundle, lease)') &&
+    settingsActionsSource.indexOf('await writeMobileDataExportFile(staging.uri, bundle, lease)') <
+      settingsActionsSource.indexOf(
+        "await markPlaintextStagingState(staging, 'plaintext_written')",
+      ) &&
+    !/writeAsStringAsync/.test(settingsActionsSource) &&
+    !/JSON\.stringify/.test(settingsActionsSource),
+  'Mobile data export must reserve first, avoid whole-bundle string assembly, finish its incremental file write, and only then promote the journal.',
+);
+block(
+  errors,
+  /import \{ File, FileMode, type FileHandle \} from 'expo-file-system'/.test(
+    mobileDataExportWriterSource,
+  ) &&
+    /file\.create\(\{ intermediates: false, overwrite: false \}\)/.test(
+      mobileDataExportWriterSource,
+    ) &&
+    /handle = file\.open\(FileMode\.WriteOnly\)/.test(mobileDataExportWriterSource) &&
+    /writePrettyJsonIncrementally\(bundle, \{/.test(mobileDataExportWriterSource) &&
+    /handle\.writeBytes\(bytes\)/.test(mobileDataExportWriterSource) &&
+    /const closeError = closeExportFile\(handle\)/.test(mobileDataExportWriterSource) &&
+    mobileDataExportWriterSource.indexOf('const closeError = closeExportFile(handle)') <
+      mobileDataExportWriterSource.indexOf('return result!'),
+  'Mobile data export must create one exclusive file, stream bounded bytes through one write-only handle, and close it before success.',
+);
+block(
+  errors,
+  /INCREMENTAL_JSON_MAX_CHUNK_CODE_UNITS = 64 \* 1024/.test(
+    incrementalJsonWriterSource,
+  ) &&
+    /TextEncoder/.test(incrementalJsonWriterSource) &&
+    /await dependencies\.writeBytes\(bytes\)/.test(incrementalJsonWriterSource) &&
+    /await dependencies\.yieldControl\(\)/.test(incrementalJsonWriterSource) &&
+    /dependencies\.assertCurrent\(\)/.test(incrementalJsonWriterSource),
+  'The incremental JSON writer must keep a fixed fragment bound, encode bytes per chunk, yield, and revalidate its owner lease.',
 );
 block(
   errors,
