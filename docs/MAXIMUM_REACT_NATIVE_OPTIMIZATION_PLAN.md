@@ -771,6 +771,8 @@ Maintain a dependency register containing owner, purpose, native-code status, pr
 
 The current audit passed Expo dependency validation, Expo Doctor 21/21 with only a Sentry build-environment warning, and production dependency vulnerability audit with zero known vulnerabilities. Preserve those results as automated evidence rather than relying on a one-time run.
 
+Current local dependency checkpoint (2026-07-25): a fresh Expo Doctor run found 13 packages below Expo SDK 56's supported compatibility set. The mobile manifest and lockfile now use Expo's exact expected ranges for Expo 56.0.17, Router 56.2.16, React Native Screens 4.26, and the ten affected Expo modules. `expo install --check` and Expo Doctor pass, iOS and web production exports complete with all 83 web routes retained, root/mobile type-check and zero-warning lint pass, and the focused native/config matrix passes 7 files / 59 tests. The lock refresh also advances `js-yaml`, `postcss`, and `shell-quote` to fixed compatible versions, leaving the production audit at zero high/critical and 14 moderate Expo/config-plugin toolchain findings whose advertised fixes require incompatible SDK downgrades. Those findings remain explicit rather than suppressed. See `docs/optimization/evidence/2026-07-25_expo-sdk56-dependency-alignment.md`.
+
 ## 8. Photo, Camera, Encryption, And Private Storage Workstream
 
 ### 8.1 Target photo architecture
