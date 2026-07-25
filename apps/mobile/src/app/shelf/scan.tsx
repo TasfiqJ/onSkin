@@ -22,6 +22,14 @@ import {
 } from '@/features/native/camera/barcode';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
+import {
+  canAcceptBarcodeFrame,
+  isBarcodeScannerActive,
+  isBarcodeScanTerminal,
+  reduceBarcodeScanSession,
+  type BarcodeScanAction,
+  type BarcodeScanState,
+} from '@/features/shelf/barcodeScanSession';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';
@@ -35,16 +43,7 @@ import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 
-type ScanState =
-  | { kind: 'idle' }
-  | { kind: 'invalid'; reason: string }
-  | { kind: 'looking_up'; barcode: string }
-  | { kind: 'matched'; barcode: string; product: CatalogProductSummary; external: boolean }
-  | { kind: 'no_match'; barcode: string }
-  | { kind: 'offline'; barcode: string }
-  | { kind: 'error'; barcode: string; reason: string };
-
-function devShelfScanFixtureState(): ScanState | null {
+function devShelfScanFixtureState(): BarcodeScanState<CatalogProductSummary> | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
   const fixture = process.env.EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT?.trim().toLowerCase();
   const barcode = process.env.EXPO_PUBLIC_E2E_SHELF_SCAN_BARCODE?.trim() || '012345678905';
@@ -147,13 +146,15 @@ export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const { reset } = useIntake();
   const [torch, setTorch] = useState(false);
-  const [state, setState] = useState<ScanState>(
+  const [state, setState] = useState<BarcodeScanState<CatalogProductSummary>>(
     () => devShelfScanFixtureState() ?? { kind: 'idle' },
   );
+  const stateRef = useRef(state);
   const [cameraReady, setCameraReady] = useState(false);
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const lastScan = useRef<DuplicateBarcodeGate | null>(null);
   const activeLookup = useRef<AbortController | null>(null);
+  const nextLookupAttemptId = useRef(0);
   const mounted = useRef(true);
 
   const cameraPermissionMode = devShelfCameraPermissionMode();
@@ -170,6 +171,18 @@ export default function ScanScreen() {
   const compactScanSurface = height < 640 || supportFloorTextPressureScan;
   const splitShortScanSurface = height < 460;
   const showScanPreview = !splitShortScanSurface || canShowCamera;
+  const scannerActive = isBarcodeScannerActive(state, canShowCamera, isFocused);
+  const scanTerminal = isBarcodeScanTerminal(state);
+
+  const transitionScanSession = (action: BarcodeScanAction<CatalogProductSummary>) => {
+    const current = stateRef.current;
+    const next = reduceBarcodeScanSession(current, action);
+    if (next === current) return false;
+    stateRef.current = next;
+    if (!canAcceptBarcodeFrame(next)) setTorch(false);
+    if (mounted.current) setState(next);
+    return true;
+  };
 
   const goManual = () => {
     haptics.select();
@@ -222,22 +235,39 @@ export default function ScanScreen() {
   };
 
   const onBarcodeScanned = (result: BarcodeScanningResult) => {
+    if (!canAcceptBarcodeFrame(stateRef.current)) return;
     const normalized = normalizeScannedBarcode(result.data, result.type);
     if (!normalized) return;
     const now = Date.now();
     if (shouldSuppressDuplicate(lastScan.current, normalized.lookupValue, now)) return;
-    lastScan.current = { barcode: normalized.lookupValue, atMs: now };
 
     if (normalized.validChecksum === false) {
-      setState({
-        kind: 'invalid',
-        reason: 'That read failed the barcode checksum. Try holding steady in brighter light.',
-      });
+      if (
+        !transitionScanSession({
+          type: 'invalid',
+          reason: 'That read failed the barcode checksum. Try holding steady in brighter light.',
+        })
+      ) {
+        return;
+      }
+      lastScan.current = { barcode: normalized.lookupValue, atMs: now };
       track('barcode_decode_rejected', { reason: 'checksum', barcode_type: normalized.type });
       return;
     }
 
-    setState({ kind: 'looking_up', barcode: normalized.lookupValue });
+    const attemptId = nextLookupAttemptId.current + 1;
+    if (
+      !transitionScanSession({
+        type: 'lookup_started',
+        barcode: normalized.lookupValue,
+        attemptId,
+      })
+    ) {
+      return;
+    }
+    nextLookupAttemptId.current = attemptId;
+    haptics.select();
+    lastScan.current = { barcode: normalized.lookupValue, atMs: now };
     track('barcode_decode_success', { barcode_type: normalized.type });
     activeLookup.current?.abort();
     const controller = new AbortController();
@@ -257,32 +287,53 @@ export default function ScanScreen() {
         ).catch(() => undefined);
 
         if (response.result === 'matched' || response.result === 'external_candidate') {
-          setState({
-            kind: 'matched',
+          transitionScanSession({
+            type: 'lookup_finished',
             barcode: normalized.lookupValue,
-            product: response.product,
-            external: response.result === 'external_candidate',
+            attemptId,
+            outcome: {
+              kind: 'matched',
+              product: response.product,
+              external: response.result === 'external_candidate',
+            },
           });
           return;
         }
         if (response.result === 'no_match' || response.result === 'too_short') {
-          setState({ kind: 'no_match', barcode: normalized.lookupValue });
+          transitionScanSession({
+            type: 'lookup_finished',
+            barcode: normalized.lookupValue,
+            attemptId,
+            outcome: { kind: 'no_match' },
+          });
           return;
         }
         if (response.result === 'offline') {
-          setState({ kind: 'offline', barcode: normalized.lookupValue });
+          transitionScanSession({
+            type: 'lookup_finished',
+            barcode: normalized.lookupValue,
+            attemptId,
+            outcome: { kind: 'offline' },
+          });
           return;
         }
-        setState({
-          kind: 'error',
+        transitionScanSession({
+          type: 'lookup_finished',
           barcode: normalized.lookupValue,
-          reason: 'Lookup failed. Add it another way.',
+          attemptId,
+          outcome: { kind: 'error', reason: 'Lookup failed. Add it another way.' },
         });
       })
       .catch((error: unknown) => {
         if (!isOwnerQueryScopeCurrent(ownerScope)) return;
         if (controller.signal.aborted || isRequestCancellation(error)) {
-          if (mounted.current) setState({ kind: 'idle' });
+          if (mounted.current && activeLookup.current === controller) {
+            transitionScanSession({
+              type: 'lookup_cancelled',
+              barcode: normalized.lookupValue,
+              attemptId,
+            });
+          }
           return;
         }
         void recordShelfScan(
@@ -293,10 +344,11 @@ export default function ScanScreen() {
           },
           user?.id,
         ).catch(() => undefined);
-        setState({
-          kind: 'error',
+        transitionScanSession({
+          type: 'lookup_finished',
           barcode: normalized.lookupValue,
-          reason: 'Lookup failed. Add it another way.',
+          attemptId,
+          outcome: { kind: 'error', reason: 'Lookup failed. Add it another way.' },
         });
       })
       .finally(() => {
@@ -307,10 +359,23 @@ export default function ScanScreen() {
             mounted.current &&
             isOwnerQueryScopeCurrent(ownerScope)
           ) {
-            setState((current) => (current.kind === 'looking_up' ? { kind: 'idle' } : current));
+            transitionScanSession({
+              type: 'lookup_cancelled',
+              barcode: normalized.lookupValue,
+              attemptId,
+            });
           }
         }
       });
+  };
+
+  const resetScanSession = () => {
+    haptics.select();
+    activeLookup.current?.abort();
+    activeLookup.current = null;
+    lastScan.current = null;
+    setTorch(false);
+    transitionScanSession({ type: 'reset' });
   };
 
   useEffect(() => {
@@ -364,12 +429,12 @@ export default function ScanScreen() {
           />
           <Pressable
             accessibilityRole="switch"
-            accessibilityState={{ checked: torch }}
-            disabled={!canShowCamera}
+            accessibilityState={{ checked: scannerActive && torch, disabled: !scannerActive }}
+            disabled={!scannerActive}
             onPress={() => setTorch((value) => !value)}
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           >
-            <Text variant="label" tone={canShowCamera ? 'inverseMuted' : 'muted'}>
+            <Text variant="label" tone={scannerActive ? 'inverseMuted' : 'muted'}>
               torch
             </Text>
           </Pressable>
@@ -386,23 +451,18 @@ export default function ScanScreen() {
                     : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
               }
             >
-              {canShowCamera ? (
+              {canShowCamera && scannerActive ? (
                 <CameraView
-                  active={isFocused}
+                  active={scannerActive}
                   animateShutter={false}
                   barcodeScannerSettings={{ barcodeTypes: PRODUCT_BARCODE_TYPES }}
-                  enableTorch={torch}
+                  enableTorch={scannerActive && torch}
                   facing="back"
-                  onBarcodeScanned={
-                    state.kind === 'looking_up' || state.kind === 'matched'
-                      ? undefined
-                      : onBarcodeScanned
-                  }
+                  onBarcodeScanned={scannerActive ? onBarcodeScanned : undefined}
                   onCameraReady={() => setCameraReady(true)}
                   onMountError={() =>
-                    setState({
-                      kind: 'error',
-                      barcode: '',
+                    transitionScanSession({
+                      type: 'camera_failed',
                       reason: 'Camera could not start on this device.',
                     })
                   }
@@ -468,7 +528,7 @@ export default function ScanScreen() {
                 />
               ) : null}
             </View>
-            {!compactScanSurface ? (
+            {!compactScanSurface && !scanTerminal ? (
               <>
                 <Text variant="body" tone="inverseMuted" className="mt-5">
                   Line up the barcode
@@ -498,13 +558,27 @@ export default function ScanScreen() {
         {state.kind === 'looking_up' ? (
           <View className="mb-4 flex-row items-center gap-3">
             <ActivityIndicator />
-            <Text variant="bodySm" tone="inverseMuted">
+            <Text
+              accessibilityLiveRegion="polite"
+              accessibilityRole="alert"
+              accessibilityLabel={`Looking up barcode ${state.barcode}. Scanner paused.`}
+              variant="bodySm"
+              tone="inverseMuted"
+            >
               Looking up barcode {state.barcode}
             </Text>
           </View>
         ) : state.kind === 'matched' ? (
           <View className="mb-4 rounded-[16px] bg-paper/10 p-4">
-            <Text variant="label" tone="inverseMuted">
+            <Text
+              accessibilityLiveRegion="polite"
+              accessibilityRole="alert"
+              accessibilityLabel={`${
+                state.external ? 'External source candidate' : 'Catalog match'
+              }: ${state.product.brand ? `${state.product.brand} ` : ''}${state.product.name}. Scanner paused.`}
+              variant="label"
+              tone="inverseMuted"
+            >
               {state.external ? 'External source candidate' : 'Catalog match'}
             </Text>
             <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
@@ -532,17 +606,38 @@ export default function ScanScreen() {
             </View>
           </View>
         ) : state.kind === 'no_match' ? (
-          <Text variant="bodySm" tone="inverseMuted" className="mb-4">
+          <Text
+            accessibilityLiveRegion="polite"
+            accessibilityRole="alert"
+            accessibilityLabel={`No catalog match for barcode ${state.barcode}. Scanner paused. Choose Scan again to try another read.`}
+            variant="bodySm"
+            tone="inverseMuted"
+            className="mb-4"
+          >
             Barcode {state.barcode} is not in the catalog yet. Add it another way, then report the
             miss if you want.
           </Text>
         ) : state.kind === 'offline' ? (
-          <Text variant="bodySm" tone="inverseMuted" className="mb-4">
+          <Text
+            accessibilityLiveRegion="polite"
+            accessibilityRole="alert"
+            accessibilityLabel={`Product catalog unavailable for barcode ${state.barcode}. Scanner paused. Choose Scan again to retry.`}
+            variant="bodySm"
+            tone="inverseMuted"
+            className="mb-4"
+          >
             Couldn&apos;t reach the product catalog for barcode {state.barcode}. Search by name,
             scan the label, or add it by hand; the shelf still works offline.
           </Text>
         ) : state.kind === 'invalid' || state.kind === 'error' ? (
-          <Text variant="bodySm" tone="inverseMuted" className="mb-4">
+          <Text
+            accessibilityLiveRegion="polite"
+            accessibilityRole="alert"
+            accessibilityLabel={`${state.reason} Scanner paused. Choose Scan again to retry.`}
+            variant="bodySm"
+            tone="inverseMuted"
+            className="mb-4"
+          >
             {state.reason}
           </Text>
         ) : state.kind === 'idle' && compactScanSurface ? null : (
@@ -551,6 +646,19 @@ export default function ScanScreen() {
             from the app.
           </Text>
         )}
+
+        {scanTerminal ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Scan again"
+            onPress={resetScanSession}
+            className="mb-4 min-h-[48px] items-center justify-center rounded-pill border border-paper/20 px-5 py-3"
+          >
+            <Text tone="inverse" className="font-sans-semibold">
+              Scan again
+            </Text>
+          </Pressable>
+        ) : null}
 
         <View className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}>
           <FallbackRow

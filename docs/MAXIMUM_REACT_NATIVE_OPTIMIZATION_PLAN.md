@@ -1036,6 +1036,8 @@ Acceptance targets must include the last routine item, empty routine, long label
 
 Camera/scanner screens already use focus gating; preserve that strength while adding lifecycle and interruption tests.
 
+Current local scanner checkpoint (2026-07-25): Shelf barcode scanning now uses one persistent session reducer and a synchronous admission ref. Exactly one frame can enter an idle session; lookup plus invalid, matched, no-match, offline, and error states pause `CameraView`, its frame handler, reticle, and torch until a named 48 pt+ `Scan again` action clears the duplicate identity and deliberately re-arms. Accepted reads emit the documented selection haptic, and lookup/results expose concise polite-alert labels that state scanning is paused. Monotonic attempt IDs and controller identity prevent delayed completion or cancellation from an older scan of the same barcode from publishing into a newer session. Focused type-check, lint, and 3-file / 56-test coverage pass. Expo-web no-match and matched terminal fixtures at 375 x 667 and 390 x 844 retained the result past the former duplicate window, reset in place, kept every action complete and center-hit-testable, and exposed zero horizontal overflow; the first visual pass found and fixed idle guidance overlapping the terminal sheet. Signed supported-iOS physical-camera request-count, torch, interruption, VoiceOver/Dynamic Type, frame, thermal, and memory evidence remains required. See `docs/optimization/evidence/2026-07-25_shelf-scanner-terminal-session.md`.
+
 ### 9.4 Progress and comparison
 
 - Load timeline metadata and thumbnails before originals.

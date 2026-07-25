@@ -617,6 +617,45 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('min-h-[44px] min-w-[44px] items-center justify-center px-2');
   });
 
+  it('pauses barcode frames and torch until an explicit terminal-session reset', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+    const session = readFeatureFile('barcodeScanSession.ts');
+
+    expect(source).toContain('const stateRef = useRef(state);');
+    expect(source).toContain('if (!canAcceptBarcodeFrame(stateRef.current)) return;');
+    expect(source).toContain('const scannerActive = isBarcodeScannerActive(');
+    expect(source).toContain('active={scannerActive}');
+    expect(source).toContain('enableTorch={scannerActive && torch}');
+    expect(source).toContain('onBarcodeScanned={scannerActive ? onBarcodeScanned : undefined}');
+    expect(source).toContain('{canShowCamera && scannerActive ? (');
+    expect(source).toContain('disabled={!scannerActive}');
+    expect(source).toContain('{!compactScanSurface && !scanTerminal ? (');
+    expect(source).toContain('activeLookup.current === controller');
+    expect(source).toContain('if (mounted.current && activeLookup.current === controller)');
+    expect(source).toContain('const nextLookupAttemptId = useRef(0);');
+    expect(source).toContain('const attemptId = nextLookupAttemptId.current + 1;');
+    expect(source).toContain('nextLookupAttemptId.current = attemptId;\n    haptics.select();');
+    expect(source).toContain('activeLookup.current = null;');
+    expect(source).toContain('lastScan.current = null;');
+    expect(source).toContain("transitionScanSession({ type: 'reset' });");
+    expect(source).toContain('accessibilityLabel="Scan again"');
+    expect(source).toContain(
+      'className="mb-4 min-h-[48px] items-center justify-center rounded-pill',
+    );
+    expect(source).toContain('accessibilityLiveRegion="polite"');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('Scanner paused.');
+    expect(session).toContain("state.kind === 'looking_up'");
+    expect(session).toContain('state.barcode === action.barcode');
+    expect(session).toContain('state.attemptId === action.attemptId');
+    expect(session).toContain("state.kind === 'idle'");
+    expect(session).toContain("state.kind === 'invalid'");
+    expect(session).toContain("state.kind === 'matched'");
+    expect(session).toContain("state.kind === 'no_match'");
+    expect(session).toContain("state.kind === 'offline'");
+    expect(session).toContain("state.kind === 'error'");
+  });
+
   it('keeps the Shelf scan fallback readable on short phones without a fake reticle', () => {
     const source = readAppRoute('shelf/scan.tsx');
 
@@ -640,7 +679,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('{canShowCamera ? (');
     expect(source).toContain("'absolute left-8 right-8 top-[34px] h-8 rounded-[12px]'");
     expect(source).toContain("'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'");
-    expect(source).toContain('!compactScanSurface ? (');
+    expect(source).toContain('!compactScanSurface && !scanTerminal ? (');
     expect(source).toContain("'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'");
     expect(source).toContain("style={{ position: 'relative', zIndex: 1 }}");
     expect(source).toContain("state.kind === 'idle' && compactScanSurface ? null");
@@ -678,14 +717,16 @@ describe('Shelf route mobile contracts', () => {
 
   it('distinguishes true scan no-match from offline lookup recovery', () => {
     const source = readAppRoute('shelf/scan.tsx');
+    const session = readFeatureFile('barcodeScanSession.ts');
 
     expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT');
     expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
-    expect(source).toContain("| { kind: 'offline'; barcode: string }");
+    expect(session).toContain("| { kind: 'offline'; barcode: string }");
     expect(source).toContain("case 'offline':");
     expect(source).toContain("return { kind: 'offline', barcode };");
     expect(source).toContain("if (response.result === 'offline')");
-    expect(source).toContain("setState({ kind: 'offline', barcode: normalized.lookupValue });");
+    expect(source).toContain("outcome: { kind: 'offline' }");
+    expect(source).not.toContain("setState({ kind: 'offline', barcode: normalized.lookupValue });");
     expect(source).toContain('function noMatchRoute(barcode: string)');
     expect(source).toContain("pathname: '/shelf/no-match' as const");
     expect(source).toContain('params: { barcode }');

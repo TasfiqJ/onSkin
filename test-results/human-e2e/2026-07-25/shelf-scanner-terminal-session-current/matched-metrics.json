@@ -1,0 +1,223 @@
+{
+  "scenario": "shelf scanner matched terminal-session density",
+  "fixture": {
+    "outcome": "matched",
+    "barcode": "012345678905",
+    "product": "RoutineKind Fixture Mineral SPF 50"
+  },
+  "viewports": {
+    "375x667": {
+      "alertLabels": [
+        "Catalog match: RoutineKind Fixture Mineral SPF 50. Scanner paused."
+      ],
+      "bodyText": "x\ntorch\nCamera permission is needed for barcode scanning.\nYou can still search, scan the label path, or add by hand.\nCatalog match\nRoutineKind Fixture Mineral SPF 50\nAdd this\nWrong\nScan again\n=\nScan label\nS\nSearch catalog\n+\nAdd it by hand",
+      "controls": [
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Add this",
+          "rect": {
+            "bottom": 398.08860778808594,
+            "height": 47.99757385253906,
+            "right": 252.07828903198242,
+            "width": 216.09527587890625,
+            "x": 35.98301315307617,
+            "y": 350.0910339355469
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Wrong",
+          "rect": {
+            "bottom": 398.08860778808594,
+            "height": 47.99757385253906,
+            "right": 339.7451477050781,
+            "width": 79.67233276367188,
+            "x": 260.07281494140625,
+            "y": 350.0910339355469
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Scan again",
+          "rect": {
+            "bottom": 480.00609588623047,
+            "height": 49.93932342529297,
+            "right": 355.7342281341553,
+            "width": 335.74029541015625,
+            "x": 19.993932723999023,
+            "y": 430.0667724609375
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Scan ingredient label. Capture label, then type from it",
+          "rect": {
+            "bottom": 543.9927520751953,
+            "height": 47.99757385253906,
+            "right": 355.7342281341553,
+            "width": 335.74029541015625,
+            "x": 19.993932723999023,
+            "y": 495.99517822265625
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Search catalog. Use reviewed matches",
+          "rect": {
+            "bottom": 597.9824371337891,
+            "height": 47.99757385253906,
+            "right": 355.7342281341553,
+            "width": 335.74029541015625,
+            "x": 19.993932723999023,
+            "y": 549.98486328125
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Add it by hand. Always works offline",
+          "rect": {
+            "bottom": 651.9721221923828,
+            "height": 47.99757385253906,
+            "right": 355.7342281341553,
+            "width": 335.74029541015625,
+            "x": 19.993932723999023,
+            "y": 603.9745483398438
+          }
+        }
+      ],
+      "document": {
+        "clientHeight": 668,
+        "clientWidth": 376,
+        "scrollHeight": 668,
+        "scrollWidth": 376
+      },
+      "url": "http://127.0.0.1:8265/shelf/scan",
+      "viewport": {
+        "height": 668,
+        "width": 376
+      }
+    },
+    "390x844": {
+      "alertLabels": [
+        "Catalog match: RoutineKind Fixture Mineral SPF 50. Scanner paused."
+      ],
+      "bodyText": "x\ntorch\nCamera permission is needed for barcode scanning.\nYou can still search, scan the label path, or add by hand.\nCatalog match\nRoutineKind Fixture Mineral SPF 50\nAdd this\nWrong\nScan again\n=\nScan ingredient label\nCapture label, then type from it\nS\nSearch catalog\nUse reviewed matches\n+\nAdd it by hand\nAlways works offline",
+      "controls": [
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Add this",
+          "rect": {
+            "bottom": 458.85923767089844,
+            "height": 47.99757385253906,
+            "right": 258.6468620300293,
+            "width": 214.6693115234375,
+            "x": 43.9775505065918,
+            "y": 410.8616638183594
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Wrong",
+          "rect": {
+            "bottom": 458.85923767089844,
+            "height": 47.99757385253906,
+            "right": 346.313720703125,
+            "width": 79.67233276367188,
+            "x": 266.6413879394531,
+            "y": 410.8616638183594
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Scan again",
+          "rect": {
+            "bottom": 540.776725769043,
+            "height": 49.93932342529297,
+            "right": 362.3028030395508,
+            "width": 334.3143310546875,
+            "x": 27.98847198486328,
+            "y": 490.83740234375
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Scan ingredient label. Capture label, then type from it",
+          "rect": {
+            "bottom": 632.736686706543,
+            "height": 75.97087860107422,
+            "right": 362.3028030395508,
+            "width": 334.3143310546875,
+            "x": 27.98847198486328,
+            "y": 556.7658081054688
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Search catalog. Use reviewed matches",
+          "rect": {
+            "bottom": 718.7045211791992,
+            "height": 75.97087860107422,
+            "right": 362.3028030395508,
+            "width": 334.3143310546875,
+            "x": 27.98847198486328,
+            "y": 642.733642578125
+          }
+        },
+        {
+          "centerHit": true,
+          "fullyInViewport": true,
+          "name": "Add it by hand. Always works offline",
+          "rect": {
+            "bottom": 804.6723556518555,
+            "height": 75.97087860107422,
+            "right": 362.3028030395508,
+            "width": 334.3143310546875,
+            "x": 27.98847198486328,
+            "y": 728.7014770507812
+          }
+        }
+      ],
+      "document": {
+        "clientHeight": 845,
+        "clientWidth": 390,
+        "scrollHeight": 845,
+        "scrollWidth": 390
+      },
+      "url": "http://127.0.0.1:8265/shelf/scan",
+      "viewport": {
+        "height": 845,
+        "width": 390
+      }
+    }
+  },
+  "persistenceAfter2800Ms": {
+    "matchedVisible": true,
+    "scanAgainCount": 1
+  },
+  "reset": {
+    "matchedVisible": false,
+    "scanAgainCount": 0,
+    "url": "http://127.0.0.1:8265/shelf/scan"
+  },
+  "acceptance": {
+    "allSixControlsComplete": true,
+    "allSixControlCentersHitTestable": true,
+    "scanAgainMinimumHeight48": true,
+    "accessibleStatusAnnouncement": true,
+    "horizontalOverflow": false,
+    "resetInPlace": true
+  },
+  "dialogPresent": false,
+  "capturedAt": "2026-07-25"
+}

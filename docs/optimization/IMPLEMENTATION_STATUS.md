@@ -1,10 +1,10 @@
 # Maximum Optimization Implementation Status
 
 Audit date: 2026-07-12 (America/Toronto; execution time not recorded)
-Last updated: 2026-07-21 (America/Toronto; data-export Edge-memory bound checkpoint)
+Last updated: 2026-07-25 (America/Toronto; Shelf scanner terminal-session checkpoint)
 Branch: `optimization`
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
-Current checkpoint parent SHA: `a53cfeca994e242b7e45fd43279909b1d59f2041`
+Current checkpoint parent SHA: `a8e59ef52`
 Baseline: [BASELINE.md](./BASELINE.md)
 Decision index: [DECISIONS.md](./DECISIONS.md)
 Evidence rules: [evidence/README.md](./evidence/README.md)
@@ -26,6 +26,8 @@ Root typecheck, lint, and tests passed. Mobile typecheck, lint, and tests passed
 Current dependency revalidation (2026-07-25): Expo's compatibility check initially failed on 13 stale SDK-56 package ranges. `apps/mobile/package.json` and `package-lock.json` now align with the exact supported set; `expo install --check` and Expo Doctor pass 21/21, production iOS/web exports complete, root/mobile type-check and zero-warning lint pass, and the focused native/config matrix passes 7 files / 59 tests. The full preserved-dirty-worktree suite remains at 350 passing files / 4,180 passing tests with the same four unrelated notification/Shelf failures. Compatible transitive refreshes remove all high/critical production advisories; 14 moderate Expo/config-plugin toolchain findings remain because the audit's proposed fixes are incompatible SDK downgrades. See `evidence/2026-07-25_expo-sdk56-dependency-alignment.md`.
 
 Current release-export attribution checkpoint (2026-07-25): schema v2 now fail-closes on absent/incomplete/content-free Metro maps and emits the largest 50 lockfile-approved dependency or fixed workspace groups without raw source paths or contents. Its adversarial smoke passes, and fresh iOS/Android external-map exports reconcile 2,846/2,936 source occurrences, 124/128 groups, and zero unattributed sources. See `evidence/2026-07-25_source-map-group-attribution.md`.
+
+Current Shelf scanner checkpoint (2026-07-25): one synchronous session gate now admits exactly one barcode frame, pauses the camera handler, reticle, and torch through lookup and every terminal outcome, fences delayed same-barcode work with monotonic attempt IDs, restores the accepted-read selection haptic, announces concise paused-state alert labels, and requires a 48 pt+ `Scan again` action to clear the duplicate identity and re-arm. Focused type-check, lint, and 3-file / 56-test proof pass. Supported-phone Expo-web no-match/matched terminal and reset evidence passes at 375 x 667 and 390 x 844 with every action complete, center-hit-testable, and at zero overflow after fixing a first-pass terminal-copy overlap. Signed supported-iOS camera request-count, torch, interruption, VoiceOver, Dynamic Type, frame, thermal, and memory proof remains open. See `evidence/2026-07-25_shelf-scanner-terminal-session.md`.
 
 The accepted launch decision and device policy make Android release evidence not
 applicable to the current iOS-only release. Platform-neutral correctness and
