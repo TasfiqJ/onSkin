@@ -730,6 +730,8 @@ Optimization rules:
 - record the user-visible or operational feature that justifies each large dependency;
 - require a size and runtime impact note for every new native dependency.
 
+Current local source-group checkpoint (2026-07-25): release-export schema v2 now requires complete external Metro maps and reports the largest 50 privacy-safe dependency/workspace groups by exact UTF-8 `sourcesContent` bytes. It validates VLQ mapping structure and requires every attributed source to be referenced. Lockfile allowlisting and fixed fallback groups prevent raw source paths, roots, usernames, hosts, query hashes, contents, or fingerprints from entering JSON/Markdown artifacts; malformed, incomplete, unrelated, indexed, oversized, and content-free maps fail closed. Fresh current-head exports attribute all 2,846 iOS and 2,936 Android source occurrences with zero unattributed sources. The iOS report measures 8,910,488 Hermes bytes and 14,293,595 mapped source-content bytes across 124 groups; Android measures 9,109,508 Hermes bytes and 14,554,357 mapped source-content bytes across 128 groups. The report is investigation evidence, not a bytecode-size equivalence or an approved budget. Signed native artifact sizes, historical deltas, two-release baselines, budget owners, and signoff remain open. See `docs/optimization/evidence/2026-07-25_source-map-group-attribution.md`.
+
 ### 7.5 Native artifact and update strategy
 
 The repository documents over-the-air rollback behavior but does not currently include and configure `expo-updates`. Choose one coherent policy:
