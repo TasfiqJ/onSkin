@@ -6,6 +6,8 @@ import {
   OUTBOX_LIMIT_REACHED,
   OUTBOX_SCHEMA_VERSION,
   OUTBOX_UNSUPPORTED_VERSION,
+  MAX_OUTBOX_REVISIONS,
+  MAX_OUTBOX_ROWS,
   MAX_SHELF_SCAN_OUTBOX_ROWS,
   decodeOutboxEnvelope,
   conflictChoiceIdentityHashInput,
@@ -127,6 +129,52 @@ function enqueue(
     payload: operationKind === 'delete' ? null : (input.payload ?? SHELF_PAYLOAD),
     enqueuedAt: input.enqueuedAt ?? NOW,
   });
+}
+
+function enqueueScan(
+  envelope: OutboxEnvelope,
+  input: {
+    index: number;
+    ownerHash?: string;
+    enqueuedAt?: string;
+  },
+): OutboxEnvelope {
+  const enqueuedAt = input.enqueuedAt ?? new Date(Date.parse(NOW) + input.index).toISOString();
+  return enqueueShelfScanOutboxOperation(envelope, {
+    operationId: uuid(30_000 + input.index),
+    ownerHash: input.ownerHash ?? OWNER,
+    ownerGeneration: 7,
+    entityId: uuid(40_000 + input.index),
+    payload: { ...SCAN_PAYLOAD, scanned_at: enqueuedAt },
+    payloadHash: SCAN_PAYLOAD_HASH,
+    enqueuedAt,
+  }).envelope;
+}
+
+function markShelfScansDead(
+  envelope: OutboxEnvelope,
+  operationIds: readonly string[] = envelope.rows
+    .filter((row) => row.entityType === 'shelf_scan')
+    .map((row) => row.operationId),
+): OutboxEnvelope {
+  const selected = new Set(operationIds);
+  const persisted = JSON.parse(encodeOutboxEnvelope(envelope)) as {
+    rows: {
+      operationId: string;
+      state: string;
+      lastErrorClass: string | null;
+      leaseOwner: string | null;
+      leaseExpiresAt: string | null;
+    }[];
+  };
+  for (const row of persisted.rows) {
+    if (!selected.has(row.operationId)) continue;
+    row.state = 'dead';
+    row.lastErrorClass = 'validation';
+    row.leaseOwner = null;
+    row.leaseExpiresAt = null;
+  }
+  return decodeOutboxEnvelope(JSON.stringify(persisted));
 }
 
 describe('transactional outbox model', () => {
@@ -548,19 +596,12 @@ describe('transactional outbox model', () => {
     ).toThrow(OUTBOX_INVALID);
   });
 
-  it('caps scan telemetry and leases state mirrors before older immutable events', () => {
+  it('rejects a new scan when all 128 retained scan rows are live', () => {
     let envelope = emptyOutboxEnvelope();
     for (let index = 1; index <= MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
-      envelope = enqueueShelfScanOutboxOperation(envelope, {
-        operationId: uuid(30_000 + index),
-        ownerHash: OWNER,
-        ownerGeneration: 7,
-        entityId: uuid(40_000 + index),
-        payload: { ...SCAN_PAYLOAD, scanned_at: NOW },
-        payloadHash: SCAN_PAYLOAD_HASH,
-        enqueuedAt: NOW,
-      }).envelope;
+      envelope = enqueueScan(envelope, { index, enqueuedAt: NOW });
     }
+    const before = encodeOutboxEnvelope(envelope);
     expect(() =>
       enqueueShelfScanOutboxOperation(envelope, {
         operationId: uuid(50_001),
@@ -572,6 +613,7 @@ describe('transactional outbox model', () => {
         enqueuedAt: NOW,
       }),
     ).toThrow(OUTBOX_LIMIT_REACHED);
+    expect(encodeOutboxEnvelope(envelope)).toBe(before);
 
     const withState = enqueue(envelope, {
       operationId: OP_A1,
@@ -585,6 +627,386 @@ describe('transactional outbox model', () => {
       limit: 1,
     });
     expect(leased.rows[0]?.entityType).toBe('shelf_product');
+  });
+
+  it('evicts the oldest dead scan and its revision to admit a new immutable event', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
+      envelope = enqueueScan(envelope, { index, enqueuedAt: NOW });
+    }
+    const dead = markShelfScansDead(envelope);
+    const oldest = dead.rows[0]!;
+    const firstRetained = dead.rows[1]!;
+    const admittedInput = {
+      operationId: uuid(50_001),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(50_002),
+      payload: { ...SCAN_PAYLOAD, scanned_at: '2026-07-18T15:00:01.000Z' },
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    } as const;
+
+    const admitted = enqueueShelfScanOutboxOperation(dead, admittedInput).envelope;
+
+    expect(admitted.rows).toHaveLength(MAX_SHELF_SCAN_OUTBOX_ROWS);
+    expect(admitted.rows.some((row) => row.operationId === oldest.operationId)).toBe(false);
+    expect(
+      admitted.revisions.some(
+        (revision) =>
+          revision.ownerHash === oldest.ownerHash &&
+          revision.entityType === oldest.entityType &&
+          revision.entityId === oldest.entityId,
+      ),
+    ).toBe(false);
+    expect(admitted.rows.find((row) => row.operationId === firstRetained.operationId)).toEqual(
+      firstRetained,
+    );
+    expect(
+      admitted.rows.find((row) => row.operationId === admittedInput.operationId),
+    ).toMatchObject({
+      ownerHash: OWNER,
+      entityType: 'shelf_scan',
+      entityId: admittedInput.entityId,
+      clientRevision: 1,
+      idempotencyKey: `shelf_scan:${admittedInput.operationId}:${admittedInput.payloadHash}`,
+      payload: admittedInput.payload,
+      enqueuedAt: admittedInput.enqueuedAt,
+      state: 'ready',
+    });
+    expect(decodeOutboxEnvelope(encodeOutboxEnvelope(admitted))).toEqual(admitted);
+
+    const retried = retryDeadOutboxRows(admitted, {
+      ownerHash: OWNER,
+      entityType: 'shelf_scan',
+      now: '2026-07-18T15:00:02.000Z',
+    });
+    const retriedRetained = retried.envelope.rows.find(
+      (row) => row.operationId === firstRetained.operationId,
+    );
+    const stillNew = retried.envelope.rows.find(
+      (row) => row.operationId === admittedInput.operationId,
+    );
+    expect(retried.retried).toBe(MAX_SHELF_SCAN_OUTBOX_ROWS - 1);
+    expect(retriedRetained).toMatchObject({
+      operationId: firstRetained.operationId,
+      ownerHash: firstRetained.ownerHash,
+      entityType: firstRetained.entityType,
+      entityId: firstRetained.entityId,
+      clientRevision: 1,
+      idempotencyKey: firstRetained.idempotencyKey,
+      payload: firstRetained.payload,
+      enqueuedAt: firstRetained.enqueuedAt,
+      state: 'ready',
+    });
+    expect(stillNew).toEqual(
+      admitted.rows.find((row) => row.operationId === admittedInput.operationId),
+    );
+
+    const beforeReplay = encodeOutboxEnvelope(admitted);
+    expect(() => enqueueShelfScanOutboxOperation(admitted, admittedInput)).toThrow(OUTBOX_INVALID);
+    expect(encodeOutboxEnvelope(admitted)).toBe(beforeReplay);
+  });
+
+  it('evicts the current owners dead scan even when a foreign dead scan is older', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
+      envelope = enqueueScan(envelope, {
+        index,
+        ownerHash: index === 2 ? OWNER_B : OWNER,
+      });
+    }
+    const oldestLive = envelope.rows[0]!;
+    const foreignDead = envelope.rows[1]!;
+    const ownDead = envelope.rows[2]!;
+    envelope = markShelfScansDead(envelope, [foreignDead.operationId, ownDead.operationId]);
+    envelope = enqueue(envelope, {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+    const nonScanRow = envelope.rows.find((row) => row.operationId === OP_A1)!;
+    const nonScanRevision = envelope.revisions.find(
+      (revision) =>
+        revision.ownerHash === OWNER &&
+        revision.entityType === 'shelf_product' &&
+        revision.entityId === ENTITY_A,
+    )!;
+
+    const admitted = enqueueShelfScanOutboxOperation(envelope, {
+      operationId: uuid(50_001),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(50_002),
+      payload: { ...SCAN_PAYLOAD, scanned_at: '2026-07-18T15:00:02.000Z' },
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    expect(admitted.rows.filter((row) => row.entityType === 'shelf_scan')).toHaveLength(
+      MAX_SHELF_SCAN_OUTBOX_ROWS,
+    );
+    expect(admitted.rows).toHaveLength(MAX_SHELF_SCAN_OUTBOX_ROWS + 1);
+    expect(admitted.rows.find((row) => row.operationId === oldestLive.operationId)).toEqual(
+      oldestLive,
+    );
+    expect(admitted.rows.find((row) => row.operationId === foreignDead.operationId)).toEqual(
+      envelope.rows.find((row) => row.operationId === foreignDead.operationId),
+    );
+    expect(admitted.rows.some((row) => row.operationId === ownDead.operationId)).toBe(false);
+    expect(admitted.rows.find((row) => row.operationId === OP_A1)).toEqual(nonScanRow);
+    expect(admitted.revisions).toContainEqual(nonScanRevision);
+    expect(
+      admitted.revisions.some(
+        (revision) =>
+          revision.ownerHash === OWNER_B &&
+          revision.entityType === 'shelf_scan' &&
+          revision.entityId === foreignDead.entityId,
+      ),
+    ).toBe(true);
+    expect(
+      admitted.revisions.some(
+        (revision) =>
+          revision.ownerHash === OWNER &&
+          revision.entityType === 'shelf_scan' &&
+          revision.entityId === ownDead.entityId,
+      ),
+    ).toBe(false);
+  });
+
+  it('rejects without mutation when only a foreign owner has a dead scan', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
+      envelope = enqueueScan(envelope, {
+        index,
+        ownerHash: index === 1 ? OWNER_B : OWNER,
+        enqueuedAt: NOW,
+      });
+    }
+    envelope = markShelfScansDead(envelope, [uuid(30_001)]);
+    const before = encodeOutboxEnvelope(envelope);
+
+    expect(() =>
+      enqueueShelfScanOutboxOperation(envelope, {
+        operationId: uuid(50_001),
+        ownerHash: OWNER,
+        ownerGeneration: 8,
+        entityId: uuid(50_002),
+        payload: { ...SCAN_PAYLOAD, scanned_at: '2026-07-18T15:00:02.000Z' },
+        payloadHash: 'f'.repeat(64),
+        enqueuedAt: '2026-07-18T15:00:02.000Z',
+      }),
+    ).toThrow(OUTBOX_LIMIT_REACHED);
+    expect(encodeOutboxEnvelope(envelope)).toBe(before);
+  });
+
+  it('breaks equal scan timestamps deterministically by operation id', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
+      envelope = enqueueScan(envelope, { index, enqueuedAt: NOW });
+    }
+    const lowerOperationId = uuid(30_002);
+    const higherOperationId = uuid(30_003);
+    envelope = markShelfScansDead(envelope, [higherOperationId, lowerOperationId]);
+
+    const admitted = enqueueShelfScanOutboxOperation(envelope, {
+      operationId: uuid(50_001),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(50_002),
+      payload: { ...SCAN_PAYLOAD, scanned_at: '2026-07-18T15:00:02.000Z' },
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    expect(admitted.rows.some((row) => row.operationId === lowerOperationId)).toBe(false);
+    expect(admitted.rows.some((row) => row.operationId === higherOperationId)).toBe(true);
+    expect(
+      admitted.revisions.some(
+        (revision) =>
+          revision.ownerHash === OWNER &&
+          revision.entityType === 'shelf_scan' &&
+          revision.entityId === uuid(40_002),
+      ),
+    ).toBe(false);
+    expect(
+      admitted.revisions.some(
+        (revision) =>
+          revision.ownerHash === OWNER &&
+          revision.entityType === 'shelf_scan' &&
+          revision.entityId === uuid(40_003),
+      ),
+    ).toBe(true);
+  });
+
+  it('reclaims a same-owner dead scan at the exact global row boundary', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index < MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
+      envelope = enqueueScan(envelope, { index, enqueuedAt: NOW });
+    }
+    const victim = envelope.rows[0]!;
+    envelope = markShelfScansDead(envelope, [victim.operationId]);
+    const otherRowCount = MAX_OUTBOX_ROWS - envelope.rows.length;
+    for (let index = 1; index <= otherRowCount; index += 1) {
+      envelope = enqueue(envelope, {
+        operationId: uuid(100_000 + index),
+        entityId: uuid(200_000 + index),
+      }).envelope;
+    }
+    expect(envelope.rows).toHaveLength(MAX_OUTBOX_ROWS);
+
+    const admitted = enqueueShelfScanOutboxOperation(envelope, {
+      operationId: uuid(50_001),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(50_002),
+      payload: { ...SCAN_PAYLOAD, scanned_at: '2026-07-18T15:00:02.000Z' },
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    expect(admitted.rows).toHaveLength(MAX_OUTBOX_ROWS);
+    expect(admitted.rows.some((row) => row.operationId === victim.operationId)).toBe(false);
+    expect(admitted.rows.some((row) => row.operationId === uuid(50_001))).toBe(true);
+    expect(admitted.rows.filter((row) => row.entityType === 'shelf_product')).toHaveLength(
+      otherRowCount,
+    );
+    expect(
+      admitted.revisions.some(
+        (revision) =>
+          revision.ownerHash === victim.ownerHash &&
+          revision.entityType === victim.entityType &&
+          revision.entityId === victim.entityId,
+      ),
+    ).toBe(false);
+  });
+
+  it('reclaims a same-owner dead scan at the exact global revision boundary', () => {
+    let envelope = enqueueScan(emptyOutboxEnvelope(), { index: 1, enqueuedAt: NOW });
+    const victim = envelope.rows[0]!;
+    envelope = markShelfScansDead(envelope);
+    envelope = decodeOutboxEnvelope(
+      JSON.stringify({
+        ...envelope,
+        revisions: [
+          ...envelope.revisions,
+          ...Array.from({ length: MAX_OUTBOX_REVISIONS - 1 }, (_, index) => ({
+            ownerHash: OWNER,
+            entityType: 'shelf_product',
+            entityId: uuid(300_000 + index),
+            revision: 1,
+          })),
+        ],
+      }),
+    );
+    expect(envelope.revisions).toHaveLength(MAX_OUTBOX_REVISIONS);
+
+    const admitted = enqueueShelfScanOutboxOperation(envelope, {
+      operationId: uuid(50_001),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(50_002),
+      payload: { ...SCAN_PAYLOAD, scanned_at: '2026-07-18T15:00:02.000Z' },
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    expect(admitted.rows).toHaveLength(1);
+    expect(admitted.rows[0]?.operationId).toBe(uuid(50_001));
+    expect(admitted.revisions).toHaveLength(MAX_OUTBOX_REVISIONS);
+    expect(
+      admitted.revisions.some(
+        (revision) =>
+          revision.ownerHash === victim.ownerHash &&
+          revision.entityType === victim.entityType &&
+          revision.entityId === victim.entityId,
+      ),
+    ).toBe(false);
+  });
+
+  it('continues past a victim whose shared legacy revision is still referenced', () => {
+    let envelope = emptyOutboxEnvelope();
+    envelope = enqueueScan(envelope, { index: 1, enqueuedAt: NOW });
+    envelope = enqueueScan(envelope, { index: 2, enqueuedAt: NOW });
+    envelope = markShelfScansDead(envelope);
+    const sharedEntityId = envelope.rows[0]!.entityId;
+    const legacyRows = envelope.rows.map((row) => ({
+      ...row,
+      entityId: sharedEntityId,
+      dependencyGroupId: `shelf_scan:${sharedEntityId}`,
+    }));
+    const legacyRevisionCapped = decodeOutboxEnvelope(
+      JSON.stringify({
+        version: 1,
+        rows: legacyRows,
+        revisions: [
+          { entityType: 'shelf_scan', entityId: sharedEntityId, revision: 1 },
+          ...Array.from({ length: MAX_OUTBOX_REVISIONS - 1 }, (_, index) => ({
+            entityType: 'shelf_product',
+            entityId: uuid(300_000 + index),
+            revision: 1,
+          })),
+        ],
+      }),
+    );
+
+    const admitted = enqueueShelfScanOutboxOperation(legacyRevisionCapped, {
+      operationId: uuid(50_001),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(50_002),
+      payload: { ...SCAN_PAYLOAD, scanned_at: '2026-07-18T15:00:02.000Z' },
+      payloadHash: 'f'.repeat(64),
+      enqueuedAt: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+
+    expect(admitted.rows).toHaveLength(1);
+    expect(admitted.rows[0]?.operationId).toBe(uuid(50_001));
+    expect(admitted.revisions).toHaveLength(MAX_OUTBOX_REVISIONS);
+    expect(
+      admitted.revisions.some(
+        (revision) => revision.entityType === 'shelf_scan' && revision.entityId === sharedEntityId,
+      ),
+    ).toBe(false);
+  });
+
+  it('keeps global row and revision caps fail-closed during scan admission', () => {
+    let rowCapped = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_OUTBOX_ROWS; index += 1) {
+      rowCapped = enqueue(rowCapped, {
+        operationId: uuid(100_000 + index),
+        entityId: uuid(200_000 + index),
+      }).envelope;
+    }
+    const rowCappedBytes = encodeOutboxEnvelope(rowCapped);
+    expect(() =>
+      enqueueScan(rowCapped, {
+        index: 500_001,
+        enqueuedAt: '2026-07-18T15:00:03.000Z',
+      }),
+    ).toThrow(OUTBOX_LIMIT_REACHED);
+    expect(encodeOutboxEnvelope(rowCapped)).toBe(rowCappedBytes);
+
+    const revisionCapped = decodeOutboxEnvelope(
+      JSON.stringify({
+        version: OUTBOX_SCHEMA_VERSION,
+        rows: [],
+        revisions: Array.from({ length: MAX_OUTBOX_REVISIONS }, (_, index) => ({
+          ownerHash: OWNER,
+          entityType: 'shelf_product',
+          entityId: uuid(300_000 + index),
+          revision: 1,
+        })),
+      }),
+    );
+    const revisionCappedBytes = encodeOutboxEnvelope(revisionCapped);
+    expect(() =>
+      enqueueScan(revisionCapped, {
+        index: 500_002,
+        enqueuedAt: '2026-07-18T15:00:04.000Z',
+      }),
+    ).toThrow(OUTBOX_LIMIT_REACHED);
+    expect(encodeOutboxEnvelope(revisionCapped)).toBe(revisionCappedBytes);
   });
 
   it('reclaims settled immutable event revisions beyond the global revision bound', () => {

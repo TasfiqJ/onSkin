@@ -816,6 +816,48 @@ function sortRows(rows: readonly OutboxRow[]): OutboxRow[] {
   );
 }
 
+function reclaimTerminalShelfScanCapacity(
+  envelope: OutboxEnvelope,
+  ownerHash: string,
+): OutboxEnvelope {
+  const candidates = sortRows(
+    envelope.rows.filter(
+      (row) =>
+        row.entityType === 'shelf_scan' && row.ownerHash === ownerHash && row.state === 'dead',
+    ),
+  );
+  const revisionMatchesRow = (revision: OutboxRevision, row: OutboxRow) =>
+    revision.entityType === row.entityType &&
+    revision.entityId === row.entityId &&
+    (revision.ownerHash === null || revision.ownerHash === row.ownerHash);
+  let rows = [...envelope.rows];
+  let revisions = [...envelope.revisions];
+  let candidateIndex = 0;
+  const hasCapacity = () =>
+    rows.filter((row) => row.entityType === 'shelf_scan').length < MAX_SHELF_SCAN_OUTBOX_ROWS &&
+    rows.length < MAX_OUTBOX_ROWS &&
+    revisions.length < MAX_OUTBOX_REVISIONS;
+
+  while (!hasCapacity()) {
+    const victim = candidates[candidateIndex];
+    if (!victim) fail(OUTBOX_LIMIT_REACHED);
+    candidateIndex += 1;
+    rows = rows.filter((row) => row.operationId !== victim.operationId);
+    revisions = revisions.filter(
+      (revision) =>
+        !revisionMatchesRow(revision, victim) ||
+        rows.some((row) => revisionMatchesRow(revision, row)),
+    );
+  }
+  if (candidateIndex === 0) return envelope;
+
+  return Object.freeze({
+    ...envelope,
+    rows: Object.freeze(sortRows(rows)),
+    revisions: Object.freeze(revisions),
+  });
+}
+
 export function enqueueShelfOutboxOperation(
   envelope: OutboxEnvelope,
   input: Readonly<{
@@ -901,13 +943,7 @@ export function enqueueShelfScanOutboxOperation(
   }>,
 ): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
   if (!SHA256_HEX.test(input.payloadHash)) fail();
-  if (
-    envelope.rows.filter((row) => row.entityType === 'shelf_scan').length >=
-    MAX_SHELF_SCAN_OUTBOX_ROWS
-  ) {
-    fail(OUTBOX_LIMIT_REACHED);
-  }
-  return enqueueOutboxOperation(envelope, {
+  return enqueueOutboxOperation(reclaimTerminalShelfScanCapacity(envelope, input.ownerHash), {
     ...input,
     entityType: 'shelf_scan',
     operationKind: 'upsert',

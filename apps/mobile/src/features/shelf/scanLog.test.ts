@@ -5,8 +5,12 @@ import {
   endAccountGenerationBoundary,
 } from '@/lib/auth/accountGeneration';
 import {
+  MAX_SHELF_SCAN_OUTBOX_ROWS,
   OUTBOX_STORAGE_KEY,
   decodeOutboxEnvelope,
+  emptyOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueueShelfScanOutboxOperation,
   shelfScanPayloadHashInput,
 } from '@/lib/offline/outbox.pure';
 import { createOwnerQueryScope, type OwnerQueryScope } from '@/lib/query/queryKeys';
@@ -86,6 +90,45 @@ function record(
 
 function storedRows() {
   return decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows;
+}
+
+function fullPersistedShelfScanEnvelope(state: 'dead' | 'ready') {
+  let envelope = emptyOutboxEnvelope();
+  for (let index = 0; index < MAX_SHELF_SCAN_OUTBOX_ROWS; index += 1) {
+    const scannedAt = new Date(
+      Date.parse(NOW) - (MAX_SHELF_SCAN_OUTBOX_ROWS - index) * 1_000,
+    ).toISOString();
+    envelope = enqueueShelfScanOutboxOperation(envelope, {
+      operationId: uuid(10_000 + index),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 0,
+      entityId: uuid(20_000 + index),
+      payload: {
+        barcode: (1_000_000_000_000 + index).toString(),
+        result: 'no_match',
+        matched_product_id: null,
+        scanned_at: scannedAt,
+      },
+      payloadHash: PAYLOAD_HASH,
+      enqueuedAt: scannedAt,
+    }).envelope;
+  }
+  if (state === 'dead') {
+    envelope = Object.freeze({
+      ...envelope,
+      rows: Object.freeze(
+        envelope.rows.map((row) =>
+          Object.freeze({
+            ...row,
+            attemptCount: 1,
+            lastErrorClass: 'validation' as const,
+            state: 'dead' as const,
+          }),
+        ),
+      ),
+    });
+  }
+  return encodeOutboxEnvelope(envelope);
 }
 
 afterEach(() => {
@@ -237,6 +280,51 @@ describe('shelf scan intake log', () => {
       true,
     );
     expect(mocks.scheduleFlush).toHaveBeenCalledTimes(100);
+  });
+
+  it('admits and schedules a valid authenticated scan after persisted terminal saturation', async () => {
+    const raw = fullPersistedShelfScanEnvelope('dead');
+    mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
+
+    await expect(
+      record({ barcode: '1234567890123', result: 'matched', matchedProductId: PRODUCT_ID }),
+    ).resolves.toBeUndefined();
+
+    const stored = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null);
+    expect(stored.rows).toHaveLength(MAX_SHELF_SCAN_OUTBOX_ROWS);
+    expect(stored.rows.filter((row) => row.state === 'dead')).toHaveLength(
+      MAX_SHELF_SCAN_OUTBOX_ROWS - 1,
+    );
+    expect(stored.rows).not.toContainEqual(expect.objectContaining({ operationId: uuid(10_000) }));
+    expect(stored.revisions).not.toContainEqual(
+      expect.objectContaining({ entityId: uuid(20_000) }),
+    );
+    expect(stored.rows).toContainEqual(
+      expect.objectContaining({
+        operationId: uuid(1),
+        entityId: uuid(2),
+        state: 'ready',
+        payload: expect.objectContaining({
+          barcode: '1234567890123',
+          result: 'matched',
+          matched_product_id: PRODUCT_ID,
+          scanned_at: NOW,
+        }),
+      }),
+    );
+    expect(mocks.scheduleFlush).toHaveBeenCalledOnce();
+  });
+
+  it('keeps persisted bytes intact and the visible scan path best effort at live saturation', async () => {
+    const raw = fullPersistedShelfScanEnvelope('ready');
+    mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
+
+    await expect(record({ barcode: '1234567890123', result: 'no_match' })).resolves.toBeUndefined();
+
+    expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(raw);
+    expect(storedRows()).toHaveLength(MAX_SHELF_SCAN_OUTBOX_ROWS);
+    expect(storedRows().every((row) => row.state === 'ready')).toBe(true);
+    expect(mocks.scheduleFlush).not.toHaveBeenCalled();
   });
 
   it('preserves a corrupt or future outbox and keeps the visible scan path best effort', async () => {
