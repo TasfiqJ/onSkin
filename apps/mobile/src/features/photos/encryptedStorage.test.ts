@@ -47,6 +47,10 @@ import {
   verifyEncryptedPhotoDeletionSources,
   waitForEncryptedPhotoWritesToSettle,
 } from './encryptedStorage';
+import {
+  beginEncryptedPhotoAccountBoundary as beginLightweightPhotoAccountBoundary,
+  endEncryptedPhotoAccountBoundary as endLightweightPhotoAccountBoundary,
+} from './photoAccountBoundary';
 
 const CONTENT_KEY_NAME = 'onskin.photo.content_key.v1';
 const CONTENT_KEY_MARKER = 'onskin.photo.content_key_created.v1';
@@ -278,6 +282,17 @@ describe('encrypted photo storage', () => {
       PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
     );
     expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+  });
+
+  it('shares one boundary singleton across the lightweight coordinator and encrypted storage', async () => {
+    beginLightweightPhotoAccountBoundary();
+    try {
+      await expect(encryptPhotoNote('account A note')).rejects.toThrow(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+    } finally {
+      endLightweightPhotoAccountBoundary();
+    }
   });
 
   it('drains a photo file write already in progress before account cleanup', async () => {

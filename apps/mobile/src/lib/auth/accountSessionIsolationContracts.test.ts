@@ -37,6 +37,7 @@ describe('account session isolation integration', () => {
     const boundaryQueue = readSource('lib/auth/sessionBoundaryQueue.ts');
     const accountGeneration = readSource('lib/auth/accountGeneration.ts');
     const privateKV = readSource('lib/storage/privateKV.ts');
+    const photoAccountBoundary = readSource('features/photos/photoAccountBoundary.ts');
     const encryptedStorage = readSource('features/photos/encryptedStorage.ts');
     const actions = readSource('features/settings/actions.ts');
     const supabaseClient = readSource('lib/supabase/client.ts');
@@ -91,14 +92,15 @@ describe('account session isolation integration', () => {
     expect(privateKV).toContain('for (const read of [...activeReadOperations]) read.invalidate();');
     expect(privateKV).toContain('while (inFlightMutationOperations.size > 0)');
     expect(privateKV).not.toContain('const inFlightOperations');
-    expect(encryptedStorage).toContain('function runAccountScopedPhotoRead');
-    expect(encryptedStorage).toContain('async function runAccountScopedPhotoMutation');
-    expect(encryptedStorage).toContain('const inFlightPhotoMutations');
-    expect(encryptedStorage).toContain(
+    expect(photoAccountBoundary).toContain('function runAccountScopedPhotoRead');
+    expect(photoAccountBoundary).toContain('async function runAccountScopedPhotoMutation');
+    expect(photoAccountBoundary).toContain('const inFlightPhotoMutations');
+    expect(photoAccountBoundary).toContain(
       'for (const invalidate of [...activePhotoReadInvalidators]) invalidate();',
     );
-    expect(encryptedStorage).toContain('while (inFlightPhotoMutations.size > 0)');
-    expect(encryptedStorage).not.toContain('const inFlightPhotoOperations');
+    expect(photoAccountBoundary).toContain('while (inFlightPhotoMutations.size > 0)');
+    expect(photoAccountBoundary).not.toContain('const inFlightPhotoOperations');
+    expect(encryptedStorage).toContain("} from './photoAccountBoundary';");
     expect(actions).toContain('await completeLocalSignOut();');
     expect(actions).not.toContain('clearAccountIsolatedState');
     expect(supabaseClient).toContain('export async function clearPersistedSupabaseSession');

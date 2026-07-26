@@ -26,7 +26,7 @@ import {
   beginEncryptedPhotoAccountBoundary,
   endEncryptedPhotoAccountBoundary,
   waitForEncryptedPhotoWritesToSettle,
-} from '@/features/photos/encryptedStorage';
+} from '@/features/photos/photoAccountBoundary';
 import {
   AnonymousOnboardingRequestSupersededError,
   anonymousHandoffNeedsSessionPublication,

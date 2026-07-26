@@ -14,7 +14,7 @@ const accountGenerationMocks = vi.hoisted(() => ({
 
 vi.mock('./accountGeneration', () => accountGenerationMocks);
 
-vi.mock('@/features/photos/encryptedStorage', () => ({
+vi.mock('@/features/photos/photoAccountBoundary', () => ({
   beginEncryptedPhotoAccountBoundary: vi.fn(),
   endEncryptedPhotoAccountBoundary: vi.fn(),
   waitForEncryptedPhotoWritesToSettle: vi.fn(async () => {}),

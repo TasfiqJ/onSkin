@@ -149,10 +149,10 @@ describe('account-sensitive production gateway inventory', () => {
     expect(privateKV).toContain('runAccountScopedPrivateMutation');
     expect(privateKV).toContain('beginPrivateKVAccountBoundary');
 
-    const photos = source(join(SRC_DIR, 'features/photos/encryptedStorage.ts'));
-    expect(photos).toContain('runAccountScopedPhotoRead');
-    expect(photos).toContain('runAccountScopedPhotoMutation');
-    expect(photos).toContain('beginEncryptedPhotoAccountBoundary');
+    const photoAccountBoundary = source(join(SRC_DIR, 'features/photos/photoAccountBoundary.ts'));
+    expect(photoAccountBoundary).toContain('runAccountScopedPhotoRead');
+    expect(photoAccountBoundary).toContain('runAccountScopedPhotoMutation');
+    expect(photoAccountBoundary).toContain('beginEncryptedPhotoAccountBoundary');
 
     const mobileDataExportWriter = source(
       join(SRC_DIR, 'features/settings/mobileDataExportWriter.ts'),

@@ -4,7 +4,7 @@ import {
   beginEncryptedPhotoAccountBoundary,
   endEncryptedPhotoAccountBoundary,
   waitForEncryptedPhotoWritesToSettle,
-} from '@/features/photos/encryptedStorage';
+} from '@/features/photos/photoAccountBoundary';
 import { queryClient } from '@/lib/query/queryClient';
 import {
   beginPrivateKVAccountBoundary,

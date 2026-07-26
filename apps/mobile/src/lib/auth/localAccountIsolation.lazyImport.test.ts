@@ -38,7 +38,7 @@ vi.mock('./accountGeneration', () => ({
   waitForAccountGenerationOperationsToSettle: mocks.waitForAccountGenerationOperationsToSettle,
 }));
 
-vi.mock('@/features/photos/encryptedStorage', () => ({
+vi.mock('@/features/photos/photoAccountBoundary', () => ({
   beginEncryptedPhotoAccountBoundary: mocks.beginEncryptedPhotoAccountBoundary,
   endEncryptedPhotoAccountBoundary: mocks.endEncryptedPhotoAccountBoundary,
   waitForEncryptedPhotoWritesToSettle: mocks.waitForEncryptedPhotoWritesToSettle,
