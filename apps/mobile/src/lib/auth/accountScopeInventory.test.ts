@@ -27,8 +27,8 @@ function source(path: string): string {
 const SUPABASE_CLIENT_FILES = [
   'features/commerce/store.ts',
   'features/commerce/useCommerce.ts',
-  'features/onboarding/OnboardingContext.tsx',
   'features/onboarding/onboardingStatusQuery.ts',
+  'features/onboarding/skinProfileMirror.ts',
   'features/photos/store.ts',
   'features/routine/useProgress.ts',
   'features/scheduler/profile.ts',
@@ -84,7 +84,9 @@ describe('account-sensitive production gateway inventory', () => {
     for (const relativePath of SUPABASE_CLIENT_FILES) {
       if (relativePath === 'lib/network/edgeFunctions.ts') continue;
       const text = source(join(SRC_DIR, relativePath));
-      expect(text, relativePath).toMatch(/run(?:AccountGeneration|OwnerQuery)Operation/);
+      expect(text, relativePath).toMatch(
+        /run(?:AccountGeneration|OwnerQuery)Operation|runSerializedConsentWorkflow/,
+      );
       expect(text, relativePath).toContain('.assertCurrent()');
     }
 

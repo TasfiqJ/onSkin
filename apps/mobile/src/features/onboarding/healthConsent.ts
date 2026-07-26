@@ -2,6 +2,7 @@ import type { QueryClient } from '@tanstack/react-query';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { recordConsent } from '@/lib/consent/consent';
+import { runSerializedConsentWorkflow } from '@/lib/consent/workflow';
 import {
   isOwnerQueryScopeCurrent,
   ownerQueryPrefixes,
@@ -19,17 +20,6 @@ type HealthConsentDeps = {
 
 const defaultDeps: HealthConsentDeps = { recordConsent };
 
-let healthConsentMutationTail: Promise<void> = Promise.resolve();
-
-function runHealthConsentMutation<T>(operation: () => Promise<T>): Promise<T> {
-  const result = healthConsentMutationTail.then(operation, operation);
-  healthConsentMutationTail = result.then(
-    () => undefined,
-    () => undefined,
-  );
-  return result;
-}
-
 export async function resetHealthProfileConsumers(
   queryClient: QueryClient,
   ownerScope: OwnerQueryScope,
@@ -46,7 +36,7 @@ export async function grantHealthDataCollectionConsent(
   deps: HealthConsentDeps = defaultDeps,
 ): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await runHealthConsentMutation(async () => {
+    await runSerializedConsentWorkflow(lease, async () => {
       lease.assertCurrent();
       await setHealthDataCollectionConsentLocal({
         granted: true,
@@ -74,7 +64,7 @@ export async function declineHealthDataCollectionConsent(
   deps: HealthConsentDeps = defaultDeps,
 ): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await runHealthConsentMutation(async () => {
+    await runSerializedConsentWorkflow(lease, async () => {
       lease.assertCurrent();
       await setHealthDataCollectionConsentLocal({
         granted: false,

@@ -520,17 +520,33 @@ describe('onboarding route contracts', () => {
       fileURLToPath(new URL('./OnboardingContext.tsx', import.meta.url)),
       'utf8',
     );
-
-    expect(context).toContain('hasCurrentHealthDataCollectionConsent()');
-    expect(context).toContain("throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED')");
-    expect(context.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
-      context.indexOf('setStoredSkinProfile({ result, goals, completedAt })'),
+    const persistence = readFileSync(
+      fileURLToPath(new URL('./skinProfilePersistence.ts', import.meta.url)),
+      'utf8',
     );
+    const mirror = readFileSync(
+      fileURLToPath(new URL('./skinProfileMirror.ts', import.meta.url)),
+      'utf8',
+    );
+
+    expect(context).toContain('persistSkinProfileWithConsentWorkflow(ownerLease, {');
+    expect(persistence).toContain('return runSerializedConsentWorkflow(lease, async () => {');
+    expect(persistence).toContain('deps.hasCurrentLocalConsent()');
+    expect(persistence).toContain("throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED')");
+    expect(persistence.indexOf('deps.hasCurrentLocalConsent()')).toBeLessThan(
+      persistence.indexOf(
+        'deps.setStoredProfile({ result, goals: [...input.goals], completedAt })',
+      ),
+    );
+    expect(persistence).toContain('deps.mirrorInsideWorkflow(lease, {');
     expect(context).toContain('queryClient.setQueryData(queryKeys.onboarded(ownerScope), true)');
     expect(context).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
     expect(context).toContain('ownerQueryPrefixes.shelf(ownerScope)');
     expect(context).toContain('ownerQueryPrefixes.ramp(ownerScope)');
-    expect(context).toContain('.abortSignal(ownerLease.signal)');
+    expect(context).not.toContain('supabase');
+    expect(mirror).toContain('hasLatestExactConsentGrantWithLease');
+    expect(mirror).toContain("endpoint: 'skin_profile_publication'");
+    expect(mirror).toContain('.abortSignal(signal)');
   });
 
   it('recovers direct quiz completion without inventing missing goals', () => {

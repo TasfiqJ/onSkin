@@ -2,20 +2,11 @@ import type { GoalId } from '@onskin/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { ownerQueryPrefixes, queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { supabase } from '@/lib/supabase/client';
 
-import {
-  getQuizCompletionState,
-  ONBOARDING_QUIZ,
-  scoreQuiz,
-  type QuizAnswers,
-  type SkinProfileResult,
-} from './quiz';
-import { setStoredSkinProfile } from './skinProfileStore';
-import { hasCurrentHealthDataCollectionConsent } from './healthConsentStore';
+import { scoreQuiz, type QuizAnswers, type SkinProfileResult } from './quiz';
+import { persistSkinProfileWithConsentWorkflow } from './skinProfilePersistence';
 
 // In-progress onboarding answers, accumulated client-side and persisted at the
 // reveal step. Goals are capped at 2 (design spec: "choose up to two").
@@ -54,77 +45,25 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         setQuizAnswers((prev) => ({ ...prev, [questionId]: val }));
       },
       computeResult() {
-        return scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
+        return scoreQuiz(quizAnswers);
       },
       async persistSkinProfile() {
-        return runOwnerQueryOperation(ownerScope, async (ownerLease) => {
-          if (!(await hasCurrentHealthDataCollectionConsent())) {
-            ownerLease.assertCurrent();
-            throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
-          }
-          ownerLease.assertCurrent();
-          const completion = getQuizCompletionState(quizAnswers, ONBOARDING_QUIZ);
-          if (!completion.complete) {
-            throw new Error(
-              `Cannot persist incomplete onboarding quiz: ${completion.missingQuestionIds.join(', ')}`,
-            );
-          }
-          const result = scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
-          const completedAt = new Date().toISOString();
-          // Local-first (D-029): record completion on-device FIRST so the entry
-          // gate (app/index.tsx) recognizes this user as onboarded even if the
-          // server write fails or no backend exists yet. This is the v1 source of
-          // truth; the Supabase insert below is a best-effort mirror that must not
-          // throw past this point (a returning user must never be re-onboarded).
-          await setStoredSkinProfile({ result, goals, completedAt });
-          ownerLease.assertCurrent();
-          queryClient.setQueryData(queryKeys.onboarded(ownerScope), true);
-          await Promise.all([
-            queryClient.invalidateQueries({
-              queryKey: ownerQueryPrefixes.skinProfile(ownerScope),
-            }),
-            queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) }),
-            queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) }),
-          ]);
-          ownerLease.assertCurrent();
-
-          let userId: string | undefined;
-          try {
-            userId = (await captureAuthenticatedAccountOwner(ownerLease))?.userId;
-          } catch {
-            ownerLease.assertCurrent();
-            // Best-effort mirror; the local record is the durable v1 signal.
-          }
-          ownerLease.assertCurrent();
-          if (userId) {
-            try {
-              // Axis scores are stored as the raw signed sums (docs/01 §3 axis ints).
-              await supabase
-                .from('skin_profiles')
-                .insert({
-                  user_id: userId,
-                  oily_dry: result.axisScores.oily_dry,
-                  sensitive_resistant: result.axisScores.sensitive_resistant,
-                  pigmented_non: result.axisScores.pigmented_non,
-                  wrinkled_tight: result.axisScores.wrinkled_tight,
-                  fitzpatrick: result.fitzpatrick,
-                  monk_tone: result.monkTone,
-                  sensitivities: result.sensitivities,
-                  pregnancy_status: result.pregnancyStatus,
-                  goals,
-                  completed_at: completedAt,
-                  version: 1,
-                })
-                .abortSignal(ownerLease.signal);
-              ownerLease.assertCurrent();
-            } catch {
-              ownerLease.assertCurrent();
-              // Server mirroring remains best-effort until the backend is available.
-            }
-          }
-          ownerLease.assertCurrent();
-          return result;
-        });
+        return runOwnerQueryOperation(ownerScope, (ownerLease) =>
+          persistSkinProfileWithConsentWorkflow(ownerLease, {
+            goals,
+            quizAnswers,
+            async onLocalCommit() {
+              queryClient.setQueryData(queryKeys.onboarded(ownerScope), true);
+              await Promise.all([
+                queryClient.invalidateQueries({
+                  queryKey: ownerQueryPrefixes.skinProfile(ownerScope),
+                }),
+                queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) }),
+                queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) }),
+              ]);
+            },
+          }),
+        );
       },
       reset() {
         setGoals([]);

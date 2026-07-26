@@ -8,10 +8,7 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { requireAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { isSupabaseConfigured } from '@/lib/env';
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
+import { runRequestWithLease, supabaseRequestFailure } from '@/lib/network/requestPolicy';
 
 import { supabase } from '../supabase/client';
 
@@ -69,6 +66,64 @@ export async function getLatestConsentsWithLease(
     if (!(row.consent_type in latest)) latest[row.consent_type] = row.granted;
   }
   return latest;
+}
+
+/**
+ * Require the newest authoritative ledger row to be an exact grant for the
+ * copy the caller rendered. Equal-time revocations sort first and therefore
+ * win. Transport failures reject so publication callers can fail closed.
+ */
+export async function hasLatestExactConsentGrantWithLease(
+  lease: AccountGenerationLease,
+  params: Readonly<{
+    type: ConsentType;
+    version: string;
+    consentText: string;
+  }>,
+): Promise<boolean> {
+  lease.assertCurrent();
+  if (!isSupabaseConfigured) return false;
+
+  const consentTextHash = await awaitAccountGenerationLease(lease, () =>
+    Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, params.consentText),
+  );
+  lease.assertCurrent();
+
+  const latest = await getLatestExactConsentRow(lease, params.type);
+  lease.assertCurrent();
+  return (
+    latest?.granted === true &&
+    latest.version === params.version &&
+    latest.consent_text_hash === consentTextHash
+  );
+}
+
+async function getLatestExactConsentRow(lease: AccountGenerationLease, type: ConsentType) {
+  return runRequestWithLease(
+    lease,
+    {
+      endpoint: 'consent_exact_proof',
+      deadlineMs: 8_000,
+      idempotent: true,
+      maxAttempts: 2,
+      maxResponseBytes: 16 * 1024,
+    },
+    async ({ signal }) => {
+      const response = await supabase
+        .from('consents')
+        .select('consent_type, granted, version, consent_text_hash, granted_at')
+        .eq('consent_type', type)
+        .order('granted_at', { ascending: false })
+        .order('granted', { ascending: true })
+        .limit(1)
+        .abortSignal(signal)
+        .maybeSingle();
+      if (response.error) {
+        throw supabaseRequestFailure(response.error, response.status);
+      }
+      return response.data;
+    },
+  );
 }
 
 async function getLatestConsentRows(lease: AccountGenerationLease) {

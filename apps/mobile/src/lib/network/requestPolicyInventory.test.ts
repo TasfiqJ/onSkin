@@ -34,7 +34,7 @@ const READ_ONLY_ENDPOINTS_BY_FILE = {
   'features/subscription/store.ts': ['entitlement_server'],
   'features/trend/consent.ts': ['trend_consent'],
   'features/trend/useTrend.ts': ['trend_monk_band'],
-  'lib/consent/consent.ts': ['consent_ledger'],
+  'lib/consent/consent.ts': ['consent_exact_proof', 'consent_ledger'],
 } as const;
 
 type DirectMutationVerb = 'delete' | 'insert' | 'update' | 'upsert';
@@ -70,7 +70,7 @@ const POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE = {
  * a safe timeout race or retry. Freeze their exact table/verb inventory while
  * migration to the durable outbox remains deferred. */
 const DEFERRED_OUTBOX_MUTATIONS_BY_FILE = {
-  'features/onboarding/OnboardingContext.tsx': [
+  'features/onboarding/skinProfileMirror.ts': [
     { table: 'skin_profiles', verb: 'insert', occurrences: 1 },
   ],
   'lib/consent/consent.ts': [{ table: 'consents', verb: 'insert', occurrences: 1 }],
@@ -201,14 +201,16 @@ describe('production request-policy inventory', () => {
       expect(text.match(RAW_MUTATION_VERB) ?? [], relativePath).toHaveLength(
         mutations.reduce((total, mutation) => total + mutation.occurrences, 0),
       );
-      expect(text, relativePath).toMatch(/run(?:AccountGeneration|OwnerQuery)Operation/);
+      expect(text, relativePath).toMatch(
+        /run(?:AccountGeneration|OwnerQuery)Operation|runSerializedConsentWorkflow/,
+      );
       expect(text, relativePath).toContain('.abortSignal(');
     }
   });
 
   it('keeps endpoint names fixed, unique, and content-free', () => {
     expect(new Set(REQUEST_ENDPOINTS).size).toBe(REQUEST_ENDPOINTS.length);
-    expect(REQUEST_ENDPOINTS).toHaveLength(21);
+    expect(REQUEST_ENDPOINTS).toHaveLength(23);
     for (const endpoint of REQUEST_ENDPOINTS) {
       expect(endpoint).toMatch(/^[a-z][a-z0-9_]{2,63}$/);
       expect(endpoint).not.toMatch(

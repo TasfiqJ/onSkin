@@ -5,10 +5,19 @@ import {
   AccountGenerationLeaseError,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  runAccountGenerationOperation,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
-import { getLatestConsents, recordConsent } from './consent';
+import { getLatestConsents, hasLatestExactConsentGrantWithLease, recordConsent } from './consent';
+
+type ExactConsentTestRow = {
+  consent_type: string;
+  granted: boolean;
+  version: string;
+  consent_text_hash: string;
+  granted_at: string;
+};
 
 const mocks = vi.hoisted(() => {
   const insertAbortSignal = vi.fn(async () => ({ error: null }));
@@ -24,10 +33,39 @@ const mocks = vi.hoisted(() => {
     order: vi.fn(),
   };
   latestBuilder.order.mockReturnValue(latestBuilder);
-  const select = vi.fn(() => latestBuilder);
+  const exactAbortSignal = vi.fn();
+  const exactMaybeSingle = vi.fn(async () => ({
+    data: null as ExactConsentTestRow | null,
+    error: null,
+  }));
+  const exactBuilder: {
+    abortSignal: typeof exactAbortSignal;
+    eq: ReturnType<typeof vi.fn>;
+    limit: ReturnType<typeof vi.fn>;
+    maybeSingle: typeof exactMaybeSingle;
+    order: ReturnType<typeof vi.fn>;
+  } = {
+    abortSignal: exactAbortSignal,
+    eq: vi.fn(),
+    limit: vi.fn(),
+    maybeSingle: exactMaybeSingle,
+    order: vi.fn(),
+  };
+  exactBuilder.abortSignal.mockReturnValue(exactBuilder);
+  exactBuilder.eq.mockReturnValue(exactBuilder);
+  exactBuilder.limit.mockReturnValue(exactBuilder);
+  exactBuilder.order.mockReturnValue(exactBuilder);
+  const select = vi.fn((columns: string) =>
+    columns.includes('consent_text_hash') ? exactBuilder : latestBuilder,
+  );
   const insert = vi.fn(() => ({ abortSignal: insertAbortSignal }));
   return {
     digest: vi.fn(async () => 'hash'),
+    exactAbortSignal,
+    exactEq: exactBuilder.eq,
+    exactLimit: exactBuilder.limit,
+    exactMaybeSingle,
+    exactOrder: exactBuilder.order,
     from: vi.fn(() => ({ insert, select })),
     getUser: vi.fn(async () => ({ data: { user: { id: 'owner-a' } }, error: null })),
     insert,
@@ -64,6 +102,12 @@ describe('consent backend guards', () => {
   beforeEach(() => {
     state.isSupabaseConfigured = false;
     mocks.digest.mockClear();
+    mocks.exactAbortSignal.mockClear();
+    mocks.exactEq.mockClear();
+    mocks.exactLimit.mockClear();
+    mocks.exactMaybeSingle.mockClear();
+    mocks.exactOrder.mockClear();
+    mocks.exactMaybeSingle.mockResolvedValue({ data: null, error: null });
     mocks.from.mockClear();
     mocks.getUser.mockClear();
     mocks.insert.mockClear();
@@ -116,6 +160,114 @@ describe('consent backend guards', () => {
     expect(mocks.latestAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
     expect(mocks.order).toHaveBeenNthCalledWith(1, 'granted_at', { ascending: false });
     expect(mocks.order).toHaveBeenNthCalledWith(2, 'granted', { ascending: true });
+  });
+
+  it('requires the latest ledger row to match the exact granted copy', async () => {
+    state.isSupabaseConfigured = true;
+    mocks.exactMaybeSingle.mockResolvedValueOnce({
+      data: {
+        consent_type: 'health_data_collection',
+        granted: true,
+        version: 'current-v1',
+        consent_text_hash: 'hash',
+        granted_at: '2026-07-26T12:00:00.000Z',
+      },
+      error: null,
+    });
+
+    await expect(
+      runAccountGenerationOperation((lease) =>
+        hasLatestExactConsentGrantWithLease(lease, {
+          type: 'health_data_collection',
+          version: 'current-v1',
+          consentText: 'exact copy',
+        }),
+      ),
+    ).resolves.toBe(true);
+    expect(mocks.digest).toHaveBeenCalledWith('SHA-256', 'exact copy');
+    expect(mocks.exactEq).toHaveBeenCalledWith('consent_type', 'health_data_collection');
+    expect(mocks.exactOrder).toHaveBeenNthCalledWith(1, 'granted_at', {
+      ascending: false,
+    });
+    expect(mocks.exactOrder).toHaveBeenNthCalledWith(2, 'granted', {
+      ascending: true,
+    });
+    expect(mocks.exactLimit).toHaveBeenCalledWith(1);
+    expect(mocks.exactAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it.each([
+    {
+      label: 'missing',
+      row: null,
+    },
+    {
+      label: 'revoked',
+      row: {
+        consent_type: 'health_data_collection',
+        granted: false,
+        version: 'current-v1',
+        consent_text_hash: 'hash',
+        granted_at: '2026-07-26T12:00:00.000Z',
+      },
+    },
+    {
+      label: 'stale version',
+      row: {
+        consent_type: 'health_data_collection',
+        granted: true,
+        version: 'stale-v0',
+        consent_text_hash: 'hash',
+        granted_at: '2026-07-26T12:00:00.000Z',
+      },
+    },
+    {
+      label: 'wrong hash',
+      row: {
+        consent_type: 'health_data_collection',
+        granted: true,
+        version: 'current-v1',
+        consent_text_hash: 'other-hash',
+        granted_at: '2026-07-26T12:00:00.000Z',
+      },
+    },
+    {
+      label: 'equal-time revocation',
+      row: {
+        consent_type: 'health_data_collection',
+        granted: false,
+        version: 'current-v1',
+        consent_text_hash: 'hash',
+        granted_at: '2026-07-26T12:00:00.000Z',
+      },
+    },
+  ])('rejects a $label authoritative proof', async ({ row }) => {
+    state.isSupabaseConfigured = true;
+    mocks.exactMaybeSingle.mockResolvedValueOnce({ data: row, error: null });
+
+    await expect(
+      runAccountGenerationOperation((lease) =>
+        hasLatestExactConsentGrantWithLease(lease, {
+          type: 'health_data_collection',
+          version: 'current-v1',
+          consentText: 'exact copy',
+        }),
+      ),
+    ).resolves.toBe(false);
+  });
+
+  it('fails exact publication proof closed without a configured backend', async () => {
+    await expect(
+      runAccountGenerationOperation((lease) =>
+        hasLatestExactConsentGrantWithLease(lease, {
+          type: 'health_data_collection',
+          version: 'current-v1',
+          consentText: 'exact copy',
+        }),
+      ),
+    ).resolves.toBe(false);
+    expect(mocks.digest).not.toHaveBeenCalled();
+    expect(mocks.from).not.toHaveBeenCalled();
   });
 
   it('detaches a hung ledger transport so an account boundary drains and late rows stay unpublished', async () => {
