@@ -1,6 +1,10 @@
 import { Stack, usePathname } from 'expo-router';
 
-import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
+import {
+  RoutineRouteSourcesProvider,
+  useRoutineRouteSources,
+} from '@/features/routine/RoutineRouteSources';
+import { ShelfDataAvailabilityBoundary } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { ProGate } from '@/features/subscription/ProGate';
 import { routineGateFeatureForPath } from '@/features/subscription/gatedRoutes';
 
@@ -29,5 +33,14 @@ function RoutineScreenLayout({
 }) {
   if (!ROUTES_REQUIRING_SHELF_DATA.has(route.name)) return <>{children}</>;
 
-  return <ShelfDataAvailabilityGate>{children}</ShelfDataAvailabilityGate>;
+  return (
+    <RoutineRouteSourcesProvider>
+      <RoutineShelfDataBoundary>{children}</RoutineShelfDataBoundary>
+    </RoutineRouteSourcesProvider>
+  );
+}
+
+function RoutineShelfDataBoundary({ children }: { children: React.ReactNode }) {
+  const { shelf } = useRoutineRouteSources();
+  return <ShelfDataAvailabilityBoundary query={shelf}>{children}</ShelfDataAvailabilityBoundary>;
 }

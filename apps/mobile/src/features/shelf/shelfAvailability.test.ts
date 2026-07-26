@@ -126,6 +126,9 @@ describe('Shelf private-data availability contract', () => {
     const routineLayout = read('app/routine/_layout.tsx');
     expect(routineLayout).toContain('screenLayout={RoutineScreenLayout}');
     expect(routineLayout).toContain("'plan'");
+    expect(routineLayout).toContain('<RoutineRouteSourcesProvider>');
+    expect(routineLayout).toContain('<ShelfDataAvailabilityBoundary query={shelf}>');
+    expect(routineLayout).not.toContain('<ShelfDataAvailabilityGate');
     expect(routineLayout).not.toContain('<ShelfDataAvailabilityGate>{stack}');
     expect(read('app/routine/plan.tsx')).toContain('if (planQuery.isError)');
   });

@@ -11,12 +11,12 @@ import {
   type RoutineFirstInsightCopy,
 } from '@/features/routine/firstInsight';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
-import { usePlan } from '@/features/routine/usePlan';
+import { useRoutinePlanViewModel } from '@/features/routine/useRoutinePlanViewModel';
 import { ActiveScheduleUnavailableNotice } from '@/features/scheduler/ActiveScheduleUnavailableNotice';
 import { classLabel } from '@/features/scheduler/classes';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
-import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
+import { useCycleMutations } from '@/features/scheduler/useCycle';
 import {
   PRIVATE_GUIDANCE_AVAILABILITY_COPY,
   ShelfDataUnavailableNotice,
@@ -182,9 +182,8 @@ function FirstInsightCard({
 
 export default function PlanScreen() {
   const { height } = useWindowDimensions();
-  const planQuery = usePlan();
+  const { planQuery, cycleQuery } = useRoutinePlanViewModel();
   const { data } = planQuery;
-  const cycleQuery = useCycle();
   const { data: cycleData } = cycleQuery;
   const cycleMutations = useCycleMutations();
   const [starting, setStarting] = useState(false);

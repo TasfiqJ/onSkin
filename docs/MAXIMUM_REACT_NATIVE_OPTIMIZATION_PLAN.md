@@ -520,6 +520,8 @@ Profiler acceptance:
 - routine generation runs only when actual inputs change;
 - background notification preparation is absent from first-interaction commits.
 
+Current local Routine Plan checkpoint (2026-07-25): the routine layout now owns one local-date boundary and one Shelf observer, passes that exact Shelf result through the fail-closed availability boundary, and exposes both to one route view model. Plan reuses the owner-leased profile inside Shelf and mounts routine order, ramp, and cycle config exactly once. The static routine-data graph falls from 9 QueryObservers and 3 local-date subscriptions to 4 and 1; the unchanged Pro gate makes the complete visible graph 11 to 6 observers. Retry ownership remains exact for Shelf, routine order, ramp/cycle config, and Start Today. Focused tests, independent re-audit, and supported-phone Expo-web Back/Start-to-Today/scroll/overflow checks pass. Signed supported-iOS QueryObserver, commit/flamegraph, interaction, date-rollover, accessibility, latency, and memory evidence remains required before OPT-114 can advance. See `docs/optimization/evidence/2026-07-25_routine-plan-route-view-model.md`.
+
 ### 5.3 Isolate text-input hot paths
 
 Required changes:
