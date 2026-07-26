@@ -683,6 +683,125 @@ describe('transactional outbox model', () => {
     ).toEqual([]);
   });
 
+  it('repairs impossible future retry time without changing immutable event identity', () => {
+    const future = '2027-07-18T15:00:00.000Z';
+    const payload = { ...SCAN_PAYLOAD, scanned_at: future };
+    let queued = enqueueShelfScanOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_A,
+      payload,
+      payloadHash: SCAN_PAYLOAD_HASH,
+      enqueuedAt: future,
+    }).envelope;
+    queued = enqueueShelfOutboxOperation(queued, {
+      operationId: OP_B1,
+      ownerHash: OWNER_B,
+      ownerGeneration: 8,
+      entityId: ENTITY_B,
+      operationKind: 'upsert',
+      payload: SHELF_PAYLOAD,
+      enqueuedAt: future,
+    }).envelope;
+    const otherOwnerRow = queued.rows.find((row) => row.ownerHash === OWNER_B)!;
+
+    const leased = leaseReadyOutboxRows(queued, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    });
+
+    expect(leased.rows).toHaveLength(1);
+    expect(leased.rows[0]).toMatchObject({
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityType: 'shelf_scan',
+      entityId: ENTITY_A,
+      enqueuedAt: future,
+      nextAttemptAt: NOW,
+      payload,
+      clientRevision: 1,
+      idempotencyKey: `shelf_scan:${OP_A1}:${SCAN_PAYLOAD_HASH}`,
+      dependencyGroupId: `shelf_scan:${ENTITY_A}`,
+      attemptCount: 1,
+      leaseOwner: WORKER_A,
+    });
+    expect(leased.envelope.rows.find((row) => row.ownerHash === OWNER_B)).toEqual(otherOwnerRow);
+    expect(leased.envelope.version).toBe(OUTBOX_SCHEMA_VERSION);
+  });
+
+  it('reclaims an impossible future orphan lease while preserving exact legal horizons', () => {
+    const future = '2027-07-18T15:00:00.000Z';
+    const queued = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+      enqueuedAt: future,
+    }).envelope;
+    const oldLease = leaseReadyOutboxRows(queued, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: future,
+    });
+    const repaired = leaseReadyOutboxRows(oldLease.envelope, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_B,
+      now: NOW,
+    });
+
+    expect(repaired.rows).toEqual([
+      expect.objectContaining({
+        operationId: OP_A1,
+        enqueuedAt: future,
+        nextAttemptAt: NOW,
+        attemptCount: 2,
+        leaseOwner: WORKER_B,
+        leaseExpiresAt: '2026-07-18T15:00:30.000Z',
+      }),
+    ]);
+    expect(
+      settleOutboxLease(repaired.envelope, {
+        leaseOwner: WORKER_A,
+        now: '2026-07-18T15:00:01.000Z',
+        results: [{ operationId: OP_A1, status: 'applied' }],
+      }),
+    ).toEqual(repaired.envelope);
+
+    const exactRetryBoundary = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A2,
+      entityId: ENTITY_B,
+      enqueuedAt: '2026-07-18T15:05:00.000Z',
+    }).envelope;
+    const deferred = leaseReadyOutboxRows(exactRetryBoundary, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    });
+    expect(deferred.rows).toEqual([]);
+    expect(deferred.envelope).toEqual(exactRetryBoundary);
+
+    const exactLeaseBoundary = leaseReadyOutboxRows(
+      enqueue(emptyOutboxEnvelope(), {
+        operationId: OP_A2,
+        entityId: ENTITY_B,
+        enqueuedAt: NOW,
+      }).envelope,
+      {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_A,
+        now: NOW,
+      },
+    ).envelope;
+    const preserved = leaseReadyOutboxRows(exactLeaseBoundary, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_B,
+      now: NOW,
+    });
+    expect(preserved.rows).toEqual([]);
+    expect(preserved.envelope).toEqual(exactLeaseBoundary);
+  });
+
   it('dead-letters one permanent poison row without blocking an independent success', () => {
     let envelope = enqueue(emptyOutboxEnvelope(), {
       operationId: OP_A1,

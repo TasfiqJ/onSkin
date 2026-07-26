@@ -1067,7 +1067,11 @@ export function discardConflictChoiceOutboxDependencies(
 }
 
 function expired(row: OutboxRow, now: string): boolean {
-  return row.state === 'leased' && row.leaseExpiresAt !== null && row.leaseExpiresAt <= now;
+  return (
+    row.state === 'leased' &&
+    row.leaseExpiresAt !== null &&
+    Date.parse(row.leaseExpiresAt) <= Date.parse(now)
+  );
 }
 
 export function leaseReadyOutboxRows(
@@ -1092,12 +1096,26 @@ export function leaseReadyOutboxRows(
       ? Number(input.limit)
       : MAX_OUTBOX_BATCH_SIZE,
   );
-  const reclaimed = envelope.rows.map(
-    (row): OutboxRow =>
-      row.ownerHash === input.ownerHash && expired(row, input.now)
-        ? { ...row, state: 'ready', leaseOwner: null, leaseExpiresAt: null }
-        : row,
-  );
+  const nowMs = Date.parse(input.now);
+  const reclaimed = envelope.rows.map((row): OutboxRow => {
+    if (row.ownerHash !== input.ownerHash) return row;
+    let repaired = row;
+    if (
+      expired(repaired, input.now) ||
+      (repaired.state === 'leased' &&
+        repaired.leaseExpiresAt !== null &&
+        Date.parse(repaired.leaseExpiresAt) > nowMs + OUTBOX_LEASE_MS)
+    ) {
+      repaired = { ...repaired, state: 'ready', leaseOwner: null, leaseExpiresAt: null };
+    }
+    if (
+      repaired.state === 'ready' &&
+      Date.parse(repaired.nextAttemptAt) > nowMs + OUTBOX_MAX_RETRY_MS
+    ) {
+      repaired = { ...repaired, nextAttemptAt: input.now };
+    }
+    return repaired;
+  });
   const latestReady = new Map<string, OutboxRow>();
   for (const row of reclaimed) {
     if (row.state !== 'ready') continue;
