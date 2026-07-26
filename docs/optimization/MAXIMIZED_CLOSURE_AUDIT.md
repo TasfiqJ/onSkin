@@ -5,15 +5,19 @@ Date: 2026-07-26 (America/Toronto)
 Branch: `optimization`
 
 Parent implementation checkpoint:
-`3b6c4442268a1e5549aecb1c4125626c9d2dbaf9`
+`95274596fb302477e6c1aceb8f763b9f02585e5c`
 
 Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
 
 Conclusion: OnSkin cannot yet be described as "maximized." The decision-free
 repository implementation is exhausted at this checkpoint, but section 19
 explicitly rejects test-only, simulator, Expo Go, and web-only completion
-claims. Two independent read-only audits found no remaining safe local P0, P1,
-or P2 implementation slice. The remaining gates require an approved
+claims. The terminal-status audit surfaced two genuine local deployment gaps:
+the staging runner did not enforce/use the nontransactional Supabase migration
+path, and the rate-limit cleanup index lacked a forward concurrent
+replacement. Both are now implemented, realistically exercised, pushed, and
+independently re-reviewed. The final read-only audits found no remaining safe
+local P0, P1, or P2 implementation slice. The remaining gates require an approved
 architecture or product decision, hosted/provider authority, signed artifacts,
 named owners and thresholds, or physical supported-device evidence.
 
@@ -48,11 +52,19 @@ consent, retry, or migration behavior is introduced.
 ## Current Verification Snapshot
 
 - Parent implementation and pushed remote SHA:
-  `3b6c4442268a1e5549aecb1c4125626c9d2dbaf9`.
+  `95274596fb302477e6c1aceb8f763b9f02585e5c`.
+- The staging deployer pins one absolute Supabase CLI Application at
+  `>=2.109.0`, uses `migration up --linked`, and rejects alias/function
+  interception. Runtime and persistent source contracts pass.
+- The strict 250,000-row PostgreSQL 15 rate-limit cleanup run passes with zero
+  validation failures: 6,915 concurrent DML transactions, zero failures, 235
+  commits during the 177.536 ms concurrent replacement, exact
+  wrong-definition/invalid-state recovery, safe reapply, final legacy-index
+  absence, and replacement-index planner use.
 - Root type-check: pass, two workspaces.
 - Root lint: pass, two workspaces, zero warnings.
-- Preserved dirty-worktree root tests: 370 of 372 files and 4,561 of
-  4,565 tests pass. The only four failures are the same unrelated user-owned
+- Preserved dirty-worktree root tests: 372 of 374 files and 4,567 of
+  4,571 tests pass. The only four failures are the same unrelated user-owned
   Shelf PAO/provenance and notification behavioural-snapshot changes.
 - Photo/network operation-timing matrix: pass, 4 files / 112 tests. Production
   photo encrypt/decrypt and logical network-request owners retain the fixed
@@ -105,12 +117,33 @@ The P1/P2 audit independently found no safe local slice:
 - `OPT-114`/`115` have source-owned routes, input isolation, Progress note
   recovery, and zero-retention sensitive-query behavior; the remainder is
   native profiler, Hermes, keyboard, memory, and accessibility evidence.
-- `OPT-116`-`120` have complete local harnesses and source contracts. Remaining
-  work requires hosted environments, approved budgets/policies, signed
-  baselines, or operations ownership.
+- `OPT-116` now enforces the exact local CLI identity/version/runner contract;
+  `OPT-119` now has a guarded forward concurrent replacement plus live-DML and
+  interrupted-build recovery proof. `OPT-116`-`120` have complete local
+  harnesses and source contracts. Remaining work requires hosted environments,
+  approved budgets/policies, signed baselines, or operations ownership.
 - The P2 implementation rows are locally complete, verified, or correctly not
   applicable under the accepted iOS-only launch contract. Their open portions
   are supported-device, signed-artifact, final-brand, or live-operations gates.
+
+## Ledger Finality
+
+The source assignment requires every ledger item to finish as `verified`,
+precisely `blocked-external`, or justified `not-applicable`. The prior ledger
+still contained 53 provisional statuses despite the no-safe-local-slice audit.
+The final checkpoint now records:
+
+- 55 `blocked-external`;
+- 4 `verified`;
+- 2 `not-applicable`;
+- 61 total, with exact one-to-one plan coverage.
+
+The executable contract in
+`apps/mobile/src/lib/optimization/implementationStatusFinality.test.ts` rejects
+missing, duplicate, provisional, evidence-free verified, vaguely blocked, and
+unjustified not-applicable rows. Local implementation evidence remains in each
+blocked row; no unfinished item was promoted to verified. See
+`evidence/2026-07-26_final-ledger-terminal-classification.md`.
 
 ## First Valid Unlocks
 
