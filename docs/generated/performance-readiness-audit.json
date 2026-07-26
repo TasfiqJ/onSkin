@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T22:38:19.207Z",
+  "generatedAt": "2026-07-26T01:13:56.876Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -77,7 +77,7 @@
     "android": "not_applicable"
   },
   "status": "pass",
-  "strict": false,
+  "strict": true,
   "summary": {
     "performanceMetricCount": 8,
     "docsChecked": 12,

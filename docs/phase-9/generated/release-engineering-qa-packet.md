@@ -1,10 +1,10 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-25T22:38:27.815Z
+Generated: 2026-07-26T01:14:04.831Z
 Status: blocked
-Git SHA: fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49
+Git SHA: 73c25ea4176a5b7c3d658e568b8d579b47c71f26
 Git status: DIRTY
-NUL Git status SHA-256: 37e9942206358b8192bed65dbdcd5ebf2b10cb8199969709cf5a361ef087de5a
+NUL Git status SHA-256: b74edd2f54089aa3b860d000a5b4eeb10b9ec39fd8ee7be2dbec77ca6d6294ce
 Pinned input integrity: blocked
 
 ## Governed Evidence Chain
@@ -12,7 +12,7 @@ Pinned input integrity: blocked
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Current R/F HEAD: `73c25ea4176a5b7c3d658e568b8d579b47c71f26`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -29,11 +29,11 @@ Pinned input integrity: blocked
 ## CAT07 Launch Evidence
 
 - Overall: blocked
-- Expected HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Expected HEAD: `73c25ea4176a5b7c3d658e568b8d579b47c71f26`
 - Committed validator: blocked
-- Committed validator HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Committed validator HEAD: `73c25ea4176a5b7c3d658e568b8d579b47c71f26`
 - Full manifest validator: blocked
-- Full manifest validator HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Full manifest validator HEAD: `73c25ea4176a5b7c3d658e568b8d579b47c71f26`
 - Summary SHA-256: `BLOCKED`
 - Manifest JSON SHA-256: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - Manifest Markdown SHA-256: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
@@ -44,10 +44,10 @@ Pinned input integrity: blocked
 - `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
 - `scripts/e2e/cat07-committed-evidence.mjs`: `aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0`
-- `scripts/e2e/human-e2e-manifest.mjs`: `ff71ba1ee78bafe9171b73c1eac750dbe235f1025fc610e13b0cbff6d67cef7a`
+- `scripts/e2e/human-e2e-manifest.mjs`: `99df7fe019cd88143dcd19c43af37e66b00da4455b9aedf7ef4aeae169f76807`
 - `scripts/e2e/human-e2e-manifest-render.mjs`: `b868275b0ca1a3bb99ab681bf7b96e466b03aefd3d410c244a7d9a076fc5b41d`
 - `scripts/e2e/evidence-diagnostic-hygiene.mjs`: `0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911`
-- `scripts/e2e/cat07-png-contract.mjs`: `0fa7b3546a525145a270ea52df023ffebb67e0a75d1add26eae07fe985a196f8`
+- `scripts/e2e/cat07-png-contract.mjs`: `1677a40874cc7797a9d0954d50c14c2dadde5111b85dcbc0b76cd2cdc1a53e9f`
 - `scripts/e2e/cat07-shelf-freshness-audit.mjs`: `84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229`
 
 ## Release Identity
@@ -77,26 +77,7 @@ Pinned input integrity: blocked
 - CAT07 launch evidence: CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.
 - CAT07 launch evidence: CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).
 - CAT07 launch evidence: CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.
-- CAT07 launch evidence: CAT07 full evidence contract: full CAT07 manifest validator failed: node:internal/modules<redacted-absolute-path>_main:107
-    triggerUncaughtException(
-    ^
-
-Error: Cannot find package '<redacted-absolute-path>' imported from <redacted-absolute-path>
-Did you mean to import "pngjs/lib/png.js"?
-    at legacyMainResolve (node:internal/modules/esm/resolve:205:26)
-    at packageResolve (node:internal/modules/esm/resolve:778:12)
-    at moduleResolve (node:internal/modules/esm/resolve:859:18)
-    at defaultResolve (node:internal/modules/esm/resolve:991:11)
-    at #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
-    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
-    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
-    at #resolve (node:internal/modules/esm/loader:701:17)
-    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
-    at ModuleJob.syncLink (node:internal/modules/esm/module_job:160:33) {
-  code: 'ERR_MODULE_NOT_FOUND'
-}
-
-Node.js v24.14.0.
+- CAT07 launch evidence: CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD.
 - Upstream phase5DeviceQa: pinned Phase 5 device QA packet must contain an empty blockers array.
 - Upstream phase5DeviceQa: pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing.
 - Upstream phase5DeviceQa: pinned Phase 5 device QA packet does not contain completed named native-device signoff.
@@ -297,19 +278,19 @@ Node.js v24.14.0.
 - `apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts`: `f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.ts`: `6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts`: `84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642`
-- `package.json`: `57d7608cc3edc070dac3891ade17e50062ce04a06e7b10c9a636ec9a35f33d3b`
+- `package.json`: `7f8546af94aa1e476c149c272faca40ca098de8efee23cf875191a616f76bde1`
 - `apps/mobile/package.json`: `c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80`
 - `.github/workflows/quality.yml`: `1b4bd0d46aeac3044c673d95754c25e283152461fddd062c19921e976be2faf0`
-- `package-lock.json`: `dd17af2962634dd6e1bc1f6f82ca381680bfdc61f161bea6d8ddef9e03d92920`
+- `package-lock.json`: `65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480`
 - `.github/workflows/security.yml`: `72951da24cdf28c6b5c62b75e0f6b3659ea6e8b46440e609a213d8943ca13c70`
-- `supabase/config.toml`: `9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a`
-- `supabase/functions/manifest.json`: `2d34424eaa790a61b59a10270771b5ee865d28c680e5787c7c636633afb32258`
+- `supabase/config.toml`: `b912687a1a149e4fe317160b269d5deb7e6b5f36ce65b02b8c37cf47d0c7ca7c`
+- `supabase/functions/manifest.json`: `fb79eb7f8f9d2ed569882c922ad6b31c9b50b40a9ba62bb8522a5adf1b06ec7a`
 - `apps/mobile/app.base.json`: `c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f`
 - `apps/mobile/app.config.js`: `84e5da6bde0ddb1203b6348627c5fd5e02b93ed97576538a2255561a02617fbb`
 - `apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js`: `ab40bcc6285d40e21343adcb02885c5cd920c36cd669f04994b536955795a292`
 - `apps/mobile/eas.json`: `074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051`
 - `docs/phase-9/apple-ios-privacy-baseline.json`: `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
-- `docs/phase-9/ios-sdk-package-mapping.json`: `ef4088bd6a60c9f66d86e65154a03cd165ecb37f33e655a693208444d14114c7`
+- `docs/phase-9/ios-sdk-package-mapping.json`: `ac482b5579a4ff8ad9b4dc468162b2f8bdc92b7193d45e3661d1f97ce282717a`
 - `docs/phase-9/ios-privacy-baseline-notes.md`: `4ec11024da8925c53d3ed714771b3670170fbc287cb1e3684292276e9eb8947d`
 - `scripts/phase9/patch-react-native-view-shot-privacy.mjs`: `68cd3b508feec6e42af8c1c3b633493b2271801c36a5e5c384f127226edff5d0`
 - `scripts/phase9/patch-react-native-view-shot-privacy.test.mjs`: `9fa64da1a26cb21b4a104fc521c70e893457d1a0108433a4a5289577095f9780`
@@ -429,11 +410,13 @@ Node.js v24.14.0.
 - `supabase/functions/_shared/rateLimitOwnership.test.ts`: `bb87d0d1237e89f69328bb380d8def4d38fb11e30028a347cacd6bf587abe8ee`
 - `supabase/functions/_shared/revenueCatIdentityTombstone.ts`: `69a7ef49ce80686fc0b503604219a4fbea1ac0439d58da83849615da22b6b9b3`
 - `supabase/functions/_shared/revenueCatIdentityTombstone.test.ts`: `8471d17bcc33bb67c49c9ac1f5bb3f0d3a4adf019acf31652c62f1e7bbe1ddcd`
-- `supabase/functions/data-export/index.ts`: `78097b7d4cbbcdd3bb4194ccb97d7fcf3217af111b9de64d72238006a23bcd94`
-- `supabase/functions/data-export/exportCore.ts`: `ef8828ff0f29dff17cebfca4064860ec2549a249023d9621385d7bce70a9a9bd`
+- `supabase/functions/data-export/index.ts`: `2a31523c2e8d2eb1634a2127c9bc93d14b02f70a2bf88bd70b94c8ff2afa7f93`
+- `supabase/functions/data-export/exportCore.ts`: `15dfbb295a325f007961d69eff9ed067fad4fa0aae2ac7c79c931a27f2fcc330`
 - `supabase/functions/data-export/exportCore.test.ts`: `f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b`
-- `supabase/functions/data-export/exportRegistry.ts`: `c9dfdc4fb2f39bd61f78587af09b522dd81102547cca7b954d8a6355969409b1`
-- `supabase/functions/data-export/exportRegistry.test.ts`: `b2a40a2287c40a342d4aba5cfbc509c89b6e5535698d290746a5a534523c582b`
+- `supabase/functions/data-export/catalogCorrectionExportCore.ts`: `5cefbcab0cccd73e662117cfe9eaee993fdb96541218c05b0a6443f851659a37`
+- `supabase/functions/data-export/catalogCorrectionExportCore.test.ts`: `880691f433aa8e4b52f4b46ef4116fbc229dd6088516889858537583d20f4bb7`
+- `supabase/functions/data-export/exportRegistry.ts`: `951e650d0285e60aa95bd00367aef91603c0767c3492f14f9e312c3bd328554a`
+- `supabase/functions/data-export/exportRegistry.test.ts`: `f51e5c081f06d720e85535bb9895f730d18983109a1188c1777adf7c7e4c4e39`
 - `supabase/functions/consent-withdrawal/index.ts`: `96ebbcf4dfc9f5d4d12c38871706f82ff0d4618546041acca85b804ee8631d99`
 - `supabase/functions/catalog-report/deletionBarrier.test.ts`: `f8c82659ef6216d69eb195214d936ed614addfeae512421e0892e8bc7240761b`
 - `supabase/functions/order-report-poll/index.ts`: `8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce`
@@ -470,9 +453,9 @@ Node.js v24.14.0.
 - `supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql`: `4048342265ef103e6915411494911a98485528707c7413555725ba4ff427c1e9`
 - `supabase/migrations/20260722000062_catalog_curation_statement_guard.sql`: `f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1`
 - `supabase/tests/database/catalog_import_lifecycle.test.sql`: `df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d`
-- `supabase/tests/database/catalog_launch_curation.test.sql`: `4dc48bb6d5614bf7765254733e2d03242386e6beb8527fa86cf14e12db6f3491`
-- `supabase/tests/database/catalog_serving_gate.test.sql`: `52e48dcf3a70261580791dac75329e0f16741add4d4cc09ef0f5385bae77e666`
-- `supabase/tests/database/cat07_truthful_freshness.test.sql`: `6d5971e51a3d74f1527c74baee7bce5ca0a9ffeda1c136e73200e39a06501078`
+- `supabase/tests/database/catalog_launch_curation.test.sql`: `03d6e5746cd27439fe9827f19c53916ae0637398238298b7fb3ef031eb2ae0ef`
+- `supabase/tests/database/catalog_serving_gate.test.sql`: `122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef`
+- `supabase/tests/database/cat07_truthful_freshness.test.sql`: `78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5`
 - `supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql`: `18b423bcae63f63c6f533efd1fab3ea9e6918fcebaa6480a35d396b214f89040`
 - `supabase/migrations/20260713000046_account_service_row_scrub.sql`: `268234dbc7c423eef097a2ea17790b871d8413913df71006c73d686e3bd471cf`
 - `supabase/migrations/20260713000047_account_obf_contribution_erasure.sql`: `152f6ecaf1def7bebd0a5ff1d71b4152b336de72dc8ce8e465f071810f7d023b`
@@ -487,13 +470,13 @@ Node.js v24.14.0.
 - `scripts/phase2/supabase-rls-smoke.mjs`: `fd50a0f7781cf6029a1e0452238618909b7956fac8a3023511980e046fc6b383`
 - `scripts/phase9/release-contact-smoke.mjs`: `d1808486b8747f40e8212ac71e5fa8a21ae8cd8198db63d0ad4cc0c80a6a4e0a`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `0b1ea483d03629723435a77254204af282b487dae2ecbc46645c7374879b77ae`
-- `scripts/phase9/release-smoke.mjs`: `88bd377bf540fdfabd27699983f4ad7cb2c9bbf1d8ef00db8f87ba4ec4e69b21`
+- `scripts/phase9/release-smoke.mjs`: `5c3d0b53a7054e2e8c280142a35247bc1b4c48bc72e854e48c8c65e12818d8e0`
 - `scripts/phase9/rls-adversarial-smoke.mjs`: `df660a2f69854d5466fef98ad39309c9f17cdfbb7fe1dbba7762a63e9cc3b1d2`
 - `scripts/phase9/rls-adversarial.mjs`: `10f2f044bfb614137b1213cf83552897d0e549c2bb4d5bbc2b4cb1c1161b5cfb`
 - `scripts/phase9/edge-function-manifest-check.mjs`: `f6bbf56e72aa4cac92a40bbb7d1cf28f3179d707ad1ddf3ef6e37349e95ad6a2`
 - `scripts/phase9/edge-function-manifest-lib.mjs`: `57deb682b6cd1e23e5c820366c94e1676c68d0d16c141d108235e8f5a129c0fd`
 - `scripts/phase9/edge-function-manifest-smoke.mjs`: `f9766fc6e70ab30459a0d28a77316179b5cd0f9fd8aba3241d4061da177d10c7`
-- `scripts/phase9/build-release-qa-packet.mjs`: `74f192d642c998d57d3e21fba32dc35064f33fb1f0eb6ffb10636524cb3d4b7a`
+- `scripts/phase9/build-release-qa-packet.mjs`: `333d17f07a1450c754268057ae9ff2191b81deb09e3c1be491250637de9d8afe`
 - `scripts/phase9/release-qa-integrity.mjs`: `ff2f7724d4cc0bdd4058f76acb8c31ea3b4d2e80a1e1dba531066a1750b727db`
 - `scripts/phase9/release-qa-integrity.test.mjs`: `ba97fd498d900ab76fa22ea968c37ba88406517da87ee9f1babd54f8dca5a679`
 - `scripts/launch/governed-evidence-chain.mjs`: `01a86c396964ffa8ab630341c46dc599f851cc0327e54563ec3366ef771aecb7`
@@ -518,14 +501,14 @@ Node.js v24.14.0.
 - `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
 - `scripts/e2e/cat07-committed-evidence.mjs`: `aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0`
-- `scripts/e2e/human-e2e-manifest.mjs`: `ff71ba1ee78bafe9171b73c1eac750dbe235f1025fc610e13b0cbff6d67cef7a`
+- `scripts/e2e/human-e2e-manifest.mjs`: `99df7fe019cd88143dcd19c43af37e66b00da4455b9aedf7ef4aeae169f76807`
 - `scripts/e2e/human-e2e-manifest-render.mjs`: `b868275b0ca1a3bb99ab681bf7b96e466b03aefd3d410c244a7d9a076fc5b41d`
 - `scripts/e2e/evidence-diagnostic-hygiene.mjs`: `0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911`
-- `scripts/e2e/cat07-png-contract.mjs`: `0fa7b3546a525145a270ea52df023ffebb67e0a75d1add26eae07fe985a196f8`
+- `scripts/e2e/cat07-png-contract.mjs`: `1677a40874cc7797a9d0954d50c14c2dadde5111b85dcbc0b76cd2cdc1a53e9f`
 - `scripts/e2e/cat07-shelf-freshness-audit.mjs`: `84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229`
 - `scripts/phase9/live-supabase-adversarial.mjs`: `01b6e3227a541d4cc82a0e50dd2361af686dc1cf042eb5a8d344ce6356a07698`
 - `scripts/phase9/live-edge-auth.mjs`: `9ab6dc411649969ff890179f007cbb089bf15707fcbb3fe0af53b59d631f53fc`
-- `scripts/phase9/live-data-rights.mjs`: `b11ca191fd71fb3ffdd734e87e995b5e76db2b516e9fd347c2c623adc65dea47`
+- `scripts/phase9/live-data-rights.mjs`: `4831fdb8fae6340b86829e438ef234f0bc129f3efbec99bdbb7e4a1526852351`
 - `scripts/phase9/live-consent-withdrawal.mjs`: `178519d6ce579370455de9d1eddd5f3d9261ccca5ce9775259476d87f0b3a289`
 - `scripts/phase9/consent-withdrawal-evidence.mjs`: `8ba1841b7c8f41f7056dc06ef04f353d801f45c525575574058489b7fe9f865e`
 - `scripts/phase9/consent-withdrawal-evidence.test.mjs`: `c43aaa6ad85cd3b4fb13fd248a925bf0109304528519b99ab7fe88d9a9d0bec8`
@@ -535,7 +518,7 @@ Node.js v24.14.0.
 - `scripts/phase9/live-revenuecat-webhook.mjs`: `4545d0e4f192577e0ba1cc41a3cffaeca80e01cb417e82d9892803bdd42f3e5a`
 - `scripts/phase9/edge-auth-smoke.mjs`: `e31f34605b8c84ba8a616d6aa5218212c06a4694727d91126ab2629863457421`
 - `scripts/phase9/edge-functions-check.mjs`: `dd2be657d2c12ce50d79c90e039a04bd14c2578f8a9e6e0630f454136e7cc3c3`
-- `scripts/phase9/data-rights-smoke.mjs`: `2109ff3b060355ef264029847ba11be80606f2ab68332663735f0679e9404b9d`
+- `scripts/phase9/data-rights-smoke.mjs`: `7a3fdde72e03e27e9bf6298d00ae533fae75f174206138c6962b208841fa6682`
 - `scripts/phase9/account-deletion-lifecycle-postgres-rehearsal.sql`: `f6b8bd75591d30c7d492ac42879eaaecaf4893db3842c595a9bec6bc3746ab44`
 - `scripts/phase9/account-service-scrub-postgres-rehearsal.sql`: `b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a`
 - `scripts/phase9/revenuecat-deletion-barrier-postgres-rehearsal.sql`: `13cbcb1b61f105875a71717e38d4d5b1ffb04ecf2c6cc77506ba78f09995bc4b`
@@ -548,13 +531,13 @@ Node.js v24.14.0.
 - `scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql`: `b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919`
 - `scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql`: `64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9`
 - `scripts/phase9/consent-withdrawal-smoke.mjs`: `05baf20ecf0f4da24138df80e6724ff14ce7ed6e1918a7f35484bc88d2636539`
-- `scripts/phase9/supabase-policy-lint.mjs`: `3faac8f26b03d91eee32d3c63a83af821509bc5e7b9e36ea19afc721196d9b9a`
+- `scripts/phase9/supabase-policy-lint.mjs`: `25399223a64cb073ca8629e002d4f303578d26110d3014ad6e51beb11bb5f6b4`
 - `scripts/phase9/security-ci-smoke.mjs`: `a4e7690f1885211c39423ce14bc4b78987f13c570db8d403b09254942e7098c1`
 - `scripts/phase9/privacy-payload-audit.mjs`: `f6e23f484587a5f2cfda90f8a239b2290715dcec26fe5876acd88dc59d0b2a86`
 - `scripts/phase9/dependency-sbom.mjs`: `29b516cde5cb61dbf67e8c7a91b02a2e6a85f48d05b507a91686f90cbe4908cd`
 - `scripts/phase9/store-build-inspect.mjs`: `eda8aeb6d5035229d990f260ae23a19137fee187e0d4f86fecc438bd253da939`
-- `docs/phase-9/source-of-truth.md`: `9a799b9bb07d7f26ae1ef461ada14d24e8ccf0f4cc9677fd0c29e85a1a254523`
-- `docs/phase-9/data-inventory.md`: `304c6a430f3ef71475aa9e65c91a7aa28b7ab23ad22ea28e9c0a76d279374045`
+- `docs/phase-9/source-of-truth.md`: `fd73c56faa41d67846c5c21da3d4aa94671ba13c1cd9a0f911bd6dea83cdd958`
+- `docs/phase-9/data-inventory.md`: `faf57ecc5bd99aa91b4b174af875d751551b50df5a96913cd64622ae4659b501`
 - `docs/phase-9/edge-function-auth-matrix.md`: `3c83e21900172bc49a8a9414f5f0f527591ceace89f8d3904e49f067c488c01c`
 - `docs/phase-9/observability-payload-audit.md`: `c30c1c814567abb58bbcb1b345c20522e789381f8eee945e8a3268712fcaa709`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`

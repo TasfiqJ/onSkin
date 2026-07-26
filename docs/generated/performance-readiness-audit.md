@@ -1,8 +1,8 @@
 # Performance Readiness Audit
 
-Generated: 2026-07-25T22:38:19.207Z
+Generated: 2026-07-26T01:13:56.876Z
 Status: pass
-Strict mode: no
+Strict mode: yes
 
 This generated audit keeps performance readiness explicit without faking
 runtime benchmarks. It verifies that launch docs, Tas-owned evidence, the
