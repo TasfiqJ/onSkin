@@ -205,15 +205,6 @@ export const CALLER_RLS_EXPORT_TABLES: readonly ExportTable[] = [
 
 export const SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES: readonly ExportTable[] = [
   {
-    table: 'catalog_corrections',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'service_role_filtered',
-    orderBy: ['id'],
-    selectColumns:
-      'id, user_id, product_id, barcode, correction_type, status, description, proposed_payload, client_context, source_id, created_at, updated_at',
-    note: 'Matched only to the verified caller; internal assignment/reviewer fields, retry identity, intake epoch/digest, and operator notes are excluded.',
-  },
-  {
     table: 'reverse_trial_grants',
     filter: { column: 'user_id', value: 'USER_ID' },
     scope: 'service_role_filtered',
@@ -227,6 +218,8 @@ export const SPECIAL_SERVICE_ROLE_FILTERED_EXPORTS = [
   'subscriptions_events',
   'order_attributions',
 ] as const;
+
+export const CALLER_RPC_OWNER_EXPORTS = ['catalog_corrections'] as const;
 
 export const SERVICE_ROLE_FILTERED_EXPORTS = Object.freeze([
   SPECIAL_SERVICE_ROLE_FILTERED_EXPORTS[0],
@@ -287,6 +280,7 @@ export function validateExportRegistry(options?: {
   callerTables?: readonly ExportTable[];
   directServiceTables?: readonly ExportTable[];
   specialServiceTables?: readonly string[];
+  callerRpcTables?: readonly string[];
   serviceOnlyTables?: readonly string[];
 }): void {
   const callerTables = options?.callerTables ?? CALLER_RLS_EXPORT_TABLES;
@@ -294,6 +288,7 @@ export function validateExportRegistry(options?: {
     options?.directServiceTables ?? SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES;
   const specialServiceTables =
     options?.specialServiceTables ?? SPECIAL_SERVICE_ROLE_FILTERED_EXPORTS;
+  const callerRpcTables = options?.callerRpcTables ?? CALLER_RPC_OWNER_EXPORTS;
   const serviceOnlyTables = options?.serviceOnlyTables ?? SERVICE_ONLY_EXPORT_DENYLIST;
   const serviceOnlySet = new Set(serviceOnlyTables);
   const seen = new Set<string>();
@@ -333,6 +328,14 @@ export function validateExportRegistry(options?: {
   for (const table of specialServiceTables) {
     if (!serviceOnlySet.has(table)) {
       throw new Error(`EXPORT_REGISTRY_NON_SERVICE_SPECIAL:${table}`);
+    }
+    if (seen.has(table)) throw new Error(`EXPORT_REGISTRY_DUPLICATE:${table}`);
+    seen.add(table);
+  }
+
+  for (const table of callerRpcTables) {
+    if (!serviceOnlySet.has(table)) {
+      throw new Error(`EXPORT_REGISTRY_NON_SERVICE_CALLER_RPC:${table}`);
     }
     if (seen.has(table)) throw new Error(`EXPORT_REGISTRY_DUPLICATE:${table}`);
     seen.add(table);

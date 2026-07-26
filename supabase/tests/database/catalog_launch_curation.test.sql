@@ -2779,7 +2779,7 @@ select ok(
         where trigger_row.tgfoid =
             'private.capture_catalog_launch_served_state_mutation()'::regprocedure
           and not trigger_row.tgisinternal
-      ) = 17
+      ) = 16
       and exists (
         select 1
         from pg_catalog.pg_trigger as trigger_row
@@ -3963,7 +3963,9 @@ select throws_ok(
 );
 
 select throws_ok(
-  $$select * from public.release_catalog_launch_curation_campaign(
+  $$select release.*
+  from private.catalog_launch_curation_campaigns as campaign
+  cross join lateral public.release_catalog_launch_curation_campaign(
     campaign.id,
     'cat03.release.' || campaign.release_id || '.' ||
       campaign.campaign_authority_sha256,
@@ -3973,8 +3975,7 @@ select throws_ok(
     repeat('0', 64),
     campaign.served_state_mutation_root_set_sha256,
     campaign.activation_authorization_set_sha256
-  )
-  from private.catalog_launch_curation_campaigns as campaign
+  ) as release
   where campaign.id = '58000000-0000-4000-8000-000000000080'::uuid$$,
   '55000',
   'CATALOG_LAUNCH_CURATION_CAMPAIGN_RELEASE_GATE_CLOSED',
@@ -4253,7 +4254,7 @@ select is(
 );
 reset role;
 
-set session authorization service_role;
+set local role service_role;
 create temporary table catalog_launch_curation_release_validation_cache (
   cache_key text not null,
   record_id uuid primary key,
@@ -4281,7 +4282,6 @@ select pg_catalog.set_config(
 select pg_catalog.set_config(
   'app.cat03_service_cache_poison_result',
   pg_catalog.jsonb_build_object(
-    'sessionUser', session_user,
     'currentUser', current_user,
     'lookup', (
       select count(*)
@@ -4301,14 +4301,14 @@ select pg_catalog.set_config(
   'app.catalog_launch_curation_release_validation_cache', '', true
 );
 drop table pg_temp.catalog_launch_curation_release_validation_cache;
-reset session authorization;
+reset role;
 
 select is(
   pg_catalog.current_setting(
     'app.cat03_service_cache_poison_result'
   )::jsonb,
-  '{"currentUser":"service_role","lookup":1,"search":1,"sessionUser":"service_role"}'::jsonb,
-  'an actual service_role session cannot poison scalar validity through a forged temporary cache and GUC'
+  '{"currentUser":"service_role","lookup":1,"search":1}'::jsonb,
+  'a service_role effective role cannot poison the cache locally; hosted evidence must prove an actual service_role session cannot poison scalar validity through a forged temporary cache and GUC'
 );
 
 set local role authenticated;
@@ -4373,10 +4373,9 @@ select is(
 );
 reset role;
 
--- An operator-confirmed hold irreversibly invalidates every already-sealed
--- record for that product.  Closing the mutable correction row and restoring
--- its denormalized product projection cannot resurrect the old campaign; a
--- later campaign may recover only through a newly sealed record id.
+-- Reporter-owned correction rows are no longer serving authority. Personal,
+-- workflow, and product-link edits remain inert until CAT-08 creates a
+-- reporter-free independent product hold.
 insert into cat03_test_state (state_key, value_text)
 select 'correction_root_before',
   private.catalog_launch_current_served_state_mutation_root_sha256(
@@ -4542,47 +4541,91 @@ from cat03_product_fixture where ordinal = 3;
 
 select ok(
   (select value_text from cat03_test_state
-    where state_key = 'hold_projection_root_before') <>
+    where state_key = 'hold_projection_root_before') =
   (select value_text from cat03_test_state
     where state_key = 'hold_projection_root_after')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_status_root_before') <>
+    where state_key = 'hold_status_root_before') =
   (select value_text from cat03_test_state
     where state_key = 'hold_status_root_after')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_reviewer_root_before') <>
+    where state_key = 'hold_reviewer_root_before') =
   (select value_text from cat03_test_state
     where state_key = 'hold_reviewer_root_absent')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_reviewer_root_absent') <>
+    where state_key = 'hold_reviewer_root_absent') =
   (select value_text from cat03_test_state
     where state_key = 'hold_reviewer_root_restored')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_note_root_before') <>
+    where state_key = 'hold_note_root_before') =
   (select value_text from cat03_test_state
     where state_key = 'hold_note_root_absent')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_note_root_absent') <>
+    where state_key = 'hold_note_root_absent') =
   (select value_text from cat03_test_state
     where state_key = 'hold_note_root_restored')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_product_old_root_before') <>
+    where state_key = 'hold_product_old_root_before') =
   (select value_text from cat03_test_state
     where state_key = 'hold_product_old_root_moved')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_product_new_root_before') <>
+    where state_key = 'hold_product_new_root_before') =
   (select value_text from cat03_test_state
     where state_key = 'hold_product_new_root_moved')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_product_old_root_moved') <>
+    where state_key = 'hold_product_old_root_moved') =
   (select value_text from cat03_test_state
     where state_key = 'hold_product_old_root_restored')
   and (select value_text from cat03_test_state
-    where state_key = 'hold_product_new_root_moved') <>
+    where state_key = 'hold_product_new_root_moved') =
   (select value_text from cat03_test_state
     where state_key = 'hold_product_new_root_restored'),
-  'every bounded correction projection lane advances each affected product root'
+  'reporter-owned correction projection changes cannot mutate any product serving root'
 );
+
+insert into private.catalog_operator_product_holds (
+  id, product_id, reason_code, state, version,
+  triaged_by_user_id, legacy_origin_sha256,
+  baseline_import_batch_id, baseline_product_record_sha256,
+  baseline_served_state_mutation_root_sha256, opened_at
+)
+select
+  '58000000-0000-4000-8000-000000000091',
+  fixture.product_id,
+  'wrong_match_confirmed',
+  'active',
+  1,
+  null,
+  repeat('a', 64),
+  product.import_batch_id,
+  product.import_record_sha256,
+  private.catalog_launch_current_served_state_mutation_root_sha256(
+    fixture.product_id
+  ),
+  pg_catalog.clock_timestamp()
+from cat03_product_fixture as fixture
+join public.products as product on product.id = fixture.product_id
+where fixture.ordinal = 2;
+
+select private.catalog_operator_append_hold_mutation(
+  fixture.product_id,
+  '58000000-0000-4000-8000-000000000091',
+  'INSERT',
+  null,
+  pg_catalog.jsonb_build_object(
+    'id', '58000000-0000-4000-8000-000000000091'::uuid,
+    'productId', fixture.product_id,
+    'reasonCode', 'wrong_match_confirmed',
+    'state', 'active',
+    'version', 1
+  )
+)
+from cat03_product_fixture as fixture
+where fixture.ordinal = 2;
+
+select public.refresh_product_correction_count(fixture.product_id)
+from cat03_product_fixture as fixture
+where fixture.ordinal = 2;
 
 update public.catalog_corrections
    set status = 'closed',
@@ -4613,24 +4656,26 @@ select ok(
     (select product_id from cat03_product_fixture where ordinal = 2)
   ) is false
   and (
-    select count(*) = 10
+    select count(*) = 1
     from private.catalog_launch_curation_product_mutations as mutation
     where mutation.product_id = (
         select product_id from cat03_product_fixture where ordinal = 2
       )
-      and mutation.source_relation = 'public.catalog_corrections'
+      and mutation.source_relation =
+        'private.catalog_operator_product_holds'
       and mutation.mutation_kind = 'operator_correction_hold'
   )
   and (
-    select count(*) = 2
+    select count(*) = 0
     from private.catalog_launch_curation_product_mutations as mutation
     where mutation.product_id = (
         select product_id from cat03_product_fixture where ordinal = 3
       )
-      and mutation.source_relation = 'public.catalog_corrections'
+      and mutation.source_relation =
+        'private.catalog_operator_product_holds'
       and mutation.mutation_kind = 'operator_correction_hold'
   ),
-  'operator-confirmed correction hold then close advances the root and cannot resurrect serving'
+  'one independent CAT-08 hold advances only its product root and report closure cannot resurrect serving'
 );
 
 -- A product with no curation record, token, or ingredient link proves the

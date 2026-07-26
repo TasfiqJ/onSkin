@@ -28,12 +28,17 @@ import {
 } from './exportCore.ts';
 import {
   buildDirectExportPlans,
+  CALLER_RPC_OWNER_EXPORTS,
   CALLER_RLS_EXPORT_TABLES,
   type ExportTable,
   SERVICE_ROLE_FILTERED_EXPORTS,
   SUBSCRIPTION_EVENT_EXPORT_COLUMNS,
   subscriptionEventOwnerFilter,
 } from './exportRegistry.ts';
+import {
+  type CatalogCorrectionExportCursor,
+  paginateCatalogCorrections,
+} from './catalogCorrectionExportCore.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey = readSupabasePublishableKey();
@@ -225,6 +230,32 @@ function paginateQuery(options: {
   });
 }
 
+async function exportCatalogCorrections(
+  caller: EdgeSupabaseClient,
+  userId: string,
+): Promise<PaginatedRows> {
+  return paginateCatalogCorrections({
+    expectedUserId: userId,
+    pageSize: Math.min(dataExportPageSize, 500),
+    maxRows: dataExportMaxRowsPerSource,
+    fetchPage: async (cursor: CatalogCorrectionExportCursor | null, limit: number) => {
+      const { data, error } = await caller.rpc('export_catalog_corrections_for_subject', {
+        p_user_id: userId,
+        p_after_created_at: cursor?.createdAt ?? null,
+        p_after_id: cursor?.id ?? null,
+        p_limit: limit,
+      });
+      if (error) {
+        throw new Error(`EXPORT_TABLE_FAILED:catalog_corrections:RPC:${error.message}`);
+      }
+      if (!Array.isArray(data)) {
+        throw new Error('EXPORT_TABLE_FAILED:catalog_corrections:RPC:INVALID_DATA');
+      }
+      return data as Record<string, unknown>[];
+    },
+  });
+}
+
 function chunks<T>(values: readonly T[], size: number): T[][] {
   const result: T[][] = [];
   for (let index = 0; index < values.length; index += size) {
@@ -360,6 +391,11 @@ Deno.serve(async (req) => {
           note: item.note,
         }),
       }));
+
+    sourceTasks.push(async () => ({
+      source: 'catalog_corrections',
+      result: await exportCatalogCorrections(supabase, userId),
+    }));
 
     sourceTasks.push(async () => ({
       source: 'subscriptions_events',
@@ -588,6 +624,7 @@ Deno.serve(async (req) => {
       health_consent_lifecycle: healthDecision.snapshot,
       export_coverage: {
         caller_rls_tables: CALLER_RLS_EXPORT_TABLES.map((item) => item.table),
+        caller_rpc_owner_exports: CALLER_RPC_OWNER_EXPORTS,
         service_role_filtered_exports: SERVICE_ROLE_FILTERED_EXPORTS,
         storage_sources: ['photo_storage_objects'],
         derived_sources: [

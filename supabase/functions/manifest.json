@@ -241,6 +241,42 @@
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
+    "catalog-operator": {
+      "entrypoint": "supabase/functions/catalog-operator/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt+verified-totp+live-operator-grant",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        ["CATALOG_OPERATOR_ALLOWED_ORIGINS"],
+        ["CATALOG_OPERATOR_SOURCE_REVISION"],
+        ["CATALOG_OPERATOR_CONTROL_GENERATION"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
+      ],
+      "requiredSecrets": [
+        ["CATALOG_OPERATOR_DATABASE_URL"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "CATALOG_OPERATOR_BODY_MAX_BYTES",
+        "DENO_DEPLOYMENT_ID"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
     "catalog-report": {
       "entrypoint": "supabase/functions/catalog-report/index.ts",
       "deployByDefault": true,

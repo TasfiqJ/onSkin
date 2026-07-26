@@ -1,7 +1,7 @@
 # Phase 2 Production Infrastructure Runbook
 
 Date: 2026-07-15
-Updated: 2026-07-22 for the 61-migration chain through `0062`
+Updated: 2026-07-22 for the 62-migration chain through `0063`
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `OnSkin` until
@@ -27,13 +27,13 @@ create irreversible production accounts under `OnSkin` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 61 migrations through
-  `0062` and all 16 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only deployment of 62 migrations through
+  `0063` and all 17 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
   non-overwritable evidence. The runner sets `DB06_TRAFFIC_FREEZE=frozen`, all
-  16 Edge entrypoints refuse admitted handler traffic while frozen, and the
+  17 Edge entrypoints refuse admitted handler traffic while frozen, and the
   exact eight `verifyJwt: false` endpoints are live-canary checked for the
   frozen response.
 - `supabase/ops/account-deletion-work-lane.sql`: credential-free, fail-closed
@@ -94,7 +94,7 @@ create irreversible production accounts under `OnSkin` until
    completion gate retains the existing current-validity plus one-hour-hold
    requirement. These 12-hour/seven-hour budgets conservatively exceed the
    current bounded success envelopes of approximately 10 hours 20 minutes and
-   five hours 50 minutes, including both sequential 16-function deploy loops,
+   five hours 50 minutes, including both sequential 17-function deploy loops,
    maximum inventory retries/delays, migrations, canaries, and hosted checks.
    Supply evidence references for release channels, Supabase Auth and Edge,
    Apple, RevenueCat, and scheduled ingress. `changeLockRef` and every
@@ -105,8 +105,8 @@ create irreversible production accounts under `OnSkin` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 16-function manifest before migrations `0048`-`0062`, and proves
-   all 16 entrypoints contain the first-request freeze guard. It live-canaries
+   compatible 17-function manifest before migrations `0048`-`0063`, and proves
+   all 17 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
 8. Immediately before migration push, the runner reparses the exact unchanged
@@ -115,7 +115,7 @@ create irreversible production accounts under `OnSkin` until
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
    the initial operator observations were recaptured. Only then does it apply
-   all 61 migrations in source order, redeploy the same manifest, and retain
+   all 62 migrations in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and
@@ -256,7 +256,7 @@ remote state is contained. Any post-mutation failure remains
   including runtime availability of configured function secrets.
 - [Supabase Edge Function JWT verification](https://supabase.com/docs/guides/functions/auth),
   which is why live unauthenticated freeze canaries target the eight functions
-  whose manifest explicitly sets `verifyJwt: false`; all 16 handlers are also
+  whose manifest explicitly sets `verifyJwt: false`; all 17 handlers are also
   statically guarded.
 - [Supabase network restrictions](https://supabase.com/docs/guides/platform/network-restrictions),
   whose documented scope does not replace the API, Auth, Edge, callback, and

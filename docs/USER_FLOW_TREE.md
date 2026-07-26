@@ -2077,6 +2077,104 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: UI snapshot or accessibility notes.
   - Current shortest-phone evidence: 2026-07-08 `/ask` at 320 x 480 verifies the visible prompt buttons, report control, input, and Send are 48 px or taller/wider where applicable, their center hit-tests resolve to the intended controls, and the disclosure footer remains visible without intercepting prompts. Evidence is in `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`.
 
+## Flow: CAT-08 Internal Catalog Operator Console
+
+- Goal: A named operator can review catalog sources/reports without direct
+  database editing, and a held product can return to serving only after current
+  repair authority and independent release.
+- Persona: Trained catalog triage, decision, repair-attestation, or release
+  operator. Schema v1 has no console audit-reader role.
+- Entry state: Separate internal-console origin; approved nonproduction project;
+  nonanonymous named account; email OTP; verified TOTP; current capability grant;
+  synthetic correction/source fixtures; server-authoritative incident/freeze
+  admission open.
+- Start screen/URL/window: `apps/catalog-operator-console/` deployment, never a
+  consumer Expo route.
+- Success state: The requested decision is durably audited, any required product
+  hold is visible and serving-fail-closed, and the operator is shown the current
+  version/next permitted step without raw database access.
+- Priority: Critical.
+- Automate later: Yes.
+- Surface: Separate internal web console plus hosted Supabase/Edge/database.
+- Evidence folder:
+  `test-results/human-e2e/YYYY-MM-DD/cat08-catalog-operator-console/`
+- Current evidence: Source candidate, deterministic tests, and a current local
+  ignored synthetic-fixture browser packet at
+  `test-results/human-e2e/2026-07-25/cat08-catalog-operator-console-current/`.
+  It visually covers email OTP -> `aal1` -> TOTP -> `aal2`, invalid TOTP,
+  claim-before-detail screens, a displayed optimistic conflict, a later
+  correction-success screen, hold-release/empty screens, source
+  acknowledgement, sign-out, and 375 x 667 plus 430 x 932 production-preview
+  layouts. The screenshots predate deeper fixture-authority hardening and are
+  not exact-source-bound browser evidence. They do not prove backend auth
+  ordering or token binding, live claim/version enforcement, conflict-to-
+  reclaim linkage, independent release against a current repair, durable source
+  state, or server-side token invalidation. A separate post-capture Node
+  adversarial contract passes those synthetic fixture checks, but the browser
+  flow was not rerun against that exact source. This packet therefore remains
+  fixture-only visual evidence, is not current governed acceptance evidence,
+  and covers only a subset of the required branches below. No hosted, real-MFA,
+  named-operator human-simulated evidence exists. The candidate still lacks a
+  verified named-operator/build/capability display and server-authoritative
+  incident/freeze state, so this acceptance flow is not currently executable
+  end to end.
+
+### Required paths and branches
+
+1. **Admission and denial.** Enter a named email, complete OTP and verified TOTP,
+   start the operator session, then repeat with anonymous, `aal1`, unverified-
+   factor, revoked/stale Auth session, expired grant, wrong capability, expired
+   ten-minute work session, and direct URL states. Only the exact live authority
+   reaches a queue; every denial clears sensitive state and offers a safe
+   reauthentication path. Verify the surface displays the authenticated named
+   operator, exact effective capabilities, environment, deployed revision, and
+   server-authoritative incident/freeze state. A client-only banner fails.
+2. **Queue and claim.** Exercise empty, loading, bounded cursor next-page, error,
+   five-minute claim, claim-before-detail, duplicate response-loss retry,
+   expired claim, reclaim, and two-operator collision. The database clock and
+   CAS version control authority; a stale client cannot read sensitive detail or
+   overwrite newer work.
+3. **Triage hold.** Claim an `open` correction and triage it. The console shows
+   the independent hold, and barcode/search/recommendation/product/child probes
+   all suppress the product. An unreviewed open report does not suppress it.
+4. **Independent disposition.** A different decision operator records
+   `accepted` and, in a separate fixture, `rejected`. Both leave the existing
+   hold active. The triage actor cannot decide or release the same issue.
+5. **Reporter erasure.** Withdraw/delete the reporter's consent/account fixture.
+   Personal correction intake and ephemeral claim state disappear; the
+   reporter-free product hold, served-state mutation event, and minimized
+   operator audit remain. No erased field appears in UI, logs, or network
+   responses.
+6. **Repair and release.** Complete a synthetic non-fixture CAT-02 repair and a
+   signed structurally valid staged CAT-03 successor over the active-hold
+   mutation root. Reject an unchanged pre-hold projection, unresolved triaged
+   correction work, stale, wrong-product, fixture, retired, pre-hold,
+   missing-dependency, competing-hold, or self-authored receipts. A third person
+   performs repair attestation; a fourth distinct person releases. Verify
+   release advances the root and serving stays closed. CAT-03 owners must then
+   review/release/activate a fresh post-release record/campaign, obtain signed
+   readback, and only then see serving recover.
+7. **Source/import review.** Review a catalog source/import item and record an
+   immutable recommendation. Confirm the operator cannot call migration-owner
+   CAT-02/CAT-03 promotion, rollback, activation, or release authority.
+8. **Session and navigation.** Refresh, use browser back/forward, idle for 15
+   minutes, cross the one-hour absolute client limit, expire the ten-minute
+   server session, sign out, and relaunch. No operator session is restored from
+   durable browser storage.
+9. **Accessibility and recovery.** Complete the flow by keyboard and screen
+   reader at supported desktop zoom/text settings. Verify focus order, status/
+   error announcements, non-color-only state, destructive confirmation, offline
+   recovery, and no reporter identity or unallowlisted report field in the
+   accessibility tree. Purpose-limited correction detail is visible only after
+   the live claim and must clear with that claim/session.
+
+Required evidence includes screenshots/video, accessibility snapshot, browser
+console/network logs, exact source/build/origin, redacted database/Edge
+transcripts, two-session race results, serving probes, separately authorized
+backend audit/erasure proof, and named reviewer signoff. This flow cannot be
+marked complete with mocked UI,
+source tests, or fixture-only screenshots.
+
 ## Open Questions
 
 - What clinically reviewed interval should require a pregnancy/breastfeeding status reconfirmation, and what exact behavior should apply when that interval expires?

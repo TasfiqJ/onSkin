@@ -6,3 +6,6 @@ docs/phase-5/native-ocr-evidence.template.json
 
 # Regenerated from the live Supabase schema.
 packages/types/src/database.types.ts
+
+# The standalone CAT-08 Deno boundary is formatted and checked with deno fmt.
+supabase/functions/catalog-operator/**

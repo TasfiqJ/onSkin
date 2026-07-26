@@ -4682,7 +4682,7 @@ function runGovernedEvidenceChainConsumerSmoke() {
     return git(fixtureRoot, ['rev-parse', 'HEAD']);
   };
   const createFixture = ({ omitHumanEntry = false, stopAtEvidence = false } = {}) => {
-    const fixtureRoot = mkdtempSync(join(tmpdir(), 'onskin-human-chain-consumer-'));
+    const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-human-chain-consumer-'));
     fixtureRoots.push(fixtureRoot);
     git(fixtureRoot, ['init', '--quiet', '--initial-branch=main']);
     write(fixtureRoot, '.gitattributes', '* text=auto eol=lf\n');

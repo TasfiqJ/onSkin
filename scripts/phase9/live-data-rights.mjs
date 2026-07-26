@@ -1330,7 +1330,7 @@ async function main() {
       );
       const catalogCorrectionManifest = data.manifest?.sources?.catalog_corrections;
       assert(
-        catalogCorrectionManifest?.scope === 'service_role_filtered' &&
+        catalogCorrectionManifest?.scope === 'caller_rpc_owner' &&
           catalogCorrectionManifest.complete === true &&
           catalogCorrectionManifest.count === 1 &&
           catalogCorrectionManifest.count_before === 1 &&
@@ -1340,7 +1340,10 @@ async function main() {
       );
       assert(
         !data.export_coverage?.caller_rls_tables?.includes('catalog_corrections') &&
-          data.export_coverage?.service_role_filtered_exports?.filter(
+          !data.export_coverage?.service_role_filtered_exports?.includes(
+            'catalog_corrections',
+          ) &&
+          data.export_coverage?.caller_rpc_owner_exports?.filter(
             (table) => table === 'catalog_corrections',
           ).length === 1,
         'catalog-correction export coverage is incomplete, duplicated, or misclassified.',

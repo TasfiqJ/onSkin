@@ -163,7 +163,7 @@ ingredient, safety, efficacy, regulatory, expiry, or recommendation evidence.
 - no qualified product/cosmetic-chemistry or U.S. OTC-adjacent reviews;
 - no 2,000-record/category/priority inventory or CAT-03 confidence-bound report
   over an untouched holdout; and
-- no clean local/hosted full-chain pgTAP through `0062`, staging/release/supersession
+- no clean local/hosted full-chain pgTAP through `0063`, staging/release/supersession
   race, direct-service-role denial, signed readback, serving, retirement, or
   rollback evidence.
 

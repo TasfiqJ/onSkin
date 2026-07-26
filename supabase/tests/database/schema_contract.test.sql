@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  61::bigint,
-  'all 61 repository migrations are recorded'
+  62::bigint,
+  'all 62 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260722000062'::text,
-  'migration history reaches the forward-only CAT-03 statement guard'
+  '20260722000063'::text,
+  'migration history reaches the forward-only CAT-08 operator-authority boundary'
 );
 
 select is(
@@ -802,7 +802,19 @@ select ok(
     and not pg_catalog.has_table_privilege(
       'service_role', 'public.catalog_corrections', 'TRIGGER'
     )
-    and pg_catalog.has_table_privilege('service_role', 'public.catalog_corrections', 'SELECT')
+    and not pg_catalog.has_table_privilege(
+      'service_role', 'public.catalog_corrections', 'SELECT'
+    )
+    and not pg_catalog.has_function_privilege(
+      'service_role',
+      'public.export_catalog_corrections_for_subject(uuid,timestamptz,uuid,integer)',
+      'EXECUTE'
+    )
+    and pg_catalog.has_function_privilege(
+      'authenticated',
+      'public.export_catalog_corrections_for_subject(uuid,timestamptz,uuid,integer)',
+      'EXECUTE'
+    )
     and exists (
       select 1
         from pg_catalog.pg_constraint as constraint_record
@@ -852,6 +864,16 @@ select ok(
          and index_record.indexdef ~* 'unique index'
          and index_record.indexdef ~* 'intake_request_id is not null'
     )
+    and exists (
+      select 1
+        from pg_catalog.pg_indexes as index_record
+       where index_record.schemaname = 'public'
+         and index_record.tablename = 'catalog_corrections'
+         and index_record.indexname =
+           'catalog_corrections_owner_export_keyset_idx'
+         and index_record.indexdef ~*
+           '\(user_id, created_at, id\)'
+    )
     and not exists (
       select 1
         from pg_catalog.pg_policies
@@ -871,7 +893,7 @@ select ok(
                correction.client_context, 'context'
              )
     ),
-  'catalog correction operator fields are sealed from clients while sanitized service export remains available'
+  'catalog correction rows are sealed from direct reads while a dedicated authenticated-subject-bound export RPC remains available'
 );
 
 select ok(

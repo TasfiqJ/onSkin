@@ -49,7 +49,7 @@ row's factual content.
 | CAT-02 lineage           | Every contributing batch and signed barcode/category/ingredient/regulatory membership, staged record, promotion, projection, revision, and receipt ID/hash |
 | Per-field provenance     | Exact source/ref/snapshot for every served fact                                                                                                            |
 | Source snapshot          | Required, immutable, and territory/revision-bound                                                                                                          |
-| Correction state         | Zero live operator-reviewed `triaged`/`accepted` serving holds                                                                                             |
+| Correction state         | Zero independent product holds in `active` or `repair_attested` state                                                                                      |
 
 ## Required product/dependency review
 

@@ -52,7 +52,7 @@ select ok(
       'public.review_catalog_correction(uuid,bigint,text,text,text)',
       'execute'
     )
-    and has_function_privilege(
+    and not has_function_privilege(
       'service_role',
       'public.review_catalog_correction(uuid,bigint,text,text,text)',
       'execute'
@@ -75,7 +75,7 @@ select ok(
     and not has_table_privilege(
       'service_role', 'public.catalog_corrections', 'delete'
     ),
-  'correction intake and review are service-RPC-only and direct API-role DML is revoked'
+  'correction intake is service-RPC-only while legacy review and direct API-role DML are revoked'
 );
 
 select ok(
@@ -227,7 +227,7 @@ select throws_ok(
     where user_id = '56000000-0000-4000-8000-000000000001'::uuid$$,
   '42501',
   'permission denied for table catalog_corrections',
-  'authenticated callers cannot close serving holds with direct updates'
+  'authenticated callers cannot mutate reporter workflow rows directly'
 );
 reset role;
 
@@ -934,25 +934,46 @@ select is(
 );
 reset role;
 
-set local role service_role;
-select lives_ok(
-  $$select * from public.review_catalog_correction(
-    '56000000-0000-4000-8000-000000000030'::uuid,
-    1::bigint,
-    'triaged',
-    'pgtap.catalog-reviewer',
-    'Verified wrong-match evidence; hold pending catalog repair.'
-  )$$,
-  'the service review RPC can create one audited hold at the exact active epoch'
+insert into private.catalog_operator_product_holds (
+  id, product_id, reason_code, state, version,
+  triaged_by_user_id, legacy_origin_sha256,
+  baseline_import_batch_id, baseline_product_record_sha256,
+  baseline_served_state_mutation_root_sha256, opened_at
+) values (
+  '56000000-0000-4000-8000-000000000031',
+  '56000000-0000-4000-8000-000000000010',
+  'wrong_match_confirmed',
+  'active',
+  1,
+  null,
+  repeat('a', 64),
+  null,
+  null,
+  private.catalog_launch_current_served_state_mutation_root_sha256(
+    '56000000-0000-4000-8000-000000000010'
+  ),
+  pg_catalog.clock_timestamp()
 );
-reset role;
+select public.refresh_product_correction_count(
+  '56000000-0000-4000-8000-000000000010'
+);
+select ok(
+  exists (
+    select 1
+    from private.catalog_operator_product_holds as hold
+    where hold.id = '56000000-0000-4000-8000-000000000031'
+      and hold.product_id = '56000000-0000-4000-8000-000000000010'
+      and hold.state = 'active'
+      and hold.legacy_origin_sha256 = repeat('a', 64)
+  ),
+  'the serving-gate fixture uses one reporter-free independent CAT-08 hold'
+);
 
 select is(
   (
     select pg_catalog.jsonb_build_object(
       'status', correction.status,
       'reviewed', correction.operator_reviewed_at is not null,
-      'reviewed_by', correction.operator_reviewed_by,
       'hold_count', product.unresolved_correction_count,
       'eligible', product.recommendation_eligible
     )
@@ -960,8 +981,8 @@ select is(
     join public.products as product on product.id = correction.product_id
     where correction.product_id = '56000000-0000-4000-8000-000000000010'
   ),
-  '{"eligible": false, "hold_count": 1, "reviewed": true, "reviewed_by": "pgtap.catalog-reviewer", "status": "triaged"}'::jsonb,
-  'only the audited operator transition closes the serving projection'
+  '{"eligible": false, "hold_count": 1, "reviewed": false, "status": "open"}'::jsonb,
+  'the reporter-free CAT-08 hold closes serving without repurposing the report row'
 );
 
 -- Deliberately corrupt the denormalized projection. The live anti-join must
@@ -983,7 +1004,7 @@ select is(
     'freshness', (select count(*) from public.product_pao_expiry)
   ),
   '{"active_bands": 0, "barcodes": 0, "freshness": 0, "ingredient_lists": 0, "ingredient_tokens": 0, "ingredients": 0, "products": 0}'::jsonb,
-  'an operator-audited hold suppresses every direct product and child read even if projection state is corrupt'
+  'an independent CAT-08 hold suppresses every direct product and child read even if projection state is corrupt'
 );
 reset role;
 
@@ -1159,9 +1180,15 @@ from public.catalog_corrections as correction
 where correction.id = '56000000-0000-4000-8000-000000000030'::uuid;
 
 select lives_ok(
-  $$delete from public.products
-     where id = '56000000-0000-4000-8000-000000000010'::uuid$$,
-  'headerless catalog-administrator rollback can delete a product without the reporter epoch'
+  $$do $catalog_administrator_rollback$
+    begin
+      delete from private.catalog_operator_product_holds
+       where id = '56000000-0000-4000-8000-000000000031'::uuid;
+      delete from public.products
+       where id = '56000000-0000-4000-8000-000000000010'::uuid;
+    end
+  $catalog_administrator_rollback$;$$,
+  'headerless catalog-administrator rollback can retire the independent hold and delete a product without the reporter epoch'
 );
 
 select ok(

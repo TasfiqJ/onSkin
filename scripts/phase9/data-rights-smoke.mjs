@@ -16,10 +16,19 @@ const warnings = [];
 
 const exportSource = read('supabase/functions/data-export/index.ts');
 const exportCoreSource = read('supabase/functions/data-export/exportCore.ts');
+const catalogCorrectionExportSource = read(
+  'supabase/functions/data-export/catalogCorrectionExportCore.ts',
+);
+const catalogCorrectionExportTestSource = read(
+  'supabase/functions/data-export/catalogCorrectionExportCore.test.ts',
+);
 const exportRegistrySource = read('supabase/functions/data-export/exportRegistry.ts');
 const exportRegistryTestSource = read('supabase/functions/data-export/exportRegistry.test.ts');
+const catalogOperatorMigration = read(
+  'supabase/migrations/20260722000063_catalog_operator_authority.sql',
+);
 const healthLifecycleSource = read('supabase/functions/consent-withdrawal/healthLifecycleCore.ts');
-const completeExportSource = `${exportSource}\n${exportCoreSource}\n${exportRegistrySource}`;
+const completeExportSource = `${exportSource}\n${exportCoreSource}\n${catalogCorrectionExportSource}\n${exportRegistrySource}`;
 const migrationSource = listFiles('supabase/migrations')
   .filter((file) => file.endsWith('.sql'))
   .map((file) => read(file))
@@ -438,16 +447,34 @@ block(
 );
 block(
   errors,
-  /table:\s*["']catalog_corrections["'][\s\S]*?scope:\s*["']service_role_filtered["'][\s\S]*?selectColumns:\s*\n?\s*["']id, user_id, product_id, barcode, correction_type, status, description, proposed_payload, client_context, source_id, created_at, updated_at["']/.test(
-    exportRegistrySource,
-  ) &&
+  /export_catalog_corrections_for_subject/.test(exportSource) &&
+    /p_user_id:\s*userId/.test(exportSource) &&
+    /p_after_created_at:\s*cursor\?\.createdAt \?\? null/.test(exportSource) &&
+    /p_after_id:\s*cursor\?\.id \?\? null/.test(exportSource) &&
+    /paginateCatalogCorrections/.test(exportSource) &&
+    /expectedUserId:\s*userId/.test(exportSource) &&
+    /exportCatalogCorrections\(supabase, userId\)/.test(exportSource) &&
+    !/\.from\(['"]catalog_corrections['"]\)/.test(exportSource) &&
+    /CATALOG_CORRECTION_EXPORT_COLUMNS/.test(catalogCorrectionExportSource) &&
+    /export_total_count/.test(catalogCorrectionExportSource) &&
+    /COUNT_MISMATCH/.test(catalogCorrectionExportSource) &&
+    /OWNER_MISMATCH/.test(catalogCorrectionExportSource) &&
+    /NON_MONOTONIC_ORDER/.test(catalogCorrectionExportSource) &&
+    /UNSTABLE_SNAPSHOT/.test(catalogCorrectionExportSource) &&
+    /UNEXPECTED_COLUMN/.test(catalogCorrectionExportSource) &&
+    /keyset-bound, count-guarded, and strips metadata/.test(catalogCorrectionExportTestSource) &&
+    !directServiceRegistryTables.includes('catalog_corrections') &&
+    /CALLER_RPC_OWNER_EXPORTS\s*=\s*\[['"]catalog_corrections['"]\]/.test(exportRegistrySource) &&
     /catalog correction export excludes every internal operator field/.test(
       exportRegistryTestSource,
     ) &&
     /intake_request_id/.test(exportRegistryTestSource) &&
     /intake_health_epoch/.test(exportRegistryTestSource) &&
-    /intake_request_digest/.test(exportRegistryTestSource),
-  'Catalog-correction export must be service-role owner-filtered and exclude every internal operator field.',
+    /intake_request_digest/.test(exportRegistryTestSource) &&
+    /create or replace function public\.export_catalog_corrections_for_subject\([\s\S]*?public\.account_access_allowed\(\)/i.test(
+      catalogOperatorMigration,
+    ),
+  'Catalog-correction export must use the authenticated owner-scoped keyset RPC, live account-access admission, count guards, and an exact reporter-facing column allowlist.',
 );
 block(
   errors,

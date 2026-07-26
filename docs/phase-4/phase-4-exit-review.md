@@ -35,6 +35,14 @@ Implemented locally:
 - Product search, barcode lookup, and correction-report Edge Function scaffolds
   plus migration `0056`'s shared fail-closed serving gate for positive source,
   review, quality, eligibility, mapping, and live-correction evidence.
+- CAT-08's local operator-authority source candidate: migration `0063`, a
+  bounded `catalog-operator` Edge surface, a separate publishable-key-only
+  internal-console source, nonanonymous `aal2` identities, live Auth/MFA/grant
+  checks, ten-minute work sessions, five-minute lease/CAS claims, immutable
+  audit, and reporter-independent holds. Triage, disposition, repair
+  attestation, and fourth-person release are separate capabilities. Source/
+  import review remains a recommendation and does not inherit migration-owner
+  CAT-02/CAT-03 publication authority.
 - CAT-02's local content-addressed stage-envelope contract, foundational
   migration `0057`, and forward migration `0061`: sealed idempotent staging,
   owner-only review/promotion/rollback,
@@ -53,8 +61,10 @@ Implemented locally:
   guard. The isolated PostgreSQL 15/17 forward-upgrade rehearsal constructs a
   minimal pre-`0062` fixture and includes the exact `0062` bytes; it is not an
   exact `0061`-schema, full-chain, or hosted equivalence proof.
-  Partial governed inserts remain allowed. Current review/readback
-  artifacts must attest exact latest migration `20260722000062`.
+  Partial governed inserts remain allowed. Current CAT-03 review/readback
+  artifacts must bind exact CAT-03 migration `20260722000062`; deployment and
+  full-chain evidence must additionally attest repository head
+  `20260722000063`.
   Beta demand can prioritize independently sourced rows but can never become a
   product fact.
 - Mobile shelf source/quality disclosure, search fallback, parser-backed OCR, and report issue flow.
@@ -89,12 +99,13 @@ The implementation intentionally keeps production catalog use blocked until:
 - at least 2,000 independently sourced, reviewed, activation-eligible records,
   every required-category floor, and at least 100 demand-prioritized eligible
   records pass the signed inventory policy;
-- exact row-review overlays and dedicated CAT-08 operator identities exist;
+- exact row-review overlays and real named MFA-enrolled CAT-08 operator
+  identities, grants, training, coverage, and deprovisioning evidence exist;
 - qualified catalog/cosmetic-chemistry review and separate current U.S.
   sunscreen/OTC-adjacent review bind every applicable row;
 - the two-session hosted CAT-02 staging/promotion/serialization/rollback drill
   passes with complete redacted receipts and zero projection drift;
-- clean local and hosted full-chain reset through `0062`, current pgTAP, two-connection
+- clean local and hosted full-chain reset through `0063`, current pgTAP, two-connection
   staging/release/supersession race, direct-service-role denial, serving,
   retirement, and rollback evidence passes;
 - the authoritative CAT-03 coverage/quality report exists for the sealed
@@ -153,7 +164,7 @@ clinical, Apple, or commercial approval.
   signed required-category floor, and at least 100 prioritized eligible rows.
 - Product recommendations use only active-curation, eligible, reviewed,
   dependency-complete products.
-- Hosted database evidence from the full current chain through `0062`, including
+- Hosted database evidence from the full current chain through `0063`, including
   `0061`, proves the import lifecycle, rollback/reference preservation, and barcode, search,
   recommendation, product, ingredient, synonym, and child reads fail closed
   for every held source/record.
@@ -163,6 +174,28 @@ clinical, Apple, or commercial approval.
   readback, exact lineage, replay/race handling, direct-table denial for
   `service_role`, authenticated RLS allow/deny proof, and immediate fail-closed
   serving after any retirement or dependency withdrawal.
+- Hosted database evidence through migration `0063` proves no raw API-role
+  operator/correction/hold access, direct denial of all six RPCs to browser API
+  roles, exact Edge-verified signed `aal2` subject/session admission,
+  database-derived Auth-session user/TOTP authority, prompt revocation,
+  five-minute claim and stale-CAS
+  races, immutable minimized audit, reporter erasure with the independent hold
+  retained, four-person role separation, an exact current CAT-02 projection,
+  and signed staged CAT-03 successor authority over the active-hold root before
+  release. It must also prove release leaves serving closed until CAT-03 owners
+  complete a fresh post-release record/campaign, activation, and readback.
+  The source-defined dedicated `NOINHERIT` execute-only backend identity must
+  be created and rotated in the approved hosted secret manager, with retained
+  proof that it is nonsuperuser, membership/ownership-free, unable to access
+  raw table/Auth/control state, and limited to the six application-gateway
+  functions. Hosted transport must prove CA/hostname verification.
+- The separately deployed internal console is bound to its exact source/build/
+  origin and passes human-simulated MFA, denial, queue, claim/reclaim, stale
+  conflict, triage, accepted/rejected, erasure, repair, release, relaunch, and
+  sign-out flows without a service secret or telemetry. It shows the verified
+  named operator, exact capabilities, environment, and deployed revision, and
+  reflects a server-authoritative incident/freeze control rather than a
+  client-only banner.
 - The untouched holdout meets every signed confidence-bound and minimum-
   denominator target with zero open P0/P1 and zero below-usable recommendation
   exposure; missing/suppressed required strata fail closed.

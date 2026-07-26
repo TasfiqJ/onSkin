@@ -1,9 +1,54 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-18T21:29:42.151Z
+Generated: 2026-07-25T22:38:27.815Z
 Status: blocked
-Git SHA: 52107141867fbc9b8e683cfa7399ffdc6351d6d6
-Git status: clean
+Git SHA: fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49
+Git status: DIRTY
+NUL Git status SHA-256: 37e9942206358b8192bed65dbdcd5ebf2b10cb8199969709cf5a361ef087de5a
+Pinned input integrity: blocked
+
+## Governed Evidence Chain
+
+- Status: blocked
+- Source S: `BLOCKED`
+- Evidence E: `BLOCKED`
+- Current R/F HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Selected RC: `BLOCKED`
+- Ledger path: `BLOCKED`
+- Ledger SHA-256: `BLOCKED`
+- Ledger entries: 0
+- Audited generated descendants: 0
+- Packet code bound to S: BLOCKED
+
+## Upstream Packet Contracts
+
+- Phase 5 device QA: blocked
+- Phase 7 core loop: blocked
+- Beta coverage (when claimed): not_claimed
+
+## CAT07 Launch Evidence
+
+- Overall: blocked
+- Expected HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Committed validator: blocked
+- Committed validator HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Full manifest validator: blocked
+- Full manifest validator HEAD: `fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49`
+- Summary SHA-256: `BLOCKED`
+- Manifest JSON SHA-256: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
+- Manifest Markdown SHA-256: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
+
+### CAT07 Bound Input Hashes
+
+- `test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json`: `BLOCKED`
+- `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
+- `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
+- `scripts/e2e/cat07-committed-evidence.mjs`: `aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0`
+- `scripts/e2e/human-e2e-manifest.mjs`: `ff71ba1ee78bafe9171b73c1eac750dbe235f1025fc610e13b0cbff6d67cef7a`
+- `scripts/e2e/human-e2e-manifest-render.mjs`: `b868275b0ca1a3bb99ab681bf7b96e466b03aefd3d410c244a7d9a076fc5b41d`
+- `scripts/e2e/evidence-diagnostic-hygiene.mjs`: `0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911`
+- `scripts/e2e/cat07-png-contract.mjs`: `0fa7b3546a525145a270ea52df023ffebb67e0a75d1add26eae07fe985a196f8`
+- `scripts/e2e/cat07-shelf-freshness-audit.mjs`: `84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229`
 
 ## Release Identity
 
@@ -15,13 +60,127 @@ Git status: clean
 - Support email: BLOCKED
 - Signed off by: BLOCKED
 - Release candidate folder: BLOCKED
+- RC tracked inventory: blocked
+- RC pinned metadata: blocked
+- RC Git contract: blocked
+- RC archive/store cross-binding: blocked
+- RC raw archive/report binding: blocked
 
 ## Blockers
 
-- None from packet inputs.
+- test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json is missing from QA packet inputs.
+- Governed evidence chain: PHASE9_IOS_SOURCE_GIT_SHA (or its exact governed alias) must select one lowercase source commit.
+- Governed evidence chain: PHASE9_RELEASE_CANDIDATE_DIR (or its exact governed alias) must select one immutable release candidate.
+- CAT07 launch evidence: CAT07 committed evidence validator did not pass.
+- CAT07 launch evidence: CAT07 full evidence contract validator did not pass.
+- CAT07 launch evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json is not hash-bound to pinned HEAD.
+- CAT07 launch evidence: CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.
+- CAT07 launch evidence: CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).
+- CAT07 launch evidence: CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.
+- CAT07 launch evidence: CAT07 full evidence contract: full CAT07 manifest validator failed: node:internal/modules<redacted-absolute-path>_main:107
+    triggerUncaughtException(
+    ^
+
+Error: Cannot find package '<redacted-absolute-path>' imported from <redacted-absolute-path>
+Did you mean to import "pngjs/lib/png.js"?
+    at legacyMainResolve (node:internal/modules/esm/resolve:205:26)
+    at packageResolve (node:internal/modules/esm/resolve:778:12)
+    at moduleResolve (node:internal/modules/esm/resolve:859:18)
+    at defaultResolve (node:internal/modules/esm/resolve:991:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    at #resolve (node:internal/modules/esm/loader:701:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:160:33) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v24.14.0.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet must contain an empty blockers array.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet does not contain completed named native-device signoff.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet widgetLifecycleEvidence is not pass.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet cameraLifecycleEvidence is not pass.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet performanceEvidence is not pass.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet fresh governed evidence-chain audit is not pass.
+- Upstream phase5DeviceQa: pinned Phase 5 device QA packet packet Git SHA does not match its governed current Git SHA.
+- Upstream phase5DeviceQa: Phase 5 device QA packet must contain an empty blockers array.
+- Upstream phase5DeviceQa: Phase 5 device QA packet required QA evidence inventory is not exact and passing.
+- Upstream phase5DeviceQa: Phase 5 device QA packet does not contain completed named native-device signoff.
+- Upstream phase5DeviceQa: Phase 5 device QA packet widgetLifecycleEvidence is not pass.
+- Upstream phase5DeviceQa: Phase 5 device QA packet cameraLifecycleEvidence is not pass.
+- Upstream phase5DeviceQa: Phase 5 device QA packet performanceEvidence is not pass.
+- Upstream phase5DeviceQa: Phase 5 device QA packet fresh governed evidence-chain audit is not pass.
+- Upstream phase5DeviceQa: Phase 5 device QA packet packet Git SHA does not match its governed current Git SHA.
+- Upstream phase5DeviceQa: Phase 5 device QA packet fresh governed evidence-chain audit is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet must contain an empty blockers array.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence brandReady is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence supabaseRlsPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence clinicalReviewPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence catalogBetaImportPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence deviceQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence revenueCatQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence privacyExportDeletePass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence betaDashboardReady is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence has no named signoff.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence onboardingConsentQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence shelfIntakeQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence reviewedGuidanceQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence routineBuilderQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence todayCheckoffQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence photosPrivacyQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence remindersQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence paymentsLifecycleQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence privacyControlsQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence shareCardQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence deferredSurfacesQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet Phase 7 evidence analyticsQaPass is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet CAT07 evidence is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet does not record a passing Phase 5 upstream role.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet does not record a passing human-E2E upstream role.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet fresh governed evidence-chain audit is not pass.
+- Upstream phase7CoreLoop: pinned Phase 7 core-loop QA packet packet Git SHA does not match its governed current Git SHA.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet must contain an empty blockers array.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence brandReady is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence supabaseRlsPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence clinicalReviewPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence catalogBetaImportPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence deviceQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence revenueCatQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence privacyExportDeletePass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence betaDashboardReady is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence has no named signoff.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence onboardingConsentQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence shelfIntakeQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence reviewedGuidanceQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence routineBuilderQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence todayCheckoffQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence photosPrivacyQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence remindersQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence paymentsLifecycleQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence privacyControlsQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence shareCardQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence deferredSurfacesQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet Phase 7 evidence analyticsQaPass is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet CAT07 evidence is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet does not record a passing Phase 5 upstream role.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet does not record a passing human-E2E upstream role.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet fresh governed evidence-chain audit is not pass.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet packet Git SHA does not match its governed current Git SHA.
+- Upstream phase7CoreLoop: Phase 7 core-loop QA packet fresh governed evidence-chain audit is not pass.
+- Release-candidate readiness: PHASE9_RELEASE_CANDIDATE_DIR must name one strict non-template RC directory.
+- Release-candidate readiness: release-candidate tracked inventory must exactly match the required metadata set.
+- Release-candidate readiness: release-candidate metadata must be byte-pinned to regular files in HEAD.
+- Release-candidate readiness: all required external RC evidence and named signoff must be complete.
+- Release-candidate readiness: the configured iOS archive evidence path must bind the selected RC index.
+- Release-candidate readiness: the pinned RC manifest must contain exactly one full build-source Git SHA.
+- Release-candidate readiness: PHASE9_IOS_SOURCE_GIT_SHA must match the pinned RC manifest.
 
 ## Warnings
 
+- Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.
+- Release QA packet inputs do not all match regular, byte-identical blobs in pinned HEAD.
 - External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.
 - External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.
 - External RC evidence missing: PHASE9_RLS_STAGING_PASS=true.
@@ -75,13 +234,17 @@ Git status: clean
 
 ## Source Hashes
 
-- `.env.example`: `0984b7c39628ce57f90fc39918b7863b7878335cf3c04fa33a69f1abd9bc5117`
+- `.env.example`: `5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52`
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md`: `b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5`
 - `docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md`: `6dd7a2416a0e35b416e1f765906dec003f621e8cc5b8032f4c0ca3e9ff7fca68`
 - `docs/hugeToDo/IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md`: `c9520833c815e97aaf656d950a3f19aa81a7a02cb151a15320d8e26b23c8b915`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
 - `scripts/postinstall.mjs`: `0d68d89b51fda8a8c8c64ebfb12d5abf95c64add1c158f36786a8e3ca3f97bf7`
+- `scripts/cat05/native-label-ocr-source-contract.test.mjs`: `0039e0587a5bf2e3d0edb9b4bcaa8504fcab4a465894a3c3af5877431e9171d1`
+- `scripts/phase5/check-native-ocr-evidence.mjs`: `11792f4bb99fd1688b372be7fa4179b81288b9147348f36bce8601b21c49003f`
+- `scripts/phase5/native-ocr-evidence-contract.mjs`: `5887a041967cf189f0f6f38119578785bd2798279a408c89e1ca979e5ef99d34`
+- `scripts/phase5/native-ocr-evidence-smoke.mjs`: `6648a5eb693fdf27c5d8beb88b7230fbc5d2356d4ff8276f70fcef0e087fca8f`
 - `scripts/phase5/patch-expo-widgets-lifecycle.mjs`: `03ec26b5f20db80db15ed40189693b9cd43cba03d98f74ec2682170443b039c7`
 - `scripts/phase5/patch-expo-widgets-lifecycle.test.mjs`: `aa66857e2dac860c90d86079411a93ee0d843e72dc4342986c4c5a797e02be8b`
 - `scripts/phase5/expo-widgets-lifecycle-source.test.mjs`: `5f1f608d340f3f0582ccf1876f492d5c192645b420b16f35c9ae2370a5985874`
@@ -127,26 +290,26 @@ Git status: clean
 - `apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts`: `959dc00e71eaf0053908c2ad3095177b9dab19d535ea21e3549f9d76ec1bd8b7`
 - `apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx`: `9caaf70078a24d3aacec87691bbe56a73314726d3c2f89edad33f340079478a9`
 - `apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts`: `f56e2bbb8c971ac55fa0f677c351f3a1bbd323a981f0ce15fbba4dc61b446f71`
-- `apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts`: `cace0f73d9bc3f95aad8c3e5fbad2036e942dea56523098256b94f992e0a5904`
+- `apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts`: `a65ecc81cff140bd420c0d289ec13446a1c0a6de690912ca3864c5f70d68dbfc`
 - `apps/mobile/src/features/healthConsent/selectiveCleanup.ts`: `06c7c5d8c7129d01d28ff258339e09ff114d5f8077fe35462832cb52380aee71`
 - `apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts`: `0f3f77f32bd7a72991dcfbb3d42981c6f086db09580fa652affafcf0902bab96`
 - `apps/mobile/src/lib/auth/AuthProvider.tsx`: `3c6c45c4247763a2ee9d89d66739cd97cf432f2cdbe0efb6b0d39178e3215bf9`
 - `apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts`: `f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.ts`: `6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts`: `84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642`
-- `package.json`: `fcdd60b722b668df65a6714f6006014ea6ecc1ada7a50d056091c0936ce26206`
+- `package.json`: `57d7608cc3edc070dac3891ade17e50062ce04a06e7b10c9a636ec9a35f33d3b`
 - `apps/mobile/package.json`: `c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80`
-- `.github/workflows/quality.yml`: `9bdb6ea48fbaea893f53522a87281c531c99662d978bbdb745b2d1d41a1d6fbd`
-- `package-lock.json`: `0b817f6d89ea2b318e59d3bbc83203047ade24ab7496ba6ff2c91ff14356f850`
+- `.github/workflows/quality.yml`: `1b4bd0d46aeac3044c673d95754c25e283152461fddd062c19921e976be2faf0`
+- `package-lock.json`: `dd17af2962634dd6e1bc1f6f82ca381680bfdc61f161bea6d8ddef9e03d92920`
 - `.github/workflows/security.yml`: `72951da24cdf28c6b5c62b75e0f6b3659ea6e8b46440e609a213d8943ca13c70`
 - `supabase/config.toml`: `9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a`
 - `supabase/functions/manifest.json`: `2d34424eaa790a61b59a10270771b5ee865d28c680e5787c7c636633afb32258`
-- `apps/mobile/app.base.json`: `c741d1b60cc04f354955316d29a581274b208789dc8c357c49494a3584bfbb84`
-- `apps/mobile/app.config.js`: `2355312e00ff824a4092e5ab8d0a16b35e0e4910afaffaa1edf15f18d7f2ce43`
+- `apps/mobile/app.base.json`: `c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f`
+- `apps/mobile/app.config.js`: `84e5da6bde0ddb1203b6348627c5fd5e02b93ed97576538a2255561a02617fbb`
 - `apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js`: `ab40bcc6285d40e21343adcb02885c5cd920c36cd669f04994b536955795a292`
-- `apps/mobile/eas.json`: `bf0aa5a8d6df31283433c1fd17eca55de67ba34a58457059d607844e84938944`
+- `apps/mobile/eas.json`: `074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051`
 - `docs/phase-9/apple-ios-privacy-baseline.json`: `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
-- `docs/phase-9/ios-sdk-package-mapping.json`: `923b527df8b7950b28214a996056fe0667ba34b64de295d47cf17cfb21248aa1`
+- `docs/phase-9/ios-sdk-package-mapping.json`: `ef4088bd6a60c9f66d86e65154a03cd165ecb37f33e655a693208444d14114c7`
 - `docs/phase-9/ios-privacy-baseline-notes.md`: `4ec11024da8925c53d3ed714771b3670170fbc287cb1e3684292276e9eb8947d`
 - `scripts/phase9/patch-react-native-view-shot-privacy.mjs`: `68cd3b508feec6e42af8c1c3b633493b2271801c36a5e5c384f127226edff5d0`
 - `scripts/phase9/patch-react-native-view-shot-privacy.test.mjs`: `9fa64da1a26cb21b4a104fc521c70e893457d1a0108433a4a5289577095f9780`
@@ -156,16 +319,16 @@ Git status: clean
 - `scripts/phase9/ios-archive-privacy-evidence.mjs`: `9cd7c02f65b6d60d51311f7db9bdc2c5c663c564314e4b49d76171dd9b2dd181`
 - `scripts/phase9/ios-archive-privacy-evidence.test.mjs`: `26bedb61fa0017f0690f70d706fa9ceb4c37cd372c06e201a6ef92ac2e8e91b0`
 - `scripts/phase9/ios-release-candidate-cross-binding.mjs`: `81ddb55aada87ac7dc0209f5a7bda6daa5006cc6ee1b7ab0119e545d03d91982`
-- `scripts/phase9/release-candidate-git-contract.mjs`: `0e0f24d134910523c0d95049cf249d882fd7d9cad3e60475b4ecb98f4dab8d1f`
-- `scripts/phase9/release-candidate-git-contract.test.mjs`: `22790dc4564bf5347864944a4e041d96c2e6ac86feb9850ac83cc92df7a92d8e`
+- `scripts/phase9/release-candidate-git-contract.mjs`: `c27ad3cbd8e8e5d6101c8e0e70a7f66db8dbc66f66a865f499b864f612b23da1`
+- `scripts/phase9/release-candidate-git-contract.test.mjs`: `6784f9e47f87e15b878ca747048b4f84b35911b8c84b090612e489ccdac6f942`
 - `scripts/phase9/verification-wiring-contract.mjs`: `31860ea462b650f3aabbe9d96c5061961c809171e5c1bf0d7cce1dea631e74fa`
 - `scripts/phase9/verification-wiring-contract.test.mjs`: `586884d2130c29476a69f6b103d10b61afd83d35445bfb31e39000795d1beaa7`
 - `apps/mobile/src/lib/env.ts`: `22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31`
 - `apps/mobile/src/lib/env.test.ts`: `aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa`
 - `apps/mobile/src/lib/launch/phase7.ts`: `9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01`
 - `apps/mobile/src/lib/launch/phase7.test.ts`: `2d633e139d356fdce0e6b966e1675a017fcc4b4a0ddbc5679149fc942331681f`
-- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `154066b64567d5ab25cb77e3a6a614f7b604e41ddb3d109c70dc84335b1353cc`
-- `apps/mobile/src/lib/analytics/track.ts`: `b705e35e12f4a584bb97abc02df1d6855d44cc725834812a275a077132f9d617`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `39ec4444213976ea1819890f1fc4556cc79ab91f9f27547e683c9dbb14803413`
+- `apps/mobile/src/lib/analytics/track.ts`: `d9c68abb6b8ecbdf9abed12e6dc37de092b4a5172f1b89d213f96e24b7c75f8f`
 - `apps/mobile/src/app/community/ask.tsx`: `5603a0c3b19526cea52620c069183efb08f960f1943c77f74aa8bc637022d469`
 - `apps/mobile/src/app/community/people-like-you.tsx`: `b18c6e540c9451ff47d0bf1ca919d94e8fa14f2ba187f5478b568e5fb686cdf4`
 - `apps/mobile/src/app/trend/optin.tsx`: `59e11ac2d24b435b45b77a07030733ec5bfc93bddeac993f23d915a02a6058b5`
@@ -176,19 +339,19 @@ Git status: clean
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358`
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
 - `apps/mobile/src/lib/observability/sentry.ts`: `591ffcd81e9f012aaeacc4bc55c769d001d657b626b10f9a2a6fa2668e9aa2ed`
-- `apps/mobile/src/app/_layout.tsx`: `89197d975de81cc9c1a1e808a0ede821ee126bd0c8d9867a7e537897e75df529`
+- `apps/mobile/src/app/_layout.tsx`: `afad7d36ceb05bc0fb375714aa483e019510d392a21512f82542f909617c94fe`
 - `apps/mobile/src/app/(tabs)/you.tsx`: `f490947e7be30eeabe45135654398accb3edf90804d45a0e190f09c4b0c4b1ce`
 - `apps/mobile/src/app/(tabs)/progress.tsx`: `d009aa555a3230ad67a41dfdc2cbeb184b9684757b97085346fe5362e57c7125`
-- `apps/mobile/src/app/progress/capture.tsx`: `dac3a89172ee267baf085ddf27a00fc46b3b2bba8472cb8193990199bcfa9c5a`
-- `apps/mobile/src/app/progress/review.tsx`: `7ec464e63fc86038fe0d79368352061d0ef52842c37832a68a251c0b58c524f1`
+- `apps/mobile/src/app/progress/capture.tsx`: `6687c26e6fcccedf226c15b1d3a70a679d37e795e34f87380315a14f17a75294`
+- `apps/mobile/src/app/progress/review.tsx`: `2285d285f16d3b1f73b11645951bad2ce40c17ee0fa33fa9a4ad9b26ed5b7046`
 - `apps/mobile/src/app/progress/[id].tsx`: `6c30541e68f2f7e1acd9a7b366f7531eaaebdf12e284ab831eb4aa3b7d2e02d2`
 - `apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx`: `f5c45a73af3712462acd4f3b1a393ead4c9aee1067e32b82a14b6e865a23af67`
 - `apps/mobile/src/features/photos/PhotoStorageGate.tsx`: `acda1b19266b960c94f493e80bab98f23002b0ff3bcfb93a4601f774e23d6888`
 - `apps/mobile/src/features/photos/encryptedStorage.ts`: `6095256304aeebab4b7be41ddaea52002cfdc3a87c4ed8ce9b4f3dceeb7c4fd5`
 - `apps/mobile/src/features/photos/encryptedStorage.test.ts`: `b798b6e4ba13f3ca3faef5a6f388236f25b4c6a3dbb8d17f8380606a35d5760d`
-- `apps/mobile/src/features/photos/store.ts`: `88c92a487d9e8823406c443f7289ec89ed1074ae3d902b698c3b0765401358fc`
-- `apps/mobile/src/features/photos/store.test.ts`: `048652a5487c33765f6e4ec7d121a3d8a71454e83b63e0f5d0a1fcc584f5dc1b`
-- `apps/mobile/src/features/photos/usePhotos.ts`: `aa5fb56cda7c3a86b2a572c283a885857c520fe557576bfd1357cc8c367cdb5d`
+- `apps/mobile/src/features/photos/store.ts`: `015473bbe02b850a161c98cd9f219dafae42e80e716e08506407649ce448e82f`
+- `apps/mobile/src/features/photos/store.test.ts`: `1bfc8ddebafa14d7af91bd31c529de9f0ee72a280c373487b8dbaed27cdad7df`
+- `apps/mobile/src/features/photos/usePhotos.ts`: `8b51f787c875d47d11552ed5020e02a3222799db63e99c120fbe2f94696e8f99`
 - `apps/mobile/src/features/settings/actions.ts`: `ae38c8b32cbeaf26264ff9c9e1681ad67fed3cd761b74c19c57f647042ff23b3`
 - `apps/mobile/src/features/settings/actions.test.ts`: `873e39cb9cd06931bd861cc99f55347d402d85f470610098b9802771f4d608a3`
 - `apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx`: `b5b4f661c86f9da0fa431a73485e27f64cd73ec5cf6ea467f5630b37d7f122ff`
@@ -303,6 +466,13 @@ Git status: clean
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
 - `supabase/migrations/20260711000038_shelf_freshness_invariants.sql`: `672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd`
 - `supabase/migrations/20260711000039_replenishment_alert_opt_in.sql`: `eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299`
+- `supabase/migrations/20260718000060_cat07_truthful_freshness.sql`: `8bc2c35bfff443a3c3bf7ab76e52ed17e7d6b961a8b35bdde17701de5c7f574a`
+- `supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql`: `4048342265ef103e6915411494911a98485528707c7413555725ba4ff427c1e9`
+- `supabase/migrations/20260722000062_catalog_curation_statement_guard.sql`: `f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1`
+- `supabase/tests/database/catalog_import_lifecycle.test.sql`: `df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d`
+- `supabase/tests/database/catalog_launch_curation.test.sql`: `4dc48bb6d5614bf7765254733e2d03242386e6beb8527fa86cf14e12db6f3491`
+- `supabase/tests/database/catalog_serving_gate.test.sql`: `52e48dcf3a70261580791dac75329e0f16741add4d4cc09ef0f5385bae77e666`
+- `supabase/tests/database/cat07_truthful_freshness.test.sql`: `6d5971e51a3d74f1527c74baee7bce5ca0a9ffeda1c136e73200e39a06501078`
 - `supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql`: `18b423bcae63f63c6f533efd1fab3ea9e6918fcebaa6480a35d396b214f89040`
 - `supabase/migrations/20260713000046_account_service_row_scrub.sql`: `268234dbc7c423eef097a2ea17790b871d8413913df71006c73d686e3bd471cf`
 - `supabase/migrations/20260713000047_account_obf_contribution_erasure.sql`: `152f6ecaf1def7bebd0a5ff1d71b4152b336de72dc8ce8e465f071810f7d023b`
@@ -313,21 +483,50 @@ Git status: clean
 - `supabase/migrations/20260713000052_account_publication_fence.sql`: `b19dcada637f30c4a7756711aed2ad6809877f2e043fc79c9c36ed107169b05d`
 - `supabase/migrations/20260714000053_entitlement_authority_lanes.sql`: `d1aba134336ccb38292134dc5e10528b6a9370489413e5bd2b7992c03525cec1`
 - `supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql`: `8bee91bcaedd3909b2f033ddbce47f1960e366fa30d6442a10b889941f3ad524`
-- `scripts/phase9/lib.mjs`: `5036b1121759918646f89e6ff914a4b7a55914437025f5f20dd2e9723ced1017`
-- `scripts/phase2/supabase-rls-smoke.mjs`: `de00d6c06ec0ec4a7a6c48927a98cf49bbe12d64249bb6ec14cee825f0dfbdae`
+- `scripts/phase9/lib.mjs`: `013215c69c4c4a554cd35b6e7a1b633beb1aa2b16efc36e1bbf030311b93ef2c`
+- `scripts/phase2/supabase-rls-smoke.mjs`: `fd50a0f7781cf6029a1e0452238618909b7956fac8a3023511980e046fc6b383`
 - `scripts/phase9/release-contact-smoke.mjs`: `d1808486b8747f40e8212ac71e5fa8a21ae8cd8198db63d0ad4cc0c80a6a4e0a`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `0b1ea483d03629723435a77254204af282b487dae2ecbc46645c7374879b77ae`
-- `scripts/phase9/release-smoke.mjs`: `08ffca71ccc9057c3617b37f03f9c68dd0055fd4267e5b903934bd350d302f61`
+- `scripts/phase9/release-smoke.mjs`: `88bd377bf540fdfabd27699983f4ad7cb2c9bbf1d8ef00db8f87ba4ec4e69b21`
 - `scripts/phase9/rls-adversarial-smoke.mjs`: `df660a2f69854d5466fef98ad39309c9f17cdfbb7fe1dbba7762a63e9cc3b1d2`
-- `scripts/phase9/rls-adversarial.mjs`: `03abb145acc5d36966c12a6eb08c785a40ed06e66c65ac47cbd22c2a583699ec`
+- `scripts/phase9/rls-adversarial.mjs`: `10f2f044bfb614137b1213cf83552897d0e549c2bb4d5bbc2b4cb1c1161b5cfb`
 - `scripts/phase9/edge-function-manifest-check.mjs`: `f6bbf56e72aa4cac92a40bbb7d1cf28f3179d707ad1ddf3ef6e37349e95ad6a2`
 - `scripts/phase9/edge-function-manifest-lib.mjs`: `57deb682b6cd1e23e5c820366c94e1676c68d0d16c141d108235e8f5a129c0fd`
 - `scripts/phase9/edge-function-manifest-smoke.mjs`: `f9766fc6e70ab30459a0d28a77316179b5cd0f9fd8aba3241d4061da177d10c7`
-- `scripts/phase9/build-release-qa-packet.mjs`: `8d7a53077597b174a1d914e8e57ee0a8f0ecb0f49d6b2cf3e774cea4af71320f`
-- `scripts/phase9/live-supabase-adversarial.mjs`: `b1667a01d46ba8f8dac9e47b8d3297f493eab0c5c497776ca371451cf79c6c3e`
+- `scripts/phase9/build-release-qa-packet.mjs`: `74f192d642c998d57d3e21fba32dc35064f33fb1f0eb6ffb10636524cb3d4b7a`
+- `scripts/phase9/release-qa-integrity.mjs`: `ff2f7724d4cc0bdd4058f76acb8c31ea3b4d2e80a1e1dba531066a1750b727db`
+- `scripts/phase9/release-qa-integrity.test.mjs`: `ba97fd498d900ab76fa22ea968c37ba88406517da87ee9f1babd54f8dca5a679`
+- `scripts/launch/governed-evidence-chain.mjs`: `01a86c396964ffa8ab630341c46dc599f851cc0327e54563ec3366ef771aecb7`
+- `scripts/launch/governed-evidence-chain.test.mjs`: `1361abf142d7ef3e50a321637dc02c7374ac7f64e0710146849f38498a62e43a`
+- `scripts/launch/governed-publication-coverage.mjs`: `1f1c63379a21a79f6b87424cdc4a503b3999c17533d9d7f699066a082fe1733b`
+- `scripts/launch/governed-publication-coverage.test.mjs`: `d33b87d6a775ed39c749e052994c29f19f2110c7bf003fc433133fe2511fbc2b`
+- `scripts/phase9/git-status-exclusion.test.mjs`: `ab1250dc828f202bf3c78a9ac0c762c522a1bcd5d81a3dc266955e3ab879fa89`
+- `scripts/docs/device-support-policy-audit.test.mjs`: `9acf25264d13d4fe7dc9966c92e1ce8d3b1e84df61f3b86416401564a28420ea`
+- `scripts/phase9/dependency-sbom-contract.mjs`: `71769406281d2ba7ba51e0dd729e28b0bc0b00ec3e688931a2b4b59722d6f7da`
+- `scripts/phase9/dependency-sbom-contract.test.mjs`: `2e7807e72af06dbebe3e2b69d80085d9b615e978487265a270f2efee5324d989`
+- `scripts/e2e/human-e2e-manifest-contract.test.mjs`: `1567c0da6f8654d6362f7628680b87f0df73b1bbe86d8a29e6a38de1648c2415`
+- `scripts/phase9/build-evidence-chain-ledger.mjs`: `69308cd626980aba6c12b636ff82230f9c40c1bb1d9d6b9fc10e71678abfc225`
+- `scripts/phase9/build-evidence-chain-ledger.test.mjs`: `97b39eff264003a715df958960f6b352f22b9061251a47e6fad69763558e0059`
+- `scripts/phase5/device-qa-packet-contract.mjs`: `c7bb801c99819e83ad4971cfbea573c60e41c074ca31e6d9dd068b2579cdc8ee`
+- `scripts/phase7/core-loop-qa-packet-contract.mjs`: `3cf50c30778d6704ef5e83debe4a8ab3d9e80f9bed04012fb4413a5270fcf994`
+- `scripts/phase7/core-loop-qa-packet-contract.test.mjs`: `5e1f14fd16149c8617b6375d04f3620593fe22ad5ebc00886baabff15faa6b66`
+- `scripts/phase9/upstream-packet-contract.mjs`: `46518896ff14b3124b240e317fcd0d36ff2b6b213fc0342efb6725ec4a72bc47`
+- `scripts/phase9/upstream-packet-contract.test.mjs`: `a7ab3c82ad976f8791a0ab815c0029be6e41de462e601e8ce78e985556e54e5b`
+- `docs/phase-5/generated/device-qa-packet.json`: `e64731a8290b3bc8f5975f8bc6f6938829c4d643ec421e3476122293db6cf6e2`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `884c51a6a1381d4dd958e56cfa1c49b2964db9d1467274e831216422e90c98b0`
+- `docs/phase-4/generated/beta-coverage-report.json`: `41e6693871df42e4bcbdc1292ec28abb7159108a7774c0ade522ee2d47a89a53`
+- `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
+- `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
+- `scripts/e2e/cat07-committed-evidence.mjs`: `aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0`
+- `scripts/e2e/human-e2e-manifest.mjs`: `ff71ba1ee78bafe9171b73c1eac750dbe235f1025fc610e13b0cbff6d67cef7a`
+- `scripts/e2e/human-e2e-manifest-render.mjs`: `b868275b0ca1a3bb99ab681bf7b96e466b03aefd3d410c244a7d9a076fc5b41d`
+- `scripts/e2e/evidence-diagnostic-hygiene.mjs`: `0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911`
+- `scripts/e2e/cat07-png-contract.mjs`: `0fa7b3546a525145a270ea52df023ffebb67e0a75d1add26eae07fe985a196f8`
+- `scripts/e2e/cat07-shelf-freshness-audit.mjs`: `84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229`
+- `scripts/phase9/live-supabase-adversarial.mjs`: `01b6e3227a541d4cc82a0e50dd2361af686dc1cf042eb5a8d344ce6356a07698`
 - `scripts/phase9/live-edge-auth.mjs`: `9ab6dc411649969ff890179f007cbb089bf15707fcbb3fe0af53b59d631f53fc`
 - `scripts/phase9/live-data-rights.mjs`: `b11ca191fd71fb3ffdd734e87e995b5e76db2b516e9fd347c2c623adc65dea47`
-- `scripts/phase9/live-consent-withdrawal.mjs`: `0135ea69f7f7ffe3aa1ef58e208eb77fe63865d69c76c65d69421400121fd54b`
+- `scripts/phase9/live-consent-withdrawal.mjs`: `178519d6ce579370455de9d1eddd5f3d9261ccca5ce9775259476d87f0b3a289`
 - `scripts/phase9/consent-withdrawal-evidence.mjs`: `8ba1841b7c8f41f7056dc06ef04f353d801f45c525575574058489b7fe9f865e`
 - `scripts/phase9/consent-withdrawal-evidence.test.mjs`: `c43aaa6ad85cd3b4fb13fd248a925bf0109304528519b99ab7fe88d9a9d0bec8`
 - `scripts/phase9/live-public-forms.mjs`: `e4bb52bf67f60df98aabcc9095dc7758e92c376d06cd17887bf12e70220ae789`
@@ -345,24 +544,27 @@ Git status: clean
 - `scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql`: `45dcf34c01b53d77245c08105432e5d47e07df3e7d32f0c3bf205b866657e39b`
 - `scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql`: `1717baff7788481ece8fdc21170822b5bbf6f3f9e28e761d83e1fe989f1a9fbc`
 - `scripts/phase9/catalog-scan-minimization-postgres-rehearsal.sql`: `f8ad8055123c90c0b1514a436fda09f809f6b484e96dea23580ad3381a8267db`
-- `scripts/phase9/consent-withdrawal-smoke.mjs`: `5ea638aabd1bab53e27ce55e86687bf0c95417d8299ac2716e435e076b0b2b49`
+- `scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql`: `e2ffde42d3da2cf35e19c717cb85d6ddf9ba576b99d21cf46806d5e83ebc30dc`
+- `scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql`: `b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919`
+- `scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql`: `64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9`
+- `scripts/phase9/consent-withdrawal-smoke.mjs`: `05baf20ecf0f4da24138df80e6724ff14ce7ed6e1918a7f35484bc88d2636539`
 - `scripts/phase9/supabase-policy-lint.mjs`: `3faac8f26b03d91eee32d3c63a83af821509bc5e7b9e36ea19afc721196d9b9a`
 - `scripts/phase9/security-ci-smoke.mjs`: `a4e7690f1885211c39423ce14bc4b78987f13c570db8d403b09254942e7098c1`
 - `scripts/phase9/privacy-payload-audit.mjs`: `f6e23f484587a5f2cfda90f8a239b2290715dcec26fe5876acd88dc59d0b2a86`
-- `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
+- `scripts/phase9/dependency-sbom.mjs`: `29b516cde5cb61dbf67e8c7a91b02a2e6a85f48d05b507a91686f90cbe4908cd`
 - `scripts/phase9/store-build-inspect.mjs`: `eda8aeb6d5035229d990f260ae23a19137fee187e0d4f86fecc438bd253da939`
-- `docs/phase-9/source-of-truth.md`: `865d3995185fee08dd7e25a4273ff10c8e74ef899f726a469c4013b82bdd6338`
-- `docs/phase-9/data-inventory.md`: `189433afdfcf915f7d0fa6741e11312d4ca0e8ab63ffa8381218e28e0a3bd106`
+- `docs/phase-9/source-of-truth.md`: `9a799b9bb07d7f26ae1ef461ada14d24e8ccf0f4cc9677fd0c29e85a1a254523`
+- `docs/phase-9/data-inventory.md`: `304c6a430f3ef71475aa9e65c91a7aa28b7ab23ad22ea28e9c0a76d279374045`
 - `docs/phase-9/edge-function-auth-matrix.md`: `3c83e21900172bc49a8a9414f5f0f527591ceace89f8d3904e49f067c488c01c`
 - `docs/phase-9/observability-payload-audit.md`: `c30c1c814567abb58bbcb1b345c20522e789381f8eee945e8a3268712fcaa709`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`
 - `docs/phase-9/rollout-rollback-plan.md`: `7bb4e30b3c5ce98e595cf743b066eb954d44097cf9d4fbc88f656b50bc0983ab`
 - `docs/phase-9/incident-response-plan.md`: `5b884cc2d6577a0aa12e72fabab236d83c43ed7d5e3eca6543d4bd03a936b12e`
 - `docs/phase-9/beta-evidence-summary.md`: `9ab2c7ea43c23c6b0e03373b69fedc958db122b89a2295add6a898e8bb1e4ff4`
-- `docs/phase-9/dependency-sbom.md`: `8637799873805d2ab3b5118a51dd37f40debdcb56c0631b9ea5645a9f435363f`
-- `docs/phase-9/release-candidates/README.md`: `c86f348f7c55a6890d67bd7c74a5fdb8a05aea5de14e1d7a854eae2ea0c282b7`
+- `docs/phase-9/dependency-sbom.md`: `ee98f08e3cce9cd76ed941a4dc5abcb62ce15bc00e992d6dd9d921e3989c0db1`
+- `docs/phase-9/release-candidates/README.md`: `ae84b60250ed96d7a58167c20923d2f9b640498c45f32dd31017f321bcf67147`
 - `docs/phase-9/release-candidates/_template/manifest.md`: `900797b6fa8aef269d21d17143598fc92c6acca4ec6d7ddc4e21881800ea91f1`
-- `docs/phase-9/release-candidates/_template/commands.md`: `0fd19c1f675a10213bc19cfa4e0779b0b2ffe231480584b35ad423131a49f4cb`
+- `docs/phase-9/release-candidates/_template/commands.md`: `38ca3b89373b3357e7d3289218d73c3eb0aee1dfc7b24a6e7e0a68a48bd1f8dd`
 - `docs/phase-9/release-candidates/_template/automated-verification.md`: `0f3d3f7baa4a52407ed6e257da0b61dc4ef31edd48bb62c90c5ea7a4c3f90e13`
 - `docs/phase-9/release-candidates/_template/manual-qa-matrix.md`: `dcf4104f352d05241eefc35bc714774e0c4f593213006788226f5513902a1b68`
 - `docs/phase-9/release-candidates/_template/security-review.md`: `f8e52e1e5f0aae45b69de9d7f7102b93478e332ab14e53c87511cf4a48a73405`

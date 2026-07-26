@@ -651,7 +651,7 @@
       "id": "CAT-07",
       "owner": "C/R",
       "prerequisites": ["CAT-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior",
+      "nextAction": "Complete and capture acceptance evidence: Complete reviewed Shelf freshness, PAO, physical-package date, source precedence, provenance, and unknown-state behavior",
       "acceptance": "Chemistry/legal review and live data evidence pass"
     },
     {

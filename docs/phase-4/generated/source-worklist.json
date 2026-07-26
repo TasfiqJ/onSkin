@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-22T17:40:42.277Z",
+  "generatedAt": "2026-07-25T22:38:18.613Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
-  "strict": true,
-  "gitSha": "aadcf67688df648dd9c9ba872b84c6fc6f79be30",
-  "gitStatus": "",
+  "strict": false,
+  "gitSha": "fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49",
+  "gitStatus": "M .prettierignore\n M 04_repo_docs/docs/ARCHITECTURE.md\n M 04_repo_docs/docs/DECISIONS.md\n M 04_repo_docs/docs/FEATURE_INDEX.md\n M 04_repo_docs/docs/TESTING_STRATEGY.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/lib/analytics/postHogPersistenceSourceContract.test.ts\n M docs/ARCHITECTURE.md\n M docs/DECISIONS.md\n M docs/FEATURE_INDEX.md\n M docs/TESTING_STRATEGY.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/hugeToDo/task-graph.json\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/data-inventory.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-memo-open-beauty-facts.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/curated-product-curation-sheet.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/observability-dashboard.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-9/data-inventory.md\n M docs/phase-9/source-of-truth.md\n M docs/store-privacy-inventory.md\n M package-lock.json\n M package.json\n M scripts/launch/execution-baseline.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase9/build-release-qa-packet.mjs\n M scripts/phase9/data-rights-smoke.mjs\n M scripts/phase9/live-data-rights.mjs\n M scripts/phase9/release-smoke.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/config.toml\n M supabase/functions/_shared/accountAccessCoverage.test.ts\n M supabase/functions/data-export/exportCore.ts\n M supabase/functions/data-export/exportRegistry.test.ts\n M supabase/functions/data-export/exportRegistry.ts\n M supabase/functions/data-export/index.ts\n M supabase/functions/manifest.json\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/catalog_launch_curation.test.sql\n M supabase/tests/database/catalog_serving_gate.test.sql\n M supabase/tests/database/schema_contract.test.sql\n?? apps/catalog-operator-console/.env.example\n?? apps/catalog-operator-console/README.md\n?? apps/catalog-operator-console/index.html\n?? apps/catalog-operator-console/package.json\n?? apps/catalog-operator-console/public/_headers\n?? apps/catalog-operator-console/src/auth.ts\n?? apps/catalog-operator-console/src/env.test.ts\n?? apps/catalog-operator-console/src/env.ts\n?? apps/catalog-operator-console/src/main.ts\n?? apps/catalog-operator-console/src/operatorApi.test.ts\n?? apps/catalog-operator-console/src/operatorApi.ts\n?? apps/catalog-operator-console/src/sessionTimer.test.ts\n?? apps/catalog-operator-console/src/sessionTimer.ts\n?? apps/catalog-operator-console/src/styles.css\n?? apps/catalog-operator-console/src/workflow.test.ts\n?? apps/catalog-operator-console/src/workflow.ts\n?? apps/catalog-operator-console/tsconfig.json\n?? apps/catalog-operator-console/vite.config.ts\n?? deno.lock\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-authority-bypass.md\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-mfa-bypass.md\n?? docs/phase-4/catalog-operator-authority-runbook.md\n?? scripts/e2e/catalog-operator-console-fixture-server.mjs\n?? scripts/e2e/catalog-operator-console-fixture-server.test.mjs\n?? scripts/phase4/catalog-operator-authority-contract.mjs\n?? scripts/phase4/catalog-operator-authority-contract.test.mjs\n?? supabase/functions/catalog-operator/contract.test.ts\n?? supabase/functions/catalog-operator/contract.ts\n?? supabase/functions/catalog-operator/httpHandler.test.ts\n?? supabase/functions/catalog-operator/httpHandler.ts\n?? supabase/functions/catalog-operator/index.ts\n?? supabase/functions/catalog-operator/responseContract.test.ts\n?? supabase/functions/catalog-operator/responseContract.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.test.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.ts\n?? supabase/migrations/20260722000063_catalog_operator_authority.sql\n?? supabase/tests/database/catalog_operator_authority.test.sql",
   "summary": {
     "itemCount": 13,
     "domainCounts": {
@@ -17,10 +17,10 @@
       "blocked": 7,
       "local-scaffold": 6
     },
-    "sourcePathCount": 296,
+    "sourcePathCount": 302,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "items": [
     {
@@ -73,8 +73,8 @@
         {
           "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
           "exists": true,
-          "bytes": 10932,
-          "sha256": "893e09f4ad7c59c814a134df224c104ba7f959849ed2f34d5e700c2ee2088397"
+          "bytes": 11052,
+          "sha256": "8c4cd97589830a1dac8d65aa2468857cdd252dd5be9dfbcb1a69ac4a1d89f143"
         },
         {
           "path": "docs/phase-4/catalog-source-memo-cosing.md",
@@ -85,8 +85,8 @@
         {
           "path": "docs/phase-4/README.md",
           "exists": true,
-          "bytes": 7853,
-          "sha256": "daa4106ed7faaa900892fb879a517cfbebba912de9b8e805476964648b7020b4"
+          "bytes": 9346,
+          "sha256": "7939e1b27e9b235e9c061582786cd88870334018bda4681c478016cf46189b9b"
         },
         {
           "path": "docs/phase-4/catalog-source-policy.json",
@@ -115,8 +115,8 @@
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
-          "bytes": 14763,
-          "sha256": "d95811639cbf42a5877831a6a46d674bb8b275f5336357c2a20c38e6185aed8b"
+          "bytes": 14878,
+          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
         },
         {
           "path": "scripts/phase4/catalog-source-policy-audit.mjs",
@@ -133,8 +133,8 @@
         {
           "path": "docs/phase-4/phase-4-exit-review.md",
           "exists": true,
-          "bytes": 10119,
-          "sha256": "fbef76a78ea94ec0b2f2746983bd1eeb81c57ef1766d1a9b6ca85defffee4d89"
+          "bytes": 11966,
+          "sha256": "88399b14b071bb3686a0a1edc676f1ca7e72a49536d94ba8da50637c6130eb5c"
         },
         {
           "path": "docs/FOR_TAS_TO_DO.md",
@@ -182,8 +182,8 @@
         {
           "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
           "exists": true,
-          "bytes": 10932,
-          "sha256": "893e09f4ad7c59c814a134df224c104ba7f959849ed2f34d5e700c2ee2088397"
+          "bytes": 11052,
+          "sha256": "8c4cd97589830a1dac8d65aa2468857cdd252dd5be9dfbcb1a69ac4a1d89f143"
         },
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
@@ -224,8 +224,8 @@
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
-          "bytes": 14763,
-          "sha256": "d95811639cbf42a5877831a6a46d674bb8b275f5336357c2a20c38e6185aed8b"
+          "bytes": 14878,
+          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
         },
         {
           "path": "scripts/phase4/import-obf-snapshot.mjs",
@@ -361,8 +361,8 @@
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
-          "bytes": 14763,
-          "sha256": "d95811639cbf42a5877831a6a46d674bb8b275f5336357c2a20c38e6185aed8b"
+          "bytes": 14878,
+          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
         },
         {
           "path": "scripts/phase4/import-cosing-dictionary.mjs",
@@ -458,19 +458,19 @@
           "path": "docs/phase-4/curated-product-curation-sheet.md",
           "exists": true,
           "bytes": 8390,
-          "sha256": "f8b6ffd0ff144fc9b5219e1be8d624d5b1fafc6d5051b3199e5ed5cc0d5b23ff"
+          "sha256": "d93bbc7b1bd011586647893f8a6e7a49f81d05d6cbe30855d6c88d6011b0a92b"
         },
         {
           "path": "docs/phase-4/first-curated-product-batch.md",
           "exists": true,
           "bytes": 10318,
-          "sha256": "bb71a6f260f052f68128afd6b6db17d1376706b6e06973627e84c0fe9a2efc4b"
+          "sha256": "3c9172a6a5980a8d33c8fcbabb9fff8fc0959f0ea3e8497d29a9247f1e25a9c9"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44363,
-          "sha256": "5f80035149efea7ccc7c25120cfac971a33e46da12fea44f18e1f4bfdb9bafe6"
+          "bytes": 44497,
+          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -511,20 +511,20 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 54494,
-          "sha256": "46cf9014bc4e53a32ee0354f6e30fcab907e1111c2e6d45aa06f728ca0cccd35"
+          "bytes": 54980,
+          "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 44167,
-          "sha256": "5b7aae93e234fbc6292e56cc57fabe427fe58ead703ed824291a89f54a55f536"
+          "bytes": 44641,
+          "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
         },
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
-          "bytes": 14763,
-          "sha256": "d95811639cbf42a5877831a6a46d674bb8b275f5336357c2a20c38e6185aed8b"
+          "bytes": 14878,
+          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
@@ -583,8 +583,8 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 197306,
-          "sha256": "4dc48bb6d5614bf7765254733e2d03242386e6beb8527fa86cf14e12db6f3491"
+          "bytes": 198520,
+          "sha256": "134ef6289b4c59d7763e55b293603ba734f94f45083d161213898a953e4231cc"
         }
       ]
     },
@@ -686,8 +686,8 @@
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
-          "bytes": 14763,
-          "sha256": "d95811639cbf42a5877831a6a46d674bb8b275f5336357c2a20c38e6185aed8b"
+          "bytes": 14878,
+          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
         },
         {
           "path": "scripts/docs/generated-packet-status-audit.mjs",
@@ -736,7 +736,7 @@
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
           "bytes": 8829,
-          "sha256": "c171efae7cd7bdd114dabb0a015736280605dc54aeb13ad3954dfeb7d2b83268"
+          "sha256": "57edbb0dc8225750580ce647270aee17440b591b962b3c356d42c083620d540b"
         },
         {
           "path": "docs/phase-4/beta-shelf-corpus.template.json",
@@ -753,8 +753,8 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44363,
-          "sha256": "5f80035149efea7ccc7c25120cfac971a33e46da12fea44f18e1f4bfdb9bafe6"
+          "bytes": 44497,
+          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
         },
         {
           "path": "docs/phase-4/catalog-cat02-membership-proof.template.json",
@@ -777,14 +777,14 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 54494,
-          "sha256": "46cf9014bc4e53a32ee0354f6e30fcab907e1111c2e6d45aa06f728ca0cccd35"
+          "bytes": 54980,
+          "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 44167,
-          "sha256": "5b7aae93e234fbc6292e56cc57fabe427fe58ead703ed824291a89f54a55f536"
+          "bytes": 44641,
+          "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
         },
         {
           "path": "scripts/phase4/beta-coverage-report.mjs",
@@ -858,7 +858,7 @@
       "requiredEvidence": [
         "A content-addressed CAT-02 stage envelope binds an approved transform, zero-warning source QA, exact per-record reviews, source/build evidence, natural keys, record hashes, and the US territory.",
         "Fixture/candidate records, incomplete reviews, changed idempotent replays, duplicate natural keys, and existing-catalog conflicts fail closed before promotion.",
-        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs, retain bounded statement-level curation integrity, keep approval/promotion/rollback migration-owner-only pending CAT-08, and deny direct API-role catalog mutation.",
+        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only; approval, promotion, rollback, and CAT-03 activation intentionally remain migration-owner-only, and direct API-role catalog mutation remains denied.",
         "Every promoted projection traces through its immutable staged record and batch to source artifact, transform, approval, QA, and reviewer hashes.",
         "A reviewed hosted two-session drill proves atomic promotion, full retry on serialization failure, source-withdrawal containment, exact verification, and non-destructive rollback with shelf/correction references preserved."
       ],
@@ -872,6 +872,8 @@
         "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
         "supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql",
         "supabase/migrations/20260722000062_catalog_curation_statement_guard.sql",
+        "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+        "supabase/tests/database/catalog_operator_authority.test.sql",
         "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -936,6 +938,18 @@
           "sha256": "f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1"
         },
         {
+          "path": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+          "exists": true,
+          "bytes": 136620,
+          "sha256": "b6f9e51b2e64880f9be7811a8f4085706e4bd963aee2b2c9980d6d243e54ca55"
+        },
+        {
+          "path": "supabase/tests/database/catalog_operator_authority.test.sql",
+          "exists": true,
+          "bytes": 45935,
+          "sha256": "1c39e79ad716daf92143de63709987ed3c66c4c8e06a24e65e4eabc77aeb96df"
+        },
+        {
           "path": "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
           "exists": true,
           "bytes": 28021,
@@ -956,26 +970,26 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 35691,
-          "sha256": "52e48dcf3a70261580791dac75329e0f16741add4d4cc09ef0f5385bae77e666"
+          "bytes": 36315,
+          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35201,
-          "sha256": "6d5971e51a3d74f1527c74baee7bce5ca0a9ffeda1c136e73200e39a06501078"
+          "bytes": 35205,
+          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
         },
         {
           "path": "docs/phase-4/catalog-import-promotion-runbook.md",
           "exists": true,
-          "bytes": 20492,
-          "sha256": "3e5bc54b99743c5aa39c84a28c5659d25a8915906b043f33755f7ab0be61a9c6"
+          "bytes": 20551,
+          "sha256": "ae32603bbafbc01497cda9ff3631e666081211e7b8cd32b36d0ee81dabefeceb"
         },
         {
           "path": "docs/phase-4/first-curated-product-batch.md",
           "exists": true,
           "bytes": 10318,
-          "sha256": "bb71a6f260f052f68128afd6b6db17d1376706b6e06973627e84c0fe9a2efc4b"
+          "sha256": "3c9172a6a5980a8d33c8fcbabb9fff8fc0959f0ea3e8497d29a9247f1e25a9c9"
         }
       ]
     },
@@ -1032,8 +1046,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 39221,
-          "sha256": "57d7608cc3edc070dac3891ade17e50062ce04a06e7b10c9a636ec9a35f33d3b"
+          "bytes": 40695,
+          "sha256": "fc1069d44644741cebf7b3a3610fc12a532992ed60e7663bc898990eed1e1eb9"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -1044,8 +1058,8 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44363,
-          "sha256": "5f80035149efea7ccc7c25120cfac971a33e46da12fea44f18e1f4bfdb9bafe6"
+          "bytes": 44497,
+          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -1086,14 +1100,14 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 54494,
-          "sha256": "46cf9014bc4e53a32ee0354f6e30fcab907e1111c2e6d45aa06f728ca0cccd35"
+          "bytes": 54980,
+          "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 44167,
-          "sha256": "5b7aae93e234fbc6292e56cc57fabe427fe58ead703ed824291a89f54a55f536"
+          "bytes": 44641,
+          "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
@@ -1134,8 +1148,8 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 197306,
-          "sha256": "4dc48bb6d5614bf7765254733e2d03242386e6beb8527fa86cf14e12db6f3491"
+          "bytes": 198520,
+          "sha256": "134ef6289b4c59d7763e55b293603ba734f94f45083d161213898a953e4231cc"
         },
         {
           "path": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
@@ -1176,14 +1190,14 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 35691,
-          "sha256": "52e48dcf3a70261580791dac75329e0f16741add4d4cc09ef0f5385bae77e666"
+          "bytes": 36315,
+          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35201,
-          "sha256": "6d5971e51a3d74f1527c74baee7bce5ca0a9ffeda1c136e73200e39a06501078"
+          "bytes": 35205,
+          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
         }
       ]
     },
@@ -1725,8 +1739,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 423570,
-          "sha256": "fc77aa792db62be241e8fc574e7d92ddf359e9e8bfafec5ef6be32621390b2ea"
+          "bytes": 429930,
+          "sha256": "8b9285457550899253b12dc4e76fffa23875d10f2ae7173e173fa4a23253ba2d"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -1935,14 +1949,14 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 35691,
-          "sha256": "52e48dcf3a70261580791dac75329e0f16741add4d4cc09ef0f5385bae77e666"
+          "bytes": 36315,
+          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35201,
-          "sha256": "6d5971e51a3d74f1527c74baee7bce5ca0a9ffeda1c136e73200e39a06501078"
+          "bytes": 35205,
+          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
         }
       ]
     },
@@ -1954,9 +1968,9 @@
       "launchGate": "B-CATALOG-SEED",
       "owner": "Engineering + catalog operator + database reviewer",
       "requiredEvidence": [
-        "Migrations `0056` through `0062` plus the catalog and CAT-07 pgTAP contracts pass on the exact hosted staging revision before promotion, curation authorization, or campaign release.",
+        "Migrations `0056` through `0063` plus the catalog, CAT-07, and CAT-08 pgTAP contracts pass on the exact hosted staging revision before promotion, curation authorization, or campaign release.",
         "Barcode and search use service-role-only RPCs over the same positive source/product/correction/CAT-03 eligibility relation; `service_role` has no direct catalog-table read, while explicitly safe authenticated reads retain positive RLS.",
-        "Only rows in the exact active global CAT-03 campaign with active campaign-scoped product authorization, reviewed `verified` or `usable` quality, recommendation eligibility, production/legal-approved sources, and zero operator-reviewed `triaged`/`accepted` correction holds can be served; untrusted open intake remains owner-scoped.",
+        "Only rows in the exact active global CAT-03 campaign with active campaign-scoped product authorization, reviewed `verified` or `usable` quality, recommendation eligibility, production/legal-approved sources, and zero independent product holds in `active` or `repair_attested` state can be served; untrusted open intake remains owner-scoped, and accepting, rejecting, closing, or deleting a report cannot release its hold.",
         "Barcode mappings are independently reviewed, direct authenticated reads cannot bypass source withdrawal, and every held/unknown reason returns the same no-match/manual fallback."
       ],
       "sources": [
@@ -1967,10 +1981,12 @@
         "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
         "supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql",
         "supabase/migrations/20260722000062_catalog_curation_statement_guard.sql",
+        "supabase/migrations/20260722000063_catalog_operator_authority.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_launch_curation.test.sql",
         "supabase/tests/database/cat07_truthful_freshness.test.sql",
+        "supabase/tests/database/catalog_operator_authority.test.sql",
         "supabase/tests/database/schema_contract.test.sql",
         "supabase/functions/catalog-lookup/index.ts",
         "supabase/functions/catalog-lookup/catalogContract.ts",
@@ -2026,10 +2042,16 @@
           "sha256": "f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1"
         },
         {
+          "path": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+          "exists": true,
+          "bytes": 136620,
+          "sha256": "b6f9e51b2e64880f9be7811a8f4085706e4bd963aee2b2c9980d6d243e54ca55"
+        },
+        {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 35691,
-          "sha256": "52e48dcf3a70261580791dac75329e0f16741add4d4cc09ef0f5385bae77e666"
+          "bytes": 36315,
+          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
         },
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -2040,20 +2062,26 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 197306,
-          "sha256": "4dc48bb6d5614bf7765254733e2d03242386e6beb8527fa86cf14e12db6f3491"
+          "bytes": 198520,
+          "sha256": "134ef6289b4c59d7763e55b293603ba734f94f45083d161213898a953e4231cc"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35201,
-          "sha256": "6d5971e51a3d74f1527c74baee7bce5ca0a9ffeda1c136e73200e39a06501078"
+          "bytes": 35205,
+          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
+        },
+        {
+          "path": "supabase/tests/database/catalog_operator_authority.test.sql",
+          "exists": true,
+          "bytes": 45935,
+          "sha256": "1c39e79ad716daf92143de63709987ed3c66c4c8e06a24e65e4eabc77aeb96df"
         },
         {
           "path": "supabase/tests/database/schema_contract.test.sql",
           "exists": true,
-          "bytes": 33215,
-          "sha256": "3426059e0af06a40dfe8dc38adaecb875493edcb827ab541c62820e8354dc601"
+          "bytes": 33987,
+          "sha256": "7b3fec5c3e4376e3bef68b3c624bcb6a55625d805555efd35e1945b58b04fe4d"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
@@ -2094,20 +2122,20 @@
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
-          "bytes": 14763,
-          "sha256": "d95811639cbf42a5877831a6a46d674bb8b275f5336357c2a20c38e6185aed8b"
+          "bytes": 14878,
+          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44363,
-          "sha256": "5f80035149efea7ccc7c25120cfac971a33e46da12fea44f18e1f4bfdb9bafe6"
+          "bytes": 44497,
+          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
         },
         {
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
           "bytes": 15548,
-          "sha256": "94f55de83b64d628e8481a1edea8cc32d190b380710d4d8ba611220a938ac1b7"
+          "sha256": "040d445364fb96f4f54f07e4db0d2360a61005707f6f7a963998f564e6446397"
         }
       ]
     },
@@ -2120,7 +2148,7 @@
       "owner": "Support + catalog operator + privacy/security + engineering",
       "requiredEvidence": [
         "Owner-scoped missing-product and wrong-match reports enter only the app's first-party correction workflow with active health-data authority and bounded, minimized fields.",
-        "Deletion and consent-withdrawal paths cover report data. Untrusted open intake remains owner-scoped; only operator-reviewed `triaged` or `accepted` product corrections suppress global catalog serving and recommendation eligibility.",
+        "Deletion and consent-withdrawal paths cover report data. Untrusted open intake remains owner-scoped; operator triage creates an independent reporter-free product hold, and only unreleased holds in `active` or `repair_attested` state suppress global catalog serving and recommendation eligibility. Accepting, rejecting, closing, or deleting the report cannot release that hold.",
         "Named support/catalog owners operate the seven-day triage SLA and retain correction-runbook evidence.",
         "No report, shelf/profile field, or user lookup is sent to OBF, CosIng, or another source; the legacy contribution queue and flag remain inert."
       ],
@@ -2132,6 +2160,8 @@
         "supabase/functions/catalog-report/privacy.ts",
         "supabase/functions/catalog-report/privacy.test.ts",
         "supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql",
+        "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+        "supabase/tests/database/catalog_operator_authority.test.sql",
         "apps/mobile/src/features/catalog/client.ts",
         "apps/mobile/src/features/catalog/client.test.ts",
         "docs/FOR_TAS_TO_DO.md"
@@ -2180,6 +2210,18 @@
           "sha256": "0d4543effd4eb5c6d5e036b96d777b217bf853fb0c9587575429a28f14d7793c"
         },
         {
+          "path": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+          "exists": true,
+          "bytes": 136620,
+          "sha256": "b6f9e51b2e64880f9be7811a8f4085706e4bd963aee2b2c9980d6d243e54ca55"
+        },
+        {
+          "path": "supabase/tests/database/catalog_operator_authority.test.sql",
+          "exists": true,
+          "bytes": 45935,
+          "sha256": "1c39e79ad716daf92143de63709987ed3c66c4c8e06a24e65e4eabc77aeb96df"
+        },
+        {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
           "bytes": 23409,
@@ -2225,14 +2267,14 @@
         {
           "path": "docs/phase-4/observability-dashboard.md",
           "exists": true,
-          "bytes": 3506,
-          "sha256": "32031463cdbc4fcbf5997da4572f7b924154b53a25097dae78b773db67bb1b89"
+          "bytes": 5238,
+          "sha256": "83d062519e31f6414b46af0bc4c3d0c994547edc39ffe3b08822c8f37d70349a"
         },
         {
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
           "bytes": 8829,
-          "sha256": "c171efae7cd7bdd114dabb0a015736280605dc54aeb13ad3954dfeb7d2b83268"
+          "sha256": "57edbb0dc8225750580ce647270aee17440b591b962b3c356d42c083620d540b"
         },
         {
           "path": "docs/phase-10/support-operations.md",
@@ -2274,5 +2316,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
+  ]
 }

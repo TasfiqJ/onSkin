@@ -1,5 +1,6 @@
 import {
   buildDirectExportPlans,
+  CALLER_RPC_OWNER_EXPORTS,
   CALLER_RLS_EXPORT_TABLES,
   type ExportTable,
   SERVICE_ONLY_EXPORT_DENYLIST,
@@ -10,6 +11,7 @@ import {
   subscriptionEventOwnerFilter,
   validateExportRegistry,
 } from './exportRegistry.ts';
+import { CATALOG_CORRECTION_EXPORT_COLUMNS } from './catalogCorrectionExportCore.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -43,12 +45,7 @@ Deno.test('actual export registry is duplicate-free and derives truthful coverag
   );
   assert(
     JSON.stringify(SERVICE_ROLE_FILTERED_EXPORTS) ===
-      JSON.stringify([
-        'subscriptions_events',
-        'catalog_corrections',
-        'reverse_trial_grants',
-        'order_attributions',
-      ]),
+      JSON.stringify(['subscriptions_events', 'reverse_trial_grants', 'order_attributions']),
     'service-role coverage was not derived from the executed registries.',
   );
   assert(
@@ -72,12 +69,15 @@ Deno.test('actual export registry is duplicate-free and derives truthful coverag
 });
 
 Deno.test('catalog correction export excludes every internal operator field', () => {
-  const plan = buildDirectExportPlans(VERIFIED_USER_ID).find(
-    (item) => item.table === 'catalog_corrections',
+  assert(
+    CALLER_RPC_OWNER_EXPORTS.includes('catalog_corrections'),
+    'corrections must use the dedicated authenticated-owner RPC.',
   );
-  assert(plan?.clientKind === 'service_role', 'corrections must use service filtering.');
-  assert(plan.filter?.value === VERIFIED_USER_ID, 'correction owner filter was not resolved.');
-  const columns = new Set(plan.selectColumns?.split(',').map((value) => value.trim()));
+  assert(
+    !SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES.some((item) => item.table === 'catalog_corrections'),
+    'corrections must never use raw service-role table selection.',
+  );
+  const columns = new Set<string>(CATALOG_CORRECTION_EXPORT_COLUMNS);
   for (const internal of [
     'assigned_to',
     'resolved_by',
@@ -88,6 +88,7 @@ Deno.test('catalog correction export excludes every internal operator field', ()
     'intake_request_id',
     'intake_health_epoch',
     'intake_request_digest',
+    'export_total_count',
   ]) {
     assert(!columns.has(internal), `internal correction field leaked: ${internal}`);
   }

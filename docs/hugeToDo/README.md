@@ -59,6 +59,14 @@ Start here:
 - [CAT-07 Truthful Freshness Migration](../../supabase/migrations/20260718000060_cat07_truthful_freshness.sql)
 - [CAT-07 Database Contract](../../supabase/tests/database/cat07_truthful_freshness.test.sql)
 - [CAT-07 Isolated PostgreSQL Rehearsal](../../scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql)
+- [CAT-08 Operator Authority and Correction Runbook](../phase-4/catalog-operator-authority-runbook.md)
+- [CAT-08 Operator Authority Migration](../../supabase/migrations/20260722000063_catalog_operator_authority.sql)
+- [CAT-08 Database Contract](../../supabase/tests/database/catalog_operator_authority.test.sql)
+- [CAT-08 Two-Connection Revocation Rehearsal](../../supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql)
+- [CAT-08 Operator Edge Surface](../../supabase/functions/catalog-operator/)
+- [CAT-08 Separate Internal Console](../../apps/catalog-operator-console/README.md)
+- [CAT-08 Aggregate Source Contract](../../scripts/phase4/catalog-operator-authority-contract.mjs)
+- [CAT-08 Aggregate Contract Tests](../../scripts/phase4/catalog-operator-authority-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -91,9 +99,11 @@ Every other trust/scope/build combination fails closed.
 
 Migration `0056` supplies the local fail-closed serving boundary: barcode and
 search share service-role-only positive eligibility rules, direct reads cannot
-bypass source withdrawal, operator-reviewed `triaged` or `accepted` correction
-holds suppress rows, and held reasons use
-the same no-match/manual fallback. Missing-product and wrong-match reports stay
+bypass source withdrawal, and held reasons use the same no-match/manual
+fallback. Forward migration `0063` makes independent reporter-free product
+holds in `active` or `repair_attested` state the correction-serving authority:
+operator triage creates the hold, while accepting, rejecting, closing, or
+deleting the report cannot release it. Missing-product and wrong-match reports stay
 inside the app's first-party correction operation; OBF/CosIng are not runtime
 recipients and the legacy contribution lane is inert. External legal/source
 decisions, cleared identity and live URLs, actual source artifacts, active
@@ -147,14 +157,16 @@ for the migration-owner release transition, and adds the indexed `AFTER STATEMEN
 insert statement and, only when stored rows reach the expected count, validates
 the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
-must attest exact latest migration `20260722000062`; the current pgTAP source
-plan contains 99 assertions. Beta demand
+must bind the exact CAT-03 statement-guard migration `20260722000062`, while
+deployment and full-chain database evidence must also attest current repository
+head `20260722000063`; the current CAT-03 pgTAP source plan contains 99
+assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, exact local/
-hosted full-chain evidence through `0062`, current signed database readback,
+hosted full-chain evidence through `0063`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
 quality, market, or revenue outcome is implied.
 
@@ -275,6 +287,57 @@ encrypted-storage/relaunch/accessibility/notification evidence, and refreshed
 human-simulated E2E remain open. CAT-07 is not complete, and no Apple, legal,
 product-quality, market, or revenue outcome is implied.
 
+CAT-08 is now an `in_progress` local source candidate, blocked by CAT-07. The
+candidate defines six bounded operator RPCs over private FORCE-RLS authority,
+executable only by a constrained dedicated Edge login outside the Data API.
+Edge verifies the exact Supabase issuer, subject, audience, live token, and AAL2
+claim before Postgres independently derives a nonanonymous operator from the
+exact live Auth session and verified TOTP factor. Immutable grants/capability
+bindings, ten-minute work sessions, five-minute lease/CAS claims, UUIDv4
+idempotency receipts, committed global and per-action database rate budgets,
+immutable audit, and reporter-independent product holds are fail-closed.
+Triage, disposition, repair
+attestation, and release are separated. A triaged hold survives reporter
+withdrawal/account deletion; accepted/rejected/closed report state cannot
+release it. A third person may attest only an exact current CAT-02 projection
+and signed staged CAT-03 successor over the active-hold root. A fourth distinct
+person releases; release advances the root and does not activate serving.
+CAT-03 owners must complete a fresh post-release campaign/activation/readback.
+The legacy raw service-role correction read/review path is
+revoked, and API roles receive no direct protected-table editor.
+
+A separate publishable-key-only operator-console source candidate exists, but
+it is not deployed or hosted. A local ignored synthetic-fixture browser packet
+exists under `test-results/human-e2e/2026-07-25/cat08-catalog-operator-console-current/`;
+it visually covers email OTP -> `aal1` -> TOTP -> `aal2`, invalid TOTP,
+claim-before-detail screens, a displayed conflict followed by a later
+correction-success screen, hold-release/empty screens, source acknowledgement,
+sign-out, and supported compact/modern production-preview layouts. The
+screenshots predate deeper fixture-authority hardening and are not exact-source-
+bound browser evidence. In particular, they do not prove auth ordering or token
+binding, live claim/version enforcement, conflict-to-reclaim linkage,
+independent four-person release against a current repair, durable source
+recommendation state, or server-side token invalidation. A separate post-capture
+Node adversarial contract now passes those synthetic fixture checks, but the
+browser flow was not rerun against that exact source. The packet therefore
+remains local, synthetic, ignored, visual-only, partial, and not current
+governed acceptance evidence. No named MFA-enrolled operator roster,
+staffing/coverage, verified operator/build/capability/incident display, hosted
+migration/RLS/stale-session/concurrency/deletion/audit evidence, incident drill,
+hosted rate-threshold/load evidence, scheduled idle-period rate-row purge, or
+approved workforce audit-retention/deprovisioning contract exists. The isolated
+local database gate now performs two clean resets and a real two-connection
+`dblink` rehearsal: it proves action-first and
+session-establishment-versus-revocation commit ordering against the actual
+gateway, including denial after revocation. This is
+local PostgreSQL evidence only; it does not replace the required hosted
+transaction-pooler and independent-session transcript. Pre-`0063` legacy holds
+also require a prove-zero
+cutover result or separately reviewed migration-owner remediation. Professional
+privacy/security/legal review remains open. The source candidates do not complete
+CAT-08 or guarantee App Review, legal compliance, safety, product-market fit, or
+revenue.
+
 Apple 1.4.1 health-accuracy scrutiny, 2.5.18's sensitive-data advertising ban,
 5.1/5.1.2 privacy and use limits, and the FTC health-products substantiation
 standard are recorded as launch gates in the checkpoint. Whether a user-
@@ -283,8 +346,8 @@ health-targeted advertising remains unresolved; consent alone is not App Review
 or legal clearance.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now covers all 61 migrations through
-`0062`, all 16 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now covers all 62 migrations through
+`0063`, all 17 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

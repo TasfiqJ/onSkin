@@ -104,8 +104,8 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   transaction isolation, and fail-closed source withdrawal.
 - Risk: the deliberately conservative insert-only path sends cross-source or
   natural-key collisions to review rather than merging them automatically.
-  Dedicated operator roles and UI remain CAT-08 work; until then,
-  approval/promotion/rollback stay migration-owner-only. Real source approvals,
+  CAT-08 operators now record immutable recommendations only;
+  approval/promotion/rollback intentionally stay migration-owner-only. Real source approvals,
   hosted concurrency/rollback evidence, and the curated beta catalog remain
   launch gates.
 - Status: implementation candidate; production rollout gated.
@@ -150,10 +150,11 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   Every mutation of sealed served state appends an immutable per-product event
   while holding the same global lock, including reviewed correction holds,
   production/legal source withdrawal, and promoted-batch retirement. Correction-
-  hold evidence uses one bounded serving projection (correction/product ID,
-  status, UTC review time, and reviewer/note-presence booleans); user identity,
-  barcode, free text, arbitrary JSON, assignment/resolution content, and ambient
-  timestamps never enter the permanent CAT-03 digest chain. Product/dependency
+  hold evidence uses one bounded reporter-independent serving projection (hold/
+  product ID, state, bounded reason, server-opened time, and current mutation
+  root); correction/report identity, user identity, barcode, free text,
+  arbitrary JSON, assignment/resolution content, and ambient timestamps never
+  enter the permanent CAT-03 digest chain. Product/dependency
   snapshot functions and mutation capture fix `TimeZone` to UTC before whole-row
   JSON canonicalization.
   Outcome reviewers sign the current mutation root. Exact byte restoration, closing the
@@ -173,6 +174,53 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   hosted concurrency/readback evidence, and counsel-approved market-specific policy
   remain launch gates.
 - Status: source implementation candidate; production activation gated.
+
+### A-010: Dedicated Operator Identity Cannot Become Catalog Authority
+
+- Decision: CAT-08 uses a separate internal console and six bounded RPCs, never
+  a generic table editor. Browser API roles cannot execute the RPCs directly.
+  Edge signature-verifies the exact nonanonymous `aal2` bearer, then passes
+  its signed Auth-session UUID and exact deployment tuple through six hardcoded
+  functions in a non-Data-API gateway schema. A constrained, nonsuperuser,
+  membership/ownership-free `LOGIN NOINHERIT NOBYPASSRLS` role connects through
+  the transaction pooler with CA and hostname verification; service-role
+  transport is absent. Postgres derives the confirmed normalized
+  email, actor, and verified TOTP factor from the live Auth session. Every
+  action also requires an active immutable grant/capability binding and a
+  database-open runtime row matching environment, source revision, Edge
+  deployment ID, and monotonic control generation, plus a ten-minute operator
+  work session. A separately committed, grant-free admission preflight spends
+  a per-actor global budget before every action; successful action transactions
+  spend a bounded class budget. Session renewal and actions use one advisory-
+  then-grant-lock order, immediate server-derived revocations, and a fresh
+  post-lock wall clock. Queue mutations require a five-minute
+  database-clock lease,
+  UUIDv4 idempotency receipt, advisory lock, and compare-and-swap version.
+  Triage, disposition, CAT-02/CAT-03 repair attestation, and release are
+  capability-separated. Triage opens a reporter-independent product hold;
+  accepting, rejecting, closing, withdrawing, or erasing the correction cannot
+  release it. A third person may attest only exact current CAT-01/CAT-02
+  authority plus a signed staged CAT-03 successor over the active-hold mutation
+  root. A fourth distinct person releases; release advances the root and never
+  activates serving. CAT-03 owners must complete a fresh post-release record,
+  campaign release/activation, and readback. Source/import review actions are immutable
+  recommendations only and never receive migration-owner CAT-02/CAT-03
+  promotion/release authority.
+- Criteria: no shared or caller-selected identity, no browser service secret,
+  no raw API-role protected-table access, short immutable work sessions fenced
+  on every request by revocable Auth/TOTP/grant authority, all-action admission
+  and class rate budgets, linearizable renewal/revocation ordering, bounded
+  cursor/lease/CAS behavior, immutable minimized audit, reporter erasure without
+  risk resurrection, and per-product separation of duties.
+- Risk: local migration, Edge, and console source cannot prove hosted Auth/MFA,
+  revocation, concurrent sessions, deployment isolation, staffing, retention,
+  credential rotation, verified pooler TLS, runtime freeze/rollback, incident
+  response, human E2E, professional review, or Apple acceptance. Production
+  acceptance requires independent hosted proof of the dedicated gateway role's
+  exact ACL/membership/ownership state, full TLS verification, concurrency/rate
+  behavior, and the frozen runtime/deployment receipt.
+- Status: `in_progress` source candidate; CAT-07 and external acceptance gates
+  remain open.
 
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 

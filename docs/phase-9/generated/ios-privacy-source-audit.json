@@ -29,12 +29,12 @@
     "mapping": {
       "path": "docs/phase-9/ios-sdk-package-mapping.json",
       "bytes": 8352,
-      "sha256": "ef4088bd6a60c9f66d86e65154a03cd165ecb37f33e655a693208444d14114c7"
+      "sha256": "ac482b5579a4ff8ad9b4dc468162b2f8bdc92b7193d45e3661d1f97ce282717a"
     },
     "packageLock": {
       "path": "package-lock.json",
-      "bytes": 557171,
-      "sha256": "dd17af2962634dd6e1bc1f6f82ca381680bfdc61f161bea6d8ddef9e03d92920"
+      "bytes": 557676,
+      "sha256": "65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480"
     }
   },
   "summary": {

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-22T17:40:33.158Z",
+  "generatedAt": "2026-07-25T22:38:17.735Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
-  "strict": true,
-  "gitSha": "aadcf67688df648dd9c9ba872b84c6fc6f79be30",
-  "gitStatus": "",
+  "strict": false,
+  "gitSha": "fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49",
+  "gitStatus": "M .prettierignore\n M 04_repo_docs/docs/ARCHITECTURE.md\n M 04_repo_docs/docs/DECISIONS.md\n M 04_repo_docs/docs/FEATURE_INDEX.md\n M 04_repo_docs/docs/TESTING_STRATEGY.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/lib/analytics/postHogPersistenceSourceContract.test.ts\n M docs/ARCHITECTURE.md\n M docs/DECISIONS.md\n M docs/FEATURE_INDEX.md\n M docs/TESTING_STRATEGY.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/hugeToDo/task-graph.json\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/data-inventory.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-memo-open-beauty-facts.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/curated-product-curation-sheet.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/observability-dashboard.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-9/data-inventory.md\n M docs/phase-9/source-of-truth.md\n M docs/store-privacy-inventory.md\n M package-lock.json\n M package.json\n M scripts/launch/execution-baseline.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase9/build-release-qa-packet.mjs\n M scripts/phase9/data-rights-smoke.mjs\n M scripts/phase9/live-data-rights.mjs\n M scripts/phase9/release-smoke.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/config.toml\n M supabase/functions/_shared/accountAccessCoverage.test.ts\n M supabase/functions/data-export/exportCore.ts\n M supabase/functions/data-export/exportRegistry.test.ts\n M supabase/functions/data-export/exportRegistry.ts\n M supabase/functions/data-export/index.ts\n M supabase/functions/manifest.json\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/catalog_launch_curation.test.sql\n M supabase/tests/database/catalog_serving_gate.test.sql\n M supabase/tests/database/schema_contract.test.sql\n?? apps/catalog-operator-console/.env.example\n?? apps/catalog-operator-console/README.md\n?? apps/catalog-operator-console/index.html\n?? apps/catalog-operator-console/package.json\n?? apps/catalog-operator-console/public/_headers\n?? apps/catalog-operator-console/src/auth.ts\n?? apps/catalog-operator-console/src/env.test.ts\n?? apps/catalog-operator-console/src/env.ts\n?? apps/catalog-operator-console/src/main.ts\n?? apps/catalog-operator-console/src/operatorApi.test.ts\n?? apps/catalog-operator-console/src/operatorApi.ts\n?? apps/catalog-operator-console/src/sessionTimer.test.ts\n?? apps/catalog-operator-console/src/sessionTimer.ts\n?? apps/catalog-operator-console/src/styles.css\n?? apps/catalog-operator-console/src/workflow.test.ts\n?? apps/catalog-operator-console/src/workflow.ts\n?? apps/catalog-operator-console/tsconfig.json\n?? apps/catalog-operator-console/vite.config.ts\n?? deno.lock\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-authority-bypass.md\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-mfa-bypass.md\n?? docs/phase-4/catalog-operator-authority-runbook.md\n?? scripts/e2e/catalog-operator-console-fixture-server.mjs\n?? scripts/e2e/catalog-operator-console-fixture-server.test.mjs\n?? scripts/phase4/catalog-operator-authority-contract.mjs\n?? scripts/phase4/catalog-operator-authority-contract.test.mjs\n?? supabase/functions/catalog-operator/contract.test.ts\n?? supabase/functions/catalog-operator/contract.ts\n?? supabase/functions/catalog-operator/httpHandler.test.ts\n?? supabase/functions/catalog-operator/httpHandler.ts\n?? supabase/functions/catalog-operator/index.ts\n?? supabase/functions/catalog-operator/responseContract.test.ts\n?? supabase/functions/catalog-operator/responseContract.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.test.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.ts\n?? supabase/migrations/20260722000063_catalog_operator_authority.sql\n?? supabase/tests/database/catalog_operator_authority.test.sql",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 137631,
-    "sha256": "af9996140bdfe44926163cdd67409b2384a94ae351c64e190b71b9f0b9fa4a7f",
-    "currentSha256": "af9996140bdfe44926163cdd67409b2384a94ae351c64e190b71b9f0b9fa4a7f"
+    "bytes": 142508,
+    "sha256": "4f9c1729c5af28028a13ee90b77f268530cdc19e42514458825f6befbe3bfad3",
+    "currentSha256": "4f9c1729c5af28028a13ee90b77f268530cdc19e42514458825f6befbe3bfad3"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -33,7 +33,7 @@
     "signedItemCount": 0,
     "unsignedReleaseDispositionCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 2
   },
   "items": [
     {
@@ -196,7 +196,7 @@
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "5a4c98e627c27a7556bbca3b66fcc6d191504fe6bc9a1e765adafbfc123d567f",
+      "reviewSnapshotSha256": "22a96d0c40f5ee48c800d101a64e36a0986d7a61144e180790eac44ca5e87c70",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -213,8 +213,8 @@
         {
           "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
           "exists": true,
-          "bytes": 10932,
-          "sha256": "893e09f4ad7c59c814a134df224c104ba7f959849ed2f34d5e700c2ee2088397"
+          "bytes": 11052,
+          "sha256": "8c4cd97589830a1dac8d65aa2468857cdd252dd5be9dfbcb1a69ac4a1d89f143"
         },
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
@@ -351,7 +351,7 @@
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "daba02d67a4d70dacb7ee9c749ebf90a475b647e3519e043d4ed414fe24e05b3",
+      "reviewSnapshotSha256": "bf9b2cfaeb6d137bf8d0be57272c4b7e958b30b28db763d1252aff89a685cde4",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -374,8 +374,8 @@
         {
           "path": "supabase/config.toml",
           "exists": true,
-          "bytes": 3705,
-          "sha256": "9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a"
+          "bytes": 3806,
+          "sha256": "b912687a1a149e4fe317160b269d5deb7e6b5f36ce65b02b8c37cf47d0c7ca7c"
         }
       ]
     },
@@ -849,7 +849,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "6c4772d5482b08a9286fc5fe25f245b2bc33d4cc7c5a341addea23fcacfbe4fe",
+      "reviewSnapshotSha256": "e5752d3700b61a5dfd26a0479483c350230aa66c74cd0b540a09a0ff24201396",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -902,14 +902,14 @@
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 22658,
-          "sha256": "78097b7d4cbbcdd3bb4194ccb97d7fcf3217af111b9de64d72238006a23bcd94"
+          "bytes": 23928,
+          "sha256": "2a31523c2e8d2eb1634a2127c9bc93d14b02f70a2bf88bd70b94c8ff2afa7f93"
         },
         {
           "path": "supabase/functions/data-export/exportCore.ts",
           "exists": true,
-          "bytes": 16251,
-          "sha256": "ef8828ff0f29dff17cebfca4064860ec2549a249023d9621385d7bce70a9a9bd"
+          "bytes": 15866,
+          "sha256": "15dfbb295a325f007961d69eff9ed067fad4fa0aae2ac7c79c931a27f2fcc330"
         },
         {
           "path": "supabase/functions/data-export/exportCore.test.ts",
@@ -920,20 +920,20 @@
         {
           "path": "supabase/functions/data-export/exportRegistry.ts",
           "exists": true,
-          "bytes": 9442,
-          "sha256": "c9dfdc4fb2f39bd61f78587af09b522dd81102547cca7b954d8a6355969409b1"
+          "bytes": 9423,
+          "sha256": "951e650d0285e60aa95bd00367aef91603c0767c3492f14f9e312c3bd328554a"
         },
         {
           "path": "supabase/functions/data-export/exportRegistry.test.ts",
           "exists": true,
-          "bytes": 8770,
-          "sha256": "b2a40a2287c40a342d4aba5cfbc509c89b6e5535698d290746a5a534523c582b"
+          "bytes": 8848,
+          "sha256": "f51e5c081f06d720e85535bb9895f730d18983109a1188c1777adf7c7e4c4e39"
         },
         {
           "path": "scripts/phase9/data-rights-smoke.mjs",
           "exists": true,
-          "bytes": 70395,
-          "sha256": "2109ff3b060355ef264029847ba11be80606f2ab68332663735f0679e9404b9d"
+          "bytes": 71937,
+          "sha256": "7a3fdde72e03e27e9bf6298d00ae533fae75f174206138c6962b208841fa6682"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -1009,7 +1009,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "69a93daecbf91269f3bb38b4a53ce4759ac9d2fffa32a6642de6af79fdb50a6c",
+      "reviewSnapshotSha256": "87e2db999b15da6509a43c08e6474f6e320af59a5a624b2726569b3df72dfcd8",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1302,8 +1302,8 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 54494,
-          "sha256": "46cf9014bc4e53a32ee0354f6e30fcab907e1111c2e6d45aa06f728ca0cccd35"
+          "bytes": 54980,
+          "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
         },
         {
           "path": "docs/hugeToDo/health-processor-inventory-v1.json",
@@ -1332,7 +1332,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "87e3561a1478de28b9ce73cc3648520ed8d173f3e80ba6ef77044ea4974108d9",
+      "reviewSnapshotSha256": "8e6bd36059cb73102a13cdca5c0967649922f21f4cc5aa0742f0b5b82517d17a",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1349,8 +1349,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 44167,
-          "sha256": "5b7aae93e234fbc6292e56cc57fabe427fe58ead703ed824291a89f54a55f536"
+          "bytes": 44641,
+          "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
         },
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
@@ -3194,7 +3194,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "43f304e95a0d56b595775277bbdd2a010bc7534d684d92b2a319b10a85b1d1bf",
+      "reviewSnapshotSha256": "854bce7d2ddddc8e30d66be2d535759837b74283f9bbc557d67730e28858bf50",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -3223,8 +3223,8 @@
         {
           "path": "apps/mobile/src/lib/analytics/postHogPersistenceSourceContract.test.ts",
           "exists": true,
-          "bytes": 1959,
-          "sha256": "3a37c224a970201ffa4955a43a5ac8536e03cd964476a13f23662902d11f4c00"
+          "bytes": 2241,
+          "sha256": "f87bb5e703f21c0223e3869310207242e8ca9e733bbabd6bbec06173f2035cd9"
         },
         {
           "path": "apps/mobile/src/lib/analytics/track.test.ts",
@@ -3390,5 +3390,8 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review operator queue generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.",
+    "Source Phase 3 review worklist records a dirty Git worktree; regenerate from a clean tree before final reviewer handoff."
+  ]
 }

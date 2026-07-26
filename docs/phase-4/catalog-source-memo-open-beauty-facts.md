@@ -71,8 +71,10 @@ Migration `20260717000056_catalog_serving_eligibility_gate.sql` makes barcode
 and search use service-role-only RPCs over a shared positive eligibility
 boundary. It hides sources without production/legal approval and products that
 are inactive, unreviewed, below `usable`, recommendation-ineligible, or subject
-to an operator-reviewed `triaged`/`accepted` correction hold. Untrusted open
-intake remains owner-scoped. Barcode mappings also require review;
+to an independent product hold in `active` or `repair_attested` state.
+Untrusted open intake remains owner-scoped; operator triage creates the hold,
+and accepting, rejecting, closing, or deleting the report cannot release it.
+Barcode mappings also require review;
 direct authenticated reads cannot bypass source withdrawal. Every held reason
 uses the same no-match/manual fallback.
 

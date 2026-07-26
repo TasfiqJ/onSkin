@@ -88,6 +88,10 @@ entrypoint = "./functions/apple-auth-worker/index.ts"
 verify_jwt = true
 entrypoint = "./functions/catalog-lookup/index.ts"
 
+[functions.catalog-operator]
+verify_jwt = true
+entrypoint = "./functions/catalog-operator/index.ts"
+
 [functions.catalog-report]
 verify_jwt = true
 entrypoint = "./functions/catalog-report/index.ts"

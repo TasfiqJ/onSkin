@@ -22,15 +22,16 @@ source images, or external contribution.
 | ------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------- |
 | Build transform, QA, review overlay, and stage envelope | offline operator on a clean reviewed checkout                 | none                               |
 | Begin, chunk-stage, finalize, and verify a sealed batch | `service_role` through exact RPC grants                       | denied                             |
-| Decide individual records and approve a batch           | migration owner pending CAT-08 operator roles                 | denied to every API role           |
-| Promote or roll back a batch                            | migration owner pending CAT-08 operator roles                 | denied to every API role           |
+| Decide individual records and approve a batch           | migration owner; CAT-08 records recommendations only          | denied to every API role           |
+| Promote or roll back a batch                            | migration owner by explicit CAT-08 decision                   | denied to every API role           |
 | Read runtime products                                   | bounded service lookup/search plus positive authenticated RLS | no unreviewed/withdrawn source row |
 
 The shared service credential is transport authority, not review or release
 authority. Do not grant owner-only functions to `service_role`, expose the
 `private` schema, or restore direct catalog DML to make an operator workflow
-more convenient. CAT-08 must introduce distinct, auditable operator identities
-before a production admin UI can replace the migration-owner lane.
+more convenient. CAT-08 introduces distinct, auditable operator identities for
+recommendations but intentionally does not replace the migration-owner approval,
+promotion, rollback, or CAT-03 activation lane.
 
 ## Required Inputs
 
@@ -44,7 +45,7 @@ directory:
 4. the CAT-01 source approval, trust-registry, release-scope, and signed build
    evidence already embedded and hash-bound by the transform;
 5. a clean `origin/main` source revision containing migration `0057` and
-   forward migrations `0061` and `0062`, plus this runbook.
+   forward migrations through `0063`, plus this runbook.
 
 Never copy a fixture or candidate into a differently named file and treat it as
 production. The transform status, import mode, known fixture hashes, source
@@ -177,7 +178,7 @@ history. **Stop** if migration `0059` is already present, if the remote history
 differs from the reviewed source chain, or if the remote history cannot be
 verified; do not deploy until the discrepancy has an approved forward-remediation
 plan. After an approved clean-chain deployment, an operator verifies migrations
-`0057` through `0062` are present and submits only the exact RPC plan emitted in
+`0057` through `0063` are present and submits only the exact RPC plan emitted in
 `databasePlan`. Do not hand-edit that plan.
 
 Migration `0057` remains byte-stable. Migration `0061` replaces only the exact

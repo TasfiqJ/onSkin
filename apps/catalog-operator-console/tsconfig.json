@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": false,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["vite/client", "vitest/globals"]
+  },
+  "include": ["src/**/*.ts", "vite.config.ts", "vite.config.test.ts"]
+}

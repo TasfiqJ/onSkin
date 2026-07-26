@@ -235,11 +235,13 @@ their pgTAP contracts on the exact hosted revision. The first migration's servic
 barcode and search RPCs share one fail-closed eligibility boundary. A row is
 servable only when its source is production-approved and legal-approved; the
 product is active, reviewed, `verified` or `usable`, recommendation-eligible,
-and free of an operator-reviewed correction hold; and its barcode mapping is
-reviewed when barcode lookup is used. Operator-reviewed `triaged`/`accepted`
-corrections suppress serving even if a denormalized counter drifts. Untrusted
-open intake remains owner-scoped and cannot become a cross-user denial
-mechanism. Direct authenticated reads cannot bypass source withdrawal.
+and free of an independent product hold in `active` or `repair_attested` state;
+and its barcode mapping is reviewed when barcode lookup is used. Operator
+triage creates the reporter-free hold; accepting, rejecting, closing, or
+deleting the report cannot release it, and the hold suppresses serving even if
+a denormalized counter drifts. Untrusted open intake remains owner-scoped and
+cannot become a cross-user denial mechanism. Direct authenticated reads cannot
+bypass source withdrawal.
 
 Unknown and held rows return the same no-match/manual fallback so internal
 review or legal status is not disclosed. Migration `0058` additionally requires
@@ -260,7 +262,7 @@ Retain together:
 - dual-signed OBF/CosIng approvals and their reviewed evidence bytes;
 - exact production transform outputs and zero-warning QA reports;
 - signed EAS/archive/App Store release-build evidence;
-- hosted migration/reset/pgTAP/type/schema-diff evidence through `0062`;
+- hosted migration/reset/pgTAP/type/schema-diff evidence through `0063`;
 - catalog promotion, rollback, correction-SLA, and named reviewer/operator
   records.
 

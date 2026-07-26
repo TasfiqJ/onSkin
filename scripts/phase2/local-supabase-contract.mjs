@@ -18,6 +18,7 @@ const [
   runner,
   targetGuard,
   tests,
+  catalogOperatorRevocationRehearsal,
   catalogImportLifecycleMigration,
   catalogScanMinimizationMigration,
   catalogCompatibilityMigration,
@@ -39,6 +40,7 @@ const [
   read('scripts/phase2/local-supabase-reset.mjs'),
   read('scripts/phase2/local-supabase-target-guard.mjs'),
   read('supabase/tests/database/schema_contract.test.sql'),
+  read('supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql'),
   read('supabase/migrations/20260717000057_catalog_import_lifecycle.sql'),
   read('supabase/migrations/20260718000059_catalog_scan_minimization.sql'),
   read('supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql'),
@@ -81,10 +83,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 61, `Expected 61 migration files; found ${migrations.length}.`);
+check(migrations.length === 62, `Expected 62 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260722000062_'),
-  'The latest migration must remain 20260722000062.',
+  migrations.at(-1)?.startsWith('20260722000063_'),
+  'The latest migration must remain 20260722000063.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -166,6 +168,52 @@ check(
   'SIGINT/SIGTERM cleanup must be installed and exercised by the contract gate.',
 );
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
+check(
+  /run CAT-08 two-connection revocation rehearsal/u.test(runner) &&
+    /'test', 'db', '--local', 'supabase\/tests\/rehearsal'/u.test(runner),
+  'The full local DB gate must execute the committed CAT-08 two-connection rehearsal.',
+);
+check(
+  /select plan\(10\)/u.test(catalogOperatorRevocationRehearsal) &&
+    /extensions\.dblink_connect/u.test(catalogOperatorRevocationRehearsal) &&
+    /catalog_operator_gateway\.catalog_operator_queue/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /pg_catalog\.pg_advisory_lock\(820801\)/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /pg_catalog\.pg_advisory_lock\(820802\)/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    (
+      catalogOperatorRevocationRehearsal.match(
+        /pg_catalog\.pg_advisory_xact_lock\(p_latch_key\)/gu,
+      ) ?? []
+    ).length === 3 &&
+    /p_latch_key is not null/u.test(catalogOperatorRevocationRehearsal) &&
+    /pg_catalog\.pg_blocking_pids\(activity\.pid\)/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /'transactionid',[\s\S]*?'cat08_race_a'/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /'transactionid',[\s\S]*?'cat08_race_b'/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    !/p_sleep_seconds/u.test(catalogOperatorRevocationRehearsal) &&
+    !/hosted_verification_passed/u.test(catalogOperatorRevocationRehearsal) &&
+    /'cat08_race_b',[\s\S]*?'Lock'/u.test(catalogOperatorRevocationRehearsal) &&
+    /'cat08_race_a',[\s\S]*?'Lock'/u.test(catalogOperatorRevocationRehearsal) &&
+    /42501:CATALOG_OPERATOR_CAPABILITY_DENIED/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /42501:CATALOG_OPERATOR_GRANT_REQUIRED/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /dblink_disconnect\('cat08_race_a'\)/u.test(catalogOperatorRevocationRehearsal) &&
+    /dblink_disconnect\('cat08_race_b'\)/u.test(catalogOperatorRevocationRehearsal),
+  'CAT-08 rehearsal must prove action-first and session-revocation-first commit order with real independent sessions.',
+);
 check(/DB-08 remains open/u.test(runner), 'Temporary type output must not close DB-08.');
 
 const cat02ProductFixtureGtins = [

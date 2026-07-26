@@ -28,8 +28,8 @@ import {
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 61;
-const EXPECTED_LATEST_MIGRATION = '20260722000062';
+const EXPECTED_MIGRATION_COUNT = 62;
+const EXPECTED_LATEST_MIGRATION = '20260722000063';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
 // recomputes every sealed membership root. Keep ordinary CLI operations tightly
@@ -438,6 +438,17 @@ try {
       `[db05-local] temporary types: PASS (${types.output.split(/\r?\n/u).length} lines, sha256 ${typeHash})\n`,
     );
     process.stdout.write('[db05-local] DB-08 remains open; repository types were not replaced.\n');
+
+    await runLocalCli(
+      'run CAT-08 two-connection revocation rehearsal',
+      ['test', 'db', '--local', 'supabase/tests/rehearsal'],
+      {
+        timeoutMs: LOCAL_CLI_TIMEOUT_MS,
+        failureDiagnosticProfile: 'tap',
+        failureDiagnosticMaxBytes: STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES,
+        failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
+      },
+    );
   }
 } finally {
   await cleanupSandbox();

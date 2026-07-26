@@ -352,8 +352,8 @@ The review must positively establish, as applicable:
 - category and brand identity review;
 - quality disposition of `verified`, `usable`, `limited`, `unverified`, or
   `blocked`, with recommendable rows restricted to `verified`/`usable`;
-- zero live triaged/accepted correction holds and disposition of every source
-  or natural-key conflict;
+- zero independent product holds in `active` or `repair_attested` state and
+  disposition of every source or natural-key conflict;
 - PAO/expiry evidence where used; unknown stays unknown; and
 - reviewer credentials, scope, decision, conditions, timestamp, signature, and
   exact evidence hashes.
@@ -516,7 +516,8 @@ operator lane may register, seal, review, verify, stage authorizations,
 atomically release, or retire a campaign. API roles cannot directly read or
 mutate sealed curation authority.
 
-The current source chain ends at migration `0062`. Three covered indexes bound
+The current CAT-03 artifact checkpoint ends at migration `0062`; the global
+deployment chain continues through CAT-08 migration `0063`. Three covered indexes bound
 the batch/record digest, retained revision, and retained promotion-effect
 authority lookups. The membership function pushes the already-required staged
 record digest equality into the exact staged-record join without changing the
@@ -625,11 +626,11 @@ identities referenced by user shelves or history, and it never rewrites the
 prior activation record.
 
 Served-state invalidation is monotonic per product and begins before any CAT-03
-record exists. Every relevant product/child mutation, operator-reviewed
-`triaged`/`accepted` correction hold, withdrawal of a production-approved or
-legally approved source, and retirement of a promoted primary/contributing
-CAT-02 batch appends a chained mutation event and advances that product's
-generation/root. Closing or reapproving the correction, restoring source
+record exists. Every relevant product/child mutation, independent operator
+product hold, withdrawal of a production-approved or legally approved source,
+and retirement of a promoted primary/contributing CAT-02 batch appends a
+chained mutation event and advances that product's generation/root. Accepting,
+rejecting, closing, or deleting the correction cannot release its hold; restoring source
 approval or bytes, or restoring byte-identical batch/product state appends or
 retains the later root; it can never recreate an earlier root. A per-record
 invalidation marker may be retained as defense in depth, but it cannot be the
@@ -670,7 +671,7 @@ Source verification must include:
   rehearsal that includes the exact `0062` bytes and tests its three indexes,
   trigger/ACL metadata, zero/partial/exact/overflow/root/released-state guards,
   and rollback; this does not replace exact full-chain reset evidence;
-- a clean migration reset through `0062` and execution of the current
+- a clean migration reset through `0063` and execution of the current
   99-assertion CAT-03 pgTAP contract; and
 - repository typecheck, lint, tests, and source-policy/worklist audits.
 
@@ -737,7 +738,7 @@ CAT-03 stays `in_progress` until all are true:
   eligible records are present in the exact released campaign;
 - the holdout meets every predeclared confidence-bound and minimum-denominator
   gate, with zero open P0/P1 and zero below-usable recommendation exposure;
-- the complete migration chain through `0062`, with `0058` as its foundational
+- the complete migration chain through `0063`, with `0058` as its foundational
   CAT-03 authority, passes clean local and hosted reset, pgTAP, race, serving,
   activation, retirement, and rollback verification; and
 - an independent database verifier signs the exact readback receipt after the

@@ -1,10 +1,10 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-22T17:40:33.158Z
+Generated: 2026-07-25T22:38:17.735Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: aadcf67688df648dd9c9ba872b84c6fc6f79be30
-Git status: clean
+Git SHA: fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49
+Git status: DIRTY
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
 order for founder, counsel, clinical, chemistry, privacy/security, and IP/FTO
@@ -20,7 +20,7 @@ names, credentials, dates, or legal/clinical decisions.
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
 - Blockers: 0
-- Warnings: 0
+- Warnings: 2
 
 ## Next Operator Actions
 
@@ -135,7 +135,7 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `5a4c98e627c27a7556bbca3b66fcc6d191504fe6bc9a1e765adafbfc123d567f`
+- Review snapshot SHA-256: `22a96d0c40f5ee48c800d101a64e36a0986d7a61144e180790eac44ca5e87c70`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -144,7 +144,7 @@ Sources:
 Sources:
 
 - `docs/phase-4/catalog-source-memo-cosing.md` - 6696 bytes - sha256 `4e8b2194655050f0df044e377ffb52d5b9a67e5bb96fc36618b9cf732b6baaa4`
-- `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 10932 bytes - sha256 `893e09f4ad7c59c814a134df224c104ba7f959849ed2f34d5e700c2ee2088397`
+- `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 11052 bytes - sha256 `8c4cd97589830a1dac8d65aa2468857cdd252dd5be9dfbcb1a69ac4a1d89f143`
 - `docs/phase-4/odbl-compliance-memo.md` - 5338 bytes - sha256 `cf202bd20819b0a8f5b84cc81e7bb2f2470d45ae257a800d4e72f7e88e5bda7d`
 - `apps/mobile/src/features/catalog/CatalogReportConfirmation.tsx` - 4702 bytes - sha256 `2cfd1ff61e88ea74dfa8aca794cc114554edb704bd81f3ddad9c387a6f092a4d`
 - `apps/mobile/src/features/catalog/client.test.ts` - 30700 bytes - sha256 `fcc2d634af20a5ad8ad1e3b5151e8f057d165b32a9c3da33e3a4359c3633dc63`
@@ -173,7 +173,7 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `daba02d67a4d70dacb7ee9c749ebf90a475b647e3519e043d4ed414fe24e05b3`
+- Review snapshot SHA-256: `bf9b2cfaeb6d137bf8d0be57272c4b7e958b30b28db763d1252aff89a685cde4`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -183,7 +183,7 @@ Sources:
 
 - `apps/mobile/app.base.json` - 4123 bytes - sha256 `c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f`
 - `apps/mobile/app.config.js` - 17986 bytes - sha256 `84e5da6bde0ddb1203b6348627c5fd5e02b93ed97576538a2255561a02617fbb`
-- `supabase/config.toml` - 3705 bytes - sha256 `9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a`
+- `supabase/config.toml` - 3806 bytes - sha256 `b912687a1a149e4fe317160b269d5deb7e6b5f36ce65b02b8c37cf47d0c7ca7c`
 
 ### P0 - IP/FTO - Onboarding quiz FTO
 
@@ -329,7 +329,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `6c4772d5482b08a9286fc5fe25f245b2bc33d4cc7c5a341addea23fcacfbe4fe`
+- Review snapshot SHA-256: `e5752d3700b61a5dfd26a0479483c350230aa66c74cd0b540a09a0ff24201396`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -344,12 +344,12 @@ Sources:
 - `apps/mobile/src/lib/storage/privateKV.test.ts` - 31704 bytes - sha256 `6c03ca2087a0c7fbd0606d41d4fd22fbead02eef1941d7472958e0935f49cf52`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
 - `supabase/functions/account-deletion/index.ts` - 1722 bytes - sha256 `d4fd2917de31d91d010788a3c45d390de61fefd770f090ff5f1242f385b2f7f2`
-- `supabase/functions/data-export/index.ts` - 22658 bytes - sha256 `78097b7d4cbbcdd3bb4194ccb97d7fcf3217af111b9de64d72238006a23bcd94`
-- `supabase/functions/data-export/exportCore.ts` - 16251 bytes - sha256 `ef8828ff0f29dff17cebfca4064860ec2549a249023d9621385d7bce70a9a9bd`
+- `supabase/functions/data-export/index.ts` - 23928 bytes - sha256 `2a31523c2e8d2eb1634a2127c9bc93d14b02f70a2bf88bd70b94c8ff2afa7f93`
+- `supabase/functions/data-export/exportCore.ts` - 15866 bytes - sha256 `15dfbb295a325f007961d69eff9ed067fad4fa0aae2ac7c79c931a27f2fcc330`
 - `supabase/functions/data-export/exportCore.test.ts` - 12978 bytes - sha256 `f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b`
-- `supabase/functions/data-export/exportRegistry.ts` - 9442 bytes - sha256 `c9dfdc4fb2f39bd61f78587af09b522dd81102547cca7b954d8a6355969409b1`
-- `supabase/functions/data-export/exportRegistry.test.ts` - 8770 bytes - sha256 `b2a40a2287c40a342d4aba5cfbc509c89b6e5535698d290746a5a534523c582b`
-- `scripts/phase9/data-rights-smoke.mjs` - 70395 bytes - sha256 `2109ff3b060355ef264029847ba11be80606f2ab68332663735f0679e9404b9d`
+- `supabase/functions/data-export/exportRegistry.ts` - 9423 bytes - sha256 `951e650d0285e60aa95bd00367aef91603c0767c3492f14f9e312c3bd328554a`
+- `supabase/functions/data-export/exportRegistry.test.ts` - 8848 bytes - sha256 `f51e5c081f06d720e85535bb9895f730d18983109a1188c1777adf7c7e4c4e39`
+- `scripts/phase9/data-rights-smoke.mjs` - 71937 bytes - sha256 `7a3fdde72e03e27e9bf6298d00ae533fae75f174206138c6962b208841fa6682`
 - `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
 - `supabase/functions/_shared/storagePath.test.ts` - 1355 bytes - sha256 `3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9`
 
@@ -380,7 +380,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `69a93daecbf91269f3bb38b4a53ce4759ac9d2fffa32a6642de6af79fdb50a6c`
+- Review snapshot SHA-256: `87e2db999b15da6509a43c08e6474f6e320af59a5a624b2726569b3df72dfcd8`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -435,7 +435,7 @@ Sources:
 - `apps/mobile/src/lib/auth/sessionOwner.ts` - 7773 bytes - sha256 `b402808213bd63d665228e1ed013b62ce7781e0e3fc66b7985275836fccbda44`
 - `apps/mobile/src/lib/auth/sessionOwnerKey.ts` - 361 bytes - sha256 `8685503a2c910754e2baf87a5d86b5551004d64ecd2952d21800cc20ee2c5f6a`
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
-- `docs/phase-3/data-inventory.md` - 54494 bytes - sha256 `46cf9014bc4e53a32ee0354f6e30fcab907e1111c2e6d45aa06f728ca0cccd35`
+- `docs/phase-3/data-inventory.md` - 54980 bytes - sha256 `31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32996 bytes - sha256 `91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4`
 
@@ -446,7 +446,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `87e3561a1478de28b9ce73cc3648520ed8d173f3e80ba6ef77044ea4974108d9`
+- Review snapshot SHA-256: `8e6bd36059cb73102a13cdca5c0967649922f21f4cc5aa0742f0b5b82517d17a`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -455,7 +455,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/consent-matrix.md` - 16199 bytes - sha256 `72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a`
-- `docs/store-privacy-inventory.md` - 44167 bytes - sha256 `5b7aae93e234fbc6292e56cc57fabe427fe58ead703ed824291a89f54a55f536`
+- `docs/store-privacy-inventory.md` - 44641 bytes - sha256 `97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32996 bytes - sha256 `91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
 - `docs/hugeToDo/credential-inventory.json` - 22214 bytes - sha256 `8424ffa22560bc3a82d0b820cc79d509e2de54dea5c1a0ae353ad09ada160d3f`
@@ -1024,7 +1024,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `43f304e95a0d56b595775277bbdd2a010bc7534d684d92b2a319b10a85b1d1bf`
+- Review snapshot SHA-256: `854bce7d2ddddc8e30d66be2d535759837b74283f9bbc557d67730e28858bf50`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -1035,7 +1035,7 @@ Sources:
 - `apps/mobile/src/lib/analytics/eventRegistry.ts` - 4261 bytes - sha256 `39ec4444213976ea1819890f1fc4556cc79ab91f9f27547e683c9dbb14803413`
 - `apps/mobile/src/lib/analytics/postHogPersistenceCleanup.test.ts` - 3763 bytes - sha256 `e215e3d84ff7e68abfadcfdab15f3e44d23365d436ede7e28361d2335c3760b8`
 - `apps/mobile/src/lib/analytics/postHogPersistenceCleanup.ts` - 3542 bytes - sha256 `bc1c70b3507f3761171d9e6a1e613e7225421597b08738f47d588d1244858297`
-- `apps/mobile/src/lib/analytics/postHogPersistenceSourceContract.test.ts` - 1959 bytes - sha256 `3a37c224a970201ffa4955a43a5ac8536e03cd964476a13f23662902d11f4c00`
+- `apps/mobile/src/lib/analytics/postHogPersistenceSourceContract.test.ts` - 2241 bytes - sha256 `f87bb5e703f21c0223e3869310207242e8ca9e733bbabd6bbec06173f2035cd9`
 - `apps/mobile/src/lib/analytics/track.test.ts` - 10032 bytes - sha256 `f50abd8ec8a673f30826a9a5797c245099c2253df3f77ccbb2c22987b55a021d`
 - `apps/mobile/src/lib/analytics/track.ts` - 5671 bytes - sha256 `d9c68abb6b8ecbdf9abed12e6dc37de092b4a5172f1b89d213f96e24b7c75f8f`
 - `apps/mobile/src/lib/observability/operationTiming.test.ts` - 2060 bytes - sha256 `a8d991ac951e2b93df2f3c16cf3d29b1fa0fe31d691a43d35f9a4367c2eddf68`
@@ -1094,4 +1094,5 @@ Sources:
 
 ## Warnings
 
-- None.
+- Phase 3 review operator queue generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.
+- Source Phase 3 review worklist records a dirty Git worktree; regenerate from a clean tree before final reviewer handoff.

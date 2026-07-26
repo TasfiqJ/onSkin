@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T17:40:34.806Z",
+  "generatedAt": "2026-07-25T22:38:18.096Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,15 +73,15 @@
     ]
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "aadcf67688df648dd9c9ba872b84c6fc6f79be30",
-  "gitStatus": "",
+  "gitSha": "fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49",
+  "gitStatus": "M .prettierignore\n M 04_repo_docs/docs/ARCHITECTURE.md\n M 04_repo_docs/docs/DECISIONS.md\n M 04_repo_docs/docs/FEATURE_INDEX.md\n M 04_repo_docs/docs/TESTING_STRATEGY.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/lib/analytics/postHogPersistenceSourceContract.test.ts\n M docs/ARCHITECTURE.md\n M docs/DECISIONS.md\n M docs/FEATURE_INDEX.md\n M docs/TESTING_STRATEGY.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/hugeToDo/task-graph.json\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/data-inventory.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-memo-open-beauty-facts.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/curated-product-curation-sheet.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/observability-dashboard.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-9/data-inventory.md\n M docs/phase-9/source-of-truth.md\n M docs/store-privacy-inventory.md\n M package-lock.json\n M package.json\n M scripts/launch/execution-baseline.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase9/build-release-qa-packet.mjs\n M scripts/phase9/data-rights-smoke.mjs\n M scripts/phase9/live-data-rights.mjs\n M scripts/phase9/release-smoke.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/config.toml\n M supabase/functions/_shared/accountAccessCoverage.test.ts\n M supabase/functions/data-export/exportCore.ts\n M supabase/functions/data-export/exportRegistry.test.ts\n M supabase/functions/data-export/exportRegistry.ts\n M supabase/functions/data-export/index.ts\n M supabase/functions/manifest.json\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/catalog_launch_curation.test.sql\n M supabase/tests/database/catalog_serving_gate.test.sql\n M supabase/tests/database/schema_contract.test.sql\n?? apps/catalog-operator-console/.env.example\n?? apps/catalog-operator-console/README.md\n?? apps/catalog-operator-console/index.html\n?? apps/catalog-operator-console/package.json\n?? apps/catalog-operator-console/public/_headers\n?? apps/catalog-operator-console/src/auth.ts\n?? apps/catalog-operator-console/src/env.test.ts\n?? apps/catalog-operator-console/src/env.ts\n?? apps/catalog-operator-console/src/main.ts\n?? apps/catalog-operator-console/src/operatorApi.test.ts\n?? apps/catalog-operator-console/src/operatorApi.ts\n?? apps/catalog-operator-console/src/sessionTimer.test.ts\n?? apps/catalog-operator-console/src/sessionTimer.ts\n?? apps/catalog-operator-console/src/styles.css\n?? apps/catalog-operator-console/src/workflow.test.ts\n?? apps/catalog-operator-console/src/workflow.ts\n?? apps/catalog-operator-console/tsconfig.json\n?? apps/catalog-operator-console/vite.config.ts\n?? deno.lock\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-authority-bypass.md\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-mfa-bypass.md\n?? docs/phase-4/catalog-operator-authority-runbook.md\n?? scripts/e2e/catalog-operator-console-fixture-server.mjs\n?? scripts/e2e/catalog-operator-console-fixture-server.test.mjs\n?? scripts/phase4/catalog-operator-authority-contract.mjs\n?? scripts/phase4/catalog-operator-authority-contract.test.mjs\n?? supabase/functions/catalog-operator/contract.test.ts\n?? supabase/functions/catalog-operator/contract.ts\n?? supabase/functions/catalog-operator/httpHandler.test.ts\n?? supabase/functions/catalog-operator/httpHandler.ts\n?? supabase/functions/catalog-operator/index.ts\n?? supabase/functions/catalog-operator/responseContract.test.ts\n?? supabase/functions/catalog-operator/responseContract.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.test.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.ts\n?? supabase/migrations/20260722000063_catalog_operator_authority.sql\n?? supabase/tests/database/catalog_operator_authority.test.sql",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 39221,
-      "sha256": "57d7608cc3edc070dac3891ade17e50062ce04a06e7b10c9a636ec9a35f33d3b"
+      "bytes": 40695,
+      "sha256": "fc1069d44644741cebf7b3a3610fc12a532992ed60e7663bc898990eed1e1eb9"
     },
     {
       "packet": "packetContract",
@@ -101,8 +101,8 @@
       "packet": "packetContract",
       "path": "scripts/phase3/build-review-packet.mjs",
       "exists": true,
-      "bytes": 11874,
-      "sha256": "2bc88c1000d838dede8b4e5dbc49e630eec08870cc4104bb056ca8021a164a8b"
+      "bytes": 12017,
+      "sha256": "d280f0771bfe12d97556d656eefe5c307db44e63c1586ca89ab220195f7efcb0"
     },
     {
       "packet": "packetContract",
@@ -234,8 +234,8 @@
       "packet": "legalRegulatory",
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 54494,
-      "sha256": "46cf9014bc4e53a32ee0354f6e30fcab907e1111c2e6d45aa06f728ca0cccd35"
+      "bytes": 54980,
+      "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
     },
     {
       "packet": "legalRegulatory",
@@ -297,29 +297,29 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 137631,
-      "sha256": "af9996140bdfe44926163cdd67409b2384a94ae351c64e190b71b9f0b9fa4a7f"
+      "bytes": 142508,
+      "sha256": "4f9c1729c5af28028a13ee90b77f268530cdc19e42514458825f6befbe3bfad3"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 89559,
-      "sha256": "af1ffdc8266d8d8a985cb306f7f4b68e4f43fab780792972888d78e0c477af5a"
+      "bytes": 89664,
+      "sha256": "6220e0e10315d4b5e43c8959981e59303347c3477b7ec4b292edbac41aecc1d1"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 140658,
-      "sha256": "2a748267db60ca703d8a4c83f7ea3d8177facf4959ff57493058acf551ed5c6c"
+      "bytes": 145669,
+      "sha256": "2fe84a12bad8cddd8a2b90661a3d0d591cd22b43715c8dee45f6aab830fec719"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 103307,
-      "sha256": "43bfa6f20c7f7d32836e69eafdfa783e3ec56b96a561cec1a911eab7cce209d3"
+      "bytes": 103541,
+      "sha256": "a077cf35b287f3f6489ea0fe94d9f00ea191c17ba3b891403999fc5691813979"
     },
     {
       "packet": "clinical",
@@ -374,29 +374,29 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 137631,
-      "sha256": "af9996140bdfe44926163cdd67409b2384a94ae351c64e190b71b9f0b9fa4a7f"
+      "bytes": 142508,
+      "sha256": "4f9c1729c5af28028a13ee90b77f268530cdc19e42514458825f6befbe3bfad3"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 89559,
-      "sha256": "af1ffdc8266d8d8a985cb306f7f4b68e4f43fab780792972888d78e0c477af5a"
+      "bytes": 89664,
+      "sha256": "6220e0e10315d4b5e43c8959981e59303347c3477b7ec4b292edbac41aecc1d1"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 140658,
-      "sha256": "2a748267db60ca703d8a4c83f7ea3d8177facf4959ff57493058acf551ed5c6c"
+      "bytes": 145669,
+      "sha256": "2fe84a12bad8cddd8a2b90661a3d0d591cd22b43715c8dee45f6aab830fec719"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 103307,
-      "sha256": "43bfa6f20c7f7d32836e69eafdfa783e3ec56b96a561cec1a911eab7cce209d3"
+      "bytes": 103541,
+      "sha256": "a077cf35b287f3f6489ea0fe94d9f00ea191c17ba3b891403999fc5691813979"
     },
     {
       "packet": "cosmeticChemistry",
@@ -479,15 +479,15 @@
       "packet": "privacyPlatform",
       "path": "docs/store-privacy-inventory.md",
       "exists": true,
-      "bytes": 44167,
-      "sha256": "5b7aae93e234fbc6292e56cc57fabe427fe58ead703ed824291a89f54a55f536"
+      "bytes": 44641,
+      "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
     },
     {
       "packet": "privacyPlatform",
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 54494,
-      "sha256": "46cf9014bc4e53a32ee0354f6e30fcab907e1111c2e6d45aa06f728ca0cccd35"
+      "bytes": 54980,
+      "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
     },
     {
       "packet": "privacyPlatform",
@@ -892,15 +892,15 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/index.ts",
       "exists": true,
-      "bytes": 22658,
-      "sha256": "78097b7d4cbbcdd3bb4194ccb97d7fcf3217af111b9de64d72238006a23bcd94"
+      "bytes": 23928,
+      "sha256": "2a31523c2e8d2eb1634a2127c9bc93d14b02f70a2bf88bd70b94c8ff2afa7f93"
     },
     {
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/exportCore.ts",
       "exists": true,
-      "bytes": 16251,
-      "sha256": "ef8828ff0f29dff17cebfca4064860ec2549a249023d9621385d7bce70a9a9bd"
+      "bytes": 15866,
+      "sha256": "15dfbb295a325f007961d69eff9ed067fad4fa0aae2ac7c79c931a27f2fcc330"
     },
     {
       "packet": "privacyPlatform",
@@ -911,17 +911,31 @@
     },
     {
       "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/catalogCorrectionExportCore.ts",
+      "exists": true,
+      "bytes": 6131,
+      "sha256": "5cefbcab0cccd73e662117cfe9eaee993fdb96541218c05b0a6443f851659a37"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/catalogCorrectionExportCore.test.ts",
+      "exists": true,
+      "bytes": 7926,
+      "sha256": "880691f433aa8e4b52f4b46ef4116fbc229dd6088516889858537583d20f4bb7"
+    },
+    {
+      "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/exportRegistry.ts",
       "exists": true,
-      "bytes": 9442,
-      "sha256": "c9dfdc4fb2f39bd61f78587af09b522dd81102547cca7b954d8a6355969409b1"
+      "bytes": 9423,
+      "sha256": "951e650d0285e60aa95bd00367aef91603c0767c3492f14f9e312c3bd328554a"
     },
     {
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/exportRegistry.test.ts",
       "exists": true,
-      "bytes": 8770,
-      "sha256": "b2a40a2287c40a342d4aba5cfbc509c89b6e5535698d290746a5a534523c582b"
+      "bytes": 8848,
+      "sha256": "f51e5c081f06d720e85535bb9895f730d18983109a1188c1777adf7c7e4c4e39"
     },
     {
       "packet": "privacyPlatform",
@@ -1018,8 +1032,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/data-rights-smoke.mjs",
       "exists": true,
-      "bytes": 70395,
-      "sha256": "2109ff3b060355ef264029847ba11be80606f2ab68332663735f0679e9404b9d"
+      "bytes": 71937,
+      "sha256": "7a3fdde72e03e27e9bf6298d00ae533fae75f174206138c6962b208841fa6682"
     },
     {
       "packet": "privacyPlatform",
@@ -1046,8 +1060,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 71690,
-      "sha256": "b11ca191fd71fb3ffdd734e87e995b5e76db2b516e9fd347c2c623adc65dea47"
+      "bytes": 71804,
+      "sha256": "4831fdb8fae6340b86829e438ef234f0bc129f3efbec99bdbb7e4a1526852351"
     },
     {
       "packet": "privacyPlatform",
@@ -1064,5 +1078,7 @@
       "sha256": "8ad2be6cecfd8be4d73679041204015edb17e492b398e7a59467542da9bace41"
     }
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
+  ]
 }

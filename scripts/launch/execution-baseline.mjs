@@ -51,7 +51,7 @@ export const features = [
   ['F-17', 17, 'community', 'Community and Skin Notes', 'stubbed'],
   ['F-18', 18, 'trend_insights', 'Trend insights', 'launch-blocked'],
   ['F-19', 19, 'widgets_live_activities', 'Widgets and Live Activities', 'inert'],
-  ['F-20', 20, 'admin_tooling', 'Admin and operator review tooling', 'implemented'],
+  ['F-20', 20, 'admin_tooling', 'Admin and operator review tooling', 'launch-blocked'],
 ].map(([id, number, key, name, readiness]) => ({ id, number, key, name, readiness }));
 
 export const gatedSurfaces = [
@@ -288,6 +288,7 @@ function edgeFeatures(name) {
     'apple-auth-lifecycle': ['F-02', 'F-20'],
     'apple-auth-worker': ['F-02', 'F-20'],
     'catalog-lookup': ['F-03', 'F-04'],
+    'catalog-operator': ['F-04', 'F-20'],
     'catalog-report': ['F-04'],
     'catalog-search': ['F-03', 'F-04'],
     'consent-withdrawal': ['F-02'],
@@ -395,7 +396,13 @@ function discoverVendorOrigins() {
       ),
     ]);
     for (const host of sourceHosts) {
-      if (host.endsWith('.invalid') || host === 'example.com' || host.startsWith('your-project'))
+      if (
+        host.endsWith('.invalid') ||
+        host === 'example.com' ||
+        host === 'localhost' ||
+        host === '127.0.0.1' ||
+        host.startsWith('your-project')
+      )
         continue;
       const mapping = hostMap[host];
       if (!mapping) throw new Error(`Unmapped external origin https://${host} in ${path}.`);

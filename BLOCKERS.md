@@ -62,6 +62,7 @@ Read this with:
 - `docs/phase-4/observability-dashboard.md`
 - `docs/phase-4/beta-coverage-report.md`
 - `docs/phase-4/catalog-curation-release-runbook.md`
+- `docs/phase-4/catalog-operator-authority-runbook.md`
 - `docs/phase-4/phase-4-exit-review.md`
 
 ## Status Key
@@ -101,7 +102,9 @@ Read this with:
    disposition, current hashes match, and the strict copy audit passes.
 7. Real catalog seed not imported; source/license review, separately consented
    beta-shelf coverage evidence, qualified curation, signed holdout-quality
-   targets, and immutable launch-catalog activation are not complete.
+   targets, immutable launch-catalog activation, hosted CAT-08 operator
+   authority, deployed internal console, and named operator coverage are not
+   complete.
 8. Native camera/barcode/photo capture, encrypted keychain/keystore behavior,
    and app-wide/photo-timeline biometric prompt ordering, deep-link coverage,
    background relock, encrypted Progress read-failure recovery, and screen-reader
@@ -420,20 +423,23 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains a 61-migration source candidate through
-`20260722000062`, targeted hand-maintained
-RPC types with DB-08 still open, 16 deploy-by-default Edge Functions, a staging
+The repo contains a 62-migration source candidate through
+`20260722000063`, targeted hand-maintained
+RPC types with DB-08 still open, 17 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
 current source inventory classifies all 80 RLS-enabled public tables: 36 directly
 queryable private tables, 30 read-sealed private/authority tables, and 14
 authenticated catalog/editorial tables. The 30 read-sealed tables comprise 22
 service-private authorities, four global clinical/editorial relations, and four
 catalog dictionary/legacy authorities; seven additional CAT-03 authorities are
-sealed in the `private` schema. This is a source-contract classification, not
-hosted evidence. The last recorded CAT-02 Docker baseline covered the then-
+sealed in the `private` schema; `0063` adds a separately contracted set of 15
+private CAT-08 operator-authority relations and the bounded `catalog-operator`
+Edge surface. This is a source-contract classification, not hosted evidence.
+The last recorded CAT-02 Docker baseline covered the then-
 current 35-assertion partial suite and remains historical. The current source
 plans contain 50 schema, 218 CAT-02, 99 CAT-03, 53 CAT-07, 58 catalog-serving,
-and 114 Apple-lifecycle assertions. A fresh 61-migration reset and execution of
+and 114 Apple-lifecycle assertions, plus the CAT-08 operator pgTAP plan. A fresh
+62-migration reset and execution of
 those current plans, error-level schema lint, migration-shadow drift check, and
 temporary type generation remain required before this revision can claim local
 database replay evidence.
@@ -447,7 +453,7 @@ linked operation to the expected target, and rejects any public/migration/
 function/Auth/Storage/all-Cron state. It retains a full-target-bound cutover
 record, one traffic/provider-freeze artifact, five schema-v2 redacted boundary
 files, and exact before/pre-migration/after inventories. The runner sets
-`DB06_TRAFFIC_FREEZE=frozen`, guards all 16 Edge entrypoints, canaries the exact
+`DB06_TRAFFIC_FREEZE=frozen`, guards all 17 Edge entrypoints, canaries the exact
 eight `verifyJwt: false` endpoints, and immediately rereads functions, public
 freeze responses, hosted Auth controls, migrations, schema, Storage, and all
 Cron jobs before migration push. A `pass` cannot omit these proofs, cutover
@@ -525,7 +531,7 @@ consented/privacy-minimized beta-shelf coverage corpus, curation/holdout
 separation, exact multi-batch/four-scope CAT-02 memberships, confidence-bound
 quality gates, and qualified review. Current CAT-03 review and database-readback
 artifacts must attest exact latest migration `20260722000062`. No clean reset or
-pgTAP execution of the complete current chain through `0062`, hosted staging/
+pgTAP execution of the complete current chain through `0063`, hosted staging/
 release/supersession race and serving
 drill, real beta corpus, witnessed target/decision, signed review/readback, or
 active catalog exists. Beta demand prioritizes independently sourced rows; it
@@ -552,9 +558,9 @@ Next action:
   at least 12 hours remaining before the first mutation and seven hours
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
-  guarded 16-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 61
-  migrations through `0062`, redeploys the manifest, retains linked types
+  guarded 17-function manifest, canaries the eight public-gateway functions,
+  immediately rereads the full empty-target boundary, applies all 62
+  migrations through `0063`, redeploys the manifest, retains linked types
   without changing repository types, and leaves
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
@@ -1181,7 +1187,7 @@ Exit criteria:
 - migration `0057` passes the hosted two-connection replay, conflict,
   correction, source-withdrawal, promotion, dependency-serving, and rollback
   drill for the exact reviewed batch;
-- the complete migration chain through `0062`, with `0058` as its foundational
+- the complete migration chain through `0063`, with `0058` as its foundational
   CAT-03 authority, passes clean local and hosted pgTAP, two-connection replay/
   staging/release/supersession/retirement races, successor isolation, direct-
   table denial including `service_role`, dependency-serving suppression, and
@@ -1226,9 +1232,17 @@ Exit criteria:
 
 - owner-scoped reports are minimized, privacy-authorized, deletion/withdrawal
   covered, and operated to the recorded triage SLA;
-- operator-reviewed `triaged`/`accepted` correction holds immediately suppress
-  affected rows from serving and product-specific recommendations; an
-  unreviewed report alone does not become catalog authority;
+- operator-reviewed triage creates an independent reporter-free product hold
+  that immediately suppresses affected rows from serving and product-specific
+  recommendations; an unreviewed report alone does not become catalog
+  authority, and accepted/rejected/deleted report state cannot release a hold;
+- repair attestation requires exact current CAT-02 plus signed structurally
+  valid staged CAT-03 successor authority over the active-hold root; triage,
+  disposition, repair attestation, and release use four distinct people;
+  release advances the root without activation, and a fresh post-release CAT-03
+  campaign/activation/readback is required before serving; hosted MFA/session/
+  revocation, lease/CAS race, reporter-erasure, audit, deployed-console E2E, and
+  staffing evidence pass;
 - no lookup or report is sent to OBF, CosIng, or another source, and user-facing
   copy does not promise external contribution;
 - OBF obligations are satisfied through the counsel-approved attribution,

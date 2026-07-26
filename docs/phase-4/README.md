@@ -41,6 +41,8 @@ catalog activation.
 - [Phase 4 exit review](./phase-4-exit-review.md)
 - [CAT-02 catalog import, promotion, and rollback](./catalog-import-promotion-runbook.md)
 - [CAT-03 catalog curation and activation](./catalog-curation-release-runbook.md)
+- [CAT-08 operator authority and correction runbook](./catalog-operator-authority-runbook.md)
+- [CAT-08 aggregate source contract](../../scripts/phase4/catalog-operator-authority-contract.mjs)
 - [Pending coverage/quality target policy](./catalog-coverage-quality-targets.template.json)
 - [Pending minimized beta-shelf corpus](./beta-shelf-corpus.template.json)
 - [Pending qualified curation review](./catalog-curation-review.template.json)
@@ -82,8 +84,9 @@ v2 envelope, not the RPC, remains responsible for dual-review signatures,
 repairs the clean/post-`0060` health-write guard, exposes only bounded product-
 specific PAO evidence, closes legacy broad ingredient/brand/category read paths,
 and removes direct API-role global-catalog mutation. Real approved artifacts,
-dedicated CAT-08 operator identities, hosted concurrency/rollback evidence, and a
-reviewed launch catalog are still absent.
+hosted CAT-08 operator identities, deployment of the separate internal-console source,
+named staffing, hosted concurrency/rollback evidence, and a reviewed launch
+catalog are still absent.
 Foundational migration `0058`, forward migration `0062`, and the CAT-03 offline
 contracts add a local source candidate for pre-outcome target binding,
 privacy-minimized beta-shelf demand, curation/
@@ -114,6 +117,23 @@ production evidence. Beta demand prioritizes review; it never becomes a
 product fact. The current self-selected beta design cannot support a market-representative claim.
 Real consented beta evidence, witnessed targets/decisions, signed reviews and
 readback, exact CAT-01/CAT-02 lineage, clean local/hosted full-chain verification
-through `0062`, and an activated launch catalog are absent, so CAT-03 remains `in_progress`.
+through `0063`, and an activated launch catalog are absent, so CAT-03 remains `in_progress`.
 Passing these source controls does not guarantee Apple acceptance, legal
 compliance, product efficacy, or revenue.
+
+CAT-08 now has an `in_progress`, identity-bound, nonanonymous `aal2` source
+boundary with ten-minute work sessions, five-minute queue claims, capability-
+separated triage/decision/repair/release, immutable audit, and reporter-
+independent product holds. The authenticated operator surface is limited to six
+bounded RPCs; the separate owner-bound correction-export RPC is not an operator
+action. API roles do not receive raw operator/correction/hold table access, and
+service-role raw correction review is revoked. A triaged hold survives reporter erasure and
+cannot be released by accepting, rejecting, closing, or deleting a correction.
+Repair attestation requires a third person and exact current CAT-02 plus signed
+staged CAT-03 successor authority over the active-hold mutation root. A fourth
+person releases the hold; release advances the root and cannot activate serving.
+CAT-03 owners must complete a fresh post-release campaign/activation/readback.
+See the linked runbook. The publishable-key-only console source candidate is
+separate from the consumer app, but its deployment, real MFA/grants, named operators,
+concurrency/deletion drills, human-simulated E2E, and professional review
+remain open, so CAT-08 is not complete.

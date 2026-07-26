@@ -64,6 +64,18 @@ Required for:
 - Apple capture -> encrypted lifecycle -> daily validation -> access fence;
   native/server-event invalidation -> session denial -> durable deletion
 - catalog lookup/search/report
+- catalog operator session/queue/detail/claim/transition/release, including
+  nonanonymous `aal2`, live Auth-session and verified-factor checks, exact
+  immutable capability grants, ten-minute work sessions, five-minute leases,
+  UUIDv4 idempotency, compare-and-swap/advisory-lock races, role separation,
+  immutable minimized audit, reporter erasure with persistent independent
+  holds, exact current CAT-02 plus signed staged CAT-03 successor authority,
+  four-person repair/release separation, and post-release CAT-03 reactivation
+- catalog operator gateway isolation, including the dedicated transaction-
+  pooler login's exact schema/function ACLs, nonsuperuser and membership/
+  ownership-free state, absence of raw table/sequence/Auth/control access,
+  verified-full hosted TLS, default-frozen exact deployment admission, and
+  all-action global plus per-action class rate budgets
 - catalog approved-transform -> sealed staging -> complete row review ->
   transactional promotion -> serving verification -> non-destructive rollback,
   including exact replay, changed replay, duplicate keys, partial chunks,
@@ -201,6 +213,18 @@ Priority flows:
 13. Widgets, Live Activities, notifications, links, sharing, creator links,
     review prompt, and operator workflows.
 
+The CAT-08 operator workflow requires a separate internal-console pass. Cover
+email OTP plus mandatory TOTP, denied/expired/revoked access, queue empty/
+loading/error states, bounded cursor navigation, claim/reclaim, stale CAS,
+triage and immediate serving hold, accepted and rejected dispositions without
+release, reporter erasure with the hold retained, exact repair receipt handoff,
+fourth-person release, post-release non-serving and fresh CAT-03 reactivation,
+visible verified operator/capabilities/environment/build revision,
+server-authoritative incident/freeze denial, relaunch, and sign-out. Inspect
+the private append-only audit through a separately authorized backend evidence
+procedure; schema v1 exposes no console audit-export action. Expo web or
+the consumer iOS app is not the CAT-08 console surface.
+
 Reference:
 
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`
@@ -238,6 +262,27 @@ Run or maintain:
   denial, positive ingredient/source read gates, and non-destructive batch
   rollback. Hosted evidence must add two independent sessions and retry
   complete transactions on serialization failure.
+- CAT-08 operator-authority tests: deny `anon`, ordinary authenticated,
+  anonymous, `aal1`, stale/revoked Auth session, missing verified factor,
+  inactive/expired/wrong-capability grant, expired operator session, wrong or
+  expired claim, stale CAS, and role overlap; deny raw protected-table access to
+  every API role and the dedicated gateway login, revoke legacy service-role
+  correction read/review, and prove only the dedicated role can execute the six
+  non-Data-API gateway functions under an exact open runtime tuple. Prove the
+  login is nonsuperuser, membership/ownership-free, has no Auth-schema lane,
+  and uses CA/hostname-verified hosted transport. Prove an all-action committed
+  global preflight and per-action class limits, including ungranted-session
+  attempts. The isolated local two-reset gate must execute the committed
+  two-connection `dblink` rehearsal and prove action-first plus
+  session-revocation-first gateway commit ordering. Retain a separate real hosted
+  renewal/action/revocation-ordering transcript;
+  preserve a reporter-free hold and served-state mutation event after personal
+  correction erasure; and reject release without an exact current product,
+  CAT-02 repair receipt, signed structurally valid staged CAT-03 successor over
+  the active-hold root, no competing hold, and four distinct people. Prove
+  release advances the root without activation and requires a fresh CAT-03
+  owner campaign/activation/readback before serving. Run the same lease,
+  transition, erasure, and release cases with independent hosted sessions.
 - Sealed Apple table/function ACL tests; active/non-Apple/blocked/stale-session
   RLS and Storage tests; direct authenticated RPC fence tests; and terminal
   Apple-event-to-deletion assertions.
@@ -413,6 +458,10 @@ npm run phase2:rls-smoke
 npm run phase9:apple-auth-work-lane-smoke
 npm run phase3:audit-copy
 npm run phase4:qa-report
+npm run phase4:operator-authority-contract:test
+npm run phase4:catalog-operator-edge:test
+npm run phase4:catalog-operator-edge:format:check
+npm run phase4:catalog-operator-console:verify
 npm run phase5:qa-packet
 npm run phase6:qa-packet
 npm run phase7:qa-packet

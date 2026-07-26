@@ -148,7 +148,7 @@
       "number": 20,
       "key": "admin_tooling",
       "name": "Admin and operator review tooling",
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     }
   ],
   "gatedSurfaces": [
@@ -226,10 +226,10 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 120,
-    "edge-function": 16,
+    "data-store": 135,
+    "edge-function": 17,
     "feature-flag": 16,
-    "generated-packet": 33,
+    "generated-packet": 32,
     "native-module": 44,
     "route": 91,
     "vendor-call": 13
@@ -638,6 +638,111 @@
       "id": "data-store:postgres:catalog_lookup_events",
       "category": "data-store",
       "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_audit_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_capability_bindings",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_claims",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_grant_attestations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_grant_revocations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_grants",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_hold_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_operation_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_product_holds",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_rate_buckets",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_repair_authority_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_runtime_control",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_runtime_control_history",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_sessions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_work_states",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
       "featureIds": ["F-04"],
       "readiness": "implemented"
     },
@@ -1080,28 +1185,28 @@
       "category": "edge-function",
       "source": "supabase/functions/account-deletion/index.ts",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:apple-account-events",
       "category": "edge-function",
       "source": "supabase/functions/apple-account-events/index.ts",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:apple-auth-lifecycle",
       "category": "edge-function",
       "source": "supabase/functions/apple-auth-lifecycle/index.ts",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:apple-auth-worker",
       "category": "edge-function",
       "source": "supabase/functions/apple-auth-worker/index.ts",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:catalog-lookup",
@@ -1109,6 +1214,13 @@
       "source": "supabase/functions/catalog-lookup/index.ts",
       "featureIds": ["F-03", "F-04"],
       "readiness": "needs-device-verification"
+    },
+    {
+      "id": "edge-function:catalog-operator",
+      "category": "edge-function",
+      "source": "supabase/functions/catalog-operator/index.ts",
+      "featureIds": ["F-04", "F-20"],
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:catalog-report",
@@ -1276,7 +1388,7 @@
       "category": "feature-flag",
       "source": "apps/mobile/src/lib/env.ts",
       "featureIds": ["F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "feature-flag:EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED",
@@ -1440,6 +1552,13 @@
       "readiness": "implemented"
     },
     {
+      "id": "generated-packet:scripts/e2e/cat07-shelf-freshness-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/e2e/cat07-shelf-freshness-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
       "id": "generated-packet:scripts/e2e/text-pressure-route-audit.mjs",
       "category": "generated-packet",
       "source": "scripts/e2e/text-pressure-route-audit.mjs",
@@ -1503,39 +1622,10 @@
       "readiness": "implemented"
     },
     {
-      "id": "generated-packet:scripts/phase5/build-device-qa-packet.mjs",
-      "category": "generated-packet",
-      "source": "scripts/phase5/build-device-qa-packet.mjs",
-      "featureIds": ["F-03", "F-09", "F-10", "F-19"],
-      "readiness": "implemented"
-    },
-    {
       "id": "generated-packet:scripts/phase6/build-payments-qa-packet.mjs",
       "category": "generated-packet",
       "source": "scripts/phase6/build-payments-qa-packet.mjs",
       "featureIds": ["F-11", "F-12"],
-      "readiness": "implemented"
-    },
-    {
-      "id": "generated-packet:scripts/phase7/build-core-loop-qa-packet.mjs",
-      "category": "generated-packet",
-      "source": "scripts/phase7/build-core-loop-qa-packet.mjs",
-      "featureIds": [
-        "F-02",
-        "F-03",
-        "F-04",
-        "F-05",
-        "F-06",
-        "F-07",
-        "F-08",
-        "F-09",
-        "F-10",
-        "F-11",
-        "F-12",
-        "F-13",
-        "F-14",
-        "F-15"
-      ],
       "readiness": "implemented"
     },
     {
@@ -1571,7 +1661,7 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo",
@@ -1893,7 +1983,7 @@
       "category": "route",
       "source": "apps/mobile/src/app/(tabs)/you.tsx",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:ask/_layout.tsx",
@@ -2334,14 +2424,14 @@
       "category": "route",
       "source": "apps/mobile/src/app/settings/_layout.tsx",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:settings/beta-feedback.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/settings/beta-feedback.tsx",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:settings/notifications.tsx",
@@ -2355,7 +2445,7 @@
       "category": "route",
       "source": "apps/mobile/src/app/settings/privacy.tsx",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:settings/skin-profile.tsx",
@@ -2376,7 +2466,7 @@
       "category": "route",
       "source": "apps/mobile/src/app/settings/timing.tsx",
       "featureIds": ["F-02", "F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:share/conflict/[ruleId].tsx",
@@ -2523,21 +2613,21 @@
       "category": "vendor-call",
       "source": "supabase/functions/growth-event/index.ts",
       "featureIds": ["F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "vendor-call:origin:eu.i.posthog.com",
       "category": "vendor-call",
       "source": "apps/mobile/src/lib/env.ts",
       "featureIds": ["F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "vendor-call:origin:eu.posthog.com",
       "category": "vendor-call",
       "source": "supabase/functions/account-deletion/providerDeletion.ts",
       "featureIds": ["F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "vendor-call:origin:play.google.com",
@@ -2572,14 +2662,14 @@
       "category": "vendor-call",
       "source": "apps/mobile/src/lib/observability/sentry.ts",
       "featureIds": ["F-20"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "vendor-call:sdk:supabase",
       "category": "vendor-call",
       "source": "apps/mobile/src/lib/supabase/client.ts",
       "featureIds": ["F-02", "F-04", "F-20"],
-      "readiness": "stubbed"
+      "readiness": "launch-blocked"
     }
   ]
 }

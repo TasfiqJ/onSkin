@@ -7432,8 +7432,10 @@ legal compliance, revenue, or product-market fit.
 
 ### Current catalog/database source-authority reconciliation (2026-07-22)
 
-Reconciled the launch/readiness documentation to the current 61-migration
-source chain through `20260722000062`. Foundational migration `0057` remains the
+Reconciled the CAT-02/CAT-03 launch/readiness documentation to the first 61
+migrations through their exact `20260722000062` artifact checkpoint. The CAT-08
+checkpoint below extends the current global source chain through `0063`.
+Foundational migration `0057` remains the
 CAT-02 transactional lifecycle authority; forward migration `0061` adds
 `benzoyl_peroxide` to the database staging allowlist while the offline v2
 envelope, not the RPC, remains responsible for dual-review signatures. It also
@@ -7460,6 +7462,59 @@ signed review/readback, active launch campaign, native-device clearance,
 professional acceptance, or App Store decision is claimed. DB-06 remains
 `in_progress` and blocked by `ACCT-03`; CAT-07 remains `in_progress`, blocked by
 `CAT-06` and its native, hosted/live, and external-review gates.
+
+### CAT-08 operator-authority source checkpoint (2026-07-25)
+
+Migration `0063`, the bounded authenticated `catalog-operator` Edge surface,
+and the separate publishable-key-only internal-console source extend the current
+chain to 62 migrations and 17 deploy-by-default functions. The source candidate
+now denies direct `public`/`anon`/`authenticated` execution of all six operator
+RPCs. Edge verifies the exact presented token with `getClaims` plus `getUser`,
+requires its signed nonanonymous `aal2` subject/session binding, rechecks the
+same account-access snapshot, and injects only the signed Auth-session UUID
+into the dedicated `catalog_operator_edge` PostgreSQL gateway connection. The
+publishable-key Supabase client is limited to Auth/account admission; it does
+not execute operator RPCs. Postgres derives the actor and verified TOTP factor
+from the exact live Auth session, rechecks immutable
+grant/capability authority on every request, and
+uses maximum-ten-minute database work sessions plus maximum-five-minute
+lease/CAS claims. A dedicated constrained Postgres login, isolated gateway
+schema, strict project-ref transaction-pooler URL, and hosted `verify-full` TLS
+replace the prior broad service-role transport. Committed global preflight and
+per-action database rate budgets cover every Edge action. Six backend-only
+operator RPCs provide bounded session,
+queue, claim-bound detail, claim, transition, and hold-release actions; the
+separate owner-bound correction-export RPC is a data-portability action, not an
+operator action.
+
+Operator triage now creates an independent reporter-free product hold. Only
+holds in `active` or `repair_attested` state suppress serving; accepting,
+rejecting, closing, erasing, or deleting the report cannot release the hold.
+Triage, disposition, repair attestation, and release require four distinct
+actors. Repair attestation binds a changed current CAT-02 projection and a
+signed staged CAT-03 successor over the active-hold mutation root; release
+advances the root without activation, so CAT-03 owners must complete a fresh
+post-release campaign/activation/readback before serving.
+
+CAT-08 remains `in_progress` and blocked by CAT-07. The console is not deployed,
+and a local ignored synthetic-fixture browser packet predates the final source
+revision and is not governed acceptance evidence. Hosted migration/RLS/MFA/
+revocation/race/erasure/audit proof, named staffing and operator display,
+server-authoritative incident state, hosted rate-threshold/load evidence and
+scheduled idle-period bucket purge, an approved workforce
+audit-retention/deprovisioning contract, legacy-hold cutover proof or
+remediation, current human-simulated E2E, incident drills, and qualified
+privacy/security/legal review remain open. A deterministic local
+two-connection database rehearsal proves action-first and
+session-revocation-first lock ordering, but it does not prove the hosted
+transaction pooler or complete Edge HTTP request path. No Apple, legal, safety,
+market, or revenue
+acceptance is claimed.
+
+Production acceptance still requires exact hosted creation/rotation and catalog
+proof for the source-defined `NOINHERIT`, nonsuperuser, membership-free,
+ownership-free, execute-only backend identity, including the hosted extension
+function inventory and negative raw-table/Auth/control/TLS tests.
 
 ## Open questions for the founder
 

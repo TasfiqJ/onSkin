@@ -18,12 +18,12 @@ Date: 2026-07-15
   immutable snapshot through the native pinned Supabase CLI `2.109.1`, refuses
   public/migration/function/Auth/Storage/all-Cron state, validates and retains a
   full-target-bound cutover record, one traffic/provider-freeze artifact, and
-  five schema-v2 boundary files, predeploys all 16 functions before 61
-  migrations through `0062`, retains before/pre-migration/after
+  five schema-v2 boundary files, predeploys all 17 functions before 62
+  migrations through `0063`, retains before/pre-migration/after
   schema/migration/function/type evidence, and fails closed without retaining
   raw CLI output or provider digests.
 - DB-06 actively closes ingress: the runner sets
-  `DB06_TRAFFIC_FREEZE=frozen`; all 16 Edge handlers have a first-request freeze
+  `DB06_TRAFFIC_FREEZE=frozen`; all 17 Edge handlers have a first-request freeze
   guard; and the exact eight `verifyJwt: false` functions must return HTTP 503,
   exact `DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`. The
   hosted Auth gate requires signup, anonymous signup, all 26 reviewed external

@@ -279,6 +279,8 @@ const requiredFiles = [
   'supabase/functions/data-export/index.ts',
   'supabase/functions/data-export/exportCore.ts',
   'supabase/functions/data-export/exportCore.test.ts',
+  'supabase/functions/data-export/catalogCorrectionExportCore.ts',
+  'supabase/functions/data-export/catalogCorrectionExportCore.test.ts',
   'supabase/functions/data-export/exportRegistry.ts',
   'supabase/functions/data-export/exportRegistry.test.ts',
   'supabase/functions/consent-withdrawal/index.ts',

@@ -1,7 +1,7 @@
 # Phase 2 Readiness Checklist
 
 Date: 2026-07-15
-Updated: 2026-07-22 for the 61-migration chain through `0062`
+Updated: 2026-07-22 for the 62-migration chain through `0063`
 
 Phase 2 should not start until naming, account ownership, environments, and
 secret handling are clear enough that production infrastructure will not need to
@@ -57,7 +57,7 @@ clears the brand.
    `traffic-provider-freeze.json`, and five schema-v2 redacted zero-cohort
    boundary files for migrations `0048`/`0052`/`0053`/`0054`/`0055`. Bind them
    to the clean `origin/main` SHA, full target fingerprint, rollback point,
-   exact 61-migration plan hash where required, and explicit future
+   exact 62-migration plan hash where required, and explicit future
    retention-review checkpoint. At the initial pre-mutation gate, all
    observations must be no more than 30 minutes old. The freeze must cover the
    main record's `validUntil` and span no more than 24 hours. Both `validUntil`
@@ -77,13 +77,13 @@ clears the brand.
    third-party integrations disabled, with Auth admin-creation automation off.
 6. Run `scripts/phase2/deploy-supabase-staging.ps1`. The pinned procedure
    creates and repeatedly verifies an immutable Git snapshot, sets
-   `DB06_TRAFFIC_FREEZE=frozen`, predeploys all 16 guarded default functions,
+   `DB06_TRAFFIC_FREEZE=frozen`, predeploys all 17 guarded default functions,
    and canaries the exact eight `verifyJwt: false` endpoints for HTTP `503`,
    exact `DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`.
 7. Require the immediate pre-push gate to revalidate cutover bytes and reread
    the exact function inventory, public freeze canaries, Auth freeze, empty
    migration inventory, schema, Storage, and all Cron jobs before applying the
-   61 migrations through `0062`. That gate reparses the unchanged artifact
+   62 migrations through `0063`. That gate reparses the unchanged artifact
    bytes/hashes and
    proves their current `validUntil`/`holdUntil` plus the seven-hour remaining
    completion budget; it does not pretend the initial operator observations

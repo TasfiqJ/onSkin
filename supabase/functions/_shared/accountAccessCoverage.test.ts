@@ -1,5 +1,6 @@
 const protectedAuthenticatedFunctions = [
   'catalog-lookup',
+  'catalog-operator',
   'catalog-report',
   'catalog-search',
   'consent-withdrawal',
@@ -10,6 +11,7 @@ const protectedAuthenticatedFunctions = [
 
 const firstSensitiveOperation = {
   'catalog-lookup': 'const admin = createClient(supabaseUrl, serviceKey',
+  'catalog-operator': 'const rpcResult = await operatorBackend.rpc(name, args)',
   'catalog-report': 'const parsed = await requestBody(req)',
   'catalog-search': 'const admin = createClient(supabaseUrl, serviceKey',
   'consent-withdrawal': 'const parsed = await readLimitedJson(req',
@@ -49,6 +51,7 @@ Deno.test(
       );
       const authIndex = Math.max(
         source.indexOf('caller.auth.getUser()'),
+        source.indexOf('caller.auth.getUser(presentedToken)'),
         source.indexOf('supabase.auth.getUser(token)'),
         source.indexOf('admin.auth.getUser(token)'),
         source.indexOf('supabase.auth.getUser()'),
@@ -58,7 +61,7 @@ Deno.test(
       );
       const sensitiveIndex = source.indexOf(firstSensitiveOperation[functionName]);
       assert(
-        source.includes("from '../_shared/accountAccess.ts'"),
+        /from\s+["']\.\.\/_shared\/accountAccess\.ts["']/.test(source),
         `${functionName} must import the shared exact-session lifecycle authority`,
       );
       assert(authIndex !== -1, `${functionName} authentication boundary is not detectable`);
@@ -86,7 +89,7 @@ Deno.test(
         new URL(`../${functionName}/index.ts`, import.meta.url),
       );
       assert(
-        !source.includes("from '../_shared/accountAccess.ts'"),
+        !/from\s+["']\.\.\/_shared\/accountAccess\.ts["']/.test(source),
         `${functionName} must remain reachable to establish lifecycle authority or delete a blocked account`,
       );
     }

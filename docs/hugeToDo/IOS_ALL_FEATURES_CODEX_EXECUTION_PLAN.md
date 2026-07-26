@@ -360,6 +360,41 @@ shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
 | CAT-08 | C     | Add catalog/admin correction tooling and operational queues                                                                          | Authorized operators can review sources/reports without direct database editing                                                                          |
 | CAT-09 | C     | Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact                            | Dashboards and thresholds are production-ready                                                                                                           |
 
+2026-07-22 CAT-08 source checkpoint: the local candidate defines a dedicated
+operator boundary whose Edge verifies the exact issuer/subject/audience/live
+token and AAL2 claim while Postgres independently derives the actor from the
+exact live Auth session and verified TOTP factor. A dedicated constrained
+transaction-pooler login can execute only the six application-gateway
+functions; browser/API roles cannot execute them, and hosted transport requires
+CA/hostname verification. Ten-minute work-session checks, five-minute lease/CAS
+queue claims, committed global and per-action database rate budgets, immutable
+operation/audit records, and capability-separated triage, disposition, repair
+attestation, and release are fail-closed. `open` reports do not suppress serving; triage creates
+an independent reporter-free product hold that survives withdrawal/account
+deletion. Accepted/rejected dispositions cannot release it. A third person may
+attest only an exact current CAT-02 projection and signed staged CAT-03
+successor over the active-hold root. A fourth distinct person releases; release
+advances the root and cannot activate serving, so CAT-03 owners must complete a
+fresh post-release campaign/activation/readback. API roles receive no raw
+operator/correction/hold table lane, and the legacy service-role correction
+review lane is revoked. A deterministic local two-connection rehearsal proves
+action-first and session-revocation-first grant-lock ordering against the real
+database gateway.
+
+CAT-08 remains `in_progress` and blocked by CAT-07. A separate publishable-key-
+only internal-console source candidate exists, but it is not deployed or E2E-
+proven. A local ignored synthetic-fixture browser packet predates the final
+claim-bound-detail and authority revisions, so it is not current governed
+acceptance evidence. Real named MFA-enrolled operators and coverage, hosted
+full-chain/RLS/stale-session/two-connection race/deletion/audit evidence,
+verified operator/build/capability/incident display, hosted rate-threshold/load
+evidence and scheduled idle-period bucket purge, an approved workforce
+audit-retention/deprovisioning contract, legacy-hold cutover remediation,
+current human-simulated operator E2E, incident drills, and
+privacy/security/legal review are absent. Local source
+controls do not establish production operation, legal compliance, Apple
+acceptance, product-market fit, or revenue.
+
 2026-07-19 CAT-07 source checkpoint: the current candidate preserves physical-package dates,
 explicit label PAO, reviewed catalog PAO, reserved future catalog-linked
 category estimate, and unknown as distinct states. Unknown is not an estimate;

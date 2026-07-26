@@ -4,12 +4,10 @@ import type { HealthLifecycleExportSnapshot } from '../consent-withdrawal/health
 export type HealthLifecycleExportDecision =
   | { allowed: true; snapshot: HealthLifecycleExportSnapshot }
   | {
-    allowed: false;
-    error:
-      | 'HEALTH_DATA_WITHDRAWAL_IN_PROGRESS'
-      | 'HEALTH_DATA_LIFECYCLE_CHANGED';
-    retryAfterSeconds: number;
-  };
+      allowed: false;
+      error: 'HEALTH_DATA_WITHDRAWAL_IN_PROGRESS' | 'HEALTH_DATA_LIFECYCLE_CHANGED';
+      retryAfterSeconds: number;
+    };
 
 export function healthLifecycleExportDecision(
   initial: HealthLifecycleExportSnapshot,
@@ -41,7 +39,7 @@ export function healthLifecycleExportDecision(
 
 export type DatabaseSourceManifest = {
   kind: 'database_table';
-  scope: 'caller_rls' | 'service_role_filtered';
+  scope: 'caller_rls' | 'caller_rpc_owner' | 'service_role_filtered';
   order_by: readonly string[];
   count: number;
   count_before: number;
@@ -76,9 +74,7 @@ export type DerivedSourceManifest = {
 };
 
 export type ExportSourceManifest =
-  | DatabaseSourceManifest
-  | StorageSourceManifest
-  | DerivedSourceManifest;
+  DatabaseSourceManifest | StorageSourceManifest | DerivedSourceManifest;
 
 export type PaginatedRows = {
   rows: Record<string, unknown>[];
@@ -128,14 +124,10 @@ function sourceFailure(source: string, reason: string): Error {
 }
 
 function normalizeForCanonicalJson(value: unknown): unknown {
-  if (
-    value === null || typeof value === 'string' || typeof value === 'boolean'
-  ) return value;
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
   if (typeof value === 'number') return Number.isFinite(value) ? value : null;
   if (Array.isArray(value)) {
-    return value.map((
-      item,
-    ) => (item === undefined ? null : normalizeForCanonicalJson(item)));
+    return value.map((item) => (item === undefined ? null : normalizeForCanonicalJson(item)));
   }
   if (typeof value === 'object') {
     const record = value as Record<string, unknown>;
@@ -155,14 +147,8 @@ export function canonicalJson(value: unknown): string {
 }
 
 async function sha256Hex(value: string): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    'SHA-256',
-    new TextEncoder().encode(value),
-  );
-  return Array.from(
-    new Uint8Array(digest),
-    (byte) => byte.toString(16).padStart(2, '0'),
-  ).join('');
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
 export async function checksumRows(rows: readonly unknown[]): Promise<string> {
@@ -199,10 +185,7 @@ export async function paginateRows(options: {
   maxRows: number;
   note?: string;
   fetchCount: () => Promise<number | null>;
-  fetchPage: (
-    offset: number,
-    limit: number,
-  ) => Promise<Record<string, unknown>[]>;
+  fetchPage: (offset: number, limit: number) => Promise<Record<string, unknown>[]>;
 }): Promise<PaginatedRows> {
   const { source, pageSize, maxRows, orderBy } = options;
   if (!Number.isInteger(pageSize) || pageSize < 1) {
@@ -220,7 +203,7 @@ export async function paginateRows(options: {
   const orderIdentities = new Set<string>();
   let pageRequests = 0;
 
-  for (let offset = 0;; offset += pageSize) {
+  for (let offset = 0; ; offset += pageSize) {
     const page = await options.fetchPage(offset, pageSize);
     pageRequests += 1;
     if (!Array.isArray(page) || page.length > pageSize) {
@@ -288,12 +271,7 @@ export async function boundedMap<T, R>(
     }
   };
 
-  await Promise.all(
-    Array.from(
-      { length: Math.min(concurrency, values.length) },
-      () => worker(),
-    ),
-  );
+  await Promise.all(Array.from({ length: Math.min(concurrency, values.length) }, () => worker()));
   return results;
 }
 
@@ -317,15 +295,7 @@ async function listStorageOnce(options: {
   maxPrefixes: number;
   maxPageRequests: number;
 }): Promise<{ paths: string[]; pageRequests: number }> {
-  const {
-    userId,
-    bucket,
-    pageSize,
-    maxObjects,
-    maxDepth,
-    maxPrefixes,
-    maxPageRequests,
-  } = options;
+  const { userId, bucket, pageSize, maxObjects, maxDepth, maxPrefixes, maxPageRequests } = options;
   const pendingPrefixes = [userId];
   const scheduledPrefixes = new Set(pendingPrefixes);
   const visitedPrefixes = new Set<string>();
@@ -338,10 +308,7 @@ async function listStorageOnce(options: {
     offset: number,
   ): Promise<StorageListEntry[]> => {
     if (pageRequests >= maxPageRequests) {
-      throw sourceFailure(
-        'photo_storage_objects',
-        'PAGE_REQUEST_LIMIT_EXCEEDED',
-      );
+      throw sourceFailure('photo_storage_objects', 'PAGE_REQUEST_LIMIT_EXCEEDED');
     }
     try {
       const { data, error } = await bucket.list(prefix, {
@@ -355,21 +322,14 @@ async function listStorageOnce(options: {
       }
       return data;
     } catch (error) {
-      if (
-        error instanceof Error &&
-        error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')
-      ) {
+      if (error instanceof Error && error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')) {
         throw error;
       }
       throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
     }
   };
 
-  for (
-    let prefixIndex = 0;
-    prefixIndex < pendingPrefixes.length;
-    prefixIndex += 1
-  ) {
+  for (let prefixIndex = 0; prefixIndex < pendingPrefixes.length; prefixIndex += 1) {
     const prefix = pendingPrefixes[prefixIndex]!;
     if (visitedPrefixes.has(prefix)) continue;
     visitedPrefixes.add(prefix);
@@ -382,18 +342,12 @@ async function listStorageOnce(options: {
         const path = ownedChildPath(userId, prefix, entry.name);
         const depth = path.split('/').length - 1;
         if (depth > maxDepth) {
-          throw sourceFailure(
-            'photo_storage_objects',
-            'PATH_DEPTH_LIMIT_EXCEEDED',
-          );
+          throw sourceFailure('photo_storage_objects', 'PATH_DEPTH_LIMIT_EXCEEDED');
         }
         if (entry.id === null) {
           if (!visitedPrefixes.has(path) && !scheduledPrefixes.has(path)) {
             if (scheduledPrefixes.size >= maxPrefixes) {
-              throw sourceFailure(
-                'photo_storage_objects',
-                'PREFIX_LIMIT_EXCEEDED',
-              );
+              throw sourceFailure('photo_storage_objects', 'PREFIX_LIMIT_EXCEEDED');
             }
             scheduledPrefixes.add(path);
             pendingPrefixes.push(path);
@@ -404,10 +358,7 @@ async function listStorageOnce(options: {
           }
           paths.add(path);
           if (paths.size > maxObjects) {
-            throw sourceFailure(
-              'photo_storage_objects',
-              'OBJECT_LIMIT_EXCEEDED',
-            );
+            throw sourceFailure('photo_storage_objects', 'OBJECT_LIMIT_EXCEEDED');
           }
         } else {
           throw sourceFailure('photo_storage_objects', 'INVALID_LIST_ENTRY');
@@ -435,18 +386,13 @@ export async function listStoragePathsVerified(options: {
   maxPrefixes?: number;
   maxPageRequests?: number;
 }): Promise<{ paths: string[]; manifest: StorageSourceManifest }> {
-  if (
-    !photoPathBelongsToUser(options.userId, `${options.userId}/ownership-check`)
-  ) {
+  if (!photoPathBelongsToUser(options.userId, `${options.userId}/ownership-check`)) {
     throw sourceFailure('photo_storage_objects', 'INVALID_OWNER');
   }
   if (!Number.isInteger(options.pageSize) || options.pageSize < 1) {
     throw new Error('INVALID_STORAGE_PAGE_SIZE');
   }
-  if (
-    !Number.isInteger(options.maxObjects) ||
-    options.maxObjects < options.pageSize
-  ) {
+  if (!Number.isInteger(options.maxObjects) || options.maxObjects < options.pageSize) {
     throw new Error('INVALID_STORAGE_OBJECT_LIMIT');
   }
 
@@ -459,42 +405,27 @@ export async function listStoragePathsVerified(options: {
     maxPrefixes: options.maxPrefixes ?? 4_096,
     maxPageRequests: options.maxPageRequests ?? 8_192,
   };
-  if (
-    !Number.isInteger(boundedOptions.maxDepth) || boundedOptions.maxDepth < 1
-  ) {
+  if (!Number.isInteger(boundedOptions.maxDepth) || boundedOptions.maxDepth < 1) {
     throw new Error('INVALID_STORAGE_DEPTH_LIMIT');
   }
-  if (
-    !Number.isInteger(boundedOptions.maxPrefixes) ||
-    boundedOptions.maxPrefixes < 1
-  ) {
+  if (!Number.isInteger(boundedOptions.maxPrefixes) || boundedOptions.maxPrefixes < 1) {
     throw new Error('INVALID_STORAGE_PREFIX_LIMIT');
   }
-  if (
-    !Number.isInteger(boundedOptions.maxPageRequests) ||
-    boundedOptions.maxPageRequests < 1
-  ) {
+  if (!Number.isInteger(boundedOptions.maxPageRequests) || boundedOptions.maxPageRequests < 1) {
     throw new Error('INVALID_STORAGE_PAGE_REQUEST_LIMIT');
   }
 
   const first = await listStorageOnce(boundedOptions);
-  const firstChecksum = await checksumRows(
-    first.paths.map((path) => ({ path })),
-  );
+  const firstChecksum = await checksumRows(first.paths.map((path) => ({ path })));
   const second = await listStorageOnce({
     ...boundedOptions,
     // maxPageRequests is a total two-pass request budget, not a per-pass
     // budget. This keeps verification executable within an Edge deadline.
     maxPageRequests: boundedOptions.maxPageRequests - first.pageRequests,
   });
-  const secondChecksum = await checksumRows(
-    second.paths.map((path) => ({ path })),
-  );
+  const secondChecksum = await checksumRows(second.paths.map((path) => ({ path })));
 
-  if (
-    first.paths.length !== second.paths.length ||
-    firstChecksum !== secondChecksum
-  ) {
+  if (first.paths.length !== second.paths.length || firstChecksum !== secondChecksum) {
     throw sourceFailure('photo_storage_objects', 'UNSTABLE_INVENTORY');
   }
 

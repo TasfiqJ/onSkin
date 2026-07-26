@@ -259,12 +259,12 @@ function cutoverFixture(overrides = {}, trafficFreezeOverrides = {}) {
 test('current reviewed source inventory is deterministic and exact', () => {
   assertCurrentSourceContract(source);
   const second = buildSourceInventory(repoRoot);
-  assert.equal(source.migrationCount, 61);
-  assert.equal(source.latestMigrationId, '20260722000062');
-  assert.equal(source.functionCount, 16);
+  assert.equal(source.migrationCount, 62);
+  assert.equal(source.latestMigrationId, '20260722000063');
+  assert.equal(source.functionCount, 17);
   assert.equal(source.migrationSetSha256, second.migrationSetSha256);
   assert.equal(source.functionSetSha256, second.functionSetSha256);
-  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 61);
+  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 62);
 });
 
 test('schema parser accepts only one complete non-negative count row', () => {
@@ -418,7 +418,7 @@ test('immediate pre-migration gate rejects changed schema or migration history',
 test('function inventory requires exact manifest slugs, active status, versions, JWT posture, and hosted hashes', () => {
   const rows = functionRows();
   const parsed = parseFunctionInventory(JSON.stringify(rows), source, { requireComplete: true });
-  assert.equal(parsed.length, 16);
+  assert.equal(parsed.length, 17);
   assert.equal(parsed[0].reviewedSourceSetSha256.length, 64);
 
   const missingHash = structuredClone(rows);
@@ -788,7 +788,7 @@ test('generated-type summaries require a real Database surface and an exact loca
   );
 });
 
-test('completed deployment requires 61 migrations, all functions, 80 RLS tables, config, and type parity', () => {
+test('completed deployment requires 62 migrations, all functions, 80 RLS tables, config, and type parity', () => {
   const functions = parseFunctionInventory(JSON.stringify(functionRows()), source, {
     requireComplete: true,
   });
@@ -948,7 +948,7 @@ function passManifestInput(steps) {
       authIngressFreeze,
     },
     preMigration: {
-      functionCount: 16,
+      functionCount: 17,
       functions,
       trafficFreezeState: 'frozen-and-retained-through-downstream-release-gate',
       trafficFreezeCanary,
@@ -976,7 +976,7 @@ function passManifestInput(steps) {
       },
     },
     after: {
-      migrationCount: 61,
+      migrationCount: 62,
       migrationIds: source.migrations.map(({ id }) => id),
       functions,
       schema: afterSchema,

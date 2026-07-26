@@ -79,9 +79,9 @@ Node orchestrator. The orchestrator:
    source review rather than being silently ignored;
 10. sets the two staging app-environment names and
     `DB06_TRAFFIC_FREEZE=frozen`, confirms every required hosted configuration
-    group by name only, and discards provider digests. Every one of the 16 Edge
+    group by name only, and discards provider digests. Every one of the 17 Edge
     entrypoints checks the shared freeze guard before request business logic;
-11. deploys the complete 16-function manifest before any migration, reads back
+11. deploys the complete 17-function manifest before any migration, reads back
     each hosted function's active status, version, `verify_jwt` posture, and
     hosted `ezbr_sha256`, and canaries the exact eight `verifyJwt: false`
     endpoints for HTTP `503`, exact JSON error code
@@ -96,7 +96,7 @@ Node orchestrator. The orchestrator:
     misstate the initial operator observations as newly captured. The
     migration push begins only after this final zero-cohort boundary passes;
 13. runs a migration dry run, applies the exact ordered migrations, proves the
-    exact 61-ID history, redeploys the same complete manifest, and proves a
+    exact 62-ID history through `0063`, redeploys the same complete manifest, and proves a
     second dry run has no pending source change;
 14. runs linked pgTAP, error-level database lint, and an empty linked schema
     diff for `public`, `auth`, and `storage`;
@@ -236,7 +236,7 @@ $env:DB06_CUTOVER_EVIDENCE_DIR = "<absolute-path-to-redacted-boundary-directory>
    may release it. Commit only approved redacted evidence artifacts. If it
    fails, keep all traffic and provider callbacks closed, preserve the failure
    record and any containment-recovery root, and use the forward-compatible
-   containment procedure. Do not reverse migrations `0048`-`0062` or repair
+   containment procedure. Do not reverse migrations `0048`-`0063` or repair
    migration history manually. An unused fresh project may be discarded only
    under the recorded rollback/owner decision after required evidence is
    retained.
@@ -247,13 +247,13 @@ $env:DB06_CUTOVER_EVIDENCE_DIR = "<absolute-path-to-redacted-boundary-directory>
 including real descendant process-tree settlement on normal, timeout, and
 output-limit paths, plus the static wrapper/orchestrator contract. The fixtures
 cover deterministic
-61-migration/16-function source hashing; partial and malformed schema output;
+62-migration/17-function source hashing; partial and malformed schema output;
 Git snapshot mutation/injection rejection; aggregate Auth/Storage/all-Cron
 parsing and forward-safe Auth configuration-field review;
 divergent migration history; non-empty-target rejection; missing, inactive,
 extra, wrong-JWT, or un-hashed functions; secret-digest minimization; strict
 zero-cohort cutover file/fingerprint/hash/expiry binding; active shared freeze
-guards across all 16 functions; exact frozen-response canaries across the eight
+guards across all 17 functions; exact frozen-response canaries across the eight
 public-gateway functions; type validation/parity; exact 80-table/RLS and
 one-bucket/no-cohort/no-Cron acceptance; evidence governance fields; redaction;
 traversal/overwrite denial; partial-finalization recovery; checksums; retained

@@ -396,8 +396,9 @@ Use this format for every significant product, architecture, pricing, privacy, o
   transactionally locked insert-only promotion; immutable batch-to-record
   lineage; and non-destructive batch withdrawal. Shared runtime roles may
   stage and verify bounded evidence but cannot approve, promote, roll back, or
-  directly write the global catalog. Those authority-changing operations stay
-  migration-owner-only until CAT-08 supplies dedicated operator identities.
+  directly write the global catalog. CAT-08 deliberately gives identity-bound
+  operators recommendation authority only; approval, promotion, rollback, and
+  CAT-03 activation remain migration-owner-only.
 - Type: Architecture / Privacy / Legal / Launch
 - Alternatives: direct service-role upserts, automatic fuzzy merges,
   source-approval-as-row-approval, hard-delete rollback, or source-wide
@@ -442,10 +443,11 @@ Use this format for every significant product, architecture, pricing, privacy, o
   Every mutation of sealed served state appends a permanent per-product event
   under that same global lock, including reviewed correction holds, production/
   legal source withdrawal, and promoted-batch retirement. Correction evidence
-  uses only a bounded serving projection in that chain: correction and
-  product IDs, status, UTC review time, and reviewer/note-presence booleans. User
-  identity, barcode, free text, arbitrary JSON, assignment/resolution content,
-  and ambient timestamps are excluded. Whole-row snapshot and capture boundaries
+  uses only a bounded reporter-independent serving projection in that chain:
+  hold and product IDs, state, bounded reason, server-opened time, and current
+  mutation root. Correction/report identity, user identity, barcode, free text,
+  arbitrary JSON, assignment/resolution content, and ambient timestamps are
+  excluded. Whole-row snapshot and capture boundaries
   canonicalize `timestamptz` values under UTC.
   Outcome reviewers bind the current mutation root. Exact restoration, later closing the hold,
   reapproving the source, or restoring the batch cannot resurrect the old
@@ -474,6 +476,56 @@ Use this format for every significant product, architecture, pricing, privacy, o
   market or replace consent, professional judgment, hosted database proof, legal
   clearance, Apple review, or real launch data.
 - Status: Accepted for the source architecture; production activation gated.
+
+### 2026-07-22 - Separate Operator Workflow From Catalog Publication Authority
+
+- Decision: CAT-08 exposes six bounded RPCs and a separate internal-console
+  source candidate, not a general database editor. Browser API roles cannot
+  invoke the RPCs. Edge signature-verifies the exact nonanonymous `aal2`
+  bearer and passes its signed Auth-session UUID plus an exact deployment tuple
+  to six hardcoded functions in a non-Data-API gateway schema. A constrained,
+  nonsuperuser, membership/ownership-free transaction-pooler login with full
+  CA/hostname verification replaces service-role transport. The database
+  derives the confirmed normalized email, actor, and verified TOTP factor from
+  the live Auth session and requires an exact open runtime-control generation,
+  immutable active grant/capability binding,
+  ten-minute operator session, an all-action separately committed global
+  admission budget, per-action class budgets, immediate server-derived grant
+  revocation, and a common advisory/grant-lock ordering. Queue mutations use a five-minute lease,
+  UUIDv4 idempotency receipt, advisory lock, and CAS version. Triage,
+  disposition, repair attestation, and release are separate capabilities and
+  people for a held product. Triage creates a reporter-independent product hold
+  that survives report/consent/account erasure. No correction disposition can
+  release it. A third person may attest only exact current CAT-01/CAT-02
+  authority plus a signed staged CAT-03 successor over the active-hold mutation
+  root. A fourth distinct person releases; release advances the root and never
+  activates serving. CAT-03 owners must complete a fresh post-release record,
+  campaign release/activation, and readback. Source/import review records are immutable recommendations and
+  never inherit migration-owner promotion/release authority.
+- Type: Architecture / Privacy / Security / Launch
+- Alternatives: browser-visible/shared service-role console, direct table editor, caller-
+  supplied reviewer aliases, long-lived browser sessions, last-write-wins queue
+  handling, correction-row-coupled holds, or acceptance/rejection as automatic
+  serving release.
+- Criteria: least privilege, attributable named actors, rapid revocation,
+  separation of duties, bounded concurrency, immutable minimized audit,
+  reporter erasure without risk resurrection, and current exact publication
+  authority before release.
+- Risk: local source cannot prove the hosted pooler ACL/TLS, credential rotation,
+  freeze/rollback operation, concurrent renewal/revocation behavior, rate-limit
+  operations, or absence of inherited/public privilege drift.
+  Production acceptance requires hosted proof that `catalog_operator_edge` has
+  only gateway usage/execute, no role membership/ownership or
+  table/sequence/Auth/control authority, and a verified-full transport.
+- Evidence: migration `20260722000063_catalog_operator_authority.sql`, the
+  CAT-08 pgTAP and source contracts, the bounded `catalog-operator` Edge
+  surface, the separate `apps/catalog-operator-console/` source, and the Phase 4
+  operator runbook.
+- Risk: source tests do not prove hosted deployment, MFA/session revocation,
+  two-session races, console isolation, staffing, retention/deletion operations,
+  human-simulated E2E, professional review, App Review, or legal compliance.
+- Status: Accepted for the source architecture; CAT-08 remains `in_progress`
+  and production rollout is gated.
 
 ### 2026-07-06 - Deterministic Rules Over AI For Safety
 
