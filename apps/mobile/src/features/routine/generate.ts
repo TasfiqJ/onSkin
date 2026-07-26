@@ -1,19 +1,18 @@
 import type { GoalId, SequencingRole } from '@onskin/types';
 
 import {
-  detectConflicts,
+  evaluateConflicts,
+  type ConflictEvaluationStatus,
   type DetectedConflict,
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
-import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
 import { unresolvedConflicts, type ConflictChoices } from '@/features/intelligence/conflictChoices';
 import { pickCycle, type CycleTemplate } from '@/features/intelligence/scheduler';
-import {
-  pregnancySafetyReasonForProduct,
-  type PregnancySafetyMode,
-  type PregnancySafetyReason,
-  type PregnancySafetyStatus,
+import type {
+  PregnancySafetyMode,
+  PregnancySafetyReason,
+  PregnancySafetyStatus,
 } from '@/features/intelligence/pregnancySafety';
 
 import { initRamp, type RampState } from './ramp';
@@ -55,6 +54,8 @@ export type GeneratedPlan = {
   unplacedProducts: { productId: string; name: string }[];
   gaps: string[];
   conflicts: DetectedConflict[];
+  conflictCoverageStatus: ConflictEvaluationStatus;
+  unsupportedConflictPairs: string[];
 };
 
 // Roles whose absence is worth a calm, claim-safe gap note (docs/03 §2. Never
@@ -81,14 +82,37 @@ export type RoutineGenerationProfile = EngineProfile & {
 export function generatePlan(
   products: RoutineProduct[],
   profile: RoutineGenerationProfile,
-  rules: ConflictRule[] = shippableRules(),
   conflictChoices: ConflictChoices = {},
   sequencingRules: ShippableSequencingRules = shippableSequencingRules(),
 ): GeneratedPlan {
-  const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
-  const safetyExclusions = products.flatMap((product) => {
-    const reason = pregnancySafetyReasonForProduct(product, pregnancySafety, rules);
-    return reason ? [{ productId: product.id, name: product.name, reason }] : [];
+  const reproductiveStatus =
+    profile.pregnancyStatus ??
+    profile.reproductiveStatus ??
+    (profile.pregnancy ? 'pregnant' : 'none');
+  const engineProducts: EngineProduct[] = products.map((product) => ({
+    id: product.id,
+    name: product.name,
+    tags: product.tags,
+    concentration: product.concentration,
+  }));
+  const conflictEvaluation = evaluateConflicts(engineProducts, {
+    ...profile,
+    reproductiveStatus,
+  });
+  const productByIdForSafety = new Map(products.map((product) => [product.id, product] as const));
+  const safetyExclusions = conflictEvaluation.conflicts.flatMap((conflict) => {
+    if (conflict.rule.interactionType !== 'safety') return [];
+    const productId = conflict.productAId ?? conflict.productBId;
+    const product = productId ? productByIdForSafety.get(productId) : null;
+    if (!product) return [];
+    const activeTag = conflict.rule.tagA === 'pregnancy' ? conflict.rule.tagB : conflict.rule.tagA;
+    const reason: PregnancySafetyReason =
+      activeTag === 'retinoid'
+        ? 'retinoid'
+        : activeTag === 'hydroquinone'
+          ? 'hydroquinone'
+          : 'bha_not_confirmed_low';
+    return [{ productId: product.id, name: product.name, reason }];
   });
   const excludedIds = new Set(safetyExclusions.map((item) => item.productId));
   const routineProducts = products.filter((product) => !excludedIds.has(product.id));
@@ -183,18 +207,7 @@ export function generatePlan(
     .map((role) => GAP_NOTES[role]!);
 
   // Conflicts: run the docs/02 engine (launch-gated rules) over the shelf.
-  const engineProducts: EngineProduct[] = products.map((p) => ({
-    id: p.id,
-    name: p.name,
-    tags: p.tags,
-    concentration: p.concentration,
-  }));
-  const detectedConflicts = detectConflicts(
-    engineProducts,
-    { ...profile, pregnancy: profile.pregnancy },
-    rules,
-  );
-  const conflicts = unresolvedConflicts(detectedConflicts, conflictChoices);
+  const conflicts = unresolvedConflicts(conflictEvaluation.conflicts, conflictChoices);
 
   return {
     am,
@@ -207,5 +220,7 @@ export function generatePlan(
     unplacedProducts,
     gaps,
     conflicts,
+    conflictCoverageStatus: conflictEvaluation.status,
+    unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
   };
 }

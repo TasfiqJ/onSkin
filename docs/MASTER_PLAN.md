@@ -942,8 +942,6 @@ RoutineKind Pro:
 - `scan_matched`
 - `scan_no_match`
 - `first_useful_insight`
-- `conflict_detected`
-- `conflict_detail_viewed`
 - `routine_created`
 - `first_checkoff_completed`
 - `routine_checkoff_completed`
@@ -954,7 +952,13 @@ RoutineKind Pro:
 - `trial_started`
 - `purchase_completed`
 - `subscription_cancel_intent`
-- `share_card_exported`
+
+Conflict existence, conflict-detail access, and conflict-resolution choices are
+not analytics events. Even a property-free event from a conflict-only surface
+reveals health-adjacent shelf state. Keep those interactions on device and use
+only the generic, non-clinical first-value and routine events above. The current
+conflict-card exporter and its conflict-only public-link route are analytics-free
+for the same reason.
 
 ### Dashboards
 

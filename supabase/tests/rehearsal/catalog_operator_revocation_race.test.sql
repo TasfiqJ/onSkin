@@ -6,8 +6,26 @@
 create extension if not exists pgtap with schema extensions;
 create extension if not exists dblink with schema extensions;
 set search_path = extensions, public, pg_catalog;
+\ir generated/catalog-operator-dblink-target.sql
 
 select plan(10);
+
+do $$
+declare
+  v_host text := pg_catalog.current_setting('test.cat08_dblink_host', true);
+  v_port text := pg_catalog.current_setting('test.cat08_dblink_port', true);
+begin
+  if v_host <> 'host.docker.internal'
+     or v_port is null
+     or v_port !~ '^[0-9]{4,5}$'
+     or v_port::integer < 1024
+     or v_port::integer > 65535
+  then
+    raise exception 'CAT08_REHEARSAL_DBLINK_TARGET_INVALID'
+      using errcode = '42501';
+  end if;
+end;
+$$;
 
 update private.catalog_operator_runtime_control
 set control_generation = 2,
@@ -194,6 +212,27 @@ create temporary table cat08_session_results (
 grant insert, select on table pg_temp.cat08_session_results
   to catalog_operator_edge;
 
+-- The deployed gateway role must remain membership-free. Supabase CLI runs
+-- this isolated rehearsal as the fixed local `postgres` role, which is not a
+-- superuser; add only a bounded test-harness SET ROLE lane after proving the
+-- migrated role has no inherited membership. The isolated sandbox is destroyed
+-- after verification, and the grant is explicitly revoked before finish().
+do $$
+begin
+  if exists (
+    select 1
+    from pg_catalog.pg_auth_members as membership
+    inner join pg_catalog.pg_roles as edge_role
+      on edge_role.oid = membership.roleid
+    where edge_role.rolname = 'catalog_operator_edge'
+  ) then
+    raise exception 'CAT08_REHEARSAL_EDGE_MEMBERSHIP_DRIFT'
+      using errcode = '42501';
+  end if;
+end;
+$$;
+grant catalog_operator_edge to postgres;
+
 set role catalog_operator_edge;
 insert into pg_temp.cat08_session_results (established_count)
 select count(*)
@@ -202,6 +241,84 @@ from catalog_operator_gateway.catalog_operator_session(
   'development', repeat('a', 40), 'local_cat08_race', 2, 'session'
 );
 reset role;
+
+-- dblink refuses passwordless connections for the intentionally nonsuperuser
+-- local runner, while PostgreSQL also prevents that runner from altering its
+-- own privileged-role password. Create one isolated, unprivileged login with a
+-- session-generated credential and a narrowly caller-bound SECURITY DEFINER
+-- controller helper. The rehearsal is the final DB05 step, the credential is
+-- never emitted, and cleanup destroys the sandbox even on failure. Drop the
+-- helper and login explicitly after disconnecting as defense in depth.
+select pg_catalog.set_config(
+  'test.cat08_dblink_password',
+  pg_catalog.encode(extensions.gen_random_bytes(32), 'hex'),
+  false
+);
+do $$
+begin
+  if current_user <> 'postgres' then
+    raise exception 'CAT08_REHEARSAL_RUNNER_ROLE_INVALID'
+      using errcode = '42501';
+  end if;
+  if exists (
+    select 1
+    from pg_catalog.pg_roles
+    where rolname = 'cat08_rehearsal_connection'
+  ) then
+    raise exception 'CAT08_REHEARSAL_CONNECTION_ROLE_DRIFT'
+      using errcode = '42501';
+  end if;
+  execute pg_catalog.format(
+    'create role cat08_rehearsal_connection login nosuperuser noinherit ' ||
+      'nocreatedb nocreaterole noreplication nobypassrls connection limit 2 password %L',
+    pg_catalog.current_setting('test.cat08_dblink_password')
+  );
+end;
+$$;
+grant catalog_operator_edge to cat08_rehearsal_connection;
+grant usage on schema catalog_operator_gateway to cat08_rehearsal_connection;
+
+create function catalog_operator_gateway.cat08_rehearsal_revoke_then_latch(
+  p_grant_id uuid,
+  p_latch_key bigint
+)
+returns text
+language plpgsql
+volatile
+security definer
+set search_path = ''
+as $$
+begin
+  if session_user <> 'cat08_rehearsal_connection' then
+    raise exception 'CAT08_REHEARSAL_CONNECTION_CALLER_INVALID'
+      using errcode = '42501';
+  end if;
+
+  insert into private.catalog_operator_grant_revocations (
+    grant_id,
+    revoked_by_user_id,
+    reason_code,
+    evidence_sha256,
+    revoked_at
+  ) values (
+    p_grant_id,
+    '65000000-0000-4000-8000-000000000004',
+    'security_response',
+    repeat('d', 64),
+    pg_catalog.clock_timestamp() + interval '1 day'
+  );
+  if p_latch_key is not null then
+    perform pg_catalog.pg_advisory_xact_lock(p_latch_key);
+  end if;
+  return 'revoked';
+end;
+$$;
+revoke all on function
+  catalog_operator_gateway.cat08_rehearsal_revoke_then_latch(uuid, bigint)
+  from public, anon, authenticated, service_role, catalog_operator_edge;
+grant execute on function
+  catalog_operator_gateway.cat08_rehearsal_revoke_then_latch(uuid, bigint)
+  to cat08_rehearsal_connection;
 
 select is(
   (select established_count from pg_temp.cat08_session_results),
@@ -252,11 +369,23 @@ $$;
 select extensions.dblink_connect(
   'cat08_race_a',
   'dbname=' || pg_catalog.current_database() ||
+    ' host=' ||
+    pg_catalog.current_setting('test.cat08_dblink_host') ||
+    ' port=' ||
+    pg_catalog.current_setting('test.cat08_dblink_port') ||
+    ' user=cat08_rehearsal_connection password=' ||
+    pg_catalog.current_setting('test.cat08_dblink_password') ||
     ' options=''-c application_name=cat08_race_a -c statement_timeout=5000'''
 );
 select extensions.dblink_connect(
   'cat08_race_b',
   'dbname=' || pg_catalog.current_database() ||
+    ' host=' ||
+    pg_catalog.current_setting('test.cat08_dblink_host') ||
+    ' port=' ||
+    pg_catalog.current_setting('test.cat08_dblink_port') ||
+    ' user=cat08_rehearsal_connection password=' ||
+    pg_catalog.current_setting('test.cat08_dblink_password') ||
     ' options=''-c application_name=cat08_race_b -c statement_timeout=5000'''
 );
 
@@ -345,23 +474,10 @@ select extensions.dblink_exec(
     set search_path = ''
     as $function$
     begin
-      insert into private.catalog_operator_grant_revocations (
-        grant_id,
-        revoked_by_user_id,
-        reason_code,
-        evidence_sha256,
-        revoked_at
-      ) values (
+      return catalog_operator_gateway.cat08_rehearsal_revoke_then_latch(
         p_grant_id,
-        '65000000-0000-4000-8000-000000000004',
-        'security_response',
-        repeat('d', 64),
-        pg_catalog.clock_timestamp() + interval '1 day'
+        p_latch_key
       );
-      if p_latch_key is not null then
-        perform pg_catalog.pg_advisory_xact_lock(p_latch_key);
-      end if;
-      return 'revoked';
     end;
     $function$;
   $remote$
@@ -414,7 +530,7 @@ end;
 $$;
 select is(
   (
-    select result
+    select (pg_catalog.array_agg(result))[1]
     from extensions.dblink_get_result(
       'cat08_race_a'
     ) as result(result text)
@@ -422,9 +538,13 @@ select is(
   'ok',
   'the action that won the lock order commits before revocation'
 );
+select *
+from extensions.dblink_get_result(
+  'cat08_race_a'
+) as drained(result text);
 select is(
   (
-    select result
+    select (pg_catalog.array_agg(result))[1]
     from extensions.dblink_get_result(
       'cat08_race_b'
     ) as result(result text)
@@ -432,6 +552,10 @@ select is(
   'revoked',
   'the waiting revocation commits immediately after the winning action'
 );
+select *
+from extensions.dblink_get_result(
+  'cat08_race_b'
+) as drained(result text);
 
 select is(
   (
@@ -496,7 +620,7 @@ end;
 $$;
 select is(
   (
-    select result
+    select (pg_catalog.array_agg(result))[1]
     from extensions.dblink_get_result(
       'cat08_race_b'
     ) as result(result text)
@@ -504,9 +628,13 @@ select is(
   'revoked',
   'revocation-first worker commits its incident fence'
 );
+select *
+from extensions.dblink_get_result(
+  'cat08_race_b'
+) as drained(result text);
 select is(
   (
-    select result
+    select (pg_catalog.array_agg(result))[1]
     from extensions.dblink_get_result(
       'cat08_race_a'
     ) as result(result text)
@@ -514,9 +642,27 @@ select is(
   '42501:CATALOG_OPERATOR_GRANT_REQUIRED',
   'the waiting session request refreshes authority and fails closed'
 );
+select *
+from extensions.dblink_get_result(
+  'cat08_race_a'
+) as drained(result text);
 
 select extensions.dblink_disconnect('cat08_race_a');
 select extensions.dblink_disconnect('cat08_race_b');
+
+revoke execute on function
+  catalog_operator_gateway.cat08_rehearsal_revoke_then_latch(uuid, bigint)
+  from cat08_rehearsal_connection;
+drop function
+  catalog_operator_gateway.cat08_rehearsal_revoke_then_latch(uuid, bigint);
+revoke usage on schema catalog_operator_gateway
+  from cat08_rehearsal_connection;
+revoke catalog_operator_edge from cat08_rehearsal_connection;
+drop role cat08_rehearsal_connection;
+select pg_catalog.set_config('test.cat08_dblink_password', '', false);
+revoke catalog_operator_edge from postgres;
+select pg_catalog.set_config('test.cat08_dblink_host', '', false);
+select pg_catalog.set_config('test.cat08_dblink_port', '', false);
 
 update private.catalog_operator_runtime_control
 set control_generation = 3,

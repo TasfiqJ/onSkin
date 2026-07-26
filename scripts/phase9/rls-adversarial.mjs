@@ -37,6 +37,9 @@ const anonymousPhotoStorageGuard = read(
 const catalogLaunchCuration = read(
   'supabase/migrations/20260717000058_catalog_launch_curation.sql',
 );
+const legacyClinicalContentSeal = read(
+  'supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql',
+);
 const photoMetadataInsertPolicy = sqlPolicyStatement(
   migrations,
   'photos_no_anon_cloud_backup_insert',
@@ -147,6 +150,7 @@ const globalContentPolicyNames = new Map([
   ['creator_stacks', 'creator_stacks_select_active'],
   ['creator_stack_items', 'creator_stack_items_select_all'],
 ]);
+const legacyClinicalContentTables = ['conflict_rules', 'sequencing_rules'];
 const selectRevokes = [
   ...catalogLaunchCuration.matchAll(
     /revoke\s+select\s+on(?:\s+table)?\s+([\s\S]*?)\s+from\s+([^;]+);/gi,
@@ -178,6 +182,56 @@ for (const table of [...SEALED_GLOBAL_CONTENT_TABLES, ...SEALED_CATALOG_AUTHORIT
     `Migration 0058 must revoke ${table} SELECT from PUBLIC and every API role.`,
   );
 }
+
+const legacyClinicalAllRevokes = [
+  ...legacyClinicalContentSeal.matchAll(
+    /revoke\s+all(?:\s+privileges)?\s+on\s+table\s+([\s\S]*?)\s+from\s+([^;]+);/gi,
+  ),
+];
+for (const table of legacyClinicalContentTables) {
+  block(
+    errors,
+    new RegExp(
+      `alter\\s+table\\s+public\\.${table}\\s+force\\s+row\\s+level\\s+security`,
+      'i',
+    ).test(legacyClinicalContentSeal),
+    `Migration 0066 must FORCE RLS on the legacy public.${table} relation.`,
+  );
+  block(
+    errors,
+    legacyClinicalAllRevokes.some((match) => {
+      const roles = new Set(match[2].split(',').map((role) => role.trim().toLowerCase()));
+      return (
+        new RegExp(`(?:^|[,\\s])public\\.${table}(?:$|[,\\s])`, 'i').test(match[1]) &&
+        ['public', 'anon', 'authenticated', 'service_role'].every((role) => roles.has(role))
+      );
+    }),
+    `Migration 0066 must revoke every table privilege on public.${table} from PUBLIC and every API role.`,
+  );
+  block(
+    errors,
+    new RegExp(
+      `create\\s+trigger\\s+${table}_legacy_immutable\\s+before\\s+insert\\s+or\\s+update\\s+or\\s+delete\\s+or\\s+truncate\\s+on\\s+public\\.${table}\\s+for\\s+each\\s+statement\\s+execute\\s+function\\s+private\\.guard_legacy_clinical_content_immutable\\(\\)`,
+      'i',
+    ).test(legacyClinicalContentSeal),
+    `Migration 0066 must attach the statement-level four-operation immutability guard to public.${table}.`,
+  );
+}
+
+block(
+  errors,
+  /create\s+or\s+replace\s+function\s+private\.guard_legacy_clinical_content_immutable\(\)[\s\S]*?security\s+definer[\s\S]*?set\s+search_path\s*=\s*''[\s\S]*?raise\s+exception\s+'LEGACY_CLINICAL_CONTENT_IMMUTABLE'[\s\S]*?errcode\s*=\s*'55000'/i.test(
+    legacyClinicalContentSeal,
+  ),
+  'Migration 0066 legacy clinical-content guard must be a pinned SECURITY DEFINER with a deterministic 55000 rejection.',
+);
+block(
+  errors,
+  /revoke\s+all\s+on\s+function\s+private\.guard_legacy_clinical_content_immutable\(\)\s+from\s+public,\s*anon,\s*authenticated,\s*service_role\s*;/i.test(
+    legacyClinicalContentSeal,
+  ),
+  'Migration 0066 legacy clinical-content guard must revoke execute from PUBLIC and every API role.',
+);
 
 for (const issue of tableClassificationIssues({
   createdTables,

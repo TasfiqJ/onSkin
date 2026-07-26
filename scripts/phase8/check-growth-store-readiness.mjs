@@ -247,20 +247,12 @@ fail(
   'share link helper must not carry product, rule, or pregnancy data.',
 );
 fail(
-  has('apps/mobile/src/app/s/[shareId].tsx', /share_link_opened/),
-  'Installed app must handle /s/:shareId links.',
-);
-fail(
-  has('apps/mobile/src/app/s/[shareId].tsx', /landing_viewed/),
-  'Installed share route must track the Phase 8 landing_viewed dashboard event.',
-);
-fail(
   has('apps/mobile/src/app/s/[shareId].tsx', /isSafeOpaqueId/),
   'Installed share route must validate opaque share IDs.',
 );
 fail(
-  has('apps/mobile/src/app/s/[shareId].tsx', /sanitizeAttribution/),
-  'Installed share route must sanitize growth attribution before analytics.',
+  !has('apps/mobile/src/app/s/[shareId].tsx', /\btrack(?:ProductAddStarted)?\s*\(/),
+  'Conflict-only installed share route must not emit analytics that reveal conflict existence.',
 );
 
 fail(
@@ -270,17 +262,17 @@ fail(
 );
 const shareRoute = read('apps/mobile/src/app/share/conflict/[ruleId].tsx');
 const reviewPolicy = read('apps/mobile/src/features/review/policy.ts');
-for (const event of [
-  'share_card_export_started',
-  'share_link_created',
-  'share_card_export_succeeded',
-  'share_card_export_failed',
-  'share_card_exported',
-  'share_sheet_opened',
-]) {
-  fail(shareRoute.includes(event), `Share route must track ${event}.`);
-}
-fail(!/rule_id/.test(shareRoute), 'Share route must not send rule_id in public growth telemetry.');
+fail(
+  !/\btrack(?:ProductAddStarted)?\s*\(/.test(shareRoute),
+  'Conflict-only export route must not emit analytics that reveal conflict existence.',
+);
+fail(
+  !has(
+    'apps/mobile/src/features/growth/shareLinks.ts',
+    /shelf_conflict_card_v1|content:\s*['"]conflict_card|campaign:|creative_variant:|app_version:|build_number:/,
+  ),
+  'Conflict share links must not encode conflict-identifying growth attribution.',
+);
 fail(
   has('apps/mobile/src/lib/launch/phase7.ts', /interactionType\s*!==\s*'safety'/),
   'Share eligibility must exclude safety conflicts.',

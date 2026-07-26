@@ -65,6 +65,12 @@ jobs:
           - name: catalog-operator-0065-upgrade
             database: catalog_operator_upgrade_0065
             script: catalog-operator-0065-upgrade-postgres-rehearsal.sql
+          - name: clinical-content-0066-upgrade
+            database: clinical_content_upgrade_0066
+            script: clinical-content-0066-upgrade-postgres-rehearsal.sql
+          - name: catalog-release-0067-lint-contract
+            database: catalog_release_lint_contract_0067
+            script: catalog-release-0067-lint-contract-postgres-rehearsal.sql
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}

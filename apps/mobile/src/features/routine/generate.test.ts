@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DetectedConflict, EngineProfile } from '@/features/intelligence/engine';
-import type { ConflictChoices } from '@/features/intelligence/conflictChoices';
-import { conflictKey } from '@/features/intelligence/conflictIdentity';
-import { STARTER_RULES, shippableRules } from '@/features/intelligence/rules';
+import type { EngineProfile } from '@/features/intelligence/engine';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
 
 import { generatePlan, type RoutineProduct } from './generate';
@@ -48,21 +45,6 @@ function withDevFlag<T>(value: boolean, run: () => T): T {
     if (previous === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = previous;
   }
-}
-
-function choicesForConflict(
-  conflict: DetectedConflict,
-  choice: 'accept_suggested_timing' | 'use_together',
-): ConflictChoices {
-  const productIds = [conflict.productAId!, conflict.productBId!].sort() as [string, string];
-  return {
-    [conflictKey(conflict)]: {
-      choice,
-      ruleId: conflict.rule.id,
-      ruleVersion: conflict.rule.ruleVersion,
-      productIds,
-    },
-  };
 }
 
 // Maya's shelf (docs/03 §2 worked example) + a cleanser (spec AM shows one).
@@ -166,7 +148,7 @@ describe('role classification (docs/03 §3). Tags win over name keywords', () =>
 });
 
 describe('Maya plan generation (docs/03 §2 worked example)', () => {
-  const plan = withDevFlag(true, () => generatePlan(maya, mayaProfile, STARTER_RULES));
+  const plan = withDevFlag(true, () => generatePlan(maya, mayaProfile));
 
   it('AM is sequenced thin→thick: cleanser → vitamin C → moisturiser → SPF', () => {
     expect(plan.am.map((s) => s.name)).toEqual([
@@ -198,35 +180,21 @@ describe('Maya plan generation (docs/03 §2 worked example)', () => {
     expect(retRamp?.state.targetPerWeek).toBe(3);
   });
 
-  it('surfaces the retinoid × glycolic conflict (resolved alternate_nights)', () => {
-    const c = plan.conflicts.find(
-      (x) =>
-        (x.rule.tagA === 'retinoid' && x.rule.tagB === 'aha') ||
-        (x.rule.tagA === 'aha' && x.rule.tagB === 'retinoid'),
-    );
-    expect(c?.rule.resolutionType).toBe('alternate_nights');
-    expect(c?.computedSeverity).toBe('moderate'); // sensitive bumps mild→moderate
+  it('withholds compatibility guidance until the exact corpus is admitted', () => {
+    expect(plan.conflicts).toEqual([]);
+    expect(plan.conflictCoverageStatus).toBe('unsupported_unreviewed');
+    expect(plan.unsupportedConflictPairs).toContain('aha|retinoid@routine@unknown');
   });
 
-  it('removes a decided ordinary conflict from repeated Plan prompts without changing phases', () => {
-    const conflict = plan.conflicts.find(
-      (item) => item.rule.resolutionType === 'alternate_nights',
-    )!;
-
-    for (const choice of ['accept_suggested_timing', 'use_together'] as const) {
-      const decided = withDevFlag(true, () =>
-        generatePlan(maya, mayaProfile, STARTER_RULES, choicesForConflict(conflict, choice)),
-      );
-      expect(decided.conflicts.some((item) => conflictKey(item) === conflictKey(conflict))).toBe(
-        false,
-      );
-      expect(decided.am.map((step) => step.productId)).toEqual(
-        plan.am.map((step) => step.productId),
-      );
-      expect(decided.pm.map((step) => step.productId)).toEqual(
-        plan.pm.map((step) => step.productId),
-      );
-    }
+  it('does not invent a choice prompt when coverage is still under review', () => {
+    expect(plan.conflicts).toEqual([]);
+    expect(plan.am.map((step) => step.productId)).toEqual(['cleanser', 'vitc', 'cera', 'spf']);
+    expect(plan.pm.map((step) => step.productId)).toEqual([
+      'cleanser',
+      'retinol',
+      'glycolic',
+      'cera',
+    ]);
   });
 
   it('shows no gap notes (Maya owns cleanser, moisturiser, SPF)', () => {
@@ -271,7 +239,6 @@ describe('front-label shelf names', () => {
           shelfNameProduct('s', 'Mineral SPF50'),
         ],
         { sensitivity: 'neutral', pregnancy: false, goals: [] },
-        STARTER_RULES,
       ),
     );
 
@@ -280,18 +247,18 @@ describe('front-label shelf names', () => {
       'Granactive Retinoid 2% Emulsion',
       'Glycolic 7% Toner',
     ]);
-    expect(plan.conflicts.some((c) => c.rule.tagA === 'retinoid' && c.rule.tagB === 'aha')).toBe(
-      true,
-    );
+    expect(plan.conflicts).toEqual([]);
+    expect(plan.conflictCoverageStatus).toBe('unsupported_unreviewed');
+    expect(plan.unsupportedConflictPairs).toContain('aha|retinoid@routine@unknown');
   });
 
   it('does not fabricate a night cycle for a sparse daytime-only shelf', () => {
     const plan = withDevFlag(true, () =>
-      generatePlan(
-        [shelfNameProduct('s', 'Mineral SPF 50')],
-        { sensitivity: 'neutral', pregnancy: false, goals: [] },
-        STARTER_RULES,
-      ),
+      generatePlan([shelfNameProduct('s', 'Mineral SPF 50')], {
+        sensitivity: 'neutral',
+        pregnancy: false,
+        goals: [],
+      }),
     );
 
     expect(plan.am.map((s) => s.name)).toEqual(['Mineral SPF 50']);
@@ -308,10 +275,6 @@ describe('pregnancy safety exclusions', () => {
     shelfNameProduct('hydroquinone', 'Hydroquinone cream'),
     shelfNameProduct('moisturiser', 'Ceramide moisturiser'),
   ];
-  const reviewedSafetyRules = STARTER_RULES.filter((rule) => rule.interactionType === 'safety').map(
-    (rule) => ({ ...rule, reviewedBy: 'B-DERM-REVIEW' }),
-  );
-
   it('withholds unreviewed active cadence without surfacing unreviewed safety guidance', () => {
     withDevFlag(false, () => {
       const plan = generatePlan(safetyShelf, {
@@ -333,55 +296,41 @@ describe('pregnancy safety exclusions', () => {
     });
   });
 
-  it('removes reviewed caution products before PM sequencing and ramp creation in production', () => {
+  it('does not turn candidate safety rows into production exclusions', () => {
     withDevFlag(false, () => {
-      const plan = generatePlan(
-        safetyShelf,
-        {
-          sensitivity: 'neutral',
-          pregnancy: true,
-          pregnancySafety: 'caution',
-          pregnancyStatus: 'pregnant',
-          goals: [],
-        },
-        shippableRules(reviewedSafetyRules),
-      );
+      const plan = generatePlan(safetyShelf, {
+        sensitivity: 'neutral',
+        pregnancy: true,
+        pregnancySafety: 'caution',
+        pregnancyStatus: 'pregnant',
+        goals: [],
+      });
 
       expect(plan.pm).toEqual([]);
       expect(plan.ramp).toEqual([]);
       expect(plan.cycle).toBeNull();
-      expect(plan.safetyExclusions.map((item) => item.productId)).toEqual([
-        'retinoid',
-        'bha',
-        'hydroquinone',
-      ]);
-      expect(
-        plan.conflicts.filter((conflict) => conflict.rule.interactionType === 'safety'),
-      ).toHaveLength(2);
+      expect(plan.safetyExclusions).toEqual([]);
+      expect(plan.conflicts).toEqual([]);
+      expect(plan.conflictCoverageStatus).toBe('unsupported_unreviewed');
       expect(plan.sequencingWithheld.map((item) => item.productId)).toEqual(['moisturiser']);
     });
   });
 
-  it('uses the same cautious plan without falsely asserting pregnancy for unknown status', () => {
+  it('does not borrow pregnancy exclusions for an unknown status', () => {
     const plan = withDevFlag(true, () =>
-      generatePlan(
-        safetyShelf,
-        {
-          sensitivity: 'neutral',
-          pregnancy: false,
-          pregnancySafety: 'caution',
-          pregnancyStatus: 'unknown',
-          goals: [],
-        },
-        STARTER_RULES,
-      ),
+      generatePlan(safetyShelf, {
+        sensitivity: 'neutral',
+        pregnancy: false,
+        pregnancySafety: 'caution',
+        pregnancyStatus: 'unknown',
+        goals: [],
+      }),
     );
 
-    expect(plan.pm.map((step) => step.productId)).toEqual(['moisturiser']);
-    expect(plan.safetyExclusions).toHaveLength(3);
-    expect(plan.conflicts.filter((conflict) => conflict.rule.interactionType === 'safety')).toEqual(
-      [],
-    );
+    expect(plan.pm.map((step) => step.productId)).toEqual(['retinoid', 'bha', 'moisturiser']);
+    expect(plan.safetyExclusions).toEqual([]);
+    expect(plan.conflicts).toEqual([]);
+    expect(plan.conflictCoverageStatus).toBe('unsupported_unreviewed');
   });
 
   it('keeps confirmed-low BHA eligible and reintroduces products after explicit none', () => {
@@ -390,30 +339,22 @@ describe('pregnancy safety exclusions', () => {
       concentration: 'low' as const,
     };
     const cautious = withDevFlag(true, () =>
-      generatePlan(
-        [lowBha],
-        {
-          sensitivity: 'neutral',
-          pregnancy: false,
-          pregnancySafety: 'caution',
-          pregnancyStatus: 'prefer_not',
-          goals: [],
-        },
-        STARTER_RULES,
-      ),
+      generatePlan([lowBha], {
+        sensitivity: 'neutral',
+        pregnancy: false,
+        pregnancySafety: 'caution',
+        pregnancyStatus: 'prefer_not',
+        goals: [],
+      }),
     );
     const clear = withDevFlag(true, () =>
-      generatePlan(
-        safetyShelf,
-        {
-          sensitivity: 'neutral',
-          pregnancy: false,
-          pregnancySafety: 'clear',
-          pregnancyStatus: 'none',
-          goals: [],
-        },
-        STARTER_RULES,
-      ),
+      generatePlan(safetyShelf, {
+        sensitivity: 'neutral',
+        pregnancy: false,
+        pregnancySafety: 'clear',
+        pregnancyStatus: 'none',
+        goals: [],
+      }),
     );
 
     expect(cautious.pm.map((step) => step.productId)).toEqual(['bha']);
@@ -439,7 +380,6 @@ describe('clear-mode multi-treatment placement', () => {
           { id: 'copper', name: 'Copper peptide', tags: ['copper_peptide'] },
         ],
         profile,
-        STARTER_RULES,
       ),
     );
 
@@ -455,9 +395,7 @@ describe('clear-mode multi-treatment placement', () => {
     ['hydroquinone', 'Hydroquinone', 'hydroquinone'],
     ['copper', 'Copper peptide', 'copper_peptide'],
   ] as const)('withholds %s instead of inventing a retinoid ramp', (id, name, tag) => {
-    const plan = withDevFlag(true, () =>
-      generatePlan([{ id, name, tags: [tag] }], profile, STARTER_RULES),
-    );
+    const plan = withDevFlag(true, () => generatePlan([{ id, name, tags: [tag] }], profile));
 
     expect(plan.am).toEqual([]);
     expect(plan.pm).toEqual([]);
@@ -468,11 +406,7 @@ describe('clear-mode multi-treatment placement', () => {
 
   it('keeps a BP-only shelf in AM without creating a cycle or ramp', () => {
     const plan = withDevFlag(true, () =>
-      generatePlan(
-        [{ id: 'bp', name: 'Benzoyl peroxide', tags: ['benzoyl_peroxide'] }],
-        profile,
-        STARTER_RULES,
-      ),
+      generatePlan([{ id: 'bp', name: 'Benzoyl peroxide', tags: ['benzoyl_peroxide'] }], profile),
     );
 
     expect(plan.am.map((step) => step.productId)).toEqual(['bp']);
@@ -484,7 +418,6 @@ describe('clear-mode multi-treatment placement', () => {
 });
 
 describe('B-DERM-REVIEW routine launch gate', () => {
-  const retinoidAhaRule = STARTER_RULES.find((r) => r.tagA === 'retinoid' && r.tagB === 'aha')!;
   const launchProfile: EngineProfile & { goals: string[] } = {
     sensitivity: 'sensitive',
     pregnancy: false,
@@ -549,7 +482,6 @@ describe('B-DERM-REVIEW routine launch gate', () => {
       const plan = generatePlan(
         [product('cleanser', 'Cream cleanser'), product('moisturiser', 'Ceramide moisturiser')],
         launchProfile,
-        [],
         {},
         reviewedRules,
       );
@@ -581,24 +513,6 @@ describe('B-DERM-REVIEW routine launch gate', () => {
       expect(plan.cycle).toBeNull();
       expect(plan.ramp).toEqual([]);
       expect(plan.conflicts).toEqual([]);
-    });
-  });
-
-  it('surfaces reviewed conflict guidance when production rules are reviewed', () => {
-    const reviewedRetinoidAhaRule = { ...retinoidAhaRule, reviewedBy: 'B-DERM-REVIEW' };
-
-    withDevFlag(false, () => {
-      const plan = generatePlan(
-        launchShelf,
-        launchProfile,
-        shippableRules([reviewedRetinoidAhaRule]),
-      );
-
-      expect(plan.conflicts).toHaveLength(1);
-      expect(plan.conflicts[0]?.rule.id).toBe(retinoidAhaRule.id);
-      expect(plan.conflicts[0]?.rule.reviewedBy).toBe('B-DERM-REVIEW');
-      expect(plan.pm).toEqual([]);
-      expect(plan.cadenceWithheld).toHaveLength(2);
     });
   });
 });

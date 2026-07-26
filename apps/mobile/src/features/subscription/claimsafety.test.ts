@@ -72,6 +72,27 @@ describe('the required honest disclosures are present (Apple 3.1.2 / ARLs)', () 
   });
 });
 
+describe('zero-admission marketing cannot sell unavailable clinical guidance', () => {
+  it('states the review prerequisite without claiming an active review', () => {
+    expect(PAYWALL_COPY.offer.trustBlock).toContain(
+      'Health-related guidance requires independent professional review before availability',
+    );
+    expect(PAYWALL_COPY.offer.trustBlock).not.toMatch(/is under .*review/iu);
+    expect(ALL.join('\n')).not.toMatch(/reviewed by dermatologists/iu);
+  });
+
+  it('does not advertise paid conflict, sequencing, ramp, or skin-cycling guidance', () => {
+    const copy = ALL.join('\n');
+    expect(copy).not.toMatch(/unlimited (?:ingredient-)?conflict checks/iu);
+    expect(copy).not.toMatch(/conflict checks, with evidence grades/iu);
+    expect(copy).not.toMatch(/full skin-cycling scheduler/iu);
+    expect(copy).not.toMatch(/complete builder, sequencing and ramp/iu);
+    expect(UPSELL_COPY.conflict_checks.body).toContain(
+      'required before product-interaction claims can be sold, unlocked, or shown',
+    );
+  });
+});
+
 describe('the guard catches reintroduced dark patterns', () => {
   it('rejects manufactured urgency and guilt', () => {
     expect(offenders('Don’t miss out. Only 2 left!', URGENCY).length).toBeGreaterThan(0);

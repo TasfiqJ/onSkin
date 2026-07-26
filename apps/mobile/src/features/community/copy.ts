@@ -7,7 +7,7 @@
 export const COMMUNITY_COPY = {
   hub: {
     title: 'Skin Notes',
-    subtitle: 'Myth vs evidence. Expert-written, evidence-graded, calm.',
+    subtitle: 'Reference notes with visible source status.',
     // The defining footer: it states what this ISN'T (a feed).
     libraryFooter:
       'a library, not a feed. No likes, no authors to follow, no ranking by popularity',

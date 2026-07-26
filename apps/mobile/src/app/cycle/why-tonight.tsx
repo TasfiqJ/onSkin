@@ -82,7 +82,7 @@ export default function WhyTonightScreen() {
         <Text variant="body" tone="inverseMuted" className="py-6 text-center">
           {cadenceReady
             ? 'No cycle is running yet. Add an active to get started.'
-            : 'Cycle guidance is under review. Your daily AM/PM routine is still available.'}
+            : 'Cycle guidance is unavailable until its exact rules and copy complete required professional review. Your daily AM/PM routine is still available.'}
         </Text>
         <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
       </Sheet>

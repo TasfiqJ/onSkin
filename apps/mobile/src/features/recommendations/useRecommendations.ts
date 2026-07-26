@@ -19,7 +19,11 @@ import { loadDismissed, loadPreferences } from './store';
 // runs the pure, tested engine. Works offline / before the backend exists
 // (B-SUPABASE): every input is local-first. *** No commercial input anywhere. ***
 
-const EMPTY: RecResult = { recommendations: [], youreSet: false };
+const EMPTY: RecResult = {
+  recommendations: [],
+  youreSet: false,
+  conflictCoverageStatus: 'unsupported_unreviewed',
+};
 
 async function loadRecommendationStateForCurrentHealthLease() {
   return runCurrentHealthDataOperation(async (lease) => {
@@ -54,6 +58,7 @@ export function useRecommendations() {
           role,
           tags: i.engineProduct.tags,
           concentration: i.engineProduct.concentration,
+          applicabilityFacts: i.engineProduct.applicabilityFacts,
           fragranced: isFragranced(i.product),
         },
       ];
@@ -64,14 +69,19 @@ export function useRecommendations() {
         name: item.name,
         tags: item.engineProduct.tags,
         concentration: item.engineProduct.concentration,
+        applicabilityFacts: item.engineProduct.applicabilityFacts,
         reason,
       }),
     );
     return recommend({
-      profile: profile.data,
+      profile: {
+        ...profile.data,
+        reproductiveStatus: profile.data.pregnancyStatus,
+      },
       shelf: items,
       replenishment,
       conflicts: shelf.data.unresolvedConflicts,
+      conflictCoverageStatus: shelf.data.conflictCoverageStatus,
       preferences: prefsQ.data?.prefs ?? DEFAULT_PREFERENCES,
       dismissed: new Set(prefsQ.data?.dismissed ?? []),
     });

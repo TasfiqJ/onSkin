@@ -262,7 +262,7 @@ Retain together:
 - dual-signed OBF/CosIng approvals and their reviewed evidence bytes;
 - exact production transform outputs and zero-warning QA reports;
 - signed EAS/archive/App Store release-build evidence;
-- hosted migration/reset/pgTAP/type/schema-diff evidence through `0065`;
+- hosted migration/reset/pgTAP/type/schema-diff evidence through `0067`;
 - catalog promotion, rollback, correction-SLA, and named reviewer/operator
   records.
 

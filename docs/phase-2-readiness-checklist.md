@@ -1,7 +1,7 @@
 # Phase 2 Readiness Checklist
 
 Date: 2026-07-15
-Updated: 2026-07-26 for the 64-migration chain through `0065`
+Updated: 2026-07-26 for the 66-migration chain through `0067`
 
 Phase 2 should not start until naming, account ownership, environments, and
 secret handling are clear enough that production infrastructure will not need to
@@ -83,7 +83,7 @@ clears the brand.
 7. Require the immediate pre-push gate to revalidate cutover bytes and reread
    the exact function inventory, public freeze canaries, Auth freeze, empty
    migration inventory, schema, Storage, and all Cron jobs before applying the
-   64 migrations through `0065`. That gate reparses the unchanged artifact
+   66 migrations through `0067`. That gate reparses the unchanged artifact
    bytes/hashes and
    proves their current `validUntil`/`holdUntil` plus the seven-hour remaining
    completion budget; it does not pretend the initial operator observations

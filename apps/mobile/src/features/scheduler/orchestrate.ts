@@ -1,6 +1,11 @@
 import type { CycleVariant, FunctionalTag, GoalId, IngredientSubflag } from '@onskin/types';
 
-import { detectConflicts, type SensitivityLevel } from '@/features/intelligence/engine';
+import {
+  evaluateConflicts,
+  type ConflictEvaluationStatus,
+  type DetectedConflict,
+  type SensitivityLevel,
+} from '@/features/intelligence/engine';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import {
   choiceForConflict,
@@ -8,11 +13,10 @@ import {
   type ConflictUserChoice,
 } from '@/features/intelligence/conflictChoices';
 import {
-  pregnancySafetyReasonForProduct,
   type PregnancySafetyMode,
   type PregnancySafetyStatus,
 } from '@/features/intelligence/pregnancySafety';
-import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
+import type { ConflictRule } from '@/features/intelligence/rules';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 
 import {
@@ -77,6 +81,8 @@ export type OrchestrationResult = {
   cycleActives: CycleEditorActive[];
   notes: string[];
   conflictChoices: ScheduledConflictChoice[];
+  conflictCoverageStatus: ConflictEvaluationStatus;
+  unsupportedConflictPairs: string[];
 };
 
 export type SchedulerActive = {
@@ -177,24 +183,10 @@ function recoveryNight(index: number): NightSlot {
 }
 
 function scheduledConflictChoices(
-  actives: readonly SchedulerActive[],
-  profile: SchedulerProfile,
-  rules: ConflictRule[],
+  detected: readonly DetectedConflict[],
+  choices: ConflictChoices,
 ): ScheduledConflictChoice[] {
-  const choices = profile.conflictChoices ?? {};
   if (Object.keys(choices).length === 0) return [];
-
-  const detected = detectConflicts(
-    actives.map((active) => ({
-      id: active.id,
-      name: active.name,
-      tags: active.tags,
-      subflags: active.subflags,
-      concentration: active.concentration,
-    })),
-    { sensitivity: profile.sensitivity, pregnancy: profile.pregnancy },
-    rules,
-  );
 
   return detected.flatMap((conflict) => {
     const choice = choiceForConflict(choices, conflict);
@@ -225,16 +217,39 @@ function scheduledConflictChoices(
 export function orchestrate(
   actives: SchedulerActive[],
   profile: SchedulerProfile,
-  rules: ConflictRule[] = shippableRules(),
 ): OrchestrationResult {
-  const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
-  const safetyExclusions = actives.flatMap((active) => {
-    const reason = pregnancySafetyReasonForProduct(active, pregnancySafety, rules);
-    return reason ? [{ active, reason }] : [];
+  const reproductiveStatus = profile.pregnancyStatus ?? (profile.pregnancy ? 'pregnant' : 'none');
+  const engineProducts = actives.map((active) => ({
+    id: active.id,
+    name: active.name,
+    tags: active.tags,
+    subflags: active.subflags,
+    concentration: active.concentration,
+  }));
+  const conflictEvaluation = evaluateConflicts(engineProducts, {
+    sensitivity: profile.sensitivity,
+    reproductiveStatus,
   });
-  const excludedIds = new Set(safetyExclusions.map(({ active }) => active.id));
+  const safetyConflicts = conflictEvaluation.conflicts.filter(
+    (conflict) => conflict.rule.interactionType === 'safety',
+  );
+  const excludedIds = new Set(
+    safetyConflicts.flatMap((conflict) =>
+      [conflict.productAId, conflict.productBId].filter(
+        (id): id is string => typeof id === 'string',
+      ),
+    ),
+  );
   const eligibleActives = actives.filter((active) => !excludedIds.has(active.id));
-  const conflictChoices = scheduledConflictChoices(eligibleActives, profile, rules);
+  const eligibleIds = new Set(eligibleActives.map((active) => active.id));
+  const conflictChoices = scheduledConflictChoices(
+    conflictEvaluation.conflicts.filter(
+      (conflict) =>
+        (!conflict.productAId || eligibleIds.has(conflict.productAId)) &&
+        (!conflict.productBId || eligibleIds.has(conflict.productBId)),
+    ),
+    profile.conflictChoices ?? {},
+  );
   const allClassified: Classified[] = actives.map((a) => ({
     id: a.id,
     name: a.name,
@@ -245,18 +260,29 @@ export function orchestrate(
 
   const notes: string[] = [];
 
-  if (safetyExclusions.length > 0) {
-    const knownStatus =
-      profile.pregnancyStatus === 'pregnant' || profile.pregnancyStatus === 'breastfeeding';
+  if (
+    conflictEvaluation.status === 'unsupported_unreviewed' &&
+    conflictEvaluation.unsupportedPairs.length > 0
+  ) {
     notes.push(
-      knownStatus || (profile.pregnancy && profile.pregnancyStatus == null)
-        ? 'Products with pregnancy cautions are paused. Worth a word with your doctor.'
-        : 'Products with pregnancy cautions stay paused until you confirm this safety setting.',
+      'Interaction checking requires completed independent professional review for some product pairs; no compatibility result is shown.',
     );
   }
 
+  if (safetyConflicts.length > 0) {
+    notes.push(...new Set(safetyConflicts.map((conflict) => conflict.rule.copy.resolution)));
+  }
+
   if (!canUseRoutineCadence()) {
-    return { cycle: null, amDaily: [], cycleActives: [], notes, conflictChoices };
+    return {
+      cycle: null,
+      amDaily: [],
+      cycleActives: [],
+      notes,
+      conflictChoices,
+      conflictCoverageStatus: conflictEvaluation.status,
+      unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
+    };
   }
 
   // AM / daily block (stable morning): vitamin C, BP, flexible niacinamide.
@@ -297,7 +323,15 @@ export function orchestrate(
     .sort((left, right) => left.id.localeCompare(right.id));
 
   if (potent.length === 0) {
-    return { cycle: null, amDaily, cycleActives, notes, conflictChoices };
+    return {
+      cycle: null,
+      amDaily,
+      cycleActives,
+      notes,
+      conflictChoices,
+      conflictCoverageStatus: conflictEvaluation.status,
+      unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
+    };
   }
 
   const variant = profile.preferredVariant ?? pickVariant(profile);
@@ -345,5 +379,7 @@ export function orchestrate(
     cycleActives,
     notes,
     conflictChoices,
+    conflictCoverageStatus: conflictEvaluation.status,
+    unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
   };
 }

@@ -25,28 +25,42 @@ describe('routine plan profile label', () => {
     ).toBe('BUILT FOR OILY, RESISTANT SKIN');
   });
 
-  it('marks pregnancy-aware plans without adding sensitive details', () => {
-    expect(
-      routinePlanProfileLabel(
-        { sensitivity: 'sensitive', moisture: 'dry', pregnancy: true, goals: [] },
-        false,
-      ),
-    ).toBe('BUILT FOR DRY, SENSITIVE, PREGNANCY-AWARE SKIN');
-  });
-
-  it('labels an unconfirmed cautious profile without inferring pregnancy', () => {
+  it('does not put reproductive-status data in the glanceable subtitle', () => {
     expect(
       routinePlanProfileLabel(
         {
-          sensitivity: 'neutral',
-          moisture: 'balanced',
-          pregnancy: false,
-          pregnancySafety: 'caution',
-          pregnancyStatus: 'prefer_not',
+          sensitivity: 'sensitive',
+          moisture: 'dry',
+          pregnancy: true,
+          pregnancyStatus: 'pregnant',
           goals: [],
         },
         false,
       ),
-    ).toBe('BUILT FOR SAFETY-FIRST SKIN');
+    ).toBe('BUILT FOR DRY, SENSITIVE SKIN');
   });
+
+  for (const pregnancyStatus of [
+    'breastfeeding',
+    'trying',
+    'unknown',
+    'prefer_not',
+    'none',
+  ] as const) {
+    it(`does not collapse ${pregnancyStatus} into pregnancy or generic safety copy`, () => {
+      expect(
+        routinePlanProfileLabel(
+          {
+            sensitivity: 'neutral',
+            moisture: 'balanced',
+            pregnancy: pregnancyStatus === 'breastfeeding',
+            pregnancySafety: pregnancyStatus === 'none' ? 'clear' : 'caution',
+            pregnancyStatus,
+            goals: [],
+          },
+          false,
+        ),
+      ).toBe('BUILT FROM YOUR SHELF');
+    });
+  }
 });

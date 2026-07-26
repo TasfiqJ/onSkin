@@ -445,14 +445,14 @@ export default function YouScreen() {
     {
       label: 'Skin Notes',
       href: '/community',
-      hint: 'Myth vs evidence, reviewed and claim-safe.',
+      hint: 'Reference notes with visible source status.',
     },
   ];
   if (phase7Flags.cloudAsk) {
     forYouRows.unshift({
       label: BRAND.askName,
       href: '/ask',
-      hint: 'Your evidence-grounded advisor.',
+      hint: 'Ask about your organized shelf and routine.',
     });
   }
   if (phase7Flags.commerce) {

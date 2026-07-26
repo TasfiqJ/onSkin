@@ -207,7 +207,7 @@ export const whyCopy = {
   conflict: (a: string, b: string): string =>
     `${a} and ${b} can clash on your shelf. A non-conflicting alternative to one of them would keep your routine simple.`,
   goal: (goal: GoalId): string =>
-    `You set a goal toward ${goalConcern(goal)} that nothing in your routine addresses yet. Here’s an evidence-backed option to consider.`,
+    `You set a goal toward ${goalConcern(goal)} that nothing in your routine addresses yet. Here’s a routine option to consider.`,
   routineCompletion:
     'A simple, complete routine is the best place to start. A cleanser, a moisturiser and an SPF, no more.',
 };

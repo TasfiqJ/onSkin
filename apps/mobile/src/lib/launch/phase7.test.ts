@@ -179,14 +179,14 @@ describe('Phase 7 launch flags', () => {
 });
 
 describe('Phase 7 share-card eligibility', () => {
-  it('requires reviewed, non-safety, non-pregnancy owned-product conflicts', async () => {
+  it('rejects legacy reviewer markers and all safety/pregnancy conflicts', async () => {
     const { canShareConflictCard } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
       EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
       ...enableAllPhase7Flags(),
     });
 
-    expect(canShareConflictCard(reviewedConflict())).toBe(true);
+    expect(canShareConflictCard(reviewedConflict())).toBe(false);
     expect(
       canShareConflictCard(
         reviewedConflict({ rule: { ...reviewedConflict().rule, reviewedBy: null } }),

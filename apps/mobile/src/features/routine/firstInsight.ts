@@ -75,6 +75,17 @@ export function routineFirstInsightCopy(
     };
   }
 
+  if (
+    plan.conflictCoverageStatus === 'unsupported_unreviewed' &&
+    plan.unsupportedConflictPairs.length > 0
+  ) {
+    return {
+      eyebrow: 'Interaction checking',
+      title: 'Pair review in progress',
+      body: "We won't show a compatibility result for these products until that review is complete.",
+    };
+  }
+
   const actionableConflictCount = plan.conflicts.filter(
     (conflict) => !isReassuring(conflict),
   ).length;

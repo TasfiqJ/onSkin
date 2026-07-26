@@ -4,6 +4,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import {
   cp,
   lstat,
+  mkdir,
   mkdtemp,
   readFile,
   readdir,
@@ -28,8 +29,8 @@ import {
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 64;
-const EXPECTED_LATEST_MIGRATION = '20260726000065';
+const EXPECTED_MIGRATION_COUNT = 66;
+const EXPECTED_LATEST_MIGRATION = '20260726000067';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
 // recomputes every sealed membership root. Keep ordinary CLI operations tightly
@@ -439,6 +440,24 @@ try {
     );
     process.stdout.write('[db05-local] DB-08 remains open; repository types were not replaced.\n');
 
+    const rehearsalTargetDir = join(sandboxSupabaseDir, 'tests', 'rehearsal', 'generated');
+    await mkdir(rehearsalTargetDir, { recursive: true });
+    await writeFile(
+      join(rehearsalTargetDir, 'catalog-operator-dblink-target.sql'),
+      `\\set ON_ERROR_STOP on
+select pg_catalog.set_config(
+  'test.cat08_dblink_host',
+  'host.docker.internal',
+  false
+);
+select pg_catalog.set_config(
+  'test.cat08_dblink_port',
+  '${ports[2]}',
+  false
+);
+`,
+      'utf8',
+    );
     await runLocalCli(
       'run CAT-08 two-connection revocation rehearsal',
       ['test', 'db', '--local', 'supabase/tests/rehearsal'],

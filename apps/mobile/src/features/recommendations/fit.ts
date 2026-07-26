@@ -1,6 +1,7 @@
 import type { FunctionalTag, RecommendationTrigger } from '@onskin/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
+import type { ConflictSafetyContext } from '@/features/intelligence/rules';
 
 import type { RecType } from './catalog';
 import type { RecPreferences } from './preferences';
@@ -15,12 +16,12 @@ import type { RecPreferences } from './preferences';
 
 export type FitContext = {
   sensitivity: SensitivityLevel;
-  pregnancy: boolean;
+  reproductiveStatus: ConflictSafetyContext | 'none';
   preferences: RecPreferences;
   /** Functional tags that already appear on the shelf (for de-dup / complement). */
   ownedTags: Set<FunctionalTag>;
-  /** Tags that would ADD a conflict if introduced. A hard exclusion (§5). */
-  conflictTags: Set<FunctionalTag>;
+  /** Exact types that would add, or cannot rule out, an admitted conflict. */
+  conflictTypeIds: Set<string>;
   trigger: RecommendationTrigger;
 };
 
@@ -84,10 +85,10 @@ function preferenceSatisfiable(_type: RecType, _prefs: RecPreferences): boolean 
 
 export function fitScore(type: RecType, ctx: FitContext): FitResult {
   // --- HARD exclusions first (safety + church-and-state: never down-rank, exclude) ---
-  if (ctx.pregnancy && !type.pregnancySafe) {
+  if (ctx.reproductiveStatus === 'pregnant' && !type.pregnancySafe) {
     return { score: null, excludedReason: 'pregnancy', breakdown: EMPTY_BREAKDOWN };
   }
-  if (type.tags.some((t) => ctx.conflictTags.has(t))) {
+  if (ctx.conflictTypeIds.has(type.type)) {
     return { score: null, excludedReason: 'conflict', breakdown: EMPTY_BREAKDOWN };
   }
   if (!preferenceSatisfiable(type, ctx.preferences)) {

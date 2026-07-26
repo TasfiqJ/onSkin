@@ -2,10 +2,12 @@
 
 Status: no privacy or security content cleared  
 Required reviewer: privacy counsel plus technical security owner  
-Last updated: 2026-07-15
+Last updated: 2026-07-26
 
 This log governs consumer health data, consent, photos, analytics,
 observability, deletion/export, processors, auth, and incident/breach posture.
+The current official-source gap audit is
+`docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md`.
 Do not mark privacy-sensitive launch gates complete until the row below has a
 named reviewer, credential/role, date, exact source hash/version, decision, and
 conditions.

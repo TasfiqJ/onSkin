@@ -32,10 +32,10 @@ describe('Phase 3 runtime gates withhold covered conflict, recommendation, note,
     expect(recs.some((rec) => rec.medicalAdjacent)).toBe(false);
   });
 
-  it('keeps dev/demo content available only when the dev flag is explicit', () => {
+  it('keeps the conflict corpus closed in dev while other legacy demos remain explicit', () => {
     runtime.__DEV__ = true;
 
-    expect(shippableRules().length).toBeGreaterThan(0);
+    expect(shippableRules()).toEqual([]);
     expect(Object.keys(shippableSequencingRules())).toHaveLength(
       Object.keys(SEQUENCING_RULES).length,
     );

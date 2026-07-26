@@ -1,5 +1,7 @@
 import type { EvidenceLabel, FunctionalTag, GoalId, SequencingRole } from '@onskin/types';
 
+import type { EngineProduct } from '@/features/intelligence/engine';
+
 // The recommendable PRODUCT-TYPE catalog (docs/09 §5/§6). The engine is type-first:
 // it recommends a *type* ("a mineral SPF 30+"), optionally surfacing specific
 // products ranked by fit. Until the curated catalog lands (B-CATALOG-SEED) there
@@ -21,9 +23,14 @@ export type RecType = {
   /** Stable type key (matches recommendations.product_type). */
   type: string;
   role: SequencingRole;
-  /** Functional tags the type carries. Used for ownership detection + so the
-   *  engine never recommends a type that would ADD a conflict to the shelf. */
+  /** Functional tags the type carries. Tags select candidate rules; exact
+   * applicability facts decide or generically withhold the recommendation. */
   tags: FunctionalTag[];
+  /**
+   * Exact reviewed product/formulation facts. Type-first entries normally omit
+   * these; an admitted rule that requires them then fails closed.
+   */
+  applicabilityFacts?: EngineProduct['applicabilityFacts'];
   /** Type-first "What" label (docs/09 §6). */
   what: string;
   /** Illustrative category example. NOT a catalog product (B-CATALOG-SEED). */

@@ -692,7 +692,7 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain("if (response.result === 'no_match' && noProducts) {");
     expect(source).toContain("track('catalog_lookup_no_match', { lookup_type: 'search' });");
-    expect(source).not.toContain("if (noProducts) {\n        setLastNoMatchQuery(cleaned);");
+    expect(source).not.toContain('if (noProducts) {\n        setLastNoMatchQuery(cleaned);');
   });
 
   it('keeps the Shelf catalog search row inside narrow phones', () => {
@@ -842,7 +842,9 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/manual.tsx');
 
     expect(source).toContain('normalizeManualBarcode,');
-    expect(source).toContain("const initialBarcode = useIncomingDraft ? (draft.barcode ?? '') : '';");
+    expect(source).toContain(
+      "const initialBarcode = useIncomingDraft ? (draft.barcode ?? '') : '';",
+    );
     expect(source).toContain('const [barcode, setBarcode] = useState(initialBarcode);');
     expect(source).toContain('const normalizedBarcode = barcode.trim()');
     expect(source).toContain('normalizeManualBarcode(barcode, eightDigitFormat)');
@@ -1235,8 +1237,10 @@ describe('Shelf route mobile contracts', () => {
   it('does not describe unresolved product-detail conflicts as already paired', () => {
     const source = readAppRoute('shelf/[id].tsx');
 
-    expect(source).toContain("'Timing note with '");
+    expect(source).toContain('{c.rule.copy.bannerTitle}');
+    expect(source).toContain('{c.rule.copy.bannerSubhead}');
     expect(source).not.toContain("'Paired with '");
+    expect(source).not.toContain("'Timing note with '");
   });
 
   it('keeps product-detail routine placement explicit and actionable', () => {

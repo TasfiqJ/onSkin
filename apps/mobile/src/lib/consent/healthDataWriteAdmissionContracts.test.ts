@@ -89,7 +89,6 @@ describe('health-purpose local write coverage', () => {
 
   it('enumerates every direct health remote operation and requires one entry-to-result lease', () => {
     const admittedPostgrest = [
-      'app/conflict/[ruleId].tsx:routine_conflicts',
       'app/index.tsx:skin_profiles',
       'features/commerce/store.ts:commerce_click_events',
       'features/notifications/deliver.ts:notification_log',

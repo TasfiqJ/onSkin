@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { conflictDetailRoute } from './conflictIdentity';
-import { detectConflicts } from './engine';
+import { previewDetectConflicts } from './engine';
 import { STARTER_RULES } from './rules';
 
 describe('conflict route identity', () => {
   it('carries both product IDs for an ordinary two-product conflict', () => {
-    const [conflict] = detectConflicts(
+    const [conflict] = previewDetectConflicts(
       [
         { id: 'retinol', name: 'Retinol 0.3%', tags: ['retinoid'] },
         { id: 'glycolic', name: 'Glycolic 7%', tags: ['aha'] },
@@ -26,7 +26,7 @@ describe('conflict route identity', () => {
   });
 
   it('keeps two products under one safety rule independently addressable', () => {
-    const safetyConflicts = detectConflicts(
+    const safetyConflicts = previewDetectConflicts(
       [
         { id: 'retinol-a', name: 'Retinol A', tags: ['retinoid'] },
         { id: 'retinol-b', name: 'Retinol B', tags: ['retinoid'] },

@@ -1,7 +1,7 @@
 # Phase 2 Production Infrastructure Runbook
 
 Date: 2026-07-15
-Updated: 2026-07-26 for the 64-migration chain through `0065`
+Updated: 2026-07-26 for the 66-migration chain through `0067`
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `OnSkin` until
@@ -27,8 +27,8 @@ create irreversible production accounts under `OnSkin` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 64 migrations through
-  `0065` and all 17 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only deployment of 66 migrations through
+  `0067` and all 17 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
@@ -36,9 +36,13 @@ create irreversible production accounts under `OnSkin` until
   17 Edge entrypoints refuse admitted handler traffic while frozen, and the
   exact eight `verifyJwt: false` endpoints are live-canary checked for the
   frozen response.
-  The current head adds `0064`'s exact output-only skin-profile quiz provenance
-  without raw-answer retention and `0065`'s CAT-08 transition-conflict plus
-  global function-default-ACL repair.
+  The current chain adds `0064`'s exact output-only skin-profile quiz provenance
+  without raw-answer retention, `0065`'s CAT-08 transition-conflict plus global
+  function-default-ACL repair, and `0066`'s additional fail-closed seal over the
+  unreviewed legacy conflict/sequencing fixtures. Migration `0067` adds only a
+  checker-only ephemeral table shape for the catalog-release wrapper's
+  runtime-created temporary validation table; all other wrapper statements
+  remain linted with no extension dependency or runtime/security change.
 - `supabase/ops/account-deletion-work-lane.sql`: credential-free, fail-closed
   Cron/Vault provisioning for the durable account-deletion worker.
 - `docs/phase-9/account-deletion-operations-runbook.md`: exact deletion
@@ -108,7 +112,7 @@ create irreversible production accounts under `OnSkin` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 17-function manifest before migrations `0048`-`0065`, and proves
+   compatible 17-function manifest before migrations `0048`-`0067`, and proves
    all 17 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
@@ -118,7 +122,7 @@ create irreversible production accounts under `OnSkin` until
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
    the initial operator observations were recaptured. Only then does it apply
-   all 64 migrations in source order, redeploy the same manifest, and retain
+   all 66 migrations in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and

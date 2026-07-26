@@ -1,10 +1,10 @@
 import type { FunctionalTag } from '@onskin/types';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { detectConflicts } from '@/features/intelligence/engine';
+import { previewDetectConflicts } from '@/features/intelligence/engine';
 import type { ConflictChoices } from '@/features/intelligence/conflictChoices';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
-import { STARTER_RULES, shippableRules } from '@/features/intelligence/rules';
+import { STARTER_RULES } from '@/features/intelligence/rules';
 import { ROUTINE_CADENCE_REVIEWED } from '@/features/routine/reviewGate';
 
 import { CAPS_REVIEWED, frequencyCap, reviewedFrequencyCap } from './classes';
@@ -33,7 +33,7 @@ function choicesFor(
   choice: 'accept_suggested_timing' | 'use_together',
   ruleVersionOffset = 0,
 ): ConflictChoices {
-  const [conflict] = detectConflicts(
+  const [conflict] = previewDetectConflicts(
     actives,
     { sensitivity: base.sensitivity, pregnancy: false },
     STARTER_RULES,
@@ -45,6 +45,8 @@ function choicesFor(
       ruleId: conflict!.rule.id,
       ruleVersion: conflict!.rule.ruleVersion + ruleVersionOffset,
       productIds,
+      corpusSha256: conflict!.rule.corpusSha256,
+      ruleContentSha256: conflict!.rule.ruleContentSha256,
     },
   };
 }
@@ -308,7 +310,9 @@ describe('orchestration. Frequency caps + launch gate (docs/05 §4/§8)', () => 
       ]);
 
       expect(cycle).toBeNull();
-      expect(notes).toEqual([]);
+      expect(notes).toEqual([
+        'Interaction checking requires completed independent professional review for some product pairs; no compatibility result is shown.',
+      ]);
     });
   });
 
@@ -368,51 +372,34 @@ describe('orchestration. Maya (the spec example) + the complex cabinet', () => {
 });
 
 describe('orchestration. Safety + fallback', () => {
-  const reviewedSafetyRules = STARTER_RULES.filter((rule) => rule.interactionType === 'safety').map(
-    (rule) => ({ ...rule, reviewedBy: 'B-DERM-REVIEW' }),
-  );
-
-  it('pregnancy suppresses the retinoid and routes to the safety note', () => {
+  it('does not apply a pregnancy exclusion without an admitted safety rule', () => {
     const { cycle, cycleActives, notes } = run(
       [active('r', 'Retinol', ['retinoid']), active('g', 'Glycolic', ['aha'])],
       { ...base, pregnancy: true },
     );
-    expect(cycle!.nights.some((n) => n.slot === 'retinoid')).toBe(false);
-    expect(cycleActives.find((active) => active.id === 'r')).toMatchObject({ eligible: false });
-    expect(notes.join(' ')).toMatch(/pregnan|doctor/i);
-    expect(notes.join(' ')).not.toMatch(/danger|warning|!/i);
+    expect(cycle!.nights.some((n) => n.slot === 'retinoid')).toBe(true);
+    expect(cycleActives.find((active) => active.id === 'r')).toMatchObject({ eligible: true });
+    expect(notes.join(' ')).toMatch(
+      /interaction checking requires completed independent professional review/i,
+    );
+    expect(notes.join(' ')).not.toMatch(/pregnan|doctor|danger|warning|!/i);
   });
 
-  it('pregnancy note survives even when the retinoid was the ONLY potent active', () => {
+  it('shows only the generic coverage note when a retinoid is the only active', () => {
     const { cycle, notes } = run([active('r', 'Retinol', ['retinoid'])], {
       ...base,
       pregnancy: true,
     });
-    expect(cycle).toBeNull(); // no cycle (nothing left to cycle)
-    expect(notes.join(' ')).toMatch(/pregnan|doctor/i); // ...but the safety message still reaches the user
+    expect(cycle?.nights.some((night) => night.productId === 'r')).toBe(true);
+    expect(notes.join(' ')).toMatch(
+      /interaction checking requires completed independent professional review/i,
+    );
+    expect(notes.join(' ')).not.toMatch(/pregnan|doctor/i);
   });
 
-  it('applies safety exclusions before the closed production cadence gate', () => {
+  it('does not admit candidate safety rows through the production orchestrator', () => {
     withDevFlag(false, () => {
-      const { cycle, notes } = orchestrate(
-        [active('r', 'Retinol', ['retinoid'])],
-        {
-          ...base,
-          pregnancy: true,
-          pregnancySafety: 'caution',
-          pregnancyStatus: 'pregnant',
-        },
-        shippableRules(reviewedSafetyRules),
-      );
-
-      expect(cycle).toBeNull();
-      expect(notes.join(' ')).toMatch(/pregnan|doctor/i);
-    });
-  });
-
-  it('does not surface unreviewed safety guidance in production', () => {
-    withDevFlag(false, () => {
-      const { cycle, notes } = run([active('r', 'Retinol', ['retinoid'])], {
+      const { cycle, notes } = orchestrate([active('r', 'Retinol', ['retinoid'])], {
         ...base,
         pregnancy: true,
         pregnancySafety: 'caution',
@@ -420,11 +407,30 @@ describe('orchestration. Safety + fallback', () => {
       });
 
       expect(cycle).toBeNull();
-      expect(notes).toEqual([]);
+      expect(notes.join(' ')).toMatch(
+        /interaction checking requires completed independent professional review/i,
+      );
+      expect(notes.join(' ')).not.toMatch(/pregnan|doctor/i);
     });
   });
 
-  it('keeps unknown and prefer-not status cautious without asserting pregnancy', () => {
+  it('does not surface unreviewed safety guidance in production', () => {
+    withDevFlag(false, () => {
+      const { cycle, notes } = orchestrate([active('r', 'Retinol', ['retinoid'])], {
+        ...base,
+        pregnancy: true,
+        pregnancySafety: 'caution',
+        pregnancyStatus: 'pregnant',
+      });
+
+      expect(cycle).toBeNull();
+      expect(notes).toEqual([
+        'Interaction checking requires completed independent professional review for some product pairs; no compatibility result is shown.',
+      ]);
+    });
+  });
+
+  it('does not borrow pregnancy guidance for unknown and prefer-not status', () => {
     for (const pregnancyStatus of ['unknown', 'prefer_not'] as const) {
       const { cycle, notes } = run(
         [
@@ -438,9 +444,12 @@ describe('orchestration. Safety + fallback', () => {
         },
       );
 
-      expect(cycle).toBeNull();
-      expect(notes.join(' ')).toMatch(/confirm this safety setting/i);
-      expect(notes.join(' ')).not.toMatch(/you(?:'re| are) pregnant/i);
+      expect(cycle?.nights.some((night) => night.productId === 'r')).toBe(true);
+      expect(cycle?.nights.some((night) => night.productId === 's')).toBe(true);
+      expect(notes.join(' ')).toMatch(
+        /interaction checking requires completed independent professional review/i,
+      );
+      expect(notes.join(' ')).not.toMatch(/pregnan|doctor|confirm this safety setting/i);
     }
   });
 
@@ -463,19 +472,13 @@ describe('orchestration. Safety + fallback', () => {
 describe('orchestration. persisted conflict choices', () => {
   const pair = [active('r', 'Retinol 0.3%', ['retinoid']), active('g', 'Glycolic 7%', ['aha'])];
 
-  it('records an accepted choice while retaining separate potent nights', () => {
+  it('keeps a candidate accepted choice dormant while retaining separate potent nights', () => {
     const result = run(pair, {
       ...base,
       conflictChoices: choicesFor(pair, 'accept_suggested_timing'),
     });
 
-    expect(result.conflictChoices).toEqual([
-      expect.objectContaining({
-        choice: 'accept_suggested_timing',
-        productIds: ['g', 'r'],
-        resolutionType: 'alternate_nights',
-      }),
-    ]);
+    expect(result.conflictChoices).toEqual([]);
     const retinoidNights = new Set(
       result.cycle!.nights.filter((night) => night.productId === 'r').map((night) => night.index),
     );
@@ -486,15 +489,13 @@ describe('orchestration. persisted conflict choices', () => {
     ).toBe(true);
   });
 
-  it('acknowledges use-together without bypassing the one-potent-active invariant', () => {
+  it('keeps a candidate use-together choice dormant and preserves the invariant', () => {
     const result = run(pair, {
       ...base,
       conflictChoices: choicesFor(pair, 'use_together'),
     });
 
-    expect(result.conflictChoices).toEqual([
-      expect.objectContaining({ choice: 'use_together', productIds: ['g', 'r'] }),
-    ]);
+    expect(result.conflictChoices).toEqual([]);
     expect(result.cycle!.nights.some((night) => night.productId === 'g')).toBe(true);
     expect(result.cycle!.nights.some((night) => night.productId === 'r')).toBe(true);
     expect(
@@ -511,14 +512,14 @@ describe('orchestration. persisted conflict choices', () => {
     expect(result.conflictChoices).toEqual([]);
   });
 
-  it('never lets a saved choice restore a pregnancy-suppressed product', () => {
+  it('ignores a candidate saved choice without inventing a pregnancy exclusion', () => {
     const result = run(pair, {
       ...base,
       pregnancy: true,
       conflictChoices: choicesFor(pair, 'use_together'),
     });
 
-    expect(result.cycle?.nights.some((night) => night.productId === 'r')).toBe(false);
+    expect(result.cycle?.nights.some((night) => night.productId === 'r')).toBe(true);
     expect(result.conflictChoices).toEqual([]);
   });
 });

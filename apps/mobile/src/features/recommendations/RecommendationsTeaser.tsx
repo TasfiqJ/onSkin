@@ -20,10 +20,12 @@ function ForYouCard({
   compact,
   count,
   youreSet,
+  coverageUnavailable,
 }: {
   compact?: boolean;
   count: number;
   youreSet: boolean;
+  coverageUnavailable: boolean;
 }) {
   return (
     <Pressable
@@ -56,11 +58,13 @@ function ForYouCard({
           {REC_COPY.todayCard.title}
         </Text>
         <Text variant="bodySm" tone="muted" className={compact ? 'text-[12.5px]' : 'text-[13px]'}>
-          {youreSet
-            ? REC_COPY.todayCard.bodySet
-            : count === 1
-              ? REC_COPY.todayCard.bodyOne
-              : REC_COPY.todayCard.bodyMany(count)}
+          {coverageUnavailable
+            ? 'Interaction review is in progress; no compatibility result is shown.'
+            : youreSet
+              ? REC_COPY.todayCard.bodySet
+              : count === 1
+                ? REC_COPY.todayCard.bodyOne
+                : REC_COPY.todayCard.bodyMany(count)}
         </Text>
       </View>
       <Text style={{ color: colors.mutedLight, fontSize: 20 }}>›</Text>
@@ -238,6 +242,10 @@ export function RecommendationsTeaser({
           compact={compact}
           count={result.recommendations.length}
           youreSet={result.youreSet}
+          coverageUnavailable={
+            result.recommendations.length === 0 &&
+            result.conflictCoverageStatus === 'unsupported_unreviewed'
+          }
         />
       )}
     </>

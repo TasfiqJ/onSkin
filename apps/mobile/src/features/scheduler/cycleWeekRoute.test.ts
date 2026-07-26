@@ -260,7 +260,9 @@ describe('cycle week route scheduler notes', () => {
     expect(week).toContain('<ReviewGateEmptyState />');
     expect(week).toContain('cadenceReady && data?.paused');
     expect(week).toContain('cadenceReady && data?.recovery.active');
-    expect(week).toContain('Cycle guidance is under review.');
+    expect(week).toContain(
+      'Cycle guidance is unavailable until its exact rules and copy complete required professional',
+    );
     expect(week).toContain('We publish skin-cycling cadence only after dermatologist');
     expect(week).toContain('{cadenceReady ? (');
 
@@ -286,7 +288,9 @@ describe('cycle week route scheduler notes', () => {
     expect(whyTonight).toContain('const tonight = cadenceReady ? (data?.tonight ?? null) : null;');
     expect(whyTonight).not.toContain('const cycle = data?.cycle;');
     expect(whyTonight).not.toContain('const tonight = data?.tonight;');
-    expect(whyTonight).toContain('Cycle guidance is under review.');
+    expect(whyTonight).toContain(
+      'Cycle guidance is unavailable until its exact rules and copy complete required professional review.',
+    );
     expect(whyTonight).toContain('Your daily AM/PM routine is still available.');
   });
 });

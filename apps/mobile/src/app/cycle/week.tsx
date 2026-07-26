@@ -248,7 +248,8 @@ function ReviewGateEmptyState() {
   return (
     <View className="mt-6 rounded-2xl px-5 py-6" style={{ backgroundColor: colors.nightSurface }}>
       <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
-        Cycle guidance is under review.
+        Cycle guidance is unavailable until its exact rules and copy complete required professional
+        review.
       </Text>
       <Text
         className="mt-2 text-[13px]"

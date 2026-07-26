@@ -106,8 +106,8 @@ export const HEALTH_DEPENDENT_CONSENT_COPY = Object.freeze({
       version: 'ask-advisor-2026-06-14-placeholder',
       text:
         '[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ' +
-        'On-device context · a minimised summary only, to a zero-retention, no-training cloud language layer · no transcript beyond a short, consented, encrypted safety window · never a photo, never sold, never used to train a model · revocable, and the safety window is deleted when you turn it off.',
-      sha256: '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
+        'Cloud Ask is unavailable in this release. No shelf summary is sent to a cloud model until an approved provider, exact transmitted-field and retention disclosures, explicit permission, deletion controls, safety validation, and professional review are in place.',
+      sha256: '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
     }),
     withdrawal: Object.freeze({
       version: 'ask-advisor-2026-06-14-placeholder',

@@ -8,19 +8,20 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
-describe('public share landing route analytics', () => {
-  it('tracks the Phase 8 dashboard landing event with sanitized attribution', () => {
+describe('public conflict-share landing privacy boundary', () => {
+  it('does not emit analytics or accept conflict-identifying attribution', () => {
     const source = readAppRoute('s/[shareId].tsx');
 
-    expect(source).toContain('import { isSafeOpaqueId, sanitizeAttribution }');
-    expect(source).toContain('const attribution = useMemo(');
-    expect(source).toContain("track('landing_viewed', landingProps)");
-    expect(source).toContain("track('share_link_opened', landingProps)");
-    expect(source).toContain('source: firstParam(params.source)');
-    expect(source).toContain('campaign: firstParam(params.campaign)');
-    expect(source).toContain('creative_variant: firstParam(params.creative_variant)');
-    expect(source).toContain('platform: firstParam(params.platform)');
-    expect(source).toContain('share_id: safeShareId');
+    expect(source).not.toMatch(/\btrack\s*\(/);
+    expect(source).not.toContain('trackProductAddStarted');
+    expect(source).not.toContain('sanitizeAttribution');
+    expect(source).toContain('useLocalSearchParams<{ shareId?: string | string[] }>()');
+    expect(source).toContain('isSafeOpaqueId(rawShareId)');
+    expect(source).toContain('This shared link isn’t available.');
+    expect(source).toContain('router.replace(APP_SHELF_ROUTE)');
+    expect(source).not.toContain('campaign');
+    expect(source).not.toContain('content');
+    expect(source).not.toContain('creative_variant');
   });
 
   it('does not send public share route product, rule, or profile details', () => {

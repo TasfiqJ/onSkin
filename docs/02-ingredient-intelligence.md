@@ -4,15 +4,35 @@ _Ingredient & product catalog · the conflict / synergy engine · evidence gradi
 
 > This is build-order document **#2** of the 15 named in docs/00 (§"Build order", item 2: _"Ingredient/product DB pipeline + conflict engine"_). docs/00 calls this layer **"the moat and the longest pole."** It sits underneath the Shelf (spec p11–12), the conflict-detail screen (spec p13), the PM "conflict auto-resolved" banner (spec p9), the routine builder (doc #3), and the paywall's top two value props ("Routine intelligence — order, timing, skin cycling" and "Ingredient conflict checks, with evidence grades", spec p7). It extends the schema in docs/01 §3; it does not redefine those tables.
 
+> **Current publication boundary (2026-07-26):** those historical paywall
+> propositions are not production-authorized copy while the clinical corpus has
+> zero admitted rules. The runtime offer must describe only currently available
+> non-claim shelf/routine capabilities and state that health-related guidance is
+> under independent review. Evidence-graded conflict, timing, safety, or
+> professional-review marketing may return only after the exact corpus, copy,
+> build, and professional-review gates pass.
+
 ---
 
 ## TL;DR
 
 - **The moat is not "conflict detection." Conflict detection is already table stakes** — SkinSort's Routine Creator, Cosmily, and HadaBuddy all ship cross-product ingredient-conflict checks in 2026. What none of them combine, and what this layer is, is: a **barcode-scanned personal shelf + skin-profile personalization + _evidence-graded, resolution-first_ (never binary-warning) conflict handling + automatic folding of conflicts into a daily skin-cycling habit loop + PAO/expiry intelligence + a privacy-first posture** — wrapped in calm, non-alarmist, cosmetic-claim-safe copy. The defensibility is **data quality + the evidence-grading discipline + the depth of integration + compounding personal-data lock-in**, not the mere existence of a checker.
 
-- **Build a curated rules engine, not ML — exactly as docs/00 §3 concluded.** The number of ingredient pairs that genuinely matter is small (~40). Hand-curate them from the dermatology and cosmetic-chemistry literature, attach to each a **severity grade, an evidence grade, a mechanism, a non-alarmist resolution, and a citation**, and version them. ML is the wrong tool: the dataset is tiny, the outputs must be explainable to a user and auditable to a lawyer, and a hallucinated interaction is a direct liability.
+- **Build a curated rules engine, not ML — exactly as docs/00 §3 concluded.**
+  Keep the corpus intentionally bounded. There is no target count and no
+  presumed ~40-row authority: missing coverage stays explicitly unsupported
+  until an exact rule has sources, scope, severity, mechanism, calm resolution,
+  citations, hashes, and independent review. ML is the wrong tool: the outputs
+  must be explainable to a user and auditable to a lawyer, and a hallucinated
+  interaction is a direct liability.
 
-- **The science is genuinely contested, and almost all of it is _disease-oriented_ (in-vitro / mechanistic), not _patient-oriented_ (clinical-outcome) evidence.** Under the **Strength of Recommendation Taxonomy (SORT; Ebell et al., _American Family Physician_ 2004;69(3):548–556)** — A = consistent good-quality patient-oriented evidence, B = inconsistent/limited, C = consensus, opinion, _disease-oriented evidence_, case series — nearly every skincare-ingredient interaction lands at **grade C**, because the evidence is petri-dish pH studies and stability assays, not trials measuring outcomes that matter to a person. **"Contested" is therefore the honest baseline, not a hedge.** The product consequence: the engine must be as willing to **refute a myth** (niacinamide × vitamin C) as it is to **flag a real risk** — most "checkers" only ever warn, and warning about safe combinations is itself a trust-killer and a vector for misinformation.
+- **The evidence is proposition-specific and often disease-oriented
+  (in-vitro/mechanistic), not patient-oriented.** Under SORT, many candidate
+  skincare interactions land at grade C, but that does not make "contested" a
+  universal baseline. A retinoid/acid efficacy-cancellation claim can be
+  unsupported while additive irritation remains plausible; pregnancy guidance
+  can be precautionary; and copper-peptide claims can remain held for
+  insufficient evidence. Every label must name the exact proposition it grades.
 
 - **Three candidate source components, each with provenance and review obligations.** Ingredients may be transformed from an exact-hash-bound offline **EU CosIng** artifact, but the Commission describes CosIng as informative and not legal approval. Product candidates may be transformed from an exact-hash-bound offline **Open Beauty Facts** artifact while keeping that ODbL component separable; OBF images are excluded. OnSkin performs no request-time OBF lookup and no automatic contribution-back. Counsel must classify the exact database combination and approve attribution, share-alike, offer-of-data, and territorial duties before promotion. Then **hand-curate the top ~2,000 products** for guaranteed quality. Do **not** scrape INCIDecoder / SkinSort / Skincarisma — no approved source route (docs/00 §3).
 
@@ -20,7 +40,7 @@ _Ingredient & product catalog · the conflict / synergy engine · evidence gradi
 
 - **Freshness data is jurisdiction- and product-specific, so provenance is mandatory.** EU Regulation (EC) No 1223/2009 Article 19(1)(c) requires either a minimum-durability date or, where the minimum durability exceeds 30 months and durability after opening is relevant, a PAO indication using the symbol in Annex VII point 2. Ordinary U.S. cosmetics generally have no FDA expiration-date requirement. The FDA says sunscreen without a printed expiration date should be considered expired three years after purchase, but OnSkin neither captures nor verifies purchase date and therefore cannot perform that calculation. Canadian sunscreens can be non-prescription drugs or natural health products, with the applicable label regime depending on classification. The Shelf therefore records exact evidence and may remain unknown; it never invents a date merely from market or product type.
 
-- **Liability is two-sided and must be engineered against from line one.** _False reassurance_ (telling someone a combination is fine when it harms them) and _false alarm_ (scaring someone off a safe, beneficial combination) are both failures. Both are mitigated by the same design: evidence grades, conservative concentration/sensitivity-aware defaults, a separate and maximally-conservative **safety** rule class (pregnancy × retinoids), a clear **not-medical-advice** disclaimer, **dermatologist + cosmetic-chemist/pharmacist sign-off** of the rule set before launch, and versioned, auditable rules. Under the FD&C Act and FTC rules, **in-app copy is a "claim" surface** — the language must stay cosmetic ("reduces the appearance of," "may minimise irritation") and never drift into drug claims ("treats acne," "stimulates collagen").
+- **Liability is two-sided and must be engineered against from line one.** _False reassurance_ (telling someone a combination is fine when it harms them) and _false alarm_ (scaring someone off a safe, beneficial combination) are both failures. Both are mitigated by the same design: evidence grades, exact-rule applicability instead of generic concentration/sensitivity defaults, a separate **safety** rule class, a clear **not-medical-advice** disclaimer, two independent exact-hash approvals (board-certified dermatologist plus qualified cosmetic chemist/pharmacist), separate regulatory-counsel claims/jurisdiction clearance, and versioned, auditable rules. Under the FD&C Act and FTC rules, **in-app copy is a "claim" surface** — the language must stay cosmetic ("reduces the appearance of," "may minimise irritation") and never drift into drug claims ("treats acne," "stimulates collagen").
 
 - **Seven-figure verdict: yes — this is the willingness-to-pay and retention engine, not plumbing.** It powers the paywall's headline value props, it is the reason a user's data compounds (your shelf, your conflicts, your cycle, your photos = switching cost), and the category has a direct proof point in **Yuka** (per its own 2024 accounts: $7.3M revenue, 98.1% from subscriptions, ~15-person team, zero marketing — docs/01 §9). The risk to the thesis is **not** demand; it is **getting the science wrong**, which is precisely why the rest of this document is mostly about evidence discipline.
 
@@ -28,16 +48,39 @@ _Ingredient & product catalog · the conflict / synergy engine · evidence gradi
 
 ## Key Findings
 
-1. **Conflict _detection_ is no longer a differentiator; evidence-graded, resolution-first _treatment_ is.** The 2026 competitive set is crowded at the "scan and warn" layer: Yuka (barcode → a single 0–100 hazard score; 65M+ downloads, but per-product, no routine, no resolution); EWG Skin Deep (a 1–10 hazard rating across ~75,000 ingredients, with the well-documented flaw that it ignores concentration and formulation, so a well-formulated retinol can score "high hazard" purely because the molecule does); INCIDecoder (the deepest ingredient encyclopaedia, research-linked, but web-first, thin mobile, no barcode, no skin profile, no routine-building — and no public API); SkinSort (skin-type-aware match scores plus a Routine Creator that sequences and cross-checks compatibility — the closest competitor to this layer); Cosmily (compatibility + community); and HadaBuddy (scan your shelf → an AI-built routine from your products, with conflict detection). The clear conclusion: OnSkin **cannot** win by adding a conflict checker. It wins by being the only product that turns "these two clash" into "**use these on alternate nights, here's the evidence grade and why, and when a cycle exists the plan shows the exact placement — and you stay in control**." That is the experience the spec already draws.
+1. **Conflict _detection_ is no longer a differentiator; evidence-graded, resolution-first _treatment_ is.** The 2026 competitive set is crowded at the "scan and warn" layer: Yuka (barcode → a single 0–100 hazard score; 65M+ downloads, but per-product, no routine, no resolution); EWG Skin Deep (a 1–10 hazard rating across ~75,000 ingredients, with the well-documented flaw that it ignores concentration and formulation, so a well-formulated retinol can score "high hazard" purely because the molecule does); INCIDecoder (the deepest ingredient encyclopaedia, research-linked, but web-first, thin mobile, no barcode, no skin profile, no routine-building — and no public API); SkinSort (skin-type-aware match scores plus a Routine Creator that sequences and cross-checks compatibility — the closest competitor to this layer); Cosmily (compatibility + community); and HadaBuddy (scan your shelf → an AI-built routine from your products, with conflict detection). The clear conclusion: OnSkin **cannot** win by adding a conflict checker. It wins by turning an admitted interaction into the exact reviewed evidence, resolution, placement, and user controls for that rule. Alternate-night timing is a design example only, not a generic product promise.
 
-2. **The evidence base is contested and overwhelmingly disease-oriented — design _for_ that, don't paper over it.** Per SORT (Ebell et al., AFP 2004), recommendations built only on surrogate/disease-oriented outcomes (stability assays, pH-in-a-beaker, cell-turnover mechanism) are categorised **level C** regardless of how confident they sound, because disease-oriented improvements do not reliably predict patient-oriented ones. Reputable sources actively dispute the popular "rules": **Paula's Choice** states plainly that **no research has shown AHA/BHA exfoliants make retinol or retinoids less effective**, tracing the "pH clash" belief to a single study performed on proteins in a petri dish (not intact skin). The honest framing — surfaced to the user as the spec's **"Evidence: contested"** chip — is both more accurate and a trust asset, because it is visibly not scaremongering.
+2. **The evidence base is often disease-oriented — grade the exact
+   proposition, not the ingredient pair.** Stability assays and mechanistic
+   evidence do not automatically establish patient outcomes. The app must
+   distinguish efficacy cancellation, irritation, stability, safety, and
+   formulation-specific exceptions, and must use authoritative or primary
+   sources instead of commercial explainers as review authority.
 
 3. **The three tentpole pairs sit at three different evidence tiers — and that is the whole point of grading.**
-   - **Benzoyl peroxide × oxidation-sensitive retinoids (retinol / tretinoin): established mechanism, but formulation-dependent.** The classic stability work (B. Martin et al., _Br. J. Dermatol._ 1998;139(suppl.52):8–11, cited across multiple granted formulation patents) found benzoyl peroxide degraded **~50% of tretinoin within ~2 hours and ~95% within 24 hours** in the presence of light. **But:** adapalene showed **no degradation** over 24h (which is why Epiduo can combine adapalene + BP in one tube), and modern optimised/encapsulated tretinoin gels showed **~100% of the tretinoin intact after 7 hours** when deliberately mixed with BP at skin temperature. So the rule is real for _older/simple_ retinol and tretinoin, exempt for adapalene, and weakened for modern delivery systems. Resolution: **separate AM (BP) / PM (retinoid)**.
-   - **Retinol × AHA/BHA: contested on efficacy, real on irritation.** The _efficacy-cancelling_ claim is largely a myth (Paula's Choice; Glow Recipe quotes board-certified dermatologist Dr. Hadley King describing retinol + BHA as potentially _synergistic_). The _cumulative-irritation / barrier-compromise_ concern is real and clinically acknowledged for sensitive or already-inflamed skin (e.g., Westlake Dermatology, London Dermatology Centre). Resolution: **alternate nights** (precisely the spec's behaviour), buffer, or lower frequency — driven by the user's sensitivity axis.
-   - **Niacinamide × vitamin C: refuted myth.** The fear traces to a **1960s study that used _niacin_ (not niacinamide) under high heat**, forming nicotinic acid (which can flush). Niacinamide is far more stable, does not convert under normal skincare conditions, and modern formulations are routinely combined (Journal of Cosmetic Dermatology-era work and broad dermatology consensus). The engine must classify this **"myth / safe to combine"** and _reassure_, not warn.
+   - **Benzoyl peroxide × retinoid is molecule- and formulation-specific.**
+     Martin 1998 tested light-exposed tretinoin 0.025% gel with benzoyl peroxide
+     10% lotion and separately found adapalene stable in the tested conditions.
+     PMID 20967192 applies only to its optimized aqueous tretinoin 0.05% gel.
+     EPIDUO and TWYNEO support only their exact finished formulations. No
+     generic retinol, "encapsulated," or modern-delivery-system exemption exists.
+   - **Retinoid × AHA/BHA contains different propositions.** Efficacy
+     cancellation and additive irritation require separate evidence labels and
+     rules. Alternate use or lower frequency is a conservative tolerance option
+     only when an exact approved rule supports it.
+   - **Niacinamide × vitamin C permits only a narrow myth correction.** The
+     historical study used nicotinamide and ascorbic acid under laboratory
+     conditions that do not establish a routine-use incompatibility. The
+     candidate conclusion is "no evidence requires routine separation," subject
+     to derivative, pH, vehicle, packaging, and finished formulation—not generic
+     safety, compatibility, or synergy.
 
-4. **A curated rules engine is the correct architecture, decisively (re-affirming docs/00 §3).** The set of genuinely-mattering pairs is ~40; each needs a human-readable mechanism, an auditable citation, and a defensible grade. ML offers nothing here except opacity and hallucination risk, and a wrong interaction surfaced to a user is a liability event. Reserve any future ML for _non-safety_ personalization (e.g., ranking product recommendations), behind consent, far downstream.
+4. **A curated rules engine is the correct architecture, decisively
+   (re-affirming docs/00 §3).** Each admitted pair needs exact applicability,
+   presentation copy, a human-readable mechanism, structured source IDs, and a
+   defensible grade bound to the approved corpus hash. Corpus size is an output
+   of evidence and review, never a launch quota. ML offers nothing here except
+   opacity and hallucination risk.
 
 5. **Data sourcing requires exact-artifact review; it is not solved by source availability alone.** The [Commission's CosIng page](https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en) makes clear that the database is informative and does not replace the applicable regulation, annexes, or product safety assessment. Only an approved offline CosIng artifact bound to its exact SHA-256 may be transformed. OBF is considered only as a separable offline source component. Its [license guide](https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/) distinguishes database, contents, and image rights, and [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/) can trigger different duties depending on the resulting work/database. Images, request-time API access, and external contribution are excluded. Counsel must record the derivative-versus-collective classification and the exact attribution/share-alike/offer-of-data posture before production promotion. _Confidence: high on the cited source statements; legal classification remains pending counsel._
 
@@ -45,7 +88,13 @@ _Ingredient & product catalog · the conflict / synergy engine · evidence gradi
 
 7. **Skin cycling is a framework to be personalised, not a protocol to be asserted.** Dr. Whitney Bowe's classic four-night cycle is mechanistically sensible and widely endorsed, and it explicitly supports modification by skin type/concern ("gentle" = more recovery nights for sensitive skin like the spec's "Maya"; "advanced" = fewer). It has not, as a _cycle_, been validated in controlled trials; the honest claim is "a dermatologist-developed framework for staggering actives to protect the barrier," not "clinically proven to outperform." Personalise the cadence from `skin_profiles`, and let the conflict engine drive placement.
 
-8. **The liability is two-sided and symmetrical.** _False reassurance_ and _false alarm_ are equally damaging — one is a safety/legal risk, the other a trust/credibility risk and a misinformation harm. The mitigations are shared: evidence grades on every rule; concentration- and sensitivity-aware modulation; a distinct, maximally-conservative **safety** class for genuine medical contraindications (pregnancy/breastfeeding × retinoids, high-dose salicylic acid, hydroquinone) that routes to a clinician; a prominent not-medical-advice disclaimer; expert sign-off; and versioned rules with a user feedback path.
+8. **The liability is two-sided and symmetrical.** _False reassurance_ and
+   _false alarm_ are equally damaging. The mitigations are shared: evidence
+   grades; molecule/formulation/exposure-aware applicability; distinct
+   reproductive contexts; calm clinician referral for admitted safety rules; a
+   prominent not-medical-advice disclaimer; two independent exact-hash
+   professional approvals; separate regulatory-counsel claims/jurisdiction
+   clearance; and a user feedback path.
 
 9. **Barcode → product is the "magic moment" input, but coverage is the constraint.** A scan that resolves against OnSkin's reviewed catalog, parses its INCI list, and slots it onto the shelf with exact catalog provenance is the activation hook for this layer (and the spec's "Scan a barcode" CTA). Freshness may still be unknown. Because coverage is uneven, the flow must always offer **search and manual entry** fallbacks plus **OCR of the printed ingredient list** as a second-line capture. Unknown products stay user-local and may create an owner-scoped OnSkin missing-product/correction report; nothing is published to OBF.
 
@@ -65,13 +114,18 @@ The ingredient intelligence layer is the **cross-cutting "brain"** that several 
 - **PAO / expiry intelligence** for the shelf;
 - the **copy and grading system** that makes all of the above calm, honest, and claim-safe.
 
-It reads from: `user_products` (the shelf, docs/01 §3), `routines` + `routine_steps` (incl. `cycling_night`, docs/01 §3), and `skin_profiles` (the sensitivity axis, pregnancy status, goals — health-inference data gated behind the health-data consent, docs/01 §4). It writes the catalog and rule tables (service-role) and a per-user `routine_conflicts` cache (owner-only).
+It reads from: `user_products` (the shelf, docs/01 §3), `routines` + `routine_steps` (incl. `cycling_night`, docs/01 §3), and `skin_profiles` (the sensitivity axis, the typed reproductive context `pregnant | breastfeeding | none | unknown | prefer_not_to_say`, and goals — health-inference data gated behind the health-data consent, docs/01 §4). It writes the catalog and rule tables (service-role) and a per-user `routine_conflicts` cache (owner-only).
 
 **Design philosophy (committed):**
 
-- **Resolution-first, never binary.** The default unit of output is "here is what to do" (alternate nights / separate AM-PM / buffer / no change needed), with the warning subordinate to the fix. For cosmetic timing rows, the conflict-detail screen ends on **"Keep alternate nights" / "Use together anyway"** so the user can record a preference. Safety-class exclusions are the explicit exception: they stay firm and clinician-deferred.
+- **Resolution-first, never binary.** The default unit of output is the exact admitted rule's approved resolution, with the warning subordinate to the fix. Timing or override actions render only when those exact action bytes are part of the admitted cosmetic rule. Safety-class exclusions stay firm and clinician-deferred.
 - **Evidence-graded and honest.** Every rule shows its grade. We say "contested" when it is contested and "myth" when it is refuted. This is the explicit anti-pattern to hazard-score apps (EWG) and to checkers that only ever warn.
-- **Concentration- and context-aware.** A 0.3% retinol on resistant skin is not a 1.0% retinol on reactive skin. Where concentration/sensitivity are known, they modulate severity. This is the explicit anti-pattern to EWG's concentration-blind hazard model.
+- **Exposure- and context-aware.** Molecule, concentration, amount, surface
+  area, frequency, duration, pH, vehicle, occlusion, damaged skin,
+  leave-on/rinse-off use, and finished formulation may matter. Modulation is
+  pair-specific and professionally approved; there is no generic resistant-skin
+  downgrade. The exact admitted rule defines any sensitivity or unknown branch;
+  otherwise the outcome is `unsupported_unreviewed`.
 - **Calm, not gamified; private by default.** Per the spec cover's design decisions: "Streaks and cycling are calm, not gamified," and "Privacy copy is treated as brand voice." The shelf and conflict surfaces inherit this.
 
 ### 2. Data architecture & sourcing pipeline
@@ -87,7 +141,7 @@ A three-stage pipeline: **seed → curate → serve.**
 **2.4 INCI parsing & ingredient normalisation.** Ingredient strings from an approved OBF-derived offline artifact can be messy (OCR artefacts, translations, "/"-separated INCI, parenthetical common names). The pipeline:
 
 - tokenises the list, maps each token to a canonical `ingredient` via an INCI-name match plus a **synonym table** (e.g., "Vitamin C", "L-Ascorbic Acid", "Ascorbic Acid", "3-O-Ethyl Ascorbic Acid" → distinct canonical ingredients with a shared **functional family** "vitamin-C / ascorbates"; "Retinol", "Retinyl Palmitate", "Retinaldehyde/Retinal", "Adapalene", "Tretinoin" → family "retinoids", with adapalene/tretinoin sub-flags);
-- assigns each ingredient one or more **functional tags** ("AHA", "BHA", "PHA", "retinoid", "vitamin-C", "niacinamide", "benzoyl-peroxide", "copper-peptide", "hydroquinone", "physical-SPF", "chemical-SPF", "humectant", "ceramide", "barrier-repair"), because **the conflict engine matches mostly on families/tags, not individual INCI names** (it is the _acid-ness_ and the _retinoid-ness_ that interact, not the specific brand molecule);
+- assigns each ingredient one or more **functional tags** ("AHA", "BHA", "PHA", "retinoid", "vitamin-C", "niacinamide", "benzoyl-peroxide", "copper-peptide", "hydroquinone", "physical-SPF", "chemical-SPF", "humectant", "ceramide", "barrier-repair"). Tags are candidate-discovery indexes only: every candidate is then filtered by exact molecule, finished formulation/product, exposure, reproductive context, approved conditions, and corpus hashes before it can produce an outcome;
 - records ingredient **position** in the list and a **concentration band** when derivable (label %, "≤1%" line break in EU lists, or curated value).
 
 **2.5 What NOT to build on.** Do not scrape INCIDecoder, SkinSort, Skincarisma, CosDNA, or Cosmily: no public APIs, and their content/compilations carry ToS and database-right/legal risk (docs/00 §3). Their _existence_ is competitive intelligence, not a data source.
@@ -126,7 +180,7 @@ create table public.ingredient_tags (           -- functional families the engin
   tag           text not null,                   -- 'aha','bha','pha','retinoid','vitamin_c',
                                                  -- 'niacinamide','benzoyl_peroxide','copper_peptide',
                                                  -- 'hydroquinone','chemical_spf','physical_spf', ...
-  subflag       text,                            -- e.g. 'adapalene','tretinoin','l_ascorbic_acid','encapsulated'
+  subflag       text,                            -- descriptive only; never a generic exemption authority
   primary key (ingredient_id, tag)
 );
 
@@ -167,11 +221,10 @@ create table public.conflict_rules (
   resolution_type text not null,                   -- 'separate_am_pm'|'alternate_nights'|'buffer'
                                                    -- |'lower_frequency'|'no_change'|'reassure'|'avoid_refer'
   resolution_copy text not null,                   -- the calm, claim-safe suggestion shown to user
-  applies_when    jsonb,                           -- modulators: {"sensitivity":"sensitive"} | {"pregnancy":true}
-                                                   --   | {"subflag_exempt":["adapalene","encapsulated"]}
+  applies_when    jsonb,                           -- typed exact molecule/formulation/exposure/reproductive context
   source_citation text not null,                   -- e.g. 'Martin et al., Br. J. Dermatol. 1998'
   rule_version    int  not null default 1,
-  reviewed_by     text,                            -- 'derm:Dr X 2026-06' provenance of clinical sign-off
+  reviewed_by     text,                            -- display metadata only; never admission authority
   is_active       boolean not null default true,
   unique (tag_a, tag_b, interaction_type, rule_version)
 );
@@ -236,70 +289,116 @@ create policy rc_owner_upd on public.routine_conflicts
 
 Every rule is one of:
 
-1. **`irritation`** — cumulative-irritation / barrier-compromise risk (real, dose- and sensitivity-dependent). _e.g., retinoid × AHA/BHA on sensitive skin._ Resolution usually `alternate_nights` or `lower_frequency`.
-2. **`stability`** — one ingredient chemically degrades or destabilises another _in contact / in the same layer_ (a formulation-chemistry concern; often irrelevant if products are applied at different times). _e.g., benzoyl peroxide oxidising simple retinol; copper peptides catalysing ascorbic-acid oxidation._ Resolution usually `separate_am_pm`.
+1. **`irritation`** — an exact cumulative-irritation/barrier-compromise proposition. Dose, sensitivity, severity, and resolution affect the outcome only when that admitted rule defines the branch; otherwise it is `unsupported_unreviewed`. Alternate-night or lower-frequency timing is not a default.
+2. **`stability`** — one exact ingredient/formulation may degrade another _in
+   contact / in the same layer_. This class is formulation-specific. The
+   benzoyl-peroxide/tretinoin result cannot be generalized across every
+   retinoid, and free-copper chemistry does not by itself admit a copper-peptide
+   skincare rule.
 3. **`efficacy`** — a claimed reduction in how well one ingredient works. **Use sparingly and grade harshly** — most "efficacy-cancelling" claims are myths (see §4.4). Often collapses into `reassure`.
-4. **`synergy`** — a _beneficial_ interaction worth surfacing positively. _e.g., vitamin C + sunscreen in the AM (antioxidant + UV defence); niacinamide + retinoid (niacinamide supports the barrier, tempering retinoid irritation)._ This is a differentiator: most checkers can't say anything nice.
-5. **`safety`** — a genuine medical contraindication, categorically separate and **maximally conservative** (see §4.8). _e.g., topical retinoids in pregnancy/breastfeeding._ Resolution `avoid_refer` (suppress + route to clinician), never a casual cosmetic suggestion.
+4. **`synergy`** — an exact beneficial proposition that may surface only when
+   its specific formulation and outcome are independently supported and
+   approved. It must never imply increased SPF, relaxed sunscreen reapplication,
+   or generic irritation mitigation.
+5. **`safety`** — medical-adjacent guidance, categorically separate and
+   conservative (see §4.8). Applicability must distinguish pregnancy from
+   breastfeeding and exact molecules/exposure contexts. Resolution may
+   suppress and refer only when the exact reviewed rule authorizes it.
 
-Plus the special label **`myth`** (interaction*type stored as `myth`): a widely-feared pairing the evidence \_refutes*. The engine surfaces these proactively to **reassure** (e.g., when a user adds both a niacinamide and a vitamin-C product). _No competitor does this well; it is pure trust equity._
+Plus the special label **`myth`** (`interaction_type` stored as `myth`): an exact,
+widely feared proposition that the admitted evidence refutes. The engine may
+surface only that rule's reviewed reassurance bytes. Niacinamide plus vitamin C
+is a candidate design example, not an automatic reassurance from pair detection.
 
 #### 4.2 Severity scale
 
 `none | mild | moderate | high`. **Base severity** lives on the rule; **computed severity** is modulated at detection time:
 
-- **Concentration** — higher band ⇒ up to +1 step (a 10% glycolic + 1% retinol pushes harder than 0.3% retinol + a low-% PHA).
-- **Sensitivity axis** (`skin_profiles.sensitive_resistant`) — sensitive ⇒ +1 step for `irritation` rules; resistant ⇒ may −1 step.
-- **Sub-flag exemptions** — `applies_when.subflag_exempt` zeroes a `stability` rule when the retinoid is `adapalene` or `encapsulated` (per the Martin-1998 nuance: adapalene didn't degrade; optimised gels didn't degrade).
+- Modulation is defined per exact reviewed rule. There is no global `+1` for a
+  concentration band or `-1` for "resistant" skin.
+- Unknown molecule, formulation, or exposure follows the rule's approved
+  cautious/unsupported branch; it never creates compatibility.
+- A stability exemption names an exact evidence-bound finished formulation. A
+  generic subflag such as `encapsulated` cannot suppress a rule, and a stability
+  exemption cannot suppress a separate irritation rule.
 
-The spec's worked example — "Maya," **dry + sensitive** skin, with **Retinol 0.3%** and **Glycolic 7%** — yields a **Moderate** retinoid × AHA `irritation` conflict (sensitive bumps it up from mild; 0.3%/7% keeps it from high). That matches the spec's "Moderate" chip on p13 exactly.
+Until the exact Maya products, proposition, thresholds, severity, and copy are
+professionally approved, the fixture proves the candidate is hidden and the
+coverage state is `unsupported_unreviewed`; it does not assert a medical
+severity.
 
 #### 4.3 Evidence grade (SORT-anchored)
 
 Internal grade maps to **SORT** (Ebell et al., AFP 2004): **A** = consistent good-quality patient-oriented evidence; **B** = inconsistent/limited patient-oriented evidence; **C** = consensus, opinion, _disease-oriented_ evidence (in-vitro, mechanistic), case series. **Reality check: essentially all skincare-interaction claims are C**, because they rest on stability assays and pH chemistry rather than trials of outcomes that matter to a person. We therefore present a **consumer-facing label** mapped on top of the grade:
 
-| Consumer label  | Internal                                                 | When to use                                                                 | Example                                            |
-| --------------- | -------------------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------- |
-| **Established** | C (robust mechanism + repeated in-vitro/clinical signal) | strong, repeatable mechanism with supporting data                           | BP degrades simple retinol/tretinoin (Martin 1998) |
-| **Plausible**   | C (mechanism, thin human data)                           | a real chemical/biological mechanism, little outcome data                   | copper peptides + L-ascorbic acid (oxidation)      |
-| **Contested**   | C (conflicting expert opinion)                           | reputable sources actively disagree; the popular claim isn't well-supported | retinoid × AHA/BHA _efficacy_                      |
-| **Refuted**     | — (evidence contradicts the claim)                       | studies/consensus specifically debunk it                                    | niacinamide × vitamin C                            |
+| Consumer label  | Internal                                                 | When to use                                                                 | Example                                                 |
+| --------------- | -------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------- |
+| **Established** | C (robust mechanism + repeated in-vitro/clinical signal) | strong, repeatable mechanism with supporting data                           | exact tested tretinoin/BP stability proposition         |
+| **Plausible**   | C (mechanism, thin human data)                           | a real chemical/biological mechanism, little outcome data                   | additive irritation from separate potent leave-on acids |
+| **Contested**   | C (conflicting expert opinion)                           | reputable sources actively disagree; the popular claim isn't well-supported | retinoid × AHA/BHA _efficacy_                           |
+| **Refuted**     | — (evidence contradicts the exact claim)                 | evidence addresses the specifically worded proposition                      | only “must always separate niacinamide and vitamin C”   |
 
-> **Honesty requirement:** because the grades are mostly C, the in-app "Source" line and any "evidence detail" view must say so plainly ("based largely on lab and mechanistic evidence; high-quality human-outcome studies are limited"). This is the spec's **"Evidence: contested"** chip generalised, and it is a feature, not a weakness.
+> **Honesty requirement:** because the candidate grades are mostly C, the
+> in-app "Source" line and any evidence-detail view must render the exact
+> admitted rule's proposition-specific limitations and label. The spec's
+> **"Evidence: contested"** chip is a design-only placeholder, not a generalized
+> label.
 
-#### 4.4 The matrix (the ~40 pairs — the crown jewel)
+#### 4.4 The bounded draft matrix
 
-Below is the validated core. Each row is one or more `conflict_rules`. **This table must be signed off by a board-certified dermatologist and a cosmetic chemist/pharmacist before launch** (see §9; log as **BLOCKER B-DERM-REVIEW**). Citations are the _basis_, not proof; grades are deliberately conservative.
+Below is a draft research matrix, not a validated or launch-admitted corpus.
+Each row may become one or more `conflict_rules` only after its exact scope,
+copy, sources, severity, exceptions, and presentation bytes are approved by a
+board-certified dermatologist and a cosmetic chemist or pharmacist. Regulatory
+counsel must separately approve jurisdiction-specific drug/cosmetic handling
+and claims. Citations are source candidates, not professional approval.
 
-| #   | Family A × Family B                                                  | Type               | Base severity | Evidence (label / SORT) | Mechanism (claim-safe, plain)                                                                                                                                                | Resolution                                    | Basis                                                           |
-| --- | -------------------------------------------------------------------- | ------------------ | ------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | --------------------------------------------------------------- |
-| 1   | retinoid × AHA (glycolic/lactic)                                     | irritation         | mild→moderate | contested / C           | Both speed surface turnover; together they can over-exfoliate and stress the barrier, **especially on sensitive skin** — the "cancels each other out" idea is not supported. | alternate_nights                              | Paula's Choice; Westlake/London Derm; Glow Recipe (Dr. H. King) |
-| 2   | retinoid × BHA (salicylic)                                           | irritation         | mild→moderate | contested / C           | As above; some dermatologists consider retinoid + BHA potentially synergistic for oily skin.                                                                                 | alternate_nights (oily/resistant: may co-use) | Glow Recipe (Dr. King); Paula's Choice                          |
-| 3   | benzoyl peroxide × retinol/tretinoin (simple)                        | stability          | moderate      | established / C         | Benzoyl peroxide is an oxidiser; it can break simple retinol/tretinoin down on contact (~50% of tretinoin in ~2h, ~95% in 24h under light).                                  | separate_am_pm                                | Martin et al., _Br. J. Dermatol._ 1998                          |
-| 3b  | benzoyl peroxide × **adapalene / encapsulated retinoid**             | (exempt)           | none          | established / C         | Adapalene and optimised/encapsulated retinoids resist BP oxidation (basis of adapalene+BP combo products).                                                                   | no_change                                     | Martin 1998; combination-product approvals                      |
-| 4   | niacinamide × vitamin C (L-AA)                                       | **myth**           | none          | refuted / —             | The flushing fear came from a 1960s study using _niacin_ (not niacinamide) under heat; modern formulations combine them safely.                                              | reassure                                      | Clinikally; dermatology consensus                               |
-| 5   | vitamin C (L-AA) × AHA (glycolic)                                    | irritation         | mild          | contested / C           | Chemically compatible (both work at low pH; commercial C+AHA products exist); the real concern is doubling potent actives → irritation.                                      | separate_am_pm or buffer                      | Dr. Sue Ann Wee (Schweiger Derm); commercial C+AHA              |
-| 6   | copper peptides × vitamin C (L-AA)                                   | stability          | mild→moderate | plausible / C           | Copper can catalyse ascorbic-acid oxidation, so the vitamin C may degrade faster if layered together.                                                                        | separate_am_pm (C in AM, peptides PM)         | cosmetic-chemistry consensus                                    |
-| 7   | copper peptides × AHA/BHA                                            | stability          | mild          | plausible / C           | Low-pH acids can destabilise peptides; best separated.                                                                                                                       | separate_am_pm / different days               | cosmetic-chemistry consensus                                    |
-| 8   | multiple exfoliating acids stacked (AHA+BHA+ vitamin C same session) | irritation         | moderate→high | plausible / C           | Stacking several potent acids in one session raises over-exfoliation/barrier-damage risk.                                                                                    | lower_frequency (don't stack same night)      | dermatology consensus                                           |
-| 9   | vitamin C (L-AA) × niacinamide                                       | synergy (positive) | n/a           | plausible / C           | Often complementary (brightening + barrier support); surface as a _good_ pairing, not a warning.                                                                             | no_change (reassure positively)               | as #4                                                           |
-| 10  | vitamin C × sunscreen (AM)                                           | synergy (positive) | n/a           | plausible / C           | Antioxidant + UV protection are a classic morning pairing.                                                                                                                   | no_change (encourage)                         | dermatology consensus                                           |
-| 11  | niacinamide × retinoid                                               | synergy (positive) | n/a           | plausible / C           | Niacinamide supports the barrier and can temper retinoid dryness/irritation.                                                                                                 | no_change (encourage)                         | dermatology consensus                                           |
-| 12  | **retinoid × pregnancy/breastfeeding**                               | **safety**         | high          | (see §4.8)              | Conservative consensus is to avoid topical retinoids while pregnant/breastfeeding; this is a clinician conversation.                                                         | avoid_refer                                   | AAD-aligned expert consensus; see §4.8                          |
-| 13  | **high-dose salicylic acid × pregnancy**                             | **safety**         | moderate→high | (see §4.8)              | High-dose salicylic acid is on common pregnancy-caution lists.                                                                                                               | avoid_refer                                   | pregnancy-safe-skincare consensus                               |
-| 14  | **hydroquinone × pregnancy/breastfeeding**                           | **safety**         | high          | (see §4.8)              | Cosmetic hydroquinone use is hard to justify in pregnancy/lactation; defer to a clinician.                                                                                   | avoid_refer                                   | dermatology lactation reviews                                   |
-| 15  | any active × compromised/over-exfoliated barrier (self-reported)     | irritation         | moderate      | plausible / C           | When skin is already irritated, pause actives and prioritise barrier repair.                                                                                                 | lower_frequency / recovery                    | skin-cycling rationale (Bowe)                                   |
+| #   | Family A × Family B                        | Draft disposition       | Required scope before review                                                                                                                                        | Resolution candidate                           | Primary basis                                                   |
+| --- | ------------------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------- |
+| 1   | retinoid × AHA                             | retain as irritation    | Exact molecules, separate versus finished product, concentration, pH, vehicle, leave-on/rinse-off, frequency, sensitivity, barrier condition                        | conservative alternate use or lower frequency  | FDA AHA guidance; exact retinoid labeling                       |
+| 2   | retinoid × salicylic acid                  | retain as irritation    | No generic "resistant skin" bypass; exact product/formulation and exposure context required                                                                         | conservative alternate use                     | Current tretinoin labeling; FDA BHA guidance                    |
+| 3   | benzoyl peroxide × retinoid                | split by formulation    | Separate simple tretinoin, adapalene, retinol/retinal/esters, and named validated finished formulations; a stability exemption does not erase irritation            | separate unless exact formulation is approved  | Martin et al. 1998; PMID 20967192; FDA EPIDUO and TWYNEO labels |
+| 4   | niacinamide × vitamin C                    | neutral myth correction | Vitamin-C molecule/derivative, pH, vehicle, and finished formulation; do not repeat the false claim that the 1963 experiment used niacin or promise generic synergy | no required separation                         | Guttman & Brooke, PMID 14076500; formulation-specific evidence  |
+| 5   | vitamin C × AHA                            | retain as irritation    | Dose/formulation sensitive; no categorical chemical incompatibility or mandatory AM/PM split                                                                        | buffer, lower frequency, or separate if needed | PMID 11207686; FDA AHA guidance; PMID 9723049                   |
+| 6   | copper peptide × vitamin C                 | hold                    | Free-copper chemistry does not prove clinically meaningful GHK-Cu/product layering degradation                                                                      | none until exact evidence and review           | PMID 38081796; PMID 19071607; PMID 25384620                     |
+| 7   | copper peptide × AHA/BHA                   | hold                    | No blanket cosmetic-layering rule is supported; AHA evidence must not be silently extended to BHA                                                                   | none until exact evidence and review           | PMID 25384620                                                   |
+| 8   | separate leave-on AHA × BHA products       | retain as irritation    | Strength, pH, leave-on/rinse-off, frequency, sensitivity, barrier condition, and finished-formulation exemption                                                     | one potent acid per session if uncertainty     | FDA AHA and BHA guidance                                        |
+| 9   | vitamin C × sunscreen                      | qualify as adjunctive   | Exact stable antioxidant formulation; never an SPF, replacement, or relaxed-reapplication claim                                                                     | no schedule change                             | PMID 18603326                                                   |
+| 10  | niacinamide × retinoid                     | neutral compatibility   | Do not claim generic dryness mitigation or synergy without exact formulation evidence                                                                               | no schedule change                             | PMID 38628085; PMID 38299457                                    |
+| 11  | topical retinoid × pregnancy               | retain as safety        | Split tazarotene from tretinoin/adapalene/cosmetic retinoids; calm precautionary avoidance and clinician referral                                                   | suppress and refer                             | ACOG; meta-analysis PMID 26215715; molecule labels              |
+| 11b | topical retinoid × breastfeeding           | separate review lane    | Do not reuse pregnancy copy; molecule, area, infant-contact, and clinician context are required                                                                     | clinician-led, molecule-specific               | Current LactMed tretinoin/adapalene records                     |
+| 12  | salicylic acid × pregnancy                 | retain as caution       | Exact salicylic acid, not generic BHA; concentration, amount, area, frequency, duration, occlusion, vehicle, and damaged skin; unknown stays cautious               | calm caution and clinician referral            | ACOG; AAD pregnancy skincare; MotherToBaby                      |
+| 12b | salicylic acid × breastfeeding             | separate review lane    | Do not reuse pregnancy caution; avoid infant contact or ingestion and assess application area                                                                       | clinician-led, context-specific                | Current LactMed salicylic-acid record                           |
+| 13  | hydroquinone × pregnancy                   | retain as safety        | Pregnancy precaution plus U.S. prescription/unapproved-OTC handling; do not present an illegal OTC purchase path                                                    | suppress and refer                             | PMID 9638901; FDA OTC hydroquinone notice                       |
+| 13b | hydroquinone × breastfeeding               | separate review lane    | Unstudied and not formally contraindicated; long-term use and infant contact require separate clinician review                                                      | clinician-led, context-specific                | Current LactMed hydroquinone record                             |
+| 14  | active × compromised self-reported barrier | future review candidate | Exact symptom/input boundary without diagnosis; product, dose, frequency, and recovery criteria                                                                     | pause or lower frequency                       | Must receive clinical and cosmetic-chemistry review             |
 
-Rows 16–~40 extend the same pattern conservatively (e.g., retinoid × vitamin C _timing_ → reassure-with-buffer; AHA × physical scrub → over-exfoliation; benzoyl peroxide × vitamin C → mild stability; fragrance/essential-oil flags × sensitive skin → caution; etc.), each graded C and resolution-first. **The matrix ships small and correct, not large and shaky.** Every addition is a versioned, derm-reviewed event.
+There is no presumed row 15-40. Missing coverage is
+`unsupported_unreviewed`, never "compatible." The corpus ships only an exact,
+whole-corpus approved release; every addition or copy/source/scope change
+creates new hashes and invalidates earlier review receipts.
+Two or more real products with missing/unparsed tags are also
+`unsupported_unreviewed`; the engine reserves `not_applicable` for a state
+with no product/context pair to assess and never turns missing parsing facts
+into reassurance.
 
 #### 4.5 Resolution strategies (the verbs)
 
-- **`separate_am_pm`** — one ingredient AM, the other PM (BP/retinoid; vitamin C/copper peptides). Wires into the AM/PM routines (doc #3).
-- **`alternate_nights`** — the spec's signature move; place the two on different cycling nights. _Drives the skin-cycling scheduler (§5)._ The spec's PM banner ("Your glycolic toner is skipped tonight… Next acid night: Saturday") is this resolution rendered.
-- **`buffer`** — apply a moisturiser between actives, or wait ~1 min (the spec's "Wait ~1 min after serum" microcopy on the AM Today screen is a buffer hint).
-- **`lower_frequency`** — reduce one active to N×/week; the default de-escalation for sensitive skin.
-- **`no_change`** — compatible (or synergistic) — surface calm reassurance, optionally a positive note.
-- **`reassure`** — for `myth` rows: proactively tell the user the feared combination is fine.
+- **`separate_am_pm`** — one ingredient AM, the other PM when the exact reviewed
+  rule supports that resolution. Wires into the AM/PM routines (doc #3).
+- **`alternate_nights`** — place the exact pair on different cycling nights only
+  when the admitted rule approves that resolution. The spec's PM banner is a
+  design-only placeholder; its timing and copy cannot render until bound to the
+  exact admitted rule and computed schedule.
+- **`buffer`** — available only when an exact product label or independently
+  approved rule defines the step; there is no generic one-minute or
+  moisturizer-between-actives instruction.
+- **`lower_frequency`** — reduce one active to N×/week only when the exact
+  admitted rule defines the product, exposure, sensitivity/unknown branch,
+  cadence, and copy; it is never a generic default.
+- **`no_change`** — no scheduling change is required for the exact approved
+  proposition; this is not blanket compatibility or synergy.
+- **`reassure`** — neutrally correct only the exact reviewed myth proposition.
 - **`avoid_refer`** — `safety` only: suppress the recommendation and route to a clinician (§4.8).
 
 #### 4.6 Detection algorithm
@@ -309,17 +408,24 @@ Runs (a) on the **shelf** (any two products the user owns) for the Shelf conflic
 ```
 detect(user):
   products = user_products(user, status='active') joined to product_ingredients -> tags
-  profile  = skin_profiles(user)   # sensitivity, pregnancy, goals
+  profile  = skin_profiles(user)   # sensitivity, reproductive_context, goals
   results  = []
   for (p_a, p_b) in unordered_pairs(products):     # shelf-level
       for tag_a in tags(p_a), tag_b in tags(p_b):
-          rule = active_rule(tag_a, tag_b)          # tag-based lookup, both orders
-          if not rule: continue
-          if exempt(rule, p_a, p_b): continue        # adapalene/encapsulated sub-flags
-          sev = modulate(rule.base_severity, concentration(p_a,p_b), profile.sensitivity)
-          if rule.type == 'safety' and applies(rule.applies_when, profile):
-              sev = 'high'
-          results.append(Conflict(rule, p_a, p_b, sev))
+          candidates = active_rules(tag_a, tag_b)   # all candidates, both orders
+          for rule in candidates:
+              if not exact_applicability_matches(
+                  rule,
+                  molecules(p_a,p_b),
+                  finished_formulations(p_a,p_b),
+                  exposure(p_a,p_b),
+                  profile.reproductive_context,
+                  profile,
+              ): continue
+              if exact_finished_formulation_exempt(rule, p_a, p_b): continue
+              # Preserve the admitted rule's exact severity and simultaneous
+              # irritation/stability/safety outcomes; never overwrite it globally.
+              results.append(Conflict(rule, p_a, p_b, rule.severity))
   # routine-level: only flag pairs that land in the SAME application moment
   # (same routine + same cycling_night, or both 'daily'); pairs already separated
   # by AM/PM or by alternate nights are RESOLVED, not flagged.
@@ -330,28 +436,84 @@ detect(user):
 
 Key behaviours:
 
-- **Tag-based, both-orders matching.** `(retinoid, aha)` and `(aha, retinoid)` resolve to one rule.
+- **Tag-based, both-orders candidate discovery.** `(retinoid, aha)` and
+  `(aha, retinoid)` discover the same candidate set. The engine evaluates every
+  candidate and can preserve multiple simultaneous exact interaction
+  propositions for one product pair.
 - **Resolution-aware:** if two clashing actives are _already_ on different cycling nights or different AM/PM slots, the routine view shows them as **resolved/"paired"** (the spec's "paired" badge on the Glycolic 7% card, p12), not as an active warning.
-- **Idempotent, canonical upsert** identifies a choice by `(user_id, rule_id, unordered product pair)`, preserves the user's earlier `status`/`user_choice`, and records the rule version that was actually reviewed. Reversed product order cannot create a second decision.
-- **V1 choice contract:** the encrypted local record is the immediate authority and stores the exact product pair, choice, and rule version. Both `accept_suggested_timing` and `use_together` remove that exact current-version row from repeated Shelf, Plan, Recommendations, and Ask prompts. The generic acceptance value is truthful for `alternate_nights`, `separate_am_pm`, and `lower_frequency`; legacy `keep_alternate_nights` records migrate to it. A changed rule version becomes unresolved again. `use_together` records the user's preference but does not auto-co-locate potent actives: the guided checklist keeps the reviewed one-potent-active/night and retinoid-exfoliant separation constraints until named clinical and cosmetic-chemistry review approves a pair-specific co-use rule. Safety, pregnancy, cadence, and concentration gates are never bypassed. The owner-RLS `routine_conflicts` row is a best-effort mirror until `B-SUPABASE`/`B-ROUTINE-PERSIST` close.
-- **Where it runs:** as a Postgres function (`detect_conflicts(uid)`, `SECURITY DEFINER`, hardened with `REVOKE … FROM public, anon, authenticated` per DECISIONS.md D-013 pattern) for authoritative server computation, **and** mirrored as a pure client-side function over the **cached rule set** so the shelf works offline (docs/01 §6: TanStack Query + persisted cache). The rule set is small (~40 rules) and ships to the client.
+- **Idempotent, canonical upsert** identifies a choice by `(user_id, corpus_sha256,
+rule_sha256, unordered product pair)`, preserves the user's earlier
+  `status`/`user_choice` only for those exact reviewed bytes, and records the
+  corpus and rule versions. Reversed product order cannot create a second
+  decision.
+- **Choice contract:** the encrypted local record is the immediate authority and
+  stores the exact product pair, choice, corpus hash, rule hash, and versions.
+  Both `accept_suggested_timing` and `use_together` remove only that exact
+  reviewed-hash row from repeated Shelf, Plan, Recommendations, and Ask prompts.
+  Any copy, mechanism, citation, applicability, exception, replacement, or
+  presentation change becomes unresolved even if an author forgot to increment
+  a version. `use_together` records the user's preference but does not
+  auto-co-locate potent actives. Safety, pregnancy, breastfeeding, cadence, and
+  exposure gates are never bypassed. The owner-RLS `routine_conflicts` row is a
+  best-effort mirror until `B-SUPABASE`/`B-ROUTINE-PERSIST` close.
+- **Where it runs:** as a Postgres function (`detect_conflicts(uid)`, `SECURITY
+DEFINER`, hardened with `REVOKE … FROM public, anon, authenticated` per
+  DECISIONS.md D-013 pattern) for authoritative server computation, **and**
+  mirrored as a pure client-side function over one exact admitted whole-corpus
+  release so the shelf works offline (docs/01 §6: TanStack Query + persisted
+  cache). Draft/demo rules are a visibly separate preview input and are never a
+  production default.
 
 #### 4.7 Personalization
 
-- **Sensitivity** raises `irritation` severities and biases toward `lower_frequency`/`alternate_nights`; a future resistant/oily co-use path may ship only as an explicit, pair-specific, reviewer-approved rule. V1 does not infer it.
-- **Goals** (`skin_profiles.goals`) tune tone, not safety (a "barrier repair" user sees more conservative cadence and more recovery nights).
-- **Pregnancy/breastfeeding** triggers the safety class (§4.8) regardless of everything else.
-- **Conservative default:** when concentration or sensitivity is unknown, assume the **more cautious** branch.
+- **Sensitivity** changes severity or resolution only when the exact admitted,
+  pair-specific rule defines that branch. Otherwise the branch is
+  `unsupported_unreviewed`; V1 never infers a generic increase or downgrade.
+- **Goals** (`skin_profiles.goals`) may tune non-safety tone only after review;
+  they do not authorize a medical severity or regimen.
+- **Pregnancy and breastfeeding are distinct contexts.** Neither context may
+  borrow the other's rule or copy; unknown and prefer-not-to-say remain
+  conservative without asserting a health state.
+- **Unknown exposure or sensitivity:** select a cautious branch only when the
+  exact admitted rule defines one for that unknown state; otherwise return
+  `unsupported_unreviewed`.
 
 #### 4.8 Safety rules (the one place the app gets firm — and defers)
 
-Genuine medical contraindications are **not** cosmetic compatibility and are handled in a separate, conservative path. The anchor case is **topical retinoids in pregnancy/breastfeeding**: the evidence shows minimal systemic absorption and **no demonstrated harm from topical use**, yet expert consensus (AAD-aligned guidance; dermatology pregnancy/lactation reviews) is to **avoid out of caution** ("better safe than sorry"), with bakuchiol a commonly-suggested alternative. (Oral retinoids like isotretinoin are absolute contraindications, but those are prescription drugs outside OnSkin's cosmetic scope.) High-dose salicylic acid and hydroquinone are on the same pregnancy-caution list.
+Genuine medical safety guidance is **not** cosmetic compatibility and is handled
+in a separate, conservative path. During pregnancy, ACOG advises avoiding
+topical retinoids even though absorption is low; a meta-analysis of inadvertent
+exposure did not detect a major increase in measured adverse outcomes but was
+not powered to justify use. Tazarotene must remain molecule-specific because its
+labeling differs from other topical retinoids. ACOG lists topical salicylic acid
+among OTC options during pregnancy, while AAD advises limiting and discussing
+concentrations above 2%; percentage alone is not exposure, so area, amount,
+frequency, duration, occlusion, vehicle, and damaged skin matter and unknown
+stays cautious. Hydroquinone remains a pregnancy precaution and, in the United
+States, OTC hydroquinone skin-lightening products are unapproved drugs rather
+than an ordinary cosmetic purchase path.
+
+Breastfeeding is a separate corpus lane. Current LactMed records do not support
+copying blanket pregnancy avoidance into lactation: topical tretinoin and
+adapalene are considered low risk with application-area and infant-contact
+precautions; topical salicylic acid is compatible with contact precautions; and
+hydroquinone is unstudied, not formally contraindicated, and requires distinct
+long-term-use/contact judgment. Only an exact molecule/context rule approved by
+both required professionals and separately cleared by regulatory counsel for
+the exact claims and target jurisdiction may surface.
 
 Engine behaviour for `safety` rules:
 
-- **Detect early.** `skin_profiles.pregnancy_status` is captured in onboarding (docs/01 §2 step 5; flagged there as "liability-reducing"). The moment a flagged product meets a flagged state, raise it.
-- **Calm, non-diagnostic, defer to a clinician.** Copy pattern: _"Many dermatologists suggest pausing retinoids while pregnant or breastfeeding. This is a conversation for you and your doctor — consider setting this aside for now; we can suggest a gentler alternative."_ No diagnosis, no alarm, no "dangerous."
-- **Suppress and defer.** Remove the retinoid from suggested routines/cycling and offer a clinician conversation or reviewed alternative. A cosmetic timing choice cannot restore a safety-excluded product.
+- **Detect early.** The authoritative profile exposes a typed pregnancy,
+  breastfeeding, none, unknown, or prefer-not context. The moment an admitted
+  rule's exact applicability meets a flagged state, raise it.
+- **Calm, non-diagnostic, defer to a clinician.** Pregnancy and breastfeeding
+  copy are independently reviewed and must not imply diagnosis, danger, or a
+  universal contraindication.
+- **Suppress and defer only when exact scope requires it.** Suppress the exact
+  molecule/product only when that admitted reproductive-context rule requires
+  suppression, then offer a clinician conversation or its reviewed alternative.
+  A cosmetic timing choice cannot restore a safety-excluded product.
 - **Disclaimer-linked.** Always paired with the global not-medical-advice line (§9).
 
 ### 5. The skin-cycling scheduler
@@ -364,7 +526,12 @@ Engine behaviour for `safety` rules:
 - **Resistant / oily:** the classic 4-night, or advanced.
 - **No actives owned:** no cycling; a simple daily AM/PM.
 
-**How conflicts fold in (the integration that is the moat):** the scheduler reads the `alternate_nights` resolutions from the engine and _places_ the clashing actives on different nights, then renders the consequence in the daily view. The spec's PM banner — _"Your glycolic toner is skipped tonight — it doesn't mix well with retinol. Next acid night: Saturday."_ — is the scheduler computing: (a) tonight is retinoid night (cycling night 2), (b) glycolic is an AHA that `alternate_nights`-conflicts with the retinoid, so (c) suppress glycolic tonight and (d) compute the **next acid night** from the cycle calendar and name it. This is the single highest-value screen in the whole layer: the conflict is _already resolved and explained in context_, with zero user effort.
+**How conflicts fold in:** only an admitted `alternate_nights` resolution may
+place exact products on different nights. The banner must describe a
+conservative tolerance plan rather than categorical incompatibility—for
+example, “Both products can cause dryness, burning, redness, or peeling; this
+reviewed plan keeps them on different nights.” The scheduler may then compute a
+truthful next reviewed placement from the cycle calendar.
 
 **Calendar / "next acid night" computation:** given the cycle definition (ordered nights + start date/anchor) and today's date, project forward to the next night whose slot is `exfoliation`; render as a friendly weekday ("Saturday"). Recompute on edits and on date rollover (local-day aware — see the timezone tolerance in DECISIONS.md D-012).
 
@@ -376,14 +543,14 @@ Engine behaviour for `safety` rules:
 
 **Truth table (the only launch-eligible freshness waterfall):** `expiry_computed` may select the earlier of a printed date explicitly recorded or reconfirmed from this physical package and an opened-date-plus-PAO candidate, but the app must preserve which evidence created the winning candidate. A product catalog row is not bound to the user's lot, batch, or package, so its `expiry_date` remains catalog/correction evidence and never auto-populates Shelf `expiryDate`.
 
-| Product state and evidence | Stored/surfaced source | User-visible truth | Countdown, expired, or replacement signal |
-| --- | --- | --- | --- |
-| Unopened with a printed package date | `expiry_source='printed'` | Show the printed date and identify it as printed | Eligible near or past that date |
-| Unopened without a printed package date | `expiry_source='unknown'` | Show unopened with no app-derived date | Not eligible |
-| Opened with a printed package date that wins | `expiry_source='printed'` | Show the printed date and identify it as printed | Eligible near or past that date |
-| Opened with an explicit label PAO or reviewed catalog PAO that wins | `expiry_source='pao_computed'`; `pao_source='label'|'catalog'` | Explain opened date plus label/catalog PAO | Eligible near or past the computed date |
-| Future-gated: opened with an externally reviewed, server-attested catalog-linked category fallback | `expiry_source='estimated'`; `pao_source='category_default'` | Unavailable at launch; if later approved, show explicitly approximate and never as a package/manufacturer date | Not eligible |
-| No trustworthy candidate | `expiry_source='unknown'` | Show no date or estimate | Not eligible |
+| Product state and evidence                                                                         | Stored/surfaced source                                       | User-visible truth                                                                                             | Countdown, expired, or replacement signal  |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------- |
+| Unopened with a printed package date                                                               | `expiry_source='printed'`                                    | Show the printed date and identify it as printed                                                               | Eligible near or past that date            |
+| Unopened without a printed package date                                                            | `expiry_source='unknown'`                                    | Show unopened with no app-derived date                                                                         | Not eligible                               |
+| Opened with a printed package date that wins                                                       | `expiry_source='printed'`                                    | Show the printed date and identify it as printed                                                               | Eligible near or past that date            |
+| Opened with an explicit label PAO or reviewed catalog PAO that wins                                | `expiry_source='pao_computed'`; `pao_source='label'          | 'catalog'`                                                                                                     | Explain opened date plus label/catalog PAO | Eligible near or past the computed date |
+| Future-gated: opened with an externally reviewed, server-attested catalog-linked category fallback | `expiry_source='estimated'`; `pao_source='category_default'` | Unavailable at launch; if later approved, show explicitly approximate and never as a package/manufacturer date | Not eligible                               |
+| No trustworthy candidate                                                                           | `expiry_source='unknown'`                                    | Show no date or estimate                                                                                       | Not eligible                               |
 
 If printed and PAO candidates both exist, the earlier actual candidate wins; an exact tie resolves to `printed`. Shelf `pao_source='label'` is reserved for direct product-label entry. Reviewed product-specific `label`, `brand_label`, or `catalog` evidence delivered through catalog intake persists to Shelf as `catalog`, while the catalog retains the finer origin; actor-neutral copy protects ambiguous historical v1 label rows. A category estimate is a separate future-gated state, not a synonym for unknown. Current `product_categories` rows lack a named reviewer/source snapshot and the served payload lacks an exact retained category-evidence marker, so neither those mutable fields nor `products.default_pao_months` authorize Shelf evidence. Mobile/v1 intake and migration `0060` fail every `category_default` claim closed to unknown. The purged, sealed `ingredient_pao_defaults` compatibility relation is never consulted. No sunscreen-specific numeric fallback is permitted.
 
@@ -431,7 +598,7 @@ Anatomy, top to bottom:
 - **Status bar** (9:41, signal/wifi/battery) — standard.
 - **Title block:** "**Shelf**" in Instrument Serif (large), with the product count "**14 products**" right-aligned in mono. Generous top padding on paper.
 - **Filter chips:** pill segments **All / Actives / Expiring** — "All" selected (ink fill, paper text); others outlined. `Actives` filters to products bearing an active tag (retinoid/AHA/BHA/vitamin-C/BP); `Expiring` filters via the badge logic in §6. Single-select; haptic tick on change.
-- **Conflict banner (calm):** a **clay-tinted, low-contrast** card with a small clay dot, a short bold line — "**Retinol + glycolic acid share your PM routine**" — a one-line calm subhead — "Use them on alternate nights." — and a quiet **"Review →"** affordance opening the conflict detail. **Never red, never an alert icon.** Shelf-only detection must not claim placement; placement-confirmed copy is reserved for scheduler-backed routine contexts with real cycle output. The banner appears only when there's an _unresolved or noteworthy_ interaction; when everything is handled, it's absent or replaced by a subtle "all clear" affordance.
+- **Conflict banner (calm):** a **clay-tinted, low-contrast** card with a small clay dot, title, subhead, and quiet **"Review →"** affordance opening the conflict detail. The title and resolution are rendered verbatim from an admitted rule; a design-only placeholder such as "Retinol + glycolic acid share your PM routine" / "Use them on alternate nights" must never appear in production without that exact approval. **Never red, never an alert icon.** Shelf-only detection must not claim placement; placement-confirmed copy is reserved for scheduler-backed routine contexts with real cycle output. The banner appears only when there's an admitted unresolved or noteworthy interaction; unsupported coverage renders no reassurance.
 - **Product cards:** each a paper card with a rounded thumbnail (placeholder hatch until imagery), product name (Hanken, semibold), a mono metadata line ("Verra Skin · opened Mar · 6 mo PAO"), and a **right-aligned badge** (date / countdown / "paired"). Tappable → product detail (opened date, PAO, the actives it contributes, any conflicts it's part of, finish/discard actions).
 - **Scan FAB:** a dark **"Scan a barcode"** pill, centred low, clearly primary.
 - **Tab bar:** Today · Progress · Shelf · You (Shelf active, clay dot indicator).
@@ -440,19 +607,38 @@ States: **empty shelf** → a warm prompt to scan/add the first product (ties to
 
 #### 7.2 Conflict banner (calm, reusable)
 
-Used on Shelf and (variant) in the PM routine. Rules: clay tint not red; verb-first calm subhead that states the _resolution_ ("Use them on alternate nights") unless the scheduler has actually placed the products, in which case routine context may say so and show the computed next night; one quiet action ("Review →"). It models the spec cover's mandate — "non-alarmist resolution… the evidence is contested."
+Used on Shelf and (variant) in the PM routine. Rules: clay tint not red;
+verbatim admitted title, resolution, evidence label, and action bytes; one quiet
+review affordance. A routine context may add computed placement only when it
+actually placed the products. Design examples such as alternate-night timing or
+"contested" evidence remain placeholders until an exact admitted rule supplies
+them.
 
 #### 7.3 Conflict detail screen (spec p13 — the trust set-piece)
 
 The most important screen for credibility. Anatomy:
 
-- **Severity + evidence chips, side by side:** "**Moderate**" (severity) and "**Evidence: contested**" (the grade label). Both quiet, neutral-toned — _information, not alarm._
+- **Severity + evidence chips, side by side:** render only the exact
+  professionally approved severity and proposition-specific evidence label.
 - **Title:** "**Retinol × glycolic acid**" — Instrument Serif, the "×" rendered as a true multiplication sign (the pairing, stated plainly).
-- **Mechanism copy (claim-safe):** "Used the same evening, these can compound irritation — especially on sensitive skin like yours. Recent research suggests the risk is smaller than once thought, **so this is a recommendation, not a rule.**" (This is exactly the honest, contested-aware framing this whole document argues for, and it is already in the spec.)
-- **"OUR SUGGESTION":** the resolution, stated calmly — "Alternate nights — keep retinol and glycolic on different evenings." If a cycle exists, the routine view may add exact nights and confirm the plan reflects them; shelf-only conflict detail must not assert placement.
+- **Mechanism copy:** draw the exact approved bytes from the corpus. A candidate
+  irritation statement may say both products can independently cause dryness,
+  burning, redness, or peeling and concurrent use may increase irritation; it
+  must not transfer an efficacy debate into an irritation claim.
+- **"OUR SUGGESTION":** render the exact approved conservative option. If a
+  cycle exists, the routine view may add exact nights and confirm the plan
+  reflects them; shelf-only conflict detail must not assert placement.
 - **Affected products:** "Retinol 0.3% · Glycolic 7%" (the user's actual shelf items, with concentrations).
-- **Source:** "Derm. literature review, 2025" — the citation line. **Generalise:** this line must also carry the honesty note that the evidence is largely lab/mechanistic where that's true.
-- **Two actions, user in control:** "**Keep alternate nights**" (primary, accept) and "**Use together anyway**" (secondary, records `routine_conflicts.user_choice='use_together'`). Either choice is saved only after the encrypted write succeeds and stops repeat advisory prompts for that exact pair/rule version. The sheet states that guided check-offs remain on the reviewed one-potent-active schedule until named co-use review; safety rows never render these override actions.
+- **Source:** render structured, versioned identifiers and links from the
+  admitted source registry together with the rule/corpus hash. Never display a
+  fabricated generic “literature review” label.
+- **Actions, user in control:** render only the action labels and choices approved
+  in the exact admitted rule. Design-only examples such as "Keep alternate
+  nights" or "Use together anyway" are not production copy. A choice is saved
+  only after the encrypted write succeeds and stops repeat advisory prompts for
+  that exact pair/rule version. Guided check-offs remain on the reviewed
+  one-potent-active schedule until named co-use review; safety rows never render
+  override actions.
 
 Accessibility: severity/evidence chips have text labels (not colour-only); VoiceOver focus lands on the title on entry; the two actions are ≥44pt.
 
@@ -460,12 +646,22 @@ Accessibility: severity/evidence chips have text labels (not colour-only); Voice
 
 - **Header:** "THURSDAY · 9:41 PM" (mono), "**Good evening.**" (serif) — on the night palette.
 - **Skin-cycling night strip:** "SKIN CYCLING · NIGHT 2 OF 4" with four segments **Exfoliate · Retinoid · Recover · Recover**; tonight (Retinoid) highlighted in clay; the rest muted. Calm, no gamification.
-- **Evening routine checklist:** "Evening routine · 0 of 3" with steps (Cream cleanser → Retinol 0.3% → Ceramide moisturizer), each with a calm one-line instruction ("Dry skin fully before the retinoid," "Pea-sized · avoid eye area," "Generous layer tonight") — these are the buffer/usage hints the engine attaches.
-- **Conflict auto-resolution banner (clay dot, calm):** "Your glycolic toner is skipped tonight — it doesn't mix well with retinol. **Next acid night: Saturday.**" — the `alternate_nights` resolution + the computed next-acid-night, rendered in context. _This is the engine, the scheduler, and the calm-copy system working as one._
+- **Evening routine checklist:** product-specific application instructions come
+  only from the exact product label or a separately approved rule; a generic
+  retinoid tag cannot supply dose, dry-skin, eye-area, or buffer instructions.
+- **Conflict auto-resolution banner:** state the approved tolerance plan and the
+  computed next placement without saying the products categorically “do not
+  mix.”
 
 #### 7.5 Barcode scan & add-to-shelf
 
-On-device camera with a framing reticle; on read, resolve against OnSkin's reviewed catalog and show a result sheet (product, brand, parsed actives, and exact freshness source when one exists); an "opened when?" prompt; confirm → shelf. Unknown freshness stays unknown. Fallback chips: **Search**, **Scan ingredient list (OCR)**, **Add manually**. Privacy microcopy consistent with the brand voice ("Scanning happens on your device"). Unknown products remain local, with an optional OnSkin missing-product report; no third-party publication occurs.
+Camera capture and OCR run on device. A decoded barcode or minimized search
+query may be sent to OnSkin's first-party catalog service for resolution under
+the applicable consent and policy; the app must not imply that the entire
+lookup is on-device. Show the reviewed result and exact freshness source when
+one exists. Unknown freshness stays unknown. Unknown products remain local
+unless the user separately submits a minimized OnSkin missing-product report;
+no external source publication occurs.
 
 #### 7.6 Product card states & badge taxonomy
 
@@ -481,34 +677,82 @@ Badges (right-aligned, mono): **future date** (neutral) · **"N wks/days left"**
 
 #### 7.8 Reassurance surfaces (the differentiator made visible)
 
-When a user owns/added two ingredients the evidence _clears_ (e.g., niacinamide + vitamin C), surface a quiet **positive** note ("These two work well together — no need to separate them") in the same calm card style. This converts the most common skincare myth into a moment of trust, and it is something the warn-only competitors structurally cannot do.
+When an admitted rule has enough exact evidence to correct a myth, surface
+neutral reassurance in the same calm card style. For niacinamide plus vitamin
+C, the current research packet supports only "no evidence requires routine
+separation"; it does not authorize a generic synergy or "work well together"
+claim across every derivative, pH, vehicle, or finished formulation.
 
 ### 8. Privacy & compliance (personal layer)
 
-The **catalog and rules are non-personal** and carry no privacy weight. The **personal layer** — _your_ shelf, _your_ detected conflicts, _your_ cycle — is **health-inference data** (it reveals skin conditions, pregnancy status, product usage) and is therefore covered by the consents already specified in docs/01 §4 (health-data-collection consent before the quiz; the shelf and conflict data are downstream of that). It is RLS-isolated per user (§3), never sold or shared, and never used to train AI (consistent with the spec's "Sold, shared, or used to train AI: NEVER" and "on-device" brand promises, spec p4/p7). If a data-export (docs/01 §4, GDPR Art. 20) includes detected-conflict and shelf data, that is owner-only export, not sharing. _Whether surfacing pregnancy-linked safety rules constitutes additional special-category processing to disclose in the DPIA is a question for counsel — log under BLOCKERS._
+The **catalog and rules are non-personal**. The **personal layer**—the user's
+shelf, detected interactions, reproductive context, and cycle—is
+health-inference data covered by the applicable consent and policy controls. It
+is owner-isolated and may be processed by disclosed first-party infrastructure
+and contracted processors only for approved purposes. Counsel-approved
+sale/share/processing language must describe the actual architecture; a blanket
+“never shared” promise is not substituted for a processor inventory or data-flow
+review. It is not used to train AI under the current source contract.
 
 ### 9. Legal / liability framing (the part the brief is most worried about)
 
 **The cosmetic-vs-drug line (FD&C Act §201(g)/(i)).** A product (or, by extension, the claims around it) becomes a **drug** if it is intended to "diagnose, cure, mitigate, treat, or prevent disease" _or_ to "affect the structure or any function of the body." **Intended use is judged by claims — including claims on the Internet and in promotional materials (FDA).** OnSkin's in-app copy (resolutions, banners, value props) is a **claims surface**. The FTC separately polices advertising for truthfulness/substantiation. **Constraints:** keep all generated copy cosmetic ("reduce the appearance of fine lines," "may minimise irritation," "supports the look of an even tone"); never "treats acne," "cures rosacea," "stimulates collagen," "repairs DNA." Route anything disease-adjacent to "see a dermatologist."
 
-**Not medical advice — a standing disclaimer.** A clear, persistent disclaimer ("OnSkin provides general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, cure, or prevent any disease. Consult a dermatologist for medical concerns.") appears in onboarding, in Settings, and contextually on the conflict-detail and any safety screens. This is both ethically right and the core liability mitigation.
+**Not medical advice — a standing disclaimer.** A clear, persistent disclaimer
+appears in onboarding, Settings, conflict detail, and safety screens. It is a
+supporting disclosure; it does not replace substantiation, accurate scope,
+professional approval, product labeling, privacy duties, or regulatory
+clearance.
 
 **The two-sided liability, addressed by design.**
 
-- _False reassurance_ (saying a harmful combo is fine): mitigated by conservative concentration/sensitivity defaults, the separate `safety` class, evidence grades that don't overstate, and expert sign-off.
-- _False alarm_ (scaring off a safe/beneficial combo): mitigated by the `myth`/`reassure`/`synergy` classes and the contested-aware copy — the engine is _designed_ to de-escalate and to say "this is fine."
+- _False reassurance_ (saying a harmful combo is fine): mitigated by exact-rule
+  applicability, `unsupported_unreviewed` coverage, the separate `safety` class,
+  evidence grades that do not overstate, professional approvals, and counsel
+  clearance.
+- _False alarm_ (scaring a user away from an unsupportedly characterized pair):
+  mitigated by exact-proposition reassurance and `unsupported_unreviewed`
+  coverage. The engine never upgrades absence of a warning into “this is fine.”
 
-**Expert sign-off and versioning (mandatory before launch).** The entire `conflict_rules` set — types, severities, grades, mechanisms, resolutions, citations, and especially every `safety` rule — must be reviewed and signed off by a **board-certified dermatologist** and a **cosmetic chemist / pharmacist** (record provenance in `conflict_rules.reviewed_by`). Rules are **versioned** (`rule_version`) so each clinical change is an auditable event, and the app stores which rule version produced each surfaced `routine_conflicts` row. Ship with a **user feedback path** ("Was this helpful? / Report an issue") feeding rule QA. _This recommendation is **mandatory, not optional** — exactly as docs/01 made the Baumann patent review mandatory._ Log as **BLOCKER B-DERM-REVIEW** (gates launch of this layer).
+**Expert sign-off and versioning (mandatory before launch).** The entire
+`conflict_rules` corpus — types, severities, grades, mechanisms, presentation
+copy, applicability, exceptions, resolutions, replacements, and source
+registry — must receive two distinct exact-hash approvals: one from a
+board-certified dermatologist and one from a qualified cosmetic chemist or
+pharmacist. A free-text `reviewed_by` marker is not authority. Receipts bind the
+corpus hash, every rule hash, source-registry hash, count, reviewer identity and
+credential, jurisdiction, decision, scope, date, and re-review/expiry. Any byte
+or scope change invalidates admission. The app stores the exact corpus/rule
+hashes behind every surfaced choice. Ship with a user feedback path feeding
+rule QA. Separate regulatory counsel must also clear the exact claims, actions,
+source/licensing posture, and target jurisdictions. Log these independent
+external gates as **BLOCKER B-DERM-REVIEW** and **BLOCKER B-REG-COUNSEL**.
 
 **Other flags:** geofencing around healthcare facilities is banned under MHMDA — never location-target health content (docs/00 §7). Affiliate links (ShopMy, doc #10) layered on top of conflict resolutions must not create a conflict-of-interest appearance ("we flagged X so you'd buy Y") — keep recommendations evidence-led and disclosed.
 
 ### 10. Engineering / implementation notes
 
-- **Where logic lives:** authoritative detection as a hardened `SECURITY DEFINER` Postgres function (`detect_conflicts(uid)`) with `REVOKE … FROM public, anon, authenticated` (DECISIONS.md D-013 pattern), invoked after shelf/routine mutations; a mirrored **pure client-side** detector over the cached (~40-rule) set for offline shelves (docs/01 §6). Scheduling/next-acid-night computed client-side from the cycle definition, reconciled server-side.
+- **Where logic lives:** authoritative detection as a hardened
+  `SECURITY DEFINER` Postgres function (`detect_conflicts(uid)`) with
+  `REVOKE … FROM public, anon, authenticated` (DECISIONS.md D-013 pattern),
+  invoked after shelf/routine mutations; a mirrored **pure client-side**
+  detector over the exact admitted whole-corpus release for offline shelves
+  (docs/01 §6). Scheduling/next-acid-night is computed client-side from the
+  cycle definition and reconciled server-side.
 - **Offline:** the rule set and the user's catalog slice are cached (TanStack Query persistence, docs/01 §6); detection and badges work offline; `routine_conflicts` writes queue and sync (idempotent upsert).
 - **Performance:** tag-indexed rule lookups; pairwise detection over a shelf of ~10–30 products is trivial; precompute and cache `routine_conflicts`, recompute on change only.
-- **Testing (non-negotiable for a liability surface):** **every rule has a fixture test** asserting (inputs: two tagged products + a profile) → (expected type, computed severity, resolution, copy). The Maya fixture (dry/sensitive + Retinol 0.3% + Glycolic 7%) must assert **Moderate / contested / alternate_nights** and the PM "next acid night" output. Maestro E2E for the scan→shelf→banner→detail→override flow (docs/00 §9).
-- **Analytics (PostHog, docs/01 §7):** `product_scanned` (`source`, `matched`), `product_added` (`method`: scan/search/ocr/manual), `conflict_detected` (`rule_id`, `severity`, `evidence_label`), `conflict_detail_viewed`, `conflict_resolution_chosen` (`keep`/`use_together`), `cycling_night_viewed`, `pao_expiring_shown`. These also measure whether the layer drives the activation/retention it's claimed to.
+- **Testing (non-negotiable for a liability surface):** every admitted rule has
+  fixtures for exact applicability, exposure, exceptions, copy, hashes, and
+  resolution. Draft Maya data must prove hidden/`unsupported_unreviewed`
+  behavior until its exact severity and plan are professionally approved.
+  Human-simulated E2E then covers admitted scan→shelf→detail→choice flows without
+  substituting UI evidence for review.
+- **Analytics:** no rule ID, ingredient/product name, severity, pregnancy or
+  breastfeeding state, conflict text, shelf contents, or choice detail enters
+  analytics. Any future measurement must use the closed allowlisted event
+  registry, exact low-cardinality non-health buckets, explicit consent, and the
+  receipt-bound publication gate; direct mobile vendor capture remains
+  disabled.
 - **Ships as build-order #2** (docs/00): after auth/data-model/RLS (#1), before the routine builder (#3) and smart-shelf surfacing (#4) consume it.
 
 ---
@@ -525,9 +769,17 @@ The **catalog and rules are non-personal** and carry no privacy weight. The **pe
 
 1. **It is the paywall.** Two of the four paywall value props (spec p7) are this layer verbatim: "Routine intelligence — order, timing, skin cycling" and "Ingredient conflict checks, with evidence grades." This is what the user is asked to pay for at the Day-0 conversion moment where ~half of subscription conversions happen (RevenueCat SOSA, docs/01 §9).
 2. **It is the retention/lock-in engine.** Every product scanned, every conflict resolved, every cycling night logged deepens a **personal data moat**: re-creating "my shelf + my conflicts + my cycle + my photos" elsewhere is the switching cost. docs/01 §9 ties exactly this data-accumulation to retention, and annual plans retain far better than monthly (RevenueCat SOSA ~44% one-year on annual vs ~17% monthly) — so the layer's compounding value is what makes the annual default stick.
-3. **It is the trust/word-of-mouth flywheel.** The evidence-graded, non-alarmist, myth-busting posture is _differentiated trust_, and trust is what drove Yuka's zero-marketing growth. An app that reassures (niacinamide + vitamin C is fine) as credibly as it cautions earns the recommendation.
+3. **It is a potential trust/word-of-mouth flywheel.** Evidence-bound,
+   non-alarmist, proposition-specific guidance can earn trust only when it is
+   accurate and professionally reviewed. For niacinamide plus vitamin C, the
+   present candidate says only that no evidence requires routine separation.
 
-**The honest competitive read (where the moat is NOT).** Conflict _detection_ is **not** defensible — SkinSort, Cosmily, and HadaBuddy already ship it in 2026, and a hazard score is a commodity (Yuka, EWG). If OnSkin positions on "we detect conflicts," it loses. The defensible moat is the **combination**: curated data quality + the SORT-anchored evidence-grading discipline + concentration/sensitivity awareness + the _resolution-first, calm_ treatment + deep integration into the daily habit loop and skin cycling + PAO intelligence + privacy-first + the compounding personal-data lock-in. No competitor combines all of these, and several (the warn-only checkers) _structurally cannot_ match the reassurance/synergy behaviour.
+**The honest competitive read (where the moat is NOT).** Conflict _detection_
+is not defensible by itself. Any defensibility must come from reviewed data
+quality, proposition-specific evidence, exact scope, calm resolution,
+integration, truthful freshness, and privacy. Reassurance and synergy are not
+automatic differentiators; they are claim surfaces that require the same
+substantiation as warnings.
 
 **What would break the thesis:** (a) **getting the science wrong** — a false-reassurance harm or a viral "this app spreads myths" moment would destroy the trust the model depends on (hence §9's mandatory expert sign-off); (b) treating it as a feature to _advertise_ rather than an experience to _integrate_; (c) data-coverage so thin that scans frequently fail (mitigated by reviewed curation + OCR + manual entry + the correction queue). Mitigate those and this layer is the engine, not the plumbing.
 
@@ -541,15 +793,21 @@ The **catalog and rules are non-personal** and carry no privacy weight. The **pe
 
 **(b) Data:** separately reviewed, exact-hash-bound offline CosIng and OBF source components plus a hand-curated top ~2,000; tag-based normalisation; no source runtime recipient, OBF images, or external contribution; never scrape INCIDecoder/SkinSort/Skincarisma. CosIng claim authority and ODbL classification/obligations remain explicit review decisions.
 
-**(c) Engine:** a ~40-pair curated rules matrix; five interaction classes (irritation / stability / efficacy / synergy / safety) + a `myth` reassurance class; SORT-anchored evidence grades with honest consumer labels (established / plausible / contested / refuted); concentration- and sensitivity-modulated severity; resolution-first verbs (separate_am_pm / alternate_nights / buffer / lower_frequency / no_change / reassure / avoid_refer); detection that is tag-based, both-orders, resolution-aware, idempotent, and runnable offline.
+**(c) Engine:** a bounded whole-corpus authority with explicit unsupported
+coverage; typed molecule/formulation/exposure and pregnancy-versus-
+breastfeeding applicability; exact presentation copy and structured sources;
+two distinct professional exact-hash receipts plus separate regulatory-counsel
+claims/jurisdiction clearance; deterministic, ambiguity-rejecting detection;
+and resolution-first output that remains runnable offline only from the exact
+admitted release.
 
 **(d) Skin cycling:** Bowe's four-night framework, personalised by sensitivity, with conflicts _resolved into_ the cycle and rendered as the spec's calm PM banner + next-acid-night.
 
 **(e) PAO:** preserve printed, explicit label PAO, reviewed catalog PAO, future-gated category estimate, and unknown as distinct states; only physical-package printed or label/catalog-PAO candidates can drive date/countdown/expired/replacement UI. Current category metadata is insufficient authority, so every `category_default` intake/upgrade fails closed until an exact retained server marker, versioned database admission path, and named chemistry review exist; the legacy `ingredient_pao_defaults` relation is purged, sealed, and unusable.
 
-**(f) UI/feel:** Instrument Serif + Hanken Grotesk + mono labels; paper/greige/clay/ink/night; light for shelf/AM, dark for PM/capture; calm, non-alarmist, claim-safe, evidence-honest, resolution-first; user always in control ("Use together anyway"); reassurance surfaces for myths.
+**(f) UI/feel:** Instrument Serif + Hanken Grotesk + mono labels; paper/greige/clay/ink/night; light for shelf/AM, dark for PM/capture; calm, non-alarmist, claim-safe, evidence-honest, resolution-first; user control, evidence labels, reassurance, and actions all come from exact admitted rule bytes.
 
-**(g) Liability:** cosmetic-claim discipline (in-app copy is a claims surface); standing not-medical-advice disclaimer; conservative safety class with clinician routing; **mandatory dermatologist + cosmetic-chemist sign-off** of the rule set (B-DERM-REVIEW, gates launch); versioned, auditable rules; user feedback loop.
+**(g) Liability:** cosmetic-claim discipline (in-app copy is a claims surface); standing not-medical-advice disclaimer; exact-scope safety rules with clinician routing; **mandatory independent dermatologist + cosmetic-chemist/pharmacist exact-hash approvals and separate regulatory-counsel claims/jurisdiction clearance** (B-DERM-REVIEW and B-REG-COUNSEL gate launch); versioned, auditable rules; user feedback loop.
 
 **(h) 7-figure verdict:** yes — it is the paywall, the retention/lock-in engine, and the trust flywheel; defensible on integration + grading + data + privacy + lock-in, **not** on conflict detection alone; the one existential risk is getting the science wrong, which §9 is built to prevent.
 
@@ -557,22 +815,41 @@ The **catalog and rules are non-personal** and carry no privacy weight. The **pe
 
 ## Recommendations
 
-1. **Build the curated rules engine, not ML — and ship the matrix small and correct.** Start with the ~15 validated rows in §4.4, each graded conservatively, each with a fixture test. Grow only via versioned, derm-reviewed additions.
-2. **Make `B-DERM-REVIEW` a hard launch gate.** No `conflict_rules` row — especially any `safety` row — ships without board-certified-dermatologist + cosmetic-chemist sign-off recorded in `reviewed_by`. This is the primary liability control and the primary trust asset.
+1. **Build the curated rules engine, not ML, and ship only an exact
+   independently approved subset.** There is no numeric launch target and no
+   currently validated row.
+2. **Make `B-DERM-REVIEW` a hard launch gate.** No rule ships without detached,
+   exact-hash clinician and cosmetic-chemist/pharmacist approvals plus separate
+   regulatory-counsel claims/jurisdiction clearance. `reviewed_by` is display
+   metadata only.
 3. **Stand up the three-component offline pipeline now (build-order #2).** Use only reviewed CosIng and OBF artifacts bound to their exact hashes, keep the OBF-derived component separable, and hand-curate the top ~2,000. Store source, snapshot, artifact hash, batch, field-level provenance, and review state on every row. Query only OnSkin's reviewed catalog at runtime; do not send scans or corrections to OBF.
-4. **Match rules on functional tags, not INCI ids,** and carry sub-flags (adapalene, encapsulated) so the BP-exemption and similar nuances are expressible.
-5. **Treat the `myth`/`synergy`/`reassure` behaviour as a first-class differentiator.** Most of the category only warns; OnSkin's ability to credibly say "this is fine / this is good together" is unique trust equity — design surfaces for it (§7.8).
+4. **Use functional tags only for candidate discovery.** Admission and
+   exemptions bind exact molecules, products/formulations, exposure context,
+   evidence, and hashes; generic `encapsulated` is never an exemption.
+5. **Treat exact-proposition reassurance as a liability surface.** It may say
+   only what the admitted evidence and reviewers approved; absence of a warning
+   is never generic compatibility or synergy.
 6. **Implement the skin-cycling scheduler as the place conflicts get resolved,** and invest in the PM auto-resolution screen (§7.4) — it is the highest-value, most-demoable moment in the layer.
-7. **Engineer the two-sided liability:** conservative concentration/sensitivity defaults; a separate maximally-conservative safety path that defers to clinicians; claim-safe copy everywhere; a standing not-medical-advice disclaimer; versioned rules; a user feedback loop.
+7. **Engineer the two-sided liability:** pair-specific exposure logic,
+   pregnancy/breastfeeding separation, unsupported coverage, calm reviewed
+   copy, detached exact-hash approvals, supporting disclaimers, and feedback.
 8. **Handle freshness gaps honestly:** preserve the truth table's distinct sources, never collapse unknown into an estimate, and never assume a sunscreen has a printed date or a universal numeric PAO.
-9. **Instrument the layer in PostHog** to prove it drives activation/retention (scan→add→conflict→resolution funnels), and wire it to the paywall value props.
+9. **Do not instrument conflict existence or resolution.** Future analytics are
+   limited to consented, closed-registry, low-cardinality non-health events that
+   cannot encode a rule, ingredient/product, severity, reproductive state,
+   shelf, conflict existence, or choice.
 10. **Position the moat correctly in all messaging:** "personalised, evidence-graded routine intelligence that resolves conflicts into your daily plan and stays honest about the science" — not "a conflict checker."
 
 ---
 
 ## Caveats (confidence flags)
 
-- **The ingredient-interaction evidence is genuinely contested and overwhelmingly disease-oriented (SORT grade C).** Reputable sources (Paula's Choice; dermatologists quoted by Glow Recipe) dispute the popular "rules." Every rule must carry an evidence grade and a non-alarmist resolution, and the matrix needs clinical sign-off. _Medium-low confidence on individual pairs; high confidence on the "curated rules engine, evidence-graded, resolution-first" architecture._
+- **Ingredient-interaction evidence is proposition-, molecule-, formulation-,
+  exposure-, and context-specific and often disease-oriented.** Commercial
+  explainers are not review authority. Every admitted rule needs structured
+  primary/authoritative sources, exact-hash dual professional approval,
+  separate counsel clearance, and calm scoped copy. _No current rule is
+  approved._
 - **Specific conflict-pair grades and any category freshness fallback require dermatologist/cosmetic-chemist review; none is a settled launch fact.** Category estimates remain non-actionable and unavailable until the exact catalog-linked rule is approved. _Medium confidence on candidate architecture; external review pending._
 - **Skin cycling is a dermatologist-developed framework, not an RCT-validated protocol.** Frame and personalise it honestly; do not claim clinical superiority. _Medium-high confidence on the framework's provenance and rationale; low confidence in any "clinically proven" outcome claim._
 - **CosIng's exact bulk-download mechanics may have changed** with the Commission's relaunch/migration; the ~15,000 INCI figure and "no legal value" disclaimer are reliable, but verify the export route and consider whether a mirror is needed at build time. _Medium confidence._

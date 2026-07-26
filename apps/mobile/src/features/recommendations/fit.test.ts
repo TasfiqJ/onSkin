@@ -12,10 +12,10 @@ import { DEFAULT_PREFERENCES } from './preferences';
 function ctx(over: Partial<FitContext> = {}): FitContext {
   return {
     sensitivity: 'neutral',
-    pregnancy: false,
+    reproductiveStatus: 'none',
     preferences: DEFAULT_PREFERENCES,
     ownedTags: new Set<FunctionalTag>(),
-    conflictTags: new Set<FunctionalTag>(),
+    conflictTypeIds: new Set<string>(),
     trigger: 'gap',
     ...over,
   };
@@ -27,19 +27,19 @@ const vitaminC = recTypeByKey('vitamin_c_serum')!;
 
 describe('hard exclusions run first. Nothing unsafe is merely down-ranked', () => {
   it('pregnancy hard-excludes a pregnancy-unsafe active (retinoid)', () => {
-    const r = fitScore(retinoid, ctx({ pregnancy: true }));
+    const r = fitScore(retinoid, ctx({ reproductiveStatus: 'pregnant' }));
     expect(r.score).toBeNull();
     expect(r.excludedReason).toBe('pregnancy');
   });
 
   it('a pregnancy-safe active survives in pregnancy', () => {
-    const r = fitScore(vitaminC, ctx({ pregnancy: true }));
+    const r = fitScore(vitaminC, ctx({ reproductiveStatus: 'pregnant' }));
     expect(r.score).not.toBeNull();
     expect(r.excludedReason).toBeNull();
   });
 
-  it('a type whose tag would ADD a conflict is excluded (never recommend a new clash)', () => {
-    const r = fitScore(vitaminC, ctx({ conflictTags: new Set<FunctionalTag>(['vitamin_c']) }));
+  it('a type with an exact conflict disposition is excluded (never recommend a new clash)', () => {
+    const r = fitScore(vitaminC, ctx({ conflictTypeIds: new Set([vitaminC.type]) }));
     expect(r.score).toBeNull();
     expect(r.excludedReason).toBe('conflict');
   });

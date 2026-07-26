@@ -6,7 +6,7 @@ import {
   setActiveHealthProcessingEpoch,
 } from '@/lib/consent/healthProcessingEpoch';
 
-import { detectConflicts, type DetectedConflict } from './engine';
+import { previewDetectConflicts, type DetectedConflict } from './engine';
 import {
   choiceForConflict,
   CONFLICT_CHOICES_INVALID,
@@ -17,7 +17,6 @@ import {
   normalizeConflictChoicesForExport,
   setConflictChoice,
   setConflictOverride,
-  unresolvedConflicts,
 } from './overrides';
 import { STARTER_RULES } from './rules';
 
@@ -35,16 +34,15 @@ vi.mock('@/lib/storage/privateKV', () => ({
 const KEY = 'onskin.conflict.overrides';
 let accountGeneration = 0;
 
-function conflict(): DetectedConflict {
-  const [result] = detectConflicts(
+function candidateConflict(): DetectedConflict {
+  return previewDetectConflicts(
     [
       { id: 'retinol', name: 'Retinol 0.3%', tags: ['retinoid'] },
       { id: 'glycolic', name: 'Glycolic 7%', tags: ['aha'] },
     ],
-    { sensitivity: 'sensitive', pregnancy: false },
+    { sensitivity: 'sensitive', reproductiveStatus: 'none' },
     STARTER_RULES,
-  );
-  return result!;
+  )[0]!;
 }
 
 describe('conflict choice persistence', () => {
@@ -78,59 +76,88 @@ describe('conflict choice persistence', () => {
     await expect(loadConflictChoices()).resolves.toEqual({});
   });
 
-  it('normalizes a legacy override array in memory without rewriting storage', async () => {
-    const current = conflict();
+  it('keeps legacy rows exportable but hashless and permanently dormant', async () => {
+    const current = candidateConflict();
     const key = `${current.rule.id}:glycolic+retinol`;
-    const legacy = JSON.stringify([key, key, '', false]);
+    const legacy = JSON.stringify([key]);
     mocks.storage.set(KEY, legacy);
 
-    await expect(loadConflictChoices()).resolves.toEqual({
+    const choices = await loadConflictChoices();
+    expect(choices).toEqual({
       [key]: {
         choice: 'use_together',
         ruleId: current.rule.id,
         ruleVersion: 1,
         productIds: ['glycolic', 'retinol'],
+        corpusSha256: null,
+        ruleContentSha256: null,
       },
     });
+    expect(choiceForConflict(choices, current)).toBeNull();
+    expect(await getOverriddenKeys()).toEqual(new Set());
     expect(mocks.storage.get(KEY)).toBe(legacy);
   });
 
-  it('fails closed and preserves malformed or future-version state', async () => {
+  it('fails closed while preserving malformed and future-version state', async () => {
     const malformed = '{not-json';
     mocks.storage.set(KEY, malformed);
     await expect(loadConflictChoices()).rejects.toThrow(CONFLICT_CHOICES_INVALID);
     await expect(getConflictChoices()).resolves.toEqual({});
-    await expect(setConflictChoice(conflict(), 'use_together')).rejects.toThrow(
-      CONFLICT_CHOICES_INVALID,
-    );
     expect(mocks.storage.get(KEY)).toBe(malformed);
 
     const futureState = JSON.stringify({ schemaVersion: 2, choices: { future: true } });
     mocks.storage.set(KEY, futureState);
     await expect(loadConflictChoices()).rejects.toThrow(CONFLICT_CHOICES_SCHEMA_UNSUPPORTED);
     await expect(getConflictChoices()).resolves.toEqual({});
-    await expect(setConflictChoice(conflict(), 'use_together')).rejects.toThrow(
-      CONFLICT_CHOICES_SCHEMA_UNSUPPORTED,
-    );
     expect(mocks.storage.get(KEY)).toBe(futureState);
   });
 
-  it('persists both accepted and overridden decisions for the exact pair and rule version', async () => {
-    const current = conflict();
-
-    const accepted = await setConflictChoice(current, 'accept_suggested_timing');
-    expect(choiceForConflict(accepted, current)).toBe('accept_suggested_timing');
-    expect(await getOverriddenKeys()).toEqual(new Set());
-
-    const overridden = await setConflictChoice(current, 'use_together');
-    expect(choiceForConflict(overridden, current)).toBe('use_together');
-    expect(await getOverriddenKeys()).toEqual(new Set([`${current.rule.id}:glycolic+retinol`]));
+  it('rejects candidate and fabricated hash-shaped conflicts before storage', async () => {
+    const candidate = candidateConflict();
+    await expect(setConflictChoice(candidate, 'use_together')).rejects.toThrow(
+      'CONFLICT_CHOICE_NOT_ELIGIBLE',
+    );
+    const fabricated: DetectedConflict = {
+      ...candidate,
+      rule: {
+        ...candidate.rule,
+        corpusSha256: 'a'.repeat(64),
+        ruleContentSha256: 'b'.repeat(64),
+      },
+    };
+    await expect(setConflictChoice(fabricated, 'accept_suggested_timing')).rejects.toThrow(
+      'CONFLICT_CHOICE_NOT_ELIGIBLE',
+    );
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
-  it('normalizes the known legacy timing choice without rewriting it during a read', async () => {
-    const current = conflict();
+  it('rejects safety and reassurance candidates', async () => {
+    const safety = previewDetectConflicts(
+      [{ id: 'retinol', name: 'Retinol', tags: ['retinoid'] }],
+      { sensitivity: 'neutral', reproductiveStatus: 'pregnant' },
+      STARTER_RULES,
+    ).find((item) => item.rule.interactionType === 'safety')!;
+    const reassurance = previewDetectConflicts(
+      [
+        { id: 'niacinamide', name: 'Niacinamide', tags: ['niacinamide'] },
+        { id: 'vitamin-c', name: 'Vitamin C', tags: ['vitamin_c'] },
+      ],
+      { sensitivity: 'neutral', reproductiveStatus: 'none' },
+      STARTER_RULES,
+    ).find((item) => item.rule.interactionType === 'myth')!;
+
+    await expect(setConflictChoice(safety, 'use_together')).rejects.toThrow(
+      'CONFLICT_CHOICE_NOT_ELIGIBLE',
+    );
+    await expect(setConflictChoice(reassurance, 'use_together')).rejects.toThrow(
+      'CONFLICT_CHOICE_NOT_ELIGIBLE',
+    );
+  });
+
+  it('normalizes the known legacy timing choice without activating it', async () => {
+    const current = candidateConflict();
     const key = `${current.rule.id}:glycolic+retinol`;
-    const legacy = JSON.stringify({
+    const legacy = {
       schemaVersion: 1,
       choices: {
         [key]: {
@@ -140,38 +167,26 @@ describe('conflict choice persistence', () => {
           productIds: ['glycolic', 'retinol'],
         },
       },
-    });
-    mocks.storage.set(KEY, legacy);
-
-    const expected = {
-      [key]: {
-        choice: 'accept_suggested_timing',
-        ruleId: current.rule.id,
-        ruleVersion: 1,
-        productIds: ['glycolic', 'retinol'],
-      },
     };
-    await expect(loadConflictChoices()).resolves.toEqual(expected);
-    await expect(getConflictChoices()).resolves.toEqual(expected);
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-    expect(normalizeConflictChoicesForExport(JSON.parse(legacy))).toEqual({
-      schemaVersion: 1,
-      choices: expected,
-    });
+    mocks.storage.set(KEY, JSON.stringify(legacy));
 
-    await expect(setConflictChoice(current, 'use_together')).resolves.toMatchObject({
-      [key]: { choice: 'use_together' },
+    const choices = await loadConflictChoices();
+    expect(choices[key]).toMatchObject({
+      choice: 'accept_suggested_timing',
+      corpusSha256: null,
+      ruleContentSha256: null,
     });
-    expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({
+    expect(choiceForConflict(choices, current)).toBeNull();
+    expect(normalizeConflictChoicesForExport(legacy)).toEqual({
       schemaVersion: 1,
-      choices: { [key]: { choice: 'use_together' } },
+      choices,
     });
   });
 
-  it('refuses to partially apply or overwrite an unknown current record', async () => {
-    const current = conflict();
+  it('refuses unknown current-record fields instead of partially applying them', async () => {
+    const current = candidateConflict();
     const key = `${current.rule.id}:glycolic+retinol`;
-    const unknown = JSON.stringify({
+    const unknown = {
       schemaVersion: 1,
       choices: {
         [key]: {
@@ -182,116 +197,30 @@ describe('conflict choice persistence', () => {
           futureField: true,
         },
       },
-    });
-    mocks.storage.set(KEY, unknown);
+    };
+    mocks.storage.set(KEY, JSON.stringify(unknown));
 
     await expect(loadConflictChoices()).rejects.toThrow(CONFLICT_CHOICES_INVALID);
-    await expect(getConflictChoices()).resolves.toEqual({});
-    await expect(setConflictChoice(current, 'use_together')).rejects.toThrow(
-      CONFLICT_CHOICES_INVALID,
-    );
-    expect(mocks.storage.get(KEY)).toBe(unknown);
-    expect(normalizeConflictChoicesForExport(JSON.parse(unknown))).toEqual({
+    expect(normalizeConflictChoicesForExport(unknown)).toEqual({
       export_status: 'unrecognized_conflict_choice_schema',
-      stored_value: JSON.parse(unknown),
+      stored_value: unknown,
     });
   });
 
-  it('does not apply an old choice after the reviewed rule version changes', async () => {
-    const current = conflict();
-    const choices = await setConflictChoice(current, 'use_together');
-    const updated = { ...current, rule: { ...current.rule, ruleVersion: 2 } };
-
-    expect(choiceForConflict(choices, updated)).toBeNull();
-    expect(unresolvedConflicts([updated], choices)).toEqual([updated]);
-  });
-
-  it('keeps safety and reassurance rows ineligible for a local scheduling choice', async () => {
-    const safety = detectConflicts(
-      [{ id: 'retinol', name: 'Retinol', tags: ['retinoid'] }],
-      { sensitivity: 'neutral', pregnancy: true },
-      STARTER_RULES,
-    ).find((item) => item.rule.interactionType === 'safety')!;
-
-    await expect(setConflictChoice(safety, 'use_together')).rejects.toThrow(
-      'CONFLICT_CHOICE_NOT_ELIGIBLE',
-    );
-
-    const reassurance = detectConflicts(
-      [
-        { id: 'niacinamide', name: 'Niacinamide', tags: ['niacinamide'] },
-        { id: 'vitamin-c', name: 'Vitamin C', tags: ['vitamin_c'] },
-      ],
-      { sensitivity: 'neutral', pregnancy: false },
-      STARTER_RULES,
-    ).find((item) => item.rule.interactionType === 'myth')!;
-    await expect(setConflictChoice(reassurance, 'use_together')).rejects.toThrow(
-      'CONFLICT_CHOICE_NOT_ELIGIBLE',
-    );
-    expect(mocks.storage.has(KEY)).toBe(false);
-  });
-
-  it('never lets a stored choice suppress a safety-class conflict', async () => {
-    const current = conflict();
-    const choices = await setConflictChoice(current, 'use_together');
-    const safetyClone: DetectedConflict = {
-      ...current,
-      rule: { ...current.rule, interactionType: 'safety' },
-    };
-
-    expect(choiceForConflict(choices, safetyClone)).toBeNull();
-    expect(unresolvedConflicts([safetyClone], choices)).toEqual([safetyClone]);
-  });
-
-  it('falls back safely for rendering but propagates private-read failures on writes', async () => {
-    mocks.getPrivateItem.mockRejectedValue(new Error('private storage unavailable'));
-    mocks.updatePrivateItem.mockRejectedValue(new Error('private storage unavailable'));
-
-    await expect(getConflictChoices()).resolves.toEqual({});
-    await expect(loadConflictChoices()).rejects.toThrow('private storage unavailable');
-    await expect(setConflictChoice(conflict(), 'use_together')).rejects.toThrow(
-      'private storage unavailable',
-    );
-  });
-
-  it('propagates write failures and does not claim the new choice exists', async () => {
-    mocks.updatePrivateItem.mockRejectedValueOnce(new Error('write failed'));
-
-    await expect(setConflictChoice(conflict(), 'use_together')).rejects.toThrow('write failed');
-    expect(mocks.storage.has(KEY)).toBe(false);
-  });
-
-  it('serializes concurrent decisions without dropping either product pair', async () => {
-    const conflicts = detectConflicts(
-      [
-        { id: 'retinol', name: 'Retinol 0.3%', tags: ['retinoid'] },
-        { id: 'glycolic', name: 'Glycolic 7%', tags: ['aha'] },
-        { id: 'lactic', name: 'Lactic 5%', tags: ['aha'] },
-      ],
-      { sensitivity: 'sensitive', pregnancy: false },
-      STARTER_RULES,
-    ).filter((item) => item.rule.resolutionType === 'alternate_nights');
-
-    await Promise.all([
-      setConflictChoice(conflicts[0]!, 'accept_suggested_timing'),
-      setConflictChoice(conflicts[1]!, 'use_together'),
-    ]);
-
-    const stored = await loadConflictChoices();
-    expect(Object.keys(stored)).toHaveLength(2);
-    expect(choiceForConflict(stored, conflicts[0]!)).toBe('accept_suggested_timing');
-    expect(choiceForConflict(stored, conflicts[1]!)).toBe('use_together');
-  });
-
-  it('keeps the legacy adapter deterministic and ignores malformed keys', async () => {
-    await setConflictOverride('not-a-pair', true);
-    expect(mocks.storage.has(KEY)).toBe(false);
-
-    const current = conflict();
-    const key = `${current.rule.id}:retinol+glycolic`;
+  it('legacy adapter cannot create an override and can only remove dormant state', async () => {
+    const current = candidateConflict();
+    const key = `${current.rule.id}:glycolic+retinol`;
     await setConflictOverride(key, true);
-    expect(await getOverriddenKeys()).toEqual(new Set([`${current.rule.id}:glycolic+retinol`]));
+    expect(mocks.storage.has(KEY)).toBe(false);
+
+    mocks.storage.set(KEY, JSON.stringify([key]));
     await setConflictOverride(key, false);
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('falls back safely when private reads fail', async () => {
+    mocks.getPrivateItem.mockRejectedValue(new Error('private storage unavailable'));
+    await expect(getConflictChoices()).resolves.toEqual({});
+    await expect(loadConflictChoices()).rejects.toThrow('private storage unavailable');
   });
 });

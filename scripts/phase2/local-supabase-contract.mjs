@@ -32,6 +32,10 @@ const [
   catalogCurationRehearsal,
   skinProfileUpgradeRehearsal,
   catalogOperatorUpgradeRehearsal,
+  clinicalContentUpgradeRehearsal,
+  clinicalContentLegacySealTests,
+  catalogReleaseLintUpgradeRehearsal,
+  catalogReleaseLintContractTests,
   accountDeletionMigration,
   readme,
   workflow,
@@ -56,6 +60,10 @@ const [
   read('scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql'),
   read('scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql'),
   read('scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql'),
+  read('scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql'),
+  read('supabase/tests/database/clinical_content_legacy_seal.test.sql'),
+  read('scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql'),
+  read('supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -87,10 +95,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 64, `Expected 64 migration files; found ${migrations.length}.`);
+check(migrations.length === 66, `Expected 66 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260726000065_'),
-  'The latest migration must remain 20260726000065.',
+  migrations.at(-1)?.startsWith('20260726000067_'),
+  'The latest migration must remain 20260726000067.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -173,7 +181,10 @@ check(
 );
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
 check(
-  /run CAT-08 two-connection revocation rehearsal/u.test(runner) &&
+  /catalog-operator-dblink-target\.sql/u.test(runner) &&
+    /host\.docker\.internal/u.test(runner) &&
+    /test\.cat08_dblink_port[\s\S]*?ports\[2\]/u.test(runner) &&
+    /run CAT-08 two-connection revocation rehearsal/u.test(runner) &&
     /'test', 'db', '--local', 'supabase\/tests\/rehearsal'/u.test(runner),
   'The full local DB gate must execute the committed CAT-08 two-connection rehearsal.',
 );
@@ -192,12 +203,64 @@ check(
     /pg_catalog\.pg_blocking_pids\(activity\.pid\)/u.test(catalogOperatorRevocationRehearsal) &&
     /'transactionid',[\s\S]*?'cat08_race_a'/u.test(catalogOperatorRevocationRehearsal) &&
     /'transactionid',[\s\S]*?'cat08_race_b'/u.test(catalogOperatorRevocationRehearsal) &&
+    (
+      catalogOperatorRevocationRehearsal.match(
+        /pg_catalog\.array_agg\(result\)[\s\S]{0,100}dblink_get_result/gu,
+      ) ?? []
+    ).length === 4 &&
+    (
+      catalogOperatorRevocationRehearsal.match(
+        /as drained\(result text\)/gu,
+      ) ?? []
+    ).length === 4 &&
+    (
+      catalogOperatorRevocationRehearsal.match(
+        /extensions\.dblink_get_result\(/gu,
+      ) ?? []
+    ).length === 8 &&
     !/p_sleep_seconds/u.test(catalogOperatorRevocationRehearsal) &&
     !/hosted_verification_passed/u.test(catalogOperatorRevocationRehearsal) &&
     /'cat08_race_b',[\s\S]*?'Lock'/u.test(catalogOperatorRevocationRehearsal) &&
     /'cat08_race_a',[\s\S]*?'Lock'/u.test(catalogOperatorRevocationRehearsal) &&
     /42501:CATALOG_OPERATOR_CAPABILITY_DENIED/u.test(catalogOperatorRevocationRehearsal) &&
     /42501:CATALOG_OPERATOR_GRANT_REQUIRED/u.test(catalogOperatorRevocationRehearsal) &&
+    /CAT08_REHEARSAL_EDGE_MEMBERSHIP_DRIFT/u.test(catalogOperatorRevocationRehearsal) &&
+    /grant catalog_operator_edge to postgres/u.test(catalogOperatorRevocationRehearsal) &&
+    /revoke catalog_operator_edge from postgres/u.test(catalogOperatorRevocationRehearsal) &&
+    /CAT08_REHEARSAL_RUNNER_ROLE_INVALID/u.test(catalogOperatorRevocationRehearsal) &&
+    /CAT08_REHEARSAL_DBLINK_TARGET_INVALID/u.test(catalogOperatorRevocationRehearsal) &&
+    /CAT08_REHEARSAL_CONNECTION_ROLE_DRIFT/u.test(catalogOperatorRevocationRehearsal) &&
+    /CAT08_REHEARSAL_CONNECTION_CALLER_INVALID/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /extensions\.gen_random_bytes\(32\)/u.test(catalogOperatorRevocationRehearsal) &&
+    /create role cat08_rehearsal_connection login nosuperuser noinherit/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /test\.cat08_dblink_host/u.test(catalogOperatorRevocationRehearsal) &&
+    /test\.cat08_dblink_port/u.test(catalogOperatorRevocationRehearsal) &&
+    /\\ir generated\/catalog-operator-dblink-target\.sql/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /user=cat08_rehearsal_connection password=' \|\|[\s\S]*?test\.cat08_dblink_password/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /security definer[\s\S]*?session_user <> 'cat08_rehearsal_connection'/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /drop function[\s\S]*?cat08_rehearsal_revoke_then_latch\(uuid, bigint\)/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /drop role cat08_rehearsal_connection/u.test(catalogOperatorRevocationRehearsal) &&
+    /set_config\('test\.cat08_dblink_password', '', false\)/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /set_config\('test\.cat08_dblink_host', '', false\)/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
+    /set_config\('test\.cat08_dblink_port', '', false\)/u.test(
+      catalogOperatorRevocationRehearsal,
+    ) &&
     /dblink_disconnect\('cat08_race_a'\)/u.test(catalogOperatorRevocationRehearsal) &&
     /dblink_disconnect\('cat08_race_b'\)/u.test(catalogOperatorRevocationRehearsal),
   'CAT-08 rehearsal must prove action-first and session-revocation-first commit order with real independent sessions.',
@@ -346,6 +409,63 @@ check(
       workflow,
     ),
   '0065 exact-byte PostgreSQL 15/17 rehearsal must repair both transition conflict targets while preserving the Edge ACL and fail-closed function defaults.',
+);
+check(
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000066_legacy_clinical_content_immutability\.sql/u.test(
+    clinicalContentUpgradeRehearsal,
+  ) &&
+    /CORE01_0066_UPGRADE_DATA_NOT_PRESERVED/u.test(clinicalContentUpgradeRehearsal) &&
+    /CORE01_0066_API_TABLE_PRIVILEGE_SURVIVED/u.test(clinicalContentUpgradeRehearsal) &&
+    /CORE01_0066_RLS_POSTURE_INVALID/u.test(clinicalContentUpgradeRehearsal) &&
+    /CORE01_0066_TRIGGER_POSTURE_INVALID/u.test(clinicalContentUpgradeRehearsal) &&
+    /CORE01_0066_GUARD_POSTURE_INVALID/u.test(clinicalContentUpgradeRehearsal) &&
+    /clinical-content-0066-upgrade-postgres-rehearsal: pass/u.test(
+      clinicalContentUpgradeRehearsal,
+    ) &&
+    /database:\s*clinical_content_upgrade_0066[\s\S]{0,160}script:\s*clinical-content-0066-upgrade-postgres-rehearsal\.sql/u.test(
+      workflow,
+    ),
+  '0066 exact-byte PostgreSQL rehearsal must preserve the historical fixtures while sealing every API-role and migration-owner mutation path.',
+);
+check(
+  /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
+    /the clinical legacy seal runs against the exact 66-migration source history/u.test(
+      clinicalContentLegacySealTests,
+    ) &&
+    /the migration history includes the legacy seal and reaches the catalog-release lint contract head/u.test(
+      clinicalContentLegacySealTests,
+    ) &&
+    /all historical rule rows survive every denied owner and API mutation probe/u.test(
+      clinicalContentLegacySealTests,
+    ),
+  '0066 pgTAP must bind the 66-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
+);
+check(
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000067_catalog_release_temp_table_lint_contract\.sql/u.test(
+    catalogReleaseLintUpgradeRehearsal,
+  ) &&
+    /CORE02_0067_LINT_CONTRACT_INVALID/u.test(catalogReleaseLintUpgradeRehearsal) &&
+    /CORE02_0067_RELEASE_ACL_DRIFT/u.test(catalogReleaseLintUpgradeRehearsal) &&
+    /catalog-release-0067-lint-contract-postgres-rehearsal: pass/u.test(
+      catalogReleaseLintUpgradeRehearsal,
+    ) &&
+    /database:\s*catalog_release_lint_contract_0067[\s\S]{0,160}script:\s*catalog-release-0067-lint-contract-postgres-rehearsal\.sql/u.test(
+      workflow,
+    ),
+  '0067 exact-byte PostgreSQL rehearsal must supply the checker-only runtime-temp-table shape while preserving the wrapper ACL and runtime path.',
+);
+check(
+  /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
+    /the catalog release lint contract runs against the exact 66-migration source history/u.test(
+      catalogReleaseLintContractTests,
+    ) &&
+    /the migration history reaches the exact temporary-table lint contract head/u.test(
+      catalogReleaseLintContractTests,
+    ) &&
+    /only the exact temporary-table wrapper carries the checker shape/u.test(
+      catalogReleaseLintContractTests,
+    ),
+  '0067 pgTAP must bind the 66-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
 );
 check(
   /select plan\(218\)/u.test(catalogImportLifecycleTests) &&

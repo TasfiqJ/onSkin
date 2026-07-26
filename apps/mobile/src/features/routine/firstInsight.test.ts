@@ -16,6 +16,8 @@ const basePlan: GeneratedPlan = {
   unplacedProducts: [],
   gaps: [],
   conflicts: [],
+  conflictCoverageStatus: 'compatible',
+  unsupportedConflictPairs: [],
 };
 
 function plan(overrides: Partial<GeneratedPlan>): GeneratedPlan {

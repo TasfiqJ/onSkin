@@ -6,6 +6,14 @@ _The monetization + acquisition engine · the conversion-model choice (reverse t
 >
 > **Revision note (this edition).** An earlier draft recommended a _hard_ onboarding paywall as the settled default. On review, that mismatches how skincare apps actually acquire users (discovery channels, not high-intent search) and contradicts the word-of-mouth/trust acquisition thesis. This edition makes the **reverse trial the default conversion model** (A/B-tested against a hard paywall), adds the **go-to-market section (§11)**, and recommends **testing a premium price** above the original $39.99. The reasoning is in §2, §5, §10, and §11.
 
+> **Current publication boundary (2026-07-26):** the historical interaction,
+> sequencing, skin-cycling, widget, and professional-review propositions are
+> target-state copy, not an authorized description of the current
+> zero-admission build. Until the exact capability and review gates pass, the
+> runtime paywall may sell only functionality that is actually available, must
+> disclose that health-related guidance is under independent review, and must
+> not claim dermatologist review or imply payment unlocks unavailable guidance.
+
 ---
 
 ## TL;DR
@@ -101,14 +109,23 @@ This captures both populations, hard-walls no one, and — crucially — **keeps
 Placed **after the personalization reveal** (docs/01 §2 step 10), the editorial-clinical paywall (Instrument Serif headline, Hanken Grotesk body, paper/greige/clay/ink palette; docs/00 §8):
 
 - **A personalized headline** tying the plan to the quiz result ("Your plan for dry, sensitive skin is ready").
-- **The four value props** (spec p7), each a line with a calm icon: _Routine intelligence — order, timing, skin cycling_ · _Ingredient conflict checks, with evidence grades_ · _Private photo timeline — on-device only_ · _Reminders, streaks & home-screen widgets._
+- **The current zero-admission value props**, each a line with a calm icon:
+  _Routine builder — products and missing steps_ · _Ingredient and shelf
+  details, with source status_ · _Private photo timeline — on-device only_ ·
+  _Reminders and a forgiving streak_. The historical conflict, sequencing,
+  skin-cycling, widget, and professional-review claims remain target-state copy
+  gated by exact shipped capability and review evidence.
 - **The offer, with the billed amount most conspicuous** (3.1.2): "**Start 14 days free**, then **[$49.99]/year**" — the **annual price is the largest, clearest element**.
 - **The plan selector** — annual **pre-selected**; monthly secondary. **No free-trial toggle on iOS** (Apple rejects it under 3.1.2); a single clear annual-with-trial offer.
 - **Two honest paths (the reverse trial, §2.1):** the primary CTA **"Start free trial"** → store purchase sheet (§3.3); a clearly visible **"Explore first"** → the **reverse trial** (7 days full Pro, no card) → later drop to the free tier + re-present.
 - **The trial-reminder reassurance** (spec): "We'll remind you 2 days before the trial ends · Cancel anytime."
 - **The auto-renew disclosure** (3.1.2 / ARLs), plain copy below the CTA: the trial converts to the annual price, auto-renews unless cancelled ≥24h before period end, cancel anytime in account settings, ToS + Privacy links.
 - **Functional Terms of Use + Privacy Policy links and a Restore Purchases control**, tappable on the paywall itself (3.1.2 requires all three in the binary).
-- **The trust block placed _after_ the plans** (Flo pattern, docs/01 §9): dermatologist/cosmetic-chemist credibility (the B-DERM-REVIEW sign-off), privacy reassurance ("photos stay on your device · no data sales · no AI scores"), and social proof — _below_ the offer.
+- **The trust block placed _after_ the plans**: while B-DERM-REVIEW is open, it
+  states that health-related guidance is under independent review and uses only
+  supported privacy claims ("photos stay on your device · no data sales"). A
+  dermatologist/cosmetic-chemist credibility claim may appear only after the
+  exact B-DERM-REVIEW evidence is approved for the shipped build.
 
 #### 3.2 Contextual / soft paywalls
 

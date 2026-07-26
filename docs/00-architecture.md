@@ -1,10 +1,27 @@
 # Document 0 — Master Technical Architecture for a Production-Grade Skincare Routine App (iOS + Android)
 
+> **Historical research input, not the active launch or legal authority.** The
+> accepted iOS-only, provisional U.S.-only launch plan and the current
+> evidence-based legal gates in `docs/hugeToDo/`, `docs/phase-3/`, and
+> `docs/ARCHITECTURE.md` supersede categorical jurisdiction, medical-device,
+> vendor, price, schedule, and readiness statements below. Applicability and
+> classification depend on the final entity, relationships, intended use,
+> functions, data flows, users, claims, vendors, and release markets. Qualified
+> counsel and the relevant regulator/vendor decisions remain required.
+
 ## TL;DR
 
 - **Build it in React Native (Expo SDK 52+, New Architecture/Fabric) with a Supabase Postgres backend, RevenueCat for subscriptions, and a phased AI strategy that ships guided photo capture + slider comparison FIRST (no AI claims) before any cloud "skin analysis."** This stack is the best fit for a senior team optimizing for one TypeScript codebase, mature camera/widget tooling, predictable infra costs, and Postgres's relational power for the ingredient-conflict graph.
 - **The ingredient intelligence layer should be a curated rules engine, not ML.** Candidate CosIng and Open Beauty Facts (OBF) data may enter the build pipeline only as separately acquired, exact-SHA-256-bound offline artifacts with recorded source/date and review; the app never sends a user's search or barcode to either source and never publishes user corrections to OBF. CosIng remains an informative reference, not a safety or legal approval. Keep the OBF-derived component separable from proprietary/editorial data until counsel classifies the exact database design and approves any ODbL attribution, share-alike, or offer-of-data duties. Then hand-curate the top ~2,000 products and a conflict-rules matrix of roughly 30–60 ingredient pairs that actually matter.
-- **Treat skin photos as sensitive/health-adjacent data from day one.** You are almost certainly NOT HIPAA-covered, but Washington's My Health My Data Act (MHMDA, in force since March 31, 2024), GDPR special-category data, and CCPA/CPRA absolutely apply. An on-device-first photo pipeline with explicit consent lets you credibly say "your photos never train AI and never leave your device."
+- **Treat skin photos and skin inferences as sensitive/health-adjacent data from
+  day one.** The app uses the current U.S. Wave 1 consumer-health controls as a
+  conservative launch gate. HIPAA status depends on the entity and relationship
+  to a covered entity or business associate; CCPA/CPRA depends on statutory
+  scope and thresholds; Washington MHMDA and every other state-law
+  classification require review against the final facts. On-device-first
+  architecture supports data minimization, but only exact-build and observed
+  traffic evidence can support a public statement that a data class stays on
+  device or is not used for model training.
 
 ## Key Findings
 
@@ -20,7 +37,17 @@
 
 6. **Notifications/widgets/background: local-first, with careful Android 14 handling.** Routine reminders should be local notifications, not push. Android 14+ denies `SCHEDULE_EXACT_ALARM` by default for new installs targeting API 33+; a routine reminder is best served by inexact alarms / WorkManager unless you qualify for `USE_EXACT_ALARM` (calendar/alarm apps only). iOS time-sensitive notifications require justification. Widgets: iOS WidgetKit is SwiftUI-only — share data via App Groups + UserDefaults, refresh via `WidgetCenter.reloadAllTimelines()` (used sparingly — Apple throttles timeline reloads); Android uses Glance. Per Evan Bacon's analysis of the top 10K iOS apps, "20.5% of the top 10k apps have a Home Screen Widget" — a well-trodden path. Live Activities (via `expo-widgets`/ActivityKit, iOS 16.2+) are a strong fit for a skin-cycling "tonight's step" display. For push (announcements, win-backs), OneSignal or FCM both work; native APNs/FCM + Supabase Edge Functions is the lock-in-free path.
 
-7. **Compliance: GDPR + CCPA/CPRA + Washington MHMDA, likely not HIPAA.** Skin photos plus health inferences make you a "regulated entity" under Washington's My Health My Data Act, which took effect March 31, 2024 (June 30, 2024 for small businesses) per the WA Attorney General. Violations are per se Consumer Protection Act violations carrying civil penalties "up to $7,500 per violation," with courts able to treble actual damages "up to three times... or $25,000, whichever is less" (Stoel Rives LLP FAQ); the Act also carries a private right of action (first class action filed Feb 2025). It requires a standalone Consumer Health Data Privacy Policy linked on your homepage, separate affirmative consent for collection vs sharing, and signed authorization for any sale. GDPR likely treats skin photos as special-category health data. Illinois BIPA risk is low IF you never extract a biometric faceprint (on-device face detection for framing alone, with no template stored, avoids the trigger — but get legal review). Architecture that lets you say "photos never leave your device / never train AI": on-device capture + on-device face detection + client-side encryption, with cloud storage opt-in only.
+7. **Compliance is fact- and jurisdiction-specific; use the conservative U.S.
+   Wave 1 gate until counsel classifies the release.** Skin photos and inferred
+   skin information can fall within consumer-health, biometric, general
+   privacy, breach, and consumer-protection regimes. Washington MHMDA is treated
+   as a launch gate for the planned U.S. release; CCPA/CPRA, HIPAA, BIPA, and
+   other state laws require entity-, threshold-, relationship-, purpose-, and
+   data-flow-specific analysis. Canadian and EU storefronts remain closed
+   pending their own gates. On-device face framing without a retained identity
+   template is a risk-minimizing design fact, not a legal classification.
+   Public device-only/no-training claims require exact-binary, storage, vendor,
+   and network proof plus counsel-reviewed copy.
 
 8. **Design system: editorial-clinical hybrid, serif display + clean sans body.** The premium beauty/wellness convergence in 2026 pairs a high-contrast display serif (heritage, editorial — think Canela, GT Sectra; budget Google-Fonts route: Fraunces, Cormorant) with a clean grotesque/neo-grotesque sans for body and UI (Söhne, or free routes Inter/SF Pro/Sen/Tenor Sans). Color: clinical-clean neutrals (off-white, warm greige) with a single restrained accent, full dark-mode support. Premium foundry licensing (Klim, Commercial Type) runs into real money for app embedding; Google Fonts/SIL OFL routes are zero-cost and safe. Standards: 8pt grid, design tokens (Figma → NativeWind/Tailwind), Reanimated 3 + Skia for motion, Lottie for celebratory streak moments, WCAG 2.2 AA, Dynamic Type, careful contrast for text-over-photography, restrained haptics.
 
@@ -40,7 +67,7 @@ Flutter remains the runner-up — choose it only if the team is Dart-native or i
 
 ### 2. Backend Architecture
 
-Postgres suits the ingredient graph: `ingredients`, `products`, `product_ingredients` (join with position + concentration_band), `conflict_rules` (ingredient_a, ingredient_b, severity, evidence_grade, resolution, citation). RLS policies (`auth.uid() = user_id`) enforce that users only ever read/write their own photos and routines at the database layer — defense that survives an application bug. Storage: compressed photos at ~150–400KB each × 50–200 photos/user/year is modest; Supabase Storage egress ($0.09/GB over included) is the cost to watch. Edge Functions (Deno) handle ShopMy webhooks, RevenueCat webhooks, and scheduled replenishment nudges; cold starts are acceptable for these non-interactive paths. Realtime is minimal (maybe community + sync), so it's a non-factor. Vendor lock-in is low: Supabase is open-source Postgres; your schema is portable to any Postgres host. HIPAA posture is likely unnecessary (you're not a covered entity/business associate), but Supabase offers HIPAA as a paid add-on on Team/Enterprise if a future B2B2C derm partnership demands it.
+Postgres suits the ingredient graph: `ingredients`, `products`, `product_ingredients` (join with position + concentration_band), `conflict_rules` (ingredient_a, ingredient_b, severity, evidence_grade, resolution, citation). RLS policies (`auth.uid() = user_id`) enforce that users only ever read/write their own photos and routines at the database layer — defense that survives an application bug. Storage: compressed photos at ~150–400KB each × 50–200 photos/user/year is modest; Supabase Storage egress is a cost to verify against the current approved plan. Edge Functions (Deno) handle reviewed service workflows; cold starts must be measured for the exact release paths. Realtime is minimal. Vendor lock-in is reduced, not eliminated, by using Postgres and source-controlled contracts. HIPAA status cannot be inferred from the consumer-app label: counsel must assess the final entity, relationships, data flows, and whether the app acts for a covered entity or business associate. Any vendor HIPAA posture, BAA, region, product tier, and control set must be verified in the executed production agreement.
 
 ### 3. Ingredient & Product Database Pipeline
 
@@ -68,9 +95,12 @@ Local notifications for routine reminders with proper timezone handling. Android
 - Separate affirmative consent for collection vs sharing; signed authorization before any sale; honor withdrawal.
 - On-device capture + on-device face detection (no faceprint template stored → mitigates BIPA) + client-side encryption; cloud upload opt-in only.
 - Encryption in transit (TLS) and at rest; RLS for per-user isolation.
-- Data access/deletion flows (including backups) for GDPR/CCPA/MHMDA rights.
+- Data access/deletion/withdrawal flows, including processors, third parties, and
+  backups, under every law counsel determines applies to the final release.
 - App Store privacy nutrition labels accurate to actual data flows.
-- Age gate 13+ (COPPA); consider 16+ for GDPR simplicity.
+- Preserve the current fail-closed declared-age-range and minors policy gates;
+  age thresholds and regional behavior require exact-market legal and Apple
+  review and must not be chosen merely for perceived regulatory simplicity.
 - Geofencing around healthcare facilities is outright banned under MHMDA — never do location-based health targeting.
 
 ### 8. Design System Foundations

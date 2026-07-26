@@ -1,10 +1,8 @@
 import type { GoalId } from '@onskin/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
-import type {
-  PregnancySafetyMode,
-  PregnancySafetyStatus,
-} from '@/features/intelligence/pregnancySafety';
+import type { ConflictSafetyContext } from '@/features/intelligence/rules';
+import type { PregnancySafetyMode } from '@/features/intelligence/pregnancySafety';
 
 export type MoistureBalance = 'dry' | 'balanced' | 'oily';
 
@@ -13,7 +11,7 @@ export type RoutinePlanProfileLabelInput = {
   moisture: MoistureBalance;
   pregnancy: boolean;
   pregnancySafety?: PregnancySafetyMode;
-  pregnancyStatus?: PregnancySafetyStatus;
+  pregnancyStatus?: ConflictSafetyContext | 'none';
   goals: GoalId[];
 };
 
@@ -38,8 +36,8 @@ export function routinePlanProfileLabel(
     .filter((trait) => trait !== 'balanced' && trait !== 'neutral')
     .map((trait) => trait.toUpperCase());
 
-  if (profile.pregnancy) traits.push('PREGNANCY-AWARE');
-  else if (profile.pregnancySafety === 'caution') traits.push('SAFETY-FIRST');
+  // Reproductive-status data is intentionally omitted from this coarse,
+  // glanceable subtitle. Exact status remains available to private evaluators.
   if (traits.length === 0) return 'BUILT FROM YOUR SHELF';
   return `BUILT FOR ${traits.join(', ')} SKIN`;
 }

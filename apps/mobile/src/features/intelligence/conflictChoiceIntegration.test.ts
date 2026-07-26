@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
-const ROOT_DIR = fileURLToPath(new URL('../../../../../', import.meta.url));
 
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
@@ -45,7 +44,7 @@ describe('conflict choice integration contracts', () => {
     expect(scheduler).toContain('if (!canUseRoutineCadence())');
   });
 
-  it('suppresses repeat separation copy for use-together while keeping the guided schedule firm', () => {
+  it('keeps future admitted choices version-matched without hardcoded product-detail guidance', () => {
     const todayProjection = readSource('features/today/routineProjection.ts');
     const week = readSource('app/cycle/week.tsx');
     const whyTonight = readSource('app/cycle/why-tonight.tsx');
@@ -54,26 +53,19 @@ describe('conflict choice integration contracts', () => {
     expect(todayProjection).toContain('hasUseTogetherChoiceBetween(');
     expect(week).toContain('hasUseTogetherChoiceBetween(');
     expect(whyTonight).toContain('Guided check-offs keep one potent active per night');
-    expect(detail).toContain('Guided check-offs stay on the reviewed one-active schedule.');
-    expect(detail).toContain("resolved ? 'Change →' : 'Review →'");
+    expect(detail).toContain('choiceForConflict(data.conflictChoices, c)');
+    expect(detail).toContain('{c.rule.copy.primaryActionLabel}');
+    expect(detail).not.toContain('Guided check-offs stay on the reviewed one-active schedule.');
+    expect(detail).not.toContain("resolved ? 'Change →' : 'Review →'");
   });
 
-  it('gives the server mirror one canonical idempotent identity', () => {
-    const migration = readFileSync(
-      `${ROOT_DIR}/supabase/migrations/20260710000037_routine_conflict_choice_identity.sql`,
-      'utf8',
-    );
+  it('keeps conflict choices local-only and emits no health-data server mirror', () => {
     const route = readSource('app/conflict/[ruleId].tsx');
 
-    expect(migration).toContain('routine_conflicts_choice_pair_canonical');
-    expect(migration).toContain("status in ('accepted', 'overridden')");
-    expect(migration).toContain("'accept_suggested_timing'");
-    expect(migration).toContain('first_value(id) over');
-    expect(migration).toContain('from pg_constraint');
-    expect(migration).toContain('product_a_id::text < product_b_id::text');
-    expect(migration).toContain('create unique index if not exists');
-    expect(migration).toContain('(user_id, rule_id, product_a_id, product_b_id)');
-    expect(route).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
+    expect(route).toContain('local-only');
+    expect(route).not.toContain('routine_conflicts');
+    expect(route).not.toContain('.upsert(');
+    expect(route).not.toContain('onConflict:');
   });
 
   it('mirrors shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {

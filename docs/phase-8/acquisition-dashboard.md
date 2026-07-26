@@ -2,19 +2,26 @@
 
 The dashboard must show whether the public growth loop creates qualified users without leaking sensitive context.
 
-## Funnel
+## Conflict-card measurement boundary
 
-| Stage                  | Event                           | Required dimensions                                              |
-| ---------------------- | ------------------------------- | ---------------------------------------------------------------- |
-| Share card exported    | `share_card_export_succeeded`   | `creative_variant`, `share_id`                                   |
-| Share link opened      | `landing_viewed`                | `source`, `campaign`, `creative_variant`, `share_id`, `platform` |
-| Store click            | `store_click`                   | `store`, `source`, `campaign`, `share_id`                        |
-| Install attributed     | `install`                       | `store`, `source`, `campaign`                                    |
-| Onboarding started     | `onboarding_started`            | `source`, `campaign`                                             |
-| First product added    | `first_product_added`           | `source`, `campaign`                                             |
-| First reviewed insight | `first_reviewed_insight_viewed` | `source`, `campaign`                                             |
-| Trial started          | `trial_started`                 | `source`, `campaign`, `store`                                    |
-| Paid started           | `paid_started`                  | `source`, `campaign`, `store`                                    |
+The current share-card exporter and `/s/:shareId` destination exist only for a
+conflict card. They emit no analytics and carry no campaign, content, creative,
+build, platform, or share-ID attribution query. A generic event name would not
+make this safe: its conflict-only execution context would still reveal
+health-adjacent interaction state. Measure the ordinary, non-clinical product
+and routine funnel only after the recipient independently enters those surfaces.
+
+## Non-clinical acquisition funnel
+
+| Stage                  | Event                           | Required dimensions                  |
+| ---------------------- | ------------------------------- | ------------------------------------ |
+| Store click            | `store_click`                   | `store`, `source`, `campaign`        |
+| Install attributed     | `install`                       | `store`, `source`, `campaign`        |
+| Onboarding started     | `onboarding_started`            | reviewed non-clinical source buckets |
+| First product added    | `first_product_added`           | reviewed non-clinical source buckets |
+| First reviewed insight | `first_reviewed_insight_viewed` | reviewed non-clinical source buckets |
+| Trial started          | `trial_started`                 | `store`, reviewed source buckets     |
+| Paid started           | `paid_started`                  | `store`, reviewed source buckets     |
 
 ## Privacy Rules
 
@@ -45,7 +52,10 @@ Track weekly:
 ## Alert Thresholds
 
 - Any sensitive analytics key appears: stop release and purge bad events.
-- Share card export failure rate above 5% on supported devices: stop public share.
+- Any telemetry or attribution appears on the conflict-only exporter or link
+  destination: stop release and purge the affected events.
+- Share-card export failures in supported-device QA exceed the reviewed
+  threshold: stop public share.
 - App-link fallback mismatch above 2% in device QA: stop public share.
 - Store review average drops below launch threshold: pause creator/paid tests and inspect support themes.
 - Refund/cancel reason points to misleading claims: pull metadata and creative.

@@ -1820,14 +1820,78 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Persona: User checking whether two shelf products can be used together, or sharing a reviewed shelf check.
 - Entry state: User has completed onboarding or has seeded local shelf state.
 - Start screen/URL/window: Shelf tab or direct conflict/share routes.
-- Success state: Conflict guidance remains claim-safe, exact-pair/current-rule choices persist only after a successful encrypted write, downstream surfaces stop repeating the resolved advisory, the guided schedule never weakens a safety invariant, and direct-entry exits recover to the Shelf tab.
+- Success state: Production never turns an unreviewed or uncovered pair into a
+  compatibility result. Interaction-specific guidance, choices, scheduling,
+  Ask answers, recommendations, detail, and sharing exist only for the exact
+  admitted corpus/rule hash. Unsupported coverage uses calm generic recovery,
+  and direct-entry exits recover to the Shelf tab.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native share sheet behavior.
-- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/conflict-routes/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`
+- Planned human-E2E evidence folder:
+  `test-results/human-e2e/YYYY-MM-DD/conflict-routes/`
+- Historical geometry/navigation evidence:
+  `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`.
+  It predates the exact-corpus admission boundary and is not current CORE-02
+  acceptance evidence.
+- Current verified source boundary: the CORE-02 source contract is 16/16
+  passing, and the focused intelligence/recommendation regression suite is
+  81/81 passing. No current-head human-simulated E2E pass or exhaustive
+  database replay is recorded.
 
-### Path A: Conflict Detail
+### Path A: Fail-Closed Production Coverage
+
+1. Action: In an ordinary development build with no reviewed-content fixture,
+   add two active products whose parsed tags form a candidate interaction pair.
+   Expected result: Shelf shows a generic `Interaction guidance is unavailable`
+   state and says it will not show a compatibility result until review is
+   complete. It exposes no rule, ingredient-pair, severity, evidence,
+   reproductive-status, resolution, override, detail, or share action.
+2. Action: Inspect Plan, Today, Week, Recommendations, and Ask for the same
+   products, then reload and relaunch.
+   Expected result: No surface invents interaction timing, compatibility,
+   reassurance, safety exclusion, replacement, or a "you're set" result. Ask
+   returns a generic unavailable/refusal response, does not proactively lead
+   with conflict guidance, and does not offer the conflict suggested prompt.
+   Routine/fit prompts may remain where the layout supports them. The same
+   fail-closed state survives reload without storing an active legacy choice.
+3. Action: Open an old or fabricated conflict/share link directly.
+   Expected result: The route shows a non-claim stale/unavailable recovery and
+   returns to Shelf or Add a product. It does not render candidate corpus copy,
+   product names, or a share card.
+4. Action: Repeat with the current combined `Pregnant or trying` profile
+   choice, breastfeeding, prefer-not-to-answer, and unavailable/unknown
+   profile states.
+   Expected result: Breastfeeding, prefer-not, and unavailable/unknown remain
+   distinct and never borrow pregnancy-only candidate copy. The current
+   combined selection is never represented as a separately proven pregnancy or
+   trying-to-conceive fact; any future safety corpus must explicitly review the
+   combined state or wait for a separately versioned profile split.
+
+The current zero-admission Shelf/Ask behavior is source- and unit-verified only.
+`test-results/human-e2e/2026-07-26/core02-conflict-admission-current/` is a
+planned evidence location, not an accepted run. Completion still requires a
+fresh human-simulated pass on the exact build, including supported-phone text
+pressure, relaunch, stale/public-link recovery, paywall non-sale, and native
+sharing behavior.
+
+### Future Path B: Admitted Conflict Detail
+
+This path is a required future acceptance flow, not a currently available
+production path. It may be exercised only after the exact U.S. corpus, source
+registry, applicability, user copy, market-scope policy, and per-rule hashes
+have independent dermatologist and chemistry/pharmacy approvals, separate
+regulatory-counsel clearance, trusted authority/signature verification, and a
+passing exact-build review gate.
+
+Remaining launch gates include signed review artifacts for the exact corpus
+hash from the required independent professional roles; counsel review of U.S.
+intended use, claims/classification, privacy/App Privacy disclosures, terms,
+store metadata, reviewer-access instructions, and material connections; a
+native detached-signature verifier with a release trust root and packaged
+artifact; archive verification; physical-iPhone accessibility, persistence,
+share, and failure-path E2E; and Apple's independent App Review outcome.
+Passing source tests does not satisfy any of those gates.
 
 1. Action: Add a real retinoid and AHA, open the conflict from Shelf, and verify the detail URL carries the rule plus both product IDs regardless of detection order.
    Expected result: The conflict sheet names the exact pair, stays calm and claim-safe, gives timing advice without claiming shelf-only placement, and never substitutes another pair that happens to use the same rule.
@@ -1835,31 +1899,107 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Expected result: The exact pair remains accepted after reload, the Shelf banner and downstream conflict recommendation/Ask prompt do not repeat it, product detail says the schedule keeps the pair apart, and the guided checklist still contains at most one potent active per night.
 3. Action: Reopen the exact pair from product detail, change to Use together anyway, reload, and inspect Shelf, Recommendations, Ask, Today, Week, and Why Tonight.
    Expected result: The changed choice persists without a duplicate record or repeat advisory; Today/Week do not keep presenting the rejected separation rationale; Why Tonight/product detail explain that guided check-offs still use the reviewed one-potent-active schedule; retinoid and exfoliant never share a night.
-   Current local evidence: 2026-07-10 Codex in-app browser Expo web added Lactic Acid 5%, Glycolic 7%, and Retinol 0.3% through the real onboarding/Shelf UI, exercised two independent exact pairs under the same rule, persisted Keep and Use together through reload, suppressed only resolved prompts across Shelf/Recommendations/Ask, retained one potent active per night across Plan/Today/Week, and showed exact-pair APART/CHOICE explanations in Why Tonight and product detail. Evidence is in `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/`.
+   Historical/superseded evidence: the 2026-07-10 Expo-web run used starter
+   content before the current exact-corpus admission boundary. Its geometry and
+   navigation observations may be retained, but its conflict claims, choices,
+   and schedule behavior are not production-content or launch evidence.
 
 ### Branches
 
+- Branch: untrusted corpus, receipt, reviewer, or applicability data
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Attempt to mark the candidate corpus approved; add three
+    self-asserted reviewer identities/receipts; tamper a source, rule, copy,
+    market-scope, policy-file, or per-rule hash; omit one professional role;
+    use an expired/rejected receipt; leave any applicability dimension
+    review-required; and satisfy an exact fact on the wrong product side.
+  - Expected result: Admission remains null, production rules remain empty, and
+    no UI/schedule/choice/share surface renders the candidate. Swapping product
+    detection order does not change exact participant applicability.
+  - Evidence: CORE-02 source contract, corpus/admission unit tests, engine
+    wrong-side/swapped-order fixtures. Ordinary-build app-surface evidence is
+    still required.
+- Branch: mixed shelf with an unparsed product
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add two tagged products plus one product whose ingredient parser
+    produces no supported tags, then repeat with an active reproductive context.
+  - Expected result: Every physical pair involving the unparsed product has a
+    distinct non-identifying `unassessable_pair` coverage key, and the unparsed
+    product has a separate active-safety-context key. These keys are unioned
+    with parsed-pair coverage, so a parsed pair cannot hide an unassessable pair
+    or cause `compatible`/`not_applicable`.
+  - Evidence: Current focused engine regression and 16/16 source-contract
+    checks. Human-simulated mixed-shelf E2E remains required.
+- Branch: overlapping or incomplete reviewed severity branches
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Exercise an admitted-rule fixture in which more than one reviewed
+    severity branch matches, then one in which required branch facts are absent.
+  - Expected result: Overlap returns `unsupported_ambiguous_branches`; missing
+    facts return `unsupported_missing_facts`. Array order never chooses a
+    severity, coverage stays unsupported, and Recommendations exclude the
+    affected type even if another known conflict exists.
+  - Evidence: Current focused engine/recommendation regression and 16/16
+    source-contract checks. Admitted-corpus UI E2E remains required.
+- Branch: exact typed Ask pair resolution
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On a shelf of at least three products, type a conflict question
+    containing exactly two complete stored product names. Repeat with a
+    duplicate name, a partial name, and more or fewer than two resolved names.
+  - Expected result: Only the exact unambiguous pair can reach its admitted
+    conflict. Duplicate, partial, ambiguous, or wrong-cardinality input fails
+    closed. The canned shelf-wide conflict prompt is available only when
+    admitted coverage exists.
+  - Evidence: Current focused Ask regression and 16/16 source-contract checks.
+    Human-simulated typed-input E2E remains required.
+- Branch: reproductive-context replacement withholding
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Create finished/expiring retinoid, hydroquinone, and BHA products
+    under exact pregnant/combined, breastfeeding, trying, unknown, and
+    prefer-not profile states; repeat with an unrelated vitamin C product and
+    with only the legacy coarse `pregnancySafety: caution` field.
+  - Expected result: Repurchase/replenishment copy for the three gated active
+    classes is withheld unless the exact context has admitted clearance.
+    Unrelated replenishment remains eligible. The legacy coarse field alone
+    never invents a reproductive status or a clearance/exclusion.
+  - Evidence: Current focused recommendation regression and 16/16
+    source-contract checks. Native persistence and UI E2E remain required.
+- Branch: development preview isolation
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Exercise any explicit preview-only rule fixture in a development
+    test, then run the ordinary app path without that fixture.
+  - Expected result: Preview data cannot enter production consumers, write an
+    active choice, mirror to the server, render a share card, or change a
+    release flag. Preview screenshots are labeled fixture-only and cannot be
+    cited as content approval.
+  - Evidence: Source-import scan, release-flag tests, negative presentation and
+    choice tests, and separate fixture/ordinary-build transcripts.
 - Branch: encrypted choice write fails
   - Priority: Critical
   - Automate later: Yes
   - Action: With the one-shot conflict-choice failure fixture enabled, choose either action, inspect the inline state, then retry.
   - Expected result: The sheet stays open, exposes an accessibility alert that the choice was not saved, emits no success navigation/analytics, leaves the previous schedule and prompt state unchanged, prevents duplicate submits while pending, and succeeds on retry.
   - Evidence: Screenshot, encrypted-storage snapshot, route state, and analytics/network log.
-  - Current local evidence: The one-shot private-KV fixture retained the exact route, exposed `Choice not saved`, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Pending-state disabling was observed before the delayed rejection. The local run does not replace native encrypted-storage or live analytics/network QA.
+  - Historical fixture evidence: The one-shot private-KV fixture retained the exact route, exposed `Choice not saved`, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Pending-state disabling was observed before the delayed rejection. The local run predates current CORE-02 acceptance and does not replace native encrypted-storage or live analytics/network QA.
 - Branch: stale version, safety row, or mismatched pair identity
   - Priority: Critical
   - Automate later: Yes
   - Action: Exercise a newer rule version, a safety-class row, an incomplete/mismatched product-pair URL, and two pairs governed by the same rule.
   - Expected result: An old choice does not suppress new guidance; safety has no timing-override actions; a mismatched pair fails to the non-stale recovery state; each real pair has an independent choice and route identity.
   - Evidence: Unit/integration fixtures plus direct-route screenshots.
-  - Current local evidence: Focused tests cover stale versions, safety/reassurance exclusion, two same-rule pairs, and one-sided safety identity. Live rule-only and incomplete-pair URLs with two matching pairs failed closed to `Timing note unavailable`; exact-pair routes remained independent.
+  - Current source/test evidence: Focused tests cover stale versions, safety/reassurance exclusion, two same-rule pairs, and one-sided safety identity. Historical route evidence found rule-only and incomplete-pair URLs with two matching pairs failed closed to `Timing note unavailable`; exact-pair routes remained independent. A current-head route rerun is still required.
 - Branch: supported-phone geometry and text pressure
   - Priority: Critical
   - Automate later: Yes
   - Action: Run the unresolved, saving, failed, accepted, and use-together states at 360 x 640 and 390 x 844, including 200% text pressure where supported.
   - Expected result: No horizontal/text overflow, clipped actions, blocked hit targets, sub-44 px controls, dialog escape, or incoherent overlap; the exact-pair and safety-boundary copy remains readable.
   - Evidence: Geometry JSON, screenshots, browser logs, and interaction transcript.
-  - Current local evidence: Post-fix 360 x 640 and 390 x 844 Expo web evidence reports zero horizontal/text overflow, 55.99 px and 48 px actions, successful center hit-tests, initial dialog focus, Tab/Shift+Tab containment, and Escape to Shelf. The run found and fixed a 4 px partial action plus missing web Escape/initial-focus traversal. Exact populated-pair native Dynamic Type remains release-device QA.
+  - Historical partial evidence: A pre-boundary 360 x 640 and 390 x 844 Expo-web run reported zero horizontal/text overflow, 55.99 px and 48 px actions, successful center hit-tests, initial dialog focus, Tab/Shift+Tab containment, and Escape to Shelf. It found and fixed a 4 px partial action plus missing web Escape/initial-focus traversal. Current-head human E2E and populated-pair native Dynamic Type remain release-device QA.
 
 - Branch: direct-entry conflict and share exits
   - Priority: Important
@@ -1873,16 +2013,15 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` for a rule that is not present in the current shelf; use Back to Shelf from the missing detail state and the add-product escape hatch.
   - Expected result: The missing conflict detail explains that the timing note is no longer active because the shelf or safety setting changed, never falsely says a product pair was removed, never reuses stale routine advice, Back to Shelf returns to `/shelf`, Add a product opens `/shelf/manual`, and the share-card fallback still returns to Shelf without exposing private shelf details.
   - Evidence: 2026-07-07 Expo web at 320 x 568 verified the missing state copy, stale-routine warning, `/shelf` recovery, `/shelf/manual` escape hatch, default share-card fallback, and enabled unshareable share-card state without private product names.
-  - Current local evidence: 2026-07-08 in-app browser at 320 x 568 rechecked direct `/conflict/missing-rule-e2e` after a compact-sheet fallback fix. Pre-fix evidence captured `maxHeight: 0px` with the actions below the viewport; post-fix evidence confirms a 524 px dialog, `aria-modal`, `Timing note unavailable` accessibility label, zero horizontal overflow, no mojibake, and visible 56 px / 48 px actions. Evidence is in `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`.
-  - Current support-floor text-pressure evidence: 2026-07-09 headless Chrome Expo web found the missing conflict sheet clipped `Back to Shelf` at the bottom of the 320 x 480 / 170% skipped-route sweep. Post-fix, short missing-conflict sheets put recovery actions before the explanatory card, and the same 21-route sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`.
+  - Historical partial evidence: A 2026-07-08 in-app-browser run at 320 x 568 rechecked direct `/conflict/missing-rule-e2e` after a compact-sheet fallback fix. Pre-fix evidence captured `maxHeight: 0px` with the actions below the viewport; post-fix evidence confirms a 524 px dialog, `aria-modal`, `Timing note unavailable` accessibility label, zero horizontal overflow, no mojibake, and visible 56 px / 48 px actions. Evidence is in `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`; it is not current-head CORE-02 acceptance.
+  - Historical support-floor text-pressure evidence: A 2026-07-09 headless Chrome Expo-web run found the missing conflict sheet clipped `Back to Shelf` at the bottom of the 320 x 480 / 170% skipped-route sweep. Post-fix, short missing-conflict sheets put recovery actions before the explanatory card, and the same 21-route sweep reported zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`. A current-head rerun is still required.
 - Branch: native share unavailable
   - Priority: Important
   - Automate later: Yes
   - Action: Attempt to export a reviewed share card on a surface without native sharing support.
   - Expected result: The app explains sharing is unavailable without losing the user or exposing sensitive shelf details.
   - Evidence: Screenshot or platform log.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED=true`, `EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED=true`, `EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED=true`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`, `EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING=true`, and `EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT=unavailable` adds real Retinol 0.3% and Glycolic 7% products through manual shelf intake, opens the reviewed conflict share route, verifies the share card is present with a 272 x 56 Share to Stories control and 272 x 48 Done control, taps Share to Stories, renders inline `Sharing unavailable` recovery, opens no JavaScript/native dialog, leaks no raw native/provider text, and keeps horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 opened a seeded reviewed conflict share card, tapped `Share to Stories` with native sharing forced unavailable, verified no native/browser dialog, kept the branded card and controls visible, and rendered inline `Sharing unavailable` feedback above the export action. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
+  - Historical fixture evidence: A 2026-07-08 Expo-web run with explicit preview/share fixtures exercised the unavailable-share recovery and retained the card and controls. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`. Because it used seeded candidate content before the current admission boundary, it is geometry/recovery evidence only and cannot establish reviewed content, native sharing, or current CORE-02 acceptance.
 
 ## Flow: Settings Account Controls
 
@@ -2033,24 +2172,37 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ## Flow: Ask RoutineKind Deterministic Advisor
 
-- Goal: A user can open the free deterministic Ask advisor without cloud consent, while unavailable cloud Ask controls stay honestly deferred.
+- Goal: A user can open the free deterministic Ask advisor without cloud
+  consent, while unavailable cloud Ask and unadmitted interaction guidance stay
+  honestly deferred.
 - Persona: Free user exploring shelf/routine guidance.
 - Entry state: Fresh local app state or seeded shelf state; `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=false`.
 - Start screen/URL/window: Direct route `/ask`, or Today Ask teaser when available.
-- Success state: `/ask` renders the Ask RoutineKind advisor surface; `/ask/consent` renders the cloud Ask deferred screen while the cloud flag is off.
+- Success state: `/ask` renders the Ask RoutineKind advisor surface and hides
+  its proactive conflict lead and conflict suggested prompt while exact
+  interaction coverage is unavailable. `/ask/consent` renders the cloud Ask
+  deferred screen while the cloud flag is off.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route parity; iOS and Android for native app confirmation.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/ask-deterministic/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`
+- Historical geometry/navigation evidence:
+  `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`. It predates
+  zero-admission prompt hiding and is not current acceptance evidence.
 
 ### Path A: Deterministic Ask Opens
 
 1. Action: Open `/ask` directly with cloud Ask disabled.
-   Expected result: The Ask RoutineKind advisor renders with deterministic/free copy and suggested prompts. It must not show the cloud Ask deferred beta screen.
+   Expected result: The Ask RoutineKind advisor renders with
+   deterministic/free copy. At zero admission it shows neither a proactive
+   conflict turn nor `Is there a conflict on my shelf?`; routine/fit prompts
+   may remain where the supported-phone layout permits. It must not show the
+   cloud Ask deferred beta screen or imply interaction review is active.
    The composer disclosure footer stays fully visible and legible above the bottom edge on a 320 x 568 phone.
    Evidence: Screenshot and visible-text snapshot.
-   Current local evidence: 2026-07-07 Expo web 320 x 568 renders `Ask RoutineKind`, the deterministic shelf answer, a visible 48 px composer input plus 48 px Send control, the disclosure footer, and zero horizontal overflow.
+   Current source/test evidence: The 16/16 CORE-02 source contract verifies
+   both zero-admission conflict-prompt gates. A current human-simulated UI pass
+   is not recorded.
 
 ### Branches
 
@@ -2073,17 +2225,32 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/ask` with no shelf products stored.
-  - Expected result: The advisor still renders with honest empty-state guidance and safe suggested prompts.
+  - Expected result: The advisor still renders with honest empty-state
+    guidance. At zero admission it omits the conflict prompt; routine/fit
+    prompts may remain when the layout has room.
   - Evidence: Screenshot.
-- Branch: first suggested prompt on a short phone
+- Branch: first available zero-admission prompt on a short phone
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/ask` at 320 x 568 and 320 x 480 with an empty shelf, tap `Is there a conflict on my shelf?`, and inspect the first conversation state without manually scrolling.
-  - Expected result: The user question, deterministic badge, empty-shelf answer, report control, fixed composer, and disclosure footer remain readable; the first user message is not auto-scrolled under the header, and no prompt or report control peeks partially underneath the fixed composer on compact or shortest phones.
+  - Action: Open `/ask` at 320 x 568 and 320 x 480 with an empty shelf and zero
+    admission. Confirm `Is there a conflict on my shelf?` is absent, tap `What
+    should I do tonight?`, and inspect the first conversation state without
+    manually scrolling.
+  - Expected result: The available routine question, deterministic badge,
+    empty-shelf answer, report control, fixed composer, and disclosure footer
+    remain readable; the first user message is not auto-scrolled under the
+    header, and no prompt or report control peeks partially underneath the
+    fixed composer. At the 320 x 430 ultra-short layout, no prompt is preferable
+    to exposing the unavailable conflict prompt.
   - Evidence: Screenshot, scroll-position snapshot, and small-phone control-geometry snapshot.
-  - Current local evidence: 2026-07-07 Expo web 320 x 568 taps `Is there a conflict on my shelf?`, keeps the user question, deterministic `$0` badge, empty-shelf answer, report control, composer, and disclosure footer readable with zero horizontal overflow and no sub-44 px controls. The same pass typed `Should I use retinol every night?`; before the fix it misrouted to product-fit recommendation copy, and after the fix it escalates safely with no fit-engine, SPF, or vitamin-C recommendation text. Evidence is in `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`, with additional Node REPL Playwright/system Chrome evidence in `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/`.
-  - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced lower empty-state prompt buttons being intercepted by the fixed composer. Post-fix `/ask` hides decorative pills on the shortest phones, shows the top two prompt buttons above the composer, verifies both prompt centers hit their own buttons, taps `Is there a conflict on my shelf?`, and confirms the empty-shelf answer plus report control, input, Send, and disclosure have zero hit-blocked controls, zero sub-44 px controls, zero horizontal overflow, and no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`.
-  - Current 320 x 430 / 120% text-pressure evidence: 2026-07-08 headless Chrome Expo web verifies `/ask` uses the single safest empty prompt, hides nonessential intro copy, keeps the prompt center clear of the fixed composer, and reports zero clipped controls, blocked hit-tests, sub-44 visible controls, or horizontal overflow in the final 49-route sweep. Evidence and report are in `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/` and `docs/e2e-bug-reports/2026-07-08-text-pressure-short-phone-430-clearance.md`.
+  - Historical/superseded evidence: The 2026-07-07 and 2026-07-08 short-phone
+    runs tapped the conflict prompt before zero-admission prompt hiding. Their
+    geometry observations may be retained, but the prompt behavior is
+    superseded and not current acceptance. Evidence is in
+    `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`,
+    `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`,
+    and
+    `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/`.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes

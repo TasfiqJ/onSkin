@@ -1,12 +1,18 @@
 import type { FunctionalTag, GoalId, SequencingRole } from '@onskin/types';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { detectConflicts, type EngineProduct } from '@/features/intelligence/engine';
-import { STARTER_RULES } from '@/features/intelligence/rules';
+import { previewDetectConflicts, type EngineProduct } from '@/features/intelligence/engine';
+import {
+  STARTER_RULES,
+  type ConflictConstraint,
+  type ConflictParticipantApplicability,
+  type ConflictRule,
+} from '@/features/intelligence/rules';
 
-import { RECS_REVIEWED, shippableRecTypes } from './catalog';
+import { recTypeByKey, RECS_REVIEWED, shippableRecTypes } from './catalog';
 import {
   recommend,
+  recommendationConflictDispositionForType,
   type RecInput,
   type RecProfile,
   type RecReplenishmentItem,
@@ -54,7 +60,6 @@ function input(over: Partial<RecInput> & { profile: RecProfile; shelf: RecShelfI
   return {
     conflicts: [],
     preferences: DEFAULT_PREFERENCES,
-    rules: STARTER_RULES,
     ...over,
   };
 }
@@ -73,6 +78,58 @@ const niacinamide = item({
   role: 'hydrating_serum',
   tags: ['niacinamide'],
 });
+
+const notApplicable = { status: 'not_applicable' } as const;
+const exact = <T>(value: T): ConflictConstraint<T> => ({ status: 'exact', value });
+
+function reviewedParticipant(
+  over: Partial<ConflictParticipantApplicability> = {},
+): ConflictParticipantApplicability {
+  return {
+    moleculeIds: notApplicable,
+    finishedProductIds: notApplicable,
+    finishedFormulationIds: notApplicable,
+    concentration: notApplicable,
+    applicationAmount: notApplicable,
+    applicationArea: notApplicable,
+    frequencyPerWeek: notApplicable,
+    durationDays: notApplicable,
+    ph: notApplicable,
+    vehicle: notApplicable,
+    occlusion: notApplicable,
+    barrierCondition: notApplicable,
+    exposure: notApplicable,
+    ...over,
+  };
+}
+
+function admittedBpTretinoinRule(): ConflictRule {
+  const source = STARTER_RULES.find(
+    (rule) => rule.tagA === 'benzoyl_peroxide' && rule.tagB === 'retinoid',
+  )!;
+  return {
+    ...source,
+    candidateDisposition: 'reviewed',
+    admission: {
+      status: 'approved',
+      corpusSha256: source.corpusSha256,
+      receiptIds: ['receipt-derm', 'receipt-chemist', 'receipt-counsel'],
+      reviewerRoles: ['board_certified_dermatologist', 'cosmetic_chemist', 'regulatory_counsel'],
+    },
+    applicability: {
+      ...source.applicability,
+      reviewStatus: 'reviewed',
+      approvedConditions: {
+        tagA: reviewedParticipant(),
+        tagB: reviewedParticipant({
+          moleculeIds: exact(['tretinoin']),
+          finishedFormulationIds: exact(['tretinoin-gel-0.025']),
+        }),
+        reproductiveContexts: notApplicable,
+      },
+    },
+  };
+}
 
 describe('gap-filling. A missing SPF is the highest-priority recommendation (§4.1)', () => {
   const res = recommend(
@@ -109,19 +166,43 @@ describe('gap-filling. A missing SPF is the highest-priority recommendation (§4
 });
 
 describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 hard exclusion)', () => {
-  it('recommends vitamin C, never a retinoid, for an anti-aging goal in pregnancy', () => {
+  it('withholds unreviewed goal-active guidance for an exact pregnant status', () => {
     const res = recommend(
       input({
-        profile: { sensitivity: 'neutral', pregnancy: true, goals: ['anti_aging'] },
+        profile: {
+          sensitivity: 'neutral',
+          pregnancy: true,
+          reproductiveStatus: 'pregnant',
+          goals: ['anti_aging'],
+        },
         shelf: [cleanser, moisturiser, spf],
       }),
     );
     const goalRec = res.recommendations.find((r) => r.trigger === 'goal');
-    expect(goalRec?.productType).toBe('vitamin_c_serum');
-    expect(res.recommendations.some((r) => r.productType === 'retinoid_serum')).toBe(false);
+    expect(goalRec).toBeUndefined();
   });
 
-  it('uses cautious exclusions for an unconfirmed status without labeling the user pregnant', () => {
+  it('describes the combined stored profile without inferring pregnancy alone', () => {
+    const res = recommend(
+      input({
+        profile: {
+          sensitivity: 'neutral',
+          pregnancy: true,
+          reproductiveStatus: 'pregnant',
+          goals: [],
+        },
+        shelf: [cleanser, moisturiser],
+      }),
+    );
+
+    expect(res.recommendations).not.toHaveLength(0);
+    expect(res.recommendations.every((rec) => rec.how.profile.includes('Pregnant or trying'))).toBe(
+      true,
+    );
+    expect(JSON.stringify(res.recommendations)).not.toMatch(/Pregnancy setting/u);
+  });
+
+  it('does not turn the legacy caution mode into a pregnancy exclusion or claim', () => {
     const res = recommend(
       input({
         profile: {
@@ -134,11 +215,30 @@ describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 ha
       }),
     );
 
-    expect(res.recommendations.some((r) => r.productType === 'retinoid_serum')).toBe(false);
+    expect(res.recommendations.some((r) => r.trigger === 'goal')).toBe(true);
     expect(JSON.stringify(res.recommendations)).not.toMatch(/pregnan/i);
   });
 
-  it('does not let a paused retinoid count as goal coverage', () => {
+  for (const reproductiveStatus of ['breastfeeding', 'trying', 'unknown', 'prefer_not'] as const) {
+    it(`keeps ${reproductiveStatus} exact and withholds unreviewed goal-active guidance`, () => {
+      const res = recommend(
+        input({
+          profile: {
+            sensitivity: 'neutral',
+            pregnancy: reproductiveStatus === 'breastfeeding',
+            reproductiveStatus,
+            goals: ['anti_aging'],
+          },
+          shelf: [cleanser, moisturiser, spf],
+        }),
+      );
+
+      expect(res.recommendations.some((rec) => rec.trigger === 'goal')).toBe(false);
+      expect(JSON.stringify(res.recommendations)).not.toMatch(/pregnan|pregnancy-friendly/i);
+    });
+  }
+
+  it('does not infer that an owned retinoid is paused without admitted safety guidance', () => {
     const pausedRetinoid = item({
       id: 'paused-retinoid',
       name: 'Retinol serum',
@@ -157,9 +257,8 @@ describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 ha
       }),
     );
 
-    expect(res.recommendations.find((rec) => rec.trigger === 'goal')?.productType).toBe(
-      'vitamin_c_serum',
-    );
+    expect(res.recommendations.find((rec) => rec.trigger === 'goal')).toBeUndefined();
+    expect(res.conflictCoverageStatus).toBe('unsupported_unreviewed');
   });
 
   it('introduces only ONE goal active at a time (restraint, §4.5)', () => {
@@ -174,7 +273,7 @@ describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 ha
 });
 
 describe('the honest "you\'re set" seventh state (§4)', () => {
-  it('recommends nothing when the routine is complete, conflict-free and goal-appropriate', () => {
+  it('does not say "you’re set" when interaction coverage is unavailable', () => {
     const res = recommend(
       input({
         profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
@@ -182,18 +281,185 @@ describe('the honest "you\'re set" seventh state (§4)', () => {
       }),
     );
     expect(res.recommendations).toHaveLength(0);
+    expect(res.youreSet).toBe(false);
+    expect(res.conflictCoverageStatus).toBe('unsupported_unreviewed');
+  });
+
+  it('does not claim completion when interaction coverage did not evaluate a pair', () => {
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
+        shelf: [cleanser, moisturiser, spf],
+        conflictCoverageStatus: 'not_applicable',
+      }),
+    );
+
+    expect(res.recommendations).toEqual([]);
+    expect(res.youreSet).toBe(false);
+    expect(res.conflictCoverageStatus).toBe('not_applicable');
+  });
+
+  it('allows the seventh state only after reviewed compatibility', () => {
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
+        shelf: [cleanser, moisturiser, spf],
+        conflictCoverageStatus: 'compatible',
+      }),
+    );
+
+    expect(res.recommendations).toEqual([]);
     expect(res.youreSet).toBe(true);
   });
 });
 
 describe('conflict resolution. A non-conflicting alternative (§4.3)', () => {
-  it('surfaces a de-conflicting option for an unresolved shelf clash', () => {
+  it('uses exact BP × tretinoin applicability instead of collapsing every retinoid tag', () => {
+    const rule = admittedBpTretinoinRule();
+    const bp = item({
+      id: 'bp',
+      name: 'Benzoyl peroxide',
+      role: 'treatment',
+      tags: ['benzoyl_peroxide'],
+    });
+    const retinoidType = recTypeByKey('retinoid_serum')!;
+    const exactTretinoin = {
+      ...retinoidType,
+      type: 'exact-tretinoin-gel',
+      applicabilityFacts: {
+        moleculeIds: ['tretinoin'],
+        finishedFormulationId: 'tretinoin-gel-0.025',
+      },
+    };
+    const unrelatedRetinol = {
+      ...retinoidType,
+      type: 'unrelated-retinol',
+      applicabilityFacts: {
+        moleculeIds: ['retinol'],
+        finishedFormulationId: 'retinol-serum',
+      },
+    };
+    const unrelatedFormulation = {
+      ...retinoidType,
+      type: 'unrelated-tretinoin-formulation',
+      applicabilityFacts: {
+        moleculeIds: ['tretinoin'],
+        finishedFormulationId: 'tretinoin-cream-0.05',
+      },
+    };
+
+    expect(recommendationConflictDispositionForType(exactTretinoin, [bp], [rule])).toBe(
+      'reviewed_conflict',
+    );
+    expect(recommendationConflictDispositionForType(unrelatedRetinol, [bp], [rule])).toBe(
+      'eligible',
+    );
+    expect(recommendationConflictDispositionForType(unrelatedFormulation, [bp], [rule])).toBe(
+      'eligible',
+    );
+    expect(recommendationConflictDispositionForType(retinoidType, [bp], [rule])).toBe(
+      'unsupported_missing_facts',
+    );
+
+    const allowedSetRule: ConflictRule = {
+      ...rule,
+      applicability: {
+        ...rule.applicability,
+        approvedConditions: {
+          ...rule.applicability.approvedConditions,
+          tagB: reviewedParticipant({
+            moleculeIds: exact(['adapalene', 'tretinoin']),
+            finishedFormulationIds: exact([
+              'adapalene-bp-reviewed-combination',
+              'tretinoin-gel-0.025',
+            ]),
+          }),
+        },
+      },
+    };
+    expect(recommendationConflictDispositionForType(exactTretinoin, [bp], [allowedSetRule])).toBe(
+      'reviewed_conflict',
+    );
+
+    const missingSeverityBranchFact: ConflictRule = {
+      ...rule,
+      applicability: {
+        ...rule.applicability,
+        severityBranches: [
+          {
+            branchId: 'urn:reviewed-concentration-severity-branch',
+            severity: 'high',
+            conditions: {
+              tagA: reviewedParticipant(),
+              tagB: reviewedParticipant({
+                concentration: exact({
+                  unit: '%',
+                  minInclusive: 0.025,
+                  maxInclusive: 0.05,
+                }),
+              }),
+              reproductiveContexts: notApplicable,
+            },
+          },
+        ],
+      },
+    };
+    expect(
+      recommendationConflictDispositionForType(exactTretinoin, [bp], [missingSeverityBranchFact]),
+    ).toBe('unsupported_missing_facts');
+
+    const overlappingSeverityBranches: ConflictRule = {
+      ...rule,
+      applicability: {
+        ...rule.applicability,
+        severityBranches: [
+          {
+            branchId: 'urn:reviewed-overlap-moderate',
+            severity: 'moderate',
+            conditions: {
+              tagA: reviewedParticipant(),
+              tagB: reviewedParticipant(),
+              reproductiveContexts: notApplicable,
+            },
+          },
+          {
+            branchId: 'urn:reviewed-overlap-high',
+            severity: 'high',
+            conditions: {
+              tagA: reviewedParticipant(),
+              tagB: reviewedParticipant(),
+              reproductiveContexts: notApplicable,
+            },
+          },
+        ],
+      },
+    };
+    expect(
+      recommendationConflictDispositionForType(exactTretinoin, [bp], [overlappingSeverityBranches]),
+    ).toBe('unsupported_ambiguous_branches');
+    expect(
+      recommendationConflictDispositionForType(
+        exactTretinoin,
+        [bp],
+        [rule, overlappingSeverityBranches],
+      ),
+    ).toBe('unsupported_ambiguous_branches');
+    expect(
+      recommendationConflictDispositionForType(
+        exactTretinoin,
+        [bp],
+        [overlappingSeverityBranches, rule],
+      ),
+    ).toBe('unsupported_ambiguous_branches');
+  });
+
+  it('does not turn a candidate preview conflict into a production recommendation', () => {
     const profile = { sensitivity: 'sensitive' as const, pregnancy: false, goals: [] as GoalId[] };
     const engineProducts: EngineProduct[] = [
       { id: 'p_ret', name: 'Retinol 0.5%', tags: ['retinoid'] as FunctionalTag[] },
       { id: 'p_aha', name: 'Glycolic 7%', tags: ['aha'] as FunctionalTag[] },
     ];
-    const conflicts = detectConflicts(
+    const conflicts = previewDetectConflicts(
       engineProducts,
       { sensitivity: 'sensitive', pregnancy: false },
       STARTER_RULES,
@@ -212,15 +478,12 @@ describe('conflict resolution. A non-conflicting alternative (§4.3)', () => {
       }),
     );
     const conflictRec = res.recommendations.find((r) => r.trigger === 'conflict');
-    expect(conflictRec).toBeTruthy();
-    expect(conflictRec?.relatedRuleId).toBeTruthy();
-    expect(conflictRec?.relatedConflictProductIds).toEqual(['p_aha', 'p_ret']);
-    expect(conflictRec?.id).toContain(':p_aha+p_ret');
-    expect(conflictRec?.why).toMatch(/Retinol 0\.5%|Glycolic 7%/);
+    expect(conflictRec).toBeUndefined();
+    expect(res.conflictCoverageStatus).toBe('unsupported_unreviewed');
   });
 
   it('honours a legacy rule-only dismissal after conflict IDs become pair-aware', () => {
-    const conflicts = detectConflicts(
+    const conflicts = previewDetectConflicts(
       [
         { id: 'p_ret', name: 'Retinol 0.5%', tags: ['retinoid'] },
         { id: 'p_aha', name: 'Glycolic 7%', tags: ['aha'] },
@@ -249,7 +512,7 @@ describe('conflict resolution. A non-conflicting alternative (§4.3)', () => {
   });
 
   it('does not derive a conflict recommendation from a safety-excluded product', () => {
-    const conflicts = detectConflicts(
+    const conflicts = previewDetectConflicts(
       [
         { id: 'p_ret', name: 'Retinol 0.5%', tags: ['retinoid'] },
         { id: 'p_aha', name: 'Glycolic 7%', tags: ['aha'] },
@@ -404,7 +667,7 @@ describe('replacement. Only from tracked freshness or user-finished history (§4
     expect(rep?.how.evidence).toContain('Marked finished');
   });
 
-  it('never recommends repurchasing a product excluded by the current safety setting', () => {
+  it('does not invent safety exclusions for replacement rows while review is pending', () => {
     const cautiousProfile: RecProfile = {
       sensitivity: 'neutral',
       pregnancy: false,
@@ -435,7 +698,8 @@ describe('replacement. Only from tracked freshness or user-finished history (§4
       }),
     );
 
-    expect(result.recommendations.filter((rec) => rec.trigger === 'replacement')).toEqual([]);
+    expect(result.recommendations.filter((rec) => rec.trigger === 'replacement')).toHaveLength(3);
+    expect(result.conflictCoverageStatus).toBe('unsupported_unreviewed');
   });
 
   it('keeps a confirmed-low BHA replacement eligible on the cautious branch', () => {
@@ -462,6 +726,74 @@ describe('replacement. Only from tracked freshness or user-finished history (§4
     expect(
       result.recommendations.some(
         (rec) => rec.trigger === 'replacement' && rec.relatedProductId === lowBha.id,
+      ),
+    ).toBe(true);
+  });
+
+  it.each(['pregnant', 'breastfeeding', 'trying', 'unknown', 'prefer_not'] as const)(
+    'withholds safety-relevant repurchase copy for an exact %s status without admitted clearance',
+    (reproductiveStatus) => {
+      const reviewRequired = [
+        item({ id: 'r', name: 'Retinol', role: 'treatment', tags: ['retinoid'] }),
+        item({
+          id: 'h',
+          name: 'Hydroquinone',
+          role: 'treatment',
+          tags: ['hydroquinone'],
+        }),
+        item({
+          id: 'b',
+          name: 'Salicylic serum',
+          role: 'exfoliant',
+          tags: ['bha'],
+          concentration: 'low',
+        }),
+      ];
+      const result = recommend(
+        input({
+          profile: {
+            sensitivity: 'neutral',
+            pregnancy: reproductiveStatus === 'pregnant',
+            reproductiveStatus,
+            goals: [],
+          },
+          shelf: [cleanser, moisturiser, spf, ...reviewRequired],
+          replenishment: reviewRequired.map((product) => replenishment(product, 'finished')),
+          conflictCoverageStatus: 'unsupported_unreviewed',
+        }),
+      );
+
+      expect(result.recommendations.filter((rec) => rec.trigger === 'replacement')).toEqual([]);
+      expect(JSON.stringify(result.recommendations)).not.toMatch(
+        /repurchase|better-fit alternative/i,
+      );
+    },
+  );
+
+  it('keeps a non-safety-relevant replenishment row under an exact reproductive status', () => {
+    const vitaminC = item({
+      id: 'vitamin-c',
+      name: 'Vitamin C serum',
+      role: 'antioxidant',
+      tags: ['vitamin_c'],
+    });
+    const result = recommend(
+      input({
+        profile: {
+          sensitivity: 'neutral',
+          pregnancy: true,
+          reproductiveStatus: 'pregnant',
+          goals: [],
+        },
+        shelf: [cleanser, moisturiser, spf, vitaminC],
+        replenishment: [replenishment(vitaminC, 'finished')],
+        conflictCoverageStatus: 'unsupported_unreviewed',
+      }),
+    );
+
+    expect(
+      result.recommendations.some(
+        (rec) => rec.trigger === 'replacement' && rec.relatedProductId === vitaminC.id,
       ),
     ).toBe(true);
   });

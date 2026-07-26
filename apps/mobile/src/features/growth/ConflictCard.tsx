@@ -1,13 +1,11 @@
 import { forwardRef } from 'react';
 import { View, Text } from 'react-native';
 
-import { isReassuring, type DetectedConflict } from '@/features/intelligence/engine';
 import {
-  bannerSubhead,
-  evidenceChip,
-  pairTitle,
-  severityLabel,
-} from '@/features/intelligence/presentation';
+  isAdmittedDetectedConflict,
+  isReassuring,
+  type DetectedConflict,
+} from '@/features/intelligence/engine';
 import { colors } from '@/theme/tokens';
 
 import { CARD_COPY } from './cardCopy';
@@ -33,6 +31,7 @@ export const ConflictCard = forwardRef<
   View,
   { conflict: DetectedConflict; shareUrl?: string | null }
 >(function ConflictCard({ conflict, shareUrl }, ref) {
+  if (!isAdmittedDetectedConflict(conflict)) return null;
   const reassure = isReassuring(conflict);
   const accent = reassure ? colors.sage : colors.clay;
   const accentTint = reassure ? colors.sageTint : colors.clayTint;
@@ -67,7 +66,7 @@ export const ConflictCard = forwardRef<
       {/* The pairing (the focus) + chips + the calm resolution */}
       <View>
         <Text style={{ fontFamily: SERIF, fontSize: 36, lineHeight: 40, color: colors.ink }}>
-          {pairTitle(conflict)}
+          {conflict.rule.copy.shareTitle}
         </Text>
         <View style={{ flexDirection: 'row', gap: 8, marginTop: 16 }}>
           {!reassure ? (
@@ -80,7 +79,7 @@ export const ConflictCard = forwardRef<
               }}
             >
               <Text style={{ fontFamily: SANS_SEMI, fontSize: 11, color: chipText }}>
-                {severityLabel(conflict.computedSeverity)}
+                {conflict.rule.copy.severityLabel}
               </Text>
             </View>
           ) : null}
@@ -93,7 +92,7 @@ export const ConflictCard = forwardRef<
             }}
           >
             <Text style={{ fontFamily: SANS_SEMI, fontSize: 11, color: chipText }}>
-              {evidenceChip(conflict.rule.evidenceLabel)}
+              {conflict.rule.copy.evidenceLabel}
             </Text>
           </View>
         </View>
@@ -106,14 +105,16 @@ export const ConflictCard = forwardRef<
             marginTop: 18,
           }}
         >
-          {bannerSubhead(conflict)}
+          {conflict.rule.copy.shareClaim}
         </Text>
       </View>
 
       {/* Footer: CTA + watermark + the standing disclaimer */}
       <View>
         <View style={{ height: 1, backgroundColor: 'rgba(32,27,21,0.10)', marginBottom: 16 }} />
-        <Text style={{ fontFamily: SANS_SEMI, fontSize: 15, color: accent }}>{CARD_COPY.cta}</Text>
+        <Text style={{ fontFamily: SANS_SEMI, fontSize: 15, color: accent }}>
+          {conflict.rule.copy.shareActionLabel}
+        </Text>
         <View
           style={{
             flexDirection: 'row',

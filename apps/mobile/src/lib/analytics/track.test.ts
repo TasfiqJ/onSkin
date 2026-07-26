@@ -581,7 +581,6 @@ describe('analytics sanitizer', () => {
   it('allows V1 activation events without sensitive payload details', () => {
     expect(sanitizeAnalyticsEventName('first_useful_insight')).toBe('first_useful_insight');
     expect(sanitizeAnalyticsEventName('product_add_started')).toBe('product_add_started');
-    expect(sanitizeAnalyticsEventName('conflict_detected')).toBe('conflict_detected');
     expect(sanitizeAnalyticsEventName('routine_created')).toBe('routine_created');
     expect(sanitizeAnalyticsEventName('routine_plan_viewed')).toBe('routine_plan_viewed');
     expect(sanitizeAnalyticsEventName('routine_edited')).toBe('routine_edited');
@@ -589,14 +588,9 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsEventName('step_reordered')).toBe('step_reordered');
     expect(sanitizeAnalyticsEventName('ramp_step_up_offered')).toBe('ramp_step_up_offered');
     expect(sanitizeAnalyticsEventName('ramp_step_up_accepted')).toBe('ramp_step_up_accepted');
-    expect(sanitizeAnalyticsEventName('conflict_resolution_chosen')).toBe(
-      'conflict_resolution_chosen',
-    );
-    expect(sanitizeAnalyticsEventName('conflict_overridden')).toBe('conflict_overridden');
     expect(sanitizeAnalyticsEventName('routine_checkoff_completed')).toBe(
       'routine_checkoff_completed',
     );
-    expect(sanitizeAnalyticsEventName('landing_viewed')).toBe('landing_viewed');
     expect(sanitizeAnalyticsEventName('paywall_dismissed')).toBe('paywall_dismissed');
     expect(sanitizeAnalyticsEventName('subscription_cancel_intent')).toBe(
       'subscription_cancel_intent',
@@ -639,6 +633,25 @@ describe('analytics sanitizer', () => {
       category: 'catalog_match',
       severity: 'p1',
     });
+  });
+
+  it('rejects conflict-state and conflict-only sharing event names', () => {
+    for (const event of [
+      'conflict_detected',
+      'conflict_detail_viewed',
+      'conflict_overridden',
+      'conflict_resolution_chosen',
+      'landing_viewed',
+      'share_card_export_failed',
+      'share_card_export_started',
+      'share_card_export_succeeded',
+      'share_card_exported',
+      'share_link_created',
+      'share_link_opened',
+      'share_sheet_opened',
+    ]) {
+      expect(sanitizeAnalyticsEventName(event)).toBeNull();
+    }
   });
 
   it('drops unapproved or user-derived event names', () => {

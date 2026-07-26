@@ -23,8 +23,8 @@ export const PAYWALL_COPY = {
     headlineFallback: 'Your personalized plan is ready.',
     subhead: `Everything below is part of ${BRAND.proName}.`,
     valueProps: [
-      'Routine intelligence. Order, timing, skin cycling',
-      'Ingredient conflict checks, with evidence grades',
+      'Routine builder. Your products and missing steps',
+      'Ingredient and shelf details, with source status',
       'Private photo timeline. On-device only',
       'Reminders and a forgiving streak',
     ],
@@ -36,7 +36,8 @@ export const PAYWALL_COPY = {
       'Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings.',
     exploreTitle: 'Explore first. 7 days of Pro',
     exploreBody: 'No credit card. See your routine work, then decide.',
-    trustBlock: 'Reviewed by dermatologists · photos stay on your device · no data sales',
+    trustBlock:
+      'Health-related guidance requires independent professional review before availability · photos stay on your device · no data sales',
   },
   // Reverse trial in flight (design 02, docs/08 §6).
   reverseTrial: {
@@ -46,7 +47,7 @@ export const PAYWALL_COPY = {
     keepPill: 'No card on file',
     keepTitle: 'Keep Pro after your week.',
     keepBody:
-      'You are exploring Pro now. Nothing renews unless you choose a plan. Selecting a plan keeps your routine, checks, photos, and reminders unlocked after the free week.',
+      'You are exploring Pro now. Nothing renews unless you choose a plan. Selecting a plan keeps your routine, shelf tools, photos, and reminders unlocked after the free week.',
     keepCta: 'Keep Pro after your week',
     keepDeclineCta: 'Keep exploring for now',
     settingsNote: (date: string) =>
@@ -58,8 +59,8 @@ export const PAYWALL_COPY = {
     title: 'Keep the routine you just built.',
     body: 'You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week:',
     continues: [
-      'The full scheduler & skin-cycling',
-      'Unlimited conflict checks',
+      'Your routine builder & check-offs',
+      'Your shelf details & tracked dates',
       'Your photo timeline & reminders',
     ],
     keepCta: 'Keep my full routine',
@@ -99,7 +100,7 @@ export const PAYWALL_COPY = {
       `No card is on file for this access. You keep Pro until ${date}; choose a plan only if you want Pro to continue after that.`,
     freeTitle: 'You’re on the free plan',
     freeBody:
-      'The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.',
+      'The quiz result and shelf view are always free. Interaction-specific guidance requires completed independent professional review before it can be available.',
     upgradeCta: `See ${BRAND.proName}`,
   },
   // Graceful downgrade after a paid expiry (design 08, docs/08 §6).
@@ -109,7 +110,7 @@ export const PAYWALL_COPY = {
     body: 'Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up.',
     kept: ['Your routine & cycle. Kept', 'Your photos. On your phone', 'Your shelf & streak. Kept'],
     floorNote:
-      'On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do.',
+      'On free, you keep the quiz result and shelf view. Interaction-specific guidance requires completed independent professional review before it can be available.',
     renewCta: 'Renew Pro',
     declineCta: 'Keep using free',
   },
@@ -138,12 +139,12 @@ export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> 
     body: `Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of ${BRAND.proName}.`,
   },
   scheduler: {
-    title: 'Unlock your full skin-cycling scheduler.',
-    body: `Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of ${BRAND.proName}.`,
+    title: 'Build and track your routine.',
+    body: `Organize the products you chose and keep daily check-offs together. Part of ${BRAND.proName}.`,
   },
   conflict_checks: {
-    title: 'Check every product, every time.',
-    body: `Unlimited ingredient-conflict checks with evidence grades and calm resolutions. Part of ${BRAND.proName}.`,
+    title: 'Interaction guidance is unavailable.',
+    body: `Independent professional review of the exact rules and copy is required before product-interaction claims can be sold, unlocked, or shown.`,
   },
   reminders_widgets: {
     title: 'Reminders and a forgiving streak.',
@@ -151,13 +152,13 @@ export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> 
   },
   full_routine: {
     title: 'Unlock your full routine.',
-    body: `The complete builder, sequencing and ramp. Built around your skin. Part of ${BRAND.proName}.`,
+    body: `Build and edit daily routine steps around the products you chose. Part of ${BRAND.proName}.`,
   },
-  // docs/13 §15: only the deeper, cloud-grounded advisor is gated. The on-device,
-  // evidence-grounded answers about your own shelf stay free. Honest, never "AI" hype.
+  // Cloud Ask has no approved provider or exact-release privacy contract.
+  // Keep the upsell unavailable rather than marketing an unconfigured service.
   ask: {
-    title: 'A deeper advisor, grounded in your shelf.',
-    body: `Ask follow-ups in your own words and get fluent, evidence-grounded answers about your routine. Private, and never a substitute for your dermatologist. Part of ${BRAND.proName}.`,
+    title: 'Cloud Ask is unavailable.',
+    body: `It is not included in this release. It requires an approved provider, exact data and retention disclosures, explicit permission, safety validation, and professional review before it can be offered.`,
   },
 };
 

@@ -302,6 +302,8 @@ describe('local device data export', () => {
           ruleId: 'rule-1',
           ruleVersion: 1,
           productIds: ['acid', 'retinoid'],
+          corpusSha256: null,
+          ruleContentSha256: null,
         },
       },
     });

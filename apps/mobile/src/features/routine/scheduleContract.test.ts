@@ -1,6 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { STARTER_RULES } from '@/features/intelligence/rules';
 import { orchestrate } from '@/features/scheduler/orchestrate';
 import { cycleActiveSummaries } from '@/features/scheduler/projection';
 
@@ -32,7 +31,7 @@ describe('routine and canonical scheduler contract', () => {
       { id: 'moisturiser', name: 'Barrier cream', tags: ['barrier'] },
     ];
     const profile = { sensitivity: 'neutral' as const, pregnancy: false, goals: [] };
-    const plan = generatePlan(products, profile, STARTER_RULES);
+    const plan = generatePlan(products, profile);
     const cycle = orchestrate(
       products.map((product) => ({
         id: product.id,
@@ -41,7 +40,6 @@ describe('routine and canonical scheduler contract', () => {
         category: product.category,
       })),
       profile,
-      STARTER_RULES,
     ).cycle!;
 
     const planCycleIds = plan.pm

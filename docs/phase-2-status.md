@@ -18,8 +18,8 @@ Date: 2026-07-15
   immutable snapshot through the native pinned Supabase CLI `2.109.1`, refuses
   public/migration/function/Auth/Storage/all-Cron state, validates and retains a
   full-target-bound cutover record, one traffic/provider-freeze artifact, and
-  five schema-v2 boundary files, predeploys all 17 functions before 64
-  migrations through `0065`, retains before/pre-migration/after
+  five schema-v2 boundary files, predeploys all 17 functions before 66
+  migrations through `0067`, retains before/pre-migration/after
   schema/migration/function/type evidence, and fails closed without retaining
   raw CLI output or provider digests.
 - DB-06 actively closes ingress: the runner sets

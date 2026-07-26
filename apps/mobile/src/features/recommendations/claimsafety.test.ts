@@ -1,7 +1,7 @@
 import { GOALS, type FunctionalTag, type GoalId } from '@onskin/types';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { detectConflicts, type EngineProduct } from '@/features/intelligence/engine';
+import { previewDetectConflicts, type EngineProduct } from '@/features/intelligence/engine';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
 import { REC_TYPES } from './catalog';
@@ -116,7 +116,7 @@ function engineStrings(): string[] {
     { id: 'Retinol', name: 'Retinol 0.5%', tags: ['retinoid'] as FunctionalTag[] },
     { id: 'Glycolic', name: 'Glycolic 7%', tags: ['aha'] as FunctionalTag[] },
   ];
-  const conflicts = detectConflicts(
+  const conflicts = previewDetectConflicts(
     conflictShelf,
     { sensitivity: 'sensitive', pregnancy: false },
     STARTER_RULES,
@@ -127,7 +127,6 @@ function engineStrings(): string[] {
       shelf: [shelfItem({ id: 'Niacinamide', role: 'hydrating_serum', tags: ['niacinamide'] })],
       conflicts: [],
       preferences: { values: ['fragrance_free'], budget: 'mid', formats: [] },
-      rules: STARTER_RULES,
     },
     {
       profile: { sensitivity: 'neutral', pregnancy: true, goals: ['clear_skin'] },
@@ -146,7 +145,6 @@ function engineStrings(): string[] {
       ],
       conflicts: [],
       preferences: DEFAULT_PREFERENCES,
-      rules: STARTER_RULES,
     },
     // better-fit (fragranced cleanser on sensitive skin) + a real conflict-resolution.
     {
@@ -160,7 +158,6 @@ function engineStrings(): string[] {
       ],
       conflicts,
       preferences: DEFAULT_PREFERENCES,
-      rules: STARTER_RULES,
     },
   ];
   const out: string[] = [];

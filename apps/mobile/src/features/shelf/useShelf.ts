@@ -2,13 +2,13 @@ import type { ProductStatus } from '@onskin/types';
 import { useQuery } from '@tanstack/react-query';
 
 import {
-  detectConflicts,
+  evaluateConflicts,
   isReassuring,
+  type ConflictEvaluationStatus,
   type DetectedConflict,
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
-import { deriveConcentration } from '@/features/intelligence/concentration';
 import {
   choiceForConflict,
   unresolvedConflicts as filterUnresolvedConflicts,
@@ -17,7 +17,6 @@ import {
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { getConflictChoices } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
-import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
 import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
@@ -57,6 +56,8 @@ export type ShelfData = {
   unresolvedConflicts: DetectedConflict[];
   conflictChoices: ConflictChoices;
   reassurances: DetectedConflict[];
+  conflictCoverageStatus: ConflictEvaluationStatus;
+  unsupportedConflictPairs: string[];
   /** The top noteworthy (non-reassuring) interaction for the calm shelf banner. */
   banner: DetectedConflict | null;
 };
@@ -135,10 +136,7 @@ export function useShelf() {
         lease.assertCurrent();
         const profile: EngineProfile = {
           sensitivity: profileBits.sensitivity,
-          // Conflict copy may assert pregnancy only after an affirmative answer.
-          // Unknown/prefer-not still filter routine products through the separate
-          // pregnancySafety mode, without creating a literal Pregnancy pseudo-item.
-          pregnancy: profileBits.pregnancy,
+          reproductiveStatus: profileBits.pregnancyStatus,
         };
 
         const active = products.filter((p) => p.status === 'active');
@@ -152,11 +150,11 @@ export function useShelf() {
           // Preserve catalog field boundaries. Without a delimiter, an unrelated
           // ingredient percentage can attach to the next ingredient name and falsely
           // clear a cautious unknown-strength active.
-          const concentration = deriveConcentration([p.name, ...p.ingredients].join('; '), tagArr);
-          return { id: p.id, name: p.name, tags: tagArr, subflags: [...subflags], concentration };
+          return { id: p.id, name: p.name, tags: tagArr, subflags: [...subflags] };
         });
 
-        const conflicts = detectConflicts(engineProducts, profile, shippableRules());
+        const conflictEvaluation = evaluateConflicts(engineProducts, profile);
+        const conflicts = conflictEvaluation.conflicts;
         const reassurances = conflicts.filter(isReassuring);
         // Either explicit timing choice resolves repeat prompts for the exact pair
         // and current rule version. Safety and stale-version rows remain unresolved.
@@ -236,6 +234,8 @@ export function useShelf() {
           conflictChoices,
           reassurances,
           banner,
+          conflictCoverageStatus: conflictEvaluation.status,
+          unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
         };
         lease.assertCurrent();
         return result;

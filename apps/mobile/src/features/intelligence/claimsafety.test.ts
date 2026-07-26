@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { STARTER_RULES, shippableRules } from './rules';
+import {
+  CONFLICT_RULE_CORPUS,
+  CONFLICT_RULE_REVIEW_RECEIPTS,
+  STARTER_RULES,
+  isReviewedRule,
+  shippableRules,
+} from './rules';
 
 // Claim-safety + calm-copy regression guard (docs/02 §7.7, §9). In-app rule copy
 // is a "claims surface" under the FD&C Act / FTC. It must stay COSMETIC and CALM.
@@ -46,8 +52,9 @@ function withDevFlag<T>(value: boolean, run: () => T): T {
 describe('claim-safety: no drug/disease verbs in rule copy (§9)', () => {
   for (const r of STARTER_RULES) {
     it(`${r.tagA} × ${r.tagB} (${r.interactionType}). Mechanism + resolution are cosmetic`, () => {
-      expect(offenders(r.mechanism, DRUG_CLAIMS)).toEqual([]);
-      expect(offenders(r.resolutionCopy, DRUG_CLAIMS)).toEqual([]);
+      for (const text of Object.values(r.copy)) {
+        if (text !== null) expect(offenders(text, DRUG_CLAIMS)).toEqual([]);
+      }
     });
   }
 });
@@ -55,8 +62,9 @@ describe('claim-safety: no drug/disease verbs in rule copy (§9)', () => {
 describe('calm copy: no alarmist words (§7.7)', () => {
   for (const r of STARTER_RULES) {
     it(`${r.tagA} × ${r.tagB}. Mechanism + resolution are calm`, () => {
-      expect(offenders(r.mechanism, ALARM)).toEqual([]);
-      expect(offenders(r.resolutionCopy, ALARM)).toEqual([]);
+      for (const text of Object.values(r.copy)) {
+        if (text !== null) expect(offenders(text, ALARM)).toEqual([]);
+      }
     });
   }
 });
@@ -64,7 +72,7 @@ describe('calm copy: no alarmist words (§7.7)', () => {
 describe('copy does not claim scheduling or safety action before the app has done it', () => {
   for (const r of STARTER_RULES) {
     it(`${r.tagA} × ${r.tagB}. Resolution avoids premature placement claims`, () => {
-      expect(offenders(r.resolutionCopy, PLACEMENT_OVERCLAIMS)).toEqual([]);
+      expect(offenders(r.copy.resolution, PLACEMENT_OVERCLAIMS)).toEqual([]);
     });
   }
 });
@@ -72,6 +80,7 @@ describe('copy does not claim scheduling or safety action before the app has don
 describe('rule-set invariants', () => {
   it('every rule is unreviewed until B-DERM-REVIEW (reviewed_by = null)', () => {
     expect(STARTER_RULES.every((r) => r.reviewedBy === null)).toBe(true);
+    expect(STARTER_RULES.every((r) => r.admission === undefined)).toBe(true);
   });
 
   it('rule ids are unique', () => {
@@ -91,35 +100,37 @@ describe('rule-set invariants', () => {
       expect(r.evidenceLabel).not.toBe('established');
     }
   });
+
+  it('derives all presentation copy from the canonical rule bytes', () => {
+    for (const rule of STARTER_RULES) {
+      expect(rule.copy.mechanism).toBe(rule.mechanism);
+      expect(rule.copy.resolution).toBe(rule.resolutionCopy);
+      expect(rule.sourceIds.length).toBeGreaterThan(0);
+    }
+  });
 });
 
-describe('B-DERM-REVIEW production rule gate', () => {
-  it('withholds all starter rules in production until a reviewer is recorded', () => {
+describe('exact-corpus professional review gate', () => {
+  it('withholds the draft corpus in production', () => {
     withDevFlag(false, () => {
       expect(shippableRules()).toEqual([]);
     });
   });
 
-  it('ships only reviewed rules in production', () => {
-    const reviewed = { ...STARTER_RULES[0]!, reviewedBy: 'B-DERM-REVIEW' };
-    const unreviewed = STARTER_RULES[1]!;
-
-    withDevFlag(false, () => {
-      expect(shippableRules([reviewed, unreviewed])).toEqual([reviewed]);
-    });
+  it('has no fabricated checked-in review evidence', () => {
+    expect(CONFLICT_RULE_CORPUS.status).toBe('draft_blocked');
+    expect(CONFLICT_RULE_REVIEW_RECEIPTS).toEqual([]);
   });
 
-  it('rejects blank reviewer metadata in production', () => {
-    const blankReviewer = { ...STARTER_RULES[0]!, reviewedBy: '   ' };
-
-    withDevFlag(false, () => {
-      expect(shippableRules([blankReviewer])).toEqual([]);
-    });
+  it('does not treat an arbitrary legacy reviewedBy marker as professional admission', () => {
+    const marked = { ...STARTER_RULES[0]!, reviewedBy: 'B-DERM-REVIEW' };
+    expect(isReviewedRule(marked)).toBe(false);
+    expect(shippableRules([marked])).toEqual([]);
   });
 
-  it('keeps the full starter set available for development fixtures', () => {
+  it('keeps release selection closed in development too', () => {
     withDevFlag(true, () => {
-      expect(shippableRules()).toHaveLength(STARTER_RULES.length);
+      expect(shippableRules()).toEqual([]);
     });
   });
 });

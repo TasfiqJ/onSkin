@@ -62,6 +62,8 @@ function plan(overrides: Partial<GeneratedPlan> = {}): GeneratedPlan {
     unplacedProducts: [],
     gaps: [],
     conflicts: [],
+    conflictCoverageStatus: 'compatible',
+    unsupportedConflictPairs: [],
     ...overrides,
   };
 }

@@ -15,7 +15,6 @@ import { classLabel } from '@/features/scheduler/classes';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
-import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -241,10 +240,6 @@ export default function PlanScreen() {
       isExample: data.isExample,
       source,
     });
-
-    if (data.plan.conflicts.length > 0) {
-      track('conflict_detected', { count: data.plan.conflicts.length });
-    }
   }, [data]);
 
   const planNote = plan ? (plan.unplacedProducts.length > 0 ? null : (plan.gaps[0] ?? null)) : null;

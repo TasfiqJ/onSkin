@@ -95,11 +95,15 @@ function normalizeRecord(value: unknown): ConflictChoiceRecord | null {
   ) {
     return null;
   }
+  const normalizeHash = (hash: unknown): string | null =>
+    typeof hash === 'string' && /^[a-f0-9]{64}$/u.test(hash) ? hash : null;
   return {
     choice,
     ruleId: identity.ruleId,
     ruleVersion: value.ruleVersion,
     productIds: identity.productIds,
+    corpusSha256: normalizeHash(value.corpusSha256),
+    ruleContentSha256: normalizeHash(value.ruleContentSha256),
   };
 }
 
@@ -114,6 +118,8 @@ function normalizeChoices(value: unknown): NormalizedChoices | null {
         ruleId: identity.ruleId,
         ruleVersion: 1,
         productIds: identity.productIds,
+        corpusSha256: null,
+        ruleContentSha256: null,
       };
     }
     return { value: { schemaVersion: 1, choices } };
@@ -150,7 +156,17 @@ function isRecognizedCurrentState(
   return storedEntries.every(([key, storedValue]) => {
     if (
       !isRecord(storedValue) ||
-      !hasExactKeys(storedValue, ['choice', 'ruleId', 'ruleVersion', 'productIds'])
+      !(
+        hasExactKeys(storedValue, ['choice', 'ruleId', 'ruleVersion', 'productIds']) ||
+        hasExactKeys(storedValue, [
+          'choice',
+          'ruleId',
+          'ruleVersion',
+          'productIds',
+          'corpusSha256',
+          'ruleContentSha256',
+        ])
+      )
     ) {
       return false;
     }
@@ -164,6 +180,8 @@ function isRecognizedCurrentState(
       recognizedChoice &&
       storedValue.ruleId === normalizedRecord.ruleId &&
       storedValue.ruleVersion === normalizedRecord.ruleVersion &&
+      (storedValue.corpusSha256 ?? null) === normalizedRecord.corpusSha256 &&
+      (storedValue.ruleContentSha256 ?? null) === normalizedRecord.ruleContentSha256 &&
       Array.isArray(storedValue.productIds) &&
       storedValue.productIds.length === normalizedRecord.productIds.length &&
       storedValue.productIds.every(
@@ -277,6 +295,8 @@ export async function setConflictChoice(
           ruleId: identity.ruleId,
           ruleVersion: conflict.rule.ruleVersion,
           productIds: identity.productIds,
+          corpusSha256: conflict.rule.corpusSha256,
+          ruleContentSha256: conflict.rule.ruleContentSha256,
         },
       };
       lease.assertCurrent();
@@ -300,7 +320,11 @@ export async function getOverriddenKeys(): Promise<Set<string>> {
     lease.assertCurrent();
     return new Set(
       Object.entries(choices).flatMap(([key, record]) =>
-        record.choice === 'use_together' ? [key] : [],
+        record.choice === 'use_together' &&
+        record.corpusSha256 !== null &&
+        record.ruleContentSha256 !== null
+          ? [key]
+          : [],
       ),
     );
   });
@@ -316,14 +340,9 @@ export async function setConflictOverride(key: string, overridden: boolean): Pro
     await updatePrivateItem(KEY, (raw) => {
       lease.assertCurrent();
       const next = { ...choicesForMutation(raw) };
-      if (overridden) {
-        next[identity.key] = {
-          choice: 'use_together',
-          ruleId: identity.ruleId,
-          ruleVersion: 1,
-          productIds: identity.productIds,
-        };
-      } else {
+      // A legacy pair key cannot supply the exact corpus and rule hashes. It
+      // may remove old state, but can never create an active choice.
+      if (!overridden) {
         delete next[identity.key];
       }
       lease.assertCurrent();

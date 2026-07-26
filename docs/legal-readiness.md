@@ -1,5 +1,14 @@
 # OnSkin — Legal & Regulatory Readiness Checklist
 
+> **Historical checklist, not legal clearance.** The active iOS-only,
+> provisional U.S.-only launch contract, `docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md`,
+> the Phase 3 review packet, and `BLOCKERS.md` supersede categorical statements
+> in this file. Medical-device, HIPAA, CCPA/CPRA, consumer-health, biometric,
+> minors, subscription, and claims classifications depend on the final entity,
+> relationships, intended use, functions, data flows, thresholds, users,
+> storefronts, and exact copy. A disclaimer is supporting disclosure, not a
+> classification safe harbor.
+
 > **This is not legal advice, and it was not written by a lawyer.** It's a
 > practical map of the legal/regulatory surface for OnSkin, synthesised from the
 > research already in `docs/00 §7`, `docs/01 §4`, and `docs/02 §9`, plus the
@@ -14,11 +23,13 @@
 
 ## TL;DR
 
-- You are **probably NOT building a regulated medical device**, and you do **not**
-  need FDA pre-approval to launch — **provided** the app stays in the _cosmetic /
-  general-wellness_ lane, never _diagnoses/treats_ a condition, and carries a
-  standing "not medical advice" disclaimer. Under the FD&C Act, what makes
-  something a regulated drug/device is the **claims**, not the app itself.
+- The repository is designed toward a cosmetic/general-wellness posture, but no
+  source file can conclude that the final app is not a regulated medical device.
+  FDA classification turns on intended use, claims, and actual functions; a
+  standing "not medical advice" disclaimer does not cure diagnostic, treatment,
+  mitigation, measurement, or recommendation functionality. Preserve the
+  regulated-device and professional-review launch gates until qualified counsel
+  reviews the exact release and App Store Connect declaration.
 - The app's architecture was **deliberately designed** to stay in that lane:
   cosmetic language, evidence-graded + non-alarmist conflict copy, a separate
   conservative **safety** class that _defers to a clinician_, on-device-first
@@ -26,32 +37,38 @@
 - The exposures that actually have teeth are **(1) privacy / health-data law**
   (Washington MHMDA — per-violation penalties + private right of action) and
   **(2) false reassurance on a genuine safety item** — both mitigated by design.
-- Four professional sign-offs are **mandatory, not optional** before launch (see
-  the checklist). None is a government "permit"; they are professional reviews
-  that keep you out of trouble (and double as trust/marketing assets).
+- Every named professional and regulatory gate in the active review packet is
+  **mandatory before the associated surface launches**. Professional review is
+  neither a government permit nor a marketing asset by default, and it cannot
+  guarantee compliance, safety, App Review acceptance, or commercial results.
 
 ---
 
 ## 1. Are we a "medical device"? (the founder's core worry)
 
-**Short answer: almost certainly not — if we stay disciplined.**
+**Current answer: unresolved until the exact release is classified.**
 
-- The FDA regulates _Software as a Medical Device (SaMD)_ when software is intended
-  to **diagnose, treat, cure, mitigate, or prevent a disease**, or to **affect the
-  structure/function of the body**. General-wellness and low-risk informational
-  tools that make **no disease claims** are not actively regulated as devices.
-- OnSkin gives **general cosmetic information + routine organisation**, surfaces
-  ingredient interactions with **evidence grades** (and says "contested"/"myth"
-  when true), and **routes genuine medical questions to a clinician**. That is the
-  textbook way to stay _out_ of device territory.
+- FDA oversight turns on the exact software function and intended use, including
+  claims to diagnose, treat, cure, mitigate, or prevent disease or affect body
+  structure/function. The FDA's general-wellness and device-software guidance
+  must be applied to the final functions and claims, not to the app category or
+  disclaimer in isolation.
+- The intended launch posture is **general cosmetic information + routine
+  organisation**, with exact-hash reviewed content and clinician routing.
+  Trend analysis, photos, Ask, safety guidance, measurements, recommendations,
+  metadata, and marketing must each remain disabled until their function-specific
+  review gate closes.
 - **The line you must not cross:** the moment copy says "diagnoses your acne,"
   "treats your rosacea," or "clinically proven to…", you risk reclassification.
   This is enforced in code by the **claim-safety regression test**
   (`apps/mobile/src/features/intelligence/claimsafety.test.ts`), which blocks
   drug/disease verbs and alarm words from shipping in rule copy.
 
-> Action: have a regulatory-aware attorney confirm the cosmetic/wellness
-> positioning in writing once before launch. This is a confirmation, not a filing.
+> Action: obtain a function-specific written FDA/device-positioning opinion tied
+> to the exact release hashes and intended-use/claims inventory, then complete
+> the truthful App Store Connect regulated-medical-device declaration. Counsel
+> must determine whether any regulator interaction, filing, clearance, or other
+> action is required.
 
 ---
 
@@ -69,19 +86,23 @@ separately polices advertising for truthfulness/substantiation.
 
 ### B. Privacy / health-data law — _the one with teeth_ · (docs/00 §7, docs/01 §4)
 
-Skin photos + skin-health inferences are sensitive/health data. Applicable:
+Skin photos and skin-health inferences are treated as sensitive consumer-health
+data by the launch controls. Actual legal applicability remains fact-specific:
 
-- **Washington MHMDA** (in force since 2024): standalone **Consumer Health Data
+- **Washington MHMDA** is a conservative U.S. Wave 1 launch gate: standalone **Consumer Health Data
   Privacy Policy** linked on the homepage; **opt-in consent for collection that is
   "separate and distinct" from consent for sharing**; **private right of action**;
   civil penalties up to **$7,500 per violation**; deletion right with few
   exceptions. _(This is the single most likely thing to get a startup sued —
   treat it as priority #1.)_
-- **GDPR Art. 9** (EU users): _explicit_ consent for health data; a DPIA is
-  advisable for large-scale health-data processing.
-- **CCPA/CPRA** (California), **COPPA** (age gate — neutral DOB, gate at 13/16).
-- **Illinois BIPA**: avoided by doing **on-device** face detection and storing
-  **no faceprint/biometric template** — keep it that way.
+- **GDPR and Canadian/Quebec regimes** remain later-market gates; those
+  storefronts are closed rather than assumed covered or cleared.
+- **CCPA/CPRA** depends on statutory scope and thresholds. **COPPA** and other
+  minors rules depend on the final audience, knowledge, collection, and age
+  policy; the current product threshold is not a legal conclusion.
+- **Illinois BIPA and other biometric laws** require fact-specific review.
+  On-device framing with no retained faceprint/template minimizes exposure but
+  does not itself prove non-applicability.
 - **Status:** consent ledger + unbundled consent screens + on-device-first photos
   are built; the **policy/ToS/consent text + DPIA need a privacy lawyer**. Tracked
   under **B-PRIVACY-COPY**.
@@ -93,12 +114,14 @@ mitigation is layered: evidence grades on every rule, non-alarmist
 resolution-first copy, a separate maximally-conservative **safety** class that
 _defers to a clinician_, the standing disclaimer, **and** professional sign-off.
 
-- **Status:** the ~14 starter rules are authored from the literature in docs/02
-  but every row is `reviewed_by = NULL`. **A board-certified dermatologist + a
-  cosmetic chemist/pharmacist must review & sign off the entire rule set
-  (especially every `safety` rule) before any rule reaches users.** Enforced in
-  code by `shippableRules()` (only reviewed rules surface in production). Tracked
-  under **B-DERM-REVIEW** (LAUNCH GATE).
+- **Status:** 13 candidate rows are recorded for review, not approved for use.
+  Production admits zero rules. Before any exact corpus reaches users, it needs
+  independent board-certified-dermatologist and cosmetic-chemist/pharmacist
+  approvals plus separate regulatory-counsel claims/jurisdiction clearance,
+  all bound to the exact corpus, source registry, per-rule hashes, market scope,
+  reviewer credentials, and detached signatures. A legacy `reviewed_by` string
+  is display metadata and cannot authorize publication. Tracked under
+  **B-DERM-REVIEW** and the Phase 3 legal/clinical/chemistry gates.
 
 ### D. The skin-type quiz — patent/copyright · (docs/01 §2)
 
@@ -147,19 +170,21 @@ provider proof is currently required.
 
 ## 3. What "approvals" actually means here
 
-| Gate                                          | Is it a government permit?                        | What's required                                                                                                             |
-| --------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| FDA clearance / medical-device registration   | **No** (if cosmetic/wellness + no disease claims) | A confirming legal opinion on positioning                                                                                   |
-| Standing **not-medical-advice disclaimer**    | No                                                | Counsel-drafted; shown in onboarding, Settings, and on conflict/safety screens                                              |
-| **Apple App Store review**                    | Vendor gate (standard)                            | Guidelines 4.8 (SIWA), 5.1.1(v) (account deletion), 3.1.2 (no trial toggle), health-app scrutiny — all already designed for |
-| **Google Play review**                        | Vendor gate (standard)                            | Data-safety form, account/data deletion route                                                                               |
-| **Dermatologist + cosmetic-chemist sign-off** | No — professional review                          | Mandatory before launch (B-DERM-REVIEW)                                                                                     |
-| **Privacy/health-data legal review**          | No — professional review                          | Mandatory before launch (B-PRIVACY-COPY)                                                                                    |
-| **Patent/trademark opinion** (quiz)           | No — professional review                          | Before shipping the real quiz (B-QUIZ-COPY)                                                                                 |
+| Gate                                          | Is it a government permit?           | What's required                                                                                                                |
+| --------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| FDA clearance / medical-device registration   | **Unresolved for the exact release** | Function-specific intended-use/device opinion; counsel determines regulator action, and App Store declaration must be truthful |
+| Standing **not-medical-advice disclaimer**    | No                                   | Counsel-drafted; shown in onboarding, Settings, and on conflict/safety screens                                                 |
+| **Apple App Store review**                    | Vendor gate (standard)               | Guidelines 4.8 (SIWA), 5.1.1(v) (account deletion), 3.1.2 (no trial toggle), health-app scrutiny — all already designed for    |
+| **Google Play review**                        | Vendor gate (standard)               | Data-safety form, account/data deletion route                                                                                  |
+| **Dermatologist + cosmetic-chemist sign-off** | No — professional review             | Mandatory before launch (B-DERM-REVIEW)                                                                                        |
+| **Privacy/health-data legal review**          | No — professional review             | Mandatory before launch (B-PRIVACY-COPY)                                                                                       |
+| **Patent/trademark opinion** (quiz)           | No — professional review             | Before shipping the real quiz (B-QUIZ-COPY)                                                                                    |
 
-So: **no FDA/government pre-approval to launch a cosmetic-info app** — but the
-App/Play store reviews plus the three professional sign-offs above are real and
-should be budgeted and scheduled.
+No document in this repository can conclude that government action is
+unnecessary for the final build. The current source posture keeps
+medical/clinical content and functions fail-closed while qualified counsel,
+independent professionals, Apple, and any applicable regulator resolve their
+separate gates.
 
 ---
 
@@ -195,11 +220,12 @@ startup-focused service vs. a full-service firm. **Get 2–3 real quotes.**
 6. Submit to App Store / Play with accurate privacy nutrition labels / data-safety
    forms reflecting the _actual_ (on-device-first) data flows.
 
-> Everything above is wired into the codebase so that clearing each item is a
-> drop-in, not a re-architecture: populate `conflict_rules.reviewed_by`, set the
-> consent `version`/`consent_text_hash`, and fill the `.env` keys — the launch
-> gates (`shippableRules()`, the consent ledger, env placeholders) flip without
-> code changes.
+> None of these gates closes by filling a string or environment variable.
+> Legacy clinical tables are sealed and non-authoritative. Release requires
+> exact-hash review evidence, trusted reviewer authority and signature
+> verification, final consent/policy bytes, exact production configuration,
+> hosted/device evidence, and the active launch contracts. Any source or scope
+> change reopens the affected review.
 
 ---
 

@@ -13,9 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Text } from '@/components/ui';
-import { InContextNote } from '@/features/community/InContextNote';
-import { noteForTags } from '@/features/community/notes';
-import type { DetectedConflict } from '@/features/intelligence/engine';
+import { isAdmittedDetectedConflict, type DetectedConflict } from '@/features/intelligence/engine';
 import type { ConflictChoices, ConflictUserChoice } from '@/features/intelligence/conflictChoices';
 import { conflictShareRoute } from '@/features/intelligence/conflictIdentity';
 import { setConflictChoice } from '@/features/intelligence/overrides';
@@ -24,7 +22,6 @@ import {
   familyTitle,
   interactionClassLabel,
   severityLabel,
-  tagLabel,
 } from '@/features/intelligence/presentation';
 import {
   applyConflictChoicesToShelfData,
@@ -38,19 +35,14 @@ import {
 } from '@/features/subscription/conflictQuota';
 import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
-import { track } from '@/lib/analytics/track';
-import { BRAND } from '@/lib/brand';
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
   runHealthDataWriteOperation,
-  type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import { devWarn } from '@/lib/observability/safeLog';
-import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
 // Conflict override sheet (design frames 04/05/06, docs/02 §7.3 / docs/03 §7). The
@@ -59,9 +51,8 @@ import { colors } from '@/theme/tokens';
 // no re-nagging); myth/synergy reassure on a sage success sheet; safety defers to
 // a clinician on a calm night sheet. The user is never blocked.
 //
-// Display copy here is a presentation override of the canonical rule data (which
-// stays byte-synced with the seed migration and is scanned by claimsafety tests).
-// It restates the same claim-safe meaning in the design's exact words.
+// All interaction-specific claim copy comes from the hash-bound mobile corpus.
+// This route supplies layout labels and the standing legal disclaimer only.
 const SEV_DOT: Record<string, string> = {
   none: colors.severityNone,
   mild: colors.severityMild,
@@ -73,32 +64,6 @@ const SAFETY_ICON_BG = 'rgba(217,161,131,0.16)';
 const NIGHT_GRABBER = 'rgba(244,239,231,0.18)';
 const NIGHT_BODY = 'rgba(244,239,231,0.72)';
 const NIGHT_FAINT = 'rgba(244,239,231,0.5)';
-
-/** Faithful per-rule display copy, restating the canonical (claim-safe) rule meaning
- *  in the design's exact words. Keyed by rule id; falls back to the rule's own copy. */
-type CopyOverride = {
-  mechanism?: string;
-  suggestion?: string;
-  suggestionAccent?: string;
-  source?: string;
-};
-const COPY: Record<string, CopyOverride> = {
-  // Retinol × glycolic acid (frame 04).
-  '00000000-0000-4000-8000-000000000001': {
-    mechanism:
-      'Used the same evening, these can compound irritation, especially on sensitive skin like yours. The popular "they cancel each other out" idea isn’t supported, so this is about comfort, not effectiveness.',
-    suggestion: 'Alternate nights. Keep retinol and glycolic on different evenings.',
-    source:
-      'Based largely on lab and mechanistic evidence; high-quality human-outcome studies are limited. Source: dermatology literature review, 2025.',
-  },
-  // Niacinamide + vitamin C (frame 05, myth).
-  '00000000-0000-4000-8000-000000000004': {
-    mechanism:
-      'You may have read these "cancel out" or cause flushing. That fear traces to a 1960s study that used niacin, a different ingredient, under heat. Modern niacinamide is stable, and the two are routinely formulated together.',
-    suggestion:
-      'Nothing to change. These are fine in the same routine, and they can complement each other.',
-  },
-};
 
 function Chip({ label, dot, bg, fg }: { label: string; dot?: string; bg: string; fg: string }) {
   return (
@@ -157,58 +122,17 @@ function persistedChoice(choice: 'keep' | 'use_together'): ConflictUserChoice {
   return choice === 'use_together' ? 'use_together' : 'accept_suggested_timing';
 }
 
-async function mirrorChoice(
-  c: DetectedConflict,
-  userChoice: ConflictUserChoice,
-  lease: HealthDataWriteOperationLease,
-): Promise<void> {
-  try {
-    if (!c.productAId || !c.productBId) return;
-    const [productAId, productBId] = [c.productAId, c.productBId].sort();
-    const { data } = await getPersistedSupabaseUser();
-    lease.assertCurrent();
-    if (data.user?.id !== lease.ownerUserId) return;
-    const { error } = await supabase.from('routine_conflicts').upsert(
-      {
-        user_id: lease.ownerUserId,
-        rule_id: c.rule.id,
-        product_a_id: productAId,
-        product_b_id: productBId,
-        computed_severity: c.computedSeverity,
-        status: userChoice === 'use_together' ? 'overridden' : 'accepted',
-        user_choice: userChoice,
-        rule_version: c.rule.ruleVersion,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id,rule_id,product_a_id,product_b_id' },
-    );
-    lease.assertCurrent();
-    if (error) throw new Error('SUPABASE_ROUTINE_CONFLICT_UPSERT_FAILED');
-  } catch (error) {
-    lease.assertCurrent();
-    devWarn('routine_conflict_mirror_upsert_failed', error);
-    /* best-effort until backend configured (B-SUPABASE) */
-  }
-}
-
 async function recordChoice(
   c: DetectedConflict,
   choice: 'keep' | 'use_together',
 ): Promise<ConflictChoices> {
   const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
   if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
-  // Local-first so the choice sticks offline and the app stops re-nagging
-  // immediately (docs/03 §7); the server mirror below is best-effort.
+  // Exact-hash choices remain encrypted and local-only until a hash-bound
+  // backend schema exists.
   return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
     const userChoice = persistedChoice(choice);
     const conflictChoices = await setConflictChoice(c, userChoice);
-    lease.assertCurrent();
-    track('conflict_resolution_chosen', {
-      action: choice === 'use_together' ? 'use_together' : 'keep',
-      source: 'detail',
-    });
-    if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
-    await mirrorChoice(c, userChoice, lease);
     lease.assertCurrent();
     return conflictChoices;
   });
@@ -226,15 +150,8 @@ function conflictProductPairLabel(conflict: DetectedConflict): string | null {
   return names.length > 0 ? names.join(' + ') : null;
 }
 
-function conflictSuggestion(conflict: DetectedConflict, copy: CopyOverride): string {
-  if (
-    conflict.rule.resolutionType === 'alternate_nights' &&
-    conflict.productAName &&
-    conflict.productBName
-  ) {
-    return `Alternate nights. Keep ${conflict.productAName} and ${conflict.productBName} on different evenings.`;
-  }
-  return copy.suggestion ?? conflict.rule.resolutionCopy;
+function conflictSuggestion(conflict: DetectedConflict): string {
+  return conflict.rule.copy.resolution;
 }
 
 export default function ConflictSheet() {
@@ -254,7 +171,10 @@ export default function ConflictSheet() {
   const { data } = useShelf();
   const entitlement = useEntitlement();
   const [seenRuleIds, setSeenRuleIds] = useState<string[] | null>(null);
-  const ruleMatches = data?.conflicts.filter((candidate) => candidate.rule.id === ruleId) ?? [];
+  const ruleMatches =
+    data?.conflicts.filter(
+      (candidate) => isAdmittedDetectedConflict(candidate) && candidate.rule.id === ruleId,
+    ) ?? [];
   const conflict = invalidIdentity
     ? undefined
     : requestedPair
@@ -548,38 +468,18 @@ function ConflictBody({
   const r = conflict.rule;
   const isReassure = r.interactionType === 'myth' || r.interactionType === 'synergy';
   const isSafety = r.interactionType === 'safety';
-  const copy = COPY[r.id] ?? {};
-  // The community trust layer (docs/11 §9.2) reinforces a reassurance with the matching
-  // "myth vs evidence" Skin Note. Exactly where the doubt lands (e.g. niacinamide × vit C).
-  const skinNoteId = noteForTags(r.tagA, r.tagB) ?? null;
-
-  if (isReassure)
-    return (
-      <ReassureBody conflict={conflict} copy={copy} skinNoteId={skinNoteId} onDismiss={onDismiss} />
-    );
-  if (isSafety) return <SafetyBody conflict={conflict} onDismiss={onDismiss} />;
-  return (
-    <StandardBody
-      conflict={conflict}
-      copy={copy}
-      skinNoteId={skinNoteId}
-      qc={qc}
-      onDismiss={onDismiss}
-    />
-  );
+  if (isReassure) return <ReassureBody conflict={conflict} onDismiss={onDismiss} />;
+  if (isSafety) return <SafetyBody conflict={conflict} />;
+  return <StandardBody conflict={conflict} qc={qc} onDismiss={onDismiss} />;
 }
 
 // ---- Standard conflict (frame 04) ----------------------------------------------
 function StandardBody({
   conflict,
-  copy,
-  skinNoteId,
   qc,
   onDismiss,
 }: {
   conflict: DetectedConflict;
-  copy: CopyOverride;
-  skinNoteId: string | null;
   qc: ReturnType<typeof useQueryClient>;
   onDismiss: () => void;
 }) {
@@ -588,14 +488,8 @@ function StandardBody({
   const [saveFailed, setSaveFailed] = useState(false);
   const r = conflict.rule;
   const productPairLabel = conflictProductPairLabel(conflict);
-  const honest =
-    r.evidenceGrade == null || r.evidenceLabel === 'contested' || r.evidenceLabel === 'plausible';
-  const sourceBody =
-    copy.source ??
-    `${r.sourceCitation}${honest ? '. Based largely on lab and mechanistic evidence; high-quality human-outcome studies are limited.' : '.'}`;
-  const suggestion = conflictSuggestion(conflict, copy);
-  const keepLabel =
-    r.resolutionType === 'alternate_nights' ? 'Keep alternate nights' : 'Keep suggested timing';
+  const suggestion = conflictSuggestion(conflict);
+  const keepLabel = r.copy.primaryActionLabel;
 
   async function choose(choice: 'keep' | 'use_together') {
     if (saveInFlight.current) return;
@@ -620,17 +514,13 @@ function StandardBody({
     <>
       <View className="mb-4 flex-row flex-wrap gap-2">
         <Chip
-          label={severityLabel(conflict.computedSeverity)}
+          label={severityLabel(conflict)}
           dot={SEV_DOT[conflict.computedSeverity]}
           bg={colors.clayTint}
           fg={colors.clayDeep}
         />
-        <Chip label={evidenceChip(r.evidenceLabel)} bg={colors.clayTint} fg={colors.clayDeep} />
-        <Chip
-          label={interactionClassLabel(r.interactionType)}
-          bg={colors.greige}
-          fg={colors.mutedStrong}
-        />
+        <Chip label={evidenceChip(conflict)} bg={colors.clayTint} fg={colors.clayDeep} />
+        <Chip label={interactionClassLabel(conflict)} bg={colors.greige} fg={colors.mutedStrong} />
       </View>
 
       <Text variant="title" className="text-[33px] leading-[37px]" accessibilityRole="header">
@@ -654,20 +544,15 @@ function StandardBody({
         className="mt-3.5 text-[14.5px] leading-6"
         style={{ color: colors.inkSoft }}
       >
-        {copy.mechanism ?? r.mechanism}
+        {r.copy.mechanism}
       </Text>
 
       <Card className="mt-5">
         <Text variant="label" className="font-mono uppercase" style={{ color: colors.clay }}>
-          Our suggestion
+          {r.copy.interactionLabel}
         </Text>
         <Text variant="body" className="mt-2 font-sans-medium text-[15px] leading-[22px]">
           {suggestion}
-          {copy.suggestionAccent ? (
-            <Text className="font-sans-medium text-[15px]" style={{ color: colors.sageEyebrow }}>
-              {copy.suggestionAccent}
-            </Text>
-          ) : null}
         </Text>
       </Card>
 
@@ -681,19 +566,13 @@ function StandardBody({
           style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.07)' }}
         >
           <Text className="text-[13px]" style={{ color: colors.muted }}>
-            Why it&apos;s only &quot;{r.evidenceLabel}&quot;
+            {r.copy.sourceLimitationTitle}
           </Text>
         </View>
         <Text className="pt-2 text-[12.5px] leading-[19px]" style={{ color: colors.mutedStrong }}>
-          {sourceBody}
+          {r.copy.sourceLimitationBody}
         </Text>
       </View>
-
-      {skinNoteId ? (
-        <View className="mt-4">
-          <InContextNote noteId={skinNoteId} />
-        </View>
-      ) : null}
 
       <View className="mt-[18px] gap-2">
         <Button
@@ -701,18 +580,22 @@ function StandardBody({
           label={savingChoice === 'keep' ? 'Saving choice' : keepLabel}
           onPress={() => void choose('keep')}
         />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ disabled: savingChoice != null }}
-          className="min-h-[48px] items-center justify-center py-2"
-          disabled={savingChoice != null}
-          onPress={() => void choose('use_together')}
-          style={{ opacity: savingChoice != null ? 0.5 : 1 }}
-        >
-          <Text variant="body" tone="muted" className="font-sans-semibold">
-            {savingChoice === 'use_together' ? 'Saving choice' : 'Use together anyway'}
-          </Text>
-        </Pressable>
+        {r.copy.overrideActionLabel ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ disabled: savingChoice != null }}
+            className="min-h-[48px] items-center justify-center py-2"
+            disabled={savingChoice != null}
+            onPress={() => void choose('use_together')}
+            style={{ opacity: savingChoice != null ? 0.5 : 1 }}
+          >
+            <Text variant="body" tone="muted" className="font-sans-semibold">
+              {savingChoice === 'use_together'
+                ? r.copy.primaryActionLabel
+                : r.copy.overrideActionLabel}
+            </Text>
+          </Pressable>
+        ) : null}
         {saveFailed ? (
           <View accessibilityRole="alert" className="rounded-[8px] bg-clay-tint px-4 py-3">
             <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.ink }}>
@@ -723,10 +606,6 @@ function StandardBody({
             </Text>
           </View>
         ) : null}
-        <Text className="text-center text-[11.5px] leading-[17px]" style={{ color: colors.muted }}>
-          Your guided checklist keeps one potent active per night until co-use timing has named
-          clinical and cosmetic-chemistry review.
-        </Text>
         <View className="mt-1 flex-row items-center justify-center gap-2">
           <View className="h-1 w-1 rounded-full" style={{ backgroundColor: colors.mutedFaint }} />
           <Text className="font-mono text-[10.5px]" style={{ color: colors.mutedLight }}>
@@ -743,7 +622,7 @@ function StandardBody({
           onPress={() => router.push(conflictShareRoute(conflict))}
         >
           <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-            Share this card
+            {r.copy.shareActionLabel}
           </Text>
         </Pressable>
       ) : null}
@@ -759,18 +638,12 @@ function StandardBody({
 // ---- Myth / reassurance (frame 05) ---------------------------------------------
 function ReassureBody({
   conflict,
-  copy,
-  skinNoteId,
   onDismiss,
 }: {
   conflict: DetectedConflict;
-  copy: CopyOverride;
-  skinNoteId: string | null;
   onDismiss: () => void;
 }) {
   const r = conflict.rule;
-  const a = tagLabel(r.tagA);
-  const b = tagLabel(r.tagB).toLowerCase();
 
   return (
     <>
@@ -782,15 +655,12 @@ function ReassureBody({
       </View>
 
       <View className="mb-3.5 flex-row flex-wrap gap-2">
-        <Chip label="Refuted myth" bg={colors.sageTint} fg={colors.sage} />
-        <Chip label="Safe to combine" bg={colors.sageTint} fg={colors.sage} />
+        <Chip label={r.copy.interactionLabel} bg={colors.sageTint} fg={colors.sage} />
+        <Chip label={evidenceChip(conflict)} bg={colors.sageTint} fg={colors.sage} />
       </View>
 
       <Text variant="title" className="text-[33px] leading-[37px]" accessibilityRole="header">
-        {a} + {b}?{' '}
-        <Text variant="title" italic className="text-[33px]" style={{ color: colors.sage }}>
-          Go ahead.
-        </Text>
+        {r.copy.detailTitle}
       </Text>
 
       <Text
@@ -799,15 +669,15 @@ function ReassureBody({
         className="mt-3.5 text-[14.5px] leading-6"
         style={{ color: colors.inkSoft }}
       >
-        {copy.mechanism ?? r.mechanism}
+        {r.copy.mechanism}
       </Text>
 
       <Card className="mt-5">
         <Text variant="label" className="font-mono uppercase" style={{ color: colors.sage }}>
-          What we did
+          {r.copy.interactionLabel}
         </Text>
         <Text variant="body" className="mt-2 font-sans-medium text-[15px] leading-[22px]">
-          {copy.suggestion ?? r.resolutionCopy}
+          {r.copy.resolution}
         </Text>
       </Card>
 
@@ -817,19 +687,12 @@ function ReassureBody({
         style={{ backgroundColor: colors.greigeChip, paddingHorizontal: 18, paddingVertical: 14 }}
       >
         <Text className="text-[12.5px] leading-[19px]" style={{ color: colors.mutedStrong }}>
-          We flag myths as readily as risks. Telling you a safe combination is dangerous would be
-          its own kind of misinformation.
+          {r.copy.sourceLimitationBody}
         </Text>
       </View>
 
-      {skinNoteId ? (
-        <View className="mt-4">
-          <InContextNote noteId={skinNoteId} />
-        </View>
-      ) : null}
-
       <View className="mt-6">
-        <Button label="Got it" onPress={onDismiss} />
+        <Button label={r.copy.primaryActionLabel} onPress={onDismiss} />
       </View>
 
       {canShareConflictCard(conflict) ? (
@@ -839,7 +702,7 @@ function ReassureBody({
           onPress={() => router.push(conflictShareRoute(conflict))}
         >
           <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-            Share this card
+            {r.copy.shareActionLabel}
           </Text>
         </Pressable>
       ) : null}
@@ -848,17 +711,8 @@ function ReassureBody({
 }
 
 // ---- Safety class (frame 06, night sheet) --------------------------------------
-function SafetyBody({
-  conflict,
-  onDismiss,
-}: {
-  conflict: DetectedConflict;
-  onDismiss: () => void;
-}) {
+function SafetyBody({ conflict }: { conflict: DetectedConflict }) {
   const r = conflict.rule;
-  // The non-pregnancy tag names the suppressed active for the family-aware title.
-  const activeTag = r.tagA === 'pregnancy' ? r.tagB : r.tagA;
-  const activeLabel = tagLabel(activeTag).toLowerCase();
   const subjectProductLabel = conflictProductPairLabel(conflict);
 
   return (
@@ -874,7 +728,7 @@ function SafetyBody({
       </View>
 
       <View className="mb-3.5 flex-row flex-wrap gap-2">
-        <Chip label="Safety · talk to your doctor" bg={SAFETY_ICON_BG} fg={colors.clayBright} />
+        <Chip label={r.copy.interactionLabel} bg={SAFETY_ICON_BG} fg={colors.clayBright} />
       </View>
 
       <Text
@@ -883,7 +737,7 @@ function SafetyBody({
         className="text-[32px] leading-[37px]"
         accessibilityRole="header"
       >
-        Pause your {activeLabel} until you can ask your doctor.
+        {r.copy.detailTitle}
       </Text>
 
       {subjectProductLabel ? (
@@ -901,31 +755,15 @@ function SafetyBody({
       ) : null}
 
       <Text className="mt-3.5 text-[14.5px] leading-6" style={{ color: NIGHT_BODY }}>
-        Your pregnancy and breastfeeding setting puts this {activeLabel} on pause. Review the
-        setting if your status changed. Otherwise, ask your clinician before adding it to your
-        routine.
-      </Text>
-
-      <Text className="mt-3.5 text-[12px] leading-[19px]" style={{ color: NIGHT_FAINT }}>
-        {BRAND.appName} isn&apos;t medical advice. We err conservative and always defer to your
-        clinician.
+        {r.copy.mechanism} {r.copy.resolution}
       </Text>
 
       <View className="mt-6 gap-2">
         <Button
-          label="Review safety setting"
+          label={r.copy.primaryActionLabel}
           variant="inverse"
           onPress={() => router.push('/settings/skin-profile?returnTo=shelf')}
         />
-        <Pressable
-          accessibilityRole="button"
-          className="min-h-[48px] items-center justify-center py-3"
-          onPress={onDismiss}
-        >
-          <Text className="font-sans-semibold text-[15px]" style={{ color: NIGHT_FAINT }}>
-            Keep it on my shelf
-          </Text>
-        </Pressable>
       </View>
 
       <Text className="mt-5 text-center text-[11px] leading-4" style={{ color: NIGHT_FAINT }}>

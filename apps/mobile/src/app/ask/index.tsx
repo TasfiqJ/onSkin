@@ -11,13 +11,10 @@ import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// Ask. The conversational front-end to the on-device intelligence layer
-// (docs/13). The DETERMINISTIC advisor (conflict / routine / fit answers about the user's
-// own shelf) runs here at $0 and needs no consent. It is the free moat taste. The deeper
-// cloud-grounded layer is Pro-gated and deferred (B-AI-ASSISTANT-VENDOR). The language
-// model is the interface; the curated engine is the truth; substantive claims are
-// template-bounded, never free-generated. Calm, reactive, non-anthropomorphic: no persona,
-// no re-engagement, ends cleanly. Disclosed honestly as AI, never marketed as "AI".
+// Ask is the conversational front-end to deterministic on-device shelf and routine tools.
+// Conflict prompts appear only after the production evaluator reports exact admitted
+// coverage. Cloud Ask is unavailable until its vendor, privacy, safety, and review gates
+// close. Substantive responses remain template-bounded and refuse over guessing.
 
 type Msg =
   | { id: string; role: 'user'; text: string }
@@ -333,12 +330,15 @@ function SuggestedPrompt({
 
 export default function AskScreen() {
   const { height, width } = useWindowDimensions();
-  const { ask, askSuggested, isLoading, hasShelf } = useAsk();
+  const { ctx, ask, askSuggested, isLoading, hasShelf } = useAsk();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const idRef = useRef(0);
   const ledRef = useRef(false);
   const scrollRef = useRef<ScrollView>(null);
+  const interactionGuidanceAvailable =
+    ctx.conflictCoverageStatus === 'compatible' ||
+    ctx.conflictCoverageStatus === 'reviewed_interactions';
 
   useEffect(() => {
     track('ask_opened');
@@ -369,12 +369,20 @@ export default function AskScreen() {
   // deterministic answer about their own shelf rather than waiting for a good
   // question. Fires once. Users with an empty shelf still see the suggested prompts.
   useEffect(() => {
-    if (ledRef.current || isLoading || !hasShelf || messages.length > 0) return;
+    if (
+      ledRef.current ||
+      isLoading ||
+      !hasShelf ||
+      !interactionGuidanceAvailable ||
+      messages.length > 0
+    ) {
+      return;
+    }
     ledRef.current = true;
     track('ask_proactive_lead_shown');
     pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, hasShelf]);
+  }, [isLoading, hasShelf, interactionGuidanceAvailable]);
 
   const onSend = () => {
     const q = input.trim();
@@ -390,12 +398,15 @@ export default function AskScreen() {
   const splitShortPhone = height < 410;
   const supportFloorPhone = width <= 320 && height < 520;
   const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;
-  const emptyPromptOrder =
+  const baseEmptyPromptOrder =
     ultraShortPhone || splitShortPhone
       ? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER
       : shortPhone
         ? SHORT_PHONE_EMPTY_PROMPT_ORDER
         : EMPTY_PROMPT_ORDER;
+  const emptyPromptOrder = baseEmptyPromptOrder.filter(
+    (promptKey) => promptKey !== 'conflict' || interactionGuidanceAvailable,
+  );
   const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;
 
   return (

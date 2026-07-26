@@ -36,7 +36,9 @@ Implemented locally:
   plus migration `0056`'s shared fail-closed serving gate for positive source,
   review, quality, eligibility, mapping, and live-correction evidence.
 - CAT-08's local operator-authority source candidate: foundational migration
-  `0063`, forward transition-conflict/default-ACL repair `0065`, a
+  `0063`, forward transition-conflict/default-ACL repair `0065`, additional
+  legacy-clinical-content immutability seal `0066`, narrow catalog-release
+  runtime-temporary-table lint contract `0067`, a
   bounded `catalog-operator` Edge surface, a separate publishable-key-only
   internal-console source, nonanonymous `aal2` identities, live Auth/MFA/grant
   checks, ten-minute work sessions, five-minute lease/CAS claims, immutable
@@ -65,10 +67,17 @@ Implemented locally:
   Partial governed inserts remain allowed. Current CAT-03 review/readback
   artifacts must bind exact CAT-03 migration `20260722000062`; deployment and
   full-chain evidence must additionally attest repository head
-  `20260726000065`. The intervening `0064` migration adds exact output-only
+  `20260726000067`. The intervening `0064` migration adds exact output-only
   skin-profile quiz provenance without retaining raw answers or answer hashes;
   `0065` repairs both CAT-08 transition conflict targets and the global
-  function default ACL.
+  function default ACL. Migration `0066` additionally seals both explicitly
+  unreviewed legacy clinical-content relations against every API-role table
+  privilege and migration-owner mutation; it does not create publication
+  authority. Migration `0067` gives static analysis a checker-only ephemeral
+  shape for the known runtime-temporary-table catalog-release wrapper. It has no
+  runtime extension dependency or runtime/security behavior change, all
+  remaining wrapper statements stay linted, and its migration-owner-only ACL is
+  retained.
   Beta demand can prioritize independently sourced rows but can never become a
   product fact.
 - Mobile shelf source/quality disclosure, search fallback, parser-backed OCR, and report issue flow.
@@ -109,7 +118,7 @@ The implementation intentionally keeps production catalog use blocked until:
   sunscreen/OTC-adjacent review bind every applicable row;
 - the two-session hosted CAT-02 staging/promotion/serialization/rollback drill
   passes with complete redacted receipts and zero projection drift;
-- clean local and hosted full-chain reset through `0065`, current pgTAP, two-connection
+- clean local and hosted full-chain reset through `0067`, current pgTAP, two-connection
   staging/release/supersession race, direct-service-role denial, serving,
   retirement, and rollback evidence passes;
 - the authoritative CAT-03 coverage/quality report exists for the sealed
@@ -168,7 +177,7 @@ clinical, Apple, or commercial approval.
   signed required-category floor, and at least 100 prioritized eligible rows.
 - Product recommendations use only active-curation, eligible, reviewed,
   dependency-complete products.
-- Hosted database evidence from the full current chain through `0065`, including
+- Hosted database evidence from the full current chain through `0067`, including
   `0061`, proves the import lifecycle, rollback/reference preservation, and barcode, search,
   recommendation, product, ingredient, synonym, and child reads fail closed
   for every held source/record.
@@ -178,7 +187,7 @@ clinical, Apple, or commercial approval.
   readback, exact lineage, replay/race handling, direct-table denial for
   `service_role`, authenticated RLS allow/deny proof, and immediate fail-closed
   serving after any retirement or dependency withdrawal.
-- Hosted database evidence through migration `0065`, with `0063` retained as
+- Hosted database evidence through migration `0067`, with `0063` retained as
   the foundational CAT-08 authority, proves no raw API-role
   operator/correction/hold access, direct denial of all six RPCs to browser API
   roles, exact Edge-verified signed `aal2` subject/session admission,

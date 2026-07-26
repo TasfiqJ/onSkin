@@ -527,11 +527,19 @@ export default function ShelfScreen() {
               className="mt-4"
               title={bannerTitle(data.banner)}
               subhead={bannerSubhead(data.banner)}
-              severityPill={severityLabel(data.banner.computedSeverity)}
+              severityPill={severityLabel(data.banner)}
+              actionLabel={data.banner.rule.copy.primaryActionLabel}
               onReview={() => {
                 haptics.select();
                 router.push(conflictDetailRoute(data.banner!));
               }}
+            />
+          ) : data?.conflictCoverageStatus === 'unsupported_unreviewed' &&
+            data.unsupportedConflictPairs.length > 0 ? (
+            <ConflictBanner
+              className="mt-4"
+              title="Interaction guidance is unavailable"
+              subhead="We won't show a compatibility result for these products until that review is complete."
             />
           ) : null}
 

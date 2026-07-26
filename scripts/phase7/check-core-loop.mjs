@@ -412,8 +412,9 @@ require(/canShareConflictCard/.test(shareRoute), 'Share route must require canSh
 require(!/\?\?\s*data\?\.conflicts\[0\]/.test(
   shareRoute,
 ), 'Share route must not fallback to the first conflict.');
-require(/share_card_exported/.test(shareRoute), 'Share route must track share_card_exported.');
-require(/share_sheet_opened/.test(shareRoute), 'Share route must track share_sheet_opened.');
+require(!/\btrack(?:ProductAddStarted)?\s*\(/.test(
+  shareRoute,
+), 'Conflict-only share route must not emit analytics that reveal conflict existence.');
 require(has(
   'apps/mobile/src/app/conflict/[ruleId].tsx',
   /canShareConflictCard/,
@@ -429,6 +430,9 @@ const routineActivationAnalyticsTest = read(
 );
 const routineGenerate = read('apps/mobile/src/features/routine/generate.ts');
 const routineGenerateTest = read('apps/mobile/src/features/routine/generate.test.ts');
+const intelligenceClaimSafetyTest = read(
+  'apps/mobile/src/features/intelligence/claimsafety.test.ts',
+);
 const routineReviewGateTest = read('apps/mobile/src/features/routine/reviewGate.test.ts');
 const schedulerOrchestrateTest = read('apps/mobile/src/features/scheduler/orchestrate.test.ts');
 const todayTab = read('apps/mobile/src/app/(tabs)/today.tsx');
@@ -446,7 +450,6 @@ const coreLoopEvents = [
   'routine_plan_viewed',
   'routine_created',
   'first_useful_insight',
-  'conflict_detected',
   'routine_checkoff_completed',
   'first_checkoff_completed',
   'cycle_night_completed',
@@ -464,6 +467,17 @@ for (const event of coreLoopEvents) {
   require(betaDashboard.includes(
     `\`${event}\``,
   ), `Phase 7 beta dashboard must reference emitted event: ${event}.`);
+}
+
+for (const event of [
+  'conflict_detected',
+  'conflict_detail_viewed',
+  'conflict_overridden',
+  'conflict_resolution_chosen',
+]) {
+  require(!analyticsRegistry.includes(
+    `'${event}'`,
+  ), `Analytics registry must prohibit conflict-state event: ${event}.`);
 }
 
 require(/track\('product_added'/.test(
@@ -494,9 +508,9 @@ require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
     routineActivationAnalyticsTest,
   ) &&
   /track\('first_useful_insight'/.test(routineActivationAnalytics) &&
-  /track\('conflict_detected'/.test(
+  !/track\('conflict_(?:detected|detail_viewed|overridden|resolution_chosen)'/.test(
     routinePlan,
-  ), 'Routine plan must emit routine_plan_viewed, reserve routine_created for real plans with executable steps, and emit first_useful_insight plus conflict_detected.');
+  ), 'Routine plan must emit routine_plan_viewed, reserve routine_created for real plans with executable steps, emit first_useful_insight, and prohibit conflict-state analytics.');
 require(/if\s*\(result\.inserted\)\s*\{[\s\S]{0,200}track\(\s*'routine_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);[\s\S]{0,120}if\s*\(result\.firstEver\)\s*track\(\s*'first_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);/.test(
   todayTab,
 ), 'Today check-off flow must emit routine_checkoff_completed only for a newly inserted completion and first_checkoff_completed only for the first-ever completion.');
@@ -525,13 +539,14 @@ require(/completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayTab
 require(/if\s*\(result\.inserted\s*&&\s*\(progress\?\.streak\s*\?\?\s*0\)\s*>=\s*6\)\s*\{[\s\S]{0,100}requestReviewAfterValue\('seven_checkoff_days'\)/.test(
   todayTab,
 ), 'Today must request a review only after a newly inserted check-off reaches the value threshold.');
-require(/shippableRules\(\)/.test(routineGenerate) &&
+require(/evaluateConflicts\(/.test(routineGenerate) &&
   /canUseRoutineCadence\(\)/.test(routineGenerate) &&
   /does not surface unreviewed conflict guidance through the default production generator/.test(
     routineGenerateTest,
   ) &&
-  /surfaces reviewed conflict guidance when production rules are reviewed/.test(
-    routineGenerateTest,
+  /withholds compatibility guidance until the exact corpus is admitted/.test(routineGenerateTest) &&
+  /does not treat an arbitrary legacy reviewedBy marker as professional admission/.test(
+    intelligenceClaimSafetyTest,
   ) &&
   /withDevFlag\(false/.test(routineGenerateTest) &&
   /withholds cadence outside dev until clinical review flips the gate/.test(
@@ -540,7 +555,7 @@ require(/shippableRules\(\)/.test(routineGenerate) &&
   /does not let the E2E fixture open unreviewed cadence outside dev/.test(routineReviewGateTest) &&
   /withholds unreviewed cycle cadence in production until B-DERM-REVIEW closes/.test(
     schedulerOrchestrateTest,
-  ), 'Phase 7 must pin production-mode tests that withhold unreviewed conflict and routine-cadence guidance until B-DERM-REVIEW closes.');
+  ), 'Phase 7 must pin production-mode tests that withhold conflict guidance until exact corpus admission and routine cadence until B-DERM-REVIEW closes.');
 require(/shouldTrackCycleNightCompleted/.test(todayTab) &&
   /completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayTab) &&
   /completionInserted:\s*result\.inserted/.test(todayTab) &&

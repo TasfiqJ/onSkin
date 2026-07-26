@@ -45,7 +45,7 @@ directory:
 4. the CAT-01 source approval, trust-registry, release-scope, and signed build
    evidence already embedded and hash-bound by the transform;
 5. a clean `origin/main` source revision containing migration `0057` and the
-   full forward chain through `0065`, plus this runbook.
+   full forward chain through `0067`, plus this runbook.
 
 Never copy a fixture or candidate into a differently named file and treat it as
 production. The transform status, import mode, known fixture hashes, source
@@ -178,7 +178,7 @@ history. **Stop** if migration `0059` is already present, if the remote history
 differs from the reviewed source chain, or if the remote history cannot be
 verified; do not deploy until the discrepancy has an approved forward-remediation
 plan. After an approved clean-chain deployment, an operator verifies migrations
-`0057` through `0065` are present and submits only the exact RPC plan emitted in
+`0057` through `0067` are present and submits only the exact RPC plan emitted in
 `databasePlan`. Do not hand-edit that plan.
 
 Migration `0057` remains byte-stable. Migration `0061` replaces only the exact
@@ -191,7 +191,12 @@ statement-level count/root-set guard for governed bulk curation inserts. The
 forward `0065` repair makes both `0063` operator-transition paths executable by
 targeting the work-state primary-key constraint explicitly and revokes the
 global default `PUBLIC` function-execution grant; it does not delegate CAT-02
-promotion authority. The unrelated `0064` chain member adds minimized,
+promotion authority. The additional `0066` migration seals the unreviewed
+legacy conflict/sequencing fixtures and likewise does not delegate CAT-02
+promotion authority. Migration `0067` supplies a checker-only ephemeral table
+shape for the known runtime-temporary-table release wrapper so all remaining
+statements stay linted, with no extension dependency or runtime/security
+behavior change. The unrelated `0064` chain member adds minimized,
 output-only skin-profile quiz provenance and stores no raw answers or answer
 hashes. The sole historical-file exception is migration `0059`:
 the repository contains no retained hosted evidence that it was applied, but

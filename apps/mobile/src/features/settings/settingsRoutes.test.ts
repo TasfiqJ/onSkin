@@ -456,14 +456,14 @@ describe('Settings route contracts', () => {
       'const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [',
     );
     expect(source).toContain("label: 'Skin Notes'");
-    expect(source).toContain("hint: 'Myth vs evidence, reviewed and claim-safe.'");
+    expect(source).toContain("hint: 'Reference notes with visible source status.'");
     expect(source).toContain('label: BRAND.askName');
-    expect(source).toContain("hint: 'Your evidence-grounded advisor.'");
+    expect(source).toContain("hint: 'Ask about your organized shelf and routine.'");
     expect(source).toContain(
       '<Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />',
     );
     expect(source).not.toContain('Skin Notes. Myth vs evidence');
-    expect(source).not.toContain('Your evidence-grounded advisor`, href');
+    expect(source).not.toContain('Ask about your organized shelf and routine.`, href');
   });
 
   it('keeps You tab first-viewport rows clear of the floating tab bar on short phones', () => {

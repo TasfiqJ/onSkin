@@ -22,6 +22,7 @@ Start here:
 - [IOS-02 Widget Lifecycle Source Checkpoint](./IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md)
 - [IOS-09 iOS Privacy Source Checkpoint](./IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md)
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
+- [App Store, Medical, and Legal Gap Audit — 2026-07-26](../phase-3/app-store-medical-legal-gap-audit-2026-07-26.md)
 - [Health-Consent Withdrawal, Processor, and Retention Matrix](./HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md)
 - [Health Processor Inventory v1](./health-processor-inventory-v1.json)
 - [CAT-01 Phase 4 Catalog Control Index](../phase-4/README.md)
@@ -63,6 +64,12 @@ Start here:
 - [CAT-08 Operator Authority Migration](../../supabase/migrations/20260722000063_catalog_operator_authority.sql)
 - [CAT-08 Transition and Default-ACL Repair Migration](../../supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql)
 - [CAT-08 0065 PostgreSQL 15/17 Upgrade Rehearsal](../../scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql)
+- [Legacy Clinical-Content Immutability Seal Migration](../../supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql)
+- [0066 Legacy Clinical-Content PostgreSQL Upgrade Rehearsal](../../scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql)
+- [0066 Legacy Clinical-Content Database Contract](../../supabase/tests/database/clinical_content_legacy_seal.test.sql)
+- [Catalog Release Temporary-Table Lint-Contract Migration](../../supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql)
+- [0067 Catalog Release Lint-Contract PostgreSQL Rehearsal](../../scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql)
+- [0067 Catalog Release Lint Database Contract](../../supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql)
 - [CAT-08 Database Contract](../../supabase/tests/database/catalog_operator_authority.test.sql)
 - [CAT-08 Two-Connection Revocation Rehearsal](../../supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql)
 - [CAT-08 Operator Edge Surface](../../supabase/functions/catalog-operator/)
@@ -75,6 +82,8 @@ Start here:
 - [CORE-01 Skin-Profile Quiz-Provenance Migration](../../supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql)
 - [CORE-01 0064 PostgreSQL 15/17 Upgrade Rehearsal](../../scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql)
 - [CORE-01 Native Age-Assurance Source Contract](../../scripts/core01/native-age-assurance-source-contract.test.mjs)
+- [CORE-02 Clinical Conflict Source Checkpoint](./CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md)
+- [CORE-02 Clinical Rule Source Contract](../../scripts/core02/clinical-rule-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -167,14 +176,14 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260726000065`; the current CAT-03 pgTAP source plan contains 99
+head `20260726000067`; the current CAT-03 pgTAP source plan contains 99
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, exact local/
-hosted full-chain evidence through `0065`, current signed database readback,
+hosted full-chain evidence through `0067`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
 quality, market, or revenue outcome is implied.
 
@@ -407,6 +416,27 @@ quiz/claim reviews, and configured hosted evidence remain launch gates.
 Passing source/database/web checks does not establish legal compliance,
 clinical validity, Apple acceptance, product-market fit, or revenue.
 
+CORE-02 is now an `in_progress`, zero-admission source checkpoint. The
+canonical 13-row clinical-conflict corpus is `draft_blocked`; its trust and
+receipt registries are empty, and the current Hermes boundary intentionally
+cannot verify detached professional-review signatures. Production admission
+requires independent dermatology, chemistry/pharmacy, and regulatory-counsel
+receipts over the exact corpus, rule, credential-evidence, jurisdiction, and
+market-policy hashes. Runtime provenance is module-private, every applicability
+dimension and available profile context fails closed, and production consumers
+cannot use preview data or claim-bearing copy without admission. The current
+profile groups `Pregnant or trying`; it does not claim those are two distinct
+facts, and a future corpus must review that combined state or wait for a
+versioned profile split. Missing
+admission or incomplete pair coverage is `unsupported_unreviewed`; a shelf with
+no assessable pair is `not_applicable`, never "compatible." Conflict state,
+detail, resolution, override, export, and conflict-link analytics are
+prohibited, and conflict links contain only an opaque path. The independent
+CORE-02 source contract is mandatory in Phase 3 and launch verification.
+Migration `0066` separately seals the legacy database fixtures; none of these
+controls is clinical, legal, native-build, App Store, market, or revenue
+approval.
+
 Apple 1.4.1 health-accuracy scrutiny, 2.5.18's sensitive-data advertising ban,
 5.1/5.1.2 privacy and use limits, and the FTC health-products substantiation
 standard are recorded as launch gates in the checkpoint. Whether a user-
@@ -414,9 +444,22 @@ initiated item-specific affiliate route is contextual shopping or prohibited
 health-targeted advertising remains unresolved; consent alone is not App Review
 or legal clearance.
 
+The `0065` CAT-08 transition/default-ACL repair remains intact. The additional
+`0066` migration revokes all residual table privileges from the explicitly
+unreviewed legacy conflict/sequencing fixtures, forces their no-policy RLS
+posture, and installs migration-owner mutation guards without creating reviewed
+publication authority. Its focused local rehearsal and 26-assertion pgTAP
+contract pass for the current source. Migration `0067` adds the documented
+checker-only ephemeral table shape for the catalog-release wrapper's
+runtime-created temporary validation table. Every other wrapper statement
+remains linted, and the literal adds no extension dependency or runtime/security
+behavior change. Its focused PostgreSQL 15 rehearsal and direct checker proof
+pass, while the final exhaustive 66-migration full-chain replay is still in
+progress and unproven and no hosted evidence exists.
+
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now covers all 64 migrations through
-`0065`, all 17 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now covers all 66 migrations through
+`0067`, all 17 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

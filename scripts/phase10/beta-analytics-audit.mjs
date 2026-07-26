@@ -23,7 +23,6 @@ const REQUIRED_PHASE_H_EVENTS = [
   'onboarding_started',
   'product_added',
   'first_useful_insight',
-  'conflict_detected',
   'routine_created',
   'first_checkoff_completed',
   'routine_checkoff_completed',
@@ -32,6 +31,20 @@ const REQUIRED_PHASE_H_EVENTS = [
   'paywall_shown',
   'reverse_trial_started',
   'purchase_completed',
+];
+const PROHIBITED_CONFLICT_EVENTS = [
+  'conflict_detected',
+  'conflict_detail_viewed',
+  'conflict_overridden',
+  'conflict_resolution_chosen',
+  'landing_viewed',
+  'share_card_export_failed',
+  'share_card_export_started',
+  'share_card_export_succeeded',
+  'share_card_exported',
+  'share_link_created',
+  'share_link_opened',
+  'share_sheet_opened',
 ];
 
 for (const file of [registryPath, trackerPath, schemaPath])
@@ -120,6 +133,37 @@ function runtimeTrackedEvents() {
 const betaEvents = minimumBetaEvents();
 const betaEventSet = new Set(betaEvents);
 const trackedEvents = runtimeTrackedEvents();
+
+for (const event of PROHIBITED_CONFLICT_EVENTS) {
+  block(
+    errors,
+    !betaEventSet.has(event),
+    `Minimum beta coverage must prohibit conflict-state event: ${event}.`,
+  );
+  block(
+    errors,
+    !allowedEvents.has(event),
+    `ANALYTICS_ALLOWED_EVENTS must prohibit conflict-state event: ${event}.`,
+  );
+  block(
+    errors,
+    !trackedEvents.has(event),
+    `Runtime source must not emit conflict-state event: ${event}.`,
+  );
+}
+
+for (const route of [
+  'apps/mobile/src/app/conflict/[ruleId].tsx',
+  'apps/mobile/src/app/share/conflict/[ruleId].tsx',
+]) {
+  const source = exists(route) ? stripComments(read(route)) : '';
+  block(errors, exists(route), `${route} is missing.`);
+  block(
+    errors,
+    !/\btrack\s*\(/.test(source),
+    `${route} must not emit analytics; any event from a conflict-only route reveals conflict existence.`,
+  );
+}
 
 block(
   errors,

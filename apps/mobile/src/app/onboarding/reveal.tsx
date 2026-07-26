@@ -139,7 +139,7 @@ export default function RevealScreen() {
           </Text>
           <Text variant="bodySm" tone="inverseMuted" className="mt-1">
             {firstInsight?.body ??
-              'Your full plan and conflict checks are ready after this setup step.'}
+              'Your routine draft keeps missing steps visible. Interaction guidance requires completed independent professional review before it can appear.'}
           </Text>
         </Card>
       </View>

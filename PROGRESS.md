@@ -7435,8 +7435,8 @@ legal compliance, revenue, or product-market fit.
 Reconciled the CAT-02/CAT-03 launch/readiness documentation to the first 61
 migrations through their exact `20260722000062` artifact checkpoint. At that
 checkpoint, CAT-08 extended the global source chain through `0063`; the
-subsequent CORE-01 forward migrations extend the current global source chain
-through `0065`.
+subsequent CORE-01 and database-hardening forward migrations extend the current
+global source chain through `0067`.
 Foundational migration `0057` remains the
 CAT-02 transactional lifecycle authority; forward migration `0061` adds
 `benzoyl_peroxide` to the database staging allowlist while the offline v2
@@ -7469,7 +7469,7 @@ professional acceptance, or App Store decision is claimed. DB-06 remains
 
 Migration `0063`, the bounded authenticated `catalog-operator` Edge surface,
 and the separate publishable-key-only internal-console source established the
-operator boundary now carried by the 64-migration chain and 17 deploy-by-default
+operator boundary now carried by the 66-migration chain and 17 deploy-by-default
 functions. The source candidate
 now denies direct `public`/`anon`/`authenticated` execution of all six operator
 RPCs. Edge verifies the exact presented token with `getClaims` plus `getUser`,
@@ -7524,8 +7524,9 @@ Forward migration `20260726000065` repairs both runtime-ambiguous
 `0063`, preserves the exact Edge-only ACL, and replaces PostgreSQL's global
 future-function `PUBLIC EXECUTE` default for the migration owner with an
 explicit-grant posture. Its exact migration-byte rehearsal passes PostgreSQL 15
-and 17. A fresh 64-migration local reset and the focused exact-role CAT-08 pgTAP
-file pass all 89 assertions, including capability denial before cleanup,
+and 17. The corrected `0065`-head replay completes the structural pgTAP phase,
+and the focused exact-role CAT-08 pgTAP file passes all 89 assertions, including
+capability denial before cleanup,
 lease/CAS/idempotency, owner export isolation, stale repair-proof denial, and
 source recommendation non-mutation.
 
@@ -7537,11 +7538,23 @@ preserve the membership-free `catalog_operator_edge` boundary. Any PostgreSQL
 major upgrade is therefore blocked until the complete `0063`-through-current
 chain passes that exact-role rehearsal with zero membership/admin grants.
 
+Migration `20260726000066` additionally revokes every residual API-role table
+privilege from `conflict_rules` and `sequencing_rules`, forces RLS with no
+policies, and installs an owner-safe statement guard over the retained 23
+explicitly unreviewed historical fixtures. Its focused rehearsal and
+26-assertion pgTAP plan pass. Migration `20260726000067` adds only the official
+checker-only temporary-table shape to the unchanged catalog-release wrapper.
+Its focused rehearsal and seven-assertion plan pass, and direct
+`plpgsql_check_function` inspection returns no findings.
+
 The first exhaustive 64-migration database replay attempt did not pass. It
-identified six stale `0064`/63-migration head assertions, now advanced to
-`0065`/64 migrations, and a health-consent pgTAP helper/grant failure exposed
-after the global default function-ACL repair. No exhaustive pass is claimed
-until that helper boundary is fixed and the entire isolated reset gate reruns.
+identified six stale `0064`/63-migration head assertions, subsequently advanced
+to `0065`/64 migrations, and a health-consent pgTAP helper/grant failure exposed
+after the global default function-ACL repair. After those corrections, the
+`0065`-head replay completed the structural pgTAP phase; database lint then
+exposed the runtime-created temporary-table static-analysis limitation addressed
+by `0067`. The final exhaustive 66-migration current-head gate has not yet
+passed as one run, and no hosted database evidence exists.
 
 ### CORE-01 age and skin-profile provenance source checkpoint (2026-07-26)
 

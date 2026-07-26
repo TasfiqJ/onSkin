@@ -26,11 +26,33 @@ const globalContentPolicyNames = new Map([
   ['creator_stack_items', 'creator_stack_items_select_all'],
 ]);
 
-const tableSelectAclEvents = [
-  ...combined.matchAll(
-    /\b(grant|revoke)\s+select\s+on(?:\s+table)?\s+([\s\S]*?)\s+(?:to|from)\s+([^;]+);/gi,
-  ),
+const tablePrivileges = [
+  'select',
+  'insert',
+  'update',
+  'delete',
+  'truncate',
+  'references',
+  'trigger',
 ];
+const legacyClinicalContentTables = ['conflict_rules', 'sequencing_rules'];
+const tablePrivilegeAclEvents = [
+  ...combined.matchAll(
+    /\b(grant|revoke)\s+(all(?:\s+privileges)?|(?:(?:select|insert|update|delete|truncate|references|trigger)(?:\s*,\s*)?)+)\s+on(?:\s+table)?\s+([\s\S]*?)\s+(?:to|from)\s+([^;]+);/gi,
+  ),
+]
+  .map((event) => ({
+    index: event.index,
+    kind: event[1].toLowerCase(),
+    privileges: /^all(?:\s+privileges)?$/i.test(event[2].trim())
+      ? tablePrivileges
+      : [...event[2].matchAll(/select|insert|update|delete|truncate|references|trigger/gi)].map(
+          (match) => match[0].toLowerCase(),
+        ),
+    objects: event[3],
+    roles: event[4].split(',').map((candidate) => candidate.trim().toLowerCase()),
+  }))
+  .sort((left, right) => left.index - right.index);
 
 function statementListsTable(objects, table) {
   return new RegExp(`(?:^|[,\\s])public\\.${escapeRegExp(table)}(?:$|[,\\s])`, 'i').test(objects);
@@ -55,15 +77,35 @@ for (const table of SEALED_GLOBAL_CONTENT_TABLES) {
 
 for (const table of [...SEALED_GLOBAL_CONTENT_TABLES, ...SEALED_CATALOG_AUTHORITY_TABLES]) {
   for (const role of ['public', 'anon', 'authenticated', 'service_role']) {
-    const roleEvents = tableSelectAclEvents.filter((event) => {
-      const roles = event[3].split(',').map((candidate) => candidate.trim().toLowerCase());
-      return statementListsTable(event[2], table) && roles.includes(role);
-    });
+    const roleEvents = tablePrivilegeAclEvents.filter(
+      (event) =>
+        event.privileges.includes('select') &&
+        statementListsTable(event.objects, table) &&
+        event.roles.includes(role),
+    );
     block(
       errors,
-      roleEvents.at(-1)?.[1].toLowerCase() === 'revoke',
+      roleEvents.at(-1)?.kind === 'revoke',
       `public.${table} SELECT must remain revoked from ${role}.`,
     );
+  }
+}
+
+for (const table of legacyClinicalContentTables) {
+  for (const role of ['public', 'anon', 'authenticated', 'service_role']) {
+    for (const privilege of tablePrivileges) {
+      const roleEvents = tablePrivilegeAclEvents.filter(
+        (event) =>
+          event.privileges.includes(privilege) &&
+          statementListsTable(event.objects, table) &&
+          event.roles.includes(role),
+      );
+      block(
+        errors,
+        roleEvents.at(-1)?.kind === 'revoke',
+        `public.${table} ${privilege.toUpperCase()} must remain revoked from ${role}.`,
+      );
+    }
   }
 }
 

@@ -15,6 +15,7 @@ export type ConflictBannerProps = {
    *  (design frame 03, "Moderate"). */
   severityPill?: string;
   onReview?: () => void;
+  actionLabel?: string;
   tone?: 'light' | 'night';
   className?: string;
 };
@@ -24,6 +25,7 @@ export function ConflictBanner({
   subhead,
   severityPill,
   onReview,
+  actionLabel,
   tone = 'light',
   className,
 }: ConflictBannerProps) {
@@ -71,7 +73,7 @@ export function ConflictBanner({
             {subhead}
             {onReview ? (
               <Text className="font-sans-bold" style={{ color: colors.clayDeep }}>
-                {' Review →'}
+                {` ${actionLabel ?? ''} →`}
               </Text>
             ) : null}
           </Text>
@@ -80,7 +82,7 @@ export function ConflictBanner({
       {onReview ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Review conflict"
+          accessibilityLabel={actionLabel}
           className="absolute inset-0"
           onPress={onReview}
         />

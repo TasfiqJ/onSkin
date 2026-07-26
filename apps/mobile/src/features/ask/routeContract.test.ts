@@ -127,10 +127,14 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain("const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;");
     expect(home).toContain('accessibilityLabel={ASK_COPY.home.title}');
     expect(home).toContain('{visibleTitle}');
-    expect(home).toContain('const emptyPromptOrder =');
+    expect(home).toContain('const baseEmptyPromptOrder =');
     expect(home).toContain('ultraShortPhone || splitShortPhone');
     expect(home).toContain('? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain('? SHORT_PHONE_EMPTY_PROMPT_ORDER');
+    expect(home).toContain('const emptyPromptOrder = baseEmptyPromptOrder.filter(');
+    expect(home).toContain(
+      "(promptKey) => promptKey !== 'conflict' || interactionGuidanceAvailable",
+    );
     expect(home).toContain(
       "? 'h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2'",
     );
@@ -179,6 +183,7 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain(
       "pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false })",
     );
+    expect(home).toContain('!interactionGuidanceAvailable');
     expect(home).toContain(
       'pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {\n                      scrollToEnd: false,',
     );

@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-26T09:42:32.690Z",
+  "generatedAt": "2026-07-26T13:06:48.733Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "cb4ef4a80f2fa4272a0e23303d71633956d7a091",
-  "gitStatus": "M .github/workflows/quality.yml\n M 04_repo_docs/docs/DECISIONS.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/app.config.js\n M apps/mobile/src/app/_layout.tsx\n M apps/mobile/src/app/index.tsx\n M apps/mobile/src/app/onboarding/age.tsx\n M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/goals.tsx\n M apps/mobile/src/app/onboarding/paywall.tsx\n M apps/mobile/src/app/onboarding/reveal.tsx\n M apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.tsx\n M apps/mobile/src/features/onboarding/ageGate.test.ts\n M apps/mobile/src/features/onboarding/ageGate.ts\n M apps/mobile/src/features/onboarding/ageGateStore.test.ts\n M apps/mobile/src/features/onboarding/ageGateStore.ts\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M apps/mobile/src/features/onboarding/quiz.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.test.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.ts\n M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/scheduler/profile.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/trend/useTrend.ts\n M apps/mobile/src/lib/appConfig.test.ts\n M apps/mobile/src/lib/auth/AuthProvider.tsx\n M docs/DECISIONS.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/APPLE_AND_LEGAL_PRIMARY_RESEARCH.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/quiz-fto-summary.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-operator-authority-runbook.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-9/source-of-truth.md\n M packages/types/src/database.types.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/launch/execution-baseline.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase4/catalog-operator-authority-contract.mjs\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/catalog_operator_authority.test.sql\n M supabase/tests/database/health_consent_lifecycle.test.sql\n M supabase/tests/database/schema_contract.test.sql\n?? apps/mobile/modules/native-age-assurance/expo-module.config.json\n?? apps/mobile/modules/native-age-assurance/index.ts\n?? apps/mobile/modules/native-age-assurance/ios/NativeAgeAssurance.podspec\n?? apps/mobile/modules/native-age-assurance/ios/NativeAgeAssuranceModule.swift\n?? apps/mobile/modules/native-age-assurance/package.json\n?? apps/mobile/modules/native-age-assurance/src/NativeAgeAssurance.types.ts\n?? apps/mobile/modules/native-age-assurance/src/NativeAgeAssuranceModule.ts\n?? apps/mobile/src/features/onboarding/AgePolicyGate.lifecycle.test.ts\n?? apps/mobile/src/features/onboarding/AgePolicyGate.test.ts\n?? apps/mobile/src/features/onboarding/AgePolicyGate.tsx\n?? apps/mobile/src/features/onboarding/OnboardingContext.test.ts\n?? apps/mobile/src/features/onboarding/agePolicyRoute.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapter.ios.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapter.test.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapter.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapterFallback.test.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceContract.test.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceContract.ts\n?? apps/mobile/src/features/onboarding/quizContract.test.ts\n?? apps/mobile/src/features/onboarding/quizContract.ts\n?? apps/mobile/src/features/onboarding/quizScoring.test.ts\n?? apps/mobile/src/features/onboarding/serverSkinProfile.test.ts\n?? apps/mobile/src/features/onboarding/serverSkinProfile.ts\n?? apps/mobile/src/features/trend/useTrend.test.ts\n?? apps/mobile/src/lib/auth/firstSessionE2E.test.ts\n?? apps/mobile/src/lib/auth/firstSessionE2E.ts\n?? apps/mobile/src/lib/auth/firstSessionE2EAuthProviderContracts.test.ts\n?? deno.lock\n?? docs/e2e-bug-reports/2026-07-26-age-policy-downgrade-revocation.md\n?? docs/e2e-bug-reports/2026-07-26-age-policy-navigator-remount.md\n?? docs/e2e-bug-reports/2026-07-26-onboarding-e2e-consent-order-stale.md\n?? scripts/core01/native-age-assurance-source-contract.test.mjs\n?? scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql\n?? scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql\n?? supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql\n?? supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql\n?? supabase/tests/database/skin_profile_quiz_provenance.test.sql",
+  "gitSha": "591e3fdefbc744788e2de8bc7c3a869098e92e34",
+  "gitStatus": "M .github/workflows/quality.yml\n M 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md\n M 04_repo_docs/docs/MASTER_PLAN.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/ask/index.tsx\n M apps/mobile/src/app/conflict/[ruleId].tsx\n M apps/mobile/src/app/cycle/week.tsx\n M apps/mobile/src/app/cycle/why-tonight.tsx\n M apps/mobile/src/app/onboarding/reveal.tsx\n M apps/mobile/src/app/recommendations/index.tsx\n M apps/mobile/src/app/routine/plan.tsx\n M apps/mobile/src/app/s/[shareId].tsx\n M apps/mobile/src/app/share/conflict/[ruleId].tsx\n M apps/mobile/src/app/shelf/[id].tsx\n M apps/mobile/src/components/ui/ConflictBanner.tsx\n M apps/mobile/src/features/ask/answer.test.ts\n M apps/mobile/src/features/ask/answer.ts\n M apps/mobile/src/features/ask/claimsafety.test.ts\n M apps/mobile/src/features/ask/copy.ts\n M apps/mobile/src/features/ask/routeContract.test.ts\n M apps/mobile/src/features/ask/useAsk.ts\n M apps/mobile/src/features/community/copy.ts\n M apps/mobile/src/features/growth/ConflictCard.tsx\n M apps/mobile/src/features/growth/shareLandingRoute.test.ts\n M apps/mobile/src/features/growth/shareLinks.ts\n M apps/mobile/src/features/intelligence/claimsafety.test.ts\n M apps/mobile/src/features/intelligence/conflictChoiceIntegration.test.ts\n M apps/mobile/src/features/intelligence/conflictChoices.ts\n M apps/mobile/src/features/intelligence/conflictIdentity.test.ts\n M apps/mobile/src/features/intelligence/conflictRoutes.test.ts\n M apps/mobile/src/features/intelligence/engine.test.ts\n M apps/mobile/src/features/intelligence/engine.ts\n M apps/mobile/src/features/intelligence/overrides.test.ts\n M apps/mobile/src/features/intelligence/overrides.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.test.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.ts\n M apps/mobile/src/features/intelligence/presentation.test.ts\n M apps/mobile/src/features/intelligence/presentation.ts\n M apps/mobile/src/features/intelligence/rules.ts\n M apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx\n M apps/mobile/src/features/recommendations/catalog.ts\n M apps/mobile/src/features/recommendations/claimsafety.test.ts\n M apps/mobile/src/features/recommendations/copy.ts\n M apps/mobile/src/features/recommendations/engine.test.ts\n M apps/mobile/src/features/recommendations/engine.ts\n M apps/mobile/src/features/recommendations/fit.test.ts\n M apps/mobile/src/features/recommendations/fit.ts\n M apps/mobile/src/features/recommendations/useRecommendations.ts\n M apps/mobile/src/features/routine/firstInsight.test.ts\n M apps/mobile/src/features/routine/firstInsight.ts\n M apps/mobile/src/features/routine/generate.test.ts\n M apps/mobile/src/features/routine/generate.ts\n M apps/mobile/src/features/routine/orderStore.test.ts\n M apps/mobile/src/features/routine/scheduleContract.test.ts\n M apps/mobile/src/features/routine/usePlan.test.ts\n M apps/mobile/src/features/routine/usePlan.ts\n M apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.ts\n M apps/mobile/src/features/scheduler/profileMapping.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/settingsRoutes.test.ts\n M apps/mobile/src/features/shelf/shelfRoutes.test.ts\n M apps/mobile/src/features/shelf/useShelf.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M apps/mobile/src/features/subscription/claimsafety.test.ts\n M apps/mobile/src/features/subscription/copy.ts\n M apps/mobile/src/features/today/routineProjection.test.ts\n M apps/mobile/src/lib/analytics/eventRegistry.ts\n M apps/mobile/src/lib/analytics/track.test.ts\n M apps/mobile/src/lib/consent/dependentConsentContract.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts\n M apps/mobile/src/lib/launch/phase7.test.ts\n M apps/mobile/src/lib/legal/phase3LaunchGates.test.ts\n M docs/00-architecture.md\n M docs/02-ingredient-intelligence.md\n M docs/03-routine-builder.md\n M docs/08-subscriptions-paywall.md\n M docs/CODEX_IMPLEMENTATION_PROMPT.md\n M docs/MASTER_PLAN.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/legal-readiness.md\n M docs/phase-10/beta-event-schema.md\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/clinical-review-log.md\n M docs/phase-3/cosmetic-chemistry-review-log.md\n M docs/phase-3/legal-regulatory-review-log.md\n M docs/phase-3/privacy-security-review-log.md\n M docs/phase-3/review-packet-index.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-7/beta-evidence-dashboard.md\n M docs/phase-8/acquisition-dashboard.md\n M docs/phase-9/source-of-truth.md\n M package.json\n M scripts/phase10/beta-analytics-audit.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase7/check-core-loop.mjs\n M scripts/phase8/check-growth-store-readiness.mjs\n M scripts/phase9/rls-adversarial.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/schema_contract.test.sql\n M supabase/tests/database/skin_profile_quiz_provenance.test.sql\n M supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts\n?? deno.lock\n?? docs/hugeToDo/CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md\n?? docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md\n?? docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md\n?? scripts/core02/clinical-rule-source-contract.test.mjs\n?? scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql\n?? scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql\n?? supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql\n?? supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql\n?? supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql\n?? supabase/tests/database/clinical_content_legacy_seal.test.sql\n?? supabase/tests/rehearsal/generated/catalog-operator-dblink-target.sql",
   "summary": {
     "itemCount": 13,
     "domainCounts": {
@@ -17,7 +17,7 @@
       "blocked": 7,
       "local-scaffold": 6
     },
-    "sourcePathCount": 310,
+    "sourcePathCount": 323,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 1
@@ -86,7 +86,7 @@
           "path": "docs/phase-4/README.md",
           "exists": true,
           "bytes": 9346,
-          "sha256": "8e8b269d8f01c6602f19e42e782dbdd55a76b098071149755ae91cdcfd660c10"
+          "sha256": "6cd849d25d98c481da95662922e5a54d879c9cccf289d94cf9d6fe7eee2bc087"
         },
         {
           "path": "docs/phase-4/catalog-source-policy.json",
@@ -116,7 +116,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
+          "sha256": "ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620"
         },
         {
           "path": "scripts/phase4/catalog-source-policy-audit.mjs",
@@ -133,8 +133,8 @@
         {
           "path": "docs/phase-4/phase-4-exit-review.md",
           "exists": true,
-          "bytes": 13054,
-          "sha256": "5a5a1028c6b1d5df09313ae445f63737e15d9a12fde7c51a98f1bde92b3d1384"
+          "bytes": 13711,
+          "sha256": "c52fa21ea2ecf9861c186bef88bd088598f5eb267920b4b2a1d78712c9ab6494"
         },
         {
           "path": "docs/FOR_TAS_TO_DO.md",
@@ -225,7 +225,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
+          "sha256": "ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620"
         },
         {
           "path": "scripts/phase4/import-obf-snapshot.mjs",
@@ -362,7 +362,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
+          "sha256": "ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620"
         },
         {
           "path": "scripts/phase4/import-cosing-dictionary.mjs",
@@ -464,13 +464,13 @@
           "path": "docs/phase-4/first-curated-product-batch.md",
           "exists": true,
           "bytes": 10318,
-          "sha256": "4d079b14c6063c65d61201e7ae0f4bda79dd067d6b5d3cc08489ff18b52bae4f"
+          "sha256": "fbdb42e6971b7511492bc65efda409d6b0735856fdc2f98be8119bafa2472022"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44739,
-          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
+          "bytes": 45229,
+          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -524,7 +524,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
+          "sha256": "ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
@@ -687,7 +687,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
+          "sha256": "ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620"
         },
         {
           "path": "scripts/docs/generated-packet-status-audit.mjs",
@@ -736,7 +736,7 @@
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
           "bytes": 8829,
-          "sha256": "cdb34ac2abbabd81d2fab71b47b0f3f53237c02e3fa71dad427655e9712aa0b9"
+          "sha256": "ec85aa2775e5c9075bf3d72137cca06e955720aa80c3b807137ab6a7671f6c05"
         },
         {
           "path": "docs/phase-4/beta-shelf-corpus.template.json",
@@ -753,8 +753,8 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44739,
-          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
+          "bytes": 45229,
+          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
         },
         {
           "path": "docs/phase-4/catalog-cat02-membership-proof.template.json",
@@ -858,7 +858,7 @@
       "requiredEvidence": [
         "A content-addressed CAT-02 stage envelope binds an approved transform, zero-warning source QA, exact per-record reviews, source/build evidence, natural keys, record hashes, and the US territory.",
         "Fixture/candidate records, incomplete reviews, changed idempotent replays, duplicate natural keys, and existing-catalog conflicts fail closed before promotion.",
-        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants; approval, promotion, rollback, and CAT-03 activation intentionally remain migration-owner-only, and direct API-role catalog mutation remains denied.",
+        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants. Migration `0066` additionally seals the unreviewed legacy clinical-content fixtures against every API-role table privilege and migration-owner mutation. Migration `0067` gives `plpgsql_check` a checker-only ephemeral table shape for the known runtime-temporary-table release wrapper, so every other wrapper statement remains linted with no extension dependency or runtime/security change; approval, promotion, rollback, CAT-03 activation, and any future reviewed clinical publication intentionally require separate authority.",
         "Every promoted projection traces through its immutable staged record and batch to source artifact, transform, approval, QA, and reviewer hashes.",
         "A reviewed hosted two-session drill proves atomic promotion, full retry on serialization failure, source-withdrawal containment, exact verification, and non-destructive rollback with shelf/correction references preserved."
       ],
@@ -874,10 +874,16 @@
         "supabase/migrations/20260722000062_catalog_curation_statement_guard.sql",
         "supabase/migrations/20260722000063_catalog_operator_authority.sql",
         "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
+        "supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql",
+        "supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
+        "supabase/tests/database/clinical_content_legacy_seal.test.sql",
+        "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
         "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
+        "scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql",
+        "scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/cat07_truthful_freshness.test.sql",
@@ -952,10 +958,34 @@
           "sha256": "9afd1ad223c9e7587d42118cee9dbc4fe0b0ea641de4f6fad44d8ecb20d79ccb"
         },
         {
+          "path": "supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql",
+          "exists": true,
+          "bytes": 5653,
+          "sha256": "61ee02bd285ae59fe1905244335699bc630830e16910fda7eb4f19a21e637cd8"
+        },
+        {
+          "path": "supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql",
+          "exists": true,
+          "bytes": 7771,
+          "sha256": "2b9a4fc1412edc2373366bb3532710dcaec0439f5b96bb669aa22246cdfbe9b4"
+        },
+        {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
           "bytes": 73519,
           "sha256": "9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7"
+        },
+        {
+          "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
+          "exists": true,
+          "bytes": 10088,
+          "sha256": "02df3c9e33e487c314f390ce18070b15c38a0cca46c113ae7b3e03fb905a21db"
+        },
+        {
+          "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
+          "exists": true,
+          "bytes": 3300,
+          "sha256": "d8accade3b03f31827bffcf9ddf82e407b3766cb645908be2ad6a31b9c03558d"
         },
         {
           "path": "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
@@ -976,6 +1006,18 @@
           "sha256": "b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6"
         },
         {
+          "path": "scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql",
+          "exists": true,
+          "bytes": 6577,
+          "sha256": "d7bfbfb7fed85a600c07d6c779aad6bc1e349c53f7d5eae1fba62597178647e7"
+        },
+        {
+          "path": "scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql",
+          "exists": true,
+          "bytes": 3956,
+          "sha256": "859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e"
+        },
+        {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
           "bytes": 109210,
@@ -990,20 +1032,20 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35203,
-          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
+          "bytes": 35199,
+          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
         },
         {
           "path": "docs/phase-4/catalog-import-promotion-runbook.md",
           "exists": true,
-          "bytes": 20948,
-          "sha256": "61cc7da549b565aa916e0fcb6f57b762fe59f76d41c4a73965e6161a64a6060d"
+          "bytes": 21320,
+          "sha256": "da3b3a6c98890ad85834c6304edcd71e2192725017c13391304c732e244d9feb"
         },
         {
           "path": "docs/phase-4/first-curated-product-batch.md",
           "exists": true,
           "bytes": 10318,
-          "sha256": "4d079b14c6063c65d61201e7ae0f4bda79dd067d6b5d3cc08489ff18b52bae4f"
+          "sha256": "fbdb42e6971b7511492bc65efda409d6b0735856fdc2f98be8119bafa2472022"
         }
       ]
     },
@@ -1060,20 +1102,20 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 40927,
-          "sha256": "7f8546af94aa1e476c149c272faca40ca098de8efee23cf875191a616f76bde1"
+          "bytes": 41151,
+          "sha256": "5b913ce21150cbd017edb3d39851c3aac1f396f93709c026a3f100fdd37684f8"
         },
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 10888,
-          "sha256": "6223becd6a57b8e5eb06972a31ea45b6e2f3988f40e88fd36474a28c53541ed5"
+          "bytes": 11249,
+          "sha256": "034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44739,
-          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
+          "bytes": 45229,
+          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -1210,8 +1252,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35203,
-          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
+          "bytes": 35199,
+          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
         }
       ]
     },
@@ -1518,8 +1560,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 69192,
-          "sha256": "dae763b475a107f2556eabb8cc857656a0d8ea1b179bc226723d5b231988f149"
+          "bytes": 69329,
+          "sha256": "92a87a442d7bb92878cb10612b5edd6d3e8badc310eedc539e6b1b4ac754ea79"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
@@ -1536,20 +1578,20 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
           "exists": true,
-          "bytes": 5047,
-          "sha256": "0c040801faaf1e8b0b154244b475aed5d2336aece1e8bad3fd794e2a23e47b2e"
+          "bytes": 5075,
+          "sha256": "2aa0f2717f781bdf8836d451df432e577ab157fa5e0799f2ab674e87b163aea9"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 10368,
-          "sha256": "5343723662ee4f0c703c807e4a248da4faeade52a4f2c349357a83a439719e2b"
+          "bytes": 10185,
+          "sha256": "4835a4911aa8bc4b0bae235a85ed5cc681e67ac75d145917aadcbf0771f3f4a8"
         },
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
           "exists": true,
-          "bytes": 46487,
-          "sha256": "c36cf7b1ba00478ad12b2d5404bca57a5c27a238f4a90ade80e61f84de4fd54a"
+          "bytes": 45428,
+          "sha256": "1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d"
         },
         {
           "path": "apps/mobile/src/app/shelf/search.tsx",
@@ -1578,44 +1620,44 @@
         {
           "path": "apps/mobile/src/features/recommendations/catalog.ts",
           "exists": true,
-          "bytes": 9355,
-          "sha256": "ae09361be07238827076c55952c27ffe019c9fed2a4a62be643b5837b8e5ec80"
+          "bytes": 9640,
+          "sha256": "113bb09a809c5cd381b8cfb5336542b887321bc7ba3b43373ff4d36342319062"
         },
         {
           "path": "apps/mobile/src/features/recommendations/claimsafety.test.ts",
           "exists": true,
-          "bytes": 9873,
-          "sha256": "fc11c364b733bf0f3dacfba4beb221d28cf91cd79a0c5c8c07608c20884a7a3c"
+          "bytes": 9803,
+          "sha256": "1fe96a03fb2df36e660bd1ae860347f78e4d46ad0e8fd1b4e3b2339597237c63"
         },
         {
           "path": "apps/mobile/src/features/recommendations/copy.ts",
           "exists": true,
-          "bytes": 9707,
-          "sha256": "4d10fe567d51afb851e4e2eb06f84ac10b46354d0953c5e80b93240900e53b21"
+          "bytes": 9698,
+          "sha256": "62c73660f6cdd5358999017746cec322fdf4de4d7c08d8fe1746cad550899e94"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.test.ts",
           "exists": true,
-          "bytes": 18662,
-          "sha256": "0f175da22f995beaceabb89c4b6ea130ece9d1be857594fb12e5e555a9e094b5"
+          "bytes": 28963,
+          "sha256": "f63077fd3b9a2e4afce418e07b34645111a1e9a43c541c820658c87b31dc2961"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 17809,
-          "sha256": "ccd83caffac064fa690bb5acbf67ec350a86398ce64f22e5f3ecc06ca691693d"
+          "bytes": 22647,
+          "sha256": "8ad537eafe9d6353f5558d2dd777c2c55b88300bd2c2dcafd0a969e7f7eb0ed4"
         },
         {
           "path": "apps/mobile/src/features/recommendations/fit.test.ts",
           "exists": true,
-          "bytes": 4508,
-          "sha256": "37e6a7e1c6bf31bf7ad7f5b4511fa41c9e1a345f9890eaadce3152ef09cc6dd7"
+          "bytes": 4538,
+          "sha256": "d35d81e63490ba1e16fc586bb67890ac9215444f4db21d094deb83e7222be150"
         },
         {
           "path": "apps/mobile/src/features/recommendations/fit.ts",
           "exists": true,
-          "bytes": 5650,
-          "sha256": "53030a7d1537eaf7567b861bd72368f829b82d79a4323285d570a6a6da823745"
+          "bytes": 5766,
+          "sha256": "ccb921626563a5cea9ec02a162c9f84289ada483edcf51dd755ab30b5658f18d"
         },
         {
           "path": "apps/mobile/src/features/recommendations/loading.ts",
@@ -1644,8 +1686,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx",
           "exists": true,
-          "bytes": 8154,
-          "sha256": "e7f0a45a96459b892d81a36c3a5f196864b7f9bec210f4be880dee58706e75f0"
+          "bytes": 8502,
+          "sha256": "8b113a60cd2090065e7c6ed982d061cbb8213ef17c1a6684c3a26596873598b3"
         },
         {
           "path": "apps/mobile/src/features/recommendations/replenishment.test.ts",
@@ -1680,8 +1722,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/useRecommendations.ts",
           "exists": true,
-          "bytes": 3251,
-          "sha256": "ed9aa67b5350287f58fcbba8fc6f328183fb803dd27ba8625906923cd8006018"
+          "bytes": 3586,
+          "sha256": "df399196f973280670f1da3b3d5faf142c278e572ec6788c5e5430a48baf402f"
         },
         {
           "path": "supabase/functions/catalog-report/index.ts",
@@ -1765,8 +1807,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 437895,
-          "sha256": "b823eef544ca07b6f6ab6e1beae59f2ea4ae0930b891950c86f8db4364e4bc4a"
+          "bytes": 444559,
+          "sha256": "e46c024d4e02036c46e53130a1b08e54ca34e1cb00f8a6df3c0de80050e89d8a"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -1777,8 +1819,8 @@
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
           "exists": true,
-          "bytes": 46487,
-          "sha256": "c36cf7b1ba00478ad12b2d5404bca57a5c27a238f4a90ade80e61f84de4fd54a"
+          "bytes": 45428,
+          "sha256": "1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d"
         },
         {
           "path": "apps/mobile/src/app/shelf/opened.tsx",
@@ -1981,8 +2023,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35203,
-          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
+          "bytes": 35199,
+          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
         }
       ]
     },
@@ -1994,7 +2036,7 @@
       "launchGate": "B-CATALOG-SEED",
       "owner": "Engineering + catalog operator + database reviewer",
       "requiredEvidence": [
-        "The complete 64-migration chain through `0065`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, and the `0065` CAT-08 transition/default-ACL repair, passes with the catalog, profile-provenance, CAT-07, and CAT-08 pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, or campaign release.",
+        "The complete 66-migration chain through `0067`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, the `0065` CAT-08 transition/default-ACL repair, the additional `0066` legacy clinical-content immutability seal, and the narrow `0067` checker-only runtime-temporary-table shape, passes with the catalog, profile-provenance, CAT-07, CAT-08, clinical-content-seal, and lint-contract pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, clinical publication, or campaign release.",
         "Barcode and search use service-role-only RPCs over the same positive source/product/correction/CAT-03 eligibility relation; `service_role` has no direct catalog-table read, while explicitly safe authenticated reads retain positive RLS.",
         "Only rows in the exact active global CAT-03 campaign with active campaign-scoped product authorization, reviewed `verified` or `usable` quality, recommendation eligibility, production/legal-approved sources, and zero independent product holds in `active` or `repair_attested` state can be served; untrusted open intake remains owner-scoped, and accepting, rejecting, closing, or deleting a report cannot release its hold.",
         "Barcode mappings are independently reviewed, direct authenticated reads cannot bypass source withdrawal, and every held/unknown reason returns the same no-match/manual fallback."
@@ -2010,13 +2052,20 @@
         "supabase/migrations/20260722000063_catalog_operator_authority.sql",
         "supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql",
         "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
+        "supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql",
+        "supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_launch_curation.test.sql",
         "supabase/tests/database/cat07_truthful_freshness.test.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
         "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
+        "supabase/tests/database/clinical_content_legacy_seal.test.sql",
+        "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
         "supabase/tests/database/schema_contract.test.sql",
+        "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
+        "scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql",
+        "scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql",
         "supabase/functions/catalog-lookup/index.ts",
         "supabase/functions/catalog-lookup/catalogContract.ts",
         "supabase/functions/catalog-lookup/catalogContract.test.ts",
@@ -2089,6 +2138,18 @@
           "sha256": "9afd1ad223c9e7587d42118cee9dbc4fe0b0ea641de4f6fad44d8ecb20d79ccb"
         },
         {
+          "path": "supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql",
+          "exists": true,
+          "bytes": 5653,
+          "sha256": "61ee02bd285ae59fe1905244335699bc630830e16910fda7eb4f19a21e637cd8"
+        },
+        {
+          "path": "supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql",
+          "exists": true,
+          "bytes": 7771,
+          "sha256": "2b9a4fc1412edc2373366bb3532710dcaec0439f5b96bb669aa22246cdfbe9b4"
+        },
+        {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
           "bytes": 36567,
@@ -2109,8 +2170,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35203,
-          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
+          "bytes": 35199,
+          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
         },
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
@@ -2121,14 +2182,44 @@
         {
           "path": "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
           "exists": true,
-          "bytes": 21287,
-          "sha256": "59a63006b4d29ab5a9021c6bd89d212436b995d7da2d071c4a9a57b52ba47595"
+          "bytes": 21311,
+          "sha256": "f80721e651b17edba0658ec2b1435b4469157a13855b1b286e1bb8d44bbf33f9"
+        },
+        {
+          "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
+          "exists": true,
+          "bytes": 10088,
+          "sha256": "02df3c9e33e487c314f390ce18070b15c38a0cca46c113ae7b3e03fb905a21db"
+        },
+        {
+          "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
+          "exists": true,
+          "bytes": 3300,
+          "sha256": "d8accade3b03f31827bffcf9ddf82e407b3766cb645908be2ad6a31b9c03558d"
         },
         {
           "path": "supabase/tests/database/schema_contract.test.sql",
           "exists": true,
-          "bytes": 33983,
-          "sha256": "1fc4f04aa77fd310f9b1fe925e8b90e2f8378e63df692eb2796f1b82298f648e"
+          "bytes": 33990,
+          "sha256": "4a4ab8a9917c2df4909aab4748391ce36d29588fd6e9c639f8d5d88d2429e040"
+        },
+        {
+          "path": "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
+          "exists": true,
+          "bytes": 5846,
+          "sha256": "b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6"
+        },
+        {
+          "path": "scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql",
+          "exists": true,
+          "bytes": 6577,
+          "sha256": "d7bfbfb7fed85a600c07d6c779aad6bc1e349c53f7d5eae1fba62597178647e7"
+        },
+        {
+          "path": "scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql",
+          "exists": true,
+          "bytes": 3956,
+          "sha256": "859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
@@ -2170,19 +2261,19 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
+          "sha256": "ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44739,
-          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
+          "bytes": 45229,
+          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
         },
         {
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
-          "bytes": 15742,
-          "sha256": "42625d1633c425c8289e6cd239756ff4892693606c3ba652847f6a8e626893af"
+          "bytes": 16088,
+          "sha256": "3c0f7fcceb67851a9dd233d53c83c6d1fa004aa9675c0bd5f9e7b0dc9ec956dc"
         }
       ]
     },
@@ -2328,7 +2419,7 @@
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
           "bytes": 8829,
-          "sha256": "cdb34ac2abbabd81d2fab71b47b0f3f53237c02e3fa71dad427655e9712aa0b9"
+          "sha256": "ec85aa2775e5c9075bf3d72137cca06e955720aa80c3b807137ab6a7671f6c05"
         },
         {
           "path": "docs/phase-10/support-operations.md",

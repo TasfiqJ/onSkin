@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { scanClaimSafety } from '@/features/community/claimSafetyScan';
 import {
-  detectConflicts,
+  previewDetectConflicts,
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
@@ -10,7 +10,7 @@ import { STARTER_RULES } from '@/features/intelligence/rules';
 import { UPSELL_COPY } from '@/features/subscription/copy';
 
 import { answerPrompt, answerQuestion, type AskContext } from './answer';
-import { ASK_COPY, RESOLUTION_LEAD } from './copy';
+import { ASK_COPY } from './copy';
 
 // Claim-safety guard EXTENDED to Ask (docs/13 §4/§5/§10, the Slice-11..26 guard
 // pattern). The copy AND the generated answers are the regulated surface. Forbidden: any
@@ -81,11 +81,13 @@ const PRODUCTS: EngineProduct[] = [
   { id: 'b', name: 'Glycolic 7% Toner', tags: ['aha'] },
 ];
 const PROFILE: EngineProfile = { sensitivity: 'sensitive', pregnancy: false };
-const CONFLICTS = detectConflicts(PRODUCTS, PROFILE, STARTER_RULES);
+const CONFLICTS = previewDetectConflicts(PRODUCTS, PROFILE, STARTER_RULES);
 
 const CTX: AskContext = {
   conflicts: CONFLICTS,
+  shelfProducts: PRODUCTS.map(({ id, name }) => ({ id, name })),
   hasShelfProducts: true,
+  shelfProductCount: PRODUCTS.length,
   pmSteps: [
     { name: 'Glycolic 7% Toner', role: 'exfoliant' },
     { name: 'Ceramide moisturizer', role: 'moisturiser' },
@@ -103,7 +105,13 @@ const CTX: AskContext = {
   groundedReason: 'free_locked',
 };
 const NO_CONFLICT_CTX: AskContext = { ...CTX, conflicts: [] };
-const EMPTY_SHELF_CTX: AskContext = { ...CTX, conflicts: [], hasShelfProducts: false };
+const EMPTY_SHELF_CTX: AskContext = {
+  ...CTX,
+  conflicts: [],
+  shelfProducts: [],
+  hasShelfProducts: false,
+  shelfProductCount: 0,
+};
 
 const GENERATED_CLAIMS = [
   answerPrompt('conflict', CTX).claim,
@@ -120,11 +128,7 @@ const GENERATED_CLAIMS = [
 
 // Includes UPSELL_COPY.ask. The Ask paywall copy, "the regulated surface" (docs/13 §10 /
 // FTC AI-washing). Which the subscription guard does NOT scan for AI/disease/superiority.
-const STATIC = [
-  ...collect(ASK_COPY),
-  ...Object.values(RESOLUTION_LEAD),
-  ...collect(UPSELL_COPY.ask),
-];
+const STATIC = [...collect(ASK_COPY), ...collect(UPSELL_COPY.ask)];
 
 describe('every generated ANSWER claim passes the FULL guard. Template-bounded, claim-safe', () => {
   for (const claim of GENERATED_CLAIMS) {
@@ -152,21 +156,22 @@ describe('all Ask copy is claim-safe (AI-disclosure copy exempt only from the te
   }
 });
 
-describe('the required stances are present (off-by-default, on-device, refuse, escalate, disclose)', () => {
-  it('the privacy gate states on-device, zero-retention, a safety window, and off-by-default', () => {
+describe('the required stances are present (unavailable cloud, on-device, refuse, escalate)', () => {
+  it('states that available tools are on-device and no cloud provider is configured', () => {
     const keep = ASK_COPY.privacy.keep.join(' ').toLowerCase();
     expect(keep).toContain('on-device');
-    expect(keep).toContain('zero-retention');
-    expect(keep).toContain('safety window');
-    expect(ASK_COPY.privacy.toggleHint.toLowerCase()).toContain('off by default');
-    expect(ASK_COPY.privacy.never.toLowerCase()).toContain('never sold');
+    expect(keep).toContain('no cloud language provider');
+    expect(ASK_COPY.privacy.toggleHint.toLowerCase()).toContain('unavailable');
+    expect(ASK_COPY.privacy.never.toLowerCase()).toContain('no shelf summary');
+    expect(ASK_COPY.consentLedgerBody.toLowerCase()).not.toContain('zero-retention');
   });
   it('refuse-over-guess and clinician escalation copy exist', () => {
     expect(ASK_COPY.refuse.outOfScope.toLowerCase()).toContain('don’t have sourced information');
     expect(ASK_COPY.escalate.body.toLowerCase()).toContain('dermatologist');
   });
-  it('the AI is disclosed honestly (Art. 50 / SB 243)', () => {
-    expect(ASK_COPY.firstRunDisclosure.toLowerCase()).toContain('ai advisor');
+  it('does not market an unavailable AI advisor', () => {
+    expect(ASK_COPY.firstRunDisclosure.toLowerCase()).toContain('cloud ask is unavailable');
+    expect(ASK_COPY.firstRunDisclosure.toLowerCase()).not.toContain('ai advisor');
   });
   it('the church-and-state line is present (no commerce influence)', () => {
     expect(ASK_COPY.triad.howFit.toLowerCase()).toContain('never by commission');

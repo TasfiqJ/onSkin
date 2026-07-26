@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { detectConflicts, isReassuring } from '@/features/intelligence/engine';
+import { previewDetectConflicts, isReassuring } from '@/features/intelligence/engine';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
@@ -52,7 +52,7 @@ function shelfProduct(overrides: Partial<ShelfProduct> = {}): ShelfProduct {
 
 describe('shelf paired badge resolution gate', () => {
   it('does not mark alternate-night advice as paired until scheduler placement resolves it', () => {
-    const [conflict] = detectConflicts(
+    const [conflict] = previewDetectConflicts(
       [
         { id: 'retinol', name: 'Retinol 0.3%', tags: ['retinoid'] },
         { id: 'glycolic', name: 'Glycolic 7%', tags: ['aha'] },
@@ -72,7 +72,7 @@ describe('shelf paired badge resolution gate', () => {
   });
 
   it('does not mark overridden or reassuring interactions as paired', () => {
-    const conflicts = detectConflicts(
+    const conflicts = previewDetectConflicts(
       [
         { id: 'niacinamide', name: 'Niacinamide 10%', tags: ['niacinamide'] },
         { id: 'vitc', name: 'Vitamin C serum', tags: ['vitamin_c'] },
@@ -87,7 +87,7 @@ describe('shelf paired badge resolution gate', () => {
       pairedProductIdsForResolvedConflicts([reassurance!], new Set([conflictKey(reassurance!)])),
     ).toEqual(new Set());
 
-    const [conflict] = detectConflicts(
+    const [conflict] = previewDetectConflicts(
       [
         { id: 'retinol', name: 'Retinol 0.3%', tags: ['retinoid'] },
         { id: 'glycolic', name: 'Glycolic 7%', tags: ['aha'] },

@@ -7,14 +7,13 @@ import { Button, Screen, Text } from '@/components/ui';
 import { ConflictCard } from '@/features/growth/ConflictCard';
 import { shareConflictCard } from '@/features/growth/shareCard';
 import { createConflictShareLink, type ConflictShareLink } from '@/features/growth/shareLinks';
+import { isAdmittedDetectedConflict } from '@/features/intelligence/engine';
 import { useShelf } from '@/features/shelf/useShelf';
-import { track } from '@/lib/analytics/track';
 import { shareCardUserMessage } from '@/lib/errors/userFacing';
 import { canShareConflictCard, phase7Flags } from '@/lib/launch/phase7';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-const CREATIVE_VARIANT = 'story-v1';
 const SHARE_LINK_UNAVAILABLE_TITLE = 'Sharing is not ready';
 const SHARE_LINK_UNAVAILABLE_MESSAGE =
   'The public share link must be configured before this card can be exported.';
@@ -56,7 +55,10 @@ export default function ShareConflictScreen() {
   const [busy, setBusy] = useState(false);
   const [shareLink, setShareLink] = useState<ConflictShareLink | null>(null);
   const [shareFeedback, setShareFeedback] = useState<ShareFeedback | null>(null);
-  const ruleMatches = data?.conflicts.filter((candidate) => candidate.rule.id === ruleId) ?? [];
+  const ruleMatches =
+    data?.conflicts.filter(
+      (candidate) => isAdmittedDetectedConflict(candidate) && candidate.rule.id === ruleId,
+    ) ?? [];
   const conflict = invalidIdentity
     ? null
     : requestedPair
@@ -90,13 +92,8 @@ export default function ShareConflictScreen() {
     setBusy(true);
     setShareFeedback(null);
     try {
-      track('share_card_export_started', { creative_variant: CREATIVE_VARIANT });
-      const link = await createConflictShareLink({ creativeVariant: CREATIVE_VARIANT });
+      const link = await createConflictShareLink();
       if (!link) {
-        track('share_card_export_failed', {
-          creative_variant: CREATIVE_VARIANT,
-          reason: 'public_link_unavailable',
-        });
         setShareFeedback({
           title: SHARE_LINK_UNAVAILABLE_TITLE,
           message: SHARE_LINK_UNAVAILABLE_MESSAGE,
@@ -105,42 +102,16 @@ export default function ShareConflictScreen() {
       }
 
       setShareLink(link);
-      track('share_link_created', {
-        creative_variant: CREATIVE_VARIANT,
-        share_id: link.shareId,
-      });
       await nextFrame();
 
       const ok = await shareConflictCard(cardRef);
-      if (ok) {
-        track('share_card_export_succeeded', {
-          creative_variant: CREATIVE_VARIANT,
-          share_id: link.shareId,
-        });
-        track('share_card_exported', {
-          creative_variant: CREATIVE_VARIANT,
-          share_id: link.shareId,
-        });
-        track('share_sheet_opened', {
-          creative_variant: CREATIVE_VARIANT,
-          share_id: link.shareId,
-        });
-      } else {
-        track('share_card_export_failed', {
-          creative_variant: CREATIVE_VARIANT,
-          share_id: link.shareId,
-          reason: 'share_unavailable',
-        });
+      if (!ok) {
         setShareFeedback({
           title: SHARE_UNAVAILABLE_TITLE,
           message: SHARE_UNAVAILABLE_MESSAGE,
         });
       }
     } catch {
-      track('share_card_export_failed', {
-        creative_variant: CREATIVE_VARIANT,
-        reason: 'exception',
-      });
       setShareFeedback({
         title: "Couldn't create the card",
         message: shareCardUserMessage(),
@@ -181,7 +152,13 @@ export default function ShareConflictScreen() {
           </View>
         ) : null}
         <Button
-          label={busy ? 'Preparing...' : 'Share to Stories'}
+          label={
+            conflict
+              ? busy
+                ? `${conflict.rule.copy.shareActionLabel}…`
+                : conflict.rule.copy.shareActionLabel
+              : 'Share unavailable'
+          }
           disabled={busy || !canShareConflictCard(conflict)}
           onPress={() => void onShare()}
         />

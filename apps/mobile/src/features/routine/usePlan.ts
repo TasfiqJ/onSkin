@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
@@ -34,6 +33,7 @@ const MAYA_PRODUCTS: RoutineProduct[] = [
 const MAYA_PROFILE: RoutineGenerationProfile = {
   sensitivity: 'sensitive',
   pregnancy: false,
+  reproductiveStatus: 'none',
   goals: ['barrier_repair'],
 };
 
@@ -108,6 +108,7 @@ export function usePlan(): PlanHookResult {
       ? {
           sensitivity: profile.data.sensitivity,
           pregnancy: profile.data.pregnancy,
+          reproductiveStatus: profile.data.pregnancyStatus,
           pregnancySafety: profile.data.pregnancySafety,
           pregnancyStatus: profile.data.pregnancyStatus,
           goals: profile.data.goals,
@@ -116,12 +117,7 @@ export function usePlan(): PlanHookResult {
     // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
     // useShelf/recommendations. In production the conflict layer stays inert until
     // clinical sign-off; in dev the full starter matrix drives the plan.
-    const canonicalPlan = generatePlan(
-      products,
-      real,
-      shippableRules(),
-      shelf.data?.conflictChoices,
-    );
+    const canonicalPlan = generatePlan(products, real, shelf.data?.conflictChoices);
     const data: PlanResult = {
       plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
       canonicalPlan,
@@ -139,7 +135,7 @@ export function usePlan(): PlanHookResult {
       isExample: false,
     };
   }
-  const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules());
+  const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE);
   const data: PlanResult = {
     plan: canonicalPlan,
     canonicalPlan,

@@ -137,7 +137,6 @@ Phase H: Beta Readiness
   onboarding_started
   product_added
   first_useful_insight
-  conflict_detected
   routine_created
   first_checkoff_completed
   routine_checkoff_completed
@@ -146,6 +145,9 @@ Phase H: Beta Readiness
   paywall_shown
   reverse_trial_started
   purchase_completed
+- Prohibit conflict-existence and conflict-resolution analytics, including
+  property-free or generically named events emitted from conflict-only detail or
+  share surfaces.
 - Confirm beta kill criteria are documented:
   fewer than half add real products
   weak first insight

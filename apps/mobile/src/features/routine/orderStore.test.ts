@@ -50,6 +50,8 @@ function plan(am: PlanStep[], pm: PlanStep[]): GeneratedPlan {
     unplacedProducts: [],
     gaps: [],
     conflicts: [],
+    conflictCoverageStatus: 'compatible',
+    unsupportedConflictPairs: [],
   };
 }
 

@@ -93,6 +93,8 @@ unresolved, has zero professional signoffs, and correctly blocks release.
 ## Legal/Regulatory Packet
 
 - `docs/phase-3/legal-regulatory-review-log.md`
+- `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md`
+- `docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md`
 - `docs/phase-3/regulatory-positioning-memo.md`
 - `docs/phase-3/launch-claims-vocabulary.md`
 - `docs/phase-3/data-inventory.md`
@@ -108,11 +110,13 @@ unresolved, has zero professional signoffs, and correctly blocks release.
 ## Clinical Packet
 
 - `docs/phase-3/clinical-review-log.md`
+- `docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md`
 - `docs/phase-3/generated/review-worklist.json`
 - `docs/phase-3/generated/review-worklist.md`
 - `docs/phase-3/generated/review-operator-queue.json`
 - `docs/phase-3/generated/review-operator-queue.md`
 - `apps/mobile/src/features/intelligence/rules.ts`
+- `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts`
 - `apps/mobile/src/features/intelligence/pao.ts`
 - `apps/mobile/src/features/recommendations/catalog.ts`
 - `apps/mobile/src/features/community/notes.ts`
@@ -122,10 +126,12 @@ unresolved, has zero professional signoffs, and correctly blocks release.
 ## Cosmetic Chemistry Packet
 
 - `docs/phase-3/cosmetic-chemistry-review-log.md`
+- `docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md`
 - `docs/phase-3/generated/review-worklist.json`
 - `docs/phase-3/generated/review-worklist.md`
 - `docs/phase-3/generated/review-operator-queue.json`
 - `docs/phase-3/generated/review-operator-queue.md`
+- `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts`
 - `apps/mobile/src/features/intelligence/tags.ts`
 - `apps/mobile/src/features/intelligence/pao.ts`
 - `apps/mobile/src/features/recommendations/catalog.ts`
@@ -143,6 +149,7 @@ unresolved, has zero professional signoffs, and correctly blocks release.
 ## Privacy/Platform Packet
 
 - `docs/phase-3/privacy-security-review-log.md`
+- `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md`
 - `docs/store-privacy-inventory.md`
 - `docs/phase-3/data-inventory.md`
 - `docs/phase-3/consent-matrix.md`

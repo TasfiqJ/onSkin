@@ -385,6 +385,17 @@ export default function ForYouScreen() {
         </View>
       ) : result.youreSet ? (
         <YoureSet compact={compactHub} />
+      ) : result.recommendations.length === 0 &&
+        result.conflictCoverageStatus === 'unsupported_unreviewed' ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            Interaction review in progress
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            We won&apos;t show a compatibility result for these products until that review is
+            complete.
+          </Text>
+        </View>
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}

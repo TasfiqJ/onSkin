@@ -38,12 +38,8 @@ import {
   catalogQualityLabel,
   sourceDisplayName,
 } from '@/features/catalog/copy';
-import type { DetectedConflict } from '@/features/intelligence/engine';
-import { bannerSubhead, tagLabel } from '@/features/intelligence/presentation';
-import {
-  expiryMonthLabel,
-  localDateMonthYearLabel,
-} from '@/features/shelf/expiry';
+import { tagLabel } from '@/features/intelligence/presentation';
+import { expiryMonthLabel, localDateMonthYearLabel } from '@/features/shelf/expiry';
 import {
   PAO_MONTH_OPTIONS,
   parsePaoMonthInput,
@@ -387,9 +383,6 @@ export default function ProductDetailScreen() {
       usage = { phase: 'Morning routine' };
   }
 
-  const otherName = (c: DetectedConflict) =>
-    (c.productAId === id ? c.productBName : c.productAName) ?? 'another product';
-
   const setOpened = async (monthsAgo: number) => {
     await m.setOpened(id, { openedAt: monthsAgoISO(monthsAgo), isOpened: true });
     setEditOpen(false);
@@ -438,20 +431,18 @@ export default function ProductDetailScreen() {
       productId: catalogProductId ?? undefined,
       barcode: p.barcode,
       description: `${correctionType} reported from product detail`,
-        proposedPayload: {
-          productName: p.name,
-          brand: p.brand,
-          category: p.category,
-          sourceName: correctionType === 'missing_product' ? null : catalogSourceLabel,
-          sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl,
-          defaultPaoMonths:
-            correctionType !== 'missing_product' &&
-            p.paoMonths != null &&
-            p.paoSource === 'catalog'
+      proposedPayload: {
+        productName: p.name,
+        brand: p.brand,
+        category: p.category,
+        sourceName: correctionType === 'missing_product' ? null : catalogSourceLabel,
+        sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl,
+        defaultPaoMonths:
+          correctionType !== 'missing_product' && p.paoMonths != null && p.paoSource === 'catalog'
             ? p.paoMonths
             : null,
-          qualityIssue: correctionType,
-        },
+        qualityIssue: correctionType,
+      },
       clientContext: {
         addedVia: p.addedVia,
         quality: p.catalogMatchQuality,
@@ -592,9 +583,7 @@ export default function ProductDetailScreen() {
             <View className="mt-4 rounded-[16px] bg-greige px-4 py-3">
               <Text variant="bodySm" tone="muted">
                 {p.status === 'finished' ? 'Finished' : 'Discarded'}
-                {p.finishedAt
-                  ? ` · ${localDateMonthYearLabel(p.finishedAt)}`
-                  : ''}
+                {p.finishedAt ? ` · ${localDateMonthYearLabel(p.finishedAt)}` : ''}
                 {p.repurchaseCount > 1 ? ` · bought ${p.repurchaseCount}×` : ''}
               </Text>
             </View>
@@ -1013,23 +1002,8 @@ export default function ProductDetailScreen() {
 
           {/* Conflicts & pairings */}
           {conflicts.map((c) => {
-            const reassure =
-              c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
             const savedChoice = data ? choiceForConflict(data.conflictChoices, c) : null;
             const resolved = savedChoice != null;
-            const lead = reassure
-              ? 'Pairs well with '
-              : savedChoice === 'use_together'
-                ? 'Your timing choice is saved with '
-                : savedChoice === 'accept_suggested_timing'
-                  ? 'Kept on separate timing with '
-                  : 'Timing note with ';
-            const detail =
-              savedChoice === 'use_together'
-                ? 'Guided check-offs stay on the reviewed one-active schedule.'
-                : savedChoice === 'accept_suggested_timing'
-                  ? 'Your guided schedule keeps this pairing apart.'
-                  : bannerSubhead(c);
             return (
               <Pressable
                 key={conflictKey(c)}
@@ -1047,17 +1021,16 @@ export default function ProductDetailScreen() {
                   )}
                 />
                 <Text variant="bodySm" tone="muted" className="flex-1">
-                  {lead}
                   <Text variant="bodySm" className="font-sans-semibold">
-                    {otherName(c)}
+                    {c.rule.copy.bannerTitle}
                   </Text>
                   {'. '}
-                  {detail}{' '}
+                  {c.rule.copy.bannerSubhead}{' '}
                   <Text
                     variant="bodySm"
                     className={cn('font-sans-bold', resolved ? 'text-sage' : 'text-clay-deep')}
                   >
-                    {resolved ? 'Change →' : 'Review →'}
+                    {c.rule.copy.primaryActionLabel} →
                   </Text>
                 </Text>
               </Pressable>
