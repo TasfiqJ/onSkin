@@ -6,6 +6,10 @@ import {
   endAccountGenerationBoundary,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
+import {
+  readOperationTimingSamples,
+  resetOperationTimingForTests,
+} from '@/lib/observability/operationTiming';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
 import { markPlaintextStagingState, reservePlaintextStaging } from '@/lib/storage/plaintextStaging';
 
@@ -178,6 +182,7 @@ describe('encrypted photo storage', () => {
   beforeEach(() => {
     vi.stubGlobal('__DEV__', true);
     delete process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED;
+    resetOperationTimingForTests();
     mocks.asyncGetThrows = false;
     mocks.asyncSetCommitsThenThrows = false;
     mocks.asyncSetDrops = false;
@@ -270,6 +275,113 @@ describe('encrypted photo storage', () => {
   afterEach(() => {
     delete process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED;
     vi.unstubAllGlobals();
+  });
+
+  it('times only top-level captured-photo encryption and display decryption', async () => {
+    const privateSentinel = 'private-photo-id-and-uri-must-not-be-retained';
+    const sourceUri = `file://capture/${privateSentinel}.jpg`;
+    mocks.files.set(sourceUri, Buffer.from('private image bytes').toString('base64'));
+
+    const encrypted = await encryptCapturedPhoto(sourceUri, privateSentinel);
+
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'photo_encrypt',
+        durationMs: expect.any(Number),
+        outcome: 'ok',
+      },
+    ]);
+    expect(JSON.stringify(readOperationTimingSamples())).not.toContain(privateSentinel);
+
+    resetOperationTimingForTests();
+    await expect(decryptPhotoToDataUri(encrypted.encryptedLocalUri)).resolves.toMatch(
+      /^data:image\/jpeg;base64,/,
+    );
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'photo_decrypt',
+        durationMs: expect.any(Number),
+        outcome: 'ok',
+      },
+    ]);
+
+    resetOperationTimingForTests();
+    await expect(decryptPhotoToDataUri('file://cache/private-pass-through.jpg')).resolves.toBe(
+      'file://cache/private-pass-through.jpg',
+    );
+    const note = await encryptPhotoNote(privateSentinel);
+    await expect(decryptPhotoNote(note)).resolves.toBe(privateSentinel);
+    expect(readOperationTimingSamples().filter(({ name }) => name.startsWith('photo_'))).toEqual(
+      [],
+    );
+
+    resetOperationTimingForTests();
+    await expect(createPhotoShareFile(encrypted.encryptedLocalUri)).resolves.toMatch(
+      /^file:\/\/cache\//,
+    );
+    expect(readOperationTimingSamples().filter(({ name }) => name.startsWith('photo_'))).toEqual(
+      [],
+    );
+  });
+
+  it('classifies photo timing failures without retaining inputs or errors', async () => {
+    const privateSentinel = 'private-photo-error-must-not-be-retained';
+    const sourceUri = `file://capture/${privateSentinel}.jpg`;
+    mocks.readAsStringAsync.mockRejectedValueOnce(new Error(privateSentinel));
+
+    await expect(encryptCapturedPhoto(sourceUri, privateSentinel)).rejects.toThrow(privateSentinel);
+
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'photo_encrypt',
+        durationMs: expect.any(Number),
+        outcome: 'error',
+      },
+    ]);
+    expect(JSON.stringify(readOperationTimingSamples())).not.toContain(privateSentinel);
+
+    resetOperationTimingForTests();
+    mocks.files.set(encryptedPhotoUriForId(privateSentinel), `{"private":"${privateSentinel}"}`);
+    await expect(decryptPhotoToDataUri(encryptedPhotoUriForId(privateSentinel))).rejects.toThrow(
+      'PHOTO_ENCRYPTION_ENVELOPE_INVALID',
+    );
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'photo_decrypt',
+        durationMs: expect.any(Number),
+        outcome: 'error',
+      },
+    ]);
+    expect(JSON.stringify(readOperationTimingSamples())).not.toContain(privateSentinel);
+  });
+
+  it('classifies account-bound photo timing as cancellation', async () => {
+    const sourceUri = 'file://capture/account-boundary.jpg';
+    mocks.files.set(sourceUri, Buffer.from('private image bytes').toString('base64'));
+    beginEncryptedPhotoAccountBoundary();
+    try {
+      await expect(encryptCapturedPhoto(sourceUri, 'account-boundary')).rejects.toThrow(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+      await expect(
+        decryptPhotoToDataUri(encryptedPhotoUriForId('account-boundary')),
+      ).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    } finally {
+      endEncryptedPhotoAccountBoundary();
+    }
+
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'photo_encrypt',
+        durationMs: expect.any(Number),
+        outcome: 'cancelled',
+      },
+      {
+        name: 'photo_decrypt',
+        durationMs: expect.any(Number),
+        outcome: 'cancelled',
+      },
+    ]);
   });
 
   it('blocks new encrypted photo and note writes during an account boundary', async () => {
@@ -487,6 +599,7 @@ describe('encrypted photo storage', () => {
 
   it('detaches a never-resolving decrypt from the write drain and suppresses its late plaintext', async () => {
     const encrypted = await createAuthenticatedPhotoEnvelope('delayed-owner-a-decrypt');
+    resetOperationTimingForTests();
     let releaseRead!: () => void;
     let markReadStarted!: () => void;
     const readGate = new Promise<void>((resolve) => {
@@ -525,6 +638,13 @@ describe('encrypted photo storage', () => {
         PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
       );
       expect(plaintextPublished).toBe(false);
+      expect(readOperationTimingSamples()).toEqual([
+        {
+          name: 'photo_decrypt',
+          durationMs: expect.any(Number),
+          outcome: 'cancelled',
+        },
+      ]);
 
       // A non-cancellable native completion after invalidation remains
       // rejection-handled and cannot reach the public result.
@@ -532,6 +652,13 @@ describe('encrypted photo storage', () => {
       await Promise.resolve();
       await Promise.resolve();
       expect(plaintextPublished).toBe(false);
+      expect(readOperationTimingSamples()).toEqual([
+        {
+          name: 'photo_decrypt',
+          durationMs: expect.any(Number),
+          outcome: 'cancelled',
+        },
+      ]);
     } finally {
       releaseRead();
       endEncryptedPhotoAccountBoundary();
@@ -594,9 +721,7 @@ describe('encrypted photo storage', () => {
       await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(
         PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
       );
-      await expect(decryptPhotoNote(null)).rejects.toThrow(
-        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-      );
+      await expect(decryptPhotoNote(null)).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
       await expect(decryptPhotoToDataUri('file://cache/plaintext.jpg')).rejects.toThrow(
         PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
       );
@@ -775,9 +900,7 @@ describe('encrypted photo storage', () => {
       'move reported failure after commit',
     );
     expect(mocks.files.get(quarantineUri)).toBe(target.raw);
-    await expect(
-      stageEncryptedPhotoDeletions([target.uri], operationId),
-    ).resolves.toBeUndefined();
+    await expect(stageEncryptedPhotoDeletions([target.uri], operationId)).resolves.toBeUndefined();
 
     mocks.deleteAsync.mockImplementationOnce(async (uri: string) => {
       mocks.files.delete(uri);
@@ -1341,10 +1464,7 @@ describe('encrypted photo storage', () => {
     const ciphertext = await encryptPhotoNote('committed note');
 
     expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
-    expect(mocks.asyncSetItem).toHaveBeenCalledWith(
-      CONTENT_KEY_MARKER,
-      CONTENT_KEY_MARKER_CURRENT,
-    );
+    expect(mocks.asyncSetItem).toHaveBeenCalledWith(CONTENT_KEY_MARKER, CONTENT_KEY_MARKER_CURRENT);
     await expect(decryptPhotoNote(ciphertext)).resolves.toBe('committed note');
   });
 
@@ -1370,10 +1490,7 @@ describe('encrypted photo storage', () => {
     );
 
     expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_PENDING);
-    expect(mocks.asyncSetItem).toHaveBeenCalledWith(
-      CONTENT_KEY_MARKER,
-      CONTENT_KEY_MARKER_PENDING,
-    );
+    expect(mocks.asyncSetItem).toHaveBeenCalledWith(CONTENT_KEY_MARKER, CONTENT_KEY_MARKER_PENDING);
     expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toBe(
       mode === 'wrong' ? 'c'.repeat(64) : undefined,
     );

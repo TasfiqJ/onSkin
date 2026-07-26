@@ -3,6 +3,7 @@ import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
+import { startOperationTiming } from '@/lib/observability/operationTiming';
 
 export const REQUEST_ENDPOINTS = [
   'account_deletion',
@@ -578,6 +579,22 @@ async function executeWithLease<T>(
   }
 }
 
+async function runTimedNetworkRequest<T>(operation: () => Promise<T>): Promise<T> {
+  const finish = startOperationTiming('network_request');
+  try {
+    const result = await operation();
+    finish('ok');
+    return result;
+  } catch (error) {
+    finish(
+      error instanceof AccountGenerationLeaseError || isRequestCancellation(error)
+        ? 'cancelled'
+        : 'error',
+    );
+    throw error;
+  }
+}
+
 /**
  * Runs a request with a bounded, privacy-safe policy. Owner scoping defaults to
  * on. Every authenticated Edge Function keeps owner scoping enabled.
@@ -586,8 +603,10 @@ export function runRequest<T>(
   policy: RequestPolicy,
   operation: (context: RequestAttemptContext) => Promise<T>,
 ): Promise<T> {
-  if (policy.ownerScoped === false) return executeWithLease(policy, operation, null);
-  return runAccountGenerationOperation((lease) => executeWithLease(policy, operation, lease));
+  return runTimedNetworkRequest(() => {
+    if (policy.ownerScoped === false) return executeWithLease(policy, operation, null);
+    return runAccountGenerationOperation((lease) => executeWithLease(policy, operation, lease));
+  });
 }
 
 /** Reuse an already-captured owner lease instead of nesting another generation
@@ -598,5 +617,5 @@ export function runRequestWithLease<T>(
   policy: LeasedRequestPolicy,
   operation: (context: RequestAttemptContext) => Promise<T>,
 ): Promise<T> {
-  return executeWithLease(policy, operation, lease);
+  return runTimedNetworkRequest(() => executeWithLease(policy, operation, lease));
 }

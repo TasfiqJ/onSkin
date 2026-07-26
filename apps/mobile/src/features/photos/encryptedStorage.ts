@@ -14,6 +14,11 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Platform } from 'react-native';
 
 import {
+  ACCOUNT_GENERATION_CHANGED,
+  AccountGenerationLeaseError,
+} from '@/lib/auth/accountGeneration';
+import { startOperationTiming } from '@/lib/observability/operationTiming';
+import {
   cleanupPlaintextStaging,
   cleanupPlaintextStagingUri,
   markPlaintextStagingState,
@@ -28,6 +33,7 @@ import {
 import { stripImageMetadataFromBase64 } from './metadata';
 import {
   assertPhotoWriteAllowed,
+  PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   runAccountScopedPhotoMutation,
   runAccountScopedPhotoRead,
   runDestructiveAccountScopedPhotoOperation,
@@ -58,8 +64,7 @@ export const PHOTO_CONTENT_KEY_INVALID = 'PHOTO_CONTENT_KEY_INVALID';
 export const PHOTO_CONTENT_KEY_MARKER_INVALID = 'PHOTO_CONTENT_KEY_MARKER_INVALID';
 export const PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION =
   'PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION';
-export const PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH =
-  'PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH';
+export const PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH = 'PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH';
 export const PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE = 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE';
 export const PHOTO_DECRYPTION_FAILED = 'PHOTO_DECRYPTION_FAILED';
 export const PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED = 'PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED';
@@ -253,9 +258,7 @@ async function requireContentKeyMarkerWithinMutation(keyHex: string): Promise<vo
 }
 
 async function requireContentKeyMarker(keyHex: string): Promise<void> {
-  await runSerializedContentKeyMarkerMutation(() =>
-    requireContentKeyMarkerWithinMutation(keyHex),
-  );
+  await runSerializedContentKeyMarkerMutation(() => requireContentKeyMarkerWithinMutation(keyHex));
 }
 
 async function hasPriorEncryptedPhotoFiles(): Promise<boolean> {
@@ -500,6 +503,26 @@ function decryptEnvelopeToUtf8(envelope: EncryptedTextEnvelope, key: Uint8Array)
   }
 }
 
+async function runTimedPhotoOperation<T>(
+  name: 'photo_encrypt' | 'photo_decrypt',
+  operation: () => Promise<T>,
+): Promise<T> {
+  const finish = startOperationTiming(name);
+  try {
+    const result = await operation();
+    finish('ok');
+    return result;
+  } catch (error) {
+    const cancelled =
+      error instanceof AccountGenerationLeaseError ||
+      (error instanceof Error &&
+        (error.message === ACCOUNT_GENERATION_CHANGED ||
+          error.message === PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY));
+    finish(cancelled ? 'cancelled' : 'error');
+    throw error;
+  }
+}
+
 export function isEncryptedPhotoUri(uri?: string | null): boolean {
   return Boolean(uri?.endsWith('.onskinphoto'));
 }
@@ -510,64 +533,70 @@ export async function encryptCapturedPhoto(
   operationId = photoId,
 ): Promise<EncryptedPhotoWrite> {
   if (!sourceUri) throw new Error('Missing captured photo URI.');
-  return runAccountScopedPhotoMutation(async (generation) => {
-    await ensureDir();
-    const key = await getOrCreateContentKey();
-    const mimeType = mimeForUri(sourceUri);
-    const base64 = await FileSystem.readAsStringAsync(sourceUri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-    assertPhotoWriteAllowed(generation);
-    const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
-    const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
-    const envelope: EncryptedPhotoEnvelope = {
-      ...encrypted,
-      mimeType,
-    };
-    const encryptedLocalUri = encryptedPhotoUriForId(photoId);
-    const temporaryUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
-    assertPhotoWriteAllowed(generation);
-    try {
-      if (
-        (await recoveryPathExists(encryptedLocalUri)) ||
-        (await recoveryPathExists(temporaryUri))
-      ) {
-        throw new Error(PHOTO_RECOVERY_CONFLICT);
-      }
-      await FileSystem.writeAsStringAsync(temporaryUri, JSON.stringify(envelope), {
-        encoding: FileSystem.EncodingType.UTF8,
+  return runTimedPhotoOperation('photo_encrypt', () =>
+    runAccountScopedPhotoMutation(async (generation) => {
+      await ensureDir();
+      const key = await getOrCreateContentKey();
+      const mimeType = mimeForUri(sourceUri);
+      const base64 = await FileSystem.readAsStringAsync(sourceUri, {
+        encoding: FileSystem.EncodingType.Base64,
       });
-      await FileSystem.moveAsync({ from: temporaryUri, to: encryptedLocalUri });
-    } catch (error) {
-      await FileSystem.deleteAsync(temporaryUri, { idempotent: true }).catch(() => undefined);
-      throw error;
-    }
-    return {
-      encryptedLocalUri,
-      keyId: KEY_ID,
-      encryptionVersion: ENCRYPTION_VERSION,
-    };
-  });
+      assertPhotoWriteAllowed(generation);
+      const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
+      const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
+      const envelope: EncryptedPhotoEnvelope = {
+        ...encrypted,
+        mimeType,
+      };
+      const encryptedLocalUri = encryptedPhotoUriForId(photoId);
+      const temporaryUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
+      assertPhotoWriteAllowed(generation);
+      try {
+        if (
+          (await recoveryPathExists(encryptedLocalUri)) ||
+          (await recoveryPathExists(temporaryUri))
+        ) {
+          throw new Error(PHOTO_RECOVERY_CONFLICT);
+        }
+        await FileSystem.writeAsStringAsync(temporaryUri, JSON.stringify(envelope), {
+          encoding: FileSystem.EncodingType.UTF8,
+        });
+        await FileSystem.moveAsync({ from: temporaryUri, to: encryptedLocalUri });
+      } catch (error) {
+        await FileSystem.deleteAsync(temporaryUri, { idempotent: true }).catch(() => undefined);
+        throw error;
+      }
+      return {
+        encryptedLocalUri,
+        keyId: KEY_ID,
+        encryptionVersion: ENCRYPTION_VERSION,
+      };
+    }),
+  );
 }
 
 export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<string> {
-  return runAccountScopedPhotoRead(async (assertCurrent) => {
-    if (!isEncryptedPhotoUri(encryptedLocalUri)) {
+  const read = () =>
+    runAccountScopedPhotoRead(async (assertCurrent) => {
+      if (!isEncryptedPhotoUri(encryptedLocalUri)) {
+        assertCurrent();
+        return encryptedLocalUri;
+      }
+      const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
       assertCurrent();
-      return encryptedLocalUri;
-    }
-    const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
-      encoding: FileSystem.EncodingType.UTF8,
+      const envelope = photoEnvelopeFromRaw(raw);
+      if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+      const key = await getExistingContentKey(assertCurrent);
+      assertCurrent();
+      const base64 = decryptEnvelopeToUtf8(envelope, key);
+      if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+      return `data:${envelope.mimeType};base64,${base64}`;
     });
-    assertCurrent();
-    const envelope = photoEnvelopeFromRaw(raw);
-    if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-    const key = await getExistingContentKey(assertCurrent);
-    assertCurrent();
-    const base64 = decryptEnvelopeToUtf8(envelope, key);
-    if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-    return `data:${envelope.mimeType};base64,${base64}`;
-  });
+  return isEncryptedPhotoUri(encryptedLocalUri)
+    ? runTimedPhotoOperation('photo_decrypt', read)
+    : read();
 }
 
 export async function createPhotoShareFile(encryptedLocalUri: string): Promise<string> {
@@ -786,10 +815,7 @@ export async function recoverPreparedEncryptedPhoto(
             // remains exact-journal-owned and cannot be the only photo copy.
           }
         }
-        if (
-          pendingAuthenticates &&
-          snapshots.paths.get(encryptedLocalUri) !== pendingRaw
-        ) {
+        if (pendingAuthenticates && snapshots.paths.get(encryptedLocalUri) !== pendingRaw) {
           throw new Error(PHOTO_RECOVERY_CONFLICT);
         }
         snapshots.paths.set(pendingUri, pendingRaw);

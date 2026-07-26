@@ -194,6 +194,8 @@ Done when:
 - zero crashes and OS terminations are recorded;
 - a named owner signs the beta decision.
 
+Current local operation-timing checkpoint (2026-07-26): the fixed `photo_encrypt`, `photo_decrypt`, and `network_request` labels now have production owners. Captured-photo encryption measures the complete key/read/strip/encrypt/serialize/write/move path, while encrypted display decode measures the complete owner-bound file/key/authenticated-decrypt/data-URI path. Plaintext pass-through, note crypto, and share preparation are excluded so the photo distributions remain meaningful. Both request-policy entry points record one complete logical request across retries and retry delay. Outcomes are fixed to `ok`, `error`, or `cancelled`; the samples remain memory-only, timestamp-free, content-free, and capped at 200. The focused privacy/behavior matrix passes 4 files / 112 tests, repository type-check and zero-warning lint pass, and the preserved-dirty-worktree suite runs 370 files / 4,539 tests with 4,535 passing and the same four unrelated user-owned notification/Shelf failures. This closes local label adoption only; approved thresholds, named owners, raw signed-device traces, repeated release samples, and independent signoff remain required for PERF-P0-001. See `docs/optimization/evidence/2026-07-26_photo-network-operation-timing.md`.
+
 ### PERF-P0-002 — Replace the current full-resolution photo path
 
 Current state:

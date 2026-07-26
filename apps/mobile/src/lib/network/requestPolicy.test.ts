@@ -10,6 +10,10 @@ import {
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
 } from '@/lib/auth/accountGeneration';
+import {
+  readOperationTimingSamples,
+  resetOperationTimingForTests,
+} from '@/lib/observability/operationTiming';
 
 import {
   readRequestMetricSamples,
@@ -46,7 +50,10 @@ function deferred<T>(): {
 }
 
 describe('request policy network failure matrix', () => {
-  beforeEach(() => resetRequestMetricSamplesForTests());
+  beforeEach(() => {
+    resetOperationTimingForTests();
+    resetRequestMetricSamplesForTests();
+  });
 
   it('returns a bounded response and records only fixed, content-free metrics', async () => {
     const readings = [10, 22.345];
@@ -67,6 +74,109 @@ describe('request policy network failure matrix', () => {
 
     expect(readRequestMetricSamples()).toEqual([
       { endpoint: 'catalog_lookup', durationMs: 12.35, statusClass: '2xx', attemptCount: 1 },
+    ]);
+  });
+
+  it('records one content-free timing sample per logical request across retries and failures', async () => {
+    const privateSentinel = 'private-network-payload-and-error-must-not-be-retained';
+    const retryOperation = vi
+      .fn<() => Promise<{ result: string }>>()
+      .mockRejectedValueOnce(httpError(503))
+      .mockResolvedValueOnce({ result: privateSentinel });
+
+    await expect(
+      runRequest(
+        {
+          endpoint: 'catalog_lookup',
+          deadlineMs: 10_000,
+          idempotent: true,
+          maxAttempts: 2,
+          ownerScoped: false,
+          runtime: {
+            random: () => 0,
+            sleep: async () => undefined,
+          },
+        },
+        retryOperation,
+      ),
+    ).resolves.toEqual({ result: privateSentinel });
+    expect(retryOperation).toHaveBeenCalledTimes(2);
+
+    await expect(
+      runRequest(
+        {
+          endpoint: 'data_export',
+          deadlineMs: 10_000,
+          idempotent: false,
+          ownerScoped: false,
+        },
+        async () => {
+          throw new Error(privateSentinel);
+        },
+      ),
+    ).rejects.toMatchObject({ kind: 'unknown', attemptCount: 1 });
+
+    const controller = new AbortController();
+    controller.abort();
+    await expect(
+      runRequest(
+        {
+          endpoint: 'catalog_search',
+          deadlineMs: 10_000,
+          idempotent: false,
+          ownerScoped: false,
+          signal: controller.signal,
+        },
+        async () => 'must-not-run',
+      ),
+    ).rejects.toMatchObject({ kind: 'cancelled', attemptCount: 1 });
+
+    const samples = readOperationTimingSamples();
+    expect(samples).toEqual([
+      {
+        name: 'network_request',
+        durationMs: expect.any(Number),
+        outcome: 'ok',
+      },
+      {
+        name: 'network_request',
+        durationMs: expect.any(Number),
+        outcome: 'error',
+      },
+      {
+        name: 'network_request',
+        durationMs: expect.any(Number),
+        outcome: 'cancelled',
+      },
+    ]);
+    expect(Object.keys(samples[0] ?? {}).sort()).toEqual(['durationMs', 'name', 'outcome']);
+    expect(JSON.stringify(samples)).not.toContain(privateSentinel);
+    expect(JSON.stringify(samples)).not.toContain('catalog_lookup');
+  });
+
+  it('records a pre-existing owner boundary as one cancelled network request', async () => {
+    beginAccountGenerationBoundary();
+    try {
+      await expect(
+        runRequest(
+          {
+            endpoint: 'profile_server',
+            deadlineMs: 1_000,
+            idempotent: true,
+          },
+          async () => 'must-not-run',
+        ),
+      ).rejects.toThrow('ACCOUNT_GENERATION_CHANGED');
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'network_request',
+        durationMs: expect.any(Number),
+        outcome: 'cancelled',
+      },
     ]);
   });
 
@@ -97,6 +207,13 @@ describe('request policy network failure matrix', () => {
       statusClass: '2xx',
       attemptCount: 1,
     });
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'network_request',
+        durationMs: expect.any(Number),
+        outcome: 'ok',
+      },
+    ]);
   });
 
   it('enforces the deadline even when the underlying operation ignores its signal', async () => {
@@ -120,6 +237,13 @@ describe('request policy network failure matrix', () => {
     } finally {
       vi.useRealTimers();
     }
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'network_request',
+        durationMs: expect.any(Number),
+        outcome: 'error',
+      },
+    ]);
   });
 
   it('retries only idempotent transient server failures with full jitter', async () => {
@@ -490,6 +614,13 @@ describe('request policy network failure matrix', () => {
       endAccountGenerationBoundary();
     }
     expect(operation).toHaveBeenCalledTimes(1);
+    expect(readOperationTimingSamples()).toEqual([
+      {
+        name: 'network_request',
+        durationMs: expect.any(Number),
+        outcome: 'cancelled',
+      },
+    ]);
   });
 
   it('rejects oversized responses without exposing the response payload', async () => {
