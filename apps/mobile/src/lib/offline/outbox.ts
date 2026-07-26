@@ -19,6 +19,12 @@ import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { hashOutboxOwner } from './outboxIdentity';
 import {
+  OUTBOX_ENTITY_CONTRACT,
+  OUTBOX_ENTITY_TYPES,
+  type OutboxEntityType,
+  type OutboxFlushCountKey,
+} from './outboxEntities';
+import {
   OUTBOX_INVALID,
   OUTBOX_STORAGE_KEY,
   OUTBOX_UNSUPPORTED_VERSION,
@@ -30,7 +36,6 @@ import {
   selectOutboxOwnerStatus,
   settleOutboxLease,
   type OutboxEnvelope,
-  type OutboxEntityType,
   type OutboxFailureClass,
   type OutboxOwnerStatus,
   type OutboxRow,
@@ -48,14 +53,7 @@ export type OutboxFlushResult = Readonly<{
   leased: number;
   flushed: number;
   dead: number;
-  flushedByEntity: Readonly<{
-    conflictChoices: number;
-    notificationDeliveries: number;
-    notificationPreferences: number;
-    recommendationPreferences: number;
-    shelfScans: number;
-    shelfProducts: number;
-  }>;
+  flushedByEntity: Readonly<Record<OutboxFlushCountKey, number>>;
 }>;
 
 export type OwnerOutboxStatusRead =
@@ -126,42 +124,38 @@ export async function readOutbox(): Promise<OutboxRead> {
   }
 }
 
+type MutableOutboxFlushCounts = {
+  -readonly [Key in OutboxFlushCountKey]: number;
+};
+
+function createOutboxFlushCounts(): MutableOutboxFlushCounts {
+  const counts = {} as MutableOutboxFlushCounts;
+  for (const entityType of OUTBOX_ENTITY_TYPES) {
+    counts[OUTBOX_ENTITY_CONTRACT[entityType].flushCountKey] = 0;
+  }
+  return counts;
+}
+
 function emptyFlushResult(): OutboxFlushResult {
   return Object.freeze({
     leased: 0,
     flushed: 0,
     dead: 0,
-    flushedByEntity: Object.freeze({
-      conflictChoices: 0,
-      notificationDeliveries: 0,
-      notificationPreferences: 0,
-      recommendationPreferences: 0,
-      shelfScans: 0,
-      shelfProducts: 0,
-    }),
+    flushedByEntity: Object.freeze(createOutboxFlushCounts()),
   });
 }
 
 function mergeFlushResults(current: OutboxFlushResult, next: OutboxFlushResult): OutboxFlushResult {
+  const flushedByEntity = createOutboxFlushCounts();
+  for (const entityType of OUTBOX_ENTITY_TYPES) {
+    const countKey = OUTBOX_ENTITY_CONTRACT[entityType].flushCountKey;
+    flushedByEntity[countKey] = current.flushedByEntity[countKey] + next.flushedByEntity[countKey];
+  }
   return Object.freeze({
     leased: current.leased + next.leased,
     flushed: current.flushed + next.flushed,
     dead: next.dead,
-    flushedByEntity: Object.freeze({
-      conflictChoices:
-        current.flushedByEntity.conflictChoices + next.flushedByEntity.conflictChoices,
-      notificationDeliveries:
-        current.flushedByEntity.notificationDeliveries +
-        next.flushedByEntity.notificationDeliveries,
-      notificationPreferences:
-        current.flushedByEntity.notificationPreferences +
-        next.flushedByEntity.notificationPreferences,
-      recommendationPreferences:
-        current.flushedByEntity.recommendationPreferences +
-        next.flushedByEntity.recommendationPreferences,
-      shelfScans: current.flushedByEntity.shelfScans + next.flushedByEntity.shelfScans,
-      shelfProducts: current.flushedByEntity.shelfProducts + next.flushedByEntity.shelfProducts,
-    }),
+    flushedByEntity: Object.freeze(flushedByEntity),
   });
 }
 
@@ -327,18 +321,7 @@ async function sendOutboxEntityBatch(
   entityType: OutboxEntityType,
   rows: readonly OutboxRow[],
 ): Promise<readonly OutboxServerResult[]> {
-  const rpc =
-    entityType === 'shelf_product'
-      ? 'apply_shelf_outbox_batch'
-      : entityType === 'conflict_choice'
-        ? 'apply_conflict_choice_outbox_batch'
-        : entityType === 'shelf_scan'
-          ? 'apply_shelf_scan_outbox_batch'
-          : entityType === 'notification_delivery'
-            ? 'apply_notification_delivery_outbox_batch'
-            : entityType === 'notification_preferences'
-              ? 'apply_notification_preferences_outbox_batch'
-              : 'apply_recommendation_preferences_outbox_batch';
+  const rpc = OUTBOX_ENTITY_CONTRACT[entityType].rpc;
   const data = await runRequestWithLease(
     lease,
     {
@@ -372,12 +355,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
 
     let totalLeased = 0;
     let totalFlushed = 0;
-    let conflictChoicesFlushed = 0;
-    let notificationDeliveriesFlushed = 0;
-    let notificationPreferencesFlushed = 0;
-    let recommendationPreferencesFlushed = 0;
-    let shelfScansFlushed = 0;
-    let shelfProductsFlushed = 0;
+    const flushedByEntity = createOutboxFlushCounts();
     for (let batch = 0; batch < MAX_BATCHES_PER_FLUSH; batch += 1) {
       lease.assertCurrent();
       const leaseOwner = Crypto.randomUUID();
@@ -398,14 +376,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
 
       const results: OutboxServerResult[] = [];
       let hadRequestFailure = false;
-      for (const entityType of [
-        'shelf_product',
-        'conflict_choice',
-        'notification_preferences',
-        'recommendation_preferences',
-        'notification_delivery',
-        'shelf_scan',
-      ] as const) {
+      for (const entityType of OUTBOX_ENTITY_TYPES) {
         const rows = leasedRows.filter((row) => row.entityType === entityType);
         if (rows.length === 0) continue;
         let entityResults: readonly OutboxServerResult[] = [];
@@ -446,22 +417,10 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
       );
       const successfulRows = leasedRows.filter((row) => successfulIds.has(row.operationId));
       totalFlushed += successfulRows.length;
-      shelfProductsFlushed += successfulRows.filter(
-        (row) => row.entityType === 'shelf_product',
-      ).length;
-      conflictChoicesFlushed += successfulRows.filter(
-        (row) => row.entityType === 'conflict_choice',
-      ).length;
-      notificationDeliveriesFlushed += successfulRows.filter(
-        (row) => row.entityType === 'notification_delivery',
-      ).length;
-      notificationPreferencesFlushed += successfulRows.filter(
-        (row) => row.entityType === 'notification_preferences',
-      ).length;
-      recommendationPreferencesFlushed += successfulRows.filter(
-        (row) => row.entityType === 'recommendation_preferences',
-      ).length;
-      shelfScansFlushed += successfulRows.filter((row) => row.entityType === 'shelf_scan').length;
+      for (const row of successfulRows) {
+        const countKey = OUTBOX_ENTITY_CONTRACT[row.entityType].flushCountKey;
+        flushedByEntity[countKey] += 1;
+      }
       if (hadRequestFailure) break;
     }
 
@@ -474,14 +433,7 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
         state.status === 'available' || state.status === 'absent'
           ? outboxCounts(state.envelope).dead
           : 0,
-      flushedByEntity: Object.freeze({
-        conflictChoices: conflictChoicesFlushed,
-        notificationDeliveries: notificationDeliveriesFlushed,
-        notificationPreferences: notificationPreferencesFlushed,
-        recommendationPreferences: recommendationPreferencesFlushed,
-        shelfScans: shelfScansFlushed,
-        shelfProducts: shelfProductsFlushed,
-      }),
+      flushedByEntity: Object.freeze(flushedByEntity),
     });
   });
 }

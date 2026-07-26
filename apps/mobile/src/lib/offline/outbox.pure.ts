@@ -1,3 +1,13 @@
+import {
+  OUTBOX_ENTITY_CONTRACT,
+  isOutboxEntityType,
+  isOutboxOperationKind,
+  type OutboxEntityType,
+  type OutboxOperationKind,
+} from './outboxEntities';
+
+export type { OutboxEntityType, OutboxOperationKind } from './outboxEntities';
+
 export const OUTBOX_STORAGE_KEY = 'onskin.outbox.v1';
 export const OUTBOX_SCHEMA_VERSION = 5 as const;
 export const OUTBOX_LEGACY_SCHEMA_VERSIONS = [1, 2, 3, 4] as const;
@@ -24,14 +34,6 @@ const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
 const NUMERIC_BARCODE = /^[0-9]{6,14}$/;
 
-export type OutboxEntityType =
-  | 'conflict_choice'
-  | 'notification_delivery'
-  | 'notification_preferences'
-  | 'recommendation_preferences'
-  | 'shelf_scan'
-  | 'shelf_product';
-export type OutboxOperationKind = 'delete' | 'upsert';
 export type OutboxState = 'dead' | 'leased' | 'ready';
 export type OutboxFailureClass =
   | 'authentication'
@@ -400,19 +402,8 @@ export function shelfScanPayloadHashInput(payload: OutboxPayload): string {
   ].join('\n');
 }
 
-function validEntityType(value: unknown): value is OutboxEntityType {
-  return (
-    value === 'conflict_choice' ||
-    value === 'shelf_product' ||
-    value === 'shelf_scan' ||
-    value === 'notification_delivery' ||
-    value === 'notification_preferences' ||
-    value === 'recommendation_preferences'
-  );
-}
-
 function isImmutableEventEntityType(entityType: OutboxEntityType): boolean {
-  return entityType === 'notification_delivery' || entityType === 'shelf_scan';
+  return OUTBOX_ENTITY_CONTRACT[entityType].immutableEvent;
 }
 
 function entityIdentity(value: Pick<OutboxRow, 'entityType' | 'entityId'>): string {
@@ -488,10 +479,10 @@ function decodeRow(value: unknown): OutboxRow {
     !SHA256_HEX.test(value.ownerHash) ||
     !Number.isSafeInteger(value.ownerGeneration) ||
     Number(value.ownerGeneration) < 0 ||
-    !validEntityType(entityType) ||
+    !isOutboxEntityType(entityType) ||
     typeof entityId !== 'string' ||
     !UUID.test(entityId) ||
-    (operationKind !== 'upsert' && operationKind !== 'delete') ||
+    !isOutboxOperationKind(entityType, operationKind) ||
     !Number.isSafeInteger(value.clientRevision) ||
     Number(value.clientRevision) < 1 ||
     typeof value.idempotencyKey !== 'string' ||
@@ -586,7 +577,7 @@ function decodeRevision(value: unknown): OutboxRevision {
     !hasExactKeys(value, ['ownerHash', 'entityType', 'entityId', 'revision']) ||
     typeof value.ownerHash !== 'string' ||
     !SHA256_HEX.test(value.ownerHash) ||
-    !validEntityType(value.entityType) ||
+    !isOutboxEntityType(value.entityType) ||
     typeof value.entityId !== 'string' ||
     !UUID.test(value.entityId) ||
     !Number.isSafeInteger(value.revision) ||
@@ -606,7 +597,7 @@ function decodeLegacyRevision(value: unknown, rows: readonly OutboxRow[]): Outbo
   if (
     !isRecord(value) ||
     !hasExactKeys(value, ['entityType', 'entityId', 'revision']) ||
-    !validEntityType(value.entityType) ||
+    !isOutboxEntityType(value.entityType) ||
     typeof value.entityId !== 'string' ||
     !UUID.test(value.entityId) ||
     !Number.isSafeInteger(value.revision) ||
@@ -1009,21 +1000,17 @@ export function leaseReadyOutboxRows(
   const leasedIdentities = new Set(
     compacted.filter((row) => row.state === 'leased').map(ownerEntityIdentity),
   );
-  const priority: Readonly<Record<OutboxEntityType, number>> = Object.freeze({
-    shelf_product: 0,
-    conflict_choice: 1,
-    notification_preferences: 2,
-    recommendation_preferences: 3,
-    notification_delivery: 4,
-    shelf_scan: 5,
-  });
   const pendingShelfEntities = new Set(
     compacted
       .filter((row) => row.entityType === 'shelf_product')
       .map((row) => `${row.ownerHash}:${row.entityId.toLowerCase()}`),
   );
   const eligible = sortRows(compacted)
-    .sort((left, right) => priority[left.entityType] - priority[right.entityType])
+    .sort(
+      (left, right) =>
+        OUTBOX_ENTITY_CONTRACT[left.entityType].priority -
+        OUTBOX_ENTITY_CONTRACT[right.entityType].priority,
+    )
     .filter(
       (row) =>
         row.ownerHash === input.ownerHash &&
@@ -1195,7 +1182,7 @@ function assertOwnerHash(ownerHash: string): void {
 }
 
 function assertEntityType(entityType: OutboxEntityType): void {
-  if (!validEntityType(entityType)) fail();
+  if (!isOutboxEntityType(entityType)) fail();
 }
 
 export function selectOutboxOwnerStatus(
