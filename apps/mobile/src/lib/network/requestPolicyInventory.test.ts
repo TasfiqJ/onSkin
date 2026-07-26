@@ -37,19 +37,62 @@ const READ_ONLY_ENDPOINTS_BY_FILE = {
   'lib/consent/consent.ts': ['consent_ledger'],
 } as const;
 
+type DirectMutationVerb = 'delete' | 'insert' | 'update' | 'upsert';
+type DirectMutationContract = Readonly<{
+  table: string;
+  verb: DirectMutationVerb;
+  occurrences: number;
+}>;
+
 const POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE = {
-  'features/commerce/store.ts': ['commerce_click_event'],
-  'features/photos/store.ts': ['photo_delete_mirror'],
-  'lib/offline/completionQueue.ts': ['completion_sync'],
-} as const;
+  'features/commerce/store.ts': {
+    endpoints: ['commerce_click_event'],
+    mutations: [{ table: 'commerce_click_events', verb: 'insert', occurrences: 1 }],
+  },
+  'features/photos/store.ts': {
+    endpoints: ['photo_delete_mirror'],
+    mutations: [{ table: 'photos', verb: 'delete', occurrences: 1 }],
+  },
+  'lib/offline/completionQueue.ts': {
+    endpoints: ['completion_sync'],
+    mutations: [{ table: 'routine_completions', verb: 'insert', occurrences: 1 }],
+  },
+} as const satisfies Record<
+  string,
+  Readonly<{
+    endpoints: readonly string[];
+    mutations: readonly DirectMutationContract[];
+  }>
+>;
 
 /** These direct mutations already carry owner abort fencing, but at least one
  * operation in each file lacks the exact identity/order contract required for
- * a safe timeout race or retry. Freeze the list so a bypass cannot grow. */
-const DEFERRED_MUTATION_POLICY_FILES = [
-  'features/onboarding/OnboardingContext.tsx',
-  'lib/consent/consent.ts',
-] as const;
+ * a safe timeout race or retry. Freeze their exact table/verb inventory while
+ * migration to the durable outbox remains deferred. */
+const DEFERRED_OUTBOX_MUTATIONS_BY_FILE = {
+  'features/onboarding/OnboardingContext.tsx': [
+    { table: 'skin_profiles', verb: 'insert', occurrences: 1 },
+  ],
+  'lib/consent/consent.ts': [{ table: 'consents', verb: 'insert', occurrences: 1 }],
+} as const satisfies Record<string, readonly DirectMutationContract[]>;
+
+const LITERAL_DIRECT_MUTATION =
+  /\.from\(\s*(['"])([a-z][a-z0-9_]*)\1\s*\)\s*\.(delete|insert|update|upsert)\s*\(/g;
+const RAW_MUTATION_VERB = /\.(?:delete|insert|update|upsert)\s*\(/g;
+
+function directMutationInventory(relativePath: string): DirectMutationContract[] {
+  const counts = new Map<string, DirectMutationContract>();
+  for (const match of source(join(SRC_DIR, relativePath)).matchAll(LITERAL_DIRECT_MUTATION)) {
+    const table = match[2]!;
+    const verb = match[3]! as DirectMutationVerb;
+    const key = `${table}:${verb}`;
+    const prior = counts.get(key);
+    counts.set(key, { table, verb, occurrences: (prior?.occurrences ?? 0) + 1 });
+  }
+  return [...counts.values()].sort((a, b) =>
+    `${a.table}:${a.verb}`.localeCompare(`${b.table}:${b.verb}`),
+  );
+}
 
 describe('production request-policy inventory', () => {
   const files = productionSources();
@@ -131,11 +174,11 @@ describe('production request-policy inventory', () => {
 
     const expectedMutationFiles = new Set([
       ...Object.keys(POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE),
-      ...DEFERRED_MUTATION_POLICY_FILES,
+      ...Object.keys(DEFERRED_OUTBOX_MUTATIONS_BY_FILE),
     ]);
     expect(mutationFiles).toEqual([...expectedMutationFiles].sort());
 
-    for (const [relativePath, endpoints] of Object.entries(
+    for (const [relativePath, contract] of Object.entries(
       POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE,
     )) {
       const text = source(join(SRC_DIR, relativePath));
@@ -143,13 +186,21 @@ describe('production request-policy inventory', () => {
       expect(text, relativePath).toContain('idempotent: true');
       expect(text, relativePath).toContain('maxAttempts: 2');
       expect(text, relativePath).toContain('maxResponseBytes:');
-      for (const endpoint of endpoints) {
+      expect(directMutationInventory(relativePath), relativePath).toEqual(contract.mutations);
+      expect(text.match(RAW_MUTATION_VERB) ?? [], relativePath).toHaveLength(
+        contract.mutations.reduce((total, mutation) => total + mutation.occurrences, 0),
+      );
+      for (const endpoint of contract.endpoints) {
         expect(text, relativePath).toContain(`endpoint: '${endpoint}'`);
       }
     }
 
-    for (const relativePath of DEFERRED_MUTATION_POLICY_FILES) {
+    for (const [relativePath, mutations] of Object.entries(DEFERRED_OUTBOX_MUTATIONS_BY_FILE)) {
       const text = source(join(SRC_DIR, relativePath));
+      expect(directMutationInventory(relativePath), relativePath).toEqual(mutations);
+      expect(text.match(RAW_MUTATION_VERB) ?? [], relativePath).toHaveLength(
+        mutations.reduce((total, mutation) => total + mutation.occurrences, 0),
+      );
       expect(text, relativePath).toMatch(/run(?:AccountGeneration|OwnerQuery)Operation/);
       expect(text, relativePath).toContain('.abortSignal(');
     }
