@@ -89,19 +89,13 @@ describe('community consent persistence', () => {
     mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
     mocks.readCommunityConsentLocal.mockResolvedValueOnce({ status: 'unsupported_version' });
 
-    await expect(isCommunityConsented()).rejects.toThrow(
-      'PRIVATE_BOOLEAN_UNSUPPORTED_VERSION',
-    );
+    await expect(isCommunityConsented()).rejects.toThrow('PRIVATE_BOOLEAN_UNSUPPORTED_VERSION');
   });
 
   it('detaches a hung local fallback on A to B without publishing its late grant', async () => {
     const { isCommunityConsented } = await import('./consent');
     mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
-    let resolveLocal!: (value: {
-      status: 'available';
-      value: boolean;
-      format: 'current';
-    }) => void;
+    let resolveLocal!: (value: { status: 'available'; value: boolean; format: 'current' }) => void;
     let markStarted!: () => void;
     const started = new Promise<void>((resolve) => {
       markStarted = resolve;
@@ -167,6 +161,38 @@ describe('community consent persistence', () => {
     expect(mocks.setCommunityConsentLocal).toHaveBeenCalledTimes(1);
     expect(mocks.setCommunityConsentLocal).toHaveBeenCalledWith(true);
     expect(mocks.track).not.toHaveBeenCalledWith('community_consent_granted');
+  });
+
+  it('detaches a delayed community grant when the account owner changes', async () => {
+    const { grantCommunityConsent } = await import('./consent');
+    let releaseLedger!: () => void;
+    mocks.recordConsent.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseLedger = resolve;
+        }),
+    );
+
+    const grant = grantCommunityConsent();
+    await vi.waitFor(() => expect(mocks.recordConsent).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    try {
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      await expect(grant).rejects.toMatchObject({ code: ACCOUNT_GENERATION_CHANGED });
+      expect(mocks.setCommunityConsentLocal).toHaveBeenCalledOnce();
+      expect(mocks.setCommunityConsentLocal).toHaveBeenCalledWith(true);
+      expect(mocks.track).not.toHaveBeenCalledWith('community_consent_granted');
+
+      releaseLedger();
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(mocks.track).not.toHaveBeenCalledWith('community_consent_granted');
+    } finally {
+      releaseLedger();
+      endAccountGenerationBoundary();
+      boundaryActive = false;
+    }
   });
 
   it('records the age gate separately from community consent', async () => {

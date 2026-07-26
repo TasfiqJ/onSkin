@@ -321,12 +321,60 @@ export type NotificationScheduleReconcileOutcome =
   | 'suspended_undetermined'
   | 'not_applicable';
 
+export type NotificationScheduleLifecycle = Readonly<{
+  isCurrent: () => boolean;
+  signal: AbortSignal;
+}>;
+
+function assertNotificationScheduleLifecycleCurrent(
+  lifecycle: NotificationScheduleLifecycle,
+): void {
+  if (lifecycle.signal.aborted || !lifecycle.isCurrent()) {
+    throw new AccountGenerationLeaseError();
+  }
+}
+
+async function runUnderNotificationScheduleLifecycle<T>(
+  lease: AccountGenerationLease,
+  lifecycle: NotificationScheduleLifecycle,
+  operation: (guardedLease: AccountGenerationLease) => Promise<T>,
+): Promise<T> {
+  lease.assertCurrent();
+  assertNotificationScheduleLifecycleCurrent(lifecycle);
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  lease.signal.addEventListener('abort', abort, { once: true });
+  lifecycle.signal.addEventListener('abort', abort, { once: true });
+  if (lease.signal.aborted || lifecycle.signal.aborted) abort();
+
+  const guardedLease: AccountGenerationLease = Object.freeze({
+    generation: lease.generation,
+    signal: controller.signal,
+    assertCurrent: () => {
+      lease.assertCurrent();
+      assertNotificationScheduleLifecycleCurrent(lifecycle);
+      if (controller.signal.aborted) throw new AccountGenerationLeaseError();
+    },
+    beginBoundaryHandoff: () => {
+      throw new AccountGenerationLeaseError();
+    },
+  });
+
+  try {
+    guardedLease.assertCurrent();
+    const result = await operation(guardedLease);
+    guardedLease.assertCurrent();
+    return result;
+  } finally {
+    lease.signal.removeEventListener('abort', abort);
+    lifecycle.signal.removeEventListener('abort', abort);
+  }
+}
+
 export async function rescheduleReminders(
   prefs: NotifPrefs,
 ): Promise<NotificationScheduleReconcileOutcome> {
-  return runSerializedNotificationOperation((lease) =>
-    reconcileRemindersUnderLease(prefs, lease),
-  );
+  return runSerializedNotificationOperation((lease) => reconcileRemindersUnderLease(prefs, lease));
 }
 
 /**
@@ -337,32 +385,35 @@ export async function rescheduleReminders(
 export async function reconcileRootNotificationSchedules(
   prefs: NotifPrefs | null,
   expectedGeneration: number,
+  lifecycle: NotificationScheduleLifecycle,
 ): Promise<NotificationScheduleReconcileOutcome> {
   return runSerializedNotificationOperation(async (lease) => {
     if (lease.generation !== expectedGeneration) throw new AccountGenerationLeaseError();
-    if (Platform.OS === 'web') return 'not_applicable';
+    return runUnderNotificationScheduleLifecycle(lease, lifecycle, async (guardedLease) => {
+      if (Platform.OS === 'web') return 'not_applicable';
 
-    if (prefs === null) {
-      lastReminderScheduleSignature = null;
-      await cancelPreferenceRemindersUnderLease(lease);
-    }
-
-    const permission = await readPermissionUnderLease(lease);
-    if (permission.status !== 'granted') {
-      lastReminderScheduleSignature = null;
       if (prefs === null) {
-        await cancelTrialReminderUnderLease(lease);
-      } else {
-        await cancelAllOwnedRemindersUnderLease(lease);
+        lastReminderScheduleSignature = null;
+        await cancelPreferenceRemindersUnderLease(guardedLease);
       }
-      if (permission.status === 'unavailable') {
-        throw new NotificationPermissionUnavailableError(permission.reason);
-      }
-      return permission.status === 'denied' ? 'suspended_denied' : 'suspended_undetermined';
-    }
 
-    if (prefs === null) return 'scheduled';
-    return reconcileRemindersUnderLease(prefs, lease, permission);
+      const permission = await readPermissionUnderLease(guardedLease);
+      if (permission.status !== 'granted') {
+        lastReminderScheduleSignature = null;
+        if (prefs === null) {
+          await cancelTrialReminderUnderLease(guardedLease);
+        } else {
+          await cancelAllOwnedRemindersUnderLease(guardedLease);
+        }
+        if (permission.status === 'unavailable') {
+          throw new NotificationPermissionUnavailableError(permission.reason);
+        }
+        return permission.status === 'denied' ? 'suspended_denied' : 'suspended_undetermined';
+      }
+
+      if (prefs === null) return 'scheduled';
+      return reconcileRemindersUnderLease(prefs, guardedLease, permission);
+    });
   });
 }
 
@@ -406,42 +457,59 @@ export type TrialReminderInput = Readonly<{
   priceLabel: string | null;
 }>;
 
-export async function scheduleTrialReminder(input: TrialReminderInput): Promise<boolean> {
-  return runSerializedNotificationOperation(async (lease) => {
-    if (Platform.OS === 'web') return false;
-    await cancelTrialReminderUnderLease(lease);
-    const expiresAt = input.expiresAt;
-    const fireAt = new Date(expiresAt).getTime() - 2 * 86_400_000;
-    if (fireAt <= Date.now()) return false;
-    const permission = await readPermissionUnderLease(lease);
-    if (permission.status === 'unavailable') {
-      throw new NotificationPermissionUnavailableError(permission.reason);
-    }
-    if (permission.status !== 'granted') return false;
-    await awaitAccountGenerationLease(lease, () =>
-      scheduleNativeNotificationExact(lease.signal, {
-        identifier: TRIAL_REMINDER_ID,
-        content: {
-          title: PAYWALL_COPY.trialReminder.title,
-          body: PAYWALL_COPY.trialReminder.bodyFor(fmtShortDate(expiresAt), input.priceLabel),
-        },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.DATE,
-          date: fireAt,
-          ...(Platform.OS === 'android' ? { channelId: 'routine' } : {}),
-        },
-      }),
-    );
-    lease.assertCurrent();
-    return true;
+export async function scheduleTrialReminder(
+  input: TrialReminderInput,
+  lifecycle?: NotificationScheduleLifecycle,
+): Promise<boolean> {
+  return runSerializedNotificationOperation((lease) => {
+    const schedule = async (guardedLease: AccountGenerationLease): Promise<boolean> => {
+      if (Platform.OS === 'web') return false;
+      await cancelTrialReminderUnderLease(guardedLease);
+      const expiresAt = input.expiresAt;
+      const fireAt = new Date(expiresAt).getTime() - 2 * 86_400_000;
+      if (fireAt <= Date.now()) return false;
+      const permission = await readPermissionUnderLease(guardedLease);
+      if (permission.status === 'unavailable') {
+        throw new NotificationPermissionUnavailableError(permission.reason);
+      }
+      if (permission.status !== 'granted') return false;
+      await awaitAccountGenerationLease(guardedLease, () =>
+        scheduleNativeNotificationExact(guardedLease.signal, {
+          identifier: TRIAL_REMINDER_ID,
+          content: {
+            title: PAYWALL_COPY.trialReminder.title,
+            body: PAYWALL_COPY.trialReminder.bodyFor(fmtShortDate(expiresAt), input.priceLabel),
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DATE,
+            date: fireAt,
+            ...(Platform.OS === 'android' ? { channelId: 'routine' } : {}),
+          },
+        }),
+      );
+      guardedLease.assertCurrent();
+      return true;
+    };
+
+    return lifecycle
+      ? runUnderNotificationScheduleLifecycle(lease, lifecycle, schedule)
+      : schedule(lease);
   });
 }
 
 /** Cancel the pre-charge reminder on conversion or trial cancellation. */
-export async function cancelTrialReminder(): Promise<void> {
-  await runSerializedNotificationOperation(async (lease) => {
-    if (Platform.OS === 'web') return;
-    await cancelTrialReminderUnderLease(lease);
+export async function cancelTrialReminder(
+  lifecycle?: NotificationScheduleLifecycle,
+): Promise<void> {
+  await runSerializedNotificationOperation((lease) => {
+    const cancel = async (guardedLease: AccountGenerationLease): Promise<void> => {
+      if (Platform.OS === 'web') return;
+      await cancelTrialReminderUnderLease(guardedLease);
+    };
+
+    return lifecycle
+      ? runUnderNotificationScheduleLifecycle(lease, lifecycle, cancel)
+      : cancel(lease);
   });
 }
 

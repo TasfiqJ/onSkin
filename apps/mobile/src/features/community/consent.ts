@@ -5,15 +5,12 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { getLatestConsentsWithLease, recordConsent } from '@/lib/consent/consent';
+import { runSerializedConsentWorkflow } from '@/lib/consent/workflow';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
 import { COMMUNITY_COPY } from './copy';
-import {
-  readCommunityConsentLocal,
-  setAgeConfirmedLocal,
-  setCommunityConsentLocal,
-} from './store';
+import { readCommunityConsentLocal, setAgeConfirmedLocal, setCommunityConsentLocal } from './store';
 
 // The community_participation consent (docs/11 §8, D-066). A NEW, separate, unbundled
 // MHMDA/GDPR-Art.9 consent for posting health-adjacent info to others, NEVER reused from
@@ -50,22 +47,26 @@ export function isCommunityConsented(): Promise<boolean> {
  *  can require both (docs/11 §8: the hard age gate is a real control, not copy). */
 export async function grantCommunityConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setCommunityConsentLocal(true);
-    lease.assertCurrent();
-    try {
-      await recordConsent({
-        type: 'community_participation',
-        granted: true,
-        version: COMMUNITY_COPY.consentVersion,
-        consentText: `[PLACEHOLDER community_participation consent. B-PRIVACY-COPY] ${COMMUNITY_COPY.consent.body}`,
-      });
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, () => setCommunityConsentLocal(true));
       lease.assertCurrent();
-      track('community_consent_granted');
-    } catch {
-      lease.assertCurrent();
-      // Local-first/offline-safe: keep the local gate usable when the immutable
-      // ledger mirror is unavailable. Ledger state still wins on future reads when present.
-    }
+      try {
+        await awaitAccountGenerationLease(lease, () =>
+          recordConsent({
+            type: 'community_participation',
+            granted: true,
+            version: COMMUNITY_COPY.consentVersion,
+            consentText: `[PLACEHOLDER community_participation consent. B-PRIVACY-COPY] ${COMMUNITY_COPY.consent.body}`,
+          }),
+        );
+        lease.assertCurrent();
+        track('community_consent_granted');
+      } catch {
+        lease.assertCurrent();
+        // Local-first/offline-safe: keep the local gate usable when the immutable
+        // ledger mirror is unavailable. Ledger state still wins on future reads when present.
+      }
+    });
   });
 }
 
@@ -77,13 +78,17 @@ export async function confirmCommunityAge(): Promise<void> {
 
 export async function withdrawCommunityConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setCommunityConsentLocal(false);
-    lease.assertCurrent();
-    await withdrawConsent({
-      type: 'community_participation',
-      version: COMMUNITY_COPY.consentVersion,
-      consentText: `[PLACEHOLDER community_participation withdrawal. B-PRIVACY-COPY]`,
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, () => setCommunityConsentLocal(false));
+      lease.assertCurrent();
+      await awaitAccountGenerationLease(lease, () =>
+        withdrawConsent({
+          type: 'community_participation',
+          version: COMMUNITY_COPY.consentVersion,
+          consentText: `[PLACEHOLDER community_participation withdrawal. B-PRIVACY-COPY]`,
+        }),
+      );
+      lease.assertCurrent();
     });
-    lease.assertCurrent();
   });
 }

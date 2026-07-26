@@ -201,9 +201,7 @@ describe('trend insight consent persistence', () => {
       await expect(account.waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
       const rejected = await outcome;
       expect(rejected.status).toBe('rejected');
-      expect((rejected as { error: Error }).error.message).toBe(
-        account.ACCOUNT_GENERATION_CHANGED,
-      );
+      expect((rejected as { error: Error }).error.message).toBe(account.ACCOUNT_GENERATION_CHANGED);
       expect(mocks.serverSignal?.aborted).toBe(true);
       expect(published).toBe(false);
 
@@ -244,9 +242,7 @@ describe('trend insight consent persistence', () => {
       await expect(account.waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
       const rejected = await outcome;
       expect(rejected.status).toBe('rejected');
-      expect((rejected as { error: Error }).error.message).toBe(
-        account.ACCOUNT_GENERATION_CHANGED,
-      );
+      expect((rejected as { error: Error }).error.message).toBe(account.ACCOUNT_GENERATION_CHANGED);
 
       resolveLocal({ status: 'available', value: true, format: 'current' });
       await Promise.resolve();
@@ -310,5 +306,38 @@ describe('trend insight consent persistence', () => {
     expect(mocks.setTrendInsightsLocal).toHaveBeenCalledWith(false);
     expect(mocks.deleteTrendState).toHaveBeenCalledTimes(1);
     expect(mocks.track).not.toHaveBeenCalledWith('trend_consent_revoked');
+  });
+
+  it('detaches a delayed trend withdrawal when the account owner changes', async () => {
+    const account = await import('@/lib/auth/accountGeneration');
+    const { revokeTrendInsightsConsent } = await import('./consent');
+    let releaseWithdrawal!: () => void;
+    mocks.withdrawConsent.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseWithdrawal = resolve;
+        }),
+    );
+
+    const revoke = revokeTrendInsightsConsent();
+    await vi.waitFor(() => expect(mocks.withdrawConsent).toHaveBeenCalledOnce());
+    account.beginAccountGenerationBoundary();
+    try {
+      await expect(account.waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      await expect(revoke).rejects.toMatchObject({
+        code: account.ACCOUNT_GENERATION_CHANGED,
+      });
+      expect(mocks.setTrendInsightsLocal).toHaveBeenCalledWith(false);
+      expect(mocks.deleteTrendState).toHaveBeenCalledOnce();
+      expect(mocks.track).not.toHaveBeenCalledWith('trend_consent_revoked');
+
+      releaseWithdrawal();
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(mocks.track).not.toHaveBeenCalledWith('trend_consent_revoked');
+    } finally {
+      releaseWithdrawal();
+      account.endAccountGenerationBoundary();
+    }
   });
 });

@@ -2,20 +2,32 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createOwnerQueryScope } from '@/lib/query/queryKeys';
 
+import { grantAskConsent, revokeAskConsent } from '../ask/consent';
+import { grantCommunityConsent, withdrawCommunityConsent } from '../community/consent';
 import {
   declineHealthDataCollectionConsent,
   grantHealthDataCollectionConsent,
 } from '../onboarding/healthConsent';
 import { persistSettingsPrivacyConsentChoice } from '../settings/privacyConsentPersistence';
+import { grantTrendInsightsConsent, revokeTrendInsightsConsent } from '../trend/consent';
 import { grantCommerceConsent } from './consent';
 
 const mocks = vi.hoisted(() => ({
+  clearAskStore: vi.fn(),
   clearCommerceConsentLocal: vi.fn(),
+  deleteTrendState: vi.fn(),
   getLatestConsentsWithLease: vi.fn(),
+  readAskConsentLocal: vi.fn(),
   readCommerceConsentLocal: vi.fn(),
+  readCommunityConsentLocal: vi.fn(),
+  readTrendInsightsLocal: vi.fn(),
   recordConsent: vi.fn(),
+  setAgeConfirmedLocal: vi.fn(),
+  setAskConsentLocal: vi.fn(),
   setCommerceConsentLocal: vi.fn(),
+  setCommunityConsentLocal: vi.fn(),
   setHealthDataCollectionConsentLocal: vi.fn(),
+  setTrendInsightsLocal: vi.fn(),
   track: vi.fn(),
   withdrawConsent: vi.fn(),
 }));
@@ -30,14 +42,35 @@ vi.mock('@/lib/consent/consent', () => ({
 vi.mock('@/lib/consent/withdrawal', () => ({
   withdrawConsent: mocks.withdrawConsent,
 }));
+vi.mock('@/lib/env', () => ({
+  isSupabaseConfigured: false,
+}));
+vi.mock('@/lib/supabase/client', () => ({
+  supabase: { from: vi.fn() },
+}));
 vi.mock('./store', () => ({
   clearCommerceConsentLocal: mocks.clearCommerceConsentLocal,
   COMMERCE_CONSENT_WITHDRAWAL_PENDING: 'COMMERCE_CONSENT_WITHDRAWAL_PENDING',
   readCommerceConsentLocal: mocks.readCommerceConsentLocal,
   setCommerceConsentLocal: mocks.setCommerceConsentLocal,
 }));
+vi.mock('../ask/store', () => ({
+  clearAskStore: mocks.clearAskStore,
+  readAskConsentLocal: mocks.readAskConsentLocal,
+  setAskConsentLocal: mocks.setAskConsentLocal,
+}));
+vi.mock('../community/store', () => ({
+  readCommunityConsentLocal: mocks.readCommunityConsentLocal,
+  setAgeConfirmedLocal: mocks.setAgeConfirmedLocal,
+  setCommunityConsentLocal: mocks.setCommunityConsentLocal,
+}));
 vi.mock('../onboarding/healthConsentStore', () => ({
   setHealthDataCollectionConsentLocal: mocks.setHealthDataCollectionConsentLocal,
+}));
+vi.mock('../trend/store', () => ({
+  deleteTrendState: mocks.deleteTrendState,
+  readTrendInsightsLocal: mocks.readTrendInsightsLocal,
+  setTrendInsightsLocal: mocks.setTrendInsightsLocal,
 }));
 vi.mock('@/lib/storage/privateBoolean', () => ({
   requirePrivateBoolean: (result: { status: string; value?: boolean }) => {
@@ -57,12 +90,21 @@ function deferred(): Readonly<{ promise: Promise<void>; resolve: () => void }> {
 describe('cross-surface consent workflow serialization', () => {
   beforeEach(() => {
     for (const mock of Object.values(mocks)) mock.mockReset();
+    mocks.clearAskStore.mockResolvedValue(undefined);
     mocks.clearCommerceConsentLocal.mockResolvedValue(undefined);
+    mocks.deleteTrendState.mockResolvedValue(undefined);
     mocks.getLatestConsentsWithLease.mockResolvedValue({});
+    mocks.readAskConsentLocal.mockResolvedValue({ status: 'absent' });
     mocks.readCommerceConsentLocal.mockResolvedValue({ status: 'absent' });
+    mocks.readCommunityConsentLocal.mockResolvedValue({ status: 'absent' });
+    mocks.readTrendInsightsLocal.mockResolvedValue({ status: 'absent' });
     mocks.recordConsent.mockResolvedValue(undefined);
+    mocks.setAgeConfirmedLocal.mockResolvedValue(undefined);
+    mocks.setAskConsentLocal.mockResolvedValue(undefined);
     mocks.setCommerceConsentLocal.mockResolvedValue(undefined);
+    mocks.setCommunityConsentLocal.mockResolvedValue(undefined);
     mocks.setHealthDataCollectionConsentLocal.mockResolvedValue(undefined);
+    mocks.setTrendInsightsLocal.mockResolvedValue(undefined);
     mocks.withdrawConsent.mockResolvedValue(undefined);
   });
 
@@ -240,6 +282,236 @@ describe('cross-surface consent workflow serialization', () => {
       'commerce:local:false',
       'commerce:withdrawal',
       'commerce:cleared',
+    ]);
+  });
+
+  it('finishes a slow Ask grant before a later Community withdrawal can start', async () => {
+    const slowGrant = deferred();
+    const events: string[] = [];
+    mocks.setAskConsentLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`ask:local:${String(granted)}`);
+    });
+    mocks.recordConsent.mockImplementationOnce(async () => {
+      events.push('ask:ledger-started');
+      await slowGrant.promise;
+      events.push('ask:ledger-finished');
+    });
+    mocks.setCommunityConsentLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`community:local:${String(granted)}`);
+    });
+    mocks.withdrawConsent.mockImplementationOnce(async () => {
+      events.push('community:withdrawal');
+    });
+
+    const ask = grantAskConsent();
+    await vi.waitFor(() => expect(events).toEqual(['ask:local:true', 'ask:ledger-started']));
+    const community = withdrawCommunityConsent();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(events).toEqual(['ask:local:true', 'ask:ledger-started']);
+
+    slowGrant.resolve();
+    await expect(Promise.all([ask, community])).resolves.toEqual([undefined, undefined]);
+    expect(events).toEqual([
+      'ask:local:true',
+      'ask:ledger-started',
+      'ask:ledger-finished',
+      'community:local:false',
+      'community:withdrawal',
+    ]);
+  });
+
+  it('finishes a slow Community grant before a later Trend withdrawal can start', async () => {
+    const slowGrant = deferred();
+    const events: string[] = [];
+    mocks.setCommunityConsentLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`community:local:${String(granted)}`);
+    });
+    mocks.recordConsent.mockImplementationOnce(async () => {
+      events.push('community:ledger-started');
+      await slowGrant.promise;
+      events.push('community:ledger-finished');
+    });
+    mocks.setTrendInsightsLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`trend:local:${String(granted)}`);
+    });
+    mocks.deleteTrendState.mockImplementationOnce(async () => {
+      events.push('trend:deleted');
+    });
+    mocks.withdrawConsent.mockImplementationOnce(async () => {
+      events.push('trend:withdrawal');
+    });
+
+    const community = grantCommunityConsent();
+    await vi.waitFor(() =>
+      expect(events).toEqual(['community:local:true', 'community:ledger-started']),
+    );
+    const trend = revokeTrendInsightsConsent();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(events).toEqual(['community:local:true', 'community:ledger-started']);
+
+    slowGrant.resolve();
+    await expect(Promise.all([community, trend])).resolves.toEqual([undefined, undefined]);
+    expect(events).toEqual([
+      'community:local:true',
+      'community:ledger-started',
+      'community:ledger-finished',
+      'trend:local:false',
+      'trend:deleted',
+      'trend:withdrawal',
+    ]);
+  });
+
+  it('finishes a slow Trend grant before a later Ask withdrawal can start', async () => {
+    const slowGrant = deferred();
+    const events: string[] = [];
+    mocks.setTrendInsightsLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`trend:local:${String(granted)}`);
+    });
+    mocks.recordConsent.mockImplementationOnce(async () => {
+      events.push('trend:ledger-started');
+      await slowGrant.promise;
+      events.push('trend:ledger-finished');
+    });
+    mocks.clearAskStore.mockImplementationOnce(async () => {
+      events.push('ask:cleared');
+    });
+    mocks.withdrawConsent.mockImplementationOnce(async () => {
+      events.push('ask:withdrawal');
+    });
+
+    const trend = grantTrendInsightsConsent();
+    await vi.waitFor(() => expect(events).toEqual(['trend:local:true', 'trend:ledger-started']));
+    const ask = revokeAskConsent();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(events).toEqual(['trend:local:true', 'trend:ledger-started']);
+
+    slowGrant.resolve();
+    await expect(Promise.all([trend, ask])).resolves.toEqual([undefined, undefined]);
+    expect(events).toEqual([
+      'trend:local:true',
+      'trend:ledger-started',
+      'trend:ledger-finished',
+      'ask:cleared',
+      'ask:withdrawal',
+    ]);
+  });
+
+  it('finishes a slow Ask withdrawal before a later Trend grant can start', async () => {
+    const slowWithdrawal = deferred();
+    const events: string[] = [];
+    mocks.clearAskStore.mockImplementationOnce(async () => {
+      events.push('ask:cleared');
+    });
+    mocks.withdrawConsent.mockImplementationOnce(async () => {
+      events.push('ask:withdrawal-started');
+      await slowWithdrawal.promise;
+      events.push('ask:withdrawal-finished');
+    });
+    mocks.setTrendInsightsLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`trend:local:${String(granted)}`);
+    });
+    mocks.recordConsent.mockImplementationOnce(async () => {
+      events.push('trend:ledger');
+    });
+
+    const ask = revokeAskConsent();
+    await vi.waitFor(() => expect(events).toEqual(['ask:cleared', 'ask:withdrawal-started']));
+    const trend = grantTrendInsightsConsent();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(events).toEqual(['ask:cleared', 'ask:withdrawal-started']);
+
+    slowWithdrawal.resolve();
+    await expect(Promise.all([ask, trend])).resolves.toEqual([undefined, undefined]);
+    expect(events).toEqual([
+      'ask:cleared',
+      'ask:withdrawal-started',
+      'ask:withdrawal-finished',
+      'trend:local:true',
+      'trend:ledger',
+    ]);
+  });
+
+  it('finishes a slow Trend withdrawal before a later Community grant can start', async () => {
+    const slowWithdrawal = deferred();
+    const events: string[] = [];
+    mocks.setTrendInsightsLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`trend:local:${String(granted)}`);
+    });
+    mocks.deleteTrendState.mockImplementationOnce(async () => {
+      events.push('trend:deleted');
+    });
+    mocks.withdrawConsent.mockImplementationOnce(async () => {
+      events.push('trend:withdrawal-started');
+      await slowWithdrawal.promise;
+      events.push('trend:withdrawal-finished');
+    });
+    mocks.setCommunityConsentLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`community:local:${String(granted)}`);
+    });
+    mocks.recordConsent.mockImplementationOnce(async () => {
+      events.push('community:ledger');
+    });
+
+    const trend = revokeTrendInsightsConsent();
+    await vi.waitFor(() =>
+      expect(events).toEqual(['trend:local:false', 'trend:deleted', 'trend:withdrawal-started']),
+    );
+    const community = grantCommunityConsent();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(events).toEqual(['trend:local:false', 'trend:deleted', 'trend:withdrawal-started']);
+
+    slowWithdrawal.resolve();
+    await expect(Promise.all([trend, community])).resolves.toEqual([undefined, undefined]);
+    expect(events).toEqual([
+      'trend:local:false',
+      'trend:deleted',
+      'trend:withdrawal-started',
+      'trend:withdrawal-finished',
+      'community:local:true',
+      'community:ledger',
+    ]);
+  });
+
+  it('finishes a slow Community withdrawal before a later Ask grant can start', async () => {
+    const slowWithdrawal = deferred();
+    const events: string[] = [];
+    mocks.setCommunityConsentLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`community:local:${String(granted)}`);
+    });
+    mocks.withdrawConsent.mockImplementationOnce(async () => {
+      events.push('community:withdrawal-started');
+      await slowWithdrawal.promise;
+      events.push('community:withdrawal-finished');
+    });
+    mocks.setAskConsentLocal.mockImplementation(async (granted: boolean) => {
+      events.push(`ask:local:${String(granted)}`);
+    });
+    mocks.recordConsent.mockImplementationOnce(async () => {
+      events.push('ask:ledger');
+    });
+
+    const community = withdrawCommunityConsent();
+    await vi.waitFor(() =>
+      expect(events).toEqual(['community:local:false', 'community:withdrawal-started']),
+    );
+    const ask = grantAskConsent();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(events).toEqual(['community:local:false', 'community:withdrawal-started']);
+
+    slowWithdrawal.resolve();
+    await expect(Promise.all([community, ask])).resolves.toEqual([undefined, undefined]);
+    expect(events).toEqual([
+      'community:local:false',
+      'community:withdrawal-started',
+      'community:withdrawal-finished',
+      'ask:local:true',
+      'ask:ledger',
     ]);
   });
 });

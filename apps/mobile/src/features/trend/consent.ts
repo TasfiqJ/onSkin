@@ -5,11 +5,9 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { recordConsent } from '@/lib/consent/consent';
+import { runSerializedConsentWorkflow } from '@/lib/consent/workflow';
 import { isSupabaseConfigured } from '@/lib/env';
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
+import { runRequestWithLease, supabaseRequestFailure } from '@/lib/network/requestPolicy';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 import { supabase } from '@/lib/supabase/client';
@@ -78,40 +76,50 @@ export function isTrendInsightsConsented(): Promise<boolean> {
 
 export async function grantTrendInsightsConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setTrendInsightsLocal(true);
-    lease.assertCurrent();
-    try {
-      await recordConsent({
-        type: 'photo_trend_insights',
-        granted: true,
-        version: TREND_COPY.consentVersion,
-        consentText: `[PLACEHOLDER photo_trend_insights consent. B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
-      });
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, () => setTrendInsightsLocal(true));
       lease.assertCurrent();
-      track('trend_insights_opted_in');
-    } catch (error) {
-      lease.assertCurrent();
-      await setTrendInsightsLocal(false).catch(() => undefined);
-      lease.assertCurrent();
-      await deleteTrendState().catch(() => undefined);
-      lease.assertCurrent();
-      throw error;
-    }
+      try {
+        await awaitAccountGenerationLease(lease, () =>
+          recordConsent({
+            type: 'photo_trend_insights',
+            granted: true,
+            version: TREND_COPY.consentVersion,
+            consentText: `[PLACEHOLDER photo_trend_insights consent. B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
+          }),
+        );
+        lease.assertCurrent();
+        track('trend_insights_opted_in');
+      } catch (error) {
+        lease.assertCurrent();
+        await awaitAccountGenerationLease(lease, () =>
+          setTrendInsightsLocal(false).catch(() => undefined),
+        );
+        lease.assertCurrent();
+        await awaitAccountGenerationLease(lease, () => deleteTrendState().catch(() => undefined));
+        lease.assertCurrent();
+        throw error;
+      }
+    });
   });
 }
 
 export async function revokeTrendInsightsConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setTrendInsightsLocal(false);
-    lease.assertCurrent();
-    await deleteTrendState(); // deletion-on-revocation (§8/§10)
-    lease.assertCurrent();
-    await withdrawConsent({
-      type: 'photo_trend_insights',
-      version: TREND_COPY.consentVersion,
-      consentText: `[PLACEHOLDER photo_trend_insights withdrawal. B-PRIVACY-COPY]`,
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, () => setTrendInsightsLocal(false));
+      lease.assertCurrent();
+      await awaitAccountGenerationLease(lease, deleteTrendState); // deletion-on-revocation (§8/§10)
+      lease.assertCurrent();
+      await awaitAccountGenerationLease(lease, () =>
+        withdrawConsent({
+          type: 'photo_trend_insights',
+          version: TREND_COPY.consentVersion,
+          consentText: `[PLACEHOLDER photo_trend_insights withdrawal. B-PRIVACY-COPY]`,
+        }),
+      );
+      lease.assertCurrent();
+      track('trend_consent_revoked');
     });
-    lease.assertCurrent();
-    track('trend_consent_revoked');
   });
 }

@@ -5,6 +5,7 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { getLatestConsentsWithLease, recordConsent } from '@/lib/consent/consent';
+import { runSerializedConsentWorkflow } from '@/lib/consent/workflow';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
@@ -19,9 +20,7 @@ import { clearAskStore, readAskConsentLocal, setAskConsentLocal } from './store'
 // gates only the cloud path. Ledger-authoritative-then-local (the Slice-24 precedence)
 // so a withdrawal re-locks even before the backend exists. Final copy: B-PRIVACY-COPY.
 
-export async function isAskConsentedWithLease(
-  lease: AccountGenerationLease,
-): Promise<boolean> {
+export async function isAskConsentedWithLease(lease: AccountGenerationLease): Promise<boolean> {
   lease.assertCurrent();
   try {
     const consents = await getLatestConsentsWithLease(lease);
@@ -42,23 +41,29 @@ export function isAskConsented(): Promise<boolean> {
 
 export async function grantAskConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setAskConsentLocal(true);
-    lease.assertCurrent();
-    try {
-      await recordConsent({
-        type: 'ask_onskin',
-        granted: true,
-        version: ASK_COPY.consentVersion,
-        consentText: `[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ${ASK_COPY.consentLedgerBody}`,
-      });
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, () => setAskConsentLocal(true));
       lease.assertCurrent();
-      track('ask_consent_granted');
-    } catch (error) {
-      lease.assertCurrent();
-      await setAskConsentLocal(false).catch(() => undefined);
-      lease.assertCurrent();
-      throw error;
-    }
+      try {
+        await awaitAccountGenerationLease(lease, () =>
+          recordConsent({
+            type: 'ask_onskin',
+            granted: true,
+            version: ASK_COPY.consentVersion,
+            consentText: `[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ${ASK_COPY.consentLedgerBody}`,
+          }),
+        );
+        lease.assertCurrent();
+        track('ask_consent_granted');
+      } catch (error) {
+        lease.assertCurrent();
+        await awaitAccountGenerationLease(lease, () =>
+          setAskConsentLocal(false).catch(() => undefined),
+        );
+        lease.assertCurrent();
+        throw error;
+      }
+    });
   });
 }
 
@@ -67,14 +72,18 @@ export async function revokeAskConsent(): Promise<void> {
   // turn counter; the short server-side safety-audit window is purged by an Edge Function on
   // withdrawal. No conversation content is stored locally (no transcript).
   await runAccountGenerationOperation(async (lease) => {
-    await clearAskStore();
-    lease.assertCurrent();
-    await withdrawConsent({
-      type: 'ask_onskin',
-      version: ASK_COPY.consentVersion,
-      consentText: `[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]`,
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, clearAskStore);
+      lease.assertCurrent();
+      await awaitAccountGenerationLease(lease, () =>
+        withdrawConsent({
+          type: 'ask_onskin',
+          version: ASK_COPY.consentVersion,
+          consentText: `[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]`,
+        }),
+      );
+      lease.assertCurrent();
+      track('ask_consent_revoked');
     });
-    lease.assertCurrent();
-    track('ask_consent_revoked');
   });
 }

@@ -561,7 +561,10 @@ describe('paywall mobile contracts', () => {
     );
     expect(reminder).toContain('.catch(() => undefined)');
     expect(source).toContain('advanceEntitlementStateAtBoundary(current, Date.now(), event)');
-    expect(delivery).toContain('scheduleTrialReminder(input: TrialReminderInput)');
+    expect(delivery).toContain('export async function scheduleTrialReminder(');
+    expect(delivery).toContain('input: TrialReminderInput,');
+    expect(delivery).toContain('lifecycle?: NotificationScheduleLifecycle,');
+    expect(delivery).toContain('scheduleNativeNotificationExact(guardedLease.signal');
     expect(delivery).not.toContain('loadEntitlement');
   });
 
