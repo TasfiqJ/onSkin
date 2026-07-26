@@ -1,9 +1,9 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-26T13:06:48.733Z
+Generated: 2026-07-26T22:16:47.224Z
 Status: pass
-Git SHA: 591e3fdefbc744788e2de8bc7c3a869098e92e34
-Git status: DIRTY
+Git SHA: 5fd0a8a0975da3c537db533b54a9bf2400d452a9
+Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
 gate. It does not approve any catalog source, product batch, beta metric, or
@@ -13,10 +13,10 @@ must attach before Phase 4 can stop blocking launch.
 ## Summary
 
 - Work items: 13
-- Source files hashed: 323
+- Source files hashed: 348
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 1
+- Warnings: 0
 
 ## Items
 
@@ -28,11 +28,11 @@ must attach before Phase 4 can stop blocking launch.
 | curated-first-batch               | curation       | First curated launch product batch                                    | blocked        | B-CURATED-CATALOG       | 22      | 0               |
 | import-qa                         | curation       | Import QA and generated catalog evidence                              | local-scaffold | B-CATALOG-SEED          | 13      | 0               |
 | beta-coverage                     | betaEvidence   | Closed-beta catalog coverage and correction loop                      | blocked        | B-CATALOG-COVERAGE      | 19      | 0               |
-| catalog-promotion-lifecycle       | curation       | Reviewed catalog staging, promotion, lineage, and rollback            | local-scaffold | B-CATALOG-SEED          | 26      | 0               |
+| catalog-promotion-lifecycle       | curation       | Reviewed catalog staging, promotion, lineage, and rollback            | local-scaffold | B-CATALOG-SEED          | 34      | 0               |
 | catalog-launch-curation-lifecycle | curation       | Signed launch curation, positive serving authority, and retirement    | local-scaffold | B-CURATED-CATALOG       | 27      | 0               |
-| mobile-catalog-disclosure         | productSurface | Mobile catalog source, quality, and report-issue disclosure           | local-scaffold | B-CATALOG-SEED          | 77      | 0               |
-| catalog-freshness-provenance      | productSurface | Catalog-backed Shelf freshness and provenance contract                | local-scaffold | B-CATALOG-SEED          | 38      | 0               |
-| catalog-serving-gate              | productSurface | Fail-closed production catalog serving boundary                       | local-scaffold | B-CATALOG-SEED          | 33      | 0               |
+| mobile-catalog-disclosure         | productSurface | Mobile catalog source, quality, and report-issue disclosure           | local-scaffold | B-CATALOG-SEED          | 78      | 0               |
+| catalog-freshness-provenance      | productSurface | Catalog-backed Shelf freshness and provenance contract                | local-scaffold | B-CATALOG-SEED          | 46      | 0               |
+| catalog-serving-gate              | productSurface | Fail-closed production catalog serving boundary                       | local-scaffold | B-CATALOG-SEED          | 41      | 0               |
 | first-party-correction-report     | operations     | First-party missing-product and wrong-match operation                 | blocked        | B-SHELF-CONTRIB         | 13      | 0               |
 | observability-support             | operations     | Catalog dashboards, alerts, and support feedback loop                 | blocked        | B-CATALOG-COVERAGE      | 8       | 0               |
 
@@ -170,9 +170,9 @@ Sources:
 - `docs/phase-4/catalog-curation-review.template.json` - 22649 bytes - sha256 `4dcf0f76ece3ceee0328e0a97dff39a460d270474074b8abe1d5b9f568fb46f9`
 - `docs/phase-4/catalog-cat02-membership-proof.template.json` - 9254 bytes - sha256 `e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56`
 - `docs/phase-4/catalog-curation-database-readback.template.json` - 8239 bytes - sha256 `9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a`
-- `docs/phase-3/consent-matrix.md` - 16199 bytes - sha256 `72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a`
-- `docs/phase-3/data-inventory.md` - 55523 bytes - sha256 `3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8`
-- `docs/store-privacy-inventory.md` - 45140 bytes - sha256 `248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb`
+- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
+- `docs/phase-3/data-inventory.md` - 60110 bytes - sha256 `d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd`
+- `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `docs/phase-4/catalog-source-release-runbook.md` - 14878 bytes - sha256 `ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620`
 - `scripts/phase4/catalog-curation-contract.mjs` - 229798 bytes - sha256 `22acca7d8bbb543c77bb8ececef160185f4bad2ab17de0c41f717b03d5552627`
 - `scripts/phase4/catalog-curation-contract.test.mjs` - 114891 bytes - sha256 `a7d2e97697d96f619bc47b0a1ac3a843834dd018bb9262df0a052e8c1cad1eb4`
@@ -237,9 +237,9 @@ Sources:
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45229 bytes - sha256 `e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414`
 - `docs/phase-4/catalog-cat02-membership-proof.template.json` - 9254 bytes - sha256 `e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56`
 - `docs/phase-4/catalog-curation-database-readback.template.json` - 8239 bytes - sha256 `9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a`
-- `docs/phase-3/consent-matrix.md` - 16199 bytes - sha256 `72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a`
-- `docs/phase-3/data-inventory.md` - 55523 bytes - sha256 `3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8`
-- `docs/store-privacy-inventory.md` - 45140 bytes - sha256 `248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb`
+- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
+- `docs/phase-3/data-inventory.md` - 60110 bytes - sha256 `d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd`
+- `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `scripts/phase4/beta-coverage-report.mjs` - 41079 bytes - sha256 `7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1`
 - `scripts/phase4/beta-coverage-report-smoke.mjs` - 11145 bytes - sha256 `5296dda1c926ddbb7021a91251db2405f9748534d63f76d488e7b71ebd16120c`
 - `scripts/phase4/catalog-curation-contract.mjs` - 229798 bytes - sha256 `22acca7d8bbb543c77bb8ececef160185f4bad2ab17de0c41f717b03d5552627`
@@ -262,7 +262,7 @@ Required evidence:
 
 - A content-addressed CAT-02 stage envelope binds an approved transform, zero-warning source QA, exact per-record reviews, source/build evidence, natural keys, record hashes, and the US territory.
 - Fixture/candidate records, incomplete reviews, changed idempotent replays, duplicate natural keys, and existing-catalog conflicts fail closed before promotion.
-- Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants. Migration `0066` additionally seals the unreviewed legacy clinical-content fixtures against every API-role table privilege and migration-owner mutation. Migration `0067` gives `plpgsql_check` a checker-only ephemeral table shape for the known runtime-temporary-table release wrapper, so every other wrapper statement remains linted with no extension dependency or runtime/security change; approval, promotion, rollback, CAT-03 activation, and any future reviewed clinical publication intentionally require separate authority.
+- Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants. Migration `0066` additionally seals the unreviewed legacy clinical-content fixtures against every API-role table privilege and migration-owner mutation. Migration `0067` gives `plpgsql_check` a checker-only ephemeral table shape for the known runtime-temporary-table release wrapper. Migration `0069` preserves catalog provenance while moving owner Shelf projection behind an exact replay RPC and stable identity/tombstone boundary. Migration `0070` stages the exact current Ask grant tuple only as an unreleased `draft_blocked` successor without inventing review or approval; approval, promotion, rollback, CAT-03 activation, and any future reviewed clinical publication intentionally require separate authority.
 - Every promoted projection traces through its immutable staged record and batch to source artifact, transform, approval, QA, and reviewer hashes.
 - A reviewed hosted two-session drill proves atomic promotion, full retry on serialization failure, source-withdrawal containment, exact verification, and non-destructive rollback with shelf/correction references preserved.
 
@@ -281,17 +281,25 @@ Sources:
 - `supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql` - 4519 bytes - sha256 `9afd1ad223c9e7587d42118cee9dbc4fe0b0ea641de4f6fad44d8ecb20d79ccb`
 - `supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql` - 5653 bytes - sha256 `61ee02bd285ae59fe1905244335699bc630830e16910fda7eb4f19a21e637cd8`
 - `supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql` - 7771 bytes - sha256 `2b9a4fc1412edc2373366bb3532710dcaec0439f5b96bb669aa22246cdfbe9b4`
+- `supabase/migrations/20260726000068_routine_adherence_authority.sql` - 33471 bytes - sha256 `37bfd190919f62e63f4e2a61580c5cfe96dea30af72f80259b8d3e9a704f8885`
+- `supabase/migrations/20260726000069_routine_completion_sync_bridge.sql` - 66673 bytes - sha256 `a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c`
+- `supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql` - 22228 bytes - sha256 `2e2abca7a88ab17992e7b3058d4b2f2c9ddbeb2accc59ae1cbf1a96b1b708706`
 - `supabase/tests/database/catalog_operator_authority.test.sql` - 73519 bytes - sha256 `9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7`
-- `supabase/tests/database/clinical_content_legacy_seal.test.sql` - 10088 bytes - sha256 `02df3c9e33e487c314f390ce18070b15c38a0cca46c113ae7b3e03fb905a21db`
-- `supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql` - 3300 bytes - sha256 `d8accade3b03f31827bffcf9ddf82e407b3766cb645908be2ad6a31b9c03558d`
+- `supabase/tests/database/clinical_content_legacy_seal.test.sql` - 10087 bytes - sha256 `beff4edb8b7c4eebdfb7afaa664fc2c201aaa2175f0bef4a53835aa68f73639c`
+- `supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql` - 3335 bytes - sha256 `f1fdfa4a048aed29ff4eac806bdffdcc4b9abb4b36e135ef02d89620f416f653`
+- `supabase/tests/database/routine_adherence_authority.test.sql` - 38297 bytes - sha256 `4bce87e1bc3b6c1c93216a0a421a75dfbc03c8276ad4c77b77d8049ff3bbc0f3`
+- `supabase/tests/database/routine_completion_sync_bridge.test.sql` - 50468 bytes - sha256 `2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8`
+- `supabase/tests/database/health_consent_draft_successor_staging.test.sql` - 13926 bytes - sha256 `690567e280ba547157bf5fb4f9c4b46e9379de604590eb9f67c6d1405e1bd973`
+- `supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql` - 8430 bytes - sha256 `6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2`
+- `supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql` - 7066 bytes - sha256 `c714d1001be6ecb2579d4307621d0f45bcfdd1019c983551618cb42eb9a795db`
 - `scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql` - 28021 bytes - sha256 `b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919`
 - `scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql` - 22993 bytes - sha256 `64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9`
 - `scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql` - 5846 bytes - sha256 `b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6`
 - `scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql` - 6577 bytes - sha256 `d7bfbfb7fed85a600c07d6c779aad6bc1e349c53f7d5eae1fba62597178647e7`
 - `scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql` - 3956 bytes - sha256 `859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e`
-- `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109210 bytes - sha256 `df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d`
+- `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109810 bytes - sha256 `21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c`
 - `supabase/tests/database/catalog_serving_gate.test.sql` - 36567 bytes - sha256 `122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef`
-- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 35199 bytes - sha256 `3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253`
+- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 36074 bytes - sha256 `69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb`
 - `docs/phase-4/catalog-import-promotion-runbook.md` - 21320 bytes - sha256 `da3b3a6c98890ad85834c6304edcd71e2192725017c13391304c732e244d9feb`
 - `docs/phase-4/first-curated-product-batch.md` - 10318 bytes - sha256 `fbdb42e6971b7511492bc65efda409d6b0735856fdc2f98be8119bafa2472022`
 
@@ -313,7 +321,7 @@ Required evidence:
 Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
-- `package.json` - 41151 bytes - sha256 `5b913ce21150cbd017edb3d39851c3aac1f396f93709c026a3f100fdd37684f8`
+- `package.json` - 41871 bytes - sha256 `aa90ffccdb573042a9a4679a4507284010042e693e067c6e0dc3fe47db608cfd`
 - `.github/workflows/quality.yml` - 11249 bytes - sha256 `034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45229 bytes - sha256 `e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9408 bytes - sha256 `e53c6c5d2715392dab63930046836e1c7b832a007419508a778dd085c54846c1`
@@ -321,9 +329,9 @@ Sources:
 - `docs/phase-4/catalog-curation-review.template.json` - 22649 bytes - sha256 `4dcf0f76ece3ceee0328e0a97dff39a460d270474074b8abe1d5b9f568fb46f9`
 - `docs/phase-4/catalog-cat02-membership-proof.template.json` - 9254 bytes - sha256 `e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56`
 - `docs/phase-4/catalog-curation-database-readback.template.json` - 8239 bytes - sha256 `9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a`
-- `docs/phase-3/consent-matrix.md` - 16199 bytes - sha256 `72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a`
-- `docs/phase-3/data-inventory.md` - 55523 bytes - sha256 `3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8`
-- `docs/store-privacy-inventory.md` - 45140 bytes - sha256 `248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb`
+- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
+- `docs/phase-3/data-inventory.md` - 60110 bytes - sha256 `d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd`
+- `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `scripts/phase4/catalog-curation-contract.mjs` - 229798 bytes - sha256 `22acca7d8bbb543c77bb8ececef160185f4bad2ab17de0c41f717b03d5552627`
 - `scripts/phase4/catalog-curation-contract.test.mjs` - 114891 bytes - sha256 `a7d2e97697d96f619bc47b0a1ac3a843834dd018bb9262df0a052e8c1cad1eb4`
 - `scripts/phase4/build-catalog-curation-envelope.mjs` - 4096 bytes - sha256 `d31aa8d2bea0d2640ac4b343bf91261446aafc3155a9e7ce74e4f9406c760bd5`
@@ -336,9 +344,9 @@ Sources:
 - `supabase/migrations/20260718000060_cat07_truthful_freshness.sql` - 24465 bytes - sha256 `8bc2c35bfff443a3c3bf7ab76e52ed17e7d6b961a8b35bdde17701de5c7f574a`
 - `supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql` - 28316 bytes - sha256 `4048342265ef103e6915411494911a98485528707c7413555725ba4ff427c1e9`
 - `supabase/migrations/20260722000062_catalog_curation_statement_guard.sql` - 53193 bytes - sha256 `f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1`
-- `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109210 bytes - sha256 `df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d`
+- `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109810 bytes - sha256 `21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c`
 - `supabase/tests/database/catalog_serving_gate.test.sql` - 36567 bytes - sha256 `122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef`
-- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 35199 bytes - sha256 `3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253`
+- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 36074 bytes - sha256 `69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb`
 
 ### mobile-catalog-disclosure - Mobile catalog source, quality, and report-issue disclosure
 
@@ -387,28 +395,29 @@ Sources:
 - `apps/mobile/src/features/shelf/expiry.ts` - 2778 bytes - sha256 `43e97ea2d296532af742bd23643e9ca48ed0193d756ba5c163f421703a15508d`
 - `apps/mobile/src/features/shelf/freshness.test.ts` - 8353 bytes - sha256 `a7ec4652c8a3cff995038511eec95f31e3d0045cf99d4597f78c58daee44364e`
 - `apps/mobile/src/features/shelf/freshness.ts` - 7299 bytes - sha256 `be0997619e57b575d84169f1c47bbf00bbb61e811a393ce04eff586b5b14b77e`
-- `apps/mobile/src/features/shelf/freshnessMigration.test.ts` - 4873 bytes - sha256 `fa08aa33695c6e2a00a7ff7901c5859077376eeb15e2cec8abf40058314257dc`
+- `apps/mobile/src/features/shelf/freshnessMigration.test.ts` - 4858 bytes - sha256 `03808fae36a3a74134bcda3d5db0e729729dcde2653b0331a7d481a5a71f9689`
 - `apps/mobile/src/features/shelf/IntakeContext.test.ts` - 2193 bytes - sha256 `9bc6f78dec650d85c5580cb691206733882b43f719f32faae937f140bbb2a859`
 - `apps/mobile/src/features/shelf/IntakeContext.tsx` - 2707 bytes - sha256 `e0cd87f56b16cb77fcc474b06050235bc72c732108c82c0316d09bc72411b3a4`
 - `apps/mobile/src/features/shelf/intakeSession.ts` - 2846 bytes - sha256 `1c6239702337c9a30cd10e0611ef0087014be56c6bc917c48a0245f553da0710`
 - `apps/mobile/src/features/shelf/labels.test.ts` - 911 bytes - sha256 `2ba7c9f148da2c53095451e9a9dee151446950a4f60ec52ccc08a0f20d2a9c6f`
 - `apps/mobile/src/features/shelf/labels.ts` - 978 bytes - sha256 `8106cbcfb4d79040f6547234f9afcc2627b9adaa0ce529789544085b5f6ed679`
+- `apps/mobile/src/features/shelf/limits.ts` - 222 bytes - sha256 `8f469d2cafccc1f3ebb14b4ac4e09951d4e58ab63df7bea88c4906a3b8aa8449`
 - `apps/mobile/src/features/shelf/LocalDateField.tsx` - 1878 bytes - sha256 `e5cf3e8c0700e99944dcf1d515e511d4d78464277643599a6ba704daec7b9503`
 - `apps/mobile/src/features/shelf/metadata.ts` - 1606 bytes - sha256 `e7da08df3d733c91f2464b7de96fdabbfa45c283fbf47659d1e2996821f16546`
-- `apps/mobile/src/features/shelf/mutations.ts` - 8204 bytes - sha256 `f03148aaf4096689edeb7b1bee8eaf2d95eb44734a5d701b5f06af19b62a5916`
+- `apps/mobile/src/features/shelf/mutations.ts` - 4655 bytes - sha256 `13dfde9b8a5490f67b5269271ae0bdf6bb3910ba5b55b4db60560690d7a56eac`
 - `apps/mobile/src/features/shelf/pairedConflicts.ts` - 766 bytes - sha256 `eb4cc3b857828ae8d123890b0771a44fe57e73e29da3e6207604fd3ed640a918`
 - `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 508 bytes - sha256 `dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4009 bytes - sha256 `5fbd9506ee53dc6908b7839a4c4f2bcecfaeb6b2f7748ba49fc7a125b9e773c2`
 - `apps/mobile/src/features/shelf/scanLog.ts` - 1527 bytes - sha256 `4f27c7914c0147f85d4bc7f6a800e6bf013b808a17f3a5eea4dd574baf212f20`
-- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 69329 bytes - sha256 `92a87a442d7bb92878cb10612b5edd6d3e8badc310eedc539e6b1b4ac754ea79`
-- `apps/mobile/src/features/shelf/store.test.ts` - 39839 bytes - sha256 `821345dd832c7479d0329ad0e85a5e438be0f77acbb4d219ed735aab7a862ba3`
-- `apps/mobile/src/features/shelf/store.ts` - 31307 bytes - sha256 `5596f52b4eb96cfb43c349773677766e96557f315bb70e2092e711b27f7570b1`
+- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 69745 bytes - sha256 `9f2bff3241c5948522fa56e0d4e8857c24cd46b38d3e9b9868dd5416d24f1f68`
+- `apps/mobile/src/features/shelf/store.test.ts` - 57329 bytes - sha256 `c000ac66f164e1a2118cd5fe153f32a8c6565388534319825bfb0728cec29e02`
+- `apps/mobile/src/features/shelf/store.ts` - 58796 bytes - sha256 `218dd66ae24c4e301b476fe878ddcfc614e9acb435045a1571375ee399893d15`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 5075 bytes - sha256 `2aa0f2717f781bdf8836d451df432e577ab157fa5e0799f2ab674e87b163aea9`
-- `apps/mobile/src/features/shelf/useShelf.ts` - 10185 bytes - sha256 `4835a4911aa8bc4b0bae235a85ed5cc681e67ac75d145917aadcbf0771f3f4a8`
+- `apps/mobile/src/features/shelf/useShelf.ts` - 10545 bytes - sha256 `060113bd3a3af609cae6cf0d022bfcbe5292e71cd7cc91e4fac6c93d4608c9ec`
 - `apps/mobile/src/app/shelf/[id].tsx` - 45428 bytes - sha256 `1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d`
-- `apps/mobile/src/app/shelf/search.tsx` - 24405 bytes - sha256 `601e8b0ee413b1fa04048bcb52912b785897f912fdb4dc1e08743f7bce533fe0`
-- `apps/mobile/src/app/shelf/manual.tsx` - 17400 bytes - sha256 `e9e38d15ff3caf085a6c57cf153934d7318aefdcc2fef4985a0dd2526bca2c51`
+- `apps/mobile/src/app/shelf/search.tsx` - 24504 bytes - sha256 `193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087`
+- `apps/mobile/src/app/shelf/manual.tsx` - 17625 bytes - sha256 `7b5be927575a0fcc5febeafe03511c1bda402e591644707ffb167807bccb3190`
 - `apps/mobile/src/features/recommendations/applyPreferences.test.ts` - 1319 bytes - sha256 `751559e6d23b979ffe0cd2924d42f30eb41b591f6427bf13d27c175cffdb75a3`
 - `apps/mobile/src/features/recommendations/applyPreferences.ts` - 493 bytes - sha256 `50dabada0ac3066adf7bd455e93c95ee89b5838079a2f737ff7d36b57d02b0f3`
 - `apps/mobile/src/features/recommendations/catalog.ts` - 9640 bytes - sha256 `113bb09a809c5cd381b8cfb5336542b887321bc7ba3b43373ff4d36342319062`
@@ -448,30 +457,35 @@ Required evidence:
 
 Sources:
 
-- `docs/04-smart-shelf.md` - 62801 bytes - sha256 `c3abb13a3d3235e666d0de99aa4f8c1a47b0a8efe18ec2a473b3a5aa718ce855`
-- `docs/USER_FLOW_TREE.md` - 444559 bytes - sha256 `e46c024d4e02036c46e53130a1b08e54ca34e1cb00f8a6df3c0de80050e89d8a`
-- `apps/mobile/src/app/onboarding/products.tsx` - 15344 bytes - sha256 `0a6ae408b5eede2db6b93952e54da250e81b71e08fc69d4f8be1f54625f8a9ab`
+- `docs/04-smart-shelf.md` - 66848 bytes - sha256 `8e6c801570fc9943abc80b61f0d49f5f130090627c979f04e2017bd4f18123c6`
+- `docs/USER_FLOW_TREE.md` - 462555 bytes - sha256 `69509ba380bf0f1e071f60d96ee58b041689cc18576126c94c4b62f89feda95d`
+- `apps/mobile/src/app/onboarding/products.tsx` - 15830 bytes - sha256 `d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b`
 - `apps/mobile/src/app/shelf/[id].tsx` - 45428 bytes - sha256 `1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18279 bytes - sha256 `f6def4491f22caae90590351f50f424c38397a8d6c8b6d2c3f77d7d8c0346f6d`
 - `apps/mobile/src/app/shelf/replenish.tsx` - 13236 bytes - sha256 `e1511ab6367bf8b7d0242ce87cdb9c459d32f66e18f81927e1aeb932fcf2e5b0`
 - `apps/mobile/src/app/shelf/scan.tsx` - 33677 bytes - sha256 `f90b455d7f735e6ece27a07e6367e4a2e032da4d03cae497739d52c3a4bde733`
-- `apps/mobile/src/app/shelf/search.tsx` - 24405 bytes - sha256 `601e8b0ee413b1fa04048bcb52912b785897f912fdb4dc1e08743f7bce533fe0`
+- `apps/mobile/src/app/shelf/search.tsx` - 24504 bytes - sha256 `193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087`
 - `apps/mobile/src/features/catalog/client.ts` - 23827 bytes - sha256 `a134e2bb32ea3fde57ef7dbcbe987ef15a5010a440ec38700731a2ea339e9a0e`
 - `apps/mobile/src/features/catalog/client.test.ts` - 31695 bytes - sha256 `42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297`
 - `apps/mobile/src/features/intelligence/pao.ts` - 5160 bytes - sha256 `32209515587ba1136c72abcd9703f25ef46c0aa6a289bff5fac685a08a0eafde`
 - `apps/mobile/src/features/intelligence/pao.test.ts` - 3875 bytes - sha256 `d4ff777e1b13717b1fd7b6d01a695070e34f065a311b1f98e04d3b0bb737a385`
-- `apps/mobile/src/features/notifications/store.ts` - 11233 bytes - sha256 `c4a58487812e87b538741c9db719437bd92dcc1d2b482605ced3997d7ad6862d`
-- `apps/mobile/src/features/notifications/store.test.ts` - 9408 bytes - sha256 `14ab5ba14dedd4c4854b0cba685764e65de3237f8d130d543c09f47c5b7a5608`
+- `apps/mobile/src/features/notifications/store.ts` - 9907 bytes - sha256 `16ecbc9ac6e9e4b7fc6e52ddc6f0ee6fca8719f6ad18f888800f5ea387277c38`
+- `apps/mobile/src/features/notifications/store.test.ts` - 7928 bytes - sha256 `ae99c70b099cfdad28cdb9a882d9ee06fc7ecbe524397a50c5a1d672d057cf47`
 - `apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts` - 718 bytes - sha256 `2b34153c9a4a85b29bbf8483217a65e4ee99b15837a50128bc7cf572c09fb4a0`
 - `apps/mobile/src/features/recommendations/replenishment.ts` - 3829 bytes - sha256 `ad0658a4a88071c1991c13c1d8d797d6250cdf5fa70fc33f2613cef380b4e610`
 - `apps/mobile/src/features/recommendations/replenishment.test.ts` - 6345 bytes - sha256 `0809c65bdf7982d97624373387e58350342ec65cd5681a145968fa7deb864608`
 - `apps/mobile/src/features/shelf/freshness.ts` - 7299 bytes - sha256 `be0997619e57b575d84169f1c47bbf00bbb61e811a393ce04eff586b5b14b77e`
 - `apps/mobile/src/features/shelf/freshness.test.ts` - 8353 bytes - sha256 `a7ec4652c8a3cff995038511eec95f31e3d0045cf99d4597f78c58daee44364e`
-- `apps/mobile/src/features/shelf/freshnessMigration.test.ts` - 4873 bytes - sha256 `fa08aa33695c6e2a00a7ff7901c5859077376eeb15e2cec8abf40058314257dc`
+- `apps/mobile/src/features/shelf/freshnessMigration.test.ts` - 4858 bytes - sha256 `03808fae36a3a74134bcda3d5db0e729729dcde2653b0331a7d481a5a71f9689`
+- `apps/mobile/src/features/shelf/limits.ts` - 222 bytes - sha256 `8f469d2cafccc1f3ebb14b4ac4e09951d4e58ab63df7bea88c4906a3b8aa8449`
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 508 bytes - sha256 `dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3`
 - `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
-- `apps/mobile/src/features/shelf/store.ts` - 31307 bytes - sha256 `5596f52b4eb96cfb43c349773677766e96557f315bb70e2092e711b27f7570b1`
-- `apps/mobile/src/features/shelf/store.test.ts` - 39839 bytes - sha256 `821345dd832c7479d0329ad0e85a5e438be0f77acbb4d219ed735aab7a862ba3`
+- `apps/mobile/src/features/shelf/store.ts` - 58796 bytes - sha256 `218dd66ae24c4e301b476fe878ddcfc614e9acb435045a1571375ee399893d15`
+- `apps/mobile/src/features/shelf/store.test.ts` - 57329 bytes - sha256 `c000ac66f164e1a2118cd5fe153f32a8c6565388534319825bfb0728cec29e02`
+- `apps/mobile/src/lib/offline/shelfMirrorQueue.ts` - 8443 bytes - sha256 `e03000a6c457814ce75e7ccd62375bc6fe4bd0681185a86885d8292e7a274f61`
+- `apps/mobile/src/lib/offline/shelfMirrorQueue.test.ts` - 11914 bytes - sha256 `994b92f546d3b3cdfafbab14a52a1ddbb82d4a4bd5d793fa9b14ce7ac6a52b38`
+- `apps/mobile/src/lib/offline/OfflineSync.tsx` - 12107 bytes - sha256 `26dd7af6d4083ed8bf06a88bbc08887ea0a5d6b197600ed108cc81de4ce74af8`
+- `apps/mobile/src/lib/offline/OfflineSync.test.ts` - 22933 bytes - sha256 `37a321d29dff0aec1140d3060a417e0d928a8306774da039d0d3dc3b551664ad`
 - `supabase/functions/catalog-lookup/index.ts` - 11843 bytes - sha256 `23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220`
 - `supabase/functions/catalog-lookup/catalogContract.ts` - 80 bytes - sha256 `9707c48c48465b279c2112d84a8a1459867c395490d3c184aaa4e6c2fbc7f81a`
 - `supabase/functions/catalog-lookup/catalogContract.test.ts` - 14681 bytes - sha256 `96ab5dd088984ce67115b993e84436205ebb1bfabee25ea2d60558e7eea85f46`
@@ -484,8 +498,11 @@ Sources:
 - `supabase/migrations/20260718000060_cat07_truthful_freshness.sql` - 24465 bytes - sha256 `8bc2c35bfff443a3c3bf7ab76e52ed17e7d6b961a8b35bdde17701de5c7f574a`
 - `supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql` - 28316 bytes - sha256 `4048342265ef103e6915411494911a98485528707c7413555725ba4ff427c1e9`
 - `supabase/migrations/20260722000062_catalog_curation_statement_guard.sql` - 53193 bytes - sha256 `f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1`
+- `supabase/migrations/20260726000069_routine_completion_sync_bridge.sql` - 66673 bytes - sha256 `a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c`
 - `supabase/tests/database/catalog_serving_gate.test.sql` - 36567 bytes - sha256 `122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef`
-- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 35199 bytes - sha256 `3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253`
+- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 36074 bytes - sha256 `69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb`
+- `supabase/tests/database/routine_completion_sync_bridge.test.sql` - 50468 bytes - sha256 `2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8`
+- `supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql` - 8430 bytes - sha256 `6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2`
 
 ### catalog-serving-gate - Fail-closed production catalog serving boundary
 
@@ -496,7 +513,7 @@ Sources:
 
 Required evidence:
 
-- The complete 66-migration chain through `0067`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, the `0065` CAT-08 transition/default-ACL repair, the additional `0066` legacy clinical-content immutability seal, and the narrow `0067` checker-only runtime-temporary-table shape, passes with the catalog, profile-provenance, CAT-07, CAT-08, clinical-content-seal, and lint-contract pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, clinical publication, or campaign release.
+- The complete 69-migration chain through `0070`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, the `0065` CAT-08 transition/default-ACL repair, the additional `0066` legacy clinical-content immutability seal, the narrow `0067` checker-only runtime-temporary-table shape, the `0068` authoritative routine-adherence boundary, the `0069` owner-derived Shelf/completion replay bridge, and the `0070` unreleased draft-only health-consent-copy successor staging boundary, passes with the catalog, profile-provenance, CAT-07, CAT-08, clinical-content-seal, lint-contract, adherence, sync-bridge, and consent-draft-staging pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, clinical publication, or campaign release.
 - Barcode and search use service-role-only RPCs over the same positive source/product/correction/CAT-03 eligibility relation; `service_role` has no direct catalog-table read, while explicitly safe authenticated reads retain positive RLS.
 - Only rows in the exact active global CAT-03 campaign with active campaign-scoped product authorization, reviewed `verified` or `usable` quality, recommendation eligibility, production/legal-approved sources, and zero independent product holds in `active` or `repair_attested` state can be served; untrusted open intake remains owner-scoped, and accepting, rejecting, closing, or deleting a report cannot release its hold.
 - Barcode mappings are independently reviewed, direct authenticated reads cannot bypass source withdrawal, and every held/unknown reason returns the same no-match/manual fallback.
@@ -515,15 +532,23 @@ Sources:
 - `supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql` - 4519 bytes - sha256 `9afd1ad223c9e7587d42118cee9dbc4fe0b0ea641de4f6fad44d8ecb20d79ccb`
 - `supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql` - 5653 bytes - sha256 `61ee02bd285ae59fe1905244335699bc630830e16910fda7eb4f19a21e637cd8`
 - `supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql` - 7771 bytes - sha256 `2b9a4fc1412edc2373366bb3532710dcaec0439f5b96bb669aa22246cdfbe9b4`
+- `supabase/migrations/20260726000068_routine_adherence_authority.sql` - 33471 bytes - sha256 `37bfd190919f62e63f4e2a61580c5cfe96dea30af72f80259b8d3e9a704f8885`
+- `supabase/migrations/20260726000069_routine_completion_sync_bridge.sql` - 66673 bytes - sha256 `a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c`
+- `supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql` - 22228 bytes - sha256 `2e2abca7a88ab17992e7b3058d4b2f2c9ddbeb2accc59ae1cbf1a96b1b708706`
 - `supabase/tests/database/catalog_serving_gate.test.sql` - 36567 bytes - sha256 `122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef`
-- `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109210 bytes - sha256 `df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d`
+- `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109810 bytes - sha256 `21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c`
 - `supabase/tests/database/catalog_launch_curation.test.sql` - 201879 bytes - sha256 `36f2bfe54bc24795350576db03ad4a5caf0911de729a093c4dd813da9b0b1509`
-- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 35199 bytes - sha256 `3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253`
+- `supabase/tests/database/cat07_truthful_freshness.test.sql` - 36074 bytes - sha256 `69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb`
 - `supabase/tests/database/catalog_operator_authority.test.sql` - 73519 bytes - sha256 `9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7`
-- `supabase/tests/database/skin_profile_quiz_provenance.test.sql` - 21311 bytes - sha256 `f80721e651b17edba0658ec2b1435b4469157a13855b1b286e1bb8d44bbf33f9`
-- `supabase/tests/database/clinical_content_legacy_seal.test.sql` - 10088 bytes - sha256 `02df3c9e33e487c314f390ce18070b15c38a0cca46c113ae7b3e03fb905a21db`
-- `supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql` - 3300 bytes - sha256 `d8accade3b03f31827bffcf9ddf82e407b3766cb645908be2ad6a31b9c03558d`
-- `supabase/tests/database/schema_contract.test.sql` - 33990 bytes - sha256 `4a4ab8a9917c2df4909aab4748391ce36d29588fd6e9c639f8d5d88d2429e040`
+- `supabase/tests/database/skin_profile_quiz_provenance.test.sql` - 21310 bytes - sha256 `d3769a0f806f71ce3ae9468c3d5a6400e9fe33b685d3513c8a552f0a97e9eff9`
+- `supabase/tests/database/clinical_content_legacy_seal.test.sql` - 10087 bytes - sha256 `beff4edb8b7c4eebdfb7afaa664fc2c201aaa2175f0bef4a53835aa68f73639c`
+- `supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql` - 3335 bytes - sha256 `f1fdfa4a048aed29ff4eac806bdffdcc4b9abb4b36e135ef02d89620f416f653`
+- `supabase/tests/database/routine_adherence_authority.test.sql` - 38297 bytes - sha256 `4bce87e1bc3b6c1c93216a0a421a75dfbc03c8276ad4c77b77d8049ff3bbc0f3`
+- `supabase/tests/database/routine_completion_sync_bridge.test.sql` - 50468 bytes - sha256 `2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8`
+- `supabase/tests/database/health_consent_draft_successor_staging.test.sql` - 13926 bytes - sha256 `690567e280ba547157bf5fb4f9c4b46e9379de604590eb9f67c6d1405e1bd973`
+- `supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql` - 8430 bytes - sha256 `6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2`
+- `supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql` - 7066 bytes - sha256 `c714d1001be6ecb2579d4307621d0f45bcfdd1019c983551618cb42eb9a795db`
+- `supabase/tests/database/schema_contract.test.sql` - 36225 bytes - sha256 `351d42cfe6c37f01fb03bfc85f51df689649b6fbfddcfa14ebfa42cb87943c7a`
 - `scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql` - 5846 bytes - sha256 `b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6`
 - `scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql` - 6577 bytes - sha256 `d7bfbfb7fed85a600c07d6c779aad6bc1e349c53f7d5eae1fba62597178647e7`
 - `scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql` - 3956 bytes - sha256 `859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e`
@@ -535,7 +560,7 @@ Sources:
 - `supabase/functions/catalog-search/catalogContract.test.ts` - 3041 bytes - sha256 `dd91fb0c009da68074d795d7819149d9bb970e47c2fba6bbdfc7a08f7f53922d`
 - `docs/phase-4/catalog-source-release-runbook.md` - 14878 bytes - sha256 `ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45229 bytes - sha256 `e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414`
-- `docs/phase-2-production-infrastructure-runbook.md` - 16088 bytes - sha256 `3c0f7fcceb67851a9dd233d53c83c6d1fa004aa9675c0bd5f9e7b0dc9ec956dc`
+- `docs/phase-2-production-infrastructure-runbook.md` - 16672 bytes - sha256 `8f187a947b4038edc9ffa3c70340580f2ad522b9584bd6bd4f962b32dec40787`
 
 ### first-party-correction-report - First-party missing-product and wrong-match operation
 
@@ -554,7 +579,7 @@ Required evidence:
 Sources:
 
 - `docs/phase-4/odbl-compliance-memo.md` - 5338 bytes - sha256 `cf202bd20819b0a8f5b84cc81e7bb2f2470d45ae257a800d4e72f7e88e5bda7d`
-- `docs/04-smart-shelf.md` - 62801 bytes - sha256 `c3abb13a3d3235e666d0de99aa4f8c1a47b0a8efe18ec2a473b3a5aa718ce855`
+- `docs/04-smart-shelf.md` - 66848 bytes - sha256 `8e6c801570fc9943abc80b61f0d49f5f130090627c979f04e2017bd4f18123c6`
 - `supabase/migrations/20260614000026_phase4_catalog.sql` - 35102 bytes - sha256 `dc1a7f150bd5b285cf2d05f2583126ebeb97e67b5363666e670518896b93c311`
 - `supabase/functions/catalog-report/index.ts` - 10890 bytes - sha256 `00c15af1cac9a9cda6514d5c441b4c0b2420959a24727d697f7dce9ab8c4acbd`
 - `supabase/functions/catalog-report/privacy.ts` - 6403 bytes - sha256 `e81dfbdafe784f79503fc4ad03487040f6e2725fe63f5000df77d944c3e28eec`
@@ -597,4 +622,4 @@ Sources:
 
 ## Warnings
 
-- Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence.
+- None.

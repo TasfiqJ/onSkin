@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-26T13:06:47.799Z",
+  "generatedAt": "2026-07-26T22:16:46.290Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,36 +73,36 @@
     ]
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "591e3fdefbc744788e2de8bc7c3a869098e92e34",
-  "gitStatus": "M .github/workflows/quality.yml\n M 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md\n M 04_repo_docs/docs/MASTER_PLAN.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/ask/index.tsx\n M apps/mobile/src/app/conflict/[ruleId].tsx\n M apps/mobile/src/app/cycle/week.tsx\n M apps/mobile/src/app/cycle/why-tonight.tsx\n M apps/mobile/src/app/onboarding/reveal.tsx\n M apps/mobile/src/app/recommendations/index.tsx\n M apps/mobile/src/app/routine/plan.tsx\n M apps/mobile/src/app/s/[shareId].tsx\n M apps/mobile/src/app/share/conflict/[ruleId].tsx\n M apps/mobile/src/app/shelf/[id].tsx\n M apps/mobile/src/components/ui/ConflictBanner.tsx\n M apps/mobile/src/features/ask/answer.test.ts\n M apps/mobile/src/features/ask/answer.ts\n M apps/mobile/src/features/ask/claimsafety.test.ts\n M apps/mobile/src/features/ask/copy.ts\n M apps/mobile/src/features/ask/routeContract.test.ts\n M apps/mobile/src/features/ask/useAsk.ts\n M apps/mobile/src/features/community/copy.ts\n M apps/mobile/src/features/growth/ConflictCard.tsx\n M apps/mobile/src/features/growth/shareLandingRoute.test.ts\n M apps/mobile/src/features/growth/shareLinks.ts\n M apps/mobile/src/features/intelligence/claimsafety.test.ts\n M apps/mobile/src/features/intelligence/conflictChoiceIntegration.test.ts\n M apps/mobile/src/features/intelligence/conflictChoices.ts\n M apps/mobile/src/features/intelligence/conflictIdentity.test.ts\n M apps/mobile/src/features/intelligence/conflictRoutes.test.ts\n M apps/mobile/src/features/intelligence/engine.test.ts\n M apps/mobile/src/features/intelligence/engine.ts\n M apps/mobile/src/features/intelligence/overrides.test.ts\n M apps/mobile/src/features/intelligence/overrides.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.test.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.ts\n M apps/mobile/src/features/intelligence/presentation.test.ts\n M apps/mobile/src/features/intelligence/presentation.ts\n M apps/mobile/src/features/intelligence/rules.ts\n M apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx\n M apps/mobile/src/features/recommendations/catalog.ts\n M apps/mobile/src/features/recommendations/claimsafety.test.ts\n M apps/mobile/src/features/recommendations/copy.ts\n M apps/mobile/src/features/recommendations/engine.test.ts\n M apps/mobile/src/features/recommendations/engine.ts\n M apps/mobile/src/features/recommendations/fit.test.ts\n M apps/mobile/src/features/recommendations/fit.ts\n M apps/mobile/src/features/recommendations/useRecommendations.ts\n M apps/mobile/src/features/routine/firstInsight.test.ts\n M apps/mobile/src/features/routine/firstInsight.ts\n M apps/mobile/src/features/routine/generate.test.ts\n M apps/mobile/src/features/routine/generate.ts\n M apps/mobile/src/features/routine/orderStore.test.ts\n M apps/mobile/src/features/routine/scheduleContract.test.ts\n M apps/mobile/src/features/routine/usePlan.test.ts\n M apps/mobile/src/features/routine/usePlan.ts\n M apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.ts\n M apps/mobile/src/features/scheduler/profileMapping.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/settingsRoutes.test.ts\n M apps/mobile/src/features/shelf/shelfRoutes.test.ts\n M apps/mobile/src/features/shelf/useShelf.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M apps/mobile/src/features/subscription/claimsafety.test.ts\n M apps/mobile/src/features/subscription/copy.ts\n M apps/mobile/src/features/today/routineProjection.test.ts\n M apps/mobile/src/lib/analytics/eventRegistry.ts\n M apps/mobile/src/lib/analytics/track.test.ts\n M apps/mobile/src/lib/consent/dependentConsentContract.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts\n M apps/mobile/src/lib/launch/phase7.test.ts\n M apps/mobile/src/lib/legal/phase3LaunchGates.test.ts\n M docs/00-architecture.md\n M docs/02-ingredient-intelligence.md\n M docs/03-routine-builder.md\n M docs/08-subscriptions-paywall.md\n M docs/CODEX_IMPLEMENTATION_PROMPT.md\n M docs/MASTER_PLAN.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/legal-readiness.md\n M docs/phase-10/beta-event-schema.md\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/clinical-review-log.md\n M docs/phase-3/cosmetic-chemistry-review-log.md\n M docs/phase-3/legal-regulatory-review-log.md\n M docs/phase-3/privacy-security-review-log.md\n M docs/phase-3/review-packet-index.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-7/beta-evidence-dashboard.md\n M docs/phase-8/acquisition-dashboard.md\n M docs/phase-9/source-of-truth.md\n M package.json\n M scripts/phase10/beta-analytics-audit.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase7/check-core-loop.mjs\n M scripts/phase8/check-growth-store-readiness.mjs\n M scripts/phase9/rls-adversarial.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/schema_contract.test.sql\n M supabase/tests/database/skin_profile_quiz_provenance.test.sql\n M supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts\n?? deno.lock\n?? docs/hugeToDo/CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md\n?? docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md\n?? docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md\n?? scripts/core02/clinical-rule-source-contract.test.mjs\n?? scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql\n?? scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql\n?? supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql\n?? supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql\n?? supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql\n?? supabase/tests/database/clinical_content_legacy_seal.test.sql\n?? supabase/tests/rehearsal/generated/catalog-operator-dblink-target.sql",
+  "gitSha": "5fd0a8a0975da3c537db533b54a9bf2400d452a9",
+  "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 41151,
-      "sha256": "5b913ce21150cbd017edb3d39851c3aac1f396f93709c026a3f100fdd37684f8"
+      "bytes": 41871,
+      "sha256": "aa90ffccdb573042a9a4679a4507284010042e693e067c6e0dc3fe47db608cfd"
     },
     {
       "packet": "packetContract",
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 2935,
-      "sha256": "43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b"
+      "bytes": 3962,
+      "sha256": "bac7e89d7dd260ff3eb13c2fb0e2189cf342b844e1e54924af8d9d53211fba8c"
     },
     {
       "packet": "packetContract",
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 6676,
-      "sha256": "6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d"
+      "bytes": 8667,
+      "sha256": "b97e332cdf393e7761e72ae0f264d60477e783930f0a43f0802924dfcf80c1bf"
     },
     {
       "packet": "packetContract",
       "path": "scripts/phase3/build-review-packet.mjs",
       "exists": true,
-      "bytes": 12509,
-      "sha256": "e60956aa9e03463c56cf0872ece5d63ddd08e2485719d2d694a64beb83d27aff"
+      "bytes": 12638,
+      "sha256": "f8602f399f578e483ab3da51db53083975f86e14fb8a929bec94301a939bd516"
     },
     {
       "packet": "packetContract",
@@ -178,8 +178,8 @@
       "packet": "packetContract",
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 22138,
-      "sha256": "013215c69c4c4a554cd35b6e7a1b633beb1aa2b16efc36e1bbf030311b93ef2c"
+      "bytes": 22873,
+      "sha256": "2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c"
     },
     {
       "packet": "packetContract",
@@ -248,15 +248,15 @@
       "packet": "legalRegulatory",
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 55523,
-      "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
+      "bytes": 60110,
+      "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
     },
     {
       "packet": "legalRegulatory",
       "path": "docs/phase-3/consent-matrix.md",
       "exists": true,
-      "bytes": 16199,
-      "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
+      "bytes": 17967,
+      "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
     },
     {
       "packet": "legalRegulatory",
@@ -318,29 +318,29 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 150755,
-      "sha256": "31ebd5a1e82eb944dd791818515e8e29160c428a0298384b9ba783ece1a15a3a"
+      "bytes": 144125,
+      "sha256": "1bce183506c4478a53f763b21910409034cd7ac1fa0c0b1f4839a6b7f3563836"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 93372,
-      "sha256": "c86727d010301beb79b0d59b63a383432083fda0eaaa35dccccd584530056502"
+      "bytes": 93691,
+      "sha256": "ee6caa9181a72c400ce9c6f08fe16227cd5f7bd885d9c276da5345fcc61351e4"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 153734,
-      "sha256": "2175e6a00be200e439a0064b59ee47e50798576622fcdaeb8612a42d9d44497d"
+      "bytes": 146970,
+      "sha256": "ea0f8de654ed4bbfb8435bf40189ce8b8d44f7a10263a559f570bd7d1c75513d"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 107605,
-      "sha256": "567b2f444724621f173fc65067ce6bd99be5c4d85f7ab903f7b988e494039ecc"
+      "bytes": 107795,
+      "sha256": "f2ad2106e80443ba3ba1fae8d31c5ece40e82b610c3e21727d2a86b5c321bb78"
     },
     {
       "packet": "clinical",
@@ -409,29 +409,29 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 150755,
-      "sha256": "31ebd5a1e82eb944dd791818515e8e29160c428a0298384b9ba783ece1a15a3a"
+      "bytes": 144125,
+      "sha256": "1bce183506c4478a53f763b21910409034cd7ac1fa0c0b1f4839a6b7f3563836"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 93372,
-      "sha256": "c86727d010301beb79b0d59b63a383432083fda0eaaa35dccccd584530056502"
+      "bytes": 93691,
+      "sha256": "ee6caa9181a72c400ce9c6f08fe16227cd5f7bd885d9c276da5345fcc61351e4"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 153734,
-      "sha256": "2175e6a00be200e439a0064b59ee47e50798576622fcdaeb8612a42d9d44497d"
+      "bytes": 146970,
+      "sha256": "ea0f8de654ed4bbfb8435bf40189ce8b8d44f7a10263a559f570bd7d1c75513d"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 107605,
-      "sha256": "567b2f444724621f173fc65067ce6bd99be5c4d85f7ab903f7b988e494039ecc"
+      "bytes": 107795,
+      "sha256": "f2ad2106e80443ba3ba1fae8d31c5ece40e82b610c3e21727d2a86b5c321bb78"
     },
     {
       "packet": "cosmeticChemistry",
@@ -528,36 +528,36 @@
       "packet": "privacyPlatform",
       "path": "docs/store-privacy-inventory.md",
       "exists": true,
-      "bytes": 45140,
-      "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
+      "bytes": 41308,
+      "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
     },
     {
       "packet": "privacyPlatform",
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 55523,
-      "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
+      "bytes": 60110,
+      "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
     },
     {
       "packet": "privacyPlatform",
       "path": "docs/phase-3/consent-matrix.md",
       "exists": true,
-      "bytes": 16199,
-      "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
+      "bytes": 17967,
+      "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
     },
     {
       "packet": "privacyPlatform",
       "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
       "exists": true,
-      "bytes": 32996,
-      "sha256": "91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4"
+      "bytes": 37059,
+      "sha256": "c7fcaeb47bd9a53591c8f5b1a0dd78bbfb9045c54588cc382a27a27ed6120289"
     },
     {
       "packet": "privacyPlatform",
       "path": "docs/hugeToDo/health-processor-inventory-v1.json",
       "exists": true,
-      "bytes": 3039,
-      "sha256": "fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674"
+      "bytes": 3386,
+      "sha256": "491c5389e410aae42006b22705bb5c6426c813d048c47b10dec131c3b897801a"
     },
     {
       "packet": "privacyPlatform",
@@ -577,8 +577,8 @@
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 40057,
-      "sha256": "ed9c047eb6d311ae7bdc0570b30599b34c7d5ee725156ed067e6eb74639831c1"
+      "bytes": 40092,
+      "sha256": "4c46f34715c5baa915c7bdb3521a1e366ff9bba9bcd4ffff05dd61d7ad0b0bc8"
     },
     {
       "packet": "privacyPlatform",
@@ -619,8 +619,8 @@
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/features/onboarding/onboardingRoutes.test.ts",
       "exists": true,
-      "bytes": 36122,
-      "sha256": "a3162613b23f4a640a6fd66f537296adcf2cfcbe55696f6e051a7fd74d0ececc"
+      "bytes": 36624,
+      "sha256": "bda13cbc30096213fb11669cc21adea501d5cb9f130a7fff98fb841fe6336358"
     },
     {
       "packet": "privacyPlatform",
@@ -696,50 +696,50 @@
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.ts",
       "exists": true,
-      "bytes": 19096,
-      "sha256": "b3945dbafa1e26e6febb9b6100df6f7cbbe6455df3bb0685822532883f985460"
+      "bytes": 19901,
+      "sha256": "e67edbcda17e7600089d2db6e967859cc203e3e2617b8b676483ab018bcb406f"
     },
     {
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.test.ts",
       "exists": true,
-      "bytes": 19389,
-      "sha256": "47319e3bf6bc16ce8ef91ea83c7f7d92bf9f32f4dd993fd96c9b5169e8c3ecb7"
+      "bytes": 23000,
+      "sha256": "c2f9f6ee09c1513a1c47324c5009af5c861afed6fa957c5ecfaa16ca99a79b06"
     },
     {
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/features/settings/actions.ts",
       "exists": true,
-      "bytes": 21769,
-      "sha256": "ae38c8b32cbeaf26264ff9c9e1681ad67fed3cd761b74c19c57f647042ff23b3"
+      "bytes": 21568,
+      "sha256": "44b97e2c1ccc41ff4b44225d474744b3df797e00ecefdbb7cf4334ac9e35101d"
     },
     {
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
       "exists": true,
-      "bytes": 13279,
-      "sha256": "7ae3c0c97443b5ec251be0864187dfb844d6500c356e7f02386619c903eb4f31"
+      "bytes": 13610,
+      "sha256": "9d41820db49c478fd0b6694ca5e58aec595e45a8ad67dd87a7e4d1fe6aa0c543"
     },
     {
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/features/settings/localDeviceExport.test.ts",
       "exists": true,
-      "bytes": 14430,
-      "sha256": "5e26bb9891006abc3ee7df7d9f03fecd6cded51efde4673a3d9884d973a53215"
+      "bytes": 18393,
+      "sha256": "f266600513dd70ed77e045ea92ce3cff1d47506ba8fdbb151c543677beaebf4d"
     },
     {
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/lib/storage/privateKV.ts",
       "exists": true,
-      "bytes": 27373,
-      "sha256": "733a896f6f21d091797925dfff67a579d86dcdf8c695811008054b4eb9f638b4"
+      "bytes": 29437,
+      "sha256": "bef7441b904f59d7ba3cb8e96aa9642ecb3d23705076aa6ab58d73118dd04560"
     },
     {
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
       "exists": true,
-      "bytes": 31704,
-      "sha256": "6c03ca2087a0c7fbd0606d41d4fd22fbead02eef1941d7472958e0935f49cf52"
+      "bytes": 42903,
+      "sha256": "3c6b5292d1f33c4b0716da18c5912bc0aad329c130af9178ed94ca397f1585a4"
     },
     {
       "packet": "privacyPlatform",
@@ -941,22 +941,22 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/index.ts",
       "exists": true,
-      "bytes": 23928,
-      "sha256": "2a31523c2e8d2eb1634a2127c9bc93d14b02f70a2bf88bd70b94c8ff2afa7f93"
+      "bytes": 26103,
+      "sha256": "697f4541c384bad710072eac220e0e53160496536e1d4c550403fe7606655945"
     },
     {
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/exportCore.ts",
       "exists": true,
-      "bytes": 15866,
-      "sha256": "15dfbb295a325f007961d69eff9ed067fad4fa0aae2ac7c79c931a27f2fcc330"
+      "bytes": 16680,
+      "sha256": "fafb4de7b05491d1f667253d50a9189fc0d6ff21d9c0d11c0666db76f9924875"
     },
     {
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/exportCore.test.ts",
       "exists": true,
-      "bytes": 12978,
-      "sha256": "f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b"
+      "bytes": 13951,
+      "sha256": "549c69b091c2e38e6d2a980aa1c3f5ad7f2434b5e5837188beb46363803f9d63"
     },
     {
       "packet": "privacyPlatform",
@@ -974,17 +974,31 @@
     },
     {
       "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/healthSyncExportCore.ts",
+      "exists": true,
+      "bytes": 7359,
+      "sha256": "2f18dea4cba38c275082bec7d3e48d18b044a8514288de7e55df004e42d965bd"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/healthSyncExportCore.test.ts",
+      "exists": true,
+      "bytes": 6931,
+      "sha256": "a2f74eae7f99b1a3ab3c31bffd570dd2cfa687d9fda004e8057053ca7013eb82"
+    },
+    {
+      "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/exportRegistry.ts",
       "exists": true,
-      "bytes": 9423,
-      "sha256": "951e650d0285e60aa95bd00367aef91603c0767c3492f14f9e312c3bd328554a"
+      "bytes": 10203,
+      "sha256": "bd73ec992a056cafebd21897147d02df37bd66b7545784c06ca797b9998a4ca0"
     },
     {
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/exportRegistry.test.ts",
       "exists": true,
-      "bytes": 8848,
-      "sha256": "f51e5c081f06d720e85535bb9895f730d18983109a1188c1777adf7c7e4c4e39"
+      "bytes": 10778,
+      "sha256": "118c081db46604ecfe9e02c2a27db5d7feb107822e5a49f37ff6756273e13b4a"
     },
     {
       "packet": "privacyPlatform",
@@ -1081,8 +1095,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/data-rights-smoke.mjs",
       "exists": true,
-      "bytes": 71937,
-      "sha256": "7a3fdde72e03e27e9bf6298d00ae533fae75f174206138c6962b208841fa6682"
+      "bytes": 76413,
+      "sha256": "4bff491dbec345e3100c58f9d4d666eb24803974f3304d48103202dca63b336f"
     },
     {
       "packet": "privacyPlatform",
@@ -1095,8 +1109,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/health-processor-inventory-smoke.mjs",
       "exists": true,
-      "bytes": 7408,
-      "sha256": "87d5bafca4ebe1f391407d888a7cfd1ca2531362e0f0446e9767f37bcacc264a"
+      "bytes": 7698,
+      "sha256": "b002a39a771c92be4fe9df8b4e4d74ab0bf058d86be9b60ba6e61430529d3c21"
     },
     {
       "packet": "privacyPlatform",
@@ -1109,8 +1123,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 71804,
-      "sha256": "4831fdb8fae6340b86829e438ef234f0bc129f3efbec99bdbb7e4a1526852351"
+      "bytes": 77776,
+      "sha256": "e63b2e44d1b650143c7f877ba858a685408121e1836d62027c384c8dd7b12739"
     },
     {
       "packet": "privacyPlatform",
@@ -1127,7 +1141,5 @@
       "sha256": "8ad2be6cecfd8be4d73679041204015edb17e492b398e7a59467542da9bace41"
     }
   ],
-  "warnings": [
-    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
-  ]
+  "warnings": []
 }

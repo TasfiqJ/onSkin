@@ -1,10 +1,10 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-26T13:06:46.104Z",
+  "generatedAt": "2026-07-26T22:16:44.541Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "591e3fdefbc744788e2de8bc7c3a869098e92e34",
-  "gitStatus": "M .github/workflows/quality.yml\n M 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md\n M 04_repo_docs/docs/MASTER_PLAN.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/ask/index.tsx\n M apps/mobile/src/app/conflict/[ruleId].tsx\n M apps/mobile/src/app/cycle/week.tsx\n M apps/mobile/src/app/cycle/why-tonight.tsx\n M apps/mobile/src/app/onboarding/reveal.tsx\n M apps/mobile/src/app/recommendations/index.tsx\n M apps/mobile/src/app/routine/plan.tsx\n M apps/mobile/src/app/s/[shareId].tsx\n M apps/mobile/src/app/share/conflict/[ruleId].tsx\n M apps/mobile/src/app/shelf/[id].tsx\n M apps/mobile/src/components/ui/ConflictBanner.tsx\n M apps/mobile/src/features/ask/answer.test.ts\n M apps/mobile/src/features/ask/answer.ts\n M apps/mobile/src/features/ask/claimsafety.test.ts\n M apps/mobile/src/features/ask/copy.ts\n M apps/mobile/src/features/ask/routeContract.test.ts\n M apps/mobile/src/features/ask/useAsk.ts\n M apps/mobile/src/features/community/copy.ts\n M apps/mobile/src/features/growth/ConflictCard.tsx\n M apps/mobile/src/features/growth/shareLandingRoute.test.ts\n M apps/mobile/src/features/growth/shareLinks.ts\n M apps/mobile/src/features/intelligence/claimsafety.test.ts\n M apps/mobile/src/features/intelligence/conflictChoiceIntegration.test.ts\n M apps/mobile/src/features/intelligence/conflictChoices.ts\n M apps/mobile/src/features/intelligence/conflictIdentity.test.ts\n M apps/mobile/src/features/intelligence/conflictRoutes.test.ts\n M apps/mobile/src/features/intelligence/engine.test.ts\n M apps/mobile/src/features/intelligence/engine.ts\n M apps/mobile/src/features/intelligence/overrides.test.ts\n M apps/mobile/src/features/intelligence/overrides.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.test.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.ts\n M apps/mobile/src/features/intelligence/presentation.test.ts\n M apps/mobile/src/features/intelligence/presentation.ts\n M apps/mobile/src/features/intelligence/rules.ts\n M apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx\n M apps/mobile/src/features/recommendations/catalog.ts\n M apps/mobile/src/features/recommendations/claimsafety.test.ts\n M apps/mobile/src/features/recommendations/copy.ts\n M apps/mobile/src/features/recommendations/engine.test.ts\n M apps/mobile/src/features/recommendations/engine.ts\n M apps/mobile/src/features/recommendations/fit.test.ts\n M apps/mobile/src/features/recommendations/fit.ts\n M apps/mobile/src/features/recommendations/useRecommendations.ts\n M apps/mobile/src/features/routine/firstInsight.test.ts\n M apps/mobile/src/features/routine/firstInsight.ts\n M apps/mobile/src/features/routine/generate.test.ts\n M apps/mobile/src/features/routine/generate.ts\n M apps/mobile/src/features/routine/orderStore.test.ts\n M apps/mobile/src/features/routine/scheduleContract.test.ts\n M apps/mobile/src/features/routine/usePlan.test.ts\n M apps/mobile/src/features/routine/usePlan.ts\n M apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.ts\n M apps/mobile/src/features/scheduler/profileMapping.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/settingsRoutes.test.ts\n M apps/mobile/src/features/shelf/shelfRoutes.test.ts\n M apps/mobile/src/features/shelf/useShelf.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M apps/mobile/src/features/subscription/claimsafety.test.ts\n M apps/mobile/src/features/subscription/copy.ts\n M apps/mobile/src/features/today/routineProjection.test.ts\n M apps/mobile/src/lib/analytics/eventRegistry.ts\n M apps/mobile/src/lib/analytics/track.test.ts\n M apps/mobile/src/lib/consent/dependentConsentContract.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts\n M apps/mobile/src/lib/launch/phase7.test.ts\n M apps/mobile/src/lib/legal/phase3LaunchGates.test.ts\n M docs/00-architecture.md\n M docs/02-ingredient-intelligence.md\n M docs/03-routine-builder.md\n M docs/08-subscriptions-paywall.md\n M docs/CODEX_IMPLEMENTATION_PROMPT.md\n M docs/MASTER_PLAN.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/legal-readiness.md\n M docs/phase-10/beta-event-schema.md\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/clinical-review-log.md\n M docs/phase-3/cosmetic-chemistry-review-log.md\n M docs/phase-3/legal-regulatory-review-log.md\n M docs/phase-3/privacy-security-review-log.md\n M docs/phase-3/review-packet-index.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-7/beta-evidence-dashboard.md\n M docs/phase-8/acquisition-dashboard.md\n M docs/phase-9/source-of-truth.md\n M package.json\n M scripts/phase10/beta-analytics-audit.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase7/check-core-loop.mjs\n M scripts/phase8/check-growth-store-readiness.mjs\n M scripts/phase9/rls-adversarial.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/schema_contract.test.sql\n M supabase/tests/database/skin_profile_quiz_provenance.test.sql\n M supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts\n?? deno.lock\n?? docs/hugeToDo/CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md\n?? docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md\n?? docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md\n?? scripts/core02/clinical-rule-source-contract.test.mjs\n?? scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql\n?? scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql\n?? supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql\n?? supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql\n?? supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql\n?? supabase/tests/database/clinical_content_legacy_seal.test.sql\n?? supabase/tests/rehearsal/generated/catalog-operator-dblink-target.sql",
+  "gitSha": "5fd0a8a0975da3c537db533b54a9bf2400d452a9",
+  "gitStatus": "",
   "reviewLogs": [
     {
       "domain": "legalRegulatory",
@@ -60,12 +60,12 @@
       "notCleared": 24,
       "blocked": 15
     },
-    "sourcePathCount": 430,
+    "sourcePathCount": 433,
     "missingSourcePathCount": 0,
     "signedItemCount": 0,
     "unsignedReleaseDispositionCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -357,8 +357,8 @@
         {
           "path": "apps/mobile/src/features/subscription/proGatedRoutes.test.ts",
           "exists": true,
-          "bytes": 15570,
-          "sha256": "f9514722836aafe40e3882fb20a188f3c0a8ce4b494cb4ab49761779cd4b5356"
+          "bytes": 16111,
+          "sha256": "44d56f7f13bab8928002e0ef441c45de7748877e4becf54d74dd7d9279733997"
         },
         {
           "path": "apps/mobile/src/features/subscription/ReverseTrialBanner.tsx",
@@ -440,7 +440,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "df717c738c8de89fe9cff1e617506afd852f819e0e834e13c6cd0ba5c73d4294",
+      "reviewSnapshotSha256": "7aa9c53c9d8b4dadc6ee42d6b7276025eb5f5901578b05ed476d1cedd8e44473",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -775,14 +775,14 @@
         {
           "path": "apps/mobile/src/features/routine/sequencing.ts",
           "exists": true,
-          "bytes": 10036,
-          "sha256": "9f96c0395548df4780b68991599633bc919946832e3a811b0b1b43909559a06d"
+          "bytes": 20044,
+          "sha256": "7f17500cbbabe123320f13df9e018f7bbf1cb146a3f70aaa845782b0cd6dcf6c"
         },
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 8582,
-          "sha256": "a0ce443447c06688b2dbe7a86ff78cd27888d3ee1d8538e88c1d94d77469f7cc"
+          "bytes": 8621,
+          "sha256": "d98871cff5edb3cb7bf119b735fa352254c14e2f56b68d0b4f897dff0eaf21b1"
         },
         {
           "path": "apps/mobile/src/features/today/routineProjection.ts",
@@ -793,12 +793,12 @@
         {
           "path": "apps/mobile/src/app/(tabs)/today.tsx",
           "exists": true,
-          "bytes": 30507,
-          "sha256": "76da3fdb66337d118e8a5381a9cd8333e17aa02698595db5f30abcbc8510b935"
+          "bytes": 38886,
+          "sha256": "c07f10efec2a63a5c6eeb8cefc7e040276cae42fcfef1f18a1646dc3d93074d1"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "2f5e35ba5591e636166c884686b47dd199e2e41e4e47651c6cde30809b3df5d8",
+      "reviewSnapshotSha256": "f9cf9ac37fbd6dc3d672c97a0ad2c45843ae5890d93174723106dc35e521531a",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -830,14 +830,14 @@
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 8582,
-          "sha256": "a0ce443447c06688b2dbe7a86ff78cd27888d3ee1d8538e88c1d94d77469f7cc"
+          "bytes": 8621,
+          "sha256": "d98871cff5edb3cb7bf119b735fa352254c14e2f56b68d0b4f897dff0eaf21b1"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 13359,
-          "sha256": "e53780d192f047c4b7f05895b6164b4ee92be95a474a77264535ba1185611abc"
+          "bytes": 13381,
+          "sha256": "9232e7a8b8f8a92de9e871dcf806ada0776a96eb527289c5c1476ec2452286a8"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
@@ -847,7 +847,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "77b796fe86727baa91ab4e028067bdeaa5b5b5205c71f549723d49e56ae7fcaa",
+      "reviewSnapshotSha256": "a276d5cf2997a49b313c00c120363548cb7b3b6d5878d8ce4bd0d2f1a5e5a92d",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1278,12 +1278,12 @@
         {
           "path": "packages/types/src/index.ts",
           "exists": true,
-          "bytes": 19206,
-          "sha256": "241dc550353903b7f111f13df80ee35bb5a24c8f0dd99e7c2bde7ddd89b72f1e"
+          "bytes": 19110,
+          "sha256": "015b60293c9252c54e99830ec390e7b518f8244649b105920d830dc1f3e55f25"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "4e7da28a09de281b79483a56b80887dc28c96e84afbb089a73ad19ed167c4eb8",
+      "reviewSnapshotSha256": "1f9baeadd23d8ae83e0bf0bdb75849180e6990208ead7233ea33401bf827a81e",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1409,14 +1409,14 @@
         {
           "path": "apps/mobile/src/features/routine/sequencing.ts",
           "exists": true,
-          "bytes": 10036,
-          "sha256": "9f96c0395548df4780b68991599633bc919946832e3a811b0b1b43909559a06d"
+          "bytes": 20044,
+          "sha256": "7f17500cbbabe123320f13df9e018f7bbf1cb146a3f70aaa845782b0cd6dcf6c"
         },
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 8582,
-          "sha256": "a0ce443447c06688b2dbe7a86ff78cd27888d3ee1d8538e88c1d94d77469f7cc"
+          "bytes": 8621,
+          "sha256": "d98871cff5edb3cb7bf119b735fa352254c14e2f56b68d0b4f897dff0eaf21b1"
         },
         {
           "path": "apps/mobile/src/features/today/routineProjection.ts",
@@ -1427,12 +1427,12 @@
         {
           "path": "apps/mobile/src/app/(tabs)/today.tsx",
           "exists": true,
-          "bytes": 30507,
-          "sha256": "76da3fdb66337d118e8a5381a9cd8333e17aa02698595db5f30abcbc8510b935"
+          "bytes": 38886,
+          "sha256": "c07f10efec2a63a5c6eeb8cefc7e040276cae42fcfef1f18a1646dc3d93074d1"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "8d2951c3c03b18829dd891f8b336b443e62c99b57baacbd93957954b34dff776",
+      "reviewSnapshotSha256": "9779e0e245658b201d2e8c5b4c96423844223e5ff55fe34618b66731de4863d5",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1462,16 +1462,22 @@
           "sha256": "9dc3a263a0de3661ed164c685dbef6494107ae7d494bfe3c37b40d2ed7fd276c"
         },
         {
+          "path": "apps/mobile/src/features/scheduler/cadence.test.ts",
+          "exists": true,
+          "bytes": 5506,
+          "sha256": "1340e95900d2cf7ce9df0d8c9890c54bd12d661b20ad30b9308cff6719c62c5d"
+        },
+        {
           "path": "apps/mobile/src/features/scheduler/cadence.ts",
           "exists": true,
-          "bytes": 1364,
-          "sha256": "f7164eef26e124c398c3f79e3088c7500c2e35adc41f02ac47abdf675bab3b21"
+          "bytes": 2891,
+          "sha256": "0c46957a5a49577fdb6808cea95802834a8b5c5f2df50600d4ce93c00a0f8f6d"
         },
         {
           "path": "apps/mobile/src/features/scheduler/classes.ts",
           "exists": true,
-          "bytes": 4308,
-          "sha256": "49a0606bc2c475edb1460ccb41028adf03cc4ecb41ca7cdc820d5693fee36b41"
+          "bytes": 3586,
+          "sha256": "84f04b38aa881075b1a655f809ed83dd9f431d978a40b19942061c60027eb45c"
         },
         {
           "path": "apps/mobile/src/features/scheduler/customCycle.test.ts",
@@ -1494,32 +1500,32 @@
         {
           "path": "apps/mobile/src/features/scheduler/cycleStore.test.ts",
           "exists": true,
-          "bytes": 16213,
-          "sha256": "31e88a5607ab9662926b2758931e5f7e2876f24c2f5f87f9eabbde4bb1a109de"
+          "bytes": 26038,
+          "sha256": "50683374e860600be6d785014002a1c3e75c4c163f6cbfb0f74da31063f23340"
         },
         {
           "path": "apps/mobile/src/features/scheduler/cycleStore.ts",
           "exists": true,
-          "bytes": 17247,
-          "sha256": "5c7681266c67f7edc7283d2c9a3b72b8aec2fbb13e320b37a3c623776919d091"
+          "bytes": 21910,
+          "sha256": "9a32efad1c33138c1cc31ba8f21aca5f9a748a1ce767ac317ce311ca6cf0e964"
         },
         {
           "path": "apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts",
           "exists": true,
-          "bytes": 15856,
-          "sha256": "a59e8cfa5d8c4bcca71323ad7da356b1ca0bbcfccd2edea38fffed059d06ea12"
+          "bytes": 21836,
+          "sha256": "19b56bbd139d44d5ea04ebc37d33c132b6f212156ce071e0d302ae0d39ee9ab0"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.test.ts",
           "exists": true,
-          "bytes": 19685,
-          "sha256": "e4778a24536e0b436acb15802de3c42b7f0d14b00514105b882ac6d6bbdd8add"
+          "bytes": 19682,
+          "sha256": "613be5b855e6a975da9e39002c74e1069bae65ac906d7a2f351807e08ad3048a"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 13359,
-          "sha256": "e53780d192f047c4b7f05895b6164b4ee92be95a474a77264535ba1185611abc"
+          "bytes": 13381,
+          "sha256": "9232e7a8b8f8a92de9e871dcf806ada0776a96eb527289c5c1476ec2452286a8"
         },
         {
           "path": "apps/mobile/src/features/scheduler/profile.test.ts",
@@ -1542,8 +1548,8 @@
         {
           "path": "apps/mobile/src/features/scheduler/projection.test.ts",
           "exists": true,
-          "bytes": 3041,
-          "sha256": "a4cd2533262ca8fc73aa5403bff6f43be21fab7fa96b03fec19b9a4ba2687a59"
+          "bytes": 4592,
+          "sha256": "1a82f286a581851bee7f06df68d0eb629380b23037c45ed066a05c0c6be44cfe"
         },
         {
           "path": "apps/mobile/src/features/scheduler/projection.ts",
@@ -1552,10 +1558,16 @@
           "sha256": "8d5e9983dd125f4f1438534f6aec7f855f2d9f8ccb0189b56ac6dd6e31443782"
         },
         {
+          "path": "apps/mobile/src/features/scheduler/useCycle.test.ts",
+          "exists": true,
+          "bytes": 5793,
+          "sha256": "4c8cf39be7570a795ac64b8abd256b5113acda5ead6e91bb802b87a914786541"
+        },
+        {
           "path": "apps/mobile/src/features/scheduler/useCycle.ts",
           "exists": true,
-          "bytes": 10274,
-          "sha256": "19f53607aa158df0c4f05a51972d9d3a3ba598141ebe07ae8a0f80725ada31bc"
+          "bytes": 12284,
+          "sha256": "5206dc3e8cd31cea4b8933daa4d6ca1f5c2efa7808c2322c6d70705cd72c9fd9"
         },
         {
           "path": "apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts",
@@ -1571,7 +1583,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "6608595a4299836d60117e4b1b496c56fcd57a4be3d77ba71fb23e98d1b405ef",
+      "reviewSnapshotSha256": "07798ec0a1335acfb0b7532a3c64e6810cdcb85d22f2a882a371b0032cb8a163",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1657,8 +1669,8 @@
         {
           "path": "apps/mobile/src/features/shelf/freshnessMigration.test.ts",
           "exists": true,
-          "bytes": 4873,
-          "sha256": "fa08aa33695c6e2a00a7ff7901c5859077376eeb15e2cec8abf40058314257dc"
+          "bytes": 4858,
+          "sha256": "03808fae36a3a74134bcda3d5db0e729729dcde2653b0331a7d481a5a71f9689"
         },
         {
           "path": "apps/mobile/src/features/shelf/IntakeContext.test.ts",
@@ -1691,6 +1703,12 @@
           "sha256": "8106cbcfb4d79040f6547234f9afcc2627b9adaa0ce529789544085b5f6ed679"
         },
         {
+          "path": "apps/mobile/src/features/shelf/limits.ts",
+          "exists": true,
+          "bytes": 222,
+          "sha256": "8f469d2cafccc1f3ebb14b4ac4e09951d4e58ab63df7bea88c4906a3b8aa8449"
+        },
+        {
           "path": "apps/mobile/src/features/shelf/LocalDateField.tsx",
           "exists": true,
           "bytes": 1878,
@@ -1705,8 +1723,8 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 8204,
-          "sha256": "f03148aaf4096689edeb7b1bee8eaf2d95eb44734a5d701b5f06af19b62a5916"
+          "bytes": 4655,
+          "sha256": "13dfde9b8a5490f67b5269271ae0bdf6bb3910ba5b55b4db60560690d7a56eac"
         },
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
@@ -1741,20 +1759,20 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 69329,
-          "sha256": "92a87a442d7bb92878cb10612b5edd6d3e8badc310eedc539e6b1b4ac754ea79"
+          "bytes": 69745,
+          "sha256": "9f2bff3241c5948522fa56e0d4e8857c24cd46b38d3e9b9868dd5416d24f1f68"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 39839,
-          "sha256": "821345dd832c7479d0329ad0e85a5e438be0f77acbb4d219ed735aab7a862ba3"
+          "bytes": 57329,
+          "sha256": "c000ac66f164e1a2118cd5fe153f32a8c6565388534319825bfb0728cec29e02"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
           "exists": true,
-          "bytes": 31307,
-          "sha256": "5596f52b4eb96cfb43c349773677766e96557f315bb70e2092e711b27f7570b1"
+          "bytes": 58796,
+          "sha256": "218dd66ae24c4e301b476fe878ddcfc614e9acb435045a1571375ee399893d15"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
@@ -1765,12 +1783,12 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 10185,
-          "sha256": "4835a4911aa8bc4b0bae235a85ed5cc681e67ac75d145917aadcbf0771f3f4a8"
+          "bytes": 10545,
+          "sha256": "060113bd3a3af609cae6cf0d022bfcbe5292e71cd7cc91e4fac6c93d4608c9ec"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "304bfde25f932d81e04fb8c0e3e146e8710c29fd10d240721b445b495ef01999",
+      "reviewSnapshotSha256": "1a0727b74592aa8b4dea047b178178f1dbacd11dc473d6ec2c283eebb6c199b4",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1790,26 +1808,26 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 16199,
-          "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
+          "bytes": 17967,
+          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 45140,
-          "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
+          "bytes": 41308,
+          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
         },
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
           "exists": true,
-          "bytes": 32996,
-          "sha256": "91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4"
+          "bytes": 37059,
+          "sha256": "c7fcaeb47bd9a53591c8f5b1a0dd78bbfb9045c54588cc382a27a27ed6120289"
         },
         {
           "path": "docs/hugeToDo/health-processor-inventory-v1.json",
           "exists": true,
-          "bytes": 3039,
-          "sha256": "fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674"
+          "bytes": 3386,
+          "sha256": "491c5389e410aae42006b22705bb5c6426c813d048c47b10dec131c3b897801a"
         },
         {
           "path": "docs/hugeToDo/credential-inventory.json",
@@ -2042,20 +2060,20 @@
         {
           "path": "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts",
           "exists": true,
-          "bytes": 10657,
-          "sha256": "4db0e98296aa41bb022cfdaa22218dbb89dfa5455c3d73bc6c7e7b060e9a3338"
+          "bytes": 11154,
+          "sha256": "28217188baf2053b08afe6edfa22c4cd281f6555acbf600731143d571fcfc2fa"
         },
         {
           "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.test.ts",
           "exists": true,
-          "bytes": 19389,
-          "sha256": "47319e3bf6bc16ce8ef91ea83c7f7d92bf9f32f4dd993fd96c9b5169e8c3ecb7"
+          "bytes": 23000,
+          "sha256": "c2f9f6ee09c1513a1c47324c5009af5c861afed6fa957c5ecfaa16ca99a79b06"
         },
         {
           "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.ts",
           "exists": true,
-          "bytes": 19096,
-          "sha256": "b3945dbafa1e26e6febb9b6100df6f7cbbe6455df3bb0685822532883f985460"
+          "bytes": 19901,
+          "sha256": "e67edbcda17e7600089d2db6e967859cc203e3e2617b8b676483ab018bcb406f"
         },
         {
           "path": "apps/mobile/src/lib/consent/withdrawal.test.ts",
@@ -2072,8 +2090,8 @@
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 21769,
-          "sha256": "ae38c8b32cbeaf26264ff9c9e1681ad67fed3cd761b74c19c57f647042ff23b3"
+          "bytes": 21568,
+          "sha256": "44b97e2c1ccc41ff4b44225d474744b3df797e00ecefdbb7cf4334ac9e35101d"
         },
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
@@ -2162,12 +2180,12 @@
         {
           "path": "scripts/phase9/health-processor-inventory-smoke.mjs",
           "exists": true,
-          "bytes": 7408,
-          "sha256": "87d5bafca4ebe1f391407d888a7cfd1ca2531362e0f0446e9767f37bcacc264a"
+          "bytes": 7698,
+          "sha256": "b002a39a771c92be4fe9df8b4e4d74ab0bf058d86be9b60ba6e61430529d3c21"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "2b45e4c7fd051cc2495be6837cf645b4fda518b98f8d36a469ee8d55b23bea0f",
+      "reviewSnapshotSha256": "6f73785ea1f42650471625546e6a528479d4dcdc3c4a131f67965cc97cf7d4ad",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2363,12 +2381,12 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 16199,
-          "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
+          "bytes": 17967,
+          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "036fb9237f9fc6049bf049b192dc3e68c25c151071abe162a840f0f89ff83d1e",
+      "reviewSnapshotSha256": "27b7d2be2627102e1de57485c3ea60f32d8b817875c40b5aadb10747e426b2f2",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2388,32 +2406,32 @@
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 21769,
-          "sha256": "ae38c8b32cbeaf26264ff9c9e1681ad67fed3cd761b74c19c57f647042ff23b3"
+          "bytes": 21568,
+          "sha256": "44b97e2c1ccc41ff4b44225d474744b3df797e00ecefdbb7cf4334ac9e35101d"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
           "exists": true,
-          "bytes": 13279,
-          "sha256": "7ae3c0c97443b5ec251be0864187dfb844d6500c356e7f02386619c903eb4f31"
+          "bytes": 13610,
+          "sha256": "9d41820db49c478fd0b6694ca5e58aec595e45a8ad67dd87a7e4d1fe6aa0c543"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.test.ts",
           "exists": true,
-          "bytes": 14430,
-          "sha256": "5e26bb9891006abc3ee7df7d9f03fecd6cded51efde4673a3d9884d973a53215"
+          "bytes": 18393,
+          "sha256": "f266600513dd70ed77e045ea92ce3cff1d47506ba8fdbb151c543677beaebf4d"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
           "exists": true,
-          "bytes": 27373,
-          "sha256": "733a896f6f21d091797925dfff67a579d86dcdf8c695811008054b4eb9f638b4"
+          "bytes": 29437,
+          "sha256": "bef7441b904f59d7ba3cb8e96aa9642ecb3d23705076aa6ab58d73118dd04560"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
           "exists": true,
-          "bytes": 31704,
-          "sha256": "6c03ca2087a0c7fbd0606d41d4fd22fbead02eef1941d7472958e0935f49cf52"
+          "bytes": 42903,
+          "sha256": "3c6b5292d1f33c4b0716da18c5912bc0aad329c130af9178ed94ca397f1585a4"
         },
         {
           "path": "apps/mobile/src/lib/legal/policyLinks.ts",
@@ -2430,38 +2448,38 @@
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 23928,
-          "sha256": "2a31523c2e8d2eb1634a2127c9bc93d14b02f70a2bf88bd70b94c8ff2afa7f93"
+          "bytes": 26103,
+          "sha256": "697f4541c384bad710072eac220e0e53160496536e1d4c550403fe7606655945"
         },
         {
           "path": "supabase/functions/data-export/exportCore.ts",
           "exists": true,
-          "bytes": 15866,
-          "sha256": "15dfbb295a325f007961d69eff9ed067fad4fa0aae2ac7c79c931a27f2fcc330"
+          "bytes": 16680,
+          "sha256": "fafb4de7b05491d1f667253d50a9189fc0d6ff21d9c0d11c0666db76f9924875"
         },
         {
           "path": "supabase/functions/data-export/exportCore.test.ts",
           "exists": true,
-          "bytes": 12978,
-          "sha256": "f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b"
+          "bytes": 13951,
+          "sha256": "549c69b091c2e38e6d2a980aa1c3f5ad7f2434b5e5837188beb46363803f9d63"
         },
         {
           "path": "supabase/functions/data-export/exportRegistry.ts",
           "exists": true,
-          "bytes": 9423,
-          "sha256": "951e650d0285e60aa95bd00367aef91603c0767c3492f14f9e312c3bd328554a"
+          "bytes": 10203,
+          "sha256": "bd73ec992a056cafebd21897147d02df37bd66b7545784c06ca797b9998a4ca0"
         },
         {
           "path": "supabase/functions/data-export/exportRegistry.test.ts",
           "exists": true,
-          "bytes": 8848,
-          "sha256": "f51e5c081f06d720e85535bb9895f730d18983109a1188c1777adf7c7e4c4e39"
+          "bytes": 10778,
+          "sha256": "118c081db46604ecfe9e02c2a27db5d7feb107822e5a49f37ff6756273e13b4a"
         },
         {
           "path": "scripts/phase9/data-rights-smoke.mjs",
           "exists": true,
-          "bytes": 71937,
-          "sha256": "7a3fdde72e03e27e9bf6298d00ae533fae75f174206138c6962b208841fa6682"
+          "bytes": 76413,
+          "sha256": "4bff491dbec345e3100c58f9d4d666eb24803974f3304d48103202dca63b336f"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -2477,7 +2495,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "918565405a5e42d80b79786d4018864d0754d5e5957c2b87d81adabe5d7cfe6c",
+      "reviewSnapshotSha256": "625f56ef511aeec74c746925bcf6e1369026ca34ffce6be52add4a99c100d445",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2497,8 +2515,8 @@
         {
           "path": "apps/mobile/src/lib/analytics/eventRegistry.ts",
           "exists": true,
-          "bytes": 6195,
-          "sha256": "4bd87c32dc22264666f2f6c0ab45f847c7ca8299660a3805b1c3f6773030afe9"
+          "bytes": 6099,
+          "sha256": "51de958c223a1b32cf5d6fffdfff03ac1631bbfe9735de41995b084a90f23f53"
         },
         {
           "path": "apps/mobile/src/lib/analytics/postHogPersistenceCleanup.test.ts",
@@ -2610,7 +2628,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "b783e4c96b9fe346d158f9f91641df36da60226af740bfe23d45a0a1d04ad614",
+      "reviewSnapshotSha256": "330c1a9245d3f46ec4445da71e2a02d9734905dab1bbeec057caf975e1ae2713",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2930,24 +2948,24 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 55523,
-          "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
+          "bytes": 60110,
+          "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
         },
         {
           "path": "docs/hugeToDo/health-processor-inventory-v1.json",
           "exists": true,
-          "bytes": 3039,
-          "sha256": "fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674"
+          "bytes": 3386,
+          "sha256": "491c5389e410aae42006b22705bb5c6426c813d048c47b10dec131c3b897801a"
         },
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
           "exists": true,
-          "bytes": 32996,
-          "sha256": "91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4"
+          "bytes": 37059,
+          "sha256": "c7fcaeb47bd9a53591c8f5b1a0dd78bbfb9045c54588cc382a27a27ed6120289"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "76c99a6e0e0d79e4f5ff9f4b4c76c69e40b619a41cf1c00dde148ca3465b5aa8",
+      "reviewSnapshotSha256": "5b7c15fe8bd9aef35fea2de540ed76de60c4d7749d3a2d7a1567d330a718638a",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -3391,7 +3409,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence."
-  ]
+  "warnings": []
 }

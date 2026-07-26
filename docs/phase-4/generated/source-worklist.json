@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-26T13:06:48.733Z",
+  "generatedAt": "2026-07-26T22:16:47.224Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "591e3fdefbc744788e2de8bc7c3a869098e92e34",
-  "gitStatus": "M .github/workflows/quality.yml\n M 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md\n M 04_repo_docs/docs/MASTER_PLAN.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/ask/index.tsx\n M apps/mobile/src/app/conflict/[ruleId].tsx\n M apps/mobile/src/app/cycle/week.tsx\n M apps/mobile/src/app/cycle/why-tonight.tsx\n M apps/mobile/src/app/onboarding/reveal.tsx\n M apps/mobile/src/app/recommendations/index.tsx\n M apps/mobile/src/app/routine/plan.tsx\n M apps/mobile/src/app/s/[shareId].tsx\n M apps/mobile/src/app/share/conflict/[ruleId].tsx\n M apps/mobile/src/app/shelf/[id].tsx\n M apps/mobile/src/components/ui/ConflictBanner.tsx\n M apps/mobile/src/features/ask/answer.test.ts\n M apps/mobile/src/features/ask/answer.ts\n M apps/mobile/src/features/ask/claimsafety.test.ts\n M apps/mobile/src/features/ask/copy.ts\n M apps/mobile/src/features/ask/routeContract.test.ts\n M apps/mobile/src/features/ask/useAsk.ts\n M apps/mobile/src/features/community/copy.ts\n M apps/mobile/src/features/growth/ConflictCard.tsx\n M apps/mobile/src/features/growth/shareLandingRoute.test.ts\n M apps/mobile/src/features/growth/shareLinks.ts\n M apps/mobile/src/features/intelligence/claimsafety.test.ts\n M apps/mobile/src/features/intelligence/conflictChoiceIntegration.test.ts\n M apps/mobile/src/features/intelligence/conflictChoices.ts\n M apps/mobile/src/features/intelligence/conflictIdentity.test.ts\n M apps/mobile/src/features/intelligence/conflictRoutes.test.ts\n M apps/mobile/src/features/intelligence/engine.test.ts\n M apps/mobile/src/features/intelligence/engine.ts\n M apps/mobile/src/features/intelligence/overrides.test.ts\n M apps/mobile/src/features/intelligence/overrides.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.test.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.ts\n M apps/mobile/src/features/intelligence/presentation.test.ts\n M apps/mobile/src/features/intelligence/presentation.ts\n M apps/mobile/src/features/intelligence/rules.ts\n M apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx\n M apps/mobile/src/features/recommendations/catalog.ts\n M apps/mobile/src/features/recommendations/claimsafety.test.ts\n M apps/mobile/src/features/recommendations/copy.ts\n M apps/mobile/src/features/recommendations/engine.test.ts\n M apps/mobile/src/features/recommendations/engine.ts\n M apps/mobile/src/features/recommendations/fit.test.ts\n M apps/mobile/src/features/recommendations/fit.ts\n M apps/mobile/src/features/recommendations/useRecommendations.ts\n M apps/mobile/src/features/routine/firstInsight.test.ts\n M apps/mobile/src/features/routine/firstInsight.ts\n M apps/mobile/src/features/routine/generate.test.ts\n M apps/mobile/src/features/routine/generate.ts\n M apps/mobile/src/features/routine/orderStore.test.ts\n M apps/mobile/src/features/routine/scheduleContract.test.ts\n M apps/mobile/src/features/routine/usePlan.test.ts\n M apps/mobile/src/features/routine/usePlan.ts\n M apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.ts\n M apps/mobile/src/features/scheduler/profileMapping.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/settingsRoutes.test.ts\n M apps/mobile/src/features/shelf/shelfRoutes.test.ts\n M apps/mobile/src/features/shelf/useShelf.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M apps/mobile/src/features/subscription/claimsafety.test.ts\n M apps/mobile/src/features/subscription/copy.ts\n M apps/mobile/src/features/today/routineProjection.test.ts\n M apps/mobile/src/lib/analytics/eventRegistry.ts\n M apps/mobile/src/lib/analytics/track.test.ts\n M apps/mobile/src/lib/consent/dependentConsentContract.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts\n M apps/mobile/src/lib/launch/phase7.test.ts\n M apps/mobile/src/lib/legal/phase3LaunchGates.test.ts\n M docs/00-architecture.md\n M docs/02-ingredient-intelligence.md\n M docs/03-routine-builder.md\n M docs/08-subscriptions-paywall.md\n M docs/CODEX_IMPLEMENTATION_PROMPT.md\n M docs/MASTER_PLAN.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/legal-readiness.md\n M docs/phase-10/beta-event-schema.md\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/clinical-review-log.md\n M docs/phase-3/cosmetic-chemistry-review-log.md\n M docs/phase-3/legal-regulatory-review-log.md\n M docs/phase-3/privacy-security-review-log.md\n M docs/phase-3/review-packet-index.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-7/beta-evidence-dashboard.md\n M docs/phase-8/acquisition-dashboard.md\n M docs/phase-9/source-of-truth.md\n M package.json\n M scripts/phase10/beta-analytics-audit.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase7/check-core-loop.mjs\n M scripts/phase8/check-growth-store-readiness.mjs\n M scripts/phase9/rls-adversarial.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/schema_contract.test.sql\n M supabase/tests/database/skin_profile_quiz_provenance.test.sql\n M supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts\n?? apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts\n?? deno.lock\n?? docs/hugeToDo/CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md\n?? docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md\n?? docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md\n?? scripts/core02/clinical-rule-source-contract.test.mjs\n?? scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql\n?? scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql\n?? supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql\n?? supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql\n?? supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql\n?? supabase/tests/database/clinical_content_legacy_seal.test.sql\n?? supabase/tests/rehearsal/generated/catalog-operator-dblink-target.sql",
+  "gitSha": "5fd0a8a0975da3c537db533b54a9bf2400d452a9",
+  "gitStatus": "",
   "summary": {
     "itemCount": 13,
     "domainCounts": {
@@ -17,10 +17,10 @@
       "blocked": 7,
       "local-scaffold": 6
     },
-    "sourcePathCount": 323,
+    "sourcePathCount": 348,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -505,20 +505,20 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 16199,
-          "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
+          "bytes": 17967,
+          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 55523,
-          "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
+          "bytes": 60110,
+          "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 45140,
-          "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
+          "bytes": 41308,
+          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
         },
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
@@ -771,20 +771,20 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 16199,
-          "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
+          "bytes": 17967,
+          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 55523,
-          "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
+          "bytes": 60110,
+          "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 45140,
-          "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
+          "bytes": 41308,
+          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
         },
         {
           "path": "scripts/phase4/beta-coverage-report.mjs",
@@ -858,7 +858,7 @@
       "requiredEvidence": [
         "A content-addressed CAT-02 stage envelope binds an approved transform, zero-warning source QA, exact per-record reviews, source/build evidence, natural keys, record hashes, and the US territory.",
         "Fixture/candidate records, incomplete reviews, changed idempotent replays, duplicate natural keys, and existing-catalog conflicts fail closed before promotion.",
-        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants. Migration `0066` additionally seals the unreviewed legacy clinical-content fixtures against every API-role table privilege and migration-owner mutation. Migration `0067` gives `plpgsql_check` a checker-only ephemeral table shape for the known runtime-temporary-table release wrapper, so every other wrapper statement remains linted with no extension dependency or runtime/security change; approval, promotion, rollback, CAT-03 activation, and any future reviewed clinical publication intentionally require separate authority.",
+        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants. Migration `0066` additionally seals the unreviewed legacy clinical-content fixtures against every API-role table privilege and migration-owner mutation. Migration `0067` gives `plpgsql_check` a checker-only ephemeral table shape for the known runtime-temporary-table release wrapper. Migration `0069` preserves catalog provenance while moving owner Shelf projection behind an exact replay RPC and stable identity/tombstone boundary. Migration `0070` stages the exact current Ask grant tuple only as an unreleased `draft_blocked` successor without inventing review or approval; approval, promotion, rollback, CAT-03 activation, and any future reviewed clinical publication intentionally require separate authority.",
         "Every promoted projection traces through its immutable staged record and batch to source artifact, transform, approval, QA, and reviewer hashes.",
         "A reviewed hosted two-session drill proves atomic promotion, full retry on serialization failure, source-withdrawal containment, exact verification, and non-destructive rollback with shelf/correction references preserved."
       ],
@@ -876,9 +876,17 @@
         "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
         "supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql",
         "supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql",
+        "supabase/migrations/20260726000068_routine_adherence_authority.sql",
+        "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+        "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
         "supabase/tests/database/clinical_content_legacy_seal.test.sql",
         "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
+        "supabase/tests/database/routine_adherence_authority.test.sql",
+        "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+        "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
+        "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
+        "supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql",
         "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
@@ -970,6 +978,24 @@
           "sha256": "2b9a4fc1412edc2373366bb3532710dcaec0439f5b96bb669aa22246cdfbe9b4"
         },
         {
+          "path": "supabase/migrations/20260726000068_routine_adherence_authority.sql",
+          "exists": true,
+          "bytes": 33471,
+          "sha256": "37bfd190919f62e63f4e2a61580c5cfe96dea30af72f80259b8d3e9a704f8885"
+        },
+        {
+          "path": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+          "exists": true,
+          "bytes": 66673,
+          "sha256": "a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c"
+        },
+        {
+          "path": "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
+          "exists": true,
+          "bytes": 22228,
+          "sha256": "2e2abca7a88ab17992e7b3058d4b2f2c9ddbeb2accc59ae1cbf1a96b1b708706"
+        },
+        {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
           "bytes": 73519,
@@ -978,14 +1004,44 @@
         {
           "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
           "exists": true,
-          "bytes": 10088,
-          "sha256": "02df3c9e33e487c314f390ce18070b15c38a0cca46c113ae7b3e03fb905a21db"
+          "bytes": 10087,
+          "sha256": "beff4edb8b7c4eebdfb7afaa664fc2c201aaa2175f0bef4a53835aa68f73639c"
         },
         {
           "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
           "exists": true,
-          "bytes": 3300,
-          "sha256": "d8accade3b03f31827bffcf9ddf82e407b3766cb645908be2ad6a31b9c03558d"
+          "bytes": 3335,
+          "sha256": "f1fdfa4a048aed29ff4eac806bdffdcc4b9abb4b36e135ef02d89620f416f653"
+        },
+        {
+          "path": "supabase/tests/database/routine_adherence_authority.test.sql",
+          "exists": true,
+          "bytes": 38297,
+          "sha256": "4bce87e1bc3b6c1c93216a0a421a75dfbc03c8276ad4c77b77d8049ff3bbc0f3"
+        },
+        {
+          "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+          "exists": true,
+          "bytes": 50468,
+          "sha256": "2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8"
+        },
+        {
+          "path": "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
+          "exists": true,
+          "bytes": 13926,
+          "sha256": "690567e280ba547157bf5fb4f9c4b46e9379de604590eb9f67c6d1405e1bd973"
+        },
+        {
+          "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
+          "exists": true,
+          "bytes": 8430,
+          "sha256": "6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2"
+        },
+        {
+          "path": "supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql",
+          "exists": true,
+          "bytes": 7066,
+          "sha256": "c714d1001be6ecb2579d4307621d0f45bcfdd1019c983551618cb42eb9a795db"
         },
         {
           "path": "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
@@ -1020,8 +1076,8 @@
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
-          "bytes": 109210,
-          "sha256": "df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d"
+          "bytes": 109810,
+          "sha256": "21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c"
         },
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
@@ -1032,8 +1088,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35199,
-          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
+          "bytes": 36074,
+          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
         },
         {
           "path": "docs/phase-4/catalog-import-promotion-runbook.md",
@@ -1102,8 +1158,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 41151,
-          "sha256": "5b913ce21150cbd017edb3d39851c3aac1f396f93709c026a3f100fdd37684f8"
+          "bytes": 41871,
+          "sha256": "aa90ffccdb573042a9a4679a4507284010042e693e067c6e0dc3fe47db608cfd"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -1150,20 +1206,20 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 16199,
-          "sha256": "72dea59e32637652495e66be3d882714f4fef1ff43fa4f795fbc28b42c9edb9a"
+          "bytes": 17967,
+          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 55523,
-          "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
+          "bytes": 60110,
+          "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 45140,
-          "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
+          "bytes": 41308,
+          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
@@ -1240,8 +1296,8 @@
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
-          "bytes": 109210,
-          "sha256": "df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d"
+          "bytes": 109810,
+          "sha256": "21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c"
         },
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
@@ -1252,8 +1308,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35199,
-          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
+          "bytes": 36074,
+          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
         }
       ]
     },
@@ -1476,8 +1532,8 @@
         {
           "path": "apps/mobile/src/features/shelf/freshnessMigration.test.ts",
           "exists": true,
-          "bytes": 4873,
-          "sha256": "fa08aa33695c6e2a00a7ff7901c5859077376eeb15e2cec8abf40058314257dc"
+          "bytes": 4858,
+          "sha256": "03808fae36a3a74134bcda3d5db0e729729dcde2653b0331a7d481a5a71f9689"
         },
         {
           "path": "apps/mobile/src/features/shelf/IntakeContext.test.ts",
@@ -1510,6 +1566,12 @@
           "sha256": "8106cbcfb4d79040f6547234f9afcc2627b9adaa0ce529789544085b5f6ed679"
         },
         {
+          "path": "apps/mobile/src/features/shelf/limits.ts",
+          "exists": true,
+          "bytes": 222,
+          "sha256": "8f469d2cafccc1f3ebb14b4ac4e09951d4e58ab63df7bea88c4906a3b8aa8449"
+        },
+        {
           "path": "apps/mobile/src/features/shelf/LocalDateField.tsx",
           "exists": true,
           "bytes": 1878,
@@ -1524,8 +1586,8 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 8204,
-          "sha256": "f03148aaf4096689edeb7b1bee8eaf2d95eb44734a5d701b5f06af19b62a5916"
+          "bytes": 4655,
+          "sha256": "13dfde9b8a5490f67b5269271ae0bdf6bb3910ba5b55b4db60560690d7a56eac"
         },
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
@@ -1560,20 +1622,20 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 69329,
-          "sha256": "92a87a442d7bb92878cb10612b5edd6d3e8badc310eedc539e6b1b4ac754ea79"
+          "bytes": 69745,
+          "sha256": "9f2bff3241c5948522fa56e0d4e8857c24cd46b38d3e9b9868dd5416d24f1f68"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 39839,
-          "sha256": "821345dd832c7479d0329ad0e85a5e438be0f77acbb4d219ed735aab7a862ba3"
+          "bytes": 57329,
+          "sha256": "c000ac66f164e1a2118cd5fe153f32a8c6565388534319825bfb0728cec29e02"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
           "exists": true,
-          "bytes": 31307,
-          "sha256": "5596f52b4eb96cfb43c349773677766e96557f315bb70e2092e711b27f7570b1"
+          "bytes": 58796,
+          "sha256": "218dd66ae24c4e301b476fe878ddcfc614e9acb435045a1571375ee399893d15"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
@@ -1584,8 +1646,8 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 10185,
-          "sha256": "4835a4911aa8bc4b0bae235a85ed5cc681e67ac75d145917aadcbf0771f3f4a8"
+          "bytes": 10545,
+          "sha256": "060113bd3a3af609cae6cf0d022bfcbe5292e71cd7cc91e4fac6c93d4608c9ec"
         },
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
@@ -1596,14 +1658,14 @@
         {
           "path": "apps/mobile/src/app/shelf/search.tsx",
           "exists": true,
-          "bytes": 24405,
-          "sha256": "601e8b0ee413b1fa04048bcb52912b785897f912fdb4dc1e08743f7bce533fe0"
+          "bytes": 24504,
+          "sha256": "193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087"
         },
         {
           "path": "apps/mobile/src/app/shelf/manual.tsx",
           "exists": true,
-          "bytes": 17400,
-          "sha256": "e9e38d15ff3caf085a6c57cf153934d7318aefdcc2fef4985a0dd2526bca2c51"
+          "bytes": 17625,
+          "sha256": "7b5be927575a0fcc5febeafe03511c1bda402e591644707ffb167807bccb3190"
         },
         {
           "path": "apps/mobile/src/features/recommendations/applyPreferences.test.ts",
@@ -1778,10 +1840,15 @@
         "apps/mobile/src/features/shelf/freshness.ts",
         "apps/mobile/src/features/shelf/freshness.test.ts",
         "apps/mobile/src/features/shelf/freshnessMigration.test.ts",
+        "apps/mobile/src/features/shelf/limits.ts",
         "apps/mobile/src/features/shelf/paoProvenance.ts",
         "apps/mobile/src/features/shelf/paoProvenance.test.ts",
         "apps/mobile/src/features/shelf/store.ts",
         "apps/mobile/src/features/shelf/store.test.ts",
+        "apps/mobile/src/lib/offline/shelfMirrorQueue.ts",
+        "apps/mobile/src/lib/offline/shelfMirrorQueue.test.ts",
+        "apps/mobile/src/lib/offline/OfflineSync.tsx",
+        "apps/mobile/src/lib/offline/OfflineSync.test.ts",
         "supabase/functions/catalog-lookup/index.ts",
         "supabase/functions/catalog-lookup/catalogContract.ts",
         "supabase/functions/catalog-lookup/catalogContract.test.ts",
@@ -1794,27 +1861,30 @@
         "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
         "supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql",
         "supabase/migrations/20260722000062_catalog_curation_statement_guard.sql",
+        "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
-        "supabase/tests/database/cat07_truthful_freshness.test.sql"
+        "supabase/tests/database/cat07_truthful_freshness.test.sql",
+        "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+        "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql"
       ],
       "sourcePaths": [
         {
           "path": "docs/04-smart-shelf.md",
           "exists": true,
-          "bytes": 62801,
-          "sha256": "c3abb13a3d3235e666d0de99aa4f8c1a47b0a8efe18ec2a473b3a5aa718ce855"
+          "bytes": 66848,
+          "sha256": "8e6c801570fc9943abc80b61f0d49f5f130090627c979f04e2017bd4f18123c6"
         },
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 444559,
-          "sha256": "e46c024d4e02036c46e53130a1b08e54ca34e1cb00f8a6df3c0de80050e89d8a"
+          "bytes": 462555,
+          "sha256": "69509ba380bf0f1e071f60d96ee58b041689cc18576126c94c4b62f89feda95d"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
           "exists": true,
-          "bytes": 15344,
-          "sha256": "0a6ae408b5eede2db6b93952e54da250e81b71e08fc69d4f8be1f54625f8a9ab"
+          "bytes": 15830,
+          "sha256": "d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b"
         },
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
@@ -1843,8 +1913,8 @@
         {
           "path": "apps/mobile/src/app/shelf/search.tsx",
           "exists": true,
-          "bytes": 24405,
-          "sha256": "601e8b0ee413b1fa04048bcb52912b785897f912fdb4dc1e08743f7bce533fe0"
+          "bytes": 24504,
+          "sha256": "193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
@@ -1873,14 +1943,14 @@
         {
           "path": "apps/mobile/src/features/notifications/store.ts",
           "exists": true,
-          "bytes": 11233,
-          "sha256": "c4a58487812e87b538741c9db719437bd92dcc1d2b482605ced3997d7ad6862d"
+          "bytes": 9907,
+          "sha256": "16ecbc9ac6e9e4b7fc6e52ddc6f0ee6fca8719f6ad18f888800f5ea387277c38"
         },
         {
           "path": "apps/mobile/src/features/notifications/store.test.ts",
           "exists": true,
-          "bytes": 9408,
-          "sha256": "14ab5ba14dedd4c4854b0cba685764e65de3237f8d130d543c09f47c5b7a5608"
+          "bytes": 7928,
+          "sha256": "ae99c70b099cfdad28cdb9a882d9ee06fc7ecbe524397a50c5a1d672d057cf47"
         },
         {
           "path": "apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts",
@@ -1915,8 +1985,14 @@
         {
           "path": "apps/mobile/src/features/shelf/freshnessMigration.test.ts",
           "exists": true,
-          "bytes": 4873,
-          "sha256": "fa08aa33695c6e2a00a7ff7901c5859077376eeb15e2cec8abf40058314257dc"
+          "bytes": 4858,
+          "sha256": "03808fae36a3a74134bcda3d5db0e729729dcde2653b0331a7d481a5a71f9689"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/limits.ts",
+          "exists": true,
+          "bytes": 222,
+          "sha256": "8f469d2cafccc1f3ebb14b4ac4e09951d4e58ab63df7bea88c4906a3b8aa8449"
         },
         {
           "path": "apps/mobile/src/features/shelf/paoProvenance.ts",
@@ -1933,14 +2009,38 @@
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
           "exists": true,
-          "bytes": 31307,
-          "sha256": "5596f52b4eb96cfb43c349773677766e96557f315bb70e2092e711b27f7570b1"
+          "bytes": 58796,
+          "sha256": "218dd66ae24c4e301b476fe878ddcfc614e9acb435045a1571375ee399893d15"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 39839,
-          "sha256": "821345dd832c7479d0329ad0e85a5e438be0f77acbb4d219ed735aab7a862ba3"
+          "bytes": 57329,
+          "sha256": "c000ac66f164e1a2118cd5fe153f32a8c6565388534319825bfb0728cec29e02"
+        },
+        {
+          "path": "apps/mobile/src/lib/offline/shelfMirrorQueue.ts",
+          "exists": true,
+          "bytes": 8443,
+          "sha256": "e03000a6c457814ce75e7ccd62375bc6fe4bd0681185a86885d8292e7a274f61"
+        },
+        {
+          "path": "apps/mobile/src/lib/offline/shelfMirrorQueue.test.ts",
+          "exists": true,
+          "bytes": 11914,
+          "sha256": "994b92f546d3b3cdfafbab14a52a1ddbb82d4a4bd5d793fa9b14ce7ac6a52b38"
+        },
+        {
+          "path": "apps/mobile/src/lib/offline/OfflineSync.tsx",
+          "exists": true,
+          "bytes": 12107,
+          "sha256": "26dd7af6d4083ed8bf06a88bbc08887ea0a5d6b197600ed108cc81de4ce74af8"
+        },
+        {
+          "path": "apps/mobile/src/lib/offline/OfflineSync.test.ts",
+          "exists": true,
+          "bytes": 22933,
+          "sha256": "37a321d29dff0aec1140d3060a417e0d928a8306774da039d0d3dc3b551664ad"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
@@ -2015,6 +2115,12 @@
           "sha256": "f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1"
         },
         {
+          "path": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+          "exists": true,
+          "bytes": 66673,
+          "sha256": "a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c"
+        },
+        {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
           "bytes": 36567,
@@ -2023,8 +2129,20 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35199,
-          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
+          "bytes": 36074,
+          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
+        },
+        {
+          "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+          "exists": true,
+          "bytes": 50468,
+          "sha256": "2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8"
+        },
+        {
+          "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
+          "exists": true,
+          "bytes": 8430,
+          "sha256": "6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2"
         }
       ]
     },
@@ -2036,7 +2154,7 @@
       "launchGate": "B-CATALOG-SEED",
       "owner": "Engineering + catalog operator + database reviewer",
       "requiredEvidence": [
-        "The complete 66-migration chain through `0067`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, the `0065` CAT-08 transition/default-ACL repair, the additional `0066` legacy clinical-content immutability seal, and the narrow `0067` checker-only runtime-temporary-table shape, passes with the catalog, profile-provenance, CAT-07, CAT-08, clinical-content-seal, and lint-contract pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, clinical publication, or campaign release.",
+        "The complete 69-migration chain through `0070`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, the `0065` CAT-08 transition/default-ACL repair, the additional `0066` legacy clinical-content immutability seal, the narrow `0067` checker-only runtime-temporary-table shape, the `0068` authoritative routine-adherence boundary, the `0069` owner-derived Shelf/completion replay bridge, and the `0070` unreleased draft-only health-consent-copy successor staging boundary, passes with the catalog, profile-provenance, CAT-07, CAT-08, clinical-content-seal, lint-contract, adherence, sync-bridge, and consent-draft-staging pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, clinical publication, or campaign release.",
         "Barcode and search use service-role-only RPCs over the same positive source/product/correction/CAT-03 eligibility relation; `service_role` has no direct catalog-table read, while explicitly safe authenticated reads retain positive RLS.",
         "Only rows in the exact active global CAT-03 campaign with active campaign-scoped product authorization, reviewed `verified` or `usable` quality, recommendation eligibility, production/legal-approved sources, and zero independent product holds in `active` or `repair_attested` state can be served; untrusted open intake remains owner-scoped, and accepting, rejecting, closing, or deleting a report cannot release its hold.",
         "Barcode mappings are independently reviewed, direct authenticated reads cannot bypass source withdrawal, and every held/unknown reason returns the same no-match/manual fallback."
@@ -2054,6 +2172,9 @@
         "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
         "supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql",
         "supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql",
+        "supabase/migrations/20260726000068_routine_adherence_authority.sql",
+        "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+        "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_launch_curation.test.sql",
@@ -2062,6 +2183,11 @@
         "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
         "supabase/tests/database/clinical_content_legacy_seal.test.sql",
         "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
+        "supabase/tests/database/routine_adherence_authority.test.sql",
+        "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+        "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
+        "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
+        "supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql",
         "supabase/tests/database/schema_contract.test.sql",
         "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql",
@@ -2150,6 +2276,24 @@
           "sha256": "2b9a4fc1412edc2373366bb3532710dcaec0439f5b96bb669aa22246cdfbe9b4"
         },
         {
+          "path": "supabase/migrations/20260726000068_routine_adherence_authority.sql",
+          "exists": true,
+          "bytes": 33471,
+          "sha256": "37bfd190919f62e63f4e2a61580c5cfe96dea30af72f80259b8d3e9a704f8885"
+        },
+        {
+          "path": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+          "exists": true,
+          "bytes": 66673,
+          "sha256": "a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c"
+        },
+        {
+          "path": "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
+          "exists": true,
+          "bytes": 22228,
+          "sha256": "2e2abca7a88ab17992e7b3058d4b2f2c9ddbeb2accc59ae1cbf1a96b1b708706"
+        },
+        {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
           "bytes": 36567,
@@ -2158,8 +2302,8 @@
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
-          "bytes": 109210,
-          "sha256": "df492491e2243ea15ade299d6f173cd8f3e7662fd53224a0718e22f7c2da965d"
+          "bytes": 109810,
+          "sha256": "21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c"
         },
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
@@ -2170,8 +2314,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35199,
-          "sha256": "3cc0ff929a7f7fea3f409cb2a3baa40befb083e7fccade68df05dc9c3b238253"
+          "bytes": 36074,
+          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
         },
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
@@ -2182,26 +2326,56 @@
         {
           "path": "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
           "exists": true,
-          "bytes": 21311,
-          "sha256": "f80721e651b17edba0658ec2b1435b4469157a13855b1b286e1bb8d44bbf33f9"
+          "bytes": 21310,
+          "sha256": "d3769a0f806f71ce3ae9468c3d5a6400e9fe33b685d3513c8a552f0a97e9eff9"
         },
         {
           "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
           "exists": true,
-          "bytes": 10088,
-          "sha256": "02df3c9e33e487c314f390ce18070b15c38a0cca46c113ae7b3e03fb905a21db"
+          "bytes": 10087,
+          "sha256": "beff4edb8b7c4eebdfb7afaa664fc2c201aaa2175f0bef4a53835aa68f73639c"
         },
         {
           "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
           "exists": true,
-          "bytes": 3300,
-          "sha256": "d8accade3b03f31827bffcf9ddf82e407b3766cb645908be2ad6a31b9c03558d"
+          "bytes": 3335,
+          "sha256": "f1fdfa4a048aed29ff4eac806bdffdcc4b9abb4b36e135ef02d89620f416f653"
+        },
+        {
+          "path": "supabase/tests/database/routine_adherence_authority.test.sql",
+          "exists": true,
+          "bytes": 38297,
+          "sha256": "4bce87e1bc3b6c1c93216a0a421a75dfbc03c8276ad4c77b77d8049ff3bbc0f3"
+        },
+        {
+          "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+          "exists": true,
+          "bytes": 50468,
+          "sha256": "2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8"
+        },
+        {
+          "path": "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
+          "exists": true,
+          "bytes": 13926,
+          "sha256": "690567e280ba547157bf5fb4f9c4b46e9379de604590eb9f67c6d1405e1bd973"
+        },
+        {
+          "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
+          "exists": true,
+          "bytes": 8430,
+          "sha256": "6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2"
+        },
+        {
+          "path": "supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql",
+          "exists": true,
+          "bytes": 7066,
+          "sha256": "c714d1001be6ecb2579d4307621d0f45bcfdd1019c983551618cb42eb9a795db"
         },
         {
           "path": "supabase/tests/database/schema_contract.test.sql",
           "exists": true,
-          "bytes": 33990,
-          "sha256": "4a4ab8a9917c2df4909aab4748391ce36d29588fd6e9c639f8d5d88d2429e040"
+          "bytes": 36225,
+          "sha256": "351d42cfe6c37f01fb03bfc85f51df689649b6fbfddcfa14ebfa42cb87943c7a"
         },
         {
           "path": "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
@@ -2272,8 +2446,8 @@
         {
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
-          "bytes": 16088,
-          "sha256": "3c0f7fcceb67851a9dd233d53c83c6d1fa004aa9675c0bd5f9e7b0dc9ec956dc"
+          "bytes": 16672,
+          "sha256": "8f187a947b4038edc9ffa3c70340580f2ad522b9584bd6bd4f962b32dec40787"
         }
       ]
     },
@@ -2315,8 +2489,8 @@
         {
           "path": "docs/04-smart-shelf.md",
           "exists": true,
-          "bytes": 62801,
-          "sha256": "c3abb13a3d3235e666d0de99aa4f8c1a47b0a8efe18ec2a473b3a5aa718ce855"
+          "bytes": 66848,
+          "sha256": "8e6c801570fc9943abc80b61f0d49f5f130090627c979f04e2017bd4f18123c6"
         },
         {
           "path": "supabase/migrations/20260614000026_phase4_catalog.sql",
@@ -2461,7 +2635,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }
