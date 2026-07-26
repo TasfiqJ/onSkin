@@ -13,6 +13,7 @@ export const OUTBOX_SCHEMA_VERSION = 5 as const;
 export const OUTBOX_LEGACY_SCHEMA_VERSIONS = [1, 2, 3, 4] as const;
 export const OUTBOX_ROW_SCHEMA_VERSION = 1 as const;
 export const MAX_OUTBOX_ROWS = 512;
+export const MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS = 128;
 export const MAX_SHELF_SCAN_OUTBOX_ROWS = 128;
 export const MAX_OUTBOX_REVISIONS = 1_024;
 export const MAX_OUTBOX_PAYLOAD_BYTES = 64 * 1024;
@@ -119,7 +120,7 @@ export type OutboxRow = Readonly<{
 }>;
 
 export type OutboxRevision = Readonly<{
-  ownerHash: string | null;
+  ownerHash: string;
   entityType: OutboxEntityType;
   entityId: string;
   revision: number;
@@ -533,7 +534,7 @@ function ownerEntityIdentity(
 }
 
 function revisionIdentity(revision: OutboxRevision): string {
-  return `${revision.ownerHash ?? 'legacy'}:${entityIdentity(revision)}`;
+  return `${revision.ownerHash}:${entityIdentity(revision)}`;
 }
 
 function notificationPreferencesEntityId(ownerHash: string): string {
@@ -711,7 +712,7 @@ function decodeRevision(value: unknown): OutboxRevision {
   });
 }
 
-function decodeLegacyRevision(value: unknown, rows: readonly OutboxRow[]): OutboxRevision {
+function decodeLegacyRevision(value: unknown, rows: readonly OutboxRow[]): OutboxRevision[] {
   if (
     !isRecord(value) ||
     !hasExactKeys(value, ['entityType', 'entityId', 'revision']) ||
@@ -728,12 +729,17 @@ function decodeLegacyRevision(value: unknown, rows: readonly OutboxRow[]): Outbo
       .filter((row) => row.entityType === value.entityType && row.entityId === value.entityId)
       .map((row) => row.ownerHash),
   );
-  return Object.freeze({
-    ownerHash: owners.size === 1 ? [...owners][0]! : null,
-    entityType: value.entityType,
-    entityId: value.entityId,
-    revision: Number(value.revision),
-  });
+  // V1 did not persist revision ownership. Expand only to owners evidenced by
+  // matching rows; an orphan cannot be scoped safely and is intentionally
+  // dropped. The expansion is bounded by the decoded row limit.
+  return [...owners].sort().map((ownerHash) =>
+    Object.freeze({
+      ownerHash,
+      entityType: value.entityType as OutboxEntityType,
+      entityId: value.entityId as string,
+      revision: Number(value.revision),
+    }),
+  );
 }
 
 export function emptyOutboxEnvelope(): OutboxEnvelope {
@@ -780,7 +786,7 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
   const rows = parsed.rows.map(decodeRow);
   const revisions =
     parsed.version === 1
-      ? parsed.revisions.map((revision) => decodeLegacyRevision(revision, rows))
+      ? parsed.revisions.flatMap((revision) => decodeLegacyRevision(revision, rows))
       : parsed.revisions.map(decodeRevision);
   if (
     new Set(rows.map((row) => row.operationId)).size !== rows.length ||
@@ -788,7 +794,7 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     rows.some((row) => {
       const revision = revisions.find(
         (candidate) =>
-          (candidate.ownerHash === null || candidate.ownerHash === row.ownerHash) &&
+          candidate.ownerHash === row.ownerHash &&
           entityIdentity(candidate) === entityIdentity(row),
       );
       return !revision || revision.revision < row.clientRevision;
@@ -816,40 +822,69 @@ function sortRows(rows: readonly OutboxRow[]): OutboxRow[] {
   );
 }
 
-function reclaimTerminalShelfScanCapacity(
+function reclaimTerminalImmutableTelemetryCapacity(
   envelope: OutboxEnvelope,
-  ownerHash: string,
+  input: Readonly<{
+    ownerHash: string;
+    entityType: OutboxEntityType;
+    entityId: string;
+  }>,
 ): OutboxEnvelope {
-  const candidates = sortRows(
-    envelope.rows.filter(
-      (row) =>
-        row.entityType === 'shelf_scan' && row.ownerHash === ownerHash && row.state === 'dead',
-    ),
-  );
   const revisionMatchesRow = (revision: OutboxRevision, row: OutboxRow) =>
     revision.entityType === row.entityType &&
     revision.entityId === row.entityId &&
-    (revision.ownerHash === null || revision.ownerHash === row.ownerHash);
+    revision.ownerHash === row.ownerHash;
+  const identity = `${input.entityType}:${input.entityId.toLowerCase()}`;
   let rows = [...envelope.rows];
   let revisions = [...envelope.revisions];
-  let candidateIndex = 0;
-  const hasCapacity = () =>
-    rows.filter((row) => row.entityType === 'shelf_scan').length < MAX_SHELF_SCAN_OUTBOX_ROWS &&
-    rows.length < MAX_OUTBOX_ROWS &&
-    revisions.length < MAX_OUTBOX_REVISIONS;
-
-  while (!hasCapacity()) {
-    const victim = candidates[candidateIndex];
+  let reclaimed = false;
+  const projectedRowCount = () =>
+    rows.filter(
+      (row) =>
+        ownerEntityIdentity(row) !== `${input.ownerHash}:${identity}` || row.state === 'leased',
+    ).length + 1;
+  const projectedRevisionCount = () =>
+    revisions.filter(
+      (revision) => revision.ownerHash !== input.ownerHash || entityIdentity(revision) !== identity,
+    ).length + 1;
+  const removeOldest = (candidate: (row: OutboxRow) => boolean) => {
+    const victim = sortRows(rows.filter(candidate))[0];
     if (!victim) fail(OUTBOX_LIMIT_REACHED);
-    candidateIndex += 1;
     rows = rows.filter((row) => row.operationId !== victim.operationId);
     revisions = revisions.filter(
       (revision) =>
         !revisionMatchesRow(revision, victim) ||
         rows.some((row) => revisionMatchesRow(revision, row)),
     );
+    reclaimed = true;
+  };
+  const entityCap =
+    input.entityType === 'notification_delivery'
+      ? MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS
+      : input.entityType === 'shelf_scan'
+        ? MAX_SHELF_SCAN_OUTBOX_ROWS
+        : null;
+
+  while (
+    entityCap !== null &&
+    rows.filter((row) => row.entityType === input.entityType).length + 1 > entityCap
+  ) {
+    removeOldest(
+      (row) =>
+        row.ownerHash === input.ownerHash &&
+        row.entityType === input.entityType &&
+        row.state === 'dead',
+    );
   }
-  if (candidateIndex === 0) return envelope;
+  while (projectedRowCount() > MAX_OUTBOX_ROWS || projectedRevisionCount() > MAX_OUTBOX_REVISIONS) {
+    removeOldest(
+      (row) =>
+        row.ownerHash === input.ownerHash &&
+        isImmutableEventEntityType(row.entityType) &&
+        row.state === 'dead',
+    );
+  }
+  if (!reclaimed) return envelope;
 
   return Object.freeze({
     ...envelope,
@@ -943,7 +978,7 @@ export function enqueueShelfScanOutboxOperation(
   }>,
 ): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
   if (!SHA256_HEX.test(input.payloadHash)) fail();
-  return enqueueOutboxOperation(reclaimTerminalShelfScanCapacity(envelope, input.ownerHash), {
+  return enqueueOutboxOperation(envelope, {
     ...input,
     entityType: 'shelf_scan',
     operationKind: 'upsert',
@@ -1001,8 +1036,7 @@ function enqueueOutboxOperation(
     ...envelope.revisions
       .filter(
         (revision) =>
-          (revision.ownerHash === null || revision.ownerHash === input.ownerHash) &&
-          entityIdentity(revision) === identity,
+          revision.ownerHash === input.ownerHash && entityIdentity(revision) === identity,
       )
       .map((revision) => revision.revision),
   );
@@ -1044,14 +1078,19 @@ function enqueueOutboxOperation(
     leaseOwner: null,
     leaseExpiresAt: null,
   });
-  const rows = envelope.rows.filter(
+  const capacityEnvelope = reclaimTerminalImmutableTelemetryCapacity(envelope, {
+    ownerHash: input.ownerHash,
+    entityType: input.entityType,
+    entityId: normalizedEntityId,
+  });
+  const rows = capacityEnvelope.rows.filter(
     (existing) =>
       ownerEntityIdentity(existing) !== `${input.ownerHash}:${identity}` ||
       existing.state === 'leased',
   );
   rows.push(row);
   if (rows.length > MAX_OUTBOX_ROWS) fail(OUTBOX_LIMIT_REACHED);
-  const revisions = envelope.revisions.filter(
+  const revisions = capacityEnvelope.revisions.filter(
     (revision) => revision.ownerHash !== input.ownerHash || entityIdentity(revision) !== identity,
   );
   revisions.push({
@@ -1338,10 +1377,9 @@ export function settleOutboxLease(
   }
   const random = input.random ?? 0.5;
   const latestRevisionByOwnerEntity = new Map<string, number>(
-    envelope.revisions.flatMap((revision) =>
-      revision.ownerHash === null
-        ? []
-        : [[`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const],
+    envelope.revisions.map(
+      (revision) =>
+        [`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const,
     ),
   );
   const rows = envelope.rows.flatMap((row): OutboxRow[] => {
@@ -1407,7 +1445,7 @@ export function settleOutboxLease(
       (row) =>
         row.entityType === revision.entityType &&
         row.entityId === revision.entityId &&
-        (revision.ownerHash === null || row.ownerHash === revision.ownerHash),
+        row.ownerHash === revision.ownerHash,
     );
   });
   return Object.freeze({
@@ -1435,10 +1473,9 @@ export function selectOutboxOwnerStatus(
   assertOwnerHash(input.ownerHash);
   assertEntityType(input.entityType);
   const latestRevisionByOwnerEntity = new Map<string, number>(
-    envelope.revisions.flatMap((revision) =>
-      revision.ownerHash === null
-        ? []
-        : [[`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const],
+    envelope.revisions.map(
+      (revision) =>
+        [`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const,
     ),
   );
   const rows = envelope.rows.filter(
@@ -1482,10 +1519,9 @@ export function retryDeadOutboxRows(
   if (!canonicalIso(input.now)) fail();
 
   const latestRevisionByOwnerEntity = new Map<string, number>(
-    envelope.revisions.flatMap((revision) =>
-      revision.ownerHash === null
-        ? []
-        : [[`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const],
+    envelope.revisions.map(
+      (revision) =>
+        [`${revision.ownerHash}:${entityIdentity(revision)}`, revision.revision] as const,
     ),
   );
   let retried = 0;

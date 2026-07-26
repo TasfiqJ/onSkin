@@ -2,7 +2,17 @@ import type { NotificationKind, NotificationTier } from '@onskin/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
-import { OUTBOX_STORAGE_KEY, decodeOutboxEnvelope } from '@/lib/offline/outbox.pure';
+import {
+  MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS,
+  MAX_OUTBOX_ROWS,
+  OUTBOX_STORAGE_KEY,
+  decodeOutboxEnvelope,
+  emptyOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueueNotificationDeliveryOutboxOperation,
+  enqueueShelfOutboxOperation,
+  type OutboxEnvelope,
+} from '@/lib/offline/outbox.pure';
 
 import {
   confirmSentLocalDelivery,
@@ -86,6 +96,27 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 const KEY = 'onskin.notiflog.v1';
 const NOW = Date.parse('2026-07-07T12:00:00.000Z');
+const OWNER_HASH = 'a'.repeat(64);
+const FOREIGN_OWNER_HASH = 'b'.repeat(64);
+const SHELF_PAYLOAD = {
+  catalog_product_id: null,
+  catalog_source_id: null,
+  catalog_match_quality: 'manual',
+  catalog_source_snapshot_date: null,
+  manual_name: 'Capacity fixture',
+  manual_brand: null,
+  barcode: null,
+  opened_at: null,
+  pao_months: null,
+  expiry_date: null,
+  is_opened: false,
+  pao_source: 'unknown',
+  expiry_source: 'unknown',
+  added_via: 'manual',
+  source_disclosure_ack_at: null,
+  status: 'active',
+  finished_at: null,
+} as const;
 
 type LegacySentRecord = Omit<SentRecord, 'eventId' | 'state'>;
 
@@ -99,6 +130,67 @@ function parseStoredRecords(): SentRecord[] {
 
 function recordSummaries(records: readonly SentRecord[]): LegacySentRecord[] {
   return records.map(({ kind, tier, at }) => ({ kind, tier, at }));
+}
+
+function uuid(value: number): string {
+  return `00000000-0000-4000-8000-${value.toString().padStart(12, '0')}`;
+}
+
+function withOutboxState(envelope: OutboxEnvelope, state: 'dead' | 'leased' | 'ready'): string {
+  const persisted = JSON.parse(encodeOutboxEnvelope(envelope)) as {
+    rows: {
+      state: string;
+      lastErrorClass: string | null;
+      leaseOwner: string | null;
+      leaseExpiresAt: string | null;
+    }[];
+  };
+  for (const row of persisted.rows) {
+    row.state = state;
+    row.lastErrorClass = state === 'dead' ? 'validation' : null;
+    row.leaseOwner = state === 'leased' ? uuid(900_000) : null;
+    row.leaseExpiresAt = state === 'leased' ? new Date(NOW + 30_000).toISOString() : null;
+  }
+  return encodeOutboxEnvelope(decodeOutboxEnvelope(JSON.stringify(persisted)));
+}
+
+function saturatedNotificationDeliveryOutbox(
+  state: 'dead' | 'leased' | 'ready',
+  ownerHash = OWNER_HASH,
+): string {
+  let envelope = emptyOutboxEnvelope();
+  for (let index = 0; index < MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS; index += 1) {
+    const sentAt = new Date(NOW - MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS + index).toISOString();
+    envelope = enqueueNotificationDeliveryOutboxOperation(envelope, {
+      operationId: uuid(100_000 + index),
+      ownerHash,
+      ownerGeneration: 7,
+      entityId: uuid(200_000 + index),
+      payload: {
+        kind: 'capture',
+        tier: 'behavioural',
+        sent_at: sentAt,
+      },
+      enqueuedAt: sentAt,
+    }).envelope;
+  }
+  return withOutboxState(envelope, state);
+}
+
+function saturatedDeadMutableOutbox(): string {
+  let envelope = emptyOutboxEnvelope();
+  for (let index = 0; index < MAX_OUTBOX_ROWS; index += 1) {
+    envelope = enqueueShelfOutboxOperation(envelope, {
+      operationId: uuid(300_000 + index),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: uuid(400_000 + index),
+      operationKind: 'upsert',
+      payload: SHELF_PAYLOAD,
+      enqueuedAt: new Date(NOW - MAX_OUTBOX_ROWS + index).toISOString(),
+    }).envelope;
+  }
+  return withOutboxState(envelope, 'dead');
 }
 
 describe('notification sent ledger', () => {
@@ -480,6 +572,98 @@ describe('notification sent ledger', () => {
     expect(mocks.storage.get(KEY)).toBe(ledgerBefore);
     expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(outboxBefore);
   });
+
+  it('atomically confirms delivery by reclaiming the oldest current-owner dead immutable event at the exact cap', async () => {
+    const eventId = '00000000-0000-4000-8000-000000000117';
+    const operationId = '00000000-0000-4000-8000-000000000218';
+    const oldestOperationId = uuid(100_000);
+    await reserveSentLocal(eventId, 'rampup', NOW);
+    mocks.storage.set(OUTBOX_STORAGE_KEY, saturatedNotificationDeliveryOutbox('dead'));
+
+    await expect(
+      confirmSentLocalDelivery({
+        eventId,
+        operationId,
+        kind: 'rampup',
+        at: NOW,
+        owner: { ownerId: 'owner-a', ownerGeneration: 7 },
+      }),
+    ).resolves.toEqual({ changed: true, outboxQueued: true });
+
+    expect(parseStoredRecords()).toEqual([
+      expect.objectContaining({ eventId, state: 'delivered' }),
+    ]);
+    const persisted = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null);
+    expect(persisted.rows).toHaveLength(MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS);
+    expect(persisted.revisions).toHaveLength(MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS);
+    expect(persisted.rows.some((row) => row.operationId === oldestOperationId)).toBe(false);
+    expect(persisted.rows).toContainEqual(
+      expect.objectContaining({
+        operationId,
+        ownerHash: OWNER_HASH,
+        ownerGeneration: 7,
+        entityType: 'notification_delivery',
+        entityId: eventId,
+        clientRevision: 1,
+        state: 'ready',
+        payload: {
+          kind: 'rampup',
+          tier: 'behavioural',
+          sent_at: new Date(NOW).toISOString(),
+        },
+      }),
+    );
+  });
+
+  it.each([
+    {
+      saturation: 'live current-owner immutable events',
+      fixture: () => saturatedNotificationDeliveryOutbox('ready'),
+    },
+    {
+      saturation: 'leased current-owner immutable events',
+      fixture: () => saturatedNotificationDeliveryOutbox('leased'),
+    },
+    {
+      saturation: 'foreign dead immutable events',
+      fixture: () => saturatedNotificationDeliveryOutbox('dead', FOREIGN_OWNER_HASH),
+    },
+    {
+      saturation: 'current-owner dead mutable rows',
+      fixture: saturatedDeadMutableOutbox,
+    },
+  ])(
+    'preserves reserved-ledger and outbox bytes under non-reclaimable $saturation',
+    async ({ fixture }) => {
+      const eventId = '00000000-0000-4000-8000-000000000118';
+      const operationId = '00000000-0000-4000-8000-000000000219';
+      await reserveSentLocal(eventId, 'capture', NOW);
+      mocks.storage.set(OUTBOX_STORAGE_KEY, fixture());
+      const ledgerBefore = mocks.storage.get(KEY);
+      const outboxBefore = mocks.storage.get(OUTBOX_STORAGE_KEY);
+
+      await expect(
+        confirmSentLocalDelivery({
+          eventId,
+          operationId,
+          kind: 'capture',
+          at: NOW,
+          owner: { ownerId: 'owner-a', ownerGeneration: 7 },
+        }),
+      ).rejects.toThrow(SENT_LEDGER_WRITE_UNCERTAIN);
+
+      expect(mocks.storage.get(KEY)).toBe(ledgerBefore);
+      expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(outboxBefore);
+      expect(parseStoredRecords()).toEqual([
+        expect.objectContaining({ eventId, state: 'reserved' }),
+      ]);
+      expect(
+        decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows.some(
+          (row) => row.operationId === operationId,
+        ),
+      ).toBe(false);
+    },
+  );
 
   it('confirms an authenticated commit only when both transaction values match after response loss', async () => {
     const eventId = '00000000-0000-4000-8000-000000000113';
