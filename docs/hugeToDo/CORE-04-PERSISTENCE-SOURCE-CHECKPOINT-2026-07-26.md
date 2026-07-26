@@ -156,6 +156,22 @@ remain the executable behavior evidence. Passing them proves only the inspected
 source and test environment; the structural contract is not runtime,
 process-death, native-Keychain, or durability proof.
 
+## Exact-source development E2E evidence
+
+The retained
+[`CORE-04 persistence development E2E report`](../../test-results/human-e2e/2026-07-26/core04-persistence-current/report.md)
+binds an Expo-web browser run to source revision
+`b4560797b52e6910c17b03d8f66c6ef53c20900d`. At reported CSS viewports
+`390 x 845` and `360 x 641`, it exercised AM failure copy, retry, reload,
+AM/PM independence, both cancel paths, an eight-night Custom-cycle save and
+reload, and downstream Today projection. The compact routes reported no
+horizontal overflow and the browser log contained no console errors.
+
+That run reused same-origin anonymous-owner development data established by an
+earlier same-day onboarding run. It is not a clean-install result and is not
+native iOS, storage durability, process-death, offline, timezone, accessibility,
+archive, privacy, export-compliance, legal, App Review, or market evidence.
+
 ## Primary-Source Boundaries
 
 The checkpoint uses these current primary sources to bound, rather than

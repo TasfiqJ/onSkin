@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "requestedViewport": {
+    "width": 360,
+    "height": 640
+  },
+  "reportedViewport": {
+    "width": 360,
+    "height": 641
+  },
+  "routes": {
+    "/routine/plan": {
+      "bodyScrollWidth": 360,
+      "documentScrollWidth": 360,
+      "horizontalOverflow": false
+    },
+    "/cycle/settings": {
+      "bodyScrollWidth": 360,
+      "documentScrollWidth": 360,
+      "horizontalOverflow": false
+    }
+  }
+}

@@ -1419,7 +1419,9 @@
         "apps/mobile/src/features/settings/localPrivateDataKeys.ts",
         "apps/mobile/src/features/settings/localPrivateData.test.ts",
         "apps/mobile/src/features/settings/localDeviceExport.ts",
-        "apps/mobile/src/features/settings/localDeviceExport.test.ts"
+        "apps/mobile/src/features/settings/localDeviceExport.test.ts",
+        "test-results/human-e2e/2026-07-26/core04-persistence-current/report.md",
+        "test-results/human-e2e/2026-07-26/core04-persistence-current/summary.json"
       ]
     },
     {

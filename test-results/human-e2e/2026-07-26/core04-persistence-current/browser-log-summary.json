@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "b4560797b52e6910c17b03d8f66c6ef53c20900d",
+  "errors": [],
+  "expectedDevelopmentWarnings": [
+    "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+    "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+    "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+    "props.pointerEvents is deprecated. Use style.pointerEvents"
+  ],
+  "note": "Warnings repeated after development reloads. No browser console error entry was observed."
+}
