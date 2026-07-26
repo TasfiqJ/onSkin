@@ -67,6 +67,9 @@ Start here:
 - [CAT-08 Separate Internal Console](../../apps/catalog-operator-console/README.md)
 - [CAT-08 Aggregate Source Contract](../../scripts/phase4/catalog-operator-authority-contract.mjs)
 - [CAT-08 Aggregate Contract Tests](../../scripts/phase4/catalog-operator-authority-contract.test.mjs)
+- [CAT-09 Beta Event Schema and Fixed Formulas](../phase-10/beta-event-schema.md)
+- [CAT-09 Monitoring Dashboard Contract](../phase-11/monitoring-dashboards.md)
+- [CAT-09 Observability Payload Audit](../phase-9/observability-payload-audit.md)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -337,6 +340,20 @@ cutover result or separately reviewed migration-owner remediation. Professional
 privacy/security/legal review remains open. The source candidates do not complete
 CAT-08 or guarantee App Review, legal compliance, safety, product-market fit, or
 revenue.
+
+CAT-09 is now an `in_progress` local source-contract checkpoint, still blocked
+by CAT-08 and external evidence. Search and barcode outcomes, on-device OCR
+outcomes, lookup/OCR latency, ingredient-parse outcomes, and unknown-token
+counts use fixed coarse vocabularies and frozen aggregate formulas. The
+analytics publication gate is default closed, has no buffer or replay path,
+invalidates stale generations on synchronous deletion/Auth-session close, and
+has no production opener or vendor transport. No live analytics were
+collected. CAT-09 remains incomplete until a separate approved analytics
+consent record and authoritative receipt verifier, vendor/processor and
+privacy/legal review, exact-build payload/no-replay evidence, live dashboards,
+named owners, links, reviewed thresholds, and support-impact evidence exist.
+These source controls do not establish Apple acceptance, legal compliance,
+product quality, market coverage, or revenue.
 
 Apple 1.4.1 health-accuracy scrutiny, 2.5.18's sensitive-data advertising ban,
 5.1/5.1.2 privacy and use limits, and the FTC health-products substantiation

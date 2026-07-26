@@ -34,6 +34,7 @@ import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecy
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE } from '@/lib/errors/userFacing';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
+import { closeAnalyticsPublication } from '@/lib/analytics/publicationGate';
 import {
   activateRevenueCatPublication,
   assertRevenueCatResultCurrent,
@@ -436,6 +437,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       nextSession: Session | null,
       reason: 'account_boundary' | 'app_backgrounded' | 'account_deletion' = 'account_boundary',
     ): void {
+      // Analytics closes before any prior-owner session, transport, or async
+      // cleanup work can cross this account/background/deletion boundary.
+      closeAnalyticsPublication();
       // Any new private boundary invalidates a foreground refresh captured for
       // the prior candidate, even when a completed null boundary later clears
       // explicitSignOutPendingRef before that refresh promise resolves.

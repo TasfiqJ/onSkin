@@ -200,6 +200,7 @@ vi.mock('@/lib/env', () => ({
 }));
 vi.mock('@/lib/errors/userFacing', () => ({ AUTH_UNAVAILABLE_MESSAGE: 'unavailable' }));
 vi.mock('@/lib/analytics/track', () => ({ resetAnalyticsIdentity: vi.fn() }));
+vi.mock('@/lib/analytics/publicationGate', () => ({ closeAnalyticsPublication: vi.fn() }));
 vi.mock('@/lib/iap/revenuecat', () => ({
   activateRevenueCatPublication: vi.fn(async (userId: string, token: string) => {
     h.state.events.push(`activate:${token}`);

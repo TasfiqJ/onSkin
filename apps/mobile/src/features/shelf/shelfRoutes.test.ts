@@ -687,6 +687,14 @@ describe('Shelf route mobile contracts', () => {
     );
   });
 
+  it('counts only a true empty search response as a catalog miss', () => {
+    const source = readAppRoute('shelf/search.tsx');
+
+    expect(source).toContain("if (response.result === 'no_match' && noProducts) {");
+    expect(source).toContain("track('catalog_lookup_no_match', { lookup_type: 'search' });");
+    expect(source).not.toContain("if (noProducts) {\n        setLastNoMatchQuery(cleaned);");
+  });
+
   it('keeps the Shelf catalog search row inside narrow phones', () => {
     const source = readAppRoute('shelf/search.tsx');
 

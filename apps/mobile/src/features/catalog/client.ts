@@ -10,6 +10,7 @@ import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessin
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
+import { catalogLookupLatencyBucket } from './analytics';
 import type { CatalogQualityGrade } from './quality';
 import {
   catalogReportHasValidRequestId,
@@ -476,12 +477,16 @@ export async function lookupBarcode(barcode: string): Promise<CatalogLookupRespo
   return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
     if (!isSupabaseConfigured) return { result: 'offline', manualFallback: true };
     lease.assertCurrent();
+    const lookupStartedAt = performance.now();
     const { data, error } = await supabase.functions.invoke('catalog-lookup', {
       body: { barcode },
     });
     lease.assertCurrent();
     const response = error ? null : decodeCatalogLookupResponse(data, barcode);
-    track('catalog_barcode_lookup', { result: response?.result ?? 'error' });
+    track('catalog_barcode_lookup', {
+      result: response?.result ?? 'error',
+      latency_bucket: catalogLookupLatencyBucket(performance.now() - lookupStartedAt),
+    });
     lease.assertCurrent();
     return response ?? { result: 'error', manualFallback: true };
   });
@@ -496,18 +501,25 @@ export async function searchCatalog(query: string): Promise<CatalogSearchRespons
     const fixture = devCatalogSearchFixture();
     if (fixture) {
       lease.assertCurrent();
-      track('catalog_search', { result: fixture.result });
+      track('catalog_search', {
+        result: fixture.result,
+        latency_bucket: catalogLookupLatencyBucket(0),
+      });
       lease.assertCurrent();
       return fixture;
     }
     if (!isSupabaseConfigured) return { result: 'offline', products: [], manualFallback: true };
     lease.assertCurrent();
+    const lookupStartedAt = performance.now();
     const { data, error } = await supabase.functions.invoke('catalog-search', {
       body: { query, limit: 12 },
     });
     lease.assertCurrent();
     const response = error ? null : decodeCatalogSearchResponse(data);
-    track('catalog_search', { result: response?.result ?? 'error' });
+    track('catalog_search', {
+      result: response?.result ?? 'error',
+      latency_bucket: catalogLookupLatencyBucket(performance.now() - lookupStartedAt),
+    });
     lease.assertCurrent();
     return response ?? { result: 'error', products: [], manualFallback: true };
   });

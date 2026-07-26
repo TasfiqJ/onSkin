@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { catalogUnknownIngredientCountBucket } from '@/features/catalog/analytics';
 import {
   parseIngredientText,
   type ParsedIngredientToken,
@@ -590,7 +591,7 @@ export default function OcrScreen() {
       source: LABEL_CAPTURE_ANALYTICS_SOURCE,
       native_ocr_enabled: recognitionAvailable(),
       result: finalParsed.status,
-      count: finalParsed.tokens.length,
+      unknown_count_bucket: catalogUnknownIngredientCountBucket(finalParsed.unknownTokens.length),
     });
     const nextIntakeId = reset({
       barcode: incomingBarcode,

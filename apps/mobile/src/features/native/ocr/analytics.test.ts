@@ -1,7 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  ANALYTICS_LABEL_RECOGNITION_RESULTS,
+  ANALYTICS_LATENCY_BUCKETS,
+} from '@/lib/analytics/eventRegistry';
+
+import {
   LABEL_CAPTURE_ANALYTICS_SOURCE,
+  LABEL_RECOGNITION_ANALYTICS_RESULTS,
+  LABEL_RECOGNITION_LATENCY_BUCKETS,
   labelRecognitionLatencyBucket,
   trackLabelRecognitionCompleted,
 } from './analytics';
@@ -18,6 +25,15 @@ describe('label recognition analytics', () => {
   it('uses a sanitizer-safe source token for ingredient parsing', () => {
     expect(LABEL_CAPTURE_ANALYTICS_SOURCE).toBe('label_capture');
     expect(LABEL_CAPTURE_ANALYTICS_SOURCE).not.toContain('ocr');
+  });
+
+  it('shares its immutable result and latency vocabularies with the final sanitizer', () => {
+    expect(LABEL_RECOGNITION_ANALYTICS_RESULTS).toBe(
+      ANALYTICS_LABEL_RECOGNITION_RESULTS,
+    );
+    expect(LABEL_RECOGNITION_LATENCY_BUCKETS).toBe(ANALYTICS_LATENCY_BUCKETS);
+    expect(Object.isFrozen(LABEL_RECOGNITION_ANALYTICS_RESULTS)).toBe(true);
+    expect(Object.isFrozen(LABEL_RECOGNITION_LATENCY_BUCKETS)).toBe(true);
   });
 
   it.each([

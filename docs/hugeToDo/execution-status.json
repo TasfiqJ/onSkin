@@ -1257,10 +1257,18 @@
     },
     {
       "id": "CAT-09",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["CAT-08"],
-      "nextAction": "Complete and capture acceptance evidence: Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact",
-      "evidenceRefs": []
+      "nextAction": "Preserve the fixed coarse search/barcode/OCR/ingredient-parse measurement vocabularies, frozen formulas, and default-closed generation-fenced publication boundary with synchronous deletion/Auth-session close and no replay. Do not enable a transport until a separate approved analytics-consent record and authoritative owner/receipt verifier, reviewed vendor/processor configuration and privacy/legal posture, exact-build payload plus withdrawal/account-switch/deletion/purge-failure/no-replay evidence, named live dashboard owners and links, predeclared reviewed thresholds, and real support-impact evidence exist. Do not treat local source tests as CAT-09 completion, App Review, legal, product-quality, market, or revenue evidence.",
+      "evidenceRefs": [
+        "docs/phase-10/beta-event-schema.md",
+        "docs/phase-11/monitoring-dashboards.md",
+        "docs/phase-9/observability-payload-audit.md",
+        "apps/mobile/src/features/catalog/analytics.ts",
+        "apps/mobile/src/features/native/ocr/analytics.ts",
+        "apps/mobile/src/lib/analytics/publicationGate.ts",
+        "apps/mobile/src/lib/analytics/track.ts"
+      ]
     },
     {
       "id": "CORE-01",

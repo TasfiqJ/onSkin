@@ -11,6 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { catalogUnknownIngredientCountBucket } from '@/features/catalog/analytics';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import {
   manualBarcodeRequiresEightDigitFormat,
@@ -211,7 +212,7 @@ export default function ManualAddScreen() {
       track('ingredient_parse_completed', {
         source: 'manual',
         result: parsed.status,
-        count: parsed.tokens.length,
+        unknown_count_bucket: catalogUnknownIngredientCountBucket(parsed.unknownTokens.length),
       });
     }
     const intakeId = reset({

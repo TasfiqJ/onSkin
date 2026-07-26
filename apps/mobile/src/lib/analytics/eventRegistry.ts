@@ -14,6 +14,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'catalog_barcode_lookup',
   'catalog_correction_reported',
   'catalog_lookup_no_match',
+  'catalog_lookup_retry_saved',
   'catalog_search',
   'cloud_backup_opted_in',
   'commerce_consent_declined',
@@ -117,6 +118,23 @@ export const ANALYTICS_ALLOWED_EVENTS = [
 
 export type AnalyticsAllowedEventName = (typeof ANALYTICS_ALLOWED_EVENTS)[number];
 
+export const ANALYTICS_RESTRICTED_EXACT_PROP_EVENTS = Object.freeze([
+  'barcode_decode_rejected',
+  'barcode_decode_success',
+  'barcode_scanned',
+  'catalog_barcode_lookup',
+  'catalog_correction_reported',
+  'catalog_lookup_no_match',
+  'catalog_lookup_retry_saved',
+  'catalog_search',
+  'ingredient_parse_completed',
+  'label_capture_photo_taken',
+  'label_recognition_completed',
+  'product_scanned',
+  'scan_matched',
+  'scan_no_match',
+] as const satisfies readonly AnalyticsAllowedEventName[]);
+
 export const ANALYTICS_ALLOWED_PROP_KEYS = [
   'action',
   'added_via',
@@ -161,6 +179,7 @@ export const ANALYTICS_ALLOWED_PROP_KEYS = [
   'surface',
   'term',
   'type',
+  'unknown_count_bucket',
   'variant',
   'platform',
   'app_version',
@@ -168,6 +187,85 @@ export const ANALYTICS_ALLOWED_PROP_KEYS = [
 ] as const;
 
 export type AnalyticsAllowedPropKey = (typeof ANALYTICS_ALLOWED_PROP_KEYS)[number];
+
+/**
+ * Shared, content-free vocabularies for restricted analytics events. Keeping
+ * these values beside the registry gives producers and the final sanitizer one
+ * immutable source without importing feature code into the analytics layer.
+ */
+export const ANALYTICS_LATENCY_BUCKETS = Object.freeze([
+  'lt_1s',
+  '1s_to_lt_3s',
+  '3s_to_lt_6s',
+  '6s_to_lt_12s',
+  'gte_12s',
+  'unknown',
+] as const);
+
+export const ANALYTICS_CATALOG_LOOKUP_RESULTS = Object.freeze([
+  'matched',
+  'no_match',
+  'too_short',
+  'error',
+] as const);
+
+export const ANALYTICS_CATALOG_CORRECTION_TYPES = Object.freeze([
+  'wrong_match',
+  'missing_product',
+  'ingredient_issue',
+  'duplicate',
+  'source_issue',
+  'expiry_issue',
+  'category_issue',
+] as const);
+
+export const ANALYTICS_CATALOG_RETRY_RESULTS = Object.freeze([
+  'queued',
+  'already_queued',
+  'failed',
+] as const);
+
+export const ANALYTICS_SCAN_RESULTS = Object.freeze([
+  'matched',
+  'no_match',
+  'ambiguous',
+  'offline_queued',
+] as const);
+
+export const ANALYTICS_BARCODE_TYPES = Object.freeze([
+  'ean13',
+  'upc_a',
+  'upc_e',
+  'ean8',
+  'unknown',
+] as const);
+
+export const ANALYTICS_LABEL_RECOGNITION_RESULTS = Object.freeze([
+  'recognized',
+  'no_text',
+  'timed_out',
+  'failed',
+  'cancelled',
+] as const);
+
+export const ANALYTICS_INGREDIENT_PARSE_RESULTS = Object.freeze([
+  'parsed',
+  'partial',
+  'failed',
+] as const);
+
+export const ANALYTICS_INGREDIENT_PARSE_SOURCES = Object.freeze([
+  'manual',
+  'label_capture',
+] as const);
+
+export const ANALYTICS_UNKNOWN_INGREDIENT_COUNT_BUCKETS = Object.freeze([
+  'none',
+  'one_to_two',
+  'three_to_five',
+  'six_plus',
+  'unknown',
+] as const);
 
 const allowedEvents = new Set<string>(ANALYTICS_ALLOWED_EVENTS);
 const allowed = new Set<string>(ANALYTICS_ALLOWED_PROP_KEYS);

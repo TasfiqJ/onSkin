@@ -59,6 +59,14 @@ const originalDev = runtime.__DEV__;
 const CATALOG_SOURCE_ID = '00000000-0000-4000-8000-000000000042';
 const OTHER_CATALOG_SOURCE_ID = '00000000-0000-4000-8000-000000000041';
 
+beforeEach(() => {
+  vi.spyOn(performance, 'now').mockReturnValue(1_000);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 function catalogProduct(overrides: Partial<CatalogProductSummary> = {}): CatalogProductSummary {
   return {
     id: '00000000-0000-4000-8000-000000000100',
@@ -475,7 +483,10 @@ describe('catalog client E2E fixtures', () => {
       manualFallback: true,
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'no_match' });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'no_match',
+      latency_bucket: 'lt_1s',
+    });
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
@@ -500,7 +511,10 @@ describe('catalog client E2E fixtures', () => {
       ],
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'matched' });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
+    });
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
@@ -532,7 +546,10 @@ describe('catalog client E2E fixtures', () => {
       ],
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'matched' });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
+    });
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
@@ -577,7 +594,27 @@ describe('catalog network response validation', () => {
       result: 'matched',
       product,
     });
-    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', { result: 'matched' });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
+    });
+  });
+
+  it('coarsens a measured barcode lookup duration before tracking', async () => {
+    vi.mocked(performance.now).mockReturnValueOnce(1_000).mockReturnValueOnce(4_000);
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'no_match', manualFallback: true },
+      error: null,
+    });
+
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'no_match',
+      manualFallback: true,
+    });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', {
+      result: 'no_match',
+      latency_bucket: '3s_to_lt_6s',
+    });
   });
 
   it('accepts 120 and rejects 121 months at the catalog network boundary', async () => {
@@ -653,7 +690,10 @@ describe('catalog network response validation', () => {
     }
 
     expect(mocks.track).toHaveBeenCalledTimes(invalidResponses.length);
-    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', { result: 'error' });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', {
+      result: 'error',
+      latency_bucket: 'lt_1s',
+    });
   });
 
   it('accepts an exact reviewed search response and rejects unsafe response shapes', async () => {
@@ -701,8 +741,14 @@ describe('catalog network response validation', () => {
       });
     }
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'matched' });
-    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'error' });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
+    });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'error',
+      latency_bucket: 'lt_1s',
+    });
   });
 });
 

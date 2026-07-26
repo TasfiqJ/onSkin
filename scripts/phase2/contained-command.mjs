@@ -57,7 +57,7 @@ function redactDiagnosticAbsolutePath(value) {
 
 function boundedTapFailureLines(lines, maxLines) {
   const failureLine =
-    /^(?:\s*not ok\b|\s*Bail out!|\s*(?:#\s*)?Failed (?:test|\d+\/\d+ subtests?)\b|\s*Dubious, test returned\b|\s*Result:\s*FAIL\b|\s*Files=\d+\b|\s*Test Summary Report\b|\s*(?:psql:[^\r\n]*:\s*)?(?:ERROR|FATAL):)/iu;
+    /^(?:\s*not ok\b|\s*Bail out!|\s*(?:#\s*)?Failed (?:test|\d+\/\d+ subtests?)\b|\s*Dubious, test returned\b|\s*No subtests run\b|\s*Non-zero exit status\b|\s*Parse errors?:|\s*(?:Bad plan|No plan found|Tests out of sequence)\b|\s*Looks like you (?:failed|planned)\b|\s*Result:\s*FAIL\b|\s*Files=\d+\b|\s*Test Summary Report\b|\s*(?:psql:[^\r\n]*:\s*)?(?:ERROR|FATAL):)/iu;
   const selected = new Set();
 
   for (const [index, line] of lines.entries()) {

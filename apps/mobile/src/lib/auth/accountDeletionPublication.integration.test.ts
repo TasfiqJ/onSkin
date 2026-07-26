@@ -133,6 +133,7 @@ vi.mock('@/lib/env', () => ({
 }));
 vi.mock('@/lib/errors/userFacing', () => ({ AUTH_UNAVAILABLE_MESSAGE: 'unavailable' }));
 vi.mock('@/lib/analytics/track', () => ({ resetAnalyticsIdentity: vi.fn() }));
+vi.mock('@/lib/analytics/publicationGate', () => ({ closeAnalyticsPublication: vi.fn() }));
 vi.mock('@/lib/observability/safeLog', () => ({ devWarn: h.devWarn }));
 vi.mock('@/lib/query/queryClient', () => ({
   queryClient: {

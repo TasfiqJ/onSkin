@@ -288,6 +288,37 @@ test('nonzero commands can select bounded TAP failure context', async () => {
   );
 });
 
+test('TAP diagnostics retain plan errors ahead of a large PostgreSQL notice tail', async () => {
+  const diagnostic = sanitizeBoundedCommandDiagnostic(
+    {
+      stdout: [
+        'TAP version 13',
+        'catalog_launch_curation.test.sql ..',
+        'All 100 subtests passed',
+        '',
+        'Test Summary Report',
+        '-------------------',
+        'catalog_launch_curation.test.sql (Wstat: 768 Tests: 100 Failed: 0)',
+        '  Non-zero exit status: 3',
+        '  Parse errors: Bad plan. You planned 99 tests but ran 100.',
+        'Files=1, Tests=100, Result: FAIL',
+      ].join('\n'),
+      stderr: Array.from(
+        { length: 500 },
+        (_, index) => `psql:catalog_launch_curation.test.sql:${index + 1}: NOTICE: fixture notice`,
+      ).join('\n'),
+    },
+    { maxBytes: 4096, maxLines: 60, profile: 'tap' },
+  );
+
+  assert.match(diagnostic, /Test Summary Report/u);
+  assert.match(diagnostic, /Non-zero exit status: 3/u);
+  assert.match(diagnostic, /Parse errors: Bad plan\. You planned 99 tests but ran 100\./u);
+  assert.match(diagnostic, /Files=1, Tests=100, Result: FAIL/u);
+  assert.ok(Buffer.byteLength(diagnostic, 'utf8') <= 4096);
+  assert.ok(diagnostic.split('\n').length <= 60);
+});
+
 test(
   'Windows job runner contains normal, timeout, and output-limit descendants before settlement',
   { skip: process.platform !== 'win32', timeout: 30_000 },

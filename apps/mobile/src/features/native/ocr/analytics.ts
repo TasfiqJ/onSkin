@@ -1,27 +1,19 @@
 import { track } from '@/lib/analytics/track';
+import {
+  ANALYTICS_LABEL_RECOGNITION_RESULTS,
+  ANALYTICS_LATENCY_BUCKETS,
+} from '@/lib/analytics/eventRegistry';
 
 import type { LabelOcrAttemptResult } from './coordinator';
 
 export const LABEL_CAPTURE_ANALYTICS_SOURCE = 'label_capture' as const;
 
-export const LABEL_RECOGNITION_ANALYTICS_RESULTS = [
-  'recognized',
-  'no_text',
-  'timed_out',
-  'failed',
-  'cancelled',
-] as const satisfies readonly LabelOcrAttemptResult['status'][];
+export const LABEL_RECOGNITION_ANALYTICS_RESULTS =
+  ANALYTICS_LABEL_RECOGNITION_RESULTS satisfies readonly LabelOcrAttemptResult['status'][];
 
 export type LabelRecognitionAnalyticsResult = (typeof LABEL_RECOGNITION_ANALYTICS_RESULTS)[number];
 
-export const LABEL_RECOGNITION_LATENCY_BUCKETS = [
-  'lt_1s',
-  '1s_to_lt_3s',
-  '3s_to_lt_6s',
-  '6s_to_lt_12s',
-  'gte_12s',
-  'unknown',
-] as const;
+export const LABEL_RECOGNITION_LATENCY_BUCKETS = ANALYTICS_LATENCY_BUCKETS;
 
 export type LabelRecognitionLatencyBucket = (typeof LABEL_RECOGNITION_LATENCY_BUCKETS)[number];
 

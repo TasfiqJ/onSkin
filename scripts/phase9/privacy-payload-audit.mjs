@@ -6,6 +6,7 @@ const warnings = [];
 
 const registrySource = read('apps/mobile/src/lib/analytics/eventRegistry.ts');
 const trackSource = read('apps/mobile/src/lib/analytics/track.ts');
+const publicationGateSource = read('apps/mobile/src/lib/analytics/publicationGate.ts');
 const sentrySource = read('apps/mobile/src/lib/observability/sentry.ts');
 const scrubSource = read('apps/mobile/src/lib/observability/scrub.ts');
 const safeLogSource = read('apps/mobile/src/lib/observability/safeLog.ts');
@@ -34,6 +35,21 @@ const notificationLockscreenMigrationSource = read(
 const photoShareFileSource = encryptedPhotoSource.slice(
   encryptedPhotoSource.indexOf('export async function createPhotoShareFile'),
   encryptedPhotoSource.indexOf('export async function deletePhotoShareFile'),
+);
+const productionMobileSourceFiles = listFiles('apps/mobile/src').filter(
+  (item) => /\.(ts|tsx)$/.test(item) && !/\.(test|spec)\.(ts|tsx)$/.test(item),
+);
+const productionAnalyticsOpeners = productionMobileSourceFiles.filter((item) => {
+  const normalized = item.replace(/\\/g, '/');
+  return (
+    !normalized.endsWith('apps/mobile/src/lib/analytics/publicationGate.ts') &&
+    /\bopenAnalyticsPublication\b/.test(read(item))
+  );
+});
+const productionPostHogTransports = productionMobileSourceFiles.filter((item) =>
+  /(?:from\s+|import\s*\(|require\s*\()\s*['"]posthog-react-native['"]|new\s+PostHog\b|\bposthog\w*\.(?:capture|identify|flush)\s*\(/i.test(
+    read(item),
+  ),
 );
 
 const eventRegistryBody =
@@ -68,11 +84,14 @@ block(
 );
 block(
   errors,
-  /void sanitizeAnalyticsProps\(props\)/.test(trackSource) &&
-    !/import\(['"]posthog-react-native['"]\)/.test(trackSource) &&
-    !/\.capture\(/.test(trackSource) &&
-    !/\.identify\(/.test(trackSource) &&
-    !/\.flush\(/.test(trackSource),
+  /sanitizeAnalyticsEventProps\(safeEvent,\s*props\)/.test(trackSource) &&
+    /publishAnalyticsEvent\(safeEvent,\s*safeProps\)/.test(trackSource) &&
+    /let openState:\s*OpenPublicationState\s*\|\s*null\s*=\s*null/.test(
+      publicationGateSource,
+    ) &&
+    /snapshot\s*===\s*null/.test(publicationGateSource) &&
+    productionAnalyticsOpeners.length === 0 &&
+    productionPostHogTransports.length === 0,
   'Direct mobile analytics transport must remain disabled while every event and property still passes the launch-gated sanitizers.',
 );
 block(

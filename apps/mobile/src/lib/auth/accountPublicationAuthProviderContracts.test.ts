@@ -53,6 +53,10 @@ describe('account publication AuthProvider integration', () => {
 
   it('closes on true background states and safely reacquires through controlled refresh', () => {
     const provider = readSource('lib/auth/AuthProvider.tsx');
+    const boundary = provider.slice(
+      provider.indexOf('function showSessionBoundary('),
+      provider.indexOf('showSessionBoundaryRef.current = showSessionBoundary;'),
+    );
 
     expect(provider).toContain('const handle = (state: AppStateStatus | null) =>');
     expect(provider).toContain("if (state === 'active') {");
@@ -71,6 +75,13 @@ describe('account publication AuthProvider integration', () => {
     expect(provider).not.toContain('supabase.auth.startAutoRefresh();');
     expect(provider.indexOf('hasActiveRevenueCatPublication(published.user.id')).toBeLessThan(
       provider.lastIndexOf('scheduleControlledSessionRefresh(published);'),
+    );
+    expect(boundary.indexOf('closeAnalyticsPublication();')).toBeGreaterThan(-1);
+    expect(boundary.indexOf('closeAnalyticsPublication();')).toBeLessThan(
+      boundary.indexOf('closeRemoteRequestAuthority({'),
+    );
+    expect(boundary.indexOf('closeAnalyticsPublication();')).toBeLessThan(
+      boundary.indexOf('closeRevenueCatPublication(reason)'),
     );
   });
 

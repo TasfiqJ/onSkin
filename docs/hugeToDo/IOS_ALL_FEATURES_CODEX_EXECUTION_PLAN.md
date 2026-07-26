@@ -395,6 +395,25 @@ privacy/security/legal review are absent. Local source
 controls do not establish production operation, legal compliance, Apple
 acceptance, product-market fit, or revenue.
 
+2026-07-25 CAT-09 source checkpoint: search and barcode result/latency,
+on-device OCR result/latency, ingredient-parse result/source/unknown-count,
+true search no-match recovery, accepted correction workload, and directional
+support-impact definitions now have fixed coarse vocabularies and frozen
+aggregate formulas. Exact queries, barcodes, OCR/ingredient content, product
+identity, duration, timestamp, and free text are excluded. The publication gate
+is default closed, contains no event buffer or replay path, and invalidates
+stale generations when deletion or Auth account/background/deletion boundaries
+close synchronously. No non-test production caller opens the gate and no vendor
+transport is enabled, so no live CAT-09 measurement is claimed.
+
+CAT-09 remains `in_progress`, blocked by CAT-08 and by the absence of a separate
+approved analytics-consent record and authoritative owner/receipt verifier,
+vendor/processor terms and privacy/legal review, exact-build live payload and
+withdrawal/account-switch/deletion/no-replay evidence, named dashboard owners,
+links, reviewed thresholds, and real support-impact evidence. Local source
+contracts do not complete CAT-09 or establish App Review, legal, product-
+quality, market, or revenue outcomes.
+
 2026-07-19 CAT-07 source checkpoint: the current candidate preserves physical-package dates,
 explicit label PAO, reviewed catalog PAO, reserved future catalog-linked
 category estimate, and unknown as distinct states. Unknown is not an estimate;
