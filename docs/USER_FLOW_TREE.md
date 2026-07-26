@@ -653,6 +653,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Complete a step with network disabled or sync unavailable if supported locally.
   - Expected result: Local completion is preserved and sync state is honest.
   - Evidence: Screenshot and logs.
+- Branch: partial routine does not become adherence
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete one AM step, then one of several PM steps, and open Streak & adherence.
+  - Expected result: Step check-offs persist, but neither a partial AM nor partial PM routine creates a completed night, advances the streak, earns a cycle milestone, or triggers the seven-day review moment. The day qualifies exactly once only after every currently projected PM or recovery step is durably complete.
+  - Evidence: Before/after Today screenshots, adherence screen snapshot, private completion-envelope snapshot, analytics/haptic log, and relaunch verification.
+- Branch: completion storage unreadable or write unconfirmed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open Today with malformed/future-version/unreadable completion state; separately make a check-off persistence operation reject before commit and ambiguously after commit.
+  - Expected result: Today never renders an invented unchecked state, disables completion controls, explains that check-offs are unavailable, and offers retry. A failed or unconfirmed write produces no success haptic, analytics, milestone, review prompt, or navigation success and preserves bytes unless exact rollback is verified.
+  - Evidence: Error/retry screenshots, accessibility snapshot, storage transcript, and zero-success-side-effect log.
 - Branch: relaunch after completion
   - Priority: Important
   - Automate later: Yes
@@ -672,6 +684,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Today in the evening routine state.
   - Expected result: The header uses the current local date and clock time, never a static design-placeholder time.
   - Evidence: Screenshot and visible-text snapshot.
+- Branch: live 17:00, midnight, foreground, and timezone transition
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Keep Today open from 16:59 through 17:00 and from 23:59 through midnight; separately background the app, change day or timezone, and foreground it.
+  - Expected result: The visible clock refreshes, AM becomes PM at 17:00, the local-date completion and progress query keys change at midnight, and foregrounding immediately adopts the current local date/phase without writing a completion to the stale day or phase.
+  - Evidence: Fake-timer/AppState transcript plus native foreground and DST/timezone video.
+- Branch: one/two missed nights and three-night lapse
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete qualifying PM/recovery routines around one and two missed nights, then repeat with three missed nights.
+  - Expected result: One or two interior misses are absorbed automatically with calm protected copy and no guilt; a third miss lapses the active run without shrinking the historical best, and the next qualifying routine produces a neutral welcome-back state.
+  - Evidence: Adherence/welcome-back screenshots, client/server parity fixture, relaunch/cross-device proof, and analytics publication evidence when legally admitted.
 
 ## Flow: Shelf Product Add
 

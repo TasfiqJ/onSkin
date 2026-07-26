@@ -80,9 +80,17 @@ function storedDays(): Record<string, string[]> {
   const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
     version?: number;
     days?: Record<string, string[]>;
+    completedDays?: string[];
   };
-  expect(parsed.version).toBe(1);
+  expect(parsed.version).toBe(2);
   return parsed.days ?? {};
+}
+
+function storedCompletedDays(): string[] {
+  const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+    completedDays?: string[];
+  };
+  return parsed.completedDays ?? [];
 }
 
 describe('today completion persistence', () => {
@@ -105,13 +113,12 @@ describe('today completion persistence', () => {
     vi.useRealTimers();
   });
 
-  it('returns an empty day without deleting malformed encrypted bytes', async () => {
+  it('fails closed without deleting malformed encrypted bytes', async () => {
     const original = '{not-json';
     mocks.storage.set(KEY, original);
 
-    const completed = await getCompletedSteps(DAY);
+    await expect(getCompletedSteps(DAY)).rejects.toThrow(COMPLETION_LOG_INVALID);
 
-    expect([...completed]).toEqual([]);
     expect(mocks.storage.get(KEY)).toBe(original);
     expect(mocks.writes).toBe(0);
   });
@@ -131,6 +138,7 @@ describe('today completion persistence', () => {
       done: true,
       inserted: true,
       firstEver: true,
+      completionDayInserted: false,
       completedStepKeysAfter: new Set(['AM:cleanser']),
     });
 
@@ -144,12 +152,14 @@ describe('today completion persistence', () => {
       done: true,
       inserted: true,
       firstEver: true,
+      completionDayInserted: false,
       completedStepKeysAfter: new Set(['AM:cleanser']),
     });
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
       inserted: false,
       firstEver: false,
+      completionDayInserted: false,
       completedStepKeysAfter: new Set(['AM:cleanser']),
     });
 
@@ -165,6 +175,7 @@ describe('today completion persistence', () => {
       done: true,
       inserted: false,
       firstEver: false,
+      completionDayInserted: false,
       completedStepKeysAfter: new Set(['AM:cleanser']),
     });
 
@@ -191,7 +202,7 @@ describe('today completion persistence', () => {
     });
     mocks.storage.set(KEY, original);
 
-    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set());
+    await expect(getCompletedSteps(DAY)).rejects.toThrow(COMPLETION_LOG_INVALID);
     await expect(toggleCompletion('PM:retinol', DAY)).rejects.toThrow(COMPLETION_LOG_INVALID);
 
     expect(mocks.storage.get(KEY)).toBe(original);
@@ -239,12 +250,13 @@ describe('today completion persistence', () => {
 
   it('identifies exactly one completed cycle night when the final two steps race', async () => {
     const stepKeys = ['PM:cleanser', 'PM:retinoid', 'PM:moisturiser'] as const;
-    await toggleCompletion(stepKeys[0], DAY);
+    const scheduled = { phase: 'PM' as const, stepKeys };
+    await toggleCompletion(stepKeys[0], DAY, scheduled);
 
     const completions = await Promise.all(
       stepKeys.slice(1).map(async (completedKey) => ({
         completedKey,
-        result: await toggleCompletion(completedKey, DAY),
+        result: await toggleCompletion(completedKey, DAY, scheduled),
       })),
     );
 
@@ -263,14 +275,16 @@ describe('today completion persistence', () => {
     expect(completions.map(({ result }) => result.completedStepKeysAfter.size).sort()).toEqual([
       2, 3,
     ]);
+    expect(completions.filter(({ result }) => result.completionDayInserted)).toHaveLength(1);
+    expect(storedCompletedDays()).toEqual([DAY]);
     expect(new Set(storedDays()[DAY])).toEqual(new Set(stepKeys));
   });
 
   it('preserves future-version bytes and refuses to downgrade them', async () => {
-    const original = JSON.stringify({ version: 2, days: { [DAY]: ['AM:cleanser'] } });
+    const original = JSON.stringify({ version: 3, days: { [DAY]: ['AM:cleanser'] } });
     mocks.storage.set(KEY, original);
 
-    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set());
+    await expect(getCompletedSteps(DAY)).rejects.toThrow(COMPLETION_LOG_UNSUPPORTED_VERSION);
     await expect(toggleCompletion('PM:retinol', DAY)).rejects.toThrow(
       COMPLETION_LOG_UNSUPPORTED_VERSION,
     );
@@ -284,7 +298,7 @@ describe('today completion persistence', () => {
     mocks.storage.set(KEY, original);
     mocks.readFailures.set(KEY, new Error('PRIVATE_KEY_UNAVAILABLE'));
 
-    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set());
+    await expect(getCompletedSteps(DAY)).rejects.toThrow('PRIVATE_KEY_UNAVAILABLE');
     expect(mocks.storage.get(KEY)).toBe(original);
 
     mocks.readFailures.delete(KEY);
@@ -311,16 +325,56 @@ describe('today completion persistence', () => {
       done: false,
       inserted: false,
       firstEver: false,
+      completionDayInserted: false,
       completedStepKeysAfter: new Set(),
     });
     await expect(toggleCompletion('AM:cleanser', '2026-02-31')).resolves.toEqual({
       done: false,
       inserted: false,
       firstEver: false,
+      completionDayInserted: false,
       completedStepKeysAfter: new Set(),
     });
 
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('rejects unscoped step keys instead of admitting an ambiguous completion', async () => {
+    await expect(toggleCompletion('cleanser', DAY)).resolves.toEqual({
+      done: false,
+      inserted: false,
+      firstEver: false,
+      completionDayInserted: false,
+      completedStepKeysAfter: new Set(),
+    });
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('rejects non-canonical current envelopes without rewriting their bytes', async () => {
+    const cases = [
+      { version: 2, days: { [DAY]: [' AM:cleanser '] }, completedDays: [] },
+      {
+        version: 2,
+        days: { [DAY]: ['AM:cleanser', 'AM:cleanser'] },
+        completedDays: [],
+      },
+      { version: 2, days: { [` ${DAY} `]: ['AM:cleanser'] }, completedDays: [] },
+      { version: 2, days: { [DAY]: [] }, completedDays: [] },
+      { version: 2, days: { [DAY]: ['AM:cleanser'] }, completedDays: [], extra: true },
+      { version: 2, days: { [DAY]: ['AM:cleanser'] }, completedDays: [DAY] },
+      { version: 2, days: { [DAY]: ['PM:cleanser'] }, completedDays: [DAY, DAY] },
+    ];
+
+    for (const value of cases) {
+      const original = JSON.stringify(value);
+      mocks.storage.set(KEY, original);
+
+      await expect(getCompletedSteps(DAY)).rejects.toThrow(COMPLETION_LOG_INVALID);
+      await expect(toggleCompletion('PM:retinol', DAY)).rejects.toThrow(COMPLETION_LOG_INVALID);
+      expect(mocks.storage.get(KEY)).toBe(original);
+    }
+    expect(mocks.writes).toBe(0);
   });
 
   it('treats invalid dates as beyond the backfill cap', () => {
@@ -349,11 +403,12 @@ describe('today completion persistence', () => {
     mocks.storage.set(
       KEY,
       JSON.stringify({
-        version: 1,
+        version: 2,
         days: {
           [DAY]: ['AM:cleanser', 'PM:retinol'],
           '2026-07-06': ['PM:cleanser'],
         },
+        completedDays: [DAY, '2026-07-06'],
       }),
     );
 
@@ -367,6 +422,51 @@ describe('today completion persistence', () => {
       ]),
     );
     expect(mocks.reads).toBe(1);
+  });
+
+  it('does not invent adherence from AM, partial PM, or legacy step rows', async () => {
+    await toggleCompletion('AM:cleanser', DAY);
+    await toggleCompletion('PM:cleanser', DAY, {
+      phase: 'PM',
+      stepKeys: ['PM:cleanser', 'PM:moisturiser'],
+    });
+
+    await expect(getCompletionSummary()).resolves.toMatchObject({
+      completedDates: new Set(),
+    });
+    expect(storedCompletedDays()).toEqual([]);
+
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        version: 1,
+        days: { [DAY]: ['PM:cleanser', 'PM:moisturiser'] },
+      }),
+    );
+    await expect(getCompletionSummary()).resolves.toMatchObject({
+      completedDates: new Set(),
+    });
+  });
+
+  it('records exactly one adherence day only after every scheduled PM step is durable', async () => {
+    const scheduled = {
+      phase: 'PM' as const,
+      stepKeys: ['PM:cleanser', 'PM:moisturiser'],
+    };
+
+    await expect(toggleCompletion('PM:cleanser', DAY, scheduled)).resolves.toMatchObject({
+      completionDayInserted: false,
+    });
+    await expect(toggleCompletion('PM:moisturiser', DAY, scheduled)).resolves.toMatchObject({
+      completionDayInserted: true,
+    });
+    await expect(toggleCompletion('PM:moisturiser', DAY, scheduled)).resolves.toMatchObject({
+      completionDayInserted: false,
+    });
+    await expect(getCompletionSummary()).resolves.toMatchObject({
+      completedDates: new Set([DAY]),
+    });
+    expect(storedCompletedDays()).toEqual([DAY]);
   });
 
   it('does not return account-A completion data after an A-to-B same-epoch switch', async () => {

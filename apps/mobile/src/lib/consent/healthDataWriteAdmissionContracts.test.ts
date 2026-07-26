@@ -97,7 +97,6 @@ describe('health-purpose local write coverage', () => {
       'features/onboarding/OnboardingContext.tsx:skin_profiles',
       'features/photos/store.ts:photos',
       'features/recommendations/store.ts:recommendation_preferences',
-      'features/routine/useProgress.ts:profiles',
       'features/routine/useProgress.ts:routine_completions',
       'features/scheduler/profile.ts:skin_profiles',
       'features/shelf/mutations.ts:user_products',

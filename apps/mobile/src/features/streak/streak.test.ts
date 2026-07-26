@@ -56,6 +56,15 @@ describe('calm forgiving streak. Current (docs/07 §4.1/§4.2)', () => {
   it('a brand-new user with no completions has not lapsed', () => {
     expect(streakState(set(), '2026-06-13').lapsed).toBe(false);
   });
+
+  it('does not turn the timezone-tolerance row for tomorrow into a lapse', () => {
+    expect(streakState(set('2026-06-14'), '2026-06-13')).toEqual({
+      current: 0,
+      freezeActive: false,
+      frozenDates: [],
+      lapsed: false,
+    });
+  });
 });
 
 describe('longest streak. Non-decreasing best (D-011)', () => {
@@ -82,6 +91,12 @@ describe('longest streak. Non-decreasing best (D-011)', () => {
       '2026-05-09',
     );
     expect(bestStreak(completed)).toBe(4);
+  });
+
+  it('does not let future tolerance rows inflate the best through today', () => {
+    const completed = set('2026-06-12', '2026-06-13', '2026-06-14', '2026-06-15');
+
+    expect(bestStreak(completed, 2, '2026-06-13')).toBe(2);
   });
 });
 

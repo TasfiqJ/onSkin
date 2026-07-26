@@ -94,9 +94,9 @@ export const WELCOME_BACK = {
 
 /** Calm milestone copy (docs/07 §4.5). Gentle markers, never confetti-cannon. */
 export const MILESTONE_COPY: Record<string, string> = {
-  d7: 'One week of showing up. That’s how habits start.',
-  one_cycle: 'A full cycle in. Your progress photos may start to show it.',
-  d30: 'Thirty days of consistency. Quietly, this is the work paying off.',
+  d7: 'Seven completed routine nights. A steady start, at your pace.',
+  one_cycle: 'A cycle’s worth of routine nights checked off. Keep going at your pace.',
+  d30: 'Thirty completed routine nights. A steady rhythm, at your pace.',
 };
 
 /** Settings-surface labels (design screens 02/03). */

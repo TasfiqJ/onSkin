@@ -43,7 +43,7 @@ function weekDaySquare(state: DayState): {
 }
 
 export default function StreakScreen() {
-  const { data } = useProgress();
+  const { data, isError, refetch } = useProgress();
   const { data: cycleData } = useCycle();
   const recoveryReady = canUseRoutineRecovery();
   const week = data?.week ?? [];
@@ -62,6 +62,43 @@ export default function StreakScreen() {
         track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
     });
   }, [milestone?.key]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!data) {
+    return (
+      <Screen edges={['top']}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+          <View className="flex-row items-center justify-between pt-1">
+            <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+            <Text variant="label" tone="muted">
+              STREAK & ADHERENCE
+            </Text>
+            <View style={{ width: 44 }} />
+          </View>
+          <Card className="mt-5">
+            <Text variant="body" className="font-sans-bold">
+              {isError ? 'Progress is unavailable' : 'Loading your progress…'}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1.5">
+              {isError
+                ? "We couldn't safely read your saved check-offs. No streak or adherence total is being guessed."
+                : 'Your saved check-offs are being read securely.'}
+            </Text>
+            {isError ? (
+              <Pressable
+                accessibilityRole="button"
+                className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-clay px-5"
+                onPress={() => void refetch()}
+              >
+                <Text variant="bodySm" className="font-sans-bold" style={{ color: colors.paper }}>
+                  Try again
+                </Text>
+              </Pressable>
+            ) : null}
+          </Card>
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top']}>

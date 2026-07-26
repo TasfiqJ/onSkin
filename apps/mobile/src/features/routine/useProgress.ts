@@ -10,6 +10,7 @@ import {
   type WeekDay,
 } from '@/features/streak/streak';
 import { getCompletionSummary } from '@/features/today/completionsStore';
+import { useRoutineClock } from '@/features/today/useRoutineClock';
 import { localDateString } from '@/features/today/useToday';
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
@@ -20,19 +21,17 @@ import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessin
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
-import {
-  normalizeProgressCompletionDate,
-  normalizeProgressCount,
-  normalizeProgressLongestStreak,
-} from './progressSanitizers';
+import { normalizeProgressCompletionDate, normalizeProgressCount } from './progressSanitizers';
 
 // Calm, forgiving progress data (docs/03 §6 + docs/07 §4): weekly adherence, a
 // month heat-map, and the freeze-aware streak. The streak/freeze logic lives in the
 // pure, tested `features/streak/streak.ts`; this hook loads the completion log and
-// the cached personal best, then delegates. The v1 source of truth is the local-first
-// completionsStore (the Today check-off writes there); the server routine_completions
-// table is unioned in for the eventual sync (B-ROUTINE-PERSIST / B-SUPABASE). Empty
-// completions yield a calm zero state, not an error.
+// then delegates. The local-first completionsStore (the Today check-off writes there)
+// is the current source of truth. Only explicit server routine-level rows (`step_id`
+// null) are unioned for eventual sync; individual step rows never qualify a night.
+// The currently strict server cached streak is intentionally not trusted until its
+// forgiveness migration and parity evidence land. Empty completions yield a calm
+// zero state, not an error.
 
 export type { WeekDay, HeatCell } from '@/features/streak/streak';
 export type DayState = WeekDay['state'];
@@ -52,7 +51,6 @@ export type ProgressData = {
 type ServerCompletion = { completed_date: string };
 
 async function loadServerCompletions(
-  lookbackISO: string,
   lease: HealthDataWriteOperationLease,
 ): Promise<ServerCompletion[]> {
   if (!isSupabaseConfigured) return [];
@@ -61,7 +59,7 @@ async function loadServerCompletions(
     const { data } = await supabase
       .from('routine_completions')
       .select('completed_date')
-      .gte('completed_date', lookbackISO);
+      .is('step_id', null);
     lease.assertCurrent();
     return (data ?? [])
       .map((completion) => normalizeProgressCompletionDate(completion.completed_date))
@@ -73,25 +71,8 @@ async function loadServerCompletions(
   }
 }
 
-async function loadServerLongestStreak(lease: HealthDataWriteOperationLease): Promise<number> {
-  if (!isSupabaseConfigured) return 0;
-  try {
-    lease.assertCurrent();
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('longest_streak')
-      .limit(1)
-      .maybeSingle();
-    lease.assertCurrent();
-    return normalizeProgressLongestStreak(profile?.longest_streak);
-  } catch {
-    lease.assertCurrent();
-    return 0;
-  }
-}
-
 export function useProgress() {
-  const todayISO = localDateString();
+  const todayISO = useRoutineClock().localDate;
 
   return useQuery<ProgressData>({
     queryKey: ['progress', todayISO],
@@ -102,13 +83,9 @@ export function useProgress() {
       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
         const today = new Date();
         const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-        // Look back far enough for the streak run (beyond the current month).
-        const lookback = new Date(today.getTime() - 120 * 86_400_000);
-
-        const [localSummary, completions, serverLongest] = await Promise.all([
+        const [localSummary, completions] = await Promise.all([
           getCompletionSummary(),
-          loadServerCompletions(localDateString(lookback), lease),
-          loadServerLongestStreak(lease),
+          loadServerCompletions(lease),
         ]);
         lease.assertCurrent();
 
@@ -116,7 +93,7 @@ export function useProgress() {
         const completed = new Set<string>();
         for (const c of completions) {
           const completedDate = normalizeProgressCompletionDate(c.completed_date);
-          if (!completedDate) continue;
+          if (!completedDate || completedDate > todayISO) continue;
           completed.add(completedDate);
           countByDate.set(completedDate, (countByDate.get(completedDate) ?? 0) + 1);
         }
@@ -125,12 +102,12 @@ export function useProgress() {
         // sources represents the same completions, so take the max (never double-count).
         for (const d of localSummary.completedDates) {
           const completedDate = normalizeProgressCompletionDate(d);
-          if (completedDate) completed.add(completedDate);
+          if (completedDate && completedDate <= todayISO) completed.add(completedDate);
         }
         for (const [d, n] of localSummary.countByDate) {
           const completedDate = normalizeProgressCompletionDate(d);
           const count = normalizeProgressCount(n);
-          if (completedDate && count > 0) {
+          if (completedDate && completedDate <= todayISO && count > 0) {
             countByDate.set(completedDate, Math.max(countByDate.get(completedDate) ?? 0, count));
           }
         }
@@ -148,8 +125,7 @@ export function useProgress() {
         for (const [date, n] of countByDate)
           if (date >= localDateString(monthStart)) monthCounts.set(date, n);
 
-        // longest is a non-decreasing personal best (D-011): greatest(server best, computed).
-        const longest = Math.max(serverLongest, bestStreak(completed), s.current);
+        const longest = Math.max(bestStreak(completed, undefined, todayISO), s.current);
 
         lease.assertCurrent();
         return {

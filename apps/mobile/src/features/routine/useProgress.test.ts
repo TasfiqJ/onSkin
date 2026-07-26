@@ -10,19 +10,20 @@ describe('useProgress local-first contract', () => {
 
     expect(source).toContain("import { isSupabaseConfigured } from '@/lib/env'");
     expect(source).toContain('if (!isSupabaseConfigured) return []');
-    expect(source).toContain('if (!isSupabaseConfigured) return 0');
     expect(source).toContain('catch {');
-    expect(source).toContain(
-      'const [localSummary, completions, serverLongest] = await Promise.all([',
-    );
+    expect(source).toContain('const [localSummary, completions] = await Promise.all([');
     expect(source).toContain('getCompletionSummary()');
+    expect(source).toContain(".is('step_id', null)");
     expect(source).toContain('for (const d of localSummary.completedDates)');
     expect(source).toContain('for (const [d, n] of localSummary.countByDate)');
     expect(source).not.toContain('getCompletedDates()');
     expect(source).not.toContain('getCountByDate()');
     expect(source).toContain(
-      'const longest = Math.max(serverLongest, bestStreak(completed), s.current)',
+      'const longest = Math.max(bestStreak(completed, undefined, todayISO), s.current)',
     );
+    expect(source).toContain('if (!completedDate || completedDate > todayISO) continue');
+    expect(source).toContain('completedDate && completedDate <= todayISO');
     expect(source).not.toContain('const { data: completions } = await supabase');
+    expect(source).not.toContain("select('longest_streak')");
   });
 });

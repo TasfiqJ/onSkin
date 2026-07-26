@@ -10,8 +10,30 @@ import { colors } from '@/theme/tokens';
 // if grace days absorbed the gap, the streak is shown safe; if it lapsed, a gentle
 // invite back. Either way the next action is simply tonight's step.
 export default function WelcomeBackScreen() {
-  const { data } = useProgress();
-  const frozen = data?.graceUsed ?? false;
+  const { data, isError, refetch } = useProgress();
+
+  if (!data) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <View className="flex-1 justify-center">
+          <Text variant="display" style={{ fontSize: 40, lineHeight: 44 }}>
+            {isError ? 'Progress is unavailable.' : 'Loading your progress…'}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-4" style={{ lineHeight: 26 }}>
+            {isError
+              ? "We couldn't safely read your saved check-offs, so we won't guess whether your streak is protected or lapsed."
+              : 'Your saved check-offs are being read securely.'}
+          </Text>
+        </View>
+        <View className="gap-3 pb-4 pt-2">
+          {isError ? <Button label="Try again" onPress={() => void refetch()} /> : null}
+          <Button label="Back to Today" onPress={() => router.replace('/(tabs)/today')} />
+        </View>
+      </Screen>
+    );
+  }
+
+  const frozen = data.graceUsed;
 
   return (
     <Screen edges={['top', 'bottom']}>

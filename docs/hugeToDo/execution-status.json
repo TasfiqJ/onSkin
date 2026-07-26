@@ -1426,10 +1426,24 @@
     },
     {
       "id": "CORE-05",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["CORE-04"],
-      "nextAction": "Complete and capture acceptance evidence: Complete Today check-off, adherence, missed-day recovery, and calm streak behavior",
-      "evidenceRefs": []
+      "nextAction": "The current local source candidate fails closed on unreadable completion state, publishes success only after the awaited private mutation, excludes future-tolerance rows from today's progress, refreshes at 17:00/midnight/foreground, and records adherence only when every projected PM or recovery step is durable; AM, partial PM, and legacy step rows cannot invent a completed night. The mandatory CORE-05 source contract binds these controls and outcome-neutral milestone copy. CORE-04 remains incomplete. Next implement and prove stable server routine/step identity, original completion timestamps, durable offline queue feeding/replay, routine-level completion sync, authoritative timezone-aware forgiving streak/freezes with client-server parity, neutral pre-activation days, rendered/native error and account/consent races, exact notification permission/time/cap semantics, approved consent/privacy/data-flow mapping, production analytics evidence, and physical-iPhone/archive-identical acceptance evidence before restoring complete.",
+      "evidenceRefs": [
+        "docs/hugeToDo/CORE-05-ADHERENCE-SOURCE-CHECKPOINT-2026-07-26.md",
+        "scripts/core05/adherence-source-contract.test.mjs",
+        "apps/mobile/src/features/today/completionsStore.ts",
+        "apps/mobile/src/features/today/completionsStore.test.ts",
+        "apps/mobile/src/features/today/useRoutineClock.ts",
+        "apps/mobile/src/features/today/useRoutineClock.test.ts",
+        "apps/mobile/src/app/(tabs)/today.tsx",
+        "apps/mobile/src/features/today/todayRoute.test.ts",
+        "apps/mobile/src/features/routine/useProgress.ts",
+        "apps/mobile/src/features/streak/streak.ts",
+        "apps/mobile/src/features/streak/streak.test.ts",
+        "apps/mobile/src/app/routine/streak.tsx",
+        "apps/mobile/src/app/routine/welcome-back.tsx"
+      ]
     },
     {
       "id": "CORE-06",

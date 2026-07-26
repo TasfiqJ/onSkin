@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -15,7 +16,7 @@ import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
 import { projectTodayRoutine } from '@/features/today/routineProjection';
-import { currentRoutineType, localClockLabel, localDateString } from '@/features/today/useToday';
+import { useRoutineClock } from '@/features/today/useRoutineClock';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
@@ -249,6 +250,7 @@ function Check({ color = colors.paper }: { color?: string }) {
 
 function CheckRow({
   compact = false,
+  disabled = false,
   name,
   sub,
   state,
@@ -257,6 +259,7 @@ function CheckRow({
   onPress,
 }: {
   compact?: boolean;
+  disabled?: boolean;
   name: string;
   sub?: string;
   state: 'done' | 'next' | 'pending';
@@ -271,18 +274,19 @@ function CheckRow({
   return (
     <Pressable
       accessibilityRole="checkbox"
-      accessibilityState={{ checked: state === 'done' }}
+      accessibilityState={{ checked: state === 'done', disabled }}
       accessibilityLabel={name}
       aria-checked={state === 'done'}
+      disabled={disabled}
       onPress={() => {
-        if (state === 'done') return;
-        haptics.success();
+        if (disabled || state === 'done') return;
         onPress();
       }}
       className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}
       style={{
         borderTopWidth: first ? 0 : 1,
         borderTopColor: dark ? colors.hairlineDark : colors.hairline,
+        opacity: disabled ? 0.58 : 1,
       }}
     >
       <View
@@ -344,19 +348,70 @@ function CheckRow({
   );
 }
 
+function CompletionStatusNotice({
+  dark,
+  loading,
+  onRetry,
+}: {
+  dark: boolean;
+  loading: boolean;
+  onRetry: () => void;
+}) {
+  return (
+    <View
+      accessibilityRole="alert"
+      className="mt-4 rounded-card px-4 py-3.5"
+      style={{
+        backgroundColor: dark ? colors.nightSurface : colors.greige,
+        borderColor: dark ? colors.hairlineDark : colors.hairline,
+        borderWidth: 1,
+      }}
+    >
+      <Text variant="bodySm" style={{ color: dark ? 'rgba(244,239,231,0.78)' : colors.ink }}>
+        {loading
+          ? 'Loading your saved check-offs…'
+          : "Check-offs aren't available right now. Reload to confirm your saved progress, then try again."}
+      </Text>
+      {!loading ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Try loading saved check-offs again"
+          className="mt-2 min-h-[48px] self-start justify-center rounded-pill px-4"
+          style={{ backgroundColor: dark ? colors.clayBright : colors.clay }}
+          onPress={onRetry}
+        >
+          <Text
+            variant="label"
+            className="font-sans-bold"
+            style={{ color: dark ? colors.night : colors.paper }}
+          >
+            Try again
+          </Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
 export default function TodayScreen() {
   const { height, width } = useWindowDimensions();
-  const type = currentRoutineType();
+  const clock = useRoutineClock({ includeMinuteUpdates: true });
+  const type = clock.phase;
   const dark = type === 'PM';
   const { data: planData } = usePlan();
   const { data: progress } = useProgress();
   const { data: cycleData } = useCycle();
   const qc = useQueryClient();
-  const today = localDateString();
-  const { data: doneData } = useQuery({
+  const today = clock.localDate;
+  const completionQuery = useQuery({
     queryKey: ['completions', today],
     queryFn: () => getCompletedSteps(today),
   });
+  const { data: doneData } = completionQuery;
+  const [completionActionFailed, setCompletionActionFailed] = useState(false);
+  const [completionPendingKey, setCompletionPendingKey] = useState<string | null>(null);
+  const completionLoading = completionQuery.isPending;
+  const completionUnavailable = completionLoading || completionQuery.isError;
   const done = doneData ?? new Set<string>();
   // One pure, fail-closed projection now drives Today and native glance surfaces.
   // It never exposes the design-only example plan and applies the orchestrated
@@ -377,55 +432,86 @@ export default function TodayScreen() {
     cycleStripNights,
   } = routine;
 
-  // Persist the check-off to the local-first store, fire the activation metric on the
-  // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
-  async function toggle(
+  // Persist first. Cache, haptic success, analytics, review, and derived progress
+  // publication are all downstream of the confirmed owner-current mutation.
+  async function handleCompletion(
     key: string,
     context?: { phase: 'AM' | 'PM'; cycleActive: boolean; stepKeys: readonly string[] },
   ) {
-    await runCurrentHealthDataOperation(async (lease) => {
-      lease.assertCurrent();
-      const result = await toggleCompletion(key, today);
-      lease.assertCurrent();
-      if (result.inserted) {
-        const moment = type.toLowerCase();
-        track('routine_checkoff_completed', { moment });
-        if (result.firstEver) track('first_checkoff_completed', { moment });
-        const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
-        if (
-          shouldTrackCycleNightCompleted({
-            completedStepKeysAfter: result.completedStepKeysAfter,
-            completedKey: key,
-            cycleActive: context?.cycleActive === true,
-            phase: checkoffPhase,
-            stepKeys: context?.stepKeys ?? [],
-            completionInserted: result.inserted,
-          })
-        ) {
-          track('cycle_night_completed', { moment: 'pm', source: 'today' });
-        }
-      }
-      lease.assertCurrent();
-      if (result.inserted && (progress?.streak ?? 0) >= 6) {
-        await requestReviewAfterValue('seven_checkoff_days');
+    if (completionUnavailable || completionPendingKey !== null) return;
+    setCompletionActionFailed(false);
+    setCompletionPendingKey(key);
+    let persistenceConfirmed = false;
+    try {
+      await runCurrentHealthDataOperation(async (lease) => {
         lease.assertCurrent();
+        const scheduled =
+          context?.phase === 'PM'
+            ? ({ phase: 'PM', stepKeys: context.stepKeys } as const)
+            : undefined;
+        const result = await toggleCompletion(key, today, scheduled);
+        lease.assertCurrent();
+        persistenceConfirmed = true;
+        qc.setQueryData(['completions', today], new Set(result.completedStepKeysAfter));
+        haptics.success();
+        if (result.inserted) {
+          const moment = type.toLowerCase();
+          track('routine_checkoff_completed', { moment });
+          if (result.firstEver) track('first_checkoff_completed', { moment });
+          const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
+          if (
+            shouldTrackCycleNightCompleted({
+              completedStepKeysAfter: result.completedStepKeysAfter,
+              completedKey: key,
+              cycleActive: context?.cycleActive === true,
+              phase: checkoffPhase,
+              stepKeys: context?.stepKeys ?? [],
+              completionInserted: result.inserted,
+            })
+          ) {
+            track('cycle_night_completed', { moment: 'pm', source: 'today' });
+          }
+        }
+        lease.assertCurrent();
+        if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {
+          await requestReviewAfterValue('seven_checkoff_days');
+          lease.assertCurrent();
+        }
+        await qc.invalidateQueries({ queryKey: ['completions', today] });
+        lease.assertCurrent();
+        await qc.invalidateQueries({ queryKey: ['progress'] });
+        lease.assertCurrent();
+      });
+    } catch {
+      if (!persistenceConfirmed) {
+        setCompletionActionFailed(true);
+      } else {
+        // The step is already durable and visibly cached. Retry only downstream
+        // refreshes; never relabel a confirmed check-off as a storage failure.
+        void Promise.allSettled([
+          qc.invalidateQueries({ queryKey: ['completions', today] }),
+          qc.invalidateQueries({ queryKey: ['progress'] }),
+        ]);
       }
-      await qc.invalidateQueries({ queryKey: ['completions', today] });
-      lease.assertCurrent();
-      await qc.invalidateQueries({ queryKey: ['progress'] });
-      lease.assertCurrent();
-    });
+    } finally {
+      setCompletionPendingKey(null);
+    }
+  }
+
+  function retryCompletions() {
+    setCompletionActionFailed(false);
+    void completionQuery.refetch();
   }
 
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
     done.has(key) ? 'done' : key === firstUndoneKey ? 'next' : 'pending';
 
-  const dateLabel = new Date().toLocaleDateString('en-US', {
+  const dateLabel = clock.now.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
   });
-  const clockLabel = localClockLabel();
+  const clockLabel = clock.clockLabel;
   const compactPhone = height < 700;
   const compactCycleStrip = compactPhone || width < 430;
   const compactRecommendationPrompt = height < 860;
@@ -486,6 +572,14 @@ export default function TodayScreen() {
             />
           ) : null}
 
+          {completionUnavailable || completionActionFailed ? (
+            <CompletionStatusNotice
+              dark={false}
+              loading={completionLoading}
+              onRetry={retryCompletions}
+            />
+          ) : null}
+
           {hasExamplePlan ? (
             <EmptyRoutineCard compact={compactPhone} dark={false} short={shortEmptyRoutine} />
           ) : (
@@ -522,8 +616,9 @@ export default function TodayScreen() {
                     state={rowState(k, firstUndone)}
                     dark={false}
                     compact={compactPhone}
+                    disabled={completionUnavailable || completionPendingKey !== null}
                     first={i === 0}
-                    onPress={() => void toggle(k)}
+                    onPress={() => void handleCompletion(k)}
                   />
                 );
               })}
@@ -777,52 +872,64 @@ export default function TodayScreen() {
         {hasExamplePlan ? (
           <EmptyRoutineCard compact={compactPhone} dark short={shortEmptyRoutine} />
         ) : (
-          <View className="mt-4 rounded-card p-5" style={{ backgroundColor: colors.nightSurface }}>
-            <View className="mb-2 flex-row items-center justify-between">
-              <Text className="font-sans-bold text-[16px]" style={{ color: colors.cream }}>
-                Evening routine
-              </Text>
-              {pmSteps.length ? (
-                <Text className="font-mono text-[12px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
-                  {donePm} of {pmSteps.length}
+          <>
+            {completionUnavailable || completionActionFailed ? (
+              <CompletionStatusNotice dark loading={completionLoading} onRetry={retryCompletions} />
+            ) : null}
+            <View
+              className="mt-4 rounded-card p-5"
+              style={{ backgroundColor: colors.nightSurface }}
+            >
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text className="font-sans-bold text-[16px]" style={{ color: colors.cream }}>
+                  Evening routine
                 </Text>
-              ) : null}
-            </View>
-            {pmSteps.length ? (
-              pmSteps.map((s, i) => {
-                const k = stepKey('PM', s.productId);
-                return (
-                  <CheckRow
-                    key={k}
-                    name={s.name}
-                    sub={s.instruction}
-                    state={rowState(k, firstUndonePm)}
-                    dark
-                    compact={compactPhone}
-                    first={i === 0}
-                    onPress={() =>
-                      void toggle(k, {
-                        phase: 'PM',
-                        cycleActive: routine.cycleActive,
-                        stepKeys: pmStepKeys,
-                      })
-                    }
-                  />
-                );
-              })
-            ) : (
-              <View className={compactPhone ? 'py-2.5' : 'py-3'}>
-                <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
-                  No evening steps yet.
-                </Text>
-                <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
-                  {sequencingWithheldCount > 0 || cadenceWithheldCount > 0
-                    ? 'Products awaiting reviewed order or timing stay off Today for now.'
-                    : 'Add a cleanser, moisturiser, or night product to build this out.'}
-                </Text>
+                {pmSteps.length ? (
+                  <Text
+                    className="font-mono text-[12px]"
+                    style={{ color: 'rgba(244,239,231,0.45)' }}
+                  >
+                    {donePm} of {pmSteps.length}
+                  </Text>
+                ) : null}
               </View>
-            )}
-          </View>
+              {pmSteps.length ? (
+                pmSteps.map((s, i) => {
+                  const k = stepKey('PM', s.productId);
+                  return (
+                    <CheckRow
+                      key={k}
+                      name={s.name}
+                      sub={s.instruction}
+                      state={rowState(k, firstUndonePm)}
+                      dark
+                      compact={compactPhone}
+                      disabled={completionUnavailable || completionPendingKey !== null}
+                      first={i === 0}
+                      onPress={() =>
+                        void handleCompletion(k, {
+                          phase: 'PM',
+                          cycleActive: routine.cycleActive,
+                          stepKeys: pmStepKeys,
+                        })
+                      }
+                    />
+                  );
+                })
+              ) : (
+                <View className={compactPhone ? 'py-2.5' : 'py-3'}>
+                  <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
+                    No evening steps yet.
+                  </Text>
+                  <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
+                    {sequencingWithheldCount > 0 || cadenceWithheldCount > 0
+                      ? 'Products awaiting reviewed order or timing stay off Today for now.'
+                      : 'Add a cleanser, moisturiser, or night product to build this out.'}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </>
         )}
 
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}

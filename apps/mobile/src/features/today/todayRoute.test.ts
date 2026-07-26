@@ -162,10 +162,43 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('stepKeys: pmStepKeys');
     expect(source).toContain('completionInserted: result.inserted');
     expect(source).not.toContain('completedBefore: done');
-    expect(source).toContain('if (result.inserted && (progress?.streak ?? 0) >= 6) {');
+    expect(source).toContain('if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {');
+    expect(source).toContain('const result = await toggleCompletion(key, today, scheduled)');
     expect(source).toContain("track('cycle_night_completed', { moment: 'pm', source: 'today' })");
     const eventIndex = source.indexOf("track('cycle_night_completed'");
     const eventCall = source.slice(eventIndex, eventIndex + 120);
     expect(eventCall).not.toMatch(/product|slot|step|skin|goal/i);
+  });
+
+  it('fails closed when completion history cannot be read or written', () => {
+    const source = readAppRoute('(tabs)/today.tsx');
+
+    expect(source).toContain('const completionUnavailable =');
+    expect(source).toContain('completionLoading || completionQuery.isError');
+    expect(source).toContain('disabled={completionUnavailable || completionPendingKey !== null}');
+    expect(source).toContain("Check-offs aren't available right now.");
+    expect(source).toContain('Reload to confirm your saved progress, then try again.');
+    expect(source).toContain('const result = await toggleCompletion(key, today, scheduled)');
+    expect(source).toContain('persistenceConfirmed = true');
+    expect(source).toContain("qc.setQueryData(['completions', today]");
+    expect(source).toContain('haptics.success()');
+    expect(
+      source.indexOf('const result = await toggleCompletion(key, today, scheduled)'),
+    ).toBeLessThan(source.indexOf('haptics.success()'));
+    expect(source).toContain('setCompletionActionFailed(true)');
+    expect(source).toContain('if (!persistenceConfirmed)');
+    expect(source).not.toContain('onPress={() => void toggle(k)}');
+  });
+
+  it('keeps the visible date, clock, and AM/PM phase live across foreground boundaries', () => {
+    const source = readAppRoute('(tabs)/today.tsx');
+
+    expect(source).toContain("import { useRoutineClock } from '@/features/today/useRoutineClock';");
+    expect(source).toContain('const clock = useRoutineClock({ includeMinuteUpdates: true })');
+    expect(source).toContain('const type = clock.phase');
+    expect(source).toContain('const today = clock.localDate');
+    expect(source).toContain('const dateLabel = clock.now.toLocaleDateString');
+    expect(source).toContain('const clockLabel = clock.clockLabel');
+    expect(source).not.toContain('const type = currentRoutineType()');
   });
 });
