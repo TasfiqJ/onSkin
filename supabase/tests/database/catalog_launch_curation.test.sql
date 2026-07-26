@@ -2574,44 +2574,48 @@ select ok(
         'to_jsonb(product' in audit.product_definition
       ) > 0
       and position(
-        'fullproductsourcerow' in audit.dependency_definition
+        'catalog_launch_curation_dependency_snapshot_v0058'
+        in audit.dependency_definition
       ) > 0
       and position(
-        'fullreferencedsourcerows' in audit.dependency_definition
+        'fullproductsourcerow' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullimportbatchrow' in audit.dependency_definition
+        'fullreferencedsourcerows' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullstagedrecordrow' in audit.dependency_definition
-      ) > 0
-      and position('fullbrandrow' in audit.dependency_definition) > 0
-      and position('fullcategoryrow' in audit.dependency_definition) > 0
-      and position('fullbarcoderows' in audit.dependency_definition) > 0
-      and position(
-        'fullingredientlistrows' in audit.dependency_definition
-      ) > 0
-      and position('fulltokenrows' in audit.dependency_definition) > 0
-      and position(
-        'fullingredientlinkrows' in audit.dependency_definition
+        'fullimportbatchrow' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullmappedingredientrows' in audit.dependency_definition
+        'fullstagedrecordrow' in audit.dependency_v0058_definition
+      ) > 0
+      and position('fullbrandrow' in audit.dependency_v0058_definition) > 0
+      and position('fullcategoryrow' in audit.dependency_v0058_definition) > 0
+      and position('fullbarcoderows' in audit.dependency_v0058_definition) > 0
+      and position(
+        'fullingredientlistrows' in audit.dependency_v0058_definition
+      ) > 0
+      and position('fulltokenrows' in audit.dependency_v0058_definition) > 0
+      and position(
+        'fullingredientlinkrows' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullingredientsynonymrows' in audit.dependency_definition
+        'fullmappedingredientrows' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullingredienttagassignmentrows' in audit.dependency_definition
+        'fullingredientsynonymrows' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullingredienttagdefinitionrows' in audit.dependency_definition
+        'fullingredienttagassignmentrows' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullactivebandrows' in audit.dependency_definition
+        'fullingredienttagdefinitionrows' in audit.dependency_v0058_definition
       ) > 0
       and position(
-        'fullpaoexpiryrows' in audit.dependency_definition
+        'fullactivebandrows' in audit.dependency_v0058_definition
+      ) > 0
+      and position(
+        'fullpaoexpiryrows' in audit.dependency_v0058_definition
       ) > 0
       and position(
         'operatorholdrows' in audit.dependency_definition
@@ -2728,8 +2732,20 @@ select ok(
         'current_date' in audit.structural_definition
       ) = 0
       and position(
-        'at time zone ''utc''' in audit.structural_definition
-      ) > 0
+        'current_timestamp' in audit.structural_definition
+      ) = 0
+      and position(
+        'clock_timestamp(' in audit.structural_definition
+      ) = 0
+      and position(
+        'statement_timestamp(' in audit.structural_definition
+      ) = 0
+      and position(
+        'transaction_timestamp(' in audit.structural_definition
+      ) = 0
+      and position(
+        'localtimestamp' in audit.structural_definition
+      ) = 0
       and position(
         'current_date' in audit.ingredient_serving_definition
       ) = 0
@@ -2747,11 +2763,22 @@ select ok(
         in audit.mutation_writer_definition
       ) > 0
       and position(
-        'triaged' in audit.mutation_capture_definition
+        'private.catalog_operator_product_holds'
+        in audit.hold_mutation_definition
       ) > 0
       and position(
-        'accepted' in audit.mutation_capture_definition
+        'operator_correction_hold'
+        in audit.hold_mutation_definition
       ) > 0
+      and position(
+        'for update' in audit.hold_mutation_definition
+      ) > 0
+      and position(
+        'for update' in audit.hold_mutation_definition
+      ) < position(
+        'catalog-launch-curation-global'
+        in audit.hold_mutation_definition
+      )
       and position(
         'correctionid' in audit.correction_projection_definition
       ) > 0
@@ -2798,6 +2825,9 @@ select ok(
           'private.catalog_launch_curation_dependency_snapshot(uuid,uuid)'::regprocedure
         )) as dependency_definition,
         pg_catalog.lower(pg_catalog.pg_get_functiondef(
+          'private.catalog_launch_curation_dependency_snapshot_v0058(uuid,uuid)'::regprocedure
+        )) as dependency_v0058_definition,
+        pg_catalog.lower(pg_catalog.pg_get_functiondef(
           'public.lookup_catalog_product_by_barcode(text)'::regprocedure
         )) as lookup_definition,
         pg_catalog.lower(pg_catalog.pg_get_functiondef(
@@ -2833,6 +2863,9 @@ select ok(
         pg_catalog.lower(pg_catalog.pg_get_functiondef(
           'private.capture_catalog_launch_served_state_mutation()'::regprocedure
         )) as mutation_capture_definition,
+        pg_catalog.lower(pg_catalog.pg_get_functiondef(
+          'private.catalog_operator_append_hold_mutation(uuid,uuid,text,jsonb,jsonb)'::regprocedure
+        )) as hold_mutation_definition,
         pg_catalog.lower(pg_catalog.pg_get_functiondef(
           'private.catalog_launch_correction_serving_projection(jsonb)'::regprocedure
         )) as correction_projection_definition,
@@ -3770,52 +3803,62 @@ select is(
   'the prioritized eligible set is exact, unique, and contiguous from one'
 );
 
-with staged as materialized (
-  select pg_temp.cat03_stage_product(
+create temporary table cat03_initial_stage_readback on commit drop as
+select pg_temp.cat03_stage_product(
     '58000000-0000-4000-8000-000000000080',
     (select value_uuid from cat03_test_state where state_key = 'test_product')
-  ) as value
-)
-select ok(
+  ) as value;
+
+select is(
+  (select staged.value from cat03_initial_stage_readback as staged),
   (
-    select
-      staged.value ->> 'replayed' = 'false'
-      and staged.value ->> 'product_id' = record.product_id::text
-      and staged.value ->> 'release_id' = campaign.release_id
-      and staged.value ->> 'campaign_authority_sha256' =
-        campaign.campaign_authority_sha256
-      and staged.value ->> 'curation_outcome_reviewer_signature_set_sha256' =
-        campaign.curation_outcome_reviewer_signature_set_sha256
-      and staged.value ->> 'cat02_membership_proof_sha256' =
-        record.cat02_membership_proof_sha256
-      and staged.value ->> 'cat02_database_observation_sha256' =
-        record.cat02_database_observation_sha256
-      and staged.value ->> 'cat02_verifier_signature_set_sha256' =
-        record.cat02_verifier_signature_set_sha256
-      and staged.value ->> 'cat02_production_integrity_set_sha256' =
-        record.cat02_production_integrity_set_sha256
-      and staged.value ->> 'cat02_stage_record_sha256' =
-        record.cat02_stage_record_sha256
-      and staged.value ->> 'cat02_database_normalized_record_sha256' =
-        record.cat02_database_normalized_record_sha256
-      and staged.value ->> 'source_approval_sha256' = record.source_approval_sha256
-      and staged.value ->> 'source_qa_sha256' = record.source_qa_sha256
-      and staged.value ->> 'served_state_mutation_root_sha256' =
-        record.served_state_mutation_root_sha256
-      and staged.value -> 'dependency_memberships' = record.dependency_memberships
-      and staged.value ->> 'cat02_membership_readback_sha256' =
-        record.cat02_membership_readback_sha256
-      and staged.value ->> 'database_base_record_sha256' =
-        record.database_base_record_sha256
-      and staged.value ->> 'reviewed_record_mapping_sha256' =
-        record.reviewed_record_mapping_sha256
-      and staged.value ->> 'database_activation_request_sha256' =
-        record.database_activation_request_sha256
-      and staged.value ->> 'activation_signature_sha256' =
-        record.activation_signature_sha256
-      and staged.value ->> 'event_receipt_sha256' = event.event_receipt_sha256
-      and staged.value ->> 'head_sha256' = head.head_sha256
-    from staged
+    select pg_catalog.jsonb_build_object(
+      'product_id', record.product_id,
+      'curation_event_id', event.id,
+      'head_generation', head.generation,
+      'replayed', false,
+      'release_id', campaign.release_id,
+      'campaign_authority_sha256', campaign.campaign_authority_sha256,
+      'curation_outcome_reviewer_signature_set_sha256',
+        campaign.curation_outcome_reviewer_signature_set_sha256,
+      'cat02_membership_proof_sha256', record.cat02_membership_proof_sha256,
+      'cat02_database_observation_sha256',
+        record.cat02_database_observation_sha256,
+      'cat02_verifier_signature_set_sha256',
+        record.cat02_verifier_signature_set_sha256,
+      'cat02_production_integrity_set_sha256',
+        record.cat02_production_integrity_set_sha256,
+      'product_record_sha256', record.product_record_sha256,
+      'cat02_stage_record_sha256', record.cat02_stage_record_sha256,
+      'cat02_database_normalized_record_sha256',
+        record.cat02_database_normalized_record_sha256,
+      'source_approval_sha256', record.source_approval_sha256,
+      'source_qa_sha256', record.source_qa_sha256,
+      'served_state_mutation_root_sha256',
+        record.served_state_mutation_root_sha256,
+      'dependency_memberships', record.dependency_memberships,
+      'cat02_membership_readback_sha256',
+        record.cat02_membership_readback_sha256,
+      'offline_base_sealed_record_sha256',
+        record.offline_base_sealed_record_sha256,
+      'database_base_record_sha256', record.database_base_record_sha256,
+      'reviewed_record_mapping_sha256',
+        record.reviewed_record_mapping_sha256,
+      'curation_record_sha256', record.curation_record_sha256,
+      'database_activation_request_sha256',
+        record.database_activation_request_sha256,
+      'activation_signature_sha256', record.activation_signature_sha256,
+      'regulatory_review_evidence_sha256',
+        record.regulatory_review_evidence_sha256,
+      'regulatory_reviewer_ids', record.regulatory_reviewer_ids,
+      'regulatory_signature_set_sha256',
+        record.regulatory_signature_set_sha256,
+      'reviewer_evidence_sha256s', record.reviewer_evidence_sha256s,
+      'reviewer_signature_set_sha256', record.reviewer_signature_set_sha256,
+      'event_receipt_sha256', event.event_receipt_sha256,
+      'head_sha256', head.head_sha256
+    )
+    from cat03_initial_stage_readback as staged
     join private.catalog_launch_curation_records as record
       on record.product_id = (staged.value ->> 'product_id')::uuid
      and record.campaign_id = '58000000-0000-4000-8000-000000000080'
@@ -3823,8 +3866,15 @@ select ok(
       on campaign.id = record.campaign_id
     join private.catalog_launch_curation_events as event
       on event.id = (staged.value ->> 'curation_event_id')::uuid
+     and event.product_id = record.product_id
+     and event.campaign_id = campaign.id
+     and event.new_curation_record_id = record.id
     join private.catalog_launch_curation_heads as head
       on head.last_event_id = event.id
+     and head.product_id = record.product_id
+     and head.territory = 'US'
+     and head.curation_record_id = record.id
+     and head.generation = event.generation
      and head.campaign_id = campaign.id
   ),
   'product staging returns the complete canonical authorization/event/head readback'
@@ -4282,6 +4332,7 @@ select pg_catalog.set_config(
 select pg_catalog.set_config(
   'app.cat03_service_cache_poison_result',
   pg_catalog.jsonb_build_object(
+    'sessionUser', session_user,
     'currentUser', current_user,
     'lookup', (
       select count(*)
@@ -4307,8 +4358,20 @@ select is(
   pg_catalog.current_setting(
     'app.cat03_service_cache_poison_result'
   )::jsonb,
-  '{"currentUser":"service_role","lookup":1,"search":1}'::jsonb,
-  'a service_role effective role cannot poison the cache locally; hosted evidence must prove an actual service_role session cannot poison scalar validity through a forged temporary cache and GUC'
+  pg_catalog.jsonb_build_object(
+    'currentUser', 'service_role',
+    'lookup', 0,
+    'search', 0,
+    'sessionUser', (
+      select owner_role.rolname
+      from pg_catalog.pg_proc as procedure
+      join pg_catalog.pg_roles as owner_role
+        on owner_role.oid = procedure.proowner
+      where procedure.oid =
+        'public.release_catalog_launch_curation_campaign(uuid,text,text,text,text,text,text,text)'::regprocedure
+    )
+  ),
+  'SET ROLE retains the migration-owner session and therefore cannot model a distinct runtime service_role session'
 );
 
 set local role authenticated;
@@ -4583,50 +4646,6 @@ select ok(
   'reporter-owned correction projection changes cannot mutate any product serving root'
 );
 
-insert into private.catalog_operator_product_holds (
-  id, product_id, reason_code, state, version,
-  triaged_by_user_id, legacy_origin_sha256,
-  baseline_import_batch_id, baseline_product_record_sha256,
-  baseline_served_state_mutation_root_sha256, opened_at
-)
-select
-  '58000000-0000-4000-8000-000000000091',
-  fixture.product_id,
-  'wrong_match_confirmed',
-  'active',
-  1,
-  null,
-  repeat('a', 64),
-  product.import_batch_id,
-  product.import_record_sha256,
-  private.catalog_launch_current_served_state_mutation_root_sha256(
-    fixture.product_id
-  ),
-  pg_catalog.clock_timestamp()
-from cat03_product_fixture as fixture
-join public.products as product on product.id = fixture.product_id
-where fixture.ordinal = 2;
-
-select private.catalog_operator_append_hold_mutation(
-  fixture.product_id,
-  '58000000-0000-4000-8000-000000000091',
-  'INSERT',
-  null,
-  pg_catalog.jsonb_build_object(
-    'id', '58000000-0000-4000-8000-000000000091'::uuid,
-    'productId', fixture.product_id,
-    'reasonCode', 'wrong_match_confirmed',
-    'state', 'active',
-    'version', 1
-  )
-)
-from cat03_product_fixture as fixture
-where fixture.ordinal = 2;
-
-select public.refresh_product_correction_count(fixture.product_id)
-from cat03_product_fixture as fixture
-where fixture.ordinal = 2;
-
 update public.catalog_corrections
    set status = 'closed',
        resolved_by = 'cat03.correction.reviewer',
@@ -4646,37 +4665,6 @@ select 'correction_root_after',
   )
 from cat03_product_fixture as fixture
 where fixture.ordinal = 2;
-
-select ok(
-  (select value_text from cat03_test_state
-    where state_key = 'correction_root_before') <>
-  (select value_text from cat03_test_state
-    where state_key = 'correction_root_after')
-  and private.catalog_product_is_servable(
-    (select product_id from cat03_product_fixture where ordinal = 2)
-  ) is false
-  and (
-    select count(*) = 1
-    from private.catalog_launch_curation_product_mutations as mutation
-    where mutation.product_id = (
-        select product_id from cat03_product_fixture where ordinal = 2
-      )
-      and mutation.source_relation =
-        'private.catalog_operator_product_holds'
-      and mutation.mutation_kind = 'operator_correction_hold'
-  )
-  and (
-    select count(*) = 0
-    from private.catalog_launch_curation_product_mutations as mutation
-    where mutation.product_id = (
-        select product_id from cat03_product_fixture where ordinal = 3
-      )
-      and mutation.source_relation =
-        'private.catalog_operator_product_holds'
-      and mutation.mutation_kind = 'operator_correction_hold'
-  ),
-  'one independent CAT-08 hold advances only its product root and report closure cannot resurrect serving'
-);
 
 -- A product with no curation record, token, or ingredient link proves the
 -- shared source/batch mapper reaches products through active bands alone.
@@ -5284,6 +5272,109 @@ select is(
   'authenticated RLS observes the atomic successor swap with no mixed campaign rows'
 );
 reset role;
+
+insert into cat03_test_state (state_key, value_text)
+select 'cat08_hold_root_before',
+  private.catalog_launch_current_served_state_mutation_root_sha256(
+    fixture.product_id
+  )
+from cat03_product_fixture as fixture
+where fixture.ordinal = 2;
+
+insert into cat03_test_state (state_key, value_text)
+select 'cat08_hold_servable_before',
+  private.catalog_product_is_servable(fixture.product_id)::text
+from cat03_product_fixture as fixture
+where fixture.ordinal = 2;
+
+insert into private.catalog_operator_product_holds (
+  id, product_id, reason_code, state, version,
+  triaged_by_user_id, legacy_origin_sha256,
+  baseline_import_batch_id, baseline_product_record_sha256,
+  baseline_served_state_mutation_root_sha256, opened_at
+)
+select
+  '58000000-0000-4000-8000-000000000091',
+  fixture.product_id,
+  'wrong_match_confirmed',
+  'active',
+  1,
+  null,
+  repeat('a', 64),
+  product.import_batch_id,
+  product.import_record_sha256,
+  private.catalog_launch_current_served_state_mutation_root_sha256(
+    fixture.product_id
+  ),
+  pg_catalog.clock_timestamp()
+from cat03_product_fixture as fixture
+join public.products as product on product.id = fixture.product_id
+where fixture.ordinal = 2;
+
+select private.catalog_operator_append_hold_mutation(
+  fixture.product_id,
+  '58000000-0000-4000-8000-000000000091',
+  'INSERT',
+  null,
+  pg_catalog.jsonb_build_object(
+    'id', '58000000-0000-4000-8000-000000000091'::uuid,
+    'productId', fixture.product_id,
+    'reasonCode', 'wrong_match_confirmed',
+    'state', 'active',
+    'version', 1
+  )
+)
+from cat03_product_fixture as fixture
+where fixture.ordinal = 2;
+
+select public.refresh_product_correction_count(fixture.product_id)
+from cat03_product_fixture as fixture
+where fixture.ordinal = 2;
+
+insert into cat03_test_state (state_key, value_text)
+select 'cat08_hold_root_after',
+  private.catalog_launch_current_served_state_mutation_root_sha256(
+    fixture.product_id
+  )
+from cat03_product_fixture as fixture
+where fixture.ordinal = 2;
+
+select ok(
+  (select value_text from cat03_test_state
+    where state_key = 'correction_root_before') =
+  (select value_text from cat03_test_state
+    where state_key = 'correction_root_after')
+  and (select value_text from cat03_test_state
+    where state_key = 'cat08_hold_servable_before') = 'true'
+  and (select value_text from cat03_test_state
+    where state_key = 'cat08_hold_root_before') <>
+  (select value_text from cat03_test_state
+    where state_key = 'cat08_hold_root_after')
+  and private.catalog_product_is_servable(
+    (select product_id from cat03_product_fixture where ordinal = 2)
+  ) is false
+  and (
+    select count(*) = 1
+    from private.catalog_launch_curation_product_mutations as mutation
+    where mutation.product_id = (
+        select product_id from cat03_product_fixture where ordinal = 2
+      )
+      and mutation.source_relation =
+        'private.catalog_operator_product_holds'
+      and mutation.mutation_kind = 'operator_correction_hold'
+  )
+  and (
+    select count(*) = 0
+    from private.catalog_launch_curation_product_mutations as mutation
+    where mutation.product_id = (
+        select product_id from cat03_product_fixture where ordinal = 3
+      )
+      and mutation.source_relation =
+        'private.catalog_operator_product_holds'
+      and mutation.mutation_kind = 'operator_correction_hold'
+  ),
+  'reporter-owned closure is inert, then one independent CAT-08 hold advances only its product root and blocks serving'
+);
 
 select pg_temp.cat03_retire_campaign(
   '58000000-0000-4000-8000-000000000081'
