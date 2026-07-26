@@ -352,4 +352,38 @@ describe('Settings privacy consent persistence', () => {
     expect(onLocalDataSharingSaved).not.toHaveBeenCalled();
     expect(mocks.withdrawConsent).not.toHaveBeenCalled();
   });
+
+  it('cannot clear pending state after a held withdrawal crosses an owner boundary', async () => {
+    let releaseWithdrawal!: () => void;
+    const onLocalDataSharingSaved = vi.fn();
+    const onDataSharingWithdrawalCompleted = vi.fn();
+    mocks.withdrawConsent.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseWithdrawal = resolve;
+        }),
+    );
+    const persistence = persistSettingsPrivacyConsentChoice(
+      createOwnerQueryScope(),
+      {
+        type: 'data_sharing',
+        granted: false,
+        onLocalDataSharingSaved,
+        onDataSharingWithdrawalCompleted,
+      },
+      mocks,
+    );
+    await vi.waitFor(() => expect(mocks.withdrawConsent).toHaveBeenCalledOnce());
+    expect(onLocalDataSharingSaved).toHaveBeenCalledWith(false);
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(persistence).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    releaseWithdrawal();
+    await Promise.resolve();
+
+    expect(mocks.clearCommerceConsentLocal).not.toHaveBeenCalled();
+    expect(onDataSharingWithdrawalCompleted).not.toHaveBeenCalled();
+  });
 });

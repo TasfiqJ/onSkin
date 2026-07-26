@@ -39,6 +39,12 @@ Settings consent persistence now has one owner-fenced contract:
   later account generation;
 - the You surface exposes one accessible same-choice `Try again` action and
   synchronously single-flights rapid activation;
+- an exact development-web/data-sharing-only fixture fails twice and then
+  returns the exact valid cleanup acknowledgement through the production hash,
+  account-generation, and response-validation path. Its content-free same-tab
+  attempt counter survives reload; a separate held mode proves late response
+  detachment. Unknown, production, native, and other-consent paths retain the
+  normal backend contract;
 - the commerce consent sheet shares one synchronous Allow/Decline guard and
   disables both actions and dismissal while either is running. A retained
   pending marker keeps the sheet open with an accessible cleanup retry; the
@@ -60,18 +66,29 @@ npm.cmd --workspace apps/mobile exec eslint <exact changed mobile files>
 npm.cmd exec prettier -- --check <exact changed files and docs>
 npm.cmd run phase9:consent-withdrawal
 npm.cmd --workspace apps/mobile test -- --run
+npm.cmd test
+npm.cmd run typecheck
+npm.cmd run lint
 git diff --check
 ```
 
 Results:
 
 - Focused matrix: 12 files / 177 tests passed.
+- Fresh fixture/recovery matrix: 9 files / 129 tests passed. It includes
+  production/native/type/mode isolation, exact third acknowledgement,
+  content-free reload counting, restricted-session-storage normalization,
+  never-resolving hash detachment, held-response owner detachment, and
+  success-only pending-marker clearing.
 - Mobile type-check: passed.
 - Exact changed-file lint: passed.
 - Prettier and patch whitespace checks: passed.
-- Full mobile run: 361 of 363 files and 4,415 of 4,419 tests passed. The same
-  four unrelated dirty-worktree failures remain in Shelf expiry provenance and
-  the notification behavioural snapshot; the failure set is unchanged.
+- Final root run: 370 of 372 files and 4,561 of 4,565 tests passed. The dev-only
+  fixture key remains outside the production private-storage registry and its
+  inventory test passes. The same four unrelated dirty-worktree failures
+  remain in Shelf expiry provenance and the notification behavioural snapshot;
+  the failure set is unchanged.
+- Root type-check and zero-warning lint: passed across both workspaces.
 - Independent final adversarial review: no remaining P0/P1 finding after
   rechecking cross-surface invocation order, exact acknowledgement schemas,
   pending-query truthfulness, retry accessibility, dismissal, and stale-owner
@@ -91,20 +108,41 @@ recovery, dismissal fencing, and shared consent-sheet action serialization.
 
 ## Human-Simulated E2E
 
-The Codex in-app browser opened the actual Expo web You surface at 375 x 667
-and confirmed the expected starting screen before the commerce flag was
-enabled. The app was then restarted with both
-`EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and
-`EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`; the local route
-returned HTTP 200. During that restart the browser entered its generated
-connection-error document, and its URL safety policy then refused navigation
-back to the local app even from a fresh controlled tab. The browser session was
-cleaned up.
+Fresh installed-Chrome Playwright drove the actual Expo web `/you` surface at
+390 x 844 with the synthetic authenticated account fixture and commerce flag.
+The deterministic attempt series was exactly:
 
-This is not recorded as a UI pass. A fresh in-app-browser run must still
-exercise grant, failed withdrawal, rapid retry, and relaunch recovery at the
-supported phone viewport. Authenticated staging must additionally prove the
-deployed endpoint appends the caller-scoped false ledger row, deletes commerce
-click events, detaches order attributions, and returns the exact
-acknowledgement. Native VoiceOver and physical-device process-kill recovery
-remain release gates.
+`0 -> 1 -> 2 -> 2 after reload -> 3 -> 3 after final reload`
+
+- The initial 52 x 48 px switch granted locally without a withdrawal call.
+- The first withdrawal saved encrypted local `false`, unchecked the switch,
+  produced attempt one, and exposed one `Choice not saved` alert plus one
+  113.91 x 56 px same-choice retry.
+- A pending regrant remained blocked without another workflow or attempt.
+- Two same-frame retry activations produced only attempt two and one additional
+  consent start.
+- Same-tab reload retained the encrypted pending marker and content-free
+  counter at two without an automatic request.
+- One retry accepted the exact validated third acknowledgement, removed the
+  alert/retry, and left the switch off and changeable.
+- Final reload made no fourth request; a new local grant then succeeded and
+  left the withdrawal counter at three.
+
+A separate held run started sign-out after local revocation but before cleanup
+resolved. The account-generation boundary removed You immediately and entered
+the real protected-data recovery screen. Releasing the account-A response
+after that boundary did not restore You, publish account-A feedback, clear the
+gate, or increment the counter. Retrying the deliberately failed first local
+clear completed sign-out and rendered Welcome. The release hook deleted
+itself.
+
+All target controls were at least 44 px and fully visible. Every sampled state
+had zero horizontal overflow, dialogs, page errors, unexpected warnings/errors,
+or raw fixture/backend/storage text. Screenshots, exact counts, accessibility
+snapshots, logs, and the command transcript are in
+`test-results/human-e2e/2026-07-26/settings-data-sharing-withdrawal-recovery-current/`.
+
+Authenticated staging must still prove that the deployed endpoint appends the
+caller-scoped false ledger row, deletes commerce click events, detaches order
+attributions, and returns the exact acknowledgement. Native VoiceOver and
+physical-device process-kill recovery remain release gates.

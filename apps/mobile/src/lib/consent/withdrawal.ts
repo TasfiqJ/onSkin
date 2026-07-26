@@ -1,9 +1,18 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
+import { Platform } from 'react-native';
 
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
 import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
+
+import {
+  resolveConsentWithdrawalE2EFixture,
+  runConsentWithdrawalE2EFixture,
+} from './withdrawalE2EFixture';
 
 export type WithdrawableConsentType =
   | 'photo_cloud_backup'
@@ -77,24 +86,31 @@ export async function withdrawConsent(params: {
   version: string;
   consentText: string;
 }): Promise<void> {
-  if (!isSupabaseConfigured) throw new Error('CONSENT_BACKEND_UNAVAILABLE');
+  const e2eFixture = resolveConsentWithdrawalE2EFixture({
+    consentType: params.type,
+    development: typeof __DEV__ !== 'undefined' && __DEV__,
+    platform: Platform.OS,
+    raw: process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL,
+  });
+  if (!isSupabaseConfigured && !e2eFixture) throw new Error('CONSENT_BACKEND_UNAVAILABLE');
 
   await runAccountGenerationOperation(async (lease) => {
-    const consentTextHash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      params.consentText,
+    const consentTextHash = await awaitAccountGenerationLease(lease, () =>
+      Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, params.consentText),
     );
     lease.assertCurrent();
 
-    const response = await invokeEdgeFunction<unknown>('consent-withdrawal', {
-      method: 'POST',
-      signal: lease.signal,
-      body: {
-        consentType: params.type,
-        version: params.version,
-        consentTextHash,
-      },
-    });
+    const response = e2eFixture
+      ? await awaitAccountGenerationLease(lease, () => runConsentWithdrawalE2EFixture(e2eFixture))
+      : await invokeEdgeFunction<unknown>('consent-withdrawal', {
+          method: 'POST',
+          signal: lease.signal,
+          body: {
+            consentType: params.type,
+            version: params.version,
+            consentTextHash,
+          },
+        });
     lease.assertCurrent();
     if (
       !isRecord(response) ||

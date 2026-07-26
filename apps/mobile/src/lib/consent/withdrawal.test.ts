@@ -6,6 +6,11 @@ import {
 } from '@/lib/auth/accountGeneration';
 
 import { CONSENT_WITHDRAWAL_RESPONSE_INVALID, withdrawConsent } from './withdrawal';
+import {
+  DATA_SHARING_WITHDRAWAL_E2E_ATTEMPTS_KEY,
+  DATA_SHARING_WITHDRAWAL_E2E_FAILURE,
+  DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK,
+} from './withdrawalE2EFixture';
 
 const validCleanupByConsentType = {
   photo_cloud_backup: {
@@ -37,11 +42,19 @@ const mocks = vi.hoisted(() => ({
   invoke: vi.fn(),
 }));
 
-const state = vi.hoisted(() => ({ isSupabaseConfigured: false }));
+const state = vi.hoisted(() => ({ isSupabaseConfigured: false, platform: 'ios' }));
 
 vi.mock('@/lib/env', () => ({
   get isSupabaseConfigured() {
     return state.isSupabaseConfigured;
+  },
+}));
+
+vi.mock('react-native', () => ({
+  Platform: {
+    get OS() {
+      return state.platform;
+    },
   },
 }));
 
@@ -58,8 +71,11 @@ vi.mock('@/lib/supabase/client', () => ({
 }));
 
 let boundaryActive = false;
+const fixtureStorage = new Map<string, string>();
 
 afterEach(() => {
+  delete process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL;
+  vi.unstubAllGlobals();
   if (boundaryActive) {
     endAccountGenerationBoundary();
     boundaryActive = false;
@@ -69,6 +85,13 @@ afterEach(() => {
 describe('consent withdrawal backend guard', () => {
   beforeEach(() => {
     state.isSupabaseConfigured = false;
+    state.platform = 'ios';
+    fixtureStorage.clear();
+    vi.stubGlobal('__DEV__', true);
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => fixtureStorage.get(key) ?? null,
+      setItem: (key: string, value: string) => fixtureStorage.set(key, value),
+    });
     mocks.digest.mockClear();
     mocks.getSession.mockReset();
     mocks.getUser.mockReset();
@@ -89,6 +112,103 @@ describe('consent withdrawal backend guard', () => {
       },
       error: null,
     });
+  });
+
+  it('hashes, owner-fences, and validates the exact third fixture acknowledgement', async () => {
+    state.platform = 'web';
+    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'fail_twice_then_succeed';
+    const params = {
+      type: 'data_sharing' as const,
+      version: 'test',
+      consentText: 'copy',
+    };
+
+    await expect(withdrawConsent(params)).rejects.toThrow(DATA_SHARING_WITHDRAWAL_E2E_FAILURE);
+    await expect(withdrawConsent(params)).rejects.toThrow(DATA_SHARING_WITHDRAWAL_E2E_FAILURE);
+    await expect(withdrawConsent(params)).resolves.toBeUndefined();
+
+    expect(fixtureStorage.get(DATA_SHARING_WITHDRAWAL_E2E_ATTEMPTS_KEY)).toBe('3');
+    expect(mocks.digest).toHaveBeenCalledTimes(3);
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('does not bypass the backend guard for another consent type', async () => {
+    state.platform = 'web';
+    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'fail_twice_then_succeed';
+
+    await expect(
+      withdrawConsent({
+        type: 'marketing',
+        version: 'test',
+        consentText: 'copy',
+      }),
+    ).rejects.toThrow('CONSENT_BACKEND_UNAVAILABLE');
+
+    expect(mocks.digest).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(fixtureStorage.size).toBe(0);
+  });
+
+  it('detaches a held fixture response immediately when the owner boundary starts', async () => {
+    state.platform = 'web';
+    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'hold_then_succeed';
+
+    const withdrawal = withdrawConsent({
+      type: 'data_sharing',
+      version: 'test',
+      consentText: 'copy',
+    });
+    await vi.waitFor(() =>
+      expect(
+        (
+          globalThis as typeof globalThis & {
+            __ROUTINEKIND_E2E_RELEASE_DATA_SHARING_WITHDRAWAL__?: () => void;
+          }
+        )[DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK],
+      ).toBeTypeOf('function'),
+    );
+    const release = (
+      globalThis as typeof globalThis & {
+        __ROUTINEKIND_E2E_RELEASE_DATA_SHARING_WITHDRAWAL__?: () => void;
+      }
+    )[DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK];
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(withdrawal).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    release?.();
+    await Promise.resolve();
+
+    expect(mocks.digest).toHaveBeenCalledOnce();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('detaches a never-resolving hash before any fixture or network work starts', async () => {
+    state.platform = 'web';
+    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'hold_then_succeed';
+    mocks.digest.mockImplementationOnce(() => new Promise<string>(() => undefined));
+
+    const withdrawal = withdrawConsent({
+      type: 'data_sharing',
+      version: 'test',
+      consentText: 'copy',
+    });
+    await vi.waitFor(() => expect(mocks.digest).toHaveBeenCalledOnce());
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(withdrawal).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(fixtureStorage.size).toBe(0);
+    expect(
+      (
+        globalThis as typeof globalThis & {
+          __ROUTINEKIND_E2E_RELEASE_DATA_SHARING_WITHDRAWAL__?: () => void;
+        }
+      )[DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK],
+    ).toBeUndefined();
+    expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
   it('fails before hashing or invoking placeholder Supabase when unconfigured', async () => {
