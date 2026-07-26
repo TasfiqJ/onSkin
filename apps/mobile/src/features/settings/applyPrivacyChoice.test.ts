@@ -62,9 +62,8 @@ describe('settings privacy choice application', () => {
     expect(source).toContain('const [appLockFeedback, setAppLockFeedback]');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('{PRIVACY_CHOICE_SAVE_FAILED_TITLE}');
-    expect(source).toContain(
-      'setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() })',
-    );
+    expect(source).toContain('ownerGeneration: ownerScope.generation');
+    expect(source).toContain('granted,');
     expect(source).toContain(
       "onChange={(value) => void setConsent('data_sharing', value, 'commerce')}",
     );
@@ -86,15 +85,27 @@ describe('settings privacy choice application', () => {
     expect(source).toContain('commerceConsentQueryOptions(ownerScope)');
     expect(source).toContain('const marketingConsentControl = consentManagementState(');
     expect(source).toContain('const commerceConsentControl = consentManagementState(');
+    expect(source).not.toContain('dataSharingConsentManagementState');
     expect(source).toContain('value={marketingConsentControl.value}');
     expect(source).toContain('value={commerceConsentControl.value}');
     expect(source).toContain('!marketingConsentControl.canChange');
     expect(source).toContain('!commerceConsentControl.canChange');
     expect(source).toContain('onRetry={retryMarketingConsent}');
     expect(source).toContain('onRetry={retryCommerceConsent}');
-    expect(source).toContain("if (type !== 'data_sharing') throw error;");
-    expect(source).not.toContain("if (type === 'data_sharing' && granted)");
-    expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined);');
+    expect(source).toContain('persistSettingsPrivacyConsentChoice(ownerScope, {');
+    expect(source).toContain('onLocalDataSharingSaved: (localGranted) => {');
+    expect(source).toContain('queryKeys.commerceConsentWithdrawalPending(ownerScope)');
+    expect(source).toContain('commerceConsentWithdrawalPending.data === true');
+    expect(source).toContain('onDataSharingWithdrawalCompleted: () => {');
+    expect(source).toContain('retryableSettingsPrivacyChoice(');
+    expect(source).toContain('void setConsent(retry.type, retry.granted, retry.placement);');
+    expect(source).toContain('label="Try again"');
+    expect(source).toContain('retryDisabled={savingPrivacy !== null}');
+    expect(source).toContain(
+      "<YouConsentCoordinator pendingFeedbackPlacement={privacyDirectEntry ? 'privacy' : 'commerce'}>",
+    );
+    expect(source).not.toContain('recordConsent({');
+    expect(source).not.toContain('setCommerceConsentLocal(');
     expect(source).toContain('label="Progress photo storage"');
     expect(source).toContain('Cloud backup is not available in this build.');
     expect(source).toContain('Device only');

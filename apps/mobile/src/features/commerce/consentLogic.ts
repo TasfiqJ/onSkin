@@ -1,9 +1,11 @@
-// Pure consent precedence (docs/10 §6, D-061). Extracted so it can be unit-tested
-// without the native/Supabase deps that consent.ts pulls in. The immutable ledger is
-// AUTHORITATIVE when it has a data_sharing entry (so a revocation. A newer
-// granted=false row. Re-locks the "where to buy" affordance even if a stale local
-// flag still says granted); only when the ledger is unavailable (offline / no backend)
-// does the local-first flag govern.
-export function resolveCommerceConsent(ledger: boolean | undefined, local: boolean): boolean {
-  return ledger === undefined ? local : ledger;
+// Pure consent precedence (docs/10 §6, D-061), extracted from native/Supabase
+// dependencies. An explicit false from either source locks commerce. Local false serves as
+// the durable withdrawal-pending marker; local absence lets a new device honor a
+// server grant.
+export function resolveCommerceConsent(
+  ledger: boolean | undefined,
+  local: boolean | undefined,
+): boolean {
+  if (ledger === false || local === false) return false;
+  return ledger === true || local === true;
 }

@@ -5,16 +5,13 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
+import { runRequestWithLease, supabaseRequestFailure } from '@/lib/network/requestPolicy';
 import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { supabase } from '@/lib/supabase/client';
 import {
   readPrivateBoolean,
-  setPrivateBoolean,
   type PrivateBooleanReadResult,
+  updatePrivateBoolean,
 } from '@/lib/storage/privateBoolean';
 import { removePrivateItem } from '@/lib/storage/privateKV';
 
@@ -28,13 +25,24 @@ import { isHealthSafePayload, type ClickPayload } from './attribution';
 // can never be persisted.
 
 const CONSENT_KEY = 'onskin.commerceConsent.v1';
+export const COMMERCE_CONSENT_WITHDRAWAL_PENDING = 'COMMERCE_CONSENT_WITHDRAWAL_PENDING';
 
 export async function readCommerceConsentLocal(): Promise<PrivateBooleanReadResult> {
   return readPrivateBoolean(CONSENT_KEY);
 }
 
 export async function setCommerceConsentLocal(granted: boolean): Promise<void> {
-  await setPrivateBoolean(CONSENT_KEY, granted);
+  await updatePrivateBoolean(CONSENT_KEY, (current) => {
+    if (granted && current === false) {
+      throw new Error(COMMERCE_CONSENT_WITHDRAWAL_PENDING);
+    }
+    return granted;
+  });
+}
+
+/** Remove the existing local/pending marker after server cleanup is acknowledged. */
+export async function clearCommerceConsentLocal(): Promise<void> {
+  await removePrivateItem(CONSENT_KEY);
 }
 
 /** An opaque, random click token. Carries no profile/concern/photo (docs/10 §5). */
@@ -111,5 +119,5 @@ export async function recordClick(
 
 /** Test/seed reset. */
 export async function clearCommerceState(): Promise<void> {
-  await removePrivateItem(CONSENT_KEY);
+  await clearCommerceConsentLocal();
 }

@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   recordConsent: vi.fn(),
   track: vi.fn(),
   withdrawConsent: vi.fn(),
+  clearCommerceConsentLocal: vi.fn(),
   readCommerceConsentLocal: vi.fn(),
   setCommerceConsentLocal: vi.fn(),
 }));
@@ -30,6 +31,7 @@ vi.mock('@/lib/consent/withdrawal', () => ({
 }));
 
 vi.mock('./store', () => ({
+  clearCommerceConsentLocal: mocks.clearCommerceConsentLocal,
   readCommerceConsentLocal: mocks.readCommerceConsentLocal,
   setCommerceConsentLocal: mocks.setCommerceConsentLocal,
 }));
@@ -60,10 +62,12 @@ describe('commerce consent persistence', () => {
     mocks.recordConsent.mockReset();
     mocks.track.mockReset();
     mocks.withdrawConsent.mockReset();
+    mocks.clearCommerceConsentLocal.mockReset();
     mocks.readCommerceConsentLocal.mockReset();
     mocks.setCommerceConsentLocal.mockReset();
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.withdrawConsent.mockResolvedValue(undefined);
+    mocks.clearCommerceConsentLocal.mockResolvedValue(undefined);
     mocks.readCommerceConsentLocal.mockResolvedValue({ status: 'absent' });
     mocks.setCommerceConsentLocal.mockResolvedValue(undefined);
   });
@@ -89,6 +93,37 @@ describe('commerce consent persistence', () => {
     await expect(isCommerceConsented()).resolves.toBe(true);
   });
 
+  it('lets explicit local false veto a stale granted ledger row', async () => {
+    const { isCommerceConsented } = await import('./consent');
+    mocks.getLatestConsentsWithLease.mockResolvedValueOnce({ data_sharing: true });
+    mocks.readCommerceConsentLocal.mockResolvedValueOnce({
+      status: 'available',
+      value: false,
+      format: 'current',
+    });
+
+    await expect(isCommerceConsented()).resolves.toBe(false);
+  });
+
+  it('accepts a server grant on a new device when the local key is absent', async () => {
+    const { isCommerceConsented } = await import('./consent');
+    mocks.getLatestConsentsWithLease.mockResolvedValueOnce({ data_sharing: true });
+    mocks.readCommerceConsentLocal.mockResolvedValueOnce({ status: 'absent' });
+
+    await expect(isCommerceConsented()).resolves.toBe(true);
+  });
+
+  it('fails closed when local state is unreadable even if the ledger is granted', async () => {
+    const { isCommerceConsented } = await import('./consent');
+    mocks.getLatestConsentsWithLease.mockResolvedValueOnce({ data_sharing: true });
+    mocks.readCommerceConsentLocal.mockResolvedValueOnce({
+      status: 'unavailable',
+      reason: 'content_key_storage_unavailable',
+    });
+
+    await expect(isCommerceConsented()).rejects.toThrow('PRIVATE_BOOLEAN_UNAVAILABLE');
+  });
+
   it('does not disguise unavailable local commerce consent as a decline', async () => {
     const { isCommerceConsented } = await import('./consent');
     mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
@@ -103,11 +138,7 @@ describe('commerce consent persistence', () => {
   it('detaches a hung local fallback on A to B and never publishes its late grant', async () => {
     const { isCommerceConsented } = await import('./consent');
     mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
-    let resolveLocal!: (value: {
-      status: 'available';
-      value: boolean;
-      format: 'current';
-    }) => void;
+    let resolveLocal!: (value: { status: 'available'; value: boolean; format: 'current' }) => void;
     let markStarted!: () => void;
     const started = new Promise<void>((resolve) => {
       markStarted = resolve;
@@ -184,6 +215,7 @@ describe('commerce consent persistence', () => {
     expect(mocks.withdrawConsent).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'data_sharing' }),
     );
+    expect(mocks.clearCommerceConsentLocal).toHaveBeenCalledOnce();
     expect(mocks.track).toHaveBeenCalledWith('commerce_consent_declined');
     expect(mocks.withdrawConsent.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.track.mock.invocationCallOrder[0],
@@ -197,6 +229,7 @@ describe('commerce consent persistence', () => {
     await expect(declineCommerceConsent()).resolves.toBeUndefined();
 
     expect(mocks.setCommerceConsentLocal).toHaveBeenCalledWith(false);
+    expect(mocks.clearCommerceConsentLocal).not.toHaveBeenCalled();
     expect(mocks.track).toHaveBeenCalledWith('commerce_consent_declined');
   });
 });

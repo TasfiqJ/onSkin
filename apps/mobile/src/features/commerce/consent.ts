@@ -5,12 +5,17 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { getLatestConsentsWithLease, recordConsent } from '@/lib/consent/consent';
+import { runSerializedConsentWorkflow } from '@/lib/consent/workflow';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
-import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
+import { requirePrivateBoolean, type PrivateBooleanReadResult } from '@/lib/storage/privateBoolean';
 
 import { resolveCommerceConsent } from './consentLogic';
 import { COMMERCE_COPY } from './copy';
-import { readCommerceConsentLocal, setCommerceConsentLocal } from './store';
+import {
+  clearCommerceConsentLocal,
+  readCommerceConsentLocal,
+  setCommerceConsentLocal,
+} from './store';
 
 // The MHMDA "sharing" consent gate for commerce (docs/10 §6). The deep-research pass
 // confirmed: inferred skincare-concern data is regulated consumer health data, and
@@ -43,11 +48,15 @@ export async function isCommerceConsentedWithLease(
     lease.assertCurrent();
     /* offline / no DB. Fall back to the local-first flag */
   }
-  if (ledger !== undefined) return resolveCommerceConsent(ledger, false);
+  if (ledger === false) return false;
 
-  const local = await awaitAccountGenerationLease(lease, readCommerceConsentLocal);
+  const localRead = await awaitAccountGenerationLease(lease, readCommerceConsentLocal);
   lease.assertCurrent();
-  return resolveCommerceConsent(ledger, requirePrivateBoolean(local));
+  return resolveCommerceConsent(ledger, optionalPrivateBoolean(localRead));
+}
+
+function optionalPrivateBoolean(result: PrivateBooleanReadResult): boolean | undefined {
+  return result.status === 'absent' ? undefined : requirePrivateBoolean(result);
 }
 
 export function isCommerceConsented(): Promise<boolean> {
@@ -56,39 +65,49 @@ export function isCommerceConsented(): Promise<boolean> {
 
 export async function grantCommerceConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setCommerceConsentLocal(true);
-    lease.assertCurrent();
-    try {
-      await recordConsent({
-        type: 'data_sharing',
-        granted: true,
-        version: COMMERCE_COPY.consentVersion,
-        consentText: `[PLACEHOLDER commerce data-sharing consent. B-PRIVACY-COPY] ${COMMERCE_COPY.consent.body}`,
-      });
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, () => setCommerceConsentLocal(true));
       lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* offline / no DB. Keep the local-first flag; ledger reconciles later. */
-    }
-    track('commerce_consent_granted');
+      try {
+        await awaitAccountGenerationLease(lease, () =>
+          recordConsent({
+            type: 'data_sharing',
+            granted: true,
+            version: COMMERCE_COPY.consentVersion,
+            consentText: `[PLACEHOLDER commerce data-sharing consent. B-PRIVACY-COPY] ${COMMERCE_COPY.consent.body}`,
+          }),
+        );
+        lease.assertCurrent();
+      } catch {
+        lease.assertCurrent();
+        /* offline / no DB. Keep the local-first flag; ledger reconciles later. */
+      }
+      track('commerce_consent_granted');
+    });
   });
 }
 
 export async function declineCommerceConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setCommerceConsentLocal(false);
-    lease.assertCurrent();
-    try {
-      await withdrawConsent({
-        type: 'data_sharing',
-        version: COMMERCE_COPY.consentVersion,
-        consentText: `[PLACEHOLDER commerce data-sharing withdrawal. B-PRIVACY-COPY]`,
-      });
+    await runSerializedConsentWorkflow(lease, async () => {
+      await awaitAccountGenerationLease(lease, () => setCommerceConsentLocal(false));
       lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* offline / no DB. Keep the local revocation authoritative. */
-    }
-    track('commerce_consent_declined');
+      try {
+        await awaitAccountGenerationLease(lease, () =>
+          withdrawConsent({
+            type: 'data_sharing',
+            version: COMMERCE_COPY.consentVersion,
+            consentText: `[PLACEHOLDER commerce data-sharing withdrawal. B-PRIVACY-COPY]`,
+          }),
+        );
+        lease.assertCurrent();
+        await awaitAccountGenerationLease(lease, clearCommerceConsentLocal);
+        lease.assertCurrent();
+      } catch {
+        lease.assertCurrent();
+        /* Keep encrypted false as a durable withdrawal-pending marker. */
+      }
+      track('commerce_consent_declined');
+    });
   });
 }

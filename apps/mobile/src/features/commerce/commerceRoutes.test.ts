@@ -120,6 +120,58 @@ describe('Commerce route contracts', () => {
     expect(source).not.toContain('h-[42px]');
   });
 
+  it('serializes allow and decline through one synchronous consent-action guard', () => {
+    const source = readAppRoute('commerce/consent.tsx');
+
+    const handlerStart = source.indexOf(
+      "const runConsentAction = async (action: 'allow' | 'decline') => {",
+    );
+    const handlerEnd = source.indexOf("const allow = () => runConsentAction('allow');");
+    const handler = source.slice(handlerStart, handlerEnd);
+
+    expect(handlerStart).toBeGreaterThanOrEqual(0);
+    expect(handlerEnd).toBeGreaterThan(handlerStart);
+    expect(handler).toContain('if (consentActionInFlightRef.current) return;');
+    expect(handler).toContain('consentActionInFlightRef.current = true;');
+    expect(handler).toContain('consentActionInFlightRef.current = false;');
+    expect(handler.indexOf('consentActionInFlightRef.current = true;')).toBeLessThan(
+      handler.indexOf("if (action === 'allow')"),
+    );
+    expect(source.match(/disabled=\{consentActionPending\}/g)).toHaveLength(3);
+    expect(source).toContain(
+      "disabled={consentActionPending || consentActionFailure === 'decline'}",
+    );
+    expect(source).toContain(
+      "disabled: consentActionPending || consentActionFailure === 'decline'",
+    );
+    expect(source).toContain('accessibilityState={{ disabled: consentActionPending }}');
+  });
+
+  it('keeps failed withdrawal pending, retryable, and fenced from stale route effects', () => {
+    const source = readAppRoute('commerce/consent.tsx');
+
+    expect(source).toContain('commerceConsentWithdrawalPendingQueryOptions');
+    expect(source).toContain('ownerQueryPrefixes.commerceConsentWithdrawalPending(ownerScope)');
+    expect(source).toContain('const withdrawalPending = await qc.fetchQuery(');
+    expect(source).toContain("setConsentActionFailure('decline');");
+    expect(source.indexOf('await grantCommerceConsent();')).toBeLessThan(
+      source.indexOf('const withdrawalPending = await qc.fetchQuery('),
+    );
+    expect(source).toContain('error.message === COMMERCE_CONSENT_WITHDRAWAL_PENDING');
+    expect(source).toContain('Partner data sharing remains off, but cleanup was not confirmed.');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain("'Try partner data-sharing withdrawal again'");
+    expect(source).toContain("consentActionFailure === 'decline' ? 'Try again'");
+    expect(source).not.toContain('catch(() => undefined)');
+
+    expect(source).toContain('const consentActionRequestIdRef = useRef(0);');
+    expect(source).toContain('const mountedRef = useRef(true);');
+    expect(source).toContain('consentActionRequestIdRef.current === requestId');
+    expect(source).toContain('mountedRef.current &&');
+    expect(source).toContain('if (!canPublish()) return;');
+    expect(source).toContain('if (mountedRef.current) setConsentActionPending(false);');
+  });
+
   it('keeps where-to-buy secondary actions visible and touchable on phones', () => {
     const source = readFeatureFile('WhereToBuy.tsx');
 
@@ -192,7 +244,7 @@ describe('Commerce route contracts', () => {
     expect(whereToBuy).toContain('if (feedback) setLinkFeedback(feedback);');
     expect(stackDetail).toContain('await runCommerceClickOperation(');
     expect(stackDetail).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(consent).toContain('onPress={() => void allow().catch(() => undefined)}');
-    expect(consent).toContain('onPress={() => void decline().catch(() => undefined)}');
+    expect(consent).toContain('onPress={() => void allow()}');
+    expect(consent).toContain('onPress={() => void decline()}');
   });
 });

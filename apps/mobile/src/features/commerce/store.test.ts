@@ -10,6 +10,8 @@ import {
 import { createOwnerQueryScope } from '@/lib/query/queryKeys';
 
 import {
+  COMMERCE_CONSENT_WITHDRAWAL_PENDING,
+  clearCommerceConsentLocal,
   clearCommerceState,
   readCommerceConsentLocal,
   recordClick,
@@ -23,6 +25,7 @@ const mocks = vi.hoisted(() => ({
   getUser: vi.fn(),
   insert: vi.fn(),
   storage: new Map<string, string>(),
+  updatePrivateItem: vi.fn(),
 }));
 
 vi.mock('expo-crypto', () => ({
@@ -45,13 +48,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
-  updatePrivateItem: vi.fn(
-    async (key: string, updater: (current: string | null) => string | null) => {
-      const next = updater(mocks.storage.get(key) ?? null);
-      if (next === null) mocks.storage.delete(key);
-      else mocks.storage.set(key, next);
-    },
-  ),
+  updatePrivateItem: mocks.updatePrivateItem,
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -80,6 +77,7 @@ describe('commerce consent store', () => {
     mocks.getUser.mockReset();
     mocks.insert.mockReset();
     mocks.abortSignal.mockReset();
+    mocks.updatePrivateItem.mockReset();
     mocks.from.mockReturnValue({ insert: mocks.insert });
     mocks.getUser.mockResolvedValue({
       data: { user: { id: 'owner-a' } },
@@ -87,6 +85,13 @@ describe('commerce consent store', () => {
     });
     mocks.abortSignal.mockResolvedValue({ error: null });
     mocks.insert.mockReturnValue({ abortSignal: mocks.abortSignal });
+    mocks.updatePrivateItem.mockImplementation(
+      async (key: string, updater: (current: string | null) => string | null) => {
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
+      },
+    );
   });
 
   it('reads legacy commerce consent grants without repair and writes versioned flags', async () => {
@@ -120,6 +125,58 @@ describe('commerce consent store', () => {
     await clearCommerceState();
 
     expect(mocks.storage.has(CONSENT_KEY)).toBe(false);
+  });
+
+  it('does not let a grant erase a pending withdrawal marker', async () => {
+    await setCommerceConsentLocal(false);
+
+    await expect(setCommerceConsentLocal(true)).rejects.toThrow(
+      'COMMERCE_CONSENT_WITHDRAWAL_PENDING',
+    );
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
+
+    await clearCommerceConsentLocal();
+    await expect(setCommerceConsentLocal(true)).resolves.toBeUndefined();
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:1');
+  });
+
+  it('atomically rejects a grant queued behind a deferred withdrawal commit', async () => {
+    let releaseWithdrawal!: () => void;
+    let markWithdrawalUpdaterStarted!: () => void;
+    const withdrawalUpdaterStarted = new Promise<void>((resolve) => {
+      markWithdrawalUpdaterStarted = resolve;
+    });
+    const withdrawalCommitGate = new Promise<void>((resolve) => {
+      releaseWithdrawal = resolve;
+    });
+    let mutationTail = Promise.resolve();
+    let pauseFirstCommit = true;
+    mocks.updatePrivateItem.mockImplementation(
+      (key: string, updater: (current: string | null) => string | null) => {
+        const operation = mutationTail.then(async () => {
+          const next = updater(mocks.storage.get(key) ?? null);
+          if (pauseFirstCommit) {
+            pauseFirstCommit = false;
+            markWithdrawalUpdaterStarted();
+            await withdrawalCommitGate;
+          }
+          if (next === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, next);
+        });
+        mutationTail = operation.catch(() => undefined);
+        return operation;
+      },
+    );
+
+    const withdrawal = setCommerceConsentLocal(false);
+    await withdrawalUpdaterStarted;
+    const grant = setCommerceConsentLocal(true);
+    const rejectedGrant = expect(grant).rejects.toThrow(COMMERCE_CONSENT_WITHDRAWAL_PENDING);
+    releaseWithdrawal();
+
+    await expect(withdrawal).resolves.toBeUndefined();
+    await rejectedGrant;
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
   it('attributes a click to the owner captured by its mounted query scope', async () => {

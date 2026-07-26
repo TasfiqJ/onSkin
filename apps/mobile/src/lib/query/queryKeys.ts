@@ -110,6 +110,7 @@ export const queryPrefixes = {
   askConsent: ['ask_onskin'] as const,
   askGroundedTurns: ['askGroundedTurns'] as const,
   commerceConsent: ['commerceConsent'] as const,
+  commerceConsentWithdrawalPending: ['commerceConsentWithdrawalPending'] as const,
   completions: ['completions'] as const,
   communityGate: ['communityGate'] as const,
   consents: ['consents'] as const,
@@ -206,6 +207,8 @@ export const queryKeys = {
   askGroundedTurns: (scope: OwnerQueryScope, period: string) =>
     ownerScopedQueryKey(scope, 'askGroundedTurns', period),
   commerceConsent: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'commerceConsent'),
+  commerceConsentWithdrawalPending: (scope: OwnerQueryScope) =>
+    ownerScopedQueryKey(scope, 'commerceConsentWithdrawalPending'),
   completions: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity) =>
     localDayQueryKey(scope, 'completions', boundary),
   communityGate: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'communityGate'),
@@ -250,6 +253,8 @@ export const ownerQueryPrefixes = {
   askConsent: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'ask_onskin'),
   askGroundedTurns: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'askGroundedTurns'),
   commerceConsent: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'commerceConsent'),
+  commerceConsentWithdrawalPending: (scope: OwnerQueryScope) =>
+    ownerScopedQueryPrefix(scope, 'commerceConsentWithdrawalPending'),
   completions: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'completions'),
   communityGate: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'communityGate'),
   consents: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'consents'),

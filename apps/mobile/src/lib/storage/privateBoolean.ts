@@ -107,11 +107,22 @@ export async function getPrivateBoolean(key: string): Promise<boolean> {
 }
 
 export async function setPrivateBoolean(key: string, enabled: boolean): Promise<void> {
-  const next = enabled ? CURRENT_TRUE : CURRENT_FALSE;
+  await updatePrivateBoolean(key, () => enabled);
+}
+
+/**
+ * Atomically classify, transform, and persist a private boolean under the
+ * private-KV per-key mutation lock.
+ */
+export async function updatePrivateBoolean(
+  key: string,
+  updater: (current: boolean | null) => boolean,
+): Promise<void> {
   await updatePrivateItem(key, (current) => {
     // A deliberate write may canonically upgrade a valid legacy value. It must
     // not downgrade or replace application-level corrupt/future bytes.
-    if (current !== null) requirePrivateBoolean(decodeAvailablePrivateBoolean(current));
-    return next;
+    const currentValue =
+      current === null ? null : requirePrivateBoolean(decodeAvailablePrivateBoolean(current));
+    return updater(currentValue) ? CURRENT_TRUE : CURRENT_FALSE;
   });
 }

@@ -108,6 +108,11 @@ describe('owner-scoped query keys', () => {
       OWNER_QUERY_NAMESPACE,
       generation,
     ]);
+    expect(queryKeys.commerceConsentWithdrawalPending(scope)).toEqual([
+      'commerceConsentWithdrawalPending',
+      OWNER_QUERY_NAMESPACE,
+      generation,
+    ]);
     expect(queryKeys.trendConsent(scope)).toEqual([
       'trendConsent',
       OWNER_QUERY_NAMESPACE,
@@ -296,6 +301,11 @@ describe('owner-scoped query keys', () => {
         keyA: queryKeys.commerceConsent(scopeA),
         keyB: queryKeys.commerceConsent(scopeB),
         prefixA: ownerQueryPrefixes.commerceConsent(scopeA),
+      },
+      {
+        keyA: queryKeys.commerceConsentWithdrawalPending(scopeA),
+        keyB: queryKeys.commerceConsentWithdrawalPending(scopeB),
+        prefixA: ownerQueryPrefixes.commerceConsentWithdrawalPending(scopeA),
       },
       {
         keyA: queryKeys.consents(scopeA),
@@ -601,6 +611,7 @@ describe('owner-scoped query keys', () => {
     expect(profile).toContain('queryKeys.skinProfile(ownerScope)');
     expect(you).toContain('queryKeys.consents(ownerScope)');
     expect(you).toContain('queryKeys.commerceConsent(ownerScope)');
+    expect(you).toContain('queryKeys.commerceConsentWithdrawalPending(ownerScope)');
     expect(you).toContain('latestConsentsQueryOptions(ownerScope)');
     expect(you).toContain('commerceConsentQueryOptions(ownerScope)');
     expect(latestConsentsQuery).toContain('queryKeys.consents(ownerScope)');

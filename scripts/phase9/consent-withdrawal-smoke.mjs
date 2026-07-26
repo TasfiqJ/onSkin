@@ -7,12 +7,16 @@ const packageJson = JSON.parse(read('package.json'));
 
 const settings = read('apps/mobile/src/features/settings/actions.ts');
 const you = read('apps/mobile/src/app/(tabs)/you.tsx');
+const settingsConsentWriter = read(
+  'apps/mobile/src/features/settings/privacyConsentPersistence.ts',
+);
 const trend = read('apps/mobile/src/features/trend/consent.ts');
 const community = read('apps/mobile/src/features/community/consent.ts');
 const commerce = read('apps/mobile/src/features/commerce/consent.ts');
 const ask = read('apps/mobile/src/features/ask/consent.ts');
 const photoConsent = read('apps/mobile/src/features/photos/consent.ts');
 const withdrawalClient = read('apps/mobile/src/lib/consent/withdrawal.ts');
+const consentWorkflow = read('apps/mobile/src/lib/consent/workflow.ts');
 const edgeFunction = read('supabase/functions/consent-withdrawal/index.ts');
 const storagePathHelper = read('supabase/functions/_shared/storagePath.ts');
 const storagePathHelperTest = read('supabase/functions/_shared/storagePath.test.ts');
@@ -36,8 +40,43 @@ block(
 );
 block(
   errors,
-  /recordConsent/.test(you) && /granted/.test(you) && /setCommerceConsentLocal/.test(you),
-  'Settings consent toggles must record ledger rows and sync commerce local flag.',
+  /persistSettingsPrivacyConsentChoice/.test(you) &&
+    !/recordConsent/.test(you) &&
+    !/setCommerceConsentLocal/.test(you),
+  'The actual You-tab consent writer must use the centralized persistence contract.',
+);
+block(
+  errors,
+  /runOwnerQueryOperation/.test(settingsConsentWriter) &&
+    /setCommerceConsentLocal/.test(settingsConsentWriter) &&
+    /clearCommerceConsentLocal/.test(settingsConsentWriter) &&
+    /COMMERCE_CONSENT_WITHDRAWAL_PENDING/.test(settingsConsentWriter) &&
+    /recordConsent/.test(settingsConsentWriter) &&
+    /withdrawConsent/.test(settingsConsentWriter),
+  'Settings consent persistence must be owner-fenced, preserve pending commerce cleanup, and use withdrawal for revocations.',
+);
+block(
+  errors,
+  /runSerializedConsentWorkflow/.test(settingsConsentWriter) &&
+    /runSerializedConsentWorkflow/.test(commerce) &&
+    /consentWorkflowTails/.test(consentWorkflow) &&
+    /lease\.generation/.test(consentWorkflow) &&
+    /awaitAccountGenerationLease/.test(consentWorkflow),
+  'Settings and commerce must serialize complete consent workflows inside the account-generation fence.',
+);
+block(
+  errors,
+  /commerceConsentWithdrawalPendingQueryOptions/.test(you) &&
+    /retryableSettingsPrivacyChoice/.test(you) &&
+    /label="Try again"/.test(you) &&
+    /pendingFeedbackPlacement=\{privacyDirectEntry \? 'privacy' : 'commerce'\}/.test(you),
+  'The You-tab must surface owner-scoped pending cleanup with a visible same-choice retry.',
+);
+block(
+  errors,
+  /consentManagementState\(\s*commerceConsent,\s*\(effective\)/s.test(you) &&
+    !/dataSharingConsentManagementState/.test(you),
+  'The data-sharing switch must render the effective commerce gate, including local pending false.',
 );
 
 block(
@@ -112,13 +151,25 @@ block(
 
 block(
   errors,
-  /supabase\.functions\.invoke\('consent-withdrawal'/.test(withdrawalClient),
+  /invokeEdgeFunction(?:<unknown>)?\('consent-withdrawal'/.test(withdrawalClient),
   'Mobile withdrawal helper must invoke consent-withdrawal.',
 );
 block(
   errors,
   /CryptoDigestAlgorithm\.SHA256/.test(withdrawalClient),
   'Mobile withdrawal helper must send a SHA-256 consent text hash.',
+);
+block(
+  errors,
+  /CONSENT_WITHDRAWAL_RESPONSE_INVALID/.test(withdrawalClient) &&
+    /Object\.keys\(response\)\.length !== 3/.test(withdrawalClient) &&
+    /response\.withdrawn !== true/.test(withdrawalClient) &&
+    /response\.consent_type !== params\.type/.test(withdrawalClient) &&
+    /!isValidCleanup\(params\.type, response\.cleanup\)/.test(withdrawalClient) &&
+    /hasExactKeys/.test(withdrawalClient) &&
+    /Number\.isInteger/.test(withdrawalClient) &&
+    /marketing_withdrawal_recorded === true/.test(withdrawalClient),
+  'Mobile withdrawal helper must require the exact caller-matching cleanup acknowledgement.',
 );
 
 block(

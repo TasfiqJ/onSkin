@@ -29,11 +29,16 @@ import {
   Text,
   ToggleSwitch,
 } from '@/components/ui';
-import { commerceConsentQueryOptions } from '@/features/commerce/consentQuery';
-import { setCommerceConsentLocal } from '@/features/commerce/store';
-import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
+import {
+  commerceConsentQueryOptions,
+  commerceConsentWithdrawalPendingQueryOptions,
+} from '@/features/commerce/consentQuery';
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
+import {
+  persistSettingsPrivacyConsentChoice,
+  retryableSettingsPrivacyChoice,
+} from '@/features/settings/privacyConsentPersistence';
 import {
   motionAllowed,
   useReduceMotionPreference,
@@ -74,7 +79,6 @@ import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
 import { localDiagnosticsAccessEnabled } from '@/lib/diagnostics/localDiagnosticsAccess';
-import { recordConsent } from '@/lib/consent/consent';
 import {
   consentManagementState,
   latestConsentsQueryOptions,
@@ -160,7 +164,9 @@ type InlineNotice = {
   message: string;
 };
 type PrivacyFeedback = {
+  granted: boolean;
   key: PrivacyFeedbackKey;
+  ownerGeneration: number;
   placement: PrivacyFeedbackPlacement;
   message: string;
 };
@@ -176,6 +182,7 @@ type ConsentContextValue = Readonly<{
   savingPrivacy: 'marketing' | 'data_sharing' | null;
   retryCommerceConsent: () => void;
   retryMarketingConsent: () => void;
+  retryPrivacyChoice: () => void;
   setConsent: (
     type: 'marketing' | 'data_sharing',
     granted: boolean,
@@ -465,8 +472,10 @@ function useYouDataRights(): DataRightsContextValue {
 
 const YouConsentCoordinator = memo(function YouConsentCoordinator({
   children,
+  pendingFeedbackPlacement,
 }: {
   children: ReactNode;
+  pendingFeedbackPlacement: PrivacyFeedbackPlacement;
 }) {
   recordYouConsentCoordinatorRender();
   usePublishYouRenderDiagnostics();
@@ -478,14 +487,41 @@ const YouConsentCoordinator = memo(function YouConsentCoordinator({
   const savingPrivacyRef = useRef(false);
   const consentRequestIdRef = useRef(0);
   const consents = useQuery(latestConsentsQueryOptions(ownerScope));
-  // The resolved commerce data-sharing consent (ledger-if-present, else the local
-  // flag). Both surfaces share this observer so the gate and switches cannot drift.
+  // Both data-sharing switches observe the effective commerce gate: either explicit
+  // false locks it, while local absence lets a new device honor its server grant.
   const commerceConsent = useQuery(commerceConsentQueryOptions(ownerScope));
+  const commerceConsentWithdrawalPending = useQuery(
+    commerceConsentWithdrawalPendingQueryOptions(ownerScope),
+  );
   const marketingConsentControl = consentManagementState(
     consents,
     (latest) => latest.marketing === true,
   );
-  const commerceConsentControl = consentManagementState(commerceConsent, (value) => value === true);
+  const commerceConsentControl = consentManagementState(
+    commerceConsent,
+    (effective) => effective === true,
+  );
+
+  const visiblePrivacyFeedback = useMemo<PrivacyFeedback | null>(() => {
+    const currentOwnerFeedback =
+      privacyFeedback?.ownerGeneration === ownerScope.generation ? privacyFeedback : null;
+    if (commerceConsentWithdrawalPending.data !== true) return currentOwnerFeedback;
+    if (currentOwnerFeedback?.key === 'data_sharing' && currentOwnerFeedback.granted === false) {
+      return currentOwnerFeedback;
+    }
+    return {
+      granted: false,
+      key: 'data_sharing',
+      ownerGeneration: ownerScope.generation,
+      placement: pendingFeedbackPlacement,
+      message: privacyChoiceUserMessage(),
+    };
+  }, [
+    commerceConsentWithdrawalPending.data,
+    ownerScope.generation,
+    pendingFeedbackPlacement,
+    privacyFeedback,
+  ]);
 
   const setConsent = useCallback(
     async (
@@ -493,6 +529,16 @@ const YouConsentCoordinator = memo(function YouConsentCoordinator({
       granted: boolean,
       placement: PrivacyFeedbackPlacement,
     ) => {
+      if (type === 'data_sharing' && granted && commerceConsentWithdrawalPending.data === true) {
+        setPrivacyFeedback({
+          granted: false,
+          key: 'data_sharing',
+          ownerGeneration: ownerScope.generation,
+          placement,
+          message: privacyChoiceUserMessage(),
+        });
+        return;
+      }
       if (savingPrivacyRef.current) return;
       savingPrivacyRef.current = true;
       const requestId = ++consentRequestIdRef.current;
@@ -504,25 +550,29 @@ const YouConsentCoordinator = memo(function YouConsentCoordinator({
         mountedRef.current &&
         consentRequestIdRef.current === requestId &&
         isOwnerQueryScopeCurrent(ownerScope);
+      let choiceOperationSucceeded = false;
 
       try {
         await applySettingsPrivacyChoice({
           save: async () => {
-            if (type === 'data_sharing') {
-              await setCommerceConsentLocal(granted);
-            }
-            // data_sharing is the MHMDA third-party-sharing choice. Keep the
-            // local-first commerce flag aligned even before the backend exists.
-            try {
-              await recordConsent({
-                type,
-                granted,
-                version: CONSENT_COPY_VERSION,
-                consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
-              });
-            } catch (error) {
-              if (type !== 'data_sharing') throw error;
-            }
+            await persistSettingsPrivacyConsentChoice(ownerScope, {
+              type,
+              granted,
+              onLocalDataSharingSaved: (localGranted) => {
+                qc.setQueryData<boolean>(queryKeys.commerceConsent(ownerScope), localGranted);
+                qc.setQueryData<boolean>(
+                  queryKeys.commerceConsentWithdrawalPending(ownerScope),
+                  !localGranted,
+                );
+              },
+              onDataSharingWithdrawalCompleted: () => {
+                qc.setQueryData<boolean>(
+                  queryKeys.commerceConsentWithdrawalPending(ownerScope),
+                  false,
+                );
+              },
+            });
+            choiceOperationSucceeded = true;
           },
           onSaved: () => {
             if (isOwnerQueryScopeCurrent(ownerScope)) {
@@ -538,15 +588,26 @@ const YouConsentCoordinator = memo(function YouConsentCoordinator({
           },
           onFailure: () => {
             if (canPublishUi()) {
-              setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() });
+              setPrivacyFeedback({
+                granted,
+                key: type,
+                ownerGeneration: ownerScope.generation,
+                placement,
+                message: privacyChoiceUserMessage(),
+              });
             }
           },
           onSettled: async () => {
             if (!isOwnerQueryScopeCurrent(ownerScope)) return;
             await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.consents(ownerScope) });
-            if (type === 'data_sharing') {
+            if (type === 'data_sharing' && choiceOperationSucceeded) {
               await qc.invalidateQueries({
                 queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+              });
+            }
+            if (type === 'data_sharing') {
+              await qc.invalidateQueries({
+                queryKey: ownerQueryPrefixes.commerceConsentWithdrawalPending(ownerScope),
               });
             }
           },
@@ -559,12 +620,32 @@ const YouConsentCoordinator = memo(function YouConsentCoordinator({
         }
       }
     },
-    [mountedRef, ownerScope, qc],
+    [commerceConsentWithdrawalPending.data, mountedRef, ownerScope, qc],
   );
+
+  const retryPrivacyChoice = useCallback(() => {
+    const failed = visiblePrivacyFeedback;
+    if (!failed) return;
+    const retry = retryableSettingsPrivacyChoice(
+      {
+        granted: failed.granted,
+        ownerGeneration: failed.ownerGeneration,
+        placement: failed.placement,
+        type: failed.key,
+      },
+      ownerScope,
+    );
+    if (!retry) {
+      setPrivacyFeedback(null);
+      return;
+    }
+    void setConsent(retry.type, retry.granted, retry.placement);
+  }, [ownerScope, setConsent, visiblePrivacyFeedback]);
 
   const retryCommerceConsent = useCallback(() => {
     void commerceConsent.refetch();
-  }, [commerceConsent]);
+    void commerceConsentWithdrawalPending.refetch();
+  }, [commerceConsent, commerceConsentWithdrawalPending]);
   const retryMarketingConsent = useCallback(() => {
     void consents.refetch();
   }, [consents]);
@@ -572,20 +653,22 @@ const YouConsentCoordinator = memo(function YouConsentCoordinator({
     () => ({
       commerceConsentControl,
       marketingConsentControl,
-      privacyFeedback,
+      privacyFeedback: visiblePrivacyFeedback,
       savingPrivacy,
       retryCommerceConsent,
       retryMarketingConsent,
+      retryPrivacyChoice,
       setConsent,
     }),
     [
       commerceConsentControl,
       marketingConsentControl,
-      privacyFeedback,
       retryCommerceConsent,
       retryMarketingConsent,
+      retryPrivacyChoice,
       savingPrivacy,
       setConsent,
+      visiblePrivacyFeedback,
     ],
   );
 
@@ -978,19 +1061,33 @@ const YouStaticOverview = memo(function YouStaticOverview({
 function ConsentFeedbackText({
   feedback,
   feedbackKey,
+  onRetry,
   placement,
+  retryDisabled,
 }: {
   feedback: PrivacyFeedback | null;
   feedbackKey: PrivacyFeedbackKey;
+  onRetry: () => void;
   placement: PrivacyFeedbackPlacement;
+  retryDisabled: boolean;
 }) {
   if (feedback?.key !== feedbackKey || feedback.placement !== placement) return null;
   return (
-    <Text accessibilityRole="alert" variant="bodySm" tone="muted" className="pb-2 text-center">
-      {PRIVACY_CHOICE_SAVE_FAILED_TITLE}
-      {'\n'}
-      {feedback.message}
-    </Text>
+    <View className="items-center gap-2 pb-2">
+      <Text accessibilityRole="alert" variant="bodySm" tone="muted" className="text-center">
+        {PRIVACY_CHOICE_SAVE_FAILED_TITLE}
+        {'\n'}
+        {feedback.message}
+      </Text>
+      <Button
+        accessibilityLabel={`Try saving ${feedbackKey.replace('_', ' ')} choice again`}
+        disabled={retryDisabled}
+        fullWidth={false}
+        label="Try again"
+        onPress={onRetry}
+        variant="ghost"
+      />
+    </View>
   );
 }
 
@@ -1001,6 +1098,7 @@ const YouCommerceSection = memo(function YouCommerceSection() {
     commerceConsentControl,
     privacyFeedback,
     retryCommerceConsent,
+    retryPrivacyChoice,
     savingPrivacy,
     setConsent,
   } = useYouConsent();
@@ -1029,7 +1127,9 @@ const YouCommerceSection = memo(function YouCommerceSection() {
       <ConsentFeedbackText
         feedback={privacyFeedback}
         feedbackKey="data_sharing"
+        onRetry={retryPrivacyChoice}
         placement="commerce"
+        retryDisabled={savingPrivacy !== null}
       />
       <ConsentReadState
         label="Data sharing"
@@ -1186,6 +1286,7 @@ const YouPrivacySection = memo(function YouPrivacySection({
     privacyFeedback,
     retryCommerceConsent,
     retryMarketingConsent,
+    retryPrivacyChoice,
     savingPrivacy,
     setConsent,
   } = useYouConsent();
@@ -1222,7 +1323,13 @@ const YouPrivacySection = memo(function YouPrivacySection({
           onChange={(value) => void setConsent('marketing', value, 'privacy')}
         />
       </Row>
-      <ConsentFeedbackText feedback={privacyFeedback} feedbackKey="marketing" placement="privacy" />
+      <ConsentFeedbackText
+        feedback={privacyFeedback}
+        feedbackKey="marketing"
+        onRetry={retryPrivacyChoice}
+        placement="privacy"
+        retryDisabled={savingPrivacy !== null}
+      />
       <ConsentReadState
         label="Marketing"
         state={marketingConsentControl}
@@ -1244,7 +1351,9 @@ const YouPrivacySection = memo(function YouPrivacySection({
           <ConsentFeedbackText
             feedback={privacyFeedback}
             feedbackKey="data_sharing"
+            onRetry={retryPrivacyChoice}
             placement="privacy"
+            retryDisabled={savingPrivacy !== null}
           />
           <ConsentReadState
             label="Data sharing"
@@ -1631,7 +1740,7 @@ const YouMutationSections = memo(function YouMutationSections() {
   );
 
   return (
-    <YouConsentCoordinator>
+    <YouConsentCoordinator pendingFeedbackPlacement={privacyDirectEntry ? 'privacy' : 'commerce'}>
       <YouDataRightsCoordinator
         onConfirmationDismissed={cancelDataRightsConfirmationScroll}
         onConfirmationRequested={nudgeDataRightsConfirmationIntoView}

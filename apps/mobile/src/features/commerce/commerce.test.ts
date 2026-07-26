@@ -126,11 +126,13 @@ describe('price formatting (illustrative until B-CATALOG-SEED)', () => {
 describe('MHMDA consent precedence. A revocation re-locks (review fix, D-061)', () => {
   it('the ledger is authoritative when present: a revocation beats a stale local flag', () => {
     expect(resolveCommerceConsent(false, true)).toBe(false); // revoked in ledger, stale local=true → LOCKED
-    expect(resolveCommerceConsent(true, false)).toBe(true); // granted in ledger
+    expect(resolveCommerceConsent(true, false)).toBe(false); // local withdrawal pending
   });
   it('falls back to the local-first flag only when the ledger has no entry (offline)', () => {
     expect(resolveCommerceConsent(undefined, true)).toBe(true);
+    expect(resolveCommerceConsent(true, undefined)).toBe(true);
     expect(resolveCommerceConsent(undefined, false)).toBe(false);
+    expect(resolveCommerceConsent(undefined, undefined)).toBe(false);
   });
 });
 

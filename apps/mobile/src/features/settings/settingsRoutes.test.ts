@@ -458,12 +458,14 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain('onValueChange');
   });
 
-  it('keeps the You tab commerce toggle local-first when the ledger is offline', () => {
+  it('keeps the You tab commerce toggle on the owner-fenced local-first helper', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
-    expect(source).toContain("if (type !== 'data_sharing') throw error;");
-    expect(source).not.toContain("if (type === 'data_sharing' && granted)");
-    expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined)');
+    expect(source).toContain('persistSettingsPrivacyConsentChoice(ownerScope, {');
+    expect(source).toContain('onLocalDataSharingSaved: (localGranted) => {');
+    expect(source).toContain('commerceConsentWithdrawalPending.data === true');
+    expect(source).not.toContain('recordConsent({');
+    expect(source).not.toContain('setCommerceConsentLocal(');
   });
 
   it('keeps You tab navigation rows touchable beyond the chevron glyph', () => {
@@ -558,7 +560,9 @@ describe('Settings route contracts', () => {
     expect(screen).toContain('recordYouScreenRender();');
     expect(screen).toContain('return <YouMutationSections />;');
     expect(screen).not.toMatch(/use(?:State|Query|Auth|Entitlement|AppLock)/);
-    expect(shell).toContain('<YouConsentCoordinator>');
+    expect(shell).toContain(
+      "<YouConsentCoordinator pendingFeedbackPlacement={privacyDirectEntry ? 'privacy' : 'commerce'}>",
+    );
     expect(shell).toContain('<YouDataRightsCoordinator');
     expect(shell).not.toMatch(/use(?:Query|Auth|Entitlement|AppLock)/);
     expect(staticOverview).not.toMatch(/use(?:State|Query|Auth|Entitlement|AppLock)/);

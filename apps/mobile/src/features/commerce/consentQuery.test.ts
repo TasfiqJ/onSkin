@@ -14,12 +14,29 @@ import { createOwnerQueryScope, queryKeys } from '@/lib/query/queryKeys';
 import { isCommerceConsentedWithLease } from './consent';
 import {
   commerceConsentQueryOptions,
+  commerceConsentWithdrawalPendingQueryOptions,
   readCommerceConsentForOwner,
+  readCommerceConsentWithdrawalPendingForOwner,
   resolveCommerceConsentRead,
 } from './consentQuery';
 
 vi.mock('./consent', () => ({
   isCommerceConsentedWithLease: vi.fn(),
+}));
+
+const storeMocks = vi.hoisted(() => ({
+  readCommerceConsentLocal: vi.fn(),
+}));
+
+vi.mock('./store', () => ({
+  readCommerceConsentLocal: storeMocks.readCommerceConsentLocal,
+}));
+
+vi.mock('@/lib/storage/privateBoolean', () => ({
+  requirePrivateBoolean: (result: { status: string; value?: boolean }) => {
+    if (result.status === 'available') return result.value === true;
+    throw new Error('PRIVATE_BOOLEAN_UNAVAILABLE');
+  },
 }));
 
 function deferred<T>() {
@@ -33,6 +50,47 @@ function deferred<T>() {
 afterEach(() => {
   onlineManager.setOnline(true);
   vi.clearAllMocks();
+});
+
+describe('commerce consent withdrawal-pending query', () => {
+  it('surfaces encrypted false across relaunch using an owner-scoped key', async () => {
+    const scope = createOwnerQueryScope();
+    storeMocks.readCommerceConsentLocal.mockResolvedValueOnce({
+      status: 'available',
+      value: false,
+      format: 'current',
+    });
+    const options = commerceConsentWithdrawalPendingQueryOptions(scope);
+
+    expect(options.queryKey).toEqual(queryKeys.commerceConsentWithdrawalPending(scope));
+    expect(options.networkMode).toBe('always');
+    await expect(options.queryFn()).resolves.toBe(true);
+  });
+
+  it('treats local absence as completed cleanup, including on a new device', async () => {
+    storeMocks.readCommerceConsentLocal.mockResolvedValueOnce({ status: 'absent' });
+
+    await expect(
+      readCommerceConsentWithdrawalPendingForOwner(createOwnerQueryScope()),
+    ).resolves.toBe(false);
+  });
+
+  it('does not publish owner A pending state after an account boundary', async () => {
+    let releaseRead!: () => void;
+    storeMocks.readCommerceConsentLocal.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          releaseRead = () => resolve({ status: 'available', value: false, format: 'current' });
+        }),
+    );
+    const pending = readCommerceConsentWithdrawalPendingForOwner(createOwnerQueryScope());
+    await vi.waitFor(() => expect(storeMocks.readCommerceConsentLocal).toHaveBeenCalledOnce());
+
+    beginAccountGenerationBoundary();
+    releaseRead();
+    await expect(pending).rejects.toMatchObject({ code: ACCOUNT_GENERATION_CHANGED });
+    endAccountGenerationBoundary();
+  });
 });
 
 describe('commerce consent query options', () => {
@@ -55,8 +113,7 @@ describe('commerce consent query options', () => {
     const delayedA = deferred<boolean>();
     const scopeA = createOwnerQueryScope();
     vi.mocked(isCommerceConsentedWithLease).mockImplementationOnce(
-      (lease: AccountGenerationLease) =>
-        awaitAccountGenerationLease(lease, () => delayedA.promise),
+      (lease: AccountGenerationLease) => awaitAccountGenerationLease(lease, () => delayedA.promise),
     );
     const pendingA = client.fetchQuery(commerceConsentQueryOptions(scopeA));
     await Promise.resolve();
@@ -105,7 +162,10 @@ describe('commerce consent query options', () => {
   it('suppresses a delayed route result after its request is abandoned', async () => {
     const delayed = deferred<boolean>();
     let current = true;
-    const outcome = resolveCommerceConsentRead(() => delayed.promise, () => current);
+    const outcome = resolveCommerceConsentRead(
+      () => delayed.promise,
+      () => current,
+    );
 
     current = false;
     delayed.resolve(false);
@@ -126,7 +186,10 @@ describe('commerce consent query options', () => {
     const delayedFailure = new Promise<boolean>((_resolve, reject) => {
       rejectDelayed = reject;
     });
-    const stale = resolveCommerceConsentRead(() => delayedFailure, () => current);
+    const stale = resolveCommerceConsentRead(
+      () => delayedFailure,
+      () => current,
+    );
     current = false;
     rejectDelayed(new Error('late failure'));
     await expect(stale).resolves.toBe('stale');

@@ -1,12 +1,15 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { declineCommerceConsent, grantCommerceConsent } from '@/features/commerce/consent';
+import { commerceConsentWithdrawalPendingQueryOptions } from '@/features/commerce/consentQuery';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
+import { COMMERCE_CONSENT_WITHDRAWAL_PENDING } from '@/features/commerce/store';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
@@ -22,33 +25,83 @@ import { colors } from '@/theme/tokens';
 export default function CommerceConsentSheet() {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
+  const consentActionInFlightRef = useRef(false);
+  const consentActionRequestIdRef = useRef(0);
+  const mountedRef = useRef(true);
+  const [consentActionPending, setConsentActionPending] = useState(false);
+  const [consentActionFailure, setConsentActionFailure] = useState<'allow' | 'decline' | null>(
+    null,
+  );
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;
   const footerPaddingBottom = insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined;
 
+  useEffect(
+    () => () => {
+      mountedRef.current = false;
+      consentActionInFlightRef.current = false;
+      consentActionRequestIdRef.current += 1;
+    },
+    [],
+  );
+
   const close = () => backOrReplace(router, APP_YOU_ROUTE);
 
-  const allow = async () => {
-    haptics.success();
-    await grantCommerceConsent();
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    await qc.invalidateQueries({
-      queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
-    });
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    close();
+  const runConsentAction = async (action: 'allow' | 'decline') => {
+    if (consentActionInFlightRef.current) return;
+    consentActionInFlightRef.current = true;
+    const requestId = ++consentActionRequestIdRef.current;
+    setConsentActionPending(true);
+    setConsentActionFailure(null);
+    const canPublish = () =>
+      mountedRef.current &&
+      consentActionRequestIdRef.current === requestId &&
+      isOwnerQueryScopeCurrent(ownerScope);
+    try {
+      if (action === 'allow') {
+        haptics.success();
+        await grantCommerceConsent();
+      } else {
+        haptics.select();
+        await declineCommerceConsent();
+      }
+      if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+      await qc.invalidateQueries({
+        queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+      });
+      if (action === 'decline') {
+        await qc.invalidateQueries({
+          queryKey: ownerQueryPrefixes.commerceConsentWithdrawalPending(ownerScope),
+        });
+        const withdrawalPending = await qc.fetchQuery(
+          commerceConsentWithdrawalPendingQueryOptions(ownerScope),
+        );
+        if (!canPublish()) return;
+        if (withdrawalPending) {
+          setConsentActionFailure('decline');
+          return;
+        }
+      }
+      if (!canPublish()) return;
+      close();
+    } catch (error) {
+      if (!canPublish()) return;
+      setConsentActionFailure(
+        error instanceof Error && error.message === COMMERCE_CONSENT_WITHDRAWAL_PENDING
+          ? 'decline'
+          : action,
+      );
+    } finally {
+      if (consentActionRequestIdRef.current === requestId) {
+        consentActionInFlightRef.current = false;
+        if (mountedRef.current) setConsentActionPending(false);
+      }
+    }
   };
-  const decline = async () => {
-    haptics.select();
-    await declineCommerceConsent();
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    await qc.invalidateQueries({
-      queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
-    });
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    close();
-  };
+
+  const allow = () => runConsentAction('allow');
+  const decline = () => runConsentAction('decline');
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.42)' }}>
@@ -60,6 +113,7 @@ export default function CommerceConsentSheet() {
         focusable={false}
         importantForAccessibility="no"
         tabIndex={-1}
+        disabled={consentActionPending}
         onPress={close}
       />
       <View
@@ -72,6 +126,7 @@ export default function CommerceConsentSheet() {
       >
         <RouteIconButton
           accessibilityLabel="Dismiss"
+          disabled={consentActionPending}
           glyph="x"
           tone="muted"
           onPress={close}
@@ -147,11 +202,34 @@ export default function CommerceConsentSheet() {
             footerPaddingBottom === undefined ? undefined : { paddingBottom: footerPaddingBottom }
           }
         >
+          {consentActionFailure === null ? null : (
+            <Text
+              accessibilityRole="alert"
+              variant="bodySm"
+              tone="muted"
+              className="mb-2 text-center"
+            >
+              Choice not saved
+              {'\n'}
+              {consentActionFailure === 'decline'
+                ? 'Partner data sharing remains off, but cleanup was not confirmed. Try again.'
+                : 'We could not save that choice. Try again.'}
+            </Text>
+          )}
           <Pressable
             accessibilityRole="button"
-            onPress={() => void allow().catch(() => undefined)}
+            accessibilityLabel={
+              consentActionFailure === 'allow'
+                ? 'Try allowing where-to-buy links again'
+                : COMMERCE_COPY.consent.cta
+            }
+            accessibilityState={{
+              disabled: consentActionPending || consentActionFailure === 'decline',
+            }}
+            disabled={consentActionPending || consentActionFailure === 'decline'}
+            onPress={() => void allow()}
             className="h-[54px] items-center justify-center rounded-pill"
-            style={{ backgroundColor: colors.clay }}
+            style={{ backgroundColor: colors.clay, opacity: consentActionPending ? 0.55 : 1 }}
           >
             <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
               {COMMERCE_COPY.consent.cta}
@@ -159,11 +237,18 @@ export default function CommerceConsentSheet() {
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            onPress={() => void decline().catch(() => undefined)}
+            accessibilityLabel={
+              consentActionFailure === 'decline'
+                ? 'Try partner data-sharing withdrawal again'
+                : COMMERCE_COPY.consent.decline
+            }
+            accessibilityState={{ disabled: consentActionPending }}
+            disabled={consentActionPending}
+            onPress={() => void decline()}
             className="h-[48px] items-center justify-center"
           >
             <Text className="font-sans-semibold text-[15px]" tone="muted">
-              {COMMERCE_COPY.consent.decline}
+              {consentActionFailure === 'decline' ? 'Try again' : COMMERCE_COPY.consent.decline}
             </Text>
           </Pressable>
         </View>
