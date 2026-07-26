@@ -202,9 +202,11 @@ export function generatePlan(
   const ownedRoles = new Set(
     classifiedProducts.flatMap(({ role }) => (role == null ? [] : [role])),
   );
-  const gaps = (Object.keys(GAP_NOTES) as SequencingRole[])
-    .filter((role) => !ownedRoles.has(role))
-    .map((role) => GAP_NOTES[role]!);
+  const gaps = allowSequencing
+    ? (Object.keys(GAP_NOTES) as SequencingRole[])
+        .filter((role) => !ownedRoles.has(role))
+        .map((role) => GAP_NOTES[role]!)
+    : [];
 
   // Conflicts: run the docs/02 engine (launch-gated rules) over the shelf.
   const conflicts = unresolvedConflicts(conflictEvaluation.conflicts, conflictChoices);

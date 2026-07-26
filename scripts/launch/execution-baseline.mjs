@@ -375,6 +375,9 @@ function discoverVendorOrigins() {
     'api.shopmy.us': ['shopmy', ['F-16']],
     'appleid.apple.com': ['apple-identity', ['F-02']],
     'apps.apple.com': ['apple-app-store', ['F-11', 'F-12']],
+    'developer.apple.com': ['apple-review-guideline-source-provenance', ['F-06', 'F-08']],
+    'www.fda.gov': ['fda-general-wellness-policy-source-provenance', ['F-06', 'F-08']],
+    'www.ftc.gov': ['ftc-health-products-policy-source-provenance', ['F-06', 'F-08']],
     'support.apple.com': ['apple-identity-support', ['F-02']],
     'challenges.cloudflare.com': ['cloudflare-turnstile', ['F-20']],
     'eu.i.posthog.com': ['posthog', ['F-20']],
@@ -382,6 +385,7 @@ function discoverVendorOrigins() {
     'play.google.com': ['google-play-subscriptions-source-only', ['F-11', 'F-12']],
     'us.i.posthog.com': ['posthog', ['F-20']],
     'us.posthog.com': ['posthog', ['F-20']],
+    'www.aad.org': ['american-academy-dermatology-source-provenance', ['F-06', 'F-08']],
   };
   const origins = new Map();
   const files = [...walk('apps/mobile/src'), ...walk('supabase/functions')].filter(

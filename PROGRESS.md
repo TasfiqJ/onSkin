@@ -7553,8 +7553,17 @@ to `0065`/64 migrations, and a health-consent pgTAP helper/grant failure exposed
 after the global default function-ACL repair. After those corrections, the
 `0065`-head replay completed the structural pgTAP phase; database lint then
 exposed the runtime-created temporary-table static-analysis limitation addressed
-by `0067`. The final exhaustive 66-migration current-head gate has not yet
-passed as one run, and no hosted database evidence exists.
+by `0067`.
+
+The final exhaustive 66-migration current-head run now passes as one isolated
+gate. It completed two clean resets, exact migration history through
+`20260726000067`, the full structural pgTAP suite, error-level public-schema
+lint, an empty migration-shadow diff, 6,635-line temporary type generation
+(SHA-256
+`f53a6e2ade8a332f3aea88dabaa6178f44370975745c9dc8da79e136a9840c27`),
+and the ten-assertion CAT-08 two-connection rehearsal before sandbox teardown.
+The runner deliberately did not replace repository types, so DB-08 remains
+open. No hosted database evidence exists.
 
 ### CORE-01 age and skin-profile provenance source checkpoint (2026-07-26)
 

@@ -61,6 +61,42 @@
     "production_verified",
     "store_approved"
   ],
+  "featureProfessionalReviewRequirements": {
+    "routine_builder": [
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "REV-04",
+        "scope": "clinical_order_eligibility_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "REV-05",
+        "scope": "formulation_order_and_application_copy"
+      },
+      {
+        "reviewerRole": "regulatory_counsel",
+        "taskId": "H-07",
+        "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ],
+    "cycle_scheduler": [
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "REV-04",
+        "scope": "clinical_order_eligibility_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "REV-05",
+        "scope": "formulation_order_and_application_copy"
+      },
+      {
+        "reviewerRole": "regulatory_counsel",
+        "taskId": "H-07",
+        "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ]
+  },
   "safetyConstraints": {
     "diagnosisTreatmentCurePreventionClaims": false,
     "aiSkinScores": false,

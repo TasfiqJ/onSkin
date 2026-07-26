@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { shippableRoutineGuidanceCopy } from '@/features/routine/sequencing';
 import { useRamp } from '@/features/routine/useRamp';
 import { track } from '@/lib/analytics/track';
 import { backOrReplace } from '@/lib/navigation/safeBack';
@@ -22,6 +24,16 @@ const BARS = [
 ];
 
 export default function RampScreen() {
+  const cadenceReady = canUseRoutineCadence();
+  const recoveryReady = canUseRoutineRecovery();
+  const guidanceCopy = shippableRoutineGuidanceCopy();
+  if (!cadenceReady || !recoveryReady || !guidanceCopy) {
+    return <RampReviewGate />;
+  }
+  return <RampContent rampIrritationExplanation={guidanceCopy.rampIrritationExplanation} />;
+}
+
+function RampContent({ rampIrritationExplanation }: { rampIrritationExplanation: string }) {
   const { items, isLoading, acceptStepUp } = useRamp();
   // The primary ramping active (first retinoid/exfoliant). The screen paces one at a time.
   const item = items[0] ?? null;
@@ -123,8 +135,9 @@ export default function RampScreen() {
                     className="min-h-[48px] flex-1 items-center justify-center rounded-xl"
                     style={{ backgroundColor: colors.clay }}
                     onPress={async () => {
-                      track('ramp_step_up_accepted', { source: 'routine_ramp' });
+                      if (!canUseRoutineCadence() || !canUseRoutineRecovery()) return;
                       await acceptStepUp(item.productId);
+                      track('ramp_step_up_accepted', { source: 'routine_ramp' });
                       backOrReplace(router);
                     }}
                   >
@@ -163,13 +176,40 @@ export default function RampScreen() {
                 </Text>
                 <Text variant="bodySm" tone="muted" className="mt-1 text-[13px]">
                   {paused
-                    ? 'Barrier support first. No step-up while you recover.'
+                    ? rampIrritationExplanation
                     : 'We will check in as your skin settles, and offer a step-up only when it is comfortable.'}
                 </Text>
               </View>
             )}
           </>
         ) : null}
+      </View>
+    </Screen>
+  );
+}
+
+function RampReviewGate() {
+  return (
+    <Screen edges={['top', 'bottom']}>
+      <View className="mt-2 flex-row items-center">
+        <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+      </View>
+      <View
+        accessibilityRole="summary"
+        className="mt-6 rounded-[22px] bg-paper-raised p-5"
+        style={{ borderWidth: 1, borderColor: colors.hairline }}
+      >
+        <Text variant="label" tone="clay" className="font-mono">
+          RAMP GUIDANCE UNAVAILABLE
+        </Text>
+        <Text variant="titleSm" className="mt-2">
+          Ramp settings open after review.
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-2">
+          Your existing daily routine is still available and unchanged. Step-up offers and pace
+          settings stay hidden until their exact rules and copy complete all required independent
+          professional review.
+        </Text>
       </View>
     </Screen>
   );

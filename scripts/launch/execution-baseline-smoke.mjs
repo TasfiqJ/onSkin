@@ -68,6 +68,21 @@ assert.deepEqual(
   'Apple account-support instructions must remain mapped to identity and consent',
 );
 
+for (const [host, expectedFeatures] of [
+  ['developer.apple.com', ['F-06', 'F-08']],
+  ['www.fda.gov', ['F-06', 'F-08']],
+  ['www.ftc.gov', ['F-06', 'F-08']],
+  ['www.aad.org', ['F-06', 'F-08']],
+]) {
+  const sourceOrigin = inventory.items.find((entry) => entry.id === `vendor-call:origin:${host}`);
+  assert(sourceOrigin, `missing the governed routine-guidance source origin ${host}`);
+  assert.deepEqual(
+    sourceOrigin.featureIds,
+    expectedFeatures,
+    `${host} must remain mapped to the routine builder and cycle scheduler`,
+  );
+}
+
 const postHogDeletionOrigin = inventory.items.find(
   (entry) => entry.id === 'vendor-call:origin:eu.posthog.com',
 );

@@ -232,7 +232,7 @@
     "generated-packet": 32,
     "native-module": 44,
     "route": 91,
-    "vendor-call": 13
+    "vendor-call": 17
   },
   "items": [
     {
@@ -2616,6 +2616,13 @@
       "readiness": "launch-blocked"
     },
     {
+      "id": "vendor-call:origin:developer.apple.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
       "id": "vendor-call:origin:eu.i.posthog.com",
       "category": "vendor-call",
       "source": "apps/mobile/src/lib/env.ts",
@@ -2642,6 +2649,27 @@
       "source": "apps/mobile/src/features/settings/accountDeletionNotice.ts",
       "featureIds": ["F-02"],
       "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:origin:www.aad.org",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "vendor-call:origin:www.fda.gov",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "vendor-call:origin:www.ftc.gov",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
     },
     {
       "id": "vendor-call:origin:www.revenuecat.com",

@@ -1,11 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { anyBehaviouralTriggerEnabled, BehaviouralTriggers } from './BehaviouralTriggers';
 
 const mocks = vi.hoisted(() => ({
   addEventListener: vi.fn(),
+  canUseRoutineCadence: vi.fn(),
   useNotifPrefs: vi.fn(),
   useProgress: vi.fn(),
   useRamp: vi.fn(),
@@ -15,6 +16,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock('react-native', () => ({
   AppState: { addEventListener: mocks.addEventListener },
 }));
+vi.mock('@/features/routine/reviewGate', () => ({
+  canUseRoutineCadence: mocks.canUseRoutineCadence,
+}));
 vi.mock('./useNotifications', () => ({ useNotifPrefs: mocks.useNotifPrefs }));
 vi.mock('./deliver', () => ({ notifyBehavioural: vi.fn(), nowHHMM: vi.fn(() => '12:00') }));
 vi.mock('@/features/recommendations/replenishment', () => ({
@@ -23,6 +27,11 @@ vi.mock('@/features/recommendations/replenishment', () => ({
 vi.mock('@/features/routine/useProgress', () => ({ useProgress: mocks.useProgress }));
 vi.mock('@/features/routine/useRamp', () => ({ useRamp: mocks.useRamp }));
 vi.mock('@/features/shelf/useShelf', () => ({ useShelf: mocks.useShelf }));
+
+beforeEach(() => {
+  mocks.canUseRoutineCadence.mockReset();
+  mocks.canUseRoutineCadence.mockReturnValue(true);
+});
 
 describe('behavioural trigger preference gate', () => {
   it('treats only the preferences used by mounted background triggers as relevant', () => {
@@ -60,6 +69,22 @@ describe('behavioural trigger preference gate', () => {
     expect(mocks.addEventListener).not.toHaveBeenCalled();
   });
 
+  it('does not mount the ramp trigger when cadence admission is closed', () => {
+    mocks.canUseRoutineCadence.mockReturnValue(false);
+    mocks.useNotifPrefs.mockReturnValue({
+      data: {
+        promotionalOptIn: false,
+        replenishmentAlerts: false,
+        streakNudges: true,
+      },
+    });
+
+    expect(BehaviouralTriggers()).toBeNull();
+    expect(mocks.canUseRoutineCadence).toHaveBeenCalledOnce();
+    expect(mocks.useRamp).not.toHaveBeenCalled();
+    expect(mocks.addEventListener).not.toHaveBeenCalled();
+  });
+
   it('keeps expensive hooks and the lifecycle subscription behind the enabled child boundary', () => {
     const source = readFileSync(
       fileURLToPath(new URL('./BehaviouralTriggers.tsx', import.meta.url)),
@@ -77,6 +102,7 @@ describe('behavioural trigger preference gate', () => {
     expect(inner).toContain('useProgress()');
     expect(inner).toContain("AppState.addEventListener('change'");
     expect(outer).toContain('useNotifPrefs().data');
+    expect(outer).toContain('canUseRoutineCadence()');
     expect(outer).toContain('<EnabledBehaviouralTriggers enabled={enabled} />');
     expect(outer).not.toContain('useShelf()');
     expect(outer).not.toContain('useRamp()');

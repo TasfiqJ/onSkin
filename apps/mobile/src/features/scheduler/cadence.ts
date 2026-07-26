@@ -4,18 +4,48 @@ export type CycleLengthBounds = {
   requiredRecoveryNights?: number;
 };
 
+function isPositiveSafeInteger(value: number): boolean {
+  return Number.isSafeInteger(value) && value > 0;
+}
+
+function isNonNegativeSafeInteger(value: number): boolean {
+  return Number.isSafeInteger(value) && value >= 0;
+}
+
+/**
+ * Calculates floor(maxFrequencyPerWeek * lengthNights / 7) without allowing
+ * the intermediate multiplication to exceed Number.MAX_SAFE_INTEGER.
+ */
+function weeklyOccurrenceBudget(maxFrequencyPerWeek: number, lengthNights: number): number {
+  if (maxFrequencyPerWeek >= 7) return lengthNights;
+
+  const completeWeeks = Math.floor(lengthNights / 7);
+  const remainingNights = lengthNights % 7;
+  return (
+    completeWeeks * maxFrequencyPerWeek + Math.floor((remainingNights * maxFrequencyPerWeek) / 7)
+  );
+}
+
 /** Maximum occurrences a repeated cycle can apply without exceeding a weekly ceiling. */
 export function allowedCycleOccurrences(
   maxFrequencyPerWeek: number,
   lengthNights: number,
   requiredRecoveryNights = 1,
 ): number {
-  if (lengthNights <= 0 || maxFrequencyPerWeek <= 0) return 0;
+  if (
+    !isPositiveSafeInteger(maxFrequencyPerWeek) ||
+    !isPositiveSafeInteger(lengthNights) ||
+    !isNonNegativeSafeInteger(requiredRecoveryNights) ||
+    requiredRecoveryNights > lengthNights
+  ) {
+    return 0;
+  }
+
   return Math.max(
     0,
     Math.min(
       lengthNights - requiredRecoveryNights,
-      Math.floor((maxFrequencyPerWeek * lengthNights) / 7),
+      weeklyOccurrenceBudget(maxFrequencyPerWeek, lengthNights),
     ),
   );
 }
@@ -26,18 +56,47 @@ export function minimumCycleLengthForOccurrences(
   maxFrequencyPerWeek: number,
   bounds: CycleLengthBounds,
 ): number | null {
-  if (!Number.isInteger(occurrences) || occurrences < 0 || maxFrequencyPerWeek <= 0) return null;
-  const { minLength, maxLength, requiredRecoveryNights = 1 } = bounds;
-  if (!Number.isInteger(minLength) || !Number.isInteger(maxLength) || minLength > maxLength) {
+  if (
+    !isNonNegativeSafeInteger(occurrences) ||
+    !isPositiveSafeInteger(maxFrequencyPerWeek) ||
+    !bounds ||
+    typeof bounds !== 'object' ||
+    Array.isArray(bounds)
+  ) {
     return null;
   }
-  if (occurrences === 0) return minLength;
-  for (let length = minLength; length <= maxLength; length += 1) {
+
+  const { minLength, maxLength, requiredRecoveryNights = 1 } = bounds;
+  if (
+    !isPositiveSafeInteger(minLength) ||
+    !isPositiveSafeInteger(maxLength) ||
+    minLength > maxLength ||
+    !isNonNegativeSafeInteger(requiredRecoveryNights) ||
+    requiredRecoveryNights > maxLength
+  ) {
+    return null;
+  }
+
+  if (occurrences > maxLength - requiredRecoveryNights) return null;
+
+  let lowerBound = Math.max(minLength, occurrences + requiredRecoveryNights);
+  if (
+    allowedCycleOccurrences(maxFrequencyPerWeek, maxLength, requiredRecoveryNights) < occurrences
+  ) {
+    return null;
+  }
+
+  let upperBound = maxLength;
+  while (lowerBound < upperBound) {
+    const candidate = lowerBound + Math.floor((upperBound - lowerBound) / 2);
     if (
-      allowedCycleOccurrences(maxFrequencyPerWeek, length, requiredRecoveryNights) >= occurrences
+      allowedCycleOccurrences(maxFrequencyPerWeek, candidate, requiredRecoveryNights) >= occurrences
     ) {
-      return length;
+      upperBound = candidate;
+    } else {
+      lowerBound = candidate + 1;
     }
   }
-  return null;
+
+  return lowerBound;
 }

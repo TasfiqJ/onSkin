@@ -1,6 +1,8 @@
 import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
+import { shippableRoutineCadencePolicy } from '@/features/routine/sequencing';
 import { localDateString } from '@/features/today/useToday';
 import {
   runCurrentHealthDataOperation,
@@ -21,6 +23,28 @@ import {
 const KEY = 'routinekind.cycle.v2';
 const LEGACY_KEY = 'onskin.cycle.v1';
 const CYCLE_CONFIG_SCHEMA_VERSION = 1 as const;
+export const ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED =
+  'ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED';
+export const ROUTINE_RECOVERY_ADMISSION_CLOSED = 'ROUTINE_RECOVERY_ADMISSION_CLOSED';
+
+/**
+ * Cycle configuration is clinical-policy state, not a generic preference store.
+ * Keep this assertion at both the hook boundary and the storage boundary so a
+ * direct route/deep link or a future non-React caller cannot persist unreviewed
+ * cadence, recovery, staging, or disruption decisions.
+ */
+export function assertRoutineCadenceMutationAdmission(): void {
+  if (!canUseRoutineCadence()) {
+    throw new Error(ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED);
+  }
+}
+
+export function assertRoutineRecoveryAvailable(): void {
+  assertRoutineCadenceMutationAdmission();
+  if (!canUseRoutineRecovery()) {
+    throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+  }
+}
 
 export type RecoveryReason = Extract<DisruptionReason, 'procedure' | 'irritation'>;
 
@@ -237,31 +261,37 @@ function finishRecoveryAt(config: CycleConfig, todayISO: string): CycleConfig {
   return { ...shiftAnchor(config, recoveryDays), recovery: null };
 }
 
-function reconcileStoredConfig(config: CycleConfig, todayISO: string): CycleConfig {
+function reconcileStoredConfig(
+  config: CycleConfig,
+  todayISO: string,
+  allowRecoveryReconciliation: boolean,
+): CycleConfig {
   let next = config;
 
-  // Legacy builds could store pause and recovery together. Recovery takes over
-  // when it started later; a newer open-ended pause takes over from recovery.
-  // This preserves the last dated transition without counting overlap twice.
-  if (next.pausedFrom && next.recovery) {
-    if (next.pausedFrom < next.recovery.startISO) {
-      const pauseEnd = next.recovery.startISO < todayISO ? next.recovery.startISO : todayISO;
-      const pausedDays = Math.max(0, daysBetween(next.pausedFrom, pauseEnd));
-      next = {
-        ...shiftAnchor(next, pausedDays),
-        pausedFrom: null,
-        pauseReason: null,
-      };
-    } else {
-      next = finishRecoveryAt(next, next.pausedFrom);
+  if (allowRecoveryReconciliation) {
+    // Legacy builds could store pause and recovery together. Recovery takes over
+    // when it started later; a newer open-ended pause takes over from recovery.
+    // This preserves the last dated transition without counting overlap twice.
+    if (next.pausedFrom && next.recovery) {
+      if (next.pausedFrom < next.recovery.startISO) {
+        const pauseEnd = next.recovery.startISO < todayISO ? next.recovery.startISO : todayISO;
+        const pausedDays = Math.max(0, daysBetween(next.pausedFrom, pauseEnd));
+        next = {
+          ...shiftAnchor(next, pausedDays),
+          pausedFrom: null,
+          pauseReason: null,
+        };
+      } else {
+        next = finishRecoveryAt(next, next.pausedFrom);
+      }
     }
-  }
 
-  if (next.recovery && daysBetween(next.recovery.startISO, todayISO) >= next.recovery.days) {
-    next = {
-      ...shiftAnchor(next, next.recovery.days),
-      recovery: null,
-    };
+    if (next.recovery && daysBetween(next.recovery.startISO, todayISO) >= next.recovery.days) {
+      next = {
+        ...shiftAnchor(next, next.recovery.days),
+        recovery: null,
+      };
+    }
   }
 
   const currentAndFutureSkips = next.skips.filter((date) => date >= todayISO);
@@ -277,12 +307,18 @@ async function normalizeLatestStoredConfig(
   lease: HealthDataWriteOperationLease,
 ): Promise<CycleConfig | null> {
   let latest: CycleConfig | null = null;
+  assertRoutineCadenceMutationAdmission();
   lease.assertCurrent();
   await updatePrivateItem(KEY, (currentRaw) => {
     lease.assertCurrent();
     if (!currentRaw) return null;
     const { config: current } = parseStoredConfig(currentRaw, fallbackAnchorISO);
-    latest = reconcileStoredConfig(current, todayISO);
+    const recoveryAllowed = canUseRoutineRecovery();
+    if (current.recovery && !recoveryAllowed) {
+      latest = current;
+      return currentRaw;
+    }
+    latest = reconcileStoredConfig(current, todayISO, recoveryAllowed);
     return JSON.stringify(latest);
   });
   lease.assertCurrent();
@@ -298,20 +334,31 @@ async function migrateLegacyConfig(
   const legacyRaw = await getPrivateItem(LEGACY_KEY);
   lease.assertCurrent();
   if (!legacyRaw) return null;
-  const legacy = reconcileStoredConfig(
-    parseStoredConfig(legacyRaw, fallbackAnchorISO, true).config,
-    todayISO,
-  );
+  const legacyStored = parseStoredConfig(legacyRaw, fallbackAnchorISO, true).config;
+  if (legacyStored.recovery && !canUseRoutineRecovery()) return legacyStored;
   let migrated: CycleConfig | null = null;
 
   // The old key is intentionally retained for account cleanup and downgrade
   // isolation. Once v2 exists, older builds can no longer overwrite this state.
+  assertRoutineCadenceMutationAdmission();
   lease.assertCurrent();
   await updatePrivateItem(KEY, (currentRaw) => {
     lease.assertCurrent();
-    migrated = currentRaw
-      ? reconcileStoredConfig(parseStoredConfig(currentRaw, fallbackAnchorISO).config, todayISO)
-      : legacy;
+    const recoveryAllowed = canUseRoutineRecovery();
+    if (currentRaw) {
+      const current = parseStoredConfig(currentRaw, fallbackAnchorISO).config;
+      if (current.recovery && !recoveryAllowed) {
+        migrated = current;
+        return currentRaw;
+      }
+      migrated = reconcileStoredConfig(current, todayISO, recoveryAllowed);
+      return JSON.stringify(migrated);
+    }
+    if (legacyStored.recovery && !recoveryAllowed) {
+      migrated = legacyStored;
+      return null;
+    }
+    migrated = reconcileStoredConfig(legacyStored, todayISO, recoveryAllowed);
     return JSON.stringify(migrated);
   });
   lease.assertCurrent();
@@ -334,7 +381,9 @@ async function loadCycleConfigForLease(lease: HealthDataWriteOperationLease): Pr
   }
 
   const { parsed, config: normalized } = parseStoredConfig(raw, fallbackAnchor);
-  const reconciled = reconcileStoredConfig(normalized, today);
+  const recoveryAllowed = canUseRoutineRecovery();
+  if (normalized.recovery && !recoveryAllowed) return normalized;
+  const reconciled = reconcileStoredConfig(normalized, today, recoveryAllowed);
   lease.assertCurrent();
   if (JSON.stringify(parsed) === JSON.stringify(reconciled)) return reconciled;
 
@@ -351,9 +400,21 @@ function configForMutation(
   raw: string | null,
   fallbackAnchorISO: string,
   todayISO: string,
+  allowRecoveryReconciliation: boolean,
 ): CycleConfig {
   if (!raw) return defaults(fallbackAnchorISO);
-  return reconcileStoredConfig(parseStoredConfig(raw, fallbackAnchorISO).config, todayISO);
+  return reconcileStoredConfig(
+    parseStoredConfig(raw, fallbackAnchorISO).config,
+    todayISO,
+    allowRecoveryReconciliation,
+  );
+}
+
+function sameRecovery(left: RecoveryState | null, right: RecoveryState | null): boolean {
+  if (!left || !right) return left === right;
+  return (
+    left.startISO === right.startISO && left.days === right.days && left.reason === right.reason
+  );
 }
 
 let devCycleConfigWriteFailureUsed = false;
@@ -372,6 +433,7 @@ async function maybeRejectDevCycleConfigWrite(): Promise<void> {
 async function mutateCycleConfig(
   transform: (current: CycleConfig, todayISO: string) => CycleConfig,
 ): Promise<CycleConfig> {
+  assertRoutineCadenceMutationAdmission();
   return runCurrentHealthDataOperation(async (lease) => {
     const today = localDateString();
     lease.assertCurrent();
@@ -380,13 +442,22 @@ async function mutateCycleConfig(
     let next: CycleConfig | null = null;
 
     await maybeRejectDevCycleConfigWrite();
+    assertRoutineCadenceMutationAdmission();
     lease.assertCurrent();
     await updatePrivateItem(KEY, (raw) => {
       lease.assertCurrent();
-      const current = configForMutation(raw, fallbackAnchor, today);
+      const stored = raw ? parseStoredConfig(raw, fallbackAnchor).config : defaults(fallbackAnchor);
+      const recoveryAllowed = canUseRoutineRecovery();
+      const current = configForMutation(raw, fallbackAnchor, today, recoveryAllowed);
       const candidate = normalizeStoredConfig(transform(current, today), current.anchorISO);
       if (!candidate) throw new Error('CYCLE_CONFIG_INVALID');
-      next = reconcileStoredConfig(candidate, today);
+      if (!recoveryAllowed && !sameRecovery(candidate.recovery, stored.recovery)) {
+        throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+      }
+      next = reconcileStoredConfig(candidate, today, recoveryAllowed);
+      if (!canUseRoutineRecovery() && !sameRecovery(next.recovery, stored.recovery)) {
+        throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+      }
       lease.assertCurrent();
       return JSON.stringify(next);
     });
@@ -400,6 +471,9 @@ async function mutateCycleConfig(
 export async function updateCycleConfig(
   patch: Partial<Omit<CycleConfig, 'schemaVersion'>>,
 ): Promise<CycleConfig> {
+  if (Object.prototype.hasOwnProperty.call(patch, 'recovery')) {
+    assertRoutineRecoveryAvailable();
+  }
   return mutateCycleConfig((current) => ({ ...current, ...patch }));
 }
 
@@ -467,7 +541,16 @@ export async function startRecovery(days: number, reason: RecoveryReason): Promi
   if (!Number.isInteger(days) || days <= 0 || !isRecoveryReason(reason)) {
     throw new Error('CYCLE_RECOVERY_INPUT_INVALID');
   }
+  assertRoutineRecoveryAvailable();
+  const recoveryWindows = shippableRoutineCadencePolicy()?.recoveryWindows;
+  const isReviewedWindow =
+    recoveryWindows !== undefined &&
+    (reason === 'irritation'
+      ? days === recoveryWindows.irritationDays
+      : recoveryWindows.procedureChoicesDays.includes(days));
+  if (!isReviewedWindow) throw new Error('CYCLE_RECOVERY_INPUT_INVALID');
   return mutateCycleConfig((current, today) => {
+    assertRoutineRecoveryAvailable();
     const settled = finishRecoveryAt(finishPauseAt(current, today), today);
     return { ...settled, recovery: { startISO: today, days, reason } };
   });
@@ -475,7 +558,11 @@ export async function startRecovery(days: number, reason: RecoveryReason): Promi
 
 /** Finish recovery early and resume at the night where recovery began. */
 export async function endRecovery(): Promise<CycleConfig> {
-  return mutateCycleConfig((current, today) => finishRecoveryAt(current, today));
+  assertRoutineRecoveryAvailable();
+  return mutateCycleConfig((current, today) => {
+    assertRoutineRecoveryAvailable();
+    return finishRecoveryAt(current, today);
+  });
 }
 
 /** Recovery is active while today is within [start, start + days). */

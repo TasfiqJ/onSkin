@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Sheet, Text } from '@/components/ui';
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
@@ -88,6 +89,11 @@ function Option({
 }
 
 export default function DisruptionScreen() {
+  if (!canUseRoutineCadence()) return <CadenceReviewGate />;
+  return <DisruptionScreenContent />;
+}
+
+function DisruptionScreenContent() {
   const { height } = useWindowDimensions();
   const { data } = useCycle();
   const m = useCycleMutations();
@@ -96,6 +102,7 @@ export default function DisruptionScreen() {
   const compactSheet = height < 640;
   const shortSheet = height < 520;
   const controlsDisabled = pendingAction != null;
+  const recoveryReady = canUseRoutineRecovery();
 
   const act = async (action: string, fn: () => Promise<void>) => {
     if (pendingAction) return;
@@ -187,21 +194,37 @@ export default function DisruptionScreen() {
             />
           </>
         )}
-        <Option
-          glyph="◇"
-          compact={compactSheet}
-          short={shortSheet}
-          disabled={controlsDisabled}
-          title="I had a facial or peel"
-          sub="Pause actives, let skin recover"
-          firm
-          onPress={() => {
-            setSaveFailed(false);
-            router.replace('/cycle/procedure');
-          }}
-        />
+        {recoveryReady ? (
+          <Option
+            glyph="◇"
+            compact={compactSheet}
+            short={shortSheet}
+            disabled={controlsDisabled}
+            title="I had a facial or peel"
+            sub="Pause actives, let skin recover"
+            firm
+            onPress={() => {
+              setSaveFailed(false);
+              router.replace('/cycle/procedure');
+            }}
+          />
+        ) : null}
       </View>
       {saveFailed ? <CycleMutationError /> : null}
+    </Sheet>
+  );
+}
+
+function CadenceReviewGate() {
+  return (
+    <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
+      <Text variant="title" className="text-[30px] leading-[34px]" accessibilityRole="header">
+        Cycle controls are unavailable.
+      </Text>
+      <Text variant="body" tone="muted" className="mt-2">
+        Pause, skip, travel, and recovery controls stay unavailable until their exact rules and copy
+        complete required professional review.
+      </Text>
     </Sheet>
   );
 }

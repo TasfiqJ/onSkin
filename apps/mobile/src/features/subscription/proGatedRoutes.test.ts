@@ -268,7 +268,13 @@ describe('Pro-gated route contracts', () => {
     expect(disruption).toContain('short={shortSheet}');
     expect(disruption).toContain('accessibilityLabel={`${title}. ${sub}`}');
     expect(disruption).toContain('compact={compactSheet}');
-    expect(disruption).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
+    const disruptionContent = disruption.slice(
+      disruption.indexOf('function DisruptionScreenContent()'),
+      disruption.indexOf('function CadenceReviewGate()'),
+    );
+    expect(disruptionContent).toContain('<Sheet');
+    expect(disruptionContent).toContain('fallbackRoute={APP_HOME_ROUTE}');
+    expect(disruptionContent).toContain('scroll');
 
     const phasedIntro = readAppRoute('cycle/phased-intro.tsx');
     expect(phasedIntro).toContain('useWindowDimensions');
@@ -291,7 +297,13 @@ describe('Pro-gated route contracts', () => {
     expect(phasedIntro).toContain('short={shortSheet}');
     expect(phasedIntro).toContain("'min-h-[48px]'");
     expect(phasedIntro).not.toContain("'min-h-[44px]'");
-    expect(phasedIntro).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
+    const phasedIntroContent = phasedIntro.slice(
+      phasedIntro.indexOf('function PhasedIntroScreenContent()'),
+      phasedIntro.indexOf('function CadenceReviewGate()'),
+    );
+    expect(phasedIntroContent).toContain('<Sheet');
+    expect(phasedIntroContent).toContain('fallbackRoute={APP_HOME_ROUTE}');
+    expect(phasedIntroContent).toContain('scroll');
 
     const recovery = readAppRoute('cycle/recovery.tsx');
     expect(recovery).toContain('useWindowDimensions');

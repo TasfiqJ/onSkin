@@ -34,6 +34,23 @@ const REQUIRED_EVIDENCE_LEVELS = Object.freeze([
   'store_approved',
 ]);
 
+const REQUIRED_FEATURE_PROFESSIONAL_REVIEWS = Object.freeze({
+  board_certified_dermatologist: Object.freeze({
+    taskId: 'REV-04',
+    scope: 'clinical_order_eligibility_and_user_copy',
+  }),
+  cosmetic_chemist: Object.freeze({
+    taskId: 'REV-05',
+    scope: 'formulation_order_and_application_copy',
+  }),
+  regulatory_counsel: Object.freeze({
+    taskId: 'H-07',
+    scope: 'claims_jurisdiction_and_market_clearance',
+  }),
+});
+
+const PROFESSIONAL_REVIEW_FEATURE_KEYS = Object.freeze(['routine_builder', 'cycle_scheduler']);
+
 const REQUIRED_SAFETY_FALSE = Object.freeze([
   'diagnosisTreatmentCurePreventionClaims',
   'aiSkinScores',
@@ -113,6 +130,43 @@ export function validateLaunchContract(contract) {
   }
   if (!sameMembers(contract.evidenceLevels, REQUIRED_EVIDENCE_LEVELS)) {
     errors.push('evidenceLevels must contain all seven evidence-maturity levels.');
+  }
+
+  const featureReviewRequirements = contract.featureProfessionalReviewRequirements;
+  if (
+    !featureReviewRequirements ||
+    typeof featureReviewRequirements !== 'object' ||
+    Array.isArray(featureReviewRequirements) ||
+    !sameMembers(Object.keys(featureReviewRequirements), PROFESSIONAL_REVIEW_FEATURE_KEYS)
+  ) {
+    errors.push(
+      'featureProfessionalReviewRequirements must cover routine_builder and cycle_scheduler exactly.',
+    );
+  } else {
+    for (const featureKey of PROFESSIONAL_REVIEW_FEATURE_KEYS) {
+      const requirements = featureReviewRequirements[featureKey];
+      const roles = Array.isArray(requirements)
+        ? requirements.map((requirement) => requirement?.reviewerRole)
+        : [];
+      if (!sameMembers(roles, Object.keys(REQUIRED_FEATURE_PROFESSIONAL_REVIEWS))) {
+        errors.push(
+          `featureProfessionalReviewRequirements.${featureKey} must require the exact three reviewer roles.`,
+        );
+        continue;
+      }
+      for (const requirement of requirements) {
+        const expected = REQUIRED_FEATURE_PROFESSIONAL_REVIEWS[requirement.reviewerRole];
+        if (
+          !expected ||
+          requirement.taskId !== expected.taskId ||
+          requirement.scope !== expected.scope
+        ) {
+          errors.push(
+            `featureProfessionalReviewRequirements.${featureKey}.${requirement.reviewerRole} must bind the exact task and scope.`,
+          );
+        }
+      }
+    }
   }
 
   for (const key of REQUIRED_SAFETY_FALSE) {

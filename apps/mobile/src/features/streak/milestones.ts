@@ -7,13 +7,13 @@ import { MILESTONE_COPY } from '@/features/notifications/copy';
 
 export type Milestone = { key: string; threshold: number; copy: string };
 
-/** Ascending, de-duplicated milestone thresholds for a given cycle length. */
-export function milestoneThresholds(cycleLength: number): Milestone[] {
-  const raw = [
-    { key: 'd7', threshold: 7 },
-    { key: 'one_cycle', threshold: Math.max(2, Math.round(cycleLength)) },
-    { key: 'd30', threshold: 30 },
-  ];
+/** Ascending, de-duplicated thresholds. Cycle milestones require a real admitted cycle. */
+export function milestoneThresholds(cycleLength: number | null): Milestone[] {
+  const cycleMilestone =
+    cycleLength !== null && Number.isFinite(cycleLength) && cycleLength >= 2
+      ? [{ key: 'one_cycle', threshold: Math.round(cycleLength) }]
+      : [];
+  const raw = [{ key: 'd7', threshold: 7 }, ...cycleMilestone, { key: 'd30', threshold: 30 }];
   const seen = new Set<number>();
   return raw
     .sort((a, b) => a.threshold - b.threshold)
@@ -26,7 +26,7 @@ export function milestoneThresholds(cycleLength: number): Milestone[] {
 }
 
 /** The highest milestone the current streak has reached, or null below the first. */
-export function currentMilestone(current: number, cycleLength: number): Milestone | null {
+export function currentMilestone(current: number, cycleLength: number | null): Milestone | null {
   const reached = milestoneThresholds(cycleLength).filter((m) => current >= m.threshold);
   return reached.length > 0 ? (reached[reached.length - 1] ?? null) : null;
 }

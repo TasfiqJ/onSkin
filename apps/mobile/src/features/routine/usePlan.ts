@@ -17,6 +17,7 @@ import {
   ROUTINE_ORDER_QUERY_KEY,
   type RoutineOrderOverrides,
 } from './orderStore';
+import { routineGenerationProfileForRealShelf } from './planProfileAdmission';
 
 // The user's generated plan. Live from the shelf via the (tested) generatePlan
 // pipeline; when the shelf is empty, falls back to the design's Maya example so
@@ -95,6 +96,18 @@ export function usePlan(): PlanHookResult {
 
   const items = shelf.data?.items ?? [];
   if (items.length > 0) {
+    // A real shelf must never inherit the synthetic example profile. If the
+    // user's current health/profile source is unavailable, publish no plan.
+    const real = routineGenerationProfileForRealShelf(profile.data);
+    if (!real) {
+      return {
+        data: undefined,
+        isLoading: false,
+        isError,
+        sourceReady: false,
+        isExample: false,
+      };
+    }
     const products: RoutineProduct[] = items.map((i) => ({
       id: i.engineProduct.id,
       name: i.engineProduct.name,
@@ -104,16 +117,6 @@ export function usePlan(): PlanHookResult {
     }));
     // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
     // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
-    const real: RoutineGenerationProfile = profile.data
-      ? {
-          sensitivity: profile.data.sensitivity,
-          pregnancy: profile.data.pregnancy,
-          reproductiveStatus: profile.data.pregnancyStatus,
-          pregnancySafety: profile.data.pregnancySafety,
-          pregnancyStatus: profile.data.pregnancyStatus,
-          goals: profile.data.goals,
-        }
-      : MAYA_PROFILE;
     // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
     // useShelf/recommendations. In production the conflict layer stays inert until
     // clinical sign-off; in dev the full starter matrix drives the plan.

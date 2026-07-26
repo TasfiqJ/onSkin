@@ -5,9 +5,9 @@ import { previewDetectConflicts } from '@/features/intelligence/engine';
 import type { ConflictChoices } from '@/features/intelligence/conflictChoices';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { STARTER_RULES } from '@/features/intelligence/rules';
-import { ROUTINE_CADENCE_REVIEWED } from '@/features/routine/reviewGate';
+import { ROUTINE_SEQUENCING_CORPUS } from '@/features/routine/sequencing';
 
-import { CAPS_REVIEWED, frequencyCap, reviewedFrequencyCap } from './classes';
+import { frequencyCap, reviewedFrequencyCap } from './classes';
 import { allowedCustomCycleOccurrences, approximateWeeklyFrequency } from './customCycle';
 import {
   orchestrate,
@@ -124,7 +124,7 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
     // Previously freqByProductId was read by orchestrate but never populated, so
     // every active defaulted to the class cap regardless of the user's ramp.
     const r = active('r', 'Retinol 0.3%', ['retinoid']);
-    const cap = reviewedFrequencyCap('retinoid', base.sensitivity);
+    const cap = reviewedFrequencyCap('retinoid', base.sensitivity)!;
     const rampFreq = Math.max(1, cap - 1); // strictly below the cap when cap > 1
 
     const { cycle: ramped } = orchestrate([r], { ...base, freqByProductId: { r: rampFreq } });
@@ -139,7 +139,7 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
 
   it('never exceeds the cap even when the ramp frequency is higher', () => {
     const r = active('r', 'Retinol 0.3%', ['retinoid']);
-    const cap = reviewedFrequencyCap('retinoid', base.sensitivity);
+    const cap = reviewedFrequencyCap('retinoid', base.sensitivity)!;
     const { cycle } = orchestrate([r], { ...base, freqByProductId: { r: cap + 5 } });
     expect(cycle!.nights.filter((n) => n.slot === 'retinoid').length).toBe(cap);
   });
@@ -297,9 +297,10 @@ describe('orchestration. Frequency caps + launch gate (docs/05 §4/§8)', () => 
   it('the cap table is the documented consensus, but the defaults are launch-gated', () => {
     expect(frequencyCap('aha', 'sensitive')).toBe(1);
     expect(frequencyCap('bha', 'resistant')).toBe(7);
-    // B-DERM-REVIEW: the per-type numbers are not authoritative until sign-off.
-    expect(CAPS_REVIEWED).toBe(false);
-    expect(ROUTINE_CADENCE_REVIEWED).toBe(false);
+    expect(ROUTINE_SEQUENCING_CORPUS.status).toBe('draft_blocked');
+    withDevFlag(false, () => {
+      expect(reviewedFrequencyCap('retinoid', 'sensitive')).toBeNull();
+    });
   });
 
   it('withholds unreviewed cycle cadence in production until B-DERM-REVIEW closes', () => {

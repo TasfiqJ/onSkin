@@ -1,6 +1,7 @@
 import type { FunctionalTag } from '@onskin/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
+import { shippableRoutineCadencePolicy } from '@/features/routine/sequencing';
 
 // Active classification + the cadence rules the scheduler orchestrates (docs/05
 // §4/§5). Pure + data-driven. The frequency caps + AM/PM placement are SORT-grade-C
@@ -56,42 +57,29 @@ export function defaultPhase(cls: ActiveClass): Phase {
   }
 }
 
-type Caps = { sensitive: number; normal: number; resistant: number };
-
 // Conservative exfoliation/active frequency caps by skin type (docs/05 §4 table).
 // BHA tolerated more often than AHA; the retinoid cap is a ceiling. The ramp
 // (docs/03 §4) governs the real number. B-DERM-REVIEW.
-const FREQUENCY_CAPS: Partial<Record<ActiveClass, Caps>> = {
-  aha: { sensitive: 1, normal: 3, resistant: 4 },
-  bha: { sensitive: 2, normal: 3, resistant: 7 },
-  retinoid: { sensitive: 2, normal: 4, resistant: 7 },
-};
-
 /** The per-week frequency cap for a class, personalised by sensitivity (docs/05 §4). */
-export function frequencyCap(cls: ActiveClass, sensitivity: SensitivityLevel): number {
-  const caps = FREQUENCY_CAPS[cls];
-  if (!caps) return 7;
+export function frequencyCap(cls: ActiveClass, sensitivity: SensitivityLevel): number | null {
+  const policy = shippableRoutineCadencePolicy();
+  if (!policy) return null;
+  const caps =
+    cls === 'aha' || cls === 'bha' || cls === 'retinoid' ? policy.frequencyCapsPerWeek[cls] : null;
+  if (!caps) return policy.ramp.otherActivePerWeek;
   if (sensitivity === 'sensitive') return caps.sensitive;
   if (sensitivity === 'resistant') return caps.resistant;
   return caps.normal;
 }
 
-// *** BLOCKED: B-DERM-REVIEW. FREQUENCY_CAPS (and the orchestration recovery
-// *** densities) are UNREVIEWED grade-C consensus starting positions (docs/05 §8).
-// *** Mirrors rules.ts shippableRules: until a
-// *** board-certified dermatologist + cosmetic chemist sign off, PRODUCTION falls
-// *** back to the most conservative cap (the sensitive column) rather than
-// *** surfacing the per-type numbers as authoritative cadence. Flip after sign-off.
-export const CAPS_REVIEWED = false;
-
-/** The launch-gated cap used by the scheduler: the reviewed/dev numbers in
- *  development, the most conservative (sensitive) cap in production until
- *  B-DERM-REVIEW sign-off. The harm-relevant retinoid×exfoliant separation does
- *  NOT depend on this. It is enforced by construction regardless. */
-export function reviewedFrequencyCap(cls: ActiveClass, sensitivity: SensitivityLevel): number {
-  const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
-  if (isDev || CAPS_REVIEWED) return frequencyCap(cls, sensitivity);
-  return frequencyCap(cls, 'sensitive');
+/** The exact-corpus-gated cap used by the scheduler. No numeric fallback is
+ *  exposed when cadence admission is closed; a conservative-looking number is
+ *  still an unreviewed health-guidance claim. */
+export function reviewedFrequencyCap(
+  cls: ActiveClass,
+  sensitivity: SensitivityLevel,
+): number | null {
+  return frequencyCap(cls, sensitivity);
 }
 
 const CLASS_LABEL: Record<ActiveClass, string> = {

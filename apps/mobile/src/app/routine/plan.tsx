@@ -10,6 +10,11 @@ import {
   routineFirstInsightCopy,
   type RoutineFirstInsightCopy,
 } from '@/features/routine/firstInsight';
+import {
+  canUseRoutineCadence,
+  canUseRoutineRecovery,
+  canUseRoutineSequencing,
+} from '@/features/routine/reviewGate';
 import { usePlan } from '@/features/routine/usePlan';
 import { classLabel } from '@/features/scheduler/classes';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
@@ -190,7 +195,9 @@ export default function PlanScreen() {
     setStarting(true);
     setStartFailed(false);
     try {
-      await cycleMutations.start();
+      if (canUseRoutineCadence() && canUseRoutineRecovery() && cycleData?.cycle) {
+        await cycleMutations.start();
+      }
       router.replace('/today');
     } catch {
       setStartFailed(true);
@@ -242,7 +249,10 @@ export default function PlanScreen() {
     });
   }, [data]);
 
-  const planNote = plan ? (plan.unplacedProducts.length > 0 ? null : (plan.gaps[0] ?? null)) : null;
+  const planNote =
+    canUseRoutineSequencing() && plan && plan.unplacedProducts.length === 0
+      ? (plan.gaps[0] ?? null)
+      : null;
 
   return (
     <Screen edges={['top', 'bottom']}>

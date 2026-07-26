@@ -3,7 +3,10 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import {
+  canUseRoutineCadence,
+  canUseRoutineExplainabilityCopy,
+} from '@/features/routine/reviewGate';
 import type { NightReconciliationReason } from '@/features/scheduler/orchestrate';
 import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
@@ -65,11 +68,17 @@ function TraceRow({ tag, children, last }: { tag: string; children: string; last
 }
 
 export default function WhyTonightScreen() {
+  if (!canUseRoutineCadence() || !canUseRoutineExplainabilityCopy()) {
+    return <CadenceReviewGate />;
+  }
+  return <AdmittedWhyTonightScreen />;
+}
+
+function AdmittedWhyTonightScreen() {
   const { data } = useCycle();
   const params = useLocalSearchParams<{ date?: string }>();
-  const cadenceReady = canUseRoutineCadence();
-  const cycle = cadenceReady ? (data?.cycle ?? null) : null;
-  const tonight = cadenceReady ? (data?.tonight ?? null) : null;
+  const cycle = data?.cycle ?? null;
+  const tonight = data?.tonight ?? null;
   const selectedDate = params.date && DATE_PARAM_RE.test(params.date) ? params.date : null;
 
   useEffect(() => {
@@ -80,9 +89,7 @@ export default function WhyTonightScreen() {
     return (
       <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
         <Text variant="body" tone="inverseMuted" className="py-6 text-center">
-          {cadenceReady
-            ? 'No cycle is running yet. Add an active to get started.'
-            : 'Cycle guidance is unavailable until its exact rules and copy complete required professional review. Your daily AM/PM routine is still available.'}
+          No cycle is running yet. Add an active to get started.
         </Text>
         <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
       </Sheet>
@@ -203,6 +210,18 @@ export default function WhyTonightScreen() {
         </Text>
       </View>
 
+      <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
+    </Sheet>
+  );
+}
+
+function CadenceReviewGate() {
+  return (
+    <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
+      <Text variant="body" tone="inverseMuted" className="py-6 text-center">
+        Cycle guidance is unavailable until its exact rules and copy complete required professional
+        review. Your daily AM/PM routine is still available.
+      </Text>
       <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
     </Sheet>
   );

@@ -6,6 +6,8 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 
 import {
+  ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED,
+  ROUTINE_RECOVERY_ADMISSION_CLOSED,
   endRecovery,
   loadCycleConfig,
   overrideStagingProducts,
@@ -13,6 +15,7 @@ import {
   recoveryProgress,
   resumeCycle,
   saveCustomCycleDefinition,
+  skipTonight,
   startCycleToday,
   startRecovery,
   updateCycleConfig,
@@ -38,6 +41,8 @@ const CYCLE_KEY = 'routinekind.cycle.v2';
 const LEGACY_CYCLE_KEY = 'onskin.cycle.v1';
 const LEGACY_ANCHOR_KEY = 'onskin.cycleAnchor';
 const TODAY = '2026-07-10';
+const runtime = globalThis as { __DEV__?: boolean };
+const originalDev = runtime.__DEV__;
 
 function config(overrides: Partial<CycleConfig> = {}): CycleConfig {
   return {
@@ -68,9 +73,12 @@ function storeLegacyCycle(value: CycleConfig | Record<string, unknown>): string 
 
 describe('cycle configuration persistence and reconciliation', () => {
   beforeEach(() => {
+    runtime.__DEV__ = true;
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 6, 10, 12, 0, 0));
     delete process.env.EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE;
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE;
+    process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE = 'open_fixture';
     mocks.storage.clear();
     mocks.getPrivateItem.mockReset();
     mocks.removePrivateItem.mockReset();
@@ -94,7 +102,187 @@ describe('cycle configuration persistence and reconciliation', () => {
   });
 
   afterEach(() => {
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE;
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
     vi.useRealTimers();
+  });
+
+  it('refuses every cycle mutation before private storage when cadence admission is closed', async () => {
+    const before = storeCycle(config({ stagingOverrides: ['existing'] }));
+    process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE = 'closed';
+
+    const customCycle = {
+      schemaVersion: 1 as const,
+      lengthNights: 2,
+      nights: [{ productId: 'retinol' }, { productId: null }],
+    };
+    const mutations: (() => Promise<unknown>)[] = [
+      () => updateCycleConfig({ variant: 'gentle' }),
+      () => saveCustomCycleDefinition(customCycle),
+      () => pauseCycle('travel'),
+      () => resumeCycle(),
+      () => startCycleToday(),
+      () => skipTonight(),
+      () => overrideStagingProducts(['retinol']),
+      () => startRecovery(7, 'irritation'),
+      () => endRecovery(),
+    ];
+
+    for (const mutate of mutations) {
+      await expect(mutate()).rejects.toThrow(ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED);
+    }
+
+    expect(mocks.getPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('refuses automatic cycle-state reconciliation before writing when cadence admission is closed', async () => {
+    const before = storeCycle(config({ skips: ['2026-01-01', '2026-07-11'] }));
+    process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE = 'closed';
+
+    await expect(loadCycleConfig()).rejects.toThrow(ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED);
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('refuses legacy cycle migration before writing when cadence admission is closed', async () => {
+    const before = storeLegacyCycle(config({ variant: 'gentle' }));
+    process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE = 'closed';
+
+    await expect(loadCycleConfig()).rejects.toThrow(ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED);
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(LEGACY_CYCLE_KEY)).toBe(before);
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
+  });
+
+  it('does not reconcile or rewrite stale recovery when only cadence is admitted', async () => {
+    const recovery = { startISO: '2026-07-01', days: 5, reason: 'procedure' as const };
+    const before = storeCycle(
+      config({
+        anchorISO: '2026-06-20',
+        recovery,
+        skips: ['2026-01-01', '2026-07-11'],
+      }),
+    );
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      anchorISO: '2026-06-20',
+      recovery,
+      skips: ['2026-01-01', '2026-07-11'],
+    });
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('defers legacy migration rather than rewriting stale recovery without its authority', async () => {
+    const recovery = { startISO: '2026-07-01', days: 5, reason: 'procedure' as const };
+    const before = storeLegacyCycle(config({ anchorISO: '2026-06-20', recovery }));
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      anchorISO: '2026-06-20',
+      recovery,
+    });
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(LEGACY_CYCLE_KEY)).toBe(before);
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
+  });
+
+  it('preserves stale recovery across ordinary variant, custom, staging, and skip writes', async () => {
+    const recovery = { startISO: '2026-07-01', days: 5, reason: 'procedure' as const };
+    const customCycle = {
+      schemaVersion: 1 as const,
+      lengthNights: 2,
+      nights: [{ productId: 'retinol' }, { productId: null }],
+    };
+    const cases: {
+      mutate: () => Promise<CycleConfig>;
+      expected: Partial<CycleConfig>;
+    }[] = [
+      {
+        mutate: () => updateCycleConfig({ variant: 'gentle' }),
+        expected: { variant: 'gentle' },
+      },
+      {
+        mutate: () => saveCustomCycleDefinition(customCycle),
+        expected: { variant: 'custom', customCycle, stagingOverrides: ['retinol'] },
+      },
+      {
+        mutate: () => overrideStagingProducts(['retinol']),
+        expected: { stagingOverrides: ['retinol'] },
+      },
+      {
+        mutate: () => skipTonight(),
+        expected: { skips: [TODAY] },
+      },
+    ];
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+
+    for (const testCase of cases) {
+      mocks.storage.clear();
+      mocks.updatePrivateItem.mockClear();
+      storeCycle(config({ anchorISO: '2026-06-20', recovery }));
+
+      await expect(testCase.mutate()).resolves.toMatchObject({
+        anchorISO: '2026-06-20',
+        recovery,
+        ...testCase.expected,
+      });
+
+      expect(JSON.parse(mocks.storage.get(CYCLE_KEY) ?? '{}')).toMatchObject({
+        anchorISO: '2026-06-20',
+        recovery,
+        ...testCase.expected,
+      });
+      expect(mocks.updatePrivateItem).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('fails pause and restart before storage changes when they would clear stale recovery', async () => {
+    const stored = config({
+      anchorISO: '2026-06-20',
+      recovery: { startISO: '2026-07-01', days: 5, reason: 'procedure' },
+    });
+    const mutations = [() => pauseCycle('travel'), () => startCycleToday()];
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+
+    for (const mutate of mutations) {
+      mocks.storage.clear();
+      mocks.updatePrivateItem.mockClear();
+      const before = storeCycle(stored);
+
+      await expect(mutate()).rejects.toThrow(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+
+      expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+    }
+  });
+
+  it('rejects direct recovery patches and recovery commands before private storage access', async () => {
+    const before = storeCycle(
+      config({
+        recovery: { startISO: '2026-07-01', days: 5, reason: 'procedure' },
+      }),
+    );
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+
+    await expect(updateCycleConfig({ recovery: null })).rejects.toThrow(
+      ROUTINE_RECOVERY_ADMISSION_CLOSED,
+    );
+    await expect(startRecovery(5, 'procedure')).rejects.toThrow(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+    await expect(endRecovery()).rejects.toThrow(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+
+    expect(mocks.getPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
   });
 
   it('restarts today and clears every active disruption without retaining stale skips', async () => {
@@ -251,6 +439,8 @@ describe('cycle configuration persistence and reconciliation', () => {
     const before = storeCycle(config());
 
     await expect(startRecovery(0, 'irritation')).rejects.toThrow('CYCLE_RECOVERY_INPUT_INVALID');
+    await expect(startRecovery(5, 'irritation')).rejects.toThrow('CYCLE_RECOVERY_INPUT_INVALID');
+    await expect(startRecovery(4, 'procedure')).rejects.toThrow('CYCLE_RECOVERY_INPUT_INVALID');
     expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
     expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
   });

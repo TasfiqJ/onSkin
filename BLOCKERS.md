@@ -448,10 +448,14 @@ CAT-08 operator assertions. The corrected `0065`-head replay completed the
 structural pgTAP phase, and the focused CAT-08 exact-role plan passes locally.
 The focused `0066` seal rehearsal/26-assertion plan passes, while the focused
 `0067` rehearsal/seven-assertion plan passes and direct
-`plpgsql_check_function` inspection returns no findings. The exhaustive
-66-migration structural plans, error-level schema lint, migration-shadow drift
-check, temporary type generation, and two-connection rehearsal have not yet
-passed as one current-head gate. Hosted evidence also remains absent.
+`plpgsql_check_function` inspection returns no findings. The final exhaustive
+66-migration current-head gate now passes locally in one isolated run: two clean
+resets, exact history through `20260726000067`, structural pgTAP, error-level
+schema lint, empty migration-shadow drift, temporary type generation (6,635
+lines, SHA-256
+`f53a6e2ade8a332f3aea88dabaa6178f44370975745c9dc8da79e136a9840c27`),
+and the ten-assertion two-connection rehearsal all pass before sandbox teardown.
+Hosted evidence remains absent.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system,
 the separate RevenueCat/app-grant entitlement authorities, and the `0064`
 through `0067` forward-upgrade paths.
@@ -553,10 +557,11 @@ artifacts must attest exact latest migration `20260722000062`. The corrected
 focused 26-assertion `0066` seal plan, and focused seven-assertion `0067` lint
 contract pass locally; direct `plpgsql_check_function` inspection of the
 `0067` wrapper returns no findings. The exhaustive 66-migration current-chain
-gate, hosted staging/release/supersession race and serving drill, real beta
-corpus, witnessed target/decision, signed review/readback, and active catalog
-remain open. Beta demand prioritizes independently sourced rows; it never
-becomes a product fact.
+gate now passes locally, including lint, empty drift, type generation, and the
+ten-assertion two-connection rehearsal. The hosted staging/release/supersession
+race and serving drill, real beta corpus, witnessed target/decision, signed
+review/readback, and active catalog remain open. Beta demand prioritizes
+independently sourced rows; it never becomes a product fact.
 
 This is not a hosted deployment or provider proof. Full generated-type parity,
 hosted RLS/Cron/Vault/concurrency, old/tampered-client containment,
@@ -593,7 +598,8 @@ Next action:
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
   signed-anonymous user, the no-session client, the regenerated exact `0062`
-  private-table inventory, exact
+  CAT-03 authority/readback plus the exact current-head (`0067`)
+  private/read-sealed-table inventory, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
 - obtain an approved old/tampered-client control and prove the source-complete

@@ -1,5 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { assertRoutineCadenceMutationAdmission } from '@/features/scheduler/cycleStore';
 import { localDateString } from '@/features/today/useToday';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
@@ -32,14 +34,17 @@ export function useRamp(): {
   const planData = plan.data;
   const planLoading = plan.isLoading;
   const planRamps = planData?.plan.ramp ?? [];
+  const cadenceReady = canUseRoutineCadence();
+  const recoveryReady = canUseRoutineRecovery();
   const today = localDateString();
   const keyIds = planRamps.map((r) => r.productId).join(',');
 
   const q = useQuery<RampItem[]>({
     queryKey: ['ramp', keyIds],
-    enabled: !planLoading,
+    enabled: cadenceReady && !planLoading,
     queryFn: () =>
       runCurrentHealthDataOperation(async (lease) => {
+        assertRoutineCadenceMutationAdmission();
         lease.assertCurrent();
         const stored = await getStoredRamps();
         lease.assertCurrent();
@@ -70,22 +75,32 @@ export function useRamp(): {
   });
 
   function acceptStepUp(productId: string): Promise<void> {
+    assertRoutineCadenceMutationAdmission();
     return runCurrentHealthDataOperation(async (lease) => {
+      assertRoutineCadenceMutationAdmission();
       lease.assertCurrent();
       await stepUpRamp(productId);
+      assertRoutineCadenceMutationAdmission();
       lease.assertCurrent();
       await qc.invalidateQueries({ queryKey: ['ramp'] });
       lease.assertCurrent();
     });
   }
 
-  const isLoading = planLoading || q.isLoading;
-  const isError = plan.isError || q.isError;
+  const items = !cadenceReady
+    ? []
+    : (q.data ?? []).filter(
+        (item) => recoveryReady || item.state.toleranceState !== 'paused_irritation',
+      );
+  const isLoading = cadenceReady && (planLoading || q.isLoading);
+  const isError = cadenceReady && (plan.isError || q.isError);
   return {
-    items: q.data ?? [],
+    items,
     isLoading,
     isError,
-    sourceReady: Boolean(plan.sourceReady && !isLoading && !isError && q.data !== undefined),
+    sourceReady: Boolean(
+      cadenceReady && plan.sourceReady && !isLoading && !isError && q.data !== undefined,
+    ),
     isExample: plan.isExample,
     acceptStepUp,
   };

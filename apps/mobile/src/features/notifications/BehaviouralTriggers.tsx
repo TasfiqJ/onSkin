@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 
 import { hasReplenishmentSignal } from '@/features/recommendations/replenishment';
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { useProgress } from '@/features/routine/useProgress';
 import { useRamp } from '@/features/routine/useRamp';
 import { useShelf } from '@/features/shelf/useShelf';
@@ -71,7 +72,7 @@ export function BehaviouralTriggers() {
   const prefs = useNotifPrefs().data;
   const enabled = {
     promotional: prefs?.promotionalOptIn === true,
-    ramp: prefs?.streakNudges === true,
+    ramp: prefs?.streakNudges === true && canUseRoutineCadence(),
     replenishment: prefs?.replenishmentAlerts === true,
   };
 

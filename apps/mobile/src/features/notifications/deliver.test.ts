@@ -10,6 +10,8 @@ import type { NotifPrefs } from './store';
 
 const mocks = vi.hoisted(() => ({
   assertHealthDataWriteLease: vi.fn(),
+  canUseRoutineCadence: vi.fn(),
+  canUseRoutineRecovery: vi.fn(),
   cancelAllScheduledNotificationsAsync: vi.fn(async () => {}),
   cancelScheduledNotificationAsync: vi.fn(async (_id: string) => {}),
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
@@ -69,6 +71,11 @@ vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
 
 vi.mock('react-native', () => ({
   Platform: { OS: 'ios' },
+}));
+
+vi.mock('@/features/routine/reviewGate', () => ({
+  canUseRoutineCadence: mocks.canUseRoutineCadence,
+  canUseRoutineRecovery: mocks.canUseRoutineRecovery,
 }));
 
 vi.mock('./copy', () => ({
@@ -137,6 +144,10 @@ const prefs: NotifPrefs = {
 
 beforeEach(() => {
   mocks.healthOpen = true;
+  mocks.canUseRoutineCadence.mockReset();
+  mocks.canUseRoutineCadence.mockReturnValue(true);
+  mocks.canUseRoutineRecovery.mockReset();
+  mocks.canUseRoutineRecovery.mockReturnValue(true);
   mocks.assertHealthDataWriteLease.mockReset();
   mocks.captureHealthDataWriteLease.mockReset();
   mocks.captureHealthDataWriteLease.mockImplementation(() => {
@@ -394,6 +405,36 @@ describe('notifyBehavioural', () => {
     });
     mocks.sentThisWeekForTierLocal.mockClear();
     mocks.sentThisWeekForTierLocal.mockResolvedValue(0);
+  });
+
+  it('refuses ramp-up before preference reads or notification side effects when cadence is closed', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.canUseRoutineCadence.mockReturnValue(false);
+
+    await expect(notifyBehavioural('rampup', '12:00')).resolves.toBe(false);
+
+    expect(mocks.loadNotifPrefs).not.toHaveBeenCalled();
+    expect(mocks.captureHealthDataWriteLease).not.toHaveBeenCalled();
+    expect(mocks.sentThisWeekForTierLocal).not.toHaveBeenCalled();
+    expect(mocks.getUser).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+    expect(mocks.insertNotificationLog).not.toHaveBeenCalled();
+  });
+
+  it('refuses de-escalation before preference reads or side effects when recovery is closed', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.canUseRoutineRecovery.mockReturnValue(false);
+
+    await expect(notifyBehavioural('deescalation', '12:00')).resolves.toBe(false);
+
+    expect(mocks.loadNotifPrefs).not.toHaveBeenCalled();
+    expect(mocks.captureHealthDataWriteLease).not.toHaveBeenCalled();
+    expect(mocks.sentThisWeekForTierLocal).not.toHaveBeenCalled();
+    expect(mocks.getUser).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+    expect(mocks.insertNotificationLog).not.toHaveBeenCalled();
   });
 
   it('sends an allowed behavioural notification and records the local cap ledger', async () => {

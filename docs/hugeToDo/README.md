@@ -84,6 +84,8 @@ Start here:
 - [CORE-01 Native Age-Assurance Source Contract](../../scripts/core01/native-age-assurance-source-contract.test.mjs)
 - [CORE-02 Clinical Conflict Source Checkpoint](./CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md)
 - [CORE-02 Clinical Rule Source Contract](../../scripts/core02/clinical-rule-source-contract.test.mjs)
+- [CORE-03 Routine Guidance Source Checkpoint](./CORE-03-ROUTINE-GUIDANCE-SOURCE-CHECKPOINT-2026-07-26.md)
+- [CORE-03 Routine Guidance Source Contract](../../scripts/core03/routine-guidance-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -183,9 +185,11 @@ planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, exact local/
-hosted full-chain evidence through `0067`, current signed database readback,
-sealed holdout result, or active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
-quality, market, or revenue outcome is implied.
+hosted governed full-chain evidence through `0067`, current signed database
+readback, sealed holdout result, or active catalog exists, so CAT-03 is not
+complete and no Apple, legal, product-quality, market, or revenue outcome is
+implied. The disposable isolated local 66-migration gate passes as recorded
+below; it is not a retained governed packet or hosted proof.
 
 CAT-04 is now an `in_progress` source checkpoint, blocked by `CAT-03`, `H-07`,
 and `H-08`. The candidate normalizes UPC-E/manual package codes, rejects
@@ -463,6 +467,48 @@ initiated item-specific affiliate route is contextual shopping or prohibited
 health-targeted advertising remains unresolved; consent alone is not App Review
 or legal clearance.
 
+CORE-03 is now an `in_progress`, production-zero-admission source checkpoint.
+The exact-hash candidate binds ten sequencing roles plus exact cadence, recovery,
+ramp, phased-introduction, copy, jurisdiction, and market-scope data. Admission
+also requires retained-artifact identity/reference/hash fields and a complete
+claim-to-source-proposition map; those fields are deliberately null or empty in
+the current candidate. Its trusted-authority and review-receipt registries are
+empty, the detached-signature verifier intentionally refuses every receipt,
+stop/refer has no approved thresholds, its evaluator always refuses, and
+claim-bearing explainability copy remains unbound. Production ignores
+structural rule injection and free-text reviewer metadata; cadence has no
+Boolean or conservative numeric publication fallback. Sequence, cadence, ramp,
+recovery, procedure, and tolerance consumers now obtain the numeric policy and
+copy fields represented in this corpus version only through corpus selectors.
+Ramp-up and de-escalation notifications are admission-gated before reads or side
+effects, but their locally owned copy is not yet corpus-bound. Cycle, recovery,
+and ramp mutations refuse before persistence, cache, or analytics while
+admission is closed; stale cached guidance is withheld without rewriting its
+bytes. Start Today, plan gaps, and cycle-derived streak milestones no longer
+synthesize an authority, order, or cycle state; ordinary streaks remain
+available. Invalid, non-finite, fractional, unsafe, overflow-prone, or
+impossible cadence inputs also fail closed. A real shelf no longer inherits the
+synthetic Maya example profile when the current profile source is unavailable.
+The 14-of-14 independent CORE-03 contract is mandatory in Phase 3 and launch
+verification, and 15 focused files pass 252 of 252 tests. A historical
+pre-latest-hardening Expo-web packet verifies all nine closed direct routes
+across 27 of 27
+route/viewport observations at confirmed 375 x 666, 390 x 844, and 430 x 932;
+all nine refreshes and 11 of 11 safe exits pass, with 48 px minimum controls and
+zero overflow, clipped-control, forbidden-copy, dialog, or browser-error
+findings. The pass found and fixed a repo-local Metro package collision and
+unreviewed `moisturizer → SPF` copy on the closed Week card. The packet predates
+the later recovery, explainability, ramp-cache, notification, and stale-state
+hardening, is working-tree-bound, and is not manifest-registered; exact-current
+source, exact 375 x 667,
+compact/text-pressure, native/physical-device, and archive-identical evidence
+remain open. Retained immutable source artifacts, complete claim mappings,
+exact professional signatures, reviewed verifier/trust roots, executable
+stop/refer thresholds, a complete local claim-bearing copy inventory and exact
+copy binding, legal/market decisions, CORE-02 completion, and App Store
+acceptance also remain open; this checkpoint is not clinical, legal, market,
+launch, or revenue approval.
+
 The `0065` CAT-08 transition/default-ACL repair remains intact. The additional
 `0066` migration revokes all residual table privileges from the explicitly
 unreviewed legacy conflict/sequencing fixtures, forces their no-policy RLS
@@ -473,8 +519,12 @@ checker-only ephemeral table shape for the catalog-release wrapper's
 runtime-created temporary validation table. Every other wrapper statement
 remains linted, and the literal adds no extension dependency or runtime/security
 behavior change. Its focused PostgreSQL 15 rehearsal and direct checker proof
-pass, while the final exhaustive 66-migration full-chain replay is still in
-progress and unproven and no hosted evidence exists.
+pass. The final exhaustive 66-migration current-head gate also passes locally
+in one isolated run: two clean resets, exact history through `0067`, structural
+pgTAP, error-level schema lint, empty migration-shadow drift, 6,635-line
+temporary type generation, and the ten-assertion two-connection rehearsal all
+pass before sandbox teardown. Repository types were deliberately not replaced,
+and no hosted evidence exists.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. The fresh-only source procedure now covers all 66 migrations through

@@ -41,7 +41,9 @@ describe('conflict choice integration contracts', () => {
     expect(cycle).toContain('subflags: i.engineProduct.subflags');
     expect(scheduler).toContain('choiceForConflict(choices, conflict)');
     expect(scheduler).toContain("conflict.rule.interactionType === 'safety'");
-    expect(scheduler).toContain('if (!canUseRoutineCadence())');
+    expect(scheduler).toContain('const cadencePolicy = shippableRoutineCadencePolicy();');
+    expect(scheduler).toContain('const guidanceCopy = shippableRoutineGuidanceCopy();');
+    expect(scheduler).toContain('if (!cadencePolicy || !guidanceCopy)');
   });
 
   it('keeps future admitted choices version-matched without hardcoded product-detail guidance', () => {

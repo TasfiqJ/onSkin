@@ -19,12 +19,27 @@ const linkedDependencyWatchFolders =
     : [resolvedHoistedNodeModules];
 
 const config = getSentryExpoConfig(projectRoot);
+const repoTempPattern = new RegExp(
+  `^${path
+    .resolve(monorepoRoot, '.tmp')
+    .split(path.sep)
+    .map((segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('[\\\\/]')}[\\\\/]`,
+);
 
 // 1. Watch all files in the monorepo (so changes in packages/* trigger reloads).
 config.watchFolders = [monorepoRoot, ...linkedDependencyWatchFolders];
 
 // 2. Resolve modules from the app first, then the hoisted root.
 config.resolver.nodeModulesPaths = [path.resolve(projectRoot, 'node_modules'), hoistedNodeModules];
+config.resolver.blockList = [
+  ...(Array.isArray(config.resolver.blockList)
+    ? config.resolver.blockList
+    : config.resolver.blockList
+      ? [config.resolver.blockList]
+      : []),
+  repoTempPattern,
+];
 
 // 3. Allow importing the workspace TS source of @onskin/* packages directly.
 config.resolver.disableHierarchicalLookup = false;

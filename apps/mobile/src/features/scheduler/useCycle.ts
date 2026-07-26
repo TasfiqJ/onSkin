@@ -3,7 +3,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { routinePhasedIntroductionDelayDays } from '@/features/routine/sequencing';
 import { useRamp } from '@/features/routine/useRamp';
 import { useShelf } from '@/features/shelf/useShelf';
 import { localDateString } from '@/features/today/useToday';
@@ -11,6 +12,8 @@ import { track } from '@/lib/analytics/track';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import {
+  assertRoutineCadenceMutationAdmission,
+  assertRoutineRecoveryAvailable,
   endRecovery,
   loadCycleConfig,
   overrideStagingProducts,
@@ -63,6 +66,34 @@ export type CycleData = {
   notes: string[];
   conflictChoices: ScheduledConflictChoice[];
 };
+
+function closedCadenceCycleData(storedConfig: CycleConfig): CycleData {
+  return {
+    cycle: null,
+    recommendedCycle: null,
+    config: {
+      ...storedConfig,
+      variant: 'auto',
+      pausedFrom: null,
+      pauseReason: null,
+      recovery: null,
+      skips: [],
+      stagingOverrides: [],
+      customCycle: null,
+    },
+    tonight: null,
+    weekAhead: [],
+    nextAcidNight: null,
+    recovery: { active: false, day: 0, days: 0, reason: null },
+    paused: false,
+    skippedTonight: false,
+    stagedActiveIds: [],
+    cycleActives: [],
+    knownProductIds: [],
+    notes: [],
+    conflictChoices: [],
+  };
+}
 
 export function hasUseTogetherChoiceBetween(
   choices: readonly ScheduledConflictChoice[],
@@ -145,6 +176,8 @@ export function useCycle(): CycleHookResult {
   // the class cap (docs/05 §4: freq = min(ramp.freq_per_week, frequency_cap)).
   const ramp = useRamp();
   const cadenceReady = canUseRoutineCadence();
+  const recoveryReady = canUseRoutineRecovery();
+  const phasedIntroductionDelayDays = routinePhasedIntroductionDelayDays();
   // Per-product ramp frequency keyed by engineProduct.id (== user_product id ==
   // rampStore key), built from the merged plan-initial + persisted-override ramp.
   const freqByProductId = useMemo<Record<string, number>>(() => {
@@ -156,6 +189,13 @@ export function useCycle(): CycleHookResult {
   const data = useMemo<CycleData | undefined>(() => {
     if (!shelf.data || !cfg.data || !profile.data) return undefined;
     const config = cfg.data;
+    // Keep the encrypted stored record byte-identical for later reviewed
+    // recovery, but never publish cached cadence or disruption guidance after
+    // admission closes. In particular, Today must not inherit stale
+    // pause/recovery/skip state from React Query.
+    if (!cadenceReady || phasedIntroductionDelayDays === null) {
+      return closedCadenceCycleData(config);
+    }
 
     const actives: SchedulerActive[] = shelf.data.items.map((i) => ({
       id: i.engineProduct.id,
@@ -167,7 +207,7 @@ export function useCycle(): CycleHookResult {
       // Recently added → phased introduction, unless the user opted to start it
       // now ("add it now anyway", docs/05 §6.2).
       isNew:
-        daysSince(i.product.createdAt) <= 3 &&
+        daysSince(i.product.createdAt) <= phasedIntroductionDelayDays &&
         !config.stagingOverrides.includes(i.engineProduct.id),
     }));
     const {
@@ -206,16 +246,22 @@ export function useCycle(): CycleHookResult {
       : null;
     const week = cycle ? weekAhead(cycle, anchor, today) : [];
     const nextAcidNight = cycle ? nextSlotDate(cycle, anchor, today, 'exfoliate') : null;
-    const rec = recoveryProgress(config.recovery, today);
+    const rec = recoveryReady
+      ? recoveryProgress(config.recovery, today)
+      : { active: false, day: 0, days: 0 };
+    const publishedConfig = recoveryReady ? config : { ...config, recovery: null };
 
     return {
       cycle,
       recommendedCycle,
-      config,
+      config: publishedConfig,
       tonight,
       weekAhead: week,
       nextAcidNight,
-      recovery: { ...rec, reason: config.recovery?.reason ?? null },
+      recovery: {
+        ...rec,
+        reason: recoveryReady ? (config.recovery?.reason ?? null) : null,
+      },
       paused: config.pausedFrom != null,
       skippedTonight: config.skips.includes(today),
       stagedActiveIds,
@@ -224,7 +270,16 @@ export function useCycle(): CycleHookResult {
       notes,
       conflictChoices,
     };
-  }, [shelf.data, cfg.data, profile.data, freqByProductId, today, cadenceReady]);
+  }, [
+    shelf.data,
+    cfg.data,
+    profile.data,
+    freqByProductId,
+    today,
+    cadenceReady,
+    recoveryReady,
+    phasedIntroductionDelayDays,
+  ]);
 
   const isLoading = shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading;
   const isError = shelf.isError || cfg.isError || profile.isError || ramp.isError;
@@ -248,8 +303,15 @@ export function useCycle(): CycleHookResult {
 
 export function useCycleMutations() {
   const qc = useQueryClient();
-  const commit = (operation: () => Promise<CycleConfig>, afterCommit?: () => void): Promise<void> =>
-    runCurrentHealthDataOperation(async (lease) => {
+  const commit = (
+    operation: () => Promise<CycleConfig>,
+    afterCommit?: () => void,
+  ): Promise<void> => {
+    // Refuse at the UI mutation boundary before query cancellation, cache
+    // publication, analytics, or any storage call. cycleStore repeats the check
+    // so direct/non-React callers are fail-closed too.
+    assertRoutineCadenceMutationAdmission();
+    return runCurrentHealthDataOperation(async (lease) => {
       lease.assertCurrent();
       await qc.cancelQueries({ queryKey: ['cycleConfig'] });
       lease.assertCurrent();
@@ -260,6 +322,7 @@ export function useCycleMutations() {
       afterCommit?.();
       lease.assertCurrent();
     });
+  };
   return {
     setVariant(variant: CycleConfig['variant']) {
       return commit(
@@ -298,12 +361,14 @@ export function useCycleMutations() {
       );
     },
     beginRecovery(days: number, reason: RecoveryReason) {
+      assertRoutineRecoveryAvailable();
       return commit(
         () => startRecovery(days, reason),
         () => track('cycle_recovery_started'),
       );
     },
     finishRecovery() {
+      assertRoutineRecoveryAvailable();
       return commit(endRecovery);
     },
   };

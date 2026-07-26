@@ -17,7 +17,10 @@ import {
   type PregnancySafetyStatus,
 } from '@/features/intelligence/pregnancySafety';
 import type { ConflictRule } from '@/features/intelligence/rules';
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import {
+  shippableRoutineCadencePolicy,
+  shippableRoutineGuidanceCopy,
+} from '@/features/routine/sequencing';
 
 import {
   classifyActiveClass,
@@ -111,14 +114,6 @@ export type SchedulerProfile = {
   conflictChoices?: ConflictChoices;
 };
 
-// Recovery density per variant: nights inserted between pushes + trailing.
-const RECOVERY: Record<CycleVariant, { between: number; trailing: number }> = {
-  classic: { between: 0, trailing: 2 }, // the Bowe 4-night rhythm
-  gentle: { between: 1, trailing: 1 }, // more rest, for sensitive / barrier-repair
-  advanced: { between: 0, trailing: 1 }, // tighter, for resistant skin
-  custom: { between: 1, trailing: 1 },
-};
-
 /** Auto-pick a variant from the profile (mirrors the docs/02 §5 personalisation). */
 export function pickVariant(profile: SchedulerProfile): CycleVariant {
   if (profile.sensitivity === 'sensitive' || profile.goals.includes('barrier_repair'))
@@ -143,6 +138,7 @@ function needsRecoveryBetween(a: Classified, b: Classified): boolean {
 
 function weeklyFrequencyFor(active: Classified, profile: SchedulerProfile): number {
   const cap = reviewedFrequencyCap(active.cls, profile.sensitivity);
+  if (cap === null) return 0;
   const storedRamp = profile.freqByProductId?.[active.id];
   const requested =
     typeof storedRamp === 'number' && Number.isFinite(storedRamp) ? Math.floor(storedRamp) : cap;
@@ -273,7 +269,9 @@ export function orchestrate(
     notes.push(...new Set(safetyConflicts.map((conflict) => conflict.rule.copy.resolution)));
   }
 
-  if (!canUseRoutineCadence()) {
+  const cadencePolicy = shippableRoutineCadencePolicy();
+  const guidanceCopy = shippableRoutineGuidanceCopy();
+  if (!cadencePolicy || !guidanceCopy) {
     return {
       cycle: null,
       amDaily: [],
@@ -304,7 +302,10 @@ export function orchestrate(
     for (const active of staged) stagedIds.add(active.id);
     potent = potent.filter((c) => !c.isNew);
     notes.push(
-      `We'll add your ${staged.map((s) => s.name).join(' and ')} next week, once your routine settles.`,
+      guidanceCopy.phasedIntroductionNoteTemplate.replace(
+        '{productNames}',
+        staged.map((s) => s.name).join(' and '),
+      ),
     );
   }
 
@@ -341,7 +342,7 @@ export function orchestrate(
   const withFreq = potent.map((active) => ({ active, freq: weeklyFrequencyFor(active, profile) }));
 
   const pushes = buildPushes(withFreq);
-  const rec = RECOVERY[variant];
+  const rec = cadencePolicy.cycleRecoveryNights[variant];
 
   const nights: NightSlot[] = [];
   pushes.forEach((p, i) => {
@@ -355,11 +356,21 @@ export function orchestrate(
     const isLast = i === pushes.length - 1;
     const nextPush = pushes[i + 1];
     const repeatPotentSlot = nextPush ? needsRecoveryBetween(p.active, nextPush.active) : false;
-    const gaps = isLast ? rec.trailing : Math.max(rec.between, repeatPotentSlot ? 1 : 0);
+    const gaps = isLast
+      ? rec.trailing
+      : Math.max(
+          rec.betweenPushes,
+          repeatPotentSlot ? cadencePolicy.minimumBetweenRepeatedPotentSlotNights : 0,
+        );
     for (let g = 0; g < gaps; g++) nights.push(recoveryNight(nights.length));
   });
   // Guarantee at least one recovery night so the barrier always gets rest.
-  if (!nights.some((n) => n.slot === 'recover')) nights.push(recoveryNight(nights.length));
+  while (
+    nights.filter((night) => night.slot === 'recover').length <
+    cadencePolicy.minimumRecoveryNightsPerCycle
+  ) {
+    nights.push(recoveryNight(nights.length));
+  }
 
   // `freq` is a weekly ceiling, not a raw per-cycle count. Short generated
   // cycles are padded until their repeated projection obeys the same

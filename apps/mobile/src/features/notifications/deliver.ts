@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 
 import type { NotificationKind } from '@onskin/types';
 
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { PLANS } from '@/features/subscription/plans';
 import { loadEntitlement } from '@/features/subscription/store';
@@ -281,6 +282,8 @@ async function sentThisWeekForTier(userId: string, tier: string): Promise<number
  * triggers to call; the trigger *content* is owned by those features (docs/07 §1).
  */
 export async function notifyBehavioural(kind: NotificationKind, hhmm: string): Promise<boolean> {
+  if (kind === 'rampup' && !canUseRoutineCadence()) return false;
+  if (kind === 'deescalation' && !canUseRoutineRecovery()) return false;
   try {
     return await runHealthNotificationOperation(async ({ assertCurrent, schedule }) => {
       assertCurrent();

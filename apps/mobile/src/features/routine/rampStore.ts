@@ -4,8 +4,13 @@ import {
   runCurrentHealthDataOperation,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  assertRoutineCadenceMutationAdmission,
+  assertRoutineRecoveryAvailable,
+} from '@/features/scheduler/cycleStore';
 
 import { applyTolerance, type RampState } from './ramp';
+import { shippableRoutineCadencePolicy } from './sequencing';
 
 // Local-first retinoid/active ramp state (docs/03 §4). The `active_ramp` table
 // (migration 0015) is the deferred server target (B-ROUTINE-PERSIST); this store is
@@ -171,8 +176,10 @@ export function getStoredRamps(): Promise<Log> {
 export async function ensureRamp(productId: string, initial: RampState): Promise<StoredRamp> {
   const normalizedProductId = productId.trim();
   if (normalizedProductId.length === 0) throw new Error(RAMP_STATE_INVALID);
+  assertRoutineCadenceMutationAdmission();
   return runCurrentHealthDataOperation(async (lease) => {
     let result: StoredRamp | null = null;
+    assertRoutineCadenceMutationAdmission();
     lease.assertCurrent();
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();
@@ -199,7 +206,11 @@ export async function ensureRamp(productId: string, initial: RampState): Promise
 export async function stepUpRamp(productId: string): Promise<void> {
   const normalizedProductId = productId.trim();
   if (normalizedProductId.length === 0) return;
+  assertRoutineCadenceMutationAdmission();
+  const increment = shippableRoutineCadencePolicy()?.ramp.stepUpIncrementPerWeek;
+  if (increment === undefined) throw new Error('ROUTINE_CADENCE_NOT_ADMITTED');
   await runCurrentHealthDataOperation(async (lease) => {
+    assertRoutineCadenceMutationAdmission();
     lease.assertCurrent();
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();
@@ -211,7 +222,7 @@ export async function stepUpRamp(productId: string): Promise<void> {
       }
       log[normalizedProductId] = {
         ...ramp,
-        freqPerWeek: Math.min(ramp.targetPerWeek, ramp.freqPerWeek + 1),
+        freqPerWeek: Math.min(ramp.targetPerWeek, ramp.freqPerWeek + increment),
         toleranceState: 'steady',
         lastStepUp: localDateString(),
       };
@@ -227,7 +238,11 @@ export async function stepUpRamp(productId: string): Promise<void> {
 export async function applyToleranceToRamps(
   answer: 'comfortable' | 'a_bit_dry' | 'irritated',
 ): Promise<void> {
+  assertRoutineCadenceMutationAdmission();
+  if (answer === 'irritated') assertRoutineRecoveryAvailable();
   await runCurrentHealthDataOperation(async (lease) => {
+    assertRoutineCadenceMutationAdmission();
+    if (answer === 'irritated') assertRoutineRecoveryAvailable();
     lease.assertCurrent();
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();

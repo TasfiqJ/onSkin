@@ -48,4 +48,20 @@ const weakenedSafety = structuredClone(contract);
 weakenedSafety.safetyConstraints.aiSkinScores = true;
 assert.match(validateLaunchContract(weakenedSafety).join('\n'), /aiSkinScores must be false/);
 
+const missingRoutineReviewer = structuredClone(contract);
+missingRoutineReviewer.featureProfessionalReviewRequirements.routine_builder =
+  missingRoutineReviewer.featureProfessionalReviewRequirements.routine_builder.slice(0, 2);
+assert.match(
+  validateLaunchContract(missingRoutineReviewer).join('\n'),
+  /routine_builder must require the exact three reviewer roles/,
+);
+
+const weakenedSchedulerReviewer = structuredClone(contract);
+weakenedSchedulerReviewer.featureProfessionalReviewRequirements.cycle_scheduler[2].taskId =
+  'REV-05';
+assert.match(
+  validateLaunchContract(weakenedSchedulerReviewer).join('\n'),
+  /cycle_scheduler.regulatory_counsel must bind the exact task and scope/,
+);
+
 console.log('Launch contract smoke tests passed.');

@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { localDateString } from '@/features/today/useToday';
 import {
   clearActiveHealthProcessingEpoch,
   setActiveHealthProcessingEpoch,
 } from '@/lib/consent/healthProcessingEpoch';
+import { ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED } from '@/features/scheduler/cycleStore';
 
 import {
   applyToleranceToRamps,
@@ -20,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
+  updatePrivateItem: vi.fn(),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -27,36 +29,85 @@ vi.mock('@/lib/storage/privateKV', () => ({
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
-  updatePrivateItem: vi.fn(
-    async (key: string, updater: (current: string | null) => string | null) => {
-      const previous = mocks.tails.get(key) ?? Promise.resolve();
-      let release!: () => void;
-      const tail = new Promise<void>((resolve) => {
-        release = resolve;
-      });
-      mocks.tails.set(key, tail);
-      await previous;
-      try {
-        if (mocks.updateFailure) throw mocks.updateFailure;
-        const next = updater(mocks.storage.get(key) ?? null);
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
-      } finally {
-        release();
-        if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
-      }
-    },
-  ),
+  updatePrivateItem: mocks.updatePrivateItem,
 }));
 
 const KEY = 'onskin.ramp.v1';
+const runtime = globalThis as { __DEV__?: boolean };
+const originalDev = runtime.__DEV__;
 
 describe('routine ramp persistence', () => {
   beforeEach(() => {
+    runtime.__DEV__ = true;
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE;
+    process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE = 'open_fixture';
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.updateFailure = null;
+    mocks.updatePrivateItem.mockReset();
+    mocks.updatePrivateItem.mockImplementation(
+      async (key: string, updater: (current: string | null) => string | null) => {
+        const previous = mocks.tails.get(key) ?? Promise.resolve();
+        let release!: () => void;
+        const tail = new Promise<void>((resolve) => {
+          release = resolve;
+        });
+        mocks.tails.set(key, tail);
+        await previous;
+        try {
+          if (mocks.updateFailure) throw mocks.updateFailure;
+          const next = updater(mocks.storage.get(key) ?? null);
+          if (next === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, next);
+        } finally {
+          release();
+          if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
+        }
+      },
+    );
     setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
+  });
+
+  afterEach(() => {
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE;
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+  });
+
+  it('refuses ramp writes before private storage when cadence admission is closed', async () => {
+    const before = JSON.stringify({
+      version: 1,
+      ramps: {
+        retinol: {
+          freqPerWeek: 2,
+          targetPerWeek: 3,
+          toleranceState: 'building',
+          startedAt: localDateString(),
+          lastStepUp: null,
+        },
+      },
+    });
+    mocks.storage.set(KEY, before);
+    process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE = 'closed';
+
+    const mutations: (() => Promise<unknown>)[] = [
+      () =>
+        ensureRamp('acid', {
+          freqPerWeek: 1,
+          targetPerWeek: 2,
+          toleranceState: 'building',
+        }),
+      () => stepUpRamp('retinol'),
+      () => applyToleranceToRamps('comfortable'),
+    ];
+
+    for (const mutate of mutations) {
+      await expect(mutate()).rejects.toThrow(ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED);
+    }
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(before);
   });
 
   it('preserves unreadable ramp state and returns a fail-closed empty view', async () => {
@@ -200,6 +251,7 @@ describe('routine ramp persistence', () => {
 
   it('clears ramp bytes after health processing closes', async () => {
     mocks.storage.set(KEY, JSON.stringify({ version: 1, ramps: {} }));
+    process.env.EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE = 'closed';
     clearActiveHealthProcessingEpoch();
 
     await clearRamps();

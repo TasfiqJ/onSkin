@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { EngineProfile } from '@/features/intelligence/engine';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
@@ -126,7 +126,7 @@ describe('role classification (docs/03 §3). Tags win over name keywords', () =>
     });
   });
 
-  it('uses only the reviewed role subset in production', () => {
+  it('ignores structurally injected free-text review metadata in production', () => {
     const reviewedCleanser = {
       ...SEQUENCING_RULES.cleanser,
       reviewedBy: 'B-DERM-REVIEW',
@@ -142,8 +142,8 @@ describe('role classification (docs/03 §3). Tags win over name keywords', () =>
       product('moisturiser', 'Ceramide moisturiser'),
     ];
 
-    expect(sequencePhase(input, 'am', rules).map((step) => step.productId)).toEqual(['cleanser']);
-    expect(sequencePhase(input, 'am', rules)[0]?.instruction).toBe(reviewedCleanser.notes);
+    expect(rules).toEqual({});
+    expect(sequencePhase(input, 'am', rules)).toEqual([]);
   });
 });
 
@@ -207,13 +207,28 @@ describe('Maya plan generation (docs/03 §2 worked example)', () => {
 });
 
 describe('gap notes (docs/03 §2. Never fabricate a product)', () => {
-  it('notes a missing SPF', () => {
-    const plan = generatePlan([product('r', 'Retinol', ['Retinol'])], {
-      sensitivity: 'neutral',
-      pregnancy: false,
-      goals: [],
-    });
+  it('notes a missing SPF only when sequencing guidance is admitted', () => {
+    const plan = withDevFlag(true, () =>
+      generatePlan([product('r', 'Retinol', ['Retinol'])], {
+        sensitivity: 'neutral',
+        pregnancy: false,
+        goals: [],
+      }),
+    );
     expect(plan.gaps.some((g) => g.toLowerCase().includes('spf'))).toBe(true);
+  });
+
+  it('publishes no product-gap advice while sequencing admission is closed', () => {
+    withDevFlag(false, () => {
+      const plan = generatePlan([product('r', 'Retinol', ['Retinol'])], {
+        sensitivity: 'neutral',
+        pregnancy: false,
+        goals: [],
+      });
+
+      expect(plan.gaps).toEqual([]);
+      expect(JSON.stringify(plan)).not.toContain('highest-impact');
+    });
   });
 
   it('leaves unclassified products out of AM/PM rows and records why', () => {
@@ -465,10 +480,11 @@ describe('B-DERM-REVIEW routine launch gate', () => {
         },
       ]);
       expect(plan.sequencingWithheld.every((item) => item.placement === 'withheld')).toBe(true);
+      expect(plan.gaps).toEqual([]);
     });
   });
 
-  it('auto-places only products whose role rule carries production review', () => {
+  it('does not auto-place a product from free-text production review metadata', () => {
     const reviewedCleanser = {
       ...SEQUENCING_RULES.cleanser,
       reviewedBy: 'B-DERM-REVIEW',
@@ -486,10 +502,17 @@ describe('B-DERM-REVIEW routine launch gate', () => {
         reviewedRules,
       );
 
-      expect(plan.am.map((step) => step.productId)).toEqual(['cleanser']);
-      expect(plan.pm.map((step) => step.productId)).toEqual(['cleanser']);
-      expect(plan.am[0]?.instruction).toBe(reviewedCleanser.notes);
+      expect(reviewedRules).toEqual({});
+      expect(plan.am).toEqual([]);
+      expect(plan.pm).toEqual([]);
       expect(plan.sequencingWithheld).toEqual([
+        {
+          productId: 'cleanser',
+          name: 'Cream cleanser',
+          role: 'cleanser',
+          placement: 'withheld',
+          reason: 'review_required',
+        },
         {
           productId: 'moisturiser',
           name: 'Ceramide moisturiser',
@@ -518,6 +541,14 @@ describe('B-DERM-REVIEW routine launch gate', () => {
 });
 
 describe('retinoid ramp (docs/03 §4)', () => {
+  beforeEach(() => {
+    (globalThis as { __DEV__?: boolean }).__DEV__ = true;
+  });
+
+  afterEach(() => {
+    delete (globalThis as { __DEV__?: boolean }).__DEV__;
+  });
+
   it('starts gentler for sensitive than resistant', () => {
     expect(initRamp('retinoid', 'sensitive').freqPerWeek).toBe(2);
     expect(initRamp('retinoid', 'resistant').freqPerWeek).toBe(3);

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Card, RouteIconButton, Screen, Text } from '@/components/ui';
+import { canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { useProgress, type DayState, type HeatCell } from '@/features/routine/useProgress';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { currentMilestone } from '@/features/streak/milestones';
@@ -44,12 +45,13 @@ function weekDaySquare(state: DayState): {
 export default function StreakScreen() {
   const { data } = useProgress();
   const { data: cycleData } = useCycle();
+  const recoveryReady = canUseRoutineRecovery();
   const week = data?.week ?? [];
   const heat = data?.heat ?? [];
 
-  // Highest calm milestone the current streak has reached (docs/07 §4.5). The
-  // "one cycle" marker uses the real cycle length when available.
-  const cycleLength = cycleData?.cycle?.lengthNights ?? 4;
+  // Highest calm milestone the current streak has reached (docs/07 §4.5). A
+  // cycle milestone exists only when the admitted scheduler supplies a cycle.
+  const cycleLength = cycleData?.cycle?.lengthNights ?? null;
   const milestone = currentMilestone(data?.streak ?? 0, cycleLength);
 
   // Fire the analytics event once per milestone (first crossing only).
@@ -182,8 +184,9 @@ export default function StreakScreen() {
                 Welcome back
               </Text>
               <Text variant="bodySm" tone="muted" className="mt-0.5">
-                It&apos;s been a few days. That&apos;s okay. Pick up tonight; consistency over time
-                is what counts.
+                {recoveryReady
+                  ? "It's been a few days. That's okay. Pick up tonight; consistency over time is what counts."
+                  : 'Your routine remains available from Today. Recovery guidance is still under review.'}
               </Text>
             </View>
           </Pressable>

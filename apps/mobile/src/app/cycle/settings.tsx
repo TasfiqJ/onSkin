@@ -47,10 +47,12 @@ type BrowserNavigation = {
 };
 
 export default function CycleSettingsScreen() {
-  const { data, isLoading } = useCycle();
-  const cadenceReady = canUseRoutineCadence();
+  if (!canUseRoutineCadence()) return <CadenceReviewGate />;
+  return <AdmittedCycleSettingsScreen />;
+}
 
-  if (!cadenceReady) return <CadenceReviewGate />;
+function AdmittedCycleSettingsScreen() {
+  const { data, isLoading } = useCycle();
   if (isLoading || !data) return <CycleSettingsLoading />;
 
   const configKey = `${data.config.variant}:${JSON.stringify(data.config.customCycle)}`;
@@ -395,7 +397,7 @@ function CadenceReviewGate() {
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-2">
           Your routine can still be used daily. Skin-cycling cadence and ramp settings stay hidden
-          in production until clinical and cosmetic-chemistry review closes.
+          in production until all required independent professional review is complete.
         </Text>
       </View>
     </Screen>
