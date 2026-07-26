@@ -17,6 +17,7 @@ import {
   updatePrivateItem,
   updatePrivateItemsTransactionally,
 } from '@/lib/storage/privateKV';
+import { readLocalDateBoundaryIdentity } from '@/lib/query/queryDateBoundaryCore';
 
 import { normalizeShelfFreshness, validLocalDate } from './freshness';
 
@@ -1020,7 +1021,9 @@ export async function reAddProduct(
   id: string,
   owner?: ShelfOperationOwner,
 ): Promise<ReAddedShelfProduct | null> {
-  const ts = nowISO();
+  const now = new Date();
+  const ts = now.toISOString();
+  const localDate = readLocalDateBoundaryIdentity(now).localDate;
   const replacementId = await replacementIdForSource(id);
   if (!replacementId || replacementId === id) throw new Error(SHELF_STATE_INVALID);
   let result: ReAddedShelfProduct | null = null;
@@ -1047,18 +1050,18 @@ export async function reAddProduct(
         ? {
             ...prev,
             status: 'finished',
-            finishedAt: ts.slice(0, 10),
+            finishedAt: localDate,
             updatedAt: ts,
           }
         : { ...prev, updatedAt: ts };
     const freshness = normalizeShelfFreshness(
       {
         ...prev,
-        openedAt: ts.slice(0, 10),
+        openedAt: localDate,
         isOpened: true,
         expiryDate: null,
       },
-      ts.slice(0, 10),
+      localDate,
     );
     const fresh: ShelfProduct = {
       ...prev,

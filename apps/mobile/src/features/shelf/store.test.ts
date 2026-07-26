@@ -508,6 +508,37 @@ describe('shelf local store recovery', () => {
     });
   });
 
+  it('uses one captured local calendar date for replenishment across a UTC boundary', async () => {
+    vi.useFakeTimers();
+    const getFullYear = vi.spyOn(Date.prototype, 'getFullYear').mockReturnValue(2026);
+    const getMonth = vi.spyOn(Date.prototype, 'getMonth').mockReturnValue(6);
+    const getDate = vi.spyOn(Date.prototype, 'getDate').mockReturnValue(16);
+    try {
+      vi.setSystemTime(new Date('2026-07-15T23:59:59.900Z'));
+      const previous = await addProduct({ name: 'Local-date refill', addedVia: 'manual' });
+
+      const replaced = await reAddProduct(previous.id);
+
+      expect(replaced?.archived).toMatchObject({
+        status: 'finished',
+        finishedAt: '2026-07-16',
+        updatedAt: '2026-07-15T23:59:59.900Z',
+      });
+      expect(replaced?.fresh).toMatchObject({
+        status: 'active',
+        isOpened: true,
+        openedAt: '2026-07-16',
+        createdAt: '2026-07-15T23:59:59.900Z',
+        updatedAt: '2026-07-15T23:59:59.900Z',
+      });
+    } finally {
+      getDate.mockRestore();
+      getMonth.mockRestore();
+      getFullYear.mockRestore();
+      vi.useRealTimers();
+    }
+  });
+
   it('does not rewrite a discarded unit as finished when it is re-added', async () => {
     const previous = await addProduct({
       name: 'Eye Cream',
