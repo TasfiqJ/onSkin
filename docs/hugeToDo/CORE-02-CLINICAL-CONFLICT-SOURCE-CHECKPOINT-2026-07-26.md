@@ -94,6 +94,8 @@ publication authority.
 - `supabase/tests/database/clinical_content_legacy_seal.test.sql`
 - `supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql`
 - `supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql`
+- `test-results/human-e2e/2026-07-26/core02-conflict-admission-current/`
+- `docs/e2e-bug-reports/2026-07-26-core02-ask-fit-evidence-label.md`
 
 The CORE-02 source contract is mandatory in both `phase3:verify` and
 `launch:verify`. The Phase 3 review packet includes the exact corpus and both
@@ -111,9 +113,27 @@ The CORE-02 source contract is mandatory in both `phase3:verify` and
   gates pass; their external-evidence warnings remain open and are not treated
   as launch evidence.
 - Focused PostgreSQL 15 rehearsals for `0066` and `0067` pass. The exhaustive
-  current-head database replay and human-simulated UI evidence are recorded
-  separately when their complete commands exit; an in-flight run is not a
-  pass.
+  current-head database replay is recorded separately only when its complete
+  command exits; an in-flight run is not a pass.
+- A local, folder-specific human-simulated Expo-web observation at the supported
+  390 x 844 viewport records the ordinary zero-admission Shelf, Ask
+  prompt-hiding, exact typed-pair refusal, stale-detail, invalid public-share,
+  and paywall non-sale/disclosure states against source commit
+  `c78208ef1da9dd4b3c5f385d421541f8741dba3c`. The pass found and fixed one
+  unbound `Evidence: established` label in the deterministic Ask fit answer.
+  The retained console snapshot contains 96 expected development warnings and
+  zero errors only through `2026-07-26T13:11:31.816Z`; it predates the final
+  screenshots, and no post-flow console export is retained. The tester observed
+  `Back to Shelf` return to `/shelf`, but no post-click screenshot or trace is
+  retained. This is local Expo-web evidence, not native or submitted-build
+  proof.
+- The repository-wide human-E2E manifest stops before this packet on the
+  pre-existing absent 2026-07-22 CAT07 shelf-freshness folder. The governed
+  CAT07 runner writes live timestamps while that manifest requires
+  `2026-07-22T...`, so rerunning it on 2026-07-26 would not truthfully repair
+  the missing packet. No CORE-02 packet contract is currently registered in the
+  manifest either. The CAT07 runner contract passes 38/38; no evidence was
+  fabricated or backdated.
 
 ## Remaining release gates
 
@@ -141,7 +161,9 @@ The CORE-02 source contract is mandatory in both `phase3:verify` and
    also resolve whether `Pregnant or trying` remains a combined precautionary
    state or becomes two separately versioned, reviewed states.
 
-The source now fails closed at the current code boundary. This checkpoint does
-not record an exhaustive database replay or current human-simulated E2E pass,
-and it is not a substitute for professional signoff, an exact-release legal
-decision, native/physical-device evidence, or Apple's review.
+The source now fails closed at the current code boundary. This checkpoint
+records a current folder-specific human-simulated Expo-web observation but does
+not claim manifest admission and does not record the in-flight exhaustive
+database replay. It is not a substitute for professional signoff, an
+exact-release legal decision, native/physical-device evidence, or Apple's
+review.

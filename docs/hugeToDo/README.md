@@ -437,6 +437,25 @@ Migration `0066` separately seals the legacy database fixtures; none of these
 controls is clinical, legal, native-build, App Store, market, or revenue
 approval.
 
+Two independent source/code audits identified four P1 fail-closed defects. The
+current implementation and focused tests address mixed tagged/untagged shelf
+coverage, overlapping severity branches, exact typed-pair resolution, and
+reproductive-context repurchase withholding; professional and legal review
+remain open. Zero-admission Ask hides both proactive and suggested conflict
+prompts; exact typed product pairs refuse without admitted coverage; fit
+reassurance requires positive compatible coverage; and the Ask fit surface no
+longer exposes a bare evidence grade without exact citation/review. A local,
+folder-specific human-simulated Expo-web observation at 390 x 844 records the
+current Shelf zero-admission, Ask prompt-hiding/refusal/neutral-fit,
+stale-detail, product-free invalid-share, and paywall disclosure states. Its
+retained console snapshot contains 96 expected development warnings and zero
+errors only through `2026-07-26T13:11:31.816Z`; it predates the final
+screenshots, and no post-flow console export is retained. The tracked packet is
+not admitted by `e2e:human:manifest`: no CORE-02 packet contract is registered,
+and the repository gate also stops first on a pre-existing missing 2026-07-22
+CAT07 packet. This web packet does not replace compact/text-pressure, native,
+physical-iPhone, or reviewed admitted-content QA.
+
 Apple 1.4.1 health-accuracy scrutiny, 2.5.18's sensitive-data advertising ban,
 5.1/5.1.2 privacy and use limits, and the FTC health-products substantiation
 standard are recorded as launch gates in the checkpoint. Whether a user-

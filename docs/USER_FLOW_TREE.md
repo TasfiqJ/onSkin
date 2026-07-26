@@ -1828,16 +1828,21 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native share sheet behavior.
-- Planned human-E2E evidence folder:
-  `test-results/human-e2e/YYYY-MM-DD/conflict-routes/`
+- Current human-E2E evidence folder:
+  `test-results/human-e2e/2026-07-26/core02-conflict-admission-current/`
 - Historical geometry/navigation evidence:
   `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`.
   It predates the exact-corpus admission boundary and is not current CORE-02
   acceptance evidence.
 - Current verified source boundary: the CORE-02 source contract is 16/16
   passing, and the focused intelligence/recommendation regression suite is
-  81/81 passing. No current-head human-simulated E2E pass or exhaustive
-  database replay is recorded.
+  81/81 passing. A local, folder-specific 390 x 844 Expo-web observation records
+  Shelf, Ask, typed-pair refusal, stale detail, invalid public share, and paywall
+  non-sale/disclosure states against commit
+  `c78208ef1da9dd4b3c5f385d421541f8741dba3c`. No CORE-02 packet contract is
+  registered in `e2e:human:manifest`, which also stops first on the pre-existing
+  absent 2026-07-22 CAT07 packet. The exhaustive database replay and
+  native/physical-iPhone acceptance remain separate gates.
 
 ### Path A: Fail-Closed Production Coverage
 
@@ -1868,12 +1873,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    trying-to-conceive fact; any future safety corpus must explicitly review the
    combined state or wait for a separately versioned profile split.
 
-The current zero-admission Shelf/Ask behavior is source- and unit-verified only.
-`test-results/human-e2e/2026-07-26/core02-conflict-admission-current/` is a
-planned evidence location, not an accepted run. Completion still requires a
-fresh human-simulated pass on the exact build, including supported-phone text
-pressure, relaunch, stale/public-link recovery, paywall non-sale, and native
-sharing behavior.
+The current zero-admission Shelf/Ask behavior is source- and unit-verified. A
+folder-specific human-simulated Expo-web observation at 390 x 844 is tracked in
+`test-results/human-e2e/2026-07-26/core02-conflict-admission-current/`.
+The screenshots record stale/public-link and paywall non-sale/disclosure states;
+the tester observed `Back to Shelf` return to `/shelf`, but no post-click trace
+or screenshot is retained. Compact-phone text pressure, process relaunch, native
+sharing, VoiceOver, Dynamic Type, signed-archive, and physical-iPhone behavior
+remain open.
 
 ### Future Path B: Admitted Conflict Detail
 
@@ -1992,14 +1999,14 @@ Passing source tests does not satisfy any of those gates.
   - Action: Exercise a newer rule version, a safety-class row, an incomplete/mismatched product-pair URL, and two pairs governed by the same rule.
   - Expected result: An old choice does not suppress new guidance; safety has no timing-override actions; a mismatched pair fails to the non-stale recovery state; each real pair has an independent choice and route identity.
   - Evidence: Unit/integration fixtures plus direct-route screenshots.
-  - Current source/test evidence: Focused tests cover stale versions, safety/reassurance exclusion, two same-rule pairs, and one-sided safety identity. Historical route evidence found rule-only and incomplete-pair URLs with two matching pairs failed closed to `Timing note unavailable`; exact-pair routes remained independent. A current-head route rerun is still required.
+  - Current evidence: Focused tests cover stale versions, safety/reassurance exclusion, two same-rule pairs, and one-sided safety identity. The current 390 x 844 Expo-web screenshot records a stale canonical rule URL and the generic `Timing note unavailable` dialog without product/rule claims. The tester observed `Back to Shelf` return to `/shelf`, but no post-click screenshot or trace is retained. Admitted exact-pair routing still requires a future professionally reviewed fixture and native acceptance evidence.
 - Branch: supported-phone geometry and text pressure
   - Priority: Critical
   - Automate later: Yes
   - Action: Run the unresolved, saving, failed, accepted, and use-together states at 360 x 640 and 390 x 844, including 200% text pressure where supported.
   - Expected result: No horizontal/text overflow, clipped actions, blocked hit targets, sub-44 px controls, dialog escape, or incoherent overlap; the exact-pair and safety-boundary copy remains readable.
   - Evidence: Geometry JSON, screenshots, browser logs, and interaction transcript.
-  - Historical partial evidence: A pre-boundary 360 x 640 and 390 x 844 Expo-web run reported zero horizontal/text overflow, 55.99 px and 48 px actions, successful center hit-tests, initial dialog focus, Tab/Shift+Tab containment, and Escape to Shelf. It found and fixed a 4 px partial action plus missing web Escape/initial-focus traversal. Current-head human E2E and populated-pair native Dynamic Type remain release-device QA.
+  - Current evidence: The current screenshots visually record the ordinary 390 x 844 zero-admission Shelf, Ask, typed-refusal, stale-detail, public-share, and paywall states. No current DOM geometry or text-pressure measurement is retained. Historical populated-pair evidence reported 55.99 px and 48 px actions plus focus trapping, but admitted populated-pair native Dynamic Type remains release-device QA.
 
 - Branch: direct-entry conflict and share exits
   - Priority: Important
@@ -2007,6 +2014,7 @@ Passing source tests does not satisfy any of those gates.
   - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` directly, then use the visible Close, Done, Keep, or Use together control.
   - Expected result: The user returns to the Shelf tab instead of remaining on a direct-entry conflict or share-card screen with no navigation history.
   - Evidence: 2026-07-07 Expo web at 320 x 568 verified `/conflict/missing-rule-e2e` `Back to Shelf`, default `/share/conflict/missing-rule-e2e` deferred `Back to Shelf`, and share-card-enabled unshareable `Done` all return to `/shelf`, with zero horizontal overflow and no browser console errors.
+  - Current evidence: The 2026-07-26 Expo-web screenshot at 390 x 844 records the stale detail route before recovery, and the tester observed `Back to Shelf` return to `/shelf`; no post-click screenshot or trace is retained. The same packet records a product-free invalid public share state. Native sharing and admitted populated-pair exits remain release-device QA.
 - Branch: missing or unshareable conflict
   - Priority: Important
   - Automate later: Yes
@@ -2014,7 +2022,7 @@ Passing source tests does not satisfy any of those gates.
   - Expected result: The missing conflict detail explains that the timing note is no longer active because the shelf or safety setting changed, never falsely says a product pair was removed, never reuses stale routine advice, Back to Shelf returns to `/shelf`, Add a product opens `/shelf/manual`, and the share-card fallback still returns to Shelf without exposing private shelf details.
   - Evidence: 2026-07-07 Expo web at 320 x 568 verified the missing state copy, stale-routine warning, `/shelf` recovery, `/shelf/manual` escape hatch, default share-card fallback, and enabled unshareable share-card state without private product names.
   - Historical partial evidence: A 2026-07-08 in-app-browser run at 320 x 568 rechecked direct `/conflict/missing-rule-e2e` after a compact-sheet fallback fix. Pre-fix evidence captured `maxHeight: 0px` with the actions below the viewport; post-fix evidence confirms a 524 px dialog, `aria-modal`, `Timing note unavailable` accessibility label, zero horizontal overflow, no mojibake, and visible 56 px / 48 px actions. Evidence is in `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`; it is not current-head CORE-02 acceptance.
-  - Historical support-floor text-pressure evidence: A 2026-07-09 headless Chrome Expo-web run found the missing conflict sheet clipped `Back to Shelf` at the bottom of the 320 x 480 / 170% skipped-route sweep. Post-fix, short missing-conflict sheets put recovery actions before the explanatory card, and the same 21-route sweep reported zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`. A current-head rerun is still required.
+  - Historical support-floor text-pressure evidence: A 2026-07-09 headless Chrome Expo-web run found the missing conflict sheet clipped `Back to Shelf` at the bottom of the 320 x 480 / 170% skipped-route sweep. Post-fix, short missing-conflict sheets put recovery actions before the explanatory card, and the same 21-route sweep reported zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`. Compact/text-pressure and native reruns are still required; the supported 390 x 844 packet currently records the stale-detail and product-free invalid-share states only.
 - Branch: native share unavailable
   - Priority: Important
   - Automate later: Yes
@@ -2200,9 +2208,10 @@ Passing source tests does not satisfy any of those gates.
    cloud Ask deferred beta screen or imply interaction review is active.
    The composer disclosure footer stays fully visible and legible above the bottom edge on a 320 x 568 phone.
    Evidence: Screenshot and visible-text snapshot.
-   Current source/test evidence: The 16/16 CORE-02 source contract verifies
-   both zero-admission conflict-prompt gates. A current human-simulated UI pass
-   is not recorded.
+   Current evidence: The 16/16 CORE-02 source contract verifies both
+   zero-admission conflict-prompt gates. The supported 390 x 844 Expo-web pass
+   confirms the proactive turn and conflict prompt are absent, while routine
+   and fit prompts plus the local-only disclosure remain visible.
 
 ### Branches
 
@@ -2233,8 +2242,8 @@ Passing source tests does not satisfy any of those gates.
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/ask` at 320 x 568 and 320 x 480 with an empty shelf and zero
-    admission. Confirm `Is there a conflict on my shelf?` is absent, tap `What
-    should I do tonight?`, and inspect the first conversation state without
+    admission. Confirm `Is there a conflict on my shelf?` is absent, tap the
+    available routine prompt, and inspect the first conversation state without
     manually scrolling.
   - Expected result: The available routine question, deterministic badge,
     empty-shelf answer, report control, fixed composer, and disclosure footer
