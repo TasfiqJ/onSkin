@@ -1,7 +1,7 @@
 # Phase 2 Readiness Checklist
 
 Date: 2026-07-15
-Updated: 2026-07-26 for the 66-migration chain through `0067`
+Updated: 2026-07-26 for the 67-migration chain through `0068`
 
 Phase 2 should not start until naming, account ownership, environments, and
 secret handling are clear enough that production infrastructure will not need to
@@ -75,7 +75,11 @@ clears the brand.
    hosted Auth signup, anonymous signup, all 26 reviewed external providers,
    all seven reviewed hooks, SAML, OAuth server, custom OAuth, SSO, and
    third-party integrations disabled, with Auth admin-creation automation off.
-6. Run `scripts/phase2/deploy-supabase-staging.ps1`. The pinned procedure
+6. Run `npm run phase2:db-local-verify` and require the committed
+   `0067` -> `0068` rehearsal to pass against nonzero legacy caches,
+   client-authored freezes, partial steps, and routine markers before either
+   repeatable head reset is accepted. Then run
+   `scripts/phase2/deploy-supabase-staging.ps1`. The pinned procedure
    creates and repeatedly verifies an immutable Git snapshot, sets
    `DB06_TRAFFIC_FREEZE=frozen`, predeploys all 17 guarded default functions,
    and canaries the exact eight `verifyJwt: false` endpoints for HTTP `503`,
@@ -83,7 +87,7 @@ clears the brand.
 7. Require the immediate pre-push gate to revalidate cutover bytes and reread
    the exact function inventory, public freeze canaries, Auth freeze, empty
    migration inventory, schema, Storage, and all Cron jobs before applying the
-   66 migrations through `0067`. That gate reparses the unchanged artifact
+   67 migrations through `0068`. That gate reparses the unchanged artifact
    bytes/hashes and
    proves their current `validUntil`/`holdUntil` plus the seven-hour remaining
    completion budget; it does not pretend the initial operator observations

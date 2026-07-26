@@ -9,6 +9,7 @@ import {
   readFile,
   readdir,
   realpath,
+  rename,
   rm,
   stat,
   writeFile,
@@ -29,8 +30,8 @@ import {
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 66;
-const EXPECTED_LATEST_MIGRATION = '20260726000067';
+const EXPECTED_MIGRATION_COUNT = 67;
+const EXPECTED_LATEST_MIGRATION = '20260726000068';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
 // recomputes every sealed membership root. Keep ordinary CLI operations tightly
@@ -355,9 +356,81 @@ try {
 
   await stat(join(sandboxSupabaseDir, 'seed.sql'));
   await stat(join(sandboxSupabaseDir, 'tests', 'database', 'schema_contract.test.sql'));
+  await stat(
+    join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'routine_adherence_0068_upgrade.test.sql',
+    ),
+  );
+
+  const sandboxHeadMigration = join(
+    sandboxSupabaseDir,
+    'migrations',
+    migrationFiles.at(-1),
+  );
+  const withheldHeadMigration = join(
+    sandboxRoot,
+    migrationFiles.at(-1),
+  );
+  if (mode === '--verify') {
+    await rename(sandboxHeadMigration, withheldHeadMigration);
+  }
 
   stackMayExist = true;
   await runLocalCli('start isolated credential-free stack', ['start']);
+  if (mode === '--verify') {
+    await runLocalCli(
+      'reset through 0067 for the 0068 forward-upgrade rehearsal',
+      ['db', 'reset', '--local'],
+    );
+    await rename(withheldHeadMigration, sandboxHeadMigration);
+    const upgradeTemplatePath = join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'routine_adherence_0068_upgrade.test.sql',
+    );
+    const generatedUpgradeDir = join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'generated',
+    );
+    const generatedUpgradePath = join(
+      generatedUpgradeDir,
+      'routine_adherence_0068_upgrade.generated.test.sql',
+    );
+    const [upgradeTemplate, exactHeadMigration] = await Promise.all([
+      readFile(upgradeTemplatePath, 'utf8'),
+      readFile(sandboxHeadMigration, 'utf8'),
+    ]);
+    const includeMarker = '-- @@INCLUDE_EXACT_0068_MIGRATION@@';
+    if (upgradeTemplate.split(includeMarker).length !== 2) {
+      throw new Error('The 0068 upgrade rehearsal include marker is invalid.');
+    }
+    await mkdir(generatedUpgradeDir, { recursive: true });
+    await writeFile(
+      generatedUpgradePath,
+      upgradeTemplate.replace(includeMarker, () => exactHeadMigration),
+      'utf8',
+    );
+    await runLocalCli(
+      'run 0067 to 0068 adherence data-cutover rehearsal',
+      [
+        'test',
+        'db',
+        '--local',
+        'supabase/tests/upgrade/generated/routine_adherence_0068_upgrade.generated.test.sql',
+      ],
+      {
+        failureDiagnosticProfile: 'tap',
+        failureDiagnosticMaxBytes: STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES,
+        failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
+      },
+    );
+  }
   await runLocalCli('reset 1 of 2 (migrations plus seed)', ['db', 'reset', '--local']);
 
   if (mode === '--verify') {

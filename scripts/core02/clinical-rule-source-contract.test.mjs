@@ -38,6 +38,7 @@ const paths = Object.freeze({
   packetBuilder: 'scripts/phase3/build-review-packet.mjs',
   migration0066: 'supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql',
   migration0067: 'supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql',
+  migration0068: 'supabase/migrations/20260726000068_routine_adherence_authority.sql',
   schemaContract: 'supabase/tests/database/schema_contract.test.sql',
   clinicalSealContract: 'supabase/tests/database/clinical_content_legacy_seal.test.sql',
   lintContract: 'supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql',
@@ -874,19 +875,23 @@ test('migration 0066 seals legacy clinical tables and 0067 preserves the exact l
   );
 });
 
-test('the database contract is exactly 66 migrations through head 0067', () => {
+test('the database contract is exactly 67 migrations through head 0068', () => {
   const migrations = readdirSync(resolve(root, 'supabase/migrations'))
     .filter((name) => name.endsWith('.sql'))
     .sort();
-  assert.equal(migrations.length, 66);
-  assert.equal(migrations.at(-1), '20260726000067_catalog_release_temp_table_lint_contract.sql');
+  assert.equal(migrations.length, 67);
+  assert.equal(migrations.at(-1), '20260726000068_routine_adherence_authority.sql');
+  assert.match(
+    read(paths.migration0068),
+    /step_id IS NULL/u,
+  );
 
   for (const path of [paths.schemaContract, paths.clinicalSealContract, paths.lintContract]) {
     const source = read(path);
-    assert.match(source, /\b66::bigint\b/u, `${path} must bind the exact migration count.`);
+    assert.match(source, /\b67::bigint\b/u, `${path} must bind the exact migration count.`);
     assert.match(
       source,
-      /['"]20260726000067['"]::text/u,
+      /['"]20260726000068['"]::text/u,
       `${path} must bind the exact migration head.`,
     );
   }

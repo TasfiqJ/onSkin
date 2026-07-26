@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import test from 'node:test';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -32,11 +33,26 @@ const paths = Object.freeze({
   notificationLedger: 'apps/mobile/src/features/notifications/sentStore.ts',
   notificationSettings: 'apps/mobile/src/app/settings/notifications.tsx',
   notificationTiming: 'apps/mobile/src/app/settings/timing.tsx',
+  adherenceMigration: 'supabase/migrations/20260726000068_routine_adherence_authority.sql',
+  adherenceDbTest: 'supabase/tests/database/routine_adherence_authority.test.sql',
+  adherenceParityCorpus: 'scripts/core05/adherence-parity-corpus.json',
+  schemaContract: 'supabase/tests/database/schema_contract.test.sql',
   notificationHooks: 'apps/mobile/src/features/notifications/useNotifications.ts',
 });
 
 function read(path) {
   return readFileSync(resolve(root, path), 'utf8').replaceAll('\r\n', '\n');
+}
+
+function expandIsoDateRange({ start, end }) {
+  const dates = [];
+  const cursor = new Date(`${start}T12:00:00Z`);
+  const last = new Date(`${end}T12:00:00Z`);
+  while (cursor <= last) {
+    dates.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return dates;
 }
 
 test('completion state is strict, versioned, and never invents legacy adherence', () => {
@@ -204,6 +220,82 @@ test('notification opt-in is exact-time, authorization-aware, local-only, and ca
   assert.match(hooks, /await rescheduleReminders\(\)/u);
   assert.match(timing, /Event-triggered suggestions are skipped\./u);
   assert.match(timing, /Trial billing reminders follow the date shown at checkout\./u);
+});
+
+test('database adherence is exact-time, marker-only, and server-owned at head 0068', () => {
+  const migration = read(paths.adherenceMigration);
+  const dbTest = read(paths.adherenceDbTest);
+  const schemaContract = read(paths.schemaContract);
+
+  assert.match(migration, /private\.routine_adherence_timezone_is_valid/u);
+  assert.match(migration, /completions\.step_id is null/u);
+  assert.match(migration, /private\.project_routine_adherence/u);
+  assert.match(migration, /ROUTINE_ADHERENCE_CACHE_SERVER_OWNED/u);
+  assert.match(migration, /ROUTINE_ADHERENCE_FREEZE_SERVER_OWNED/u);
+  assert.match(migration, /drop policy if exists "streak_freezes_insert_own"/u);
+  assert.match(migration, /public\.set_routine_adherence_timezone/u);
+  assert.match(migration, /public\.refresh_routine_adherence/u);
+  assert.match(migration, /referencing new table as inserted_routine_completions/u);
+  assert.match(migration, /referencing old table as deleted_routine_completions/u);
+  assert.match(migration, /clear_routine_adherence_on_withdrawal/u);
+
+  assert.match(dbTest, /select plan\(78\)/u);
+  assert.match(
+    dbTest,
+    /CORE05_PARITY_CORPUS_SHA256: cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00/u,
+  );
+  assert.match(dbTest, /the hashed parity corpus matches the authoritative SQL projection/u);
+  assert.match(dbTest, /two separated misses consume the total two-freeze budget/u);
+  assert.match(dbTest, /a partial step completion cannot affect adherence/u);
+  assert.match(dbTest, /an authenticated owner cannot directly insert a freeze/u);
+  assert.match(dbTest, /deletion clears current\/freeze state without shrinking the personal best/u);
+  assert.match(schemaContract, /\b67::bigint\b/u);
+  assert.match(schemaContract, /'20260726000068'::text/u);
+});
+
+test('the hashed corpus executes the actual client streak implementation and binds SQL parity', async () => {
+  const corpus = JSON.parse(read(paths.adherenceParityCorpus));
+  const dbTest = read(paths.adherenceDbTest);
+  const corpusHash = createHash('sha256')
+    .update(JSON.stringify(corpus))
+    .digest('hex');
+
+  assert.equal(corpus.schemaVersion, 1);
+  assert.equal(corpus.canonicalFrozenDateOrder, 'newest_to_oldest');
+  assert.equal(corpus.cases.length, 9);
+  assert.equal(
+    corpusHash,
+    'cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00',
+  );
+  assert.match(dbTest, new RegExp(`CORE05_PARITY_CORPUS_SHA256: ${corpusHash}`, 'u'));
+  assert.equal(
+    dbTest.split(JSON.stringify(corpus)).length - 1,
+    2,
+    'pgTAP actual and expected queries must both consume the exact hashed JSON bytes',
+  );
+
+  const client = await import(pathToFileURL(resolve(root, paths.streak)).href);
+  for (const parityCase of corpus.cases) {
+    const completedDates =
+      parityCase.completedDates ?? expandIsoDateRange(parityCase.completedDateRange);
+    const completed = new Set(completedDates);
+    const actual = client.streakState(completed, parityCase.referenceDay, 2);
+    assert.deepEqual(
+      actual,
+      {
+        current: parityCase.expected.current,
+        freezeActive: parityCase.expected.frozenDates.length > 0,
+        frozenDates: parityCase.expected.frozenDates,
+        lapsed: parityCase.expected.lapsed,
+      },
+      `${parityCase.id}: actual streakState must match the shared corpus`,
+    );
+    assert.equal(
+      client.bestStreak(completed, 2, parityCase.referenceDay),
+      parityCase.expected.best,
+      `${parityCase.id}: actual bestStreak must match the shared corpus`,
+    );
+  }
 });
 
 test('completion records remain registered for cleanup/export and this contract is mandatory', () => {

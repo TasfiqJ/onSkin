@@ -128,6 +128,12 @@ function isoDate(offsetDays = 0) {
   return new Date(Date.now() + offsetDays * 86_400_000).toISOString().slice(0, 10);
 }
 
+function addIsoDays(value, offsetDays) {
+  const date = new Date(`${value}T12:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + offsetDays);
+  return date.toISOString().slice(0, 10);
+}
+
 async function createLiveUser(admin, label, cleanupUsers) {
   const suffix = `${Date.now()}-${randomUUID().slice(0, 8)}`;
   const email = `phase9-${label}-${suffix}@example.invalid`;
@@ -387,11 +393,16 @@ async function main() {
     }
 
     await runCheck('profile owner isolation', async () => {
-      const profile = await upsertOne(userA.client, 'profiles', {
-        id: userA.id,
-        display_name: 'Phase 9 User A',
-        units: 'metric',
-      });
+      const { data: profile, error: profileError } = await userA.client
+        .from('profiles')
+        .update({
+          display_name: 'Phase 9 User A',
+          units: 'metric',
+        })
+        .eq('id', userA.id)
+        .select()
+        .single();
+      if (profileError) throw profileError;
       registerPrivateTableProbe('profiles', 'id', profile.id);
       await expectVisible(userA.client, 'profiles', 'id', profile.id, 'profile owner read');
       await expectNotVisible(userB.client, 'profiles', 'id', profile.id, 'profile cross-user read');
@@ -417,6 +428,7 @@ async function main() {
     let crossUserProduct;
     let routine;
     let step;
+    let adherenceReferenceDay;
     await runCheck('skin profile, shelf, routine, and completion isolation', async () => {
       const skinProfile = await insertOne(userA.client, 'skin_profiles', {
         user_id: userA.id,
@@ -548,6 +560,17 @@ async function main() {
           .eq('id', step.id)
           .select('id'),
       );
+
+      const adherence = await userA.client.rpc('set_routine_adherence_timezone', {
+        p_timezone: 'America/Toronto',
+      });
+      if (adherence.error) throw adherence.error;
+      const adherenceProjection = Array.isArray(adherence.data) ? adherence.data[0] : null;
+      assert(
+        /^\d{4}-\d{2}-\d{2}$/u.test(String(adherenceProjection?.reference_day ?? '')),
+        'adherence timezone setter did not return an exact local reference day.',
+      );
+      adherenceReferenceDay = adherenceProjection.reference_day;
 
       const completion = await insertOne(userA.client, 'routine_completions', {
         user_id: userA.id,
@@ -1209,11 +1232,36 @@ async function main() {
           .insert({ user_id: userA.id, tier: 'utility', kind: 'pm_step' }),
       );
 
-      const freeze = await insertOne(userA.client, 'streak_freezes', {
+      assert(adherenceReferenceDay, 'adherence reference day was not configured.');
+      await expectBlockedInsert(
+        'streak freeze owner insert',
+        userA.client.from('streak_freezes').insert({
+          user_id: userA.id,
+          applied_for_date: addIsoDays(adherenceReferenceDay, -1),
+          source: 'auto',
+        }),
+      );
+      await insertOne(userA.client, 'routine_completions', {
         user_id: userA.id,
-        applied_for_date: isoDate(-1),
-        source: 'auto',
+        routine_id: routine.id,
+        step_id: null,
+        completed_date: adherenceReferenceDay,
       });
+      await insertOne(userA.client, 'routine_completions', {
+        user_id: userA.id,
+        routine_id: routine.id,
+        step_id: null,
+        completed_date: addIsoDays(adherenceReferenceDay, -2),
+      });
+      const freezeRead = await userA.client
+        .from('streak_freezes')
+        .select('id,user_id,applied_for_date,source')
+        .eq('user_id', userA.id)
+        .eq('applied_for_date', addIsoDays(adherenceReferenceDay, -1))
+        .single();
+      if (freezeRead.error) throw freezeRead.error;
+      const freeze = freezeRead.data;
+      assert(freeze?.source === 'auto', 'server-owned freeze source was not automatic.');
       registerPrivateTableProbe('streak_freezes', 'id', freeze.id);
       await expectVisible(
         userA.client,
@@ -1233,7 +1281,10 @@ async function main() {
         'streak freeze cross-user insert',
         userB.client
           .from('streak_freezes')
-          .insert({ user_id: userA.id, applied_for_date: isoDate(-2) }),
+          .insert({
+            user_id: userA.id,
+            applied_for_date: addIsoDays(adherenceReferenceDay, -2),
+          }),
       );
 
       const recommendationPreferences = await upsertOne(

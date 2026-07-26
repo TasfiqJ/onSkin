@@ -143,7 +143,9 @@ const clientCallableDefiners = new Set([
   'owns_routine(uuid)',
   'owns_user_product(uuid)',
   'read_entitlement_projections()',
+  'refresh_routine_adherence()',
   'record_health_dependent_consent(bigint, bigint, text, text, text, text)',
+  'set_routine_adherence_timezone(text)',
   'begin_health_dependent_consent_withdrawal(bigint, bigint, text, text, text, text)',
 ]);
 const serviceCallableDefiners = new Set([

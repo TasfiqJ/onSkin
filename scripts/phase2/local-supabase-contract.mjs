@@ -36,6 +36,9 @@ const [
   clinicalContentLegacySealTests,
   catalogReleaseLintUpgradeRehearsal,
   catalogReleaseLintContractTests,
+  routineAdherenceMigration,
+  routineAdherenceTests,
+  routineAdherenceUpgradeRehearsal,
   accountDeletionMigration,
   readme,
   workflow,
@@ -64,6 +67,9 @@ const [
   read('supabase/tests/database/clinical_content_legacy_seal.test.sql'),
   read('scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql'),
   read('supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql'),
+  read('supabase/migrations/20260726000068_routine_adherence_authority.sql'),
+  read('supabase/tests/database/routine_adherence_authority.test.sql'),
+  read('supabase/tests/upgrade/routine_adherence_0068_upgrade.test.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -95,10 +101,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 66, `Expected 66 migration files; found ${migrations.length}.`);
+check(migrations.length === 67, `Expected 67 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260726000067_'),
-  'The latest migration must remain 20260726000067.',
+  migrations.at(-1)?.startsWith('20260726000068_'),
+  'The latest migration must remain 20260726000068.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -180,6 +186,14 @@ check(
   'SIGINT/SIGTERM cleanup must be installed and exercised by the contract gate.',
 );
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
+check(
+  /reset through 0067 for the 0068 forward-upgrade rehearsal/u.test(runner) &&
+    /rename\(sandboxHeadMigration, withheldHeadMigration\)/u.test(runner) &&
+    /rename\(withheldHeadMigration, sandboxHeadMigration\)/u.test(runner) &&
+    /upgradeTemplate\.replace\(includeMarker, \(\) => exactHeadMigration\)/u.test(runner) &&
+    /routine_adherence_0068_upgrade\.generated\.test\.sql/u.test(runner),
+  'The full local DB gate must execute 0068 against a real 0067 migration history.',
+);
 check(
   /catalog-operator-dblink-target\.inc/u.test(runner) &&
     /host\.docker\.internal/u.test(runner) &&
@@ -420,16 +434,16 @@ check(
 );
 check(
   /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
-    /the clinical legacy seal runs against the exact 66-migration source history/u.test(
+    /the clinical legacy seal runs against the exact 67-migration source history/u.test(
       clinicalContentLegacySealTests,
     ) &&
-    /the migration history includes the legacy seal and reaches the catalog-release lint contract head/u.test(
+    /the migration history includes the legacy seal and reaches the routine-adherence authority head/u.test(
       clinicalContentLegacySealTests,
     ) &&
     /all historical rule rows survive every denied owner and API mutation probe/u.test(
       clinicalContentLegacySealTests,
     ),
-  '0066 pgTAP must bind the 66-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
+  '0066 pgTAP must bind the 67-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
 );
 check(
   /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000067_catalog_release_temp_table_lint_contract\.sql/u.test(
@@ -447,16 +461,86 @@ check(
 );
 check(
   /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
-    /the catalog release lint contract runs against the exact 66-migration source history/u.test(
+    /the catalog release lint contract runs against the exact 67-migration source history/u.test(
       catalogReleaseLintContractTests,
     ) &&
-    /the migration history reaches the exact temporary-table lint contract head/u.test(
+    /the migration history retains the temporary-table lint contract through the routine-adherence authority head/u.test(
       catalogReleaseLintContractTests,
     ) &&
     /only the exact temporary-table wrapper carries the checker shape/u.test(
       catalogReleaseLintContractTests,
     ),
-  '0067 pgTAP must bind the 66-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
+  '0067 pgTAP must bind the 67-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
+);
+check(
+  /begin;/u.test(routineAdherenceMigration) &&
+    routineAdherenceMigration.includes(
+      'lock table public.routine_completions in access exclusive mode;',
+    ) &&
+    routineAdherenceMigration.includes(
+      'lock table public.profiles in access exclusive mode;',
+    ) &&
+    routineAdherenceMigration.includes(
+      'lock table public.streak_freezes in access exclusive mode;',
+    ) &&
+    routineAdherenceMigration.indexOf(
+      'lock table public.routine_completions in access exclusive mode;',
+    ) <
+      routineAdherenceMigration.indexOf(
+        'lock table public.profiles in access exclusive mode;',
+      ) &&
+    routineAdherenceMigration.indexOf(
+      'lock table public.profiles in access exclusive mode;',
+    ) <
+      routineAdherenceMigration.indexOf(
+        'lock table public.streak_freezes in access exclusive mode;',
+      ) &&
+    /private\.routine_adherence_timezone_is_valid/u.test(routineAdherenceMigration) &&
+    /completions\.step_id is null/u.test(routineAdherenceMigration) &&
+    /drop policy if exists "streak_freezes_insert_own"/u.test(routineAdherenceMigration) &&
+    /ROUTINE_ADHERENCE_CACHE_SERVER_OWNED/u.test(routineAdherenceMigration) &&
+    /public\.set_routine_adherence_timezone/u.test(routineAdherenceMigration) &&
+    /public\.refresh_routine_adherence/u.test(routineAdherenceMigration) &&
+    /referencing new table as inserted_routine_completions/u.test(routineAdherenceMigration) &&
+    /referencing old table as deleted_routine_completions/u.test(routineAdherenceMigration) &&
+    /commit;/u.test(routineAdherenceMigration),
+  '0068 must atomically bind exact local time, routine markers, server-owned cache/freezes, refresh, and statement-level recomputation.',
+);
+check(
+  /select plan\(8\)/u.test(routineAdherenceUpgradeRehearsal) &&
+    /@@INCLUDE_EXACT_0068_MIGRATION@@/u.test(
+      routineAdherenceUpgradeRehearsal,
+    ) &&
+    /current_streak = 9/u.test(routineAdherenceUpgradeRehearsal) &&
+    /legacy-client/u.test(routineAdherenceUpgradeRehearsal) &&
+    /0068 atomically resets unverifiable legacy profile adherence/u.test(
+      routineAdherenceUpgradeRehearsal,
+    ) &&
+    /the cutover preflight fails closed on a cross-owner legacy marker/u.test(
+      routineAdherenceUpgradeRehearsal,
+    ) &&
+    /only the two preserved routine markers restore authoritative adherence/u.test(
+      routineAdherenceUpgradeRehearsal,
+    ),
+  '0068 must prove its legacy cache/freeze cutover and marker-only restoration from head 0067.',
+);
+check(
+  /select plan\(78\)/u.test(routineAdherenceTests) &&
+    /CORE05_PARITY_CORPUS_SHA256: cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00/u.test(
+      routineAdherenceTests,
+    ) &&
+    /the hashed parity corpus matches the authoritative SQL projection/u.test(
+      routineAdherenceTests,
+    ) &&
+    /exact 67-migration source history/u.test(routineAdherenceTests) &&
+    /authoritative routine-adherence head/u.test(routineAdherenceTests) &&
+    /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
+    /a partial step completion cannot affect adherence/u.test(routineAdherenceTests) &&
+    /an authenticated owner cannot directly insert a freeze/u.test(routineAdherenceTests) &&
+    /deletion clears current\/freeze state without shrinking the personal best/u.test(
+      routineAdherenceTests,
+    ),
+  '0068 pgTAP must bind the current head and exercise exact timezone, marker-only, freeze, cache, and delete truth.',
 );
 check(
   /select plan\(218\)/u.test(catalogImportLifecycleTests) &&

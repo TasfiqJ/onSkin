@@ -969,11 +969,14 @@ async function main() {
     let callerPhotoSignedUrl = null;
 
     const seed = async (user, label) => {
-      await upsertOne(user.client, 'profiles', {
-        id: user.id,
-        display_name: `Phase 9 Data ${label}`,
-        units: 'metric',
-      });
+      const { error: profileError } = await user.client
+        .from('profiles')
+        .update({
+          display_name: `Phase 9 Data ${label}`,
+          units: 'metric',
+        })
+        .eq('id', user.id);
+      if (profileError) throw profileError;
       const healthConsentVersion = 'draft-v1-2026-07-10';
       const healthConsentHash = '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
       const { data: consentRows, error: consentError } = await user.client.rpc(
@@ -1057,6 +1060,15 @@ async function main() {
         frequency: 'daily',
         instructions: `Phase 9 ${label} step`,
       });
+      const adherence = await user.client.rpc('set_routine_adherence_timezone', {
+        p_timezone: 'America/Toronto',
+      });
+      if (adherence.error) throw adherence.error;
+      assert(
+        Array.isArray(adherence.data) &&
+          /^\d{4}-\d{2}-\d{2}$/u.test(String(adherence.data[0]?.reference_day ?? '')),
+        `adherence timezone setup failed for ${label}.`,
+      );
       await insertOne(user.client, 'consents', {
         user_id: user.id,
         consent_type: 'photo_cloud_backup',

@@ -187,11 +187,16 @@ async function main() {
       );
     }
 
-    const profile = await upsertOne(userA.client, 'profiles', {
-      id: userA.id,
-      display_name: 'Phase 2 Smoke A',
-      units: 'metric',
-    });
+    const { data: profile, error: profileError } = await userA.client
+      .from('profiles')
+      .update({
+        display_name: 'Phase 2 Smoke A',
+        units: 'metric',
+      })
+      .eq('id', userA.id)
+      .select()
+      .single();
+    if (profileError) throw profileError;
     await expectOwnRead(userA.client, 'profiles', 'id', profile.id, 'profile own read');
     await expectNoPrivateRead(
       userB.client,

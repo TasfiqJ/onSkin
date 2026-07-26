@@ -98,6 +98,9 @@ const phase9ConsentMigration = read(
 const healthLifecycleMigration = read(
   'supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql',
 );
+const routineAdherenceMigration = read(
+  'supabase/migrations/20260726000068_routine_adherence_authority.sql',
+);
 const catalogScanMinimizationMigration = read(
   'supabase/migrations/20260718000059_catalog_scan_minimization.sql',
 );
@@ -572,8 +575,12 @@ block(
     /private\.health_processing_read_allowed/.test(healthLifecycleMigration) &&
     !/schemas\s*=\s*\[[^\]]*['"]private['"]/.test(supabaseConfig) &&
     /_health_read_barrier_context_active/.test(healthLifecycleMigration) &&
-    /set current_streak = 0,[\s\S]*longest_streak = 0/.test(healthLifecycleMigration),
-  'The predicate must remain outside PostgREST and begin must synchronously clear mixed-purpose profile streak caches.',
+    /set current_streak = 0,[\s\S]*longest_streak = 0/.test(healthLifecycleMigration) &&
+    /clear_routine_adherence_on_withdrawal/.test(routineAdherenceMigration) &&
+    /adherence_timezone = null/.test(routineAdherenceMigration) &&
+    /streak_reference_day = null/.test(routineAdherenceMigration) &&
+    /streak_algorithm_version = 0/.test(routineAdherenceMigration),
+  'The predicate must remain outside PostgREST and begin must synchronously clear every mixed-purpose profile adherence authority field.',
 );
 block(
   errors,

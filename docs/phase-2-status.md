@@ -18,8 +18,8 @@ Date: 2026-07-15
   immutable snapshot through the native pinned Supabase CLI `2.109.1`, refuses
   public/migration/function/Auth/Storage/all-Cron state, validates and retains a
   full-target-bound cutover record, one traffic/provider-freeze artifact, and
-  five schema-v2 boundary files, predeploys all 17 functions before 66
-  migrations through `0067`, retains before/pre-migration/after
+  five schema-v2 boundary files, predeploys all 17 functions before 67
+  migrations through `0068`, retains before/pre-migration/after
   schema/migration/function/type evidence, and fails closed without retaining
   raw CLI output or provider digests.
 - DB-06 actively closes ingress: the runner sets
@@ -44,6 +44,12 @@ Date: 2026-07-15
   no failure is mislabeled as contained.
 - DB-06 retains linked generated types only after exact local/linked hash parity
   and deliberately leaves repository type replacement to DB-08.
+- The local DB gate now rehearses the exact `0067` -> `0068` forward cutover
+  with legacy nonzero adherence caches, client-authored freezes, partial steps,
+  and marker rows before its two clean 67-migration head resets. It proves the
+  locked cutover clears unverifiable projections, preserves completion
+  evidence, and restores adherence from markers only after exact-timezone
+  configuration.
 - Store/privacy inventory and production infrastructure runbook are documented.
 
 ## Not Done Because It Requires External Accounts

@@ -6,9 +6,14 @@ select plan(215);
 -- Supabase API grants are hosted-bootstrap state rather than migration-owned.
 -- Rehearse the trigger/RPC contract with only the table privileges the normal
 -- authenticated API lane receives; sealed lifecycle tables remain ungranted.
+grant select, insert, delete
+  on public.profiles
+  to authenticated;
+grant update (display_name, avatar_path, locale, units)
+  on public.profiles
+  to authenticated;
 grant select, insert, update, delete
-  on public.profiles, public.skin_profiles, public.consents, public.photos,
-     public.routines
+  on public.skin_profiles, public.consents, public.photos, public.routines
   to authenticated;
 grant select on public.entitlements, public.community_blocks, public.community_questions
   to authenticated;
@@ -22,7 +27,7 @@ create policy "pgtap_health_read_fence_control_select" on storage.objects
     bucket_id = 'photos'
     and name = '70000000-0000-4000-8000-000000000003/e1/read-fence.bin'
   );
-grant select, update on public.profiles to service_role;
+grant select on public.profiles to service_role;
 grant insert on public.consents to service_role;
 grant select, delete on public.skin_profiles to service_role;
 grant select, delete on storage.objects to service_role;
@@ -1324,10 +1329,8 @@ select ok(
   'the public ownership helper remains usable while health processing is active'
 );
 select lives_ok(
-  $$update public.profiles
-       set current_streak = 5, longest_streak = 8
-     where id = '70000000-0000-4000-8000-000000000001'$$,
-  'profile health caches may change only under the active epoch'
+  $$select * from public.set_routine_adherence_timezone('America/Toronto')$$,
+  'the exact-session adherence RPC may publish only a server-owned cache under the active epoch'
 );
 select pg_catalog.set_config(
   'request.jwt.claims',
@@ -1678,7 +1681,11 @@ select ok(
   exists (
     select 1 from public.profiles
      where id = '70000000-0000-4000-8000-000000000001'
-       and current_streak = 0 and longest_streak = 0
+       and current_streak = 0
+       and longest_streak = 0
+       and adherence_timezone is null
+       and streak_reference_day is null
+       and streak_algorithm_version = 0
   )
     and exists (
       select 1 from public.consents
@@ -1759,9 +1766,9 @@ select throws_ok(
   $$update public.profiles
        set current_streak = 1, longest_streak = 1
      where id = '70000000-0000-4000-8000-000000000001'$$,
-  '55000',
-  'HEALTH_PROCESSING_NOT_ACTIVE',
-  'authenticated callers cannot spoof the transaction-local purge marker'
+  '42501',
+  'permission denied for table profiles',
+  'authenticated callers cannot spoof the transaction-local purge marker or reach server-owned cache columns'
 );
 select pg_catalog.set_config('app.health_purge', '', true);
 select lives_ok(
@@ -1815,9 +1822,9 @@ select throws_ok(
   $$update public.profiles
        set current_streak = 1, longest_streak = 1
      where id = '70000000-0000-4000-8000-000000000001'$$,
-  '55000',
-  'HEALTH_PROCESSING_NOT_ACTIVE',
-  'service-role writes cannot spoof the transaction-local purge marker'
+  '42501',
+  'permission denied for table profiles',
+  'service-role writes cannot spoof the transaction-local purge marker or reach server-owned cache columns'
 );
 select pg_catalog.set_config('app.health_purge', '', true);
 reset role;
@@ -1932,11 +1939,12 @@ select ok(
   'database cleanup preserves the account and profile shell'
 );
 select results_eq(
-  $$select current_streak, longest_streak
+  $$select current_streak, longest_streak, adherence_timezone,
+      streak_reference_day, streak_algorithm_version
       from public.profiles
      where id = '70000000-0000-4000-8000-000000000001'$$,
-  $$values (0::integer, 0::integer)$$,
-  'authorized purge zeros profile health caches once'
+  $$values (0::integer, 0::integer, null::text, null::date, 0::smallint)$$,
+  'authorized purge clears every profile adherence authority field once'
 );
 
 set local role service_role;
@@ -2151,10 +2159,12 @@ select lives_ok(
       values ('70000000-0000-4000-8000-000000000002', array['legacy-cleanup'])
       returning user_id
     )
-    update public.profiles
-       set current_streak = 3, longest_streak = 4
-     where id = (select user_id from inserted)$$,
-  'second-owner health rows and streak caches are admitted under the exact grant'
+    select timezone.*
+      from inserted
+      cross join lateral public.set_routine_adherence_timezone(
+        'America/Vancouver'
+      ) as timezone$$,
+  'second-owner health rows and server-owned adherence timezone are admitted under the exact grant'
 );
 select public.pgtap_grant_health_dependent_consent(
   1,
@@ -2344,9 +2354,17 @@ select results_eq(
       (select current_streak from public.profiles
         where id = '70000000-0000-4000-8000-000000000002'),
       (select longest_streak from public.profiles
+        where id = '70000000-0000-4000-8000-000000000002'),
+      (select adherence_timezone from public.profiles
+        where id = '70000000-0000-4000-8000-000000000002'),
+      (select streak_reference_day from public.profiles
+        where id = '70000000-0000-4000-8000-000000000002'),
+      (select streak_algorithm_version from public.profiles
         where id = '70000000-0000-4000-8000-000000000002')$$,
-  $$values (0::integer, 0::integer, 0::integer)$$,
-  'recoverable Storage action-required never postpones the database health purge'
+  $$values (
+      0::integer, 0::integer, 0::integer, null::text, null::date, 0::smallint
+    )$$,
+  'recoverable Storage action-required never postpones the database health purge or leaves adherence residue'
 );
 select is(
   (select state from public.health_consent_withdrawal_operations

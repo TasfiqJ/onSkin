@@ -7,14 +7,14 @@ select plan(26);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  66::bigint,
-  'the clinical legacy seal runs against the exact 66-migration source history'
+  67::bigint,
+  'the clinical legacy seal runs against the exact 67-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000067'::text,
-  'the migration history includes the legacy seal and reaches the catalog-release lint contract head'
+  '20260726000068'::text,
+  'the migration history includes the legacy seal and reaches the routine-adherence authority head'
 );
 
 select is(

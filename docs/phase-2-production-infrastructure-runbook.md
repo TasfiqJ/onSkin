@@ -1,7 +1,7 @@
 # Phase 2 Production Infrastructure Runbook
 
 Date: 2026-07-15
-Updated: 2026-07-26 for the 66-migration chain through `0067`
+Updated: 2026-07-26 for the 67-migration chain through `0068`
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `OnSkin` until
@@ -27,8 +27,8 @@ create irreversible production accounts under `OnSkin` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 66 migrations through
-  `0067` and all 17 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only deployment of 67 migrations through
+  `0068` and all 17 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
@@ -43,6 +43,14 @@ create irreversible production accounts under `OnSkin` until
   checker-only ephemeral table shape for the catalog-release wrapper's
   runtime-created temporary validation table; all other wrapper statements
   remain linted with no extension dependency or runtime/security change.
+  Migration `0068` adds the exact-IANA, routine-marker-only, server-owned
+  adherence cache and freeze authority with health/account/Apple fences. Its
+  cutover takes completion, profile, then freeze locks in the same order as
+  runtime recomputation. `npm run phase2:db-local-verify` withholds `0068`,
+  resets the real chain through `0067`, seeds nonzero legacy caches,
+  client-authored freezes, partial steps, and routine markers, applies the exact
+  checked-in `0068` bytes, and proves fail-closed reset plus marker-only
+  restoration before the ordinary repeatable head resets.
 - `supabase/ops/account-deletion-work-lane.sql`: credential-free, fail-closed
   Cron/Vault provisioning for the durable account-deletion worker.
 - `docs/phase-9/account-deletion-operations-runbook.md`: exact deletion
@@ -112,7 +120,7 @@ create irreversible production accounts under `OnSkin` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 17-function manifest before migrations `0048`-`0067`, and proves
+   compatible 17-function manifest before migrations `0048`-`0068`, and proves
    all 17 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
@@ -122,7 +130,7 @@ create irreversible production accounts under `OnSkin` until
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
    the initial operator observations were recaptured. Only then does it apply
-   all 66 migrations in source order, redeploy the same manifest, and retain
+   all 67 migrations in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and

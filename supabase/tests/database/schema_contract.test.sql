@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  66::bigint,
-  'all 66 repository migrations are recorded'
+  67::bigint,
+  'all 67 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000067'::text,
-  'migration history reaches the narrow catalog-release temporary-table lint contract'
+  '20260726000068'::text,
+  'migration history reaches the authoritative routine-adherence contract'
 );
 
 select is(
