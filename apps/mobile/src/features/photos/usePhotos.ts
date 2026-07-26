@@ -8,6 +8,8 @@ import {
 
 import { PHOTO_SERIES, type PhotoSeries } from '@onskin/types';
 
+import { useAuth } from '@/lib/auth/AuthProvider';
+import { scheduleOutboxFlush } from '@/lib/offline/outbox';
 import {
   useLocalDateBoundary,
   type LocalDateBoundaryIdentity,
@@ -198,6 +200,8 @@ export type PhotosQueryResult = ReturnType<typeof usePhotosFromBoundary>;
 export function usePhotoActions() {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
+  const { user } = useAuth();
+  const ownerId = user?.id.trim();
   const commit = async <TResult>(
     operation: () => Promise<PhotoMutationCommit<TResult>>,
   ): Promise<TResult> => {
@@ -215,7 +219,16 @@ export function usePhotoActions() {
     mutationFn: (id: string) => commit(() => setReference(id)),
   });
   const remove = useMutation({
-    mutationFn: (id: string) => commit(() => removePhoto(id)),
+    mutationFn: async (id: string) => {
+      const result = await commit(() =>
+        removePhoto(id, {
+          ...(ownerId ? { ownerId } : {}),
+          ownerGeneration: ownerScope.generation,
+        }),
+      );
+      if (ownerId) scheduleOutboxFlush();
+      return result;
+    },
   });
   const note = useMutation({
     mutationFn: ({ id, notes }: { id: string; notes: string }) =>

@@ -64,6 +64,7 @@ export type OwnerOutboxStatusRead =
 
 export type ShelfOutboxStatusRead = OwnerOutboxStatusRead;
 export type NotificationPreferencesOutboxStatusRead = OwnerOutboxStatusRead;
+export type PhotoDeleteOutboxStatusRead = OwnerOutboxStatusRead;
 export type RecommendationPreferencesOutboxStatusRead = OwnerOutboxStatusRead;
 
 type ServerWireResult = Readonly<{
@@ -256,6 +257,13 @@ export function readNotificationPreferencesOutboxStatus(
   ownerId?: string | null,
 ): Promise<NotificationPreferencesOutboxStatusRead> {
   return readOwnerOutboxStatus(scope, ownerId, ['notification_preferences']);
+}
+
+export function readPhotoDeleteOutboxStatus(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<PhotoDeleteOutboxStatusRead> {
+  return readOwnerOutboxStatus(scope, ownerId, ['photo_delete']);
 }
 
 export function readRecommendationPreferencesOutboxStatus(
@@ -625,6 +633,13 @@ export function retryNotificationPreferencesOutbox(
   ownerId?: string | null,
 ): Promise<OutboxFlushResult> {
   return retryOwnerOutbox(scope, ownerId, ['notification_preferences']);
+}
+
+export function retryPhotoDeleteOutbox(
+  scope: OwnerQueryScope,
+  ownerId?: string | null,
+): Promise<OutboxFlushResult> {
+  return retryOwnerOutbox(scope, ownerId, ['photo_delete']);
 }
 
 export function retryRecommendationPreferencesOutbox(

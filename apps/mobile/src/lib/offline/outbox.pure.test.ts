@@ -7,8 +7,12 @@ import {
   OUTBOX_SCHEMA_VERSION,
   OUTBOX_UNSUPPORTED_VERSION,
   MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS,
+  MAX_OUTBOX_ENVELOPE_CHARS,
   MAX_OUTBOX_REVISIONS,
   MAX_OUTBOX_ROWS,
+  MAX_OUTBOX_TOTAL_REVISIONS,
+  MAX_OUTBOX_TOTAL_ROWS,
+  MAX_PHOTO_DELETE_OUTBOX_ROWS,
   MAX_SHELF_SCAN_OUTBOX_ROWS,
   decodeOutboxEnvelope,
   conflictChoiceIdentityHashInput,
@@ -18,6 +22,7 @@ import {
   encodeOutboxEnvelope,
   enqueueNotificationDeliveryOutboxOperation,
   enqueueNotificationPreferencesOutboxOperation,
+  enqueuePhotoDeleteOutboxOperation,
   enqueueRecommendationPreferencesOutboxOperation,
   enqueueShelfScanOutboxOperation,
   enqueueShelfOutboxOperation,
@@ -230,7 +235,7 @@ describe('transactional outbox model', () => {
       entityId: ENTITY_A,
     }).envelope;
     expect(decodeOutboxEnvelope(encodeOutboxEnvelope(queued))).toEqual(queued);
-    expect(OUTBOX_LEGACY_SCHEMA_VERSIONS).toEqual([1, 2, 3, 4]);
+    expect(OUTBOX_LEGACY_SCHEMA_VERSIONS).toEqual([1, 2, 3, 4, 5]);
     for (const version of OUTBOX_LEGACY_SCHEMA_VERSIONS) {
       const legacy = JSON.parse(encodeOutboxEnvelope(queued)) as {
         version: number;
@@ -250,6 +255,270 @@ describe('transactional outbox model', () => {
         JSON.stringify({ version: OUTBOX_SCHEMA_VERSION + 1, rows: [], revisions: [] }),
       ),
     ).toThrow(OUTBOX_UNSUPPORTED_VERSION);
+    expect(() => decodeOutboxEnvelope(' '.repeat(MAX_OUTBOX_ENVELOPE_CHARS + 1))).toThrow(
+      OUTBOX_INVALID,
+    );
+  });
+
+  it('strictly admits content-free photo-delete tombstones and rejects intent drift', () => {
+    const queued = enqueuePhotoDeleteOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_A,
+      enqueuedAt: NOW,
+    });
+    expect(queued.row).toMatchObject({
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityType: 'photo_delete',
+      entityId: ENTITY_A,
+      operationKind: 'delete',
+      payload: null,
+      clientRevision: 1,
+      idempotencyKey: `photo_delete:${OP_A1}`,
+      tombstone: true,
+      state: 'ready',
+    });
+    expect(decodeOutboxEnvelope(encodeOutboxEnvelope(queued.envelope))).toEqual(queued.envelope);
+    const legacyLabel = JSON.parse(encodeOutboxEnvelope(queued.envelope)) as {
+      version: number;
+    };
+    legacyLabel.version = 5;
+    expect(() => decodeOutboxEnvelope(JSON.stringify(legacyLabel))).toThrow(OUTBOX_INVALID);
+
+    for (const mutation of [
+      { operationKind: 'upsert' },
+      { payload: { secret: 'must-not-persist' } },
+      { tombstone: false },
+      { idempotencyKey: `photo_delete:${OP_A2}` },
+    ]) {
+      const persisted = JSON.parse(encodeOutboxEnvelope(queued.envelope)) as {
+        rows: Record<string, unknown>[];
+      };
+      Object.assign(persisted.rows[0]!, mutation);
+      expect(() => decodeOutboxEnvelope(JSON.stringify(persisted))).toThrow(OUTBOX_INVALID);
+    }
+  });
+
+  it('keeps a photo-delete revision while retryable/dead and garbage-collects it after receipt', () => {
+    const queued = enqueuePhotoDeleteOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: ENTITY_A,
+      enqueuedAt: NOW,
+    }).envelope;
+    const leased = leaseReadyOutboxRows(queued, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const retryable = settleOutboxLease(leased, {
+      leaseOwner: WORKER_A,
+      operationIds: [OP_A1],
+      now: NOW,
+      results: [],
+      failureClass: 'offline',
+      random: 0,
+    });
+    expect(retryable.rows).toHaveLength(1);
+    expect(retryable.revisions).toHaveLength(1);
+
+    const retryLease = leaseReadyOutboxRows(retryable, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: '2026-07-18T15:00:02.000Z',
+    }).envelope;
+    const applied = settleOutboxLease(retryLease, {
+      leaseOwner: WORKER_A,
+      operationIds: [OP_A1],
+      now: '2026-07-18T15:00:02.000Z',
+      results: [{ operationId: OP_A1, status: 'duplicate' }],
+    });
+    expect(applied.rows).toEqual([]);
+    expect(applied.revisions).toEqual([]);
+  });
+
+  it('admits a privacy tombstone when a legacy envelope exhausted every old row slot', () => {
+    let legacyFull = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_OUTBOX_ROWS; index += 1) {
+      legacyFull = enqueue(legacyFull, {
+        operationId: uuid(100_000 + index),
+        entityId: uuid(200_000 + index),
+      }).envelope;
+    }
+    legacyFull = decodeOutboxEnvelope(JSON.stringify({ ...legacyFull, version: 5 }));
+
+    const admitted = enqueuePhotoDeleteOutboxOperation(legacyFull, {
+      operationId: uuid(800_001),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(900_001),
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(admitted.rows).toHaveLength(MAX_OUTBOX_ROWS + 1);
+    expect(admitted.rows.filter((row) => row.entityType === 'photo_delete')).toHaveLength(1);
+    expect(admitted.rows.length).toBeLessThanOrEqual(MAX_OUTBOX_TOTAL_ROWS);
+  });
+
+  it('admits a privacy tombstone when legacy mutable fences exhausted the old revision slots', () => {
+    const legacyFull = decodeOutboxEnvelope(
+      JSON.stringify({
+        version: 5,
+        rows: [],
+        revisions: Array.from({ length: MAX_OUTBOX_REVISIONS }, (_, index) => ({
+          ownerHash: OWNER,
+          entityType: 'shelf_product',
+          entityId: uuid(300_000 + index),
+          revision: 1,
+        })),
+      }),
+    );
+
+    const admitted = enqueuePhotoDeleteOutboxOperation(legacyFull, {
+      operationId: uuid(800_002),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(900_002),
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(admitted.revisions).toHaveLength(MAX_OUTBOX_REVISIONS + 1);
+    expect(admitted.revisions.length).toBeLessThanOrEqual(MAX_OUTBOX_TOTAL_REVISIONS);
+  });
+
+  it('prevents non-photo producers from consuming the privacy reserve', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_OUTBOX_ROWS; index += 1) {
+      envelope = enqueue(envelope, {
+        operationId: uuid(400_000 + index),
+        entityId: uuid(500_000 + index),
+      }).envelope;
+    }
+    envelope = enqueuePhotoDeleteOutboxOperation(envelope, {
+      operationId: uuid(800_003),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(900_003),
+      enqueuedAt: NOW,
+    }).envelope;
+    const before = encodeOutboxEnvelope(envelope);
+
+    expect(() =>
+      enqueue(envelope, {
+        operationId: uuid(800_004),
+        entityId: uuid(900_004),
+      }),
+    ).toThrow(OUTBOX_LIMIT_REACHED);
+    expect(encodeOutboxEnvelope(envelope)).toBe(before);
+  });
+
+  it('prevents non-photo producers from consuming the revision reserve', () => {
+    let envelope = decodeOutboxEnvelope(
+      JSON.stringify({
+        version: OUTBOX_SCHEMA_VERSION,
+        rows: [],
+        revisions: Array.from({ length: MAX_OUTBOX_REVISIONS }, (_, index) => ({
+          ownerHash: OWNER,
+          entityType: 'shelf_product',
+          entityId: uuid(510_000 + index),
+          revision: 1,
+        })),
+      }),
+    );
+    envelope = enqueuePhotoDeleteOutboxOperation(envelope, {
+      operationId: uuid(800_006),
+      ownerHash: OWNER,
+      ownerGeneration: 8,
+      entityId: uuid(900_006),
+      enqueuedAt: NOW,
+    }).envelope;
+    const before = encodeOutboxEnvelope(envelope);
+
+    expect(() =>
+      enqueue(envelope, {
+        operationId: uuid(800_007),
+        entityId: uuid(900_007),
+      }),
+    ).toThrow(OUTBOX_LIMIT_REACHED);
+    expect(encodeOutboxEnvelope(envelope)).toBe(before);
+  });
+
+  it('never evicts dead photo tombstones after the dedicated reserve is full', () => {
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_PHOTO_DELETE_OUTBOX_ROWS; index += 1) {
+      envelope = enqueuePhotoDeleteOutboxOperation(envelope, {
+        operationId: uuid(600_000 + index),
+        ownerHash: OWNER,
+        ownerGeneration: 8,
+        entityId: uuid(700_000 + index),
+        enqueuedAt: NOW,
+      }).envelope;
+    }
+    envelope = markRowsDead(envelope);
+    const before = encodeOutboxEnvelope(envelope);
+
+    expect(() =>
+      enqueuePhotoDeleteOutboxOperation(envelope, {
+        operationId: uuid(800_005),
+        ownerHash: OWNER,
+        ownerGeneration: 8,
+        entityId: uuid(900_005),
+        enqueuedAt: NOW,
+      }),
+    ).toThrow(OUTBOX_LIMIT_REACHED);
+    expect(encodeOutboxEnvelope(envelope)).toBe(before);
+  });
+
+  it('proves the maximum structurally valid Shelf envelope fits the transaction bound', () => {
+    const worstPayload = {
+      ...SHELF_PAYLOAD,
+      manual_name: '\u0001'.repeat(512),
+      manual_brand: '\u0001'.repeat(512),
+      barcode: '\u0001'.repeat(128),
+    };
+    let envelope = emptyOutboxEnvelope();
+    for (let index = 1; index <= MAX_OUTBOX_ROWS; index += 1) {
+      envelope = enqueue(envelope, {
+        operationId: uuid(100_000 + index),
+        entityId: uuid(200_000 + index),
+        payload: worstPayload,
+      }).envelope;
+    }
+    envelope = decodeOutboxEnvelope(
+      JSON.stringify({
+        ...envelope,
+        revisions: [
+          ...envelope.revisions,
+          ...Array.from(
+            { length: MAX_OUTBOX_REVISIONS - envelope.revisions.length },
+            (_, index) => ({
+              ownerHash: OWNER,
+              entityType: 'shelf_product',
+              entityId: uuid(500_000 + index),
+              revision: 1,
+            }),
+          ),
+        ],
+      }),
+    );
+    for (let index = 1; index <= MAX_PHOTO_DELETE_OUTBOX_ROWS; index += 1) {
+      envelope = enqueuePhotoDeleteOutboxOperation(envelope, {
+        operationId: uuid(300_000 + index),
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: uuid(400_000 + index),
+        enqueuedAt: NOW,
+      }).envelope;
+    }
+    const encoded = encodeOutboxEnvelope(envelope);
+    expect(envelope.rows).toHaveLength(MAX_OUTBOX_TOTAL_ROWS);
+    expect(envelope.revisions).toHaveLength(MAX_OUTBOX_TOTAL_REVISIONS);
+    expect(encoded.length).toBeLessThanOrEqual(MAX_OUTBOX_ENVELOPE_CHARS);
+    expect(decodeOutboxEnvelope(encoded)).toEqual(envelope);
   });
 
   it('drops an unknowable legacy orphan rather than persisting a global ownerless fence', () => {

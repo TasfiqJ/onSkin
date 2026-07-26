@@ -30,8 +30,10 @@ const mocks = vi.hoisted(() => ({
   queryClient: null as unknown,
   recoverPhotoStoreMutations: vi.fn(),
   removePhoto: vi.fn(),
+  scheduleOutboxFlush: vi.fn(),
   setReference: vi.fn(),
   updatePhoto: vi.fn(),
+  user: { id: 'owner-a' } as { id: string } | null,
   useMutation: vi.fn(),
 }));
 
@@ -46,6 +48,14 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
 
 vi.mock('@/lib/query/useOwnerQueryScope', () => ({
   useOwnerQueryScope: () => mocks.ownerScope,
+}));
+
+vi.mock('@/lib/auth/AuthProvider', () => ({
+  useAuth: () => ({ user: mocks.user }),
+}));
+
+vi.mock('@/lib/offline/outbox', () => ({
+  scheduleOutboxFlush: mocks.scheduleOutboxFlush,
 }));
 
 vi.mock('./store', () => ({
@@ -142,13 +152,7 @@ const actionCases = [
   ['add', newPhoto, mocks.addPhoto, [newPhoto], addedPhoto],
   ['reference', 'front-new', mocks.setReference, ['front-new'], undefined],
   ['remove', 'front-new', mocks.removePhoto, ['front-new'], undefined],
-  [
-    'note',
-    noteInput,
-    mocks.updatePhoto,
-    ['front-new', { notes: 'owner A note' }],
-    undefined,
-  ],
+  ['note', noteInput, mocks.updatePhoto, ['front-new', { notes: 'owner A note' }], undefined],
 ] as const;
 
 function nextOwnerScope(owner: OwnerQueryScope): OwnerQueryScope {
@@ -189,12 +193,14 @@ describe('owner-bound photo actions', () => {
     mocks.loadPhotos.mockReset().mockResolvedValue(committedPhotos);
     mocks.recoverPhotoStoreMutations.mockReset().mockResolvedValue(undefined);
     mocks.removePhoto.mockReset().mockResolvedValue({ result: undefined, photos: committedPhotos });
+    mocks.scheduleOutboxFlush.mockReset();
     mocks.setReference
       .mockReset()
       .mockResolvedValue({ result: undefined, photos: committedPhotos });
     mocks.updatePhoto.mockReset().mockResolvedValue({ result: undefined, photos: committedPhotos });
     mocks.useMutation.mockReset();
     mocks.useMutation.mockImplementation((options: Record<string, unknown>) => options);
+    mocks.user = { id: 'owner-a' };
 
     ownerA = createOwnerQueryScope();
     mocks.ownerScope = ownerA;
@@ -220,7 +226,16 @@ describe('owner-bound photo actions', () => {
 
       await expect(mutation.mutationFn(input)).resolves.toEqual(expectedResult);
 
-      expect(storeCall).toHaveBeenCalledExactlyOnceWith(...expectedStoreArgs);
+      const resolvedStoreArgs =
+        actionName === 'remove'
+          ? ['front-new', { ownerId: 'owner-a', ownerGeneration: ownerA.generation }]
+          : expectedStoreArgs;
+      expect(storeCall).toHaveBeenCalledExactlyOnceWith(...resolvedStoreArgs);
+      if (actionName === 'remove') {
+        expect(mocks.scheduleOutboxFlush).toHaveBeenCalledOnce();
+      } else {
+        expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
+      }
       expect(invalidate).not.toHaveBeenCalled();
       expect(mocks.loadPhotos).not.toHaveBeenCalled();
       expect(mocks.recoverPhotoStoreMutations).not.toHaveBeenCalled();
@@ -244,9 +259,7 @@ describe('owner-bound photo actions', () => {
       const ownerB = nextOwnerScope(ownerA);
       seedOwnerCaches(client, ownerA, ownerB);
       const ownerAFrontBefore = client.getQueryData(photoQueryKey(ownerA));
-      const ownerALeftBefore = client.getQueryData(
-        photoQueryKey(ownerA, earlierBoundary, 'left'),
-      );
+      const ownerALeftBefore = client.getQueryData(photoQueryKey(ownerA, earlierBoundary, 'left'));
       const invalidate = vi.spyOn(client, 'invalidateQueries');
       const setQueryData = vi.spyOn(client, 'setQueryData');
       storeCall.mockRejectedValueOnce(new Error('PRIVATE_STORE_UNAVAILABLE'));
@@ -259,6 +272,7 @@ describe('owner-bound photo actions', () => {
       expect(setQueryData).not.toHaveBeenCalled();
       expect(mocks.loadPhotos).not.toHaveBeenCalled();
       expect(mocks.recoverPhotoStoreMutations).not.toHaveBeenCalled();
+      expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
       expect(client.getQueryData(photoQueryKey(ownerA))).toBe(ownerAFrontBefore);
       expect(client.getQueryData(photoQueryKey(ownerA, earlierBoundary, 'left'))).toBe(
         ownerALeftBefore,
@@ -286,6 +300,7 @@ describe('owner-bound photo actions', () => {
       });
 
       expect(storeCall).not.toHaveBeenCalled();
+      expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
       expect(invalidate).not.toHaveBeenCalled();
       expect(setQueryData).not.toHaveBeenCalled();
       expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
@@ -323,6 +338,18 @@ describe('owner-bound photo actions', () => {
 
     expect(setQueryData).not.toHaveBeenCalled();
     expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
+  });
+
+  it('keeps signed-out removal local-only and does not schedule the worker', async () => {
+    mocks.user = null;
+    const actions = useCapturedPhotoActions();
+
+    await expect(actions.remove.mutationFn('front-new')).resolves.toBeUndefined();
+
+    expect(mocks.removePhoto).toHaveBeenCalledExactlyOnceWith('front-new', {
+      ownerGeneration: ownerA.generation,
+    });
+    expect(mocks.scheduleOutboxFlush).not.toHaveBeenCalled();
   });
 
   it('drains a started note write without publishing owner-A text after an account boundary', async () => {
@@ -415,9 +442,7 @@ describe('owner-bound photo actions', () => {
       await expect(actions.note.mutationFn(noteInput)).resolves.toBeUndefined();
 
       expect(setQueryData).not.toHaveBeenCalled();
-      expect(
-        client.getQueriesData({ queryKey: ownerQueryPrefixes.photos(ownerA) }),
-      ).toEqual([]);
+      expect(client.getQueriesData({ queryKey: ownerQueryPrefixes.photos(ownerA) })).toEqual([]);
     });
   });
 });

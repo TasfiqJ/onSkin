@@ -20,7 +20,6 @@ export const REQUEST_ENDPOINTS = [
   'entitlement_server',
   'onboarding_status',
   'outbox_sync',
-  'photo_delete_mirror',
   'profile_server',
   'progress_completions',
   'progress_longest_streak',

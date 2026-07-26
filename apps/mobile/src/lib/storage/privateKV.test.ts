@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
+import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
+import { bytesToHex, bytesToUtf8, hexToBytes, utf8ToBytes } from '@noble/ciphers/utils.js';
 
 import { LOCAL_PRIVATE_READ_ONLY_KEYS } from '@/features/settings/localPrivateDataRegistry';
+import { PRIVATE_KV_CONTENT_KEY_NAME } from './privateKVContentKey';
 
 import {
   assertPrivateKVReadable,
@@ -19,6 +22,9 @@ import {
   PRIVATE_KV_ENVELOPE_UNSUPPORTED,
   PRIVATE_KV_RESERVED_KEY,
   PRIVATE_KV_READ_ONLY_KEY,
+  PRIVATE_KV_TRANSACTION_CONFLICT,
+  PRIVATE_KV_TRANSACTION_JOURNAL_INVALID,
+  PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED,
   PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
   PRIVATE_KV_WRITE_CONFLICT,
@@ -37,6 +43,39 @@ import {
   type PrivateKVUnavailableReason,
 } from './privateKV';
 import { PRIVATE_KV_TRANSACTION_JOURNAL_KEY } from './privateKVTransactionCore';
+
+function encryptTransactionJournalPlaintext(
+  plaintext: string,
+  contentKeyHex: string,
+  nonceByte: number,
+): string {
+  const nonce = new Uint8Array(24).fill(nonceByte);
+  const ciphertext = xchacha20poly1305(hexToBytes(contentKeyHex), nonce).encrypt(
+    utf8ToBytes(plaintext),
+  );
+  return JSON.stringify({
+    version: 'xchacha20poly1305:v1',
+    nonceHex: bytesToHex(nonce),
+    ciphertextHex: bytesToHex(ciphertext),
+  });
+}
+
+function decryptTransactionJournalPlaintext(raw: string, contentKeyHex: string): string {
+  const envelope = JSON.parse(raw) as {
+    nonceHex: string;
+    ciphertextHex: string;
+  };
+  return bytesToUtf8(
+    xchacha20poly1305(hexToBytes(contentKeyHex), hexToBytes(envelope.nonceHex)).decrypt(
+      hexToBytes(envelope.ciphertextHex),
+    ),
+  );
+}
+
+async function sha256Hex(value: string): Promise<string> {
+  const digest = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
@@ -121,6 +160,19 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
 }));
 
 vi.mock('react-native-get-random-values', () => ({}));
+
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: vi.fn(async (_algorithm: string, value: string) => {
+    const digest = await globalThis.crypto.subtle.digest(
+      'SHA-256',
+      new TextEncoder().encode(value),
+    );
+    return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join(
+      '',
+    );
+  }),
+}));
 
 vi.mock('expo-secure-store', () => ({
   WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
@@ -254,6 +306,47 @@ describe('private KV encrypted storage', () => {
     expect(mocks.asyncStorage.get(outboxKey)).not.toContain('outbox');
   });
 
+  it('domain-separates absent and present-string V2 before-state fingerprints', async () => {
+    const absentKey = 'onskin.outbox.v1';
+    const presentStringKey = 'onskin.photos.v1';
+    mocks.asyncStorage.set(presentStringKey, '');
+    mocks.setItemFailures.set(absentKey, 1);
+
+    await expect(
+      updatePrivateItemsTransactionally(
+        [presentStringKey, absentKey],
+        () =>
+          new Map([
+            [absentKey, 'queued-outbox'],
+            [presentStringKey, 'prepared-photos'],
+          ]),
+      ),
+    ).rejects.toThrow('ASYNC_STORAGE_SET_FAILED');
+
+    const journalRaw = mocks.asyncStorage.get(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)!;
+    const contentKeyHex = mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)!;
+    const journal = JSON.parse(decryptTransactionJournalPlaintext(journalRaw, contentKeyHex)) as {
+      version: number;
+      targets: { key: string; beforeRawHash: string }[];
+    };
+    const absentHash = journal.targets.find((target) => target.key === absentKey)?.beforeRawHash;
+    const presentStringHash = journal.targets.find(
+      (target) => target.key === presentStringKey,
+    )?.beforeRawHash;
+
+    expect(journal.version).toBe(2);
+    await expect(sha256Hex('onskin:private-kv-transaction-before:v2:null')).resolves.toBe(
+      absentHash,
+    );
+    await expect(sha256Hex('onskin:private-kv-transaction-before:v2:value:')).resolves.toBe(
+      presentStringHash,
+    );
+    expect(absentHash).not.toBe(presentStringHash);
+
+    mocks.setItemFailures.clear();
+    await recoverPendingPrivateKVTransaction();
+  });
+
   it('rolls a committed partial transaction forward before the next private read', async () => {
     const shelfKey = 'onskin.shelf.v1';
     const outboxKey = 'onskin.completions.pending';
@@ -282,6 +375,166 @@ describe('private KV encrypted storage', () => {
       ]),
     );
     expect(mocks.asyncStorage.has(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('preserves a mismatched V2 partial apply and performs no further target writes', async () => {
+    const firstKey = 'onskin.completions.pending';
+    const secondKey = 'onskin.shelf.v1';
+    await setPrivateItem(firstKey, 'old-first');
+    await setPrivateItem(secondKey, 'old-second');
+    mocks.setItemFailures.set(secondKey, 1);
+
+    await expect(
+      updatePrivateItemsTransactionally(
+        [secondKey, firstKey],
+        () =>
+          new Map([
+            [firstKey, 'new-first'],
+            [secondKey, 'new-second'],
+          ]),
+      ),
+    ).rejects.toThrow('ASYNC_STORAGE_SET_FAILED');
+
+    mocks.asyncStorage.set(secondKey, 'unexpected-owner-bytes');
+    const preservedJournal = mocks.asyncStorage.get(PRIVATE_KV_TRANSACTION_JOURNAL_KEY);
+    const preservedFirst = mocks.asyncStorage.get(firstKey);
+    const preservedSecond = mocks.asyncStorage.get(secondKey);
+    mocks.setItemFailures.clear();
+    mocks.setItemCount = 0;
+
+    await expect(recoverPendingPrivateKVTransaction()).rejects.toThrow(
+      PRIVATE_KV_TRANSACTION_CONFLICT,
+    );
+
+    expect(mocks.setItemCount).toBe(0);
+    expect(mocks.asyncStorage.get(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(preservedJournal);
+    expect(mocks.asyncStorage.get(firstKey)).toBe(preservedFirst);
+    expect(mocks.asyncStorage.get(secondKey)).toBe(preservedSecond);
+  });
+
+  it.each([
+    ['malformed', '{"version":2', PRIVATE_KV_TRANSACTION_JOURNAL_INVALID, 11],
+    [
+      'unsupported-future',
+      JSON.stringify({ version: 3, transactionId: '1'.repeat(64), targets: [] }),
+      PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED,
+      12,
+    ],
+  ])(
+    'preserves encrypted %s transaction plaintext byte-for-byte',
+    async (_label, plaintext, expectedError, nonceByte) => {
+      const targetKey = 'onskin.shelf.v1';
+      await setPrivateItem(targetKey, 'unchanged-target');
+      const targetRaw = mocks.asyncStorage.get(targetKey);
+      const contentKeyHex = mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)!;
+      const journalRaw = encryptTransactionJournalPlaintext(plaintext, contentKeyHex, nonceByte);
+      mocks.asyncStorage.set(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, journalRaw);
+      await clearPrivateKVContentKey();
+      mocks.secureStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, contentKeyHex);
+      mocks.setItemCount = 0;
+
+      await expect(recoverPendingPrivateKVTransaction()).rejects.toThrow(expectedError);
+
+      expect(mocks.setItemCount).toBe(0);
+      expect(mocks.asyncStorage.get(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(journalRaw);
+      expect(mocks.asyncStorage.get(targetKey)).toBe(targetRaw);
+    },
+  );
+
+  it('rolls a persisted V1 transaction journal forward after the V2 upgrade', async () => {
+    const shelfKey = 'onskin.shelf.v1';
+    const outboxKey = 'onskin.completions.pending';
+    await setPrivateItem(shelfKey, 'old-shelf');
+    await setPrivateItem(outboxKey, 'old-outbox');
+    const beforeShelf = mocks.asyncStorage.get(shelfKey)!;
+    const beforeOutbox = mocks.asyncStorage.get(outboxKey)!;
+    const contentKeyHex = mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)!;
+    const legacyJournal = JSON.stringify({
+      version: 1,
+      transactionId: '1'.repeat(64),
+      targets: [
+        { key: outboxKey, beforeRaw: beforeOutbox, nextValue: 'new-outbox' },
+        { key: shelfKey, beforeRaw: beforeShelf, nextValue: 'new-shelf' },
+      ],
+    });
+    const nonce = new Uint8Array(24).fill(7);
+    const ciphertext = xchacha20poly1305(hexToBytes(contentKeyHex), nonce).encrypt(
+      utf8ToBytes(legacyJournal),
+    );
+    mocks.asyncStorage.set(
+      PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
+      JSON.stringify({
+        version: privateKVEncryptionInfo.version,
+        nonceHex: bytesToHex(nonce),
+        ciphertextHex: bytesToHex(ciphertext),
+      }),
+    );
+    // Reset only the in-memory journal fast-path, then restore the same test
+    // content key so recovery exercises the persisted V1 bytes.
+    await clearPrivateKVContentKey();
+    mocks.secureStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, contentKeyHex);
+
+    await recoverPendingPrivateKVTransaction();
+
+    await expect(getPrivateItems([shelfKey, outboxKey])).resolves.toEqual(
+      new Map([
+        [shelfKey, 'new-shelf'],
+        [outboxKey, 'new-outbox'],
+      ]),
+    );
+    expect(mocks.asyncStorage.has(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('cleans an account-boundary-interrupted multi-key transaction with its targets', async () => {
+    const shelfKey = 'onskin.shelf.v1';
+    const outboxKey = 'onskin.outbox.v1';
+    await setPrivateItem(shelfKey, 'owner-a-shelf');
+    await setPrivateItem(outboxKey, 'owner-a-outbox');
+    let releaseJournalWrite!: () => void;
+    let markJournalWriteStarted!: () => void;
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      releaseJournalWrite = resolve;
+    });
+    const journalWriteStarted = new Promise<void>((resolve) => {
+      markJournalWriteStarted = resolve;
+    });
+    mocks.setItemStarted = markJournalWriteStarted;
+
+    const transaction = updatePrivateItemsTransactionally(
+      [shelfKey, outboxKey],
+      () =>
+        new Map([
+          [shelfKey, 'owner-a-next-shelf'],
+          [outboxKey, 'owner-a-next-outbox'],
+        ]),
+    );
+    const rejection = expect(transaction).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    await journalWriteStarted;
+    beginPrivateKVAccountBoundary();
+    releaseJournalWrite();
+
+    try {
+      await rejection;
+      await waitForPrivateKVWritesToSettle();
+      mocks.setItemGate = null;
+      mocks.setItemStarted = null;
+      expect(mocks.asyncStorage.has(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(true);
+      expect(mocks.asyncStorage.has(shelfKey)).toBe(true);
+      expect(mocks.asyncStorage.has(outboxKey)).toBe(true);
+
+      await removePrivateItemsForAuthorizedReset(
+        [PRIVATE_KV_TRANSACTION_JOURNAL_KEY, shelfKey, outboxKey],
+        'account_isolation',
+      );
+
+      expect(mocks.asyncStorage.has(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)).toBe(false);
+      expect(mocks.asyncStorage.has(shelfKey)).toBe(false);
+      expect(mocks.asyncStorage.has(outboxKey)).toBe(false);
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
   });
 
   it('treats a committed journal acknowledgement loss as an exact successful write', async () => {

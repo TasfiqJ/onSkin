@@ -17,6 +17,7 @@ const MIGRATION_DIRECTORY = join(REPOSITORY_ROOT, 'supabase', 'migrations');
 const OUTBOX_SOURCE = readFileSync(fileURLToPath(new URL('./outbox.ts', import.meta.url)), 'utf8');
 
 const RPC_MIGRATIONS = {
+  photo_delete: '20260726000058_photo_delete_outbox_rpc.sql',
   shelf_product: '20260718000046_shelf_outbox_rpc.sql',
   notification_preferences: '20260718000047_notification_preferences_outbox_rpc.sql',
   recommendation_preferences: '20260718000048_recommendation_preferences_outbox_rpc.sql',
@@ -58,6 +59,7 @@ function requiredShelfPayloadKeys(sql: string): string[] {
 describe('outbox entity contract', () => {
   it('defines the complete ordered runtime contract without ambiguous metadata', () => {
     expect(OUTBOX_ENTITY_TYPES).toEqual([
+      'photo_delete',
       'shelf_product',
       'conflict_choice',
       'notification_preferences',
@@ -66,43 +68,50 @@ describe('outbox entity contract', () => {
       'shelf_scan',
     ]);
     expect(OUTBOX_ENTITY_CONTRACT).toEqual({
-      shelf_product: {
+      photo_delete: {
         priority: 0,
+        rpc: 'apply_photo_delete_outbox_batch',
+        flushCountKey: 'photoDeletes',
+        immutableEvent: false,
+        operationKinds: ['delete'],
+      },
+      shelf_product: {
+        priority: 1,
         rpc: 'apply_shelf_outbox_batch',
         flushCountKey: 'shelfProducts',
         immutableEvent: false,
         operationKinds: ['upsert', 'delete'],
       },
       conflict_choice: {
-        priority: 1,
+        priority: 2,
         rpc: 'apply_conflict_choice_outbox_batch',
         flushCountKey: 'conflictChoices',
         immutableEvent: false,
         operationKinds: ['upsert'],
       },
       notification_preferences: {
-        priority: 2,
+        priority: 3,
         rpc: 'apply_notification_preferences_outbox_batch',
         flushCountKey: 'notificationPreferences',
         immutableEvent: false,
         operationKinds: ['upsert'],
       },
       recommendation_preferences: {
-        priority: 3,
+        priority: 4,
         rpc: 'apply_recommendation_preferences_outbox_batch',
         flushCountKey: 'recommendationPreferences',
         immutableEvent: false,
         operationKinds: ['upsert'],
       },
       notification_delivery: {
-        priority: 4,
+        priority: 5,
         rpc: 'apply_notification_delivery_outbox_batch',
         flushCountKey: 'notificationDeliveries',
         immutableEvent: true,
         operationKinds: ['upsert'],
       },
       shelf_scan: {
-        priority: 5,
+        priority: 6,
         rpc: 'apply_shelf_scan_outbox_batch',
         flushCountKey: 'shelfScans',
         immutableEvent: true,
@@ -114,7 +123,7 @@ describe('outbox entity contract', () => {
     expect(new Set(entries.map(({ priority }) => priority)).size).toBe(entries.length);
     expect(new Set(entries.map(({ rpc }) => rpc)).size).toBe(entries.length);
     expect(new Set(entries.map(({ flushCountKey }) => flushCountKey)).size).toBe(entries.length);
-    expect(entries.map(({ priority }) => priority)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(entries.map(({ priority }) => priority)).toEqual([0, 1, 2, 3, 4, 5, 6]);
   });
 
   it('uses the registry for entity and operation admission', () => {
@@ -133,7 +142,7 @@ describe('outbox entity contract', () => {
   });
 
   it('matches the schema-head receipt constraint exactly', () => {
-    const schemaHead = readMigration('conflict_choice');
+    const schemaHead = readMigration('photo_delete');
     const constraint =
       /mobile_outbox_receipts_entity_type_check[\s\S]*?check\s*\(\s*entity_type\s+in\s*\(([\s\S]*?)\)\s*\)/.exec(
         schemaHead,
@@ -153,10 +162,10 @@ describe('outbox entity contract', () => {
       expect(new Set(requiredWireKeys(sql))).toEqual(new Set(WIRE_KEYS));
       expect(sql).toContain(`v_operation ->> 'entity_type' = '${entityType}'`);
 
-      if ((contract.operationKinds as readonly string[]).includes('delete')) {
+      if (contract.operationKinds.length > 1) {
         expect(sql).toMatch(/v_operation\s*->>\s*'operation_kind'\s+in\s*\('upsert',\s*'delete'\)/);
       } else {
-        expect(sql).toContain(`v_operation ->> 'operation_kind' = 'upsert'`);
+        expect(sql).toContain(`v_operation ->> 'operation_kind' = '${contract.operationKinds[0]}'`);
       }
       if (contract.immutableEvent) {
         expect(sql).toContain(`v_operation ->> 'client_revision' = '1'`);

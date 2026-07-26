@@ -9,11 +9,13 @@ import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
 import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
+  OUTBOX_STORAGE_KEY,
+  decodeOutboxEnvelope,
+  encodeOutboxEnvelope,
+  enqueuePhotoDeleteOutboxOperation,
+} from '@/lib/offline/outbox.pure';
 import {
   cleanupPlaintextStagingOperation,
   lookupPlaintextStaging,
@@ -29,9 +31,9 @@ import {
   PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   readPrivateItem,
   setPrivateItem,
+  updatePrivateItemsTransactionally,
   type PrivateKVReadFailureReason,
 } from '@/lib/storage/privateKV';
-import { supabase } from '@/lib/supabase/client';
 
 import {
   decryptPhotoNote,
@@ -84,6 +86,8 @@ const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
 const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
 const CAPTURE_OPERATION_ID = /^[0-9a-f]{32}$/;
 const CANONICAL_PHOTO_FILE_ID = /^[A-Za-z0-9_-]{1,128}$/;
+const SERVER_PHOTO_ID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const MAX_PHOTO_FIELD_CHARS = 1_024;
 export const MAX_PHOTO_NOTE_PLAINTEXT_CHARS = 262_144;
 const MAX_PHOTO_NOTE_CIPHERTEXT_CHARS = 1_048_576;
@@ -215,6 +219,25 @@ export type NewPhoto = {
   localUri?: string | null;
   notes?: string | null;
 };
+
+export type PhotoDeleteOwner = Readonly<{
+  ownerId?: string;
+  ownerGeneration: number;
+}>;
+
+function photoDeleteOwnerId(
+  owner: PhotoDeleteOwner | undefined,
+  lease: AccountGenerationLease,
+): string | null {
+  lease.assertCurrent();
+  if (!owner) return null;
+  if (owner.ownerGeneration !== lease.generation) throw new AccountGenerationLeaseError();
+  const ownerId = owner.ownerId?.trim();
+  if (owner.ownerId !== undefined && (!ownerId || owner.ownerId.length > 512)) {
+    throw new Error(PHOTO_METADATA_INVALID);
+  }
+  return ownerId ?? null;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -1034,31 +1057,69 @@ export async function updatePhoto(
   });
 }
 
-export async function removePhoto(id: string): Promise<PhotoMutationCommit<void>> {
+export async function removePhoto(
+  id: string,
+  owner?: PhotoDeleteOwner,
+): Promise<PhotoMutationCommit<void>> {
   return runAccountGenerationOperation(async (lease) => {
-    const localCommit = await runPhotoStoreMutation(async () => {
+    const ownerId = photoDeleteOwnerId(owner, lease);
+    const ownerHash = ownerId ? await hashOutboxOwner(ownerId) : null;
+    lease.assertCurrent();
+
+    return runPhotoStoreMutation(async (storeLease) => {
+      if (storeLease.generation !== lease.generation) throw new AccountGenerationLeaseError();
+      lease.assertCurrent();
       const items = await loadPhotosForMutationUnlocked();
       const targetIndex = items.findIndex((item) => item.id === id);
-      if (targetIndex < 0) return photoMutationCommit(false, items);
+      if (targetIndex < 0) return photoMutationCommit(undefined, items);
       const target = items[targetIndex]!;
       const affectedUris = encryptedUrisForRecord(target);
       target && assertCanonicalRecordUris(target);
       await verifyEncryptedPhotoDeletionSources(affectedUris);
 
+      const expectedPhotoRaw = await getPrivateItem(KEY);
       const storedItems = await encodeStoredRecords(items);
       const nextStoredItems = storedItems.filter((_item, index) => index !== targetIndex);
       const retainedItems = [storedItems[targetIndex]!];
       const operationId = randomUUID().toLowerCase();
+      const enqueuedAt = new Date().toISOString();
       const prepared: PhotoMutationJournal = {
         kind: 'delete',
         operationId,
         phase: 'prepared',
       };
-      await writeStoredEnvelope({
+      const preparedPhotoRaw = encodePhotoStore({
         items: nextStoredItems,
         mutation: prepared,
         retainedItems,
       });
+      if (ownerHash && SERVER_PHOTO_ID.test(id)) {
+        await updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY], (current) => {
+          lease.assertCurrent();
+          storeLease.assertCurrent();
+          if ((current.get(KEY) ?? null) !== expectedPhotoRaw) {
+            throw new Error(PHOTO_METADATA_COMMIT_UNCERTAIN);
+          }
+          const queued = enqueuePhotoDeleteOutboxOperation(
+            decodeOutboxEnvelope(current.get(OUTBOX_STORAGE_KEY) ?? null),
+            {
+              operationId,
+              ownerHash,
+              ownerGeneration: lease.generation,
+              entityId: id,
+              enqueuedAt,
+            },
+          );
+          return new Map<string, string | null>([
+            [KEY, preparedPhotoRaw],
+            [OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(queued.envelope)],
+          ]);
+        });
+      } else {
+        await writeExactPhotoStore(preparedPhotoRaw);
+      }
+      lease.assertCurrent();
+      storeLease.assertCurrent();
       await stageEncryptedPhotoDeletions(affectedUris, operationId);
       await writeStoredEnvelope({
         items: nextStoredItems,
@@ -1067,44 +1128,11 @@ export async function removePhoto(id: string): Promise<PhotoMutationCommit<void>
       });
       await finalizeEncryptedPhotoDeletions(affectedUris, operationId);
       await writeStoredEnvelope({ items: nextStoredItems, mutation: null });
-      return photoMutationCommit(true, items.filter((_item, index) => index !== targetIndex));
+      return photoMutationCommit(
+        undefined,
+        items.filter((_item, index) => index !== targetIndex),
+      );
     });
-    lease.assertCurrent();
-    if (localCommit.result) {
-      try {
-        const owner = await captureAuthenticatedAccountOwner(lease);
-        if (owner) {
-          lease.assertCurrent();
-          await runRequestWithLease(
-            lease,
-            {
-              endpoint: 'photo_delete_mirror',
-              deadlineMs: 8_000,
-              idempotent: true,
-              maxAttempts: 2,
-              maxResponseBytes: 16 * 1024,
-            },
-            async ({ signal }) => {
-              const response = await supabase
-                .from('photos')
-                .delete()
-                .eq('id', id)
-                .eq('user_id', owner.userId)
-                .abortSignal(signal);
-              if (response.error) {
-                throw supabaseRequestFailure(response.error, response.status);
-              }
-              return null;
-            },
-          );
-          lease.assertCurrent();
-        }
-      } catch {
-        lease.assertCurrent();
-        /* best-effort */
-      }
-    }
-    return photoMutationCommit(undefined, localCommit.photos);
   });
 }
 

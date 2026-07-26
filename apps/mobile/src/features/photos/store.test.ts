@@ -3,7 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  getAccountGeneration,
 } from '@/lib/auth/accountGeneration';
+import {
+  decodeOutboxEnvelope,
+  OUTBOX_STORAGE_KEY,
+  OUTBOX_UNSUPPORTED_VERSION,
+} from '@/lib/offline/outbox.pure';
 import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
 
 import {
@@ -42,20 +48,15 @@ const mocks = vi.hoisted(() => ({
   cleanupCalls: [] as string[],
   cleanupErrorOnce: null as Error | null,
   decryptPhotoNote: vi.fn(),
-  deletePhoto: vi.fn(),
-  deletePhotoAbortSignal: vi.fn(),
   discardPendingEncryptedPhotoForRetry: vi.fn(),
   encryptCapturedPhoto: vi.fn(),
   encryptPhotoNote: vi.fn(),
-  eqPhotoId: vi.fn(),
-  eqPhotoOwner: vi.fn(),
   finalFiles: new Set<string>(),
   finalizeErrorAfterDeleteOnce: null as Error | null,
   finalizeEncryptedPhotoDeletions: vi.fn(),
-  from: vi.fn(),
   getPrivateItem: vi.fn(),
   getPrivateItemError: null as Error | null,
-  getUser: vi.fn(),
+  hashOutboxOwner: vi.fn(),
   lookupPlaintextStaging: vi.fn(),
   plaintext: new Map<string, string>(),
   quarantines: new Set<string>(),
@@ -70,6 +71,11 @@ const mocks = vi.hoisted(() => ({
   stageErrorAfterMoveOnce: null as Error | null,
   stageEncryptedPhotoDeletions: vi.fn(),
   storage: new Map<string, string>(),
+  transactionErrorAfterCommit: null as Error | null,
+  transactionErrorBeforeCommit: null as Error | null,
+  transactionSnapshots: [] as Map<string, string | null>[],
+  transactionHook: null as (() => void) | null,
+  updatePrivateItemsTransactionally: vi.fn(),
   verifyEncryptedPhotoDeletionSources: vi.fn(),
   writeAttempts: 0,
 }));
@@ -89,6 +95,11 @@ vi.mock('@/lib/storage/privateKV', () => ({
   PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY: 'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
   readPrivateItem: mocks.readPrivateItem,
   setPrivateItem: mocks.setPrivateItem,
+  updatePrivateItemsTransactionally: mocks.updatePrivateItemsTransactionally,
+}));
+
+vi.mock('@/lib/offline/outboxIdentity', () => ({
+  hashOutboxOwner: mocks.hashOutboxOwner,
 }));
 
 vi.mock('@/lib/storage/plaintextStaging', () => ({
@@ -102,13 +113,6 @@ vi.mock('@/lib/storage/plaintextStaging', () => ({
     }
     mocks.plaintext.delete(operationId);
   }),
-}));
-
-vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: { getUser: mocks.getUser },
-    from: mocks.from,
-  },
 }));
 
 vi.mock('./encryptedStorage', () => ({
@@ -196,13 +200,15 @@ function quarantineKey(uri: string, operationId: string): string {
   return `${uri}.pending-delete-${operationId}`;
 }
 
+function authenticatedPhotoOwner() {
+  return { ownerId: 'owner-a', ownerGeneration: getAccountGeneration() } as const;
+}
+
 describe('photo local store journal', () => {
   beforeEach(() => {
     mocks.cleanupCalls = [];
     mocks.cleanupErrorOnce = null;
     mocks.decryptPhotoNote.mockReset().mockImplementation(async (value: string) => `note:${value}`);
-    mocks.deletePhoto.mockReset();
-    mocks.deletePhotoAbortSignal.mockReset().mockResolvedValue({ error: null });
     mocks.discardPendingEncryptedPhotoForRetry.mockReset().mockResolvedValue(true);
     mocks.encryptCapturedPhoto
       .mockReset()
@@ -214,8 +220,6 @@ describe('photo local store journal', () => {
     mocks.encryptPhotoNote
       .mockReset()
       .mockImplementation(async (note: string | null) => (note ? `enc:${note}` : null));
-    mocks.eqPhotoId.mockReset();
-    mocks.eqPhotoOwner.mockReset();
     mocks.finalFiles.clear();
     mocks.finalizeErrorAfterDeleteOnce = null;
     mocks.finalizeEncryptedPhotoDeletions
@@ -231,7 +235,6 @@ describe('photo local store journal', () => {
           throw error;
         }
       });
-    mocks.from.mockReset();
     mocks.getPrivateItem.mockReset().mockImplementation(async (key: string) => {
       if (mocks.getPrivateItemError) throw mocks.getPrivateItemError;
       return mocks.storage.get(key) ?? null;
@@ -256,10 +259,7 @@ describe('photo local store journal', () => {
         return { status: 'unavailable', reason: 'storage_unavailable' } as const;
       }
     });
-    mocks.getUser.mockReset().mockResolvedValue({
-      data: { user: { id: 'owner-a' } },
-      error: null,
-    });
+    mocks.hashOutboxOwner.mockReset().mockResolvedValue('a'.repeat(64));
     mocks.lookupPlaintextStaging.mockReset().mockImplementation(async (operationId: string) => {
       const uri = mocks.plaintext.get(operationId);
       return uri ? { operationId, purpose: 'photo_capture_jpeg', uri } : null;
@@ -298,6 +298,42 @@ describe('photo local store journal', () => {
         }
       });
     mocks.storage.clear();
+    mocks.transactionErrorAfterCommit = null;
+    mocks.transactionErrorBeforeCommit = null;
+    mocks.transactionSnapshots = [];
+    mocks.transactionHook = null;
+    mocks.updatePrivateItemsTransactionally
+      .mockReset()
+      .mockImplementation(
+        async (
+          keys: readonly string[],
+          updater: (
+            current: ReadonlyMap<string, string | null>,
+          ) => ReadonlyMap<string, string | null>,
+        ) => {
+          const current = new Map(
+            keys.map((key) => [key, mocks.storage.get(key) ?? null] as const),
+          );
+          const requested = new Map(updater(current));
+          mocks.transactionSnapshots.push(new Map(requested));
+          mocks.transactionHook?.();
+          if (mocks.transactionErrorBeforeCommit) {
+            const error = mocks.transactionErrorBeforeCommit;
+            mocks.transactionErrorBeforeCommit = null;
+            throw error;
+          }
+          for (const key of keys) {
+            const value = requested.get(key);
+            if (value === null || value === undefined) mocks.storage.delete(key);
+            else mocks.storage.set(key, value);
+          }
+          if (mocks.transactionErrorAfterCommit) {
+            const error = mocks.transactionErrorAfterCommit;
+            mocks.transactionErrorAfterCommit = null;
+            throw error;
+          }
+        },
+      );
     mocks.verifyEncryptedPhotoDeletionSources
       .mockReset()
       .mockImplementation(async (uris: readonly string[]) => {
@@ -306,11 +342,6 @@ describe('photo local store journal', () => {
         }
       });
     mocks.writeAttempts = 0;
-
-    mocks.eqPhotoOwner.mockReturnValue({ abortSignal: mocks.deletePhotoAbortSignal });
-    mocks.eqPhotoId.mockReturnValue({ eq: mocks.eqPhotoOwner });
-    mocks.deletePhoto.mockReturnValue({ eq: mocks.eqPhotoId });
-    mocks.from.mockReturnValue({ delete: mocks.deletePhoto });
   });
 
   it('propagates private-store failures without replacing metadata', async () => {
@@ -699,7 +730,6 @@ describe('photo local store journal', () => {
     expect(envelope().items).toHaveLength(1);
     expect(mocks.finalFiles.has(photoUri(id))).toBe(true);
     expect(mocks.plaintext.has(CAPTURE_A)).toBe(false);
-    expect(mocks.from).not.toHaveBeenCalled();
   });
 
   it('recovers a prepared add after final encryption but before metadata commit', async () => {
@@ -876,7 +906,6 @@ describe('photo local store journal', () => {
     expect(envelope().items).toEqual([]);
     expect(envelope().mutation).toBeNull();
     expect(mocks.quarantines.size).toBe(0);
-    expect(mocks.from).not.toHaveBeenCalled();
   });
 
   it('recovers delete after irreversible cleanup commits then rejects', async () => {
@@ -896,37 +925,128 @@ describe('photo local store journal', () => {
     expect(envelope().mutation).toBeNull();
   });
 
-  it('deletes the server mirror only after local journal completion and scopes the owner', async () => {
+  it('atomically co-commits one owner-bound tombstone with the prepared photo journal', async () => {
     const id = uuid(1);
     seedSettled([storedPhoto(id)]);
     mocks.finalFiles.add(photoUri(id));
 
-    await removePhoto(id);
+    const owner = authenticatedPhotoOwner();
+    await removePhoto(id, owner);
 
+    expect(mocks.updatePrivateItemsTransactionally).toHaveBeenCalledExactlyOnceWith(
+      [KEY, OUTBOX_STORAGE_KEY],
+      expect.any(Function),
+    );
+    const committed = mocks.transactionSnapshots[0]!;
+    const preparedPhoto = JSON.parse(committed.get(KEY)!) as StoredEnvelope;
+    const queued = decodeOutboxEnvelope(committed.get(OUTBOX_STORAGE_KEY) ?? null);
+    expect(preparedPhoto.mutation).toMatchObject({
+      kind: 'delete',
+      phase: 'prepared',
+    });
+    expect(queued.rows).toEqual([
+      expect.objectContaining({
+        operationId: preparedPhoto.mutation!.operationId,
+        ownerHash: 'a'.repeat(64),
+        ownerGeneration: owner.ownerGeneration,
+        entityType: 'photo_delete',
+        entityId: id,
+        operationKind: 'delete',
+        payload: null,
+        tombstone: true,
+        idempotencyKey: `photo_delete:${preparedPhoto.mutation!.operationId}`,
+      }),
+    ]);
     expect(envelope().mutation).toBeNull();
-    expect(mocks.eqPhotoId).toHaveBeenCalledWith('id', id);
-    expect(mocks.eqPhotoOwner).toHaveBeenCalledWith('user_id', 'owner-a');
-    expect(mocks.deletePhotoAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+    expect(decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows).toEqual(
+      queued.rows,
+    );
   });
 
-  it('retries the same commutative server delete after a transient failure', async () => {
+  it('recovers the local deletion after an atomic commit response is lost without duplicating intent', async () => {
     const id = uuid(1);
     seedSettled([storedPhoto(id)]);
     mocks.finalFiles.add(photoUri(id));
-    vi.spyOn(Math, 'random').mockReturnValue(0);
-    mocks.deletePhotoAbortSignal
-      .mockResolvedValueOnce({
-        error: { code: 'TEMPORARY_NETWORK_FAILURE', message: 'temporary server failure' },
-        status: 503,
-      })
-      .mockResolvedValueOnce({ error: null, status: 204 });
+    mocks.transactionErrorAfterCommit = new Error('TRANSACTION_RESPONSE_LOST');
 
-    await removePhoto(id);
+    await expect(removePhoto(id, authenticatedPhotoOwner())).rejects.toThrow(
+      'TRANSACTION_RESPONSE_LOST',
+    );
+    const preparedOperationId = envelope().mutation!.operationId;
+    const queuedBeforeRecovery = mocks.storage.get(OUTBOX_STORAGE_KEY)!;
+    expect(decodeOutboxEnvelope(queuedBeforeRecovery).rows[0]?.operationId).toBe(
+      preparedOperationId,
+    );
+    expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
 
-    expect(mocks.deletePhoto).toHaveBeenCalledTimes(2);
-    expect(mocks.eqPhotoId).toHaveBeenNthCalledWith(1, 'id', id);
-    expect(mocks.eqPhotoId).toHaveBeenNthCalledWith(2, 'id', id);
-    vi.restoreAllMocks();
+    await recoverPhotoStoreMutations();
+    expect(envelope().mutation).toBeNull();
+    expect(envelope().items).toEqual([]);
+    expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(queuedBeforeRecovery);
+
+    await removePhoto(id, authenticatedPhotoOwner());
+    expect(mocks.updatePrivateItemsTransactionally).toHaveBeenCalledTimes(1);
+    expect(decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY)!).rows).toHaveLength(1);
+  });
+
+  it('fails atomically on malformed or future outbox state before moving photo files', async () => {
+    for (const [raw, error] of [
+      ['{"version":6,"rows":"bad","revisions":[]}', 'OUTBOX_INVALID'],
+      ['{"version":999,"rows":[],"revisions":[]}', OUTBOX_UNSUPPORTED_VERSION],
+    ]) {
+      const id = uuid(1);
+      const photoRaw = seedSettled([storedPhoto(id)]);
+      mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
+      mocks.finalFiles.add(photoUri(id));
+
+      await expect(removePhoto(id, authenticatedPhotoOwner())).rejects.toThrow(error);
+      expect(mocks.storage.get(KEY)).toBe(photoRaw);
+      expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(raw);
+      expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
+
+      mocks.storage.clear();
+      mocks.finalFiles.clear();
+      mocks.updatePrivateItemsTransactionally.mockClear();
+    }
+  });
+
+  it('rejects an owner A to B boundary before the atomic tombstone commit', async () => {
+    const id = uuid(1);
+    const photoRaw = seedSettled([storedPhoto(id)]);
+    mocks.finalFiles.add(photoUri(id));
+    mocks.transactionHook = () => {
+      beginAccountGenerationBoundary();
+      mocks.transactionErrorBeforeCommit = new Error('PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY');
+    };
+
+    try {
+      await expect(removePhoto(id, authenticatedPhotoOwner())).rejects.toThrow();
+      expect(mocks.storage.get(KEY)).toBe(photoRaw);
+      expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+      expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+  });
+
+  it('keeps signed-out and authenticated legacy IDs on the local-only delete path', async () => {
+    for (const owner of [
+      { ownerGeneration: getAccountGeneration() },
+      authenticatedPhotoOwner(),
+    ] as const) {
+      const id = 'ownerId' in owner ? 'legacy-photo-id' : uuid(1);
+      seedSettled([storedPhoto(id)]);
+      mocks.finalFiles.add(photoUri(id));
+
+      await removePhoto(id, owner);
+      expect(envelope().items).toEqual([]);
+      expect(mocks.updatePrivateItemsTransactionally).not.toHaveBeenCalled();
+      expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+
+      mocks.storage.clear();
+      mocks.finalFiles.clear();
+      mocks.setPrivateItem.mockClear();
+    }
   });
 
   it('fails before destructive authority for an unsafe legacy ID', async () => {
@@ -976,9 +1096,9 @@ describe('photo local store journal', () => {
   });
 
   it('keeps an absent delete a local and remote no-op', async () => {
-    await removePhoto('missing');
+    await removePhoto('missing', authenticatedPhotoOwner());
     expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.from).not.toHaveBeenCalled();
+    expect(mocks.updatePrivateItemsTransactionally).not.toHaveBeenCalled();
   });
 
   it('requires the capture session only when plaintext encryption is requested', async () => {

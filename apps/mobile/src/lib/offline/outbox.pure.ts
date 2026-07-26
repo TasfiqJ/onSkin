@@ -9,14 +9,26 @@ import {
 export type { OutboxEntityType, OutboxOperationKind } from './outboxEntities';
 
 export const OUTBOX_STORAGE_KEY = 'onskin.outbox.v1';
-export const OUTBOX_SCHEMA_VERSION = 5 as const;
-export const OUTBOX_LEGACY_SCHEMA_VERSIONS = [1, 2, 3, 4] as const;
+export const OUTBOX_SCHEMA_VERSION = 6 as const;
+export const OUTBOX_LEGACY_SCHEMA_VERSIONS = [1, 2, 3, 4, 5] as const;
 export const OUTBOX_ROW_SCHEMA_VERSION = 1 as const;
+/** Capacity available to every non-photo producer, retained for V1-V5. */
 export const MAX_OUTBOX_ROWS = 512;
+export const MAX_PHOTO_DELETE_OUTBOX_ROWS = 128;
+export const MAX_OUTBOX_TOTAL_ROWS = MAX_OUTBOX_ROWS + MAX_PHOTO_DELETE_OUTBOX_ROWS;
 export const MAX_NOTIFICATION_DELIVERY_OUTBOX_ROWS = 128;
 export const MAX_SHELF_SCAN_OUTBOX_ROWS = 128;
+/** Revision capacity available to every non-photo producer. */
 export const MAX_OUTBOX_REVISIONS = 1_024;
+export const MAX_OUTBOX_TOTAL_REVISIONS = MAX_OUTBOX_REVISIONS + MAX_PHOTO_DELETE_OUTBOX_ROWS;
 export const MAX_OUTBOX_PAYLOAD_BYTES = 64 * 1024;
+/**
+ * All entity codecs below impose substantially smaller structural bounds than
+ * the generic payload ceiling. This aggregate ceiling is above the maximum
+ * strictly decodable 512-row envelope and keeps multi-key transaction journals
+ * bounded when an authenticated photo deletion appends a tombstone.
+ */
+export const MAX_OUTBOX_ENVELOPE_CHARS = 6 * 1024 * 1024;
 export const MAX_OUTBOX_BATCH_SIZE = 25;
 export const MAX_OUTBOX_ATTEMPTS = 8;
 export const OUTBOX_LEASE_MS = 30_000;
@@ -27,6 +39,7 @@ export const NOTIFICATION_DELIVERY_ENTITY_NAMESPACE = 'notification_delivery';
 export const RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE = 'recommendation_preferences';
 export const SHELF_SCAN_ENTITY_NAMESPACE = 'shelf_scan';
 export const CONFLICT_CHOICE_ENTITY_NAMESPACE = 'conflict_choice';
+export const PHOTO_DELETE_ENTITY_NAMESPACE = 'photo_delete';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SHA256_HEX = /^[0-9a-f]{64}$/;
@@ -508,6 +521,12 @@ function conflictChoiceIdempotencyKey(
   return value.toLowerCase();
 }
 
+function photoDeleteIdempotencyKey(operationId: unknown): string | null {
+  return typeof operationId === 'string' && UUID.test(operationId)
+    ? `${PHOTO_DELETE_ENTITY_NAMESPACE}:${operationId.toLowerCase()}`
+    : null;
+}
+
 export function shelfScanPayloadHashInput(payload: OutboxPayload): string {
   if (!validShelfScanPayload(payload)) fail();
   return [
@@ -606,15 +625,17 @@ function decodeRow(value: unknown): OutboxRow {
     value.idempotencyKey !==
       (entityType === 'conflict_choice'
         ? conflictChoiceIdempotencyKey(value.operationId, entityId, value.idempotencyKey)
-        : entityType === 'notification_preferences'
-          ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
-          : entityType === 'notification_delivery'
-            ? notificationDeliveryIdempotencyKey(value.operationId, value.payload)
-            : entityType === 'shelf_scan'
-              ? shelfScanIdempotencyKey(value.operationId, value.idempotencyKey)
-              : entityType === 'recommendation_preferences'
-                ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
-                : `${entityType}:${entityId}:${value.clientRevision}`) ||
+        : entityType === 'photo_delete'
+          ? photoDeleteIdempotencyKey(value.operationId)
+          : entityType === 'notification_preferences'
+            ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
+            : entityType === 'notification_delivery'
+              ? notificationDeliveryIdempotencyKey(value.operationId, value.payload)
+              : entityType === 'shelf_scan'
+                ? shelfScanIdempotencyKey(value.operationId, value.idempotencyKey)
+                : entityType === 'recommendation_preferences'
+                  ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${value.operationId}`
+                  : `${entityType}:${entityId}:${value.clientRevision}`) ||
     value.dependencyGroupId !== `${entityType}:${entityId}` ||
     !canonicalIso(value.enqueuedAt) ||
     !Number.isSafeInteger(value.attemptCount) ||
@@ -633,6 +654,8 @@ function decodeRow(value: unknown): OutboxRow {
     fail();
   }
   if (
+    (entityType === 'photo_delete' &&
+      (operationKind !== 'delete' || value.payload !== null || value.tombstone !== true)) ||
     (entityType === 'shelf_product' &&
       ((operationKind === 'delete' && (value.payload !== null || value.tombstone !== true)) ||
         (operationKind === 'upsert' &&
@@ -759,6 +782,7 @@ function isSupportedOutboxSchemaVersion(value: unknown): boolean {
 
 export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
   if (raw === null) return emptyOutboxEnvelope();
+  if (raw.length > MAX_OUTBOX_ENVELOPE_CHARS) fail();
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -777,9 +801,9 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     !isSupportedOutboxSchemaVersion(parsed.version) ||
     !hasExactKeys(parsed, ['version', 'rows', 'revisions']) ||
     !Array.isArray(parsed.rows) ||
-    parsed.rows.length > MAX_OUTBOX_ROWS ||
+    parsed.rows.length > MAX_OUTBOX_TOTAL_ROWS ||
     !Array.isArray(parsed.revisions) ||
-    parsed.revisions.length > MAX_OUTBOX_REVISIONS
+    parsed.revisions.length > MAX_OUTBOX_TOTAL_REVISIONS
   ) {
     fail();
   }
@@ -788,7 +812,16 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     parsed.version === 1
       ? parsed.revisions.flatMap((revision) => decodeLegacyRevision(revision, rows))
       : parsed.revisions.map(decodeRevision);
+  const photoRows = rows.filter((row) => row.entityType === 'photo_delete').length;
+  const photoRevisions = revisions.filter(
+    (revision) => revision.entityType === 'photo_delete',
+  ).length;
   if (
+    (parsed.version !== OUTBOX_SCHEMA_VERSION && (photoRows > 0 || photoRevisions > 0)) ||
+    photoRows > MAX_PHOTO_DELETE_OUTBOX_ROWS ||
+    rows.length - photoRows > MAX_OUTBOX_ROWS ||
+    photoRevisions > MAX_PHOTO_DELETE_OUTBOX_ROWS ||
+    revisions.length - photoRevisions > MAX_OUTBOX_REVISIONS ||
     new Set(rows.map((row) => row.operationId)).size !== rows.length ||
     new Set(revisions.map(revisionIdentity)).size !== revisions.length ||
     rows.some((row) => {
@@ -810,7 +843,9 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
 }
 
 export function encodeOutboxEnvelope(envelope: OutboxEnvelope): string {
-  return JSON.stringify(envelope);
+  const encoded = JSON.stringify(envelope);
+  if (encoded.length > MAX_OUTBOX_ENVELOPE_CHARS) fail(OUTBOX_LIMIT_REACHED);
+  return encoded;
 }
 
 function sortRows(rows: readonly OutboxRow[]): OutboxRow[] {
@@ -843,10 +878,34 @@ function reclaimTerminalImmutableTelemetryCapacity(
       (row) =>
         ownerEntityIdentity(row) !== `${input.ownerHash}:${identity}` || row.state === 'leased',
     ).length + 1;
+  const projectedNonPhotoRowCount = () =>
+    rows.filter(
+      (row) =>
+        row.entityType !== 'photo_delete' &&
+        (ownerEntityIdentity(row) !== `${input.ownerHash}:${identity}` || row.state === 'leased'),
+    ).length + (input.entityType === 'photo_delete' ? 0 : 1);
   const projectedRevisionCount = () =>
     revisions.filter(
       (revision) => revision.ownerHash !== input.ownerHash || entityIdentity(revision) !== identity,
     ).length + 1;
+  const projectedNonPhotoRevisionCount = () =>
+    revisions.filter(
+      (revision) =>
+        revision.entityType !== 'photo_delete' &&
+        (revision.ownerHash !== input.ownerHash || entityIdentity(revision) !== identity),
+    ).length + (input.entityType === 'photo_delete' ? 0 : 1);
+  const projectedPhotoRowCount = () =>
+    rows.filter(
+      (row) =>
+        row.entityType === 'photo_delete' &&
+        (ownerEntityIdentity(row) !== `${input.ownerHash}:${identity}` || row.state === 'leased'),
+    ).length + (input.entityType === 'photo_delete' ? 1 : 0);
+  const projectedPhotoRevisionCount = () =>
+    revisions.filter(
+      (revision) =>
+        revision.entityType === 'photo_delete' &&
+        (revision.ownerHash !== input.ownerHash || entityIdentity(revision) !== identity),
+    ).length + (input.entityType === 'photo_delete' ? 1 : 0);
   const removeOldest = (candidate: (row: OutboxRow) => boolean) => {
     const victim = sortRows(rows.filter(candidate))[0];
     if (!victim) fail(OUTBOX_LIMIT_REACHED);
@@ -865,6 +924,13 @@ function reclaimTerminalImmutableTelemetryCapacity(
         ? MAX_SHELF_SCAN_OUTBOX_ROWS
         : null;
 
+  if (
+    projectedPhotoRowCount() > MAX_PHOTO_DELETE_OUTBOX_ROWS ||
+    projectedPhotoRevisionCount() > MAX_PHOTO_DELETE_OUTBOX_ROWS
+  ) {
+    fail(OUTBOX_LIMIT_REACHED);
+  }
+
   while (
     entityCap !== null &&
     rows.filter((row) => row.entityType === input.entityType).length + 1 > entityCap
@@ -876,7 +942,12 @@ function reclaimTerminalImmutableTelemetryCapacity(
         row.state === 'dead',
     );
   }
-  while (projectedRowCount() > MAX_OUTBOX_ROWS || projectedRevisionCount() > MAX_OUTBOX_REVISIONS) {
+  while (
+    projectedRowCount() > MAX_OUTBOX_TOTAL_ROWS ||
+    projectedRevisionCount() > MAX_OUTBOX_TOTAL_REVISIONS ||
+    projectedNonPhotoRowCount() > MAX_OUTBOX_ROWS ||
+    projectedNonPhotoRevisionCount() > MAX_OUTBOX_REVISIONS
+  ) {
     removeOldest(
       (row) =>
         row.ownerHash === input.ownerHash &&
@@ -908,6 +979,24 @@ export function enqueueShelfOutboxOperation(
   return enqueueOutboxOperation(envelope, {
     ...input,
     entityType: 'shelf_product',
+  });
+}
+
+export function enqueuePhotoDeleteOutboxOperation(
+  envelope: OutboxEnvelope,
+  input: Readonly<{
+    operationId: string;
+    ownerHash: string;
+    ownerGeneration: number;
+    entityId: string;
+    enqueuedAt: string;
+  }>,
+): Readonly<{ envelope: OutboxEnvelope; row: OutboxRow }> {
+  return enqueueOutboxOperation(envelope, {
+    ...input,
+    entityType: 'photo_delete',
+    operationKind: 'delete',
+    payload: null,
   });
 }
 
@@ -1059,15 +1148,17 @@ function enqueueOutboxOperation(
             normalizedEntityId,
             input.idempotencyKey,
           ) ?? '')
-        : input.entityType === 'notification_preferences'
-          ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
-          : input.entityType === 'notification_delivery'
-            ? (notificationDeliveryIdempotencyKey(input.operationId, input.payload) ?? '')
-            : input.entityType === 'shelf_scan'
-              ? (shelfScanIdempotencyKey(input.operationId, input.idempotencyKey) ?? '')
-              : input.entityType === 'recommendation_preferences'
-                ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
-                : `${dependencyIdentity}:${clientRevision}`,
+        : input.entityType === 'photo_delete'
+          ? (photoDeleteIdempotencyKey(input.operationId) ?? '')
+          : input.entityType === 'notification_preferences'
+            ? `${NOTIFICATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
+            : input.entityType === 'notification_delivery'
+              ? (notificationDeliveryIdempotencyKey(input.operationId, input.payload) ?? '')
+              : input.entityType === 'shelf_scan'
+                ? (shelfScanIdempotencyKey(input.operationId, input.idempotencyKey) ?? '')
+                : input.entityType === 'recommendation_preferences'
+                  ? `${RECOMMENDATION_PREFERENCES_ENTITY_NAMESPACE}:${input.operationId}`
+                  : `${dependencyIdentity}:${clientRevision}`,
     dependencyGroupId: dependencyIdentity,
     enqueuedAt: input.enqueuedAt,
     attemptCount: 0,
@@ -1089,7 +1180,14 @@ function enqueueOutboxOperation(
       existing.state === 'leased',
   );
   rows.push(row);
-  if (rows.length > MAX_OUTBOX_ROWS) fail(OUTBOX_LIMIT_REACHED);
+  const photoRowCount = rows.filter((candidate) => candidate.entityType === 'photo_delete').length;
+  if (
+    rows.length > MAX_OUTBOX_TOTAL_ROWS ||
+    photoRowCount > MAX_PHOTO_DELETE_OUTBOX_ROWS ||
+    rows.length - photoRowCount > MAX_OUTBOX_ROWS
+  ) {
+    fail(OUTBOX_LIMIT_REACHED);
+  }
   const revisions = capacityEnvelope.revisions.filter(
     (revision) => revision.ownerHash !== input.ownerHash || entityIdentity(revision) !== identity,
   );
@@ -1099,7 +1197,16 @@ function enqueueOutboxOperation(
     entityId: normalizedEntityId,
     revision: clientRevision,
   });
-  if (revisions.length > MAX_OUTBOX_REVISIONS) fail(OUTBOX_LIMIT_REACHED);
+  const photoRevisionCount = revisions.filter(
+    (candidate) => candidate.entityType === 'photo_delete',
+  ).length;
+  if (
+    revisions.length > MAX_OUTBOX_TOTAL_REVISIONS ||
+    photoRevisionCount > MAX_PHOTO_DELETE_OUTBOX_ROWS ||
+    revisions.length - photoRevisionCount > MAX_OUTBOX_REVISIONS
+  ) {
+    fail(OUTBOX_LIMIT_REACHED);
+  }
   return {
     row,
     envelope: Object.freeze({
@@ -1440,7 +1547,12 @@ export function settleOutboxLease(
     ];
   });
   const revisions = envelope.revisions.filter((revision) => {
-    if (!isImmutableEventEntityType(revision.entityType)) return true;
+    if (
+      !isImmutableEventEntityType(revision.entityType) &&
+      revision.entityType !== 'photo_delete'
+    ) {
+      return true;
+    }
     return rows.some(
       (row) =>
         row.entityType === revision.entityType &&

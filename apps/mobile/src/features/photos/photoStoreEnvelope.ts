@@ -6,6 +6,12 @@ export const PHOTO_MUTATION_JOURNAL_INCONSISTENT = 'PHOTO_MUTATION_JOURNAL_INCON
 
 export const MAX_PHOTO_RECORDS = 10_000;
 export const MAX_PHOTO_STORE_CHARS = 8_388_608;
+/**
+ * A delete journal temporarily moves one existing record from `items` to
+ * `retainedItems` and adds fixed-size recovery metadata. The settled authority
+ * remains capped at MAX_PHOTO_STORE_CHARS.
+ */
+export const MAX_PENDING_PHOTO_STORE_CHARS = MAX_PHOTO_STORE_CHARS + 1024;
 const OPAQUE_OPERATION_ID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -74,7 +80,7 @@ export function decodePhotoStore(raw: string | null): DecodedPhotoStore {
   if (raw === null) {
     return { format: 'absent', items: [], mutation: null, retainedItems: [] };
   }
-  if (raw.length > MAX_PHOTO_STORE_CHARS) {
+  if (raw.length > MAX_PENDING_PHOTO_STORE_CHARS) {
     throw new Error(PHOTO_METADATA_INVALID);
   }
 
@@ -88,7 +94,9 @@ export function decodePhotoStore(raw: string | null): DecodedPhotoStore {
   // V1 was a bare array. It remains read compatible and is migrated only by an
   // explicit mutation that writes the atomic V2 envelope.
   if (Array.isArray(parsed)) {
-    if (parsed.length > MAX_PHOTO_RECORDS) throw new Error(PHOTO_METADATA_INVALID);
+    if (raw.length > MAX_PHOTO_STORE_CHARS || parsed.length > MAX_PHOTO_RECORDS) {
+      throw new Error(PHOTO_METADATA_INVALID);
+    }
     return { format: 'legacy', items: parsed, mutation: null, retainedItems: [] };
   }
 
@@ -113,6 +121,24 @@ export function decodePhotoStore(raw: string | null): DecodedPhotoStore {
 
   const mutation = parseMutation(parsed.mutation);
   if (mutation === null && parsed.retainedItems.length !== 0) {
+    throw new Error(PHOTO_METADATA_INVALID);
+  }
+  if (mutation?.kind === 'clear' && parsed.items.length !== 0) {
+    throw new Error(PHOTO_METADATA_INVALID);
+  }
+  if ((mutation === null || mutation.kind === 'add') && raw.length > MAX_PHOTO_STORE_CHARS) {
+    throw new Error(PHOTO_METADATA_INVALID);
+  }
+  if (
+    mutation !== null &&
+    (mutation.kind === 'delete' || mutation.kind === 'clear') &&
+    JSON.stringify({
+      version: PHOTO_STORE_VERSION,
+      items: parsed.items,
+      mutation: null,
+      retainedItems: [],
+    }).length > MAX_PHOTO_STORE_CHARS
+  ) {
     throw new Error(PHOTO_METADATA_INVALID);
   }
 
@@ -141,7 +167,20 @@ export function encodePhotoStore(params: SettledPhotoStoreInput | PendingPhotoSt
   if (
     params.items.length > MAX_PHOTO_RECORDS ||
     retainedItems.length > MAX_PHOTO_RECORDS ||
-    (params.mutation === null && retainedItems.length !== 0)
+    (params.mutation === null && retainedItems.length !== 0) ||
+    (params.mutation?.kind === 'clear' && params.items.length !== 0)
+  ) {
+    throw new Error(PHOTO_METADATA_INVALID);
+  }
+  if (
+    params.mutation !== null &&
+    (params.mutation.kind === 'delete' || params.mutation.kind === 'clear') &&
+    JSON.stringify({
+      version: PHOTO_STORE_VERSION,
+      items: params.items,
+      mutation: null,
+      retainedItems: [],
+    }).length > MAX_PHOTO_STORE_CHARS
   ) {
     throw new Error(PHOTO_METADATA_INVALID);
   }
@@ -151,7 +190,12 @@ export function encodePhotoStore(params: SettledPhotoStoreInput | PendingPhotoSt
     mutation: params.mutation,
     retainedItems,
   });
-  if (encoded.length > MAX_PHOTO_STORE_CHARS) throw new Error(PHOTO_METADATA_INVALID);
+  const maxChars =
+    params.mutation !== null &&
+    (params.mutation.kind === 'delete' || params.mutation.kind === 'clear')
+      ? MAX_PENDING_PHOTO_STORE_CHARS
+      : MAX_PHOTO_STORE_CHARS;
+  if (encoded.length > maxChars) throw new Error(PHOTO_METADATA_INVALID);
   return encoded;
 }
 

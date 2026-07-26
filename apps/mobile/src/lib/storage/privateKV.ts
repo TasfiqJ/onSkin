@@ -2,6 +2,7 @@ import 'react-native-get-random-values';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
+import * as Crypto from 'expo-crypto';
 import {
   bytesToHex,
   bytesToUtf8,
@@ -27,10 +28,14 @@ import { withOperationTiming } from '@/lib/observability/operationTiming';
 import {
   MAX_PRIVATE_KV_TRANSACTION_TARGETS,
   PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
+  PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION,
+  PRIVATE_KV_TRANSACTION_SCHEMA_VERSION,
   PrivateKVTransactionJournalError,
   decodePrivateKVTransactionJournal,
   encodePrivateKVTransactionJournal,
+  type PrivateKVTransactionLegacyTarget,
   type PrivateKVTransactionJournal,
+  type PrivateKVTransactionTarget,
 } from './privateKVTransactionCore';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
@@ -550,12 +555,17 @@ async function applyPrivateKVTransactionJournal(
   contentKey: Uint8Array,
   generation: number,
 ): Promise<void> {
-  const currentTargets = new Map<string, string | null>();
+  const beforeMatches = new Map<string, boolean>();
   for (const target of journal.targets) {
     assertAccountScopedPrivateOperationAllowed(generation);
     const currentRaw = await AsyncStorage.getItem(target.key);
-    currentTargets.set(target.key, currentRaw);
-    if (currentRaw === target.beforeRaw) continue;
+    const matchesBefore =
+      journal.version === PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION
+        ? currentRaw === (target as PrivateKVTransactionLegacyTarget).beforeRaw
+        : (await privateKVTransactionBeforeRawHash(currentRaw)) ===
+          (target as PrivateKVTransactionTarget).beforeRawHash;
+    beforeMatches.set(target.key, matchesBefore);
+    if (matchesBefore) continue;
     const decoded = await decodeMutablePrivateRaw(target.key, currentRaw, contentKey);
     if (decoded.value !== target.nextValue) {
       throw new Error(PRIVATE_KV_TRANSACTION_CONFLICT);
@@ -563,8 +573,7 @@ async function applyPrivateKVTransactionJournal(
   }
 
   for (const target of journal.targets) {
-    const currentRaw = currentTargets.get(target.key) ?? null;
-    if (currentRaw !== target.beforeRaw) {
+    if (!beforeMatches.get(target.key)) {
       // An earlier attempt already made this exact logical value durable.
       failedReadSnapshots.delete(target.key);
       continue;
@@ -582,6 +591,15 @@ async function applyPrivateKVTransactionJournal(
   await writeRawExactly(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, null, generation);
   failedReadSnapshots.delete(PRIVATE_KV_TRANSACTION_JOURNAL_KEY);
   privateTransactionJournalKnownAbsent = true;
+}
+
+async function privateKVTransactionBeforeRawHash(raw: string | null): Promise<string> {
+  return Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    raw === null
+      ? 'onskin:private-kv-transaction-before:v2:null'
+      : `onskin:private-kv-transaction-before:v2:value:${raw}`,
+  );
 }
 
 async function recoverPrivateKVTransactionForGeneration(generation: number): Promise<void> {
@@ -1060,11 +1078,19 @@ export async function updatePrivateItemsTransactionally(
               throw new Error(PRIVATE_KV_TRANSACTION_JOURNAL_INVALID);
             }
 
-            const targets = uniqueKeys.flatMap((key) => {
+            const targetInputs = uniqueKeys.flatMap((key) => {
               const nextValue = requested.get(key)!;
               if (nextValue === currentValues.get(key) && currentEncoding.get(key)) return [];
               return [{ key, beforeRaw: beforeRaw.get(key) ?? null, nextValue }];
             });
+            const targets: PrivateKVTransactionTarget[] = [];
+            for (const target of targetInputs) {
+              targets.push({
+                key: target.key,
+                beforeRawHash: await privateKVTransactionBeforeRawHash(target.beforeRaw),
+                nextValue: target.nextValue,
+              });
+            }
             if (targets.length === 0) return;
 
             assertAccountScopedPrivateOperationAllowed(generation);
@@ -1074,7 +1100,7 @@ export async function updatePrivateItemsTransactionally(
             }
             contentKey ??= await getOrCreateContentKey();
             const candidate: PrivateKVTransactionJournal = {
-              version: 1,
+              version: PRIVATE_KV_TRANSACTION_SCHEMA_VERSION,
               transactionId: bytesToHex(randomBytes(32)),
               targets,
             };

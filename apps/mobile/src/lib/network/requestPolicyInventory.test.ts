@@ -49,10 +49,6 @@ const POLICY_BOUND_IDEMPOTENT_MUTATIONS_BY_FILE = {
     endpoints: ['commerce_click_event'],
     mutations: [{ table: 'commerce_click_events', verb: 'insert', occurrences: 1 }],
   },
-  'features/photos/store.ts': {
-    endpoints: ['photo_delete_mirror'],
-    mutations: [{ table: 'photos', verb: 'delete', occurrences: 1 }],
-  },
   'lib/offline/completionQueue.ts': {
     endpoints: ['completion_sync'],
     mutations: [{ table: 'routine_completions', verb: 'insert', occurrences: 1 }],
@@ -210,7 +206,7 @@ describe('production request-policy inventory', () => {
 
   it('keeps endpoint names fixed, unique, and content-free', () => {
     expect(new Set(REQUEST_ENDPOINTS).size).toBe(REQUEST_ENDPOINTS.length);
-    expect(REQUEST_ENDPOINTS).toHaveLength(23);
+    expect(REQUEST_ENDPOINTS).toHaveLength(22);
     for (const endpoint of REQUEST_ENDPOINTS) {
       expect(endpoint).toMatch(/^[a-z][a-z0-9_]{2,63}$/);
       expect(endpoint).not.toMatch(

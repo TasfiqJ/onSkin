@@ -9,10 +9,12 @@ import {
   readOutbox,
   readOutboxChangeRevision,
   readOutboxSyncDiagnostics,
+  readPhotoDeleteOutboxStatus,
   readRecommendationPreferencesOutboxStatus,
   readShelfOutboxStatus,
   resetOutboxWorkerForTests,
   retryRecommendationPreferencesOutbox,
+  retryPhotoDeleteOutbox,
   retryShelfOutbox,
   scheduleOutboxFlush,
   setOutboxSchedulerActive,
@@ -26,6 +28,7 @@ import {
   enqueueConflictChoiceOutboxOperation,
   enqueueNotificationDeliveryOutboxOperation,
   enqueueNotificationPreferencesOutboxOperation,
+  enqueuePhotoDeleteOutboxOperation,
   enqueueRecommendationPreferencesOutboxOperation,
   enqueueShelfScanOutboxOperation,
   enqueueShelfOutboxOperation,
@@ -236,6 +239,7 @@ function flushResult(
   notificationDeliveries = 0,
   shelfScans = 0,
   conflictChoices = 0,
+  photoDeletes = 0,
 ) {
   return {
     leased,
@@ -245,6 +249,7 @@ function flushResult(
       conflictChoices,
       notificationDeliveries,
       notificationPreferences,
+      photoDeletes,
       recommendationPreferences,
       shelfScans,
       shelfProducts:
@@ -253,7 +258,8 @@ function flushResult(
         notificationPreferences -
         recommendationPreferences -
         shelfScans -
-        conflictChoices,
+        conflictChoices -
+        photoDeletes,
     },
   };
 }
@@ -315,7 +321,7 @@ describe('transactional outbox runtime', () => {
   it('strictly reports corrupt, future, and unavailable reads without changing persisted bytes', async () => {
     for (const [raw, status] of [
       ['{not-json', 'corrupt'],
-      [JSON.stringify({ version: 6, rows: [], revisions: [] }), 'unsupported_version'],
+      [JSON.stringify({ version: 7, rows: [], revisions: [] }), 'unsupported_version'],
     ] as const) {
       mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
       await expect(readOutbox()).resolves.toEqual({ status, envelope: null });
@@ -356,6 +362,123 @@ describe('transactional outbox runtime', () => {
     expect(wire).not.toContain('raw-owner@example.com');
     expect(wire).not.toContain('ownerHash');
     expect(wire).not.toContain('ownerGeneration');
+  });
+
+  it('routes and counts photo tombstones through the authenticated delete RPC', async () => {
+    const operationId = uuid(51_001);
+    const entityId = uuid(51_002);
+    const envelope = enqueuePhotoDeleteOutboxOperation(emptyOutboxEnvelope(), {
+      operationId,
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId,
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0, 0, 0, 0, 0, 0, 1));
+
+    expect(mocks.rpc).toHaveBeenCalledExactlyOnceWith('apply_photo_delete_outbox_batch', {
+      p_operations: [
+        {
+          operation_id: operationId,
+          entity_type: 'photo_delete',
+          entity_id: entityId,
+          operation_kind: 'delete',
+          payload: null,
+          client_revision: 1,
+          idempotency_key: `photo_delete:${operationId}`,
+        },
+      ],
+    });
+    expect(storedEnvelope()).toEqual(emptyOutboxEnvelope());
+  });
+
+  it('replays the same photo operation after an applied RPC response is lost', async () => {
+    const operationId = uuid(51_003);
+    const entityId = uuid(51_004);
+    const envelope = enqueuePhotoDeleteOutboxOperation(emptyOutboxEnvelope(), {
+      operationId,
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId,
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    let serverApplied = false;
+    mocks.rpcHandler = async (operations) =>
+      operations.map((operation) => {
+        const status = serverApplied ? 'duplicate' : 'applied';
+        serverApplied = true;
+        return {
+          operation_id: operation.operation_id,
+          status,
+          error_class: null,
+        };
+      });
+    mocks.runRequestWithLease.mockImplementationOnce(
+      async (
+        _lease: unknown,
+        _policy: unknown,
+        operation: (context: { signal: AbortSignal }) => Promise<unknown>,
+      ) => {
+        await operation({ signal: new AbortController().signal });
+        throw new RequestPolicyError({
+          endpoint: 'outbox_sync',
+          kind: 'timeout',
+          attemptCount: 1,
+          statusClass: 'network',
+        });
+      },
+    );
+    setOutboxSchedulerActive(false);
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 0));
+    const retryAt = storedEnvelope().rows[0]!.nextAttemptAt;
+    vi.setSystemTime(new Date(retryAt));
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0, 0, 0, 0, 0, 0, 1));
+
+    expect(mocks.rpc).toHaveBeenCalledTimes(2);
+    const firstWire = mocks.rpc.mock.calls[0]?.[1].p_operations[0];
+    const secondWire = mocks.rpc.mock.calls[1]?.[1].p_operations[0];
+    expect(secondWire).toEqual(firstWire);
+    expect(firstWire).toMatchObject({
+      operation_id: operationId,
+      idempotency_key: `photo_delete:${operationId}`,
+    });
+    expect(storedEnvelope()).toEqual(emptyOutboxEnvelope());
+  });
+
+  it('surfaces and retries a terminal photo deletion for the current owner', async () => {
+    const operationId = uuid(51_005);
+    const envelope = enqueuePhotoDeleteOutboxOperation(emptyOutboxEnvelope(), {
+      operationId,
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: uuid(51_006),
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    mocks.rpcHandler = async (operations) =>
+      operations.map((operation) => ({
+        operation_id: operation.operation_id,
+        status: 'permanent',
+        error_class: 'validation',
+      }));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 1));
+    await expect(
+      readPhotoDeleteOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'needs_attention', pendingCount: 1, attentionCount: 1 },
+    });
+
+    mocks.rpcHandler = async (operations) => successfulResults(operations);
+    await expect(
+      retryPhotoDeleteOutbox({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual(flushResult(1, 1, 0, 0, 0, 0, 0, 0, 1));
+    expect(storedEnvelope()).toEqual(emptyOutboxEnvelope());
   });
 
   it('reports dead rows only for the authenticated owner', async () => {

@@ -4,6 +4,7 @@ import {
   decodePhotoStore,
   decodePhotoStoreItemsForExport,
   encodePhotoStore,
+  MAX_PENDING_PHOTO_STORE_CHARS,
   MAX_PHOTO_RECORDS,
   MAX_PHOTO_STORE_CHARS,
   PHOTO_METADATA_INVALID,
@@ -65,6 +66,110 @@ describe('photo store envelope', () => {
     );
     expect(() =>
       encodePhotoStore({ items: [{ payload: `${atLimitPayload}x` }], mutation: null }),
+    ).toThrow(PHOTO_METADATA_INVALID);
+  });
+
+  it.each(['delete', 'clear'] as const)(
+    'lets a maximum settled store carry bounded %s recovery overhead and settle',
+    (kind) => {
+      const emptyRecord = { id: 'photo-at-limit', payload: '' };
+      const settledBase = JSON.stringify({
+        version: 2,
+        items: [emptyRecord],
+        mutation: null,
+        retainedItems: [],
+      });
+      const record = {
+        ...emptyRecord,
+        payload: 'x'.repeat(MAX_PHOTO_STORE_CHARS - settledBase.length),
+      };
+      const settled = encodePhotoStore({ items: [record], mutation: null });
+      const pending = encodePhotoStore({
+        items: [],
+        mutation: { kind, operationId: OPERATION_ID, phase: 'prepared' },
+        retainedItems: [record],
+      });
+
+      expect(settled).toHaveLength(MAX_PHOTO_STORE_CHARS);
+      expect(pending.length).toBeGreaterThan(MAX_PHOTO_STORE_CHARS);
+      expect(pending.length).toBeLessThanOrEqual(MAX_PENDING_PHOTO_STORE_CHARS);
+      expect(decodePhotoStore(pending)).toMatchObject({
+        mutation: { kind, operationId: OPERATION_ID, phase: 'prepared' },
+        retainedItems: [record],
+      });
+      expect(encodePhotoStore({ items: [], mutation: null }).length).toBeLessThan(
+        MAX_PHOTO_STORE_CHARS,
+      );
+    },
+  );
+
+  it('keeps oversized legacy arrays and add journals outside the recovery-overhead allowance', () => {
+    const legacyBase = JSON.stringify([{ payload: '' }]);
+    const oversizedLegacy = JSON.stringify([
+      { payload: 'x'.repeat(MAX_PHOTO_STORE_CHARS + 1 - legacyBase.length) },
+    ]);
+    expect(oversizedLegacy).toHaveLength(MAX_PHOTO_STORE_CHARS + 1);
+    expect(() => decodePhotoStore(oversizedLegacy)).toThrow(PHOTO_METADATA_INVALID);
+
+    const emptyAdd = {
+      version: 2,
+      items: [{ payload: '' }],
+      mutation: { kind: 'add', operationId: OPERATION_ID, phase: 'prepared' },
+      retainedItems: [],
+    };
+    const emptyAddLength = JSON.stringify(emptyAdd).length;
+    const oversizedAdd = JSON.stringify({
+      ...emptyAdd,
+      items: [{ payload: 'x'.repeat(MAX_PHOTO_STORE_CHARS + 1 - emptyAddLength) }],
+    });
+    expect(oversizedAdd).toHaveLength(MAX_PHOTO_STORE_CHARS + 1);
+    expect(() => decodePhotoStore(oversizedAdd)).toThrow(PHOTO_METADATA_INVALID);
+    expect(() =>
+      encodePhotoStore({
+        items: [
+          {
+            payload: 'x'.repeat(MAX_PHOTO_STORE_CHARS + 1 - emptyAddLength),
+          },
+        ],
+        mutation: { kind: 'add', operationId: OPERATION_ID, phase: 'prepared' },
+        retainedItems: [],
+      }),
+    ).toThrow(PHOTO_METADATA_INVALID);
+  });
+
+  it('rejects pending journals whose eventual settled authority cannot fit', () => {
+    const settledBase = JSON.stringify({
+      version: 2,
+      items: [{ payload: '' }],
+      mutation: null,
+      retainedItems: [],
+    });
+    const oversizedItems = [
+      { payload: 'x'.repeat(MAX_PHOTO_STORE_CHARS + 1 - settledBase.length) },
+    ];
+    const unrecoverableDelete = JSON.stringify({
+      version: 2,
+      items: oversizedItems,
+      mutation: { kind: 'delete', operationId: OPERATION_ID, phase: 'prepared' },
+      retainedItems: [],
+    });
+
+    expect(unrecoverableDelete.length).toBeGreaterThan(MAX_PHOTO_STORE_CHARS);
+    expect(unrecoverableDelete.length).toBeLessThanOrEqual(MAX_PENDING_PHOTO_STORE_CHARS);
+    expect(() => decodePhotoStore(unrecoverableDelete)).toThrow(PHOTO_METADATA_INVALID);
+    expect(() =>
+      encodePhotoStore({
+        items: oversizedItems,
+        mutation: { kind: 'delete', operationId: OPERATION_ID, phase: 'prepared' },
+        retainedItems: [],
+      }),
+    ).toThrow(PHOTO_METADATA_INVALID);
+    expect(() =>
+      encodePhotoStore({
+        items: [{ id: 'clear-must-not-retain-current-items' }],
+        mutation: { kind: 'clear', operationId: OPERATION_ID, phase: 'prepared' },
+        retainedItems: [],
+      }),
     ).toThrow(PHOTO_METADATA_INVALID);
   });
 

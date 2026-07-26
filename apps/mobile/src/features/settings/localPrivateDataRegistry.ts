@@ -6,7 +6,11 @@ import {
 } from '@/lib/auth/sessionOwnerKey';
 import { ACCOUNT_DELETION_VENDOR_FREEZE_KEY } from '@/lib/auth/accountDeletionVendorFreezeKey';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
-import { PRIVATE_KV_TRANSACTION_JOURNAL_KEY } from '@/lib/storage/privateKVTransactionCore';
+import {
+  PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
+  PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION,
+  PRIVATE_KV_TRANSACTION_SCHEMA_VERSION,
+} from '@/lib/storage/privateKVTransactionCore';
 import {
   OUTBOX_LEGACY_SCHEMA_VERSIONS,
   OUTBOX_SCHEMA_VERSION,
@@ -267,11 +271,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
   privateData({
     key: OUTBOX_STORAGE_KEY,
     lifecycle: 'current',
-    codec: jsonCodec(
-      'transactional_outbox',
-      OUTBOX_SCHEMA_VERSION,
-      OUTBOX_LEGACY_SCHEMA_VERSIONS,
-    ),
+    codec: jsonCodec('transactional_outbox', OUTBOX_SCHEMA_VERSION, OUTBOX_LEGACY_SCHEMA_VERSIONS),
     typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'transactional_outbox'),
   }),
@@ -531,7 +531,9 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     storage: 'private_kv',
     lifecycle: 'metadata',
     discovery: 'production_literal',
-    codec: jsonCodec('private_kv_transaction_journal', 1),
+    codec: jsonCodec('private_kv_transaction_journal', PRIVATE_KV_TRANSACTION_SCHEMA_VERSION, [
+      PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION,
+    ]),
     typedRead: enforced({ mode: 'control_state_machine' as const }),
     mutation: enforced({ mode: 'private_kv_transaction_journal' as const }),
     ownerBinding: PRIVATE_KV_OWNER,

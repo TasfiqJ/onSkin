@@ -1203,6 +1203,10 @@ export type Database = {
         Args: { p_operations: Json };
         Returns: Json;
       };
+      apply_photo_delete_outbox_batch: {
+        Args: { p_operations: Json };
+        Returns: Json;
+      };
       apply_recommendation_preferences_outbox_batch: {
         Args: { p_operations: Json };
         Returns: Json;

@@ -5,6 +5,11 @@ import {
   OUTBOX_SCHEMA_VERSION,
   OUTBOX_STORAGE_KEY,
 } from '@/lib/offline/outbox.pure';
+import {
+  PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
+  PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION,
+  PRIVATE_KV_TRANSACTION_SCHEMA_VERSION,
+} from '@/lib/storage/privateKVTransactionCore';
 
 import {
   LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
@@ -34,15 +39,26 @@ describe('local private-data contract registry', () => {
   });
 
   it('binds the transactional outbox descriptor to the live codec versions', () => {
-    const outbox = LOCAL_PRIVATE_KEY_REGISTRY.find(
-      (entry) => entry.key === OUTBOX_STORAGE_KEY,
-    );
+    const outbox = LOCAL_PRIVATE_KEY_REGISTRY.find((entry) => entry.key === OUTBOX_STORAGE_KEY);
 
     expect(outbox?.codec).toEqual({
       status: 'enforced',
       codecId: 'transactional_outbox',
       currentVersion: OUTBOX_SCHEMA_VERSION,
       legacyVersions: OUTBOX_LEGACY_SCHEMA_VERSIONS,
+    });
+  });
+
+  it('binds the private-KV transaction journal to V2 with V1 recovery', () => {
+    const journal = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
+    );
+
+    expect(journal?.codec).toEqual({
+      status: 'enforced',
+      codecId: 'private_kv_transaction_journal',
+      currentVersion: PRIVATE_KV_TRANSACTION_SCHEMA_VERSION,
+      legacyVersions: [PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION],
     });
   });
 

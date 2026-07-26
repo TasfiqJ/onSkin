@@ -3,6 +3,7 @@ type OutboxEntityContractEntry = Readonly<{
     | 'conflictChoices'
     | 'notificationDeliveries'
     | 'notificationPreferences'
+    | 'photoDeletes'
     | 'recommendationPreferences'
     | 'shelfProducts'
     | 'shelfScans';
@@ -13,6 +14,7 @@ type OutboxEntityContractEntry = Readonly<{
     | 'apply_conflict_choice_outbox_batch'
     | 'apply_notification_delivery_outbox_batch'
     | 'apply_notification_preferences_outbox_batch'
+    | 'apply_photo_delete_outbox_batch'
     | 'apply_recommendation_preferences_outbox_batch'
     | 'apply_shelf_outbox_batch'
     | 'apply_shelf_scan_outbox_batch';
@@ -23,43 +25,50 @@ type OutboxEntityContractEntry = Readonly<{
  * immutable-event behavior, and content-free flush diagnostics.
  */
 export const OUTBOX_ENTITY_CONTRACT = Object.freeze({
-  shelf_product: Object.freeze({
+  photo_delete: Object.freeze({
     priority: 0,
+    rpc: 'apply_photo_delete_outbox_batch',
+    flushCountKey: 'photoDeletes',
+    immutableEvent: false,
+    operationKinds: Object.freeze(['delete'] as const),
+  }),
+  shelf_product: Object.freeze({
+    priority: 1,
     rpc: 'apply_shelf_outbox_batch',
     flushCountKey: 'shelfProducts',
     immutableEvent: false,
     operationKinds: Object.freeze(['upsert', 'delete'] as const),
   }),
   conflict_choice: Object.freeze({
-    priority: 1,
+    priority: 2,
     rpc: 'apply_conflict_choice_outbox_batch',
     flushCountKey: 'conflictChoices',
     immutableEvent: false,
     operationKinds: Object.freeze(['upsert'] as const),
   }),
   notification_preferences: Object.freeze({
-    priority: 2,
+    priority: 3,
     rpc: 'apply_notification_preferences_outbox_batch',
     flushCountKey: 'notificationPreferences',
     immutableEvent: false,
     operationKinds: Object.freeze(['upsert'] as const),
   }),
   recommendation_preferences: Object.freeze({
-    priority: 3,
+    priority: 4,
     rpc: 'apply_recommendation_preferences_outbox_batch',
     flushCountKey: 'recommendationPreferences',
     immutableEvent: false,
     operationKinds: Object.freeze(['upsert'] as const),
   }),
   notification_delivery: Object.freeze({
-    priority: 4,
+    priority: 5,
     rpc: 'apply_notification_delivery_outbox_batch',
     flushCountKey: 'notificationDeliveries',
     immutableEvent: true,
     operationKinds: Object.freeze(['upsert'] as const),
   }),
   shelf_scan: Object.freeze({
-    priority: 5,
+    priority: 6,
     rpc: 'apply_shelf_scan_outbox_batch',
     flushCountKey: 'shelfScans',
     immutableEvent: true,
