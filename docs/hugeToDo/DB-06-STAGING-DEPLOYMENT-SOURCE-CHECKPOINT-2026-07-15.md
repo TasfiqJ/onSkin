@@ -1,7 +1,7 @@
 # DB-06 Staging Deployment Source Checkpoint
 
 Date: 2026-07-15
-Updated: 2026-07-22 for migrations `0061` and `0062`
+Updated: 2026-07-26 for the 64-migration chain through `0065`
 
 Status: `in_progress`, blocked by `ACCT-03`; source procedure and evidence
 contract implemented; no hosted staging deployment or live DB-06 acceptance
@@ -43,8 +43,8 @@ Node orchestrator. The orchestrator:
    failure. On Windows, an unconfirmed job-object shutdown preserves the
    cancellation signal and runtime root and emits a stable redacted recovery
    fingerprint;
-4. derives and hashes the exact 61 ordered migration files through
-   `20260722000062`, the 16 `deployByDefault` functions, each function's
+4. derives and hashes the exact 64 ordered migration files through
+   `20260726000065`, the 17 `deployByDefault` functions, each function's
    transitive local source set, the function manifest, the Deno lockfile, and
    every deployment/evidence procedure input;
 5. runs the complete credential-free local DB-05 replay and retains its
@@ -96,7 +96,7 @@ Node orchestrator. The orchestrator:
     misstate the initial operator observations as newly captured. The
     migration push begins only after this final zero-cohort boundary passes;
 13. runs a migration dry run, applies the exact ordered migrations, proves the
-    exact 62-ID history through `0063`, redeploys the same complete manifest, and proves a
+    exact 64-ID history through `0065`, redeploys the same complete manifest, and proves a
     second dry run has no pending source change;
 14. runs linked pgTAP, error-level database lint, and an empty linked schema
     diff for `public`, `auth`, and `storage`;
@@ -236,7 +236,7 @@ $env:DB06_CUTOVER_EVIDENCE_DIR = "<absolute-path-to-redacted-boundary-directory>
    may release it. Commit only approved redacted evidence artifacts. If it
    fails, keep all traffic and provider callbacks closed, preserve the failure
    record and any containment-recovery root, and use the forward-compatible
-   containment procedure. Do not reverse migrations `0048`-`0063` or repair
+   containment procedure. Do not reverse migrations `0048`-`0065` or repair
    migration history manually. An unused fresh project may be discarded only
    under the recorded rollback/owner decision after required evidence is
    retained.
@@ -268,12 +268,19 @@ The current database tail is bound by
 `supabase/migrations/20260718000060_cat07_truthful_freshness.sql`,
 `supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql`,
 `supabase/migrations/20260722000062_catalog_curation_statement_guard.sql`,
+`supabase/migrations/20260722000063_catalog_operator_authority.sql`,
+`supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql`,
+`supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql`,
 `supabase/tests/database/cat07_truthful_freshness.test.sql`,
 `supabase/tests/database/catalog_import_lifecycle.test.sql`,
 `supabase/tests/database/catalog_launch_curation.test.sql`,
+`supabase/tests/database/catalog_operator_authority.test.sql`,
+`supabase/tests/database/skin_profile_quiz_provenance.test.sql`,
 `scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql`,
 `scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql`,
 `scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql`,
+`scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql`,
+`scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql`,
 `scripts/phase2/local-supabase-contract.mjs`, and the structural
 `supabase/tests/database/schema_contract.test.sql`. These remain source/local
 contracts, not evidence that an approved hosted target was mutated.

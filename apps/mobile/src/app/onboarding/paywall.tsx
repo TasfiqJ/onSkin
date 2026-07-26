@@ -54,7 +54,7 @@ function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
 
 export default function PaywallScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
-  const { goals, quizAnswers, computeResult } = useOnboarding();
+  const { goals, quizAnswers, profileResult, computeResult } = useOnboarding();
   const { startTrial, startReverseTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
@@ -104,8 +104,9 @@ export default function PaywallScreen() {
   // Personalized headline from the quiz axes (sign convention per the reveal: axes
   // >= 0.5 is the positive pole). Only when the quiz was actually taken.
   let headline: string = PAYWALL_COPY.offer.headlineFallback;
-  if (quizCompletion.complete) {
-    const r = computeResult();
+  const result = profileResult ?? (quizCompletion.complete ? computeResult() : null);
+  if (result) {
+    const r = result;
     const descriptor = `${r.axes.oily_dry < 0.5 ? 'dry' : 'oily'}, ${r.axes.sensitive_resistant >= 0.5 ? 'sensitive' : 'resistant'} skin`;
     headline = PAYWALL_COPY.offer.headlineFor(descriptor);
   }

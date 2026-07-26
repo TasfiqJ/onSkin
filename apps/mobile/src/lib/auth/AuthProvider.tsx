@@ -89,6 +89,12 @@ import {
 } from './accountGeneration';
 import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
 import {
+  clearPublishedFirstSessionE2ESession,
+  getFirstSessionE2EFixture,
+  getPublishedFirstSessionE2ESession,
+  publishFirstSessionE2ESession,
+} from './firstSessionE2E';
+import {
   authenticateWithAppleCredential,
   authenticateWithProviderToken,
   requestEmailAccountCode,
@@ -128,6 +134,7 @@ import { getGoogleIdToken } from './google';
 import { clearAccountIsolatedState, prepareLocalDataForSession } from './localAccountIsolation';
 import { clearAuthDerivedLocalActivity } from './revokedCredentialActivity';
 import {
+  claimLocalDataOwnership,
   localDataOwnerBinding,
   markLocalDataCleanupRequired,
   preserveLocalDataForForcedSignOut,
@@ -242,7 +249,10 @@ async function revokeSupabaseRefreshTokens(binding: SupabaseRemoteSessionBinding
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const accountIsolationE2EFixture = useMemo(() => getAccountIsolationE2EFixture(), []);
-  const initialSession = accountIsolationE2EFixture?.session ?? null;
+  const firstSessionE2EFixture = useMemo(() => getFirstSessionE2EFixture(), []);
+  const initialSession =
+    accountIsolationE2EFixture?.session ??
+    getPublishedFirstSessionE2ESession(firstSessionE2EFixture);
   const [session, setSession] = useState<Session | null>(initialSession);
   const [initializing, setInitializing] = useState(
     isSupabaseConfigured && accountIsolationE2EFixture === null,
@@ -307,6 +317,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const freshAuthenticationPendingRef = useRef(false);
   const authSemanticOperationPendingRef = useRef(false);
   const deferredAuthSemanticBoundaryRef = useRef<{ session: Session | null } | null>(null);
+  const firstSessionE2EPublicationRef = useRef<Promise<void> | null>(null);
+  const firstSessionE2ECommitResolveRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    if (!firstSessionE2EFixture || session !== firstSessionE2EFixture.session) return;
+    const resolve = firstSessionE2ECommitResolveRef.current;
+    firstSessionE2ECommitResolveRef.current = null;
+    resolve?.();
+  }, [firstSessionE2EFixture, session]);
+
+  useEffect(() => {
+    if (firstSessionE2EFixture && session === null) {
+      clearPublishedFirstSessionE2ESession();
+    }
+  }, [firstSessionE2EFixture, session]);
+
+  useEffect(
+    () => () => {
+      const resolve = firstSessionE2ECommitResolveRef.current;
+      firstSessionE2ECommitResolveRef.current = null;
+      resolve?.();
+    },
+    [],
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -1970,7 +2004,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const userId = session?.user.id ?? null;
     const accessToken = session?.access_token ?? null;
-    if (!userId || !accessToken || initializing || accountIsolationE2EFixture) return;
+    if (
+      !userId ||
+      !accessToken ||
+      initializing ||
+      accountIsolationE2EFixture ||
+      firstSessionE2EFixture
+    )
+      return;
 
     let cleanup: (() => void) | null = null;
     let cancelled = false;
@@ -2150,7 +2191,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       releaseInitialListenerWrites();
       if (cleanup) cleanup();
     };
-  }, [accountIsolationE2EFixture, initializing, session?.access_token, session?.user.id]);
+  }, [
+    accountIsolationE2EFixture,
+    firstSessionE2EFixture,
+    initializing,
+    session?.access_token,
+    session?.user.id,
+  ]);
 
   const value = useMemo<AuthContextValue>(() => {
     const user = session?.user ?? null;
@@ -2294,7 +2341,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await applySessionBoundaryRef.current(pending.session);
       },
       async ensureAnonymousSession(captchaToken?: string) {
-        if (!isSupabaseConfigured) return;
+        if (!isSupabaseConfigured) {
+          if (!firstSessionE2EFixture || session) return;
+          const existing = firstSessionE2EPublicationRef.current;
+          if (existing) return existing;
+
+          const publication = (async () => {
+            if (
+              isAccountDeletionIntakeHoldActive() ||
+              isAccountActivityBlockedForDeletion() ||
+              sessionBoundaryActiveRef.current
+            ) {
+              throw new Error(AUTH_UNAVAILABLE_MESSAGE);
+            }
+            await claimLocalDataOwnership(firstSessionE2EFixture.session.user.id);
+            activeUserIdRef.current = firstSessionE2EFixture.session.user.id;
+            publishedSessionRef.current = firstSessionE2EFixture.session;
+            publishFirstSessionE2ESession(firstSessionE2EFixture);
+            initialSessionRestorePendingRef.current = false;
+            setSessionBoundaryError(false);
+            const committed = new Promise<void>((resolve) => {
+              firstSessionE2ECommitResolveRef.current = resolve;
+            });
+            setSession(firstSessionE2EFixture.session);
+            // Age activation replaces the bootstrap navigator. Do not let its
+            // caller publish the receipt transition until this owner is
+            // visible to downstream Auth consumers in a committed render.
+            await committed;
+          })();
+          firstSessionE2EPublicationRef.current = publication;
+          try {
+            await publication;
+          } finally {
+            if (firstSessionE2EPublicationRef.current === publication) {
+              firstSessionE2EPublicationRef.current = null;
+            }
+          }
+          return;
+        }
 
         if (session && !appleCredentialQuarantinedRef.current) return;
         // BLOCKED: B-TURNSTILE. CaptchaToken expected here once Turnstile is wired.
@@ -2361,7 +2445,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       signOut: completeExplicitSignOut,
     };
-  }, [accountIsolationE2EFixture, initializing, session, sessionBoundaryError]);
+  }, [
+    accountIsolationE2EFixture,
+    firstSessionE2EFixture,
+    initializing,
+    session,
+    sessionBoundaryError,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

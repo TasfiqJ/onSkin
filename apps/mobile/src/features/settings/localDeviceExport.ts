@@ -1,5 +1,6 @@
 import { decryptPhotoNoteForPurposeLimitedExport } from '@/features/photos/encryptedStorage';
 import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
+import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
 import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { purgeExpiredCatalogLookupQueueForPurposeLimitedExport } from '@/lib/offline/catalogLookupQueue';
 import { getPrivateItemsForPurposeLimitedExport } from '@/lib/storage/privateKV';
@@ -36,7 +37,11 @@ export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
 ] as const satisfies readonly LocalPrivateDataKey[];
 
 const LOCAL_EXPORT_SPECS = [
-  { key: 'onskin.ageVerified', section: 'account_and_privacy', field: 'age_verified' },
+  {
+    key: AGE_POLICY_RECEIPT_KEY,
+    section: 'account_and_privacy',
+    field: 'age_policy_receipt',
+  },
   {
     key: 'onskin.appLock.enabled',
     section: 'account_and_privacy',

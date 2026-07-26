@@ -59,6 +59,12 @@ jobs:
           - name: catalog-curation-0062-upgrade
             database: catalog_curation_upgrade_0062
             script: catalog-curation-0062-upgrade-postgres-rehearsal.sql
+          - name: skin-profile-0064-upgrade
+            database: skin_profile_upgrade_0064
+            script: skin-profile-0064-upgrade-postgres-rehearsal.sql
+          - name: catalog-operator-0065-upgrade
+            database: catalog_operator_upgrade_0065
+            script: catalog-operator-0065-upgrade-postgres-rehearsal.sql
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}

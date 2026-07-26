@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanupRequired';
+import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
 
 import {
   LOCAL_PRIVATE_CONTROL_KEYS,
@@ -57,6 +58,10 @@ describe('local private data registry', () => {
       ...LOCAL_PRIVATE_SECURE_STORE_KEYS,
     ];
     expect(new Set(all).size).toBe(all.length);
+  });
+
+  it('includes the age-policy receipt in account cleanup inventory', () => {
+    expect(LOCAL_PRIVATE_DATA_KEYS).toContain(AGE_POLICY_RECEIPT_KEY);
   });
 
   it('keeps auth-derived crash recovery outside destructive private-data registries', () => {

@@ -34,20 +34,119 @@ describe('onboarding route contracts', () => {
     expect(source).not.toContain('â€™');
   });
 
-  it('keeps age routing outside the transition-prone age screen and gates direct consent links', () => {
+  it('commits the age receipt before anonymous account creation and gates direct consent links', () => {
     const welcome = readAppRoute('index.tsx');
     const age = readAppRoute('onboarding/age.tsx');
     const consent = readAppRoute('onboarding/consent.tsx');
 
-    expect(welcome).toContain('const ageVerified = await getAgeVerified().catch(() => false);');
-    expect(welcome).toContain(
-      "router.push(ageVerified ? '/onboarding/consent' : '/onboarding/age')",
+    expect(welcome).toContain('const agePolicyStatus = await getAgePolicyReceiptStatus();');
+    expect(welcome.indexOf('getAgePolicyReceiptStatus()')).toBeLessThan(
+      welcome.indexOf('await ensureAnonymousSession()'),
     );
     expect(age).not.toContain('getAgeVerified');
+    expect(age).toContain('const eligible = meetsMinimumAge(dob, today);');
+    expect(age).toContain('await setAgeVerified(true);');
+    expect(age).toContain('await setAgeVerified(false);');
+    expect(age).toContain(
+      'const reverificationGeneration = stageAgePolicyReverificationHandoff();',
+    );
+    expect(
+      age.indexOf("queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'missing')"),
+    ).toBeLessThan(age.indexOf('await setAgeVerified(false);'));
+    expect(age.indexOf('await setAgeVerified(false);')).toBeLessThan(
+      age.indexOf('markAgePolicyReverificationHandoffFailed(reverificationGeneration);'),
+    );
+    expect(age).toContain('useSyncExternalStore(');
+    expect(age).toContain("const blocked = reverificationHandoff !== 'none';");
+    expect(age.indexOf('await setAgeVerified(true);')).toBeLessThan(
+      age.indexOf('await ensureAnonymousSession()'),
+    );
+    expect(age.indexOf('await ensureAnonymousSession()')).toBeLessThan(
+      age.indexOf('stagePostAgeConsentRoute()'),
+    );
+    const eligibleHandoffClear = age.indexOf(
+      'clearAgePolicyReverificationHandoff();',
+      age.indexOf('await ensureAnonymousSession()'),
+    );
+    expect(eligibleHandoffClear).toBeGreaterThan(age.indexOf('await ensureAnonymousSession()'));
+    expect(eligibleHandoffClear).toBeLessThan(age.indexOf('stagePostAgeConsentRoute()'));
+    expect(age.indexOf('stagePostAgeConsentRoute()')).toBeLessThan(
+      age.indexOf("queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'current')"),
+    );
     expect(consent).toContain('await getAgeVerified().catch(() => false)');
     expect(consent).toContain("router.replace('/onboarding/age')");
     expect(consent.indexOf('await getAgeVerified().catch(() => false)')).toBeLessThan(
       consent.indexOf('grantHealthDataCollectionConsent(healthDataOwnerId)'),
+    );
+  });
+
+  it('verifies the current age-policy receipt before reading or mounting a returning profile', () => {
+    const welcome = readAppRoute('index.tsx');
+    const agePolicyQuery = welcome.indexOf('queryKey: AGE_POLICY_STATUS_QUERY_KEY');
+    const profileQuery = welcome.indexOf("queryKey: ['onboarded', session?.user.id]");
+    const profileRead = welcome.indexOf('const local = await readStoredSkinProfile();');
+
+    expect(agePolicyQuery).toBeGreaterThan(-1);
+    expect(profileQuery).toBeGreaterThan(agePolicyQuery);
+    expect(profileRead).toBeGreaterThan(profileQuery);
+    expect(welcome).toContain(
+      "enabled: !resetting && !!session && !initializing && agePolicy.data === 'current',",
+    );
+    expect(welcome).toContain("agePolicy.data !== 'current'");
+    expect(welcome).toContain("agePolicy.data !== 'unavailable'");
+    expect(welcome).toContain("router.replace('/onboarding/age')");
+    expect(welcome).toContain(
+      "if (agePolicy.data === 'current' && onboarded.data === true) router.replace('/today');",
+    );
+    expect(welcome.indexOf("agePolicy.data !== 'current'")).toBeLessThan(
+      welcome.indexOf(
+        "if (agePolicy.data === 'current' && onboarded.data === true) router.replace('/today');",
+      ),
+    );
+    expect(welcome).toContain(
+      "(!!session && (agePolicy.data !== 'current' || onboarded.isLoading))",
+    );
+    expect(welcome).toContain("if (local.status === 'available') return true;");
+    expect(welcome).toContain(
+      'if (!isServerSkinProfileFallbackPermitted(local.status)) return false;',
+    );
+    expect(welcome).toContain('applyCurrentServerSkinProfileFilters');
+    expect(welcome).toContain('parseCurrentServerSkinProfile(data)');
+  });
+
+  it('places the fail-closed age-policy gate outside every health-data route provider', () => {
+    const layout = readAppRoute('_layout.tsx');
+    const gate = readFileSync(
+      fileURLToPath(new URL('./AgePolicyGate.tsx', import.meta.url)),
+      'utf8',
+    );
+
+    expect(layout).toContain('<AgePolicyGate');
+    expect(layout).toContain('bootstrap={');
+    expect(layout.indexOf('<AgePolicyGate')).toBeLessThan(
+      layout.indexOf('<HealthDataLifecycleGate>'),
+    );
+    expect(gate).toContain("router.replace('/onboarding/age')");
+    expect(gate).toContain("receiptStatus === 'unavailable'");
+    expect(gate).toContain("receiptStatus === 'current'");
+    expect(gate).toContain('return <>{bootstrap}</>');
+    expect(gate.indexOf("receiptStatus === 'current'")).toBeLessThan(
+      gate.indexOf('return <>{bootstrap}</>'),
+    );
+    expect(gate).toContain("AppState.addEventListener('change'");
+    expect(gate).toContain("if (nextState !== 'active')");
+    expect(gate).toContain("setReceiptStatus('checking')");
+    expect(gate).toContain('void readActiveReceipt()');
+    expect(gate).toContain('queryClient.getQueryCache().subscribe');
+    expect(gate).toContain("event.action.type !== 'success'");
+    expect(gate).toContain("publishedStatus !== 'current'");
+    expect(gate).toContain("publishedStatus !== 'missing'");
+    expect(gate).toContain("publishedStatus !== 'unavailable'");
+    expect(gate).toContain('setReceiptStatus(publishedStatus)');
+    expect(gate).toContain('!routeAllowedWithoutReceiptRef.current');
+    expect(gate).not.toContain('staleTime: Number.POSITIVE_INFINITY');
+    expect(gate.indexOf("setReceiptStatus('checking')")).toBeLessThan(
+      gate.indexOf('nextStatus = await getAgePolicyReceiptStatus()'),
     );
   });
 
@@ -74,9 +173,13 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES');
     expect(source).toContain('queryClient.clear()');
     expect(source).toContain("router.replace('/')");
-    expect(source).toContain('enabled: !resetting && !!session && !initializing');
+    expect(source).toContain(
+      "enabled: !resetting && !!session && !initializing && agePolicy.data === 'current'",
+    );
     expect(source).toContain('if (!isSupabaseConfigured) return false;');
-    expect(source).toContain('const deciding = resetting || initializing ||');
+    expect(source).toContain('const deciding =');
+    expect(source).toContain('resetting ||');
+    expect(source).toContain('initializing ||');
   });
 
   it('keeps onboarding chip and product-remove controls touchable on phones', () => {
@@ -408,11 +511,27 @@ describe('onboarding route contracts', () => {
     expect(context).toContain('hasCurrentHealthDataCollectionConsent()');
     expect(context).toContain("throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED')");
     expect(context.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
-      context.indexOf('setStoredSkinProfile({ result, goals, completedAt })'),
+      context.indexOf('setStoredSkinProfileFromExplicitQuiz({ result, goals, completedAt })'),
     );
     expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
     expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['shelf'] })");
     expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['ramp'] })");
+
+    const insertStart = context.indexOf("supabase.from('skin_profiles').insert({");
+    const insertEnd = context.indexOf('});', insertStart);
+    const insert = context.slice(insertStart, insertEnd);
+    expect(insertStart).toBeGreaterThan(-1);
+    expect(insertEnd).toBeGreaterThan(insertStart);
+    expect(insert).toContain('version: 2');
+    expect(insert).toContain('dspt: result.dspt');
+    expect(insert).toContain('oily_dry_basis_points: result.axesBasisPoints.oily_dry');
+    expect(insert).toContain('quiz_contract_id: result.provenance.contractId');
+    expect(insert).toContain('quiz_content_sha256: result.provenance.contentSha256');
+    expect(insert).toContain('quiz_scoring_sha256: result.provenance.scoringSha256');
+    expect(insert).toContain('quiz_contract_sha256: result.provenance.contractSha256');
+    expect(insert).toContain('quiz_review_status: result.provenance.reviewStatus');
+    expect(insert).not.toContain('quizAnswers');
+    expect(insert).not.toContain('answers');
   });
 
   it('recovers direct quiz completion without inventing missing goals', () => {
@@ -421,10 +540,12 @@ describe('onboarding route contracts', () => {
     const analyzing = readAppRoute('onboarding/analyzing.tsx');
 
     expect(goals).toContain('getQuizCompletionState');
-    expect(goals).toContain('const { goals, quizAnswers, toggleGoal } = useOnboarding();');
+    expect(goals).toContain(
+      'const { goals, profileResult, quizAnswers, toggleGoal } = useOnboarding();',
+    );
     expect(goals).toContain('const quizCompletion = getQuizCompletionState(quizAnswers);');
     expect(goals).toContain(
-      "router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/quiz')",
+      "router.push(hasProfileResult ? '/onboarding/products' : '/onboarding/quiz')",
     );
     expect(goals).toContain('hasCurrentHealthDataCollectionConsent');
     expect(goals).toContain("router.replace('/onboarding/consent')");
@@ -432,11 +553,35 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('if (goals.length === 0)');
     expect(products).toContain("router.replace('/onboarding/goals')");
     expect(analyzing).toContain(
-      'const { goals, persistSkinProfile, quizAnswers } = useOnboarding();',
+      'const { goals, persistSkinProfile, profileResult, quizAnswers } = useOnboarding();',
     );
     expect(analyzing).toContain('if (goals.length === 0)');
     expect(analyzing).toContain("router.replace('/onboarding/goals')");
     expect(analyzing).toContain('goals.length');
+  });
+
+  it('retains only the scored profile after durable local save for remaining onboarding routes', () => {
+    const context = readFileSync(
+      fileURLToPath(new URL('./OnboardingContext.tsx', import.meta.url)),
+      'utf8',
+    );
+    const analyzing = readAppRoute('onboarding/analyzing.tsx');
+    const reveal = readAppRoute('onboarding/reveal.tsx');
+    const paywall = readAppRoute('onboarding/paywall.tsx');
+
+    const durableWrite = context.indexOf(
+      'await setStoredSkinProfileFromExplicitQuiz({ result, goals, completedAt });',
+    );
+    const retainResult = context.indexOf('setProfileResult(result);');
+    const wipeAnswers = context.indexOf('setQuizAnswers({});', retainResult);
+    expect(durableWrite).toBeGreaterThan(-1);
+    expect(retainResult).toBeGreaterThan(durableWrite);
+    expect(wipeAnswers).toBeGreaterThan(retainResult);
+    expect(analyzing).toMatch(/profileResult\s*\?\s*Promise\.resolve\(profileResult\)/);
+    expect(reveal).toContain('profileResult ?? (quizCompletion.complete ? computeResult() : null)');
+    expect(paywall).toContain(
+      'profileResult ?? (quizCompletion.complete ? computeResult() : null)',
+    );
   });
 
   it('keeps health-data consent copy scrollable above buffered phone actions', () => {

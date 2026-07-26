@@ -30,6 +30,8 @@ const [
   freshnessMigration,
   freshnessRehearsal,
   catalogCurationRehearsal,
+  skinProfileUpgradeRehearsal,
+  catalogOperatorUpgradeRehearsal,
   accountDeletionMigration,
   readme,
   workflow,
@@ -52,6 +54,8 @@ const [
   read('supabase/migrations/20260718000060_cat07_truthful_freshness.sql'),
   read('scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql'),
   read('scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql'),
+  read('scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql'),
+  read('scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -83,10 +87,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 62, `Expected 62 migration files; found ${migrations.length}.`);
+check(migrations.length === 64, `Expected 64 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260722000063_'),
-  'The latest migration must remain 20260722000063.',
+  migrations.at(-1)?.startsWith('20260726000065_'),
+  'The latest migration must remain 20260726000065.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -176,40 +180,24 @@ check(
 check(
   /select plan\(10\)/u.test(catalogOperatorRevocationRehearsal) &&
     /extensions\.dblink_connect/u.test(catalogOperatorRevocationRehearsal) &&
-    /catalog_operator_gateway\.catalog_operator_queue/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
-    /pg_catalog\.pg_advisory_lock\(820801\)/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
-    /pg_catalog\.pg_advisory_lock\(820802\)/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
+    /catalog_operator_gateway\.catalog_operator_queue/u.test(catalogOperatorRevocationRehearsal) &&
+    /pg_catalog\.pg_advisory_lock\(820801\)/u.test(catalogOperatorRevocationRehearsal) &&
+    /pg_catalog\.pg_advisory_lock\(820802\)/u.test(catalogOperatorRevocationRehearsal) &&
     (
       catalogOperatorRevocationRehearsal.match(
         /pg_catalog\.pg_advisory_xact_lock\(p_latch_key\)/gu,
       ) ?? []
     ).length === 3 &&
     /p_latch_key is not null/u.test(catalogOperatorRevocationRehearsal) &&
-    /pg_catalog\.pg_blocking_pids\(activity\.pid\)/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
-    /'transactionid',[\s\S]*?'cat08_race_a'/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
-    /'transactionid',[\s\S]*?'cat08_race_b'/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
+    /pg_catalog\.pg_blocking_pids\(activity\.pid\)/u.test(catalogOperatorRevocationRehearsal) &&
+    /'transactionid',[\s\S]*?'cat08_race_a'/u.test(catalogOperatorRevocationRehearsal) &&
+    /'transactionid',[\s\S]*?'cat08_race_b'/u.test(catalogOperatorRevocationRehearsal) &&
     !/p_sleep_seconds/u.test(catalogOperatorRevocationRehearsal) &&
     !/hosted_verification_passed/u.test(catalogOperatorRevocationRehearsal) &&
     /'cat08_race_b',[\s\S]*?'Lock'/u.test(catalogOperatorRevocationRehearsal) &&
     /'cat08_race_a',[\s\S]*?'Lock'/u.test(catalogOperatorRevocationRehearsal) &&
-    /42501:CATALOG_OPERATOR_CAPABILITY_DENIED/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
-    /42501:CATALOG_OPERATOR_GRANT_REQUIRED/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
+    /42501:CATALOG_OPERATOR_CAPABILITY_DENIED/u.test(catalogOperatorRevocationRehearsal) &&
+    /42501:CATALOG_OPERATOR_GRANT_REQUIRED/u.test(catalogOperatorRevocationRehearsal) &&
     /dblink_disconnect\('cat08_race_a'\)/u.test(catalogOperatorRevocationRehearsal) &&
     /dblink_disconnect\('cat08_race_b'\)/u.test(catalogOperatorRevocationRehearsal),
   'CAT-08 rehearsal must prove action-first and session-revocation-first commit order with real independent sessions.',
@@ -326,6 +314,40 @@ check(
   '0062 exact-byte PostgreSQL 15/17 rehearsal must cover indexed authority, statement boundaries, rollback, ACL, and trigger metadata.',
 );
 check(
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000064_skin_profile_quiz_provenance\.sql/u.test(
+    skinProfileUpgradeRehearsal,
+  ) &&
+    /CORE01_0064_PREEXISTING_V2_ROW_NOT_PRESERVED/u.test(skinProfileUpgradeRehearsal) &&
+    /CORE01_0064_UPGRADE_CONSTRAINT_VALIDATION_POSTURE_INVALID/u.test(
+      skinProfileUpgradeRehearsal,
+    ) &&
+    /skin_profiles_quiz_v2_provenance_coherent/u.test(skinProfileUpgradeRehearsal) &&
+    /skin_profiles_quiz_v2_scores_coherent/u.test(skinProfileUpgradeRehearsal) &&
+    /skin_profiles_quiz_v2_profile_coherent/u.test(skinProfileUpgradeRehearsal) &&
+    /skin_profiles_quiz_supported_version/u.test(skinProfileUpgradeRehearsal) &&
+    /skin-profile-0064-upgrade-postgres-rehearsal: pass/u.test(skinProfileUpgradeRehearsal) &&
+    /database:\s*skin_profile_upgrade_0064[\s\S]{0,160}script:\s*skin-profile-0064-upgrade-postgres-rehearsal\.sql/u.test(
+      workflow,
+    ),
+  '0064 exact-byte PostgreSQL 15/17 rehearsal must preserve a pre-existing v2 collision while enforcing every new check on later writes.',
+);
+check(
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000065_catalog_operator_transition_conflict_target\.sql/u.test(
+    catalogOperatorUpgradeRehearsal,
+  ) &&
+    /CORE01_0065_CONFLICT_TARGET_REPAIR_INVALID/u.test(catalogOperatorUpgradeRehearsal) &&
+    /CORE01_0065_BOTH_TRANSITION_PATHS_NOT_EXECUTABLE/u.test(catalogOperatorUpgradeRehearsal) &&
+    /CORE01_0065_TRANSITION_SECURITY_POSTURE_INVALID/u.test(catalogOperatorUpgradeRehearsal) &&
+    /CORE01_0065_GLOBAL_FUNCTION_DEFAULT_ACL_INVALID/u.test(catalogOperatorUpgradeRehearsal) &&
+    /catalog-operator-0065-upgrade-postgres-rehearsal: pass/u.test(
+      catalogOperatorUpgradeRehearsal,
+    ) &&
+    /database:\s*catalog_operator_upgrade_0065[\s\S]{0,160}script:\s*catalog-operator-0065-upgrade-postgres-rehearsal\.sql/u.test(
+      workflow,
+    ),
+  '0065 exact-byte PostgreSQL 15/17 rehearsal must repair both transition conflict targets while preserving the Edge ACL and fail-closed function defaults.',
+);
+check(
   /select plan\(218\)/u.test(catalogImportLifecycleTests) &&
     /latest forward migration admits the signed benzoyl-peroxide category override/u.test(
       catalogImportLifecycleTests,
@@ -363,7 +385,7 @@ check(
     /exact migration-owner session consumes only its keyed transaction-local release cache/u.test(
       catalogLaunchCurationTests,
     ) &&
-    /actual service_role session cannot poison scalar validity through a forged temporary cache and GUC/u.test(
+    /SET ROLE retains the migration-owner session and therefore cannot model a distinct runtime service_role session/u.test(
       catalogLaunchCurationTests,
     ) &&
     /\{"aliasLookup":0,"lookup":1,"search":1\}/u.test(catalogLaunchCurationTests) &&

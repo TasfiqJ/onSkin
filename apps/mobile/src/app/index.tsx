@@ -5,8 +5,17 @@ import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
-import { getAgeVerified } from '@/features/onboarding/ageGateStore';
-import { isOnboardedLocal } from '@/features/onboarding/skinProfileStore';
+import {
+  AGE_POLICY_STATUS_QUERY_KEY,
+  getAgePolicyReceiptStatus,
+} from '@/features/onboarding/ageGateStore';
+import {
+  applyCurrentServerSkinProfileFilters,
+  CURRENT_SERVER_SKIN_PROFILE_SELECT,
+  isServerSkinProfileFallbackPermitted,
+  parseCurrentServerSkinProfile,
+} from '@/features/onboarding/serverSkinProfile';
+import { readStoredSkinProfile } from '@/features/onboarding/skinProfileStore';
 import {
   acknowledgeAccountDeletionNotice,
   peekAccountDeletionNotice,
@@ -45,13 +54,14 @@ async function clearE2ELocalControlState(): Promise<void> {
 
 // 01 · Welcome. The anonymous session starts silently here (docs/01 §1/§2).
 // Also acts as the entry gate: a returning user who already finished onboarding
-// (a completed skin_profile exists) is sent straight to Today.
+// reaches Today only after the current age-policy receipt is verified.
 export default function WelcomeScreen() {
   const params = useLocalSearchParams<{ e2eReset?: string }>();
   const { ensureAnonymousSession, session, initializing } = useAuth();
   const [accountDeletionNotice] = useState(peekAccountDeletionNotice);
   const [appleInstructionsUnavailable, setAppleInstructionsUnavailable] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [startError, setStartError] = useState(false);
   const [resetting, setResetting] = useState(() => shouldRunE2ELocalReset(params.e2eReset));
 
   useEffect(() => {
@@ -87,50 +97,94 @@ export default function WelcomeScreen() {
     };
   }, [params.e2eReset]);
 
-  // Onboarding-completion check as a query (no setState-in-effect). Reads the
-  // local-first completion record FIRST (the v1 source of truth, D-029): a
-  // returning onboarded user is recognized even with no backend, so a failed or
-  // absent server write never re-onboards them. Falls back to the server row.
+  // Resolve the minimized age-policy receipt before any profile-backed
+  // onboarding check. Missing, legacy, stale, malformed, or unavailable receipt
+  // bytes all fail closed. An unavailable read stays distinct so the root gate
+  // can provide recovery instead of redirecting into a failing write.
+  const agePolicy = useQuery({
+    queryKey: AGE_POLICY_STATUS_QUERY_KEY,
+    enabled: !resetting && !!session && !initializing,
+    retry: 0,
+    staleTime: Number.POSITIVE_INFINITY,
+    queryFn: getAgePolicyReceiptStatus,
+  });
+
+  // Onboarding-completion check as a query (no setState-in-effect). The
+  // local-first completion record remains the source of truth, but it must not
+  // be read until the current age-policy receipt has been verified.
   const onboarded = useQuery({
     queryKey: ['onboarded', session?.user.id],
-    enabled: !resetting && !!session && !initializing,
+    enabled: !resetting && !!session && !initializing && agePolicy.data === 'current',
     retry: 0,
     queryFn: async () => {
       const expectedOwnerUserId = session?.user.id;
       if (!expectedOwnerUserId) return false;
       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
-        const localOnboarded = await isOnboardedLocal();
+        const local = await readStoredSkinProfile();
         lease.assertCurrent();
-        if (localOnboarded) return true;
+        if (local.status === 'available') return true;
+        // Only a genuinely absent local profile permits a server fallback.
+        // Invalid, legacy, future, mismatched, or unreadable local bytes remain
+        // authoritative fail-closed states and require a fresh quiz/recovery.
+        if (!isServerSkinProfileFallbackPermitted(local.status)) return false;
         if (!isSupabaseConfigured) return false;
-        lease.assertCurrent();
-        const { count } = await supabase
-          .from('skin_profiles')
-          .select('id', { count: 'exact', head: true })
-          .not('completed_at', 'is', null);
-        lease.assertCurrent();
-        return (count ?? 0) > 0;
+        try {
+          lease.assertCurrent();
+          const { data, error } = await applyCurrentServerSkinProfileFilters(
+            supabase.from('skin_profiles').select(CURRENT_SERVER_SKIN_PROFILE_SELECT),
+          )
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          lease.assertCurrent();
+          return !error && parseCurrentServerSkinProfile(data) !== null;
+        } catch {
+          // Supabase errors fail closed, while a generation/owner boundary must
+          // still propagate instead of being mistaken for an absent profile.
+          lease.assertCurrent();
+          return false;
+        }
       });
     },
   });
 
   useEffect(() => {
-    if (onboarded.data === true) router.replace('/today');
-  }, [onboarded.data]);
+    if (resetting || initializing || !session || agePolicy.isLoading) return;
+    if (agePolicy.data !== 'current' && agePolicy.data !== 'unavailable') {
+      router.replace('/onboarding/age');
+    }
+  }, [agePolicy.data, agePolicy.isLoading, initializing, resetting, session]);
+
+  useEffect(() => {
+    if (agePolicy.data === 'current' && onboarded.data === true) router.replace('/today');
+  }, [agePolicy.data, onboarded.data]);
 
   async function begin() {
     setBusy(true);
+    setStartError(false);
     track('onboarding_started');
+    const agePolicyStatus = await getAgePolicyReceiptStatus();
+    queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, agePolicyStatus);
+    if (agePolicyStatus === 'unavailable') {
+      setBusy(false);
+      return;
+    }
+    if (agePolicyStatus !== 'current') {
+      setBusy(false);
+      router.push('/onboarding/age');
+      return;
+    }
     try {
       await ensureAnonymousSession();
     } catch {
-      // non-fatal before backend is configured
+      setStartError(true);
+      setBusy(false);
+      return;
     }
-    const ageVerified = await getAgeVerified().catch(() => false);
     setBusy(false);
     // Neutral DOB age gate (docs/01 §4) precedes any data collection. Resolve
     // the skip here so an inactive age screen cannot redirect a later route.
-    router.push(ageVerified ? '/onboarding/consent' : '/onboarding/age');
+    router.push('/onboarding/consent');
   }
 
   async function openAppleInstructions() {
@@ -142,8 +196,12 @@ export default function WelcomeScreen() {
     if (!opened) setAppleInstructionsUnavailable(true);
   }
 
-  // Stay on splash while deciding; render nothing while redirecting an onboarded user.
-  const deciding = resetting || initializing || (!!session && onboarded.isLoading);
+  // Stay on splash while deciding; render nothing while redirecting an invalid
+  // age-policy receipt or an already-onboarded user.
+  const deciding =
+    resetting ||
+    initializing ||
+    (!!session && (agePolicy.data !== 'current' || onboarded.isLoading));
 
   useEffect(() => {
     if (!accountDeletionNotice || deciding || onboarded.data === true) return;
@@ -208,6 +266,11 @@ export default function WelcomeScreen() {
         </View>
         <View className="pb-4">
           <Button label="Begin" onPress={begin} disabled={busy} />
+          {startError ? (
+            <Text accessibilityRole="alert" variant="bodySm" tone="clay" className="mt-3">
+              We couldn&apos;t start a private session. Nothing new was collected. Try again.
+            </Text>
+          ) : null}
           <Pressable
             accessibilityRole="button"
             className="mt-3 min-h-[44px] items-center justify-center py-3"

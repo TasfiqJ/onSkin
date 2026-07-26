@@ -12,6 +12,12 @@ import {
   updateStoredPregnancyStatus,
   type StoredSkinProfile,
 } from '@/features/onboarding/skinProfileStore';
+import {
+  applyCurrentServerSkinProfileFilters,
+  CURRENT_SERVER_SKIN_PROFILE_SELECT,
+  isServerSkinProfileFallbackPermitted,
+  parseCurrentServerSkinProfile,
+} from '@/features/onboarding/serverSkinProfile';
 import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
@@ -93,29 +99,34 @@ export async function readProfileBits(): Promise<ProfileBits> {
 
     // A private read/validation failure is not absence. Never consult a stale
     // server mirror after an authoritative local record becomes unreadable.
-    if (local.status !== 'missing') return { ...UNKNOWN_PROFILE, consentCurrent: true };
+    if (!isServerSkinProfileFallbackPermitted(local.status)) {
+      return { ...UNKNOWN_PROFILE, consentCurrent: true };
+    }
 
     if (!isSupabaseConfigured) return { ...UNKNOWN_PROFILE, consentCurrent: true };
 
     try {
       lease.assertCurrent();
-      const { data } = await supabase
-        .from('skin_profiles')
-        .select('oily_dry, sensitive_resistant, goals')
+      const { data, error } = await applyCurrentServerSkinProfileFilters(
+        supabase.from('skin_profiles').select(CURRENT_SERVER_SKIN_PROFILE_SELECT),
+      )
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
       lease.assertCurrent();
-      if (data) {
+      if (!error) {
+        const profile = parseCurrentServerSkinProfile(data);
+        if (!profile) return { ...UNKNOWN_PROFILE, consentCurrent: true };
         return {
           source: 'server',
-          sensitivity: sensitivityFromAxis(data.sensitive_resistant ?? null),
-          moisture: moistureFromAxis(data.oily_dry ?? null),
-          // V1 status edits are local-only. A server-only row may be stale, so it
-          // can provide non-safety profile bits but can never clear caution.
+          sensitivity: sensitivityFromAxis(profile.sensitive_resistant),
+          moisture: moistureFromAxis(profile.oily_dry),
+          // Pregnancy edits remain device-authoritative. A server-only row may
+          // be stale, so even an otherwise exact v2 profile cannot clear the
+          // scheduler's conservative safety posture.
           ...pregnancyBits('unknown'),
           consentCurrent: true,
-          goals: (data.goals ?? []) as GoalId[],
+          goals: profile.goals,
         };
       }
     } catch {
@@ -126,7 +137,7 @@ export async function readProfileBits(): Promise<ProfileBits> {
   });
 }
 
-/** V1 profile updates are local-first; the server profile remains a fallback mirror. */
+/** Current profile updates are local-first; the server profile remains a fallback mirror. */
 export async function savePregnancyStatus(status: PregnancyStatus): Promise<ProfileBits> {
   const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
   if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);

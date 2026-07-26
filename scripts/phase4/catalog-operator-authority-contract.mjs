@@ -172,9 +172,7 @@ function functionBlock(source, name, nextName) {
 }
 
 function auditMigration(migration, errors) {
-  const compact = collapsed(migration)
-    .replace(/\(\s+/g, '(')
-    .replace(/\s+\)/g, ')');
+  const compact = collapsed(migration).replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
   const rpcNames = [
     ...migration.matchAll(
       /create\s+or\s+replace\s+function\s+catalog_operator_gateway\.(catalog_operator_[a-z_]+)\s*\(/g,
@@ -332,9 +330,9 @@ function auditMigration(migration, errors) {
     'Migration does not apply a rate budget to every gateway action.',
   );
 
-  const tables = [...migration.matchAll(/create\s+table\s+private\.(catalog_operator_[a-z_]+)\s*\(/g)].map(
-    (match) => match[1],
-  );
+  const tables = [
+    ...migration.matchAll(/create\s+table\s+private\.(catalog_operator_[a-z_]+)\s*\(/g),
+  ].map((match) => match[1]);
   add(
     errors,
     exactSet(tables, AUTHORITY_TABLES),
@@ -376,8 +374,11 @@ function auditMigration(migration, errors) {
   );
 
   const holdStart = migration.indexOf('create table private.catalog_operator_product_holds');
-  const holdEnd = migration.indexOf('create unique index catalog_operator_product_holds_active_uidx');
-  const holdBlock = holdStart >= 0 && holdEnd > holdStart ? migration.slice(holdStart, holdEnd) : '';
+  const holdEnd = migration.indexOf(
+    'create unique index catalog_operator_product_holds_active_uidx',
+  );
+  const holdBlock =
+    holdStart >= 0 && holdEnd > holdStart ? migration.slice(holdStart, holdEnd) : '';
   add(
     errors,
     holdBlock.length > 0 &&
@@ -433,8 +434,8 @@ function auditMigration(migration, errors) {
       'v_auth.actor_user_id = any(v_hold_lifecycle_actor_ids)',
       'v_auth.actor_user_id = v_receipt.attested_by_user_id',
       'v_receipt.valid_until <= pg_catalog.now()',
-      'product.import_projection_status = \'active\'',
-      'batch.status = \'promoted\'',
+      "product.import_projection_status = 'active'",
+      "batch.status = 'promoted'",
       'batch.verification_evidence_sha256 =',
       'record.served_state_mutation_root_sha256 =',
       'private.catalog_launch_current_served_state_mutation_root_sha256(',
@@ -446,7 +447,11 @@ function auditMigration(migration, errors) {
     'Release RPC does not require current CAT-02/staged-CAT-03 authority and a fourth distinct person.',
   );
 
-  const cleanup = functionBlock(migration, 'private.cleanup_catalog_operator_correction_work', null);
+  const cleanup = functionBlock(
+    migration,
+    'private.cleanup_catalog_operator_correction_work',
+    null,
+  );
   add(
     errors,
     includesAll(cleanup, [
@@ -507,7 +512,7 @@ function auditDatabaseTest(databaseTest, errors) {
       "'local_cat08_test'",
       "auth_session.aal::text = ''aal2''",
       'FROM auth.sessions',
-      'FROM auth.mfa_factors',
+      'auth[.]mfa_factors',
       'is_anonymous',
       'CATALOG_OPERATOR_AAL2_SESSION_REQUIRED',
     ]),
@@ -539,7 +544,7 @@ function auditDatabaseTest(databaseTest, errors) {
       'CATALOG_OPERATOR_CURRENT_CAT02_CAT03_REPAIR_PROOF_REQUIRED',
     ]) &&
       (databaseTest.match(/CATALOG_OPERATOR_CURRENT_CAT02_CAT03_REPAIR_PROOF_REQUIRED/g) ?? [])
-          .length >= 2,
+        .length >= 2,
     'Database test does not prove disposition, erasure survival, separated repair/release, and stale-proof denial.',
   );
 }
@@ -573,9 +578,8 @@ function auditRaceRehearsal(raceRehearsal, errors) {
       !raceRehearsal.includes('p_sleep_seconds') &&
       !raceRehearsal.includes('hosted_verification_passed') &&
       (raceRehearsal.match(/'transactionid'/g) ?? []).length === 2 &&
-      (
-        raceRehearsal.match(/pg_catalog\.pg_advisory_xact_lock\(p_latch_key\)/g) ?? []
-      ).length === 3 &&
+      (raceRehearsal.match(/pg_catalog\.pg_advisory_xact_lock\(p_latch_key\)/g) ?? []).length ===
+        3 &&
       (raceRehearsal.match(/extensions\.dblink_send_query\(/g) ?? []).length === 4 &&
       (raceRehearsal.match(/pg_temp\.cat08_wait_for_activity\(/g) ?? []).length === 5,
     'Two-connection rehearsal does not prove action-first and session-revocation-first commit order against the real gateway.',
@@ -719,7 +723,7 @@ function auditConsole(consoleSource, consoleTests, rawConsoleSource, errors) {
     includesAll(consoleSource, [
       "new URL('/functions/v1/catalog-operator', supabaseUrl)",
       "method: 'POST'",
-      "Authorization: `Bearer ${accessToken}`",
+      'Authorization: `Bearer ${accessToken}`',
       "cache: 'no-store'",
       "credentials: 'omit'",
       "redirect: 'error'",
@@ -741,10 +745,10 @@ function auditConsole(consoleSource, consoleTests, rawConsoleSource, errors) {
       "'invalid_request'",
     ]) &&
       includesAll(rawConsoleSource, [
-      "Content-Security-Policy: default-src 'self'",
-      'Strict-Transport-Security:',
-      'X-Robots-Tag: noindex',
-    ]) &&
+        "Content-Security-Policy: default-src 'self'",
+        'Strict-Transport-Security:',
+        'X-Robots-Tag: noindex',
+      ]) &&
       !/(?:client|caller|supabase)\.from\s*\(/i.test(consoleSource) &&
       !/\.rpc\s*\(/.test(consoleSource) &&
       !/\b(?:localStorage|sessionStorage|indexedDB)\b|document\.cookie/.test(consoleSource) &&

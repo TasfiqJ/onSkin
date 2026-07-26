@@ -186,6 +186,6 @@ fixture and includes the exact `0062` bytes; it is not exact full-chain or hoste
 evidence.
 No consented beta corpus, witnessed target/decision, qualified product review,
 2,000-record launch campaign, signed database readback, clean hosted full-chain
-evidence through `0063`,
+evidence through `0065`,
 lifecycle evidence, or active launch campaign exists yet. CAT-03 therefore
 remains `in_progress`, and no production row is launch-authorized.

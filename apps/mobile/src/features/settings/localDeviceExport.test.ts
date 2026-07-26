@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { AGE_POLICY_RECEIPT_KEY, AGE_POLICY_SHA256 } from '@/features/onboarding/ageGate';
+import { ONBOARDING_QUIZ, scoreQuiz, type QuizAnswers } from '@/features/onboarding/quiz';
+
 import {
   LOCAL_PRIVATE_DATA_KEYS,
   LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
@@ -17,6 +20,15 @@ const mocks = vi.hoisted(() => ({
   getPrivateItemsForPurposeLimitedExport: vi.fn(),
   purgeExpiredCatalogLookupQueueForPurposeLimitedExport: vi.fn(),
 }));
+
+const CURRENT_PROFILE_RESULT = scoreQuiz(
+  Object.fromEntries(
+    ONBOARDING_QUIZ.map((question) => [
+      question.id,
+      question.multiSelect === true ? [question.options[0]!.id] : question.options[0]!.id,
+    ]),
+  ) as QuizAnswers,
+);
 
 vi.mock('@/features/photos/encryptedStorage', () => ({
   decryptPhotoNoteForPurposeLimitedExport: mocks.decryptPhotoNoteForPurposeLimitedExport,
@@ -104,8 +116,23 @@ describe('local device data export', () => {
   it('exports device-authoritative records while redacting media paths and ciphertext', async () => {
     const stored = new Map<string, string>([
       [
+        AGE_POLICY_RECEIPT_KEY,
+        JSON.stringify({
+          receipt_version: 1,
+          policy_sha256: AGE_POLICY_SHA256,
+          eligible: true,
+        }),
+      ],
+      [
         'onskin.skinprofile.v1',
-        JSON.stringify({ result: { dspt: 'OSPT' }, goals: ['acne'], completedAt: '2026-07-10' }),
+        JSON.stringify({
+          version: 2,
+          profile: {
+            result: CURRENT_PROFILE_RESULT,
+            goals: ['clear_skin'],
+            completedAt: '2026-07-10T12:00:00.000Z',
+          },
+        }),
       ],
       [
         'onskin.shelf.v1',
@@ -208,8 +235,22 @@ describe('local device data export', () => {
     );
 
     expect(result.sections.profile_and_preferences.skin_profile).toEqual(
-      expect.objectContaining({ goals: ['acne'] }),
+      expect.objectContaining({
+        version: 2,
+        profile: expect.objectContaining({
+          result: expect.objectContaining({
+            axesBasisPoints: CURRENT_PROFILE_RESULT.axesBasisPoints,
+            provenance: CURRENT_PROFILE_RESULT.provenance,
+          }),
+          goals: ['clear_skin'],
+        }),
+      }),
     );
+    expect(result.sections.account_and_privacy.age_policy_receipt).toEqual({
+      receipt_version: 1,
+      policy_sha256: AGE_POLICY_SHA256,
+      eligible: true,
+    });
     expect(result.sections.shelf_and_routine.completion_history).toEqual({
       '2026-07-09': ['PM:shelf-1'],
     });
@@ -293,6 +334,8 @@ describe('local device data export', () => {
     expect(serialized).not.toContain('thumbnailPath');
     expect(serialized).not.toContain('photo-content-key-v1');
     expect(serialized).not.toContain('secret-idempotency-key');
+    expect(serialized).not.toContain('q_oil');
+    expect(serialized).not.toContain('answerHash');
   });
 
   it('marks an undecryptable photo note without exporting its ciphertext', async () => {

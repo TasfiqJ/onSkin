@@ -1,6 +1,11 @@
+import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 
 import {
+  AGE_POLICY_CANONICAL,
+  AGE_POLICY_REVIEW_STATUS,
+  AGE_POLICY_SHA256,
+  AGE_POLICY_TUPLE,
   ageOn,
   getDobValidationError,
   INVALID_DOB_MESSAGE,
@@ -12,6 +17,23 @@ import {
 const today = new Date(2026, 5, 25); // 2026-06-25 (local)
 
 describe('neutral age gate (docs/01 §4)', () => {
+  it('pins the current draft-blocked semantic policy tuple', () => {
+    expect(MINIMUM_AGE).toBe(16);
+    expect(AGE_POLICY_REVIEW_STATUS).toBe('draft_blocked');
+    expect(AGE_POLICY_TUPLE).toEqual([
+      'policy=neutral_dob_eligibility',
+      'version=draft-v1',
+      'scope=global',
+      'minimum_years=16',
+      'parental_consent_path=none',
+      'review_status=draft_blocked',
+    ]);
+    expect(AGE_POLICY_CANONICAL).toBe(AGE_POLICY_TUPLE.join('\n'));
+    expect(createHash('sha256').update(AGE_POLICY_CANONICAL, 'utf8').digest('hex')).toBe(
+      AGE_POLICY_SHA256,
+    );
+  });
+
   it('computes age accounting for whether the birthday has passed this year', () => {
     expect(ageOn({ year: 2000, month: 1, day: 1 }, today)).toBe(26); // birthday passed
     expect(ageOn({ year: 2000, month: 12, day: 31 }, today)).toBe(25); // not yet this year

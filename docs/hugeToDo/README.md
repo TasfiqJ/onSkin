@@ -61,6 +61,8 @@ Start here:
 - [CAT-07 Isolated PostgreSQL Rehearsal](../../scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql)
 - [CAT-08 Operator Authority and Correction Runbook](../phase-4/catalog-operator-authority-runbook.md)
 - [CAT-08 Operator Authority Migration](../../supabase/migrations/20260722000063_catalog_operator_authority.sql)
+- [CAT-08 Transition and Default-ACL Repair Migration](../../supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql)
+- [CAT-08 0065 PostgreSQL 15/17 Upgrade Rehearsal](../../scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql)
 - [CAT-08 Database Contract](../../supabase/tests/database/catalog_operator_authority.test.sql)
 - [CAT-08 Two-Connection Revocation Rehearsal](../../supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql)
 - [CAT-08 Operator Edge Surface](../../supabase/functions/catalog-operator/)
@@ -70,6 +72,9 @@ Start here:
 - [CAT-09 Beta Event Schema and Fixed Formulas](../phase-10/beta-event-schema.md)
 - [CAT-09 Monitoring Dashboard Contract](../phase-11/monitoring-dashboards.md)
 - [CAT-09 Observability Payload Audit](../phase-9/observability-payload-audit.md)
+- [CORE-01 Skin-Profile Quiz-Provenance Migration](../../supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql)
+- [CORE-01 0064 PostgreSQL 15/17 Upgrade Rehearsal](../../scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql)
+- [CORE-01 Native Age-Assurance Source Contract](../../scripts/core01/native-age-assurance-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -162,14 +167,14 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260722000063`; the current CAT-03 pgTAP source plan contains 99
+head `20260726000065`; the current CAT-03 pgTAP source plan contains 99
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, exact local/
-hosted full-chain evidence through `0063`, current signed database readback,
+hosted full-chain evidence through `0065`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and no Apple, legal, product-
 quality, market, or revenue outcome is implied.
 
@@ -355,6 +360,53 @@ named owners, links, reviewed thresholds, and support-impact evidence exist.
 These source controls do not establish Apple acceptance, legal compliance,
 product quality, market coverage, or revenue.
 
+CORE-01 is now an `in_progress` source checkpoint. The neutral DOB screen
+retains only an exact-policy-hash eligible receipt and sits outside every
+health-data provider. A fresh non-affirmative result immediately closes the
+protected tree and atomically replaces an older affirmative receipt with an
+exact minimized re-verification tombstone that retains no DOB, age, threshold
+outcome, or reason. Total storage-write failure remains closed for the live
+process but cannot truthfully prove durable revocation after process
+termination. The quiz content and scoring manifests are frozen and
+hash-pinned; scoring uses integer basis points and emits only canonical derived
+outputs. Local profile envelope v2 and migration `0064` bind the same versions,
+hashes, DSPT, reachable raw-score domains, basis-point equations, goals,
+sensitivities, pregnancy state, review status, and tie rule without retaining
+raw quiz answers or an answer hash. Raw answers remain in memory only for a
+pending/failed local-save retry and are cleared after the durable derived
+profile succeeds. Ordinary local reads/writes preserve and fail closed on
+legacy, future, malformed, mathematically inconsistent, and
+contract-mismatched data; a fresh explicit quiz may replace any unusable
+profile atomically, while storage failure preserves the prior bytes. Server
+fallback is permitted only when local authority is genuinely missing and only
+an exact current server tuple is accepted. Because the pre-0064 schema did not
+reserve version 2, all four new checks are intentionally `NOT VALID`: they
+enforce every new write while preserving any pre-existing malformed v2
+collision for explicit quarantine instead of aborting deployment. The exact
+migration-byte rehearsal proves that posture on PostgreSQL 15 and 17. The exact
+final-code 390 x 844
+Expo-web first-session flow passes direct protected-route age fencing through
+the 12-question quiz, generated routine, and AM/PM check-offs, then proves a
+fresh below-threshold re-verification closes protected providers and remains
+closed across direct Today navigation and reload at
+`test-results/human-e2e/2026-07-26/core01-age-profile-provenance-current/`.
+That development-fixture web pass is not hosted or native release evidence.
+
+A first-party iOS Expo module now wraps Apple's Declared Age Range API behind
+iOS 26.2 SDK/runtime guards, a fixed age gate of 16, a request-bound exact JSON
+contract, lower-bound-only access evaluation, and no logging, networking, or
+persistence. Expo config declares the Boolean
+`com.apple.developer.declared-age-range` entitlement. The TypeScript adapter is
+nevertheless literally `launch_blocked`: this Windows source checkpoint cannot
+compile or sign Swift, inspect a generated entitlement/archive, run Apple's
+region-specific sandbox matrix, prove physical-iPhone presentation,
+accessibility, foreground/relaunch behavior, or process authenticated
+`RESCIND_CONSENT` notifications. PermissionKit/significant-change decisions,
+territorial minors policy, retention/disclosure, App Store age rating, exact
+quiz/claim reviews, and configured hosted evidence remain launch gates.
+Passing source/database/web checks does not establish legal compliance,
+clinical validity, Apple acceptance, product-market fit, or revenue.
+
 Apple 1.4.1 health-accuracy scrutiny, 2.5.18's sensitive-data advertising ban,
 5.1/5.1.2 privacy and use limits, and the FTC health-products substantiation
 standard are recorded as launch gates in the checkpoint. Whether a user-
@@ -363,8 +415,8 @@ health-targeted advertising remains unresolved; consent alone is not App Review
 or legal clearance.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now covers all 62 migrations through
-`0063`, all 17 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now covers all 64 migrations through
+`0065`, all 17 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

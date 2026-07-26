@@ -74,7 +74,8 @@ across every serving lane even if the denormalized product counter is stale.
   capability denial, separation of duties, lease/CAS races, RPC ACLs, immutable
   audit, and denial of direct table mutation.
 
-Migration `0063` and the CAT-08 source contract are local source candidates.
+Migration `0063`, its `0065` operator-transition/default-ACL repair, and the
+CAT-08 source contract are local source candidates.
 They do not replace the launch requirement for a separately deployed internal
 console, named operators, alerting, queue SLAs, hosted race/revocation/deletion
 evidence, human-simulated E2E, or professional review. Those remain launch

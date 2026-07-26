@@ -117,7 +117,7 @@ production evidence. Beta demand prioritizes review; it never becomes a
 product fact. The current self-selected beta design cannot support a market-representative claim.
 Real consented beta evidence, witnessed targets/decisions, signed reviews and
 readback, exact CAT-01/CAT-02 lineage, clean local/hosted full-chain verification
-through `0063`, and an activated launch catalog are absent, so CAT-03 remains `in_progress`.
+through `0065`, and an activated launch catalog are absent, so CAT-03 remains `in_progress`.
 Passing these source controls does not guarantee Apple acceptance, legal
 compliance, product efficacy, or revenue.
 

@@ -175,6 +175,23 @@ async function stopProcess(child) {
   detach();
 }
 
+async function removeBrowserProfile(userDataDir) {
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      rmSync(userDataDir, { force: true, maxRetries: 2, recursive: true, retryDelay: 150 });
+      return;
+    } catch (error) {
+      if (attempt === 3) {
+        process.stderr.write(
+          `Warning: browser profile cleanup deferred for ${userDataDir}: ${error.message}\n`,
+        );
+        return;
+      }
+      await delay(250);
+    }
+  }
+}
+
 function startExpoServer() {
   const command = isWindows ? (process.env.ComSpec ?? 'cmd.exe') : 'npm';
   const args = isWindows
@@ -195,16 +212,29 @@ function startExpoServer() {
         '--host',
         'localhost',
       ];
+  const serverEnvironment = { ...process.env };
+  for (const key of Object.keys(serverEnvironment)) {
+    const credentialNamed =
+      /(?:TOKEN|SECRET|PASSWORD|PASSCODE|API[_-]?KEY|AUTHORIZATION|COOKIE|PRIVATE[_-]?KEY|DSN)(?:_|$)/iu.test(
+        key,
+      );
+    if (key.startsWith('EXPO_PUBLIC_') || credentialNamed) delete serverEnvironment[key];
+  }
   const child = spawn(command, args, {
     cwd: repoRoot,
     env: {
-      ...process.env,
+      ...serverEnvironment,
       BROWSER: 'none',
       CI: '1',
+      EXPO_NO_DOTENV: '1',
+      EXPO_PUBLIC_APP_ENV: 'development',
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
+      ...(!accountIsolationMode ? { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner' } : {}),
       ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
       ...(accountIsolationMode ? { EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: 'signout_clear_retry' } : {}),
       EXPO_PUBLIC_E2E_LOCAL_RESET: '1',
+      EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '__BLOCKED_PLACEHOLDER__',
+      EXPO_PUBLIC_SUPABASE_URL: 'https://blocked-supabase-url.invalid',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
@@ -733,7 +763,9 @@ function writeReport(summary) {
     ? 'Invalid email code and successful recovery'
     : summary.accountIsolationMode
       ? 'Cleanup failure, retry, and signed-out direct routes'
-      : `Happy path / ${isLaunchFloorViewport ? 'launch-floor phone viewport' : 'stress viewport'}`;
+      : `Happy path plus age re-verification downgrade / ${
+          isLaunchFloorViewport ? 'launch-floor phone viewport' : 'stress viewport'
+        }`;
   const lines = [
     '# Human-Simulated E2E Run Report',
     '',
@@ -816,6 +848,18 @@ async function run() {
     await waitForText(client, 'Begin', 60_000);
     const welcome = await captureStep(client, '01-welcome');
 
+    await client.send('Page.navigate', { url: `${baseUrl}/today` });
+    await waitForPath(client, '/onboarding/age', 30_000);
+    await waitForText(client, 'First, your', 30_000);
+    const directProtectedAgeGate = await captureStep(client, '01a-direct-protected-age-gate');
+    assert(
+      !directProtectedAgeGate.bodyText.includes('Morning routine'),
+      'A direct protected route mounted Today content before age eligibility.',
+    );
+    await client.send('Page.navigate', { url: baseUrl });
+    await waitForPath(client, '/', 30_000);
+    await waitForText(client, 'Begin', 30_000);
+
     await clickByText(client, 'Begin');
     await waitForText(client, 'First, your', 30_000);
     await captureStep(client, '02-age-empty');
@@ -825,16 +869,23 @@ async function run() {
     await captureStep(client, '03-age-filled');
     await clickByText(client, 'Continue');
 
+    await waitForPath(client, '/onboarding/consent', 30_000);
+    await waitForText(client, 'Before the quiz', 30_000);
+    const postAgeSubmit = await captureStep(client, '03a-after-age-submit');
+    assert(
+      postAgeSubmit.bodyText.includes('Before the quiz'),
+      `Age submission did not reach consent. Current screen: ${postAgeSubmit.url} — ${postAgeSubmit.bodyText}`,
+    );
+    await captureStep(client, '04-consent');
+    await clickByText(client, 'I agree. Continue');
+    await waitForPath(client, '/onboarding/goals');
     await waitForText(client, 'What brings you here?');
-    await captureStep(client, '04-goals');
+    await captureStep(client, '05-goals');
     await clickByText(client, 'Clear skin', { exact: false });
     await clickByText(client, 'Barrier repair', { exact: false });
-    await captureStep(client, '05-goals-selected');
+    await captureStep(client, '06-goals-selected');
     await clickByText(client, 'Continue');
 
-    await waitForText(client, 'Before the quiz');
-    await captureStep(client, '06-consent');
-    await clickByText(client, 'I agree. Continue');
     await waitForPath(client, '/onboarding/quiz');
     await answerQuiz(client);
 
@@ -927,7 +978,18 @@ async function run() {
     await scrollTextIntoView(client, 'Explore first', { exact: false });
     const paywallExplore = await captureStep(client, '18-paywall-explore-visible');
     await clickByText(client, 'Explore first', { exact: false });
-    await waitForPath(client, '/routine/plan', 30_000);
+    await waitForCondition(
+      client,
+      `window.location.pathname.startsWith('/routine/plan') ||
+        (document.body?.innerText ?? '').includes('Explore first unavailable')`,
+      30_000,
+      'Explore first to open the routine plan or expose its recovery state',
+    );
+    const postExplore = await captureStep(client, '18a-after-explore-first');
+    assert(
+      postExplore.url.includes('/routine/plan'),
+      `Explore first did not open the routine plan. Current screen: ${postExplore.url} — ${postExplore.bodyText}`,
+    );
     await waitForText(client, 'Your routine, in order.', 30_000);
     await waitForText(client, 'Start today', 30_000);
     const routinePlan = await captureStep(client, '19-routine-plan-current');
@@ -989,6 +1051,59 @@ async function run() {
     });
     assertInteractiveControl(todayPmAfter, 'Glycolic 7%');
     assert(todayPmAfter.bodyText.includes('1 of 1'), 'PM check-off did not reach 1 of 1.');
+
+    let ageReverificationBefore = null;
+    let ageReverificationBlocked = null;
+    let ageReverificationDirectToday = null;
+    let ageReverificationReloadedToday = null;
+    if (!accountUpgradeMode && !accountIsolationMode) {
+      await client.send('Page.navigate', { url: `${baseUrl}/onboarding/age` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      await fillByLabel(client, 'Day of birth', '01');
+      await fillByLabel(client, 'Month of birth', '01');
+      await fillByLabel(client, 'Year of birth', String(new Date().getFullYear()));
+      ageReverificationBefore = await captureStep(client, '25-age-reverification-before-submit');
+      await clickByText(client, 'Continue');
+      await waitForText(client, 'You need to be at least 16', 30_000);
+      ageReverificationBlocked = await captureStep(client, '26-age-reverification-blocked');
+      assert(
+        !ageReverificationBlocked.bodyText.includes('Morning routine') &&
+          !ageReverificationBlocked.bodyText.includes('Evening routine'),
+        'Protected Today content remained mounted after the fresh age downgrade.',
+      );
+
+      await client.send('Page.navigate', { url: `${baseUrl}/today?routine=AM` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      ageReverificationDirectToday = await captureStep(
+        client,
+        '27-age-reverification-direct-today-blocked',
+      );
+      assert(
+        !ageReverificationDirectToday.bodyText.includes('Morning routine'),
+        'A direct Today route reopened after the in-process age downgrade.',
+      );
+
+      await client.send('Page.reload', { ignoreCache: true });
+      await waitForText(client, 'First, your', 60_000);
+      await client.send('Page.navigate', { url: `${baseUrl}/today?routine=AM` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      // CDP can observe the replacement document before Chrome has painted its
+      // first frame. Wait for the redirected age surface to become visual so
+      // the retained screenshot is evidence of the post-reload state.
+      await delay(1_000);
+      ageReverificationReloadedToday = await captureStep(
+        client,
+        '28-age-reverification-reload-today-blocked',
+      );
+      assert(
+        ageReverificationReloadedToday.bodyText.includes('First, your') &&
+          !ageReverificationReloadedToday.bodyText.includes('Morning routine'),
+        'The minimized re-verification tombstone did not keep Today closed after reload.',
+      );
+    }
 
     let accountBeforeSignOut = null;
     let accountBoundaryFailure = null;
@@ -1082,6 +1197,10 @@ async function run() {
       todayAmAfter,
       todayPmBefore,
       todayPmAfter,
+      ...(ageReverificationBefore ? { ageReverificationBefore } : {}),
+      ...(ageReverificationBlocked ? { ageReverificationBlocked } : {}),
+      ...(ageReverificationDirectToday ? { ageReverificationDirectToday } : {}),
+      ...(ageReverificationReloadedToday ? { ageReverificationReloadedToday } : {}),
       ...(accountBeforeSignOut ? { accountBeforeSignOut } : {}),
       ...(accountBoundaryFailure ? { accountBoundaryFailure } : {}),
       ...(accountBoundaryRetry ? { accountBoundaryRetry } : {}),
@@ -1126,11 +1245,16 @@ async function run() {
         : null,
       browserProblemLogCount: problemLogs.length,
       date: today,
-      endUrl: signedOutToday?.url ?? todayPmAfter.url,
+      endUrl:
+        signedOutToday?.url ??
+        ageReverificationReloadedToday?.url ??
+        ageReverificationDirectToday?.url ??
+        todayPmAfter.url,
       evidenceFiles: [
         '01-welcome.png',
+        '01a-direct-protected-age-gate.png',
         '03-age-filled.png',
-        '05-goals-selected.png',
+        '06-goals-selected.png',
         '09-products-empty.png',
         '12-products-after-3.png',
         '14-reveal-insight.png',
@@ -1145,6 +1269,14 @@ async function run() {
         '22-today-am-after-checkoff.png',
         '23-today-pm-before-checkoff.png',
         '24-today-pm-after-checkoff.png',
+        ...(!accountUpgradeMode && !accountIsolationMode
+          ? [
+              '25-age-reverification-before-submit.png',
+              '26-age-reverification-blocked.png',
+              '27-age-reverification-direct-today-blocked.png',
+              '28-age-reverification-reload-today-blocked.png',
+            ]
+          : []),
         ...(accountIsolationMode
           ? [
               '25-account-before-signout.png',
@@ -1160,7 +1292,7 @@ async function run() {
         ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
         : accountIsolationMode
           ? 'Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
-          : 'Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off.',
+          : 'Completed onboarding through Explore first, routine plan, Start today, AM and PM check-offs, then proved an under-threshold re-verification immediately closed protected providers and remained closed across direct Today navigation and reload.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -1193,6 +1325,22 @@ async function run() {
         exploreFirstLedToRoutinePlan: routinePlan.url.includes('/routine/plan'),
         notificationSkipLedToAccount: true,
         pmCheckoffReachedComplete: todayPmAfter.bodyText.includes('1 of 1'),
+        ageReverificationClosedProtectedProviders:
+          accountUpgradeMode ||
+          accountIsolationMode ||
+          (ageReverificationBlocked !== null &&
+            !ageReverificationBlocked.bodyText.includes('Morning routine') &&
+            !ageReverificationBlocked.bodyText.includes('Evening routine')),
+        ageReverificationDirectTodayStayedClosed:
+          accountUpgradeMode ||
+          accountIsolationMode ||
+          (ageReverificationDirectToday?.url.includes('/onboarding/age') === true &&
+            !ageReverificationDirectToday.bodyText.includes('Morning routine')),
+        ageReverificationReloadStayedClosed:
+          accountUpgradeMode ||
+          accountIsolationMode ||
+          (ageReverificationReloadedToday?.url.includes('/onboarding/age') === true &&
+            !ageReverificationReloadedToday.bodyText.includes('Morning routine')),
         signedOutShelfIsEmpty:
           !accountIsolationMode || signedOutShelf?.bodyText.includes('empty for now') === true,
         signedOutTodayIsEmpty:
@@ -1202,13 +1350,15 @@ async function run() {
         startTodayLedToToday: todayAfterStart.url.includes('/today'),
       },
       startCommand: shouldStartServer
-        ? `${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
+        ? `EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development ${!accountIsolationMode ? 'EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH=anonymous_owner ' : ''}${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
         : `Existing Expo web at ${baseUrl}`,
       startUrl: `${baseUrl}/?e2eReset=local`,
       steps: [
         'Reset local private state with dev-only fixture.',
-        'Began onboarding, entered valid adult DOB, selected Clear skin and Barrier repair.',
-        'Granted explicit health-data collection consent.',
+        'Verified direct protected-route entry failed closed to the age gate before any private Today content mounted.',
+        'Began onboarding and entered a valid adult DOB.',
+        'Granted explicit health-data collection consent before health-purpose inputs mounted.',
+        'Selected Clear skin and Barrier repair.',
         'Answered 12-question quiz with visible option buttons.',
         'Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.',
         accountUpgradeMode
@@ -1259,7 +1409,7 @@ async function run() {
     client?.close();
     await stopProcess(browser);
     await stopProcess(server);
-    rmSync(userDataDir, { recursive: true, force: true });
+    await removeBrowserProfile(userDataDir);
   }
 }
 

@@ -7433,8 +7433,10 @@ legal compliance, revenue, or product-market fit.
 ### Current catalog/database source-authority reconciliation (2026-07-22)
 
 Reconciled the CAT-02/CAT-03 launch/readiness documentation to the first 61
-migrations through their exact `20260722000062` artifact checkpoint. The CAT-08
-checkpoint below extends the current global source chain through `0063`.
+migrations through their exact `20260722000062` artifact checkpoint. At that
+checkpoint, CAT-08 extended the global source chain through `0063`; the
+subsequent CORE-01 forward migrations extend the current global source chain
+through `0065`.
 Foundational migration `0057` remains the
 CAT-02 transactional lifecycle authority; forward migration `0061` adds
 `benzoyl_peroxide` to the database staging allowlist while the offline v2
@@ -7466,8 +7468,9 @@ professional acceptance, or App Store decision is claimed. DB-06 remains
 ### CAT-08 operator-authority source checkpoint (2026-07-25)
 
 Migration `0063`, the bounded authenticated `catalog-operator` Edge surface,
-and the separate publishable-key-only internal-console source extend the current
-chain to 62 migrations and 17 deploy-by-default functions. The source candidate
+and the separate publishable-key-only internal-console source established the
+operator boundary now carried by the 64-migration chain and 17 deploy-by-default
+functions. The source candidate
 now denies direct `public`/`anon`/`authenticated` execution of all six operator
 RPCs. Edge verifies the exact presented token with `getClaims` plus `getUser`,
 requires its signed nonanonymous `aal2` subject/session binding, rechecks the
@@ -7515,6 +7518,94 @@ Production acceptance still requires exact hosted creation/rotation and catalog
 proof for the source-defined `NOINHERIT`, nonsuperuser, membership-free,
 ownership-free, execute-only backend identity, including the hosted extension
 function inventory and negative raw-table/Auth/control/TLS tests.
+
+Forward migration `20260726000065` repairs both runtime-ambiguous
+`catalog_operator_transition` conflict targets without rewriting already-applied
+`0063`, preserves the exact Edge-only ACL, and replaces PostgreSQL's global
+future-function `PUBLIC EXECUTE` default for the migration owner with an
+explicit-grant posture. Its exact migration-byte rehearsal passes PostgreSQL 15
+and 17. A fresh 64-migration local reset and the focused exact-role CAT-08 pgTAP
+file pass all 89 assertions, including capability denial before cleanup,
+lease/CAS/idempotency, owner export isolation, stale repair-proof denial, and
+source recommendation non-mutation.
+
+### CORE-01 age and skin-profile provenance source checkpoint (2026-07-26)
+
+Implemented an exact minimized age-policy receipt outside every health-data
+provider. The receipt retains only schema version 1, policy SHA-256
+`213a9fa27a479d336ca74edb858d780d568abf4166a43b586dd8bdc48f62fb1e`,
+and `eligible: true`; DOB, birth year, age, timestamps, and ineligible values
+are never retained. A fresh non-affirmative result first closes the live
+provider tree, then atomically replaces an older affirmative receipt with the
+exact minimized `{"receipt_version":1,"verification_required":true}`
+tombstone; it retains no threshold outcome or reason. Direct protected-route
+entry fails closed. Background/inactive transitions and fresh safe-route
+downgrades synchronously hide protected providers, foreground performs a fresh
+private-storage read instead of trusting the infinite query cache, stale reads
+cannot republish, and unavailable storage remains non-destructive and
+retryable. A total overwrite failure remains closed for the live process but
+cannot be described as durable after process termination.
+
+Added a first-party Expo iOS Declared Age Range source module and exact Boolean
+entitlement configuration. The Swift source is SDK/runtime guarded, requests
+only the fixed age gate 16, maps every known declaration and communication
+control, emits a deterministic request-bound response without exact age, and
+performs no logging, networking, or persistence. The TypeScript adapter remains
+literally `launch_blocked`: Windows source/autolinking checks do not establish
+Xcode compilation, archive signing, entitlement presence in the signed app,
+Apple sandbox behavior, App Store Server Notification handling, physical-device
+behavior, or legal/privacy approval.
+
+Froze the 12-question quiz and identity scorer with content hash
+`be00ee6008ca03fbcb53e7256432cd044e6131e9aecd5bf90809b2a57cde39bb`,
+scoring hash
+`ffd16579edad35b21377244c41af69419248faa3f8f2238183c58a5a8893c893`,
+and combined hash
+`95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16`.
+Local profile envelope v2 and migration `20260726000064` bind those versions,
+integer basis-point axes, exact DSPT, review state, tie state, and one or two
+canonical goals. Raw quiz answers remain only for pending/failed-save retry and
+are wiped from the provider after the durable derived profile succeeds. A fresh
+explicit quiz can atomically recover corrupt, legacy, future, or mismatched
+local profile bytes; ordinary reads/writes and storage failure remain
+non-destructive and fail closed. Server readers accept only the exact v2 tuple
+and fall back only when local authority is genuinely missing.
+
+The pre-0064 schema did not reserve version 2. All four new database checks are
+therefore intentionally `NOT VALID`: every post-migration insert/update is
+enforced, while a pre-existing malformed v2 namespace collision cannot abort
+deployment and remains unreadable to exact clients pending quarantine. The
+exact migration-byte upgrade rehearsal preserves such a collision while
+rejecting new bad provenance, score, profile, and future-version writes on both
+PostgreSQL 15 and 17.
+
+The explicit development-only anonymous-owner fixture now claims durable local
+ownership before publication, waits until the user is committed to Auth
+consumers, and carries only that already-claimed session across the Expo Router
+bootstrap/protected navigator remount in process memory. Configured Supabase,
+staging, production, release, missing/invalid flags, and a null session cannot
+activate or retain the fixture.
+
+The exact final-code 390 x 844 Expo-web run passed direct `/today` age fencing,
+age -> consent -> goals -> all 12 quiz questions, three-product intake, reveal,
+notifications, account skip, paywall, `Explore first`, generated routine,
+`Start today`, and AM/PM check-offs. It then passed an under-threshold
+re-verification from the eligible session, immediate protected-provider
+teardown, direct Today denial, and reload denial through the minimized
+tombstone. Evidence is in
+`test-results/human-e2e/2026-07-26/core01-age-profile-provenance-current/`;
+`summary.json` records `verdict: pass` and zero horizontal overflow on every
+summarized screen. Repository typecheck and lint pass. The full mobile suite
+passes 319 files / 3,800 tests, and the catalog-operator console retains 7 files
+/ 24 tests.
+
+CORE-01 remains `in_progress` and launch-blocked. Required external evidence
+still includes Xcode 26.2+ compilation/archive inspection, signed entitlement
+readback, Apple age-range sandbox and consent-rescission matrices, supported
+physical-iPhone lifecycle/accessibility/Dynamic Type testing, hosted Supabase
+v2/RLS/cutover proof, min-client enforcement, and named legal, privacy,
+clinical, scoring-content, App Review, and release approvals. No App Store,
+legal, safety, medical, market, or revenue acceptance is claimed.
 
 ## Open questions for the founder
 

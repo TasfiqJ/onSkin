@@ -14,9 +14,9 @@ import {
   ONBOARDING_QUIZ,
   scoreQuiz,
   type QuizAnswers,
-  type SkinProfileResult,
+  type ScoredQuizProfileResult,
 } from './quiz';
-import { setStoredSkinProfile } from './skinProfileStore';
+import { setStoredSkinProfileFromExplicitQuiz } from './skinProfileStore';
 import { hasCurrentHealthDataCollectionConsent } from './healthConsentStore';
 
 // In-progress onboarding answers, accumulated client-side and persisted at the
@@ -25,9 +25,10 @@ type OnboardingContextValue = {
   goals: GoalId[];
   toggleGoal: (id: GoalId) => void;
   quizAnswers: QuizAnswers;
+  profileResult: ScoredQuizProfileResult | null;
   setAnswer: (questionId: string, value: string | string[]) => void;
-  computeResult: () => SkinProfileResult;
-  persistSkinProfile: () => Promise<SkinProfileResult>;
+  computeResult: () => ScoredQuizProfileResult;
+  persistSkinProfile: () => Promise<ScoredQuizProfileResult>;
   reset: () => void;
 };
 
@@ -39,11 +40,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [goals, setGoals] = useState<GoalId[]>([]);
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers>({});
+  const [profileResult, setProfileResult] = useState<ScoredQuizProfileResult | null>(null);
 
   const value = useMemo<OnboardingContextValue>(
     () => ({
       goals,
       toggleGoal(id) {
+        setProfileResult(null);
         setGoals((prev) => {
           if (prev.includes(id)) return prev.filter((g) => g !== id);
           if (prev.length >= MAX_GOALS) return [prev[1]!, id]; // keep most recent two
@@ -51,11 +54,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         });
       },
       quizAnswers,
+      profileResult,
       setAnswer(questionId, val) {
+        setProfileResult(null);
         setQuizAnswers((prev) => ({ ...prev, [questionId]: val }));
       },
       computeResult() {
-        return scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
+        return profileResult ?? scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
       },
       async persistSkinProfile() {
         const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
@@ -75,12 +80,18 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
           const completedAt = new Date().toISOString();
           // Local-first (D-029): record completion on-device FIRST so the entry
           // gate (app/index.tsx) recognizes this user as onboarded even if the
-          // server write fails or no backend exists yet. This is the v1 source of
-          // truth; the Supabase insert below is a best-effort mirror that must not
-          // throw past this point (a returning user must never be re-onboarded).
-          await setStoredSkinProfile({ result, goals, completedAt });
+          // server write fails or no backend exists yet. The exact v2 contract
+          // receipt is the local source of truth; the Supabase insert below is a
+          // best-effort mirror that must not throw past this point (a returning
+          // user must never be re-onboarded).
+          await setStoredSkinProfileFromExplicitQuiz({ result, goals, completedAt });
+          // The current receipt is durable. Keep only the scored result needed
+          // by the remaining onboarding screens and discard raw answers,
+          // including pregnancy and sensitivity responses, from provider memory.
+          setProfileResult(result);
+          setQuizAnswers({});
           lease.assertCurrent();
-          await Promise.all([
+          await Promise.allSettled([
             queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] }),
             queryClient.invalidateQueries({ queryKey: ['shelf'] }),
             queryClient.invalidateQueries({ queryKey: ['ramp'] }),
@@ -99,13 +110,27 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
               sensitive_resistant: result.axisScores.sensitive_resistant,
               pigmented_non: result.axisScores.pigmented_non,
               wrinkled_tight: result.axisScores.wrinkled_tight,
+              dspt: result.dspt,
+              oily_dry_basis_points: result.axesBasisPoints.oily_dry,
+              sensitive_resistant_basis_points: result.axesBasisPoints.sensitive_resistant,
+              pigmented_non_basis_points: result.axesBasisPoints.pigmented_non,
+              wrinkled_tight_basis_points: result.axesBasisPoints.wrinkled_tight,
               fitzpatrick: result.fitzpatrick,
               monk_tone: result.monkTone,
               sensitivities: result.sensitivities,
               pregnancy_status: result.pregnancyStatus,
               goals,
               completed_at: completedAt,
-              version: 1,
+              version: 2,
+              quiz_contract_id: result.provenance.contractId,
+              quiz_content_version: result.provenance.contentVersion,
+              quiz_scoring_version: result.provenance.scoringVersion,
+              quiz_output_schema_version: result.provenance.outputSchemaVersion,
+              quiz_content_sha256: result.provenance.contentSha256,
+              quiz_scoring_sha256: result.provenance.scoringSha256,
+              quiz_contract_sha256: result.provenance.contractSha256,
+              quiz_review_status: result.provenance.reviewStatus,
+              quiz_pole_tie_rule: result.provenance.poleTieRule,
             });
             lease.assertCurrent();
             if (error) throw error;
@@ -121,9 +146,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       reset() {
         setGoals([]);
         setQuizAnswers({});
+        setProfileResult(null);
       },
     }),
-    [goals, queryClient, quizAnswers],
+    [goals, profileResult, queryClient, quizAnswers],
   );
 
   return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;

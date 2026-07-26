@@ -1,9 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
+import {
+  applyCurrentServerSkinProfileFilters,
+  CURRENT_SERVER_SKIN_PROFILE_SELECT,
+  isServerSkinProfileFallbackPermitted,
+  parseCurrentServerSkinProfile,
+} from '@/features/onboarding/serverSkinProfile';
+import { readStoredSkinProfile } from '@/features/onboarding/skinProfileStore';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { runHealthDataWriteOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
+import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
 import { isTrendInsightsConsented } from './consent';
@@ -18,20 +26,28 @@ import { classifyChange, MIN_CAPTURES } from './trend';
 // renders, while the classification + the fairness floor are the real, tested logic. ***
 // Nothing is uploaded; there is no score, ever.
 
-async function readMonkBand(): Promise<number | null> {
+export async function readMonkBand(): Promise<number | null> {
   const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
   if (!expectedOwnerUserId) return null;
   return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const local = await readStoredSkinProfile();
+    lease.assertCurrent();
+    if (local.status === 'available') return local.profile.result.monkTone;
+    // A corrupt, unsupported, stale-policy, or unreadable device record is not
+    // absence and cannot be bypassed by a potentially stale server mirror.
+    if (!isServerSkinProfileFallbackPermitted(local.status) || !isSupabaseConfigured) return null;
+
     try {
       lease.assertCurrent();
-      const { data } = await supabase
-        .from('skin_profiles')
-        .select('monk_tone')
+      const { data, error } = await applyCurrentServerSkinProfileFilters(
+        supabase.from('skin_profiles').select(CURRENT_SERVER_SKIN_PROFILE_SELECT),
+      )
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
       lease.assertCurrent();
-      return data?.monk_tone ?? null;
+      if (error) return null;
+      return parseCurrentServerSkinProfile(data)?.monk_tone ?? null;
     } catch {
       lease.assertCurrent();
       return null;

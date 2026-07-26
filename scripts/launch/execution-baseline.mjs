@@ -27,7 +27,7 @@ export const readinessLabels = [
 
 export const features = [
   ['F-01', 1, 'brand_identity', 'Rebrand and identity migration', 'launch-blocked'],
-  ['F-02', 2, 'onboarding_consent', 'Onboarding, age gate, and consent', 'implemented'],
+  ['F-02', 2, 'onboarding_consent', 'Onboarding, age gate, and consent', 'launch-blocked'],
   [
     'F-03',
     3,

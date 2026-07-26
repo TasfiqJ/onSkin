@@ -423,8 +423,8 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains a 62-migration source candidate through
-`20260722000063`, targeted hand-maintained
+The repo contains a 64-migration source candidate through
+`20260726000065`, targeted hand-maintained
 RPC types with DB-08 still open, 17 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
 current source inventory classifies all 80 RLS-enabled public tables: 36 directly
@@ -434,17 +434,22 @@ service-private authorities, four global clinical/editorial relations, and four
 catalog dictionary/legacy authorities; seven additional CAT-03 authorities are
 sealed in the `private` schema; `0063` adds a separately contracted set of 15
 private CAT-08 operator-authority relations and the bounded `catalog-operator`
-Edge surface. This is a source-contract classification, not hosted evidence.
+Edge surface; `0064` adds the hash-bound quiz/profile provenance envelope, and
+`0065` repairs the operator transition conflict target plus the global default
+PUBLIC function-execute ACL. This is a source-contract classification, not
+hosted evidence.
 The last recorded CAT-02 Docker baseline covered the then-
 current 35-assertion partial suite and remains historical. The current source
 plans contain 50 schema, 218 CAT-02, 99 CAT-03, 53 CAT-07, 58 catalog-serving,
-and 114 Apple-lifecycle assertions, plus the CAT-08 operator pgTAP plan. A fresh
-62-migration reset and execution of
-those current plans, error-level schema lint, migration-shadow drift check, and
-temporary type generation remain required before this revision can claim local
-database replay evidence.
-PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system and
-the separate RevenueCat/app-grant entitlement authorities.
+and 114 Apple-lifecycle assertions, plus 48 quiz/profile-provenance and 89
+CAT-08 operator assertions. A fresh 64-migration reset and the focused CAT-08
+exact-role plan pass locally. The exhaustive current structural plans,
+error-level schema lint, migration-shadow drift check, temporary type
+generation, and two-connection rehearsal are running and remain required before
+this revision can claim complete local database replay evidence.
+PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system,
+the separate RevenueCat/app-grant entitlement authorities, and the `0064`/
+`0065` forward-upgrade paths.
 
 The DB-06 source procedure is now complete for a first empty staging project.
 It deploys only a Git-blob-verified immutable clean-main snapshot through the
@@ -530,11 +535,12 @@ full reviewed-record decision witnessed before holdout access, a separately
 consented/privacy-minimized beta-shelf coverage corpus, curation/holdout
 separation, exact multi-batch/four-scope CAT-02 memberships, confidence-bound
 quality gates, and qualified review. Current CAT-03 review and database-readback
-artifacts must attest exact latest migration `20260722000062`. No clean reset or
-pgTAP execution of the complete current chain through `0063`, hosted staging/
-release/supersession race and serving
-drill, real beta corpus, witnessed target/decision, signed review/readback, or
-active catalog exists. Beta demand prioritizes independently sourced rows; it
+artifacts must attest exact latest migration `20260722000062`. A clean local
+reset through the 64-migration source head `0065` and a focused 89-assertion
+CAT-08 exact-role run now pass. The exhaustive current-chain structural/
+two-connection gate, hosted staging/release/supersession race and serving drill,
+real beta corpus, witnessed target/decision, signed review/readback, and active
+catalog remain open. Beta demand prioritizes independently sourced rows; it
 never becomes a product fact.
 
 This is not a hosted deployment or provider proof. Full generated-type parity,
@@ -559,8 +565,8 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 17-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 62
-  migrations through `0063`, redeploys the manifest, retains linked types
+  immediately rereads the full empty-target boundary, applies all 64
+  migrations through `0065`, redeploys the manifest, retains linked types
   without changing repository types, and leaves
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
@@ -830,8 +836,11 @@ to avoid copying or implying proprietary skin typing frameworks.
 
 Current implementation note:
 
-- `apps/mobile/src/features/onboarding/quiz.ts` is still explicitly
-  placeholder-gated.
+- `apps/mobile/src/features/onboarding/quizContract.ts` now freezes and hashes
+  one exact draft content/scoring contract, and `quiz.ts` rejects any cloned,
+  incomplete, extra-key, duplicate, invalid, or noncanonical answer set.
+- The current draft remains marked `launch-blocked`; deterministic source and
+  database provenance are not professional IP, clinical, or legal approval.
 - `docs/phase-3/quiz-fto-summary.md` is the review packet entry point.
 
 Exit criteria:
@@ -839,7 +848,8 @@ Exit criteria:
 - final quiz copy is counsel-reviewed;
 - age gate/minors policy is clear;
 - copy avoids diagnosis and unsupported claims;
-- reviewed copy version is recorded.
+- the content, scoring, and combined SHA-256 values reviewed by counsel are
+  recorded, and any later semantic change invalidates that review.
 
 ## B-PRIVACY-COPY - Policies and consent copy
 
@@ -1187,8 +1197,10 @@ Exit criteria:
 - migration `0057` passes the hosted two-connection replay, conflict,
   correction, source-withdrawal, promotion, dependency-serving, and rollback
   drill for the exact reviewed batch;
-- the complete migration chain through `0063`, with `0058` as its foundational
-  CAT-03 authority, passes clean local and hosted pgTAP, two-connection replay/
+- the complete migration chain through `0065`, with `0058` as its foundational
+  CAT-03 authority and `0064`/`0065` as forward-only profile-provenance and
+  operator-transition/default-ACL repairs, passes clean local and hosted pgTAP,
+  two-connection replay/
   staging/release/supersession/retirement races, successor isolation, direct-
   table denial including `service_role`, dependency-serving suppression, and
   rollback drills for the exact signed campaign;

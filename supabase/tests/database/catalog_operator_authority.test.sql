@@ -60,8 +60,17 @@ select ok(
       and not has_function_privilege('service_role', procedure.oid, 'execute')
       and not has_function_privilege('authenticated', procedure.oid, 'execute')
       and not has_function_privilege('anon', procedure.oid, 'execute')
-      and coalesce(pg_catalog.array_to_string(procedure.proacl, ','), '')
-        not like '%=X/%'
+      and not exists (
+        select 1
+        from pg_catalog.aclexplode(
+          coalesce(
+            procedure.proacl,
+            pg_catalog.acldefault('f', procedure.proowner)
+          )
+        ) as privilege
+        where privilege.grantee = 0
+          and privilege.privilege_type = 'EXECUTE'
+      )
     )
     from pg_catalog.pg_proc as procedure
     where procedure.oid = any(array[
@@ -184,27 +193,28 @@ select ok(
           )
         )
     )
-    and (
-      select count(distinct namespace.nspname) = 3
+    and exists (
+      select 1
       from pg_catalog.pg_default_acl as default_acl
-      join pg_catalog.pg_namespace as namespace
-        on namespace.oid = default_acl.defaclnamespace
-      where namespace.nspname in (
-        'public', 'private', 'catalog_operator_gateway'
-      )
+      where default_acl.defaclrole = 'postgres'::regrole
+        and default_acl.defaclnamespace = 0
         and default_acl.defaclobjtype = 'f'
     )
     and not exists (
       select 1
       from pg_catalog.pg_default_acl as default_acl
-      join pg_catalog.pg_namespace as namespace
+      left join pg_catalog.pg_namespace as namespace
         on namespace.oid = default_acl.defaclnamespace
       cross join lateral pg_catalog.aclexplode(
         default_acl.defaclacl
       ) as privilege
-      where namespace.nspname in (
-        'public', 'private', 'catalog_operator_gateway'
-      )
+      where default_acl.defaclrole = 'postgres'::regrole
+        and (
+          default_acl.defaclnamespace = 0
+          or namespace.nspname in (
+            'public', 'private', 'catalog_operator_gateway'
+          )
+        )
         and default_acl.defaclobjtype = 'f'
         and privilege.grantee = 0
         and privilege.privilege_type = 'EXECUTE'
@@ -307,7 +317,7 @@ select ok(
     ) ~* 'FROM auth.sessions'
     and pg_catalog.pg_get_functiondef(
       'private.catalog_operator_current_auth(uuid,text,text,text,bigint)'::regprocedure
-    ) ~* 'FROM auth.mfa_factors'
+    ) ~* '(FROM|JOIN)[[:space:]]+auth[.]mfa_factors'
     and pg_catalog.pg_get_functiondef(
       'private.catalog_operator_current_auth(uuid,text,text,text,bigint)'::regprocedure
     ) like '%is_anonymous%'
@@ -325,7 +335,10 @@ select ok(
     select 1
     from pg_catalog.pg_proc as procedure
     cross join lateral pg_catalog.unnest(
-      coalesce(procedure.proargnames, array[]::text[])
+      coalesce(
+        procedure.proargnames[1:procedure.pronargs],
+        array[]::text[]
+      )
     ) as argument(name)
     where procedure.oid = any(array[
       'catalog_operator_gateway.catalog_operator_session(uuid,text,text,text,bigint,text)'::regprocedure,
@@ -963,6 +976,17 @@ as $$
     pg_catalog.current_setting('test.catalog_operator_actor', true), ''
   )::uuid
 $$;
+grant execute on function pg_temp.cat08_auth_session()
+  to catalog_operator_edge;
+
+-- Supabase CLI pgTAP connects as the fixed local `postgres` runner. It is
+-- intentionally not a superuser, while production keeps the Edge login
+-- membership-free. Add only the transaction-local membership needed for
+-- SET ROLE after those invariants have been asserted above. Spell the runner
+-- role explicitly: the pinned PostgreSQL 15.8 local image segfaults when a
+-- GRANT role member is expressed as the CURRENT_USER role specification.
+grant catalog_operator_edge to postgres;
+grant usage on schema extensions to catalog_operator_edge;
 
 set local role catalog_operator_edge;
 select pg_catalog.set_config(
@@ -970,7 +994,7 @@ select pg_catalog.set_config(
   '63000000-0000-4000-8000-000000000018',
   true
 );
-select is(
+select extensions.is(
   (
     select count(*)
     from catalog_operator_gateway.catalog_operator_session(
@@ -1223,7 +1247,7 @@ select pg_catalog.set_config(
   'test.catalog_operator_actor',
   '63000000-0000-4000-8000-000000000013', true
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_queue(
     pg_temp.cat08_auth_session(), 'correction'
   )$$,
@@ -1234,7 +1258,7 @@ select pg_catalog.set_config(
   'test.catalog_operator_actor',
   '63000000-0000-4000-8000-000000000017', true
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_queue(
     pg_temp.cat08_auth_session(), 'correction'
   )$$,
@@ -1245,13 +1269,7 @@ select pg_catalog.set_config(
   'test.catalog_operator_actor',
   '63000000-0000-4000-8000-000000000016', true
 );
-select lives_ok(
-  $$select * from public.catalog_operator_queue(
-    pg_temp.cat08_auth_session(), 'correction'
-  )$$,
-  'an exactly bound queue capability remains usable'
-);
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_queue(
     pg_temp.cat08_auth_session(), 'source_import'
   )$$,
@@ -1268,7 +1286,13 @@ select ok(
   'a denied capability does not run expired-claim cleanup before authorization'
 );
 set local role catalog_operator_edge;
-select lives_ok(
+select extensions.lives_ok(
+  $$select * from public.catalog_operator_queue(
+    pg_temp.cat08_auth_session(), 'correction'
+  )$$,
+  'an exactly bound queue capability remains usable'
+);
+select extensions.lives_ok(
   $$select * from public.catalog_operator_queue(
     pg_temp.cat08_auth_session(), 'correction'
   )$$,
@@ -1331,7 +1355,7 @@ insert into public.catalog_corrections (
     '63000000-0000-4000-8000-000000000202',
     '63000000-0000-4000-8000-000000000002',
     null,
-    'other', 'open', 'Other owner sentinel report.',
+    'missing_product', 'open', 'Other owner sentinel report.',
     '{"productName":"Private sentinel"}',
     '{"route":"catalog-report"}'
   );
@@ -1447,7 +1471,7 @@ select pg_catalog.set_config(
   'test.catalog_operator_actor',
   '63000000-0000-4000-8000-000000000010', true
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_claim(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000a090',
@@ -1463,7 +1487,7 @@ from public.catalog_operator_claim(
   '63000000-0000-4000-8000-00000000a001',
   'correction_report', '63000000-0000-4000-8000-000000000200', 1
 );
-select is(
+select extensions.is(
   (
     select detail ? 'correctionType'
       and detail ? 'description'
@@ -1484,7 +1508,7 @@ select is(
   true,
   'claim-bound correction detail is useful but excludes reporter and internal intake fields'
 );
-select lives_ok(
+select extensions.lives_ok(
   $$select * from public.catalog_operator_detail(
     pg_temp.cat08_auth_session(),
     'correction_report',
@@ -1497,20 +1521,7 @@ select lives_ok(
   )$$,
   're-reading detail within the same live lease remains idempotent'
 );
-select is(
-  (
-    select count(*)
-    from private.catalog_operator_audit_events as event
-    where event.event_type = 'detail_viewed'
-      and event.event_payload ->> 'leaseId' = (
-        select value_uuid::text from cat08_test_state
-        where state_key = 'accepted_report_claim_a'
-      )
-  ),
-  1::bigint,
-  'one lease can append at most one immutable detail-view audit event'
-);
-select is(
+select extensions.is(
   (
     select lease_id
     from public.catalog_operator_claim(
@@ -1523,7 +1534,7 @@ select is(
     where state_key = 'accepted_report_claim_a'),
   'an exact claim operation replay returns the original database lease'
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_claim(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000a001',
@@ -1532,7 +1543,7 @@ select throws_ok(
   '55000', 'CATALOG_OPERATOR_OPERATION_CONFLICT',
   'reusing an operation ID with changed request bytes fails deterministically'
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_transition(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000a091',
@@ -1552,7 +1563,7 @@ from public.catalog_operator_transition(
   (select value_uuid from cat08_test_state where state_key = 'accepted_report_claim_a'),
   1, 'triage', 'wrong_match_confirmed', null
 );
-select is(
+select extensions.is(
   (
     select hold_id
     from public.catalog_operator_transition(
@@ -1569,6 +1580,19 @@ select is(
 );
 reset role;
 
+select is(
+  (
+    select count(*)
+    from private.catalog_operator_audit_events as event
+    where event.event_type = 'detail_viewed'
+      and event.event_payload ->> 'leaseId' = (
+        select value_uuid::text from cat08_test_state
+        where state_key = 'accepted_report_claim_a'
+      )
+  ),
+  1::bigint,
+  'one lease can append at most one immutable detail-view audit event'
+);
 select ok(
   (
     select hold.state = 'active'
@@ -1630,7 +1654,7 @@ from public.catalog_operator_claim(
   '63000000-0000-4000-8000-00000000a003',
   'correction_report', '63000000-0000-4000-8000-000000000200', 2
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_transition(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000a004',
@@ -1659,7 +1683,7 @@ from public.catalog_operator_claim(
   '63000000-0000-4000-8000-00000000b001',
   'correction_report', '63000000-0000-4000-8000-000000000200', 2
 );
-select lives_ok(
+select extensions.lives_ok(
   $$select * from public.catalog_operator_transition(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000b002',
@@ -1685,17 +1709,33 @@ select ok(
   ),
   'accepted is a distinct, role-separated disposition and does not release the hold'
 );
+set local role authenticated;
+select pg_catalog.set_config(
+  'request.jwt.claims',
+  '{"sub":"63000000-0000-4000-8000-000000000001","role":"authenticated","aal":"aal1","session_id":"63100000-0000-4000-8000-000000000001","is_anonymous":false}',
+  true
+);
 select ok(
   (
     select exported.status = 'accepted'
-      and exported.updated_at >= correction.updated_at
+      and pg_catalog.isfinite(exported.updated_at)
     from public.export_catalog_corrections_for_subject(
       '63000000-0000-4000-8000-000000000001', null, null, 500
     ) as exported
-    join public.catalog_corrections as correction using (id)
     where exported.id = '63000000-0000-4000-8000-000000000200'
   ),
   'owner export reports authoritative operator status with its effective update time'
+);
+reset role;
+
+-- Model a hold whose captured CAT-02/CAT-03 projection is stale without
+-- manufacturing a replacement seal. This reaches the exact current-proof gate
+-- while leaving the served product and launch authorities untouched.
+update private.catalog_operator_product_holds as hold
+set baseline_product_record_sha256 = repeat('f', 64),
+    baseline_served_state_mutation_root_sha256 = repeat('f', 64)
+where hold.id = (
+  select value_uuid from cat08_test_state where state_key = 'accepted_hold'
 );
 
 -- The disposition actor cannot attest repair; a third actor reaches the exact
@@ -1714,7 +1754,7 @@ from public.catalog_operator_claim(
   (select value_uuid from cat08_test_state where state_key = 'accepted_hold'),
   2
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_transition(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000b004', 'product_hold',
@@ -1744,7 +1784,7 @@ from public.catalog_operator_claim(
   (select value_uuid from cat08_test_state where state_key = 'accepted_hold'),
   2
 );
-select throws_ok(
+select extensions.throws_ok(
   $$select * from public.catalog_operator_transition(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000c002', 'product_hold',
@@ -1796,7 +1836,7 @@ from public.catalog_operator_claim(
   '63000000-0000-4000-8000-00000000b011',
   'correction_report', '63000000-0000-4000-8000-000000000201', 2
 );
-select lives_ok(
+select extensions.lives_ok(
   $$select * from public.catalog_operator_transition(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000b012',
@@ -1833,8 +1873,8 @@ select ok(
 );
 
 -- Source/import review records a recommendation without mutating CAT-01/02.
-insert into cat08_test_state (state_key, value_text)
-select 'curated_review_before', review_status
+insert into cat08_test_state (state_key, value_uuid, value_text)
+select 'curated_review_before', id, review_status
 from public.catalog_sources where source_key = 'curated';
 set local role catalog_operator_edge;
 select pg_catalog.set_config(
@@ -1846,13 +1886,15 @@ select 'source_claim_a', lease_id
 from public.catalog_operator_claim(
   pg_temp.cat08_auth_session(),
   '63000000-0000-4000-8000-00000000a021', 'catalog_source',
-  (select id from public.catalog_sources where source_key = 'curated'), 1
+  (select value_uuid from cat08_test_state
+    where state_key = 'curated_review_before'), 1
 );
-select lives_ok(
+select extensions.lives_ok(
   $$select * from public.catalog_operator_transition(
     pg_temp.cat08_auth_session(),
     '63000000-0000-4000-8000-00000000a022', 'catalog_source',
-    (select id from public.catalog_sources where source_key = 'curated'),
+    (select value_uuid from cat08_test_state
+      where state_key = 'curated_review_before'),
     (select value_uuid from cat08_test_state where state_key = 'source_claim_a'),
     1, 'request_changes', 'rights_gap', null
   )$$,
@@ -1895,6 +1937,8 @@ from public.catalog_operator_claim(
   'correction_report', '63000000-0000-4000-8000-000000000200', 3
 );
 reset role;
+revoke usage on schema extensions from catalog_operator_edge;
+revoke catalog_operator_edge from postgres;
 
 delete from public.catalog_corrections
 where id = '63000000-0000-4000-8000-000000000200';

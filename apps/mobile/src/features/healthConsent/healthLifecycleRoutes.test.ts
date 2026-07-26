@@ -8,6 +8,8 @@ const read = (path: string) => readFileSync(`${SRC}/${path}`, 'utf8');
 describe('health lifecycle route contract', () => {
   it('mounts the lifecycle gate above every health provider and route', () => {
     const root = read('app/_layout.tsx');
+    const protectedStack = root.lastIndexOf('<Stack screenOptions=');
+    expect(protectedStack).toBeGreaterThan(-1);
     expect(root.indexOf('<PrivateDataAvailabilityGate>')).toBeLessThan(
       root.indexOf('<HealthDataLifecycleGate>'),
     );
@@ -18,9 +20,7 @@ describe('health lifecycle route contract', () => {
       root.indexOf('<IntakeProvider>'),
     );
     expect(root.indexOf('<HealthDataLifecycleGate>')).toBeLessThan(root.indexOf('<OfflineSync />'));
-    expect(root.indexOf('<HealthDataLifecycleGate>')).toBeLessThan(
-      root.indexOf('<Stack screenOptions='),
-    );
+    expect(root.indexOf('<HealthDataLifecycleGate>')).toBeLessThan(protectedStack);
   });
 
   it('keeps account deletion and health withdrawal as separate controls', () => {

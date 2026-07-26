@@ -54,13 +54,13 @@ function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
 }
 
 export default function RevealScreen() {
-  const { computeResult, quizAnswers } = useOnboarding();
+  const { computeResult, profileResult, quizAnswers } = useOnboarding();
   const planResult = usePlan();
   const trackedRevealInsight = useRef(false);
   const quizCompletion = useMemo(() => getQuizCompletionState(quizAnswers), [quizAnswers]);
   const result = useMemo(
-    () => (quizCompletion.complete ? computeResult() : null),
-    [computeResult, quizCompletion.complete],
+    () => profileResult ?? (quizCompletion.complete ? computeResult() : null),
+    [computeResult, profileResult, quizCompletion.complete],
   );
   const firstInsight = planResult.data
     ? routineFirstInsightCopy(planResult.data.plan, planResult.data.isExample)

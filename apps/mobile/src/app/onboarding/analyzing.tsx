@@ -17,8 +17,9 @@ function devProfileSaveFailureMode(): 'once' | null {
 // Uses a lightweight RN Animated pulse as a PLACEHOLDER for the recommended Rive
 // hero (BLOCKED: B-VERIFY-RIVE-LOTTIE). Persists the skin profile, then reveals.
 export default function AnalyzingScreen() {
-  const { goals, persistSkinProfile, quizAnswers } = useOnboarding();
+  const { goals, persistSkinProfile, profileResult, quizAnswers } = useOnboarding();
   const quizCompletion = getQuizCompletionState(quizAnswers);
+  const hasProfileResult = profileResult !== null || quizCompletion.complete;
   const [pulse] = useState(() => new Animated.Value(0));
   const [saveError, setSaveError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
@@ -27,7 +28,7 @@ export default function AnalyzingScreen() {
   const useNativeAnimationDriver = Platform.OS !== 'web';
 
   useEffect(() => {
-    if (!quizCompletion.complete) {
+    if (!hasProfileResult) {
       router.replace('/onboarding/quiz');
       return;
     }
@@ -60,8 +61,9 @@ export default function AnalyzingScreen() {
 
     // Persist the local completion record before reveal. Without that durable
     // signal, a cold start can force the user back through onboarding.
-    const profileSave =
-      profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
+    const profileSave = profileResult
+      ? Promise.resolve(profileResult)
+      : profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
         ? (() => {
             simulatedProfileSaveFailureUsed.current = true;
             return Promise.reject(new Error('E2E_PROFILE_SAVE_FAILURE'));
@@ -87,10 +89,11 @@ export default function AnalyzingScreen() {
     };
   }, [
     goals.length,
+    hasProfileResult,
     persistSkinProfile,
+    profileResult,
     profileSaveFailureMode,
     pulse,
-    quizCompletion.complete,
     retryKey,
     useNativeAnimationDriver,
   ]);

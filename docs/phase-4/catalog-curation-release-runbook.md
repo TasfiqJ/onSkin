@@ -517,7 +517,11 @@ atomically release, or retire a campaign. API roles cannot directly read or
 mutate sealed curation authority.
 
 The current CAT-03 artifact checkpoint ends at migration `0062`; the global
-deployment chain continues through CAT-08 migration `0063`. Three covered indexes bound
+deployment chain continues through migration `0065`. Migration `0063`
+establishes CAT-08 operator authority, `0064` adds exact output-only
+skin-profile quiz provenance without raw answers or answer hashes, and `0065`
+repairs the CAT-08 transition conflict targets plus the global function default
+ACL. Three covered indexes bound
 the batch/record digest, retained revision, and retained promotion-effect
 authority lookups. The membership function pushes the already-required staged
 record digest equality into the exact staged-record join without changing the
@@ -671,7 +675,7 @@ Source verification must include:
   rehearsal that includes the exact `0062` bytes and tests its three indexes,
   trigger/ACL metadata, zero/partial/exact/overflow/root/released-state guards,
   and rollback; this does not replace exact full-chain reset evidence;
-- a clean migration reset through `0063` and execution of the current
+- a clean migration reset through `0065` and execution of the current
   99-assertion CAT-03 pgTAP contract; and
 - repository typecheck, lint, tests, and source-policy/worklist audits.
 
@@ -738,7 +742,7 @@ CAT-03 stays `in_progress` until all are true:
   eligible records are present in the exact released campaign;
 - the holdout meets every predeclared confidence-bound and minimum-denominator
   gate, with zero open P0/P1 and zero below-usable recommendation exposure;
-- the complete migration chain through `0063`, with `0058` as its foundational
+- the complete migration chain through `0065`, with `0058` as its foundational
   CAT-03 authority, passes clean local and hosted reset, pgTAP, race, serving,
   activation, retirement, and rollback verification; and
 - an independent database verifier signs the exact readback receipt after the

@@ -4,6 +4,8 @@ import type {
   StoredSkinProfile,
   StoredSkinProfileRead,
 } from '@/features/onboarding/skinProfileStore';
+import { CURRENT_SERVER_SKIN_PROFILE_PROVENANCE } from '@/features/onboarding/serverSkinProfile';
+import { QUIZ_SCORING_PROVENANCE } from '@/features/onboarding/quizContract';
 
 import { readProfileBits, savePregnancyStatus } from './profile';
 import { moistureFromAxis, sensitivityFromAxis } from './profileMapping';
@@ -14,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   consentCurrent: true,
   supabaseConfigured: false,
   serverData: null as Record<string, unknown> | null,
+  serverError: null as { message: string } | null,
   from: vi.fn(),
   leaseOpen: true,
   updateStoredPregnancyStatus: vi.fn(),
@@ -68,29 +71,63 @@ const storedProfile = (input: {
   sensitiveResistant: number;
   pregnancyStatus?: StoredSkinProfile['result']['pregnancyStatus'];
   goals?: StoredSkinProfile['goals'];
-}): StoredSkinProfile => ({
-  result: {
-    axes: {
-      oily_dry: 0.5,
-      sensitive_resistant: 0.5,
-      pigmented_non: 0.5,
-      wrinkled_tight: 0.5,
+}): StoredSkinProfile => {
+  const basisPoints = (raw: number) => ((raw + 4) * 10_000) / 8;
+  const oilyDryBasisPoints = basisPoints(input.oilyDry);
+  const sensitiveResistantBasisPoints = basisPoints(input.sensitiveResistant);
+  return {
+    result: {
+      axes: {
+        oily_dry: oilyDryBasisPoints / 10_000,
+        sensitive_resistant: sensitiveResistantBasisPoints / 10_000,
+        pigmented_non: 0.5,
+        wrinkled_tight: 0.5,
+      },
+      axesBasisPoints: {
+        oily_dry: oilyDryBasisPoints,
+        sensitive_resistant: sensitiveResistantBasisPoints,
+        pigmented_non: 5000,
+        wrinkled_tight: 5000,
+      },
+      axisScores: {
+        oily_dry: input.oilyDry,
+        sensitive_resistant: input.sensitiveResistant,
+        pigmented_non: 0,
+        wrinkled_tight: 0,
+      },
+      dspt: `${input.oilyDry >= 0 ? 'O' : 'D'}${input.sensitiveResistant >= 0 ? 'S' : 'R'}PW`,
+      fitzpatrick: 3,
+      monkTone: 5,
+      sensitivities: [],
+      pregnancyStatus: input.pregnancyStatus ?? 'none',
+      provenance: QUIZ_SCORING_PROVENANCE,
     },
-    axisScores: {
-      oily_dry: input.oilyDry,
-      sensitive_resistant: input.sensitiveResistant,
-      pigmented_non: 0,
-      wrinkled_tight: 0,
-    },
-    dspt: 'OSNT',
-    fitzpatrick: null,
-    monkTone: null,
+    goals: input.goals ?? ['hydration'],
+    completedAt: '2026-07-08T00:00:00.000Z',
+  };
+};
+
+function currentServerProfile(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    oily_dry: 2,
+    sensitive_resistant: -2,
+    pigmented_non: 0,
+    wrinkled_tight: 0,
+    dspt: 'ORPW',
+    oily_dry_basis_points: 7500,
+    sensitive_resistant_basis_points: 2500,
+    pigmented_non_basis_points: 5000,
+    wrinkled_tight_basis_points: 5000,
+    fitzpatrick: 3,
+    monk_tone: 5,
     sensitivities: [],
-    pregnancyStatus: input.pregnancyStatus ?? 'none',
-  },
-  goals: input.goals ?? ['hydration'],
-  completedAt: '2026-07-08T00:00:00.000Z',
-});
+    pregnancy_status: 'none',
+    goals: ['anti_aging'],
+    completed_at: '2026-07-26T00:00:00+00:00',
+    ...CURRENT_SERVER_SKIN_PROFILE_PROVENANCE,
+    ...overrides,
+  };
+}
 
 beforeEach(() => {
   mocks.storedProfile = null;
@@ -98,14 +135,16 @@ beforeEach(() => {
   mocks.consentCurrent = true;
   mocks.supabaseConfigured = false;
   mocks.serverData = null;
+  mocks.serverError = null;
   mocks.leaseOpen = true;
   mocks.from.mockReset();
   mocks.from.mockImplementation(() => {
     const query = {
       select: vi.fn(() => query),
+      eq: vi.fn(() => query),
       order: vi.fn(() => query),
       limit: vi.fn(() => query),
-      maybeSingle: vi.fn(async () => ({ data: mocks.serverData })),
+      maybeSingle: vi.fn(async () => ({ data: mocks.serverData, error: mocks.serverError })),
     };
     return query;
   });
@@ -177,12 +216,7 @@ describe('skin profile axis mapping', () => {
   it('does not consult a stale server mirror after an unreadable local profile', async () => {
     mocks.localStatus = 'unavailable';
     mocks.supabaseConfigured = true;
-    mocks.serverData = {
-      oily_dry: 2,
-      sensitive_resistant: -2,
-      pregnancy_status: 'none',
-      goals: ['anti_aging'],
-    };
+    mocks.serverData = currentServerProfile();
 
     await expect(readProfileBits()).resolves.toMatchObject({
       source: 'unavailable',
@@ -195,12 +229,7 @@ describe('skin profile axis mapping', () => {
 
   it('treats a server-only status as unknown so a stale none cannot clear caution', async () => {
     mocks.supabaseConfigured = true;
-    mocks.serverData = {
-      oily_dry: 2,
-      sensitive_resistant: -2,
-      pregnancy_status: 'none',
-      goals: ['anti_aging'],
-    };
+    mocks.serverData = currentServerProfile();
 
     await expect(readProfileBits()).resolves.toEqual({
       source: 'server',
@@ -214,16 +243,57 @@ describe('skin profile axis mapping', () => {
     });
   });
 
+  it.each([
+    ['legacy version', { version: 1 }],
+    ['mismatched hash', { quiz_contract_sha256: '0'.repeat(64) }],
+    ['inconsistent basis points', { oily_dry_basis_points: 5000 }],
+    ['incorrect DSPT tie output', { dspt: 'ORNW' }],
+  ])('fails closed for a server profile with %s', async (_label, changes) => {
+    mocks.supabaseConfigured = true;
+    mocks.serverData = currentServerProfile(changes);
+
+    await expect(readProfileBits()).resolves.toEqual({
+      source: 'unavailable',
+      sensitivity: 'neutral',
+      moisture: 'balanced',
+      pregnancyStatus: 'unknown',
+      pregnancySafety: 'caution',
+      pregnancy: false,
+      consentCurrent: true,
+      goals: [],
+    });
+  });
+
+  it('fails closed when a selected server column is absent or the query reports an error', async () => {
+    mocks.supabaseConfigured = true;
+    const incomplete = currentServerProfile();
+    delete incomplete.quiz_scoring_sha256;
+    mocks.serverData = incomplete;
+
+    await expect(readProfileBits()).resolves.toMatchObject({
+      source: 'unavailable',
+      goals: [],
+    });
+
+    mocks.serverData = currentServerProfile();
+    mocks.serverError = { message: 'column unavailable' };
+    await expect(readProfileBits()).resolves.toMatchObject({
+      source: 'unavailable',
+      goals: [],
+    });
+  });
+
   it('does not let the fail-soft server fallback swallow lease invalidation', async () => {
     mocks.supabaseConfigured = true;
     mocks.from.mockImplementationOnce(() => {
       const query = {
         select: vi.fn(() => query),
+        eq: vi.fn(() => query),
         order: vi.fn(() => query),
         limit: vi.fn(() => query),
         maybeSingle: vi.fn(async () => {
           mocks.leaseOpen = false;
-          return { data: { oily_dry: 2, sensitive_resistant: -2, goals: ['anti_aging'] } };
+          return { data: currentServerProfile(), error: null };
         }),
       };
       return query;

@@ -22,7 +22,7 @@
       "number": 2,
       "key": "onboarding_consent",
       "name": "Onboarding, age gate, and consent",
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "F-03",
@@ -268,7 +268,7 @@
       "category": "data-store",
       "source": "apps/mobile/src/features/healthConsent/lifecycleStore.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "data-store:local:apps/mobile/src/features/notifications/sentStore.ts",
@@ -289,21 +289,21 @@
       "category": "data-store",
       "source": "apps/mobile/src/features/onboarding/ageGateStore.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "data-store:local:apps/mobile/src/features/onboarding/healthConsentStore.ts",
       "category": "data-store",
       "source": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "data-store:local:apps/mobile/src/features/onboarding/skinProfileStore.ts",
       "category": "data-store",
       "source": "apps/mobile/src/features/onboarding/skinProfileStore.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "data-store:local:apps/mobile/src/features/photos/encryptedStorage.ts",
@@ -387,14 +387,14 @@
       "category": "data-store",
       "source": "apps/mobile/src/lib/applock/store.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "data-store:local:apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts",
       "category": "data-store",
       "source": "apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "data-store:local:apps/mobile/src/lib/offline/catalogLookupQueue.ts",
@@ -415,7 +415,7 @@
       "category": "data-store",
       "source": "apps/mobile/src/lib/supabase/largeSecureStore.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "data-store:postgres:account_deletion_barriers",
@@ -1241,14 +1241,14 @@
       "category": "edge-function",
       "source": "supabase/functions/consent-withdrawal/index.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:data-export",
       "category": "edge-function",
       "source": "supabase/functions/data-export/index.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:growth-event",
@@ -1262,7 +1262,7 @@
       "category": "edge-function",
       "source": "supabase/functions/health-consent-worker/index.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "edge-function:order-report-poll",
@@ -1647,14 +1647,14 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:@react-native-google-signin/google-signin",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:@sentry/react-native",
@@ -1668,14 +1668,14 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-apple-authentication",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-application",
@@ -1689,7 +1689,7 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-camera",
@@ -1703,7 +1703,7 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-crypto",
@@ -1717,7 +1717,7 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-device",
@@ -1738,14 +1738,14 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-haptics",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-image",
@@ -1766,7 +1766,7 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-local-authentication",
@@ -1780,14 +1780,14 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-network",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-notifications",
@@ -1801,7 +1801,7 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-secure-store",
@@ -1822,14 +1822,14 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-status-bar",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-store-review",
@@ -1843,49 +1843,49 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-web-browser",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:expo-widgets",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:posthog-react-native",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-gesture-handler",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-get-random-values",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-purchases",
@@ -1899,28 +1899,28 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-safe-area-context",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-screens",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-url-polyfill",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-view-shot",
@@ -1934,28 +1934,28 @@
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "native-module:react-native-worklets",
       "category": "native-module",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02", "F-03", "F-06", "F-07"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:_layout.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/_layout.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:(tabs)/_layout.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/(tabs)/_layout.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:(tabs)/progress.tsx",
@@ -2144,84 +2144,84 @@
       "category": "route",
       "source": "apps/mobile/src/app/index.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/_layout.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/_layout.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/account.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/account.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/age.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/age.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/analyzing.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/analyzing.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/consent.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/consent.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/goals.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/goals.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/notifications.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/notifications.tsx",
       "featureIds": ["F-02", "F-10"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/paywall.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/paywall.tsx",
       "featureIds": ["F-02", "F-11", "F-12"],
-      "readiness": "simulated"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/products.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/products.tsx",
       "featureIds": ["F-02", "F-03"],
-      "readiness": "needs-device-verification"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/quiz.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/quiz.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:onboarding/reveal.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/onboarding/reveal.tsx",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:paywall/_layout.tsx",
@@ -2599,7 +2599,7 @@
       "category": "vendor-call",
       "source": "supabase/functions/account-deletion/appleDeletionNetwork.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "vendor-call:origin:apps.apple.com",
@@ -2641,7 +2641,7 @@
       "category": "vendor-call",
       "source": "apps/mobile/src/features/settings/accountDeletionNotice.ts",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "vendor-call:origin:www.revenuecat.com",
@@ -2655,7 +2655,7 @@
       "category": "vendor-call",
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02"],
-      "readiness": "implemented"
+      "readiness": "launch-blocked"
     },
     {
       "id": "vendor-call:sdk:sentry",

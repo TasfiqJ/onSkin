@@ -28,8 +28,8 @@ import {
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 62;
-const EXPECTED_LATEST_MIGRATION = '20260722000063';
+const EXPECTED_MIGRATION_COUNT = 64;
+const EXPECTED_LATEST_MIGRATION = '20260726000065';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
 // recomputes every sealed membership root. Keep ordinary CLI operations tightly

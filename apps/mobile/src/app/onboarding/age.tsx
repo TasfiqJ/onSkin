@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState, useSyncExternalStore } from 'react';
 import { Platform, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -9,14 +9,25 @@ import {
   meetsMinimumAge,
   MINIMUM_AGE,
 } from '@/features/onboarding/ageGate';
-import { setAgeVerified } from '@/features/onboarding/ageGateStore';
+import { AGE_POLICY_STATUS_QUERY_KEY, setAgeVerified } from '@/features/onboarding/ageGateStore';
+import {
+  clearAgePolicyReverificationHandoff,
+  dismissAgePolicyReverificationHandoff,
+  getAgePolicyReverificationHandoff,
+  markAgePolicyReverificationHandoffFailed,
+  stageAgePolicyReverificationHandoff,
+  stagePostAgeConsentRoute,
+  subscribeAgePolicyReverificationHandoff,
+} from '@/features/onboarding/agePolicyRoute';
 import { track } from '@/lib/analytics/track';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
 
 // 01b · Neutral age gate (docs/01 §4). We ask for a date of birth (never "are you
 // over X?", which invites falsification) BEFORE any health-data collection, and
-// block under-threshold users. We persist only that the gate passed, never the
-// DOB itself (data minimization). Final threshold / parental-consent path: counsel.
+// block under-threshold users. We never persist the DOB: storage contains only
+// the exact affirmative receipt or a generic re-verification tombstone.
+// Final threshold / parental-consent path: counsel.
 function DobField({
   label,
   accessibilityLabel,
@@ -54,11 +65,21 @@ function DobField({
 }
 
 export default function AgeGateScreen() {
+  const queryClient = useQueryClient();
+  const { ensureAnonymousSession } = useAuth();
   const { fontScale = 1, height, width } = useWindowDimensions();
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
-  const [blocked, setBlocked] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [localSubmitError, setLocalSubmitError] = useState(false);
+  const reverificationHandoff = useSyncExternalStore(
+    subscribeAgePolicyReverificationHandoff,
+    getAgePolicyReverificationHandoff,
+    getAgePolicyReverificationHandoff,
+  );
+  const blocked = reverificationHandoff !== 'none';
+  const submitError = localSubmitError || reverificationHandoff === 'reverification_write_failed';
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
@@ -71,18 +92,39 @@ export default function AgeGateScreen() {
 
   function edit(setter: (v: string) => void) {
     return (v: string) => {
-      setBlocked(false);
+      dismissAgePolicyReverificationHandoff();
+      setLocalSubmitError(false);
       setter(v);
     };
   }
 
   async function submit() {
+    if (submitting) return;
+    setSubmitting(true);
+    setLocalSubmitError(false);
     track('screen_viewed', { screen_name: 'age_gate' });
-    if (meetsMinimumAge(dob, today)) {
-      await setAgeVerified();
-      router.replace('/onboarding/consent');
-    } else {
-      setBlocked(true);
+    const eligible = meetsMinimumAge(dob, today);
+    if (!eligible) {
+      const reverificationGeneration = stageAgePolicyReverificationHandoff();
+      queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'missing');
+      try {
+        await setAgeVerified(false);
+      } catch {
+        markAgePolicyReverificationHandoffFailed(reverificationGeneration);
+      }
+      setSubmitting(false);
+      return;
+    }
+
+    try {
+      await setAgeVerified(true);
+      await ensureAnonymousSession();
+      clearAgePolicyReverificationHandoff();
+      stagePostAgeConsentRoute();
+      queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'current');
+    } catch {
+      setLocalSubmitError(true);
+      setSubmitting(false);
     }
   }
 
@@ -150,11 +192,16 @@ export default function AgeGateScreen() {
               {validationError ?? `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`}
             </Text>
           ) : null}
+          {submitError ? (
+            <Text variant="bodySm" tone="clay" className="mt-3" accessibilityRole="alert">
+              We couldn&apos;t finish the age check. Nothing new was collected. Try again.
+            </Text>
+          ) : null}
         </ScrollView>
       </View>
 
       <View className="bg-paper pb-4 pt-2">
-        <Button label="Continue" disabled={!valid} onPress={() => void submit()} />
+        <Button label="Continue" disabled={!valid || submitting} onPress={() => void submit()} />
       </View>
     </Screen>
   );

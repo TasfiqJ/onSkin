@@ -12,9 +12,10 @@ import {
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
 } from '@/lib/storage/plaintextStagingCore';
+import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
 
 export const LOCAL_PRIVATE_DATA_KEYS = [
-  'onskin.ageVerified',
+  AGE_POLICY_RECEIPT_KEY,
   'onskin.appLock.enabled',
   'onskin.ask.consent.v1',
   'onskin.ask.groundedTurns.v1',

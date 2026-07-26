@@ -44,8 +44,8 @@ directory:
    disposition and independent review evidence;
 4. the CAT-01 source approval, trust-registry, release-scope, and signed build
    evidence already embedded and hash-bound by the transform;
-5. a clean `origin/main` source revision containing migration `0057` and
-   forward migrations through `0063`, plus this runbook.
+5. a clean `origin/main` source revision containing migration `0057` and the
+   full forward chain through `0065`, plus this runbook.
 
 Never copy a fixture or candidate into a differently named file and treat it as
 production. The transform status, import mode, known fixture hashes, source
@@ -178,7 +178,7 @@ history. **Stop** if migration `0059` is already present, if the remote history
 differs from the reviewed source chain, or if the remote history cannot be
 verified; do not deploy until the discrepancy has an approved forward-remediation
 plan. After an approved clean-chain deployment, an operator verifies migrations
-`0057` through `0063` are present and submits only the exact RPC plan emitted in
+`0057` through `0065` are present and submits only the exact RPC plan emitted in
 `databasePlan`. Do not hand-edit that plan.
 
 Migration `0057` remains byte-stable. Migration `0061` replaces only the exact
@@ -188,7 +188,12 @@ historically named policies from sealed scan/correction relations before
 reasserting privileges. Migration `0062` preserves those per-row curation
 decisions while adding three bounded authority lookup indexes and a deterministic
 statement-level count/root-set guard for governed bulk curation inserts. The
-sole historical-file exception is migration `0059`:
+forward `0065` repair makes both `0063` operator-transition paths executable by
+targeting the work-state primary-key constraint explicitly and revokes the
+global default `PUBLIC` function-execution grant; it does not delegate CAT-02
+promotion authority. The unrelated `0064` chain member adds minimized,
+output-only skin-profile quiz provenance and stores no raw answers or answer
+hashes. The sole historical-file exception is migration `0059`:
 the repository contains no retained hosted evidence that it was applied, but
 that absence does not prove remote state. The file contained a missing closing
 parenthesis that prevented a clean migration chain from parsing at all. Its

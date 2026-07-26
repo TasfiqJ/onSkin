@@ -1236,15 +1236,70 @@ select pg_catalog.set_config(
   'request.headers', '{"x-health-processing-epoch":"1"}', true
 );
 select lives_ok(
-  $$insert into public.skin_profiles (user_id, goals)
-    values ('70000000-0000-4000-8000-000000000001', array['texture'])$$,
-  'health publication with the active epoch succeeds'
+  $$insert into public.skin_profiles (
+      user_id,
+      oily_dry,
+      sensitive_resistant,
+      pigmented_non,
+      wrinkled_tight,
+      fitzpatrick,
+      monk_tone,
+      sensitivities,
+      pregnancy_status,
+      goals,
+      completed_at,
+      version,
+      dspt,
+      oily_dry_basis_points,
+      sensitive_resistant_basis_points,
+      pigmented_non_basis_points,
+      wrinkled_tight_basis_points,
+      quiz_contract_id,
+      quiz_content_version,
+      quiz_scoring_version,
+      quiz_output_schema_version,
+      quiz_content_sha256,
+      quiz_scoring_sha256,
+      quiz_contract_sha256,
+      quiz_review_status,
+      quiz_pole_tie_rule
+    ) values (
+      '70000000-0000-4000-8000-000000000001',
+      0, 0, 0, 0,
+      3,
+      5,
+      array['fragrance'],
+      'none',
+      array['clear_skin'],
+      '2026-07-26T00:00:00Z'::timestamptz,
+      2,
+      'OSPW',
+      5000, 5000, 5000, 5000,
+      'urn:routinekind:onboarding:skin-profile',
+      'draft-2026-07-04',
+      'draft-1',
+      1,
+      'be00ee6008ca03fbcb53e7256432cd044e6131e9aecd5bf90809b2a57cde39bb',
+      'ffd16579edad35b21377244c41af69419248faa3f8f2238183c58a5a8893c893',
+      '95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16',
+      'launch-blocked',
+      'raw_score_greater_than_or_equal_to_zero_uses_positive_pole'
+    )$$,
+  'an active authenticated owner can publish the exact current v2 profile through the real table'
 );
-select is(
-  (select count(*) from public.skin_profiles
-    where user_id = '70000000-0000-4000-8000-000000000001'),
-  1::bigint,
-  'an active owner can read their health-purpose database row'
+select results_eq(
+  $$select version, dspt, oily_dry_basis_points, quiz_contract_sha256,
+      quiz_review_status
+      from public.skin_profiles
+     where user_id = '70000000-0000-4000-8000-000000000001'$$,
+  $$values (
+    2::integer,
+    'OSPW'::text,
+    5000::integer,
+    '95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16'::text,
+    'launch-blocked'::text
+  )$$,
+  'the owner reads the exact constrained v2 provenance row through real RLS and the health read fence'
 );
 select lives_ok(
   $$insert into public.routines (id, user_id, type, name) values (

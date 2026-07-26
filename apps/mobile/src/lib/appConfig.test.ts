@@ -221,6 +221,16 @@ describe('Expo app identity config', () => {
     expect(pluginNames).toContain('expo-apple-authentication');
   });
 
+  it('declares Apple age-range capability for native sandbox and archive validation', () => {
+    const expo = buildExpoConfig({});
+
+    expect(expo.ios.entitlements).toEqual(
+      expect.objectContaining({
+        'com.apple.developer.declared-age-range': true,
+      }),
+    );
+  });
+
   it('uses one exact reviewed camera purpose string in both generated iOS locations', () => {
     const expo = buildExpoConfig({});
     const expected =

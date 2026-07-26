@@ -11,6 +11,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { configureNotifications } from '@/features/notifications/startup';
 import { startLabelPhotoStartupScavenge } from '@/features/native/camera/labelPhotoStartup';
 import { HealthDataLifecycleGate } from '@/features/healthConsent/HealthDataLifecycleGate';
+import { AgePolicyGate } from '@/features/onboarding/AgePolicyGate';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
@@ -66,15 +67,24 @@ export default function RootLayout() {
                 <AppLockProvider>
                   <StoreTransactionNoticeHost />
                   <PrivateDataAvailabilityGate>
-                    <HealthDataLifecycleGate>
-                      <OnboardingProvider>
-                        <IntakeProvider>
-                          <OfflineSync />
+                    <AgePolicyGate
+                      bootstrap={
+                        <>
                           <StatusBar style="dark" />
                           <Stack screenOptions={{ headerShown: false }} />
-                        </IntakeProvider>
-                      </OnboardingProvider>
-                    </HealthDataLifecycleGate>
+                        </>
+                      }
+                    >
+                      <HealthDataLifecycleGate>
+                        <OnboardingProvider>
+                          <IntakeProvider>
+                            <OfflineSync />
+                            <StatusBar style="dark" />
+                            <Stack screenOptions={{ headerShown: false }} />
+                          </IntakeProvider>
+                        </OnboardingProvider>
+                      </HealthDataLifecycleGate>
+                    </AgePolicyGate>
                   </PrivateDataAvailabilityGate>
                 </AppLockProvider>
               </SessionBoundaryGate>

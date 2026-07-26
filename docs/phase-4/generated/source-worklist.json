@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-25T22:38:18.613Z",
+  "generatedAt": "2026-07-26T09:42:32.690Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49",
-  "gitStatus": "M .prettierignore\n M 04_repo_docs/docs/ARCHITECTURE.md\n M 04_repo_docs/docs/DECISIONS.md\n M 04_repo_docs/docs/FEATURE_INDEX.md\n M 04_repo_docs/docs/TESTING_STRATEGY.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/src/lib/analytics/postHogPersistenceSourceContract.test.ts\n M docs/ARCHITECTURE.md\n M docs/DECISIONS.md\n M docs/FEATURE_INDEX.md\n M docs/TESTING_STRATEGY.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/hugeToDo/task-graph.json\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/data-inventory.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-memo-open-beauty-facts.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/curated-product-curation-sheet.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/observability-dashboard.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-9/data-inventory.md\n M docs/phase-9/source-of-truth.md\n M docs/store-privacy-inventory.md\n M package-lock.json\n M package.json\n M scripts/launch/execution-baseline.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase9/build-release-qa-packet.mjs\n M scripts/phase9/data-rights-smoke.mjs\n M scripts/phase9/live-data-rights.mjs\n M scripts/phase9/release-smoke.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/config.toml\n M supabase/functions/_shared/accountAccessCoverage.test.ts\n M supabase/functions/data-export/exportCore.ts\n M supabase/functions/data-export/exportRegistry.test.ts\n M supabase/functions/data-export/exportRegistry.ts\n M supabase/functions/data-export/index.ts\n M supabase/functions/manifest.json\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/catalog_launch_curation.test.sql\n M supabase/tests/database/catalog_serving_gate.test.sql\n M supabase/tests/database/schema_contract.test.sql\n?? apps/catalog-operator-console/.env.example\n?? apps/catalog-operator-console/README.md\n?? apps/catalog-operator-console/index.html\n?? apps/catalog-operator-console/package.json\n?? apps/catalog-operator-console/public/_headers\n?? apps/catalog-operator-console/src/auth.ts\n?? apps/catalog-operator-console/src/env.test.ts\n?? apps/catalog-operator-console/src/env.ts\n?? apps/catalog-operator-console/src/main.ts\n?? apps/catalog-operator-console/src/operatorApi.test.ts\n?? apps/catalog-operator-console/src/operatorApi.ts\n?? apps/catalog-operator-console/src/sessionTimer.test.ts\n?? apps/catalog-operator-console/src/sessionTimer.ts\n?? apps/catalog-operator-console/src/styles.css\n?? apps/catalog-operator-console/src/workflow.test.ts\n?? apps/catalog-operator-console/src/workflow.ts\n?? apps/catalog-operator-console/tsconfig.json\n?? apps/catalog-operator-console/vite.config.ts\n?? deno.lock\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-authority-bypass.md\n?? docs/e2e-bug-reports/2026-07-25-cat08-fixture-mfa-bypass.md\n?? docs/phase-4/catalog-operator-authority-runbook.md\n?? scripts/e2e/catalog-operator-console-fixture-server.mjs\n?? scripts/e2e/catalog-operator-console-fixture-server.test.mjs\n?? scripts/phase4/catalog-operator-authority-contract.mjs\n?? scripts/phase4/catalog-operator-authority-contract.test.mjs\n?? supabase/functions/catalog-operator/contract.test.ts\n?? supabase/functions/catalog-operator/contract.ts\n?? supabase/functions/catalog-operator/httpHandler.test.ts\n?? supabase/functions/catalog-operator/httpHandler.ts\n?? supabase/functions/catalog-operator/index.ts\n?? supabase/functions/catalog-operator/responseContract.test.ts\n?? supabase/functions/catalog-operator/responseContract.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.test.ts\n?? supabase/functions/data-export/catalogCorrectionExportCore.ts\n?? supabase/migrations/20260722000063_catalog_operator_authority.sql\n?? supabase/tests/database/catalog_operator_authority.test.sql",
+  "gitSha": "cb4ef4a80f2fa4272a0e23303d71633956d7a091",
+  "gitStatus": "M .github/workflows/quality.yml\n M 04_repo_docs/docs/DECISIONS.md\n M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M apps/mobile/app.config.js\n M apps/mobile/src/app/_layout.tsx\n M apps/mobile/src/app/index.tsx\n M apps/mobile/src/app/onboarding/age.tsx\n M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/goals.tsx\n M apps/mobile/src/app/onboarding/paywall.tsx\n M apps/mobile/src/app/onboarding/reveal.tsx\n M apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.tsx\n M apps/mobile/src/features/onboarding/ageGate.test.ts\n M apps/mobile/src/features/onboarding/ageGate.ts\n M apps/mobile/src/features/onboarding/ageGateStore.test.ts\n M apps/mobile/src/features/onboarding/ageGateStore.ts\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M apps/mobile/src/features/onboarding/quiz.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.test.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.ts\n M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/scheduler/profile.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/trend/useTrend.ts\n M apps/mobile/src/lib/appConfig.test.ts\n M apps/mobile/src/lib/auth/AuthProvider.tsx\n M docs/DECISIONS.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/APPLE_AND_LEGAL_PRIMARY_RESEARCH.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-2-status.md\n M docs/phase-3/quiz-fto-summary.md\n M docs/phase-4/README.md\n M docs/phase-4/beta-coverage-report.md\n M docs/phase-4/catalog-correction-serving-hold-policy.md\n M docs/phase-4/catalog-curation-release-runbook.md\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-operator-authority-runbook.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/first-curated-product-batch.md\n M docs/phase-4/phase-4-exit-review.md\n M docs/phase-9/source-of-truth.md\n M packages/types/src/database.types.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/launch/execution-baseline.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase4/catalog-operator-authority-contract.mjs\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/catalog_operator_authority.test.sql\n M supabase/tests/database/health_consent_lifecycle.test.sql\n M supabase/tests/database/schema_contract.test.sql\n?? apps/mobile/modules/native-age-assurance/expo-module.config.json\n?? apps/mobile/modules/native-age-assurance/index.ts\n?? apps/mobile/modules/native-age-assurance/ios/NativeAgeAssurance.podspec\n?? apps/mobile/modules/native-age-assurance/ios/NativeAgeAssuranceModule.swift\n?? apps/mobile/modules/native-age-assurance/package.json\n?? apps/mobile/modules/native-age-assurance/src/NativeAgeAssurance.types.ts\n?? apps/mobile/modules/native-age-assurance/src/NativeAgeAssuranceModule.ts\n?? apps/mobile/src/features/onboarding/AgePolicyGate.lifecycle.test.ts\n?? apps/mobile/src/features/onboarding/AgePolicyGate.test.ts\n?? apps/mobile/src/features/onboarding/AgePolicyGate.tsx\n?? apps/mobile/src/features/onboarding/OnboardingContext.test.ts\n?? apps/mobile/src/features/onboarding/agePolicyRoute.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapter.ios.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapter.test.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapter.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceAdapterFallback.test.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceContract.test.ts\n?? apps/mobile/src/features/onboarding/nativeAgeAssuranceContract.ts\n?? apps/mobile/src/features/onboarding/quizContract.test.ts\n?? apps/mobile/src/features/onboarding/quizContract.ts\n?? apps/mobile/src/features/onboarding/quizScoring.test.ts\n?? apps/mobile/src/features/onboarding/serverSkinProfile.test.ts\n?? apps/mobile/src/features/onboarding/serverSkinProfile.ts\n?? apps/mobile/src/features/trend/useTrend.test.ts\n?? apps/mobile/src/lib/auth/firstSessionE2E.test.ts\n?? apps/mobile/src/lib/auth/firstSessionE2E.ts\n?? apps/mobile/src/lib/auth/firstSessionE2EAuthProviderContracts.test.ts\n?? deno.lock\n?? docs/e2e-bug-reports/2026-07-26-age-policy-downgrade-revocation.md\n?? docs/e2e-bug-reports/2026-07-26-age-policy-navigator-remount.md\n?? docs/e2e-bug-reports/2026-07-26-onboarding-e2e-consent-order-stale.md\n?? scripts/core01/native-age-assurance-source-contract.test.mjs\n?? scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql\n?? scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql\n?? supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql\n?? supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql\n?? supabase/tests/database/skin_profile_quiz_provenance.test.sql",
   "summary": {
     "itemCount": 13,
     "domainCounts": {
@@ -17,7 +17,7 @@
       "blocked": 7,
       "local-scaffold": 6
     },
-    "sourcePathCount": 302,
+    "sourcePathCount": 310,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 1
@@ -86,7 +86,7 @@
           "path": "docs/phase-4/README.md",
           "exists": true,
           "bytes": 9346,
-          "sha256": "7939e1b27e9b235e9c061582786cd88870334018bda4681c478016cf46189b9b"
+          "sha256": "8e8b269d8f01c6602f19e42e782dbdd55a76b098071149755ae91cdcfd660c10"
         },
         {
           "path": "docs/phase-4/catalog-source-policy.json",
@@ -116,7 +116,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
+          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
         },
         {
           "path": "scripts/phase4/catalog-source-policy-audit.mjs",
@@ -133,8 +133,8 @@
         {
           "path": "docs/phase-4/phase-4-exit-review.md",
           "exists": true,
-          "bytes": 11966,
-          "sha256": "88399b14b071bb3686a0a1edc676f1ca7e72a49536d94ba8da50637c6130eb5c"
+          "bytes": 13054,
+          "sha256": "5a5a1028c6b1d5df09313ae445f63737e15d9a12fde7c51a98f1bde92b3d1384"
         },
         {
           "path": "docs/FOR_TAS_TO_DO.md",
@@ -225,7 +225,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
+          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
         },
         {
           "path": "scripts/phase4/import-obf-snapshot.mjs",
@@ -362,7 +362,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
+          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
         },
         {
           "path": "scripts/phase4/import-cosing-dictionary.mjs",
@@ -464,13 +464,13 @@
           "path": "docs/phase-4/first-curated-product-batch.md",
           "exists": true,
           "bytes": 10318,
-          "sha256": "3c9172a6a5980a8d33c8fcbabb9fff8fc0959f0ea3e8497d29a9247f1e25a9c9"
+          "sha256": "4d079b14c6063c65d61201e7ae0f4bda79dd067d6b5d3cc08489ff18b52bae4f"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44497,
-          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
+          "bytes": 44739,
+          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -511,20 +511,20 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 54980,
-          "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
+          "bytes": 55523,
+          "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 44641,
-          "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
+          "bytes": 45140,
+          "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
         },
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
+          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
@@ -583,8 +583,8 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 198520,
-          "sha256": "134ef6289b4c59d7763e55b293603ba734f94f45083d161213898a953e4231cc"
+          "bytes": 201879,
+          "sha256": "36f2bfe54bc24795350576db03ad4a5caf0911de729a093c4dd813da9b0b1509"
         }
       ]
     },
@@ -687,7 +687,7 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
+          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
         },
         {
           "path": "scripts/docs/generated-packet-status-audit.mjs",
@@ -736,7 +736,7 @@
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
           "bytes": 8829,
-          "sha256": "57edbb0dc8225750580ce647270aee17440b591b962b3c356d42c083620d540b"
+          "sha256": "cdb34ac2abbabd81d2fab71b47b0f3f53237c02e3fa71dad427655e9712aa0b9"
         },
         {
           "path": "docs/phase-4/beta-shelf-corpus.template.json",
@@ -753,8 +753,8 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44497,
-          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
+          "bytes": 44739,
+          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
         },
         {
           "path": "docs/phase-4/catalog-cat02-membership-proof.template.json",
@@ -777,14 +777,14 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 54980,
-          "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
+          "bytes": 55523,
+          "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 44641,
-          "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
+          "bytes": 45140,
+          "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
         },
         {
           "path": "scripts/phase4/beta-coverage-report.mjs",
@@ -858,7 +858,7 @@
       "requiredEvidence": [
         "A content-addressed CAT-02 stage envelope binds an approved transform, zero-warning source QA, exact per-record reviews, source/build evidence, natural keys, record hashes, and the US territory.",
         "Fixture/candidate records, incomplete reviews, changed idempotent replays, duplicate natural keys, and existing-catalog conflicts fail closed before promotion.",
-        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only; approval, promotion, rollback, and CAT-03 activation intentionally remain migration-owner-only, and direct API-role catalog mutation remains denied.",
+        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants; approval, promotion, rollback, and CAT-03 activation intentionally remain migration-owner-only, and direct API-role catalog mutation remains denied.",
         "Every promoted projection traces through its immutable staged record and batch to source artifact, transform, approval, QA, and reviewer hashes.",
         "A reviewed hosted two-session drill proves atomic promotion, full retry on serialization failure, source-withdrawal containment, exact verification, and non-destructive rollback with shelf/correction references preserved."
       ],
@@ -873,9 +873,11 @@
         "supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql",
         "supabase/migrations/20260722000062_catalog_curation_statement_guard.sql",
         "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+        "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
         "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql",
+        "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/cat07_truthful_freshness.test.sql",
@@ -940,14 +942,20 @@
         {
           "path": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
           "exists": true,
-          "bytes": 136620,
-          "sha256": "b6f9e51b2e64880f9be7811a8f4085706e4bd963aee2b2c9980d6d243e54ca55"
+          "bytes": 165489,
+          "sha256": "dd9f1537dd7bc68810d9e1322055a6c36a1fef6e873e90577687f133094dcdb2"
+        },
+        {
+          "path": "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
+          "exists": true,
+          "bytes": 4519,
+          "sha256": "9afd1ad223c9e7587d42118cee9dbc4fe0b0ea641de4f6fad44d8ecb20d79ccb"
         },
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
-          "bytes": 45935,
-          "sha256": "1c39e79ad716daf92143de63709987ed3c66c4c8e06a24e65e4eabc77aeb96df"
+          "bytes": 73519,
+          "sha256": "9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7"
         },
         {
           "path": "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
@@ -962,6 +970,12 @@
           "sha256": "64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9"
         },
         {
+          "path": "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
+          "exists": true,
+          "bytes": 5846,
+          "sha256": "b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6"
+        },
+        {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
           "bytes": 109210,
@@ -970,26 +984,26 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36315,
-          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
+          "bytes": 36567,
+          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35205,
-          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
+          "bytes": 35203,
+          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
         },
         {
           "path": "docs/phase-4/catalog-import-promotion-runbook.md",
           "exists": true,
-          "bytes": 20551,
-          "sha256": "ae32603bbafbc01497cda9ff3631e666081211e7b8cd32b36d0ee81dabefeceb"
+          "bytes": 20948,
+          "sha256": "61cc7da549b565aa916e0fcb6f57b762fe59f76d41c4a73965e6161a64a6060d"
         },
         {
           "path": "docs/phase-4/first-curated-product-batch.md",
           "exists": true,
           "bytes": 10318,
-          "sha256": "3c9172a6a5980a8d33c8fcbabb9fff8fc0959f0ea3e8497d29a9247f1e25a9c9"
+          "sha256": "4d079b14c6063c65d61201e7ae0f4bda79dd067d6b5d3cc08489ff18b52bae4f"
         }
       ]
     },
@@ -1046,20 +1060,20 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 40695,
-          "sha256": "fc1069d44644741cebf7b3a3610fc12a532992ed60e7663bc898990eed1e1eb9"
+          "bytes": 40927,
+          "sha256": "7f8546af94aa1e476c149c272faca40ca098de8efee23cf875191a616f76bde1"
         },
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 10554,
-          "sha256": "1b4bd0d46aeac3044c673d95754c25e283152461fddd062c19921e976be2faf0"
+          "bytes": 10888,
+          "sha256": "6223becd6a57b8e5eb06972a31ea45b6e2f3988f40e88fd36474a28c53541ed5"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44497,
-          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
+          "bytes": 44739,
+          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -1100,14 +1114,14 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 54980,
-          "sha256": "31619a0ca641acb0fce969b4a66766f08f49b5c6af00274a790761395203223b"
+          "bytes": 55523,
+          "sha256": "3db72b178c48f2011f4606c9bb7fbe7ee63477adb07063dfba900ca69848eab8"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 44641,
-          "sha256": "97668227a250555588fb10859c84edd0008a0a877f1876f085f16a15c042c85d"
+          "bytes": 45140,
+          "sha256": "248805cba7f7006b8f05759cf99264422097103de4aa13149d0da015506683eb"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
@@ -1148,8 +1162,8 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 198520,
-          "sha256": "134ef6289b4c59d7763e55b293603ba734f94f45083d161213898a953e4231cc"
+          "bytes": 201879,
+          "sha256": "36f2bfe54bc24795350576db03ad4a5caf0911de729a093c4dd813da9b0b1509"
         },
         {
           "path": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
@@ -1190,14 +1204,14 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36315,
-          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
+          "bytes": 36567,
+          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35205,
-          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
+          "bytes": 35203,
+          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
         }
       ]
     },
@@ -1226,6 +1240,18 @@
       ],
       "sourcePaths": [
         {
+          "path": "apps/mobile/src/features/catalog/analytics.test.ts",
+          "exists": true,
+          "bytes": 3368,
+          "sha256": "aebe009cf40c8c8c07e88395c0395a90449d79bb24d514a187b06fee7b6bfacc"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/analytics.ts",
+          "exists": true,
+          "bytes": 1523,
+          "sha256": "0576db6223f0a0f0a3b4a3a12aa06818c91787b812438724867a7146ebd5c592"
+        },
+        {
           "path": "apps/mobile/src/features/catalog/CatalogReportConfirmation.tsx",
           "exists": true,
           "bytes": 4702,
@@ -1234,14 +1260,14 @@
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 30700,
-          "sha256": "fcc2d634af20a5ad8ad1e3b5151e8f057d165b32a9c3da33e3a4359c3633dc63"
+          "bytes": 31695,
+          "sha256": "42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 23409,
-          "sha256": "6dae85551fc7891582a285fb019ac50f1348f0e446c26836a36715d44f84e9bf"
+          "bytes": 23827,
+          "sha256": "a134e2bb32ea3fde57ef7dbcbe987ef15a5010a440ec38700731a2ea339e9a0e"
         },
         {
           "path": "apps/mobile/src/features/catalog/copy.ts",
@@ -1492,8 +1518,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 68783,
-          "sha256": "f4fc09db9b69aac6c353afb098b5bcf2e73ed20254f6f3face9f2812f1464c83"
+          "bytes": 69192,
+          "sha256": "dae763b475a107f2556eabb8cc857656a0d8ea1b179bc226723d5b231988f149"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
@@ -1534,8 +1560,8 @@
         {
           "path": "apps/mobile/src/app/shelf/manual.tsx",
           "exists": true,
-          "bytes": 17257,
-          "sha256": "72ddd7b03efd0951228dbd3c24b74680d47da6af8100d099866a85932a8dda46"
+          "bytes": 17400,
+          "sha256": "e9e38d15ff3caf085a6c57cf153934d7318aefdcc2fef4985a0dd2526bca2c51"
         },
         {
           "path": "apps/mobile/src/features/recommendations/applyPreferences.test.ts",
@@ -1739,8 +1765,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 429930,
-          "sha256": "8b9285457550899253b12dc4e76fffa23875d10f2ae7173e173fa4a23253ba2d"
+          "bytes": 437895,
+          "sha256": "b823eef544ca07b6f6ab6e1beae59f2ea4ae0930b891950c86f8db4364e4bc4a"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -1781,14 +1807,14 @@
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 23409,
-          "sha256": "6dae85551fc7891582a285fb019ac50f1348f0e446c26836a36715d44f84e9bf"
+          "bytes": 23827,
+          "sha256": "a134e2bb32ea3fde57ef7dbcbe987ef15a5010a440ec38700731a2ea339e9a0e"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 30700,
-          "sha256": "fcc2d634af20a5ad8ad1e3b5151e8f057d165b32a9c3da33e3a4359c3633dc63"
+          "bytes": 31695,
+          "sha256": "42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297"
         },
         {
           "path": "apps/mobile/src/features/intelligence/pao.ts",
@@ -1949,14 +1975,14 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36315,
-          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
+          "bytes": 36567,
+          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35205,
-          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
+          "bytes": 35203,
+          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
         }
       ]
     },
@@ -1968,7 +1994,7 @@
       "launchGate": "B-CATALOG-SEED",
       "owner": "Engineering + catalog operator + database reviewer",
       "requiredEvidence": [
-        "Migrations `0056` through `0063` plus the catalog, CAT-07, and CAT-08 pgTAP contracts pass on the exact hosted staging revision before promotion, curation authorization, or campaign release.",
+        "The complete 64-migration chain through `0065`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, and the `0065` CAT-08 transition/default-ACL repair, passes with the catalog, profile-provenance, CAT-07, and CAT-08 pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, or campaign release.",
         "Barcode and search use service-role-only RPCs over the same positive source/product/correction/CAT-03 eligibility relation; `service_role` has no direct catalog-table read, while explicitly safe authenticated reads retain positive RLS.",
         "Only rows in the exact active global CAT-03 campaign with active campaign-scoped product authorization, reviewed `verified` or `usable` quality, recommendation eligibility, production/legal-approved sources, and zero independent product holds in `active` or `repair_attested` state can be served; untrusted open intake remains owner-scoped, and accepting, rejecting, closing, or deleting a report cannot release its hold.",
         "Barcode mappings are independently reviewed, direct authenticated reads cannot bypass source withdrawal, and every held/unknown reason returns the same no-match/manual fallback."
@@ -1982,11 +2008,14 @@
         "supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql",
         "supabase/migrations/20260722000062_catalog_curation_statement_guard.sql",
         "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+        "supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql",
+        "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_launch_curation.test.sql",
         "supabase/tests/database/cat07_truthful_freshness.test.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
+        "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
         "supabase/tests/database/schema_contract.test.sql",
         "supabase/functions/catalog-lookup/index.ts",
         "supabase/functions/catalog-lookup/catalogContract.ts",
@@ -2044,14 +2073,26 @@
         {
           "path": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
           "exists": true,
-          "bytes": 136620,
-          "sha256": "b6f9e51b2e64880f9be7811a8f4085706e4bd963aee2b2c9980d6d243e54ca55"
+          "bytes": 165489,
+          "sha256": "dd9f1537dd7bc68810d9e1322055a6c36a1fef6e873e90577687f133094dcdb2"
+        },
+        {
+          "path": "supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql",
+          "exists": true,
+          "bytes": 6096,
+          "sha256": "06f801d0e783b95fdb7fe7e4bd4c288885c6eaeda7189708b5c50d8429b5460f"
+        },
+        {
+          "path": "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
+          "exists": true,
+          "bytes": 4519,
+          "sha256": "9afd1ad223c9e7587d42118cee9dbc4fe0b0ea641de4f6fad44d8ecb20d79ccb"
         },
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36315,
-          "sha256": "66037ea55adfcc7033917f644fa19142f55f7c462afdc285032fe0a98619ba8e"
+          "bytes": 36567,
+          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
         },
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -2062,26 +2103,32 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 198520,
-          "sha256": "134ef6289b4c59d7763e55b293603ba734f94f45083d161213898a953e4231cc"
+          "bytes": 201879,
+          "sha256": "36f2bfe54bc24795350576db03ad4a5caf0911de729a093c4dd813da9b0b1509"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 35205,
-          "sha256": "78e2e0eb518f7ac03bd80c4b31ea703b3e9cf38dcb21d7f67a802209c4fbb7d5"
+          "bytes": 35203,
+          "sha256": "910b940a7ed8eded83b31f7f607dae8d14a2354540b1cd84379d636e6e0ddbf6"
         },
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
-          "bytes": 45935,
-          "sha256": "1c39e79ad716daf92143de63709987ed3c66c4c8e06a24e65e4eabc77aeb96df"
+          "bytes": 73519,
+          "sha256": "9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7"
+        },
+        {
+          "path": "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
+          "exists": true,
+          "bytes": 21287,
+          "sha256": "59a63006b4d29ab5a9021c6bd89d212436b995d7da2d071c4a9a57b52ba47595"
         },
         {
           "path": "supabase/tests/database/schema_contract.test.sql",
           "exists": true,
-          "bytes": 33987,
-          "sha256": "7b3fec5c3e4376e3bef68b3c624bcb6a55625d805555efd35e1945b58b04fe4d"
+          "bytes": 33983,
+          "sha256": "1fc4f04aa77fd310f9b1fe925e8b90e2f8378e63df692eb2796f1b82298f648e"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
@@ -2123,19 +2170,19 @@
           "path": "docs/phase-4/catalog-source-release-runbook.md",
           "exists": true,
           "bytes": 14878,
-          "sha256": "59532d69a27e895a4c4ee98099d4c3fc792f7c97294629a7c81430966b52e485"
+          "sha256": "966f326ff781a55b5e8b849e9987a2720f597a19cf937099af128f1fa16fe51f"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 44497,
-          "sha256": "23af0ed8b122b12a3fc9bf6c966644e578801ec003bad9e174d86331ecf618de"
+          "bytes": 44739,
+          "sha256": "1e5edb0b4866372cb2c0f568c62836eae6254e0421debc87c44f1b0f742fbbd4"
         },
         {
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
-          "bytes": 15548,
-          "sha256": "040d445364fb96f4f54f07e4db0d2360a61005707f6f7a963998f564e6446397"
+          "bytes": 15742,
+          "sha256": "42625d1633c425c8289e6cd239756ff4892693606c3ba652847f6a8e626893af"
         }
       ]
     },
@@ -2161,6 +2208,7 @@
         "supabase/functions/catalog-report/privacy.test.ts",
         "supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql",
         "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+        "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
         "apps/mobile/src/features/catalog/client.ts",
         "apps/mobile/src/features/catalog/client.test.ts",
@@ -2212,26 +2260,32 @@
         {
           "path": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
           "exists": true,
-          "bytes": 136620,
-          "sha256": "b6f9e51b2e64880f9be7811a8f4085706e4bd963aee2b2c9980d6d243e54ca55"
+          "bytes": 165489,
+          "sha256": "dd9f1537dd7bc68810d9e1322055a6c36a1fef6e873e90577687f133094dcdb2"
+        },
+        {
+          "path": "supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql",
+          "exists": true,
+          "bytes": 4519,
+          "sha256": "9afd1ad223c9e7587d42118cee9dbc4fe0b0ea641de4f6fad44d8ecb20d79ccb"
         },
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
-          "bytes": 45935,
-          "sha256": "1c39e79ad716daf92143de63709987ed3c66c4c8e06a24e65e4eabc77aeb96df"
+          "bytes": 73519,
+          "sha256": "9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 23409,
-          "sha256": "6dae85551fc7891582a285fb019ac50f1348f0e446c26836a36715d44f84e9bf"
+          "bytes": 23827,
+          "sha256": "a134e2bb32ea3fde57ef7dbcbe987ef15a5010a440ec38700731a2ea339e9a0e"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 30700,
-          "sha256": "fcc2d634af20a5ad8ad1e3b5151e8f057d165b32a9c3da33e3a4359c3633dc63"
+          "bytes": 31695,
+          "sha256": "42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297"
         },
         {
           "path": "docs/FOR_TAS_TO_DO.md",
@@ -2267,14 +2321,14 @@
         {
           "path": "docs/phase-4/observability-dashboard.md",
           "exists": true,
-          "bytes": 5238,
-          "sha256": "83d062519e31f6414b46af0bc4c3d0c994547edc39ffe3b08822c8f37d70349a"
+          "bytes": 5335,
+          "sha256": "ffc77c9c33712b2a7b81bf92103e9bc4e71237a60ed40cd96b3aaad7298f0949"
         },
         {
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
           "bytes": 8829,
-          "sha256": "57edbb0dc8225750580ce647270aee17440b591b962b3c356d42c083620d540b"
+          "sha256": "cdb34ac2abbabd81d2fab71b47b0f3f53237c02e3fa71dad427655e9712aa0b9"
         },
         {
           "path": "docs/phase-10/support-operations.md",

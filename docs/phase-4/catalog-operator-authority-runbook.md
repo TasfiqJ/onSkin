@@ -180,16 +180,16 @@ schema v1 exposes no operator grant-management or audit-export action.
 
 ## 6. Least-privilege capability model
 
-| Capability | May do | Must not do |
-| --- | --- | --- |
-| Queue reader (`correction_queue_read`, `source_queue_read`) | Read bounded minimized summaries | Read raw tables, reporter identity, or arbitrary payloads |
-| Correction claimant (`correction_claim`) | Take a five-minute lease on one correction report | Claim a product hold or source/import item |
-| Hold claimant (`catalog_hold_claim`) | Take a five-minute lease on one reporter-free product hold | Claim or reopen personal correction intake |
-| Source claimant (`source_claim`) | Take a five-minute lease on one source/import item | Claim correction intake or a product hold |
-| Triage operator (`correction_triage`) | Move `open` to `triaged`, creating an independent hold | Accept/reject or release that hold |
-| Decision reviewer (`correction_disposition`, `source_review_record`) | Record `accepted` or `rejected` or an immutable source-review recommendation | Rewrite intake, invoke owner-only CAT-02/CAT-03 authority, or release |
-| Catalog repair attestor (`correction_queue_read`, `catalog_hold_claim`, `catalog_repair_attest`) | Claim a reporter-free hold and bind reviewed CAT-02/CAT-03 repair receipts | Reopen personal report detail, edit correction decisions, call migration-owner authority functions, or release its resulting hold |
-| Release operator (`correction_queue_read`, `catalog_hold_claim`, `catalog_hold_release`) | Claim a reporter-free hold, verify the exact current repair receipt, and release it | Triage/decide the same issue or attest its repair |
+| Capability                                                                                       | May do                                                                              | Must not do                                                                                                                       |
+| ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Queue reader (`correction_queue_read`, `source_queue_read`)                                      | Read bounded minimized summaries                                                    | Read raw tables, reporter identity, or arbitrary payloads                                                                         |
+| Correction claimant (`correction_claim`)                                                         | Take a five-minute lease on one correction report                                   | Claim a product hold or source/import item                                                                                        |
+| Hold claimant (`catalog_hold_claim`)                                                             | Take a five-minute lease on one reporter-free product hold                          | Claim or reopen personal correction intake                                                                                        |
+| Source claimant (`source_claim`)                                                                 | Take a five-minute lease on one source/import item                                  | Claim correction intake or a product hold                                                                                         |
+| Triage operator (`correction_triage`)                                                            | Move `open` to `triaged`, creating an independent hold                              | Accept/reject or release that hold                                                                                                |
+| Decision reviewer (`correction_disposition`, `source_review_record`)                             | Record `accepted` or `rejected` or an immutable source-review recommendation        | Rewrite intake, invoke owner-only CAT-02/CAT-03 authority, or release                                                             |
+| Catalog repair attestor (`correction_queue_read`, `catalog_hold_claim`, `catalog_repair_attest`) | Claim a reporter-free hold and bind reviewed CAT-02/CAT-03 repair receipts          | Reopen personal report detail, edit correction decisions, call migration-owner authority functions, or release its resulting hold |
+| Release operator (`correction_queue_read`, `catalog_hold_claim`, `catalog_hold_release`)         | Claim a reporter-free hold, verify the exact current repair receipt, and release it | Triage/decide the same issue or attest its repair                                                                                 |
 
 Schema v1 intentionally exposes no operator audit-reader or grant-administrator
 capability. Redacted audit review and grant lifecycle administration stay on a
@@ -467,6 +467,12 @@ application gateway functions. Reusing a drifted role fails migration. It has no
 usage or direct table, sequence, Auth,
 grant-management, runtime-control, or CAT-02/CAT-03 owner grant. The Edge source
 contains no service-role or secret-key transport.
+
+Forward migration
+`20260726000065_catalog_operator_transition_conflict_target.sql` repairs both
+runtime-ambiguous transition conflict targets against the named work-state
+primary key, preserves that exact six-RPC ACL/security posture, and removes
+`PUBLIC` function execution from the migration owner's global default ACL.
 
 The migration deliberately does not store a database password. A production
 operator must generate a high-entropy credential in the approved secret

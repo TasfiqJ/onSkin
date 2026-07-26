@@ -455,6 +455,10 @@ module.exports = () => {
     NSCameraUsageDescription: permissionCopy.cameraUsageDescription,
     NSFaceIDUsageDescription: permissionCopy.faceIDUsageDescription,
   };
+  expo.ios.entitlements = {
+    ...(expo.ios.entitlements ?? {}),
+    'com.apple.developer.declared-age-range': true,
+  };
   if (!iosWidgetExtensionBuildEnabled) {
     delete expo.ios.infoPlist.NSSupportsLiveActivities;
     delete expo.ios.infoPlist.NSSupportsLiveActivitiesFrequentUpdates;
