@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-26",
+  "feature": "CORE-03 production-closed routine cadence direct entry",
+  "surface": "Expo web in Codex in-app browser",
+  "overallResult": "pass_with_external_gates_open",
+  "sourceBinding": {
+    "kind": "working_tree_at_capture",
+    "gitHeadBeforeCaptureCommit": "d21a2877a09e140bf87125f0707a4e65e0808aa3",
+    "immutableCommitBinding": false
+  },
+  "evidenceApplicability": "Historical outer-gate UI evidence only. It predates later source-artifact, recovery/stop-refer, explainability-copy, ramp-cache, notification-admission, and stale-state hardening and is not exact-current-source proof.",
+  "startCommand": "EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed npm run web -- --port 8091",
+  "routes": [
+    "/cycle/week",
+    "/cycle/settings",
+    "/cycle/why-tonight",
+    "/cycle/disruption",
+    "/cycle/recovery",
+    "/cycle/phased-intro",
+    "/cycle/procedure",
+    "/routine/ramp",
+    "/routine/tolerance"
+  ],
+  "viewports": [
+    {
+      "cssPixels": "375x666",
+      "classification": "one-pixel-shorter stress boundary for the requested 375x667 class",
+      "reason": "The in-app browser viewport controller could produce 375x666 or 376x668, but not exact 375x667."
+    },
+    {
+      "cssPixels": "390x844",
+      "classification": "supported iPhone-class viewport"
+    },
+    {
+      "cssPixels": "430x932",
+      "classification": "supported iPhone-class viewport"
+    }
+  ],
+  "assertions": {
+    "routeViewportObservations": 27,
+    "routeViewportPasses": 27,
+    "refreshObservations": 9,
+    "refreshPasses": 9,
+    "safeExitControlsExercised": 11,
+    "safeExitPasses": 11,
+    "minimumVisibleControlWidthPx": 48,
+    "minimumVisibleControlHeightPx": 48,
+    "horizontalOverflowFailures": 0,
+    "clippedVisibleControlFailures": 0,
+    "forbiddenDraftCopyFailures": 0,
+    "javascriptDialogs": 0
+  },
+  "diagnostics": {
+    "windowStart": "2026-07-26T14:19:55.088Z",
+    "windowEnd": "2026-07-26T14:29:17.190Z",
+    "errors": 0,
+    "expectedDevelopmentWarnings": 132,
+    "warningClasses": 4,
+    "details": "browser-console-summary.json"
+  },
+  "bugsFoundAndFixed": [
+    "Metro watched the repo-local .tmp verification tree and reported a package-name collision.",
+    "The closed Cycle Week card still displayed the unreviewed order moisturizer to SPF."
+  ],
+  "openGates": [
+    "Exact 375x667 CSS-pixel evidence remains open because the selected browser controller cannot represent that exact pair.",
+    "Native iOS simulator, physical iPhone, Dynamic Type, VoiceOver, safe-area, and archive-identical production evidence remain open.",
+    "The packet is not registered in e2e:human:manifest and has no immutable source-commit binding.",
+    "Current-exact-source partial-admission and independently closed recovery/explainability evidence remain open.",
+    "Professional review, legal review, market clearance, hosted services, and App Store acceptance remain open."
+  ]
+}
