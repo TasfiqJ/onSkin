@@ -445,11 +445,23 @@ and 114 Apple-lifecycle assertions, plus 48 quiz/profile-provenance and 89
 CAT-08 operator assertions. A fresh 64-migration reset and the focused CAT-08
 exact-role plan pass locally. The exhaustive current structural plans,
 error-level schema lint, migration-shadow drift check, temporary type
-generation, and two-connection rehearsal are running and remain required before
-this revision can claim complete local database replay evidence.
+generation, and two-connection rehearsal do not yet pass as one gate. The first
+current-chain run exposed six stale migration-head assertions, now corrected,
+plus a health-consent pgTAP helper/grant failure after the fail-closed default
+function ACL repair; that helper boundary remains under diagnosis and the full
+gate must be rerun before this revision can claim complete local database replay
+evidence.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system,
 the separate RevenueCat/app-grant entitlement authorities, and the `0064`/
 `0065` forward-upgrade paths.
+They do not clear a PostgreSQL major-version upgrade for CAT-08. PostgreSQL
+16/17 changed `CREATEROLE` and role-membership administration semantics, while
+the full CAT-08 authority chain is intentionally pinned to the Supabase
+PostgreSQL 15 runtime and requires a membership-free operator gateway. No major
+upgrade may ship until the complete `0063`-through-current chain passes under a
+Supabase-equivalent nonsuperuser migration owner and proves that
+`catalog_operator_edge` has no membership or admin grants. The existing
+PostgreSQL 17 `0065` superuser rehearsal proves forward-migration behavior only.
 
 The DB-06 source procedure is now complete for a first empty staging project.
 It deploys only a Git-blob-verified immutable clean-main snapshot through the

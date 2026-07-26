@@ -7529,6 +7529,20 @@ file pass all 89 assertions, including capability denial before cleanup,
 lease/CAS/idempotency, owner export isolation, stale repair-proof denial, and
 source recommendation non-mutation.
 
+The complete CAT-08 authority chain remains pinned to the Supabase PostgreSQL
+15 runtime. PostgreSQL 16/17 changed `CREATEROLE` and membership-administration
+semantics; the existing PostgreSQL 17 `0065` rehearsal runs as superuser and
+does not prove that a Supabase-equivalent nonsuperuser migration owner can
+preserve the membership-free `catalog_operator_edge` boundary. Any PostgreSQL
+major upgrade is therefore blocked until the complete `0063`-through-current
+chain passes that exact-role rehearsal with zero membership/admin grants.
+
+The first exhaustive 64-migration database replay attempt did not pass. It
+identified six stale `0064`/63-migration head assertions, now advanced to
+`0065`/64 migrations, and a health-consent pgTAP helper/grant failure exposed
+after the global default function-ACL repair. No exhaustive pass is claimed
+until that helper boundary is fixed and the entire isolated reset gate reruns.
+
 ### CORE-01 age and skin-profile provenance source checkpoint (2026-07-26)
 
 Implemented an exact minimized age-policy receipt outside every health-data

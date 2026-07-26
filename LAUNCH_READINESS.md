@@ -51,6 +51,10 @@ E2E evidence identified by date:
   preserves the Edge-only ACL, and installs fail-closed migration-owner function
   defaults; its exact-byte rehearsal also passes PostgreSQL 15 and 17. A fresh
   64-migration reset and the focused exact-role CAT-08 pgTAP file pass 89/89. A
+  PostgreSQL major-version upgrade remains blocked: the PostgreSQL 17 rehearsal
+  is a superuser forward-migration check, not a full-chain
+  Supabase-equivalent nonsuperuser proof of the membership-free
+  `catalog_operator_edge` invariant. A
   first-party Declared Age Range Expo iOS module and entitlement source exist,
   but the adapter remains literally `launch_blocked` pending Xcode 26.2+ signed
   archive, sandbox, notification-rescission, physical-iPhone, and professional
@@ -62,6 +66,9 @@ E2E evidence identified by date:
   Repository typecheck/lint pass; the full mobile suite passes 319 files /
   3,800 tests. These are source/local-web facts, not hosted Supabase, native
   Apple, legal/privacy/clinical, App Review, market, or revenue clearance.
+  The combined exhaustive database replay gate is still open: its first
+  current-chain run exposed six corrected stale-head expectations and a
+  health-consent pgTAP helper/grant failure that must be repaired and rerun.
 
 - IOS-02 now has a reviewed, hash-pinned native lifecycle source candidate for
   the exact installed `expo-widgets` 56.0.23 package. RoutineKind timeline and
