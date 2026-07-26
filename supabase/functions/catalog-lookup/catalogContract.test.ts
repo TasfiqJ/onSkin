@@ -1,7 +1,9 @@
 import {
+  ACTIVE_CATALOG_PRODUCT_FILTER,
   CATALOG_LOOKUP_PRODUCT_SELECT,
   REVIEWED_CATALOG_FRESHNESS_FILTER,
   externalCatalogProvenance,
+  shouldFetchExternalCatalogCandidate,
 } from './catalogContract.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -45,5 +47,21 @@ Deno.test('external lookup candidates do not fabricate catalog or freshness prov
   assert(
     provenance.default_pao_months === null && provenance.product_pao_expiry.length === 0,
     'external candidates must not synthesize PAO or expiry evidence',
+  );
+});
+
+Deno.test('inactive mapped catalog barcodes remain tombstones for external lookup', () => {
+  assert(
+    ACTIVE_CATALOG_PRODUCT_FILTER.column === 'status' &&
+      ACTIVE_CATALOG_PRODUCT_FILTER.value === 'active',
+    'catalog intake must filter products to active status',
+  );
+  assert(
+    !shouldFetchExternalCatalogCandidate(true),
+    'a mapped inactive barcode must not be resurrected through live OBF',
+  );
+  assert(
+    shouldFetchExternalCatalogCandidate(false),
+    'an unmapped barcode may still use the external fallback',
   );
 });

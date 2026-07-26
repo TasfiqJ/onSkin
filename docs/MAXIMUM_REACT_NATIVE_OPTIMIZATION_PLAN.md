@@ -1227,6 +1227,29 @@ Build a restartable ingestion pipeline:
 
 Load-test search after ingestion, not only on fixtures.
 
+Current local PostgreSQL replay checkpoint (2026-07-25): a strict Docker-backed
+PostgreSQL 15 harness now applies the exact eight-migration catalog closure and
+streams a 50,000-line synthetic snapshot through the production importer. It
+proves commit-then-response-loss replay, two real rolled-back pre-commit
+attempts, resume by a fresh worker from the server receipt, count/checksum
+reconciliation, duplicate latest-line wins, ready-only promotion, predecessor
+switching, and retirement of 49,948 absent products. Forward migration
+`20260725000054_catalog_import_identity_and_visibility.sql` binds each
+source/revision pair to exactly one artifact SHA-256 and importer version,
+creates four active-only search indexes, and changes all three effective search
+predicates to `status = 'active'`. Barcode intake likewise treats an inactive
+mapped product as a tombstone, returning manual fallback without resurrecting
+it through live OBF. The strict run naturally used the active bigram, trigram,
+and rank indexes with no products sequential scan. It also reapplied the
+nontransactional migration after function replacement, exercised every import
+RPC as `service_role`, proved anon/authenticated denial, and rejected both
+pre-ready and unapproved promotion in PostgreSQL. Barcode tombstone branching
+has focused pure/source-contract proof rather than a hosted handler execution.
+Hosted staging, a complete approved OBF artifact, migration-runner/version
+proof, client visibility during promotion, and an operator rollback drill
+remain required before verification. See
+`docs/optimization/evidence/2026-07-25_catalog-import-postgres-replay.md`.
+
 ### 10.6 Data export correctness and performance
 
 The export function serially performs roughly 30 unpaginated `select('*')` operations. PostgREST defaults can cap results at 1,000 rows, silently making an export incomplete.

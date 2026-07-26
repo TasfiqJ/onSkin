@@ -6,6 +6,19 @@ export const REVIEWED_CATALOG_FRESHNESS_FILTER = {
   value: 'reviewed',
 } as const;
 
+export const ACTIVE_CATALOG_PRODUCT_FILTER = {
+  column: 'status',
+  value: 'active',
+} as const;
+
+/**
+ * A known catalog barcode is a tombstone even when its product is inactive.
+ * Do not resurrect a retired/blocked catalog row through the live OBF fallback.
+ */
+export function shouldFetchExternalCatalogCandidate(hasCatalogBarcodeMapping: boolean): boolean {
+  return !hasCatalogBarcodeMapping;
+}
+
 export function externalCatalogProvenance(barcode: string, snapshotDate: string | null) {
   return {
     region: null,

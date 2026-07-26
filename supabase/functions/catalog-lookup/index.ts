@@ -5,9 +5,11 @@ import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 import {
+  ACTIVE_CATALOG_PRODUCT_FILTER,
   CATALOG_LOOKUP_PRODUCT_SELECT,
   REVIEWED_CATALOG_FRESHNESS_FILTER,
   externalCatalogProvenance,
+  shouldFetchExternalCatalogCandidate,
 } from './catalogContract.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -188,6 +190,7 @@ Deno.serve(async (req) => {
       .from('products')
       .select(CATALOG_LOOKUP_PRODUCT_SELECT)
       .eq('id', barcodeRow.product_id)
+      .eq(ACTIVE_CATALOG_PRODUCT_FILTER.column, ACTIVE_CATALOG_PRODUCT_FILTER.value)
       .eq(REVIEWED_CATALOG_FRESHNESS_FILTER.column, REVIEWED_CATALOG_FRESHNESS_FILTER.value)
       .maybeSingle();
     if (productError) return json({ error: 'lookup_failed' }, 500);
@@ -203,6 +206,18 @@ Deno.serve(async (req) => {
       });
       return json({ result: 'matched', product: { ...product, barcode } });
     }
+  }
+
+  if (!shouldFetchExternalCatalogCandidate(Boolean(barcodeRow?.product_id))) {
+    await caller.from('catalog_lookup_events').insert({
+      user_id: userId,
+      lookup_type: 'barcode',
+      barcode,
+      result: 'no_match',
+      source_key: null,
+      quality_grade: null,
+    });
+    return json({ result: 'no_match', manualFallback: true });
   }
 
   const external = await fetchOpenBeautyFacts(barcode);
