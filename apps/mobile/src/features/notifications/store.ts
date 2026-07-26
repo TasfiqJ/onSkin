@@ -1,21 +1,21 @@
-import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
   runHealthDataWriteOperation,
-  type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
+import { DEFAULT_ROUTINE_REMINDER_TIMES } from './defaults';
+
 /**
  * Local-first notification preferences (docs/07 §7, the D-029 shelf/photos pattern).
- * AsyncStorage is the v1 source of truth so the settings + scheduling work offline
- * and before the backend exists (B-SUPABASE); a best-effort `notification_preferences`
- * mirror keeps the row ready to reconcile. Times are "HH:MM" (24h) locally and
- * mapped to the DB `time` columns on mirror, with the current device timezone
- * carried in the DB `timezone` field. This is the single source of truth for the
- * AM/PM reminder schedule, the tier toggles, quiet hours, and discretion. It
- * supersedes the Slice-20 local photo-reminder flag (now `captureReminders`).
+ * The encrypted device store is the source of truth so settings and scheduling
+ * work offline without transmitting reminder times, quiet hours, timezone, or
+ * inferred routine interests. Remote preference/log sync remains closed until
+ * CAT-09 privacy, consent, retention, and exact-build disclosure gates pass.
+ * Times are "HH:MM" (24h). Every notification purpose defaults off; the AM/PM
+ * values below are proposals that become active only after the exact times are
+ * shown and accepted.
  */
 const KEY = 'onskin.notifPrefs.v1';
 const SCHEMA_VERSION = 1 as const;
@@ -48,11 +48,11 @@ export const NOTIF_PREFS_INVALID = 'NOTIF_PREFS_INVALID';
 export const NOTIF_PREFS_UNSUPPORTED_VERSION = 'NOTIF_PREFS_UNSUPPORTED_VERSION';
 
 export const DEFAULT_PREFS: NotifPrefs = {
-  amEnabled: true,
-  pmEnabled: true,
-  amTime: '07:30',
-  pmTime: '21:30',
-  streakNudges: true,
+  amEnabled: false,
+  pmEnabled: false,
+  amTime: DEFAULT_ROUTINE_REMINDER_TIMES.amTime,
+  pmTime: DEFAULT_ROUTINE_REMINDER_TIMES.pmTime,
+  streakNudges: false,
   replenishmentAlerts: false,
   captureReminders: false,
   quietStart: '22:00',
@@ -256,39 +256,6 @@ export async function loadNotifPrefs(): Promise<NotifPrefs> {
   }
 }
 
-function toDbTime(hm: string | null): string | null {
-  return hm ? `${hm}:00` : null;
-}
-
-/** Best-effort mirror to the owner-only `notification_preferences` row (B-SUPABASE). */
-async function mirror(p: NotifPrefs, lease: HealthDataWriteOperationLease): Promise<void> {
-  try {
-    const { data: u } = await getPersistedSupabaseUser();
-    lease.assertCurrent();
-    if (u.user?.id !== lease.ownerUserId) return;
-    await supabase.from('notification_preferences').upsert({
-      user_id: lease.ownerUserId,
-      am_reminder_time: toDbTime(p.amTime),
-      pm_reminder_time: toDbTime(p.pmTime),
-      am_reminder_enabled: p.amEnabled,
-      pm_reminder_enabled: p.pmEnabled,
-      streak_nudges: p.streakNudges,
-      replenishment_alerts: p.replenishmentAlerts,
-      capture_reminders: p.captureReminders,
-      quiet_hours_start: toDbTime(p.quietStart),
-      quiet_hours_end: toDbTime(p.quietEnd),
-      timezone: p.timezone,
-      live_activity_enabled: p.liveActivityEnabled,
-      promotional_opt_in: p.promotionalOptIn,
-      lockscreen_discreet: p.lockscreenDiscreet,
-    });
-    lease.assertCurrent();
-  } catch {
-    lease.assertCurrent();
-    /* best-effort until backend configured */
-  }
-}
-
 export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifPrefs> {
   const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
   if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
@@ -310,8 +277,6 @@ export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifP
     });
     lease.assertCurrent();
     if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
-    await mirror(next, lease);
-    lease.assertCurrent();
     return next;
   });
 }

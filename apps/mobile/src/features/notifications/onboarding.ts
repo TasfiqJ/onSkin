@@ -5,14 +5,27 @@ import {
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 
 import { applyNotificationPreferencePatch } from './applyPreferences';
-import { rescheduleReminders, requestPermission } from './deliver';
+import { DEFAULT_ROUTINE_REMINDER_TIMES } from './defaults';
+import {
+  isDeliverableAuthorizationState,
+  rescheduleReminders,
+  requestPermission,
+  type NotificationPermissionOutcome,
+} from './deliver';
 import { saveNotifPrefs, type NotifPrefs } from './store';
 
-const ROUTINE_REMINDERS_ON: Partial<NotifPrefs> = { amEnabled: true, pmEnabled: true };
-const ROUTINE_REMINDERS_OFF: Partial<NotifPrefs> = { amEnabled: false, pmEnabled: false };
+export const PROPOSED_ROUTINE_REMINDER_TIMES = DEFAULT_ROUTINE_REMINDER_TIMES;
+
+const OPTIONAL_NOTIFICATION_PURPOSES_OFF: Partial<NotifPrefs> = {
+  streakNudges: false,
+  replenishmentAlerts: false,
+  captureReminders: false,
+  liveActivityEnabled: false,
+  promotionalOptIn: false,
+};
 
 type NotificationOnboardingDeps = {
-  requestPermission: () => Promise<boolean>;
+  requestPermission: () => Promise<NotificationPermissionOutcome>;
   saveNotifPrefs: (patch: Partial<NotifPrefs>) => Promise<NotifPrefs>;
   rescheduleReminders: (prefs: NotifPrefs) => Promise<void>;
 };
@@ -24,21 +37,29 @@ const defaultDeps: NotificationOnboardingDeps = {
 };
 
 export async function acceptRoutineReminderSoftAsk(
+  times: Readonly<typeof PROPOSED_ROUTINE_REMINDER_TIMES> = PROPOSED_ROUTINE_REMINDER_TIMES,
   deps: NotificationOnboardingDeps = defaultDeps,
-): Promise<boolean> {
+): Promise<NotificationPermissionOutcome> {
   const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
   if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
   return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
     lease.assertCurrent();
-    const granted = await deps.requestPermission();
+    const outcome = await deps.requestPermission();
     lease.assertCurrent();
+    const enabled = isDeliverableAuthorizationState(outcome.state);
     await applyNotificationPreferencePatch(
-      granted ? ROUTINE_REMINDERS_ON : ROUTINE_REMINDERS_OFF,
+      {
+        ...OPTIONAL_NOTIFICATION_PURPOSES_OFF,
+        amEnabled: enabled,
+        pmEnabled: enabled,
+        amTime: times.amTime,
+        pmTime: times.pmTime,
+      },
       { save: deps.saveNotifPrefs, reschedule: deps.rescheduleReminders },
       lease,
     );
     lease.assertCurrent();
-    return granted;
+    return outcome;
   });
 }
 
@@ -50,7 +71,11 @@ export async function declineRoutineReminderSoftAsk(
   await runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
     lease.assertCurrent();
     await applyNotificationPreferencePatch(
-      ROUTINE_REMINDERS_OFF,
+      {
+        ...OPTIONAL_NOTIFICATION_PURPOSES_OFF,
+        amEnabled: false,
+        pmEnabled: false,
+      },
       { save: deps.saveNotifPrefs, reschedule: deps.rescheduleReminders },
       lease,
     );

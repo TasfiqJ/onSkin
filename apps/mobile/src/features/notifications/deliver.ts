@@ -17,17 +17,20 @@ import {
   captureHealthDataWriteLease,
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
   HEALTH_DATA_WRITE_OWNER_MISMATCH,
-  runHealthDataWriteOperation,
   type HealthDataWriteLease,
 } from '@/lib/consent/healthDataWriteAdmission';
-import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import { notificationContentForLockScreen } from './copy';
-import { canSend, reminderTimeOutsideQuietHours, tierEnabled, tierOf, toMinutes } from './policy';
-import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
+import { canSend, reminderTimeOutsideQuietHours, tierEnabled, toMinutes } from './policy';
+import { reserveNotificationSlotLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
 
 export { configureNotifications } from './startup';
+
+export type EventTriggeredNotificationKind = Extract<
+  NotificationKind,
+  'replenishment' | 'rampup' | 'deescalation' | 'winback'
+>;
 
 type HealthNotificationOperation = Readonly<{
   assertCurrent: () => void;
@@ -37,6 +40,7 @@ type HealthNotificationOperation = Readonly<{
 }>;
 
 const inFlightHealthNotificationOperations = new Set<Promise<unknown>>();
+let healthNotificationOperationTail: Promise<void> = Promise.resolve();
 
 function assertHealthNotificationOperationCurrent(
   accountLease: AccountGenerationLease,
@@ -55,38 +59,49 @@ async function cancelCreatedHealthNotifications(ids: ReadonlySet<string>): Promi
 async function runHealthNotificationOperation<T>(
   operation: (context: HealthNotificationOperation) => Promise<T>,
 ): Promise<T> {
-  const pending = runAccountGenerationOperation(async (accountLease) => {
-    const healthLease = captureHealthDataWriteLease();
-    const createdIds = new Set<string>();
-    const assertCurrent = () => assertHealthNotificationOperationCurrent(accountLease, healthLease);
-    const schedule = async (
-      request: Parameters<typeof Notifications.scheduleNotificationAsync>[0],
-    ) => {
-      assertCurrent();
-      const id = await Notifications.scheduleNotificationAsync(request);
-      createdIds.add(id);
+  const execute = () =>
+    runAccountGenerationOperation(async (accountLease) => {
+      const healthLease = captureHealthDataWriteLease();
+      const createdIds = new Set<string>();
+      const assertCurrent = () =>
+        assertHealthNotificationOperationCurrent(accountLease, healthLease);
+      const schedule = async (
+        request: Parameters<typeof Notifications.scheduleNotificationAsync>[0],
+      ) => {
+        assertCurrent();
+        if (!isDeliverableAuthorizationState(await getPermissionStatus())) {
+          throw new Error('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
+        }
+        assertCurrent();
+        const id = await Notifications.scheduleNotificationAsync(request);
+        createdIds.add(id);
+        try {
+          assertCurrent();
+        } catch (error) {
+          await Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined);
+          createdIds.delete(id);
+          throw error;
+        }
+        return id;
+      };
+
       try {
         assertCurrent();
+        const result = await operation({ assertCurrent, schedule });
+        assertCurrent();
+        return result;
       } catch (error) {
-        await Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined);
-        createdIds.delete(id);
+        // If authorization closes between two schedules, remove every reminder
+        // this exact operation already published before allowing cleanup to drain.
+        await cancelCreatedHealthNotifications(createdIds);
         throw error;
       }
-      return id;
-    };
-
-    try {
-      assertCurrent();
-      const result = await operation({ assertCurrent, schedule });
-      assertCurrent();
-      return result;
-    } catch (error) {
-      // If authorization closes between two schedules, remove every reminder
-      // this exact operation already published before allowing cleanup to drain.
-      await cancelCreatedHealthNotifications(createdIds);
-      throw error;
-    }
-  });
+    });
+  const pending = healthNotificationOperationTail.then(execute, execute);
+  healthNotificationOperationTail = pending.then(
+    () => undefined,
+    () => undefined,
+  );
   inFlightHealthNotificationOperations.add(pending);
   try {
     return await pending;
@@ -118,30 +133,115 @@ export function nowHHMM(d = new Date()): string {
  * are LOCAL notifications (§8).
  */
 
-export async function getPermissionStatus(): Promise<'granted' | 'denied' | 'undetermined'> {
+export type NotificationAuthorizationState =
+  | 'not_determined'
+  | 'denied'
+  | 'authorized'
+  | 'provisional'
+  | 'ephemeral'
+  | 'unavailable';
+
+export type NotificationPermissionOutcome =
+  | {
+      kind: 'already_authorized';
+      state: 'authorized' | 'provisional' | 'ephemeral';
+      requestAttempted: false;
+    }
+  | {
+      kind: 'authorized';
+      state: 'authorized' | 'provisional' | 'ephemeral';
+      requestAttempted: true;
+    }
+  | { kind: 'denied'; state: 'denied'; requestAttempted: true }
+  | { kind: 'blocked'; state: 'denied'; requestAttempted: false }
+  | { kind: 'unchanged'; state: 'not_determined'; requestAttempted: true }
+  | { kind: 'error'; state: 'unavailable'; requestAttempted: boolean };
+
+export function isDeliverableAuthorizationState(
+  state: NotificationAuthorizationState,
+): state is 'authorized' | 'provisional' | 'ephemeral' {
+  return state === 'authorized' || state === 'provisional' || state === 'ephemeral';
+}
+
+function authorizationState(
+  status: Notifications.NotificationPermissionsStatus,
+): NotificationAuthorizationState {
+  if (Platform.OS === 'ios' && status.ios) {
+    switch (status.ios.status) {
+      case Notifications.IosAuthorizationStatus.AUTHORIZED:
+        return 'authorized';
+      case Notifications.IosAuthorizationStatus.PROVISIONAL:
+        return 'provisional';
+      case Notifications.IosAuthorizationStatus.EPHEMERAL:
+        return 'ephemeral';
+      case Notifications.IosAuthorizationStatus.DENIED:
+        return 'denied';
+      case Notifications.IosAuthorizationStatus.NOT_DETERMINED:
+        return 'not_determined';
+    }
+  }
+  if (status.status === 'granted') return 'authorized';
+  if (status.status === 'denied') return 'denied';
+  return 'not_determined';
+}
+
+async function readAuthorization(): Promise<{
+  state: NotificationAuthorizationState;
+  canAskAgain: boolean;
+}> {
+  const status = await Notifications.getPermissionsAsync();
+  return { state: authorizationState(status), canAskAgain: status.canAskAgain };
+}
+
+export async function getPermissionStatus(): Promise<NotificationAuthorizationState> {
   try {
-    const { status } = await Notifications.getPermissionsAsync();
-    return status === 'granted' ? 'granted' : status === 'denied' ? 'denied' : 'undetermined';
+    return (await readAuthorization()).state;
   } catch {
-    return 'undetermined';
+    return 'unavailable';
   }
 }
 
 /** The OS prompt. Fired only after the soft-ask "yes" (docs/07 §3.2). */
-export async function requestPermission(): Promise<boolean> {
+export async function requestPermission(): Promise<NotificationPermissionOutcome> {
+  let requestAttempted = false;
   try {
-    const { status } = await Notifications.requestPermissionsAsync();
-    return status === 'granted';
+    const before = await readAuthorization();
+    if (isDeliverableAuthorizationState(before.state)) {
+      return {
+        kind: 'already_authorized',
+        state: before.state,
+        requestAttempted: false,
+      };
+    }
+    if (before.state === 'denied' && !before.canAskAgain) {
+      return { kind: 'blocked', state: 'denied', requestAttempted: false };
+    }
+    requestAttempted = true;
+    const after = await Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowBadge: false,
+        allowSound: false,
+      },
+    });
+    const state = authorizationState(after);
+    if (isDeliverableAuthorizationState(state)) {
+      return { kind: 'authorized', state, requestAttempted: true };
+    }
+    if (state === 'denied') {
+      return { kind: 'denied', state: 'denied', requestAttempted: true };
+    }
+    return { kind: 'unchanged', state: 'not_determined', requestAttempted: true };
   } catch {
-    return false;
+    return { kind: 'error', state: 'unavailable', requestAttempted };
   }
 }
 
 /**
  * Cancel + reschedule the utility AM/PM reminders from the user's prefs. A reminder
  * whose chosen time falls inside quiet hours is shifted to the quiet-hours end so
- * nothing fires inside the window and the reminder still arrives. Idempotent and
- * safe to call on every prefs change.
+ * routine scheduling waits until the window ends. The OS still controls actual
+ * presentation. Idempotent and safe to call on every prefs change.
  */
 export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
   try {
@@ -150,6 +250,8 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
       const p = prefs ?? (await loadNotifPrefs());
       assertCurrent();
       await Notifications.cancelAllScheduledNotificationsAsync();
+      assertCurrent();
+      if (!isDeliverableAuthorizationState(await getPermissionStatus())) return;
       assertCurrent();
       const channelId = Platform.OS === 'android' ? 'routine' : undefined;
       const scheduleRoutine = async (kind: 'am_reminder' | 'pm_step', hm: string) => {
@@ -225,6 +327,7 @@ export async function scheduleTrialReminder(): Promise<void> {
     if (!e || !e.isActive || e.periodType !== 'trial' || !e.expiresAt) return;
     const fireAt = new Date(e.expiresAt).getTime() - 2 * 86_400_000;
     if (fireAt <= Date.now()) return; // already inside the final 2 days. Nothing to schedule
+    if (!isDeliverableAuthorizationState(await getPermissionStatus())) return;
     await Notifications.scheduleNotificationAsync({
       identifier: TRIAL_REMINDER_ID,
       content: {
@@ -254,34 +357,19 @@ export async function cancelTrialReminder(): Promise<void> {
   }
 }
 
-/** This week's count for a tier, from the content-free log (best-effort; B-SUPABASE). */
-async function sentThisWeekForTier(userId: string, tier: string): Promise<number> {
-  try {
-    return await runHealthDataWriteOperation(userId, async (lease) => {
-      const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
-      lease.assertCurrent();
-      const { count } = await supabase
-        .from('notification_log')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', userId) // explicit per-user scope, not relying on RLS alone
-        .eq('tier', tier)
-        .gte('sent_at', weekAgo);
-      lease.assertCurrent();
-      return count ?? 0;
-    });
-  } catch {
-    return 0;
-  }
-}
-
 /**
- * A behavioural-trigger notification (replenishment / rampup / de-escalation /
- * streak nudge / capture), gated by the frequency-cap engine + quiet hours (§9).
- * Fires an immediate local notification and logs metadata only. Returns whether it
- * was sent. Behavioural delivery is wired here for the features that raise these
- * triggers to call; the trigger *content* is owned by those features (docs/07 §1).
+ * An event-triggered optional notification (replenishment / ramp-up /
+ * de-escalation / win-back), gated by the frequency-cap engine + quiet hours (§9).
+ * Reserves device-local cap capacity before asking the native scheduler and returns
+ * whether the schedule request succeeded. A reservation is an attempt record, not
+ * delivery/open proof. Behavioural delivery is wired here for the features that
+ * raise these triggers to call; the trigger *content* is owned by those features
+ * (docs/07 §1).
  */
-export async function notifyBehavioural(kind: NotificationKind, hhmm: string): Promise<boolean> {
+export async function notifyBehavioural(
+  kind: EventTriggeredNotificationKind,
+  hhmm: string,
+): Promise<boolean> {
   if (kind === 'rampup' && !canUseRoutineCadence()) return false;
   if (kind === 'deescalation' && !canUseRoutineRecovery()) return false;
   try {
@@ -293,34 +381,21 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
       // and especially the off-by-default promotional tier. Never fires.
       if (!tierEnabled(kind, p)) return false;
       const now = Date.now();
-      // Frequency cap source of truth = the local sent-log (works offline), unioned
-      // with the server log when present. Without this, the server count is 0 offline
-      // (v1) and a foreground trigger would re-fire on every app open (docs/07 §9).
-      let sent = await sentThisWeekForTierLocal(tierOf(kind), now);
-      assertCurrent();
-      let userId: string | undefined;
-      try {
-        const { data } = await getPersistedSupabaseUser();
-        assertCurrent();
-        userId = data.user?.id;
-        if (userId) {
-          sent = Math.max(sent, await sentThisWeekForTier(userId, tierOf(kind)));
-          assertCurrent();
-        }
-      } catch {
-        // A boundary invalidation is not an offline fallback. Re-asserting the
-        // lease propagates it before any notification can be scheduled.
-        assertCurrent();
-        /* offline. Local count stands */
-      }
       const decision = canSend({
         kind,
-        sentThisWeekForTier: sent,
+        // The atomic device-local reservation below owns the cap decision. This
+        // pure check handles quiet hours without a split read/then-write race.
+        sentThisWeekForTier: 0,
         now: hhmm,
         quietStart: p.quietStart,
         quietEnd: p.quietEnd,
       });
       if (!decision.allowed) return false;
+      assertCurrent();
+      if (!isDeliverableAuthorizationState(await getPermissionStatus())) return false;
+      assertCurrent();
+      if (!(await reserveNotificationSlotLocal(kind, now))) return false;
+      assertCurrent();
       try {
         assertCurrent();
         await schedule({
@@ -330,32 +405,12 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
           trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
         });
         assertCurrent();
-        await recordSentLocal(kind, now); // local cap ledger (v1 source of truth)
-        assertCurrent();
       } catch {
         // Do not collapse an account-boundary invalidation into an ordinary
         // notification failure; the outer boundary handler must stop this
         // continuation before it can write into the next owner's state.
         assertCurrent();
         return false;
-      }
-      if (userId) {
-        try {
-          assertCurrent();
-          await runHealthDataWriteOperation(userId, async (lease) => {
-            lease.assertCurrent();
-            await supabase.from('notification_log').insert({
-              user_id: userId,
-              tier: tierOf(kind),
-              kind,
-            });
-            lease.assertCurrent();
-          });
-          assertCurrent();
-        } catch {
-          assertCurrent();
-          /* best-effort backend mirror; local delivery already succeeded */
-        }
       }
       return true;
     });

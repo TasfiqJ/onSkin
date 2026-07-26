@@ -1,10 +1,20 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useState } from 'react';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
 import { SETTINGS_COPY } from '@/features/notifications/copy';
-import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
+import {
+  isDeliverableAuthorizationState,
+  requestPermission,
+} from '@/features/notifications/deliver';
+import {
+  useNotificationAuthorization,
+  useNotifPrefs,
+  useUpdateNotifPrefs,
+} from '@/features/notifications/useNotifications';
+import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -46,6 +56,7 @@ function Row({
   onPress,
   last,
   compact = false,
+  disabled = false,
 }: {
   title: string;
   subtitle?: string;
@@ -54,6 +65,7 @@ function Row({
   onPress?: () => void;
   last?: boolean;
   compact?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <View
@@ -119,7 +131,12 @@ function Row({
           ) : null}
         </View>
       )}
-      <ToggleSwitch accessibilityLabel={title} value={value} onChange={onChange} />
+      <ToggleSwitch
+        accessibilityLabel={title}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+      />
     </View>
   );
 }
@@ -127,7 +144,9 @@ function Row({
 export default function NotificationSettingsScreen() {
   const { height, width } = useWindowDimensions();
   const { data: p } = useNotifPrefs();
+  const authorization = useNotificationAuthorization();
   const update = useUpdateNotifPrefs();
+  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
@@ -157,6 +176,44 @@ export default function NotificationSettingsScreen() {
           : undefined;
   const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
   if (!p) return null;
+  const authorizationState = authorization.data ?? 'unavailable';
+  const authorizationPending = authorization.isPending;
+  const deliveryAuthorized = isDeliverableAuthorizationState(authorizationState);
+  const canOpenDeviceSettings = Platform.OS !== 'web';
+
+  const openDeviceSettings = async () => {
+    if (!canOpenDeviceSettings) return;
+    setSettingsOpenFailed(false);
+    const opened = await openAppSettings({ alertOnFailure: false });
+    setSettingsOpenFailed(!opened);
+  };
+
+  const setAuthorizedToggle = async (
+    key:
+      | 'amEnabled'
+      | 'pmEnabled'
+      | 'streakNudges'
+      | 'replenishmentAlerts'
+      | 'captureReminders'
+      | 'promotionalOptIn',
+    value: boolean,
+  ) => {
+    if (authorizationPending) return;
+    setSettingsOpenFailed(false);
+    if (!value || deliveryAuthorized) {
+      set({ [key]: value });
+      return;
+    }
+    if (authorizationState === 'denied') {
+      await openDeviceSettings();
+      return;
+    }
+    const outcome = await requestPermission();
+    await authorization.refetch();
+    if (isDeliverableAuthorizationState(outcome.state)) set({ [key]: true });
+  };
+
+  const effective = (value: boolean) => value && deliveryAuthorized;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -187,6 +244,42 @@ export default function NotificationSettingsScreen() {
           </Text>
         </View>
 
+        {authorizationPending ? (
+          <View className="mb-2 rounded-[14px] bg-paper-raised px-4 py-3">
+            <Text variant="bodySm" tone="muted">
+              Checking notification access…
+            </Text>
+          </View>
+        ) : !deliveryAuthorized ? (
+          <View className="mb-2 rounded-[14px] bg-paper-raised px-4 py-3">
+            <Text variant="bodySm" tone="muted">
+              {authorizationState === 'denied'
+                ? Platform.OS === 'web'
+                  ? 'Notification permission is unavailable in this browser preview.'
+                  : `Notifications are blocked in ${Platform.OS === 'ios' ? 'iOS' : 'device'} Settings.`
+                : authorizationState === 'not_determined'
+                  ? 'Notification permission has not been granted. Turn on a reminder to choose.'
+                  : 'Notification authorization is unavailable right now. Reminders stay off.'}
+            </Text>
+            {authorizationState === 'denied' && canOpenDeviceSettings ? (
+              <Pressable
+                accessibilityRole="button"
+                className="min-h-[48px] justify-center"
+                onPress={() => void openDeviceSettings()}
+              >
+                <Text variant="bodySm" className="font-sans-semibold">
+                  Open Settings
+                </Text>
+              </Pressable>
+            ) : null}
+            {settingsOpenFailed ? (
+              <Text accessibilityRole="alert" variant="bodySm" tone="muted">
+                Open Settings manually to allow notifications.
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
+
         <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
           UTILITY · YOUR ROUTINE
         </SectionLabel>
@@ -194,47 +287,52 @@ export default function NotificationSettingsScreen() {
           <Row
             title="Morning routine"
             subtitle={fmtTime(p.amTime)}
-            value={p.amEnabled}
-            onChange={(v) => set({ amEnabled: v })}
+            value={effective(p.amEnabled)}
+            onChange={(v) => void setAuthorizedToggle('amEnabled', v)}
             onPress={() => router.push('/settings/timing')}
             compact={compactNotifications}
+            disabled={authorizationPending}
           />
           <Row
             title="Evening · tonight’s step"
             subtitle={fmtTime(p.pmTime)}
-            value={p.pmEnabled}
-            onChange={(v) => set({ pmEnabled: v })}
+            value={effective(p.pmEnabled)}
+            onChange={(v) => void setAuthorizedToggle('pmEnabled', v)}
             onPress={() => router.push('/settings/timing')}
             last
             compact={compactNotifications}
+            disabled={authorizationPending}
           />
         </View>
 
         <View style={nudgesSectionStyle}>
           <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-            GENTLE NUDGES · CAPPED
+            OPTIONAL REMINDERS
           </SectionLabel>
           <View className="rounded-[18px] bg-paper-raised px-[18px]">
             <Row
-              title="Streak &amp; adherence"
-              value={p.streakNudges}
-              onChange={(v) => set({ streakNudges: v })}
+              title="Routine pacing suggestions"
+              value={effective(p.streakNudges)}
+              onChange={(v) => void setAuthorizedToggle('streakNudges', v)}
               compact={compactNotifications}
+              disabled={authorizationPending}
             />
             <Row
               title="Replenishment"
-              value={p.replenishmentAlerts}
-              onChange={(v) => set({ replenishmentAlerts: v })}
+              value={effective(p.replenishmentAlerts)}
+              onChange={(v) => void setAuthorizedToggle('replenishmentAlerts', v)}
               last={deferCaptureNudge}
               compact={compactNotifications}
+              disabled={authorizationPending}
             />
             {deferCaptureNudge ? null : (
               <Row
                 title="Progress-photo nudge"
-                value={p.captureReminders}
-                onChange={(v) => set({ captureReminders: v })}
+                value={effective(p.captureReminders)}
+                onChange={(v) => void setAuthorizedToggle('captureReminders', v)}
                 last
                 compact={compactNotifications}
+                disabled={authorizationPending}
               />
             )}
           </View>
@@ -245,10 +343,11 @@ export default function NotificationSettingsScreen() {
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
               <Row
                 title="Progress-photo nudge"
-                value={p.captureReminders}
-                onChange={(v) => set({ captureReminders: v })}
+                value={effective(p.captureReminders)}
+                onChange={(v) => void setAuthorizedToggle('captureReminders', v)}
                 last
                 compact={compactNotifications}
+                disabled={authorizationPending}
               />
             </View>
           </View>
@@ -262,10 +361,11 @@ export default function NotificationSettingsScreen() {
             <Row
               title="Tips &amp; announcements"
               subtitle="off by default"
-              value={p.promotionalOptIn}
-              onChange={(v) => set({ promotionalOptIn: v })}
+              value={effective(p.promotionalOptIn)}
+              onChange={(v) => void setAuthorizedToggle('promotionalOptIn', v)}
               last
               compact={compactNotifications}
+              disabled={authorizationPending}
             />
           </View>
         </View>

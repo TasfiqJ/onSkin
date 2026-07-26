@@ -150,9 +150,6 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `photo_baseline_added`
 - `photo_captured`
 - `first_photo_captured`
-- `notification_prompt_shown`
-- `notification_prompt_granted`
-- `notification_prompt_denied`
 - `paywall_shown`
 - `contextual_paywall_shown`
 - `reverse_trial_started`

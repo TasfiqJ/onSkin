@@ -5,25 +5,28 @@ import {
 } from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
-import { TIER_OF, tierOf } from './policy';
+import { TIER_OF, tierOf, WEEKLY_CAP } from './policy';
 
-// Local-first record of behavioural/promotional notifications actually sent
-// (docs/07 §9 frequency caps). The server `notification_log` table is the
-// deferred sync target (B-SUPABASE), but offline it returns 0, which would make
-// the per-tier weekly cap a no-op and let a foreground trigger fire on every app
-// open. This AsyncStorage log is the v1 SOURCE OF TRUTH for the cap (D-029),
-// unioned with the server count so the cap holds with or without a backend.
+// Device-local record of behavioural/promotional scheduling attempts (docs/07
+// §9 frequency caps). Remote sync remains closed pending CAT-09 privacy and
+// consent approval. The encrypted device ledger is the source of truth for the
+// current-device cap and prevents a foreground trigger from firing on every app
+// open.
 const KEY = 'onskin.notiflog.v1';
 const SCHEMA_VERSION = 1 as const;
 
-export const SENT_LEDGER_INVALID = 'SENT_LEDGER_INVALID';
-export const SENT_LEDGER_UNSUPPORTED_VERSION = 'SENT_LEDGER_UNSUPPORTED_VERSION';
-export const SENT_LEDGER_FAIL_CLOSED_COUNT = Number.MAX_SAFE_INTEGER;
+export const ATTEMPT_LEDGER_INVALID = 'ATTEMPT_LEDGER_INVALID';
+export const ATTEMPT_LEDGER_UNSUPPORTED_VERSION = 'ATTEMPT_LEDGER_UNSUPPORTED_VERSION';
+export const ATTEMPT_LEDGER_FAIL_CLOSED_COUNT = Number.MAX_SAFE_INTEGER;
 
-type SentRecord = { kind: NotificationKind; tier: NotificationTier; at: number }; // at = epoch ms
-type SentLedgerEnvelope = {
+type SchedulingAttemptRecord = {
+  kind: NotificationKind;
+  tier: NotificationTier;
+  at: number;
+}; // at = epoch ms
+type SchedulingAttemptLedgerEnvelope = {
   version: typeof SCHEMA_VERSION;
-  records: SentRecord[];
+  records: SchedulingAttemptRecord[];
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -34,7 +37,10 @@ function isNotificationKind(value: unknown): value is NotificationKind {
   return typeof value === 'string' && value in TIER_OF;
 }
 
-function normalizeSentRecord(value: unknown, strict: boolean): SentRecord | null {
+function normalizeSchedulingAttempt(
+  value: unknown,
+  strict: boolean,
+): SchedulingAttemptRecord | null {
   if (!isRecord(value) || !isNotificationKind(value.kind)) return null;
   if (strict) {
     const keys = Object.keys(value).sort();
@@ -48,54 +54,59 @@ function normalizeSentRecord(value: unknown, strict: boolean): SentRecord | null
     : null;
 }
 
-function decodeRecords(value: unknown, strict: boolean): SentRecord[] {
-  if (!Array.isArray(value)) throw new Error(SENT_LEDGER_INVALID);
-  const items: SentRecord[] = [];
+function decodeRecords(value: unknown, strict: boolean): SchedulingAttemptRecord[] {
+  if (!Array.isArray(value)) throw new Error(ATTEMPT_LEDGER_INVALID);
+  const items: SchedulingAttemptRecord[] = [];
   for (const row of value) {
-    const normalized = normalizeSentRecord(row, strict);
-    if (!normalized) throw new Error(SENT_LEDGER_INVALID);
+    const normalized = normalizeSchedulingAttempt(row, strict);
+    if (!normalized) throw new Error(ATTEMPT_LEDGER_INVALID);
     items.push(normalized);
   }
   return items;
 }
 
-function decodeSentLedger(raw: string | null): SentRecord[] {
+function decodeAttemptLedger(raw: string | null): SchedulingAttemptRecord[] {
   if (raw === null) return [];
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
   } catch {
-    throw new Error(SENT_LEDGER_INVALID);
+    throw new Error(ATTEMPT_LEDGER_INVALID);
   }
   if (Array.isArray(parsed)) return decodeRecords(parsed, false);
-  if (!isRecord(parsed)) throw new Error(SENT_LEDGER_INVALID);
+  if (!isRecord(parsed)) throw new Error(ATTEMPT_LEDGER_INVALID);
   if (parsed.version !== SCHEMA_VERSION) {
     if (
       typeof parsed.version === 'number' &&
       Number.isSafeInteger(parsed.version) &&
       parsed.version > SCHEMA_VERSION
     ) {
-      throw new Error(SENT_LEDGER_UNSUPPORTED_VERSION);
+      throw new Error(ATTEMPT_LEDGER_UNSUPPORTED_VERSION);
     }
-    throw new Error(SENT_LEDGER_INVALID);
+    throw new Error(ATTEMPT_LEDGER_INVALID);
   }
   const keys = Object.keys(parsed).sort();
   if (keys.length !== 2 || keys[0] !== 'records' || keys[1] !== 'version') {
-    throw new Error(SENT_LEDGER_INVALID);
+    throw new Error(ATTEMPT_LEDGER_INVALID);
   }
   return decodeRecords(parsed.records, true);
 }
 
-function encodeSentLedger(records: SentRecord[]): string {
-  return JSON.stringify({ version: SCHEMA_VERSION, records } satisfies SentLedgerEnvelope);
+function encodeAttemptLedger(records: SchedulingAttemptRecord[]): string {
+  return JSON.stringify({
+    version: SCHEMA_VERSION,
+    records,
+  } satisfies SchedulingAttemptLedgerEnvelope);
 }
 
-async function load(lease: HealthDataWriteOperationLease): Promise<SentRecord[] | null> {
+async function load(
+  lease: HealthDataWriteOperationLease,
+): Promise<SchedulingAttemptRecord[] | null> {
   try {
     lease.assertCurrent();
     const raw = await getPrivateItem(KEY);
     lease.assertCurrent();
-    const records = decodeSentLedger(raw);
+    const records = decodeAttemptLedger(raw);
     lease.assertCurrent();
     return records;
   } catch {
@@ -106,26 +117,44 @@ async function load(lease: HealthDataWriteOperationLease): Promise<SentRecord[] 
   }
 }
 
-/** Record a sent notification locally, pruning entries older than ~30 days. */
-export async function recordSentLocal(kind: NotificationKind, now: number): Promise<void> {
+/**
+ * Atomically reserve one device-local scheduling attempt under the rolling
+ * seven-day tier cap. The reservation lands before the native schedule call so
+ * concurrent callers, process death, or an ambiguous native failure cannot
+ * create an uncounted optional notification. A failed native call may therefore
+ * conservatively consume capacity; this ledger is not delivery/open proof.
+ */
+export async function reserveNotificationSlotLocal(
+  kind: NotificationKind,
+  now: number,
+): Promise<boolean> {
   const cutoff = now - 30 * 86_400_000;
+  const weekAgo = now - 7 * 86_400_000;
+  const tier = tierOf(kind);
+  let reserved = false;
   await runCurrentHealthDataOperation(async (lease) => {
     lease.assertCurrent();
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();
-      const records = decodeSentLedger(current).filter((record) => {
+      const records = decodeAttemptLedger(current).filter((record) => {
         return record.at >= cutoff && record.at <= now;
       });
-      records.push({ kind, tier: tierOf(kind), at: now });
+      const used = records.filter((record) => {
+        return record.tier === tier && record.at >= weekAgo;
+      }).length;
+      if (used >= WEEKLY_CAP[tier]) return current;
+      records.push({ kind, tier, at: now });
+      reserved = true;
       lease.assertCurrent();
-      return encodeSentLedger(records);
+      return encodeAttemptLedger(records);
     });
     lease.assertCurrent();
   });
+  return reserved;
 }
 
-/** How many notifications of a tier were sent locally in the last 7 days. */
-export async function sentThisWeekForTierLocal(
+/** How many scheduling attempts a tier reserved locally in the last 7 days. */
+export async function schedulingAttemptsThisWeekForTierLocal(
   tier: NotificationTier,
   now: number,
 ): Promise<number> {
@@ -135,7 +164,7 @@ export async function sentThisWeekForTierLocal(
     lease.assertCurrent();
     if (records === null) {
       lease.assertCurrent();
-      return SENT_LEDGER_FAIL_CLOSED_COUNT;
+      return ATTEMPT_LEDGER_FAIL_CLOSED_COUNT;
     }
     const count = records.filter((record) => {
       return record.tier === tier && record.at >= weekAgo && record.at <= now;

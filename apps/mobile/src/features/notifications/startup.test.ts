@@ -29,7 +29,9 @@ vi.mock('react-native', () => ({
 
 vi.mock('expo-secure-store', () => ({ getItemAsync: mocks.secureStoreRead }));
 vi.mock('./store', () => ({ loadNotifPrefs: mocks.loadNotifPrefs }));
-vi.mock('./sentStore', () => ({ sentThisWeekForTierLocal: mocks.sentLogRead }));
+vi.mock('./sentStore', () => ({
+  schedulingAttemptsThisWeekForTierLocal: mocks.sentLogRead,
+}));
 vi.mock('@/features/subscription/store', () => ({ loadEntitlement: mocks.loadEntitlement }));
 vi.mock('@/lib/supabase/client', () => ({
   supabase: { auth: { getUser: mocks.supabaseRead } },

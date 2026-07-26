@@ -1,6 +1,7 @@
 import type { NotificationKind } from '@onskin/types';
 
 import { BRAND } from '@/lib/brand';
+import { DEFAULT_ROUTINE_REMINDER_TIMES } from './defaults';
 
 /**
  * Centralised, calm + claim-safe copy for the engagement layer (docs/07 §3.3/§4,
@@ -69,12 +70,25 @@ export function notificationContentForLockScreen(kind: NotificationKind): {
   return { title: LOCK_SCREEN_NOTIFICATION_TITLE, body: c.discreet };
 }
 
+function formatReminderTime(hm: string): string {
+  const [rawHour, rawMinute] = hm.split(':').map(Number);
+  const hour = Number.isFinite(rawHour) ? (rawHour ?? 0) : 0;
+  const minute = Number.isFinite(rawMinute) ? (rawMinute ?? 0) : 0;
+  const suffix = hour < 12 ? 'AM' : 'PM';
+  const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${displayHour}:${String(minute).padStart(2, '0')} ${suffix}`;
+}
+
 /** Soft-ask permission priming (design screen 01, docs/07 §3.2). */
 export const SOFT_ASK = {
   title: 'A gentle nudge at your routine times?',
-  body: 'You pick the moments. Morning and evening, and we’ll quietly remind you. No noise, no pressure, and you can change it anytime.',
-  bullets: ['Only at times you choose', 'Discreet on your lock screen', 'Off in one tap, whenever'],
-  yes: 'Yes, remind me',
+  body: 'Start with these two times for routine reminders. No pressure, and you can change either time anytime.',
+  bullets: [
+    `Morning at ${formatReminderTime(DEFAULT_ROUTINE_REMINDER_TIMES.amTime)}`,
+    `Evening at ${formatReminderTime(DEFAULT_ROUTINE_REMINDER_TIMES.pmTime)}`,
+    'Discreet on your lock screen',
+  ],
+  yes: 'Use these times',
   no: 'Not now',
 } as const;
 
@@ -101,8 +115,9 @@ export const MILESTONE_COPY: Record<string, string> = {
 
 /** Settings-surface labels (design screens 02/03). */
 export const SETTINGS_COPY = {
-  capNote: 'we cap gentle nudges so they never stack up',
+  capNote:
+    'On this device, routine pacing and replenishment suggestions are limited to 3 scheduling attempts in 7 days; tips and announcements to 1. Progress-photo reminders are weekly.',
   discreetLabel: 'Lock screen privacy',
   discreetHint: 'Always generic; product, photo, and condition details stay inside the app',
-  quietLabel: 'Nothing fires',
+  quietLabel: 'Routine quiet hours',
 } as const;

@@ -42,8 +42,9 @@ export type TierToggles = {
 
 /** Which user toggle governs each kind (docs/07 §3.1 "each independently
  *  controllable"). rampup/de-escalation have no dedicated surfaced toggle, so they
- *  fall under the behavioural "Streak & adherence" nudge toggle; winback is gated by
- *  the opt-in-only promotional toggle (§3.6/§8). */
+ *  fall under the legacy-schema `streakNudges` field surfaced as "Routine pacing
+ *  suggestions"; no streak/adherence notification producer exists. winback is
+ *  gated by the opt-in-only promotional toggle (§3.6/§8). */
 export const TOGGLE_FOR: Record<NotificationKind, keyof TierToggles> = {
   am_reminder: 'amEnabled',
   pm_step: 'pmEnabled',

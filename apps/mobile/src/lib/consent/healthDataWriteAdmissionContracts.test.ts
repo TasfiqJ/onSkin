@@ -91,9 +91,6 @@ describe('health-purpose local write coverage', () => {
     const admittedPostgrest = [
       'app/index.tsx:skin_profiles',
       'features/commerce/store.ts:commerce_click_events',
-      'features/notifications/deliver.ts:notification_log',
-      'features/notifications/deliver.ts:notification_log',
-      'features/notifications/store.ts:notification_preferences',
       'features/onboarding/OnboardingContext.tsx:skin_profiles',
       'features/photos/store.ts:photos',
       'features/recommendations/store.ts:recommendation_preferences',

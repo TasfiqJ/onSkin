@@ -88,6 +88,8 @@ Start here:
 - [CORE-03 Routine Guidance Source Contract](../../scripts/core03/routine-guidance-source-contract.test.mjs)
 - [CORE-04 Routine Persistence Source Checkpoint](./CORE-04-PERSISTENCE-SOURCE-CHECKPOINT-2026-07-26.md)
 - [CORE-04 Persistence Source Contract](../../scripts/core04/persistence-source-contract.test.mjs)
+- [CORE-05 Today Adherence and Notification Source Checkpoint](./CORE-05-ADHERENCE-SOURCE-CHECKPOINT-2026-07-26.md)
+- [CORE-05 Adherence and Notification Source Contract](../../scripts/core05/adherence-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -538,6 +540,35 @@ end-to-end flows, accessibility, archive privacy and export-compliance proof,
 privacy/security review, and App Store acceptance remain open. Cross-device
 sync remains deferred; this source checkpoint is not launch or revenue
 approval.
+
+CORE-05 is now an `in_progress` adherence and local-notification source
+checkpoint. Today step taps persist before success UI and create a qualifying
+routine day only after the exact projected PM or recovery routine is complete;
+legacy and partial rows cannot invent adherence. Unreadable state fails closed,
+future rows cannot inflate current or best streaks, long-lived screens refresh
+at phase/day boundaries, and milestone copy describes only verified check-offs.
+The client currently trusts only explicit routine-level completion rows and
+does not trust the older strict server streak cache.
+
+All notification purposes now default off. The soft ask names the proposed
+7:30 AM and 9:30 PM times before any OS request and enables only those two
+routine reminders. Scheduling rechecks current authorization, settings show
+effective-off state and native recovery truthfully, routine quiet hours are
+scoped to the reminders they actually govern, and event-triggered suggestions
+reserve a rolling seven-day device slot atomically before native scheduling
+(three behavioural attempts; one promotional attempt). Reminder preferences,
+scheduling-attempt reservations, and decisions are device-local; the mobile
+client does not use
+`notification_preferences`, `notification_log`, or prompt-result analytics.
+The mandatory CORE-05 contract is wired into Phase 3 and launch verification.
+A 1279 x 720 development Expo-web observation found and fixed one native
+Settings handoff crash and verifies only the bounded web UI states. Server
+routine identity/outbox replay, authoritative forgiving streak parity,
+neutral pre-activation weeks, native encrypted/process-death behavior,
+supported-iPhone permission/scheduling/DST/accessibility/network evidence,
+CAT-09 privacy/analytics approval, signed-archive identity, legal review, and
+App Store acceptance remain open. This checkpoint is not launch, legal,
+Apple, product-market, or revenue approval.
 
 The `0065` CAT-08 transition/default-ACL repair remains intact. The additional
 `0066` migration revokes all residual table privileges from the explicitly

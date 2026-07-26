@@ -298,6 +298,15 @@ describe('Settings route contracts', () => {
     expect(notifications).not.toContain('min-h-[44px] flex-1 justify-center pr-3');
     expect(notifications).toContain('useWindowDimensions');
     expect(notifications).toContain('const { height, width } = useWindowDimensions();');
+    expect(notifications).toContain('const authorizationPending = authorization.isPending;');
+    expect(notifications).toContain('Checking notification access…');
+    expect(notifications).toContain(
+      'const opened = await openAppSettings({ alertOnFailure: false })',
+    );
+    expect(notifications).toContain('setSettingsOpenFailed(!opened);');
+    expect(notifications).toContain('Open Settings manually to allow notifications.');
+    expect(notifications).toContain('disabled={authorizationPending}');
+    expect(notifications).toContain('Routine pacing suggestions');
     expect(notifications).toContain('const compactNotifications = height < 600;');
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
     expect(notifications).toContain('const splitShortNotifications = height < 600;');

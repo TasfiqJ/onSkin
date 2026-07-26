@@ -6,12 +6,12 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 
 import {
+  ATTEMPT_LEDGER_FAIL_CLOSED_COUNT,
+  ATTEMPT_LEDGER_INVALID,
+  ATTEMPT_LEDGER_UNSUPPORTED_VERSION,
   clearSentLocal,
-  recordSentLocal,
-  SENT_LEDGER_FAIL_CLOSED_COUNT,
-  SENT_LEDGER_INVALID,
-  SENT_LEDGER_UNSUPPORTED_VERSION,
-  sentThisWeekForTierLocal,
+  reserveNotificationSlotLocal,
+  schedulingAttemptsThisWeekForTierLocal,
 } from './sentStore';
 
 const mocks = vi.hoisted(() => ({
@@ -50,7 +50,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 const KEY = 'onskin.notiflog.v1';
 const NOW = Date.parse('2026-07-07T12:00:00.000Z');
 
-describe('notification sent ledger', () => {
+describe('notification scheduling-attempt ledger', () => {
   beforeEach(() => {
     mocks.storage.clear();
     mocks.tails.clear();
@@ -62,10 +62,12 @@ describe('notification sent ledger', () => {
     const original = '{not-json';
     mocks.storage.set(KEY, original);
 
-    await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(
-      SENT_LEDGER_FAIL_CLOSED_COUNT,
+    await expect(schedulingAttemptsThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(
+      ATTEMPT_LEDGER_FAIL_CLOSED_COUNT,
     );
-    await expect(recordSentLocal('capture', NOW)).rejects.toThrow(SENT_LEDGER_INVALID);
+    await expect(reserveNotificationSlotLocal('capture', NOW)).rejects.toThrow(
+      ATTEMPT_LEDGER_INVALID,
+    );
 
     expect(mocks.storage.get(KEY)).toBe(original);
   });
@@ -74,10 +76,12 @@ describe('notification sent ledger', () => {
     const original = JSON.stringify({ version: 2, records: [] });
     mocks.storage.set(KEY, original);
 
-    await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(
-      SENT_LEDGER_FAIL_CLOSED_COUNT,
+    await expect(schedulingAttemptsThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(
+      ATTEMPT_LEDGER_FAIL_CLOSED_COUNT,
     );
-    await expect(recordSentLocal('capture', NOW)).rejects.toThrow(SENT_LEDGER_UNSUPPORTED_VERSION);
+    await expect(reserveNotificationSlotLocal('capture', NOW)).rejects.toThrow(
+      ATTEMPT_LEDGER_UNSUPPORTED_VERSION,
+    );
 
     expect(mocks.storage.get(KEY)).toBe(original);
   });
@@ -89,8 +93,8 @@ describe('notification sent ledger', () => {
     ]);
     mocks.storage.set(KEY, original);
 
-    await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(
-      SENT_LEDGER_FAIL_CLOSED_COUNT,
+    await expect(schedulingAttemptsThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(
+      ATTEMPT_LEDGER_FAIL_CLOSED_COUNT,
     );
     expect(mocks.storage.get(KEY)).toBe(original);
   });
@@ -102,8 +106,8 @@ describe('notification sent ledger', () => {
     ]);
     mocks.storage.set(KEY, original);
 
-    await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(1);
-    await expect(sentThisWeekForTierLocal('promotional', NOW)).resolves.toBe(1);
+    await expect(schedulingAttemptsThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(1);
+    await expect(schedulingAttemptsThisWeekForTierLocal('promotional', NOW)).resolves.toBe(1);
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
@@ -114,12 +118,12 @@ describe('notification sent ledger', () => {
     ]);
     mocks.storage.set(KEY, original);
 
-    await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(1);
+    await expect(schedulingAttemptsThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(1);
 
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('prunes send history older than 30 days when recording a new notification', async () => {
+  it('prunes attempt history older than 30 days when reserving a slot', async () => {
     mocks.storage.set(
       KEY,
       JSON.stringify([
@@ -128,7 +132,7 @@ describe('notification sent ledger', () => {
       ]),
     );
 
-    await recordSentLocal('replenishment', NOW);
+    await expect(reserveNotificationSlotLocal('replenishment', NOW)).resolves.toBe(true);
 
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
       version: 1,
@@ -139,29 +143,68 @@ describe('notification sent ledger', () => {
     });
   });
 
-  it('serializes simultaneous sent records without losing a cap entry', async () => {
-    await Promise.all([
-      recordSentLocal('replenishment', NOW),
-      recordSentLocal('rampup', NOW + 1),
-      recordSentLocal('winback', NOW + 2),
-    ]);
+  it('serializes simultaneous attempt reservations without losing a cap entry', async () => {
+    await expect(
+      Promise.all([
+        reserveNotificationSlotLocal('replenishment', NOW),
+        reserveNotificationSlotLocal('rampup', NOW + 1),
+        reserveNotificationSlotLocal('winback', NOW + 2),
+      ]),
+    ).resolves.toEqual([true, true, true]);
 
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}').records).toHaveLength(3);
-    await expect(sentThisWeekForTierLocal('behavioural', NOW + 2)).resolves.toBe(2);
-    await expect(sentThisWeekForTierLocal('promotional', NOW + 2)).resolves.toBe(1);
+    await expect(schedulingAttemptsThisWeekForTierLocal('behavioural', NOW + 2)).resolves.toBe(2);
+    await expect(schedulingAttemptsThisWeekForTierLocal('promotional', NOW + 2)).resolves.toBe(1);
   });
 
-  it('leaves the prior ledger intact when an atomic write fails', async () => {
-    await recordSentLocal('capture', NOW);
-    const original = mocks.storage.get(KEY);
-    mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
+  it('atomically admits only the remaining behavioural slot under concurrency', async () => {
+    await expect(reserveNotificationSlotLocal('replenishment', NOW - 2)).resolves.toBe(true);
+    await expect(reserveNotificationSlotLocal('rampup', NOW - 1)).resolves.toBe(true);
 
-    await expect(recordSentLocal('rampup', NOW + 1)).rejects.toThrow('PRIVATE_WRITE_FAILED');
+    const admitted = await Promise.all(
+      Array.from({ length: 10 }, (_, index) =>
+        reserveNotificationSlotLocal('replenishment', NOW + index),
+      ),
+    );
+
+    expect(admitted.filter(Boolean)).toHaveLength(1);
+    await expect(schedulingAttemptsThisWeekForTierLocal('behavioural', NOW + 10)).resolves.toBe(3);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}').records).toHaveLength(3);
+  });
+
+  it('reserves at most one promotional attempt in seven days', async () => {
+    const admitted = await Promise.all(
+      Array.from({ length: 6 }, (_, index) => reserveNotificationSlotLocal('winback', NOW + index)),
+    );
+
+    expect(admitted.filter(Boolean)).toHaveLength(1);
+    await expect(schedulingAttemptsThisWeekForTierLocal('promotional', NOW + 10)).resolves.toBe(1);
+  });
+
+  it('preserves malformed bytes and refuses a reservation before native scheduling', async () => {
+    const original = '{not-json';
+    mocks.storage.set(KEY, original);
+
+    await expect(reserveNotificationSlotLocal('replenishment', NOW)).rejects.toThrow(
+      ATTEMPT_LEDGER_INVALID,
+    );
 
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('clears the sent ledger after health processing closes', async () => {
+  it('leaves the prior ledger intact when an atomic write fails', async () => {
+    await expect(reserveNotificationSlotLocal('capture', NOW)).resolves.toBe(true);
+    const original = mocks.storage.get(KEY);
+    mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
+
+    await expect(reserveNotificationSlotLocal('rampup', NOW + 1)).rejects.toThrow(
+      'PRIVATE_WRITE_FAILED',
+    );
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('clears the attempt ledger after health processing closes', async () => {
     mocks.storage.set(KEY, JSON.stringify({ version: 1, records: [] }));
     clearActiveHealthProcessingEpoch();
 

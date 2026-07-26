@@ -33,9 +33,29 @@
 > exclusive-lock/read-write-SQLite render path still requires Instruments and
 > device contention evidence.
 
+> **2026-07-26 reminder implementation status:** The current mobile source uses
+> an encrypted, device-local notification preference and scheduling-attempt
+> ledger. Every notification purpose defaults off. The onboarding soft ask
+> displays the proposed 7:30 AM and 9:30 PM times before any OS request and can
+> enable only those two routine reminders. Scheduling rechecks the current OS
+> authorization state, settings render stored purposes effectively off when
+> authorization is unavailable, and native denial has a Settings recovery
+> path. Behavioural routine/replenishment suggestions reserve one of three
+> rolling seven-day device slots and promotional attempts reserve one,
+> atomically before native scheduling; the separately opted-in progress-photo
+> reminder is weekly. Routine quiet hours do not claim to govern
+> the checkout-date billing reminder or OS presentation. The mobile client does
+> not read or write `notification_preferences` or `notification_log`, and it
+> does not produce permission-prompt analytics. Remote synchronization,
+> cross-device caps, sent/open measurement, native OS prompt/scheduling,
+> timezone/DST/relaunch, accessibility, network, signed-archive, privacy/legal,
+> and physical-iPhone evidence remain closed launch gates. This is a local
+> source and development-web checkpoint, not notification, App Review, legal,
+> launch, or revenue clearance.
+
 _The engagement & delivery layer · local-first reminders with permission-priming · notification tiers, timing, quiet hours & lock-screen discretion · the calm, forgiving streak & weekly adherence · home-screen widgets (including interactive check-off) · Live Activities for the evening routine._
 
-> This is build-order document **#7** of the 15 named in docs/00 (§"Build order", item 7: _"Reminders/streaks/widgets"_). It is the **delivery and engagement layer** that several earlier documents feed into: it _delivers_ the reminder **content** the scheduler computes (docs/05 §9 — tonight's active, recovery night, next acid night, ramp step-up, de-escalation), the **replenishment alerts** from the Smart Shelf (docs/04 §6), and the **capture nudges** from the photo feature (docs/06 §5); and it _owns and implements_ the **calm, forgiving streak** whose principles docs/03 §6 established and explicitly deferred to "doc #7." It _extends_ docs/01's `notification_preferences` table and the **computed-and-cached streak** on `profiles` (D-011, D-012), and it _implements_ docs/00 §6 (local-first notifications, Android-14 exact-alarm handling, WidgetKit/Glance widgets, Live Activities, permission-priming). Its design principle — **calm, not gamified** — is, as this document shows, not only on-brand but the **retention-optimal** strategy: over-notification and pressure-streaks measurably backfire. It powers the paywall's #4 value prop, _"Reminders, streaks & home-screen widgets,"_ and feeds the subscription/paywall surface (doc #8).
+> This is build-order document **#7** of the 15 named in docs/00 (§"Build order", item 7: _"Reminders/streaks/widgets"_). It is the **delivery and engagement layer** that several earlier documents feed into: it _delivers_ the reminder **content** the scheduler computes (docs/05 §9 — tonight's active, recovery night, next acid night, ramp step-up, de-escalation), the **replenishment alerts** from the Smart Shelf (docs/04 §6), and the **capture nudges** from the photo feature (docs/06 §5); and it _owns and implements_ the **calm, forgiving streak** whose principles docs/03 §6 established and explicitly deferred to "doc #7." It retains docs/01's server `notification_preferences` table only as dormant future-sync/cleanup scaffolding; encrypted device preferences are the current scheduling authority. It also extends the **computed-and-cached streak** on `profiles` (D-011, D-012), and it _implements_ docs/00 §6 (local-first notifications, Android-14 exact-alarm handling, WidgetKit/Glance widgets, Live Activities, permission-priming). Its design principle — **calm, not gamified** — is, as this document shows, not only on-brand but the **retention-optimal** strategy: over-notification and pressure-streaks measurably backfire. It powers the paywall's #4 value prop, _"Reminders, streaks & home-screen widgets,"_ and feeds the subscription/paywall surface (doc #8).
 
 ---
 
@@ -118,7 +138,7 @@ So the layer takes the _mechanically_ powerful parts of reminders/streaks/widget
 
 Every notification belongs to exactly one tier, each independently controllable:
 
-- **Utility (always-on-if-opted-in, user-scheduled):** the **AM/PM routine reminders** at `notification_preferences.am_reminder_time` / `pm_reminder_time`, and the **"tonight's step"** prompt. These are the core value; they fire at times the user chose for their own routine.
+- **Utility (off until explicitly enabled, user-scheduled):** the **AM/PM routine reminders** at the encrypted current-device `amTime` / `pmTime`, and the **"tonight's step"** prompt. The onboarding proposal is 7:30 AM and 9:30 PM and confirms both before requesting OS authorization.
 - **Behavioural-trigger (gentle, event-driven, capped):** the **streak/adherence nudge** (`streak_nudges`), the **replenishment alert** (`replenishment_alerts`, docs/04 §6), the **ramp step-up offer** (docs/05 §4, occasional), and the **irritation de-escalation** guidance (docs/05 §7). Triggered by state, not by a schedule, and frequency-capped.
 - **Promotional (sparse, explicit opt-in only):** **win-backs** and **announcements**. Off by default beyond a minimal lifecycle; never the daily noise.
 
@@ -126,7 +146,7 @@ This tiering is the validated "fastest structural fix for notification fatigue a
 
 #### 3.2 Permission-priming (the soft-ask)
 
-Onboarding step 8 (docs/01 §2) shows a **soft pre-permission screen** at the value moment — after the user has felt the product, framed around the benefit ("Want a gentle nudge at your routine times? You choose when.") — and only fires the **OS prompt on "yes"** (55–70% opt-in vs 30–40% cold; docs/01 §8). iOS gives exactly one system prompt, so the soft-ask is the one chance to get it right; Android 13+ requires the same. PostHog: `notification_prompt_shown` / `_granted` / `_denied` (docs/01 §7).
+Onboarding step 8 (docs/01 §2) shows a **soft pre-permission screen** at the value moment, names the proposed 7:30 AM and 9:30 PM routine times, and requests OS authorization only after the affirmative `Use these times` action. It enables only AM/PM after a deliverable authorization result. The current path emits no prompt-result analytics: app code cannot prove that the system sheet was visibly presented, and unavailable/error/unchanged outcomes are not denials.
 
 #### 3.3 The reminders (what gets delivered)
 
@@ -142,16 +162,16 @@ All copy is **calm and claim-safe** (docs/02 §9): no guilt ("Don't break your s
 
 #### 3.4 Timing, scheduling & frequency caps
 
-- **User-set times** for the utility tier — the person picks their AM/PM routine times (the best possible "send-time optimisation," since it matches when they actually do the routine). Stored in `notification_preferences`; **timezone-aware** (`timezone`; D-012's tolerant window handling).
+- **User-set times** for the utility tier — the person confirms or edits AM/PM routine times. Stored in the encrypted device preference record; its device timezone is local authority. Remote preference sync remains closed.
 - **Local notifications** for everything schedulable (routine reminders, capture nudges) — no server round-trip, work offline, content stays on-device (docs/00 §6).
-- **Quiet hours** — a user-set do-not-disturb window; nothing fires inside it (defaults respect overnight).
+- **Routine quiet hours** — scheduled AM/PM and weekly photo reminders inside the window move to its end; immediate event-triggered suggestions are skipped. Matching start/end means off. The checkout-date billing reminder is outside this health-purpose window, and OS presentation remains system-controlled.
 - **Frequency caps** — a per-tier, per-week cap enforced by the delivery layer (§9), so behavioural triggers can never stack into fatigue; the utility tier is bounded by the user's own schedule.
 
 #### 3.5 Platform mechanics
 
 - **iOS time-sensitive notifications** require justification; routine reminders are standard notifications (not time-sensitive) unless the user opts a step into time-sensitivity. One system opt-in prompt (§3.2).
 - **Android 14+ exact alarms** — `SCHEDULE_EXACT_ALARM` is denied by default for new installs targeting API 33+; routine reminders use **inexact alarms / WorkManager** (a routine nudge does not need minute precision), and the app **must call `canScheduleExactAlarms()` before any exact-alarm API or it crashes** (docs/00 §6). `USE_EXACT_ALARM` is reserved for alarm/calendar apps and is not claimed here.
-- **Push (APNs/FCM via Supabase Edge Functions)** is used only for the **promotional tier** (win-backs/announcements) and any cross-device sync signal — native APNs/FCM to avoid vendor lock-in (docs/00 §6); `push_token` stored in `notification_preferences`.
+- **Remote push is closed in the current mobile source.** A future APNs promotional or cross-device signal path would require separate in-app opt-in, token lifecycle, privacy/retention approval, and exact-build evidence. The current client stores no push token in `notification_preferences`.
 
 #### 3.6 Lock-screen discretion (health-adjacent content)
 
@@ -181,7 +201,7 @@ The **primary** progress framing is **weekly adherence** ("5 of 7 nights this we
 
 - Streaks are **computed server-side / in a security-definer function** from the append-only `routine_completions` log, with `current_streak`/`longest_streak` **cached on `profiles`** via trigger (docs/01 §3, the hybrid recommendation).
 - **`longest_streak` is a non-decreasing personal best** — `recompute_streak` uses `greatest(longest_streak, computed)` so a deleted completion never shrinks the all-time best (**D-011**); `current_streak` is recomputed on both INSERT and DELETE.
-- The **completion validation window is timezone-tolerant** (**D-012**; precise per-user-timezone validation via `notification_preferences.timezone` is the refinement), and offline backfill is **capped at 48h** and flagged `source='backfilled'` to prevent backdating abuse (docs/01 §3).
+- The **completion validation window is timezone-tolerant** (**D-012**); authoritative adherence timezone cannot depend on the dormant notification mirror. Offline backfill is **capped at 48h** and flagged `source='backfilled'` to prevent backdating abuse (docs/01 §3).
 - The freeze/grace state is computed from the same log plus a small freeze ledger (§7), so it survives offline and recomputes deterministically.
 
 #### 4.5 The streak surfaces (look & feel)
@@ -312,16 +332,22 @@ push-to-start token observation/emission is intentionally removed because those
 tokens are not owner-bound or revocable; per-activity push remains signed
 `false` and current-authority-gated.
 
-### 7. Data model — extends docs/01 `notification_preferences` + streak caching
+### 7. Data model — dormant notification server scaffolding + streak caching
 
-**Recap (docs/01 §3):** `notification_preferences` = `user_id PK`, `am_reminder_time time`, `pm_reminder_time time`, `streak_nudges bool`, `replenishment_alerts bool`, `push_token text`, `timezone text` (owner-only RLS); `profiles.current_streak` / `longest_streak`.
+**Current authority boundary:** `notification_preferences` and
+`notification_log` remain server schema/withdrawal/export scaffolding, not
+current mobile collection or delivery authority. The encrypted device preference
+record and encrypted scheduling-attempt ledger are authoritative. Every purpose
+defaults off, and the current client sends neither preference values nor attempt
+metadata off device. `profiles.current_streak` / `longest_streak` also remain
+untrusted until the forgiving server parity migration lands.
 
 **Extensions this layer needs:**
 
 ```sql
 alter table public.notification_preferences
-  add column pm_reminder_enabled boolean not null default true,
-  add column am_reminder_enabled boolean not null default true,
+  add column pm_reminder_enabled boolean not null default false,
+  add column am_reminder_enabled boolean not null default false,
   add column capture_reminders   boolean not null default false, -- the weekly progress-photo nudge (opt-in)
   add column quiet_hours_start    time,
   add column quiet_hours_end      time,
@@ -340,7 +366,8 @@ create table public.streak_freezes (
 );
 create index on public.streak_freezes (user_id);
 
--- A delivery/throttle log for frequency caps + analytics (no health content stored).
+-- Dormant future remote delivery/throttle scaffolding. The current mobile client
+-- must not use this table for caps, analytics, or delivery decisions.
 create table public.notification_log (
   id        uuid primary key default gen_random_uuid(),
   user_id   uuid not null references auth.users(id) on delete cascade,
@@ -360,13 +387,13 @@ The **streak computation** (`recompute_streak`, security-definer, D-011/D-012; d
 
 - **Lock-screen / home-screen content is discreet** because skincare reveals health context (§3.6, §6); detail is opt-in; widgets on a shared home screen show calm, non-revealing content by default.
 - **Local notifications keep content on-device** for the utility/behavioural tiers; the promotional **push** tier (APNs/FCM via Edge Functions) carries only generic copy — **no health-revealing content in third-party push payloads** (avoids exposing health-adjacent data to push intermediaries; consistent with MHMDA/GDPR special-category handling, docs/01 §4).
-- **`push_token`** is owner-only and used solely for the consented promotional tier; **no notification data is sold or shared** (brand promise); any analytics on notifications are metadata-only (`notification_log`), never content.
+- **`push_token` is not currently collected.** Future remote push and notification analytics remain closed until purpose, opt-in, recipients, retention/deletion, processor, linkage, privacy-label, and exact-build review pass.
 - **Streak/adherence data** is owner-only (RLS), included in the GDPR Art. 20 export, and removed on deletion (docs/01 §4).
 
 ### 9. Engineering / implementation notes
 
 - **Notifications:** `expo-notifications` for **local notifications** (routine reminders, capture nudges) with timezone-correct scheduling; **Android 14**: inexact alarms / **WorkManager** by default, `canScheduleExactAlarms()` guarded before any exact API (or crash), `USE_EXACT_ALARM` not claimed; **iOS**: standard notifications with the single opt-in prompt, time-sensitive only where justified; **push** for win-backs via native **APNs/FCM + Supabase Edge Functions** (docs/00 §6).
-- **Frequency-cap engine:** before sending any behavioural/promotional notification, check `notification_log` against the per-tier weekly cap and `quiet_hours`; suppress or defer if exceeded.
+- **Frequency-cap engine:** atomically reserve the encrypted current-device scheduling-attempt ledger before any event-triggered native schedule request. Behavioural suggestions admit at most three attempts and promotional at most one in a rolling seven days. Keep the reservation after native failure; it is not sent/open proof. Weekly photo reminders are separately opted in and separately described.
 - **Widgets:** **iOS** WidgetKit (SwiftUI) via the exact-pinned
   `expo-widgets` source; App Group SQLite authority with a native durable
   outbox/CAS and one-shot final-quiescence lifecycle; RoutineKind timeline
@@ -379,7 +406,7 @@ The **streak computation** (`recompute_streak`, security-definer, D-011/D-012; d
   The start/config flags remain false until signed and physical-device gates
   pass; the Android ongoing-notification equivalent is later scope.
 - **Streak:** `recompute_streak` security-definer function (D-011/D-012), `profiles` cache via trigger, `streak_freezes` ledger; all offline-safe and idempotent (docs/03 §6).
-- **PostHog instrumentation:** `notification_prompt_shown`/`_granted`/`_denied` (docs/01 §7), `notification_sent` (tier/kind), `notification_opened`, `reminder_time_set`, `streak_freeze_applied`, `streak_milestone_reached`, `widget_added`, `widget_checkoff_completed`, `live_activity_started`. Wire `widget_checkoff_completed` and reminder-driven opens into the activation/retention analysis. Never log notification _content_ or health detail.
+- **Notification instrumentation is closed.** The current notification path produces no prompt, sent, opened, or reminder-time analytics. A future CAT-09 schema may use only mechanically observable names and must separately approve consent, payload, linkage, recipients, retention, deletion, and exact-build transport. Never infer that an OS prompt was shown or that a schedule attempt was delivered/opened.
 - **Performance:** the frequency-cap check is a single indexed query and
   reminder scheduling is local and battery-friendly (inexact alarms). The
   RoutineKind WidgetKit provider/render read path is not yet performance-cleared:
@@ -425,7 +452,12 @@ revenue forecast or guarantee.
 
 **(f) Live Activities:** an opt-in PM "tonight's step" on the Lock Screen / Dynamic Island, started at the reminder and ended on completion.
 
-**(g) Data & privacy:** extends `notification_preferences` (tiers, quiet hours, capture/live-activity/promotional toggles), adds `streak_freezes` and `notification_log`; health-adjacent content stays in local notifications and discreet on screens; nothing sold; metadata-only analytics.
+**(g) Data & privacy:** encrypted current-device preferences hold tiers, quiet
+hours, and capture/live-activity/promotional toggles; the encrypted device
+attempt ledger owns local caps. Server `notification_preferences` and
+`notification_log` are dormant scaffolding, and notification analytics are
+closed. Health-adjacent content stays in local notifications and discreet on
+screens.
 
 **(h) Composition & confidence:** consumes docs/03/04/05/06, extends docs/01, implements docs/00; the load-bearing constraints are restraint (frequency/tiering), forgiveness (the streak), and discretion (health-adjacent content) — all both ethical and retention-optimal.
 

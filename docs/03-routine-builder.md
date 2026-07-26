@@ -198,7 +198,9 @@ create index on public.active_ramp (user_id);
 - **A forgiving streak.** Define a "completion day" as _did your scheduled routine for today_ — and **recovery nights count**. Build in **grace days / a streak freeze** so one missed day doesn't reset to zero (the abstinence-violation fix). Never use shame copy ("You broke your streak!"); a missed day is acknowledged neutrally and the user is invited back.
 - **Weekly adherence + a heat-map**, not just a number. Show "5 of 7 nights this week" and a calm calendar heat-map of the month — a framing that rewards consistency-over-time (the thing Lally found matters) rather than perfection.
 - **White-hat motivation** (accomplishment, progress, meaning — tying check-offs to the visible photo progress of doc-#10) over loss-aversion. Milestones (where used) unlock genuinely meaningful things (e.g. a progress-photo comparison), not bigger numbers.
-- **A sub-one-minute check-off** and **gentle, opt-in nudges** (never the aggressive notification cadence the streak-backfire literature warns about; honour `notification_preferences`, §10).
+- **A sub-one-minute check-off** and **gentle, opt-in nudges** (never the
+  aggressive notification cadence the streak-backfire literature warns about;
+  honour the encrypted current-device notification preferences, §10).
 
 ### 7. Editing, overrides & recompute
 
@@ -256,11 +258,18 @@ The design language is fixed by the spec and docs/00 §8 / **D-005**: **Instrume
 
 **9.8 Accessibility & localisation.** Dynamic Type reflow (no fixed-height text containers); 44pt minimum targets; correct VoiceOver order; Reduce-Motion fallbacks; **dark-mode variants for every PM surface**; externalised strings with ~30% expansion headroom and RTL mirroring (docs/01 §8).
 
-**9.9 Widgets & Live Activity (spec p14 names these as natural next screens).** A home-screen widget for "tonight's step / next up" and an optional **Live Activity** for the evening routine ("Retinoid night — 1 of 3"), driven by the same plan and honouring `notification_preferences`. Platform-gated (iOS Live Activity / WidgetKit; Android equivalents) and to be re-verified at build (docs/00 §6).
+**9.9 Widgets & Live Activity (spec p14 names these as natural next screens).**
+A home-screen widget for "tonight's step / next up" and an optional **Live
+Activity** for the evening routine ("Retinoid night — 1 of 3"), driven by the
+same plan and honouring the current-device notification settings. Platform-gated
+(iOS Live Activity / WidgetKit; Android equivalents) and to be re-verified at
+build (docs/00 §6).
 
 ### 10. Notifications & reminders
 
-- **AM/PM reminders** at `notification_preferences.am_reminder_time` / `pm_reminder_time`; "tonight's step" surfaced via the widget/Live Activity.
+- **AM/PM reminders** at the encrypted current-device `amTime` / `pmTime`;
+  "tonight's step" surfaced via the widget/Live Activity. The dormant server
+  `notification_preferences` table is not current scheduling authority.
 - **Gentle, opt-in streak nudges** only — never the aggressive, guilt-driven cadence the streak-backfire literature warns against; `streak_nudges` is user-controlled, calm, and respects quiet hours.
 - **Replenishment alerts** from PAO/expiry (`replenishment_alerts`, docs/02 §6).
 - **Permission-priming:** a soft in-app explainer before the OS prompt, fired at the value moment, not at launch (docs/01 §8).

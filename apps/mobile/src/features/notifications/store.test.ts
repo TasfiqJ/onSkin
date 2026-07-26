@@ -1,12 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  beginAccountGenerationBoundary,
-  endAccountGenerationBoundary,
-  waitForAccountGenerationOperationsToSettle,
-} from '@/lib/auth/accountGeneration';
-
-import {
   currentDeviceTimezone,
   DEFAULT_PREFS,
   loadNotifPrefs,
@@ -17,8 +11,6 @@ import {
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
-  getUser: vi.fn(async () => ({ data: { user: { id: 'user-1' } } })),
-  upsert: vi.fn(async () => ({ error: null })),
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
 }));
@@ -83,25 +75,11 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-vi.mock('@/lib/supabase/client', () => ({
-  getPersistedSupabaseUser: mocks.getUser,
-  supabase: {
-    auth: {
-      getUser: mocks.getUser,
-    },
-    from: vi.fn(() => ({
-      upsert: mocks.upsert,
-    })),
-  },
-}));
-
 const KEY = 'onskin.notifPrefs.v1';
 
 describe('notification lock-screen privacy preference', () => {
   beforeEach(() => {
     mocks.storage.clear();
-    mocks.getUser.mockClear();
-    mocks.upsert.mockClear();
     mocks.tails.clear();
     mocks.updateFailure = null;
   });
@@ -113,8 +91,18 @@ describe('notification lock-screen privacy preference', () => {
   });
 
   it('keeps replenishment alerts off until the user explicitly opts in', async () => {
+    expect(DEFAULT_PREFS.amEnabled).toBe(false);
+    expect(DEFAULT_PREFS.pmEnabled).toBe(false);
+    expect(DEFAULT_PREFS.streakNudges).toBe(false);
     expect(DEFAULT_PREFS.replenishmentAlerts).toBe(false);
-    await expect(loadNotifPrefs()).resolves.toMatchObject({ replenishmentAlerts: false });
+    await expect(loadNotifPrefs()).resolves.toMatchObject({
+      amEnabled: false,
+      pmEnabled: false,
+      streakNudges: false,
+      replenishmentAlerts: false,
+      amTime: '07:30',
+      pmTime: '21:30',
+    });
   });
 
   it('fails closed for legacy true values with no explicit opt-in marker', async () => {
@@ -126,7 +114,7 @@ describe('notification lock-screen privacy preference', () => {
     );
   });
 
-  it('persists and mirrors an explicit replenishment opt-in across unrelated edits', async () => {
+  it('persists an explicit replenishment opt-in locally across unrelated edits', async () => {
     await expect(saveNotifPrefs({ replenishmentAlerts: true })).resolves.toMatchObject({
       replenishmentAlerts: true,
     });
@@ -144,9 +132,6 @@ describe('notification lock-screen privacy preference', () => {
         replenishmentAlertsOptInConfirmed: true,
       },
     });
-    expect(mocks.upsert).toHaveBeenLastCalledWith(
-      expect.objectContaining({ replenishment_alerts: true }),
-    );
   });
 
   it('preserves unreadable local prefs and fails every optional notification closed', async () => {
@@ -201,7 +186,7 @@ describe('notification lock-screen privacy preference', () => {
     );
 
     await expect(loadNotifPrefs()).resolves.toMatchObject({
-      amEnabled: true,
+      amEnabled: false,
       pmEnabled: false,
       amTime: '08:15',
       pmTime: DEFAULT_PREFS.pmTime,
@@ -215,7 +200,7 @@ describe('notification lock-screen privacy preference', () => {
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ amTime: ' 08:15 ' });
   });
 
-  it('refuses to persist or mirror a false lock-screen discretion value', async () => {
+  it('refuses to persist a false lock-screen discretion value', async () => {
     const prefs = await saveNotifPrefs({ amEnabled: false, lockscreenDiscreet: false });
     await Promise.resolve();
     await Promise.resolve();
@@ -233,12 +218,6 @@ describe('notification lock-screen privacy preference', () => {
         timezone: currentDeviceTimezone(),
       },
     });
-    expect(mocks.upsert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        lockscreen_discreet: true,
-        timezone: currentDeviceTimezone(),
-      }),
-    );
   });
 
   it('serializes simultaneous partial preference edits without losing either writer', async () => {
@@ -255,41 +234,15 @@ describe('notification lock-screen privacy preference', () => {
     });
   });
 
-  it('does not mirror or replace the prior envelope when an atomic write fails', async () => {
+  it('does not replace the prior envelope when an atomic write fails', async () => {
     await saveNotifPrefs({ amEnabled: false });
     await Promise.resolve();
     await Promise.resolve();
     const original = mocks.storage.get(KEY);
-    mocks.upsert.mockClear();
     mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
 
     await expect(saveNotifPrefs({ pmEnabled: false })).rejects.toThrow('PRIVATE_WRITE_FAILED');
 
     expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('does not publish an old preference mirror after an account boundary begins', async () => {
-    let releaseUser!: () => void;
-    const userGate = new Promise<void>((resolve) => {
-      releaseUser = resolve;
-    });
-    mocks.getUser.mockImplementationOnce(async () => {
-      await userGate;
-      return { data: { user: { id: 'user-1' } } };
-    });
-
-    const saving = saveNotifPrefs({ amEnabled: false });
-    await vi.waitFor(() => expect(mocks.getUser).toHaveBeenCalled());
-    beginAccountGenerationBoundary();
-    try {
-      releaseUser();
-      await expect(saving).rejects.toThrow('ACCOUNT_GENERATION_CHANGED');
-      await waitForAccountGenerationOperationsToSettle();
-    } finally {
-      endAccountGenerationBoundary();
-    }
-
-    expect(mocks.upsert).not.toHaveBeenCalled();
   });
 });

@@ -7,8 +7,8 @@ integrity defects in Today check-off, adherence qualification, streak display,
 failure recovery, future-date handling, and long-lived routine clocks. It does
 not mark CORE-05 complete and does not prove server synchronization,
 authoritative cross-device forgiveness, native storage durability, notification
-consent, analytics publication, legal approval, archive identity, App Review
-acceptance, launch readiness, or revenue.
+delivery or OS-prompt behavior, analytics publication, legal approval, archive
+identity, App Review acceptance, launch readiness, or revenue.
 
 `CORE-04` remains an upstream dependency. The current local encrypted
 persistence candidate is source- and development-web-tested, but its physical
@@ -95,6 +95,53 @@ were removed. The remaining cycle-threshold marker says only that a cycle's
 worth of qualifying routine nights was checked off; it does not claim a
 specific skin or photo outcome.
 
+## Local-only notification consent and scheduling
+
+The current notification source now fails closed around the bounded local
+reminder surface:
+
+- every notification purpose defaults off while 7:30 AM and 9:30 PM remain
+  proposed values;
+- the onboarding soft ask visibly names those exact times before an OS request,
+  persists the exact values shown, and enables only AM and PM routine reminders;
+- iOS authorization keeps not-determined, denied, authorized, provisional, and
+  ephemeral states distinct, preserves whether another request is possible, and
+  is rechecked before each scheduling path;
+- settings refresh authorization on foreground, display stored purposes
+  effectively off when delivery is unavailable, and expose a native Settings
+  recovery path only where that handoff exists. Each authorization read
+  reconciles native schedules, so revocation cancels them and a later explicit
+  OS grant rebuilds only purposes whose stored choices remain enabled;
+- routine reminder, trial reminder, and event-triggered schedule operations
+  serialize with consent/health admission; no later schedule request can bypass
+  the current authorization check;
+- event-triggered suggestions atomically reserve capacity in the encrypted
+  device ledger before native scheduling. A conservative reservation survives a
+  native failure, so interruption cannot exceed the rolling seven-day device
+  caps: three behavioural routine/replenishment attempts and one promotional
+  attempt;
+- the separately opted-in progress-photo reminder is described as weekly rather
+  than as part of that event-triggered cap; and
+- routine quiet-hours copy scopes itself to routine/optional reminders, names the
+  checkout-date billing exception, and explicitly treats matching start/end
+  values as off. It does not promise OS presentation.
+
+The mobile client no longer reads or writes `notification_preferences` or
+`notification_log`, and it produces no `notification_prompt_shown`,
+`notification_prompt_granted`, or `notification_prompt_denied` events. Existing
+database tables remain covered by withdrawal/export/residue controls, but are
+not current collection authority. Remote synchronization, cross-device caps,
+delivery/open measurement, and permission analytics remain closed pending
+CAT-09 privacy, consent, retention, recipient, disclosure, and exact-build
+review.
+
+The retained development Expo-web observation shows the exact onboarding times,
+skip behavior, all purposes effectively off when browser authorization is
+unavailable, scoped quiet-hours copy, and the matching-time off state. It found
+and fixed a web-only native-Settings handoff crash. The 1279 x 720 packet is not
+compact, native, physical-iPhone, OS-permission, native-scheduling, or
+archive-identical evidence.
+
 ## Mandatory Source Contract
 
 `scripts/core05/adherence-source-contract.test.mjs` is a blocking command in
@@ -106,8 +153,10 @@ both `phase3:verify` and `launch:verify`. It binds:
 4. future-row exclusion and live routine clock boundaries;
 5. fail-closed Streak and Welcome Back routes;
 6. outcome-neutral milestone copy;
-7. completion-key cleanup and purpose-limited export registration; and
-8. mandatory launch verification wiring.
+7. exact-time, default-off, authorization-aware, local-only notification
+   scheduling and atomic cap reservation;
+8. completion-key cleanup and purpose-limited export registration; and
+9. mandatory launch verification wiring.
 
 Passing this structural contract and the focused Vitest suite proves only the
 inspected source behavior in the test environment.
@@ -119,8 +168,9 @@ inspected source behavior in the test environment.
   app. They do not provide a pre-approval guarantee.
 - [Apple notification guidance](https://developer.apple.com/documentation/usernotifications/asking-permission-to-use-notifications)
   says authorization status can change and should be checked before scheduling.
-  Current OnSkin permission-status and exact-time confirmation behavior remains
-  an open CORE-05/CAT-09 gate.
+  The bounded source now rechecks authorization and confirms proposed times.
+  Native prompt, revocation, Settings-return, and delivery evidence remains an
+  open CORE-05 gate.
 - [Apple App Privacy details](https://developer.apple.com/app-store/app-privacy-details/)
   require disclosure of app and integrated-partner collection, linkage, and
   purposes. Local-only processing is treated differently from data sent off
@@ -157,13 +207,15 @@ evidence for all of the following:
   commit-before-reject ambiguity, rollback failure, consent/account changes
   during writes, success invalidation, reload, and direct-entry loading/error/
   new/grace/lapsed Welcome Back states;
-- exact notification time review before scheduling, current OS authorization
-  status and recovery, truthful prompt analytics, correctly named preference
-  purposes, quiet-hour boundaries, serialized weekly caps, and receipt-ledger
-  reconciliation;
+- supported-iPhone evidence for the exact-time soft ask, fresh grant, denial,
+  provisional/ephemeral where available, Settings revocation/return, every
+  schedule class, cancellation/opt-out, quiet-hour/DST/timezone/relaunch
+  behavior, concurrent cap admission, process interruption after reservation,
+  and the native scheduled-notification inventory;
 - approved health-consent and privacy text covering completion history,
-  adherence derivation, notification preferences/logs, remote mirrors,
-  recipients, retention, deletion, withdrawal, and any analytics;
+  adherence derivation, current device-local notification data, any future
+  remote preference/log mirror, recipients, retention, deletion, withdrawal,
+  and analytics;
 - field-level exact-build App Privacy mapping and counsel determination for
   applicable privacy, consumer-health, breach-notification, and promotional
   communication requirements;

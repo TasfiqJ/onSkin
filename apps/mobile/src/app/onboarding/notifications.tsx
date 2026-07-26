@@ -7,14 +7,14 @@ import { SOFT_ASK } from '@/features/notifications/copy';
 import {
   acceptRoutineReminderSoftAsk,
   declineRoutineReminderSoftAsk,
+  PROPOSED_ROUTINE_REMINDER_TIMES,
 } from '@/features/notifications/onboarding';
-import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
 // 08 · Notification soft-ask (docs/07 §3.2, design screen 01). A value-moment
-// pre-permission explainer; only "Yes" fires the single OS prompt (55-70% vs
-// 30-40% cold, docs/01 §8). On grant we enable the utility AM/PM reminders at the
-// default times and schedule them locally; the user tunes times/quiet hours later.
+// pre-permission explainer. It displays the exact proposed AM/PM times before
+// asking the OS and activates only those two purposes after deliverable
+// authorization. We deliberately do not claim the system sheet was shown.
 function CheckRow({ label }: { label: string }) {
   return (
     <View className="flex-row items-center gap-3 py-1">
@@ -49,10 +49,7 @@ export default function NotificationsScreen() {
 
   function enable() {
     void finish(async () => {
-      track('notification_prompt_shown');
-      const granted = await acceptRoutineReminderSoftAsk();
-      if (granted) track('notification_prompt_granted');
-      else track('notification_prompt_denied');
+      await acceptRoutineReminderSoftAsk(PROPOSED_ROUTINE_REMINDER_TIMES);
     });
   }
 

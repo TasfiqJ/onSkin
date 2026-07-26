@@ -24,6 +24,15 @@ const paths = Object.freeze({
   cleanup: 'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
   localExport: 'apps/mobile/src/features/settings/localDeviceExport.ts',
   notificationCopy: 'apps/mobile/src/features/notifications/copy.ts',
+  notificationDefaults: 'apps/mobile/src/features/notifications/defaults.ts',
+  notificationStore: 'apps/mobile/src/features/notifications/store.ts',
+  notificationOnboarding: 'apps/mobile/src/features/notifications/onboarding.ts',
+  notificationOnboardingRoute: 'apps/mobile/src/app/onboarding/notifications.tsx',
+  notificationDelivery: 'apps/mobile/src/features/notifications/deliver.ts',
+  notificationLedger: 'apps/mobile/src/features/notifications/sentStore.ts',
+  notificationSettings: 'apps/mobile/src/app/settings/notifications.tsx',
+  notificationTiming: 'apps/mobile/src/app/settings/timing.tsx',
+  notificationHooks: 'apps/mobile/src/features/notifications/useNotifications.ts',
 });
 
 function read(path) {
@@ -130,6 +139,71 @@ test('routine milestones describe verified check-offs without outcome claims', (
   assert.match(copy, /A cycle['’]s worth of routine nights checked off/u);
   assert.match(copy, /Thirty completed routine nights/u);
   assert.doesNotMatch(copy, /progress photos may|paying off|full cycle in/u);
+});
+
+test('notification opt-in is exact-time, authorization-aware, local-only, and cap-safe', () => {
+  const store = read(paths.notificationStore);
+  const defaults = read(paths.notificationDefaults);
+  const onboarding = read(paths.notificationOnboarding);
+  const route = read(paths.notificationOnboardingRoute);
+  const copy = read(paths.notificationCopy);
+  const delivery = read(paths.notificationDelivery);
+  const ledger = read(paths.notificationLedger);
+  const settings = read(paths.notificationSettings);
+  const timing = read(paths.notificationTiming);
+  const hooks = read(paths.notificationHooks);
+
+  assert.match(store, /amEnabled:\s*false/u);
+  assert.match(store, /pmEnabled:\s*false/u);
+  assert.match(store, /streakNudges:\s*false/u);
+  assert.match(store, /amTime:\s*DEFAULT_ROUTINE_REMINDER_TIMES\.amTime/u);
+  assert.match(store, /pmTime:\s*DEFAULT_ROUTINE_REMINDER_TIMES\.pmTime/u);
+  assert.match(defaults, /amTime:\s*['"]07:30['"]/u);
+  assert.match(defaults, /pmTime:\s*['"]21:30['"]/u);
+  assert.doesNotMatch(store, /notification_preferences|supabase/u);
+
+  assert.match(onboarding, /PROPOSED_ROUTINE_REMINDER_TIMES/u);
+  assert.match(onboarding, /DEFAULT_ROUTINE_REMINDER_TIMES/u);
+  assert.match(onboarding, /amTime:\s*times\.amTime/u);
+  assert.match(onboarding, /pmTime:\s*times\.pmTime/u);
+  assert.match(onboarding, /isDeliverableAuthorizationState\(outcome\.state\)/u);
+  assert.match(copy, /formatReminderTime\(DEFAULT_ROUTINE_REMINDER_TIMES\.amTime\)/u);
+  assert.match(copy, /formatReminderTime\(DEFAULT_ROUTINE_REMINDER_TIMES\.pmTime\)/u);
+  assert.match(copy, /Use these times/u);
+  assert.match(route, /acceptRoutineReminderSoftAsk\(PROPOSED_ROUTINE_REMINDER_TIMES\)/u);
+  assert.doesNotMatch(route, /notification_prompt_(?:shown|granted|denied)/u);
+
+  for (const state of [
+    'not_determined',
+    'denied',
+    'authorized',
+    'provisional',
+    'ephemeral',
+    'unavailable',
+  ]) {
+    assert.match(delivery, new RegExp(`['"]${state}['"]`, 'u'));
+  }
+  assert.match(delivery, /canAskAgain/u);
+  assert.match(delivery, /allowAlert:\s*true/u);
+  assert.match(delivery, /allowBadge:\s*false/u);
+  assert.match(delivery, /allowSound:\s*false/u);
+  assert.match(delivery, /reserveNotificationSlotLocal\(kind,\s*now\)/u);
+  assert.doesNotMatch(delivery, /notification_log|from\(['"]notification_/u);
+  assert.match(ledger, /export async function reserveNotificationSlotLocal/u);
+  assert.match(ledger, /used >= WEEKLY_CAP\[tier\]/u);
+  assert.doesNotMatch(ledger, /export async function recordSentLocal/u);
+  assert.match(settings, /blocked in/u);
+  assert.match(settings, /Open Settings/u);
+  assert.match(settings, /openAppSettings/u);
+  assert.match(settings, /settingsOpenFailed/u);
+  assert.match(settings, /Checking notification access/u);
+  assert.match(settings, /Routine pacing suggestions/u);
+  assert.match(hooks, /AppState\.addEventListener\(['"]change['"]/u);
+  assert.match(hooks, /invalidateQueries\(\{\s*queryKey:\s*AUTHORIZATION_KEY\s*\}\)/u);
+  assert.match(hooks, /const state = await getPermissionStatus\(\)/u);
+  assert.match(hooks, /await rescheduleReminders\(\)/u);
+  assert.match(timing, /Event-triggered suggestions are skipped\./u);
+  assert.match(timing, /Trial billing reminders follow the date shown at checkout\./u);
 });
 
 test('completion records remain registered for cleanup/export and this contract is mandatory', () => {

@@ -280,7 +280,9 @@ export default function TimingScreen() {
             className={compactTiming ? 'mt-1 text-[12px]' : 'mt-2'}
             style={compactTiming ? { lineHeight: 15 } : undefined}
           >
-            Nothing fires inside this window. Even your routine reminders wait until morning.
+            {p.quietStart === p.quietEnd
+              ? 'Quiet hours are off because the start and end match.'
+              : 'Routine and weekly photo reminders scheduled inside this window move to its end. Event-triggered suggestions are skipped. Trial billing reminders follow the date shown at checkout.'}
           </Text>
         </View>
 
