@@ -7,6 +7,7 @@ import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
 import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import {
@@ -78,6 +79,7 @@ export function usePlanFromSources(
 ): PlanQueryResult {
   const ownerScope = useOwnerQueryScope();
   const routineOrder = useQuery({
+    ...deterministicLocalQueryPolicy,
     queryKey: queryKeys.routineOrder(ownerScope),
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
@@ -88,8 +90,6 @@ export function usePlanFromSources(
         lease.assertCurrent();
         return overrides;
       }),
-    networkMode: 'always',
-    retry: 1,
     staleTime: Infinity,
   });
 

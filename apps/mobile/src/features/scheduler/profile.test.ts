@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { QueryClient } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -14,7 +15,11 @@ import type {
   StoredSkinProfileRead,
 } from '@/features/onboarding/skinProfileStore';
 
-import { readProfileBits, savePregnancyStatus } from './profile';
+import {
+  readProfileBits,
+  savePregnancyStatus,
+  shouldAutomaticallyRefetchProfileQuery,
+} from './profile';
 import { moistureFromAxis, sensitivityFromAxis } from './profileMapping';
 
 const mocks = vi.hoisted(() => ({
@@ -32,19 +37,17 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@/features/onboarding/skinProfileStore', () => ({
-  readStoredSkinProfile: vi.fn(
-    async (): Promise<StoredSkinProfileRead> => {
-      if (mocks.storedProfile) return { status: 'available', profile: mocks.storedProfile };
-      if (mocks.localStatus === 'missing') return { status: 'missing', profile: null };
-      if (mocks.localStatus === 'unsupported_version') {
-        return { status: 'unsupported_version', profile: null };
-      }
-      if (mocks.localStatus === 'invalid') {
-        return { status: 'invalid', profile: null, reason: 'invalid_record' };
-      }
-      return { status: 'unavailable', profile: null, reason: 'storage_unavailable' };
-    },
-  ),
+  readStoredSkinProfile: vi.fn(async (): Promise<StoredSkinProfileRead> => {
+    if (mocks.storedProfile) return { status: 'available', profile: mocks.storedProfile };
+    if (mocks.localStatus === 'missing') return { status: 'missing', profile: null };
+    if (mocks.localStatus === 'unsupported_version') {
+      return { status: 'unsupported_version', profile: null };
+    }
+    if (mocks.localStatus === 'invalid') {
+      return { status: 'invalid', profile: null, reason: 'invalid_record' };
+    }
+    return { status: 'unavailable', profile: null, reason: 'storage_unavailable' };
+  }),
   updateStoredPregnancyStatus: mocks.updateStoredPregnancyStatus,
 }));
 
@@ -143,7 +146,9 @@ describe('skin profile axis mapping', () => {
 
     expect(source).toContain('queryKey: queryKeys.skinProfile(ownerScope)');
     expect(source).toContain('runOwnerQueryOperation(ownerScope, readProfileBitsWithLease)');
-    expect(source).toContain("networkMode: 'always'");
+    expect(source).toContain('...stableErrorQueryPolicy');
+    expect(source).toContain('shouldAutomaticallyRefetchProfileQuery');
+    expect(source).toContain('structuralSharing: false');
   });
 
   it('aborts and drains a delayed owner-A server fallback without publishing it', async () => {
@@ -213,10 +218,16 @@ describe('skin profile axis mapping', () => {
   it('keeps the same-generation offline fallback but never translates cancellation to data', async () => {
     mocks.supabaseConfigured = true;
     mocks.maybeSingle.mockRejectedValueOnce(new Error('offline'));
-    await expect(readProfileBits()).resolves.toMatchObject({
+    const offlineFallback = await readProfileBits();
+    expect(offlineFallback).toMatchObject({
       source: 'unavailable',
       consentCurrent: true,
     });
+    expect(
+      shouldAutomaticallyRefetchProfileQuery({
+        state: { data: offlineFallback, status: 'success' },
+      }),
+    ).toBe(true);
 
     mocks.maybeSingle.mockRejectedValueOnce(
       Object.assign(new Error('aborted'), { name: 'AbortError' }),
@@ -227,6 +238,47 @@ describe('skin profile axis mapping', () => {
       attemptCount: 1,
       message: 'NETWORK_REQUEST_CANCELLED',
     });
+  });
+
+  it('replaces deep-equal profile fallbacks so lifecycle eligibility follows their source path', async () => {
+    const client = new QueryClient();
+    const options = {
+      queryKey: ['test', 'profile-structural-sharing'] as const,
+      queryFn: readProfileBits,
+      structuralSharing: false,
+    };
+
+    mocks.localStatus = 'unavailable';
+    const unreadableLocal = await client.fetchQuery(options);
+    expect(
+      shouldAutomaticallyRefetchProfileQuery({
+        state: { data: unreadableLocal, status: 'success' },
+      }),
+    ).toBe(false);
+
+    mocks.localStatus = 'missing';
+    mocks.supabaseConfigured = true;
+    mocks.maybeSingle.mockRejectedValueOnce(new Error('offline'));
+    const serverUnavailable = await client.fetchQuery(options);
+    expect(serverUnavailable).toEqual(unreadableLocal);
+    expect(serverUnavailable).not.toBe(unreadableLocal);
+    expect(
+      shouldAutomaticallyRefetchProfileQuery({
+        state: { data: serverUnavailable, status: 'success' },
+      }),
+    ).toBe(true);
+
+    mocks.localStatus = 'unavailable';
+    const unreadableAgain = await client.fetchQuery(options);
+    expect(unreadableAgain).toEqual(serverUnavailable);
+    expect(unreadableAgain).not.toBe(serverUnavailable);
+    expect(
+      shouldAutomaticallyRefetchProfileQuery({
+        state: { data: unreadableAgain, status: 'success' },
+      }),
+    ).toBe(false);
+
+    client.clear();
   });
 
   it('maps sensitivity axis scores into coarse planner buckets', () => {
@@ -264,7 +316,8 @@ describe('skin profile axis mapping', () => {
   });
 
   it('keeps unavailable status distinct and takes the cautious safety branch', async () => {
-    await expect(readProfileBits()).resolves.toEqual({
+    const unavailable = await readProfileBits();
+    expect(unavailable).toEqual({
       source: 'unavailable',
       sensitivity: 'neutral',
       moisture: 'balanced',
@@ -274,6 +327,11 @@ describe('skin profile axis mapping', () => {
       consentCurrent: true,
       goals: [],
     });
+    expect(
+      shouldAutomaticallyRefetchProfileQuery({
+        state: { data: unavailable, status: 'success' },
+      }),
+    ).toBe(false);
   });
 
   it('does not infer pregnancy from prefer-not while keeping safety cautious', async () => {
@@ -318,7 +376,8 @@ describe('skin profile axis mapping', () => {
       goals: ['anti_aging'],
     };
 
-    await expect(readProfileBits()).resolves.toEqual({
+    const serverProfile = await readProfileBits();
+    expect(serverProfile).toEqual({
       source: 'server',
       sensitivity: 'resistant',
       moisture: 'oily',
@@ -328,6 +387,16 @@ describe('skin profile axis mapping', () => {
       consentCurrent: true,
       goals: ['anti_aging'],
     });
+    expect(
+      shouldAutomaticallyRefetchProfileQuery({
+        state: { data: serverProfile, status: 'success' },
+      }),
+    ).toBe(true);
+    expect(
+      shouldAutomaticallyRefetchProfileQuery({
+        state: { data: serverProfile, status: 'error' },
+      }),
+    ).toBe(false);
   });
 
   it('withholds personal profile bits until the current consent text is granted', async () => {

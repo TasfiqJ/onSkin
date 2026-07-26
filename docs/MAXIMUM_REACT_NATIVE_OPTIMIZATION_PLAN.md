@@ -574,7 +574,7 @@ Required changes:
 
 ### 6.1 Mobile-aware TanStack Query policy
 
-Current global policy is a one-minute stale time and two retries. Required redesign:
+Previous global policy was a one-minute stale time and two retries. Required redesign:
 
 - Bridge `focusManager` to React Native `AppState`.
 - Add `onlineManager` only after selecting and inspecting a connectivity source.
@@ -586,6 +586,27 @@ Current global policy is a one-minute stale time and two retries. Required redes
 - Keep sensitive queries unpersisted.
 - Use short explicit photo-query `gcTime` and purge on lock/account change.
 - Pass TanStack cancellation signals through supported network operations.
+
+Current local query-policy checkpoint (2026-07-25): TanStack queries now deny
+outer retries by default and keep rejected errors stable across mount, focus,
+and reconnect until an owning recovery action explicitly refetches. Successful
+stale snapshots still retain lifecycle refresh. Encrypted/local queries run
+while offline and suppress automatic recovery; date-sensitive photo, Progress,
+and cycle queries refresh only healthy current-day state. Queries already
+wrapped by the bounded request policy cannot multiply its attempt budget, while
+successful offline/typed fallbacks can heal after reconnect. Profile refresh
+distinguishes a retryable server fallback from a deterministic unreadable local
+record without changing the public profile payload. Onboarding still
+revalidates even a fresh successful cache on mount but never remount-retries an
+error. Real `QueryObserver` tests prove one deterministic execution, no hidden
+remount/focus/reconnect rerun, one explicit manual recovery, exact inner request
+attempts, and healthy fallback reconnect refresh. The focused matrix passes 15
+files / 200 tests. A one-shot encrypted-photo failure at 390 x 844 remained
+behind the truthful Progress availability alert until one Retry restored the
+10-photo fixture with zero overflow, dialogs, or unexpected errors. Native
+airplane/VPN/captive-portal, AppState, process-restart, and signed-device
+evidence remains open. See
+`docs/optimization/evidence/2026-07-25_query-retry-classification.md`.
 
 Current local photo-query cache checkpoint (2026-07-21): photo query results now set query-scoped `gcTime: 0` because each derived result retains complete `PhotoRecord` values, including notes and local/encrypted/thumbnail URIs. Real TanStack `QueryObserver` tests prove data remains while any observer exists, disappears after the last observer, a non-cancellable late storage completion leaves no residue after settling, and a later mutation cannot recreate an unobserved query. A content-free development counter contains one integer only; a 390 x 844 Expo-web run switched Progress to Today and back twice, observed exact query execution counts `1 -> 2 -> 3`, and recovered all 10 deterministic Timeline actions after each reread with zero storage errors, overflow, dialogs, or unexpected logs. Global account/lock clearing remains mandatory, and native SecureStore/filesystem/process-kill/memory evidence remains open. See `docs/optimization/evidence/2026-07-21_progress-sensitive-query-cache-eviction.md`.
 
@@ -2033,26 +2054,26 @@ The following register is intended to prevent small-but-important work from disa
 
 ### 18.1 P0 — correctness, privacy, and launch safety
 
-| ID      | Task                                                                 | Status                                                                                                          | Proof required                     |
-| ------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| OPT-001 | Explicitly disable disk caching for sensitive image sources          | Implemented locally; physical-device filesystem proof pending                                                   | device filesystem inspection       |
-| OPT-002 | Clear decoded/private image memory on lock/background/account switch | Implemented locally; native decoded-memory proof pending                                                        | lifecycle test + memory trace      |
-| OPT-003 | Journal and scavenge plaintext capture/share/export staging          | Implemented locally; native force-quit/filesystem proof pending                                                 | force-quit/relaunch test           |
-| OPT-004 | Preserve ciphertext on missing/invalid key across every store        | Implemented locally; signed-device key-loss/restore proof pending                                               | corruption/key-loss matrix         |
-| OPT-005 | Serialize and journal photo mutations                                | Implemented locally; native process-kill recovery proof pending                                                 | race/failure injection             |
-| OPT-006 | Remove ordinary-read photo metadata rewrite                          | Verified locally                                                                                                | read-only regression test          |
-| OPT-007 | Make private-store read/modify/write atomic                          | Implemented locally; device proof pending                                                                       | simultaneous writer tests          |
-| OPT-008 | Return typed unavailable/corrupt/unsupported states                  | Implemented locally; native fault-path proof pending                                                            | store-by-store tests               |
-| OPT-009 | Bind async writes to owner/account generation                        | Implemented locally; physical account-switch proof pending                                                      | delayed A-to-B tests               |
-| OPT-010 | Create encrypted transactional outbox                                | In progress; core + Shelf + conflict choices + Shelf scans + notification prefs/delivery + recommendation prefs | offline/reconnect/duplicate worker |
-| OPT-011 | Verify iOS Keychain/file protection/backup exclusion                 | Partial local hardening; durable-file backup exclusion and signed proof pending                                 | signed-device artifact/test        |
-| OPT-012 | Verify Android Keystore/backup/data extraction                       | Implemented locally; signed manifest/resource and physical proof pending                                        | merged manifest + device test      |
+| ID      | Task                                                                 | Status                                                                                                                                                                                                 | Proof required                                |
+| ------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| OPT-001 | Explicitly disable disk caching for sensitive image sources          | Implemented locally; physical-device filesystem proof pending                                                                                                                                          | device filesystem inspection                  |
+| OPT-002 | Clear decoded/private image memory on lock/background/account switch | Implemented locally; native decoded-memory proof pending                                                                                                                                               | lifecycle test + memory trace                 |
+| OPT-003 | Journal and scavenge plaintext capture/share/export staging          | Implemented locally; native force-quit/filesystem proof pending                                                                                                                                        | force-quit/relaunch test                      |
+| OPT-004 | Preserve ciphertext on missing/invalid key across every store        | Implemented locally; signed-device key-loss/restore proof pending                                                                                                                                      | corruption/key-loss matrix                    |
+| OPT-005 | Serialize and journal photo mutations                                | Implemented locally; native process-kill recovery proof pending                                                                                                                                        | race/failure injection                        |
+| OPT-006 | Remove ordinary-read photo metadata rewrite                          | Verified locally                                                                                                                                                                                       | read-only regression test                     |
+| OPT-007 | Make private-store read/modify/write atomic                          | Implemented locally; device proof pending                                                                                                                                                              | simultaneous writer tests                     |
+| OPT-008 | Return typed unavailable/corrupt/unsupported states                  | Implemented locally; native fault-path proof pending                                                                                                                                                   | store-by-store tests                          |
+| OPT-009 | Bind async writes to owner/account generation                        | Implemented locally; physical account-switch proof pending                                                                                                                                             | delayed A-to-B tests                          |
+| OPT-010 | Create encrypted transactional outbox                                | In progress; core + Shelf + conflict choices + Shelf scans + notification prefs/delivery + recommendation prefs                                                                                        | offline/reconnect/duplicate worker            |
+| OPT-011 | Verify iOS Keychain/file protection/backup exclusion                 | Partial local hardening; durable-file backup exclusion and signed proof pending                                                                                                                        | signed-device artifact/test                   |
+| OPT-012 | Verify Android Keystore/backup/data extraction                       | Implemented locally; signed manifest/resource and physical proof pending                                                                                                                               | merged manifest + device test                 |
 | OPT-013 | Paginate/verify complete data exports                                | Implemented locally with bounded fail-closed Edge assembly and bounded incremental mobile file output; >8 MiB streaming/archive, snapshot/resume, hosted coverage, and native heap/share proof pending | >1,000-row count/checksum + byte-bound stress |
-| OPT-014 | Fix storage deletion pagination and make deletion resumable          | Core resumable deletion implemented locally; hosted failure proof pending                                       | multi-page failure injection       |
-| OPT-015 | Make RevenueCat event insert/projection atomic and ordered           | Implemented locally; staging replay/alert proof pending                                                         | duplicate/reorder suite            |
-| OPT-016 | Declaratively configure every Edge Function                          | Implemented locally; hosted smoke/resource proof pending                                                        | manifest/source diff + smoke       |
-| OPT-017 | Add scheduled retention matching privacy claims                      | Blocked externally on approved retention policy and operations ownership                                        | job run and backlog alert          |
-| OPT-018 | Establish signed physical-device performance baseline                | Blocked on execution evidence                                                                                   | iOS/Android packet                 |
+| OPT-014 | Fix storage deletion pagination and make deletion resumable          | Core resumable deletion implemented locally; hosted failure proof pending                                                                                                                              | multi-page failure injection                  |
+| OPT-015 | Make RevenueCat event insert/projection atomic and ordered           | Implemented locally; staging replay/alert proof pending                                                                                                                                                | duplicate/reorder suite                       |
+| OPT-016 | Declaratively configure every Edge Function                          | Implemented locally; hosted smoke/resource proof pending                                                                                                                                               | manifest/source diff + smoke                  |
+| OPT-017 | Add scheduled retention matching privacy claims                      | Blocked externally on approved retention policy and operations ownership                                                                                                                               | job run and backlog alert                     |
+| OPT-018 | Establish signed physical-device performance baseline                | Blocked on execution evidence                                                                                                                                                                          | iOS/Android packet                            |
 
 ### 18.2 P1 — major speed, memory, and scale
 

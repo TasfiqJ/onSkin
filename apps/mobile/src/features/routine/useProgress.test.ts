@@ -297,7 +297,7 @@ describe('useProgress local-first contract', () => {
     expect(source.match(/runRequestWithLease\(/g)).toHaveLength(2);
     expect(source).toContain("endpoint: 'progress_completions'");
     expect(source).toContain("endpoint: 'progress_longest_streak'");
-    expect(source).toContain("networkMode: 'always'");
+    expect(source).toContain('...deterministicLocalQueryPolicy');
     expect(source).toContain(
       'export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity)',
     );

@@ -8,6 +8,7 @@ import {
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 import { createOwnerQueryScope, queryKeys } from '@/lib/query/queryKeys';
+import { alwaysRefetchSuccessfulQuery } from '@/lib/query/queryPolicies';
 
 import { SKIN_PROFILE_INVALID, SKIN_PROFILE_UNSUPPORTED_VERSION } from './skinProfileStore';
 import {
@@ -93,8 +94,10 @@ describe('owner-bound onboarding status query', () => {
 
     expect(options.queryKey).toEqual(queryKeys.onboarded(ownerScope));
     expect(options.networkMode).toBe('always');
-    expect(options.refetchOnMount).toBe('always');
-    expect(options.retry).toBe(0);
+    expect(options.refetchOnMount).toBe(alwaysRefetchSuccessfulQuery);
+    expect(alwaysRefetchSuccessfulQuery({ state: { status: 'success' } })).toBe('always');
+    expect(alwaysRefetchSuccessfulQuery({ state: { status: 'error' } })).toBe(false);
+    expect(options.retry).toBe(false);
     expect(options.staleTime).toBe(0);
     await expect(client.fetchQuery(options)).resolves.toBe(true);
     expect(mocks.from).not.toHaveBeenCalled();
@@ -163,7 +166,19 @@ describe('owner-bound onboarding status query', () => {
     const options = onboardingStatusQueryOptions(createOwnerQueryScope());
 
     await expect(client.fetchQuery(options)).rejects.toBe(localError);
+    expect(mocks.readLocalOnboardingStatus).toHaveBeenCalledOnce();
+
+    const remounted = new QueryObserver(client, options);
+    const unsubscribe = remounted.subscribe(() => undefined);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(remounted.getCurrentResult().isError).toBe(true);
+    expect(mocks.readLocalOnboardingStatus).toHaveBeenCalledOnce();
+
+    const retried = await remounted.refetch();
+    expect(retried.isError).toBe(true);
+    expect(mocks.readLocalOnboardingStatus).toHaveBeenCalledTimes(2);
     expect(mocks.from).not.toHaveBeenCalled();
+    unsubscribe();
     client.clear();
   });
 
@@ -300,9 +315,7 @@ describe('owner-bound onboarding status query', () => {
     expect(classifyOnboardingStatusFailure(new Error(SKIN_PROFILE_UNSUPPORTED_VERSION))).toBe(
       'unsupported_profile',
     );
-    expect(classifyOnboardingStatusFailure(new Error('offline'))).toBe(
-      'retryable_unavailable',
-    );
+    expect(classifyOnboardingStatusFailure(new Error('offline'))).toBe('retryable_unavailable');
   });
 
   it('detaches a hung local read at A to B and suppresses its late result', async () => {

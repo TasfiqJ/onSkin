@@ -530,8 +530,13 @@ describe('owner-scoped query keys', () => {
     expect(todayViewModel).toContain('queryKeys.completions(ownerScope, boundary)');
     expect(dateBoundary).toContain("refetchType: 'none'");
     for (const source of [progress, photos]) {
-      expect(source).toContain('refetchOnReconnect: shouldRefetchCurrentLocalDayQuery');
-      expect(source).toContain('refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery');
+      expect(source).toContain('refetchOnReconnect: (query');
+      expect(source).toContain('refetchOnWindowFocus: (query');
+      expect(
+        source.match(
+          /query\.state\.status !== 'error' && shouldRefetchCurrentLocalDayQuery\(query\)/g,
+        ),
+      ).toHaveLength(2);
     }
     expect(today).toContain('const boundary = useLocalDateBoundary();');
     expect(todayViewModel).toContain('refetchOnReconnect: (query) =>');

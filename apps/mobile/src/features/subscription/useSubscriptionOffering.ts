@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { configureRevenueCat, getSubscriptionOffering } from '@/lib/iap/revenuecat';
 import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { stableErrorQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 type SubscriptionOfferingOptions = {
@@ -14,9 +15,9 @@ export function useSubscriptionOffering({ enabled = true }: SubscriptionOffering
   const ownerScope = useOwnerQueryScope();
 
   return useQuery({
+    ...stableErrorQueryPolicy,
     queryKey: queryKeys.subscriptionOffering(ownerScope),
     enabled,
-    retry: 1,
     staleTime: 5 * 60 * 1000,
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {

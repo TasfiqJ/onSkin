@@ -27,6 +27,7 @@ import {
   supabaseRequestFailure,
 } from '@/lib/network/requestPolicy';
 import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { stableErrorQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
@@ -58,6 +59,24 @@ const UNKNOWN_PROFILE: ProfileBits = {
   consentCurrent: false,
   goals: [],
 };
+
+const profileBitsThatNeedLifecycleRefresh = new WeakSet<object>();
+
+function markProfileBitsForLifecycleRefresh(bits: ProfileBits): ProfileBits {
+  profileBitsThatNeedLifecycleRefresh.add(bits);
+  return bits;
+}
+
+export function shouldAutomaticallyRefetchProfileQuery(query: {
+  state: Readonly<{ data?: unknown; status: string }>;
+}): boolean {
+  return (
+    query.state.status !== 'error' &&
+    typeof query.state.data === 'object' &&
+    query.state.data !== null &&
+    profileBitsThatNeedLifecycleRefresh.has(query.state.data)
+  );
+}
 
 let pregnancyStatusMutationTail: Promise<void> = Promise.resolve();
 
@@ -160,7 +179,7 @@ export async function readProfileBitsWithLease(
     );
     lease.assertCurrent();
     if (data) {
-      return {
+      return markProfileBitsForLifecycleRefresh({
         source: 'server',
         sensitivity: sensitivityFromAxis(data.sensitive_resistant ?? null),
         moisture: moistureFromAxis(data.oily_dry ?? null),
@@ -169,7 +188,7 @@ export async function readProfileBitsWithLease(
         ...pregnancyBits('unknown'),
         consentCurrent: true,
         goals: (data.goals ?? []) as GoalId[],
-      };
+      });
     }
   } catch (error) {
     // Preserve the existing offline/server fallback only while this exact
@@ -179,7 +198,7 @@ export async function readProfileBitsWithLease(
     /* offline / no DB */
   }
   lease.assertCurrent();
-  return { ...UNKNOWN_PROFILE, consentCurrent: true };
+  return markProfileBitsForLifecycleRefresh({ ...UNKNOWN_PROFILE, consentCurrent: true });
 }
 
 export function readProfileBits(): Promise<ProfileBits> {
@@ -207,11 +226,18 @@ export async function savePregnancyStatus(status: PregnancyStatus): Promise<Prof
 export function useProfileBits() {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
+    ...stableErrorQueryPolicy,
     queryKey: queryKeys.skinProfile(ownerScope),
     queryFn: () => runOwnerQueryOperation(ownerScope, readProfileBitsWithLease),
     // Consent and the authoritative profile are encrypted local reads. Let
     // them resolve offline; readProfileBits already contains the optional,
     // failure-tolerant server fallback for a genuinely missing local profile.
     networkMode: 'always',
+    refetchOnMount: shouldAutomaticallyRefetchProfileQuery,
+    refetchOnReconnect: shouldAutomaticallyRefetchProfileQuery,
+    refetchOnWindowFocus: shouldAutomaticallyRefetchProfileQuery,
+    // Lifecycle eligibility is attached to the exact result identity. Do not
+    // structurally reuse a deep-equal result from a different source path.
+    structuralSharing: false,
   });
 }

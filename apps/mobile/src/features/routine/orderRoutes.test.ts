@@ -51,7 +51,7 @@ describe('persistent routine order route contracts', () => {
     const today = readSource('app/(tabs)/today.tsx');
 
     expect(usePlan).toContain('applyRoutineOrderOverrides(canonicalPlan, orderOverrides)');
-    expect(usePlan).toContain("networkMode: 'always'");
+    expect(usePlan).toContain('...deterministicLocalQueryPolicy');
     expect(usePlan).toContain('canonicalPlan,');
     expect(today).toContain('const scheduledCyclePlanStep =');
     expect(today).toContain('order: scheduledCyclePlanStep?.order ?? 40');

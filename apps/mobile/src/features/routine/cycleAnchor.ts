@@ -12,6 +12,7 @@ import {
   runOwnerQueryOperation,
   shouldRefetchCurrentLocalDayQuery,
 } from '@/lib/query/queryKeys';
+import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
@@ -180,9 +181,12 @@ export function useCycleAnchor() {
   const ownerScope = useOwnerQueryScope();
   const boundary = useLocalDateBoundary();
   return useQuery({
+    ...deterministicLocalQueryPolicy,
     queryKey: queryKeys.cycleAnchor(ownerScope, boundary),
     queryFn: () => runOwnerQueryOperation(ownerScope, getCycleAnchorWithLease),
-    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
-    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
+    refetchOnReconnect: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
+    refetchOnWindowFocus: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
   });
 }

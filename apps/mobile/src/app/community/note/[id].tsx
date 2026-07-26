@@ -15,6 +15,7 @@ import {
 import { track } from '@/lib/analytics/track';
 import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
+import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -38,10 +39,10 @@ export default function NoteDetail() {
   const supportFloorMissingNote = splitShortMissingNote || narrowCompactMissingNote;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
+    ...deterministicLocalQueryPolicy,
     queryKey: queryKeys.noteHelped(ownerScope, id),
     queryFn: () => isNoteHelpful(id ?? ''),
     enabled: !!id,
-    retry: false,
   });
   const helped = helpedQ.data ?? false;
   const helpedMutation = useMutation({

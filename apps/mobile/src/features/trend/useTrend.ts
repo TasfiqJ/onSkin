@@ -6,11 +6,9 @@ import {
   ACCOUNT_GENERATION_CHANGED,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
+import { runRequestWithLease, supabaseRequestFailure } from '@/lib/network/requestPolicy';
 import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { requestPolicyOwnedQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
@@ -80,6 +78,7 @@ type TrendQueryOptions = { enabled?: boolean };
 export function useTrendConsent(options: TrendQueryOptions = {}) {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
+    ...requestPolicyOwnedQueryPolicy,
     queryKey: queryKeys.trendConsent(ownerScope),
     queryFn: () => runOwnerQueryOperation(ownerScope, isTrendInsightsConsentedWithLease),
     enabled: options.enabled,
@@ -90,6 +89,7 @@ export function useTrendConsent(options: TrendQueryOptions = {}) {
 export function useMonkBand(options: TrendQueryOptions = {}) {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
+    ...requestPolicyOwnedQueryPolicy,
     queryKey: queryKeys.monkBand(ownerScope),
     queryFn: () => runOwnerQueryOperation(ownerScope, readMonkBandWithLease),
     enabled: options.enabled,

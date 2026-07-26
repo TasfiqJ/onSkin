@@ -21,6 +21,7 @@ import {
   shouldRefetchCurrentLocalDayQuery,
   type OwnerQueryScope,
 } from '@/lib/query/queryKeys';
+import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import {
@@ -42,10 +43,7 @@ import {
   type PhotoMutationCommit,
   type PhotoRecord,
 } from './store';
-import {
-  buildProgressE2EPhotos,
-  parseProgressE2EPhotoCount,
-} from './progressStressFixture';
+import { buildProgressE2EPhotos, parseProgressE2EPhotoCount } from './progressStressFixture';
 import { recordPhotoQueryExecution } from './photoQueryCacheDiagnostics';
 
 // Reads the local-first photo store (docs/06 §6) and derives the Progress-tab
@@ -147,12 +145,17 @@ export function photoQueryOptions(
   boundary: LocalDateBoundaryIdentity,
   series: PhotoSeries = 'front',
 ) {
+  type PhotoLifecycleQuery = Parameters<typeof shouldRefetchCurrentLocalDayQuery>[0] &
+    Readonly<{ state: Readonly<{ status: string }> }>;
   const { localDate: todayYmd } = boundary;
   return {
+    ...deterministicLocalQueryPolicy,
     gcTime: SENSITIVE_PHOTO_QUERY_GC_TIME_MS,
     queryKey: queryKeys.photos(ownerScope, boundary, series),
-    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
-    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
+    refetchOnReconnect: (query: PhotoLifecycleQuery) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
+    refetchOnWindowFocus: (query: PhotoLifecycleQuery) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
     queryFn: () => {
       recordPhotoQueryExecution();
       return runOwnerQueryOperation(ownerScope, async () => {
@@ -173,7 +176,6 @@ export function photoQueryOptions(
         return derivePhotosQueryData(photos, series, todayYmd);
       });
     },
-    retry: 0,
   } as const;
 }
 

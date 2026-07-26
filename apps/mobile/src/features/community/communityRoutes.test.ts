@@ -182,7 +182,7 @@ describe('Community route contracts', () => {
   it('keeps an unreadable This helped state distinct from an unselected reaction', () => {
     const source = readAppRoute('community/note/[id].tsx');
 
-    expect(source).toContain('retry: false');
+    expect(source).toContain('...deterministicLocalQueryPolicy');
     expect(source).toContain('helpedQ.isPending');
     expect(source).toContain('helpedQ.isError');
     expect(source).toContain('Reaction unavailable. Your saved choice was not reset.');

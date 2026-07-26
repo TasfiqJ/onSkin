@@ -3,15 +3,9 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
-import {
-  queryKeys,
-  runOwnerQueryOperation,
-  type OwnerQueryScope,
-} from '@/lib/query/queryKeys';
+import { runRequestWithLease, supabaseRequestFailure } from '@/lib/network/requestPolicy';
+import { queryKeys, runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
+import { alwaysRefetchSuccessfulQuery, stableErrorQueryPolicy } from '@/lib/query/queryPolicies';
 import { supabase } from '@/lib/supabase/client';
 
 import {
@@ -32,11 +26,7 @@ export class OnboardingStatusUnavailableError extends Error {
   }
 }
 
-export type WelcomeOnboardingGateDecision =
-  | 'checking'
-  | 'error'
-  | 'redirect_today'
-  | 'welcome';
+export type WelcomeOnboardingGateDecision = 'checking' | 'error' | 'redirect_today' | 'welcome';
 
 type WelcomeOnboardingGateInput = {
   data: boolean | undefined;
@@ -149,11 +139,11 @@ export async function readOnboardingStatusWithLease(
 
 export function onboardingStatusQueryOptions(ownerScope: OwnerQueryScope) {
   return {
+    ...stableErrorQueryPolicy,
     queryKey: queryKeys.onboarded(ownerScope),
     queryFn: () => runOwnerQueryOperation(ownerScope, readOnboardingStatusWithLease),
     networkMode: 'always' as const,
-    refetchOnMount: 'always' as const,
-    retry: 0,
+    refetchOnMount: alwaysRefetchSuccessfulQuery,
     staleTime: 0,
   };
 }

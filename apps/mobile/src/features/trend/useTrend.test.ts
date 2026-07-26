@@ -69,6 +69,7 @@ type CapturedQuery<T> = {
   networkMode?: string;
   queryFn: () => Promise<T>;
   queryKey: readonly unknown[];
+  refetchOnReconnect?: (query: { state: { status: string } }) => boolean | 'always';
 };
 
 function capturedQuery<T>(hook: () => unknown): CapturedQuery<T> {
@@ -138,6 +139,8 @@ describe('owner-bound trend queries', () => {
 
     expect(query.queryKey).toEqual(queryKeys.trendConsent(ownerScope));
     expect(query.networkMode).toBe('always');
+    expect(query.refetchOnReconnect?.({ state: { status: 'success' } })).toBe(true);
+    expect(query.refetchOnReconnect?.({ state: { status: 'error' } })).toBe(false);
     await expect(query.queryFn()).resolves.toBe(true);
     await expect(query.queryFn()).resolves.toBe(false);
     expect(leases).toHaveLength(2);

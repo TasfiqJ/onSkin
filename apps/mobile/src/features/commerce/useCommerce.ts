@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
+import { runRequestWithLease, supabaseRequestFailure } from '@/lib/network/requestPolicy';
 import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { requestPolicyOwnedQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
@@ -28,6 +26,7 @@ export function useCommerceConsent() {
 export function useWhereToBuy(productType: string | null) {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
+    ...requestPolicyOwnedQueryPolicy,
     queryKey: queryKeys.whereToBuy(ownerScope, productType),
     enabled: !!productType,
     queryFn: () =>

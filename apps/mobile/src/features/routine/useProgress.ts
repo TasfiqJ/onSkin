@@ -32,6 +32,7 @@ import {
   settleOwnerQueryOperations,
   shouldRefetchCurrentLocalDayQuery,
 } from '@/lib/query/queryKeys';
+import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
@@ -161,13 +162,14 @@ export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity) {
   const { localDate: todayISO } = boundary;
 
   return useQuery<ProgressData>({
+    ...deterministicLocalQueryPolicy,
     queryKey: queryKeys.progress(ownerScope, boundary),
     // Local encrypted completion history remains authoritative while offline;
     // optional server reconciliation already fails soft inside the query.
-    networkMode: 'always',
-    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
-    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
-    retry: 1,
+    refetchOnReconnect: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
+    refetchOnWindowFocus: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
         lease.assertCurrent();
