@@ -1066,47 +1066,28 @@ export function discardConflictChoiceOutboxDependencies(
   });
 }
 
-function expired(row: OutboxRow, now: string): boolean {
-  return (
-    row.state === 'leased' &&
-    row.leaseExpiresAt !== null &&
-    Date.parse(row.leaseExpiresAt) <= Date.parse(now)
-  );
-}
+type PreparedOutboxRows = Readonly<{
+  rows: readonly OutboxRow[];
+  leasedIdentities: ReadonlySet<string>;
+  pendingShelfEntities: ReadonlySet<string>;
+  requiresImmediateLeaseRepair: boolean;
+}>;
 
-export function leaseReadyOutboxRows(
+function prepareOutboxRows(
   envelope: OutboxEnvelope,
-  input: Readonly<{
-    ownerHash: string;
-    leaseOwner: string;
-    now: string;
-    limit?: number;
-  }>,
-): Readonly<{ envelope: OutboxEnvelope; rows: readonly OutboxRow[] }> {
-  if (
-    !SHA256_HEX.test(input.ownerHash) ||
-    !UUID.test(input.leaseOwner) ||
-    !canonicalIso(input.now)
-  ) {
-    fail();
-  }
-  const limit = Math.min(
-    MAX_OUTBOX_BATCH_SIZE,
-    Number.isSafeInteger(input.limit) && Number(input.limit) > 0
-      ? Number(input.limit)
-      : MAX_OUTBOX_BATCH_SIZE,
-  );
+  input: Readonly<{ ownerHash: string; now: string }>,
+): PreparedOutboxRows {
   const nowMs = Date.parse(input.now);
+  let requiresImmediateLeaseRepair = false;
   const reclaimed = envelope.rows.map((row): OutboxRow => {
     if (row.ownerHash !== input.ownerHash) return row;
     let repaired = row;
-    if (
-      expired(repaired, input.now) ||
-      (repaired.state === 'leased' &&
-        repaired.leaseExpiresAt !== null &&
-        Date.parse(repaired.leaseExpiresAt) > nowMs + OUTBOX_LEASE_MS)
-    ) {
-      repaired = { ...repaired, state: 'ready', leaseOwner: null, leaseExpiresAt: null };
+    if (repaired.state === 'leased' && repaired.leaseExpiresAt !== null) {
+      const leaseExpiresAtMs = Date.parse(repaired.leaseExpiresAt);
+      if (leaseExpiresAtMs <= nowMs || leaseExpiresAtMs > nowMs + OUTBOX_LEASE_MS) {
+        requiresImmediateLeaseRepair = true;
+        repaired = { ...repaired, state: 'ready', leaseOwner: null, leaseExpiresAt: null };
+      }
     }
     if (
       repaired.state === 'ready' &&
@@ -1132,16 +1113,111 @@ export function leaseReadyOutboxRows(
       )
       .map((row) => row.operationId),
   );
-  const compacted = reclaimed.filter((row) => !supersededReadyIds.has(row.operationId));
-  const leasedIdentities = new Set(
-    compacted.filter((row) => row.state === 'leased').map(ownerEntityIdentity),
+  const rows = reclaimed.filter((row) => !supersededReadyIds.has(row.operationId));
+  return Object.freeze({
+    rows: Object.freeze(rows),
+    leasedIdentities: new Set(
+      rows.filter((row) => row.state === 'leased').map(ownerEntityIdentity),
+    ),
+    pendingShelfEntities: new Set(
+      rows
+        .filter((row) => row.entityType === 'shelf_product')
+        .map((row) => `${row.ownerHash}:${row.entityId.toLowerCase()}`),
+    ),
+    requiresImmediateLeaseRepair,
+  });
+}
+
+function hasPendingShelfDependency(
+  row: OutboxRow,
+  pendingShelfEntities: ReadonlySet<string>,
+): boolean {
+  return (
+    row.entityType === 'conflict_choice' &&
+    row.payload !== null &&
+    [row.payload.product_a_id, row.payload.product_b_id].some(
+      (productId) =>
+        typeof productId === 'string' &&
+        pendingShelfEntities.has(`${row.ownerHash}:${productId.toLowerCase()}`),
+    )
   );
-  const pendingShelfEntities = new Set(
-    compacted
-      .filter((row) => row.entityType === 'shelf_product')
-      .map((row) => `${row.ownerHash}:${row.entityId.toLowerCase()}`),
+}
+
+/**
+ * Returns the next persisted deadline that can make owner-scoped work
+ * leaseable. Offline, authentication, and request-level validation failures
+ * resume from their external or manual signals instead of a timer.
+ */
+export function nextOutboxWakeAt(
+  envelope: OutboxEnvelope,
+  input: Readonly<{ ownerHash: string; now: string }>,
+): string | null {
+  if (!SHA256_HEX.test(input.ownerHash) || !canonicalIso(input.now)) fail();
+
+  const prepared = prepareOutboxRows(envelope, input);
+  if (prepared.requiresImmediateLeaseRepair) return input.now;
+
+  const nowMs = Date.parse(input.now);
+  let earliest: string | null = null;
+  let earliestMs = Number.POSITIVE_INFINITY;
+  const consider = (deadline: string) => {
+    const deadlineMs = Date.parse(deadline);
+    if (deadlineMs < earliestMs) {
+      earliest = deadline;
+      earliestMs = deadlineMs;
+    }
+  };
+
+  for (const row of prepared.rows) {
+    if (row.ownerHash !== input.ownerHash || row.state === 'dead') continue;
+    if (row.state === 'leased') {
+      consider(row.leaseExpiresAt!);
+      continue;
+    }
+    if (
+      row.lastErrorClass === 'offline' ||
+      row.lastErrorClass === 'authentication' ||
+      row.lastErrorClass === 'validation'
+    ) {
+      continue;
+    }
+    if (
+      prepared.leasedIdentities.has(ownerEntityIdentity(row)) ||
+      hasPendingShelfDependency(row, prepared.pendingShelfEntities)
+    ) {
+      continue;
+    }
+    if (Date.parse(row.nextAttemptAt) <= nowMs) return input.now;
+    consider(row.nextAttemptAt);
+  }
+  return earliest;
+}
+
+export function leaseReadyOutboxRows(
+  envelope: OutboxEnvelope,
+  input: Readonly<{
+    ownerHash: string;
+    leaseOwner: string;
+    now: string;
+    limit?: number;
+  }>,
+): Readonly<{ envelope: OutboxEnvelope; rows: readonly OutboxRow[] }> {
+  if (
+    !SHA256_HEX.test(input.ownerHash) ||
+    !UUID.test(input.leaseOwner) ||
+    !canonicalIso(input.now)
+  ) {
+    fail();
+  }
+  const limit = Math.min(
+    MAX_OUTBOX_BATCH_SIZE,
+    Number.isSafeInteger(input.limit) && Number(input.limit) > 0
+      ? Number(input.limit)
+      : MAX_OUTBOX_BATCH_SIZE,
   );
-  const eligible = sortRows(compacted)
+  const nowMs = Date.parse(input.now);
+  const prepared = prepareOutboxRows(envelope, input);
+  const eligible = sortRows(prepared.rows)
     .sort(
       (left, right) =>
         OUTBOX_ENTITY_CONTRACT[left.entityType].priority -
@@ -1151,22 +1227,14 @@ export function leaseReadyOutboxRows(
       (row) =>
         row.ownerHash === input.ownerHash &&
         row.state === 'ready' &&
-        !leasedIdentities.has(ownerEntityIdentity(row)) &&
-        !(
-          row.entityType === 'conflict_choice' &&
-          row.payload !== null &&
-          [row.payload.product_a_id, row.payload.product_b_id].some(
-            (productId) =>
-              typeof productId === 'string' &&
-              pendingShelfEntities.has(`${row.ownerHash}:${productId.toLowerCase()}`),
-          )
-        ) &&
-        row.nextAttemptAt <= input.now,
+        !prepared.leasedIdentities.has(ownerEntityIdentity(row)) &&
+        !hasPendingShelfDependency(row, prepared.pendingShelfEntities) &&
+        Date.parse(row.nextAttemptAt) <= nowMs,
     );
   const selected = new Set(eligible.slice(0, limit).map((row) => row.operationId));
   const leaseExpiresAt = new Date(Date.parse(input.now) + OUTBOX_LEASE_MS).toISOString();
   const leasedRows: OutboxRow[] = [];
-  const rows = compacted.map((row): OutboxRow => {
+  const rows = prepared.rows.map((row): OutboxRow => {
     if (!selected.has(row.operationId)) return row;
     if (row.attemptCount >= MAX_OUTBOX_ATTEMPTS) {
       return {

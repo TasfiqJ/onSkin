@@ -31,7 +31,7 @@ import {
   decodeOutboxEnvelope,
   encodeOutboxEnvelope,
   leaseReadyOutboxRows,
-  outboxCounts,
+  nextOutboxWakeAt,
   retryDeadOutboxRows,
   selectOutboxOwnerStatus,
   settleOutboxLease,
@@ -43,6 +43,8 @@ import {
 } from './outbox.pure';
 
 const MAX_BATCHES_PER_FLUSH = 4;
+const OUTBOX_WAKE_CLOCK_RECHECK_MS = 30_000;
+const OUTBOX_WAKE_CLOCK_DRIFT_TOLERANCE_MS = 1_000;
 
 export type OutboxRead =
   | { status: 'absent'; envelope: OutboxEnvelope }
@@ -72,6 +74,9 @@ type ServerWireResult = Readonly<{
 
 let activeFlush: Promise<OutboxFlushResult> | null = null;
 let flushRerunRequested = false;
+let outboxSchedulerActive = false;
+let outboxWakeTimer: ReturnType<typeof setTimeout> | null = null;
+let outboxWakeToken = 0;
 let outboxChangeRevision = 0;
 const outboxChangeListeners = new Set<() => void>();
 let syncDiagnostics: Readonly<{
@@ -82,6 +87,46 @@ let syncDiagnostics: Readonly<{
 function publishOutboxChange(): void {
   outboxChangeRevision += 1;
   for (const listener of outboxChangeListeners) listener();
+}
+
+function clearOutboxWakeTimer(): void {
+  outboxWakeToken += 1;
+  if (outboxWakeTimer !== null) {
+    clearTimeout(outboxWakeTimer);
+    outboxWakeTimer = null;
+  }
+}
+
+function armOutboxWakeTimer(wakeAt: string | null): void {
+  clearOutboxWakeTimer();
+  if (!outboxSchedulerActive || wakeAt === null) return;
+  const deadlineMs = Date.parse(wakeAt);
+  const armedAtMs = Date.now();
+  const delayMs = Math.min(Math.max(0, deadlineMs - armedAtMs), OUTBOX_WAKE_CLOCK_RECHECK_MS);
+  const expectedWakeMs = armedAtMs + delayMs;
+  const token = outboxWakeToken;
+  outboxWakeTimer = setTimeout(() => {
+    if (token !== outboxWakeToken || !outboxSchedulerActive) return;
+    outboxWakeTimer = null;
+    const observedNowMs = Date.now();
+    const wallClockShifted =
+      Math.abs(observedNowMs - expectedWakeMs) > OUTBOX_WAKE_CLOCK_DRIFT_TOLERANCE_MS;
+    if (observedNowMs >= deadlineMs || wallClockShifted) {
+      void flushOutbox().catch(() => undefined);
+      return;
+    }
+    armOutboxWakeTimer(wakeAt);
+  }, delayMs);
+}
+
+/**
+ * Enables persisted-deadline wakes while the foreground sync surface is
+ * active. Immediate explicit drains remain available while this gate is off.
+ */
+export function setOutboxSchedulerActive(active: boolean): void {
+  if (outboxSchedulerActive === active) return;
+  outboxSchedulerActive = active;
+  if (!active) clearOutboxWakeTimer();
 }
 
 export function subscribeOutboxChanges(listener: () => void): () => void {
@@ -344,12 +389,30 @@ async function sendOutboxEntityBatch(
   return decodeServerResults(data, rows);
 }
 
-async function flushOutboxOnce(): Promise<OutboxFlushResult> {
-  if (!isSupabaseConfigured) return emptyFlushResult();
+type OutboxDrainPass = Readonly<{
+  result: OutboxFlushResult;
+  hasRemainingRows: boolean;
+  nextWakeAt: string | null;
+}>;
+
+async function flushOutboxOnce(): Promise<OutboxDrainPass> {
+  if (!isSupabaseConfigured) {
+    return Object.freeze({
+      result: emptyFlushResult(),
+      hasRemainingRows: false,
+      nextWakeAt: null,
+    });
+  }
 
   return runAccountGenerationOperation(async (lease) => {
     const owner = await captureAuthenticatedAccountOwner(lease);
-    if (!owner) return emptyFlushResult();
+    if (!owner) {
+      return Object.freeze({
+        result: emptyFlushResult(),
+        hasRemainingRows: false,
+        nextWakeAt: null,
+      });
+    }
     const ownerHash = await hashOutboxOwner(owner.userId);
     lease.assertCurrent();
 
@@ -426,20 +489,41 @@ async function flushOutboxOnce(): Promise<OutboxFlushResult> {
 
     const state = await readOutbox();
     lease.assertCurrent();
+    const now = new Date().toISOString();
+    const envelope =
+      state.status === 'available' || state.status === 'absent' ? state.envelope : null;
+    const ownerStatuses =
+      envelope === null
+        ? []
+        : OUTBOX_ENTITY_TYPES.map((entityType) =>
+            selectOutboxOwnerStatus(envelope, { ownerHash, entityType }),
+          );
+    const ownerDeadCount = ownerStatuses.reduce(
+      (total, status) => total + status.attentionCount,
+      0,
+    );
     return Object.freeze({
-      leased: totalLeased,
-      flushed: totalFlushed,
-      dead:
-        state.status === 'available' || state.status === 'absent'
-          ? outboxCounts(state.envelope).dead
-          : 0,
-      flushedByEntity: Object.freeze(flushedByEntity),
+      result: Object.freeze({
+        leased: totalLeased,
+        flushed: totalFlushed,
+        dead: ownerDeadCount,
+        flushedByEntity: Object.freeze(flushedByEntity),
+      }),
+      hasRemainingRows: ownerStatuses.some((status) => status.pendingCount > 0),
+      nextWakeAt:
+        envelope === null
+          ? null
+          : nextOutboxWakeAt(envelope, {
+              ownerHash,
+              now,
+            }),
     });
   });
 }
 
 /** Single-flight drain used by mount, foreground, reconnect, and post-mutation triggers. */
 export function flushOutbox(): Promise<OutboxFlushResult> {
+  clearOutboxWakeTimer();
   if (activeFlush) {
     flushRerunRequested = true;
     return activeFlush;
@@ -453,13 +537,17 @@ export function flushOutbox(): Promise<OutboxFlushResult> {
   activeFlush = current;
   void (async () => {
     let result = emptyFlushResult();
+    let hasRemainingRows = false;
+    let nextWakeAt: string | null = null;
     try {
       do {
         flushRerunRequested = false;
-        result = mergeFlushResults(result, await flushOutboxOnce());
+        const pass = await flushOutboxOnce();
+        result = mergeFlushResults(result, pass.result);
+        hasRemainingRows = pass.hasRemainingRows;
+        nextWakeAt = pass.nextWakeAt;
         syncDiagnostics = Object.freeze({
-          result:
-            result.leased > result.flushed ? 'pending' : result.flushed > 0 ? 'synced' : 'idle',
+          result: hasRemainingRows ? 'pending' : result.flushed > 0 ? 'synced' : 'idle',
           at: new Date().toISOString(),
         });
         publishOutboxChange();
@@ -467,6 +555,7 @@ export function flushOutbox(): Promise<OutboxFlushResult> {
       // No async boundary exists between the final request check and releasing
       // ownership, so a later request either joins this loop or starts a new one.
       activeFlush = null;
+      armOutboxWakeTimer(nextWakeAt);
       resolveCurrent(result);
     } catch (error: unknown) {
       syncDiagnostics = Object.freeze({
@@ -484,7 +573,9 @@ export function flushOutbox(): Promise<OutboxFlushResult> {
 }
 
 export function scheduleOutboxFlush(): void {
+  clearOutboxWakeTimer();
   publishOutboxChange();
+  if (!outboxSchedulerActive) return;
   if (activeFlush) {
     flushRerunRequested = true;
     return;
@@ -548,6 +639,8 @@ export function readOutboxSyncDiagnostics(): typeof syncDiagnostics {
 }
 
 export function resetOutboxWorkerForTests(): void {
+  outboxSchedulerActive = false;
+  clearOutboxWakeTimer();
   activeFlush = null;
   flushRerunRequested = false;
   outboxChangeRevision = 0;

@@ -7,7 +7,7 @@ import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 
 import { flushCompletions } from './completionQueue';
-import { flushOutbox } from './outbox';
+import { flushOutbox, setOutboxSchedulerActive } from './outbox';
 
 // Drains the legacy check-off queue and the transactional outbox on mount,
 // foreground, and connectivity recovery. Successful drains refresh only the
@@ -49,14 +49,19 @@ export function OfflineSync() {
         })
         .catch(() => undefined);
     };
-    run();
+    const isActive = AppState.currentState === 'active';
+    setOutboxSchedulerActive(isActive);
+    if (isActive) run();
     const sub = AppState.addEventListener('change', (s) => {
-      if (s === 'active') run();
+      const isActive = s === 'active';
+      setOutboxSchedulerActive(isActive);
+      if (isActive) run();
     });
     const unsubscribeOnline = onlineManager.subscribe((online) => {
-      if (online) run();
+      if (online && AppState.currentState === 'active') run();
     });
     return () => {
+      setOutboxSchedulerActive(false);
       sub.remove();
       unsubscribeOnline();
     };

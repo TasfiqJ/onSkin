@@ -20,6 +20,7 @@ import {
   enqueueShelfOutboxOperation,
   enqueueConflictChoiceOutboxOperation,
   leaseReadyOutboxRows,
+  nextOutboxWakeAt,
   outboxCounts,
   outboxEntityIdFromSha256,
   retryDeadOutboxRows,
@@ -800,6 +801,293 @@ describe('transactional outbox model', () => {
     });
     expect(preserved.rows).toEqual([]);
     expect(preserved.envelope).toEqual(exactLeaseBoundary);
+  });
+
+  it('selects canonical owner-scoped retry deadlines and repairs only impossible horizons', () => {
+    let envelope = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+      enqueuedAt: '2026-07-18T15:05:00.000Z',
+    }).envelope;
+    envelope = enqueue(envelope, {
+      operationId: OP_A2,
+      entityId: ENTITY_B,
+      enqueuedAt: '2026-07-18T15:01:00.000Z',
+    }).envelope;
+    envelope = enqueueShelfOutboxOperation(envelope, {
+      operationId: OP_B1,
+      ownerHash: OWNER_B,
+      ownerGeneration: 8,
+      entityId: CONFLICT_PAYLOAD.product_a_id,
+      operationKind: 'upsert',
+      payload: SHELF_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(nextOutboxWakeAt(envelope, { ownerHash: OWNER, now: NOW })).toBe(
+      '2026-07-18T15:01:00.000Z',
+    );
+    expect(nextOutboxWakeAt(envelope, { ownerHash: OWNER_B, now: NOW })).toBe(NOW);
+    expect(
+      nextOutboxWakeAt(
+        enqueue(emptyOutboxEnvelope(), {
+          operationId: OP_A1,
+          entityId: ENTITY_A,
+          enqueuedAt: '2026-07-18T15:05:00.000Z',
+        }).envelope,
+        { ownerHash: OWNER, now: NOW },
+      ),
+    ).toBe('2026-07-18T15:05:00.000Z');
+    expect(
+      nextOutboxWakeAt(
+        enqueue(emptyOutboxEnvelope(), {
+          operationId: OP_A1,
+          entityId: ENTITY_A,
+          enqueuedAt: '2026-07-18T15:05:00.001Z',
+        }).envelope,
+        { ownerHash: OWNER, now: NOW },
+      ),
+    ).toBe(NOW);
+    expect(nextOutboxWakeAt(emptyOutboxEnvelope(), { ownerHash: OWNER, now: NOW })).toBeNull();
+    expect(() =>
+      nextOutboxWakeAt(emptyOutboxEnvelope(), { ownerHash: 'A'.repeat(64), now: NOW }),
+    ).toThrow(OUTBOX_INVALID);
+    expect(() =>
+      nextOutboxWakeAt(emptyOutboxEnvelope(), {
+        ownerHash: OWNER,
+        now: '2026-07-18T11:00:00.000-04:00',
+      }),
+    ).toThrow(OUTBOX_INVALID);
+  });
+
+  it('uses lease expiry instead of busy-looping on a newer ready row with the same identity', () => {
+    const first = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+    }).envelope;
+    const leased = leaseReadyOutboxRows(first, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const newer = enqueue(leased, {
+      operationId: OP_A2,
+      entityId: ENTITY_A,
+      enqueuedAt: '2026-07-18T15:00:01.000Z',
+    }).envelope;
+
+    expect(
+      nextOutboxWakeAt(newer, {
+        ownerHash: OWNER,
+        now: '2026-07-18T15:00:01.000Z',
+      }),
+    ).toBe('2026-07-18T15:00:30.000Z');
+    expect(
+      nextOutboxWakeAt(newer, {
+        ownerHash: OWNER,
+        now: '2026-07-18T15:00:30.000Z',
+      }),
+    ).toBe('2026-07-18T15:00:30.000Z');
+
+    const rolledBackLease = leaseReadyOutboxRows(
+      enqueue(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        entityId: ENTITY_A,
+        enqueuedAt: '2027-07-18T15:00:00.000Z',
+      }).envelope,
+      {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_A,
+        now: '2027-07-18T15:00:00.000Z',
+      },
+    ).envelope;
+    expect(nextOutboxWakeAt(rolledBackLease, { ownerHash: OWNER, now: NOW })).toBe(NOW);
+  });
+
+  it('mirrors latest-ready compaction without allowing another owner to affect the deadline', () => {
+    const oldReady = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+    }).envelope;
+    const leasedOld = leaseReadyOutboxRows(oldReady, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    let persisted = enqueue(leasedOld, {
+      operationId: OP_A2,
+      entityId: ENTITY_A,
+      enqueuedAt: '2026-07-18T15:02:00.000Z',
+    }).envelope;
+    persisted = decodeOutboxEnvelope(
+      JSON.stringify({
+        ...persisted,
+        rows: persisted.rows.map((row) =>
+          row.operationId === OP_A1
+            ? {
+                ...row,
+                state: 'ready',
+                leaseOwner: null,
+                leaseExpiresAt: null,
+              }
+            : row,
+        ),
+      }),
+    );
+    persisted = enqueueShelfOutboxOperation(persisted, {
+      operationId: OP_B1,
+      ownerHash: OWNER_B,
+      ownerGeneration: 8,
+      entityId: ENTITY_B,
+      operationKind: 'upsert',
+      payload: SHELF_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(nextOutboxWakeAt(persisted, { ownerHash: OWNER, now: NOW })).toBe(
+      '2026-07-18T15:02:00.000Z',
+    );
+  });
+
+  it.each(['offline', 'authentication', 'validation'] as const)(
+    'waits for an external signal after a %s failure',
+    (failureClass) => {
+      const queued = enqueue(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        entityId: ENTITY_A,
+      }).envelope;
+      const leased = leaseReadyOutboxRows(queued, {
+        ownerHash: OWNER,
+        leaseOwner: WORKER_A,
+        now: NOW,
+      }).envelope;
+      const failed = settleOutboxLease(leased, {
+        leaseOwner: WORKER_A,
+        now: NOW,
+        results: [],
+        failureClass,
+        random: 0,
+      });
+
+      expect(nextOutboxWakeAt(failed, { ownerHash: OWNER, now: NOW })).toBeNull();
+    },
+  );
+
+  it('does not arm a future timer for request-level validation recovery', () => {
+    const queued = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      entityId: ENTITY_A,
+    }).envelope;
+    const leased = leaseReadyOutboxRows(queued, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const failed = settleOutboxLease(leased, {
+      leaseOwner: WORKER_A,
+      now: NOW,
+      results: [],
+      failureClass: 'validation',
+      retryAfterMs: 60_000,
+    });
+
+    expect(failed.rows[0]).toMatchObject({
+      state: 'ready',
+      lastErrorClass: 'validation',
+      nextAttemptAt: '2026-07-18T15:01:00.000Z',
+    });
+    expect(nextOutboxWakeAt(failed, { ownerHash: OWNER, now: NOW })).toBeNull();
+  });
+
+  it('ignores dead rows and wakes for the Shelf retry that blocks a due conflict choice', () => {
+    let envelope = enqueueShelfOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_PAYLOAD.product_a_id,
+      operationKind: 'upsert',
+      payload: SHELF_PAYLOAD,
+      enqueuedAt: '2026-07-18T15:01:00.000Z',
+    }).envelope;
+    envelope = enqueueConflictChoiceOutboxOperation(envelope, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_ENTITY_ID,
+      payload: CONFLICT_PAYLOAD,
+      identityHash: CONFLICT_IDENTITY_HASH,
+      payloadHash: CONFLICT_PAYLOAD_HASH,
+      enqueuedAt: NOW,
+    }).envelope;
+
+    expect(nextOutboxWakeAt(envelope, { ownerHash: OWNER, now: NOW })).toBe(
+      '2026-07-18T15:01:00.000Z',
+    );
+
+    const deadQueued = enqueue(emptyOutboxEnvelope(), {
+      operationId: OP_B1,
+      entityId: ENTITY_B,
+    }).envelope;
+    const deadLeased = leaseReadyOutboxRows(deadQueued, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+    }).envelope;
+    const dead = settleOutboxLease(deadLeased, {
+      leaseOwner: WORKER_A,
+      now: NOW,
+      results: [{ operationId: OP_B1, status: 'permanent', errorClass: 'validation' }],
+    });
+    expect(nextOutboxWakeAt(dead, { ownerHash: OWNER, now: NOW })).toBeNull();
+  });
+
+  it('does not busy-loop when a conflict dependency needs connectivity or manual repair', () => {
+    let envelope = enqueueShelfOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: OP_A1,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_PAYLOAD.product_a_id,
+      operationKind: 'upsert',
+      payload: SHELF_PAYLOAD,
+      enqueuedAt: NOW,
+    }).envelope;
+    envelope = enqueueConflictChoiceOutboxOperation(envelope, {
+      operationId: OP_A2,
+      ownerHash: OWNER,
+      ownerGeneration: 7,
+      entityId: CONFLICT_ENTITY_ID,
+      payload: CONFLICT_PAYLOAD,
+      identityHash: CONFLICT_IDENTITY_HASH,
+      payloadHash: CONFLICT_PAYLOAD_HASH,
+      enqueuedAt: NOW,
+    }).envelope;
+    const shelfLease = leaseReadyOutboxRows(envelope, {
+      ownerHash: OWNER,
+      leaseOwner: WORKER_A,
+      now: NOW,
+      limit: 1,
+    });
+    expect(nextOutboxWakeAt(shelfLease.envelope, { ownerHash: OWNER, now: NOW })).toBe(
+      '2026-07-18T15:00:30.000Z',
+    );
+
+    const offlineShelf = settleOutboxLease(shelfLease.envelope, {
+      leaseOwner: WORKER_A,
+      operationIds: [OP_A1],
+      now: NOW,
+      results: [],
+      failureClass: 'offline',
+      random: 0,
+    });
+    expect(nextOutboxWakeAt(offlineShelf, { ownerHash: OWNER, now: NOW })).toBeNull();
+
+    const deadShelf = settleOutboxLease(shelfLease.envelope, {
+      leaseOwner: WORKER_A,
+      operationIds: [OP_A1],
+      now: NOW,
+      results: [{ operationId: OP_A1, status: 'permanent', errorClass: 'validation' }],
+    });
+    expect(nextOutboxWakeAt(deadShelf, { ownerHash: OWNER, now: NOW })).toBeNull();
   });
 
   it('dead-letters one permanent poison row without blocking an independent success', () => {

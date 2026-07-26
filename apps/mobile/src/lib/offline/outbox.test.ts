@@ -8,12 +8,14 @@ import {
   readNotificationPreferencesOutboxStatus,
   readOutbox,
   readOutboxChangeRevision,
+  readOutboxSyncDiagnostics,
   readRecommendationPreferencesOutboxStatus,
   readShelfOutboxStatus,
   resetOutboxWorkerForTests,
   retryRecommendationPreferencesOutbox,
   retryShelfOutbox,
   scheduleOutboxFlush,
+  setOutboxSchedulerActive,
   subscribeOutboxChanges,
 } from './outbox';
 import {
@@ -111,6 +113,7 @@ vi.mock('@/lib/supabase/client', () => ({
 
 const NOW = '2026-07-18T16:00:00.000Z';
 const OWNER_HASH = 'a'.repeat(64);
+const OWNER_B_HASH = 'b'.repeat(64);
 const SHELF_PAYLOAD = {
   catalog_product_id: null,
   catalog_source_id: null,
@@ -260,6 +263,7 @@ describe('transactional outbox runtime', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(NOW));
     resetOutboxWorkerForTests();
+    setOutboxSchedulerActive(true);
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.afterUpdate = null;
@@ -352,6 +356,92 @@ describe('transactional outbox runtime', () => {
     expect(wire).not.toContain('raw-owner@example.com');
     expect(wire).not.toContain('ownerHash');
     expect(wire).not.toContain('ownerGeneration');
+  });
+
+  it('reports dead rows only for the authenticated owner', async () => {
+    let envelope = seedRows(1);
+    envelope = enqueueShelfOutboxOperation(envelope, {
+      operationId: uuid(39_001),
+      ownerHash: OWNER_B_HASH,
+      ownerGeneration: 11,
+      entityId: uuid(39_002),
+      operationKind: 'upsert',
+      payload: { ...SHELF_PAYLOAD, manual_name: 'Owner B poison row' },
+      enqueuedAt: NOW,
+    }).envelope;
+    envelope = {
+      ...envelope,
+      rows: envelope.rows.map((row) =>
+        row.ownerHash === OWNER_B_HASH
+          ? {
+              ...row,
+              state: 'dead' as const,
+              attemptCount: 1,
+              lastErrorClass: 'validation' as const,
+            }
+          : row,
+      ),
+    };
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    mocks.digestStringAsync.mockImplementation(async (_algorithm, value: string) =>
+      value.includes('owner-b@example.com') ? OWNER_B_HASH : OWNER_HASH,
+    );
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0));
+
+    mocks.captureOwner.mockResolvedValue({ userId: 'owner-b@example.com', generation: 11 });
+    await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 1));
+    expect(readOutboxSyncDiagnostics()).toMatchObject({ result: 'pending' });
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('re-resolves the authenticated owner when an earlier owner timer wakes', async () => {
+    let envelope = seedRows(1);
+    const ownerBOperationId = uuid(39_003);
+    envelope = enqueueShelfOutboxOperation(envelope, {
+      operationId: ownerBOperationId,
+      ownerHash: OWNER_B_HASH,
+      ownerGeneration: 11,
+      entityId: uuid(39_004),
+      operationKind: 'upsert',
+      payload: { ...SHELF_PAYLOAD, manual_name: 'Owner B due row' },
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    mocks.digestStringAsync.mockImplementation(async (_algorithm, value: string) =>
+      value.includes('owner-b@example.com') ? OWNER_B_HASH : OWNER_HASH,
+    );
+    mocks.runRequestWithLease.mockRejectedValueOnce(
+      new RequestPolicyError({
+        endpoint: 'outbox_sync',
+        kind: 'rate_limit',
+        attemptCount: 1,
+        statusClass: '4xx',
+        retryAfterMs: 45_000,
+      }),
+    );
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 0));
+    expect(vi.getTimerCount()).toBe(1);
+
+    mocks.captureOwner.mockResolvedValue({ userId: 'owner-b@example.com', generation: 11 });
+    await vi.advanceTimersByTimeAsync(45_000);
+    await vi.waitFor(() =>
+      expect(storedEnvelope().rows.filter((row) => row.ownerHash === OWNER_B_HASH)).toEqual([]),
+    );
+
+    expect(mocks.rpc).toHaveBeenCalledTimes(1);
+    expect(mocks.rpc.mock.calls[0]?.[1].p_operations).toEqual([
+      expect.objectContaining({ operation_id: ownerBOperationId }),
+    ]);
+    expect(storedEnvelope().rows).toEqual([
+      expect.objectContaining({
+        ownerHash: OWNER_HASH,
+        state: 'ready',
+        nextAttemptAt: '2026-07-18T16:00:45.000Z',
+      }),
+    ]);
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it('coalesces concurrent drains into one in-flight RPC and removes applied or duplicate rows', async () => {
@@ -485,7 +575,7 @@ describe('transactional outbox runtime', () => {
     unsubscribe();
   });
 
-  it('persists Retry-After backoff and drains the same ready row after reconnect time', async () => {
+  it('automatically wakes at Retry-After without an explicit reconnect flush', async () => {
     seedRows(1);
     mocks.runRequestWithLease.mockRejectedValueOnce(
       new RequestPolicyError({
@@ -509,11 +599,267 @@ describe('transactional outbox runtime', () => {
 
     await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
     expect(mocks.rpc).toHaveBeenCalledTimes(0);
+    expect(vi.getTimerCount()).toBe(1);
+    expect(readOutboxSyncDiagnostics()).toMatchObject({ result: 'pending' });
 
-    vi.setSystemTime(new Date('2026-07-18T16:00:46.000Z'));
-    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 1, 0));
+    await vi.advanceTimersByTimeAsync(44_999);
+    expect(mocks.rpc).toHaveBeenCalledTimes(0);
+    expect(storedEnvelope().rows).toHaveLength(1);
+
+    await vi.advanceTimersByTimeAsync(1);
+    await vi.waitFor(() => expect(storedEnvelope().rows).toEqual([]));
     expect(mocks.rpc).toHaveBeenCalledTimes(1);
-    expect(storedEnvelope().rows).toEqual([]);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('automatically reclaims a persisted lease at its normal expiry', async () => {
+    const envelope = seedRows(1);
+    mocks.storage.set(
+      OUTBOX_STORAGE_KEY,
+      encodeOutboxEnvelope({
+        ...envelope,
+        rows: envelope.rows.map((row) => ({
+          ...row,
+          state: 'leased' as const,
+          attemptCount: 1,
+          leaseOwner: uuid(99_001),
+          leaseExpiresAt: '2026-07-18T16:00:30.000Z',
+        })),
+      }),
+    );
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
+    expect(mocks.rpc).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(1);
+
+    await vi.advanceTimersByTimeAsync(29_999);
+    expect(mocks.rpc).not.toHaveBeenCalled();
+    expect(storedEnvelope().rows[0]).toMatchObject({
+      state: 'leased',
+      leaseOwner: uuid(99_001),
+    });
+
+    await vi.advanceTimersByTimeAsync(1);
+    await vi.waitFor(() => expect(storedEnvelope().rows).toEqual([]));
+    expect(mocks.rpc).toHaveBeenCalledTimes(1);
+    expect(mocks.rpc.mock.calls[0]?.[1].p_operations).toHaveLength(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('uses a next-tick wake to continue after the 100-row drain budget', async () => {
+    seedRows(101);
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(100, 100, 0));
+    expect(mocks.rpc).toHaveBeenCalledTimes(4);
+    expect(storedEnvelope().rows).toHaveLength(1);
+    expect(vi.getTimerCount()).toBe(1);
+    expect(readOutboxSyncDiagnostics()).toMatchObject({ result: 'pending' });
+
+    await vi.runOnlyPendingTimersAsync();
+    await vi.waitFor(() => expect(storedEnvelope().rows).toEqual([]));
+    expect(mocks.rpc).toHaveBeenCalledTimes(5);
+    expect(mocks.rpc.mock.calls[4]?.[1].p_operations).toHaveLength(1);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(readOutboxSyncDiagnostics()).toMatchObject({ result: 'synced' });
+  });
+
+  it.each(['authentication', 'offline'] as const)(
+    'does not timer-loop a %s request failure',
+    async (kind) => {
+      seedRows(1);
+      mocks.runRequestWithLease.mockRejectedValueOnce(
+        new RequestPolicyError({
+          endpoint: 'outbox_sync',
+          kind,
+          attemptCount: 1,
+          statusClass: kind === 'authentication' ? '4xx' : 'network',
+        }),
+      );
+
+      await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 0));
+      expect(storedEnvelope().rows[0]).toMatchObject({
+        state: 'ready',
+        attemptCount: 1,
+        lastErrorClass: kind,
+      });
+      expect(vi.getTimerCount()).toBe(0);
+
+      await vi.advanceTimersByTimeAsync(5 * 60_000);
+      expect(mocks.runRequestWithLease).toHaveBeenCalledTimes(1);
+      expect(storedEnvelope().rows[0]).toMatchObject({
+        state: 'ready',
+        attemptCount: 1,
+      });
+    },
+  );
+
+  it('does not timer-loop a request-level validation failure', async () => {
+    seedRows(1);
+    mocks.rpcHandler = async () => ({ malformed: true });
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 0));
+    expect(storedEnvelope().rows[0]).toMatchObject({
+      state: 'ready',
+      attemptCount: 1,
+      lastErrorClass: 'validation',
+      leaseOwner: null,
+      leaseExpiresAt: null,
+    });
+    expect(mocks.rpc).toHaveBeenCalledTimes(1);
+    expect(mocks.runRequestWithLease).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+
+    await vi.advanceTimersByTimeAsync(5 * 60_000);
+    expect(mocks.rpc).toHaveBeenCalledTimes(1);
+    expect(mocks.runRequestWithLease).toHaveBeenCalledTimes(1);
+    expect(storedEnvelope().rows[0]).toMatchObject({
+      state: 'ready',
+      attemptCount: 1,
+      lastErrorClass: 'validation',
+    });
+  });
+
+  it('clears a pending wake when the worker resets', async () => {
+    seedRows(1);
+    mocks.runRequestWithLease.mockRejectedValueOnce(
+      new RequestPolicyError({
+        endpoint: 'outbox_sync',
+        kind: 'rate_limit',
+        attemptCount: 1,
+        statusClass: '4xx',
+        retryAfterMs: 45_000,
+      }),
+    );
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 0));
+    expect(vi.getTimerCount()).toBe(1);
+
+    resetOutboxWorkerForTests();
+    expect(vi.getTimerCount()).toBe(0);
+
+    await vi.advanceTimersByTimeAsync(45_000);
+    expect(mocks.rpc).not.toHaveBeenCalled();
+    expect(storedEnvelope().rows).toHaveLength(1);
+  });
+
+  it('clears its timer and gates producer scheduling while inactive', async () => {
+    seedRows(1);
+    mocks.runRequestWithLease.mockRejectedValueOnce(
+      new RequestPolicyError({
+        endpoint: 'outbox_sync',
+        kind: 'rate_limit',
+        attemptCount: 1,
+        statusClass: '4xx',
+        retryAfterMs: 45_000,
+      }),
+    );
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(1, 0, 0));
+    expect(vi.getTimerCount()).toBe(1);
+    const updateCallsBeforeBackground = mocks.updateCalls;
+
+    setOutboxSchedulerActive(false);
+    expect(vi.getTimerCount()).toBe(0);
+    scheduleOutboxFlush();
+    await Promise.resolve();
+
+    expect(mocks.updateCalls).toBe(updateCallsBeforeBackground);
+    expect(mocks.runRequestWithLease).toHaveBeenCalledTimes(1);
+    expect(storedEnvelope().rows).toHaveLength(1);
+  });
+
+  it('uses bounded clock checks without touching storage before a normal deadline', async () => {
+    const envelope = seedRows(1);
+    mocks.storage.set(
+      OUTBOX_STORAGE_KEY,
+      encodeOutboxEnvelope({
+        ...envelope,
+        rows: envelope.rows.map((row) => ({
+          ...row,
+          lastErrorClass: 'rate_limit' as const,
+          nextAttemptAt: '2026-07-18T16:05:00.000Z',
+        })),
+      }),
+    );
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
+    const updateCallsBeforeClockCheck = mocks.updateCalls;
+    expect(vi.getTimerCount()).toBe(1);
+
+    await vi.advanceTimersByTimeAsync(30_000);
+    expect(mocks.updateCalls).toBe(updateCallsBeforeClockCheck);
+    expect(mocks.rpc).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(1);
+
+    vi.setSystemTime(new Date('2026-07-18T16:10:00.000Z'));
+    await vi.advanceTimersByTimeAsync(30_000);
+    await vi.waitFor(() => expect(storedEnvelope().rows).toEqual([]));
+    expect(mocks.updateCalls).toBeGreaterThan(updateCallsBeforeClockCheck);
+    expect(mocks.rpc).toHaveBeenCalledTimes(1);
+  });
+
+  it('recomputes a persisted deadline after a backward wall-clock shift', async () => {
+    const envelope = seedRows(1);
+    mocks.storage.set(
+      OUTBOX_STORAGE_KEY,
+      encodeOutboxEnvelope({
+        ...envelope,
+        rows: envelope.rows.map((row) => ({
+          ...row,
+          lastErrorClass: 'rate_limit' as const,
+          nextAttemptAt: '2026-07-18T16:00:45.000Z',
+        })),
+      }),
+    );
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
+    const updateCallsBeforeRollback = mocks.updateCalls;
+
+    vi.setSystemTime(new Date('2026-07-18T15:58:00.000Z'));
+    await vi.advanceTimersByTimeAsync(30_000);
+    await vi.waitFor(() => expect(mocks.updateCalls).toBe(updateCallsBeforeRollback + 1));
+
+    expect(mocks.rpc).not.toHaveBeenCalled();
+    expect(storedEnvelope().rows[0]).toMatchObject({
+      state: 'ready',
+      nextAttemptAt: '2026-07-18T16:00:45.000Z',
+    });
+    expect(vi.getTimerCount()).toBe(1);
+  });
+
+  it('ignores a stale callback after replacing its wake timer', async () => {
+    const timerSpy = vi.spyOn(globalThis, 'setTimeout');
+    try {
+      const envelope = seedRows(1);
+      mocks.storage.set(
+        OUTBOX_STORAGE_KEY,
+        encodeOutboxEnvelope({
+          ...envelope,
+          rows: envelope.rows.map((row) => ({
+            ...row,
+            lastErrorClass: 'rate_limit' as const,
+            nextAttemptAt: '2026-07-18T16:00:45.000Z',
+          })),
+        }),
+      );
+
+      await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
+      const staleCallback = timerSpy.mock.calls[0]?.[0];
+      expect(typeof staleCallback).toBe('function');
+
+      await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
+      const updateCallsAfterReplacement = mocks.updateCalls;
+      expect(vi.getTimerCount()).toBe(1);
+
+      if (typeof staleCallback === 'function') staleCallback();
+      await Promise.resolve();
+
+      expect(mocks.updateCalls).toBe(updateCallsAfterReplacement);
+      expect(mocks.rpc).not.toHaveBeenCalled();
+      expect(vi.getTimerCount()).toBe(1);
+    } finally {
+      timerSpy.mockRestore();
+    }
   });
 
   it('dead-letters a permanent poison row while committing the independent result', async () => {
@@ -524,6 +870,7 @@ describe('transactional outbox runtime', () => {
     ];
 
     await expect(flushOutbox()).resolves.toEqual(flushResult(2, 1, 1));
+    expect(vi.getTimerCount()).toBe(0);
     expect(storedEnvelope().rows).toEqual([
       expect.objectContaining({
         operationId: uuid(10_001),
@@ -882,9 +1229,12 @@ describe('transactional outbox runtime', () => {
         attemptCount: 0,
       },
     );
-    for (let trigger = 0; trigger < 10; trigger += 1) {
-      await expect(flushOutbox()).resolves.toEqual(flushResult(0, 0, 0));
-    }
+    expect(vi.getTimerCount()).toBe(1);
+    const updateCallsAfterBackoff = mocks.updateCalls;
+
+    await vi.advanceTimersByTimeAsync(5 * 60_000 - 1);
+    expect(mocks.rpc).toHaveBeenCalledTimes(1);
+    expect(mocks.updateCalls).toBe(updateCallsAfterBackoff);
     expect(storedEnvelope().rows.find((row) => row.entityType === 'conflict_choice')).toMatchObject(
       {
         state: 'ready',
@@ -892,14 +1242,15 @@ describe('transactional outbox runtime', () => {
       },
     );
 
-    vi.setSystemTime(new Date(Date.parse(NOW) + 5 * 60_000));
     mocks.rpc.mockClear();
     mocks.rpcHandler = async (operations) => successfulResults(operations);
-    await expect(flushOutbox()).resolves.toEqual(flushResult(3, 3, 0, 0, 0, 0, 0, 1));
+    await vi.advanceTimersByTimeAsync(1);
+    await vi.waitFor(() => expect(storedEnvelope().rows).toEqual([]));
     expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
       'apply_shelf_outbox_batch',
       'apply_conflict_choice_outbox_batch',
     ]);
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it('still dispatches an unrelated conflict when a different Shelf request fails', async () => {
