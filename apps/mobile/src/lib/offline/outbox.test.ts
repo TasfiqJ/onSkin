@@ -768,6 +768,45 @@ describe('transactional outbox runtime', () => {
     expect(storedEnvelope().rows).toEqual([]);
   });
 
+  it('settles receipt-backed clock-skew events as successful terminal no-ops', async () => {
+    let envelope = enqueueNotificationDeliveryOutboxOperation(emptyOutboxEnvelope(), {
+      operationId: uuid(909),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: uuid(910),
+      payload: { kind: 'replenishment', tier: 'behavioural', sent_at: NOW },
+      enqueuedAt: NOW,
+    }).envelope;
+    envelope = enqueueShelfScanOutboxOperation(envelope, {
+      operationId: uuid(911),
+      ownerHash: OWNER_HASH,
+      ownerGeneration: 7,
+      entityId: uuid(912),
+      payload: {
+        barcode: '1234567890123',
+        result: 'no_match',
+        matched_product_id: null,
+        scanned_at: NOW,
+      },
+      payloadHash: 'c'.repeat(64),
+      enqueuedAt: NOW,
+    }).envelope;
+    mocks.storage.set(OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(envelope));
+    mocks.rpcHandler = async (operations) =>
+      operations.map((operation) => ({
+        operation_id: operation.operation_id,
+        status: 'stale',
+        error_class: null,
+      }));
+
+    await expect(flushOutbox()).resolves.toEqual(flushResult(2, 2, 0, 0, 0, 1, 1));
+    expect(mocks.rpc.mock.calls.map((call) => call[0])).toEqual([
+      'apply_notification_delivery_outbox_batch',
+      'apply_shelf_scan_outbox_batch',
+    ]);
+    expect(storedEnvelope().rows).toEqual([]);
+  });
+
   it('dispatches conflict state only after its Shelf dependency batch succeeds', async () => {
     const identityHash = 'd'.repeat(64);
     const payloadHash = 'e'.repeat(64);

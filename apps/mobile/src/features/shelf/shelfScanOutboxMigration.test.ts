@@ -11,6 +11,15 @@ const migration = readFileSync(
   ),
   'utf8',
 );
+const clockSkewMigration = readFileSync(
+  fileURLToPath(
+    new URL(
+      '../../../../../supabase/migrations/20260726000055_immutable_event_clock_skew.sql',
+      import.meta.url,
+    ),
+  ),
+  'utf8',
+);
 
 describe('Shelf scan outbox migration', () => {
   it('derives the owner and exposes only the authenticated replay-safe RPC', () => {
@@ -87,5 +96,15 @@ describe('Shelf scan outbox migration', () => {
     expect(migration).toContain('if not found then');
     expect(migration).toContain('v_matched_product_id := null');
     expect(migration).toContain("v_result = 'matched' or v_matched_product_id is null");
+  });
+
+  it('turns far-future device time into a payload-bound terminal no-op', () => {
+    expect(clockSkewMigration).toContain('public.apply_shelf_scan_outbox_batch(jsonb)');
+    expect(clockSkewMigration).toContain(
+      "or v_scanned_at > pg_catalog.now() + interval ''5 minutes'' then",
+    );
+    expect(clockSkewMigration).toContain('OUTBOX_CLOCK_SKEW_SHELF_SCAN_POSTCONDITION_FAILED');
+    expect(clockSkewMigration).toContain('execute v_definition');
+    expect(clockSkewMigration).not.toMatch(/then\s+pg_catalog\.now\(\)/);
   });
 });

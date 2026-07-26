@@ -34,6 +34,7 @@ const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
 const NUMERIC_BARCODE = /^[0-9]{6,14}$/;
 const LOCAL_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
+const EVENT_ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
 export type OutboxState = 'dead' | 'leased' | 'ready';
 export type OutboxFailureClass =
@@ -168,6 +169,15 @@ function canonicalIso(value: unknown): string | null {
   if (!Number.isFinite(timestamp)) return null;
   const canonical = new Date(timestamp).toISOString();
   return canonical === value ? canonical : null;
+}
+
+function canonicalEventIso(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    EVENT_ISO.test(value) &&
+    value.slice(0, 4) !== '0000' &&
+    canonicalIso(value) !== null
+  );
 }
 
 function utf8Bytes(value: string): number {
@@ -371,7 +381,7 @@ function validNotificationDeliveryPayload(value: unknown): value is OutboxPayloa
     typeof value.kind === 'string' &&
     typeof value.tier === 'string' &&
     tierByKind[value.kind] === value.tier &&
-    canonicalIso(value.sent_at) !== null
+    canonicalEventIso(value.sent_at)
   );
 }
 
@@ -393,7 +403,7 @@ function validShelfScanPayload(value: unknown): value is OutboxPayload {
     (matchedProductId === null ||
       (typeof matchedProductId === 'string' && UUID.test(matchedProductId))) &&
     (value.result === 'matched' || matchedProductId === null) &&
-    canonicalIso(value.scanned_at) !== null
+    canonicalEventIso(value.scanned_at)
   );
 }
 
@@ -637,11 +647,13 @@ function decodeRow(value: unknown): OutboxRow {
     (entityType === 'notification_delivery' &&
       (operationKind !== 'upsert' ||
         !validNotificationDeliveryPayload(value.payload) ||
+        value.payload.sent_at !== value.enqueuedAt ||
         value.clientRevision !== 1 ||
         value.tombstone !== false)) ||
     (entityType === 'shelf_scan' &&
       (operationKind !== 'upsert' ||
         !validShelfScanPayload(value.payload) ||
+        value.payload.scanned_at !== value.enqueuedAt ||
         value.clientRevision !== 1 ||
         value.tombstone !== false)) ||
     (entityType === 'recommendation_preferences' &&

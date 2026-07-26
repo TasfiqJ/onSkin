@@ -11,6 +11,15 @@ const migration = readFileSync(
   ),
   'utf8',
 );
+const clockSkewMigration = readFileSync(
+  fileURLToPath(
+    new URL(
+      '../../../../../supabase/migrations/20260726000055_immutable_event_clock_skew.sql',
+      import.meta.url,
+    ),
+  ),
+  'utf8',
+);
 
 describe('notification delivery outbox migration', () => {
   it('derives the owner and exposes only the authenticated replay-safe RPC', () => {
@@ -80,5 +89,15 @@ describe('notification delivery outbox migration', () => {
       /v_constraint_name not in \(\s*'notification_log_pkey',\s*'mobile_outbox_receipts_pkey'/,
     );
     expect(migration).toContain('receipt.operation_id = v_operation_id');
+  });
+
+  it('turns far-future device time into a receipt-backed terminal no-op', () => {
+    expect(clockSkewMigration).toContain('public.apply_notification_delivery_outbox_batch(jsonb)');
+    expect(clockSkewMigration).toContain(
+      "or v_sent_at > pg_catalog.now() + interval ''5 minutes'' then",
+    );
+    expect(clockSkewMigration).toContain('OUTBOX_CLOCK_SKEW_NOTIFICATION_POSTCONDITION_FAILED');
+    expect(clockSkewMigration).toContain('execute v_definition');
+    expect(clockSkewMigration).not.toMatch(/then\s+pg_catalog\.now\(\)/);
   });
 });

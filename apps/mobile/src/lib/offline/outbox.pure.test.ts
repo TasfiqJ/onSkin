@@ -311,6 +311,55 @@ describe('transactional outbox model', () => {
     ).toThrow(OUTBOX_INVALID);
   });
 
+  it('binds immutable event payload time to enqueue time and the SQL timestamp grammar', () => {
+    const differentTime = '2026-07-18T15:00:00.001Z';
+    expect(() =>
+      enqueueNotificationDeliveryOutboxOperation(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: ENTITY_A,
+        payload: DELIVERY_PAYLOAD,
+        enqueuedAt: differentTime,
+      }),
+    ).toThrow(OUTBOX_INVALID);
+    expect(() =>
+      enqueueShelfScanOutboxOperation(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        ownerHash: OWNER,
+        ownerGeneration: 7,
+        entityId: ENTITY_A,
+        payload: SCAN_PAYLOAD,
+        payloadHash: SCAN_PAYLOAD_HASH,
+        enqueuedAt: differentTime,
+      }),
+    ).toThrow(OUTBOX_INVALID);
+
+    for (const timestamp of ['0000-01-01T00:00:00.000Z', '+010000-01-01T00:00:00.000Z']) {
+      expect(() =>
+        enqueueNotificationDeliveryOutboxOperation(emptyOutboxEnvelope(), {
+          operationId: OP_A1,
+          ownerHash: OWNER,
+          ownerGeneration: 7,
+          entityId: ENTITY_A,
+          payload: { ...DELIVERY_PAYLOAD, sent_at: timestamp },
+          enqueuedAt: timestamp,
+        }),
+      ).toThrow(OUTBOX_INVALID);
+      expect(() =>
+        enqueueShelfScanOutboxOperation(emptyOutboxEnvelope(), {
+          operationId: OP_A1,
+          ownerHash: OWNER,
+          ownerGeneration: 7,
+          entityId: ENTITY_A,
+          payload: { ...SCAN_PAYLOAD, scanned_at: timestamp },
+          payloadHash: SCAN_PAYLOAD_HASH,
+          enqueuedAt: timestamp,
+        }),
+      ).toThrow(OUTBOX_INVALID);
+    }
+  });
+
   it('keeps Shelf scans as payload-bound unique revision-one events', () => {
     const first = enqueueShelfScanOutboxOperation(emptyOutboxEnvelope(), {
       operationId: OP_A1,
