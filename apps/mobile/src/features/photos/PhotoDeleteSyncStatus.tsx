@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useId, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { ActivityIndicator, Platform, View } from 'react-native';
 
 import { Button, StateNotice, Text } from '@/components/ui';
@@ -18,24 +18,25 @@ import { colors } from '@/theme/tokens';
 
 import { PHOTO_COPY } from './copy';
 import { runPhotoDeleteRetrySingleFlight } from './photoDeleteRetrySingleFlight';
+import {
+  createPhotoDeleteSyncStatusFixtureReader,
+  photoDeleteSyncStatusQueryEnabled,
+  photoDeleteSyncStatusQueryKey,
+  resolvePhotoDeleteSyncStatusFixture,
+  type PhotoDeleteSyncStatusFixture,
+} from './photoDeleteSyncStatusFixture';
 
 type DisplayState = PhotoDeleteOutboxStatusRead | { status: 'checking'; value: null };
 
-function developmentFixture(): PhotoDeleteOutboxStatusRead | null {
-  if (typeof __DEV__ === 'undefined' || !__DEV__ || Platform.OS !== 'web') return null;
-  const fixture = process.env.EXPO_PUBLIC_E2E_PHOTO_DELETE_SYNC_STATUS?.trim().toLowerCase();
-  if (!['saved_local', 'syncing', 'needs_attention'].includes(fixture ?? '')) return null;
-  return {
-    status: 'available',
-    value: Object.freeze({
-      kind: fixture as 'needs_attention' | 'saved_local' | 'syncing',
-      pendingCount: 1,
-      attentionCount: fixture === 'needs_attention' ? 1 : 0,
-    }),
-  };
+function developmentFixture(): PhotoDeleteSyncStatusFixture | null {
+  return resolvePhotoDeleteSyncStatusFixture({
+    development: typeof __DEV__ !== 'undefined' && __DEV__,
+    platform: Platform.OS,
+    raw: process.env.EXPO_PUBLIC_E2E_PHOTO_DELETE_SYNC_STATUS,
+  });
 }
 
-function usePhotoDeleteSyncStatus(disabled: boolean) {
+function usePhotoDeleteSyncStatus(fixture: PhotoDeleteSyncStatusFixture | null) {
   const ownerScope = useOwnerQueryScope();
   const { user } = useAuth();
   const ownerId = user?.id;
@@ -46,10 +47,27 @@ function usePhotoDeleteSyncStatus(disabled: boolean) {
   );
   const [retrying, setRetrying] = useState(false);
   const retryPromiseRef = useRef<Promise<void> | null>(null);
+  const fixtureInstanceId = useId();
+  const readStatus = useMemo(
+    () =>
+      createPhotoDeleteSyncStatusFixtureReader(fixture, () =>
+        readPhotoDeleteOutboxStatus(ownerScope, ownerId),
+      ),
+    [fixture, ownerId, ownerScope],
+  );
+  const queryKey = useMemo(
+    () =>
+      photoDeleteSyncStatusQueryKey(
+        queryKeys.photoDeleteOutboxStatus(ownerScope, revision),
+        fixture,
+        fixtureInstanceId,
+      ),
+    [fixture, fixtureInstanceId, ownerScope, revision],
+  );
   const statusQuery = useQuery({
-    queryKey: queryKeys.photoDeleteOutboxStatus(ownerScope, revision),
-    queryFn: () => readPhotoDeleteOutboxStatus(ownerScope, ownerId),
-    enabled: !disabled,
+    queryKey,
+    queryFn: readStatus,
+    enabled: photoDeleteSyncStatusQueryEnabled(fixture),
     networkMode: 'always',
     retry: false,
     staleTime: Infinity,
@@ -66,6 +84,7 @@ function usePhotoDeleteSyncStatus(disabled: boolean) {
   );
 
   const retry = useCallback((): Promise<void> => {
+    if (fixture?.kind === 'static') return Promise.resolve();
     return runPhotoDeleteRetrySingleFlight(retryPromiseRef, async () => {
       setRetrying(true);
       try {
@@ -79,15 +98,15 @@ function usePhotoDeleteSyncStatus(disabled: boolean) {
         if (isOwnerQueryScopeCurrent(ownerScope)) setRetrying(false);
       }
     });
-  }, [ownerId, ownerScope, refetch, state]);
+  }, [fixture, ownerId, ownerScope, refetch, state]);
 
   return { retry, retrying, state };
 }
 
 export function PhotoDeleteSyncStatus({ className }: { className?: string }) {
-  const fixture = developmentFixture();
-  const { retry, retrying, state } = usePhotoDeleteSyncStatus(fixture !== null);
-  const displayedState = fixture ?? state;
+  const fixture = useMemo(() => developmentFixture(), []);
+  const { retry, retrying, state } = usePhotoDeleteSyncStatus(fixture);
+  const displayedState = fixture?.kind === 'static' ? fixture.value : state;
 
   if (displayedState.status === 'checking') return null;
   if (displayedState.status === 'available' && displayedState.value.kind === 'idle') return null;

@@ -64,7 +64,11 @@ Current V1 does not upload photo bytes. This RPC deletes optional server metadat
 - The first narrow attention run found a partially off-viewport primary capture action. Reusing the existing compact first-run layout below 700 px fixed it, and the exact rerun kept both actions fully visible above the floating tab bar.
 - Evidence, exact viewport/capture dimensions, accessibility snapshots, expected local warnings, and the bug report are in `test-results/human-e2e/2026-07-26/progress-photo-delete-recovery-current/`.
 
-The development-web fixtures prove presentation and visible interaction only; they disable the live status query. Runtime outbox tests prove current-owner status/retry and account-generation fences, and the behavioral coordinator test proves retry single-flight. This follow-up does not claim an authenticated server delete or outbox transition from the browser fixture.
+The saved-local, syncing, and needs-attention development-web fixtures prove presentation and visible interaction only; static fixtures disable the live status query and cannot read or retry real storage. A separate dev-web `unavailable_once` fixture calls the real current-owner status reader, replaces only its first result with typed unavailable, and delegates the next `Check again` refetch unchanged. Empty 360 x 640 and populated 390 x 844 runs each moved from exactly one alert/56 px action to no status leaf after rapid double activation, with zero overflow, clipping, short controls, failed center hits, dialogs, page errors, or forbidden metadata. A populated remount repeated the one-click recovery. Evidence is in `test-results/human-e2e/2026-07-26/progress-photo-delete-unreadable-recovery-current/`.
+
+The focused 8-file / 154-test matrix proves real-reader invocation, per-instance query-cache isolation, byte-preserving unavailable recovery, static-fixture non-mutation, duplicate activation single-flight, null/blank-owner hiding without hash/storage reads, and signed-out or authenticated legacy/non-UUID local-only deletion without an outbox row. This follow-up does not claim an authenticated server delete or outbox transition from the browser fixture.
+
+The fresh full root suite ran 371 files / 4,547 tests; 4,543 passed. The four failures are the same unrelated dirty-tree notification behavioral-snapshot expectation and three Shelf PAO metadata/provenance expectations. Root and mobile typecheck and zero-warning lint passed, as did `git diff --check`.
 
 ## Evidence still required
 
@@ -73,7 +77,7 @@ The development-web fixtures prove presentation and visible interaction only; th
 - Hosted Supabase migration/RLS/concurrency replay.
 - Release compatibility/minimum-build evidence before revoking the old best-effort direct DELETE path for any installed production build.
 - Long-lived offline testing through the 128-command privacy reserve and manual terminal retry.
-- Actual unreadable-queue `Check again` fault injection and authenticated offline-delete/reconnect/manual-retry presentation.
+- Authenticated offline-delete/reconnect/manual-retry presentation.
 - Supported-iOS VoiceOver, Dynamic Type, safe-area, and recovery interaction evidence.
 
 This closes the local durable photo-metadata deletion gap. It does not mark OPT-010 verified while hosted, native process-kill, long-lived capacity, and cross-device evidence remain open.

@@ -7,6 +7,10 @@ const componentSource = readFileSync(
   requireFromTest.resolve('./PhotoDeleteSyncStatus.tsx'),
   'utf8',
 );
+const fixtureSource = readFileSync(
+  requireFromTest.resolve('./photoDeleteSyncStatusFixture.ts'),
+  'utf8',
+);
 const copySource = readFileSync(requireFromTest.resolve('./copy.ts'), 'utf8');
 const progressRoute = readFileSync(
   requireFromTest.resolve('../../app/(tabs)/progress.tsx'),
@@ -50,6 +54,11 @@ describe('photo deletion sync status UI contract', () => {
     expect(componentSource).toContain('useSyncExternalStore(');
     expect(componentSource).toContain('isOwnerQueryScopeCurrent(ownerScope)');
     expect(componentSource).toContain('runPhotoDeleteRetrySingleFlight(retryPromiseRef');
+    expect(componentSource).toContain("if (fixture?.kind === 'static') return Promise.resolve()");
+    expect(componentSource).toContain(
+      "state.status === 'available' && state.value.kind === 'needs_attention'",
+    );
+    expect(componentSource).toContain('await refetch()');
     expect(componentSource).not.toContain('setInterval(');
     expect(componentSource).not.toContain('setTimeout(');
   });
@@ -79,7 +88,15 @@ describe('photo deletion sync status UI contract', () => {
 
   it('keeps visual fixtures development-web-only', () => {
     expect(componentSource).toContain('EXPO_PUBLIC_E2E_PHOTO_DELETE_SYNC_STATUS');
-    expect(componentSource).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
-    expect(componentSource).toContain("Platform.OS !== 'web'");
+    expect(componentSource).toContain("typeof __DEV__ !== 'undefined' && __DEV__");
+    expect(componentSource).toContain('platform: Platform.OS');
+    expect(componentSource).toContain('createPhotoDeleteSyncStatusFixtureReader(fixture');
+    expect(componentSource).toContain('photoDeleteSyncStatusQueryEnabled(fixture)');
+    expect(componentSource).toContain('photoDeleteSyncStatusQueryKey(');
+    expect(componentSource).toContain('const fixtureInstanceId = useId()');
+    expect(fixtureSource).toContain("value === 'unavailable_once'");
+    expect(fixtureSource).toContain("input.platform !== 'web'");
+    expect(fixtureSource).toContain('const result = await readRealStatus()');
+    expect(fixtureSource).toContain("'development_unavailable_once'");
   });
 });

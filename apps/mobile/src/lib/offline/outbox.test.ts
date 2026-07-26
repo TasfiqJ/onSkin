@@ -47,6 +47,7 @@ const mocks = vi.hoisted(() => ({
   nextUuid: 1,
   ownerCurrent: true,
   randomUUID: vi.fn(),
+  readCalls: 0,
   readOverride: null as null | Readonly<Record<string, unknown>>,
   rpc: vi.fn(),
   rpcHandler: null as null | ((operations: readonly Record<string, unknown>[]) => Promise<unknown>),
@@ -82,6 +83,7 @@ vi.mock('@/lib/network/requestPolicy', async (importOriginal) => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   readPrivateItem: vi.fn(async (key: string) => {
+    mocks.readCalls += 1;
     if (mocks.readOverride) return mocks.readOverride;
     const value = mocks.storage.get(key);
     return value === undefined ? { status: 'absent' } : { status: 'available', value };
@@ -274,6 +276,7 @@ describe('transactional outbox runtime', () => {
     mocks.tails.clear();
     mocks.afterUpdate = null;
     mocks.updateCalls = 0;
+    mocks.readCalls = 0;
     mocks.readOverride = null;
     mocks.nextUuid = 1;
     mocks.ownerCurrent = true;
@@ -332,6 +335,54 @@ describe('transactional outbox runtime', () => {
     mocks.readOverride = { status: 'unavailable', reason: 'storage_unavailable' };
     await expect(readOutbox()).resolves.toEqual({ status: 'unavailable', envelope: null });
     expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(original);
+    expect(mocks.updateCalls).toBe(0);
+  });
+
+  it('recovers photo status from typed unreadable state without mutating persisted bytes', async () => {
+    const original = encodeOutboxEnvelope(emptyOutboxEnvelope());
+    mocks.storage.set(OUTBOX_STORAGE_KEY, original);
+    mocks.readOverride = { status: 'unavailable', reason: 'storage_unavailable' };
+
+    await expect(
+      readPhotoDeleteOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({ status: 'unavailable', value: null });
+    expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(original);
+    expect(mocks.updateCalls).toBe(0);
+
+    mocks.readOverride = null;
+    await expect(
+      readPhotoDeleteOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'idle', pendingCount: 0, attentionCount: 0 },
+    });
+    expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(original);
+    expect(mocks.updateCalls).toBe(0);
+    expect(mocks.readCalls).toBe(2);
+  });
+
+  it('hides photo deletion status without an authenticated owner or queued operation', async () => {
+    mocks.readOverride = { status: 'unavailable', reason: 'storage_unavailable' };
+
+    for (const ownerId of [undefined, null, '   '] as const) {
+      await expect(readPhotoDeleteOutboxStatus({ generation: 7 }, ownerId)).resolves.toEqual({
+        status: 'available',
+        value: { kind: 'idle', pendingCount: 0, attentionCount: 0 },
+      });
+    }
+
+    expect(mocks.digestStringAsync).not.toHaveBeenCalled();
+    expect(mocks.readCalls).toBe(0);
+    expect(mocks.updateCalls).toBe(0);
+
+    mocks.readOverride = null;
+    await expect(
+      readPhotoDeleteOutboxStatus({ generation: 7 }, 'raw-owner@example.com'),
+    ).resolves.toEqual({
+      status: 'available',
+      value: { kind: 'idle', pendingCount: 0, attentionCount: 0 },
+    });
+    expect(mocks.readCalls).toBe(1);
     expect(mocks.updateCalls).toBe(0);
   });
 
