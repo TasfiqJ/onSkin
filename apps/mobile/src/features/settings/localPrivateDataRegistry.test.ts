@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  OUTBOX_LEGACY_SCHEMA_VERSIONS,
+  OUTBOX_SCHEMA_VERSION,
+  OUTBOX_STORAGE_KEY,
+} from '@/lib/offline/outbox.pure';
+
+import {
   LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
   LOCAL_PRIVATE_CONTROL_KEYS,
   LOCAL_PRIVATE_DATA_KEYS,
@@ -25,6 +31,19 @@ describe('local private-data contract registry', () => {
 
   it('has no unresolved per-key contract gaps', () => {
     expect(localPrivateRegistryGaps()).toEqual([]);
+  });
+
+  it('binds the transactional outbox descriptor to the live codec versions', () => {
+    const outbox = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === OUTBOX_STORAGE_KEY,
+    );
+
+    expect(outbox?.codec).toEqual({
+      status: 'enforced',
+      codecId: 'transactional_outbox',
+      currentVersion: OUTBOX_SCHEMA_VERSION,
+      legacyVersions: OUTBOX_LEGACY_SCHEMA_VERSIONS,
+    });
   });
 
   it('records the retired cloud-backup flag codec without restoring a live reader', () => {

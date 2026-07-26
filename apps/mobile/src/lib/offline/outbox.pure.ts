@@ -1,5 +1,6 @@
 export const OUTBOX_STORAGE_KEY = 'onskin.outbox.v1';
 export const OUTBOX_SCHEMA_VERSION = 5 as const;
+export const OUTBOX_LEGACY_SCHEMA_VERSIONS = [1, 2, 3, 4] as const;
 export const OUTBOX_ROW_SCHEMA_VERSION = 1 as const;
 export const MAX_OUTBOX_ROWS = 512;
 export const MAX_SHELF_SCAN_OUTBOX_ROWS = 128;
@@ -634,6 +635,13 @@ export function emptyOutboxEnvelope(): OutboxEnvelope {
   });
 }
 
+function isSupportedOutboxSchemaVersion(value: unknown): boolean {
+  return (
+    value === OUTBOX_SCHEMA_VERSION ||
+    OUTBOX_LEGACY_SCHEMA_VERSIONS.some((version) => version === value)
+  );
+}
+
 export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
   if (raw === null) return emptyOutboxEnvelope();
   let parsed: unknown;
@@ -651,11 +659,7 @@ export function decodeOutboxEnvelope(raw: string | null): OutboxEnvelope {
     fail(OUTBOX_UNSUPPORTED_VERSION);
   }
   if (
-    (parsed.version !== 1 &&
-      parsed.version !== 2 &&
-      parsed.version !== 3 &&
-      parsed.version !== 4 &&
-      parsed.version !== OUTBOX_SCHEMA_VERSION) ||
+    !isSupportedOutboxSchemaVersion(parsed.version) ||
     !hasExactKeys(parsed, ['version', 'rows', 'revisions']) ||
     !Array.isArray(parsed.rows) ||
     parsed.rows.length > MAX_OUTBOX_ROWS ||

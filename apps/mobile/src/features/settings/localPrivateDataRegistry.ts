@@ -7,7 +7,11 @@ import {
 import { ACCOUNT_DELETION_VENDOR_FREEZE_KEY } from '@/lib/auth/accountDeletionVendorFreezeKey';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
 import { PRIVATE_KV_TRANSACTION_JOURNAL_KEY } from '@/lib/storage/privateKVTransactionCore';
-import { OUTBOX_STORAGE_KEY } from '@/lib/offline/outbox.pure';
+import {
+  OUTBOX_LEGACY_SCHEMA_VERSIONS,
+  OUTBOX_SCHEMA_VERSION,
+  OUTBOX_STORAGE_KEY,
+} from '@/lib/offline/outbox.pure';
 
 export type LocalPrivateKeyCategory = 'data' | 'secure_store' | 'metadata' | 'control';
 export type LocalPrivateKeyLifecycle =
@@ -263,7 +267,11 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
   privateData({
     key: OUTBOX_STORAGE_KEY,
     lifecycle: 'current',
-    codec: jsonCodec('transactional_outbox', 1),
+    codec: jsonCodec(
+      'transactional_outbox',
+      OUTBOX_SCHEMA_VERSION,
+      OUTBOX_LEGACY_SCHEMA_VERSIONS,
+    ),
     typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'transactional_outbox'),
   }),

@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   OUTBOX_INVALID,
+  OUTBOX_LEGACY_SCHEMA_VERSIONS,
   OUTBOX_LIMIT_REACHED,
+  OUTBOX_SCHEMA_VERSION,
   OUTBOX_UNSUPPORTED_VERSION,
   MAX_SHELF_SCAN_OUTBOX_ROWS,
   decodeOutboxEnvelope,
@@ -114,23 +116,25 @@ describe('transactional outbox model', () => {
       entityId: ENTITY_A,
     }).envelope;
     expect(decodeOutboxEnvelope(encodeOutboxEnvelope(queued))).toEqual(queued);
-    const legacy = JSON.parse(encodeOutboxEnvelope(queued)) as {
-      version: number;
-      revisions: Record<string, unknown>[];
-    };
-    legacy.version = 1;
-    legacy.revisions = legacy.revisions.map(({ ownerHash: _ownerHash, ...revision }) => revision);
-    expect(decodeOutboxEnvelope(JSON.stringify(legacy))).toEqual(queued);
-    const previous = JSON.parse(encodeOutboxEnvelope(queued)) as { version: number };
-    previous.version = 2;
-    expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
-    previous.version = 3;
-    expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
-    previous.version = 4;
-    expect(decodeOutboxEnvelope(JSON.stringify(previous))).toEqual(queued);
+    expect(OUTBOX_LEGACY_SCHEMA_VERSIONS).toEqual([1, 2, 3, 4]);
+    for (const version of OUTBOX_LEGACY_SCHEMA_VERSIONS) {
+      const legacy = JSON.parse(encodeOutboxEnvelope(queued)) as {
+        version: number;
+        revisions: Record<string, unknown>[];
+      };
+      legacy.version = version;
+      if (version === 1) {
+        legacy.revisions = legacy.revisions.map(
+          ({ ownerHash: _ownerHash, ...revision }) => revision,
+        );
+      }
+      expect(decodeOutboxEnvelope(JSON.stringify(legacy))).toEqual(queued);
+    }
     expect(() => decodeOutboxEnvelope('{bad-json')).toThrow(OUTBOX_INVALID);
     expect(() =>
-      decodeOutboxEnvelope(JSON.stringify({ version: 6, rows: [], revisions: [] })),
+      decodeOutboxEnvelope(
+        JSON.stringify({ version: OUTBOX_SCHEMA_VERSION + 1, rows: [], revisions: [] }),
+      ),
     ).toThrow(OUTBOX_UNSUPPORTED_VERSION);
   });
 
