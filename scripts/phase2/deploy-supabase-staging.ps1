@@ -5,6 +5,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+. (Join-Path $PSScriptRoot "supabase-cli-version-gate.ps1")
+$supabaseCliPath = Resolve-SupabaseCliApplicationPath
+$null = Assert-SupabaseCliMinimumVersion -CliPath $supabaseCliPath
+
 function Read-AppEnvironment {
   $raw = $env:EXPO_PUBLIC_APP_ENV
   if (-not $raw) { $raw = $env:APP_ENV }
@@ -70,17 +74,20 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Linking Supabase project $ProjectRef"
-supabase link --project-ref $ProjectRef
+& $supabaseCliPath link --project-ref $ProjectRef
 
-Write-Host "Pushing migrations"
-supabase db push
+Write-Host "Applying linked migrations with the non-transactional migration runner"
+& $supabaseCliPath migration up --linked
+if ($LASTEXITCODE -ne 0) {
+  throw "SUPABASE_MIGRATION_UP_FAILED"
+}
 
 Write-Host "Deploying every manifest Edge Function"
 foreach ($entry in $functionEntries) {
-  supabase functions deploy $entry.Name --project-ref $ProjectRef
+  & $supabaseCliPath functions deploy $entry.Name --project-ref $ProjectRef
 }
 
 Write-Host "Generating local database types"
-supabase gen types typescript --linked --schema public > packages/types/src/database.types.ts
+& $supabaseCliPath gen types typescript --linked --schema public > packages/types/src/database.types.ts
 
 Write-Host "Run npm run phase2:rls-smoke against this staging project before any EAS production build."

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -36,6 +36,12 @@ const indexGuardMigrationPath = path.join(
   'migrations',
   '20260718000053_edge_rate_limit_cleanup_index_guard.sql',
 );
+const concurrentIndexMigrationPath = path.join(
+  repoRoot,
+  'supabase',
+  'migrations',
+  '20260726000059_edge_rate_limit_cleanup_concurrent_index.sql',
+);
 const DEFAULT_REPORT = path.join(
   repoRoot,
   'docs',
@@ -48,6 +54,13 @@ const DEFAULT_STALE_ROWS = 2_500;
 const DATABASE = 'onskin_rate_limit_benchmark';
 const PASSWORD = 'onskin-local-opt119-only';
 const CLEANUP_PREDICATE = 'window_start < now() - make_interval(secs => greatest(60 * 4, 3600))';
+const CLEANUP_INDEX_NAME = 'edge_rate_limits_window_start_concurrent_idx';
+const LEGACY_CLEANUP_INDEX_NAME = 'edge_rate_limits_window_start_idx';
+const CLEANUP_INDEX_FAILURE_SQLSTATE = '55000';
+const CLEANUP_INDEX_FAILURE_HINT =
+  'Run DROP INDEX CONCURRENTLY IF EXISTS public.edge_rate_limits_window_start_concurrent_idx; then retry migration 20260726000059.';
+const WRONG_DEFINITION_MESSAGE = 'edge_rate_limits_cleanup_index_definition_mismatch';
+const INVALID_OR_UNREADY_MESSAGE = 'edge_rate_limits_cleanup_index_invalid_or_unready';
 
 function integerOption(name, fallback, minimum, maximum) {
   const prefix = `--${name}=`;
@@ -81,6 +94,39 @@ function command(commandName, args, options = {}) {
 
 function docker(args, options) {
   return command('docker', args, options);
+}
+
+function spawnDocker(args) {
+  const child = spawn('docker', args, {
+    cwd: repoRoot,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  child.stdout.setEncoding('utf8');
+  child.stderr.setEncoding('utf8');
+  let stdout = '';
+  let stderr = '';
+  child.stdout.on('data', (chunk) => {
+    stdout += chunk;
+  });
+  child.stderr.on('data', (chunk) => {
+    stderr += chunk;
+  });
+  return Object.freeze({
+    child,
+    completed: new Promise((resolve, reject) => {
+      child.once('error', reject);
+      child.once('close', (status, signal) => {
+        resolve(
+          Object.freeze({
+            status,
+            signal,
+            stdout,
+            stderr,
+          }),
+        );
+      });
+    }),
+  });
 }
 
 function waitForPostgres(container) {
@@ -140,6 +186,37 @@ function psqlFails(container, sql) {
     { cwd: repoRoot, encoding: 'utf8', input: sql },
   );
   return result.status !== 0;
+}
+
+function psqlFailure(container, sql) {
+  const result = spawnSync(
+    'docker',
+    [
+      'exec',
+      '-i',
+      container,
+      'psql',
+      '-X',
+      '-qAt',
+      '-v',
+      'ON_ERROR_STOP=1',
+      '-U',
+      'postgres',
+      '-d',
+      DATABASE,
+    ],
+    {
+      cwd: repoRoot,
+      encoding: 'utf8',
+      input: `\\set VERBOSITY verbose\n${sql}`,
+      maxBuffer: 64 * 1024 * 1024,
+    },
+  );
+  return Object.freeze({
+    status: result.status,
+    stdout: result.stdout ?? '',
+    stderr: result.stderr ?? '',
+  });
 }
 
 function jsonQuery(container, sql) {
@@ -216,7 +293,10 @@ function parsePgbenchLatencies(raw) {
     .filter(Number.isFinite);
 }
 
-function indexContract(container) {
+function indexContract(container, indexName = CLEANUP_INDEX_NAME) {
+  if (![CLEANUP_INDEX_NAME, LEGACY_CLEANUP_INDEX_NAME].includes(indexName)) {
+    throw new Error('Unexpected cleanup index name.');
+  }
   return jsonQuery(
     container,
     `select json_build_object(
@@ -245,26 +325,263 @@ function indexContract(container) {
      and window_start.attname = 'window_start'
      and not window_start.attisdropped
     where index_namespace.nspname = 'public'
-      and index_relation.relname = 'edge_rate_limits_window_start_idx';`,
+      and index_relation.relname = '${indexName}';`,
   );
 }
 
-function rejectsWrongNamedIndex(container, guardMigration) {
-  const rejected = psqlFails(
-    container,
-    `begin;
-drop index public.edge_rate_limits_window_start_idx;
-create index edge_rate_limits_window_start_idx
-  on public.edge_rate_limits (updated_at);
-${guardMigration}`,
-  );
-  const restoredContract = indexContract(container);
+function indexExists(container, indexName) {
+  if (![CLEANUP_INDEX_NAME, LEGACY_CLEANUP_INDEX_NAME].includes(indexName)) {
+    throw new Error('Unexpected cleanup index name.');
+  }
+  return psql(container, `select to_regclass('public.${indexName}') is not null;`) === 't';
+}
+
+function indexOid(container, indexName) {
+  if (![CLEANUP_INDEX_NAME, LEGACY_CLEANUP_INDEX_NAME].includes(indexName)) {
+    throw new Error('Unexpected cleanup index name.');
+  }
+  return psql(container, `select 'public.${indexName}'::regclass::oid;`);
+}
+
+function exactMigrationFailure(result, expectedMessage) {
+  const lines = `${result.stderr}\n${result.stdout}`
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const errorLine = lines.find((line) => line.startsWith('ERROR:'));
+  const errorMatch = errorLine?.match(/^ERROR:\s+([A-Z0-9]{5}):\s+(.+)$/);
+  const hintLine = lines.find((line) => line.startsWith('HINT:'));
+  const hint = hintLine?.replace(/^HINT:\s+/, '') ?? null;
   return Object.freeze({
-    wrong_definition_rejected: rejected,
-    transaction_rollback_restored_original:
-      restoredContract.valid === true &&
-      restoredContract.ready === true &&
-      restoredContract.sole_key_is_window_start === true,
+    rejected: result.status !== 0,
+    sqlstate: errorMatch?.[1] ?? null,
+    message: errorMatch?.[2] ?? null,
+    hint,
+    exact_contract:
+      result.status !== 0 &&
+      errorMatch?.[1] === CLEANUP_INDEX_FAILURE_SQLSTATE &&
+      errorMatch?.[2] === expectedMessage &&
+      hint === CLEANUP_INDEX_FAILURE_HINT,
+  });
+}
+
+async function applyConcurrentIndexMigrationWithDmlProbe(container, migration) {
+  const probePath = '/tmp/opt119-concurrent-index-dml.sql';
+  const probeSql = `insert into public.edge_rate_limits (
+  scope,
+  key_hash,
+  window_start,
+  window_seconds,
+  request_count
+) values (
+  'opt119_concurrent_dml',
+  repeat('9', 64),
+  date_trunc('minute', clock_timestamp()),
+  60,
+  1
+)
+on conflict (scope, key_hash, window_start)
+do update set
+  request_count = public.edge_rate_limits.request_count + 1,
+  updated_at = clock_timestamp();
+insert into public.opt119_concurrent_dml_probe(kind) values ('dml');
+`;
+  psql(
+    container,
+    `create unlogged table public.opt119_concurrent_dml_probe (
+      id bigint generated always as identity primary key,
+      kind text not null check (kind in ('dml', 'migration_start', 'migration_end')),
+      observed_at timestamptz not null default clock_timestamp()
+    );`,
+  );
+  docker(['exec', '-i', container, 'tee', probePath], { input: probeSql });
+  const worker = spawnDocker([
+    'exec',
+    '-w',
+    '/tmp',
+    container,
+    'pgbench',
+    '-n',
+    '-c',
+    '2',
+    '-j',
+    '2',
+    '-T',
+    '5',
+    '-f',
+    probePath,
+    '-U',
+    'postgres',
+    DATABASE,
+  ]);
+
+  let dmlBeforeMigration = 0;
+  for (let attempt = 0; attempt < 80; attempt += 1) {
+    dmlBeforeMigration = Number(
+      psql(
+        container,
+        `select count(*) from public.opt119_concurrent_dml_probe where kind = 'dml';`,
+      ),
+    );
+    if (dmlBeforeMigration > 0) break;
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 25);
+  }
+  if (dmlBeforeMigration < 1) {
+    worker.child.kill();
+    await worker.completed;
+    throw new Error('Concurrent DML worker did not make initial progress.');
+  }
+
+  psql(
+    container,
+    `set maintenance_work_mem = '1MB';
+insert into public.opt119_concurrent_dml_probe(kind) values ('migration_start');
+${migration}
+insert into public.opt119_concurrent_dml_probe(kind) values ('migration_end');`,
+  );
+  const workerResult = await worker.completed;
+  const summary = `${workerResult.stdout}\n${workerResult.stderr}`;
+  const failedMatch = summary.match(/number of failed transactions:\s+([0-9]+)/);
+  const processedMatch = summary.match(/number of transactions actually processed:\s+([0-9]+)/);
+  const failedTransactions = failedMatch ? Number(failedMatch[1]) : Number.NaN;
+  const processedTransactions = processedMatch ? Number(processedMatch[1]) : Number.NaN;
+  const overlap = jsonQuery(
+    container,
+    `select json_build_object(
+      'migration_duration_ms',
+        extract(epoch from (migration_end.observed_at - migration_start.observed_at)) * 1000,
+      'dml_during_migration', count(*) filter (
+        where probe.kind = 'dml'
+          and probe.observed_at >= migration_start.observed_at
+          and probe.observed_at <= migration_end.observed_at
+      ),
+      'dml_total', count(*) filter (where probe.kind = 'dml')
+    )
+    from public.opt119_concurrent_dml_probe as probe
+    cross join lateral (
+      select observed_at
+      from public.opt119_concurrent_dml_probe
+      where kind = 'migration_start'
+      order by id
+      limit 1
+    ) as migration_start
+    cross join lateral (
+      select observed_at
+      from public.opt119_concurrent_dml_probe
+      where kind = 'migration_end'
+      order by id
+      limit 1
+    ) as migration_end
+    group by migration_start.observed_at, migration_end.observed_at;`,
+  );
+  psql(
+    container,
+    `delete from public.edge_rate_limits where scope = 'opt119_concurrent_dml';
+drop table public.opt119_concurrent_dml_probe;`,
+  );
+  return Object.freeze({
+    postgres_fixture: true,
+    processed_transactions: processedTransactions,
+    failed_transactions: failedTransactions,
+    dml_before_migration: dmlBeforeMigration,
+    dml_during_migration: Number(overlap.dml_during_migration),
+    dml_total: Number(overlap.dml_total),
+    migration_duration_ms: Number(overlap.migration_duration_ms),
+    forward_progress_during_migration: Number(overlap.dml_during_migration) > 0,
+    zero_dml_errors: workerResult.status === 0 && failedTransactions === 0,
+  });
+}
+
+function exerciseConcurrentIndexMigration(container, migration) {
+  const initialOid = indexOid(container, CLEANUP_INDEX_NAME);
+  psql(container, migration);
+  const reappliedContract = indexContract(container);
+  const safeReapply =
+    initialOid === indexOid(container, CLEANUP_INDEX_NAME) &&
+    reappliedContract.valid === true &&
+    reappliedContract.ready === true &&
+    reappliedContract.sole_key_is_window_start === true &&
+    !indexExists(container, LEGACY_CLEANUP_INDEX_NAME);
+
+  psql(
+    container,
+    `create index concurrently ${LEGACY_CLEANUP_INDEX_NAME}
+      on public.edge_rate_limits using btree (window_start);`,
+  );
+  psql(container, `drop index concurrently public.${CLEANUP_INDEX_NAME};`);
+  psql(
+    container,
+    `create index concurrently ${CLEANUP_INDEX_NAME}
+      on public.edge_rate_limits using btree (updated_at);`,
+  );
+
+  const legacyOidBeforeWrongDefinition = indexOid(container, LEGACY_CLEANUP_INDEX_NAME);
+  const wrongDefinitionFailure = exactMigrationFailure(
+    psqlFailure(container, migration),
+    WRONG_DEFINITION_MESSAGE,
+  );
+  const wrongContract = indexContract(container);
+  const legacyOidAfterWrongDefinition = indexOid(container, LEGACY_CLEANUP_INDEX_NAME);
+
+  psql(container, `drop index concurrently public.${CLEANUP_INDEX_NAME};`);
+  psql(container, migration);
+  const recoveredContract = indexContract(container);
+  const recoveredAfterNegative =
+    recoveredContract.valid === true &&
+    recoveredContract.ready === true &&
+    recoveredContract.unique === false &&
+    recoveredContract.access_method === 'btree' &&
+    recoveredContract.key_attributes === 1 &&
+    recoveredContract.total_attributes === 1 &&
+    recoveredContract.partial === false &&
+    recoveredContract.expression === false &&
+    recoveredContract.sole_key_is_window_start === true &&
+    recoveredContract.table_is_edge_rate_limits === true &&
+    !indexExists(container, LEGACY_CLEANUP_INDEX_NAME);
+
+  psql(
+    container,
+    `create index concurrently ${LEGACY_CLEANUP_INDEX_NAME}
+      on public.edge_rate_limits using btree (window_start);`,
+  );
+  const legacyOidBeforeInvalidPreflight = indexOid(container, LEGACY_CLEANUP_INDEX_NAME);
+  psql(
+    container,
+    `update pg_catalog.pg_index
+      set indisvalid = false, indisready = false
+      where indexrelid = 'public.${CLEANUP_INDEX_NAME}'::regclass;`,
+  );
+  const invalidContract = indexContract(container);
+  const invalidPreflightFailure = exactMigrationFailure(
+    psqlFailure(container, migration),
+    INVALID_OR_UNREADY_MESSAGE,
+  );
+  const legacyOidAfterInvalidPreflight = indexOid(container, LEGACY_CLEANUP_INDEX_NAME);
+  psql(container, `drop index concurrently public.${CLEANUP_INDEX_NAME};`);
+  psql(container, migration);
+  const recoveredFromInvalidContract = indexContract(container);
+  const recoveredFromInvalid =
+    recoveredFromInvalidContract.valid === true &&
+    recoveredFromInvalidContract.ready === true &&
+    recoveredFromInvalidContract.sole_key_is_window_start === true &&
+    !indexExists(container, LEGACY_CLEANUP_INDEX_NAME);
+
+  return Object.freeze({
+    safe_reapply: safeReapply,
+    wrong_definition: {
+      ...wrongDefinitionFailure,
+      fixture_sole_key_is_window_start: wrongContract.sole_key_is_window_start,
+      legacy_oid_unchanged: legacyOidBeforeWrongDefinition === legacyOidAfterWrongDefinition,
+      recovered: recoveredAfterNegative,
+    },
+    invalid_or_unready: {
+      ...invalidPreflightFailure,
+      fixture_valid: invalidContract.valid,
+      fixture_ready: invalidContract.ready,
+      legacy_oid_unchanged: legacyOidBeforeInvalidPreflight === legacyOidAfterInvalidPreflight,
+      recovered: recoveredFromInvalid,
+    },
+    legacy_index_absent: !indexExists(container, LEGACY_CLEANUP_INDEX_NAME),
   });
 }
 
@@ -277,7 +594,7 @@ function tableState(container) {
       'stale_rows', (select count(*) from public.edge_rate_limits where ${CLEANUP_PREDICATE}),
       'relation_bytes', pg_total_relation_size('public.edge_rate_limits'),
       'table_bytes', pg_relation_size('public.edge_rate_limits'),
-      'window_index_bytes', pg_relation_size('public.edge_rate_limits_window_start_idx'),
+      'window_index_bytes', pg_relation_size('public.${CLEANUP_INDEX_NAME}'),
       'primary_key_bytes', pg_relation_size('public.edge_rate_limits_pkey'),
       'updated_index_bytes', pg_relation_size('public.edge_rate_limits_updated_idx'),
       'n_live_tup', stats.n_live_tup,
@@ -293,7 +610,7 @@ function tableState(container) {
     from pg_stat_user_tables as stats
     join pg_stat_user_indexes as indexes
       on indexes.relid = stats.relid
-     and indexes.indexrelname = 'edge_rate_limits_window_start_idx'
+     and indexes.indexrelname = '${CLEANUP_INDEX_NAME}'
     where stats.relid = 'public.edge_rate_limits'::regclass;`,
   );
 }
@@ -731,7 +1048,7 @@ export function validateRateLimitEvidence(input) {
     if (cleanup.plan.edgeRateLimitsSequentialScan) {
       failures.push(`cleanup_${cacheState}:sequential_scan`);
     }
-    if (!cleanup.plan.indexNames.includes('edge_rate_limits_window_start_idx')) {
+    if (!cleanup.plan.indexNames.includes(CLEANUP_INDEX_NAME)) {
       failures.push(`cleanup_${cacheState}:missing_window_index`);
     }
     if (!cleanup.rolledBack) failures.push(`cleanup_${cacheState}:rollback_mismatch`);
@@ -772,11 +1089,46 @@ export function validateRateLimitEvidence(input) {
   ) {
     failures.push('cleanup_index_definition_mismatch');
   }
+  const concurrentDml = input.concurrentDml;
   if (
-    input.indexGuardNegative?.wrong_definition_rejected !== true ||
-    input.indexGuardNegative?.transaction_rollback_restored_original !== true
+    concurrentDml?.postgres_fixture !== true ||
+    !Number.isSafeInteger(concurrentDml?.processed_transactions) ||
+    concurrentDml.processed_transactions < 1 ||
+    concurrentDml?.failed_transactions !== 0 ||
+    concurrentDml?.dml_before_migration < 1 ||
+    concurrentDml?.dml_during_migration < 1 ||
+    concurrentDml?.dml_total < concurrentDml?.dml_during_migration ||
+    !(concurrentDml?.migration_duration_ms > 0) ||
+    concurrentDml?.forward_progress_during_migration !== true ||
+    concurrentDml?.zero_dml_errors !== true
   ) {
-    failures.push('cleanup_index_negative_guard_mismatch');
+    failures.push('cleanup_index_concurrent_dml_mismatch');
+  }
+  const migration = input.indexMigration;
+  if (
+    migration?.create_index_concurrently !== true ||
+    migration?.drop_legacy_index_concurrently !== true ||
+    migration?.safe_reapply !== true ||
+    migration?.wrong_definition?.rejected !== true ||
+    migration?.wrong_definition?.sqlstate !== CLEANUP_INDEX_FAILURE_SQLSTATE ||
+    migration?.wrong_definition?.message !== WRONG_DEFINITION_MESSAGE ||
+    migration?.wrong_definition?.hint !== CLEANUP_INDEX_FAILURE_HINT ||
+    migration?.wrong_definition?.exact_contract !== true ||
+    migration?.wrong_definition?.fixture_sole_key_is_window_start !== false ||
+    migration?.wrong_definition?.legacy_oid_unchanged !== true ||
+    migration?.wrong_definition?.recovered !== true ||
+    migration?.invalid_or_unready?.rejected !== true ||
+    migration?.invalid_or_unready?.sqlstate !== CLEANUP_INDEX_FAILURE_SQLSTATE ||
+    migration?.invalid_or_unready?.message !== INVALID_OR_UNREADY_MESSAGE ||
+    migration?.invalid_or_unready?.hint !== CLEANUP_INDEX_FAILURE_HINT ||
+    migration?.invalid_or_unready?.exact_contract !== true ||
+    migration?.invalid_or_unready?.fixture_valid !== false ||
+    migration?.invalid_or_unready?.fixture_ready !== false ||
+    migration?.invalid_or_unready?.legacy_oid_unchanged !== true ||
+    migration?.invalid_or_unready?.recovered !== true ||
+    migration?.legacy_index_absent !== true
+  ) {
+    failures.push('cleanup_index_migration_mismatch');
   }
   for (const scenario of ['hot_key', 'many_keys_insert', 'many_keys_replay']) {
     const load = input.loads?.[scenario];
@@ -970,6 +1322,7 @@ async function main() {
     const baseMigration = readFileSync(baseMigrationPath, 'utf8');
     const indexMigration = readFileSync(indexMigrationPath, 'utf8');
     const indexGuardMigration = readFileSync(indexGuardMigrationPath, 'utf8');
+    const concurrentIndexMigration = readFileSync(concurrentIndexMigrationPath, 'utf8');
     psql(container, baseMigration);
 
     const fixtureStarted = performance.now();
@@ -980,12 +1333,30 @@ async function main() {
       `stale_rows=${staleRows}`,
     ]);
     const fixtureLoadMs = performance.now() - fixtureStarted;
-    const indexBuildStarted = performance.now();
+    const legacyIndexBuildStarted = performance.now();
     psql(container, indexMigration);
-    const indexBuildMs = performance.now() - indexBuildStarted;
+    const legacyIndexBuildMs = performance.now() - legacyIndexBuildStarted;
     psql(container, indexGuardMigration);
+    const concurrentDml = await applyConcurrentIndexMigrationWithDmlProbe(
+      container,
+      concurrentIndexMigration,
+    );
     const cleanupIndexContract = indexContract(container);
-    const indexGuardNegative = rejectsWrongNamedIndex(container, indexGuardMigration);
+    const indexMigrationExercise = exerciseConcurrentIndexMigration(
+      container,
+      concurrentIndexMigration,
+    );
+    const indexMigrationEvidence = Object.freeze({
+      create_index_concurrently:
+        /create\s+index\s+concurrently\s+if\s+not\s+exists\s+edge_rate_limits_window_start_concurrent_idx/i.test(
+          concurrentIndexMigration,
+        ),
+      drop_legacy_index_concurrently:
+        /drop\s+index\s+concurrently\s+if\s+exists\s+public\.edge_rate_limits_window_start_idx/i.test(
+          concurrentIndexMigration,
+        ),
+      ...indexMigrationExercise,
+    });
     psql(container, 'analyze public.edge_rate_limits;');
     const fixtureState = tableState(container);
     const databaseVersion = psql(container, `select current_setting('server_version');`);
@@ -1084,7 +1455,8 @@ async function main() {
       runtimeCleanup,
       loadIsolation,
       indexContract: cleanupIndexContract,
-      indexGuardNegative,
+      concurrentDml,
+      indexMigration: indexMigrationEvidence,
       loads,
       growth,
       correctness,
@@ -1106,11 +1478,17 @@ async function main() {
       database,
       fixture,
       index_deployment: {
-        build_ms_fixture_rows: indexBuildMs,
-        create_index_concurrently: /create\s+index\s+concurrently/i.test(indexMigration),
-        blocking_build_risk: true,
+        historical_blocking_build_ms_fixture_rows: legacyIndexBuildMs,
+        replacement_build_ms_fixture_rows: concurrentDml.migration_duration_ms,
+        create_index_concurrently: indexMigrationEvidence.create_index_concurrently,
+        drop_legacy_index_concurrently: indexMigrationEvidence.drop_legacy_index_concurrently,
         definition_guard_applied: true,
-        wrong_named_index_negative_test: indexGuardNegative,
+        local_postgresql_concurrent_dml_proof: concurrentDml,
+        real_supabase_runner_replay: 'external_required',
+        safe_reapply: indexMigrationEvidence.safe_reapply,
+        wrong_named_index_negative_test: indexMigrationEvidence.wrong_definition,
+        invalid_or_unready_preflight_test: indexMigrationEvidence.invalid_or_unready,
+        legacy_index_absent: indexMigrationEvidence.legacy_index_absent,
         contract: cleanupIndexContract,
       },
       cleanup_contract: {
@@ -1157,7 +1535,7 @@ async function main() {
         'named_operator_alert_and_rollback_owner',
         'approved_latency_reject_ratio_and_growth_budgets',
         'global_cleanup_window_interaction_policy',
-        'nonblocking_production_index_build_path',
+        'real_supabase_runner_concurrent_migration_replay',
       ],
     };
     writeReport(reportPath, report);

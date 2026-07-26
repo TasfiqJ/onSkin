@@ -787,8 +787,10 @@ async function main() {
       deployment_contract: {
         migration_runner_used_for_this_report: 'psql_autocommit',
         minimum_supabase_cli_for_concurrent_index_migration: '2.109.0',
-        minimum_cli_enforced_in_staging_deployer: false,
-        status: 'open_scale_deployment_gate',
+        minimum_cli_enforced_in_staging_deployer: true,
+        staging_deployer_migration_command: 'supabase migration up --linked',
+        exact_staging_runner_replayed: false,
+        status: 'local_runner_contract_enforced_external_replay_and_budget_pending',
       },
       database,
       fixture,
@@ -837,7 +839,7 @@ async function main() {
       validation_failures: failures,
       external_gates: [
         'hosted_staging_plan_load_replay',
-        'supabase_cli_minimum_2_109_0_pin',
+        'hosted_staging_migration_runner_replay',
         'catalog_index_write_overhead_budget_approval',
       ],
     };

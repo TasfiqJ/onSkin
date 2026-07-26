@@ -24,7 +24,7 @@ const explain = (sequential = false) => [
           : {
               'Node Type': 'Index Scan',
               'Relation Name': 'edge_rate_limits',
-              'Index Name': 'edge_rate_limits_window_start_idx',
+              'Index Name': 'edge_rate_limits_window_start_concurrent_idx',
               'Actual Rows': 5_000,
             },
       ],
@@ -37,7 +37,7 @@ const explain = (sequential = false) => [
 const indexedPlan = summarizeCleanupPlan(explain());
 assert.equal(indexedPlan.edgeRateLimitsSequentialScan, false);
 assert.equal(indexedPlan.affectedRows, 5_000);
-assert.deepEqual(indexedPlan.indexNames, ['edge_rate_limits_window_start_idx']);
+assert.deepEqual(indexedPlan.indexNames, ['edge_rate_limits_window_start_concurrent_idx']);
 assert.equal(indexedPlan.sharedHitBlocks, 10);
 assert.equal(summarizeCleanupPlan(explain(true)).edgeRateLimitsSequentialScan, true);
 
@@ -86,9 +86,43 @@ const evidence = {
     sole_key_is_window_start: true,
     table_is_edge_rate_limits: true,
   },
-  indexGuardNegative: {
-    wrong_definition_rejected: true,
-    transaction_rollback_restored_original: true,
+  concurrentDml: {
+    postgres_fixture: true,
+    processed_transactions: 500,
+    failed_transactions: 0,
+    dml_before_migration: 5,
+    dml_during_migration: 100,
+    dml_total: 500,
+    migration_duration_ms: 125,
+    forward_progress_during_migration: true,
+    zero_dml_errors: true,
+  },
+  indexMigration: {
+    create_index_concurrently: true,
+    drop_legacy_index_concurrently: true,
+    safe_reapply: true,
+    wrong_definition: {
+      rejected: true,
+      sqlstate: '55000',
+      message: 'edge_rate_limits_cleanup_index_definition_mismatch',
+      hint: 'Run DROP INDEX CONCURRENTLY IF EXISTS public.edge_rate_limits_window_start_concurrent_idx; then retry migration 20260726000059.',
+      exact_contract: true,
+      fixture_sole_key_is_window_start: false,
+      legacy_oid_unchanged: true,
+      recovered: true,
+    },
+    invalid_or_unready: {
+      rejected: true,
+      sqlstate: '55000',
+      message: 'edge_rate_limits_cleanup_index_invalid_or_unready',
+      hint: 'Run DROP INDEX CONCURRENTLY IF EXISTS public.edge_rate_limits_window_start_concurrent_idx; then retry migration 20260726000059.',
+      exact_contract: true,
+      fixture_valid: false,
+      fixture_ready: false,
+      legacy_oid_unchanged: true,
+      recovered: true,
+    },
+    legacy_index_absent: true,
   },
   loads: {
     hot_key: {
@@ -167,12 +201,16 @@ invalid.cleanup.warm.plan = summarizeCleanupPlan(explain(true));
 invalid.loads.hot_key.reject_ratio = 0;
 invalid.loads.many_keys_insert.decisions.reused_buckets = 1;
 invalid.correctness.grants.anon = true;
+invalid.indexMigration.legacy_index_absent = false;
+invalid.concurrentDml.dml_during_migration = 0;
 const failures = validateRateLimitEvidence(invalid);
 assert(failures.includes('cleanup_warm:sequential_scan'));
 assert(failures.includes('cleanup_warm:missing_window_index'));
 assert(failures.includes('hot_key:missing_rejections'));
 assert(failures.includes('many_keys:non_unique_fixture_keys'));
 assert(failures.includes('grant_or_rls_mismatch'));
+assert(failures.includes('cleanup_index_migration_mismatch'));
+assert(failures.includes('cleanup_index_concurrent_dml_mismatch'));
 
 const baseMigration = readFileSync(
   'supabase/migrations/20260705000029_phase9_edge_rate_limits.sql',
@@ -186,6 +224,10 @@ const guardMigration = readFileSync(
   'supabase/migrations/20260718000053_edge_rate_limit_cleanup_index_guard.sql',
   'utf8',
 );
+const concurrentIndexMigration = readFileSync(
+  'supabase/migrations/20260726000059_edge_rate_limit_cleanup_concurrent_index.sql',
+  'utf8',
+);
 const fixtureSql = readFileSync('scripts/optimization/rate-limit-cleanup-plan-load.sql', 'utf8');
 const pgbenchSql = readFileSync('scripts/optimization/rate-limit-cleanup-pgbench.sql', 'utf8');
 
@@ -196,6 +238,49 @@ assert.match(guardMigration, /indexes\.indisvalid/i);
 assert.match(guardMigration, /indexes\.indisready/i);
 assert.match(guardMigration, /indexes\.indkey\[0\]\s*=\s*window_start\.attnum/i);
 assert.match(guardMigration, /raise exception/i);
+assert.match(
+  concurrentIndexMigration,
+  /create\s+index\s+concurrently\s+if\s+not\s+exists\s+edge_rate_limits_window_start_concurrent_idx/i,
+);
+assert.match(
+  concurrentIndexMigration,
+  /drop\s+index\s+concurrently\s+if\s+exists\s+public\.edge_rate_limits_window_start_idx/i,
+);
+assert.match(concurrentIndexMigration, /not\s+indexes\.indisunique/i);
+assert.match(concurrentIndexMigration, /indexes\.indpred\s+is\s+null/i);
+assert.match(concurrentIndexMigration, /indexes\.indexprs\s+is\s+null/i);
+assert.match(concurrentIndexMigration, /indexes\.indkey\[0\]\s*=\s*window_start\.attnum/i);
+assert.equal((concurrentIndexMigration.match(/errcode\s*=\s*'55000'/g) ?? []).length, 2);
+assert.match(
+  concurrentIndexMigration,
+  /message\s*=\s*'edge_rate_limits_cleanup_index_invalid_or_unready'/i,
+);
+assert.match(
+  concurrentIndexMigration,
+  /message\s*=\s*'edge_rate_limits_cleanup_index_definition_mismatch'/i,
+);
+assert.equal(
+  (
+    concurrentIndexMigration.match(
+      /hint\s*=\s*'Run DROP INDEX CONCURRENTLY IF EXISTS public\.edge_rate_limits_window_start_concurrent_idx; then retry migration 20260726000059\.'/g,
+    ) ?? []
+  ).length,
+  2,
+);
+assert(
+  concurrentIndexMigration.indexOf('edge_rate_limits_cleanup_index_invalid_or_unready') <
+    concurrentIndexMigration.indexOf(
+      'create index concurrently if not exists edge_rate_limits_window_start_concurrent_idx',
+    ),
+);
+assert(
+  concurrentIndexMigration.indexOf('raise exception') <
+    concurrentIndexMigration.indexOf(
+      'drop index concurrently if exists public.edge_rate_limits_window_start_idx',
+    ),
+);
+assert.doesNotMatch(concurrentIndexMigration, /(?:^|;)\s*create\s+index\s+(?!concurrently)/im);
+assert.doesNotMatch(concurrentIndexMigration, /(?:^|;)\s*drop\s+index\s+(?!concurrently)/im);
 assert.match(fixtureSql, /autovacuum_enabled\s*=\s*false/i);
 assert.match(pgbenchSql, /case\s+when\s+:key_mode\s*=\s*1/i);
 assert.match(pgbenchSql, /md5\(/i);
