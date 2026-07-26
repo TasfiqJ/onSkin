@@ -45,6 +45,7 @@ export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
 export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
   'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
+export const PRIVATE_KV_WRITE_ROLLBACK_FAILED = 'PRIVATE_KV_WRITE_ROLLBACK_FAILED';
 
 type PrivateEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -305,6 +306,68 @@ async function assertNoFailedReadRewrite(key: string): Promise<string | null> {
   }
   if (failedSnapshot !== undefined) failedReadSnapshots.delete(key);
   return current;
+}
+
+function privateKVWriteRollbackFailure(cause: unknown): Error {
+  const error = new Error(PRIVATE_KV_WRITE_ROLLBACK_FAILED) as Error & {
+    cause?: unknown;
+  };
+  error.cause = cause;
+  return error;
+}
+
+/**
+ * Resolve a commit-then-reject or stale-authority mutation without guessing.
+ *
+ * The caller still owns the serialized key slot and remains registered as an
+ * in-flight account-scoped operation. Account cleanup therefore waits for this
+ * compensation even when the authority assertion that prompted it is stale.
+ * A foreign value is never overwritten, and prior preservation is accepted
+ * only after an exact raw-byte read-back.
+ */
+async function restoreExactRawAfterAmbiguousMutation(
+  key: string,
+  attemptedRaw: string | null,
+  existingRaw: string | null,
+): Promise<void> {
+  let currentRaw: string | null;
+  try {
+    currentRaw = await AsyncStorage.getItem(key);
+  } catch (error) {
+    throw privateKVWriteRollbackFailure(error);
+  }
+
+  // The storage call rejected before committing, or another compensating
+  // continuation already restored the exact prior state.
+  if (currentRaw === existingRaw) return;
+
+  // Never overwrite bytes that cannot be attributed to this mutation.
+  if (currentRaw !== attemptedRaw) {
+    throw privateKVWriteRollbackFailure(new Error(PRIVATE_KV_WRITE_CONFLICT));
+  }
+
+  let restoreError: unknown;
+  try {
+    if (existingRaw === null) {
+      await AsyncStorage.removeItem(key);
+    } else {
+      await AsyncStorage.setItem(key, existingRaw);
+    }
+  } catch (error) {
+    // AsyncStorage restoration can itself commit and then reject. Read back
+    // below before deciding whether preservation actually failed.
+    restoreError = error;
+  }
+
+  let restoredRaw: string | null;
+  try {
+    restoredRaw = await AsyncStorage.getItem(key);
+  } catch (error) {
+    throw privateKVWriteRollbackFailure(error);
+  }
+  if (restoredRaw !== existingRaw) {
+    throw privateKVWriteRollbackFailure(restoreError ?? new Error(PRIVATE_KV_WRITE_CONFLICT));
+  }
 }
 
 export async function getPrivateItem(key: string): Promise<string | null> {
@@ -619,8 +682,19 @@ async function updatePrivateItemWithGuard(
 
         if (nextValue === null) {
           assertMutationCurrent();
-          await AsyncStorage.removeItem(key);
-          assertMutationCurrent();
+          try {
+            await AsyncStorage.removeItem(key);
+          } catch (error) {
+            await restoreExactRawAfterAmbiguousMutation(key, null, existingRaw);
+            throw error;
+          }
+          try {
+            assertAccountScopedPrivateOperationAllowed(generation);
+            assertMutationCurrent();
+          } catch (error) {
+            await restoreExactRawAfterAmbiguousMutation(key, null, existingRaw);
+            throw error;
+          }
           failedReadSnapshots.delete(key);
           return;
         }
@@ -638,28 +712,19 @@ async function updatePrivateItemWithGuard(
         assertMutationCurrent();
         const committedRaw = JSON.stringify(envelope);
         assertMutationCurrent();
-        await AsyncStorage.setItem(key, committedRaw);
+        try {
+          await AsyncStorage.setItem(key, committedRaw);
+        } catch (error) {
+          await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          throw error;
+        }
         try {
           assertMutationCurrent();
         } catch (error) {
           // The write crossed a withdrawal, expiry, owner change, re-grant, or
-          // purpose-limited account boundary. Roll back only while this account
-          // generation and serialized key slot still own the committed value.
-          try {
-            assertAccountScopedPrivateOperationAllowed(generation);
-            const currentRaw = await AsyncStorage.getItem(key);
-            assertAccountScopedPrivateOperationAllowed(generation);
-            if (currentRaw === committedRaw) {
-              if (existingRaw === null) {
-                await AsyncStorage.removeItem(key);
-              } else {
-                await AsyncStorage.setItem(key, existingRaw);
-              }
-            }
-          } catch {
-            // Account-boundary cleanup drains this tracked operation and then
-            // removes prior-owner state. Never write around that boundary.
-          }
+          // purpose-limited account boundary. The shared rollback helper
+          // verifies exact prior preservation and surfaces ambiguity.
+          await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
           throw error;
         }
         failedReadSnapshots.delete(key);

@@ -18,6 +18,11 @@ export type RoutineOrderOverrides = {
   pm: string[];
 };
 
+export type RoutineOrderSaveTransaction = {
+  previous: RoutineOrderOverrides;
+  next: RoutineOrderOverrides;
+};
+
 type NormalizedOverrides = {
   value: RoutineOrderOverrides;
   changed: boolean;
@@ -82,6 +87,57 @@ function normalizeOverrides(value: unknown): NormalizedOverrides | null {
   };
 }
 
+function validateIdsForWrite(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null;
+
+  const ids: string[] = [];
+  const seen = new Set<string>();
+  for (const item of value) {
+    if (typeof item !== 'string' || item.length === 0 || item.trim() !== item || seen.has(item)) {
+      return null;
+    }
+    seen.add(item);
+    ids.push(item);
+  }
+  return ids;
+}
+
+function validateOverridesForWrite(value: unknown): RoutineOrderOverrides {
+  if (isRecord(value) && typeof value.schemaVersion === 'number' && value.schemaVersion > 1) {
+    throw new Error(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+  }
+  if (!isRecord(value)) throw new Error(ROUTINE_ORDER_INVALID);
+
+  const keys = Object.keys(value).sort();
+  if (
+    keys.length !== 3 ||
+    keys[0] !== 'am' ||
+    keys[1] !== 'pm' ||
+    keys[2] !== 'schemaVersion' ||
+    value.schemaVersion !== 1
+  ) {
+    throw new Error(ROUTINE_ORDER_INVALID);
+  }
+
+  const am = validateIdsForWrite(value.am);
+  const pm = validateIdsForWrite(value.pm);
+  if (!am || !pm) throw new Error(ROUTINE_ORDER_INVALID);
+
+  return { schemaVersion: 1, am, pm };
+}
+
+function validateSaveTransaction(value: unknown): RoutineOrderSaveTransaction {
+  if (!isRecord(value)) throw new Error(ROUTINE_ORDER_INVALID);
+  const keys = Object.keys(value).sort();
+  if (keys.length !== 2 || keys[0] !== 'next' || keys[1] !== 'previous') {
+    throw new Error(ROUTINE_ORDER_INVALID);
+  }
+  return {
+    previous: validateOverridesForWrite(value.previous),
+    next: validateOverridesForWrite(value.next),
+  };
+}
+
 function hasOverrides(value: RoutineOrderOverrides): boolean {
   return value.am.length > 0 || value.pm.length > 0;
 }
@@ -116,20 +172,31 @@ export function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
 }
 
 export async function saveRoutineOrderOverrides(
-  value: RoutineOrderOverrides,
+  transaction: RoutineOrderSaveTransaction,
 ): Promise<RoutineOrderOverrides> {
-  const normalized = normalizeOverrides(value);
-  const next = normalized?.value ?? emptyOverrides();
+  const { previous, next } = validateSaveTransaction(transaction);
+  const changed = {
+    am: !sameIds(previous.am, next.am),
+    pm: !sameIds(previous.pm, next.pm),
+  };
+
   return runCurrentHealthDataOperation(async (lease) => {
+    let committed: RoutineOrderOverrides | null = null;
     lease.assertCurrent();
     await updatePrivateItem(STORAGE_KEY, (current) => {
       lease.assertCurrent();
-      if (current !== null) decodeOverrides(current);
+      const latest = current === null ? emptyOverrides() : decodeOverrides(current);
+      committed = {
+        schemaVersion: 1,
+        am: changed.am ? next.am : latest.am,
+        pm: changed.pm ? next.pm : latest.pm,
+      };
       lease.assertCurrent();
-      return hasOverrides(next) ? JSON.stringify(next) : null;
+      return hasOverrides(committed) ? JSON.stringify(committed) : null;
     });
     lease.assertCurrent();
-    return next;
+    if (!committed) throw new Error(ROUTINE_ORDER_INVALID);
+    return committed;
   });
 }
 

@@ -1401,10 +1401,26 @@
     },
     {
       "id": "CORE-04",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["CORE-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete durable AM/PM routine order and custom-cycle persistence",
-      "evidenceRefs": []
+      "nextAction": "The current source candidate binds versioned AM/PM order preferences and the complete v2 Custom-cycle configuration to serialized private transforms. Independent concurrent AM and PM edits merge by phase; cycle reconciliation and the requested mutation share one current-key transform; incomplete, malformed, future-version, read-failed, and authority-stale state cannot silently become empty state. Modeled pre-commit and commit-then-reject writes verify exact prior-byte restoration or surface a distinct rollback failure, while cache, success analytics, and navigation follow only the awaited operation. Stable shelf-product identity, cleanup, current-device export, cadence-authority isolation, named Node/Vitest timezone cases, and these bounded structural markers are covered by a mandatory Phase 3/launch contract. CORE-03 remains incomplete. Retain accepted-revision physical-iPhone and archive-identical evidence for encrypted relaunch/process death, commit-ambiguous/low-storage behavior, legacy plaintext-compatible migration, reviewed Keychain/backup/reinstall behavior, offline edits and failure recovery, native DST/timezone boundaries, account switch/withdrawal/deletion cleanup and export, current-source Save/Cancel/retry/preset/Custom/downstream agreement, accessibility, archive privacy manifests/App Privacy/network activity, and export compliance; complete privacy/security review before restoring complete. Cross-device sync remains deferred.",
+      "evidenceRefs": [
+        "docs/hugeToDo/CORE-04-PERSISTENCE-SOURCE-CHECKPOINT-2026-07-26.md",
+        "scripts/core04/persistence-source-contract.test.mjs",
+        "apps/mobile/src/lib/storage/privateKV.ts",
+        "apps/mobile/src/lib/storage/privateKV.test.ts",
+        "apps/mobile/src/features/routine/orderStore.ts",
+        "apps/mobile/src/features/routine/orderStore.test.ts",
+        "apps/mobile/src/features/routine/orderRoutes.test.ts",
+        "apps/mobile/src/features/scheduler/cycleStore.ts",
+        "apps/mobile/src/features/scheduler/cycleStore.test.ts",
+        "apps/mobile/src/features/scheduler/customCycle.ts",
+        "apps/mobile/src/features/scheduler/customCycle.test.ts",
+        "apps/mobile/src/features/settings/localPrivateDataKeys.ts",
+        "apps/mobile/src/features/settings/localPrivateData.test.ts",
+        "apps/mobile/src/features/settings/localDeviceExport.ts",
+        "apps/mobile/src/features/settings/localDeviceExport.test.ts"
+      ]
     },
     {
       "id": "CORE-05",

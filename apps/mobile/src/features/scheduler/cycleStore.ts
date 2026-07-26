@@ -22,6 +22,7 @@ import {
 // user's persistent choices and disruption state on top of that schedule.
 const KEY = 'routinekind.cycle.v2';
 const LEGACY_KEY = 'onskin.cycle.v1';
+const LEGACY_ANCHOR_KEY = 'onskin.cycleAnchor';
 const CYCLE_CONFIG_SCHEMA_VERSION = 1 as const;
 export const ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED =
   'ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED';
@@ -102,6 +103,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && !Array.isArray(value) && typeof value === 'object';
 }
 
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
 function normalizeLocalDateISO(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const text = value.trim();
@@ -164,6 +169,26 @@ function normalizeStoredConfig(
   allowMissingSchemaVersion = false,
 ): CycleConfig | null {
   if (!isRecord(value)) return null;
+  if (!allowMissingSchemaVersion) {
+    const expectedKeys = [
+      'anchorISO',
+      'customCycle',
+      'pausedFrom',
+      'pauseReason',
+      'recovery',
+      'schemaVersion',
+      'skips',
+      'stagingOverrides',
+      'variant',
+    ].sort();
+    const actualKeys = Object.keys(value).sort();
+    if (
+      actualKeys.length !== expectedKeys.length ||
+      expectedKeys.some((key, index) => actualKeys[index] !== key || !hasOwn(value, key))
+    ) {
+      return null;
+    }
+  }
   const base = defaults(fallbackAnchorISO);
   const schemaVersion =
     value.schemaVersion ?? (allowMissingSchemaVersion ? CYCLE_CONFIG_SCHEMA_VERSION : undefined);
@@ -396,20 +421,6 @@ export async function loadCycleConfig(): Promise<CycleConfig> {
   return runCurrentHealthDataOperation(loadCycleConfigForLease);
 }
 
-function configForMutation(
-  raw: string | null,
-  fallbackAnchorISO: string,
-  todayISO: string,
-  allowRecoveryReconciliation: boolean,
-): CycleConfig {
-  if (!raw) return defaults(fallbackAnchorISO);
-  return reconcileStoredConfig(
-    parseStoredConfig(raw, fallbackAnchorISO).config,
-    todayISO,
-    allowRecoveryReconciliation,
-  );
-}
-
 function sameRecovery(left: RecoveryState | null, right: RecoveryState | null): boolean {
   if (!left || !right) return left === right;
   return (
@@ -437,7 +448,21 @@ async function mutateCycleConfig(
   return runCurrentHealthDataOperation(async (lease) => {
     const today = localDateString();
     lease.assertCurrent();
-    const fallbackAnchor = (await loadCycleConfigForLease(lease)).anchorISO;
+    let fallbackAnchor = today;
+    try {
+      const legacyAnchor = await getPrivateItem(LEGACY_ANCHOR_KEY);
+      lease.assertCurrent();
+      fallbackAnchor = normalizeLocalDateISO(legacyAnchor) ?? today;
+    } catch {
+      // The v2 transform below remains authoritative and re-reads its own key.
+      // A failed legacy-anchor read must not trigger a repair write before the
+      // requested cycle mutation has committed.
+      lease.assertCurrent();
+    }
+
+    const currentRaw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const legacyRaw = currentRaw ? null : await getPrivateItem(LEGACY_KEY);
     lease.assertCurrent();
     let next: CycleConfig | null = null;
 
@@ -446,9 +471,15 @@ async function mutateCycleConfig(
     lease.assertCurrent();
     await updatePrivateItem(KEY, (raw) => {
       lease.assertCurrent();
-      const stored = raw ? parseStoredConfig(raw, fallbackAnchor).config : defaults(fallbackAnchor);
+      const sourceRaw = raw ?? legacyRaw;
+      const stored = sourceRaw
+        ? parseStoredConfig(sourceRaw, fallbackAnchor, raw === null).config
+        : defaults(fallbackAnchor);
       const recoveryAllowed = canUseRoutineRecovery();
-      const current = configForMutation(raw, fallbackAnchor, today, recoveryAllowed);
+      if (raw === null && stored.recovery && !recoveryAllowed) {
+        throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+      }
+      const current = reconcileStoredConfig(stored, today, recoveryAllowed);
       const candidate = normalizeStoredConfig(transform(current, today), current.anchorISO);
       if (!candidate) throw new Error('CYCLE_CONFIG_INVALID');
       if (!recoveryAllowed && !sameRecovery(candidate.recovery, stored.recovery)) {

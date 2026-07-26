@@ -34,13 +34,18 @@ describe('persistent routine order route contracts', () => {
     expect(source).toContain('if (saveInFlight.current || persistenceUnavailable) return;');
     expect(source).toContain('saveInFlight.current = true;');
     expect(source).toContain('saveInFlight.current = false;');
+    expect(source).toContain('previous: previousOverrides');
+    expect(source).toContain('next: {');
     expect(source).toContain('mode: changedPhase');
     expect(source).not.toContain('phase: changedPhase');
     expect(cacheIndex).toBeGreaterThan(saveIndex);
     expect(trackIndex).toBeGreaterThan(cacheIndex);
     expect(exitIndex).toBeGreaterThan(trackIndex);
     expect(source).toContain('Order not saved');
-    expect(source).toContain('Your previous routine is still in place. Try Save again.');
+    expect(source).toContain(
+      'We could not confirm the save. Reload to check your saved routine, then try again.',
+    );
+    expect(source).not.toContain('Your previous routine is still in place.');
     expect(source).toContain('EXPO_PUBLIC_E2E_ROUTINE_ORDER_SAVE_FAILURE');
   });
 

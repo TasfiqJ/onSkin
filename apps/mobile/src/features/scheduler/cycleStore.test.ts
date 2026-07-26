@@ -399,6 +399,17 @@ describe('cycle configuration persistence and reconciliation', () => {
     expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
   });
 
+  it('requires a complete exact current schema instead of defaulting partial or unknown fields', async () => {
+    const partial = storeCycle({ schemaVersion: 1 });
+
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(partial);
+
+    const withUnknownField = storeCycle({ ...config(), futureField: true });
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(withUnknownField);
+  });
+
   it('propagates private read failures without creating fallback state', async () => {
     const before = storeCycle(config());
     mocks.getPrivateItem.mockImplementation(async (key: string) => {
@@ -451,6 +462,55 @@ describe('cycle configuration persistence and reconciliation', () => {
 
     await expect(pauseCycle('travel')).rejects.toThrow('private write failed');
     expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('does not pre-commit reconciliation when the requested mutation fails', async () => {
+    const before = storeCycle(
+      config({
+        anchorISO: '2026-06-20',
+        recovery: { startISO: '2026-07-01', days: 5, reason: 'procedure' },
+        skips: ['2026-01-01', '2026-07-11'],
+      }),
+    );
+    process.env.EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE = 'once';
+
+    const pending = updateCycleConfig({ variant: 'gentle' });
+    const rejection = expect(pending).rejects.toThrow('E2E_CYCLE_CONFIG_PRIVATE_WRITE_FAILURE');
+    await vi.advanceTimersByTimeAsync(600);
+
+    await rejection;
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('applies a mutation to legacy state in the same first v2 write', async () => {
+    const legacyRaw = storeLegacyCycle({
+      variant: 'gentle',
+      anchorISO: '2026-07-01',
+      skips: ['2026-07-11'],
+    });
+
+    await expect(updateCycleConfig({ variant: 'advanced' })).resolves.toMatchObject({
+      schemaVersion: 1,
+      variant: 'advanced',
+      anchorISO: '2026-07-01',
+      skips: ['2026-07-11'],
+    });
+    expect(mocks.updatePrivateItem).toHaveBeenCalledTimes(1);
+    expect(mocks.storage.get(LEGACY_CYCLE_KEY)).toBe(legacyRaw);
+  });
+
+  it('does not migrate or overwrite legacy recovery during an unauthorized mutation', async () => {
+    const recovery = { startISO: '2026-07-01', days: 5, reason: 'procedure' as const };
+    const legacyRaw = storeLegacyCycle(config({ recovery }));
+    delete process.env.EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE;
+
+    await expect(updateCycleConfig({ variant: 'gentle' })).rejects.toThrow(
+      ROUTINE_RECOVERY_ADMISSION_CLOSED,
+    );
+
+    expect(mocks.storage.get(LEGACY_CYCLE_KEY)).toBe(legacyRaw);
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
   });
 
   it('resumes on the same cycle night by shifting the anchor by paused days', async () => {

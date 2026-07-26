@@ -86,6 +86,8 @@ Start here:
 - [CORE-02 Clinical Rule Source Contract](../../scripts/core02/clinical-rule-source-contract.test.mjs)
 - [CORE-03 Routine Guidance Source Checkpoint](./CORE-03-ROUTINE-GUIDANCE-SOURCE-CHECKPOINT-2026-07-26.md)
 - [CORE-03 Routine Guidance Source Contract](../../scripts/core03/routine-guidance-source-contract.test.mjs)
+- [CORE-04 Routine Persistence Source Checkpoint](./CORE-04-PERSISTENCE-SOURCE-CHECKPOINT-2026-07-26.md)
+- [CORE-04 Persistence Source Contract](../../scripts/core04/persistence-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -508,6 +510,34 @@ stop/refer thresholds, a complete local claim-bearing copy inventory and exact
 copy binding, legal/market decisions, CORE-02 completion, and App Store
 acceptance also remain open; this checkpoint is not clinical, legal, market,
 launch, or revenue approval.
+
+CORE-04 is now an `in_progress` persistence source checkpoint. The current
+private-KV boundary serializes complete same-key transforms, blocks fallback
+overwrites after failed reads, and models exact-byte rollback for
+commit-ambiguous writes. New native private-record writes use encrypted
+envelopes; legacy plaintext-compatible upgrade paths remain an explicit native
+migration gate. Versioned
+`routinekind.routineOrder.v1` keeps AM and PM stable shelf-product IDs, while
+`routinekind.cycle.v2` keeps one complete versioned cycle configuration and
+Custom-cycle definition. Independent concurrent AM and PM edits merge by
+phase; incomplete, malformed, future-version, read-failed, and modeled
+write-failed state cannot silently become empty state. Cycle reconciliation and
+each requested mutation now share one in-process current-key transform. The
+routine editor and cycle mutation hook publish cache, success analytics, and
+navigation only after the awaited operation, and failure copy does not claim
+that ambiguous storage left prior bytes unchanged. Both current records are
+registered in account cleanup and purpose-limited current-device export.
+Routine ordering is only a post-generation preference and cannot change the
+canonical cycle or create cadence authority; Custom-cycle writes remain behind
+the independent CORE-03 cadence gate. The bounded structural CORE-04 contract
+is wired into Phase 3 and launch verification. CORE-03 completion, native
+encrypted relaunch/process-death and commit-ambiguous evidence, upgrade
+migration, reviewed Keychain/backup behavior, offline failure recovery, native
+timezone/DST coverage, account-boundary cleanup/export, current-source
+end-to-end flows, accessibility, archive privacy and export-compliance proof,
+privacy/security review, and App Store acceptance remain open. Cross-device
+sync remains deferred; this source checkpoint is not launch or revenue
+approval.
 
 The `0065` CAT-08 transition/default-ACL repair remains intact. The additional
 `0066` migration revokes all residual table privileges from the explicitly

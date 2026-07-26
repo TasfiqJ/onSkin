@@ -29,6 +29,7 @@ import {
   PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
   PRIVATE_KV_WRITE_CONFLICT,
+  PRIVATE_KV_WRITE_ROLLBACK_FAILED,
   removePrivateItem,
   multiRemovePrivateItems,
   privateKVEncryptionInfo,
@@ -45,13 +46,21 @@ const mocks = vi.hoisted(() => ({
   multiGetGate: null as Promise<void> | null,
   multiGetStarted: null as (() => void) | null,
   platformOS: 'ios',
+  removeItemCommitted: null as ((key: string) => void) | null,
   removeItemGate: null as Promise<void> | null,
+  removeItemGateKey: null as string | null,
+  removeItemOutcomeKey: null as string | null,
+  removeItemOutcomes: [] as ('resolve' | 'reject-before' | 'reject-after')[],
+  removeItemStartedKey: null as string | null,
   removeItemStarted: null as (() => void) | null,
   secureGetThrows: false,
   secureGetGate: null as Promise<void> | null,
   secureGetStarted: null as (() => void) | null,
   secureStorage: new Map<string, string>(),
+  setItemCommitted: null as ((key: string, value: string) => void) | null,
   setItemGate: null as Promise<void> | null,
+  setItemOutcomeKey: null as string | null,
+  setItemOutcomes: [] as ('resolve' | 'reject-before' | 'reject-after')[],
   setItemStarted: null as (() => void) | null,
 }));
 
@@ -81,12 +90,39 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
     setItem: vi.fn(async (key: string, value: string) => {
       mocks.setItemStarted?.();
       if (mocks.setItemGate) await mocks.setItemGate;
+      const outcome =
+        mocks.setItemOutcomeKey === key ? (mocks.setItemOutcomes.shift() ?? 'resolve') : 'resolve';
+      if (outcome === 'reject-before') {
+        throw new Error('ASYNC_STORAGE_SET_REJECTED_BEFORE_COMMIT');
+      }
       mocks.asyncStorage.set(key, value);
+      mocks.setItemCommitted?.(key, value);
+      if (outcome === 'reject-after') {
+        throw new Error('ASYNC_STORAGE_SET_REJECTED_AFTER_COMMIT');
+      }
     }),
     removeItem: vi.fn(async (key: string) => {
-      mocks.removeItemStarted?.();
-      if (mocks.removeItemGate) await mocks.removeItemGate;
+      if (mocks.removeItemStartedKey === null || mocks.removeItemStartedKey === key) {
+        mocks.removeItemStarted?.();
+      }
+      if (
+        mocks.removeItemGate &&
+        (mocks.removeItemGateKey === null || mocks.removeItemGateKey === key)
+      ) {
+        await mocks.removeItemGate;
+      }
+      const outcome =
+        mocks.removeItemOutcomeKey === key
+          ? (mocks.removeItemOutcomes.shift() ?? 'resolve')
+          : 'resolve';
+      if (outcome === 'reject-before') {
+        throw new Error('ASYNC_STORAGE_REMOVE_REJECTED_BEFORE_COMMIT');
+      }
       mocks.asyncStorage.delete(key);
+      mocks.removeItemCommitted?.(key);
+      if (outcome === 'reject-after') {
+        throw new Error('ASYNC_STORAGE_REMOVE_REJECTED_AFTER_COMMIT');
+      }
     }),
     multiRemove: vi.fn(async (keys: string[]) => {
       mocks.removeItemStarted?.();
@@ -122,13 +158,21 @@ describe('private KV encrypted storage', () => {
     mocks.multiGetGate = null;
     mocks.multiGetStarted = null;
     mocks.platformOS = 'ios';
+    mocks.removeItemCommitted = null;
     mocks.removeItemGate = null;
+    mocks.removeItemGateKey = null;
+    mocks.removeItemOutcomeKey = null;
+    mocks.removeItemOutcomes.length = 0;
+    mocks.removeItemStartedKey = null;
     mocks.removeItemStarted = null;
     mocks.secureGetThrows = false;
     mocks.secureGetGate = null;
     mocks.secureGetStarted = null;
     mocks.secureStorage.clear();
+    mocks.setItemCommitted = null;
     mocks.setItemGate = null;
+    mocks.setItemOutcomeKey = null;
+    mocks.setItemOutcomes.length = 0;
     mocks.setItemStarted = null;
     endPrivateKVAccountBoundary();
     clearActiveHealthProcessingEpoch();
@@ -258,6 +302,226 @@ describe('private KV encrypted storage', () => {
       serverVerifiedAt: null,
     });
     await expect(getPrivateItem('onskin.skinprofile.v1')).resolves.toBe('prior-profile');
+  });
+
+  it('restores exact prior ciphertext when setItem commits and then rejects', async () => {
+    const key = 'onskin.set-commit-reject-existing';
+    await setPrivateItem(key, 'prior-value');
+    const priorRaw = mocks.asyncStorage.get(key);
+    mocks.setItemOutcomeKey = key;
+    mocks.setItemOutcomes.push('reject-after');
+
+    await expect(setPrivateItem(key, 'rejected-value')).rejects.toThrow(
+      'ASYNC_STORAGE_SET_REJECTED_AFTER_COMMIT',
+    );
+
+    expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+    await expect(getPrivateItem(key)).resolves.toBe('prior-value');
+  });
+
+  it('restores exact prior absence when first setItem commits and then rejects', async () => {
+    const key = 'onskin.set-commit-reject-new';
+    mocks.setItemOutcomeKey = key;
+    mocks.setItemOutcomes.push('reject-after');
+
+    await expect(setPrivateItem(key, 'rejected-value')).rejects.toThrow(
+      'ASYNC_STORAGE_SET_REJECTED_AFTER_COMMIT',
+    );
+
+    expect(mocks.asyncStorage.has(key)).toBe(false);
+  });
+
+  it('preserves exact prior ciphertext when setItem rejects before committing', async () => {
+    const key = 'onskin.set-reject-before-commit';
+    await setPrivateItem(key, 'prior-value');
+    const priorRaw = mocks.asyncStorage.get(key);
+    mocks.setItemOutcomeKey = key;
+    mocks.setItemOutcomes.push('reject-before');
+
+    await expect(setPrivateItem(key, 'rejected-value')).rejects.toThrow(
+      'ASYNC_STORAGE_SET_REJECTED_BEFORE_COMMIT',
+    );
+
+    expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+  });
+
+  it('fails closed when committed setItem bytes cannot be rolled back', async () => {
+    const key = 'onskin.set-rollback-failure';
+    await setPrivateItem(key, 'prior-value');
+    const priorRaw = mocks.asyncStorage.get(key);
+    mocks.setItemOutcomeKey = key;
+    mocks.setItemOutcomes.push('reject-after', 'reject-before');
+
+    await expect(setPrivateItem(key, 'ambiguous-value')).rejects.toThrow(
+      PRIVATE_KV_WRITE_ROLLBACK_FAILED,
+    );
+
+    expect(mocks.asyncStorage.get(key)).not.toBe(priorRaw);
+  });
+
+  it('fails closed without overwriting conflicting bytes after setItem rejection', async () => {
+    const key = 'onskin.set-rollback-conflict';
+    await setPrivateItem(key, 'prior-value');
+    const replacement = 'concurrent-authoritative-replacement';
+    const priorRaw = mocks.asyncStorage.get(key);
+    mocks.setItemOutcomeKey = key;
+    mocks.setItemOutcomes.push('reject-after');
+    mocks.setItemCommitted = (committedKey, committedValue) => {
+      if (committedKey === key && committedValue !== priorRaw) {
+        mocks.asyncStorage.set(key, replacement);
+      }
+    };
+
+    await expect(setPrivateItem(key, 'ambiguous-value')).rejects.toThrow(
+      PRIVATE_KV_WRITE_ROLLBACK_FAILED,
+    );
+
+    expect(mocks.asyncStorage.get(key)).toBe(replacement);
+  });
+
+  it('restores exact prior ciphertext when a delayed guarded removal loses health authority', async () => {
+    const key = 'onskin.skinprofile.v1';
+    await setPrivateItem(key, 'prior-profile');
+    const priorRaw = mocks.asyncStorage.get(key);
+    let releaseRemoval!: () => void;
+    let markRemovalStarted!: () => void;
+    mocks.removeItemGate = new Promise<void>((resolve) => {
+      releaseRemoval = resolve;
+    });
+    mocks.removeItemGateKey = key;
+    mocks.removeItemStartedKey = key;
+    const removalStarted = new Promise<void>((resolve) => {
+      markRemovalStarted = resolve;
+    });
+    mocks.removeItemStarted = markRemovalStarted;
+
+    const removal = updatePrivateItem(key, () => null);
+    await removalStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    releaseRemoval();
+
+    await expect(removal).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+    await expect(getPrivateItem(key)).resolves.toBe('prior-profile');
+  });
+
+  it('restores exact prior ciphertext when a delayed guarded removal loses account authority', async () => {
+    const key = 'routinekind.catalog.lookupQueue.v1';
+    await setPrivateItem(key, 'prior-catalog-queue');
+    const priorRaw = mocks.asyncStorage.get(key);
+    clearActiveHealthProcessingEpoch();
+    let releaseRemoval!: () => void;
+    let markRemovalStarted!: () => void;
+    mocks.removeItemGate = new Promise<void>((resolve) => {
+      releaseRemoval = resolve;
+    });
+    mocks.removeItemGateKey = key;
+    mocks.removeItemStartedKey = key;
+    const removalStarted = new Promise<void>((resolve) => {
+      markRemovalStarted = resolve;
+    });
+    mocks.removeItemStarted = markRemovalStarted;
+
+    const removal = runAccountGenerationOperation((accountLease) =>
+      updateCatalogLookupQueueForPurposeLimitedExport(accountLease, () => null),
+    );
+    await removalStarted;
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    releaseRemoval();
+
+    await expect(removal).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+    expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+    await expect(
+      runAccountGenerationOperation((accountLease) =>
+        getPrivateItemsForPurposeLimitedExport([key], accountLease),
+      ),
+    ).resolves.toEqual(new Map([[key, 'prior-catalog-queue']]));
+  });
+
+  it('restores exact prior ciphertext when guarded remove commits and then rejects', async () => {
+    const key = 'onskin.remove-commit-reject';
+    await setPrivateItem(key, 'prior-value');
+    const priorRaw = mocks.asyncStorage.get(key);
+    mocks.removeItemOutcomeKey = key;
+    mocks.removeItemOutcomes.push('reject-after');
+
+    await expect(updatePrivateItem(key, () => null)).rejects.toThrow(
+      'ASYNC_STORAGE_REMOVE_REJECTED_AFTER_COMMIT',
+    );
+
+    expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+    await expect(getPrivateItem(key)).resolves.toBe('prior-value');
+  });
+
+  it('fails closed when guarded removal rollback cannot restore prior ciphertext', async () => {
+    const key = 'onskin.skinprofile.v1';
+    await setPrivateItem(key, 'prior-value');
+    const priorRaw = mocks.asyncStorage.get(key);
+    mocks.setItemOutcomeKey = key;
+    mocks.setItemOutcomes.push('reject-before');
+    let releaseRemoval!: () => void;
+    let markRemovalStarted!: () => void;
+    mocks.removeItemGate = new Promise<void>((resolve) => {
+      releaseRemoval = resolve;
+    });
+    mocks.removeItemGateKey = key;
+    mocks.removeItemStartedKey = key;
+    const removalStarted = new Promise<void>((resolve) => {
+      markRemovalStarted = resolve;
+    });
+    mocks.removeItemStarted = markRemovalStarted;
+
+    const removal = updatePrivateItem(key, () => null);
+    await removalStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    releaseRemoval();
+
+    await expect(removal).rejects.toThrow(PRIVATE_KV_WRITE_ROLLBACK_FAILED);
+    expect(mocks.asyncStorage.get(key)).not.toBe(priorRaw);
+  });
+
+  it('fails closed without overwriting a conflicting guarded-removal replacement', async () => {
+    const key = 'onskin.skinprofile.v1';
+    await setPrivateItem(key, 'prior-profile');
+    const replacement = 'concurrent-authoritative-replacement';
+    mocks.removeItemCommitted = (committedKey) => {
+      if (committedKey === key) mocks.asyncStorage.set(key, replacement);
+    };
+    let releaseRemoval!: () => void;
+    let markRemovalStarted!: () => void;
+    mocks.removeItemGate = new Promise<void>((resolve) => {
+      releaseRemoval = resolve;
+    });
+    mocks.removeItemGateKey = key;
+    mocks.removeItemStartedKey = key;
+    const removalStarted = new Promise<void>((resolve) => {
+      markRemovalStarted = resolve;
+    });
+    mocks.removeItemStarted = markRemovalStarted;
+
+    const removal = updatePrivateItem(key, () => null);
+    await removalStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    releaseRemoval();
+
+    await expect(removal).rejects.toThrow(PRIVATE_KV_WRITE_ROLLBACK_FAILED);
+    expect(mocks.asyncStorage.get(key)).toBe(replacement);
   });
 
   it('keeps classified deletion and nonclassified account state available after withdrawal', async () => {
@@ -673,6 +937,35 @@ describe('private KV encrypted storage', () => {
 
     await expect(write).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
     expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
+  });
+
+  it('restores a guarded removal that commits across a private account boundary', async () => {
+    const key = 'onskin.account-a';
+    await setPrivateItem(key, 'prior-account-value');
+    const priorRaw = mocks.asyncStorage.get(key);
+    let releaseRemoval!: () => void;
+    let markRemovalStarted!: () => void;
+    mocks.removeItemGate = new Promise<void>((resolve) => {
+      releaseRemoval = resolve;
+    });
+    mocks.removeItemGateKey = key;
+    mocks.removeItemStartedKey = key;
+    const removalStarted = new Promise<void>((resolve) => {
+      markRemovalStarted = resolve;
+    });
+    mocks.removeItemStarted = markRemovalStarted;
+
+    const removal = updatePrivateItem(key, () => null);
+    await removalStarted;
+    beginPrivateKVAccountBoundary();
+    releaseRemoval();
+    try {
+      await expect(removal).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
+    await expect(getPrivateItem(key)).resolves.toBe('prior-account-value');
   });
 
   it('waits for a storage write already in progress before account cleanup continues', async () => {

@@ -182,19 +182,22 @@ function ReorderEditor({
       }
 
       const saved = await saveRoutineOrderOverrides({
-        schemaVersion: 1,
-        am: routineOrderOverrideForPhase(
-          canonical.am,
-          orders.am,
-          previousOverrides.am,
-          activeProductIds,
-        ),
-        pm: routineOrderOverrideForPhase(
-          canonical.pm,
-          orders.pm,
-          previousOverrides.pm,
-          activeProductIds,
-        ),
+        previous: previousOverrides,
+        next: {
+          schemaVersion: 1,
+          am: routineOrderOverrideForPhase(
+            canonical.am,
+            orders.am,
+            previousOverrides.am,
+            activeProductIds,
+          ),
+          pm: routineOrderOverrideForPhase(
+            canonical.pm,
+            orders.pm,
+            previousOverrides.pm,
+            activeProductIds,
+          ),
+        },
       });
       queryClient.setQueryData(ROUTINE_ORDER_QUERY_KEY, saved);
 
@@ -326,7 +329,7 @@ function ReorderEditor({
               Order not saved
             </Text>
             <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
-              Your previous routine is still in place. Try Save again.
+              We could not confirm the save. Reload to check your saved routine, then try again.
             </Text>
           </View>
         ) : null}
