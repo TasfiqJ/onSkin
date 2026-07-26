@@ -141,6 +141,15 @@ as $$
   )::text;
 $$;
 
+-- Migration 0065 intentionally removes PostgreSQL's implicit PUBLIC EXECUTE
+-- default for future migration-owner functions. These transaction-local pgTAP
+-- helpers model authenticated client calls, so grant only that test role
+-- explicitly instead of relying on the unsafe global default.
+grant execute on function public.pgtap_grant_health_dependent_consent(bigint, text, text)
+  to authenticated;
+grant execute on function public.pgtap_health_headers(bigint, text[])
+  to authenticated;
+
 insert into public.entitlements (
   user_id,
   entitlement,

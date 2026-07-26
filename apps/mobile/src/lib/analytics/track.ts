@@ -23,11 +23,10 @@ import {
   type GrowthAttributionKey,
 } from '@/lib/growth/attribution';
 import { purgeLegacyPostHogPersistence } from '@/lib/analytics/postHogPersistenceCleanup';
-import {
-  closeAnalyticsPublication,
-  publishAnalyticsEvent,
-} from '@/lib/analytics/publicationGate';
+import { closeAnalyticsPublication, publishAnalyticsEvent } from '@/lib/analytics/publicationGate';
 
+// Direct mobile vendor capture is intentionally disabled. Production source
+// cannot open the receipt-bound publication gate or install a vendor transport.
 type AnalyticsProps = Record<string, string | number | boolean | null> | undefined;
 
 export const SENSITIVE_ANALYTICS_KEY =
@@ -49,22 +48,16 @@ const PHOTO_QUALITY_RESULT_VALUES = new Set([
   'unmeasured',
   'darker',
 ]);
-const LABEL_RECOGNITION_RESULT_VALUES = new Set<string>(
-  ANALYTICS_LABEL_RECOGNITION_RESULTS,
-);
+const LABEL_RECOGNITION_RESULT_VALUES = new Set<string>(ANALYTICS_LABEL_RECOGNITION_RESULTS);
 const LATENCY_BUCKET_VALUES = new Set<string>(ANALYTICS_LATENCY_BUCKETS);
 const CATALOG_LOOKUP_RESULT_VALUES = new Set<string>(ANALYTICS_CATALOG_LOOKUP_RESULTS);
-const CATALOG_CORRECTION_TYPE_VALUES = new Set<string>(
-  ANALYTICS_CATALOG_CORRECTION_TYPES,
-);
+const CATALOG_CORRECTION_TYPE_VALUES = new Set<string>(ANALYTICS_CATALOG_CORRECTION_TYPES);
 const CATALOG_RETRY_RESULT_VALUES = new Set<string>(ANALYTICS_CATALOG_RETRY_RESULTS);
 const SCAN_RESULT_VALUES = new Set<string>(ANALYTICS_SCAN_RESULTS);
 const BARCODE_TYPE_VALUES = new Set<string>(ANALYTICS_BARCODE_TYPES);
 const INGREDIENT_PARSE_RESULT_VALUES = new Set<string>(ANALYTICS_INGREDIENT_PARSE_RESULTS);
 const INGREDIENT_PARSE_SOURCE_VALUES = new Set<string>(ANALYTICS_INGREDIENT_PARSE_SOURCES);
-const UNKNOWN_INGREDIENT_COUNT_VALUES = new Set<string>(
-  ANALYTICS_UNKNOWN_INGREDIENT_COUNT_BUCKETS,
-);
+const UNKNOWN_INGREDIENT_COUNT_VALUES = new Set<string>(ANALYTICS_UNKNOWN_INGREDIENT_COUNT_BUCKETS);
 const EVENTS_REQUIRING_EXACT_PROPS = new Set<AnalyticsAllowedEventName>(
   ANALYTICS_RESTRICTED_EXACT_PROP_EVENTS,
 );
@@ -159,8 +152,7 @@ export function sanitizeAnalyticsEventProps(
   }
   if (event === 'catalog_correction_reported') {
     const correctionType = props?.correction_type;
-    return typeof correctionType === 'string' &&
-      CATALOG_CORRECTION_TYPE_VALUES.has(correctionType)
+    return typeof correctionType === 'string' && CATALOG_CORRECTION_TYPE_VALUES.has(correctionType)
       ? { correction_type: correctionType }
       : undefined;
   }
@@ -227,8 +219,7 @@ export function sanitizeAnalyticsEventProps(
       !INGREDIENT_PARSE_RESULT_VALUES.has(clean.result) ||
       typeof clean.unknown_count_bucket !== 'string' ||
       !UNKNOWN_INGREDIENT_COUNT_VALUES.has(clean.unknown_count_bucket) ||
-      (clean.native_ocr_enabled !== undefined &&
-        typeof clean.native_ocr_enabled !== 'boolean')
+      (clean.native_ocr_enabled !== undefined && typeof clean.native_ocr_enabled !== 'boolean')
     ) {
       return undefined;
     }
