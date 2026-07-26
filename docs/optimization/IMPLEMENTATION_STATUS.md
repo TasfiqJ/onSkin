@@ -1,10 +1,10 @@
 # Maximum Optimization Implementation Status
 
 Audit date: 2026-07-12 (America/Toronto; execution time not recorded)
-Last updated: 2026-07-26 (America/Toronto; partner data-sharing withdrawal recovery checkpoint)
+Last updated: 2026-07-26 (America/Toronto; maximized-closure audit checkpoint)
 Branch: `optimization`
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
-Current checkpoint parent SHA: `05cf9bc96`
+Current checkpoint parent SHA: `3b6c44422`
 Baseline: [BASELINE.md](./BASELINE.md)
 Decision index: [DECISIONS.md](./DECISIONS.md)
 Evidence rules: [evidence/README.md](./evidence/README.md)
@@ -247,4 +247,4 @@ Durable local evidence now includes deterministic iOS/Android dirty-worktree exp
 - No owner, threshold, signed artifact, physical-device result, approval, or evidence path was invented.
 - The device-policy conflict and user-owned dirty worktree are explicit.
 - Reproducible export/asset reporting and deterministic fixtures now exist.
-- The requirement-by-requirement section 19 closure result is recorded in `MAXIMIZED_CLOSURE_AUDIT.md`. Exact-release recovery, telemetry allowlists/queue caps, Progress note recovery/inactive query eviction, Shelf/archive collection stress, fail-closed Edge export-memory bounds, verification-only private-vault plaintext minimization, and bounded incremental mobile export output are now locally implemented. A fresh two-agent audit found no further measured, decision-free repository implementation slice: the proposed Ask storage rewrite was invalidated by the latest 12-boundary evidence and would require unapproved transcript-retention behavior. Complete exports above 8 MiB still require the explicit durable archive/streaming decision and hosted/native proof. Approved photo-v2/cache/thumbnail and startup-shield decisions; hosted Supabase/provider rehearsals; retention, abuse-window, scheduler, alert, and completion-ID ownership; approved budgets and signed release baselines; and physical supported-iOS performance, accessibility, keyboard, and lifecycle evidence remain genuine external gates. All user-owned worktree changes remain outside isolated commits.
+- The current requirement-by-requirement section 19 closure result is recorded in `MAXIMIZED_CLOSURE_AUDIT.md` at parent checkpoint `3b6c44422`. Exact-release recovery, telemetry allowlists/queue caps, Progress note recovery/inactive query eviction, Shelf/archive collection stress, fail-closed Edge export-memory bounds, verification-only private-vault plaintext minimization, bounded incremental mobile export output, production-owner photo/network timing, durable authenticated photo deletion and recovery, and partner-withdrawal recovery are locally implemented. Independent P0 and P1/P2 audits found no further safe decision-free repository implementation slice. Approved photo-v2/native-storage/cache/thumbnail and startup-shield decisions; authoritative completion/consent/onboarding operation semantics; hosted Supabase/provider rehearsals; retention, abuse-window, scheduler, and alert ownership; approved budgets and signed release baselines; and physical supported-iOS performance, accessibility, keyboard, and lifecycle evidence remain genuine external gates. All user-owned worktree changes remain outside isolated commits.

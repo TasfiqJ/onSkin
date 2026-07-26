@@ -1,66 +1,137 @@
 # Maximized Closure Audit
 
-Date: 2026-07-21 (America/Toronto)
+Date: 2026-07-26 (America/Toronto)
 
 Branch: `optimization`
 
-Implementation checkpoint SHA: `24ad841ef3fc1e5cf3f067a6d942157e04b44540`
+Parent implementation checkpoint:
+`3b6c4442268a1e5549aecb1c4125626c9d2dbaf9`
 
 Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
 
-Conclusion: OnSkin cannot yet be described as "maximized." Local decision-free implementation is substantially advanced; the scoped Edge export-memory boundary, incremental mobile export writer, and private-vault verify-only decrypt gates pass, but section 19 explicitly rejects test-only, Expo Go, simulator, and web-only completion claims. The current dirty-worktree repository test run also contains four failures in unrelated user-owned notification/Shelf changes, while type-check and lint pass. The remaining closure gates require approved decisions, hosted/provider authority, signed artifacts, named owners, or physical supported-device evidence that is not present in this workspace.
+Conclusion: OnSkin cannot yet be described as "maximized." The decision-free
+repository implementation is exhausted at this checkpoint, but section 19
+explicitly rejects test-only, simulator, Expo Go, and web-only completion
+claims. Two independent read-only audits found no remaining safe local P0, P1,
+or P2 implementation slice. The remaining gates require an approved
+architecture or product decision, hosted/provider authority, signed artifacts,
+named owners and thresholds, or physical supported-device evidence.
+
+This is a closure classification, not a permission request. No external gate is
+silently converted into a local pass, and no speculative native, retention,
+consent, retry, or migration behavior is introduced.
 
 ## Requirement-By-Requirement Result
 
-| Section 19 requirement                                                          | Result at this checkpoint                      | Evidence boundary / remaining gate                                                                                                                                                                                                                                                                                            |
-| ------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| All P0 items complete with evidence                                             | Not met                                        | PERF-P0-002 is `not-started`; multiple PERF-P0 rows remain `investigating`; signed/native/hosted proof is absent. See `IMPLEMENTATION_STATUS.md`.                                                                                                                                                                             |
-| No open release-blocking P1 item                                                | Not met                                        | OPT-101/102 remain decision-gated; OPT-103/104/105/115/118/120 and others retain explicit release evidence debt.                                                                                                                                                                                                              |
-| Signed iOS and Android builds meet predeclared thresholds                       | Blocked external                               | No approved thresholds, canonical signed artifacts, repeated device samples, or authorized signoff packet exists.                                                                                                                                                                                                             |
-| 50 encrypted photos pass crash/kill/residue/frame/memory gates                  | Partial local only                             | The 50-photo web stress run passes UI traversal, but it uses one tiny unencrypted development image. Signed encrypted-photo Instruments/filesystem/OS-kill proof is absent.                                                                                                                                                   |
-| Lowest supported device classes pass critical flows                             | Blocked external                               | Web phone viewports cover compatible behavior only; signed physical lowest-class runs are absent.                                                                                                                                                                                                                             |
-| Private data fails closed without destructive empty conversion                  | Locally implemented; release proof open        | Typed unavailable/corrupt/unsupported store states and fault tests pass. Exhaustive startup authentication now avoids a complete plaintext result `Map` while retaining exact failed-read fencing; physical protected-storage/key-loss and native peak-heap evidence remain.                                                  |
-| Two simultaneous writes cannot lose a user action                               | Locally implemented; release proof open        | Deterministic 100-way store matrices and atomic reducers pass; native process-kill/secure-store fault proof remains.                                                                                                                                                                                                          |
-| Delayed old-account work cannot mutate the new account                          | Locally implemented; release proof open        | Owner-generation and stale-work tests pass across registered gateways; physical provider/account-switch proof remains.                                                                                                                                                                                                        |
-| Offline work converges idempotently                                             | Partial                                        | Transactional core plus seven entities, including durable authenticated photo deletion, are implemented; completion-history adoption, two legacy direct mutations, native reconnect/process-kill, and hosted duplicate-worker proof remain.                                                                                   |
-| Catalog search uses a proven index at realistic scale                           | Strong local proof; hosted approval open       | The 250,000-row PostgreSQL 15 plan/load run has no final-product sequential scans and 4,821 timed RPC samples; hosted staging replay and write-cost approval remain.                                                                                                                                                          |
-| Webhook events are atomic, idempotent, ordering-safe                            | Locally implemented; hosted proof open         | RevenueCat insert/projection ordering logic and tests pass; staging duplicate/reorder/provider/alert exercise remains.                                                                                                                                                                                                        |
-| Export is complete above platform row limits                                    | Locally implemented; hosted proof open         | Pagination, exact count/checksum, bounded concurrency, shared 8 MiB/100,000-item fail-closed assembly, exact response caps, and bounded incremental mobile file output exist; complete >8 MiB archive/streaming, seeded hosted replay, and native FileHandle/heap/share proof remain.                                         |
-| Deletion is resumable across multiple pages                                     | Locally implemented; hosted proof open         | Leased resumable deletion and exhaustive storage pagination exist; hosted multi-page failure/recovery/provider completion remains.                                                                                                                                                                                            |
-| Privacy retention claims are enforced by jobs                                   | Not met                                        | Retention policy, scheduler, alert thresholds, and operations ownership remain externally unapproved.                                                                                                                                                                                                                         |
-| Every deployed function is declarative and smoke-tested                         | Local manifest complete; deployment proof open | Local manifest/source validation passes; authenticated hosted deployment/resource smoke is absent.                                                                                                                                                                                                                            |
-| Exact-release symbols/source maps/mappings are recoverable                      | Local gate complete; external exercise open    | Phase 9 now fail-closes on SHA/build/performance/manifest drift, Apple distribution/profile/entitlement mismatch, incomplete Mach-O/dSYM DWARF coverage, shipped maps, wrong Hermes debug ID, weak Sentry DIFs, or unverified JS/native recovery. A real signed macOS artifact and live provider exercise still do not exist. |
-| Accessibility, Reduce Motion, large text, and critical errors pass human review | Partial                                        | Extensive deterministic/web human evidence exists; signed native VoiceOver, physical Dynamic Type, Reduce Motion, and device error-state review remain.                                                                                                                                                                       |
-| Update/rollback behavior is rehearsed                                           | Partial                                        | Store-only update policy and local incident exercise pass; signed binary canary/rollback plus provider/backend recovery identifiers and owners remain.                                                                                                                                                                        |
-| Performance evidence is launch-linked and governance-approved                   | Not met                                        | Local sanitized checkpoints exist, but no approved performance packet, thresholds, owners, signed matrix, or launch-readiness approval exists.                                                                                                                                                                                |
+| Section 19 requirement                                                          | Result at this checkpoint                                 | Evidence boundary / remaining gate                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| All P0 items complete with evidence                                             | Not met                                                   | Local work is complete where decisions permit, but `PERF-P0-002` remains decision-gated and several P0 rows require signed/native/hosted evidence.                                                                                                                                                                                                                     |
+| No open release-blocking P1 item                                                | Not met                                                   | Local P1 implementation is exhausted; photo-v2/thumbnail decisions, hosted scale/provider runs, signed baselines, approved budgets, and native evidence remain open.                                                                                                                                                                                                   |
+| Signed iOS and Android builds meet predeclared thresholds                       | Not met by the plan's literal definition                  | The accepted V1 launch contract is iOS-only, but section 19 still names both platforms. No canonical signed threshold packet or authorized signoff exists.                                                                                                                                                                                                             |
+| 50 encrypted photos pass crash/kill/residue/frame/memory gates                  | Partial local only                                        | Deterministic 50/100-photo web traversal and 250-record derivation pass. Signed encrypted-photo Instruments, filesystem, memory, frame, and OS-kill proof is absent.                                                                                                                                                                                                   |
+| Lowest supported device classes pass critical flows                             | Blocked external                                          | Compatible phone viewports pass covered flows; signed physical lowest-class runs are absent.                                                                                                                                                                                                                                                                           |
+| Private data fails closed without destructive empty conversion                  | Locally implemented; release proof open                   | Typed missing/corrupt/unsupported/unavailable states preserve bytes and fail closed. Physical protected-storage/key-loss and native heap proof remain.                                                                                                                                                                                                                 |
+| Two simultaneous writes cannot lose a user action                               | Locally implemented; release proof open                   | Atomic private-KV transforms and deterministic 100-way same-key matrices cover every named compact/high-value store. Native process-kill and secure-store fault proof remain.                                                                                                                                                                                          |
+| Delayed old-account work cannot mutate the new account                          | Locally implemented; release proof open                   | Account-generation ownership covers current production gateways, including held consent withdrawal and unreadable photo-delete recovery. Physical provider/account-switch proof remains.                                                                                                                                                                               |
+| Offline work converges idempotently                                             | Partial                                                   | The outbox core plus seven entities, including durable authenticated photo deletion, are implemented. Completion history lacks authoritative routine/step UUID mapping; onboarding publication and the consent ledger lack approved operation identity, ordering, and terminal reconciliation. Native reconnect/process-kill and hosted duplicate-worker proof remain. |
+| Catalog search uses a proven index at realistic scale                           | Strong local proof; hosted approval open                  | PostgreSQL 15 runs at 250,000 rows prove indexed final-product plans and timed RPC behavior. Hosted replay and approved write-cost budgets remain.                                                                                                                                                                                                                     |
+| Webhook events are atomic, idempotent, ordering-safe                            | Locally implemented; hosted proof open                    | RevenueCat projection ordering and replay tests pass. Staging duplicate/reorder/provider/alert exercise remains.                                                                                                                                                                                                                                                       |
+| Export is complete above platform row limits                                    | Locally implemented within the approved response boundary | Pagination, manifests, counts/checksums, bounded concurrency, exact 8 MiB/100,000-item fail-closed assembly, response caps, and incremental mobile output exist. Complete larger archive/streaming policy, hosted near-cap proof, and native writer/share/heap evidence remain.                                                                                        |
+| Deletion is resumable across multiple pages                                     | Locally implemented; hosted proof open                    | Leased resumable deletion, exhaustive Storage pagination, provider fencing, and stale-worker handling exist. Hosted multi-page/provider recovery remains.                                                                                                                                                                                                              |
+| Privacy retention claims are enforced by jobs                                   | Not met                                                   | Counsel-approved retention periods/holds, scheduler and secret ownership, alert thresholds, and hosted report-only/delete evidence are absent.                                                                                                                                                                                                                         |
+| Every deployed function is declarative and smoke-tested                         | Local manifest complete; deployment proof open            | All 11 functions are inventoried and config-aligned. Authenticated/anonymous/provider hosted deployment and resource observations remain.                                                                                                                                                                                                                              |
+| Exact-release symbols/source maps/mappings are recoverable                      | Local gate complete; external exercise open               | The exact SHA/build/Apple artifact/Mach-O/dSYM/Hermes/Sentry recovery contract fails closed locally. A real signed macOS artifact and live provider recovery exercise remain.                                                                                                                                                                                          |
+| Accessibility, Reduce Motion, large text, and critical errors pass human review | Partial                                                   | Deterministic semantic tests and extensive web human evidence exist. Supported-iOS VoiceOver, Dynamic Type, Reduce Motion, keyboard, and physical error-state review remain.                                                                                                                                                                                           |
+| Update/rollback behavior is rehearsed                                           | Partial                                                   | Store-only update policy and local incident exercise pass. Signed canary/rollback, live identifiers, owners, and independent recovery signals remain.                                                                                                                                                                                                                  |
+| Performance evidence is launch-linked and governance-approved                   | Not met                                                   | Sanitized local evidence exists, including production-owner photo/network timing, but thresholds, owners, signed device distributions, and launch-readiness approval are absent.                                                                                                                                                                                       |
 
 ## Current Verification Snapshot
 
-- Implementation checkpoint: `24ad841ef3fc1e5cf3f067a6d942157e04b44540`.
-- Repository type-check: pass, two workspaces.
-- Repository lint: pass, two workspaces, zero warnings.
-- Repository tests in the preserved dirty worktree: 2 files failed / 350 passed; 4 tests failed / 4,180 passed. All four failures arise from unrelated preserved user-owned notification/Shelf metadata changes; the scoped private-vault and mobile-export matrices pass.
-- Shelf focused matrix: pass, 6 files / 107 tests.
-- Shelf/archive web stress: 100 All, 34 Actives, 40 Expiring, and 100 Archive rows traverse exactly; independent filters and the semantic final-row boundary after Archive Back restore with zero sampled blanks, overflow, dialogs, or unexpected logs.
-- Progress focused matrix: pass, 5 files / 158 tests.
-- Progress note web recovery: deterministic pre-write failure retains the exact draft and accessible retry; retry succeeds; a fresh direct load restores the exact encrypted note through the real photo-metadata path using the exact development-only Expo-web content-key harness.
-- Progress web stress: 50 and 100 photos traverse to unique oldest rows without blank viewports; 100-photo picker traverses and changes selection; 250-record pure derivations pass.
-- Progress sensitive-query cache matrix: pass, 4 files / 49 tests, including shared-observer retention, final-observer eviction, late non-cancellable completion cleanup, and unobserved mutation non-recreation.
-- Progress query-cache web recovery: query executions advance exactly `1 -> 2 -> 3` across two Progress -> Today -> Progress cycles; all 10 Timeline actions return each time with zero storage errors, overflow, dialogs, or unexpected logs.
-- Data-export memory matrix: pass, 14 Deno tests. The exact shared boundary passes across 34 synthetic sources; one byte over, one oversized private row, storage double-pass overflow, and tiny-item overflow fail closed with content-free codes.
-- Data-export code gates: Edge Deno check, focused Deno lint, and Phase 9 data-rights source gate pass. The mobile writer/actions/staging/account-inventory matrix passes 6 files / 101 tests; exact pretty-JSON bytes, bounded chunks, one-handle create/open/write/close, account interruption, journal ordering, cleanup, and partial-file relaunch scavenging are covered. The 390 x 844 Expo-web compatible branch retains exact disclosure and sanitized failure behavior with no dialog, browser warning/error, writer-code leak, or overflow. Root type-check/lint pass; the preserved dirty-worktree root test totals now contain 350 passing files / 4,180 passing tests with the same unrelated four failures.
-- Private-vault verification matrix: pass, 8 files / 153 tests. A 49-record, 32 KiB-per-value fixture uses one existing content-key read, performs zero writes, preserves ciphertext exactly, returns no plaintext collection, and still rejects later-record corruption and delayed owner-A key failures across account replacement.
-- Latest implementation evidence: `evidence/2026-07-21_mobile-export-incremental-writer.md`.
-- Latest final local-slice audit: `evidence/2026-07-21_final-decision-free-slice-audit.md`.
+- Parent implementation and pushed remote SHA:
+  `3b6c4442268a1e5549aecb1c4125626c9d2dbaf9`.
+- Root type-check: pass, two workspaces.
+- Root lint: pass, two workspaces, zero warnings.
+- Preserved dirty-worktree root tests: 370 of 372 files and 4,561 of
+  4,565 tests pass. The only four failures are the same unrelated user-owned
+  Shelf PAO/provenance and notification behavioural-snapshot changes.
+- Photo/network operation-timing matrix: pass, 4 files / 112 tests. Production
+  photo encrypt/decrypt and logical network-request owners retain the fixed
+  content-free, memory-only schema.
+- Authenticated photo-delete durability matrix: pass, 13 files / 332 tests.
+  The PostgreSQL replay/RLS/concurrency harness and six saved-local/syncing/
+  attention presentations pass.
+- Photo-delete unreadable recovery matrix: pass, 8 files / 154 tests. Actual
+  Expo web passes empty and populated unavailable-to-idle recovery plus a
+  populated remount through the real current-owner reader.
+- Partner data-sharing withdrawal recovery matrix: pass, 9 files / 129 tests.
+  Actual Expo web at 390 x 844 passes exact failure/retry/reload/regrant and
+  held-sign-out/late-release recovery through the production hash,
+  account-generation, and acknowledgement-validation path.
+- Dependency alignment, Expo compatibility, Expo Doctor 21/21, production
+  iOS/web exports, source-map attribution, query retry ownership, Routine Plan
+  source ownership, private-registry/outbox schema binding, and catalog import
+  identity/load checkpoints remain locally passing as recorded in
+  `IMPLEMENTATION_STATUS.md`.
 
-## Remaining Work Classification
+## Independent Remaining-Gap Audit
 
-The independent audits found additional decision-free local P0/P1/P2 slices after this checkpoint. Exact-release artifact/recovery, exact per-event PostHog and fixed Sentry allowlists, explicit PostHog persisted-queue expiry/caps, Progress note persistence/failure recovery and inactive query eviction, Shelf/archive collection stress coverage, fail-closed Edge export-memory bounds, verification-only private-vault plaintext minimization, and bounded incremental mobile export-file assembly are now locally implemented. Complete server exports above 8 MiB remain decision/operations-gated on durable archive/streaming policy. A fresh two-agent audit found no further measured, decision-free repository implementation slice. One audit proposed an immutable paged Ask transcript from stale status text; the current 202-message evidence already traverses all 12 mixed-height prepend boundaries with exact anchors and bounded mounted rows. The second audit rejected the rewrite because an in-memory page container would not bound retained message content, durable paging would introduce unapproved retention/consent/purge/export/deletion behavior, and bidirectional eviction would add unmeasured focus/accessibility/anchor risk. The focused Ask matrix still passes 3 files / 39 tests. Genuine closure gates remain one or more of:
+The P0 audit found no safe decision-free local slice:
 
-- decision-gated: photo v2/native handles, encrypted thumbnails/cache ceilings, startup-shield scope, retention/abuse/scheduler thresholds, and bundle/performance budgets;
-- hosted/provider-gated: Supabase deployment and seeded scale/recovery rehearsals, RevenueCat/provider replay, retention scheduling, alerting, and completion terminal reconciliation;
-- signed-artifact-gated: exact iOS/Android binaries, symbols/mappings/privacy manifests, artifact budgets, upgrade/canary/rollback, and store declaration inspection;
-- physical-device-gated: supported/lowest-class frame, memory, startup, encrypted-photo, filesystem, lifecycle, account-switch, keyboard, accessibility, and OS-kill evidence;
-- ownership/approval-gated: threshold owners, primary/backup responders, signoff, operations cadence, and launch-readiness approval.
+- `PERF-P0-001`, `003`-`006`, `009`, and `010` have complete local
+  implementations; their remaining gates are approved thresholds/owners,
+  hosted endpoint effects, signed artifacts, native samples, or physical-device
+  evidence.
+- `PERF-P0-002` and the remaining native portions of `004` and `008` require
+  approved photo-envelope, rendition, native-storage, backup-exclusion, and
+  migration/rollback contracts. The current durable photo directory has no
+  supported explicit iOS backup-exclusion API in this architecture; an ad hoc
+  move would cross the native photo decision.
+- `PERF-P0-007` cannot safely expand by inference. Completion history lacks
+  authoritative routine/step UUID mapping. Onboarding and consent lack
+  approved operation identity, ordering, and terminal reconciliation;
+  speculative retry after a terminal timeout could silently change cloud
+  health-data enforcement.
 
-These are precise closure prerequisites, not permission requests and not claims that the local implementation is verified.
+The P1/P2 audit independently found no safe local slice:
+
+- `OPT-101`-`104` require the unapproved photo-v2/rendition decisions and signed
+  native profiling.
+- `OPT-105` has no measured local virtualization defect. Durable Ask paging
+  would introduce unapproved retention, consent, purge, export, deletion,
+  focus, and accessibility behavior.
+- `OPT-107` cannot change startup shielding, remount, or gate ordering without
+  `OPT-DEC-004`; the safe local instrumentation and heavy-work removal are
+  complete.
+- `OPT-114`/`115` have source-owned routes, input isolation, Progress note
+  recovery, and zero-retention sensitive-query behavior; the remainder is
+  native profiler, Hermes, keyboard, memory, and accessibility evidence.
+- `OPT-116`-`120` have complete local harnesses and source contracts. Remaining
+  work requires hosted environments, approved budgets/policies, signed
+  baselines, or operations ownership.
+- The P2 implementation rows are locally complete, verified, or correctly not
+  applicable under the accepted iOS-only launch contract. Their open portions
+  are supported-device, signed-artifact, final-brand, or live-operations gates.
+
+## First Valid Unlocks
+
+Repository implementation should resume only when one of these precise inputs
+exists:
+
+1. Approve `OPT-DEC-001` and `OPT-DEC-009`, then implement the migration-safe
+   photo-v2/native/thumbnail path with measured ceilings.
+2. Approve a native protected-directory and backup-exclusion contract, then
+   implement journaled dual-path photo migration with rollback and
+   byte-preservation proof.
+3. Provide authoritative completion-history identifiers or approved
+   onboarding/consent operation identity, ordering, and terminal
+   reconciliation semantics before expanding the outbox.
+4. Provide a disposable hosted environment and credentials for catalog,
+   export, deletion, webhook, retention, and duplicate-worker rehearsals.
+5. Provide canonical signed artifacts, supported physical devices, approved
+   thresholds, owners, and signoff for the native performance/accessibility/
+   lifecycle packet.
+
+Until one of those prerequisites exists, revalidation and evidence maintenance
+are the only safe repository-local actions. That is a truthful stopping
+boundary for implementation, not a claim that the plan's definition of
+"maximized" has been met.
