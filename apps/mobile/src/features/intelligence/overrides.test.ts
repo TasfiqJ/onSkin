@@ -41,7 +41,25 @@ vi.mock('expo-crypto', () => ({
 vi.mock('@/features/shelf/store', () => ({
   SHELF_STORAGE_KEY: 'onskin.shelf.v1',
   decodeShelfProductsForOutboxDependency: mocks.decodeShelfProducts,
-  shelfProductOutboxPayload: vi.fn((product: { id: string }) => ({ name: product.id })),
+  shelfProductOutboxPayload: vi.fn((product: { id: string }) => ({
+    catalog_product_id: null,
+    catalog_source_id: null,
+    catalog_match_quality: 'manual',
+    catalog_source_snapshot_date: null,
+    manual_name: product.id,
+    manual_brand: null,
+    barcode: null,
+    opened_at: null,
+    pao_months: null,
+    expiry_date: null,
+    is_opened: false,
+    pao_source: 'unknown',
+    expiry_source: 'unknown',
+    added_via: 'manual',
+    source_disclosure_ack_at: null,
+    status: 'active',
+    finished_at: null,
+  })),
 }));
 
 vi.mock('@/lib/offline/outbox', () => ({

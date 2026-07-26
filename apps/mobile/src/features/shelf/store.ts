@@ -10,7 +10,7 @@ import {
   encodeOutboxEnvelope,
   enqueueShelfOutboxOperation,
   type OutboxOperationKind,
-  type OutboxPayload,
+  type ShelfProductOutboxPayload,
 } from '@/lib/offline/outbox.pure';
 import {
   readPrivateItem,
@@ -146,7 +146,7 @@ type ShelfOperationOwner = Readonly<{
 
 type ShelfOutboxChange = Readonly<
   | { operationKind: 'delete'; entityId: string; payload: null }
-  | { operationKind: 'upsert'; entityId: string; payload: OutboxPayload }
+  | { operationKind: 'upsert'; entityId: string; payload: ShelfProductOutboxPayload }
 >;
 
 type ShelfStorageUpdate = Readonly<{
@@ -242,7 +242,9 @@ function isoStringOrFallback(value: unknown, fallback: string): string {
 
 function isoStringOrNull(value: unknown): string | null {
   const text = nonEmptyString(value);
-  return text && !Number.isNaN(Date.parse(text)) ? text : null;
+  if (!text) return null;
+  const timestamp = Date.parse(text);
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
 }
 
 function zeroToOneOrNull(value: unknown): number | null {
@@ -629,7 +631,7 @@ async function shelfAddIdentity(
   return { ownerHash, inputHash };
 }
 
-export function shelfProductOutboxPayload(product: ShelfProduct): OutboxPayload {
+export function shelfProductOutboxPayload(product: ShelfProduct): ShelfProductOutboxPayload {
   return Object.freeze({
     catalog_product_id: product.catalogProductId,
     catalog_source_id: product.catalogSourceId,

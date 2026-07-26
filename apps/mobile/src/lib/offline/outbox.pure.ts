@@ -33,6 +33,7 @@ const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
 const NUMERIC_BARCODE = /^[0-9]{6,14}$/;
+const LOCAL_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 export type OutboxState = 'dead' | 'leased' | 'ready';
 export type OutboxFailureClass =
@@ -46,6 +47,53 @@ export type OutboxFailureClass =
   | 'validation';
 
 export type OutboxPayload = Readonly<Record<string, unknown>>;
+
+export const SHELF_PRODUCT_OUTBOX_PAYLOAD_KEYS = Object.freeze([
+  'catalog_product_id',
+  'catalog_source_id',
+  'catalog_match_quality',
+  'catalog_source_snapshot_date',
+  'manual_name',
+  'manual_brand',
+  'barcode',
+  'opened_at',
+  'pao_months',
+  'expiry_date',
+  'is_opened',
+  'pao_source',
+  'expiry_source',
+  'added_via',
+  'source_disclosure_ack_at',
+  'status',
+  'finished_at',
+] as const);
+
+export type ShelfProductOutboxPayload = Readonly<{
+  catalog_product_id: string | null;
+  catalog_source_id: string | null;
+  catalog_match_quality:
+    | 'blocked'
+    | 'limited'
+    | 'manual'
+    | 'unverified'
+    | 'usable'
+    | 'verified'
+    | null;
+  catalog_source_snapshot_date: string | null;
+  manual_name: string;
+  manual_brand: string | null;
+  barcode: string | null;
+  opened_at: string | null;
+  pao_months: number | null;
+  expiry_date: string | null;
+  is_opened: boolean;
+  pao_source: 'catalog' | 'category_default' | 'label' | 'unknown';
+  expiry_source: 'estimated' | 'pao_computed' | 'printed' | 'unknown';
+  added_via: 'barcode' | 'manual' | 'ocr' | 'onboarding' | 'search';
+  source_disclosure_ack_at: string | null;
+  status: 'active' | 'discarded' | 'finished';
+  finished_at: string | null;
+}>;
 
 export type OutboxRow = Readonly<{
   schemaVersion: typeof OUTBOX_ROW_SCHEMA_VERSION;
@@ -166,6 +214,64 @@ function validPayload(value: unknown): value is OutboxPayload {
   } catch {
     return false;
   }
+}
+
+function validLocalDate(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const match = LOCAL_DATE.exec(value);
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (year < 1 || month < 1 || month > 12 || day < 1) return false;
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  return day <= daysInMonth;
+}
+
+function validShelfProductPayload(value: unknown): value is ShelfProductOutboxPayload {
+  if (!validPayload(value) || !hasExactKeys(value, SHELF_PRODUCT_OUTBOX_PAYLOAD_KEYS)) {
+    return false;
+  }
+  const optionalBoundedString = (candidate: unknown, maxBytes: number) =>
+    candidate === null ||
+    (typeof candidate === 'string' &&
+      utf8Bytes(candidate) >= 1 &&
+      utf8Bytes(candidate) <= maxBytes);
+  const optionalUuid = (candidate: unknown) =>
+    candidate === null || (typeof candidate === 'string' && UUID.test(candidate));
+  const optionalDate = (candidate: unknown) => candidate === null || validLocalDate(candidate);
+
+  return (
+    typeof value.manual_name === 'string' &&
+    utf8Bytes(value.manual_name) >= 1 &&
+    utf8Bytes(value.manual_name) <= 512 &&
+    optionalBoundedString(value.manual_brand, 512) &&
+    optionalBoundedString(value.barcode, 128) &&
+    optionalUuid(value.catalog_product_id) &&
+    optionalUuid(value.catalog_source_id) &&
+    (value.catalog_match_quality === null ||
+      ['verified', 'usable', 'limited', 'unverified', 'blocked', 'manual'].includes(
+        String(value.catalog_match_quality),
+      )) &&
+    optionalDate(value.catalog_source_snapshot_date) &&
+    optionalDate(value.opened_at) &&
+    (value.pao_months === null ||
+      (Number.isInteger(value.pao_months) &&
+        Number(value.pao_months) >= 1 &&
+        Number(value.pao_months) <= 1200)) &&
+    optionalDate(value.expiry_date) &&
+    typeof value.is_opened === 'boolean' &&
+    ['label', 'catalog', 'category_default', 'unknown'].includes(String(value.pao_source)) &&
+    ['printed', 'pao_computed', 'estimated', 'unknown'].includes(String(value.expiry_source)) &&
+    ['barcode', 'search', 'ocr', 'manual', 'onboarding'].includes(String(value.added_via)) &&
+    (value.source_disclosure_ack_at === null ||
+      (typeof value.source_disclosure_ack_at === 'string' &&
+        utf8Bytes(value.source_disclosure_ack_at) >= 20 &&
+        utf8Bytes(value.source_disclosure_ack_at) <= 64 &&
+        canonicalIso(value.source_disclosure_ack_at) !== null)) &&
+    ['active', 'finished', 'discarded'].includes(String(value.status)) &&
+    optionalDate(value.finished_at)
+  );
 }
 
 function validNotificationPreferencesPayload(value: unknown): value is OutboxPayload {
@@ -519,7 +625,7 @@ function decodeRow(value: unknown): OutboxRow {
     (entityType === 'shelf_product' &&
       ((operationKind === 'delete' && (value.payload !== null || value.tombstone !== true)) ||
         (operationKind === 'upsert' &&
-          (!validPayload(value.payload) || value.tombstone !== false)))) ||
+          (!validShelfProductPayload(value.payload) || value.tombstone !== false)))) ||
     (entityType === 'conflict_choice' &&
       (operationKind !== 'upsert' ||
         !validConflictChoicePayload(value.payload) ||

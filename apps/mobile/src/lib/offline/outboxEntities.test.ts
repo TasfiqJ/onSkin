@@ -10,6 +10,7 @@ import {
   isOutboxOperationKind,
   type OutboxEntityType,
 } from './outboxEntities';
+import { SHELF_PRODUCT_OUTBOX_PAYLOAD_KEYS } from './outbox.pure';
 
 const REPOSITORY_ROOT = fileURLToPath(new URL('../../../../../', import.meta.url));
 const MIGRATION_DIRECTORY = join(REPOSITORY_ROOT, 'supabase', 'migrations');
@@ -45,6 +46,12 @@ function quotedValues(value: string): string[] {
 function requiredWireKeys(sql: string): string[] {
   const match = /v_operation\s+\?&\s+array\s*\[([\s\S]*?)\]/.exec(sql);
   expect(match, 'RPC must require an exact operation object').not.toBeNull();
+  return quotedValues(match![1]!);
+}
+
+function requiredShelfPayloadKeys(sql: string): string[] {
+  const match = /v_payload\s+\?&\s+array\s*\[([\s\S]*?)\]/.exec(sql);
+  expect(match, 'Shelf RPC must require an exact payload object').not.toBeNull();
   return quotedValues(match![1]!);
 }
 
@@ -155,6 +162,13 @@ describe('outbox entity contract', () => {
         expect(sql).toContain(`v_operation ->> 'client_revision' = '1'`);
       }
     }
+  });
+
+  it('binds the Shelf client payload keys to the exact RPC payload', () => {
+    expect(new Set(requiredShelfPayloadKeys(readMigration('shelf_product')))).toEqual(
+      new Set(SHELF_PRODUCT_OUTBOX_PAYLOAD_KEYS),
+    );
+    expect(SHELF_PRODUCT_OUTBOX_PAYLOAD_KEYS).toHaveLength(17);
   });
 
   it('routes and counts through the registry instead of a permissive RPC fallback', () => {

@@ -111,6 +111,25 @@ vi.mock('@/lib/supabase/client', () => ({
 
 const NOW = '2026-07-18T16:00:00.000Z';
 const OWNER_HASH = 'a'.repeat(64);
+const SHELF_PAYLOAD = {
+  catalog_product_id: null,
+  catalog_source_id: null,
+  catalog_match_quality: 'manual',
+  catalog_source_snapshot_date: null,
+  manual_name: 'Cleanser',
+  manual_brand: null,
+  barcode: null,
+  opened_at: null,
+  pao_months: null,
+  expiry_date: null,
+  is_opened: false,
+  pao_source: 'unknown',
+  expiry_source: 'unknown',
+  added_via: 'manual',
+  source_disclosure_ack_at: null,
+  status: 'active',
+  finished_at: null,
+} as const;
 
 function uuid(sequence: number): string {
   return `00000000-0000-4000-8000-${sequence.toString(16).padStart(12, '0')}`;
@@ -125,7 +144,7 @@ function seedRows(count: number): OutboxEnvelope {
       ownerGeneration: 7,
       entityId: uuid(index),
       operationKind: 'upsert',
-      payload: { name: `Product ${index}`, status: 'active' },
+      payload: { ...SHELF_PAYLOAD, manual_name: `Product ${index}` },
       enqueuedAt: NOW,
     }).envelope;
   }

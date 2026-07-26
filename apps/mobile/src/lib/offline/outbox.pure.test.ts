@@ -39,6 +39,25 @@ const OP_B1 = '00000000-0000-4000-8000-000000000201';
 const WORKER_A = '00000000-0000-4000-8000-000000000301';
 const WORKER_B = '00000000-0000-4000-8000-000000000302';
 const NOW = '2026-07-18T15:00:00.000Z';
+const SHELF_PAYLOAD = {
+  catalog_product_id: null,
+  catalog_source_id: null,
+  catalog_match_quality: 'manual',
+  catalog_source_snapshot_date: null,
+  manual_name: 'Cleanser',
+  manual_brand: null,
+  barcode: null,
+  opened_at: null,
+  pao_months: null,
+  expiry_date: null,
+  is_opened: false,
+  pao_source: 'unknown',
+  expiry_source: 'unknown',
+  added_via: 'manual',
+  source_disclosure_ack_at: null,
+  status: 'active',
+  finished_at: null,
+} as const;
 const NOTIFICATION_PAYLOAD = {
   am_reminder_time: '07:30',
   pm_reminder_time: '21:30',
@@ -104,7 +123,7 @@ function enqueue(
     ownerGeneration: 7,
     entityId: input.entityId,
     operationKind,
-    payload: operationKind === 'delete' ? null : (input.payload ?? { name: 'Cleanser' }),
+    payload: operationKind === 'delete' ? null : (input.payload ?? SHELF_PAYLOAD),
     enqueuedAt: input.enqueuedAt ?? NOW,
   });
 }
@@ -143,7 +162,78 @@ describe('transactional outbox model', () => {
       enqueue(emptyOutboxEnvelope(), {
         operationId: OP_A1,
         entityId: ENTITY_A,
-        payload: { name: 'Cleanser', user_id: 'raw-owner' },
+        payload: { ...SHELF_PAYLOAD, user_id: 'raw-owner' },
+      }),
+    ).toThrow(OUTBOX_INVALID);
+  });
+
+  it('accepts the exact Shelf RPC payload at its UTF-8, UUID, date, and PAO boundaries', () => {
+    expect(() =>
+      enqueue(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        entityId: ENTITY_A,
+        payload: {
+          ...SHELF_PAYLOAD,
+          catalog_product_id: ENTITY_A,
+          catalog_source_id: ENTITY_B,
+          catalog_match_quality: 'verified',
+          catalog_source_snapshot_date: '2024-02-29',
+          manual_name: '🧴'.repeat(128),
+          manual_brand: 'é'.repeat(256),
+          barcode: '1'.repeat(128),
+          opened_at: '2026-07-18',
+          pao_months: 1200,
+          expiry_date: '2027-07-18',
+          is_opened: true,
+          pao_source: 'catalog',
+          expiry_source: 'pao_computed',
+          added_via: 'barcode',
+          source_disclosure_ack_at: NOW,
+          status: 'finished',
+          finished_at: '2026-07-18',
+        },
+      }),
+    ).not.toThrow();
+  });
+
+  it.each([
+    [
+      'missing key',
+      (() => {
+        const payload: Record<string, unknown> = { ...SHELF_PAYLOAD };
+        delete payload.finished_at;
+        return payload;
+      })(),
+    ],
+    ['extra key', { ...SHELF_PAYLOAD, category: 'cleanser' }],
+    ['empty name', { ...SHELF_PAYLOAD, manual_name: '' }],
+    ['oversized UTF-8 name', { ...SHELF_PAYLOAD, manual_name: '🧴'.repeat(129) }],
+    ['empty brand', { ...SHELF_PAYLOAD, manual_brand: '' }],
+    ['oversized UTF-8 brand', { ...SHELF_PAYLOAD, manual_brand: 'é'.repeat(257) }],
+    ['empty barcode', { ...SHELF_PAYLOAD, barcode: '' }],
+    ['oversized UTF-8 barcode', { ...SHELF_PAYLOAD, barcode: 'é'.repeat(65) }],
+    ['invalid catalog product UUID', { ...SHELF_PAYLOAD, catalog_product_id: 'catalog-1' }],
+    ['invalid catalog source UUID', { ...SHELF_PAYLOAD, catalog_source_id: 'source-1' }],
+    ['invalid quality', { ...SHELF_PAYLOAD, catalog_match_quality: 'trusted' }],
+    ['impossible snapshot date', { ...SHELF_PAYLOAD, catalog_source_snapshot_date: '2026-02-29' }],
+    ['impossible opened date', { ...SHELF_PAYLOAD, opened_at: '2026-04-31' }],
+    ['invalid PAO zero', { ...SHELF_PAYLOAD, pao_months: 0 }],
+    ['invalid fractional PAO', { ...SHELF_PAYLOAD, pao_months: 1.5 }],
+    ['invalid PAO maximum', { ...SHELF_PAYLOAD, pao_months: 1201 }],
+    ['impossible expiry date', { ...SHELF_PAYLOAD, expiry_date: '2027-02-29' }],
+    ['invalid opened flag', { ...SHELF_PAYLOAD, is_opened: 1 }],
+    ['invalid PAO source', { ...SHELF_PAYLOAD, pao_source: 'user' }],
+    ['invalid expiry source', { ...SHELF_PAYLOAD, expiry_source: 'manual' }],
+    ['invalid intake source', { ...SHELF_PAYLOAD, added_via: 'import' }],
+    ['invalid disclosure timestamp', { ...SHELF_PAYLOAD, source_disclosure_ack_at: 'today' }],
+    ['invalid status', { ...SHELF_PAYLOAD, status: 'deleted' }],
+    ['impossible finished date', { ...SHELF_PAYLOAD, finished_at: '2026-02-30' }],
+  ])('rejects a Shelf payload with %s', (_label, payload) => {
+    expect(() =>
+      enqueue(emptyOutboxEnvelope(), {
+        operationId: OP_A1,
+        entityId: ENTITY_A,
+        payload,
       }),
     ).toThrow(OUTBOX_INVALID);
   });
@@ -490,12 +580,12 @@ describe('transactional outbox model', () => {
     const first = enqueue(emptyOutboxEnvelope(), {
       operationId: OP_A1,
       entityId: ENTITY_A,
-      payload: { name: 'First' },
+      payload: { ...SHELF_PAYLOAD, manual_name: 'First' },
     }).envelope;
     const second = enqueue(first, {
       operationId: OP_A2,
       entityId: ENTITY_A,
-      payload: { name: 'Second' },
+      payload: { ...SHELF_PAYLOAD, manual_name: 'Second' },
     }).envelope;
 
     expect(second.rows).toHaveLength(1);
@@ -518,7 +608,7 @@ describe('transactional outbox model', () => {
     const second = enqueue(leasedA.envelope, {
       operationId: OP_A2,
       entityId: ENTITY_A,
-      payload: { name: 'Newer' },
+      payload: { ...SHELF_PAYLOAD, manual_name: 'Newer' },
       enqueuedAt: '2026-07-18T15:00:01.000Z',
     }).envelope;
     const leasedB = leaseReadyOutboxRows(second, {
@@ -829,7 +919,7 @@ describe('transactional outbox model', () => {
       ownerGeneration: 7,
       entityId: ENTITY_A,
       operationKind: 'upsert',
-      payload: { name: 'Owner A first' },
+      payload: { ...SHELF_PAYLOAD, manual_name: 'Owner A first' },
       enqueuedAt: NOW,
     }).envelope;
     const bothOwners = enqueueShelfOutboxOperation(ownerA, {
@@ -838,7 +928,7 @@ describe('transactional outbox model', () => {
       ownerGeneration: 8,
       entityId: ENTITY_A,
       operationKind: 'upsert',
-      payload: { name: 'Owner B' },
+      payload: { ...SHELF_PAYLOAD, manual_name: 'Owner B' },
       enqueuedAt: '2026-07-18T15:00:01.000Z',
     }).envelope;
     const leasedA = leaseReadyOutboxRows(bothOwners, {
@@ -852,7 +942,7 @@ describe('transactional outbox model', () => {
       ownerGeneration: 7,
       entityId: ENTITY_A,
       operationKind: 'upsert',
-      payload: { name: 'Owner A newer' },
+      payload: { ...SHELF_PAYLOAD, manual_name: 'Owner A newer' },
       enqueuedAt: '2026-07-18T15:00:02.000Z',
     }).envelope;
     const leasedB = leaseReadyOutboxRows(newerA, {

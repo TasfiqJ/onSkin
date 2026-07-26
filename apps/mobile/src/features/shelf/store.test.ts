@@ -162,7 +162,11 @@ describe('shelf local store recovery', () => {
 
   it('atomically appends an owner-bound encrypted outbox intent with an authenticated add', async () => {
     const product = await addProductWithOperation(
-      { name: 'Atomic cleanser', addedVia: 'manual' },
+      {
+        name: 'Atomic cleanser',
+        addedVia: 'manual',
+        sourceDisclosureAckAt: '2026-07-18T12:00:00Z',
+      },
       {
         ownerId: 'owner-a',
         ownerGeneration: 7,
@@ -185,7 +189,10 @@ describe('shelf local store recovery', () => {
           operationKind: 'upsert',
           clientRevision: 1,
           state: 'ready',
-          payload: { manual_name: 'Atomic cleanser' },
+          payload: {
+            manual_name: 'Atomic cleanser',
+            source_disclosure_ack_at: '2026-07-18T12:00:00.000Z',
+          },
         },
       ],
       revisions: [
@@ -197,6 +204,23 @@ describe('shelf local store recovery', () => {
         },
       ],
     });
+  });
+
+  it('aborts both Shelf and outbox writes when an authenticated payload exceeds the RPC contract', async () => {
+    await expect(
+      addProductWithOperation(
+        { name: '🧴'.repeat(129), addedVia: 'manual' },
+        {
+          ownerId: 'owner-a',
+          ownerGeneration: 7,
+          operationId: 'oversized-name-operation',
+        },
+      ),
+    ).rejects.toThrow('OUTBOX_INVALID');
+
+    expect(mocks.transactionCalls).toBe(1);
+    expect(mocks.writeCalls).toBe(0);
+    expect(mocks.storage.size).toBe(0);
   });
 
   it('requires caller-owned operation identity before entering private storage', async () => {
