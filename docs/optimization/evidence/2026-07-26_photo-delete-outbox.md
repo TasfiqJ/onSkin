@@ -4,7 +4,7 @@
 
 Authenticated canonical photo deletion now commits one encrypted local deletion journal and one owner-bound `photo_delete` outbox tombstone atomically before any encrypted file moves. The same random UUID identifies both authorities. Offline use, process interruption, request timeout, and response loss can therefore recover/replay without inventing a second operation or losing the server cleanup intent.
 
-Signed-out deletion and authenticated legacy non-UUID IDs remain strictly local-only. The visible Progress deletion flow and copy are unchanged.
+Signed-out deletion and authenticated legacy non-UUID IDs remain strictly local-only. The original durability checkpoint left Progress unchanged; the follow-up now adds one aggregate current-owner recovery leaf inside entitled, timeline-unlocked, storage-readable Progress content.
 
 ## Client durability contract
 
@@ -13,7 +13,7 @@ Signed-out deletion and authenticated legacy non-UUID IDs remain strictly local-
 - `[onskin.photos.v1, onskin.outbox.v1]` commits through one crash-recoverable private-KV transaction. Malformed/future outbox state, capacity failure, a stale owner generation, or a transaction conflict fails before file quarantine.
 - Startup photo recovery finishes the existing prepared/metadata-committed file journal. It does not synthesize or duplicate an outbox row; the atomic prepare already made the intent durable.
 - The shared worker gives `photo_delete` highest privacy lease priority, sends it only through `apply_photo_delete_outbox_batch`, and retains ready/leased/dead commands. Applied, duplicate, or stale settlement removes the terminal row and its otherwise-unneeded revision fence.
-- Current-owner content-free status and manual retry APIs cover terminal photo deletion rows.
+- Current-owner content-free status and manual retry APIs cover terminal photo deletion rows and feed the non-blocking Progress recovery leaf.
 
 ## Bounded storage changes
 
@@ -55,7 +55,16 @@ Current V1 does not upload photo bytes. This RPC deletes optional server metadat
 - Independent architecture and final adversarial reviews found and drove fixes for large transaction envelopes, terminal revision leakage, photo-cap starvation, legacy-version provenance, pending-add/legacy envelope widening, account-deletion receipt races, stale metadata resurrection, UUID-rewrite bypass, unindexed tombstone checks, registry codec drift, and terminal retry observability. Final review found no remaining local correctness or security blocker.
 - Full mobile suite: 368 files / 4,515 tests; 4,511 passed. The four failures are the pre-existing unrelated notification behavioural-snapshot expectation and three user-edited Shelf metadata/provenance expectations.
 
-No human-simulated UI E2E was required for this checkpoint because it changes persistence, recovery, scheduling, and database enforcement without changing the visible Progress deletion flow. The existing route-level delete confirmation/recovery flow remains separately documented in `docs/USER_FLOW_TREE.md`.
+### Progress recovery presentation follow-up
+
+- The UI/status focused matrix passed 5 files / 81 tests, including a behavioral coordinator proving duplicate retry activation joins one promise and that completion or failure permits a later attempt.
+- The fresh root suite ran 370 files / 4,534 tests; 4,530 passed. The four failures remain the same unrelated user-edited notification behavioral-snapshot expectation and three Shelf metadata/provenance expectations. Root typecheck and zero-warning lint passed.
+- Codex in-app browser Expo web rendered saved-local, syncing, and needs-attention in both empty Progress at a requested 360 x 640 viewport and populated Progress at a requested 390 x 844 viewport.
+- All six presentations had zero horizontal overflow, partial visible controls, sub-44 visible controls, forbidden UUID/date/filename/raw-error content, or JavaScript dialogs. Syncing exposed exactly one named progressbar; attention exposed exactly one alert and a 55.99 px-high retry action.
+- The first narrow attention run found a partially off-viewport primary capture action. Reusing the existing compact first-run layout below 700 px fixed it, and the exact rerun kept both actions fully visible above the floating tab bar.
+- Evidence, exact viewport/capture dimensions, accessibility snapshots, expected local warnings, and the bug report are in `test-results/human-e2e/2026-07-26/progress-photo-delete-recovery-current/`.
+
+The development-web fixtures prove presentation and visible interaction only; they disable the live status query. Runtime outbox tests prove current-owner status/retry and account-generation fences, and the behavioral coordinator test proves retry single-flight. This follow-up does not claim an authenticated server delete or outbox transition from the browser fixture.
 
 ## Evidence still required
 
@@ -64,5 +73,7 @@ No human-simulated UI E2E was required for this checkpoint because it changes pe
 - Hosted Supabase migration/RLS/concurrency replay.
 - Release compatibility/minimum-build evidence before revoking the old best-effort direct DELETE path for any installed production build.
 - Long-lived offline testing through the 128-command privacy reserve and manual terminal retry.
+- Actual unreadable-queue `Check again` fault injection and authenticated offline-delete/reconnect/manual-retry presentation.
+- Supported-iOS VoiceOver, Dynamic Type, safe-area, and recovery interaction evidence.
 
 This closes the local durable photo-metadata deletion gap. It does not mark OPT-010 verified while hosted, native process-kill, long-lived capacity, and cross-device evidence remain open.

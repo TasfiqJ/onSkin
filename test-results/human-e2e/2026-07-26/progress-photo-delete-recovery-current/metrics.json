@@ -1,0 +1,112 @@
+{
+  "date": "2026-07-26",
+  "surface": "Expo web /progress in Codex in-app browser",
+  "expectedCurrentOriginWarnings": [
+    "EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+    "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+    "Listening to push token changes is not yet fully supported on web"
+  ],
+  "scenarios": [
+    {
+      "name": "empty-saved",
+      "requestedViewport": { "width": 360, "height": 640 },
+      "observedViewport": { "width": 360, "height": 641 },
+      "capturedPng": { "width": 360, "height": 639 },
+      "horizontalOverflow": 0,
+      "alertCount": 0,
+      "progressbarCount": 0,
+      "visibleInteractiveCount": 1,
+      "partialVisibleControls": 0,
+      "sub44VisibleControls": 0,
+      "forbiddenMetadataMatches": 0,
+      "javascriptDialog": false
+    },
+    {
+      "name": "empty-syncing",
+      "requestedViewport": { "width": 360, "height": 640 },
+      "observedViewport": { "width": 360, "height": 641 },
+      "capturedPng": { "width": 360, "height": 639 },
+      "horizontalOverflow": 0,
+      "alertCount": 0,
+      "progressbarCount": 1,
+      "progressbarLabels": ["Finishing deletion"],
+      "visibleInteractiveCount": 1,
+      "partialVisibleControls": 0,
+      "sub44VisibleControls": 0,
+      "forbiddenMetadataMatches": 0,
+      "javascriptDialog": false
+    },
+    {
+      "name": "empty-attention",
+      "requestedViewport": { "width": 360, "height": 640 },
+      "observedViewport": { "width": 360, "height": 641 },
+      "capturedPng": { "width": 360, "height": 639 },
+      "horizontalOverflow": 0,
+      "alertCount": 1,
+      "progressbarCount": 0,
+      "visibleInteractiveCount": 2,
+      "partialVisibleControls": 0,
+      "sub44VisibleControls": 0,
+      "retryControl": {
+        "label": "Try deletion again",
+        "width": 278.2767028808594,
+        "height": 55.99211502075195,
+        "top": 200.9102020263672,
+        "bottom": 256.90231704711914
+      },
+      "retryActivated": true,
+      "forbiddenMetadataMatches": 0,
+      "javascriptDialog": false
+    },
+    {
+      "name": "populated-saved",
+      "requestedViewport": { "width": 390, "height": 844 },
+      "observedViewport": { "width": 390, "height": 845 },
+      "capturedPng": { "width": 390, "height": 843 },
+      "horizontalOverflow": 0,
+      "alertCount": 0,
+      "progressbarCount": 0,
+      "visibleInteractiveCount": 8,
+      "partialVisibleControls": 0,
+      "sub44VisibleControls": 0,
+      "forbiddenMetadataMatches": 0,
+      "javascriptDialog": false
+    },
+    {
+      "name": "populated-syncing",
+      "requestedViewport": { "width": 390, "height": 844 },
+      "observedViewport": { "width": 390, "height": 845 },
+      "capturedPng": { "width": 390, "height": 843 },
+      "horizontalOverflow": 0,
+      "alertCount": 0,
+      "progressbarCount": 1,
+      "progressbarLabels": ["Finishing deletion"],
+      "visibleInteractiveCount": 8,
+      "partialVisibleControls": 0,
+      "sub44VisibleControls": 0,
+      "forbiddenMetadataMatches": 0,
+      "javascriptDialog": false
+    },
+    {
+      "name": "populated-attention",
+      "requestedViewport": { "width": 390, "height": 844 },
+      "observedViewport": { "width": 390, "height": 845 },
+      "capturedPng": { "width": 390, "height": 843 },
+      "horizontalOverflow": 0,
+      "alertCount": 1,
+      "progressbarCount": 0,
+      "visibleInteractiveCount": 9,
+      "partialVisibleControls": 0,
+      "sub44VisibleControls": 0,
+      "retryControl": {
+        "label": "Try deletion again",
+        "width": 308.3738098144531,
+        "height": 55.99211502075195,
+        "top": 292.8701477050781,
+        "bottom": 348.8622627258301
+      },
+      "forbiddenMetadataMatches": 0,
+      "javascriptDialog": false
+    }
+  ]
+}

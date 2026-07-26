@@ -45,8 +45,10 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('function FirstRun({ compact = false }: { compact?: boolean })');
     expect(source).toContain('const { height } = useWindowDimensions();');
     expect(source).toContain('const compactFirstRun = height < 520;');
+    expect(source).toContain('const compactEmptyFirstRun = height < 700;');
+    expect(source).toContain("contentContainerClassName={compactEmptyFirstRun ? 'pb-28' : 'pb-8'}");
     expect(source).toContain("contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}");
-    expect(source).toContain('<FirstRun compact={compactFirstRun} />');
+    expect(source).toContain('<FirstRun compact={compactEmptyFirstRun} />');
     expect(source).toContain("compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'");
     expect(source).toContain("compact ? 'mb-2 p-3' : 'mb-5'");
     expect(source).toContain('fontSize: compact ? 22 : 26');
@@ -68,6 +70,24 @@ describe('Progress route mobile contracts', () => {
     expect(copy).toContain('Cloud backup is not available in this build.');
     expect(copy).not.toContain('cloudTitle');
     expect(copy).not.toContain('cloudOff');
+  });
+
+  it('keeps photo deletion cleanup status inside both locked Progress scroll states', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+    const status = readSource('features/photos/PhotoDeleteSyncStatus.tsx');
+    const copy = readSource('features/photos/copy.ts');
+
+    expect(source).toContain(
+      "import { PhotoDeleteSyncStatus } from '@/features/photos/PhotoDeleteSyncStatus';",
+    );
+    expect(source.match(/<PhotoDeleteSyncStatus className=/g)).toHaveLength(2);
+    expect(source).toContain('<PhotoDeleteSyncStatus className="mt-3" />');
+    expect(source).toContain('<PhotoDeleteSyncStatus className="mt-4" />');
+    expect(status).toContain('readPhotoDeleteOutboxStatus');
+    expect(status).toContain('retryPhotoDeleteOutbox');
+    expect(copy).toContain("savedTitle: 'Deletion saved'");
+    expect(copy).toContain("attentionTitle: 'Deletion needs attention'");
+    expect(copy).toContain('Progress photo images are not uploaded in this build.');
   });
 
   it('gates every sensitive Progress entry with one shared timeline unlock', () => {
@@ -488,7 +508,9 @@ describe('Progress route mobile contracts', () => {
     expect(editor).toContain('createPhotoNoteSaveCoordinator({');
     expect(editor).toContain('createPhotoNoteSaveCoordinator({ commit: onCommit, initialNotes })');
     expect(editor).toContain('coordinator.setCommit(onCommit)');
-    expect(editor).toContain('const [noteState, setNoteState] = useState(coordinator.getSnapshot);');
+    expect(editor).toContain(
+      'const [noteState, setNoteState] = useState(coordinator.getSnapshot);',
+    );
     expect(editor).toContain('coordinator.subscribe(setNoteState)');
     expect(editor).toContain('coordinator.updateDraft(notes);');
     expect(editor).toContain('<TextInput');
@@ -523,7 +545,9 @@ describe('Progress route mobile contracts', () => {
     expect(editor).not.toContain('<PhotoImage');
 
     expect(coordinator).toContain('if (savePromise) {');
-    expect(coordinator).toContain('if (requestedDraft !== inFlightDraft) queuedDraft = requestedDraft;');
+    expect(coordinator).toContain(
+      'if (requestedDraft !== inFlightDraft) queuedDraft = requestedDraft;',
+    );
     expect(coordinator).toContain("publish({ ...snapshot, status: 'error' });");
     expect(copy).toContain("noteSaving: 'Saving on this device…'");
     expect(copy).toContain("noteSaved: 'Saved on this device'");
@@ -585,13 +609,17 @@ describe('Progress route mobile contracts', () => {
     const entitlement = readSource('features/subscription/useEntitlement.ts');
 
     expect(source).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return null;");
-    expect(source).toContain('parseProgressE2EPhotoCount(process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS)');
+    expect(source).toContain(
+      'parseProgressE2EPhotoCount(process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS)',
+    );
     expect(source).toContain('buildProgressE2EPhotos(count, E2E_PROGRESS_PHOTO_URI)');
     expect(source).toContain("'data:image/png;base64,");
     expect(source).toContain('const fixture = e2eProgressPhotoFixture();');
     expect(source).toContain('if (!fixture) await recoverPhotoStoreMutations();');
     expect(source).toContain('let photos = fixture ?? (await loadPhotos());');
-    expect(fixture).toContain("if (normalized === 'populated') return DEFAULT_PROGRESS_E2E_PHOTOS;");
+    expect(fixture).toContain(
+      "if (normalized === 'populated') return DEFAULT_PROGRESS_E2E_PHOTOS;",
+    );
     expect(fixture).toContain('export const MAX_PROGRESS_E2E_PHOTOS = 250;');
     expect(fixture).toContain('e2e-front-2026-04-01');
     expect(fixture).toContain('e2e-front-2026-05-12');

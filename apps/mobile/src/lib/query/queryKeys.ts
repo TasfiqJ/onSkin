@@ -122,6 +122,7 @@ export const queryPrefixes = {
   notificationPreferences: ['notifPrefs'] as const,
   notificationPreferencesOutboxStatus: ['notificationPreferencesOutboxStatus'] as const,
   onboarded: ['onboarded'] as const,
+  photoDeleteOutboxStatus: ['photoDeleteOutboxStatus'] as const,
   photos: ['photos'] as const,
   progress: ['progress'] as const,
   ramp: ['ramp'] as const,
@@ -225,6 +226,8 @@ export const queryKeys = {
   notificationPreferencesOutboxStatus: (scope: OwnerQueryScope, revision: number) =>
     ownerScopedQueryKey(scope, 'notificationPreferencesOutboxStatus', revision),
   onboarded: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'onboarded'),
+  photoDeleteOutboxStatus: (scope: OwnerQueryScope, revision: number) =>
+    ownerScopedQueryKey(scope, 'photoDeleteOutboxStatus', revision),
   photos: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity, series: string) =>
     localDayQueryKey(scope, 'photos', boundary, series),
   progress: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity) =>
@@ -267,6 +270,8 @@ export const ownerQueryPrefixes = {
   notificationPreferencesOutboxStatus: (scope: OwnerQueryScope) =>
     ownerScopedQueryPrefix(scope, 'notificationPreferencesOutboxStatus'),
   onboarded: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'onboarded'),
+  photoDeleteOutboxStatus: (scope: OwnerQueryScope) =>
+    ownerScopedQueryPrefix(scope, 'photoDeleteOutboxStatus'),
   photos: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'photos'),
   progress: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'progress'),
   ramp: (scope: OwnerQueryScope) => ownerScopedQueryPrefix(scope, 'ramp'),

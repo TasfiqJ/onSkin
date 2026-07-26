@@ -114,6 +114,23 @@ export const PHOTO_COPY = {
     noteSaveUnavailable: "We couldn't confirm this note was saved. Your text is still here.",
     noteSaveRetry: 'Try save again',
   },
+  deleteSync: {
+    savedTitle: 'Deletion saved',
+    savedBody:
+      "Any deleted photos are already gone from this phone. We'll finish removing matching account records when a connection is ready. Progress photo images are not uploaded in this build.",
+    syncingTitle: 'Finishing deletion',
+    syncingBody:
+      "Any deleted photos are already gone from this phone. We're removing matching account records now. Progress photo images are not uploaded in this build.",
+    attentionTitle: 'Deletion needs attention',
+    attentionBody:
+      "Any deleted photos are already gone from this phone, but we couldn't finish removing matching account records. Progress photo images are not uploaded in this build.",
+    retry: 'Try deletion again',
+    retrying: 'Trying again...',
+    unavailableTitle: 'Deletion status unavailable',
+    unavailableBody:
+      "We couldn't safely read the deletion queue. No photo was restored or changed.",
+    checkAgain: 'Check again',
+  },
   // Privacy / app-lock (design screen 08, docs/06 §7).
   lock: {
     title: 'Your timeline is locked.',

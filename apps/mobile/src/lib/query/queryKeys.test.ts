@@ -97,6 +97,12 @@ describe('owner-scoped query keys', () => {
       OWNER_QUERY_NAMESPACE,
       generation,
     ]);
+    expect(queryKeys.photoDeleteOutboxStatus(scope, 7)).toEqual([
+      'photoDeleteOutboxStatus',
+      OWNER_QUERY_NAMESPACE,
+      generation,
+      7,
+    ]);
     expect(queryKeys.skinProfile(scope)).toEqual([
       'skinProfileBits',
       OWNER_QUERY_NAMESPACE,
@@ -351,6 +357,11 @@ describe('owner-scoped query keys', () => {
         keyA: queryKeys.onboarded(scopeA),
         keyB: queryKeys.onboarded(scopeB),
         prefixA: ownerQueryPrefixes.onboarded(scopeA),
+      },
+      {
+        keyA: queryKeys.photoDeleteOutboxStatus(scopeA, 1),
+        keyB: queryKeys.photoDeleteOutboxStatus(scopeB, 1),
+        prefixA: ownerQueryPrefixes.photoDeleteOutboxStatus(scopeA),
       },
       {
         keyA: queryKeys.recommendationPreferences(scopeA),

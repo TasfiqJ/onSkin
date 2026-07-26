@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card, Screen, Text } from '@/components/ui';
 import { CompareSlider } from '@/features/photos/CompareSlider';
 import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
+import { PhotoDeleteSyncStatus } from '@/features/photos/PhotoDeleteSyncStatus';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageBoundary } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';
@@ -675,6 +676,7 @@ function PopulatedProgressHeader({
       <Text variant="bodySm" tone="muted" italic className="mt-2" style={{ lineHeight: 19 }}>
         {PHOTO_COPY.tagline}
       </Text>
+      <PhotoDeleteSyncStatus className="mt-4" />
       {trend ? (
         <View className="mt-4">
           <TrendInsightFromSource source={trend} />
@@ -753,6 +755,7 @@ function PhotoProgressContent({
 }) {
   const { height } = useWindowDimensions();
   const compactFirstRun = height < 520;
+  const compactEmptyFirstRun = height < 700;
 
   useEffect(() => {
     if (mode === 'compare') track('comparison_viewed');
@@ -769,14 +772,15 @@ function PhotoProgressContent({
       {count === 0 ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}
+          contentContainerClassName={compactEmptyFirstRun ? 'pb-28' : 'pb-8'}
         >
           <View className="flex-row items-start justify-between">
             <Text variant="title" className="mt-2" style={{ fontSize: 38 }}>
               {PHOTO_COPY.tabTitle}
             </Text>
           </View>
-          <FirstRun compact={compactFirstRun} />
+          <PhotoDeleteSyncStatus className="mt-3" />
+          <FirstRun compact={compactEmptyFirstRun} />
         </ScrollView>
       ) : mode === 'timeline' ? (
         <TimelineView compact={compactFirstRun} data={data} header={populatedHeader} />

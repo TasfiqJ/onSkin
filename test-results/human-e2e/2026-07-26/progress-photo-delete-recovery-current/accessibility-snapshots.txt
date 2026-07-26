@@ -1,0 +1,57 @@
+EMPTY / SAVED LOCAL
+Progress
+Deletion saved
+Any deleted photos are already gone from this phone. We'll finish removing matching account
+records when a connection is ready. Progress photo images are not uploaded in this build.
+button "Take my first photo"
+tab "Progress tab" [selected]
+
+EMPTY / SYNCING
+Progress
+progressbar "Finishing deletion"
+Finishing deletion
+Any deleted photos are already gone from this phone. We're removing matching account records
+now. Progress photo images are not uploaded in this build.
+button "Take my first photo"
+tab "Progress tab" [selected]
+
+EMPTY / NEEDS ATTENTION
+Progress
+alert
+Needs attention
+Deletion needs attention
+Any deleted photos are already gone from this phone, but we couldn't finish removing matching
+account records. Progress photo images are not uploaded in this build.
+button "Try deletion again"
+button "Take my first photo"
+tab "Progress tab" [selected]
+
+POPULATED / SAVED LOCAL
+Progress
+button "Take a progress photo"
+Deletion saved
+button "Compare"
+button "Timeline"
+slider "Before Apr 1 and after Jun 24 comparison divider"
+tab "Progress tab" [selected]
+POPULATED / SYNCING
+Progress
+button "Take a progress photo"
+progressbar "Finishing deletion"
+Finishing deletion
+button "Compare"
+button "Timeline"
+slider "Before Apr 1 and after Jun 24 comparison divider"
+tab "Progress tab" [selected]
+
+POPULATED / NEEDS ATTENTION
+Progress
+button "Take a progress photo"
+alert
+Needs attention
+Deletion needs attention
+button "Try deletion again"
+button "Compare"
+button "Timeline"
+slider "Before Apr 1 and after Jun 24 comparison divider"
+tab "Progress tab" [selected]
