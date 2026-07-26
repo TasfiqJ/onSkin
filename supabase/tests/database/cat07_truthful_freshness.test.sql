@@ -7,14 +7,14 @@ select plan(53);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  67::bigint,
-  'CAT-07 behavior from 20260718000060 runs against the exact 67-migration source history'
+  69::bigint,
+  'CAT-07 behavior from 20260718000060 runs against the exact 69-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000068'::text,
-  'CAT-07 remains effective through the latest routine-adherence authority contract'
+  '20260726000070'::text,
+  'CAT-07 remains effective through the Shelf/completion sync bridge head'
 );
 
 select is(
@@ -288,6 +288,23 @@ insert into public.product_pao_expiry (
 
 alter table public.user_products enable trigger trg_user_products_catalog_pao_snapshot;
 alter table public.user_products enable trigger trg_user_products_category_default_evidence;
+
+-- 0069 makes Shelf identity durable independently of mutable product content.
+-- These privileged CAT-07 fixtures bypass runtime health admission, so stage
+-- their minimal same-owner identities explicitly before inserting content.
+alter table public.shelf_product_identities disable trigger user;
+insert into public.shelf_product_identities (id, user_id)
+select fixture.id, '60000000-0000-4000-8000-000000000001'::uuid
+  from unnest(array[
+    '64000000-0000-4000-8000-000000000001'::uuid,
+    '64000000-0000-4000-8000-000000000002'::uuid,
+    '64000000-0000-4000-8000-000000000003'::uuid,
+    '64000000-0000-4000-8000-000000000004'::uuid,
+    '64000000-0000-4000-8000-000000000006'::uuid,
+    '64000000-0000-4000-8000-000000000007'::uuid,
+    '64000000-0000-4000-8000-000000000008'::uuid
+  ]) as fixture(id);
+alter table public.shelf_product_identities enable trigger user;
 
 select lives_ok(
   $$insert into public.user_products (

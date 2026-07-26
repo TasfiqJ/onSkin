@@ -171,7 +171,7 @@
     "phase9:security-ci-smoke:strict": "node scripts/phase9/security-ci-smoke.mjs --strict",
     "phase9:data-rights-smoke": "node scripts/phase9/data-rights-smoke.mjs",
     "phase9:data-rights-smoke:strict": "node scripts/phase9/data-rights-smoke.mjs --strict",
-    "phase9:data-export-contract-smoke": "deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/_shared/accountAccess.test.ts supabase/functions/_shared/accountAccessCoverage.test.ts supabase/functions/data-export/exportCore.test.ts supabase/functions/data-export/catalogCorrectionExportCore.test.ts supabase/functions/data-export/exportRegistry.test.ts",
+    "phase9:data-export-contract-smoke": "deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/_shared/accountAccess.test.ts supabase/functions/_shared/accountAccessCoverage.test.ts supabase/functions/data-export/exportCore.test.ts supabase/functions/data-export/catalogCorrectionExportCore.test.ts supabase/functions/data-export/healthSyncExportCore.test.ts supabase/functions/data-export/exportRegistry.test.ts",
     "phase9:storage-path-privacy-smoke": "deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/_shared/storagePath.test.ts",
     "phase9:account-deletion-photo-storage-smoke": "deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/account-deletion/photoStorageCleanup.test.ts",
     "phase9:account-provider-deletion-smoke": "deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/account-deletion/providerDeletion.test.ts",

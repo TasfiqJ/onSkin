@@ -314,6 +314,12 @@ async function insertOne(client, table, payload, select = '*') {
   return data;
 }
 
+async function selectOne(client, table, column, value, select = '*') {
+  const { data, error } = await client.from(table).select(select).eq(column, value).single();
+  if (error) throw error;
+  return data;
+}
+
 async function upsertOne(client, table, payload, select = '*') {
   const { data, error } = await client.from(table).upsert(payload).select(select).single();
   if (error) throw error;
@@ -361,6 +367,46 @@ const catalogCorrectionInternalFields = [
   'intake_health_epoch',
   'intake_request_digest',
 ];
+const shelfIdentityExportFields = [
+  'id',
+  'user_id',
+  'created_at',
+  'deleted_effective_at',
+  'deleted_received_at',
+];
+const shelfSyncReceiptExportFields = [
+  'operation_id',
+  'user_id',
+  'state',
+  'result_code',
+  'created_at',
+  'finalized_at',
+];
+const routineCompletionSyncReceiptExportFields = [
+  'event_id',
+  'user_id',
+  'state',
+  'result_code',
+  'created_at',
+  'finalized_at',
+];
+
+function dateInTimezone(instant, timezone) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(instant);
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  assert(
+    /^\d{4}$/.test(value.year ?? '') &&
+      /^\d{2}$/.test(value.month ?? '') &&
+      /^\d{2}$/.test(value.day ?? ''),
+    'could not derive the completion fixture date in its declared timezone.',
+  );
+  return `${value.year}-${value.month}-${value.day}`;
+}
 
 function subscriptionEventContainsIdentity(row, userId) {
   return (
@@ -802,7 +848,7 @@ async function exhaustDataExportRateLimit(user) {
     );
     assert(body?.user_id === user.id, 'data-export before limit returned the wrong user_id.');
     assert(
-      body?.export_schema_version === 3,
+      body?.export_schema_version === 4,
       'data-export before limit returned the wrong export schema version.',
     );
     assertLocalPhotoExportDisclosure(body);
@@ -1041,33 +1087,83 @@ async function main() {
         goals: [`phase9-data-${label}`],
         completed_at: new Date().toISOString(),
       });
-      const product = await insertOne(user.client, 'user_products', {
-        user_id: user.id,
+      const productId = randomUUID();
+      const shelfOperationId = randomUUID();
+      const shelfEnqueuedAt = new Date(Date.now() - 1_000).toISOString();
+      const shelfPayload = {
+        id: productId,
+        catalog_product_id: null,
+        catalog_source_id: null,
+        catalog_match_quality: 'manual',
+        catalog_source_snapshot_date: null,
         manual_name: `Phase 9 ${label} Cleanser`,
         manual_brand: 'Data Rights Smoke',
-        opened_at: new Date().toISOString().slice(0, 10),
-        pao_months: 12,
-      });
-      const routine = await insertOne(user.client, 'routines', {
-        user_id: user.id,
-        type: 'AM',
-        name: `Phase 9 ${label} AM`,
-      });
-      const step = await insertOne(user.client, 'routine_steps', {
-        routine_id: routine.id,
-        user_product_id: product.id,
-        step_order: 1,
-        frequency: 'daily',
-        instructions: `Phase 9 ${label} step`,
-      });
-      const adherence = await user.client.rpc('set_routine_adherence_timezone', {
-        p_timezone: 'America/Toronto',
-      });
-      if (adherence.error) throw adherence.error;
+        barcode: null,
+        opened_at: null,
+        pao_months: null,
+        expiry_date: null,
+        is_opened: false,
+        pao_source: 'unknown',
+        expiry_source: 'unknown',
+        added_via: 'manual',
+        source_disclosure_ack_at: null,
+        status: 'active',
+        finished_at: null,
+      };
+      const { data: shelfSyncResponse, error: shelfSyncError } = await user.client.rpc(
+        'sync_shelf_product',
+        {
+          p_operation_id: shelfOperationId,
+          p_operation_kind: 'upsert',
+          p_enqueued_at: shelfEnqueuedAt,
+          p_product_id: productId,
+          p_payload: shelfPayload,
+        },
+      );
+      if (shelfSyncError) throw shelfSyncError;
       assert(
-        Array.isArray(adherence.data) &&
-          /^\d{4}-\d{2}-\d{2}$/u.test(String(adherence.data[0]?.reference_day ?? '')),
-        `adherence timezone setup failed for ${label}.`,
+        shelfSyncResponse?.version === 1 &&
+          shelfSyncResponse?.operation_id === shelfOperationId &&
+          shelfSyncResponse?.status === 'accepted' &&
+          shelfSyncResponse?.code === null,
+        `Shelf sync fixture was not accepted for ${label}.`,
+      );
+      const product = await selectOne(user.client, 'user_products', 'id', productId);
+
+      const routineId = randomUUID();
+      const stepId = randomUUID();
+      const completionEventId = randomUUID();
+      const completedAt = new Date().toISOString();
+      const completedDate = dateInTimezone(new Date(completedAt), 'America/Toronto');
+      const { data: completionSyncResponse, error: completionSyncError } = await user.client.rpc(
+        'record_routine_completion',
+        {
+          p_event_id: completionEventId,
+          p_routine_id: routineId,
+          p_routine_type: 'AM',
+          p_step_id: stepId,
+          p_user_product_id: productId,
+          p_step_order: 1,
+          p_completed_at: completedAt,
+          p_completed_date: completedDate,
+          p_timezone: 'America/Toronto',
+        },
+      );
+      if (completionSyncError) throw completionSyncError;
+      assert(
+        completionSyncResponse?.version === 1 &&
+          completionSyncResponse?.event_id === completionEventId &&
+          completionSyncResponse?.status === 'accepted' &&
+          completionSyncResponse?.code === null,
+        `completion sync fixture was not accepted for ${label}.`,
+      );
+      const routine = await selectOne(user.client, 'routines', 'id', routineId);
+      const step = await selectOne(user.client, 'routine_steps', 'id', stepId);
+      const completion = await selectOne(
+        user.client,
+        'routine_completions',
+        'id',
+        completionEventId,
       );
       await insertOne(user.client, 'consents', {
         user_id: user.id,
@@ -1083,13 +1179,6 @@ async function main() {
         version: `phase9-data-${label}`,
         consent_text_hash: healthConsentHash,
       });
-      const completion = await insertOne(user.client, 'routine_completions', {
-        user_id: user.id,
-        routine_id: routine.id,
-        step_id: step.id,
-        completed_date: new Date().toISOString().slice(0, 10),
-      });
-
       const photoPath = `${user.id}/e1/phase9-data-${label}-${randomUUID()}.bin`;
       storagePaths.push(photoPath);
       const upload = await user.client.storage
@@ -1171,6 +1260,8 @@ async function main() {
         step,
         consent,
         completion,
+        shelfOperationId,
+        completionEventId,
         photo,
         click,
         clickToken,
@@ -1281,7 +1372,7 @@ async function main() {
       if (error) throw error;
       assert(data && typeof data === 'object', 'data-export did not return a JSON bundle.');
       assert(data.user_id === userA.id, 'data-export returned the wrong user_id.');
-      assert(data.export_schema_version === 3, 'data-export schema version mismatch.');
+      assert(data.export_schema_version === 4, 'data-export schema version mismatch.');
       assertLocalPhotoExportDisclosure(data);
 
       expectBundleHasOnlyUser(data, 'skin_profiles', 'user_id', userA.id, userB.id);
@@ -1294,6 +1385,70 @@ async function main() {
       expectBundleHasOnlyUser(data, 'entitlements', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'reverse_trial_grants', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'catalog_corrections', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'shelf_product_identities', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'shelf_sync_receipts', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(
+        data,
+        'routine_completion_sync_receipts',
+        'user_id',
+        userA.id,
+        userB.id,
+      );
+
+      const sealedSyncSources = [
+        ['shelf_product_identities', shelfIdentityExportFields, 'id', seededA.product.id],
+        [
+          'shelf_sync_receipts',
+          shelfSyncReceiptExportFields,
+          'operation_id',
+          seededA.shelfOperationId,
+        ],
+        [
+          'routine_completion_sync_receipts',
+          routineCompletionSyncReceiptExportFields,
+          'event_id',
+          seededA.completionEventId,
+        ],
+      ];
+      for (const [source, fields, idField, expectedId] of sealedSyncSources) {
+        const sourceRows = rows(data, source);
+        assert(
+          sourceRows.length === 1 &&
+            sourceRows[0]?.[idField] === expectedId &&
+            sourceRows[0]?.user_id === userA.id &&
+            exactObjectKeys(sourceRows[0], fields) &&
+            !Object.hasOwn(sourceRows[0], 'request_sha256'),
+          `${source} omitted the exact caller receipt or exposed an internal field.`,
+        );
+        const sourceManifest = data.manifest?.sources?.[source];
+        assert(
+          sourceManifest?.scope === 'caller_rpc_owner' &&
+            sourceManifest.complete === true &&
+            sourceManifest.count === 1 &&
+            sourceManifest.count_before === 1 &&
+            sourceManifest.count_after === 1 &&
+            /^sha256:[a-f0-9]{64}$/.test(sourceManifest.checksum),
+          `${source} export manifest is incomplete or misclassified.`,
+        );
+        assert(
+          !data.export_coverage?.caller_rls_tables?.includes(source) &&
+            !data.export_coverage?.service_role_filtered_exports?.includes(source) &&
+            data.export_coverage?.caller_rpc_owner_exports?.filter(
+              (candidate) => candidate === source,
+            ).length === 1,
+          `${source} export coverage is incomplete, duplicated, or misclassified.`,
+        );
+      }
+      assert(
+        Array.isArray(data.exclusion_register) &&
+          data.exclusion_register.some(
+            (entry) =>
+              entry?.data_class === 'health_sync_request_fingerprints' &&
+              typeof entry.reason === 'string' &&
+              entry.reason.includes('request_sha256'),
+          ),
+        'data-export omitted the reviewed sync-fingerprint exclusion.',
+      );
 
       const catalogCorrectionRows = rows(data, 'catalog_corrections');
       assert(
@@ -1352,9 +1507,7 @@ async function main() {
       );
       assert(
         !data.export_coverage?.caller_rls_tables?.includes('catalog_corrections') &&
-          !data.export_coverage?.service_role_filtered_exports?.includes(
-            'catalog_corrections',
-          ) &&
+          !data.export_coverage?.service_role_filtered_exports?.includes('catalog_corrections') &&
           data.export_coverage?.caller_rpc_owner_exports?.filter(
             (table) => table === 'catalog_corrections',
           ).length === 1,

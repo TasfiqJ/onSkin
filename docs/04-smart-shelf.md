@@ -12,6 +12,20 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 
 > **CAT-07 freshness boundary (2026-07-19):** strict physical-package date, label-or-catalog PAO, disabled future category-estimate, and unknown provenance; explicit replacement opening state; and authenticated byte-preserving local v1→v2 handling are source candidates only. Integrated source/static-policy verification, qualified chemistry/legal review, hosted migration/RLS/live-catalog evidence, refreshed E2E, and signed-build physical-iPhone storage/relaunch/accessibility/notification evidence remain open. See `docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md`.
 
+> **Current CORE-05 replay boundary (2026-07-26):** CAT-07's freshness
+> semantics remain the product-content contract, but its local v1→v2 note is
+> predecessor history. The current encrypted Shelf record is strict schema v3:
+> canonical products, stable lowercase UUID-v4 identities, a FIFO mirror
+> outbox, bounded terminal receipts, and explicit incompatibilities. Historical
+> schemas never fabricate a missing delete or other replay. Migration `0069`
+> separates mutable `user_products` content from deletion-wins
+> `shelf_product_identities`, seals direct Shelf/completion mutation behind
+> owner-derived health/account-fenced RPCs, and lets completion replay wait for
+> stable product identity. Shelf drains before completion. This is source-level
+> replay and export work, not proof of hosted two-device convergence, native
+> storage durability, withdrawal cleanup, or App Store readiness. See
+> [the CORE-05 source checkpoint](hugeToDo/CORE-05-ADHERENCE-SOURCE-CHECKPOINT-2026-07-26.md).
+
 - **The Smart Shelf is intended to be the product-data capture engine, with barcode intake as a candidate activation moment.** Products can currently enter by reviewed-catalog scan/search or manual intake; the internal staging label path has a bounded Apple Vision candidate with editable review, while every build retains manual text recovery and production remains disabled. PAO/expiry lives on the Shelf, and downstream conflict/routine logic reads the stored products. Competitor adoption suggests that scanning can reduce intake friction, but OnSkin must measure scan-to-save activation, repeat use, and retention in a consented beta before claiming that this behavior or switching cost transfers to this app.
 
 - **Scope is deliberately narrow against docs/02.** docs/02 owns the **catalog** (`products`, `ingredients`, `product_ingredients`, product-specific PAO evidence, and future category metadata) and the freshness truth table: a date recorded/reconfirmed from this physical package, explicit label PAO, reviewed catalog PAO, disabled future catalog-linked category estimate, or unknown. A product-level catalog expiry date has no lot/package binding and never enters Shelf. Migration `0060` purges, force-RLS seals, and prevents repopulation of legacy `ingredient_pao_defaults`; Shelf never reads it. Document 4 owns the **shelf _feature and experience_** — intake and its edge cases, Shelf screens, product-detail management, lifecycle, replacement, and replenishment. docs/02 determines the evidence semantics; doc 4 determines how the user adds, sees, manages, and replaces a unit.
@@ -61,7 +75,11 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 **It is** the user's personal product inventory and the system's product-data capture surface. Concretely, the shelf:
 
 - is the **intake point** — every product enters here (scan / search / OCR / manual), and intake captures the data the rest of the app needs (catalog link, parsed actives, concentration, `opened_at`, PAO);
-- is the **source of truth for what the user owns** — the routine builder (docs/03) draws its steps from `user_products`, and the conflict engine (docs/02 `detect_conflicts`) runs over the shelf;
+- is the **source of truth for what the user owns on this device** — the
+  routine builder and conflict engine read canonical local Shelf-v3 content;
+  `user_products` is its mutable server mirror, while
+  `shelf_product_identities` preserves only stable server identity/deletion
+  state for delayed completion replay;
 - is the **home of PAO / expiry** — the place freshness is surfaced and managed;
 - is the **launch point for replenishment** — when a trusted printed or label/catalog-PAO date is near or past, or the user marks a unit finished.
 
@@ -87,8 +105,17 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 
 ### 2. Data model — extends docs/01 `user_products` + docs/02 catalog
 
-**Recap of the existing `user_products` (docs/01 §3) — unchanged, the spine of the shelf:**
+**Recap of the existing `user_products` content table (docs/01 §3):**
 `id`, `user_id`, `catalog_product_id NULL FK` (→ docs/02 `products`), manual fallbacks `manual_name` / `manual_brand`, `barcode`, `opened_at date`, `pao_months int`, `expiry_date date`, and the generated column `expiry_computed date GENERATED ALWAYS AS (least(expiry_date, opened_at + (pao_months || ' months')::interval)) STORED`, plus `status text` (active/finished/discarded). Owner-only RLS; indexed on `user_id`, `catalog_product_id`.
+
+Migration `0069` supersedes the assumption that this mutable row is also the
+only identity authority. `shelf_product_identities` retains only `id`,
+`user_id`, `created_at`, `deleted_effective_at`, and `deleted_received_at`.
+Routine steps reference that stable identity. A delete of missing content
+creates or advances a same-owner tombstone; a later upsert cannot resurrect it.
+A delayed completion at or before the effective cutoff can reconcile, while a
+later completion is terminal. Direct product/routine/step/completion mutation
+is revoked from API roles and admitted through the owner-derived sync RPCs.
 
 **Extensions this feature needs** (additive columns plus a device-local reconnect queue; they do **not** redefine the table):
 
@@ -131,7 +158,18 @@ create index on public.user_products (user_id, status, expiry_computed);  -- for
 
 > **Decision-log notes (DECISIONS.md):** **D-022** — `opened_at` is captured at intake and an explicit **`is_opened` unopened state** is supported (no PAO clock until opened); **D-023** — every `user_products` row records `pao_source`/`expiry_source` provenance so printed, label/catalog PAO, reserved future category estimate, and unknown never collapse into one another; **D-024** — product **thumbnails are stored on-device by default** (`thumbnail_path` local), cloud only on the same opt-in that governs progress photos (docs/01 §3). Anything touching the **data-sharing** consent for replenishment/affiliate belongs in **BLOCKERS.md** (see §6/§7).
 
-**Local freshness envelope v1 → v2 boundary.** The CAT-07 source candidate authenticates legacy schema-v1 bytes against the exact v1 canonical representation, decodes a valid record into v2 semantics in memory, and does **not** rewrite storage merely because it was read. The first successful authorized atomic mutation writes canonical v2 bytes. A failed write leaves the original v1 bytes intact. Non-canonical, future-version, or otherwise untrusted envelopes are preserved byte-for-byte and mutations fail closed; the app must not silently normalize evidence it cannot authenticate. This source contract still needs green integrated tests plus native encrypted-storage, relaunch, interruption, and account-boundary evidence.
+**Historical CAT-07 v1→v2 boundary and current v3 supersession.** CAT-07
+authenticated legacy schema-v1 bytes against their exact canonical form,
+decoded them into v2 freshness semantics in memory, and avoided a read-only
+rewrite. That behavior remains predecessor evidence. The current Shelf decoder
+is strict v3. It retains canonical product content plus FIFO, terminal, and
+incompatibility state. Eligible canonical v2 products may receive idempotent
+upserts only during an authorized health/account-bound upgrade; historical
+records do not invent a delete. Incompatible identifiers or content remain
+repair-required instead of being silently normalized into replay. Failed
+mutation preserves the prior authenticated bytes. Native encrypted-storage,
+relaunch, interruption, process-death, and account-boundary evidence remains
+open.
 
 ### 3. PAO / expiry intelligence — operationalising docs/02 §6
 
@@ -160,7 +198,11 @@ promoted to `printed`.
 
 ### 4. Product intake — the multi-path funnel (the hero flow)
 
-Intake is the most important _how-it-works_ surface in this document. There is **one hero path (scan)** and **three fallbacks**, and **every path ends at the opened-date capture (§4.5)** and writes a `user_products` row.
+Intake is the most important _how-it-works_ surface in this document. There is
+**one hero path (scan)** and **three fallbacks**, and **every path ends at the
+opened-date capture (§4.5)** and atomically writes canonical local Shelf-v3
+content plus stable replay intent. The later server `user_products` mutation
+occurs only through `sync_shelf_product`.
 
 #### 4.1 Barcode scan (the hero)
 
@@ -168,7 +210,15 @@ Intake is the most important _how-it-works_ surface in this document. There is *
 2. **Camera:** the current `expo-camera` native barcode scanner (docs/00 §4) decodes barcode frames **on-device**, with a clear framing reticle, a steadying hint ("Line up the barcode"), privacy microcopy ("Decoding happens on your device"), a torch toggle, and a selection haptic on a successful read. The shared CAT-06 source gate admits one focused/foreground preview only after fresh permission verification and camera-ready, uses a fresh keyed generation after mount failure, and invalidates queued callbacks before barcode parsing when lifecycle authority closes. The decoded identifier is then sent to the first-party catalog service; exact signed-build device and traffic proof remains required.
 3. **Lookup:** on a decoded barcode, query OnSkin's reviewed catalog service. The service queries only promoted catalog rows and has no OBF/OFF origin, request helper, live-API flag, or external candidate response.
 4. **Result card:** the current source confirms product name, brand, and reviewed catalog/source quality before **“Add this.”** Parsed actives and catalog-derived PAO are not currently rendered on this card; adding either requires strict served-field decoding, provenance copy, and UI/device evidence. Product detail and opened-date intake remain the places where available freshness/ingredient context is shown.
-5. **Opened state (§4.5)** → choose opened/unopened and confirm only the freshness evidence actually available for this unit (physical-package date entered/reconfirmed by the user, explicit label PAO, reviewed catalog PAO, or unknown) → **save** to `user_products` (`added_via='barcode'`, `catalog_product_id` set). Never import a product-level catalog expiry date. Emit only a bounded scan-outcome analytics event; never persist the raw barcode in analytics.
+5. **Opened state (§4.5)** → choose opened/unopened and confirm only the freshness
+   evidence actually available for this unit (physical-package date
+   entered/reconfirmed by the user, explicit label PAO, reviewed catalog PAO,
+   or unknown) → **save** to local Shelf v3 with
+   `added_via='barcode'`, the reviewed `catalog_product_id`, and its stable
+   upsert operation. Never import a product-level catalog expiry date. The
+   server content mirror is replayed through `sync_shelf_product`. Emit only a
+   bounded scan-outcome analytics event; never persist the raw barcode in
+   analytics.
 
 **Edge cases (all handled, calmly):**
 
@@ -202,7 +252,7 @@ A simple form: **name, brand, category**, optional **barcode**, optional **ingre
 
 #### 4.5 The opened-date capture (the linchpin)
 
-Every intake path converges here. A calm sheet asks **"When did you open it?"** with **Just opened it** (`opened_at = today`), **Pick a date** (a valid past date), and **Not opened yet** (`is_opened=false`, `opened_at=null`, no PAO clock). The app does not substitute add time when the user is unsure. Explicit open-jar PAO can be confirmed here with its source; reviewed catalog PAO remains catalog provenance; a printed package date becomes actionable only after the user enters or reconfirms it from this physical unit; and unknown remains a valid completion state. Product-level catalog expiry rows remain in catalog/correction surfaces. Replacement uses an equivalent explicit opening-state choice rather than silently starting a PAO clock.
+Every intake path converges here. A calm sheet asks **"When did you open it?"** with **Just opened it** (`opened_at = today`), **Pick a date** (a valid past date), and **Not opened yet** (`is_opened=false`, `opened_at=null`, no PAO clock). The app does not substitute add time when the user is unsure. Explicit open-jar PAO can be confirmed here with its source; reviewed catalog PAO remains catalog provenance; a printed package date becomes actionable only after the user enters or reconfirms it from this physical unit; and unknown remains a valid completion state. Product-level catalog expiry rows remain in catalog/correction surfaces. Replacement uses an equivalent explicit opening-state choice rather than silently starting a PAO clock. Confirmation commits the canonical product and stable upsert intent to the encrypted local Shelf-v3 record before UI success; `user_products` changes later only through the `0069` replay RPC.
 
 #### 4.6 Missing-product and correction path (OnSkin only)
 
@@ -210,7 +260,7 @@ Any no-match, OCR-built, or manually entered product remains user-local. With he
 
 #### 4.7 First intake from onboarding
 
-The onboarding "current products intake" (docs/01 §2 step 6) is the shelf's first population; **skip must stay visible** (docs/01). Whatever is added there seeds `user_products` (`added_via='onboarding'`) and immediately feeds the first routine generation ("See my routine," docs/03 §2) and the first conflict pass.
+The onboarding "current products intake" (docs/01 §2 step 6) is the shelf's first population; **skip must stay visible** (docs/01). Whatever is added there seeds the encrypted local Shelf-v3 content and its stable upsert intent (`added_via='onboarding'`) and immediately feeds the first routine generation ("See my routine," docs/03 §2) and the first conflict pass. The server mirror is replayed later through `sync_shelf_product`; the onboarding route does not directly write `user_products`.
 
 ### 5. The Shelf surfaces (look, feel, and behaviour) — every detail
 
@@ -306,14 +356,63 @@ _Whether the shelf's product mix constitutes additional special-category inferen
 
 ### 8. Offline & sync
 
-The shelf must work in a bathroom with no signal (docs/01 §6): **view** the cached shelf, **add manually**, and explicitly queue an OnSkin-catalog barcode lookup for reconnect. There is no third-party source lookup, report queue, or contribution queue. A correction report intentionally retains actionable identity and therefore requires a separate online user submission with inline failure recovery. The lookup queue is encrypted, health-consent and account-bound, limited to 64 unique normalized barcodes, marks entries ineligible after a seven-day logical TTL, uses bounded exponential backoff, and stores only a minimal reviewed candidate. Encrypted bytes are physically purged on the next activation, queue read/maintenance, local export, or account/consent lifecycle cleanup; mobile OS suspension or termination can delay that purge beyond the logical deadline. When an account owner is verified, local export removes foreign-owner residue before reading the exact-owner snapshot; a verified unclaimed local store preserves validated live records. Reconnect never mutates `user_products`: Shelf exposes the candidate, compares it with current user-entered details, and requires an explicit accept or reject. Acceptance revalidates the exact first-party product; catalog identity is opt-in, while ingredients and freshness are always preserved. Shelf creation uses a stable per-submission operation UUID so an uncertain retry cannot duplicate a row. Rejection removes the reviewed candidate immediately; acceptance removes it only after the confirmed Shelf save succeeds. Final retention wording and legal treatment remain open for qualified privacy/legal review. The data layer remains TanStack Query plus purpose-specific persisted queues (DECISIONS **D-007**).
+The Shelf must work in a bathroom with no signal (docs/01 §6): **view** the
+canonical local content, **add manually**, and queue a Shelf mirror operation
+without waiting for the network. The strict encrypted v3 envelope is the
+durability boundary, not a TanStack optimistic cache: one authorized private-KV
+transform commits the product and owner-free UUID-v4 upsert/delete operation
+before success is published. Its FIFO retains ambiguous network, authorization,
+thrown-RPC, or malformed-response outcomes and acknowledges only exact
+accepted/idempotent dispositions.
+
+The coordinator sends Shelf through `sync_shelf_product` before dispatching any
+completion. Migration `0069` derives owner from Auth, holds the account/
+health boundary, and writes mutable content separately from stable identity.
+Delete wins even if the original upsert never arrived; same-owner retry is
+idempotent and a later upsert cannot resurrect the tombstone. Missing identity
+therefore stays retryable for completion. If local Shelf state proves an
+unresolved terminal product operation and no corrective Shelf work, the
+completion worker may reversibly move only its exact same-routine/date pending
+group through the routine-day marker to the FIFO tail. It does not permanently
+quarantine correctable intent. A true remote-terminal completion follows the
+separate terminal marker-cascade rule described in docs/03.
+
+Catalog lookup recovery is a different queue. It is encrypted,
+health-consent/account-bound, limited to 64 unique normalized barcodes, marks
+entries ineligible after seven days, and stores only a minimal reviewed
+candidate. Physical byte purge waits for the next activation, read/export, or
+lifecycle cleanup if the OS suspends the app. Reconnect presents the candidate
+for explicit accept/reject and never silently mutates Shelf. Correction reports
+remain separate online, identity-bearing submissions with visible failure
+recovery; there is no third-party source lookup, report queue, or contribution
+queue.
+
+The requesting-device export wrapper is schema v2 and labels the current
+pending/terminal local v3 record `shelf_and_sync_state`. Server export schema v4
+uses health-lifecycle-fenced owner-derived projections for stable identity and
+subject-facing Shelf receipts; raw request bodies and internal
+`request_sha256` are excluded. With no safe replay-expiry protocol, minimal
+tombstones and receipts remain only for the active account/health purpose and
+are erased on withdrawal or account/Auth deletion. Hosted response-loss,
+two-user/two-device convergence, native process death, export concurrency,
+zero-residue erasure, final retention/legal treatment, and App Review remain
+open gates.
 
 ### 9. Engineering / implementation notes
 
 - **Barcode scanning:** `expo-camera` native barcode scanning (docs/00 §1/§4), on-device; query only OnSkin's reviewed catalog. Yuka-grade scan reliability is the bar (SkinSort's is weaker) — invest in fast acquisition, good low-light handling, duplicate suppression, UPC-E expansion, and forgiving framing.
 - **OCR:** an Apple Vision revision-3 source candidate is enabled only in the internal staging profile. Its text remains confirmable/editable and manual entry remains available. Development and production stay disabled until exact-build CAT-05 privacy/accuracy/latency/accessibility/cleanup evidence and CAT-06 permission/lifecycle/mount/offline evidence pass on both required physical iPhones.
 - **Corrections:** owner-scoped missing/wrong-match reports stay inside OnSkin's reviewed correction workflow. No source credential, OBF POST, environment flag, or queue may publish them externally. Show approved source attribution on each derived catalog row.
-- **New schema summary:** the `user_products` additive columns; migration `0059` purges and seals legacy `shelf_scans`; the CAT-07 migration/source candidate adds strict freshness provenance and v1→v2 local-envelope handling; reconnect recovery lives in the encrypted account-bound device queue and requires user confirmation. Suggested DECISIONS **D-022/023/024**; blockers include qualified chemistry review for category estimates, qualified legal review for territorial labeling/copy, hosted migration/RLS/catalog evidence, and **B-PRIVACY** for replenishment sharing.
+- **Schema summary:** the `user_products` additive content columns; migration
+  `0059` purges and seals legacy `shelf_scans`; CAT-07 supplies strict freshness
+  provenance history; current local Shelf state is strict v3; and migration
+  `0069` adds deletion-wins `shelf_product_identities`, sealed minimized replay
+  receipts, and owner-derived Shelf/completion RPCs. Catalog reconnect recovery
+  remains a separate encrypted account-bound device queue requiring user
+  confirmation. Suggested DECISIONS **D-022/023/024** remain relevant;
+  qualified chemistry/legal review, hosted migration/RLS/catalog/replay
+  evidence, final retention/privacy treatment, and **B-PRIVACY** for
+  replenishment sharing remain blockers.
 - **PostHog instrumentation** (docs/01 §7): `product_add_started` (safe `source` bucket), `product_added` (with `added_via`), `barcode_scanned`, `scan_matched` / `scan_no_match`, `opened_date_set`, `product_finished` / `_discarded`, `replenishment_nudge_shown` / `_tapped`, `affiliate_link_tapped`. Wire the **scan→add** funnel as a shelf activation metric.
 - **Performance:** the `(user_id, status, expiry_computed)` index powers the Expiring filter/sort; recompute conflicts (`detect_conflicts`, docs/02) on any shelf change so the banner and "paired" badges stay current; the badge computation is pure and client-cached for offline.
 
@@ -337,7 +436,15 @@ The Smart Shelf could contribute to activation, retention, and optional commerce
 
 **(a) What it is:** the user's digital cabinet and the system's product-data capture engine — intake, PAO/expiry, source-of-truth for what the user owns, and the launch point for replenishment. Scoped narrowly against docs/02 (catalog/logic) and docs/03 (routine).
 
-**(b) Data model:** extends docs/01 `user_products` with provenance, lifecycle, on-device thumbnail, and explicit unopened state. Migration `0059` purges and force-RLS seals the legacy `shelf_scans` relation. The CAT-07 source candidate authenticates canonical v1 local bytes, decodes them in memory, preserves them on read or failed write, and emits v2 only after a successful authorized atomic mutation. Reconnect state is encrypted, account-bound, short-lived device data, and its candidate cannot mutate Shelf state without explicit user acceptance.
+**(b) Data model:** extends docs/01 `user_products` content with provenance,
+lifecycle, on-device thumbnail, and explicit unopened state. Migration `0059`
+purges and force-RLS seals legacy `shelf_scans`. CAT-07's canonical v1→v2
+freshness handling is predecessor evidence; the current encrypted Shelf record
+is strict v3 and preserves products, FIFO replay, terminal receipts, and
+incompatibilities. Migration `0069` separates deletion-wins stable identity
+from mutable content and seals writes behind owner-derived RPCs. Catalog
+reconnect state remains a separate encrypted device queue and cannot mutate
+Shelf without explicit acceptance.
 
 **(c) PAO/expiry rules:** a strict truth table preserves printed, explicit label PAO, reviewed catalog PAO, reserved future category estimate, and unknown as distinct states. Only printed or label/catalog PAO evidence may drive countdown, expired, or replenishment UI. The app makes no elapsed-time efficacy, contamination, infection, or special eye/SPF safety determination.
 
@@ -347,7 +454,14 @@ The Smart Shelf could contribute to activation, retention, and optional commerce
 
 **(f) Replenishment:** an opt-in, claim-safe surface triggered only by trusted printed or label/catalog-PAO evidence, or a user-marked finish, that can route to ShopMy behind the data-sharing consent.
 
-**(g) Privacy & offline:** health-inference data → owner-only RLS, on-device thumbnails, sharing only on the separate MHMDA consent; full offline view + manual add + an explicit encrypted OnSkin-catalog lookup queue, with no third-party source recipient. Catalog correction reports are separate online, identity-bearing user actions and are never silently queued.
+**(g) Privacy & offline:** health-inference data → encrypted local Shelf v3,
+owner/account/health-fenced server RPCs, on-device thumbnails, and sharing only
+on the separate MHMDA consent. Full offline view/manual add uses the durable
+Shelf FIFO; the explicit OnSkin-catalog lookup queue remains separate, with no
+third-party source recipient. Local export schema v2 includes
+`shelf_and_sync_state`; server schema v4 includes subject-facing stable identity
+and receipt fields. Catalog correction reports are separate online,
+identity-bearing user actions and are never silently queued.
 
 **(h) Composition & confidence:** the shelf consumes docs/02 (catalog/engine/PAO), feeds docs/03 (routine source), and connects forward to doc #7 (replenishment reminders) and doc #10 (ShopMy); PAO defaults and the replenishment/affiliate path are the items most needing review (B-DERM-REVIEW, B-PRIVACY).
 
@@ -363,7 +477,13 @@ The Smart Shelf could contribute to activation, retention, and optional commerce
 6. **Make the product detail the management hub** — freshness with provenance, actives, the conflicts the product is in, where it's used, and the full lifecycle actions — with finishing/discarding archiving (not deleting) to preserve history and lock-in.
 7. **Treat replenishment as honest help, opt-in, and consented.** Trigger only from trusted printed or label/catalog-PAO evidence or a user-marked finish; route to ShopMy only behind the separate MHMDA data-sharing consent; never manufacture urgency (D-024-adjacent; B-PRIVACY).
 8. **Store product thumbnails on-device by default** (D-024) and keep the shelf owner-only RLS, consistent with the privacy-as-trust positioning.
-9. **Make the shelf fully offline-capable** — view, manual add, and an explicitly queued OnSkin-catalog lookup — on the TanStack Query + persisted-queue layer (D-007), with no external source publication. Keep identity-bearing correction reports as separate online actions with visible failure recovery.
+9. **Make the Shelf fully offline-capable** — view and manual mutations persist
+   through the strict encrypted Shelf-v3 FIFO before UI success; the explicitly
+   queued OnSkin-catalog lookup remains a separate recovery purpose. Drain
+   Shelf before completion, preserve deletion-wins identity, and do not claim
+   cross-device parity until hosted two-device evidence passes. Keep
+   identity-bearing correction reports as separate online actions with visible
+   failure recovery and no external source publication.
 10. **Instrument the scan→add funnel in PostHog** as a shelf activation metric, alongside opened-date capture, finishes, and replenishment taps.
 
 ---

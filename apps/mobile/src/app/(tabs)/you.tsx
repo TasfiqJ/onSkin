@@ -62,7 +62,7 @@ const EXPORT_UNAVAILABLE_TITLE = 'Export unavailable';
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
 const DATA_EXPORT_SCOPE_HINT =
-  'Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, and Progress notes. Photo files and thumbnails stay encrypted here; share images individually from Progress.';
+  'Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, Progress notes, and pending or terminal shelf and completion sync records. Photo files and thumbnails stay encrypted here; share images individually from Progress.';
 const EXPORT_FAILED_TITLE = 'Export failed';
 const SUBSCRIPTION_STOREFRONT_COPY = subscriptionStorefrontCopy(Platform.OS);
 const APPLE_SIGN_IN_REVOCATION_COPY =
@@ -556,9 +556,7 @@ export default function YouScreen() {
           applyChoice(lease),
         );
       } else {
-        await runAccountGenerationOperation((lease) =>
-          applyChoice(lease, type === 'data_sharing'),
-        );
+        await runAccountGenerationOperation((lease) => applyChoice(lease, type === 'data_sharing'));
       }
     } finally {
       savingPrivacyRef.current = false;

@@ -290,6 +290,79 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: `getUser`, real Edge cancellation, native share-sheet lifetime, and cache semantics still require configured Supabase plus supported physical-iPhone proof. A native share sheet already opened by account A intentionally keeps the next account gated until it closes and cleanup settles.
 - Status: Accepted.
 
+### 2026-07-26 - Replay Shelf Before Completion And Preserve Correctable Intent
+
+- Decision: Use strict encrypted v3 Shelf and completion records with stable
+  lowercase UUID v4 identities, append-only journals, FIFO outboxes, governed
+  terminal receipts, and no invented replay work from historical schemas. One
+  Today check-off writes visible completion and its replay event in the same
+  private-KV transform before success publication. The offline coordinator
+  drains Shelf before completion. A missing server product identity remains
+  retryable. If the local Shelf record proves an unresolved terminal operation
+  for that product and no pending correction, atomically move the exact
+  completion and its remaining same-routine/date group through the routine-day
+  marker to the FIFO tail. Keep every original event replayable after a
+  corrective Shelf operation. Only an exact remote-terminal completion enters
+  the terminal lane; every same-routine/date routine-day marker then enters a
+  dependency-terminal lane instead of being dispatched.
+- Alternatives: dispatch completions ahead of Shelf, permanently reject a
+  completion when a Shelf upsert is terminal, quarantine all product-dependent
+  completion work, let a routine-day marker overtake an earlier step, drop the
+  head to unblock unrelated work, or retry the same blocked head forever.
+- Criteria: persistence-before-success, stable idempotency, FIFO causality,
+  recovery after correctable product data, no head-of-line deadlock, no
+  unsupported routine-day claim, bounded replay work, owner/account/health
+  isolation, and exportable retained intent.
+- Evidence: `completionSync.ts`, `completionsStore.ts`,
+  `completionQueue.ts`, `shelfMirrorQueue.ts`, `OfflineSync.tsx`, the focused
+  Vitest suites, and the mandatory
+  `scripts/core05/adherence-source-contract.test.mjs`.
+- Risk: local-source and mock-RPC results do not prove native durability,
+  response-loss recovery, or two-device delivery order. Hosted two-user/
+  two-session replay, physical-iPhone process death, account switching,
+  withdrawal, and exact-current human-simulated E2E remain release gates.
+- Status: Accepted as an `in_progress` source boundary; not launch-cleared.
+
+### 2026-07-26 - Keep Minimal Deletion-Wins Identity And Export Subject Receipts
+
+- Decision: Separate mutable Shelf content from
+  `shelf_product_identities`. A delete of a missing same-owner identity creates
+  a minimal tombstone, prevents resurrection, preserves validation of a queued
+  completion at or before the effective cutoff, and makes a later completion
+  terminal. Keep private Shelf/completion replay ledgers with only owner,
+  operation/event identity, a domain-separated request digest, bounded
+  disposition, and timestamps—never raw request payloads. Expose stable
+  identity/tombstone fields and receipt state/result/timestamps only through
+  three authenticated, nonanonymous, `auth.uid()`-derived keyset export RPCs;
+  direct table grants remain revoked. Server export schema v4 pins the initial
+  health read epoch into every health-fenced read, performs two exact
+  count/checksum/owner/column-guarded passes, and rechecks lifecycle before
+  delivery. Exclude `request_sha256` from the subject receipt because it can be
+  tested against guessed deleted payloads and does not explain the disposition.
+  With no safe protocol replay horizon, retain tombstones and minimized
+  receipts only for the active account/health-purpose lifetime, then erase them
+  on health withdrawal or account/Auth deletion.
+- Alternatives: cascade-delete product identity and historical routine
+  references, resurrect a late upsert, retain raw replay bodies, grant direct
+  client/service-role table reads, omit the new records from access export,
+  export request fingerprints, or impose an uncoordinated TTL on a suspended
+  device's replay authority.
+- Criteria: deletion-wins, historical evidence integrity, cross-owner safety,
+  payload minimization, data portability, stable export completeness,
+  withdrawal/account erasure, and no silent health-RLS omission.
+- Evidence: migrations
+  `20260726000068_routine_adherence_authority.sql` and
+  `20260726000069_routine_completion_sync_bridge.sql`, the `0069` database/
+  upgrade tests, `healthSyncExportCore.ts`, `exportRegistry.ts`, data-export
+  tests, and the CORE-05 source contract.
+- Risk: active-purpose lifetime is an engineering necessity until a versioned
+  replay expiry exists, not an approved legal retention period. Counsel must
+  approve the legal basis/duration, final notices, backup treatment, access
+  scope, and `request_sha256` exclusion. Hosted export concurrency, withdrawal/
+  deletion zero residue, App Privacy labels, security review, and App Review
+  remain open.
+- Status: Accepted as a minimized source design; privacy/legal approval pending.
+
 ### 2026-07-10 - Persist Conflict Choices Without Weakening The Reviewed Schedule
 
 - Decision: V1 stores each cosmetic timing choice in encrypted private KV under the canonical unordered product pair, conflict rule ID, and rule version. Both `accept_suggested_timing` and `use_together` suppress repeat advisory prompts for only that current-version pair across Shelf, Plan, Recommendations, Ask, and schedule explanations; legacy `keep_alternate_nights` values migrate to the generic accepted-timing value. Writes complete before success analytics or navigation; unreadable storage and unsupported future schemas fail closed without replacing prior data. The owner-RLS `routine_conflicts` mirror uses one canonical unique identity and remains best effort until routine sync is authoritative. `use_together` acknowledges the user's preference but does not auto-co-locate potent actives: one potent active per night, retinoid-exfoliant separation, pregnancy exclusions, frequency caps, phased introduction, and the cadence-review gate remain authoritative. Safety and reassurance rows are not eligible for a timing override.

@@ -120,6 +120,19 @@ export default function StreakScreen() {
             : 'Your nights, no pressure.'}
         </Text>
 
+        {data.serverStatus === 'unavailable' ? (
+          <View
+            accessibilityLiveRegion="polite"
+            className="mt-4 rounded-card px-4 py-3.5"
+            style={{ backgroundColor: colors.greige }}
+          >
+            <Text variant="bodySm" tone="muted">
+              Showing check-offs saved on this device. Cross-device sync will retry when its secure
+              connection is available.
+            </Text>
+          </View>
+        ) : null}
+
         {/* Calm milestone marker (docs/07 §4.5). A gentle acknowledgement, no confetti. */}
         {milestone ? (
           <View

@@ -21,6 +21,10 @@ import {
   consumeAccountDeletionNotice,
   resetAccountDeletionNoticeForTests,
 } from './accountDeletionNotice';
+import {
+  SERVER_DATA_EXPORT_ARRAY_SOURCES,
+  SERVER_DATA_EXPORT_COVERAGE,
+} from './serverDataExportContract';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 const STAGED_EXPORT = {
@@ -43,6 +47,30 @@ const DELETION_TOKENS = {
   idempotencyKey: '01'.repeat(32),
   statusCapability: '02'.repeat(32),
 };
+const EXPORT_CONSISTENCY = {
+  model: 'independent_count_guarded_reads',
+  guarantees: [
+    'Every database source is read in deterministic unique-key order using bounded pages.',
+    'A database source is returned only when its exact count before pagination, exported row count, and exact count after pagination are equal.',
+    'Storage pagination advances by the rows actually returned and probes every short-page boundary, so a service-side page cap cannot silently skip objects.',
+    'The owner-prefixed photo-storage inventory is returned only when two complete, deterministically ordered listings have identical counts and checksums.',
+    'Every returned source has a count and a SHA-256 checksum over canonical JSON.',
+  ],
+  limitations: [
+    'Supabase PostgREST and Storage reads in this Edge Function do not share a database transaction or cross-source snapshot.',
+    'Rows updated while a source is paginated can contain values from different instants even when the source count is stable.',
+    'A concurrent delete and insert that preserve a source count can evade the count guard; duplicate ordering keys and unstable storage inventories still fail closed.',
+    'Rows committed after a source finishes, or storage objects committed after the verified inventory, are not part of this export.',
+  ],
+};
+const EXPORT_PAGINATION = {
+  database_page_size: 500,
+  storage_page_size: 500,
+  max_concurrency: 4,
+  max_rows_per_database_source: 50_000,
+  max_storage_objects: 25_000,
+};
+const ACTIVE_CONSENT_HASH = '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
 
 function deferred<T>() {
   let resolve!: (value: T | PromiseLike<T>) => void;
@@ -56,6 +84,110 @@ function deferred<T>() {
 
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
+}
+
+function completeServerExport(
+  userId = 'user-1',
+  extra: Record<string, unknown> = {},
+): Record<string, unknown> {
+  const emptySources = Object.fromEntries(
+    SERVER_DATA_EXPORT_ARRAY_SOURCES.map((source) => [source, []]),
+  );
+  const databaseManifest = (source: string) => ({
+    kind: 'database_table',
+    scope: (SERVER_DATA_EXPORT_COVERAGE.caller_rls_tables as readonly string[]).includes(source)
+      ? 'caller_rls'
+      : (SERVER_DATA_EXPORT_COVERAGE.caller_rpc_owner_exports as readonly string[]).includes(source)
+        ? 'caller_rpc_owner'
+        : 'service_role_filtered',
+    order_by: ['id'],
+    count: 0,
+    count_before: 0,
+    count_after: 0,
+    page_requests: 1,
+    checksum: `sha256:${'0'.repeat(64)}`,
+    checksum_algorithm: 'sha256-canonical-json-v1',
+    complete: true,
+  });
+  const sourceManifests = Object.fromEntries(
+    SERVER_DATA_EXPORT_ARRAY_SOURCES.map((source) => [
+      source,
+      source === 'photo_storage_objects'
+        ? {
+            kind: 'storage_inventory',
+            scope: 'service_role_owner_prefix',
+            order_by: ['path'],
+            count: 0,
+            verification_passes: 2,
+            page_requests: 2,
+            checksum: `sha256:${'0'.repeat(64)}`,
+            checksum_algorithm: 'sha256-canonical-json-v1',
+            complete: true,
+          }
+        : (SERVER_DATA_EXPORT_COVERAGE.derived_sources as readonly string[]).includes(source)
+          ? {
+              kind: 'derived',
+              count: 0,
+              checksum: `sha256:${'0'.repeat(64)}`,
+              checksum_algorithm: 'sha256-canonical-json-v1',
+              checksum_fields:
+                source === 'photo_download_urls' ? ['id', 'path'] : ['id', 'path', 'reason'],
+              complete: true,
+              ...(source === 'photo_download_urls'
+                ? {
+                    note: 'Signed URL tokens are volatile and excluded from the checksum; identity fields are checksummed.',
+                  }
+                : {}),
+            }
+          : databaseManifest(source),
+    ]),
+  );
+  return {
+    export_schema_version: 4,
+    exported_at: '2026-07-26T16:00:00.000Z',
+    user_id: userId,
+    manifest: {
+      manifest_schema_version: 1,
+      complete: true,
+      consistency: EXPORT_CONSISTENCY,
+      pagination: EXPORT_PAGINATION,
+      sources: {
+        ...sourceManifests,
+        health_consent_lifecycle: {
+          kind: 'derived',
+          count: 1,
+          checksum: `sha256:${'0'.repeat(64)}`,
+          checksum_algorithm: 'sha256-canonical-json-v1',
+          checksum_fields: [
+            'state',
+            'processing_epoch',
+            'operation_state',
+            'result_code',
+            'consent_version',
+            'consent_text_hash',
+            'server_verified_at',
+          ],
+          complete: true,
+          note: 'Sanitized lifecycle',
+        },
+      },
+    },
+    local_only_photo_note: 'Local note',
+    server_photo_object_note: 'Server note',
+    health_consent_lifecycle: {
+      state: 'active',
+      processing_epoch: 1,
+      operation_state: null,
+      result_code: null,
+      consent_version: 'draft-v1-2026-07-10',
+      consent_text_hash: ACTIVE_CONSENT_HASH,
+      server_verified_at: '2026-07-26T16:00:00.000Z',
+    },
+    export_coverage: SERVER_DATA_EXPORT_COVERAGE,
+    exclusion_register: [],
+    ...emptySources,
+    ...extra,
+  };
 }
 
 const mocks = vi.hoisted(() => ({
@@ -214,7 +346,7 @@ describe('settings data export', () => {
     mocks.signOut.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.buildMobileDataExportBundle.mockImplementation((params) => ({
-      mobile_export_schema_version: 1,
+      mobile_export_schema_version: 2,
       exported_at: '2026-07-10T12:01:00.000Z',
       server_account_data_status: params.serverAccountDataStatus,
       server_account_data: params.serverAccountData,
@@ -222,13 +354,13 @@ describe('settings data export', () => {
       local_media_note: 'Progress photo files and thumbnails are not included.',
     }));
     mocks.collectLocalDeviceExportData.mockResolvedValue({
-      schema_version: 1,
+      schema_version: 2,
       collected_at: '2026-07-10T12:00:00.000Z',
       storage_scope: 'encrypted_private_storage_on_this_device',
       sections: {
         account_and_privacy: {},
         profile_and_preferences: {},
-        shelf_and_routine: { shelf_products: [{ id: 'local-1' }] },
+        shelf_and_routine: { shelf_and_sync_state: [{ id: 'local-1' }] },
         activity_and_app_state: {},
         subscription: {},
         progress: {},
@@ -248,10 +380,7 @@ describe('settings data export', () => {
       error: null,
     });
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
-    mocks.invoke.mockResolvedValue({
-      data: { export_schema_version: 2, user_id: 'user-1', account: { id: 'user-1' } },
-      error: null,
-    });
+    mocks.invoke.mockResolvedValue({ data: completeServerExport('user-1'), error: null });
     mocks.readLocalDataOwnership.mockImplementation(async (userId: string | null) =>
       userId === null ? 'unclaimed' : 'match',
     );
@@ -299,16 +428,15 @@ describe('settings data export', () => {
     >;
     expect(written).toEqual(
       expect.objectContaining({
-        mobile_export_schema_version: 1,
+        mobile_export_schema_version: 2,
         server_account_data_status: 'included',
-        server_account_data: {
-          export_schema_version: 2,
+        server_account_data: expect.objectContaining({
+          export_schema_version: 4,
           user_id: 'user-1',
-          account: { id: 'user-1' },
-        },
+        }),
         local_device_data: expect.objectContaining({
           sections: expect.objectContaining({
-            shelf_and_routine: { shelf_products: [{ id: 'local-1' }] },
+            shelf_and_routine: { shelf_and_sync_state: [{ id: 'local-1' }] },
           }),
         }),
       }),
@@ -409,7 +537,7 @@ describe('settings data export', () => {
       expect.objectContaining({
         server_account_data_status: 'backend_not_configured',
         server_account_data: null,
-        local_device_data: expect.objectContaining({ schema_version: 1 }),
+        local_device_data: expect.objectContaining({ schema_version: 2 }),
       }),
     );
   });
@@ -430,6 +558,64 @@ describe('settings data export', () => {
 
     expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it.each([1, 2, 3, 5])(
+    'fails closed when the configured server returns schema version %i',
+    async (exportSchemaVersion) => {
+      mocks.invoke.mockResolvedValueOnce({
+        data: { export_schema_version: exportSchemaVersion, user_id: 'user-1' },
+        error: null,
+      });
+
+      await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_INVALID');
+      expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
+      expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    },
+  );
+
+  it('fails closed when the schema-v4 manifest omits a required sync source', async () => {
+    const response = completeServerExport();
+    const manifest = response.manifest as {
+      sources: Record<string, unknown>;
+    };
+    delete manifest.sources.shelf_sync_receipts;
+    mocks.invoke.mockResolvedValueOnce({ data: response, error: null });
+
+    await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_INVALID');
+    expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when the schema-v4 manifest or a required source is incomplete', async () => {
+    for (const response of [
+      {
+        ...completeServerExport(),
+        manifest: {
+          ...(completeServerExport().manifest as Record<string, unknown>),
+          complete: false,
+        },
+      },
+      (() => {
+        const candidate = completeServerExport();
+        const sources = (candidate.manifest as { sources: Record<string, unknown> }).sources;
+        sources.routine_completion_sync_receipts = { complete: false, count: 0 };
+        return candidate;
+      })(),
+    ]) {
+      mocks.invoke.mockResolvedValueOnce({ data: response, error: null });
+      await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_INVALID');
+      expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
+    }
+  });
+
+  it('fails closed when a schema-v4 source count does not match its rows', async () => {
+    const response = completeServerExport();
+    const sources = (response.manifest as { sources: Record<string, unknown> }).sources;
+    sources.shelf_product_identities = { complete: true, count: 1 };
+    mocks.invoke.mockResolvedValueOnce({ data: response, error: null });
+
+    await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_INVALID');
+    expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
   });
 
   it('fails closed before reading local data when no authenticated export owner is available', async () => {
@@ -454,7 +640,7 @@ describe('settings data export', () => {
 
   it('rejects a valid server bundle owned by a different account', async () => {
     mocks.invoke.mockResolvedValueOnce({
-      data: { export_schema_version: 2, user_id: 'user-2' },
+      data: completeServerExport('user-2'),
       error: null,
     });
 
@@ -499,7 +685,7 @@ describe('settings data export', () => {
     beginAccountGenerationBoundary();
     endAccountGenerationBoundary();
     localSnapshot.resolve({
-      schema_version: 1,
+      schema_version: 2,
       collected_at: '2026-07-10T12:00:00.000Z',
       storage_scope: 'encrypted_private_storage_on_this_device',
       sections: {
@@ -540,7 +726,7 @@ describe('settings data export', () => {
     mocks.sharingAvailable.mockResolvedValueOnce(true);
     mocks.shareAsync.mockResolvedValueOnce(undefined);
     mocks.invoke.mockResolvedValueOnce({
-      data: JSON.stringify({ export_schema_version: 2, user_id: 'user-1' }),
+      data: JSON.stringify(completeServerExport()),
       error: null,
     });
 
@@ -548,7 +734,10 @@ describe('settings data export', () => {
 
     expect(mocks.buildMobileDataExportBundle).toHaveBeenCalledWith(
       expect.objectContaining({
-        serverAccountData: { export_schema_version: 2, user_id: 'user-1' },
+        serverAccountData: expect.objectContaining({
+          export_schema_version: 4,
+          user_id: 'user-1',
+        }),
         serverAccountDataStatus: 'included',
       }),
     );
@@ -566,9 +755,15 @@ describe('settings data export', () => {
   it('keeps the You tab from treating unavailable sharing as a successful export', () => {
     const source = readSource('app/(tabs)/you.tsx');
     const actions = readSource('features/settings/actions.ts');
+    const exportContract = readSource('features/settings/serverDataExportContract.ts');
 
     expect(actions).toContain('if (isSupabaseConfigured)');
     expect(actions).toContain('collectLocalDeviceExportData(lease, expectedUserId)');
+    expect(exportContract).toContain(
+      'export const SERVER_DATA_EXPORT_SCHEMA_VERSION = 4 as const;',
+    );
+    expect(actions).toContain('decodeServerDataExport(response.data, expectedUserId)');
+    expect(exportContract).toContain('!hasExactKeys(parsed, expectedTopLevelKeys)');
     expect(actions).toContain('readLocalDataOwnership(expectedUserId)');
     expect(actions).toContain("serverAccountDataStatus = 'included'");
     expect(source).toContain('onSuccess: (shared)');
@@ -581,7 +776,8 @@ describe('settings data export', () => {
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('Export unavailable');
     expect(source).toContain('Includes data saved to your account and on this device:');
-    expect(source).toContain('completion history, preferences, and Progress notes.');
+    expect(source).toContain('completion history, preferences, Progress notes,');
+    expect(source).toContain('pending or terminal shelf and completion sync records.');
     expect(source).toContain('Photo files and thumbnails stay encrypted here;');
     expect(source).toContain('share images individually from Progress.');
     expect(source).toContain(

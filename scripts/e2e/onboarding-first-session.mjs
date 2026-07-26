@@ -736,9 +736,18 @@ async function answerQuiz(client) {
 
 async function addProduct(client, product, evidenceName) {
   await fillByLabel(client, 'Product name', product.name);
-  await clickByText(client, 'Choose product category', { exact: false });
-  await waitForText(client, 'Product category');
-  await clickByText(client, product.category);
+  const compactCategoryPicker = await evaluate(
+    client,
+    rectByTextExpression('Choose product category', false),
+  );
+  if (compactCategoryPicker) {
+    await clickByText(client, 'Choose product category', { exact: false });
+    await waitForText(client, 'Product category');
+    await clickByText(client, product.category);
+  } else {
+    await scrollTextIntoView(client, product.category);
+    await clickByText(client, product.category);
+  }
   await clickByText(client, 'Add to shelf');
   await waitForText(client, 'When did you open it?');
   await clickByText(client, 'Just opened it');
@@ -914,18 +923,34 @@ async function run() {
     );
     await captureStep(client, '13-post-products-continue-current');
     await waitForText(client, 'YOUR SKIN PROFILE', 45_000);
-    await waitForText(client, 'FIRST INSIGHT');
-    await waitForText(client, 'Timing handled');
+    await waitForCondition(
+      client,
+      `(document.body?.innerText ?? '').includes('FIRST INSIGHT') ||
+        (document.body?.innerText ?? '').includes('Pair review in progress')`,
+      30_000,
+      'reviewed first insight or truthful pending-review state',
+    );
     const reveal = await captureStep(client, '14-reveal-checks');
     await screenshot(client, '14-reveal-insight');
-    assert(reveal.bodyText.includes('FIRST INSIGHT'), 'Reveal did not show FIRST INSIGHT.');
-    assert(reveal.bodyText.includes('Timing handled'), 'Reveal did not show Timing handled.');
-    assert(
+    const revealHasReviewedInsight =
+      reveal.bodyText.includes('FIRST INSIGHT') && reveal.bodyText.includes('Timing handled');
+    const revealHasPendingReview =
+      reveal.bodyText.includes('Pair review in progress') &&
       reveal.bodyText.includes(
-        'Products that need different timing are separated before the first check-off.',
-      ),
-      'Reveal did not show the shelf-derived timing insight body.',
+        "We won't show a compatibility result for these products until that review is complete.",
+      );
+    assert(
+      revealHasReviewedInsight !== revealHasPendingReview,
+      'Reveal must show exactly one reviewed insight or truthful pending-review state.',
     );
+    if (revealHasReviewedInsight) {
+      assert(
+        reveal.bodyText.includes(
+          'Products that need different timing are separated before the first check-off.',
+        ),
+        'Reveal did not show the reviewed shelf-derived timing insight body.',
+      );
+    }
     assert(!reveal.bodyText.includes('See my routine'), 'Reveal still exposes See my routine CTA.');
 
     await clickByText(client, 'Continue');
@@ -993,13 +1018,17 @@ async function run() {
     await waitForText(client, 'Your routine, in order.', 30_000);
     await waitForText(client, 'Start today', 30_000);
     const routinePlan = await captureStep(client, '19-routine-plan-current');
+    const routinePlanHasReviewedInsight =
+      routinePlan.bodyText.includes('FIRST INSIGHT') &&
+      routinePlan.bodyText.includes('Timing handled');
+    const routinePlanHasPendingReview =
+      routinePlan.bodyText.includes('Pair review in progress') &&
+      routinePlan.bodyText.includes(
+        "We won't show a compatibility result for these products until that review is complete.",
+      );
     assert(
-      routinePlan.bodyText.includes('FIRST INSIGHT'),
-      'Routine plan did not show FIRST INSIGHT.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Timing handled'),
-      'Routine plan did not show Timing handled.',
+      routinePlanHasReviewedInsight !== routinePlanHasPendingReview,
+      'Routine plan must show exactly one reviewed insight or truthful pending-review state.',
     );
     assert(
       routinePlan.bodyText.includes('Mineral SPF 50'),
@@ -1301,6 +1330,7 @@ async function run() {
           'Products that need different timing are separated before the first check-off.',
         ),
         hasFirstInsightLabel: reveal.bodyText.includes('FIRST INSIGHT'),
+        hasPendingReview: revealHasPendingReview,
         hasRoutinePreviewFallback: reveal.bodyText.includes('Routine preview'),
         hasSeeMyRoutine: reveal.bodyText.includes('See my routine'),
         hasTimingHandled: reveal.bodyText.includes('Timing handled'),
@@ -1309,6 +1339,7 @@ async function run() {
       routinePlan: {
         hasFirstInsight: routinePlan.bodyText.includes('FIRST INSIGHT'),
         hasGlycolicNight: routinePlan.bodyText.includes('Glycolic 7%'),
+        hasPendingReview: routinePlanHasPendingReview,
         hasRetinolNight: routinePlan.bodyText.includes('Retinol 0.3%'),
         hasSpfMorning: routinePlan.bodyText.includes('Mineral SPF 50'),
         hasStartToday: routinePlan.bodyText.includes('Start today'),
@@ -1365,7 +1396,7 @@ async function run() {
           ? 'Continued from reveal to notification soft ask, skipped reminders, recovered from an invalid email code, completed the deterministic account upgrade, and reached onboarding paywall.'
           : 'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
         'Used Explore first to unlock the routine plan without card entry.',
-        'Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.',
+        'Verified the generated routine plan contains either a reviewed first insight or the truthful pending-review state, plus SPF, glycolic, and retinol placement.',
         'Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
         ...(accountIsolationMode
           ? [

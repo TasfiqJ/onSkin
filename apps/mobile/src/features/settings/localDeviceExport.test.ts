@@ -251,7 +251,8 @@ describe('local device data export', () => {
       policy_sha256: AGE_POLICY_SHA256,
       eligible: true,
     });
-    expect(result.sections.shelf_and_routine.completion_history).toEqual({
+    expect(result.schema_version).toBe(2);
+    expect(result.sections.shelf_and_routine.completion_and_sync_state).toEqual({
       '2026-07-09': ['PM:shelf-1'],
     });
     expect(result.sections.shelf_and_routine.routine_order_overrides).toEqual({
@@ -307,7 +308,7 @@ describe('local device data export', () => {
         },
       },
     });
-    expect(result.sections.shelf_and_routine.shelf_products).toEqual([
+    expect(result.sections.shelf_and_routine.shelf_and_sync_state).toEqual([
       {
         id: 'shelf-1',
         name: 'Retinol 0.3%',
@@ -367,6 +368,120 @@ describe('local device data export', () => {
     expect(JSON.stringify(result)).not.toContain('invalid-envelope');
   });
 
+  it('exports representative v3 pending and terminal completion and Shelf sync evidence', async () => {
+    const productA = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const productB = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+    const routineId = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
+    const stepA = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
+    const stepB = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+    const pendingEvent = '11111111-1111-4111-8111-111111111111';
+    const terminalEvent = '22222222-2222-4222-8222-222222222222';
+    const pendingMirror = {
+      operationId: '33333333-3333-4333-8333-333333333333',
+      enqueuedAt: '2026-07-10T11:00:00.000Z',
+      kind: 'delete',
+      productId: productA,
+    };
+    const terminalMirror = {
+      operationId: '44444444-4444-4444-8444-444444444444',
+      enqueuedAt: '2026-07-10T10:00:00.000Z',
+      kind: 'delete',
+      productId: productB,
+    };
+    const completionState = {
+      version: 3,
+      days: {
+        '2026-07-09': [`AM:${productA}`],
+        '2026-07-10': [`AM:${productB}`],
+        '2026-07-08': ['AM:legacy-shelf-product'],
+      },
+      completedDays: [],
+      sync: {
+        routineIds: { AM: routineId, PM: null },
+        stepIds: {
+          [`AM:${productA}`]: { id: stepA, stepOrder: 1 },
+          [`AM:${productB}`]: { id: stepB, stepOrder: 2 },
+        },
+        journal: [
+          {
+            eventId: pendingEvent,
+            kind: 'step',
+            routineId,
+            routineType: 'AM',
+            stepId: stepA,
+            userProductId: productA,
+            stepOrder: 1,
+            completedAt: '2026-07-09T12:00:00.000Z',
+            completedDate: '2026-07-09',
+            timezone: 'Canada/Eastern',
+          },
+          {
+            eventId: terminalEvent,
+            kind: 'step',
+            routineId,
+            routineType: 'AM',
+            stepId: stepB,
+            userProductId: productB,
+            stepOrder: 2,
+            completedAt: '2026-07-10T12:00:00.000Z',
+            completedDate: '2026-07-10',
+            timezone: 'America/Toronto',
+          },
+        ],
+        outbox: [pendingEvent],
+        terminal: [{ eventId: terminalEvent, code: 'COMPLETION_EVENT_CONFLICT' }],
+        unsynced: [
+          {
+            eventId: '55555555-5555-4555-8555-555555555555',
+            stepKey: 'AM:legacy-shelf-product',
+            routineType: 'AM',
+            stepOrder: 3,
+            completedAt: '2026-07-08T12:00:00.000Z',
+            completedDate: '2026-07-08',
+            completionDayInserted: false,
+            reason: 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED',
+          },
+        ],
+      },
+    };
+    const shelfState = {
+      version: 3,
+      products: [],
+      mirrorOutbox: [pendingMirror],
+      terminal: [
+        {
+          operation: terminalMirror,
+          code: 'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+        },
+      ],
+      mirrorIncompatibilities: [],
+    };
+    mocks.getPrivateItemsForPurposeLimitedExport.mockImplementation(
+      async (keys: readonly string[]) =>
+        new Map(
+          keys.map((key) => [
+            key,
+            key === 'onskin.completions.v1'
+              ? JSON.stringify(completionState)
+              : key === 'onskin.shelf.v1'
+                ? JSON.stringify(shelfState)
+                : null,
+          ]),
+        ),
+    );
+
+    const result = await collectLocalDeviceExportData(
+      accountLease,
+      expectedUserId,
+      '2026-07-10T12:00:00.000Z',
+    );
+    expect(result.schema_version).toBe(2);
+    expect(result.sections.shelf_and_routine.completion_and_sync_state).toEqual(completionState);
+    expect(result.sections.shelf_and_routine.shelf_and_sync_state).toEqual(shelfState);
+    expect(result.sections.shelf_and_routine).not.toHaveProperty('completion_history');
+    expect(result.sections.shelf_and_routine).not.toHaveProperty('shelf_products');
+  });
+
   it('preserves an unsupported future conflict-choice schema with an explicit export status', async () => {
     const future = { schemaVersion: 2, choices: { future: true } };
     mocks.getPrivateItemsForPurposeLimitedExport.mockImplementation(
@@ -411,15 +526,15 @@ describe('local device data export', () => {
       buildMobileDataExportBundle({
         exportedAt: '2026-07-10T12:01:00.000Z',
         serverAccountDataStatus: 'included',
-        serverAccountData: { user_id: 'user-1', export_schema_version: 2 },
+        serverAccountData: { user_id: 'user-1', export_schema_version: 4 },
         localDeviceData,
       }),
     ).toEqual(
       expect.objectContaining({
-        mobile_export_schema_version: 1,
+        mobile_export_schema_version: 2,
         exported_at: '2026-07-10T12:01:00.000Z',
         server_account_data_status: 'included',
-        server_account_data: { user_id: 'user-1', export_schema_version: 2 },
+        server_account_data: { user_id: 'user-1', export_schema_version: 4 },
         local_device_data: localDeviceData,
       }),
     );

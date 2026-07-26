@@ -1,6 +1,7 @@
 import {
   buildDirectExportPlans,
   CALLER_RPC_OWNER_EXPORTS,
+  CALLER_RPC_OWNER_EXPORT_TABLE_BY_SOURCE,
   CALLER_RLS_EXPORT_TABLES,
   type ExportTable,
   SERVICE_ONLY_EXPORT_DENYLIST,
@@ -12,6 +13,7 @@ import {
   validateExportRegistry,
 } from './exportRegistry.ts';
 import { CATALOG_CORRECTION_EXPORT_COLUMNS } from './catalogCorrectionExportCore.ts';
+import { HEALTH_SYNC_EXPORT_SOURCES } from './healthSyncExportCore.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -93,6 +95,55 @@ Deno.test('catalog correction export excludes every internal operator field', ()
     assert(!columns.has(internal), `internal correction field leaked: ${internal}`);
   }
 });
+
+Deno.test(
+  'sealed health-sync authority is exported only through exact subject RPC projections',
+  () => {
+    assert(
+      JSON.stringify(CALLER_RPC_OWNER_EXPORTS) ===
+        JSON.stringify([
+          'catalog_corrections',
+          'shelf_product_identities',
+          'shelf_sync_receipts',
+          'routine_completion_sync_receipts',
+        ]),
+      'caller-RPC coverage omitted or reordered a reviewed owner source.',
+    );
+    assert(
+      JSON.stringify(CALLER_RPC_OWNER_EXPORT_TABLE_BY_SOURCE) ===
+        JSON.stringify({
+          catalog_corrections: 'catalog_corrections',
+          shelf_product_identities: 'shelf_product_identities',
+          shelf_sync_receipts: 'shelf_sync_operations',
+          routine_completion_sync_receipts: 'routine_completion_sync_operations',
+        }),
+      'caller-RPC sources are no longer bound to the exact sealed tables.',
+    );
+
+    for (const [source, definition] of Object.entries(HEALTH_SYNC_EXPORT_SOURCES)) {
+      assert(
+        CALLER_RPC_OWNER_EXPORTS.includes(source as (typeof CALLER_RPC_OWNER_EXPORTS)[number]),
+        `${source} is missing from executable caller-RPC coverage.`,
+      );
+      assert(
+        !CALLER_RLS_EXPORT_TABLES.some(
+          (item) => item.table === CALLER_RPC_OWNER_EXPORT_TABLE_BY_SOURCE[source],
+        ),
+        `${source} was exposed through direct caller table reads.`,
+      );
+      assert(
+        !SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES.some(
+          (item) => item.table === CALLER_RPC_OWNER_EXPORT_TABLE_BY_SOURCE[source],
+        ),
+        `${source} was exposed through direct service-role reads.`,
+      );
+      assert(
+        !(definition.columns as readonly string[]).includes('request_sha256'),
+        `${source} exposes an internal request fingerprint.`,
+      );
+    }
+  },
+);
 
 Deno.test('every canonical service-only table is rejected from the caller registry', () => {
   for (const table of SERVICE_ONLY_EXPORT_DENYLIST) {

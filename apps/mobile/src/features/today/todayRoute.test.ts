@@ -163,7 +163,17 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('completionInserted: result.inserted');
     expect(source).not.toContain('completedBefore: done');
     expect(source).toContain('if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {');
-    expect(source).toContain('const result = await toggleCompletion(key, today, scheduled)');
+    expect(source).toContain(
+      'const result = await toggleCompletion(key, today, scheduled, remoteSync)',
+    );
+    expect(source).toContain("routine.source === 'real'");
+    expect(source).toContain('completionSyncStepIdentity(key) === null');
+    expect(source).toContain("'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED'");
+    expect(source).toContain("'COMPLETION_TIMEZONE_UNAVAILABLE'");
+    expect(source).toContain("queryKey: ['completion-sync-unsynced']");
+    expect(source).toContain('Your local export keeps this evidence.');
+    expect(source).toContain("source: 'real_plan'");
+    expect(source).toContain('stepOrder: context.stepOrder');
     expect(source).toContain("track('cycle_night_completed', { moment: 'pm', source: 'today' })");
     const eventIndex = source.indexOf("track('cycle_night_completed'");
     const eventCall = source.slice(eventIndex, eventIndex + 120);
@@ -178,12 +188,14 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('disabled={completionUnavailable || completionPendingKey !== null}');
     expect(source).toContain("Check-offs aren't available right now.");
     expect(source).toContain('Reload to confirm your saved progress, then try again.');
-    expect(source).toContain('const result = await toggleCompletion(key, today, scheduled)');
+    expect(source).toContain(
+      'const result = await toggleCompletion(key, today, scheduled, remoteSync)',
+    );
     expect(source).toContain('persistenceConfirmed = true');
     expect(source).toContain("qc.setQueryData(['completions', today]");
     expect(source).toContain('haptics.success()');
     expect(
-      source.indexOf('const result = await toggleCompletion(key, today, scheduled)'),
+      source.indexOf('const result = await toggleCompletion(key, today, scheduled, remoteSync)'),
     ).toBeLessThan(source.indexOf('haptics.success()'));
     expect(source).toContain('setCompletionActionFailed(true)');
     expect(source).toContain('if (!persistenceConfirmed)');

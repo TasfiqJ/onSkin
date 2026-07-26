@@ -241,16 +241,41 @@ async function main() {
       userB.client.from('skin_profiles').insert({ user_id: userA.id, goals: ['bad'] }),
     );
 
-    const product = await insertOne(userA.client, 'user_products', {
-      user_id: userA.id,
-      manual_name: 'Phase 2 Cleanser',
-      manual_brand: 'Smoke Test',
-      is_opened: false,
-      opened_at: null,
-      pao_months: null,
-      pao_source: 'unknown',
-      expiry_source: 'unknown',
+    const productId = randomUUID();
+    const shelfMirror = await userA.client.rpc('sync_shelf_product', {
+      p_operation_id: randomUUID(),
+      p_operation_kind: 'upsert',
+      p_enqueued_at: new Date().toISOString(),
+      p_product_id: productId,
+      p_payload: {
+        id: productId,
+        catalog_product_id: null,
+        catalog_source_id: null,
+        catalog_match_quality: 'manual',
+        catalog_source_snapshot_date: null,
+        manual_name: 'Phase 2 Cleanser',
+        manual_brand: 'Smoke Test',
+        barcode: null,
+        opened_at: null,
+        pao_months: null,
+        expiry_date: null,
+        is_opened: false,
+        pao_source: 'unknown',
+        expiry_source: 'unknown',
+        added_via: 'manual',
+        source_disclosure_ack_at: null,
+        status: 'active',
+        finished_at: null,
+      },
     });
+    if (shelfMirror.error) throw shelfMirror.error;
+    assert(shelfMirror.data?.status === 'accepted', 'Shelf mirror RPC did not accept fixture.');
+    const { data: product, error: productReadError } = await userA.client
+      .from('user_products')
+      .select('*')
+      .eq('id', productId)
+      .single();
+    if (productReadError) throw productReadError;
     await expectOwnRead(userA.client, 'user_products', 'id', product.id, 'shelf own read');
     await expectNoPrivateRead(
       userB.client,
@@ -385,18 +410,43 @@ async function main() {
       }),
     );
 
-    const routine = await insertOne(userA.client, 'routines', {
-      user_id: userA.id,
-      type: 'AM',
-      name: 'Phase 2 AM',
+    const routineId = randomUUID();
+    const stepId = randomUUID();
+    const completionAt = new Date();
+    const completionDate = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Toronto',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(completionAt);
+    const completionBridge = await userA.client.rpc('record_routine_completion', {
+      p_event_id: randomUUID(),
+      p_routine_id: routineId,
+      p_routine_type: 'AM',
+      p_step_id: stepId,
+      p_user_product_id: product.id,
+      p_step_order: 1,
+      p_completed_at: completionAt.toISOString(),
+      p_completed_date: completionDate,
+      p_timezone: 'America/Toronto',
     });
-    const step = await insertOne(userA.client, 'routine_steps', {
-      routine_id: routine.id,
-      user_product_id: product.id,
-      step_order: 1,
-      frequency: 'daily',
-      instructions: 'Smoke test step',
-    });
+    if (completionBridge.error) throw completionBridge.error;
+    assert(
+      completionBridge.data?.status === 'accepted',
+      'Completion bridge RPC did not accept fixture.',
+    );
+    const { data: routine, error: routineReadError } = await userA.client
+      .from('routines')
+      .select('*')
+      .eq('id', routineId)
+      .single();
+    if (routineReadError) throw routineReadError;
+    const { data: step, error: stepReadError } = await userA.client
+      .from('routine_steps')
+      .select('*')
+      .eq('id', stepId)
+      .single();
+    if (stepReadError) throw stepReadError;
     await expectOwnRead(userA.client, 'routines', 'id', routine.id, 'routine own read');
     await expectNoPrivateRead(
       userB.client,

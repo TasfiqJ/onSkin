@@ -13,9 +13,9 @@
   "primaryInfrastructureProcessors": [
     {
       "id": "supabase",
-      "purpose": "Authentication, owner-scoped Postgres data, Storage, and Edge Functions",
+      "purpose": "Authentication; owner-scoped Postgres health-purpose data including active Shelf content, stable product identity/tombstone records, routine steps/completions/adherence, and minimized sync replay receipts; owner-scoped Storage; and Edge Functions",
       "mayProcessHealthPurposeData": true,
-      "withdrawalLane": "Relational rows are removed by the database-cleanup step and owned photo objects by the Storage work step; Supabase is therefore not duplicated in the separate external-processor array.",
+      "withdrawalLane": "The database-cleanup step removes active Shelf content, retained Shelf identity/tombstones, routines, completions, adherence state, and both minimized replay ledgers; the Storage work step removes owned photo objects. Account deletion also cascades these owner-linked relations. Supabase is therefore not duplicated in the separate external-processor array.",
       "productionEvidence": "blocked_pending_live_project_dpa_region_backup_and_deletion_verification"
     }
   ],

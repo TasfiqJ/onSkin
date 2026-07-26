@@ -7,13 +7,13 @@ select plan(78);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  67::bigint,
-  'CORE-05 adherence runs against the exact 67-migration source history'
+  69::bigint,
+  'CORE-05 adherence runs against the exact 69-migration source history'
 );
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000068'::text,
-  'the migration history reaches the authoritative routine-adherence head'
+  '20260726000070'::text,
+  'the migration history retains adherence authority through the Shelf/completion sync bridge head'
 );
 select results_eq(
   $$select column_name::text collate "C"
@@ -471,14 +471,16 @@ select ok(
   'authenticated cannot invoke the historical owner-parameterized recompute function'
 );
 select ok(
-  (
-    select pg_catalog.pg_get_expr(policy.polwithcheck, policy.polrelid)
-      like '%steps.routine_id = routine_completions.routine_id%'
+  not exists (
+    select 1
       from pg_catalog.pg_policy as policy
      where policy.polrelid = 'public.routine_completions'::regclass
        and policy.polname = 'routine_completions_insert_own'
+  )
+  and not pg_catalog.has_table_privilege(
+    'authenticated', 'public.routine_completions', 'INSERT'
   ),
-  'the completion policy proves that a non-null step belongs to the same routine'
+  'the current sync bridge removes direct completion policy and INSERT authority'
 );
 select ok(
   pg_catalog.pg_get_functiondef('public.validate_completion()'::regprocedure)
@@ -669,7 +671,7 @@ select lives_ok(
      where id = '68000000-0000-4000-8000-000000000001'$$,
   'the restricted privilege still permits a non-health profile-shell edit'
 );
-select lives_ok(
+select throws_ok(
   $$insert into public.routines (id, user_id, type, name) values
       (
         '68200000-0000-4000-8000-000000000001',
@@ -693,9 +695,36 @@ select lives_ok(
         '68300000-0000-4000-8000-000000000002',
         '68200000-0000-4000-8000-000000000002',
         1
-      )$$,
-  'an active owner can create two routine fixtures and their steps'
+  )$$,
+  '42501',
+  'new row violates row-level security policy for table "routines"',
+  'the current sync bridge denies direct authenticated routine fixtures'
 );
+reset role;
+insert into public.routines (id, user_id, type, name) values
+  (
+    '68200000-0000-4000-8000-000000000001',
+    '68000000-0000-4000-8000-000000000001',
+    'PM',
+    'Authority rehearsal A'
+  ),
+  (
+    '68200000-0000-4000-8000-000000000002',
+    '68000000-0000-4000-8000-000000000001',
+    'PM',
+    'Authority rehearsal B'
+  );
+insert into public.routine_steps (id, routine_id, step_order) values
+  (
+    '68300000-0000-4000-8000-000000000001',
+    '68200000-0000-4000-8000-000000000001',
+    1
+  ),
+  (
+    '68300000-0000-4000-8000-000000000002',
+    '68200000-0000-4000-8000-000000000002',
+    1
+  );
 select pg_catalog.set_config('request.headers', '{}', true);
 select throws_ok(
   $$insert into public.routine_completions (
@@ -918,10 +947,11 @@ select throws_ok(
   'permission denied for table streak_freezes',
   'an authenticated owner cannot directly insert a freeze'
 );
+reset role;
 select lives_ok(
   $$delete from public.routines
      where id = '68200000-0000-4000-8000-000000000001'$$,
-  'routine deletion cascades marker deletion and recomputes once'
+  'a privileged routine publisher deletion cascades marker deletion and recomputes once'
 );
 select results_eq(
   $$select
@@ -934,6 +964,7 @@ select results_eq(
   $$values (0::integer, 2::integer, 0::integer)$$,
   'deletion clears current/freeze state without shrinking the personal best'
 );
+set local role authenticated;
 select results_eq(
   $$select current_streak, longest_streak, adherence_timezone,
       reference_day, frozen_dates, algorithm_version

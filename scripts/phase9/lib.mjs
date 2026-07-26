@@ -48,6 +48,7 @@ export const OWNER_LINKED_PRIVATE_TABLES = Object.freeze([
 export const HEALTH_PURPOSE_READ_FENCED_TABLES = Object.freeze([
   'skin_profiles',
   'user_products',
+  'shelf_product_identities',
   'routines',
   'routine_steps',
   'routine_completions',
@@ -84,11 +85,28 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
   'edge_rate_limits',
 ]);
 
+// Owner-linked authority that remains sealed from direct PostgREST access but
+// has a reviewed, subject-facing projection in data-export. Source aliases are
+// deliberately distinct from the private ledger table names so the bundle
+// cannot imply that internal request fingerprints are part of the receipt.
+export const SEALED_OWNER_RPC_EXPORT_SOURCES = Object.freeze([
+  'shelf_product_identities',
+  'shelf_sync_receipts',
+  'routine_completion_sync_receipts',
+]);
+
+export const SEALED_OWNER_RPC_EXPORT_TABLES = Object.freeze([
+  'shelf_product_identities',
+  'shelf_sync_operations',
+  'routine_completion_sync_operations',
+]);
+
 // These tables are reachable only through narrowly granted security-definer
 // RPCs. Even service_role has no direct table privileges, so hosted PostgREST
 // evidence must prove they are sealed rather than pretending an admin client
 // can create or read a positive-control row.
 export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
+  'shelf_product_identities',
   'shelf_scans',
   'obf_contribution_queue',
   'catalog_sources',
@@ -99,6 +117,7 @@ export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
   'health_consent_withdrawal_steps',
   'health_consent_copy_registry',
   'health_consent_copy_review_events',
+  'health_consent_copy_staging_events',
   'health_dependent_consent_operations',
   'health_dependent_consent_states',
   'account_publication_leases',

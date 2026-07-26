@@ -13,8 +13,14 @@ const paths = Object.freeze({
   packageJson: 'package.json',
   store: 'apps/mobile/src/features/today/completionsStore.ts',
   storeTest: 'apps/mobile/src/features/today/completionsStore.test.ts',
+  completionSync: 'apps/mobile/src/features/today/completionSync.ts',
   today: 'apps/mobile/src/app/(tabs)/today.tsx',
   todayTest: 'apps/mobile/src/features/today/todayRoute.test.ts',
+  completionQueue: 'apps/mobile/src/lib/offline/completionQueue.ts',
+  completionQueueTest: 'apps/mobile/src/lib/offline/completionQueue.test.ts',
+  shelfMirrorQueue: 'apps/mobile/src/lib/offline/shelfMirrorQueue.ts',
+  offlineSync: 'apps/mobile/src/lib/offline/OfflineSync.tsx',
+  offlineSyncTest: 'apps/mobile/src/lib/offline/OfflineSync.test.ts',
   progress: 'apps/mobile/src/features/routine/useProgress.ts',
   streak: 'apps/mobile/src/features/streak/streak.ts',
   streakTest: 'apps/mobile/src/features/streak/streak.test.ts',
@@ -35,6 +41,9 @@ const paths = Object.freeze({
   notificationTiming: 'apps/mobile/src/app/settings/timing.tsx',
   adherenceMigration: 'supabase/migrations/20260726000068_routine_adherence_authority.sql',
   adherenceDbTest: 'supabase/tests/database/routine_adherence_authority.test.sql',
+  syncBridgeMigration: 'supabase/migrations/20260726000069_routine_completion_sync_bridge.sql',
+  syncBridgeDbTest: 'supabase/tests/database/routine_completion_sync_bridge.test.sql',
+  databaseTypes: 'packages/types/src/database.types.ts',
   adherenceParityCorpus: 'scripts/core05/adherence-parity-corpus.json',
   schemaContract: 'supabase/tests/database/schema_contract.test.sql',
   notificationHooks: 'apps/mobile/src/features/notifications/useNotifications.ts',
@@ -42,6 +51,28 @@ const paths = Object.freeze({
 
 function read(path) {
   return readFileSync(resolve(root, path), 'utf8').replaceAll('\r\n', '\n');
+}
+
+function sourceBetween(source, start, end, label) {
+  const startIndex = source.indexOf(start);
+  const endIndex = source.indexOf(end, startIndex + start.length);
+  assert.ok(startIndex >= 0, `${label}: missing start marker`);
+  assert.ok(endIndex > startIndex, `${label}: missing end marker`);
+  return source.slice(startIndex, endIndex);
+}
+
+function assertSourceOrder(source, patterns, label) {
+  let offset = 0;
+  for (const pattern of patterns) {
+    const flags = pattern.flags.replaceAll('g', '').replaceAll('y', '');
+    const match = new RegExp(pattern.source, flags).exec(source.slice(offset));
+    assert.ok(match, `${label}: missing ordered source ${pattern}`);
+    offset += match.index + match[0].length;
+  }
+}
+
+function quotedValues(source) {
+  return [...source.matchAll(/['"]([^'"]+)['"]/gu)].map((match) => match[1]);
 }
 
 function expandIsoDateRange({ start, end }) {
@@ -55,25 +86,97 @@ function expandIsoDateRange({ start, end }) {
   return dates;
 }
 
-test('completion state is strict, versioned, and never invents legacy adherence', () => {
+test('completion state is strict v3 and legacy versions never invent adherence or replay work', () => {
   const store = read(paths.store);
   const storeTest = read(paths.storeTest);
+  const completionSync = read(paths.completionSync);
+  const legacyDecode = sourceBetween(
+    store,
+    "if (!hasOwn(parsed, 'version'))",
+    'if (parsed.version === 1)',
+    'legacy completion decoder',
+  );
+  const v1Decode = sourceBetween(
+    store,
+    'if (parsed.version === 1)',
+    'if (parsed.version === 2)',
+    'v1 completion decoder',
+  );
+  const v2Decode = sourceBetween(
+    store,
+    'if (parsed.version === 2)',
+    'if (parsed.version !== SCHEMA_VERSION)',
+    'v2 completion decoder',
+  );
+  const currentDecode = sourceBetween(
+    store,
+    'if (parsed.version !== SCHEMA_VERSION)',
+    'function encodeCompletionLog',
+    'current completion decoder',
+  );
 
-  assert.match(store, /const SCHEMA_VERSION = 2 as const/u);
-  assert.match(store, /Object\.keys\(parsed\)\.length !== 3/u);
-  assert.match(store, /normalizeCompletionLog\(parsed\.days,\s*true\)/u);
-  assert.match(store, /completedDays:\s*new Set\(\)/u);
-  assert.match(store, /normalizedDate !== entry/u);
+  assert.match(store, /const SCHEMA_VERSION\s*=\s*3\s+as const/u);
+  assert.match(currentDecode, /Object\.keys\(parsed\)\.length\s*!==\s*4/u);
+  for (const key of ['days', 'completedDays', 'sync']) {
+    assert.match(currentDecode, new RegExp(`hasOwn\\(parsed, ['"]${key}['"]\\)`, 'u'));
+  }
+  assert.match(currentDecode, /decodeCompletionSyncState\(parsed\.sync/u);
+  assert.match(
+    completionSync,
+    /hasExactKeys\(value,\s*\[['"]routineIds['"],\s*['"]stepIds['"],\s*['"]journal['"],\s*['"]outbox['"],\s*['"]terminal['"]\]\)/u,
+  );
+  for (const historicalDecode of [legacyDecode, v1Decode, v2Decode]) {
+    assert.equal(
+      historicalDecode.match(/sync:\s*emptyCompletionSyncState\(\)/gu)?.length,
+      1,
+      'each historical decoder must migrate with exactly one empty replay state',
+    );
+    assert.doesNotMatch(historicalDecode, /appendCompletionSync|journal\.push|outbox\.push/u);
+  }
+  for (const noAdherenceDecode of [legacyDecode, v1Decode]) {
+    assert.match(noAdherenceDecode, /completedDays:\s*new Set\(\)/u);
+  }
+  assert.match(v2Decode, /normalizeCompletedDays\(parsed\.completedDays,\s*days\)/u);
+  assert.match(store, /normalizedDate\s*!==\s*entry/u);
   assert.match(store, /out\.has\(normalizedDate\)/u);
   assert.match(store, /key\.startsWith\(['"]PM:['"]\)/u);
   assert.match(storeTest, /does not invent adherence from AM, partial PM, or legacy step rows/u);
+  assert.match(
+    storeTest,
+    /upgrades v2 without inventing remote identities, timestamps, or replay work/u,
+  );
   assert.match(storeTest, /rejects non-canonical current envelopes without rewriting their bytes/u);
 });
 
-test('only a complete projected PM or recovery routine creates an adherence day', () => {
+test('only a complete projected PM or recovery routine creates an adherence day or remote work', () => {
   const store = read(paths.store);
   const storeTest = read(paths.storeTest);
+  const completionSync = read(paths.completionSync);
   const today = read(paths.today);
+  const toggle = sourceBetween(
+    store,
+    'export async function toggleCompletion',
+    '/** Strict FIFO snapshot',
+    'toggleCompletion',
+  );
+  const atomicAppend = sourceBetween(
+    store,
+    'function appendCompletionSyncOperation',
+    'function appendCompletionSyncEvents',
+    'completion journal append',
+  );
+  const terminalCascade = sourceBetween(
+    store,
+    'function blockRoutineDayForTerminalStep',
+    'function appendCompletionSyncEvents',
+    'terminal step dependency cascade',
+  );
+  const rejection = sourceBetween(
+    store,
+    'export async function rejectCompletionSyncOperation',
+    '/** Dates with at least one completion',
+    'terminal completion rejection',
+  );
 
   assert.match(store, /export type ScheduledCompletionContext/u);
   assert.match(store, /scheduledStepKeys\.every\(\(step\)\s*=>\s*day\.has\(step\)\)/u);
@@ -82,11 +185,70 @@ test('only a complete projected PM or recovery routine creates an adherence day'
     /completionDayInserted:\s*completedScheduledRoutine\s*&&\s*!alreadyCompletedDay/u,
   );
   assert.match(store, /for \(const date of log\.completedDays\) completedDates\.add\(date\)/u);
+  assert.match(store, /source:\s*['"]real_plan['"]/u);
+  assert.match(toggle, /remoteSync\?:\s*CompletionRemoteSyncContext/u);
+  assert.match(toggle, /remoteSync\.source\s*!==\s*['"]real_plan['"]/u);
+  assert.match(toggle, /const remoteIdentity = completionSyncStepIdentity\(normalizedKey\)/u);
+  assert.match(toggle, /remoteIdentity === null/u);
+  assert.match(toggle, /remoteSync\.timezone\s*!==\s*null\s*&&\s*remoteTimezone\s*===\s*null/u);
+  assert.match(
+    toggle,
+    /remoteSync\.unavailableReason\s*===\s*['"]COMPLETION_TIMEZONE_UNAVAILABLE['"][\s\S]*?remoteSync\.timezone\s*!==\s*null/u,
+  );
+  assert.match(toggle, /canonicalCompletionSyncStepOrder\(remoteSync\.stepOrder\)\s*===\s*null/u);
+  assertSourceOrder(
+    toggle,
+    [
+      /await updatePrivateItem\(KEY/u,
+      /appendCompletionSyncEvents\(/u,
+      /return encodeCompletionLog\(state\)/u,
+    ],
+    'visible completion and replay event must share one private-KV transform',
+  );
+  assertSourceOrder(
+    atomicAppend,
+    [/sync\.journal\.push\(/u, /sync\.outbox\.push\(eventId\)/u],
+    'journal append must precede its replay pointer',
+  );
+  assert.match(rejection, /operation\?\.kind\s*===\s*['"]step['"]/u);
+  assert.match(
+    rejection,
+    /blockRoutineDayForTerminalStep\(state\.sync,\s*normalizedEventId,\s*operation\)/u,
+  );
+  assert.match(terminalCascade, /index\s*>\s*stepIndex/u);
+  assert.match(terminalCascade, /operation\.kind\s*===\s*['"]routine_day['"]/u);
+  assert.match(terminalCascade, /operation\.routineId\s*===\s*step\.routineId/u);
+  assert.match(terminalCascade, /operation\.completedDate\s*===\s*step\.completedDate/u);
+  assert.match(
+    terminalCascade,
+    /sync\.outbox\s*=\s*sync\.outbox\.filter\(\(eventId\)\s*=>\s*eventId\s*!==\s*marker\.eventId\)/u,
+  );
+  assert.match(terminalCascade, /code:\s*COMPLETION_DEPENDENCY_TERMINAL/u);
+  assert.match(completionSync, /value\s*===\s*COMPLETION_DEPENDENCY_TERMINAL\s*\?\s*value\s*:/u);
   assert.match(
     storeTest,
     /records exactly one adherence day only after every scheduled PM step is durable/u,
   );
-  assert.match(today, /toggleCompletion\(key,\s*today,\s*scheduled\)/u);
+  assert.match(
+    storeTest,
+    /atomically journals real-plan step and full-PM attestations with stable identities/u,
+  );
+  assert.match(
+    storeTest,
+    /atomically cascades a terminal final PM step to its bound routine-day marker/u,
+  );
+  assert.match(today, /stepKey\(['"]AM['"],\s*s\.productId\)/u);
+  assert.match(today, /stepKey\(['"]PM['"],\s*s\.productId\)/u);
+  assert.match(today, /routine\.source\s*===\s*['"]real['"]/u);
+  assert.match(today, /completionSyncStepIdentity\(key\)\s*===\s*null/u);
+  assert.match(today, /timezone\s*===\s*null/u);
+  assert.match(today, /['"]COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED['"]/u);
+  assert.match(today, /['"]COMPLETION_TIMEZONE_UNAVAILABLE['"]/u);
+  assert.match(
+    today,
+    /remoteSync\s*=\s*\{[\s\S]*?source:\s*['"]real_plan['"],[\s\S]*?timezone,[\s\S]*?stepOrder:\s*context\.stepOrder/u,
+  );
+  assert.match(today, /toggleCompletion\(key,\s*today,\s*scheduled,\s*remoteSync\)/u);
   assert.match(
     today,
     /result\.completionDayInserted\s*&&\s*\(progress\?\.streak\s*\?\?\s*0\)\s*>=\s*6/u,
@@ -101,17 +263,180 @@ test('Today publishes success only after persistence and fails closed on unreada
   assert.doesNotMatch(store, /Reads stay fail-soft/u);
   assert.match(today, /completionLoading\s*\|\|\s*completionQuery\.isError/u);
   assert.match(today, /disabled=\{completionUnavailable\s*\|\|\s*completionPendingKey !== null\}/u);
-  const persistIndex = today.indexOf(
-    'const result = await toggleCompletion(key, today, scheduled)',
+  assertSourceOrder(
+    today,
+    [
+      /const result\s*=\s*await toggleCompletion\(\s*key,\s*today,\s*scheduled,\s*remoteSync\s*\)/u,
+      /lease\.assertCurrent\(\)/u,
+      /persistenceConfirmed\s*=\s*true/u,
+      /qc\.setQueryData\(/u,
+      /haptics\.success\(\)/u,
+    ],
+    'Today persistence-before-success publication',
   );
-  const hapticIndex = today.indexOf('haptics.success()', persistIndex);
-  assert.ok(persistIndex >= 0 && hapticIndex > persistIndex);
   assert.match(today, /persistenceConfirmed = true/u);
   assert.match(today, /if \(!persistenceConfirmed\)/u);
   assert.match(today, /qc\.setQueryData\(\[['"]completions['"],\s*today\]/u);
   assert.match(today, /setCompletionActionFailed\(true\)/u);
   assert.match(today, /Reload to confirm your saved progress, then try again\./u);
   assert.match(todayTest, /fails closed when completion history cannot be read or written/u);
+});
+
+test('completion replay uses exact dispositions and a durable Shelf dependency barrier', () => {
+  const completionSync = read(paths.completionSync);
+  const completionQueue = read(paths.completionQueue);
+  const completionQueueTest = read(paths.completionQueueTest);
+  const shelfMirrorQueue = read(paths.shelfMirrorQueue);
+  const offlineSync = read(paths.offlineSync);
+  const offlineSyncTest = read(paths.offlineSyncTest);
+  const terminalCodeBlock = sourceBetween(
+    completionSync,
+    'const COMPLETION_SYNC_REMOTE_TERMINAL_CODES',
+    'export type CompletionSyncOperation',
+    'completion remote terminal codes',
+  );
+  const responseDecoder = sourceBetween(
+    completionQueue,
+    'function decodeCompletionRpcResponse',
+    'function rpcArguments',
+    'completion response decoder',
+  );
+  const dependencyDeferral = sourceBetween(
+    read(paths.store),
+    'export async function deferCompletionSyncDependencyOperation',
+    '/** Dates with at least one completion',
+    'completion dependency deferral',
+  );
+  const completionRpcArguments = sourceBetween(
+    completionQueue,
+    'function rpcArguments(operation: CompletionSyncOperation)',
+    'type CompletionFlushResult',
+    'completion RPC arguments',
+  );
+  const shelfRpcArguments = sourceBetween(
+    shelfMirrorQueue,
+    'function rpcArguments(operation: ShelfMirrorOperation)',
+    'function shelfMirrorLeaseKey',
+    'Shelf RPC arguments',
+  );
+  const runShelf = sourceBetween(
+    offlineSync,
+    'const runShelf =',
+    'const scheduleCompletionWake',
+    'Shelf replay worker',
+  );
+  const runAll = sourceBetween(
+    offlineSync,
+    'const run =',
+    'const unsubscribeHealthLease',
+    'offline worker entry point',
+  );
+  const completionWake = sourceBetween(
+    offlineSync,
+    'const unsubscribeCompletions = subscribeCompletionSyncOutboxChanges',
+    'const unsubscribeShelf = subscribeShelfMirrorOutboxChanges',
+    'completion outbox wake',
+  );
+
+  assert.deepEqual([...new Set(quotedValues(terminalCodeBlock))].sort(), [
+    'COMPLETION_AFTER_PRODUCT_DELETION',
+    'COMPLETION_EVENT_CONFLICT',
+    'COMPLETION_IDENTITY_CONFLICT',
+    'COMPLETION_REQUEST_INVALID',
+  ]);
+  assert.match(
+    completionSync,
+    /return value\s*===\s*['"]COMPLETION_PRODUCT_RETRY_LATER['"]\s*\?\s*value\s*:\s*null/u,
+  );
+  assert.match(responseDecoder, /keys\.length\s*!==\s*4/u);
+  assert.deepEqual(
+    [...responseDecoder.matchAll(/value\.status\s*!==\s*['"]([^'"]+)['"]/gu)]
+      .map((match) => match[1])
+      .sort(),
+    ['accepted', 'idempotent', 'retryable', 'terminal'],
+  );
+  assert.match(
+    responseDecoder,
+    /status\s*===\s*['"]accepted['"]\s*\|\|\s*status\s*===\s*['"]idempotent['"]/u,
+  );
+  assert.match(responseDecoder, /if \(value\.code\s*!==\s*null\)/u);
+  assert.match(responseDecoder, /retryableCompletionSyncCode\(value\.code\)/u);
+  assert.match(responseDecoder, /remoteTerminalCompletionSyncCode\(value\.code\)/u);
+  assert.doesNotMatch(completionQueue, /set_routine_adherence_timezone/u);
+  assert.match(
+    completionQueue,
+    /supabase\.rpc\(['"]record_routine_completion['"],\s*rpcArguments\(operation\)\)/u,
+  );
+  assert.match(
+    shelfMirrorQueue,
+    /supabase\.rpc\(['"]sync_shelf_product['"],\s*rpcArguments\(operation\)\)/u,
+  );
+  assert.doesNotMatch(completionQueue, /supabase\.rpc\.bind|as unknown as CompletionRpc/u);
+  assert.doesNotMatch(shelfMirrorQueue, /supabase\.rpc\.bind|as unknown as ShelfMirrorRpc/u);
+  assert.match(completionQueue, /deferCompletionSyncDependencyOperation\(/u);
+  assert.match(completionQueue, /hasUnresolvedTerminalShelfMirrorOperationForProduct\(/u);
+  assert.match(dependencyDeferral, /const originalOutbox = \[\.\.\.state\.sync\.outbox\]/u);
+  assert.match(dependencyDeferral, /candidate\.kind === ['"]routine_day['"]/u);
+  assert.match(dependencyDeferral, /candidate\.routineId === operation\.routineId/u);
+  assert.match(dependencyDeferral, /candidate\.completedDate === operation\.completedDate/u);
+  assert.match(
+    dependencyDeferral,
+    /state\.sync\.outbox = \[[\s\S]*?filter\([\s\S]*?!deferredIds\.has[\s\S]*?\.\.\.deferredEventIds/u,
+  );
+  assert.doesNotMatch(dependencyDeferral, /sync\.terminal\.push|COMPLETION_DEPENDENCY_TERMINAL/u);
+  for (const key of [
+    'p_event_id',
+    'p_routine_id',
+    'p_routine_type',
+    'p_step_id',
+    'p_user_product_id',
+    'p_step_order',
+    'p_completed_at',
+    'p_completed_date',
+    'p_timezone',
+  ]) {
+    assert.match(completionRpcArguments, new RegExp(`\\b${key}:`, 'u'));
+  }
+  for (const key of [
+    'p_operation_id',
+    'p_operation_kind',
+    'p_enqueued_at',
+    'p_product_id',
+    'p_payload',
+  ]) {
+    assert.match(shelfRpcArguments, new RegExp(`\\b${key}:`, 'u'));
+  }
+  assertSourceOrder(
+    runShelf,
+    [/flushShelfMirrorQueue\(\)/u, /if \(remaining\s*>\s*0\) return/u, /runCompletions\(\)/u],
+    'Shelf must drain before completion replay',
+  );
+  assert.match(runAll, /runShelf\(\)/u);
+  assert.doesNotMatch(runAll, /runCompletions\(\)|flushCompletions\(\)/u);
+  assert.match(completionWake, /runShelf\(\)/u);
+  assert.doesNotMatch(completionWake, /runCompletions\(\)|flushCompletions\(\)/u);
+  assert.match(
+    completionQueueTest,
+    /fails closed on malformed, foreign-event, or over-shaped success responses/u,
+  );
+  assert.match(
+    completionQueueTest,
+    /defers a retryable missing Shelf dependency and drains later unrelated FIFO work/u,
+  );
+  assert.match(
+    completionQueueTest,
+    /retains and later replays the original event when Shelf is corrected after the terminal check/u,
+  );
+  assert.match(
+    read(paths.storeTest),
+    /atomically defers a missing Shelf dependency and its bound routine-day marker/u,
+  );
+  assert.match(offlineSyncTest, /drains a newly journaled Shelf operation before completions/u);
+  assert.match(
+    offlineSyncTest,
+    /retries remaining Shelf work with bounded online backoff before completions/u,
+  );
+  assert.match(offlineSyncTest, /backs off a thrown Shelf flush without starting completions/u);
 });
 
 test('future tolerance rows cannot affect today and live clocks cross routine boundaries', () => {
@@ -124,6 +449,7 @@ test('future tolerance rows cannot affect today and live clocks cross routine bo
   assert.match(progress, /completedDate > todayISO/u);
   assert.match(progress, /completedDate <= todayISO/u);
   assert.match(progress, /\.is\(['"]step_id['"],\s*null\)/u);
+  assert.match(progress, /setAdherenceTimezone\(['"]set_routine_adherence_timezone['"]/u);
   assert.doesNotMatch(progress, /select\(['"]longest_streak['"]\)/u);
   assert.match(streak, /eligibleCompleted/u);
   assert.match(streak, /!throughDate\s*\|\|\s*day <= throughDate/u);
@@ -222,9 +548,12 @@ test('notification opt-in is exact-time, authorization-aware, local-only, and ca
   assert.match(timing, /Trial billing reminders follow the date shown at checkout\./u);
 });
 
-test('database adherence is exact-time, marker-only, and server-owned at head 0068', () => {
+test('database adherence and atomic Shelf/completion sync remain server-owned at head 0070', () => {
   const migration = read(paths.adherenceMigration);
   const dbTest = read(paths.adherenceDbTest);
+  const syncBridgeMigration = read(paths.syncBridgeMigration);
+  const syncBridgeDbTest = read(paths.syncBridgeDbTest);
+  const databaseTypes = read(paths.databaseTypes);
   const schemaContract = read(paths.schemaContract);
 
   assert.match(migration, /private\.routine_adherence_timezone_is_valid/u);
@@ -248,25 +577,74 @@ test('database adherence is exact-time, marker-only, and server-owned at head 00
   assert.match(dbTest, /two separated misses consume the total two-freeze budget/u);
   assert.match(dbTest, /a partial step completion cannot affect adherence/u);
   assert.match(dbTest, /an authenticated owner cannot directly insert a freeze/u);
-  assert.match(dbTest, /deletion clears current\/freeze state without shrinking the personal best/u);
-  assert.match(schemaContract, /\b67::bigint\b/u);
-  assert.match(schemaContract, /'20260726000068'::text/u);
+  assert.match(
+    dbTest,
+    /deletion clears current\/freeze state without shrinking the personal best/u,
+  );
+  assert.match(syncBridgeMigration, /public\.sync_shelf_product\(/u);
+  assert.match(syncBridgeMigration, /public\.record_routine_completion\(/u);
+  assert.match(syncBridgeMigration, /public\.export_shelf_product_identities_for_subject\(/u);
+  assert.match(syncBridgeMigration, /public\.export_shelf_sync_receipts_for_subject\(/u);
+  assert.match(
+    syncBridgeMigration,
+    /public\.export_routine_completion_sync_receipts_for_subject\(/u,
+  );
+  assert.match(syncBridgeMigration, /HEALTH_SYNC_EXPORT_NONACTIVE_RESIDUE/u);
+  assert.match(syncBridgeMigration, /create table public\.shelf_product_identities/u);
+  assert.match(syncBridgeMigration, /COMPLETION_PRODUCT_RETRY_LATER/u);
+  assert.doesNotMatch(syncBridgeMigration, /COMPLETION_DEPENDENCY_TERMINAL/u);
+  assert.match(syncBridgeDbTest, /exact 69-migration source history/u);
+  assert.match(syncBridgeDbTest, /semantic-conflict rejection cannot mutate adherence authority/u);
+  assert.match(
+    syncBridgeDbTest,
+    /Shelf sync rejects an exact draft-blocked health grant before retention/u,
+  );
+  assert.match(
+    syncBridgeDbTest,
+    /completion sync rejects a formerly active epoch after its exact grant closes/u,
+  );
+  assert.match(
+    syncBridgeDbTest,
+    /withdrawn lifecycle fails closed if a sealed source has synthetic residue/u,
+  );
+  assert.match(
+    syncBridgeDbTest,
+    /zero-attestation proves stable identities and all relational health data erased/u,
+  );
+  assert.match(schemaContract, /\b69::bigint\b/u);
+  assert.match(schemaContract, /'20260726000070'::text/u);
+  assert.match(databaseTypes, /shelf_product_identities:\s*\{/u);
+  assert.match(
+    databaseTypes,
+    /export_shelf_product_identities_for_subject:\s*\{[\s\S]*?p_after_created_at:\s*Timestamptz \| null;[\s\S]*?export_total_count:\s*number;[\s\S]*?deleted_received_at:\s*Timestamptz \| null;/u,
+  );
+  assert.match(
+    databaseTypes,
+    /export_shelf_sync_receipts_for_subject:\s*\{[\s\S]*?p_after_id:\s*string \| null;[\s\S]*?operation_id:\s*string;[\s\S]*?finalized_at:\s*Timestamptz \| null;/u,
+  );
+  assert.match(
+    databaseTypes,
+    /export_routine_completion_sync_receipts_for_subject:\s*\{[\s\S]*?p_limit:\s*number;[\s\S]*?event_id:\s*string;[\s\S]*?result_code:\s*string \| null;/u,
+  );
+  assert.match(
+    databaseTypes,
+    /sync_shelf_product:\s*\{[\s\S]*?p_payload:\s*Json;[\s\S]*?Returns:\s*Json;/u,
+  );
+  assert.match(
+    databaseTypes,
+    /record_routine_completion:\s*\{[\s\S]*?p_step_id:\s*string \| null;[\s\S]*?p_step_order:\s*number \| null;[\s\S]*?Returns:\s*Json;/u,
+  );
 });
 
 test('the hashed corpus executes the actual client streak implementation and binds SQL parity', async () => {
   const corpus = JSON.parse(read(paths.adherenceParityCorpus));
   const dbTest = read(paths.adherenceDbTest);
-  const corpusHash = createHash('sha256')
-    .update(JSON.stringify(corpus))
-    .digest('hex');
+  const corpusHash = createHash('sha256').update(JSON.stringify(corpus)).digest('hex');
 
   assert.equal(corpus.schemaVersion, 1);
   assert.equal(corpus.canonicalFrozenDateOrder, 'newest_to_oldest');
   assert.equal(corpus.cases.length, 9);
-  assert.equal(
-    corpusHash,
-    'cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00',
-  );
+  assert.equal(corpusHash, 'cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00');
   assert.match(dbTest, new RegExp(`CORE05_PARITY_CORPUS_SHA256: ${corpusHash}`, 'u'));
   assert.equal(
     dbTest.split(JSON.stringify(corpus)).length - 1,
@@ -301,6 +679,7 @@ test('the hashed corpus executes the actual client streak implementation and bin
 test('completion records remain registered for cleanup/export and this contract is mandatory', () => {
   const cleanup = read(paths.cleanup);
   const localExport = read(paths.localExport);
+  const completionQueue = read(paths.completionQueue);
   for (const key of [
     'onskin.completions.v1',
     'onskin.completions.firstCompletion.v1',
@@ -309,6 +688,34 @@ test('completion records remain registered for cleanup/export and this contract 
     assert.match(cleanup, new RegExp(key.replaceAll('.', '\\.'), 'u'));
     assert.match(localExport, new RegExp(key.replaceAll('.', '\\.'), 'u'));
   }
+  const completionFlush = sourceBetween(
+    completionQueue,
+    'async function runCompletionFlush',
+    '/**\n * Single-flight FIFO replay',
+    'completion replay cleanup',
+  );
+  assert.match(completionFlush, /getPendingCompletionSyncOperations\(\)/u);
+  assert.doesNotMatch(
+    completionQueue,
+    /removePrivateItem|LEGACY_COMPLETION_QUEUE_KEY|onskin\.completions\.pending/u,
+    'completion replay must preserve and never read the exportable legacy quarantine',
+  );
+  assert.doesNotMatch(
+    completionFlush,
+    /getPrivateItem\(\s*LEGACY_COMPLETION_QUEUE_KEY|JSON\.parse\([^)]*LEGACY_COMPLETION_QUEUE_KEY/u,
+  );
+  assert.match(
+    localExport,
+    /key:\s*['"]onskin\.completions\.pending['"][\s\S]*?field:\s*['"]legacy_pending_completion_sync['"]/u,
+  );
+  assert.match(
+    localExport,
+    /const REDACTED_LOCAL_FIELD_NAMES\s*=\s*new Set\(\[[\s\S]*?['"]ownerUserId['"]/u,
+  );
+  assert.match(
+    localExport,
+    /sections\[spec\.section\]\[spec\.field\]\s*=\s*redactLocalFields\(exportValue\)/u,
+  );
 
   const packageJson = JSON.parse(read(paths.packageJson));
   assert.equal(

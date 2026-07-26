@@ -274,8 +274,8 @@ select throws_ok(
 select is(
   (select count(*) from public.health_consent_copy_registry
     where review_status = 'draft_blocked'),
-  15::bigint,
-  'installed base and dependent disclosure copies are truthfully draft-blocked'
+  16::bigint,
+  'installed current and historical disclosure copies are truthfully draft-blocked'
 );
 
 set local role authenticated;
@@ -335,7 +335,7 @@ select throws_ok(
   $$select * from public.record_health_dependent_consent(
     1, 0, repeat('4', 64), 'ask_onskin',
     'ask-advisor-2026-06-14-placeholder',
-    '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18'
+    '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
   )$$,
   '55000', 'HEALTH_CONSENT_COPY_NOT_RELEASED',
   'exact draft Ask copy cannot create a dependent grant'
@@ -514,7 +514,7 @@ select lives_ok(
         ('photo_trend_insights', 'photo-trend-insights-2026-06-13-placeholder',
           '58997d5c3ef5098edf6544aa2752e6878765065831ddbf42c24a364ab36cd1aa'),
         ('ask_onskin', 'ask-advisor-2026-06-14-placeholder',
-          '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18'),
+          '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'),
         ('community_participation', 'community-participation-2026-06-13-placeholder',
           '416da3ba3cd3496c1008cff937b4d7ad0efa7093d40bcfed2636b480e603ca5e'),
         ('data_sharing', 'commerce-consent-2026-06-13-placeholder',
@@ -549,7 +549,7 @@ select results_eq(
      order by review_status$$,
   $$values
     ('approved'::text, 7::bigint),
-    ('draft_blocked'::text, 8::bigint)$$,
+    ('draft_blocked'::text, 9::bigint)$$,
   'only grant rows are promoted; refusal and withdrawal copy remains draft truth'
 );
 select results_eq(
@@ -674,7 +674,7 @@ select throws_ok(
   $$select * from public.record_health_dependent_consent(
     1, 0, repeat('8', 64), 'ask_onskin',
     'ask-advisor-2026-06-14-placeholder',
-    '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18'
+    '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
   )$$,
   '55000',
   'HEALTH_DEPENDENT_IDEMPOTENCY_KEY_REUSED',
@@ -1315,15 +1315,25 @@ select results_eq(
   )$$,
   'the owner reads the exact constrained v2 provenance row through real RLS and the health read fence'
 );
-select lives_ok(
+select throws_ok(
   $$insert into public.routines (id, user_id, type, name) values (
       '74000000-0000-4000-8000-000000000001',
       '70000000-0000-4000-8000-000000000001',
       'AM',
       'Read-fence ownership probe'
-    )$$,
-  'an active owner can create a routine for the ownership-helper rehearsal'
+  )$$,
+  '42501',
+  'new row violates row-level security policy for table "routines"',
+  'the current sync bridge seals direct authenticated routine creation'
 );
+reset role;
+insert into public.routines (id, user_id, type, name) values (
+  '74000000-0000-4000-8000-000000000001',
+  '70000000-0000-4000-8000-000000000001',
+  'AM',
+  'Read-fence ownership probe'
+);
+set local role authenticated;
 select ok(
   public.owns_routine('74000000-0000-4000-8000-000000000001'),
   'the public ownership helper remains usable while health processing is active'
@@ -2672,7 +2682,7 @@ select ok(
 );
 
 -- Migration-owner-only disclosure lifecycle rehearsal. This pgTAP transaction
--- rolls back, so the installed 15 tuples remain current draft_blocked rows.
+-- rolls back, so the installed 15 current tuples remain draft_blocked rows.
 select throws_ok(
   $$update public.health_consent_copy_registry
        set is_current = false

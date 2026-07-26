@@ -30,8 +30,8 @@ import {
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 67;
-const EXPECTED_LATEST_MIGRATION = '20260726000068';
+const EXPECTED_MIGRATION_COUNT = 69;
+const EXPECTED_LATEST_MIGRATION = '20260726000070';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
 // recomputes every sealed membership root. Keep ordinary CLI operations tightly
@@ -361,6 +361,22 @@ try {
       sandboxSupabaseDir,
       'tests',
       'upgrade',
+      'routine_completion_sync_bridge_0069_upgrade.test.sql',
+    ),
+  );
+  await stat(
+    join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'health_consent_draft_successor_0070_upgrade.test.sql',
+    ),
+  );
+  await stat(
+    join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
       'routine_adherence_0068_upgrade.test.sql',
     ),
   );
@@ -370,12 +386,32 @@ try {
     'migrations',
     migrationFiles.at(-1),
   );
+  const sandboxAdherenceMigration = join(
+    sandboxSupabaseDir,
+    'migrations',
+    migrationFiles.find((name) => name.startsWith('20260726000068_')),
+  );
+  const sandboxSyncMigration = join(
+    sandboxSupabaseDir,
+    'migrations',
+    migrationFiles.find((name) => name.startsWith('20260726000069_')),
+  );
   const withheldHeadMigration = join(
     sandboxRoot,
     migrationFiles.at(-1),
   );
+  const withheldSyncMigration = join(
+    sandboxRoot,
+    migrationFiles.find((name) => name.startsWith('20260726000069_')),
+  );
+  const withheldAdherenceMigration = join(
+    sandboxRoot,
+    migrationFiles.find((name) => name.startsWith('20260726000068_')),
+  );
   if (mode === '--verify') {
     await rename(sandboxHeadMigration, withheldHeadMigration);
+    await rename(sandboxSyncMigration, withheldSyncMigration);
+    await rename(sandboxAdherenceMigration, withheldAdherenceMigration);
   }
 
   stackMayExist = true;
@@ -385,8 +421,8 @@ try {
       'reset through 0067 for the 0068 forward-upgrade rehearsal',
       ['db', 'reset', '--local'],
     );
-    await rename(withheldHeadMigration, sandboxHeadMigration);
-    const upgradeTemplatePath = join(
+    await rename(withheldAdherenceMigration, sandboxAdherenceMigration);
+    const adherenceUpgradeTemplatePath = join(
       sandboxSupabaseDir,
       'tests',
       'upgrade',
@@ -398,22 +434,25 @@ try {
       'upgrade',
       'generated',
     );
-    const generatedUpgradePath = join(
+    const generatedAdherenceUpgradePath = join(
       generatedUpgradeDir,
       'routine_adherence_0068_upgrade.generated.test.sql',
     );
-    const [upgradeTemplate, exactHeadMigration] = await Promise.all([
-      readFile(upgradeTemplatePath, 'utf8'),
-      readFile(sandboxHeadMigration, 'utf8'),
+    const [adherenceUpgradeTemplate, exactAdherenceMigration] = await Promise.all([
+      readFile(adherenceUpgradeTemplatePath, 'utf8'),
+      readFile(sandboxAdherenceMigration, 'utf8'),
     ]);
-    const includeMarker = '-- @@INCLUDE_EXACT_0068_MIGRATION@@';
-    if (upgradeTemplate.split(includeMarker).length !== 2) {
+    const adherenceIncludeMarker = '-- @@INCLUDE_EXACT_0068_MIGRATION@@';
+    if (adherenceUpgradeTemplate.split(adherenceIncludeMarker).length !== 2) {
       throw new Error('The 0068 upgrade rehearsal include marker is invalid.');
     }
     await mkdir(generatedUpgradeDir, { recursive: true });
     await writeFile(
-      generatedUpgradePath,
-      upgradeTemplate.replace(includeMarker, () => exactHeadMigration),
+      generatedAdherenceUpgradePath,
+      adherenceUpgradeTemplate.replace(
+        adherenceIncludeMarker,
+        () => exactAdherenceMigration,
+      ),
       'utf8',
     );
     await runLocalCli(
@@ -423,6 +462,93 @@ try {
         'db',
         '--local',
         'supabase/tests/upgrade/generated/routine_adherence_0068_upgrade.generated.test.sql',
+      ],
+      {
+        failureDiagnosticProfile: 'tap',
+        failureDiagnosticMaxBytes: STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES,
+        failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
+      },
+    );
+    await runLocalCli(
+      'reset through 0068 for the 0069 forward-upgrade rehearsal',
+      ['db', 'reset', '--local'],
+    );
+    await rename(withheldSyncMigration, sandboxSyncMigration);
+    const syncUpgradeTemplatePath = join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'routine_completion_sync_bridge_0069_upgrade.test.sql',
+    );
+    const generatedSyncUpgradePath = join(
+      generatedUpgradeDir,
+      'routine_completion_sync_bridge_0069_upgrade.generated.test.sql',
+    );
+    const [syncUpgradeTemplate, exactSyncMigration] = await Promise.all([
+      readFile(syncUpgradeTemplatePath, 'utf8'),
+      readFile(sandboxSyncMigration, 'utf8'),
+    ]);
+    const syncIncludeMarker = '-- @@INCLUDE_EXACT_0069_MIGRATION@@';
+    if (syncUpgradeTemplate.split(syncIncludeMarker).length !== 2) {
+      throw new Error('The 0069 upgrade rehearsal include marker is invalid.');
+    }
+    await writeFile(
+      generatedSyncUpgradePath,
+      syncUpgradeTemplate.replace(syncIncludeMarker, () => exactSyncMigration),
+      'utf8',
+    );
+    await runLocalCli(
+      'run 0068 to 0069 sync-bridge data-cutover rehearsal',
+      [
+        'test',
+        'db',
+        '--local',
+        'supabase/tests/upgrade/generated/routine_completion_sync_bridge_0069_upgrade.generated.test.sql',
+      ],
+      {
+        failureDiagnosticProfile: 'tap',
+        failureDiagnosticMaxBytes: STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES,
+        failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
+      },
+    );
+    await runLocalCli(
+      'reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal',
+      ['db', 'reset', '--local'],
+    );
+    await rename(withheldHeadMigration, sandboxHeadMigration);
+    const consentDraftUpgradeTemplatePath = join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'health_consent_draft_successor_0070_upgrade.test.sql',
+    );
+    const generatedConsentDraftUpgradePath = join(
+      generatedUpgradeDir,
+      'health_consent_draft_successor_0070_upgrade.generated.test.sql',
+    );
+    const [consentDraftUpgradeTemplate, exactHeadMigration] = await Promise.all([
+      readFile(consentDraftUpgradeTemplatePath, 'utf8'),
+      readFile(sandboxHeadMigration, 'utf8'),
+    ]);
+    const consentDraftIncludeMarker = '-- @@INCLUDE_EXACT_0070_MIGRATION@@';
+    if (consentDraftUpgradeTemplate.split(consentDraftIncludeMarker).length !== 2) {
+      throw new Error('The 0070 upgrade rehearsal include marker is invalid.');
+    }
+    await writeFile(
+      generatedConsentDraftUpgradePath,
+      consentDraftUpgradeTemplate.replace(
+        consentDraftIncludeMarker,
+        () => exactHeadMigration,
+      ),
+      'utf8',
+    );
+    await runLocalCli(
+      'run 0069 to 0070 consent-draft staging rehearsal',
+      [
+        'test',
+        'db',
+        '--local',
+        'supabase/tests/upgrade/generated/health_consent_draft_successor_0070_upgrade.generated.test.sql',
       ],
       {
         failureDiagnosticProfile: 'tap',
@@ -446,6 +572,22 @@ try {
       `[db05-local] migration history: PASS (${EXPECTED_MIGRATION_COUNT}, latest ${EXPECTED_LATEST_MIGRATION})\n`,
     );
 
+    await runLocalCli(
+      'run focused CORE-05 structural regressions',
+      [
+        'test',
+        'db',
+        '--local',
+        'supabase/tests/database/health_consent_lifecycle.test.sql',
+        'supabase/tests/database/routine_adherence_authority.test.sql',
+        'supabase/tests/database/routine_completion_sync_bridge.test.sql',
+      ],
+      {
+        failureDiagnosticProfile: 'tap',
+        failureDiagnosticMaxBytes: STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES,
+        failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
+      },
+    );
     await runLocalCli(
       'run structural pgTAP tests',
       ['test', 'db', '--local', 'supabase/tests/database'],

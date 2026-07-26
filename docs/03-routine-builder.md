@@ -6,6 +6,21 @@ _Routine generation · application-order sequencing · frequency & the retinoid 
 
 ---
 
+> **Current CORE-05 authority boundary (2026-07-26):** the product and
+> behavioral intent below remains current, but the earlier direct-write and
+> cached-streak implementation notes are superseded. Today now persists the
+> visible check-off and its append-only replay event atomically in a strict
+> encrypted local completion-v3 record before publishing success. Historical
+> local schemas never invent remote identities or replay work. Migration
+> `0068` makes routine-day rows the server adherence input and makes current,
+> best, and absorbed dates server-owned. Migration `0069` admits Shelf and
+> completion replay only through owner-derived, health/account-fenced RPCs;
+> Shelf drains first, stable product identity is deletion-wins, and direct
+> product/routine/step/completion mutation is sealed. These source controls do
+> not prove hosted or native durability, two-device convergence, withdrawal/
+> export completeness, or App Store readiness. See
+> [the CORE-05 source checkpoint](hugeToDo/CORE-05-ADHERENCE-SOURCE-CHECKPOINT-2026-07-26.md).
+
 ## TL;DR
 
 - **The routine builder is the product's spine, and it is the activation and retention engine — not plumbing.** It converts the skin profile (docs/01 `skin_profiles`), the shelf (`user_products`), and docs/02's rules engine into a personalised AM/PM plan, schedules the actives, folds in every conflict resolution, and renders the daily habit loop where the user checks off steps. That check-off **is** the north-star activation metric (docs/01 §7: "first check-off within 24 hours"), and the accumulating plan + cycle + completion history is the compounding switching cost that drives annual retention.
@@ -188,10 +203,36 @@ create index on public.active_ramp (user_id);
 
 **Check-off mechanics (extends docs/01 §3/§6, hardened by the DECISIONS log).**
 
-- A tap on a step writes a `routine_completions` row — **append-only**, idempotent on `(user_id, step_id, completed_date)` (docs/01 §3). Record both `completed_at` (when logged) and `completed_date` (the local day it counts for).
-- **Offline-first:** completions must succeed in a bathroom with no signal — TanStack Query optimistic update + a persisted mutation queue (docs/01 §6, **D-007**); last-write-wins is safe because completions are idempotent.
-- **Streak integrity:** offline backfill is capped to ~48h server-side and flagged `source='backfilled'` (docs/01 §6); the completion validation window is the timezone-tolerant `[current_date − 2, current_date + 1]` (**D-012**); INSERTs prove routine/step ownership via `owns_routine` (**D-014**).
-- **Streaks are computed/authoritative, cached on `profiles`** (docs/01 §3), with `longest_streak` a **non-decreasing personal best** (**D-011**) so a deleted completion never shrinks the badge.
+- A tap on a step atomically writes the visible check-off and one canonical
+  append-only replay event to the strict encrypted local completion-v3 record.
+  Cache publication, haptics, analytics, milestones, and review moments wait
+  for that private-KV transform. An unreadable or rejected write fails closed.
+- **Offline-first:** the local v3 journal and FIFO outbox preserve stable
+  routine, step, and event UUIDs. Historical schemas do not invent replay.
+  The coordinator drains the Shelf mirror before completion so a step cannot
+  overtake its product identity. Ambiguous transport/RPC outcomes retain the
+  head; only exact accepted/idempotent dispositions acknowledge it.
+- **Qualification and terminal safety:** partial AM/PM work never creates a
+  routine day. The exact final projected PM or recovery step appends one
+  routine-day event. Missing product identity remains retryable. A proven
+  unresolved terminal Shelf dependency may reversibly move only the exact
+  same-routine/date pending group through its marker to the FIFO tail; a true
+  remote-terminal step instead terminally cascades that marker so the client
+  never sends an unsupported day claim.
+- **Server completion/adherence authority:** migration `0069` inserts immutable
+  step or routine-day evidence through `record_routine_completion`, deriving
+  owner and validating routine/step/product identity, local date, timestamp,
+  and IANA timezone. Migration `0068` projects current/best/absorbed dates only
+  from routine-day rows, excludes future rows, treats the current day
+  neutrally, absorbs at most two total missed days per run, and preserves the
+  historical best. Its profile cache and freezes are server-owned.
+- **Export and erasure:** the requesting-device export wrapper is schema v2 and
+  labels local pending/terminal v3 data as `completion_and_sync_state`. Server
+  export schema v4 includes subject-facing completion receipts but not raw
+  request bodies or the internal request fingerprint. Health withdrawal and
+  account/Auth deletion erase the local and server replay state. Hosted
+  concurrency, native share/cache cleanup, and two-device completeness remain
+  open evidence gates.
 
 **Calm, not gamified — the design, and why (the evidence).** Lally et al. (2010) show habits take ~66 days (range 18–254), that "21 days" is a myth, and — decisively — that **missing a single day does not meaningfully impair habit formation**; the streak-design literature shows rigid daily counters trigger the abstinence-violation effect and rage-quitting (Octalysis Group; Duolingo's own Streak Freeze / Weekend Amulet exist precisely to soften this). For a **skin-cycling** app the all-or-nothing daily streak is actively wrong, because recovery nights and the occasional missed evening are _expected and healthy_. Concretely:
 
@@ -277,7 +318,13 @@ build (docs/00 §6).
 ### 11. Engineering / implementation notes
 
 - **Where generation runs.** A future authoritative server-side function must consume only evidence-authorized rule projections and remain hardened with `REVOKE … FROM public, anon, authenticated` per **D-013**. The offline client mirror retains review metadata and applies the same production filter; it must not treat bundled availability as publication authority. The small rule sets may ship in the binary only with this fail-closed gate.
-- **New schema introduced here:** `sequencing_rules` is a read-sealed clinical/content authority, and `active_ramp` is per-user and owner-only. Migration `0058` supersedes the former world-readable classification. No change to `routines` / `routine_steps` / `routine_completions` — they already carry `step_order`, `frequency`, `cycling_night`, `instructions`, and the append-only completion log.
+- **Schema history and current supersession:** this build spec introduced
+  `sequencing_rules` and `active_ramp`; migration `0058` superseded the former
+  world-readable classification. The old “no change to routines/completions”
+  note is no longer current. Migration `0068` adds the server-owned adherence
+  projection, and `0069` adds stable Shelf identity, sealed replay receipts,
+  owner-derived sync RPCs, immutable completion controls, and the governed
+  routine-step/product relationship required by delayed replay.
 - **Suggested DECISIONS.md entries:** **D-019** — application-order encoded as a versioned `sequencing_rules` table, not hard-coded; **D-020** — the retinoid ramp modelled as a per-user `active_ramp` with offer-only step-ups and auto de-escalation on reported irritation; **D-021** — streak is _forgiving_ (grace/freeze, recovery nights count, weekly-adherence + heat-map framing) on the Lally + streak-backfire evidence. Anything touching the _medical defensibility_ of sequencing/ramp/cycling rules belongs in **BLOCKERS.md** under **B-DERM-REVIEW** (which now covers these rules in addition to docs/02's matrix).
 - **Analytics instrumentation** (extends docs/01 §7): `first_routine_created` and `first_checkoff_completed` already exist; add only non-clinical habit events such as `routine_edited`, `step_reordered`, `ramp_step_up_offered` / `_accepted`, `cycle_night_completed`, and `streak_freeze_used`. Wire the activation funnel (reveal → see-routine → first check-off) and the depth metric (3 check-offs in 7 days). Do not emit conflict-existence, conflict-detail, override, resolution, or conflict-share events; a generic event name from a conflict-only surface still reveals health-adjacent shelf state.
 - **Performance & correctness:** index `active_ramp(user_id)` and `routine_conflicts(user_id)`; keep generation idempotent (re-running `build_routine` over an unchanged shelf yields the same plan and preserves overrides); recompute the cycle on local-day rollover (D-012).
@@ -310,7 +357,13 @@ The routine builder is the layer where willingness-to-pay and retention are actu
 
 **(e) Skin cycling:** Bowe's framework as the active-scheduling spine, personalised by sensitivity (gentle/classic/advanced), with conflicts folded in via `alternate_nights` and the next-acid-night computation rendered in the PM banner.
 
-**(f) The habit loop:** check-off → append-only `routine_completions` (offline-first, 48h backfill cap, computed/cached streaks per D-011/D-012/D-014); **calm, not gamified** — a forgiving streak, weekly adherence + heat-map, white-hat motivation — justified by Lally (2010) and the streak-backfire literature.
+**(f) The habit loop:** check-off → atomic local completion-v3 history plus
+append-only replay intent → owner-derived immutable server evidence → `0068`
+server adherence projection from routine-day rows. The UI remains **calm, not
+gamified** — a forgiving streak, weekly adherence + heat-map, and white-hat
+motivation justified by Lally (2010) and the streak-backfire literature.
+Hosted/native/two-device parity remains an acceptance gate rather than a
+product claim.
 
 **(g) Editing & adaptation:** everything is user-editable; every edit re-runs detection + rescheduling while preserving overrides; adaptation (ramp, new products, irritation de-escalation, seasonal) is conservative, reversible, and claim-safe.
 
@@ -342,7 +395,12 @@ The routine builder is the layer where willingness-to-pay and retention are actu
 - **The streak-backfire evidence is behavioural-economics reasoning plus industry case studies (Octalysis Group, Duolingo), not RCTs;** the _direction_ (forgive misses, avoid loss-aversion pressure) is well-supported and converges with Lally, but the specific retention magnitudes (e.g. "+14% D14 from a streak wager") are vendor-reported. _Medium-high confidence on the direction; treat magnitudes as directional._
 - **Sequencing, ramp, and cycling rules are medical-adjacent and fall under the same launch gate as docs/02's matrix (`B-DERM-REVIEW`);** do not ship safety-relevant scheduling (especially anything touching pregnancy or barrier compromise) without board-certified-dermatologist + cosmetic-chemist sign-off recorded in `reviewed_by`. _High confidence that this gate is required._
 - **The competitive set moves fast** — SkinSort sequences and flags, HadaBuddy ships an AI-built routine, and new entrants will appear; the moat is the _integration_ (cycling-aware, conflict-resolved, ramp-scheduled, calm habit loop, data lock-in), not any single capability, and that positioning must be revisited periodically. _Medium confidence._
-- **Offline streak/completion correctness has real edge cases** — timezone handling (D-012), backfill-abuse caps, and concurrent multi-device writes (deferred until a sync upgrade, docs/01 §6) — and should be verified on-device. _Medium confidence pending device testing._
+- **Offline streak/completion correctness still has real edge cases.** The v3
+  local queue and `0068`/`0069` server bridge now exist, but timezone/DST and
+  clock changes, response loss, deletion races, stale writers, withdrawal,
+  account switching, process death, and concurrent two-device delivery still
+  require hosted and supported-device evidence. Cross-device parity is not a
+  launch claim. _Medium confidence pending those tests._
 - **Adaptation features must stay inside the FDA cosmetic-vs-drug claims boundary** (docs/02 §9); the more the plan "responds to your skin," the more carefully the copy must avoid implying diagnosis or treatment. Regulatory-counsel review of adaptive copy is recommended. _High confidence on the principle; legal review recommended for wording._
 - **Widgets and Live Activity have platform constraints** (iOS WidgetKit / Live Activities background limits; Android equivalents) and are named in the spec as _next_ screens (p14); re-verify feasibility and refresh cadence at build time (docs/00 §6). _Medium confidence._
 - **Market-size and trend figures are vendor/definition-dependent** (skincare-app vs beauty-tech vs skincare-products; TikTok view counts as a demand proxy); treat the specific numbers as directional. The Yuka financials (its own accounts) remain the most reliable proof point. _Medium confidence on sizing; high on the Yuka reference._

@@ -27,6 +27,9 @@ export type Database = {
           units: string;
           current_streak: number;
           longest_streak: number;
+          adherence_timezone: string | null;
+          streak_reference_day: DateStr | null;
+          streak_algorithm_version: number;
           created_at: Timestamptz;
           updated_at: Timestamptz;
         };
@@ -38,6 +41,9 @@ export type Database = {
           units?: string;
           current_streak?: number;
           longest_streak?: number;
+          adherence_timezone?: string | null;
+          streak_reference_day?: DateStr | null;
+          streak_algorithm_version?: number;
           created_at?: Timestamptz;
           updated_at?: Timestamptz;
         };
@@ -389,6 +395,24 @@ export type Database = {
           updated_at?: Timestamptz;
         };
         Update: Partial<Database['public']['Tables']['user_products']['Insert']>;
+        Relationships: [];
+      };
+      shelf_product_identities: {
+        Row: {
+          id: string;
+          user_id: string;
+          created_at: Timestamptz;
+          deleted_effective_at: Timestamptz | null;
+          deleted_received_at: Timestamptz | null;
+        };
+        Insert: {
+          id: string;
+          user_id: string;
+          created_at?: Timestamptz;
+          deleted_effective_at?: Timestamptz | null;
+          deleted_received_at?: Timestamptz | null;
+        };
+        Update: Partial<Database['public']['Tables']['shelf_product_identities']['Insert']>;
         Relationships: [];
       };
       shelf_scans: {
@@ -823,6 +847,56 @@ export type Database = {
         };
         Update: Partial<
           Database['public']['Tables']['health_consent_copy_review_events']['Insert']
+        >;
+        Relationships: [];
+      };
+      // Sealed migration-only evidence for draft-to-draft copy alignment.
+      // This relation is distinct from legal/privacy review and release events.
+      health_consent_copy_staging_events: {
+        Row: {
+          id: string;
+          consent_type: string;
+          action: string;
+          previous_version: string;
+          previous_consent_text_hash: string;
+          previous_review_status: string;
+          previous_from_is_current: boolean;
+          previous_to_is_current: boolean;
+          successor_version: string;
+          successor_consent_text_hash: string;
+          successor_review_status: string;
+          successor_from_is_current: boolean;
+          successor_to_is_current: boolean;
+          staging_change_reference: string;
+          staged_by: string;
+          staging_evidence_hash: string;
+          lifecycle_xid: string;
+          lifecycle_backend_pid: number;
+          staged_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          consent_type: string;
+          action: string;
+          previous_version: string;
+          previous_consent_text_hash: string;
+          previous_review_status: string;
+          previous_from_is_current: boolean;
+          previous_to_is_current: boolean;
+          successor_version: string;
+          successor_consent_text_hash: string;
+          successor_review_status: string;
+          successor_from_is_current: boolean;
+          successor_to_is_current: boolean;
+          staging_change_reference: string;
+          staged_by: string;
+          staging_evidence_hash: string;
+          lifecycle_xid: string;
+          lifecycle_backend_pid: number;
+          staged_at?: Timestamptz;
+        };
+        Update: Partial<
+          Database['public']['Tables']['health_consent_copy_staging_events']['Insert']
         >;
         Relationships: [];
       };
@@ -1312,6 +1386,34 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      stage_health_consent_copy_draft_successor: {
+        Args: {
+          p_consent_type: string;
+          p_action: string;
+          p_previous_version: string;
+          p_previous_consent_text_hash: string;
+          p_successor_version: string;
+          p_successor_consent_text_hash: string;
+          p_staging_change_reference: string;
+          p_staged_by: string;
+          p_staging_evidence_hash: string;
+        };
+        Returns: {
+          staging_event_id: string;
+          consent_type: string;
+          action: string;
+          previous_version: string;
+          previous_consent_text_hash: string;
+          successor_version: string;
+          successor_consent_text_hash: string;
+          successor_review_status: string;
+          successor_is_current: boolean;
+          staging_change_reference: string;
+          staged_by: string;
+          staging_evidence_hash: string;
+          staged_at: Timestamptz;
+        }[];
+      };
       promote_health_consent_copy_for_release: {
         Args: {
           p_consent_type: string;
@@ -1518,6 +1620,101 @@ export type Database = {
       recompute_streak: {
         Args: { p_user_id: string };
         Returns: undefined;
+      };
+      set_routine_adherence_timezone: {
+        Args: { p_timezone: string };
+        Returns: {
+          current_streak: number;
+          longest_streak: number;
+          adherence_timezone: string;
+          reference_day: DateStr;
+          frozen_dates: DateStr[];
+          lapsed: boolean;
+          algorithm_version: number;
+        }[];
+      };
+      refresh_routine_adherence: {
+        Args: Record<string, never>;
+        Returns: {
+          current_streak: number;
+          longest_streak: number;
+          adherence_timezone: string;
+          reference_day: DateStr;
+          frozen_dates: DateStr[];
+          lapsed: boolean;
+          algorithm_version: number;
+        }[];
+      };
+      export_shelf_product_identities_for_subject: {
+        Args: {
+          p_after_created_at: Timestamptz | null;
+          p_after_id: string | null;
+          p_limit: number;
+        };
+        Returns: {
+          export_total_count: number;
+          id: string;
+          user_id: string;
+          created_at: Timestamptz;
+          deleted_effective_at: Timestamptz | null;
+          deleted_received_at: Timestamptz | null;
+        }[];
+      };
+      export_shelf_sync_receipts_for_subject: {
+        Args: {
+          p_after_created_at: Timestamptz | null;
+          p_after_id: string | null;
+          p_limit: number;
+        };
+        Returns: {
+          export_total_count: number;
+          operation_id: string;
+          user_id: string;
+          state: string;
+          result_code: string | null;
+          created_at: Timestamptz;
+          finalized_at: Timestamptz | null;
+        }[];
+      };
+      export_routine_completion_sync_receipts_for_subject: {
+        Args: {
+          p_after_created_at: Timestamptz | null;
+          p_after_id: string | null;
+          p_limit: number;
+        };
+        Returns: {
+          export_total_count: number;
+          event_id: string;
+          user_id: string;
+          state: string;
+          result_code: string | null;
+          created_at: Timestamptz;
+          finalized_at: Timestamptz | null;
+        }[];
+      };
+      sync_shelf_product: {
+        Args: {
+          p_operation_id: string;
+          p_operation_kind: string;
+          p_enqueued_at: string;
+          p_product_id: string;
+          p_payload: Json;
+        };
+        Returns: Json;
+      };
+      record_routine_completion: {
+        Args: {
+          p_event_id: string;
+          p_routine_id: string;
+          p_routine_type: string;
+          p_step_id: string | null;
+          p_user_product_id: string | null;
+          p_step_order: number | null;
+          p_completed_at: string;
+          p_completed_date: string;
+          p_timezone: string;
+        };
+        Returns: Json;
       };
       read_entitlement_projections: {
         Args: Record<string, never>;

@@ -15,6 +15,7 @@ import {
 import { conflictDetailRoute } from '@/features/intelligence/conflictIdentity';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
+import type { ShelfMirrorIncompatibility } from '@/features/shelf/store';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { readReadyCatalogLookups, type ReadyCatalogLookup } from '@/lib/offline/catalogLookupQueue';
 import { haptics } from '@/theme/haptics';
@@ -111,6 +112,43 @@ function CatalogRecoveryUnavailable({ retry }: { retry: () => void }) {
       >
         <Text variant="bodySm" tone="clay" className="font-sans-semibold">
           Try again
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function ShelfMirrorRepairCard({
+  incompatibilities,
+}: {
+  incompatibilities: ShelfMirrorIncompatibility[];
+}) {
+  const first = incompatibilities[0]!;
+  const identityRepair = first.codes.includes('SHELF_MIRROR_PRODUCT_ID_REPAIR_REQUIRED');
+  return (
+    <View accessibilityRole="alert" className="mt-4 rounded-[18px] bg-clay-tint p-4">
+      <Text variant="body" className="font-sans-semibold">
+        Review saved product details
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-1">
+        {identityRepair
+          ? 'This older product stays on this device, but it must be removed and added again before it can sync.'
+          : 'This older product stays on this device. Review its name, brand, and barcode to make it eligible for sync.'}
+        {incompatibilities.length > 1
+          ? ` ${incompatibilities.length} saved products need review.`
+          : ''}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Review product that needs sync repair"
+        onPress={() => {
+          haptics.select();
+          router.push(`/shelf/${first.productId}`);
+        }}
+        className="mt-2 min-h-[48px] self-start justify-center rounded-pill px-4 py-2"
+      >
+        <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+          Review saved product
         </Text>
       </Pressable>
     </View>
@@ -440,13 +478,16 @@ export default function ShelfScreen() {
   ) : catalogRecovery.isError ? (
     <CatalogRecoveryUnavailable retry={() => void catalogRecovery.refetch()} />
   ) : null;
+  const repairSurface = data?.mirrorIncompatibilities.length ? (
+    <ShelfMirrorRepairCard incompatibilities={data.mirrorIncompatibilities} />
+  ) : null;
 
   return (
     <Screen edges={['top']}>
       {showLoading ? (
         <SkeletonShelf compactFilterLabels={compactFilterLabels} />
       ) : isEmpty ? (
-        recoverySurface ? (
+        recoverySurface || repairSurface ? (
           <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
             <View className="mt-2">
               <Text variant="title" className="text-[38px] leading-[40px]">
@@ -457,6 +498,7 @@ export default function ShelfScreen() {
               </Text>
             </View>
             {recoverySurface}
+            {repairSurface}
             <EmptyShelf
               archiveCount={archiveCount}
               compact={compactShelf}
@@ -521,6 +563,7 @@ export default function ShelfScreen() {
           </Text>
 
           {recoverySurface}
+          {repairSurface}
 
           {data?.banner ? (
             <ConflictBanner

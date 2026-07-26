@@ -7,6 +7,8 @@ import {
   OWNER_LINKED_PRIVATE_TABLES,
   printResult,
   read,
+  SEALED_OWNER_RPC_EXPORT_SOURCES,
+  SEALED_OWNER_RPC_EXPORT_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   warn,
 } from './lib.mjs';
@@ -22,13 +24,20 @@ const catalogCorrectionExportSource = read(
 const catalogCorrectionExportTestSource = read(
   'supabase/functions/data-export/catalogCorrectionExportCore.test.ts',
 );
+const healthSyncExportSource = read('supabase/functions/data-export/healthSyncExportCore.ts');
+const healthSyncExportTestSource = read(
+  'supabase/functions/data-export/healthSyncExportCore.test.ts',
+);
 const exportRegistrySource = read('supabase/functions/data-export/exportRegistry.ts');
 const exportRegistryTestSource = read('supabase/functions/data-export/exportRegistry.test.ts');
 const catalogOperatorMigration = read(
   'supabase/migrations/20260722000063_catalog_operator_authority.sql',
 );
+const routineCompletionSyncMigration = read(
+  'supabase/migrations/20260726000069_routine_completion_sync_bridge.sql',
+);
 const healthLifecycleSource = read('supabase/functions/consent-withdrawal/healthLifecycleCore.ts');
-const completeExportSource = `${exportSource}\n${exportCoreSource}\n${catalogCorrectionExportSource}\n${exportRegistrySource}`;
+const completeExportSource = `${exportSource}\n${exportCoreSource}\n${catalogCorrectionExportSource}\n${healthSyncExportSource}\n${exportRegistrySource}`;
 const migrationSource = listFiles('supabase/migrations')
   .filter((file) => file.endsWith('.sql'))
   .map((file) => read(file))
@@ -201,6 +210,9 @@ const environmentExampleSource = read('.env.example');
 const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
 const deletionManifest = edgeFunctionManifest.functions?.['account-deletion'] ?? {};
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
+const serverDataExportContractSource = read(
+  'apps/mobile/src/features/settings/serverDataExportContract.ts',
+);
 const accountDeletionClientStateSource = read(
   'apps/mobile/src/features/settings/accountDeletionClientState.ts',
 );
@@ -272,6 +284,11 @@ const serviceOnlyDenylist = stringLiteralsBetween(
   'export const SERVICE_ONLY_EXPORT_DENYLIST',
   'export const CALLER_RLS_EXPORT_TABLES',
 );
+const callerRpcRegistrySources = stringLiteralsBetween(
+  exportRegistrySource,
+  'export const CALLER_RPC_OWNER_EXPORTS',
+  'export const CALLER_RPC_OWNER_EXPORT_TABLE_BY_SOURCE',
+);
 const subscriptionExportColumns = stringLiteralsBetween(
   exportRegistrySource,
   'export const SUBSCRIPTION_EVENT_EXPORT_COLUMNS',
@@ -296,6 +313,7 @@ const requiredExportTables = [
   'profiles',
   'skin_profiles',
   'user_products',
+  'shelf_product_identities',
   'routines',
   'routine_steps',
   'routine_completions',
@@ -313,6 +331,8 @@ const requiredExportTables = [
   'recommendation_preferences',
   'recommendations',
   'catalog_corrections',
+  'shelf_sync_receipts',
+  'routine_completion_sync_receipts',
   'catalog_lookup_events',
   'commerce_click_events',
   'community_blocks',
@@ -348,6 +368,7 @@ block(
   (() => {
     const expectedExportDenylist = [
       ...SERVICE_ONLY_PRIVATE_TABLES,
+      ...SEALED_OWNER_RPC_EXPORT_TABLES,
       'shelf_scans',
       'obf_contribution_queue',
       'catalog_import_batches',
@@ -360,6 +381,13 @@ block(
     );
   })(),
   'Runtime export denylist must exactly cover direct service-only tables plus purged scan/contribution stores and sealed catalog ledgers.',
+);
+block(
+  errors,
+  JSON.stringify([...new Set(callerRpcRegistrySources)].sort()) ===
+    JSON.stringify(['catalog_corrections', ...SEALED_OWNER_RPC_EXPORT_SOURCES].sort()) &&
+    callerRpcRegistrySources.length === SEALED_OWNER_RPC_EXPORT_SOURCES.length + 1,
+  'Caller-RPC export registry must cover catalog corrections and every sealed owner-linked sync source exactly once.',
 );
 block(
   errors,
@@ -440,7 +468,7 @@ block(
 block(
   errors,
   /buildDirectExportPlans\(userId\)/.test(exportSource) &&
-    /item\.clientKind === 'caller' \? supabase : admin/.test(exportSource) &&
+    /item\.clientKind === 'caller' \? healthSupabase : admin/.test(exportSource) &&
     /selectColumns:\s*item\.selectColumns/.test(exportSource) &&
     /EXPORT_SOURCE_DUPLICATE/.test(exportSource),
   'data-export must execute the validated caller/service plan with the selected client, allowlist, and duplicate-source guard.',
@@ -453,7 +481,7 @@ block(
     /p_after_id:\s*cursor\?\.id \?\? null/.test(exportSource) &&
     /paginateCatalogCorrections/.test(exportSource) &&
     /expectedUserId:\s*userId/.test(exportSource) &&
-    /exportCatalogCorrections\(supabase, userId\)/.test(exportSource) &&
+    /exportCatalogCorrections\(healthSupabase, userId\)/.test(exportSource) &&
     !/\.from\(['"]catalog_corrections['"]\)/.test(exportSource) &&
     /CATALOG_CORRECTION_EXPORT_COLUMNS/.test(catalogCorrectionExportSource) &&
     /export_total_count/.test(catalogCorrectionExportSource) &&
@@ -464,7 +492,7 @@ block(
     /UNEXPECTED_COLUMN/.test(catalogCorrectionExportSource) &&
     /keyset-bound, count-guarded, and strips metadata/.test(catalogCorrectionExportTestSource) &&
     !directServiceRegistryTables.includes('catalog_corrections') &&
-    /CALLER_RPC_OWNER_EXPORTS\s*=\s*\[['"]catalog_corrections['"]\]/.test(exportRegistrySource) &&
+    callerRpcRegistrySources.includes('catalog_corrections') &&
     /catalog correction export excludes every internal operator field/.test(
       exportRegistryTestSource,
     ) &&
@@ -475,6 +503,43 @@ block(
       catalogOperatorMigration,
     ),
   'Catalog-correction export must use the authenticated owner-scoped keyset RPC, live account-access admission, count guards, and an exact reporter-facing column allowlist.',
+);
+block(
+  errors,
+  SEALED_OWNER_RPC_EXPORT_SOURCES.every((source) => callerRpcRegistrySources.includes(source)) &&
+    /paginateHealthSyncSource/.test(exportSource) &&
+    /Object\.keys\(HEALTH_SYNC_EXPORT_SOURCES\)/.test(exportSource) &&
+    /expectedUserId:\s*userId/.test(exportSource) &&
+    /p_after_created_at:\s*cursor\?\.createdAt \?\? null/.test(exportSource) &&
+    /p_after_id:\s*cursor\?\.id \?\? null/.test(exportSource) &&
+    /export_total_count/.test(healthSyncExportSource) &&
+    /OWNER_MISMATCH/.test(healthSyncExportSource) &&
+    /NON_MONOTONIC_ORDER/.test(healthSyncExportSource) &&
+    /UNSTABLE_SNAPSHOT/.test(healthSyncExportSource) &&
+    /UNEXPECTED_COLUMN/.test(healthSyncExportSource) &&
+    /request_sha256/.test(healthSyncExportTestSource) &&
+    /internal request fingerprints/.test(healthSyncExportTestSource) &&
+    /health_sync_request_fingerprints/.test(exportSource) &&
+    /create or replace function public\.export_shelf_product_identities_for_subject\(/i.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /create or replace function public\.export_shelf_sync_receipts_for_subject\(/i.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /create or replace function public\.export_routine_completion_sync_receipts_for_subject\(/i.test(
+      routineCompletionSyncMigration,
+    ) &&
+    !/request_sha256['"]?\s*,?\s*$/m.test(
+      healthSyncExportSource.match(
+        /shelf_sync_receipts:\s*\{[\s\S]*?columns:\s*\[([\s\S]*?)\]/,
+      )?.[1] ?? '',
+    ) &&
+    !/request_sha256['"]?\s*,?\s*$/m.test(
+      healthSyncExportSource.match(
+        /routine_completion_sync_receipts:\s*\{[\s\S]*?columns:\s*\[([\s\S]*?)\]/,
+      )?.[1] ?? '',
+    ),
+  'Sealed Shelf identity and sync ledgers must use authenticated subject-derived keyset RPCs, exact receipt projections, two-pass count/checksum guards, and an explicit request-fingerprint exclusion.',
 );
 block(
   errors,
@@ -548,25 +613,32 @@ block(
   /get_health_data_consent_status/.test(exportSource) &&
     /initialHealthLifecycle/.test(exportSource) &&
     /finalHealthLifecycle/.test(exportSource) &&
+    /healthReadEpochForExport\(initialHealthLifecycle\)/.test(exportSource) &&
+    /'x-health-processing-epoch': String\(healthReadEpoch\)/.test(exportSource) &&
+    /item\.clientKind === 'caller' \? healthSupabase : admin/.test(exportSource) &&
+    /exportHealthSyncRecords\(healthSupabase, userId, source\)/.test(exportSource) &&
+    /healthReadEpochForExport/.test(exportCoreSource) &&
     /healthLifecycleExportDecision/.test(exportSource) &&
     /HEALTH_DATA_WITHDRAWAL_IN_PROGRESS/.test(exportCoreSource) &&
     /Retry-After/.test(exportSource),
-  'data-export must reject nonterminal or changing health-withdrawal snapshots with a retry contract.',
+  'data-export must pin the initial health epoch for caller reads and reject nonterminal or changing withdrawal snapshots with a retry contract.',
 );
 block(
   errors,
-  /export_schema_version:\s*3/.test(exportSource) &&
+  /export_schema_version:\s*4/.test(exportSource) &&
     /healthLifecycleExportSnapshot/.test(exportSource) &&
     /processing_epoch/.test(healthLifecycleSource) &&
     !/operation_id:\s*row\.operation_id/.test(
       healthLifecycleSource.match(/healthLifecycleExportSnapshot[\s\S]*?\n\}/)?.[0] ?? '',
     ),
-  'data-export schema v3 must include sanitized health lifecycle status without an internal operation id.',
+  'data-export schema v4 must include sanitized health lifecycle status without an internal operation id.',
 );
 block(
   errors,
   /Includes data saved to your account and on this device:/.test(settingsRouteSource) &&
-    /completion history, preferences, and Progress notes\./.test(settingsRouteSource) &&
+    /completion history, preferences, Progress notes, and pending or terminal shelf and completion sync records\./.test(
+      settingsRouteSource,
+    ) &&
     /Photo files and thumbnails stay encrypted here;/.test(settingsRouteSource) &&
     /share images individually from Progress\./.test(settingsRouteSource) &&
     /Progress photos stay encrypted here unless you share one\./.test(settingsRouteSource) &&
@@ -579,9 +651,13 @@ block(
     /readLocalDataOwnership\(expectedUserId\)/.test(settingsActionsSource) &&
     /if \(isSupabaseConfigured\)/.test(settingsActionsSource) &&
     /serverAccountDataStatus = 'included'/.test(settingsActionsSource) &&
-    /DATA_EXPORT_RESPONSE_INVALID/.test(settingsActionsSource) &&
-    /parsed\.export_schema_version/.test(settingsActionsSource) &&
-    /parsed\.user_id/.test(settingsActionsSource) &&
+    /decodeServerDataExport\(response\.data, expectedUserId\)/.test(settingsActionsSource) &&
+    /SERVER_DATA_EXPORT_SCHEMA_VERSION = 4/.test(serverDataExportContractSource) &&
+    /hasExactKeys\(parsed, expectedTopLevelKeys\)/.test(serverDataExportContractSource) &&
+    /hasExactKeys\(manifest\.sources, ALL_MANIFEST_SOURCES\)/.test(
+      serverDataExportContractSource,
+    ) &&
+    /requireOwnerRows/.test(serverDataExportContractSource) &&
     /buildMobileDataExportBundle/.test(settingsActionsSource),
   'Mobile export must combine local device data with a validated configured server account bundle.',
 );
@@ -1406,6 +1482,9 @@ block(
 block(
   errors,
   /exportCore\.test\.ts/.test(packageJson.scripts?.['phase9:data-export-contract-smoke'] ?? '') &&
+    /healthSyncExportCore\.test\.ts/.test(
+      packageJson.scripts?.['phase9:data-export-contract-smoke'] ?? '',
+    ) &&
     /exportRegistry\.test\.ts/.test(
       packageJson.scripts?.['phase9:data-export-contract-smoke'] ?? '',
     ) &&
@@ -1441,6 +1520,14 @@ block(
     /'submit_catalog_correction'/.test(liveHarness) &&
     /catalog-correction export returned an internal operator field/.test(liveHarness) &&
     /catalog-correction export manifest is incomplete or misclassified/.test(liveHarness) &&
+    /data\.export_schema_version === 4/.test(liveHarness) &&
+    /'sync_shelf_product'/.test(liveHarness) &&
+    /'record_routine_completion'/.test(liveHarness) &&
+    /shelf_product_identities/.test(liveHarness) &&
+    /shelf_sync_receipts/.test(liveHarness) &&
+    /routine_completion_sync_receipts/.test(liveHarness) &&
+    /health_sync_request_fingerprints/.test(liveHarness) &&
+    /omitted the exact caller receipt or exposed an internal field/.test(liveHarness) &&
     /deleted catalog correction/.test(liveHarness) &&
     /other user catalog correction retained/.test(liveHarness) &&
     /reverse_trial_grants/.test(liveHarness) &&

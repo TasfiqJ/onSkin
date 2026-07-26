@@ -17,6 +17,9 @@ export type ResolvedExportTable = Omit<ExportTable, 'filter'> & {
 export const SERVICE_ONLY_EXPORT_DENYLIST = [
   'shelf_scans',
   'catalog_corrections',
+  'shelf_product_identities',
+  'shelf_sync_operations',
+  'routine_completion_sync_operations',
   'reverse_trial_grants',
   'subscriptions_events',
   'order_attributions',
@@ -219,7 +222,20 @@ export const SPECIAL_SERVICE_ROLE_FILTERED_EXPORTS = [
   'order_attributions',
 ] as const;
 
-export const CALLER_RPC_OWNER_EXPORTS = ['catalog_corrections'] as const;
+export const CALLER_RPC_OWNER_EXPORTS = [
+  'catalog_corrections',
+  'shelf_product_identities',
+  'shelf_sync_receipts',
+  'routine_completion_sync_receipts',
+] as const;
+
+export const CALLER_RPC_OWNER_EXPORT_TABLE_BY_SOURCE: Readonly<Record<string, string>> =
+  Object.freeze({
+    catalog_corrections: 'catalog_corrections',
+    shelf_product_identities: 'shelf_product_identities',
+    shelf_sync_receipts: 'shelf_sync_operations',
+    routine_completion_sync_receipts: 'routine_completion_sync_operations',
+  });
 
 export const SERVICE_ROLE_FILTERED_EXPORTS = Object.freeze([
   SPECIAL_SERVICE_ROLE_FILTERED_EXPORTS[0],
@@ -281,6 +297,7 @@ export function validateExportRegistry(options?: {
   directServiceTables?: readonly ExportTable[];
   specialServiceTables?: readonly string[];
   callerRpcTables?: readonly string[];
+  callerRpcTableBySource?: Readonly<Record<string, string>>;
   serviceOnlyTables?: readonly string[];
 }): void {
   const callerTables = options?.callerTables ?? CALLER_RLS_EXPORT_TABLES;
@@ -289,6 +306,8 @@ export function validateExportRegistry(options?: {
   const specialServiceTables =
     options?.specialServiceTables ?? SPECIAL_SERVICE_ROLE_FILTERED_EXPORTS;
   const callerRpcTables = options?.callerRpcTables ?? CALLER_RPC_OWNER_EXPORTS;
+  const callerRpcTableBySource =
+    options?.callerRpcTableBySource ?? CALLER_RPC_OWNER_EXPORT_TABLE_BY_SOURCE;
   const serviceOnlyTables = options?.serviceOnlyTables ?? SERVICE_ONLY_EXPORT_DENYLIST;
   const serviceOnlySet = new Set(serviceOnlyTables);
   const seen = new Set<string>();
@@ -333,12 +352,13 @@ export function validateExportRegistry(options?: {
     seen.add(table);
   }
 
-  for (const table of callerRpcTables) {
+  for (const source of callerRpcTables) {
+    const table = callerRpcTableBySource[source] ?? source;
     if (!serviceOnlySet.has(table)) {
-      throw new Error(`EXPORT_REGISTRY_NON_SERVICE_CALLER_RPC:${table}`);
+      throw new Error(`EXPORT_REGISTRY_NON_SERVICE_CALLER_RPC:${source}`);
     }
-    if (seen.has(table)) throw new Error(`EXPORT_REGISTRY_DUPLICATE:${table}`);
-    seen.add(table);
+    if (seen.has(source)) throw new Error(`EXPORT_REGISTRY_DUPLICATE:${source}`);
+    seen.add(source);
   }
 }
 

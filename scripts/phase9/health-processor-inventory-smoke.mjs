@@ -66,8 +66,12 @@ if (inventory) {
     primary.length !== 1 ||
     primary[0]?.id !== 'supabase' ||
     primary[0]?.mayProcessHealthPurposeData !== true ||
+    !primary[0]?.purpose?.includes('stable product identity/tombstone') ||
+    !primary[0]?.purpose?.includes('minimized sync replay receipts') ||
     !primary[0]?.withdrawalLane?.includes('database-cleanup') ||
-    !primary[0]?.withdrawalLane?.includes('Storage')
+    !primary[0]?.withdrawalLane?.includes('Storage') ||
+    !primary[0]?.withdrawalLane?.includes('both minimized replay ledgers') ||
+    !primary[0]?.withdrawalLane?.includes('Account deletion')
   ) {
     fail(
       'Supabase must remain explicitly classified as the primary health-data infrastructure processor.',

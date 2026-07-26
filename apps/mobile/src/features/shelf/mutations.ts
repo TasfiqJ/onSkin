@@ -8,13 +8,10 @@ import {
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
-import { devWarn } from '@/lib/observability/safeLog';
-import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import {
   addProduct,
   applyCatalogRecoveryProductUpdate,
-  loadShelf,
   reAddProduct,
   removeProduct,
   updateProduct,
@@ -25,72 +22,9 @@ import {
   type ShelfProduct,
 } from './store';
 
-// Shelf lifecycle mutations (docs/04 §5.7). Each writes the local-first store
-// (source of truth, D-029) and best-effort-mirrors to Supabase so it's ready to
-// sync once the project exists (B-SUPABASE). PostHog funnel events per docs/04 §9.
-
-/** Best-effort mirror to user_products. Local and server rows deliberately share
- * one UUID so routine_conflicts foreign keys can reference the mirrored shelf. */
-async function mirrorUpsert(p: ShelfProduct, lease: HealthDataWriteOperationLease): Promise<void> {
-  try {
-    const { data } = await getPersistedSupabaseUser();
-    lease.assertCurrent();
-    if (data.user?.id !== lease.ownerUserId) return;
-    const payload = {
-        id: p.id,
-        user_id: lease.ownerUserId,
-        catalog_product_id: p.catalogProductId,
-        catalog_source_id: p.catalogSourceId,
-        catalog_match_quality: p.catalogMatchQuality,
-        catalog_source_snapshot_date: p.catalogSourceSnapshotDate,
-        manual_name: p.name,
-        manual_brand: p.brand,
-        barcode: p.barcode,
-        opened_at: p.openedAt,
-        pao_months: p.paoMonths,
-        expiry_date: p.expiryDate,
-        legacy_unverified_expiry_date: p.legacyUnverifiedExpiryDate,
-        is_opened: p.isOpened,
-        pao_source: p.paoSource,
-        expiry_source: p.expirySource,
-        added_via: p.addedVia,
-        source_disclosure_ack_at: p.sourceDisclosureAckAt,
-        status: p.status,
-        finished_at: p.finishedAt,
-      };
-    const userProducts = supabase.from('user_products') as unknown as {
-      upsert: (
-        values: typeof payload,
-        options: { onConflict: string },
-      ) => Promise<{ error: unknown }>;
-    };
-    const { error } = await userProducts.upsert(payload, { onConflict: 'id' });
-    lease.assertCurrent();
-    if (error) throw new Error('SUPABASE_USER_PRODUCT_UPSERT_FAILED');
-  } catch (error) {
-    lease.assertCurrent();
-    devWarn('shelf_mirror_upsert_failed', error);
-    /* offline / no DB. The local store already holds it (D-029) */
-  }
-}
-
-async function mirrorDelete(id: string, lease: HealthDataWriteOperationLease): Promise<void> {
-  try {
-    const { data } = await getPersistedSupabaseUser();
-    lease.assertCurrent();
-    if (data.user?.id !== lease.ownerUserId) return;
-    const { error } = await supabase
-      .from('user_products')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', lease.ownerUserId);
-    lease.assertCurrent();
-    if (error) throw new Error('SUPABASE_USER_PRODUCT_DELETE_FAILED');
-  } catch (error) {
-    lease.assertCurrent();
-    devWarn('shelf_mirror_delete_failed', error);
-  }
-}
+// Shelf lifecycle mutations (docs/04 §5.7) write the local-first source of
+// truth (D-029). Store v3 persists owner-free replay work in the same encrypted
+// transaction, so this hook has no crash-gap-prone direct mirror.
 
 function runShelfMutation<T>(
   operation: (lease: HealthDataWriteOperationLease) => Promise<T>,
@@ -110,8 +44,6 @@ export function useShelfMutations() {
         const product = await addProduct(input);
         lease.assertCurrent();
         track('product_added', { added_via: input.addedVia });
-        await mirrorUpsert(product, lease);
-        lease.assertCurrent();
         await invalidate();
         lease.assertCurrent();
         return product;
@@ -123,8 +55,6 @@ export function useShelfMutations() {
     ): Promise<CatalogRecoveryProductUpdateResult> {
       return runShelfMutation(async (lease) => {
         const result = await applyCatalogRecoveryProductUpdate(input);
-        lease.assertCurrent();
-        if (result.status === 'updated') await mirrorUpsert(result.product, lease);
         lease.assertCurrent();
         await invalidate();
         lease.assertCurrent();
@@ -138,13 +68,11 @@ export function useShelfMutations() {
       patch: { openedAt: string | null; isOpened: boolean; paoMonths?: number | null },
     ): Promise<void> {
       return runShelfMutation(async (lease) => {
-        const product = await updateProduct(id, {
+        await updateProduct(id, {
           openedAt: patch.openedAt,
           isOpened: patch.isOpened,
           ...(patch.paoMonths !== undefined ? { paoMonths: patch.paoMonths } : {}),
         });
-        lease.assertCurrent();
-        if (product) await mirrorUpsert(product, lease);
         lease.assertCurrent();
         track('opened_date_set', { is_opened: patch.isOpened });
         await invalidate();
@@ -154,9 +82,7 @@ export function useShelfMutations() {
 
     async edit(id: string, patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>): Promise<void> {
       return runShelfMutation(async (lease) => {
-        const product = await updateProduct(id, patch);
-        lease.assertCurrent();
-        if (product) await mirrorUpsert(product, lease);
+        await updateProduct(id, patch);
         lease.assertCurrent();
         await invalidate();
         lease.assertCurrent();
@@ -165,12 +91,10 @@ export function useShelfMutations() {
 
     async markFinished(id: string): Promise<void> {
       return runShelfMutation(async (lease) => {
-        const product = await updateProduct(id, {
+        await updateProduct(id, {
           status: 'finished',
           finishedAt: localDateString(),
         });
-        lease.assertCurrent();
-        if (product) await mirrorUpsert(product, lease);
         lease.assertCurrent();
         track('product_finished', { source: 'shelf' });
         await invalidate();
@@ -180,12 +104,10 @@ export function useShelfMutations() {
 
     async markDiscarded(id: string): Promise<void> {
       return runShelfMutation(async (lease) => {
-        const product = await updateProduct(id, {
+        await updateProduct(id, {
           status: 'discarded',
           finishedAt: localDateString(),
         });
-        lease.assertCurrent();
-        if (product) await mirrorUpsert(product, lease);
         lease.assertCurrent();
         track('product_discarded', { source: 'shelf' });
         await invalidate();
@@ -196,8 +118,6 @@ export function useShelfMutations() {
     async remove(id: string): Promise<void> {
       return runShelfMutation(async (lease) => {
         await removeProduct(id);
-        lease.assertCurrent();
-        await mirrorDelete(id, lease);
         lease.assertCurrent();
         await invalidate();
         lease.assertCurrent();
@@ -213,15 +133,6 @@ export function useShelfMutations() {
       return runShelfMutation(async (lease) => {
         const fresh = await reAddProduct(id, opening, operationId);
         lease.assertCurrent();
-        if (fresh) {
-          const shelf = await loadShelf();
-          lease.assertCurrent();
-          const archived = shelf.find((product) => product.id === id);
-          if (archived) await mirrorUpsert(archived, lease);
-          lease.assertCurrent();
-          await mirrorUpsert(fresh, lease);
-          lease.assertCurrent();
-        }
         track('replenishment_nudge_tapped', { action: 're_add' });
         await invalidate();
         lease.assertCurrent();

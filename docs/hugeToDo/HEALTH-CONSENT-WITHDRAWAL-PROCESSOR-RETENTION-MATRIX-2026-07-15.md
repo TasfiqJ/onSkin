@@ -68,8 +68,8 @@ outside the primary profile table.
 | Data or authority                                                                              | Withdrawal outcome                                                                                            | Reason / verification                                                                                                    |
 | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Skin profile, goals, sensitivities, quiz answers, and pregnancy/breastfeeding setting          | Delete locally and remotely                                                                                   | Direct health-inference input; absence plus write denial required                                                        |
-| Shelf products, scan history, catalog corrections/lookups tied to the user                     | Delete                                                                                                        | Products and searches can reveal health concerns; disabled/legacy OBF contribution queue rows are included               |
-| Routines, steps, cycles, ramps, conflicts, completions, streaks                                | Delete; reset profile streak counters                                                                         | Derived from health-purpose inputs and adherence behavior                                                                |
+| Shelf products, stable identity/tombstone rows, local/server sync queues and minimized receipts, scan history, catalog corrections/lookups tied to the user | Delete | Products, tombstones, retry state, and searches can reveal health concerns; private replay ledgers and disabled/legacy OBF contribution rows are included |
+| Routines, steps, cycles, ramps, conflicts, step/routine-day completions, local completion journal/outbox/terminal receipts, streaks and freezes | Delete; reset profile streak counters and adherence timezone/reference/version | Derived from health-purpose inputs and adherence behavior; routine-day rows are user attestation, not objective proof |
 | Recommendation preferences/results                                                             | Delete                                                                                                        | Health-purpose personalization and derived state                                                                         |
 | Ask sessions and safety audit rows                                                             | Delete                                                                                                        | May encode health context even when transcripts are minimized                                                            |
 | Trend state and server photo metadata                                                          | Delete                                                                                                        | Derived from sensitive progress observations                                                                             |
@@ -99,7 +99,7 @@ below run.
 | Provider or boundary       | Current source-candidate role                                                                 | Receives health-purpose data?                                         | Withdrawal treatment                                                                                                                                                            | Launch status                                                                                               |
 | -------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | Supabase                   | Auth, owner-scoped Postgres, Storage, Edge Functions                                          | Yes, when configured and consented                                    | Postgres cleanup and Storage work run inside the durable operation; no duplicate external-provider dispatch                                                                     | Live project, DPA, region, backup behavior, restore behavior, hosted worker, and zero-residue proof blocked |
-| Current device             | Encrypted local profile, shelf, routine, completion, photo, and preference state              | Yes                                                                   | Freeze synchronously, drain/cancel work, delete registered health stores and photo material, clear memory/query caches                                                          | Mobile implementation and native process-death/keychain evidence pending                                    |
+| Current device             | Encrypted local profile, Shelf v3 products/pending/terminal sync, completion v3 history/journal/outbox/terminal/unsynced state, routine, photo, and preference state | Yes | Freeze synchronously, drain/cancel work, delete registered health stores and photo material, clear memory/query caches | Source cleanup registration exists; native process-death/Keychain/zero-byte evidence remains pending |
 | PostHog                    | Dependency/config scaffold; direct capture disabled                                           | No approved health payload; current `track()` sanitizes then discards | No provider deletion step for this purpose. Purge legacy local PostHog persistence. Any enabled capture requires a new inventory version and reviewed transport                 | Live project and privacy review blocked                                                                     |
 | Sentry                     | Optional scrubbed crash diagnostics                                                           | No approved health or stable user payload                             | Not an account health-data store by contract. Before-send removes user, route, request, breadcrumbs, product/photo/profile context, and raw exception text                      | Live payload inspection, DPA, retention, and deletion posture blocked                                       |
 | RevenueCat                 | Subscription/entitlement processing                                                           | No; health attributes are prohibited                                  | Preserve billing evidence; do not reset identity during health withdrawal                                                                                                       | Live project/sandbox and privacy review blocked                                                             |
@@ -159,6 +159,7 @@ reason to report `NO_CONFIGURED_EXTERNAL_HEALTH_PROCESSORS`.
 | New health-purpose processing after the user confirms withdrawal | Stop before destructive cleanup begins                                                                                           | Mobile local freeze, server barrier, epoch-bound writer tests, stale-client tests, and live two-device proof                                                                |
 | Active local health state                                        | Delete during the local withdrawal boundary                                                                                      | Registered-key coverage, cancellation/drain proof, relaunch/process-death recovery, encrypted file and memory inspection                                                    |
 | Active Supabase relational health state                          | Delete as soon as the worker prepares the accepted operation                                                                     | Clean migration replay, RPC/trigger tests, interrupted worker retry, exact zero counts, live staging proof                                                                  |
+| Stable Shelf identity/tombstones and minimized replay receipts   | Retain only while the account and health-data purpose are active; erase when withdrawal begins and on account/Auth deletion       | No safe replay horizon exists for a suspended device. A future finite TTL requires versioned expiry/terminal semantics, migration and backup behavior, final notices, and privacy/legal approval |
 | Supabase Storage objects                                         | Delete in bounded work batches; operation remains nonterminal until absence is re-attested                                       | Path ownership/epoch tests, unsafe legacy path handling, lost-response retry, hosted residue proof                                                                          |
 | Separately reconciled external processors                        | None in version 1                                                                                                                | Inventory hash audit. Any recipient observed in release traffic is a P0 mismatch                                                                                            |
 | Open Beauty Facts network transport                              | No request-time lookup, contribution, or other user-request transfer                                                             | Static source/manifest/env gates plus release-binary traffic inspection must show no OBF origin; any observed request is a P0 inventory mismatch                            |
@@ -175,6 +176,43 @@ particular business is covered. The UI must report the operation's actual
 state; it must not promise completion while Storage, a processor, a worker, or
 backup handling remains unverified.
 
+### 2026-07-26 CORE-05 replay and access addendum
+
+Migrations `0068` and `0069` bring Today adherence and Shelf/completion replay
+inside this withdrawal contract. `0069` deletes private
+`shelf_sync_operations` and `routine_completion_sync_operations` synchronously
+when the lifecycle enters withdrawal; established routine/product cleanup and
+identity cleanup hooks remove active and already-tombstoned
+`shelf_product_identities`. The exact zero-residue predicate includes all three
+new sources. Account/Auth deletion also cascades them.
+
+Before withdrawal, the stable identity contains only product/owner ID,
+creation time, and optional effective/received deletion times. The two receipt
+ledgers contain operation/event ID, owner, a domain-separated request digest,
+bounded state/result, and timestamps; neither retains the raw Shelf payload or
+completion body. They remain linked health-purpose data, not anonymous
+telemetry.
+
+The absence of a finite TTL is deliberate but not legally approved. The
+current protocol gives a suspended device no bounded replay horizon or expired
+terminal disposition. Deleting a tombstone or receipt earlier could permit
+resurrection, destroy exact idempotency, or make a delayed completion
+unresolvable. A future finite schedule must coordinate client/server protocol,
+migration, old-build handling, backup/restore, copy, access/export treatment,
+and privacy/legal review.
+
+Server account export schema v4 exposes the subject-facing stable identity and
+receipt fields through three authenticated-nonanonymous,
+`auth.uid()`-derived, account/health-fenced keyset RPCs. Direct table access
+remains revoked. The Edge binds every health-fenced read to the initial
+lifecycle-derived epoch, performs two complete owner/count/checksum/column
+passes, and rechecks final lifecycle. Stable withdrawn/never-active state must
+yield exact empty health sources under a deny epoch; nonactive residue fails
+closed, and withdrawing or changed state aborts. Internal `request_sha256`
+remains excluded because it can be
+tested against guessed deleted payloads; counsel must approve that rights
+decision.
+
 For the US-wide product baseline, use Washington's stricter six-month backup
 outer limit or a shorter supported target even though Nevada's statutory backup
 outer allowance can reach two years. Neither limit is a product waiting period.
@@ -182,10 +220,15 @@ outer allowance can reach two years. Neither limit is a product waiting period.
 ## 6. Primary-Source Rationale
 
 - Apple App Review Guidelines 5.1.1(i) require the privacy policy to describe
-  retention/deletion and how a user can revoke consent or request deletion;
-  5.1.1(ii) requires an easily accessible and understandable withdrawal path.
-  Apple also requires metadata and submitted behavior to be accurate.
-  [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
+  collected data, collection method, every use, third-party equivalent
+  protection, retention/deletion, and how a user can revoke consent or request
+  deletion; 5.1.1(ii) requires an easily accessible and understandable
+  withdrawal path. Apple App Privacy treats off-device data retained beyond
+  the real-time request as collected and requires the app-level answer to
+  include integrated third-party practices. Apple also requires metadata and
+  submitted behavior to be accurate.
+  [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/),
+  [Apple App Privacy Details](https://developer.apple.com/app-store/app-privacy-details/)
 - Apple's health-and-fitness guidance requires data minimization, permission for
   health-data collection, accurate App Privacy declarations, and prohibits using
   health/fitness data for advertising, marketing, use-based data mining, or sale
@@ -200,16 +243,22 @@ outer allowance can reach two years. Neither limit is a product waiting period.
   required. The Canadian privacy commissioners' joint meaningful-consent
   guidance further calls for prominent descriptions of the data, purposes,
   recipients, and meaningful risks; explicit consent is generally expected for
-  sensitive information. Applicability and any provincial overlay still require
-  launch-jurisdiction counsel.
+  sensitive information, and significant new purposes/parties/risks require
+  fresh meaningful consent rather than silent policy expansion. Applicability
+  and any provincial overlay still require launch-jurisdiction counsel.
   [PIPEDA section 6.1](https://laws-lois.justice.gc.ca/eng/acts/P-8.6/section-6.1.html),
   [PIPEDA Schedule 1](https://laws-lois.justice.gc.ca/eng/acts/P-8.6/section-sched417658.html),
   [OPC meaningful-consent guidance](https://www.priv.gc.ca/en/privacy-topics/business-privacy/collecting-personal-information/consent/gl_omc_201805/)
-- Washington RCW 19.373.040 states withdrawal and deletion as distinct consumer
-  rights. A deletion request reaches the entity's network and notified
-  processors/contractors/third parties; active requests generally have a
-  45-day response rule, and archived/backup deletion delay may not exceed six
-  months. Coverage and exact application still require counsel.
+- Washington RCW 19.373.020 requires a consumer-health privacy policy to state
+  categories, sources, purposes, affiliates, processors/recipients, and rights,
+  and requires affirmative consent before collecting additional categories or
+  using data for additional purposes not disclosed in that policy. RCW
+  19.373.040 states withdrawal and deletion as distinct consumer rights. A
+  deletion request reaches the entity's network and notified processors/
+  contractors/third parties; active requests generally have a 45-day response
+  rule, and archived/backup deletion delay may not exceed six months. Coverage
+  and exact application still require counsel.
+  [RCW 19.373.020](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373.020),
   [RCW 19.373.040](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373.040)
 - Nevada NRS 603A.500, 603A.505, 603A.515, and 603A.530 address
   affirmative collection/sharing choices, cessation and deletion, propagation
@@ -260,6 +309,13 @@ passed 104 Deno tests plus 7 evidence tests. The mobile workspace passed
 typecheck, lint, and 3,026 tests across 266 files. These are local source results
 only; repository types were not replaced and `DB-08` remains open.
 
+That 2026-07-15 evidence is historical for the original withdrawal lifecycle.
+The 2026-07-26 `0068`/`0069` source extends its cleanup and zero-residue scope to
+adherence fields, stable Shelf identities, and both minimized replay ledgers.
+Only the exact current-head database/upgrade/source gates can prove the local
+extension; hosted worker, Storage, backup, two-device, native, export,
+privacy/legal/security, and App Review proof remain open.
+
 Local human-simulated Expo-web evidence at 390 x 844 and 360 x 640 covers
 consent-before-goals, decline/direct-goals denial, non-destructive withdrawal,
 paused reload, fresh-consent refusal, and terminal reconsent with route stability
@@ -289,6 +345,11 @@ Remaining required evidence includes:
   process death, stale writers, actual Storage objects, zero residue, and worker
   continuation without the requesting device, including retained Vault/Cron
   configuration and job-run evidence;
+- schema-v4 hosted export evidence for stable Shelf identity and both replay
+  receipt sources, including active-epoch reads, stable withdrawn/
+  never-active exact emptiness, lifecycle-change abort, concurrent mutation,
+  owner mismatch, count/checksum/column guards, and the reviewed
+  `request_sha256` exclusion;
 - supported physical-iPhone evidence for local files/keys/cache, notification
   cancellation, StoreKit/account preservation, foreground/background behavior,
   Dynamic Type, VoiceOver, and relaunch;

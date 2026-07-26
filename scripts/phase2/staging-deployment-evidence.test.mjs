@@ -259,12 +259,12 @@ function cutoverFixture(overrides = {}, trafficFreezeOverrides = {}) {
 test('current reviewed source inventory is deterministic and exact', () => {
   assertCurrentSourceContract(source);
   const second = buildSourceInventory(repoRoot);
-  assert.equal(source.migrationCount, 67);
-  assert.equal(source.latestMigrationId, '20260726000068');
+  assert.equal(source.migrationCount, 69);
+  assert.equal(source.latestMigrationId, '20260726000070');
   assert.equal(source.functionCount, 17);
   assert.equal(source.migrationSetSha256, second.migrationSetSha256);
   assert.equal(source.functionSetSha256, second.functionSetSha256);
-  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 67);
+  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 69);
 });
 
 test('schema parser accepts only one complete non-negative count row', () => {
@@ -788,7 +788,7 @@ test('generated-type summaries require a real Database surface and an exact loca
   );
 });
 
-test('completed deployment requires 67 migrations, all functions, 80 RLS tables, config, and type parity', () => {
+test('completed deployment requires 69 migrations, all functions, 82 RLS tables, config, and type parity', () => {
   const functions = parseFunctionInventory(JSON.stringify(functionRows()), source, {
     requireComplete: true,
   });
@@ -796,8 +796,8 @@ test('completed deployment requires 67 migrations, all functions, 80 RLS tables,
   const afterSchema = {
     ...parseSchemaInventory(JSON.stringify([schemaRow()])),
     ...emptyCronInventory(),
-    publicTableCount: 80,
-    publicRlsTableCount: 80,
+    publicTableCount: 82,
+    publicRlsTableCount: 82,
     storageBucketCount: 1,
   };
   const migrationIds = source.migrations.map(({ id }) => id);
@@ -897,8 +897,8 @@ function passManifestInput(steps) {
   const zeroSchema = zeroLiveSchema();
   const afterSchema = {
     ...zeroSchema,
-    publicTableCount: 80,
-    publicRlsTableCount: 80,
+    publicTableCount: 82,
+    publicRlsTableCount: 82,
     storageBucketCount: 1,
   };
   const validUntil = '2026-07-16T09:00:00.000Z';
@@ -976,7 +976,7 @@ function passManifestInput(steps) {
       },
     },
     after: {
-      migrationCount: 67,
+      migrationCount: 69,
       migrationIds: source.migrations.map(({ id }) => id),
       functions,
       schema: afterSchema,

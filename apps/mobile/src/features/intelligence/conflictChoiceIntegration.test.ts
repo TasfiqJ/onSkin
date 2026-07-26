@@ -70,18 +70,24 @@ describe('conflict choice integration contracts', () => {
     expect(route).not.toContain('onConflict:');
   });
 
-  it('mirrors shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {
+  it('journals shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {
     const mutations = readSource('features/shelf/mutations.ts');
+    const store = readSource('features/shelf/store.ts');
+    const worker = readSource('lib/offline/shelfMirrorQueue.ts');
 
-    expect(mutations).toContain('id: p.id,');
-    expect(mutations).toContain('.upsert(');
-    expect(mutations).toContain("{ onConflict: 'id' }");
-    expect(mutations).toContain('status: p.status');
-    expect(mutations).toContain('finished_at: p.finishedAt');
-    expect(mutations).toContain('await mirrorUpsert(product, lease)');
-    expect(mutations).toContain('await mirrorDelete(id, lease)');
+    expect(store).toContain('id: product.id,');
+    expect(store).toContain('status: product.status');
+    expect(store).toContain('finished_at: product.finishedAt');
+    expect(store).toContain('appendMirrorUpsert(mirrorOutbox, product, ts)');
+    expect(store).toContain('appendMirrorDelete(mirrorOutbox, id, ts)');
     expect(mutations).toContain('runHealthDataWriteOperation(expectedOwnerUserId, operation)');
     expect(mutations).toContain('lease.assertCurrent()');
-    expect(mutations).toContain('if (error) throw new Error');
+    expect(mutations).not.toContain('.upsert(');
+    expect(mutations).not.toContain('.delete()');
+    expect(mutations).not.toContain("from('user_products')");
+    expect(worker).toContain("'sync_shelf_product'");
+    expect(worker).toContain('p_product_id:');
+    expect(worker).toContain('p_payload:');
+    expect(worker).not.toContain("from('user_products')");
   });
 });

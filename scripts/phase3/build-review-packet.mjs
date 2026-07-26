@@ -168,6 +168,8 @@ const packets = {
     'supabase/functions/data-export/exportCore.test.ts',
     'supabase/functions/data-export/catalogCorrectionExportCore.ts',
     'supabase/functions/data-export/catalogCorrectionExportCore.test.ts',
+    'supabase/functions/data-export/healthSyncExportCore.ts',
+    'supabase/functions/data-export/healthSyncExportCore.test.ts',
     'supabase/functions/data-export/exportRegistry.ts',
     'supabase/functions/data-export/exportRegistry.test.ts',
     'supabase/functions/consent-withdrawal/index.ts',

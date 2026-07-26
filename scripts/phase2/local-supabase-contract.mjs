@@ -39,6 +39,12 @@ const [
   routineAdherenceMigration,
   routineAdherenceTests,
   routineAdherenceUpgradeRehearsal,
+  routineCompletionSyncMigration,
+  routineCompletionSyncTests,
+  routineCompletionSyncUpgradeRehearsal,
+  healthConsentDraftStagingMigration,
+  healthConsentDraftStagingTests,
+  healthConsentDraftStagingUpgradeRehearsal,
   accountDeletionMigration,
   readme,
   workflow,
@@ -70,6 +76,12 @@ const [
   read('supabase/migrations/20260726000068_routine_adherence_authority.sql'),
   read('supabase/tests/database/routine_adherence_authority.test.sql'),
   read('supabase/tests/upgrade/routine_adherence_0068_upgrade.test.sql'),
+  read('supabase/migrations/20260726000069_routine_completion_sync_bridge.sql'),
+  read('supabase/tests/database/routine_completion_sync_bridge.test.sql'),
+  read('supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql'),
+  read('supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql'),
+  read('supabase/tests/database/health_consent_draft_successor_staging.test.sql'),
+  read('supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -101,10 +113,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 67, `Expected 67 migration files; found ${migrations.length}.`);
+check(migrations.length === 69, `Expected 69 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260726000068_'),
-  'The latest migration must remain 20260726000068.',
+  migrations.at(-1)?.startsWith('20260726000070_'),
+  'The latest migration must remain 20260726000070.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -188,11 +200,16 @@ check(
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
 check(
   /reset through 0067 for the 0068 forward-upgrade rehearsal/u.test(runner) &&
+    /routine_adherence_0068_upgrade\.generated\.test\.sql/u.test(runner) &&
+    /reset through 0068 for the 0069 forward-upgrade rehearsal/u.test(runner) &&
+    /rename\(withheldSyncMigration, sandboxSyncMigration\)/u.test(runner) &&
+    /syncUpgradeTemplate\.replace\(syncIncludeMarker, \(\) => exactSyncMigration\)/u.test(runner) &&
+    /routine_completion_sync_bridge_0069_upgrade\.generated\.test\.sql/u.test(runner) &&
+    /reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal/u.test(runner) &&
     /rename\(sandboxHeadMigration, withheldHeadMigration\)/u.test(runner) &&
     /rename\(withheldHeadMigration, sandboxHeadMigration\)/u.test(runner) &&
-    /upgradeTemplate\.replace\(includeMarker, \(\) => exactHeadMigration\)/u.test(runner) &&
-    /routine_adherence_0068_upgrade\.generated\.test\.sql/u.test(runner),
-  'The full local DB gate must execute 0068 against a real 0067 migration history.',
+    /health_consent_draft_successor_0070_upgrade\.generated\.test\.sql/u.test(runner),
+  'The full local DB gate must execute 0068 against 0067, 0069 against 0068, and 0070 against 0069.',
 );
 check(
   /catalog-operator-dblink-target\.inc/u.test(runner) &&
@@ -434,16 +451,16 @@ check(
 );
 check(
   /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
-    /the clinical legacy seal runs against the exact 67-migration source history/u.test(
+    /the clinical legacy seal runs against the exact 69-migration source history/u.test(
       clinicalContentLegacySealTests,
     ) &&
-    /the migration history includes the legacy seal and reaches the routine-adherence authority head/u.test(
+    /the migration history includes the legacy seal and reaches the Shelf\/completion sync bridge head/u.test(
       clinicalContentLegacySealTests,
     ) &&
     /all historical rule rows survive every denied owner and API mutation probe/u.test(
       clinicalContentLegacySealTests,
     ),
-  '0066 pgTAP must bind the 67-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
+  '0066 pgTAP must bind the 69-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
 );
 check(
   /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000067_catalog_release_temp_table_lint_contract\.sql/u.test(
@@ -461,16 +478,16 @@ check(
 );
 check(
   /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
-    /the catalog release lint contract runs against the exact 67-migration source history/u.test(
+    /the catalog release lint contract runs against the exact 69-migration source history/u.test(
       catalogReleaseLintContractTests,
     ) &&
-    /the migration history retains the temporary-table lint contract through the routine-adherence authority head/u.test(
+    /the migration history retains the temporary-table lint contract through the Shelf\/completion sync bridge head/u.test(
       catalogReleaseLintContractTests,
     ) &&
     /only the exact temporary-table wrapper carries the checker shape/u.test(
       catalogReleaseLintContractTests,
     ),
-  '0067 pgTAP must bind the 67-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
+  '0067 pgTAP must bind the 69-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
 );
 check(
   /begin;/u.test(routineAdherenceMigration) &&
@@ -532,8 +549,10 @@ check(
     /the hashed parity corpus matches the authoritative SQL projection/u.test(
       routineAdherenceTests,
     ) &&
-    /exact 67-migration source history/u.test(routineAdherenceTests) &&
-    /authoritative routine-adherence head/u.test(routineAdherenceTests) &&
+    /exact 69-migration source history/u.test(routineAdherenceTests) &&
+    /retains adherence authority through the Shelf\/completion sync bridge head/u.test(
+      routineAdherenceTests,
+    ) &&
     /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
     /a partial step completion cannot affect adherence/u.test(routineAdherenceTests) &&
     /an authenticated owner cannot directly insert a freeze/u.test(routineAdherenceTests) &&
@@ -541,6 +560,152 @@ check(
       routineAdherenceTests,
     ),
   '0068 pgTAP must bind the current head and exercise exact timezone, marker-only, freeze, cache, and delete truth.',
+);
+check(
+  /begin;/u.test(routineCompletionSyncMigration) &&
+    /create table public\.shelf_product_identities/u.test(routineCompletionSyncMigration) &&
+    /create table private\.shelf_sync_operations/u.test(routineCompletionSyncMigration) &&
+    /create table private\.routine_completion_sync_operations/u.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /public\.sync_shelf_product\(/u.test(routineCompletionSyncMigration) &&
+    /public\.record_routine_completion\(/u.test(routineCompletionSyncMigration) &&
+    /public\.export_shelf_product_identities_for_subject\(/u.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /public\.export_shelf_sync_receipts_for_subject\(/u.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /public\.export_routine_completion_sync_receipts_for_subject\(/u.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /HEALTH_SYNC_EXPORT_NONACTIVE_RESIDUE/u.test(routineCompletionSyncMigration) &&
+    /COMPLETION_PRODUCT_RETRY_LATER/u.test(routineCompletionSyncMigration) &&
+    /COMPLETION_AFTER_PRODUCT_DELETION/u.test(routineCompletionSyncMigration) &&
+    !/COMPLETION_DEPENDENCY_TERMINAL/u.test(routineCompletionSyncMigration) &&
+    /revoke insert, update, delete, truncate, references, trigger[\s\S]*?public\.user_products/u.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /commit;/u.test(routineCompletionSyncMigration),
+  '0069 must atomically install minimized stable identity, replay ledgers, authenticated bridge RPCs, tombstones, and direct-DML seals.',
+);
+check(
+  /select plan\(16\)/u.test(routineCompletionSyncUpgradeRehearsal) &&
+    /@@INCLUDE_EXACT_0069_MIGRATION@@/u.test(routineCompletionSyncUpgradeRehearsal) &&
+    /0069 backfills one minimal stable identity per legacy Shelf row/u.test(
+      routineCompletionSyncUpgradeRehearsal,
+    ) &&
+    /the cutover preflight fails closed on a cross-owner legacy product/u.test(
+      routineCompletionSyncUpgradeRehearsal,
+    ) &&
+    /the exact scalar completion RPC signature exists/u.test(
+      routineCompletionSyncUpgradeRehearsal,
+    ),
+  '0069 must prove its exact 0068-to-0069 identity/FK/ACL cutover with production-shaped legacy rows.',
+);
+check(
+  /select plan\(82\)/u.test(routineCompletionSyncTests) &&
+    /exact 69-migration source history/u.test(routineCompletionSyncTests) &&
+    /Shelf sync rejects an exact draft-blocked health grant before retention/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /completion sync rejects an exact draft-blocked health grant before retention/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /Shelf sync rejects a formerly active epoch after its exact grant closes/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /completion sync rejects a formerly active epoch after its exact grant closes/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /active subject export requires the exact current health-processing epoch/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /second subject can export only that subject''s own minimized receipts/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /withdrawn lifecycle fails closed if a sealed source has synthetic residue/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /all sealed health-sync exports verify exact zero after canonical withdrawal purge/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /a completion whose Shelf identity has not arrived is retryable/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /orphan-marker rejection leaves timezone, profile cache, and freezes byte-stable/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /semantic-conflict rejection cannot mutate adherence authority/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /historical evidence exactly at the tombstone cutoff remains admissible/u.test(
+      routineCompletionSyncTests,
+    ) &&
+    /zero-attestation proves stable identities and all relational health data erased/u.test(
+      routineCompletionSyncTests,
+    ),
+  '0069 pgTAP must exercise exact JSON, delayed dependencies, conflict side-effect safety, tombstones, ACLs, and erasure.',
+);
+check(
+  /create table public\.health_consent_copy_staging_events/u.test(
+    healthConsentDraftStagingMigration,
+  ) &&
+    /stage_health_consent_copy_draft_successor/u.test(
+      healthConsentDraftStagingMigration,
+    ) &&
+    /_health_consent_copy_staging_evidence_hash/u.test(
+      healthConsentDraftStagingMigration,
+    ) &&
+    /HEALTH_CONSENT_COPY_DRAFT_STAGING_EVIDENCE_MISMATCH/u.test(
+      healthConsentDraftStagingMigration,
+    ) &&
+    /4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc/u.test(
+      healthConsentDraftStagingMigration,
+    ) &&
+    /HEALTH_CONSENT_COPY_NOT_RELEASED/u.test(healthConsentDraftStagingMigration) &&
+    /from public, anon, authenticated, service_role/u.test(
+      healthConsentDraftStagingMigration,
+    ),
+  '0070 must stage the exact mobile Ask tuple as an unreleased migration-owned draft without runtime authority.',
+);
+check(
+  /select plan\(25\)/u.test(healthConsentDraftStagingTests) &&
+    /predecessor Ask tuple remains immutable noncurrent draft history/u.test(
+      healthConsentDraftStagingTests,
+    ) &&
+    /draft alignment creates no Ask review, promotion, or supersession event/u.test(
+      healthConsentDraftStagingTests,
+    ) &&
+    /staging evidence cannot be rewritten by the database owner/u.test(
+      healthConsentDraftStagingTests,
+    ) &&
+    /one-byte staging-evidence mutation fails before replay or writes/u.test(
+      healthConsentDraftStagingTests,
+    ) &&
+    /runtime service authority is not migration staging authority/u.test(
+      healthConsentDraftStagingTests,
+    ) &&
+    /exact newly current Ask draft still cannot authorize a grant/u.test(
+      healthConsentDraftStagingTests,
+    ),
+  '0070 pgTAP must prove exact retained history, immutable non-review evidence, runtime denial, and unreleased grant denial.',
+);
+check(
+  /select plan\(13\)/u.test(healthConsentDraftStagingUpgradeRehearsal) &&
+    /@@INCLUDE_EXACT_0070_MIGRATION@@/u.test(
+      healthConsentDraftStagingUpgradeRehearsal,
+    ) &&
+    /0069 starts with the installed Ask predecessor as the current draft/u.test(
+      healthConsentDraftStagingUpgradeRehearsal,
+    ) &&
+    /0070 invents no legal or privacy review event/u.test(
+      healthConsentDraftStagingUpgradeRehearsal,
+    ) &&
+    /0070 leaves the exact updated Ask grant blocked pending genuine review/u.test(
+      healthConsentDraftStagingUpgradeRehearsal,
+    ),
+  '0070 must prove its exact 0069-to-0070 draft-only consent-copy transition.',
 );
 check(
   /select plan\(218\)/u.test(catalogImportLifecycleTests) &&
@@ -592,7 +757,7 @@ check(
   'CAT-03 must own positive active-head serving, exact payload-shape, attribution, and same-territory/same-source freshness coverage.',
 );
 
-check(/select plan\(50\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
+check(/select plan\(52\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
 check(
   /select plan\(53\)/u.test(freshnessTests) &&
     (
@@ -670,7 +835,7 @@ check(
   'pgTAP must verify migration history.',
 );
 check(
-  /80::bigint/u.test(tests) && /relrowsecurity/u.test(tests),
+  /82::bigint/u.test(tests) && /relrowsecurity/u.test(tests),
   'pgTAP must verify the RLS table inventory.',
 );
 check(

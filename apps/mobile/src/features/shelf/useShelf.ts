@@ -26,7 +26,12 @@ import { functionalTagsForCategory } from './categories';
 import { isEstimatedExpiry, surfacedExpiry } from './expiry';
 import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
-import { loadShelf, type ShelfProduct } from './store';
+import {
+  getShelfMirrorIncompatibilities,
+  loadShelf,
+  type ShelfMirrorIncompatibility,
+  type ShelfProduct,
+} from './store';
 
 // The Shelf data layer (docs/04 §5): reads the local-first store, tags products
 // via the client dictionary, runs the launch-gated conflict engine, and computes
@@ -58,6 +63,9 @@ export type ShelfData = {
   reassurances: DetectedConflict[];
   conflictCoverageStatus: ConflictEvaluationStatus;
   unsupportedConflictPairs: string[];
+  /** Local rows remain visible; these deterministic issues require user repair
+   * before the encrypted mirror queue can represent them truthfully. */
+  mirrorIncompatibilities: ShelfMirrorIncompatibility[];
   /** The top noteworthy (non-reassuring) interaction for the calm shelf banner. */
   banner: DetectedConflict | null;
 };
@@ -128,11 +136,9 @@ export function useShelf() {
     queryFn: () =>
       runCurrentHealthDataOperation(async (lease) => {
         lease.assertCurrent();
-        const [products, profileBits, conflictChoices] = await Promise.all([
-          loadShelf(),
-          readProfileBits(),
-          getConflictChoices(),
-        ]);
+        const [products, mirrorIncompatibilities, profileBits, conflictChoices] = await Promise.all(
+          [loadShelf(), getShelfMirrorIncompatibilities(), readProfileBits(), getConflictChoices()],
+        );
         lease.assertCurrent();
         const profile: EngineProfile = {
           sensitivity: profileBits.sensitivity,
@@ -236,6 +242,7 @@ export function useShelf() {
           banner,
           conflictCoverageStatus: conflictEvaluation.status,
           unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
+          mirrorIncompatibilities,
         };
         lease.assertCurrent();
         return result;

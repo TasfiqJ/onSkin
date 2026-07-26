@@ -98,8 +98,14 @@ const phase9ConsentMigration = read(
 const healthLifecycleMigration = read(
   'supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql',
 );
+const healthConsentCopyMigrations =
+  healthLifecycleMigration +
+  read('supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql');
 const routineAdherenceMigration = read(
   'supabase/migrations/20260726000068_routine_adherence_authority.sql',
+);
+const routineCompletionSyncMigration = read(
+  'supabase/migrations/20260726000069_routine_completion_sync_bridge.sql',
 );
 const catalogScanMinimizationMigration = read(
   'supabase/migrations/20260718000059_catalog_scan_minimization.sql',
@@ -130,6 +136,9 @@ const retiredReadFenceTargets = new Set(
 const installedReadFenceTargets = [
   ...healthLifecycleMigration.matchAll(
     /create policy "health_processing_read_fence" on (public|storage)\.([a-z_]+)/g,
+  ),
+  ...routineCompletionSyncMigration.matchAll(
+    /create policy "shelf_product_identities_health_read_fence"\s+on (public|storage)\.([a-z_]+)/g,
   ),
 ]
   .map((match) => `${match[1]}.${match[2]}`)
@@ -553,7 +562,7 @@ block(
 );
 block(
   errors,
-  HEALTH_PURPOSE_READ_FENCED_TABLES.length === 25 &&
+  HEALTH_PURPOSE_READ_FENCED_TABLES.length === 26 &&
     JSON.stringify([...installedReadFenceTargets].sort()) ===
       JSON.stringify(
         [
@@ -564,7 +573,7 @@ block(
     !installedReadFenceTargets.some((target) =>
       ['public.profiles', 'public.consents', 'public.entitlements'].includes(target),
     ),
-  'The restrictive health read fence must cover the exact 25 current owner/client tables plus photo Storage while preserving sealed scan/correction, account, policy, and billing lanes.',
+  'The restrictive health read fence must cover the exact 26 health-purpose tables plus photo Storage while preserving account, policy, and billing lanes.',
 );
 block(
   errors,
@@ -579,7 +588,12 @@ block(
     /clear_routine_adherence_on_withdrawal/.test(routineAdherenceMigration) &&
     /adherence_timezone = null/.test(routineAdherenceMigration) &&
     /streak_reference_day = null/.test(routineAdherenceMigration) &&
-    /streak_algorithm_version = 0/.test(routineAdherenceMigration),
+    /streak_algorithm_version = 0/.test(routineAdherenceMigration) &&
+    /delete from private\.shelf_sync_operations/.test(routineCompletionSyncMigration) &&
+    /delete from private\.routine_completion_sync_operations/.test(
+      routineCompletionSyncMigration,
+    ) &&
+    /shelf_product_identities/.test(routineCompletionSyncMigration),
   'The predicate must remain outside PostgREST and begin must synchronously clear every mixed-purpose profile adherence authority field.',
 );
 block(
@@ -602,7 +616,13 @@ block(
 block(
   errors,
   /readExportHealthLifecycle\(supabase, userId\)/.test(dataExport) &&
-    /item\.clientKind === 'caller' \? supabase : admin/.test(dataExport) &&
+    /const healthReadEpoch = healthReadEpochForExport\(initialHealthLifecycle\)/.test(
+      dataExport,
+    ) &&
+    /const healthSupabase = createClient\(supabaseUrl, publishableKey,[\s\S]*'x-health-processing-epoch': String\(healthReadEpoch\)/.test(
+      dataExport,
+    ) &&
+    /item\.clientKind === 'caller' \? healthSupabase : admin/.test(dataExport) &&
     /const photoBucket = admin\.storage\.from\('photos'\)/.test(dataExport) &&
     /HEALTH_DATA_WITHDRAWAL_IN_PROGRESS/.test(read('supabase/functions/data-export/exportCore.ts')),
   'Data export must retain authenticated active reads, service-filtered/admin sources, and a stable retry response during withdrawal.',
@@ -729,8 +749,8 @@ block(
   errors,
   edgeHealthConsentContract.includes(LIVE_HEALTH_CONSENT_COPY.baseGrant.version) &&
     edgeHealthConsentContract.includes(LIVE_HEALTH_CONSENT_COPY.baseGrant.hash) &&
-    healthLifecycleMigration.includes(LIVE_HEALTH_CONSENT_COPY.baseGrant.version) &&
-    healthLifecycleMigration.includes(LIVE_HEALTH_CONSENT_COPY.baseGrant.hash),
+    healthConsentCopyMigrations.includes(LIVE_HEALTH_CONSENT_COPY.baseGrant.version) &&
+    healthConsentCopyMigrations.includes(LIVE_HEALTH_CONSENT_COPY.baseGrant.hash),
   'The live base-grant fixture must match the Edge and database release-copy registries.',
 );
 for (const [consentType, contract] of Object.entries(LIVE_HEALTH_CONSENT_COPY.dependent)) {
@@ -740,10 +760,10 @@ for (const [consentType, contract] of Object.entries(LIVE_HEALTH_CONSENT_COPY.de
       errors,
       dependentConsentCopy.includes(copy.version) &&
         dependentConsentCopy.includes(copy.hash) &&
-        healthLifecycleMigration.includes(
+        healthConsentCopyMigrations.includes(
           `'${consentType}', '${databaseAction}', '${copy.version}'`,
         ) &&
-        healthLifecycleMigration.includes(`'${copy.hash}'`) &&
+        healthConsentCopyMigrations.includes(`'${copy.hash}'`) &&
         (action === 'grant' ||
           (granularWithdrawalCore.includes(copy.version) &&
             granularWithdrawalCore.includes(copy.hash))),

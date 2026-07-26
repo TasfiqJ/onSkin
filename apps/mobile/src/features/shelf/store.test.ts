@@ -6,16 +6,27 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 
 import {
+  acknowledgeShelfMirrorOperation,
   addProduct,
   applyCatalogRecoveryProductUpdate,
   clearShelf,
+  getPendingShelfMirrorOperations,
+  getShelfMirrorIncompatibilities,
+  hasUnresolvedTerminalShelfMirrorOperationForProduct,
   loadShelf,
   reAddProduct,
+  rejectShelfMirrorOperation,
   removeProduct,
+  SHELF_PRODUCT_BRAND_MAX_LENGTH,
+  SHELF_PRODUCT_NAME_MAX_LENGTH,
+  SHELF_PRODUCT_TEXT_MAX_BYTES,
   SHELF_STATE_INVALID,
   SHELF_STATE_UNSUPPORTED_VERSION,
+  subscribeShelfMirrorOutboxChanges,
   updateProduct,
   type CatalogRecoveryProductUpdate,
+  type ShelfMirrorOperation,
+  type ShelfMirrorTerminal,
   type ShelfProduct,
 } from './store';
 import { normalizeShelfFreshnessV1 } from './freshness';
@@ -30,7 +41,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('expo-crypto', () => ({
-  randomUUID: vi.fn(() => `shelf-product-${++mocks.nextId}`),
+  randomUUID: vi.fn(() => `10000000-0000-4000-8000-${String(++mocks.nextId).padStart(12, '0')}`),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -68,7 +79,9 @@ function operationId(sequence: number): string {
   return `00000000-0000-4000-8000-${String(sequence).padStart(12, '0')}`;
 }
 
-function v1Product(product: ShelfProduct): Omit<
+function v1Product(
+  product: ShelfProduct,
+): Omit<
   ShelfProduct,
   | 'replacementRootId'
   | 'replacesProductId'
@@ -90,6 +103,20 @@ function storedProducts(): unknown[] {
     products?: unknown[];
   };
   return parsed.products ?? [];
+}
+
+function storedMirrorOutbox(): ShelfMirrorOperation[] {
+  const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+    mirrorOutbox?: ShelfMirrorOperation[];
+  };
+  return parsed.mirrorOutbox ?? [];
+}
+
+function storedMirrorTerminal(): ShelfMirrorTerminal[] {
+  const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+    terminal?: ShelfMirrorTerminal[];
+  };
+  return parsed.terminal ?? [];
 }
 
 function catalogRecoveryInput(
@@ -399,10 +426,14 @@ describe('shelf local store recovery', () => {
     });
 
     const replacementOpenedAt = '2026-07-01';
-    const fresh = await reAddProduct(previous.id, {
-      isOpened: true,
-      openedAt: replacementOpenedAt,
-    }, operationId(1));
+    const fresh = await reAddProduct(
+      previous.id,
+      {
+        isOpened: true,
+        openedAt: replacementOpenedAt,
+      },
+      operationId(1),
+    );
     const shelf = await loadShelf();
     const archived = shelf.find((product) => product.id === previous.id);
 
@@ -439,7 +470,7 @@ describe('shelf local store recovery', () => {
       paoSource: 'label',
     });
     const envelope = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
-      version: 2;
+      version: 3;
       products: ShelfProduct[];
     };
     envelope.products[0]!.legacyUnverifiedExpiryDate = '2028-01-01';
@@ -507,9 +538,9 @@ describe('shelf local store recovery', () => {
     const previous = await addProduct({ name: 'Cleanser', addedVia: 'manual' });
     const original = mocks.storage.get(KEY);
 
-    await expect(
-      reAddProduct(previous.id, undefined as never, operationId(4)),
-    ).rejects.toThrow(SHELF_STATE_INVALID);
+    await expect(reAddProduct(previous.id, undefined as never, operationId(4))).rejects.toThrow(
+      SHELF_STATE_INVALID,
+    );
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
@@ -575,19 +606,17 @@ describe('shelf local store recovery', () => {
     expect((await loadShelf()).filter((product) => product.status === 'active')).toHaveLength(1);
   });
 
-  it('preserves the current row when a direct update blanks product identity', async () => {
+  it('rejects a direct update that blanks product identity without changing bytes', async () => {
     const product = await addProduct({
       name: 'Mineral SPF 50',
       category: 'spf',
       addedVia: 'manual',
     });
+    const original = mocks.storage.get(KEY);
 
-    await updateProduct(product.id, { name: '' });
-
-    const shelf = await loadShelf();
-
-    expect(shelf).toHaveLength(1);
-    expect(shelf[0]?.name).toBe('Mineral SPF 50');
+    await expect(updateProduct(product.id, { name: '' })).rejects.toThrow(SHELF_STATE_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(original);
+    await expect(loadShelf()).resolves.toMatchObject([{ name: 'Mineral SPF 50' }]);
   });
 
   it('attaches revalidated catalog metadata without silently replacing user fields', async () => {
@@ -694,7 +723,7 @@ describe('shelf local store recovery', () => {
 
     await updateProduct('retinol', { brand: 'Example' });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      version: 2,
+      version: 3,
       products: [{ id: 'retinol', brand: 'Example', ingredients: ['retinol'] }],
     });
   });
@@ -722,9 +751,9 @@ describe('shelf local store recovery', () => {
     expect(mocks.storage.get(KEY)).toBe(original);
 
     mocks.updateFailure = new Error('storage unavailable');
-    await expect(
-      updateProduct('legacy-array-catalog', { brand: 'Not committed' }),
-    ).rejects.toThrow('storage unavailable');
+    await expect(updateProduct('legacy-array-catalog', { brand: 'Not committed' })).rejects.toThrow(
+      'storage unavailable',
+    );
     expect(mocks.storage.get(KEY)).toBe(original);
 
     mocks.updateFailure = null;
@@ -736,7 +765,7 @@ describe('shelf local store recovery', () => {
       expirySource: 'unknown',
       legacyUnverifiedExpiryDate: '2027-06-01',
     });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 2 });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 3 });
   });
 
   it('normalizes a mixed canonical v1 envelope in memory and upgrades on mutation', async () => {
@@ -815,7 +844,7 @@ describe('shelf local store recovery', () => {
 
     await updateProduct(categoryEstimate.id, { brand: 'Still present' });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      version: 2,
+      version: 3,
       products: [
         { id: unopened.id, expirySource: 'unknown' },
         {
@@ -959,7 +988,7 @@ describe('shelf local store recovery', () => {
       isOpened: true,
       openedAt: '2026-07-20',
     });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 2 });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 3 });
   });
 
   it('authenticates historically unbounded v1 PAO before upgrading it fail-closed', async () => {
@@ -990,7 +1019,7 @@ describe('shelf local store recovery', () => {
       expirySource: 'unknown',
     });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      version: 2,
+      version: 3,
       products: [
         { id: product.id, paoMonths: null, paoSource: 'unknown', expirySource: 'unknown' },
       ],
@@ -1038,7 +1067,7 @@ describe('shelf local store recovery', () => {
       expirySource: 'pao_computed',
       legacyUnverifiedExpiryDate: '2027-01-01',
     });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 2 });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 3 });
 
     await expect(updateProduct(product.id, { expiryDate: '2028-01-01' })).resolves.toMatchObject({
       expiryDate: '2028-01-01',
@@ -1058,9 +1087,7 @@ describe('shelf local store recovery', () => {
       products: [{ ...v1Product(product), expirySource: 'estimated' }],
     });
     mocks.storage.set(KEY, original);
-    await expect(loadShelf()).resolves.toMatchObject([
-      { id: product.id, expirySource: 'unknown' },
-    ]);
+    await expect(loadShelf()).resolves.toMatchObject([{ id: product.id, expirySource: 'unknown' }]);
     expect(mocks.storage.get(KEY)).toBe(original);
 
     mocks.updateFailure = new Error('storage unavailable');
@@ -1089,9 +1116,16 @@ describe('shelf local store recovery', () => {
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('rejects noncanonical raw serialization for both versioned envelopes', async () => {
+  it('rejects noncanonical raw serialization for every versioned envelope', async () => {
     const product = await addProduct({ name: 'Canonical cleanser', addedVia: 'manual' });
-    const canonicalV2 = mocks.storage.get(KEY)!;
+    const canonicalV3 = mocks.storage.get(KEY)!;
+    const parsedV3 = JSON.parse(canonicalV3) as {
+      version: 3;
+      products: ShelfProduct[];
+      mirrorOutbox: unknown[];
+      terminal: unknown[];
+    };
+    const canonicalV2 = JSON.stringify({ version: 2, products: parsedV3.products });
     const parsedV2 = JSON.parse(canonicalV2) as { version: 2; products: ShelfProduct[] };
     const canonicalV1 = JSON.stringify({ version: 1, products: [v1Product(product)] });
     const parsedV1 = JSON.parse(canonicalV1) as {
@@ -1105,6 +1139,14 @@ describe('shelf local store recovery', () => {
       JSON.stringify(parsedV2, null, 2),
       JSON.stringify({ products: parsedV2.products, version: 2 }),
       canonicalV2.replace('{"version":2,', '{"version":2,"version":2,'),
+      JSON.stringify(parsedV3, null, 2),
+      JSON.stringify({
+        terminal: parsedV3.terminal,
+        mirrorOutbox: parsedV3.mirrorOutbox,
+        products: parsedV3.products,
+        version: 3,
+      }),
+      canonicalV3.replace('{"version":3,', '{"version":3,"version":3,'),
     ];
 
     for (const raw of noncanonical) {
@@ -1118,7 +1160,7 @@ describe('shelf local store recovery', () => {
   });
 
   it('preserves future-version shelf bytes and refuses every mutation', async () => {
-    const original = JSON.stringify({ version: 3, products: [] });
+    const original = JSON.stringify({ version: 4, products: [] });
     mocks.storage.set(KEY, original);
 
     await expect(loadShelf()).resolves.toEqual([]);
@@ -1130,6 +1172,434 @@ describe('shelf local store recovery', () => {
     );
     await expect(removeProduct('missing')).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('atomically stores a complete owner-free upsert with stable IDs and timestamp', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-26T18:30:00.123Z'));
+    const productId = operationId(700);
+
+    const product = await addProduct({
+      operationId: productId,
+      name: 'Offline cleanser',
+      brand: 'Example',
+      barcode: '0123456789012',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-07-26',
+      paoMonths: 12,
+      paoSource: 'label',
+    });
+
+    expect(product.id).toBe(productId);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 3 });
+    const pending = await getPendingShelfMirrorOperations();
+    expect(pending).toEqual([
+      {
+        operationId: '10000000-0000-4000-8000-000000000001',
+        enqueuedAt: '2026-07-26T18:30:00.123Z',
+        kind: 'upsert',
+        payload: {
+          id: productId,
+          catalog_product_id: null,
+          catalog_source_id: null,
+          catalog_match_quality: 'manual',
+          catalog_source_snapshot_date: null,
+          manual_name: 'Offline cleanser',
+          manual_brand: 'Example',
+          barcode: '0123456789012',
+          opened_at: '2026-07-26',
+          pao_months: 12,
+          expiry_date: null,
+          is_opened: true,
+          pao_source: 'label',
+          expiry_source: 'pao_computed',
+          added_via: 'manual',
+          source_disclosure_ack_at: null,
+          status: 'active',
+          finished_at: null,
+        },
+      },
+    ]);
+    expect(mocks.storage.get(KEY)).not.toContain('user-a');
+    expect(mocks.storage.get(KEY)).not.toContain('user_id');
+  });
+
+  it('bounds mirror identity text and barcode fields before any local commit', async () => {
+    expect(SHELF_PRODUCT_NAME_MAX_LENGTH).toBe(120);
+    expect(SHELF_PRODUCT_BRAND_MAX_LENGTH).toBe(120);
+    expect(SHELF_PRODUCT_TEXT_MAX_BYTES).toBe(512);
+    for (const input of [
+      { name: ' leading', addedVia: 'manual' as const },
+      { name: 'trailing ', addedVia: 'manual' as const },
+      { name: 'control\u0000name', addedVia: 'manual' as const },
+      { name: 'n'.repeat(121), addedVia: 'manual' as const },
+      { name: '😀'.repeat(61), addedVia: 'manual' as const },
+      { name: 'Valid', brand: ' brand', addedVia: 'manual' as const },
+      { name: 'Valid', brand: 'b'.repeat(121), addedVia: 'manual' as const },
+      { name: 'Valid', barcode: '123456789', addedVia: 'manual' as const },
+      { name: 'Valid', barcode: '1234 5678', addedVia: 'manual' as const },
+    ]) {
+      await expect(addProduct(input)).rejects.toThrow(SHELF_STATE_INVALID);
+      expect(mocks.storage.has(KEY)).toBe(false);
+    }
+
+    await expect(
+      addProduct({
+        name: 'n'.repeat(120),
+        brand: 'b'.repeat(120),
+        barcode: '12345678',
+        addedVia: 'manual',
+      }),
+    ).resolves.toMatchObject({
+      name: 'n'.repeat(120),
+      brand: 'b'.repeat(120),
+      barcode: '12345678',
+    });
+  });
+
+  it('rejects invalid identity edits and noncanonical mirror payload bytes without data loss', async () => {
+    const product = await addProduct({
+      operationId: operationId(705),
+      name: 'Canonical identity',
+      brand: 'Canonical brand',
+      barcode: '123456789012',
+      addedVia: 'manual',
+    });
+    const canonical = mocks.storage.get(KEY)!;
+
+    for (const patch of [
+      { name: ' edited' },
+      { name: 'x'.repeat(121) },
+      { brand: 'bad\nbrand' },
+      { brand: '' },
+      { barcode: 'not-a-barcode' },
+    ]) {
+      await expect(updateProduct(product.id, patch)).rejects.toThrow(SHELF_STATE_INVALID);
+      expect(mocks.storage.get(KEY)).toBe(canonical);
+    }
+
+    for (const payloadPatch of [
+      { manual_name: ' untrimmed' },
+      { manual_name: 'x'.repeat(121) },
+      { manual_brand: 'bad\u007fbrand' },
+      { barcode: '123456789' },
+    ]) {
+      const parsed = JSON.parse(canonical) as {
+        mirrorOutbox: { payload: Record<string, unknown> }[];
+      };
+      Object.assign(parsed.mirrorOutbox[0]!.payload, payloadPatch);
+      const malformed = JSON.stringify(parsed);
+      mocks.storage.set(KEY, malformed);
+      await expect(getPendingShelfMirrorOperations()).rejects.toThrow(SHELF_STATE_INVALID);
+      expect(mocks.storage.get(KEY)).toBe(malformed);
+    }
+  });
+
+  it('keeps mutation replay FIFO and only acknowledges the exact head', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-26T19:00:00.000Z'));
+    const notifications: number[] = [];
+    const unsubscribe = subscribeShelfMirrorOutboxChanges(() => {
+      notifications.push(storedMirrorOutbox().length);
+    });
+    const product = await addProduct({
+      operationId: operationId(710),
+      name: 'FIFO serum',
+      addedVia: 'manual',
+    });
+    vi.setSystemTime(new Date('2026-07-26T19:01:00.000Z'));
+    await updateProduct(product.id, {
+      status: 'finished',
+      finishedAt: '2026-07-26',
+    });
+    vi.setSystemTime(new Date('2026-07-26T19:02:00.000Z'));
+    await removeProduct(product.id);
+
+    const pending = await getPendingShelfMirrorOperations();
+    expect(pending.map((operation) => operation.kind)).toEqual(['upsert', 'upsert', 'delete']);
+    expect(pending.map((operation) => operation.enqueuedAt)).toEqual([
+      '2026-07-26T19:00:00.000Z',
+      '2026-07-26T19:01:00.000Z',
+      '2026-07-26T19:02:00.000Z',
+    ]);
+    expect(
+      pending.map((operation) =>
+        operation.kind === 'delete' ? operation.productId : operation.payload.id,
+      ),
+    ).toEqual([product.id, product.id, product.id]);
+
+    const bytesBeforeOutOfOrderAck = mocks.storage.get(KEY);
+    await expect(acknowledgeShelfMirrorOperation(pending[1]!.operationId)).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(bytesBeforeOutOfOrderAck);
+
+    await expect(acknowledgeShelfMirrorOperation(pending[0]!.operationId)).resolves.toBe(true);
+    await expect(getPendingShelfMirrorOperations()).resolves.toEqual(pending.slice(1));
+    unsubscribe();
+    await acknowledgeShelfMirrorOperation(pending[1]!.operationId);
+    expect(notifications).toEqual([1, 2, 3, 2]);
+  });
+
+  it('atomically quarantines only a terminal FIFO head and preserves its complete operation', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-26T19:30:00.000Z'));
+    const first = await addProduct({
+      operationId: operationId(712),
+      name: 'Terminal serum',
+      brand: 'Exact bytes',
+      addedVia: 'manual',
+    });
+    await addProduct({
+      operationId: operationId(713),
+      name: 'Later cleanser',
+      addedVia: 'manual',
+    });
+    const pending = await getPendingShelfMirrorOperations();
+    const exactOperationBytes = JSON.stringify(pending[0]);
+    const bytesBeforeOutOfOrderReject = mocks.storage.get(KEY);
+
+    await expect(
+      rejectShelfMirrorOperation(pending[1]!.operationId, 'SHELF_PRODUCT_PAYLOAD_INVALID'),
+    ).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(bytesBeforeOutOfOrderReject);
+
+    await expect(
+      rejectShelfMirrorOperation(pending[0]!.operationId, 'SHELF_PRODUCT_PAYLOAD_INVALID'),
+    ).resolves.toBe(true);
+    expect(await getPendingShelfMirrorOperations()).toEqual(pending.slice(1));
+    expect(storedMirrorTerminal()).toEqual([
+      {
+        operation: pending[0],
+        code: 'SHELF_PRODUCT_PAYLOAD_INVALID',
+      },
+    ]);
+    expect(JSON.stringify(storedMirrorTerminal()[0]!.operation)).toBe(exactOperationBytes);
+    expect(storedMirrorTerminal()[0]!.operation).toMatchObject({
+      kind: 'upsert',
+      payload: { id: first.id, manual_brand: 'Exact bytes' },
+    });
+  });
+
+  it('exposes an unresolved terminal product only while no corrective Shelf work is pending', async () => {
+    const product = await addProduct({
+      operationId: operationId(714),
+      name: 'Never mirrored serum',
+      addedVia: 'manual',
+    });
+    const [upsert] = await getPendingShelfMirrorOperations();
+    await expect(
+      rejectShelfMirrorOperation(upsert!.operationId, 'SHELF_PRODUCT_PROVENANCE_INVALID'),
+    ).resolves.toBe(true);
+    await expect(hasUnresolvedTerminalShelfMirrorOperationForProduct(product.id)).resolves.toBe(
+      true,
+    );
+    await updateProduct(product.id, { brand: 'Corrective edit' });
+    await expect(hasUnresolvedTerminalShelfMirrorOperationForProduct(product.id)).resolves.toBe(
+      false,
+    );
+  });
+
+  it('fails closed for unknown terminal codes, duplicate lane IDs, and malformed quarantine bytes', async () => {
+    await addProduct({
+      operationId: operationId(714),
+      name: 'Strict terminal serum',
+      addedVia: 'manual',
+    });
+    const [head] = await getPendingShelfMirrorOperations();
+    const canonical = mocks.storage.get(KEY)!;
+
+    await expect(
+      rejectShelfMirrorOperation(head!.operationId, 'SHELF_NEW_UNKNOWN_CODE' as never),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(canonical);
+
+    const parsed = JSON.parse(canonical) as {
+      terminal: unknown[];
+      mirrorOutbox: ShelfMirrorOperation[];
+    };
+    for (const terminal of [
+      [{ operation: parsed.mirrorOutbox[0], code: 'SHELF_PRODUCT_PAYLOAD_INVALID' }],
+      [{ operation: parsed.mirrorOutbox[0], code: 'SHELF_NEW_UNKNOWN_CODE' }],
+      [{ code: 'SHELF_PRODUCT_PAYLOAD_INVALID' }],
+    ]) {
+      const malformed = JSON.stringify({ ...parsed, terminal });
+      mocks.storage.set(KEY, malformed);
+      await expect(loadShelf()).resolves.toEqual([]);
+      await expect(getPendingShelfMirrorOperations()).rejects.toThrow(SHELF_STATE_INVALID);
+      expect(mocks.storage.get(KEY)).toBe(malformed);
+    }
+  });
+
+  it('records replenishment archive and replacement upserts in the same private commit', async () => {
+    const product = await addProduct({
+      operationId: operationId(720),
+      name: 'Replacement cream',
+      addedVia: 'manual',
+    });
+    const [initial] = await getPendingShelfMirrorOperations();
+    await acknowledgeShelfMirrorOperation(initial!.operationId);
+    const before = mocks.storage.get(KEY);
+
+    mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
+    await expect(
+      reAddProduct(product.id, { isOpened: false, openedAt: null }, operationId(721)),
+    ).rejects.toThrow('PRIVATE_WRITE_FAILED');
+    expect(mocks.storage.get(KEY)).toBe(before);
+
+    mocks.updateFailure = null;
+    await expect(
+      reAddProduct(product.id, { isOpened: false, openedAt: null }, operationId(721)),
+    ).resolves.toMatchObject({ id: operationId(721), status: 'active' });
+
+    const pending = await getPendingShelfMirrorOperations();
+    expect(pending).toHaveLength(2);
+    expect(pending).toEqual([
+      expect.objectContaining({
+        kind: 'upsert',
+        payload: expect.objectContaining({ id: product.id, status: 'finished' }),
+      }),
+      expect.objectContaining({
+        kind: 'upsert',
+        payload: expect.objectContaining({ id: operationId(721), status: 'active' }),
+      }),
+    ]);
+  });
+
+  it('migrates canonical v2 rows to safe upserts without inventing deletes or an owner', async () => {
+    const first = await addProduct({
+      operationId: operationId(730),
+      name: 'Migrated cleanser',
+      addedVia: 'manual',
+    });
+    const second = await addProduct({
+      operationId: operationId(731),
+      name: 'Migrated sunscreen',
+      addedVia: 'manual',
+    });
+    const products = [...storedProducts()];
+    const v2Bytes = JSON.stringify({ version: 2, products });
+    mocks.storage.set(KEY, v2Bytes);
+
+    const pending = await getPendingShelfMirrorOperations();
+
+    expect(pending).toHaveLength(2);
+    expect(pending.every((operation) => operation.kind === 'upsert')).toBe(true);
+    expect(
+      pending.map((operation) => (operation.kind === 'upsert' ? operation.payload.id : '')),
+    ).toEqual([second.id, first.id]);
+    expect(mocks.storage.get(KEY)).not.toBe(v2Bytes);
+    expect(mocks.storage.get(KEY)).not.toContain('user-a');
+    expect(mocks.storage.get(KEY)).not.toContain('user_id');
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 3,
+      products,
+    });
+  });
+
+  it('keeps mirror-incompatible v2 rows visible and queues them only after deterministic repair', async () => {
+    const product = await addProduct({
+      operationId: operationId(735),
+      name: 'Legacy repair product',
+      addedVia: 'manual',
+    });
+    const legacyProduct = {
+      ...storedProducts()[0]!,
+      name: 'n'.repeat(140),
+      barcode: 'legacy-barcode',
+    };
+    const v2Bytes = JSON.stringify({ version: 2, products: [legacyProduct] });
+    mocks.storage.set(KEY, v2Bytes);
+
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: product.id, name: 'n'.repeat(140), barcode: 'legacy-barcode' },
+    ]);
+    await expect(getShelfMirrorIncompatibilities()).resolves.toEqual([
+      {
+        productId: product.id,
+        codes: ['SHELF_MIRROR_NAME_REPAIR_REQUIRED', 'SHELF_MIRROR_BARCODE_REPAIR_REQUIRED'],
+      },
+    ]);
+    await expect(getPendingShelfMirrorOperations()).resolves.toEqual([]);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 3,
+      mirrorIncompatibilities: [
+        {
+          productId: product.id,
+          codes: ['SHELF_MIRROR_NAME_REPAIR_REQUIRED', 'SHELF_MIRROR_BARCODE_REPAIR_REQUIRED'],
+        },
+      ],
+    });
+
+    await expect(
+      updateProduct(product.id, { name: 'Repaired product', barcode: null }),
+    ).resolves.toMatchObject({ name: 'Repaired product', barcode: null });
+    await expect(getShelfMirrorIncompatibilities()).resolves.toEqual([]);
+    await expect(getPendingShelfMirrorOperations()).resolves.toHaveLength(1);
+  });
+
+  it('keeps a legacy non-v4 product visible but never emits an invalid mirror operation', async () => {
+    const product = await addProduct({
+      operationId: operationId(736),
+      name: 'Legacy identity product',
+      addedVia: 'manual',
+    });
+    const legacyId = '11111111-1111-1111-8111-111111111111';
+    const legacyProduct = {
+      ...storedProducts()[0]!,
+      id: legacyId,
+      replacementRootId: legacyId,
+    };
+    mocks.storage.set(KEY, JSON.stringify({ version: 2, products: [legacyProduct] }));
+
+    await expect(loadShelf()).resolves.toMatchObject([{ id: legacyId }]);
+    await expect(getShelfMirrorIncompatibilities()).resolves.toEqual([
+      {
+        productId: legacyId,
+        codes: ['SHELF_MIRROR_PRODUCT_ID_REPAIR_REQUIRED'],
+      },
+    ]);
+    await expect(getPendingShelfMirrorOperations()).resolves.toEqual([]);
+    await expect(
+      addProduct({
+        operationId: legacyId,
+        name: product.name,
+        addedVia: 'manual',
+      }),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+  });
+
+  it('does not infer mirror work from pre-v2 history', async () => {
+    const product = await addProduct({
+      operationId: operationId(740),
+      name: 'Historical cleanser',
+      addedVia: 'manual',
+    });
+    const v1Bytes = JSON.stringify({ version: 1, products: [v1Product(product)] });
+    mocks.storage.set(KEY, v1Bytes);
+
+    await expect(getPendingShelfMirrorOperations()).resolves.toEqual([]);
+    expect(mocks.storage.get(KEY)).toBe(v1Bytes);
+  });
+
+  it('fails the pending API closed for noncanonical outbox bytes', async () => {
+    await addProduct({
+      operationId: operationId(750),
+      name: 'Strict cleanser',
+      addedVia: 'manual',
+    });
+    const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+      mirrorOutbox: Record<string, unknown>[];
+    };
+    parsed.mirrorOutbox[0]!.ownerUserId = 'user-a';
+    const malformed = JSON.stringify(parsed);
+    mocks.storage.set(KEY, malformed);
+
+    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(getPendingShelfMirrorOperations()).rejects.toThrow(SHELF_STATE_INVALID);
+    await expect(updateProduct(operationId(750), { brand: 'Must not overwrite' })).rejects.toThrow(
+      SHELF_STATE_INVALID,
+    );
+    expect(mocks.storage.get(KEY)).toBe(malformed);
   });
 
   it('serializes simultaneous additions without losing a product', async () => {

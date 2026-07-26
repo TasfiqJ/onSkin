@@ -10,6 +10,7 @@ import {
   type WeekDay,
 } from '@/features/streak/streak';
 import { getCompletionSummary } from '@/features/today/completionsStore';
+import { currentCompletionSyncTimezone } from '@/features/today/completionSync';
 import { useRoutineClock } from '@/features/today/useRoutineClock';
 import { localDateString } from '@/features/today/useToday';
 import {
@@ -21,7 +22,12 @@ import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessin
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
-import { normalizeProgressCompletionDate, normalizeProgressCount } from './progressSanitizers';
+import {
+  decodeServerAdherenceProjection,
+  normalizeProgressCompletionDate,
+  normalizeProgressCount,
+  type ServerAdherenceProjection,
+} from './progressSanitizers';
 
 // Calm, forgiving progress data (docs/03 §6 + docs/07 §4): weekly adherence, a
 // month heat-map, and the freeze-aware streak. The streak/freeze logic lives in the
@@ -46,28 +52,66 @@ export type ProgressData = {
   graceUsed: boolean; // a freeze is currently absorbing a recent miss (streak safe)
   lapsed: boolean; // the streak lapsed past the forgiveness window (earn-back)
   frozenDates: string[];
+  /** Whether cross-device adherence was verified for this projection. */
+  serverStatus: 'not_configured' | 'verified' | 'unavailable';
 };
 
 type ServerCompletion = { completed_date: string };
+type ServerAdherence = Readonly<{
+  status: ProgressData['serverStatus'];
+  completions: ServerCompletion[];
+  projection: ServerAdherenceProjection | null;
+}>;
 
-async function loadServerCompletions(
+async function loadServerAdherence(
   lease: HealthDataWriteOperationLease,
-): Promise<ServerCompletion[]> {
-  if (!isSupabaseConfigured) return [];
+  expectedReferenceDay: string,
+): Promise<ServerAdherence> {
+  if (!isSupabaseConfigured) {
+    return { status: 'not_configured', completions: [], projection: null };
+  }
+  const timezone = currentCompletionSyncTimezone();
+  if (timezone === null) {
+    return { status: 'unavailable', completions: [], projection: null };
+  }
   try {
     lease.assertCurrent();
-    const { data } = await supabase
+    const setAdherenceTimezone = supabase.rpc.bind(supabase) as unknown as (
+      functionName: 'set_routine_adherence_timezone',
+      args: { p_timezone: string },
+    ) => Promise<{ data: unknown; error: unknown }>;
+    const projectionResult = await setAdherenceTimezone('set_routine_adherence_timezone', {
+      p_timezone: timezone,
+    });
+    lease.assertCurrent();
+    if (projectionResult.error !== null) throw new Error('PROGRESS_SERVER_RPC_FAILED');
+    const projection = decodeServerAdherenceProjection(projectionResult.data);
+    if (
+      projection === null ||
+      projection.adherenceTimezone !== timezone ||
+      projection.referenceDay !== expectedReferenceDay
+    ) {
+      throw new Error('PROGRESS_SERVER_PROJECTION_INVALID');
+    }
+
+    const { data, error } = await supabase
       .from('routine_completions')
       .select('completed_date')
       .is('step_id', null);
     lease.assertCurrent();
-    return (data ?? [])
-      .map((completion) => normalizeProgressCompletionDate(completion.completed_date))
-      .filter((completedDate): completedDate is string => Boolean(completedDate))
-      .map((completedDate) => ({ completed_date: completedDate }));
+    if (error !== null || data === null) throw new Error('PROGRESS_SERVER_READ_FAILED');
+    const completions: ServerCompletion[] = [];
+    for (const completion of data) {
+      const completedDate = normalizeProgressCompletionDate(completion.completed_date);
+      if (completedDate === null || completedDate !== completion.completed_date) {
+        throw new Error('PROGRESS_SERVER_COMPLETION_INVALID');
+      }
+      completions.push({ completed_date: completedDate });
+    }
+    return { status: 'verified', completions, projection };
   } catch {
     lease.assertCurrent();
-    return [];
+    return { status: 'unavailable', completions: [], projection: null };
   }
 }
 
@@ -83,15 +127,15 @@ export function useProgress() {
       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
         const today = new Date();
         const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-        const [localSummary, completions] = await Promise.all([
+        const [localSummary, server] = await Promise.all([
           getCompletionSummary(),
-          loadServerCompletions(lease),
+          loadServerAdherence(lease, todayISO),
         ]);
         lease.assertCurrent();
 
         const countByDate = new Map<string, number>();
         const completed = new Set<string>();
-        for (const c of completions) {
+        for (const c of server.completions) {
           const completedDate = normalizeProgressCompletionDate(c.completed_date);
           if (!completedDate || completedDate > todayISO) continue;
           completed.add(completedDate);
@@ -125,7 +169,11 @@ export function useProgress() {
         for (const [date, n] of countByDate)
           if (date >= localDateString(monthStart)) monthCounts.set(date, n);
 
-        const longest = Math.max(bestStreak(completed, undefined, todayISO), s.current);
+        const longest = Math.max(
+          bestStreak(completed, undefined, todayISO),
+          s.current,
+          server.projection?.longestStreak ?? 0,
+        );
 
         lease.assertCurrent();
         return {
@@ -138,6 +186,7 @@ export function useProgress() {
           graceUsed: s.freezeActive,
           lapsed: s.lapsed,
           frozenDates: s.frozenDates,
+          serverStatus: server.status,
         };
       });
     },

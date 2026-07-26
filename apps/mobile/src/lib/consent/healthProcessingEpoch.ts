@@ -6,6 +6,13 @@ export const CATALOG_HEALTH_EPOCH_FUNCTION_NAMES = [
   'catalog-report',
   'catalog-search',
 ] as const;
+/** Exact PostgREST RPCs that read or mutate health-purpose adherence state. */
+export const HEALTH_PROCESSING_POSTGREST_RPC_NAMES = [
+  'record_routine_completion',
+  'refresh_routine_adherence',
+  'set_routine_adherence_timezone',
+  'sync_shelf_product',
+] as const;
 
 /** Tables whose RLS consumes the exact mobile processing epoch. */
 export const HEALTH_PROCESSING_POSTGREST_TABLES = [
@@ -41,6 +48,7 @@ export const HEALTH_PROCESSING_POSTGREST_TABLES = [
 
 const CATALOG_HEALTH_EPOCH_FUNCTIONS = new Set<string>(CATALOG_HEALTH_EPOCH_FUNCTION_NAMES);
 const HEALTH_PROCESSING_POSTGREST_TABLE_SET = new Set<string>(HEALTH_PROCESSING_POSTGREST_TABLES);
+const HEALTH_PROCESSING_POSTGREST_RPC_SET = new Set<string>(HEALTH_PROCESSING_POSTGREST_RPC_NAMES);
 
 export const HEALTH_PROCESSING_STATUS_LEASE_MS = 5 * 60 * 1_000;
 export const HEALTH_PROCESSING_SERVER_CLOCK_SKEW_MS = 60 * 1_000;
@@ -344,14 +352,28 @@ function healthEpochTransportRoute(
   if (url.origin !== supabaseOrigin) return null;
 
   const restRoot = `${basePath}/rest/v1`;
+  const requestMethod = (
+    init?.method ?? (input instanceof Request ? input.method : 'GET')
+  ).toUpperCase();
+  const rpcRoot = `${restRoot}/rpc/`;
+  if (url.pathname.startsWith(rpcRoot)) {
+    const functionName = url.pathname.slice(rpcRoot.length);
+    if (
+      requestMethod !== 'POST' ||
+      url.search !== '' ||
+      functionName.length === 0 ||
+      functionName.includes('/') ||
+      !HEALTH_PROCESSING_POSTGREST_RPC_SET.has(functionName)
+    ) {
+      return null;
+    }
+    return { kind: 'postgrest', dependentConsentType: null };
+  }
   if (url.pathname.startsWith(`${restRoot}/`)) {
     const table = url.pathname.slice(restRoot.length + 1).split('/', 1)[0];
     if (!table || !HEALTH_PROCESSING_POSTGREST_TABLE_SET.has(table)) {
       return null;
     }
-    const requestMethod = (
-      init?.method ?? (input instanceof Request ? input.method : 'GET')
-    ).toUpperCase();
     const dependentConsentType =
       table === 'photos' && requestMethod !== 'DELETE'
         ? 'photo_cloud_backup'

@@ -4,25 +4,46 @@ import {
   setPrivateItem,
   updatePrivateItem,
 } from '@/lib/storage/privateKV';
+import { randomUUID } from 'expo-crypto';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import {
   runCurrentHealthDataOperation,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  canonicalCompletionSyncInstant,
+  canonicalCompletionSyncStepOrder,
+  canonicalCompletionSyncTimezone,
+  canonicalCompletionSyncUuid,
+  completionSyncDateInTimezone,
+  completionSyncStepIdentity,
+  COMPLETION_DEPENDENCY_TERMINAL,
+  createUniqueCompletionSyncUuid,
+  decodeCompletionSyncState,
+  emptyCompletionSyncState,
+  remoteTerminalCompletionSyncCode,
+  type CompletionSyncOperation,
+  type CompletionSyncRemoteTerminalCode,
+  type CompletionSyncRoutineType,
+  type CompletionSyncState,
+  type CompletionSyncUnavailableReason,
+  type CompletionSyncUnsynced,
+} from './completionSync';
 import { localDateString } from './useToday';
 
 // Local-first daily check-off log (docs/03 §6: the activation + streak loop, and
 // the research verdict's #1 lever, "make the daily loop the engine"). This is the
 // v1 SOURCE OF TRUTH, following the D-029 local-first pattern shared with the shelf
-// / photos / cycle stores; the server routine_completions table + the offline queue
-// (completionQueue.ts) are the deferred sync target (B-ROUTINE-PERSIST / B-SUPABASE).
+// / photos / cycle stores. Schema v3 writes the visible completion, stable
+// pseudonymous server identities, original timestamp, and replay operation in
+// one encrypted transform; the network worker can never create a crash gap.
 // A step completion is a (stepKey, localDate) pair. Adherence is deliberately
 // stricter: a date counts only after every step in that day's projected PM/recovery
 // routine is durable. Replaces the old local-useState check-off in today.tsx that
 // never persisted (it broke activation + every streak surface).
 const KEY = 'onskin.completions.v1';
 const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
-const SCHEMA_VERSION = 2 as const;
+const SCHEMA_VERSION = 3 as const;
 
 export const COMPLETION_LOG_INVALID = 'COMPLETION_LOG_INVALID';
 export const COMPLETION_LOG_UNSUPPORTED_VERSION = 'COMPLETION_LOG_UNSUPPORTED_VERSION';
@@ -32,11 +53,14 @@ type CompletionState = {
   days: Log;
   /** Explicit proof that every projected PM/recovery step was completed that day. */
   completedDays: Set<string>;
+  /** Stable pseudonymous identities plus the append-only sync journal/outbox. */
+  sync: CompletionSyncState;
 };
 type CompletionLogEnvelope = {
   version: typeof SCHEMA_VERSION;
   days: Log;
   completedDays: string[];
+  sync: CompletionSyncState;
 };
 
 export type ToggleCompletionResult = {
@@ -53,6 +77,35 @@ export type ScheduledCompletionContext = Readonly<{
   phase: 'PM';
   stepKeys: readonly string[];
 }>;
+
+export type CompletionRemoteSyncContext = Readonly<{
+  source: 'real_plan';
+  timezone: string | null;
+  stepOrder: number;
+  unavailableReason?: CompletionSyncUnavailableReason;
+}>;
+
+export type CompletionSyncOutboxListener = () => void;
+
+const completionSyncOutboxListeners = new Set<CompletionSyncOutboxListener>();
+
+function notifyCompletionSyncOutboxChanged(): void {
+  for (const listener of completionSyncOutboxListeners) {
+    try {
+      listener();
+    } catch {
+      // Storage has already committed. One observer must never prevent other
+      // observers from waking or relabel the user's durable check-off as failed.
+    }
+  }
+}
+
+export function subscribeCompletionSyncOutboxChanges(
+  listener: CompletionSyncOutboxListener,
+): () => void {
+  completionSyncOutboxListeners.add(listener);
+  return () => completionSyncOutboxListeners.delete(listener);
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -147,7 +200,9 @@ function normalizeCompletedDays(value: unknown, days: Log): Set<string> {
 }
 
 function decodeCompletionLog(raw: string | null): CompletionState {
-  if (raw === null) return { days: {}, completedDays: new Set() };
+  if (raw === null) {
+    return { days: {}, completedDays: new Set(), sync: emptyCompletionSyncState() };
+  }
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -157,7 +212,11 @@ function decodeCompletionLog(raw: string | null): CompletionState {
   if (!isRecord(parsed)) throw completionLogError(COMPLETION_LOG_INVALID);
 
   if (!hasOwn(parsed, 'version')) {
-    return { days: normalizeCompletionLog(parsed), completedDays: new Set() };
+    return {
+      days: normalizeCompletionLog(parsed),
+      completedDays: new Set(),
+      sync: emptyCompletionSyncState(),
+    };
   }
   if (parsed.version === 1) {
     if (Object.keys(parsed).length !== 2 || !hasOwn(parsed, 'days') || !isRecord(parsed.days)) {
@@ -167,6 +226,25 @@ function decodeCompletionLog(raw: string | null): CompletionState {
       days: normalizeCompletionLog(parsed.days, true),
       // A v1 row proves step taps, not that the then-scheduled PM routine was complete.
       completedDays: new Set(),
+      sync: emptyCompletionSyncState(),
+    };
+  }
+  if (parsed.version === 2) {
+    if (
+      Object.keys(parsed).length !== 3 ||
+      !hasOwn(parsed, 'days') ||
+      !hasOwn(parsed, 'completedDays') ||
+      !isRecord(parsed.days)
+    ) {
+      throw completionLogError(COMPLETION_LOG_INVALID);
+    }
+    const days = normalizeCompletionLog(parsed.days, true);
+    return {
+      days,
+      completedDays: normalizeCompletedDays(parsed.completedDays, days),
+      // Historical v2 rows have neither an original timestamp nor durable
+      // server identity. Never invent remote operations for them.
+      sync: emptyCompletionSyncState(),
     };
   }
   if (parsed.version !== SCHEMA_VERSION) {
@@ -180,15 +258,25 @@ function decodeCompletionLog(raw: string | null): CompletionState {
     throw completionLogError(COMPLETION_LOG_INVALID);
   }
   if (
-    Object.keys(parsed).length !== 3 ||
+    Object.keys(parsed).length !== 4 ||
     !hasOwn(parsed, 'days') ||
     !hasOwn(parsed, 'completedDays') ||
+    !hasOwn(parsed, 'sync') ||
     !isRecord(parsed.days)
   ) {
     throw completionLogError(COMPLETION_LOG_INVALID);
   }
   const days = normalizeCompletionLog(parsed.days, true);
-  return { days, completedDays: normalizeCompletedDays(parsed.completedDays, days) };
+  const completedDays = normalizeCompletedDays(parsed.completedDays, days);
+  try {
+    const sync = decodeCompletionSyncState(parsed.sync, {
+      hasCompletedStep: (completedDate, step) => days[completedDate]?.includes(step) === true,
+      hasCompletedDay: (completedDate) => completedDays.has(completedDate),
+    });
+    return { days, completedDays, sync };
+  } catch {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
 }
 
 function encodeCompletionLog(state: CompletionState): string {
@@ -196,6 +284,7 @@ function encodeCompletionLog(state: CompletionState): string {
     version: SCHEMA_VERSION,
     days: state.days,
     completedDays: [...state.completedDays].sort(),
+    sync: state.sync,
   } satisfies CompletionLogEnvelope);
 }
 
@@ -205,6 +294,220 @@ export function stepKey(phase: 'AM' | 'PM', productId: string): string {
   const normalized = normalizeStepKey(`${phase}:${productId}`);
   if (!normalized) throw completionLogError(COMPLETION_LOG_INVALID);
   return normalized;
+}
+
+function completionSyncUsedIds(sync: CompletionSyncState): Set<string> {
+  return new Set([
+    ...Object.values(sync.routineIds).flatMap((id) => (id === null ? [] : [id])),
+    ...Object.values(sync.stepIds).map(({ id }) => id),
+    ...sync.journal.map(({ eventId }) => eventId),
+    ...sync.unsynced.map(({ eventId }) => eventId),
+  ]);
+}
+
+function nextCompletionSyncUuid(sync: CompletionSyncState): string {
+  return createUniqueCompletionSyncUuid(
+    () => randomUUID().toLowerCase(),
+    completionSyncUsedIds(sync),
+  );
+}
+
+function ensureCompletionSyncRoutineId(
+  sync: CompletionSyncState,
+  routineType: CompletionSyncRoutineType,
+): string {
+  const existing = sync.routineIds[routineType];
+  if (existing !== null) return existing;
+  const routineId = nextCompletionSyncUuid(sync);
+  sync.routineIds[routineType] = routineId;
+  return routineId;
+}
+
+function appendCompletionSyncOperation(
+  sync: CompletionSyncState,
+  operation: Omit<CompletionSyncOperation, 'eventId'>,
+  requestedEventId?: string,
+): string {
+  const eventId =
+    requestedEventId === undefined
+      ? nextCompletionSyncUuid(sync)
+      : canonicalCompletionSyncUuid(requestedEventId);
+  if (eventId === null || completionSyncUsedIds(sync).has(eventId)) {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+  sync.journal.push({ eventId, ...operation });
+  sync.outbox.push(eventId);
+  return eventId;
+}
+
+function blockRoutineDayForTerminalStep(
+  sync: CompletionSyncState,
+  stepEventId: string,
+  step: CompletionSyncOperation,
+): void {
+  if (step.kind !== 'step') return;
+  const stepIndex = sync.journal.findIndex((operation) => operation.eventId === stepEventId);
+  const marker = sync.journal.find(
+    (operation, index) =>
+      index > stepIndex &&
+      operation.kind === 'routine_day' &&
+      operation.routineId === step.routineId &&
+      operation.completedDate === step.completedDate,
+  );
+  if (marker === undefined) return;
+  sync.outbox = sync.outbox.filter((eventId) => eventId !== marker.eventId);
+  const existingIndex = sync.terminal.findIndex(
+    (terminal) =>
+      terminal.eventId === marker.eventId && terminal.code === COMPLETION_DEPENDENCY_TERMINAL,
+  );
+  const existing = existingIndex < 0 ? undefined : sync.terminal[existingIndex];
+  const dependencyEventIds = new Set(existing?.dependencyEventIds ?? []);
+  dependencyEventIds.add(stepEventId);
+  const journalIndex = new Map(sync.journal.map((operation, index) => [operation.eventId, index]));
+  const dependencyTerminal = {
+    eventId: marker.eventId,
+    code: COMPLETION_DEPENDENCY_TERMINAL,
+    dependencyEventIds: [...dependencyEventIds].sort(
+      (left, right) => journalIndex.get(left)! - journalIndex.get(right)!,
+    ),
+  } as const;
+  if (existingIndex < 0) sync.terminal.push(dependencyTerminal);
+  else sync.terminal[existingIndex] = dependencyTerminal;
+}
+
+function appendCompletionSyncEvents(input: {
+  state: CompletionState;
+  step: string;
+  completedDate: string;
+  completedAt: string;
+  remote: CompletionRemoteSyncContext;
+  completionDayInserted: boolean;
+  recoveredEventId?: string;
+}): void {
+  const identity = completionSyncStepIdentity(input.step);
+  const timezone = canonicalCompletionSyncTimezone(input.remote.timezone);
+  const requestedStepOrder = canonicalCompletionSyncStepOrder(input.remote.stepOrder);
+  if (
+    input.remote.source !== 'real_plan' ||
+    input.remote.unavailableReason !== undefined ||
+    identity === null ||
+    timezone === null ||
+    requestedStepOrder === null ||
+    canonicalCompletionSyncInstant(input.completedAt) === null
+  ) {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+
+  const routineId = ensureCompletionSyncRoutineId(input.state.sync, identity.routineType);
+  let stepIdentity = input.state.sync.stepIds[input.step];
+  if (stepIdentity === undefined) {
+    stepIdentity = {
+      id: nextCompletionSyncUuid(input.state.sync),
+      stepOrder: requestedStepOrder,
+    };
+    input.state.sync.stepIds[input.step] = stepIdentity;
+  }
+  appendCompletionSyncOperation(
+    input.state.sync,
+    {
+      kind: 'step',
+      routineId,
+      routineType: identity.routineType,
+      stepId: stepIdentity.id,
+      userProductId: identity.userProductId,
+      // The first admitted order is immutable identity metadata. Reordering a
+      // local plan never rewrites the historical server step.
+      stepOrder: stepIdentity.stepOrder,
+      completedAt: input.completedAt,
+      completedDate: input.completedDate,
+      timezone,
+    },
+    input.recoveredEventId,
+  );
+
+  if (input.completionDayInserted) {
+    if (identity.routineType !== 'PM') {
+      throw completionLogError(COMPLETION_LOG_INVALID);
+    }
+    const markerEventId = appendCompletionSyncOperation(input.state.sync, {
+      kind: 'routine_day',
+      routineId,
+      routineType: 'PM',
+      stepId: null,
+      userProductId: null,
+      stepOrder: null,
+      completedAt: input.completedAt,
+      completedDate: input.completedDate,
+      timezone,
+    });
+    const marker = input.state.sync.journal.find(
+      (operation) => operation.eventId === markerEventId,
+    )!;
+    const priorTerminalSteps = input.state.sync.terminal.flatMap((terminal) => {
+      if (terminal.code === COMPLETION_DEPENDENCY_TERMINAL) return [];
+      const operation = input.state.sync.journal.find(
+        (candidate) => candidate.eventId === terminal.eventId,
+      );
+      return operation?.kind === 'step' &&
+        operation.routineId === marker.routineId &&
+        operation.completedDate === marker.completedDate
+        ? [{ terminal, operation }]
+        : [];
+    });
+    for (const { terminal, operation } of priorTerminalSteps) {
+      blockRoutineDayForTerminalStep(input.state.sync, terminal.eventId, operation);
+    }
+  }
+}
+
+function appendCompletionSyncUnsynced(input: {
+  state: CompletionState;
+  step: string;
+  completedDate: string;
+  completedAt: string;
+  remote: CompletionRemoteSyncContext;
+  completionDayInserted: boolean;
+}): void {
+  const requestedStepOrder = canonicalCompletionSyncStepOrder(input.remote.stepOrder);
+  const identity = completionSyncStepIdentity(input.step);
+  const reason = input.remote.unavailableReason;
+  const timezoneEvidence =
+    input.remote.timezone === null ? null : canonicalCompletionSyncTimezone(input.remote.timezone);
+  const routineType = input.step.startsWith('AM:')
+    ? 'AM'
+    : input.step.startsWith('PM:')
+      ? 'PM'
+      : null;
+  if (
+    input.remote.source !== 'real_plan' ||
+    requestedStepOrder === null ||
+    routineType === null ||
+    canonicalCompletionSyncInstant(input.completedAt) === null ||
+    (input.remote.timezone !== null &&
+      canonicalCompletionSyncTimezone(input.remote.timezone) === null) ||
+    (input.completionDayInserted && routineType !== 'PM') ||
+    (reason === 'COMPLETION_TIMEZONE_UNAVAILABLE' &&
+      (identity === null || input.remote.timezone !== null)) ||
+    (reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' && identity !== null) ||
+    (reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' && timezoneEvidence === null) ||
+    (reason !== 'COMPLETION_TIMEZONE_UNAVAILABLE' &&
+      reason !== 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED')
+  ) {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+  input.state.sync.unsynced.push({
+    eventId: nextCompletionSyncUuid(input.state.sync),
+    stepKey: input.step,
+    routineType,
+    stepOrder: requestedStepOrder,
+    completedAt: input.completedAt,
+    completedDate: input.completedDate,
+    completionDayInserted: input.completionDayInserted,
+    reason,
+    disposition:
+      reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' ? 'terminal' : 'recoverable',
+    timezoneEvidence,
+  });
 }
 
 async function load(lease: HealthDataWriteOperationLease): Promise<CompletionState> {
@@ -272,6 +575,7 @@ export async function toggleCompletion(
   key: string,
   date: string = localDateString(),
   scheduled?: ScheduledCompletionContext,
+  remoteSync?: CompletionRemoteSyncContext,
 ): Promise<ToggleCompletionResult> {
   return runCurrentHealthDataOperation(async (lease) => {
     const normalizedKey = normalizeStepKey(key);
@@ -287,6 +591,30 @@ export async function toggleCompletion(
         completionDayInserted: false,
         completedStepKeysAfter: existing,
       };
+    }
+    const completedAt = new Date().toISOString();
+    const remoteIdentity = completionSyncStepIdentity(normalizedKey);
+    const remoteTimezone =
+      remoteSync?.timezone === null || remoteSync === undefined
+        ? null
+        : canonicalCompletionSyncTimezone(remoteSync.timezone);
+    if (
+      remoteSync !== undefined &&
+      (remoteSync.source !== 'real_plan' ||
+        canonicalCompletionSyncStepOrder(remoteSync.stepOrder) === null ||
+        canonicalCompletionSyncInstant(completedAt) === null ||
+        (remoteSync.timezone !== null && remoteTimezone === null) ||
+        (remoteSync.unavailableReason === undefined &&
+          (remoteIdentity === null || remoteTimezone === null)) ||
+        (remoteSync.unavailableReason === 'COMPLETION_TIMEZONE_UNAVAILABLE' &&
+          (remoteIdentity === null || remoteSync.timezone !== null)) ||
+        (remoteSync.unavailableReason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' &&
+          remoteIdentity !== null) ||
+        (remoteSync.unavailableReason !== undefined &&
+          remoteSync.unavailableReason !== 'COMPLETION_TIMEZONE_UNAVAILABLE' &&
+          remoteSync.unavailableReason !== 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED'))
+    ) {
+      throw completionLogError(COMPLETION_LOG_INVALID);
     }
     const scheduledStepKeys =
       scheduled === undefined
@@ -318,6 +646,7 @@ export async function toggleCompletion(
       completedStepKeysAfter: new Set(),
     };
     let shouldMarkFirstCompletion = false;
+    let syncEventsInserted = false;
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();
       const state = decodeCompletionLog(current);
@@ -338,6 +667,28 @@ export async function toggleCompletion(
         completionDayInserted: completedScheduledRoutine && !alreadyCompletedDay,
         completedStepKeysAfter: new Set(day),
       };
+      if (result.inserted && remoteSync !== undefined) {
+        if (remoteSync.unavailableReason === undefined) {
+          appendCompletionSyncEvents({
+            state,
+            step: normalizedKey,
+            completedDate: normalizedDate,
+            completedAt,
+            remote: remoteSync,
+            completionDayInserted: result.completionDayInserted,
+          });
+        } else {
+          appendCompletionSyncUnsynced({
+            state,
+            step: normalizedKey,
+            completedDate: normalizedDate,
+            completedAt,
+            remote: remoteSync,
+            completionDayInserted: result.completionDayInserted,
+          });
+        }
+        syncEventsInserted = true;
+      }
       shouldMarkFirstCompletion = hadAny || result.firstEver;
       lease.assertCurrent();
       return encodeCompletionLog(state);
@@ -347,7 +698,224 @@ export async function toggleCompletion(
       await markFirstCompletion(lease);
     }
     lease.assertCurrent();
+    if (syncEventsInserted) notifyCompletionSyncOutboxChanged();
     return result;
+  });
+}
+
+/** Strict FIFO snapshot of replay operations from the same encrypted envelope
+ * that owns their visible local evidence. No owner identifier is persisted. */
+export async function getPendingCompletionSyncOperations(): Promise<CompletionSyncOperation[]> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const state = await load(lease);
+    lease.assertCurrent();
+    const byEventId = new Map(
+      state.sync.journal.map((operation) => [operation.eventId, operation]),
+    );
+    const pending = state.sync.outbox.map((eventId) => {
+      const operation = byEventId.get(eventId);
+      if (operation === undefined) throw completionLogError(COMPLETION_LOG_INVALID);
+      return operation;
+    });
+    lease.assertCurrent();
+    return pending;
+  });
+}
+
+/** Real-plan check-offs retained locally because a server-safe operation could
+ * not yet be constructed. These records are part of the encrypted local export. */
+export async function getCompletionSyncUnsynced(): Promise<CompletionSyncUnsynced[]> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const state = await load(lease);
+    lease.assertCurrent();
+    return state.sync.unsynced.map((entry) => ({ ...entry }));
+  });
+}
+
+/** Atomically promotes only date-proven timezone-blocked evidence into the
+ * normal durable journal/outbox. A later/current zone is never applied in bulk:
+ * each exact instant must map back to that event's persisted local date.
+ * Product-identity repair records are terminal local evidence and remain
+ * visible/exportable until explicit health-data retention cleanup. */
+export async function recoverCompletionSyncUnsynced(timezone: string | null): Promise<number> {
+  const normalizedTimezone = canonicalCompletionSyncTimezone(timezone);
+  if (normalizedTimezone === null) return 0;
+  return runCurrentHealthDataOperation(async (lease) => {
+    let recovered = 0;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const state = decodeCompletionLog(current);
+      const recoverable = state.sync.unsynced.filter(
+        (entry) =>
+          entry.reason === 'COMPLETION_TIMEZONE_UNAVAILABLE' &&
+          entry.disposition === 'recoverable' &&
+          entry.timezoneEvidence === null &&
+          completionSyncDateInTimezone(entry.completedAt, normalizedTimezone) ===
+            entry.completedDate,
+      );
+      if (recoverable.length === 0) return current;
+      const recoverableIds = new Set(recoverable.map(({ eventId }) => eventId));
+      state.sync.unsynced = state.sync.unsynced.filter(
+        ({ eventId }) => !recoverableIds.has(eventId),
+      );
+      for (const entry of recoverable) {
+        appendCompletionSyncEvents({
+          state,
+          step: entry.stepKey,
+          completedDate: entry.completedDate,
+          completedAt: entry.completedAt,
+          remote: {
+            source: 'real_plan',
+            timezone: normalizedTimezone,
+            stepOrder: entry.stepOrder,
+          },
+          completionDayInserted: entry.completionDayInserted,
+          recoveredEventId: entry.eventId,
+        });
+      }
+      recovered = recoverable.length;
+      lease.assertCurrent();
+      return encodeCompletionLog(state);
+    });
+    lease.assertCurrent();
+    if (recovered > 0) notifyCompletionSyncOutboxChanged();
+    return recovered;
+  });
+}
+
+/** Remove only the replay pointer after the server returns an exact accepted or
+ * exact-idempotent response. The append-only local journal remains intact. */
+export async function acknowledgeCompletionSyncOperation(eventId: string): Promise<boolean> {
+  if (canonicalCompletionSyncUuid(eventId) === null) {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    let acknowledged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const state = decodeCompletionLog(current);
+      if (state.sync.outbox[0] !== eventId) return current;
+      state.sync.outbox.shift();
+      acknowledged = true;
+      lease.assertCurrent();
+      return encodeCompletionLog(state);
+    });
+    lease.assertCurrent();
+    return acknowledged;
+  });
+}
+
+/** Quarantine a non-retryable response without deleting the user's original
+ * event. Terminal codes are bounded, non-sensitive protocol identifiers. */
+export async function rejectCompletionSyncOperation(
+  eventId: string,
+  code: CompletionSyncRemoteTerminalCode,
+): Promise<boolean> {
+  const normalizedEventId = canonicalCompletionSyncUuid(eventId);
+  const normalizedCode = remoteTerminalCompletionSyncCode(code);
+  if (normalizedEventId === null || normalizedCode === null) {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    let rejected = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const state = decodeCompletionLog(current);
+      if (state.sync.outbox[0] !== normalizedEventId) return current;
+      state.sync.outbox.shift();
+      state.sync.terminal.push({ eventId: normalizedEventId, code: normalizedCode });
+      const operationIndex = state.sync.journal.findIndex(
+        (operation) => operation.eventId === normalizedEventId,
+      );
+      const operation = state.sync.journal[operationIndex];
+      if (operation?.kind === 'step') {
+        blockRoutineDayForTerminalStep(state.sync, normalizedEventId, operation);
+      }
+      rejected = true;
+      lease.assertCurrent();
+      return encodeCompletionLog(state);
+    });
+    lease.assertCurrent();
+    return rejected;
+  });
+}
+
+/**
+ * Move the exact FIFO-head step and the remaining same-routine/date group
+ * through its routine-day marker behind unrelated work. The marker can never
+ * overtake an earlier blocked step, and every original event remains replayable
+ * after a corrective Shelf operation.
+ */
+export async function deferCompletionSyncDependencyOperation(
+  eventId: string,
+  userProductId: string,
+): Promise<Readonly<{ deferred: boolean; moved: number }>> {
+  const normalizedEventId = canonicalCompletionSyncUuid(eventId);
+  const normalizedProductId = canonicalCompletionSyncUuid(userProductId);
+  if (normalizedEventId === null || normalizedProductId === null) {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    let deferred = false;
+    let moved = 0;
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const state = decodeCompletionLog(current);
+      if (state.sync.outbox[0] !== normalizedEventId) return current;
+      const operationIndex = state.sync.journal.findIndex(
+        (operation) => operation.eventId === normalizedEventId,
+      );
+      const operation = state.sync.journal[operationIndex];
+      if (operation?.kind !== 'step' || operation.userProductId !== normalizedProductId) {
+        return current;
+      }
+
+      const originalOutbox = [...state.sync.outbox];
+      const pendingIds = new Set(originalOutbox);
+      const markerIndex = state.sync.journal.findIndex(
+        (candidate, index) =>
+          index > operationIndex &&
+          candidate.kind === 'routine_day' &&
+          candidate.routineId === operation.routineId &&
+          candidate.completedDate === operation.completedDate &&
+          pendingIds.has(candidate.eventId),
+      );
+      const deferredIds = new Set([normalizedEventId]);
+      if (markerIndex > operationIndex) {
+        for (let index = operationIndex + 1; index <= markerIndex; index += 1) {
+          const candidate = state.sync.journal[index]!;
+          if (
+            candidate.routineId === operation.routineId &&
+            candidate.completedDate === operation.completedDate &&
+            pendingIds.has(candidate.eventId)
+          ) {
+            deferredIds.add(candidate.eventId);
+          }
+        }
+      }
+      const deferredEventIds = originalOutbox.filter((pendingEventId) =>
+        deferredIds.has(pendingEventId),
+      );
+      state.sync.outbox = [
+        ...originalOutbox.filter((pendingEventId) => !deferredIds.has(pendingEventId)),
+        ...deferredEventIds,
+      ];
+      deferred = true;
+      moved = deferredEventIds.length;
+      outboxChanged = state.sync.outbox.some(
+        (pendingEventId, index) => pendingEventId !== originalOutbox[index],
+      );
+      if (!outboxChanged) return current;
+      lease.assertCurrent();
+      return encodeCompletionLog(state);
+    });
+    lease.assertCurrent();
+    return { deferred, moved };
   });
 }
 

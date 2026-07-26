@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from './healthDataWriteAdmission';
 import {
   CATALOG_HEALTH_EPOCH_FUNCTION_NAMES,
+  HEALTH_PROCESSING_POSTGREST_RPC_NAMES,
   HEALTH_PROCESSING_POSTGREST_TABLES,
 } from './healthProcessingEpoch';
 
@@ -88,6 +89,12 @@ describe('health-purpose local write coverage', () => {
   });
 
   it('enumerates every direct health remote operation and requires one entry-to-result lease', () => {
+    expect(HEALTH_PROCESSING_POSTGREST_RPC_NAMES).toEqual([
+      'record_routine_completion',
+      'refresh_routine_adherence',
+      'set_routine_adherence_timezone',
+      'sync_shelf_product',
+    ]);
     const admittedPostgrest = [
       'app/index.tsx:skin_profiles',
       'features/commerce/store.ts:commerce_click_events',
@@ -96,14 +103,9 @@ describe('health-purpose local write coverage', () => {
       'features/recommendations/store.ts:recommendation_preferences',
       'features/routine/useProgress.ts:routine_completions',
       'features/scheduler/profile.ts:skin_profiles',
-      'features/shelf/mutations.ts:user_products',
-      'features/shelf/mutations.ts:user_products',
       'features/trend/useTrend.ts:skin_profiles',
     ].sort();
-    const explicitExemptions = [
-      // The offline queue owns its own durable lease/retry protocol.
-      'lib/offline/completionQueue.ts:routine_completions',
-    ].sort();
+    const explicitExemptions: string[] = [];
     const classifiedTables = new Set<string>(HEALTH_PROCESSING_POSTGREST_TABLES);
     const observed: string[] = [];
 
@@ -130,6 +132,17 @@ describe('health-purpose local write coverage', () => {
       }
       expect(source, file).toContain('lease.assertCurrent()');
     }
+
+    const completionQueue = readFileSync(`${SRC}/lib/offline/completionQueue.ts`, 'utf8');
+    expect(completionQueue).toContain("'record_routine_completion'");
+    expect(completionQueue).toContain('runHealthDataOperation');
+    expect(completionQueue.match(/lease\.assertCurrent\(\)/gu)?.length).toBeGreaterThanOrEqual(6);
+
+    const shelfMirrorQueue = readFileSync(`${SRC}/lib/offline/shelfMirrorQueue.ts`, 'utf8');
+    expect(shelfMirrorQueue).toContain("'sync_shelf_product'");
+    expect(shelfMirrorQueue).toContain('runHealthDataOperation');
+    expect(shelfMirrorQueue).not.toContain(".from('user_products')");
+    expect(shelfMirrorQueue.match(/lease\.assertCurrent\(\)/gu)?.length).toBeGreaterThanOrEqual(6);
 
     const catalog = readFileSync(`${SRC}/features/catalog/client.ts`, 'utf8');
     const catalogFunctions = [...catalog.matchAll(/functions\.invoke\(\s*['"]([^'"]+)['"]/gu)]

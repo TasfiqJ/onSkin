@@ -630,6 +630,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-checkoff-append-only/`
+- Current CORE-05 source boundary: local Shelf and completion records are strict
+  encrypted v3 structures; Today persists the visible check-off and replay
+  event together; the offline coordinator drains Shelf before completion;
+  migrations `0068`/`0069` provide owner-derived adherence and sync RPCs,
+  deletion-wins stable product identity, and minimized replay receipts. The
+  historical UI evidence above predates this exact replay bridge and does not
+  prove hosted, two-device, native-storage, withdrawal/export, or
+  archive-identical behavior.
 
 ### Path A: Happy Path
 
@@ -650,9 +658,36 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: offline or sync pending
   - Priority: Important
   - Automate later: Yes
-  - Action: Complete a step with network disabled or sync unavailable if supported locally.
-  - Expected result: Local completion is preserved and sync state is honest.
-  - Evidence: Screenshot and logs.
+  - Action: Complete a step with the network disabled, relaunch, add/update/delete its Shelf product while still offline, then reconnect with controlled response loss on the Shelf and completion RPCs.
+  - Expected result: Local completion and the exact original event identity remain preserved. Shelf replay drains first. Network, authorization, thrown-RPC, and malformed-response ambiguity retain the exact FIFO head; only an exact accepted/idempotent four-field response acknowledges it. Relaunch does not invent a new event, duplicate completion, or success claim.
+  - Evidence: Today/Shelf screenshots, encrypted v3 state snapshots before/after relaunch, ordered network/RPC trace, event/operation IDs, and server readback.
+- Branch: terminal Shelf fact with correctable completion dependency
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Queue a completion whose product upsert receives an exact terminal Shelf result. Leave unrelated Shelf and completion work behind it; then queue a corrected Shelf upsert or deletion and retry.
+  - Expected result: The missing product completion first receives `COMPLETION_PRODUCT_RETRY_LATER`. If the Shelf record has that unresolved terminal fact and no pending correction, the client atomically moves the exact step plus the remaining same-routine/date pending group through its routine-day marker to the durable outbox tail. Unrelated work drains within the bounded replay budget. No original event enters a permanent dependency quarantine or is deleted. A later correction replays the exact original event. The marker never overtakes an earlier step.
+  - Evidence: Local v3 journal/outbox/terminal snapshots for every transition, ordered RPC trace, corrected replay readback, and crash/relaunch checkpoints around the atomic deferral.
+  - Open external evidence: Current source has focused tests; exact-current app-surface, physical-iPhone process-death, and hosted two-device evidence remain required.
+- Branch: remote-terminal completion cascades routine-day marker
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Make any scheduled PM step receive each exact remote terminal code, including a step that is terminal before the final check-off appends the routine-day marker and the final step immediately preceding an existing marker.
+  - Expected result: The original step remains in the local journal and enters the terminal receipt lane. Any same-routine/date routine-day marker is removed from pending replay and receives `COMPLETION_DEPENDENCY_TERMINAL` with the terminal step event IDs in journal order. The marker is never dispatched. A terminal step cannot manufacture adherence, a milestone, or a server routine-day row.
+  - Evidence: Visible Today/adherence state, local terminal receipt snapshot, zero marker-RPC trace, server rows, relaunch proof, and exact code coverage.
+  - Open external evidence: Current source has focused tests; fresh UI/native/hosted evidence has not been retained.
+- Branch: deletion wins across missing upsert and delayed completion
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On two authenticated sessions, exercise missing upsert then delete, delete response loss/retry, an upsert after the tombstone, completions at/before and after the effective deletion cutoff, and a cross-owner UUID race.
+  - Expected result: Same-owner delete creates only a minimal content-free identity/tombstone and is idempotent. Later upsert cannot resurrect content. A completion at or before the cutoff can reconcile; a later one is terminal. Cross-owner reuse is an ownership conflict. Direct table mutation stays denied, and withdrawal/account deletion removes identity and receipt residue.
+  - Evidence: Two-session ordered trace; exact identity/content/completion/receipt rows; direct-DML denial; withdrawal/account-deletion zero counts; and response-loss replay.
+  - Open external evidence: Local database contracts do not replace hosted two-device, stale-session, worker, backup, or physical-iPhone proof.
+- Branch: legacy UUID or timezone cannot construct replay work
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Relaunch with legacy/v1/v2 completion bytes, incompatible legacy Shelf identifiers/names/barcodes, unavailable or invalid timezone, a later valid IANA timezone, and repeated UUID-collision fixtures.
+  - Expected result: Historical completion schemas never invent routine IDs, step IDs, timestamps, adherence, or replay work. Incompatible Shelf records stay repair-required. A visible check-off that cannot construct canonical sync evidence stays in explicit encrypted unsynced state and can promote its original event after a valid timezone is available. UUID generation is lowercase v4, bounded, collision-aware, and fails closed instead of reusing identity.
+  - Evidence: Byte-identical legacy snapshots, repair/unsynced UI and export snapshots, recovered event identity, timezone/date trace, and focused source/native relaunch tests.
 - Branch: partial routine does not become adherence
   - Priority: Critical
   - Automate later: Yes
@@ -696,6 +731,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Complete qualifying PM/recovery routines around one and two missed nights, then repeat with three missed nights.
   - Expected result: One or two interior misses are absorbed automatically with calm protected copy and no guilt; a third miss lapses the active run without shrinking the historical best, and the next qualifying routine produces a neutral welcome-back state.
   - Evidence: Adherence/welcome-back screenshots, client/server parity fixture, relaunch/cross-device proof, and analytics publication evidence when legally admitted.
+- Branch: CORE-05 combined data export and withdrawal
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With pending, accepted, and terminal Shelf/completion sync facts, request a combined export; then withdraw health-data consent and request/export again only through the lifecycle states the UI permits.
+  - Expected result: The current-device export labels local pending/terminal v3 records as `shelf_and_sync_state` and `completion_and_sync_state`. Server schema v4 includes exact subject-facing stable identity and receipt fields through three owner-derived projections and excludes internal `request_sha256`. Every active export read uses the initial lifecycle-derived health epoch and aborts if lifecycle changes. Stable withdrawn/never-active state yields exact empty health sources under the deny epoch; synthetic nonactive residue fails closed. Withdrawal erases local sync state, stable identities, and both minimized ledgers without deleting Auth or billing.
+  - Evidence: Export JSON and manifest; owner/count/checksum/column results; lifecycle transition trace; exact pre/post database/local counts; raw-payload/digest absence; and account/billing preservation.
+  - Open external evidence: Hosted export completeness/concurrency, native share/cache cleanup, processor/backup handling, final policy/App Privacy answers, `request_sha256` rights treatment, and counsel/App Review remain open.
 
 ## Flow: Shelf Product Add
 

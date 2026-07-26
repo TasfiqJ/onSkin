@@ -1510,9 +1510,21 @@ insert into auth.users (id) values ('57000000-0000-4000-8000-000000000001');
 -- This fixture proves rollback preserves a pre-existing shelf reference; the
 -- health-consent admission trigger is independently covered by its lifecycle
 -- suite and is not the behavior under test here.
-alter table public.user_products disable trigger trg_user_products_health_write;
-insert into public.user_products (user_id, catalog_product_id, barcode)
+insert into cat02_test_state (state_key, value_uuid)
+values ('shelf_product_id', pg_catalog.gen_random_uuid());
+alter table public.shelf_product_identities
+  disable trigger trg_shelf_product_identities_health_write;
+insert into public.shelf_product_identities (id, user_id)
 values (
+  (select value_uuid from cat02_test_state where state_key = 'shelf_product_id'),
+  '57000000-0000-4000-8000-000000000001'
+);
+alter table public.shelf_product_identities
+  enable trigger trg_shelf_product_identities_health_write;
+alter table public.user_products disable trigger trg_user_products_health_write;
+insert into public.user_products (id, user_id, catalog_product_id, barcode)
+values (
+  (select value_uuid from cat02_test_state where state_key = 'shelf_product_id'),
   '57000000-0000-4000-8000-000000000001',
   (select value_uuid from cat02_test_state where state_key = 'product_id'),
   '991234567899'

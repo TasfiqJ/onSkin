@@ -22,7 +22,7 @@ const correctiveMigration = readFileSync(
   'utf8',
 );
 
-const mutations = readFileSync(fileURLToPath(new URL('./mutations.ts', import.meta.url)), 'utf8');
+const shelfStore = readFileSync(fileURLToPath(new URL('./store.ts', import.meta.url)), 'utf8');
 
 describe('server Shelf freshness invariants', () => {
   it('backfills without inventing an opened date before adding coherence checks', () => {
@@ -45,33 +45,35 @@ describe('server Shelf freshness invariants', () => {
 });
 
 describe('CAT-07 corrective freshness migration', () => {
-  it('mirrors quarantined historical package dates without making them actionable', () => {
-    expect(mutations).toContain(
-      'legacy_unverified_expiry_date: p.legacyUnverifiedExpiryDate',
-    );
-    expect(mutations).toContain('expiry_date: p.expiryDate');
+  it('keeps quarantined historical dates local while mirroring actionable package dates', () => {
+    expect(shelfStore).not.toContain('legacy_unverified_expiry_date');
+    expect(shelfStore).toContain('expiry_date: product.expiryDate');
   });
 
   it('purges and seals the unreviewed legacy PAO table', () => {
     expect(correctiveMigration).toContain('delete from public.ingredient_pao_defaults;');
-    expect(correctiveMigration).toContain('alter table public.ingredient_pao_defaults force row level security');
+    expect(correctiveMigration).toContain(
+      'alter table public.ingredient_pao_defaults force row level security',
+    );
     expect(correctiveMigration).toContain(
       'revoke all on table public.ingredient_pao_defaults\n  from public, anon, authenticated, service_role;',
     );
     expect(correctiveMigration).toContain(
       'add constraint ingredient_pao_defaults_legacy_empty check (false)',
     );
-    expect(correctiveMigration).toContain(
-      'not current Shelf PAO authority',
-    );
+    expect(correctiveMigration).toContain('not current Shelf PAO authority');
   });
 
   it('keeps category defaults launch-disabled while retaining product-specific catalog evidence', () => {
     expect(correctiveMigration).toContain('set pao_months = null');
     expect(correctiveMigration).toContain("where pao_source = 'category_default'");
-    expect(correctiveMigration).toContain('create or replace function private.resolve_catalog_pao_snapshot');
+    expect(correctiveMigration).toContain(
+      'create or replace function private.resolve_catalog_pao_snapshot',
+    );
     expect(correctiveMigration).toContain("freshness.review_status = 'reviewed'");
-    expect(correctiveMigration).toContain("nullif(pg_catalog.btrim(freshness.reviewed_by), '') is not null");
+    expect(correctiveMigration).toContain(
+      "nullif(pg_catalog.btrim(freshness.reviewed_by), '') is not null",
+    );
     expect(correctiveMigration).toContain(
       "freshness.pao_source in ('label', 'brand_label', 'catalog')",
     );
@@ -79,7 +81,7 @@ describe('CAT-07 corrective freshness migration', () => {
       'create or replace function private.guard_user_product_category_default_evidence',
     );
     expect(correctiveMigration).toContain("new.pao_source := 'unknown'");
-    expect(correctiveMigration).not.toContain("reviewed_category_default");
+    expect(correctiveMigration).not.toContain('reviewed_category_default');
   });
 
   it('backfills before restoring a coherent truthful-source constraint', () => {
@@ -98,9 +100,7 @@ describe('CAT-07 corrective freshness migration', () => {
     expect(expiryBackfill).toBeLessThan(addConstraint);
     expect(correctiveMigration).toContain("where pao_source = 'unknown'");
     expect(correctiveMigration).toContain('add constraint user_products_pao_source_coherent');
-    expect(correctiveMigration).toContain(
-      "and pao_source in ('label', 'catalog')",
-    );
+    expect(correctiveMigration).toContain("and pao_source in ('label', 'catalog')");
     expect(correctiveMigration).toContain("when is_opened = false then 'unknown'");
     expect(correctiveMigration).toContain("where pao_source = 'category_default'");
     expect(correctiveMigration).toContain(

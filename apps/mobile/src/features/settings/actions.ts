@@ -34,6 +34,10 @@ import {
   type MobileDataExportBundle,
 } from './localDeviceExport';
 import {
+  decodeServerDataExport,
+  SERVER_DATA_EXPORT_SCHEMA_VERSION,
+} from './serverDataExportContract';
+import {
   type AccountDeletionClientRecord,
   accountDeletionRecordMatchesOwner,
   createAccountDeletionOwnerBinding,
@@ -76,6 +80,10 @@ type AccountDeletionInitiator = Readonly<{
   generation: number;
   userId: string;
 }>;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
 
 function startDeletionIntakeHandoff(
   expectedUserId: string,
@@ -435,35 +443,7 @@ export async function withdrawHealthDataConsent(ownerUserId: string): Promise<vo
 // the mobile layer adds every registered private device record after removing
 // local media paths, credentials, and encryption material. We then write the
 // combined bundle to a one-time cache file and remove it after the share attempt.
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function parseServerExport(data: unknown, expectedUserId: string): Record<string, unknown> {
-  let parsed = data;
-  if (typeof data === 'string') {
-    try {
-      parsed = JSON.parse(data) as unknown;
-    } catch {
-      throw new Error('DATA_EXPORT_RESPONSE_INVALID');
-    }
-  }
-
-  if (
-    !isRecord(parsed) ||
-    typeof parsed.user_id !== 'string' ||
-    parsed.user_id.trim().length === 0 ||
-    typeof parsed.export_schema_version !== 'number' ||
-    !Number.isInteger(parsed.export_schema_version) ||
-    parsed.export_schema_version < 1
-  ) {
-    throw new Error('DATA_EXPORT_RESPONSE_INVALID');
-  }
-  if (parsed.user_id !== expectedUserId) {
-    throw new Error(DATA_EXPORT_RESPONSE_OWNER_MISMATCH);
-  }
-  return parsed;
-}
+export { SERVER_DATA_EXPORT_SCHEMA_VERSION };
 
 async function waitForExportE2EDelay(signal: AbortSignal): Promise<void> {
   const rawDelay =
@@ -538,7 +518,19 @@ export async function exportData(): Promise<boolean> {
       }
       lease.assertCurrent();
       if (response.error) throw response.error;
-      serverAccountData = parseServerExport(response.data, expectedUserId);
+      try {
+        serverAccountData = decodeServerDataExport(response.data, expectedUserId);
+      } catch (error) {
+        if (
+          response.data !== null &&
+          typeof response.data === 'object' &&
+          !Array.isArray(response.data) &&
+          (response.data as Record<string, unknown>).user_id !== expectedUserId
+        ) {
+          throw new Error(DATA_EXPORT_RESPONSE_OWNER_MISMATCH);
+        }
+        throw error;
+      }
       serverAccountDataStatus = 'included';
     }
 

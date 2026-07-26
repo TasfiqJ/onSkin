@@ -5,6 +5,8 @@ import {
   PRIVATE_PUBLIC_TABLES,
   SEALED_CATALOG_AUTHORITY_TABLES,
   SEALED_GLOBAL_CONTENT_TABLES,
+  SEALED_OWNER_RPC_EXPORT_SOURCES,
+  SEALED_OWNER_RPC_EXPORT_TABLES,
   SEALED_PUBLIC_TABLES,
   SEALED_SERVICE_PRIVATE_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
@@ -39,6 +41,9 @@ const catalogLaunchCuration = read(
 );
 const legacyClinicalContentSeal = read(
   'supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql',
+);
+const routineCompletionSyncBridge = read(
+  'supabase/migrations/20260726000069_routine_completion_sync_bridge.sql',
 );
 const photoMetadataInsertPolicy = sqlPolicyStatement(
   migrations,
@@ -95,8 +100,8 @@ block(
 );
 block(
   errors,
-  SEALED_SERVICE_PRIVATE_TABLES.length === 22,
-  `Sealed service-only private-table inventory must contain 22 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
+  SEALED_SERVICE_PRIVATE_TABLES.length === 24,
+  `Sealed service-only private-table inventory must contain 24 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
 );
 block(
   errors,
@@ -110,8 +115,8 @@ block(
 );
 block(
   errors,
-  SEALED_PUBLIC_TABLES.length === 30,
-  `Combined sealed public-schema inventory must contain 30 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
+  SEALED_PUBLIC_TABLES.length === 32,
+  `Combined sealed public-schema inventory must contain 32 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
 );
 block(
   errors,
@@ -120,14 +125,57 @@ block(
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.length === 66,
-  `Combined private-table inventory must contain 66 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+  PRIVATE_PUBLIC_TABLES.length === 68,
+  `Combined private-table inventory must contain 68 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
 );
 block(
   errors,
   PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length === 36,
   'Directly queryable private-table inventory must contain 36 tables.',
 );
+block(
+  errors,
+  SEALED_OWNER_RPC_EXPORT_SOURCES.length === 3 &&
+    SEALED_OWNER_RPC_EXPORT_TABLES.length === 3 &&
+    new Set(SEALED_OWNER_RPC_EXPORT_SOURCES).size === 3 &&
+    new Set(SEALED_OWNER_RPC_EXPORT_TABLES).size === 3,
+  'Sealed owner-RPC export inventory must contain three unique source/table pairs.',
+);
+for (const [index, source] of SEALED_OWNER_RPC_EXPORT_SOURCES.entries()) {
+  const table = SEALED_OWNER_RPC_EXPORT_TABLES[index];
+  block(
+    errors,
+    new RegExp(`${source}:\\s*'${table}'`, 'u').test(exportRegistrySource),
+    `Caller owner-RPC export mapping must bind ${source} to sealed table ${table}.`,
+  );
+}
+block(
+  errors,
+  /revoke all on table private\.shelf_sync_operations[\s\S]*?from public, anon, authenticated, service_role/i.test(
+    routineCompletionSyncBridge,
+  ) &&
+    /revoke all on table private\.routine_completion_sync_operations[\s\S]*?from public, anon, authenticated, service_role/i.test(
+      routineCompletionSyncBridge,
+    ) &&
+    /revoke all on table public\.shelf_product_identities[\s\S]*?from public, anon, authenticated, service_role/i.test(
+      routineCompletionSyncBridge,
+    ),
+  'Every owner-RPC export source must remain sealed from direct table access by all API roles.',
+);
+for (const functionName of [
+  'export_shelf_product_identities_for_subject',
+  'export_shelf_sync_receipts_for_subject',
+  'export_routine_completion_sync_receipts_for_subject',
+]) {
+  block(
+    errors,
+    new RegExp(
+      `revoke all on function public\\.${functionName}\\([\\s\\S]*?\\) from public, anon, authenticated, service_role;[\\s\\S]*?grant execute on function public\\.${functionName}\\([\\s\\S]*?\\) to authenticated;`,
+      'i',
+    ).test(routineCompletionSyncBridge),
+    `Owner-RPC export ${functionName} must deny direct anon/service execution and grant only authenticated.`,
+  );
+}
 
 for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
   block(
@@ -395,10 +443,15 @@ block(
 );
 block(
   errors,
-  /drop policy if exists "routine_steps_insert_own"[\s\S]*create policy "routine_steps_insert_own"[\s\S]*owns_user_product\(user_product_id\)/i.test(
-    migrations,
-  ),
-  'Routine step RLS must block cross-user product references.',
+  /drop policy if exists "routine_steps_insert_own"/i.test(routineCompletionSyncBridge) &&
+    /grant execute on function public\.record_routine_completion\([\s\S]*?\)\s+to authenticated/i.test(
+      routineCompletionSyncBridge,
+    ) &&
+    /revoke insert, update, delete, truncate, references, trigger[\s\S]*?on table public\.routine_steps[\s\S]*?authenticated/i.test(
+      routineCompletionSyncBridge,
+    ) &&
+    /ROUTINE_STEP_PRODUCT_OWNER_INVALID/i.test(routineCompletionSyncBridge),
+  'Routine-step writes must use the authenticated completion RPC behind a same-owner invariant and direct-DML seal.',
 );
 block(
   errors,
@@ -577,7 +630,7 @@ block(
 );
 
 const requiredLiveHarnessChecks = [
-  'all 66 private tables have access-control probes',
+  'all 67 private tables have access-control probes',
   'routine conflict swapped canonical pair',
   'routine conflict duplicate canonical identity',
   'Shelf provenance matrix',

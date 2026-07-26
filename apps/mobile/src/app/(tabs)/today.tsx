@@ -13,7 +13,18 @@ import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
-import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
+import {
+  getCompletedSteps,
+  getCompletionSyncUnsynced,
+  recoverCompletionSyncUnsynced,
+  stepKey,
+  toggleCompletion,
+  type CompletionRemoteSyncContext,
+} from '@/features/today/completionsStore';
+import {
+  completionSyncStepIdentity,
+  currentCompletionSyncTimezone,
+} from '@/features/today/completionSync';
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
 import { projectTodayRoutine } from '@/features/today/routineProjection';
 import { useRoutineClock } from '@/features/today/useRoutineClock';
@@ -393,6 +404,55 @@ function CompletionStatusNotice({
   );
 }
 
+function CompletionSyncUnavailableNotice({
+  dark,
+  hasIdentityRepair,
+  count,
+  onRetry,
+}: {
+  dark: boolean;
+  hasIdentityRepair: boolean;
+  count: number;
+  onRetry: () => void;
+}) {
+  return (
+    <View
+      accessibilityRole="alert"
+      className="mt-4 rounded-card px-4 py-3.5"
+      style={{
+        backgroundColor: dark ? colors.nightSurface : colors.greige,
+        borderColor: dark ? colors.clayBright : colors.clay,
+        borderWidth: 1,
+      }}
+    >
+      <Text variant="bodySm" style={{ color: dark ? 'rgba(244,239,231,0.78)' : colors.ink }}>
+        {hasIdentityRepair
+          ? `${count} older check-off${count === 1 ? ' cannot' : 's cannot'} be safely rebound to a different product identity. Remove and add the affected Shelf product so future check-offs can sync; your local export keeps the original evidence.`
+          : `${count} saved check-off${count === 1 ? ' is' : 's are'} only on this device until a valid timezone is available. Your local export keeps this evidence.`}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={
+          hasIdentityRepair
+            ? 'Review Shelf products that need identity repair'
+            : 'Try preparing saved check-offs for sync again'
+        }
+        className="mt-2 min-h-[48px] self-start justify-center rounded-pill px-4"
+        style={{ backgroundColor: dark ? colors.clayBright : colors.clay }}
+        onPress={onRetry}
+      >
+        <Text
+          variant="label"
+          className="font-sans-bold"
+          style={{ color: dark ? colors.night : colors.paper }}
+        >
+          {hasIdentityRepair ? 'Review Shelf' : 'Try again'}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 export default function TodayScreen() {
   const { height, width } = useWindowDimensions();
   const clock = useRoutineClock({ includeMinuteUpdates: true });
@@ -407,12 +467,20 @@ export default function TodayScreen() {
     queryKey: ['completions', today],
     queryFn: () => getCompletedSteps(today),
   });
+  const completionSyncUnsyncedQuery = useQuery({
+    queryKey: ['completion-sync-unsynced'],
+    queryFn: getCompletionSyncUnsynced,
+  });
   const { data: doneData } = completionQuery;
   const [completionActionFailed, setCompletionActionFailed] = useState(false);
   const [completionPendingKey, setCompletionPendingKey] = useState<string | null>(null);
   const completionLoading = completionQuery.isPending;
   const completionUnavailable = completionLoading || completionQuery.isError;
   const done = doneData ?? new Set<string>();
+  const completionSyncUnsynced = completionSyncUnsyncedQuery.data ?? [];
+  const hasCompletionIdentityRepair = completionSyncUnsynced.some(
+    ({ reason }) => reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED',
+  );
   // One pure, fail-closed projection now drives Today and native glance surfaces.
   // It never exposes the design-only example plan and applies the orchestrated
   // pause/skip/recovery/staging/profile-safety rules before publishing steps.
@@ -436,7 +504,12 @@ export default function TodayScreen() {
   // publication are all downstream of the confirmed owner-current mutation.
   async function handleCompletion(
     key: string,
-    context?: { phase: 'AM' | 'PM'; cycleActive: boolean; stepKeys: readonly string[] },
+    context: {
+      phase: 'AM' | 'PM';
+      cycleActive: boolean;
+      stepKeys: readonly string[];
+      stepOrder: number;
+    },
   ) {
     if (completionUnavailable || completionPendingKey !== null) return;
     setCompletionActionFailed(false);
@@ -446,10 +519,26 @@ export default function TodayScreen() {
       await runCurrentHealthDataOperation(async (lease) => {
         lease.assertCurrent();
         const scheduled =
-          context?.phase === 'PM'
+          context.phase === 'PM'
             ? ({ phase: 'PM', stepKeys: context.stepKeys } as const)
             : undefined;
-        const result = await toggleCompletion(key, today, scheduled);
+        const timezone = currentCompletionSyncTimezone();
+        let remoteSync: CompletionRemoteSyncContext | undefined;
+        if (routine.source === 'real') {
+          const unavailableReason =
+            completionSyncStepIdentity(key) === null
+              ? ('COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' as const)
+              : timezone === null
+                ? ('COMPLETION_TIMEZONE_UNAVAILABLE' as const)
+                : undefined;
+          remoteSync = {
+            source: 'real_plan',
+            timezone,
+            stepOrder: context.stepOrder,
+            ...(unavailableReason === undefined ? {} : { unavailableReason }),
+          };
+        }
+        const result = await toggleCompletion(key, today, scheduled, remoteSync);
         lease.assertCurrent();
         persistenceConfirmed = true;
         qc.setQueryData(['completions', today], new Set(result.completedStepKeysAfter));
@@ -481,6 +570,8 @@ export default function TodayScreen() {
         lease.assertCurrent();
         await qc.invalidateQueries({ queryKey: ['progress'] });
         lease.assertCurrent();
+        await qc.invalidateQueries({ queryKey: ['completion-sync-unsynced'] });
+        lease.assertCurrent();
       });
     } catch {
       if (!persistenceConfirmed) {
@@ -491,6 +582,7 @@ export default function TodayScreen() {
         void Promise.allSettled([
           qc.invalidateQueries({ queryKey: ['completions', today] }),
           qc.invalidateQueries({ queryKey: ['progress'] }),
+          qc.invalidateQueries({ queryKey: ['completion-sync-unsynced'] }),
         ]);
       }
     } finally {
@@ -501,6 +593,17 @@ export default function TodayScreen() {
   function retryCompletions() {
     setCompletionActionFailed(false);
     void completionQuery.refetch();
+  }
+
+  function handleCompletionSyncUnavailable() {
+    if (hasCompletionIdentityRepair) {
+      router.push('/(tabs)/shelf');
+      return;
+    }
+    void recoverCompletionSyncUnsynced(currentCompletionSyncTimezone()).then(
+      () => completionSyncUnsyncedQuery.refetch(),
+      () => completionSyncUnsyncedQuery.refetch(),
+    );
   }
 
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
@@ -580,6 +683,15 @@ export default function TodayScreen() {
             />
           ) : null}
 
+          {completionSyncUnsynced.length > 0 ? (
+            <CompletionSyncUnavailableNotice
+              dark={false}
+              count={completionSyncUnsynced.length}
+              hasIdentityRepair={hasCompletionIdentityRepair}
+              onRetry={handleCompletionSyncUnavailable}
+            />
+          ) : null}
+
           {hasExamplePlan ? (
             <EmptyRoutineCard compact={compactPhone} dark={false} short={shortEmptyRoutine} />
           ) : (
@@ -618,7 +730,14 @@ export default function TodayScreen() {
                     compact={compactPhone}
                     disabled={completionUnavailable || completionPendingKey !== null}
                     first={i === 0}
-                    onPress={() => void handleCompletion(k)}
+                    onPress={() =>
+                      void handleCompletion(k, {
+                        phase: 'AM',
+                        cycleActive: false,
+                        stepKeys: routine.am.stepKeys,
+                        stepOrder: i + 1,
+                      })
+                    }
                   />
                 );
               })}
@@ -876,6 +995,14 @@ export default function TodayScreen() {
             {completionUnavailable || completionActionFailed ? (
               <CompletionStatusNotice dark loading={completionLoading} onRetry={retryCompletions} />
             ) : null}
+            {completionSyncUnsynced.length > 0 ? (
+              <CompletionSyncUnavailableNotice
+                dark
+                count={completionSyncUnsynced.length}
+                hasIdentityRepair={hasCompletionIdentityRepair}
+                onRetry={handleCompletionSyncUnavailable}
+              />
+            ) : null}
             <View
               className="mt-4 rounded-card p-5"
               style={{ backgroundColor: colors.nightSurface }}
@@ -911,6 +1038,7 @@ export default function TodayScreen() {
                           phase: 'PM',
                           cycleActive: routine.cycleActive,
                           stepKeys: pmStepKeys,
+                          stepOrder: i + 1,
                         })
                       }
                     />

@@ -11,7 +11,7 @@ const protectedAuthenticatedFunctions = [
 
 const firstSensitiveOperation = {
   'catalog-lookup': 'const admin = createClient(supabaseUrl, serviceKey',
-  'catalog-operator': 'const rpcResult = await operatorBackend.rpc(name, args)',
+  'catalog-operator': 'const rpcResult = await operatorGateway(',
   'catalog-report': 'const parsed = await requestBody(req)',
   'catalog-search': 'const admin = createClient(supabaseUrl, serviceKey',
   'consent-withdrawal': 'const parsed = await readLimitedJson(req',

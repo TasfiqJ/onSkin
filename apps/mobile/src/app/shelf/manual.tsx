@@ -24,6 +24,10 @@ import {
   type ProductCategory,
 } from '@/features/shelf/categories';
 import { isCurrentIntakeSession, useIntake } from '@/features/shelf/IntakeContext';
+import {
+  SHELF_PRODUCT_BRAND_MAX_LENGTH,
+  SHELF_PRODUCT_NAME_MAX_LENGTH,
+} from '@/features/shelf/limits';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -267,6 +271,7 @@ export default function ManualAddScreen() {
             <FieldLabel>Product name</FieldLabel>
             <TextInput
               accessibilityLabel="Product name"
+              maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}
               value={name}
               onChangeText={setName}
               placeholder="e.g. Gentle Retinol Night Serum"
@@ -280,6 +285,7 @@ export default function ManualAddScreen() {
               <FieldLabel>Brand</FieldLabel>
               <TextInput
                 accessibilityLabel="Brand"
+                maxLength={SHELF_PRODUCT_BRAND_MAX_LENGTH}
                 value={brand}
                 onChangeText={setBrand}
                 placeholder="Brand"

@@ -60,7 +60,7 @@ export const LIVE_HEALTH_CONSENT_COPY = Object.freeze({
     ask_onskin: Object.freeze({
       grant: Object.freeze({
         version: 'ask-advisor-2026-06-14-placeholder',
-        hash: '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
+        hash: '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
       }),
       withdrawal: Object.freeze({
         version: 'ask-advisor-2026-06-14-placeholder',

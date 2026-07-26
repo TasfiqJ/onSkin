@@ -17,6 +17,7 @@ import { trackProductAddStarted } from '@/features/shelf/analytics';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { useShelfMutations } from '@/features/shelf/mutations';
+import { SHELF_PRODUCT_NAME_MAX_LENGTH } from '@/features/shelf/limits';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
@@ -124,6 +125,7 @@ export default function ProductsScreen() {
 }
 
 function ProductsScreenContent() {
+  const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();
   const { fontScale = 1, height, width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
@@ -177,6 +179,14 @@ function ProductsScreenContent() {
   useEffect(() => {
     trackProductAddStarted('onboarding');
   }, []);
+
+  useEffect(() => {
+    if (!addedProductId || added.length === 0) return;
+    const frame = requestAnimationFrame(() => {
+      scrollRef.current?.scrollToEnd({ animated: false });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [added.length, addedProductId]);
 
   function focusNextProduct() {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
@@ -291,6 +301,7 @@ function ProductsScreenContent() {
             <TextInput
               ref={inputRef}
               accessibilityLabel="Product name"
+              maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}
               value={name}
               onChangeText={setName}
               placeholder="e.g. Retinol serum"

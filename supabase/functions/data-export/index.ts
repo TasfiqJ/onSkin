@@ -22,6 +22,7 @@ import {
   EXPORT_CONSISTENCY,
   type ExportSourceManifest,
   healthLifecycleExportDecision,
+  healthReadEpochForExport,
   listStoragePathsVerified,
   type PaginatedRows,
   paginateRows,
@@ -39,6 +40,12 @@ import {
   type CatalogCorrectionExportCursor,
   paginateCatalogCorrections,
 } from './catalogCorrectionExportCore.ts';
+import {
+  HEALTH_SYNC_EXPORT_SOURCES,
+  type HealthSyncExportCursor,
+  type HealthSyncExportSource,
+  paginateHealthSyncSource,
+} from './healthSyncExportCore.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey = readSupabasePublishableKey();
@@ -256,6 +263,34 @@ async function exportCatalogCorrections(
   });
 }
 
+async function exportHealthSyncRecords(
+  caller: EdgeSupabaseClient,
+  userId: string,
+  source: HealthSyncExportSource,
+): Promise<PaginatedRows> {
+  const definition = HEALTH_SYNC_EXPORT_SOURCES[source];
+  return paginateHealthSyncSource({
+    source,
+    expectedUserId: userId,
+    pageSize: Math.min(dataExportPageSize, 500),
+    maxRows: dataExportMaxRowsPerSource,
+    fetchPage: async (cursor: HealthSyncExportCursor | null, limit: number) => {
+      const { data, error } = await caller.rpc(definition.rpc, {
+        p_after_created_at: cursor?.createdAt ?? null,
+        p_after_id: cursor?.id ?? null,
+        p_limit: limit,
+      });
+      if (error) {
+        throw new Error(`EXPORT_TABLE_FAILED:${source}:RPC:${error.message}`);
+      }
+      if (!Array.isArray(data)) {
+        throw new Error(`EXPORT_TABLE_FAILED:${source}:RPC:INVALID_DATA`);
+      }
+      return data as Record<string, unknown>[];
+    },
+  });
+}
+
 function chunks<T>(values: readonly T[], size: number): T[][] {
   const result: T[][] = [];
   for (let index = 0; index < values.length; index += size) {
@@ -362,6 +397,16 @@ Deno.serve(async (req) => {
   if (!initialHealthDecision.allowed) {
     return healthLifecycleRetryResponse(initialHealthDecision);
   }
+  const healthReadEpoch = healthReadEpochForExport(initialHealthLifecycle);
+  const healthSupabase = createClient(supabaseUrl, publishableKey, {
+    global: {
+      headers: {
+        Authorization: authHeader,
+        'x-health-processing-epoch': String(healthReadEpoch),
+      },
+    },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 
   const rateLimitError = await enforceRateLimit(admin, userId);
   if (rateLimitError) return rateLimitError;
@@ -382,7 +427,7 @@ Deno.serve(async (req) => {
       directPlans.map((item) => async () => ({
         source: item.table,
         result: await paginateQuery({
-          client: item.clientKind === 'caller' ? supabase : admin,
+          client: item.clientKind === 'caller' ? healthSupabase : admin,
           table: item.table,
           scope: item.scope,
           orderBy: item.orderBy,
@@ -394,8 +439,15 @@ Deno.serve(async (req) => {
 
     sourceTasks.push(async () => ({
       source: 'catalog_corrections',
-      result: await exportCatalogCorrections(supabase, userId),
+      result: await exportCatalogCorrections(healthSupabase, userId),
     }));
+
+    for (const source of Object.keys(HEALTH_SYNC_EXPORT_SOURCES) as HealthSyncExportSource[]) {
+      sourceTasks.push(async () => ({
+        source,
+        result: await exportHealthSyncRecords(healthSupabase, userId, source),
+      }));
+    }
 
     sourceTasks.push(async () => ({
       source: 'subscriptions_events',
@@ -601,7 +653,7 @@ Deno.serve(async (req) => {
 
     const exportedAt = new Date().toISOString();
     const bundle: Record<string, unknown> = {
-      export_schema_version: 3,
+      export_schema_version: 4,
       exported_at: exportedAt,
       user_id: userId,
       manifest: {
@@ -643,6 +695,11 @@ Deno.serve(async (req) => {
           data_class: 'internal_commission_calculation',
           reason:
             'order_attributions rows linked by an exported user click token omit commission_cents as internal business accounting.',
+        },
+        {
+          data_class: 'health_sync_request_fingerprints',
+          reason:
+            'Shelf and routine-completion sync receipts include subject-facing identifiers, state, result, and timestamps. Domain-separated request_sha256 fingerprints remain excluded internal replay-integrity metadata because they can be tested against guessed deleted payloads and are not needed to interpret or port the receipt.',
         },
       ],
       ...sourcePayloads,

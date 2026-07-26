@@ -9,6 +9,7 @@ import {
   activeHealthProcessingLeaseSnapshot,
   clearActiveHealthProcessingEpoch,
   createHealthEpochFetch,
+  HEALTH_PROCESSING_POSTGREST_RPC_NAMES,
   HEALTH_PROCESSING_RESULT_STALE,
   HEALTH_PROCESSING_STATUS_LEASE_MS,
   isHealthProcessingStatusLeaseCurrent,
@@ -114,6 +115,62 @@ describe('health processing epoch transport', () => {
     expect(headers.get('Prefer')).toBe('handling=strict, return=representation');
   });
 
+  it('marks only the exact POST adherence RPC allowlist', async () => {
+    const { calls, transport } = recordingTransport();
+    const wrapped = createHealthEpochFetch(transport, SUPABASE_URL, activeRemoteAuthority);
+    activate(8);
+
+    for (const functionName of HEALTH_PROCESSING_POSTGREST_RPC_NAMES) {
+      await wrapped(`${SUPABASE_URL}/rest/v1/rpc/${functionName}`, {
+        method: 'POST',
+        headers: { 'x-client-info': 'sdk' },
+      });
+    }
+    for (const [url, method] of [
+      [`${SUPABASE_URL}/rest/v1/rpc/record_routine_completion`, 'GET'],
+      [`${SUPABASE_URL}/rest/v1/rpc/record_routine_completion?select=*`, 'POST'],
+      [`${SUPABASE_URL}/rest/v1/rpc/record_routine_completion/extra`, 'POST'],
+      [`${SUPABASE_URL}/rest/v1/rpc/record_routine_completion_evil`, 'POST'],
+      [`${SUPABASE_URL}/rest/v1/rpc/unknown`, 'POST'],
+    ] as const) {
+      await wrapped(url, { method, headers: { 'x-client-info': 'sdk' } });
+    }
+
+    expect(calls).toHaveLength(HEALTH_PROCESSING_POSTGREST_RPC_NAMES.length + 5);
+    for (const call of calls.slice(0, HEALTH_PROCESSING_POSTGREST_RPC_NAMES.length)) {
+      expect(new Headers(call.init?.headers).get('x-client-info')).toBe(
+        'sdk; health-processing-epoch=8',
+      );
+    }
+    for (const call of calls.slice(HEALTH_PROCESSING_POSTGREST_RPC_NAMES.length)) {
+      expect(new Headers(call.init?.headers).get('x-client-info')).toBe('sdk');
+    }
+  });
+
+  it('strips caller markers from an allowlisted RPC while closed or owner-mismatched', async () => {
+    const { calls, transport } = recordingTransport();
+    const wrapped = createHealthEpochFetch(transport, SUPABASE_URL, activeRemoteAuthority);
+    const url = `${SUPABASE_URL}/rest/v1/rpc/record_routine_completion`;
+
+    await wrapped(url, {
+      method: 'POST',
+      headers: {
+        'x-health-processing-epoch': '999',
+        'x-client-info': 'sdk; health-processing-epoch=999',
+      },
+    });
+    activate(8, 'owner-b', 2);
+    await wrapped(url, {
+      method: 'POST',
+      headers: { 'x-client-info': 'sdk' },
+    });
+
+    expect(new Headers(calls[0]?.init?.headers).get('x-health-processing-epoch')).toBeNull();
+    expect(new Headers(calls[0]?.init?.headers).get('x-client-info')).toBeNull();
+    expect(new Headers(calls[1]?.init?.headers).get('x-health-processing-epoch')).toBeNull();
+    expect(new Headers(calls[1]?.init?.headers).get('x-client-info')).toBe('sdk');
+  });
+
   it('uses the dedicated header only for the three catalog Edge functions', async () => {
     const { calls, transport } = recordingTransport();
     const wrapped = createHealthEpochFetch(transport, SUPABASE_URL, activeRemoteAuthority);
@@ -192,6 +249,7 @@ describe('health processing epoch transport', () => {
       'https://project.supabase.co:444/rest/v1/photos',
       `${SUPABASE_URL}/prefix/rest/v1/photos`,
       `${SUPABASE_URL}/rest/v10/photos`,
+      `${SUPABASE_URL}/rest/v1/rpc/record_routine_completion/extra`,
       `${SUPABASE_URL}/functions/v1/catalog-lookup/extra`,
       `${SUPABASE_URL}/functions/v1/catalog-lookup-evil`,
     ]) {
@@ -312,6 +370,36 @@ describe('health processing epoch transport', () => {
     expect(settled).toBe(false);
 
     deferred.finish('{"epoch":1}');
+    await expect(pending).rejects.toThrow(HEALTH_PROCESSING_RESULT_STALE);
+    expect(deferred.response.bodyUsed).toBe(true);
+  });
+
+  it('rejects an allowlisted RPC response after close and same-epoch session rotation', async () => {
+    let remote: TestRemoteAuthority = {
+      state: 'active',
+      generation: 1,
+      subject: 'owner-a',
+      sessionId: 'session-a',
+    };
+    const deferred = deferredBodyResponse();
+    const transport = vi.fn(async () => deferred.response) as unknown as typeof fetch;
+    const wrapped = createHealthEpochFetch(transport, SUPABASE_URL, () => remote);
+    activate(7, 'owner-a', 4);
+
+    const pending = wrapped(`${SUPABASE_URL}/rest/v1/rpc/record_routine_completion`, {
+      method: 'POST',
+    });
+    clearActiveHealthProcessingEpoch();
+    remote = { state: 'closed', generation: 2, subject: null, sessionId: null };
+    activate(7, 'owner-a', 4);
+    remote = {
+      state: 'active',
+      generation: 3,
+      subject: 'owner-a',
+      sessionId: 'session-a-next',
+    };
+
+    deferred.finish('{"version":1}');
     await expect(pending).rejects.toThrow(HEALTH_PROCESSING_RESULT_STALE);
     expect(deferred.response.bodyUsed).toBe(true);
   });

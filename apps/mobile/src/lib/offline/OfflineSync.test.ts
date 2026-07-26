@@ -14,6 +14,8 @@ const h = vi.hoisted(() => ({
   online: true,
   onlineListener: null as ((online: boolean) => void) | null,
   queueListener: null as (() => void) | null,
+  shelfListener: null as (() => void) | null,
+  completionListener: null as (() => void) | null,
   leaseListener: null as ((lease: unknown) => void) | null,
   lease: null as Readonly<{
     generation: number;
@@ -23,6 +25,7 @@ const h = vi.hoisted(() => ({
     expiresAt: null;
   }> | null,
   flushCompletions: vi.fn(),
+  flushShelfMirrorQueue: vi.fn(),
   drainCatalogLookupQueue: vi.fn(),
   maintainCatalogLookupQueue: vi.fn(),
   invalidateQueries: vi.fn(),
@@ -61,6 +64,25 @@ vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
 vi.mock('./completionQueue', () => ({
   flushCompletions: h.flushCompletions,
 }));
+vi.mock('./shelfMirrorQueue', () => ({
+  flushShelfMirrorQueue: h.flushShelfMirrorQueue,
+}));
+vi.mock('@/features/shelf/store', () => ({
+  subscribeShelfMirrorOutboxChanges: (listener: () => void) => {
+    h.shelfListener = listener;
+    return () => {
+      if (h.shelfListener === listener) h.shelfListener = null;
+    };
+  },
+}));
+vi.mock('@/features/today/completionsStore', () => ({
+  subscribeCompletionSyncOutboxChanges: (listener: () => void) => {
+    h.completionListener = listener;
+    return () => {
+      if (h.completionListener === listener) h.completionListener = null;
+    };
+  },
+}));
 vi.mock('./catalogLookupQueue', () => ({
   drainCatalogLookupQueue: h.drainCatalogLookupQueue,
   maintainCatalogLookupQueue: h.maintainCatalogLookupQueue,
@@ -87,9 +109,17 @@ beforeEach(() => {
   h.online = true;
   h.onlineListener = null;
   h.queueListener = null;
+  h.shelfListener = null;
+  h.completionListener = null;
   h.leaseListener = null;
   h.lease = null;
-  h.flushCompletions.mockReset().mockResolvedValue({ flushed: 1, remaining: 0 });
+  h.flushCompletions.mockReset().mockResolvedValue({ flushed: 1, terminal: 0, remaining: 0 });
+  h.flushShelfMirrorQueue.mockReset().mockResolvedValue({
+    flushed: 0,
+    terminal: 0,
+    remaining: 0,
+    retryable: false,
+  });
   h.drainCatalogLookupQueue.mockReset().mockResolvedValue({
     attempted: 0,
     ready: 0,
@@ -121,11 +151,13 @@ describe('OfflineSync health-processing admission', () => {
       renderer = create(createElement(OfflineSync));
     });
     await flushEffects();
+    expect(h.flushShelfMirrorQueue).not.toHaveBeenCalled();
     expect(h.flushCompletions).not.toHaveBeenCalled();
     expect(h.drainCatalogLookupQueue).not.toHaveBeenCalled();
 
     await act(async () => h.appStateListener?.('active'));
     await flushEffects();
+    expect(h.flushShelfMirrorQueue).not.toHaveBeenCalled();
     expect(h.flushCompletions).not.toHaveBeenCalled();
     expect(h.drainCatalogLookupQueue).not.toHaveBeenCalled();
     expect(h.invalidateQueries).not.toHaveBeenCalled();
@@ -143,16 +175,22 @@ describe('OfflineSync health-processing admission', () => {
       renderer = create(createElement(OfflineSync));
     });
     await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
     expect(h.flushCompletions).toHaveBeenCalledOnce();
     expect(h.drainCatalogLookupQueue).toHaveBeenCalledOnce();
     expect(h.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['completions'] });
     expect(h.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['progress'] });
+    expect(h.flushShelfMirrorQueue.mock.invocationCallOrder[0]).toBeLessThan(
+      h.flushCompletions.mock.invocationCallOrder[0]!,
+    );
 
     await act(async () => h.appStateListener?.('background'));
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
     expect(h.flushCompletions).toHaveBeenCalledOnce();
     expect(h.drainCatalogLookupQueue).toHaveBeenCalledOnce();
     await act(async () => h.appStateListener?.('active'));
     await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledTimes(2);
     expect(h.flushCompletions).toHaveBeenCalledTimes(2);
     expect(h.drainCatalogLookupQueue).toHaveBeenCalledTimes(2);
   });
@@ -162,6 +200,7 @@ describe('OfflineSync health-processing admission', () => {
       renderer = create(createElement(OfflineSync));
     });
     await flushEffects();
+    expect(h.flushShelfMirrorQueue).not.toHaveBeenCalled();
     expect(h.flushCompletions).not.toHaveBeenCalled();
     expect(h.drainCatalogLookupQueue).not.toHaveBeenCalled();
 
@@ -175,6 +214,7 @@ describe('OfflineSync health-processing admission', () => {
     await act(async () => h.leaseListener?.(h.lease));
     await flushEffects();
 
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
     expect(h.flushCompletions).toHaveBeenCalledOnce();
     expect(h.drainCatalogLookupQueue).toHaveBeenCalledOnce();
   });
@@ -319,12 +359,14 @@ describe('OfflineSync health-processing admission', () => {
     await act(async () => h.onlineListener?.(false));
     await flushEffects();
     expect(h.maintainCatalogLookupQueue).toHaveBeenCalledOnce();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
     expect(h.flushCompletions).toHaveBeenCalledOnce();
 
     h.online = true;
     await act(async () => h.onlineListener?.(true));
     await flushEffects();
     expect(h.drainCatalogLookupQueue).toHaveBeenCalledTimes(2);
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledTimes(2);
     expect(h.flushCompletions).toHaveBeenCalledTimes(2);
 
     h.appState = 'background';
@@ -353,6 +395,189 @@ describe('OfflineSync health-processing admission', () => {
     await act(async () => h.queueListener?.());
     await flushEffects();
     expect(h.drainCatalogLookupQueue).toHaveBeenCalledTimes(2);
+  });
+
+  it('drains a newly journaled completion while online and foregrounded', async () => {
+    h.lease = {
+      generation: 1,
+      epoch: 4,
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      expiresAt: null,
+    };
+    await act(async () => {
+      renderer = create(createElement(OfflineSync));
+    });
+    await flushEffects();
+    expect(h.flushCompletions).toHaveBeenCalledOnce();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
+
+    await act(async () => h.completionListener?.());
+    await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledTimes(2);
+    expect(h.flushCompletions).toHaveBeenCalledTimes(2);
+
+    h.online = false;
+    await act(async () => h.onlineListener?.(false));
+    await act(async () => h.completionListener?.());
+    await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledTimes(2);
+    expect(h.flushCompletions).toHaveBeenCalledTimes(2);
+  });
+
+  it('starts completions after a terminal Shelf head is quarantined and the queue drains', async () => {
+    h.lease = {
+      generation: 1,
+      epoch: 4,
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      expiresAt: null,
+    };
+    h.flushShelfMirrorQueue.mockResolvedValueOnce({
+      flushed: 0,
+      terminal: 1,
+      remaining: 0,
+      retryable: false,
+    });
+    await act(async () => {
+      renderer = create(createElement(OfflineSync));
+    });
+    await flushEffects();
+
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
+    expect(h.flushCompletions).toHaveBeenCalledOnce();
+    expect(h.flushShelfMirrorQueue.mock.invocationCallOrder[0]).toBeLessThan(
+      h.flushCompletions.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('backs off a thrown Shelf flush without starting completions', async () => {
+    vi.useFakeTimers();
+    h.lease = {
+      generation: 1,
+      epoch: 4,
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      expiresAt: null,
+    };
+    h.flushShelfMirrorQueue
+      .mockRejectedValueOnce(new Error('SHELF_MIRROR_RESPONSE_INVALID'))
+      .mockResolvedValueOnce({
+        flushed: 0,
+        terminal: 0,
+        remaining: 0,
+        retryable: false,
+      });
+    await act(async () => {
+      renderer = create(createElement(OfflineSync));
+    });
+    await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
+    expect(h.flushCompletions).not.toHaveBeenCalled();
+
+    await act(async () => {
+      vi.advanceTimersByTime(1_000);
+    });
+    await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledTimes(2);
+    expect(h.flushCompletions).toHaveBeenCalledOnce();
+  });
+
+  it('drains a newly journaled Shelf operation before completions', async () => {
+    h.lease = {
+      generation: 1,
+      epoch: 4,
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      expiresAt: null,
+    };
+    await act(async () => {
+      renderer = create(createElement(OfflineSync));
+    });
+    await flushEffects();
+    h.flushShelfMirrorQueue.mockClear();
+    h.flushCompletions.mockClear();
+
+    await act(async () => h.shelfListener?.());
+    await flushEffects();
+
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
+    expect(h.flushCompletions).toHaveBeenCalledOnce();
+    expect(h.flushShelfMirrorQueue.mock.invocationCallOrder[0]).toBeLessThan(
+      h.flushCompletions.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('retries remaining Shelf work with bounded online backoff before completions', async () => {
+    vi.useFakeTimers();
+    h.lease = {
+      generation: 1,
+      epoch: 4,
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      expiresAt: null,
+    };
+    h.flushShelfMirrorQueue
+      .mockResolvedValueOnce({
+        flushed: 0,
+        terminal: 0,
+        remaining: 1,
+        retryable: true,
+      })
+      .mockResolvedValueOnce({
+        flushed: 1,
+        terminal: 0,
+        remaining: 0,
+        retryable: false,
+      });
+    await act(async () => {
+      renderer = create(createElement(OfflineSync));
+    });
+    await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
+    expect(h.flushCompletions).not.toHaveBeenCalled();
+
+    await act(async () => {
+      vi.advanceTimersByTime(999);
+    });
+    await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
+    await act(async () => {
+      vi.advanceTimersByTime(1);
+    });
+    await flushEffects();
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledTimes(2);
+    expect(h.flushCompletions).toHaveBeenCalledOnce();
+  });
+
+  it('retries remaining completion work with bounded online backoff', async () => {
+    vi.useFakeTimers();
+    h.lease = {
+      generation: 1,
+      epoch: 4,
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      expiresAt: null,
+    };
+    h.flushCompletions
+      .mockResolvedValueOnce({ flushed: 0, terminal: 0, remaining: 1 })
+      .mockResolvedValueOnce({ flushed: 1, terminal: 0, remaining: 0 });
+    await act(async () => {
+      renderer = create(createElement(OfflineSync));
+    });
+    await flushEffects();
+    expect(h.flushCompletions).toHaveBeenCalledOnce();
+
+    await act(async () => {
+      vi.advanceTimersByTime(999);
+    });
+    await flushEffects();
+    expect(h.flushCompletions).toHaveBeenCalledOnce();
+    await act(async () => {
+      vi.advanceTimersByTime(1);
+    });
+    await flushEffects();
+    expect(h.flushCompletions).toHaveBeenCalledTimes(2);
   });
 
   it('wakes at the exact next online retry time', async () => {
@@ -425,6 +650,38 @@ describe('OfflineSync health-processing admission', () => {
     await flushEffects();
     expect(h.maintainCatalogLookupQueue).toHaveBeenCalledTimes(2);
     expect(h.drainCatalogLookupQueue).not.toHaveBeenCalled();
+  });
+
+  it('does not start completion replay when the Shelf barrier settles after lease closure', async () => {
+    let resolveShelf!: (result: {
+      flushed: number;
+      terminal: number;
+      remaining: number;
+      retryable: boolean;
+    }) => void;
+    h.lease = {
+      generation: 1,
+      epoch: 4,
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      expiresAt: null,
+    };
+    h.flushShelfMirrorQueue.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveShelf = resolve;
+      }),
+    );
+    await act(async () => {
+      renderer = create(createElement(OfflineSync));
+    });
+    expect(h.flushShelfMirrorQueue).toHaveBeenCalledOnce();
+    expect(h.flushCompletions).not.toHaveBeenCalled();
+
+    h.lease = null;
+    resolveShelf({ flushed: 1, terminal: 0, remaining: 0, retryable: false });
+    await flushEffects();
+
+    expect(h.flushCompletions).not.toHaveBeenCalled();
   });
 
   it('does not publish a flush that settles after processing closes', async () => {

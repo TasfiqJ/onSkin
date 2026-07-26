@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(50);
+select plan(52);
 
 select has_extension('citext', 'the case-insensitive email type dependency is installed');
 
@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  67::bigint,
-  'all 67 repository migrations are recorded'
+  69::bigint,
+  'all 69 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000068'::text,
-  'migration history reaches the authoritative routine-adherence contract'
+  '20260726000070'::text,
+  'migration history reaches migration-owned consent draft staging'
 );
 
 select is(
@@ -49,8 +49,8 @@ select is(
     where namespace.nspname = 'public'
       and relation.relkind in ('r', 'p')
   ),
-  80::bigint,
-  'the migrated public schema has exactly 80 tables'
+  82::bigint,
+  'the migrated public schema has exactly 82 tables'
 );
 
 select is(
@@ -62,7 +62,7 @@ select is(
       and relation.relkind in ('r', 'p')
       and relation.relrowsecurity
   ),
-  80::bigint,
+  82::bigint,
   'row level security is enabled on every public table'
 );
 
@@ -100,6 +100,11 @@ select has_table(
 );
 select has_table(
   'public',
+  'health_consent_copy_staging_events',
+  'immutable non-review disclosure draft-staging evidence is present'
+);
+select has_table(
+  'public',
   'health_dependent_consent_operations',
   'durable dependent consent idempotency and worker operations are present'
 );
@@ -107,6 +112,11 @@ select has_table(
   'public',
   'health_dependent_consent_states',
   'the per-purpose generation and withdrawal barrier projection is present'
+);
+select has_table(
+  'public',
+  'shelf_product_identities',
+  'the minimal stable Shelf identity and tombstone relation is present'
 );
 
 select is(
@@ -128,11 +138,12 @@ select ok(
     where relations.oid = any(array[
       'public.health_consent_copy_registry'::regclass,
       'public.health_consent_copy_review_events'::regclass,
+      'public.health_consent_copy_staging_events'::regclass,
       'public.health_dependent_consent_operations'::regclass,
       'public.health_dependent_consent_states'::regclass
     ])
       and relations.relrowsecurity
-      and relations.relforcerowsecurity) = 4,
+      and relations.relforcerowsecurity) = 5,
   'every dependent lifecycle table has enabled and forced row-level security'
 );
 
@@ -143,6 +154,7 @@ select ok(
       cross join unnest(array[
         'public.health_consent_copy_registry',
         'public.health_consent_copy_review_events',
+        'public.health_consent_copy_staging_events',
         'public.health_dependent_consent_operations',
         'public.health_dependent_consent_states'
       ]) as sealed_tables(table_name)
@@ -207,8 +219,38 @@ select ok(
       'service_role',
       'public.close_health_consent_copy_for_emergency(text,text,text,text,text,text,text)',
       'execute'
+    )
+    and not has_function_privilege(
+      'anon',
+      'public.stage_health_consent_copy_draft_successor(text,text,text,text,text,text,text,text,text)',
+      'execute'
+    )
+    and not has_function_privilege(
+      'authenticated',
+      'public.stage_health_consent_copy_draft_successor(text,text,text,text,text,text,text,text,text)',
+      'execute'
+    )
+    and not has_function_privilege(
+      'service_role',
+      'public.stage_health_consent_copy_draft_successor(text,text,text,text,text,text,text,text,text)',
+      'execute'
+    )
+    and not has_function_privilege(
+      'anon',
+      'public._health_consent_copy_staging_evidence_hash(text,text,text,text,text,text,text,text)',
+      'execute'
+    )
+    and not has_function_privilege(
+      'authenticated',
+      'public._health_consent_copy_staging_evidence_hash(text,text,text,text,text,text,text,text)',
+      'execute'
+    )
+    and not has_function_privilege(
+      'service_role',
+      'public._health_consent_copy_staging_evidence_hash(text,text,text,text,text,text,text,text)',
+      'execute'
     ),
-  'no runtime API role can promote, supersede, or emergency-close disclosure copy'
+  'no runtime API role can stage, promote, supersede, or emergency-close disclosure copy'
 );
 
 select ok(
@@ -227,6 +269,11 @@ select ok(
            from pg_catalog.pg_proc as functions
           where functions.oid =
             'public.close_health_consent_copy_for_emergency(text,text,text,text,text,text,text)'::regprocedure)
+    and (select functions.prosecdef
+                 and functions.proconfig @> array['search_path=""']::text[]
+           from pg_catalog.pg_proc as functions
+          where functions.oid =
+            'public.stage_health_consent_copy_draft_successor(text,text,text,text,text,text,text,text,text)'::regprocedure)
     and exists (
       select 1 from pg_catalog.pg_trigger
        where tgname = 'trg_health_consent_copy_registry_lifecycle'
@@ -236,8 +283,13 @@ select ok(
       select 1 from pg_catalog.pg_trigger
        where tgname = 'trg_health_consent_copy_review_event_immutable'
          and not tgisinternal
+    )
+    and exists (
+      select 1 from pg_catalog.pg_trigger
+       where tgname = 'trg_health_consent_copy_staging_event_immutable'
+         and not tgisinternal
     ),
-  'migration-owner copy lifecycle is exact, evidence-gated, immutable, and search-path sealed'
+  'migration-owner review and draft-staging lifecycles are exact, evidence-gated, immutable, and search-path sealed'
 );
 
 select ok(
@@ -263,8 +315,15 @@ select ok(
        where columns.table_schema = 'public'
          and columns.table_name = 'health_consent_copy_review_events'
          and columns.column_name = 'successor_consent_text_hash'
+    )
+    and exists (
+      select 1
+        from information_schema.columns as columns
+       where columns.table_schema = 'public'
+         and columns.table_name = 'health_consent_copy_staging_events'
+         and columns.column_name = 'staging_evidence_hash'
     ),
-  'versioned copy history has one partial-unique current tuple and explicit lifecycle audit fields'
+  'versioned copy history has one partial-unique current tuple and explicit review/staging evidence fields'
 );
 
 select ok(

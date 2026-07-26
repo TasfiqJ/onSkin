@@ -199,10 +199,25 @@ The **primary** progress framing is **weekly adherence** ("5 of 7 nights this we
 
 #### 4.4 Computation (authoritative, cached, correct)
 
-- Streaks are **computed server-side / in a security-definer function** from the append-only `routine_completions` log, with `current_streak`/`longest_streak` **cached on `profiles`** via trigger (docs/01 §3, the hybrid recommendation).
+- Migration `0068` computes streaks server-side through owner-scoped
+  security-definer projections from explicit routine-level
+  `routine_completions` attestations. `profiles.current_streak` and
+  `profiles.longest_streak` are server-owned caches; direct client mutation is
+  denied.
 - **`longest_streak` is a non-decreasing personal best** — `recompute_streak` uses `greatest(longest_streak, computed)` so a deleted completion never shrinks the all-time best (**D-011**); `current_streak` is recomputed on both INSERT and DELETE.
-- The **completion validation window is timezone-tolerant** (**D-012**); authoritative adherence timezone cannot depend on the dormant notification mirror. Offline backfill is **capped at 48h** and flagged `source='backfilled'` to prevent backdating abuse (docs/01 §3).
-- The freeze/grace state is computed from the same log plus a small freeze ledger (§7), so it survives offline and recomputes deterministically.
+- The **completion validation window is timezone-tolerant** (**D-012**);
+  authoritative adherence timezone is an independently validated IANA value and
+  never comes from the dormant notification mirror. The current server intake
+  admits only the bounded local replay window and rejects dates outside it.
+- The freeze/grace state is projected from the same log plus the server-owned
+  freeze ledger (§7), so it survives offline and recomputes deterministically.
+- Migration `0069` is the only current mobile-to-server Shelf/completion
+  mutation bridge. It derives the owner from the authenticated session, fences
+  every write to the current approved health-processing epoch, drains Shelf
+  identity before completion replay, records minimized idempotency receipts,
+  and denies direct client DML. This is a source boundary; hosted convergence,
+  two-device races, native process-death, withdrawal, and signed-build evidence
+  remain launch gates.
 
 #### 4.5 The streak surfaces (look & feel)
 
@@ -339,8 +354,12 @@ tokens are not owner-bound or revocable; per-activity push remains signed
 current mobile collection or delivery authority. The encrypted device preference
 record and encrypted scheduling-attempt ledger are authoritative. Every purpose
 defaults off, and the current client sends neither preference values nor attempt
-metadata off device. `profiles.current_streak` / `longest_streak` also remain
-untrusted until the forgiving server parity migration lands.
+metadata off device. Migration `0068` has landed the forgiving server-parity
+projection, so `profiles.current_streak` / `longest_streak` are now trusted only
+as server-owned derived caches under the current health-processing authority.
+Migration `0069` adds the owner-derived Shelf/completion replay bridge and
+minimized receipt/identity export projections; it does not make dormant
+notification tables mobile authority.
 
 **Extensions this layer needs:**
 
@@ -379,7 +398,13 @@ create index on public.notification_log (user_id, tier, sent_at);
 -- All three: owner-only RLS per docs/01 §3 (subselect auth.uid(), TO authenticated, WITH CHECK).
 ```
 
-The **streak computation** (`recompute_streak`, security-definer, D-011/D-012; docs/01 §3) consumes `routine_completions` + `streak_freezes` to produce `current_streak`/`longest_streak`; the freeze logic is deterministic and offline-safe.
+The **streak computation** (`project_routine_adherence` and its owner-facing
+security-definer projections, D-011/D-012; docs/01 §3) consumes explicit
+routine-level `routine_completions` plus `streak_freezes` to produce
+`current_streak` / `longest_streak`; the freeze logic is deterministic and the
+local/server parity corpus is versioned. Migration `0069` reconciles the
+encrypted offline completion journal through `record_routine_completion`; it
+does not infer adherence from partial step rows.
 
 > **Decision-log notes (DECISIONS.md):** **D-031** — notifications are **tiered (utility / behavioural / promotional)**, each independently toggleable and **frequency-capped**, with utility reminders fired at **user-set local times**; **D-032** — the streak is **forgiving (auto-applied freezes, never purchased; recovery nights count) and framed as weekly adherence + a heat-map**, implementing the calm-streak philosophy (D-021) — no guilt copy, no default leaderboards, no loss-aversion maximisation; **D-033** — the **Today widget supports interactive check-off** (iOS 17 / Android `RemoteViews`) through the idempotent completion path, and **all health-adjacent notification content stays in local notifications** (no health content in third-party push payloads). Lock-screen/health-content discretion and the win-back cadence belong in **BLOCKERS.md** under **B-PRIVACY** where they touch sensitive content.
 

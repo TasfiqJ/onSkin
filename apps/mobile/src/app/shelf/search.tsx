@@ -38,6 +38,7 @@ import {
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
 import { isCurrentIntakeSession, useIntake } from '@/features/shelf/IntakeContext';
+import { SHELF_PRODUCT_NAME_MAX_LENGTH } from '@/features/shelf/limits';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
 import { cn } from '@/lib/cn';
@@ -484,7 +485,7 @@ export default function CatalogSearchScreen() {
                       );
                     }}
                     editable={!reportingMissingProduct}
-                    maxLength={120}
+                    maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}
                     autoCapitalize="words"
                     placeholder="Product name"
                     placeholderTextColor={colors.mutedLight}

@@ -39,6 +39,60 @@ Use this checklist before marking UI-facing work done.
 - [ ] Store evidence under `test-results/human-e2e/YYYY-MM-DD/` or a documented phase-specific evidence folder.
 - [ ] Record uncovered branches and the reason they were not covered.
 
+## CORE-05 Today/Shelf Replay Addendum
+
+Use these gates when the accepted revision touches Today completion, Shelf
+mutation, adherence/streak projection, offline replay, health-data export, or
+withdrawal:
+
+Current retained local evidence, 2026-07-26: headless-Chrome Expo web with a
+deterministic anonymous-owner fixture passes the complete onboarding,
+three-product Shelf intake, truthful pending-review reveal/plan, `Start today`, AM and PM
+1-of-1 check-off, age re-verification, direct-Today denial, and reload-denial
+path at 375 x 667, 390 x 844, and 430 x 932. The harness requires exactly one
+reviewed insight or truthful pending-review state. A 375 x 667 fixed-footer
+overlap was fixed with post-add non-animated scrolling; its focused route
+regression passed 20 of 20, mobile typecheck passed, and the rerun plus the
+390 x 844 compact-category-sheet and 430 x 932 inline-category paths report
+zero visible-control issues. This is local web/fixture evidence only, not
+native, hosted, real-account, two-device, or signed-archive evidence; the
+unchecked matrix below remains authoritative.
+
+- [ ] Capture the exact local Shelf and completion schema versions before the
+      run; do not migrate/seed historical replay work that the source does not
+      create.
+- [ ] Prove the visible Today check-off persists before success publication and
+      survives navigation/relaunch.
+- [ ] Prove partial AM/PM work creates no routine day; the exact final projected
+      PM/recovery step creates one marker and no duplicate.
+- [ ] Drive network loss, thrown RPC, malformed response, response loss, exact
+      accepted/idempotent, retryable, and every bounded terminal result.
+- [ ] Retain an ordered trace proving Shelf drains before completion.
+- [ ] Exercise terminal Shelf plus missing completion identity, verify
+      reversible same-routine/date tail deferral through the marker, drain
+      unrelated work, then repair Shelf and replay the exact original event.
+- [ ] Exercise a remote-terminal scheduled step both before and after its
+      marker exists; verify the marker receives a dependency-terminal receipt
+      and is never dispatched.
+- [ ] On hosted non-production fixtures, prove deletion-wins for a missing
+      upsert, response-loss retry, no resurrection, pre/post-cutoff completion,
+      cross-owner UUID denial, and direct-DML denial.
+- [ ] Exercise legacy/incompatible UUID, missing/invalid/recovered timezone,
+      offline relaunch, account switch, health-epoch change, withdrawal, and
+      account deletion without inventing replay evidence.
+- [ ] Verify server schema-v4 export includes the three exact stable-identity/
+      receipt sources, excludes raw payloads and `request_sha256`, binds every
+      health-fenced read to the initial lifecycle-derived epoch, and aborts on
+      lifecycle change.
+- [ ] Verify the requesting-device export labels pending/terminal local v3 state
+      as `shelf_and_sync_state` and `completion_and_sync_state`.
+- [ ] Capture exact pre/post local, Postgres, and Storage zero counts for
+      withdrawal/account erasure while preserving the account/billing state
+      appropriate to health withdrawal.
+- [ ] Record separately what Expo web, local Postgres, hosted staging, iOS
+      Simulator, physical iPhone, two-device, signed archive, and professional
+      review each did and did not prove.
+
 ## Bugs And Fixes
 
 - [ ] Record each bug with `docs/E2E_BUG_REPORT_TEMPLATE.md`.

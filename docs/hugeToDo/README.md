@@ -90,6 +90,13 @@ Start here:
 - [CORE-04 Persistence Source Contract](../../scripts/core04/persistence-source-contract.test.mjs)
 - [CORE-05 Today Adherence and Notification Source Checkpoint](./CORE-05-ADHERENCE-SOURCE-CHECKPOINT-2026-07-26.md)
 - [CORE-05 Adherence and Notification Source Contract](../../scripts/core05/adherence-source-contract.test.mjs)
+- [CORE-05 Routine Adherence Authority Migration](../../supabase/migrations/20260726000068_routine_adherence_authority.sql)
+- [CORE-05 Shelf and Completion Sync Bridge Migration](../../supabase/migrations/20260726000069_routine_completion_sync_bridge.sql)
+- [CORE-05 Sync Bridge Database Contract](../../supabase/tests/database/routine_completion_sync_bridge.test.sql)
+- [CORE-05 0069 Forward-Upgrade Contract](../../supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql)
+- [CORE-05 Ask Draft-Successor Staging Migration](../../supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql)
+- [CORE-05 Draft-Successor Database Contract](../../supabase/tests/database/health_consent_draft_successor_staging.test.sql)
+- [CORE-05 0070 Forward-Upgrade Contract](../../supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -547,8 +554,48 @@ routine day only after the exact projected PM or recovery routine is complete;
 legacy and partial rows cannot invent adherence. Unreadable state fails closed,
 future rows cannot inflate current or best streaks, long-lived screens refresh
 at phase/day boundaries, and milestone copy describes only verified check-offs.
-The client currently trusts only explicit routine-level completion rows and
-does not trust the older strict server streak cache.
+Migration `0068` makes explicit routine-level completion rows the server
+adherence input, derives the reference day from a validated IANA timezone,
+projects the same two-total-missed-day forgiving algorithm, materializes
+absorbed dates deterministically, preserves the historical best, makes the
+derived profile cache server-owned, and clears it when health withdrawal begins.
+
+Migration `0069` adds owner-derived, active-health/account-fenced Shelf and
+completion replay RPCs. The encrypted local Shelf and completion records are
+strict v3 structures with stable lowercase UUID v4 identities, append-only
+journals, FIFO outboxes, and governed terminal receipts; historical schemas do
+not invent replay work. The offline worker drains Shelf before completions.
+Missing product identity stays retryable. When the Shelf record proves an
+unresolved terminal fact and no corrective Shelf work, the exact pending step
+and its remaining same-routine/date group through the routine-day marker move
+to the outbox tail without losing or terminally quarantining the original
+events. An exact remote-terminal step instead cascades its same-day routine
+marker into a dependency-terminal receipt so the client cannot send an
+unsupported completed-day claim.
+
+Server product content is separated from the minimal stable identity needed by
+delayed completion replay. Delete wins even when the original upsert never
+arrived: it creates a same-owner tombstone, prevents resurrection, admits
+historical completion at or before the effective cutoff, and rejects later
+completion. The private replay ledgers retain a domain-separated request digest
+and bounded disposition, never raw product/completion payloads. Because the
+protocol has no safe replay expiry yet, those minimized rows and tombstones are
+kept only while the account and health-data purpose remain active and are
+erased on health withdrawal or account/Auth deletion.
+
+The server data export is source schema v4. Three sealed-table projection RPCs
+export the subject-facing stable identity and Shelf/completion receipt fields
+through an authenticated nonanonymous `auth.uid()`-derived path; direct table
+grants remain revoked. Each source uses two count/checksum/owner/column-guarded
+keyset passes under the initial health-processing epoch and a final lifecycle
+recheck. Stable withdrawn/never-active states receive deny-by-policy reads and
+must produce exact empty health sources, while any nonactive residue fails
+closed; a withdrawing or changing lifecycle aborts. Internal `request_sha256`
+fingerprints are excluded because they can be
+tested against guessed deleted payloads, but counsel must approve that
+exclusion and the final access/retention disclosure. The current-device export
+separately labels local `completion_and_sync_state` and
+`shelf_and_sync_state`, including pending and terminal records.
 
 All notification purposes now default off. The soft ask names the proposed
 7:30 AM and 9:30 PM times before any OS request and enables only those two
@@ -562,13 +609,27 @@ client does not use
 `notification_preferences`, `notification_log`, or prompt-result analytics.
 The mandatory CORE-05 contract is wired into Phase 3 and launch verification.
 A 1279 x 720 development Expo-web observation found and fixed one native
-Settings handoff crash and verifies only the bounded web UI states. Server
-routine identity/outbox replay, authoritative forgiving streak parity,
-neutral pre-activation weeks, native encrypted/process-death behavior,
-supported-iPhone permission/scheduling/DST/accessibility/network evidence,
-CAT-09 privacy/analytics approval, signed-archive identity, legal review, and
-App Store acceptance remain open. This checkpoint is not launch, legal,
-Apple, product-market, or revenue approval.
+Settings handoff crash and verifies only the bounded web notification states.
+Current-source local headless-Chrome Expo-web packets also pass the full
+onboarding, three-product Shelf intake, truthful pending-review reveal/plan,
+`Start today`, AM and PM 1-of-1 check-off, under-threshold age
+re-verification, direct-Today denial, and reload-denial path at 375 x 667,
+390 x 844, and 430 x 932. The harness accepts exactly one reviewed insight or
+the truthful pending-review state and observed the pending-review state in all
+three runs. The 375 x 667 run found a fixed-footer overlap; a post-add,
+non-animated `scrollToEnd` fix passed the 20-of-20 focused route regression,
+mobile typecheck, and a zero-visible-control-issue rerun. The 390 x 844 compact
+category-sheet and 430 x 932 inline-category responsive paths also passed with
+zero visible-control issues. These are deterministic local fixture observations,
+not native, hosted, real-account, two-device, or archive-identical evidence.
+Server source does not close hosted execution or convergence: clean hosted
+migration/RLS/export proof, real two-user/two-session delivery races, neutral
+pre-activation weeks, corrective replay, withdrawal/account erasure, native
+encrypted/process-death behavior, supported-iPhone permission/scheduling/DST/
+accessibility/network evidence, CAT-09 privacy/analytics approval,
+signed-archive identity, final policy/App Privacy answers, counsel/security
+review, and App Store acceptance remain open. This checkpoint is not launch,
+legal, Apple, product-market, or revenue approval.
 
 The `0065` CAT-08 transition/default-ACL repair remains intact. The additional
 `0066` migration revokes all residual table privileges from the explicitly

@@ -722,6 +722,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('Report missing product');
     expect(source).toContain('missing_product reported from catalog search');
     expect(source).toContain('accessibilityLabel="Product name for report"');
+    expect(source).toContain('SHELF_PRODUCT_NAME_MAX_LENGTH');
+    expect(source).toContain('maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}');
     expect(source).toContain('Confirm or edit the name printed on the product.');
     expect(source).toContain(
       'const missingReportDraft = (productName: string): CatalogReportInput => ({',
@@ -743,6 +745,10 @@ describe('Shelf route mobile contracts', () => {
   it('keeps Shelf manual add picker options clear of the fixed footer on short phones', () => {
     const source = readAppRoute('shelf/manual.tsx');
 
+    expect(source).toContain('SHELF_PRODUCT_NAME_MAX_LENGTH');
+    expect(source).toContain('SHELF_PRODUCT_BRAND_MAX_LENGTH');
+    expect(source).toContain('maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}');
+    expect(source).toContain('maxLength={SHELF_PRODUCT_BRAND_MAX_LENGTH}');
     expect(source).toContain('function CategoryPickerSheet');
     expect(source).toContain('if (!visible) return null;');
     expect(source).toContain('className="absolute inset-0 justify-end"');

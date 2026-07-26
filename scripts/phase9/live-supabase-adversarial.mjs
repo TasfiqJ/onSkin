@@ -2354,6 +2354,7 @@ async function main() {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
       registerSealedPrivateTableProbe('catalog_sources', 'id', absentUuid);
+      registerSealedPrivateTableProbe('shelf_product_identities', 'id', absentUuid);
       registerSealedPrivateTableProbe('obf_contribution_queue', 'id', absentUuid);
       registerSealedPrivateTableProbe('health_processing_states', 'user_id', absentUuid);
       registerSealedPrivateTableProbe('catalog_import_batches', 'id', absentUuid);
@@ -2370,6 +2371,11 @@ async function main() {
         absentDigest,
       );
       registerSealedPrivateTableProbe('health_consent_copy_review_events', 'id', absentUuid);
+      registerSealedPrivateTableProbe(
+        'health_consent_copy_staging_events',
+        'id',
+        absentUuid,
+      );
       registerSealedPrivateTableProbe('health_dependent_consent_operations', 'id', absentUuid);
       registerSealedPrivateTableProbe('health_dependent_consent_states', 'user_id', absentUuid);
       registerSealedPrivateTableProbe(
@@ -2456,7 +2462,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 66 private tables have access-control probes', async () => {
+    await runCheck('all 67 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(

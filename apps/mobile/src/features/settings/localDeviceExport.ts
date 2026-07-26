@@ -123,14 +123,18 @@ const LOCAL_EXPORT_SPECS = [
     field: 'first_completion_marker',
   },
   {
+    // Obsolete v1 transport bytes are deleted without being read by the live
+    // replay worker, but a purpose-limited export must still account for them
+    // if the user requests access before that cleanup runs. Recursive export
+    // sanitization strips the historical ownerUserId field.
     key: 'onskin.completions.pending',
     section: 'shelf_and_routine',
-    field: 'pending_completion_sync',
+    field: 'legacy_pending_completion_sync',
   },
   {
     key: 'onskin.completions.v1',
     section: 'shelf_and_routine',
-    field: 'completion_history',
+    field: 'completion_and_sync_state',
   },
   {
     key: 'onskin.conflict.overrides',
@@ -158,7 +162,11 @@ const LOCAL_EXPORT_SPECS = [
     field: 'routine_order_overrides',
   },
   { key: 'onskin.ramp.v1', section: 'shelf_and_routine', field: 'active_ramps' },
-  { key: 'onskin.shelf.v1', section: 'shelf_and_routine', field: 'shelf_products' },
+  {
+    key: 'onskin.shelf.v1',
+    section: 'shelf_and_routine',
+    field: 'shelf_and_sync_state',
+  },
   {
     key: 'onskin.ask.groundedTurns.v1',
     section: 'activity_and_app_state',
@@ -260,7 +268,7 @@ const SAFE_PHOTO_FIELDS = [
 type ExportSectionRecords = Record<LocalExportSection, Record<string, unknown>>;
 
 export type LocalDeviceExportData = {
-  schema_version: 1;
+  schema_version: 2;
   collected_at: string;
   storage_scope: 'encrypted_private_storage_on_this_device';
   sections: ExportSectionRecords & {
@@ -277,7 +285,7 @@ export type LocalDeviceExportData = {
 };
 
 export type MobileDataExportBundle = {
-  mobile_export_schema_version: 1;
+  mobile_export_schema_version: 2;
   exported_at: string;
   server_account_data_status: 'included' | 'backend_not_configured';
   server_account_data: unknown | null;
@@ -408,7 +416,7 @@ export async function collectLocalDeviceExportData(
   accountLease.assertCurrent();
 
   return {
-    schema_version: 1,
+    schema_version: 2,
     collected_at: collectedAt,
     storage_scope: 'encrypted_private_storage_on_this_device',
     sections,
@@ -451,7 +459,7 @@ export function buildMobileDataExportBundle(params: {
   localDeviceData: LocalDeviceExportData;
 }): MobileDataExportBundle {
   return {
-    mobile_export_schema_version: 1,
+    mobile_export_schema_version: 2,
     exported_at: params.exportedAt ?? new Date().toISOString(),
     server_account_data_status: params.serverAccountDataStatus,
     server_account_data: params.serverAccountData,

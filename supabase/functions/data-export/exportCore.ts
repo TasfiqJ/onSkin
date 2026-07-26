@@ -9,6 +9,22 @@ export type HealthLifecycleExportDecision =
       retryAfterSeconds: number;
     };
 
+export function healthReadEpochForExport(snapshot: HealthLifecycleExportSnapshot): number {
+  if (!Number.isSafeInteger(snapshot.processing_epoch) || snapshot.processing_epoch < 0) {
+    throw new Error('EXPORT_HEALTH_PROCESSING_EPOCH_INVALID');
+  }
+  if (snapshot.state === 'active' && snapshot.processing_epoch < 1) {
+    throw new Error('EXPORT_HEALTH_PROCESSING_EPOCH_INVALID');
+  }
+
+  // The database request header intentionally accepts only positive epochs.
+  // A never-active/terminal lifecycle still needs a syntactically valid value
+  // so restrictive RLS policies can evaluate to false and return an exact
+  // empty source rather than turning an account export into an availability
+  // error. Active reads always use the exact pinned epoch.
+  return Math.max(1, snapshot.processing_epoch);
+}
+
 export function healthLifecycleExportDecision(
   initial: HealthLifecycleExportSnapshot,
   final: HealthLifecycleExportSnapshot,
@@ -74,7 +90,9 @@ export type DerivedSourceManifest = {
 };
 
 export type ExportSourceManifest =
-  DatabaseSourceManifest | StorageSourceManifest | DerivedSourceManifest;
+  | DatabaseSourceManifest
+  | StorageSourceManifest
+  | DerivedSourceManifest;
 
 export type PaginatedRows = {
   rows: Record<string, unknown>[];

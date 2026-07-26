@@ -206,6 +206,8 @@ describe('onboarding route contracts', () => {
       'const [category, setCategory] = useState<ProductCategory | null>(null);',
     );
     expect(source).toContain('onChangeText={setName}');
+    expect(source).toContain('SHELF_PRODUCT_NAME_MAX_LENGTH');
+    expect(source).toContain('maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}');
   });
 
   it('keeps onboarding fixed-footer screens scrollable above phone actions', () => {
@@ -279,6 +281,12 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('placeholder="e.g. Retinol serum"');
     expect(products).not.toContain('placeholder="e.g. Retinol 0.3% Night Serum"');
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
+    expect(products).toContain(
+      "const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();",
+    );
+    expect(products).toContain('if (!addedProductId || added.length === 0) return;');
+    expect(products).toContain('scrollRef.current?.scrollToEnd({ animated: false })');
+    expect(products).toContain('cancelAnimationFrame(frame)');
     expect(products).not.toContain('scrollRef.current?.scrollToEnd({ animated: true })');
     expect(products).not.toContain('scrollToShelfList');
     expect(products).toContain('scrollRef.current?.scrollTo({ y: 0, animated: true })');

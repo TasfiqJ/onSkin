@@ -15,10 +15,10 @@ import { dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node
 export const DB06_EVIDENCE_SCHEMA_VERSION = 1;
 export const DB06_RETENTION_CLASS = 'release-qa';
 export const DB06_CURRENT_SOURCE_CONTRACT = Object.freeze({
-  migrationCount: 67,
-  latestMigrationId: '20260726000068',
+  migrationCount: 69,
+  latestMigrationId: '20260726000070',
   functionCount: 17,
-  publicTableCount: 80,
+  publicTableCount: 82,
   storageBucketCount: 1,
 });
 export const DB06_INITIAL_MUTATION_COMPLETION_BUDGET_MS = 12 * 60 * 60_000;
