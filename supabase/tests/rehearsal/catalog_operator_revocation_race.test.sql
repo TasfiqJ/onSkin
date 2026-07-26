@@ -6,7 +6,7 @@
 create extension if not exists pgtap with schema extensions;
 create extension if not exists dblink with schema extensions;
 set search_path = extensions, public, pg_catalog;
-\ir generated/catalog-operator-dblink-target.sql
+\ir generated/catalog-operator-dblink-target.inc
 
 select plan(10);
 

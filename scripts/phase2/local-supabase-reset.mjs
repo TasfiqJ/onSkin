@@ -443,7 +443,7 @@ try {
     const rehearsalTargetDir = join(sandboxSupabaseDir, 'tests', 'rehearsal', 'generated');
     await mkdir(rehearsalTargetDir, { recursive: true });
     await writeFile(
-      join(rehearsalTargetDir, 'catalog-operator-dblink-target.sql'),
+      join(rehearsalTargetDir, 'catalog-operator-dblink-target.inc'),
       `\\set ON_ERROR_STOP on
 select pg_catalog.set_config(
   'test.cat08_dblink_host',

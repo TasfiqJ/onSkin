@@ -181,7 +181,7 @@ check(
 );
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
 check(
-  /catalog-operator-dblink-target\.sql/u.test(runner) &&
+  /catalog-operator-dblink-target\.inc/u.test(runner) &&
     /host\.docker\.internal/u.test(runner) &&
     /test\.cat08_dblink_port[\s\S]*?ports\[2\]/u.test(runner) &&
     /run CAT-08 two-connection revocation rehearsal/u.test(runner) &&
@@ -208,16 +208,9 @@ check(
         /pg_catalog\.array_agg\(result\)[\s\S]{0,100}dblink_get_result/gu,
       ) ?? []
     ).length === 4 &&
-    (
-      catalogOperatorRevocationRehearsal.match(
-        /as drained\(result text\)/gu,
-      ) ?? []
-    ).length === 4 &&
-    (
-      catalogOperatorRevocationRehearsal.match(
-        /extensions\.dblink_get_result\(/gu,
-      ) ?? []
-    ).length === 8 &&
+    (catalogOperatorRevocationRehearsal.match(/as drained\(result text\)/gu) ?? []).length === 4 &&
+    (catalogOperatorRevocationRehearsal.match(/extensions\.dblink_get_result\(/gu) ?? []).length ===
+      8 &&
     !/p_sleep_seconds/u.test(catalogOperatorRevocationRehearsal) &&
     !/hosted_verification_passed/u.test(catalogOperatorRevocationRehearsal) &&
     /'cat08_race_b',[\s\S]*?'Lock'/u.test(catalogOperatorRevocationRehearsal) &&
@@ -230,16 +223,14 @@ check(
     /CAT08_REHEARSAL_RUNNER_ROLE_INVALID/u.test(catalogOperatorRevocationRehearsal) &&
     /CAT08_REHEARSAL_DBLINK_TARGET_INVALID/u.test(catalogOperatorRevocationRehearsal) &&
     /CAT08_REHEARSAL_CONNECTION_ROLE_DRIFT/u.test(catalogOperatorRevocationRehearsal) &&
-    /CAT08_REHEARSAL_CONNECTION_CALLER_INVALID/u.test(
-      catalogOperatorRevocationRehearsal,
-    ) &&
+    /CAT08_REHEARSAL_CONNECTION_CALLER_INVALID/u.test(catalogOperatorRevocationRehearsal) &&
     /extensions\.gen_random_bytes\(32\)/u.test(catalogOperatorRevocationRehearsal) &&
     /create role cat08_rehearsal_connection login nosuperuser noinherit/u.test(
       catalogOperatorRevocationRehearsal,
     ) &&
     /test\.cat08_dblink_host/u.test(catalogOperatorRevocationRehearsal) &&
     /test\.cat08_dblink_port/u.test(catalogOperatorRevocationRehearsal) &&
-    /\\ir generated\/catalog-operator-dblink-target\.sql/u.test(
+    /\\ir generated\/catalog-operator-dblink-target\.inc/u.test(
       catalogOperatorRevocationRehearsal,
     ) &&
     /user=cat08_rehearsal_connection password=' \|\|[\s\S]*?test\.cat08_dblink_password/u.test(
