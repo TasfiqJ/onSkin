@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T21:29:34.486Z",
+  "generatedAt": "2026-07-29T08:26:58.755Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,13 +81,15 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "52107141867fbc9b8e683cfa7399ffdc6351d6d6",
+  "gitSha": "f5c96856e1e994f73991af4e54fcfcb2d21217d6",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
   "requiredFilesMissingFromHead": [],
   "requiredFilesDifferFromHead": [],
-  "trackedSecretEnvironmentFiles": [],
+  "trackedSecretEnvironmentFiles": [
+    "apps/catalog-operator-console/.env.example"
+  ],
   "revenueCatV2AccessEvidence": {
     "valid": false,
     "path": "",
@@ -180,20 +182,20 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 27455,
-      "sha256": "0984b7c39628ce57f90fc39918b7863b7878335cf3c04fa33a69f1abd9bc5117"
+      "bytes": 27858,
+      "sha256": "5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 33803,
-      "sha256": "fcdd60b722b668df65a6714f6006014ea6ecc1ada7a50d056091c0936ce26206"
+      "bytes": 42442,
+      "sha256": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1"
     },
     {
       "path": "package-lock.json",
       "exists": true,
-      "bytes": 557143,
-      "sha256": "0b817f6d89ea2b318e59d3bbc83203047ade24ab7496ba6ff2c91ff14356f850"
+      "bytes": 557676,
+      "sha256": "65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480"
     },
     {
       "path": "apps/mobile/package.json",
@@ -204,20 +206,20 @@
     {
       "path": "apps/mobile/eas.json",
       "exists": true,
-      "bytes": 1478,
-      "sha256": "bf0aa5a8d6df31283433c1fd17eca55de67ba34a58457059d607844e84938944"
+      "bytes": 1477,
+      "sha256": "074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051"
     },
     {
       "path": "supabase/functions/deno.lock",
       "exists": true,
-      "bytes": 2282,
-      "sha256": "0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a"
+      "bytes": 2465,
+      "sha256": "b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 2935,
-      "sha256": "43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b"
+      "bytes": 4451,
+      "sha256": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b"
     },
     {
       "path": "docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md",
@@ -228,8 +230,8 @@
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 6676,
-      "sha256": "6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d"
+      "bytes": 8713,
+      "sha256": "1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -294,8 +296,8 @@
     {
       "path": "apps/mobile/src/app/onboarding/paywall.tsx",
       "exists": true,
-      "bytes": 13146,
-      "sha256": "e5851cd5b74fbed61d537e36111634ca951c841ad7dfc1999c1086ff4504f6ad"
+      "bytes": 13221,
+      "sha256": "7b374ada0d4aa901e40540ec7a38648d7a9838f7d09f2d0c36ce8060b8cbed0d"
     },
     {
       "path": "apps/mobile/src/app/paywall/upsell.tsx",
@@ -600,14 +602,14 @@
     {
       "path": "scripts/phase6/build-payments-qa-packet.mjs",
       "exists": true,
-      "bytes": 32804,
-      "sha256": "bd9d4b833789b3cf924193afc3135884d7990bf9df0ab5142e76ccc0d22d621b"
+      "bytes": 32780,
+      "sha256": "a2dab123bfe37998053a83e37fc6338ea576db916ea49cd9e0428ae4133a6650"
     },
     {
       "path": "scripts/phase6/check-payments-env.mjs",
       "exists": true,
-      "bytes": 20250,
-      "sha256": "b018c4df1d878a0eea7eb427f7a845c384dcebbfa586f4181b64111d8b7daf44"
+      "bytes": 20212,
+      "sha256": "a166695650b6afed693b3d98291d3bcc661909a067ca3b6ee98ffcb385ac8f62"
     },
     {
       "path": "scripts/phase6/check-payments-env-smoke.mjs",
@@ -666,8 +668,8 @@
     {
       "path": "scripts/phase9/supabase-policy-lint.mjs",
       "exists": true,
-      "bytes": 16274,
-      "sha256": "3faac8f26b03d91eee32d3c63a83af821509bc5e7b9e36ea19afc721196d9b9a"
+      "bytes": 18126,
+      "sha256": "6da0337e9605b44b1f2020f326626e7250644c9eafc3e285166819039211bef6"
     },
     {
       "path": "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
@@ -678,20 +680,20 @@
     {
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 71690,
-      "sha256": "b11ca191fd71fb3ffdd734e87e995b5e76db2b516e9fd347c2c623adc65dea47"
+      "bytes": 77776,
+      "sha256": "e63b2e44d1b650143c7f877ba858a685408121e1836d62027c384c8dd7b12739"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 107141,
-      "sha256": "a6e1e2973ebd93367289b896c8fe7b24b4581765294c7ac78111da0c443488af"
+      "bytes": 365743,
+      "sha256": "de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 25469,
-      "sha256": "5036b1121759918646f89e6ff914a4b7a55914437025f5f20dd2e9723ced1017"
+      "bytes": 22873,
+      "sha256": "2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -702,26 +704,26 @@
     {
       "path": "docs/E2E_TESTING_CHECKLIST.md",
       "exists": true,
-      "bytes": 3632,
-      "sha256": "1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f"
+      "bytes": 6998,
+      "sha256": "34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026"
     },
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 409032,
-      "sha256": "18d07ded129d688110c11f7500121493b71024b603688c90c202a4310ec66fdb"
+      "bytes": 468010,
+      "sha256": "75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 49808,
-      "sha256": "812072fe8197fd6770af625db9e2ef1c1245316ed4308c421285de6551e1a0e2"
+      "bytes": 51716,
+      "sha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 22808,
-      "sha256": "6b0807114d527c2b6e90a3a25c180e21cb29384b24b8150532d437f4f3c7b77a"
+      "bytes": 29844,
+      "sha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",
@@ -1080,8 +1082,8 @@
     {
       "path": "apps/mobile/src/features/subscription/claimsafety.test.ts",
       "exists": true,
-      "bytes": 3455,
-      "sha256": "ada28dacdc9700b7b387e4a89980fe84c70423f07d1021172cf5230ad9680b45"
+      "bytes": 4504,
+      "sha256": "62d70ccc6d6342d86d72ad36c135f82eef591e7964e561951a02c0ffeaaf5f09"
     },
     {
       "path": "apps/mobile/src/features/subscription/conflictQuota.test.ts",
@@ -1098,8 +1100,8 @@
     {
       "path": "apps/mobile/src/features/subscription/copy.ts",
       "exists": true,
-      "bytes": 8325,
-      "sha256": "1a9ce7ca24c4de4b8631166a12351307e8facb6372bec4262193ad726147477c"
+      "bytes": 8500,
+      "sha256": "4e72f3ac95733986cb8e9cd076a126e9ab43d9dd16e57f601cf39a3954f51beb"
     },
     {
       "path": "apps/mobile/src/features/subscription/dismissPaywall.test.ts",
@@ -1164,8 +1166,8 @@
     {
       "path": "apps/mobile/src/features/subscription/proGatedRoutes.test.ts",
       "exists": true,
-      "bytes": 15570,
-      "sha256": "f9514722836aafe40e3882fb20a188f3c0a8ce4b494cb4ab49761779cd4b5356"
+      "bytes": 16111,
+      "sha256": "44d56f7f13bab8928002e0ef441c45de7748877e4becf54d74dd7d9279733997"
     },
     {
       "path": "apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts",
@@ -1223,6 +1225,7 @@
     }
   ],
   "blockers": [
+    "Tracked secret environment file is forbidden: apps/catalog-operator-console/.env.example.",
     "Missing PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.",
     "Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.",
     "Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.",
