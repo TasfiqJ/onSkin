@@ -174,7 +174,7 @@ describe('skin profile axis mapping', () => {
       goals: ['barrier_repair'],
     });
 
-    await expect(readProfileBits()).resolves.toEqual({
+    await expect(readProfileBits()).resolves.toMatchObject({
       source: 'local',
       sensitivity: 'resistant',
       moisture: 'oily',
@@ -183,6 +183,11 @@ describe('skin profile axis mapping', () => {
       pregnancy: true,
       consentCurrent: true,
       goals: ['barrier_repair'],
+      goalProvenance: {
+        source: 'local_current_quiz',
+        goals: ['barrier_repair'],
+        profileCompletedAt: '2026-07-08T00:00:00.000Z',
+      },
     });
   });
 
@@ -196,6 +201,7 @@ describe('skin profile axis mapping', () => {
       pregnancy: false,
       consentCurrent: true,
       goals: [],
+      goalProvenance: null,
     });
   });
 
@@ -231,7 +237,7 @@ describe('skin profile axis mapping', () => {
     mocks.supabaseConfigured = true;
     mocks.serverData = currentServerProfile();
 
-    await expect(readProfileBits()).resolves.toEqual({
+    await expect(readProfileBits()).resolves.toMatchObject({
       source: 'server',
       sensitivity: 'resistant',
       moisture: 'oily',
@@ -240,6 +246,11 @@ describe('skin profile axis mapping', () => {
       pregnancy: false,
       consentCurrent: true,
       goals: ['anti_aging'],
+      goalProvenance: {
+        source: 'server_current_quiz',
+        goals: ['anti_aging'],
+        profileCompletedAt: '2026-07-26T00:00:00+00:00',
+      },
     });
   });
 
@@ -261,6 +272,7 @@ describe('skin profile axis mapping', () => {
       pregnancy: false,
       consentCurrent: true,
       goals: [],
+      goalProvenance: null,
     });
   });
 

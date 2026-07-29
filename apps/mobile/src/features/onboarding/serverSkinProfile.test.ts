@@ -142,6 +142,8 @@ describe('current server skin-profile contract', () => {
     { sensitivities: ['none'] },
     { pregnancy_status: 'unknown' },
     { goals: [] },
+    { goals: 'hydration' },
+    { goals: ['hydration', 'hydration'] },
     { goals: ['hydration', 'barrier_repair', 'anti_aging'] },
     { goals: ['not_a_goal'] },
     { completed_at: 'not-a-timestamp' },

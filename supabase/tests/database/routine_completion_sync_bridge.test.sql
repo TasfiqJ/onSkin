@@ -39,13 +39,13 @@ grant execute on function pg_temp.core05_shelf_payload(text, text)
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  69::bigint,
-  'CORE-05 sync bridge runs against the exact 69-migration source history'
+  70::bigint,
+  'CORE-05 sync bridge runs against the exact 70-migration source history'
 );
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000070'::text,
-  'the migration history reaches the authoritative sync-bridge head'
+  '20260726000071'::text,
+  'the migration history retains the sync bridge through recommendation zero admission'
 );
 select results_eq(
   $$select column_name::text collate "C"

@@ -15,8 +15,8 @@ import { dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node
 export const DB06_EVIDENCE_SCHEMA_VERSION = 1;
 export const DB06_RETENTION_CLASS = 'release-qa';
 export const DB06_CURRENT_SOURCE_CONTRACT = Object.freeze({
-  migrationCount: 69,
-  latestMigrationId: '20260726000070',
+  migrationCount: 70,
+  latestMigrationId: '20260726000071',
   functionCount: 17,
   publicTableCount: 82,
   storageBucketCount: 1,

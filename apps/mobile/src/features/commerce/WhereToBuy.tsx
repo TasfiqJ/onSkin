@@ -4,6 +4,10 @@ import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
+import {
+  isAdmittedCatalogProductProvenance,
+  type RecommendationProvenance,
+} from '@/features/recommendations/admission';
 import { track } from '@/lib/analytics/track';
 import { isCommerceConsented } from '@/features/commerce/consent';
 import { phase7Flags } from '@/lib/launch/phase7';
@@ -233,8 +237,8 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
   );
 }
 
-export function WhereToBuy({ productType }: { productType: string }) {
-  if (!phase7Flags.commerce) return null;
+export function WhereToBuy({ provenance }: { provenance: RecommendationProvenance }) {
+  if (!phase7Flags.commerce || !isAdmittedCatalogProductProvenance(provenance)) return null;
 
-  return <EnabledWhereToBuy productType={productType} />;
+  return <EnabledWhereToBuy productType={provenance.productType} />;
 }

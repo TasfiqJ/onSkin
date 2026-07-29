@@ -20,12 +20,12 @@ function ForYouCard({
   compact,
   count,
   youreSet,
-  coverageUnavailable,
+  statusBody,
 }: {
   compact?: boolean;
   count: number;
   youreSet: boolean;
-  coverageUnavailable: boolean;
+  statusBody: string | null;
 }) {
   return (
     <Pressable
@@ -55,11 +55,11 @@ function ForYouCard({
       </View>
       <View className="flex-1">
         <Text variant="body" className="font-sans-semibold text-[15px]">
-          {REC_COPY.todayCard.title}
+          {statusBody ? REC_COPY.todayCard.statusTitle : REC_COPY.todayCard.title}
         </Text>
         <Text variant="bodySm" tone="muted" className={compact ? 'text-[12.5px]' : 'text-[13px]'}>
-          {coverageUnavailable
-            ? 'Interaction review is in progress; no compatibility result is shown.'
+          {statusBody
+            ? statusBody
             : youreSet
               ? REC_COPY.todayCard.bodySet
               : count === 1
@@ -225,14 +225,22 @@ export function RecommendationsTeaser({
   compact?: boolean;
   showGapPrompt?: boolean;
 }) {
-  const { result, isLoading } = useRecommendations();
-  if (isLoading) return null;
+  const { result, isLoading, isUnavailable } = useRecommendations();
+  if (isLoading || isUnavailable) return null;
 
   const spfGap = result.recommendations.find(
     (r) =>
       (r.trigger === 'gap' || r.trigger === 'routine_completion') && r.productType.includes('spf'),
   );
   const showCompactGapOnly = compact && showGapPrompt && Boolean(spfGap);
+  const statusBody =
+    result.recommendations.length > 0 || result.youreSet
+      ? null
+      : result.goalReviewPending || result.conflictCoverageStatus === 'unsupported_unreviewed'
+        ? REC_COPY.todayCard.bodyReviewPending
+        : result.conflictCoverageStatus === 'not_applicable'
+          ? REC_COPY.todayCard.bodyNoPairEvaluation
+          : REC_COPY.todayCard.bodyNoCurrentSuggestion;
 
   return (
     <>
@@ -242,10 +250,7 @@ export function RecommendationsTeaser({
           compact={compact}
           count={result.recommendations.length}
           youreSet={result.youreSet}
-          coverageUnavailable={
-            result.recommendations.length === 0 &&
-            result.conflictCoverageStatus === 'unsupported_unreviewed'
-          }
+          statusBody={statusBody}
         />
       )}
     </>

@@ -64,4 +64,12 @@ assert.match(
   /cycle_scheduler.regulatory_counsel must bind the exact task and scope/,
 );
 
+const missingRecommendationReviewer = structuredClone(contract);
+missingRecommendationReviewer.featureProfessionalReviewRequirements.recommendations =
+  missingRecommendationReviewer.featureProfessionalReviewRequirements.recommendations.slice(0, 2);
+assert.match(
+  validateLaunchContract(missingRecommendationReviewer).join('\n'),
+  /recommendations must require the exact three reviewer roles/,
+);
+
 console.log('Launch contract smoke tests passed.');

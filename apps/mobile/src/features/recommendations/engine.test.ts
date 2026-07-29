@@ -1,5 +1,5 @@
 import type { FunctionalTag, GoalId, SequencingRole } from '@onskin/types';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { previewDetectConflicts, type EngineProduct } from '@/features/intelligence/engine';
 import {
@@ -9,7 +9,7 @@ import {
   type ConflictRule,
 } from '@/features/intelligence/rules';
 
-import { recTypeByKey, RECS_REVIEWED, shippableRecTypes } from './catalog';
+import { recTypeByKey, shippableRecTypes } from './catalog';
 import {
   recommend,
   recommendationConflictDispositionForType,
@@ -19,20 +19,11 @@ import {
   type RecShelfItem,
 } from './engine';
 import { DEFAULT_PREFERENCES } from './preferences';
+import { CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE } from './goalAdmission';
 
 // Engine fixtures (docs/09 §4/§5). The six triggers + the honest "you're set",
 // restrained and type-first. The engine recommends only on a genuine, profile-
 // grounded need, prioritised safety/gap > replacement > conflict > better-fit > goal.
-
-// In dev the full catalog (incl. launch-gated goal actives) is available. Mirror
-// that here so the behavioural fixtures exercise the goal trigger. A dedicated test
-// below asserts the production gate withholds them (B-DERM-REVIEW).
-beforeAll(() => {
-  (globalThis as { __DEV__?: boolean }).__DEV__ = true;
-});
-afterAll(() => {
-  delete (globalThis as { __DEV__?: boolean }).__DEV__;
-});
 
 function item(over: Partial<RecShelfItem> & { id: string; role: SequencingRole }): RecShelfItem {
   return {
@@ -215,7 +206,7 @@ describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 ha
       }),
     );
 
-    expect(res.recommendations.some((r) => r.trigger === 'goal')).toBe(true);
+    expect(res.recommendations.some((r) => r.trigger === 'goal')).toBe(false);
     expect(JSON.stringify(res.recommendations)).not.toMatch(/pregnan/i);
   });
 
@@ -261,14 +252,14 @@ describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 ha
     expect(res.conflictCoverageStatus).toBe('unsupported_unreviewed');
   });
 
-  it('introduces only ONE goal active at a time (restraint, §4.5)', () => {
+  it('introduces zero goal actives while current review clearance is closed', () => {
     const res = recommend(
       input({
         profile: { sensitivity: 'neutral', pregnancy: false, goals: ['anti_aging', 'clear_skin'] },
         shelf: [cleanser, moisturiser, spf],
       }),
     );
-    expect(res.recommendations.filter((r) => r.trigger === 'goal').length).toBe(1);
+    expect(res.recommendations.filter((r) => r.trigger === 'goal')).toEqual([]);
   });
 });
 
@@ -310,6 +301,35 @@ describe('the honest "you\'re set" seventh state (§4)', () => {
 
     expect(res.recommendations).toEqual([]);
     expect(res.youreSet).toBe(true);
+    expect(res.goalReviewPending).toBe(false);
+  });
+
+  it('does not claim completion while an unaddressed goal is awaiting review', () => {
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: ['anti_aging'] },
+        shelf: [cleanser, moisturiser, spf],
+        conflictCoverageStatus: 'compatible',
+      }),
+    );
+
+    expect(res.recommendations).toEqual([]);
+    expect(res.youreSet).toBe(false);
+    expect(res.goalReviewPending).toBe(true);
+  });
+
+  it('can report structural completion when every current goal is already addressed', () => {
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: ['hydration'] },
+        shelf: [cleanser, moisturiser, spf],
+        conflictCoverageStatus: 'compatible',
+      }),
+    );
+
+    expect(res.recommendations).toEqual([]);
+    expect(res.youreSet).toBe(true);
+    expect(res.goalReviewPending).toBe(false);
   });
 });
 
@@ -562,6 +582,46 @@ describe('better-fit. A gentler alternative to a fragranced product (§4.4)', ()
     expect(bf?.relatedProductId).toBe('p_fc');
     expect(bf?.footLabel).toBe('Better fit');
   });
+
+  it('withholds a better-fit result when the exact role has no fragrance-free type fact', () => {
+    const fragrancedMoisturiser = item({
+      id: 'p_fm',
+      name: 'Rose moisturiser',
+      role: 'moisturiser',
+      fragranced: true,
+    });
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'sensitive', pregnancy: false, goals: [] },
+        shelf: [cleanser, fragrancedMoisturiser, spf],
+      }),
+    );
+
+    expect(
+      res.recommendations.some((recommendation) => recommendation.trigger === 'better_fit'),
+    ).toBe(false);
+  });
+});
+
+describe('preference explanation truthfulness', () => {
+  it('does not describe sensitivity metadata as fragrance-free evidence', () => {
+    const result = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
+        shelf: [cleanser, spf],
+        preferences: {
+          ...DEFAULT_PREFERENCES,
+          values: ['fragrance_free'],
+        },
+      }),
+    );
+    const moisturiserGap = result.recommendations.find(
+      (recommendation) => recommendation.productType === 'ceramide_moisturiser',
+    );
+
+    expect(moisturiserGap?.how.fit).toBe('Matched to your profile');
+    expect(moisturiserGap?.how.fit).not.toMatch(/fragrance-free/i);
+  });
 });
 
 describe('routine completion. A beginner gets a minimal starter routine (§4.6)', () => {
@@ -812,22 +872,18 @@ describe('dismissed suggestions never re-surface ("not for me")', () => {
   });
 });
 
-describe('the launch gate withholds medically-adjacent goal actives in production (B-DERM-REVIEW)', () => {
-  it('RECS_REVIEWED is false (parity with the conflict-matrix + PAO gates)', () => {
-    expect(RECS_REVIEWED).toBe(false);
+describe('the launch gate withholds medically-adjacent goal actives (B-DERM-REVIEW)', () => {
+  it('uses a structured current clearance with zero admitted types and receipts', () => {
+    expect(CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE.status).toBe('closed');
+    expect(CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE.admittedTypeCount).toBe(0);
+    expect(CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE.receiptIds).toEqual([]);
   });
 
-  it('in production only structural routine-completeness types ship; goal actives are withheld', () => {
-    const prev = (globalThis as { __DEV__?: boolean }).__DEV__;
-    (globalThis as { __DEV__?: boolean }).__DEV__ = false;
-    try {
-      const shippable = shippableRecTypes();
-      expect(shippable.every((t) => !t.medicalAdjacent)).toBe(true);
-      expect(shippable.some((t) => t.role === 'spf')).toBe(true); // structural SPF still ships
-      expect(shippable.some((t) => t.type === 'retinoid_serum')).toBe(false);
-    } finally {
-      (globalThis as { __DEV__?: boolean }).__DEV__ = prev;
-    }
+  it('only structural routine-completeness types ship; dev is not a review bypass', () => {
+    const shippable = shippableRecTypes();
+    expect(shippable.every((t) => !t.medicalAdjacent)).toBe(true);
+    expect(shippable.some((t) => t.role === 'spf')).toBe(true); // structural SPF still ships
+    expect(shippable.some((t) => t.type === 'retinoid_serum')).toBe(false);
   });
 });
 
@@ -852,5 +908,28 @@ describe('church and state. No commercial field exists in the ranking output (D-
     ]) {
       expect(keys).not.toContain(banned);
     }
+    expect(rec.provenance.kind).toBe('type_first');
+    expect(rec.provenance.catalogProductId).toBeNull();
+  });
+
+  it('is invariant when forged commission and affiliate payloads are permuted', () => {
+    const base = input({
+      profile: { sensitivity: 'sensitive', pregnancy: false, goals: ['anti_aging'] },
+      shelf: [cleanser, moisturiser],
+    });
+    const withCommercialPayload = (commissionRate: number, affiliate: boolean) =>
+      recommend({
+        ...base,
+        commissionRate,
+        affiliate,
+        commercialRankingWeight: affiliate ? 1_000_000 : -1_000_000,
+      } as RecInput);
+
+    expect(withCommercialPayload(0.99, true)).toEqual(withCommercialPayload(0.01, false));
+    expect(
+      withCommercialPayload(0.99, true).recommendations.every(
+        (recommendation) => recommendation.provenance.kind !== 'catalog_product',
+      ),
+    ).toBe(true);
   });
 });

@@ -565,6 +565,11 @@ for (const match of liveHarness.matchAll(
 )) {
   staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
 }
+for (const match of liveHarness.matchAll(
+  /registerClosedPrivateTableProbe\(\s*['"]([a-z_]+)['"]/g,
+)) {
+  staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
+}
 
 for (const table of PRIVATE_PUBLIC_TABLES) {
   const count = staticProbeCounts.get(table) ?? 0;
@@ -630,7 +635,12 @@ block(
 );
 
 const requiredLiveHarnessChecks = [
-  'all 67 private tables have access-control probes',
+  'all 68 private tables have access-control probes',
+  'recommendation preferences owner direct update',
+  'recommendation preferences service-role direct insert',
+  'recommendation cache service-role zero-admission read',
+  'recommendation owner insert while admission is closed',
+  'recommendation service-role insert while admission is closed',
   'routine conflict swapped canonical pair',
   'routine conflict duplicate canonical identity',
   'Shelf provenance matrix',

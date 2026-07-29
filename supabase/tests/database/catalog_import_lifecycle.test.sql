@@ -1556,7 +1556,7 @@ select throws_ok(
 -- curation head. Source withdrawal remains fail closed across every read lane.
 update public.products
 set review_status = 'reviewed', quality_grade = 'verified',
-    recommendation_eligible = true, last_reviewed_at = pg_catalog.now()
+    recommendation_eligible = false, last_reviewed_at = pg_catalog.now()
 where id = (select value_uuid from cat02_test_state where state_key = 'product_id');
 update public.product_barcodes
 set review_status = 'reviewed'
@@ -1724,7 +1724,7 @@ select ok(
 -- Even a mistaken later curation edit cannot resurrect a retired import batch.
 update public.products
 set status = 'active', review_status = 'reviewed', quality_grade = 'verified',
-    recommendation_eligible = true, last_reviewed_at = pg_catalog.now(),
+    recommendation_eligible = false, last_reviewed_at = pg_catalog.now(),
     barcode = '991234567899', source_ref = '991234567899',
     import_projection_status = 'active', retired_import_natural_key = null
 where id = (select value_uuid from cat02_test_state where state_key = 'product_id');
@@ -1996,7 +1996,7 @@ reset role;
 -- Build one imported dependent product and one unrelated legacy product.
 update public.products
 set status = 'active', review_status = 'reviewed', quality_grade = 'verified',
-    recommendation_eligible = true, last_reviewed_at = pg_catalog.now()
+    recommendation_eligible = false, last_reviewed_at = pg_catalog.now()
 where import_batch_id = (select value_uuid from cat02_test_state where state_key = 'product_corrected');
 update public.product_barcodes
 set review_status = 'reviewed'
@@ -2058,7 +2058,7 @@ values (
   'cleanser', 'US', 'open_beauty_facts',
   (select id from public.catalog_sources where source_key = 'open_beauty_facts'),
   '992345678900', 'https://world.openbeautyfacts.org/product/992345678900',
-  current_date, 'active', 'reviewed', pg_catalog.now(), 'verified', true, 0
+  current_date, 'active', 'reviewed', pg_catalog.now(), 'verified', false, 0
 );
 insert into public.product_barcodes (barcode, product_id, source_id, review_status)
 values (

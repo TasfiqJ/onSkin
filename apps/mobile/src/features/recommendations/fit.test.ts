@@ -22,6 +22,7 @@ function ctx(over: Partial<FitContext> = {}): FitContext {
 }
 
 const mineralSpf = recTypeByKey('mineral_spf')!;
+const fragranceFreeCleanser = recTypeByKey('fragrance_free_cleanser')!;
 const retinoid = recTypeByKey('retinoid_serum')!;
 const vitaminC = recTypeByKey('vitamin_c_serum')!;
 
@@ -89,13 +90,28 @@ describe('the soft score is weighted, explainable, and merit-only', () => {
 
   it('rewards a fragrance-free type when the user set a fragrance-free preference', () => {
     const withPref = fitScore(
+      fragranceFreeCleanser,
+      ctx({ preferences: { values: ['fragrance_free'], budget: null, formats: [] } }),
+    );
+    const without = fitScore(fragranceFreeCleanser, ctx());
+    expect(withPref.breakdown.preferenceMatch).toBeGreaterThan(without.breakdown.preferenceMatch);
+  });
+
+  it('does not treat sensitive-safe as evidence that a type is fragrance-free', () => {
+    expect(mineralSpf.sensitiveSafe).toBe(true);
+    const withPref = fitScore(
       mineralSpf,
       ctx({ preferences: { values: ['fragrance_free'], budget: null, formats: [] } }),
     );
     const without = fitScore(mineralSpf, ctx());
-    expect(withPref.breakdown.preferenceMatch).toBeGreaterThanOrEqual(
-      without.breakdown.preferenceMatch,
-    );
+
+    expect(withPref.breakdown.preferenceMatch).toBe(without.breakdown.preferenceMatch);
+  });
+
+  it('assigns zero catalog-quality credit while product admission is closed', () => {
+    for (const type of REC_TYPES) {
+      expect(fitScore(type, ctx()).breakdown.catalogQuality).toBe(0);
+    }
   });
 });
 

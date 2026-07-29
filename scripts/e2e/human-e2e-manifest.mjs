@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
@@ -53,8 +53,15 @@ import {
 } from '../phase9/release-qa-integrity.mjs';
 import {
   GOVERNED_DOWNSTREAM_GENERATED_PATHS,
+  GOVERNED_DOWNSTREAM_PUBLICATION_UNITS,
+  GOVERNED_FINAL_READINESS_PUBLICATION_UNIT_ID,
+  GOVERNED_LAUNCH_CONTRACT_PATH,
+  GOVERNED_POST_E_PUBLICATION_DAG_EDGES,
+  GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS,
+  GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS,
   auditGovernedEvidenceChain,
   captureGovernedEvidenceWorkingBindings,
+  captureGovernedPublicationPolicy,
   renderGovernedEvidenceLedger,
   validateGovernedEvidenceChainBinding,
   validateGovernedGeneratedPublication,
@@ -4645,6 +4652,28 @@ function runGovernedEvidenceChainConsumerSmoke() {
   const humanPath = 'test-results/human-e2e/2099-01-01/cat07-shelf-freshness-current/summary.json';
   const historicalRequiredPath =
     'test-results/human-e2e/2099-01-01/trend-route-group-gate-current/summary.json';
+  const publicationUnitById = new Map(
+    GOVERNED_DOWNSTREAM_PUBLICATION_UNITS.map((unit) => [unit.id, unit]),
+  );
+  const requiredPostEvidenceOrder = (() => {
+    const remaining = new Set(GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS);
+    const completed = new Set();
+    const ordered = [];
+    while (remaining.size > 0) {
+      const next = [...remaining]
+        .sort()
+        .find((unitId) =>
+          GOVERNED_POST_E_PUBLICATION_DAG_EDGES.filter(({ after }) => after === unitId).every(
+            ({ before }) => completed.has(before),
+          ),
+        );
+      if (!next) throw new Error('governed consumer-smoke publication policy contains a cycle');
+      ordered.push(next);
+      completed.add(next);
+      remaining.delete(next);
+    }
+    return ordered;
+  })();
   const gitContext = cat07TrustedGitContext();
   const git = (fixtureRoot, commandArgs) =>
     execFileSync(
@@ -4664,6 +4693,20 @@ function runGovernedEvidenceChainConsumerSmoke() {
     const absolute = resolve(fixtureRoot, ...repoPath.split('/'));
     mkdirSync(dirname(absolute), { recursive: true });
     writeFileSync(absolute, bytes);
+  };
+  const writePublicationUnit = (fixtureRoot, unitId, marker) => {
+    const unit = publicationUnitById.get(unitId);
+    if (!unit) throw new Error(`unknown governed consumer-smoke publication unit: ${unitId}`);
+    for (const repoPath of unit.paths) {
+      write(
+        fixtureRoot,
+        repoPath,
+        repoPath.endsWith('.json')
+          ? `${JSON.stringify({ marker, unitId })}\n`
+          : `# ${marker}: ${unitId}\n`,
+      );
+    }
+    return unit;
   };
   const commit = (fixtureRoot, message) => {
     git(fixtureRoot, ['add', '--all']);
@@ -4687,12 +4730,21 @@ function runGovernedEvidenceChainConsumerSmoke() {
     git(fixtureRoot, ['init', '--quiet', '--initial-branch=main']);
     write(fixtureRoot, '.gitattributes', '* text=auto eol=lf\n');
     write(fixtureRoot, 'source.txt', 'immutable source\n');
+    write(
+      fixtureRoot,
+      GOVERNED_LAUNCH_CONTRACT_PATH,
+      readFileSync(resolve(root, ...GOVERNED_LAUNCH_CONTRACT_PATH.split('/'))),
+    );
+    for (const unitId of GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS) {
+      writePublicationUnit(fixtureRoot, unitId, 'source snapshot S');
+    }
     const historicalRequiredBytes = Buffer.from(
       `${JSON.stringify({ status: 'pass', surface: 'expo-web' }, null, 2)}\n`,
       'utf8',
     );
     write(fixtureRoot, historicalRequiredPath, historicalRequiredBytes);
     const sourceGitSha = commit(fixtureRoot, 'source S');
+    const publicationPolicy = captureGovernedPublicationPolicy(fixtureRoot, sourceGitSha);
     const humanBytes = Buffer.from(
       `${JSON.stringify({ sourceGitSha, status: 'pass' }, null, 2)}\n`,
       'utf8',
@@ -4717,7 +4769,12 @@ function runGovernedEvidenceChainConsumerSmoke() {
     write(
       fixtureRoot,
       ledgerPath,
-      renderGovernedEvidenceLedger({ sourceGitSha, releaseCandidateDir: rcDir, entries }),
+      renderGovernedEvidenceLedger({
+        sourceGitSha,
+        releaseCandidateDir: rcDir,
+        publicationPolicy,
+        entries,
+      }),
     );
     const evidenceGitSha = commit(fixtureRoot, 'evidence E');
     if (stopAtEvidence) {
@@ -4731,9 +4788,15 @@ function runGovernedEvidenceChainConsumerSmoke() {
         sourceGitSha,
       };
     }
-    write(fixtureRoot, 'docs/e2e/generated/human-e2e-manifest.json', '{"generated":true}\n');
-    const releasePacketGitSha = commit(fixtureRoot, 'generated R');
-    write(fixtureRoot, 'docs/generated/readiness-status-audit.json', '{"ready":true}\n');
+    const publicationCommits = new Map();
+    for (const unitId of requiredPostEvidenceOrder) {
+      writePublicationUnit(fixtureRoot, unitId, 'generated R');
+      publicationCommits.set(unitId, commit(fixtureRoot, `generated R ${unitId}`));
+    }
+    const releasePacketGitSha = publicationCommits.get(
+      'docs/generated/generated-packet-status-audit',
+    );
+    writePublicationUnit(fixtureRoot, GOVERNED_FINAL_READINESS_PUBLICATION_UNIT_ID, 'readiness F');
     const finalGitSha = commit(fixtureRoot, 'readiness F');
     return {
       evidenceGitSha,
@@ -4759,12 +4822,16 @@ function runGovernedEvidenceChainConsumerSmoke() {
   try {
     const accepted = createFixture();
     const acceptedAudit = auditFixture(accepted);
-    assert(acceptedAudit.status === 'pass', 'S to E to R to F fixture must pass');
+    assert(
+      acceptedAudit.status === 'pass',
+      'S to E to every required R publication to F fixture must pass',
+    );
     assert(
       acceptedAudit.evidenceCommitSha === accepted.evidenceGitSha &&
         acceptedAudit.headGitSha === accepted.finalGitSha &&
-        acceptedAudit.downstreamCommits.length === 2,
-      'consumer audit must record exact S, E, R/F head, and both generated descendants',
+        acceptedAudit.downstreamCommits.length ===
+          GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS.length + 1,
+      'consumer audit must record exact S, E, every one-unit R commit, and the final F commit',
     );
     const acceptedBinding = governedEvidenceChainBinding(acceptedAudit);
     assert(
@@ -4781,11 +4848,11 @@ function runGovernedEvidenceChainConsumerSmoke() {
         {
           ...acceptedBinding,
           currentGitSha: accepted.releasePacketGitSha,
-          downstreamCommitCount: 1,
+          downstreamCommitCount: GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS.length,
         },
         acceptedAudit,
       ).length === 0,
-      'a manifest recorded at R must remain a valid exact-prefix binding when checked at F',
+      'a manifest recorded at the complete R prefix must remain valid when checked at F',
     );
     assert(
       collectRecordedGovernedDescendantFailures(
@@ -4803,7 +4870,7 @@ function runGovernedEvidenceChainConsumerSmoke() {
         {
           ...acceptedBinding,
           currentGitSha: accepted.releasePacketGitSha,
-          downstreamCommitCount: 2,
+          downstreamCommitCount: GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS.length + 1,
         },
         acceptedAudit,
       ).some((error) => error.includes('exact prefix position')),
@@ -4938,18 +5005,18 @@ function runGovernedEvidenceChainConsumerSmoke() {
       'conflicting canonical and alias release-candidate directories must fail closed',
     );
 
-    const unledgered = createFixture({ omitHumanEntry: true });
+    const unledgered = createFixture({ omitHumanEntry: true, stopAtEvidence: true });
     assert(
       auditFixture(unledgered).status === 'invalid',
       'an unledgered human evidence file in E must fail',
     );
 
-    const mutated = createFixture();
+    const mutated = createFixture({ stopAtEvidence: true });
     write(mutated.fixtureRoot, humanPath, '{"sourceGitSha":"forged"}\n');
     mutated.finalGitSha = commit(mutated.fixtureRoot, 'mutate raw evidence after E');
     assert(auditFixture(mutated).status === 'invalid', 'post-E raw evidence mutation must fail');
 
-    const nearMiss = createFixture();
+    const nearMiss = createFixture({ stopAtEvidence: true });
     write(nearMiss.fixtureRoot, 'docs/phase-7/generated/near-miss.json', '{}\n');
     nearMiss.finalGitSha = commit(nearMiss.fixtureRoot, 'generated near miss');
     assert(

@@ -77,6 +77,31 @@ warning that live staging and production evidence is absent.
 CI reruns `phase2:db-local-contract` and `phase2:db-local-verify` from the
 accepted lockfile; that clean-revision run is the durable acceptance evidence.
 
+## 2026-07-29 Current-Head Verification Update
+
+`npm run phase2:db-local-verify` exited 0 against the complete 70-migration
+chain through `20260726000071`. The isolated credential-free PostgreSQL 15 run
+passed:
+
+- all four sequential cutovers
+  (`0067 -> 0068 -> 0069 -> 0070 -> 0071`);
+- two complete clean resets and exact 70-version history with `0071` latest;
+- the focused four-file lane with 410 planned assertions;
+- 15 structural pgTAP files / 1,199 assertions, including CAT-03 99/99;
+- public-schema error-level lint;
+- an empty `public`/`auth`/`storage` migration-shadow comparison;
+- temporary local type generation of 6,771 lines with SHA-256
+  `39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`;
+- the CAT-08 two-connection revocation rehearsal 10/10; and
+- complete teardown with zero DB-05 containers, volumes, networks, verifier
+  processes, or temporary verifier directories.
+
+Repository database types were deliberately not replaced, so DB-08 remains
+open. This update is disposable local source evidence only. It does not prove
+hosted staging/production history or drift, linked-type parity, live
+role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
+compatibility, device behavior, professional approval, or release readiness.
+
 ## Boundary And Remaining Gates
 
 No project was linked. No access token, project ref, database password,

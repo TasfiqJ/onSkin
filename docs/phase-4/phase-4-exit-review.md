@@ -118,7 +118,8 @@ The implementation intentionally keeps production catalog use blocked until:
   sunscreen/OTC-adjacent review bind every applicable row;
 - the two-session hosted CAT-02 staging/promotion/serialization/rollback drill
   passes with complete redacted receipts and zero projection drift;
-- clean local and hosted full-chain reset through `0067`, current pgTAP, two-connection
+- clean local and hosted full-chain reset through exact current head `0071`,
+  current pgTAP, two-connection
   staging/release/supersession race, direct-service-role denial, serving,
   retirement, and rollback evidence passes;
 - the authoritative CAT-03 coverage/quality report exists for the sealed
@@ -177,7 +178,7 @@ clinical, Apple, or commercial approval.
   signed required-category floor, and at least 100 prioritized eligible rows.
 - Product recommendations use only active-curation, eligible, reviewed,
   dependency-complete products.
-- Hosted database evidence from the full current chain through `0067`, including
+- Hosted database evidence from the full current chain through `0071`, including
   `0061`, proves the import lifecycle, rollback/reference preservation, and barcode, search,
   recommendation, product, ingredient, synonym, and child reads fail closed
   for every held source/record.
@@ -187,7 +188,7 @@ clinical, Apple, or commercial approval.
   readback, exact lineage, replay/race handling, direct-table denial for
   `service_role`, authenticated RLS allow/deny proof, and immediate fail-closed
   serving after any retirement or dependency withdrawal.
-- Hosted database evidence through migration `0067`, with `0063` retained as
+- Hosted database evidence through migration `0071`, with `0063` retained as
   the foundational CAT-08 authority, proves no raw API-role
   operator/correction/hold access, direct denial of all six RPCs to browser API
   roles, exact Edge-verified signed `aal2` subject/session admission,

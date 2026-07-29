@@ -681,7 +681,7 @@ Source verification must include:
   rehearsal that includes the exact `0062` bytes and tests its three indexes,
   trigger/ACL metadata, zero/partial/exact/overflow/root/released-state guards,
   and rollback; this does not replace exact full-chain reset evidence;
-- a clean migration reset through `0067` and execution of the current
+- a clean migration reset through exact current head `0071` and execution of the current
   99-assertion CAT-03 pgTAP contract; and
 - repository typecheck, lint, tests, and source-policy/worklist audits.
 
@@ -748,7 +748,7 @@ CAT-03 stays `in_progress` until all are true:
   eligible records are present in the exact released campaign;
 - the holdout meets every predeclared confidence-bound and minimum-denominator
   gate, with zero open P0/P1 and zero below-usable recommendation exposure;
-- the complete migration chain through `0067`, with `0058` as its foundational
+- the complete migration chain through `0071`, with `0058` as its foundational
   CAT-03 authority, passes clean local and hosted reset, pgTAP, race, serving,
   activation, retirement, and rollback verification; and
 - an independent database verifier signs the exact readback receipt after the

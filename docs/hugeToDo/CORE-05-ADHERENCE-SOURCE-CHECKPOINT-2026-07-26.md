@@ -30,14 +30,14 @@ open, so the predecessor's caution does not become production clearance.
 
 ## Current Authorities
 
-| Concern | Current authority | What is not claimed |
-| --- | --- | --- |
-| Visible Today completion | Encrypted local completion envelope after the awaited private-KV transform | A tap or animation alone is not completion evidence |
-| Shelf content and pending mirror work | Encrypted local Shelf v3 envelope until an exact server disposition is processed | The server is not a complete cross-device Shelf UI authority yet |
-| Server product identity | `shelf_product_identities`, separate from mutable/deletable product content | A tombstone is not product content and is not anonymous |
-| Server completion evidence | Immutable `routine_completions` admitted by `record_routine_completion` | A routine-day row is user attestation, not objective proof that skincare occurred |
-| Current/best streak and absorbed dates | Migration `0068` server projection from routine-day completion rows | The historical client/server streak cache is not trusted without refresh |
-| Notification preferences and attempt caps | Encrypted current-device records plus observed OS authorization | No remote notification preference/log authority, push delivery, or cross-device cap is claimed |
+| Concern                                   | Current authority                                                                | What is not claimed                                                                            |
+| ----------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Visible Today completion                  | Encrypted local completion envelope after the awaited private-KV transform       | A tap or animation alone is not completion evidence                                            |
+| Shelf content and pending mirror work     | Encrypted local Shelf v3 envelope until an exact server disposition is processed | The server is not a complete cross-device Shelf UI authority yet                               |
+| Server product identity                   | `shelf_product_identities`, separate from mutable/deletable product content      | A tombstone is not product content and is not anonymous                                        |
+| Server completion evidence                | Immutable `routine_completions` admitted by `record_routine_completion`          | A routine-day row is user attestation, not objective proof that skincare occurred              |
+| Current/best streak and absorbed dates    | Migration `0068` server projection from routine-day completion rows              | The historical client/server streak cache is not trusted without refresh                       |
+| Notification preferences and attempt caps | Encrypted current-device records plus observed OS authorization                  | No remote notification preference/log authority, push delivery, or cross-device cap is claimed |
 
 ## Local V3 Completion And Shelf Records
 
@@ -388,9 +388,11 @@ close the native/live matrix below.
 CORE-05 cannot become `complete` until the accepted release revision has
 retained evidence for:
 
-- a clean current-head migration replay and exact `0067 -> 0068 -> 0069 -> 0070`
-  upgrade path, all current pgTAP/source/RLS/lint/drift/type gates, and the same
-  gates against the intended hosted staging candidate;
+- the 2026-07-29 local current-head replay and exact
+  `0067 -> 0068 -> 0069 -> 0070 -> 0071` upgrade path now pass, together with
+  the current pgTAP/lint/drift/temporary-type gates and teardown; the same gates
+  still must pass against the intended hosted staging candidate, and DB-08
+  still owns deliberate repository type replacement;
 - authenticated hosted Shelf/completion RPC, exact response-loss replay,
   deletion-wins, cross-owner denial, account/Apple denial, health-epoch denial,
   withdrawal erasure, account deletion, and schema-v4 export;

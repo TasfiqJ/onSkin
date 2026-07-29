@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,7 +32,6 @@ const root = resolve(scriptDir, '..', '..');
 const checkPath = resolve(scriptDir, 'check-core-loop.mjs');
 const packetPath = resolve(scriptDir, 'build-core-loop-qa-packet.mjs');
 const humanE2eManifestPath = resolve(root, 'scripts/e2e/human-e2e-manifest.mjs');
-const upstreamGeneratedEvidencePath = resolve(root, 'docs/e2e/generated/human-e2e-manifest.json');
 const cat07ShelfFreshnessSummaryPath = CAT07_COMMITTED_SUMMARY_PATH;
 
 const passthroughKeys = [
@@ -84,8 +91,8 @@ function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
 
-function packetMatchesCat07HeadBinding(packet) {
-  const expected = validateCat07CommittedEvidence(root);
+function packetMatchesCat07HeadBinding(packet, repositoryRoot = root) {
+  const expected = validateCat07CommittedEvidence(repositoryRoot);
   const resultMatches = JSON.stringify(packet.cat07CommittedEvidence) === JSON.stringify(expected);
   const exactHeadBinding =
     packet.cat07CommittedEvidence?.headSha === packet.gitSha &&
@@ -134,15 +141,99 @@ function runHumanE2eGovernedChainSmoke() {
 }
 
 let packetFixtureCounter = 0;
+let packetFixtureRepositoryParent = null;
+let packetFixtureRepositoryRoot = null;
+
+function gitFixtureBuffer(cwd, args) {
+  const result = spawnSync('git', args, {
+    cwd,
+    env: processBaseEnv,
+  });
+  if (result.status !== 0) {
+    throw new Error(`git ${args.join(' ')} failed: ${output(result)}`);
+  }
+  return Buffer.from(result.stdout ?? Buffer.alloc(0));
+}
+
+function parseNulTerminatedPaths(bytes, label) {
+  if (bytes.length === 0) return [];
+  if (bytes.at(-1) !== 0) throw new Error(`${label} is not NUL terminated`);
+  return bytes.subarray(0, -1).toString('utf8').split('\0');
+}
+
+function packetSmokeRepositoryRoot() {
+  if (packetFixtureRepositoryRoot) return packetFixtureRepositoryRoot;
+  packetFixtureRepositoryParent = mkdtempSync(join(tmpdir(), 'routinekind-phase7-packet-smoke-'));
+  packetFixtureRepositoryRoot = resolve(packetFixtureRepositoryParent, 'repo');
+  gitFixture(packetFixtureRepositoryParent, [
+    'clone',
+    '--quiet',
+    '--shared',
+    root,
+    packetFixtureRepositoryRoot,
+  ]);
+  gitFixture(packetFixtureRepositoryRoot, ['config', 'user.email', 'phase7-smoke@example.invalid']);
+  gitFixture(packetFixtureRepositoryRoot, ['config', 'user.name', 'Phase 7 Smoke']);
+
+  const changedPaths = [
+    ...new Set([
+      ...parseNulTerminatedPaths(
+        gitFixtureBuffer(root, ['diff', '--name-only', '-z', 'HEAD']),
+        'tracked Phase 7 packet-smoke path inventory',
+      ),
+      ...parseNulTerminatedPaths(
+        gitFixtureBuffer(root, ['ls-files', '--others', '--exclude-standard', '-z']),
+        'untracked Phase 7 packet-smoke path inventory',
+      ),
+    ]),
+  ];
+  const excludedPaths = new Set([
+    'deno.lock',
+    'docs/phase-9/generated/dependency-inventory.json',
+    'docs/phase-9/generated/dependency-inventory.md',
+  ]);
+  for (const repoPath of changedPaths) {
+    if (excludedPaths.has(repoPath)) continue;
+    const sourcePath = resolve(root, ...repoPath.split('/'));
+    const fixturePath = resolve(packetFixtureRepositoryRoot, ...repoPath.split('/'));
+    if (!existsSync(sourcePath)) {
+      rmSync(fixturePath, { force: true, recursive: true });
+      continue;
+    }
+    const sourceStats = lstatSync(sourcePath);
+    if (!sourceStats.isFile() || sourceStats.isSymbolicLink()) {
+      throw new Error(`Phase 7 packet-smoke source path is not a regular file: ${repoPath}`);
+    }
+    mkdirSync(dirname(fixturePath), { recursive: true });
+    writeFileSync(fixturePath, readFileSync(sourcePath));
+  }
+  gitFixture(packetFixtureRepositoryRoot, ['add', '-A']);
+  gitFixture(packetFixtureRepositoryRoot, [
+    '-c',
+    'commit.gpgsign=false',
+    'commit',
+    '--quiet',
+    '-m',
+    'current Phase 7 packet smoke source',
+  ]);
+  return packetFixtureRepositoryRoot;
+}
+
+process.on('exit', () => {
+  if (packetFixtureRepositoryParent) {
+    rmSync(packetFixtureRepositoryParent, { force: true, recursive: true });
+  }
+});
 
 function runPacket(extraEnv, args = []) {
+  const repositoryRoot = packetSmokeRepositoryRoot();
   packetFixtureCounter += 1;
   const fixtureId = `phase7-${process.pid}-${packetFixtureCounter}`;
   const outDirRelative = `.tmp/phase7-packet-fixtures/${fixtureId}`;
-  const outDir = resolve(root, ...outDirRelative.split('/'));
+  const outDir = resolve(repositoryRoot, ...outDirRelative.split('/'));
   try {
     const result = spawnSync(process.execPath, [packetPath, ...args, '--test-fixture-output'], {
-      cwd: root,
+      cwd: repositoryRoot,
       encoding: 'utf8',
       env: {
         ...processBaseEnv,
@@ -170,7 +261,7 @@ function runRejectedPacketOutput(outDir, args = [], extraEnv = {}) {
 }
 
 function runPacketWithDirtyWorktree(extraEnv, args = []) {
-  const markerPath = join(root, `.phase7-smoke-dirty-${process.pid}.tmp`);
+  const markerPath = join(packetSmokeRepositoryRoot(), `.phase7-smoke-dirty-${process.pid}.tmp`);
   writeFileSync(markerPath, 'temporary Phase 7 dirty-worktree smoke marker\n');
   try {
     return runPacket(extraEnv, args);
@@ -180,6 +271,10 @@ function runPacketWithDirtyWorktree(extraEnv, args = []) {
 }
 
 function runPacketWithDirtyUpstreamEvidence(extraEnv) {
+  const upstreamGeneratedEvidencePath = resolve(
+    packetSmokeRepositoryRoot(),
+    'docs/e2e/generated/human-e2e-manifest.json',
+  );
   const original = readFileSync(upstreamGeneratedEvidencePath);
   writeFileSync(
     upstreamGeneratedEvidencePath,
@@ -483,7 +578,7 @@ const cases = [
     },
   },
   {
-    name: 'Governed chain accepts S to E to R to F and rejects unledgered, mutated, and near-miss evidence',
+    name: 'Governed chain accepts S to E to every required R unit to F and rejects unledgered, mutated, and near-miss evidence',
     result: runHumanE2eGovernedChainSmoke(),
     expect(result) {
       return (
@@ -589,6 +684,7 @@ const cases = [
     name: 'Phase 7 packet writes normalized evidence and signoff',
     result: runPacket({ ...validPublicIdentity, ...validEvidence }),
     expect(result) {
+      if (result.packet === null) return false;
       const requiredPacketPaths = [
         'scripts/phase7/build-core-loop-qa-packet.mjs',
         'scripts/phase7/check-core-loop.mjs',
@@ -665,8 +761,7 @@ const cases = [
             path.endsWith('catalog_import_lifecycle.test.sql') ||
             path.endsWith('catalog_launch_curation.test.sql') ||
             path.endsWith('catalog_serving_gate.test.sql') ||
-            path.includes('CAT-07-SHELF-FRESHNESS') ||
-            path.endsWith('cat07-shelf-freshness-current/summary.json'),
+            path.includes('CAT-07-SHELF-FRESHNESS'),
         )
         .filter(
           (path) =>
@@ -674,6 +769,19 @@ const cases = [
               (file) => file.path === path && /^[0-9a-f]{64}$/i.test(file.sha256 ?? ''),
             ),
         );
+      const cat07SummaryFile = result.packet.files.find(
+        (file) => file.path === cat07ShelfFreshnessSummaryPath,
+      );
+      const cat07SummaryBinding =
+        cat07SummaryFile?.exists === true
+          ? /^[0-9a-f]{64}$/i.test(cat07SummaryFile.sha256 ?? '') &&
+            result.packet.cat07CommittedEvidence.summarySha256 === cat07SummaryFile.sha256
+          : cat07SummaryFile?.exists === false &&
+            result.packet.cat07CommittedEvidence.status === 'blocked' &&
+            result.packet.cat07CommittedEvidence.summarySha256 === null &&
+            result.packet.blockers.includes(
+              `CAT07 committed evidence: ${cat07ShelfFreshnessSummaryPath} must exist in HEAD.`,
+            );
       const checks = {
         status: result.status === 0,
         normalizedEvidence:
@@ -692,7 +800,7 @@ const cases = [
           result.packet.governedEvidenceChain.errors.every((error) =>
             result.packet.blockers.includes(`Governed evidence chain: ${error}.`),
           ),
-        cat07HeadBinding: packetMatchesCat07HeadBinding(result.packet),
+        cat07HeadBinding: packetMatchesCat07HeadBinding(result.packet, packetSmokeRepositoryRoot()),
         cat07DiagnosticsAreRepoRelative: !result.packet.blockers
           .filter((blocker) => blocker.startsWith('CAT07'))
           .some((blocker) =>
@@ -702,6 +810,7 @@ const cases = [
           ),
         requiredPacketPaths: missingPacketPaths.length === 0,
         cat07Hashes: invalidCat07Hashes.length === 0,
+        cat07SummaryBinding,
         scenarios: result.packet.scenarios.every((scenario) => scenario.evidencePass === true),
         signoffBlocker: !result.packet.blockers.some((blocker) =>
           /PHASE7_SIGNED_OFF_BY/.test(blocker),
@@ -722,6 +831,7 @@ const cases = [
     name: 'Phase 7 packet warns when generated from a dirty worktree',
     result: runPacketWithDirtyWorktree({ ...validPublicIdentity, ...validEvidence }),
     expect(result) {
+      if (result.packet === null) return false;
       return (
         result.status === 0 &&
         result.packet.gitStatus.includes(`.phase7-smoke-dirty-${process.pid}.tmp`) &&
@@ -735,6 +845,7 @@ const cases = [
     name: 'Strict Phase 7 packet blocks a dirty worktree',
     result: runPacketWithDirtyWorktree({ ...validPublicIdentity, ...validEvidence }, ['--strict']),
     expect(result) {
+      if (result.packet === null) return false;
       return (
         result.status === 1 &&
         result.packet.gitStatus.includes(`.phase7-smoke-dirty-${process.pid}.tmp`) &&
@@ -745,12 +856,16 @@ const cases = [
     },
   },
   {
-    name: 'Phase 7 packet ignores dirty upstream generated evidence',
+    name: 'Phase 7 packet reports dirty upstream generated evidence instead of trusting it',
     result: runPacketWithDirtyUpstreamEvidence({ ...validPublicIdentity, ...validEvidence }),
     expect(result) {
+      if (result.packet === null) return false;
       return (
         result.status === 0 &&
-        !result.packet.gitStatus.includes('docs/e2e/generated/human-e2e-manifest.json')
+        result.packet.gitStatus.includes('docs/e2e/generated/human-e2e-manifest.json') &&
+        result.packet.blockers.includes(
+          'Phase 7 source snapshot: docs/e2e/generated/human-e2e-manifest.json working bytes do not match pinned HEAD.',
+        )
       );
     },
   },
@@ -762,6 +877,7 @@ const cases = [
       PHASE7_SIGNED_OFF_BY: 'tester@example.com',
     }),
     expect(result) {
+      if (result.packet === null) return false;
       return (
         result.status === 0 &&
         result.packet.evidence.signedOffBy === '' &&
@@ -777,6 +893,7 @@ const cases = [
       PHASE7_TODAY_CHECKOFF_QA_PASS: 'complete',
     }),
     expect(result) {
+      if (result.packet === null) return false;
       return (
         result.status === 0 &&
         result.packet.evidence.todayCheckoffQaPass === false &&

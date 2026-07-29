@@ -18,8 +18,8 @@ Date: 2026-07-15
   immutable snapshot through the native pinned Supabase CLI `2.109.1`, refuses
   public/migration/function/Auth/Storage/all-Cron state, validates and retains a
   full-target-bound cutover record, one traffic/provider-freeze artifact, and
-  five schema-v2 boundary files, predeploys all 17 functions before 67
-  migrations through `0068`, retains before/pre-migration/after
+  five schema-v2 boundary files, predeploys all 17 functions before 70
+  migrations through `0071`, retains before/pre-migration/after
   schema/migration/function/type evidence, and fails closed without retaining
   raw CLI output or provider digests.
 - DB-06 actively closes ingress: the runner sets
@@ -32,7 +32,7 @@ Date: 2026-07-15
 - Immediately before migration push, DB-06 revalidates the cutover bytes and
   rereads the exact function inventory, public freeze responses, Auth freeze,
   empty migration inventory, schema, Storage, and all Cron jobs. The final pass
-  contract rejects omitted proof, requires 80 public/80 RLS tables, one
+  contract rejects omitted proof, requires 82 public/82 RLS tables, one
   `photos` bucket, zero Auth cohort/Storage objects/Cron jobs, and revalidates
   the cutover artifacts at completion. DB-06 never unfreezes staging; release
   belongs to a separate recorded downstream live gate.
@@ -44,12 +44,21 @@ Date: 2026-07-15
   no failure is mislabeled as contained.
 - DB-06 retains linked generated types only after exact local/linked hash parity
   and deliberately leaves repository type replacement to DB-08.
-- The local DB gate now rehearses the exact `0067` -> `0068` forward cutover
-  with legacy nonzero adherence caches, client-authored freezes, partial steps,
-  and marker rows before its two clean 67-migration head resets. It proves the
-  locked cutover clears unverifiable projections, preserves completion
-  evidence, and restores adherence from markers only after exact-timezone
-  configuration.
+- The local DB gate now defines exact `0067 -> 0068 -> 0069 -> 0070 -> 0071`
+  forward rehearsals plus two clean 70-migration head resets. Those four
+  transitions cover the adherence cutover, Shelf/completion replay bridge,
+  draft-only consent-copy staging, and recommendation zero-admission boundary.
+  The `0067 -> 0068` fixture includes legacy nonzero adherence caches,
+  client-authored freezes, partial steps, and marker rows and requires the
+  locked cutover to clear unverifiable projections, preserve completion
+  evidence, and restore adherence only after exact-timezone configuration.
+  The exact full current-head command is not a pass until every phase exits and
+  teardown completes. On 2026-07-29 that command exited 0: all four forward
+  cutovers, both clean resets, exact 70-version history, the focused lane, 15
+  structural pgTAP files / 1,199 assertions, error-level lint, empty
+  migration-shadow drift, temporary 6,771-line type generation, CAT-08 10/10,
+  and teardown passed. This is disposable local source evidence only; DB-08
+  type replacement and all hosted gates remain open.
 - Store/privacy inventory and production infrastructure runbook are documented.
 
 ## Not Done Because It Requires External Accounts

@@ -3,13 +3,12 @@ import { useMemo } from 'react';
 
 import { classifyRole } from '@/features/routine/sequencing';
 import { useProfileBits } from '@/features/scheduler/profile';
-import type { ShelfProduct } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import { recommend, type RecReplenishmentItem, type RecResult, type RecShelfItem } from './engine';
-import { isRecommendationDataLoading } from './loading';
-import { DEFAULT_PREFERENCES } from './preferences';
+import { hasExplicitFragranceMarker } from './fragrance';
+import { isRecommendationDataLoading, isRecommendationDataUnavailable } from './loading';
 import { collectReplenishmentCandidates } from './replenishment';
 import { loadDismissed, loadPreferences } from './store';
 
@@ -22,6 +21,7 @@ import { loadDismissed, loadPreferences } from './store';
 const EMPTY: RecResult = {
   recommendations: [],
   youreSet: false,
+  goalReviewPending: false,
   conflictCoverageStatus: 'unsupported_unreviewed',
 };
 
@@ -34,10 +34,6 @@ async function loadRecommendationStateForCurrentHealthLease() {
   });
 }
 
-function isFragranced(p: ShelfProduct): boolean {
-  return [p.name, ...p.ingredients].some((t) => /fragrance|parfum|perfume/i.test(t));
-}
-
 export function useRecommendations() {
   const shelf = useShelf();
   const profile = useProfileBits();
@@ -45,9 +41,16 @@ export function useRecommendations() {
     queryKey: ['recPrefsAndDismissed'],
     queryFn: loadRecommendationStateForCurrentHealthLease,
   });
+  const isUnavailable = isRecommendationDataUnavailable({
+    shelfError: shelf.isError,
+    profileError: profile.isError,
+    prefsError: prefsQ.isError,
+    profileSource: profile.data?.source ?? null,
+    consentCurrent: profile.data?.consentCurrent ?? null,
+  });
 
   const result = useMemo<RecResult>(() => {
-    if (!shelf.data || !profile.data) return EMPTY;
+    if (!shelf.data || !profile.data || !prefsQ.data || isUnavailable) return EMPTY;
     const items: RecShelfItem[] = shelf.data.items.flatMap((i) => {
       const role = classifyRole({ ...i.engineProduct, category: i.category });
       if (!role) return [];
@@ -59,7 +62,7 @@ export function useRecommendations() {
           tags: i.engineProduct.tags,
           concentration: i.engineProduct.concentration,
           applicabilityFacts: i.engineProduct.applicabilityFacts,
-          fragranced: isFragranced(i.product),
+          fragranced: hasExplicitFragranceMarker(i.product),
         },
       ];
     });
@@ -77,18 +80,21 @@ export function useRecommendations() {
       profile: {
         ...profile.data,
         reproductiveStatus: profile.data.pregnancyStatus,
+        consentCurrent: profile.data.consentCurrent,
+        goalProvenance: profile.data.goalProvenance,
       },
       shelf: items,
       replenishment,
       conflicts: shelf.data.unresolvedConflicts,
       conflictCoverageStatus: shelf.data.conflictCoverageStatus,
-      preferences: prefsQ.data?.prefs ?? DEFAULT_PREFERENCES,
-      dismissed: new Set(prefsQ.data?.dismissed ?? []),
+      preferences: prefsQ.data.prefs,
+      dismissed: new Set(prefsQ.data.dismissed),
     });
-  }, [shelf.data, profile.data, prefsQ.data]);
+  }, [isUnavailable, shelf.data, profile.data, prefsQ.data]);
 
   return {
     result,
+    isUnavailable,
     isLoading: isRecommendationDataLoading({
       shelfLoading: shelf.isLoading,
       profileLoading: profile.isLoading,

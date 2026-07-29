@@ -38,6 +38,20 @@ describe('Recommendation route contracts', () => {
     }
   });
 
+  it('keeps type-first acceptance in the user-completed manual-add flow', () => {
+    const source = readAppRoute('recommendations/[id].tsx');
+
+    expect(source).toContain('const recType = recTypeByKey(rec.productType);');
+    expect(source).toContain(
+      'const presetCategory = recType ? ROLE_TO_CATEGORY[recType.role] : undefined;',
+    );
+    expect(source).toContain(
+      "presetCategory ? { pathname: '/shelf/manual', params: { presetCategory } } : '/shelf/manual'",
+    );
+    expect(source).not.toContain("pathname: '/shelf/search'");
+    expect(source).not.toContain('catalogProductId');
+  });
+
   it('keeps recommendation card footers usable on narrow phones', () => {
     const source = readAppRoute('recommendations/index.tsx');
 
@@ -102,6 +116,17 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('<YoureSet compact={compactHub} />');
     expect(source).not.toContain('<View className="flex-1 items-center justify-center px-2">');
     expect(source).not.toContain('<YoureSet />');
+  });
+
+  it('renders explicit truthful states for every zero-result evaluation', () => {
+    const source = readAppRoute('recommendations/index.tsx');
+
+    expect(source).toContain("result.conflictCoverageStatus === 'not_applicable'");
+    expect(source).toContain('{REC_COPY.noPairEvaluation.title}');
+    expect(source).toContain('{REC_COPY.noPairEvaluation.body}');
+    expect(source).toContain('{REC_COPY.noCurrentSuggestion.title}');
+    expect(source).toContain('{REC_COPY.noCurrentSuggestion.body}');
+    expect(source).toContain('else if (result.recommendations.length > 0) {');
   });
 
   it('keeps recommendation preferences fail-closed on local save failure', () => {
@@ -172,6 +197,7 @@ describe('Recommendation route contracts', () => {
     );
     expect(source).toContain('{showPreferencesSubtitle ? (');
     expect(source).toContain('{REC_COPY.preferences.subtitle}');
+    expect(source).toContain('{REC_COPY.preferences.compactScope}');
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
     expect(source).toContain("? 'mb-1 mt-1.5'");
     expect(source).toContain("? 'mb-1.5 mt-3'");
@@ -261,5 +287,11 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('style={{ width: 72, flexShrink: 0 }}');
     expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');
     expect(source).not.toContain('mt-4 min-h-[44px] items-center justify-center py-2');
+    expect(source.indexOf('await dismissRecommendation(rec.id);')).toBeLessThan(
+      source.indexOf("track('recommendation_dismissed');"),
+    );
+    expect(source.indexOf('if (isConflict && rec.relatedRuleId) {')).toBeLessThan(
+      source.indexOf("track('recommendation_accepted');"),
+    );
   });
 });

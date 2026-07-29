@@ -226,7 +226,7 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 135,
+    "data-store": 141,
     "edge-function": 17,
     "feature-flag": 16,
     "generated-packet": 32,
@@ -409,6 +409,13 @@
       "source": "apps/mobile/src/lib/offline/completionQueue.ts",
       "featureIds": ["F-07"],
       "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/offline/shelfMirrorQueue.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/offline/shelfMirrorQueue.ts",
+      "featureIds": ["F-03"],
+      "readiness": "needs-device-verification"
     },
     {
       "id": "data-store:local:apps/mobile/src/lib/supabase/largeSecureStore.ts",
@@ -894,6 +901,13 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:health_consent_copy_staging_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:health_consent_withdrawal_operations",
       "category": "data-store",
       "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
@@ -1076,6 +1090,13 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:recommendation_admission_control",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
+      "featureIds": ["F-13"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:recommendation_preferences",
       "category": "data-store",
       "source": "supabase/migrations/20260613000021_recommendations.sql",
@@ -1101,6 +1122,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260615000027_phase6_payments.sql",
       "featureIds": ["F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:routine_completion_sync_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "featureIds": ["F-07"],
       "readiness": "implemented"
     },
     {
@@ -1139,11 +1167,25 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:shelf_product_identities",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:shelf_scans",
       "category": "data-store",
       "source": "supabase/migrations/20260613000016_smart_shelf.sql",
       "featureIds": ["F-03"],
       "readiness": "inert"
+    },
+    {
+      "id": "data-store:postgres:shelf_sync_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
     },
     {
       "id": "data-store:postgres:skin_profiles",

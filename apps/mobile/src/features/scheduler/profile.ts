@@ -13,6 +13,10 @@ import {
   type StoredSkinProfile,
 } from '@/features/onboarding/skinProfileStore';
 import {
+  currentGoalRecommendationProvenance,
+  type GoalRecommendationProvenance,
+} from '@/features/recommendations/goalProvenance';
+import {
   applyCurrentServerSkinProfileFilters,
   CURRENT_SERVER_SKIN_PROFILE_SELECT,
   isServerSkinProfileFallbackPermitted,
@@ -43,6 +47,8 @@ export type ProfileBits = {
   pregnancy: boolean;
   consentCurrent: boolean;
   goals: GoalId[];
+  /** Exact current quiz/profile tuple that authorized these runtime-validated goals. */
+  goalProvenance?: GoalRecommendationProvenance | null;
 };
 
 const UNKNOWN_PROFILE: ProfileBits = {
@@ -54,6 +60,7 @@ const UNKNOWN_PROFILE: ProfileBits = {
   pregnancy: false,
   consentCurrent: false,
   goals: [],
+  goalProvenance: null,
 };
 
 function normalizePregnancyStatus(value: unknown): PregnancySafetyStatus {
@@ -82,6 +89,11 @@ function profileBitsFromStoredProfile(profile: StoredSkinProfile): ProfileBits {
     ...pregnancyBits(status),
     consentCurrent: true,
     goals: profile.goals,
+    goalProvenance: currentGoalRecommendationProvenance({
+      source: 'local_current_quiz',
+      profileCompletedAt: profile.completedAt,
+      goals: profile.goals,
+    }),
   };
 }
 
@@ -127,6 +139,11 @@ export async function readProfileBits(): Promise<ProfileBits> {
           ...pregnancyBits('unknown'),
           consentCurrent: true,
           goals: profile.goals,
+          goalProvenance: currentGoalRecommendationProvenance({
+            source: 'server_current_quiz',
+            profileCompletedAt: profile.completed_at,
+            goals: profile.goals,
+          }),
         };
       }
     } catch {

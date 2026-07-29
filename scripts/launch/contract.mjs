@@ -49,7 +49,11 @@ const REQUIRED_FEATURE_PROFESSIONAL_REVIEWS = Object.freeze({
   }),
 });
 
-const PROFESSIONAL_REVIEW_FEATURE_KEYS = Object.freeze(['routine_builder', 'cycle_scheduler']);
+const PROFESSIONAL_REVIEW_FEATURE_KEYS = Object.freeze([
+  'routine_builder',
+  'cycle_scheduler',
+  'recommendations',
+]);
 
 const REQUIRED_SAFETY_FALSE = Object.freeze([
   'diagnosisTreatmentCurePreventionClaims',
@@ -140,7 +144,7 @@ export function validateLaunchContract(contract) {
     !sameMembers(Object.keys(featureReviewRequirements), PROFESSIONAL_REVIEW_FEATURE_KEYS)
   ) {
     errors.push(
-      'featureProfessionalReviewRequirements must cover routine_builder and cycle_scheduler exactly.',
+      'featureProfessionalReviewRequirements must cover routine_builder, cycle_scheduler, and recommendations exactly.',
     );
   } else {
     for (const featureKey of PROFESSIONAL_REVIEW_FEATURE_KEYS) {

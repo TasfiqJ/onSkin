@@ -255,6 +255,46 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   declarations, and App Review remain open.
 - Status: `in_progress` source candidate through migrations `0068` and `0069`.
 
+### A-012: Admit Recommendation Provenance Before Product Or Commerce Output
+
+- Decision: Recommendation output is a positive-admission boundary, not a
+  consequence of a UI route, feature flag, quality score, `reviewedBy` string,
+  or available product row. The current source admits only explicit
+  `type_first` and `shelf_context` provenance. Product-specific mode is
+  literally closed, the admitted catalog-product set is empty, and no current
+  producer can construct `catalog_product` provenance. Goal-active output
+  requires the Phase 7 flag plus exact current health consent, profile and goal
+  provenance, and a current positive review clearance; the clearance registry
+  starts empty. The current goal-provenance envelope checks exact structure,
+  current quiz-contract hashes, and the exact goal set, but it is not an
+  unforgeable authorization receipt. Unavailable
+  profiles and unreadable recommendation preference/dismissal records withhold
+  suggestions. The production engine takes no caller-supplied recommendation
+  type collection. Commerce admission is unconditionally false in this
+  checkpoint, so neither current provenance kind may render where-to-buy or
+  trigger a retailer fetch.
+- Criteria: zero product publication by default, no caller-minted review
+  authority, closed-set rejection reasons, exhaustive provenance handling,
+  current health/profile inputs and exact goal-set matching, no commission or affiliate data in
+  detection/ranking, no retailer request before commerce admission, and an
+  honest no-result/review-pending recovery state. Migration `0071` purges every
+  legacy recommendation-cache row and revokes all unused runtime table
+  privileges; retained owner/export reads and the exact preference-writer RPC
+  cannot publish a recommendation.
+- Risk: structural type guidance can still convey an express or implied
+  health-product claim. Exact copy, catalog facts, market classification,
+  professional receipts, consumer-health privacy obligations, analytics,
+  accessibility, native/network behavior, and final App Privacy disclosures
+  remain separate gates. A later product-specific mode requires a new
+  versioned admission contract binding an exact SKU, market, and admission
+  receipt. Goal-active output additionally requires server-minted and
+  server-verified receipts bound to the exact account, health-processing
+  lifecycle, profile completion, goal set, review scope, and expiry. Relaxing a
+  literal or adding a database row is insufficient.
+- Status: `in_progress` zero-product-admission source candidate through
+  migration `0071`. It is not clinical, cosmetic-chemistry, privacy, legal,
+  App Store, safety, market, or revenue clearance.
+
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
 - Decision: the encrypted local skin profile is the V1 authority for pregnancy/breastfeeding status, and it can be read or changed only with a granted consent record whose version and SHA-256 text hash match the current health-data copy. Malformed or unreadable local profile/consent records are preserved and fail closed; they never trigger a server fallback. When no local profile exists, the newest server profile may supply non-safety axes/goals, but its pregnancy status is always treated as unknown because a local V1 edit may be newer. Shelf, Plan, scheduler, Today, recommendations, and conflict explanations consume the shared `ProfileBits` reader. Only a successfully read explicit local `none` clears caution; affirmative, prefer-not, unknown, missing, and unavailable states remain cautious without an inferred pregnancy claim. Exclusions are derived from the launch-gated docs/02 safety rules, not a parallel table: production accepts only rules carrying recorded review metadata, while development/staging can exercise starter rules for review. Eligible reviewed rules remove retinoids and hydroquinone and remove BHA unless every threshold-bearing active percentage is unambiguously tag-associated and confirmed low, before sequence, cadence, cycle, ramp, replacement recommendations, or Today. If the separate cadence review gate is closed, all treatment/exfoliant placement is withheld instead of becoming an unassigned daily step. Writes persist locally first, disable competing selection input while pending, and invalidate every dependent query.
@@ -271,6 +311,9 @@ apps/mobile
   encrypted Shelf/completion v3 journals and FIFO outboxes
   Shelf-first offline replay with reversible completion-dependency deferral
   deterministic client mirrors
+  zero-product recommendation admission with closed provenance variants
+  type-first and Shelf-context recommendation output only
+  commerce guard before any where-to-buy render or fetch
   central exact-session remote admission and controlled refresh
   composite Apple ID-token authentication plus lifecycle capture permit
   durable owner-aware store transaction journal
@@ -287,6 +330,7 @@ Supabase
   account publication leases and deletion barriers
   sealed Apple lifecycle, one-use capture, and signed-event state
   server-owned adherence projection and minimized Shelf/completion replay receipts
+  sealed legacy recommendation cache with no runtime API-role writer
 
 Apple
   native authorization -> identity token + one-use authorization code

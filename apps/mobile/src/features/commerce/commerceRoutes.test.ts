@@ -136,6 +136,18 @@ describe('Commerce route contracts', () => {
     expect(source.match(/minHeight: 48/g)?.length ?? 0).toBeGreaterThanOrEqual(3);
   });
 
+  it('requires admitted catalog provenance before recommendation commerce can render', () => {
+    const whereToBuy = readFeatureFile('WhereToBuy.tsx');
+    const recommendationDetail = readAppRoute('recommendations/[id].tsx');
+
+    expect(whereToBuy).toContain('isAdmittedCatalogProductProvenance(provenance)');
+    expect(whereToBuy).toContain(
+      'if (!phase7Flags.commerce || !isAdmittedCatalogProductProvenance(provenance)) return null;',
+    );
+    expect(recommendationDetail).toContain('<WhereToBuy provenance={rec.provenance} />');
+    expect(recommendationDetail).not.toContain('<WhereToBuy productType={rec.productType} />');
+  });
+
   it('keeps stack detail paid-link disclosure actions touchable on phones', () => {
     const source = readAppRoute('commerce/stack/[slug].tsx');
 

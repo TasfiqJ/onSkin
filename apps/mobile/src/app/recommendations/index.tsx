@@ -343,7 +343,7 @@ function HubIntro({
 
 export default function ForYouScreen() {
   const { height, width } = useWindowDimensions();
-  const { result, isLoading } = useRecommendations();
+  const { result, isLoading, isUnavailable } = useRecommendations();
   const groups = grouped(result.recommendations);
   const compactHub = height < 640;
   const shortHub = height < 520;
@@ -352,10 +352,12 @@ export default function ForYouScreen() {
   const narrowCompactHub = compactHub && width <= 430;
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || isUnavailable) return;
     if (result.youreSet) track('youre_set_shown');
-    else track('recommendation_shown', { count: result.recommendations.length });
-  }, [isLoading, result.youreSet, result.recommendations.length]);
+    else if (result.recommendations.length > 0) {
+      track('recommendation_shown', { count: result.recommendations.length });
+    }
+  }, [isLoading, isUnavailable, result.youreSet, result.recommendations.length]);
 
   return (
     <Screen edges={['top']}>
@@ -383,6 +385,24 @@ export default function ForYouScreen() {
             Looking at your routine…
           </Text>
         </View>
+      ) : isUnavailable ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.unavailable.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.unavailable.body}
+          </Text>
+        </View>
+      ) : result.recommendations.length === 0 && result.goalReviewPending ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.reviewPending.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.reviewPending.body}
+          </Text>
+        </View>
       ) : result.youreSet ? (
         <YoureSet compact={compactHub} />
       ) : result.recommendations.length === 0 &&
@@ -394,6 +414,25 @@ export default function ForYouScreen() {
           <Text variant="body" tone="muted" className="mt-3 text-center">
             We won&apos;t show a compatibility result for these products until that review is
             complete.
+          </Text>
+        </View>
+      ) : result.recommendations.length === 0 &&
+        result.conflictCoverageStatus === 'not_applicable' ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.noPairEvaluation.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.noPairEvaluation.body}
+          </Text>
+        </View>
+      ) : result.recommendations.length === 0 ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.noCurrentSuggestion.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.noCurrentSuggestion.body}
           </Text>
         </View>
       ) : (

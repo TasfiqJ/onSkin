@@ -6,10 +6,11 @@ export const CATALOG_HEALTH_EPOCH_FUNCTION_NAMES = [
   'catalog-report',
   'catalog-search',
 ] as const;
-/** Exact PostgREST RPCs that read or mutate health-purpose adherence state. */
+/** Exact PostgREST RPCs that read or mutate health-purpose state. */
 export const HEALTH_PROCESSING_POSTGREST_RPC_NAMES = [
   'record_routine_completion',
   'refresh_routine_adherence',
+  'set_recommendation_preferences',
   'set_routine_adherence_timezone',
   'sync_shelf_product',
 ] as const;

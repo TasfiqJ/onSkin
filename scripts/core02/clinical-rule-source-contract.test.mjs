@@ -40,8 +40,8 @@ const paths = Object.freeze({
   migration0067: 'supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql',
   migration0068: 'supabase/migrations/20260726000068_routine_adherence_authority.sql',
   migration0069: 'supabase/migrations/20260726000069_routine_completion_sync_bridge.sql',
-  migration0070:
-    'supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql',
+  migration0070: 'supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql',
+  migration0071: 'supabase/migrations/20260726000071_recommendation_zero_admission.sql',
   schemaContract: 'supabase/tests/database/schema_contract.test.sql',
   clinicalSealContract: 'supabase/tests/database/clinical_content_legacy_seal.test.sql',
   lintContract: 'supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql',
@@ -878,31 +878,23 @@ test('migration 0066 seals legacy clinical tables and 0067 preserves the exact l
   );
 });
 
-test('the database contract is exactly 69 migrations through head 0070', () => {
+test('the database contract is exactly 70 migrations through head 0071', () => {
   const migrations = readdirSync(resolve(root, 'supabase/migrations'))
     .filter((name) => name.endsWith('.sql'))
     .sort();
-  assert.equal(migrations.length, 69);
-  assert.equal(
-    migrations.at(-1),
-    '20260726000070_health_consent_draft_successor_staging.sql',
-  );
-  assert.match(
-    read(paths.migration0068),
-    /step_id IS NULL/u,
-  );
+  assert.equal(migrations.length, 70);
+  assert.equal(migrations.at(-1), '20260726000071_recommendation_zero_admission.sql');
+  assert.match(read(paths.migration0068), /step_id IS NULL/u);
   assert.match(read(paths.migration0069), /public\.record_routine_completion/u);
-  assert.match(
-    read(paths.migration0070),
-    /public\.stage_health_consent_copy_draft_successor/u,
-  );
+  assert.match(read(paths.migration0070), /public\.stage_health_consent_copy_draft_successor/u);
+  assert.match(read(paths.migration0071), /private\.recommendation_admission_control/u);
 
   for (const path of [paths.schemaContract, paths.clinicalSealContract, paths.lintContract]) {
     const source = read(path);
-    assert.match(source, /\b69::bigint\b/u, `${path} must bind the exact migration count.`);
+    assert.match(source, /\b70::bigint\b/u, `${path} must bind the exact migration count.`);
     assert.match(
       source,
-      /['"]20260726000070['"]::text/u,
+      /['"]20260726000071['"]::text/u,
       `${path} must bind the exact migration head.`,
     );
   }

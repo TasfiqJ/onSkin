@@ -4,6 +4,7 @@ import type { SensitivityLevel } from '@/features/intelligence/engine';
 import type { ConflictSafetyContext } from '@/features/intelligence/rules';
 
 import type { RecType } from './catalog';
+import { isCurrentFragranceFreeRecommendationType } from './fragrance';
 import type { RecPreferences } from './preferences';
 
 // The FIT score (docs/09 §5/§6). A weighted, explainable score over SIX inputs,
@@ -109,15 +110,16 @@ export function fitScore(type: RecType, ctx: FitContext): FitResult {
   const ownsPotent = POTENT_ACTIVE.some((t) => ctx.ownedTags.has(t));
   const simplicity = addsPotent && ownsPotent && ctx.sensitivity === 'sensitive' ? 0.7 : 1.0;
 
-  // Preference match: a bonus when a set values filter aligns with the type's note
-  // (e.g. fragrance-free types for a fragrance-free preference). Honest, not a sell.
+  // Preference match: a bonus only when the current type itself carries the
+  // exact fragrance-free meaning. `sensitiveSafe` is not fragrance-free evidence
+  // and must never be used as a proxy. Honest, not a sell.
   const wantsFragranceFree = ctx.preferences.values.includes('fragrance_free');
-  const typeIsFragranceFree = /fragrance-free/i.test(type.what) || type.sensitiveSafe;
+  const typeIsFragranceFree = isCurrentFragranceFreeRecommendationType(type);
   const preferenceMatch = wantsFragranceFree && typeIsFragranceFree ? 1.0 : 0.85;
 
-  // Catalog quality: type-first only until the curated catalog lands. A deliberate,
-  // honest down-weight (the engine degrades to type-first guidance, §5/§12).
-  const catalogQuality = type.example ? 0.6 : 0.5;
+  // No catalog product is admitted in CORE-06A, so catalog quality contributes
+  // literally zero. An illustrative type example is not product-quality evidence.
+  const catalogQuality = 0;
 
   const breakdown: FitBreakdown = {
     profileMatch,

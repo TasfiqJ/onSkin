@@ -116,18 +116,30 @@ export const REC_COPY = {
   // instead, which never asserts a goal-matching the engine cannot perform.
   youreSet: {
     title: 'Your routine looks complete.',
-    body: 'Cleanser, treatment, moisturiser and SPF. All covered, conflict-free, and matched to your goals. Nothing to add right now.',
+    body: 'Cleanser, moisturiser and SPF are covered, conflict-free, and matched to your goals. Nothing to add right now.',
     bodyNoGoals:
-      'Cleanser, treatment, moisturiser and SPF. All covered and conflict-free. Nothing to add right now.',
-    checks: ['Cleanser · treatment · moisturiser · SPF', 'No unresolved conflicts'],
-    footnote: 'we’ll tell you the moment that changes, never before',
+      'Cleanser, moisturiser and SPF are covered and conflict-free. Nothing to add right now.',
+    checks: ['Cleanser · moisturiser · SPF', 'No unresolved conflicts'],
+    footnote: 'Nothing else is suggested from the current reviewed inputs.',
+  },
+  reviewPending: {
+    title: 'Recommendation review in progress',
+    body: "We won't call your routine complete or suggest an unreviewed active while the required review is still pending.",
+  },
+  noPairEvaluation: {
+    title: 'No compatibility result',
+    body: "No relevant product pair was evaluated, so we won't call your routine conflict-free or complete.",
+  },
+  noCurrentSuggestion: {
+    title: 'No current suggestion',
+    body: "There isn't a current suggestion to show. We haven't marked your routine complete.",
   },
   card: {
     whatLabel: 'What',
     whyLabel: 'Why',
     howLabel: 'How we decided',
     seeHow: 'See how',
-    specificNote: 'specific products, ranked by fit',
+    specificNote: 'No specific product is selected or offered.',
     addToShelf: 'Add to shelf',
     dismiss: 'Not for me',
     whereToFind: 'Where to find it',
@@ -153,22 +165,37 @@ export const REC_COPY = {
   // A calm Today entry into the hub (docs/09 §7.1).
   todayCard: {
     title: 'A few honest suggestions',
+    statusTitle: 'Recommendation status',
     bodyOne: '1 thing we’d gently suggest',
     bodyMany: (n: number) => `${n} things we’d gently suggest`,
     bodySet: 'Your routine looks complete',
+    bodyReviewPending: 'Recommendation review is in progress; no unreviewed result is shown.',
+    bodyNoPairEvaluation: 'No product pair was evaluated, so no completeness result is shown.',
+    bodyNoCurrentSuggestion:
+      'There is no current suggestion, and your routine is not marked complete.',
   },
   preferences: {
     title: 'Recommendation preferences',
-    subtitle: 'These shape what fits you. They never change what sells.',
+    subtitle:
+      'Only fragrance-free can affect current type guidance. Other choices are saved, but reviewed product matching is not available and they do not affect current suggestions.',
+    compactScope: 'Current guidance: fragrance-free only.',
     valuesLabel: 'Values',
     budgetLabel: 'Budget',
     formatLabel: 'Texture',
     // Honest until specific products carry attributes (B-CATALOG-SEED): the
     // engine is type-first and weights these in fit, it does not yet hard-exclude.
-    footnote: 'We prioritise options that fit these.',
+    footnote:
+      'Only fragrance-free can affect current type guidance. Other choices are saved but do not affect current suggestions.',
     none: 'No preference',
     saveFailedTitle: 'Preference not saved',
     saveFailedBody: "We couldn't save that preference. Please try again.",
+    loadFailedTitle: 'Preferences unavailable',
+    loadFailedBody:
+      "We couldn't verify your saved preferences, so suggestions are paused and nothing was replaced.",
+  },
+  unavailable: {
+    title: 'Suggestions unavailable',
+    body: "We couldn't verify your profile, shelf, and preferences, so no personalised suggestion is shown.",
   },
 } as const;
 
@@ -203,7 +230,7 @@ export const whyCopy = {
     'Your routine has no moisturiser. It helps seal everything in and support your barrier.',
   gapCleanser: 'Your routine has no cleanser. A gentle, clean base is where every routine starts.',
   betterFit: (name: string): string =>
-    `Your ${name} is fragranced, which can suit sensitive skin less well. A fragrance-free option is worth considering. Optional, not a must.`,
+    `Your saved shelf details include a fragrance marker for ${name}. A fragrance-free option may be worth considering. Optional, not a must.`,
   conflict: (a: string, b: string): string =>
     `${a} and ${b} can clash on your shelf. A non-conflicting alternative to one of them would keep your routine simple.`,
   goal: (goal: GoalId): string =>

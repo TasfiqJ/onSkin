@@ -1,7 +1,7 @@
 # DB-06 Staging Deployment Source Checkpoint
 
 Date: 2026-07-15
-Updated: 2026-07-26 for the 66-migration chain through `0067`
+Updated: 2026-07-29 for the 70-migration chain through `0071`
 
 Status: `in_progress`, blocked by `ACCT-03`; source procedure and evidence
 contract implemented; no hosted staging deployment or live DB-06 acceptance
@@ -43,8 +43,8 @@ Node orchestrator. The orchestrator:
    failure. On Windows, an unconfirmed job-object shutdown preserves the
    cancellation signal and runtime root and emits a stable redacted recovery
    fingerprint;
-4. derives and hashes the exact 66 ordered migration files through
-   `20260726000067`, the 17 `deployByDefault` functions, each function's
+4. derives and hashes the exact 70 ordered migration files through
+   `20260726000071`, the 17 `deployByDefault` functions, each function's
    transitive local source set, the function manifest, the Deno lockfile, and
    every deployment/evidence procedure input;
 5. runs the complete credential-free local DB-05 replay and retains its
@@ -96,14 +96,14 @@ Node orchestrator. The orchestrator:
     misstate the initial operator observations as newly captured. The
     migration push begins only after this final zero-cohort boundary passes;
 13. runs a migration dry run, applies the exact ordered migrations, proves the
-    exact 66-ID history through `0067`, redeploys the same complete manifest, and proves a
+    exact 70-ID history through `0071`, redeploys the same complete manifest, and proves a
     second dry run has no pending source change;
 14. runs linked pgTAP, error-level database lint, and an empty linked schema
     diff for `public`, `auth`, and `storage`;
 15. generates linked public-schema types, requires their SHA-256 to equal the
     clean local generation, and retains the linked type file without modifying
     `packages/types/src/database.types.ts`; and
-16. verifies the final schema has exactly 80 public tables and all 80 have RLS,
+16. verifies the final schema has exactly 82 public tables and all 82 have RLS,
     one reviewed `photos` Storage bucket, and still no Auth cohort, Storage
     object, or Cron job; captures the complete final
     migration/function/configuration/Auth/freeze inventories; rechecks the
@@ -247,14 +247,14 @@ $env:DB06_CUTOVER_EVIDENCE_DIR = "<absolute-path-to-redacted-boundary-directory>
 including real descendant process-tree settlement on normal, timeout, and
 output-limit paths, plus the static wrapper/orchestrator contract. The fixtures
 cover deterministic
-62-migration/17-function source hashing; partial and malformed schema output;
+70-migration/17-function source hashing; partial and malformed schema output;
 Git snapshot mutation/injection rejection; aggregate Auth/Storage/all-Cron
 parsing and forward-safe Auth configuration-field review;
 divergent migration history; non-empty-target rejection; missing, inactive,
 extra, wrong-JWT, or un-hashed functions; secret-digest minimization; strict
 zero-cohort cutover file/fingerprint/hash/expiry binding; active shared freeze
 guards across all 17 functions; exact frozen-response canaries across the eight
-public-gateway functions; type validation/parity; exact 80-table/RLS and
+public-gateway functions; type validation/parity; exact 82-table/RLS and
 one-bucket/no-cohort/no-Cron acceptance; evidence governance fields; redaction;
 traversal/overwrite denial; partial-finalization recovery; checksums; retained
 linked types; completion-time cutover revalidation; and rejection of a `pass`

@@ -12,7 +12,12 @@ import {
   REC_COPY,
   VALUES_LABEL,
 } from '@/features/recommendations/copy';
-import { DEFAULT_PREFERENCES, type RecPreferences } from '@/features/recommendations/preferences';
+import {
+  DEFAULT_PREFERENCES,
+  RECOMMENDATION_FORMATS,
+  type RecommendationFormat,
+  type RecPreferences,
+} from '@/features/recommendations/preferences';
 import { loadPreferences, savePreferences } from '@/features/recommendations/store';
 import { track } from '@/lib/analytics/track';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -20,13 +25,13 @@ import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // Preferences (docs/09 §8, §11). The values / format / budget filters. Honest
-// personalisation: they shape *what fits you*, never *what sells*. The engine is
-// type-first and WEIGHTS these in the fit score; the hard product-level exclusion
-// (a fragrance-averse user never seeing a fragranced product) lands with the
-// curated catalog (B-CATALOG-SEED), so the copy says "prioritise", not "never".
+// personalisation, never commerce. Current type guidance can use an explicit
+// fragrance-free preference where relevant type/Shelf facts exist. Budget,
+// format, and the remaining values are saved for a later reviewed product-level
+// matching contract and are not described as current ranking inputs.
 
 const BUDGETS: BudgetBand[] = ['drugstore', 'mid', 'premium'];
-const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];
+const FORMATS = RECOMMENDATION_FORMATS;
 const MAX_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS = 3_000;
 
 function devRecommendationPreferenceFailureMode(): 'once' | null {
@@ -113,12 +118,16 @@ export default function PreferencesScreen() {
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const simulatedPreferenceFailureUsed = useRef(false);
-  const { data: prefs, isLoading } = useQuery({
+  const {
+    data: prefs,
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey: ['recPreferences'],
     queryFn: loadPreferences,
   });
   const p = prefs ?? DEFAULT_PREFERENCES;
-  const controlsDisabled = isLoading || saving;
+  const controlsDisabled = isLoading || isError || saving;
   const preferenceFailureMode = devRecommendationPreferenceFailureMode();
   const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
@@ -231,7 +240,7 @@ export default function PreferencesScreen() {
       values: p.values.includes(v) ? p.values.filter((x) => x !== v) : [...p.values, v],
     });
   const setBudget = (b: BudgetBand) => commit({ ...p, budget: p.budget === b ? null : b });
-  const toggleFormat = (f: string) =>
+  const toggleFormat = (f: RecommendationFormat) =>
     commit({
       ...p,
       formats: p.formats.includes(f) ? p.formats.filter((x) => x !== f) : [...p.formats, f],
@@ -275,7 +284,11 @@ export default function PreferencesScreen() {
           <Text variant="bodySm" tone="muted" className="mt-1.5">
             {REC_COPY.preferences.subtitle}
           </Text>
-        ) : null}
+        ) : (
+          <Text variant="label" tone="muted" className="mt-1">
+            {REC_COPY.preferences.compactScope}
+          </Text>
+        )}
         {saveFailed ? (
           <View
             accessibilityRole="alert"
@@ -287,6 +300,20 @@ export default function PreferencesScreen() {
             </Text>
             <Text variant="bodySm" tone="muted" className="mt-1">
               {REC_COPY.preferences.saveFailedBody}
+            </Text>
+          </View>
+        ) : null}
+        {isError ? (
+          <View
+            accessibilityRole="alert"
+            className="mt-4 rounded-xl bg-clay-tint px-3.5 py-3"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <Text className="font-sans-bold text-[13px]" style={{ color: colors.clay }}>
+              {REC_COPY.preferences.loadFailedTitle}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              {REC_COPY.preferences.loadFailedBody}
             </Text>
           </View>
         ) : null}

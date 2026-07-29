@@ -179,11 +179,60 @@ substitute for the evidence.
 
 ## RLS Evidence Contract
 
-The migration-derived public-schema inventory is 80 tables: 28 owner-client private tables, eight directly service-only private tables, 22 sealed service-private lifecycle/authority tables, four sealed global clinical/editorial tables, four sealed catalog-authority tables, and 14 authenticated catalog/editorial tables. Migration `0054` adds seven force-RLS, sealed health-consent lifecycle/copy tables; migration `0055` adds three force-RLS, sealed Apple lifecycle/capture/event tables; migration `0057` moves `catalog_import_batches` and `catalog_quality_reports` from direct service access behind the exact catalog-import RPC lifecycle and seals `catalog_sources` because its legal approval and reviewer fields are release authority rather than client catalog data. Migration `0058` removes the active-only read policies and every API-role SELECT grant from `conflict_rules`, `sequencing_rules`, `creator_stacks`, and `creator_stack_items` until a separate evidence-bound B-DERM publication authority exists. It also removes direct API-role reads from the legacy/dictionary authorities `ingredient_tags`, `ingredient_pao_defaults`, `product_categories`, and `ingredient_tag_definitions`; bounded serving functions consume reviewed projections instead. Migration `0058` additionally creates seven `private`-schema sealed CAT-03 campaign/record/product-mutation/product-event/product-head/global-release-event/global-release-head authorities; they are outside the 80-public-table count and must deny every direct API-role path. Migration `0059` purges the legacy account-linked barcode history, removes all `shelf_scans` policies and API-role privileges, and force-RLS seals that relation. It also purges and seals `obf_contribution_queue`, revokes all runtime table/enqueue authority while retaining the empty relation for account-erasure compatibility, and purges/check-constrains every raw identity field in `catalog_lookup_events`; only its owner-linked lookup type, bounded result, and timestamps remain. Migration `0060` deletes every legacy `ingredient_pao_defaults` row, removes its read policy, force-RLS seals and revokes the relation, and validates an always-false check so it cannot be repopulated. `product_categories` remains sealed editorial/future-candidate metadata and is not a serving estimate. Migration `0061` limits authenticated PAO reads to bounded, reviewed `label`, `brand_label`, or `catalog` evidence tied to the exact parent product source; `category_default` and `unknown` remain excluded. Migration `0062` adds covered CAT-03 authority indexes and a bounded statement-level count/root-set guard while retaining the per-row checks. Migration `0063` adds 15 private CAT-08 operator-authority relations whose separate contract denies every raw API-role path. Migration `0064` adds fail-closed, hash-bound quiz/profile provenance without rewriting existing rows during upgrade. Migration `0065` repairs the operator transition's ambiguous conflict targets and closes PostgreSQL's global default PUBLIC function-execute ACL while preserving the existing exact-role gateway posture. Migration `0066` is an additional seal: it revokes all residual table privileges from `conflict_rules` and `sequencing_rules`, forces RLS with no policies, and applies an owner-safe statement guard that rejects insert, update, delete, and truncate while preserving the 23 explicitly unreviewed historical fixtures. It does not create reviewed clinical publication authority. Migration `0067` adds the documented checker-only `PRAGMA:TABLE` string literal to the one migration-owner catalog-release wrapper whose runtime-created `pg_temp` validation cache cannot otherwise be resolved by static analysis. The harmless literal creates no runtime extension dependency or runtime/security behavior change, every other wrapper statement remains linted, and the seven-assertion database contract plus runtime rehearsal keep the function shape and ACL fail closed. Every public table must be classified exactly once and have RLS enabled. The current matrix source registers all 66 public-schema tables classified private exactly once: the 36 directly queryable tables receive row-positive owner/cross-user, real signed-anonymous, and publishable-key-with-no-session probes, while all 30 sealed public-schema tables deny direct access to every API role, including `service_role`. The regenerated hosted matrix must prove that 66-table posture and add the seven CAT-03 and 15 CAT-08 `private`-schema authorities as separate exact ACL/denial lanes. These identities and denial lanes are not interchangeable.
+The current migration-derived public-schema inventory is 82 RLS-enabled
+tables: 36 directly queryable private tables, 32 read-sealed
+private/authority tables, and 14 authenticated catalog/editorial tables. The
+32 sealed tables comprise 24 service-private lifecycle/authority relations,
+four global clinical/editorial relations, and four catalog-authority
+relations. Every public table must be classified exactly once and have RLS
+enabled.
+
+Migrations `0054` and `0055` add the sealed health-consent and Apple lifecycle
+relations. Migrations `0057`-`0063` seal catalog import, clinical/editorial,
+dictionary, CAT-03, and CAT-08 authorities; minimize scan/contribution/lookup
+history; close category PAO defaults; constrain product-specific PAO evidence;
+and add the catalog curation/operator controls. Migration `0064` adds
+fail-closed hash-bound quiz/profile provenance. Migration `0065` repairs the
+operator transition and global default function ACL. Migration `0066` revokes
+the residual legacy conflict/sequencing privileges without creating clinical
+publication authority. Migration `0067` adds only the checker-visible
+temporary-table shape for the unchanged catalog-release wrapper; its focused
+26- and seven-assertion evidence is narrow historical proof, not current-head
+database acceptance.
+
+Migrations `0068` and `0069` add authoritative adherence plus owner-derived
+Shelf/completion replay, two minimized private replay ledgers, and bounded
+export sources. Migration `0070` stages only a `draft_blocked`
+health-consent-copy successor and grants no release authority. Migration
+`0071` establishes recommendation zero admission, purges the untrusted cache,
+keeps catalog recommendation eligibility closed, revokes unused runtime
+mutation privileges, and adds one immutable private admission control.
+
+The current matrix source registers all 68 public-schema tables classified
+private/read-sealed exactly once: the 36 directly queryable tables receive
+row-positive owner/cross-user, real signed-anonymous, and
+publishable-key-with-no-session probes, while all 32 sealed public-schema
+tables deny direct access to every API role, including `service_role`. The
+regenerated hosted matrix must prove that 68-table posture and every separately
+sealed `private`-schema CAT-02, CAT-03, CAT-08, replay, and recommendation
+authority lane. Public-table identities and private-schema denial lanes are
+not interchangeable.
 
 Negative database assertions accept only the exact expected PostgreSQL/PostgREST code, or exact empty rows for operations whose RLS semantics permit that result. Negative Storage assertions accept only typed authorization outcomes, with operation-specific not-found or empty-result allowances plus state-preserving owner/admin reads. Network failures, invalid requests or JWTs, missing buckets, and server failures must fail the harness. Cleanup must verify that synthetic database rows, Auth users, and Storage objects are gone.
 
-The focused local `0066` seal rehearsal/26-assertion pgTAP contract and `0067` checker-shape rehearsal/seven-assertion pgTAP contract prove those narrow source behaviors, but the final exhaustive current-head full-chain replay remains in progress and unproven. The credential-free behavioral smoke and static contract prove the harness/source shape only. DB-09 and DB-10 remain live-blocked until the complete 66-migration chain through `20260726000067_catalog_release_temp_table_lint_contract.sql` passes reviewed clean local and hosted resets and the 80-public-table/66-public-schema-private classification plus seven-CAT-03/15-CAT-08-`private`-schema-authority matrices produce redacted, clean-revision staging and production evidence. Evidence flags cannot substitute for those runs.
+The focused local `0066` seal rehearsal/26-assertion pgTAP contract and `0067`
+checker-shape rehearsal/seven-assertion pgTAP contract prove those narrow
+source behaviors, but they do not by themselves prove the exact current head.
+On 2026-07-29 the complete credential-free local PostgreSQL 15 gate passed all
+70 migrations through
+`20260726000071_recommendation_zero_admission.sql`, including every sequential
+cutover, two clean resets, 15 structural pgTAP files / 1,199 assertions, lint,
+empty migration-shadow drift, temporary type generation, CAT-08 10/10, and
+teardown. Repository types were deliberately not replaced. DB-09 and DB-10
+remain live-blocked until reviewed hosted resets and the complete
+82-public-table/68-public-schema-private/read-sealed classification plus every
+private-schema authority lane produce redacted, clean-revision staging and
+production evidence. Evidence flags cannot substitute for those runs.
 
 ## Current Non-Code Blockers
 

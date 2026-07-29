@@ -2,6 +2,8 @@ import type { EvidenceLabel, FunctionalTag, GoalId, SequencingRole } from '@onsk
 
 import type { EngineProduct } from '@/features/intelligence/engine';
 
+import { isCurrentGoalActiveReviewClearanceOpen } from './goalAdmission';
+
 // The recommendable PRODUCT-TYPE catalog (docs/09 §5/§6). The engine is type-first:
 // it recommends a *type* ("a mineral SPF 30+"), optionally surfacing specific
 // products ranked by fit. Until the curated catalog lands (B-CATALOG-SEED) there
@@ -12,12 +14,10 @@ import type { EngineProduct } from '@/features/intelligence/engine';
 // the evidence. There is NO commission / affiliate / brand-deal field. The FIT
 // score (fit.ts) draws only from this and the profile, never from commerce.
 //
-// *** BLOCKED: B-DERM-REVIEW. The medically-adjacent entries (an active for a
-// *** goal: retinoid, acids, vitamin C, azelaic, niacinamide) carry reviewedBy =
-// *** null and are launch-gated exactly like the conflict matrix (rules.ts) and the
-// *** PAO defaults (pao.ts). Structural routine-completeness types (a cleanser, a
-// *** moisturiser, an SPF, a hydrating serum) are NOT drug claims and ship; the
-// *** goal-active recommendations only surface in dev until clinical sign-off.
+// *** BLOCKED: B-DERM-REVIEW. Medically-adjacent goal actives are governed by the
+// *** structured, current clearance in goalAdmission.ts. Catalog rows cannot
+// *** self-authorize with an inline reviewer name. Structural routine-completeness
+// *** types remain honest, type-first guidance.
 
 export type RecType = {
   /** Stable type key (matches recommendations.product_type). */
@@ -35,26 +35,25 @@ export type RecType = {
   what: string;
   /** Illustrative category example. NOT a catalog product (B-CATALOG-SEED). */
   example: string | null;
-  /** Goals this type can help with (claim-safe; concerns, not conditions). */
+  /** Cosmetic-concern routing metadata; not product-specific or claim clearance. */
   goals: GoalId[];
   /** The docs/02-style evidence label for the type's relevance (§6). */
   evidenceLabel: EvidenceLabel;
-  /** A calm, claim-safe one-line evidence note for the "how". */
+  /** A restrained type-first evidence note; final claim clearance remains external. */
   evidenceNote: string;
   /** An honest downside/flaw, surfaced in the "how" (Wirecutter honesty, §3/§6). */
   caveat: string | null;
-  /** Safe to recommend for sensitive skin without a caution. */
+  /** Whether local type-first guidance avoids a built-in sensitivity caution. */
   sensitiveSafe: boolean;
-  /** Safe in pregnancy/breastfeeding. false => HARD-excluded for those profiles. */
+  /** Conservative type-first reproductive gate; never product-specific safety clearance. */
   pregnancySafe: boolean;
   /** Carries a potent active => medically-adjacent => launch-gated (B-DERM-REVIEW).
    *  Structural routine-completeness types are not gated. */
   medicalAdjacent: boolean;
-  /** Clinical sign-off marker (docs/02 §9 launch gate). null until B-DERM-REVIEW. */
-  reviewedBy: string | null;
 };
 
-// Structural routine-completeness types (claim-safe; always shippable) ----------
+// Structural type-first guidance. It may render locally, but no catalog identity,
+// product-specific commerce, or final launch/claim clearance follows from this list.
 const STRUCTURAL: RecType[] = [
   {
     type: 'mineral_spf',
@@ -69,7 +68,6 @@ const STRUCTURAL: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: false,
-    reviewedBy: null,
   },
   {
     type: 'daily_spf',
@@ -84,7 +82,6 @@ const STRUCTURAL: RecType[] = [
     sensitiveSafe: false,
     pregnancySafe: true,
     medicalAdjacent: false,
-    reviewedBy: null,
   },
   {
     type: 'ceramide_moisturiser',
@@ -99,7 +96,6 @@ const STRUCTURAL: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: false,
-    reviewedBy: null,
   },
   {
     type: 'gentle_cleanser',
@@ -114,7 +110,6 @@ const STRUCTURAL: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: false,
-    reviewedBy: null,
   },
   {
     type: 'fragrance_free_cleanser',
@@ -129,7 +124,6 @@ const STRUCTURAL: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: false,
-    reviewedBy: null,
   },
   {
     type: 'hydrating_serum',
@@ -144,7 +138,6 @@ const STRUCTURAL: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: false,
-    reviewedBy: null,
   },
 ];
 
@@ -163,7 +156,6 @@ const GOAL_ACTIVES: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: true,
-    reviewedBy: null,
   },
   {
     type: 'vitamin_c_serum',
@@ -178,7 +170,6 @@ const GOAL_ACTIVES: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: true,
-    reviewedBy: null,
   },
   {
     type: 'azelaic_acid',
@@ -193,7 +184,6 @@ const GOAL_ACTIVES: RecType[] = [
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: true,
-    reviewedBy: null,
   },
   {
     type: 'retinoid_serum',
@@ -208,7 +198,6 @@ const GOAL_ACTIVES: RecType[] = [
     sensitiveSafe: false,
     pregnancySafe: false, // HARD exclusion in pregnancy/breastfeeding (docs/02 safety)
     medicalAdjacent: true,
-    reviewedBy: null,
   },
   {
     type: 'bha_exfoliant',
@@ -221,9 +210,8 @@ const GOAL_ACTIVES: RecType[] = [
     evidenceNote: 'BHA. Plausible for congestion-prone skin',
     caveat: 'Build up slowly to avoid over-exfoliating',
     sensitiveSafe: false,
-    pregnancySafe: true, // low-dose cosmetic BHA generally fine; dose-gating lives in the conflict engine
+    pregnancySafe: true, // Category metadata only; goal-active admission remains closed.
     medicalAdjacent: true,
-    reviewedBy: null,
   },
 ];
 
@@ -231,23 +219,19 @@ export const REC_TYPES: RecType[] = [...STRUCTURAL, ...GOAL_ACTIVES];
 
 /**
  * Launch gate (B-DERM-REVIEW), mirroring `shippableRules()`.
- * In production, the medically-adjacent goal-active types are withheld until a
- * board-certified dermatologist signs off (reviewedBy set); the engine then
- * degrades to type-first STRUCTURAL guidance only. In dev the full set is used so
- * the layer is demoable. Structural routine-completeness types always ship. They
- * are routine-completeness, not drug claims.
+ * Medically-adjacent goal-active types are withheld until the governed review
+ * corpus is current. Dev mode is not a review bypass.
+ * Structural routine-completeness types may render locally as type-first guidance;
+ * this is not product, claim, legal, sunscreen-category, or final launch clearance.
  */
-export const RECS_REVIEWED = false;
-
 export function shippableRecTypes(types: RecType[] = REC_TYPES): RecType[] {
-  const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
-  if (isDev) return types;
-  return types.filter((t) => !t.medicalAdjacent || t.reviewedBy != null);
+  const goalReviewClearanceOpen = isCurrentGoalActiveReviewClearanceOpen();
+  return types.filter((type) => !type.medicalAdjacent || goalReviewClearanceOpen);
 }
 
 /**
  * Whether goal-driven (medically-adjacent) recommendations can ship. False in
- * production until B-DERM-REVIEW, where the gate strips every goal active. The
+ * every environment until B-DERM-REVIEW, where the gate strips every goal active. The
  * "you're set" copy must NOT claim the routine is "matched to your goals" when
  * this is false, because the engine cannot serve goal recs then (docs/09 §4: the
  * honesty bug where the gate silently removes the only goal mechanism).

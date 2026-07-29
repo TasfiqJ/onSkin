@@ -62,19 +62,15 @@ function Body({ rec }: { rec: Recommendation }) {
 
   const dismiss = async () => {
     haptics.select();
-    track('recommendation_dismissed');
     await dismissRecommendation(rec.id);
+    track('recommendation_dismissed');
     await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
     backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);
   };
 
-  // Where-to-buy is for real catalog types (gap / goal / better-fit / completion) ,
-  // the shelf-anchored replacement & conflict triggers route elsewhere (docs/10 §3).
-  const showWhereToBuy = rec.trigger !== 'replacement' && rec.trigger !== 'conflict';
-
+  // Current recommendations accept only a user-chosen product type or shelf action.
   const accept = () => {
     haptics.success();
-    track('recommendation_accepted');
     if (isConflict && rec.relatedRuleId) {
       const [productAId, productBId] = rec.relatedConflictProductIds ?? [];
       router.push({
@@ -86,6 +82,7 @@ function Body({ rec }: { rec: Recommendation }) {
       });
       return;
     }
+    track('recommendation_accepted');
     // No catalog yet (B-CATALOG-SEED) → the honest path is the manual-add flow, so
     // the user adds their own product of this type. Church-and-state intact. Carry
     // the recommended type's category so the form is pre-filled, not blank/stale.
@@ -156,9 +153,8 @@ function Body({ rec }: { rec: Recommendation }) {
           ) : null}
         </View>
 
-        {/* Where to buy (docs/10 §3). A quiet, consent-gated, FTC-disclosed affordance
-            BENEATH the rationale; church-and-state walled, opaque-token attribution. */}
-        {showWhereToBuy ? <WhereToBuy productType={rec.productType} /> : null}
+        {/* Runtime admission keeps this inert for type-first and shelf-context output. */}
+        <WhereToBuy provenance={rec.provenance} />
       </View>
 
       {/* actions */}
@@ -194,7 +190,7 @@ function Body({ rec }: { rec: Recommendation }) {
 export default function RecommendationDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { width } = useWindowDimensions();
-  const { result, isLoading } = useRecommendations();
+  const { result, isLoading, isUnavailable } = useRecommendations();
   const rec = result.recommendations.find((r) => r.id === id);
   const compactHeader = width <= 360;
 
@@ -223,6 +219,15 @@ export default function RecommendationDetail() {
         <View className="flex-1 items-center justify-center">
           <Text variant="bodySm" tone="muted">
             Looking at your routine…
+          </Text>
+        </View>
+      ) : isUnavailable ? (
+        <View className="flex-1 items-center justify-center px-6">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.unavailable.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.unavailable.body}
           </Text>
         </View>
       ) : !rec ? (

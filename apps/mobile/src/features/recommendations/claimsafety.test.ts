@@ -229,8 +229,31 @@ describe('the honest disclosures + the "you\'re set" stance are present (§3/§4
     expect(REC_COPY.youreSet.bodyNoGoals.toLowerCase()).not.toContain('goal');
     expect(REC_COPY.youreSet.body.toLowerCase()).toContain('goal'); // the dev/reviewed variant may
   });
+  it("does not promise a future notification from the you're-set state", () => {
+    expect(REC_COPY.youreSet.footnote.toLowerCase()).toContain('current reviewed inputs');
+    expect(REC_COPY.youreSet.footnote.toLowerCase()).not.toContain("we'll tell you");
+    expect(REC_COPY.youreSet.footnote.toLowerCase()).not.toContain('the moment');
+  });
+  it('never claims treatment coverage because treatment is not a required coverage role', () => {
+    expect(REC_COPY.youreSet.body.toLowerCase()).not.toContain('treatment');
+    expect(REC_COPY.youreSet.bodyNoGoals.toLowerCase()).not.toContain('treatment');
+    expect(REC_COPY.youreSet.checks.join(' ').toLowerCase()).not.toContain('treatment');
+  });
   it('the hub subtitle states the cardinal rule (ranked by fit/evidence, never commission)', () => {
     expect(REC_COPY.hub.subtitle.toLowerCase()).toContain('never by commission');
+  });
+  it('distinguishes the sole current preference influence from unavailable product matching', () => {
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).toContain('only fragrance-free');
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).toContain('not available');
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).toContain(
+      'do not affect current suggestions',
+    );
+    expect(REC_COPY.preferences.compactScope.toLowerCase()).toContain('fragrance-free only');
+    expect(REC_COPY.preferences.footnote.toLowerCase()).toContain('only fragrance-free');
+    expect(REC_COPY.preferences.footnote.toLowerCase()).toContain(
+      'do not affect current suggestions',
+    );
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).not.toContain('these shape what fits you');
   });
   it('keeps product-label PAO distinct from reviewed catalog PAO without attributing who recorded it', () => {
     const label = replacementCopy('Vitamin C serum', 'label_pao_countdown');

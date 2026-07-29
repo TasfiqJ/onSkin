@@ -216,6 +216,15 @@ async function expectNotVisible(client, table, column, value, label) {
   );
 }
 
+async function expectEmptyTable(client, table, select, label) {
+  const result = await client.from(table).select(select).limit(1);
+  if (result.error) throw result.error;
+  assert(
+    Array.isArray(result.data) && result.data.length === 0,
+    `${label}: expected an exact empty relation.`,
+  );
+}
+
 async function expectBlockedMutation(label, promise) {
   const result = await promise;
   assert(
@@ -272,6 +281,17 @@ function registerPrivateTableProbe(table, column, value, crossClient = 'userB') 
     `Unknown cross-client selector for ${table}.`,
   );
   privateTableProbes.set(table, { column, value, crossClient });
+}
+
+function registerClosedPrivateTableProbe(table, column, value) {
+  assert(PRIVATE_PUBLIC_TABLES.includes(table), `Unknown closed private-table probe: ${table}.`);
+  assert(!privateTableProbes.has(table), `Duplicate private-table probe: ${table}.`);
+  assert(
+    typeof column === 'string' && column.length > 0,
+    `Missing closed probe column for ${table}.`,
+  );
+  assert(value !== null && value !== undefined, `Missing closed probe value for ${table}.`);
+  privateTableProbes.set(table, { closed: true, column, value });
 }
 
 function registerSealedPrivateTableProbe(table, column, value) {
@@ -1279,23 +1299,30 @@ async function main() {
       );
       await expectBlockedInsert(
         'streak freeze cross-user insert',
-        userB.client
-          .from('streak_freezes')
-          .insert({
-            user_id: userA.id,
-            applied_for_date: addIsoDays(adherenceReferenceDay, -2),
-          }),
+        userB.client.from('streak_freezes').insert({
+          user_id: userA.id,
+          applied_for_date: addIsoDays(adherenceReferenceDay, -2),
+        }),
       );
 
-      const recommendationPreferences = await upsertOne(
-        userA.client,
-        'recommendation_preferences',
+      const recommendationPreferencesResult = await userA.client.rpc(
+        'set_recommendation_preferences',
         {
-          user_id: userA.id,
-          values_filters: ['fragrance_free'],
-          budget_band: 'drugstore',
-          format_prefs: ['gel'],
+          p_values_filters: ['fragrance_free'],
+          p_budget_band: 'drugstore',
+          p_format_prefs: ['gel'],
         },
+      );
+      if (recommendationPreferencesResult.error) throw recommendationPreferencesResult.error;
+      assert(
+        Array.isArray(recommendationPreferencesResult.data) &&
+          recommendationPreferencesResult.data.length === 1,
+        'recommendation preference RPC did not return exactly one owner row.',
+      );
+      const recommendationPreferences = recommendationPreferencesResult.data[0];
+      assert(
+        recommendationPreferences?.user_id === userA.id,
+        'recommendation preference RPC returned a foreign owner.',
       );
       registerPrivateTableProbe(
         'recommendation_preferences',
@@ -1316,34 +1343,62 @@ async function main() {
         recommendationPreferences.user_id,
         'recommendation preferences cross-user read',
       );
+      await expectBlockedMutation(
+        'recommendation preferences owner direct update',
+        userA.client
+          .from('recommendation_preferences')
+          .update({ budget_band: 'premium' })
+          .eq('user_id', userA.id),
+      );
       await expectBlockedInsert(
         'recommendation preferences cross-user insert',
         userA.client
           .from('recommendation_preferences')
           .insert({ user_id: userB.id, values_filters: ['bad'] }),
       );
+      await expectBlockedInsert(
+        'recommendation preferences service-role direct insert',
+        admin.from('recommendation_preferences').insert({
+          user_id: userB.id,
+          values_filters: ['fragrance_free'],
+          budget_band: 'drugstore',
+          format_prefs: ['gel'],
+        }),
+      );
 
-      const recommendation = await insertOne(userA.client, 'recommendations', {
-        user_id: userA.id,
-        trigger: 'gap',
-        product_type: `phase9-${randomUUID()}`,
-        fit_rationale: 'Phase 9 RLS test rationale.',
-        evidence_grade: 'C',
-      });
-      registerPrivateTableProbe('recommendations', 'id', recommendation.id);
-      await expectVisible(
+      const absentRecommendationId = '00000000-0000-0000-0000-000000000000';
+      registerClosedPrivateTableProbe('recommendations', 'id', absentRecommendationId);
+      await expectEmptyTable(
+        admin,
+        'recommendations',
+        'id',
+        'recommendation cache service-role zero-admission read',
+      );
+      await expectEmptyTable(
         userA.client,
         'recommendations',
         'id',
-        recommendation.id,
-        'recommendation owner read',
+        'recommendation cache owner zero-admission read',
       );
-      await expectNotVisible(
-        userB.client,
-        'recommendations',
-        'id',
-        recommendation.id,
-        'recommendation cross-user read',
+      await expectBlockedInsert(
+        'recommendation owner insert while admission is closed',
+        userA.client.from('recommendations').insert({
+          user_id: userA.id,
+          trigger: 'gap',
+          product_type: `phase9-${randomUUID()}`,
+          fit_rationale: 'Phase 9 closed-admission probe.',
+          evidence_grade: 'C',
+        }),
+      );
+      await expectBlockedInsert(
+        'recommendation service-role insert while admission is closed',
+        admin.from('recommendations').insert({
+          user_id: userA.id,
+          trigger: 'gap',
+          product_type: `phase9-${randomUUID()}`,
+          fit_rationale: 'Phase 9 service-role closed-admission probe.',
+          evidence_grade: 'C',
+        }),
       );
       await expectBlockedInsert(
         'recommendation cross-user insert',
@@ -2371,11 +2426,7 @@ async function main() {
         absentDigest,
       );
       registerSealedPrivateTableProbe('health_consent_copy_review_events', 'id', absentUuid);
-      registerSealedPrivateTableProbe(
-        'health_consent_copy_staging_events',
-        'id',
-        absentUuid,
-      );
+      registerSealedPrivateTableProbe('health_consent_copy_staging_events', 'id', absentUuid);
       registerSealedPrivateTableProbe('health_dependent_consent_operations', 'id', absentUuid);
       registerSealedPrivateTableProbe('health_dependent_consent_states', 'user_id', absentUuid);
       registerSealedPrivateTableProbe(
@@ -2462,7 +2513,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 67 private tables have access-control probes', async () => {
+    await runCheck('all 68 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(
@@ -2473,6 +2524,24 @@ async function main() {
       for (const table of PRIVATE_PUBLIC_TABLES) {
         const probe = privateTableProbes.get(table);
         assert(Boolean(probe), `Missing private-table positive control: ${table}.`);
+        if (probe.closed === true) {
+          for (const [client, label] of [
+            [admin, 'service-role admin'],
+            [userA.client, 'owner client'],
+            [userB.client, 'cross-user client'],
+            [signedAnonymous.client, 'signed-anonymous client'],
+            [unauthenticated, 'unauthenticated client'],
+          ]) {
+            await expectNotVisible(
+              client,
+              table,
+              probe.column,
+              probe.value,
+              `${table} ${label} closed-table read`,
+            );
+          }
+          continue;
+        }
         if (probe.sealed === true) {
           for (const [client, label] of [
             [admin, 'service-role admin'],
@@ -2583,7 +2652,7 @@ async function main() {
       // Direct table privileges are intentionally absent for sealed tables,
       // including service_role. Their residue is attested through the narrow
       // lifecycle RPC/rehearsal lanes, not through an impossible admin read.
-      if (probe.sealed === true) continue;
+      if (probe.sealed === true || probe.closed === true) continue;
       const remaining = await admin.from(table).select(probe.column).eq(probe.column, probe.value);
       if (remaining.error) {
         errors.push(

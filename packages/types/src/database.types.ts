@@ -1077,14 +1077,10 @@ export type Database = {
           format_prefs: string[];
           updated_at: Timestamptz;
         };
-        Insert: {
-          user_id: string;
-          values_filters?: string[];
-          budget_band?: string | null;
-          format_prefs?: string[];
-          updated_at?: Timestamptz;
-        };
-        Update: Partial<Database['public']['Tables']['recommendation_preferences']['Insert']>;
+        // CORE-06A: client table DML is closed. Authenticated owners write only
+        // through set_recommendation_preferences.
+        Insert: never;
+        Update: never;
         Relationships: [];
       };
       // docs/09 §9. The recommendations cache. NO commercial column exists in the
@@ -1101,18 +1097,10 @@ export type Database = {
           status: string;
           created_at: Timestamptz;
         };
-        Insert: {
-          id?: string;
-          user_id: string;
-          trigger: string;
-          product_type: string;
-          catalog_product_id?: string | null;
-          fit_rationale: string;
-          evidence_grade?: string | null;
-          status?: string;
-          created_at?: Timestamptz;
-        };
-        Update: Partial<Database['public']['Tables']['recommendations']['Insert']>;
+        // CORE-06A: the optional cache is server-owned and admission is closed.
+        // Catalog references are constrained NULL until a later reviewed release.
+        Insert: never;
+        Update: never;
         Relationships: [];
       };
       // docs/10. The commerce domain, walled off downstream of ranking (D-058). No
@@ -1386,6 +1374,20 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      set_recommendation_preferences: {
+        Args: {
+          p_values_filters: string[];
+          p_budget_band: string | null;
+          p_format_prefs: string[];
+        };
+        Returns: {
+          user_id: string;
+          values_filters: string[];
+          budget_band: string | null;
+          format_prefs: string[];
+          updated_at: Timestamptz;
+        }[];
+      };
       stage_health_consent_copy_draft_successor: {
         Args: {
           p_consent_type: string;

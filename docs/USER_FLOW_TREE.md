@@ -1656,11 +1656,19 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ## Flow: Personalized Recommendations
 
-- Goal: A user can review independent For You recommendations, tune recommendation preferences, and escape stale/direct recommendation links without getting trapped.
+- Goal: A user can review only positively admitted, independent For You
+  guidance, see an honest no-product state when product-specific authority is
+  absent, tune recommendation preferences, and escape stale/direct
+  recommendation links without getting trapped.
 - Persona: Returning user deciding what to add, replace, or skip.
 - Entry state: User has completed onboarding or has seeded profile/shelf/routine state.
 - Start screen/URL/window: You tab, Today recommendation teaser, or direct recommendation routes.
-- Success state: Recommendations remain calm and explainable, and direct-entry recommendation screens recover to the correct parent surface.
+- Success state: Current-source output is limited to admitted type-first or
+  Shelf-context provenance; product-specific and goal-active content remains
+  absent while its positive gates are closed; unavailable profiles and
+  unreadable preference/dismissal records withhold suggestions; commerce
+  admission remains unconditionally false and makes no retailer request; and
+  direct-entry recommendation screens recover to the correct parent surface.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native commerce/share surfaces.
@@ -1674,6 +1682,11 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-08/recommendations-youre-set-compact/`
 - Current ultra-short evidence: `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-spf-gap-prompt-current/`
+- Evidence qualification: all listed packets predate the CORE-06A positive
+  recommendation-admission boundary. They remain useful geometry/navigation
+  history, but they do not establish exact-current admission, product-specific
+  suppression, goal provenance, commerce network absence, native behavior, or
+  launch acceptance.
 
 ### Path A: For You Hub
 
@@ -1683,6 +1696,81 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: product-specific mode closed with zero admitted products
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open the hub, a recommendation detail, and the Today teaser with an
+    empty Shelf, one-product Shelf, and a forged/full local catalog candidate
+    while product-specific mode is closed.
+  - Expected result: No catalog product name, product image, candidate fit
+    score, buy action, retailer availability, price, or affiliate disclosure is
+    rendered. The surface may show admitted structural type guidance or an
+    honest no-product/review-pending state. A forged candidate, mutable review
+    string, quality score, absent correction, feature flag, or caller-supplied
+    recommendation-type/copy collection cannot create product provenance.
+  - Evidence: Exact-source/build identity, screenshots and accessibility
+    snapshots for all three Shelf states, recommendation/provenance snapshot,
+    negative catalog-name query, and browser/network log proving zero retailer
+    requests.
+- Branch: goal-active admission remains closed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Exercise the goal recommendation path with the Phase 7 flag off,
+    flag on but missing/stale health consent, missing/stale profile or goal
+    provenance, and current inputs but an empty review-clearance set.
+  - Expected result: Every state withholds the goal-active suggestion and shows
+    calm unavailable/review-pending recovery without substituting another
+    active or implying product safety. Only a later exact-current positive
+    clearance plus a server-minted, server-verified receipt bound to the exact
+    account, health-processing lifecycle, profile completion, goal set, review
+    scope, and expiry may admit the reviewed output. The current structured
+    goal-provenance envelope alone is not authorization.
+  - Evidence: Gate-state matrix, screenshots, exact local record snapshots, and
+    absence of goal-active analytics/product/retailer traffic.
+- Branch: no-product and product lookup failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open a type-first recommendation when there is no admitted matching
+    product, then simulate candidate service unavailable, timeout, malformed
+    response, owner/market mismatch, stale serving receipt, and an open
+    correction/hold.
+  - Expected result: The type explanation remains truthful if independently
+    admitted, but no product is invented, cached as current, or described as
+    reviewed/available. The user sees an honest no-product state and can return
+    to For You or add their own Shelf item.
+  - Evidence: Screenshot sequence, bounded error-state transcript, cache
+    snapshot, serving-receipt checks, and absence of leaked raw errors.
+- Branch: commerce fetch is impossible for current provenance
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Enable the commerce environment flag and grant local commerce
+    consent, then open every current `type_first` and `shelf_context` detail and
+    attempt direct where-to-buy routes. Separately inject unavailable, timeout,
+    malformed, redirect, non-HTTPS, and wrong-product retailer responses into a
+    later product-provenance test fixture.
+  - Expected result: Current provenance never renders or invokes where-to-buy,
+    regardless of shape, flag, or consent, because current commerce admission
+    returns `false` unconditionally, and generates zero retailer/affiliate
+    traffic. The later fixture requires an exact SKU/market/admission receipt
+    and fails closed without changing ranking, product identity, or
+    recommendation provenance while giving a calm retry/back path.
+  - Evidence: Source-bound provenance matrix, network log with a zero-retailer
+    assertion, screenshot/accessibility snapshots, and ranking equality before
+    and after all commerce fixtures.
+- Branch: recommendation inputs are unavailable or unreadable
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open the hub, Today teaser, and a detail route with an unavailable
+    profile, unreadable preference envelope, and unreadable dismissal envelope;
+    relaunch each state and then restore the exact original bytes.
+  - Expected result: Every state withholds all suggestions, renders the calm
+    suggestions-unavailable recovery, does not replace unreadable bytes with
+    defaults or an empty set, and emits no product, goal-active, analytics, or
+    retailer traffic. Restoring valid input permits only the independently
+    admitted current output.
+  - Evidence: Before/after encrypted-byte hashes, screenshots and accessibility
+    snapshots, reload transcript, recommendation snapshot, and network/analytics
+    log.
 - Branch: Today recommendation teaser and SPF gap prompt
   - Priority: Important
   - Automate later: Yes

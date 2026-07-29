@@ -97,6 +97,11 @@ Start here:
 - [CORE-05 Ask Draft-Successor Staging Migration](../../supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql)
 - [CORE-05 Draft-Successor Database Contract](../../supabase/tests/database/health_consent_draft_successor_staging.test.sql)
 - [CORE-05 0070 Forward-Upgrade Contract](../../supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql)
+- [CORE-06 Recommendation Admission Source Checkpoint](./CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md)
+- [CORE-06 Recommendation Admission Source Contract](../../scripts/core06/recommendation-admission-source-contract.test.mjs)
+- [CORE-06 Recommendation Zero-Admission Migration](../../supabase/migrations/20260726000071_recommendation_zero_admission.sql)
+- [CORE-06 Recommendation Database Contract](../../supabase/tests/database/recommendation_zero_admission.test.sql)
+- [CORE-06 0071 Forward-Upgrade Contract](../../supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -189,18 +194,20 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260726000067`; the current CAT-03 pgTAP source plan contains 99
+head `20260726000071`; the current CAT-03 pgTAP source plan contains 99
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
-catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, exact local/
-hosted governed full-chain evidence through `0067`, current signed database
-readback, sealed holdout result, or active catalog exists, so CAT-03 is not
-complete and no Apple, legal, product-quality, market, or revenue outcome is
-implied. The disposable isolated local 66-migration gate passes as recorded
-below; it is not a retained governed packet or hosted proof.
+catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, hosted
+governed full-chain evidence through `0071`, current signed database readback,
+sealed holdout result, or active catalog exists, so CAT-03 is not complete and
+no Apple, legal, product-quality, market, or revenue outcome is implied. The
+exact disposable local `0071` gate now passes, including CAT-03 99/99 within the
+15-file / 1,199-assertion pgTAP suite. That is local source evidence only, not a
+retained governed hosted packet, signed readback, real corpus, or active
+catalog.
 
 CAT-04 is now an `in_progress` source checkpoint, blocked by `CAT-03`, `H-07`,
 and `H-08`. The candidate normalizes UPC-E/manual package codes, rejects
@@ -631,26 +638,74 @@ signed-archive identity, final policy/App Privacy answers, counsel/security
 review, and App Store acceptance remain open. This checkpoint is not launch,
 legal, Apple, product-market, or revenue approval.
 
-The `0065` CAT-08 transition/default-ACL repair remains intact. The additional
-`0066` migration revokes all residual table privileges from the explicitly
-unreviewed legacy conflict/sequencing fixtures, forces their no-policy RLS
-posture, and installs migration-owner mutation guards without creating reviewed
-publication authority. Its focused local rehearsal and 26-assertion pgTAP
-contract pass for the current source. Migration `0067` adds the documented
-checker-only ephemeral table shape for the catalog-release wrapper's
-runtime-created temporary validation table. Every other wrapper statement
-remains linted, and the literal adds no extension dependency or runtime/security
-behavior change. Its focused PostgreSQL 15 rehearsal and direct checker proof
-pass. The final exhaustive 66-migration current-head gate also passes locally
-in one isolated run: two clean resets, exact history through `0067`, structural
-pgTAP, error-level schema lint, empty migration-shadow drift, 6,635-line
-temporary type generation, and the ten-assertion two-connection rehearsal all
-pass before sandbox teardown. Repository types were deliberately not replaced,
-and no hosted evidence exists.
+CORE-06A is now an `in_progress`, zero-product-admission source checkpoint.
+Product-specific recommendation mode is closed, the admitted catalog-product
+set is empty, and current result provenance is limited to `type_first` and
+`shelf_context`; no current producer can construct product-specific provenance.
+Goal-active output requires the Phase 7 flag plus exact current health consent,
+profile and goal provenance, and positive current review clearance. The review
+clearance set starts empty, so a flag does not publish an active suggestion.
+The current goal-provenance envelope checks strict shape, current quiz-contract
+hashes, and the exact goal set; it is not an unforgeable authorization receipt.
+Unavailable profiles and unreadable
+recommendation preference/dismissal state withhold all suggestions. The
+production engine does not accept caller-supplied recommendation types or copy.
+
+Commerce remains downstream, and its current admission predicate returns
+`false` unconditionally. Neither current provenance kind can render where-to-buy
+UI or start a retailer/affiliate request, even when commerce is flagged on and
+consent is present. Commission, price, retailer, paid-placement, availability,
+click-attribution, and conversion fields remain outside detection and ranking.
+Migration `0071` purges every legacy recommendations-cache row, revokes all
+unused runtime table privileges, and leaves retained owner/export reads plus
+the exact preference-writer RPC without recommendation-publication authority.
+
+A future product-specific successor still requires a new versioned contract
+binding an exact SKU, market, and admission receipt. Goal-active output also
+requires server-minted and server-verified receipts bound to the exact account,
+health-processing lifecycle, profile completion, goal set, review scope, and
+expiry.
+
+The CORE-06A contract binds this literal zero-product posture, exhaustive
+provenance, the goal-positive gate, commerce guard, cache seal, and verification
+wiring. Historical recommendation browser packets predate this boundary and
+remain layout/navigation evidence only. Exact-current E2E, approved product and
+claim corpus, CAT-03 serving receipts, professional review, market
+classification, privacy/consumer-health and affiliate review, hosted/native/
+accessibility/network evidence, archive-derived App Privacy answers, counsel,
+and App Store acceptance remain open. This checkpoint does not prove safety,
+compliance, product-market fit, seven-figure revenue, or any revenue.
+
+The `0065` CAT-08 transition/default-ACL repair, `0066` legacy clinical-table
+seal, and `0067` checker-only catalog-release lint contract remain intact.
+Migrations `0068` and `0069` add the authoritative routine-adherence projection
+and owner-derived Shelf/completion replay bridge; `0070` records only an
+immutable draft-to-draft health-consent copy transition and grants no release
+authority; and `0071` adds the CORE-06A database zero-admission boundary,
+purges the untrusted recommendation cache, keeps product eligibility closed,
+revokes unused runtime privileges, and exposes only the bounded owner preference
+writer. The repository therefore contains 70 migrations through
+`20260726000071`.
+
+On 2026-07-29, `npm run phase2:db-local-verify` exited 0 against the complete
+70-migration chain through `20260726000071`: all four forward cutovers
+(`0067 -> 0068 -> 0069 -> 0070 -> 0071`), two clean resets, exact 70-version
+history with `0071` latest, the focused current-head lane, 15 structural pgTAP
+files / 1,199 assertions including CAT-03 99/99, error-level public-schema lint,
+an empty migration-shadow diff, temporary type generation of 6,771 lines with
+SHA-256
+`39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
+the CAT-08 two-connection rehearsal 10/10, and complete teardown. Cleanup left
+zero DB-05 containers, volumes, networks, processes, or temporary directories.
+Repository types were deliberately not replaced, so DB-08 remains open. This
+is disposable local PostgreSQL 15 source evidence only; it does not prove
+hosted staging/production, generated-type parity or replacement, live
+role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
+compatibility, device behavior, professional approval, or release readiness.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now covers all 66 migrations through
-`0067`, all 17 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now binds all 70 migrations through
+`0071`, all 17 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

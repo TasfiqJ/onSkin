@@ -131,6 +131,9 @@ const clientCallableDefiners = new Set([
   'begin_health_data_consent_withdrawal(bigint, text, text, text)',
   'decline_initial_health_data_consent(bigint, text, text)',
   'export_catalog_corrections_for_subject(uuid, timestamptz, uuid, integer)',
+  'export_routine_completion_sync_receipts_for_subject(timestamptz, uuid, integer)',
+  'export_shelf_product_identities_for_subject(timestamptz, uuid, integer)',
+  'export_shelf_sync_receipts_for_subject(timestamptz, uuid, integer)',
   'get_health_data_consent_status()',
   'get_health_dependent_consent_status(text)',
   'get_account_access_state()',
@@ -143,9 +146,12 @@ const clientCallableDefiners = new Set([
   'owns_routine(uuid)',
   'owns_user_product(uuid)',
   'read_entitlement_projections()',
+  'record_routine_completion(text, text, text, text, text, integer, text, text, text)',
   'refresh_routine_adherence()',
   'record_health_dependent_consent(bigint, bigint, text, text, text, text)',
+  'set_recommendation_preferences(text[], text, text[])',
   'set_routine_adherence_timezone(text)',
+  'sync_shelf_product(text, text, text, text, jsonb)',
   'begin_health_dependent_consent_withdrawal(bigint, bigint, text, text, text, text)',
 ]);
 const serviceCallableDefiners = new Set([

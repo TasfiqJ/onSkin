@@ -92,6 +92,7 @@ describe('health-purpose local write coverage', () => {
     expect(HEALTH_PROCESSING_POSTGREST_RPC_NAMES).toEqual([
       'record_routine_completion',
       'refresh_routine_adherence',
+      'set_recommendation_preferences',
       'set_routine_adherence_timezone',
       'sync_shelf_product',
     ]);
@@ -100,7 +101,6 @@ describe('health-purpose local write coverage', () => {
       'features/commerce/store.ts:commerce_click_events',
       'features/onboarding/OnboardingContext.tsx:skin_profiles',
       'features/photos/store.ts:photos',
-      'features/recommendations/store.ts:recommendation_preferences',
       'features/routine/useProgress.ts:routine_completions',
       'features/scheduler/profile.ts:skin_profiles',
       'features/trend/useTrend.ts:skin_profiles',
@@ -143,6 +143,14 @@ describe('health-purpose local write coverage', () => {
     expect(shelfMirrorQueue).toContain('runHealthDataOperation');
     expect(shelfMirrorQueue).not.toContain(".from('user_products')");
     expect(shelfMirrorQueue.match(/lease\.assertCurrent\(\)/gu)?.length).toBeGreaterThanOrEqual(6);
+
+    const recommendationStore = readFileSync(`${SRC}/features/recommendations/store.ts`, 'utf8');
+    expect(recommendationStore).toContain("'set_recommendation_preferences'");
+    expect(recommendationStore).toContain('runHealthDataWriteOperation');
+    expect(recommendationStore).not.toContain(".from('recommendation_preferences')");
+    expect(recommendationStore.match(/lease\.assertCurrent\(\)/gu)?.length).toBeGreaterThanOrEqual(
+      4,
+    );
 
     const catalog = readFileSync(`${SRC}/features/catalog/client.ts`, 'utf8');
     const catalogFunctions = [...catalog.matchAll(/functions\.invoke\(\s*['"]([^'"]+)['"]/gu)]

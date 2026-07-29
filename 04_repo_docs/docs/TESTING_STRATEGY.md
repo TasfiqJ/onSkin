@@ -190,6 +190,20 @@ reviewed hosted worker/Storage/backup, two-device, physical-iPhone, and professi
 remain open. The exact privacy report, policy/support URLs, and
 non-expiring demo review access also remain launch blockers.
 
+## 2026-07-29 CORE-06A Source Checkpoint
+
+The current full repository verification passes TypeScript, strict lint, 331
+mobile test files / 4,156 tests, and the catalog operator console's 7 files /
+24 tests. Focused recommendation-admission verification additionally passes
+the CORE-06 source and static database contracts, the complete recommendation
+mobile slice, the launch contract, the Phase 7 packet-inventory contract, and
+the Phase 9 RLS/policy code gates.
+
+These counts and code gates are local source facts. They do not establish a
+clean release-candidate evidence chain, hosted Supabase behavior, native iOS
+archive or physical-device behavior, professional legal/clinical/privacy
+clearance, App Review acceptance, market demand, or revenue.
+
 ## E2E Tests
 
 Human-simulated E2E is required for UI-facing work.

@@ -14,16 +14,21 @@ import {
 } from '@/lib/storage/privateKV';
 import { decodePrivateStringSet, encodePrivateStringSet } from '@/lib/storage/privateStringSet';
 
-import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
+import {
+  DEFAULT_PREFERENCES,
+  RECOMMENDATION_FORMATS,
+  type RecommendationFormat,
+  type RecPreferences,
+} from './preferences';
 
 // Local-first recommendation state (docs/09 §12, the D-029 pattern). v1 source of
-// truth is AsyncStorage (works offline; the For-you hub + gap prompts must render
-// before the backend exists, B-SUPABASE), with a best-effort `recommendation_
-// preferences` Supabase mirror that reconciles via the persisted mutation queue
-// (D-007) once the project is live. The `recommendations` cache table is NOT used
-// as a source of truth. The pure engine recomputes live (the doc: "never the
-// source of truth"). We persist only the user's PREFERENCES and which suggestions
-// they have DISMISSED ("not for me"), so a dismissed card doesn't reappear.
+// truth is encrypted private storage (works offline; the For-you hub + gap prompts
+// render without the backend), with a best-effort immediate Supabase preference
+// mirror when an exact current session is available. There is no retry queue in
+// this checkpoint, so the local record remains authoritative after a remote
+// failure. The `recommendations` cache table is NOT used as a source of truth.
+// The pure engine recomputes live. We persist only the user's PREFERENCES and
+// which suggestions they have DISMISSED ("not for me").
 
 const PREF_KEY = 'onskin.recPrefs.v1';
 const DISMISSED_KEY = 'onskin.recDismissed.v1';
@@ -39,6 +44,7 @@ type RecPreferencesEnvelope = {
 
 const BUDGET_BANDS = new Set<BudgetBand>(['drugstore', 'mid', 'premium']);
 const VALUES = new Set<ValuesFilter>(VALUES_FILTERS);
+const FORMATS = new Set<RecommendationFormat>(RECOMMENDATION_FORMATS);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -77,12 +83,18 @@ function normalizeBudget(value: unknown): BudgetBand | null {
     : null;
 }
 
+function normalizeFormats(value: unknown): RecommendationFormat[] {
+  return uniqueStrings(value).filter((item): item is RecommendationFormat =>
+    FORMATS.has(item as RecommendationFormat),
+  );
+}
+
 function normalizePreferences(value: unknown): RecPreferences | null {
   if (!isRecord(value)) return null;
   return {
     values: normalizeValues(value.values),
     budget: normalizeBudget(value.budget),
-    formats: uniqueStrings(value.formats),
+    formats: normalizeFormats(value.formats),
   };
 }
 
@@ -134,12 +146,8 @@ function encodePreferences(preferences: RecPreferences): string {
 
 // --- preferences --------------------------------------------------------------
 export async function loadPreferences(): Promise<RecPreferences> {
-  try {
-    const raw = await getPrivateItem(PREF_KEY);
-    return raw === null ? DEFAULT_PREFERENCES : decodePreferences(raw);
-  } catch {
-    return DEFAULT_PREFERENCES;
-  }
+  const raw = await getPrivateItem(PREF_KEY);
+  return raw === null ? DEFAULT_PREFERENCES : decodePreferences(raw);
 }
 
 export async function savePreferences(prefs: RecPreferences): Promise<void> {
@@ -152,17 +160,17 @@ export async function savePreferences(prefs: RecPreferences): Promise<void> {
       return encodePreferences(normalized);
     });
     lease.assertCurrent();
-    // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
-    // own row. Guarded so the store works fully before the backend is configured.
+    // Best-effort mirror (B-SUPABASE). The authenticated scalar RPC owns the row
+    // write and rechecks session, health epoch, and account access. Direct table
+    // DML is intentionally unavailable to mobile.
     try {
       const { data } = await getPersistedSupabaseUser();
       lease.assertCurrent();
       if (data.user?.id !== lease.ownerUserId) return;
-      await supabase.from('recommendation_preferences').upsert({
-        user_id: lease.ownerUserId,
-        values_filters: normalized.values,
-        budget_band: normalized.budget,
-        format_prefs: normalized.formats,
+      await supabase.rpc('set_recommendation_preferences', {
+        p_values_filters: normalized.values,
+        p_budget_band: normalized.budget,
+        p_format_prefs: normalized.formats,
       });
       lease.assertCurrent();
     } catch {
@@ -175,11 +183,7 @@ export async function savePreferences(prefs: RecPreferences): Promise<void> {
 
 // --- dismissed suggestions ("not for me") -------------------------------------
 export async function loadDismissed(): Promise<string[]> {
-  try {
-    return decodePrivateStringSet(await getPrivateItem(DISMISSED_KEY));
-  } catch {
-    return [];
-  }
+  return decodePrivateStringSet(await getPrivateItem(DISMISSED_KEY));
 }
 
 export async function dismissRecommendation(id: string): Promise<void> {

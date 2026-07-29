@@ -7,14 +7,14 @@ select plan(53);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  69::bigint,
-  'CAT-07 behavior from 20260718000060 runs against the exact 69-migration source history'
+  70::bigint,
+  'CAT-07 behavior from 20260718000060 runs against the exact 70-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000070'::text,
-  'CAT-07 remains effective through the Shelf/completion sync bridge head'
+  '20260726000071'::text,
+  'CAT-07 remains effective through the recommendation zero-admission head'
 );
 
 select is(
@@ -222,6 +222,8 @@ alter table public.catalog_sources disable trigger user;
 alter table public.product_pao_expiry disable trigger user;
 alter table public.product_categories disable trigger user;
 alter table public.products disable trigger user;
+alter table public.products
+  enable trigger products_recommendation_eligibility_closed;
 alter table public.user_products disable trigger user;
 
 insert into auth.users (id)
@@ -264,13 +266,13 @@ insert into public.products (
   source_snapshot_date, region, status, review_status, quality_grade,
   recommendation_eligible, last_reviewed_at
 ) values
-  ('61000000-0000-4000-8000-000000000001', '10000007', 'CAT07 label', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-label', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', true, pg_catalog.statement_timestamp() - interval '1 minute'),
-  ('61000000-0000-4000-8000-000000000002', '10000014', 'CAT07 brand label', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-brand-label', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', true, pg_catalog.statement_timestamp() - interval '1 minute'),
-  ('61000000-0000-4000-8000-000000000003', '10000021', 'CAT07 catalog', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-catalog', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', true, pg_catalog.statement_timestamp() - interval '1 minute'),
-  ('61000000-0000-4000-8000-000000000004', '10000038', 'CAT07 ambiguous', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-ambiguous', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', true, pg_catalog.statement_timestamp() - interval '1 minute'),
-  ('61000000-0000-4000-8000-000000000005', '10000045', 'CAT07 no match', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-no-match', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', true, pg_catalog.statement_timestamp() - interval '1 minute'),
-  ('61000000-0000-4000-8000-000000000006', '10000052', 'CAT07 category quarantine', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-category', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', true, pg_catalog.statement_timestamp() - interval '1 minute'),
-  ('61000000-0000-4000-8000-000000000007', '10000069', 'CAT07 source delete category', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-source-delete', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', true, pg_catalog.statement_timestamp() - interval '1 minute');
+  ('61000000-0000-4000-8000-000000000001', '10000007', 'CAT07 label', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-label', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', false, pg_catalog.statement_timestamp() - interval '1 minute'),
+  ('61000000-0000-4000-8000-000000000002', '10000014', 'CAT07 brand label', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-brand-label', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', false, pg_catalog.statement_timestamp() - interval '1 minute'),
+  ('61000000-0000-4000-8000-000000000003', '10000021', 'CAT07 catalog', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-catalog', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', false, pg_catalog.statement_timestamp() - interval '1 minute'),
+  ('61000000-0000-4000-8000-000000000004', '10000038', 'CAT07 ambiguous', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-ambiguous', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', false, pg_catalog.statement_timestamp() - interval '1 minute'),
+  ('61000000-0000-4000-8000-000000000005', '10000045', 'CAT07 no match', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-no-match', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', false, pg_catalog.statement_timestamp() - interval '1 minute'),
+  ('61000000-0000-4000-8000-000000000006', '10000052', 'CAT07 category quarantine', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-category', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', false, pg_catalog.statement_timestamp() - interval '1 minute'),
+  ('61000000-0000-4000-8000-000000000007', '10000069', 'CAT07 source delete category', 'serum', 'cat07-reviewed-serum', 'internal_derived', (select id from public.catalog_sources where source_key = 'internal_derived'), 'cat07-source-delete', (pg_catalog.now() at time zone 'UTC')::date, 'US', 'active', 'reviewed', 'verified', false, pg_catalog.statement_timestamp() - interval '1 minute');
 
 insert into public.product_pao_expiry (
   id, product_id, pao_months, pao_source, region, source_id,

@@ -247,7 +247,7 @@ remaining before the first mutation and seven hours immediately before
 migration push, inside a maximum 24-hour freeze window. The final gate still
 requires current validity and at least one hour of freeze hold.
 
-The runner sets `DB06_TRAFFIC_FREEZE=frozen`, statically guards all 16 Edge
+The runner sets `DB06_TRAFFIC_FREEZE=frozen`, statically guards all 17 Edge
 entrypoints, and canaries the exact eight `verifyJwt: false` endpoints for HTTP
 503, exact `DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`. Hosted
 Auth requires signup, anonymous signup, all 26 reviewed external providers,
@@ -255,7 +255,7 @@ seven reviewed hooks, SAML/OAuth/custom OAuth, SSO, and third-party integrations
 closed. Immediately before migration push, the runner revalidates cutover bytes
 and rereads the exact functions, canaries, Auth, migrations, schema, Storage,
 and all Cron jobs. A `pass` cannot omit these proofs. Final acceptance remains
-80 public/80 RLS tables, one `photos` bucket, and zero Auth cohort, Storage
+82 public/82 RLS tables, one `photos` bucket, and zero Auth cohort, Storage
 objects, or Cron jobs.
 
 The runner revalidates cutover artifacts at completion and never unfreezes the
@@ -7642,6 +7642,23 @@ physical-iPhone lifecycle/accessibility/Dynamic Type testing, hosted Supabase
 v2/RLS/cutover proof, min-client enforcement, and named legal, privacy,
 clinical, scoring-content, App Review, and release approvals. No App Store,
 legal, safety, medical, market, or revenue acceptance is claimed.
+
+### Exact 70-migration local database gate (2026-07-29)
+
+`npm run phase2:db-local-verify` exited 0 against the complete chain through
+`20260726000071`. The run passed all four sequential cutovers, two clean resets,
+exact 70-version history, the focused four-file lane, 15 structural pgTAP files
+/ 1,199 assertions including CAT-03 99/99, error-level lint, an empty
+migration-shadow diff, temporary 6,771-line type generation with SHA-256
+`39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
+the CAT-08 two-connection rehearsal 10/10, and complete zero-residue teardown.
+Repository database types were deliberately not replaced.
+
+This closes DB-05's current local replay requirement for the accepted source
+revision. DB-06/08/09/10 hosted deployment, linked-type parity/replacement,
+live role/provider/TLS/load/concurrency, supported-device, professional,
+legal/privacy, and release gates remain open. The result is not App Store,
+legal, safety, market, or revenue acceptance.
 
 ## Open questions for the founder
 

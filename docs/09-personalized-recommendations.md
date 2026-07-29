@@ -1,5 +1,58 @@
 # Document 9: Personalized Recommendations — Build Spec
 
+## 2026-07-26 Authoritative Source Boundary
+
+The commercial and product strategy below is aspirational until its positive
+admission gates pass. The current `CORE-06A` source checkpoint is deliberately
+narrower:
+
+- product-specific recommendation mode is closed and admits zero catalog
+  products;
+- current recommendation provenance is limited to explicit `type_first` and
+  `shelf_context` results; there is no current `catalog_product` producer;
+- the production engine accepts app-assembled state only and obtains its
+  structural type vocabulary from the checked-in, launch-gated source; callers
+  cannot supply alternate recommendation types or copy;
+- type-first output may describe a structural routine need or existing Shelf
+  context only when all upstream profile, consent, conflict, cadence, and
+  persistence authorities required for that output are current;
+- an unavailable profile or unreadable recommendation preferences/dismissals
+  withholds all suggestions instead of substituting defaults or an empty set;
+- goal-active output additionally requires the Phase 7 flag, the exact current
+  health/profile/goal provenance, and positive recommendation-review clearance;
+  the clearance set starts empty. The current goal-provenance envelope is a
+  strict shape/freshness check, not an unforgeable authorization receipt;
+- a caller-supplied product, a mutable `reviewedBy` string, a quality score, a
+  feature flag, an absent correction, or an environment variable cannot mint
+  recommendation authority;
+- commerce remains downstream and cannot render where-to-buy UI for either
+  currently admitted provenance kind. A paid link, retailer fetch, affiliate
+  identifier, commission, availability, or price is never a ranking input, and
+  the current runtime commerce-admission predicate returns `false`
+  unconditionally;
+- migration `0071` purges every legacy recommendation-cache row and revokes all
+  unused runtime table privileges; the retained owner/export reads and exact
+  preference-writer RPC do not create recommendation authority; and
+- no-result, missing-product, stale-direct-entry, malformed provenance,
+  unavailable commerce, and failed-fetch states stay honest and fail closed.
+
+The detailed candidate-ranking, product-card, affiliate, analytics, and cache
+design later in this document does not override this boundary. Product-specific
+mode can open only through a later versioned contract that binds one exact
+served CAT-03 SKU, market, admission receipt, and every client-readable fact to
+current catalog authority, exact professional review receipts, claim scope,
+correction-free current state, recommendation provenance, and independent
+commerce controls. Any goal-active successor also requires server-minted,
+server-verified receipts bound to the exact account, health-processing
+lifecycle, profile completion, goal set, review scope, and expiry.
+
+See
+[`CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md`](./hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md).
+This source checkpoint is not product-specific recommendation clearance,
+clinical or cosmetic-chemistry review, legal advice or approval, an App Store
+acceptance prediction, a safety guarantee, product-market proof, or a revenue
+guarantee.
+
 _The independent, needs-based recommendation engine · profile + evidence-based (not AI-scan, not pay-to-play) · gap-filling, replacement, conflict-resolution, better-fit & goal-driven suggestions · the "what / why / how" explainability + a fit score · the editorial–commerce "church and state" separation · the surfaces · ranked by fit and evidence, never by commission._
 
 > This is build-order document **#9** of the 15 named in docs/00 (§"Build order", item 9: _"Personalized recommendations"_). It is the **recommendation engine** that turns the user's profile (docs/01), the ingredient/product catalog and evidence grades (docs/02), the routine and scheduler gaps (docs/03/05), and the shelf/replenishment state (docs/04) into **honest, personalized suggestions for what to use** — the digital equivalent of a trusted skin advisor. Its cardinal rule, and the reason it can exist inside a trust-first brand at all, is that **it ranks purely by fit, evidence, and need — never by commission**: the commerce/affiliate layer (the ShopMy integration and creator-curated stacks of **doc #10**) sits _downstream_ and **never influences what is recommended**. It is consistent with docs/06's decision to ship **no AI skin scores** — recommendations are **profile- and evidence-based, not selfie-scan-based**. This document deliberately answers, with the same rigour applied to the paywall, the harder question: _is a recommendation engine even right for OnSkin, and if so, what is the only way to execute it without destroying the trust that is the business?_ The short answer — validated by Yuka, Wirecutter, and Consumer Reports — is **yes, but only as an independent, restrained, needs-based advisor.**

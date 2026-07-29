@@ -54,6 +54,15 @@ describe('RecommendationsTeaser mobile contracts', () => {
     expect(source).toContain('compact={compact}');
     expect(source).toContain('count={result.recommendations.length}');
     expect(source).toContain('youreSet={result.youreSet}');
+    expect(source).toContain('statusBody={statusBody}');
+    expect(source).toContain('result.goalReviewPending');
+    expect(source).toContain('REC_COPY.todayCard.bodyReviewPending');
+    expect(source).toContain('REC_COPY.todayCard.bodyNoPairEvaluation');
+    expect(source).toContain('REC_COPY.todayCard.bodyNoCurrentSuggestion');
+    expect(source).toContain(
+      'statusBody ? REC_COPY.todayCard.statusTitle : REC_COPY.todayCard.title',
+    );
+    expect(source).not.toContain('coverageUnavailable');
     expect(source).not.toContain('hitSlop={8}');
     expect(source).not.toContain('hitSlop={6}');
     expect(source).not.toContain(

@@ -372,7 +372,7 @@ values (
   'active',
   'reviewed',
   'verified',
-  true,
+  false,
   0,
   99,
   'curated:catalog-gate-serum',
@@ -858,12 +858,12 @@ set local role service_role;
 select is(
   (select count(*) from public.search_catalog_products('gate serum', 20)),
   0::bigint,
-  'search hides a product whose eligibility projection is closed'
+  'search remains CAT-03-head-gated while recommendation admission is independently closed'
 );
 reset role;
 
 update public.products
-set recommendation_eligible = true,
+set recommendation_eligible = false,
     unresolved_correction_count = 1
 where id = '56000000-0000-4000-8000-000000000010';
 set local role service_role;
@@ -876,7 +876,7 @@ reset role;
 
 update public.products
 set unresolved_correction_count = 0,
-    recommendation_eligible = true
+    recommendation_eligible = false
 where id = '56000000-0000-4000-8000-000000000010';
 
 -- This fixture is testing the catalog anti-join, not the separately covered
@@ -907,7 +907,7 @@ alter table public.catalog_corrections
 -- intentionally has no direct catalog table lane.
 select ok(
   (
-    select product.recommendation_eligible
+    select product.recommendation_eligible is false
       and product.unresolved_correction_count = 0
       and correction.operator_reviewed_at is null
       and correction.operator_reviewed_by is null
@@ -916,7 +916,7 @@ select ok(
       on correction.product_id = product.id
     where product.id = '56000000-0000-4000-8000-000000000010'
   ),
-  'an untrusted open report does not mutate the reviewed serving projection'
+  'an untrusted open report neither opens recommendation admission nor mutates the independent serving projection'
 );
 set local role service_role;
 select is(
@@ -985,11 +985,12 @@ select is(
   'the reporter-free CAT-08 hold closes serving without repurposing the report row'
 );
 
--- Deliberately corrupt the denormalized projection. The live anti-join must
--- still prevent either serving path from leaking an operator-held product.
+-- Deliberately corrupt the denormalized hold count and attempt to reopen the
+-- now-immutable recommendation flag. The live anti-join must still prevent
+-- either serving path from leaking an operator-held product.
 update public.products
 set unresolved_correction_count = 0,
-    recommendation_eligible = true
+    recommendation_eligible = false
 where id = '56000000-0000-4000-8000-000000000010';
 
 set local role authenticated;

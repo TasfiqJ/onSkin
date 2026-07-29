@@ -1,8 +1,8 @@
 # Blockers - iOS All-Features Launch Gates
 
-Date: 2026-07-22
+Date: 2026-07-29
 
-Status reviewed: 2026-07-22
+Status reviewed: 2026-07-29
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -168,6 +168,11 @@ documentation freshness gates. These results and generated packets are
 historical only: the retained human manifest records a different, non-ancestor
 Git SHA and no current governed-chain binding. The current source revision must
 republish and recheck every required unit through the governed `E -> ... -> F`
+chain. At the current CORE-06A source checkpoint on 2026-07-29, repository
+typecheck and strict lint pass, and `npm test` passes 331 mobile test files /
+4,156 tests plus the catalog operator console's 7 files / 24 tests. These are
+local source facts only; they do not clear hosted, native, professional-review,
+App Review, market, or revenue gates.
 sequence before any packet can be treated as current release evidence. The
 generated-packet status audit rejects dirty packet outputs and stale recorded
 source/file hashes. At that historical checkpoint, the Phase 7 core-loop packet
@@ -423,39 +428,50 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains a 66-migration source candidate through
-`20260726000067`, targeted hand-maintained
+The repo contains a 70-migration source candidate through
+`20260726000071`, targeted hand-maintained
 RPC types with DB-08 still open, 17 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
-current source inventory classifies all 80 RLS-enabled public tables: 36 directly
-queryable private tables, 30 read-sealed private/authority tables, and 14
-authenticated catalog/editorial tables. The 30 read-sealed tables comprise 22
+current source inventory classifies all 82 RLS-enabled public tables: 36 directly
+queryable private tables, 32 read-sealed private/authority tables, and 14
+authenticated catalog/editorial tables. The 32 read-sealed tables comprise 24
 service-private authorities, four global clinical/editorial relations, and four
-catalog dictionary/legacy authorities; seven additional CAT-03 authorities are
-sealed in the `private` schema; `0063` adds a separately contracted set of 15
-private CAT-08 operator-authority relations and the bounded `catalog-operator`
-Edge surface; `0064` adds the hash-bound quiz/profile provenance envelope;
-`0065` repairs the operator transition conflict target plus the global default
-PUBLIC function-execute ACL; `0066` fail-closed seals the unreviewed legacy
-clinical fixture tables; and `0067` adds only the checker-only temporary-table
-shape needed to statically inspect the unchanged catalog-release wrapper. This
-is a source-contract classification, not hosted evidence.
+catalog dictionary/legacy authorities. CAT-02/CAT-03 lifecycle relations,
+CAT-08's 15 operator-authority relations, the two `0069` minimized replay
+ledgers, and `0071`'s immutable recommendation-admission control are separately
+sealed in the `private` schema. Migrations `0064`-`0067` add profile provenance,
+the CAT-08/default-ACL repair, the legacy clinical fixture seal, and the
+checker-only catalog-release lint shape. Migrations `0068` and `0069` add the
+routine-adherence authority and owner-derived Shelf/completion replay bridge;
+`0070` records a draft-to-draft consent-copy transition without release
+authority; and `0071` establishes recommendation zero admission. This is a
+source-contract classification, not hosted evidence.
 The last recorded CAT-02 Docker baseline covered the then-
 current 35-assertion partial suite and remains historical. The current source
-plans contain 50 schema, 218 CAT-02, 99 CAT-03, 53 CAT-07, 58 catalog-serving,
-and 114 Apple-lifecycle assertions, plus 48 quiz/profile-provenance and 89
-CAT-08 operator assertions. The corrected `0065`-head replay completed the
+plans contain 52 schema, 218 CAT-02, 99 CAT-03, 53 CAT-07, 58 catalog-serving,
+114 Apple-lifecycle, 48 quiz/profile-provenance, 89 CAT-08 operator, 78
+adherence, 82 Shelf/completion-sync, 25 draft-consent-staging, and 35
+recommendation-zero-admission assertions. The corrected `0065`-head replay completed the
 structural pgTAP phase, and the focused CAT-08 exact-role plan passes locally.
 The focused `0066` seal rehearsal/26-assertion plan passes, while the focused
 `0067` rehearsal/seven-assertion plan passes and direct
-`plpgsql_check_function` inspection returns no findings. The final exhaustive
-66-migration current-head gate now passes locally in one isolated run: two clean
-resets, exact history through `20260726000067`, structural pgTAP, error-level
-schema lint, empty migration-shadow drift, temporary type generation (6,635
-lines, SHA-256
-`f53a6e2ade8a332f3aea88dabaa6178f44370975745c9dc8da79e136a9840c27`),
-and the ten-assertion two-connection rehearsal all pass before sandbox teardown.
-Hosted evidence remains absent.
+`plpgsql_check_function` inspection returns no findings. On 2026-07-29,
+`npm run phase2:db-local-verify` exited 0 against the complete 70-migration
+chain through `20260726000071`: all four forward cutovers
+(`0067 -> 0068 -> 0069 -> 0070 -> 0071`), two clean resets, exact 70-version
+history with `0071` latest, the focused current-head lane, 15 structural pgTAP
+files / 1,199 assertions including CAT-03 99/99, error-level public-schema
+lint, an empty migration-shadow diff, temporary type generation of 6,771 lines
+with SHA-256
+`39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
+the CAT-08 two-connection rehearsal 10/10, and complete teardown. Cleanup left
+zero DB-05 containers, volumes, networks, processes, or temporary directories.
+Repository types were deliberately not replaced, so DB-08 remains open. This
+is disposable local PostgreSQL 15 source evidence only; it does not prove
+hosted staging/production, generated-type parity or replacement, live
+role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
+compatibility, device behavior, professional approval, or release readiness.
+Exact local evidence now passes; reviewed hosted evidence remains absent.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system,
 the separate RevenueCat/app-grant entitlement authorities, and the `0064`
 through `0067` forward-upgrade paths.
@@ -466,7 +482,8 @@ PostgreSQL 15 runtime and requires a membership-free operator gateway. No major
 upgrade may ship until the complete `0063`-through-current chain passes under a
 Supabase-equivalent nonsuperuser migration owner and proves that
 `catalog_operator_edge` has no membership or admin grants. The existing
-PostgreSQL 17 `0065` superuser rehearsal proves forward-migration behavior only.
+PostgreSQL 17 `0065` superuser rehearsal proves forward-migration behavior only;
+no PostgreSQL 15/17 claim is made here for the exact `0068`-`0071` chain.
 
 The DB-06 source procedure is now complete for a first empty staging project.
 It deploys only a Git-blob-verified immutable clean-main snapshot through the
@@ -552,14 +569,12 @@ full reviewed-record decision witnessed before holdout access, a separately
 consented/privacy-minimized beta-shelf coverage corpus, curation/holdout
 separation, exact multi-batch/four-scope CAT-02 memberships, confidence-bound
 quality gates, and qualified review. Current CAT-03 review and database-readback
-artifacts must attest exact latest migration `20260722000062`. The corrected
-`0065`-head structural pgTAP phase, focused 89-assertion CAT-08 exact-role run,
-focused 26-assertion `0066` seal plan, and focused seven-assertion `0067` lint
-contract pass locally; direct `plpgsql_check_function` inspection of the
-`0067` wrapper returns no findings. The exhaustive 66-migration current-chain
-gate now passes locally, including lint, empty drift, type generation, and the
-ten-assertion two-connection rehearsal. The hosted staging/release/supersession
-race and serving drill, real beta corpus, witnessed target/decision, signed
+artifacts must attest exact latest migration `20260722000062`. The exact
+70-migration local gate through `0071` passes, including the current CAT-03 plan
+at 99/99 within the 15-file / 1,199-assertion suite, lint, empty drift,
+temporary type generation, and the CAT-08 10/10 two-connection rehearsal. This
+remains disposable local evidence. The hosted staging/release/supersession race
+and serving drill, real beta corpus, witnessed target/decision, signed
 review/readback, and active catalog remain open. Beta demand prioritizes
 independently sourced rows; it never becomes a product fact.
 
@@ -585,8 +600,8 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 17-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 66
-  migrations through `0067`, redeploys the manifest, retains linked types
+  immediately rereads the full empty-target boundary, applies all 70
+  migrations through `0071`, redeploys the manifest, retains linked types
   without changing repository types, and leaves
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
@@ -598,7 +613,7 @@ Next action:
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
   signed-anonymous user, the no-session client, the regenerated exact `0062`
-  CAT-03 authority/readback plus the exact current-head (`0067`)
+  CAT-03 authority/readback plus the exact current-head (`0071`)
   private/read-sealed-table inventory, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
@@ -1218,10 +1233,12 @@ Exit criteria:
 - migration `0057` passes the hosted two-connection replay, conflict,
   correction, source-withdrawal, promotion, dependency-serving, and rollback
   drill for the exact reviewed batch;
-- the complete migration chain through `0067`, with `0058` as its foundational
+- the complete migration chain through `0071`, with `0058` as its foundational
   CAT-03 authority, `0064`/`0065` as forward-only profile-provenance and
   operator-transition/default-ACL repairs, `0066` as the legacy clinical-table
-  seal, and `0067` as the checker-only catalog-release lint contract, passes
+  seal, `0067` as the checker-only catalog-release lint contract, `0068`/`0069`
+  as adherence/replay authorities, `0070` as draft-only consent staging, and
+  `0071` as recommendation zero admission, passes
   clean local and hosted pgTAP,
   two-connection replay/
   staging/release/supersession/retirement races, successor isolation, direct-
@@ -1601,18 +1618,43 @@ Exit criteria:
 
 ## B-GROWTH-LINK - Share-card domain and attribution
 
-Status: `needs-device-verification`
+Status: `launch-blocked`
 
-The Shelf Conflict Card is a strong organic loop, but final brand/domain and
-app/web fallback are blocked by `B-BRAND`.
+The Shelf Conflict Card is a possible organic loop, not an admitted publication
+surface. The current route is flag-closed and the conflict corpus has no
+positive admission. A legacy `reviewedBy` value, an owned-product match, or a
+final domain cannot authorize a public health-adjacent claim. Before any share
+can leave the private app context, CORE-07A must establish a separate immutable
+share authority bound to the exact admitted rule, copy, citations, version,
+reviewer receipts, content-rights scope, and expiry; derive an allowlisted
+sanitized projection; require explicit confirmation; and keep public-link
+admission independently closed. Brand/domain, app/web fallback, attribution,
+and device QA remain additional gates, not substitutes for content admission.
 
 Exit criteria:
 
+- a separate share-publication receipt positively admits the exact
+  rule/copy/citation/version and current professional-review and content-rights
+  scope;
+- the renderer accepts only an allowlisted sanitized projection and cannot
+  receive product names, Shelf identifiers, goals, profile data, safety state,
+  account identifiers, or other private conflict fields not approved for the
+  card;
+- the user sees and explicitly confirms the exact export payload and
+  destination behavior before the native share sheet opens;
+- public links remain disabled until a separate reviewed token, retention,
+  revocation, recipient, indexing, abuse, incident, privacy, and deletion
+  boundary exists; a static public landing URL must not imply a per-user record;
 - final domain and universal/app links work;
 - non-users reach a useful web fallback and store path;
 - UTM/channel attribution works;
-- card export works in a native build;
-- card copy remains claim-safe.
+- card export, cancel, failure, relaunch, accessibility, Dynamic Type, and
+  privacy inspection work in the exact native build;
+- card copy remains claim-safe, citation-complete, version-bound, and covered by
+  named clinical, regulatory, privacy, IP/content-rights, and launch review; and
+- exact archive/network/analytics evidence proves that no private Shelf,
+  health, recommendation, or conflict payload is sent before positive share
+  admission and confirmation.
 
 ## B-CLOSED-BETA - Real demand proof
 

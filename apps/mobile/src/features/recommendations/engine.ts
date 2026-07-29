@@ -30,8 +30,16 @@ import {
 } from '@/features/intelligence/rules';
 
 import { recTypeByKey, shippableRecTypes, type RecType } from './catalog';
+import {
+  shelfContextProvenance,
+  typeFirstProvenance,
+  type RecommendationProvenance,
+} from './admission';
 import { GROUP_LABEL, goalShort, replacementCopy, whyCopy } from './copy';
 import { fitLabel, fitScore, type FitContext, type FitResult } from './fit';
+import { isCurrentFragranceFreeRecommendationType } from './fragrance';
+import { goalActiveRecommendationAdmission } from './goalAdmission';
+import type { GoalRecommendationProvenance } from './goalProvenance';
 import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
 import type { ReplenishmentReason } from './replenishment';
 
@@ -64,6 +72,8 @@ export type RecProfile = {
   pregnancySafety?: PregnancySafetyMode;
   reproductiveStatus?: ConflictSafetyContext | 'none';
   goals: GoalId[];
+  consentCurrent?: boolean;
+  goalProvenance?: GoalRecommendationProvenance | null;
 };
 
 export type RecInput = {
@@ -78,7 +88,6 @@ export type RecInput = {
   preferences: RecPreferences;
   /** Ids the user has dismissed ("not for me"). Never re-surfaced. */
   dismissed?: Set<string>;
-  recTypes?: RecType[];
 };
 
 export type RecHow = {
@@ -116,12 +125,19 @@ export type Recommendation = {
   relatedRuleId: string | null;
   /** Exact unordered product pair for a conflict detail route. */
   relatedConflictProductIds: [string, string] | null;
+  /**
+   * Runtime-safe origin boundary. Current engine producers emit only type-first
+   * or shelf-context provenance; neither can become a catalog product.
+   */
+  provenance: RecommendationProvenance;
 };
 
 export type RecResult = {
   recommendations: Recommendation[];
   /** True only when a real evaluation found nothing to add (docs/09 §4 seventh state). */
   youreSet: boolean;
+  /** True when an unaddressed goal exists but current goal-active review is closed. */
+  goalReviewPending: boolean;
   conflictCoverageStatus: ConflictEvaluationStatus;
 };
 
@@ -163,6 +179,17 @@ const GOAL_SERVED_BY: Record<GoalId, { tags: FunctionalTag[]; roles: SequencingR
   sensitivity: { tags: ['ceramide', 'barrier', 'niacinamide'], roles: [] },
   barrier_repair: { tags: ['ceramide', 'barrier'], roles: ['moisturiser'] },
 };
+
+function goalIsAddressedByShelf(goal: GoalId, shelf: readonly RecShelfItem[]): boolean {
+  const served = GOAL_SERVED_BY[goal];
+  return (
+    shelf.some((product) => product.tags.some((tag) => served.tags.includes(tag))) ||
+    shelf.some(
+      (product) =>
+        served.roles.includes(product.role) && (goal === 'hydration' || goal === 'barrier_repair'),
+    )
+  );
+}
 
 function sensitivityWord(s: SensitivityLevel): string {
   return s === 'sensitive' ? 'Sensitive skin' : s === 'resistant' ? 'Resistant skin' : 'Your skin';
@@ -306,7 +333,7 @@ function makeFitContext(
   };
 }
 
-/** Best shippable type for a role, scored by FIT; null if none survives exclusions. */
+/** Best locally renderable type-first role; null if none survives exclusions. */
 function bestTypeForRole(
   role: SequencingRole,
   input: RecInput,
@@ -323,7 +350,7 @@ function bestTypeForRole(
   return scored[0] ?? null;
 }
 
-/** Best shippable goal-active for a goal (pregnancy-safe etc. via FIT exclusions). */
+/** Best otherwise-eligible goal active; the independent goal admission still governs output. */
 function bestTypeForGoal(
   goal: GoalId,
   input: RecInput,
@@ -348,7 +375,7 @@ function howFor(type: RecType, input: RecInput, gapLine: string): RecHow {
     fitBits.push('sensitive-safe');
   if (
     input.preferences.values.includes('fragrance_free') &&
-    (/fragrance-free/i.test(type.what) || type.sensitiveSafe)
+    isCurrentFragranceFreeRecommendationType(type)
   )
     fitBits.push('fragrance-free (your preference)');
   if (fitBits.length === 0) fitBits.push('Matched to your profile');
@@ -392,6 +419,7 @@ function typeRec(args: {
     relatedProductId: relatedProductId ?? null,
     relatedRuleId: null,
     relatedConflictProductIds: null,
+    provenance: typeFirstProvenance(type.type),
   };
 }
 
@@ -425,7 +453,9 @@ function recommendCore(input: RecInput, rules: ConflictRule[]): RecResult {
     replenishment: eligibleReplenishment,
     conflicts: eligibleConflicts,
   };
-  const recTypes = shippableRecTypes(eligibleInput.recTypes);
+  // The production input cannot supply recommendation copy or type rows. Only
+  // the checked-in, launch-gated catalog can reach rendering and scoring.
+  const recTypes = shippableRecTypes();
   const dismissed = input.dismissed ?? new Set<string>();
   const out: Recommendation[] = [];
 
@@ -495,6 +525,7 @@ function recommendCore(input: RecInput, rules: ConflictRule[]): RecResult {
       relatedProductId: item.id,
       relatedRuleId: null,
       relatedConflictProductIds: null,
+      provenance: shelfContextProvenance(item.id),
     });
   }
 
@@ -536,6 +567,7 @@ function recommendCore(input: RecInput, rules: ConflictRule[]): RecResult {
       relatedProductId: topConflict.productBId,
       relatedRuleId: topConflict.rule.id,
       relatedConflictProductIds: productIds,
+      provenance: shelfContextProvenance(topConflict.productBId),
     });
   }
 
@@ -549,53 +581,58 @@ function recommendCore(input: RecInput, rules: ConflictRule[]): RecResult {
       (p) => p.fragranced && (p.role === 'cleanser' || p.role === 'moisturiser'),
     );
     if (fragranced) {
-      const best = bestTypeForRole(fragranced.role, eligibleInput, 'better_fit', recTypes, rules);
-      // Prefer the fragrance-free variant explicitly.
-      const ff = recTypes.find((t) => t.role === fragranced.role && /fragrance-free/i.test(t.what));
-      const chosen = ff
-        ? {
-            type: ff,
-            fit: fitScore(ff, makeFitContext(eligibleInput, 'better_fit', rules, recTypes)),
-          }
-        : best;
-      if (chosen && chosen.fit.score != null) {
-        const rec = typeRec({
-          trigger: 'better_fit',
-          type: chosen.type,
-          fit: chosen.fit,
-          why: whyCopy.betterFit(fragranced.name),
-          gapLine: `${fragranced.name} is fragranced`,
-          input: eligibleInput,
-          relatedProductId: fragranced.id,
-        });
-        out.push({ ...rec, footLabel: 'Better fit', footIsEvidence: false });
+      // An adjacent "sensitive-safe" or example-only type is not fragrance-free
+      // authority. Withhold unless the exact role has an explicit current type fact.
+      const fragranceFreeType = recTypes.find(
+        (type) => type.role === fragranced.role && isCurrentFragranceFreeRecommendationType(type),
+      );
+      if (fragranceFreeType) {
+        const fit = fitScore(
+          fragranceFreeType,
+          makeFitContext(eligibleInput, 'better_fit', rules, recTypes),
+        );
+        if (fit.score != null) {
+          const rec = typeRec({
+            trigger: 'better_fit',
+            type: fragranceFreeType,
+            fit,
+            why: whyCopy.betterFit(fragranced.name),
+            gapLine: `${fragranced.name} has a fragrance marker in your saved shelf details`,
+            input: eligibleInput,
+            relatedProductId: fragranced.id,
+          });
+          out.push({ ...rec, footLabel: 'Better fit', footIsEvidence: false });
+        }
       }
     }
   }
 
   // 5. Goal-driven. The first set goal nothing addresses yet, one active at a time
   // (docs/09 §4). Pregnancy-unsafe actives are excluded by FIT (→ a safe alternative).
-  for (const goal of eligibleInput.profile.goals) {
-    const served = GOAL_SERVED_BY[goal];
-    const addressed =
-      eligibleShelf.some((p) => p.tags.some((t) => served.tags.includes(t))) ||
-      eligibleShelf.some(
-        (p) => served.roles.includes(p.role) && (goal === 'hydration' || goal === 'barrier_repair'),
+  const goalAdmission = goalActiveRecommendationAdmission({
+    consentCurrent: eligibleInput.profile.consentCurrent === true,
+    goals: eligibleInput.profile.goals,
+    provenance: eligibleInput.profile.goalProvenance,
+  });
+  const unaddressedGoals = eligibleInput.profile.goals.filter(
+    (goal) => !goalIsAddressedByShelf(goal, eligibleShelf),
+  );
+  if (goalAdmission.admitted) {
+    for (const goal of unaddressedGoals) {
+      const best = bestTypeForGoal(goal, eligibleInput, recTypes, rules);
+      if (!best) continue;
+      out.push(
+        typeRec({
+          trigger: 'goal',
+          type: best.type,
+          fit: best.fit,
+          why: whyCopy.goal(goal),
+          gapLine: `Nothing addresses your ${goalShort(goal)} goal yet`,
+          input: eligibleInput,
+        }),
       );
-    if (addressed) continue;
-    const best = bestTypeForGoal(goal, eligibleInput, recTypes, rules);
-    if (!best) continue;
-    out.push(
-      typeRec({
-        trigger: 'goal',
-        type: best.type,
-        fit: best.fit,
-        why: whyCopy.goal(goal),
-        gapLine: `Nothing addresses your ${goalShort(goal)} goal yet`,
-        input: eligibleInput,
-      }),
-    );
-    break; // one goal active at a time (restraint)
+      break; // one goal active at a time (restraint)
+    }
   }
 
   // Drop dismissed, de-dup by id, rank by the §5 priority ladder then FIT.
@@ -618,9 +655,14 @@ function recommendCore(input: RecInput, rules: ConflictRule[]): RecResult {
     });
 
   const conflictCoverageStatus = input.conflictCoverageStatus ?? 'unsupported_unreviewed';
+  const goalReviewPending = unaddressedGoals.length > 0 && !goalAdmission.admitted;
   return {
     recommendations: ranked,
-    youreSet: ranked.length === 0 && conflictCoverageStatus === 'compatible',
+    youreSet:
+      ranked.length === 0 &&
+      conflictCoverageStatus === 'compatible' &&
+      unaddressedGoals.length === 0,
+    goalReviewPending,
     conflictCoverageStatus,
   };
 }

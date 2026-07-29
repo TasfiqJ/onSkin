@@ -222,6 +222,79 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 - Status: `in_progress` source candidate; CAT-07 and external acceptance gates
   remain open.
 
+### A-011: Separate Local Completion Intent, Stable Product Identity, And Server Adherence
+
+- Decision: Today and Shelf use strict encrypted v3 local records. A Today
+  mutation persists its visible check-off and append-only replay event in one
+  private-KV transform; the Shelf record retains its own owner-free FIFO and
+  terminal operations. The offline coordinator drains Shelf before completion
+  replay. Server product content is separable from the minimum stable
+  owner/product identity required by a delayed completion. Delete therefore
+  creates or advances a deletion-wins tombstone without erasing historical
+  routine references. Missing identity is retryable. If the client has an
+  unresolved terminal Shelf fact and no corrective Shelf work, it reversibly
+  moves the exact completion dependency group through its routine-day marker
+  to the outbox tail; it does not permanently reject the completion. An exact
+  remote-terminal step instead creates a terminal receipt and terminally
+  cascades its routine-day marker. The server admits owner-derived
+  Shelf/completion RPCs, makes routine-day rows the only adherence input, and
+  projects the timezone-bound two-total-missed-day algorithm. Private replay
+  ledgers retain only a domain-separated request digest and bounded
+  disposition, never the raw payload.
+- Criteria: persistence-before-success, stable idempotency, no completion
+  overtaking missing product identity, no permanent head-of-line deadlock,
+  deletion-wins without resurrection, immutable historical evidence,
+  server/client adherence parity, health/account fencing, purpose-limited
+  export, and withdrawal/account erasure.
+- Risk: no protocol replay horizon exists, so an arbitrary TTL could destroy
+  the only delayed-device idempotency or tombstone fact. The minimized
+  identities and receipts remain for the active account/health-purpose
+  lifetime and are erased on health withdrawal or account deletion. Final
+  retention/legal basis, the `request_sha256` access exclusion, hosted
+  two-device convergence, native process-death behavior, archive privacy
+  declarations, and App Review remain open.
+- Status: `in_progress` source candidate through migrations `0068` and `0069`.
+
+### A-012: Admit Recommendation Provenance Before Product Or Commerce Output
+
+- Decision: Recommendation output is a positive-admission boundary, not a
+  consequence of a UI route, feature flag, quality score, `reviewedBy` string,
+  or available product row. The current source admits only explicit
+  `type_first` and `shelf_context` provenance. Product-specific mode is
+  literally closed, the admitted catalog-product set is empty, and no current
+  producer can construct `catalog_product` provenance. Goal-active output
+  requires the Phase 7 flag plus exact current health consent, profile and goal
+  provenance, and a current positive review clearance; the clearance registry
+  starts empty. The current goal-provenance envelope checks exact structure,
+  current quiz-contract hashes, and the exact goal set, but it is not an
+  unforgeable authorization receipt. Unavailable
+  profiles and unreadable recommendation preference/dismissal records withhold
+  suggestions. The production engine takes no caller-supplied recommendation
+  type collection. Commerce admission is unconditionally false in this
+  checkpoint, so neither current provenance kind may render where-to-buy or
+  trigger a retailer fetch.
+- Criteria: zero product publication by default, no caller-minted review
+  authority, closed-set rejection reasons, exhaustive provenance handling,
+  current health/profile inputs and exact goal-set matching, no commission or affiliate data in
+  detection/ranking, no retailer request before commerce admission, and an
+  honest no-result/review-pending recovery state. Migration `0071` purges every
+  legacy recommendation-cache row and revokes all unused runtime table
+  privileges; retained owner/export reads and the exact preference-writer RPC
+  cannot publish a recommendation.
+- Risk: structural type guidance can still convey an express or implied
+  health-product claim. Exact copy, catalog facts, market classification,
+  professional receipts, consumer-health privacy obligations, analytics,
+  accessibility, native/network behavior, and final App Privacy disclosures
+  remain separate gates. A later product-specific mode requires a new
+  versioned admission contract binding an exact SKU, market, and admission
+  receipt. Goal-active output additionally requires server-minted and
+  server-verified receipts bound to the exact account, health-processing
+  lifecycle, profile completion, goal set, review scope, and expiry. Relaxing a
+  literal or adding a database row is insufficient.
+- Status: `in_progress` zero-product-admission source candidate through
+  migration `0071`. It is not clinical, cosmetic-chemistry, privacy, legal,
+  App Store, safety, market, or revenue clearance.
+
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
 - Decision: the encrypted local skin profile is the V1 authority for pregnancy/breastfeeding status, and it can be read or changed only with a granted consent record whose version and SHA-256 text hash match the current health-data copy. Malformed or unreadable local profile/consent records are preserved and fail closed; they never trigger a server fallback. When no local profile exists, the newest server profile may supply non-safety axes/goals, but its pregnancy status is always treated as unknown because a local V1 edit may be newer. Shelf, Plan, scheduler, Today, recommendations, and conflict explanations consume the shared `ProfileBits` reader. Only a successfully read explicit local `none` clears caution; affirmative, prefer-not, unknown, missing, and unavailable states remain cautious without an inferred pregnancy claim. Exclusions are derived from the launch-gated docs/02 safety rules, not a parallel table: production accepts only rules carrying recorded review metadata, while development/staging can exercise starter rules for review. Eligible reviewed rules remove retinoids and hydroquinone and remove BHA unless every threshold-bearing active percentage is unambiguously tag-associated and confirmed low, before sequence, cadence, cycle, ramp, replacement recommendations, or Today. If the separate cadence review gate is closed, all treatment/exfoliant placement is withheld instead of becoming an unassigned daily step. Writes persist locally first, disable competing selection input while pending, and invalidate every dependent query.
@@ -235,7 +308,12 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 apps/mobile
   UI routes and feature modules
   local-first stores
+  encrypted Shelf/completion v3 journals and FIFO outboxes
+  Shelf-first offline replay with reversible completion-dependency deferral
   deterministic client mirrors
+  zero-product recommendation admission with closed provenance variants
+  type-first and Shelf-context recommendation output only
+  commerce guard before any where-to-buy render or fetch
   central exact-session remote admission and controlled refresh
   composite Apple ID-token authentication plus lifecycle capture permit
   durable owner-aware store transaction journal
@@ -251,6 +329,8 @@ Supabase
   reverse_trial_grants (independent no-card grant)
   account publication leases and deletion barriers
   sealed Apple lifecycle, one-use capture, and signed-event state
+  server-owned adherence projection and minimized Shelf/completion replay receipts
+  sealed legacy recommendation cache with no runtime API-role writer
 
 Apple
   native authorization -> identity token + one-use authorization code
@@ -280,6 +360,7 @@ Core tables:
 - `skin_profiles`
 - `consents`
 - `user_products`
+- `shelf_product_identities`
 - `products`
 - `ingredients`
 - `product_ingredients`
@@ -300,6 +381,8 @@ Core tables:
 - `apple_auth_lifecycles`
 - `apple_auth_capture_operations`
 - `apple_auth_server_events`
+- private `shelf_sync_operations`
+- private `routine_completion_sync_operations`
 
 ## API Structure
 
@@ -316,6 +399,16 @@ Supabase Edge Functions:
 - signed Apple account-event ingress
 - scheduled Apple refresh-token validation
 - public waitlist/support/share routes
+
+Owner-derived Postgres RPC boundaries:
+
+- `sync_shelf_product`
+- `record_routine_completion`
+- `set_routine_adherence_timezone`
+- `refresh_routine_adherence`
+- `export_shelf_product_identities_for_subject`
+- `export_shelf_sync_receipts_for_subject`
+- `export_routine_completion_sync_receipts_for_subject`
 
 Account deletion uses a service-role-only transactional RPC for database rows that
 cannot be safely erased through caller RLS. Commerce click-token ownership is unique;
@@ -414,9 +507,43 @@ Hosted non-destructive health-consent worker/Storage/backup and physical-iPhone 
 approved final consent copy, the exact privacy report, policy/support URLs, and non-expiring
 demo review access are also launch blockers.
 
+Migrations `20260726000068_routine_adherence_authority.sql` and
+`20260726000069_routine_completion_sync_bridge.sql` establish the current
+CORE-05 source boundary. `0068` makes validated-IANA-timezone routine-day rows
+the adherence input, projects one current/best/freeze result under the account/
+health locks, keeps profile streak fields server-owned, and erases the derived
+state at health withdrawal. `0069` separates active Shelf content from stable
+identity/tombstone state, keeps routine-step ownership as a database invariant,
+and seals direct product/routine/step/completion writes behind owner-derived,
+active-health/account-fenced RPCs. Delete wins even when an upsert never
+arrived; a delayed completion at or before the effective cutoff can reconcile,
+while a later completion is terminal.
+
+The `0069` private ledgers store operation/event identity, owner, a
+domain-separated request digest, bounded result, and timestamps—not raw Shelf
+or completion payloads. Direct access stays revoked. Three authenticated,
+nonanonymous, `auth.uid()`-derived, health-lifecycle-fenced keyset export RPCs
+expose only the subject identity/tombstone fields and receipt state/result/
+timestamps. Server export
+schema v4 performs two count/checksum/owner/column-guarded passes. It pins the
+initial health-lifecycle epoch into every health-fenced caller read and
+rechecks the final lifecycle; stable withdrawn/never-active state uses a valid
+deny epoch and must return exact empty health sources, any nonactive residue
+fails closed, and withdrawing or changed state aborts. Internal
+`request_sha256` is excluded because it is a
+guessable deleted-payload fingerprint, subject to counsel approval of that
+rights decision. With no agreed replay horizon, identities/receipts persist
+only for the active account and active health purpose and are erased on
+withdrawal or account/Auth deletion. These source controls are not hosted,
+native, legal, privacy-label, or App Review evidence.
+
 Client APIs:
 
 - feature modules call local stores first where privacy/offline matters
+- Shelf replay drains before completion replay; an unresolved terminal Shelf
+  fact may move only the exact pending same-routine/date completion group
+  through its marker to the FIFO tail, preserving every original event for
+  corrective replay
 - authenticated Supabase requests use the central exact-session admission gate and its
   controlled refresh path; a closed gate cannot be bypassed by feature code
 - entitlement readers call the owner-derived projection RPC and combine, rather than

@@ -1318,14 +1318,14 @@ insert into public.products (
     '63000000-0000-4000-8000-000000000100',
     '4006381333931', 'CAT08 Accepted Product', 'CAT08 Brand', 'serum',
     'curated', (select id from public.catalog_sources where source_key = 'curated'),
-    'active', 'reviewed', 'verified', true, 0, 99,
+    'active', 'reviewed', 'verified', false, 0, 99,
     'curated:cat08-accepted', current_date, pg_catalog.now()
   ),
   (
     '63000000-0000-4000-8000-000000000101',
     '5901234123457', 'CAT08 Rejected Product', 'CAT08 Brand', 'serum',
     'curated', (select id from public.catalog_sources where source_key = 'curated'),
-    'active', 'reviewed', 'verified', true, 0, 99,
+    'active', 'reviewed', 'verified', false, 0, 99,
     'curated:cat08-rejected', current_date, pg_catalog.now()
   );
 

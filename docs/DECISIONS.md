@@ -363,6 +363,51 @@ Use this format for every significant product, architecture, pricing, privacy, o
   remain open.
 - Status: Accepted as a minimized source design; privacy/legal approval pending.
 
+### 2026-07-26 - Make Recommendation Admission Positive And Product-Specific Mode Empty
+
+- Decision: CORE-06A recognizes only `type_first` and `shelf_context`
+  recommendation provenance. Product-specific mode starts closed, admits an
+  empty catalog set, and has no current `catalog_product` producer. Goal-active
+  output requires all of the Phase 7 flag, the exact current health-consent and
+  profile boundary, exact current goal provenance, and a positive current
+  recommendation-review clearance; the clearance set starts empty. Commerce
+  cannot attach where-to-buy behavior to either current provenance kind and
+  cannot participate in need detection or ranking; current commerce admission
+  returns `false` unconditionally. The production engine does not accept a
+  caller-supplied recommendation-type collection. Unavailable profiles and
+  unreadable preference/dismissal records withhold suggestions. Migration
+  `0071` purges all legacy recommendation-cache rows and revokes all unused
+  runtime table privileges; retained owner/export reads and the exact
+  preference-writer RPC do not create recommendation authority.
+- Type: Product / Architecture / Privacy / Legal / Launch
+- Alternatives: trust a mutable `reviewedBy` field, infer authority from catalog
+  quality or correction counts, let a flag expose goal actives, render a generic
+  product card before provenance exists, preserve authenticated direct cache
+  writes, or rely on disclosure while allowing commission fields into ranking.
+- Criteria: zero product admission by default, closed-set rejection reasons,
+  explicit and exhaustively handled current provenance, exact upstream
+  freshness, independent ranking, no commerce fetch before product admission,
+  a purged and sealed legacy cache, and truthful no-product recovery. The
+  current goal-provenance envelope is deliberately not treated as an
+  unforgeable authorization receipt. A successor must bind exact SKU, market,
+  and admission receipt and use server-minted, server-verified goal receipts
+  bound to the exact account, health-processing lifecycle, profile completion,
+  goal set, review scope, and expiry.
+- Evidence: the CORE-06A recommendation-admission source checkpoint, bounded
+  mobile tests, database seal contract, and
+  `scripts/core06/recommendation-admission-source-contract.test.mjs`.
+- Risk: source controls do not supply an approved product corpus, exact claims,
+  market classification, qualified clinical/cosmetic-chemistry/regulatory
+  review, hosted database or retailer proof, current affiliate terms approval,
+  native/accessibility/network evidence, final policy/App Privacy answers,
+  counsel clearance, Apple acceptance, product-market fit, or revenue.
+- Status: Accepted for the zero-product-admission source architecture;
+  CORE-06A and production rollout remain gated.
+- Owner: Product, clinical content, catalog, commerce, privacy, and release
+  owners share the downstream gates.
+- Review date: Before any product-specific recommendation, goal-active
+  suggestion, retailer fetch, or App Store submission candidate.
+
 ### 2026-07-10 - Persist Conflict Choices Without Weakening The Reviewed Schedule
 
 - Decision: V1 stores each cosmetic timing choice in encrypted private KV under the canonical unordered product pair, conflict rule ID, and rule version. Both `accept_suggested_timing` and `use_together` suppress repeat advisory prompts for only that current-version pair across Shelf, Plan, Recommendations, Ask, and schedule explanations; legacy `keep_alternate_nights` values migrate to the generic accepted-timing value. Writes complete before success analytics or navigation; unreadable storage and unsupported future schemas fail closed without replacing prior data. The owner-RLS `routine_conflicts` mirror uses one canonical unique identity and remains best effort until routine sync is authoritative. `use_together` acknowledges the user's preference but does not auto-co-locate potent actives: one potent active per night, retinoid-exfoliant separation, pregnancy exclusions, frequency caps, phased introduction, and the cadence-review gate remain authoritative. Safety and reassurance rows are not eligible for a timing override.

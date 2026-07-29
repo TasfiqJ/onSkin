@@ -4,6 +4,7 @@ import { shippableNotes } from '@/features/community/notes';
 import { shippableStacks } from '@/features/commerce/stacks';
 import { shippableRules } from '@/features/intelligence/rules';
 import { shippableRecTypes } from '@/features/recommendations/catalog';
+import { CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE } from '@/features/recommendations/goalAdmission';
 import { SEQUENCING_RULES, shippableSequencingRules } from '@/features/routine/sequencing';
 
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
@@ -28,11 +29,14 @@ describe('Phase 3 runtime gates withhold covered conflict, recommendation, note,
     const recs = shippableRecTypes();
 
     expect(recs.length).toBeGreaterThan(0);
-    expect(recs.every((rec) => !rec.medicalAdjacent || rec.reviewedBy != null)).toBe(true);
+    expect(CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE.status).toBe('closed');
+    expect(CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE.admittedTypeCount).toBe(0);
+    expect(CURRENT_GOAL_ACTIVE_REVIEW_CLEARANCE.receiptIds).toEqual([]);
+    expect(recs.every((rec) => !rec.medicalAdjacent)).toBe(true);
     expect(recs.some((rec) => rec.medicalAdjacent)).toBe(false);
   });
 
-  it('keeps the conflict corpus closed in dev while other legacy demos remain explicit', () => {
+  it('keeps conflict and goal-active recommendation corpora closed in dev', () => {
     runtime.__DEV__ = true;
 
     expect(shippableRules()).toEqual([]);
@@ -41,6 +45,6 @@ describe('Phase 3 runtime gates withhold covered conflict, recommendation, note,
     );
     expect(shippableNotes().length).toBeGreaterThan(0);
     expect(shippableStacks().length).toBeGreaterThan(0);
-    expect(shippableRecTypes().some((rec) => rec.medicalAdjacent)).toBe(true);
+    expect(shippableRecTypes().some((rec) => rec.medicalAdjacent)).toBe(false);
   });
 });

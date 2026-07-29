@@ -536,9 +536,9 @@ require(/completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayTab
   /expect\(source\)\.not\.toContain\('completedBefore: done'\)/.test(
     todayRouteTest,
   ), 'Today cycle-night analytics must use the atomic post-insert snapshot, require inserted-key membership, and reject the stale render snapshot.');
-require(/if\s*\(result\.inserted\s*&&\s*\(progress\?\.streak\s*\?\?\s*0\)\s*>=\s*6\)\s*\{[\s\S]{0,100}requestReviewAfterValue\('seven_checkoff_days'\)/.test(
+require(/if\s*\(result\.completionDayInserted\s*&&\s*\(progress\?\.streak\s*\?\?\s*0\)\s*>=\s*6\)\s*\{[\s\S]{0,100}requestReviewAfterValue\('seven_checkoff_days'\)/.test(
   todayTab,
-), 'Today must request a review only after a newly inserted check-off reaches the value threshold.');
+), 'Today must request a review only after a newly completed routine day reaches the value threshold.');
 require(/evaluateConflicts\(/.test(routineGenerate) &&
   /canUseRoutineCadence\(\)/.test(routineGenerate) &&
   /does not surface unreviewed conflict guidance through the default production generator/.test(

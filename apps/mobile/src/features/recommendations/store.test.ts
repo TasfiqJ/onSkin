@@ -15,7 +15,7 @@ const mocks = vi.hoisted(() => ({
   updateFailure: null as Error | null,
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
   runHealthDataWriteOperation: vi.fn(),
-  upsert: vi.fn(async () => ({ error: null })),
+  rpc: vi.fn(async () => ({ error: null as { message: string } | null })),
 }));
 
 vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
@@ -60,7 +60,7 @@ vi.mock('@/lib/supabase/client', () => ({
     auth: {
       getUser: mocks.getUser,
     },
-    from: vi.fn(() => ({ upsert: mocks.upsert })),
+    rpc: mocks.rpc,
   },
 }));
 
@@ -72,7 +72,8 @@ describe('recommendation local store recovery', () => {
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.updateFailure = null;
-    mocks.getUser.mockClear();
+    mocks.getUser.mockReset();
+    mocks.getUser.mockResolvedValue({ data: { user: null } });
     mocks.runHealthDataWriteOperation.mockReset();
     mocks.runHealthDataWriteOperation.mockImplementation(
       async (
@@ -80,18 +81,15 @@ describe('recommendation local store recovery', () => {
         operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => unknown,
       ) => operation({ ownerUserId, assertCurrent: vi.fn() }),
     );
-    mocks.upsert.mockClear();
+    mocks.rpc.mockReset();
+    mocks.rpc.mockResolvedValue({ error: null });
   });
 
-  it('preserves malformed preference JSON and returns defaults', async () => {
+  it('preserves malformed preference JSON and fails closed', async () => {
     const original = '{not-json';
     mocks.storage.set(PREF_KEY, original);
 
-    await expect(loadPreferences()).resolves.toEqual({
-      values: [],
-      budget: null,
-      formats: [],
-    });
+    await expect(loadPreferences()).rejects.toThrow(REC_PREFERENCES_INVALID);
     expect(mocks.storage.get(PREF_KEY)).toBe(original);
   });
 
@@ -118,7 +116,7 @@ describe('recommendation local store recovery', () => {
       values: ['fragrance_free', 'fragrance_free'],
       budget: 'mid',
       formats: ['cream', 'cream', ''],
-    });
+    } as Parameters<typeof savePreferences>[0]);
 
     expect(JSON.parse(mocks.storage.get(PREF_KEY) ?? '{}')).toEqual({
       version: 1,
@@ -128,13 +126,47 @@ describe('recommendation local store recovery', () => {
         formats: ['cream'],
       },
     });
+    expect(mocks.rpc).not.toHaveBeenCalled();
   });
 
-  it('preserves malformed dismissed recommendation JSON', async () => {
+  it('uses the authenticated scalar RPC and closed format enum for the server mirror', async () => {
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
+
+    await savePreferences({
+      values: ['fragrance_free'],
+      budget: 'mid',
+      formats: ['gel', 'cream'],
+    });
+
+    expect(mocks.rpc).toHaveBeenCalledWith('set_recommendation_preferences', {
+      p_values_filters: ['fragrance_free'],
+      p_budget_band: 'mid',
+      p_format_prefs: ['gel', 'cream'],
+    });
+  });
+
+  it('keeps the encrypted local preference authoritative when the remote mirror rejects', async () => {
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
+    mocks.rpc.mockResolvedValueOnce({ error: { message: 'offline' } });
+
+    await savePreferences({
+      values: ['vegan'],
+      budget: 'drugstore',
+      formats: ['fluid'],
+    });
+
+    await expect(loadPreferences()).resolves.toEqual({
+      values: ['vegan'],
+      budget: 'drugstore',
+      formats: ['fluid'],
+    });
+  });
+
+  it('preserves malformed dismissed recommendation JSON and fails closed', async () => {
     const original = '{not-json';
     mocks.storage.set(DISMISSED_KEY, original);
 
-    await expect(loadDismissed()).resolves.toEqual([]);
+    await expect(loadDismissed()).rejects.toThrow('PRIVATE_STRING_SET_INVALID');
     expect(mocks.storage.get(DISMISSED_KEY)).toBe(original);
   });
 
@@ -163,7 +195,7 @@ describe('recommendation local store recovery', () => {
     const original = JSON.stringify({ version: 2, preferences: {} });
     mocks.storage.set(PREF_KEY, original);
 
-    await expect(loadPreferences()).resolves.toEqual({ values: [], budget: null, formats: [] });
+    await expect(loadPreferences()).rejects.toThrow(REC_PREFERENCES_UNSUPPORTED_VERSION);
     await expect(savePreferences({ values: [], budget: null, formats: [] })).rejects.toThrow(
       REC_PREFERENCES_UNSUPPORTED_VERSION,
     );

@@ -240,7 +240,32 @@ The exhaustive orphan audit also found launch-significant policy/data-model gaps
 
 ## RLS And Photo Storage Inventory
 
-The migration-derived public schema has 80 RLS-enabled tables: 28 owner-client private, eight directly service-only private, 22 fully sealed service-only lifecycle/tombstone/publication/copy/release-authority tables, four sealed global clinical/editorial tables, four sealed catalog-authority tables, and 14 authenticated catalog/editorial tables. Migration `0057` moves the import batch and QA ledgers behind narrow RPCs and seals the catalog-source legal approval authority, so even `service_role` has no direct table access. Migration `0058` removes active-only publication and direct API-role reads from `conflict_rules`, `sequencing_rules`, `creator_stacks`, and `creator_stack_items`; they remain unavailable until a separate evidence-bound B-DERM authority exists. It also seals direct API reads of `ingredient_tags`, `ingredient_pao_defaults`, `product_categories`, and `ingredient_tag_definitions`, which are consumed only behind bounded catalog serving functions. Migration `0059` purges the legacy account-linked barcode history and moves `shelf_scans` from the caller-RLS lane to the sealed service-private lane. It also purges the deprecated external-contribution queue, revokes its runtime table/enqueue authority, moves `obf_contribution_queue` into the sealed service-private lane, read-seals `catalog_corrections`, purges `catalog_lookup_events` request identity, and enforces null query, barcode, matched-product, source, and quality fields so the remaining owner-linked lookup export contains only lookup type, bounded outcome, and timestamps. Migration `0060` fully purges legacy `ingredient_pao_defaults`, removes its read policy, force-RLS seals and revokes it, and prevents repopulation with a validated always-false check. `product_categories` remains sealed editorial/future-candidate metadata and is not a serving estimate. Migration `0061` allows only bounded, reviewed, exact-parent-source `label`, `brand_label`, or `catalog` PAO evidence into the authenticated serving lane; `category_default` and `unknown` remain excluded. Migration `0062` adds covered CAT-03 authority indexes and a bounded statement-level count/root-set guard without weakening the row-level authority checks. Migration `0063` adds the authenticated, nonanonymous, `auth.uid()`-bound and `account_access_allowed()`-gated catalog-correction keyset export RPC while denying `service_role` both raw-table `SELECT` and RPC execution. The DB-09 hosted matrix must register all 66 private tables exactly once, apply row-positive isolation probes to the 36 directly queryable private tables, prove direct denial for every role on the 30 sealed tables, and distinguish cross-user permanent accounts, a real signed-anonymous account, and a publishable-key client with no session. Disposable PostgreSQL rehearsals and local pgTAP provide source evidence for sealed state that PostgREST is deliberately unable to inspect directly; hosted proof remains open.
+The migration-derived public schema has 82 RLS-enabled tables: 36 directly
+queryable private tables, 32 read-sealed private/authority tables, and 14
+authenticated catalog/editorial tables. The 32 sealed relations comprise 24
+service-private lifecycle/authority tables, four global clinical/editorial
+tables, and four catalog-authority tables. Migrations `0057`-`0063` seal the
+catalog source/import/curation/operator and unreviewed clinical/editorial
+authorities, minimize scan/contribution/lookup history, close legacy category
+PAO defaults, and allow only bounded product-specific PAO evidence.
+Migrations `0064`-`0067` add profile provenance, the CAT-08/default-ACL repair,
+the legacy clinical-table seal, and the checker-only catalog-release lint
+shape. Migrations `0068`/`0069` add adherence plus owner-derived
+Shelf/completion replay, stable tombstone identities, two minimized private
+replay ledgers, and three bounded export sources. Migration `0070` records only
+a `draft_blocked` consent-copy successor. Migration `0071` establishes
+recommendation zero admission, purges the untrusted recommendation cache,
+keeps catalog recommendation eligibility closed, and adds one immutable
+private admission control.
+
+The DB-09 hosted matrix must register all 68 private/read-sealed public tables
+exactly once, apply row-positive isolation probes to the 36 directly queryable
+tables, prove direct denial for every role on the 32 sealed tables, and
+distinguish cross-user permanent accounts, a real signed-anonymous account, and
+a publishable-key client with no session. It must separately prove every
+private-schema CAT-02, CAT-03, CAT-08, replay, and recommendation authority
+lane. Disposable PostgreSQL rehearsals and local pgTAP provide only their
+recorded source evidence; reviewed current-head hosted proof remains open.
 
 Photo metadata and `photos` bucket objects require an owner-prefixed path plus current `photo_cloud_backup` consent. Migration `20260713000045_anonymous_photo_storage_guard.sql` additionally denies insert/update of cloud photo bytes to signed-anonymous accounts, including an anonymous account that can create its own consent row. Owner-prefixed select/delete remains available so existing legacy objects can still be accessed or removed. This source posture is not release evidence until a reviewed reset and the hosted adversarial matrix pass with unchanged-object and residue-free-cleanup postconditions.
 

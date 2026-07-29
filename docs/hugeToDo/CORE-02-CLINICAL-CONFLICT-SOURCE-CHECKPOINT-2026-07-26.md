@@ -115,6 +115,11 @@ The CORE-02 source contract is mandatory in both `phase3:verify` and
 - Focused PostgreSQL 15 rehearsals for `0066` and `0067` pass. The exhaustive
   current-head database replay is recorded separately only when its complete
   command exits; an in-flight run is not a pass.
+- 2026-07-29 update: the complete 70-migration PostgreSQL 15 gate through
+  `0071` exited 0, including all four forward cutovers, two clean resets, the
+  15-file / 1,199-assertion pgTAP suite, lint, empty drift, temporary type
+  generation, CAT-08 10/10, and teardown. This local result does not replace
+  hosted, device, professional-review, or release evidence.
 - A local, folder-specific human-simulated Expo-web observation at the supported
   390 x 844 viewport records the ordinary zero-admission Shelf, Ask
   prompt-hiding, exact typed-pair refusal, stale-detail, invalid public-share,

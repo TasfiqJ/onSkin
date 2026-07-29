@@ -439,7 +439,7 @@ set brand_id = (select value_uuid from cat03_test_state where state_key = 'brand
     barcode_quality_score = case when fixture.ordinal = 2001 then 50 else 99 end,
     category_quality_score = case when fixture.ordinal = 2001 then 50 else 99 end,
     quality_grade = case when fixture.ordinal = 2001 then 'usable' else 'verified' end,
-    recommendation_eligible = fixture.ordinal <= 2000,
+    recommendation_eligible = false,
     ingredient_parse_status = 'reviewed',
     ingredient_parse_confidence = 1,
     last_reviewed_at = pg_catalog.now()
@@ -2274,6 +2274,10 @@ select ok(
       pg_catalog.format('public.%I', relation_matrix.relation_name),
       'SELECT'
     )
+      and not (
+        role_matrix.role_name = 'service_role'
+        and relation_matrix.relation_name = 'recommendable_catalog_products'
+      )
   )
   and not exists (
     select 1
@@ -2291,7 +2295,7 @@ select ok(
         'public.creator_stack_items'::regclass
       )
   ),
-  'unreviewed source/tag/global clinical authorities and legacy views deny every API role and broad policy'
+  'unreviewed authorities and legacy views deny every API role while only the exact closed recommendation projection is service-readable'
 );
 
 select ok(
@@ -5083,7 +5087,7 @@ set review_status = 'reviewed',
     barcode_quality_score = 99,
     category_quality_score = 99,
     quality_grade = 'verified',
-    recommendation_eligible = true,
+    recommendation_eligible = false,
     last_reviewed_at = pg_catalog.now()
 where id = (
   select value_uuid from cat03_test_state where state_key = 'successor_product'

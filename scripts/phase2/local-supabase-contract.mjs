@@ -45,6 +45,9 @@ const [
   healthConsentDraftStagingMigration,
   healthConsentDraftStagingTests,
   healthConsentDraftStagingUpgradeRehearsal,
+  recommendationZeroAdmissionMigration,
+  recommendationZeroAdmissionTests,
+  recommendationZeroAdmissionUpgradeRehearsal,
   accountDeletionMigration,
   readme,
   workflow,
@@ -82,6 +85,9 @@ const [
   read('supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql'),
   read('supabase/tests/database/health_consent_draft_successor_staging.test.sql'),
   read('supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql'),
+  read('supabase/migrations/20260726000071_recommendation_zero_admission.sql'),
+  read('supabase/tests/database/recommendation_zero_admission.test.sql'),
+  read('supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -113,10 +119,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 69, `Expected 69 migration files; found ${migrations.length}.`);
+check(migrations.length === 70, `Expected 70 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260726000070_'),
-  'The latest migration must remain 20260726000070.',
+  migrations.at(-1)?.startsWith('20260726000071_'),
+  'The latest migration must remain 20260726000071.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -206,10 +212,13 @@ check(
     /syncUpgradeTemplate\.replace\(syncIncludeMarker, \(\) => exactSyncMigration\)/u.test(runner) &&
     /routine_completion_sync_bridge_0069_upgrade\.generated\.test\.sql/u.test(runner) &&
     /reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal/u.test(runner) &&
-    /rename\(sandboxHeadMigration, withheldHeadMigration\)/u.test(runner) &&
+    /rename\(sandboxConsentDraftMigration, withheldConsentDraftMigration\)/u.test(runner) &&
+    /rename\(withheldConsentDraftMigration, sandboxConsentDraftMigration\)/u.test(runner) &&
+    /health_consent_draft_successor_0070_upgrade\.generated\.test\.sql/u.test(runner) &&
+    /reset through 0070 for the 0071 recommendation forward-upgrade rehearsal/u.test(runner) &&
     /rename\(withheldHeadMigration, sandboxHeadMigration\)/u.test(runner) &&
-    /health_consent_draft_successor_0070_upgrade\.generated\.test\.sql/u.test(runner),
-  'The full local DB gate must execute 0068 against 0067, 0069 against 0068, and 0070 against 0069.',
+    /recommendation_zero_admission_0071_upgrade\.generated\.test\.sql/u.test(runner),
+  'The full local DB gate must execute 0068 against 0067, 0069 against 0068, 0070 against 0069, and 0071 against 0070.',
 );
 check(
   /catalog-operator-dblink-target\.inc/u.test(runner) &&
@@ -451,16 +460,16 @@ check(
 );
 check(
   /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
-    /the clinical legacy seal runs against the exact 69-migration source history/u.test(
+    /the clinical legacy seal runs against the exact 70-migration source history/u.test(
       clinicalContentLegacySealTests,
     ) &&
-    /the migration history includes the legacy seal and reaches the Shelf\/completion sync bridge head/u.test(
+    /the migration history includes the legacy seal and reaches recommendation zero admission/u.test(
       clinicalContentLegacySealTests,
     ) &&
     /all historical rule rows survive every denied owner and API mutation probe/u.test(
       clinicalContentLegacySealTests,
     ),
-  '0066 pgTAP must bind the 69-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
+  '0066 pgTAP must bind the 70-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
 );
 check(
   /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000067_catalog_release_temp_table_lint_contract\.sql/u.test(
@@ -478,37 +487,30 @@ check(
 );
 check(
   /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
-    /the catalog release lint contract runs against the exact 69-migration source history/u.test(
+    /the catalog release lint contract runs against the exact 70-migration source history/u.test(
       catalogReleaseLintContractTests,
     ) &&
-    /the migration history retains the temporary-table lint contract through the Shelf\/completion sync bridge head/u.test(
+    /the migration history retains the temporary-table lint contract through recommendation zero admission/u.test(
       catalogReleaseLintContractTests,
     ) &&
     /only the exact temporary-table wrapper carries the checker shape/u.test(
       catalogReleaseLintContractTests,
     ),
-  '0067 pgTAP must bind the 69-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
+  '0067 pgTAP must bind the 70-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
 );
 check(
   /begin;/u.test(routineAdherenceMigration) &&
     routineAdherenceMigration.includes(
       'lock table public.routine_completions in access exclusive mode;',
     ) &&
-    routineAdherenceMigration.includes(
-      'lock table public.profiles in access exclusive mode;',
-    ) &&
+    routineAdherenceMigration.includes('lock table public.profiles in access exclusive mode;') &&
     routineAdherenceMigration.includes(
       'lock table public.streak_freezes in access exclusive mode;',
     ) &&
     routineAdherenceMigration.indexOf(
       'lock table public.routine_completions in access exclusive mode;',
-    ) <
-      routineAdherenceMigration.indexOf(
-        'lock table public.profiles in access exclusive mode;',
-      ) &&
-    routineAdherenceMigration.indexOf(
-      'lock table public.profiles in access exclusive mode;',
-    ) <
+    ) < routineAdherenceMigration.indexOf('lock table public.profiles in access exclusive mode;') &&
+    routineAdherenceMigration.indexOf('lock table public.profiles in access exclusive mode;') <
       routineAdherenceMigration.indexOf(
         'lock table public.streak_freezes in access exclusive mode;',
       ) &&
@@ -525,9 +527,7 @@ check(
 );
 check(
   /select plan\(8\)/u.test(routineAdherenceUpgradeRehearsal) &&
-    /@@INCLUDE_EXACT_0068_MIGRATION@@/u.test(
-      routineAdherenceUpgradeRehearsal,
-    ) &&
+    /@@INCLUDE_EXACT_0068_MIGRATION@@/u.test(routineAdherenceUpgradeRehearsal) &&
     /current_streak = 9/u.test(routineAdherenceUpgradeRehearsal) &&
     /legacy-client/u.test(routineAdherenceUpgradeRehearsal) &&
     /0068 atomically resets unverifiable legacy profile adherence/u.test(
@@ -549,8 +549,8 @@ check(
     /the hashed parity corpus matches the authoritative SQL projection/u.test(
       routineAdherenceTests,
     ) &&
-    /exact 69-migration source history/u.test(routineAdherenceTests) &&
-    /retains adherence authority through the Shelf\/completion sync bridge head/u.test(
+    /exact 70-migration source history/u.test(routineAdherenceTests) &&
+    /retains adherence authority through recommendation zero admission/u.test(
       routineAdherenceTests,
     ) &&
     /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
@@ -570,12 +570,8 @@ check(
     ) &&
     /public\.sync_shelf_product\(/u.test(routineCompletionSyncMigration) &&
     /public\.record_routine_completion\(/u.test(routineCompletionSyncMigration) &&
-    /public\.export_shelf_product_identities_for_subject\(/u.test(
-      routineCompletionSyncMigration,
-    ) &&
-    /public\.export_shelf_sync_receipts_for_subject\(/u.test(
-      routineCompletionSyncMigration,
-    ) &&
+    /public\.export_shelf_product_identities_for_subject\(/u.test(routineCompletionSyncMigration) &&
+    /public\.export_shelf_sync_receipts_for_subject\(/u.test(routineCompletionSyncMigration) &&
     /public\.export_routine_completion_sync_receipts_for_subject\(/u.test(
       routineCompletionSyncMigration,
     ) &&
@@ -598,14 +594,12 @@ check(
     /the cutover preflight fails closed on a cross-owner legacy product/u.test(
       routineCompletionSyncUpgradeRehearsal,
     ) &&
-    /the exact scalar completion RPC signature exists/u.test(
-      routineCompletionSyncUpgradeRehearsal,
-    ),
+    /the exact scalar completion RPC signature exists/u.test(routineCompletionSyncUpgradeRehearsal),
   '0069 must prove its exact 0068-to-0069 identity/FK/ACL cutover with production-shaped legacy rows.',
 );
 check(
   /select plan\(82\)/u.test(routineCompletionSyncTests) &&
-    /exact 69-migration source history/u.test(routineCompletionSyncTests) &&
+    /exact 70-migration source history/u.test(routineCompletionSyncTests) &&
     /Shelf sync rejects an exact draft-blocked health grant before retention/u.test(
       routineCompletionSyncTests,
     ) &&
@@ -651,12 +645,8 @@ check(
   /create table public\.health_consent_copy_staging_events/u.test(
     healthConsentDraftStagingMigration,
   ) &&
-    /stage_health_consent_copy_draft_successor/u.test(
-      healthConsentDraftStagingMigration,
-    ) &&
-    /_health_consent_copy_staging_evidence_hash/u.test(
-      healthConsentDraftStagingMigration,
-    ) &&
+    /stage_health_consent_copy_draft_successor/u.test(healthConsentDraftStagingMigration) &&
+    /_health_consent_copy_staging_evidence_hash/u.test(healthConsentDraftStagingMigration) &&
     /HEALTH_CONSENT_COPY_DRAFT_STAGING_EVIDENCE_MISMATCH/u.test(
       healthConsentDraftStagingMigration,
     ) &&
@@ -664,9 +654,7 @@ check(
       healthConsentDraftStagingMigration,
     ) &&
     /HEALTH_CONSENT_COPY_NOT_RELEASED/u.test(healthConsentDraftStagingMigration) &&
-    /from public, anon, authenticated, service_role/u.test(
-      healthConsentDraftStagingMigration,
-    ),
+    /from public, anon, authenticated, service_role/u.test(healthConsentDraftStagingMigration),
   '0070 must stage the exact mobile Ask tuple as an unreleased migration-owned draft without runtime authority.',
 );
 check(
@@ -693,9 +681,7 @@ check(
 );
 check(
   /select plan\(13\)/u.test(healthConsentDraftStagingUpgradeRehearsal) &&
-    /@@INCLUDE_EXACT_0070_MIGRATION@@/u.test(
-      healthConsentDraftStagingUpgradeRehearsal,
-    ) &&
+    /@@INCLUDE_EXACT_0070_MIGRATION@@/u.test(healthConsentDraftStagingUpgradeRehearsal) &&
     /0069 starts with the installed Ask predecessor as the current draft/u.test(
       healthConsentDraftStagingUpgradeRehearsal,
     ) &&
@@ -706,6 +692,80 @@ check(
       healthConsentDraftStagingUpgradeRehearsal,
     ),
   '0070 must prove its exact 0069-to-0070 draft-only consent-copy transition.',
+);
+check(
+  /create table private\.recommendation_admission_control/u.test(
+    recommendationZeroAdmissionMigration,
+  ) &&
+    /check \(admission_state = 'closed'\)/u.test(recommendationZeroAdmissionMigration) &&
+    /products_recommendation_eligibility_closed/u.test(recommendationZeroAdmissionMigration) &&
+    /new\.recommendation_eligible := false/u.test(recommendationZeroAdmissionMigration) &&
+    /drop view public\.recommendable_catalog_products/u.test(
+      recommendationZeroAdmissionMigration,
+    ) &&
+    /grant select on public\.recommendable_catalog_products to service_role/u.test(
+      recommendationZeroAdmissionMigration,
+    ) &&
+    /RECOMMENDATION_CATALOG_VALIDATOR_PREDICATE_DRIFT/u.test(
+      recommendationZeroAdmissionMigration,
+    ) &&
+    /catalog_launch_curation_record_is_valid_v0058/u.test(recommendationZeroAdmissionMigration) &&
+    /catalog_launch_curation_campaign_record_validity/u.test(
+      recommendationZeroAdmissionMigration,
+    ) &&
+    /recommendations_catalog_product_closed/u.test(recommendationZeroAdmissionMigration) &&
+    /RECOMMENDATION_ADMISSION_CLOSED/u.test(recommendationZeroAdmissionMigration) &&
+    /set_recommendation_preferences/u.test(recommendationZeroAdmissionMigration) &&
+    /revoke all on public\.order_attributions/u.test(recommendationZeroAdmissionMigration),
+  '0071 must close product/cached recommendation admission, preserve Shelf serving, expose only an exact service projection, and retain one owner preference RPC.',
+);
+check(
+  /select plan\(35\)/u.test(recommendationZeroAdmissionTests) &&
+    /the control is exactly one constrained closed checkpoint/u.test(
+      recommendationZeroAdmissionTests,
+    ) &&
+    /every import or refresh assignment is coerced back to false/u.test(
+      recommendationZeroAdmissionTests,
+    ) &&
+    /Shelf serving remains independently CAT-03 and hold gated/u.test(
+      recommendationZeroAdmissionTests,
+    ) &&
+    /CAT-03 scalar and set-based live validators do not depend on recommendation admission/u.test(
+      recommendationZeroAdmissionTests,
+    ) &&
+    /the recommendation candidate projection has one exact column allowlist/u.test(
+      recommendationZeroAdmissionTests,
+    ) &&
+    /no privileged cache publisher can bypass closed admission/u.test(
+      recommendationZeroAdmissionTests,
+    ) &&
+    /an exact current owner can atomically persist bounded preferences/u.test(
+      recommendationZeroAdmissionTests,
+    ) &&
+    /commission\/order storage has no client privilege or policy/u.test(
+      recommendationZeroAdmissionTests,
+    ),
+  '0071 pgTAP must prove exact zero admission, ACLs, Shelf independence, and owner-only preference publication.',
+);
+check(
+  /select plan\(19\)/u.test(recommendationZeroAdmissionUpgradeRehearsal) &&
+    /@@INCLUDE_EXACT_0071_MIGRATION@@/u.test(recommendationZeroAdmissionUpgradeRehearsal) &&
+    /0071 purges every catalog-linked recommendation cache row/u.test(
+      recommendationZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /0071 also purges unreceipted type-only free-text cache rows/u.test(
+      recommendationZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /0071 removes every unused table privilege from both recommendation relations/u.test(
+      recommendationZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /legacy refresh\/import reopen attempt closed/u.test(
+      recommendationZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /Shelf product serving is independent from recommendation admission/u.test(
+      recommendationZeroAdmissionUpgradeRehearsal,
+    ),
+  '0071 must prove its exact 0070-to-0071 loss-averse cache and admission cutover.',
 );
 check(
   /select plan\(218\)/u.test(catalogImportLifecycleTests) &&
