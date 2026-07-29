@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T19:01:16.536Z",
+  "generatedAt": "2026-07-29T19:56:44.553Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -165,6 +165,18 @@
       "exactPayloadConfirmationRequired": true,
       "rawPrivateFieldsAllowed": false,
       "analyticsAllowed": false
+    },
+    "trendInsightAdmission": {
+      "trendInsightAdmitted": false,
+      "validatedOnDeviceEngineAvailable": false,
+      "resultIssuerAvailable": false,
+      "calibrationAuthorityAvailable": false,
+      "fairnessAuthorityAvailable": false,
+      "simulatedMetricsAllowed": false,
+      "contentAnalyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false,
+      "cloudPhotoProcessingAllowed": false,
+      "scoreAgeGradePercentageAllowed": false
     }
   },
   "platformStatus": {
