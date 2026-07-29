@@ -1,27 +1,22 @@
 import { Stack } from 'expo-router';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
-import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_PROGRESS_ROUTE } from '@/lib/navigation/safeBack';
 
-function TrendScreenGate({ children }: { children: React.ReactElement }) {
-  if (!phase7Flags.trend) {
-    return (
-      <DeferredSurface
-        surface="trend"
-        fallbackRoute={APP_PROGRESS_ROUTE}
-        fallbackLabel="Back to Progress"
-        fallbackBehavior="replace"
-      />
-    );
-  }
-
-  return children;
+function TrendScreenGate({ children: _children }: { children: React.ReactElement }) {
+  return (
+    <DeferredSurface
+      surface="trend"
+      fallbackRoute={APP_PROGRESS_ROUTE}
+      fallbackLabel="Back to Progress"
+      fallbackBehavior="replace"
+      trackView={false}
+    />
+  );
 }
 
-// "Changes in your own photos" surfaces (docs/12 §5). The off-by-default opt-in and
-// the fairness floor, presented over the tabs. The refusal (docs/06) is preserved and
-// remains the default; this is the optional, on-device, no-number opt-in.
+// Preserve exact stale/direct-entry URLs while withholding the matched child before
+// any private hook can mount. Each child also fails closed when rendered in isolation.
 export default function TrendLayout() {
   return (
     <Stack

@@ -17,17 +17,20 @@ export function DeferredSurface({
   fallbackRoute,
   fallbackLabel,
   fallbackBehavior = 'back-or-replace',
+  trackView = true,
 }: {
   surface: DeferredSurfaceKind;
   fallbackRoute?: AppFallbackRoute;
   fallbackLabel?: string;
   fallbackBehavior?: 'back-or-replace' | 'replace';
+  trackView?: boolean;
 }) {
   const copy = deferredSurfaceCopy[surface];
 
   useEffect(() => {
+    if (!trackView) return;
     track('phase7_deferred_surface_viewed', { surface });
-  }, [surface]);
+  }, [surface, trackView]);
 
   return (
     <Screen edges={['top', 'bottom']}>

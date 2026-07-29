@@ -36,6 +36,23 @@ assert.equal(contract.conflictShareAdmission.sanitizedProjectionAllowlistRequire
 assert.equal(contract.conflictShareAdmission.exactPayloadConfirmationRequired, true);
 assert.equal(contract.conflictShareAdmission.rawPrivateFieldsAllowed, false);
 assert.equal(contract.conflictShareAdmission.analyticsAllowed, false);
+assert.deepEqual(contract.trendInsightAdmission, {
+  trendInsightAdmitted: false,
+  validatedOnDeviceEngineAvailable: false,
+  resultIssuerAvailable: false,
+  calibrationAuthorityAvailable: false,
+  fairnessAuthorityAvailable: false,
+  simulatedMetricsAllowed: false,
+  contentAnalyticsAllowed: false,
+  disabledPathSideEffectsAllowed: false,
+  cloudPhotoProcessingAllowed: false,
+  scoreAgeGradePercentageAllowed: false,
+});
+assert.equal(Object.isFrozen(contract.trendInsightAdmission), true);
+assert.deepEqual(
+  launchContractSnapshot(contract).trendInsightAdmission,
+  contract.trendInsightAdmission,
+);
 assert.deepEqual(
   contract.featureProfessionalReviewRequirements.conflict_share.map(
     ({ reviewerRole, taskId }) => `${reviewerRole}:${taskId}`,
@@ -125,6 +142,33 @@ extraShareAdmissionKey.conflictShareAdmission.runtimeFlagOverride = true;
 assert.match(
   validateLaunchContract(extraShareAdmissionKey).join('\n'),
   /only the exact CORE-07A admission keys/,
+);
+
+for (const key of Object.keys(contract.trendInsightAdmission)) {
+  const forgedTrendAdmission = structuredClone(contract);
+  forgedTrendAdmission.trendInsightAdmission[key] = true;
+  assert.match(
+    validateLaunchContract(forgedTrendAdmission).join('\n'),
+    new RegExp(`trendInsightAdmission\\.${key} must be false`, 'u'),
+  );
+}
+
+const missingTrendAdmissionKey = structuredClone(contract);
+delete missingTrendAdmissionKey.trendInsightAdmission.resultIssuerAvailable;
+assert.match(
+  validateLaunchContract(missingTrendAdmissionKey).join('\n'),
+  /resultIssuerAvailable must be false/,
+);
+assert.match(
+  validateLaunchContract(missingTrendAdmissionKey).join('\n'),
+  /only the exact PHOTO-05A admission keys/,
+);
+
+const extraTrendAdmissionKey = structuredClone(contract);
+extraTrendAdmissionKey.trendInsightAdmission.fixtureOverride = true;
+assert.match(
+  validateLaunchContract(extraTrendAdmissionKey).join('\n'),
+  /only the exact PHOTO-05A admission keys/,
 );
 
 console.log('Launch contract smoke tests passed.');

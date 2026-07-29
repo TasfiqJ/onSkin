@@ -156,6 +156,18 @@
     "rawPrivateFieldsAllowed": false,
     "analyticsAllowed": false
   },
+  "trendInsightAdmission": {
+    "trendInsightAdmitted": false,
+    "validatedOnDeviceEngineAvailable": false,
+    "resultIssuerAvailable": false,
+    "calibrationAuthorityAvailable": false,
+    "fairnessAuthorityAvailable": false,
+    "simulatedMetricsAllowed": false,
+    "contentAnalyticsAllowed": false,
+    "disabledPathSideEffectsAllowed": false,
+    "cloudPhotoProcessingAllowed": false,
+    "scoreAgeGradePercentageAllowed": false
+  },
   "safetyConstraints": {
     "diagnosisTreatmentCurePreventionClaims": false,
     "aiSkinScores": false,

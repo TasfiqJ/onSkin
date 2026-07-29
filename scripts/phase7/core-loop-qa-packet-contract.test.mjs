@@ -6,6 +6,7 @@ import {
   PHASE7_EVIDENCE_KEYS,
   validatePhase7EvidenceInventory,
 } from './core-loop-qa-packet-contract.mjs';
+import { PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS } from '../photo05/trend-admission-source-contract.mjs';
 
 function validEvidence() {
   return Object.fromEntries(
@@ -146,6 +147,38 @@ test('Phase 7 source hashes and blockers bind the complete CORE-07A zero-share b
     /launchContract\.conflictShareAdmission\.publicLinksAdmitted !== true/u,
   );
   assert.match(builderSource, /literal zero share and public-link admission/u);
+});
+
+test('Phase 7 and Phase 9 packets bind the complete PHOTO-05A zero-Trend boundary', () => {
+  const phase7Source = readFileSync(
+    new URL('./build-core-loop-qa-packet.mjs', import.meta.url),
+    'utf8',
+  );
+  const phase7Checker = readFileSync(new URL('./check-core-loop.mjs', import.meta.url), 'utf8');
+  const phase7Smoke = readFileSync(
+    new URL('./check-core-loop-smoke.mjs', import.meta.url),
+    'utf8',
+  );
+  const phase9Source = readFileSync(
+    new URL('../phase9/build-release-qa-packet.mjs', import.meta.url),
+    'utf8',
+  );
+  const phase9Smoke = readFileSync(new URL('../phase9/release-smoke.mjs', import.meta.url), 'utf8');
+
+  assert.ok(PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS.length >= 35);
+  for (const source of [phase7Source, phase9Source]) {
+    assert.match(source, /PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS/u);
+    assert.match(source, /trendInsightAdmission\.trendInsightAdmitted/u);
+    assert.match(source, /PHOTO-05A Trend insights remain literal-zero-admission/u);
+  }
+  for (const source of [phase7Checker, phase9Smoke]) {
+    assert.match(source, /auditPhoto05aTrendAdmission/u);
+    assert.match(source, /PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS/u);
+  }
+  assert.match(
+    phase7Smoke,
+    /scripts\/photo05\/trend-admission-source-contract\.test\.mjs/u,
+  );
 });
 
 test('Phase 3, Phase 8, and Phase 9 packets bind the complete CORE-07A boundary', () => {

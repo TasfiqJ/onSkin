@@ -66,6 +66,12 @@ The `data-export` Edge Function exports the caller-scoped tables listed in `CALL
 
 Caller-scoped table coverage includes account profile, skin profile, shelf, routines, completions, conflicts, active ramp, cycles, reminders, consent ledger, photos, entitlements, recommendations, outcome-only lookup events, commerce click events, community participation, photo trend metadata, Ask metadata, and Ask safety audit rows. Catalog corrections are deliberately absent from this direct-table lane and use the owner-bound RPC lane described below.
 
+PHOTO-05A zero admission does not erase the data-rights obligation for legacy
+`photo_trend` rows. They remain in the owner-scoped export/withdrawal/deletion
+inventory, but no current route, hook, consent grant, or simulated metric may
+create or display a new Trend result. Export presence is portability evidence,
+not engine, fairness, consent, or publication authority.
+
 `reverse_trial_grants` remains service-only under RLS and is now exported only through the separate backend service-role client, with an exact `user_id` filter resolved from `auth.getUser()` rather than request data. Its output is allowlisted to `user_id`, grant/expiry timestamps, source, and reviewed metadata. The executable registry rejects every canonical service-only table if it is inserted into the caller-RLS set; the caller registry now exactly matches all 28 owner-client private tables. Migration `0059` purges and seals legacy `shelf_scans`, so it is denylisted rather than exported as caller data. Migration `0063` keeps `catalog_corrections` read-sealed and moves reporter-facing portability to `export_catalog_corrections_for_subject`: the authenticated nonanonymous caller client invokes a `SECURITY DEFINER` keyset RPC that requires `p_user_id = auth.uid()` and `account_access_allowed()`. Only `authenticated` receives execute; `service_role` has neither raw correction-table `SELECT` nor export-RPC execution. The allowlist excludes assignment, reviewer, resolution, intake-security, and internal operator-note fields.
 
 Cloud photo export links are generated only when the photo metadata path is a well-formed object path under the caller's user ID storage prefix. Malformed, cross-user, dot-segment, empty-segment, query/fragment, or control-character legacy paths are reported as `INVALID_STORAGE_PATH` omissions and are not signed. Signed links default to and are capped at 60 seconds. Already issued links cannot be revoked; live evidence must prove they work before expiry and fail afterward.

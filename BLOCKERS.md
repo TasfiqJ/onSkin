@@ -1585,18 +1585,74 @@ Exit criteria:
 - reviewer metadata recorded;
 - stale or unreviewed content is gated out.
 
+## B-AI-FAIRNESS - Trend measurement fairness evidence
+
+Status: `launch-blocked`
+
+PHOTO-05A admits no Trend result. A real on-device engine cannot launch until
+PHOTO-06 supplies predeclared, independently reviewed evidence across the
+supported skin-tone, lighting, hair, glasses, environment, and iPhone matrix.
+Fairness is not implied by local processing, a Monk-tone input, a conservative
+constant, or the availability of Apple image-processing APIs.
+
+Exit criteria:
+
+- the exact measurement and abstention semantics are fixed before evaluation;
+- a separately consented cohort and sampling/power plan are approved;
+- Monk 7-10 representation, device/environment coverage, confidence intervals,
+  false-positive, false-negative, inconclusive, and abstention results are
+  retained;
+- parity bands, failure thresholds, drift ownership, and model/algorithm
+  revalidation rules are signed by named independent reviewers; and
+- the report is bound to the exact source, production archive, engine and
+  calibration versions, supported markets, and user-facing claims.
+
+## B-AI-LEGAL - Trend consent, privacy, and claims review
+
+Status: `launch-blocked`
+
+PHOTO-05A is a source refusal, not a conclusion that an eventual Trend feature
+complies with any law or Apple policy. The exact finished data flow, derived
+health inference, consent, withdrawal, deletion, backup, incident, App Privacy,
+and express/implied measurement claims require market-specific review.
+
+Exit criteria:
+
+- privacy/security and regulatory counsel review the exact source, archive,
+  data flow, policies, consent copy, App Privacy answers, and store/marketing
+  copy for every launch market;
+- Washington consumer-health-data and California sensitive-personal-
+  information duties, FTC health-claim substantiation and breach obligations,
+  FDA intended-use boundaries, and other applicable regimes are resolved;
+- collection, sharing, retention, backup, export, withdrawal, deletion, and
+  installed-base reconsent behavior are exact, tested, and disclosed;
+- no diagnosis, disease, treatment, score, age, percentage, accuracy,
+  objectivity, or superiority claim exceeds retained evidence; and
+- named decisions are bound to the exact production source and archive.
+
 ## B-AI-ONDEVICE - Real trend analysis engine
 
 Status: `launch-blocked`
 
 The safe current posture is no score, no age, no disease, no percentage
-improvement. Do not market trend analysis as AI skin scoring.
+improvement, and no Trend result at all. PHOTO-05A removes the former simulated
+delta/lighting path and keeps the engine, consent grant, result copy, and
+content analytics at literal zero admission. Apple Vision, Accelerate/vImage,
+an environment flag, a legacy consent, or a pure classifier is not a result
+issuer. Do not market trend analysis as AI skin scoring.
 
 Exit criteria:
 
-- real on-device CV exists;
-- MDC calibration and fairness validation pass;
-- FDA/FTC/EU/app-store counsel review is complete;
+- a real on-device engine and versioned result issuer exist in the exact signed
+  archive;
+- input selection, registration, measurement, calibration, provenance,
+  limitations, and every abstention/failure state are deterministic and
+  retained;
+- no photo, feature vector, derived observation, or content analytics leaves
+  the device, as proven by archive and observed-network evidence;
+- supported physical-iPhone performance, memory, thermal, battery, lifecycle,
+  cancellation, accessibility, and failure evidence passes;
+- `B-AI-FAIRNESS` and `B-AI-LEGAL` close independently; and
 - copy remains descriptive and no-score.
 
 ## B-AI-ASSISTANT - Cloud Ask vendor, safety, and legal gates

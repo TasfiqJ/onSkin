@@ -6,6 +6,21 @@
 > superseded; the scientific noise floor, fairness, privacy, consent, device,
 > claims, and professional-review gates remain mandatory.
 
+> **2026-07-29 PHOTO-05A source checkpoint:** No real engine or result issuer
+> exists, so current admission is literal zero. The historical simulated delta
+> may not render `consistent` or any other Trend state. Progress retains only
+> the private photo timeline and no-score explanation; positive Trend consent,
+> photo/profile/tone/Trend-state reads, result selection, persistence, content
+> analytics, and external/native/file side effects stay closed. Explicit legacy
+> withdrawal cleanup remains a data-rights path. See
+> [`PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`](./hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+>
+> The two decision logs deliberately cross-reference one another:
+> docs/12 `D-046`–`D-050` map to root `D-068`–`D-072`. PHOTO-05A preserves the
+> numbering and supersedes only the former root `D-069` implementation note
+> that a conservative stub could produce `consistent`; the on-device-only rule
+> itself remains.
+
 _The honest verdict on the app's last and most-deferred feature · why the population "skin score" / "skin age" is killed outright · why the shipped refusal of AI scores (docs/06) is the asset, not a gap to fill · the only defensible form — on-device, within-person, descriptive, no-number, fairness-validated, off-by-default, and arguably not called "AI" at all — "Changes in your own photos" · the score-vs-trend scientific distinction · the Minimal-Detectable-Change noise floor · the fairness launch gate (Monk scale; the bias that physics will not fully fix) · the claim-safe, calm output copy and the forbidden patterns · why cloud is killed, not deferred-with-a-DPA · the steelman for building it, and its rebuttal · and the recommendation, made plainly: keep the door shut and market the refusal._
 
 > This is build-order item **#12** of the 15 feature documents in docs/00 (§"Build order", item 12: _"AI trend analysis (last)"_). It is the only feature docs/00 marks **"(last)"** and **"intentionally last,"** and the only one that exists in direct tension with positions OnSkin has **already shipped and earns marketing on**. docs/06 (guided photo progress) did not merely _decline_ AI scores — it **shipped an on-screen "No scores, no AI grades" refusal as a trust artifact** (docs/06 §8, D-030) and **earns the literal-true claim "your photos never leave your device and never train AI"** (docs/06 line 177), backed by local-only/client-side-encrypted storage, on-device face detection _for framing only_, and **no faceprint ever stored** (which is what keeps OnSkin clear of BIPA's biometric-identifier trigger). docs/09 made recommendations profile- and evidence-based, _explicitly not_ AI-scan-based, and warned against ever adding an "AI skin analysis recommends…" surface "(that's the deferred, consented, fairness-validated doc #12 path, if ever)." docs/00 §4 left only a _narrow_ door: _"Phase 2 optional cloud trend analysis… gated behind explicit, revocable consent… fairness validation… honest grading, and never a hazard-style score."_ So this document does not ask "how do we build AI analysis?" It asks the prior, harder question the user is owed: **is AI trend analysis a genuine seven-figure, king-making feature; is there any execution that does not betray the trust the app is built on; and does it truly belong at all?** The short, evidence-driven, deliberately uncomfortable answer — validated against the 2026 state of skin-AI accuracy, the skin-tone fairness literature, FDA/FTC regulation, the on-device-vs-cloud reality, and the role model (Yuka, which has _no_ AI face analysis) — is: **a population skin score must be killed outright; the only defensible form is an on-device, within-person, descriptive "changes in your own photos" layer that is a modest retention assist at best, not a king-maker; even that should be deferred behind the proven pillars until an evidence bar the entire vendor field has failed to meet (as of June 2026) is met; and the highest-value move available is to keep refusing AI scores and market the refusal itself.** The rest of the document proves that verdict, then — because the founder may still choose to build the narrow exception — fully specifies the only form that does not end the trust brand.
@@ -249,11 +264,61 @@ create index on public.photo_trend (user_id, series, computed_local_date);
 
 ### 13. Engineering / implementation notes
 
+**Current boundary before these future notes apply:** PHOTO-05A is a
+zero-admission checkpoint, not the engine described below. Apple Vision can
+locate facial features and compare capture attributes, and Accelerate/vImage
+can perform optimized image operations, but those framework primitives do not
+validate a skincare measurement, establish a noise floor or fairness, or issue
+a result receipt. The exact current source must not evaluate a simulated
+delta, select a narrative, grant positive consent, or emit Trend content
+analytics.
+
 - **Engine & device:** classical CV (registration + SSIM/color delta) on the existing guided series; an optional tiny Core ML / LiteRT model in Phase 2; **never a general multimodal LLM**; performance verified on real devices (shares B-CAMERA's custom-dev-build need; B-AI-ONDEVICE) with the MDC floor calibrated per-device/per-user.
 - **Reuse, don't reinvent:** the claim-safety regression guard (docs/02/06/07/08) is extended to cover trend strings (D-048); the local-first/encrypted on-device store and the biometric app-lock (docs/06, D-028) carry over unchanged; the consent ledger (docs/01 §3, immutable, D-015) gains `photo_trend_insights`.
 - **No new server surface:** `photo_trend` holds only abstract deltas, owner-RLS, excluded from cloud backup, deleted on revocation; the source image stays `local_only`.
 - **PostHog instrumentation — metadata only, never image or skin data:** `trend_insights_opted_in`, `trend_shown` (with `change_state`, not any value), `trend_inconclusive_lighting`, `trend_consistency_celebrated`, `trend_consent_revoked`. Instrument for _opt-in/retention_, never toward a score or "improvement."
 - **Fairness governance:** a named owner, a re-validation gate before any model update (PCCP-style), and the Monk-stratified cohort maintained as a standing obligation (B-AI-FAIRNESS), not a one-time check.
+
+**Current official-source recheck (2026-07-29):**
+
+- [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
+  1.4.1, 2.3, 5.1.1, and 5.1.2 keep methodology/accuracy support,
+  truthful metadata, minimization, purpose, consent/withdrawal, retention/
+  deletion, and sensitive/facial-data practices in the exact-build gate.
+- [Apple App privacy details](https://developer.apple.com/app-store/app-privacy-details/)
+  distinguishes health, photos/videos, sensitive information, identifiers,
+  usage, and diagnostics; it says data processed only on device is not
+  “collected” for the label, while off-device derivatives must be assessed
+  separately. This makes archive/SDK/traffic evidence necessary; it is not a
+  local-only exemption from other law.
+- [Apple Vision face landmarks](https://developer.apple.com/documentation/vision/vndetectfacelandmarksrequest),
+  [face-capture quality](https://developer.apple.com/documentation/vision/selecting-a-selfie-based-on-capture-quality),
+  and [Accelerate/vImage](https://developer.apple.com/documentation/accelerate/vimage-library)
+  document capture and image-processing primitives, not a validated
+  skin-change engine.
+- FDA's [January 2026 General Wellness guidance](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/general-wellness-policy-low-risk-devices)
+  is nonbinding and distinguishes general-wellness values/trends from
+  screening, diagnosis, monitoring, clinical action, disease management, and
+  clinical-accuracy/grade claims. Exact classification remains counsel-gated.
+- The [FTC Health Products Compliance Guidance](https://www.ftc.gov/business-guidance/resources/health-products-compliance-guidance)
+  requires adequate prior substantiation for express and implied objective
+  health/safety claims; the [FTC Health Breach Notification Rule guidance](https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0)
+  explains that covered health apps outside HIPAA can have duties for
+  unauthorized disclosures of unsecured identifiable health information.
+- [Washington RCW 19.373](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373&full=true)
+  includes inferred/derived health data and establishes notice, consent,
+  withdrawal, deletion, processor, and security duties subject to its exact
+  scope and exceptions.
+- [California Civil Code § 1798.140](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.140.)
+  includes analyzed health information in sensitive personal information, and
+  the [CPPA regulations effective January 1, 2026](https://cppa.ca.gov/regulations/pdf/ccpa_updates_cyber_risk_admt_appr_text.pdf)
+  establish risk-assessment rules for qualifying businesses and processing.
+  Business thresholds, exemptions, permitted uses, rights, risk assessment,
+  and ADMT applicability require California counsel.
+
+These sources support the conservative boundary but do not provide medical or
+legal advice, prove compliance, validate the future engine, or guarantee Apple
+acceptance.
 
 ---
 

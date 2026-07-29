@@ -24,6 +24,7 @@ import {
 } from '../e2e/cat07-committed-evidence.mjs';
 import { validateHumanE2eManifestReleaseRole } from '../e2e/human-e2e-manifest-contract.mjs';
 import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from '../phase5/device-qa-packet-contract.mjs';
+import { PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS } from '../photo05/trend-admission-source-contract.mjs';
 import { validatePhase7EvidenceInventory } from './core-loop-qa-packet-contract.mjs';
 
 const strict = process.argv.includes('--strict');
@@ -263,6 +264,9 @@ const requiredFiles = [
   'docs/phase-7/phase-7-exit-review.md',
   'docs/phase-8/public-site/share.html',
 ];
+for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
 
 const scenarios = [
   {
@@ -773,6 +777,11 @@ if (launchContract.conflictShareAdmission.sharePublicationAdmitted !== true) {
 if (launchContract.conflictShareAdmission.publicLinksAdmitted !== true) {
   blockers.push(
     'CORE-07A public links are not admitted; no token service, reviewed retention/revocation/deletion/abuse contract, or exact-destination confirmation is available.',
+  );
+}
+if (launchContract.trendInsightAdmission.trendInsightAdmitted !== true) {
+  blockers.push(
+    'PHOTO-05A Trend insights remain literal-zero-admission; no environment, development, E2E, caller, fixture, legacy state, simulated metric, consent grant, QA flag, or stored row may substitute for a validated on-device engine and issuer-bound result.',
   );
 }
 const cat07CommittedEvidence = validateCat07CommittedEvidence(root, { expectedHeadSha: gitSha });

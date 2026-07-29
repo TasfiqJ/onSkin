@@ -10,6 +10,7 @@ type DeferredTrendProps = {
   fallbackRoute: string;
   fallbackLabel: string;
   fallbackBehavior: string;
+  trackView: boolean;
 };
 
 type StackProps = {
@@ -42,7 +43,6 @@ vi.mock('@/components/ui', () => ({
   Text: 'Text',
 }));
 vi.mock('@/features/trend/useTrend', () => ({ useMonkBand: mocks.useMonkBand }));
-vi.mock('@/lib/launch/phase7', () => ({ phase7Flags: { trend: false } }));
 vi.mock('@/lib/navigation/safeBack', () => ({
   APP_PROGRESS_ROUTE: '/(tabs)/progress',
   APP_TREND_OPTIN_ROUTE: '/trend/optin',
@@ -78,6 +78,7 @@ describe('Trend fairness privacy gate', () => {
       fallbackRoute: '/(tabs)/progress',
       fallbackLabel: 'Back to Progress',
       fallbackBehavior: 'replace',
+      trackView: false,
     });
   });
 
@@ -91,6 +92,7 @@ describe('Trend fairness privacy gate', () => {
       fallbackRoute: '/(tabs)/progress',
       fallbackLabel: 'Back to Progress',
       fallbackBehavior: 'replace',
+      trackView: false,
     });
   });
 });

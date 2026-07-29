@@ -33,6 +33,14 @@ conclusion that the architecture is incapable of launch.
 | P0 if UGC is exposed                                 | Production filtering, reporting, blocking, published contact information, trained moderation, escalation, appeal, and audit evidence are absent             | Keep peer posting fail-closed until the complete Guideline 1.2 control and staffing model works end to end. Preserve the current no-images/no-DMs constraint unless separately reviewed.                                                              |
 | P0 if medical-adjacent content/functions are exposed | Exact production conflict rules, Ask behavior, trend methodology, measurements, recommendations, claims, and medical positioning lack independent review    | Development builds may fail closed, but a submitted build must either complete the reviewed feature or remove/hide its prompts, upsells, placeholder cards, routes, metadata, and screenshots. Obtain exact-hash clinical, chemistry/pharmacy, regulatory-claims, privacy, and device-classification decisions. Disclose remaining non-obvious functionality in Review Notes. Do not diagnose, assign disease risk, recommend treatment, or imply validated measurement. |
 
+2026-07-29 PHOTO-05A now makes the Trend portion of that fail-closed posture
+literal: it admits no engine, simulated result, positive consent, or content
+analytics and leaves only truthful route recovery plus legacy privacy cleanup.
+That source checkpoint reduces the current misleading-measurement surface; it
+does not close PHOTO-05/06/07, `B-AI-ONDEVICE`, `B-AI-FAIRNESS`,
+`B-AI-LEGAL`, exact-claim review, archive/local-only proof, physical-device
+evidence, or App Review.
+
 If Apple treats any retained surface as a medical app, the exact release must
 include the Guideline 1.4.1 reminder to check with a doctor before medical
 decisions. Any health-measurement or accuracy claim must disclose supporting

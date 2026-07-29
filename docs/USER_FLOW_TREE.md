@@ -1199,8 +1199,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Launch-Blocked Direct Entry
 
 1. Action: Open `/trend/optin` and `/trend/fairness` directly, including a build with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`.
-   Expected result: Both routes remain deferred, show no toggle or `photo_trend_insights` consent request, and expose a `Back to Progress` action.
-   Evidence: Screenshot sequence, visible-text snapshot, and confirmation that no consent ledger mutation occurs. The former enabled Trend evidence is historical and does not describe the current launch contract.
+   Expected result: Both routes remain deferred, show no toggle or `photo_trend_insights` consent request, and expose a `Back to Progress` action. Literal `phase7Capabilities.trendEngine=false`, `phase7Flags.trend=false`, and machine `trendInsightAdmission` zero admission win over every environment, development, E2E, domain, or QA input.
+   Evidence: Screenshot sequence, visible-text snapshot, exact route identity, and confirmation that no consent ledger mutation, photo/profile/Monk/Trend-store read, simulated metric, result copy, content analytics, network request, native call, or file side effect occurs. The former enabled Trend evidence is historical and does not describe the current launch contract.
 
 ### Branches
 
@@ -1225,6 +1225,23 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Start a dev build with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, then open `/trend/optin` and `/trend/fairness`.
   - Expected result: The frozen missing-engine capability wins over the environment flag; both routes stay deferred and no Trend consent control mounts.
   - Evidence: Screenshot sequence plus Phase 7 launch-flag and route-contract tests.
+- Branch: forged positive inputs and historical state
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Populate historical local/database Trend state, caller consent, positive delta, Monk tone, fixture and E2E overrides, then open Progress and both direct Trend routes.
+  - Expected result: Progress shows no Trend card or opt-in, direct routes remain truthful unavailable recovery, and no `consistent`, `change_observed`, `inconclusive_lighting`, or `insufficient_data` result is produced. The private photo timeline and no-score explanation remain usable.
+  - Evidence: Screenshot and route snapshots; seeded-state before/after; no positive consent mutation; no Trend-result write; and network, analytics, console, and native/file side-effect absence.
+- Branch: explicit legacy withdrawal cleanup
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Seed legacy Trend consent/state, invoke the explicit revoke/health-withdrawal path, interrupt and retry where supported, then revisit Progress and direct Trend routes.
+  - Expected result: Cleanup remains available and idempotent, legacy state is deleted according to the governed data-rights lifecycle, no new grant or result is created, and all Trend presentation remains unavailable.
+  - Evidence: Before/after consent and state snapshots, cleanup receipt, interruption/retry transcript, and no Trend-result/content-analytics output.
+
+PHOTO-05A source-refusal evidence is not human-simulated E2E. The next current
+run must retain all branch evidence at the supported iPhone viewports and bind
+it to the exact source/archive under test. See
+[`PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`](./hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
 
 ## Flow: Pro Feature Gating
 

@@ -14,9 +14,7 @@ import { parseLocalDate } from '@/features/photos/timeline';
 import { timelapseFrames } from '@/features/photos/timelapse';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
-import { TrendInsight } from '@/features/trend/TrendInsight';
 import { track } from '@/lib/analytics/track';
-import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
 
 // Progress tab. The guided photo timeline (docs/06; design screens 03/04/05/08).
@@ -474,14 +472,6 @@ function PhotoProgressTab() {
             <Text variant="bodySm" tone="muted" italic className="mt-2" style={{ lineHeight: 19 }}>
               {PHOTO_COPY.tagline}
             </Text>
-
-            {/* "Changes in your own photos" (docs/12). Renders ONLY when opted in
-                (off by default); on-device, within-person, descriptive, no number. */}
-            {phase7Flags.trend ? (
-              <View className="mt-4">
-                <TrendInsight />
-              </View>
-            ) : null}
 
             <View className="mt-4 gap-2.5">
               <View className="flex-row items-center gap-2.5">

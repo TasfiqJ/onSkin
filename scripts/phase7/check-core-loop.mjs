@@ -13,6 +13,10 @@ import {
   REQUIRED_SURFACE_KEYS,
 } from '../launch/contract.mjs';
 import { auditCore07aShareAdmission } from '../core07/share-admission-source-contract.mjs';
+import {
+  auditPhoto05aTrendAdmission,
+  PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS,
+} from '../photo05/trend-admission-source-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -70,6 +74,9 @@ function hasSelfClosingJsxWithProps(source, component, propPatterns) {
 for (const error of auditCore07aShareAdmission(root)) {
   require(false, `CORE-07A share-admission source contract: ${error}`);
 }
+for (const error of auditPhoto05aTrendAdmission(root)) {
+  require(false, `PHOTO-05A Trend-admission source contract: ${error}`);
+}
 
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile('.env');
@@ -95,6 +102,9 @@ const requiredFiles = [
   'docs/phase-7/core-loop-qa-checklist.md',
   'docs/phase-7/phase-7-exit-review.md',
 ];
+for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
 
 for (const file of requiredFiles) {
   require(existsSync(abs(file)), `${file} is missing.`);
@@ -313,12 +323,18 @@ require(has(
 
 const gatedRoutes = [
   ['apps/mobile/src/app/commerce/_layout.tsx', /phase7Flags\.commerce/, 'commerce route group'],
-  ['apps/mobile/src/app/trend/_layout.tsx', /phase7Flags\.trend/, 'trend route group'],
 ];
 for (const [path, pattern, label] of gatedRoutes) {
   require(has(path, /DeferredSurface/), `${label} must render DeferredSurface when gated.`);
   require(has(path, pattern), `${label} is missing its Phase 7 flag check.`);
 }
+require(
+  has('apps/mobile/src/app/trend/_layout.tsx', /screenLayout=\{\(\{ children \}\) => <TrendScreenGate>\{children\}<\/TrendScreenGate>\}/) &&
+    has('apps/mobile/src/app/trend/_layout.tsx', /function TrendScreenGate\((?:_props|\{ children: _children \})/) &&
+    has('apps/mobile/src/app/trend/_layout.tsx', /trackView=\{false\}/) &&
+    !has('apps/mobile/src/app/trend/_layout.tsx', /phase7Flags|isPhase7SurfaceEnabled/),
+  'trend route group must unconditionally withhold matched children behind an analytics-free unavailable surface.',
+);
 
 for (const [path, surface, label] of [
   ['apps/mobile/src/app/community/ask.tsx', 'communityPosting', 'community ask screen'],
@@ -388,14 +404,12 @@ require(has(
   'apps/mobile/src/app/(tabs)/today.tsx',
   /phase7Flags\.cloudAsk[\s\S]{0,120}<AskTeaser/,
 ), 'Today must hide AskTeaser unless cloud Ask is enabled.');
-require(has(
-  'apps/mobile/src/app/(tabs)/progress.tsx',
-  /phase7Flags\.trend[\s\S]*<TrendInsight/,
-), 'Progress must hide TrendInsight unless trend is enabled.');
-require(has(
-  'apps/mobile/src/app/progress/about.tsx',
-  /phase7Flags\.trend[\s\S]*trend\/optin/,
-), 'Progress no-score explainer must hide trend opt-in unless trend is enabled.');
+require(!/features\/trend|TrendInsight|phase7Flags\.trend/.test(
+  read('apps/mobile/src/app/(tabs)/progress.tsx'),
+), 'Progress must not import, mount, or retain a hidden Trend result branch while PHOTO-05A is zero-admission.');
+require(!/features\/trend|useTrendConsent|phase7Flags\.trend|trend\/optin/.test(
+  read('apps/mobile/src/app/progress/about.tsx'),
+), 'Progress no-score explainer must not read Trend consent or retain an opt-in branch while PHOTO-05A is zero-admission.');
 require(has('apps/mobile/src/features/commerce/WhereToBuy.tsx', /phase7Flags\.commerce/) &&
   has(
     'apps/mobile/src/features/commerce/WhereToBuy.tsx',

@@ -36,7 +36,7 @@ export const phase7Capabilities = Object.freeze({
   conflictSharePublication: false,
 } as const);
 
-export const phase7Flags = {
+export const phase7Flags = Object.freeze({
   finalDomainReady,
   productionSurfaceReady,
   commerce: env.phase7CommerceEnabled && finalDomainReady,
@@ -48,12 +48,14 @@ export const phase7Flags = {
     phase7Capabilities.communityAggregates &&
     env.phase7CommunityPostingEnabled &&
     productionSurfaceReady,
-  trend: phase7Capabilities.trendEngine && env.phase7TrendEnabled && productionSurfaceReady,
+  // PHOTO-05A: no environment, dev, E2E, caller, fixture, consent, or photo-history
+  // input may issue Trend admission while the validated engine does not exist.
+  trend: false,
   cloudAsk: env.phase7CloudAskEnabled && productionSurfaceReady,
   widgets: phase7Capabilities.nativeWidgets && env.phase7WidgetsEnabled && productionSurfaceReady,
   shareCard: false,
   goalActiveRecommendations: env.phase7GoalActiveRecommendationsEnabled && productionSurfaceReady,
-} as const;
+} as const);
 
 const SURFACE_TO_FLAG: Record<DeferredSurfaceKind, boolean> = {
   commerce: phase7Flags.commerce,

@@ -27,6 +27,10 @@ import { auditReleaseCandidateGitContract } from './release-candidate-git-contra
 import { auditVerificationWiring } from './verification-wiring-contract.mjs';
 import { PHASE9_CAT07_BOUND_INPUT_PATHS } from './release-qa-integrity.mjs';
 import { GOVERNED_POST_F_COMMANDS } from '../launch/governed-publication-coverage.mjs';
+import {
+  auditPhoto05aTrendAdmission,
+  PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS,
+} from '../photo05/trend-admission-source-contract.mjs';
 
 const errors = [];
 const warnings = [];
@@ -34,6 +38,10 @@ const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
 const launchContract = loadLaunchContract();
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
+
+for (const error of auditPhoto05aTrendAdmission(process.cwd())) {
+  block(errors, false, `PHOTO-05A Trend-admission source contract: ${error}`);
+}
 
 const phase7EvidenceKeys = [
   'PHASE7_BRAND_READY',
@@ -357,6 +365,9 @@ const requiredFiles = [
   'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
 ];
+for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
 
 for (const file of requiredFiles) block(errors, exists(file), `${file} is missing.`);
 
@@ -1193,6 +1204,8 @@ for (const file of ['.env.example', ...requiredFiles]) {
     errors,
     qaPacketBuilder.includes(`'${file}'`) ||
       qaPacketBuilder.includes(`"${file}"`) ||
+      (PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS.includes(file) &&
+        /PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS/.test(qaPacketBuilder)) ||
       (PHASE9_CAT07_BOUND_INPUT_PATHS.includes(file) &&
         /\.\.\.PHASE9_CAT07_BOUND_INPUT_PATHS/.test(qaPacketBuilder)),
     `Phase 9 release QA packet must hash ${file}.`,

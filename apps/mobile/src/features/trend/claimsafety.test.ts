@@ -124,11 +124,12 @@ describe('the required stances are present (the no-score/no-upload/off-by-defaul
   });
 });
 
-describe('trend analytics stays content-minimized', () => {
-  it('does not send computed trend states as analytics props or state-specific events', () => {
+describe('disabled Trend presentation produces no analytics', () => {
+  it('does not emit view, content, or state-specific events while admission is closed', () => {
     const source = readFeatureSource('TrendInsight.tsx');
 
-    expect(source).toContain("track('trend_shown')");
+    expect(source).not.toContain("track('");
+    expect(source).not.toContain('trend_shown');
     expect(source).not.toContain('change_state');
     expect(source).not.toContain('trend_inconclusive_lighting');
     expect(source).not.toContain('trend_consistency_celebrated');

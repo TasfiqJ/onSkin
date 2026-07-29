@@ -749,8 +749,8 @@
       "id": "PHOTO-05",
       "owner": "C/R",
       "prerequisites": ["PHOTO-04"],
-      "nextAction": "Complete and capture acceptance evidence: Build the real trend engine rather than returning simulated insights",
-      "acceptance": "Output provenance, limitations, failure states, and performance are measurable"
+      "nextAction": "Complete and capture acceptance evidence: Replace PHOTO-05A literal zero admission with a versioned real on-device Trend engine/result issuer; never restore simulated output",
+      "acceptance": "Exact-build provenance, measurement/calibration, limitations, abstention/failure states, zero egress, and performance are measurable"
     },
     {
       "id": "PHOTO-06",

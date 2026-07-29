@@ -1,11 +1,8 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { NO_SCORE_COPY } from '@/features/photos/copy';
-import { TREND_COPY } from '@/features/trend/copy';
-import { useTrendConsent } from '@/features/trend/useTrend';
-import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -29,7 +26,6 @@ function Bullet({ children }: { children: string }) {
 }
 
 export default function AboutNoScoreScreen() {
-  const { data: trendConsented } = useTrendConsent();
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row justify-end pt-1">
@@ -61,27 +57,6 @@ export default function AboutNoScoreScreen() {
         <Text variant="label" tone="muted" className="mt-10 text-center" style={{ lineHeight: 18 }}>
           {NO_SCORE_COPY.footer}
         </Text>
-
-        {/* docs/12. The optional, on-device, off-by-default opt-in. The refusal above
-            is preserved as the default; this never overrides it. Once opted in, the
-            copy switches to "manage" so it doesn't invite enabling what is already on. */}
-        {phase7Flags.trend ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => router.push('/trend/optin')}
-            className="mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
-            style={{ borderWidth: 1, borderColor: colors.hairline }}
-          >
-            <Text
-              variant="bodySm"
-              className="flex-1 pr-3 font-sans-medium text-[12.5px]"
-              style={{ color: colors.inkSoft, lineHeight: 18 }}
-            >
-              {trendConsented ? TREND_COPY.manageLink : TREND_COPY.refusalLink}
-            </Text>
-            <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>
-          </Pressable>
-        ) : null}
       </ScrollView>
     </Screen>
   );

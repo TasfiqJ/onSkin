@@ -30,4 +30,7 @@ Purpose: every public or in-app launch claim must map to product evidence. Claim
 - If no reviewed conflict exists: "No reviewed shelf check is available yet."
 - If goal-active recommendations are gated: "Your essentials are covered. New active suggestions are still under review."
 - If commerce is gated: hide buy links and partner-sharing consent rows.
-- If trend insights are gated: keep the photo timeline and no-score explainer; hide the opt-in.
+- While PHOTO-05A Trend admission is zero: keep the private photo timeline and
+  no-score explainer; render no opt-in, result card, change narrative,
+  fairness-result claim, metric, or Trend content analytics. Do not describe a
+  deterministic fallback or historical fixture as an engine.

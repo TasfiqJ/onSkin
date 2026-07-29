@@ -58,7 +58,11 @@ Screenshots may show only production-real surfaces:
 Do not show:
 
 - Ask/cloud advisor unless Phase 7 cloud Ask is enabled and policy reviewed
-- Trend insights unless Phase 7 trend is enabled and device/fairness QA passed
+- Trend insights while machine `trendInsightAdmission` is zero. A future store
+  claim requires a real exact-build result issuer, measurement/calibration and
+  failure evidence, PHOTO-06 fairness, PHOTO-07 privacy/consent, professional
+  review, archive-identical local-only proof, and supported-iPhone QA; a Phase
+  7 flag, historical enabled fixture, or source refusal test is insufficient
 - Commerce links unless commerce consent/disclosure and paid-link QA passed
 - Community posting unless moderation/legal gates passed
 - Any simulated "before/after" outcome

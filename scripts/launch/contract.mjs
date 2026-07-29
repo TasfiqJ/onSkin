@@ -98,6 +98,19 @@ const REQUIRED_CONFLICT_SHARE_ADMISSION = Object.freeze({
   analyticsAllowed: false,
 });
 
+export const REQUIRED_TREND_INSIGHT_ADMISSION = Object.freeze({
+  trendInsightAdmitted: false,
+  validatedOnDeviceEngineAvailable: false,
+  resultIssuerAvailable: false,
+  calibrationAuthorityAvailable: false,
+  fairnessAuthorityAvailable: false,
+  simulatedMetricsAllowed: false,
+  contentAnalyticsAllowed: false,
+  disabledPathSideEffectsAllowed: false,
+  cloudPhotoProcessingAllowed: false,
+  scoreAgeGradePercentageAllowed: false,
+});
+
 const REQUIRED_SAFETY_FALSE = Object.freeze([
   'diagnosisTreatmentCurePreventionClaims',
   'aiSkinScores',
@@ -253,6 +266,21 @@ export function validateLaunchContract(contract) {
     errors.push('conflictShareAdmission must contain only the exact CORE-07A admission keys.');
   }
 
+  for (const [key, expected] of Object.entries(REQUIRED_TREND_INSIGHT_ADMISSION)) {
+    if (contract.trendInsightAdmission?.[key] !== expected) {
+      errors.push(`trendInsightAdmission.${key} must be ${expected}.`);
+    }
+  }
+  if (
+    Object.keys(contract.trendInsightAdmission ?? {}).length !==
+      Object.keys(REQUIRED_TREND_INSIGHT_ADMISSION).length ||
+    Object.keys(contract.trendInsightAdmission ?? {}).some(
+      (key) => !(key in REQUIRED_TREND_INSIGHT_ADMISSION),
+    )
+  ) {
+    errors.push('trendInsightAdmission must contain only the exact PHOTO-05A admission keys.');
+  }
+
   for (const key of REQUIRED_SAFETY_FALSE) {
     if (contract.safetyConstraints?.[key] !== false) {
       errors.push(`safetyConstraints.${key} must be false.`);
@@ -271,6 +299,7 @@ export function loadLaunchContract(root = process.cwd(), path = LAUNCH_CONTRACT_
   if (errors.length > 0) {
     throw new Error(`Invalid launch contract ${path}:\n- ${errors.join('\n- ')}`);
   }
+  contract.trendInsightAdmission = Object.freeze({ ...contract.trendInsightAdmission });
   return Object.freeze(contract);
 }
 
@@ -318,6 +347,7 @@ export function launchContractSnapshot(contract = loadLaunchContract()) {
     requiredSurfaces: Object.freeze([...contract.requiredSurfaces]),
     featureProfessionalReviewRequirements,
     conflictShareAdmission: Object.freeze({ ...contract.conflictShareAdmission }),
+    trendInsightAdmission: Object.freeze({ ...contract.trendInsightAdmission }),
   });
 }
 

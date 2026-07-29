@@ -103,7 +103,6 @@ describe('health-purpose local write coverage', () => {
       'features/photos/store.ts:photos',
       'features/routine/useProgress.ts:routine_completions',
       'features/scheduler/profile.ts:skin_profiles',
-      'features/trend/useTrend.ts:skin_profiles',
     ].sort();
     const explicitExemptions: string[] = [];
     const classifiedTables = new Set<string>(HEALTH_PROCESSING_POSTGREST_TABLES);

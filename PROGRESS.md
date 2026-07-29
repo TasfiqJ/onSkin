@@ -6,6 +6,28 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-29
 
+### PHOTO-05A literal zero-Trend-admission source checkpoint
+
+Removed the historical deterministic `deltaMetric=0.05` and
+`lightingConsistent=true` path that could turn a missing engine into a
+fabricated reassuring Trend result. The current launch boundary now keeps the
+Trend engine and public flag literally false; Progress retains only the private
+photo timeline and no-score explanation; direct Trend routes expose truthful
+unavailable recovery; positive Trend consent, input reads, profile/Monk reads,
+photo processing, result state, and content analytics remain closed. Explicit
+withdrawal/deletion may still erase legacy private Trend state as a data-rights
+operation and cannot activate the feature.
+
+The feature-document decisions `D-046` through `D-050` remain deliberately
+cross-mapped to root `D-068` through `D-072`. PHOTO-05A supersedes only the old
+root `D-069` stub note, not the future on-device-only, no-score, calibrated,
+fairness-gated, separately consented requirements. `B-AI-ONDEVICE`,
+`B-AI-FAIRNESS`, and `B-AI-LEGAL` are now recorded as independent blockers.
+PHOTO-05 remains `in_progress` and launch-blocked; this source checkpoint is not
+a real engine, measurement/calibration result, fairness validation, legal or
+medical advice, privacy compliance, App Review approval, product-market proof,
+or revenue evidence.
+
 ### CORE-07A literal zero-share/public-link source checkpoint
 
 Separated private conflict admission from share publication and public-token

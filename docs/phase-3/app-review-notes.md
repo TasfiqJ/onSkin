@@ -1,13 +1,13 @@
 # Apple App Review Notes
 
 Status: draft, not ready for submission
-Last updated: 2026-07-13
+Last updated: 2026-07-29
 
 These notes are for App Store Connect review information after legal/privacy review. Do not submit until the final identity, URLs, production services, professional signoffs, reviewer account, and exact build evidence are complete. The 20-feature acceptance matrix is [APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md](../hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md).
 
 ## Reviewer Summary Draft
 
-`[FINAL DISPLAY NAME]` is a general-wellness skincare routine organizer. Users can complete a consented skin-profile quiz; add products through manual entry, catalog search, barcode, or native label OCR; build and check off reviewed routines; use a conservative cycle/ramp scheduler; keep private local-first progress photos; receive reminders; manage a StoreKit subscription or one-time app-granted Explore-first period; inspect reviewed recommendations and Skin Notes; use a disclosed cloud Ask advisor; share reviewed conflict cards; follow disclosed commerce links; participate in a moderated community; view validated score-free Trend insights; and use privacy-redacted iOS widgets and Live Activities.
+`[FINAL DISPLAY NAME]` is a general-wellness skincare routine organizer. Users can complete a consented skin-profile quiz; add products through manual entry, catalog search, barcode, or native label OCR; build and check off reviewed routines; use a conservative cycle/ramp scheduler; keep private local-first progress photos; receive reminders; manage a StoreKit subscription or one-time app-granted Explore-first period; inspect reviewed recommendations and Skin Notes; use a disclosed cloud Ask advisor; share reviewed conflict cards; follow disclosed commerce links; participate in a moderated community; `[ONLY AFTER POSITIVE PHOTO-05/06/07 ADMISSION: view validated score-free Trend insights]`; and use privacy-redacted iOS widgets and Live Activities.
 
 The app does not diagnose, treat, cure, prevent, screen for, or detect medical conditions. Photo progress and Trend have no skin score, skin age, grade, percentage improvement, lesion analysis, or disease detection. Progress photos stay encrypted on the device and are not sent to Ask, analytics, crash reporting, commerce, community, or advertising. Cloud photo backup is not offered unless a later separately consented and reviewed requirement replaces this statement.
 
@@ -33,6 +33,12 @@ The app does not diagnose, treat, cure, prevent, screen for, or detect medical c
 - Account-data export is available in app. Its versioned JSON wrapper includes owner-scoped server data plus registered encrypted records from the current device, including local-first shelf/routine state and sanitized Progress metadata/notes. Progress image files, thumbnails, device paths, ciphertext, keys, credentials, and transient cache files are excluded; images can be shared individually from Progress.
 - Community posting requires filtering, report, block, contact, removal, appeal, audit, and real staffed response paths before these notes can be submitted.
 - Trend requires separate default-off consent and a validated score-free engine; no user is silently enrolled from legacy photo consent.
+- Current PHOTO-05A source has literal zero Trend admission: it exposes no
+  positive consent or result path and must not be submitted or described as
+  providing Trend insights. Replace the bracketed reviewer-summary placeholder
+  only after the exact build has a real issuer plus complete measurement,
+  fairness, privacy/legal/professional, archive, network, device, and release
+  evidence.
 - Widgets/Live Activities use an allowlisted App Group payload and redact private detail while the device/app is locked.
 
 ## Subscription Notes

@@ -68,7 +68,9 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - App lock gates existing photo timeline.
 - Settings and locked Progress label photo storage as device-only; no cloud-backup control is exposed.
 - Saving a photo emits no automatic image or metadata request to Supabase under any current UI state.
-- Trend opt-in is hidden unless `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`.
+- Trend opt-in and results remain unavailable even when
+  `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`: literal capability, flag, and
+  machine admission are zero until a versioned real-engine successor exists.
 - No AI score/grade/age/percent wording appears.
 
 ## Reminders
@@ -91,7 +93,8 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - `/commerce/*`, `/ask/*`, `/trend/*`, `/routine/widgets`, `/community/ask`, `/community/people-like-you`, and `/share/conflict/*` are unavailable by default.
 - You tab does not show deferred rows by default.
 - Today does not show Ask teaser by default.
-- Progress does not show trend insight or opt-in by default.
+- Progress does not show any Trend insight or opt-in under the current
+  zero-admission contract.
 - Where-to-buy rows return null by default.
 
 ## Share card
@@ -242,31 +245,22 @@ this beta` / `Back to Today`), visible controls are 48 px+, horizontal
   `test-results/human-e2e/2026-07-08/full-routine-intelligence-current/`; this
   does not replace native iOS/Android safe-area, screen-reader, Dynamic Type,
   RevenueCat, or real non-example shelf/profile beta QA.
-- 2026-07-07: Expo web E2E at 320 x 568 covers local Trend route recovery in
-  both launch-gated and enabled modes. Default `/trend/optin` and
-  `/trend/fairness` show the deferred Trend surface with `Back to Progress` and
-  return to `/progress`; the enabled local-only consent fixture starts the
-  `Read my progress` switch off, toggles on/off, opens fairness after a user-like
-  scroll, returns nested/direct fairness to `/trend/optin`, and returns direct
-  opt-in to `/progress`, with zero horizontal overflow and no browser errors.
-  Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`; it
-  does not replace native photo/toggle QA, live authenticated consent-ledger/RLS
-  evidence, fairness validation, or final legal consent-copy review.
-- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers installed-base
-  Trend reconsent with populated local Progress photos and no
-  `photo_trend_insights` consent. A clean-origin returning photo user sees
-  `12 weeks · 3 photos · all on this phone` while the Trend insight is hidden;
-  the no-score refusal remains visible with optional/off-by-default opt-in copy;
-  `/trend/optin` starts with `Read my progress` off and separate revocable
-  consent copy; one explicit switch tap sets `aria-checked=true`; and reopening
-  Progress renders the on-device Trend card. The scoped Trend output has no
-  score, grade, skin age, or percentage, visible controls are 48 px+, and
-  horizontal overflow is zero. Evidence is in
-  `test-results/human-e2e/2026-07-08/installed-base-trend-reconsent-current/`;
-  focused tests now ensure a configured consent ledger with legacy
-  `photo_capture` but no `photo_trend_insights` fails closed. This does not
-  replace native secure-storage/biometric-lock QA or live Supabase
-  consent-ledger/RLS evidence.
+- 2026-07-07 and 2026-07-08 enabled-fixture Trend observations are historical
+  regression context only. They do not describe the PHOTO-05A contract and
+  cannot support engine, consent, fairness, privacy, device, store, or launch
+  acceptance. PHOTO-05A removes the simulated output and positive consent
+  path. Current direct `/trend/optin` and `/trend/fairness` entries must retain
+  their exact URLs, show only the complete unavailable recovery state, and
+  return to Progress; Progress must retain its private photo timeline and
+  no-score explanation without a Trend entry or result.
+- Exact-current PHOTO-05A human-simulated E2E remains required. Run with every
+  historical environment, development, E2E, consent, positive-delta, tone,
+  fixture, legacy-state, domain, and QA override enabled. Verify zero consent
+  controls, zero results, zero photo/profile/tone/Trend-store reads, zero
+  simulated delta/MDC/fairness/narrative evaluation, zero positive writes,
+  zero content analytics, zero network/native/file side effects, and safe
+  recovery at all supported iPhone viewports. Explicit legacy withdrawal
+  cleanup must be tested separately and must never activate Trend.
 - 2026-07-07: Codex in-app browser Expo web E2E at 320 x 568 covers the
   first-use `/progress/capture` local-only consent gate after the safe-area
   overlay hardening. The gate renders complete on-device/no-faceprint/cloud-

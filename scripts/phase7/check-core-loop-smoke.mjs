@@ -36,6 +36,10 @@ const core07aContractPath = resolve(
   root,
   'scripts/core07/share-admission-source-contract.test.mjs',
 );
+const photo05aContractPath = resolve(
+  root,
+  'scripts/photo05/trend-admission-source-contract.test.mjs',
+);
 const cat07ShelfFreshnessSummaryPath = CAT07_COMMITTED_SUMMARY_PATH;
 
 const passthroughKeys = [
@@ -122,6 +126,14 @@ function run(extraEnv, args = []) {
 
 function runCore07aContract() {
   return spawnSync(process.execPath, ['--test', core07aContractPath], {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+}
+
+function runPhoto05aContract() {
+  return spawnSync(process.execPath, ['--test', photo05aContractPath], {
     cwd: root,
     encoding: 'utf8',
     env: processBaseEnv,
@@ -539,6 +551,13 @@ function runCommittedCat07BindingSmoke() {
 }
 
 const cases = [
+  {
+    name: 'PHOTO-05A Trend admission remains literal-closed and side-effect free',
+    result: runPhoto05aContract(),
+    expect(result) {
+      return result.status === 0;
+    },
+  },
   {
     name: 'CORE-07A share admission remains literal-closed and side-effect free',
     result: runCore07aContract(),

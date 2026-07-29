@@ -642,6 +642,20 @@ Feature 13: Trend Insights
   privacy, device, and professional-review gates pass.
 - Complexity: High.
 - Dependencies: fairness/device/legal review.
+- Current state: `in_progress` zero-admission source checkpoint. No current
+  engine or result issuer exists, so environment, development, E2E, consent,
+  positive-delta, tone, legacy-state, fixture, domain, or QA inputs can produce
+  a Trend result. The private photo timeline and no-score explanation remain;
+  Trend consent grant, processing, result copy, and content analytics stay
+  closed. See
+  [`PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`](./hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+- Decision crosswalk: feature-document `D-046` through `D-050` map to root
+  `D-068` through `D-072`. The former root `D-069` implementation note that a
+  stub could render `consistent` is superseded; its on-device-only rule remains.
+- Open blockers: `B-AI-ONDEVICE`, `B-AI-FAIRNESS`, and `B-AI-LEGAL` are
+  independent. Source refusal does not close PHOTO-05, PHOTO-06, PHOTO-07,
+  professional review, archive/local-only proof, supported-iPhone evidence, or
+  App Review.
 
 Feature 14: Widgets/Live Activities
 

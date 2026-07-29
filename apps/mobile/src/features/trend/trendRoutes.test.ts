@@ -8,82 +8,63 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
-function expectTouchableRouteIcon(route: string): void {
-  const source = readAppRoute(route);
+describe('PHOTO-05A Trend route contracts', () => {
+  it.each(['trend/optin.tsx', 'trend/fairness.tsx'])(
+    'keeps %s unconditionally deferred and analytics-free',
+    (route) => {
+      const source = readAppRoute(route);
 
-  expect(source, `${route} should use the shared 44pt route icon button`).toContain(
-    'RouteIconButton',
-  );
-  expect(source, `${route} should not shrink route icons below phone touch targets`).not.toContain(
-    'h-7 w-7',
-  );
-}
-
-describe('Trend route contracts', () => {
-  it('keeps the launch-blocked opt-in route deferred on direct entry', () => {
-    const source = readAppRoute('trend/optin.tsx');
-
-    expect(source).toContain('<DeferredSurface');
-    expect(source).toContain('surface="trend"');
-    expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
-    expect(source).toContain('fallbackLabel="Back to Progress"');
-    expect(source).toContain('fallbackBehavior="replace"');
-  });
-
-  it('never requests or stores trend consent while the engine is unavailable', () => {
-    const source = readAppRoute('trend/optin.tsx');
-
-    expect(source).not.toContain('grantTrendInsightsConsent');
-    expect(source).not.toContain('revokeTrendInsightsConsent');
-    expect(source).not.toContain('setTrendInsightsLocal');
-    expect(source).not.toContain('ToggleSwitch');
-    expect(source).not.toContain('photo_trend_insights');
-  });
-
-  it('keeps the fairness explainer safe for direct entry', () => {
-    const source = readAppRoute('trend/fairness.tsx');
-
-    expect(source).not.toContain('router.back()');
-    expect(source).toContain('if (!phase7Flags.trend)');
-    expect(source).toContain('<DeferredSurface');
-    expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
-    expect(source).toContain('fallbackBehavior="replace"');
-    expect(source).toContain('APP_TREND_OPTIN_ROUTE');
-    expect(source).toContain('backOrReplace(router, APP_TREND_OPTIN_ROUTE)');
-  });
-
-  it('keeps the matched Trend route mounted while gating its child scene', () => {
-    const optIn = readAppRoute('trend/optin.tsx');
-    const fairness = readAppRoute('trend/fairness.tsx');
-    const layout = readAppRoute('trend/_layout.tsx');
-
-    for (const source of [optIn, fairness]) {
+      expect(source).toContain('<DeferredSurface');
       expect(source).toContain('surface="trend"');
       expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
       expect(source).toContain('fallbackLabel="Back to Progress"');
       expect(source).toContain('fallbackBehavior="replace"');
-    }
-    const navigator = layout.slice(layout.indexOf('export default function TrendLayout'));
+      expect(source).toContain('trackView={false}');
 
-    expect(layout).toContain('function TrendScreenGate');
-    expect(layout).toContain('if (!phase7Flags.trend)');
+      for (const forbidden of [
+        'phase7Flags',
+        'useTrend',
+        'useMonkBand',
+        'usePhotos',
+        'TREND_COPY',
+        'grantTrendInsightsConsent',
+        'revokeTrendInsightsConsent',
+        'setTrendInsightsLocal',
+        'photo_trend_insights',
+        'ToggleSwitch',
+        'process.env',
+        '__DEV__',
+        "track('",
+      ]) {
+        expect(source).not.toContain(forbidden);
+      }
+    },
+  );
+
+  it('preserves both exact direct-entry URLs instead of a layout redirect', () => {
+    const layout = readAppRoute('trend/_layout.tsx');
+
     expect(layout).toContain('<DeferredSurface');
-    expect(layout).toContain('surface="trend"');
-    expect(layout).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
-    expect(layout).toContain('fallbackLabel="Back to Progress"');
-    expect(layout).toContain('fallbackBehavior="replace"');
-    expect(navigator).toContain('<Stack');
-    expect(navigator).toContain(
-      'screenLayout={({ children }) => <TrendScreenGate>{children}</TrendScreenGate>}',
-    );
-    expect(navigator).not.toContain('if (!phase7Flags.trend)');
+    expect(layout).toContain('screenLayout={({ children }) =>');
+    expect(layout).toContain('trackView={false}');
+    expect(layout).not.toContain('phase7Flags');
+    expect(layout).not.toContain('<Redirect');
     expect(layout).toContain('<Stack.Screen name="optin" />');
     expect(layout).toContain('<Stack.Screen name="fairness" />');
   });
 
-  it('keeps Trend route escape controls touchable on phones', () => {
-    for (const route of ['trend/fairness.tsx']) {
-      expectTouchableRouteIcon(route);
+  it('removes disabled-path Trend observers from Progress and the no-score explainer', () => {
+    const progress = readAppRoute('(tabs)/progress.tsx');
+    const about = readAppRoute('progress/about.tsx');
+
+    for (const source of [progress, about]) {
+      expect(source).not.toContain("from '@/features/trend/");
+      expect(source).not.toContain('useTrendConsent');
+      expect(source).not.toContain('useTrendInsight');
+      expect(source).not.toContain('TrendInsight');
+      expect(source).not.toContain("router.push('/trend/");
     }
+    expect(progress).not.toContain('ProgressTrendBoundary');
+    expect(progress).not.toContain('phase7Flags.trend');
   });
 });

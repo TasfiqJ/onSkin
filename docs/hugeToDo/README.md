@@ -105,6 +105,9 @@ Start here:
 - [CORE-07A Share Admission Source Checkpoint](./CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md)
 - [CORE-07A Share Admission Source Contract](../../scripts/core07/share-admission-source-contract.mjs)
 - [CORE-07A Share Admission Source Contract Tests](../../scripts/core07/share-admission-source-contract.test.mjs)
+- [PHOTO-05A Trend Admission Source Checkpoint](./PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md)
+- [PHOTO-05A Trend Admission Source Contract](../../scripts/photo05/trend-admission-source-contract.mjs)
+- [PHOTO-05A Trend Admission Source Contract Tests](../../scripts/photo05/trend-admission-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -704,6 +707,33 @@ network, native failure/cancel, and App Review evidence remain open. The
 checkpoint cites Apple, FTC, Washington, and California primary sources as a
 conservative research basis; it is not counsel, professional, Apple, market,
 growth, or revenue approval.
+
+PHOTO-05 remains `in_progress` and launch-blocked. PHOTO-05A removes the
+historical simulated-Trend result path and establishes literal zero admission:
+both `phase7Capabilities.trendEngine` and `phase7Flags.trend` are `false`, and
+the launch contract records no engine, result issuer, calibration authority,
+fairness authority, simulated metric, content analytics, or admitted side
+effect. Environment, development, E2E, consent, positive-delta, Monk-tone,
+legacy-row, fixture, domain, and QA inputs cannot override that boundary.
+Progress retains the private photo timeline and no-score explanation; direct
+Trend routes show only truthful unavailable recovery. Positive Trend consent
+is refused before mutation or analytics, while explicit legacy withdrawal
+cleanup remains a data-rights path and never activates the feature.
+
+The feature-document decisions `D-046` through `D-050` deliberately map to
+root decisions `D-068` through `D-072`. PHOTO-05A preserves that crosswalk and
+supersedes only the former root `D-069` implementation note that allowed a
+stubbed delta to render `consistent`; the governing on-device-only rule
+remains. `B-AI-ONDEVICE`, `B-AI-FAIRNESS`, and `B-AI-LEGAL` are independent
+launch blockers. A future positive successor must bind a real on-device result
+issuer, exact measurement/calibration and failure semantics, predeclared
+diverse-condition fairness evidence, reviewed consent/data-lifecycle and
+claim copy, archive-identical local-only proof, physical-iPhone evidence, and
+named current-source signoffs. Apple Vision and vImage provide implementation
+primitives, not a validated skin-change engine or Apple approval. The
+checkpoint cites current Apple, FDA, FTC, Washington, and California primary
+sources as conservative inputs; it is not engine, fairness, legal, privacy,
+Apple, market, growth, or revenue approval.
 
 The `0065` CAT-08 transition/default-ACL repair, `0066` legacy clinical-table
 seal, and `0067` checker-only catalog-release lint contract remain intact.

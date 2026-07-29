@@ -656,6 +656,15 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 > Yuka's $7.37M, zero AI face analysis). The verdict rests on four HIGH-confidence grounds
 > (trust-promise reversal, unfixable fairness physics, the regulatory claim-surface, the
 > absence of any independent validation) — the economics are explicitly non-load-bearing.
+>
+> **2026-07-29 PHOTO-05A source checkpoint:** the decision-number crosswalk
+> remains deliberate (`D-046`…`D-050` in docs/12 map to root
+> `D-068`…`D-072`). PHOTO-05A supersedes the former implementation note that
+> allowed a conservative stub to render `consistent`. No engine or result
+> issuer currently exists, so Trend processing, positive consent, result copy,
+> and content analytics remain at literal zero admission. The future
+> on-device-only, no-score, calibrated, fairness-gated, separately consented
+> decisions remain requirements, not current runtime capabilities.
 
 - **D-068 — 2026-06-13 — The population "skin score" / "skin age" is KILLED OUTRIGHT
   (docs/12 §4, the doc's "D-046").** AI trend analysis is not a pillar; it ranks below
@@ -674,13 +683,14 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   own series), honestly "your phone comparing your own photos", **never a general
   multimodal LLM** and **never marketed as "AI"**. The real CV engine + the MDC
   calibration + device-performance verification are **B-AI-ONDEVICE** (shares B-CAMERA's
-  custom-dev-build need); v1 ships the pure, tested **classification + tone-adjusted MDC
-  floor** with the registered-pair delta stubbed (a conservative value → the calm
-  "consistent" common output renders).
+  custom-dev-build need). Until that exact engine and a versioned result issuer exist,
+  the pure classifier, tone adjustment, caller values, environment flags, historical
+  consent/data, and Apple image-processing primitives are not measurement authority:
+  PHOTO-05A renders no Trend result and invokes no Trend input or analytics path.
 
 - **D-070 — 2026-06-13 — Within-person CHANGE, never a population score; a hard MDC noise
-  floor; "consistent" celebrated (docs/12 §6, the doc's "D-048").** The output is a
-  within-person change-STATE (`consistent` | `change_observed` | `inconclusive_lighting`
+  floor; "consistent" celebrated (docs/12 §6, the doc's "D-048").** Any future output is
+  a within-person change-STATE (`consistent` | `change_observed` | `inconclusive_lighting`
   | `insufficient_data`) — surfaced **only** above a Minimal-Detectable-Change floor, and
   **"consistent / no detectable change" is a celebrated first-class output (adherence
   win)**, never a flat line to feel bad about; "lighting varied too much" is shown
@@ -689,6 +699,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   skin-age/grade/%/rating, disease-detection → FDA SaMD, "dermatologist-grade"/superiority
   → FTC, "improved/worse" verdict, structure/function, "AI" marketing — with a
   negation-exemption for the disclosure strings that quote banned terms to refuse them).
+  None of these states may be produced before a real engine, calibrated threshold, and
+  issuer-authenticated result contract exist; missing measurement authority yields no
+  Trend output, not a reassuring default.
 
 - **D-071 — 2026-06-13 — Fairness is a LAUNCH GATE (docs/12 §7, the doc's "D-049",
   B-AI-FAIRNESS).** The Monk Skin Tone scale (read from `skin_profiles.monk_tone`), never
@@ -701,6 +714,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   ships until a ≥25–30% dark-skin, Monk 7–10-heavy cohort shows parity** — a launch gate
   the whole field has failed. The "Fairness check" surface states this calmly (the
   internal blocker is B-AI-FAIRNESS; not surfaced as a code in the UI).
+  PHOTO-05A does not evaluate a Monk band or tone multiplier at runtime because no
+  engine is admitted. A future fairness threshold remains conditional on the signed,
+  predeclared evaluation; a hardcoded factor is not fairness evidence.
 
 - **D-072 — 2026-06-13 — A separate, explicit, DEFAULT-OFF `photo_trend_insights` consent
   (docs/12 §8, the doc's "D-050").** The consents enum gains an 8th type
@@ -716,6 +732,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   FTC AI-washing counsel sign-off of the copy + the DPIA extension), **B-AI-ONDEVICE**
   (the on-device CV/Core ML engine + MDC calibration + device verification); the consent
   copy + DPIA also extend **B-PRIVACY / B-PRIVACY-COPY**.
+  While admission is closed, positive Trend consent is neither read, displayed, refreshed,
+  nor granted. Explicit withdrawal/deletion may still erase legacy private state as a
+  data-rights operation and can never activate the feature.
 
 - **D-073 — 2026-06-14 — "Ask OnSkin" is the grounded, TEMPLATE-BOUNDED front-end to the
   on-device intelligence layer, never an open chatbot (docs/13, the doc's "D-051/D-057").**

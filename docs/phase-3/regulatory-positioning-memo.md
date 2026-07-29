@@ -2,7 +2,7 @@
 
 Status: not cleared for production launch  
 Owner: founder until counsel/clinical reviewers are retained  
-Last updated: 2026-07-10
+Last updated: 2026-07-29
 
 ## Executive Position
 
@@ -31,7 +31,13 @@ Planned public V1 classification:
 - User-entered shelf/routine tracking.
 - Ingredient/routine sequencing support using conservative rules.
 - Photo progress capture and comparison without scores, diagnosis, disease detection, cloud analysis, or cloud backup in current V1.
-- Explicit, separate, revocable health-data collection consent before personalized quiz/profile use, validated against the exact current version and text hash; Ask cloud mode, trend analysis, commerce partner sharing, and marketing remain separate optional grants. Photo cloud-backup consent remains reserved and unwired unless a future complete implementation is reviewed.
+- Explicit, separate, revocable health-data collection consent before
+  personalized quiz/profile use, validated against the exact current version
+  and text hash; Ask cloud mode, commerce partner sharing, and marketing remain
+  separate optional grants. Trend processing is currently unavailable and
+  refuses a positive grant before mutation; explicit legacy withdrawal cleanup
+  remains. Photo cloud-backup consent remains reserved and unwired unless a
+  future complete implementation is reviewed.
 
 Not launch classification:
 
@@ -81,7 +87,10 @@ Deferred or hidden until signoff:
 - Placeholder quiz copy.
 - Any derm-reviewed recommendation, rule, PAO default, community note, or shoppable stack without reviewer identity/date.
 - Cloud Ask OnSkin beyond deterministic shelf/routine/conflict answers.
-- Automated trend analysis public launch until fairness and legal review are complete.
+- Automated Trend processing or claims until a real exact-build engine/result
+  issuer, measurement/calibration and failure evidence, diverse-condition
+  fairness, exact consent/data-lifecycle, clinical/regulatory/privacy review,
+  archive-identical local-only proof, and supported-iPhone evidence are complete.
 - Peer-submitted community posting.
 - Affiliate/partner catalogue until contracts, disclosures, partner data flow, and taxonomy are cleared.
 
@@ -95,7 +104,9 @@ The current implementation already uses production gates for high-risk surfaces:
 - `apps/mobile/src/features/commerce/stacks.ts`: shoppable stacks are hidden in production until reviewed.
 - `apps/mobile/src/features/community/notes.ts`: notes are hidden in production until reviewed.
 - `apps/mobile/src/features/ask/answer.ts`: substantive answers are template-bounded; unsupported or medical questions refuse/escalate.
-- `apps/mobile/src/features/photos/copy.ts` and `apps/mobile/src/features/trend/copy.ts`: no-score/no-diagnosis posture is centralized and test-scanned.
+- `apps/mobile/src/features/photos/copy.ts`: the no-score/no-diagnosis posture
+  remains centralized and test-scanned. Historical Trend copy is not current
+  publication authority; PHOTO-05A refuses before result selection or display.
 
 ## Required Signoffs
 
