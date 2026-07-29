@@ -1,10 +1,43 @@
 {
+  "schemaVersion": 2,
   "status": "not-run",
+  "sourceSha": null,
+  "sourceTreeClean": true,
   "appEnvironment": "production",
-  "supabaseHost": "your-project-ref.supabase.co",
+  "expectedSupabaseProjectRef": null,
+  "actualSupabaseProjectRef": null,
+  "supabaseHost": null,
+  "schemaRevision": {
+    "path": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+    "sha256": "8bee91bcaedd3909b2f033ddbce47f1960e366fa30d6442a10b889941f3ad524"
+  },
+  "harnessRevision": {
+    "path": "scripts/phase9/live-consent-withdrawal.mjs",
+    "sha256": "178519d6ce579370455de9d1eddd5f3d9261ccca5ce9775259476d87f0b3a289"
+  },
+  "evidenceContractRevision": {
+    "path": "scripts/phase9/consent-withdrawal-evidence.mjs",
+    "sha256": "6c0042f7c3be6ed4c7db4283f1bb4f2b1f191f6a85da436d0bc93a3b2f3fb489"
+  },
+  "copyContractSha256": "52c3637e2f8c073fa1868080a277bf3e94831371875971ff5ecc61a0daa37fec",
+  "checkManifest": {
+    "names": [
+      "authoritative base and dependent grant RPCs establish exact owner-bound authorities",
+      "photo_cloud_backup withdrawal is accepted pending and the scheduled worker removes owned Storage before terminal relocalization",
+      "ask_onskin withdrawal deletes the complete server-side Ask graph",
+      "photo_trend_insights withdrawal deletes trend rows",
+      "community_participation withdrawal deletes owner community rows",
+      "data_sharing withdrawal detaches order links and deletes commerce clicks",
+      "photo_capture withdrawal is accepted pending and the scheduled worker deletes remaining photo metadata",
+      "synthetic harness cleanup removes owned Storage, fixtures, and Auth identity"
+    ],
+    "sha256": "64940aaf0b4b7bcde1a198ae59726942fe31c4e1e053e89b9d2f8c67470ef609"
+  },
+  "workerPollTimeoutSeconds": 180,
+  "workerPollIntervalSeconds": 5,
   "checks": [],
   "warnings": [
-    "Live consent-withdrawal harness not run; set PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL=true with staging credentials."
+    "Hosted consent-withdrawal evidence not run; use the protected staging workflow with reviewed Supabase credentials."
   ],
   "errors": []
 }
