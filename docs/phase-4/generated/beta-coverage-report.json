@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T08:26:10.629Z",
+  "generatedAt": "2026-07-29T18:51:17.094Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -70,10 +70,105 @@
       "review_prompts",
       "creator_links",
       "paid_measurement"
-    ]
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    }
   },
   "inputPath": "docs/phase-4/beta-coverage-input.json",
-  "gitSha": "44de7eddd085dd84d4a3c306089dd47bf9f048f6",
+  "gitSha": "172277b522a18b8bdb9b8daef0d38fc2b2d3d96c",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -89,20 +184,20 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 42442,
-      "sha256": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1"
+      "bytes": 42839,
+      "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 4451,
-      "sha256": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b"
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 8713,
-      "sha256": "1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9"
+      "bytes": 12227,
+      "sha256": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f"
     },
     {
       "path": ".env.example",
@@ -335,14 +430,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 128107,
-      "sha256": "0faf656705652079a3916775ffaaa8cb7b8ea248d54912fb1dbe25e1f83b18c8"
+      "bytes": 128106,
+      "sha256": "96db8c868a4e3e8aa1cdd04fe8a09ebf86d7e0650027648f20f99c6f49fe3472"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 76417,
-      "sha256": "829f9687d80a773df1240b737905874ae11ebd2703e854a4a98604b6d0ba4569"
+      "sha256": "b44f05580615ca200fdbe0eab7495f5c95432480383e4d1cdc82ad398b78acaf"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -419,14 +514,14 @@
     {
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
-      "bytes": 20490,
-      "sha256": "3fa069e631f604280abdbcfd7a12ac5983c3e64d20ddb769c3cead6df8f395ed"
+      "bytes": 23645,
+      "sha256": "7a6f583e917d4a82683b0608542aee66021f5bdd01b9bc5e0d1e83476e6aa41e"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
-      "bytes": 12338,
-      "sha256": "fca3b843bc2b31daf518396cdfad8e1bb23bd5846aeb7e966c3e841cfabb400a"
+      "bytes": 12339,
+      "sha256": "f6ede19fceaef43a5c222fe77916fde5232d039bab0210f96dbd92e037830207"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
@@ -457,7 +552,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "44de7eddd085dd84d4a3c306089dd47bf9f048f6",
+    "currentGitSha": "172277b522a18b8bdb9b8daef0d38fc2b2d3d96c",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,

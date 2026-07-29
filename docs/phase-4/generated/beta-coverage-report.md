@@ -1,8 +1,8 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-29T08:26:10.629Z
+Generated: 2026-07-29T18:51:17.094Z
 Status: blocked
-Git SHA: 44de7eddd085dd84d4a3c306089dd47bf9f048f6
+Git SHA: 172277b522a18b8bdb9b8daef0d38fc2b2d3d96c
 Git status: clean
 
 
@@ -11,7 +11,7 @@ Git status: clean
 - Status: blocked
 - Source S: BLOCKED
 - Evidence E: BLOCKED
-- Current R/F HEAD: 44de7eddd085dd84d4a3c306089dd47bf9f048f6
+- Current R/F HEAD: 172277b522a18b8bdb9b8daef0d38fc2b2d3d96c
 - Selected RC: BLOCKED
 - Ledger SHA-256: BLOCKED
 - Ledger entries: 0
@@ -69,9 +69,9 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
 | .gitignore | present | 1644 | 066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a |
-| package.json | present | 42442 | fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1 |
-| docs/hugeToDo/launch-contract.json | present | 4451 | 3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b |
-| scripts/launch/contract.mjs | present | 8713 | 1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9 |
+| package.json | present | 42839 | a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270 |
+| docs/hugeToDo/launch-contract.json | present | 5899 | 7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea |
+| scripts/launch/contract.mjs | present | 12227 | 72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f |
 | .env.example | present | 27858 | 5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52 |
 | scripts/phase4/build-source-worklist.mjs | present | 45862 | 9771b7f30ba4347828e0293fc7e8381b204e779f5dbd0520aebbdb45cb099cfc |
 | scripts/phase4/beta-coverage-report.mjs | present | 41079 | 7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1 |
@@ -110,8 +110,8 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | docs/phase-4/catalog-cat02-membership-proof.template.json | present | 9254 | e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56 |
 | docs/phase-4/catalog-curation-database-readback.template.json | present | 8239 | 9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a |
 | docs/phase-4/catalog-curation-release-runbook.md | present | 45248 | ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e |
-| docs/phase-4/generated/source-worklist.json | present | 128107 | 0faf656705652079a3916775ffaaa8cb7b8ea248d54912fb1dbe25e1f83b18c8 |
-| docs/phase-4/generated/source-worklist.md | present | 76417 | 829f9687d80a773df1240b737905874ae11ebd2703e854a4a98604b6d0ba4569 |
+| docs/phase-4/generated/source-worklist.json | present | 128106 | 96db8c868a4e3e8aa1cdd04fe8a09ebf86d7e0650027648f20f99c6f49fe3472 |
+| docs/phase-4/generated/source-worklist.md | present | 76417 | b44f05580615ca200fdbe0eab7495f5c95432480383e4d1cdc82ad398b78acaf |
 | docs/phase-4/observability-dashboard.md | present | 5335 | ffc77c9c33712b2a7b81bf92103e9bc4e71237a60ed40cd96b3aaad7298f0949 |
 | docs/phase-4/phase-4-exit-review.md | present | 13732 | f816d01e8ec61062144ed5fe8e85805e58147e775efb86d87a3107971bec92ed |
 | supabase/migrations/20260717000058_catalog_launch_curation.sql | present | 295282 | f2d53caad23347103e29b0f5660eefdbdd22bfdc05cc2cb47445ece4192919a6 |
@@ -124,8 +124,8 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | supabase/tests/database/catalog_launch_curation.test.sql | present | 202040 | 2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376 |
 | supabase/tests/database/catalog_serving_gate.test.sql | present | 36707 | 1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9 |
 | supabase/tests/database/cat07_truthful_freshness.test.sql | present | 36171 | d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 20490 | 3fa069e631f604280abdbcfd7a12ac5983c3e64d20ddb769c3cead6df8f395ed |
-| docs/phase-4/generated/catalog-qa-report.md | present | 12338 | fca3b843bc2b31daf518396cdfad8e1bb23bd5846aeb7e966c3e841cfabb400a |
+| docs/phase-4/generated/catalog-qa-report.json | present | 23645 | 7a6f583e917d4a82683b0608542aee66021f5bdd01b9bc5e0d1e83476e6aa41e |
+| docs/phase-4/generated/catalog-qa-report.md | present | 12339 | f6ede19fceaef43a5c222fe77916fde5232d039bab0210f96dbd92e037830207 |
 | docs/phase-10/beta-event-schema.md | present | 15983 | b8d378bed2de90910be0932c60f6d526adfe55c4c1fc2ec21641ab04aba84e85 |
 | docs/phase-10/catalog-beta-report.md | present | 1680 | 28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28 |
 | docs/phase-10/support-beta-report.md | present | 2149 | f25c3841a8bc5649dbd1f38632c756898da46a5d7f4d59ff7c328726dc9d26ac |
