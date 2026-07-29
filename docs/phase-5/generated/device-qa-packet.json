@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "phase5_device_qa_packet",
-  "generatedAt": "2026-07-29T08:26:31.310Z",
+  "generatedAt": "2026-07-29T18:51:33.618Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,9 +73,104 @@
       "review_prompts",
       "creator_links",
       "paid_measurement"
-    ]
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    }
   },
-  "gitSha": "90e8978932aa78a2c4e705b634978408b346de68",
+  "gitSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": null,
@@ -244,7 +339,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "90e8978932aa78a2c4e705b634978408b346de68",
+    "currentGitSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -293,7 +388,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "90e8978932aa78a2c4e705b634978408b346de68",
+    "headSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -303,7 +398,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "90e8978932aa78a2c4e705b634978408b346de68",
+    "headSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
     "status": "blocked"
   },
   "scenarios": [
@@ -386,8 +481,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 42442,
-      "sha256": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1"
+      "bytes": 42839,
+      "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
     },
     {
       "path": "package-lock.json",
@@ -398,14 +493,14 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 4451,
-      "sha256": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b"
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 8713,
-      "sha256": "1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9"
+      "bytes": 12227,
+      "sha256": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -452,14 +547,14 @@
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
       "exists": true,
-      "bytes": 6338,
-      "sha256": "9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01"
+      "bytes": 5153,
+      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.test.ts",
       "exists": true,
-      "bytes": 8406,
-      "sha256": "109e475d00d13808a70465189dee685c5097abd2b707dc928115a842010a7110"
+      "bytes": 7770,
+      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
@@ -1466,8 +1561,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 468010,
-      "sha256": "75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24"
+      "bytes": 470834,
+      "sha256": "6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f"
     },
     {
       "path": "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
