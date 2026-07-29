@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T08:28:04.423Z",
+  "generatedAt": "2026-07-29T18:53:05.835Z",
   "objective": "Phase 8 growth loop and store readiness",
   "launchContract": {
     "schemaVersion": 1,
@@ -71,14 +71,109 @@
       "review_prompts",
       "creator_links",
       "paid_measurement"
-    ]
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    }
   },
   "platformStatus": {
     "ios": "required",
     "android": "not_applicable"
   },
   "status": "blocked",
-  "gitSha": "d70f556c827e8d03bd93e6274333594a0d60ce70",
+  "gitSha": "bd6a0db4c905729bd9e0f607d9e9d2b7e6adf223",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -106,17 +201,18 @@
   },
   "matrices": {
     "linkRouting": [
-      "iOS installed opens app via Universal Links",
-      "iOS not installed opens web fallback",
-      "Desktop opens web fallback",
-      "Invalid share ID never reveals sensitive context"
+      "Zero admission: no per-record link or token is generated, resolved, or treated as valid",
+      "Neutral static unavailable fallback does not imply a reviewed shared record",
+      "No landing impression, store-click, share_id, or destination analytics/network beacon",
+      "Future iOS Universal Link activation requires separately admitted public-link authority",
+      "Malformed, valid-looking, expired, revoked, deleted, or unknown identifiers remain unavailable"
     ],
     "shareCard": [
-      "Reviewed non-safety two-product conflicts only",
-      "1080x1920 export",
-      "Brand, CTA, footnote, and first-party link label present",
-      "No product/profile/pregnancy/photo/rule data in URL",
-      "Started, link created, succeeded/failed, sheet opened events present"
+      "Zero admission: no card capture, temporary file, link, network request, or native share sheet",
+      "Only an explicit sanitized allowlist may cross a future private-to-share boundary",
+      "No raw owned products, profile, pregnancy, photo, internal rule, reviewer, or provenance fields",
+      "Future export requires an immutable exact-content receipt and exact-payload confirmation",
+      "No share-started, link-created, sheet-opened, destination, or payload analytics"
     ],
     "storeSubmission": [
       "Metadata limits validated in tests",
@@ -127,29 +223,52 @@
     ],
     "attribution": [
       "Allowed campaign keys only",
-      "Opaque share_id only",
+      "No share_id while public-link admission is closed",
       "No health/product/profile/contact fields",
       "No complex analytics objects"
     ]
   },
   "sourceHashes": {
     ".env.example": "5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52",
-    "package.json": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1",
-    "docs/hugeToDo/launch-contract.json": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b",
-    "scripts/launch/contract.mjs": "1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9",
+    "package.json": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270",
+    "docs/hugeToDo/launch-contract.json": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea",
+    "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab",
+    "scripts/launch/contract.mjs": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f",
+    "scripts/core02/clinical-rule-source-contract.test.mjs": "9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed",
+    "scripts/core07/share-admission-source-contract.mjs": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d",
+    "scripts/core07/share-admission-source-contract.test.mjs": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3",
     "apps/mobile/app.config.js": "4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c",
     "apps/mobile/src/lib/env.ts": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31",
-    "apps/mobile/src/lib/launch/phase8.ts": "8149b2ab7984be03fd26ff44d3d680e422473dd79b7ad559558138cad4cf6ff9",
+    "apps/mobile/src/lib/env.test.ts": "d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9",
+    "apps/mobile/src/lib/launch/phase7.ts": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3",
+    "apps/mobile/src/lib/launch/phase7.test.ts": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166",
+    "apps/mobile/src/lib/launch/phase8.ts": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7",
+    "apps/mobile/src/lib/launch/phase8.test.ts": "7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b",
     "apps/mobile/src/lib/growth/attribution.ts": "80c9c4089fed353e7443deb38f9baa6ebb56b466a4fc07f2ce2caeb4f71f55e2",
-    "apps/mobile/src/features/growth/shareLinks.ts": "fb87d418754d6c1590a181db32dada60e1885fd8006da0e38d9b96a95febf3e8",
-    "apps/mobile/src/app/s/[shareId].tsx": "6357836090591a592544884599c9177dfbe397b5b7ef1f5a4c9cb489d5957aa5",
-    "apps/mobile/src/features/growth/shareCard.ts": "e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436",
-    "apps/mobile/src/app/share/conflict/[ruleId].tsx": "c01a7d3b07823b92b83c4014da0b3ebbea4a0aecbd44abeb494b6a972abb92bd",
+    "apps/mobile/src/features/growth/shareAdmission.ts": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327",
+    "apps/mobile/src/features/growth/shareAdmission.test.ts": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7",
+    "apps/mobile/src/features/growth/publicLinkAdmission.ts": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0",
+    "apps/mobile/src/features/growth/publicLinkAdmission.test.ts": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23",
+    "apps/mobile/src/features/growth/shareProjection.ts": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b",
+    "apps/mobile/src/features/growth/shareProjection.test.ts": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4",
+    "apps/mobile/src/features/growth/ConflictCard.tsx": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981",
+    "apps/mobile/src/features/growth/shareLinks.ts": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7",
+    "apps/mobile/src/features/growth/shareLinks.test.ts": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706",
+    "apps/mobile/src/features/growth/shareLandingRoute.test.ts": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0",
+    "apps/mobile/src/features/growth/cardCopy.ts": "e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776",
+    "apps/mobile/src/features/growth/cardCopy.test.ts": "c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9",
+    "apps/mobile/src/features/intelligence/conflictIdentity.ts": "06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf",
+    "apps/mobile/src/features/intelligence/conflictRoutes.test.ts": "5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e",
+    "apps/mobile/src/app/s/[shareId].tsx": "1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2",
+    "apps/mobile/src/features/growth/shareCard.ts": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac",
+    "apps/mobile/src/features/growth/shareCard.test.ts": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b",
+    "apps/mobile/src/app/conflict/[ruleId].tsx": "18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e",
+    "apps/mobile/src/app/share/conflict/[ruleId].tsx": "a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473",
     "apps/mobile/src/features/review/policy.ts": "ae0deae45bf76323f0ce33832cb34d961d5bec065c5177ef6f8eb34df37b21fe",
     "apps/mobile/src/features/review/prompt.ts": "c8d002cd9d7297b262e199074e3af4971bc7d752f62afa884ad04c924971f43b",
     "apps/mobile/src/lib/legal/storeMetadata.ts": "eb209dc51a5639c1eaae942a9c5426a3044b15a49e0db8e636d3775f55acbb7c",
-    "docs/phase-8/source-of-truth.md": "a37b4c9915e4433a7aeda3ca42b5131578cf77394e0b8bbf200bcd9a8ceb22e9",
-    "docs/phase-8/link-routing-runbook.md": "4f794fbe84a313a34441cff9ffbc7a363a0e555fdc23e0248f685ff9e8fe92cd",
+    "docs/phase-8/source-of-truth.md": "0c16aab57df886d9900d6629adc7431119bbeea8fa4e03a737e0559fbeb8c356",
+    "docs/phase-8/link-routing-runbook.md": "c4314fc17eb9941a0c63b10ccca883c7c4c9762e1c64b1c8de3e9cc12995d0f3",
     "docs/phase-8/store-metadata-source-of-truth.md": "17bbcb8962f7d8592a51d914f8ce7e5e40c83daa3be7a61c1a6fd1ef1abbe8fb",
     "docs/phase-8/store-compliance-packet.md": "846963335b3c4c91ae1491cb33a7f1a8bcb0e91f27f20cb79882d855c7cf1a5e",
     "docs/phase-8/creator-brief.md": "4d24677954d2ec765fc40c912806fbfc6cb9ab5020ad4d71b1c00cd5bc2453bb",
@@ -157,33 +276,36 @@
     "docs/phase-8/acquisition-dashboard.md": "fc0f930310046c7f10e3e7c385ad5a52bde711927ab645d74bd5fb1b247be252",
     "docs/phase-8/launch-dry-run-checklist.md": "3d357c7e4a8d4adc1d018da0d646d81944b7c30d0f2c357eac4264e14f76b798",
     "docs/phase-8/support-review-response-playbook.md": "4bb43fd8996cd5a8585b84fc51de370ee0a3a4fe3d12375ec2bee908e77e3576",
-    "docs/phase-8/phase-8-exit-review.md": "7e2eb6fdf96e23539f54211c95a11c1092cd8fafcb42ac25985a37a755044963",
+    "docs/phase-8/phase-8-exit-review.md": "b22998175e5087040973e9216b7e2bbb9412506fc9db5816372c7737142fa4ab",
     "docs/phase-8/public-site/index.html": "c42920a7f165be6cb2d878b6a3423c5a0531d992a0a8963f86c0ec924224cede",
-    "docs/phase-8/public-site/share.html": "8769234d1fbf894eb49d650d8643d8e25dfeb735c5caa199acb40c61836e9a49",
+    "docs/phase-8/public-site/share.html": "45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834",
     "docs/phase-8/public-site/waitlist.html": "2a27f02d64f526012b9dd022f7fb7591cab04f46470d3a6cd6c8439baf9c8a94",
     "docs/phase-8/public-site/support.html": "d1235f470c05baf63ca059a5d188db7c03e4753499a4a4ee4ae4de75e7daef2a",
     "docs/phase-8/public-site/.well-known/apple-app-site-association.template.json": "074f2a17a36b3659e6682ae1e8386c6c668c4362f90e88ed09cd98c0b5ab0813",
     "docs/phase-8/public-site/.well-known/assetlinks.template.json": "1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319",
     "docs/HUMAN_SIMULATED_E2E_TESTING.md": "4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e",
     "docs/E2E_TESTING_CHECKLIST.md": "34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026",
-    "docs/USER_FLOW_TREE.md": "75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24",
+    "docs/USER_FLOW_TREE.md": "6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f",
     "docs/e2e/generated/human-e2e-manifest.json": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "docs/e2e/generated/human-e2e-manifest.md": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
-    "docs/phase-5/generated/device-qa-packet.json": "7edfbff0c2f39e82e47fec0ba5d5617301bb7a0b3c6fa90c6f45153650eebb39",
-    "docs/phase-5/generated/device-qa-packet.md": "aff90827030fcddd435cde71253d164baf8a847a65cd4a0777351d6d25287abd",
-    "docs/phase-6/generated/payments-qa-packet.json": "6b5f7da57f5a2c7fb0f1e5ba37a4e856238a4a98b7c69eac5d4e73ec4b28ca7b",
-    "docs/phase-6/generated/payments-qa-packet.md": "1ff05c349bb03d40fe68b9dd30c3dc07f6daf6695f7376b9fb7cbc02470adb51",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "b3f5b84a99141a06d3728709f7034fe50ba74481865f24c1f5b7fe90d685dbfb",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "cccd3a432ecb00a33b940a65f0d19c3db5c24568fcf11a12a8bbc810ae4d6e83",
-    "scripts/phase8/build-growth-store-qa-packet.mjs": "a125aa4557441949dcee8d8b943b2590767da3e9b76ea2569bf46dca9a1b261b",
-    "scripts/phase8/check-growth-store-readiness.mjs": "d1496dce11a51b2c0afce0f574c32bd4d102abccdc3598870268a311377524f4",
-    "scripts/phase8/check-growth-store-smoke.mjs": "89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98",
+    "docs/phase-5/generated/device-qa-packet.json": "9073a63d41af5cbb80cd4bc10f4101ac3ad109384cfb6569d82ca2b5a76b0e9b",
+    "docs/phase-5/generated/device-qa-packet.md": "fa44a085025b1de90f723b160a756198c19abd7f4e9dc2d6aceaa30010cadd50",
+    "docs/phase-6/generated/payments-qa-packet.json": "1fb2e6abb448babc5f3e688d1d2cee05fa431f0cfbe889bcb23e6856673084bb",
+    "docs/phase-6/generated/payments-qa-packet.md": "fb3d6b06a5a4e1de9bc637644aba5587bb32a62dc852c7dd4886af24aa559217",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "3d590a64cd8f98516d5d18977819ec3941ee963aa07b2728aa90a14e6a5a7796",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "2b6d1b6a45e2e832dd807598b0bc6a28355ee6d0f2f2a7ac4e0837c768be5132",
+    "scripts/phase8/build-growth-store-qa-packet.mjs": "ac6279c12bb2f5f3314db3d1333ec30fa0b873712a5d14424e28ad3976009683",
+    "scripts/phase8/check-growth-store-readiness.mjs": "75106f91f70732d79811924589958cb7c469b477fef9278fb3d61da13aa8d3af",
+    "scripts/phase8/check-growth-store-smoke.mjs": "f3557324dca81f8687fb75ee2d8d76183ab3da26112acf0dc0db1323dcc295d4",
     "scripts/phase9/lib.mjs": "2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c",
     "supabase/migrations/20260616000028_phase8_growth.sql": "9f0deaa909e7a5641c405b4b68870e58e3d143cb5956f2794e092ba704276e44",
     "supabase/functions/growth-event/index.ts": "af59ae32fabd9310558274109db8cdd53455d09dc26074efb4758373f63a1770",
     "supabase/functions/waitlist/index.ts": "d798455f90ccf72a5505e2dd5e42c3225d05ae5a4f3d8a2fcfc63cb86ed8c6ac"
   },
-  "blockers": [],
+  "blockers": [
+    "CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag can authorize export.",
+    "CORE-07A public links are not admitted; the repository has no production token service or reviewed retention, revocation, deletion, and abuse contract."
+  ],
   "warnings": [
     "Final brand domain is missing.",
     "Marketing URL is missing.",
