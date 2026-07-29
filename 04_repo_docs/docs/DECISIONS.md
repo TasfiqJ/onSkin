@@ -691,6 +691,45 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: slower content expansion.
 - Status: Accepted.
 
+### 2026-07-29 - Admit No Trend Result Until A Real Exact-Build Issuer Exists
+
+- Decision: Keep `phase7Capabilities.trendEngine` and `phase7Flags.trend`
+  literal `false` and remove every simulated-result path. A classifier, copy
+  catalogue, default delta, environment/development/E2E setting, caller consent,
+  positive metric, Monk tone, fixture, legacy row, final domain, or QA boolean
+  is not a Trend engine or publication authority. Progress retains the private
+  photo timeline and no-score explanation; direct Trend routes expose only
+  truthful unavailable recovery. A positive Trend-consent grant refuses before
+  mutation, processing, or analytics. Explicit withdrawal cleanup may erase
+  legacy state but cannot activate the feature.
+- Decision crosswalk: docs/12 `D-046` through `D-050` deliberately map to root
+  `D-068` through `D-072`. This decision does not renumber them. It supersedes
+  only the former root `D-069` implementation note that a conservative stub
+  could render `consistent`; the governing on-device-only rule remains.
+- Alternatives: keep a reassuring `consistent` default; expose consent before
+  an engine exists; treat Apple Vision face/capture-quality output or vImage
+  operations as a validated skin measurement; trust an environment flag;
+  preserve the enabled fixture as a production path; or call a cloud/general
+  multimodal service.
+- Criteria: truthful feature/metadata claims, no fabricated health inference,
+  no pre-authority sensitive processing or content analytics, installed-base
+  privacy cleanup, a versioned positive successor, independently reviewable
+  fairness and claim evidence, and exact archive/network/device proof.
+- Evidence: the source boundary and current primary-source implications are
+  recorded in
+  [`PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`](./hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+  Apple Vision/vImage documentation establishes useful image-processing
+  primitives, not a validated skincare engine. Current Apple review/privacy,
+  FDA general-wellness, FTC health-claim/HBNR, Washington MHMDA, and California
+  privacy sources support conservative review questions but do not decide
+  compliance or approval.
+- Risk: zero admission is not PHOTO-05 completion. `B-AI-ONDEVICE`,
+  `B-AI-FAIRNESS`, and `B-AI-LEGAL` remain independent launch blockers, followed
+  by PHOTO-06/07, exact professional review, human-simulated/native/archive/
+  network/performance evidence, and Apple's actual review.
+- Status: Accepted for the zero-admission source architecture; Trend remains
+  `in_progress` and launch-blocked.
+
 ## Stack Decisions
 
 ### 2026-07-06 - Local-First Photos And Shelf

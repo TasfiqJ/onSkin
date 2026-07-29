@@ -113,7 +113,10 @@ Features:
 - support workflow
 - staging-only Apple Vision OCR source candidate, exact-build native evidence,
   and catalog coverage
-- photos and trend calibration
+- photos and Trend: PHOTO-05A currently proves only literal zero admission;
+  build the real on-device result issuer, then complete predeclared
+  diverse-condition calibration/fairness and exact consent/data-lifecycle,
+  archive, network, accessibility, performance, and supported-iPhone evidence
 - cloud Ask safety and cost
 - commerce and creator handoff
 - community posting, moderation, and expert workflow
@@ -129,6 +132,10 @@ Done criteria:
 - CAT-05 passes its exact signed-build two-iPhone, 25-label/50-run accuracy,
   RTL, zero-network, cleanup, accessibility, and performance contracts before
   production OCR is enabled
+- PHOTO-05/06/07 pass against one exact signed archive: no simulated result or
+  environment override, validated within-person measurement and abstention
+  behavior, separate current consent, signed fairness/legal/privacy review,
+  zero image/feature-vector egress, and supported-iPhone evidence
 
 Risks:
 
@@ -137,6 +144,9 @@ Risks:
 - trust objections
 - source-only or deterministic web OCR evidence is mistaken for native privacy,
   accuracy, accessibility, or release proof
+- a deterministic Trend classifier, Apple Vision/vImage primitive, source
+  refusal test, or historical enabled fixture is mistaken for a validated
+  skin-change engine, fairness proof, legal clearance, or Apple acceptance
 
 ## Phase 5: Public Launch
 
