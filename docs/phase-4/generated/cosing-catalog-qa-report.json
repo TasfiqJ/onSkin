@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T18:47:28.256Z",
+  "generatedAt": "2026-07-29T18:58:50.415Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -168,7 +168,7 @@
     }
   },
   "inputPath": "docs/phase-4/generated/cosing-fixture-import.json",
-  "gitSha": "c80e3b58495077805a7d1e6474822b377a8d434d",
+  "gitSha": "52097f237b8a9efb707c4b99c4530d25a1d530ab",
   "buildSourceGitSha": null,
   "gitStatus": "",
   "source": "cosing",
