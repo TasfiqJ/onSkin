@@ -1,23 +1,23 @@
 {
-  "generatedAt": "2026-07-26T22:16:47.224Z",
+  "generatedAt": "2026-07-29T08:24:06.640Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "5fd0a8a0975da3c537db533b54a9bf2400d452a9",
+  "gitSha": "6496d97775b58af5bd12eddc9cf7142d1a5c16ba",
   "gitStatus": "",
   "summary": {
-    "itemCount": 13,
+    "itemCount": 14,
     "domainCounts": {
       "sourceReview": 3,
       "curation": 4,
       "betaEvidence": 1,
-      "productSurface": 3,
+      "productSurface": 4,
       "operations": 2
     },
     "statusCounts": {
       "blocked": 7,
-      "local-scaffold": 6
+      "local-scaffold": 7
     },
-    "sourcePathCount": 348,
+    "sourcePathCount": 380,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -133,8 +133,8 @@
         {
           "path": "docs/phase-4/phase-4-exit-review.md",
           "exists": true,
-          "bytes": 13711,
-          "sha256": "c52fa21ea2ecf9861c186bef88bd088598f5eb267920b4b2a1d78712c9ab6494"
+          "bytes": 13732,
+          "sha256": "f816d01e8ec61062144ed5fe8e85805e58147e775efb86d87a3107971bec92ed"
         },
         {
           "path": "docs/FOR_TAS_TO_DO.md",
@@ -469,8 +469,8 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 45229,
-          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
+          "bytes": 45248,
+          "sha256": "ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -583,8 +583,8 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 201879,
-          "sha256": "36f2bfe54bc24795350576db03ad4a5caf0911de729a093c4dd813da9b0b1509"
+          "bytes": 202040,
+          "sha256": "2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376"
         }
       ]
     },
@@ -753,8 +753,8 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 45229,
-          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
+          "bytes": 45248,
+          "sha256": "ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e"
         },
         {
           "path": "docs/phase-4/catalog-cat02-membership-proof.template.json",
@@ -858,7 +858,7 @@
       "requiredEvidence": [
         "A content-addressed CAT-02 stage envelope binds an approved transform, zero-warning source QA, exact per-record reviews, source/build evidence, natural keys, record hashes, and the US territory.",
         "Fixture/candidate records, incomplete reviews, changed idempotent replays, duplicate natural keys, and existing-catalog conflicts fail closed before promotion.",
-        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants. Migration `0066` additionally seals the unreviewed legacy clinical-content fixtures against every API-role table privilege and migration-owner mutation. Migration `0067` gives `plpgsql_check` a checker-only ephemeral table shape for the known runtime-temporary-table release wrapper. Migration `0069` preserves catalog provenance while moving owner Shelf projection behind an exact replay RPC and stable identity/tombstone boundary. Migration `0070` stages the exact current Ask grant tuple only as an unreleased `draft_blocked` successor without inventing review or approval; approval, promotion, rollback, CAT-03 activation, and any future reviewed clinical publication intentionally require separate authority.",
+        "Migration `0057` plus forward migrations `0061` and `0062` stage the signed v2 category vocabulary through sealed service RPCs and retain bounded statement-level curation integrity. Migration `0063` gives CAT-08 operators immutable recommendation authority only, and `0065` repairs both operator-transition conflict targets plus the global function default ACL while preserving the exact gateway grants. Migration `0066` additionally seals the unreviewed legacy clinical-content fixtures against every API-role table privilege and migration-owner mutation. Migration `0067` gives `plpgsql_check` a checker-only ephemeral table shape for the known runtime-temporary-table release wrapper. Migration `0069` preserves catalog provenance while moving owner Shelf projection behind an exact replay RPC and stable identity/tombstone boundary. Migration `0070` stages the exact current Ask grant tuple only as an unreleased `draft_blocked` successor without inventing review or approval. Migration `0071` then forces literal zero product-specific recommendation admission, seals the legacy recommendation cache, and makes preference mutation owner-derived through one health-fenced RPC; approval, promotion, rollback, CAT-03 activation, recommendation-mode opening, and any future reviewed clinical publication intentionally require separate authority.",
         "Every promoted projection traces through its immutable staged record and batch to source artifact, transform, approval, QA, and reviewer hashes.",
         "A reviewed hosted two-session drill proves atomic promotion, full retry on serialization failure, source-withdrawal containment, exact verification, and non-destructive rollback with shelf/correction references preserved."
       ],
@@ -879,19 +879,23 @@
         "supabase/migrations/20260726000068_routine_adherence_authority.sql",
         "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
         "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
+        "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
         "supabase/tests/database/clinical_content_legacy_seal.test.sql",
         "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
         "supabase/tests/database/routine_adherence_authority.test.sql",
         "supabase/tests/database/routine_completion_sync_bridge.test.sql",
         "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
+        "supabase/tests/database/recommendation_zero_admission.test.sql",
         "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
         "supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql",
+        "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
         "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql",
+        "scripts/phase9/recommendation-zero-admission-smoke.mjs",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/cat07_truthful_freshness.test.sql",
@@ -996,40 +1000,52 @@
           "sha256": "2e2abca7a88ab17992e7b3058d4b2f2c9ddbeb2accc59ae1cbf1a96b1b708706"
         },
         {
+          "path": "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
+          "exists": true,
+          "bytes": 14874,
+          "sha256": "4e3e0c46a246b97e98f014bf65499ea86b7f57119744466aebc8c1491331acc9"
+        },
+        {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
-          "bytes": 73519,
-          "sha256": "9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7"
+          "bytes": 73521,
+          "sha256": "b07cc18913ab3be7fc5642a92027eca7a62389421347160141f2854a6372e38a"
         },
         {
           "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
           "exists": true,
-          "bytes": 10087,
-          "sha256": "beff4edb8b7c4eebdfb7afaa664fc2c201aaa2175f0bef4a53835aa68f73639c"
+          "bytes": 10079,
+          "sha256": "e0ae64004b13eb5f4cf6e73a911e4b8d200e7f6ca7a8212549716c2439b09fd9"
         },
         {
           "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
           "exists": true,
-          "bytes": 3335,
-          "sha256": "f1fdfa4a048aed29ff4eac806bdffdcc4b9abb4b36e135ef02d89620f416f653"
+          "bytes": 3327,
+          "sha256": "1a437fe0dbe60900edac7eb0055df4c0b82ef7366887219a9e4a7cd987b5290a"
         },
         {
           "path": "supabase/tests/database/routine_adherence_authority.test.sql",
           "exists": true,
-          "bytes": 38297,
-          "sha256": "4bce87e1bc3b6c1c93216a0a421a75dfbc03c8276ad4c77b77d8049ff3bbc0f3"
+          "bytes": 38289,
+          "sha256": "b2fddf167c1c250700b8a2a31407d21e75c1c170fe174f5637096444cb82dbd5"
         },
         {
           "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
           "exists": true,
-          "bytes": 50468,
-          "sha256": "2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8"
+          "bytes": 50487,
+          "sha256": "888a04189fb5222991fe68b7b42232deb96a100b7fcb6bd44621cca9dae9cac9"
         },
         {
           "path": "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
           "exists": true,
-          "bytes": 13926,
-          "sha256": "690567e280ba547157bf5fb4f9c4b46e9379de604590eb9f67c6d1405e1bd973"
+          "bytes": 13953,
+          "sha256": "e7b6b6706be6b38a5db0cd0f69d065aec36aa00e0830b1ee1400d7da769bf069"
+        },
+        {
+          "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
+          "exists": true,
+          "bytes": 17931,
+          "sha256": "29f904aac21064dd5f5c2e8f3c7fa2a81417d3ffde26f5134f58e8b145b224b5"
         },
         {
           "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
@@ -1042,6 +1058,12 @@
           "exists": true,
           "bytes": 7066,
           "sha256": "c714d1001be6ecb2579d4307621d0f45bcfdd1019c983551618cb42eb9a795db"
+        },
+        {
+          "path": "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+          "exists": true,
+          "bytes": 7912,
+          "sha256": "011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77"
         },
         {
           "path": "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
@@ -1074,22 +1096,28 @@
           "sha256": "859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e"
         },
         {
+          "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
+          "exists": true,
+          "bytes": 7831,
+          "sha256": "eb9e8caad7b98399af9ad7001b08e9a27eea01e614c8dd04a562eb63f6465865"
+        },
+        {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
-          "bytes": 109810,
-          "sha256": "21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c"
+          "bytes": 109814,
+          "sha256": "d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899"
         },
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36567,
-          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
+          "bytes": 36707,
+          "sha256": "1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36074,
-          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
+          "bytes": 36171,
+          "sha256": "d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24"
         },
         {
           "path": "docs/phase-4/catalog-import-promotion-runbook.md",
@@ -1158,8 +1186,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 41871,
-          "sha256": "aa90ffccdb573042a9a4679a4507284010042e693e067c6e0dc3fe47db608cfd"
+          "bytes": 42442,
+          "sha256": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -1170,8 +1198,8 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 45229,
-          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
+          "bytes": 45248,
+          "sha256": "ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e"
         },
         {
           "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -1260,8 +1288,8 @@
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 201879,
-          "sha256": "36f2bfe54bc24795350576db03ad4a5caf0911de729a093c4dd813da9b0b1509"
+          "bytes": 202040,
+          "sha256": "2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376"
         },
         {
           "path": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
@@ -1296,20 +1324,20 @@
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
-          "bytes": 109810,
-          "sha256": "21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c"
+          "bytes": 109814,
+          "sha256": "d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899"
         },
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36567,
-          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
+          "bytes": 36707,
+          "sha256": "1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36074,
-          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
+          "bytes": 36171,
+          "sha256": "d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24"
         }
       ]
     },
@@ -1668,6 +1696,18 @@
           "sha256": "7b5be927575a0fcc5febeafe03511c1bda402e591644707ffb167807bccb3190"
         },
         {
+          "path": "apps/mobile/src/features/recommendations/admission.test.ts",
+          "exists": true,
+          "bytes": 3673,
+          "sha256": "41f457e23372c20b95d5bfe723a4077bebfefbf833aaa4cf786e73505a51cf70"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/admission.ts",
+          "exists": true,
+          "bytes": 3362,
+          "sha256": "699de9485fa5fed2335fb4b91dbd9f263ae7cd081048c30bb6b4d6fc17bb7934"
+        },
+        {
           "path": "apps/mobile/src/features/recommendations/applyPreferences.test.ts",
           "exists": true,
           "bytes": 1319,
@@ -1682,74 +1722,98 @@
         {
           "path": "apps/mobile/src/features/recommendations/catalog.ts",
           "exists": true,
-          "bytes": 9640,
-          "sha256": "113bb09a809c5cd381b8cfb5336542b887321bc7ba3b43373ff4d36342319062"
+          "bytes": 9187,
+          "sha256": "c51facef1b8d53e2c916de28b08910147b6afe2d1de3ba36f587ad9cc1f64ffa"
         },
         {
           "path": "apps/mobile/src/features/recommendations/claimsafety.test.ts",
           "exists": true,
-          "bytes": 9803,
-          "sha256": "1fe96a03fb2df36e660bd1ae860347f78e4d46ad0e8fd1b4e3b2339597237c63"
+          "bytes": 11303,
+          "sha256": "778a3f8cf6a166b5684ac5b862403e1349259d30ca8c7f540626b94fdd0bbcda"
         },
         {
           "path": "apps/mobile/src/features/recommendations/copy.ts",
           "exists": true,
-          "bytes": 9698,
-          "sha256": "62c73660f6cdd5358999017746cec322fdf4de4d7c08d8fe1746cad550899e94"
+          "bytes": 11161,
+          "sha256": "4e652b871697dbe4856f2c931da5faa7b85dcbcca84e2cad7d70b4b4a3880f72"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.test.ts",
           "exists": true,
-          "bytes": 28963,
-          "sha256": "f63077fd3b9a2e4afce418e07b34645111a1e9a43c541c820658c87b31dc2961"
+          "bytes": 31682,
+          "sha256": "0dafb11a6aebd0a713417db7839385905ab059a2a06c56c4f691fdf13e50205c"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 22647,
-          "sha256": "8ad537eafe9d6353f5558d2dd777c2c55b88300bd2c2dcafd0a969e7f7eb0ed4"
+          "bytes": 24385,
+          "sha256": "09d3eb6119b68909c9d34d23ddacf6c2ee9d79e0d35ecf277353c68d8b8224c3"
         },
         {
           "path": "apps/mobile/src/features/recommendations/fit.test.ts",
           "exists": true,
-          "bytes": 4538,
-          "sha256": "d35d81e63490ba1e16fc586bb67890ac9215444f4db21d094deb83e7222be150"
+          "bytes": 5242,
+          "sha256": "be28f0c73964323a77cdbfedc171ec895f8828765a7a7077896f07ce729c3a0a"
         },
         {
           "path": "apps/mobile/src/features/recommendations/fit.ts",
           "exists": true,
-          "bytes": 5766,
-          "sha256": "ccb921626563a5cea9ec02a162c9f84289ada483edcf51dd755ab30b5658f18d"
+          "bytes": 5853,
+          "sha256": "5c26217852fd5a54a2ca1fa5bc60eba3943611a1f84a7a26a8050a6331383f7e"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/fragrance.ts",
+          "exists": true,
+          "bytes": 912,
+          "sha256": "da21d1a0df285d242c9aef9fe4c05e329d44f3fb1047a2c4a075d4585d2c1644"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/goalAdmission.test.ts",
+          "exists": true,
+          "bytes": 2749,
+          "sha256": "9342f3791b75441c2522f505832a3e7eb371de999ef15d8f166277acde9337aa"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/goalAdmission.ts",
+          "exists": true,
+          "bytes": 2693,
+          "sha256": "70b629422f47106ad926b24f343103c3e782383f7a447909e314941a4a41df19"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/goalProvenance.ts",
+          "exists": true,
+          "bytes": 4465,
+          "sha256": "05dc69ab16053b740179fad604b101afc486dfcc16a90fa76586ac8f59f8e50d"
         },
         {
           "path": "apps/mobile/src/features/recommendations/loading.ts",
           "exists": true,
-          "bytes": 251,
-          "sha256": "9c611cd49e793cc1161ecd665ee790bb056014b28a8d2f928a20bf59c0d7294d"
+          "bytes": 707,
+          "sha256": "3708883b8d09582f3620cc933e2412ef2c6054d0fe5d9f5ca15d9145067c5c55"
         },
         {
           "path": "apps/mobile/src/features/recommendations/preferences.ts",
           "exists": true,
-          "bytes": 647,
-          "sha256": "055882921e6e68b018b75aa075d93214119fa098add0c3e2665f96dadc77ebbf"
+          "bytes": 917,
+          "sha256": "20f23f9dd2a185d093a204b9977ef771a0f4e562bb588b0398290a0eeb1bf898"
         },
         {
           "path": "apps/mobile/src/features/recommendations/recommendationRoutes.test.ts",
           "exists": true,
-          "bytes": 14651,
-          "sha256": "e09257f75e5dabd44ce73b475e00f9e31bb60c619f948ebe3c6b96ff6f0abeb2"
+          "bytes": 16214,
+          "sha256": "613046a86d8d81bd131362697574f18dc7f7ed2d44ce3041076e358ad93eec62"
         },
         {
           "path": "apps/mobile/src/features/recommendations/RecommendationsTeaser.test.ts",
           "exists": true,
-          "bytes": 3590,
-          "sha256": "6f0d92c8fb2f1165be38c25b7bc2b6aa6ba582bfda66e86b7099e7ed78bb4340"
+          "bytes": 4098,
+          "sha256": "b5e0476fc56282475ab005d50a49e3e65104a1e9d413389d81cf957976eea03a"
         },
         {
           "path": "apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx",
           "exists": true,
-          "bytes": 8502,
-          "sha256": "8b113a60cd2090065e7c6ed982d061cbb8213ef17c1a6684c3a26596873598b3"
+          "bytes": 8769,
+          "sha256": "9a255293b62127479d28415260afe39f1730cf408f25fcef38c55610d1e327ff"
         },
         {
           "path": "apps/mobile/src/features/recommendations/replenishment.test.ts",
@@ -1766,26 +1830,26 @@
         {
           "path": "apps/mobile/src/features/recommendations/store.test.ts",
           "exists": true,
-          "bytes": 7126,
-          "sha256": "3f51aba2e8b925752a0c74c30413190342d1462a09c19bbc7c0dcbc1f8dde1d8"
+          "bytes": 8331,
+          "sha256": "8a22ba398c5d5204162dbb98b4ef7f97dd82817f13e21d154dcc50fe0eee6444"
         },
         {
           "path": "apps/mobile/src/features/recommendations/store.ts",
           "exists": true,
-          "bytes": 7133,
-          "sha256": "b240f42ca33243d0db35eaed63c307d598be89aa485a1ba80a6e5bd7b5f98774"
+          "bytes": 7353,
+          "sha256": "b24499fe9b122b13b390248fd9988d5521991a47f26b8e24eca1b2dfab923a83"
         },
         {
           "path": "apps/mobile/src/features/recommendations/useRecommendations.test.ts",
           "exists": true,
-          "bytes": 1006,
-          "sha256": "9c1908c337df4cc3abd8a4fb12fcf12bca2d82b985b4043189a4347ab65fe44a"
+          "bytes": 2802,
+          "sha256": "facda1c30fe00fe4cf5e7bf7a98c3435481835857c4774a3e9316af501f343bc"
         },
         {
           "path": "apps/mobile/src/features/recommendations/useRecommendations.ts",
           "exists": true,
-          "bytes": 3586,
-          "sha256": "df399196f973280670f1da3b3d5faf142c278e572ec6788c5e5430a48baf402f"
+          "bytes": 3878,
+          "sha256": "c86b5797892557f0197bc812cac9bf1ebe5eab79956590be5e64955b3331f733"
         },
         {
           "path": "supabase/functions/catalog-report/index.ts",
@@ -1804,6 +1868,151 @@
           "exists": true,
           "bytes": 10228,
           "sha256": "31411acef464f8e0dda16605ee3f0af769163f67ea920ae5c1f6156ee4508f1d"
+        }
+      ]
+    },
+    {
+      "id": "recommendation-zero-admission",
+      "domain": "productSurface",
+      "area": "Fail-closed product-specific recommendation admission",
+      "status": "local-scaffold",
+      "launchGate": "B-CURATED-CATALOG",
+      "owner": "Engineering + clinical reviewers + regulatory counsel + database reviewer",
+      "requiredEvidence": [
+        "CORE-06A remains a zero-product-admission checkpoint: only type-first and existing-Shelf context provenance can exist, and neither provenance can render or fetch commerce.",
+        "Goal-active output requires the exact current feature flag, consent, quiz/profile/goal provenance, and positive review clearance; the current clearance is closed and empty.",
+        "Migration `0071` forces every catalog row recommendation-ineligible, returns a zero-row service-only recommendation projection, seals the legacy recommendation cache, and exposes only an owner-derived health-fenced preference RPC.",
+        "The aggregate source contract, static database gate, exact pgTAP contract, and forward-upgrade contract all pass before any product-specific mode-opening change can be reviewed.",
+        "This checkpoint does not establish reviewed products, professional clearance, hosted or physical-device behavior, App Review acceptance, legal compliance, product safety, product-market fit, or revenue."
+      ],
+      "sources": [
+        "docs/09-personalized-recommendations.md",
+        "docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md",
+        "scripts/core06/recommendation-admission-source-contract.test.mjs",
+        "apps/mobile/src/features/recommendations/admission.ts",
+        "apps/mobile/src/features/recommendations/admission.test.ts",
+        "apps/mobile/src/features/recommendations/goalAdmission.ts",
+        "apps/mobile/src/features/recommendations/goalAdmission.test.ts",
+        "apps/mobile/src/features/recommendations/goalProvenance.ts",
+        "apps/mobile/src/features/recommendations/catalog.ts",
+        "apps/mobile/src/features/recommendations/engine.ts",
+        "apps/mobile/src/features/recommendations/engine.test.ts",
+        "apps/mobile/src/features/recommendations/useRecommendations.ts",
+        "apps/mobile/src/features/commerce/WhereToBuy.tsx",
+        "apps/mobile/src/app/recommendations/[id].tsx",
+        "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
+        "supabase/tests/database/recommendation_zero_admission.test.sql",
+        "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+        "scripts/phase9/recommendation-zero-admission-smoke.mjs"
+      ],
+      "sourcePaths": [
+        {
+          "path": "docs/09-personalized-recommendations.md",
+          "exists": true,
+          "bytes": 46631,
+          "sha256": "7d4544112256b1b026116a42357069ec3e4002c5bde7ef1b6612b82784fcd0f4"
+        },
+        {
+          "path": "docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md",
+          "exists": true,
+          "bytes": 35333,
+          "sha256": "c852d2a97f979b23680069241b667ad2e15d7a7f298d364281955db8599888a2"
+        },
+        {
+          "path": "scripts/core06/recommendation-admission-source-contract.test.mjs",
+          "exists": true,
+          "bytes": 32016,
+          "sha256": "c845f060a7a18f514eacfb5476ce0f5aa8696dc76692cf2a2feb45332b91e3c7"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/admission.ts",
+          "exists": true,
+          "bytes": 3362,
+          "sha256": "699de9485fa5fed2335fb4b91dbd9f263ae7cd081048c30bb6b4d6fc17bb7934"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/admission.test.ts",
+          "exists": true,
+          "bytes": 3673,
+          "sha256": "41f457e23372c20b95d5bfe723a4077bebfefbf833aaa4cf786e73505a51cf70"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/goalAdmission.ts",
+          "exists": true,
+          "bytes": 2693,
+          "sha256": "70b629422f47106ad926b24f343103c3e782383f7a447909e314941a4a41df19"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/goalAdmission.test.ts",
+          "exists": true,
+          "bytes": 2749,
+          "sha256": "9342f3791b75441c2522f505832a3e7eb371de999ef15d8f166277acde9337aa"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/goalProvenance.ts",
+          "exists": true,
+          "bytes": 4465,
+          "sha256": "05dc69ab16053b740179fad604b101afc486dfcc16a90fa76586ac8f59f8e50d"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/catalog.ts",
+          "exists": true,
+          "bytes": 9187,
+          "sha256": "c51facef1b8d53e2c916de28b08910147b6afe2d1de3ba36f587ad9cc1f64ffa"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/engine.ts",
+          "exists": true,
+          "bytes": 24385,
+          "sha256": "09d3eb6119b68909c9d34d23ddacf6c2ee9d79e0d35ecf277353c68d8b8224c3"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/engine.test.ts",
+          "exists": true,
+          "bytes": 31682,
+          "sha256": "0dafb11a6aebd0a713417db7839385905ab059a2a06c56c4f691fdf13e50205c"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/useRecommendations.ts",
+          "exists": true,
+          "bytes": 3878,
+          "sha256": "c86b5797892557f0197bc812cac9bf1ebe5eab79956590be5e64955b3331f733"
+        },
+        {
+          "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
+          "exists": true,
+          "bytes": 9445,
+          "sha256": "42147c464f5bfdd3c6b206c9e2814c387b784f7decc25e98b93d926451bcb1ca"
+        },
+        {
+          "path": "apps/mobile/src/app/recommendations/[id].tsx",
+          "exists": true,
+          "bytes": 9516,
+          "sha256": "3e486837968cfecd86544a9e5a78a658854e26a541b4d7c04ed8c0460467326e"
+        },
+        {
+          "path": "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
+          "exists": true,
+          "bytes": 14874,
+          "sha256": "4e3e0c46a246b97e98f014bf65499ea86b7f57119744466aebc8c1491331acc9"
+        },
+        {
+          "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
+          "exists": true,
+          "bytes": 17931,
+          "sha256": "29f904aac21064dd5f5c2e8f3c7fa2a81417d3ffde26f5134f58e8b145b224b5"
+        },
+        {
+          "path": "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+          "exists": true,
+          "bytes": 7912,
+          "sha256": "011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77"
+        },
+        {
+          "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
+          "exists": true,
+          "bytes": 7831,
+          "sha256": "eb9e8caad7b98399af9ad7001b08e9a27eea01e614c8dd04a562eb63f6465865"
         }
       ]
     },
@@ -1877,8 +2086,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 462555,
-          "sha256": "69509ba380bf0f1e071f60d96ee58b041689cc18576126c94c4b62f89feda95d"
+          "bytes": 468010,
+          "sha256": "75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -2123,20 +2332,20 @@
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36567,
-          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
+          "bytes": 36707,
+          "sha256": "1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36074,
-          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
+          "bytes": 36171,
+          "sha256": "d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24"
         },
         {
           "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
           "exists": true,
-          "bytes": 50468,
-          "sha256": "2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8"
+          "bytes": 50487,
+          "sha256": "888a04189fb5222991fe68b7b42232deb96a100b7fcb6bd44621cca9dae9cac9"
         },
         {
           "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
@@ -2154,7 +2363,7 @@
       "launchGate": "B-CATALOG-SEED",
       "owner": "Engineering + catalog operator + database reviewer",
       "requiredEvidence": [
-        "The complete 69-migration chain through `0070`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, the `0065` CAT-08 transition/default-ACL repair, the additional `0066` legacy clinical-content immutability seal, the narrow `0067` checker-only runtime-temporary-table shape, the `0068` authoritative routine-adherence boundary, the `0069` owner-derived Shelf/completion replay bridge, and the `0070` unreleased draft-only health-consent-copy successor staging boundary, passes with the catalog, profile-provenance, CAT-07, CAT-08, clinical-content-seal, lint-contract, adherence, sync-bridge, and consent-draft-staging pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, clinical publication, or campaign release.",
+        "The complete 70-migration chain through `0071`, including catalog migrations `0056` through `0063`, `0064` exact output-only skin-profile quiz provenance, the `0065` CAT-08 transition/default-ACL repair, the additional `0066` legacy clinical-content immutability seal, the narrow `0067` checker-only runtime-temporary-table shape, the `0068` authoritative routine-adherence boundary, the `0069` owner-derived Shelf/completion replay bridge, the `0070` unreleased draft-only health-consent-copy successor staging boundary, and the `0071` recommendation zero-admission/cache-seal/preference-RPC boundary, passes with the catalog, profile-provenance, CAT-07, CAT-08, clinical-content-seal, lint-contract, adherence, sync-bridge, consent-draft-staging, and recommendation-zero-admission pgTAP contracts on the exact hosted staging revision before promotion, curation authorization, clinical publication, recommendation-mode opening, or campaign release.",
         "Barcode and search use service-role-only RPCs over the same positive source/product/correction/CAT-03 eligibility relation; `service_role` has no direct catalog-table read, while explicitly safe authenticated reads retain positive RLS.",
         "Only rows in the exact active global CAT-03 campaign with active campaign-scoped product authorization, reviewed `verified` or `usable` quality, recommendation eligibility, production/legal-approved sources, and zero independent product holds in `active` or `repair_attested` state can be served; untrusted open intake remains owner-scoped, and accepting, rejecting, closing, or deleting a report cannot release its hold.",
         "Barcode mappings are independently reviewed, direct authenticated reads cannot bypass source withdrawal, and every held/unknown reason returns the same no-match/manual fallback."
@@ -2175,6 +2384,7 @@
         "supabase/migrations/20260726000068_routine_adherence_authority.sql",
         "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
         "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
+        "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
         "supabase/tests/database/catalog_serving_gate.test.sql",
         "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "supabase/tests/database/catalog_launch_curation.test.sql",
@@ -2186,12 +2396,15 @@
         "supabase/tests/database/routine_adherence_authority.test.sql",
         "supabase/tests/database/routine_completion_sync_bridge.test.sql",
         "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
+        "supabase/tests/database/recommendation_zero_admission.test.sql",
         "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
         "supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql",
+        "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
         "supabase/tests/database/schema_contract.test.sql",
         "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql",
         "scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql",
+        "scripts/phase9/recommendation-zero-admission-smoke.mjs",
         "supabase/functions/catalog-lookup/index.ts",
         "supabase/functions/catalog-lookup/catalogContract.ts",
         "supabase/functions/catalog-lookup/catalogContract.test.ts",
@@ -2294,70 +2507,82 @@
           "sha256": "2e2abca7a88ab17992e7b3058d4b2f2c9ddbeb2accc59ae1cbf1a96b1b708706"
         },
         {
+          "path": "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
+          "exists": true,
+          "bytes": 14874,
+          "sha256": "4e3e0c46a246b97e98f014bf65499ea86b7f57119744466aebc8c1491331acc9"
+        },
+        {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
           "exists": true,
-          "bytes": 36567,
-          "sha256": "122a856982e0401fbc9dfd6587d0c650a27d15c31273439020cd4d666ee34bef"
+          "bytes": 36707,
+          "sha256": "1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9"
         },
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
           "exists": true,
-          "bytes": 109810,
-          "sha256": "21d798c24446aab1846b514039ac71d09af768aeed3aba49aa7562e18360c70c"
+          "bytes": 109814,
+          "sha256": "d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899"
         },
         {
           "path": "supabase/tests/database/catalog_launch_curation.test.sql",
           "exists": true,
-          "bytes": 201879,
-          "sha256": "36f2bfe54bc24795350576db03ad4a5caf0911de729a093c4dd813da9b0b1509"
+          "bytes": 202040,
+          "sha256": "2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376"
         },
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36074,
-          "sha256": "69601bdf3d674daa51059ba8519f0a2efda60400d5aff17249115044fc215adb"
+          "bytes": 36171,
+          "sha256": "d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24"
         },
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
-          "bytes": 73519,
-          "sha256": "9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7"
+          "bytes": 73521,
+          "sha256": "b07cc18913ab3be7fc5642a92027eca7a62389421347160141f2854a6372e38a"
         },
         {
           "path": "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
           "exists": true,
-          "bytes": 21310,
-          "sha256": "d3769a0f806f71ce3ae9468c3d5a6400e9fe33b685d3513c8a552f0a97e9eff9"
+          "bytes": 21302,
+          "sha256": "efc0e9f1bc95c733193d0d14ade039983705e322dae50b816acff2d9772fd591"
         },
         {
           "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
           "exists": true,
-          "bytes": 10087,
-          "sha256": "beff4edb8b7c4eebdfb7afaa664fc2c201aaa2175f0bef4a53835aa68f73639c"
+          "bytes": 10079,
+          "sha256": "e0ae64004b13eb5f4cf6e73a911e4b8d200e7f6ca7a8212549716c2439b09fd9"
         },
         {
           "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
           "exists": true,
-          "bytes": 3335,
-          "sha256": "f1fdfa4a048aed29ff4eac806bdffdcc4b9abb4b36e135ef02d89620f416f653"
+          "bytes": 3327,
+          "sha256": "1a437fe0dbe60900edac7eb0055df4c0b82ef7366887219a9e4a7cd987b5290a"
         },
         {
           "path": "supabase/tests/database/routine_adherence_authority.test.sql",
           "exists": true,
-          "bytes": 38297,
-          "sha256": "4bce87e1bc3b6c1c93216a0a421a75dfbc03c8276ad4c77b77d8049ff3bbc0f3"
+          "bytes": 38289,
+          "sha256": "b2fddf167c1c250700b8a2a31407d21e75c1c170fe174f5637096444cb82dbd5"
         },
         {
           "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
           "exists": true,
-          "bytes": 50468,
-          "sha256": "2f9cd59edf87f73e04cbc8b10320a32101180eb97036cbac5d2417e964e892a8"
+          "bytes": 50487,
+          "sha256": "888a04189fb5222991fe68b7b42232deb96a100b7fcb6bd44621cca9dae9cac9"
         },
         {
           "path": "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
           "exists": true,
-          "bytes": 13926,
-          "sha256": "690567e280ba547157bf5fb4f9c4b46e9379de604590eb9f67c6d1405e1bd973"
+          "bytes": 13953,
+          "sha256": "e7b6b6706be6b38a5db0cd0f69d065aec36aa00e0830b1ee1400d7da769bf069"
+        },
+        {
+          "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
+          "exists": true,
+          "bytes": 17931,
+          "sha256": "29f904aac21064dd5f5c2e8f3c7fa2a81417d3ffde26f5134f58e8b145b224b5"
         },
         {
           "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
@@ -2372,10 +2597,16 @@
           "sha256": "c714d1001be6ecb2579d4307621d0f45bcfdd1019c983551618cb42eb9a795db"
         },
         {
+          "path": "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+          "exists": true,
+          "bytes": 7912,
+          "sha256": "011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77"
+        },
+        {
           "path": "supabase/tests/database/schema_contract.test.sql",
           "exists": true,
-          "bytes": 36225,
-          "sha256": "351d42cfe6c37f01fb03bfc85f51df689649b6fbfddcfa14ebfa42cb87943c7a"
+          "bytes": 36217,
+          "sha256": "e7ddd60490c766ca593a9a6bed82226307577e906c62ddbdd59b19cd851c9764"
         },
         {
           "path": "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
@@ -2394,6 +2625,12 @@
           "exists": true,
           "bytes": 3956,
           "sha256": "859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e"
+        },
+        {
+          "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
+          "exists": true,
+          "bytes": 7831,
+          "sha256": "eb9e8caad7b98399af9ad7001b08e9a27eea01e614c8dd04a562eb63f6465865"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
@@ -2440,14 +2677,14 @@
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
           "exists": true,
-          "bytes": 45229,
-          "sha256": "e273a6080b0dcc8609cacd8eeff850056cec0069406c646b9ff87f17578a2414"
+          "bytes": 45248,
+          "sha256": "ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e"
         },
         {
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
-          "bytes": 16672,
-          "sha256": "8f187a947b4038edc9ffa3c70340580f2ad522b9584bd6bd4f962b32dec40787"
+          "bytes": 16921,
+          "sha256": "cfdf9a022f505fd8570dced36610f28c759bd869574913b87c033dcd74eebb80"
         }
       ]
     },
@@ -2537,8 +2774,8 @@
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
           "exists": true,
-          "bytes": 73519,
-          "sha256": "9c465a6b8c15dabf799913b2ae30f03b62ca61514cdcafbb372af39c78c652d7"
+          "bytes": 73521,
+          "sha256": "b07cc18913ab3be7fc5642a92027eca7a62389421347160141f2854a6372e38a"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",

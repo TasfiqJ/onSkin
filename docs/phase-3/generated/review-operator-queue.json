@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-26T22:16:45.424Z",
+  "generatedAt": "2026-07-29T08:24:04.082Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "5fd0a8a0975da3c537db533b54a9bf2400d452a9",
+  "gitSha": "6496d97775b58af5bd12eddc9cf7142d1a5c16ba",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 144125,
-    "sha256": "1bce183506c4478a53f763b21910409034cd7ac1fa0c0b1f4839a6b7f3563836",
-    "currentSha256": "1bce183506c4478a53f763b21910409034cd7ac1fa0c0b1f4839a6b7f3563836"
+    "sha256": "d6968068472f12b50c7e2e0ba1c24f010843b3676e5c3e47eaf1c18380d925b7",
+    "currentSha256": "d6968068472f12b50c7e2e0ba1c24f010843b3676e5c3e47eaf1c18380d925b7"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -665,7 +665,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "1b2e48199cedd418765c4b1cfe59661c6963f71012176236f90871fdc68c5c4e",
+      "reviewSnapshotSha256": "bb9e2ad2c4fb112e05868315ae7c1ffbcc1948129e9d21c438fef8aa025e3cf3",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -712,8 +712,8 @@
         {
           "path": "apps/mobile/src/features/commerce/commerceRoutes.test.ts",
           "exists": true,
-          "bytes": 7974,
-          "sha256": "81e737f3f9405d604fff015768213cbff8b3ff954fd1c97fa94572599133cd77"
+          "bytes": 8621,
+          "sha256": "c39cb98b09a609e825dc3e463ee125e968ddd7e98f7d1af19ff32ed1ac1a2cfb"
         },
         {
           "path": "apps/mobile/src/features/commerce/consent.test.ts",
@@ -790,8 +790,8 @@
         {
           "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
           "exists": true,
-          "bytes": 9240,
-          "sha256": "928812bf1f63a3af964dba397d94e52599474a9677b211f29202036939dccc90"
+          "bytes": 9445,
+          "sha256": "42147c464f5bfdd3c6b206c9e2814c387b784f7decc25e98b93d926451bcb1ca"
         },
         {
           "path": "supabase/functions/order-report-poll/index.ts",
@@ -1368,7 +1368,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "6f73785ea1f42650471625546e6a528479d4dcdc3c4a131f67965cc97cf7d4ad",
+      "reviewSnapshotSha256": "1a4e842170fbb594202db30edd3d655465ec423c55c50c2e0ebd95cbc3769e8c",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1421,8 +1421,8 @@
         {
           "path": "apps/mobile/src/features/scheduler/profile.ts",
           "exists": true,
-          "bytes": 5913,
-          "sha256": "c1e1a25237f4a710a5b77e19aa3e69eae4a4e94c2d31af39d42e71df2afc9492"
+          "bytes": 6605,
+          "sha256": "a29854d4894bd7920c0b050bcfe61ea066563cdf9df188ea717d7efb9a70cad2"
         },
         {
           "path": "apps/mobile/src/features/healthConsent/activationInterlock.test.ts",
@@ -1631,8 +1631,8 @@
         {
           "path": "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts",
           "exists": true,
-          "bytes": 11154,
-          "sha256": "28217188baf2053b08afe6edfa22c4cd281f6555acbf600731143d571fcfc2fa"
+          "bytes": 11578,
+          "sha256": "b4f0a759ae2d8f14b48f01f3700eec8ad9dcd92a2adcfd937e4bbdb84e2af270"
         },
         {
           "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.test.ts",
@@ -1643,8 +1643,8 @@
         {
           "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.ts",
           "exists": true,
-          "bytes": 19901,
-          "sha256": "e67edbcda17e7600089d2db6e967859cc203e3e2617b8b676483ab018bcb406f"
+          "bytes": 19927,
+          "sha256": "1b0af9d43eae6b98e7ffa633457910cef695c778f3f428d9b5a6b7b8c3b6407d"
         },
         {
           "path": "apps/mobile/src/lib/consent/withdrawal.test.ts",
@@ -2147,7 +2147,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "a276d5cf2997a49b313c00c120363548cb7b3b6d5878d8ce4bd0d2f1a5e5a92d",
+      "reviewSnapshotSha256": "d664febbe35ebc7046647f11608258d7a4885a12aaf0ed2295f162e0ec97f749",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2182,8 +2182,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 22647,
-          "sha256": "8ad537eafe9d6353f5558d2dd777c2c55b88300bd2c2dcafd0a969e7f7eb0ed4"
+          "bytes": 24385,
+          "sha256": "09d3eb6119b68909c9d34d23ddacf6c2ee9d79e0d35ecf277353c68d8b8224c3"
         }
       ]
     },
@@ -2200,7 +2200,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "ef10cc2e63c5537b84ce29b0d789896fa872f5253f277be97bf4cef66f8862c5",
+      "reviewSnapshotSha256": "33313868dcb1e46ebf4af9bf62b5001208f19ebabe468a98863c492a7ccfc9a8",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2211,8 +2211,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/catalog.ts",
           "exists": true,
-          "bytes": 9640,
-          "sha256": "113bb09a809c5cd381b8cfb5336542b887321bc7ba3b43373ff4d36342319062"
+          "bytes": 9187,
+          "sha256": "c51facef1b8d53e2c916de28b08910147b6afe2d1de3ba36f587ad9cc1f64ffa"
         }
       ]
     },
@@ -2418,7 +2418,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "07798ec0a1335acfb0b7532a3c64e6810cdcb85d22f2a882a371b0032cb8a163",
+      "reviewSnapshotSha256": "259344bc47052a68762108411af31f5b2ff83fab106f977f0f0595c837ac5614",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2507,14 +2507,14 @@
         {
           "path": "apps/mobile/src/features/scheduler/profile.test.ts",
           "exists": true,
-          "bytes": 10516,
-          "sha256": "743587c165158b22421d9b72b7e4dbebabbaad5f44b52114a175a90edb8f8f3d"
+          "bytes": 10906,
+          "sha256": "ca69bfb059f6d8d608574c05c49b88097afa69895bc6963c4823e766a1549985"
         },
         {
           "path": "apps/mobile/src/features/scheduler/profile.ts",
           "exists": true,
-          "bytes": 5913,
-          "sha256": "c1e1a25237f4a710a5b77e19aa3e69eae4a4e94c2d31af39d42e71df2afc9492"
+          "bytes": 6605,
+          "sha256": "a29854d4894bd7920c0b050bcfe61ea066563cdf9df188ea717d7efb9a70cad2"
         },
         {
           "path": "apps/mobile/src/features/scheduler/profileMapping.ts",
@@ -2555,8 +2555,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 22647,
-          "sha256": "8ad537eafe9d6353f5558d2dd777c2c55b88300bd2c2dcafd0a969e7f7eb0ed4"
+          "bytes": 24385,
+          "sha256": "09d3eb6119b68909c9d34d23ddacf6c2ee9d79e0d35ecf277353c68d8b8224c3"
         }
       ]
     },
@@ -2666,7 +2666,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "be279924bd3de3129d5b4e9314c350929ed4ffb0808389fe56c6f4f0a751162b",
+      "reviewSnapshotSha256": "2bd55d28d1873aeeddf0ff02af01ddacb3875862c62862b80695e7feff8ac234",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2677,8 +2677,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/catalog.ts",
           "exists": true,
-          "bytes": 9640,
-          "sha256": "113bb09a809c5cd381b8cfb5336542b887321bc7ba3b43373ff4d36342319062"
+          "bytes": 9187,
+          "sha256": "c51facef1b8d53e2c916de28b08910147b6afe2d1de3ba36f587ad9cc1f64ffa"
         }
       ]
     },
