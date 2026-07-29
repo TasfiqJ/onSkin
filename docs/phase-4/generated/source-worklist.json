@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-29T18:58:41.147Z",
+  "generatedAt": "2026-07-29T19:50:37.292Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "52097f237b8a9efb707c4b99c4530d25a1d530ab",
+  "gitSha": "d9ebed9fdbf20e87d4d1154720371dab37170569",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -505,14 +505,14 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17967,
-          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
+          "bytes": 17993,
+          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 60110,
-          "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
+          "bytes": 60082,
+          "sha256": "0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483"
         },
         {
           "path": "docs/store-privacy-inventory.md",
@@ -771,14 +771,14 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17967,
-          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
+          "bytes": 17993,
+          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 60110,
-          "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
+          "bytes": 60082,
+          "sha256": "0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483"
         },
         {
           "path": "docs/store-privacy-inventory.md",
@@ -1186,8 +1186,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 42839,
-          "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
+          "bytes": 43019,
+          "sha256": "cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -1234,14 +1234,14 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17967,
-          "sha256": "20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23"
+          "bytes": 17993,
+          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 60110,
-          "sha256": "d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd"
+          "bytes": 60082,
+          "sha256": "0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483"
         },
         {
           "path": "docs/store-privacy-inventory.md",
@@ -2086,8 +2086,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 470834,
-          "sha256": "6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f"
+          "bytes": 472929,
+          "sha256": "3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",

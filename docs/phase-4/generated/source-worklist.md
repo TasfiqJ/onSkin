@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-29T18:58:41.147Z
+Generated: 2026-07-29T19:50:37.292Z
 Status: pass
-Git SHA: 52097f237b8a9efb707c4b99c4530d25a1d530ab
+Git SHA: d9ebed9fdbf20e87d4d1154720371dab37170569
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -171,8 +171,8 @@ Sources:
 - `docs/phase-4/catalog-curation-review.template.json` - 22649 bytes - sha256 `4dcf0f76ece3ceee0328e0a97dff39a460d270474074b8abe1d5b9f568fb46f9`
 - `docs/phase-4/catalog-cat02-membership-proof.template.json` - 9254 bytes - sha256 `e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56`
 - `docs/phase-4/catalog-curation-database-readback.template.json` - 8239 bytes - sha256 `9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a`
-- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
-- `docs/phase-3/data-inventory.md` - 60110 bytes - sha256 `d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd`
+- `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
+- `docs/phase-3/data-inventory.md` - 60082 bytes - sha256 `0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483`
 - `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `docs/phase-4/catalog-source-release-runbook.md` - 14878 bytes - sha256 `ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620`
 - `scripts/phase4/catalog-curation-contract.mjs` - 229798 bytes - sha256 `22acca7d8bbb543c77bb8ececef160185f4bad2ab17de0c41f717b03d5552627`
@@ -238,8 +238,8 @@ Sources:
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45248 bytes - sha256 `ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e`
 - `docs/phase-4/catalog-cat02-membership-proof.template.json` - 9254 bytes - sha256 `e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56`
 - `docs/phase-4/catalog-curation-database-readback.template.json` - 8239 bytes - sha256 `9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a`
-- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
-- `docs/phase-3/data-inventory.md` - 60110 bytes - sha256 `d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd`
+- `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
+- `docs/phase-3/data-inventory.md` - 60082 bytes - sha256 `0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483`
 - `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `scripts/phase4/beta-coverage-report.mjs` - 41079 bytes - sha256 `7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1`
 - `scripts/phase4/beta-coverage-report-smoke.mjs` - 11145 bytes - sha256 `5296dda1c926ddbb7021a91251db2405f9748534d63f76d488e7b71ebd16120c`
@@ -326,7 +326,7 @@ Required evidence:
 Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
-- `package.json` - 42839 bytes - sha256 `a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270`
+- `package.json` - 43019 bytes - sha256 `cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239`
 - `.github/workflows/quality.yml` - 11249 bytes - sha256 `034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45248 bytes - sha256 `ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9408 bytes - sha256 `e53c6c5d2715392dab63930046836e1c7b832a007419508a778dd085c54846c1`
@@ -334,8 +334,8 @@ Sources:
 - `docs/phase-4/catalog-curation-review.template.json` - 22649 bytes - sha256 `4dcf0f76ece3ceee0328e0a97dff39a460d270474074b8abe1d5b9f568fb46f9`
 - `docs/phase-4/catalog-cat02-membership-proof.template.json` - 9254 bytes - sha256 `e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56`
 - `docs/phase-4/catalog-curation-database-readback.template.json` - 8239 bytes - sha256 `9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a`
-- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
-- `docs/phase-3/data-inventory.md` - 60110 bytes - sha256 `d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd`
+- `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
+- `docs/phase-3/data-inventory.md` - 60082 bytes - sha256 `0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483`
 - `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `scripts/phase4/catalog-curation-contract.mjs` - 229798 bytes - sha256 `22acca7d8bbb543c77bb8ececef160185f4bad2ab17de0c41f717b03d5552627`
 - `scripts/phase4/catalog-curation-contract.test.mjs` - 114891 bytes - sha256 `a7d2e97697d96f619bc47b0a1ac3a843834dd018bb9262df0a052e8c1cad1eb4`
@@ -505,7 +505,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66848 bytes - sha256 `8e6c801570fc9943abc80b61f0d49f5f130090627c979f04e2017bd4f18123c6`
-- `docs/USER_FLOW_TREE.md` - 470834 bytes - sha256 `6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f`
+- `docs/USER_FLOW_TREE.md` - 472929 bytes - sha256 `3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c`
 - `apps/mobile/src/app/onboarding/products.tsx` - 15830 bytes - sha256 `d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b`
 - `apps/mobile/src/app/shelf/[id].tsx` - 45428 bytes - sha256 `1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18279 bytes - sha256 `f6def4491f22caae90590351f50f424c38397a8d6c8b6d2c3f77d7d8c0346f6d`

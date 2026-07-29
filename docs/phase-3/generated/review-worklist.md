@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-29T18:58:27.240Z
+Generated: 2026-07-29T19:50:30.594Z
 Status: pass
-Git SHA: 52097f237b8a9efb707c4b99c4530d25a1d530ab
+Git SHA: d9ebed9fdbf20e87d4d1154720371dab37170569
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 39
-- Source files hashed: 440
+- Source files hashed: 442
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -38,7 +38,7 @@ reviewers must inspect before launch gates can close.
 | clinical          | Shoppable stacks                                  | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | clinical          | Community notes and posts                         | Not cleared | TBD      | TBD  | not-applicable | 17      | 0               |
 | clinical          | Ask OnSkin deterministic answers                  | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
-| clinical          | Trend analysis                                    | Not cleared | TBD      | TBD  | not-applicable | 15      | 0               |
+| clinical          | Trend analysis                                    | Not cleared | TBD      | TBD  | not-applicable | 16      | 0               |
 | clinical          | Photo progress copy                               | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | clinical          | Onboarding quiz                                   | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
 | clinical          | Consent copy                                      | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
@@ -52,7 +52,7 @@ reviewers must inspect before launch gates can close.
 | cosmeticChemistry | Smart shelf labels                                | Not cleared | TBD      | TBD  | not-applicable | 31      | 0               |
 | privacySecurity   | Health-data consent and withdrawal                | Blocked     | TBD      | TBD  | not-applicable | 63      | 0               |
 | privacySecurity   | Photo privacy and local storage                   | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
-| privacySecurity   | Trend and cloud-backup consent                    | Blocked     | TBD      | TBD  | not-applicable | 16      | 0               |
+| privacySecurity   | Trend and cloud-backup consent                    | Blocked     | TBD      | TBD  | not-applicable | 17      | 0               |
 | privacySecurity   | Ask, commerce, and community consent              | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
 | privacySecurity   | Account deletion and data export                  | Blocked     | TBD      | TBD  | not-applicable | 15      | 0               |
 | privacySecurity   | Analytics and crash payloads                      | Not cleared | TBD      | TBD  | not-applicable | 19      | 0               |
@@ -72,15 +72,15 @@ reviewers must inspect before launch gates can close.
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `1a66856cf884527b3622f7e9bf3e1111e7a3a46c49911e5738f222cdc9cde025`
+- Review snapshot SHA-256: `3cbb82a8c65e9865fce862c40f56a34b28f21bdbfdad344c53f2bba077e2b1e1`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Counsel must classify every exact release function and intended-use/claim surface; a disclaimer is not a device-classification safe harbor.
 
 Sources:
 
-- `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md` - 18119 bytes - sha256 `71621c8656ca5185501b65e3c43faef93caa4894af4cf1832852a8922360accf`
-- `docs/phase-3/regulatory-positioning-memo.md` - 8472 bytes - sha256 `e0118d857672f79febfbc4c19491f967e1624db92a89698db66d479d334d4c9a`
+- `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md` - 18597 bytes - sha256 `f365db66e5db9a4d0847de9c184558e946e21176587d587fc8bba6f8754c42d5`
+- `docs/phase-3/regulatory-positioning-memo.md` - 8907 bytes - sha256 `d0e67dde9ea011dd2846934f38f30b636b4233fccd4faf4773195c6a7016ea5d`
 - `docs/legal-readiness.md` - 16423 bytes - sha256 `0738dd5c741a5e666d0b3e0a0fdd0fd11cf3233ec69ede5a8b166c324cda1e7f`
 - `apps/mobile/src/lib/legal/disclaimer.ts` - 926 bytes - sha256 `b9cc550cb5802a61fbc0c782585b4fcc388719d2475e5f7d476005da4f26e174`
 
@@ -107,16 +107,16 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `570aaa59b41d9f7a7b57fe44cb37574a9957ed0fc7c9e9bc90d9b023c0f0db96`
+- Review snapshot SHA-256: `5db51fe3c2e854377612c444e19e653cb2337e7ceb4d9de57cadce81d3207369`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Requires final brand, support/policy URLs, privacy labels, medical-device declaration, IAP, reviewer access, and exact-build evidence.
 
 Sources:
 
-- `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md` - 18119 bytes - sha256 `71621c8656ca5185501b65e3c43faef93caa4894af4cf1832852a8922360accf`
+- `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md` - 18597 bytes - sha256 `f365db66e5db9a4d0847de9c184558e946e21176587d587fc8bba6f8754c42d5`
 - `docs/phase-3/store-metadata-review.md` - 2533 bytes - sha256 `eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1`
-- `docs/phase-3/app-review-notes.md` - 4875 bytes - sha256 `1d38121d118b40a00c71de955766d1f1ddaf38d09b6c56e4e75e31d1de43827d`
+- `docs/phase-3/app-review-notes.md` - 5319 bytes - sha256 `c7e521b926db2c8d3cdc62c9962538ed92da5822c8b1146ba1a1952a59bb7453`
 - `docs/phase-3/google-play-health-declaration-notes.md` - 1901 bytes - sha256 `12329457687f1d91a80099badea762832c3e123cfcf8dc82ce739c8ed1fb5658`
 - `apps/mobile/src/lib/legal/storeMetadata.ts` - 7852 bytes - sha256 `eb209dc51a5639c1eaae942a9c5426a3044b15a49e0db8e636d3775f55acbb7c`
 
@@ -392,28 +392,29 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `08605ceb521ec510079258754cc5fa6b369c996ce06a67336bb9ddb20cfd483e`
+- Review snapshot SHA-256: `31288c3e3f44cb7a3f987423224f5ebe3f5d833b181331b01bf152b605b658f8`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Requires real engine, calibration, fairness, privacy, clinical, legal, and device review before launch.
+- Review-log notes: Requires a real exact-build engine/issuer, measurement/failure evidence, predeclared diverse-condition fairness, exact claim/copy review, privacy/legal review, and supported-iPhone proof before launch.
 
 Sources:
 
-- `apps/mobile/src/features/trend/applyConsentChoice.test.ts` - 2646 bytes - sha256 `86e179a895d4f1c9d78b468c4d0450e7caf4679818549e5b849812a9187fcdd7`
-- `apps/mobile/src/features/trend/applyConsentChoice.ts` - 506 bytes - sha256 `8322b4a9b03c8edc25f6e07761ea4a923159edc90cf8002712aca36a815758a9`
-- `apps/mobile/src/features/trend/claimsafety.test.ts` - 5885 bytes - sha256 `15e1553b3f22d7585e7c2b507e745a2e3eb9b66566a781927f8b06900e86398d`
-- `apps/mobile/src/features/trend/consent.test.ts` - 2117 bytes - sha256 `d38f73eedc62e72285f015ffd150096ab87f1e0d358658a7e09570f0f5639c51`
-- `apps/mobile/src/features/trend/consent.ts` - 1022 bytes - sha256 `17975a720bbe22bd6ca95449308c0d8c33d54377bebd5c17c7956e38f7103acc`
+- `apps/mobile/src/features/trend/applyConsentChoice.test.ts` - 1828 bytes - sha256 `45a12c3ef0f7cb17830606f98365e59b77111f7e9e45241f2c1aa1539c80c14e`
+- `apps/mobile/src/features/trend/applyConsentChoice.ts` - 637 bytes - sha256 `3b960048debd59e0a0669167c408025159ad67cfd3f62076700fe78bcd429124`
+- `apps/mobile/src/features/trend/claimsafety.test.ts` - 5935 bytes - sha256 `72b6e24abefe92212523ecfe62877adea6ab0111870c1cd6a8f252591ac2cf0e`
+- `apps/mobile/src/features/trend/consent.test.ts` - 2518 bytes - sha256 `c8d5b14e464359308cc39cf16f880e77cff2184e0f0da36814256d9d937fb3ce`
+- `apps/mobile/src/features/trend/consent.ts` - 1227 bytes - sha256 `a4e37054dfc470c935ec45249c8f2bb58d75d5c55407dc3b238b9f1d6e055106`
 - `apps/mobile/src/features/trend/copy.ts` - 5381 bytes - sha256 `804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318`
-- `apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts` - 3425 bytes - sha256 `d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1`
+- `apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts` - 3420 bytes - sha256 `71eec188c7b7135d067ce1313be73dc4df8be5afc02fe3ec655fe44a81dac802`
 - `apps/mobile/src/features/trend/store.test.ts` - 2466 bytes - sha256 `ba5aff392e2b0cec9abf07ecf89a8b14415ff5923795f484990e42bfe2c06ad3`
 - `apps/mobile/src/features/trend/store.ts` - 2119 bytes - sha256 `7dff9753d4e1d2334a9e4b82be2eea727f8a16b5967051beeaefcffe69a7dc0e`
 - `apps/mobile/src/features/trend/trend.test.ts` - 3224 bytes - sha256 `797f4e43ac5724fce8c6df388bdd6c84514ff8a10626f6c7866b8fb47bf3733b`
 - `apps/mobile/src/features/trend/trend.ts` - 3598 bytes - sha256 `3a7c314b74b0ff8e166f1aa55f710745ad6d743793bc5f65441c1675d7aeb24d`
-- `apps/mobile/src/features/trend/TrendInsight.tsx` - 2322 bytes - sha256 `d033b5f0572da342702b29f72ee2864808757525f2804a688789c79661029c1b`
-- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 3695 bytes - sha256 `3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7`
-- `apps/mobile/src/features/trend/useTrend.test.ts` - 5917 bytes - sha256 `50c7a0286eba234cf717f348c87f608d5783db188294f1bd095d1f67b86b643e`
-- `apps/mobile/src/features/trend/useTrend.ts` - 4370 bytes - sha256 `fcd3bd8d434f15a63638e7852260f23a65309f997bd1daa45c57483dd041396e`
+- `apps/mobile/src/features/trend/TrendInsight.tsx` - 462 bytes - sha256 `0cb5fe60f475a09c85e89b5aea4dd8a5f0092b90f87191605c958f8d760723c5`
+- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 2544 bytes - sha256 `a74a7c0516aa57fb610e0339d85a740505fe8f203f30d7f93f5e1713ddcf298a`
+- `apps/mobile/src/features/trend/useTrend.test.ts` - 3959 bytes - sha256 `0900e378011668323b49eb2cd6a2054dfd7393ed62efa808badce8cf7fe72f72`
+- `apps/mobile/src/features/trend/useTrend.ts` - 2605 bytes - sha256 `f66040eaa2090ad36f2b35244e6c70814f6709981448e5210b5577ec71d98f75`
+- `docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md` - 21446 bytes - sha256 `1e1f85728bcea9e473bbe010f9f6bf0930b4c14f196a67378c6fc2ae6db359c3`
 
 ### clinical - Photo progress copy
 
@@ -641,14 +642,14 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `1a4e842170fbb594202db30edd3d655465ec423c55c50c2e0ebd95cbc3769e8c`
+- Review snapshot SHA-256: `6ff8df716a32727c9397fcb413d47ce89bf7efbd4dab0a44089ea5fcabea1b89`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review age -> consent -> goals ordering; immediate local/server freeze; exact deletion/preservation scope; legacy users; terminal-only fresh reconsent; installed-client rollout; minimized receipt retention; Supabase backup/restore; processor versioning; and final consumer-health notice.
 
 Sources:
 
-- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
+- `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
 - `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 37059 bytes - sha256 `c7fcaeb47bd9a53591c8f5b1a0dd78bbfb9045c54588cc382a27a27ed6120289`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3386 bytes - sha256 `491c5389e410aae42006b22705bb5c6426c813d048c47b10dec131c3b897801a`
@@ -690,7 +691,7 @@ Sources:
 - `apps/mobile/src/lib/consent/dependentConsentTransport.test.ts` - 4757 bytes - sha256 `3bd97c342b3950e38ad7aae57e3444911a1c826d4702a54073226b7a01a353ea`
 - `apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts` - 6586 bytes - sha256 `94a92e7970e8caba3fedae3ed3a160541c8c83122aaa54c5bdc97dff85dfab6f`
 - `apps/mobile/src/lib/consent/healthDataWriteAdmission.ts` - 5969 bytes - sha256 `f2b5741c792e52a2838f6b3344c084f2093163c332b67f21d485b95993ba51f6`
-- `apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts` - 11578 bytes - sha256 `b4f0a759ae2d8f14b48f01f3700eec8ad9dcd92a2adcfd937e4bbdb84e2af270`
+- `apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts` - 11528 bytes - sha256 `269eb1032b67e9b85ab254aacc0e1aafeffaab32fb115f1ae3cb6a40b9e19b5f`
 - `apps/mobile/src/lib/consent/healthProcessingEpoch.test.ts` - 23000 bytes - sha256 `c2f9f6ee09c1513a1c47324c5009af5c861afed6fa957c5ecfaa16ca99a79b06`
 - `apps/mobile/src/lib/consent/healthProcessingEpoch.ts` - 19927 bytes - sha256 `1b0af9d43eae6b98e7ffa633457910cef695c778f3f428d9b5a6b7b8c3b6407d`
 - `apps/mobile/src/lib/consent/withdrawal.test.ts` - 13554 bytes - sha256 `a8756f43ce2e8cd74c32d0cb1432e58844f0dcbe1f506549f015e4f985838df6`
@@ -736,29 +737,30 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `354a30830ddc17843f37ff644221663052c1039ff596b290f58ace2a4f51b6a7`
+- Review snapshot SHA-256: `335fb7a65917d3d35788522b794e6ed6f5a818cd3c7c1172dc3de34f61ec4dbc`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Fairness/legal review and live consent ledger evidence are required.
+- Review-log notes: Review the future real-engine data flow, separate exact consent, installed-base reconsent, inference classification, retention/backup/export/deletion, local-only archive/network proof, fairness, incident response, and App Privacy answers. Source refusal is not clearance.
 
 Sources:
 
-- `apps/mobile/src/features/trend/applyConsentChoice.test.ts` - 2646 bytes - sha256 `86e179a895d4f1c9d78b468c4d0450e7caf4679818549e5b849812a9187fcdd7`
-- `apps/mobile/src/features/trend/applyConsentChoice.ts` - 506 bytes - sha256 `8322b4a9b03c8edc25f6e07761ea4a923159edc90cf8002712aca36a815758a9`
-- `apps/mobile/src/features/trend/claimsafety.test.ts` - 5885 bytes - sha256 `15e1553b3f22d7585e7c2b507e745a2e3eb9b66566a781927f8b06900e86398d`
-- `apps/mobile/src/features/trend/consent.test.ts` - 2117 bytes - sha256 `d38f73eedc62e72285f015ffd150096ab87f1e0d358658a7e09570f0f5639c51`
-- `apps/mobile/src/features/trend/consent.ts` - 1022 bytes - sha256 `17975a720bbe22bd6ca95449308c0d8c33d54377bebd5c17c7956e38f7103acc`
+- `apps/mobile/src/features/trend/applyConsentChoice.test.ts` - 1828 bytes - sha256 `45a12c3ef0f7cb17830606f98365e59b77111f7e9e45241f2c1aa1539c80c14e`
+- `apps/mobile/src/features/trend/applyConsentChoice.ts` - 637 bytes - sha256 `3b960048debd59e0a0669167c408025159ad67cfd3f62076700fe78bcd429124`
+- `apps/mobile/src/features/trend/claimsafety.test.ts` - 5935 bytes - sha256 `72b6e24abefe92212523ecfe62877adea6ab0111870c1cd6a8f252591ac2cf0e`
+- `apps/mobile/src/features/trend/consent.test.ts` - 2518 bytes - sha256 `c8d5b14e464359308cc39cf16f880e77cff2184e0f0da36814256d9d937fb3ce`
+- `apps/mobile/src/features/trend/consent.ts` - 1227 bytes - sha256 `a4e37054dfc470c935ec45249c8f2bb58d75d5c55407dc3b238b9f1d6e055106`
 - `apps/mobile/src/features/trend/copy.ts` - 5381 bytes - sha256 `804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318`
-- `apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts` - 3425 bytes - sha256 `d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1`
+- `apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts` - 3420 bytes - sha256 `71eec188c7b7135d067ce1313be73dc4df8be5afc02fe3ec655fe44a81dac802`
 - `apps/mobile/src/features/trend/store.test.ts` - 2466 bytes - sha256 `ba5aff392e2b0cec9abf07ecf89a8b14415ff5923795f484990e42bfe2c06ad3`
 - `apps/mobile/src/features/trend/store.ts` - 2119 bytes - sha256 `7dff9753d4e1d2334a9e4b82be2eea727f8a16b5967051beeaefcffe69a7dc0e`
 - `apps/mobile/src/features/trend/trend.test.ts` - 3224 bytes - sha256 `797f4e43ac5724fce8c6df388bdd6c84514ff8a10626f6c7866b8fb47bf3733b`
 - `apps/mobile/src/features/trend/trend.ts` - 3598 bytes - sha256 `3a7c314b74b0ff8e166f1aa55f710745ad6d743793bc5f65441c1675d7aeb24d`
-- `apps/mobile/src/features/trend/TrendInsight.tsx` - 2322 bytes - sha256 `d033b5f0572da342702b29f72ee2864808757525f2804a688789c79661029c1b`
-- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 3695 bytes - sha256 `3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7`
-- `apps/mobile/src/features/trend/useTrend.test.ts` - 5917 bytes - sha256 `50c7a0286eba234cf717f348c87f608d5783db188294f1bd095d1f67b86b643e`
-- `apps/mobile/src/features/trend/useTrend.ts` - 4370 bytes - sha256 `fcd3bd8d434f15a63638e7852260f23a65309f997bd1daa45c57483dd041396e`
+- `apps/mobile/src/features/trend/TrendInsight.tsx` - 462 bytes - sha256 `0cb5fe60f475a09c85e89b5aea4dd8a5f0092b90f87191605c958f8d760723c5`
+- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 2544 bytes - sha256 `a74a7c0516aa57fb610e0339d85a740505fe8f203f30d7f93f5e1713ddcf298a`
+- `apps/mobile/src/features/trend/useTrend.test.ts` - 3959 bytes - sha256 `0900e378011668323b49eb2cd6a2054dfd7393ed62efa808badce8cf7fe72f72`
+- `apps/mobile/src/features/trend/useTrend.ts` - 2605 bytes - sha256 `f66040eaa2090ad36f2b35244e6c70814f6709981448e5210b5577ec71d98f75`
 - `apps/mobile/src/features/photos/consent.ts` - 1267 bytes - sha256 `2349c73a64860f76611e7e72017bdd15de7a3bf068e348bcfdc39cd977a72100`
+- `docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md` - 21446 bytes - sha256 `1e1f85728bcea9e473bbe010f9f6bf0930b4c14f196a67378c6fc2ae6db359c3`
 
 ### privacySecurity - Ask, commerce, and community consent
 
@@ -766,7 +768,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `27b7d2be2627102e1de57485c3ea60f32d8b817875c40b5aadb10747e426b2f2`
+- Review snapshot SHA-256: `bf7d80f3edc334e90edde892bea3e0a4f2d82e9aab839b3626de2b5a0eb93f1f`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Vendor/partner sharing and withdrawal copy must be reviewed.
@@ -776,7 +778,7 @@ Sources:
 - `apps/mobile/src/features/ask/consent.ts` - 833 bytes - sha256 `ba732d8c83bd8951f2c33a11ef7555bd2d6ee23dd1b02d6bfb8de20cd219885b`
 - `apps/mobile/src/features/commerce/consent.ts` - 1227 bytes - sha256 `355ba414c9719156b12c5772e9550d986f64b312395f82dde8e313e20ab1b5ef`
 - `apps/mobile/src/features/community/consent.ts` - 1121 bytes - sha256 `9bacdd40ad62d380a482bb4de5f911c62b87a03002d95ac8b4f4fb7d6a2ae8c6`
-- `docs/phase-3/consent-matrix.md` - 17967 bytes - sha256 `20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23`
+- `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
 
 ### privacySecurity - Account deletion and data export
 
@@ -846,7 +848,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `5b7c15fe8bd9aef35fea2de540ed76de60c4d7749d3a2d7a1567d330a718638a`
+- Review snapshot SHA-256: `2d36da6647b9149e36004982c0680dbf7b89898ca943da8c8cbf0cd0e169ee2f`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Verify Apple/Google auth, Supabase DPA/region/backups, observed SDK traffic, processor/subprocessor contracts, HBNR posture, breach contacts, retention, deletion APIs, and RLS.
@@ -903,7 +905,7 @@ Sources:
 - `apps/mobile/src/lib/auth/sessionOwner.ts` - 7773 bytes - sha256 `b402808213bd63d665228e1ed013b62ce7781e0e3fc66b7985275836fccbda44`
 - `apps/mobile/src/lib/auth/sessionOwnerKey.ts` - 361 bytes - sha256 `8685503a2c910754e2baf87a5d86b5551004d64ecd2952d21800cc20ee2c5f6a`
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
-- `docs/phase-3/data-inventory.md` - 60110 bytes - sha256 `d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd`
+- `docs/phase-3/data-inventory.md` - 60082 bytes - sha256 `0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3386 bytes - sha256 `491c5389e410aae42006b22705bb5c6426c813d048c47b10dec131c3b897801a`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 37059 bytes - sha256 `c7fcaeb47bd9a53591c8f5b1a0dd78bbfb9045c54588cc382a27a27ed6120289`
 
@@ -973,14 +975,14 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `245c39dc1ed92bfb8018d8d620dd09461b74e3ed3e84aa8fdc5846f4ac9cb832`
+- Review snapshot SHA-256: `60640c0b706c74b947cf01e3245639998c648be31c89cc74d270f1bb28dcb886`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm copy avoids competitor confusion and unsupported superiority.
 
 Sources:
 
-- `docs/phase-3/regulatory-positioning-memo.md` - 8472 bytes - sha256 `e0118d857672f79febfbc4c19491f967e1624db92a89698db66d479d334d4c9a`
+- `docs/phase-3/regulatory-positioning-memo.md` - 8907 bytes - sha256 `d0e67dde9ea011dd2846934f38f30b636b4233fccd4faf4773195c6a7016ea5d`
 - `docs/phase-3/store-metadata-review.md` - 2533 bytes - sha256 `eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1`
 - `docs/14-growth-to-seven-figures.md` - 57855 bytes - sha256 `a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0`
 
