@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T19:00:05.524Z",
+  "generatedAt": "2026-07-29T19:54:01.271Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -166,6 +166,18 @@
       "exactPayloadConfirmationRequired": true,
       "rawPrivateFieldsAllowed": false,
       "analyticsAllowed": false
+    },
+    "trendInsightAdmission": {
+      "trendInsightAdmitted": false,
+      "validatedOnDeviceEngineAvailable": false,
+      "resultIssuerAvailable": false,
+      "calibrationAuthorityAvailable": false,
+      "fairnessAuthorityAvailable": false,
+      "simulatedMetricsAllowed": false,
+      "contentAnalyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false,
+      "cloudPhotoProcessingAllowed": false,
+      "scoreAgeGradePercentageAllowed": false
     }
   },
   "platformStatus": {
@@ -176,7 +188,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "a0100a289f1da48290697a8c7a936e758bdc0680",
+  "gitSha": "da14bb50b4882e63275051159b867930c6f38603",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
@@ -283,8 +295,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 42839,
-      "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
+      "bytes": 43019,
+      "sha256": "cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239"
     },
     {
       "path": "package-lock.json",
@@ -313,8 +325,8 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 5899,
-      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
+      "bytes": 6343,
+      "sha256": "49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72"
     },
     {
       "path": "docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md",
@@ -325,8 +337,8 @@
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 12227,
-      "sha256": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f"
+      "bytes": 13431,
+      "sha256": "bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -805,8 +817,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 470834,
-      "sha256": "6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f"
+      "bytes": 472929,
+      "sha256": "3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
