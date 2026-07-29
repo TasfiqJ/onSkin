@@ -1,8 +1,28 @@
 {
   "status": "not-run",
+  "sourceSha": null,
+  "workflowRunId": null,
+  "workflowRunAttempt": null,
+  "ref": null,
+  "actor": null,
+  "triggeringActor": null,
+  "repository": null,
+  "workflow": null,
+  "event": null,
+  "buildIds": {
+    "ios": null
+  },
   "appEnvironment": "production",
-  "supabaseHost": "your-project-ref.supabase.co",
+  "expectedSupabaseProjectRef": null,
+  "actualSupabaseProjectRef": null,
+  "supabaseHost": null,
   "userEdgeBodyMaxBytes": 16384,
+  "requestTimeoutSeconds": 20,
+  "responseMaxBytes": 16384,
+  "accountDeletionPreflight": "authenticated-live-clear-missing-invalid-stale",
+  "accountDeletionPositiveLifecycle": "delegated-to-phase9-live-data-rights",
+  "accountDeletionAuthorizedWorker": "delegated-to-reviewed-cron-evidence",
+  "healthConsentAuthorizedWorker": "delegated-to-reviewed-cron-evidence",
   "checks": [],
   "warnings": [
     "Live Edge auth harness not run; set PHASE9_RUN_LIVE_EDGE_AUTH=true with staging credentials."
