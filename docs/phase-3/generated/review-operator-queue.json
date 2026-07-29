@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-29T08:24:04.082Z",
+  "generatedAt": "2026-07-29T18:47:06.721Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
-  "strict": false,
-  "gitSha": "6496d97775b58af5bd12eddc9cf7142d1a5c16ba",
+  "strict": true,
+  "gitSha": "c80e3b58495077805a7d1e6474822b377a8d434d",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 144125,
-    "sha256": "d6968068472f12b50c7e2e0ba1c24f010843b3676e5c3e47eaf1c18380d925b7",
-    "currentSha256": "d6968068472f12b50c7e2e0ba1c24f010843b3676e5c3e47eaf1c18380d925b7"
+    "bytes": 145761,
+    "sha256": "82a4dca92c22c089776ff268b85b2395c8e5ab454123f024d4a20929445ed9fc",
+    "currentSha256": "82a4dca92c22c089776ff268b85b2395c8e5ab454123f024d4a20929445ed9fc"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -451,7 +451,7 @@
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "ca93a49bb1ed223bf32bf5001a6d0dd97d949e304defabdae88ad760647894cb",
+      "reviewSnapshotSha256": "1a7d1458c68210d2d1057be20cd2b99ac4354d03bd89aea088ee9b4824a6b5cb",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -474,32 +474,74 @@
         {
           "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
           "exists": true,
-          "bytes": 4805,
-          "sha256": "ddb8ff9e7f80174551f791df14febe07aedbf3f0866c9b636b606692cf869b12"
+          "bytes": 4280,
+          "sha256": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/publicLinkAdmission.test.ts",
+          "exists": true,
+          "bytes": 1401,
+          "sha256": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/publicLinkAdmission.ts",
+          "exists": true,
+          "bytes": 1278,
+          "sha256": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+          "exists": true,
+          "bytes": 1775,
+          "sha256": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+          "exists": true,
+          "bytes": 2280,
+          "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
         },
         {
           "path": "apps/mobile/src/features/growth/shareCard.test.ts",
           "exists": true,
-          "bytes": 5266,
-          "sha256": "e5e46d4018c95d6b7c14a1239acd51108b830618a0332824737a9bd7b4e0ca82"
+          "bytes": 1667,
+          "sha256": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b"
         },
         {
           "path": "apps/mobile/src/features/growth/shareCard.ts",
           "exists": true,
-          "bytes": 1967,
-          "sha256": "e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436"
+          "bytes": 405,
+          "sha256": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac"
         },
         {
           "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
           "exists": true,
-          "bytes": 1493,
-          "sha256": "c80cc63f6212343b749773c0d936797970f3c1b09eacd9a115050c294f68f033"
+          "bytes": 1958,
+          "sha256": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareLinks.test.ts",
+          "exists": true,
+          "bytes": 1434,
+          "sha256": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706"
         },
         {
           "path": "apps/mobile/src/features/growth/shareLinks.ts",
           "exists": true,
-          "bytes": 864,
-          "sha256": "fb87d418754d6c1590a181db32dada60e1885fd8006da0e38d9b96a95febf3e8"
+          "bytes": 318,
+          "sha256": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+          "exists": true,
+          "bytes": 3366,
+          "sha256": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareProjection.ts",
+          "exists": true,
+          "bytes": 3922,
+          "sha256": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b"
         },
         {
           "path": "docs/14-growth-to-seven-figures.md",

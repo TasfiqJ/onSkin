@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T08:24:05.492Z",
+  "generatedAt": "2026-07-29T18:47:12.145Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -70,39 +70,134 @@
       "review_prompts",
       "creator_links",
       "paid_measurement"
-    ]
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    }
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "6496d97775b58af5bd12eddc9cf7142d1a5c16ba",
+  "gitSha": "c80e3b58495077805a7d1e6474822b377a8d434d",
   "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 42442,
-      "sha256": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1"
+      "bytes": 42839,
+      "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
     },
     {
       "packet": "packetContract",
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 4451,
-      "sha256": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b"
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "packet": "packetContract",
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 8713,
-      "sha256": "1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9"
+      "bytes": 12227,
+      "sha256": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f"
     },
     {
       "packet": "packetContract",
       "path": "scripts/phase3/build-review-packet.mjs",
       "exists": true,
-      "bytes": 14222,
-      "sha256": "4d47966e43d2e19cb8a29603eb2be01434274f2575b82e2818e1ebf74c052c49"
+      "bytes": 16255,
+      "sha256": "7c719417fb680f5894e7c8dfeef4d590bbc320a2e54a6b914704dd31c98af4ba"
     },
     {
       "packet": "packetContract",
@@ -290,8 +385,8 @@
       "packet": "legalRegulatory",
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 4451,
-      "sha256": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b"
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "packet": "legalRegulatory",
@@ -456,6 +551,216 @@
     },
     {
       "packet": "legalRegulatory",
+      "path": "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md",
+      "exists": true,
+      "bytes": 9943,
+      "sha256": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+      "exists": true,
+      "bytes": 2280,
+      "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+      "exists": true,
+      "bytes": 1775,
+      "sha256": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.ts",
+      "exists": true,
+      "bytes": 1278,
+      "sha256": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.test.ts",
+      "exists": true,
+      "bytes": 1401,
+      "sha256": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareProjection.ts",
+      "exists": true,
+      "bytes": 3922,
+      "sha256": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+      "exists": true,
+      "bytes": 3366,
+      "sha256": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
+      "exists": true,
+      "bytes": 4280,
+      "sha256": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareCard.ts",
+      "exists": true,
+      "bytes": 405,
+      "sha256": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareCard.test.ts",
+      "exists": true,
+      "bytes": 1667,
+      "sha256": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareLinks.ts",
+      "exists": true,
+      "bytes": 318,
+      "sha256": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareLinks.test.ts",
+      "exists": true,
+      "bytes": 1434,
+      "sha256": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
+      "exists": true,
+      "bytes": 1958,
+      "sha256": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/cardCopy.ts",
+      "exists": true,
+      "bytes": 1017,
+      "sha256": "e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/growth/cardCopy.test.ts",
+      "exists": true,
+      "bytes": 2319,
+      "sha256": "c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/intelligence/conflictIdentity.ts",
+      "exists": true,
+      "bytes": 878,
+      "sha256": "06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/features/intelligence/conflictRoutes.test.ts",
+      "exists": true,
+      "bytes": 15285,
+      "sha256": "5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 539,
+      "sha256": "a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 25335,
+      "sha256": "18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/app/s/[shareId].tsx",
+      "exists": true,
+      "bytes": 1198,
+      "sha256": "1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 5153,
+      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "exists": true,
+      "bytes": 7770,
+      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/lib/launch/phase8.ts",
+      "exists": true,
+      "bytes": 2237,
+      "sha256": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/lib/launch/phase8.test.ts",
+      "exists": true,
+      "bytes": 2313,
+      "sha256": "7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 6982,
+      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "apps/mobile/src/lib/env.test.ts",
+      "exists": true,
+      "bytes": 8126,
+      "sha256": "d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "docs/phase-8/public-site/share.html",
+      "exists": true,
+      "bytes": 1634,
+      "sha256": "45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 35923,
+      "sha256": "9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "scripts/core07/share-admission-source-contract.mjs",
+      "exists": true,
+      "bytes": 34840,
+      "sha256": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d"
+    },
+    {
+      "packet": "legalRegulatory",
+      "path": "scripts/core07/share-admission-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 11145,
+      "sha256": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3"
+    },
+    {
+      "packet": "legalRegulatory",
       "path": "apps/mobile/src/lib/legal/disclaimer.ts",
       "exists": true,
       "bytes": 926,
@@ -493,29 +798,36 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 144125,
-      "sha256": "d6968068472f12b50c7e2e0ba1c24f010843b3676e5c3e47eaf1c18380d925b7"
+      "bytes": 145761,
+      "sha256": "82a4dca92c22c089776ff268b85b2395c8e5ab454123f024d4a20929445ed9fc"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 93691,
-      "sha256": "b26c1c3ad9dae530080d2c5184f46c99ef8c76b345b5e4d15d5f7f101ae0f6d6"
+      "bytes": 94719,
+      "sha256": "2bf45230d680496c47d20afdf5ff7898ea6bf5b64ac070dc0f4df2ff93cc4d74"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 146970,
-      "sha256": "0c78c27f9995bec499c205b2fd02a6768419b2a4768c3c27c4ba703c7702418d"
+      "bytes": 148606,
+      "sha256": "19be7022a80b30d0b2678208ea2739f6f1e2b11302a643687519e25b494cd726"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 107795,
-      "sha256": "24082d8bd0cbf9d56f07c9b1608ac18d7431df04a09a55c5700b031916dc7389"
+      "bytes": 108823,
+      "sha256": "9341a77cb402e6855905d701699d6512e968200b14fbc78c9f4a094a08bd51b4"
+    },
+    {
+      "packet": "clinical",
+      "path": "docs/hugeToDo/launch-contract.json",
+      "exists": true,
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "packet": "clinical",
@@ -694,6 +1006,216 @@
     },
     {
       "packet": "clinical",
+      "path": "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md",
+      "exists": true,
+      "bytes": 9943,
+      "sha256": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+      "exists": true,
+      "bytes": 2280,
+      "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+      "exists": true,
+      "bytes": 1775,
+      "sha256": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.ts",
+      "exists": true,
+      "bytes": 1278,
+      "sha256": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.test.ts",
+      "exists": true,
+      "bytes": 1401,
+      "sha256": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareProjection.ts",
+      "exists": true,
+      "bytes": 3922,
+      "sha256": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+      "exists": true,
+      "bytes": 3366,
+      "sha256": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
+      "exists": true,
+      "bytes": 4280,
+      "sha256": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareCard.ts",
+      "exists": true,
+      "bytes": 405,
+      "sha256": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareCard.test.ts",
+      "exists": true,
+      "bytes": 1667,
+      "sha256": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareLinks.ts",
+      "exists": true,
+      "bytes": 318,
+      "sha256": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareLinks.test.ts",
+      "exists": true,
+      "bytes": 1434,
+      "sha256": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
+      "exists": true,
+      "bytes": 1958,
+      "sha256": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/cardCopy.ts",
+      "exists": true,
+      "bytes": 1017,
+      "sha256": "e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/growth/cardCopy.test.ts",
+      "exists": true,
+      "bytes": 2319,
+      "sha256": "c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/intelligence/conflictIdentity.ts",
+      "exists": true,
+      "bytes": 878,
+      "sha256": "06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/features/intelligence/conflictRoutes.test.ts",
+      "exists": true,
+      "bytes": 15285,
+      "sha256": "5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 539,
+      "sha256": "a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 25335,
+      "sha256": "18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/app/s/[shareId].tsx",
+      "exists": true,
+      "bytes": 1198,
+      "sha256": "1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 5153,
+      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "exists": true,
+      "bytes": 7770,
+      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/lib/launch/phase8.ts",
+      "exists": true,
+      "bytes": 2237,
+      "sha256": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/lib/launch/phase8.test.ts",
+      "exists": true,
+      "bytes": 2313,
+      "sha256": "7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 6982,
+      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
+    },
+    {
+      "packet": "clinical",
+      "path": "apps/mobile/src/lib/env.test.ts",
+      "exists": true,
+      "bytes": 8126,
+      "sha256": "d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9"
+    },
+    {
+      "packet": "clinical",
+      "path": "docs/phase-8/public-site/share.html",
+      "exists": true,
+      "bytes": 1634,
+      "sha256": "45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834"
+    },
+    {
+      "packet": "clinical",
+      "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 35923,
+      "sha256": "9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed"
+    },
+    {
+      "packet": "clinical",
+      "path": "scripts/core07/share-admission-source-contract.mjs",
+      "exists": true,
+      "bytes": 34840,
+      "sha256": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d"
+    },
+    {
+      "packet": "clinical",
+      "path": "scripts/core07/share-admission-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 11145,
+      "sha256": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3"
+    },
+    {
+      "packet": "clinical",
       "path": "apps/mobile/src/features/community/notes.ts",
       "exists": true,
       "bytes": 9194,
@@ -731,29 +1253,36 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 144125,
-      "sha256": "d6968068472f12b50c7e2e0ba1c24f010843b3676e5c3e47eaf1c18380d925b7"
+      "bytes": 145761,
+      "sha256": "82a4dca92c22c089776ff268b85b2395c8e5ab454123f024d4a20929445ed9fc"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 93691,
-      "sha256": "b26c1c3ad9dae530080d2c5184f46c99ef8c76b345b5e4d15d5f7f101ae0f6d6"
+      "bytes": 94719,
+      "sha256": "2bf45230d680496c47d20afdf5ff7898ea6bf5b64ac070dc0f4df2ff93cc4d74"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 146970,
-      "sha256": "0c78c27f9995bec499c205b2fd02a6768419b2a4768c3c27c4ba703c7702418d"
+      "bytes": 148606,
+      "sha256": "19be7022a80b30d0b2678208ea2739f6f1e2b11302a643687519e25b494cd726"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 107795,
-      "sha256": "24082d8bd0cbf9d56f07c9b1608ac18d7431df04a09a55c5700b031916dc7389"
+      "bytes": 108823,
+      "sha256": "9341a77cb402e6855905d701699d6512e968200b14fbc78c9f4a094a08bd51b4"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "docs/hugeToDo/launch-contract.json",
+      "exists": true,
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "packet": "cosmeticChemistry",
@@ -939,6 +1468,216 @@
     },
     {
       "packet": "cosmeticChemistry",
+      "path": "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md",
+      "exists": true,
+      "bytes": 9943,
+      "sha256": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+      "exists": true,
+      "bytes": 2280,
+      "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+      "exists": true,
+      "bytes": 1775,
+      "sha256": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.ts",
+      "exists": true,
+      "bytes": 1278,
+      "sha256": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.test.ts",
+      "exists": true,
+      "bytes": 1401,
+      "sha256": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareProjection.ts",
+      "exists": true,
+      "bytes": 3922,
+      "sha256": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+      "exists": true,
+      "bytes": 3366,
+      "sha256": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
+      "exists": true,
+      "bytes": 4280,
+      "sha256": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareCard.ts",
+      "exists": true,
+      "bytes": 405,
+      "sha256": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareCard.test.ts",
+      "exists": true,
+      "bytes": 1667,
+      "sha256": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareLinks.ts",
+      "exists": true,
+      "bytes": 318,
+      "sha256": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareLinks.test.ts",
+      "exists": true,
+      "bytes": 1434,
+      "sha256": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
+      "exists": true,
+      "bytes": 1958,
+      "sha256": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/cardCopy.ts",
+      "exists": true,
+      "bytes": 1017,
+      "sha256": "e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/growth/cardCopy.test.ts",
+      "exists": true,
+      "bytes": 2319,
+      "sha256": "c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/intelligence/conflictIdentity.ts",
+      "exists": true,
+      "bytes": 878,
+      "sha256": "06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/features/intelligence/conflictRoutes.test.ts",
+      "exists": true,
+      "bytes": 15285,
+      "sha256": "5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 539,
+      "sha256": "a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 25335,
+      "sha256": "18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/app/s/[shareId].tsx",
+      "exists": true,
+      "bytes": 1198,
+      "sha256": "1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 5153,
+      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "exists": true,
+      "bytes": 7770,
+      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/lib/launch/phase8.ts",
+      "exists": true,
+      "bytes": 2237,
+      "sha256": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/lib/launch/phase8.test.ts",
+      "exists": true,
+      "bytes": 2313,
+      "sha256": "7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 6982,
+      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "apps/mobile/src/lib/env.test.ts",
+      "exists": true,
+      "bytes": 8126,
+      "sha256": "d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "docs/phase-8/public-site/share.html",
+      "exists": true,
+      "bytes": 1634,
+      "sha256": "45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 35923,
+      "sha256": "9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "scripts/core07/share-admission-source-contract.mjs",
+      "exists": true,
+      "bytes": 34840,
+      "sha256": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d"
+    },
+    {
+      "packet": "cosmeticChemistry",
+      "path": "scripts/core07/share-admission-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 11145,
+      "sha256": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3"
+    },
+    {
+      "packet": "cosmeticChemistry",
       "path": "apps/mobile/src/features/commerce/stacks.ts",
       "exists": true,
       "bytes": 3159,
@@ -967,6 +1706,13 @@
     },
     {
       "packet": "ipFto",
+      "path": "docs/hugeToDo/launch-contract.json",
+      "exists": true,
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
+    },
+    {
+      "packet": "ipFto",
       "path": "apps/mobile/src/features/onboarding/quiz.ts",
       "exists": true,
       "bytes": 9591,
@@ -985,6 +1731,216 @@
       "exists": true,
       "bytes": 5609,
       "sha256": "8c64e3a6e1ea7fe776310c381e8c8dfb7669f045de88feabbd540a1fb720789c"
+    },
+    {
+      "packet": "ipFto",
+      "path": "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md",
+      "exists": true,
+      "bytes": 9943,
+      "sha256": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+      "exists": true,
+      "bytes": 2280,
+      "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+      "exists": true,
+      "bytes": 1775,
+      "sha256": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.ts",
+      "exists": true,
+      "bytes": 1278,
+      "sha256": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.test.ts",
+      "exists": true,
+      "bytes": 1401,
+      "sha256": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareProjection.ts",
+      "exists": true,
+      "bytes": 3922,
+      "sha256": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+      "exists": true,
+      "bytes": 3366,
+      "sha256": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
+      "exists": true,
+      "bytes": 4280,
+      "sha256": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareCard.ts",
+      "exists": true,
+      "bytes": 405,
+      "sha256": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareCard.test.ts",
+      "exists": true,
+      "bytes": 1667,
+      "sha256": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareLinks.ts",
+      "exists": true,
+      "bytes": 318,
+      "sha256": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareLinks.test.ts",
+      "exists": true,
+      "bytes": 1434,
+      "sha256": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
+      "exists": true,
+      "bytes": 1958,
+      "sha256": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/cardCopy.ts",
+      "exists": true,
+      "bytes": 1017,
+      "sha256": "e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/growth/cardCopy.test.ts",
+      "exists": true,
+      "bytes": 2319,
+      "sha256": "c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/intelligence/conflictIdentity.ts",
+      "exists": true,
+      "bytes": 878,
+      "sha256": "06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/features/intelligence/conflictRoutes.test.ts",
+      "exists": true,
+      "bytes": 15285,
+      "sha256": "5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 539,
+      "sha256": "a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 25335,
+      "sha256": "18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/app/s/[shareId].tsx",
+      "exists": true,
+      "bytes": 1198,
+      "sha256": "1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 5153,
+      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "exists": true,
+      "bytes": 7770,
+      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/lib/launch/phase8.ts",
+      "exists": true,
+      "bytes": 2237,
+      "sha256": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/lib/launch/phase8.test.ts",
+      "exists": true,
+      "bytes": 2313,
+      "sha256": "7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 6982,
+      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
+    },
+    {
+      "packet": "ipFto",
+      "path": "apps/mobile/src/lib/env.test.ts",
+      "exists": true,
+      "bytes": 8126,
+      "sha256": "d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9"
+    },
+    {
+      "packet": "ipFto",
+      "path": "docs/phase-8/public-site/share.html",
+      "exists": true,
+      "bytes": 1634,
+      "sha256": "45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834"
+    },
+    {
+      "packet": "ipFto",
+      "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 35923,
+      "sha256": "9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed"
+    },
+    {
+      "packet": "ipFto",
+      "path": "scripts/core07/share-admission-source-contract.mjs",
+      "exists": true,
+      "bytes": 34840,
+      "sha256": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d"
+    },
+    {
+      "packet": "ipFto",
+      "path": "scripts/core07/share-admission-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 11145,
+      "sha256": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3"
     },
     {
       "packet": "privacyPlatform",
@@ -1041,6 +1997,13 @@
       "exists": true,
       "bytes": 22214,
       "sha256": "8424ffa22560bc3a82d0b820cc79d509e2de54dea5c1a0ae353ad09ada160d3f"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "docs/hugeToDo/launch-contract.json",
+      "exists": true,
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "packet": "privacyPlatform",
@@ -1230,6 +2193,216 @@
       "exists": true,
       "bytes": 32016,
       "sha256": "c845f060a7a18f514eacfb5476ce0f5aa8696dc76692cf2a2feb45332b91e3c7"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md",
+      "exists": true,
+      "bytes": 9943,
+      "sha256": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+      "exists": true,
+      "bytes": 2280,
+      "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+      "exists": true,
+      "bytes": 1775,
+      "sha256": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.ts",
+      "exists": true,
+      "bytes": 1278,
+      "sha256": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.test.ts",
+      "exists": true,
+      "bytes": 1401,
+      "sha256": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareProjection.ts",
+      "exists": true,
+      "bytes": 3922,
+      "sha256": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+      "exists": true,
+      "bytes": 3366,
+      "sha256": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
+      "exists": true,
+      "bytes": 4280,
+      "sha256": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareCard.ts",
+      "exists": true,
+      "bytes": 405,
+      "sha256": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareCard.test.ts",
+      "exists": true,
+      "bytes": 1667,
+      "sha256": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareLinks.ts",
+      "exists": true,
+      "bytes": 318,
+      "sha256": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareLinks.test.ts",
+      "exists": true,
+      "bytes": 1434,
+      "sha256": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
+      "exists": true,
+      "bytes": 1958,
+      "sha256": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/cardCopy.ts",
+      "exists": true,
+      "bytes": 1017,
+      "sha256": "e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/growth/cardCopy.test.ts",
+      "exists": true,
+      "bytes": 2319,
+      "sha256": "c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/intelligence/conflictIdentity.ts",
+      "exists": true,
+      "bytes": 878,
+      "sha256": "06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/features/intelligence/conflictRoutes.test.ts",
+      "exists": true,
+      "bytes": 15285,
+      "sha256": "5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 539,
+      "sha256": "a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 25335,
+      "sha256": "18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/app/s/[shareId].tsx",
+      "exists": true,
+      "bytes": 1198,
+      "sha256": "1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 5153,
+      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "exists": true,
+      "bytes": 7770,
+      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/lib/launch/phase8.ts",
+      "exists": true,
+      "bytes": 2237,
+      "sha256": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/lib/launch/phase8.test.ts",
+      "exists": true,
+      "bytes": 2313,
+      "sha256": "7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 6982,
+      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "apps/mobile/src/lib/env.test.ts",
+      "exists": true,
+      "bytes": 8126,
+      "sha256": "d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "docs/phase-8/public-site/share.html",
+      "exists": true,
+      "bytes": 1634,
+      "sha256": "45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 35923,
+      "sha256": "9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "scripts/core07/share-admission-source-contract.mjs",
+      "exists": true,
+      "bytes": 34840,
+      "sha256": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "scripts/core07/share-admission-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 11145,
+      "sha256": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3"
     },
     {
       "packet": "privacyPlatform",

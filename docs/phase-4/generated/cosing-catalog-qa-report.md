@@ -1,12 +1,12 @@
 # Catalog QA Report
 
-Generated: 2026-07-29T08:24:10.571Z
+Generated: 2026-07-29T18:47:28.256Z
 
 Source: cosing
 
 Transform status: fixture
 
-Git SHA: 6496d97775b58af5bd12eddc9cf7142d1a5c16ba
+Git SHA: c80e3b58495077805a7d1e6474822b377a8d434d
 
 Build-source Git SHA: not verified
 
@@ -38,15 +38,15 @@ Launch clear reason: No. Source-transform QA is only one gate; launch still requ
 | --- | --- | ---: | --- |
 | .gitignore | present | 1644 | 066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a |
 | .github/workflows/quality.yml | present | 11249 | 034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb |
-| package.json | present | 42442 | fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1 |
+| package.json | present | 42839 | a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270 |
 | package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
 | apps/mobile/app.config.js | present | 18109 | 4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c |
 | apps/mobile/app.base.json | present | 4123 | c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f |
 | apps/mobile/eas.json | present | 1477 | 074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051 |
 | apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
 | apps/mobile/phase3-review-evidence.js | present | 28497 | e6dbe67277b536a4cf3e6ba5eb3e3682d2caffe455c624088890e862b2796c93 |
-| docs/hugeToDo/launch-contract.json | present | 4451 | 3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b |
-| scripts/launch/contract.mjs | present | 8713 | 1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9 |
+| docs/hugeToDo/launch-contract.json | present | 5899 | 7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea |
+| scripts/launch/contract.mjs | present | 12227 | 72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f |
 | scripts/phase4/catalog-qa-report.mjs | present | 27119 | c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09 |
 | scripts/phase4/build-source-worklist.mjs | present | 45862 | 9771b7f30ba4347828e0293fc7e8381b204e779f5dbd0520aebbdb45cb099cfc |
 | scripts/phase4/beta-coverage-report.mjs | present | 41079 | 7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1 |

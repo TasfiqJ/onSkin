@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-07-29T08:24:00.954Z
+Generated: 2026-07-29T18:46:51.234Z
 Status: pass
 Strict mode: yes
 
@@ -25,10 +25,10 @@ the top-level packet markdown shape changes without updating the audit.
 
 | Packet doc                     | Active docs status | AGENTS.md | CLAUDE.md | Packet SHA-256 |
 | ------------------------------ | ------------------ | --------- | --------- | -------------- |
-| ARCHITECTURE.md                | identical          | yes       | yes       | 637703f0354a   |
+| ARCHITECTURE.md                | identical          | yes       | yes       | 25b90a0a7039   |
 | CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | b9d05d45ec32   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | 90bad2f86fea   |
+| DECISIONS.md                   | identical          | yes       | yes       | f65de35d74aa   |
 | FEATURE_INDEX.md               | identical          | yes       | yes       | 345c1ee3e62f   |
 | MASTER_PLAN.md                 | identical          | yes       | yes       | e97e645fcd52   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
@@ -49,10 +49,10 @@ the top-level packet markdown shape changes without updating the audit.
 | ------------------------------------------------ | ----- | ------------ |
 | 04_repo_docs/AGENTS.md                           | 3385  | ef580a3f1d66 |
 | 04_repo_docs/README.md                           | 2924  | b7ebba84d0dd |
-| 04_repo_docs/docs/ARCHITECTURE.md                | 42153 | 637703f0354a |
+| 04_repo_docs/docs/ARCHITECTURE.md                | 44027 | 25b90a0a7039 |
 | 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 8670  | b9d05d45ec32 |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
-| 04_repo_docs/docs/DECISIONS.md                   | 80573 | 90bad2f86fea |
+| 04_repo_docs/docs/DECISIONS.md                   | 82988 | f65de35d74aa |
 | 04_repo_docs/docs/FEATURE_INDEX.md               | 7221  | 345c1ee3e62f |
 | 04_repo_docs/docs/MASTER_PLAN.md                 | 62071 | e97e645fcd52 |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |

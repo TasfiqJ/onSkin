@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-29T08:24:06.640Z
+Generated: 2026-07-29T18:47:16.817Z
 Status: pass
-Git SHA: 6496d97775b58af5bd12eddc9cf7142d1a5c16ba
+Git SHA: c80e3b58495077805a7d1e6474822b377a8d434d
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -326,7 +326,7 @@ Required evidence:
 Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
-- `package.json` - 42442 bytes - sha256 `fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1`
+- `package.json` - 42839 bytes - sha256 `a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270`
 - `.github/workflows/quality.yml` - 11249 bytes - sha256 `034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45248 bytes - sha256 `ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9408 bytes - sha256 `e53c6c5d2715392dab63930046836e1c7b832a007419508a778dd085c54846c1`
@@ -505,7 +505,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66848 bytes - sha256 `8e6c801570fc9943abc80b61f0d49f5f130090627c979f04e2017bd4f18123c6`
-- `docs/USER_FLOW_TREE.md` - 468010 bytes - sha256 `75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24`
+- `docs/USER_FLOW_TREE.md` - 470834 bytes - sha256 `6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f`
 - `apps/mobile/src/app/onboarding/products.tsx` - 15830 bytes - sha256 `d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b`
 - `apps/mobile/src/app/shelf/[id].tsx` - 45428 bytes - sha256 `1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18279 bytes - sha256 `f6def4491f22caae90590351f50f424c38397a8d6c8b6d2c3f77d7d8c0346f6d`

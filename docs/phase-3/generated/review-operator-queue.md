@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-29T08:24:04.082Z
+Generated: 2026-07-29T18:47:06.721Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 6496d97775b58af5bd12eddc9cf7142d1a5c16ba
+Git SHA: c80e3b58495077805a7d1e6474822b377a8d434d
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -32,7 +32,7 @@ names, credentials, dates, or legal/clinical decisions.
 | 4    | P0       | IP/FTO             | Catalog source and image rights                   | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 24      |
 | 5    | P0       | IP/FTO             | Native identifiers and callbacks                  | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 3       |
 | 6    | P0       | IP/FTO             | Onboarding quiz FTO                               | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
-| 7    | P0       | IP/FTO             | Share-card marks and deep links                   | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 9       |
+| 7    | P0       | IP/FTO             | Share-card marks and deep links                   | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 16      |
 | 8    | P0       | Legal/regulatory   | Ask and AI disclosures                            | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
 | 9    | P0       | Legal/regulatory   | Commerce and paid-link disclosure                 | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 21      |
 | 10   | P0       | Legal/regulatory   | Store metadata and review notes                   | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 5       |
@@ -215,7 +215,7 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ca93a49bb1ed223bf32bf5001a6d0dd97d949e304defabdae88ad760647894cb`
+- Review snapshot SHA-256: `1a7d1458c68210d2d1057be20cd2b99ac4354d03bd89aea088ee9b4824a6b5cb`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -225,11 +225,18 @@ Sources:
 
 - `apps/mobile/src/features/growth/cardCopy.test.ts` - 2319 bytes - sha256 `c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9`
 - `apps/mobile/src/features/growth/cardCopy.ts` - 1017 bytes - sha256 `e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776`
-- `apps/mobile/src/features/growth/ConflictCard.tsx` - 4805 bytes - sha256 `ddb8ff9e7f80174551f791df14febe07aedbf3f0866c9b636b606692cf869b12`
-- `apps/mobile/src/features/growth/shareCard.test.ts` - 5266 bytes - sha256 `e5e46d4018c95d6b7c14a1239acd51108b830618a0332824737a9bd7b4e0ca82`
-- `apps/mobile/src/features/growth/shareCard.ts` - 1967 bytes - sha256 `e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436`
-- `apps/mobile/src/features/growth/shareLandingRoute.test.ts` - 1493 bytes - sha256 `c80cc63f6212343b749773c0d936797970f3c1b09eacd9a115050c294f68f033`
-- `apps/mobile/src/features/growth/shareLinks.ts` - 864 bytes - sha256 `fb87d418754d6c1590a181db32dada60e1885fd8006da0e38d9b96a95febf3e8`
+- `apps/mobile/src/features/growth/ConflictCard.tsx` - 4280 bytes - sha256 `c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981`
+- `apps/mobile/src/features/growth/publicLinkAdmission.test.ts` - 1401 bytes - sha256 `01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23`
+- `apps/mobile/src/features/growth/publicLinkAdmission.ts` - 1278 bytes - sha256 `2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0`
+- `apps/mobile/src/features/growth/shareAdmission.test.ts` - 1775 bytes - sha256 `b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7`
+- `apps/mobile/src/features/growth/shareAdmission.ts` - 2280 bytes - sha256 `02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327`
+- `apps/mobile/src/features/growth/shareCard.test.ts` - 1667 bytes - sha256 `fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b`
+- `apps/mobile/src/features/growth/shareCard.ts` - 405 bytes - sha256 `a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac`
+- `apps/mobile/src/features/growth/shareLandingRoute.test.ts` - 1958 bytes - sha256 `f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0`
+- `apps/mobile/src/features/growth/shareLinks.test.ts` - 1434 bytes - sha256 `a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706`
+- `apps/mobile/src/features/growth/shareLinks.ts` - 318 bytes - sha256 `36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7`
+- `apps/mobile/src/features/growth/shareProjection.test.ts` - 3366 bytes - sha256 `1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4`
+- `apps/mobile/src/features/growth/shareProjection.ts` - 3922 bytes - sha256 `181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b`
 - `docs/14-growth-to-seven-figures.md` - 57855 bytes - sha256 `a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0`
 - `docs/brand-decision-memo.md` - 6469 bytes - sha256 `c2506dfb241232eb5bab07ed5aa4a5d24900790a36c54eed6af7d615d767b612`
 
