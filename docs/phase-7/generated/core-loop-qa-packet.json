@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T18:52:14.646Z",
+  "generatedAt": "2026-07-29T19:00:22.849Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -168,7 +168,7 @@
     }
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
+  "gitSha": "066fec8429c3ffa188719398d9eb6203763db83e",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -197,7 +197,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
+    "currentGitSha": "066fec8429c3ffa188719398d9eb6203763db83e",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -221,7 +221,7 @@
     },
     "phase5DeviceQa": {
       "status": "blocked",
-      "gitSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
+      "gitSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
       "errors": [
         "pinned Phase 5 device QA packet must contain an empty blockers array",
         "pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing",
@@ -241,7 +241,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
+    "headSha": "066fec8429c3ffa188719398d9eb6203763db83e",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -251,7 +251,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
+    "headSha": "066fec8429c3ffa188719398d9eb6203763db83e",
     "status": "blocked"
   },
   "scenarios": [
@@ -1519,25 +1519,25 @@
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 67134,
-      "sha256": "9073a63d41af5cbb80cd4bc10f4101ac3ad109384cfb6569d82ca2b5a76b0e9b"
+      "sha256": "6c5a8392a141b8bd7b4a386694af40b3d92eb735ad9034959e67ba6578456210"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 54005,
-      "sha256": "fa44a085025b1de90f723b160a756198c19abd7f4e9dc2d6aceaa30010cadd50"
+      "sha256": "fae02b1117440520afb208793ff8181969dfad1bd5bacdf0f466a56c8ee2625e"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 46459,
-      "sha256": "1fb2e6abb448babc5f3e688d1d2cee05fa431f0cfbe889bcb23e6856673084bb"
+      "sha256": "b8ac3ab8859450f99f61f13d2e72e4296cebbe30a518b5415bae1125fbf1a4d9"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 29731,
-      "sha256": "fb3d6b06a5a4e1de9bc637644aba5587bb32a62dc852c7dd4886af24aa559217"
+      "sha256": "68ef2e97dd73b8c641322d0b0f61d2fdeae44b456722fec480c3c552844db2db"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
