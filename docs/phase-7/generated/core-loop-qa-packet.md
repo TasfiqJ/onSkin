@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-29T08:27:39.992Z
-Git SHA: 3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3
+Generated at: 2026-07-29T18:52:14.646Z
+Git SHA: 8fc46e85a872a5b87f315048b3c1b36181d050a3
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -11,7 +11,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3`
+- Current R/F HEAD: `8fc46e85a872a5b87f315048b3c1b36181d050a3`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -23,7 +23,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 - Human-E2E manifest: blocked
 - Phase 5 device QA: blocked
-- Phase 5 recorded head: `90e8978932aa78a2c4e705b634978408b346de68`
+- Phase 5 recorded head: `9f037a57c73c639288a3d6c8057c4c61c6418862`
 
 ## Evidence
 
@@ -65,7 +65,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | Reminders | permission, quiet hours, Android 13+ permission, timezone/DST behavior verified | `PHASE7_REMINDERS_QA_PASS` | BLOCKED |
 | Payments | RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified | `PHASE7_PAYMENTS_LIFECYCLE_QA_PASS` | BLOCKED |
 | Privacy controls | export, account deletion, health-data withdrawal, app lock, support links verified | `PHASE7_PRIVACY_CONTROLS_QA_PASS` | BLOCKED |
-| Share card | exact owned reviewed conflict only; no fallback; no sensitive analytics payload | `PHASE7_SHARE_CARD_QA_PASS` | BLOCKED |
+| Share card | literal zero share and public-link admission: no capture, file, network, token, native share, record-implying landing state, raw/private projection, or analytics side effect | `PHASE7_SHARE_CARD_QA_PASS` | BLOCKED |
 | Deferred surfaces | commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled | `PHASE7_DEFERRED_SURFACES_QA_PASS` | BLOCKED |
 | Analytics | activation, retention, payment, privacy, support, and deferred-surface events visible | `PHASE7_ANALYTICS_QA_PASS` | BLOCKED |
 
@@ -73,15 +73,23 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 42442 | fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1 |
-| docs/hugeToDo/launch-contract.json | present | 4451 | 3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b |
+| package.json | present | 42839 | a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270 |
+| docs/hugeToDo/launch-contract.json | present | 5899 | 7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea |
 | docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md | present | 35333 | c852d2a97f979b23680069241b667ad2e15d7a7f298d364281955db8599888a2 |
+| docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md | present | 9943 | 36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab |
 | docs/09-personalized-recommendations.md | present | 46631 | 7d4544112256b1b026116a42357069ec3e4002c5bde7ef1b6612b82784fcd0f4 |
-| scripts/launch/contract.mjs | present | 8713 | 1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9 |
+| scripts/launch/contract.mjs | present | 12227 | 72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f |
+| scripts/core02/clinical-rule-source-contract.test.mjs | present | 35923 | 9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed |
 | scripts/core06/recommendation-admission-source-contract.test.mjs | present | 32016 | c845f060a7a18f514eacfb5476ce0f5aa8696dc76692cf2a2feb45332b91e3c7 |
+| scripts/core07/share-admission-source-contract.mjs | present | 34840 | ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d |
+| scripts/core07/share-admission-source-contract.test.mjs | present | 11145 | 8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3 |
 | scripts/phase9/recommendation-zero-admission-smoke.mjs | present | 7831 | eb9e8caad7b98399af9ad7001b08e9a27eea01e614c8dd04a562eb63f6465865 |
-| apps/mobile/src/lib/launch/phase7.ts | present | 6338 | 9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01 |
-| apps/mobile/src/lib/launch/phase7.test.ts | present | 8406 | 109e475d00d13808a70465189dee685c5097abd2b707dc928115a842010a7110 |
+| apps/mobile/src/lib/env.ts | present | 6982 | 22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31 |
+| apps/mobile/src/lib/env.test.ts | present | 8126 | d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9 |
+| apps/mobile/src/lib/launch/phase7.ts | present | 5153 | 693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3 |
+| apps/mobile/src/lib/launch/phase7.test.ts | present | 7770 | 5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166 |
+| apps/mobile/src/lib/launch/phase8.ts | present | 2237 | dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7 |
+| apps/mobile/src/lib/launch/phase8.test.ts | present | 2313 | 7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b |
 | apps/mobile/src/components/launch/DeferredSurface.tsx | present | 2320 | 6ff85a7cc8ac36e0566673132a0abef71e0e65e99af158c3439b61c9bb4b98b2 |
 | apps/mobile/src/components/launch/DeferredSurface.test.ts | present | 1224 | 28c8db73d114e25fb69fa533df1020bcfbf91df1e31036b12ee91040ff24c60d |
 | apps/mobile/src/lib/navigation/safeBack.ts | present | 1487 | a2e3143f42c223bb14acb27e97182a8582dc85342f44a8960c0c4adf4795ec12 |
@@ -96,11 +104,12 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/app/cycle/why-tonight.tsx | present | 9120 | 7e85c05e2157e53dbb88db012045056133b2f6a0b32dc47f797e6891a95559f3 |
 | apps/mobile/src/app/onboarding/products.tsx | present | 15830 | d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b |
 | apps/mobile/src/app/routine/plan.tsx | present | 19735 | a7a4e3c5dc34b3dd0811faefb6f67a1a6809a0e6396b16521d46497c334c9bfc |
-| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 6235 | c01a7d3b07823b92b83c4014da0b3ebbea4a0aecbd44abeb494b6a972abb92bd |
+| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 539 | a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473 |
+| apps/mobile/src/app/s/[shareId].tsx | present | 1198 | 1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2 |
 | apps/mobile/src/app/trend/_layout.tsx | present | 1091 | 84e2ebdcabfebf7ae274c6742f44841410376ff6dc62888561ffa52b4fe7b9ed |
 | apps/mobile/src/app/trend/fairness.tsx | present | 4963 | 7e4654db068f93519165002135b21efc3c275c097d970a4960890657662fc8e0 |
 | apps/mobile/src/app/trend/optin.tsx | present | 526 | 59e11ac2d24b435b45b77a07030733ec5bfc93bddeac993f23d915a02a6058b5 |
-| apps/mobile/src/app/conflict/[ruleId].tsx | present | 26400 | 0d8aecb155c99ddb206fdbef7e57dfe6910d7443492693957bbb2a7b27f96f17 |
+| apps/mobile/src/app/conflict/[ruleId].tsx | present | 25335 | 18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e |
 | apps/mobile/src/app/recommendations/[id].tsx | present | 9516 | 3e486837968cfecd86544a9e5a78a658854e26a541b4d7c04ed8c0460467326e |
 | apps/mobile/src/app/recommendations/index.tsx | present | 16524 | 44c0ddd92b98b8d98d51b204914f42a3238fcabdad4dbede9c836e6bab3e32b4 |
 | apps/mobile/src/app/recommendations/preferences.tsx | present | 14355 | d032c3c7198f8bf4c85406796a5e5cc2c38c05c33c440e2084d15f30c1e07a38 |
@@ -122,10 +131,26 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/features/ask/useAsk.ts | present | 5560 | 9f03da10e33b546052d7c0bea39b8f72cba70c28465f17eeca5bed79930b6727 |
 | apps/mobile/src/features/catalog/client.ts | present | 23827 | a134e2bb32ea3fde57ef7dbcbe987ef15a5010a440ec38700731a2ea339e9a0e |
 | apps/mobile/src/features/catalog/client.test.ts | present | 31695 | 42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297 |
+| apps/mobile/src/features/growth/shareAdmission.ts | present | 2280 | 02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327 |
+| apps/mobile/src/features/growth/shareAdmission.test.ts | present | 1775 | b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7 |
+| apps/mobile/src/features/growth/publicLinkAdmission.ts | present | 1278 | 2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0 |
+| apps/mobile/src/features/growth/publicLinkAdmission.test.ts | present | 1401 | 01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23 |
+| apps/mobile/src/features/growth/shareProjection.ts | present | 3922 | 181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b |
+| apps/mobile/src/features/growth/shareProjection.test.ts | present | 3366 | 1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4 |
+| apps/mobile/src/features/growth/ConflictCard.tsx | present | 4280 | c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981 |
+| apps/mobile/src/features/growth/shareCard.ts | present | 405 | a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac |
+| apps/mobile/src/features/growth/shareCard.test.ts | present | 1667 | fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b |
+| apps/mobile/src/features/growth/shareLinks.ts | present | 318 | 36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7 |
+| apps/mobile/src/features/growth/shareLinks.test.ts | present | 1434 | a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706 |
+| apps/mobile/src/features/growth/shareLandingRoute.test.ts | present | 1958 | f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0 |
+| apps/mobile/src/features/growth/cardCopy.ts | present | 1017 | e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776 |
+| apps/mobile/src/features/growth/cardCopy.test.ts | present | 2319 | c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9 |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 9445 | 42147c464f5bfdd3c6b206c9e2814c387b784f7decc25e98b93d926451bcb1ca |
 | apps/mobile/src/features/commerce/commerceRoutes.test.ts | present | 8621 | c39cb98b09a609e825dc3e463ee125e968ddd7e98f7d1af19ff32ed1ac1a2cfb |
 | apps/mobile/src/features/intelligence/pao.ts | present | 5160 | 32209515587ba1136c72abcd9703f25ef46c0aa6a289bff5fac685a08a0eafde |
 | apps/mobile/src/features/intelligence/pao.test.ts | present | 3875 | d4ff777e1b13717b1fd7b6d01a695070e34f065a311b1f98e04d3b0bb737a385 |
+| apps/mobile/src/features/intelligence/conflictIdentity.ts | present | 878 | 06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf |
+| apps/mobile/src/features/intelligence/conflictRoutes.test.ts | present | 15285 | 5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e |
 | apps/mobile/src/features/notifications/BehaviouralTriggers.tsx | present | 3485 | a1d607269e8beef3e56d0694fd80fb7f9f6f77b42278d7e7f5dc8cb1db4a5ffd |
 | apps/mobile/src/features/notifications/claimsafety.test.ts | present | 4506 | a60c1534edb7ac76c00faf543e833d5df5671685373e8475db80aa23a4d8ab5a |
 | apps/mobile/src/features/notifications/copy.ts | present | 5148 | 02aeba0b0c5edc670c169e4732aa94ba4960ba153c087ffdc9d617561955af38 |
@@ -212,11 +237,11 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | supabase/tests/database/cat07_truthful_freshness.test.sql | present | 36171 | d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24 |
 | supabase/tests/database/recommendation_zero_admission.test.sql | present | 17931 | 29f904aac21064dd5f5c2e8f3c7fa2a81417d3ffde26f5134f58e8b145b224b5 |
 | supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql | present | 7912 | 011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77 |
-| scripts/phase7/build-core-loop-qa-packet.mjs | present | 47179 | f472adeaec9983773e97e5dd3e22e6c94b8b120a5b19c6af9e71a8dd6f77ae23 |
-| scripts/phase7/check-core-loop.mjs | present | 30922 | 3736173b8971fbc9bffcbd85d63d97af2772b895a7154abcc3e82fbc84b15c9f |
-| scripts/phase7/check-core-loop-smoke.mjs | present | 34704 | c546277e8f46a174d7ce26604d8f55fbcef1303314a90501e47ad4a048d9b5cb |
+| scripts/phase7/build-core-loop-qa-packet.mjs | present | 49237 | bf4349ebdc049d5bb87e6c54e509d13f1c676f3155af4963ba81864480c46060 |
+| scripts/phase7/check-core-loop.mjs | present | 31071 | f6470c7627d0f583404433f629c63ce6456c9eff4a2877f15b8cc66efd36fe56 |
+| scripts/phase7/check-core-loop-smoke.mjs | present | 35175 | 06504cfde48c52c8a81e095505568e4edd2fe897cb0798d90a6f788e80f53e1b |
 | scripts/phase7/core-loop-qa-packet-contract.mjs | present | 1474 | 3cf50c30778d6704ef5e83debe4a8ab3d9e80f9bed04012fb4413a5270fcf994 |
-| scripts/phase7/core-loop-qa-packet-contract.test.mjs | present | 4011 | 54813e3c594264f8e9771463ac3613fcfb4a9a5ba9c94a8c9d2da2ca6b6046d9 |
+| scripts/phase7/core-loop-qa-packet-contract.test.mjs | present | 8842 | 24fec7274b0478d8d15f1fceb7bf131adfc1ad88b189debed51f04c804df7772 |
 | scripts/e2e/human-e2e-manifest.mjs | present | 365743 | de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615 |
 | scripts/e2e/human-e2e-manifest-render.mjs | present | 2593 | b868275b0ca1a3bb99ab681bf7b96e466b03aefd3d410c244a7d9a076fc5b41d |
 | scripts/e2e/human-e2e-manifest-contract.mjs | present | 3491 | 6e7f480614b95db86bcd3fd771a7de603cc4e1c9517fdd944c5846399e9bce0a |
@@ -239,20 +264,21 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase9/build-evidence-chain-ledger.test.mjs | present | 10832 | 97b39eff264003a715df958960f6b352f22b9061251a47e6fad69763558e0059 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10407 | 4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e |
 | docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
-| docs/USER_FLOW_TREE.md | present | 468010 | 75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24 |
+| docs/USER_FLOW_TREE.md | present | 470834 | 6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f |
 | docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md | present | 16934 | e8df50a7774196f97388b0b3aa0f29a0379c2b2380400f39b6e5350a40ecaf1f |
 | docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
 | docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
 | test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json | missing |  |  |
-| docs/phase-5/generated/device-qa-packet.json | present | 63979 | 7edfbff0c2f39e82e47fec0ba5d5617301bb7a0b3c6fa90c6f45153650eebb39 |
-| docs/phase-5/generated/device-qa-packet.md | present | 54005 | aff90827030fcddd435cde71253d164baf8a847a65cd4a0777351d6d25287abd |
-| docs/phase-6/generated/payments-qa-packet.json | present | 43304 | 6b5f7da57f5a2c7fb0f1e5ba37a4e856238a4a98b7c69eac5d4e73ec4b28ca7b |
-| docs/phase-6/generated/payments-qa-packet.md | present | 29730 | 1ff05c349bb03d40fe68b9dd30c3dc07f6daf6695f7376b9fb7cbc02470adb51 |
-| docs/phase-7/surface-inventory.md | present | 13288 | 14f1fa6df585ac7c8f1ae0d018218f9efec13139697a7bda0c48ec980f3ca0cd |
+| docs/phase-5/generated/device-qa-packet.json | present | 67134 | 9073a63d41af5cbb80cd4bc10f4101ac3ad109384cfb6569d82ca2b5a76b0e9b |
+| docs/phase-5/generated/device-qa-packet.md | present | 54005 | fa44a085025b1de90f723b160a756198c19abd7f4e9dc2d6aceaa30010cadd50 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 46459 | 1fb2e6abb448babc5f3e688d1d2cee05fa431f0cfbe889bcb23e6856673084bb |
+| docs/phase-6/generated/payments-qa-packet.md | present | 29731 | fb3d6b06a5a4e1de9bc637644aba5587bb32a62dc852c7dd4886af24aa559217 |
+| docs/phase-7/surface-inventory.md | present | 13983 | 6e786b9110a866ad89dc569e5bbcb029f97a08e7c55379ee06310223286e4d83 |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4972 | 8018b3cfa5f4c3c5092308a75854ac29e32f3a0c16deefc7f842eaa6e98a243e |
 | docs/phase-7/core-loop-qa-checklist.md | present | 67419 | a68a8abdd945bdc6ddb5f95e5333a568729f4e35f292e7398b2dd05ecac0fca3 |
 | docs/phase-7/phase-7-exit-review.md | present | 4844 | 4eae611b79c272251576743e6d999f1a84f540fb2dbe2a1049c1e0e9b2f48eba |
+| docs/phase-8/public-site/share.html | present | 1634 | 45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834 |
 
 ## Blockers
 
@@ -273,6 +299,8 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Human-E2E upstream manifest: human-E2E manifest must be one JSON object.
 - Human-E2E upstream manifest: fresh governed evidence-chain audit is not pass.
 - Missing test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json.
+- CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag may substitute for a positive immutable exact-content share receipt.
+- CORE-07A public links are not admitted; no token service, reviewed retention/revocation/deletion/abuse contract, or exact-destination confirmation is available.
 - CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.
 - CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).
 - CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T08:27:39.992Z",
+  "generatedAt": "2026-07-29T18:52:14.646Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -70,10 +70,105 @@
       "review_prompts",
       "creator_links",
       "paid_measurement"
-    ]
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    }
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3",
+  "gitSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -102,7 +197,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3",
+    "currentGitSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -126,7 +221,7 @@
     },
     "phase5DeviceQa": {
       "status": "blocked",
-      "gitSha": "90e8978932aa78a2c4e705b634978408b346de68",
+      "gitSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
       "errors": [
         "pinned Phase 5 device QA packet must contain an empty blockers array",
         "pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing",
@@ -146,7 +241,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3",
+    "headSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -156,7 +251,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3",
+    "headSha": "8fc46e85a872a5b87f315048b3c1b36181d050a3",
     "status": "blocked"
   },
   "scenarios": [
@@ -225,7 +320,7 @@
     },
     {
       "surface": "Share card",
-      "scenario": "exact owned reviewed conflict only; no fallback; no sensitive analytics payload",
+      "scenario": "literal zero share and public-link admission: no capture, file, network, token, native share, record-implying landing state, raw/private projection, or analytics side effect",
       "evidenceKey": "shareCardQaPass",
       "envKey": "PHASE7_SHARE_CARD_QA_PASS",
       "evidencePass": false
@@ -249,20 +344,26 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 42442,
-      "sha256": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1"
+      "bytes": 42839,
+      "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 4451,
-      "sha256": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b"
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "path": "docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md",
       "exists": true,
       "bytes": 35333,
       "sha256": "c852d2a97f979b23680069241b667ad2e15d7a7f298d364281955db8599888a2"
+    },
+    {
+      "path": "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md",
+      "exists": true,
+      "bytes": 9943,
+      "sha256": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab"
     },
     {
       "path": "docs/09-personalized-recommendations.md",
@@ -273,8 +374,14 @@
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 8713,
-      "sha256": "1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9"
+      "bytes": 12227,
+      "sha256": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f"
+    },
+    {
+      "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 35923,
+      "sha256": "9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed"
     },
     {
       "path": "scripts/core06/recommendation-admission-source-contract.test.mjs",
@@ -283,22 +390,58 @@
       "sha256": "c845f060a7a18f514eacfb5476ce0f5aa8696dc76692cf2a2feb45332b91e3c7"
     },
     {
+      "path": "scripts/core07/share-admission-source-contract.mjs",
+      "exists": true,
+      "bytes": 34840,
+      "sha256": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d"
+    },
+    {
+      "path": "scripts/core07/share-admission-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 11145,
+      "sha256": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3"
+    },
+    {
       "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
       "exists": true,
       "bytes": 7831,
       "sha256": "eb9e8caad7b98399af9ad7001b08e9a27eea01e614c8dd04a562eb63f6465865"
     },
     {
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 6982,
+      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
+    },
+    {
+      "path": "apps/mobile/src/lib/env.test.ts",
+      "exists": true,
+      "bytes": 8126,
+      "sha256": "d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9"
+    },
+    {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
       "exists": true,
-      "bytes": 6338,
-      "sha256": "9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01"
+      "bytes": 5153,
+      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.test.ts",
       "exists": true,
-      "bytes": 8406,
-      "sha256": "109e475d00d13808a70465189dee685c5097abd2b707dc928115a842010a7110"
+      "bytes": 7770,
+      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase8.ts",
+      "exists": true,
+      "bytes": 2237,
+      "sha256": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase8.test.ts",
+      "exists": true,
+      "bytes": 2313,
+      "sha256": "7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b"
     },
     {
       "path": "apps/mobile/src/components/launch/DeferredSurface.tsx",
@@ -387,8 +530,14 @@
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
       "exists": true,
-      "bytes": 6235,
-      "sha256": "c01a7d3b07823b92b83c4014da0b3ebbea4a0aecbd44abeb494b6a972abb92bd"
+      "bytes": 539,
+      "sha256": "a996efa45ca90843bb78b4f07e188d27f5e41bb37d146c7379e0a1c3881cc473"
+    },
+    {
+      "path": "apps/mobile/src/app/s/[shareId].tsx",
+      "exists": true,
+      "bytes": 1198,
+      "sha256": "1703e9e18281966cf0c6cf0d8d37524c80bfdc094da073eb04f8618da50af0f2"
     },
     {
       "path": "apps/mobile/src/app/trend/_layout.tsx",
@@ -411,8 +560,8 @@
     {
       "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
       "exists": true,
-      "bytes": 26400,
-      "sha256": "0d8aecb155c99ddb206fdbef7e57dfe6910d7443492693957bbb2a7b27f96f17"
+      "bytes": 25335,
+      "sha256": "18f00fd1e5f161dfda3cda01f952a5bc620e88598c7ed13ffdfa67c9d9587f4e"
     },
     {
       "path": "apps/mobile/src/app/recommendations/[id].tsx",
@@ -541,6 +690,90 @@
       "sha256": "42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297"
     },
     {
+      "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+      "exists": true,
+      "bytes": 2280,
+      "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+      "exists": true,
+      "bytes": 1775,
+      "sha256": "b91ac95fd984223a78d8cf7e90aafbecc93ca37b3720c998a2c74f9f50728db7"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.ts",
+      "exists": true,
+      "bytes": 1278,
+      "sha256": "2010dbd8de265052387c6d8930df10fc77f152aa3da1529622ed47b1adfc1ab0"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/publicLinkAdmission.test.ts",
+      "exists": true,
+      "bytes": 1401,
+      "sha256": "01dffc5dbcba810134a1f7939ff0212ef79fee924349008bde69a8ee43d05c23"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareProjection.ts",
+      "exists": true,
+      "bytes": 3922,
+      "sha256": "181032634536521b98caee66fabda609be3e3832f238bf1c73b4f42fca08ab6b"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+      "exists": true,
+      "bytes": 3366,
+      "sha256": "1bc71c2592968386a9d620c63fd33672c7fc78cf4f209b7344f0e1c83ffd03d4"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
+      "exists": true,
+      "bytes": 4280,
+      "sha256": "c507a02987606253932950df0066322a724edfccdc08286640882d0b660af981"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareCard.ts",
+      "exists": true,
+      "bytes": 405,
+      "sha256": "a7059162afa68ee7cdd765a117d5c8edee387eaf5a8d7d85c78ff23ee0faafac"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareCard.test.ts",
+      "exists": true,
+      "bytes": 1667,
+      "sha256": "fcecf1cd61bf89aa3693ac9bd3e1dde3432de81926f4d52598209ce36ded0e7b"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareLinks.ts",
+      "exists": true,
+      "bytes": 318,
+      "sha256": "36af63e30c40653b8940d7f8dbf89e7e6b451c3286b522181f77ff1f9a1127f7"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareLinks.test.ts",
+      "exists": true,
+      "bytes": 1434,
+      "sha256": "a995256a1740d32d2608a0bfab05d053a80ec07407dbe86090690808bb92c706"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
+      "exists": true,
+      "bytes": 1958,
+      "sha256": "f4a329de6c143ef8b1ea376bf5f778e13861d28880a6462f6f1f03183632b8f0"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/cardCopy.ts",
+      "exists": true,
+      "bytes": 1017,
+      "sha256": "e9f3d09dfa1ba628dd883088e2b67976eaa2164c3a509e5808f54435ef991776"
+    },
+    {
+      "path": "apps/mobile/src/features/growth/cardCopy.test.ts",
+      "exists": true,
+      "bytes": 2319,
+      "sha256": "c288a67751c6a181f80c8a93933f2aee36fd7d286d0f7f3faee72e42716d45c9"
+    },
+    {
       "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
       "exists": true,
       "bytes": 9445,
@@ -563,6 +796,18 @@
       "exists": true,
       "bytes": 3875,
       "sha256": "d4ff777e1b13717b1fd7b6d01a695070e34f065a311b1f98e04d3b0bb737a385"
+    },
+    {
+      "path": "apps/mobile/src/features/intelligence/conflictIdentity.ts",
+      "exists": true,
+      "bytes": 878,
+      "sha256": "06b94824e2a2b164d3b40f38e3106252cf0f796a34292d8dcbbdeba7d0c20ecf"
+    },
+    {
+      "path": "apps/mobile/src/features/intelligence/conflictRoutes.test.ts",
+      "exists": true,
+      "bytes": 15285,
+      "sha256": "5afea2b23b272edfca8978c717523530ea5d2729a29367876899a53171bd949e"
     },
     {
       "path": "apps/mobile/src/features/notifications/BehaviouralTriggers.tsx",
@@ -1083,20 +1328,20 @@
     {
       "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
       "exists": true,
-      "bytes": 47179,
-      "sha256": "f472adeaec9983773e97e5dd3e22e6c94b8b120a5b19c6af9e71a8dd6f77ae23"
+      "bytes": 49237,
+      "sha256": "bf4349ebdc049d5bb87e6c54e509d13f1c676f3155af4963ba81864480c46060"
     },
     {
       "path": "scripts/phase7/check-core-loop.mjs",
       "exists": true,
-      "bytes": 30922,
-      "sha256": "3736173b8971fbc9bffcbd85d63d97af2772b895a7154abcc3e82fbc84b15c9f"
+      "bytes": 31071,
+      "sha256": "f6470c7627d0f583404433f629c63ce6456c9eff4a2877f15b8cc66efd36fe56"
     },
     {
       "path": "scripts/phase7/check-core-loop-smoke.mjs",
       "exists": true,
-      "bytes": 34704,
-      "sha256": "c546277e8f46a174d7ce26604d8f55fbcef1303314a90501e47ad4a048d9b5cb"
+      "bytes": 35175,
+      "sha256": "06504cfde48c52c8a81e095505568e4edd2fe897cb0798d90a6f788e80f53e1b"
     },
     {
       "path": "scripts/phase7/core-loop-qa-packet-contract.mjs",
@@ -1107,8 +1352,8 @@
     {
       "path": "scripts/phase7/core-loop-qa-packet-contract.test.mjs",
       "exists": true,
-      "bytes": 4011,
-      "sha256": "54813e3c594264f8e9771463ac3613fcfb4a9a5ba9c94a8c9d2da2ca6b6046d9"
+      "bytes": 8842,
+      "sha256": "24fec7274b0478d8d15f1fceb7bf131adfc1ad88b189debed51f04c804df7772"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
@@ -1245,8 +1490,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 468010,
-      "sha256": "75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24"
+      "bytes": 470834,
+      "sha256": "6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f"
     },
     {
       "path": "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
@@ -1273,32 +1518,32 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 63979,
-      "sha256": "7edfbff0c2f39e82e47fec0ba5d5617301bb7a0b3c6fa90c6f45153650eebb39"
+      "bytes": 67134,
+      "sha256": "9073a63d41af5cbb80cd4bc10f4101ac3ad109384cfb6569d82ca2b5a76b0e9b"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 54005,
-      "sha256": "aff90827030fcddd435cde71253d164baf8a847a65cd4a0777351d6d25287abd"
+      "sha256": "fa44a085025b1de90f723b160a756198c19abd7f4e9dc2d6aceaa30010cadd50"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 43304,
-      "sha256": "6b5f7da57f5a2c7fb0f1e5ba37a4e856238a4a98b7c69eac5d4e73ec4b28ca7b"
+      "bytes": 46459,
+      "sha256": "1fb2e6abb448babc5f3e688d1d2cee05fa431f0cfbe889bcb23e6856673084bb"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 29730,
-      "sha256": "1ff05c349bb03d40fe68b9dd30c3dc07f6daf6695f7376b9fb7cbc02470adb51"
+      "bytes": 29731,
+      "sha256": "fb3d6b06a5a4e1de9bc637644aba5587bb32a62dc852c7dd4886af24aa559217"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
       "exists": true,
-      "bytes": 13288,
-      "sha256": "14f1fa6df585ac7c8f1ae0d018218f9efec13139697a7bda0c48ec980f3ca0cd"
+      "bytes": 13983,
+      "sha256": "6e786b9110a866ad89dc569e5bbcb029f97a08e7c55379ee06310223286e4d83"
     },
     {
       "path": "docs/phase-7/launch-claim-matrix.md",
@@ -1323,6 +1568,12 @@
       "exists": true,
       "bytes": 4844,
       "sha256": "4eae611b79c272251576743e6d999f1a84f540fb2dbe2a1049c1e0e9b2f48eba"
+    },
+    {
+      "path": "docs/phase-8/public-site/share.html",
+      "exists": true,
+      "bytes": 1634,
+      "sha256": "45bced7d455386121e569aff4bf40b20dfccda7e54b4cd62560a313d2031c834"
     }
   ],
   "blockers": [
@@ -1343,6 +1594,8 @@
     "Human-E2E upstream manifest: human-E2E manifest must be one JSON object.",
     "Human-E2E upstream manifest: fresh governed evidence-chain audit is not pass.",
     "Missing test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json.",
+    "CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag may substitute for a positive immutable exact-content share receipt.",
+    "CORE-07A public links are not admitted; no token service, reviewed retention/revocation/deletion/abuse contract, or exact-destination confirmation is available.",
     "CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.",
     "CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).",
     "CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.",
