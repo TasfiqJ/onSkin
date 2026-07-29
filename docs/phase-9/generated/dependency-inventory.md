@@ -1,7 +1,9 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-17T00:26:51.473Z
-Package count: 1100
+Generated: 2026-07-29T19:54:52.891Z
+Audit mode: not_run
+Audit completed: no
+Package count: 1102
 Lockfile version: 3
 
 ## Vulnerabilities
@@ -27,10 +29,11 @@ Lockfile version: 3
 ## Warnings
 
 - npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.
-- Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.
+- Missing registry-backed dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true after reviewing the exact RC scanner artifacts.
 
 ## Packages
 
+- `apps/catalog-operator-console` 0.1.0
 - `apps/mobile` 0.1.0
 - `expo-store-review` 56.0.3
 - `@adobe/css-tools` 4.5.0
@@ -188,6 +191,7 @@ Lockfile version: 3
 - `@nodelib/fs.stat` 2.0.5
 - `@nodelib/fs.walk` 1.2.8
 - `@nolyfill/is-core-module` 1.0.39
+- `@onskin/catalog-operator-console` unknown
 - `@onskin/mobile` unknown
 - `@onskin/types` unknown
 - `@oxc-project/types` 0.138.0
@@ -340,7 +344,7 @@ Lockfile version: 3
 - `@typescript-eslint/types` 8.61.0
 - `@typescript-eslint/typescript-estree` 8.61.0
 - `@typescript-eslint/typescript-estree/node_modules/balanced-match` 4.0.4
-- `@typescript-eslint/typescript-estree/node_modules/brace-expansion` 5.0.6
+- `@typescript-eslint/typescript-estree/node_modules/brace-expansion` 5.0.7
 - `@typescript-eslint/typescript-estree/node_modules/minimatch` 10.2.5
 - `@typescript-eslint/typescript-estree/node_modules/semver` 7.8.4
 - `@typescript-eslint/utils` 8.61.0
@@ -428,7 +432,7 @@ Lockfile version: 3
 - `binary-extensions` 2.3.0
 - `bplist-creator` 0.1.0
 - `bplist-parser` 0.3.2
-- `brace-expansion` 1.1.15
+- `brace-expansion` 1.1.16
 - `braces` 3.0.3
 - `browserslist` 4.28.2
 - `bser` 2.1.1
@@ -643,7 +647,7 @@ Lockfile version: 3
 - `glob` 13.0.6
 - `glob-parent` 6.0.2
 - `glob/node_modules/balanced-match` 4.0.4
-- `glob/node_modules/brace-expansion` 5.0.6
+- `glob/node_modules/brace-expansion` 5.0.7
 - `glob/node_modules/minimatch` 10.2.5
 - `globals` 14.0.0
 - `globalthis` 1.0.4
@@ -728,7 +732,7 @@ Lockfile version: 3
 - `jose` 6.2.3
 - `jpeg-js` 0.4.4
 - `js-tokens` 4.0.0
-- `js-yaml` 4.2.0
+- `js-yaml` 4.3.0
 - `jsc-safe-url` 0.2.4
 - `jsesc` 3.1.0
 - `json-buffer` 3.0.1
@@ -995,7 +999,7 @@ Lockfile version: 3
 - `shallowequal` 1.1.0
 - `shebang-command` 2.0.0
 - `shebang-regex` 3.0.0
-- `shell-quote` 1.8.4
+- `shell-quote` 1.10.0
 - `side-channel` 1.1.1
 - `side-channel-list` 1.0.1
 - `side-channel-map` 1.0.1
