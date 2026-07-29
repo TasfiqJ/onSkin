@@ -1,8 +1,8 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-29T18:59:30.006Z
+Generated: 2026-07-29T19:53:21.558Z
 Status: blocked
-Git SHA: 923c00fc5edd6ca06eb8f7de333c5dc40ab57987
+Git SHA: 36cda4b0a7bd1790df80abe9caef721546aefe58
 Git status: clean
 
 
@@ -11,7 +11,7 @@ Git status: clean
 - Status: blocked
 - Source S: BLOCKED
 - Evidence E: BLOCKED
-- Current R/F HEAD: 923c00fc5edd6ca06eb8f7de333c5dc40ab57987
+- Current R/F HEAD: 36cda4b0a7bd1790df80abe9caef721546aefe58
 - Selected RC: BLOCKED
 - Ledger SHA-256: BLOCKED
 - Ledger entries: 0
@@ -69,9 +69,9 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
 | .gitignore | present | 1644 | 066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a |
-| package.json | present | 42839 | a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270 |
-| docs/hugeToDo/launch-contract.json | present | 5899 | 7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea |
-| scripts/launch/contract.mjs | present | 12227 | 72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f |
+| package.json | present | 43019 | cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239 |
+| docs/hugeToDo/launch-contract.json | present | 6343 | 49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72 |
+| scripts/launch/contract.mjs | present | 13431 | bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35 |
 | .env.example | present | 27858 | 5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52 |
 | scripts/phase4/build-source-worklist.mjs | present | 45862 | 9771b7f30ba4347828e0293fc7e8381b204e779f5dbd0520aebbdb45cb099cfc |
 | scripts/phase4/beta-coverage-report.mjs | present | 41079 | 7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1 |
@@ -99,8 +99,8 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | scripts/launch/governed-evidence-chain.mjs | present | 64286 | 01a86c396964ffa8ab630341c46dc599f851cc0327e54563ec3366ef771aecb7 |
 | scripts/launch/governed-evidence-chain.test.mjs | present | 35858 | 1361abf142d7ef3e50a321637dc02c7374ac7f64e0710146849f38498a62e43a |
 | docs/FOR_TAS_TO_DO.md | present | 11239 | 11b6df522e34a3b1a3ad8e130cf07345a8e91059efee6f4399d27360026c2825 |
-| docs/phase-3/consent-matrix.md | present | 17967 | 20ff4675f44860c27cf77e44e2e7755f8876f563e0983dff897c76f30f497f23 |
-| docs/phase-3/data-inventory.md | present | 60110 | d4ede05246fcffba3ffed0976cf686be98f7cf8117cfc2d8395dd222d664d3bd |
+| docs/phase-3/consent-matrix.md | present | 17993 | 2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342 |
+| docs/phase-3/data-inventory.md | present | 60082 | 0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483 |
 | docs/store-privacy-inventory.md | present | 41308 | 27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5 |
 | docs/phase-4/beta-coverage-input.template.json | present | 2315 | 4def562c508626e3ad3c2e289d8cd454fe223ba560c85862e6dc78d53613a172 |
 | docs/phase-4/beta-shelf-corpus.template.json | present | 24386 | 55a44a32ecd47ed53a7a7ba1b8a1694ea936a69768668e9a739f0218d98420a5 |
@@ -110,8 +110,8 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | docs/phase-4/catalog-cat02-membership-proof.template.json | present | 9254 | e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56 |
 | docs/phase-4/catalog-curation-database-readback.template.json | present | 8239 | 9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a |
 | docs/phase-4/catalog-curation-release-runbook.md | present | 45248 | ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e |
-| docs/phase-4/generated/source-worklist.json | present | 128106 | 8dfb087ed3b919c9d13b42e127e33cbea0e3fd2b443bbf111ebebc2d8316e707 |
-| docs/phase-4/generated/source-worklist.md | present | 76417 | 0671dcd7a4fd99eb4320617ef54dd488679d6488db9d22eda36b9a8426d42531 |
+| docs/phase-4/generated/source-worklist.json | present | 128106 | fb344a72e2ca4ca3a440bd97b0753c3efee0b9d119321e7726ce1e1b41bb5a4b |
+| docs/phase-4/generated/source-worklist.md | present | 76417 | 28948cc7dd03b9420295e518e912cb4f209d545ebd70f0198e460459fe076d5e |
 | docs/phase-4/observability-dashboard.md | present | 5335 | ffc77c9c33712b2a7b81bf92103e9bc4e71237a60ed40cd96b3aaad7298f0949 |
 | docs/phase-4/phase-4-exit-review.md | present | 13732 | f816d01e8ec61062144ed5fe8e85805e58147e775efb86d87a3107971bec92ed |
 | supabase/migrations/20260717000058_catalog_launch_curation.sql | present | 295282 | f2d53caad23347103e29b0f5660eefdbdd22bfdc05cc2cb47445ece4192919a6 |
@@ -124,8 +124,8 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | supabase/tests/database/catalog_launch_curation.test.sql | present | 202040 | 2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376 |
 | supabase/tests/database/catalog_serving_gate.test.sql | present | 36707 | 1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9 |
 | supabase/tests/database/cat07_truthful_freshness.test.sql | present | 36171 | d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 23645 | dc6863285a11233915991933a0b88aa454223903930f1590d689f9cae8b6420e |
-| docs/phase-4/generated/catalog-qa-report.md | present | 12339 | a621462256d2195076e0337c092342c495292b7585d3061232b31e67e21e010e |
+| docs/phase-4/generated/catalog-qa-report.json | present | 24113 | 6d270f2b962ba6172a3ab50061777b2bc33e5eb2a992fd0be3311441083b3aec |
+| docs/phase-4/generated/catalog-qa-report.md | present | 12339 | 592dcb7761d484fcbce8042973fc5b338c0373aa4daa0ef94172fd0556b0cd16 |
 | docs/phase-10/beta-event-schema.md | present | 15983 | b8d378bed2de90910be0932c60f6d526adfe55c4c1fc2ec21641ab04aba84e85 |
 | docs/phase-10/catalog-beta-report.md | present | 1680 | 28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28 |
 | docs/phase-10/support-beta-report.md | present | 2149 | f25c3841a8bc5649dbd1f38632c756898da46a5d7f4d59ff7c328726dc9d26ac |
