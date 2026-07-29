@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T18:51:17.094Z",
+  "generatedAt": "2026-07-29T18:59:30.006Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -168,7 +168,7 @@
     }
   },
   "inputPath": "docs/phase-4/beta-coverage-input.json",
-  "gitSha": "172277b522a18b8bdb9b8daef0d38fc2b2d3d96c",
+  "gitSha": "923c00fc5edd6ca06eb8f7de333c5dc40ab57987",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -431,13 +431,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 128106,
-      "sha256": "96db8c868a4e3e8aa1cdd04fe8a09ebf86d7e0650027648f20f99c6f49fe3472"
+      "sha256": "8dfb087ed3b919c9d13b42e127e33cbea0e3fd2b443bbf111ebebc2d8316e707"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 76417,
-      "sha256": "b44f05580615ca200fdbe0eab7495f5c95432480383e4d1cdc82ad398b78acaf"
+      "sha256": "0671dcd7a4fd99eb4320617ef54dd488679d6488db9d22eda36b9a8426d42531"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -515,13 +515,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 23645,
-      "sha256": "7a6f583e917d4a82683b0608542aee66021f5bdd01b9bc5e0d1e83476e6aa41e"
+      "sha256": "dc6863285a11233915991933a0b88aa454223903930f1590d689f9cae8b6420e"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 12339,
-      "sha256": "f6ede19fceaef43a5c222fe77916fde5232d039bab0210f96dbd92e037830207"
+      "sha256": "a621462256d2195076e0337c092342c495292b7585d3061232b31e67e21e010e"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
@@ -552,7 +552,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "172277b522a18b8bdb9b8daef0d38fc2b2d3d96c",
+    "currentGitSha": "923c00fc5edd6ca06eb8f7de333c5dc40ab57987",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -564,7 +564,7 @@
     ]
   },
   "status": "blocked",
-  "strict": false,
+  "strict": true,
   "metrics": {
     "invitedUsers": null,
     "targetUsers": null,
