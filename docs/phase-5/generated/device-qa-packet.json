@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "phase5_device_qa_packet",
-  "generatedAt": "2026-07-29T18:51:33.618Z",
+  "generatedAt": "2026-07-29T18:59:46.433Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -170,7 +170,7 @@
       "analyticsAllowed": false
     }
   },
-  "gitSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
+  "gitSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": null,
@@ -339,7 +339,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
+    "currentGitSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -388,7 +388,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
+    "headSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -398,7 +398,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "9f037a57c73c639288a3d6c8057c4c61c6418862",
+    "headSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
     "status": "blocked"
   },
   "scenarios": [
