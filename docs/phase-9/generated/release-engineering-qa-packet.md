@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-29T18:53:46.036Z
+Generated: 2026-07-29T19:01:36.641Z
 Status: blocked
-Git SHA: 9269bb3fcffa4365adf48e40a180512c121221ba
+Git SHA: d31098382b6f012c8224336ebc33ffe79a29a3a1
 Git status: clean
 NUL Git status SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 Pinned input integrity: blocked
@@ -12,7 +12,7 @@ Pinned input integrity: blocked
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `9269bb3fcffa4365adf48e40a180512c121221ba`
+- Current R/F HEAD: `d31098382b6f012c8224336ebc33ffe79a29a3a1`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -29,11 +29,11 @@ Pinned input integrity: blocked
 ## CAT07 Launch Evidence
 
 - Overall: blocked
-- Expected HEAD: `9269bb3fcffa4365adf48e40a180512c121221ba`
+- Expected HEAD: `d31098382b6f012c8224336ebc33ffe79a29a3a1`
 - Committed validator: blocked
-- Committed validator HEAD: `9269bb3fcffa4365adf48e40a180512c121221ba`
+- Committed validator HEAD: `d31098382b6f012c8224336ebc33ffe79a29a3a1`
 - Full manifest validator: blocked
-- Full manifest validator HEAD: `9269bb3fcffa4365adf48e40a180512c121221ba`
+- Full manifest validator HEAD: `d31098382b6f012c8224336ebc33ffe79a29a3a1`
 - Summary SHA-256: `BLOCKED`
 - Manifest JSON SHA-256: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - Manifest Markdown SHA-256: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
@@ -540,9 +540,9 @@ Pinned input integrity: blocked
 - `scripts/phase7/core-loop-qa-packet-contract.test.mjs`: `24fec7274b0478d8d15f1fceb7bf131adfc1ad88b189debed51f04c804df7772`
 - `scripts/phase9/upstream-packet-contract.mjs`: `46518896ff14b3124b240e317fcd0d36ff2b6b213fc0342efb6725ec4a72bc47`
 - `scripts/phase9/upstream-packet-contract.test.mjs`: `a7ab3c82ad976f8791a0ab815c0029be6e41de462e601e8ce78e985556e54e5b`
-- `docs/phase-5/generated/device-qa-packet.json`: `9073a63d41af5cbb80cd4bc10f4101ac3ad109384cfb6569d82ca2b5a76b0e9b`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `3d590a64cd8f98516d5d18977819ec3941ee963aa07b2728aa90a14e6a5a7796`
-- `docs/phase-4/generated/beta-coverage-report.json`: `8b4c24146ece1a7a2fefdca7d685cbe2abc5c8729e5f51bad3afb0a7defcf70c`
+- `docs/phase-5/generated/device-qa-packet.json`: `6c5a8392a141b8bd7b4a386694af40b3d92eb735ad9034959e67ba6578456210`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `c17f660a14bad7bdd3c4415aada97f9c067a1920a68a48c138138d62e2259847`
+- `docs/phase-4/generated/beta-coverage-report.json`: `e88f1a94f453d369c13fa4778d8d982d8f1c8c3d0121efc091c7ea6c84462591`
 - `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
 - `scripts/e2e/cat07-committed-evidence.mjs`: `aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0`
