@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T08:26:58.755Z",
+  "generatedAt": "2026-07-29T18:51:52.126Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -71,7 +71,102 @@
       "review_prompts",
       "creator_links",
       "paid_measurement"
-    ]
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    }
   },
   "platformStatus": {
     "ios": "required",
@@ -81,7 +176,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "f5c96856e1e994f73991af4e54fcfcb2d21217d6",
+  "gitSha": "60fad5ad713e455e5bff86285c7927bff1d948e8",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
@@ -188,8 +283,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 42442,
-      "sha256": "fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1"
+      "bytes": 42839,
+      "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
     },
     {
       "path": "package-lock.json",
@@ -218,8 +313,8 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 4451,
-      "sha256": "3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b"
+      "bytes": 5899,
+      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
     },
     {
       "path": "docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md",
@@ -230,8 +325,8 @@
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 8713,
-      "sha256": "1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9"
+      "bytes": 12227,
+      "sha256": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -710,8 +805,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 468010,
-      "sha256": "75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24"
+      "bytes": 470834,
+      "sha256": "6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",

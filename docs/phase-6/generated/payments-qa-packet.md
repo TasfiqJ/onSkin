@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-29T08:26:58.755Z
-Git SHA: f5c96856e1e994f73991af4e54fcfcb2d21217d6
+Generated at: 2026-07-29T18:51:52.126Z
+Git SHA: 60fad5ad713e455e5bff86285c7927bff1d948e8
 Git status: clean
 Required inputs committed and byte-matched to HEAD: yes
 Tracked secret environment files absent: BLOCKED
@@ -68,14 +68,14 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
 | .env.example | present | 27858 | 5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52 |
-| package.json | present | 42442 | fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1 |
+| package.json | present | 42839 | a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270 |
 | package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
 | apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
 | apps/mobile/eas.json | present | 1477 | 074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051 |
 | supabase/functions/deno.lock | present | 2465 | b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7 |
-| docs/hugeToDo/launch-contract.json | present | 4451 | 3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b |
+| docs/hugeToDo/launch-contract.json | present | 5899 | 7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea |
 | docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md | present | 11287 | b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5 |
-| scripts/launch/contract.mjs | present | 8713 | 1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9 |
+| scripts/launch/contract.mjs | present | 12227 | 72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 37617 | 6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358 |
 | apps/mobile/src/lib/iap/revenuecat.test.ts | present | 2427 | ee01c705dd9a77db4dc527d00fae8040b1e5315d2624193330afbd35ff144c0f |
 | apps/mobile/src/lib/iap/revenuecatPublication.test.ts | present | 16262 | fbf6e643684dbdb4464b620885256936762803190e4df8c798af12e5f61a080f |
@@ -155,7 +155,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10407 | 4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e |
 | docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
-| docs/USER_FLOW_TREE.md | present | 468010 | 75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24 |
+| docs/USER_FLOW_TREE.md | present | 470834 | 6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f |
 | docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
 | docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
 | docs/phase-6/payments-runbook.md | present | 11302 | 676492b480b32f12c6fe829962f33a3f31bd597f2e2f4a7aa319e63e0f1da821 |
