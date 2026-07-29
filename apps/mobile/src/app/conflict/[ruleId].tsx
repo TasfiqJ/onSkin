@@ -15,7 +15,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, Text } from '@/components/ui';
 import { isAdmittedDetectedConflict, type DetectedConflict } from '@/features/intelligence/engine';
 import type { ConflictChoices, ConflictUserChoice } from '@/features/intelligence/conflictChoices';
-import { conflictShareRoute } from '@/features/intelligence/conflictIdentity';
 import { setConflictChoice } from '@/features/intelligence/overrides';
 import {
   evidenceChip,
@@ -40,7 +39,6 @@ import {
   runHealthDataWriteOperation,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
-import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -614,19 +612,6 @@ function StandardBody({
         </View>
       </View>
 
-      {/* Shareable Shelf Conflict Card (docs/14 §3, the word-of-mouth growth artifact). */}
-      {canShareConflictCard(conflict) ? (
-        <Pressable
-          accessibilityRole="button"
-          className="mt-4 min-h-[48px] items-center justify-center"
-          onPress={() => router.push(conflictShareRoute(conflict))}
-        >
-          <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-            {r.copy.shareActionLabel}
-          </Text>
-        </Pressable>
-      ) : null}
-
       {/* Standing not-medical-advice disclaimer (docs/02 §9). */}
       <Text variant="bodySm" tone="muted" className="mt-5 text-center text-[11px]">
         {NOT_MEDICAL_ADVICE_SHORT}
@@ -694,18 +679,6 @@ function ReassureBody({
       <View className="mt-6">
         <Button label={r.copy.primaryActionLabel} onPress={onDismiss} />
       </View>
-
-      {canShareConflictCard(conflict) ? (
-        <Pressable
-          accessibilityRole="button"
-          className="mt-4 min-h-[48px] items-center justify-center"
-          onPress={() => router.push(conflictShareRoute(conflict))}
-        >
-          <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-            {r.copy.shareActionLabel}
-          </Text>
-        </Pressable>
-      ) : null}
     </>
   );
 }

@@ -112,7 +112,49 @@
         "taskId": "H-07",
         "scope": "claims_jurisdiction_and_market_clearance"
       }
+    ],
+    "conflict_share": [
+      {
+        "reviewerRole": "regulatory_claims_counsel",
+        "taskId": "REV-02",
+        "scope": "exact_share_claims_copy_citations_and_market_positioning"
+      },
+      {
+        "reviewerRole": "privacy_security_reviewer",
+        "taskId": "REV-03",
+        "scope": "share_projection_destination_retention_revocation_and_data_flow"
+      },
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "REV-04",
+        "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "REV-05",
+        "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+      },
+      {
+        "reviewerRole": "ip_content_rights_counsel",
+        "taskId": "REV-06",
+        "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+      },
+      {
+        "reviewerRole": "release_signoff_operator",
+        "taskId": "REV-07",
+        "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+      }
     ]
+  },
+  "conflictShareAdmission": {
+    "sharePublicationAdmitted": false,
+    "publicLinksAdmitted": false,
+    "shareReceiptIssuerAvailable": false,
+    "publicTokenServiceAvailable": false,
+    "sanitizedProjectionAllowlistRequired": true,
+    "exactPayloadConfirmationRequired": true,
+    "rawPrivateFieldsAllowed": false,
+    "analyticsAllowed": false
   },
   "safetyConstraints": {
     "diagnosisTreatmentCurePreventionClaims": false,

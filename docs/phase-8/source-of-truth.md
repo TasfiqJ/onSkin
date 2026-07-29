@@ -2,6 +2,27 @@
 
 Phase 8 is blocked from public launch until this file is filled with final, signed-off values. The code is wired to stay inert when these values are placeholders.
 
+## CORE-07A Publication Boundary
+
+Conflict sharing and `/s/:shareId` are literal zero-admission surfaces. The
+machine launch contract records no share receipt issuer, no public token
+service, no share/public-link admission, no raw/private projection fields, and
+no share analytics. Phase 7/8 flags and a final domain are incident/config
+inputs only; they cannot grant publication authority.
+
+Current denial occurs before capture, temporary-file creation, link
+construction, network work, native sharing, record-implying public copy, or
+analytics. The card renderer accepts only a deliberately constructed sanitized
+projection, not a private conflict, Shelf, product, or profile object. Every
+identifier is neutrally unavailable because syntax is not proof of a record.
+
+Future activation requires an immutable issuer-authenticated exact-content
+receipt, an explicitly allowlisted projection, confirmation of the exact
+image/text/link/destination before native export, and a separately reviewed
+public-token retention/revocation/deletion/abuse lifecycle. Exact-source
+`REV-02` through `REV-06` decisions and `REV-07` detached signoffs remain
+mandatory.
+
 ## Public Identity
 
 | Field           | Required final value               | Current status                                           |
@@ -20,18 +41,21 @@ Phase 8 is blocked from public launch until this file is filled with final, sign
 
 At $49.99/year, $1,000,000 gross ARR needs about 20,004 annual subscribers. Net of a 15% store fee, the target is about 23,535 annual subscribers. Net of a 30% fee, it is about 28,577 annual subscribers.
 
-Phase 8 does not assume paid acquisition can solve that. The growth loop must be organic, attributable, compliant, and attached to a real value moment: a shareable reviewed shelf conflict that sends prospects to a first-party landing page.
+Phase 8 does not assume paid acquisition can solve that. A future organic share
+loop may be evaluated only after positive share and public-link admission. The
+current build cannot count a renderer, flag, opaque-looking path, or projected
+conversion as growth evidence, and no seven-figure outcome is guaranteed.
 
 ## Launch Gates
 
 All flags default off in `.env.example`.
 
-| Gate                                               | Evidence                                                                                         |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED=true`     | Final domain, Universal Links, Android App Links, public fallback, and store URLs work on device |
-| `EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED=true`    | StoreReview policy tested; App Store and Play review flows verified                              |
-| `EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED=true`    | FTC creator brief approved; no reward/referral program                                           |
-| `EXPO_PUBLIC_PHASE8_PAID_MEASUREMENT_ENABLED=true` | Apple Ads keyword lab only; no cold paid scale campaign                                          |
+| Gate                                               | Evidence                                                                                                                                 |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED=true`     | Insufficient alone: positive token authority, exact reviews, final domain, Universal Links, fallback, lifecycle, and store URLs all pass |
+| `EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED=true`    | StoreReview policy tested; App Store and Play review flows verified                                                                      |
+| `EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED=true`    | FTC creator brief approved; no reward/referral program                                                                                   |
+| `EXPO_PUBLIC_PHASE8_PAID_MEASUREMENT_ENABLED=true` | Apple Ads keyword lab only; no cold paid scale campaign                                                                                  |
 
 Strict release evidence is represented by `PHASE8_*` environment variables and checked by `npm run phase8:check-growth-store:strict`.
 
@@ -44,6 +68,11 @@ Markdown must show whether it was generated from a clean or dirty Git worktree
 so reviewers can reject stale or mixed-worktree store evidence.
 
 ## Public Routes Required On Final Domain
+
+This is future infrastructure inventory, not a list of currently admitted
+record routes. Until CORE-07A is superseded, `/s/:shareId` must show only a
+neutral static unavailable page, reveal no existence bit, and emit no
+record/share analytics.
 
 - `/`
 - `/s/:shareId`
@@ -62,7 +91,6 @@ Allowed public framing:
 
 - Routine organization
 - Shelf organization
-- Reviewed product-order conflicts
 - Progress photo comparison without scores
 - Privacy controls, export, deletion
 - Clearly disclosed paid links only when enabled
@@ -72,6 +100,9 @@ Blocked public framing:
 - Diagnosis, treatment, cure, prevention, or disease detection
 - AI skin score, skin age, hazard score, percentage improvement
 - Before/after galleries
+- Any conflict/share claim without an exact positive publication receipt
+- Any public route that implies a per-user or reviewed share record exists
+- Share, destination, store-click, or `share_id` analytics while admission is closed
 - Fake testimonials or review gating
 - Referral rewards before the Shelf Conflict Card proves value
 - Store screenshots of unbuilt, post-launch, or simulated features

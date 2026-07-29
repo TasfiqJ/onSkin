@@ -295,6 +295,34 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   migration `0071`. It is not clinical, cosmetic-chemistry, privacy, legal,
   App Store, safety, market, or revenue clearance.
 
+### A-013: Separate Private Conflict Guidance From Share And Public-Link Authority
+
+- Decision: CORE-07A is literal zero-share admission. Private conflict
+  admission never grants publication authority. A future export must carry a
+  separate issuer-authenticated immutable receipt over the exact admitted
+  conflict, copy, citations, market, projection bytes, review receipts,
+  content-rights scope, expiry, and revocation state. The renderer boundary
+  accepts only an explicitly allowlisted sanitized projection, never a private
+  conflict/Shelf/profile object. No receipt issuer exists, so the current path
+  returns before capture, temporary-file, link, network, native-share, or
+  analytics work. Public links are a second independent positive authority; no
+  token service exists, so every identifier resolves to a neutral unavailable
+  state without implying that a record exists.
+- Criteria: no authority by flag/domain/`reviewedBy`/owned-pair coincidence,
+  no raw/private object crossing the renderer boundary, no valid-looking token
+  inference, no side effect before positive admission, exact-payload
+  confirmation immediately before native share, and independent public-token
+  retention/revocation/deletion/abuse controls.
+- Risk: an allowlisted projection can still express a health-adjacent claim.
+  Future activation therefore requires exact-source `REV-02` regulatory,
+  `REV-03` privacy/security, `REV-04` dermatology, `REV-05` cosmetic chemistry,
+  and `REV-06` IP/content-rights decisions plus `REV-07` detached signoffs,
+  final identity/domain, hosted token/security/privacy evidence, archive-bound
+  native iPhone QA, and App Review. No current source control proves legal
+  compliance, clinical validity, Apple acceptance, growth, or revenue.
+- Status: `in_progress` zero-share/public-link source candidate; CORE-07 and
+  launch remain blocked.
+
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
 - Decision: the encrypted local skin profile is the V1 authority for pregnancy/breastfeeding status, and it can be read or changed only with a granted consent record whose version and SHA-256 text hash match the current health-data copy. Malformed or unreadable local profile/consent records are preserved and fail closed; they never trigger a server fallback. When no local profile exists, the newest server profile may supply non-safety axes/goals, but its pregnancy status is always treated as unknown because a local V1 edit may be newer. Shelf, Plan, scheduler, Today, recommendations, and conflict explanations consume the shared `ProfileBits` reader. Only a successfully read explicit local `none` clears caution; affirmative, prefer-not, unknown, missing, and unavailable states remain cautious without an inferred pregnancy claim. Exclusions are derived from the launch-gated docs/02 safety rules, not a parallel table: production accepts only rules carrying recorded review metadata, while development/staging can exercise starter rules for review. Eligible reviewed rules remove retinoids and hydroquinone and remove BHA unless every threshold-bearing active percentage is unambiguously tag-associated and confirmed low, before sequence, cadence, cycle, ramp, replacement recommendations, or Today. If the separate cadence review gate is closed, all treatment/exfoliant placement is withheld instead of becoming an unassigned daily step. Writes persist locally first, disable competing selection input while pending, and invalidate every dependent query.

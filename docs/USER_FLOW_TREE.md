@@ -591,30 +591,31 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Start Expo web with the working public display name, open `/onboarding/age`, `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local reverse-trial path before `/routine/widgets`.
-  - Expected result: Visible public copy on age gate, share landing, catalog search, and timing lock-screen preview uses `RoutineKind` and does not show legacy `OnSkin`; widgets route remains the existing native-widget deferred surface until device QA enables it.
+  - Expected result: Visible public copy on the age gate, catalog search, and timing lock-screen preview uses `RoutineKind` and does not show legacy `OnSkin`; every `/s/[shareId]` path renders the same product-free `Public sharing is unavailable.` recovery without deriving content from the path; widgets remain the existing native-widget deferred surface until device QA enables them.
   - Evidence: Phone-width screenshots, visible-text snapshots, local reverse-trial route snapshot, and browser console logs.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` verifies `/onboarding/age`, `/s/sharecard01`, `/shelf/search`, `/settings/timing`, and free `/routine/widgets` before and after tapping `Explore first. 7 days of Pro`. The four public copy surfaces show `RoutineKind`, all six captured states show no visible `OnSkin`, the no-card Pro week reaches the widgets deferred surface (`Widgets are not in this beta` / `Back to Today`), visible controls are 48 px+, horizontal overflow is zero, and current-origin browser warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` verified the pre-CORE-07A `/s/sharecard01` surface alongside the age, catalog, timing, and widget surfaces. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; the former public-share behavior is superseded and is not current acceptance evidence. Final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
 - Branch: public share landing attribution
   - Priority: Critical
   - Automate later: Yes
-  - Action: Open `/s/[shareId]` with safe campaign attribution parameters, then open an invalid share id.
-  - Expected result: The public landing page renders without exposing private shelf, skin-profile, product, token, signed-url, or JWT values; invalid share IDs recover to the safe missing-share state; analytics attribution remains sanitized by source-contract and payload tests.
-  - Evidence: Phone-width screenshots, visible-text snapshot, browser console logs, route URL snapshot, and focused analytics/attribution test output.
-  - Current local evidence: 2026-07-09 Chrome DevTools Protocol Expo web at the 360 x 640 supported phone floor opened `/s/sharecard01` with safe attribution and `/s/not-a-valid-share-id` with sensitive-looking attribution/query values. Both routes rendered the safe public shelf-check landing surface, kept `Scan a product` and `Add manually` as complete 56 px controls, reported zero horizontal overflow, zero route issues, and zero disallowed browser logs, and exposed no private product, shelf, skin-profile, token, signed-url, JWT, photo, or health context in visible text. Evidence is in `test-results/human-e2e/2026-07-09/share-landing-attribution-current/`.
+  - Action: Open `/s/[shareId]` with both ordinary and sensitive-looking query parameters, then repeat with a different or invalid path value.
+  - Expected result: Every path and query renders the same product-free `Public sharing is unavailable.` recovery. The route does not parse or validate an identifier, derive a projection, fetch a record, emit attribution or analytics, expose private shelf/profile/product/health data, or create a public token, signed URL, or JWT. `Go to Shelf` and `Add a product` navigate only into the local private flow.
+  - Evidence: Phone-width screenshots, visible-text snapshot, browser console/network logs, route URL snapshot, focused zero-admission source-contract output, and navigation snapshots.
+  - Current source boundary: CORE-07A statically binds every `/s/[shareId]` path to the same product-free recovery and the source-contract rejects path/query reads, payload reconstruction, network or storage reads, token handling, and analytics. A fresh human-simulated phone-floor pass remains required before launch.
+  - Historical local evidence: 2026-07-09 evidence in `test-results/human-e2e/2026-07-09/share-landing-attribution-current/` predates CORE-07A and is retained only as regression history; its former public shelf-check landing and `Scan a product` / `Add manually` expectations are superseded.
 - Branch: Phase 8 public-site identity smoke
   - Priority: Critical
   - Automate later: Yes
   - Action: Serve `docs/phase-8/public-site` locally, open `index.html`, `share.html`, `support.html`, and `waitlist.html` at phone width, and inspect titles plus visible copy.
-  - Expected result: The static launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, keep final app association IDs as placeholders until store-console identity is cleared, and disclose the V1 support floor on support.html: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
+  - Expected result: The branded launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared. `share.html` instead remains a brand-neutral, inert `Public links are unavailable.` recovery that does not derive content from the address. `support.html` discloses the V1 support floor: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
   - Evidence: Phone-width screenshots, visible-text snapshots, static-server transcript, and brand audit output.
   - Current local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700, verified the visible support copy includes RoutineKind's V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no visible legacy `OnSkin`, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`.
 - Branch: Phase 8 public-site placeholder store links
   - Priority: Critical
   - Automate later: Yes
-  - Action: Serve `docs/phase-8/public-site` locally before final store URLs are substituted, open `index.html` and `share.html` at phone width, then tap one App Store/Google Play waitlist fallback.
-  - Expected result: Raw `__APP_STORE_URL__` and `__PLAY_STORE_URL__` tokens are never clickable `href` values. Placeholder store buttons visibly route to `/waitlist.html`; when final production store URLs are substituted, the runtime guard promotes only validated App Store and Play Store HTTPS URLs.
-  - Evidence: Phone-width screenshots, visible-text/link snapshots, click-through URL snapshot, and source-level final-substitution check.
-  - Current local evidence: 2026-07-08 Codex in-app browser at 390 x 700 serves `docs/phase-8/public-site` on localhost, verifies `index.html` and `share.html` render `App Store waitlist` / `Google Play waitlist` with `/waitlist.html` hrefs and `data-store-ready=false`, taps App Store and Google Play fallbacks into the waitlist, records zero horizontal overflow, and source-checks that final App Store / Play Store URL substitution leaves no placeholder tokens while keeping the production-host runtime guard. Evidence and report are in `test-results/human-e2e/2026-07-08/phase8-public-store-link-fallback/` and `docs/e2e-bug-reports/2026-07-08-phase8-public-store-placeholder-hrefs.md`.
+  - Action: Serve `docs/phase-8/public-site` locally before final store URLs are substituted. Open `index.html` at phone width and tap one App Store/Google Play waitlist fallback; separately inspect `share.html` as the inert unavailable route.
+  - Expected result: On `index.html`, raw `__APP_STORE_URL__` and `__PLAY_STORE_URL__` tokens are never clickable `href` values, placeholder store buttons visibly route to `/waitlist.html`, and final substitution promotes only validated App Store and Play Store HTTPS URLs. `share.html` contains no anchor, button, form, iframe, script, token parsing, beacon, analytics, or store destination and displays only the neutral unavailable state.
+  - Evidence: Phone-width screenshots, visible-text/link snapshots, click-through URL snapshot for `index.html`, inert-surface DOM/network snapshot for `share.html`, and source-level final-substitution check.
+  - Historical local evidence: 2026-07-08 evidence and the report in `test-results/human-e2e/2026-07-08/phase8-public-store-link-fallback/` and `docs/e2e-bug-reports/2026-07-08-phase8-public-store-placeholder-hrefs.md` predate CORE-07A. Their `index.html` placeholder-store verification remains useful history; the former `share.html` waitlist/store destinations are superseded and are not current acceptance evidence.
 
 ## Flow: Today Routine Completion
 
@@ -1975,20 +1976,26 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The frozen missing-submission capability wins over the environment flag. No 16+ or community consent is solicited, no text input or `Submit for review` action mounts, and no `question_submitted` analytics event can fire.
   - Evidence: Screenshot/control snapshot plus Phase 7 launch-flag, route-contract, and analytics-registry tests. The 2026-07-08 enabled-composer evidence is historical and intentionally superseded.
 
-## Flow: Shelf Conflict Checks And Share Cards
+## Flow: Shelf Conflict Checks And Zero-Admission Sharing
 
-- Goal: A user can inspect conflict guidance and share reviewed conflict cards without getting stuck on direct-entry surfaces.
-- Persona: User checking whether two shelf products can be used together, or sharing a reviewed shelf check.
+- Goal: A user can inspect only admitted private conflict guidance while every
+  conflict-card export and public-link path remains truthfully unavailable
+  until separate publication authority exists.
+- Persona: User checking whether two shelf products can be used together or
+  attempting to open/share a conflict path.
 - Entry state: User has completed onboarding or has seeded local shelf state.
 - Start screen/URL/window: Shelf tab or direct conflict/share routes.
 - Success state: Production never turns an unreviewed or uncovered pair into a
   compatibility result. Interaction-specific guidance, choices, scheduling,
-  Ask answers, recommendations, detail, and sharing exist only for the exact
-  admitted corpus/rule hash. Unsupported coverage uses calm generic recovery,
-  and direct-entry exits recover to the Shelf tab.
+  Ask answers, recommendations, and detail exist only for the exact admitted
+  corpus/rule hash. Even admitted private guidance does not authorize sharing.
+  Share and public-link admissions remain separately false; denied paths create
+  no capture/file/link/network/native-share/analytics side effect, reveal no
+  private field or record-existence bit, and recover safely.
 - Priority: Critical
 - Automate later: Yes
-- Surface: Expo web for route recovery; iOS and Android for native share sheet behavior.
+- Surface: Expo web for current route recovery; iOS for any future admitted
+  native share-sheet behavior. Android is outside the current release contract.
 - Current human-E2E evidence folder:
   `test-results/human-e2e/2026-07-26/core02-conflict-admission-current/`
 - Historical geometry/navigation evidence:
@@ -2043,7 +2050,40 @@ or screenshot is retained. Compact-phone text pressure, process relaunch, native
 sharing, VoiceOver, Dynamic Type, signed-archive, and physical-iPhone behavior
 remain open.
 
-### Future Path B: Admitted Conflict Detail
+### Path B: CORE-07A Literal Zero Share And Public Links
+
+1. Action: In a development fixture, make every Phase 7/8 share/public-link
+   flag and final-domain input look enabled while the machine admission remains
+   false. Open `/share/conflict/[ruleId]`.
+   Expected result: The independent admission wins. No private conflict object
+   reaches the renderer, no exact or generic card is captured, no temporary
+   file or URL is created, no network or native share API runs, and no share,
+   link, sheet, destination, or payload analytics fires. The route explains
+   unavailability and offers a safe Shelf exit.
+2. Action: Open `/s/not-valid`, an unknown valid-looking identifier, and any
+   legacy identifier; refresh, relaunch, and use back/forward.
+   Expected result: Every value reaches one neutral unavailable state. Copy
+   does not say a reviewed card exists, distinguish malformed from unknown,
+   reveal product/rule/profile data, or emit landing/store-click/`share_id`
+   telemetry. Static public HTML behaves the same and makes no record-derived
+   request.
+3. Action: Attempt to pass a raw `DetectedConflict`, product, Shelf, profile,
+   pregnancy/safety, reviewer, receipt, provenance, or unknown key across the
+   card boundary.
+   Expected result: The boundary refuses it. Only a deliberately constructed
+   exact allowlist projection type can be accepted by the renderer, and zero
+   admission prevents even that projection from reaching export.
+4. Action: Repeat after setting legacy `reviewedBy`, exact owned-product match,
+   final domain, and all broad QA evidence flags.
+   Expected result: None is publication or token authority. Phase 7, Phase 8,
+   and Phase 9 packets remain blocked by the machine admissions.
+
+Evidence required now: source contract, focused unit/route tests, browser text
+and navigation snapshots at supported/compact/text-pressure sizes, and network/
+analytics/native-call spies proving zero side effects. This source checkpoint
+does not replace future positive-path native or professional evidence.
+
+### Future Path C: Admitted Conflict Detail
 
 This path is a required future acceptance flow, not a currently available
 production path. It may be exercised only after the exact U.S. corpus, source
@@ -2172,9 +2212,9 @@ Passing source tests does not satisfy any of those gates.
 - Branch: direct-entry conflict and share exits
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` directly, then use the visible Close, Done, Keep, or Use together control.
-  - Expected result: The user returns to the Shelf tab instead of remaining on a direct-entry conflict or share-card screen with no navigation history.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified `/conflict/missing-rule-e2e` `Back to Shelf`, default `/share/conflict/missing-rule-e2e` deferred `Back to Shelf`, and share-card-enabled unshareable `Done` all return to `/shelf`, with zero horizontal overflow and no browser console errors.
+  - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` directly. Use the visible recovery action; exercise private conflict choices only in an exact admitted private-content fixture.
+  - Expected result: The zero-admission share route always exposes only `Back to Shelf` and returns to `/shelf`, with no card, product, rule, capture, link, or native-share action. The user never remains trapped on a direct-entry route with no navigation history.
+  - Historical evidence: 2026-07-07 Expo web at 320 x 568 verified `/conflict/missing-rule-e2e` `Back to Shelf`, default `/share/conflict/missing-rule-e2e` deferred `Back to Shelf`, and the former share-card-enabled unshareable `Done` path. The latter is superseded and is not current share-route acceptance evidence.
   - Current evidence: The 2026-07-26 Expo-web screenshot at 390 x 844 records the stale detail route before recovery, and the tester observed `Back to Shelf` return to `/shelf`; no post-click screenshot or trace is retained. The same packet records a product-free invalid public share state. Native sharing and admitted populated-pair exits remain release-device QA.
 - Branch: missing or unshareable conflict
   - Priority: Important
@@ -2184,11 +2224,15 @@ Passing source tests does not satisfy any of those gates.
   - Evidence: 2026-07-07 Expo web at 320 x 568 verified the missing state copy, stale-routine warning, `/shelf` recovery, `/shelf/manual` escape hatch, default share-card fallback, and enabled unshareable share-card state without private product names.
   - Historical partial evidence: A 2026-07-08 in-app-browser run at 320 x 568 rechecked direct `/conflict/missing-rule-e2e` after a compact-sheet fallback fix. Pre-fix evidence captured `maxHeight: 0px` with the actions below the viewport; post-fix evidence confirms a 524 px dialog, `aria-modal`, `Timing note unavailable` accessibility label, zero horizontal overflow, no mojibake, and visible 56 px / 48 px actions. Evidence is in `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`; it is not current-head CORE-02 acceptance.
   - Historical support-floor text-pressure evidence: A 2026-07-09 headless Chrome Expo-web run found the missing conflict sheet clipped `Back to Shelf` at the bottom of the 320 x 480 / 170% skipped-route sweep. Post-fix, short missing-conflict sheets put recovery actions before the explanatory card, and the same 21-route sweep reported zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`. Compact/text-pressure and native reruns are still required; the supported 390 x 844 packet currently records the stale-detail and product-free invalid-share states only.
-- Branch: native share unavailable
+- Future branch: native share unavailable
   - Priority: Important
   - Automate later: Yes
-  - Action: Attempt to export a reviewed share card on a surface without native sharing support.
-  - Expected result: The app explains sharing is unavailable without losing the user or exposing sensitive shelf details.
+  - Action: After a positive exact-content receipt, reviewed projection, and
+    exact-payload confirmation exist, attempt export on a surface without native
+    sharing support.
+  - Expected result: The app explains sharing is unavailable without losing
+    the user, exposing private Shelf details, leaving a temporary file, or
+    emitting success/link/sheet analytics.
   - Evidence: Screenshot or platform log.
   - Historical fixture evidence: A 2026-07-08 Expo-web run with explicit preview/share fixtures exercised the unavailable-share recovery and retained the card and controls. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`. Because it used seeded candidate content before the current admission boundary, it is geometry/recovery evidence only and cannot establish reviewed content, native sharing, or current CORE-02 acceptance.
 

@@ -1620,22 +1620,24 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-The Shelf Conflict Card is a possible organic loop, not an admitted publication
-surface. The current route is flag-closed and the conflict corpus has no
-positive admission. A legacy `reviewedBy` value, an owned-product match, or a
-final domain cannot authorize a public health-adjacent claim. Before any share
-can leave the private app context, CORE-07A must establish a separate immutable
-share authority bound to the exact admitted rule, copy, citations, version,
-reviewer receipts, content-rights scope, and expiry; derive an allowlisted
-sanitized projection; require explicit confirmation; and keep public-link
-admission independently closed. Brand/domain, app/web fallback, attribution,
-and device QA remain additional gates, not substitutes for content admission.
+The Shelf Conflict Card is a possible future organic loop, not an admitted
+publication surface. CORE-07A now establishes a literal zero-share/public-link
+source checkpoint: the machine contract records no receipt issuer, no token
+service, no positive admission, no raw/private projection fields, and no share
+analytics. A legacy `reviewedBy` value, an owned-product match, broad QA flags,
+or a final domain cannot authorize a public health-adjacent claim. Denied paths
+return before capture, temporary file, link, network, native share, record-
+implying landing copy, or analytics. The renderer boundary accepts only a
+constructed sanitized projection rather than a private conflict object, and
+every identifier is neutrally unavailable. Brand/domain, app/web fallback,
+attribution, and device QA remain additional gates, not substitutes for
+publication or token authority.
 
 Exit criteria:
 
 - a separate share-publication receipt positively admits the exact
-  rule/copy/citation/version and current professional-review and content-rights
-  scope;
+  rule/copy/citation/version/market/projection bytes, current professional
+  review and content-rights scope, expiry, and revocation state;
 - the renderer accepts only an allowlisted sanitized projection and cannot
   receive product names, Shelf identifiers, goals, profile data, safety state,
   account identifiers, or other private conflict fields not approved for the
@@ -1651,10 +1653,14 @@ Exit criteria:
 - card export, cancel, failure, relaunch, accessibility, Dynamic Type, and
   privacy inspection work in the exact native build;
 - card copy remains claim-safe, citation-complete, version-bound, and covered by
-  named clinical, regulatory, privacy, IP/content-rights, and launch review; and
+  named clinical, regulatory, privacy, IP/content-rights, and launch review;
+- exact-source `REV-02` regulatory claims, `REV-03` privacy/security,
+  `REV-04` dermatology, `REV-05` cosmetic chemistry, `REV-06` IP/content
+  rights, and `REV-07` detached signoffs all pass without role substitution;
+  and
 - exact archive/network/analytics evidence proves that no private Shelf,
-  health, recommendation, or conflict payload is sent before positive share
-  admission and confirmation.
+  health, recommendation, conflict, share-ID, or destination payload is sent
+  before positive share admission and confirmation.
 
 ## B-CLOSED-BETA - Real demand proof
 

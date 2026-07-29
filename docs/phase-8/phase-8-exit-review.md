@@ -7,9 +7,14 @@ Status: not launch-ready.
 - Phase 8 env gates and source-of-truth fields.
 - Expo config for Universal Links and Android App Links once a final domain is set.
 - Privacy-safe growth attribution sanitizer and URL builder.
-- Opaque share link generation for Shelf Conflict Card.
-- Share card export fixed to 1080x1920.
-- Share eligibility tightened to reviewed, non-safety, two-product conflicts.
+- CORE-07A separately closes share publication and public-link admission; no
+  flag, domain, `reviewedBy` value, owned pair, or valid-looking ID grants
+  authority.
+- The conflict-card renderer accepts only a constructed sanitized projection,
+  not a raw private conflict object.
+- Share routes return before capture, temporary file, link, network, native
+  share, or analytics work. Public routes and static HTML make no per-record
+  claim and emit no share/destination beacon.
 - Global analytics sanitizer tightened for growth telemetry.
 - Store review prompt policy with caps and value moments.
 - Store metadata packet with validator.
@@ -30,6 +35,15 @@ Status: not launch-ready.
 
 - Final brand/domain/app IDs are not recorded.
 - Store URLs are not configured.
+- No immutable exact-content share receipt issuer exists; share admission is
+  literal false.
+- No reviewed public token, retention, revocation, deletion, indexing, cache,
+  abuse, or incident service exists; public-link admission is literal false.
+- No exact-payload confirmation boundary exists because there is no positive
+  export path.
+- Exact-source `REV-02` regulatory, `REV-03` privacy/security, `REV-04`
+  dermatology, `REV-05` cosmetic chemistry, `REV-06` IP/content-rights, and
+  `REV-07` detached signoffs are missing.
 - App-link association files need final Team ID, bundle ID, package name, and certificate fingerprints.
 - Store screenshots have not been captured on physical devices.
 - Privacy labels and Data safety forms need final legal review.
@@ -48,3 +62,5 @@ npm run phase8:qa-packet:strict
 ```
 
 Strict mode intentionally fails until external evidence variables are true.
+It must also remain blocked while either machine-readable CORE-07A admission is
+false; external evidence variables cannot override that source authority.

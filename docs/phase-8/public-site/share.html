@@ -3,18 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Open RoutineKind Shelf Check</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <title>Public Link Unavailable</title>
     <meta
       name="description"
-      content="Open a shared RoutineKind shelf check and start your own skincare routine tracker."
+      content="Public links are unavailable. This page does not display user content or select content from the address."
     />
     <style>
       :root {
         --paper: #f5f1ea;
         --ink: #201b15;
         --muted: #756b61;
-        --clay: #a5694b;
-        --line: rgba(32, 27, 21, 0.14);
       }
       body {
         margin: 0;
@@ -30,6 +29,7 @@
         color: var(--ink);
       }
       main {
+        box-sizing: border-box;
         min-height: 100vh;
         display: grid;
         place-items: center;
@@ -43,38 +43,12 @@
         font-family: Georgia, 'Times New Roman', serif;
         font-size: 64px;
         font-weight: 400;
-        letter-spacing: 0;
         line-height: 0.95;
       }
       p {
         color: var(--muted);
         font-size: 18px;
         line-height: 1.55;
-      }
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 28px;
-      }
-      .button {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 13px 16px;
-        text-decoration: none;
-        color: inherit;
-        background: white;
-        font-weight: 700;
-      }
-      .primary {
-        background: var(--ink);
-        color: var(--paper);
-        border-color: var(--ink);
-      }
-      small {
-        display: block;
-        margin-top: 28px;
-        color: var(--muted);
       }
       @media (max-width: 520px) {
         h1 {
@@ -86,106 +60,9 @@
   <body>
     <main>
       <section>
-        <h1>Check your own shelf.</h1>
-        <p>
-          This RoutineKind card came from a reviewed product-order check. Open the app or start with
-          your own shelf.
-        </p>
-        <div class="actions">
-          <a
-            class="button primary"
-            id="app-store"
-            href="/waitlist.html"
-            data-store-url="__APP_STORE_URL__"
-            data-store-label="App Store"
-            data-store-name="app_store"
-            data-store-ready="false"
-            >App Store waitlist</a
-          >
-          <a
-            class="button"
-            id="play-store"
-            href="/waitlist.html"
-            data-store-url="__PLAY_STORE_URL__"
-            data-store-label="Google Play"
-            data-store-name="play_store"
-            data-store-ready="false"
-            >Google Play waitlist</a
-          >
-          <a class="button" href="/waitlist.html">Join waitlist</a>
-        </div>
-        <small>General cosmetic information only, not medical advice.</small>
+        <h1>Public links are unavailable.</h1>
+        <p>This page does not display user content or use the address to select content.</p>
       </section>
     </main>
-    <script>
-      const allowed = new Set([
-        'source',
-        'medium',
-        'campaign',
-        'content',
-        'term',
-        'creative_variant',
-        'landing_variant',
-        'platform',
-        'app_version',
-        'build_number',
-        'store',
-        'share_id',
-      ]);
-      const sensitive =
-        /(barcode|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|age|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide)/i;
-      function attribution() {
-        const params = new URLSearchParams(window.location.search);
-        const clean = {};
-        for (const [key, value] of params.entries()) {
-          if (
-            !allowed.has(key) ||
-            sensitive.test(key) ||
-            sensitive.test(value) ||
-            value.includes('@')
-          )
-            continue;
-          clean[key] = value.slice(0, 120);
-        }
-        return clean;
-      }
-      function track(event, extra) {
-        const body = JSON.stringify({ event, ...attribution(), ...extra });
-        navigator.sendBeacon && navigator.sendBeacon('/api/growth-event', body);
-      }
-      function safeStoreUrl(value, label) {
-        if (!value || value.includes('__')) return null;
-        try {
-          const url = new URL(value);
-          if (url.protocol !== 'https:' || url.username || url.password) return null;
-          if (label === 'App Store' && url.hostname !== 'apps.apple.com') return null;
-          if (label === 'Google Play' && url.hostname !== 'play.google.com') return null;
-          return url.toString();
-        } catch {
-          return null;
-        }
-      }
-      function configureStoreLink(id) {
-        const link = document.getElementById(id);
-        const label = link.dataset.storeLabel || link.textContent.trim();
-        const storeUrl = safeStoreUrl(link.dataset.storeUrl, label);
-        if (!storeUrl) {
-          link.href = '/waitlist.html';
-          link.textContent = `${label} waitlist`;
-          link.setAttribute('aria-label', `${label} waitlist`);
-          link.dataset.storeReady = 'false';
-          return;
-        }
-        link.href = storeUrl;
-        link.textContent = label;
-        link.setAttribute('aria-label', label);
-        link.dataset.storeReady = 'true';
-        link.addEventListener('click', () => track('store_click', { store: link.dataset.storeName }));
-      }
-
-      track('landing_viewed', {});
-      configureStoreLink('app-store');
-      configureStoreLink('play-store');
-    </script>
   </body>
 </html>

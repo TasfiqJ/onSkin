@@ -32,6 +32,10 @@ const root = resolve(scriptDir, '..', '..');
 const checkPath = resolve(scriptDir, 'check-core-loop.mjs');
 const packetPath = resolve(scriptDir, 'build-core-loop-qa-packet.mjs');
 const humanE2eManifestPath = resolve(root, 'scripts/e2e/human-e2e-manifest.mjs');
+const core07aContractPath = resolve(
+  root,
+  'scripts/core07/share-admission-source-contract.test.mjs',
+);
 const cat07ShelfFreshnessSummaryPath = CAT07_COMMITTED_SUMMARY_PATH;
 
 const passthroughKeys = [
@@ -113,6 +117,14 @@ function run(extraEnv, args = []) {
     cwd: root,
     encoding: 'utf8',
     env: { ...processBaseEnv, ...extraEnv },
+  });
+}
+
+function runCore07aContract() {
+  return spawnSync(process.execPath, ['--test', core07aContractPath], {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
   });
 }
 
@@ -527,6 +539,13 @@ function runCommittedCat07BindingSmoke() {
 }
 
 const cases = [
+  {
+    name: 'CORE-07A share admission remains literal-closed and side-effect free',
+    result: runCore07aContract(),
+    expect(result) {
+      return result.status === 0;
+    },
+  },
   {
     name: 'Phase 7 packet rejects caller-selected normal output directories',
     result: runRejectedPacketOutput('docs/phase-7/caller-selected'),

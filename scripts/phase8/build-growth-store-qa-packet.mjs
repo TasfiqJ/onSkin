@@ -109,14 +109,37 @@ const sourceFiles = [
   '.env.example',
   'package.json',
   'docs/hugeToDo/launch-contract.json',
+  'docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md',
   'scripts/launch/contract.mjs',
+  'scripts/core02/clinical-rule-source-contract.test.mjs',
+  'scripts/core07/share-admission-source-contract.mjs',
+  'scripts/core07/share-admission-source-contract.test.mjs',
   'apps/mobile/app.config.js',
   'apps/mobile/src/lib/env.ts',
+  'apps/mobile/src/lib/env.test.ts',
+  'apps/mobile/src/lib/launch/phase7.ts',
+  'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/lib/launch/phase8.ts',
+  'apps/mobile/src/lib/launch/phase8.test.ts',
   'apps/mobile/src/lib/growth/attribution.ts',
+  'apps/mobile/src/features/growth/shareAdmission.ts',
+  'apps/mobile/src/features/growth/shareAdmission.test.ts',
+  'apps/mobile/src/features/growth/publicLinkAdmission.ts',
+  'apps/mobile/src/features/growth/publicLinkAdmission.test.ts',
+  'apps/mobile/src/features/growth/shareProjection.ts',
+  'apps/mobile/src/features/growth/shareProjection.test.ts',
+  'apps/mobile/src/features/growth/ConflictCard.tsx',
   'apps/mobile/src/features/growth/shareLinks.ts',
+  'apps/mobile/src/features/growth/shareLinks.test.ts',
+  'apps/mobile/src/features/growth/shareLandingRoute.test.ts',
+  'apps/mobile/src/features/growth/cardCopy.ts',
+  'apps/mobile/src/features/growth/cardCopy.test.ts',
+  'apps/mobile/src/features/intelligence/conflictIdentity.ts',
+  'apps/mobile/src/features/intelligence/conflictRoutes.test.ts',
   'apps/mobile/src/app/s/[shareId].tsx',
   'apps/mobile/src/features/growth/shareCard.ts',
+  'apps/mobile/src/features/growth/shareCard.test.ts',
+  'apps/mobile/src/app/conflict/[ruleId].tsx',
   'apps/mobile/src/app/share/conflict/[ruleId].tsx',
   'apps/mobile/src/features/review/policy.ts',
   'apps/mobile/src/features/review/prompt.ts',
@@ -160,6 +183,14 @@ const sourceFiles = [
 for (const file of sourceFiles) {
   block(exists(file), `${file} is missing from the QA packet inputs.`);
 }
+block(
+  launchContract.conflictShareAdmission.sharePublicationAdmitted === true,
+  'CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag can authorize export.',
+);
+block(
+  launchContract.conflictShareAdmission.publicLinksAdmitted === true,
+  'CORE-07A public links are not admitted; the repository has no production token service or reviewed retention, revocation, deletion, and abuse contract.',
+);
 
 let gitSha = 'unknown';
 let gitStatus = 'unknown';
@@ -213,20 +244,21 @@ const packet = {
   evidence,
   matrices: {
     linkRouting: [
-      'iOS installed opens app via Universal Links',
-      'iOS not installed opens web fallback',
+      'Zero admission: no per-record link or token is generated, resolved, or treated as valid',
+      'Neutral static unavailable fallback does not imply a reviewed shared record',
+      'No landing impression, store-click, share_id, or destination analytics/network beacon',
+      'Future iOS Universal Link activation requires separately admitted public-link authority',
       ...(androidReleaseRequired
-        ? ['Android installed opens app via App Links', 'Android not installed opens web fallback']
+        ? ['Future Android App Link activation requires separately admitted public-link authority']
         : []),
-      'Desktop opens web fallback',
-      'Invalid share ID never reveals sensitive context',
+      'Malformed, valid-looking, expired, revoked, deleted, or unknown identifiers remain unavailable',
     ],
     shareCard: [
-      'Reviewed non-safety two-product conflicts only',
-      '1080x1920 export',
-      'Brand, CTA, footnote, and first-party link label present',
-      'No product/profile/pregnancy/photo/rule data in URL',
-      'Started, link created, succeeded/failed, sheet opened events present',
+      'Zero admission: no card capture, temporary file, link, network request, or native share sheet',
+      'Only an explicit sanitized allowlist may cross a future private-to-share boundary',
+      'No raw owned products, profile, pregnancy, photo, internal rule, reviewer, or provenance fields',
+      'Future export requires an immutable exact-content receipt and exact-payload confirmation',
+      'No share-started, link-created, sheet-opened, destination, or payload analytics',
     ],
     storeSubmission: [
       'Metadata limits validated in tests',
@@ -237,7 +269,7 @@ const packet = {
     ],
     attribution: [
       'Allowed campaign keys only',
-      'Opaque share_id only',
+      'No share_id while public-link admission is closed',
       'No health/product/profile/contact fields',
       'No complex analytics objects',
     ],

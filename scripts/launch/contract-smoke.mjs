@@ -28,6 +28,31 @@ assert.equal(isFeatureRequired(20, contract), true);
 assert.equal(isFeatureRequired('widgets_live_activities', contract), true);
 assert.equal(isSurfaceRequired('cloud_ask', contract), true);
 assert.equal(isSurfaceRequired('paid_measurement', contract), true);
+assert.equal(contract.conflictShareAdmission.sharePublicationAdmitted, false);
+assert.equal(contract.conflictShareAdmission.publicLinksAdmitted, false);
+assert.equal(contract.conflictShareAdmission.shareReceiptIssuerAvailable, false);
+assert.equal(contract.conflictShareAdmission.publicTokenServiceAvailable, false);
+assert.equal(contract.conflictShareAdmission.sanitizedProjectionAllowlistRequired, true);
+assert.equal(contract.conflictShareAdmission.exactPayloadConfirmationRequired, true);
+assert.equal(contract.conflictShareAdmission.rawPrivateFieldsAllowed, false);
+assert.equal(contract.conflictShareAdmission.analyticsAllowed, false);
+assert.deepEqual(
+  contract.featureProfessionalReviewRequirements.conflict_share.map(
+    ({ reviewerRole, taskId }) => `${reviewerRole}:${taskId}`,
+  ),
+  [
+    'regulatory_claims_counsel:REV-02',
+    'privacy_security_reviewer:REV-03',
+    'board_certified_dermatologist:REV-04',
+    'cosmetic_chemist:REV-05',
+    'ip_content_rights_counsel:REV-06',
+    'release_signoff_operator:REV-07',
+  ],
+);
+assert.deepEqual(
+  launchContractSnapshot(contract).featureProfessionalReviewRequirements.conflict_share,
+  contract.featureProfessionalReviewRequirements.conflict_share,
+);
 assert.deepEqual(
   launchContractSnapshot(contract).requiredFeatureIds,
   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
@@ -70,6 +95,36 @@ missingRecommendationReviewer.featureProfessionalReviewRequirements.recommendati
 assert.match(
   validateLaunchContract(missingRecommendationReviewer).join('\n'),
   /recommendations must require the exact three reviewer roles/,
+);
+
+const missingConflictShareReviewer = structuredClone(contract);
+missingConflictShareReviewer.featureProfessionalReviewRequirements.conflict_share =
+  missingConflictShareReviewer.featureProfessionalReviewRequirements.conflict_share.slice(0, 5);
+assert.match(
+  validateLaunchContract(missingConflictShareReviewer).join('\n'),
+  /conflict_share must require the exact six release-review roles/,
+);
+
+const weakenedConflictShareReviewer = structuredClone(contract);
+weakenedConflictShareReviewer.featureProfessionalReviewRequirements.conflict_share[5].taskId =
+  'REV-06';
+assert.match(
+  validateLaunchContract(weakenedConflictShareReviewer).join('\n'),
+  /conflict_share.release_signoff_operator must bind the exact task and scope/,
+);
+
+const forgedShareAdmission = structuredClone(contract);
+forgedShareAdmission.conflictShareAdmission.sharePublicationAdmitted = true;
+assert.match(
+  validateLaunchContract(forgedShareAdmission).join('\n'),
+  /sharePublicationAdmitted must be false/,
+);
+
+const extraShareAdmissionKey = structuredClone(contract);
+extraShareAdmissionKey.conflictShareAdmission.runtimeFlagOverride = true;
+assert.match(
+  validateLaunchContract(extraShareAdmissionKey).join('\n'),
+  /only the exact CORE-07A admission keys/,
 );
 
 console.log('Launch contract smoke tests passed.');

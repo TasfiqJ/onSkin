@@ -4,6 +4,26 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-29
+
+### CORE-07A literal zero-share/public-link source checkpoint
+
+Separated private conflict admission from share publication and public-token
+authority. The machine launch contract now fixes publication, public links,
+receipt issuance, token service, raw/private fields, and analytics closed; an
+exact allowlist and exact-payload confirmation are mandatory for a future
+successor. Share/public routes refuse before capture, file, URL, network,
+native-share, record-implying landing copy, or analytics work, and the renderer
+accepts only a constructed sanitized projection.
+
+Bound the complete CORE-07A surface into Phase 3 professional review and Phase
+7/8/9 release packets. Future activation requires exact-source `REV-02` through
+`REV-06` decisions and `REV-07` detached signoffs, an immutable issuer, an
+independent reviewed token lifecycle, final identity/domain, hosted privacy/
+security, signed-archive, physical-iPhone, accessibility, failure/cancel, and
+App Review evidence. CORE-07 remains `in_progress` and launch-blocked; this is
+not legal, professional, Apple, market, growth, or revenue clearance.
+
 ## 2026-07-16
 
 ### Phase 6 durable RevenueCat deletion contract refresh

@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { productionUrlReady, supportEmailReady } from './phase8';
+import { phase8Flags, productionUrlReady, supportEmailReady } from './phase8';
 
 describe('Phase 8 production URL readiness', () => {
+  it('keeps public conflict links independently closed', () => {
+    expect(phase8Flags.publicLinks).toBe(false);
+  });
+
   it('accepts real HTTPS production URLs', () => {
     expect(productionUrlReady('https://routinekind.app')).toBe(true);
     expect(productionUrlReady('https://apps.apple.com/app/id123456789')).toBe(true);

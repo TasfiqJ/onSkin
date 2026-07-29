@@ -7,6 +7,9 @@ const ORIGINAL_NATIVE_CAMERA_ENABLED = process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENA
 const ORIGINAL_NATIVE_OCR_ENABLED = process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED;
 const ORIGINAL_PHASE7_COMMERCE_ENABLED = process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED;
 const ORIGINAL_PHASE7_TREND_ENABLED = process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED;
+const ORIGINAL_PHASE7_SHARE_CARD_ENABLED = process.env.EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED;
+const ORIGINAL_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED =
+  process.env.EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED;
 const ORIGINAL_PHASE8_PUBLIC_LINKS_ENABLED = process.env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED;
 const ORIGINAL_DEV = (globalThis as { __DEV__?: boolean }).__DEV__;
 
@@ -18,6 +21,8 @@ async function loadEnvWith(overrides: {
   nativeOcrEnabled?: string;
   phase7CommerceEnabled?: string;
   phase7TrendEnabled?: string;
+  phase7ShareCardEnabled?: string;
+  phase7ReviewedConflictSharingEnabled?: string;
   phase8PublicLinksEnabled?: string;
   dev?: boolean;
 }) {
@@ -29,6 +34,11 @@ async function loadEnvWith(overrides: {
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', overrides.nativeOcrEnabled);
   setEnv('EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED', overrides.phase7CommerceEnabled);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', overrides.phase7TrendEnabled);
+  setEnv('EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED', overrides.phase7ShareCardEnabled);
+  setEnv(
+    'EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED',
+    overrides.phase7ReviewedConflictSharingEnabled,
+  );
   setEnv('EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED', overrides.phase8PublicLinksEnabled);
   if (overrides.dev === undefined) delete (globalThis as { __DEV__?: boolean }).__DEV__;
   else (globalThis as { __DEV__?: boolean }).__DEV__ = overrides.dev;
@@ -49,6 +59,11 @@ afterEach(() => {
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', ORIGINAL_NATIVE_OCR_ENABLED);
   setEnv('EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED', ORIGINAL_PHASE7_COMMERCE_ENABLED);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', ORIGINAL_PHASE7_TREND_ENABLED);
+  setEnv('EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED', ORIGINAL_PHASE7_SHARE_CARD_ENABLED);
+  setEnv(
+    'EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED',
+    ORIGINAL_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED,
+  );
   setEnv('EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED', ORIGINAL_PHASE8_PUBLIC_LINKS_ENABLED);
   if (ORIGINAL_DEV === undefined) delete (globalThis as { __DEV__?: boolean }).__DEV__;
   else (globalThis as { __DEV__?: boolean }).__DEV__ = ORIGINAL_DEV;
@@ -132,6 +147,8 @@ describe('env boolean flags', () => {
       nativeOcrEnabled: ' True ',
       phase7CommerceEnabled: ' true ',
       phase7TrendEnabled: 'FALSE',
+      phase7ShareCardEnabled: ' true ',
+      phase7ReviewedConflictSharingEnabled: ' TRUE ',
       phase8PublicLinksEnabled: ' true ',
     });
 
@@ -139,6 +156,8 @@ describe('env boolean flags', () => {
     expect(mod.env.nativeOcrEnabled).toBe(true);
     expect(mod.env.phase7CommerceEnabled).toBe(true);
     expect(mod.env.phase7TrendEnabled).toBe(false);
+    expect(mod.env.phase7ShareCardEnabled).toBe(true);
+    expect(mod.env.phase7ReviewedConflictSharingEnabled).toBe(true);
     expect(mod.env.phase8PublicLinksEnabled).toBe(true);
   });
 
@@ -156,12 +175,16 @@ describe('env boolean flags', () => {
       nativeCameraEnabled: 'yes',
       nativeOcrEnabled: '1',
       phase7CommerceEnabled: 'enabled',
+      phase7ShareCardEnabled: 'enabled',
+      phase7ReviewedConflictSharingEnabled: '1',
       phase8PublicLinksEnabled: 'on',
     });
 
     expect(mod.env.nativeCameraEnabled).toBe(false);
     expect(mod.env.nativeOcrEnabled).toBe(false);
     expect(mod.env.phase7CommerceEnabled).toBe(false);
+    expect(mod.env.phase7ShareCardEnabled).toBe(false);
+    expect(mod.env.phase7ReviewedConflictSharingEnabled).toBe(false);
     expect(mod.env.phase8PublicLinksEnabled).toBe(false);
   });
 });

@@ -19,10 +19,14 @@ describe('Conflict route contracts', () => {
       expect(source, `${route} should recover direct entries to Shelf`).toContain(
         'APP_SHELF_ROUTE',
       );
-      expect(source, `${route} should guard native back with a fallback`).toContain(
-        'backOrReplace(router, APP_SHELF_ROUTE)',
-      );
     }
+
+    expect(readAppRoute('conflict/[ruleId].tsx')).toContain(
+      'backOrReplace(router, APP_SHELF_ROUTE)',
+    );
+    expect(readAppRoute('share/conflict/[ruleId].tsx')).toContain(
+      'fallbackRoute={APP_SHELF_ROUTE}',
+    );
   });
 
   it('returns deferred share-card direct entries to Shelf', () => {
@@ -33,16 +37,20 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('fallbackLabel="Back to Shelf"');
   });
 
-  it('keeps share-card export recovery inline on the share route', () => {
+  it('keeps the share-card route zero-admission before all private hooks and side effects', () => {
     const source = readAppRoute('share/conflict/[ruleId].tsx');
 
-    expect(source).toContain('const [shareFeedback, setShareFeedback]');
-    expect(source).toContain('SHARE_LINK_UNAVAILABLE_MESSAGE');
-    expect(source).toContain('SHARE_UNAVAILABLE_MESSAGE');
-    expect(source).toContain('setShareFeedback({');
-    expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('shareCardUserMessage()');
-    expect(source).not.toContain('Alert.alert');
+    expect(source).toContain('surface="shareCard"');
+    expect(source).not.toContain('useLocalSearchParams');
+    expect(source).not.toContain('useShelf');
+    expect(source).not.toContain('DetectedConflict');
+    expect(source).not.toContain('ConflictCard');
+    expect(source).not.toContain('shareConflictCard');
+    expect(source).not.toContain('createConflictShareLink');
+    expect(source).not.toContain('captureRef');
+    expect(source).not.toContain('FileSystem');
+    expect(source).not.toContain('Sharing');
+    expect(source).not.toContain('fetch(');
   });
 
   it('recovers missing conflict-detail routes without stale guidance', () => {
@@ -142,16 +150,23 @@ describe('Conflict route contracts', () => {
     expect(shelf).toContain('data.unsupportedConflictPairs.length > 0');
   });
 
-  it('preserves exact pair identity when opening a share card', () => {
+  it('keeps the private conflict detail launcher closed and the share route product-blind', () => {
     const detail = readAppRoute('conflict/[ruleId].tsx');
     const share = readAppRoute('share/conflict/[ruleId].tsx');
+    const phase7 = readFileSync(`${APP_DIR}/../lib/launch/phase7.ts`, 'utf8');
 
-    expect(detail).toContain('router.push(conflictShareRoute(conflict))');
-    expect(share).toContain('const requestedPair =');
-    expect(share).toContain('isAdmittedDetectedConflict(candidate)');
-    expect(share).toContain('ruleMatches.length === 1');
-    expect(share).toContain("sort().join('+')");
-    expect(share).toContain('requestedPair,');
+    expect(detail).not.toContain('router.push(conflictShareRoute(conflict))');
+    expect(detail).not.toContain('conflictShareRoute');
+    expect(detail).not.toContain('canShareConflictCard');
+    expect(phase7).toContain('shareCard: false');
+    expect(phase7).toContain('export function canShareConflictCard(_conflict?: unknown): false');
+    expect(phase7).toContain('return false;');
+    expect(share).not.toContain('requestedPair');
+    expect(share).not.toContain('isAdmittedDetectedConflict');
+    expect(share).not.toContain('ruleMatches');
+    expect(share).not.toContain('productAId');
+    expect(share).not.toContain('productBId');
+    expect(share).not.toContain('ruleId');
   });
 
   it('keeps recommendation conflict routes tied to the detected product pair', () => {
@@ -180,14 +195,14 @@ describe('Conflict route contracts', () => {
     }
   });
 
-  it('creates an opaque conflict-share URL without attribution metadata', () => {
+  it('keeps conflict public-link creation literal-null and side-effect-free', () => {
     const source = readFileSync(`${APP_DIR}/../features/growth/shareLinks.ts`, 'utf8');
 
-    expect(source).toContain('buildPublicGrowthUrl(`/s/${shareId}`, {})');
-    expect(source).not.toContain('campaign:');
-    expect(source).not.toContain('content:');
-    expect(source).not.toContain('creative_variant:');
-    expect(source).not.toContain('share_id:');
+    expect(source).toContain('createConflictShareLink(_request?: unknown): Promise<null>');
+    expect(source).toContain('return null;');
+    expect(source).not.toContain('buildPublicGrowthUrl');
+    expect(source).not.toContain('expo-crypto');
+    expect(source).not.toContain('createShareId');
   });
 
   it('uses only admitted conflicts and canonical corpus copy in recommendations', () => {
@@ -292,11 +307,9 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('contentContainerClassName="pb-10"');
     expect(source).toContain('paddingBottom: contentPaddingBottom');
     expect(source).toContain('className="min-h-[48px] items-center justify-center py-2"');
-    expect(source).toContain('className="mt-4 min-h-[48px] items-center justify-center"');
     expect(source).not.toContain('const sheetMaxHeight = Math.max(320, height - 24)');
     expect(source).not.toContain('height - 24');
     expect(source).not.toContain('viewportHeight > 0 ? Math.max(0, viewportHeight - 44) : 524');
     expect(source).not.toContain('className="items-center py-2"');
-    expect(source).not.toContain('className="mt-4 items-center"');
   });
 });

@@ -1,5 +1,3 @@
-import type { DetectedConflict } from '@/features/intelligence/engine';
-import { isReviewedRule } from '@/features/intelligence/rules';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import { normalizePublicDomain } from '@/lib/growth/attribution';
@@ -35,6 +33,7 @@ export const phase7Capabilities = Object.freeze({
   communityAggregates: false,
   trendEngine: false,
   nativeWidgets: false,
+  conflictSharePublication: false,
 } as const);
 
 export const phase7Flags = {
@@ -52,12 +51,7 @@ export const phase7Flags = {
   trend: phase7Capabilities.trendEngine && env.phase7TrendEnabled && productionSurfaceReady,
   cloudAsk: env.phase7CloudAskEnabled && productionSurfaceReady,
   widgets: phase7Capabilities.nativeWidgets && env.phase7WidgetsEnabled && productionSurfaceReady,
-  shareCard:
-    env.phase7ShareCardEnabled &&
-    env.phase7ReviewedConflictSharingEnabled &&
-    env.phase8PublicLinksEnabled &&
-    productionSurfaceReady &&
-    finalDomainReady,
+  shareCard: false,
   goalActiveRecommendations: env.phase7GoalActiveRecommendationsEnabled && productionSurfaceReady,
 } as const;
 
@@ -108,8 +102,9 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   },
   shareCard: {
     title: 'Share cards are not ready yet',
-    body: 'A card can be shared only for a real owned-product interaction backed by a reviewed rule and final brand domain.',
-    detail: 'This prevents unreviewed ingredient guidance from becoming a growth artifact.',
+    body: 'No shelf-check card or public link is admitted for sharing in this build.',
+    detail:
+      'Sharing needs separate reviewed publication authority, a private-data-safe card, and your confirmation of the exact card first.',
     cta: 'Back',
   },
   goalActiveRecommendations: {
@@ -125,30 +120,6 @@ export function isPhase7SurfaceEnabled(surface: DeferredSurfaceKind): boolean {
   return SURFACE_TO_FLAG[surface];
 }
 
-function e2eReviewedConflictSharingEnabled(): boolean {
-  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
-
-  const fixture = process.env.EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING?.trim().toLowerCase();
-  return fixture === '1' || fixture === 'true' || fixture === 'enabled';
-}
-
-export function isReviewedConflict(conflict: DetectedConflict | null | undefined): boolean {
-  if (!conflict) return false;
-  if (e2eReviewedConflictSharingEnabled()) return true;
-  return isReviewedRule(conflict.rule);
-}
-
-export function canShareConflictCard(
-  conflict: DetectedConflict | null | undefined,
-): conflict is DetectedConflict {
-  if (!phase7Flags.shareCard || !conflict || !isReviewedConflict(conflict)) return false;
-  return (
-    conflict.rule.interactionType !== 'safety' &&
-    conflict.rule.tagA !== 'pregnancy' &&
-    conflict.rule.tagB !== 'pregnancy' &&
-    Boolean(conflict.productAId) &&
-    Boolean(conflict.productBId) &&
-    Boolean(conflict.productAName) &&
-    Boolean(conflict.productBName)
-  );
+export function canShareConflictCard(_conflict?: unknown): false {
+  return false;
 }

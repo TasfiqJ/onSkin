@@ -12,6 +12,7 @@ import {
   loadLaunchContract,
   REQUIRED_SURFACE_KEYS,
 } from '../launch/contract.mjs';
+import { auditCore07aShareAdmission } from '../core07/share-admission-source-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -64,6 +65,10 @@ function has(path, pattern) {
 function hasSelfClosingJsxWithProps(source, component, propPatterns) {
   const tags = source.match(new RegExp(`<${component}\\b[\\s\\S]*?\\/\\s*>`, 'g')) ?? [];
   return tags.some((tag) => propPatterns.every((pattern) => pattern.test(tag)));
+}
+
+for (const error of auditCore07aShareAdmission(root)) {
+  require(false, `CORE-07A share-admission source contract: ${error}`);
 }
 
 const exampleEnv = parseEnv(read('.env.example'));
@@ -405,20 +410,15 @@ require(has('apps/mobile/src/app/(tabs)/you.tsx', /phase7Flags\.widgets/) &&
   ), 'You tab must gate widgets, cloud Ask, commerce, and trend entry points.');
 
 const shareRoute = read('apps/mobile/src/app/share/conflict/[ruleId].tsx');
-require(/phase7Flags\.shareCard/.test(
+require(/<DeferredSurface\b[\s\S]*?surface=["']shareCard["']/u.test(
   shareRoute,
-), 'Share route must be gated by phase7Flags.shareCard.');
-require(/canShareConflictCard/.test(shareRoute), 'Share route must require canShareConflictCard.');
-require(!/\?\?\s*data\?\.conflicts\[0\]/.test(
+), 'Share route must remain an unconditional truthful deferred surface.');
+require(!/useShelf|useLocalSearchParams|ConflictCard|shareConflictCard|createConflictShareLink/u.test(
   shareRoute,
-), 'Share route must not fallback to the first conflict.');
-require(!/\btrack(?:ProductAddStarted)?\s*\(/.test(
-  shareRoute,
-), 'Conflict-only share route must not emit analytics that reveal conflict existence.');
-require(has(
-  'apps/mobile/src/app/conflict/[ruleId].tsx',
-  /canShareConflictCard/,
-), 'Conflict sheet must hide share launcher unless share card is eligible.');
+), 'Share route must not read private conflict state or invoke export/link helpers.');
+require(!/canShareConflictCard|\/share\/conflict|conflictShareRoute/u.test(
+  read('apps/mobile/src/app/conflict/[ruleId].tsx'),
+), 'Conflict detail must not expose a launcher into literal-zero-admission sharing.');
 
 const analyticsRegistry = read('apps/mobile/src/lib/analytics/eventRegistry.ts');
 const shelfTab = read('apps/mobile/src/app/(tabs)/shelf.tsx');

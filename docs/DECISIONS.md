@@ -408,6 +408,43 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Review date: Before any product-specific recommendation, goal-active
   suggestion, retailer fetch, or App Store submission candidate.
 
+### 2026-07-29 - Make Conflict Sharing A Separate Zero-Admission Authority
+
+- Decision: CORE-07A separates private clinical-conflict admission, share
+  publication, and public-link resolution. The current share and public-link
+  admissions are literal `false`; there is no receipt issuer or token service.
+  A flag, final domain, `reviewedBy` string, exact owned pair, or QA evidence
+  cannot grant authority. The share UI may receive only a deliberately
+  constructed sanitized allowlist projection, never the raw private conflict
+  object, and denial occurs before capture, file, URL, network, native-share,
+  or analytics work. Any valid-looking public ID resolves to the same neutral
+  unavailable state as malformed, unknown, expired, revoked, or deleted input.
+- Type: Product / Architecture / Privacy / Growth / Legal / Launch
+- Alternatives: infer shareability from admitted conflict content, reuse the
+  final domain as authority, expose a client-generated opaque ID, sanitize only
+  analytics, show a record-looking fallback for valid IDs, or rely on a generic
+  confirmation after the share sheet opens.
+- Criteria: independently reviewable authorities, exact allowlist, unknown-key
+  rejection, zero private/raw fields, zero pre-admission side effects, no token
+  existence oracle, and explicit confirmation of the exact future image/text/
+  link/destination before native export.
+- Evidence:
+  `docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`,
+  `scripts/core07/share-admission-source-contract.test.mjs`, focused mobile
+  tests, the machine launch contract, and Phase 3/7/8/9 packet bindings.
+- Risk: this refusal boundary does not supply positive publication or legal
+  authority. A successor needs an immutable issuer and token lifecycle,
+  exact-source `REV-02` through `REV-06` professional decisions, `REV-07`
+  detached signoffs, final policies/domain, content rights, hosted privacy/
+  security/deletion/abuse proof, physical-iPhone and signed-archive evidence,
+  and Apple review.
+- Status: Accepted for the zero-admission source architecture; CORE-07 remains
+  `in_progress` and launch-blocked.
+- Owner: Product, clinical, chemistry, regulatory, privacy/security,
+  IP/content-rights, growth, and release owners.
+- Review date: Before any conflict-card capture, public token issuance, native
+  share-sheet invocation, public record implication, or App Store candidate.
+
 ### 2026-07-10 - Persist Conflict Choices Without Weakening The Reviewed Schedule
 
 - Decision: V1 stores each cosmetic timing choice in encrypted private KV under the canonical unordered product pair, conflict rule ID, and rule version. Both `accept_suggested_timing` and `use_together` suppress repeat advisory prompts for only that current-version pair across Shelf, Plan, Recommendations, Ask, and schedule explanations; legacy `keep_alternate_nights` values migrate to the generic accepted-timing value. Writes complete before success analytics or navigation; unreadable storage and unsupported future schemas fail closed without replacing prior data. The owner-RLS `routine_conflicts` mirror uses one canonical unique identity and remains best effort until routine sync is authoritative. `use_together` acknowledges the user's preference but does not auto-co-locate potent actives: one potent active per night, retinoid-exfoliant separation, pregnancy exclusions, frequency caps, phased introduction, and the cadence-review gate remain authoritative. Safety and reassurance rows are not eligible for a timing override.

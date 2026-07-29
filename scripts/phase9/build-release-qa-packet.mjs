@@ -370,9 +370,13 @@ const sourceFiles = [
   'docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md',
   'docs/hugeToDo/IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md',
   'docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md',
+  'docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md',
   'docs/09-personalized-recommendations.md',
   'scripts/launch/contract.mjs',
+  'scripts/core02/clinical-rule-source-contract.test.mjs',
   'scripts/core06/recommendation-admission-source-contract.test.mjs',
+  'scripts/core07/share-admission-source-contract.mjs',
+  'scripts/core07/share-admission-source-contract.test.mjs',
   'scripts/phase9/recommendation-zero-admission-smoke.mjs',
   'scripts/postinstall.mjs',
   'scripts/cat05/native-label-ocr-source-contract.test.mjs',
@@ -461,6 +465,28 @@ const sourceFiles = [
   'apps/mobile/src/lib/env.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
+  'apps/mobile/src/lib/launch/phase8.ts',
+  'apps/mobile/src/lib/launch/phase8.test.ts',
+  'apps/mobile/src/features/growth/shareAdmission.ts',
+  'apps/mobile/src/features/growth/shareAdmission.test.ts',
+  'apps/mobile/src/features/growth/publicLinkAdmission.ts',
+  'apps/mobile/src/features/growth/publicLinkAdmission.test.ts',
+  'apps/mobile/src/features/growth/shareProjection.ts',
+  'apps/mobile/src/features/growth/shareProjection.test.ts',
+  'apps/mobile/src/features/growth/ConflictCard.tsx',
+  'apps/mobile/src/features/growth/shareCard.ts',
+  'apps/mobile/src/features/growth/shareCard.test.ts',
+  'apps/mobile/src/features/growth/shareLinks.ts',
+  'apps/mobile/src/features/growth/shareLinks.test.ts',
+  'apps/mobile/src/features/growth/shareLandingRoute.test.ts',
+  'apps/mobile/src/features/growth/cardCopy.ts',
+  'apps/mobile/src/features/growth/cardCopy.test.ts',
+  'apps/mobile/src/features/intelligence/conflictIdentity.ts',
+  'apps/mobile/src/features/intelligence/conflictRoutes.test.ts',
+  'apps/mobile/src/app/share/conflict/[ruleId].tsx',
+  'apps/mobile/src/app/conflict/[ruleId].tsx',
+  'apps/mobile/src/app/s/[shareId].tsx',
+  'docs/phase-8/public-site/share.html',
   'apps/mobile/src/features/recommendations/admission.ts',
   'apps/mobile/src/features/recommendations/admission.test.ts',
   'apps/mobile/src/features/recommendations/goalAdmission.ts',
@@ -861,6 +887,16 @@ try {
   process.exit(1);
 }
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
+block(
+  errors,
+  launchContract.conflictShareAdmission.sharePublicationAdmitted === true,
+  'CORE-07A share publication remains zero-admission; exact-content receipt issuance, sanitized projection review, and explicit exact-payload confirmation are unavailable.',
+);
+block(
+  errors,
+  launchContract.conflictShareAdmission.publicLinksAdmitted === true,
+  'CORE-07A public links remain zero-admission; no reviewed production token, retention, revocation, deletion, abuse, or destination contract exists.',
+);
 const gitStatus = sourceSnapshot.gitStatus;
 warn(
   warnings,

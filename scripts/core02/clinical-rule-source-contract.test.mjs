@@ -685,7 +685,7 @@ test('no client or Edge Function mirrors conflict choices before hashes exist in
   assert.doesNotMatch(routineConflictSchema, /\bcorpus_sha256\b|\brule_content_sha256\b/u);
 });
 
-test('claim-bearing conflict surfaces require production admission and canonical rule.copy', () => {
+test('claim-bearing private conflict surfaces require production admission and canonical rule.copy', () => {
   const presentation = read(paths.presentation);
   const ask = read(paths.ask);
   const conflictRoute = read(paths.conflictRoute);
@@ -708,9 +708,16 @@ test('claim-bearing conflict surfaces require production admission and canonical
     /isAdmittedDetectedConflict\s*\(\s*candidate\s*\)[\s\S]*?candidate\.rule\.id/u,
   );
   assert.match(conflictRoute, /\.rule\.copy\./u);
-  assert.match(shareRoute, /canShareConflictCard\s*\(\s*conflict\s*\)/u);
-  assert.match(shareRoute, /\.rule\.copy\./u);
-  assert.match(phase7, /isReviewedRule\s*\(\s*conflict\.rule\s*\)/u);
+  assert.doesNotMatch(
+    shareRoute,
+    /DetectedConflict|\.rule\.copy\.|canShareConflictCard|useShelf/u,
+    'literal-zero-admission share route must not read or render private conflict claims',
+  );
+  assert.match(
+    phase7,
+    /shareCard:\s*false/u,
+    'Phase 7 must keep conflict sharing literally closed rather than deriving authority from review metadata',
+  );
   assert.match(recommendations, /\bisAdmittedDetectedConflict\b/u);
   assert.ok(
     recommendations.includes('.rule.copy.'),

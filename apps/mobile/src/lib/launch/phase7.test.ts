@@ -1,4 +1,3 @@
-import type { DetectedConflict } from '@/features/intelligence/engine';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const ENV_KEYS = [
@@ -54,22 +53,6 @@ function enableAllPhase7Flags(): Partial<Record<EnvKey, string>> {
     EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED: 'true',
     EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED: 'true',
   };
-}
-
-function reviewedConflict(overrides: Partial<DetectedConflict> = {}): DetectedConflict {
-  return {
-    rule: {
-      tagA: 'retinoid',
-      tagB: 'aha',
-      interactionType: 'routine',
-      reviewedBy: 'clinical-reviewer',
-    },
-    productAId: 'product-a',
-    productBId: 'product-b',
-    productAName: 'Product A',
-    productBName: 'Product B',
-    ...overrides,
-  } as DetectedConflict;
 }
 
 afterEach(() => {
@@ -147,6 +130,7 @@ describe('Phase 7 launch flags', () => {
       communityAggregates: false,
       trendEngine: false,
       nativeWidgets: false,
+      conflictSharePublication: false,
     });
     expect(phase7Flags.communityPosting).toBe(false);
     expect(phase7Flags.communityAggregates).toBe(false);
@@ -173,58 +157,54 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.trend).toBe(false);
     expect(phase7Flags.cloudAsk).toBe(true);
     expect(phase7Flags.widgets).toBe(false);
-    expect(phase7Flags.shareCard).toBe(true);
+    expect(phase7Flags.shareCard).toBe(false);
     expect(phase7Flags.goalActiveRecommendations).toBe(true);
   });
 });
 
 describe('Phase 7 share-card eligibility', () => {
-  it('rejects legacy reviewer markers and all safety/pregnancy conflicts', async () => {
+  it('rejects every conflict even when all flags and public identity look ready', async () => {
     const { canShareConflictCard } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
       EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
       ...enableAllPhase7Flags(),
     });
 
-    expect(canShareConflictCard(reviewedConflict())).toBe(false);
     expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, reviewedBy: null } }),
-      ),
+      canShareConflictCard({
+        rule: {
+          id: 'forged-rule',
+          interactionType: 'routine',
+          reviewedBy: 'clinical-reviewer',
+        },
+        productAId: 'product-a',
+        productBId: 'product-b',
+        productAName: 'Product A',
+        productBName: 'Product B',
+        sharePublicationReceipt: { decision: 'admitted' },
+      }),
     ).toBe(false);
-    expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, reviewedBy: '   ' } }),
-      ),
-    ).toBe(false);
-    expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, interactionType: 'safety' } }),
-      ),
-    ).toBe(false);
-    expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, tagA: 'pregnancy' } }),
-      ),
-    ).toBe(false);
-    expect(canShareConflictCard(reviewedConflict({ productAId: null }))).toBe(false);
   });
 
-  it('allows dev-only reviewed-conflict sharing fixtures without changing production review gates', async () => {
+  it('does not let a development fixture grant share authority', async () => {
     const flags = {
       EXPO_PUBLIC_APP_ENV: 'development',
       EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
       ...enableAllPhase7Flags(),
       EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING: 'true',
     };
-    const unreviewed = reviewedConflict({
-      rule: { ...reviewedConflict().rule, reviewedBy: null },
-    });
+    const validLookingConflict = {
+      rule: { reviewedBy: 'reviewer', interactionType: 'routine' },
+      productAId: 'product-a',
+      productBId: 'product-b',
+    };
 
     const devModule = await loadPhase7With(flags, { dev: true });
-    expect(devModule.canShareConflictCard(unreviewed)).toBe(true);
+    expect(devModule.phase7Flags.shareCard).toBe(false);
+    expect(devModule.canShareConflictCard(validLookingConflict)).toBe(false);
 
     const productionModule = await loadPhase7With(flags, { dev: false });
-    expect(productionModule.canShareConflictCard(unreviewed)).toBe(false);
+    expect(productionModule.phase7Flags.shareCard).toBe(false);
+    expect(productionModule.canShareConflictCard(validLookingConflict)).toBe(false);
   });
 });

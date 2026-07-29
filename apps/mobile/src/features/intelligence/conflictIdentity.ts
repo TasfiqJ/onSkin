@@ -28,24 +28,3 @@ export function conflictDetailRoute(c: DetectedConflict) {
     },
   };
 }
-
-export function conflictShareRoute(c: DetectedConflict) {
-  if (!c.productAId || !c.productBId) {
-    const subjectProductId = c.productAId ?? c.productBId;
-    return {
-      pathname: '/share/conflict/[ruleId]' as const,
-      params: {
-        ruleId: c.rule.id,
-        ...(subjectProductId ? { subjectProductId } : {}),
-      },
-    };
-  }
-  return {
-    pathname: '/share/conflict/[ruleId]' as const,
-    params: {
-      ruleId: c.rule.id,
-      productAId: c.productAId,
-      productBId: c.productBId,
-    },
-  };
-}

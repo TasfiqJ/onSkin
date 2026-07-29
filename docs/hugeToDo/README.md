@@ -102,6 +102,9 @@ Start here:
 - [CORE-06 Recommendation Zero-Admission Migration](../../supabase/migrations/20260726000071_recommendation_zero_admission.sql)
 - [CORE-06 Recommendation Database Contract](../../supabase/tests/database/recommendation_zero_admission.test.sql)
 - [CORE-06 0071 Forward-Upgrade Contract](../../supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql)
+- [CORE-07A Share Admission Source Checkpoint](./CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md)
+- [CORE-07A Share Admission Source Contract](../../scripts/core07/share-admission-source-contract.mjs)
+- [CORE-07A Share Admission Source Contract Tests](../../scripts/core07/share-admission-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -675,6 +678,32 @@ classification, privacy/consumer-health and affiliate review, hosted/native/
 accessibility/network evidence, archive-derived App Privacy answers, counsel,
 and App Store acceptance remain open. This checkpoint does not prove safety,
 compliance, product-market fit, seven-figure revenue, or any revenue.
+
+CORE-07 is now `in_progress` only because CORE-07A establishes a literal
+zero-share/public-link source boundary; the full feature is not complete.
+Private conflict guidance does not authorize publication. The launch contract
+records no share receipt issuer, no public token service, no share or public-
+link admission, no raw/private projection fields, and no share analytics.
+Every share attempt refuses before capture, temporary file, link, network,
+native-share, or analytics work. The renderer boundary may accept only a
+deliberately constructed sanitized allowlist projection rather than the full
+private conflict object, and every syntactically valid public identifier has
+the same neutral unavailable outcome as malformed, unknown, expired, revoked,
+or deleted input.
+
+A future positive successor must bind an immutable receipt to the exact
+admitted conflict corpus, rule/copy/citation/version, market, projection bytes,
+rights scope, reviewer receipts, expiry, and revocation state; show and obtain
+confirmation of the exact payload/destination before native export; and provide
+a separately reviewed public-token retention/revocation/deletion/abuse
+lifecycle. Activation requires exact-source `REV-02` regulatory, `REV-03`
+privacy/security, `REV-04` dermatology, `REV-05` cosmetic chemistry, `REV-06`
+IP/content-rights decisions, and `REV-07` detached signoffs. Final identity/
+domain, hosted privacy/security, signed archive, physical-iPhone, accessibility,
+network, native failure/cancel, and App Review evidence remain open. The
+checkpoint cites Apple, FTC, Washington, and California primary sources as a
+conservative research basis; it is not counsel, professional, Apple, market,
+growth, or revenue approval.
 
 The `0065` CAT-08 transition/default-ACL repair, `0066` legacy clinical-table
 seal, and `0067` checker-only catalog-release lint contract remain intact.

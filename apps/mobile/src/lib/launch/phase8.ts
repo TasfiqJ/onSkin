@@ -42,8 +42,7 @@ export const phase8PublicIdentity = {
 } as const;
 
 export const phase8Flags = {
-  publicLinks:
-    env.phase8PublicLinksEnabled && Boolean(finalDomain) && phase8PublicIdentity.marketingUrlReady,
+  publicLinks: false,
   reviewPrompt:
     env.phase8ReviewPromptEnabled &&
     (phase8PublicIdentity.appStoreUrlReady || phase8PublicIdentity.playStoreUrlReady),

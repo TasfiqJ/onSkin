@@ -11,6 +11,7 @@ import {
   productionUrl,
 } from '../phase9/lib.mjs';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
+import { auditCore07aShareAdmission } from '../core07/share-admission-source-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -56,6 +57,10 @@ function warn(condition, message) {
 
 function has(path, pattern) {
   return pattern.test(read(path));
+}
+
+for (const error of auditCore07aShareAdmission(root)) {
+  fail(false, `CORE-07A share-admission source contract: ${error}`);
 }
 
 function listFiles(dir) {
@@ -153,10 +158,7 @@ for (const file of requiredFiles) {
   fail(exists(file), `${file} is missing.`);
 }
 
-const publicSiteFiles = [
-  'docs/phase-8/public-site/index.html',
-  'docs/phase-8/public-site/share.html',
-];
+const publicSiteFiles = ['docs/phase-8/public-site/index.html'];
 for (const file of publicSiteFiles) {
   const source = read(file);
   fail(
@@ -176,6 +178,18 @@ for (const file of publicSiteFiles) {
     `${file} must promote only validated production store URLs at runtime.`,
   );
 }
+
+const publicSharePage = read('docs/phase-8/public-site/share.html');
+fail(
+  !/<(?:a|button|form|iframe|script)\b/iu.test(publicSharePage) &&
+    !/(?:share[_-]?id|URLSearchParams|sendBeacon|fetch\s*\(|data-store-url)/iu.test(
+      publicSharePage,
+    ) &&
+    /\bpublic links?\b[\s\S]{0,80}\b(?:unavailable|not available|disabled)\b/iu.test(
+      publicSharePage,
+    ),
+  'Public share fallback must remain a generic, inert unavailable state with no token parsing, destinations, or analytics.',
+);
 
 const supportPage = read('docs/phase-8/public-site/support.html');
 for (const requiredCopy of [
@@ -239,20 +253,22 @@ fail(
   'growth attribution must allow opaque share_id only.',
 );
 fail(
-  has('apps/mobile/src/features/growth/shareLinks.ts', /createShareId/),
-  'share link helper must create opaque share IDs.',
-);
-fail(
   !has('apps/mobile/src/features/growth/shareLinks.ts', /product(Name|Id)|rule_id|pregnan/i),
   'share link helper must not carry product, rule, or pregnancy data.',
 );
 fail(
-  has('apps/mobile/src/app/s/[shareId].tsx', /isSafeOpaqueId/),
-  'Installed share route must validate opaque share IDs.',
+  !has(
+    'apps/mobile/src/features/growth/shareLinks.ts',
+    /expo-crypto|randomUUID|digestStringAsync|buildPublicGrowthUrl|createShareId/,
+  ),
+  'Closed share-link helper must not generate a token, digest, or URL.',
 );
 fail(
-  !has('apps/mobile/src/app/s/[shareId].tsx', /\btrack(?:ProductAddStarted)?\s*\(/),
-  'Conflict-only installed share route must not emit analytics that reveal conflict existence.',
+  !has(
+    'apps/mobile/src/app/s/[shareId].tsx',
+    /useLocalSearchParams|isSafeOpaqueId|\bshareId\b|\btrack(?:ProductAddStarted)?\s*\(/,
+  ),
+  'Closed installed public route must not parse a token or emit analytics.',
 );
 
 fail(
@@ -274,12 +290,12 @@ fail(
   'Conflict share links must not encode conflict-identifying growth attribution.',
 );
 fail(
-  has('apps/mobile/src/lib/launch/phase7.ts', /interactionType\s*!==\s*'safety'/),
-  'Share eligibility must exclude safety conflicts.',
+  has('apps/mobile/src/lib/launch/phase7.ts', /shareCard:\s*false/),
+  'Phase 7 share-card capability must remain literal false.',
 );
 fail(
-  has('apps/mobile/src/lib/launch/phase7.ts', /tagA\s*!==\s*'pregnancy'/),
-  'Share eligibility must exclude pregnancy pseudo-conflicts.',
+  has('apps/mobile/src/lib/launch/phase8.ts', /publicLinks:\s*false/),
+  'Phase 8 public-link capability must remain literal false.',
 );
 
 fail(

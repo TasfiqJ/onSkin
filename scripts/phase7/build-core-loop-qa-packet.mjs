@@ -59,12 +59,20 @@ const requiredFiles = [
   'package.json',
   'docs/hugeToDo/launch-contract.json',
   'docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md',
+  'docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md',
   'docs/09-personalized-recommendations.md',
   'scripts/launch/contract.mjs',
+  'scripts/core02/clinical-rule-source-contract.test.mjs',
   'scripts/core06/recommendation-admission-source-contract.test.mjs',
+  'scripts/core07/share-admission-source-contract.mjs',
+  'scripts/core07/share-admission-source-contract.test.mjs',
   'scripts/phase9/recommendation-zero-admission-smoke.mjs',
+  'apps/mobile/src/lib/env.ts',
+  'apps/mobile/src/lib/env.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
+  'apps/mobile/src/lib/launch/phase8.ts',
+  'apps/mobile/src/lib/launch/phase8.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
   'apps/mobile/src/components/launch/DeferredSurface.test.ts',
   'apps/mobile/src/lib/navigation/safeBack.ts',
@@ -80,6 +88,7 @@ const requiredFiles = [
   'apps/mobile/src/app/onboarding/products.tsx',
   'apps/mobile/src/app/routine/plan.tsx',
   'apps/mobile/src/app/share/conflict/[ruleId].tsx',
+  'apps/mobile/src/app/s/[shareId].tsx',
   'apps/mobile/src/app/trend/_layout.tsx',
   'apps/mobile/src/app/trend/fairness.tsx',
   'apps/mobile/src/app/trend/optin.tsx',
@@ -105,10 +114,26 @@ const requiredFiles = [
   'apps/mobile/src/features/ask/useAsk.ts',
   'apps/mobile/src/features/catalog/client.ts',
   'apps/mobile/src/features/catalog/client.test.ts',
+  'apps/mobile/src/features/growth/shareAdmission.ts',
+  'apps/mobile/src/features/growth/shareAdmission.test.ts',
+  'apps/mobile/src/features/growth/publicLinkAdmission.ts',
+  'apps/mobile/src/features/growth/publicLinkAdmission.test.ts',
+  'apps/mobile/src/features/growth/shareProjection.ts',
+  'apps/mobile/src/features/growth/shareProjection.test.ts',
+  'apps/mobile/src/features/growth/ConflictCard.tsx',
+  'apps/mobile/src/features/growth/shareCard.ts',
+  'apps/mobile/src/features/growth/shareCard.test.ts',
+  'apps/mobile/src/features/growth/shareLinks.ts',
+  'apps/mobile/src/features/growth/shareLinks.test.ts',
+  'apps/mobile/src/features/growth/shareLandingRoute.test.ts',
+  'apps/mobile/src/features/growth/cardCopy.ts',
+  'apps/mobile/src/features/growth/cardCopy.test.ts',
   'apps/mobile/src/features/commerce/WhereToBuy.tsx',
   'apps/mobile/src/features/commerce/commerceRoutes.test.ts',
   'apps/mobile/src/features/intelligence/pao.ts',
   'apps/mobile/src/features/intelligence/pao.test.ts',
+  'apps/mobile/src/features/intelligence/conflictIdentity.ts',
+  'apps/mobile/src/features/intelligence/conflictRoutes.test.ts',
   'apps/mobile/src/features/notifications/BehaviouralTriggers.tsx',
   'apps/mobile/src/features/notifications/claimsafety.test.ts',
   'apps/mobile/src/features/notifications/copy.ts',
@@ -236,6 +261,7 @@ const requiredFiles = [
   'docs/phase-7/beta-evidence-dashboard.md',
   'docs/phase-7/core-loop-qa-checklist.md',
   'docs/phase-7/phase-7-exit-review.md',
+  'docs/phase-8/public-site/share.html',
 ];
 
 const scenarios = [
@@ -299,7 +325,8 @@ const scenarios = [
   },
   {
     surface: 'Share card',
-    scenario: 'exact owned reviewed conflict only; no fallback; no sensitive analytics payload',
+    scenario:
+      'literal zero share and public-link admission: no capture, file, network, token, native share, record-implying landing state, raw/private projection, or analytics side effect',
     evidenceKey: 'shareCardQaPass',
     envKey: 'PHASE7_SHARE_CARD_QA_PASS',
   },
@@ -738,6 +765,16 @@ if (gitStatus.length > 0) {
   else warnings.push(dirtyMessage);
 }
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
+if (launchContract.conflictShareAdmission.sharePublicationAdmitted !== true) {
+  blockers.push(
+    'CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag may substitute for a positive immutable exact-content share receipt.',
+  );
+}
+if (launchContract.conflictShareAdmission.publicLinksAdmitted !== true) {
+  blockers.push(
+    'CORE-07A public links are not admitted; no token service, reviewed retention/revocation/deletion/abuse contract, or exact-destination confirmation is available.',
+  );
+}
 const cat07CommittedEvidence = validateCat07CommittedEvidence(root, { expectedHeadSha: gitSha });
 for (const error of cat07CommittedEvidence.errors) {
   blockers.push(`CAT07 committed evidence: ${error}.`);
