@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "phase5_device_qa_packet",
-  "generatedAt": "2026-07-29T18:59:46.433Z",
+  "generatedAt": "2026-07-29T19:53:38.919Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -168,9 +168,21 @@
       "exactPayloadConfirmationRequired": true,
       "rawPrivateFieldsAllowed": false,
       "analyticsAllowed": false
+    },
+    "trendInsightAdmission": {
+      "trendInsightAdmitted": false,
+      "validatedOnDeviceEngineAvailable": false,
+      "resultIssuerAvailable": false,
+      "calibrationAuthorityAvailable": false,
+      "fairnessAuthorityAvailable": false,
+      "simulatedMetricsAllowed": false,
+      "contentAnalyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false,
+      "cloudPhotoProcessingAllowed": false,
+      "scoreAgeGradePercentageAllowed": false
     }
   },
-  "gitSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
+  "gitSha": "0d7a2621f4b37ed16554c59ca74184742ee0fa43",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": null,
@@ -339,7 +351,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
+    "currentGitSha": "0d7a2621f4b37ed16554c59ca74184742ee0fa43",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -388,7 +400,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
+    "headSha": "0d7a2621f4b37ed16554c59ca74184742ee0fa43",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -398,7 +410,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "86f092e4d90760f1d1bb4f34860346549b7bcfa5",
+    "headSha": "0d7a2621f4b37ed16554c59ca74184742ee0fa43",
     "status": "blocked"
   },
   "scenarios": [
@@ -481,8 +493,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 42839,
-      "sha256": "a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270"
+      "bytes": 43019,
+      "sha256": "cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239"
     },
     {
       "path": "package-lock.json",
@@ -493,14 +505,14 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 5899,
-      "sha256": "7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea"
+      "bytes": 6343,
+      "sha256": "49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72"
     },
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 12227,
-      "sha256": "72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f"
+      "bytes": 13431,
+      "sha256": "bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -547,20 +559,20 @@
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
       "exists": true,
-      "bytes": 5153,
-      "sha256": "693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3"
+      "bytes": 5256,
+      "sha256": "3f343eefac464487797f396821a3e89a5204a636733efb19f82208fa4652e0bb"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.test.ts",
       "exists": true,
-      "bytes": 7770,
-      "sha256": "5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166"
+      "bytes": 9230,
+      "sha256": "bd5c645e4c1aea55a6987dc1fff405d721a180cac60a6e6bea84195dfc639c60"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
       "exists": true,
-      "bytes": 20519,
-      "sha256": "d009aa555a3230ad67a41dfdc2cbeb184b9684757b97085346fe5362e57c7125"
+      "bytes": 20084,
+      "sha256": "5ca24d30673f0f0e79ea4ded5e2758e17ecda5505ca6a94862271b9614c6b030"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/shelf.tsx",
@@ -1561,8 +1573,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 470834,
-      "sha256": "6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f"
+      "bytes": 472929,
+      "sha256": "3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c"
     },
     {
       "path": "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
