@@ -1,10 +1,29 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-18T21:29:37.575Z
-Git SHA: 52107141867fbc9b8e683cfa7399ffdc6351d6d6
+Generated at: 2026-07-29T08:27:39.992Z
+Git SHA: 3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
+
+## Governed Evidence Chain
+
+- Status: blocked
+- Source S: `BLOCKED`
+- Evidence E: `BLOCKED`
+- Current R/F HEAD: `3cd0b35ecb75e8f459ad68078f7c6a7ce72169c3`
+- Selected RC: `BLOCKED`
+- Ledger path: `BLOCKED`
+- Ledger SHA-256: `BLOCKED`
+- Ledger entries: 0
+- Audited generated descendants: 0
+- Packet code bound to S: BLOCKED
+
+## Upstream Packet Contracts
+
+- Human-E2E manifest: blocked
+- Phase 5 device QA: blocked
+- Phase 5 recorded head: `90e8978932aa78a2c4e705b634978408b346de68`
 
 ## Evidence
 
@@ -54,94 +73,127 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 33803 | fcdd60b722b668df65a6714f6006014ea6ecc1ada7a50d056091c0936ce26206 |
-| docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
-| scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
+| package.json | present | 42442 | fce10a58e3001d05ac2d809317f3ae6890996da1a07e080563460eaf7ab54cf1 |
+| docs/hugeToDo/launch-contract.json | present | 4451 | 3b74e9d87e3327ce5fe8829ab2a22f42a2af23668176aedcd72a65da53d4ac6b |
+| docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md | present | 35333 | c852d2a97f979b23680069241b667ad2e15d7a7f298d364281955db8599888a2 |
+| docs/09-personalized-recommendations.md | present | 46631 | 7d4544112256b1b026116a42357069ec3e4002c5bde7ef1b6612b82784fcd0f4 |
+| scripts/launch/contract.mjs | present | 8713 | 1799e586dbc2cdb6679422c3634199ce7da730e4cb1d03a08c6f2da2ba1a4fc9 |
+| scripts/core06/recommendation-admission-source-contract.test.mjs | present | 32016 | c845f060a7a18f514eacfb5476ce0f5aa8696dc76692cf2a2feb45332b91e3c7 |
+| scripts/phase9/recommendation-zero-admission-smoke.mjs | present | 7831 | eb9e8caad7b98399af9ad7001b08e9a27eea01e614c8dd04a562eb63f6465865 |
 | apps/mobile/src/lib/launch/phase7.ts | present | 6338 | 9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01 |
-| apps/mobile/src/lib/launch/phase7.test.ts | present | 8407 | 2d633e139d356fdce0e6b966e1675a017fcc4b4a0ddbc5679149fc942331681f |
+| apps/mobile/src/lib/launch/phase7.test.ts | present | 8406 | 109e475d00d13808a70465189dee685c5097abd2b707dc928115a842010a7110 |
 | apps/mobile/src/components/launch/DeferredSurface.tsx | present | 2320 | 6ff85a7cc8ac36e0566673132a0abef71e0e65e99af158c3439b61c9bb4b98b2 |
 | apps/mobile/src/components/launch/DeferredSurface.test.ts | present | 1224 | 28c8db73d114e25fb69fa533df1020bcfbf91df1e31036b12ee91040ff24c60d |
 | apps/mobile/src/lib/navigation/safeBack.ts | present | 1487 | a2e3143f42c223bb14acb27e97182a8582dc85342f44a8960c0c4adf4795ec12 |
 | apps/mobile/src/lib/navigation/safeBack.test.ts | present | 3715 | 126a5f0b64f09192e20052bfa87f2f327ffab2831b3cc9a287882023ae7cd203 |
-| apps/mobile/src/app/(tabs)/today.tsx | present | 30507 | 76da3fdb66337d118e8a5381a9cd8333e17aa02698595db5f30abcbc8510b935 |
+| apps/mobile/src/app/(tabs)/today.tsx | present | 38886 | c07f10efec2a63a5c6eeb8cefc7e040276cae42fcfef1f18a1646dc3d93074d1 |
 | apps/mobile/src/app/(tabs)/progress.tsx | present | 20519 | d009aa555a3230ad67a41dfdc2cbeb184b9684757b97085346fe5362e57c7125 |
-| apps/mobile/src/app/(tabs)/shelf.tsx | present | 19737 | 9f3cb714402e4aaa7116968573106325629b1c7174d38e68745c9c579f62c694 |
-| apps/mobile/src/app/(tabs)/you.tsx | present | 40044 | f490947e7be30eeabe45135654398accb3edf90804d45a0e190f09c4b0c4b1ce |
-| apps/mobile/src/app/_layout.tsx | present | 3469 | 89197d975de81cc9c1a1e808a0ede821ee126bd0c8d9867a7e537897e75df529 |
-| apps/mobile/src/app/cycle/settings.tsx | present | 27252 | 0ecdd558bf0120bd4a3906899313ae9aefe7ad3452c761c742b428099fea4c4f |
-| apps/mobile/src/app/cycle/week.tsx | present | 13901 | 264a6d9fa2ce28abbb132d61b80739da5eb196990ef47867e1e6c3444e93b868 |
-| apps/mobile/src/app/cycle/why-tonight.tsx | present | 8646 | 758245963dc29153bcb362353c3f375249b4fb0cde6ff60f5df2826875d444f2 |
-| apps/mobile/src/app/onboarding/products.tsx | present | 15483 | ae461d520feb9894e38ce46222b47963d9f31f9077933eb03142e53898ea72ba |
-| apps/mobile/src/app/routine/plan.tsx | present | 19647 | 0db1d32033f801f9685b2193ae3d2b4a8e8d7538e84f1d101641f543d96984f6 |
-| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 7123 | 0bd46e014ebcb0e3f2affaacfda83b2685137028564bca5a717fa7ac81f038db |
+| apps/mobile/src/app/(tabs)/shelf.tsx | present | 21848 | aaf21f3b9567103e0c35b2fdeec4f535f164b592942e76b091e25ba19ab0fb43 |
+| apps/mobile/src/app/(tabs)/you.tsx | present | 40092 | 4c46f34715c5baa915c7bdb3521a1e366ff9bba9bcd4ffff05dd61d7ad0b0bc8 |
+| apps/mobile/src/app/_layout.tsx | present | 4046 | d2d7bae5a6eb88250d21a81cf09ec2ac2523673b429e7df4fcb4ba45539a08f6 |
+| apps/mobile/src/app/cycle/settings.tsx | present | 27311 | e743de466e9c1a3c0a33f63ff34bb99c3c9507b698e8564a76a2dc2b60089450 |
+| apps/mobile/src/app/cycle/week.tsx | present | 15186 | b2c90d552f0c186bad5cbcd385e60cba289ca5b6242f6f9d0b991f631af200ba |
+| apps/mobile/src/app/cycle/why-tonight.tsx | present | 9120 | 7e85c05e2157e53dbb88db012045056133b2f6a0b32dc47f797e6891a95559f3 |
+| apps/mobile/src/app/onboarding/products.tsx | present | 15830 | d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b |
+| apps/mobile/src/app/routine/plan.tsx | present | 19735 | a7a4e3c5dc34b3dd0811faefb6f67a1a6809a0e6396b16521d46497c334c9bfc |
+| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 6235 | c01a7d3b07823b92b83c4014da0b3ebbea4a0aecbd44abeb494b6a972abb92bd |
 | apps/mobile/src/app/trend/_layout.tsx | present | 1091 | 84e2ebdcabfebf7ae274c6742f44841410376ff6dc62888561ffa52b4fe7b9ed |
 | apps/mobile/src/app/trend/fairness.tsx | present | 4963 | 7e4654db068f93519165002135b21efc3c275c097d970a4960890657662fc8e0 |
 | apps/mobile/src/app/trend/optin.tsx | present | 526 | 59e11ac2d24b435b45b77a07030733ec5bfc93bddeac993f23d915a02a6058b5 |
-| apps/mobile/src/app/conflict/[ruleId].tsx | present | 32892 | 141ddf0dbd48a2a8ab96f5a6894e3a05cd19887f54724778f4b76b6d266f5fdb |
-| apps/mobile/src/app/shelf/[id].tsx | present | 43230 | 1d3c7d2b8b6b1e595a9c53646fedfef2ebdaca4ccd616279e10577238b743c5c |
+| apps/mobile/src/app/conflict/[ruleId].tsx | present | 26400 | 0d8aecb155c99ddb206fdbef7e57dfe6910d7443492693957bbb2a7b27f96f17 |
+| apps/mobile/src/app/recommendations/[id].tsx | present | 9516 | 3e486837968cfecd86544a9e5a78a658854e26a541b4d7c04ed8c0460467326e |
+| apps/mobile/src/app/recommendations/index.tsx | present | 16524 | 44c0ddd92b98b8d98d51b204914f42a3238fcabdad4dbede9c836e6bab3e32b4 |
+| apps/mobile/src/app/recommendations/preferences.tsx | present | 14355 | d032c3c7198f8bf4c85406796a5e5cc2c38c05c33c440e2084d15f30c1e07a38 |
+| apps/mobile/src/app/shelf/[id].tsx | present | 45428 | 1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d |
 | apps/mobile/src/app/shelf/_layout.tsx | present | 963 | 5223360e4b730ffc7fd37d356211a5aab42cae6aba388474ea1af61999d8203c |
 | apps/mobile/src/app/shelf/add.tsx | present | 337 | 69027d3b5ac294d2632ceba04a4f075dfdfe624566466415059e5e74f37c0aa7 |
-| apps/mobile/src/app/shelf/archive.tsx | present | 4585 | 5629481e04a349322eeff9bfd7633771689e532bb3b3109dfd1f969ad58f90ad |
-| apps/mobile/src/app/shelf/manual.tsx | present | 17688 | 783206228e50ac36ea9fd7d897d34f2b7eda3301b7021b794af77617be418f92 |
-| apps/mobile/src/app/shelf/no-match.tsx | present | 13272 | af3611acb6fc277ad98a8354786d111980ac549e0c79da330a46309470157a46 |
-| apps/mobile/src/app/shelf/ocr.tsx | present | 23251 | 149ee905c75bb47a73f49a0e19efcb4108b60347ebea6978f6fd2c33076ac047 |
-| apps/mobile/src/app/shelf/opened.tsx | present | 13752 | af48fb852216a2816432d33365a4438c9e1878b5b862f3cd2662ea4a073438d1 |
-| apps/mobile/src/app/shelf/replenish.tsx | present | 7631 | 5addfea202ebc15850feacc3a18c79d6216310c61a341a101c300a497cd94644 |
-| apps/mobile/src/app/shelf/scan.tsx | present | 27561 | fd7c554939f6733d95942f401cc866a61f652c917dd96241cc76d605d1db6136 |
-| apps/mobile/src/app/shelf/search.tsx | present | 24023 | 9e611454306cda227aab99c5eb0ebd7b1b5f563bbff15ecbb5750420f74b2d19 |
-| apps/mobile/src/features/ask/answer.ts | present | 11305 | 62e8f3bca768b462c74117b3215dfe32fdc23488a9c9219eb3a37f8394ae1971 |
-| apps/mobile/src/features/ask/answer.test.ts | present | 7151 | 5cc0f7342b5839a880ee6839283a62ec2362463f65ad879c4675366436684788 |
-| apps/mobile/src/features/ask/claimsafety.test.ts | present | 7602 | 2af74cb07a39bb25b0b4204c845539cb2f5d4c2835bb63a056a1cf6565063cc3 |
-| apps/mobile/src/features/ask/copy.ts | present | 8534 | 3417a7d79f70df50d1a25d00aac004e7e06ca4be28313432d9c19409d31d6ca3 |
-| apps/mobile/src/features/ask/useAsk.ts | present | 5305 | 43f52fa66c6ef5b79ba18fad4cf6134dd37cd3941d6a94cc7d1d44100c261ba8 |
-| apps/mobile/src/features/catalog/client.ts | present | 23836 | c8d0d42fbaca418df9a7c8ef51760538ab073b76a2a7bc587e1c19a1994a7061 |
-| apps/mobile/src/features/catalog/client.test.ts | present | 23664 | 059cf83ee9bb155a9c5f1dc54428d092bce07c75f6ca272eefc8e53a42024221 |
-| apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 9240 | 928812bf1f63a3af964dba397d94e52599474a9677b211f29202036939dccc90 |
-| apps/mobile/src/features/intelligence/pao.ts | present | 8291 | fcf9d36c694715069f527a60586ca9c0d075a00d9162263cd4b7d71f1d4baa27 |
-| apps/mobile/src/features/intelligence/pao.test.ts | present | 5134 | 1304cbbd30e91abd5ec841c4f71598fe0dcb6ce5437eec6d78849e169c1742b2 |
-| apps/mobile/src/features/notifications/BehaviouralTriggers.tsx | present | 3389 | acda04c36b2cc08ed4c108feef5ee7ac3ef778a1e74e9b04aeca900d37f1031c |
+| apps/mobile/src/app/shelf/archive.tsx | present | 4165 | 6f17ea9614579d1f50e8b17bdf0b9dbfac6caac699821302710903f745d3854d |
+| apps/mobile/src/app/shelf/manual.tsx | present | 17625 | 7b5be927575a0fcc5febeafe03511c1bda402e591644707ffb167807bccb3190 |
+| apps/mobile/src/app/shelf/no-match.tsx | present | 13431 | 7fdbdebaf549170305f6e959548446c1cc1a0d483c1b32408f8683a820d4c353 |
+| apps/mobile/src/app/shelf/ocr.tsx | present | 47515 | 8081c8eec75eb8a0781c66a1f2e5f093ad6f54c067e261a155bf33412f2b61a2 |
+| apps/mobile/src/app/shelf/opened.tsx | present | 18279 | f6def4491f22caae90590351f50f424c38397a8d6c8b6d2c3f77d7d8c0346f6d |
+| apps/mobile/src/app/shelf/replenish.tsx | present | 13236 | e1511ab6367bf8b7d0242ce87cdb9c459d32f66e18f81927e1aeb932fcf2e5b0 |
+| apps/mobile/src/app/shelf/scan.tsx | present | 33677 | f90b455d7f735e6ece27a07e6367e4a2e032da4d03cae497739d52c3a4bde733 |
+| apps/mobile/src/app/shelf/search.tsx | present | 24504 | 193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087 |
+| apps/mobile/src/features/ask/answer.ts | present | 15567 | cc9a7a0bd0e44a3cca4709479aee9513f424059917fd07335e26bb36371ce786 |
+| apps/mobile/src/features/ask/answer.test.ts | present | 11922 | 4d6a33acbd626f7a3a61b02e62af29c85d59ace6fc01f63a74bd27608ffb1dbf |
+| apps/mobile/src/features/ask/claimsafety.test.ts | present | 7841 | 05cd47f500866b175719b0c16e5a0106c84ed0581d49a372e5d6daaadb3e650c |
+| apps/mobile/src/features/ask/copy.ts | present | 7508 | c0fa11f9fcb1c0175e13a3368e1000f7dd6f2b80e2d486124649b55878358f35 |
+| apps/mobile/src/features/ask/useAsk.ts | present | 5560 | 9f03da10e33b546052d7c0bea39b8f72cba70c28465f17eeca5bed79930b6727 |
+| apps/mobile/src/features/catalog/client.ts | present | 23827 | a134e2bb32ea3fde57ef7dbcbe987ef15a5010a440ec38700731a2ea339e9a0e |
+| apps/mobile/src/features/catalog/client.test.ts | present | 31695 | 42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297 |
+| apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 9445 | 42147c464f5bfdd3c6b206c9e2814c387b784f7decc25e98b93d926451bcb1ca |
+| apps/mobile/src/features/commerce/commerceRoutes.test.ts | present | 8621 | c39cb98b09a609e825dc3e463ee125e968ddd7e98f7d1af19ff32ed1ac1a2cfb |
+| apps/mobile/src/features/intelligence/pao.ts | present | 5160 | 32209515587ba1136c72abcd9703f25ef46c0aa6a289bff5fac685a08a0eafde |
+| apps/mobile/src/features/intelligence/pao.test.ts | present | 3875 | d4ff777e1b13717b1fd7b6d01a695070e34f065a311b1f98e04d3b0bb737a385 |
+| apps/mobile/src/features/notifications/BehaviouralTriggers.tsx | present | 3485 | a1d607269e8beef3e56d0694fd80fb7f9f6f77b42278d7e7f5dc8cb1db4a5ffd |
 | apps/mobile/src/features/notifications/claimsafety.test.ts | present | 4506 | a60c1534edb7ac76c00faf543e833d5df5671685373e8475db80aa23a4d8ab5a |
-| apps/mobile/src/features/notifications/copy.ts | present | 4426 | a5b7cc3a1a0a512d21e61c49b0041ac0430c0194ab8adda45c09124a45f7787b |
-| apps/mobile/src/features/notifications/store.ts | present | 11233 | c4a58487812e87b538741c9db719437bd92dcc1d2b482605ced3997d7ad6862d |
-| apps/mobile/src/features/notifications/store.test.ts | present | 9408 | 14ab5ba14dedd4c4854b0cba685764e65de3237f8d130d543c09f47c5b7a5608 |
+| apps/mobile/src/features/notifications/copy.ts | present | 5148 | 02aeba0b0c5edc670c169e4732aa94ba4960ba153c087ffdc9d617561955af38 |
+| apps/mobile/src/features/notifications/store.ts | present | 9907 | 16ecbc9ac6e9e4b7fc6e52ddc6f0ee6fca8719f6ad18f888800f5ea387277c38 |
+| apps/mobile/src/features/notifications/store.test.ts | present | 7928 | ae99c70b099cfdad28cdb9a882d9ee06fc7ecbe524397a50c5a1d672d057cf47 |
 | apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts | present | 718 | 2b34153c9a4a85b29bbf8483217a65e4ee99b15837a50128bc7cf572c09fb4a0 |
-| apps/mobile/src/features/recommendations/claimsafety.test.ts | present | 9030 | 7ad766f22ba19b9a6f9ca80bb1320ebae3c5bf970c3e850c485407db22b03068 |
-| apps/mobile/src/features/recommendations/copy.ts | present | 7852 | d770279401f291b2ee903c275a1202c535f717272bc37bf7d5ef3fe1036778cb |
-| apps/mobile/src/features/recommendations/engine.ts | present | 17809 | ccd83caffac064fa690bb5acbf67ec350a86398ce64f22e5f3ecc06ca691693d |
-| apps/mobile/src/features/recommendations/engine.test.ts | present | 16643 | 8aaf0076f3f5df6f4c982d0ac1a62ce6835c1b6efcd6fc3f8f23ffa436126b1c |
-| apps/mobile/src/features/recommendations/replenishment.ts | present | 2237 | c1283d8602f70730433bc4009a6049ffe21c369682bf2bdf3832b64766a09420 |
-| apps/mobile/src/features/recommendations/replenishment.test.ts | present | 3505 | 9594da62265838c9628bc8dbfcc9eb81c24709a2510cb69fe1a88cde68b2f4cc |
-| apps/mobile/src/features/recommendations/useRecommendations.ts | present | 3251 | ed9aa67b5350287f58fcbba8fc6f328183fb803dd27ba8625906923cd8006018 |
+| apps/mobile/src/features/onboarding/serverSkinProfile.ts | present | 9985 | dd8c759f21a9c494689f2f2560587e7d6f518ffe48e8cc68178139b3d3fd55b2 |
+| apps/mobile/src/features/onboarding/serverSkinProfile.test.ts | present | 5885 | 484831986ac1278169488f2348fe604093c973226f418af67906578ea2553d04 |
+| apps/mobile/src/features/recommendations/admission.ts | present | 3362 | 699de9485fa5fed2335fb4b91dbd9f263ae7cd081048c30bb6b4d6fc17bb7934 |
+| apps/mobile/src/features/recommendations/admission.test.ts | present | 3673 | 41f457e23372c20b95d5bfe723a4077bebfefbf833aaa4cf786e73505a51cf70 |
+| apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx | present | 8769 | 9a255293b62127479d28415260afe39f1730cf408f25fcef38c55610d1e327ff |
+| apps/mobile/src/features/recommendations/RecommendationsTeaser.test.ts | present | 4098 | b5e0476fc56282475ab005d50a49e3e65104a1e9d413389d81cf957976eea03a |
+| apps/mobile/src/features/recommendations/claimsafety.test.ts | present | 11303 | 778a3f8cf6a166b5684ac5b862403e1349259d30ca8c7f540626b94fdd0bbcda |
+| apps/mobile/src/features/recommendations/catalog.ts | present | 9187 | c51facef1b8d53e2c916de28b08910147b6afe2d1de3ba36f587ad9cc1f64ffa |
+| apps/mobile/src/features/recommendations/copy.ts | present | 11161 | 4e652b871697dbe4856f2c931da5faa7b85dcbcca84e2cad7d70b4b4a3880f72 |
+| apps/mobile/src/features/recommendations/engine.ts | present | 24385 | 09d3eb6119b68909c9d34d23ddacf6c2ee9d79e0d35ecf277353c68d8b8224c3 |
+| apps/mobile/src/features/recommendations/engine.test.ts | present | 31682 | 0dafb11a6aebd0a713417db7839385905ab059a2a06c56c4f691fdf13e50205c |
+| apps/mobile/src/features/recommendations/fit.ts | present | 5853 | 5c26217852fd5a54a2ca1fa5bc60eba3943611a1f84a7a26a8050a6331383f7e |
+| apps/mobile/src/features/recommendations/fit.test.ts | present | 5242 | be28f0c73964323a77cdbfedc171ec895f8828765a7a7077896f07ce729c3a0a |
+| apps/mobile/src/features/recommendations/fragrance.ts | present | 912 | da21d1a0df285d242c9aef9fe4c05e329d44f3fb1047a2c4a075d4585d2c1644 |
+| apps/mobile/src/features/recommendations/goalAdmission.ts | present | 2693 | 70b629422f47106ad926b24f343103c3e782383f7a447909e314941a4a41df19 |
+| apps/mobile/src/features/recommendations/goalAdmission.test.ts | present | 2749 | 9342f3791b75441c2522f505832a3e7eb371de999ef15d8f166277acde9337aa |
+| apps/mobile/src/features/recommendations/goalProvenance.ts | present | 4465 | 05dc69ab16053b740179fad604b101afc486dfcc16a90fa76586ac8f59f8e50d |
+| apps/mobile/src/features/recommendations/loading.ts | present | 707 | 3708883b8d09582f3620cc933e2412ef2c6054d0fe5d9f5ca15d9145067c5c55 |
+| apps/mobile/src/features/recommendations/preferences.ts | present | 917 | 20f23f9dd2a185d093a204b9977ef771a0f4e562bb588b0398290a0eeb1bf898 |
+| apps/mobile/src/features/recommendations/recommendationRoutes.test.ts | present | 16214 | 613046a86d8d81bd131362697574f18dc7f7ed2d44ce3041076e358ad93eec62 |
+| apps/mobile/src/features/recommendations/replenishment.ts | present | 3829 | ad0658a4a88071c1991c13c1d8d797d6250cdf5fa70fc33f2613cef380b4e610 |
+| apps/mobile/src/features/recommendations/replenishment.test.ts | present | 6345 | 0809c65bdf7982d97624373387e58350342ec65cd5681a145968fa7deb864608 |
+| apps/mobile/src/features/recommendations/store.ts | present | 7353 | b24499fe9b122b13b390248fd9988d5521991a47f26b8e24eca1b2dfab923a83 |
+| apps/mobile/src/features/recommendations/store.test.ts | present | 8331 | 8a22ba398c5d5204162dbb98b4ef7f97dd82817f13e21d154dcc50fe0eee6444 |
+| apps/mobile/src/features/recommendations/useRecommendations.ts | present | 3878 | c86b5797892557f0197bc812cac9bf1ebe5eab79956590be5e64955b3331f733 |
+| apps/mobile/src/features/recommendations/useRecommendations.test.ts | present | 2802 | facda1c30fe00fe4cf5e7bf7a98c3435481835857c4774a3e9316af501f343bc |
 | apps/mobile/src/features/routine/activationAnalytics.ts | present | 5528 | a79affb1332e22f7d9f4a6acbaa24066bbc4d0443de3ac40f72614e9ef4f78c4 |
 | apps/mobile/src/features/routine/activationAnalytics.test.ts | present | 6851 | ce2b53262a21163ff27df5a6823b902f4de85fa396e2535e32331dfd2d4d9889 |
-| apps/mobile/src/features/scheduler/cadence.ts | present | 1364 | f7164eef26e124c398c3f79e3088c7500c2e35adc41f02ac47abdf675bab3b21 |
+| apps/mobile/src/features/scheduler/cadence.ts | present | 2891 | 0c46957a5a49577fdb6808cea95802834a8b5c5f2df50600d4ce93c00a0f8f6d |
 | apps/mobile/src/features/scheduler/customCycle.ts | present | 13146 | 3e6fc08ddf8813933f5e07216fc04c411d7683a44f3761b33b82132f95ee9cda |
 | apps/mobile/src/features/scheduler/customCycle.test.ts | present | 9291 | 9cec61bc36016b5c2acc6afeaff48b37cae861271141203520574ea3399f8e14 |
-| apps/mobile/src/features/scheduler/cycleStore.ts | present | 17247 | 5c7681266c67f7edc7283d2c9a3b72b8aec2fbb13e320b37a3c623776919d091 |
-| apps/mobile/src/features/scheduler/cycleStore.test.ts | present | 16213 | 31e88a5607ab9662926b2758931e5f7e2876f24c2f5f87f9eabbde4bb1a109de |
-| apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts | present | 15702 | c95cabb80b34ba878449ef6d401495d35ce6a3498bb53293a1d29322b107610e |
-| apps/mobile/src/features/scheduler/orchestrate.ts | present | 12566 | cc78a6d95295d2dd3cf2db03e00401fcd01bf3142ca0a329e25d5e2e2e884a37 |
-| apps/mobile/src/features/scheduler/orchestrate.test.ts | present | 19231 | da53077967a8907cc35ac85b032fc1dba1537cc9b92d99b180b3ffb7a4e388b2 |
-| apps/mobile/src/features/scheduler/useCycle.ts | present | 10274 | 19f53607aa158df0c4f05a51972d9d3a3ba598141ebe07ae8a0f80725ada31bc |
-| apps/mobile/src/features/shelf/freshness.ts | present | 3758 | db7f03175302ca10c75668056d8ca1ce0ff3f41de06b36e8428e09437ddc1ee2 |
-| apps/mobile/src/features/shelf/freshness.test.ts | present | 2976 | 3ab2cc0066fb2c9880b8a294424fcf15b21b749e39106b95fda14153bab5b962 |
-| apps/mobile/src/features/shelf/freshnessMigration.test.ts | present | 1325 | 39696409e00d951d5a8d57b065b35f051bdc12a791471d8564c146446dc1dd73 |
+| apps/mobile/src/features/scheduler/cycleStore.ts | present | 21910 | 9a32efad1c33138c1cc31ba8f21aca5f9a748a1ce767ac317ce311ca6cf0e964 |
+| apps/mobile/src/features/scheduler/cycleStore.test.ts | present | 26038 | 50683374e860600be6d785014002a1c3e75c4c163f6cbfb0f74da31063f23340 |
+| apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts | present | 21836 | 19b56bbd139d44d5ea04ebc37d33c132b6f212156ce071e0d302ae0d39ee9ab0 |
+| apps/mobile/src/features/scheduler/orchestrate.ts | present | 13381 | 9232e7a8b8f8a92de9e871dcf806ada0776a96eb527289c5c1476ec2452286a8 |
+| apps/mobile/src/features/scheduler/orchestrate.test.ts | present | 19682 | 613be5b855e6a975da9e39002c74e1069bae65ac906d7a2f351807e08ad3048a |
+| apps/mobile/src/features/scheduler/profile.ts | present | 6605 | a29854d4894bd7920c0b050bcfe61ea066563cdf9df188ea717d7efb9a70cad2 |
+| apps/mobile/src/features/scheduler/profile.test.ts | present | 10906 | ca69bfb059f6d8d608574c05c49b88097afa69895bc6963c4823e766a1549985 |
+| apps/mobile/src/features/scheduler/useCycle.ts | present | 12284 | 5206dc3e8cd31cea4b8933daa4d6ca1f5c2efa7808c2322c6d70705cd72c9fd9 |
+| apps/mobile/src/features/shelf/freshness.ts | present | 7299 | be0997619e57b575d84169f1c47bbf00bbb61e811a393ce04eff586b5b14b77e |
+| apps/mobile/src/features/shelf/freshness.test.ts | present | 8353 | a7ec4652c8a3cff995038511eec95f31e3d0045cf99d4597f78c58daee44364e |
+| apps/mobile/src/features/shelf/freshnessMigration.test.ts | present | 4858 | 03808fae36a3a74134bcda3d5db0e729729dcde2653b0331a7d481a5a71f9689 |
 | apps/mobile/src/features/shelf/paoProvenance.ts | present | 508 | dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3 |
 | apps/mobile/src/features/shelf/paoProvenance.test.ts | present | 1305 | 036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555 |
-| apps/mobile/src/features/shelf/shelfRoutes.test.ts | present | 59080 | 366abc3261c3f2769d1f0f1735a7c10ded295265baaa95b751e84e868a4b60d8 |
-| apps/mobile/src/features/shelf/store.ts | present | 20001 | a5fc172580b440af6c845c4ca53801386719f5cd9b641dc99e78c01f61811dd8 |
-| apps/mobile/src/features/shelf/store.test.ts | present | 16005 | 9e3886447ec96393b377258551ce4fcb2158a96ef8a6f6c347eb048d082bfa10 |
-| apps/mobile/src/features/today/completionsStore.ts | present | 11485 | 107d01dff838d426aa7ade51617133fa8ede21482e348871fe8ce5063b1f09cc |
-| apps/mobile/src/features/today/completionsStore.test.ts | present | 14015 | 67870a090332a812bfc72dcc0edd535eff5d42b05e2ce2aab99b1e7d2d4aa8bd |
+| apps/mobile/src/features/shelf/shelfRoutes.test.ts | present | 69745 | 9f2bff3241c5948522fa56e0d4e8857c24cd46b38d3e9b9868dd5416d24f1f68 |
+| apps/mobile/src/features/shelf/store.ts | present | 58796 | 218dd66ae24c4e301b476fe878ddcfc614e9acb435045a1571375ee399893d15 |
+| apps/mobile/src/features/shelf/store.test.ts | present | 57329 | c000ac66f164e1a2118cd5fe153f32a8c6565388534319825bfb0728cec29e02 |
+| apps/mobile/src/features/today/completionsStore.ts | present | 36561 | f6b92329805ead6df4e8340f1a7734b2a2b1e7cdd695ab2be148fe256283ff34 |
+| apps/mobile/src/features/today/completionsStore.test.ts | present | 31515 | a51b1cacf3ea5d610ed026e9fb9d3b6a76074dce799c6964be3fd097875fc308 |
 | apps/mobile/src/features/today/cycleCompletion.ts | present | 622 | c3c632e9bf71f42f85fa140de50b03e3b47afe2d0c00a70977579879f81f5317 |
 | apps/mobile/src/features/today/cycleCompletion.test.ts | present | 2516 | 437d3282afaac2a6c106fc3e056b410dab2fb6d34c3363bc99de829e615b3462 |
 | apps/mobile/src/features/today/routineProjection.ts | present | 7275 | 6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0 |
-| apps/mobile/src/features/today/routineProjection.test.ts | present | 7561 | da3894289743284f1b405b39b59d47c9de0633aba16ea58c1e8c5247d83bef0d |
-| apps/mobile/src/features/today/todayRoute.test.ts | present | 9902 | 4622cb88b55c293eccbb291ab51a844668403bab13a53d36c2f1a903f9926eb2 |
+| apps/mobile/src/features/today/routineProjection.test.ts | present | 7637 | c89b88c5a960fc77fec7508528b5d0f10699600a17bc917a7b4371f0d1f761ed |
+| apps/mobile/src/features/today/todayRoute.test.ts | present | 12470 | a9f3974eecfdf656bb1b3024bcc9950bd3c3511934045d8a7e04cc3e0ea65a20 |
 | apps/mobile/src/features/trend/copy.ts | present | 5381 | 804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318 |
 | apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts | present | 3425 | d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1 |
 | apps/mobile/src/features/trend/trendRoutes.test.ts | present | 3695 | 3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7 |
-| apps/mobile/src/features/trend/useTrend.ts | present | 3487 | f2ba58512a8322ad112f66d79762743c97856d2770a248185f71e065b9609df5 |
+| apps/mobile/src/features/trend/useTrend.ts | present | 4370 | fcd3bd8d434f15a63638e7852260f23a65309f997bd1daa45c57483dd041396e |
+| apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts | present | 11578 | b4f0a759ae2d8f14b48f01f3700eec8ad9dcd92a2adcfd937e4bbdb84e2af270 |
+| apps/mobile/src/lib/consent/healthProcessingEpoch.ts | present | 19927 | 1b0af9d43eae6b98e7ffa633457910cef695c778f3f428d9b5a6b7b8c3b6407d |
+| apps/mobile/src/lib/legal/phase3LaunchGates.test.ts | present | 2096 | 8a142e0fa997dd409c06d449f4749b88940db50b02ed10f4369d5a6bc52c3229 |
+| packages/types/src/database.types.ts | present | 58832 | 33e67e9c9cb829624bed72693dfe2b4706838483a547b1d3d359384bef8bd434 |
 | supabase/functions/catalog-lookup/index.ts | present | 11843 | 23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220 |
 | supabase/functions/catalog-lookup/catalogContract.ts | present | 80 | 9707c48c48465b279c2112d84a8a1459867c395490d3c184aaa4e6c2fbc7f81a |
 | supabase/functions/catalog-lookup/catalogContract.test.ts | present | 14681 | 96ab5dd088984ce67115b993e84436205ebb1bfabee25ea2d60558e7eea85f46 |
@@ -150,28 +202,81 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | supabase/functions/catalog-search/catalogContract.test.ts | present | 3041 | dd91fb0c009da68074d795d7819149d9bb970e47c2fba6bbdfc7a08f7f53922d |
 | supabase/migrations/20260711000038_shelf_freshness_invariants.sql | present | 1973 | 672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd |
 | supabase/migrations/20260711000039_replenishment_alert_opt_in.sql | present | 372 | eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299 |
-| scripts/phase7/build-core-loop-qa-packet.mjs | present | 15159 | f289a4e0313669eca0284b540374815ee15ccb75fb6b0ae366a352b39f1a9031 |
-| scripts/phase7/check-core-loop.mjs | present | 25381 | ec74e0247668ad49707b762c75a417429affacdedaadb4b3661910cf12507c1c |
-| scripts/phase7/check-core-loop-smoke.mjs | present | 14513 | 844fe14d085cf6ccb6722ba152e619a5cba502a1f1c65e52765048e52b869f6e |
-| scripts/e2e/human-e2e-manifest.mjs | present | 107141 | a6e1e2973ebd93367289b896c8fe7b24b4581765294c7ac78111da0c443488af |
-| scripts/phase9/lib.mjs | present | 25469 | 5036b1121759918646f89e6ff914a4b7a55914437025f5f20dd2e9723ced1017 |
+| supabase/migrations/20260718000060_cat07_truthful_freshness.sql | present | 24465 | 8bc2c35bfff443a3c3bf7ab76e52ed17e7d6b961a8b35bdde17701de5c7f574a |
+| supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql | present | 28316 | 4048342265ef103e6915411494911a98485528707c7413555725ba4ff427c1e9 |
+| supabase/migrations/20260722000062_catalog_curation_statement_guard.sql | present | 53193 | f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1 |
+| supabase/migrations/20260726000071_recommendation_zero_admission.sql | present | 14874 | 4e3e0c46a246b97e98f014bf65499ea86b7f57119744466aebc8c1491331acc9 |
+| supabase/tests/database/catalog_import_lifecycle.test.sql | present | 109814 | d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899 |
+| supabase/tests/database/catalog_launch_curation.test.sql | present | 202040 | 2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376 |
+| supabase/tests/database/catalog_serving_gate.test.sql | present | 36707 | 1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9 |
+| supabase/tests/database/cat07_truthful_freshness.test.sql | present | 36171 | d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24 |
+| supabase/tests/database/recommendation_zero_admission.test.sql | present | 17931 | 29f904aac21064dd5f5c2e8f3c7fa2a81417d3ffde26f5134f58e8b145b224b5 |
+| supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql | present | 7912 | 011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77 |
+| scripts/phase7/build-core-loop-qa-packet.mjs | present | 47179 | f472adeaec9983773e97e5dd3e22e6c94b8b120a5b19c6af9e71a8dd6f77ae23 |
+| scripts/phase7/check-core-loop.mjs | present | 30922 | 3736173b8971fbc9bffcbd85d63d97af2772b895a7154abcc3e82fbc84b15c9f |
+| scripts/phase7/check-core-loop-smoke.mjs | present | 34704 | c546277e8f46a174d7ce26604d8f55fbcef1303314a90501e47ad4a048d9b5cb |
+| scripts/phase7/core-loop-qa-packet-contract.mjs | present | 1474 | 3cf50c30778d6704ef5e83debe4a8ab3d9e80f9bed04012fb4413a5270fcf994 |
+| scripts/phase7/core-loop-qa-packet-contract.test.mjs | present | 4011 | 54813e3c594264f8e9771463ac3613fcfb4a9a5ba9c94a8c9d2da2ca6b6046d9 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 365743 | de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615 |
+| scripts/e2e/human-e2e-manifest-render.mjs | present | 2593 | b868275b0ca1a3bb99ab681bf7b96e466b03aefd3d410c244a7d9a076fc5b41d |
+| scripts/e2e/human-e2e-manifest-contract.mjs | present | 3491 | 6e7f480614b95db86bcd3fd771a7de603cc4e1c9517fdd944c5846399e9bce0a |
+| scripts/e2e/human-e2e-manifest-contract.test.mjs | present | 3037 | 1567c0da6f8654d6362f7628680b87f0df73b1bbe86d8a29e6a38de1648c2415 |
+| scripts/e2e/evidence-diagnostic-hygiene.mjs | present | 26880 | 0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911 |
+| scripts/e2e/cat07-png-contract.mjs | present | 7176 | 1677a40874cc7797a9d0954d50c14c2dadde5111b85dcbc0b76cd2cdc1a53e9f |
+| scripts/e2e/cat07-committed-evidence.mjs | present | 26706 | aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0 |
+| scripts/e2e/cat07-shelf-freshness-audit.mjs | present | 150904 | 84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229 |
+| scripts/e2e/cat07-shelf-freshness-audit.test.mjs | present | 60211 | a5a2f444cdf73cc914490101b1f90a4c3f5b48156e43eca3b219c1b0816615a6 |
+| scripts/phase2/local-supabase-contract.mjs | present | 47459 | d72fad22be3bc90240178ed03b2718d2338355f977458968d7ed9d435b5d068d |
+| scripts/phase5/device-qa-packet-contract.mjs | present | 2100 | c7bb801c99819e83ad4971cfbea573c60e41c074ca31e6d9dd068b2579cdc8ee |
+| scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql | present | 12249 | e2ffde42d3da2cf35e19c717cb85d6ddf9ba576b99d21cf46806d5e83ebc30dc |
+| scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql | present | 28021 | b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919 |
+| scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql | present | 22993 | 64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9 |
+| scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
+| scripts/phase9/release-qa-integrity.mjs | present | 56470 | ff2f7724d4cc0bdd4058f76acb8c31ea3b4d2e80a1e1dba531066a1750b727db |
+| scripts/launch/governed-evidence-chain.mjs | present | 64286 | 01a86c396964ffa8ab630341c46dc599f851cc0327e54563ec3366ef771aecb7 |
+| scripts/launch/governed-evidence-chain.test.mjs | present | 35858 | 1361abf142d7ef3e50a321637dc02c7374ac7f64e0710146849f38498a62e43a |
+| scripts/phase9/build-evidence-chain-ledger.mjs | present | 17702 | 69308cd626980aba6c12b636ff82230f9c40c1bb1d9d6b9fc10e71678abfc225 |
+| scripts/phase9/build-evidence-chain-ledger.test.mjs | present | 10832 | 97b39eff264003a715df958960f6b352f22b9061251a47e6fad69763558e0059 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10407 | 4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e |
-| docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
-| docs/USER_FLOW_TREE.md | present | 409032 | 18d07ded129d688110c11f7500121493b71024b603688c90c202a4310ec66fdb |
-| docs/e2e/generated/human-e2e-manifest.json | present | 49808 | 812072fe8197fd6770af625db9e2ef1c1245316ed4308c421285de6551e1a0e2 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 22808 | 6b0807114d527c2b6e90a3a25c180e21cb29384b24b8150532d437f4f3c7b77a |
-| docs/phase-5/generated/device-qa-packet.json | present | 45848 | e64731a8290b3bc8f5975f8bc6f6938829c4d643ec421e3476122293db6cf6e2 |
-| docs/phase-5/generated/device-qa-packet.md | present | 40567 | 33d395b1649f0b42e67793d9d111ca2e4976a896a0767116afe8826efb62720b |
-| docs/phase-6/generated/payments-qa-packet.json | present | 43155 | 6510f98c312401d17bd4fdf730db1624eb6efbdb82f1f5c0d28768a6e9f1188a |
-| docs/phase-6/generated/payments-qa-packet.md | present | 29634 | 94f9c5409c2e6a515f97f82f59606a59523ed483b06ce2f7b50809f9bd4cc101 |
-| docs/phase-7/surface-inventory.md | present | 9071 | 784ec337b865238eeaee6074371ce43bd9891b3dd5bfcf6fdbf7b71c818d350c |
+| docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
+| docs/USER_FLOW_TREE.md | present | 468010 | 75f3816b04c3bc799123cfe14303e89b405c8d26079f3238be0d8aa8f3865b24 |
+| docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md | present | 16934 | e8df50a7774196f97388b0b3aa0f29a0379c2b2380400f39b6e5350a40ecaf1f |
+| docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
+| docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
+| test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json | missing |  |  |
+| docs/phase-5/generated/device-qa-packet.json | present | 63979 | 7edfbff0c2f39e82e47fec0ba5d5617301bb7a0b3c6fa90c6f45153650eebb39 |
+| docs/phase-5/generated/device-qa-packet.md | present | 54005 | aff90827030fcddd435cde71253d164baf8a847a65cd4a0777351d6d25287abd |
+| docs/phase-6/generated/payments-qa-packet.json | present | 43304 | 6b5f7da57f5a2c7fb0f1e5ba37a4e856238a4a98b7c69eac5d4e73ec4b28ca7b |
+| docs/phase-6/generated/payments-qa-packet.md | present | 29730 | 1ff05c349bb03d40fe68b9dd30c3dc07f6daf6695f7376b9fb7cbc02470adb51 |
+| docs/phase-7/surface-inventory.md | present | 13288 | 14f1fa6df585ac7c8f1ae0d018218f9efec13139697a7bda0c48ec980f3ca0cd |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
-| docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
-| docs/phase-7/core-loop-qa-checklist.md | present | 64648 | 722eebf635789f1d51ef933ff6d66d13a09c1f09f51afce9a4cec8f1aa7f7586 |
+| docs/phase-7/beta-evidence-dashboard.md | present | 4972 | 8018b3cfa5f4c3c5092308a75854ac29e32f3a0c16deefc7f842eaa6e98a243e |
+| docs/phase-7/core-loop-qa-checklist.md | present | 67419 | a68a8abdd945bdc6ddb5f95e5333a568729f4e35f292e7398b2dd05ecac0fca3 |
 | docs/phase-7/phase-7-exit-review.md | present | 4844 | 4eae611b79c272251576743e6d999f1a84f540fb2dbe2a1049c1e0e9b2f48eba |
 
 ## Blockers
 
+- Phase 7 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.
+- Phase 7 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json is missing in the working tree.
+- Governed evidence chain: the governed evidence source must be one lowercase 40-character Git SHA.
+- Governed evidence chain: the governed evidence release candidate must be one strict immutable RC directory.
+- Governed evidence chain: pinned human-E2E manifest has no governed evidence-chain binding.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet must contain an empty blockers array.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet does not contain completed named native-device signoff.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet widgetLifecycleEvidence is not pass.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet cameraLifecycleEvidence is not pass.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet performanceEvidence is not pass.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet required native OCR evidence is not pass.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet fresh governed evidence-chain audit is not pass.
+- Phase 5 upstream packet: pinned Phase 5 device QA packet fresh governed evidence-chain audit is not pass.
+- Human-E2E upstream manifest: human-E2E manifest must be one JSON object.
+- Human-E2E upstream manifest: fresh governed evidence-chain audit is not pass.
+- Missing test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json.
+- CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.
+- CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).
+- CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.
+- CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD.
 - Missing brandReady evidence.
 - Missing supabaseRlsPass evidence.
 - Missing clinicalReviewPass evidence.
@@ -193,6 +298,27 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Missing shareCardQaPass evidence.
 - Missing deferredSurfacesQaPass evidence.
 - Missing analyticsQaPass evidence.
+- Phase 7 evidence contract: Phase 7 evidence brandReady is not pass.
+- Phase 7 evidence contract: Phase 7 evidence supabaseRlsPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence clinicalReviewPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence catalogBetaImportPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence deviceQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence revenueCatQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence privacyExportDeletePass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence betaDashboardReady is not pass.
+- Phase 7 evidence contract: Phase 7 evidence has no named signoff.
+- Phase 7 evidence contract: Phase 7 evidence onboardingConsentQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence shelfIntakeQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence reviewedGuidanceQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence routineBuilderQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence todayCheckoffQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence photosPrivacyQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence remindersQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence paymentsLifecycleQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence privacyControlsQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence shareCardQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence deferredSurfacesQaPass is not pass.
+- Phase 7 evidence contract: Phase 7 evidence analyticsQaPass is not pass.
 
 ## Warnings
 
