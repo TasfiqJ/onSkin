@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
@@ -23,13 +22,13 @@ const supabaseUrl = env.SUPABASE_URL ?? env.EXPO_PUBLIC_SUPABASE_URL;
 const publishableKey =
   env.SUPABASE_PUBLISHABLE_KEY ?? env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? env.SUPABASE_ANON_KEY;
 const secretKey = env.SUPABASE_SECRET_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
-const activatedExpected = env.PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED === 'true';
+const COMMERCE_ADMISSION_CLOSED = 'COM-01A: commerce admission closed';
 
 const artifact = {
   status: runLive ? 'running' : 'not-run',
   appEnvironment: appEnv,
   supabaseHost: safeHost(supabaseUrl),
-  activatedExpected,
+  commerceAdmission: COMMERCE_ADMISSION_CLOSED,
   checks,
   observations,
   warnings,
@@ -74,7 +73,7 @@ function writeArtifacts(status) {
       `- Status: ${artifact.status}`,
       `- Environment: ${artifact.appEnvironment}`,
       `- Supabase host: ${artifact.supabaseHost ?? 'not configured'}`,
-      `- Activated expected: ${artifact.activatedExpected ? 'yes' : 'no'}`,
+      `- Commerce admission: ${artifact.commerceAdmission}`,
       '',
       '## Checks',
       checks.length
@@ -160,39 +159,16 @@ function observe(name, response) {
   observations.push({ name, status: response.status, code: responseCode(response) });
 }
 
-function assertNoWriteResponse(response, label) {
+function assertClosedResponse(response, label) {
   observe(label, response);
-  if (response.status === 200) {
-    assert(response.body?.ok === true, `${label}: expected ok body on inert response.`);
-    assert(
-      /B-SHOPMY|no brand API key|poll inert/i.test(response.body?.skipped ?? ''),
-      `${label}: expected inert B-SHOPMY skipped response.`,
-    );
-    assert(
-      !activatedExpected,
-      `${label}: poll is inert but PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED=true.`,
-    );
-    return;
-  }
-  if (response.status === 401) {
-    assert(response.body?.error === 'unauthorized', `${label}: expected unauthorized body.`);
-    return;
-  }
-  if (response.status === 503) {
-    assert(
-      ['scheduler_secret_not_configured', 'shopmy_brand_domain_not_configured'].includes(
-        response.body?.error,
-      ),
-      `${label}: expected a stable activation-configuration error body.`,
-    );
-    assert(
-      !activatedExpected,
-      `${label}: poll configuration is incomplete but PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED=true.`,
-    );
-    return;
-  }
-  throw new Error(
-    `${label}: expected inert 200, 401, or 503; got ${response.status} (${response.text.slice(0, 120)}).`,
+  assertStatus(response.status, 200, label, response.text);
+  assert(
+    response.body !== null &&
+      !Array.isArray(response.body) &&
+      Object.keys(response.body).sort().join(',') === 'ok,skipped' &&
+      response.body.ok === true &&
+      response.body.skipped === COMMERCE_ADMISSION_CLOSED,
+    `${label}: expected exact COM-01A inert response; got ${response.text.slice(0, 160)}.`,
   );
 }
 
@@ -252,51 +228,53 @@ async function main() {
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
   const before = await orderAttributionCount(admin);
-  const wrongSecret = `phase9-wrong-${randomUUID()}`;
-
-  await runCheck('order-report-poll rejects non-POST before service-role work', async () => {
+  await runCheck('order-report-poll rejects non-POST before COM-01A inert response', async () => {
     const response = await callPoll({ method: 'GET' });
     observe('non-POST', response);
     assertStatus(response.status, 405, 'order-report-poll GET', response.text);
     assert(
-      response.body?.error === 'method_not_allowed',
+      response.body !== null &&
+        Object.keys(response.body).join(',') === 'error' &&
+        response.body.error === 'method_not_allowed',
       `order-report-poll GET returned unexpected body: ${response.text.slice(0, 120)}.`,
     );
     await assertNoAttributionDelta(admin, before, 'non-POST');
   });
 
   await runCheck(
-    'order-report-poll missing scheduler secret does not write attributions',
+    'order-report-poll POST returns exact COM-01A inert response without credentials',
     async () => {
       const response = await callPoll();
-      assertNoWriteResponse(response, 'missing scheduler secret');
-      await assertNoAttributionDelta(admin, before, 'missing scheduler secret');
+      assertClosedResponse(response, 'credential-free POST');
+      await assertNoAttributionDelta(admin, before, 'credential-free POST');
     },
   );
 
   await runCheck(
-    'order-report-poll wrong scheduler secret does not write attributions',
+    'order-report-poll ignores fake provider and scheduler credentials under COM-01A',
     async () => {
       const response = await callPoll({
         headers: {
-          Authorization: `Bearer ${wrongSecret}`,
-          'x-scheduler-secret': wrongSecret,
+          Authorization: 'Bearer com-01a-must-remain-inert',
+          'x-scheduler-secret': 'com-01a-must-remain-inert',
         },
       });
-      assertNoWriteResponse(response, 'wrong scheduler secret');
-      await assertNoAttributionDelta(admin, before, 'wrong scheduler secret');
+      assertClosedResponse(response, 'adversarial credential headers');
+      await assertNoAttributionDelta(admin, before, 'adversarial credential headers');
     },
   );
 
-  await runCheck('order-report-poll evidence avoids authorized ShopMy polling', async () => {
+  await runCheck('order-report-poll observations remain literal-zero commerce', async () => {
     assert(
-      !observations.some((item) => item.status === 200 && item.code !== 'skipped'),
-      'harness unexpectedly observed an authorized poll response.',
+      observations.filter((item) => item.name !== 'non-POST').every(
+        (item) => item.status === 200 && item.code === 'skipped',
+      ),
+      'harness observed a POST response outside the exact COM-01A inert contract.',
     );
   });
 
   warnings.push(
-    'Authorized scheduler success path intentionally not run because it would use the server-only ShopMy token/domain and call the Order Report API.',
+    'Live evidence reaches the deployed Edge endpoint and compares attribution counts; it cannot directly capture provider egress. The source contract separately forbids provider code and credentials.',
   );
 
   writeArtifacts(errors.length > 0 ? 'fail' : 'pass');

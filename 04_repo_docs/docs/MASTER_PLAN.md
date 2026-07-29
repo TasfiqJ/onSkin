@@ -10,6 +10,51 @@
 - `[Needs Research]`: more external research required.
 - `[Open Question]`: unanswered blocker.
 
+## 0.1 COM-01A Commerce Admission Checkpoint
+
+[Decision] COM-01A is a source checkpoint for **literal zero admission**, not a
+commerce implementation or release approval. Current commerce authority,
+affiliate/retailer rail availability, publication authority, reviewed catalog
+and Stack availability, positive commerce-consent grant, provider/order polling,
+catalog or attribution reads, click/order recording, external purchase
+navigation, and commerce analytics are all unconditionally `false` or inert.
+Explicit refusal, withdrawal, cleanup, and deletion may remain so legacy state
+can be removed without creating admission. COM-01 through COM-07 are incomplete
+and launch-blocked. Any older positive commerce, demo, preview, creator-Stack,
+Where-to-buy, or partner-polling language is a future requirement only.
+
+[Researched] A positive successor needs an exact reviewed rail and publication
+authority, provider terms and data-flow approval, independent ranking, current
+App Privacy answers, and an ATT determination. Apple's
+[App Review Guideline 5.1.2(vi)](https://developer.apple.com/app-store/review/guidelines/)
+says data gathered from depth/facial-mapping tools, including Camera and Photo
+APIs, may not be used for marketing, advertising, or use-based data mining,
+including by third parties. A photo-derived product choice, Stack,
+replenishment prompt, affiliate link, or attribution event is therefore a
+high-risk path that must remain closed unless qualified counsel and Apple review
+the exact release; consent or replacing the input with an opaque token does not
+cure prohibited upstream use. Guideline 2.5.18 separately bars targeted or
+behavioral display advertising based on sensitive health/medical data.
+
+[Researched] The
+[FTC Endorsement Guides Q&A](https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking)
+requires clear, conspicuous disclosure close to an affiliate recommendation and
+explains that “affiliate link” or “buy now” alone may be inadequate. The FTC's
+[native-advertising guidance](https://www.ftc.gov/business-guidance/resources/native-advertising-guide-businesses)
+also requires commercial content to be identifiable, while product/ranking and
+health-related claims still require substantiation. Exact data flows must be
+reviewed for the
+[FTC Health Breach Notification Rule](https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0),
+[Washington RCW 19.373](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373&full=true),
+[Nevada NRS 603A.400-.550](https://www.leg.state.nv.us/nrs/nrs-603a.html),
+and, when applicable,
+[California Civil Code § 1798.140](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.140.).
+Those laws can reach inferred/derived health data, sharing, sale, commercial
+interactions, or profiles and may require distinct consent, authorization,
+rights, contracts, or disclosures. These source controls and reviews cannot
+guarantee App Store acceptance, legal compliance, safety, product-market fit,
+or revenue.
+
 ## 1. Executive Summary
 
 ### Final Project Name Recommendation
@@ -390,7 +435,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 | Medical claims       | App review/legal risk          | Cosmetic language, clinical review, disclaimers          |
 | Unreviewed rules     | Safety/trust risk              | Reviewer metadata before production exposure             |
 | Catalog licensing    | ODbL/source obligations        | Attribution, source memos, contribution posture          |
-| Commerce             | Trust/privacy risk             | Separate consent, disclosure, independence               |
+| Commerce             | Trust/privacy/App Review risk  | COM-01A literal-zero gate; reviewed rail/authority, dataflow, ATT/privacy labels, disclosure, independent ranking, counsel |
 | Community            | UGC moderation risk            | Human moderation before posting                          |
 
 ### 4.8 MVP Reality Check
@@ -624,6 +669,24 @@ Feature 11: Commerce
   disclosure, reconciliation, and device gates pass.
 - Complexity: High.
 - Dependencies: consent, FTC disclosure, partner, attribution.
+- Current state: COM-01A is a **literal zero admission** source checkpoint.
+  Commerce authority, rail/publication authority, catalog/Stack reads, positive
+  consent, provider poll, click/order recording, external navigation, and
+  analytics are unconditionally closed; only refusal, withdrawal, cleanup, and
+  deletion may remain. COM-01 through COM-07 are incomplete and launch-blocked.
+  All positive behavior described here or in older commerce specs is a future
+  requirement, not current runtime authority.
+- Positive successor gates: executed provider terms; exact first/third-party
+  data-flow and recipient inventory; ATT and App Privacy decisions; adjacent
+  affiliate/native-ad disclosure; commission-independent product, retailer, and
+  Stack ranking; claims and HBNR review; Washington and Nevada consumer-health
+  review; applicable California review; live reconciliation; accessibility,
+  network, archive, and supported-iPhone evidence. Apple Guideline 5.1.2(vi)
+  requires photo/camera-derived commerce to remain excluded unless the exact
+  design receives qualified legal and Apple review; consent or an opaque token
+  alone is insufficient.
+- Assurance boundary: source refusal is not COM-01 completion and supplies no
+  App Store, legal, safety, demand, or revenue guarantee.
 
 Feature 12: Community/Skin Notes
 

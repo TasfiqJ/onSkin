@@ -365,7 +365,7 @@
       "owner": "C/H/V",
       "prerequisites": ["ACCT-11"],
       "nextAction": "Complete and capture acceptance evidence: Commerce/affiliate provider",
-      "acceptance": "Codex selects and applies to ShopMy or approved alternative, configures API, links, disclosures, and polling"
+      "acceptance": "Blocked under COM-01A; a future reviewed successor may select/apply to an approved provider and configure the rail"
     },
     {
       "id": "ACCT-13",
@@ -483,8 +483,8 @@
       "id": "DB-02",
       "owner": "C",
       "prerequisites": ["DB-01"],
-      "nextAction": "Complete and capture acceptance evidence: Correct revenuecat-webhook and order-report-poll gateway authentication",
-      "acceptance": "External signed/authenticated requests reach handlers and fail closed on bad credentials"
+      "nextAction": "Complete and capture acceptance evidence: Correct RevenueCat webhook authentication; keep order-report-poll literal-zero until a new reviewed commerce admission checkpoint",
+      "acceptance": "RevenueCat external requests fail closed; commerce configuration cannot activate the inert handler"
     },
     {
       "id": "DB-03",

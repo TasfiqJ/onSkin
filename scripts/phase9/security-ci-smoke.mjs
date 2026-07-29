@@ -240,9 +240,11 @@ if (exists(workflowPath)) {
     /if:\s*github\.event_name == 'workflow_dispatch'/.test(workflow) &&
       /npm run phase9:live-order-report-poll:strict/.test(workflow) &&
       /PHASE9_RUN_LIVE_ORDER_REPORT_POLL/.test(workflow) &&
-      /PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(workflow) &&
-      !/ORDER_REPORT_POLL_SECRET:\s*\$\{\{\s*secrets\./.test(workflow),
-    'Live order-report-poll CI job must be manual-only, strict, expectation-driven, and must not expose the real scheduler secret.',
+      !/PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(workflow) &&
+      !/(?:SHOPMY_BRAND_API_KEY|SHOPMY_BRAND_DOMAIN|ORDER_REPORT_POLL_SECRET):\s*\$\{\{/.test(
+        workflow,
+      ),
+    'Live order-report-poll CI job must be manual-only, strict, and free of commerce activation/provider credentials.',
   );
   block(
     errors,

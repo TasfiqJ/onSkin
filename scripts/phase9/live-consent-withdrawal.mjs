@@ -16,6 +16,7 @@ import {
   readScriptAppEnvironment,
   redactedErrorKind,
   resolveHostedSupabaseProjectTarget,
+  stableErrorCode,
   storageObjectMissing,
   strict,
   write,
@@ -445,17 +446,6 @@ async function cleanupSyntheticState(admin, state) {
       cleanupFailures.push(redactedErrorKind(error));
     }
   }
-  for (const externalOrderId of state.orderIds) {
-    try {
-      const { error } = await admin
-        .from('order_attributions')
-        .delete()
-        .eq('external_order_id', externalOrderId);
-      if (error) cleanupFailures.push(redactedErrorKind(error));
-    } catch (error) {
-      cleanupFailures.push(redactedErrorKind(error));
-    }
-  }
   if (state.noteIds.length > 0) {
     try {
       const { error } = await admin.from('community_notes').delete().in('id', state.noteIds);
@@ -539,7 +529,6 @@ async function main() {
     storagePaths: [],
     topicIds: [],
     noteIds: [],
-    orderIds: [],
   };
   let fixtureClient = null;
   let epoch = null;
@@ -799,27 +788,20 @@ async function main() {
       });
 
       await runCheck(REQUIRED_LIVE_CONSENT_WITHDRAWAL_CHECKS[5], async () => {
-        const clickToken = `phase9-consent-${randomUUID()}`;
-        await insertOne(fixtureClient, 'commerce_click_events', {
+        const blockedClickToken = `phase9-consent-closed-${randomUUID()}`;
+        const blockedCommerceWrite = await fixtureClient.from('commerce_click_events').insert({
           user_id: state.user.id,
-          click_token: clickToken,
+          click_token: blockedClickToken,
           product_type: 'cleanser',
           source: 'direct',
           consented: true,
         });
-        const externalOrderId = `phase9-consent-${randomUUID()}`;
-        state.orderIds.push(externalOrderId);
-        const orderWrite = await admin.from('order_attributions').insert({
-          external_order_id: externalOrderId,
-          click_token: clickToken,
-          order_amount_cents: 1299,
-          commission_cents: 123,
-          currency: 'USD',
-          status: 'locked',
-          transaction_date: new Date().toISOString(),
-          record_updated_at: new Date().toISOString(),
-        });
-        if (orderWrite.error) throw orderWrite.error;
+        assert(
+          stableErrorCode(blockedCommerceWrite.error) === '42501',
+          `COM-01A commerce click publication was not rejected: ${redactedErrorKind(
+            blockedCommerceWrite.error,
+          )}.`,
+        );
 
         const withdrawal = await invokeWithdrawal(
           state.user.client,
@@ -830,9 +812,9 @@ async function main() {
         assert(
           withdrawal.status === 200 &&
             withdrawal.data.withdrawn === true &&
-            withdrawal.data.cleanup?.commerce_click_events_deleted >= 1 &&
-            withdrawal.data.cleanup?.order_attributions_detached >= 1,
-          'data_sharing did not attest click deletion and order detachment.',
+            withdrawal.data.cleanup?.commerce_click_events_deleted === 0 &&
+            withdrawal.data.cleanup?.order_attributions_detached === 0,
+          'data_sharing did not truthfully attest zero COM-01A cleanup.',
         );
         await expectRevocationRecorded(state.user.client, 'data_sharing');
         await expectRowCount(
@@ -842,16 +824,6 @@ async function main() {
           state.user.id,
           0,
           'Commerce click cleanup',
-        );
-        const { data: order, error } = await admin
-          .from('order_attributions')
-          .select('click_token')
-          .eq('external_order_id', externalOrderId)
-          .single();
-        if (error) throw error;
-        assert(
-          order.click_token === null,
-          'data_sharing left an order attribution linked to the click token.',
         );
       });
 

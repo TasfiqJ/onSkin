@@ -996,13 +996,21 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Responsive/accessibility branch: Verify 360 x 640 and 390 x 844 with zero horizontal overflow, complete 48 px controls, named exact-date fields, explicit radio states, route-owned inline validation, no JavaScript dialog, and clean current-origin browser logs.
   - Evidence: Supported-phone screenshots, accessibility/geometry snapshots, reload assertions, byte/digest assertions for v1→v2 migration, browser/device logs, source contracts, focused lifecycle tests, hosted migration/RLS/catalog readback, qualified chemistry/legal review, and an exact-build E2E report.
   - Current evidence boundary: The 2026-07-11 Expo-web packet in `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/` remains useful historical UI evidence, but it predates CAT-07's explicit replacement opening choice, category-estimate exclusion, and v1→v2 byte-preservation contract. It is stale for current source acceptance and cannot prove native encrypted storage/relaunch, live migration/RLS/catalog truth, physical-device accessibility, notifications, or named chemistry/legal review. CAT-07 remains `in_progress`.
-- Branch: replenish similar options unavailable after commerce consent
-  - Priority: Important
+- Branch: replenish remains commerce-free at COM-01A literal zero admission
+  - Priority: Critical
   - Automate later: Yes
-  - Action: Set a product to a PAO boundary, open `/shelf/replenish`, tap `See similar options`, grant where-to-buy consent, and tap `See similar options` again while the catalogue/partner rail is unavailable.
-  - Expected result: No paid links or retailer telemetry are exposed before consent. After consent, the route stays in the replenish context and shows a visible, accessible inline unavailable-catalogue message instead of appearing inert or opening a native alert.
-  - Evidence: Screenshot sequence, dialog check, alert geometry, browser logs, and source contract.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app` adds `Similar Flow Serum`, sets `3 months ago` plus `3 mo` PAO, verifies Shelf shows `0 days left`, opens `/shelf/replenish`, grants `Allow where-to-buy links`, and retaps `See similar options`. Pre-fix evidence showed the consented tap left Expo web visually unchanged while the source path used `Alert.alert`. Post-fix, one route-owned `role="alert"` message appears at y=427-545, `tab.getJsDialog()` is null, `scrollWidth=320`, and warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/`; native iOS/Android announcement, Dynamic Type, and live similar-product rail QA remain open.
+  - Action: Set a product to a PAO boundary and open `/shelf/replenish` while
+    positive-looking commerce flags and legacy consent exist.
+  - Expected result: The route exposes no commerce, retailer, consent,
+    where-to-buy, paid-link, or `See similar options` CTA. The user can complete
+    only the ordinary non-commerce replenish/replacement flow.
+  - Evidence: The 2026-07-29 Expo-web packet passed `/shelf/replenish` at
+    360 x 640, 390 x 844, and 430 x 932 with commerce and similar-options copy
+    absent and zero current-run console errors or warnings. Evidence is in
+    `test-results/human-e2e/2026-07-29/com01a-zero-commerce-current/`.
+  - Historical/stale evidence: The 2026-07-08 positive consent and
+    `See similar options` packet predates COM-01A and cannot support current
+    acceptance or a future positive commerce successor.
 - Branch: active shelf empty with archive history
   - Priority: Critical
   - Automate later: Yes
@@ -1868,59 +1876,100 @@ it to the exact source/archive under test. See
   - Evidence: Alert-region text, absence of a JS/system dialog, disabled chip state, and local preference state.
   - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE=once` and `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS=1200` verifies `Vegan` stays `aria-selected=false` and disabled while the failed save is pending, shows stable `Preference not saved` copy after rejection with no JS/system dialog, disables again during retry, becomes `aria-selected=true` only after the successful save, persists after reload, keeps zero horizontal overflow, and keeps visible controls 48 px tall. Evidence is in `test-results/human-e2e/2026-07-08/recommendation-preference-save-failure-current/`.
 
-## Flow: Commerce Trust And Shoppable Routines
+## Flow: COM-01A Commerce Literal Zero Admission
 
-- Goal: A user can inspect where-to-buy transparency, manage commerce consent, and browse shoppable routines without getting trapped on trust-critical direct-entry surfaces.
-- Persona: Returning user reviewing commerce independence before tapping a paid link or browsing a curated routine.
-- Entry state: User has completed onboarding; commerce feature flag may be enabled or deferred.
-- Start screen/URL/window: You tab, For You recommendation detail, stack list, stack detail, transparency page, consent sheet, or direct commerce routes.
-- Success state: Commerce remains secondary to recommendations, disclosures are visible, consent stays separate and revocable, and direct-entry commerce exits recover to the correct parent surface.
+- Goal: A user who reaches a stale or direct commerce URL sees truthful unavailable recovery while the app performs no commerce read, grant, click, navigation, attribution, polling, or analytics side effect.
+- Persona: Returning user following a stale commerce link or checking a surface that formerly exposed where-to-buy behavior.
+- Entry state: User has completed onboarding; adversarial commerce flags, final-looking domains, legacy consent, fixtures, and provider credentials may be present but cannot create authority.
+- Start screen/URL/window: You tab, For You recommendation detail, Shelf/replenishment, `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, or `/commerce/stack/[slug]`.
+- Success state: Every direct commerce route presents the same analytics-free unavailable surface and replaces to You; You, recommendations, and Shelf expose no commerce entry, consent grant, retailer row, creator stack, or similar-options handoff; no catalog/click/order/provider side effect occurs.
 - Priority: Critical
 - Automate later: Yes
-- Surface: Expo web for route recovery; iOS and Android for native outbound-link and modal behavior.
-- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/commerce-routes/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/commerce-routes-current/`
+- Surface: Expo web for route recovery, visible-state, layout, and console
+  observation; supported physical iPhones remain required for any future
+  positive external-link or consent successor.
+- Evidence folder:
+  `test-results/human-e2e/2026-07-29/com01a-zero-commerce-current/`
+- Source authority: [COM-01A checkpoint](hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+- Current evidence: 2026-07-29 human-simulated Expo web passed at
+  360 x 640, 390 x 844, and 430 x 932 with zero current-run console errors and
+  zero warnings. This packet did not retain a network capture and is not native,
+  legal, privacy, App Review, or launch clearance.
+- Historical evidence notice: Every positive commerce, consent, paid-link,
+  development-stack, retailer, attribution, and direct-route observation from
+  2026-07-06 through 2026-07-08 is historical/stale. It predates COM-01A, does
+  not describe current behavior, and cannot satisfy COM-01 through COM-07.
 
-### Path A: Transparency And Consent
+### Path A: Direct Commerce Route Refusal
 
-1. Action: Open the You tab commerce rows, open "How we stay honest", then return. Open a recommendation where-to-buy consent gate and choose Allow or Not now.
-   Expected result: The transparency page explains church-and-state commerce clearly; the consent gate is separate, calm, and dismisses back to the originating surface when there is navigation history.
-   Evidence: 2026-07-07 Expo web at 320 x 568 verified direct `/commerce/transparency` recovery, recommendation where-to-buy locked state with consent off, separate `/commerce/consent` sheet entry, `Not now`, `Dismiss`, `Allow where-to-buy links`, return to the originating recommendation after Allow, and catalog-blocked empty state while live links remain unavailable.
+1. Action: With every commerce-related environment input set to a plausible
+   positive value, open `/commerce/stacks`, `/commerce/transparency`,
+   `/commerce/consent`, and
+   `/commerce/stack/sensitive-skin-starter-set` directly; activate
+   `Back to You`.
+   Expected result: Every route retains that exact URL until the user acts,
+   renders one shared unavailable surface with exactly one `Back to You`, and
+   contains no stack, transparency, consent-allow, paid-link, retailer, price,
+   commission, external-link, or positive commerce copy. `Back to You` replaces
+   the route with `/you`.
+   Evidence: The 2026-07-29 three-viewport packet passed all four exact routes,
+   exact pre-action URLs, one `Back to You` per route, absence of positive copy,
+   and post-action `/you`. Console capture reports zero errors and zero warnings.
 
-### Path B: Shoppable Routines
+### Path B: No Indirect Commerce Entry
 
-1. Action: Open `/commerce/stacks`, open an available stack in development, tap "How this works", and return through the visible Back controls.
-   Expected result: The stack remains ordered by routine sequence, paid-link disclosure stays visible, transparency remains reachable through a 44 pt phone target, and Back returns through the stack hierarchy.
-   Evidence: 2026-07-07 Expo web at 320 x 568 verified `/commerce/stacks` to `/commerce/stack/sensitive-skin-starter-set`, visible paid-link disclosure, 48 px `How stack paid links work`, `/commerce/transparency`, Back to stack detail, and Back to `/commerce/stacks` with zero horizontal overflow.
+1. Action: Inspect You and Shelf/replenishment with legacy consent and
+   positive-looking flags, then trigger ordinary non-commerce controls.
+   Expected result: You exposes neither commerce nor Trend. Shelf/replenishment
+   exposes no commerce or similar-options CTA. Ordinary non-commerce navigation
+   remains usable.
+   Evidence: The 2026-07-29 packet passed You and Shelf/replenishment at all
+   three viewports with those positive labels and actions absent.
 
 ### Branches
 
-- Branch: direct-entry commerce exits
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Open `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/[slug]` directly, then use the visible Back, Dismiss, Allow, Not now, or scrim control.
-  - Expected result: Top-level commerce direct entries return to the You tab; stack details return to `/commerce/stacks`; deferred commerce routes also return to the You tab instead of a no-history dead end. Visible Back and Dismiss controls meet the 44 pt phone touch target, and the consent sheet keeps Dismiss reachable while its content scrolls on short phones.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified default deferred `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/sensitive-skin-starter-set` return to `/you`; commerce-enabled direct `/commerce/transparency`, `/commerce/stacks`, `/commerce/consent`, and `/commerce/stack/sensitive-skin-starter-set` recover to `/you` or `/commerce/stacks` as appropriate, with 44+ px visible controls and no browser errors.
-  - 2026-07-08 safe-area follow-up: With `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`, Codex in-app browser verified `/commerce/consent` at 320 px renders one named `Before we show where to buy` dialog with `aria-modal=true`, a 44 px top reserve, zero horizontal overflow, 48 x 48 Dismiss, 264 x 54 Allow, 264 x 48 Not now, and no mojibake. Source contracts now require native bottom-inset padding when present and hide the scrim from accessibility traversal; native iOS/Android safe-area and screen-reader QA remain open.
-- Branch: unavailable stack
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Open `/commerce/stack/[slug]` for a slug that is not currently shippable.
-  - Expected result: The app shows a calm unavailable state, explains the stack may have been updated while disclosures or product availability are reviewed, provides a visible `Back to stacks` path to `/commerce/stacks`, and keeps `How paid links work` available without exposing retailer links.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified `/commerce/stack/missing-stack-e2e` unavailable copy, no retailer links, 56 px `Back to stacks`, 56 px `How paid links work`, recovery to `/commerce/stacks`, and transparency recovery.
-- Branch: no commerce consent
+- Branch: route-group layout canonicalization
   - Priority: Critical
   - Automate later: Yes
-  - Action: With commerce consent off, inspect a where-to-buy block and a stack item.
-  - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state, and the Allow where-to-buy plus shelf alternative controls meet the 44 pt phone touch target.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified the recommendation where-to-buy block shows locked copy with no retailer rows, no paid-link disclosure, 48 px `Allow where-to-buy`, 50 px shelf alternative to `/shelf/manual`, and stack item taps open the separate consent sheet instead of retailer links.
-  - Current locking evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with commerce enabled and a final-domain flag reproduced a stack regression where `/commerce/stack/sensitive-skin-starter-set` exposed `Paid link`, `Paid links`, external glyphs, and paid-link accessibility labels before consent. Post-fix, the stack shows `Consent needed` locked rows, no paid-link text, no external glyph, zero horizontal overflow, no sub-44 visible controls, and locked item taps open `/commerce/consent`. The same run adds a cleanser through `/shelf/manual`, opens `/recommendations/gap:mineral_spf`, verifies the locked where-to-buy block has no paid-link text/glyph, 48 px `Allow where-to-buy`, 50 px shelf alternative, the Allow control opens the consent sheet, and the shelf alternative routes to `/shelf/manual`. Evidence and report are in `test-results/human-e2e/2026-07-08/commerce-no-consent-locking/` and `docs/e2e-bug-reports/2026-07-08-commerce-stack-paid-links-before-consent.md`.
-- Branch: retailer link handoff failure
-  - Priority: Important
+  - Action: Open each direct commerce URL from a fresh browser navigation,
+    inspect the address before interaction, and activate the only recovery CTA.
+  - Expected result: The route-group layout is a transparent `Slot`; it neither
+    redirects nor renders a competing deferred surface. The leaf route owns the
+    unavailable state, retains the exact direct URL, and replaces to `/you`.
+  - Current evidence: The initial 2026-07-29 run exposed a layout
+    canonicalization defect. Replacing the commerce layout body with a
+    transparent `Slot` fixed it. The same three-viewport rerun passed all four
+    exact direct URLs and the `/you` replacement.
+- Branch: positive commerce copy stays absent
+  - Priority: Critical
   - Automate later: Yes
-  - Action: With commerce consent on and a real HTTPS retailer URL available, simulate the OS refusing to open the external URL.
-  - Expected result: The app shows a calm Link unavailable message, does not appear inert, and the user remains in the recommendation context.
-  - Evidence: Partial. The 2026-07-07 local run reaches the consent-allowed catalog-blocked empty state because source-cleared retailer links and affiliate partner rails are not approved yet. 2026-07-08 Codex in-app browser Expo web at 320 x 568 with commerce enabled verified the stack paid-link stub path stays on `/commerce/stack/sensitive-skin-starter-set`, opens no dialog, renders a visible route-owned `role="alert"` message at viewport y=242-408 before the paid-link rows, keeps the paid-link row touchable, and keeps zero horizontal overflow. Source contracts now reject native `Alert` calls in `WhereToBuy` and stack paid-link recovery. Real retailer URL OS-refusal remains open until approved HTTPS retailer links are available.
+  - Action: Inspect visible text, roles, links, and controls on all four direct
+    routes with positive-looking commerce inputs.
+  - Expected result: Each route contains one `Back to You` and no allow/consent,
+    paid-link, retailer, price, commission, external-link, stack, or
+    transparency content.
+  - Current evidence: All four routes passed at 360 x 640, 390 x 844, and
+    430 x 932. The retained console report contains zero errors and zero
+    warnings.
+- Branch: indirect commerce entry remains absent
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Inspect You and Shelf/replenishment at all three viewports.
+  - Expected result: You contains no commerce or Trend entry. Shelf/replenishment
+    contains no commerce, retailer, consent, or similar-options CTA.
+  - Current evidence: The 2026-07-29 packet passed both surfaces at all three
+    viewports.
+- Branch: evidence boundary
+  - Priority: Critical
+  - Automate later: No
+  - Action: Review the retained packet and state only what it captured.
+  - Expected result: The packet is described as Expo-web human-simulated
+    visible-state, route, layout, and console evidence. It is not described as a
+    network capture, native iOS behavior, physical-iPhone proof, provider or
+    hosted proof, legal/privacy approval, App Review clearance, launch
+    clearance, or revenue evidence.
+  - Current evidence:
+    `test-results/human-e2e/2026-07-29/com01a-zero-commerce-current/`.
 
 ## Flow: Skin Notes Community Trust Layer
 

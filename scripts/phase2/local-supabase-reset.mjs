@@ -30,8 +30,8 @@ import {
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 70;
-const EXPECTED_LATEST_MIGRATION = '20260726000071';
+const EXPECTED_MIGRATION_COUNT = 71;
+const EXPECTED_LATEST_MIGRATION = '20260729000072';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
 // recomputes every sealed membership root. Keep ordinary CLI operations tightly
@@ -381,10 +381,23 @@ try {
     ),
   );
   await stat(
+    join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'commerce_zero_admission_0072_upgrade.test.sql',
+    ),
+  );
+  await stat(
     join(sandboxSupabaseDir, 'tests', 'upgrade', 'routine_adherence_0068_upgrade.test.sql'),
   );
 
   const sandboxHeadMigration = join(sandboxSupabaseDir, 'migrations', migrationFiles.at(-1));
+  const sandboxRecommendationMigration = join(
+    sandboxSupabaseDir,
+    'migrations',
+    migrationFiles.find((name) => name.startsWith('20260726000071_')),
+  );
   const sandboxAdherenceMigration = join(
     sandboxSupabaseDir,
     'migrations',
@@ -401,6 +414,10 @@ try {
     migrationFiles.find((name) => name.startsWith('20260726000070_')),
   );
   const withheldHeadMigration = join(sandboxRoot, migrationFiles.at(-1));
+  const withheldRecommendationMigration = join(
+    sandboxRoot,
+    migrationFiles.find((name) => name.startsWith('20260726000071_')),
+  );
   const withheldSyncMigration = join(
     sandboxRoot,
     migrationFiles.find((name) => name.startsWith('20260726000069_')),
@@ -415,6 +432,7 @@ try {
   );
   if (mode === '--verify') {
     await rename(sandboxHeadMigration, withheldHeadMigration);
+    await rename(sandboxRecommendationMigration, withheldRecommendationMigration);
     await rename(sandboxConsentDraftMigration, withheldConsentDraftMigration);
     await rename(sandboxSyncMigration, withheldSyncMigration);
     await rename(sandboxAdherenceMigration, withheldAdherenceMigration);
@@ -562,7 +580,7 @@ try {
       'reset',
       '--local',
     ]);
-    await rename(withheldHeadMigration, sandboxHeadMigration);
+    await rename(withheldRecommendationMigration, sandboxRecommendationMigration);
     const recommendationUpgradeTemplatePath = join(
       sandboxSupabaseDir,
       'tests',
@@ -575,7 +593,7 @@ try {
     );
     const [recommendationUpgradeTemplate, exactRecommendationMigration] = await Promise.all([
       readFile(recommendationUpgradeTemplatePath, 'utf8'),
-      readFile(sandboxHeadMigration, 'utf8'),
+      readFile(sandboxRecommendationMigration, 'utf8'),
     ]);
     const recommendationIncludeMarker = '-- @@INCLUDE_EXACT_0071_MIGRATION@@';
     if (recommendationUpgradeTemplate.split(recommendationIncludeMarker).length !== 2) {
@@ -596,6 +614,49 @@ try {
         'db',
         '--local',
         'supabase/tests/upgrade/generated/recommendation_zero_admission_0071_upgrade.generated.test.sql',
+      ],
+      {
+        failureDiagnosticProfile: 'tap',
+        failureDiagnosticMaxBytes: STRUCTURAL_TEST_DIAGNOSTIC_MAX_BYTES,
+        failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
+      },
+    );
+    await runLocalCli('reset through 0071 for the 0072 commerce forward-upgrade rehearsal', [
+      'db',
+      'reset',
+      '--local',
+    ]);
+    await rename(withheldHeadMigration, sandboxHeadMigration);
+    const commerceUpgradeTemplatePath = join(
+      sandboxSupabaseDir,
+      'tests',
+      'upgrade',
+      'commerce_zero_admission_0072_upgrade.test.sql',
+    );
+    const generatedCommerceUpgradePath = join(
+      generatedUpgradeDir,
+      'commerce_zero_admission_0072_upgrade.generated.test.sql',
+    );
+    const [commerceUpgradeTemplate, exactCommerceMigration] = await Promise.all([
+      readFile(commerceUpgradeTemplatePath, 'utf8'),
+      readFile(sandboxHeadMigration, 'utf8'),
+    ]);
+    const commerceIncludeMarker = '-- @@INCLUDE_EXACT_0072_MIGRATION@@';
+    if (commerceUpgradeTemplate.split(commerceIncludeMarker).length !== 2) {
+      throw new Error('The 0072 upgrade rehearsal include marker is invalid.');
+    }
+    await writeFile(
+      generatedCommerceUpgradePath,
+      commerceUpgradeTemplate.replace(commerceIncludeMarker, () => exactCommerceMigration),
+      'utf8',
+    );
+    await runLocalCli(
+      'run 0071 to 0072 commerce zero-admission rehearsal',
+      [
+        'test',
+        'db',
+        '--local',
+        'supabase/tests/upgrade/generated/commerce_zero_admission_0072_upgrade.generated.test.sql',
       ],
       {
         failureDiagnosticProfile: 'tap',
@@ -629,6 +690,7 @@ try {
         'supabase/tests/database/routine_adherence_authority.test.sql',
         'supabase/tests/database/routine_completion_sync_bridge.test.sql',
         'supabase/tests/database/recommendation_zero_admission.test.sql',
+        'supabase/tests/database/commerce_zero_admission.test.sql',
       ],
       {
         failureDiagnosticProfile: 'tap',

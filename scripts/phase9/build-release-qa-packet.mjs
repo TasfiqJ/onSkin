@@ -54,6 +54,7 @@ import {
 } from '../launch/governed-evidence-chain.mjs';
 import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from '../phase5/device-qa-packet-contract.mjs';
 import { PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS } from '../photo05/trend-admission-source-contract.mjs';
+import { COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS } from '../com01/commerce-admission-source-contract.mjs';
 import { validatePhase7EvidenceInventory } from '../phase7/core-loop-qa-packet-contract.mjs';
 import {
   validateClaimedBetaUpstreamPacket,
@@ -752,6 +753,9 @@ const sourceFiles = [
 for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
   if (!sourceFiles.includes(path)) sourceFiles.push(path);
 }
+for (const path of COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS) {
+  if (!sourceFiles.includes(path)) sourceFiles.push(path);
+}
 
 for (const file of sourceFiles)
   block(errors, exists(file), `${file} is missing from QA packet inputs.`);
@@ -905,6 +909,11 @@ block(
   errors,
   launchContract.trendInsightAdmission.trendInsightAdmitted === true,
   'PHOTO-05A Trend insights remain literal-zero-admission; no validated on-device engine or result issuer exists, and simulated metrics, consent state, tone, fixtures, legacy rows, analytics, and disabled-path side effects grant no authority.',
+);
+block(
+  errors,
+  launchContract.commerceAdmission.commerceAdmitted === true,
+  'COM-01A commerce remains literal-zero-admission; the approved rail, publication authority, reviewed catalog/stacks, consent grant, partner poll, click recording, external navigation, analytics, and disabled-path side effects all remain closed.',
 );
 const gitStatus = sourceSnapshot.gitStatus;
 warn(

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { isCommerceConsented } from '@/features/commerce/consent';
-import { getCommerceConsentLocal, setCommerceConsentLocal } from '@/features/commerce/store';
+import { getCommerceConsentLocal } from '@/features/commerce/store';
 import { isCommunityConsented } from '@/features/community/consent';
 import {
   getAgeConfirmedLocal,
@@ -87,7 +87,9 @@ describe('dependent consent cleanup on base health withdrawal', () => {
       version: HEALTH_DATA_CONSENT.version,
       consentText: HEALTH_DATA_CONSENT.fullText,
     });
-    await setCommerceConsentLocal(true);
+    // Seed a pre-COM-01A stale receipt directly; the production positive setter is
+    // intentionally fail-closed and cannot create this state.
+    mocks.storage.set(COMMERCE_KEY, 'v1:1');
     await setCommunityConsentLocal(true);
     await setAgeConfirmedLocal(true);
 

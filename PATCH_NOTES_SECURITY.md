@@ -7,19 +7,19 @@
 - Why safe: The function is intended to be deployed without Supabase JWT verification, so it must fail closed unless an external webhook verifier is configured.
 - Regression: `scripts/phase9/edge-auth-smoke.mjs` now checks this fail-closed condition.
 
-## Service-role scheduler activation gates
+## Commerce literal-zero scheduler boundary
 
-- Files: `supabase/functions/order-report-poll/index.ts`, `supabase/functions/revenuecat-webhook/index.ts`, `scripts/phase9/live-order-report-poll.mjs`, `.env.example`, `scripts/phase9/edge-auth-smoke.mjs`, `scripts/phase9/live-revenuecat-webhook.mjs`, `scripts/phase9/release-smoke.mjs`.
-- Change: RevenueCat webhook now rejects non-`POST` methods before raw body parsing. The ShopMy order-report poll now rejects non-`POST` methods, remains a no-op without `SHOPMY_BRAND_API_KEY`, and fails closed with `scheduler_secret_not_configured` or `unauthorized` once the brand key is configured unless `ORDER_REPORT_POLL_SECRET` is supplied by the scheduler.
-- Why safe: Both functions are intended to run without Supabase user JWTs. The webhook should only accept provider deliveries, and the scheduled service-role poll must not become a public trigger for external API spend or order-attribution writes after ShopMy approval.
-- Regression: Phase 9 Edge auth smoke requires POST-only webhook/poll behavior, scheduler secret checks, fail-closed poll activation, pre-ShopMy-call authorization, and a live order-report-poll harness that does not read/send the real scheduler secret. Release smoke blocks `SHOPMY_BRAND_API_KEY` without `ORDER_REPORT_POLL_SECRET`; the live RevenueCat harness includes a non-POST no-write check.
+- Files: `supabase/functions/order-report-poll/index.ts`, `supabase/functions/manifest.json`, `supabase/migrations/20260729000072_commerce_zero_admission.sql`, `.env.example`, `scripts/phase9/edge-auth-smoke.mjs`, `scripts/phase9/live-order-report-poll.mjs`, `scripts/phase9/release-smoke.mjs`.
+- Change: RevenueCat webhook still rejects non-`POST` methods before raw body parsing. Independently, the COM-01A order-report endpoint now has exactly one POST behavior: return `{ok:true, skipped:"COM-01A: commerce admission closed"}` without reading provider, scheduler, or Supabase credentials; creating a client; making an external request; or writing attribution data. Runtime values cannot activate it.
+- Why safe: The inactive endpoint has no privileged capability. Migration 0072 separately rejects attribution inserts and business updates from stale privileged code while retaining exact token detachment and deletion for privacy rights.
+- Regression: Phase 9 source, Edge-auth, release, and security CI contracts require the exact inert implementation and reject provider fetches, clients, credentials, activation branches, or attribution writes. The RevenueCat live harness retains its separate non-POST no-write check.
 
 ## Live order-report-poll scheduler harness
 
 - Files: `scripts/phase9/live-order-report-poll.mjs`, `scripts/phase9/edge-auth-smoke.mjs`, `scripts/phase9/security-ci-smoke.mjs`, `scripts/phase9/release-smoke.mjs`, `scripts/phase9/build-release-qa-packet.mjs`, `.github/workflows/security.yml`, `.env.example`, `package.json`.
-- Change: Added an explicit-flag live harness for deployed `order-report-poll`. It verifies non-`POST` rejection, verifies missing and wrong scheduler secrets do not write `order_attributions`, supports a staging activation expectation flag, refuses production unless separately allowed, writes evidence artifacts, and intentionally avoids the authorized scheduler success path so it cannot call the ShopMy Order Report API.
-- Why safe: The order-report poll is a service-role path. This gives staging proof of inert/fail-closed behavior without exposing `ORDER_REPORT_POLL_SECRET` to CI or triggering external commerce ingestion.
-- Regression: Phase 9 Edge auth smoke requires the harness, production guard, no real scheduler-secret access, no-write checks, and activated-env expectations. Security CI smoke requires the manual workflow step and rejects passing the real scheduler secret into that job. Release smoke adds `PHASE9_ORDER_REPORT_POLL_PASS`.
+- Change: The explicit-flag live harness verifies deployed non-`POST` rejection, the exact COM-01A inert POST body, and a zero `order_attributions` row-count delta. It refuses production unless separately allowed and writes redacted evidence.
+- Why safe: The harness uses no provider or scheduler activation credential and cannot exercise a positive commerce path because none exists in current source.
+- Regression: Phase 9 Edge-auth and security CI smoke require the harness, production guard, exact inert result, zero-write proof, and absence of activation credentials or provider work. Release smoke retains `PHASE9_ORDER_REPORT_POLL_PASS` as deployed literal-zero evidence.
 
 ## Notification lock-screen privacy
 

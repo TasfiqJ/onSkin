@@ -100,7 +100,32 @@ Requests opportunistically purge a bounded expired set, but an idle database can
 retain expired rows until a scheduled hosted purge runs. Launch evidence must
 prove that job, backup/restore treatment, and the resulting deletion transcript.
 
-Migrations `20260713000046_account_service_row_scrub.sql` and `20260713000047_account_obf_contribution_erasure.sql` plus the account-deletion helper close the bounded synchronous service-row paths they cover: the service-role-only RPC is transactional, rejects residual identity, deletes account-only subscription events, the caller's commerce clicks, and any legacy-held OBF contribution payloads, detaches matching order attribution tokens, and removes only the deleting user from all seven scalar/alias/transfer owner fields on a shared event. Migration `0046` repairs legacy missing event IDs, canonicalizes live UUIDs found in old webhook payload owner keys, replaces every historical payload with a typed allowlist, makes click-token ownership unique, and tolerates legacy UUID case/whitespace during deletion. Migration `0047` purges legacy OBF rows with no owner, makes `user_id` mandatory, and changes the Auth FK from `SET NULL` to validated `CASCADE`, so direct Auth deletion cannot strand barcode/payload data. The current official ShopMy report exposes no correlation field, so its adapter always persists `click_token = null`; the known-token lookup and foreign-key path remain a fail-closed invariant for a future provider-approved rail. Strict result-shape validation prevents database errors or malformed attestations from being reported as deletion success. The real migrations pass disposable PostgreSQL 15 and 17 rehearsals, including idempotent RPC retry and direct Auth cascade, but this does not replace a complete Supabase migration reset or live concurrency/provider-interruption evidence.
+Migrations `20260713000046_account_service_row_scrub.sql` and
+`20260713000047_account_obf_contribution_erasure.sql` plus the account-deletion
+helper close the bounded synchronous service-row paths they cover: the
+service-role-only RPC is transactional, rejects residual identity, deletes
+account-only subscription events, the caller's commerce clicks, and any
+legacy-held OBF contribution payloads, detaches matching order attribution
+tokens, and removes only the deleting user from all seven scalar/alias/transfer
+owner fields on a shared event. Migration `0046` repairs legacy missing event
+IDs, canonicalizes live UUIDs found in old webhook payload owner keys, replaces
+every historical payload with a typed allowlist, makes click-token ownership
+unique, and tolerates legacy UUID case/whitespace during deletion. Migration
+`0047` purges legacy OBF rows with no owner, makes `user_id` mandatory, and
+changes the Auth FK from `SET NULL` to validated `CASCADE`, so direct Auth
+deletion cannot strand barcode/payload data.
+
+The former ShopMy parsing core is an unconsumed future-adapter candidate only:
+the deployed COM-01A handler does not import or invoke it and never creates a
+client, fetches, or persists an attribution row. Migration 0072 rejects inserts
+and business updates even from stale privileged poller code while retaining
+exact token-detachment/deletion privacy cleanup. Any future correlation/token
+path requires a new reviewed commerce admission checkpoint. Strict result-shape
+validation prevents database errors or malformed attestations from being
+reported as deletion success. The real migrations pass disposable PostgreSQL
+15 and 17 rehearsals, including idempotent RPC retry and direct Auth cascade,
+but this does not replace a complete Supabase migration reset or live
+concurrency/provider-interruption evidence.
 
 Migrations `20260713000048` through `20260713000052` and the durable Edge
 runtime close the bounded server-lifecycle gaps listed below that the earlier

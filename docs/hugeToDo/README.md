@@ -108,6 +108,9 @@ Start here:
 - [PHOTO-05A Trend Admission Source Checkpoint](./PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md)
 - [PHOTO-05A Trend Admission Source Contract](../../scripts/photo05/trend-admission-source-contract.mjs)
 - [PHOTO-05A Trend Admission Source Contract Tests](../../scripts/photo05/trend-admission-source-contract.test.mjs)
+- [COM-01A Commerce Admission Source Checkpoint](./COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md)
+- [COM-01A Commerce Admission Source Contract](../../scripts/com01/commerce-admission-source-contract.mjs)
+- [COM-01A Commerce Admission Source Contract Tests](../../scripts/com01/commerce-admission-source-contract.test.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -681,6 +684,28 @@ classification, privacy/consumer-health and affiliate review, hosted/native/
 accessibility/network evidence, archive-derived App Privacy answers, counsel,
 and App Store acceptance remain open. This checkpoint does not prove safety,
 compliance, product-market fit, seven-figure revenue, or any revenue.
+
+COM-01A establishes **literal zero admission** for commerce as an `in_progress`
+source checkpoint. Current direct routes render only a shared analytics-free
+unavailable recovery; You, recommendations, and Shelf/replenishment expose no
+commerce entry or read; consent grants and click publication refuse before any
+storage, session, network, URL, native-link, or analytics work; catalog/link/
+stack selectors return nothing; and provider polling/order attribution are
+inert. Only refusal, withdrawal, owner deletion, and account data-rights cleanup
+remain, and cleanup cannot activate commerce. Every earlier positive commerce
+UI, development stack, paid-link, retailer, consent-allow, opaque-token, poll,
+and 2026-07-06 through 2026-07-08 evidence statement is historical/stale.
+
+COM-01 through COM-07 remain launch-blocked on accepted Apple 2.5.18,
+3.1.3(e), and 5.1.2(vi) classification; accurate App Privacy/ATT treatment; FTC
+affiliate/native-ad, health-claim, and HBNR review; Washington RCW 19.373,
+Nevada NRS 603A.400-.550, and applicable CCPA/CPRA controls; a rule excluding
+all photo/face/health-derived inputs; an approved rail and contract; reviewed
+catalog, stacks, claims, consent, and disclosure copy; hosted rights/security/
+operations; exact signed-archive and supported-iPhone evidence; App Review; and
+named exact-source signoffs. Consent, ATT, or an opaque token does not cure a
+prohibited photo-derived marketing use. This is not an Apple, legal, privacy,
+provider, product-market, seven-figure revenue, or revenue guarantee.
 
 CORE-07 is now `in_progress` only because CORE-07A establishes a literal
 zero-share/public-link source boundary; the full feature is not complete.

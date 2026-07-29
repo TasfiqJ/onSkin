@@ -503,7 +503,6 @@ block(
 for (const [type, tablePolicy] of [
   ['photo_cloud_backup', 'photos_cloud_backup_consent_insert'],
   ['photo_cloud_backup', 'photos_objects_insert_own'],
-  ['data_sharing', 'commerce_click_events_consent_insert'],
   ['photo_trend_insights', 'photo_trend_consent_insert'],
   ['community_participation', 'community_reactions_consent_insert'],
   ['ask_onskin', 'ask_sessions_consent_insert'],
@@ -516,6 +515,23 @@ for (const [type, tablePolicy] of [
     `${tablePolicy} must require current ${type} consent.`,
   );
 }
+block(
+  errors,
+  /drop policy if exists "commerce_click_events_insert_own"[\s\S]*drop policy if exists "commerce_click_events_consent_insert"/i.test(
+    migrations,
+  ) &&
+    /revoke all on table public\.commerce_click_events[\s\S]*grant select, delete on table public\.commerce_click_events\s+to authenticated/i.test(
+      migrations,
+    ),
+  'COM-01A must remove commerce click publication policy and privilege while preserving installed-base owner reads and deletion.',
+);
+block(
+  errors,
+  /create trigger commerce_click_events_admission_closed[\s\S]*before insert or update[\s\S]*guard_commerce_click_publication/i.test(
+    migrations,
+  ) && /raise exception 'COMMERCE_ADMISSION_CLOSED'[\s\S]*errcode = '55000'/i.test(migrations),
+  'COM-01A must fail every commerce click insert/update closed at the database boundary.',
+);
 block(
   errors,
   Boolean(packageJson.scripts?.['phase9:live-supabase-adversarial']),
@@ -591,6 +607,15 @@ for (const table of staticProbeCounts.keys()) {
 for (const table of SERVICE_ONLY_PRIVATE_TABLES) {
   const cleanupMarker = `trackServiceCleanup('${table}'`;
   const probeMarker = `registerPrivateTableProbe('${table}'`;
+  if (table === 'order_attributions') {
+    block(
+      errors,
+      !liveHarness.includes(cleanupMarker) &&
+        liveHarness.includes("registerClosedPrivateTableProbe('order_attributions'"),
+      'Live harness must verify COM-01A order-attribution closure without creating a synthetic positive fixture.',
+    );
+    continue;
+  }
   if (table === 'reverse_trial_grants' || table === 'catalog_corrections') {
     const guardedRpc =
       table === 'reverse_trial_grants'
@@ -658,6 +683,7 @@ const requiredLiveHarnessChecks = [
   'community reaction unpublished note insert',
   'community reaction null note insert',
   'photo trend revoked consent insert',
+  'commerce click owner insert while admission is closed',
   'commerce click revoked consent insert',
   'community question revoked consent insert',
   'community reaction revoked consent insert',

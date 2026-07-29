@@ -3,17 +3,11 @@ import type { CuratorKind } from '@onskin/types';
 import { BRAND } from '@/lib/brand';
 
 /**
- * Centralised commerce copy (docs/10 §8, the Slice-11/20/21/22/23 guard pattern).
- * The FTC research is decisive and this wording is LEGALLY LOAD-BEARING:
- *  - "paid link" is the FTC-adequate disclosure; "affiliate link" and
- *    "commissionable link" are NOT adequate (the person placing the link is getting
- *    paid and consumers may not understand those terms). A "buy now" button is not a
- *    disclosure either.
- *  - the disclosure must be CLEAR & CONSPICUOUS / "unavoidable". Visible at the same
- *    time as the link, never collapsed behind a "more"/expand tap (16 CFR 255.0).
- *  - it must state the app's independence ("never affects what we recommend").
- * `claimsafety.test.ts` scans this module on every edit and asserts the wording.
- * Keep all persuasive/disclosure copy HERE, not inline in screens.
+ * Unapproved future-commerce copy draft retained only for negative claim-safety
+ * regression tests. COM-01A forbids every production consumer of this module.
+ * Nothing here is legal approval or a settled description of a provider/data
+ * flow. Any successor must replace or re-review the exact copy against its
+ * actual architecture, disclosures, Apple classification, and applicable law.
  */
 
 export const COMMERCE_COPY = {
@@ -24,7 +18,7 @@ export const COMMERCE_COPY = {
     lockedBody: 'Turn on where-to-buy links to see partner retailers. A separate, private choice.',
     lockedCta: 'Allow where-to-buy',
     partnerLabel: (price: string | null) => `at a partner retailer${price ? ` · ${price}` : ''}`,
-    paidChip: 'Paid link', // FTC-adequate wording. NEVER "affiliate link"/"commissionable link"
+    paidChip: 'Paid link',
     // The disclosure sits DIRECTLY under the links, always visible (FTC "unavoidable").
     // Split so the independence clause renders bold-inked (design §3); `disclosure`
     // keeps the full sentence for the claim-safety guard.
@@ -39,7 +33,7 @@ export const COMMERCE_COPY = {
     // The inert tap explainer until the rail is approved (B-SHOPMY).
     stubTitle: 'Where to buy',
     stubBody:
-      'Partner links go live with our product catalogue and an approved affiliate partner. They’ll carry only an anonymous token, never anything about your skin, and they never change what we recommend.',
+      'Commerce is not available. Any future partner, data flow and disclosure require separate review.',
   },
   // Surface 02. The shoppable Stack.
   stack: {
@@ -80,14 +74,14 @@ export const COMMERCE_COPY = {
         body: 'If the best place to buy has no programme, we link there anyway, and tell you so.',
       },
     ],
-    footer: 'We never send anything about your skin to a retailer.',
+    footer: 'Draft only. No retailer data-sharing statement is approved in this build.',
   },
   // Surface 04. The MHMDA consent gate.
   consent: {
     title: 'Before we show where to buy',
-    body: 'Opening a “where to buy” link shares a single anonymous click token with our affiliate partner, so a purchase can be credited. That’s it.',
-    allow: 'An opaque token tied to no skin data',
-    never: 'Never your profile, concerns or photos',
+    body: 'Commerce is closed. Any future data sharing requires a separately reviewed purpose, scope, disclosure and consent flow.',
+    allow: 'Unavailable while commerce admission is closed',
+    never: 'No current commerce data flow',
     // MHMDA-strict default (D-061): decline => no paid links shown at all (not "links
     // still work with zero tracking", which the mock implied). The safer reading.
     note: 'a separate, revocable choice (MHMDA / GDPR) · decline and we simply won’t show paid links',

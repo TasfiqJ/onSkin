@@ -413,23 +413,25 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('PAO recorded from the label or catalog');
     expect(source).toContain('You marked ${item.name} as finished.');
     expect(source).toContain('No urgency is added.');
-    expect(source).toContain('Options from available catalog data');
+    expect(source).not.toContain('Options from available catalog data');
     expect(source).not.toContain('nearly finished');
     expect(source).not.toContain('running low');
     expect(source).not.toContain("don't run out");
     expect(source).not.toMatch(/protection|safety|seriously|claim-safe/i);
   });
 
-  it('keeps replenishment similar-options recovery inline after commerce consent', () => {
+  it('keeps replenishment free of commerce bypasses while commerce admission is closed', () => {
     const source = readAppRoute('shelf/replenish.tsx');
 
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
-    expect(source).toContain('CommerceLinkNotice');
-    expect(source).toContain('feedback: CommerceLinkFeedback');
-    expect(source).toContain('activeSimilarFeedback');
-    expect(source).toContain('setSimilarFeedback({');
-    expect(source).toContain('COMMERCE_COPY.whereToBuy.emptyState');
+    expect(source).not.toContain('CommerceLinkNotice');
+    expect(source).not.toContain('CommerceLinkFeedback');
+    expect(source).not.toContain('isCommerceConsented');
+    expect(source).not.toContain('COMMERCE_COPY');
+    expect(source).not.toContain('/commerce/consent');
+    expect(source).not.toContain('See similar options');
+    expect(source).not.toContain('see_similar');
   });
 
   it('keeps archived products reachable when the active Shelf is empty', () => {

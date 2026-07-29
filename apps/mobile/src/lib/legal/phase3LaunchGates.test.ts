@@ -44,7 +44,7 @@ describe('Phase 3 runtime gates withhold covered conflict, recommendation, note,
       Object.keys(SEQUENCING_RULES).length,
     );
     expect(shippableNotes().length).toBeGreaterThan(0);
-    expect(shippableStacks().length).toBeGreaterThan(0);
+    expect(shippableStacks()).toEqual([]);
     expect(shippableRecTypes().some((rec) => rec.medicalAdjacent)).toBe(false);
   });
 });

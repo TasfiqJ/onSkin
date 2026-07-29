@@ -135,6 +135,7 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.productionSurfaceReady).toBe(true);
     expect(Object.isFrozen(phase7Capabilities)).toBe(true);
     expect(phase7Capabilities).toEqual({
+      commerce: false,
       communityQuestionSubmission: false,
       communityAggregates: false,
       trendEngine: false,
@@ -160,7 +161,7 @@ describe('Phase 7 launch flags', () => {
 
     expect(phase7Flags.finalDomainReady).toBe(true);
     expect(phase7Flags.productionSurfaceReady).toBe(true);
-    expect(phase7Flags.commerce).toBe(true);
+    expect(phase7Flags.commerce).toBe(false);
     expect(phase7Flags.communityPosting).toBe(false);
     expect(phase7Flags.communityAggregates).toBe(false);
     expect(phase7Flags.trend).toBe(false);
@@ -192,6 +193,29 @@ describe('Phase 7 launch flags', () => {
     expect(source).toMatch(/trendEngine:\s*false/);
     expect(source).toMatch(/\btrend:\s*false/);
     expect(source).not.toContain('trend: phase7Capabilities.trendEngine && env.phase7TrendEnabled');
+  });
+
+  it('keeps commerce issuerless under env, dev, public-domain, and mutation attempts', async () => {
+    const { phase7Capabilities, phase7Flags, isPhase7SurfaceEnabled } = await loadPhase7With(
+      {
+        EXPO_PUBLIC_APP_ENV: 'development',
+        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+        ...enableAllPhase7Flags(),
+      },
+      { dev: true },
+    );
+
+    expect(phase7Capabilities.commerce).toBe(false);
+    expect(phase7Flags.commerce).toBe(false);
+    expect(isPhase7SurfaceEnabled('commerce')).toBe(false);
+    expect(Object.isFrozen(phase7Capabilities)).toBe(true);
+    expect(Object.isFrozen(phase7Flags)).toBe(true);
+    expect(Reflect.set(phase7Flags as object, 'commerce', true)).toBe(false);
+    expect(phase7Flags.commerce).toBe(false);
+
+    const source = readFileSync(PHASE7_SOURCE_PATH, 'utf8');
+    expect(source).toMatch(/\bcommerce:\s*false/);
+    expect(source).not.toContain('commerce: env.phase7CommerceEnabled');
   });
 });
 

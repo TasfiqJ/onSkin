@@ -5,6 +5,18 @@
 > language is superseded by `docs/hugeToDo/launch-contract.json`; all legal,
 > privacy, source, ranking-isolation, operational, and device gates still apply.
 
+> **2026-07-29 COM-01A authority:** The current source checkpoint is
+> **literal zero admission**. Mobile/direct routes, catalog and creator-stack
+> reads, consent grants, click recording, external navigation, analytics, the
+> provider poll, and order attribution are inert and side-effect-free. Only
+> refusal, withdrawal, owner deletion, and account data-rights cleanup remain.
+> Every positive flow, development stack, retailer row, consent-allow action,
+> opaque-token path, provider-poll description, and browser-evidence statement
+> below is historical/stale and a future-design candidate only. It does not
+> describe current runtime authority. COM-01 through COM-07 remain
+> launch-blocked. See the
+> [COM-01A checkpoint](hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+
 > Companion to `docs/10-compass-artifact.md` (the strategic spec). This file is the
 > implementation-grade specification: the validated verdict, then **every** detail of
 > how the commerce layer works, looks, and feels — minor and major. Authoritative for
@@ -14,6 +26,15 @@
 ---
 
 ## 0. The validated verdict (read first)
+
+The verdict below is retained as commercial research, not present-tense build
+authority. A future successor must pass the checkpoint's Apple 2.5.18,
+3.1.3(e), and 5.1.2(vi); App Privacy/ATT; FTC affiliate, native-advertising,
+health-claim, and HBNR; Washington RCW 19.373; Nevada NRS
+603A.400-.550; applicable CCPA/CPRA; provider, publication, hosted, native,
+and named-review gates. Consent or an opaque token does not cure a prohibited
+photo-derived marketing use. No source checkpoint guarantees Apple acceptance,
+legal compliance, product-market fit, seven-figure revenue, or any revenue.
 
 **Build it — phased, narrow, rail-agnostic — but as a SIX-figure supplement, not a
 seven-figure pillar.** The seven-figure business is the _subscription_ business.

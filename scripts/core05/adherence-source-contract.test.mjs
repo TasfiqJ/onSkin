@@ -593,7 +593,7 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
   assert.match(syncBridgeMigration, /create table public\.shelf_product_identities/u);
   assert.match(syncBridgeMigration, /COMPLETION_PRODUCT_RETRY_LATER/u);
   assert.doesNotMatch(syncBridgeMigration, /COMPLETION_DEPENDENCY_TERMINAL/u);
-  assert.match(syncBridgeDbTest, /exact 70-migration source history/u);
+  assert.match(syncBridgeDbTest, /exact 71-migration source history/u);
   assert.match(syncBridgeDbTest, /semantic-conflict rejection cannot mutate adherence authority/u);
   assert.match(
     syncBridgeDbTest,
@@ -611,8 +611,8 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
     syncBridgeDbTest,
     /zero-attestation proves stable identities and all relational health data erased/u,
   );
-  assert.match(schemaContract, /\b70::bigint\b/u);
-  assert.match(schemaContract, /'20260726000071'::text/u);
+  assert.match(schemaContract, /\b71::bigint\b/u);
+  assert.match(schemaContract, /'20260729000072'::text/u);
   assert.match(databaseTypes, /shelf_product_identities:\s*\{/u);
   assert.match(
     databaseTypes,

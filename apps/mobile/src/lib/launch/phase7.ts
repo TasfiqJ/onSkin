@@ -23,12 +23,14 @@ const productionSurfaceReady = env.appEnvironment !== 'production' || finalDomai
 
 // Environment flags can expose only capabilities that actually exist in the
 // release binary. These literals are intentionally not environment-driven:
-// widget source is build-gated until lifecycle and device proof are complete,
-// community has no submission/moderation or aggregate-data path, and Trend has
-// no validated engine. Keeping those facts
+// commerce has no approved retailer rail or launch evidence, widget source is
+// build-gated until lifecycle and device proof are complete, community has no
+// submission/moderation or aggregate-data path, and Trend has no validated
+// engine. Keeping those facts
 // here prevents a release configuration mistake from turning previews,
 // placeholder data, or consent scaffolding into a customer-facing promise.
 export const phase7Capabilities = Object.freeze({
+  commerce: false,
   communityQuestionSubmission: false,
   communityAggregates: false,
   trendEngine: false,
@@ -39,7 +41,9 @@ export const phase7Capabilities = Object.freeze({
 export const phase7Flags = Object.freeze({
   finalDomainReady,
   productionSurfaceReady,
-  commerce: env.phase7CommerceEnabled && finalDomainReady,
+  // COM-01A: no environment, dev, E2E, caller, consent, fixture, catalog row,
+  // or final-domain input may admit commerce before the live rail is proven.
+  commerce: false,
   communityPosting:
     phase7Capabilities.communityQuestionSubmission &&
     env.phase7CommunityPostingEnabled &&

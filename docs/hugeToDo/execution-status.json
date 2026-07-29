@@ -741,7 +741,7 @@
       "id": "DB-02",
       "status": "in_progress",
       "blockedBy": ["DB-01", "ACCT-04"],
-      "nextAction": "Deploy both external handlers to staging and run forged, missing, stale, duplicate, oversized, and lifecycle requests from the real provider or scheduler path; keep order-report-poll inert until the affiliate contract and key are approved.",
+      "nextAction": "Deploy RevenueCat webhook for authenticated provider lifecycle evidence. Separately deploy COM-01A order-report-poll plus migration 0072 and retain its exact public inert response and zero-attribution-delta proof without provider or scheduler credentials; any positive successor requires a new reviewed admission checkpoint.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/revenuecat-webhook/webhookCore.test.ts",

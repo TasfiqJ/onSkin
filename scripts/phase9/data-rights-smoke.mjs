@@ -176,6 +176,9 @@ const orderAttributionCoreSource = read(
   'supabase/functions/order-report-poll/orderAttributionCore.ts',
 );
 const orderAttributionPollSource = read('supabase/functions/order-report-poll/index.ts');
+const commerceZeroAdmissionMigration = read(
+  'supabase/migrations/20260729000072_commerce_zero_admission.sql',
+);
 const completeDeletionSource = [
   deletionSource,
   deletionHttpSource,
@@ -1317,16 +1320,20 @@ block(
 );
 block(
   errors,
-  /persistOrderAttributionPage/.test(orderAttributionPollSource) &&
-    /pollOrderReportPages/.test(orderAttributionPollSource) &&
-    /orderReportFailure/.test(orderAttributionPollSource) &&
+  /COM-01A: commerce admission closed/.test(orderAttributionPollSource) &&
+    !/(?:Deno\.env|SHOPMY|createClient|fetch|persistOrderAttributionPage|pollOrderReportPages|order_attributions)/i.test(
+      orderAttributionPollSource,
+    ) &&
     /findKnownClickTokens/.test(orderAttributionCoreSource) &&
     /knownTokens\.has\(candidate\) \? candidate : null/.test(orderAttributionCoreSource) &&
     /ORDER_REPORT_UPSTREAM_FAILED/.test(orderAttributionCoreSource) &&
     /ORDER_REPORT_PAGE_LIMIT_EXCEEDED/.test(orderAttributionCoreSource) &&
     /adaptShopMyOrderReportItem/.test(orderAttributionCoreSource) &&
-    /ORDER_ATTRIBUTION_PERSIST_FAILED/.test(orderAttributionPollSource),
-  'Order-report ingestion must fail closed on incomplete provider pages and never invent or restore an unknown/deleted click token.',
+    /create trigger order_attributions_admission_closed[\s\S]*before insert or update/.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /COMMERCE_ORDER_ATTRIBUTION_PUBLICATION_CLOSED/.test(commerceZeroAdmissionMigration),
+  'COM-01A must keep the deployed poll inert and database publication closed while the quarantined adapter retains unknown/deleted click-token safety.',
 );
 block(
   errors,

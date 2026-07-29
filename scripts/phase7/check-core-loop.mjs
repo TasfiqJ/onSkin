@@ -17,6 +17,10 @@ import {
   auditPhoto05aTrendAdmission,
   PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS,
 } from '../photo05/trend-admission-source-contract.mjs';
+import {
+  auditCom01aCommerceAdmission,
+  COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS,
+} from '../com01/commerce-admission-source-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -77,6 +81,9 @@ for (const error of auditCore07aShareAdmission(root)) {
 for (const error of auditPhoto05aTrendAdmission(root)) {
   require(false, `PHOTO-05A Trend-admission source contract: ${error}`);
 }
+for (const error of auditCom01aCommerceAdmission(root)) {
+  require(false, `COM-01A commerce-admission source contract: ${error}`);
+}
 
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile('.env');
@@ -105,6 +112,9 @@ const requiredFiles = [
 for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
   if (!requiredFiles.includes(path)) requiredFiles.push(path);
 }
+for (const path of COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
 
 for (const file of requiredFiles) {
   require(existsSync(abs(file)), `${file} is missing.`);
@@ -112,7 +122,6 @@ for (const file of requiredFiles) {
 
 const phase7PublicFlags = [
   'EXPO_PUBLIC_FINAL_BRAND_DOMAIN',
-  'EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED',
   'EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED',
   'EXPO_PUBLIC_PHASE7_TREND_ENABLED',
   'EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED',
@@ -126,10 +135,6 @@ for (const key of phase7PublicFlags) {
   require(Object.prototype.hasOwnProperty.call(exampleEnv, key), `.env.example is missing ${key}.`);
 }
 
-require(has(
-  'apps/mobile/src/lib/env.ts',
-  /phase7CommerceEnabled/,
-), 'env.ts is missing Phase 7 commerce flag.');
 require(has(
   'apps/mobile/src/lib/env.ts',
   /phase7ReviewedConflictSharingEnabled/,
@@ -321,13 +326,14 @@ require(has(
     /keeps unimplemented capabilities closed even when staging flags are enabled/,
   ), 'phase7.test.ts must cover production identity gates and non-bypassable unavailable capabilities.');
 
-const gatedRoutes = [
-  ['apps/mobile/src/app/commerce/_layout.tsx', /phase7Flags\.commerce/, 'commerce route group'],
-];
-for (const [path, pattern, label] of gatedRoutes) {
-  require(has(path, /DeferredSurface/), `${label} must render DeferredSurface when gated.`);
-  require(has(path, pattern), `${label} is missing its Phase 7 flag check.`);
-}
+require(
+  has('apps/mobile/src/app/commerce/_layout.tsx', /return <Slot \/>/) &&
+    !has(
+      'apps/mobile/src/app/commerce/_layout.tsx',
+      /CommerceDeferredSurface|phase7Flags|isPhase7SurfaceEnabled|track\(/,
+    ),
+  'commerce route group must preserve exact direct URLs through a transparent Slot while every leaf renders the shared analytics-free COM-01A unavailable surface.',
+);
 require(
   has('apps/mobile/src/app/trend/_layout.tsx', /screenLayout=\{\(\{ children \}\) => <TrendScreenGate>\{children\}<\/TrendScreenGate>\}/) &&
     has('apps/mobile/src/app/trend/_layout.tsx', /function TrendScreenGate\((?:_props|\{ children: _children \})/) &&
@@ -410,18 +416,20 @@ require(!/features\/trend|TrendInsight|phase7Flags\.trend/.test(
 require(!/features\/trend|useTrendConsent|phase7Flags\.trend|trend\/optin/.test(
   read('apps/mobile/src/app/progress/about.tsx'),
 ), 'Progress no-score explainer must not read Trend consent or retain an opt-in branch while PHOTO-05A is zero-admission.');
-require(has('apps/mobile/src/features/commerce/WhereToBuy.tsx', /phase7Flags\.commerce/) &&
-  has(
-    'apps/mobile/src/features/commerce/WhereToBuy.tsx',
-    /EnabledWhereToBuy/,
-  ), 'WhereToBuy must be hidden behind the commerce flag without conditional hooks.');
+require(
+  !/import|useQuery|useState|track|EnabledWhereToBuy|phase7Flags|isAdmittedCatalogProductProvenance/u.test(
+    read('apps/mobile/src/features/commerce/WhereToBuy.tsx'),
+  ) &&
+    /return null/u.test(read('apps/mobile/src/features/commerce/WhereToBuy.tsx')),
+  'WhereToBuy must remain an import-free, caller-agnostic null renderer while COM-01A is zero-admission.',
+);
 require(has('apps/mobile/src/app/(tabs)/you.tsx', /phase7Flags\.widgets/) &&
   has('apps/mobile/src/app/(tabs)/you.tsx', /phase7Flags\.cloudAsk/) &&
-  has('apps/mobile/src/app/(tabs)/you.tsx', /phase7Flags\.commerce/) &&
+  !has('apps/mobile/src/app/(tabs)/you.tsx', /isCommerceConsented|commerceConsent|\/commerce\//) &&
   has(
     'apps/mobile/src/app/(tabs)/you.tsx',
     /phase7Flags\.trend/,
-  ), 'You tab must gate widgets, cloud Ask, commerce, and trend entry points.');
+  ), 'You tab must gate widgets, cloud Ask, and trend while removing every COM-01A consent read and commerce entry point.');
 
 const shareRoute = read('apps/mobile/src/app/share/conflict/[ruleId].tsx');
 require(/<DeferredSurface\b[\s\S]*?surface=["']shareCard["']/u.test(

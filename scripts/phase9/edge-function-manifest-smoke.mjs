@@ -106,6 +106,18 @@ runFailureCase(
 );
 
 runFailureCase(
+  'authenticated boundary must retain Supabase JWT as the base mechanism',
+  ({ fixtureRoot, manifest }) => {
+    const name = Object.keys(manifest.functions).find(
+      (candidate) => manifest.functions[candidate].access === 'authenticated',
+    );
+    manifest.functions[name].auth = 'verified-totp-only';
+    persistManifest(fixtureRoot, manifest);
+  },
+  /auth must start with supabase-user-jwt/,
+);
+
+runFailureCase(
   'mixed boundary cannot use gateway JWT verification',
   ({ fixtureRoot, manifest }) => {
     const name = Object.keys(manifest.functions).find(

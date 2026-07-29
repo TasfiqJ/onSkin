@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-07-29T19:50:25.137Z
+Generated: 2026-07-29T21:37:16.427Z
 Status: pass
 Strict mode: yes
 
@@ -28,12 +28,12 @@ the top-level packet markdown shape changes without updating the audit.
 | ARCHITECTURE.md                | identical          | yes       | yes       | 25b90a0a7039   |
 | CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | b9d05d45ec32   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | 8ffa5b70deb5   |
-| FEATURE_INDEX.md               | identical          | yes       | yes       | c45df008a341   |
-| MASTER_PLAN.md                 | identical          | yes       | yes       | 2664772b8421   |
+| DECISIONS.md                   | identical          | yes       | yes       | dcd8c96a1bca   |
+| FEATURE_INDEX.md               | identical          | yes       | yes       | 04a1be15af74   |
+| MASTER_PLAN.md                 | identical          | yes       | yes       | 14c7e657f709   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
 | PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | 406d2987034a   |
-| ROADMAP.md                     | identical          | yes       | yes       | 1a8426b20427   |
+| ROADMAP.md                     | identical          | yes       | yes       | fb13e339e545   |
 | TESTING_STRATEGY.md            | identical          | yes       | yes       | 420487e911ee   |
 
 ## Top-Level Packet Files
@@ -52,12 +52,12 @@ the top-level packet markdown shape changes without updating the audit.
 | 04_repo_docs/docs/ARCHITECTURE.md                | 44027 | 25b90a0a7039 |
 | 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 8670  | b9d05d45ec32 |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
-| 04_repo_docs/docs/DECISIONS.md                   | 85621 | 8ffa5b70deb5 |
-| 04_repo_docs/docs/FEATURE_INDEX.md               | 7227  | c45df008a341 |
-| 04_repo_docs/docs/MASTER_PLAN.md                 | 63078 | 2664772b8421 |
+| 04_repo_docs/docs/DECISIONS.md                   | 90999 | dcd8c96a1bca |
+| 04_repo_docs/docs/FEATURE_INDEX.md               | 9140  | 04a1be15af74 |
+| 04_repo_docs/docs/MASTER_PLAN.md                 | 67542 | 14c7e657f709 |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |
 | 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md        | 5865  | 406d2987034a |
-| 04_repo_docs/docs/ROADMAP.md                     | 4974  | 1a8426b20427 |
+| 04_repo_docs/docs/ROADMAP.md                     | 8546  | fb13e339e545 |
 | 04_repo_docs/docs/TESTING_STRATEGY.md            | 24997 | 420487e911ee |
 
 ## Blockers

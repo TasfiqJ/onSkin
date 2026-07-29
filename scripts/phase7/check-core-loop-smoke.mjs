@@ -40,6 +40,10 @@ const photo05aContractPath = resolve(
   root,
   'scripts/photo05/trend-admission-source-contract.test.mjs',
 );
+const com01aContractPath = resolve(
+  root,
+  'scripts/com01/commerce-admission-source-contract.test.mjs',
+);
 const cat07ShelfFreshnessSummaryPath = CAT07_COMMITTED_SUMMARY_PATH;
 
 const passthroughKeys = [
@@ -134,6 +138,14 @@ function runCore07aContract() {
 
 function runPhoto05aContract() {
   return spawnSync(process.execPath, ['--test', photo05aContractPath], {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+}
+
+function runCom01aContract() {
+  return spawnSync(process.execPath, ['--test', com01aContractPath], {
     cwd: root,
     encoding: 'utf8',
     env: processBaseEnv,
@@ -551,6 +563,13 @@ function runCommittedCat07BindingSmoke() {
 }
 
 const cases = [
+  {
+    name: 'COM-01A commerce admission remains literal-closed and side-effect free',
+    result: runCom01aContract(),
+    expect(result) {
+      return result.status === 0;
+    },
+  },
   {
     name: 'PHOTO-05A Trend admission remains literal-closed and side-effect free',
     result: runPhoto05aContract(),

@@ -7,6 +7,7 @@ import {
   validatePhase7EvidenceInventory,
 } from './core-loop-qa-packet-contract.mjs';
 import { PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS } from '../photo05/trend-admission-source-contract.mjs';
+import { COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS } from '../com01/commerce-admission-source-contract.mjs';
 
 function validEvidence() {
   return Object.fromEntries(
@@ -178,6 +179,38 @@ test('Phase 7 and Phase 9 packets bind the complete PHOTO-05A zero-Trend boundar
   assert.match(
     phase7Smoke,
     /scripts\/photo05\/trend-admission-source-contract\.test\.mjs/u,
+  );
+});
+
+test('Phase 7 and Phase 9 packets bind the complete COM-01A zero-commerce boundary', () => {
+  const phase7Source = readFileSync(
+    new URL('./build-core-loop-qa-packet.mjs', import.meta.url),
+    'utf8',
+  );
+  const phase7Checker = readFileSync(new URL('./check-core-loop.mjs', import.meta.url), 'utf8');
+  const phase7Smoke = readFileSync(
+    new URL('./check-core-loop-smoke.mjs', import.meta.url),
+    'utf8',
+  );
+  const phase9Source = readFileSync(
+    new URL('../phase9/build-release-qa-packet.mjs', import.meta.url),
+    'utf8',
+  );
+  const phase9Smoke = readFileSync(new URL('../phase9/release-smoke.mjs', import.meta.url), 'utf8');
+
+  assert.ok(COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS.length >= 35);
+  for (const source of [phase7Source, phase9Source]) {
+    assert.match(source, /COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS/u);
+    assert.match(source, /commerceAdmission\.commerceAdmitted/u);
+    assert.match(source, /COM-01A commerce remains literal-zero-admission/u);
+  }
+  for (const source of [phase7Checker, phase9Smoke]) {
+    assert.match(source, /auditCom01aCommerceAdmission/u);
+    assert.match(source, /COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS/u);
+  }
+  assert.match(
+    phase7Smoke,
+    /scripts\/com01\/commerce-admission-source-contract\.test\.mjs/u,
   );
 });
 

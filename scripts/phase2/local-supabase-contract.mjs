@@ -48,6 +48,9 @@ const [
   recommendationZeroAdmissionMigration,
   recommendationZeroAdmissionTests,
   recommendationZeroAdmissionUpgradeRehearsal,
+  commerceZeroAdmissionMigration,
+  commerceZeroAdmissionTests,
+  commerceZeroAdmissionUpgradeRehearsal,
   accountDeletionMigration,
   readme,
   workflow,
@@ -88,6 +91,9 @@ const [
   read('supabase/migrations/20260726000071_recommendation_zero_admission.sql'),
   read('supabase/tests/database/recommendation_zero_admission.test.sql'),
   read('supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql'),
+  read('supabase/migrations/20260729000072_commerce_zero_admission.sql'),
+  read('supabase/tests/database/commerce_zero_admission.test.sql'),
+  read('supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -119,10 +125,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 70, `Expected 70 migration files; found ${migrations.length}.`);
+check(migrations.length === 71, `Expected 71 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260726000071_'),
-  'The latest migration must remain 20260726000071.',
+  migrations.at(-1)?.startsWith('20260729000072_'),
+  'The latest migration must remain 20260729000072.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -216,9 +222,12 @@ check(
     /rename\(withheldConsentDraftMigration, sandboxConsentDraftMigration\)/u.test(runner) &&
     /health_consent_draft_successor_0070_upgrade\.generated\.test\.sql/u.test(runner) &&
     /reset through 0070 for the 0071 recommendation forward-upgrade rehearsal/u.test(runner) &&
+    /rename\(withheldRecommendationMigration, sandboxRecommendationMigration\)/u.test(runner) &&
+    /recommendation_zero_admission_0071_upgrade\.generated\.test\.sql/u.test(runner) &&
+    /reset through 0071 for the 0072 commerce forward-upgrade rehearsal/u.test(runner) &&
     /rename\(withheldHeadMigration, sandboxHeadMigration\)/u.test(runner) &&
-    /recommendation_zero_admission_0071_upgrade\.generated\.test\.sql/u.test(runner),
-  'The full local DB gate must execute 0068 against 0067, 0069 against 0068, 0070 against 0069, and 0071 against 0070.',
+    /commerce_zero_admission_0072_upgrade\.generated\.test\.sql/u.test(runner),
+  'The full local DB gate must execute 0068 against 0067, 0069 against 0068, 0070 against 0069, 0071 against 0070, and 0072 against 0071.',
 );
 check(
   /catalog-operator-dblink-target\.inc/u.test(runner) &&
@@ -460,16 +469,16 @@ check(
 );
 check(
   /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
-    /the clinical legacy seal runs against the exact 70-migration source history/u.test(
+    /the clinical legacy seal runs against the exact 71-migration source history/u.test(
       clinicalContentLegacySealTests,
     ) &&
-    /the migration history includes the legacy seal and reaches recommendation zero admission/u.test(
+    /the migration history includes the legacy seal and reaches commerce zero admission/u.test(
       clinicalContentLegacySealTests,
     ) &&
     /all historical rule rows survive every denied owner and API mutation probe/u.test(
       clinicalContentLegacySealTests,
     ),
-  '0066 pgTAP must bind the 70-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
+  '0066 pgTAP must bind the 71-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
 );
 check(
   /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000067_catalog_release_temp_table_lint_contract\.sql/u.test(
@@ -487,16 +496,16 @@ check(
 );
 check(
   /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
-    /the catalog release lint contract runs against the exact 70-migration source history/u.test(
+    /the catalog release lint contract runs against the exact 71-migration source history/u.test(
       catalogReleaseLintContractTests,
     ) &&
-    /the migration history retains the temporary-table lint contract through recommendation zero admission/u.test(
+    /the migration history retains the temporary-table lint contract through commerce zero admission/u.test(
       catalogReleaseLintContractTests,
     ) &&
     /only the exact temporary-table wrapper carries the checker shape/u.test(
       catalogReleaseLintContractTests,
     ),
-  '0067 pgTAP must bind the 70-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
+  '0067 pgTAP must bind the 71-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
 );
 check(
   /begin;/u.test(routineAdherenceMigration) &&
@@ -549,8 +558,8 @@ check(
     /the hashed parity corpus matches the authoritative SQL projection/u.test(
       routineAdherenceTests,
     ) &&
-    /exact 70-migration source history/u.test(routineAdherenceTests) &&
-    /retains adherence authority through recommendation zero admission/u.test(
+    /exact 71-migration source history/u.test(routineAdherenceTests) &&
+    /retains adherence authority through commerce zero admission/u.test(
       routineAdherenceTests,
     ) &&
     /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
@@ -599,7 +608,7 @@ check(
 );
 check(
   /select plan\(82\)/u.test(routineCompletionSyncTests) &&
-    /exact 70-migration source history/u.test(routineCompletionSyncTests) &&
+    /exact 71-migration source history/u.test(routineCompletionSyncTests) &&
     /Shelf sync rejects an exact draft-blocked health grant before retention/u.test(
       routineCompletionSyncTests,
     ) &&
@@ -766,6 +775,66 @@ check(
       recommendationZeroAdmissionUpgradeRehearsal,
     ),
   '0071 must prove its exact 0070-to-0071 loss-averse cache and admission cutover.',
+);
+check(
+  /create table private\.commerce_admission_control/u.test(commerceZeroAdmissionMigration) &&
+    /check \(admission_state = 'closed'\)/u.test(commerceZeroAdmissionMigration) &&
+    /revoke all on table public\.affiliate_links/u.test(commerceZeroAdmissionMigration) &&
+    /revoke all on table public\.creator_stacks/u.test(commerceZeroAdmissionMigration) &&
+    /grant select, delete on table public\.commerce_click_events/u.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /revoke all on table public\.order_attributions/u.test(commerceZeroAdmissionMigration) &&
+    /grant update \(click_token\) on table public\.order_attributions/u.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /create trigger order_attributions_admission_closed/u.test(commerceZeroAdmissionMigration) &&
+    /COMMERCE_ADMISSION_CLOSED/u.test(commerceZeroAdmissionMigration) &&
+    /COMMERCE_ORDER_ATTRIBUTION_PUBLICATION_CLOSED/u.test(commerceZeroAdmissionMigration),
+  '0072 must close commerce publication, catalog reads, click writes, and stale-poller attribution writes while retaining exact data-rights cleanup.',
+);
+check(
+  /select plan\(23\)/u.test(commerceZeroAdmissionTests) &&
+    /owner read\/delete policies remain/u.test(commerceZeroAdmissionTests) &&
+    /service data-rights deletion and attribution detachment remain/u.test(
+      commerceZeroAdmissionTests,
+    ) &&
+    /even a privileged publisher cannot mint a click while commerce is closed/u.test(
+      commerceZeroAdmissionTests,
+    ) &&
+    /privileged stale poller cannot publish a new order attribution/u.test(
+      commerceZeroAdmissionTests,
+    ) &&
+    /token detachment cannot camouflage a business-field update/u.test(
+      commerceZeroAdmissionTests,
+    ) &&
+    /installed-base attribution deletion remains available/u.test(
+      commerceZeroAdmissionTests,
+    ),
+  '0072 pgTAP must prove exact zero commerce admission, revoked publication ACLs, stale-poller closure, and retained cleanup.',
+);
+check(
+  /select plan\(21\)/u.test(commerceZeroAdmissionUpgradeRehearsal) &&
+    /@@INCLUDE_EXACT_0072_MIGRATION@@/u.test(commerceZeroAdmissionUpgradeRehearsal) &&
+    /retains the legacy affiliate row without publishing it/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /preserves deletion of an installed-base click/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /leaves no permissive commerce publication policy/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /post-upgrade attribution insert guard/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /preserves exact installed-base attribution detachment/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /preserves installed-base attribution deletion/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ),
+  '0072 must prove its exact 0071-to-0072 loss-averse commerce and stale-poller cutover.',
 );
 check(
   /select plan\(218\)/u.test(catalogImportLifecycleTests) &&

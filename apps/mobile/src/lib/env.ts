@@ -98,7 +98,6 @@ export const env = {
     invalidValue: false,
   }),
   nativeOcrEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED),
-  phase7CommerceEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED),
   phase7CommunityPostingEnabled: readBooleanEnv(
     process.env.EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED,
   ),

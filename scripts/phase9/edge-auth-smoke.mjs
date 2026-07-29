@@ -367,7 +367,6 @@ for (const fn of userJwtFunctions) {
 for (const fn of [
   'growth-event',
   'health-consent-worker',
-  'order-report-poll',
   'revenuecat-webhook',
   'waitlist',
 ]) {
@@ -398,7 +397,7 @@ for (const fn of [
   );
 }
 
-for (const fn of ['waitlist', 'growth-event', 'order-report-poll', 'subscription-reconciliation']) {
+for (const fn of ['waitlist', 'growth-event', 'subscription-reconciliation']) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -1164,67 +1163,43 @@ const pollCore = read('supabase/functions/order-report-poll/orderAttributionCore
 const pollCoreTest = read('supabase/functions/order-report-poll/orderAttributionCore.test.ts');
 block(
   errors,
-  /SHOPMY_BRAND_API_KEY/.test(poll),
-  'order-report-poll must require ShopMy brand API key before polling.',
-);
-block(errors, /no brand API key/.test(poll), 'order-report-poll must no-op without ShopMy key.');
-block(
-  errors,
-  /SHOPMY_BRAND_DOMAIN/.test(poll) && /shopmy_brand_domain_not_configured/.test(poll),
-  'order-report-poll must require a server-only registered ShopMy brand domain when activated.',
+  /COM-01A: commerce admission closed/.test(poll) &&
+    /ok:\s*true/.test(poll) &&
+    /skipped:\s*"COM-01A: commerce admission closed"/.test(poll),
+  'order-report-poll must return the exact COM-01A literal-zero response.',
 );
 block(
   errors,
-  /ORDER_REPORT_POLL_SECRET/.test(poll),
-  'order-report-poll must require a scheduler secret before activation.',
-);
-block(
-  errors,
-  /req\.method !== 'POST'/.test(poll) && /method_not_allowed/.test(poll),
+  /req\.method !== "POST"/.test(poll) &&
+    /method_not_allowed/.test(poll) &&
+    /Allow:\s*"POST"/.test(poll),
   'order-report-poll must reject non-POST methods.',
 );
 block(
   errors,
-  /scheduler_secret_not_configured/.test(poll),
-  'order-report-poll must fail closed when ShopMy key exists but scheduler secret is missing.',
+  /stagingTrafficFreezeResponse/.test(poll) &&
+    poll.indexOf('stagingTrafficFreezeResponse()') <
+      poll.indexOf('req.method !== "POST"') &&
+    poll.indexOf('req.method !== "POST"') <
+      poll.indexOf('COM-01A: commerce admission closed'),
+  'order-report-poll must preserve traffic freeze, method rejection, then COM-01A closure ordering.',
 );
 block(
   errors,
-  /authorizedSchedulerRequest/.test(poll),
-  'order-report-poll must validate scheduler authorization before polling.',
-);
-block(
-  errors,
-  /Authorization/.test(poll) && /x-scheduler-secret/.test(poll),
-  'order-report-poll must support explicit scheduler secret headers.',
-);
-block(
-  errors,
-  /constantTimeEqual/.test(poll),
-  'order-report-poll must compare scheduler secrets without direct string equality.',
-);
-block(
-  errors,
-  poll.indexOf("req.method !== 'POST'") !== -1 &&
-    poll.indexOf('!shopmyBrandKey') !== -1 &&
-    poll.indexOf("req.method !== 'POST'") < poll.indexOf('!shopmyBrandKey'),
-  'order-report-poll method check must run before inert/no-op handling.',
-);
-block(
-  errors,
-  poll.indexOf('authorizedSchedulerRequest(req)') !== -1 &&
-    poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL') !== -1 &&
-    poll.indexOf('authorizedSchedulerRequest(req)') <
-      poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL'),
-  'order-report-poll scheduler authorization must run before the ShopMy API call.',
-);
-block(
-  errors,
-  /https:\/\/api\.shopmy\.us\/v1\/Partners\/OrderReport/.test(poll) &&
-    /Authorization:\s*`Bearer \$\{shopmyBrandKey\}`/.test(poll) &&
-    /domain:\s*shopmyBrandDomain/.test(poll) &&
-    !/x-api-key/.test(poll),
-  'order-report-poll must use the official ShopMy endpoint, Bearer authentication, and registered-domain body.',
+  ![
+    /Deno\.env/,
+    /SHOPMY/i,
+    /ORDER_REPORT_POLL_SECRET/,
+    /createClient/,
+    /readSupabaseSecretKey/,
+    /\bfetch\s*\(/,
+    /pollOrderReportPages/,
+    /order_attributions/,
+    /\.upsert\s*\(/,
+    /orderAttributionCore/,
+    /Authorization/,
+  ].some((pattern) => pattern.test(poll)),
+  'order-report-poll must not read commerce credentials, call a provider, create a Supabase client, import the future adapter, or write attributions.',
 );
 block(
   errors,
@@ -1235,7 +1210,7 @@ block(
     /order_report_upstream_failed/.test(pollCore) &&
     /official ShopMy wire fixture/.test(pollCoreTest) &&
     /max-page truncation/.test(pollCoreTest),
-  'order-report-poll must test zero-indexed bounded pagination and map incomplete/upstream responses to stable non-2xx failures.',
+  'The quarantined future order-report adapter must retain bounded pagination and stable failure tests.',
 );
 block(
   errors,
@@ -1244,12 +1219,7 @@ block(
     /'Commission Amount USD'/.test(pollCore) &&
     /not expose a click-token/.test(pollCore) &&
     /click_token === null/.test(pollCoreTest),
-  'order-report-poll must adapt the documented display-key wire DTO without inventing click attribution.',
-);
-warn(
-  warnings,
-  !/INERT STUB/i.test(poll),
-  'order-report-poll remains inert until ShopMy account model and API key are approved.',
+  'The quarantined future order-report adapter must not invent click attribution.',
 );
 block(
   errors,
@@ -1265,25 +1235,28 @@ block(
 );
 block(
   errors,
-  /order-report-poll rejects non-POST before service-role work/.test(liveOrderReportPoll) &&
-    /order-report-poll missing scheduler secret does not write attributions/.test(
+  /order-report-poll rejects non-POST before COM-01A inert response/.test(liveOrderReportPoll) &&
+    /order-report-poll POST returns exact COM-01A inert response without credentials/.test(
       liveOrderReportPoll,
     ) &&
-    /order-report-poll wrong scheduler secret does not write attributions/.test(
+    /order-report-poll ignores fake provider and scheduler credentials under COM-01A/.test(
       liveOrderReportPoll,
     ) &&
-    /order-report-poll evidence avoids authorized ShopMy polling/.test(liveOrderReportPoll),
-  'Live order-report-poll harness must prove method rejection and missing/wrong scheduler secret no-write behavior.',
+    /order-report-poll observations remain literal-zero commerce/.test(liveOrderReportPoll),
+  'Live order-report-poll harness must prove exact COM-01A closure and no-write behavior.',
 );
 block(
   errors,
-  /Authorized scheduler success path intentionally not run/.test(liveOrderReportPoll) &&
+  /COM-01A: commerce admission closed/.test(liveOrderReportPoll) &&
+    /Object\.keys\(response\.body\)\.sort\(\)\.join\(','\) === 'ok,skipped'/.test(
+      liveOrderReportPoll,
+    ) &&
+    /order_attributions count changed/.test(liveOrderReportPoll) &&
     !/ORDER_REPORT_POLL_SECRET/.test(liveOrderReportPoll) &&
-    !/SHOPMY_ORDER_REPORT_POLL_SECRET/.test(liveOrderReportPoll) &&
     !/SHOPMY_BRAND_API_KEY/.test(liveOrderReportPoll) &&
     !/SHOPMY_BRAND_DOMAIN/.test(liveOrderReportPoll) &&
-    /PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(liveOrderReportPoll),
-  'Live order-report-poll harness must not read/send ShopMy activation values or the real scheduler secret and must support activated-env expectations.',
+    !/PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(liveOrderReportPoll),
+  'Live order-report-poll harness must strictly verify the exact inert response without reading activation values.',
 );
 
 warn(

@@ -25,10 +25,11 @@ const migrations = (await readdir(join(root, 'supabase', 'migrations')))
   .filter((name) => /^\d{14}_[a-z0-9_]+\.sql$/u.test(name))
   .sort((left, right) => left.localeCompare(right));
 
-check(migrations.length === 70, 'CORE-06A requires the exact 70-migration source set.');
+check(migrations.length === 71, 'CORE-06A requires the exact 71-migration source set.');
 check(
-  migrations.at(-1) === '20260726000071_recommendation_zero_admission.sql',
-  'Migration 0071 must remain the exact source head.',
+  migrations.includes('20260726000071_recommendation_zero_admission.sql') &&
+    migrations.at(-1) === '20260729000072_commerce_zero_admission.sql',
+  'Migration 0071 must remain in the exact source chain through commerce head 0072.',
 );
 check(
   /^--[\s\S]*\nbegin;[\s\S]*\ncommit;\s*$/u.test(migration),

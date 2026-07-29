@@ -405,13 +405,16 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain('onValueChange');
   });
 
-  it('keeps the You tab commerce toggle local-first when the ledger is offline', () => {
+  it('omits commerce consent controls from You while commerce admission is closed', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
-    expect(source).toContain('if (granted) await grantCommerceConsent();');
-    expect(source).toContain('else await declineCommerceConsent();');
-    expect(source).not.toContain('setCommerceConsentLocal');
-    expect(source).toContain('runHealthDataOperation(initiatingHealthLease.ownerUserId');
+    expect(source).not.toContain('grantCommerceConsent');
+    expect(source).not.toContain('declineCommerceConsent');
+    expect(source).not.toContain('isCommerceConsented');
+    expect(source).not.toContain('data_sharing');
+    expect(source).not.toContain('/commerce/');
+    expect(source).not.toContain('phase7Flags.commerce');
+    expect(source).toContain("onChange={(v) => void setConsent('marketing', v, 'privacy')}");
     expect(source).toContain('expectedUserId: initiatingUserId');
   });
 

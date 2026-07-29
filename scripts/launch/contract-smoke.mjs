@@ -53,6 +53,25 @@ assert.deepEqual(
   launchContractSnapshot(contract).trendInsightAdmission,
   contract.trendInsightAdmission,
 );
+assert.deepEqual(contract.commerceAdmission, {
+  commerceAdmitted: false,
+  affiliateRailAvailable: false,
+  publicationAuthorityAvailable: false,
+  reviewedCatalogAvailable: false,
+  reviewedStacksAvailable: false,
+  partnerPollingAllowed: false,
+  consentGrantAllowed: false,
+  catalogReadsAllowed: false,
+  clickRecordingAllowed: false,
+  externalNavigationAllowed: false,
+  analyticsAllowed: false,
+  disabledPathSideEffectsAllowed: false,
+});
+assert.equal(Object.isFrozen(contract.commerceAdmission), true);
+assert.deepEqual(
+  launchContractSnapshot(contract).commerceAdmission,
+  contract.commerceAdmission,
+);
 assert.deepEqual(
   contract.featureProfessionalReviewRequirements.conflict_share.map(
     ({ reviewerRole, taskId }) => `${reviewerRole}:${taskId}`,
@@ -169,6 +188,33 @@ extraTrendAdmissionKey.trendInsightAdmission.fixtureOverride = true;
 assert.match(
   validateLaunchContract(extraTrendAdmissionKey).join('\n'),
   /only the exact PHOTO-05A admission keys/,
+);
+
+for (const key of Object.keys(contract.commerceAdmission)) {
+  const forgedCommerceAdmission = structuredClone(contract);
+  forgedCommerceAdmission.commerceAdmission[key] = true;
+  assert.match(
+    validateLaunchContract(forgedCommerceAdmission).join('\n'),
+    new RegExp(`commerceAdmission\\.${key} must be false`, 'u'),
+  );
+}
+
+const missingCommerceAdmissionKey = structuredClone(contract);
+delete missingCommerceAdmissionKey.commerceAdmission.affiliateRailAvailable;
+assert.match(
+  validateLaunchContract(missingCommerceAdmissionKey).join('\n'),
+  /affiliateRailAvailable must be false/,
+);
+assert.match(
+  validateLaunchContract(missingCommerceAdmissionKey).join('\n'),
+  /only the exact COM-01A admission keys/,
+);
+
+const extraCommerceAdmissionKey = structuredClone(contract);
+extraCommerceAdmissionKey.commerceAdmission.fixtureOverride = true;
+assert.match(
+  validateLaunchContract(extraCommerceAdmissionKey).join('\n'),
+  /only the exact COM-01A admission keys/,
 );
 
 console.log('Launch contract smoke tests passed.');

@@ -168,6 +168,20 @@
     "cloudPhotoProcessingAllowed": false,
     "scoreAgeGradePercentageAllowed": false
   },
+  "commerceAdmission": {
+    "commerceAdmitted": false,
+    "affiliateRailAvailable": false,
+    "publicationAuthorityAvailable": false,
+    "reviewedCatalogAvailable": false,
+    "reviewedStacksAvailable": false,
+    "partnerPollingAllowed": false,
+    "consentGrantAllowed": false,
+    "catalogReadsAllowed": false,
+    "clickRecordingAllowed": false,
+    "externalNavigationAllowed": false,
+    "analyticsAllowed": false,
+    "disabledPathSideEffectsAllowed": false
+  },
   "safetyConstraints": {
     "diagnosisTreatmentCurePreventionClaims": false,
     "aiSkinScores": false,

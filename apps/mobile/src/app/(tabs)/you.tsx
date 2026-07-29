@@ -4,11 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
-import {
-  declineCommerceConsent,
-  grantCommerceConsent,
-  isCommerceConsented,
-} from '@/features/commerce/consent';
 import { LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER } from '@/features/healthConsent/lifecycle';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
@@ -23,8 +18,6 @@ import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
-import { runHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
-import { activeHealthProcessingLeaseSnapshot } from '@/lib/consent/healthProcessingEpoch';
 import {
   appLockUserMessage,
   dataRightsUserMessage,
@@ -101,8 +94,8 @@ const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 48;
 const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;
 
 type StaticRouteHref = Extract<Href, string>;
-type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'app_lock';
-type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';
+type PrivacyFeedbackKey = 'marketing' | 'app_lock';
+type PrivacyFeedbackPlacement = 'privacy' | 'security';
 type InlineNotice = {
   title: string;
   message: string;
@@ -296,7 +289,7 @@ export default function YouScreen() {
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
-  const [savingPrivacy, setSavingPrivacy] = useState<'marketing' | 'data_sharing' | null>(null);
+  const [savingPrivacy, setSavingPrivacy] = useState<'marketing' | null>(null);
   const [privacyFeedback, setPrivacyFeedback] = useState<{
     key: PrivacyFeedbackKey;
     placement: PrivacyFeedbackPlacement;
@@ -320,15 +313,6 @@ export default function YouScreen() {
   const savingAppLockRef = useRef(false);
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
-  // The RESOLVED commerce data-sharing consent (ledger-if-present, else the local
-  // flag). Both data-sharing surfaces read this so that offline (v1, no backend) a
-  // sheet-granted consent shows ON, instead of the toggle reading the empty ledger
-  // while the gate reads the local flag (docs/10 §6 cross-surface consistency).
-  const commerceConsent = useQuery({
-    queryKey: ['commerceConsent'],
-    queryFn: isCommerceConsented,
-    retry: 0,
-  });
   const { data: ent } = useEntitlement();
   const accountLabel = isAnonymous ? 'Guest (not saved)' : (user?.email ?? 'Signed in');
   const planLabel = ent?.inReverseTrial
@@ -455,10 +439,6 @@ export default function YouScreen() {
       hint: 'Ask about your organized shelf and routine.',
     });
   }
-  if (phase7Flags.commerce) {
-    forYouRows.push({ label: 'Shoppable routines', href: '/commerce/stacks' });
-  }
-
   function renderPrivacyFeedback(key: PrivacyFeedbackKey, placement: PrivacyFeedbackPlacement) {
     if (privacyFeedback?.key !== key || privacyFeedback.placement !== placement) return null;
 
@@ -472,24 +452,17 @@ export default function YouScreen() {
   }
 
   async function setConsent(
-    type: 'marketing' | 'data_sharing',
+    type: 'marketing',
     granted: boolean,
     placement: PrivacyFeedbackPlacement,
   ) {
     if (savingPrivacyRef.current) return;
     const initiatingUserId = user?.id ?? null;
-    const initiatingHealthLease = activeHealthProcessingLeaseSnapshot();
     savingPrivacyRef.current = true;
     try {
-      const applyChoice = async (
-        operationLease: PrivacyOperationLease,
-        requireHealthToRemainClosed = false,
-      ) => {
+      const applyChoice = async (operationLease: PrivacyOperationLease) => {
         const assertCurrent = () => {
           operationLease.assertCurrent();
-          if (requireHealthToRemainClosed && activeHealthProcessingLeaseSnapshot() !== null) {
-            throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
-          }
         };
         assertCurrent();
         setSavingPrivacy(type);
@@ -497,28 +470,23 @@ export default function YouScreen() {
         await applySettingsPrivacyChoice({
           save: async () => {
             assertCurrent();
-            if (type === 'data_sharing') {
-              if (granted) await grantCommerceConsent();
-              else await declineCommerceConsent();
+            if (!initiatingUserId) throw new Error('CONSENT_OWNER_CHANGED');
+            if (granted) {
+              await recordConsent({
+                type,
+                granted: true,
+                version: CONSENT_COPY_VERSION,
+                consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
+                expectedUserId: initiatingUserId,
+              });
             } else {
-              if (!initiatingUserId) throw new Error('CONSENT_OWNER_CHANGED');
-              if (granted) {
-                await recordConsent({
-                  type,
-                  granted: true,
-                  version: CONSENT_COPY_VERSION,
-                  consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
-                  expectedUserId: initiatingUserId,
-                });
-              } else {
-                await recordConsent({
-                  type,
-                  granted: false,
-                  version: CONSENT_COPY_VERSION,
-                  consentText: `[PLACEHOLDER ${type} withdrawal. B-PRIVACY-COPY]`,
-                  expectedUserId: initiatingUserId,
-                });
-              }
+              await recordConsent({
+                type,
+                granted: false,
+                version: CONSENT_COPY_VERSION,
+                consentText: `[PLACEHOLDER ${type} withdrawal. B-PRIVACY-COPY]`,
+                expectedUserId: initiatingUserId,
+              });
             }
             assertCurrent();
           },
@@ -528,9 +496,6 @@ export default function YouScreen() {
               ...(prev ?? {}),
               [type]: granted,
             }));
-            if (type === 'data_sharing') {
-              qc.setQueryData<boolean>(['commerceConsent'], granted);
-            }
             assertCurrent();
             setPrivacyFeedback(null);
           },
@@ -542,22 +507,12 @@ export default function YouScreen() {
             assertCurrent();
             await qc.invalidateQueries({ queryKey: ['consents'] });
             assertCurrent();
-            if (type === 'data_sharing') {
-              await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
-              assertCurrent();
-            }
           },
         });
         assertCurrent();
       };
 
-      if (type === 'data_sharing' && initiatingHealthLease?.ownerUserId) {
-        await runHealthDataOperation(initiatingHealthLease.ownerUserId, (lease) =>
-          applyChoice(lease),
-        );
-      } else {
-        await runAccountGenerationOperation((lease) => applyChoice(lease, type === 'data_sharing'));
-      }
+      await runAccountGenerationOperation((lease) => applyChoice(lease));
     } finally {
       savingPrivacyRef.current = false;
       setSavingPrivacy(null);
@@ -817,31 +772,6 @@ export default function YouScreen() {
           </Card>
         )}
 
-        {phase7Flags.commerce ? (
-          <Card className="mt-4">
-            <Text variant="label" tone="muted" className="mb-1">
-              WHERE TO BUY
-            </Text>
-            <Row
-              label="How we stay honest"
-              hint="Why recommendations and money stay separate. And every paid link is disclosed."
-              onPress={() => router.push('/commerce/transparency')}
-            />
-            <Row
-              label="Share data with partners (where-to-buy)"
-              hint="Off by default. A separate, revocable MHMDA choice. Turn off and we won’t show paid links."
-            >
-              <Toggle
-                accessibilityLabel="Share data with partners for where-to-buy"
-                value={commerceConsent.data ?? false}
-                disabled={savingPrivacy === 'data_sharing'}
-                onChange={(v) => void setConsent('data_sharing', v, 'commerce')}
-              />
-            </Row>
-            {renderPrivacyFeedback('data_sharing', 'commerce')}
-          </Card>
-        ) : null}
-
         <Card
           className={privacyDirectEntry ? undefined : 'mt-4'}
           style={privacyDirectEntry ? { marginTop: PRIVACY_DIRECT_ENTRY_DATA_MARGIN } : undefined}
@@ -940,22 +870,6 @@ export default function YouScreen() {
             />
           </Row>
           {renderPrivacyFeedback('marketing', 'privacy')}
-          {phase7Flags.commerce ? (
-            <>
-              <Row
-                label="Share data with partners"
-                hint="Separate from collection (MHMDA). Off by default."
-              >
-                <Toggle
-                  accessibilityLabel="Share data with partners"
-                  value={commerceConsent.data ?? false}
-                  disabled={savingPrivacy === 'data_sharing'}
-                  onChange={(v) => void setConsent('data_sharing', v, 'privacy')}
-                />
-              </Row>
-              {renderPrivacyFeedback('data_sharing', 'privacy')}
-            </>
-          ) : null}
           {privacyDirectEntry ? null : (
             <Row
               label="Photos & the no-AI-score promise"

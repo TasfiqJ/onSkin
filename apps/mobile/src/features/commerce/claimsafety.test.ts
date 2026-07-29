@@ -4,13 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { COMMERCE_COPY } from './copy';
 import { STARTER_STACKS } from './stacks';
 
-// FTC + claim-safety guard for the commerce copy (docs/10 §8, the Slice-11..23 pattern).
-// The deep-research pass made the FTC wording legally load-bearing:
-//   - "paid link" is FTC-adequate; "affiliate link" / "commissionable link" are NOT;
-//   - a "buy now" button is not a disclosure;
-//   - the disclosure must state the app's independence.
-// Plus: no dark patterns (urgency/scarcity/guilt), and claim-safe (concerns, not
-// conditions). Curly-apostrophe-aware (['’]).
+// Negative safety baseline for unapproved future copy. These tests do not certify
+// FTC, privacy, Apple, or other legal acceptance. COM-01A forbids production
+// consumers; any successor must re-review exact copy and actual data flows.
 
 const FTC_INADEQUATE = [/\baffiliate\s+link/i, /\bcommissionable\s+link/i, /\bbuy\s+now\b/i];
 const URGENCY = [
@@ -62,7 +58,7 @@ const ALL = [
   ]),
 ];
 
-describe('commerce copy is FTC-correct, dark-pattern-free, and claim-safe (docs/10 §8)', () => {
+describe('unapproved future commerce draft avoids known high-risk wording', () => {
   for (const text of ALL) {
     if (!text) continue;
     it(`no inadequate-FTC / urgency / guilt / condition wording in: "${text.slice(0, 40)}…"`, () => {
@@ -74,13 +70,13 @@ describe('commerce copy is FTC-correct, dark-pattern-free, and claim-safe (docs/
   }
 });
 
-describe('the FTC-required disclosure wording is present (paid link + independence)', () => {
+describe('future draft retains disclosure and independence review prompts', () => {
   it('the where-to-buy disclosure uses "paid link" and states independence', () => {
     const d = COMMERCE_COPY.whereToBuy.disclosure.toLowerCase();
     expect(d).toContain('paid link');
     expect(d).toContain('never affects what we recommend');
   });
-  it('the paid-link chip is "Paid link". The FTC-adequate wording', () => {
+  it('retains the paid-link draft label without treating it as legal approval', () => {
     expect(COMMERCE_COPY.whereToBuy.paidChip).toBe('Paid link');
     expect(COMMERCE_COPY.stack.paidChip).toBe('Paid link');
   });
@@ -92,9 +88,9 @@ describe('the FTC-required disclosure wording is present (paid link + independen
       'never enter the ranking',
     );
   });
-  it('the consent gate states it is separate, revocable, and shares no skin data', () => {
+  it('the closed consent draft states separation and no current commerce data flow', () => {
     expect(COMMERCE_COPY.consent.note.toLowerCase()).toContain('separate');
-    expect(COMMERCE_COPY.consent.never.toLowerCase()).toContain('never');
+    expect(COMMERCE_COPY.consent.never.toLowerCase()).toContain('no current');
   });
 });
 

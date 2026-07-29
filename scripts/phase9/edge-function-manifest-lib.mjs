@@ -282,8 +282,13 @@ export function validateEdgeFunctionManifest({
     if (definition.public !== publiclyReachable) {
       errors.push(`${functionLabel}.public must match public or mixed access.`);
     }
-    if (definition.access === 'authenticated' && definition.auth !== 'supabase-user-jwt') {
-      errors.push(`${functionLabel}.auth must be supabase-user-jwt for authenticated access.`);
+    if (
+      definition.access === 'authenticated' &&
+      !/^supabase-user-jwt(?:\+[a-z0-9-]+)*$/u.test(definition.auth)
+    ) {
+      errors.push(
+        `${functionLabel}.auth must start with supabase-user-jwt and use +token suffixes for stronger authenticated gates.`,
+      );
     }
 
     if (!isRecord(definition.resourceLimits)) {

@@ -31,6 +31,10 @@ import {
   auditPhoto05aTrendAdmission,
   PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS,
 } from '../photo05/trend-admission-source-contract.mjs';
+import {
+  auditCom01aCommerceAdmission,
+  COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS,
+} from '../com01/commerce-admission-source-contract.mjs';
 
 const errors = [];
 const warnings = [];
@@ -41,6 +45,9 @@ const androidReleaseRequired = isReleasePlatformRequired('android', launchContra
 
 for (const error of auditPhoto05aTrendAdmission(process.cwd())) {
   block(errors, false, `PHOTO-05A Trend-admission source contract: ${error}`);
+}
+for (const error of auditCom01aCommerceAdmission(process.cwd())) {
+  block(errors, false, `COM-01A commerce-admission source contract: ${error}`);
 }
 
 const phase7EvidenceKeys = [
@@ -368,6 +375,9 @@ const requiredFiles = [
 for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
   if (!requiredFiles.includes(path)) requiredFiles.push(path);
 }
+for (const path of COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
 
 for (const file of requiredFiles) block(errors, exists(file), `${file} is missing.`);
 
@@ -397,9 +407,6 @@ for (const key of [
   'PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK',
   'PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS',
   'PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX',
-  'SHOPMY_BRAND_API_KEY',
-  'SHOPMY_BRAND_DOMAIN',
-  'ORDER_REPORT_POLL_SECRET',
   'ACCOUNT_DELETION_PAYLOAD_KEY_HEX',
   'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX',
   'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION',
@@ -426,7 +433,6 @@ for (const key of [
   'PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT',
   'PHASE9_RUN_LIVE_ORDER_REPORT_POLL',
   'PHASE9_ALLOW_PRODUCTION_LIVE_ORDER_REPORT_POLL',
-  'PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED',
   'PHASE9_RUN_LIVE_REVENUECAT_WEBHOOK',
   'PHASE9_ALLOW_PRODUCTION_LIVE_REVENUECAT_WEBHOOK',
   'PHASE9_RUN_LIVE_DATA_RIGHTS',
@@ -456,12 +462,6 @@ const integerInRange = (value, min, max) => {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed >= min && parsed <= max;
 };
-const validServerHostname = (value) =>
-  typeof value === 'string' &&
-  value.length <= 253 &&
-  /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])$/i.test(
-    value.trim(),
-  );
 const POSTHOG_MOBILE_INGEST_HOST = 'https://eu.i.posthog.com';
 const POSTHOG_SERVER_API_HOST = 'https://eu.posthog.com';
 
@@ -1206,6 +1206,8 @@ for (const file of ['.env.example', ...requiredFiles]) {
       qaPacketBuilder.includes(`"${file}"`) ||
       (PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS.includes(file) &&
         /PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS/.test(qaPacketBuilder)) ||
+      (COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS.includes(file) &&
+        /COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS/.test(qaPacketBuilder)) ||
       (PHASE9_CAT07_BOUND_INPUT_PATHS.includes(file) &&
         /\.\.\.PHASE9_CAT07_BOUND_INPUT_PATHS/.test(qaPacketBuilder)),
     `Phase 9 release QA packet must hash ${file}.`,
@@ -1512,16 +1514,6 @@ if (evidenceFlagEnabled(env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED)) {
 
 const productionPhase7SurfaceEvidence = [
   {
-    flag: 'EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED',
-    label: 'Commerce',
-    evidence: [
-      'PHASE7_BRAND_READY',
-      'PHASE7_CLINICAL_REVIEW_PASS',
-      'PHASE7_CATALOG_BETA_IMPORT_PASS',
-      'PHASE7_PRIVACY_EXPORT_DELETE_PASS',
-    ],
-  },
-  {
     flag: 'EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED',
     label: 'Community posting',
     evidence: [
@@ -1618,18 +1610,16 @@ if (env.EXPO_PUBLIC_APP_ENV === 'production') {
     'Production public forms require TURNSTILE_SECRET_KEY.',
   );
 }
-if (!placeholder(env.SHOPMY_BRAND_API_KEY)) {
-  block(
-    errors,
-    !placeholder(env.ORDER_REPORT_POLL_SECRET),
-    'ORDER_REPORT_POLL_SECRET is required when SHOPMY_BRAND_API_KEY is configured.',
-  );
-  block(
-    errors,
-    !placeholder(env.SHOPMY_BRAND_DOMAIN) && validServerHostname(env.SHOPMY_BRAND_DOMAIN),
-    'SHOPMY_BRAND_DOMAIN must be the registered hostname without a scheme or path when SHOPMY_BRAND_API_KEY is configured.',
-  );
-}
+block(
+  errors,
+  [
+    'SHOPMY_BRAND_API_KEY',
+    'SHOPMY_BRAND_DOMAIN',
+    'ORDER_REPORT_POLL_SECRET',
+    'SHOPMY_ORDER_REPORT_POLL_SECRET',
+  ].every((key) => placeholder(env[key])),
+  'COM-01A requires every ShopMy/provider-poll activation value to remain unset; credentials and flags cannot reopen commerce admission.',
+);
 block(
   errors,
   integerInRange(env.PUBLIC_FORMS_RATE_LIMIT_MAX, 1, 1000),

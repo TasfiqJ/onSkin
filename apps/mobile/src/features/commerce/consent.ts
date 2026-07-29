@@ -1,23 +1,21 @@
-import { track } from '@/lib/analytics/track';
 import {
-  grantHealthDependentConsent,
-  isHealthDependentConsentActive,
   refuseHealthDependentConsent,
   withdrawHealthDependentConsent,
 } from '@/lib/consent/dependentConsentLifecycle';
 
+import { COMMERCE_ADMISSION_CLOSED } from './admission';
 import { clearCommerceState } from './store';
 
-/** Partner disclosure never falls back to a boolean or an offline local grant. */
-export function isCommerceConsented(): Promise<boolean> {
-  return isHealthDependentConsentActive('data_sharing', {
-    deleteLocalOnAuthoritativeClose: clearCommerceState,
-  });
+export { COMMERCE_ADMISSION_CLOSED } from './admission';
+
+/** COM-01A: no stale ledger/local state can become positive commerce authority. */
+export async function isCommerceConsented(): Promise<false> {
+  return false;
 }
 
-export async function grantCommerceConsent(): Promise<void> {
-  await grantHealthDependentConsent('data_sharing');
-  track('commerce_consent_granted');
+/** Positive consent cannot be created until the live commerce rail is admitted. */
+export async function grantCommerceConsent(): Promise<never> {
+  throw new Error(COMMERCE_ADMISSION_CLOSED);
 }
 
 export async function declineCommerceConsent(): Promise<void> {
@@ -25,7 +23,6 @@ export async function declineCommerceConsent(): Promise<void> {
     type: 'data_sharing',
     deleteLocal: clearCommerceState,
   });
-  track('commerce_consent_declined');
 }
 
 /** Initial sheet refusal: confirm the authority is already off; record no revocation claim. */
@@ -34,5 +31,4 @@ export async function refuseCommerceConsent(): Promise<void> {
     type: 'data_sharing',
     deleteLocal: clearCommerceState,
   });
-  track('commerce_consent_declined');
 }

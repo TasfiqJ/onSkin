@@ -50,12 +50,8 @@ describe('settings privacy choice application', () => {
     const source = readSource('app/(tabs)/you.tsx');
 
     expect(source).toContain('applySettingsPrivacyChoice');
-    expect(source).toContain(
-      "type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'app_lock';",
-    );
-    expect(source).toContain(
-      "type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';",
-    );
+    expect(source).toContain("type PrivacyFeedbackKey = 'marketing' | 'app_lock';");
+    expect(source).toContain("type PrivacyFeedbackPlacement = 'privacy' | 'security';");
     expect(source).toContain("const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';");
     expect(source).toContain('const [privacyFeedback, setPrivacyFeedback] = useState<{');
     expect(source).toContain('const [savingAppLock, setSavingAppLock] = useState(false);');
@@ -68,20 +64,13 @@ describe('settings privacy choice application', () => {
       'setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() })',
     );
     expect(source).toContain("placement: 'security'");
-    expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'commerce')}");
     expect(source).toContain("onChange={(v) => void setConsent('marketing', v, 'privacy')}");
-    expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'privacy')}");
     expect(source).not.toContain("Alert.alert('Choice not saved'");
     expect(source).not.toContain("Alert.alert('Encrypted cloud backup'");
     expect(source).toContain("disabled={savingPrivacy === 'marketing'}");
-    expect(source).toContain("disabled={savingPrivacy === 'data_sharing'}");
-    expect(source).toContain('if (granted) await grantCommerceConsent();');
-    expect(source).toContain('else await declineCommerceConsent();');
     expect(source).not.toContain('withdrawConsent');
     expect(source).toContain('await recordConsent({');
     expect(source).toContain('granted: false,');
-    expect(source).not.toContain('setCommerceConsentLocal');
-    expect(source).toContain('runHealthDataOperation(initiatingHealthLease.ownerUserId');
     expect(source).toContain('runAccountGenerationOperation((lease) =>');
     expect(source).toContain('expectedUserId: initiatingUserId');
     expect(source).toContain('operationLease.assertCurrent();');
@@ -94,15 +83,23 @@ describe('settings privacy choice application', () => {
     expect(source).not.toContain('getCloudBackupEnabled');
     expect(source).not.toContain("track('cloud_backup_opted_in')");
     expect(source).not.toContain('accessibilityLabel="Encrypted cloud backup"');
+    expect(source).not.toContain('data_sharing');
+    expect(source).not.toContain('CommerceConsent');
+    expect(source).not.toContain('/commerce/');
+    expect(source).not.toContain('phase7Flags.commerce');
   });
 
-  it('separates never-consented commerce refusal from active settings withdrawal', () => {
+  it('keeps commerce refusal cleanup dormant and removes commerce actions from settings', () => {
+    const facade = readSource('features/commerce/consent.ts');
     const sheet = readSource('app/commerce/consent.tsx');
     const settings = readSource('app/(tabs)/you.tsx');
 
-    expect(sheet).toContain('refuseCommerceConsent');
-    expect(sheet).not.toContain('declineCommerceConsent');
-    expect(settings).toContain('else await declineCommerceConsent();');
+    expect(facade).toContain('refuseCommerceConsent');
+    expect(facade).toContain('withdrawHealthDependentConsent');
+    expect(sheet).toContain('CommerceDeferredSurface');
+    expect(sheet).not.toContain('refuseCommerceConsent');
+    expect(settings).not.toContain('declineCommerceConsent');
     expect(settings).not.toContain('refuseCommerceConsent');
+    expect(settings).not.toContain('grantCommerceConsent');
   });
 });

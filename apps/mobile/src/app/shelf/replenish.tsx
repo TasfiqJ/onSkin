@@ -5,12 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, ExpiryBadge, Sheet, StripedThumb, Text } from '@/components/ui';
-import { isCommerceConsented } from '@/features/commerce/consent';
-import {
-  CommerceLinkNotice,
-  type CommerceLinkFeedback,
-} from '@/features/commerce/CommerceLinkNotice';
-import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { LocalDateField } from '@/features/shelf/LocalDateField';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import type { ReplacementOpeningState } from '@/features/shelf/store';
@@ -22,8 +16,8 @@ import { haptics } from '@/theme/haptics';
 
 // Replenishment (design screen 09, docs/04 §6). An honest PAO/expiry/finished
 // replacement prompt with neutral source-bound copy. Re-add archives the prior
-// unit and requires an explicit opening state; "see similar" + any affiliate link are gated behind the separate MHMDA data-sharing
-// consent (B-PRIVACY) and the catalog (B-CATALOG-SEED).
+// unit and requires an explicit opening state. Commerce stays absent until its
+// independent launch evidence exists.
 export default function ReplenishScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data } = useShelf();
@@ -39,11 +33,6 @@ export default function ReplenishScreen() {
   useEffect(() => {
     if (routeRemovalReady) router.replace('/shelf');
   }, [routeRemovalReady]);
-  const [similarFeedback, setSimilarFeedback] = useState<{
-    itemId: string;
-    feedback: CommerceLinkFeedback;
-  } | null>(null);
-
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
 
   // Surface the nudge once (analytics). The in-app prompt, not a notification (§6).
@@ -115,10 +104,6 @@ export default function ReplenishScreen() {
         : catalogPao && (expired || countdown)
           ? 'This reminder comes from the opened date and the reviewed catalog PAO.'
         : 'Use this when you are ready to replace or repurchase. No urgency is added.';
-  const similarSub = 'Options from available catalog data';
-  const activeSimilarFeedback =
-    similarFeedback?.itemId === item.id ? similarFeedback.feedback : null;
-
   const replace = async (opening: ReplacementOpeningState) => {
     if (replacementInFlight.current) return;
     replacementInFlight.current = true;
@@ -148,28 +133,6 @@ export default function ReplenishScreen() {
         setReplacing(false);
       }
     }
-  };
-
-  const seeSimilar = async () => {
-    if (replacementInFlight.current) return;
-    haptics.select();
-    track('replenishment_nudge_tapped', { action: 'see_similar' });
-    // Route through the SAME commerce MHMDA gate the where-to-buy surface uses
-    // (docs/10 §3): no consent => open the consent sheet, never share silently.
-    // Consented => the honest empty state until the catalog lands (B-CATALOG-SEED).
-    const consented = await isCommerceConsented();
-    if (!consented) {
-      setSimilarFeedback(null);
-      router.push('/commerce/consent');
-      return;
-    }
-    setSimilarFeedback({
-      itemId: item.id,
-      feedback: {
-        title: 'Similar options',
-        body: COMMERCE_COPY.whereToBuy.emptyState,
-      },
-    });
   };
 
   return (
@@ -281,35 +244,6 @@ export default function ReplenishScreen() {
             </Text>
           </View>
         </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ disabled: replacing }}
-          disabled={replacing}
-          onPress={() => void seeSimilar()}
-          className="flex-row items-center gap-3.5 rounded-[18px] border border-hairline bg-paper-raised p-4"
-        >
-          <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-greige">
-            <Text tone="muted">⌕</Text>
-          </View>
-          <View className="flex-1">
-            <Text variant="body" className="font-sans-semibold">
-              See similar options
-            </Text>
-            <Text variant="bodySm" tone="muted">
-              {similarSub}
-            </Text>
-          </View>
-        </Pressable>
-        {activeSimilarFeedback ? <CommerceLinkNotice feedback={activeSimilarFeedback} /> : null}
-      </View>
-
-      <View className="mt-4 flex-row items-center justify-center gap-2">
-        <Text tone="muted" className="text-[12px]">
-          ✦
-        </Text>
-        <Text variant="label" tone="muted" className="text-center">
-          shopping links share data only with your consent · turn on in Settings
-        </Text>
       </View>
 
       <Pressable

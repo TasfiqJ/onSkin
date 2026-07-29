@@ -269,7 +269,7 @@ H-05 when a provider requires them.
 | ACCT-09 | C/H   | Cloudflare Turnstile                  | Codex creates/configures site, keys, domains, auth/public forms, and failure behavior                              |
 | ACCT-10 | C/H/V | Catalog sources                       | Codex handles source applications, licensing packet, imports, attribution, correction workflow, and monitoring     |
 | ACCT-11 | C/H/V | AI/model provider                     | Codex evaluates privacy, safety, latency, residency, cost, and contract fit, then configures approved provider     |
-| ACCT-12 | C/H/V | Commerce/affiliate provider           | Codex selects and applies to ShopMy or approved alternative, configures API, links, disclosures, and polling       |
+| ACCT-12 | C/H/V | Commerce/affiliate provider           | Blocked under COM-01A; a future reviewed successor may select/apply to an approved provider and configure the rail |
 | ACCT-13 | C/H   | Support/helpdesk                      | Codex selects/configures inbox, forms, taxonomy, SLAs, macros, escalation, privacy, and reporting                  |
 | ACCT-14 | C/H   | Moderation service/staff              | Codex prepares staffing/vendor recommendation, tools, runbook, training, and audit; founder contracts real humans  |
 | ACCT-15 | C/H   | Attribution/paid measurement          | Codex selects privacy-preserving approach, configures consent/ATT where required, and validates payloads           |
@@ -298,7 +298,7 @@ Known deployment contradictions are Codex work.
 | ID    | Owner | Codex deliverable                                                                                                                                                                                       | Acceptance                                                                                        |
 | ----- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | DB-01 | C     | Add shared support for hosted SUPABASE_SECRET_KEYS and SUPABASE_PUBLISHABLE_KEYS maps with safe local/legacy fallback                                                                                   | All functions work with current hosted keys; no secret is exposed to the client                   |
-| DB-02 | C     | Correct revenuecat-webhook and order-report-poll gateway authentication                                                                                                                                 | External signed/authenticated requests reach handlers and fail closed on bad credentials          |
+| DB-02 | C     | Correct RevenueCat webhook authentication; keep order-report-poll literal-zero until a new reviewed commerce admission checkpoint                                                                       | RevenueCat external requests fail closed; commerce configuration cannot activate the inert handler |
 | DB-03 | C     | Deploy every required function: account-deletion, catalog lookup/search/report, consent-withdrawal, data-export, growth-event, order-report-poll, revenuecat-webhook, subscription-grants, and waitlist | Staging function inventory is complete and hashed                                                 |
 | DB-04 | C     | Add explicit APP_ENV and complete secret/config validation                                                                                                                                              | Staging never defaults silently to production behavior                                            |
 | DB-05 | C     | Reconcile every migration and apply to a fresh local instance                                                                                                                                           | Clean reset applies all migrations with zero drift                                                |
@@ -494,6 +494,30 @@ sensitive-data-targeted-advertising boundary and the FTC-reviewed net impression
 | ASK-07 | C     | Build production quality, safety, latency, cost, refusal, feedback, and incident dashboards                                                        | Launch on-call can identify and disable unsafe behavior |
 
 ## 19. Commerce, Replenishment, and Creator Links
+
+**COM-01A current source boundary (2026-07-29): literal zero admission.**
+Mobile/direct routes, catalog and stack reads, consent grants, click recording,
+external retailer navigation, commerce analytics, provider polling, order
+reads, and attribution writes are inert and side-effect-free. Only refusal,
+withdrawal, owner deletion, and account data-rights cleanup remain, and cleanup
+cannot activate commerce. Positive commerce flows and their 2026-07-06 through
+2026-07-08 evidence are historical/stale. This is a source checkpoint only;
+COM-01 through COM-07 remain launch-blocked.
+
+A future successor must pass qualified Apple 2.5.18, 3.1.3(e), and 5.1.2(vi)
+classification, App Privacy/ATT reconciliation, FTC affiliate/native-ad and
+health-claim review, HBNR analysis, Washington RCW 19.373, Nevada NRS
+603A.400-.550, and applicable CCPA/CPRA controls. It must enforce that no photo,
+face signal, Trend result, health profile, concern, condition, inferred health
+attribute, or health-derived category selects, targets, ranks, measures, or
+attributes commerce. Consent, ATT, pseudonymization, or an opaque token does not
+cure a prohibited photo-derived marketing use. Approved provider/account and
+contracts, reviewed catalog/stacks/copy, hosted rights/security/operations,
+signed-archive and supported-iPhone proof, App Review, and named exact-source
+signoffs remain mandatory. The checkpoint guarantees neither Apple/legal
+acceptance nor commercial viability, product-market fit, seven-figure revenue,
+or any revenue. See
+`docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`.
 
 | ID     | Owner | Codex deliverable                                                                                                                           | Acceptance                                           |
 | ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
@@ -740,7 +764,10 @@ As of this document date:
   signed-archive linkage, physical-iPhone, real-label accuracy, zero-network,
   cache cleanup, VoiceOver/Dynamic Type, or performance proof exists yet.
 - Cloud Ask lacks a completed production provider/gateway/safety contract.
-- Commerce lacks an approved live rail.
+- COM-01A enforces literal zero admission. Commerce lacks accepted Apple/legal
+  classification, an approved live rail/account and contract, reviewed
+  catalog/stacks/copy, hosted operations, signed-archive and supported-iPhone
+  evidence, App Review, and named signoffs; COM-01 through COM-07 remain open.
 - Community lacks complete live moderation operations.
 - Widgets and Live Activities now have a hash-pinned `expo-widgets` native
   patch, typed bridge, owner-bound coordinator/host source, deterministic stale

@@ -1536,30 +1536,60 @@ Exit criteria:
 
 ## B-COMMERCE-RAIL - ShopMy or alternative commerce rail
 
-Status: `inert`
+Status: `launch-blocked`
 
-Commerce is launch-required but must remain subordinate to the trust/core loop
-and must never influence rankings.
+COM-01A establishes **literal zero admission** while this blocker remains open.
+Commerce is launch-required but currently no mobile/direct route, catalog or
+stack read, consent grant, click record, external handoff, analytic event,
+partner poll, order read, or attribution write is admitted. Those paths are
+inert and side-effect-free. Only refusal, withdrawal, owner deletion, and
+account data-rights cleanup remain, and cleanup cannot activate commerce.
 
-The credential-free Order Report handler now follows ShopMy's documented
-endpoint, Bearer authentication, registered-domain, zero-indexed pagination,
-500-row limit, display-key wire response, bounded-read, and fail-closed
-truncation contracts. However, the public Order Report documents no click-token
-or click-ID field that can be safely joined to an OnSkin outbound click. The
-adapter therefore persists `click_token = null` instead of guessing. ShopMy
-remains blocked for attribution viability until the provider documents an
-approved correlation field for the selected account/rail or a reviewed
-alternative is chosen and proven live.
+Every pre-COM-01A positive development stack, consent-allow, paid-link,
+retailer-handoff, opaque-token, credential-driven poll, and 2026-07-06 through
+2026-07-08 commerce browser result is historical/stale. COM-01 through COM-07
+remain launch-blocked.
+
+The blocker is broader than provider correlation. Apple 5.1.2(vi) can prohibit
+marketing/advertising/use-based data-mining uses of data gathered from the
+listed facial/depth/Camera/Photo tools; Apple 2.5.18 restricts sensitive-data
+targeted/behavioral display advertising; and 3.1.3(e) addresses payment for
+physical goods without authorizing data reuse. Consent, ATT, pseudonymization,
+or an opaque token does not cure a prohibited upstream photo-derived marketing
+purpose. The exact surface also needs FTC affiliate/native-ad net-impression
+and health-claim review, HBNR analysis, Washington RCW 19.373 and Nevada NRS
+603A.400-.550 health-data analysis, and applicable CCPA/CPRA classification and
+rights. See
+`docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`.
 
 Exit criteria:
 
-- rail selected and working;
-- data-sharing consent finalized;
-- FTC "paid link" style disclosure reviewed;
-- attribution/order-report pipeline works;
-- ranking remains independent from commission;
-- live link validation, broken-link monitoring, order reconciliation, support,
-  opt-out, and physical-iPhone handoff evidence pass.
+- Apple/App Review and qualified counsel accept the exact classification of
+  retailer rows, creator stacks, attribution, measurement, and disclosures;
+- an enforced independent-input rule proves no photo, face signal, Trend result,
+  health profile, concern, condition, pregnancy state, inferred health data, or
+  health-derived category selects, targets, ranks, or measures commerce;
+- a rail/account and written provider contract support first-party links,
+  correlation, retention, deletion, opt-out, security, incident response, and
+  audit duties;
+- a source-cleared catalog and separately authorized, exact-version reviewed
+  stacks exist; fixtures and reviewer-name strings are not publication
+  authority;
+- FTC link-level material-connection/native-ad disclosures and every
+  health-adjacent claim are reviewed and substantiated;
+- exact privacy, ATT where applicable, consumer-health, HBNR, Washington,
+  Nevada, applicable California, processor, retention, withdrawal, deletion,
+  export, and breach controls are approved and match observed behavior;
+- credentials remain server-held; link allowlisting, safe handoff, bounded
+  idempotent polling, monitoring, reconciliation, support, and kill switches
+  pass while commission remains absent from recommendation paths; and
+- hosted RLS/isolation, network/privacy/security, accessibility, compact/text
+  pressure, failure/offline, signed-archive, supported physical-iPhone,
+  staging/production, App Review, and named-review evidence pass for the exact
+  release candidate.
+
+This source refusal does not guarantee legal compliance, Apple acceptance,
+commercial viability, product-market fit, seven-figure revenue, or any revenue.
 
 ## B-COMMUNITY-MOD - Human moderation and store floor
 

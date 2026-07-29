@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T19:50:25.137Z",
+  "generatedAt": "2026-07-29T21:37:16.427Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -52,18 +52,18 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 85621,
-      "sha256": "8ffa5b70deb5648446019f177dc19796abcf440d54384eee41f1560a86f78a9a"
+      "bytes": 90999,
+      "sha256": "dcd8c96a1bcad498defe8bfa5eff3385e5d8768006c25d652e8bb16716552386"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
-      "bytes": 7227,
-      "sha256": "c45df008a341a25e89743d810d8d0081a1af99e360dd80ca97aa631c98a8303d"
+      "bytes": 9140,
+      "sha256": "04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
-      "bytes": 63078,
-      "sha256": "2664772b842104b2dd42f28c8891b9966273daab72d6049eddc94b41d484a5d9"
+      "bytes": 67542,
+      "sha256": "14c7e657f70910eb44a7433ec9e88d0d5b0dc5eaf730de7ab1d24d2e5a9d644c"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md",
@@ -77,8 +77,8 @@
     },
     {
       "path": "04_repo_docs/docs/ROADMAP.md",
-      "bytes": 4974,
-      "sha256": "1a8426b20427dfc76cf1389611e000d1ee1b208cf994c473d9de2d1f1723b181"
+      "bytes": 8546,
+      "sha256": "fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de"
     },
     {
       "path": "04_repo_docs/docs/TESTING_STRATEGY.md",
@@ -131,10 +131,10 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 85621,
-      "activeBytes": 85621,
-      "sourceSha256": "8ffa5b70deb5648446019f177dc19796abcf440d54384eee41f1560a86f78a9a",
-      "activeSha256": "8ffa5b70deb5648446019f177dc19796abcf440d54384eee41f1560a86f78a9a",
+      "sourceBytes": 90999,
+      "activeBytes": 90999,
+      "sourceSha256": "dcd8c96a1bcad498defe8bfa5eff3385e5d8768006c25d652e8bb16716552386",
+      "activeSha256": "dcd8c96a1bcad498defe8bfa5eff3385e5d8768006c25d652e8bb16716552386",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -144,10 +144,10 @@
       "title": "Feature Index",
       "sourcePath": "04_repo_docs/docs/FEATURE_INDEX.md",
       "activePath": "docs/FEATURE_INDEX.md",
-      "sourceBytes": 7227,
-      "activeBytes": 7227,
-      "sourceSha256": "c45df008a341a25e89743d810d8d0081a1af99e360dd80ca97aa631c98a8303d",
-      "activeSha256": "c45df008a341a25e89743d810d8d0081a1af99e360dd80ca97aa631c98a8303d",
+      "sourceBytes": 9140,
+      "activeBytes": 9140,
+      "sourceSha256": "04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c",
+      "activeSha256": "04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -157,10 +157,10 @@
       "title": "Master Plan",
       "sourcePath": "04_repo_docs/docs/MASTER_PLAN.md",
       "activePath": "docs/MASTER_PLAN.md",
-      "sourceBytes": 63078,
-      "activeBytes": 63078,
-      "sourceSha256": "2664772b842104b2dd42f28c8891b9966273daab72d6049eddc94b41d484a5d9",
-      "activeSha256": "2664772b842104b2dd42f28c8891b9966273daab72d6049eddc94b41d484a5d9",
+      "sourceBytes": 67542,
+      "activeBytes": 67542,
+      "sourceSha256": "14c7e657f70910eb44a7433ec9e88d0d5b0dc5eaf730de7ab1d24d2e5a9d644c",
+      "activeSha256": "14c7e657f70910eb44a7433ec9e88d0d5b0dc5eaf730de7ab1d24d2e5a9d644c",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -196,10 +196,10 @@
       "title": "Roadmap",
       "sourcePath": "04_repo_docs/docs/ROADMAP.md",
       "activePath": "docs/ROADMAP.md",
-      "sourceBytes": 4974,
-      "activeBytes": 4974,
-      "sourceSha256": "1a8426b20427dfc76cf1389611e000d1ee1b208cf994c473d9de2d1f1723b181",
-      "activeSha256": "1a8426b20427dfc76cf1389611e000d1ee1b208cf994c473d9de2d1f1723b181",
+      "sourceBytes": 8546,
+      "activeBytes": 8546,
+      "sourceSha256": "fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de",
+      "activeSha256": "fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

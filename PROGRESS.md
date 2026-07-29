@@ -6,6 +6,34 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-29
 
+### COM-01A literal zero admission source checkpoint
+
+Established one fail-closed commerce authority across the launch contract,
+mobile surfaces, server poll, database privileges, and release verification.
+Current direct routes share an unavailable recovery surface; You,
+recommendations, and Shelf/replenishment expose no commerce entry or read;
+catalog/link/stack selectors publish nothing; positive consent and click paths
+refuse before storage, session, network, analytics, URL, or native-link work;
+and the order-report poll cannot read credentials, call a provider, or write an
+attribution. Only refusal, withdrawal, owner deletion, and account data-rights
+cleanup remain, and cleanup cannot grant authority.
+
+Apple 5.1.2(vi), 2.5.18, 3.1.3(e), App Privacy/ATT, FTC affiliate/native-ad and
+health-claim rules, the FTC HBNR, Washington RCW 19.373, Nevada NRS
+603A.400-.550, and applicable CCPA/CPRA controls are recorded as positive
+admission gates. An opaque token, minimization, consent, or ATT cannot cure a
+prohibited photo-derived marketing purpose. A future successor must also prove
+input independence from all photo/face/health-derived data, an approved rail
+and provider contract, reviewed catalog/stacks/copy, hosted operations and
+rights handling, signed-archive and supported-iPhone behavior, App Review, and
+named exact-source signoffs.
+
+All positive commerce UI, development-stack, consent-allow, retailer,
+paid-link, attribution, poll, and 2026-07-06 through 2026-07-08 evidence is now
+historical/stale. COM-01 through COM-07 remain launch-blocked. This source
+checkpoint does not prove Apple or legal acceptance, provider access,
+product-market fit, seven-figure revenue, or any revenue.
+
 ### PHOTO-05A literal zero-Trend-admission source checkpoint
 
 Removed the historical deterministic `deltaMetric=0.05` and

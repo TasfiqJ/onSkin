@@ -111,6 +111,21 @@ export const REQUIRED_TREND_INSIGHT_ADMISSION = Object.freeze({
   scoreAgeGradePercentageAllowed: false,
 });
 
+export const REQUIRED_COMMERCE_ADMISSION = Object.freeze({
+  commerceAdmitted: false,
+  affiliateRailAvailable: false,
+  publicationAuthorityAvailable: false,
+  reviewedCatalogAvailable: false,
+  reviewedStacksAvailable: false,
+  partnerPollingAllowed: false,
+  consentGrantAllowed: false,
+  catalogReadsAllowed: false,
+  clickRecordingAllowed: false,
+  externalNavigationAllowed: false,
+  analyticsAllowed: false,
+  disabledPathSideEffectsAllowed: false,
+});
+
 const REQUIRED_SAFETY_FALSE = Object.freeze([
   'diagnosisTreatmentCurePreventionClaims',
   'aiSkinScores',
@@ -281,6 +296,21 @@ export function validateLaunchContract(contract) {
     errors.push('trendInsightAdmission must contain only the exact PHOTO-05A admission keys.');
   }
 
+  for (const [key, expected] of Object.entries(REQUIRED_COMMERCE_ADMISSION)) {
+    if (contract.commerceAdmission?.[key] !== expected) {
+      errors.push(`commerceAdmission.${key} must be ${expected}.`);
+    }
+  }
+  if (
+    Object.keys(contract.commerceAdmission ?? {}).length !==
+      Object.keys(REQUIRED_COMMERCE_ADMISSION).length ||
+    Object.keys(contract.commerceAdmission ?? {}).some(
+      (key) => !(key in REQUIRED_COMMERCE_ADMISSION),
+    )
+  ) {
+    errors.push('commerceAdmission must contain only the exact COM-01A admission keys.');
+  }
+
   for (const key of REQUIRED_SAFETY_FALSE) {
     if (contract.safetyConstraints?.[key] !== false) {
       errors.push(`safetyConstraints.${key} must be false.`);
@@ -300,6 +330,7 @@ export function loadLaunchContract(root = process.cwd(), path = LAUNCH_CONTRACT_
     throw new Error(`Invalid launch contract ${path}:\n- ${errors.join('\n- ')}`);
   }
   contract.trendInsightAdmission = Object.freeze({ ...contract.trendInsightAdmission });
+  contract.commerceAdmission = Object.freeze({ ...contract.commerceAdmission });
   return Object.freeze(contract);
 }
 
@@ -348,6 +379,7 @@ export function launchContractSnapshot(contract = loadLaunchContract()) {
     featureProfessionalReviewRequirements,
     conflictShareAdmission: Object.freeze({ ...contract.conflictShareAdmission }),
     trendInsightAdmission: Object.freeze({ ...contract.trendInsightAdmission }),
+    commerceAdmission: Object.freeze({ ...contract.commerceAdmission }),
   });
 }
 

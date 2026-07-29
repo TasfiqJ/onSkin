@@ -126,7 +126,7 @@
       "deployByDefault": true,
       "verifyJwt": true,
       "access": "authenticated",
-      "auth": "supabase-user-jwt",
+      "auth": "supabase-user-jwt+verified-totp+live-operator-grant",
       "public": false,
       "resourceLimits": {
         "timeoutSeconds": 30,
@@ -246,7 +246,7 @@
       "deployByDefault": true,
       "verifyJwt": true,
       "access": "authenticated",
-      "auth": "supabase-user-jwt+verified-totp+live-operator-grant",
+      "auth": "supabase-user-jwt",
       "public": false,
       "resourceLimits": {
         "timeoutSeconds": 30,
@@ -272,7 +272,8 @@
       "optionalEnvironment": [
         "EXPO_PUBLIC_APP_ENV",
         "CATALOG_OPERATOR_BODY_MAX_BYTES",
-        "DENO_DEPLOYMENT_ID"
+        "DENO_DEPLOYMENT_ID",
+        "USER_EDGE_BODY_MAX_BYTES"
       ],
       "conditionalEnvironment": [],
       "conditionalSecrets": []
@@ -478,39 +479,18 @@
       "entrypoint": "supabase/functions/order-report-poll/index.ts",
       "deployByDefault": true,
       "verifyJwt": false,
-      "access": "scheduled",
-      "auth": "scheduler-secret",
-      "public": false,
+      "access": "public",
+      "auth": "literal-zero-no-auth-side-effects",
+      "public": true,
       "resourceLimits": {
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
-      "requiredSecrets": [
-        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
-      ],
-      "optionalEnvironment": [
-        "EXPO_PUBLIC_APP_ENV",
-        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
-        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
-        "USER_EDGE_BODY_MAX_BYTES"
-      ],
-      "conditionalEnvironment": [
-        {
-          "when": "the ShopMy order-report rail is activated",
-          "anyOf": ["SHOPMY_BRAND_DOMAIN"]
-        }
-      ],
-      "conditionalSecrets": [
-        {
-          "when": "the ShopMy order-report rail is activated",
-          "anyOf": ["SHOPMY_BRAND_API_KEY"]
-        },
-        {
-          "when": "the ShopMy order-report rail is activated",
-          "anyOf": ["ORDER_REPORT_POLL_SECRET", "SHOPMY_ORDER_REPORT_POLL_SECRET"]
-        }
-      ]
+      "requiredEnvironment": [["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
+      "requiredSecrets": [],
+      "optionalEnvironment": ["EXPO_PUBLIC_APP_ENV"],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
     },
     "revenuecat-webhook": {
       "entrypoint": "supabase/functions/revenuecat-webhook/index.ts",

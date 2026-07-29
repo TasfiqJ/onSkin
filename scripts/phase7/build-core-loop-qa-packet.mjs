@@ -25,6 +25,7 @@ import {
 import { validateHumanE2eManifestReleaseRole } from '../e2e/human-e2e-manifest-contract.mjs';
 import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from '../phase5/device-qa-packet-contract.mjs';
 import { PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS } from '../photo05/trend-admission-source-contract.mjs';
+import { COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS } from '../com01/commerce-admission-source-contract.mjs';
 import { validatePhase7EvidenceInventory } from './core-loop-qa-packet-contract.mjs';
 
 const strict = process.argv.includes('--strict');
@@ -265,6 +266,9 @@ const requiredFiles = [
   'docs/phase-8/public-site/share.html',
 ];
 for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
+for (const path of COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS) {
   if (!requiredFiles.includes(path)) requiredFiles.push(path);
 }
 
@@ -782,6 +786,11 @@ if (launchContract.conflictShareAdmission.publicLinksAdmitted !== true) {
 if (launchContract.trendInsightAdmission.trendInsightAdmitted !== true) {
   blockers.push(
     'PHOTO-05A Trend insights remain literal-zero-admission; no environment, development, E2E, caller, fixture, legacy state, simulated metric, consent grant, QA flag, or stored row may substitute for a validated on-device engine and issuer-bound result.',
+  );
+}
+if (launchContract.commerceAdmission.commerceAdmitted !== true) {
+  blockers.push(
+    'COM-01A commerce remains literal-zero-admission; no environment, domain, development/E2E mode, consent or legacy state, catalog row, reviewer string, affiliate URL, server credential, QA flag, or stored row may admit publication, partner polling, click recording, analytics, or retailer navigation.',
   );
 }
 const cat07CommittedEvidence = validateCat07CommittedEvidence(root, { expectedHeadSha: gitSha });

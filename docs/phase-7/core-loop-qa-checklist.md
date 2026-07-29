@@ -366,7 +366,13 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`; it does not
   replace native iOS/Android home-indicator, Dynamic Type, VoiceOver, or
   TalkBack QA.
-- 2026-07-07: Expo web E2E at 320 x 568 covers commerce trust route recovery in
+- **COM-01A supersession (2026-07-29):** The next two commerce entries are
+  historical evidence for source that no longer has runtime authority. The
+  `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED` flag is retired, positive commerce UI
+  cannot be reproduced from current source, and those packets cannot satisfy a
+  current launch gate. The literal-zero checkpoint and its honestly bounded
+  current web observation are authoritative.
+- 2026-07-07: Historical Expo web E2E at 320 x 568 covered commerce trust route recovery in
   default deferred and enabled local modes. Default `/commerce/stacks`,
   `/commerce/transparency`, `/commerce/consent`, and
   `/commerce/stack/sensitive-skin-starter-set` show the deferred beta surface and
@@ -384,7 +390,7 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   replace real retailer link handoff/failure QA, native modal/outbound-link QA,
   ShopMy or fallback partner approval, source-cleared catalog QA, final legal
   paid-link consent copy, or production domain verification.
-- 2026-07-08: Source-contract and Expo web follow-up hardens the enabled
+- 2026-07-08: Historical source-contract and Expo web follow-up hardened the enabled
   `/commerce/consent` MHMDA consent sheet for native safe areas and modal
   semantics. With `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`, in-app browser
   evidence at 320 px verifies one `Before we show where to buy` dialog with

@@ -1,9 +1,18 @@
 # Document 10: Creator Stacks + ShopMy — Build Specification & Strategic Validation
 
+> **2026-07-29 COM-01A authority:** This document is retained as historical
+> research and a future-design candidate only. Current commerce admission is
+> literal zero: no catalog/stack publication, consent grant, outbound link,
+> click attribution, provider poll, order ingestion, or commerce analytics can
+> run. Runtime configuration cannot activate the rail. COM-01 through COM-07
+> remain launch-blocked, and any positive successor requires a separately
+> reviewed source/migration/admission checkpoint plus legal, privacy, Apple,
+> partner, hosted, and native evidence. See the
+> [COM-01A checkpoint](hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+
 > **2026-07-12 launch-scope update:** Creator links and production commerce are
-> required for the iOS all-features release. Older “later” or post-launch
-> sequencing is superseded by `docs/hugeToDo/launch-contract.json`; source,
-> consent, disclosure, ranking-isolation, privacy, and live-rail gates remain.
+> part of the all-features backlog, but the later COM-01A checkpoint supersedes
+> this document as current implementation authority.
 
 ## TL;DR
 

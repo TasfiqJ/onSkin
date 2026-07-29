@@ -730,6 +730,84 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Status: Accepted for the zero-admission source architecture; Trend remains
   `in_progress` and launch-blocked.
 
+### 2026-07-29 - Admit No Commerce Until A Reviewed Rail And Publication Authority Exist
+
+- Decision: COM-01A establishes **literal zero admission** for commerce. Current
+  commerce authority, affiliate or retailer rail availability, publication
+  authority, reviewed catalog and Stack availability, positive commerce-consent
+  grant, provider/order polling, catalog or attribution reads, click/order
+  recording, external purchase navigation, and commerce analytics are
+  unconditionally `false` or inert. A flag, environment, development build,
+  final domain, fixture, demo retailer, caller consent, opaque token, partner
+  credential, existing row, or positive recommendation cannot admit them.
+  Explicit refusal, withdrawal, cleanup, and deletion may remain so legacy state
+  can be removed without creating a positive path. Any older positive commerce,
+  Where-to-buy, replenishment, creator-Stack, or partner-polling text is a future
+  requirement only.
+- Alternatives: admit a demo/development catalog; let a final domain and
+  credential activate a provider; collect consent before authority exists;
+  preserve read-only retailer links; treat disclosure or an opaque token as a
+  privacy safe harbor; use photo, Trend, profile, health, or recommendation
+  output to choose or attribute a commercial item; or permit commission to
+  affect ranking.
+- Criteria: one immutable admission truth; no pre-authority commercial data
+  flow or analytics; commission-independent ranking; retained withdrawal and
+  deletion; exact, reviewable provider, recipient, catalog, Stack, disclosure,
+  reconciliation, privacy-label, and ATT boundaries; and a positive successor
+  that cannot be created by runtime configuration alone.
+- Evidence: Apple's
+  [App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
+  §5.1.2(vi) prohibit using data gathered from depth/facial-mapping tools,
+  including Camera and Photo APIs, for marketing, advertising, or use-based
+  data mining, including by third parties. Product selection, retailer choice,
+  replenishment, attribution, or paid-link output derived from that data must
+  therefore remain closed unless qualified counsel and Apple review the exact
+  release; consent or an opaque token does not cure prohibited upstream use.
+  Section 2.5.18 separately prohibits targeted or behavioral display
+  advertising based on sensitive health/medical data. Apple's
+  [App Privacy details](https://developer.apple.com/app-store/app-privacy-details/)
+  and
+  [User Privacy and Data Use](https://developer.apple.com/app-store/user-privacy-and-data-use/)
+  require exact collection/purpose answers and an ATT determination for
+  cross-company tracking or advertising measurement.
+- Evidence: the
+  [FTC Endorsement Guides Q&A](https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking)
+  requires clear and conspicuous material-connection disclosure close to the
+  affiliate recommendation and explains that “affiliate link” or “buy now”
+  alone may be inadequate. The FTC's
+  [native-advertising guidance](https://www.ftc.gov/business-guidance/resources/native-advertising-guide-businesses)
+  requires commercial content to be identifiable; independent-ranking and
+  health/product claims still need truthful substantiation. The
+  [FTC Health Breach Notification Rule guidance](https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0)
+  makes unauthorized disclosure a potential breach for covered health apps.
+  Exact data flows and entity/applicability facts also require review under
+  [Washington RCW 19.373](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373&full=true),
+  [Nevada NRS 603A.400-.550](https://www.leg.state.nv.us/nrs/nrs-603a.html),
+  and, when applicable,
+  [California Civil Code § 1798.140](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.140.).
+  Those statutes can reach inferred or derived health data, distinct sharing
+  consent, sale authorization, product interactions, sensitive data, and
+  commercial inferences.
+- Risk: COM-01A is a source checkpoint only. Before any positive successor,
+  COM-01 through COM-07 still require executed provider terms, reviewed rail and
+  publication authority, reviewed catalog/Stacks, documented first- and
+  third-party data flows and contracts, App Privacy/ATT decisions, adjacent
+  disclosure and native-ad treatment, ranking isolation, claims/HBNR and
+  Washington/Nevada/applicable-California review, live reconciliation,
+  deletion/withdrawal proof, abuse/security controls, and exact archive,
+  network, accessibility, performance, supported-iPhone, and App Review
+  evidence.
+- Status: Accepted for the literal-zero commerce source architecture; COM-01
+  through COM-07 remain incomplete and launch-blocked.
+- Owner: Product, commerce, catalog, privacy, legal, security, data-rights, and
+  release owners share the downstream gates.
+- Review date: Before any commerce consent grant, catalog/Stack fetch, affiliate
+  or retailer link, provider poll, attribution write, external purchase
+  navigation, commerce analytics, TestFlight claim, or App Store submission
+  candidate.
+- Assurance boundary: This decision does not guarantee App Store acceptance,
+  legal compliance, safety, product-market fit, or revenue.
+
 ## Stack Decisions
 
 ### 2026-07-06 - Local-First Photos And Shelf

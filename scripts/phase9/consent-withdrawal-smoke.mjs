@@ -95,6 +95,9 @@ const migrations =
 const phase9ConsentMigration = read(
   'supabase/migrations/20260705000032_phase9_consent_withdrawal.sql',
 );
+const commerceZeroAdmissionMigration = read(
+  'supabase/migrations/20260729000072_commerce_zero_admission.sql',
+);
 const healthLifecycleMigration = read(
   'supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql',
 );
@@ -167,10 +170,10 @@ block(
 block(
   errors,
   /recordConsent/.test(you) &&
-    /grantCommerceConsent/.test(you) &&
-    /declineCommerceConsent/.test(you) &&
-    /qc\.setQueryData<boolean>\(\['commerceConsent'\], granted\)/.test(you),
-  'Settings consent toggles must use their purpose-specific ledger/cleanup helpers and sync the resolved commerce cache.',
+    !/(?:grantCommerceConsent|declineCommerceConsent|commerceConsent|isCommerceConsented|type:\s*['"]data_sharing['"])/.test(
+      you,
+    ),
+  'Settings/privacy may preserve purpose-specific non-commerce consent writes but must not read, resolve, or write a positive commerce cache under COM-01A.',
 );
 
 block(
@@ -388,7 +391,7 @@ block(
   /withdrawDataSharing/.test(dependentCleanupRuntime) &&
     /order_attributions/.test(dependentCleanupRuntime) &&
     /commerce_click_events/.test(dependentCleanupRuntime),
-  'Data-sharing withdrawal must detach order attributions and delete commerce clicks.',
+  'Data-sharing withdrawal must preserve installed-base order detachment and commerce-click deletion.',
 );
 block(
   errors,
@@ -720,8 +723,10 @@ block(
     /waitForDependentWithdrawal/.test(liveHarness) &&
     /storageObjectMissing/.test(liveHarness) &&
     /replayWithdrawal/.test(liveHarness) &&
-    /order\.click_token === null/.test(liveHarness),
-  'Live fixtures must bind epoch/generation headers and prove exact HTTP completion states, scheduled photo cleanup, exact replay, Storage absence, and commerce detachment.',
+    /stableErrorCode\(blockedCommerceWrite\.error\) === '42501'/.test(liveHarness) &&
+    /commerce_click_events_deleted === 0/.test(liveHarness) &&
+    /order_attributions_detached === 0/.test(liveHarness),
+  'Live fixtures must bind epoch/generation headers and prove exact HTTP completion states, scheduled photo cleanup, exact replay, Storage absence, and truthful COM-01A zero cleanup.',
 );
 block(
   errors,
@@ -774,7 +779,6 @@ for (const [consentType, contract] of Object.entries(LIVE_HEALTH_CONSENT_COPY.de
 
 for (const [type, policy] of [
   ['photo_cloud_backup', 'photos_cloud_backup_consent_insert'],
-  ['data_sharing', 'commerce_click_events_consent_insert'],
   ['photo_trend_insights', 'photo_trend_consent_insert'],
   ['community_participation', 'community_reactions_consent_insert'],
   ['ask_onskin', 'ask_sessions_consent_insert'],
@@ -786,6 +790,22 @@ for (const [type, policy] of [
     `RLS must enforce current ${type} consent for sensitive writes.`,
   );
 }
+block(
+  errors,
+  commerceZeroAdmissionMigration.includes(
+    'drop policy if exists "commerce_click_events_consent_insert"',
+  ) &&
+    /revoke all on table public\.commerce_click_events[\s\S]*grant select, delete on table public\.commerce_click_events\s+to authenticated/.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /create trigger commerce_click_events_admission_closed[\s\S]*before insert or update/.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /raise exception 'COMMERCE_ADMISSION_CLOSED'[\s\S]*errcode = '55000'/.test(
+      commerceZeroAdmissionMigration,
+    ),
+  'COM-01A must remove consent-authorized publication while preserving installed-base owner reads/deletion and a fail-closed database guard.',
+);
 
 warn(
   warnings,

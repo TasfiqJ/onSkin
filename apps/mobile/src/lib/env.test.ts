@@ -5,7 +5,6 @@ const ORIGINAL_SUPABASE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_SUPABASE_PUBLI
 const ORIGINAL_APP_ENV = process.env.EXPO_PUBLIC_APP_ENV;
 const ORIGINAL_NATIVE_CAMERA_ENABLED = process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED;
 const ORIGINAL_NATIVE_OCR_ENABLED = process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED;
-const ORIGINAL_PHASE7_COMMERCE_ENABLED = process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED;
 const ORIGINAL_PHASE7_TREND_ENABLED = process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED;
 const ORIGINAL_PHASE7_SHARE_CARD_ENABLED = process.env.EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED;
 const ORIGINAL_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED =
@@ -19,7 +18,6 @@ async function loadEnvWith(overrides: {
   appEnv?: string;
   nativeCameraEnabled?: string;
   nativeOcrEnabled?: string;
-  phase7CommerceEnabled?: string;
   phase7TrendEnabled?: string;
   phase7ShareCardEnabled?: string;
   phase7ReviewedConflictSharingEnabled?: string;
@@ -32,7 +30,6 @@ async function loadEnvWith(overrides: {
   setEnv('EXPO_PUBLIC_APP_ENV', overrides.appEnv);
   setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', overrides.nativeCameraEnabled);
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', overrides.nativeOcrEnabled);
-  setEnv('EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED', overrides.phase7CommerceEnabled);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', overrides.phase7TrendEnabled);
   setEnv('EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED', overrides.phase7ShareCardEnabled);
   setEnv(
@@ -57,7 +54,6 @@ afterEach(() => {
   setEnv('EXPO_PUBLIC_APP_ENV', ORIGINAL_APP_ENV);
   setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', ORIGINAL_NATIVE_CAMERA_ENABLED);
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', ORIGINAL_NATIVE_OCR_ENABLED);
-  setEnv('EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED', ORIGINAL_PHASE7_COMMERCE_ENABLED);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', ORIGINAL_PHASE7_TREND_ENABLED);
   setEnv('EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED', ORIGINAL_PHASE7_SHARE_CARD_ENABLED);
   setEnv(
@@ -145,7 +141,6 @@ describe('env boolean flags', () => {
     const mod = await loadEnvWith({
       nativeCameraEnabled: ' TRUE ',
       nativeOcrEnabled: ' True ',
-      phase7CommerceEnabled: ' true ',
       phase7TrendEnabled: 'FALSE',
       phase7ShareCardEnabled: ' true ',
       phase7ReviewedConflictSharingEnabled: ' TRUE ',
@@ -154,7 +149,6 @@ describe('env boolean flags', () => {
 
     expect(mod.env.nativeCameraEnabled).toBe(true);
     expect(mod.env.nativeOcrEnabled).toBe(true);
-    expect(mod.env.phase7CommerceEnabled).toBe(true);
     expect(mod.env.phase7TrendEnabled).toBe(false);
     expect(mod.env.phase7ShareCardEnabled).toBe(true);
     expect(mod.env.phase7ReviewedConflictSharingEnabled).toBe(true);
@@ -174,7 +168,6 @@ describe('env boolean flags', () => {
     const mod = await loadEnvWith({
       nativeCameraEnabled: 'yes',
       nativeOcrEnabled: '1',
-      phase7CommerceEnabled: 'enabled',
       phase7ShareCardEnabled: 'enabled',
       phase7ReviewedConflictSharingEnabled: '1',
       phase8PublicLinksEnabled: 'on',
@@ -182,7 +175,6 @@ describe('env boolean flags', () => {
 
     expect(mod.env.nativeCameraEnabled).toBe(false);
     expect(mod.env.nativeOcrEnabled).toBe(false);
-    expect(mod.env.phase7CommerceEnabled).toBe(false);
     expect(mod.env.phase7ShareCardEnabled).toBe(false);
     expect(mod.env.phase7ReviewedConflictSharingEnabled).toBe(false);
     expect(mod.env.phase8PublicLinksEnabled).toBe(false);

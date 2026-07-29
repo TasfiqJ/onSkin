@@ -7,8 +7,8 @@ select plan(25);
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000071'::text,
-  'draft-successor staging remains intact through recommendation zero admission'
+  '20260729000072'::text,
+  'draft-successor staging remains intact through commerce zero admission'
 );
 
 select has_table(

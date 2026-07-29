@@ -1547,46 +1547,24 @@ async function main() {
 
       await grantConsent(userA.client, userA.id, 'data_sharing');
       await grantConsent(userB.client, userB.id, 'data_sharing');
-      const clickEvent = await insertOne(userA.client, 'commerce_click_events', {
-        user_id: userA.id,
-        click_token: `phase9-${randomUUID()}`,
-        product_type: 'cleanser',
-        source: 'none',
-        consented: true,
-      });
-      registerPrivateTableProbe('commerce_click_events', 'id', clickEvent.id);
-      await expectVisible(
-        userA.client,
-        'commerce_click_events',
-        'id',
-        clickEvent.id,
-        'commerce click owner read',
-      );
-      await expectNotVisible(
-        userB.client,
-        'commerce_click_events',
-        'id',
-        clickEvent.id,
-        'commerce click cross-user read',
-      );
       await expectBlockedInsert(
-        'commerce click cross-user insert',
-        userB.client.from('commerce_click_events').insert({
+        'commerce click owner insert while admission is closed',
+        userA.client.from('commerce_click_events').insert({
           user_id: userA.id,
-          click_token: `bad-${randomUUID()}`,
+          click_token: `phase9-closed-${randomUUID()}`,
           product_type: 'cleanser',
           source: 'none',
           consented: true,
         }),
       );
       await expectBlockedInsert(
-        'commerce click unconsented insert',
-        userA.client.from('commerce_click_events').insert({
+        'commerce click cross-user insert while admission is closed',
+        userB.client.from('commerce_click_events').insert({
           user_id: userA.id,
-          click_token: `phase9-unconsented-${randomUUID()}`,
+          click_token: `phase9-cross-closed-${randomUUID()}`,
           product_type: 'cleanser',
           source: 'none',
-          consented: false,
+          consented: true,
         }),
       );
       await revokeConsent(userA.client, userA.id, 'data_sharing');
@@ -1600,6 +1578,7 @@ async function main() {
           consented: true,
         }),
       );
+      registerClosedPrivateTableProbe('commerce_click_events', 'id', randomUUID());
     });
 
     await runCheck('community owner, moderation, and report isolation', async () => {
@@ -2477,13 +2456,7 @@ async function main() {
       trackServiceCleanup('subscriptions_events', 'id', subscriptionEvent.id);
       registerPrivateTableProbe('subscriptions_events', 'id', subscriptionEvent.id);
 
-      const orderAttribution = await insertOne(admin, 'order_attributions', {
-        external_order_id: `phase9-${randomUUID()}`,
-        click_token: `phase9-${randomUUID()}`,
-        status: 'returned',
-      });
-      trackServiceCleanup('order_attributions', 'id', orderAttribution.id);
-      registerPrivateTableProbe('order_attributions', 'id', orderAttribution.id);
+      registerClosedPrivateTableProbe('order_attributions', 'id', absentUuid);
 
       const waitlistSignup = await insertOne(admin, 'waitlist_signups', {
         email: `phase9-${randomUUID()}@example.invalid`,

@@ -13,6 +13,7 @@ import {
   readScriptAppEnvironment,
   redactedErrorKind,
   resolveHostedSupabaseProjectTarget,
+  stableErrorCode,
   storageObjectMissing,
   strict,
   write,
@@ -1005,7 +1006,6 @@ async function main() {
   });
   const users = [];
   const storagePaths = [];
-  const externalOrderIds = [];
   const subscriptionEventIds = [];
   const accountDeletionRateLimitKeys = [];
 
@@ -1195,27 +1195,29 @@ async function main() {
         face_region_redacted: true,
       });
 
-      const clickToken = `phase9-data-${label}-${randomUUID()}`;
-      const click = await insertOne(user.client, 'commerce_click_events', {
+      const blockedClickToken = `phase9-data-closed-${label}-${randomUUID()}`;
+      const blockedCommerceWrite = await user.client.from('commerce_click_events').insert({
         user_id: user.id,
-        click_token: clickToken,
+        click_token: blockedClickToken,
         product_type: 'cleanser',
         source: 'direct',
         consented: true,
       });
-      const externalOrderId = `phase9-data-${label}-${randomUUID()}`;
-      externalOrderIds.push(externalOrderId);
-      const orderWrite = await admin.from('order_attributions').insert({
-        external_order_id: externalOrderId,
-        click_token: clickToken,
-        order_amount_cents: 1299,
-        commission_cents: 123,
-        currency: 'USD',
-        status: 'locked',
-        transaction_date: new Date().toISOString(),
-        record_updated_at: new Date().toISOString(),
-      });
-      if (orderWrite.error) throw orderWrite.error;
+      assert(
+        stableErrorCode(blockedCommerceWrite.error) === '42501',
+        `COM-01A commerce click publication was not rejected for ${label}: ${redactedErrorKind(
+          blockedCommerceWrite.error,
+        )}.`,
+      );
+      const { data: closedCommerceRows, error: closedCommerceReadError } = await user.client
+        .from('commerce_click_events')
+        .select('id')
+        .eq('click_token', blockedClickToken);
+      if (closedCommerceReadError) throw closedCommerceReadError;
+      assert(
+        Array.isArray(closedCommerceRows) && closedCommerceRows.length === 0,
+        `COM-01A rejected commerce fixture nevertheless persisted for ${label}.`,
+      );
 
       const grantExpiresAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
       const { error: grantError } = await admin.rpc('grant_app_granted_reverse_trial', {
@@ -1263,9 +1265,7 @@ async function main() {
         shelfOperationId,
         completionEventId,
         photo,
-        click,
-        clickToken,
-        externalOrderId,
+        blockedClickToken,
         reverseTrialGrant,
         catalogCorrection,
       };
@@ -1382,6 +1382,10 @@ async function main() {
       expectBundleHasOnlyUser(data, 'consents', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'photos', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'commerce_click_events', 'user_id', userA.id, userB.id);
+      assert(
+        rows(data, 'commerce_click_events').length === 0,
+        'COM-01A data export returned a commerce click row after zero-admission fixture rejection.',
+      );
       expectBundleHasOnlyUser(data, 'entitlements', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'reverse_trial_grants', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'catalog_corrections', 'user_id', userA.id, userB.id);
@@ -1585,12 +1589,8 @@ async function main() {
 
       const orderRows = rows(data, 'order_attributions');
       assert(
-        orderRows.some((row) => row.external_order_id === seededA.externalOrderId),
-        'export missing caller order attribution.',
-      );
-      assert(
-        !orderRows.some((row) => row.external_order_id === seededB.externalOrderId),
-        'export leaked another user order attribution.',
+        orderRows.length === 0,
+        'COM-01A data export returned order attribution without an admitted legacy click.',
       );
       assert(
         orderRows.every((row) => !Object.hasOwn(row, 'commission_cents')),
@@ -1924,27 +1924,6 @@ async function main() {
         if (otherPhoto.error)
           throw new Error('account-deletion removed another user photo object.');
 
-        const { data: ownerOrder, error: ownerOrderError } = await admin
-          .from('order_attributions')
-          .select('click_token')
-          .eq('external_order_id', seededA.externalOrderId)
-          .single();
-        if (ownerOrderError) throw ownerOrderError;
-        assert(
-          ownerOrder.click_token === null,
-          'deleted user order attribution click token was not scrubbed.',
-        );
-
-        const { data: otherOrder, error: otherOrderError } = await admin
-          .from('order_attributions')
-          .select('click_token')
-          .eq('external_order_id', seededB.externalOrderId)
-          .single();
-        if (otherOrderError) throw otherOrderError;
-        assert(
-          otherOrder.click_token === seededB.clickToken,
-          'account-deletion scrubbed another user order attribution.',
-        );
       },
     );
   } finally {
@@ -1958,23 +1937,6 @@ async function main() {
           errors.push(`Storage cleanup verification failed: ${redactedErrorKind(remaining.error)}`);
         }
       }
-    }
-    for (const externalOrderId of externalOrderIds) {
-      const { error } = await admin
-        .from('order_attributions')
-        .delete()
-        .eq('external_order_id', externalOrderId);
-      if (error) {
-        errors.push(`Order cleanup failed: ${redactedErrorKind(error)}`);
-        continue;
-      }
-      const { count, error: verifyError } = await admin
-        .from('order_attributions')
-        .select('*', { count: 'exact', head: true })
-        .eq('external_order_id', externalOrderId);
-      if (verifyError)
-        errors.push(`Order cleanup verification failed: ${redactedErrorKind(verifyError)}`);
-      else if (count !== 0) errors.push('Order cleanup left a residual row.');
     }
     const trackedSubscriptionEventIds = [...new Set(subscriptionEventIds)];
     if (trackedSubscriptionEventIds.length > 0) {

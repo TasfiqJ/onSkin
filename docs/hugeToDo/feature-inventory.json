@@ -226,13 +226,13 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 141,
+    "data-store": 142,
     "edge-function": 17,
-    "feature-flag": 16,
+    "feature-flag": 15,
     "generated-packet": 32,
     "native-module": 44,
     "route": 91,
-    "vendor-call": 17
+    "vendor-call": 16
   },
   "items": [
     {
@@ -765,6 +765,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
       "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:commerce_admission_control",
+      "category": "data-store",
+      "source": "supabase/migrations/20260729000072_commerce_zero_admission.sql",
+      "featureIds": ["F-16"],
       "readiness": "implemented"
     },
     {
@@ -1368,13 +1375,6 @@
       "source": "apps/mobile/src/lib/env.ts",
       "featureIds": ["F-14"],
       "readiness": "launch-blocked"
-    },
-    {
-      "id": "feature-flag:EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED",
-      "category": "feature-flag",
-      "source": "apps/mobile/src/lib/env.ts",
-      "featureIds": ["F-16"],
-      "readiness": "inert"
     },
     {
       "id": "feature-flag:EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED",
@@ -2628,13 +2628,6 @@
       "source": "supabase/functions/account-deletion/durableProviderDeletion.ts",
       "featureIds": ["F-11", "F-12"],
       "readiness": "simulated"
-    },
-    {
-      "id": "vendor-call:origin:api.shopmy.us",
-      "category": "vendor-call",
-      "source": "supabase/functions/order-report-poll/index.ts",
-      "featureIds": ["F-16"],
-      "readiness": "inert"
     },
     {
       "id": "vendor-call:origin:appleid.apple.com",

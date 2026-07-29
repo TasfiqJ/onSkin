@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 
-export const LIVE_CONSENT_WITHDRAWAL_EVIDENCE_SCHEMA_VERSION = 2;
+export const LIVE_CONSENT_WITHDRAWAL_EVIDENCE_SCHEMA_VERSION = 3;
 export const LIVE_CONSENT_WITHDRAWAL_EVIDENCE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1_000;
 export const LIVE_CONSENT_WITHDRAWAL_EVIDENCE_FUTURE_SKEW_MS = 5 * 60 * 1_000;
 export const HEALTH_CONSENT_SCHEMA_PATH =
@@ -16,7 +16,7 @@ export const REQUIRED_LIVE_CONSENT_WITHDRAWAL_CHECKS = Object.freeze([
   'ask_onskin withdrawal deletes the complete server-side Ask graph',
   'photo_trend_insights withdrawal deletes trend rows',
   'community_participation withdrawal deletes owner community rows',
-  'data_sharing withdrawal detaches order links and deletes commerce clicks',
+  'data_sharing withdrawal preserves COM-01A zero publication and returns truthful zero cleanup',
   'photo_capture withdrawal is accepted pending and the scheduled worker deletes remaining photo metadata',
   'synthetic harness cleanup removes owned Storage, fixtures, and Auth identity',
 ]);

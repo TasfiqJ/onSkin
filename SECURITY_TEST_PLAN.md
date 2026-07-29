@@ -255,11 +255,11 @@
   - Proves those functions use the Postgres rate-limit RPC before Turnstile verification, keyed-hash request identity before storage, and return `429` when limited.
   - Proves the rate-limit migration uses RLS, a pinned-search-path `SECURITY DEFINER` function, and service-role-only RPC execution.
   - Proves RevenueCat webhook rejects non-`POST` before raw body parsing.
-  - Proves the ShopMy order-report poll rejects non-`POST`, remains inert without a brand key, and requires a scheduler secret before any activated service-role poll work.
+  - Proves the COM-01A order-report endpoint rejects non-`POST`, returns the exact inert result for POST, and contains no provider/Supabase client, fetch, credential read, activation branch, or attribution write.
   - Proves every user-JWT Edge Function rejects non-`POST` before caller auth resolution and that catalog lookup cannot reintroduce GET/query-string barcode lookup.
   - Proves body-parsing user-JWT Edge Functions use `USER_EDGE_BODY_MAX_BYTES`, reject oversized bodies with `413 payload_too_large`, and check `Content-Length` before auth/body parsing work.
   - Proves catalog search/lookup use the shared Postgres rate-limit RPC with HMAC-keyed user identity, fail closed when the limiter is unavailable, return `429` when limited, and enforce the limit before request body parsing, service-role catalog reads, lookup telemetry writes, or Open Beauty Facts calls.
-  - Proves external-provider functions use `fetchWithTimeout` plus bounded response text/JSON readers, and rejects raw provider `fetch()`, `.json()`, or `.text()` parsing in account deletion, catalog lookup, public forms, and order polling.
+  - Proves active external-provider functions use `fetchWithTimeout` plus bounded response text/JSON readers, and rejects raw provider `fetch()`, `.json()`, or `.text()` parsing in account deletion, catalog lookup, and public forms. COM-01A separately requires order polling to contain no fetch or provider path at all.
 - `scripts/phase9/live-public-forms.mjs`
   - When explicitly enabled, verifies public waitlist/growth endpoints reject missing and invalid Turnstile tokens.
   - In strict evidence mode with `PHASE9_TURNSTILE_VALID_TOKEN`, verifies valid-token writes and sanitization for both endpoints.
@@ -272,8 +272,8 @@
   - Verifies `edge_rate_limits` rows for catalog scopes use 64-character keyed hashes and writes redacted `docs/phase-9/generated/live-catalog-rate-limit.*` evidence artifacts.
 - `scripts/phase9/live-order-report-poll.mjs`
   - When explicitly enabled, verifies deployed `order-report-poll` rejects non-`POST` before service-role work.
-  - Verifies missing and wrong scheduler secrets do not write `order_attributions`, while accepting either inert no-ShopMy-key responses or activated fail-closed responses according to `PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED`.
-  - Does not read or send the real scheduler secret and intentionally avoids the authorized ShopMy API path.
+  - Verifies the exact COM-01A inert POST response and proves the `order_attributions` row count does not change.
+  - Does not accept or read any provider/scheduler activation credential; no authorized commerce path exists in current source.
   - Writes `docs/phase-9/generated/live-order-report-poll.*` as an evidence packet.
 - `scripts/phase9/live-revenuecat-webhook.mjs`
   - When explicitly enabled, verifies deployed RevenueCat webhook rejects non-`POST` methods without writing subscription events.
@@ -442,8 +442,8 @@
   - Verifies Sentry default PII, performance tracing, failed-request capture, screenshot attachments, and view hierarchy attachments remain disabled.
   - Verifies Sentry events use the global before-send sanitizer and drop request, breadcrumb, context, transaction, fingerprint, log entry, thread, span, module, measurement, debug, server-name, and SDK-processing metadata fields before upload.
 - `apps/mobile/src/features/commerce/attribution.test.ts` and `apps/mobile/src/features/commerce/commerce.test.ts`
-  - Verify where-to-buy URLs fail closed for unsafe schemes or embedded credentials.
-  - Verify unsafe affiliate rows are filtered before rendering and that outbound commerce URLs still append only the opaque `oref` token.
+  - Verify dormant where-to-buy and attribution helpers remain fail-closed: no outbound URL is built, no click payload is admitted, and no retailer row is published.
+  - These are negative compatibility contracts only. They do not describe an active affiliate row, opaque-token handoff, or commerce URL; the COM-01A source contract prevents production consumers from activating the dormant modules.
 - `scripts/phase9/privacy-payload-audit.mjs`
   - Proves analytics/Sentry identity paths use pseudonymous IDs.
   - Fails if analytics event names bypass the event-name allowlist, vendor capture uses the raw event name, or app call sites use non-literal/unapproved event names.
@@ -475,7 +475,7 @@
 - Edge Function auth tests for data export, account deletion, subscription grants, and catalog functions, including valid-JWT non-`POST` rejection for every user-JWT function and no side effects from those rejected calls.
 - Live Edge auth negative tests using `npm run phase9:live-edge-auth:strict`, then set `PHASE9_EDGE_AUTH_PASS=true` only after staging artifact review.
 - RevenueCat webhook lifecycle using `npm run phase9:live-revenuecat-webhook:strict`: non-POST rejection, invalid auth, invalid signature, stale signature, oversized body rejection, duplicate delivery, initial purchase grant, renewal, cancellation, billing issue, expiration, refund revoke, raw-payload minimization, and dashboard secret parity.
-- ShopMy order-report poll activation test before enabling commerce attribution: run `phase9:live-order-report-poll:strict`; prove `POST` only, no-op without brand key, `503` if brand key exists without `ORDER_REPORT_POLL_SECRET`, `401` with missing/wrong scheduler secret, no `order_attributions` write before authorization, and no real scheduler secret in the harness. Authorized scheduler success should be tested only in a controlled ShopMy sandbox/partner environment.
+- COM-01A order-report literal-zero test: run `phase9:live-order-report-poll:strict`; prove non-`POST` rejection, the exact inert POST body, and no `order_attributions` delta without provider or scheduler credentials. A future positive rail must first land as a separately reviewed admission/source/migration change and then receive controlled partner, legal, privacy, platform, and hosted QA.
 - Public waitlist/growth abuse-control tests: missing server secret returns 503, missing token returns 403, invalid token returns 403, oversized bodies return 413 without writes, valid token writes the expected sanitized record, and repeated requests produce `429` without persisting raw IP/user-agent values. Missing/invalid, oversized-body, valid-token, and 429/keyed-hash paths are covered by `phase9:live-public-forms:strict`; missing-secret evidence still requires staging deployment logs or a targeted staging probe.
 - Authenticated catalog abuse-control tests: run `npm run phase9:live-catalog-rate-limit:strict` with staging credentials and matching `CATALOG_RATE_LIMIT_MAX`/`PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX`; repeated `catalog-search` and `catalog-lookup` POSTs should produce `429` plus `rate_limited`, and redacted artifacts should show only keyed hashes in `edge_rate_limits`, not raw user IDs.
 - Account deletion with photos, shelf, routines, entitlement rows, RevenueCat deletion, PostHog deletion, client SDK identity reset, local cache wipe, and notification cancellation. The deployed backend portion is covered by `phase9:live-data-rights:strict`; local device wipe still needs real-device QA.

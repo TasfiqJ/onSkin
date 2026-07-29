@@ -98,7 +98,6 @@ describe('health-purpose local write coverage', () => {
     ]);
     const admittedPostgrest = [
       'app/index.tsx:skin_profiles',
-      'features/commerce/store.ts:commerce_click_events',
       'features/onboarding/OnboardingContext.tsx:skin_profiles',
       'features/photos/store.ts:photos',
       'features/routine/useProgress.ts:routine_completions',
@@ -124,13 +123,14 @@ describe('health-purpose local write coverage', () => {
     for (const entry of new Set(admittedPostgrest)) {
       const file = entry.slice(0, entry.lastIndexOf(':'));
       const source = readFileSync(`${SRC}/${file}`, 'utf8');
-      if (file === 'features/commerce/store.ts') {
-        expect(source, file).toContain("runHealthDependentConsentOperation('data_sharing'");
-      } else {
-        expect(source, file).toMatch(/runHealthData(?:Write)?Operation/u);
-      }
+      expect(source, file).toMatch(/runHealthData(?:Write)?Operation/u);
       expect(source, file).toContain('lease.assertCurrent()');
     }
+
+    const commerceStore = readFileSync(`${SRC}/features/commerce/store.ts`, 'utf8');
+    expect(commerceStore).not.toContain("from('commerce_click_events')");
+    expect(commerceStore).not.toContain('runHealthDependentConsentOperation');
+    expect(commerceStore).toContain('throw new Error(COMMERCE_ADMISSION_CLOSED)');
 
     const completionQueue = readFileSync(`${SRC}/lib/offline/completionQueue.ts`, 'utf8');
     expect(completionQueue).toContain("'record_routine_completion'");

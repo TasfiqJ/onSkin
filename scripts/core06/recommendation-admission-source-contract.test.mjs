@@ -197,14 +197,10 @@ test('runtime commerce admission rejects every current or forged provenance', ()
   );
   assert.match(
     whereToBuy,
-    /export function WhereToBuy\(\{ provenance \}:[\s\S]*?if\s*\(\s*!phase7Flags\.commerce\s*\|\|\s*!isAdmittedCatalogProductProvenance\(provenance\)\s*\)\s*return null;/u,
+    /export function WhereToBuy\(_props:\s*\{\s*provenance:\s*unknown\s*\}\)\s*\{\s*return null;\s*\}/u,
   );
-  const guardIndex = whereToBuy.indexOf('export function WhereToBuy');
-  const enabledIndex = whereToBuy.indexOf('<EnabledWhereToBuy', guardIndex);
-  assert.ok(
-    guardIndex >= 0 && enabledIndex > guardIndex,
-    'the data-fetching where-to-buy component must mount only after provenance admission',
-  );
+  assert.doesNotMatch(whereToBuy, /^import\s/mu);
+  assert.doesNotMatch(whereToBuy, /EnabledWhereToBuy|useWhereToBuy|recordClick|openExternalHttpsUrl/u);
 });
 
 test('goal-active output requires flag, consent, exact provenance, and positive review clearance', () => {
@@ -656,7 +652,7 @@ test('database and forward-upgrade tests execute the checked-in 0071 boundary', 
   const runner = read(paths.databaseRunner);
 
   assert.match(database, /select plan\(\d+\)/u);
-  assert.match(database, /'20260726000071'/u);
+  assert.match(database, /'20260729000072'/u);
   assert.match(database, /recommendation_admission_control/u);
   assert.match(database, /recommendable_catalog_products/u);
   assert.match(database, /recommendations_catalog_product_closed/u);

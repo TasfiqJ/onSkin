@@ -7,14 +7,14 @@ select plan(48);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  70::bigint,
-  'CORE-01 runs against the exact 70-migration source history'
+  71::bigint,
+  'CORE-01 runs against the exact 71-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260726000071'::text,
-  'the migration history includes quiz provenance and reaches recommendation zero admission'
+  '20260729000072'::text,
+  'the migration history includes quiz provenance and reaches commerce zero admission'
 );
 
 select results_eq(
