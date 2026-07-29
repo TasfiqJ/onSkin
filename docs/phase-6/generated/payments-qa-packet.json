@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T18:51:52.126Z",
+  "generatedAt": "2026-07-29T19:00:05.524Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -176,7 +176,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "60fad5ad713e455e5bff86285c7927bff1d948e8",
+  "gitSha": "a0100a289f1da48290697a8c7a936e758bdc0680",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
