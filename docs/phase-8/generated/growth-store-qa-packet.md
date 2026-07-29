@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-29T19:00:54.981Z
+Generated: 2026-07-29T19:54:41.766Z
 Status: blocked
-Git SHA: 263a7d7a26ca61ca8fa2376f0888be38427b376f
+Git SHA: 84da6b99db09ffef2287066b9a0ffb560020acae
 Git status: clean
 
 ## Public Identity
@@ -73,18 +73,18 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52`
-- `package.json`: `a7784a3b2521e128f0c06e854b7b662ddb00be06ce59e13f667a653ddb1a8270`
-- `docs/hugeToDo/launch-contract.json`: `7256e35fbe476ea0217c5443ecc84b84cc8a6ea3246f0279e7fe170b95b9d1ea`
+- `package.json`: `cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239`
+- `docs/hugeToDo/launch-contract.json`: `49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72`
 - `docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`: `36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab`
-- `scripts/launch/contract.mjs`: `72fe270bb72f4be815c6b3d1bce1be95b3f961dc9de29df9937acaa58e84878f`
+- `scripts/launch/contract.mjs`: `bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35`
 - `scripts/core02/clinical-rule-source-contract.test.mjs`: `9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed`
 - `scripts/core07/share-admission-source-contract.mjs`: `ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d`
 - `scripts/core07/share-admission-source-contract.test.mjs`: `8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3`
 - `apps/mobile/app.config.js`: `4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c`
 - `apps/mobile/src/lib/env.ts`: `22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31`
 - `apps/mobile/src/lib/env.test.ts`: `d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9`
-- `apps/mobile/src/lib/launch/phase7.ts`: `693b552de439ef21d68a78cef57c94d3cbe20aa60fc2e2ee15fbbcb20ec2e7c3`
-- `apps/mobile/src/lib/launch/phase7.test.ts`: `5705ef52663469a5dc8d31d84e8059047f97b4b062f9d096c34cc94f0258e166`
+- `apps/mobile/src/lib/launch/phase7.ts`: `3f343eefac464487797f396821a3e89a5204a636733efb19f82208fa4652e0bb`
+- `apps/mobile/src/lib/launch/phase7.test.ts`: `bd5c645e4c1aea55a6987dc1fff405d721a180cac60a6e6bea84195dfc639c60`
 - `apps/mobile/src/lib/launch/phase8.ts`: `dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7`
 - `apps/mobile/src/lib/launch/phase8.test.ts`: `7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b`
 - `apps/mobile/src/lib/growth/attribution.ts`: `80c9c4089fed353e7443deb38f9baa6ebb56b466a4fc07f2ce2caeb4f71f55e2`
@@ -112,7 +112,7 @@ Git status: clean
 - `apps/mobile/src/lib/legal/storeMetadata.ts`: `eb209dc51a5639c1eaae942a9c5426a3044b15a49e0db8e636d3775f55acbb7c`
 - `docs/phase-8/source-of-truth.md`: `0c16aab57df886d9900d6629adc7431119bbeea8fa4e03a737e0559fbeb8c356`
 - `docs/phase-8/link-routing-runbook.md`: `c4314fc17eb9941a0c63b10ccca883c7c4c9762e1c64b1c8de3e9cc12995d0f3`
-- `docs/phase-8/store-metadata-source-of-truth.md`: `17bbcb8962f7d8592a51d914f8ce7e5e40c83daa3be7a61c1a6fd1ef1abbe8fb`
+- `docs/phase-8/store-metadata-source-of-truth.md`: `b0351e2736ff2e77cccc6ec7e3530c1165f1fac5bc862e9cfc3d1d653584da08`
 - `docs/phase-8/store-compliance-packet.md`: `846963335b3c4c91ae1491cb33a7f1a8bcb0e91f27f20cb79882d855c7cf1a5e`
 - `docs/phase-8/creator-brief.md`: `4d24677954d2ec765fc40c912806fbfc6cb9ab5020ad4d71b1c00cd5bc2453bb`
 - `docs/phase-8/apple-ads-keyword-lab.md`: `386c58b62123b320adf38079b98b9a15446389595258eecc21fdaec94aaf5642`
@@ -128,15 +128,15 @@ Git status: clean
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e`
 - `docs/E2E_TESTING_CHECKLIST.md`: `34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026`
-- `docs/USER_FLOW_TREE.md`: `6aa5e9b6e07e6feac24c2f64a0f5974314aada8f12ecc346a295b91e67cb367f`
+- `docs/USER_FLOW_TREE.md`: `3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c`
 - `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
-- `docs/phase-5/generated/device-qa-packet.json`: `6c5a8392a141b8bd7b4a386694af40b3d92eb735ad9034959e67ba6578456210`
-- `docs/phase-5/generated/device-qa-packet.md`: `fae02b1117440520afb208793ff8181969dfad1bd5bacdf0f466a56c8ee2625e`
-- `docs/phase-6/generated/payments-qa-packet.json`: `b8ac3ab8859450f99f61f13d2e72e4296cebbe30a518b5415bae1125fbf1a4d9`
-- `docs/phase-6/generated/payments-qa-packet.md`: `68ef2e97dd73b8c641322d0b0f61d2fdeae44b456722fec480c3c552844db2db`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `c17f660a14bad7bdd3c4415aada97f9c067a1920a68a48c138138d62e2259847`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `d21f16fa186139cb8d0cbd907b3836daf0bde6ea12ed9a9120e890b69d203b00`
+- `docs/phase-5/generated/device-qa-packet.json`: `ef0e9a77e581ffb5749cb7715678abc5149e26627db559865bdc906d62d67b12`
+- `docs/phase-5/generated/device-qa-packet.md`: `b88e3367e5dfad613fa4ef263c0e384e0f459f4c6dd948584e06e60969643e1a`
+- `docs/phase-6/generated/payments-qa-packet.json`: `64f7587c7bc516d0521ca17e8c19dd99e86b9aa3a20f89c89e49311162eae255`
+- `docs/phase-6/generated/payments-qa-packet.md`: `e9ff616128afb8e0b0bb06ea1296cd914499fc96464731346cfeb60145046a25`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `6936c4c5de06f6e3378919264080be4976f4055b185a145c4de894c7f7f007f6`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `74a05b82d17037fc33eb41e7d808473d5217dd12a8fd27e56c6a32b45f412230`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `ac6279c12bb2f5f3314db3d1333ec30fa0b873712a5d14424e28ad3976009683`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `75106f91f70732d79811924589958cb7c469b477fef9278fb3d61da13aa8d3af`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `f3557324dca81f8687fb75ee2d8d76183ab3da26112acf0dc0db1323dcc295d4`
