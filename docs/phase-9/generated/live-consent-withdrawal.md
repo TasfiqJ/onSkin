@@ -1,6 +1,6 @@
 # Live consent-withdrawal evidence
 
-- Evidence schema: 2
+- Evidence schema: 3
 - Status: not-run
 - Source SHA: not supplied
 - Clean source tree: yes
@@ -9,9 +9,9 @@
 - Actual Supabase project ref: not canonical
 - Supabase host: not configured
 - Schema SHA-256: 8bee91bcaedd3909b2f033ddbce47f1960e366fa30d6442a10b889941f3ad524
-- Harness SHA-256: 178519d6ce579370455de9d1eddd5f3d9261ccca5ce9775259476d87f0b3a289
-- Evidence-contract SHA-256: 6c0042f7c3be6ed4c7db4283f1bb4f2b1f191f6a85da436d0bc93a3b2f3fb489
-- Check-manifest SHA-256: 64940aaf0b4b7bcde1a198ae59726942fe31c4e1e053e89b9d2f8c67470ef609
+- Harness SHA-256: 94fafcff2c0f34a36fc244eb6a02b256aafb602e3e5cfc7d20b45be7b9ed71b9
+- Evidence-contract SHA-256: 603d4e3579f5afce974176e0bfdd322fad999bc152f14d72b79f83344b1b2259
+- Check-manifest SHA-256: cf6369065470a26dc98726b141efae54da471931192bc795bd6445ddc06268ad
 - Ran at: not run
 
 ## Checks

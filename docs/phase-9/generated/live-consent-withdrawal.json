@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "status": "not-run",
   "sourceSha": null,
   "sourceTreeClean": true,
@@ -13,11 +13,11 @@
   },
   "harnessRevision": {
     "path": "scripts/phase9/live-consent-withdrawal.mjs",
-    "sha256": "178519d6ce579370455de9d1eddd5f3d9261ccca5ce9775259476d87f0b3a289"
+    "sha256": "94fafcff2c0f34a36fc244eb6a02b256aafb602e3e5cfc7d20b45be7b9ed71b9"
   },
   "evidenceContractRevision": {
     "path": "scripts/phase9/consent-withdrawal-evidence.mjs",
-    "sha256": "6c0042f7c3be6ed4c7db4283f1bb4f2b1f191f6a85da436d0bc93a3b2f3fb489"
+    "sha256": "603d4e3579f5afce974176e0bfdd322fad999bc152f14d72b79f83344b1b2259"
   },
   "copyContractSha256": "52c3637e2f8c073fa1868080a277bf3e94831371875971ff5ecc61a0daa37fec",
   "checkManifest": {
@@ -27,11 +27,11 @@
       "ask_onskin withdrawal deletes the complete server-side Ask graph",
       "photo_trend_insights withdrawal deletes trend rows",
       "community_participation withdrawal deletes owner community rows",
-      "data_sharing withdrawal detaches order links and deletes commerce clicks",
+      "data_sharing withdrawal preserves COM-01A zero publication and returns truthful zero cleanup",
       "photo_capture withdrawal is accepted pending and the scheduled worker deletes remaining photo metadata",
       "synthetic harness cleanup removes owned Storage, fixtures, and Auth identity"
     ],
-    "sha256": "64940aaf0b4b7bcde1a198ae59726942fe31c4e1e053e89b9d2f8c67470ef609"
+    "sha256": "cf6369065470a26dc98726b141efae54da471931192bc795bd6445ddc06268ad"
   },
   "workerPollTimeoutSeconds": 180,
   "workerPollIntervalSeconds": 5,
