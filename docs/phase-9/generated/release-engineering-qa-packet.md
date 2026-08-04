@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-29T19:56:57.633Z
+Generated: 2026-08-04T21:59:11.412Z
 Status: blocked
-Git SHA: 1729363c5c7b127b46a7aa4af35cf1c5214be981
+Git SHA: ce9fc0eab71f23a064e864e44ebad405180426f5
 Git status: clean
 NUL Git status SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 Pinned input integrity: blocked
@@ -12,7 +12,7 @@ Pinned input integrity: blocked
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `1729363c5c7b127b46a7aa4af35cf1c5214be981`
+- Current R/F HEAD: `ce9fc0eab71f23a064e864e44ebad405180426f5`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -29,11 +29,11 @@ Pinned input integrity: blocked
 ## CAT07 Launch Evidence
 
 - Overall: blocked
-- Expected HEAD: `1729363c5c7b127b46a7aa4af35cf1c5214be981`
+- Expected HEAD: `ce9fc0eab71f23a064e864e44ebad405180426f5`
 - Committed validator: blocked
-- Committed validator HEAD: `1729363c5c7b127b46a7aa4af35cf1c5214be981`
+- Committed validator HEAD: `ce9fc0eab71f23a064e864e44ebad405180426f5`
 - Full manifest validator: blocked
-- Full manifest validator HEAD: `1729363c5c7b127b46a7aa4af35cf1c5214be981`
+- Full manifest validator HEAD: `ce9fc0eab71f23a064e864e44ebad405180426f5`
 - Summary SHA-256: `BLOCKED`
 - Manifest JSON SHA-256: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - Manifest Markdown SHA-256: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
@@ -74,6 +74,7 @@ Pinned input integrity: blocked
 - CORE-07A share publication remains zero-admission; exact-content receipt issuance, sanitized projection review, and explicit exact-payload confirmation are unavailable.
 - CORE-07A public links remain zero-admission; no reviewed production token, retention, revocation, deletion, abuse, or destination contract exists.
 - PHOTO-05A Trend insights remain literal-zero-admission; no validated on-device engine or result issuer exists, and simulated metrics, consent state, tone, fixtures, legacy rows, analytics, and disabled-path side effects grant no authority.
+- COM-01A commerce remains literal-zero-admission; the approved rail, publication authority, reviewed catalog/stacks, consent grant, partner poll, click recording, external navigation, analytics, and disabled-path side effects all remain closed.
 - CAT07 launch evidence: CAT07 committed evidence validator did not pass.
 - CAT07 launch evidence: CAT07 full evidence contract validator did not pass.
 - CAT07 launch evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json is not hash-bound to pinned HEAD.
@@ -215,20 +216,20 @@ Pinned input integrity: blocked
 
 ## Source Hashes
 
-- `.env.example`: `5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52`
-- `docs/hugeToDo/launch-contract.json`: `49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72`
+- `.env.example`: `b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90`
+- `docs/hugeToDo/launch-contract.json`: `d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07`
 - `docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md`: `b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5`
 - `docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md`: `6dd7a2416a0e35b416e1f765906dec003f621e8cc5b8032f4c0ca3e9ff7fca68`
 - `docs/hugeToDo/IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md`: `c9520833c815e97aaf656d950a3f19aa81a7a02cb151a15320d8e26b23c8b915`
 - `docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md`: `c852d2a97f979b23680069241b667ad2e15d7a7f298d364281955db8599888a2`
 - `docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`: `36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab`
 - `docs/09-personalized-recommendations.md`: `7d4544112256b1b026116a42357069ec3e4002c5bde7ef1b6612b82784fcd0f4`
-- `scripts/launch/contract.mjs`: `bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35`
-- `scripts/core02/clinical-rule-source-contract.test.mjs`: `9ce053ef5dfd88e963583f494ad3232cf1623d0c559d854795b319faa14a65ed`
-- `scripts/core06/recommendation-admission-source-contract.test.mjs`: `c845f060a7a18f514eacfb5476ce0f5aa8696dc76692cf2a2feb45332b91e3c7`
+- `scripts/launch/contract.mjs`: `51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c`
+- `scripts/core02/clinical-rule-source-contract.test.mjs`: `627b0a03adc26059ed2828b55bc69d6a87b9662f8dbac9c5bdc89f6a42fc0382`
+- `scripts/core06/recommendation-admission-source-contract.test.mjs`: `2df02dfaa6e2698ebc8e02a97b010b380f07ba97d04fb64fafca7db0076857e9`
 - `scripts/core07/share-admission-source-contract.mjs`: `ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d`
 - `scripts/core07/share-admission-source-contract.test.mjs`: `8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3`
-- `scripts/phase9/recommendation-zero-admission-smoke.mjs`: `eb9e8caad7b98399af9ad7001b08e9a27eea01e614c8dd04a562eb63f6465865`
+- `scripts/phase9/recommendation-zero-admission-smoke.mjs`: `efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd`
 - `scripts/postinstall.mjs`: `0d68d89b51fda8a8c8c64ebfb12d5abf95c64add1c158f36786a8e3ca3f97bf7`
 - `scripts/cat05/native-label-ocr-source-contract.test.mjs`: `0039e0587a5bf2e3d0edb9b4bcaa8504fcab4a465894a3c3af5877431e9171d1`
 - `scripts/phase5/check-native-ocr-evidence.mjs`: `11792f4bb99fd1688b372be7fa4179b81288b9147348f36bce8601b21c49003f`
@@ -286,13 +287,13 @@ Pinned input integrity: blocked
 - `apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts`: `f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.ts`: `6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts`: `84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642`
-- `package.json`: `cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239`
+- `package.json`: `8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706`
 - `apps/mobile/package.json`: `c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80`
 - `.github/workflows/quality.yml`: `034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb`
 - `package-lock.json`: `65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480`
-- `.github/workflows/security.yml`: `72951da24cdf28c6b5c62b75e0f6b3659ea6e8b46440e609a213d8943ca13c70`
+- `.github/workflows/security.yml`: `c813e8ebdce3ff0002b4ba168526d58d4a1b39ae11254aab4542f834c43e6eaa`
 - `supabase/config.toml`: `b912687a1a149e4fe317160b269d5deb7e6b5f36ce65b02b8c37cf47d0c7ca7c`
-- `supabase/functions/manifest.json`: `fb79eb7f8f9d2ed569882c922ad6b31c9b50b40a9ba62bb8522a5adf1b06ec7a`
+- `supabase/functions/manifest.json`: `3f16b90be7ad4883c6940fc04eff938b5a9bb60635afa04cdf6363c065b2ff96`
 - `apps/mobile/app.base.json`: `c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f`
 - `apps/mobile/app.config.js`: `4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c`
 - `apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js`: `ab40bcc6285d40e21343adcb02885c5cd920c36cd669f04994b536955795a292`
@@ -312,10 +313,10 @@ Pinned input integrity: blocked
 - `scripts/phase9/release-candidate-git-contract.test.mjs`: `6784f9e47f87e15b878ca747048b4f84b35911b8c84b090612e489ccdac6f942`
 - `scripts/phase9/verification-wiring-contract.mjs`: `31860ea462b650f3aabbe9d96c5061961c809171e5c1bf0d7cce1dea631e74fa`
 - `scripts/phase9/verification-wiring-contract.test.mjs`: `586884d2130c29476a69f6b103d10b61afd83d35445bfb31e39000795d1beaa7`
-- `apps/mobile/src/lib/env.ts`: `22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31`
-- `apps/mobile/src/lib/env.test.ts`: `d799ad8c62a0fdff865f5d29299061eb1927e7d5e1c30e177683bed18791ebc9`
-- `apps/mobile/src/lib/launch/phase7.ts`: `3f343eefac464487797f396821a3e89a5204a636733efb19f82208fa4652e0bb`
-- `apps/mobile/src/lib/launch/phase7.test.ts`: `bd5c645e4c1aea55a6987dc1fff405d721a180cac60a6e6bea84195dfc639c60`
+- `apps/mobile/src/lib/env.ts`: `bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad`
+- `apps/mobile/src/lib/env.test.ts`: `3a2791e73834c3086343a0a2a76c059529b61667665c8f67defed01dddd438f3`
+- `apps/mobile/src/lib/launch/phase7.ts`: `1d198075b9eed13f1b0b9cfcdff59043368999a46f2845df4c81ab518afa4f36`
+- `apps/mobile/src/lib/launch/phase7.test.ts`: `a940f412b4300c8e98e4a2d7265c8b04b755f5371ed0501530d087572f31c4c3`
 - `apps/mobile/src/lib/launch/phase8.ts`: `dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7`
 - `apps/mobile/src/lib/launch/phase8.test.ts`: `7def95ec2a6b678d70e535babaf2c34d241ec112239fef4a4aac526d03c1977b`
 - `apps/mobile/src/features/growth/shareAdmission.ts`: `02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327`
@@ -347,10 +348,10 @@ Pinned input integrity: blocked
 - `apps/mobile/src/features/recommendations/engine.ts`: `09d3eb6119b68909c9d34d23ddacf6c2ee9d79e0d35ecf277353c68d8b8224c3`
 - `apps/mobile/src/features/recommendations/engine.test.ts`: `0dafb11a6aebd0a713417db7839385905ab059a2a06c56c4f691fdf13e50205c`
 - `apps/mobile/src/features/recommendations/useRecommendations.ts`: `c86b5797892557f0197bc812cac9bf1ebe5eab79956590be5e64955b3331f733`
-- `apps/mobile/src/features/commerce/WhereToBuy.tsx`: `42147c464f5bfdd3c6b206c9e2814c387b784f7decc25e98b93d926451bcb1ca`
+- `apps/mobile/src/features/commerce/WhereToBuy.tsx`: `a459ece2191dbbfb7aa787e784dd074b8b361369e904ee9d76baf8118848a0ae`
 - `apps/mobile/src/app/recommendations/[id].tsx`: `3e486837968cfecd86544a9e5a78a658854e26a541b4d7c04ed8c0460467326e`
 - `supabase/migrations/20260726000071_recommendation_zero_admission.sql`: `4e3e0c46a246b97e98f014bf65499ea86b7f57119744466aebc8c1491331acc9`
-- `supabase/tests/database/recommendation_zero_admission.test.sql`: `29f904aac21064dd5f5c2e8f3c7fa2a81417d3ffde26f5134f58e8b145b224b5`
+- `supabase/tests/database/recommendation_zero_admission.test.sql`: `6b913214063fde2879fc990e53e48dc46e3a3fb12998ded0f91b106ae6b454bf`
 - `supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql`: `011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77`
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `51de958c223a1b32cf5d6fffdfff03ac1631bbfe9735de41995b084a90f23f53`
 - `apps/mobile/src/lib/analytics/track.ts`: `3087aac6c5d81fd34e070c2ee0fab7107e9fd911113c93febd3e3b9385c293ef`
@@ -365,7 +366,7 @@ Pinned input integrity: blocked
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
 - `apps/mobile/src/lib/observability/sentry.ts`: `591ffcd81e9f012aaeacc4bc55c769d001d657b626b10f9a2a6fa2668e9aa2ed`
 - `apps/mobile/src/app/_layout.tsx`: `d2d7bae5a6eb88250d21a81cf09ec2ac2523673b429e7df4fcb4ba45539a08f6`
-- `apps/mobile/src/app/(tabs)/you.tsx`: `4c46f34715c5baa915c7bdb3521a1e366ff9bba9bcd4ffff05dd61d7ad0b0bc8`
+- `apps/mobile/src/app/(tabs)/you.tsx`: `c5e534632a0dc98b33dc23aef4c0fa491f614a339d44ee6c24692712f9133620`
 - `apps/mobile/src/app/(tabs)/progress.tsx`: `5ca24d30673f0f0e79ea4ded5e2758e17ecda5505ca6a94862271b9614c6b030`
 - `apps/mobile/src/app/progress/capture.tsx`: `6687c26e6fcccedf226c15b1d3a70a679d37e795e34f87380315a14f17a75294`
 - `apps/mobile/src/app/progress/review.tsx`: `2285d285f16d3b1f73b11645951bad2ce40c17ee0fa33fa9a4ad9b26ed5b7046`
@@ -465,7 +466,7 @@ Pinned input integrity: blocked
 - `supabase/functions/data-export/exportRegistry.test.ts`: `118c081db46604ecfe9e02c2a27db5d7feb107822e5a49f37ff6756273e13b4a`
 - `supabase/functions/consent-withdrawal/index.ts`: `96ebbcf4dfc9f5d4d12c38871706f82ff0d4618546041acca85b804ee8631d99`
 - `supabase/functions/catalog-report/deletionBarrier.test.ts`: `f8c82659ef6216d69eb195214d936ed614addfeae512421e0892e8bc7240761b`
-- `supabase/functions/order-report-poll/index.ts`: `8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce`
+- `supabase/functions/order-report-poll/index.ts`: `5747e2e536851e325fcb25ca3c9f0cefa81fc0c0f94c6c34791b89b5651adc8c`
 - `supabase/functions/order-report-poll/orderAttributionCore.ts`: `434abcf6f1f7424d503fcec137bd799dc66b520c26d0e76bd36d0820f1dfa7f0`
 - `supabase/functions/order-report-poll/orderAttributionCore.test.ts`: `63105c5562be39504a68075984320cb2105d8f84be04d67d282135f79fb30f6b`
 - `supabase/functions/subscription-grants/index.ts`: `6aea31f612dc3ef6cb0011df0c126f26150b3d8d4c9d2eae4b6266e22815e8d0`
@@ -501,7 +502,7 @@ Pinned input integrity: blocked
 - `supabase/tests/database/catalog_import_lifecycle.test.sql`: `d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899`
 - `supabase/tests/database/catalog_launch_curation.test.sql`: `2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376`
 - `supabase/tests/database/catalog_serving_gate.test.sql`: `1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9`
-- `supabase/tests/database/cat07_truthful_freshness.test.sql`: `d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24`
+- `supabase/tests/database/cat07_truthful_freshness.test.sql`: `24fe6b485009f9733568b3e101c5278380d620e9a75894898a114a9f1670d6f3`
 - `supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql`: `18b423bcae63f63c6f533efd1fab3ea9e6918fcebaa6480a35d396b214f89040`
 - `supabase/migrations/20260713000046_account_service_row_scrub.sql`: `268234dbc7c423eef097a2ea17790b871d8413913df71006c73d686e3bd471cf`
 - `supabase/migrations/20260713000047_account_obf_contribution_erasure.sql`: `152f6ecaf1def7bebd0a5ff1d71b4152b336de72dc8ce8e465f071810f7d023b`
@@ -516,13 +517,13 @@ Pinned input integrity: blocked
 - `scripts/phase2/supabase-rls-smoke.mjs`: `03e2c7ecffa214c030de4f168f3600a7b149354a17ceec76db16ee563420fcc9`
 - `scripts/phase9/release-contact-smoke.mjs`: `d1808486b8747f40e8212ac71e5fa8a21ae8cd8198db63d0ad4cc0c80a6a4e0a`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `0b1ea483d03629723435a77254204af282b487dae2ecbc46645c7374879b77ae`
-- `scripts/phase9/release-smoke.mjs`: `ed4fb1f3103ca971d5873a5371f880afeb4e99e62288f9469795110b7ceb1599`
+- `scripts/phase9/release-smoke.mjs`: `3fae0a968fae1afdd95a25b966c68907c7cd55b16913be2d6e19cbf77515cea1`
 - `scripts/phase9/rls-adversarial-smoke.mjs`: `3674c5483fb6517b718ddcda2da5841923289ec47bf71206d369535136721d40`
-- `scripts/phase9/rls-adversarial.mjs`: `6c7629ae037520bc657fb7c058d9bb6c2284c574ceecfee234acadbb48cc2465`
+- `scripts/phase9/rls-adversarial.mjs`: `e274bdca1054344593cf6ce53c251a2c77f2764ea5088e262ee78927e84f88ef`
 - `scripts/phase9/edge-function-manifest-check.mjs`: `f6bbf56e72aa4cac92a40bbb7d1cf28f3179d707ad1ddf3ef6e37349e95ad6a2`
-- `scripts/phase9/edge-function-manifest-lib.mjs`: `57deb682b6cd1e23e5c820366c94e1676c68d0d16c141d108235e8f5a129c0fd`
-- `scripts/phase9/edge-function-manifest-smoke.mjs`: `f9766fc6e70ab30459a0d28a77316179b5cd0f9fd8aba3241d4061da177d10c7`
-- `scripts/phase9/build-release-qa-packet.mjs`: `e24000b790f16815588a38f54f7fc4936a015e9b81dcc5e8856e45ac607f6d6d`
+- `scripts/phase9/edge-function-manifest-lib.mjs`: `52561fddae797f561694e50d77955c1ef64d5d9558284865bd0603b0a3476618`
+- `scripts/phase9/edge-function-manifest-smoke.mjs`: `b2a7b208987ebb0f7da576cd0b8836b82ff0e5b565b8880cc543ede2b58c2b04`
+- `scripts/phase9/build-release-qa-packet.mjs`: `b1af60d1ab0c1e0366d4d7aecf07401541e935d85b67a0239e3bf0f9c98fe7ab`
 - `scripts/phase9/release-qa-integrity.mjs`: `ff2f7724d4cc0bdd4058f76acb8c31ea3b4d2e80a1e1dba531066a1750b727db`
 - `scripts/phase9/release-qa-integrity.test.mjs`: `ba97fd498d900ab76fa22ea968c37ba88406517da87ee9f1babd54f8dca5a679`
 - `scripts/launch/governed-evidence-chain.mjs`: `01a86c396964ffa8ab630341c46dc599f851cc0327e54563ec3366ef771aecb7`
@@ -538,12 +539,12 @@ Pinned input integrity: blocked
 - `scripts/phase9/build-evidence-chain-ledger.test.mjs`: `97b39eff264003a715df958960f6b352f22b9061251a47e6fad69763558e0059`
 - `scripts/phase5/device-qa-packet-contract.mjs`: `c7bb801c99819e83ad4971cfbea573c60e41c074ca31e6d9dd068b2579cdc8ee`
 - `scripts/phase7/core-loop-qa-packet-contract.mjs`: `3cf50c30778d6704ef5e83debe4a8ab3d9e80f9bed04012fb4413a5270fcf994`
-- `scripts/phase7/core-loop-qa-packet-contract.test.mjs`: `e046edcd6057074ee2d8618fb40cbe42940cfafff787bbd1adc027c1879eedad`
+- `scripts/phase7/core-loop-qa-packet-contract.test.mjs`: `236a4c10cbc0a04d080253b7fa53e1a7bcc9ec132e9c20cec024542bf8e4ae36`
 - `scripts/phase9/upstream-packet-contract.mjs`: `46518896ff14b3124b240e317fcd0d36ff2b6b213fc0342efb6725ec4a72bc47`
 - `scripts/phase9/upstream-packet-contract.test.mjs`: `a7ab3c82ad976f8791a0ab815c0029be6e41de462e601e8ce78e985556e54e5b`
-- `docs/phase-5/generated/device-qa-packet.json`: `ef0e9a77e581ffb5749cb7715678abc5149e26627db559865bdc906d62d67b12`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `6936c4c5de06f6e3378919264080be4976f4055b185a145c4de894c7f7f007f6`
-- `docs/phase-4/generated/beta-coverage-report.json`: `234e1a4082f7aa6b49a934a602ca3a5d6b8d6b7a9315f6034a054db73cba2e58`
+- `docs/phase-5/generated/device-qa-packet.json`: `406feb2add61338cc919b618f3493f70c3489a137e8f8ac9372958fe7ba1c2e0`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `1ed1bc8316f127a27d1e2e1df650143a42ab7d0d8b932a5aac3e9190170e123e`
+- `docs/phase-4/generated/beta-coverage-report.json`: `000e0b9dafdf01af42d50aab7244b0388b857378c23e72842b3b2ac42779b2eb`
 - `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
 - `scripts/e2e/cat07-committed-evidence.mjs`: `aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0`
@@ -552,19 +553,19 @@ Pinned input integrity: blocked
 - `scripts/e2e/evidence-diagnostic-hygiene.mjs`: `0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911`
 - `scripts/e2e/cat07-png-contract.mjs`: `1677a40874cc7797a9d0954d50c14c2dadde5111b85dcbc0b76cd2cdc1a53e9f`
 - `scripts/e2e/cat07-shelf-freshness-audit.mjs`: `84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229`
-- `scripts/phase9/live-supabase-adversarial.mjs`: `b2e3235a4c9630e2f5f44e5a0a98ce506a286f9b02a5676ccab9bcda3f95d27d`
+- `scripts/phase9/live-supabase-adversarial.mjs`: `5b3ca4a66937f4b5e69cb608cd08b351a61b91e0111f2b5519d5e18cb168a767`
 - `scripts/phase9/live-edge-auth.mjs`: `9ab6dc411649969ff890179f007cbb089bf15707fcbb3fe0af53b59d631f53fc`
-- `scripts/phase9/live-data-rights.mjs`: `e63b2e44d1b650143c7f877ba858a685408121e1836d62027c384c8dd7b12739`
-- `scripts/phase9/live-consent-withdrawal.mjs`: `178519d6ce579370455de9d1eddd5f3d9261ccca5ce9775259476d87f0b3a289`
-- `scripts/phase9/consent-withdrawal-evidence.mjs`: `6c0042f7c3be6ed4c7db4283f1bb4f2b1f191f6a85da436d0bc93a3b2f3fb489`
+- `scripts/phase9/live-data-rights.mjs`: `992a15a6471e68bce483359b3157b5f9df8950d7f7576342a28492f15ea22bd5`
+- `scripts/phase9/live-consent-withdrawal.mjs`: `94fafcff2c0f34a36fc244eb6a02b256aafb602e3e5cfc7d20b45be7b9ed71b9`
+- `scripts/phase9/consent-withdrawal-evidence.mjs`: `603d4e3579f5afce974176e0bfdd322fad999bc152f14d72b79f83344b1b2259`
 - `scripts/phase9/consent-withdrawal-evidence.test.mjs`: `c43aaa6ad85cd3b4fb13fd248a925bf0109304528519b99ab7fe88d9a9d0bec8`
 - `scripts/phase9/live-public-forms.mjs`: `e4bb52bf67f60df98aabcc9095dc7758e92c376d06cd17887bf12e70220ae789`
 - `scripts/phase9/live-catalog-rate-limit.mjs`: `9325b416192733bd81da59811b9b08f2e1c58dcfa7c2aa43dd08ca9038046da6`
-- `scripts/phase9/live-order-report-poll.mjs`: `d8d7281b76c43fe98da08ff01a74f01e2bf1eec75aadcf207874edb5595b8bb3`
+- `scripts/phase9/live-order-report-poll.mjs`: `2ded90acef48bff23d422236ca78946c37d211fa9fb887055bf2eb77415b1aa0`
 - `scripts/phase9/live-revenuecat-webhook.mjs`: `4545d0e4f192577e0ba1cc41a3cffaeca80e01cb417e82d9892803bdd42f3e5a`
-- `scripts/phase9/edge-auth-smoke.mjs`: `e31f34605b8c84ba8a616d6aa5218212c06a4694727d91126ab2629863457421`
+- `scripts/phase9/edge-auth-smoke.mjs`: `ff76c0208274ebedb80a68f60e13b4ab90a6b98a25b83c14abfd6d41133f8ce6`
 - `scripts/phase9/edge-functions-check.mjs`: `dd2be657d2c12ce50d79c90e039a04bd14c2578f8a9e6e0630f454136e7cc3c3`
-- `scripts/phase9/data-rights-smoke.mjs`: `4bff491dbec345e3100c58f9d4d666eb24803974f3304d48103202dca63b336f`
+- `scripts/phase9/data-rights-smoke.mjs`: `49e02e7c1ac01ea39842bfef995317146831d389c06395ba2f23fa0511a966c2`
 - `scripts/phase9/account-deletion-lifecycle-postgres-rehearsal.sql`: `f6b8bd75591d30c7d492ac42879eaaecaf4893db3842c595a9bec6bc3746ab44`
 - `scripts/phase9/account-service-scrub-postgres-rehearsal.sql`: `b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a`
 - `scripts/phase9/revenuecat-deletion-barrier-postgres-rehearsal.sql`: `13cbcb1b61f105875a71717e38d4d5b1ffb04ecf2c6cc77506ba78f09995bc4b`
@@ -576,15 +577,15 @@ Pinned input integrity: blocked
 - `scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql`: `e2ffde42d3da2cf35e19c717cb85d6ddf9ba576b99d21cf46806d5e83ebc30dc`
 - `scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql`: `b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919`
 - `scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql`: `64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9`
-- `scripts/phase9/consent-withdrawal-smoke.mjs`: `4fed16a248270139a155c0ac8ba1aa9d453bd4f36e869d47427591e2ff7d2e2e`
+- `scripts/phase9/consent-withdrawal-smoke.mjs`: `cd3c4b11f290e2a8badffc3a4d83d2c6f3fe64c12389f1ab11c533cc35f48d7d`
 - `scripts/phase9/supabase-policy-lint.mjs`: `6da0337e9605b44b1f2020f326626e7250644c9eafc3e285166819039211bef6`
-- `scripts/phase9/security-ci-smoke.mjs`: `a4e7690f1885211c39423ce14bc4b78987f13c570db8d403b09254942e7098c1`
+- `scripts/phase9/security-ci-smoke.mjs`: `5d02a16eb98111039f908324d7e845bab28ba7d58b6f533d77dee49100ce8c8e`
 - `scripts/phase9/privacy-payload-audit.mjs`: `fbc8826a9097ee0fc6dfcb0719644efbae2c6d4bc2db58b2af43137c793d02ca`
 - `scripts/phase9/dependency-sbom.mjs`: `29b516cde5cb61dbf67e8c7a91b02a2e6a85f48d05b507a91686f90cbe4908cd`
 - `scripts/phase9/store-build-inspect.mjs`: `eda8aeb6d5035229d990f260ae23a19137fee187e0d4f86fecc438bd253da939`
 - `docs/phase-9/source-of-truth.md`: `3aaa3b0b763eab9a4a6e22ce329b43354e7c67e4bbf1bcb86ec54331f82608e8`
-- `docs/phase-9/data-inventory.md`: `d4550b76931ed53e6ad00928185d4d87a29356e529104756a02ddec984b70cb6`
-- `docs/phase-9/edge-function-auth-matrix.md`: `3c83e21900172bc49a8a9414f5f0f527591ceace89f8d3904e49f067c488c01c`
+- `docs/phase-9/data-inventory.md`: `40b3cc5ff69873417161ec4e4fbc506a743a05769724ebf50ce92dd4bc363ccc`
+- `docs/phase-9/edge-function-auth-matrix.md`: `11349fa53e22f2759fdc934af7f724e2acfc741ca04ec34a9ae1a4c041e82d36`
 - `docs/phase-9/observability-payload-audit.md`: `54f233bac9811d394660937993699b270bde5945860d76256ac3d7859e5142d4`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`
 - `docs/phase-9/rollout-rollback-plan.md`: `7bb4e30b3c5ce98e595cf743b066eb954d44097cf9d4fbc88f656b50bc0983ab`
@@ -608,14 +609,14 @@ Pinned input integrity: blocked
 - `docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`: `1e1f85728bcea9e473bbe010f9f6bf0930b4c14f196a67378c6fc2ae6db359c3`
 - `docs/06-photo-progress.md`: `6f27bf72cb232e7e2ed251c45a38b1900984c0b5efe7f3eaf6e4dddda34ad3b4`
 - `docs/12-ai-trend-analysis.md`: `d03bc3f120dfb1a1bf4e77ab1c5b2d7f5a0f707b94b958f1811291dee15daf05`
-- `docs/MASTER_PLAN.md`: `2664772b842104b2dd42f28c8891b9966273daab72d6049eddc94b41d484a5d9`
-- `docs/DECISIONS.md`: `8ffa5b70deb5648446019f177dc19796abcf440d54384eee41f1560a86f78a9a`
-- `docs/FEATURE_INDEX.md`: `c45df008a341a25e89743d810d8d0081a1af99e360dd80ca97aa631c98a8303d`
-- `docs/ROADMAP.md`: `1a8426b20427dfc76cf1389611e000d1ee1b208cf994c473d9de2d1f1723b181`
-- `docs/USER_FLOW_TREE.md`: `3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c`
-- `docs/hugeToDo/README.md`: `9962e3b323763b89b83fe09b877bc0a99a3ad784d771bf8e803249fb38f4db72`
-- `docs/phase-7/surface-inventory.md`: `e5dd87b5070f347254a684547d1aefe4370fd0bb7c0b10a33a98f3743e524417`
-- `scripts/launch/contract-smoke.mjs`: `47e7221802f74153bc6eff049bcb1ba3a89f06cacc5867f7fede1c212df76cd2`
+- `docs/MASTER_PLAN.md`: `14c7e657f70910eb44a7433ec9e88d0d5b0dc5eaf730de7ab1d24d2e5a9d644c`
+- `docs/DECISIONS.md`: `dcd8c96a1bcad498defe8bfa5eff3385e5d8768006c25d652e8bb16716552386`
+- `docs/FEATURE_INDEX.md`: `04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c`
+- `docs/ROADMAP.md`: `fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de`
+- `docs/USER_FLOW_TREE.md`: `a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a`
+- `docs/hugeToDo/README.md`: `91d018365075790dffd9988e25f6df8567da99c3f2c6f1069ffdfe3fb6d90624`
+- `docs/phase-7/surface-inventory.md`: `3210ece9e29d343560a8fcbe7c98bff1334808e77a1a0491931186e3d3146ca0`
+- `scripts/launch/contract-smoke.mjs`: `fc9bd3a701c39a822a84cd4e5fa21a962a0b0b2ccabce1faf77507ad8cf7a899`
 - `scripts/launch/check-contract.mjs`: `f00772997c9bc422a77001d27d7eb5ab167f24b5e1074b641f87643bad99b4f3`
 - `apps/mobile/src/components/launch/DeferredSurface.tsx`: `79a3f2e05911f3e78be64f9fca311d57166fbe38ae178359f2dc3181d7417c47`
 - `apps/mobile/src/components/launch/DeferredSurface.test.ts`: `bf8f2f3f4b13e8f06f1bd7f2f9c27271d873c05b70435dbc0f49dc8d0f3bb7f3`
@@ -649,6 +650,41 @@ Pinned input integrity: blocked
 - `supabase/migrations/20260613000024_photo_trend.sql`: `af7618e6a91895b4d68f053f23f8321c38a4bdd33d1652488f7437720d4c05ce`
 - `scripts/photo05/trend-admission-source-contract.mjs`: `97d3850c9474e889c112e1c0904ac9f16ede01f537165f78ff579373176f963a`
 - `scripts/photo05/trend-admission-source-contract.test.mjs`: `5aaf71a04757e216e5d89196fa13c049f87bb551d0e052f4946c8b3ca5d6bd20`
-- `scripts/phase7/build-core-loop-qa-packet.mjs`: `2338015de797cb1442bedc85da629c9a3cee4921fd450c0c3c5d34798ee1e65a`
-- `scripts/phase7/check-core-loop.mjs`: `ad9e4b06c53579b9506f68b012d2dad57a80f8e98414e3424330b3099ac299c5`
-- `scripts/phase7/check-core-loop-smoke.mjs`: `7055cc774b6cf2bd37426287c475d40d0b49534464dc0cae21b067979b76b0dc`
+- `scripts/phase7/build-core-loop-qa-packet.mjs`: `d7b638d35672ebab8ac51d5fdd7298809b11abd85b57368ced7065359c3fa11c`
+- `scripts/phase7/check-core-loop.mjs`: `5841e27ed49bc96b5a3c32812ee0a395eecc9f288de4a94e1e53fe626199ccf2`
+- `scripts/phase7/check-core-loop-smoke.mjs`: `22e0a78ce36833681d91b2940f5b7c994f1a3ce780fec3089c54a1ff0c25a168`
+- `BLOCKERS.md`: `b44331a3498b1e8c3dd3784c5122ba5d8e35a11f1895ec05c52090d8776d371e`
+- `PROGRESS.md`: `90c9600758f01e538dc9a105bb31ed97d37beba0cd2c16b16be7b07dcbd7af37`
+- `apps/mobile/src/app/commerce/_layout.tsx`: `f9c006f08624e8f8f3a6fc2a2ba015a71d5c2954af82aae09b2d6185c6283abb`
+- `apps/mobile/src/app/commerce/consent.tsx`: `a2453382e5b3d1eed13160b4a27f675dd3f563fbbed7e3eba4a9f7d9f2fb6749`
+- `apps/mobile/src/app/commerce/stack/[slug].tsx`: `37f630992967de1c4b87cf6e59599df93b2bb331afd87b63cacf60c1d64e14fa`
+- `apps/mobile/src/app/commerce/stacks.tsx`: `45a849bb0d637007e1a4a3f0bd96bd928e77cfd8b2f12142c049f252ee698b4e`
+- `apps/mobile/src/app/commerce/transparency.tsx`: `391fa84fa5a3085da65bdcbeb50c6470912de8616826ab2f7aaee24258e79989`
+- `apps/mobile/src/app/shelf/replenish.tsx`: `e4dee732e65c6bbdb7870597941390d5e53416940cce96d02d3f4d7eb8d2aec1`
+- `apps/mobile/src/features/commerce/CommerceDeferredSurface.tsx`: `b57b799ec43cecce12b7d9c9155d81288a62fdd4af2a6f520ad99e1b57b668e5`
+- `apps/mobile/src/features/commerce/CommerceLinkNotice.tsx`: `911862ba2aa65e417f186c920738dc977ab3acb65fddc46ad9682b32b31ad2f7`
+- `apps/mobile/src/features/commerce/LockGlyph.tsx`: `a6a4bc8696bc94c4fd5acc0a39226a258607b3778dd21f90bb23bd22fe0c9ca8`
+- `apps/mobile/src/features/commerce/admission.ts`: `32feaa31a53d5d322da4ca4eb3b38a5968458d04c28df95afdcfe8d4ad96a10d`
+- `apps/mobile/src/features/commerce/attribution.test.ts`: `0bcba1e47b0c2d6c2be25520822988b738b8833b4aa04e3e26e0e6a358812683`
+- `apps/mobile/src/features/commerce/attribution.ts`: `851b6e522d79437bbd905b0c03e105e9734702dbd5915c81144e6b553059a636`
+- `apps/mobile/src/features/commerce/claimsafety.test.ts`: `605ed71990018b118eba4cf5b4a5e6745fd9bb231f74253610484619a54f50b0`
+- `apps/mobile/src/features/commerce/commerce.test.ts`: `6db2503af9f9cd26612945dfa2e1184dbaa95f63bd1ef0393d6feaa38b9bb76a`
+- `apps/mobile/src/features/commerce/commerceRoutes.test.ts`: `5944b9d3b150c49ed31e4b111ca50717630813ef4a58211bd6d6de412ea3ff72`
+- `apps/mobile/src/features/commerce/consent.test.ts`: `29d6cee0db17a8ccf62b2f62c633a59b57e9f45029dbf1f8f5f5ce351f070226`
+- `apps/mobile/src/features/commerce/consent.ts`: `80f0f30cacc7c0de3393568bb6fa4c23c703eccdba0c658788732cb1a66a73bd`
+- `apps/mobile/src/features/commerce/consentLogic.ts`: `613f344902c702ae413107b040b3c2c1b0069b58325771c44968dc38ffed6777`
+- `apps/mobile/src/features/commerce/copy.ts`: `5196c28ede0ccc14c2f82e389c3b14544e839d3210c4b08203e95f4bc08f912d`
+- `apps/mobile/src/features/commerce/disclosureOperation.test.ts`: `2afd4c867d9bbccc27834a4573d2a88bd90c9681122bcbe74135a9fe03a9f757`
+- `apps/mobile/src/features/commerce/disclosureOperation.ts`: `24008712afbcc370df59388af3a08f7e723cd7089aefb7e73c73a4a1073d936e`
+- `apps/mobile/src/features/commerce/links.ts`: `447f7ace76a8af1a6598b84a17edb7a7d1e64dff9e14ff99d3100996c663845f`
+- `apps/mobile/src/features/commerce/stacks.ts`: `f631f46d439ea14dd5ed9deeed2be1eabfa941c802942a16c8f83178562e0820`
+- `apps/mobile/src/features/commerce/store.test.ts`: `243b0eacb1b7068a39e160ec31bf2626c7dae8300a85b826df1c87ca21698b82`
+- `apps/mobile/src/features/commerce/store.ts`: `d45e9ebae23d64d13a9f390569a0ee8a1e6b34096d3b4395df69414ba2dc5ba0`
+- `apps/mobile/src/features/commerce/useCommerce.ts`: `09521e1e075a97111e59d0e32a55a9d0db9ad18987bfd3304a4726bbc719d92e`
+- `docs/10-creator-stacks-build-spec.md`: `5696921b22652395370012948099e84a2235141d9b2bf31676c0cfe128bd34ef`
+- `docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`: `83bf977d2d7433c5dc8869293f695e42f8665cb6d378d66b652af272edfed049`
+- `scripts/com01/commerce-admission-source-contract.mjs`: `c1543dfdf705534235a73e84cf6be7e952e880b76065ecd5ab529eb5db7f8b26`
+- `scripts/com01/commerce-admission-source-contract.test.mjs`: `d85f429733175bd750ee191c987541bedb37cfa9e1996772f5f920f90ddcdb34`
+- `supabase/migrations/20260729000072_commerce_zero_admission.sql`: `876d12e4d9d917cd42b55ea480b4db6db129ba21a329bd052a979adeb303aa04`
+- `supabase/tests/database/commerce_zero_admission.test.sql`: `631595dda1db2a861263de17ac249a7a16bda92018e41d64050773392a2a372e`
+- `supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql`: `a6589de84a09db42afb230e914984c17a93e643ba0707625d36016e38d86894d`
