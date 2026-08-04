@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T19:50:33.337Z",
+  "generatedAt": "2026-08-04T21:52:50.593Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -177,10 +177,24 @@
       "disabledPathSideEffectsAllowed": false,
       "cloudPhotoProcessingAllowed": false,
       "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
     }
   },
   "inputPath": "docs/phase-4/generated/cosing-fixture-import.json",
-  "gitSha": "d9ebed9fdbf20e87d4d1154720371dab37170569",
+  "gitSha": "9416b48f35cf5e1d6c4957ec632c752775b1d1d2",
   "buildSourceGitSha": null,
   "gitStatus": "",
   "source": "cosing",
@@ -225,8 +239,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43019,
-      "sha256": "cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239"
+      "bytes": 43202,
+      "sha256": "8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706"
     },
     {
       "path": "package-lock.json",
@@ -267,14 +281,14 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 6343,
-      "sha256": "49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72"
+      "bytes": 6817,
+      "sha256": "d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07"
     },
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 13431,
-      "sha256": "bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35"
+      "bytes": 14603,
+      "sha256": "51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
@@ -285,8 +299,8 @@
     {
       "path": "scripts/phase4/build-source-worklist.mjs",
       "exists": true,
-      "bytes": 45862,
-      "sha256": "9771b7f30ba4347828e0293fc7e8381b204e779f5dbd0520aebbdb45cb099cfc"
+      "bytes": 46184,
+      "sha256": "28a02f5eadc7ea2fa54cc9995455a26e2a6a83db2821097ebe69549e7b11b640"
     },
     {
       "path": "scripts/phase4/beta-coverage-report.mjs",
@@ -411,14 +425,14 @@
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
-      "bytes": 47459,
-      "sha256": "d72fad22be3bc90240178ed03b2718d2338355f977458968d7ed9d435b5d068d"
+      "bytes": 50988,
+      "sha256": "ae4552be8c42679548108ef862f3bee4007173ca4ee46db86dca1af64f159399"
     },
     {
       "path": "scripts/phase2/local-supabase-reset.mjs",
       "exists": true,
-      "bytes": 27555,
-      "sha256": "3f0a01f25c7b0e35dd2c8424cadb8eb80a854f28156e13735b23dbffc99c3dd2"
+      "bytes": 29767,
+      "sha256": "28edd35f996edde2b823351fd3644c010577d438798ce2357210b0397c58b2aa"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -507,8 +521,8 @@
     {
       "path": "supabase/tests/database/schema_contract.test.sql",
       "exists": true,
-      "bytes": 36217,
-      "sha256": "e7ddd60490c766ca593a9a6bed82226307577e906c62ddbdd59b19cd851c9764"
+      "bytes": 36211,
+      "sha256": "e8fb6e8cc5e395bd5456ffe09009196495be43875821ebec89e31d3bb833e351"
     },
     {
       "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -531,8 +545,8 @@
     {
       "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
       "exists": true,
-      "bytes": 36171,
-      "sha256": "d95b9ec59b13f8ab09fcf3e71a052c17c2b3a669e8c93acaf01c793ffd073d24"
+      "bytes": 36165,
+      "sha256": "24fe6b485009f9733568b3e101c5278380d620e9a75894898a114a9f1670d6f3"
     },
     {
       "path": "supabase/functions/catalog-lookup/index.ts",

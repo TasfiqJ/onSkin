@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-29T19:51:24.501Z
+Generated: 2026-08-04T21:52:45.288Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: d9ebed9fdbf20e87d4d1154720371dab37170569
+Git SHA: 9416b48f35cf5e1d6c4957ec632c752775b1d1d2
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -34,7 +34,7 @@ names, credentials, dates, or legal/clinical decisions.
 | 6    | P0       | IP/FTO             | Onboarding quiz FTO                               | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
 | 7    | P0       | IP/FTO             | Share-card marks and deep links                   | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 16      |
 | 8    | P0       | Legal/regulatory   | Ask and AI disclosures                            | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
-| 9    | P0       | Legal/regulatory   | Commerce and paid-link disclosure                 | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 21      |
+| 9    | P0       | Legal/regulatory   | Commerce and paid-link disclosure                 | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 23      |
 | 10   | P0       | Legal/regulatory   | Store metadata and review notes                   | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 5       |
 | 11   | P0       | Privacy/security   | Account deletion and data export                  | Blocked     | not-applicable | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 15      |
 | 12   | P0       | Privacy/security   | Ask, commerce, and community consent              | Blocked     | not-applicable | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
@@ -282,7 +282,7 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `bb9e2ad2c4fb112e05868315ae7c1ffbcc1948129e9d21c438fef8aa025e3cf3`
+- Review snapshot SHA-256: `fb3c40e9ce02b2e5d97318a36d79fe7a991062db2b982e9719f13ad8891b442b`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -291,26 +291,28 @@ Sources:
 Sources:
 
 - `docs/phase-4/odbl-compliance-memo.md` - 5338 bytes - sha256 `cf202bd20819b0a8f5b84cc81e7bb2f2470d45ae257a800d4e72f7e88e5bda7d`
-- `apps/mobile/src/features/commerce/attribution.test.ts` - 5254 bytes - sha256 `8d759dcc16a3324d872895664b9dfc23b35224190d2441588782a2cdaa257d43`
-- `apps/mobile/src/features/commerce/attribution.ts` - 4062 bytes - sha256 `1c69b53246f2396a00620ef2b032e18c481aff3682fd1b44b29d75e7fd44ac51`
-- `apps/mobile/src/features/commerce/claimsafety.test.ts` - 4518 bytes - sha256 `73a396b16adcce8d9736fb7ce578e8b88a54cf255aa625a6e35ceb71565562d9`
-- `apps/mobile/src/features/commerce/commerce.test.ts` - 5924 bytes - sha256 `9bb6f8f73510267201a6850801ed86c86fa64b817822ab2dc497fb0205ce1253`
+- `apps/mobile/src/features/commerce/admission.ts` - 70 bytes - sha256 `32feaa31a53d5d322da4ca4eb3b38a5968458d04c28df95afdcfe8d4ad96a10d`
+- `apps/mobile/src/features/commerce/attribution.test.ts` - 2317 bytes - sha256 `0bcba1e47b0c2d6c2be25520822988b738b8833b4aa04e3e26e0e6a358812683`
+- `apps/mobile/src/features/commerce/attribution.ts` - 1544 bytes - sha256 `851b6e522d79437bbd905b0c03e105e9734702dbd5915c81144e6b553059a636`
+- `apps/mobile/src/features/commerce/claimsafety.test.ts` - 4270 bytes - sha256 `605ed71990018b118eba4cf5b4a5e6745fd9bb231f74253610484619a54f50b0`
+- `apps/mobile/src/features/commerce/commerce.test.ts` - 2844 bytes - sha256 `6db2503af9f9cd26612945dfa2e1184dbaa95f63bd1ef0393d6feaa38b9bb76a`
+- `apps/mobile/src/features/commerce/CommerceDeferredSurface.tsx` - 449 bytes - sha256 `b57b799ec43cecce12b7d9c9155d81288a62fdd4af2a6f520ad99e1b57b668e5`
 - `apps/mobile/src/features/commerce/CommerceLinkNotice.tsx` - 751 bytes - sha256 `911862ba2aa65e417f186c920738dc977ab3acb65fddc46ad9682b32b31ad2f7`
-- `apps/mobile/src/features/commerce/commerceRoutes.test.ts` - 8621 bytes - sha256 `c39cb98b09a609e825dc3e463ee125e968ddd7e98f7d1af19ff32ed1ac1a2cfb`
-- `apps/mobile/src/features/commerce/consent.test.ts` - 2415 bytes - sha256 `3da8f82f15725cde17ddcc3ee07f13d1250b2a5b426049b7e14a38084c751427`
-- `apps/mobile/src/features/commerce/consent.ts` - 1227 bytes - sha256 `355ba414c9719156b12c5772e9550d986f64b312395f82dde8e313e20ab1b5ef`
-- `apps/mobile/src/features/commerce/consentLogic.ts` - 670 bytes - sha256 `a93343b81c5af690fc74abbf8b21846496a8e8804b3ced589c27cf3609f4973f`
-- `apps/mobile/src/features/commerce/copy.ts` - 5252 bytes - sha256 `994d09c84b011cd536622cf282f861b26a5a9aa00734fab1ee503fe8a2acc7b4`
-- `apps/mobile/src/features/commerce/disclosureOperation.test.ts` - 2299 bytes - sha256 `e01a36798ea54b01e5e0752cab247ea86d6c7cdfc6eaac41e9a7d3e78fffddf6`
-- `apps/mobile/src/features/commerce/disclosureOperation.ts` - 867 bytes - sha256 `54553d40eefd384ed2c464e933528ce334b9ac9e552aff66bc08de8500a6fb5f`
-- `apps/mobile/src/features/commerce/links.ts` - 4058 bytes - sha256 `b64f6505d6cf060e4c0e7d86f2da33503ae84b09e2c6919824c72a74ca37d5d8`
+- `apps/mobile/src/features/commerce/commerceRoutes.test.ts` - 3417 bytes - sha256 `5944b9d3b150c49ed31e4b111ca50717630813ef4a58211bd6d6de412ea3ff72`
+- `apps/mobile/src/features/commerce/consent.test.ts` - 2287 bytes - sha256 `29d6cee0db17a8ccf62b2f62c633a59b57e9f45029dbf1f8f5f5ce351f070226`
+- `apps/mobile/src/features/commerce/consent.ts` - 1095 bytes - sha256 `80f0f30cacc7c0de3393568bb6fa4c23c703eccdba0c658788732cb1a66a73bd`
+- `apps/mobile/src/features/commerce/consentLogic.ts` - 336 bytes - sha256 `613f344902c702ae413107b040b3c2c1b0069b58325771c44968dc38ffed6777`
+- `apps/mobile/src/features/commerce/copy.ts` - 4647 bytes - sha256 `5196c28ede0ccc14c2f82e389c3b14544e839d3210c4b08203e95f4bc08f912d`
+- `apps/mobile/src/features/commerce/disclosureOperation.test.ts` - 1066 bytes - sha256 `2afd4c867d9bbccc27834a4573d2a88bd90c9681122bcbe74135a9fe03a9f757`
+- `apps/mobile/src/features/commerce/disclosureOperation.ts` - 495 bytes - sha256 `24008712afbcc370df59388af3a08f7e723cd7089aefb7e73c73a4a1073d936e`
+- `apps/mobile/src/features/commerce/links.ts` - 1608 bytes - sha256 `447f7ace76a8af1a6598b84a17edb7a7d1e64dff9e14ff99d3100996c663845f`
 - `apps/mobile/src/features/commerce/LockGlyph.tsx` - 1284 bytes - sha256 `a6a4bc8696bc94c4fd5acc0a39226a258607b3778dd21f90bb23bd22fe0c9ca8`
-- `apps/mobile/src/features/commerce/stacks.ts` - 3159 bytes - sha256 `eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f`
-- `apps/mobile/src/features/commerce/store.test.ts` - 3697 bytes - sha256 `8caf13c05f082a9f2aa24384b395fb557b002f84ef062fae907c463ee302d449`
-- `apps/mobile/src/features/commerce/store.ts` - 2567 bytes - sha256 `932dae44db15aaf7456a997ac59c10d4fc1e5dc319241567ec6cd13fdbddba08`
-- `apps/mobile/src/features/commerce/useCommerce.ts` - 1609 bytes - sha256 `a542c1503fe78f280f0d98e369e49a4d35209a1f261ef138b95526225072135c`
-- `apps/mobile/src/features/commerce/WhereToBuy.tsx` - 9445 bytes - sha256 `42147c464f5bfdd3c6b206c9e2814c387b784f7decc25e98b93d926451bcb1ca`
-- `supabase/functions/order-report-poll/index.ts` - 5552 bytes - sha256 `8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce`
+- `apps/mobile/src/features/commerce/stacks.ts` - 1127 bytes - sha256 `f631f46d439ea14dd5ed9deeed2be1eabfa941c802942a16c8f83178562e0820`
+- `apps/mobile/src/features/commerce/store.test.ts` - 1800 bytes - sha256 `243b0eacb1b7068a39e160ec31bf2626c7dae8300a85b826df1c87ca21698b82`
+- `apps/mobile/src/features/commerce/store.ts` - 970 bytes - sha256 `d45e9ebae23d64d13a9f390569a0ee8a1e6b34096d3b4395df69414ba2dc5ba0`
+- `apps/mobile/src/features/commerce/useCommerce.ts` - 698 bytes - sha256 `09521e1e075a97111e59d0e32a55a9d0db9ad18987bfd3304a4726bbc719d92e`
+- `apps/mobile/src/features/commerce/WhereToBuy.tsx` - 156 bytes - sha256 `a459ece2191dbbfb7aa787e784dd074b8b361369e904ee9d76baf8118848a0ae`
+- `supabase/functions/order-report-poll/index.ts` - 1125 bytes - sha256 `5747e2e536851e325fcb25ca3c9f0cefa81fc0c0f94c6c34791b89b5651adc8c`
 
 ### P0 - Legal/regulatory - Store metadata and review notes
 
@@ -340,7 +342,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `625f56ef511aeec74c746925bcf6e1369026ca34ffce6be52add4a99c100d445`
+- Review snapshot SHA-256: `d0b1b667332ed24e2eff3706b6edd26edecfcf009f48abbbbd765325f149630f`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -360,7 +362,7 @@ Sources:
 - `supabase/functions/data-export/exportCore.test.ts` - 13951 bytes - sha256 `549c69b091c2e38e6d2a980aa1c3f5ad7f2434b5e5837188beb46363803f9d63`
 - `supabase/functions/data-export/exportRegistry.ts` - 10203 bytes - sha256 `bd73ec992a056cafebd21897147d02df37bd66b7545784c06ca797b9998a4ca0`
 - `supabase/functions/data-export/exportRegistry.test.ts` - 10778 bytes - sha256 `118c081db46604ecfe9e02c2a27db5d7feb107822e5a49f37ff6756273e13b4a`
-- `scripts/phase9/data-rights-smoke.mjs` - 76413 bytes - sha256 `4bff491dbec345e3100c58f9d4d666eb24803974f3304d48103202dca63b336f`
+- `scripts/phase9/data-rights-smoke.mjs` - 76753 bytes - sha256 `49e02e7c1ac01ea39842bfef995317146831d389c06395ba2f23fa0511a966c2`
 - `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
 - `supabase/functions/_shared/storagePath.test.ts` - 1355 bytes - sha256 `3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9`
 
@@ -371,7 +373,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `bf7d80f3edc334e90edde892bea3e0a4f2d82e9aab839b3626de2b5a0eb93f1f`
+- Review snapshot SHA-256: `d7cfefa6fd371e85ffc60752cce679feec2fe0034b98d1fa03cd8fa2217ee2e3`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -380,7 +382,7 @@ Sources:
 Sources:
 
 - `apps/mobile/src/features/ask/consent.ts` - 833 bytes - sha256 `ba732d8c83bd8951f2c33a11ef7555bd2d6ee23dd1b02d6bfb8de20cd219885b`
-- `apps/mobile/src/features/commerce/consent.ts` - 1227 bytes - sha256 `355ba414c9719156b12c5772e9550d986f64b312395f82dde8e313e20ab1b5ef`
+- `apps/mobile/src/features/commerce/consent.ts` - 1095 bytes - sha256 `80f0f30cacc7c0de3393568bb6fa4c23c703eccdba0c658788732cb1a66a73bd`
 - `apps/mobile/src/features/community/consent.ts` - 1121 bytes - sha256 `9bacdd40ad62d380a482bb4de5f911c62b87a03002d95ac8b4f4fb7d6a2ae8c6`
 - `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
 
@@ -460,7 +462,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `6ff8df716a32727c9397fcb413d47ce89bf7efbd4dab0a44089ea5fcabea1b89`
+- Review snapshot SHA-256: `c64d441848d3d7f4ac8a385985453fb094b913175fb8a210a6a78d0a838d033d`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -472,13 +474,13 @@ Sources:
 - `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 37059 bytes - sha256 `c7fcaeb47bd9a53591c8f5b1a0dd78bbfb9045c54588cc382a27a27ed6120289`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3386 bytes - sha256 `491c5389e410aae42006b22705bb5c6426c813d048c47b10dec131c3b897801a`
-- `docs/hugeToDo/credential-inventory.json` - 22214 bytes - sha256 `8424ffa22560bc3a82d0b820cc79d509e2de54dea5c1a0ae353ad09ada160d3f`
+- `docs/hugeToDo/credential-inventory.json` - 21138 bytes - sha256 `245be60b517158b1acea43635eab87f113d5cf70dd1009303dfee7dc1e1bda31`
 - `apps/mobile/src/features/onboarding/consentCopy.ts` - 5658 bytes - sha256 `6e0cc1d6de3cad0b84c5cdb7463ed8b171820a9e436d5075f3b54623e6a47034`
 - `apps/mobile/src/features/onboarding/healthConsentStore.ts` - 7274 bytes - sha256 `3a9356ffd904a36fc034b5650f98f932f0517a3dc2ed4532e774787e57ea92e3`
 - `apps/mobile/src/features/scheduler/profile.ts` - 6605 bytes - sha256 `a29854d4894bd7920c0b050bcfe61ea066563cdf9df188ea717d7efb9a70cad2`
 - `apps/mobile/src/features/healthConsent/activationInterlock.test.ts` - 7300 bytes - sha256 `56ae9f642fb7b71eed61d3fbbaa1c3345791688435c265a46c6dd5a22a072312`
 - `apps/mobile/src/features/healthConsent/activationInterlock.ts` - 4493 bytes - sha256 `bc07baebb5133b36e5a6cdec09e76f9776442f4c6261090b0f82e219a0f5d0e1`
-- `apps/mobile/src/features/healthConsent/dependentConsentCleanup.test.ts` - 5128 bytes - sha256 `565ec081b99bd1c2548cba7a725de6bd6a550239b68712fbf9f74e029b7e899a`
+- `apps/mobile/src/features/healthConsent/dependentConsentCleanup.test.ts` - 5254 bytes - sha256 `27803a00d46eccaecec0703145dbf2b4a77fc0a700dd26a37b6ec9521c1970b6`
 - `apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts` - 6015 bytes - sha256 `959dc00e71eaf0053908c2ad3095177b9dab19d535ea21e3549f9d76ec1bd8b7`
 - `apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx` - 3261 bytes - sha256 `aef498d084e3233bba3ed43315193e52a3b308e5a6d0f37108cb66ea3c114611`
 - `apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts` - 6504 bytes - sha256 `f56e2bbb8c971ac55fa0f677c351f3a1bbd323a981f0ce15fbba4dc61b446f71`
@@ -510,7 +512,7 @@ Sources:
 - `apps/mobile/src/lib/consent/dependentConsentTransport.test.ts` - 4757 bytes - sha256 `3bd97c342b3950e38ad7aae57e3444911a1c826d4702a54073226b7a01a353ea`
 - `apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts` - 6586 bytes - sha256 `94a92e7970e8caba3fedae3ed3a160541c8c83122aaa54c5bdc97dff85dfab6f`
 - `apps/mobile/src/lib/consent/healthDataWriteAdmission.ts` - 5969 bytes - sha256 `f2b5741c792e52a2838f6b3344c084f2093163c332b67f21d485b95993ba51f6`
-- `apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts` - 11528 bytes - sha256 `269eb1032b67e9b85ab254aacc0e1aafeffaab32fb115f1ae3cb6a40b9e19b5f`
+- `apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts` - 11623 bytes - sha256 `862fa0aba3d6153c257203e4a532361315e994852bc3294aac0ef4fb2bd11f3c`
 - `apps/mobile/src/lib/consent/healthProcessingEpoch.test.ts` - 23000 bytes - sha256 `c2f9f6ee09c1513a1c47324c5009af5c861afed6fa957c5ecfaa16ca99a79b06`
 - `apps/mobile/src/lib/consent/healthProcessingEpoch.ts` - 19927 bytes - sha256 `1b0af9d43eae6b98e7ffa633457910cef695c778f3f428d9b5a6b7b8c3b6407d`
 - `apps/mobile/src/lib/consent/withdrawal.test.ts` - 13554 bytes - sha256 `a8756f43ce2e8cd74c32d0cb1432e58844f0dcbe1f506549f015e4f985838df6`
@@ -734,7 +736,7 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ea4989bbf191f63c77cd615cddd82515b853d3dafef32a71b53604ffe7329370`
+- Review snapshot SHA-256: `2bca48349eab5a9520af45a871f5232eb72621b722a8b9f6aefb6101cc0510ac`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -742,7 +744,7 @@ Sources:
 
 Sources:
 
-- `apps/mobile/src/features/commerce/stacks.ts` - 3159 bytes - sha256 `eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f`
+- `apps/mobile/src/features/commerce/stacks.ts` - 1127 bytes - sha256 `f631f46d439ea14dd5ed9deeed2be1eabfa941c802942a16c8f83178562e0820`
 
 ### P1 - Clinical - Trend analysis
 
@@ -910,7 +912,7 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `57b346d30eab10589faadd7f05d6311913d9b4c3977a1dc4be54b4ae5d10a409`
+- Review snapshot SHA-256: `7811ba5f22f25fd2fb7f46d640bf815fb50131a8f83f7e65202e85f6de962314`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -918,7 +920,7 @@ Sources:
 
 Sources:
 
-- `apps/mobile/src/features/commerce/stacks.ts` - 3159 bytes - sha256 `eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f`
+- `apps/mobile/src/features/commerce/stacks.ts` - 1127 bytes - sha256 `f631f46d439ea14dd5ed9deeed2be1eabfa941c802942a16c8f83178562e0820`
 
 ### P1 - Cosmetic chemistry - Smart shelf labels
 
@@ -927,7 +929,7 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `1a0727b74592aa8b4dea047b178178f1dbacd11dc473d6ec2c283eebb6c199b4`
+- Review snapshot SHA-256: `b95ff4e0f8983b2e057f22bc01eb4af9e1826da46869cdad994d0a5fa03f3f49`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -961,7 +963,7 @@ Sources:
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 508 bytes - sha256 `dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4009 bytes - sha256 `5fbd9506ee53dc6908b7839a4c4f2bcecfaeb6b2f7748ba49fc7a125b9e773c2`
 - `apps/mobile/src/features/shelf/scanLog.ts` - 1527 bytes - sha256 `4f27c7914c0147f85d4bc7f6a800e6bf013b808a17f3a5eea4dd574baf212f20`
-- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 69745 bytes - sha256 `9f2bff3241c5948522fa56e0d4e8857c24cd46b38d3e9b9868dd5416d24f1f68`
+- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 69844 bytes - sha256 `4e25d81e10f9bba5eead0e597eaabec9f1e459600b73bc922fe8bb75528d3a71`
 - `apps/mobile/src/features/shelf/store.test.ts` - 57329 bytes - sha256 `c000ac66f164e1a2118cd5fe153f32a8c6565388534319825bfb0728cec29e02`
 - `apps/mobile/src/features/shelf/store.ts` - 58796 bytes - sha256 `218dd66ae24c4e301b476fe878ddcfc614e9acb435045a1571375ee399893d15`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 5075 bytes - sha256 `2aa0f2717f781bdf8836d451df432e577ab157fa5e0799f2ab674e87b163aea9`
