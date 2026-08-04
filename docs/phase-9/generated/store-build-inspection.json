@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T19:56:44.553Z",
+  "generatedAt": "2026-08-04T21:58:46.399Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -177,6 +177,20 @@
       "disabledPathSideEffectsAllowed": false,
       "cloudPhotoProcessingAllowed": false,
       "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
     }
   },
   "platformStatus": {
@@ -331,10 +345,9 @@
     "archiveContainerIntegrityMachineValidated": false,
     "provisioningCmsSignatureTrusted": false
   },
-  "blockers": [
-    "Resolved production app config failed: Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve."
-  ],
+  "blockers": [],
   "warnings": [
+    "Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.",
     "Exact iOS archive evidence not supplied: set PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH to the completed RC JSON.",
     "Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.",
     "Missing iOS privacy-report reviewer metadata flag: PHASE9_IOS_PRIVACY_REPORT_PASS=true. This flag is not archive evidence.",
