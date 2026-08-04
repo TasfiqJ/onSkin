@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T19:54:01.271Z",
+  "generatedAt": "2026-08-04T21:54:55.002Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -178,6 +178,20 @@
       "disabledPathSideEffectsAllowed": false,
       "cloudPhotoProcessingAllowed": false,
       "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
     }
   },
   "platformStatus": {
@@ -188,7 +202,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "da14bb50b4882e63275051159b867930c6f38603",
+  "gitSha": "6b347609fb5e48f4c46dbb00fc8f3bf67be60027",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
@@ -289,14 +303,14 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 27858,
-      "sha256": "5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52"
+      "bytes": 27692,
+      "sha256": "b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43019,
-      "sha256": "cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239"
+      "bytes": 43202,
+      "sha256": "8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706"
     },
     {
       "path": "package-lock.json",
@@ -325,8 +339,8 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 6343,
-      "sha256": "49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72"
+      "bytes": 6817,
+      "sha256": "d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07"
     },
     {
       "path": "docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md",
@@ -337,8 +351,8 @@
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 13431,
-      "sha256": "bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35"
+      "bytes": 14603,
+      "sha256": "51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -361,8 +375,8 @@
     {
       "path": "apps/mobile/src/lib/env.ts",
       "exists": true,
-      "bytes": 6982,
-      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
+      "bytes": 6892,
+      "sha256": "bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad"
     },
     {
       "path": "apps/mobile/src/features/subscription/store.ts",
@@ -583,8 +597,8 @@
     {
       "path": "supabase/functions/order-report-poll/index.ts",
       "exists": true,
-      "bytes": 5552,
-      "sha256": "8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce"
+      "bytes": 1125,
+      "sha256": "5747e2e536851e325fcb25ca3c9f0cefa81fc0c0f94c6c34791b89b5651adc8c"
     },
     {
       "path": "supabase/functions/order-report-poll/orderAttributionCore.ts",
@@ -787,8 +801,8 @@
     {
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 77776,
-      "sha256": "e63b2e44d1b650143c7f877ba858a685408121e1836d62027c384c8dd7b12739"
+      "bytes": 76345,
+      "sha256": "992a15a6471e68bce483359b3157b5f9df8950d7f7576342a28492f15ea22bd5"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
@@ -817,8 +831,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 472929,
-      "sha256": "3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c"
+      "bytes": 470486,
+      "sha256": "a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",

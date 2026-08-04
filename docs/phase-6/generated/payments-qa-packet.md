@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-29T19:54:01.271Z
-Git SHA: da14bb50b4882e63275051159b867930c6f38603
+Generated at: 2026-08-04T21:54:55.002Z
+Git SHA: 6b347609fb5e48f4c46dbb00fc8f3bf67be60027
 Git status: clean
 Required inputs committed and byte-matched to HEAD: yes
 Tracked secret environment files absent: BLOCKED
@@ -67,19 +67,19 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| .env.example | present | 27858 | 5514e31f85bd2f7155d8bbab2bdda9874cb6ecc92bc7bb2164c62bc6d6276a52 |
-| package.json | present | 43019 | cb06180e39a939dca7fcf26ea633e1417ec6e3250ccfcf76e917aa1d1f677239 |
+| .env.example | present | 27692 | b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90 |
+| package.json | present | 43202 | 8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706 |
 | package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
 | apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
 | apps/mobile/eas.json | present | 1477 | 074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051 |
 | supabase/functions/deno.lock | present | 2465 | b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7 |
-| docs/hugeToDo/launch-contract.json | present | 6343 | 49359cf6585e2e3ad2825935ebab657ab398ad209d4b20ff3fea60df083f2c72 |
+| docs/hugeToDo/launch-contract.json | present | 6817 | d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07 |
 | docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md | present | 11287 | b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5 |
-| scripts/launch/contract.mjs | present | 13431 | bc9437b9ae8ce4094bd8048932c1e748bf12bca4ebc8b377c84bb7fd94b95f35 |
+| scripts/launch/contract.mjs | present | 14603 | 51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 37617 | 6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358 |
 | apps/mobile/src/lib/iap/revenuecat.test.ts | present | 2427 | ee01c705dd9a77db4dc527d00fae8040b1e5315d2624193330afbd35ff144c0f |
 | apps/mobile/src/lib/iap/revenuecatPublication.test.ts | present | 16262 | fbf6e643684dbdb4464b620885256936762803190e4df8c798af12e5f61a080f |
-| apps/mobile/src/lib/env.ts | present | 6982 | 22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31 |
+| apps/mobile/src/lib/env.ts | present | 6892 | bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad |
 | apps/mobile/src/features/subscription/store.ts | present | 60455 | 2e5e3e65abd8fc2e36b8e6bd0b9e369291829249d92740c0011d1f87d61101d8 |
 | apps/mobile/src/features/subscription/entitlement.ts | present | 5813 | 735938df18d9a15c383c7017102c9626b538ab90f0f7e0ef9054d7b14de9e9ec |
 | apps/mobile/src/features/subscription/entitlementEvidence.ts | present | 18546 | b8d11b40a3ec16703e42442a49f7a6a4582ea7a2c190a7e2f271326fbf5b61f9 |
@@ -116,7 +116,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | supabase/functions/account-deletion/providerDeletion.test.ts | present | 17762 | 336488fc323c9dcf681e2df7781ece7bf144974fa705b6bd42c01a5d377e4fbf |
 | supabase/functions/account-deletion/serviceRoleCleanup.ts | present | 3440 | f8d8d06f9fdf4b940af912773c6293eeb4530df110c8279b7d58788f344f053d |
 | supabase/functions/account-deletion/serviceRoleCleanup.test.ts | present | 16530 | e93c3fe4cd82445ad5833a148ec5aaee95eb95b17b29e02170693623b3f4f95a |
-| supabase/functions/order-report-poll/index.ts | present | 5552 | 8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce |
+| supabase/functions/order-report-poll/index.ts | present | 1125 | 5747e2e536851e325fcb25ca3c9f0cefa81fc0c0f94c6c34791b89b5651adc8c |
 | supabase/functions/order-report-poll/orderAttributionCore.ts | present | 10537 | 434abcf6f1f7424d503fcec137bd799dc66b520c26d0e76bd36d0820f1dfa7f0 |
 | supabase/functions/order-report-poll/orderAttributionCore.test.ts | present | 14124 | 63105c5562be39504a68075984320cb2105d8f84be04d67d282135f79fb30f6b |
 | supabase/migrations/20260615000027_phase6_payments.sql | present | 3061 | ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865 |
@@ -150,12 +150,12 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase2/check-env-smoke.mjs | present | 25482 | 8b9de5340f2fb90f70d9d70f3ea0d1598e7507d3d7abed3890da145f82d0f270 |
 | scripts/phase9/supabase-policy-lint.mjs | present | 18126 | 6da0337e9605b44b1f2020f326626e7250644c9eafc3e285166819039211bef6 |
 | scripts/phase9/account-service-scrub-postgres-rehearsal.sql | present | 26077 | b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a |
-| scripts/phase9/live-data-rights.mjs | present | 77776 | e63b2e44d1b650143c7f877ba858a685408121e1836d62027c384c8dd7b12739 |
+| scripts/phase9/live-data-rights.mjs | present | 76345 | 992a15a6471e68bce483359b3157b5f9df8950d7f7576342a28492f15ea22bd5 |
 | scripts/e2e/human-e2e-manifest.mjs | present | 365743 | de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615 |
 | scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10407 | 4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e |
 | docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
-| docs/USER_FLOW_TREE.md | present | 472929 | 3c267f841f35165eef5e2c2359ad328027352bfe026a47e7a4c89ded239ca79c |
+| docs/USER_FLOW_TREE.md | present | 470486 | a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a |
 | docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
 | docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
 | docs/phase-6/payments-runbook.md | present | 11302 | 676492b480b32f12c6fe829962f33a3f31bd597f2e2f4a7aa319e63e0f1da821 |
