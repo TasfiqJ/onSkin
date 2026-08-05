@@ -816,6 +816,9 @@ check(
 check(
   /select plan\(21\)/u.test(commerceZeroAdmissionUpgradeRehearsal) &&
     /@@INCLUDE_EXACT_0072_MIGRATION@@/u.test(commerceZeroAdmissionUpgradeRehearsal) &&
+    /insert into public\.commerce_click_events\s*\([\s\S]{0,300}?health_processing_epoch,\s*data_sharing_generation\s*\) values \([\s\S]{0,300}?true,\s*1,\s*1\s*\)/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
     /retains the legacy affiliate row without publishing it/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
@@ -834,7 +837,7 @@ check(
     /preserves installed-base attribution deletion/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ),
-  '0072 must prove its exact 0071-to-0072 loss-averse commerce and stale-poller cutover.',
+  '0072 must prove its exact 0071-to-0072 loss-averse commerce and stale-poller cutover from a schema-valid health-authority fixture.',
 );
 check(
   /select plan\(218\)/u.test(catalogImportLifecycleTests) &&

@@ -68,14 +68,18 @@ insert into public.commerce_click_events (
   click_token,
   product_type,
   source,
-  consented
+  consented,
+  health_processing_epoch,
+  data_sharing_generation
 ) values (
   '72000000-0000-4000-8000-000000000030',
   '72000000-0000-4000-8000-000000000001',
   'legacy-click-token',
   'spf',
   'none',
-  true
+  true,
+  1,
+  1
 );
 alter table public.commerce_click_events enable trigger user;
 
