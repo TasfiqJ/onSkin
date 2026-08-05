@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "phase5_device_qa_packet",
-  "generatedAt": "2026-08-04T21:54:09.232Z",
+  "generatedAt": "2026-08-05T05:50:38.183Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -194,9 +194,19 @@
       "externalNavigationAllowed": false,
       "analyticsAllowed": false,
       "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
     }
   },
-  "gitSha": "92dec848003f32db88e3ec633b4f550a6ce78e25",
+  "gitSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": null,
@@ -365,7 +375,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "92dec848003f32db88e3ec633b4f550a6ce78e25",
+    "currentGitSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -414,7 +424,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "92dec848003f32db88e3ec633b4f550a6ce78e25",
+    "headSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -424,7 +434,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "92dec848003f32db88e3ec633b4f550a6ce78e25",
+    "headSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
     "status": "blocked"
   },
   "scenarios": [
@@ -501,14 +511,14 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 27692,
-      "sha256": "b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90"
+      "bytes": 29678,
+      "sha256": "41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43202,
-      "sha256": "8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706"
+      "bytes": 43962,
+      "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
     },
     {
       "path": "package-lock.json",
@@ -519,14 +529,14 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 6817,
-      "sha256": "d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07"
+      "bytes": 7174,
+      "sha256": "ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb"
     },
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 14603,
-      "sha256": "51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c"
+      "bytes": 15776,
+      "sha256": "7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -537,8 +547,8 @@
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 18109,
-      "sha256": "4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c"
+      "bytes": 19143,
+      "sha256": "9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f"
     },
     {
       "path": "apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js",
@@ -549,8 +559,8 @@
     {
       "path": "apps/mobile/eas.json",
       "exists": true,
-      "bytes": 1477,
-      "sha256": "074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051"
+      "bytes": 1636,
+      "sha256": "c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04"
     },
     {
       "path": "apps/mobile/package.json",
@@ -567,8 +577,8 @@
     {
       "path": "apps/mobile/src/lib/appConfig.test.ts",
       "exists": true,
-      "bytes": 42508,
-      "sha256": "7977eb5aa6ad19ee325116b34bf6d2da12a0d68b2c6e79ed70c776ceec70e278"
+      "bytes": 44283,
+      "sha256": "2a0eb426c5ee91bbe172813db5fc478f02499a69d36395932d23548de6825288"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
@@ -1173,14 +1183,14 @@
     {
       "path": "apps/mobile/src/features/notifications/deliver.ts",
       "exists": true,
-      "bytes": 16439,
-      "sha256": "e6a0e37a671e75ecf1baca4be4c50f82957b17eaab56c11e91478c66943315d4"
+      "bytes": 16639,
+      "sha256": "00bdf36c5c9e730f429581b63c0620a661d3867ebb2161f7cdf1d128eb5e46df"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 37617,
-      "sha256": "6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358"
+      "bytes": 40778,
+      "sha256": "2651b32304ac9571847df92258d6c38fddd36a7820f9ad92149f61494e9a09a7"
     },
     {
       "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts",
@@ -1257,8 +1267,8 @@
     {
       "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
       "exists": true,
-      "bytes": 104418,
-      "sha256": "3663f395c97b0d227db6f01f6ebe6c7c2b272bb9246e64d2935e1cf62020cbbc"
+      "bytes": 104605,
+      "sha256": "37ea14b3d26dafaf54c1b51acf9c5f32f18775854f6eea430f6255fa8ea16b18"
     },
     {
       "path": "apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts",
@@ -1515,8 +1525,8 @@
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
-      "bytes": 50988,
-      "sha256": "ae4552be8c42679548108ef862f3bee4007173ca4ee46db86dca1af64f159399"
+      "bytes": 52725,
+      "sha256": "7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83"
     },
     {
       "path": "scripts/phase2/supabase-rls-smoke.mjs",
@@ -1587,8 +1597,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 470486,
-      "sha256": "a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a"
+      "bytes": 479048,
+      "sha256": "326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e"
     },
     {
       "path": "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
@@ -1735,8 +1745,8 @@
     {
       "path": "apps/mobile/src/lib/env.ts",
       "exists": true,
-      "bytes": 6892,
-      "sha256": "bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad"
+      "bytes": 7878,
+      "sha256": "10d3095fdac566e4720f2e99e0791bb8617c8c09f21618873c3fc919cf166757"
     },
     {
       "path": "apps/mobile/modules/native-label-ocr/expo-module.config.json",
@@ -1873,8 +1883,8 @@
     {
       "path": "apps/mobile/src/features/photos/progressRoutes.test.ts",
       "exists": true,
-      "bytes": 33501,
-      "sha256": "642e69f294acd5aa96ecfde10d20ac87498c957f779ea75034f2e1d440bb8934"
+      "bytes": 34170,
+      "sha256": "e01bdba92f07cf29f3bdb4f522b455b86505c0b200305b9b3802fd024cb4b747"
     },
     {
       "path": "apps/mobile/src/features/navigation/sheetRouteContracts.test.ts",
