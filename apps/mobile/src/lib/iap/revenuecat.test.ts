@@ -68,4 +68,33 @@ describe('RevenueCat identity boundary', () => {
     );
     expect(source).not.toContain('const trialDays = trialDaysForPackage(pack);');
   });
+
+  it('keeps win-back provider paths behind the governed commercial state', () => {
+    const source = readFileSync(REVENUECAT_SOURCE, 'utf8');
+
+    expect(source).toContain("if (!env.iosWinBackEnabled || Platform.OS !== 'ios') return null;");
+    expect(source).toMatch(
+      /purchaseWinBackPackage[\s\S]*if \(!env\.iosWinBackEnabled \|\| Platform\.OS !== 'ios'\)[\s\S]*offerUnavailable: true[\s\S]*requireConfigured\(ticket, 'win-back purchase'\)/u,
+    );
+    expect(source).toContain('shouldShowInAppMessagesAutomatically: false');
+    expect(source).toContain("if (Platform.OS === 'ios' && env.iosWinBackEnabled)");
+    expect(source).toContain('Purchases.IN_APP_MESSAGE_TYPE.WIN_BACK_OFFER');
+  });
+
+  it('keeps manual StoreKit recovery messages retryable without identity or cache mutation', () => {
+    const source = readFileSync(REVENUECAT_SOURCE, 'utf8');
+
+    expect(source).toContain('export async function showRevenueCatInAppMessages');
+    expect(source).toContain('showConfiguredRevenueCatInAppMessages(Purchases, ticket)');
+    expect(source).toMatch(
+      /showRevenueCatInAppMessages[\s\S]*bindingMatches\(configuredBinding, binding\)[\s\S]*requireConfigured\(ticket, 'in-app messages'\)[\s\S]*showConfiguredRevenueCatInAppMessages/u,
+    );
+    const retryStart = source.indexOf('export async function showRevenueCatInAppMessages');
+    const retryEnd = source.indexOf('export async function resetRevenueCatIdentity', retryStart);
+    const retrySource = source.slice(retryStart, retryEnd);
+    expect(retrySource).not.toContain('configuredBinding =');
+    expect(retrySource).not.toContain('cachedOfferings =');
+    expect(retrySource).not.toContain('Purchases.configure(');
+    expect(retrySource).not.toContain('Purchases.logIn(');
+  });
 });

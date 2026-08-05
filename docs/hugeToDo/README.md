@@ -13,6 +13,7 @@ Start here:
 - [PAY-01 Pricing and Unit-Economics Recommendation](./PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md)
 - [PAY-06 Entitlement Authority Lanes](./PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md)
 - [PAY-07 Entitlement Admission Source Checkpoint](./PAY-07-ENTITLEMENT-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md)
+- [PAY-08 iOS Win-Back Admission Source Checkpoint](./PAY-08-IOS-WIN-BACK-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md)
 - [Accounts and Vendor Decision Packet](./ACCOUNTS_AND_VENDOR_DECISION_PACKET.md)
 - [DB-01–DB-11 Gap Matrix](./DB-01-11-GAP-MATRIX-2026-07-13.md)
 - [DB-05 Credential-Free Local Reset Evidence](./DB-05-LOCAL-RESET-2026-07-14.md)

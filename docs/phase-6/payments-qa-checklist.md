@@ -73,14 +73,30 @@
 
 ## Win-Back
 
-- The recorded PAY-01 launch state is tested exactly: no offer configured, or a
-  specifically approved native Apple offer.
-- For the recommended no-offer launch, eligible and ineligible discovery both
-  return unavailable and route to the standard Pro offer without showing a
-  discount.
+- The versioned launch contract says `winBackOfferAdmitted=false`, all EAS
+  profiles say `EXPO_PUBLIC_IOS_WIN_BACK_ENABLED=false`, and app config rejects
+  an attempted true override.
+- RevenueCat automatic in-app messages are false. The explicit manual allowlist
+  includes billing issue, price increase consent, and generic messages, and
+  excludes `WIN_BACK_OFFER` while admission is closed.
+- Standard Pro offering retrieval remains available for localized ordinary-plan
+  terms, but no-offer loading skips `getEligibleWinBackOffersForPackage`. The
+  dedicated win-back purchase path returns unavailable before RevenueCat
+  configuration, offering retrieval, eligibility, or StoreKit purchase calls.
+- The unavailable route reaches the standard Pro offer using current localized
+  plan pricing, with no invented discount, crossed-out price, savings, or urgency.
+- Retained App Store Connect evidence covers the exact subscription group,
+  product IDs, and every launch storefront and shows no configured or active
+  win-back offer. Matching RevenueCat evidence binds the same products. Source
+  tests or an environment flag do not satisfy this external gate.
+- Physical-iPhone sandbox and TestFlight evidence covers every supported iOS
+  version and binds the signed build, source SHA, product, account eligibility,
+  timestamps, network/offline conditions, and screenshots/logs.
 - If an offer is later approved and configured, an eligible user sees the
   native localized offer price and purchase grants Pro only from RevenueCat
-  `CustomerInfo`; an ineligible user sees the truthful fallback.
+  `CustomerInfo`; an ineligible user sees the truthful fallback. The exact offer
+  ID/product/storefront/eligibility/duration/price must be approved in a new
+  PAY-08 contract version before the build flag changes.
 - Android or unsupported OS routes to the standard Pro offer.
 
 ## Account Deletion

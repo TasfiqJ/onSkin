@@ -43,6 +43,15 @@ if (customProGrantEnabled && variant !== 'development') {
     'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED may be true only for a development build; the iOS release candidate must use StoreKit purchase or introductory-offer authority.',
   );
 }
+const iosWinBackEnabled = readOptionalBooleanEnv(
+  'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED',
+  process.env.EXPO_PUBLIC_IOS_WIN_BACK_ENABLED,
+);
+if (iosWinBackEnabled && launchContract.iosWinBackOfferAdmission?.winBackOfferAdmitted !== true) {
+  throw new Error(
+    'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED cannot be true while the versioned launch contract does not admit an iOS win-back offer. Reopen PAY-08 and update the reviewed admission before enabling a build.',
+  );
+}
 const iosWidgetExtensionBuildEnabled = readOptionalBooleanEnv(
   IOS_WIDGET_EXTENSION_BUILD_ENV,
   process.env[IOS_WIDGET_EXTENSION_BUILD_ENV],

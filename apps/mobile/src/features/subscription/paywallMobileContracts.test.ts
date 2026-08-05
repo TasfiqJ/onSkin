@@ -692,8 +692,11 @@ describe('paywall mobile contracts', () => {
     expect(compactReason).toBeLessThan(purchaseCta);
   });
 
-  it('keeps unavailable win-back offer copy next to the fallback action', () => {
+  it('admits win-back presentation only for an enabled exact eligible SDK offer', () => {
     const winback = readAppRoute('paywall/winback.tsx');
+    const subscription = readAppRoute('settings/subscription.tsx');
+    const copy = readSource('features/subscription/copy.ts');
+    const plans = readSource('features/subscription/plans.ts');
 
     expect(winback).toContain('useWindowDimensions');
     expect(winback).toContain(
@@ -707,14 +710,60 @@ describe('paywall mobile contracts', () => {
     expect(winback).toContain('const compactPaywall = height < 640 || tallTextPressurePaywall;');
     expect(winback).toContain("style={{ overflow: 'hidden' }}");
     expect(winback).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
-    expect(winback).toContain('const unavailableOfferCopy =');
+    expect(winback).toContain("import { env } from '@/lib/env';");
+    expect(winback).toContain('const eligibleOffer =');
+    expect(winback).toContain('env.iosWinBackEnabled &&');
+    expect(winback).toContain("offering.data?.status === 'available' &&");
+    expect(winback).toContain('offering.data.winBack?.canPurchase === true');
+    expect(winback).toContain('? offering.data.winBack');
+    expect(winback).toContain(': null;');
+    expect(winback).toContain('const canWinBack = eligibleOffer !== null;');
+    expect(winback).toContain('? PAYWALL_COPY.winback.offer');
+    expect(winback).toContain(': PAYWALL_COPY.winback.currentPlan;');
+    expect(winback).toContain('{winBackCopy.eyebrow.toUpperCase()}');
+    expect(winback).toContain('{winBackCopy.title}');
+    expect(winback).toContain('{winBackCopy.body}');
+    expect(winback).toContain('{winBackCopy.priceLabel}');
+    expect(winback).toContain('{eligibleOffer?.priceLabel ?? annualDisplay.priceLabel}');
+    expect(winback).toContain('{eligibleOffer?.originalPriceLabel ? (');
+    expect(winback).toContain('{eligibleOffer?.percentOff ? (');
+    expect(winback).toContain('{winBackCopy.cta}');
+    expect(winback).toContain('{winBackCopy.declineCta}');
+    expect(winback).toContain('const fallbackActionCopy =');
     expect(winback).toContain('className="gap-2.5"');
     expect(winback).toContain(
       'style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}',
     );
     expect(winback).toContain('className="px-2 text-center"');
-    expect(winback).toContain('{unavailableOfferCopy}');
-    expect(winback).toContain("{canWinBack ? PAYWALL_COPY.winback.cta : 'See current Pro plan'}");
+    expect(winback).toContain('{fallbackActionCopy}');
+
+    expect(subscription).toContain("import { env } from '@/lib/env';");
+    expect(subscription).toContain('const eligibleWinBackOffer =');
+    expect(subscription).toContain('env.iosWinBackEnabled &&');
+    expect(subscription).toContain("offering.data?.status === 'available' &&");
+    expect(subscription).toContain('offering.data.winBack?.canPurchase === true;');
+    expect(subscription).toContain('? PAYWALL_COPY.winback.offer.settingsCta');
+    expect(subscription).toContain(': PAYWALL_COPY.winback.currentPlan.settingsCta;');
+    expect(subscription).toContain('function openExpiredPlanOptions()');
+    expect(subscription).toContain("? '/paywall/winback'");
+    expect(subscription).toContain(": '/paywall/upsell?feature=full_routine'");
+    expect(subscription).toContain('onPress={openExpiredPlanOptions}');
+    expect(subscription).toContain('{expiredPlanCta} →');
+    expect(subscription).not.toContain('See your welcome-back offer →');
+
+    expect(copy).toContain('currentPlan: {');
+    expect(copy).toContain("priceLabel: 'Annual Pro option'");
+    expect(copy).toContain("settingsCta: 'See standard Pro options'");
+    expect(copy).toContain('App Store confirms the final price before purchase.');
+    expect(copy).toContain('offer: {');
+    expect(copy).toContain("priceLabel: 'Eligible App Store offer'");
+    expect(copy).toContain("settingsCta: 'See your welcome-back offer'");
+
+    for (const source of [winback, subscription, copy, plans]) {
+      expect(source).not.toContain('$34.99');
+      expect(source).not.toContain('percentOff: 30');
+      expect(source).not.toContain('30%-off');
+    }
   });
 
   it('keeps active reverse-trial keep options distinct from the expired re-offer', () => {

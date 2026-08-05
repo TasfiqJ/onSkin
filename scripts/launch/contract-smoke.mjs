@@ -68,9 +68,21 @@ assert.deepEqual(contract.commerceAdmission, {
   disabledPathSideEffectsAllowed: false,
 });
 assert.equal(Object.isFrozen(contract.commerceAdmission), true);
+assert.deepEqual(launchContractSnapshot(contract).commerceAdmission, contract.commerceAdmission);
+assert.deepEqual(contract.iosWinBackOfferAdmission, {
+  schemaVersion: 1,
+  winBackOfferAdmitted: false,
+  automaticInAppMessagesAllowed: false,
+  winBackInAppMessageAllowed: false,
+  disabledWinBackProviderCallsAllowed: false,
+  eligibilityDerivedOfferRequired: true,
+  localizedStorePricingRequired: true,
+  hardcodedDiscountAllowed: false,
+});
+assert.equal(Object.isFrozen(contract.iosWinBackOfferAdmission), true);
 assert.deepEqual(
-  launchContractSnapshot(contract).commerceAdmission,
-  contract.commerceAdmission,
+  launchContractSnapshot(contract).iosWinBackOfferAdmission,
+  contract.iosWinBackOfferAdmission,
 );
 assert.deepEqual(
   contract.featureProfessionalReviewRequirements.conflict_share.map(
@@ -215,6 +227,34 @@ extraCommerceAdmissionKey.commerceAdmission.fixtureOverride = true;
 assert.match(
   validateLaunchContract(extraCommerceAdmissionKey).join('\n'),
   /only the exact COM-01A admission keys/,
+);
+
+for (const [key, expected] of Object.entries(contract.iosWinBackOfferAdmission)) {
+  const forgedWinBackAdmission = structuredClone(contract);
+  forgedWinBackAdmission.iosWinBackOfferAdmission[key] =
+    typeof expected === 'boolean' ? !expected : expected + 1;
+  assert.match(
+    validateLaunchContract(forgedWinBackAdmission).join('\n'),
+    new RegExp(`iosWinBackOfferAdmission\\.${key} must be`, 'u'),
+  );
+}
+
+const missingWinBackAdmissionKey = structuredClone(contract);
+delete missingWinBackAdmissionKey.iosWinBackOfferAdmission.winBackOfferAdmitted;
+assert.match(
+  validateLaunchContract(missingWinBackAdmissionKey).join('\n'),
+  /winBackOfferAdmitted must be false/,
+);
+assert.match(
+  validateLaunchContract(missingWinBackAdmissionKey).join('\n'),
+  /only the exact PAY-08 admission keys/,
+);
+
+const extraWinBackAdmissionKey = structuredClone(contract);
+extraWinBackAdmissionKey.iosWinBackOfferAdmission.runtimeOverride = true;
+assert.match(
+  validateLaunchContract(extraWinBackAdmissionKey).join('\n'),
+  /only the exact PAY-08 admission keys/,
 );
 
 console.log('Launch contract smoke tests passed.');

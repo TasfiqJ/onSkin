@@ -168,6 +168,16 @@
     "cloudPhotoProcessingAllowed": false,
     "scoreAgeGradePercentageAllowed": false
   },
+  "iosWinBackOfferAdmission": {
+    "schemaVersion": 1,
+    "winBackOfferAdmitted": false,
+    "automaticInAppMessagesAllowed": false,
+    "winBackInAppMessageAllowed": false,
+    "disabledWinBackProviderCallsAllowed": false,
+    "eligibilityDerivedOfferRequired": true,
+    "localizedStorePricingRequired": true,
+    "hardcodedDiscountAllowed": false
+  },
   "commerceAdmission": {
     "commerceAdmitted": false,
     "affiliateRailAvailable": false,

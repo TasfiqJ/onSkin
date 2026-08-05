@@ -126,6 +126,17 @@ export const REQUIRED_COMMERCE_ADMISSION = Object.freeze({
   disabledPathSideEffectsAllowed: false,
 });
 
+export const REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION = Object.freeze({
+  schemaVersion: 1,
+  winBackOfferAdmitted: false,
+  automaticInAppMessagesAllowed: false,
+  winBackInAppMessageAllowed: false,
+  disabledWinBackProviderCallsAllowed: false,
+  eligibilityDerivedOfferRequired: true,
+  localizedStorePricingRequired: true,
+  hardcodedDiscountAllowed: false,
+});
+
 const REQUIRED_SAFETY_FALSE = Object.freeze([
   'diagnosisTreatmentCurePreventionClaims',
   'aiSkinScores',
@@ -311,6 +322,21 @@ export function validateLaunchContract(contract) {
     errors.push('commerceAdmission must contain only the exact COM-01A admission keys.');
   }
 
+  for (const [key, expected] of Object.entries(REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION)) {
+    if (contract.iosWinBackOfferAdmission?.[key] !== expected) {
+      errors.push(`iosWinBackOfferAdmission.${key} must be ${expected}.`);
+    }
+  }
+  if (
+    Object.keys(contract.iosWinBackOfferAdmission ?? {}).length !==
+      Object.keys(REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION).length ||
+    Object.keys(contract.iosWinBackOfferAdmission ?? {}).some(
+      (key) => !(key in REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION),
+    )
+  ) {
+    errors.push('iosWinBackOfferAdmission must contain only the exact PAY-08 admission keys.');
+  }
+
   for (const key of REQUIRED_SAFETY_FALSE) {
     if (contract.safetyConstraints?.[key] !== false) {
       errors.push(`safetyConstraints.${key} must be false.`);
@@ -331,6 +357,9 @@ export function loadLaunchContract(root = process.cwd(), path = LAUNCH_CONTRACT_
   }
   contract.trendInsightAdmission = Object.freeze({ ...contract.trendInsightAdmission });
   contract.commerceAdmission = Object.freeze({ ...contract.commerceAdmission });
+  contract.iosWinBackOfferAdmission = Object.freeze({
+    ...contract.iosWinBackOfferAdmission,
+  });
   return Object.freeze(contract);
 }
 
@@ -380,6 +409,7 @@ export function launchContractSnapshot(contract = loadLaunchContract()) {
     conflictShareAdmission: Object.freeze({ ...contract.conflictShareAdmission }),
     trendInsightAdmission: Object.freeze({ ...contract.trendInsightAdmission }),
     commerceAdmission: Object.freeze({ ...contract.commerceAdmission }),
+    iosWinBackOfferAdmission: Object.freeze({ ...contract.iosWinBackOfferAdmission }),
   });
 }
 

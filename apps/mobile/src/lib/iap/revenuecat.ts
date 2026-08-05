@@ -167,6 +167,29 @@ async function loadPurchases() {
   return mod.default;
 }
 
+type RevenueCatPurchases = Awaited<ReturnType<typeof loadPurchases>>;
+
+async function showConfiguredRevenueCatInAppMessages(
+  Purchases: RevenueCatPurchases,
+  ticket: AccountPublicationTicket,
+): Promise<void> {
+  const inAppMessageTypes = [
+    Purchases.IN_APP_MESSAGE_TYPE.BILLING_ISSUE,
+    Purchases.IN_APP_MESSAGE_TYPE.PRICE_INCREASE_CONSENT,
+    Purchases.IN_APP_MESSAGE_TYPE.GENERIC,
+  ];
+  if (Platform.OS === 'ios' && env.iosWinBackEnabled) {
+    inAppMessageTypes.push(Purchases.IN_APP_MESSAGE_TYPE.WIN_BACK_OFFER);
+  }
+  try {
+    await Purchases.showInAppMessages(inAppMessageTypes);
+  } catch {
+    // A later retained-publication foreground retries these recovery messages.
+    // Presentation failure is not purchase, identity, or offering authority.
+  }
+  ticket.assertCurrent();
+}
+
 function serializeIdentityTransition<T>(operation: () => Promise<T>): Promise<T> {
   const completion = identityTransition.then(operation, operation);
   identityTransition = completion.then(
@@ -680,7 +703,7 @@ async function winBackViewForPackage(
   ticket: AccountPublicationTicket,
   pack: PurchasesPackage,
 ): Promise<WinBackOfferView | null> {
-  if (Platform.OS !== 'ios') return null;
+  if (!env.iosWinBackEnabled || Platform.OS !== 'ios') return null;
   const Purchases = await requireConfigured(ticket, 'win-back offers');
   if (!Purchases) return null;
 
@@ -745,12 +768,14 @@ export async function configureRevenueCat(appUserId: string): Promise<void> {
             apiKey,
             appUserID: appUserId,
             automaticDeviceIdentifierCollectionEnabled: false,
+            shouldShowInAppMessagesAutomatically: false,
             entitlementVerificationMode: Purchases.ENTITLEMENT_VERIFICATION_MODE.INFORMATIONAL,
           });
         } else if (configuredBinding?.userId !== appUserId) {
           await Purchases.logIn(appUserId);
         }
         ticket.assertCurrent();
+        await showConfiguredRevenueCatInAppMessages(Purchases, ticket);
         configuredBinding = binding;
         cachedOfferings = null;
       });
@@ -760,6 +785,26 @@ export async function configureRevenueCat(appUserId: string): Promise<void> {
       } finally {
         if (configurePromise?.completion === completion) configurePromise = null;
       }
+    },
+    appUserId,
+  );
+}
+
+/**
+ * Retry manually selected StoreKit recovery messages for an already-bound user.
+ * This operation never configures identity and never invalidates offerings.
+ */
+export async function showRevenueCatInAppMessages(appUserId: string): Promise<void> {
+  if (!appUserId) return;
+  assertAppUserId(appUserId);
+  await accountPublicationController.runOperation(
+    'configure',
+    async (ticket) => {
+      const binding = ticketBinding(ticket);
+      if (!bindingMatches(configuredBinding, binding)) return;
+      const Purchases = await requireConfigured(ticket, 'in-app messages');
+      if (!Purchases) return;
+      await showConfiguredRevenueCatInAppMessages(Purchases, ticket);
     },
     appUserId,
   );
@@ -944,12 +989,15 @@ export async function purchaseWinBackPackage(
   return accountPublicationController.runOperation(
     'purchase',
     async (ticket) => {
+      if (!env.iosWinBackEnabled || Platform.OS !== 'ios') {
+        return bindResultToTicket({ purchased: false, offerUnavailable: true }, ticket, 'purchase');
+      }
       const Purchases = await requireConfigured(ticket, 'win-back purchase');
       if (!Purchases) return bindResultToTicket({ purchased: false }, ticket, 'purchase');
 
       const offerings = await fetchOfferings(ticket);
       const annualPackage = offerings ? findPackage(offerings, 'annual') : null;
-      if (!annualPackage || Platform.OS !== 'ios') {
+      if (!annualPackage) {
         return bindResultToTicket({ purchased: false, offerUnavailable: true }, ticket, 'purchase');
       }
 

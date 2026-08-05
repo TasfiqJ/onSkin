@@ -1683,11 +1683,18 @@
       "id": "PAY-08",
       "status": "in_progress",
       "blockedBy": ["PAY-07"],
-      "nextAction": "After PAY-01 is approved, test the selected commercial state on supported iOS versions: for the recommended no-offer launch, prove eligible and ineligible discovery both return a truthful unavailable fallback with no invented discount; if a later native offer is approved, also prove eligibility, localized price, purchase, renewal, and fallback.",
+      "nextAction": "Keep the versioned no-offer admission closed. Retain exact App Store Connect product/subscription-group/storefront evidence proving no configured or active win-back offer, matching RevenueCat configuration, and final signed-build sandbox/TestFlight evidence on supported iOS versions proving zero win-back eligibility/purchase calls while disabled, no app-requested win-back message, and a truthful ordinary-Pro fallback with no invented discount.",
       "evidenceRefs": [
+        "docs/hugeToDo/launch-contract.json",
+        "scripts/pay08/ios-win-back-source-contract.test.mjs",
+        "apps/mobile/app.config.js",
+        "apps/mobile/eas.json",
+        "apps/mobile/src/features/subscription/winBackCommercialState.ts",
         "apps/mobile/src/lib/iap/revenuecat.ts",
         "apps/mobile/src/app/paywall/winback.tsx",
         "docs/phase-6/payments-qa-checklist.md",
+        "docs/phase-6/payments-runbook.md",
+        "docs/hugeToDo/PAY-08-IOS-WIN-BACK-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md",
         "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md"
       ]
     },

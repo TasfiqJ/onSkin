@@ -12,8 +12,10 @@ import {
   getSubscriptionOffering,
   getUncachedCustomerInfo,
   purchasePackage,
+  purchaseWinBackPackage,
   revenueCatUnconfirmedStoreMessage,
   reserveRevenueCatPublication,
+  showRevenueCatInAppMessages,
   startRevenueCatDeletionQuiesce,
   subscribeToCustomerInfoUpdates,
 } from './revenuecat';
@@ -29,6 +31,12 @@ const mocks = vi.hoisted(() => {
       INTRO_ELIGIBILITY_STATUS_UNKNOWN: 0,
     },
     LOG_LEVEL: { DEBUG: 'DEBUG', WARN: 'WARN' },
+    IN_APP_MESSAGE_TYPE: {
+      BILLING_ISSUE: 0,
+      PRICE_INCREASE_CONSENT: 1,
+      GENERIC: 2,
+      WIN_BACK_OFFER: 3,
+    },
     PURCHASES_ERROR_CODE: { PURCHASE_CANCELLED_ERROR: 'PURCHASE_CANCELLED_ERROR' },
     addCustomerInfoUpdateListener: vi.fn(),
     configure: vi.fn(),
@@ -40,8 +48,10 @@ const mocks = vi.hoisted(() => {
     invalidateCustomerInfoCache: vi.fn(),
     logIn: vi.fn(),
     purchasePackage: vi.fn(),
+    purchasePackageWithWinBackOffer: vi.fn(),
     removeCustomerInfoUpdateListener: vi.fn(),
     setLogLevel: vi.fn(),
+    showInAppMessages: vi.fn(async (_messageTypes?: number[]) => {}),
   };
   return {
     nextCapability: () => {
@@ -49,11 +59,19 @@ const mocks = vi.hoisted(() => {
       return capability.toString(16).padStart(64, '0');
     },
     durableDeletionBlock: false,
+    iosWinBackEnabled: false,
+    platformOs: 'ios',
     purchases,
   };
 });
 
-vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
+vi.mock('react-native', () => ({
+  Platform: {
+    get OS() {
+      return mocks.platformOs;
+    },
+  },
+}));
 vi.mock('react-native-purchases', () => ({ default: mocks.purchases }));
 vi.mock('@/features/settings/accountDeletionBarrier', () => ({
   isAccountActivityBlockedForDeletion: () => false,
@@ -63,10 +81,13 @@ vi.mock('@/features/settings/accountDeletionBarrier', () => ({
 vi.mock('@/lib/env', () => ({
   env: {
     appEnvironment: 'production',
-    revenueCatAndroidKey: '',
+    revenueCatAndroidKey: 'goog_known_key',
     revenueCatEntitlementId: 'pro',
     revenueCatIosKey: 'appl_known_key',
     revenueCatTestStoreKey: '',
+    get iosWinBackEnabled() {
+      return mocks.iosWinBackEnabled;
+    },
   },
 }));
 vi.mock('@/lib/auth/accountPublicationFence', () => ({
@@ -89,6 +110,8 @@ const USER_B = '22222222-2222-4222-8222-222222222222';
 beforeEach(() => {
   vi.stubGlobal('__DEV__', false);
   mocks.durableDeletionBlock = false;
+  mocks.iosWinBackEnabled = false;
+  mocks.platformOs = 'ios';
 });
 
 afterEach(async () => {
@@ -250,8 +273,11 @@ describe('RevenueCat publication integration', () => {
       apiKey: 'appl_known_key',
       appUserID: USER_ID,
       automaticDeviceIdentifierCollectionEnabled: false,
+      shouldShowInAppMessagesAutomatically: false,
       entitlementVerificationMode: 'INFORMATIONAL',
     });
+    expect(mocks.purchases.showInAppMessages).toHaveBeenCalledWith([0, 1, 2]);
+    expect(mocks.purchases.showInAppMessages.mock.calls[0]?.[0]).not.toContain(3);
 
     await closeRevenueCatPublication('app_backgrounded');
     await expect(getCustomerInfo()).rejects.toMatchObject({
@@ -266,6 +292,53 @@ describe('RevenueCat publication integration', () => {
     expect(mocks.purchases.logIn).toHaveBeenNthCalledWith(1, USER_ID);
     expect(mocks.purchases.logIn).toHaveBeenNthCalledWith(2, USER_ID);
     expect(mocks.purchases).not.toHaveProperty('logOut');
+  });
+
+  it('retries manual recovery messages without reconfiguring identity or invalidating offerings', async () => {
+    const annual = {
+      identifier: 'annual',
+      offeringIdentifier: 'default',
+      product: {
+        identifier: 'routinekind_pro_annual',
+        title: 'RoutineKind Pro Annual',
+        priceString: 'US$49.99',
+        pricePerMonthString: 'US$4.17',
+        subscriptionPeriod: 'P1Y',
+        introPrice: null,
+      },
+    };
+    const monthly = {
+      identifier: 'monthly',
+      offeringIdentifier: 'default',
+      product: {
+        identifier: 'routinekind_pro_monthly',
+        title: 'RoutineKind Pro Monthly',
+        priceString: 'US$9.99',
+        pricePerMonthString: 'US$9.99',
+        subscriptionPeriod: 'P1M',
+        introPrice: null,
+      },
+    };
+    mocks.purchases.isConfigured.mockResolvedValue(false);
+    mocks.purchases.showInAppMessages
+      .mockRejectedValueOnce(new Error('message presentation unavailable'))
+      .mockResolvedValueOnce(undefined);
+    mocks.purchases.getOfferings.mockResolvedValue({
+      current: { identifier: 'default', annual, monthly, availablePackages: [annual, monthly] },
+    });
+
+    await reserveRevenueCatPublication(USER_ID, 'session-token-message-retry');
+    await activateRevenueCatPublication(USER_ID, 'session-token-message-retry');
+    await expect(configureRevenueCat(USER_ID)).resolves.toBeUndefined();
+    await expect(getSubscriptionOffering()).resolves.toMatchObject({ status: 'available' });
+    await expect(showRevenueCatInAppMessages(USER_ID)).resolves.toBeUndefined();
+    await expect(getSubscriptionOffering()).resolves.toMatchObject({ status: 'available' });
+
+    expect(mocks.purchases.showInAppMessages.mock.calls).toEqual([[[0, 1, 2]], [[0, 1, 2]]]);
+    expect(mocks.purchases.configure).toHaveBeenCalledOnce();
+    expect(mocks.purchases.isConfigured).toHaveBeenCalledOnce();
+    expect(mocks.purchases.logIn).not.toHaveBeenCalled();
+    expect(mocks.purchases.getOfferings).toHaveBeenCalledOnce();
   });
 
   it('advertises an introductory trial only for an exact eligible App Store product result', async () => {
@@ -322,6 +395,142 @@ describe('RevenueCat publication integration', () => {
     expect(mocks.purchases.checkTrialOrIntroductoryPriceEligibility).toHaveBeenNthCalledWith(1, [
       'routinekind_pro_annual',
     ]);
+    expect(mocks.purchases.getEligibleWinBackOffersForPackage).not.toHaveBeenCalled();
+  });
+
+  it('returns disabled win-back purchase fallback before every provider and native call', async () => {
+    await reserveRevenueCatPublication(USER_ID, 'session-token-disabled-win-back');
+    await activateRevenueCatPublication(USER_ID, 'session-token-disabled-win-back');
+    const nativeCall = {
+      beforeNativeStoreCall: vi.fn(async () => {}),
+      markNativeCallStarted: vi.fn(),
+    };
+
+    await expect(purchaseWinBackPackage(USER_ID, nativeCall)).resolves.toMatchObject({
+      purchased: false,
+      offerUnavailable: true,
+    });
+
+    expect(mocks.purchases.setLogLevel).not.toHaveBeenCalled();
+    expect(mocks.purchases.isConfigured).not.toHaveBeenCalled();
+    expect(mocks.purchases.configure).not.toHaveBeenCalled();
+    expect(mocks.purchases.logIn).not.toHaveBeenCalled();
+    expect(mocks.purchases.getOfferings).not.toHaveBeenCalled();
+    expect(mocks.purchases.getEligibleWinBackOffersForPackage).not.toHaveBeenCalled();
+    expect(mocks.purchases.purchasePackageWithWinBackOffer).not.toHaveBeenCalled();
+    expect(nativeCall.beforeNativeStoreCall).not.toHaveBeenCalled();
+    expect(nativeCall.markNativeCallStarted).not.toHaveBeenCalled();
+  });
+
+  it('keeps enabled win-back messages and purchases inert on non-iOS platforms', async () => {
+    mocks.iosWinBackEnabled = true;
+    mocks.platformOs = 'android';
+    await reserveRevenueCatPublication(USER_ID, 'session-token-android-win-back');
+    await activateRevenueCatPublication(USER_ID, 'session-token-android-win-back');
+    const nativeCall = {
+      beforeNativeStoreCall: vi.fn(async () => {}),
+      markNativeCallStarted: vi.fn(),
+    };
+
+    await expect(purchaseWinBackPackage(USER_ID, nativeCall)).resolves.toMatchObject({
+      purchased: false,
+      offerUnavailable: true,
+    });
+    expect(mocks.purchases.setLogLevel).not.toHaveBeenCalled();
+    expect(mocks.purchases.isConfigured).not.toHaveBeenCalled();
+    expect(mocks.purchases.getOfferings).not.toHaveBeenCalled();
+    expect(mocks.purchases.getEligibleWinBackOffersForPackage).not.toHaveBeenCalled();
+    expect(mocks.purchases.purchasePackageWithWinBackOffer).not.toHaveBeenCalled();
+    expect(nativeCall.beforeNativeStoreCall).not.toHaveBeenCalled();
+
+    mocks.purchases.isConfigured.mockResolvedValue(false);
+    await configureRevenueCat(USER_ID);
+    expect(mocks.purchases.showInAppMessages).toHaveBeenCalledWith([0, 1, 2]);
+    expect(mocks.purchases.showInAppMessages.mock.calls[0]?.[0]).not.toContain(3);
+  });
+
+  it('uses exact native eligibility and localized terms only in the governed enabled path', async () => {
+    mocks.iosWinBackEnabled = true;
+    const annual = {
+      identifier: 'annual',
+      offeringIdentifier: 'default',
+      product: {
+        identifier: 'routinekind_pro_annual',
+        title: 'RoutineKind Pro Annual',
+        price: 49.99,
+        priceString: 'US$49.99',
+        pricePerMonthString: 'US$4.17',
+        subscriptionPeriod: 'P1Y',
+        introPrice: null,
+      },
+    };
+    const monthly = {
+      identifier: 'monthly',
+      offeringIdentifier: 'default',
+      product: {
+        identifier: 'routinekind_pro_monthly',
+        title: 'RoutineKind Pro Monthly',
+        price: 9.99,
+        priceString: 'US$9.99',
+        pricePerMonthString: 'US$9.99',
+        subscriptionPeriod: 'P1M',
+        introPrice: null,
+      },
+    };
+    const nativeOffer = {
+      identifier: 'native-win-back-2026',
+      price: 34.99,
+      priceString: 'US$34.99',
+      cycles: 3,
+      periodUnit: 'MONTH',
+    };
+    const customerInfo = {
+      entitlements: { active: { pro: { isActive: true } } },
+    };
+    mocks.purchases.isConfigured.mockResolvedValue(false);
+    mocks.purchases.getOfferings.mockResolvedValue({
+      current: { identifier: 'default', annual, monthly, availablePackages: [annual, monthly] },
+    });
+    mocks.purchases.getEligibleWinBackOffersForPackage.mockResolvedValue([nativeOffer]);
+    mocks.purchases.purchasePackageWithWinBackOffer.mockResolvedValue({
+      customerInfo,
+      productIdentifier: 'routinekind_pro_annual',
+    });
+
+    await reserveRevenueCatPublication(USER_ID, 'session-token-enabled-win-back');
+    await activateRevenueCatPublication(USER_ID, 'session-token-enabled-win-back');
+    await configureRevenueCat(USER_ID);
+
+    expect(mocks.purchases.showInAppMessages).toHaveBeenCalledWith([0, 1, 2, 3]);
+    await expect(getSubscriptionOffering()).resolves.toMatchObject({
+      status: 'available',
+      winBack: {
+        offerId: 'native-win-back-2026',
+        productId: 'routinekind_pro_annual',
+        priceLabel: 'US$34.99',
+        originalPriceLabel: 'US$49.99',
+        percentOff: 30,
+        periodLabel: '3 months',
+        canPurchase: true,
+      },
+    });
+    expect(mocks.purchases.getEligibleWinBackOffersForPackage).toHaveBeenCalledWith(annual);
+
+    const nativeCall = {
+      beforeNativeStoreCall: vi.fn(async () => {}),
+      markNativeCallStarted: vi.fn(),
+    };
+    await expect(purchaseWinBackPackage(USER_ID, nativeCall)).resolves.toMatchObject({
+      purchased: true,
+      productId: 'routinekind_pro_annual',
+      priceLabel: 'US$34.99',
+    });
+    expect(mocks.purchases.purchasePackageWithWinBackOffer).toHaveBeenCalledWith(
+      annual,
+      nativeOffer,
+    );
+    expect(nativeCall.beforeNativeStoreCall).toHaveBeenCalledOnce();
+    expect(nativeCall.markNativeCallStarted).toHaveBeenCalledOnce();
   });
 
   it('rejects a foreign deletion quiesce synchronously and closes exact admission immediately', async () => {

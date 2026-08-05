@@ -28,6 +28,15 @@ const viewport = {
 };
 const entitlementLoadingText = 'Checking your access';
 const entitlementWaitMs = positiveNumber(process.env.TEXT_PRESSURE_ENTITLEMENT_WAIT_MS, 35_000);
+const httpAttemptTimeoutMs = positiveNumber(
+  process.env.TEXT_PRESSURE_HTTP_ATTEMPT_TIMEOUT_MS,
+  5_000,
+);
+const cdpCommandTimeoutMs = positiveNumber(
+  process.env.TEXT_PRESSURE_CDP_COMMAND_TIMEOUT_MS,
+  15_000,
+);
+const childProcessFailures = new WeakMap();
 
 const defaultRoutes = [
   '/today',
@@ -175,37 +184,101 @@ function findBrowserPath() {
   return candidate;
 }
 
-async function waitForUrl(url, timeoutMs = 120_000) {
+function observeChildProcess(child, label) {
+  child.once('error', (error) => {
+    childProcessFailures.set(
+      child,
+      new Error(
+        `${label} failed to start: ${error instanceof Error ? error.message : String(error)}`,
+      ),
+    );
+  });
+  return child;
+}
+
+function assertChildProcessRunning(child, label) {
+  if (!child) return;
+  const spawnFailure = childProcessFailures.get(child);
+  if (spawnFailure) throw spawnFailure;
+  if (child.exitCode !== null || child.signalCode !== null) {
+    throw new Error(
+      `${label} exited before it became ready (code=${child.exitCode ?? 'none'}, signal=${
+        child.signalCode ?? 'none'
+      }).`,
+    );
+  }
+}
+
+async function boundedFetch(url, init, attemptTimeoutMs, readResponse) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort(new Error(`HTTP attempt timed out after ${attemptTimeoutMs}ms.`));
+  }, attemptTimeoutMs);
+
+  try {
+    const response = await fetch(url, { ...init, signal: controller.signal });
+    return await readResponse(response);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function waitForUrl(url, timeoutMs = 120_000, child = null, childLabel = 'process') {
   const startedAt = Date.now();
   let lastError = null;
 
   while (Date.now() - startedAt < timeoutMs) {
+    assertChildProcessRunning(child, childLabel);
+    const remainingMs = timeoutMs - (Date.now() - startedAt);
+    const attemptTimeoutMs = Math.max(1, Math.min(httpAttemptTimeoutMs, remainingMs));
     try {
-      const response = await fetch(url, { redirect: 'manual' });
-      if (response.status < 500) return;
+      const status = await boundedFetch(
+        url,
+        { redirect: 'manual' },
+        attemptTimeoutMs,
+        async (response) => {
+          const responseStatus = response.status;
+          await response.body?.cancel();
+          return responseStatus;
+        },
+      );
+      if (status < 500) return;
     } catch (error) {
       lastError = error;
     }
 
-    await delay(500);
+    assertChildProcessRunning(child, childLabel);
+    const retryDelayMs = Math.min(500, timeoutMs - (Date.now() - startedAt));
+    if (retryDelayMs > 0) await delay(retryDelayMs);
   }
 
   throw new Error(`Timed out waiting for ${url}: ${lastError?.message ?? 'no response'}`);
 }
 
-async function readJson(url, timeoutMs = 30_000) {
+async function readJson(url, timeoutMs = 30_000, child = null, childLabel = 'process') {
   const startedAt = Date.now();
   let lastError = null;
 
   while (Date.now() - startedAt < timeoutMs) {
+    assertChildProcessRunning(child, childLabel);
+    const remainingMs = timeoutMs - (Date.now() - startedAt);
+    const attemptTimeoutMs = Math.max(1, Math.min(httpAttemptTimeoutMs, remainingMs));
     try {
-      const response = await fetch(url);
-      if (response.ok) return await response.json();
+      const result = await boundedFetch(url, {}, attemptTimeoutMs, async (response) => {
+        if (!response.ok) {
+          await response.body?.cancel();
+          return { ok: false, value: null };
+        }
+        return { ok: true, value: await response.json() };
+      });
+      if (result.ok) return result.value;
     } catch (error) {
       lastError = error;
     }
 
-    await delay(250);
+    assertChildProcessRunning(child, childLabel);
+    const retryDelayMs = Math.min(250, timeoutMs - (Date.now() - startedAt));
+    if (retryDelayMs > 0) await delay(retryDelayMs);
   }
 
   throw new Error(`Timed out reading ${url}: ${lastError?.message ?? 'no response'}`);
@@ -260,38 +333,33 @@ async function stopProcess(child) {
 }
 
 function startExpoServer() {
-  const command = isWindows ? (process.env.ComSpec ?? 'cmd.exe') : 'npm';
-  const args = isWindows
-    ? [
-        '/d',
-        '/s',
-        '/c',
-        `npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`,
-      ]
-    : [
-        '--workspace',
-        'apps/mobile',
-        'run',
-        'web',
-        '--',
+  const child = observeChildProcess(
+    spawn(
+      process.execPath,
+      [
+        path.join(repoRoot, 'node_modules', 'expo', 'bin', 'cli'),
+        'start',
+        '--web',
         '--port',
         String(appPort),
         '--host',
         'localhost',
-      ];
-
-  const child = spawn(command, args, {
-    cwd: repoRoot,
-    env: {
-      ...process.env,
-      BROWSER: 'none',
-      CI: '1',
-      EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
-      EXPO_PUBLIC_E2E_TODAY_ROUTINE: 'pm',
-    },
-    stdio: ['ignore', 'pipe', 'pipe'],
-    windowsHide: true,
-  });
+      ],
+      {
+        cwd: path.join(repoRoot, 'apps', 'mobile'),
+        env: {
+          ...process.env,
+          BROWSER: 'none',
+          CI: '1',
+          EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
+          EXPO_PUBLIC_E2E_TODAY_ROUTINE: 'pm',
+        },
+        stdio: ['ignore', 'pipe', 'pipe'],
+        windowsHide: true,
+      },
+    ),
+    'Expo web',
+  );
 
   const logPath = path.join(evidenceDir, 'expo-web.log');
   const logLines = [];
@@ -306,25 +374,39 @@ function startExpoServer() {
 }
 
 function startBrowser(browserPath, userDataDir) {
-  return spawn(
-    browserPath,
-    [
-      '--headless=new',
-      `--remote-debugging-port=${debugPort}`,
-      `--user-data-dir=${userDataDir}`,
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--disable-background-networking',
-      '--disable-extensions',
-      '--disable-sync',
-      '--hide-scrollbars',
-      'about:blank',
-    ],
-    {
-      stdio: 'ignore',
-      windowsHide: true,
-    },
+  const child = observeChildProcess(
+    spawn(
+      browserPath,
+      [
+        '--headless=new',
+        `--remote-debugging-port=${debugPort}`,
+        `--user-data-dir=${userDataDir}`,
+        '--no-first-run',
+        '--no-default-browser-check',
+        '--disable-background-networking',
+        '--disable-extensions',
+        '--disable-gpu',
+        '--disable-gpu-sandbox',
+        '--disable-sync',
+        '--hide-scrollbars',
+        'about:blank',
+      ],
+      {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        windowsHide: true,
+      },
+    ),
+    'Headless browser',
   );
+  const logPath = path.join(evidenceDir, 'browser.log');
+  const logLines = [];
+  const append = (chunk) => {
+    logLines.push(chunk.toString());
+    writeFileSync(logPath, logLines.join(''));
+  };
+  child.stdout?.on('data', append);
+  child.stderr?.on('data', append);
+  return child;
 }
 
 class CdpClient {
@@ -334,17 +416,49 @@ class CdpClient {
     this.pending = new Map();
     this.ws = new WebSocket(wsUrl);
     this.ready = new Promise((resolve, reject) => {
-      this.ws.addEventListener('open', resolve, { once: true });
-      this.ws.addEventListener('error', reject, { once: true });
+      const timeout = setTimeout(
+        () =>
+          reject(
+            new Error(`Timed out opening the browser CDP socket after ${cdpCommandTimeoutMs}ms.`),
+          ),
+        cdpCommandTimeoutMs,
+      );
+      this.ws.addEventListener(
+        'open',
+        () => {
+          clearTimeout(timeout);
+          resolve();
+        },
+        { once: true },
+      );
+      this.ws.addEventListener(
+        'error',
+        () => {
+          clearTimeout(timeout);
+          reject(new Error('The browser CDP socket failed before opening.'));
+        },
+        { once: true },
+      );
     });
     this.ws.addEventListener('message', (event) => this.handleMessage(event));
+    this.ws.addEventListener('close', () => this.rejectPending('The browser CDP socket closed.'));
+    this.ws.addEventListener('error', () => this.rejectPending('The browser CDP socket failed.'));
+  }
+
+  rejectPending(message) {
+    for (const { reject, timeout } of this.pending.values()) {
+      clearTimeout(timeout);
+      reject(new Error(message));
+    }
+    this.pending.clear();
   }
 
   handleMessage(event) {
     const message = JSON.parse(event.data.toString());
     if (message.id && this.pending.has(message.id)) {
-      const { reject, resolve } = this.pending.get(message.id);
+      const { reject, resolve, timeout } = this.pending.get(message.id);
       this.pending.delete(message.id);
+      clearTimeout(timeout);
 
       if (message.error) {
         reject(new Error(`${message.error.message}: ${message.error.data ?? ''}`));
@@ -363,12 +477,23 @@ class CdpClient {
     this.nextId += 1;
 
     return await new Promise((resolve, reject) => {
-      this.pending.set(id, { reject, resolve });
-      this.ws.send(JSON.stringify({ id, method, params }));
+      const timeout = setTimeout(() => {
+        this.pending.delete(id);
+        reject(new Error(`Timed out waiting for browser CDP method ${method}.`));
+      }, cdpCommandTimeoutMs);
+      this.pending.set(id, { reject, resolve, timeout });
+      try {
+        this.ws.send(JSON.stringify({ id, method, params }));
+      } catch (error) {
+        clearTimeout(timeout);
+        this.pending.delete(id);
+        reject(error);
+      }
     });
   }
 
   async close() {
+    this.rejectPending('The browser CDP client is closing.');
     await Promise.race([
       new Promise((resolve) => {
         if (this.ws.readyState >= WebSocket.CLOSING) {
@@ -383,8 +508,13 @@ class CdpClient {
   }
 }
 
-async function connectToPage() {
-  const targets = await readJson(`http://127.0.0.1:${debugPort}/json`);
+async function connectToPage(browser) {
+  const targets = await readJson(
+    `http://127.0.0.1:${debugPort}/json`,
+    30_000,
+    browser,
+    'Headless browser',
+  );
   const pageTarget = targets.find(
     (target) => target.type === 'page' && target.webSocketDebuggerUrl,
   );
@@ -738,13 +868,18 @@ async function run() {
   try {
     if (shouldStartServer) {
       server = startExpoServer();
-      await waitForUrl(baseUrl);
+      await waitForUrl(baseUrl, 120_000, server, 'Expo web');
     }
 
     const browserPath = findBrowserPath();
     browser = startBrowser(browserPath, userDataDir);
-    await readJson(`http://127.0.0.1:${debugPort}/json/version`);
-    client = await connectToPage();
+    await readJson(
+      `http://127.0.0.1:${debugPort}/json/version`,
+      30_000,
+      browser,
+      'Headless browser',
+    );
+    client = await connectToPage(browser);
     await client.send('Emulation.setDeviceMetricsOverride', {
       deviceScaleFactor: 2,
       height: viewport.height,

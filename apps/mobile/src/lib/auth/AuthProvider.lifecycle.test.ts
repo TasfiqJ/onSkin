@@ -99,6 +99,7 @@ const h = vi.hoisted(() => {
     checkAppleCredentialForSession: vi.fn<(_user: User) => Promise<AppleCheckResult>>(async () => ({
       status: 'not_applicable',
     })),
+    showRevenueCatInAppMessages: vi.fn(async (_userId: string) => {}),
     clearPersistedSession: vi.fn(async () => {}),
     fetchBarrier: vi.fn(),
     prepareLocalDataForSession: vi.fn(async () => ({ cleared: false, resetRoute: false })),
@@ -245,6 +246,7 @@ vi.mock('@/lib/iap/revenuecat', () => ({
   }),
   retryRevenueCatPublicationDrain: h.retryRevenueCatPublicationDrain,
   runRevenueCatResultWrite: h.runRevenueCatResultWrite,
+  showRevenueCatInAppMessages: h.showRevenueCatInAppMessages,
   subscribeToCustomerInfoUpdates: h.subscribeToCustomerInfoUpdates,
 }));
 vi.mock('@/lib/observability/safeLog', () => ({ devWarn: vi.fn() }));
@@ -662,6 +664,7 @@ beforeEach(() => {
     .mockImplementation(async (_result: unknown, write: () => Promise<void>) => write());
   h.saveVerifiedEntitlement.mockReset().mockImplementation(async (entitlement) => entitlement);
   h.setEntitlementQueryData.mockReset();
+  h.showRevenueCatInAppMessages.mockReset().mockResolvedValue(undefined);
 });
 
 afterEach(async () => {
@@ -1253,6 +1256,8 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
     expect(h.fetchBarrier).not.toHaveBeenCalled();
     expect(h.state.events.some((event) => event.startsWith('reserve:'))).toBe(false);
     expect(h.state.events.some((event) => event.startsWith('activate:'))).toBe(false);
+    expect(h.showRevenueCatInAppMessages).toHaveBeenCalledOnce();
+    expect(h.showRevenueCatInAppMessages).toHaveBeenCalledWith(USER_A);
   });
 
   it('checks Apple before reopening a transient inactive boundary', async () => {
@@ -1288,6 +1293,8 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
     expect(h.state.events).toContain('admission:resume');
     expect(h.auth.refreshSession).not.toHaveBeenCalled();
     expect(h.fetchBarrier).not.toHaveBeenCalled();
+    expect(h.showRevenueCatInAppMessages).toHaveBeenCalledOnce();
+    expect(h.showRevenueCatInAppMessages).toHaveBeenCalledWith(USER_A);
   });
 
   it('checks Apple before reacquiring remote authority after background', async () => {

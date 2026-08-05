@@ -4,6 +4,7 @@ const ORIGINAL_SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const ORIGINAL_SUPABASE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const ORIGINAL_APP_ENV = process.env.EXPO_PUBLIC_APP_ENV;
 const ORIGINAL_CUSTOM_PRO_GRANT_ENABLED = process.env.EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED;
+const ORIGINAL_IOS_WIN_BACK_ENABLED = process.env.EXPO_PUBLIC_IOS_WIN_BACK_ENABLED;
 const ORIGINAL_NATIVE_CAMERA_ENABLED = process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED;
 const ORIGINAL_NATIVE_OCR_ENABLED = process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED;
 const ORIGINAL_PHASE7_TREND_ENABLED = process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED;
@@ -18,6 +19,7 @@ async function loadEnvWith(overrides: {
   supabaseKey?: string;
   appEnv?: string;
   customProGrantEnabled?: string;
+  iosWinBackEnabled?: string;
   nativeCameraEnabled?: string;
   nativeOcrEnabled?: string;
   phase7TrendEnabled?: string;
@@ -31,6 +33,7 @@ async function loadEnvWith(overrides: {
   setEnv('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY', overrides.supabaseKey);
   setEnv('EXPO_PUBLIC_APP_ENV', overrides.appEnv);
   setEnv('EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED', overrides.customProGrantEnabled);
+  setEnv('EXPO_PUBLIC_IOS_WIN_BACK_ENABLED', overrides.iosWinBackEnabled);
   setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', overrides.nativeCameraEnabled);
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', overrides.nativeOcrEnabled);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', overrides.phase7TrendEnabled);
@@ -56,6 +59,7 @@ afterEach(() => {
   setEnv('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY', ORIGINAL_SUPABASE_PUBLISHABLE_KEY);
   setEnv('EXPO_PUBLIC_APP_ENV', ORIGINAL_APP_ENV);
   setEnv('EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED', ORIGINAL_CUSTOM_PRO_GRANT_ENABLED);
+  setEnv('EXPO_PUBLIC_IOS_WIN_BACK_ENABLED', ORIGINAL_IOS_WIN_BACK_ENABLED);
   setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', ORIGINAL_NATIVE_CAMERA_ENABLED);
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', ORIGINAL_NATIVE_OCR_ENABLED);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', ORIGINAL_PHASE7_TREND_ENABLED);
@@ -147,6 +151,18 @@ describe('env appEnvironment fail-closed behavior', () => {
 });
 
 describe('env boolean flags', () => {
+  it('keeps iOS win-back closed unless both public and source authorities enable it', async () => {
+    await expect(loadEnvWith({})).resolves.toMatchObject({
+      env: expect.objectContaining({ iosWinBackEnabled: false }),
+    });
+    await expect(loadEnvWith({ iosWinBackEnabled: 'true' })).resolves.toMatchObject({
+      env: expect.objectContaining({ iosWinBackEnabled: false }),
+    });
+    await expect(loadEnvWith({ iosWinBackEnabled: 'enabled' })).resolves.toMatchObject({
+      env: expect.objectContaining({ iosWinBackEnabled: false }),
+    });
+  });
+
   it('allows the custom Pro grant only in an explicit development runtime', async () => {
     await expect(
       loadEnvWith({ appEnv: 'development', customProGrantEnabled: 'true', dev: true }),

@@ -69,8 +69,8 @@ test('machine admission cannot be opened or extended', () => {
     mutate(snapshot, COM01A_SOURCE_PATHS.launchContract, (source) =>
       replaceRequired(
         source,
-        '"analyticsAllowed": false,\n    "disabledPathSideEffectsAllowed": false\n  },\n  "safetyConstraints"',
-        '"analyticsAllowed": false,\n    "disabledPathSideEffectsAllowed": false,\n    "fixtureOverride": true\n  },\n  "safetyConstraints"',
+        '"analyticsAllowed": false,\n    "disabledPathSideEffectsAllowed": false\n  }',
+        '"analyticsAllowed": false,\n    "disabledPathSideEffectsAllowed": false,\n    "fixtureOverride": true\n  }',
       ),
     ),
     /commerceAdmission must remain the exact literal-zero COM-01A machine contract/u,

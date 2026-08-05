@@ -51,6 +51,7 @@ import {
   resumeRevenueCatPublicationAdmission,
   retryRevenueCatPublicationDrain,
   runRevenueCatResultWrite,
+  showRevenueCatInAppMessages,
   subscribeToCustomerInfoUpdates,
 } from '@/lib/iap/revenuecat';
 import { devWarn } from '@/lib/observability/safeLog';
@@ -1884,6 +1885,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setInitializing(false);
           retrySessionRestoreRef.current = null;
           scheduleControlledSessionRefresh(current);
+          void showRevenueCatInAppMessages(current.user.id).catch(() => {});
           return;
         }
 
@@ -1928,6 +1930,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // in-flight purchase/restore ticket. A real background transition
           // closes commerce authority below.
           scheduleControlledSessionRefresh(published);
+          void showRevenueCatInAppMessages(published.user.id).catch(() => {});
           return;
         }
         void resumeForegroundPublication();

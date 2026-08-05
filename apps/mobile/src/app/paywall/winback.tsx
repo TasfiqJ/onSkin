@@ -16,10 +16,11 @@ import { planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
+import { env } from '@/lib/env';
 import { colors } from '@/theme/tokens';
 
-// Honest win-back (design 09, docs/08 §6). Value restated, a respectful 30%-off
-// offer, an easy "no". Sparse, ARL-clean, never pressuring. Dark surface.
+// PAY-08 keeps the ordinary current-plan path neutral. Welcome-back copy and
+// pricing are admitted only for an exact SDK offer in an explicitly enabled build.
 const BG = '#1B1813';
 
 export default function WinbackScreen() {
@@ -28,11 +29,17 @@ export default function WinbackScreen() {
   const { winback } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
-  const offer = offering.data?.winBack ?? null;
-  const canWinBack = offering.data?.status === 'available' && offer?.canPurchase;
+  const eligibleOffer =
+    env.iosWinBackEnabled &&
+    offering.data?.status === 'available' &&
+    offering.data.winBack?.canPurchase === true
+      ? offering.data.winBack
+      : null;
+  const canWinBack = eligibleOffer !== null;
+  const winBackCopy = canWinBack ? PAYWALL_COPY.winback.offer : PAYWALL_COPY.winback.currentPlan;
   const annualDisplay = planPriceDisplay('annual', offering.data);
-  const unavailableOfferCopy =
-    'A native welcome-back offer is not available on this account. You can still choose the current Pro plan.';
+  const fallbackActionCopy =
+    'No welcome-back offer is available. You can still review the standard Pro options.';
   const tallTextPressurePaywall =
     width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPaywall = height < 640 || tallTextPressurePaywall;
@@ -79,7 +86,7 @@ export default function WinbackScreen() {
         }}
       >
         <Text variant="label" style={{ color: 'rgba(244,239,231,0.5)', letterSpacing: 2 }}>
-          {PAYWALL_COPY.winback.eyebrow.toUpperCase()}
+          {winBackCopy.eyebrow.toUpperCase()}
         </Text>
         <Text
           variant="display"
@@ -90,7 +97,7 @@ export default function WinbackScreen() {
             lineHeight: compactPaywall ? 37 : 43,
           }}
         >
-          {PAYWALL_COPY.winback.title}
+          {winBackCopy.title}
         </Text>
         <Text
           variant="body"
@@ -101,7 +108,7 @@ export default function WinbackScreen() {
             fontSize: compactPaywall ? 15 : undefined,
           }}
         >
-          {PAYWALL_COPY.winback.body}
+          {winBackCopy.body}
         </Text>
         <View
           className={compactPaywall ? 'mt-4 rounded-card p-4' : 'mt-6 rounded-card p-5'}
@@ -110,30 +117,30 @@ export default function WinbackScreen() {
           <View className="flex-row items-center justify-between">
             <View>
               <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.55)' }}>
-                {PAYWALL_COPY.winback.offerLabel}
+                {winBackCopy.priceLabel}
               </Text>
               <View className="mt-1 flex-row items-baseline gap-2">
                 <Text variant="title" style={{ color: colors.cream, fontSize: 28 }}>
-                  {offer?.priceLabel ?? annualDisplay.priceLabel}
+                  {eligibleOffer?.priceLabel ?? annualDisplay.priceLabel}
                 </Text>
-                {offer?.originalPriceLabel ? (
+                {eligibleOffer?.originalPriceLabel ? (
                   <Text
                     variant="bodySm"
                     style={{ color: 'rgba(244,239,231,0.45)', textDecorationLine: 'line-through' }}
                   >
-                    {offer.originalPriceLabel}
+                    {eligibleOffer.originalPriceLabel}
                   </Text>
                 ) : null}
                 <Text variant="bodySm" style={{ color: colors.clayBright }}>
-                  {offer?.periodLabel
-                    ? `/ ${offer.periodLabel}`
+                  {eligibleOffer?.periodLabel
+                    ? `/ ${eligibleOffer.periodLabel}`
                     : annualDisplay.periodLabel
                       ? `/ ${annualDisplay.periodLabel}`
                       : ''}
                 </Text>
               </View>
             </View>
-            {offer?.percentOff ? (
+            {eligibleOffer?.percentOff ? (
               <View
                 className="rounded-pill px-3 py-1.5"
                 style={{ backgroundColor: 'rgba(217,161,131,0.2)' }}
@@ -143,7 +150,7 @@ export default function WinbackScreen() {
                   className="font-sans-bold"
                   style={{ color: colors.clayBright, fontSize: 11 }}
                 >
-                  {offer.percentOff}% off
+                  {eligibleOffer.percentOff}% off
                 </Text>
               </View>
             ) : null}
@@ -163,7 +170,7 @@ export default function WinbackScreen() {
               lineHeight: compactPaywall ? 15 : 16,
             }}
           >
-            {unavailableOfferCopy}
+            {fallbackActionCopy}
           </Text>
         ) : null}
         <PaywallFeedback
@@ -180,7 +187,7 @@ export default function WinbackScreen() {
           style={{ backgroundColor: colors.cream }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.ink, fontSize: 16 }}>
-            {canWinBack ? PAYWALL_COPY.winback.cta : 'See current Pro plan'}
+            {winBackCopy.cta}
           </Text>
         </Pressable>
         <Pressable
@@ -192,7 +199,7 @@ export default function WinbackScreen() {
             className="font-sans-semibold"
             style={{ color: 'rgba(244,239,231,0.5)', fontSize: 15 }}
           >
-            {PAYWALL_COPY.winback.declineCta}
+            {winBackCopy.declineCta}
           </Text>
         </Pressable>
       </View>

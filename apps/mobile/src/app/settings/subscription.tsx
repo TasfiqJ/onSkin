@@ -12,6 +12,7 @@ import { useEntitlement, useEntitlementActions } from '@/features/subscription/u
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
+import { env } from '@/lib/env';
 import {
   MANAGE_SUBSCRIPTION_URL_ANDROID,
   MANAGE_SUBSCRIPTION_URL_IOS,
@@ -98,6 +99,17 @@ export default function SubscriptionScreen() {
   const upgradeCtaLabel = supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;
   const restoreLabel = supportFloorSubscription ? 'Restore' : PAYWALL_COPY.manage.restoreRow;
   const isPro = data?.isPro ?? false;
+  const eligibleWinBackOffer =
+    env.iosWinBackEnabled &&
+    offering.data?.status === 'available' &&
+    offering.data.winBack?.canPurchase === true;
+  const expiredPlanCta = eligibleWinBackOffer
+    ? PAYWALL_COPY.winback.offer.settingsCta
+    : PAYWALL_COPY.winback.currentPlan.settingsCta;
+
+  function openExpiredPlanOptions() {
+    router.push(eligibleWinBackOffer ? '/paywall/winback' : '/paywall/upsell?feature=full_routine');
+  }
 
   async function openStore() {
     setSubscriptionFeedback(null);
@@ -390,11 +402,11 @@ export default function SubscriptionScreen() {
             {data?.expired ? (
               <Pressable
                 accessibilityRole="button"
-                onPress={() => router.push('/paywall/winback')}
+                onPress={openExpiredPlanOptions}
                 className="mt-4 min-h-[48px] items-center justify-center py-2"
               >
                 <Text variant="body" tone="clay" className="font-sans-semibold">
-                  See your welcome-back offer →
+                  {expiredPlanCta} →
                 </Text>
               </Pressable>
             ) : null}

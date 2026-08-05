@@ -5,6 +5,8 @@
  * boots and the wiring is visible, rather than crashing.
  */
 
+import { resolveIosWinBackEnabled } from '@/features/subscription/winBackCommercialState';
+
 const PLACEHOLDER = '__BLOCKED_PLACEHOLDER__';
 const SUPABASE_URL_PLACEHOLDER = 'https://blocked-supabase-url.invalid';
 const SUPABASE_EXAMPLE_URL = 'https://YOUR-PROJECT-ref.supabase.co';
@@ -156,6 +158,9 @@ export const env = {
   revenueCatIosKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY ?? '',
   revenueCatAndroidKey: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY ?? '',
   revenueCatEntitlementId: process.env.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID ?? 'pro',
+  iosWinBackEnabled: resolveIosWinBackEnabled(
+    readBooleanEnv(process.env.EXPO_PUBLIC_IOS_WIN_BACK_ENABLED),
+  ),
   revenueCatAnnualProductId:
     process.env.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID?.trim() ||
     REVENUECAT_DEFAULT_PRODUCT_IDS.annual,

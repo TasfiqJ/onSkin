@@ -90,6 +90,7 @@ const APP_ENV_KEYS = [
   'APP_VARIANT',
   'EXPO_PUBLIC_APP_ENV',
   'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED',
+  'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED',
   'BRAND_LEGAL_CLEARANCE',
   'PHASE3_RELEASE_CLEARANCE',
   'EXPORT_COMPLIANCE_CLEARANCE',
@@ -728,6 +729,33 @@ describe('Expo app identity config', () => {
         }),
       ).toThrow(/CUSTOM_PRO_GRANT_ENABLED may be true only for a development build/);
     }
+  });
+
+  it('rejects iOS win-back enablement in every build while PAY-08 admission is closed', () => {
+    for (const variant of ['development', 'staging', 'production'] as const) {
+      expect(() =>
+        buildExpoConfig({
+          APP_VARIANT: variant,
+          EXPO_PUBLIC_APP_ENV: variant,
+          EXPO_PUBLIC_IOS_WIN_BACK_ENABLED: 'true',
+        }),
+      ).toThrow(/launch contract does not admit an iOS win-back offer/);
+    }
+  });
+
+  it('pins every EAS build profile to the PAY-08 no-offer state', () => {
+    const eas = JSON.parse(readFileSync(EAS_CONFIG_PATH, 'utf8')) as {
+      build: Record<string, { env?: Record<string, string> }>;
+    };
+    for (const [profile, config] of Object.entries(eas.build)) {
+      expect(config.env?.EXPO_PUBLIC_IOS_WIN_BACK_ENABLED, profile).toBe('false');
+    }
+  });
+
+  it('rejects malformed iOS win-back build variables', () => {
+    expect(() => buildExpoConfig({ EXPO_PUBLIC_IOS_WIN_BACK_ENABLED: 'enabled' })).toThrow(
+      /EXPO_PUBLIC_IOS_WIN_BACK_ENABLED must be true or false/,
+    );
   });
 
   it('allows counsel-cleared legacy identity only when explicitly supplied', () => {

@@ -20,11 +20,31 @@ Required dashboard configuration:
 - Webhook Authorization header: set to `REVENUECAT_WEBHOOK_AUTH` as defense in depth
 
 Launch win-back posture follows the approved PAY-01 commercial state. The
-current recommendation is **no win-back offer configured at launch**: discovery
-must return unavailable and route to the standard Pro offer without inventing a
-discount. If a later founder-approved native Apple win-back offer is enabled,
-reopen PAY-08 and verify eligibility, localized price, purchase, renewal, and
-fallback on supported iOS versions before release.
+versioned PAY-08 source admission is closed: every EAS profile sets
+`EXPO_PUBLIC_IOS_WIN_BACK_ENABLED=false`, app config rejects true, ordinary
+offering retrieval skips win-back eligibility discovery, win-back purchase
+returns before RevenueCat/provider calls, and unavailable UI routes to the
+ordinary localized Pro offer without inventing a discount. RevenueCat
+automatic in-app messages are disabled; the explicit allowlist retains billing
+issue, price increase consent, and generic messages while excluding win-back.
+An exact already-bound user retries that allowlist on a retained
+inactive-to-active foreground transition; a transient presentation failure does
+not reconfigure identity or invalidate cached offerings. `WIN_BACK_OFFER` is
+added only when reviewed admission and the iOS platform check are both positive,
+and dedicated win-back purchase code returns unavailable on non-iOS before any
+provider configuration, offering, eligibility, or purchase call.
+
+This source posture cannot prove the App Store Connect dashboard contains no
+offer. Apple may merchandise an already-configured eligible offer in Manage
+Subscriptions or the App Store independently of app-owned UI. Before production,
+retain exact-product, exact-subscription-group, and exact-storefront App Store
+Connect evidence showing no configured or active win-back offer, plus matching
+RevenueCat configuration and final-build evidence. PAY-08 remains live-blocked
+until those records and the physical-iPhone sandbox/TestFlight matrix exist. If
+a later native Apple offer is proposed, reopen PAY-08, version the positive
+admission, and verify exact eligibility, localized price, purchase, renewal,
+expiry, restore, interruption, offline behavior, and fallback on supported iOS
+versions before release.
 
 Production environment:
 
@@ -32,6 +52,7 @@ Production environment:
 - `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` only when Android becomes a
   contract-required release platform
 - `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID=pro`
+- `EXPO_PUBLIC_IOS_WIN_BACK_ENABLED=false` while PAY-08 admission is closed
 - `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID`
 - `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`
 - `REVENUECAT_WEBHOOK_AUTH`, a 32-256 character ASCII letters/digits/\_/- shared

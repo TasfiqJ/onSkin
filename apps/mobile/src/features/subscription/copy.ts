@@ -147,14 +147,26 @@ export const PAYWALL_COPY = {
     renewCta: 'Renew Pro',
     declineCta: 'Keep using free',
   },
-  // Honest win-back (design 09, docs/08 §6).
+  // PAY-08 current-plan fallback plus separately admitted native offer copy.
   winback: {
-    eyebrow: 'A month later',
-    title: 'Here’s what your timeline could show by autumn.',
-    body: 'Skin rewards consistency. If you’d like to pick it back up, we kept your place.',
-    offerLabel: 'A welcome-back offer',
-    cta: 'Come back to Pro',
-    declineCta: 'No thanks',
+    currentPlan: {
+      eyebrow: 'Pro options',
+      title: 'See the standard Pro options.',
+      body: 'Review the annual Pro option. App Store confirms the final price before purchase.',
+      priceLabel: 'Annual Pro option',
+      cta: 'See standard Pro options',
+      settingsCta: 'See standard Pro options',
+      declineCta: 'Not now',
+    },
+    offer: {
+      eyebrow: 'Welcome back',
+      title: 'A welcome-back offer is available.',
+      body: 'Review your eligible App Store offer before choosing whether to return to Pro.',
+      priceLabel: 'Eligible App Store offer',
+      cta: 'Continue with this offer',
+      settingsCta: 'See your welcome-back offer',
+      declineCta: 'Not now',
+    },
   },
   // The trial-end pre-charge reminder content (delivered by doc 7; docs/08 §6).
   trialReminder: {

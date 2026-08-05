@@ -17,7 +17,8 @@
         "EXPO_PUBLIC_APP_ENV": "development",
         "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
         "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
-        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false"
+        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false",
+        "EXPO_PUBLIC_IOS_WIN_BACK_ENABLED": "false"
       }
     },
     "staging": {
@@ -31,7 +32,8 @@
         "EXPO_PUBLIC_APP_ENV": "staging",
         "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
         "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
-        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "true"
+        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "true",
+        "EXPO_PUBLIC_IOS_WIN_BACK_ENABLED": "false"
       }
     },
     "production": {
@@ -46,7 +48,8 @@
         "EXPO_PUBLIC_APP_ENV": "production",
         "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
         "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
-        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false"
+        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false",
+        "EXPO_PUBLIC_IOS_WIN_BACK_ENABLED": "false"
       }
     }
   },

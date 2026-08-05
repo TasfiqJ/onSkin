@@ -60,6 +60,12 @@ const h = vi.hoisted(() => {
   };
   const purchases = {
     ENTITLEMENT_VERIFICATION_MODE: { INFORMATIONAL: 'INFORMATIONAL' },
+    IN_APP_MESSAGE_TYPE: {
+      BILLING_ISSUE: 0,
+      PRICE_INCREASE_CONSENT: 1,
+      GENERIC: 2,
+      WIN_BACK_OFFER: 3,
+    },
     LOG_LEVEL: { DEBUG: 'DEBUG', WARN: 'WARN' },
     PURCHASES_ERROR_CODE: { PURCHASE_CANCELLED_ERROR: 'PURCHASE_CANCELLED_ERROR' },
     addCustomerInfoUpdateListener: vi.fn(),
@@ -72,6 +78,7 @@ const h = vi.hoisted(() => {
     logIn: vi.fn(async () => ({ created: false })),
     removeCustomerInfoUpdateListener: vi.fn(),
     setLogLevel: vi.fn(async () => {}),
+    showInAppMessages: vi.fn(async (_messageTypes?: number[]) => {}),
   };
   return {
     appState,
