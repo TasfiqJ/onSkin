@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-08-04T22:04:46.453Z
+Generated: 2026-08-05T05:59:00.921Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 53
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 3388
+- Hash references checked: 3428
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -29,11 +29,11 @@ being treated as trustworthy launch evidence.
 | docs/phase-10/generated/support-handoff-packet.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 42        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 445       | 0               |
+| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 454       | 0               |
 | docs/phase-3/generated/review-operator-queue.md           | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 395       | 0               |
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 449       | 0               |
+| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 458       | 0               |
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 62        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |
@@ -47,7 +47,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 235       | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 174       | 0               |
+| docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 196       | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 275       | 0               |
 | docs/phase-7/generated/core-loop-qa-packet.md             | md   | 0                  | 0                          | 0         | 0               |
