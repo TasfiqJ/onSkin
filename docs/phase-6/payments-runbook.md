@@ -82,8 +82,8 @@ closed. Only the packet's own two generated outputs are excluded from status.
 ## Entitlement Truth
 
 RevenueCat is the source of truth for store purchases. Supabase mirrors only
-RevenueCat authority into `public.entitlements`; the one-time local reverse
-trial remains in `public.reverse_trial_grants`. Authenticated clients call the
+RevenueCat authority into `public.entitlements`; the one-time server app grant
+remains in `public.reverse_trial_grants`. Authenticated clients call the
 no-argument `read_entitlement_projections()` RPC, which derives `auth.uid()` and
 returns both lanes in one schema-versioned object. The mobile AsyncStorage
 entitlement is a cache only.
@@ -98,19 +98,43 @@ Forbidden production behavior:
 
 - Local trial grants
 - Local paid grants
-- Client E2E entitlement fixtures or artificial entitlement delays outside
-  development builds
+- Client-created reverse-trial entitlements in every environment
+- Positive entitlement fixtures or artificial entitlement delays in the
+  shared/default/native module; the only permitted positive visual fixture is
+  the platform-resolved Expo web development module
+- `NOT_REQUESTED` RevenueCat data admitted as positive entitlement evidence
+- Direct or stale `/paywall/success` navigation treated as proof of a purchase,
+  trial, renewal, price, expiry, or Pro unlock; cached, pending, failed, expired,
+  stale-verification, or incomplete-authority data must show recovery
 - Win-back grants without a native eligible offer
 - Test Store key in production
 - Purchase CTA enabled when the current offering is missing
 
-## Reverse Trial
+## Custom App Grant (disabled in the iOS release candidate)
 
-The no-card reverse trial is granted by `supabase/functions/subscription-grants`.
+Production/staging app configuration rejects the custom full-Pro grant flag,
+onboarding exposes a real free-plan continuation instead, contextual grant UI is
+development-only and explicit, and the runtime refuses the grant before any
+network call unless that development exception is active. The Edge Function
+also refuses before authentication unless `APP_ENV=development` and
+`SUPABASE_URL` is an exact HTTP loopback origin with an explicit port. Hosted
+Supabase URLs are denied even if their environment is mislabeled development.
+The retained backend authority is therefore dormant future-exception code, not
+an active hosted release mechanism.
+
+If a separately reviewed future exception is pursued,
+`supabase/functions/subscription-grants` remains the only grant authority and
+must satisfy all rules below:
 
 Rules:
 
 - Authenticated users only
+- Edge runtime is explicitly development and bound to an exact HTTP loopback
+  Supabase origin with an explicit port; production, staging, hosted,
+  malformed, credential-bearing, path-bearing, and non-loopback URLs fail
+  closed before authentication or service-role work
+- Supabase must be configured and the exact server response must be accepted;
+  the client never fabricates or persists a fallback grant
 - One grant per user in `reverse_trial_grants`
 - 7 days of Pro
 - `will_renew=false`
@@ -135,6 +159,89 @@ Historical store rows with no trustworthy provider cursor fail closed as
 accepts no caller fields, fetches bounded RevenueCat v1 CustomerInfo for the
 JWT-derived user, requires a fresh provider `request_date`, and invokes the
 service-only snapshot RPC. It never substitutes Edge/database processing time.
+
+RevenueCat `VERIFIED` evidence is definitive. `VERIFIED_ON_DEVICE` remains a
+positive-only provisional lane and cannot advance an empty/inactive watermark.
+`FAILED` and `NOT_REQUESTED` are rejected. RevenueCat provider promotions retain
+the `promotional` store lane and never become `app_granted` authority. Here
+`promotional` means a RevenueCat-granted out-of-store, non-billing entitlement;
+it is not an Apple/StoreKit promotional offer and never supports a purchase,
+price, conversion, or renewal claim.
+
+### Trusted Entitlements operational gate
+
+The exact production build must keep RevenueCat response-signature verification
+enabled before it can admit store access. Current RevenueCat SDKs enable Trusted
+Entitlements by default, and this app also explicitly configures informational
+verification; this is an SDK/build control, not a claimed dashboard switch.
+Retain the exact SDK/version/configuration evidence and sandbox/TestFlight
+purchase plus Restore artifacts showing `VERIFIED` or `VERIFIED_ON_DEVICE` for
+the exact app user, product, build, and timestamp. Exercise invalid verification
+and cache invalidation behavior. `NOT_REQUESTED` means verification was not
+requested and is deliberately denied; a source-only rejection test does not
+prove the signed candidate runs the expected path. If verification is
+unavailable or fails, keep Pro closed, show recovery, preserve the transaction
+journal, and direct the user to Restore or support without offering another
+charge.
+
+Create the retained record from
+`docs/phase-6/revenuecat-trusted-entitlements-evidence.template.json`, then set
+`PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH` to that committed
+repo-relative file. Set
+`PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA` to the full immutable Git
+commit used to build the reviewed binary. That commit must exist locally and be
+an ancestor of the later packet/evidence HEAD. The gate reads `revenuecat.ts`
+and `package-lock.json` from the source commit, derives the configured
+`INFORMATIONAL` mode and installed SDK version, and compares those values to the
+record. This source commit intentionally predates the commit that adds evidence;
+binding the record to its own containing HEAD would be self-referential. The
+commit range from reviewed source through packet HEAD may contain only
+added/modified governed Trusted Entitlements records/artifacts and Phase 6
+generated packet outputs. Any deletion, rename, or unrelated source/docs change
+requires a new reviewed build and source commit.
+
+For each sandbox/TestFlight purchase and Restore observation, retain one
+separate redacted source artifact under
+`docs/phase-6/revenuecat-trusted-entitlements-artifacts/<release>/` and record its
+repo-relative path and SHA-256 in the observation. Use four unique direct regular
+non-symlink files; the validator hashes their actual bytes, while the packet
+requires the record and all four artifacts to be committed and byte-equal to
+packet HEAD. Purchase and Restore within an environment must bind the same
+app-user ID hash and product. Hash app-user IDs with SHA-256 and redact raw IDs,
+tokens, receipts, and secrets from retained logs/screenshots. The gate decodes
+text/JSON/log artifacts as UTF-8 and rejects secret-like, control-character, and
+placeholder content; binary screenshots remain subject to reviewer redaction.
+Observations and review must be no more than 30 days old.
+`PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS=true` is only a review attestation
+and cannot replace the record or its four retained source artifacts.
+
+Before showing any free-trial language, the iOS client also calls RevenueCat's
+per-product introductory-offer eligibility API. Only exact `ELIGIBLE` results
+may expose trial duration/copy; unknown, ineligible, no-offer, and failed checks
+must show ordinary subscription checkout language.
+
+### Apple classification gate for the custom app grant
+
+The server-only boundary prevents a compromised or misconfigured client from
+minting Pro; it does not establish that the underlying custom no-card Pro grant
+is acceptable for App Store distribution. Apple App Review Guideline 3.1.1
+requires in-app purchase for feature/functionality unlocks, while 3.1.2 and App
+Store Connect define introductory free trials for auto-renewable subscriptions.
+The current iOS release candidate uses the StoreKit subscription path (including
+an Apple-managed introductory offer when configured) and disables the custom
+grant. If a future exception is pursued, record qualified counsel analysis, any
+Apple correspondence, and separately reviewed server-verified App
+Attest/DeviceCheck, cross-account/device
+eligibility, replay resistance, and rate limits. Counsel and correspondence are
+inputs, not App Review approval or a guarantee. Only Apple's acceptance of the
+exact submitted build for App Store distribution with that mechanism present
+resolves this gate; fraud controls do not resolve the payment-policy question.
+
+References: [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/),
+[Apple introductory offers](https://developer.apple.com/help/app-store-connect/manage-subscriptions/set-up-introductory-offers-for-auto-renewable-subscriptions/),
+[Expo platform-specific modules](https://docs.expo.dev/router/advanced/platform-specific-modules/),
+[Expo environment variables](https://docs.expo.dev/guides/environment-variables/), and
+[RevenueCat Trusted Entitlements](https://www.revenuecat.com/docs/customers/trusted-entitlements).
 
 ## Webhook Verification
 

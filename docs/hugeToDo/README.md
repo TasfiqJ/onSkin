@@ -11,6 +11,8 @@ Start here:
 - [Founder Enrollment and External Gates Packet](./FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md)
 - [Apple Review Feature Acceptance Matrix](./APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md)
 - [PAY-01 Pricing and Unit-Economics Recommendation](./PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md)
+- [PAY-06 Entitlement Authority Lanes](./PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md)
+- [PAY-07 Entitlement Admission Source Checkpoint](./PAY-07-ENTITLEMENT-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md)
 - [Accounts and Vendor Decision Packet](./ACCOUNTS_AND_VENDOR_DECISION_PACKET.md)
 - [DB-01–DB-11 Gap Matrix](./DB-01-11-GAP-MATRIX-2026-07-13.md)
 - [DB-05 Credential-Free Local Reset Evidence](./DB-05-LOCAL-RESET-2026-07-14.md)
@@ -203,14 +205,14 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260726000071`; the current CAT-03 pgTAP source plan contains 99
+head `20260729000072`; the current CAT-03 pgTAP source plan contains 99
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, hosted
-governed full-chain evidence through `0071`, current signed database readback,
+governed full-chain evidence through `0072`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and
 no Apple, legal, product-quality, market, or revenue outcome is implied. The
 exact disposable local `0071` gate now passes, including CAT-03 99/99 within the
@@ -768,8 +770,9 @@ immutable draft-to-draft health-consent copy transition and grants no release
 authority; and `0071` adds the CORE-06A database zero-admission boundary,
 purges the untrusted recommendation cache, keeps product eligibility closed,
 revokes unused runtime privileges, and exposes only the bounded owner preference
-writer. The repository therefore contains 70 migrations through
-`20260726000071`.
+writer. `0072` adds the literal-zero COM-01A commerce-admission boundary and
+retires the stale poller authority. The repository therefore contains 71
+migrations through `20260729000072`.
 
 On 2026-07-29, `npm run phase2:db-local-verify` exited 0 against the complete
 70-migration chain through `20260726000071`: all four forward cutovers
@@ -786,10 +789,13 @@ is disposable local PostgreSQL 15 source evidence only; it does not prove
 hosted staging/production, generated-type parity or replacement, live
 role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
 compatibility, device behavior, professional approval, or release readiness.
+That recorded run predates `0072`; the current runner expects the exact
+71-migration chain, but no fresh complete `0072` current-head replay is claimed
+by this paragraph.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now binds all 70 migrations through
-`0071`, all 17 Edge functions, an active traffic/provider freeze, and an
+`ACCT-03`. The fresh-only source procedure now binds all 71 migrations through
+`0072`, all 17 Edge functions, an active traffic/provider freeze, and an
 immediate pre-push reread of functions, public frozen responses, hosted Auth
 controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

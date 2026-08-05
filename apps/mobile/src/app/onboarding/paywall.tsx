@@ -19,13 +19,11 @@ import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
-// 10 · Onboarding offer. Two honest paths (docs/08 §3.1, design 01). "Start free
-// trial" (the committed path → carded 14-day trial) AND a visible "Explore first"
-// (→ the app-granted 7-day reverse trial, no card). Annual pre-selected, the billed
-// amount most conspicuous, no trial toggle, Terms/Privacy/Restore present, trust
-// block below the plans (Apple 3.1.2). Store purchase opens RevenueCat when an
-// offering is available; previews fail closed while the no-card reverse trial remains
-// a server/app-granted entitlement.
+// 10 · Onboarding offer. Two honest paths (docs/08 §3.1, design 01): the native
+// StoreKit subscription/introductory-offer path and a visible free-plan path.
+// The custom no-card full-Pro grant is absent from the iOS release UI. Annual is
+// pre-selected, the billed amount is conspicuous, and Terms/Privacy/Restore
+// remain visible (Apple 3.1.2).
 function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
   return (
     <View className={cn('flex-row items-center', compact ? 'gap-2' : 'gap-3')}>
@@ -55,11 +53,15 @@ function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
 export default function PaywallScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const { goals, quizAnswers, profileResult, computeResult } = useOnboarding();
-  const { startTrial, startReverseTrial } = useEntitlementActions();
+  const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const hasEligibleIntroTrial = (annual?.trialDays ?? 0) > 0;
+  const primaryCtaLabel = hasEligibleIntroTrial
+    ? PAYWALL_COPY.offer.cta
+    : PAYWALL_COPY.offer.subscribeCta;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const monthlyDisplay = planPriceDisplay('monthly', offering.data);
   const monthlyEquivalent = annualDisplay.pricePerMonthLabel;
@@ -87,14 +89,9 @@ export default function PaywallScreen() {
     });
   }
 
-  function onStartReverseTrial() {
+  function onContinueFree() {
     setActionFeedback(null);
-    startReverseTrial.mutate(undefined, {
-      onSuccess: (result) => {
-        if (result.active) router.replace('/routine/plan');
-      },
-      onError: () => setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable),
-    });
+    router.replace('/(tabs)/today');
   }
 
   useEffect(() => {
@@ -240,7 +237,7 @@ export default function PaywallScreen() {
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
-            {PAYWALL_COPY.offer.cta}
+            {primaryCtaLabel}
           </Text>
         </Pressable>
         <Text
@@ -249,14 +246,15 @@ export default function PaywallScreen() {
           className={compactPaywall ? 'mt-1 text-center' : 'mt-2.5 text-center'}
           style={compactPaywall ? { fontSize: 11, lineHeight: 14 } : undefined}
         >
-          {PAYWALL_COPY.offer.trialReassurance}
+          {hasEligibleIntroTrial
+            ? PAYWALL_COPY.offer.trialReassurance
+            : PAYWALL_COPY.offer.subscriptionReassurance}
         </Text>
 
-        {/* the second honest path. The reverse trial */}
+        {/* The non-purchase path remains visible and grants no Pro authority. */}
         <Pressable
           accessibilityRole="button"
-          disabled={startReverseTrial.isPending}
-          onPress={onStartReverseTrial}
+          onPress={onContinueFree}
           className={
             compactPaywall
               ? 'mt-1.5 flex-row items-center gap-2 rounded-card px-3 py-2'
@@ -288,7 +286,7 @@ export default function PaywallScreen() {
                 lineHeight: compactPaywall ? 16 : undefined,
               }}
             >
-              {PAYWALL_COPY.offer.exploreTitle}
+              {PAYWALL_COPY.offer.continueFreeTitle}
             </Text>
             <Text
               variant="label"
@@ -298,7 +296,7 @@ export default function PaywallScreen() {
                 lineHeight: compactPaywall ? 13 : undefined,
               }}
             >
-              {PAYWALL_COPY.offer.exploreBody}
+              {PAYWALL_COPY.offer.continueFreeBody}
             </Text>
           </View>
           <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
@@ -316,7 +314,9 @@ export default function PaywallScreen() {
           className="px-2 text-center"
           style={{ fontSize: 10.5, lineHeight: 15 }}
         >
-          {PAYWALL_COPY.offer.autoRenewDisclosure}
+          {hasEligibleIntroTrial
+            ? PAYWALL_COPY.offer.autoRenewDisclosure
+            : PAYWALL_COPY.offer.subscriptionDisclosure}
         </Text>
 
         {/* trust block. Below the plans (Flo pattern) */}

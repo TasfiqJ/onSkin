@@ -55,6 +55,30 @@ rights, contracts, or disclosures. These source controls and reviews cannot
 guarantee App Store acceptance, legal compliance, safety, product-market fit,
 or revenue.
 
+## 0.2 PAY-07 Entitlement Admission Source Checkpoint
+
+[Decision] The default and safest iOS release path uses an Apple-managed
+introductory offer configured in App Store Connect. The custom server-issued
+full-Pro no-card reverse trial is a conditional future mechanism, not an
+approved launch decision, and must remain disabled in the release candidate
+unless qualified counsel review, Apple correspondence if obtainable, reviewed
+anti-abuse controls, and exact hosted-authority evidence exist, and Apple accepts
+the exact submitted build for App Store distribution with the mechanism
+present. Counsel, correspondence, controls, evidence, and any prior review do
+not guarantee that acceptance.
+
+[Confirmed] PAY-07 is a source-hardening checkpoint, not live payment or release
+approval. Client-created reverse-trial grants are removed, positive entitlement
+fixtures are confined to Expo web development, unverified RevenueCat positives
+are rejected, and purchase-success claims fail closed without fresh exact
+authority. The Edge grant endpoint also refuses hosted, production, and staging
+projects before authentication, admitting only an explicit development runtime
+on an exact HTTP loopback Supabase origin. PAY-06 and PAY-07 remain incomplete
+pending production RevenueCat
+Trusted Entitlements, real StoreKit products and offering, hosted authority,
+sandbox/TestFlight and physical-iPhone lifecycle evidence, professional review,
+and Apple's independent App Review.
+
 ## 1. Executive Summary
 
 ### Final Project Name Recommendation
@@ -313,7 +337,7 @@ Test $29.99, $49.99, and $59.99 annual. Use actual checkout or paid-beta deposit
 | Paid tier       | Full routine, full conflict checks, progress, reminders, Ask depth                   |
 | Usage-based     | Avoid for consumer V1                                                                |
 | Team/enterprise | Later: esthetician/client routine planner                                            |
-| Best hypothesis | [Decision] $49.99/year annual-first, $8.99-$9.99 monthly anchor, 7-day reverse trial |
+| Best hypothesis | [Decision under uncertainty] $49.99/year annual-first, $8.99-$9.99 monthly anchor, Apple-managed introductory offer by default; no-card reverse trial only as a gated future exception |
 
 ### 3.10 Go / Narrow / Pivot / Stop
 
@@ -421,7 +445,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 | Competitor pricing | [Researched] HadaBuddy Pro is publicly listed at $3.99/month or $29.99/year. Think Dirty premium has been reported at $59.99/year. App Store competitors show IAP ranges. |
 | Likely model       | [Decision] Annual-first subscription                                                                                                                                      |
 | Free tier          | [Decision] Useful but limited shelf/routine preview                                                                                                                       |
-| Trial              | [Decision] 7-day reverse trial, then annual carded trial tests as needed                                                                                                  |
+| Trial              | [Decision] Apple-managed introductory offer by default; no-card reverse trial is a conditional future exception subject to the PAY-07 gates                                                                                                  |
 | Upgrade triggers   | First useful conflict, full routine unlock, unlimited checks, photo timeline, reminders                                                                                   |
 | Pricing risk       | HadaBuddy anchors low at $29.99/year; premium pricing must prove trust and retention                                                                                      |
 
@@ -629,7 +653,8 @@ Feature 6: Photo Progress
 
 Feature 7: Paywall And Entitlements
 
-- Feature summary: RevenueCat annual-first Pro with reverse trial.
+- Feature summary: RevenueCat annual-first Pro with an Apple-managed introductory
+  offer by default; the no-card reverse trial is a conditional future exception.
 - Priority: Must-have.
 - MVP inclusion: Yes.
 - Complexity: High.
@@ -780,7 +805,7 @@ Secondary routes:
 6. Analyzing/reveal.
 7. First useful shelf/routine insight.
 8. Today routine.
-9. Paywall after value or reverse trial.
+9. Paywall after value, with the Apple-managed introductory offer when eligible.
 
 ### Empty States
 
@@ -810,7 +835,8 @@ Expo mobile app
   -> local private storage for shelf, photos, completions
   -> central exact-session admission for authenticated Supabase requests
   -> Supabase Auth/Postgres/RLS for account, catalog, publication fences
-  -> separate RevenueCat entitlement and no-card reverse-trial projections
+  -> RevenueCat entitlement projection plus a dormant, separately gated
+     no-card reverse-trial projection for any future approved exception
   -> Supabase Edge Functions for deletion/export, webhook, grants, reconciliation
   -> RevenueCat SDK for IAP/subscriptions behind a durable transaction journal
   -> PostHog for consented analytics
@@ -978,11 +1004,17 @@ RoutineKind Pro:
 
 ### Trial Strategy
 
-- 7-day reverse trial with no card after onboarding value.
-- Optional store-backed 14-day trial test after RevenueCat live.
-- Keep the no-card grant in `reverse_trial_grants`; never write it into or revoke the
-  ordered RevenueCat `entitlements` projection. Read both through the owner-derived
-  no-argument projection RPC.
+- Default the iOS release candidate to an Apple-managed introductory offer
+  configured in App Store Connect after RevenueCat and the real Store products
+  are live.
+- Treat the 7-day no-card reverse trial as a conditional future exception, not
+  an approved launch mechanism. Keep it disabled unless the PAY-07 legal,
+  Apple-input, anti-abuse, hosted-authority, exact-build, and App Review gates
+  are satisfied.
+- If a future approved release retains the no-card grant, keep it in
+  `reverse_trial_grants`; never write it into or revoke the ordered RevenueCat
+  `entitlements` projection. Read both through the owner-derived no-argument
+  projection RPC.
 - On iOS, billing and cancellation copy names the App Store only. Purchase and restore
   admission is durably journaled so an unresolved native transaction blocks a repeat
   purchase and directs the user to restore instead.
@@ -1095,7 +1127,8 @@ Goal: test willingness to pay.
 Done criteria:
 
 - paywall after value
-- no-card reverse trial and RevenueCat entitlements remain independent
+- Apple-managed introductory-offer admission works; any future approved no-card
+  reverse-trial exception remains independent from RevenueCat entitlements
 - RevenueCat webhook ordering and bounded provider reconciliation work
 - durable purchase/restore journal prevents unsafe repeat transactions
 - PostHog funnel dashboard works

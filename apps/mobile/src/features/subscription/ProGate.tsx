@@ -4,6 +4,7 @@ import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'reac
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
+import { env } from '@/lib/env';
 import { colors } from '@/theme/tokens';
 import type { GatedFeature } from '@onskin/types';
 
@@ -74,7 +75,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         zIndex: 2,
       }
     : undefined;
-  const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
+  const showExploreFirst =
+    env.customProGrantEnabled && data ? canStartContextualReverseTrial(data) : false;
   const compactExploreCopyPaywall = supportedTextPressurePaywall || tallPhoneTextPressurePaywall;
   const exploreFirstTitle = compactExploreCopyPaywall
     ? 'Explore first'
@@ -131,13 +133,16 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     : copy.title;
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const hasEligibleIntroTrial = (annual?.trialDays ?? 0) > 0;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const priceIntroLabel = lapsedEntitlement ? 'Restore Pro for' : annualDisplay.introLabel;
   const primaryCtaLabel = lapsedEntitlement
     ? lapsedReverseTrial
       ? PAYWALL_COPY.reoffer.keepCta
       : PAYWALL_COPY.downgrade.renewCta
-    : PAYWALL_COPY.offer.cta;
+    : hasEligibleIntroTrial
+      ? PAYWALL_COPY.offer.cta
+      : PAYWALL_COPY.offer.subscribeCta;
 
   function onStartTrial() {
     setActionFeedback(null);

@@ -4,8 +4,8 @@ import { Platform } from 'react-native';
 import type { NotificationKind } from '@onskin/types';
 
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { billingCadenceForProductId } from '@/features/subscription/billingCadence';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { PLANS } from '@/features/subscription/plans';
 import { loadEntitlement } from '@/features/subscription/store';
 import {
   AccountGenerationLeaseError,
@@ -315,16 +315,20 @@ function fmtShortDate(iso: string): string {
 
 /**
  * Schedule the one-shot pre-charge reminder fired 2 days before a carded trial
- * converts (docs/08 §6 / docs/07): the app promises this on the paywall + success
- * screens, so it must actually be scheduled. Reads the entitlement; only schedules
- * for an ACTIVE carded trial whose 2-days-before instant is still in the future.
- * Idempotent (fixed identifier, cancelled + recreated). No-op off-device.
+ * converts (docs/08 §6 / docs/07). The UI describes this as optional because
+ * delivery depends on notification permission and device availability. Only an
+ * active carded trial with an exact configured-product cadence, localized price,
+ * and future 2-days-before instant is eligible. Idempotent (fixed identifier,
+ * cancelled + recreated). No-op off-device.
  */
 export async function scheduleTrialReminder(): Promise<void> {
   try {
     await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID).catch(() => {});
     const e = await loadEntitlement();
     if (!e || !e.isActive || e.periodType !== 'trial' || !e.expiresAt) return;
+    const cadence = billingCadenceForProductId(e.productId);
+    const price = e.priceLabel?.trim() || null;
+    if (!cadence || !price) return;
     const fireAt = new Date(e.expiresAt).getTime() - 2 * 86_400_000;
     if (fireAt <= Date.now()) return; // already inside the final 2 days. Nothing to schedule
     if (!isDeliverableAuthorizationState(await getPermissionStatus())) return;
@@ -334,7 +338,8 @@ export async function scheduleTrialReminder(): Promise<void> {
         title: PAYWALL_COPY.trialReminder.title,
         body: PAYWALL_COPY.trialReminder.bodyFor(
           fmtShortDate(e.expiresAt),
-          e.priceLabel ?? PLANS.annual.priceLabel,
+          price,
+          cadence,
         ),
       },
       trigger: {

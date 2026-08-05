@@ -9,7 +9,7 @@ const APP_STORE_COPY: SubscriptionStorefrontCopy = {
   billingContinuation:
     'Your App Store subscription continues until you cancel it in the App Store.',
   cancellationNote: (date) =>
-    `Cancelling is one tap in your App Store settings, and you keep Pro until ${date}. No maze, no calls.`,
+    `You keep Pro until ${date}. Manage or cancel the subscription in App Store settings.`,
   managementUnavailable:
     'We could not open subscription management. You can manage billing from your App Store account settings.',
   manageLabel: 'Manage in App Store',
@@ -19,7 +19,7 @@ const GOOGLE_PLAY_COPY: SubscriptionStorefrontCopy = {
   billingContinuation:
     'Your Google Play subscription continues until you cancel it in Google Play.',
   cancellationNote: (date) =>
-    `Cancelling is one tap in your Google Play settings, and you keep Pro until ${date}. No maze, no calls.`,
+    `You keep Pro until ${date}. Manage or cancel the subscription in Google Play settings.`,
   managementUnavailable:
     'We could not open subscription management. You can manage billing from your Google Play account settings.',
   manageLabel: 'Manage in Google Play',

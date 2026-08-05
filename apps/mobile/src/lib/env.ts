@@ -32,8 +32,22 @@ function readEnv(name: string, value: string | undefined, blockerId: string): st
 
 function readAppEnvironment(value: string | undefined): AppEnvironment {
   const candidate = value?.trim().toLowerCase();
-  if (candidate && APP_ENVIRONMENTS.has(candidate)) return candidate as AppEnvironment;
+  if (candidate && APP_ENVIRONMENTS.has(candidate)) {
+    // A non-development JavaScript bundle must never regain local-only
+    // behavior because a public build variable was mislabeled development.
+    if (candidate === 'development' && !isDevRuntime()) return 'production';
+    return candidate as AppEnvironment;
+  }
   return isDevRuntime() ? 'development' : 'production';
+}
+
+const APP_ENVIRONMENT = readAppEnvironment(process.env.EXPO_PUBLIC_APP_ENV);
+
+function readCustomProGrantEnabled(value: string | undefined): boolean {
+  // The no-card full-Pro grant is not part of the iOS release candidate. It is
+  // available only as an explicitly requested development fixture while the
+  // separate Apple-policy/anti-abuse exception remains unresolved.
+  return APP_ENVIRONMENT === 'development' && isDevRuntime() && readBooleanEnv(value);
 }
 
 function readBooleanEnv(
@@ -80,7 +94,10 @@ function readSupabaseUrlEnv(name: string, value: string | undefined, blockerId: 
 }
 
 export const env = {
-  appEnvironment: readAppEnvironment(process.env.EXPO_PUBLIC_APP_ENV),
+  appEnvironment: APP_ENVIRONMENT,
+  customProGrantEnabled: readCustomProGrantEnabled(
+    process.env.EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED,
+  ),
   privacyUrl: process.env.EXPO_PUBLIC_PRIVACY_URL ?? '',
   termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? '',
   supportUrl: process.env.EXPO_PUBLIC_SUPPORT_URL ?? '',

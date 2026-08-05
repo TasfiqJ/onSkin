@@ -32,6 +32,7 @@ const mocks = vi.hoisted(() => ({
   nextMutationWriteError: null as Error | null,
   currentOwnerBinding: 'a'.repeat(64) as string | null,
   appEnvironment: 'development' as 'development' | 'staging' | 'production',
+  customProGrantEnabled: false,
   isSupabaseConfigured: false,
   from: vi.fn(),
   rpc: vi.fn(),
@@ -49,6 +50,10 @@ vi.mock('@/lib/env', () => ({
     get appEnvironment() {
       return mocks.appEnvironment;
     },
+    get customProGrantEnabled() {
+      return mocks.customProGrantEnabled;
+    },
+    revenueCatEntitlementId: 'pro',
   },
   get isSupabaseConfigured() {
     return mocks.isSupabaseConfigured;
@@ -158,28 +163,37 @@ function appGrant(overrides: Partial<StoredEntitlement> = {}): StoredEntitlement
 function customerInfo(
   verification: 'VERIFIED' | 'VERIFIED_ON_DEVICE' | 'NOT_REQUESTED' | 'FAILED',
   requestDate: string,
-  activeVerification?: 'VERIFIED' | 'VERIFIED_ON_DEVICE' | 'NOT_REQUESTED' | 'FAILED',
+  activeVerification:
+    | 'VERIFIED'
+    | 'VERIFIED_ON_DEVICE'
+    | 'NOT_REQUESTED'
+    | 'FAILED'
+    | null = verification,
 ) {
   return {
     requestDate,
     entitlements: {
       verification,
-      active: activeVerification
-        ? {
-            pro: {
-              verification: activeVerification,
-              isActive: true,
-              productIdentifier: 'routinekind_pro_annual',
-            },
-          }
-        : {},
+      active:
+        activeVerification !== null
+          ? {
+              pro: {
+                verification: activeVerification,
+                isActive: true,
+                productIdentifier: 'routinekind_pro_annual',
+              },
+            }
+          : {},
       all: {},
     },
   } as Parameters<typeof customerInfoToEvidence>[0];
 }
 
 function snapshotEvidence(requestDate: string, entitlement: StoredEntitlement | null) {
-  const converted = customerInfoToEvidence(customerInfo('VERIFIED', requestDate), entitlement);
+  const converted = customerInfoToEvidence(
+    customerInfo('VERIFIED', requestDate, entitlement ? 'VERIFIED' : null),
+    entitlement,
+  );
   if (converted.status !== 'evidence') throw new Error('fixture conversion failed');
   return converted.evidence;
 }
@@ -296,6 +310,7 @@ describe('owner-bound entitlement evidence store', () => {
     mocks.nextMutationWriteError = null;
     mocks.currentOwnerBinding = A;
     mocks.appEnvironment = 'development';
+    mocks.customProGrantEnabled = false;
     mocks.isSupabaseConfigured = false;
     mocks.from.mockReset();
     mocks.rpc.mockReset();
@@ -377,7 +392,10 @@ describe('owner-bound entitlement evidence store', () => {
       await mergeEntitlementEvidence(contextA, positive.evidence, NOW);
     }
     expect(
-      customerInfoToEvidence(customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T12:00:00.000Z'), null),
+      customerInfoToEvidence(
+        customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T12:00:00.000Z', null),
+        null,
+      ),
     ).toEqual({ status: 'ignored', reason: 'verified_on_device_empty' });
 
     const read = await readEntitlementSnapshot(contextA, NOW);
@@ -387,7 +405,7 @@ describe('owner-bound entitlement evidence store', () => {
     expect(JSON.parse(mocks.storage.get(KEY)!).store.definitive).toBeNull();
   });
 
-  it('rejects FAILED verification and treats NOT_REQUESTED as weak positive-only legacy evidence', async () => {
+  it('rejects FAILED and NOT_REQUESTED verification without creating positive evidence', async () => {
     expect(
       customerInfoToEvidence(
         customerInfo('FAILED', '2026-07-14T11:00:00.000Z'),
@@ -396,13 +414,13 @@ describe('owner-bound entitlement evidence store', () => {
     ).toEqual({ status: 'rejected', reason: 'verification_failed' });
     expect(
       customerInfoToEvidence(customerInfo('NOT_REQUESTED', '2026-07-14T11:00:00.000Z'), null),
-    ).toEqual({ status: 'ignored', reason: 'not_requested_empty' });
+    ).toEqual({ status: 'rejected', reason: 'verification_not_requested' });
 
     const weak = customerInfoToEvidence(
       customerInfo('NOT_REQUESTED', '2026-07-14T11:00:00.000Z'),
       storeEntitlement(),
     );
-    expect(weak.status === 'evidence' && weak.evidence.kind).toBe('legacy_positive');
+    expect(weak).toEqual({ status: 'rejected', reason: 'verification_not_requested' });
   });
 
   it.each([
@@ -410,15 +428,15 @@ describe('owner-bound entitlement evidence store', () => {
     ['VERIFIED', false, 'store_definitive', 'evidence'],
     ['VERIFIED_ON_DEVICE', true, 'store_provisional_active', 'evidence'],
     ['VERIFIED_ON_DEVICE', false, null, 'ignored'],
-    ['NOT_REQUESTED', true, 'legacy_positive', 'evidence'],
-    ['NOT_REQUESTED', false, null, 'ignored'],
+    ['NOT_REQUESTED', true, null, 'rejected'],
+    ['NOT_REQUESTED', false, null, 'rejected'],
     ['FAILED', true, null, 'rejected'],
     ['FAILED', false, null, 'rejected'],
   ] as const)(
     'maps aggregate %s with mapped-active=%s to %s/%s',
     (verification, mappedActive, expectedKind, expectedStatus) => {
       const converted = customerInfoToEvidence(
-        customerInfo(verification, '2026-07-14T11:00:00.000Z'),
+        customerInfo(verification, '2026-07-14T11:00:00.000Z', mappedActive ? verification : null),
         mappedActive ? storeEntitlement() : null,
       );
       expect(converted.status).toBe(expectedStatus);
@@ -434,6 +452,18 @@ describe('owner-bound entitlement evidence store', () => {
       ),
     ).toEqual({ status: 'rejected', reason: 'verification_failed' });
   });
+
+  it.each(['NOT_REQUESTED', 'VERIFIED_ON_DEVICE'] as const)(
+    'rejects selected-child %s beneath aggregate VERIFIED',
+    (activeVerification) => {
+      expect(
+        customerInfoToEvidence(
+          customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z', activeVerification),
+          storeEntitlement(),
+        ),
+      ).toEqual({ status: 'rejected', reason: 'verification_mismatch' });
+    },
+  );
 
   it('persists an equal-provider-time contradiction as a fail-closed conflict requiring refresh', async () => {
     await mergeEntitlementEvidence(
@@ -531,6 +561,191 @@ describe('owner-bound entitlement evidence store', () => {
       ),
     ).toEqual({ status: 'ignored', reason: 'missing_store_cursor' });
   });
+
+  it('replaces an exact owner-bound retired NOT_REQUESTED cache with fresh definitive evidence', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      legacy: { provenance: string };
+    };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    mocks.storage.set(KEY, JSON.stringify(seeded));
+
+    await expect(readEntitlementSnapshot(contextA, NOW)).resolves.toMatchObject({
+      status: 'corrupt',
+    });
+
+    const repaired = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(repaired).toMatchObject({ status: 'committed', disposition: 'applied' });
+    expect(repaired.snapshot?.activeStoreEntitlement?.isActive).toBe(true);
+    expect(mocks.storage.get(KEY)).not.toContain('revenuecat_not_requested');
+    await expect(readEntitlementSnapshot(contextA, NOW)).resolves.toMatchObject({
+      status: 'available',
+      snapshot: { activeStoreEntitlement: { isActive: true } },
+    });
+  });
+
+  it('scrubs only the retired proof while retaining newer inactive, app-grant, revision, and clock authority', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+    const retiredProof = (JSON.parse(mocks.storage.get(KEY)!) as { legacy: unknown }).legacy;
+
+    mocks.storage.delete(KEY);
+    await mergeAppGrant();
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T12:00:00.000Z', null),
+      NOW,
+    );
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      revision: number;
+      clockAnchor: string;
+      store: { definitive: unknown };
+      appGrant: { definitive: unknown };
+      legacy: { provenance: string } | null;
+    };
+    seeded.legacy = retiredProof as { provenance: string };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    const expected = {
+      revision: seeded.revision,
+      clockAnchor: seeded.clockAnchor,
+      storeDefinitive: seeded.store.definitive,
+      appGrantDefinitive: seeded.appGrant.definitive,
+    };
+    mocks.storage.set(KEY, JSON.stringify(seeded));
+
+    const repaired = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:30:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(repaired.disposition).toBe('stale');
+    expect(repaired.snapshot?.activeStoreEntitlement).toBeNull();
+    expect(repaired.snapshot?.activeAppGrantEntitlement?.isActive).toBe(true);
+    const saved = JSON.parse(mocks.storage.get(KEY)!) as typeof seeded;
+    expect(saved.legacy).toBeNull();
+    expect(saved.revision).toBe(expected.revision);
+    expect(saved.clockAnchor).toBe(expected.clockAnchor);
+    expect(saved.store.definitive).toEqual(expected.storeDefinitive);
+    expect(saved.appGrant.definitive).toEqual(expected.appGrantDefinitive);
+  });
+
+  it('scrubs only the retired proof while retaining a fail-closed conflict', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+    const retiredProof = (JSON.parse(mocks.storage.get(KEY)!) as { legacy: unknown }).legacy;
+
+    mocks.storage.delete(KEY);
+    await mergeAppGrant();
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    const contradictory = rowToEvidence(
+      webhookRow({ is_active: false, rc_event_at: '2026-07-14T11:00:00.000Z' }),
+    );
+    if (contradictory.status !== 'evidence') throw new Error('conflict fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, contradictory.evidence, NOW);
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      revision: number;
+      clockAnchor: string;
+      store: { conflict: unknown };
+      appGrant: { definitive: unknown };
+      legacy: { provenance: string } | null;
+    };
+    seeded.legacy = retiredProof as { provenance: string };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    const expected = {
+      revision: seeded.revision,
+      clockAnchor: seeded.clockAnchor,
+      conflict: seeded.store.conflict,
+      appGrantDefinitive: seeded.appGrant.definitive,
+    };
+    mocks.storage.set(KEY, JSON.stringify(seeded));
+
+    const repaired = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T10:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(repaired.snapshot?.hasConflict).toBe(true);
+    expect(repaired.snapshot?.activeStoreEntitlement).toBeNull();
+    expect(repaired.snapshot?.activeAppGrantEntitlement?.isActive).toBe(true);
+    const saved = JSON.parse(mocks.storage.get(KEY)!) as typeof seeded;
+    expect(saved.legacy).toBeNull();
+    expect(saved.revision).toBe(expected.revision);
+    expect(saved.clockAnchor).toBe(expected.clockAnchor);
+    expect(saved.store.conflict).toEqual(expected.conflict);
+    expect(saved.appGrant.definitive).toEqual(expected.appGrantDefinitive);
+  });
+
+  it('does not let weak evidence adopt a retired NOT_REQUESTED cache', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      legacy: { provenance: string };
+    };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    const raw = JSON.stringify(seeded);
+    mocks.storage.set(KEY, raw);
+
+    const blocked = await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+    expect(blocked.status).toBe('blocked');
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it.each(['foreign owner', 'forged fingerprint'] as const)(
+    'does not scrub a %s retired cache during repair',
+    async (label) => {
+      const legacy = rowToEvidence(
+        webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+      );
+      if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+      await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+
+      const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+        ownerBinding: string;
+        legacy: { provenance: string; fingerprint: string };
+      };
+      seeded.legacy.provenance = 'revenuecat_not_requested';
+      if (label === 'foreign owner') seeded.ownerBinding = B;
+      else seeded.legacy.fingerprint = 'forged';
+      const raw = JSON.stringify(seeded);
+      mocks.storage.set(KEY, raw);
+
+      const blocked = await mergeEntitlementEvidence(
+        contextA,
+        snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+        NOW,
+      );
+      expect(blocked.status).toBe('blocked');
+      expect(mocks.storage.get(KEY)).toBe(raw);
+    },
+  );
 
   it.each([
     ['corrupt', '{not-json', 'corrupt'],
@@ -656,7 +871,7 @@ describe('owner-bound entitlement evidence store', () => {
     };
     const result = await publishCustomerInfoEvidence({
       context: contextA,
-      customerInfo: customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T11:00:00.000Z'),
+      customerInfo: customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T11:00:00.000Z', null),
       entitlement: null,
       queryClient,
       observedAtISO: NOW,
@@ -914,22 +1129,80 @@ describe('owner-bound entitlement evidence store', () => {
     await expect(clearStoreEntitlementIfRevenueCatVerifiedEmpty()).resolves.toBe('blocked');
     await expect(
       clearStoreEntitlementIfRevenueCatVerifiedEmpty(
-        customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T11:00:00.000Z'),
+        customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T11:00:00.000Z', null),
       ),
     ).resolves.toBe('blocked');
     await expect(
       clearStoreEntitlementIfRevenueCatVerifiedEmpty(
-        customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z'),
+        customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z', null),
       ),
     ).resolves.toBe('committed');
     const read = await readEntitlementSnapshot(contextA, NOW);
     expect(read.status === 'available' && read.snapshot.activeStoreEntitlement).toBeNull();
   });
 
-  it('creates an owner-bound development reverse trial and explicit reset removes both keys', async () => {
+  it('rejects an unconfigured reverse trial without invoking or writing authority', async () => {
+    mocks.customProGrantEnabled = true;
+    await expect(startReverseTrialOnServer()).rejects.toThrow(
+      'Reverse trial is unavailable until Supabase is configured.',
+    );
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.writes).toBe(0);
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('keeps the custom full-Pro grant disabled unless the development exception is explicit', async () => {
+    mocks.isSupabaseConfigured = true;
+    await expect(startReverseTrialOnServer()).rejects.toThrow('CUSTOM_PRO_GRANT_DISABLED');
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.writes).toBe(0);
+  });
+
+  it('commits a reverse trial only from the configured server response', async () => {
+    mocks.customProGrantEnabled = true;
+    mocks.isSupabaseConfigured = true;
+    const grantedAt = '2026-07-14T12:00:00.000Z';
+    mocks.invoke.mockResolvedValue({
+      data: {
+        entitlement: webhookRow({
+          period_type: 'reverse_trial',
+          store: 'app_granted',
+          product_id: null,
+          expires_at: '2026-07-21T12:00:00.000Z',
+          will_renew: false,
+          original_purchase_at: grantedAt,
+          source: 'app_granted',
+          environment: 'production',
+          management_url: null,
+          verified_at: grantedAt,
+          store_user_id: null,
+          offering_id: null,
+          package_id: null,
+          rc_event_at: null,
+          rc_event_priority: null,
+          rc_event_id: null,
+        }),
+      },
+      error: null,
+    });
+
     const grant = await startReverseTrialOnServer();
-    expect(grant).toMatchObject({ source: 'app_granted', isActive: true });
+    expect(mocks.invoke).toHaveBeenCalledWith('subscription-grants', {
+      body: { action: 'start_reverse_trial' },
+      signal: expect.any(AbortSignal),
+    });
+    expect(grant).toMatchObject({
+      source: 'app_granted',
+      store: 'app_granted',
+      productId: null,
+      isActive: true,
+      grantedAt,
+    });
     expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({ version: 2, ownerBinding: A });
+  });
+
+  it('explicit reset removes both entitlement cache keys', async () => {
+    await mergeAppGrant();
     mocks.storage.set(LEGACY_KEY, 'legacy');
     await clearEntitlement();
     expect(mocks.storage.has(KEY)).toBe(false);

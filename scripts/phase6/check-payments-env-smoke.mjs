@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,6 +18,7 @@ import {
   revenueCatV1SecretKeyFingerprint,
   revenueCatV2SecretKeyFingerprint,
 } from './payments-revenuecat-access-evidence.mjs';
+import { sha256RevenueCatAppUserId } from './payments-trusted-entitlements-evidence.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
@@ -18,6 +28,7 @@ const localContractTestPaths = [
   resolve(scriptDir, 'payments-source-contract.test.mjs'),
   resolve(scriptDir, 'payments-git-provenance.test.mjs'),
   resolve(scriptDir, 'payments-revenuecat-access-evidence.test.mjs'),
+  resolve(scriptDir, 'payments-trusted-entitlements-evidence.test.mjs'),
 ];
 const accountDeletionSourcePaths = readdirSync(
   resolve(root, 'supabase/functions/account-deletion'),
@@ -52,6 +63,25 @@ const revenueCatLegacySecretApiKey = 'sk_LegacySmokeKey2026Beta789';
 const accessEvidenceReviewedAt = new Date().toISOString();
 const accessEvidenceFixturePath = `docs/phase-6/revenuecat-v2-access-evidence.smoke-${process.pid}.json`;
 const accessEvidenceFixtureAbsolutePath = resolve(root, accessEvidenceFixturePath);
+const revenueCatAppId = 'appProductionIos2026';
+const productionBundleIdentifier = 'com.routinekind.app';
+const productionBuildNumber = '104';
+const trustedEntitlementsSourceGitSha = String(
+  spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', env: processBaseEnv })
+    .stdout ?? '',
+).trim();
+const driftedTrustedEntitlementsSourceGitSha = String(
+  spawnSync('git', ['rev-parse', 'HEAD^'], { cwd: root, encoding: 'utf8', env: processBaseEnv })
+    .stdout ?? '',
+).trim();
+const trustedEntitlementsReviewedAt = new Date().toISOString();
+const trustedEntitlementsFixturePath = `docs/phase-6/revenuecat-trusted-entitlements-evidence.smoke-${process.pid}.json`;
+const trustedEntitlementsFixtureAbsolutePath = resolve(root, trustedEntitlementsFixturePath);
+const trustedEntitlementsArtifactDirectory = `docs/phase-6/revenuecat-trusted-entitlements-artifacts/smoke-${process.pid}`;
+const trustedEntitlementsArtifactDirectoryAbsolutePath = resolve(
+  root,
+  trustedEntitlementsArtifactDirectory,
+);
 
 function accessEvidenceDocument() {
   return {
@@ -86,8 +116,78 @@ function writeAccessEvidence(path, document) {
   writeFileSync(resolve(root, path), `${JSON.stringify(document, null, 2)}\n`);
 }
 
+function trustedObservation(environment, operation, ageMinutes, appUserId) {
+  const artifactPath = `${trustedEntitlementsArtifactDirectory}/${environment}-${operation}.txt`;
+  const artifactBytes = Buffer.from(
+    `redacted ${environment} ${operation} RevenueCat smoke output\n`,
+    'utf8',
+  );
+  return {
+    environment,
+    operation,
+    appUserIdSha256: sha256RevenueCatAppUserId(appUserId),
+    artifactPath,
+    artifactSha256: createHash('sha256').update(artifactBytes).digest('hex'),
+    productId: 'routinekind.pro.annual',
+    entitlementId: 'pro',
+    verificationResult: operation === 'purchase' ? 'VERIFIED' : 'VERIFIED_ON_DEVICE',
+    isActive: true,
+    observedAt: new Date(Date.now() - ageMinutes * 60_000).toISOString(),
+  };
+}
+
+function trustedEntitlementsDocument() {
+  return {
+    schemaVersion: 2,
+    status: 'complete',
+    provider: 'revenuecat',
+    environment: 'production',
+    redacted: true,
+    app: {
+      platform: 'ios',
+      revenueCatAppId,
+      bundleIdentifier: productionBundleIdentifier,
+      buildNumber: productionBuildNumber,
+      sourceGitSha: trustedEntitlementsSourceGitSha,
+      reactNativePurchasesVersion: '10.4.1',
+      trustedEntitlementsMode: 'INFORMATIONAL',
+    },
+    entitlementId: 'pro',
+    productIds: {
+      annual: 'routinekind.pro.annual',
+      monthly: 'routinekind.pro.monthly',
+    },
+    observations: {
+      sandbox: {
+        purchase: trustedObservation('sandbox', 'purchase', 40, 'sandbox-smoke-user'),
+        restore: trustedObservation('sandbox', 'restore', 35, 'sandbox-smoke-user'),
+      },
+      testFlight: {
+        purchase: trustedObservation('testflight', 'purchase', 20, 'testflight-smoke-user'),
+        restore: trustedObservation('testflight', 'restore', 15, 'testflight-smoke-user'),
+      },
+    },
+    reviewedAt: trustedEntitlementsReviewedAt,
+    reviewedBy: 'Tas Mohammed',
+  };
+}
+
+mkdirSync(trustedEntitlementsArtifactDirectoryAbsolutePath, { recursive: true });
+for (const environment of ['sandbox', 'testflight']) {
+  for (const operation of ['purchase', 'restore']) {
+    writeFileSync(
+      resolve(trustedEntitlementsArtifactDirectoryAbsolutePath, `${environment}-${operation}.txt`),
+      `redacted ${environment} ${operation} RevenueCat smoke output\n`,
+    );
+  }
+}
 writeAccessEvidence(accessEvidenceFixturePath, accessEvidenceDocument());
-process.once('exit', () => rmSync(accessEvidenceFixtureAbsolutePath, { force: true }));
+writeAccessEvidence(trustedEntitlementsFixturePath, trustedEntitlementsDocument());
+process.once('exit', () => {
+  rmSync(accessEvidenceFixtureAbsolutePath, { force: true });
+  rmSync(trustedEntitlementsFixtureAbsolutePath, { force: true });
+  rmSync(trustedEntitlementsArtifactDirectoryAbsolutePath, { force: true, recursive: true });
+});
 
 const completeEnv = {
   EXPO_PUBLIC_REVENUECAT_IOS_KEY: 'appl_livevalue123',
@@ -99,8 +199,13 @@ const completeEnv = {
   REVENUECAT_WEBHOOK_SIGNING_SECRET: 'whsec_RevenueCatSigning2026_AlphaBeta789',
   REVENUECAT_SECRET_API_KEY: revenueCatLegacySecretApiKey,
   REVENUECAT_PROJECT_ID: revenueCatProjectId,
+  REVENUECAT_APP_ID: revenueCatAppId,
   REVENUECAT_V2_SECRET_API_KEY: revenueCatV2SecretApiKey,
   PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH: accessEvidenceFixturePath,
+  PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH: trustedEntitlementsFixturePath,
+  PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA: trustedEntitlementsSourceGitSha,
+  APP_IOS_BUNDLE_IDENTIFIER: productionBundleIdentifier,
+  CATALOG_RELEASE_IOS_BUILD_NUMBER: productionBuildNumber,
   PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS: 'true',
   BRAND_LEGAL_CLEARANCE: 'cleared',
   EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
@@ -108,6 +213,7 @@ const completeEnv = {
   EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.app/support',
   PHASE6_RC_OFFERING_REVIEWED: ' TRUE ',
   PHASE6_IOS_SANDBOX_RESTORE_PASS: 'true',
+  PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS: ' true ',
   PHASE6_ANDROID_LICENSE_TEST_PASS: 'True',
   PHASE6_WEBHOOK_HMAC_TEST_PASS: ' true ',
   PHASE6_FINANCE_SIGNOFF: 'TRUE',
@@ -159,6 +265,18 @@ let accessEvidenceVariant = 0;
 function runWithAccessEvidence(document, callback) {
   accessEvidenceVariant += 1;
   const path = `docs/phase-6/revenuecat-v2-access-evidence.smoke-${process.pid}-${accessEvidenceVariant}.json`;
+  writeAccessEvidence(path, document);
+  try {
+    return callback(path);
+  } finally {
+    rmSync(resolve(root, path), { force: true });
+  }
+}
+
+let trustedEntitlementsVariant = 0;
+function runWithTrustedEntitlementsEvidence(document, callback) {
+  trustedEntitlementsVariant += 1;
+  const path = `docs/phase-6/revenuecat-trusted-entitlements-evidence.smoke-${process.pid}-${trustedEntitlementsVariant}.json`;
   writeAccessEvidence(path, document);
   try {
     return callback(path);
@@ -311,6 +429,70 @@ const cases = [
     },
   },
   {
+    name: 'strict payments env rejects a missing Trusted Entitlements evidence artifact',
+    result: run({ PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing RevenueCat Trusted Entitlements evidence path/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'strict payments env rejects a missing immutable Trusted Entitlements source commit',
+    result: run({ PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /sourceGitSha does not match a verified immutable reviewed source commit/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict payments env rejects unrelated committed drift after the reviewed source commit',
+    result: runWithTrustedEntitlementsEvidence(
+      {
+        ...trustedEntitlementsDocument(),
+        app: {
+          ...trustedEntitlementsDocument().app,
+          sourceGitSha: driftedTrustedEntitlementsSourceGitSha,
+        },
+      },
+      (path) =>
+        run({
+          PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH: path,
+          PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA:
+            driftedTrustedEntitlementsSourceGitSha,
+        }),
+    ),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /sourceGitSha does not match a verified immutable reviewed source commit/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict payments env rejects Trusted Entitlements evidence for another build',
+    result: runWithTrustedEntitlementsEvidence(
+      {
+        ...trustedEntitlementsDocument(),
+        app: { ...trustedEntitlementsDocument().app, buildNumber: '105' },
+      },
+      (path) => run({ PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH: path }),
+    ),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /buildNumber does not match the reviewed production build/.test(output(result))
+      );
+    },
+  },
+  {
     name: 'strict payments env rejects RevenueCat V2 evidence bound to another project',
     result: runWithAccessEvidence(
       { ...accessEvidenceDocument(), projectId: 'projother12345' },
@@ -383,10 +565,28 @@ const cases = [
           revenueCatV1SecretKeyFingerprint(revenueCatLegacySecretApiKey) &&
         result.packet.revenueCatV2AccessEvidence.reviewedAt === accessEvidenceReviewedAt &&
         result.packet.revenueCatV2AccessEvidence.reviewedBy === 'Tas Mohammed' &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.valid === true &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.path ===
+          trustedEntitlementsFixturePath &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.revenueCatAppId === revenueCatAppId &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.bundleIdentifier ===
+          productionBundleIdentifier &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.buildNumber === productionBuildNumber &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.sourceGitSha ===
+          trustedEntitlementsSourceGitSha &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.trustedEntitlementsMode ===
+          'INFORMATIONAL' &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.observationArtifacts.length === 4 &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.reviewedBy === 'Tas Mohammed' &&
         result.packet.files.some(
           (file) =>
             file.path === accessEvidenceFixturePath &&
             file.sha256 === result.packet.revenueCatV2AccessEvidence.sha256,
+        ) &&
+        result.packet.files.some(
+          (file) =>
+            file.path === trustedEntitlementsFixturePath &&
+            file.sha256 === result.packet.revenueCatTrustedEntitlementsEvidence.sha256,
         ) &&
         result.packet.evidence.androidLicenseTestPass === null &&
         result.packet.platformStatus.android === 'not_applicable' &&
@@ -394,6 +594,13 @@ const cases = [
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
         result.packet.headFileTrackingCaptured === true &&
         result.packet.requiredFilesMissingFromHead.includes(accessEvidenceFixturePath) &&
+        result.packet.requiredFilesMissingFromHead.includes(trustedEntitlementsFixturePath) &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.observationArtifacts.every(
+          (artifact) =>
+            result.packet.files.some(
+              (file) => file.path === artifact.path && file.sha256 === artifact.sha256,
+            ) && result.packet.requiredFilesMissingFromHead.includes(artifact.path),
+        ) &&
         result.packet.blockers.includes(
           `Phase 6 required input is not committed at HEAD: ${accessEvidenceFixturePath}.`,
         ) &&
@@ -483,7 +690,17 @@ const cases = [
           (file) => file.path === 'scripts/phase6/payments-revenuecat-access-evidence.test.mjs',
         ) &&
         result.packet.files.some(
+          (file) => file.path === 'scripts/phase6/payments-trusted-entitlements-evidence.mjs',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'scripts/phase6/payments-trusted-entitlements-evidence.test.mjs',
+        ) &&
+        result.packet.files.some(
           (file) => file.path === 'docs/phase-6/revenuecat-v2-access-evidence.template.json',
+        ) &&
+        result.packet.files.some(
+          (file) =>
+            file.path === 'docs/phase-6/revenuecat-trusted-entitlements-evidence.template.json',
         ) &&
         accountDeletionSourcePaths.every((path) =>
           result.packet.files.some((file) => file.path === path),
@@ -586,10 +803,27 @@ const cases = [
     },
   },
   {
-    name: 'Phase 6 strict packet ignores dirty central generated evidence',
+    name: 'Phase 6 strict packet rejects missing Trusted Entitlements evidence',
+    result: runPacket({ PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH: '' }, ['--strict']),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        result.packet.revenueCatTrustedEntitlementsEvidence.valid === false &&
+        result.packet.blockers.includes('Missing RevenueCat Trusted Entitlements evidence path.')
+      );
+    },
+  },
+  {
+    name: 'Phase 6 strict packet detects dirty governed evidence outside its own outputs',
     result: runPacketWithDirtyUnrelatedGeneratedEvidence({}, ['--strict']),
     expect(result) {
-      return !result.packet.gitStatus.includes('docs/phase-3/generated/review-worklist.json');
+      return (
+        result.status === 1 &&
+        result.packet.gitStatus.includes('docs/phase-3/generated/review-worklist.json') &&
+        result.packet.blockers.includes(
+          'Phase 6 final payments evidence requires a clean Git worktree.',
+        )
+      );
     },
   },
   {

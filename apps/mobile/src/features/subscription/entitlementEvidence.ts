@@ -60,7 +60,7 @@ export type AppGrantConflict = Readonly<{
 }>;
 
 export type LegacyPositiveProof = Readonly<{
-  provenance: 'revenuecat_not_requested' | 'server_missing_cursor';
+  provenance: 'server_missing_cursor';
   entitlement: StoredEntitlement;
   fingerprint: string;
 }>;
@@ -455,6 +455,14 @@ function mergeLegacyPositive(
   current: EntitlementCacheEnvelopeV2,
   evidence: Extract<EntitlementEvidence, { kind: 'legacy_positive' }>,
 ): PureEntitlementMergeResult {
+  if (evidence.provenance !== 'server_missing_cursor') {
+    return {
+      envelope: current,
+      changed: false,
+      disposition: 'ignored',
+      requiresUncachedRefresh: false,
+    };
+  }
   if (current.store.definitive || current.store.provisionalActive || current.store.conflict) {
     return {
       envelope: current,

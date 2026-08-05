@@ -4,7 +4,7 @@ import { Platform, Pressable, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Sheet, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
-import { UPSELL_COPY } from '@/features/subscription/copy';
+import { PAYWALL_COPY, UPSELL_COPY } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
 import {
   PAYWALL_FEEDBACK,
@@ -36,6 +36,10 @@ export default function UpsellSheet() {
   const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const hasEligibleIntroTrial = (annual?.trialDays ?? 0) > 0;
+  const primaryCtaLabel = hasEligibleIntroTrial
+    ? PAYWALL_COPY.offer.cta
+    : PAYWALL_COPY.offer.subscribeCta;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const splitShortPaywall = height < 410;
   const microShortPaywall = height < 380;
@@ -269,7 +273,7 @@ export default function UpsellSheet() {
           numberOfLines={1}
           style={{ color: colors.paper, fontSize: microShortPaywall ? 15.5 : 17 }}
         >
-          Start free trial
+          {primaryCtaLabel}
         </Text>
       </Pressable>
       <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />

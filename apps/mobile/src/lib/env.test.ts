@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 const ORIGINAL_SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const ORIGINAL_SUPABASE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const ORIGINAL_APP_ENV = process.env.EXPO_PUBLIC_APP_ENV;
+const ORIGINAL_CUSTOM_PRO_GRANT_ENABLED = process.env.EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED;
 const ORIGINAL_NATIVE_CAMERA_ENABLED = process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED;
 const ORIGINAL_NATIVE_OCR_ENABLED = process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED;
 const ORIGINAL_PHASE7_TREND_ENABLED = process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED;
@@ -16,6 +17,7 @@ async function loadEnvWith(overrides: {
   supabaseUrl?: string;
   supabaseKey?: string;
   appEnv?: string;
+  customProGrantEnabled?: string;
   nativeCameraEnabled?: string;
   nativeOcrEnabled?: string;
   phase7TrendEnabled?: string;
@@ -28,6 +30,7 @@ async function loadEnvWith(overrides: {
   setEnv('EXPO_PUBLIC_SUPABASE_URL', overrides.supabaseUrl);
   setEnv('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY', overrides.supabaseKey);
   setEnv('EXPO_PUBLIC_APP_ENV', overrides.appEnv);
+  setEnv('EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED', overrides.customProGrantEnabled);
   setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', overrides.nativeCameraEnabled);
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', overrides.nativeOcrEnabled);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', overrides.phase7TrendEnabled);
@@ -52,6 +55,7 @@ afterEach(() => {
   setEnv('EXPO_PUBLIC_SUPABASE_URL', ORIGINAL_SUPABASE_URL);
   setEnv('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY', ORIGINAL_SUPABASE_PUBLISHABLE_KEY);
   setEnv('EXPO_PUBLIC_APP_ENV', ORIGINAL_APP_ENV);
+  setEnv('EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED', ORIGINAL_CUSTOM_PRO_GRANT_ENABLED);
   setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', ORIGINAL_NATIVE_CAMERA_ENABLED);
   setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', ORIGINAL_NATIVE_OCR_ENABLED);
   setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', ORIGINAL_PHASE7_TREND_ENABLED);
@@ -134,9 +138,33 @@ describe('env appEnvironment fail-closed behavior', () => {
 
     expect(mod.env.appEnvironment).toBe('staging');
   });
+
+  it('does not let an explicit development label reopen release-only behavior', async () => {
+    const mod = await loadEnvWith({ appEnv: 'development', dev: false });
+
+    expect(mod.env.appEnvironment).toBe('production');
+  });
 });
 
 describe('env boolean flags', () => {
+  it('allows the custom Pro grant only in an explicit development runtime', async () => {
+    await expect(
+      loadEnvWith({ appEnv: 'development', customProGrantEnabled: 'true', dev: true }),
+    ).resolves.toMatchObject({
+      env: expect.objectContaining({ customProGrantEnabled: true }),
+    });
+    await expect(
+      loadEnvWith({ appEnv: 'production', customProGrantEnabled: 'true', dev: false }),
+    ).resolves.toMatchObject({
+      env: expect.objectContaining({ customProGrantEnabled: false }),
+    });
+    await expect(
+      loadEnvWith({ appEnv: 'development', customProGrantEnabled: 'true', dev: false }),
+    ).resolves.toMatchObject({
+      env: expect.objectContaining({ customProGrantEnabled: false }),
+    });
+  });
+
   it('normalizes case and whitespace for explicit boolean flags', async () => {
     const mod = await loadEnvWith({
       nativeCameraEnabled: ' TRUE ',

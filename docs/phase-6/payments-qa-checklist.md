@@ -10,7 +10,11 @@
 
 ## Purchase
 
-- Annual trial purchase opens native store sheet.
+- On iOS, trial copy and the `Start free trial` CTA appear only when
+  `checkTrialOrIntroductoryPriceEligibility` returns exact-product `ELIGIBLE` for
+  the current customer. Unknown, ineligible, no-offer, and error results show a
+  plain subscription CTA and no trial promise.
+- Eligible annual trial purchase opens the native store sheet.
 - User-cancelled purchase does not grant Pro.
 - Active trial grants Pro only after RevenueCat `CustomerInfo` contains `pro`.
 - Paid purchase grants Pro only after RevenueCat `CustomerInfo` contains `pro`.
@@ -24,10 +28,22 @@
 - Restore with no active subscription does not grant Pro.
 - Restored entitlement cache includes `source='revenuecat'`, `verifiedAt`, `managementUrl` when available, product id, store, and renewal state.
 
-## Reverse Trial
+## Custom App Grant Release Posture
 
-- Anonymous/authenticated Supabase user can start exactly one reverse trial.
-- Reverse trial uses `store='app_granted'`, `period_type='reverse_trial'`, `will_renew=false`.
+- The iOS release candidate does not expose or invoke the custom full-Pro grant.
+- Production and staging app configuration reject
+  `EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED=true`; runtime grant code also rejects
+  unless an explicit development-runtime exception is active.
+- The Edge Function independently returns `custom_pro_grant_disabled` before
+  authentication unless `APP_ENV=development` and `SUPABASE_URL` is an exact
+  HTTP loopback origin with an explicit port. Hosted, production, staging,
+  malformed, and ambiguous URLs remain denied.
+- Onboarding always provides a non-purchase free-plan continuation that grants
+  no Pro authority.
+- The dormant backend contract remains tested only as a future exception:
+  an authenticated Supabase user can start exactly one grant, it uses
+  `store='app_granted'`, `period_type='reverse_trial'`, `will_renew=false`, and
+  no client can mint it locally.
 - A user with an active paid subscription cannot start a reverse trial.
 - A second reverse trial attempt returns a conflict.
 - The grant writes only `reverse_trial_grants`; an existing RevenueCat row is
@@ -88,8 +104,11 @@ clean`, current payment source hashes, current human-E2E manifest hashes,
 - `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID=pro`
 - `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID=<final store product id>`
 - `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID=<final store product id>`
-- The no-card reverse trial has no Store product ID; its app-granted entitlement
-  records `product_id=null`, `offering_id=null`, and `package_id=null`.
+- The production iOS candidate contains no active no-card grant path. If a future
+  separately reviewed exception is introduced, its app-granted entitlement must
+  record `product_id=null`, `offering_id=null`, and `package_id=null`, remain
+  blocked until Apple accepts the exact submitted build with that mechanism, and
+  never substitute a boolean flag for retained evidence.
 - `REVENUECAT_WEBHOOK_AUTH=<32-256 ASCII letters/digits/_/- with at least eight
 distinct characters>`
 - `REVENUECAT_WEBHOOK_SIGNING_SECRET=<whsec_ plus 32-256 ASCII
@@ -133,6 +152,37 @@ JSON copied from docs/phase-6/revenuecat-v2-access-evidence.template.json>`
 - `EXPO_PUBLIC_SUPPORT_URL=<production HTTPS URL>`
 - `PHASE6_RC_OFFERING_REVIEWED=true`
 - `PHASE6_IOS_SANDBOX_RESTORE_PASS=true`
+- `PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS=true` only after retained
+  exact-project sandbox/TestFlight purchase and Restore artifacts show Trusted
+  Entitlements enabled and `VERIFIED` or `VERIFIED_ON_DEVICE`; the flag records
+  review and is not independent proof
+- `REVENUECAT_APP_ID=<exact non-secret app... production iOS app identifier>`
+- `PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH=<completed redacted
+repo-relative JSON copied from
+docs/phase-6/revenuecat-trusted-entitlements-evidence.template.json>`
+- `PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA=<full immutable Git
+commit used to build the reviewed binary>`; that commit must exist locally and
+  be an ancestor of the later packet/evidence HEAD. The gate reads
+  `apps/mobile/src/lib/iap/revenuecat.ts` and `package-lock.json` from that commit,
+  derives `INFORMATIONAL` from the actual `Purchases.configure` call, and derives
+  the installed `react-native-purchases` version. From that commit through packet
+  HEAD, only added/modified governed Trusted Entitlements records/artifacts and
+  Phase 6 packet outputs may differ; deletion, rename, or unrelated source/docs
+  drift blocks the record. Never use packet HEAD as a self-referential field
+  inside an artifact committed by that same HEAD.
+- The Trusted Entitlements record must be canonical, direct/non-symlink,
+  committed and byte-equal to packet HEAD, fresh within 30 days, and cross-bound
+  to the production app ID, bundle ID, build number, immutable source Git SHA,
+  exact source-lock SDK version, source-derived informational mode, entitlement,
+  annual/monthly products, and named reviewer. Each sandbox/TestFlight purchase
+  and Restore observation must name a distinct direct retained artifact under
+  `docs/phase-6/revenuecat-trusted-entitlements-artifacts/` and its exact SHA-256;
+  all four artifact bytes must also be committed and byte-equal to packet HEAD.
+  Purchase and Restore in each environment must bind the same SHA-256 app-user ID
+  hash and product. Retained text/JSON/log bytes must be valid UTF-8 and pass the
+  secret/control/placeholder scan; binary screenshots require reviewer redaction.
+  Retain no raw identifiers or secrets. A true review flag or hand-entered
+  observation without this closure remains blocking.
 - `PHASE6_ANDROID_LICENSE_TEST_PASS` is not applicable for the current iOS-only
   launch contract
 - `PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS=true` only after the retained

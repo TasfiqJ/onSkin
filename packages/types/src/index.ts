@@ -178,7 +178,15 @@ export type SubscriptionTier = 'free' | 'pro' | 'pro_plus';
  *  14-day store trial; 'normal' is a paid subscription; 'intro' an intro offer. */
 export type PeriodType = 'reverse_trial' | 'trial' | 'intro' | 'normal' | 'prepaid';
 /** Where the entitlement came from (docs/08 §8 `store`). */
-export type EntitlementStore = 'app_store' | 'play_store' | 'web' | 'app_granted' | 'test_store';
+export type EntitlementStore =
+  | 'app_store'
+  | 'play_store'
+  | 'web'
+  | 'app_granted'
+  /** RevenueCat-granted out-of-store, non-billing access. This is not an
+   * Apple/StoreKit promotional offer and never implies a purchase or renewal. */
+  | 'promotional'
+  | 'test_store';
 /** The purchasable plans (docs/08 §2.3). No weekly plan by design. */
 export type PlanId = 'annual' | 'monthly';
 /** Pro-gated feature areas, used to frame the contextual upsell (docs/08 §3.2). */

@@ -2,6 +2,8 @@ import type { GatedFeature } from '@onskin/types';
 
 import { BRAND } from '@/lib/brand';
 
+import { priceWithCadence, type BillingCadence } from './billingCadence';
+
 /**
  * Centralised, honest-by-design paywall + lifecycle copy (docs/08 §9/§12, the
  * Slice-11/20/21 guard pattern). The subscription playbook is where dark patterns
@@ -9,7 +11,8 @@ import { BRAND } from '@/lib/brand';
  * laws, AND because trust monetises (the Yuka thesis), so this copy carries: NO
  * manufactured urgency ("Don't miss out!", fake countdowns), NO guilt, NO drug/
  * disease claims, and it DOES carry the honest auto-renew disclosure, the
- * 2-day-before reminder promise, and "cancel anytime." `claimsafety.test.ts` scans
+ * conditional reminder wording and App Store management instructions.
+ * `claimsafety.test.ts` scans
  * the marketing/disclosure copy in THIS module on every edit (keep all persuasive
  * paywall copy here, not inline in screens, so the guard sees it; screen-inline text
  * is limited to prices/labels, which are data). Prices shown here are FALLBACK labels
@@ -30,12 +33,19 @@ export const PAYWALL_COPY = {
     ],
     annualBadge: 'Annual · best value',
     cta: 'Start free trial',
-    trialReassurance: 'We’ll remind you 2 days before the trial ends · cancel anytime',
+    subscribeCta: 'Subscribe to Pro',
+    trialReassurance:
+      'Optional reminder with notifications enabled · manage or cancel in App Store',
+    subscriptionReassurance: 'Manage or cancel the subscription in App Store',
     // The honest auto-renew disclosure (Apple 3.1.2 / ARLs). Plain, below the CTA.
     autoRenewDisclosure:
       'Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings.',
+    subscriptionDisclosure:
+      'Payment is charged to your App Store account at confirmation. The annual plan auto-renews unless cancelled at least 24 hours before the current period ends. Manage or cancel in App Store.',
     exploreTitle: 'Explore first. 7 days of Pro',
     exploreBody: 'No credit card. See your routine work, then decide.',
+    continueFreeTitle: 'Continue with the free plan',
+    continueFreeBody: 'No purchase. Pro features stay locked until you choose a plan.',
     trustBlock:
       'Health-related guidance requires independent professional review before availability · photos stay on your device · no data sales',
   },
@@ -69,21 +79,44 @@ export const PAYWALL_COPY = {
   // Purchase success (design 05, docs/08 §3.3).
   success: {
     titleFor: (name: string | null) => (name ? `You’re all set, ${name}.` : 'You’re all set.'),
-    bodyFor: (price: string) =>
-      `Your 14 days of Pro start now. We’ll remind you 2 days before it converts to ${price}/year. Cancel anytime.`,
-    metaFor: (endDate: string, price: string) => `trial ends ${endDate} · renews ${price}/yr`,
-    metaRowsFor: (endDate: string, price: string) => [
+    bodyFor: (endDate: string, price: string, cadence: BillingCadence) =>
+      `Your trial is active through ${endDate}. Current subscription status shows it will renew at ${priceWithCadence(price, cadence)} unless canceled. Manage or cancel in App Store.`,
+    metaFor: (endDate: string, price: string, cadence: BillingCadence) =>
+      `trial ends ${endDate} · set to renew ${priceWithCadence(price, cadence, 'short')}`,
+    metaRowsFor: (endDate: string, price: string, cadence: BillingCadence) => [
       `trial ends ${endDate}`,
-      `renews ${price}/yr`,
+      `set to renew ${priceWithCadence(price, cadence, 'short')}`,
     ],
     // Paid path (win-back / direct purchase): there is no trial, so do not promise
     // a trial conversion. The amount the user actually paid is the one shown.
-    bodyForPaid: (price: string) =>
-      `Pro is active now. Your plan renews at ${price}/year. Cancel anytime.`,
-    metaForPaid: (endDate: string, price: string) => `active until ${endDate} · renews ${price}/yr`,
-    metaRowsForPaid: (endDate: string, price: string) => [
+    bodyForPaid: (price: string, cadence: BillingCadence) =>
+      `Pro is active now. Current subscription status shows renewal at ${priceWithCadence(price, cadence)}. Manage or cancel in App Store.`,
+    metaForPaid: (endDate: string, price: string, cadence: BillingCadence) =>
+      `active until ${endDate} · set to renew ${priceWithCadence(price, cadence, 'short')}`,
+    metaRowsForPaid: (endDate: string, price: string, cadence: BillingCadence) => [
       `active until ${endDate}`,
-      `renews ${price}/yr`,
+      `set to renew ${priceWithCadence(price, cadence, 'short')}`,
+    ],
+    bodyForAppGrant: (endDate: string) =>
+      `No-card Pro access is active through ${endDate}. You will not be charged automatically.`,
+    metaRowsForAppGrant: (endDate: string) => [`access through ${endDate}`, 'no card on file'],
+    bodyForPromotion: (endDate: string) =>
+      `Promotional Pro access is active through ${endDate}. This grant does not charge or renew.`,
+    metaRowsForPromotion: (endDate: string) => [
+      `access through ${endDate}`,
+      'no purchase or renewal',
+    ],
+    bodyForNonRenewing: (endDate: string) =>
+      `Pro is active through ${endDate}. No renewal is scheduled.`,
+    metaRowsForNonRenewing: (endDate: string) => [
+      `access through ${endDate}`,
+      'no renewal scheduled',
+    ],
+    bodyForBillingUnknown: (endDate: string) =>
+      `Pro is active through ${endDate}. Check Subscription for current billing details.`,
+    metaRowsForBillingUnknown: (endDate: string) => [
+      `access through ${endDate}`,
+      'billing details in Subscription',
     ],
     cta: 'See tonight’s routine',
   },
@@ -95,7 +128,7 @@ export const PAYWALL_COPY = {
     restoreRow: 'Restore purchases',
     termsRow: 'Terms & Privacy',
     cancelNote: (date: string) =>
-      `Cancelling is one tap in your App Store settings, and you keep Pro until ${date}. No maze, no calls.`,
+      `You keep Pro until ${date}. Manage or cancel the subscription in App Store settings.`,
     appGrantedNote: (date: string) =>
       `No card is on file for this access. You keep Pro until ${date}; choose a plan only if you want Pro to continue after that.`,
     freeTitle: 'You’re on the free plan',
@@ -126,9 +159,9 @@ export const PAYWALL_COPY = {
   // The trial-end pre-charge reminder content (delivered by doc 7; docs/08 §6).
   trialReminder: {
     title: 'Your free trial ends in 2 days',
-    bodyFor: (date: string, price: string) =>
-      `On ${date} you’ll move to ${price}/year. Happy to stay? Nothing to do. Not for you? Cancel in one tap. No hard feelings.`,
-    footnote: 'we remind you before we ever charge. Apple sends one too',
+    bodyFor: (date: string, price: string, cadence: BillingCadence) =>
+      `On ${date}, the subscription renews at ${priceWithCadence(price, cadence)} unless canceled. Manage or cancel it in App Store.`,
+    footnote: 'Reminder delivery requires notification permission and device availability.',
   },
 } as const;
 

@@ -97,7 +97,10 @@ vi.mock('./copy', () => ({
 vi.mock('@/features/subscription/copy', () => ({
   PAYWALL_COPY: {
     trialReminder: {
-      bodyFor: vi.fn((date: string, price: string) => `Trial ends ${date} at ${price}`),
+      bodyFor: vi.fn(
+        (date: string, price: string, cadence: string) =>
+          `Trial ends ${date} at ${price}/${cadence}`,
+      ),
       title: 'Your free trial ends in 2 days',
     },
   },
@@ -424,6 +427,7 @@ describe('rescheduleReminders', () => {
       isActive: true,
       periodType: 'trial',
       expiresAt: '2026-07-12T12:00:00.000Z',
+      productId: 'routinekind_pro_annual_dev',
       priceLabel: 'CA$69.99',
     });
 
@@ -462,6 +466,7 @@ describe('scheduleTrialReminder', () => {
         isActive: true,
         periodType: 'trial',
         expiresAt: '2026-07-12T12:00:00.000Z',
+        productId: 'routinekind_pro_annual_dev',
         priceLabel: 'CA$69.99',
       });
 
@@ -470,7 +475,7 @@ describe('scheduleTrialReminder', () => {
       expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith(
         expect.objectContaining({
           content: {
-            body: 'Trial ends Jul 12 at CA$69.99',
+            body: 'Trial ends Jul 12 at CA$69.99/annual',
             title: 'Your free trial ends in 2 days',
           },
         }),

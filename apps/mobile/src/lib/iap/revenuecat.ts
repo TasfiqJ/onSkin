@@ -473,7 +473,7 @@ function mapStore(store: RevenueCatStore | string | null | undefined): StoredEnt
     case 'TEST_STORE':
       return 'test_store';
     case 'PROMOTIONAL':
-      return 'app_granted';
+      return 'promotional';
     case 'STRIPE':
     case 'PADDLE':
     case 'RC_BILLING':
@@ -551,8 +551,9 @@ function packageToView(
   plan: PlanId,
   pack: PurchasesPackage,
   canPurchase: boolean,
+  trialEligible: boolean,
 ): SubscriptionPackageView {
-  const trialDays = trialDaysForPackage(pack);
+  const trialDays = trialEligible ? trialDaysForPackage(pack) : null;
   return {
     plan,
     packageId: pack.identifier,
@@ -581,8 +582,8 @@ function developmentFallbackPackage(plan: PlanId): SubscriptionPackageView {
     pricePerMonthLabel: plan === 'annual' ? '$4.16' : null,
     periodLabel: p.unit,
     subscriptionPeriod: plan === 'annual' ? 'P1Y' : 'P1M',
-    trialDays: p.trialDays || null,
-    introLabel: p.trialDays ? `${p.trialDays} days free` : null,
+    trialDays: null,
+    introLabel: null,
     canPurchase: false,
   };
 }
@@ -607,6 +608,30 @@ function findPackage(offerings: PurchasesOfferings, plan: PlanId): PurchasesPack
 
   const productId = PLANS[plan].productId;
   return current.availablePackages.find((pack) => pack.product.identifier === productId) ?? null;
+}
+
+async function eligibleIntroProductIds(
+  ticket: AccountPublicationTicket,
+  packages: readonly PurchasesPackage[],
+): Promise<ReadonlySet<string>> {
+  if (Platform.OS !== 'ios') return new Set();
+  const candidates = packages.filter((pack) => trialDaysForPackage(pack) !== null);
+  if (candidates.length === 0) return new Set();
+  const Purchases = await requireConfigured(ticket, 'intro eligibility');
+  if (!Purchases) return new Set();
+  const productIds = candidates.map((pack) => pack.product.identifier);
+  const eligibility = await Purchases.checkTrialOrIntroductoryPriceEligibility(productIds).catch(
+    () => null,
+  );
+  ticket.assertCurrent();
+  if (!eligibility) return new Set();
+  return new Set(
+    productIds.filter(
+      (productId) =>
+        eligibility[productId]?.status ===
+        Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE,
+    ),
+  );
 }
 
 function ticketBinding(ticket: AccountPublicationTicket): RevenueCatBinding {
@@ -779,11 +804,23 @@ export async function getSubscriptionOffering(
           return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
         }
 
+        const trialEligibleProductIds = await eligibleIntroProductIds(ticket, [annual, monthly]);
+
         return {
           status: 'available',
           offeringId: current.identifier,
-          annual: packageToView('annual', annual, true),
-          monthly: packageToView('monthly', monthly, true),
+          annual: packageToView(
+            'annual',
+            annual,
+            true,
+            trialEligibleProductIds.has(annual.product.identifier),
+          ),
+          monthly: packageToView(
+            'monthly',
+            monthly,
+            true,
+            trialEligibleProductIds.has(monthly.product.identifier),
+          ),
           winBack: await winBackViewForPackage(ticket, annual),
         };
       },
@@ -801,10 +838,13 @@ export function customerInfoToStoredEntitlement(
   if (verification === 'FAILED') {
     throw new Error('REVENUECAT_ENTITLEMENT_VERIFICATION_FAILED');
   }
+  if (verification === 'NOT_REQUESTED') {
+    throw new Error('REVENUECAT_ENTITLEMENT_VERIFICATION_NOT_REQUESTED');
+  }
   const info = entitlementInfo(customerInfo);
   if (!info) return null;
-  if (info.verification === 'FAILED') {
-    throw new Error('REVENUECAT_ENTITLEMENT_VERIFICATION_FAILED');
+  if (info.verification !== verification) {
+    throw new Error('REVENUECAT_ENTITLEMENT_VERIFICATION_MISMATCH');
   }
   const subscriptionInfo = customerInfo.subscriptionsByProductIdentifier[info.productIdentifier];
 

@@ -785,8 +785,18 @@ As of this document date:
   event registration/delivery, the one-minute Vault/Cron worker, existing-user
   recapture cutover, rotation/rollback drills, and physical-iPhone/TestFlight
   evidence remain open.
-- The reverse-trial environment/validator contract contradicts its app-granted
-  implementation.
+- The PAY-07 source candidate removes client-created reverse-trial authority,
+  denies the Edge grant before authentication outside an explicit development
+  runtime on an exact HTTP loopback Supabase origin,
+  confines positive entitlement fixtures to Expo web development, rejects
+  unverified provider positives, and makes cached/direct success routes fail
+  closed. PAY-06/PAY-07 remain incomplete. The safest iOS release candidate
+  disables the custom server full-Pro grant and uses an Apple-managed
+  introductory offer. Any retained exception needs counsel analysis, Apple
+  correspondence if obtainable, abuse controls, and the exact submitted build's
+  App Review outcome; none guarantees acceptance. Hosted RevenueCat Trusted
+  Entitlements evidence and physical-iPhone StoreKit lifecycle proof also remain
+  open.
 - App Store privacy, export, metadata, subscriptions, reviewer packet, and
   signed production build do not yet exist.
 

@@ -89,6 +89,7 @@ const runtime = globalThis as typeof globalThis & {
 const APP_ENV_KEYS = [
   'APP_VARIANT',
   'EXPO_PUBLIC_APP_ENV',
+  'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED',
   'BRAND_LEGAL_CLEARANCE',
   'PHASE3_RELEASE_CLEARANCE',
   'EXPORT_COMPLIANCE_CLEARANCE',
@@ -408,7 +409,7 @@ describe('Expo app identity config', () => {
         EXPO_PUBLIC_APP_ENV: 'production',
         IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'true',
       }),
-    ).toThrow(/Production iOS widget extension builds remain blocked/);
+    ).toThrow(/APP_VARIANT and EXPO_PUBLIC_APP_ENV must match exactly/);
   });
 
   it('uses production identity only when the production variant is explicit', () => {
@@ -702,13 +703,31 @@ describe('Expo app identity config', () => {
     ).toThrow(/requires a valid APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE/);
   });
 
-  it('blocks a production runtime environment even under an internal build variant', () => {
+  it('rejects a runtime environment that differs from the native build variant', () => {
     expect(() =>
       buildExpoConfig({
         APP_VARIANT: 'staging',
         EXPO_PUBLIC_APP_ENV: 'production',
       }),
-    ).toThrow(/requires PHASE3_RELEASE_CLEARANCE=cleared/);
+    ).toThrow(/APP_VARIANT and EXPO_PUBLIC_APP_ENV must match exactly/);
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'development',
+      }),
+    ).toThrow(/APP_VARIANT and EXPO_PUBLIC_APP_ENV must match exactly/);
+  });
+
+  it('rejects the custom full-Pro grant in staging and production builds', () => {
+    for (const variant of ['staging', 'production'] as const) {
+      expect(() =>
+        buildExpoConfig({
+          APP_VARIANT: variant,
+          EXPO_PUBLIC_APP_ENV: variant,
+          EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED: 'true',
+        }),
+      ).toThrow(/CUSTOM_PRO_GRANT_ENABLED may be true only for a development build/);
+    }
   });
 
   it('allows counsel-cleared legacy identity only when explicitly supplied', () => {

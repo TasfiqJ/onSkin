@@ -9,6 +9,7 @@ import {
   configureRevenueCat,
   customerInfoToStoredEntitlement,
   getCustomerInfo,
+  getSubscriptionOffering,
   getUncachedCustomerInfo,
   purchasePackage,
   revenueCatUnconfirmedStoreMessage,
@@ -21,11 +22,19 @@ const mocks = vi.hoisted(() => {
   let capability = 0;
   const purchases = {
     ENTITLEMENT_VERIFICATION_MODE: { INFORMATIONAL: 'INFORMATIONAL' },
+    INTRO_ELIGIBILITY_STATUS: {
+      INTRO_ELIGIBILITY_STATUS_ELIGIBLE: 2,
+      INTRO_ELIGIBILITY_STATUS_INELIGIBLE: 1,
+      INTRO_ELIGIBILITY_STATUS_NO_INTRO_OFFER_EXISTS: 3,
+      INTRO_ELIGIBILITY_STATUS_UNKNOWN: 0,
+    },
     LOG_LEVEL: { DEBUG: 'DEBUG', WARN: 'WARN' },
     PURCHASES_ERROR_CODE: { PURCHASE_CANCELLED_ERROR: 'PURCHASE_CANCELLED_ERROR' },
     addCustomerInfoUpdateListener: vi.fn(),
     configure: vi.fn(),
+    checkTrialOrIntroductoryPriceEligibility: vi.fn(),
     getCustomerInfo: vi.fn(),
+    getEligibleWinBackOffersForPackage: vi.fn(),
     getOfferings: vi.fn(),
     isConfigured: vi.fn(),
     invalidateCustomerInfoCache: vi.fn(),
@@ -100,6 +109,7 @@ describe('RevenueCat publication integration', () => {
       willRenew: false,
       originalPurchaseDate: '2026-06-01T00:00:00.000Z',
       isSandbox: false,
+      verification: 'VERIFIED',
     };
     const active = {
       ...expired,
@@ -116,7 +126,7 @@ describe('RevenueCat publication integration', () => {
         entitlements: {
           active: activeEntitlements,
           all: allEntitlements,
-          verification: 'NOT_REQUESTED',
+          verification: 'VERIFIED',
         },
         subscriptionsByProductIdentifier: {},
         managementURL: null,
@@ -150,11 +160,11 @@ describe('RevenueCat publication integration', () => {
       isSandbox: false,
       verification: 'VERIFIED',
     };
-    const customerInfo = (verification: string) =>
+    const customerInfo = (verification: string, store = 'APP_STORE') =>
       ({
         entitlements: {
-          active: { pro: { ...active, verification } },
-          all: { pro: { ...active, verification } },
+          active: { pro: { ...active, store, verification } },
+          all: { pro: { ...active, store, verification } },
           verification,
         },
         subscriptionsByProductIdentifier: {},
@@ -170,13 +180,32 @@ describe('RevenueCat publication integration', () => {
       isActive: true,
       verifiedAt: null,
     });
-    expect(customerInfoToStoredEntitlement(customerInfo('NOT_REQUESTED'))).toMatchObject({
-      isActive: true,
-      verifiedAt: null,
-    });
+    expect(() => customerInfoToStoredEntitlement(customerInfo('NOT_REQUESTED'))).toThrow(
+      'REVENUECAT_ENTITLEMENT_VERIFICATION_NOT_REQUESTED',
+    );
     expect(() => customerInfoToStoredEntitlement(customerInfo('FAILED'))).toThrow(
       'REVENUECAT_ENTITLEMENT_VERIFICATION_FAILED',
     );
+    const verified = customerInfo('VERIFIED');
+    const divergent = {
+      ...verified,
+      entitlements: {
+        ...verified.entitlements,
+        active: {
+          ...verified.entitlements.active,
+          pro: { ...verified.entitlements.active.pro, verification: 'NOT_REQUESTED' },
+        },
+      },
+    } as Parameters<typeof customerInfoToStoredEntitlement>[0];
+    expect(() => customerInfoToStoredEntitlement(divergent)).toThrow(
+      'REVENUECAT_ENTITLEMENT_VERIFICATION_MISMATCH',
+    );
+    expect(customerInfoToStoredEntitlement(customerInfo('VERIFIED', 'PROMOTIONAL'))).toMatchObject({
+      isActive: true,
+      productId: 'pro.active',
+      source: 'revenuecat',
+      store: 'promotional',
+    });
   });
 
   it('uses truthful recovery copy when StoreKit completion crossed a closed boundary', () => {
@@ -237,6 +266,62 @@ describe('RevenueCat publication integration', () => {
     expect(mocks.purchases.logIn).toHaveBeenNthCalledWith(1, USER_ID);
     expect(mocks.purchases.logIn).toHaveBeenNthCalledWith(2, USER_ID);
     expect(mocks.purchases).not.toHaveProperty('logOut');
+  });
+
+  it('advertises an introductory trial only for an exact eligible App Store product result', async () => {
+    const annual = {
+      identifier: 'annual',
+      offeringIdentifier: 'default',
+      product: {
+        identifier: 'routinekind_pro_annual',
+        title: 'OnSkin Pro Annual',
+        priceString: '$49.99',
+        pricePerMonthString: '$4.17',
+        subscriptionPeriod: 'P1Y',
+        introPrice: {
+          price: 0,
+          periodUnit: 'DAY',
+          periodNumberOfUnits: 14,
+          cycles: 1,
+        },
+      },
+    };
+    const monthly = {
+      identifier: 'monthly',
+      offeringIdentifier: 'default',
+      product: {
+        identifier: 'routinekind_pro_monthly',
+        title: 'OnSkin Pro Monthly',
+        priceString: '$7.99',
+        pricePerMonthString: '$7.99',
+        subscriptionPeriod: 'P1M',
+        introPrice: null,
+      },
+    };
+    mocks.purchases.isConfigured.mockResolvedValue(false);
+    mocks.purchases.getOfferings.mockResolvedValue({
+      current: { identifier: 'default', annual, monthly, availablePackages: [annual, monthly] },
+    });
+    mocks.purchases.getEligibleWinBackOffersForPackage.mockResolvedValue([]);
+    mocks.purchases.checkTrialOrIntroductoryPriceEligibility
+      .mockResolvedValueOnce({ routinekind_pro_annual: { status: 2 } })
+      .mockResolvedValueOnce({ routinekind_pro_annual: { status: 0 } });
+
+    await reserveRevenueCatPublication(USER_ID, 'session-token-eligibility');
+    await activateRevenueCatPublication(USER_ID, 'session-token-eligibility');
+
+    await expect(getSubscriptionOffering(USER_ID)).resolves.toMatchObject({
+      status: 'available',
+      annual: { trialDays: 14, introLabel: '14 days free' },
+      monthly: { trialDays: null, introLabel: null },
+    });
+    await expect(getSubscriptionOffering(USER_ID)).resolves.toMatchObject({
+      status: 'available',
+      annual: { trialDays: null, introLabel: null },
+    });
+    expect(mocks.purchases.checkTrialOrIntroductoryPriceEligibility).toHaveBeenNthCalledWith(1, [
+      'routinekind_pro_annual',
+    ]);
   });
 
   it('rejects a foreign deletion quiesce synchronously and closes exact admission immediately', async () => {

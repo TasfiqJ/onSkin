@@ -60,12 +60,18 @@ describe('the required honest disclosures are present (Apple 3.1.2 / ARLs)', () 
     expect(d).toContain('auto-renew');
     expect(d).toContain('cancel');
   });
-  it('the offer promises the 2-day pre-charge reminder and cancel-anytime', () => {
-    expect(PAYWALL_COPY.offer.trialReassurance.toLowerCase()).toContain('2 days before');
-    expect(PAYWALL_COPY.offer.trialReassurance.toLowerCase()).toContain('cancel anytime');
+  it('the offer makes reminder delivery conditional and names App Store management', () => {
+    const reassurance = PAYWALL_COPY.offer.trialReassurance.toLowerCase();
+    expect(reassurance).toContain('notifications enabled');
+    expect(reassurance).toContain('app store');
+    expect(reassurance).not.toMatch(/we(?:’|')ll remind|apple sends|one tap/iu);
   });
   it('the reverse trial is stated as no-card', () => {
     expect(PAYWALL_COPY.offer.exploreBody.toLowerCase()).toContain('no credit card');
+  });
+  it('the onboarding free path promises no purchase or Pro unlock', () => {
+    expect(PAYWALL_COPY.offer.continueFreeBody.toLowerCase()).toContain('no purchase');
+    expect(PAYWALL_COPY.offer.continueFreeBody.toLowerCase()).toContain('stay locked');
   });
   it('the trust block carries the privacy promise, no data sales', () => {
     expect(PAYWALL_COPY.offer.trustBlock.toLowerCase()).toContain('no data sales');

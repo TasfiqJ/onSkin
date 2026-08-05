@@ -394,15 +394,15 @@ test('readiness output env cannot redirect publication or forge reviewed test ba
   }
 
   assert.deepEqual(reviewedReadinessTestBaseline(), {
-    expectedMobileTestFiles: 331,
-    expectedMobileTests: 4156,
+    expectedMobileTestFiles: 336,
+    expectedMobileTests: 4183,
   });
   assert.doesNotThrow(() =>
-    reviewedReadinessTestBaseline({ READINESS_TEST_FILES: '331', READINESS_TESTS: '4156' }),
+    reviewedReadinessTestBaseline({ READINESS_TEST_FILES: '336', READINESS_TESTS: '4183' }),
   );
   for (const environment of [
     { READINESS_TEST_FILES: '1' },
-    { READINESS_TEST_FILES: '331.0' },
+    { READINESS_TEST_FILES: '336.0' },
     { READINESS_TESTS: '0' },
     { READINESS_TESTS: '999999' },
   ]) {

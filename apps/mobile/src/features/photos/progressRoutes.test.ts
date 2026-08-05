@@ -479,6 +479,10 @@ describe('Progress route mobile contracts', () => {
   it('keeps the populated progress fixture gated to explicit E2E runs', () => {
     const source = readSource('features/photos/usePhotos.ts');
     const entitlement = readSource('features/subscription/useEntitlement.ts');
+    const webEntitlementFixture = readSource('features/subscription/entitlementE2EFixture.web.ts');
+    const nativeEntitlementFixture = readSource(
+      'features/subscription/entitlementE2EFixture.native.ts',
+    );
 
     expect(source).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return null;");
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS !== 'populated'");
@@ -492,12 +496,21 @@ describe('Progress route mobile contracts', () => {
     expect(source.indexOf('lease.assertCurrent();')).toBeLessThan(
       source.indexOf('const photos = fixture ?? (await loadPhotos());'),
     );
-    expect(entitlement).toContain("fixture !== 'expired_store'");
-    expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
-    expect(entitlement).toContain("if (fixture === 'store_pro')");
-    expect(entitlement).toContain("store: 'app_store'");
-    expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
-    expect(entitlement).toContain('function e2eEntitlementState(): SubscriptionState | null');
+    expect(entitlement).toContain("from './entitlementE2EFixture'");
+    expect(webEntitlementFixture).toContain("fixture !== 'expired_store'");
+    expect(webEntitlementFixture).toContain("fixture !== 'expired_reverse_trial'");
+    expect(webEntitlementFixture).toContain("if (fixture === 'store_pro')");
+    expect(webEntitlementFixture).toContain("store: 'app_store'");
+    expect(webEntitlementFixture).toContain(
+      "managementUrl: 'https://apps.apple.com/account/subscriptions'",
+    );
+    expect(webEntitlementFixture).toContain(
+      'export function e2eEntitlementState(): SubscriptionState | null',
+    );
+    expect(nativeEntitlementFixture).not.toContain('EXPO_PUBLIC_E2E_ENTITLEMENT');
+    expect(nativeEntitlementFixture).not.toContain("store: 'app_store'");
+    expect(nativeEntitlementFixture).not.toContain("tier: 'pro'");
+    expect(nativeEntitlementFixture).toContain('return null;');
   });
 
   it('keeps the compare photo picker dismissible without inert sheet buttons', () => {

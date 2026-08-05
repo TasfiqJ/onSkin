@@ -8,6 +8,7 @@ import { bearerAuthorizationHeader, bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { readEdgeAppEnvironment } from '../_shared/env.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
+import { customProGrantAllowed } from './customProGrantAdmission.ts';
 import { reverseTrialGrantErrorCode, reverseTrialGrantErrorStatus } from './grantErrors.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -47,6 +48,9 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok');
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
+  if (!customProGrantAllowed(appEnvironment, supabaseUrl)) {
+    return json({ error: 'custom_pro_grant_disabled' }, 403);
+  }
 
   const token = bearerToken(req);
   const authorization = bearerAuthorizationHeader(req);

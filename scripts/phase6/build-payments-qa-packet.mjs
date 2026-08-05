@@ -22,6 +22,10 @@ import {
   auditRevenueCatV2AccessEvidence,
   normalizePhase6Reviewer,
 } from './payments-revenuecat-access-evidence.mjs';
+import {
+  auditRevenueCatTrustedEntitlementsEvidence,
+  trustedEntitlementsSourceDriftAllowed,
+} from './payments-trusted-entitlements-evidence.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -142,25 +146,38 @@ const fixedRequiredFiles = [
   'package.json',
   'package-lock.json',
   'apps/mobile/package.json',
+  'packages/types/src/index.ts',
+  'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
   'supabase/functions/deno.lock',
   'docs/hugeToDo/launch-contract.json',
+  'docs/hugeToDo/PAY-07-ENTITLEMENT-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md',
   'docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md',
   'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/lib/iap/revenuecat.test.ts',
   'apps/mobile/src/lib/iap/revenuecatPublication.test.ts',
   'apps/mobile/src/lib/env.ts',
+  'apps/mobile/src/lib/env.test.ts',
+  'apps/mobile/src/lib/appConfig.test.ts',
   'apps/mobile/src/features/subscription/store.ts',
   'apps/mobile/src/features/subscription/entitlement.ts',
   'apps/mobile/src/features/subscription/entitlementEvidence.ts',
   'apps/mobile/src/features/subscription/entitlementEvidence.test.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.ts',
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.native.ts',
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts',
+  'apps/mobile/src/features/subscription/successAdmission.ts',
+  'apps/mobile/src/features/subscription/successAdmission.test.ts',
+  'apps/mobile/src/features/subscription/successPresentation.ts',
+  'apps/mobile/src/features/subscription/copy.ts',
   'apps/mobile/src/features/subscription/useSubscriptionOffering.ts',
   'apps/mobile/src/app/onboarding/paywall.tsx',
   'apps/mobile/src/app/paywall/upsell.tsx',
   'apps/mobile/src/app/paywall/reoffer.tsx',
   'apps/mobile/src/app/paywall/downgrade.tsx',
+  'apps/mobile/src/app/paywall/success.tsx',
   'apps/mobile/src/app/paywall/winback.tsx',
   'apps/mobile/src/app/settings/subscription.tsx',
   'supabase/functions/revenuecat-webhook/index.ts',
@@ -215,8 +232,12 @@ const fixedRequiredFiles = [
   'scripts/phase6/payments-git-provenance.test.mjs',
   'scripts/phase6/payments-revenuecat-access-evidence.mjs',
   'scripts/phase6/payments-revenuecat-access-evidence.test.mjs',
+  'scripts/phase6/payments-trusted-entitlements-evidence.mjs',
+  'scripts/phase6/payments-trusted-entitlements-evidence.test.mjs',
   'scripts/phase6/payments-source-contract.mjs',
   'scripts/phase6/payments-source-contract.test.mjs',
+  'scripts/pay07/entitlement-admission-source-contract.mjs',
+  'scripts/pay07/entitlement-admission-source-contract.test.mjs',
   'scripts/phase2/check-env.mjs',
   'scripts/phase2/check-env-smoke.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
@@ -233,6 +254,7 @@ const fixedRequiredFiles = [
   'docs/phase-6/payments-qa-checklist.md',
   'docs/phase-6/phase-6-exit-review.md',
   'docs/phase-6/revenuecat-v2-access-evidence.template.json',
+  'docs/phase-6/revenuecat-trusted-entitlements-evidence.template.json',
 ];
 const baseRequiredFiles = [
   ...new Set([...fixedRequiredFiles, ...durableDeletionDependencyFiles, ...paymentDependencyFiles]),
@@ -259,8 +281,8 @@ const scenarios = [
   ],
   ['Restore', 'new install restores active subscription and writes verified local cache'],
   [
-    'Reverse trial',
-    'authenticated Edge Function atomically grants exactly once in the app lane with null provider identity; access expires from the immutable grant window without mutating the store lane',
+    'Custom app grant',
+    'production/staging config and release UI keep the custom full-Pro grant disabled; dormant backend one-grant authority remains development-only pending separate Apple-policy and anti-abuse acceptance',
   ],
   [
     'Win-back',
@@ -311,7 +333,7 @@ function gitStatusExcludingGeneratedPacket() {
 }
 
 function trackedSecretEnvironmentFile(path) {
-  return /(^|\/)\.env(?:\.|$)/.test(path) && path !== '.env.example';
+  return /(^|\/)\.env(?:\.|$)/.test(path) && !/(^|\/)\.env\.example$/u.test(path);
 }
 
 function revenueCatPublicKey(value, prefix) {
@@ -461,6 +483,9 @@ const productionConfigBlockers = [
 const evidence = {
   rcOfferingReviewed: evidenceFlagEnabled(process.env.PHASE6_RC_OFFERING_REVIEWED),
   iosSandboxRestorePass: evidenceFlagEnabled(process.env.PHASE6_IOS_SANDBOX_RESTORE_PASS),
+  revenueCatTrustedEntitlementsPass: evidenceFlagEnabled(
+    process.env.PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS,
+  ),
   androidLicenseTestPass: androidReleaseRequired
     ? evidenceFlagEnabled(process.env.PHASE6_ANDROID_LICENSE_TEST_PASS)
     : null,
@@ -471,6 +496,70 @@ const evidence = {
   financeSignoff: evidenceFlagEnabled(process.env.PHASE6_FINANCE_SIGNOFF),
   signedOffBy: normalizePhase6Reviewer(process.env.PHASE6_SIGNED_OFF_BY, prodEnv),
 };
+
+function reviewedRevenueCatSourceAtCommit(sourceGitSha) {
+  const empty = {
+    verified: false,
+    source: '',
+    reactNativePurchasesVersion: '',
+  };
+  if (!/^[0-9a-f]{40}$/u.test(sourceGitSha)) return empty;
+  try {
+    const verifiedSha = command('git', [
+      'rev-parse',
+      '--verify',
+      `${sourceGitSha}^{commit}`,
+    ]).trim();
+    if (verifiedSha !== sourceGitSha) return empty;
+    command('git', ['merge-base', '--is-ancestor', sourceGitSha, 'HEAD']);
+    const sourceDrift = command(
+      'git',
+      ['diff', '--name-status', '--no-renames', '-z', `${sourceGitSha}..HEAD`],
+      { maxBuffer: 16 * 1024 * 1024 },
+    );
+    if (!trustedEntitlementsSourceDriftAllowed(sourceDrift)) return empty;
+    const source = command(
+      'git',
+      ['show', `${sourceGitSha}:apps/mobile/src/lib/iap/revenuecat.ts`],
+      { maxBuffer: 2 * 1024 * 1024 },
+    );
+    const sourcePackageLock = JSON.parse(
+      command('git', ['show', `${sourceGitSha}:package-lock.json`], {
+        maxBuffer: 16 * 1024 * 1024,
+      }),
+    );
+    const reactNativePurchasesVersion = String(
+      sourcePackageLock.packages?.['node_modules/react-native-purchases']?.version ?? '',
+    );
+    return { verified: true, source, reactNativePurchasesVersion };
+  } catch {
+    return empty;
+  }
+}
+
+const trustedEntitlementsSourceGitSha = String(
+  prodEnv.PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA ?? '',
+).trim();
+const trustedEntitlementsSourceReview = reviewedRevenueCatSourceAtCommit(
+  trustedEntitlementsSourceGitSha,
+);
+
+const revenueCatTrustedEntitlementsEvidence = auditRevenueCatTrustedEntitlementsEvidence({
+  root,
+  evidencePath: String(process.env.PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH ?? ''),
+  nowMs: packetNowMs,
+  revenueCatAppId: String(prodEnv.REVENUECAT_APP_ID ?? ''),
+  bundleIdentifier: String(prodEnv.APP_IOS_BUNDLE_IDENTIFIER ?? ''),
+  buildNumber: String(prodEnv.CATALOG_RELEASE_IOS_BUILD_NUMBER ?? ''),
+  sourceGitSha: trustedEntitlementsSourceGitSha,
+  sourceGitCommitVerified: trustedEntitlementsSourceReview.verified,
+  reactNativePurchasesVersion: trustedEntitlementsSourceReview.reactNativePurchasesVersion,
+  trustedEntitlementsSource: trustedEntitlementsSourceReview.source,
+  entitlementId: String(prodEnv.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID ?? ''),
+  annualProductId: String(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID ?? ''),
+  monthlyProductId: String(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID ?? ''),
+  signedOffBy: evidence.signedOffBy,
+});
 
 const revenueCatV2AccessEvidence = auditRevenueCatV2AccessEvidence({
   root,
@@ -485,6 +574,12 @@ const requiredFiles = [
   ...new Set([
     ...baseRequiredFiles,
     ...(revenueCatV2AccessEvidence.path ? [revenueCatV2AccessEvidence.path] : []),
+    ...(revenueCatTrustedEntitlementsEvidence.path
+      ? [revenueCatTrustedEntitlementsEvidence.path]
+      : []),
+    ...revenueCatTrustedEntitlementsEvidence.observationArtifacts
+      .map((artifact) => artifact.path)
+      .filter(Boolean),
   ]),
 ];
 const files = requiredFiles.map(hashFile);
@@ -493,6 +588,25 @@ const warnings = [];
 const revenueCatV2AccessEvidenceFile = files.find(
   (file) => file.path === revenueCatV2AccessEvidence.path,
 );
+const revenueCatTrustedEntitlementsEvidenceFile = files.find(
+  (file) => file.path === revenueCatTrustedEntitlementsEvidence.path,
+);
+if (
+  revenueCatTrustedEntitlementsEvidence.path &&
+  revenueCatTrustedEntitlementsEvidenceFile?.exists &&
+  revenueCatTrustedEntitlementsEvidenceFile.sha256 !==
+    revenueCatTrustedEntitlementsEvidence.artifactSha256
+) {
+  blockers.push('RevenueCat Trusted Entitlements evidence changed while the QA packet was built.');
+}
+for (const artifact of revenueCatTrustedEntitlementsEvidence.observationArtifacts) {
+  const file = files.find((candidate) => candidate.path === artifact.path);
+  if (artifact.path && file?.exists && file.sha256 !== artifact.sha256) {
+    blockers.push(
+      `RevenueCat Trusted Entitlements observation artifact changed while the QA packet was built: ${artifact.path}.`,
+    );
+  }
+}
 if (
   revenueCatV2AccessEvidence.path &&
   revenueCatV2AccessEvidenceFile?.exists &&
@@ -574,11 +688,14 @@ if (!capturedHeadFileTracking) {
 }
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
 blockers.push(...revenueCatV2AccessEvidence.errors);
+blockers.push(...revenueCatTrustedEntitlementsEvidence.errors);
 for (const [key, message] of productionConfigBlockers) {
   if (!productionConfig[key]) blockers.push(message);
 }
 if (!evidence.rcOfferingReviewed) blockers.push('Missing PHASE6_RC_OFFERING_REVIEWED=true.');
 if (!evidence.iosSandboxRestorePass) blockers.push('Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.');
+if (!evidence.revenueCatTrustedEntitlementsPass)
+  blockers.push('Missing PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS=true.');
 if (androidReleaseRequired && !evidence.androidLicenseTestPass)
   blockers.push('Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.');
 if (!evidence.revenueCatV2CustomerDeleteAccessPass)
@@ -625,6 +742,19 @@ const packet = {
     reviewedAt: revenueCatV2AccessEvidence.reviewedAt,
     reviewedBy: revenueCatV2AccessEvidence.reviewedBy,
   },
+  revenueCatTrustedEntitlementsEvidence: {
+    valid: revenueCatTrustedEntitlementsEvidence.valid,
+    path: revenueCatTrustedEntitlementsEvidence.path,
+    sha256: revenueCatTrustedEntitlementsEvidence.artifactSha256,
+    revenueCatAppId: revenueCatTrustedEntitlementsEvidence.revenueCatAppId,
+    bundleIdentifier: revenueCatTrustedEntitlementsEvidence.bundleIdentifier,
+    buildNumber: revenueCatTrustedEntitlementsEvidence.buildNumber,
+    sourceGitSha: revenueCatTrustedEntitlementsEvidence.sourceGitSha,
+    trustedEntitlementsMode: revenueCatTrustedEntitlementsEvidence.trustedEntitlementsMode,
+    observationArtifacts: revenueCatTrustedEntitlementsEvidence.observationArtifacts,
+    reviewedAt: revenueCatTrustedEntitlementsEvidence.reviewedAt,
+    reviewedBy: revenueCatTrustedEntitlementsEvidence.reviewedBy,
+  },
   productionConfig,
   evidence,
   scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
@@ -665,6 +795,17 @@ writeFileSync(
     '',
     `- RevenueCat offering reviewed: ${evidence.rcOfferingReviewed ? 'yes' : 'BLOCKED'}`,
     `- iOS sandbox restore pass: ${evidence.iosSandboxRestorePass ? 'yes' : 'BLOCKED'}`,
+    `- Trusted Entitlements review attested: ${evidence.revenueCatTrustedEntitlementsPass ? 'yes' : 'BLOCKED'} (the flag records review; the governed artifact below supplies the cross-bound evidence)`,
+    `- Trusted Entitlements governed evidence valid: ${packet.revenueCatTrustedEntitlementsEvidence.valid ? 'yes' : 'BLOCKED'}`,
+    `- Trusted Entitlements evidence path: ${packet.revenueCatTrustedEntitlementsEvidence.path || 'BLOCKED'}`,
+    `- Trusted Entitlements evidence SHA-256: ${packet.revenueCatTrustedEntitlementsEvidence.sha256 || 'BLOCKED'}`,
+    `- Trusted Entitlements RevenueCat app ID: ${packet.revenueCatTrustedEntitlementsEvidence.revenueCatAppId || 'BLOCKED'}`,
+    `- Trusted Entitlements bundle/build: ${packet.revenueCatTrustedEntitlementsEvidence.bundleIdentifier || 'BLOCKED'} / ${packet.revenueCatTrustedEntitlementsEvidence.buildNumber || 'BLOCKED'}`,
+    `- Trusted Entitlements immutable source Git SHA: ${packet.revenueCatTrustedEntitlementsEvidence.sourceGitSha || 'BLOCKED'}`,
+    `- Trusted Entitlements mode derived from reviewed source: ${packet.revenueCatTrustedEntitlementsEvidence.trustedEntitlementsMode || 'BLOCKED'}`,
+    `- Trusted Entitlements retained observation artifacts: ${packet.revenueCatTrustedEntitlementsEvidence.observationArtifacts.length === 4 ? '4 separately hashed artifacts' : 'BLOCKED'}`,
+    `- Trusted Entitlements evidence reviewed at: ${packet.revenueCatTrustedEntitlementsEvidence.reviewedAt || 'BLOCKED'}`,
+    `- Trusted Entitlements evidence reviewed by: ${packet.revenueCatTrustedEntitlementsEvidence.reviewedBy || 'BLOCKED'}`,
     `- Android license test pass: ${packet.platformEvidenceStatus.androidLicenseTest === 'not_applicable' ? 'NOT APPLICABLE' : evidence.androidLicenseTestPass ? 'yes' : 'BLOCKED'}`,
     `- Retained RevenueCat V2 production project/access evidence attested: ${evidence.revenueCatV2CustomerDeleteAccessPass ? 'yes' : 'BLOCKED'} (the flag records that retained evidence was reviewed; it does not itself prove access or permissions)`,
     `- RevenueCat V2 redacted access evidence valid: ${packet.revenueCatV2AccessEvidence.valid ? 'yes' : 'BLOCKED'}`,

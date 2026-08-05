@@ -502,6 +502,39 @@ it never fabricates provider order. The mobile store durably journals native tra
 admission before purchase or restore can be repeated, and keeps unresolved ownership or
 confirmation state visible and fail-closed.
 
+The 2026-08-04 PAY-07 source boundary additionally removes every local
+reverse-trial mint, rejects RevenueCat `NOT_REQUESTED` positives, preserves
+RevenueCat `PROMOTIONAL` as a RevenueCat-granted out-of-store, non-billing
+`promotional` entitlement (not an Apple/StoreKit promotional offer), and requires
+a completed post-mount exact-owner query plus fresh verification and a
+future exact expiry before the success route can render confirmation. A live
+wall clock closes/refetches at the earliest evidence boundary and on foreground.
+Renewal and price copy additionally requires an exact billing-store lane,
+`willRenew=true`, the entitlement's own price, and cadence derived from the
+configured product ID; app grants, promotions,
+non-renewing access, and unknown billing facts use separate non-billing or
+non-claiming copy. Expo platform resolution confines deterministic
+positive visual fixtures to the web development module; the default and native
+modules return no grant or delay. `APP_VARIANT` and `EXPO_PUBLIC_APP_ENV` must
+match, and a non-development runtime treats an explicit development public value
+as production. Trial advertising also fails closed unless RevenueCat reports
+the exact iOS product as introductory-offer eligible for the current customer.
+The production build must retain explicit RevenueCat
+informational response-signature verification and return `VERIFIED` or
+`VERIFIED_ON_DEVICE` in exact sandbox/TestFlight proof; otherwise
+`NOT_REQUESTED` correctly denies access. A governed Phase 6 artifact cross-binds
+those sandbox/TestFlight purchase and Restore observations to the exact app,
+bundle, build, Git SHA, SDK, products, entitlement, and reviewer. These controls harden
+admission but do not clear the independent Apple-policy and abuse gates for the
+custom server app grant.
+
+The custom app-grant write authority is also server-fail-closed. The
+`subscription-grants` Edge Function refuses before authentication and
+service-role work unless the resolved Edge environment is `development` and
+`SUPABASE_URL` is an exact HTTP loopback origin with an explicit port. A hosted
+Supabase URL is denied even when mislabeled development. The mobile development
+switch is therefore not the server security boundary.
+
 Migration `20260715000054_health_consent_withdrawal_lifecycle.sql` brings the current chain
 to the prior fully verified 53-migration checkpoint. It adds a non-account-deleting health-consent lifecycle, processing-epoch
 write barrier, service-only durable worker claims, relational/Storage absence attestation,

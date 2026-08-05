@@ -38,8 +38,8 @@ export const READINESS_INPUT_AGGREGATE_MAX_BYTES = Math.min(
   16 * 1024 * 1024,
 );
 export const READINESS_MOBILE_INVENTORY_MAX_ENTRIES = 20_000;
-export const READINESS_EXPECTED_MOBILE_TEST_FILES = 331;
-export const READINESS_EXPECTED_MOBILE_TESTS = 4156;
+export const READINESS_EXPECTED_MOBILE_TEST_FILES = 336;
+export const READINESS_EXPECTED_MOBILE_TESTS = 4183;
 export const READINESS_OUTPUT_JSON_PATH = 'docs/generated/readiness-status-audit.json';
 export const READINESS_OUTPUT_MD_PATH = 'docs/generated/readiness-status-audit.md';
 export const READINESS_PROVENANCE_CONTRACT = 'governed-evidence-chain-final-output-pair-v2';

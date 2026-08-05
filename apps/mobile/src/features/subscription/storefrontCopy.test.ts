@@ -58,4 +58,9 @@ describe('subscription storefront copy', () => {
     expect(noticeHost).toContain('subscriptionStorefrontCopy(Platform.OS)');
     expect(noticeHost).toContain('storefrontCopy.managementUnavailable');
   });
+
+  it('does not promise a universal one-tap cancellation flow', () => {
+    expect(renderedCopy('ios')).not.toMatch(/one tap|no maze/iu);
+    expect(renderedCopy('android')).not.toMatch(/one tap|no maze/iu);
+  });
 });

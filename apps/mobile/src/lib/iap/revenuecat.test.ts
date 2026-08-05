@@ -54,4 +54,18 @@ describe('RevenueCat identity boundary', () => {
     expect(lazyLoads).toHaveLength(2);
     expect(guardedLazyLoads).toHaveLength(lazyLoads.length);
   });
+
+  it('fails introductory-offer claims closed unless the exact product is eligible', () => {
+    const source = readFileSync(REVENUECAT_SOURCE, 'utf8');
+
+    expect(source).toContain('Purchases.checkTrialOrIntroductoryPriceEligibility(productIds)');
+    expect(source).toContain(
+      'Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE',
+    );
+    expect(source).toContain('const trialDays = trialEligible ? trialDaysForPackage(pack) : null;');
+    expect(source).toMatch(
+      /function developmentFallbackPackage[\s\S]*trialDays: null,[\s\S]*introLabel: null,/u,
+    );
+    expect(source).not.toContain('const trialDays = trialDaysForPackage(pack);');
+  });
 });

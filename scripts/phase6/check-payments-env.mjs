@@ -14,6 +14,10 @@ import {
   auditRevenueCatV2AccessEvidence,
   normalizePhase6Reviewer,
 } from './payments-revenuecat-access-evidence.mjs';
+import {
+  auditRevenueCatTrustedEntitlementsEvidence,
+  trustedEntitlementsSourceDriftAllowed,
+} from './payments-trusted-entitlements-evidence.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -150,7 +154,7 @@ try {
   trackedSecretEnvironmentFiles = command('git', ['ls-tree', '-r', '--name-only', 'HEAD'])
     .split(/\r?\n/)
     .map((path) => path.replaceAll('\\', '/').trim())
-    .filter((path) => /(^|\/)\.env(?:\.|$)/.test(path) && path !== '.env.example');
+    .filter((path) => /(^|\/)\.env(?:\.|$)/.test(path) && !/(^|\/)\.env\.example$/u.test(path));
 } catch {
   trackedSecretEnvironmentFiles = null;
 }
@@ -210,13 +214,26 @@ require(/auditRevenueCatV2AccessEvidence/.test(qaPacketBuilder) &&
   /revenueCatV2AccessEvidence\.errors/.test(
     qaPacketBuilder,
   ), 'Phase 6 payments QA packet must hash and cross-bind exact project/key redacted RevenueCat access evidence.');
+require(/auditRevenueCatTrustedEntitlementsEvidence/.test(qaPacketBuilder) &&
+  /revenueCatTrustedEntitlementsEvidence\.artifactSha256/.test(qaPacketBuilder) &&
+  /revenueCatTrustedEntitlementsEvidence\.sourceGitSha/.test(qaPacketBuilder) &&
+  /revenueCatTrustedEntitlementsEvidence\.observationArtifacts/.test(qaPacketBuilder) &&
+  /reviewedRevenueCatSourceAtCommit/.test(qaPacketBuilder) &&
+  /trustedEntitlementsSourceDriftAllowed/.test(qaPacketBuilder) &&
+  /--no-renames/.test(qaPacketBuilder) &&
+  /revenueCatTrustedEntitlementsEvidence\.errors/.test(
+    qaPacketBuilder,
+  ), 'Phase 6 payments QA packet must derive Trusted Entitlements mode from an immutable reviewed source commit and close separately retained observation artifacts into Git provenance.');
 for (const file of [
   'package.json',
   'package-lock.json',
   'apps/mobile/package.json',
+  'packages/types/src/index.ts',
+  'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
   'supabase/functions/deno.lock',
   'docs/hugeToDo/launch-contract.json',
+  'docs/hugeToDo/PAY-07-ENTITLEMENT-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md',
   'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/lib/iap/revenuecat.test.ts',
@@ -226,11 +243,19 @@ for (const file of [
   'apps/mobile/src/features/subscription/entitlementEvidence.ts',
   'apps/mobile/src/features/subscription/entitlementEvidence.test.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.ts',
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.native.ts',
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts',
+  'apps/mobile/src/features/subscription/successAdmission.ts',
+  'apps/mobile/src/features/subscription/successAdmission.test.ts',
+  'apps/mobile/src/features/subscription/successPresentation.ts',
+  'apps/mobile/src/features/subscription/copy.ts',
   'apps/mobile/src/features/subscription/useSubscriptionOffering.ts',
   'apps/mobile/src/app/onboarding/paywall.tsx',
   'apps/mobile/src/app/paywall/upsell.tsx',
   'apps/mobile/src/app/paywall/reoffer.tsx',
   'apps/mobile/src/app/paywall/downgrade.tsx',
+  'apps/mobile/src/app/paywall/success.tsx',
   'apps/mobile/src/app/paywall/winback.tsx',
   'apps/mobile/src/app/settings/subscription.tsx',
   'supabase/functions/revenuecat-webhook/index.ts',
@@ -267,8 +292,12 @@ for (const file of [
   'scripts/phase6/payments-git-provenance.test.mjs',
   'scripts/phase6/payments-revenuecat-access-evidence.mjs',
   'scripts/phase6/payments-revenuecat-access-evidence.test.mjs',
+  'scripts/phase6/payments-trusted-entitlements-evidence.mjs',
+  'scripts/phase6/payments-trusted-entitlements-evidence.test.mjs',
   'scripts/phase6/payments-source-contract.mjs',
   'scripts/phase6/payments-source-contract.test.mjs',
+  'scripts/pay07/entitlement-admission-source-contract.mjs',
+  'scripts/pay07/entitlement-admission-source-contract.test.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
@@ -280,6 +309,7 @@ for (const file of [
   'docs/phase-6/payments-qa-checklist.md',
   'docs/phase-6/phase-6-exit-review.md',
   'docs/phase-6/revenuecat-v2-access-evidence.template.json',
+  'docs/phase-6/revenuecat-trusted-entitlements-evidence.template.json',
 ]) {
   require(qaPacketBuilder.includes(`'${file}'`) ||
     qaPacketBuilder.includes(`"${file}"`), `Phase 6 payments QA packet must hash ${file}.`);
@@ -311,14 +341,83 @@ const revenueCatDeletionSourceContract = auditRevenueCatDeletionSourceContract({
   providerDeletion: read('supabase/functions/account-deletion/durableProviderDeletion.ts'),
 });
 for (const error of revenueCatDeletionSourceContract.errors) require(false, error);
-require(has(
-  'apps/mobile/src/features/subscription/useEntitlement.ts',
-  /if \(env\.appEnvironment !== 'development'\) return null;/,
-), 'Entitlement E2E fixture grants must be ignored outside development builds.');
-require(has(
-  'apps/mobile/src/features/subscription/useEntitlement.ts',
-  /if \(env\.appEnvironment !== 'development'\) return 0;/,
-), 'Entitlement E2E delay fixture must be ignored outside development builds.');
+
+const entitlementHookSource = read('apps/mobile/src/features/subscription/useEntitlement.ts');
+const entitlementFixtureDefault = read(
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.ts',
+);
+const entitlementFixtureNative = read(
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.native.ts',
+);
+const entitlementFixtureWeb = read(
+  'apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts',
+);
+require(/from '\.\/entitlementE2EFixture'/.test(entitlementHookSource) &&
+  !/EXPO_PUBLIC_E2E_ENTITLEMENT/.test(
+    entitlementHookSource,
+  ), 'The shared entitlement hook must delegate fixtures to a platform module and contain no public positive-entitlement environment key.');
+for (const [path, source] of [
+  ['apps/mobile/src/features/subscription/entitlementE2EFixture.ts', entitlementFixtureDefault],
+  [
+    'apps/mobile/src/features/subscription/entitlementE2EFixture.native.ts',
+    entitlementFixtureNative,
+  ],
+]) {
+  require(/return 0;/.test(source) &&
+    /return null;/.test(source) &&
+    !/process\.env|deriveState|EXPO_PUBLIC_E2E_ENTITLEMENT/.test(
+      source,
+    ), `${path} must remain a fail-closed implementation with no positive entitlement constructor.`);
+}
+require(/if \(env\.appEnvironment !== 'development'\) return null;/.test(entitlementFixtureWeb) &&
+  /if \(env\.appEnvironment !== 'development'\) return 0;/.test(entitlementFixtureWeb) &&
+  /EXPO_PUBLIC_E2E_ENTITLEMENT/.test(
+    entitlementFixtureWeb,
+  ), 'Positive entitlement fixtures must remain confined to the web-development platform module.');
+
+const entitlementStoreSource = read('apps/mobile/src/features/subscription/store.ts');
+require(/if \(!isSupabaseConfigured\) \{\s*throw new Error\('Reverse trial is unavailable until Supabase is configured\.'\);\s*\}/.test(
+  entitlementStoreSource,
+) &&
+  !/LOCAL_REVERSE_TRIAL_DAYS|daysFromNowISO\(LOCAL_REVERSE_TRIAL_DAYS\)/.test(
+    entitlementStoreSource,
+  ), 'Unconfigured clients must refuse reverse-trial grants instead of minting local Pro access.');
+
+const paywallSuccessSource = read('apps/mobile/src/app/paywall/success.tsx');
+const successAdmissionSource = read('apps/mobile/src/features/subscription/successAdmission.ts');
+const successPresentationSource = read(
+  'apps/mobile/src/features/subscription/successPresentation.ts',
+);
+require(/const \{ data, dataUpdatedAt, refetch \} = entitlement/.test(paywallSuccessSource) &&
+  /const liveNowMs = monotonicSuccessClockMs\(/.test(paywallSuccessSource) &&
+  /monotonicSuccessClockMs\(nowMs, dataUpdatedAt\)/.test(paywallSuccessSource) &&
+  /admittedSuccessState\(entitlement, liveNowMs\)/.test(paywallSuccessSource) &&
+  /const evidenceBoundaryMs = successEvidenceBoundaryMs\(data\)/.test(paywallSuccessSource) &&
+  /\}, \[evidenceBoundaryMs, refetch\]\);/.test(paywallSuccessSource) &&
+  !/\[evidenceBoundaryMs,\s*dataUpdatedAt/.test(paywallSuccessSource) &&
+  /AppState\.addEventListener\('change'/.test(paywallSuccessSource) &&
+  /if \(!confirmedState\)/.test(paywallSuccessSource) &&
+  /Pro access not confirmed/.test(paywallSuccessSource) &&
+  /This page did not charge you or unlock Pro\./.test(paywallSuccessSource) &&
+  !/useSubscriptionOffering|offering\.data|fallbackDays/.test(paywallSuccessSource) &&
+  /!query\.isFetchedAfterMount/.test(successAdmissionSource) &&
+  /expiresAtMs <= nowMs/.test(successAdmissionSource) &&
+  /verifiedAtMs < nowMs - SUCCESS_EVIDENCE_MAX_AGE_MS/.test(successAdmissionSource) &&
+  /state\.store === 'promotional'/.test(successPresentationSource) &&
+  /state\.willRenew === true && BILLING_STORES\.has\(state\.store\) && price && cadence/.test(
+    successPresentationSource,
+  ), 'The payment success route must require exact active evidence and render a non-claiming recovery state otherwise.');
+
+const appConfigSource = read('apps/mobile/app.config.js');
+require(/if \(appEnvironment !== variant\)/.test(appConfigSource) &&
+  /APP_VARIANT and EXPO_PUBLIC_APP_ENV must match exactly/.test(
+    appConfigSource,
+  ), 'Expo app configuration must reject mismatched public and native build environments.');
+const revenueCatSource = read('apps/mobile/src/lib/iap/revenuecat.ts');
+require(/case 'PROMOTIONAL':\s*return 'promotional';/.test(revenueCatSource) &&
+  /REVENUECAT_ENTITLEMENT_VERIFICATION_NOT_REQUESTED/.test(
+    revenueCatSource,
+  ), 'RevenueCat-granted promotional entitlements must remain out-of-store/non-billing and NOT_REQUESTED snapshots must fail closed.');
 
 const forbiddenLocalGrants = [
   [
@@ -401,6 +500,22 @@ warn(
   '.env.example must document PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.',
 );
 warn(
+  Object.hasOwn(exampleEnv, 'PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS'),
+  '.env.example must document PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS.',
+);
+warn(
+  Object.hasOwn(exampleEnv, 'REVENUECAT_APP_ID'),
+  '.env.example must document REVENUECAT_APP_ID.',
+);
+warn(
+  Object.hasOwn(exampleEnv, 'PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH'),
+  '.env.example must document PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH.',
+);
+warn(
+  Object.hasOwn(exampleEnv, 'PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA'),
+  '.env.example must document PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA.',
+);
+warn(
   trackedSecretLeaks.length === 0,
   'Tracked templates/build config must not contain production server secrets.',
 );
@@ -440,6 +555,7 @@ for (const key of ['EXPO_PUBLIC_PRIVACY_URL', 'EXPO_PUBLIC_TERMS_URL', 'EXPO_PUB
 const externalEvidence = [
   'PHASE6_RC_OFFERING_REVIEWED',
   'PHASE6_IOS_SANDBOX_RESTORE_PASS',
+  'PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS',
   ...(androidReleaseRequired ? ['PHASE6_ANDROID_LICENSE_TEST_PASS'] : []),
   'PHASE6_WEBHOOK_HMAC_TEST_PASS',
   'PHASE6_FINANCE_SIGNOFF',
@@ -448,6 +564,70 @@ for (const key of externalEvidence) {
   warn(evidenceFlagEnabled(process.env[key]), `Missing external Phase 6 evidence: ${key}.`);
 }
 const signedOffBy = normalizePhase6Reviewer(process.env.PHASE6_SIGNED_OFF_BY, prodEnv);
+function reviewedRevenueCatSourceAtCommit(sourceGitSha) {
+  const empty = {
+    verified: false,
+    source: '',
+    reactNativePurchasesVersion: '',
+  };
+  if (!/^[0-9a-f]{40}$/u.test(sourceGitSha)) return empty;
+  try {
+    const verifiedSha = command('git', [
+      'rev-parse',
+      '--verify',
+      `${sourceGitSha}^{commit}`,
+    ]).trim();
+    if (verifiedSha !== sourceGitSha) return empty;
+    command('git', ['merge-base', '--is-ancestor', sourceGitSha, 'HEAD']);
+    const sourceDrift = command(
+      'git',
+      ['diff', '--name-status', '--no-renames', '-z', `${sourceGitSha}..HEAD`],
+      { maxBuffer: 16 * 1024 * 1024 },
+    );
+    if (!trustedEntitlementsSourceDriftAllowed(sourceDrift)) return empty;
+    const source = command(
+      'git',
+      ['show', `${sourceGitSha}:apps/mobile/src/lib/iap/revenuecat.ts`],
+      { maxBuffer: 2 * 1024 * 1024 },
+    );
+    const sourcePackageLock = JSON.parse(
+      command('git', ['show', `${sourceGitSha}:package-lock.json`], {
+        maxBuffer: 16 * 1024 * 1024,
+      }),
+    );
+    const reactNativePurchasesVersion = String(
+      sourcePackageLock.packages?.['node_modules/react-native-purchases']?.version ?? '',
+    );
+    return { verified: true, source, reactNativePurchasesVersion };
+  } catch {
+    return empty;
+  }
+}
+const trustedEntitlementsSourceGitSha = String(
+  prodEnv.PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_SOURCE_GIT_SHA ?? '',
+).trim();
+const trustedEntitlementsSourceReview = reviewedRevenueCatSourceAtCommit(
+  trustedEntitlementsSourceGitSha,
+);
+const revenueCatTrustedEntitlementsEvidence = auditRevenueCatTrustedEntitlementsEvidence({
+  root,
+  evidencePath: String(process.env.PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_EVIDENCE_PATH ?? ''),
+  nowMs: checkNowMs,
+  revenueCatAppId: String(prodEnv.REVENUECAT_APP_ID ?? ''),
+  bundleIdentifier: String(prodEnv.APP_IOS_BUNDLE_IDENTIFIER ?? ''),
+  buildNumber: String(prodEnv.CATALOG_RELEASE_IOS_BUILD_NUMBER ?? ''),
+  sourceGitSha: trustedEntitlementsSourceGitSha,
+  sourceGitCommitVerified: trustedEntitlementsSourceReview.verified,
+  reactNativePurchasesVersion: trustedEntitlementsSourceReview.reactNativePurchasesVersion,
+  trustedEntitlementsSource: trustedEntitlementsSourceReview.source,
+  entitlementId: String(prodEnv.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID ?? ''),
+  annualProductId: String(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID ?? ''),
+  monthlyProductId: String(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID ?? ''),
+  signedOffBy,
+});
+for (const evidenceError of revenueCatTrustedEntitlementsEvidence.errors) {
+  warn(false, evidenceError);
+}
 const revenueCatV2AccessEvidence = auditRevenueCatV2AccessEvidence({
   root,
   evidencePath: String(process.env.PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH ?? ''),

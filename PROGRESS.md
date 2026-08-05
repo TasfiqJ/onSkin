@@ -7730,6 +7730,42 @@ live role/provider/TLS/load/concurrency, supported-device, professional,
 legal/privacy, and release gates remain open. The result is not App Store,
 legal, safety, market, or revenue acceptance.
 
+### PAY-07 entitlement admission source checkpoint (2026-08-04)
+
+Native/default entitlement fixtures now return no positive state; the visual
+fixture is isolated to Expo web development. Unconfigured clients cannot mint a
+reverse trial, RevenueCat `NOT_REQUESTED` is rejected, and promotional grants
+remain explicitly out-of-store/non-billing. Purchase success requires a fresh
+post-mount exact-owner result, current verification, complete authority fields,
+and a future exact expiry. Renewal and price copy additionally requires an exact
+billing store, `willRenew=true`, the entitlement's own price, and cadence
+derived from the configured product ID. The success route revalidates against a
+live clock, and trial copy requires exact current-customer eligibility.
+
+The 390 x 844 Codex in-app browser run passed fail-closed direct entry, retry,
+subscription recovery, and the isolated confirmed visual branch. It found and
+fixed duplicate annual cadence copy. The refreshed confirmed branch now says
+`set to renew $49.99/yr` and reaches Today; onboarding and contextual upsell
+show `Subscribe to Pro` rather than a trial claim when no exact eligibility is
+available, the free-plan continuation reaches Today without Pro, and the
+unavailable store action recovers inline. The PAY-07 contract passes 18/18, the
+Trusted Entitlements evidence validator passes 21/21, focused tests pass
+276/276, the full mobile suite passes 336 files / 4,183 tests, mobile typecheck
+passes, and the 30-case Phase 6 smoke matrix passes with honest external
+warnings. Production/staging mobile custom grants are disabled; the Edge
+authority also refuses before authentication unless it is explicitly
+development on an exact HTTP loopback Supabase origin, so hosted projects remain
+denied even when mislabeled. Phase 6 now requires a committed exact-build Trusted
+Entitlements artifact rather than a boolean alone. Evidence and exact limitations are in
+`docs/hugeToDo/PAY-07-ENTITLEMENT-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md`.
+
+PAY-07 remains live-blocked on configuring the selected Apple-managed iOS
+introductory offer, exact-build RevenueCat response-signature-verification
+evidence, real
+products/offering/webhook, hosted authority, signed-build sandbox/TestFlight and
+physical-iPhone lifecycle proof, qualified legal/privacy review, and Apple's
+independent App Review outcome.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

@@ -169,8 +169,9 @@ historical only: the retained human manifest records a different, non-ancestor
 Git SHA and no current governed-chain binding. The current source revision must
 republish and recheck every required unit through the governed `E -> ... -> F`
 chain. At the current CORE-06A source checkpoint on 2026-07-29, repository
-typecheck and strict lint pass, and `npm test` passes 331 mobile test files /
-4,156 tests plus the catalog operator console's 7 files / 24 tests. These are
+typecheck and strict lint pass, and the 2026-08-04 full mobile run passes 336
+mobile test files / 4,183 tests. The prior catalog operator console baseline
+remains 7 files / 24 tests. These are
 local source facts only; they do not clear hosted, native, professional-review,
 App Review, market, or revenue gates.
 sequence before any packet can be treated as current release evidence. The
@@ -428,8 +429,8 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains a 70-migration source candidate through
-`20260726000071`, targeted hand-maintained
+The repo contains a 71-migration source candidate through
+`20260729000072`, targeted hand-maintained
 RPC types with DB-08 still open, 17 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
 current source inventory classifies all 82 RLS-enabled public tables: 36 directly
@@ -444,7 +445,8 @@ the CAT-08/default-ACL repair, the legacy clinical fixture seal, and the
 checker-only catalog-release lint shape. Migrations `0068` and `0069` add the
 routine-adherence authority and owner-derived Shelf/completion replay bridge;
 `0070` records a draft-to-draft consent-copy transition without release
-authority; and `0071` establishes recommendation zero admission. This is a
+authority; `0071` establishes recommendation zero admission; and `0072`
+establishes literal-zero commerce admission. This is a
 source-contract classification, not hosted evidence.
 The last recorded CAT-02 Docker baseline covered the then-
 current 35-assertion partial suite and remains historical. The current source
@@ -600,8 +602,8 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 17-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 70
-  migrations through `0071`, redeploys the manifest, retains linked types
+  immediately rereads the full empty-target boundary, applies all 71
+  migrations through `0072`, redeploys the manifest, retains linked types
   without changing repository types, and leaves
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
@@ -613,7 +615,7 @@ Next action:
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
   signed-anonymous user, the no-session client, the regenerated exact `0062`
-  CAT-03 authority/readback plus the exact current-head (`0071`)
+  CAT-03 authority/readback plus the exact current-head (`0072`)
   private/read-sealed-table inventory, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
@@ -791,13 +793,25 @@ and the authenticated reconciliation function accepts no caller owner/time.
 Every configure/log-in/offering/purchase/Restore/customer-info request requires
 exact publication authority. A durable write-ahead journal prevents a second
 charge after an unconfirmed native result. iOS copy names the App Store and
-deletion copy discloses up to 29 days for provider verification. None of this is
-live RevenueCat, StoreKit, counsel, physical-iPhone, or App Review evidence.
+deletion copy discloses up to 29 days for provider verification. The PAY-07
+candidate also removes local reverse-trial minting, makes default/native E2E
+fixtures fail closed, rejects RevenueCat `NOT_REQUESTED`, preserves provider
+promotions as RevenueCat-granted out-of-store/non-billing `promotional`
+entitlements (not Apple promotional offers), and refuses confirmation for
+cached, pending, failed, expired, stale-verification, or incomplete-authority
+evidence. Renewal/price copy requires an exact billing store,
+`willRenew=true`, and the entitlement's own price. None of this is live
+RevenueCat, StoreKit,
+counsel, physical-iPhone, or App Review evidence.
 
 Next action:
 
 - create RevenueCat project after final app identity;
 - configure monthly/annual products, offerings, and entitlements;
+- retain the exact production build's explicit RevenueCat informational
+  response-signature-verification configuration and sandbox/TestFlight purchase
+  and Restore results showing `VERIFIED` or `VERIFIED_ON_DEVICE`; keep
+  `NOT_REQUESTED` denied;
 - bind RevenueCat `appUserID` to Supabase user ID;
 - fetch localized prices from RevenueCat;
 - verify purchase, Restore, intro eligibility, cancellation/manage links and
@@ -809,12 +823,29 @@ Next action:
 - configure and verify provider deletion/recreation, alias/transfer, late
   webhook, fresh v1 reconciliation, and the v2 full-family absence contract
   against disposable sandbox data;
-- obtain counsel/App Review approval for the transaction-journal retention and
-  29-day deletion disclosure.
+- obtain qualified counsel review of transaction-journal retention and the
+  29-day deletion disclosure, then submit the exact build for Apple's independent
+  App Review decision;
+- use the safest iOS release default: disable the custom server-issued full-Pro
+  grant and configure an Apple introductory offer. If retained as an exception,
+  record counsel analysis and any Apple correspondence, separately prove
+  server-verified App Attest/DeviceCheck, cross-account/device eligibility,
+  replay resistance, and rate limits, and remain launch-blocked until the exact
+  submitted build is accepted by Apple for App Store distribution with that
+  mechanism present. No prior review, correspondence, or source result
+  guarantees acceptance.
 
 Exit criteria:
 
-- no local stub can grant paid access in production;
+- no client/native/default fixture or unconfigured path can grant paid access;
+- the custom app-grant mechanism is absent from the release candidate, or an
+  exception has counsel/Apple-correspondence inputs plus reviewed abuse controls
+  and Apple has accepted the exact submitted build for App Store distribution
+  with that mechanism present; no earlier build or correspondence substitutes
+  for that exact-build outcome;
+- the signed production candidate proves its exact SDK/version/configuration
+  kept RevenueCat response-signature verification enabled and its
+  purchase/Restore paths return verified evidence;
 - purchase/restore/renewal/refund/expiry/grace/upgrade/downgrade matrix passes;
 - entitlement state is correct offline and reconciles online;
 - account deletion handles active subscribers correctly.
@@ -1233,12 +1264,13 @@ Exit criteria:
 - migration `0057` passes the hosted two-connection replay, conflict,
   correction, source-withdrawal, promotion, dependency-serving, and rollback
   drill for the exact reviewed batch;
-- the complete migration chain through `0071`, with `0058` as its foundational
+- the complete migration chain through `0072`, with `0058` as its foundational
   CAT-03 authority, `0064`/`0065` as forward-only profile-provenance and
   operator-transition/default-ACL repairs, `0066` as the legacy clinical-table
   seal, `0067` as the checker-only catalog-release lint contract, `0068`/`0069`
   as adherence/replay authorities, `0070` as draft-only consent staging, and
-  `0071` as recommendation zero admission, passes
+  `0071` as recommendation zero admission, and `0072` as commerce zero
+  admission, passes
   clean local and hosted pgTAP,
   two-connection replay/
   staging/release/supersession/retirement races, successor isolation, direct-

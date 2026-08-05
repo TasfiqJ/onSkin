@@ -28,7 +28,21 @@ const appEnvironment =
   process.env.EXPO_PUBLIC_APP_ENV === undefined
     ? variant
     : readVariantEnv('EXPO_PUBLIC_APP_ENV', process.env.EXPO_PUBLIC_APP_ENV);
+if (appEnvironment !== variant) {
+  throw new Error(
+    `APP_VARIANT and EXPO_PUBLIC_APP_ENV must match exactly; got ${variant} and ${appEnvironment}.`,
+  );
+}
 const isProduction = variant === 'production';
+const customProGrantEnabled = readOptionalBooleanEnv(
+  'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED',
+  process.env.EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED,
+);
+if (customProGrantEnabled && variant !== 'development') {
+  throw new Error(
+    'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED may be true only for a development build; the iOS release candidate must use StoreKit purchase or introductory-offer authority.',
+  );
+}
 const iosWidgetExtensionBuildEnabled = readOptionalBooleanEnv(
   IOS_WIDGET_EXTENSION_BUILD_ENV,
   process.env[IOS_WIDGET_EXTENSION_BUILD_ENV],

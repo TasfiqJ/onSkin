@@ -48,7 +48,6 @@ import {
  */
 const KEY = 'onskin.entitlement.v2';
 const LEGACY_KEY = 'onskin.entitlement.v1';
-const LOCAL_REVERSE_TRIAL_DAYS = 7;
 
 export const ENTITLEMENT_CACHE_INVALID = 'ENTITLEMENT_CACHE_INVALID';
 export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION = 'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
@@ -157,10 +156,11 @@ export type EvidenceConversion =
       status: 'ignored' | 'rejected';
       reason:
         | 'verification_failed'
+        | 'verification_mismatch'
         | 'verification_unknown'
         | 'invalid_request_date'
         | 'verified_on_device_empty'
-        | 'not_requested_empty'
+        | 'verification_not_requested'
         | 'inactive_weak_evidence'
         | 'invalid_entitlement'
         | 'missing_store_cursor'
@@ -290,12 +290,6 @@ function nowISO(): string {
   return new Date().toISOString();
 }
 
-function daysFromNowISO(days: number): string {
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + days);
-  return expiresAt.toISOString();
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -349,6 +343,7 @@ function asStore(value: string | null): StoredEntitlement['store'] {
     value === 'play_store' ||
     value === 'web' ||
     value === 'app_granted' ||
+    value === 'promotional' ||
     value === 'test_store'
   ) {
     return value;
@@ -615,8 +610,7 @@ function decodeLegacyProof(value: unknown): LegacyPositiveProof | null {
   if (!isRecord(value) || !hasExactKeys(value, LEGACY_PROOF_KEYS)) return null;
   const entitlement = strictStoredEntitlement(value.entitlement);
   if (
-    (value.provenance !== 'revenuecat_not_requested' &&
-      value.provenance !== 'server_missing_cursor') ||
+    value.provenance !== 'server_missing_cursor' ||
     !entitlement?.isActive ||
     typeof value.fingerprint !== 'string' ||
     value.fingerprint !== entitlementEvidenceFingerprint('legacy', entitlement)
@@ -628,6 +622,53 @@ function decodeLegacyProof(value: unknown): LegacyPositiveProof | null {
     entitlement,
     fingerprint: value.fingerprint,
   };
+}
+
+/**
+ * Releases before the Trusted Entitlements boundary could persist an
+ * owner-bound V2 legacy proof from RevenueCat verification=NOT_REQUESTED.
+ * That proof must never grant access, but treating the otherwise-valid
+ * envelope as generic corruption prevents a fresh authoritative response
+ * from repairing an upgraded installation. Recognize only that exact retired
+ * shape so merge can atomically discard it after the current owner has
+ * received definitive evidence.
+ */
+function decodeDeprecatedNotRequestedEnvelope(raw: string): EntitlementCacheEnvelopeV2 | null {
+  let value: unknown;
+  try {
+    value = JSON.parse(raw) as unknown;
+  } catch {
+    return null;
+  }
+  if (
+    !isRecord(value) ||
+    value.version !== ENTITLEMENT_CACHE_SCHEMA_VERSION ||
+    !hasExactKeys(value, ENVELOPE_KEYS) ||
+    !isRecord(value.legacy) ||
+    !hasExactKeys(value.legacy, LEGACY_PROOF_KEYS) ||
+    value.legacy.provenance !== 'revenuecat_not_requested'
+  ) {
+    return null;
+  }
+  const entitlement = strictStoredEntitlement(value.legacy.entitlement);
+  if (
+    !entitlement?.isActive ||
+    typeof value.legacy.fingerprint !== 'string' ||
+    value.legacy.fingerprint !== entitlementEvidenceFingerprint('legacy', entitlement)
+  ) {
+    return null;
+  }
+  try {
+    return decodeEntitlementEnvelope(JSON.stringify({ ...value, legacy: null }));
+  } catch {
+    return null;
+  }
+}
+
+function hasDefinitiveReplacementEvidence(
+  evidence: readonly (EntitlementEvidence | null)[],
+): boolean {
+  return evidence.some((item) => item?.kind === 'store_definitive' || item?.kind === 'app_grant');
 }
 
 function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
@@ -886,9 +927,7 @@ function normalizedEvidence(evidence: EntitlementEvidence): EntitlementEvidence 
   }
   if (
     evidence.kind === 'legacy_positive' &&
-    (!entitlement.isActive ||
-      (evidence.provenance !== 'revenuecat_not_requested' &&
-        evidence.provenance !== 'server_missing_cursor'))
+    (!entitlement.isActive || evidence.provenance !== 'server_missing_cursor')
   ) {
     return null;
   }
@@ -930,6 +969,7 @@ export async function mergeEntitlementEvidenceBatch(
     } = {};
     await updatePrivateItem(KEY, (raw) => {
       let current: EntitlementCacheEnvelopeV2;
+      let sanitizedRetiredCache = false;
       if (raw === null) {
         current = emptyEntitlementEnvelope(context.ownerBinding);
       } else {
@@ -943,6 +983,14 @@ export async function mergeEntitlementEvidenceBatch(
             evidence.some((item) => item?.kind !== 'legacy_positive')
           ) {
             current = emptyEntitlementEnvelope(context.ownerBinding);
+          } else if (
+            errorMessage(error) === ENTITLEMENT_CACHE_INVALID &&
+            hasDefinitiveReplacementEvidence(evidence)
+          ) {
+            const deprecated = decodeDeprecatedNotRequestedEnvelope(raw);
+            if (!deprecated || deprecated.ownerBinding !== context.ownerBinding) throw error;
+            current = deprecated;
+            sanitizedRetiredCache = true;
           } else {
             throw error;
           }
@@ -974,7 +1022,7 @@ export async function mergeEntitlementEvidenceBatch(
                 ? 'stale'
                 : 'ignored';
       mutation.requiresUncachedRefresh = projection.hasConflict;
-      mutation.storageChanged = merged !== current;
+      mutation.storageChanged = sanitizedRetiredCache || merged !== current;
       mutation.snapshot = snapshotFromEnvelope(merged, canonicalObservedAt);
       if (!mutation.storageChanged) return raw;
       return encodeEntitlementEnvelope(merged);
@@ -1033,11 +1081,22 @@ export function customerInfoToEvidence(
   const normalized = entitlement ? normalizeStoredEntitlement(entitlement) : null;
   if (entitlement && !normalized) return { status: 'rejected', reason: 'invalid_entitlement' };
   const verification = customerInfo.entitlements.verification;
+  const selected = customerInfo.entitlements.active[env.revenueCatEntitlementId] ?? null;
+  const selectedActive = selected?.isActive === true;
   if (
     verification === 'FAILED' ||
     Object.values(customerInfo.entitlements.active).some((info) => info.verification === 'FAILED')
   ) {
     return { status: 'rejected', reason: 'verification_failed' };
+  }
+  if (verification === 'NOT_REQUESTED') {
+    return { status: 'rejected', reason: 'verification_not_requested' };
+  }
+  if (
+    selectedActive !== (normalized?.isActive === true) ||
+    (selectedActive && selected?.verification !== verification)
+  ) {
+    return { status: 'rejected', reason: 'verification_mismatch' };
   }
   const attributed = normalized
     ? { ...normalized, source: 'revenuecat' as const, verifiedAt: requestDate }
@@ -1075,17 +1134,6 @@ export function customerInfoToEvidence(
         },
         entitlement: { ...attributed, verifiedAt: null },
         provenance: 'revenuecat_verified_on_device',
-      },
-    };
-  }
-  if (verification === 'NOT_REQUESTED') {
-    if (!attributed?.isActive) return { status: 'ignored', reason: 'not_requested_empty' };
-    return {
-      status: 'evidence',
-      evidence: {
-        kind: 'legacy_positive',
-        provenance: 'revenuecat_not_requested',
-        entitlement: { ...attributed, verifiedAt: null },
       },
     };
   }
@@ -1703,35 +1751,15 @@ async function commitAppGrant(
 
 export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
   return runAccountGenerationOperation(async (lease) => {
-    const context = await currentEntitlementOwnerContext();
-    lease.assertCurrent();
+    if (!env.customProGrantEnabled) {
+      throw new Error('CUSTOM_PRO_GRANT_DISABLED');
+    }
     if (!isSupabaseConfigured) {
-      if (env.appEnvironment !== 'development') {
-        throw new Error('Reverse trial is unavailable until Supabase is configured.');
-      }
-      const grantedAt = nowISO();
-      const entitlement = await commitAppGrant(context, {
-        tier: 'pro',
-        isActive: true,
-        periodType: 'reverse_trial',
-        store: 'app_granted',
-        productId: null,
-        expiresAt: daysFromNowISO(LOCAL_REVERSE_TRIAL_DAYS),
-        willRenew: false,
-        grantedAt,
-        source: 'app_granted',
-        environment: 'development',
-        managementUrl: null,
-        verifiedAt: grantedAt,
-        offeringId: null,
-        packageId: null,
-        storeUserId: null,
-        priceLabel: null,
-      });
-      lease.assertCurrent();
-      return entitlement;
+      throw new Error('Reverse trial is unavailable until Supabase is configured.');
     }
 
+    const context = await currentEntitlementOwnerContext();
+    lease.assertCurrent();
     const { data, error } = await supabase.functions.invoke('subscription-grants', {
       body: { action: 'start_reverse_trial' },
       signal: lease.signal,

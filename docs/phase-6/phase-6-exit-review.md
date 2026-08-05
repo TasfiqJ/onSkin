@@ -27,8 +27,19 @@
 - iOS marketplace copy names the App Store. Account deletion does not imply
   billing cancellation and discloses that provider verification can take up to
   29 days.
-- Client E2E entitlement fixtures and artificial entitlement delays are ignored
-  outside development builds, and the Phase 6 verifier enforces that guard.
+- Positive entitlement fixtures and artificial entitlement delays exist only
+  in the Expo web development implementation. Default and native modules are
+  fail-closed, and Phase 6 plus PAY-07 source contracts enforce the boundary.
+- Unconfigured clients refuse reverse trials, RevenueCat `NOT_REQUESTED`
+  snapshots are rejected, and RevenueCat-granted `promotional` entitlements are
+  explicitly out-of-store/non-billing rather than Apple promotional offers. A
+  separate Edge boundary denies the custom grant before authentication unless
+  the runtime is explicitly development on an exact HTTP loopback Supabase
+  origin with an explicit port; hosted projects fail closed even if mislabeled.
+  A direct URL or cached, pending, failed, expired, stale-verification, or
+  incomplete-authority result renders recovery. Confirmation requires a fresh
+  post-mount exact-owner result and future exact expiry; renewal/price copy also
+  requires an exact billing store, `willRenew=true`, and the entitlement price.
 - Phase 6 scripts generate a QA packet and block strict exit on missing external evidence.
 - The generated QA packet hashes payment lifecycle routes, subscription
   contract tests, human-simulated E2E rules, user-flow tree, manifest
@@ -51,7 +62,11 @@ live RevenueCat, physical-iPhone, professional-review, or App Store evidence.
 
 ## Seven-Figure Readiness
 
-The product thesis still depends on paid willingness for a trusted skincare routine OS, not on payment mechanics alone. Phase 6 removes a major monetization risk: users cannot self-grant paid access locally, prices are not hardcoded into payable offers, and restore/cancel/delete behavior is aligned with store rules.
+The product thesis still depends on paid willingness for a trusted skincare
+routine OS, not on payment mechanics alone. The current PAY-07 source candidate
+removes known client-created Pro grants; this is not a claim that the custom
+server app grant is Apple-approved, that hosted authority is verified, or that
+restore/cancel/delete behavior has passed the signed-build lifecycle matrix.
 
 Revenue target model:
 
@@ -62,7 +77,7 @@ Revenue target model:
 
 Payment correctness target:
 
-- 0 known local self-grant paths
+- 0 known client-created Pro grant paths in the current source candidate
 - 0 production Test Store leakage paths
 - 0 hardcoded payable prices
 - 0 cancellation flows that revoke access before expiration
@@ -82,7 +97,19 @@ Payment correctness target:
   absence, deletion/recreation, and rate-limit behavior need disposable live
   provider evidence.
 - Production policy/support URLs must be real.
-- Counsel/App Review must approve the transaction-journal retention and exact
-  up-to-29-days deletion disclosure.
+- Qualified counsel must review the transaction-journal retention and exact
+  up-to-29-days deletion disclosure; only Apple can decide the exact submitted
+  build in App Review.
 - Brand/legal clearance must be recorded before production release.
 - Finance owner must sign off on price, refund, fee, tax, and churn assumptions.
+- The safest iOS release candidate disables the custom server-issued full-Pro
+  reverse trial and uses an Apple-managed introductory offer. If retained as an
+  exception, attach qualified counsel analysis, any Apple correspondence, and
+  App Attest/DeviceCheck-backed anti-abuse/one-grant evidence, while remaining
+  launch-blocked unless Apple accepts the exact submitted build for App Store
+  distribution with that mechanism present. No prior review or correspondence
+  guarantees acceptance.
+- Retain the exact production build's explicit RevenueCat informational
+  response-signature-verification configuration and sandbox/TestFlight purchase
+  and Restore proof returning `VERIFIED` or `VERIFIED_ON_DEVICE`;
+  `NOT_REQUESTED` must remain a denial.
