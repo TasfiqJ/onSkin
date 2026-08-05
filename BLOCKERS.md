@@ -1,8 +1,8 @@
 # Blockers - iOS All-Features Launch Gates
 
-Date: 2026-07-29
+Date: 2026-08-05
 
-Status reviewed: 2026-07-29
+Status reviewed: 2026-08-05
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -457,22 +457,24 @@ recommendation-zero-admission assertions. The corrected `0065`-head replay compl
 structural pgTAP phase, and the focused CAT-08 exact-role plan passes locally.
 The focused `0066` seal rehearsal/26-assertion plan passes, while the focused
 `0067` rehearsal/seven-assertion plan passes and direct
-`plpgsql_check_function` inspection returns no findings. On 2026-07-29,
-`npm run phase2:db-local-verify` exited 0 against the complete 70-migration
-chain through `20260726000071`: all four forward cutovers
-(`0067 -> 0068 -> 0069 -> 0070 -> 0071`), two clean resets, exact 70-version
-history with `0071` latest, the focused current-head lane, 15 structural pgTAP
-files / 1,199 assertions including CAT-03 99/99, error-level public-schema
-lint, an empty migration-shadow diff, temporary type generation of 6,771 lines
-with SHA-256
+`plpgsql_check_function` inspection returns no findings. On 2026-08-05,
+`npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at clean commit
+`57da25f63` against the complete 71-migration chain through
+`20260729000072`: all five forward cutovers
+(`0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072`), including commerce 21/21;
+two clean resets; exact 71-version history with `0072` latest; the focused
+five-file lane / 433 assertions; 16 structural pgTAP files / 1,222 assertions
+including CAT-03 99/99; error-level public-schema lint; an empty
+migration-shadow diff; temporary type generation of 6,771 lines with SHA-256
 `39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
-the CAT-08 two-connection rehearsal 10/10, and complete teardown. Cleanup left
-zero DB-05 containers, volumes, networks, processes, or temporary directories.
-Repository types were deliberately not replaced, so DB-08 remains open. This
-is disposable local PostgreSQL 15 source evidence only; it does not prove
-hosted staging/production, generated-type parity or replacement, live
-role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
-compatibility, device behavior, professional approval, or release readiness.
+the CAT-08 two-connection rehearsal 10/10, and awaited teardown plus removal of
+that run's own sandbox. Historical or hard-timeout roots were excluded and are
+not claimed absent. Repository types were deliberately not replaced, so DB-08
+remains open. This is disposable local PostgreSQL 15 source evidence only; it
+does not prove hosted staging/production, generated-type parity or replacement,
+live role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
+compatibility, device behavior, professional approval, App Store acceptance,
+legal compliance, revenue, or release readiness.
 Exact local evidence now passes; reviewed hosted evidence remains absent.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system,
 the separate RevenueCat/app-grant entitlement authorities, and the `0064`
@@ -485,7 +487,7 @@ upgrade may ship until the complete `0063`-through-current chain passes under a
 Supabase-equivalent nonsuperuser migration owner and proves that
 `catalog_operator_edge` has no membership or admin grants. The existing
 PostgreSQL 17 `0065` superuser rehearsal proves forward-migration behavior only;
-no PostgreSQL 15/17 claim is made here for the exact `0068`-`0071` chain.
+no PostgreSQL 15/17 claim is made here for the exact `0068`-`0072` chain.
 
 The DB-06 source procedure is now complete for a first empty staging project.
 It deploys only a Git-blob-verified immutable clean-main snapshot through the
@@ -572,8 +574,8 @@ consented/privacy-minimized beta-shelf coverage corpus, curation/holdout
 separation, exact multi-batch/four-scope CAT-02 memberships, confidence-bound
 quality gates, and qualified review. Current CAT-03 review and database-readback
 artifacts must attest exact latest migration `20260722000062`. The exact
-70-migration local gate through `0071` passes, including the current CAT-03 plan
-at 99/99 within the 15-file / 1,199-assertion suite, lint, empty drift,
+71-migration local gate through `0072` passes, including the current CAT-03 plan
+at 99/99 within the 16-file / 1,222-assertion suite, lint, empty drift,
 temporary type generation, and the CAT-08 10/10 two-connection rehearsal. This
 remains disposable local evidence. The hosted staging/release/supersession race
 and serving drill, real beta corpus, witnessed target/decision, signed

@@ -1,7 +1,7 @@
 # Phase 2 Readiness Checklist
 
 Date: 2026-07-15
-Updated: 2026-07-29 for the 70-migration chain through `0071`
+Updated: 2026-08-05 for the 71-migration chain through `0072`
 
 Phase 2 should not start until naming, account ownership, environments, and
 secret handling are clear enough that production infrastructure will not need to
@@ -75,10 +75,12 @@ clears the brand.
    hosted Auth signup, anonymous signup, all 26 reviewed external providers,
    all seven reviewed hooks, SAML, OAuth server, custom OAuth, SSO, and
    third-party integrations disabled, with Auth admin-creation automation off.
-6. Run `npm run phase2:db-local-verify` and require the committed
-   `0067` -> `0068` rehearsal to pass against nonzero legacy caches,
-   client-authored freezes, partial steps, and routine markers before either
-   repeatable head reset is accepted. Then run
+6. Run `npm run phase2:db-local-verify` and require all five committed cutover
+   rehearsals from `0067` through `0072` to pass, including nonzero legacy
+   adherence caches, client-authored freezes, partial steps, routine markers,
+   replay/export fixtures, draft consent, recommendation purge/ACL, and
+   commerce attribution/ACL convergence before either repeatable head reset is
+   accepted. Then run
    `scripts/phase2/deploy-supabase-staging.ps1`. The pinned procedure
    creates and repeatedly verifies an immutable Git snapshot, sets
    `DB06_TRAFFIC_FREEZE=frozen`, predeploys all 17 guarded default functions,
@@ -87,8 +89,12 @@ clears the brand.
 7. Require the immediate pre-push gate to revalidate cutover bytes and reread
    the exact function inventory, public freeze canaries, Auth freeze, empty
    migration inventory, schema, Storage, and all Cron jobs before applying the
-   70 migrations through `0071`. The local acceptance lane separately rehearses
-   `0067 -> 0068 -> 0069 -> 0070 -> 0071` before its two clean head resets.
+   71 migrations through `0072`. The local acceptance lane separately rehearses
+   `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` before its two clean head
+   resets. The exact 2026-08-05 clean-`57da25f63` local gate passed that lane,
+   exact 71-version history, focused 5 files/433 assertions, structural 16
+   files/1,222 assertions, lint, empty drift, temporary types, CAT-08 10/10,
+   and removal of its own sandbox; hosted proof remains required.
    That gate reparses the unchanged artifact
    bytes/hashes and
    proves their current `validUntil`/`holdUntil` plus the seven-hour remaining

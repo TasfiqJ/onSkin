@@ -216,8 +216,8 @@ catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, hosted
 governed full-chain evidence through `0072`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and
 no Apple, legal, product-quality, market, or revenue outcome is implied. The
-exact disposable local `0071` gate now passes, including CAT-03 99/99 within the
-15-file / 1,199-assertion pgTAP suite. That is local source evidence only, not a
+exact disposable local `0072` gate now passes, including CAT-03 99/99 within the
+16-file / 1,222-assertion pgTAP suite. That is local source evidence only, not a
 retained governed hosted packet, signed readback, real corpus, or active
 catalog.
 
@@ -775,24 +775,26 @@ writer. `0072` adds the literal-zero COM-01A commerce-admission boundary and
 retires the stale poller authority. The repository therefore contains 71
 migrations through `20260729000072`.
 
-On 2026-07-29, `npm run phase2:db-local-verify` exited 0 against the complete
-70-migration chain through `20260726000071`: all four forward cutovers
-(`0067 -> 0068 -> 0069 -> 0070 -> 0071`), two clean resets, exact 70-version
-history with `0071` latest, the focused current-head lane, 15 structural pgTAP
-files / 1,199 assertions including CAT-03 99/99, error-level public-schema lint,
-an empty migration-shadow diff, temporary type generation of 6,771 lines with
+On 2026-08-05, `npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at
+clean commit `57da25f63` against the complete 71-migration chain through
+`20260729000072`: all five forward cutovers
+(`0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072`), including the commerce
+zero-admission rehearsal 21/21; two clean resets; exact 71-version history with
+`0072` latest; the focused five-file lane / 433 assertions; 16 structural pgTAP
+files / 1,222 assertions including CAT-03 99/99; error-level public-schema lint;
+an empty migration-shadow diff; temporary type generation of 6,771 lines with
 SHA-256
 `39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
-the CAT-08 two-connection rehearsal 10/10, and complete teardown. Cleanup left
-zero DB-05 containers, volumes, networks, processes, or temporary directories.
-Repository types were deliberately not replaced, so DB-08 remains open. This
-is disposable local PostgreSQL 15 source evidence only; it does not prove
-hosted staging/production, generated-type parity or replacement, live
-role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
-compatibility, device behavior, professional approval, or release readiness.
-That recorded run predates `0072`; the current runner expects the exact
-71-migration chain, but no fresh complete `0072` current-head replay is claimed
-by this paragraph.
+the CAT-08 two-connection rehearsal 10/10; and awaited teardown plus recursive
+removal of this run's own random sandbox `routinekind-db05-local-1fKYbR`. The
+run emitted no stderr or cleanup diagnostic and left the worktree clean.
+Historical or hard-timeout verifier roots from other runs were excluded and
+are not claimed absent. Repository types were deliberately not replaced, so
+DB-08 remains open. This is disposable local PostgreSQL 15 source evidence
+only; it does not prove hosted staging/production, generated-type parity or
+replacement, live role/provider/TLS/load/concurrency behavior, PostgreSQL
+major-version compatibility, device behavior, professional approval, App Store
+acceptance, legal compliance, revenue, or release readiness.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. The fresh-only source procedure now binds all 71 migrations through

@@ -93,14 +93,45 @@ passed:
 - temporary local type generation of 6,771 lines with SHA-256
   `39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`;
 - the CAT-08 two-connection revocation rehearsal 10/10; and
-- complete teardown with zero DB-05 containers, volumes, networks, verifier
-  processes, or temporary verifier directories.
+- complete teardown of that verification run's own containers, volumes,
+  network, process tree, and random sandbox. Historical abandoned verifier
+  roots from other interrupted runs were outside that run and are not covered.
 
 Repository database types were deliberately not replaced, so DB-08 remains
 open. This update is disposable local source evidence only. It does not prove
 hosted staging/production history or drift, linked-type parity, live
 role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
 compatibility, device behavior, professional approval, or release readiness.
+
+## 2026-08-05 Current-Head Verification Update
+
+`npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at clean source
+commit `57da25f63` against the complete 71-migration chain through
+`20260729000072`. The isolated credential-free PostgreSQL 15 run passed:
+
+- all five sequential cutovers
+  (`0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072`), including the 0071-to-0072
+  commerce zero-admission rehearsal 21/21;
+- two complete clean resets and exact 71-version history with `0072` latest;
+- the focused five-file lane with 433 planned assertions;
+- 16 structural pgTAP files / 1,222 assertions, including CAT-03 99/99;
+- public-schema error-level lint;
+- an empty `public`/`auth`/`storage` migration-shadow comparison;
+- temporary local type generation of 6,771 lines with SHA-256
+  `39619a6870c33fc402323c61fce5601c0fb1460993026b8465f0ce56a0a9a91e`;
+- the CAT-08 two-connection revocation rehearsal 10/10; and
+- awaited shutdown plus recursive removal of this authoritative run's own
+  random sandbox `routinekind-db05-local-1fKYbR`.
+
+The run emitted no stderr or cleanup diagnostic, and the worktree remained
+clean. Historical or hard-timeout verifier roots from other runs were not part
+of this acceptance and are not claimed absent. Repository database types were
+deliberately not replaced, so DB-08 remains open. This is disposable local
+source evidence only. It does not prove hosted staging/production history or
+drift, linked-type parity, live role/provider/TLS/load/concurrency behavior,
+PostgreSQL major-version compatibility, device behavior, professional
+approval, App Store acceptance, legal compliance, revenue, or release
+readiness.
 
 ## Boundary And Remaining Gates
 
@@ -109,9 +140,10 @@ database URL, or hosted credential was required or used. No remote migration
 list, push, repair, reset, diff, type generation, or other mutation was run.
 
 Accordingly, “empty diff” in this evidence means only local replay versus a
-local migration shadow. It is not hosted drift parity. The 4,602-line temporary
-type file was evidence only: the repository database types were not replaced,
-and DB-08 remains open. DB-06 must still capture reviewed staging
+local migration shadow. It is not hosted drift parity. The historical
+4,602-line 2026-07-15 type file and the current 6,771-line 2026-08-05 type file
+were evidence only: the repository database types were not replaced, and DB-08
+remains open. DB-06 must still capture reviewed staging
 migration/checksum/deployment evidence. DB-08 must reconcile local generated
 types with reviewed staging before deliberately replacing the hand-authored
 repository types. DB-09/DB-10 hosted, provider, concurrency, and physical-iPhone

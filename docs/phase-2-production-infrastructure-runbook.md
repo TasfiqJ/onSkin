@@ -1,7 +1,7 @@
 # Phase 2 Production Infrastructure Runbook
 
 Date: 2026-07-15
-Updated: 2026-07-29 for the 70-migration chain through `0071`
+Updated: 2026-08-05 for the 71-migration chain through `0072`
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `OnSkin` until
@@ -27,8 +27,8 @@ create irreversible production accounts under `OnSkin` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 70 migrations through
-  `0071` and all 17 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only deployment of 71 migrations through
+  `0072` and all 17 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
@@ -48,12 +48,17 @@ create irreversible production accounts under `OnSkin` until
   cutover takes completion, profile, then freeze locks in the same order as
   runtime recomputation. Migration `0069` adds owner-derived Shelf/completion
   replay and minimized export sources; `0070` stages only a `draft_blocked`
-  consent-copy successor; and `0071` establishes recommendation zero admission,
+  consent-copy successor; `0071` establishes recommendation zero admission,
   purges the untrusted cache, and exposes only the bounded owner preference
-  writer. `npm run phase2:db-local-verify` rehearses each consecutive
-  `0067 -> 0068 -> 0069 -> 0070 -> 0071` cutover with the relevant legacy
-  fixtures before two ordinary repeatable 70-migration head resets. The exact
-  2026-07-29 run exited 0 through all phases and teardown.
+  writer; and `0072` establishes literal-zero commerce admission, retires the
+  stale poller authority, and deterministically converges legacy/current ACLs.
+  `npm run phase2:db-local-verify` rehearses each consecutive
+  `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` cutover with the relevant
+  legacy fixtures before two ordinary repeatable 71-migration head resets. The
+  exact 2026-08-05 clean-`57da25f63` run exited 0 through all phases, including
+  commerce 21/21, focused 5 files/433 assertions, structural 16 files/1,222
+  assertions, lint, empty drift, temporary types, CAT-08 10/10, and run-scoped
+  teardown. Historical roots were excluded.
 - `supabase/ops/account-deletion-work-lane.sql`: credential-free, fail-closed
   Cron/Vault provisioning for the durable account-deletion worker.
 - `docs/phase-9/account-deletion-operations-runbook.md`: exact deletion
@@ -123,7 +128,7 @@ create irreversible production accounts under `OnSkin` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 17-function manifest before migrations `0048`-`0068`, and proves
+   compatible 17-function manifest before migrations `0048`-`0072`, and proves
    all 17 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
@@ -133,7 +138,7 @@ create irreversible production accounts under `OnSkin` until
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
    the initial operator observations were recaptured. Only then does it apply
-   all 70 migrations through `0071` in source order, redeploy the same manifest, and retain
+   all 71 migrations through `0072` in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and

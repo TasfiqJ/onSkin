@@ -777,7 +777,7 @@
       "id": "DB-05",
       "status": "complete",
       "blockedBy": [],
-      "nextAction": "DB-05 is complete for the 2026-07-29 credential-free current-head local gate: npm run phase2:db-local-verify exited 0 against all 70 migrations through 0071; passed all four sequential forward cutovers, both clean resets, exact 70-migration history, the focused database lane, all 15 structural pgTAP files and 1,199 assertions including CAT-03 99/99, error-level schema lint, an empty shadow diff, temporary type generation at 6,771 lines with SHA-256 39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e, the CAT-08 ten-assertion two-connection rehearsal, teardown, and cleanup. Repository types remain deliberately unreplaced; route hosted reconciliation, reviewed type replacement, and live access-control proof through DB-06, DB-08, and DB-09/DB-10.",
+      "nextAction": "DB-05 is complete for the 2026-08-05 credential-free current-head local gate at clean commit 57da25f63: npm run phase2:db-local-verify exited 0 in 2,149.9 seconds against all 71 migrations through 0072; passed all five sequential forward cutovers including commerce 21/21, both clean resets, exact 71-migration history, the focused 5-file/433-assertion lane, all 16 structural pgTAP files and 1,222 assertions including CAT-03 99/99, error-level schema lint, an empty shadow diff, temporary type generation at 6,771 lines with SHA-256 39619a6870c33fc402323c61fce5601c0fb1460993026b8465f0ce56a0a9a91e, CAT-08 10/10, and awaited teardown plus removal of that run's own sandbox. Historical roots were excluded and are not claimed absent. Repository types remain deliberately unreplaced; route hosted reconciliation, reviewed type replacement, and live access-control proof through DB-06, DB-08, and DB-09/DB-10.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "docs/hugeToDo/DB-05-LOCAL-RESET-2026-07-14.md",
@@ -810,6 +810,9 @@
         "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
         "supabase/tests/database/recommendation_zero_admission.test.sql",
         "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+        "supabase/migrations/20260729000072_commerce_zero_admission.sql",
+        "supabase/tests/database/commerce_zero_admission.test.sql",
+        "supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql",
         "supabase/tests/database/catalog_operator_authority.test.sql",
         "supabase/seed.sql"
       ]
@@ -818,7 +821,7 @@
       "id": "DB-06",
       "status": "in_progress",
       "blockedBy": ["ACCT-03"],
-      "nextAction": "The fresh-staging source procedure binds the exact 70-migration history through 0071, and the 2026-07-29 credential-free current-head local gate now passes both clean resets, all four sequential cutovers, the focused lane, 15 pgTAP files/1,199 assertions, lint, empty shadow diff, temporary types, CAT-08 rehearsal, teardown, and cleanup. After ACCT-03 creates an approved empty staging project, prepare the full-target-bound cutover record, traffic/provider-freeze artifact, and five schema-v2 zero-cohort boundary files outside the worktree; close client/key distribution, hosted Auth, provider callback/retry, Apple notification, schedule, and Edge ingress; and execute the clean origin/main fresh-staging procedure. Review the mandatory before/immediate-pre-migration/after proofs, including the 0068 adherence authority, 0069 Shelf/completion replay and export boundary, 0070 draft-only consent transition, and 0071 recommendation cache purge, ACL, zero-admission, and preference-writer boundary. Keep DB06_TRAFFIC_FREEZE=frozen and release only through a separately recorded downstream live gate. No hosted run or live DB-06 packet is recorded here.",
+      "nextAction": "The fresh-staging source procedure binds the exact 71-migration history through 0072. The 2026-08-05 credential-free current-head gate at clean 57da25f63 passed both resets, all five sequential cutovers including commerce 21/21, the focused 5-file/433-assertion lane, 16 pgTAP files/1,222 assertions, lint, empty shadow diff, temporary types, CAT-08 10/10, and removal of that run's own sandbox; historical roots were excluded. After ACCT-03 creates an approved empty staging project, prepare the full-target-bound cutover record, traffic/provider-freeze artifact, and five schema-v2 zero-cohort boundary files outside the worktree; close client/key distribution, hosted Auth, provider callback/retry, Apple notification, schedule, and Edge ingress; and execute the clean origin/main fresh-staging procedure. Review the mandatory before/immediate-pre-migration/after proofs, including 0068 adherence authority, 0069 Shelf/completion replay and export, 0070 draft-only consent, 0071 recommendation zero admission, and 0072 commerce zero admission and stale-poller retirement. Keep DB06_TRAFFIC_FREEZE=frozen and release only through a separately recorded downstream live gate. No hosted run or live DB-06 packet is recorded here.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase2/deploy-supabase-staging.ps1",
@@ -857,6 +860,9 @@
         "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
         "supabase/tests/database/recommendation_zero_admission.test.sql",
         "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+        "supabase/migrations/20260729000072_commerce_zero_admission.sql",
+        "supabase/tests/database/commerce_zero_admission.test.sql",
+        "supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql",
         "scripts/phase2/local-supabase-contract.mjs",
         "supabase/tests/database/schema_contract.test.sql"
       ]
@@ -888,7 +894,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The local source candidate contains 70 migrations through 0071. The static inventory contract classifies 82 RLS-enabled public tables as 36 directly queryable private, 32 read-sealed private/authority, and 14 authenticated catalog/editorial tables; CAT-02/CAT-03/CAT-08 lifecycle relations, the two 0069 replay ledgers, and the 0071 recommendation-admission control are separately sealed in private. Migrations 0068-0071 add authoritative adherence, owner-derived Shelf/completion replay and export sources, draft-only health-consent staging, and recommendation zero admission without weakening the prior catalog/profile/operator controls. The exact 2026-07-29 70-migration local gate passed both resets, all four sequential cutovers, 15 pgTAP files/1,199 assertions, lint, empty shadow diff, 6,771-line temporary types with SHA-256 39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e, CAT-08 10/10, teardown, and cleanup. Next run the current 68-table public-schema private/read-sealed matrix plus every separately sealed private-schema authority lane against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile, exact profile/health epochs, replay/export/withdrawal, recommendation zero-admission, CAT-02/CAT-03 denial, lookup-minimization, truthful-freshness, and serving probes; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The local source candidate contains 71 migrations through 0072. The 2026-08-05 clean-57da25f63 local gate passed both resets, all five cutovers including commerce 21/21, focused 5 files/433 assertions, 16 pgTAP files/1,222 assertions including CAT-03 99/99, lint, empty shadow diff, 6,771-line temporary types with SHA-256 39619a6870c33fc402323c61fce5601c0fb1460993026b8465f0ce56a0a9a91e, CAT-08 10/10, and removal of that run's own sandbox; historical roots were excluded. Migrations 0068-0072 add authoritative adherence, owner-derived replay/export, draft-only health-consent staging, recommendation zero admission, and deterministic commerce zero-admission ACL convergence. Next run every public/private denial lane against reviewed staging and production with permanent users, signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple sessions, Turnstile, exact health epochs, replay/export/withdrawal, recommendation and commerce zero-admission, CAT-02/CAT-03 denial, lookup-minimization, truthful-freshness, and serving probes; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic state.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -938,6 +944,9 @@
         "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
         "supabase/tests/database/recommendation_zero_admission.test.sql",
         "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+        "supabase/migrations/20260729000072_commerce_zero_admission.sql",
+        "supabase/tests/database/commerce_zero_admission.test.sql",
+        "supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql",
         "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
@@ -1166,7 +1175,7 @@
       "id": "CAT-02",
       "status": "in_progress",
       "blockedBy": ["CAT-01"],
-      "nextAction": "The local source candidate provides the 0057/0061 signed-provenance, bounded-staging, dual-review, promotion/correction/withdrawal/rollback, dependency-serving, benzoyl-peroxide allowlist, health-write-guard, and bounded product-specific PAO controls. The offline v2 envelope, not the RPC, remains responsible for dual-review signatures. The CAT-02 218-assertion pgTAP plan passed within the exact 2026-07-29 70-migration/0071 local gate. Obtain real CAT-01 approvals, artifacts, reviewer keys/signatures, and zero-warning QA, deploy the complete chain through 0071 to reviewed staging, and execute the hosted two-connection retry, collision, correction, source-withdrawal, promotion, rollback, scale, and serving-path drill before any production batch.",
+      "nextAction": "The local source candidate provides the 0057/0061 signed-provenance, bounded-staging, dual-review, promotion/correction/withdrawal/rollback, dependency-serving, benzoyl-peroxide allowlist, health-write-guard, and bounded product-specific PAO controls. The offline v2 envelope, not the RPC, remains responsible for dual-review signatures. The CAT-02 218-assertion pgTAP plan passed within the exact 2026-08-05 clean-57da25f63 71-migration/0072 local gate and its 16-file/1,222-assertion structural suite. Obtain real CAT-01 approvals, artifacts, reviewer keys/signatures, and zero-warning QA, deploy the complete chain through 0072 to reviewed staging, and execute the hosted two-connection retry, collision, correction, source-withdrawal, promotion, rollback, scale, and serving-path drill before any production batch.",
       "evidenceRefs": [
         "docs/phase-4/catalog-import-promotion-runbook.md",
         "scripts/phase4/catalog-promotion-contract.mjs",
@@ -1183,7 +1192,7 @@
       "id": "CAT-03",
       "status": "in_progress",
       "blockedBy": ["CAT-01", "CAT-02", "DB-09", "DB-10", "H-07", "H-09", "REV-05"],
-      "nextAction": "The local CAT-03 source defines the 0058/0062 signed target, pre-holdout witnessed full-record decision, consent-minimized beta prioritization, curation/untouched holdout, confidence gates, exact CAT-01/CAT-02 membership, qualified row review, staged reviewer/operator authority, client-readable snapshot/root sealing, hard catalog floors, exact-set release, independent readback, immutable retirement, and mutation-ledger controls. Current review/readback artifacts must attest CAT-03 authority migration 20260722000062 while deployment evidence covers the complete current chain through 0071. The CAT-03 plan passed all 99 assertions within the exact 2026-07-29 70-migration/0071 local gate. Obtain real source/beta/witness/reviewer artifacts; run hosted full-chain pgTAP through 0071 plus the two-connection staging/release/supersession/retirement, root-restoration, successor, direct-service-role-denial, serving, withdrawal, and rollback drills; then release and independently sign the exact campaign readback. Beta demand remains prioritization only and cannot become a product fact or market-representative claim.",
+      "nextAction": "The local CAT-03 source defines the 0058/0062 signed target, pre-holdout witnessed full-record decision, consent-minimized beta prioritization, curation/untouched holdout, confidence gates, exact CAT-01/CAT-02 membership, qualified row review, staged reviewer/operator authority, client-readable snapshot/root sealing, hard catalog floors, exact-set release, independent readback, immutable retirement, and mutation-ledger controls. Current review/readback artifacts must attest CAT-03 authority migration 20260722000062 while deployment evidence covers the complete current chain through 0072. The CAT-03 plan passed all 99 assertions within the exact 2026-08-05 clean-57da25f63 71-migration/0072 local gate and its 16-file/1,222-assertion structural suite. Obtain real source/beta/witness/reviewer artifacts; run hosted full-chain pgTAP through 0072 plus the two-connection staging/release/supersession/retirement, root-restoration, successor, direct-service-role-denial, serving, withdrawal, and rollback drills; then release and independently sign the exact campaign readback. Beta demand remains prioritization only and cannot become a product fact or market-representative claim.",
       "evidenceRefs": [
         "docs/phase-4/catalog-curation-release-runbook.md",
         "docs/phase-4/catalog-coverage-quality-targets.template.json",
@@ -1286,7 +1295,7 @@
       "id": "CAT-07",
       "status": "in_progress",
       "blockedBy": ["CAT-06"],
-      "nextAction": "Preserve the green CAT-07 source/static-policy checkpoint. Its database plans now pass within the exact 2026-07-29 70-migration/0071 local gate, including lint, empty shadow diff, temporary types, and teardown/cleanup. Keep category-only estimates disabled unless a later bounded server-attested catalog projection and reviewed admission path exist; retain hosted migration/RLS plus live-catalog truth-table evidence; obtain named chemistry/legal review; resolve Apple 2.5.18/5.1.2 contextual-commerce versus sensitive-data-targeted-advertising classification for replenishment (consent is not sufficient); and capture exact signed-build physical-iPhone encrypted-storage/relaunch/accessibility/notification evidence.",
+      "nextAction": "Preserve the green CAT-07 source/static-policy checkpoint. Its database plans pass within the exact 2026-08-05 clean-57da25f63 71-migration/0072 local gate, including all five cutovers, 16 pgTAP files/1,222 assertions, lint, empty shadow diff, temporary types, CAT-08, and removal of that run's own sandbox; historical roots were excluded. Keep category-only estimates disabled unless a later bounded server-attested catalog projection and reviewed admission path exist; retain hosted migration/RLS plus live-catalog truth-table evidence; obtain named chemistry/legal review; resolve Apple 2.5.18/5.1.2 contextual-commerce versus sensitive-data-targeted-advertising classification for replenishment (consent is not sufficient); and capture exact signed-build physical-iPhone encrypted-storage/relaunch/accessibility/notification evidence.",
       "evidenceRefs": [
         "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
         "docs/02-ingredient-intelligence.md",
@@ -1455,7 +1464,7 @@
       "id": "CORE-05",
       "status": "in_progress",
       "blockedBy": ["CORE-04"],
-      "nextAction": "The current CORE-05 source candidate uses strict encrypted local v3 completion and Shelf envelopes, persists success before publication, admits only fully completed PM/recovery routine-day evidence, and fails closed on unreadable state. Migrations 0068 and 0069 add server-owned timezone-aware adherence projection plus owner-derived Shelf/completion replay, stable product tombstones, minimized receipts, and bounded export sources; 0070 only stages a current draft_blocked Ask-consent successor and grants no release authority. The exact 2026-07-29 70-migration/0071 local database gate now passes all cutovers, resets, focused and structural plans, lint, empty shadow diff, temporary types, CAT-08 rehearsal, and cleanup. CORE-04 remains incomplete, and hosted/native/two-device/notification/legal evidence remains open. Prove hosted replay, deletion-wins, withdrawal/export/account isolation, two-device convergence, physical-iPhone storage/timezone/notification/accessibility, archive privacy, approved consent/data-flow copy, and named review before restoring complete.",
+      "nextAction": "The current CORE-05 source candidate uses strict encrypted local v3 completion and Shelf envelopes, persists success before publication, admits only fully completed PM/recovery routine-day evidence, and fails closed on unreadable state. Migrations 0068 and 0069 add server-owned timezone-aware adherence projection plus owner-derived Shelf/completion replay, stable product tombstones, minimized receipts, and bounded export sources; 0070 only stages a current draft_blocked Ask-consent successor and grants no release authority. The exact 2026-08-05 clean-57da25f63 71-migration/0072 local database gate passed all five cutovers including commerce 21/21, both resets, focused 5 files/433 assertions, structural 16 files/1,222 assertions, lint, empty shadow diff, temporary types, CAT-08 10/10, and removal of that run's own sandbox; historical roots were excluded. CORE-04 remains incomplete, and hosted/native/two-device/notification/legal evidence remains open. Prove hosted replay, deletion-wins, withdrawal/export/account isolation, two-device convergence, physical-iPhone storage/timezone/notification/accessibility, archive privacy, approved consent/data-flow copy, and named review before restoring complete.",
       "evidenceRefs": [
         "docs/hugeToDo/CORE-05-ADHERENCE-SOURCE-CHECKPOINT-2026-07-26.md",
         "scripts/core05/adherence-source-contract.test.mjs",
@@ -1482,7 +1491,7 @@
       "id": "CORE-06",
       "status": "in_progress",
       "blockedBy": ["CORE-05"],
-      "nextAction": "CORE-06A is an in-progress zero-product-admission source checkpoint. Current provenance is limited to type_first and shelf_context; product-specific mode and goal-active review clearance are closed, caller-supplied recommendation types/copy are excluded, unavailable private inputs withhold output, and commerce admission returns false before where-to-buy rendering or network work. Migration 0071 purges the untrusted recommendation cache, keeps catalog recommendation eligibility false, revokes unused runtime mutation privileges, and exposes only the bounded owner preference writer. Its 0070 -> 0071 cutover, focused plans, current-head structural plans, ACL boundary, lint, shadow diff, and cleanup passed in the exact 2026-07-29 local database gate. Retain governed human-simulated UI evidence, then obtain the exact CAT-03 SKU/market/readback corpus, server-minted goal authority, claim-specific professional/counsel receipts, hosted/native/archive/privacy/accessibility/network proof, and a separately reviewed versioned product-specific successor before enabling named-product ranking or commerce.",
+      "nextAction": "CORE-06A is an in-progress zero-product-admission source checkpoint. Current provenance is limited to type_first and shelf_context; product-specific mode and goal-active review clearance are closed, caller-supplied recommendation types/copy are excluded, unavailable private inputs withhold output, and commerce admission returns false before where-to-buy rendering or network work. Migration 0071 purges the untrusted recommendation cache, keeps catalog recommendation eligibility false, revokes unused runtime mutation privileges, and exposes only the bounded owner preference writer; 0072 independently converges commerce ACLs to literal zero admission. Its 0070 -> 0071 and 0071 -> 0072 cutovers, focused 5-file/433-assertion lane, structural 16-file/1,222-assertion lane, ACL boundaries, lint, empty drift, CAT-08 10/10, and run-scoped cleanup passed in the exact 2026-08-05 clean-57da25f63 local database gate. Retain governed human-simulated UI evidence, then obtain the exact CAT-03 SKU/market/readback corpus, server-minted goal authority, claim-specific professional/counsel receipts, hosted/native/archive/privacy/accessibility/network proof, and a separately reviewed versioned product-specific successor before enabling named-product ranking or commerce.",
       "evidenceRefs": [
         "docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md",
         "scripts/core06/recommendation-admission-source-contract.test.mjs",
@@ -1494,7 +1503,10 @@
         "apps/mobile/src/features/commerce/WhereToBuy.tsx",
         "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
         "supabase/tests/database/recommendation_zero_admission.test.sql",
-        "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql"
+        "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+        "supabase/migrations/20260729000072_commerce_zero_admission.sql",
+        "supabase/tests/database/commerce_zero_admission.test.sql",
+        "supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql"
       ]
     },
     {

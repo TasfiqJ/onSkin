@@ -1,7 +1,7 @@
 # DB-06 Staging Deployment Source Checkpoint
 
 Date: 2026-07-15
-Updated: 2026-07-29 for the 70-migration chain through `0071`
+Updated: 2026-08-05 for the 71-migration chain through `0072`
 
 Status: `in_progress`, blocked by `ACCT-03`; source procedure and evidence
 contract implemented; no hosted staging deployment or live DB-06 acceptance
@@ -43,8 +43,8 @@ Node orchestrator. The orchestrator:
    failure. On Windows, an unconfirmed job-object shutdown preserves the
    cancellation signal and runtime root and emits a stable redacted recovery
    fingerprint;
-4. derives and hashes the exact 70 ordered migration files through
-   `20260726000071`, the 17 `deployByDefault` functions, each function's
+4. derives and hashes the exact 71 ordered migration files through
+   `20260729000072`, the 17 `deployByDefault` functions, each function's
    transitive local source set, the function manifest, the Deno lockfile, and
    every deployment/evidence procedure input;
 5. runs the complete credential-free local DB-05 replay and retains its
@@ -96,7 +96,7 @@ Node orchestrator. The orchestrator:
     misstate the initial operator observations as newly captured. The
     migration push begins only after this final zero-cohort boundary passes;
 13. runs a migration dry run, applies the exact ordered migrations, proves the
-    exact 70-ID history through `0071`, redeploys the same complete manifest, and proves a
+    exact 71-ID history through `0072`, redeploys the same complete manifest, and proves a
     second dry run has no pending source change;
 14. runs linked pgTAP, error-level database lint, and an empty linked schema
     diff for `public`, `auth`, and `storage`;
@@ -243,11 +243,18 @@ $env:DB06_CUTOVER_EVIDENCE_DIR = "<absolute-path-to-redacted-boundary-directory>
 
 ## Credential-Free Verification
 
+On 2026-08-05, the DB-05 prerequisite exited 0 at clean commit `57da25f63`
+across all 71 migrations through `0072`: five cutovers including commerce
+21/21, two resets, exact history, focused 5 files/433 assertions, structural 16
+files/1,222 assertions, lint, empty drift, temporary types, CAT-08 10/10, and
+removal of that run's own sandbox. Historical roots were excluded. This does
+not provide the hosted DB-06 packet or linked-type parity.
+
 `npm run phase2:deploy-env-smoke` currently proves focused behavior tests,
 including real descendant process-tree settlement on normal, timeout, and
 output-limit paths, plus the static wrapper/orchestrator contract. The fixtures
 cover deterministic
-70-migration/17-function source hashing; partial and malformed schema output;
+71-migration/17-function source hashing; partial and malformed schema output;
 Git snapshot mutation/injection rejection; aggregate Auth/Storage/all-Cron
 parsing and forward-safe Auth configuration-field review;
 divergent migration history; non-empty-target rejection; missing, inactive,

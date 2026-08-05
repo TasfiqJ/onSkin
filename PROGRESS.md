@@ -7721,8 +7721,9 @@ exact 70-version history, the focused four-file lane, 15 structural pgTAP files
 / 1,199 assertions including CAT-03 99/99, error-level lint, an empty
 migration-shadow diff, temporary 6,771-line type generation with SHA-256
 `39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
-the CAT-08 two-connection rehearsal 10/10, and complete zero-residue teardown.
-Repository database types were deliberately not replaced.
+the CAT-08 two-connection rehearsal 10/10, and teardown of that run's own
+sandbox. Historical roots from other interrupted runs were outside that run and
+are not covered. Repository database types were deliberately not replaced.
 
 This closes DB-05's current local replay requirement for the accepted source
 revision. DB-06/08/09/10 hosted deployment, linked-type parity/replacement,
@@ -7765,6 +7766,27 @@ evidence, real
 products/offering/webhook, hosted authority, signed-build sandbox/TestFlight and
 physical-iPhone lifecycle proof, qualified legal/privacy review, and Apple's
 independent App Review outcome.
+
+### Exact 71-migration local database gate (2026-08-05)
+
+At clean source commit `57da25f63`, `npm run phase2:db-local-verify` exited 0 in
+2,149.9 seconds against the complete chain through `20260729000072`. It passed
+all five sequential cutovers, including the 0071-to-0072 commerce
+zero-admission rehearsal 21/21; two clean resets; exact 71-version history; the
+focused five-file lane / 433 assertions; 16 structural pgTAP files / 1,222
+assertions including CAT-03 99/99; error-level lint; empty migration-shadow
+drift; temporary 6,771-line type generation with SHA-256
+`39619a6870c33fc402323c61fce5601c0fb1460993026b8465f0ce56a0a9a91e`;
+CAT-08 10/10; and awaited teardown plus recursive removal of this run's own
+random sandbox `routinekind-db05-local-1fKYbR`. The run emitted no stderr or
+cleanup diagnostic, and the worktree remained clean. Historical or hard-timeout
+roots from other runs were excluded and are not claimed absent.
+
+This refreshes DB-05's accepted local source replay through `0072`. Repository
+types remain unreplaced, so DB-08 is still open. DB-06/08/09/10 hosted
+deployment, linked-type parity, live role/provider/TLS/load/concurrency,
+supported-device, professional, legal/privacy, App Store, and release gates
+remain open. No revenue outcome is implied.
 
 ## Open questions for the founder
 

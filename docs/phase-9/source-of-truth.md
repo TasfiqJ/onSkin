@@ -207,6 +207,10 @@ health-consent-copy successor and grants no release authority. Migration
 `0071` establishes recommendation zero admission, purges the untrusted cache,
 keeps catalog recommendation eligibility closed, revokes unused runtime
 mutation privileges, and adds one immutable private admission control.
+Migration `0072` establishes literal-zero commerce admission, retires the stale
+poller authority, purges disallowed attribution state, and converges catalog,
+stack, click, and attribution ACLs across both legacy and current Supabase grant
+defaults.
 
 The current matrix source registers all 68 public-schema tables classified
 private/read-sealed exactly once: the 36 directly queryable tables receive
@@ -223,12 +227,14 @@ Negative database assertions accept only the exact expected PostgreSQL/PostgREST
 The focused local `0066` seal rehearsal/26-assertion pgTAP contract and `0067`
 checker-shape rehearsal/seven-assertion pgTAP contract prove those narrow
 source behaviors, but they do not by themselves prove the exact current head.
-On 2026-07-29 the complete credential-free local PostgreSQL 15 gate passed all
-70 migrations through
-`20260726000071_recommendation_zero_admission.sql`, including every sequential
-cutover, two clean resets, 15 structural pgTAP files / 1,199 assertions, lint,
-empty migration-shadow drift, temporary type generation, CAT-08 10/10, and
-teardown. Repository types were deliberately not replaced. DB-09 and DB-10
+On 2026-08-05 the complete credential-free local PostgreSQL 15 gate exited 0 at
+clean commit `57da25f63` across all 71 migrations through
+`20260729000072_commerce_zero_admission.sql`, including all five sequential
+cutovers and commerce 21/21, two clean resets, exact history, focused 5 files /
+433 assertions, 16 structural pgTAP files / 1,222 assertions, lint, empty
+migration-shadow drift, 6,771-line temporary type generation, CAT-08 10/10,
+and awaited teardown plus removal of that run's own sandbox. Historical roots
+were excluded. Repository types were deliberately not replaced. DB-09 and DB-10
 remain live-blocked until reviewed hosted resets and the complete
 82-public-table/68-public-schema-private/read-sealed classification plus every
 private-schema authority lane produce redacted, clean-revision staging and
