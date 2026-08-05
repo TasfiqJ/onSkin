@@ -228,7 +228,7 @@
   "categoryCounts": {
     "data-store": 142,
     "edge-function": 17,
-    "feature-flag": 15,
+    "feature-flag": 17,
     "generated-packet": 32,
     "native-module": 44,
     "route": 91,
@@ -1349,11 +1349,25 @@
       "readiness": "launch-blocked"
     },
     {
+      "id": "feature-flag:EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
       "id": "feature-flag:EXPO_PUBLIC_E2E_APP_LOCK_ENABLED",
       "category": "feature-flag",
       "source": "apps/mobile/src/lib/applock/store.ts",
       "featureIds": ["F-09"],
       "readiness": "needs-device-verification"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_IOS_WIN_BACK_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-11"],
+      "readiness": "stubbed"
     },
     {
       "id": "feature-flag:EXPO_PUBLIC_NATIVE_CAMERA_ENABLED",
@@ -2639,7 +2653,7 @@
     {
       "id": "vendor-call:origin:apps.apple.com",
       "category": "vendor-call",
-      "source": "apps/mobile/src/features/subscription/useEntitlement.ts",
+      "source": "apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts",
       "featureIds": ["F-11", "F-12"],
       "readiness": "simulated"
     },

@@ -97,6 +97,24 @@ assert(
   !inventory.items.some((entry) => entry.id === 'feature-flag:OBF_API_ENABLED'),
   'the retired live Open Beauty Facts API flag must not return to the launch inventory',
 );
+const customProGrantFlag = inventory.items.find(
+  (entry) => entry.id === 'feature-flag:EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED',
+);
+assert(customProGrantFlag, 'missing the governed custom Pro grant flag');
+assert.deepEqual(
+  customProGrantFlag.featureIds,
+  ['F-11', 'F-12'],
+  'the custom Pro grant must remain mapped to subscriptions and reverse trial',
+);
+const iosWinBackFlag = inventory.items.find(
+  (entry) => entry.id === 'feature-flag:EXPO_PUBLIC_IOS_WIN_BACK_ENABLED',
+);
+assert(iosWinBackFlag, 'missing the governed iOS win-back flag');
+assert.deepEqual(
+  iosWinBackFlag.featureIds,
+  ['F-11'],
+  'the iOS win-back flag must remain mapped to subscriptions',
+);
 assert(
   !inventory.items.some((entry) => entry.id === 'vendor-call:origin:world.openbeautyfacts.org'),
   'offline Open Beauty Facts artifacts must not be classified as a live vendor call',

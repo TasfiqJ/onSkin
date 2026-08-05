@@ -206,6 +206,8 @@ function routeFeatures(path) {
 }
 
 function flagFeatures(name) {
+  if (name === 'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED') return ['F-11', 'F-12'];
+  if (name === 'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED') return ['F-11'];
   if (name.includes('NATIVE_CAMERA')) return ['F-03', 'F-09'];
   if (name.includes('NATIVE_OCR') || name.includes('OBF_API')) return ['F-03', 'F-04'];
   if (name.includes('OBF_CONTRIBUTION')) return ['F-04'];
