@@ -1,10 +1,10 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-08-04T21:54:55.002Z
-Git SHA: 6b347609fb5e48f4c46dbb00fc8f3bf67be60027
+Generated at: 2026-08-05T01:57:35.409Z
+Git SHA: 7362f4bf7dfa1a4e2091b98c38cc53016882e285
 Git status: clean
 Required inputs committed and byte-matched to HEAD: yes
-Tracked secret environment files absent: BLOCKED
+Tracked secret environment files absent: yes
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
 
@@ -12,6 +12,17 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 - RevenueCat offering reviewed: BLOCKED
 - iOS sandbox restore pass: BLOCKED
+- Trusted Entitlements review attested: BLOCKED (the flag records review; the governed artifact below supplies the cross-bound evidence)
+- Trusted Entitlements governed evidence valid: BLOCKED
+- Trusted Entitlements evidence path: BLOCKED
+- Trusted Entitlements evidence SHA-256: BLOCKED
+- Trusted Entitlements RevenueCat app ID: BLOCKED
+- Trusted Entitlements bundle/build: BLOCKED / BLOCKED
+- Trusted Entitlements immutable source Git SHA: BLOCKED
+- Trusted Entitlements mode derived from reviewed source: BLOCKED
+- Trusted Entitlements retained observation artifacts: BLOCKED
+- Trusted Entitlements evidence reviewed at: BLOCKED
+- Trusted Entitlements evidence reviewed by: BLOCKED
 - Android license test pass: NOT APPLICABLE
 - Retained RevenueCat V2 production project/access evidence attested: BLOCKED (the flag records that retained evidence was reviewed; it does not itself prove access or permissions)
 - RevenueCat V2 redacted access evidence valid: BLOCKED
@@ -57,7 +68,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | Cancellation | webhook sets will_renew=false but keeps access until expiration |
 | Expiration/refund | webhook deactivates entitlement and lifecycle screen downgrades gracefully |
 | Restore | new install restores active subscription and writes verified local cache |
-| Reverse trial | authenticated Edge Function atomically grants exactly once in the app lane with null provider identity; access expires from the immutable grant window without mutating the store lane |
+| Custom app grant | production/staging config and release UI keep the custom full-Pro grant disabled; dormant backend one-grant authority remains development-only pending separate Apple-policy and anti-abuse acceptance |
 | Win-back | approved commercial state is exact: no-offer launch returns unavailable and standard fallback; any later native Apple offer proves eligibility, localized price, purchase, renewal, and fallback |
 | Webhook auth | bad HMAC rejected, stale timestamp rejected, duplicate event id idempotent |
 | Account deletion | mobile copy says deletion does not cancel store billing; server calls RevenueCat delete customer |
@@ -67,35 +78,48 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| .env.example | present | 27692 | b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90 |
-| package.json | present | 43202 | 8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706 |
+| .env.example | present | 29678 | 41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217 |
+| package.json | present | 43962 | 8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb |
 | package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
 | apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
-| apps/mobile/eas.json | present | 1477 | 074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051 |
+| packages/types/src/index.ts | present | 19296 | 99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4 |
+| apps/mobile/app.config.js | present | 19143 | 9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f |
+| apps/mobile/eas.json | present | 1636 | c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04 |
 | supabase/functions/deno.lock | present | 2465 | b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7 |
-| docs/hugeToDo/launch-contract.json | present | 6817 | d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07 |
+| docs/hugeToDo/launch-contract.json | present | 7174 | ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb |
+| docs/hugeToDo/PAY-07-ENTITLEMENT-ADMISSION-SOURCE-CHECKPOINT-2026-08-04.md | present | 10335 | 7269ef47ab1244f5a7c2c25e665399fabffc92838edfdbb75bf13a791f49aedd |
 | docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md | present | 11287 | b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5 |
-| scripts/launch/contract.mjs | present | 14603 | 51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c |
-| apps/mobile/src/lib/iap/revenuecat.ts | present | 37617 | 6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358 |
-| apps/mobile/src/lib/iap/revenuecat.test.ts | present | 2427 | ee01c705dd9a77db4dc527d00fae8040b1e5315d2624193330afbd35ff144c0f |
-| apps/mobile/src/lib/iap/revenuecatPublication.test.ts | present | 16262 | fbf6e643684dbdb4464b620885256936762803190e4df8c798af12e5f61a080f |
-| apps/mobile/src/lib/env.ts | present | 6892 | bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad |
-| apps/mobile/src/features/subscription/store.ts | present | 60455 | 2e5e3e65abd8fc2e36b8e6bd0b9e369291829249d92740c0011d1f87d61101d8 |
+| scripts/launch/contract.mjs | present | 15776 | 7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b |
+| apps/mobile/src/lib/iap/revenuecat.ts | present | 40778 | 2651b32304ac9571847df92258d6c38fddd36a7820f9ad92149f61494e9a09a7 |
+| apps/mobile/src/lib/iap/revenuecat.test.ts | present | 4873 | 2845c2d57772586a9bdf660cf370e91dd49d6ed38e9ed33de01d8c395e1b72a1 |
+| apps/mobile/src/lib/iap/revenuecatPublication.test.ts | present | 27792 | cc44b621cc2db64329beb432ed4fad9e6d3877205bde4ab8dbc4ac8864dc7075 |
+| apps/mobile/src/lib/env.ts | present | 7878 | 10d3095fdac566e4720f2e99e0791bb8617c8c09f21618873c3fc919cf166757 |
+| apps/mobile/src/lib/env.test.ts | present | 9745 | 5d2cb946d79920cbaec54eae3c9f0409fc6636673ac1e0f14ee8e6c5b5558bdc |
+| apps/mobile/src/lib/appConfig.test.ts | present | 44283 | 2a0eb426c5ee91bbe172813db5fc478f02499a69d36395932d23548de6825288 |
+| apps/mobile/src/features/subscription/store.ts | present | 61784 | 3862e0280143556f07a8514ccae8b0f6a59ee534ad0c026382bfebe017c39d54 |
 | apps/mobile/src/features/subscription/entitlement.ts | present | 5813 | 735938df18d9a15c383c7017102c9626b538ab90f0f7e0ef9054d7b14de9e9ec |
-| apps/mobile/src/features/subscription/entitlementEvidence.ts | present | 18546 | b8d11b40a3ec16703e42442a49f7a6a4582ea7a2c190a7e2f271326fbf5b61f9 |
+| apps/mobile/src/features/subscription/entitlementEvidence.ts | present | 18713 | 0f10f2b81600f7868eb376f1a8289bb65c8e00d53269daab2b23dbf8288e1c1c |
 | apps/mobile/src/features/subscription/entitlementEvidence.test.ts | present | 6620 | 3b54db67533690960a45168349bbad40dafb7a036ad31dbd669216a78f5e7c75 |
-| apps/mobile/src/features/subscription/useEntitlement.ts | present | 17046 | 07ae96a482701392e841b70aff84a77e44ea0c35ea1e4659eb2fe2f58d8ab59c |
+| apps/mobile/src/features/subscription/useEntitlement.ts | present | 13744 | ed217af48a9ca5761a22e2f8a0eada65b3f9a8524317fdacf9ce2895e922f744 |
+| apps/mobile/src/features/subscription/entitlementE2EFixture.ts | present | 376 | 5cb75f1e977fc19ec4f9484091d40e79db06acf6d4e6d4020682e0aee63c506b |
+| apps/mobile/src/features/subscription/entitlementE2EFixture.native.ts | present | 362 | 22ca06aeaff846211f3d796041fee85e29e69cab2aaee2125fab5ef5558cd081 |
+| apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts | present | 3801 | 26e749db7fb4afe5b1ab3a6bd80c2a92213c202d3f2e345b5a2a3c8eda8fe3ef |
+| apps/mobile/src/features/subscription/successAdmission.ts | present | 1938 | 4245c410f86507eb8d8c360919f3847ee7fc205b1a293262775219783edc1b74 |
+| apps/mobile/src/features/subscription/successAdmission.test.ts | present | 6999 | fc84b0dcdc9b12648d985068d0cefee23b6ba82948240e709266d4f7e442cbd5 |
+| apps/mobile/src/features/subscription/successPresentation.ts | present | 2111 | 77fe2ba9908d2634a43407537b1fb7338449dd56913925c7888f27c64826a587 |
+| apps/mobile/src/features/subscription/copy.ts | present | 11058 | ebb7b67b8ba247ec3299ce9e70ee6cb4ba9f043a39e1d1c29b2107ebef8f172d |
 | apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 761 | 9f765eb64c59b0a27f5b815b16fa829465322e1ee5dab866230bb6afe5af1a8a |
-| apps/mobile/src/app/onboarding/paywall.tsx | present | 13221 | 7b374ada0d4aa901e40540ec7a38648d7a9838f7d09f2d0c36ce8060b8cbed0d |
-| apps/mobile/src/app/paywall/upsell.tsx | present | 10512 | 2ee92b7d43f0a596808d920b2e4cb702f9693ed00fac511a4d1521bd44af6d5a |
+| apps/mobile/src/app/onboarding/paywall.tsx | present | 13151 | ac353752bc8f1b20c9f03de272f0636212d97409a2a26d6e8552058d010e0e9f |
+| apps/mobile/src/app/paywall/upsell.tsx | present | 10705 | 03e6ba0883e0bf31473e787a57328eaefa39e583fa3ddeaa4fa97e55062af603 |
 | apps/mobile/src/app/paywall/reoffer.tsx | present | 9080 | 40ff7c91d9ea2a3c529c697692fdfbcb98294f00dcc8b684ac2a0cde3a01fc9f |
 | apps/mobile/src/app/paywall/downgrade.tsx | present | 5579 | 4eb6fed57d358c1f2503be13cd8571f99adc157b362be3776e723285cd4ef92e |
-| apps/mobile/src/app/paywall/winback.tsx | present | 7658 | 74c02e7dd2118b1c8a7fb05db47693b35f2b6fb037c95c080c33232eb1529104 |
-| apps/mobile/src/app/settings/subscription.tsx | present | 15690 | bd57b2f188f7631787f4bc3cb418b1247c9d67962f8c939c63aed1c1afff7772 |
+| apps/mobile/src/app/paywall/success.tsx | present | 6870 | e5d724bb30697dee06c2d4320cee49e373e69ea071ba49914007f73aa577e090 |
+| apps/mobile/src/app/paywall/winback.tsx | present | 7837 | a337f81aa46b453e64902710086ce933d3aa6a8bfd5df0f96d84d4c22011396e |
+| apps/mobile/src/app/settings/subscription.tsx | present | 16138 | dae516f79bc4d2c8f9d3a6164fb469cedfcdbde2e89787fe0ba4f4cf735f0bcb |
 | supabase/functions/revenuecat-webhook/index.ts | present | 7924 | 5a8f373654768965232ee87b0aa407806d369a33e3ac7598a3d850fde480e0f6 |
 | supabase/functions/revenuecat-webhook/webhookCore.ts | present | 22878 | b4e1b8b677c7d4a419ccec00f288643debd4cd810bab5ef72f58819c4734e154 |
 | supabase/functions/revenuecat-webhook/webhookCore.test.ts | present | 34744 | e892bcec5deba6a27572f53b87e9acb4fea87fba3fbda134388719f3fa949390 |
-| supabase/functions/subscription-grants/index.ts | present | 4512 | 6aea31f612dc3ef6cb0011df0c126f26150b3d8d4c9d2eae4b6266e22815e8d0 |
+| supabase/functions/subscription-grants/index.ts | present | 4709 | 46bc2de380de0cbaa2374478fab12a5815368380565ac29e2d3a0c7a77f7bb97 |
 | supabase/functions/subscription-grants/grantErrors.ts | present | 1228 | bea0805decc23cd51e203b58c577b13343ff1c4a46a7a678b54000b1f8fdfcc0 |
 | supabase/functions/subscription-grants/grantErrors.test.ts | present | 2058 | ed3094a5e0da9fe098fd7d88f5139cf3d7e07870838d0e58a232a91302cda973 |
 | supabase/functions/subscription-reconciliation/index.ts | present | 11629 | e1c30509a29a2b6e7b56bf7f5dc8b6aa82c50d2c876a52f4ebc2ff55ab773821 |
@@ -133,19 +157,23 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql | present | 35892 | 887bc82835479875553b4a2b71b9e756a6507a2ad15c5903a4e02762c05a268c |
 | supabase/migrations/20260713000052_account_publication_fence.sql | present | 77778 | b19dcada637f30c4a7756711aed2ad6809877f2e043fc79c9c36ed107169b05d |
 | supabase/migrations/20260714000053_entitlement_authority_lanes.sql | present | 36742 | d1aba134336ccb38292134dc5e10528b6a9370489413e5bd2b7992c03525cec1 |
-| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 38597 | 7889b5f7ad4c9ada4dbd9f89dcfd9f78a3f032058a636b4ddf960ef423ace2af |
-| apps/mobile/src/features/subscription/store.test.ts | present | 32970 | 9074c92b587abc09f8df3e1d05c3fb4c0e95a38fd9a6ef6f4e00361a678e385d |
+| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 45302 | 20e29a36855d044849c47cdc8fcf204a9da41d43bebc2bfe724e575a5a50ee59 |
+| apps/mobile/src/features/subscription/store.test.ts | present | 43354 | 2a5a03344b57a8c47a70caea79bf64b169d1a47690943de589acaf1c7b03438d |
 | apps/mobile/src/features/subscription/entitlement.test.ts | present | 3970 | 2ef807ac5ae4b4bdf0d83e47c3a37c7d1de4eb425c436fec17177991616a273a |
 | apps/mobile/src/features/subscription/serverContracts.test.ts | present | 7049 | daca502833a84b5c01167cbe3b1c0c72e2042bc6514cbda4e56329f284f3f5be |
-| scripts/phase6/build-payments-qa-packet.mjs | present | 32780 | a2dab123bfe37998053a83e37fc6338ea576db916ea49cd9e0428ae4133a6650 |
-| scripts/phase6/check-payments-env.mjs | present | 20212 | a166695650b6afed693b3d98291d3bcc661909a067ca3b6ee98ffcb385ac8f62 |
-| scripts/phase6/check-payments-env-smoke.mjs | present | 28764 | b6cada023cb1540a68acb31404a4a144606c4d7553dcdbf99277c2c540f8ee7a |
+| scripts/phase6/build-payments-qa-packet.mjs | present | 40384 | caade2b96d77995fbac918e72b42ae3fb77257bf923ff8d11d2e0c74796d9fee |
+| scripts/phase6/check-payments-env.mjs | present | 29440 | 9425baf7a8c01bc8a084c3d9e51da895e5edac3242beb19fd7a0839414abd519 |
+| scripts/phase6/check-payments-env-smoke.mjs | present | 38109 | c83190a7459c4c6309afc7e817828aa1d5b685d5cc60261501e5bcd5392703f4 |
 | scripts/phase6/payments-git-provenance.mjs | present | 1409 | 0bafbaf1f9481a739880d5cfb51dedc1b7d7c0919dabddd35ebc239416e3f7a0 |
 | scripts/phase6/payments-git-provenance.test.mjs | present | 3384 | 38e99203fbcfe288b77198d6fc4d3202e884ba6ffc457a24377bfabb203426b7 |
 | scripts/phase6/payments-revenuecat-access-evidence.mjs | present | 11388 | 013c798d7bef14efafc95d00e841fc5e4a90e28a998f96aac43b43aad72c1372 |
 | scripts/phase6/payments-revenuecat-access-evidence.test.mjs | present | 10042 | 90d4ae157d9822acb59f44bfa5d2916ec0ba9160102ac676e9656ea98aafef5d |
+| scripts/phase6/payments-trusted-entitlements-evidence.mjs | present | 27323 | f73cf5e832fa1009b621d5d70d5c157bdcafd07f9a5eb89f4f705e5a6a52ddf9 |
+| scripts/phase6/payments-trusted-entitlements-evidence.test.mjs | present | 22719 | 2300227abf34f6fb4bc8e4a1fb7c682160c8ce66c38ba881e9f48d1e00d96356 |
 | scripts/phase6/payments-source-contract.mjs | present | 60242 | f10255f95987b1b280f35c63aa137dfcfe4822d923a27eaecfaf6f4611fecc98 |
 | scripts/phase6/payments-source-contract.test.mjs | present | 23395 | b3c8c9488f437e03e7ae6b807a21b6db061045b90f0124e5c2dd6b14fbb16e80 |
+| scripts/pay07/entitlement-admission-source-contract.mjs | present | 31267 | d960b83024b428870f76bb9700a6b05e355e51744ce2b074be7cb3d4e7084657 |
+| scripts/pay07/entitlement-admission-source-contract.test.mjs | present | 16124 | 02be758c132539a6eba6e4072bab36f017317f6b398a177cbdd4d164114a7145 |
 | scripts/phase2/check-env.mjs | present | 21920 | c12bcc548afae7cae1992c290ef65f5a425ccbbb52edba1b4931a3e7a3d2298a |
 | scripts/phase2/check-env-smoke.mjs | present | 25482 | 8b9de5340f2fb90f70d9d70f3ea0d1598e7507d3d7abed3890da145f82d0f270 |
 | scripts/phase9/supabase-policy-lint.mjs | present | 18126 | 6da0337e9605b44b1f2020f326626e7250644c9eafc3e285166819039211bef6 |
@@ -155,13 +183,14 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10407 | 4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e |
 | docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
-| docs/USER_FLOW_TREE.md | present | 470486 | a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a |
+| docs/USER_FLOW_TREE.md | present | 479048 | 326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e |
 | docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
 | docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
-| docs/phase-6/payments-runbook.md | present | 11302 | 676492b480b32f12c6fe829962f33a3f31bd597f2e2f4a7aa319e63e0f1da821 |
-| docs/phase-6/payments-qa-checklist.md | present | 7870 | 847c0775f45ae6eb6afcc78acc33d38ca128e14db1d32723cac7003d5d6fd2d5 |
-| docs/phase-6/phase-6-exit-review.md | present | 4798 | 85e5e80e3d3b14d12cbeae0a4abdbf7a66eba1128b527705bf076a6957fbba28 |
+| docs/phase-6/payments-runbook.md | present | 19954 | b5b735efa6c55540002bca1cdd99cc98162cd810fb27f99192724a749cb2b57f |
+| docs/phase-6/payments-qa-checklist.md | present | 12675 | 9ed8e1e8ffa2c340e5f44c1e9a1689c01e2a224de820ccd822fd4a29c2a3a3d5 |
+| docs/phase-6/phase-6-exit-review.md | present | 6580 | 79cce6ed47536a911053a5d9fb0cde65717feee225655472f34a9e068fdf1dac |
 | docs/phase-6/revenuecat-v2-access-evidence.template.json | present | 852 | d70276f6b45d1fb21974eb7d9bd82f3f613232cf29a5e9cd8966aa84f85941d3 |
+| docs/phase-6/revenuecat-trusted-entitlements-evidence.template.json | present | 2556 | 94e64268eb1a73c509eeb09689c4fd9e336187e7d5c478bb4a3bf2b313c72f12 |
 | supabase/functions/_shared/appleVault.test.ts | present | 5247 | ea14584e1dce69e82134b82064491ae1662eba352391c94ac8fcc1c8cd710026 |
 | supabase/functions/_shared/appleVault.ts | present | 11831 | cf6cc69449ccbaa9acfb39ec7f70e6c9130da22799a395a94175a38e2b29de62 |
 | supabase/functions/_shared/auth.ts | present | 321 | cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999 |
@@ -211,41 +240,45 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | supabase/functions/account-deletion/serviceRowsDeletionExecutor.ts | present | 1981 | 3a93798696be388478aabca75e163bd18f5d50bdb525ae6115387b02f963897e |
 | apps/mobile/src/features/subscription/ComplianceRow.tsx | present | 5025 | 116fc975b950f6cf919471bd41c0530d1da8c08875d64d9f141bec10416cf514 |
 | apps/mobile/src/features/subscription/PaywallFeedback.tsx | present | 2851 | b32214dc39986c6e3a92ecda688c761c965c2860448470c4839c4f229f399ece |
-| apps/mobile/src/features/subscription/ProGate.tsx | present | 21628 | f7528d81a3fb52ac29a32ffc7902e48dd20c10b677e1e4abafcd11cff378bb15 |
+| apps/mobile/src/features/subscription/ProGate.tsx | present | 21826 | 7b239fad87441f32846124288f913b995d76fa340c610ad01fc5e959587608c6 |
 | apps/mobile/src/features/subscription/ReverseTrialBanner.tsx | present | 2326 | b3453ed2c4b8efa0529d97decf7c352c03cae0411bc6bfbfba231212a5ec335f |
 | apps/mobile/src/features/subscription/StoreTransactionNoticeHost.test.ts | present | 5863 | 0a0bd7d45eebe2a3429029e1c2586dd75b62aef97d10cc178d5d98fa8fb3b909 |
 | apps/mobile/src/features/subscription/StoreTransactionNoticeHost.tsx | present | 12042 | 2add0b2247d702901aba3545efc4898b8b2166d105b83859bdf13aa6049c1bd0 |
+| apps/mobile/src/features/subscription/billingCadence.ts | present | 877 | f174c0201d866c74911b23b091cf5b16f3cd2fadc7db0c57ee4954b055eff4d8 |
 | apps/mobile/src/features/subscription/cancelIntent.test.ts | present | 1780 | d950be6fe9113911fb318323d4a5b7a0fdcb2a1574ee2ce567dd56377d019660 |
 | apps/mobile/src/features/subscription/cancelIntent.ts | present | 542 | 401681a7d3bed2d27b84599b1fc6321de1afb8d4cef1930bbe0d54597fc86dbe |
-| apps/mobile/src/features/subscription/claimsafety.test.ts | present | 4504 | 62d70ccc6d6342d86d72ad36c135f82eef591e7964e561951a02c0ffeaaf5f09 |
+| apps/mobile/src/features/subscription/claimsafety.test.ts | present | 4856 | bd77f63a3d456df1d06dc3cead05d2db0c316f224b92c68dc23aaf921b301e08 |
 | apps/mobile/src/features/subscription/conflictQuota.test.ts | present | 4710 | 240c045085f2c6a9b622d723607df62e6697edc3d50e5db877a4efb004503f5d |
 | apps/mobile/src/features/subscription/conflictQuota.ts | present | 3595 | 0e88478e0ca325c0650bde53a223a2b06a0252f8dba370688b4b7d3eb06dd538 |
-| apps/mobile/src/features/subscription/copy.ts | present | 8500 | 4e72f3ac95733986cb8e9cd076a126e9ab43d9dd16e57f601cf39a3954f51beb |
 | apps/mobile/src/features/subscription/dismissPaywall.test.ts | present | 2567 | 0b6b18e59315bf79fc066ba0dd5bc544fcb93a896b9205e223d6af7d39668265 |
 | apps/mobile/src/features/subscription/dismissPaywall.ts | present | 886 | f0e2425be6b3742ba8da23db5c36b326f8810d1f3285fd1015f9308072d400d9 |
 | apps/mobile/src/features/subscription/gatedRoutes.test.ts | present | 1109 | 9d50f012762bc49dadef8736536ab807af198b970189df5c901d4375a83f7a4f |
 | apps/mobile/src/features/subscription/gatedRoutes.ts | present | 483 | aea4630a6d619bc5a10f6ee247d46af66f0a29887db6f7da869f7f12fdacd4af |
 | apps/mobile/src/features/subscription/lifecycle.test.ts | present | 3609 | 7a6fa4b798d5db895852bb635c1915f84dcede71457133ae2a2e767b9f4c7a68 |
 | apps/mobile/src/features/subscription/lifecycle.ts | present | 3380 | d474cb495f3ea7250f159d2236605bb19383051202127aad225faca82a356804 |
-| apps/mobile/src/features/subscription/plans.test.ts | present | 1722 | 23c775e3e8097b29f727b29157a62659e0a61ae726f7db1b019bd55c41749882 |
-| apps/mobile/src/features/subscription/plans.ts | present | 2677 | 3e6f35b07b59b875d9ee7b337f341f227dd6f42f5178b501c4fdda2242225e22 |
+| apps/mobile/src/features/subscription/plans.test.ts | present | 1731 | 1425b8f8d67658ae86f225224234a8c2129542f86486baf1cadb26a837f0f66a |
+| apps/mobile/src/features/subscription/plans.ts | present | 2491 | 111713e2d93f6edc021cbdf19ec5032121f8760715042dd2287a25f6d521c63e |
 | apps/mobile/src/features/subscription/priceDisplay.test.ts | present | 3483 | 420ec71fc37fed57e2ecc31fc5ccd19098289051b29bb18e9b79f13c2b7c180f |
 | apps/mobile/src/features/subscription/priceDisplay.ts | present | 1789 | 2fe6c0d3c47f9eecdef15e31b4720c47afa00c74c97b14c738583648043ea296 |
 | apps/mobile/src/features/subscription/proGatedRoutes.test.ts | present | 16111 | 44d56f7f13bab8928002e0ef441c45de7748877e4becf54d74dd7d9279733997 |
 | apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts | present | 6647 | fe93dd56547bbdf2c7307897b80d9f6af56a660b261ba72089bf7ea2a4a8fd12 |
-| apps/mobile/src/features/subscription/storefrontCopy.test.ts | present | 2414 | bf337ddc1a4eb1656bb67eafc78133c36026b33f8797ebcef47e0deba889c561 |
-| apps/mobile/src/features/subscription/storefrontCopy.ts | present | 1929 | 77cf3ff8188121e6ac2854595e0a79b2b9f71e794f8ddb4e773ae9a81bdaedcc |
+| apps/mobile/src/features/subscription/storefrontCopy.test.ts | present | 2628 | 44cc9d3ff4089821e69412f3150c855c0dd7a70e5b91af116df9773a192c263d |
+| apps/mobile/src/features/subscription/storefrontCopy.ts | present | 1897 | 5f9def7dbafe7f302eb800376d47851e836fb1c97ff640db486b44523e7ccc3b |
 | apps/mobile/src/features/subscription/useEntitlementEvidenceContracts.test.ts | present | 1052 | 54fe20269bdcc074b7ec48482838981c04b42a352db12a23984d356336b5cb64 |
+| apps/mobile/src/features/subscription/winBackCommercialState.test.ts | present | 781 | ede569d3d6187329ef17c3c666a164358bcba9de712680ada9df0b78b7f72c27 |
+| apps/mobile/src/features/subscription/winBackCommercialState.ts | present | 745 | cfda0d806811c71cefbf23d73f7dd1d59327cdf50157fce4e2b03b43ca9833e4 |
 | apps/mobile/src/lib/iap/storeTransactionNotice.test.ts | present | 25084 | e29af8a370e06282d1602e7d9279a24b7f2f3f385344e6fb7af2fb8488d9b92f |
 | apps/mobile/src/lib/iap/storeTransactionNotice.ts | present | 25776 | 85ca3b06ddcd1ca2d084e74a8d55065794af5c96cc253178f67b45a801da9ce4 |
 | supabase/functions/_shared/accountAccess.test.ts | present | 4985 | e4322b71cf6fd3bc61775a8b4a340d03765fc4e53ac61cc349d588e67861b746 |
 | supabase/functions/_shared/accountAccess.ts | present | 3438 | 3a5ec1140587e88efb3caf49c4779dd44fdb2a9219f3dbf9e44deb9b8a6502e0 |
+| supabase/functions/subscription-grants/customProGrantAdmission.test.ts | present | 2312 | e653cf08ced4782c1cc8b45b33a192df7a84b5d87d08c2f394ee85c21764f713 |
+| supabase/functions/subscription-grants/customProGrantAdmission.ts | present | 939 | b2194c7f327dbdfc9d023f993b6b6a7e6b96410e655336a6c3aaa296fd391fc2 |
 | supabase/functions/subscription-grants/deletionBarrierContract.test.ts | present | 5012 | 30ca9f7926bef7371a658484fd58b15c7229e650cbf622eb8f92b19af943cab2 |
 
 ## Blockers
 
-- Tracked secret environment file is forbidden: apps/catalog-operator-console/.env.example.
 - Missing PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.
+- Missing RevenueCat Trusted Entitlements evidence path.
 - Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.
 - Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.
 - Missing final EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID.
@@ -260,6 +293,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 - EXPO_PUBLIC_SUPPORT_URL must be a production HTTPS URL.
 - Missing PHASE6_RC_OFFERING_REVIEWED=true.
 - Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.
+- Missing PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS=true.
 - Missing PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS=true.
 - Missing PHASE6_WEBHOOK_HMAC_TEST_PASS=true.
 - Missing PHASE6_FINANCE_SIGNOFF=true.
