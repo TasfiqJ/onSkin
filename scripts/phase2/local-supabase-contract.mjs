@@ -819,6 +819,9 @@ check(
     /insert into public\.commerce_click_events\s*\([\s\S]{0,300}?health_processing_epoch,\s*data_sharing_generation\s*\) values \([\s\S]{0,300}?true,\s*1,\s*1\s*\)/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
+    /alter table public\.order_attributions disable trigger user;\s*insert into public\.order_attributions\s*\([\s\S]{0,700}?\);\s*alter table public\.order_attributions enable trigger user;/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
     /retains the legacy affiliate row without publishing it/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&

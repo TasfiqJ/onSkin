@@ -83,6 +83,7 @@ insert into public.commerce_click_events (
 );
 alter table public.commerce_click_events enable trigger user;
 
+alter table public.order_attributions disable trigger user;
 insert into public.order_attributions (
   id,
   external_order_id,
@@ -100,6 +101,7 @@ insert into public.order_attributions (
   'USD',
   'pending'
 );
+alter table public.order_attributions enable trigger user;
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
