@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T21:56:18.245Z",
+  "generatedAt": "2026-08-05T05:57:22.786Z",
   "objective": "Phase 8 growth loop and store readiness",
   "launchContract": {
     "schemaVersion": 1,
@@ -192,6 +192,16 @@
       "externalNavigationAllowed": false,
       "analyticsAllowed": false,
       "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
     }
   },
   "platformStatus": {
@@ -199,7 +209,7 @@
     "android": "not_applicable"
   },
   "status": "blocked",
-  "gitSha": "72dbd42a94449427024502802022472c8b457f73",
+  "gitSha": "44bacb6b42e089bdb88a5470327250d7f1b3b26e",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -255,17 +265,17 @@
     ]
   },
   "sourceHashes": {
-    ".env.example": "b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90",
-    "package.json": "8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706",
-    "docs/hugeToDo/launch-contract.json": "d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07",
+    ".env.example": "41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217",
+    "package.json": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb",
+    "docs/hugeToDo/launch-contract.json": "ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb",
     "docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md": "36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab",
-    "scripts/launch/contract.mjs": "51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c",
+    "scripts/launch/contract.mjs": "7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b",
     "scripts/core02/clinical-rule-source-contract.test.mjs": "627b0a03adc26059ed2828b55bc69d6a87b9662f8dbac9c5bdc89f6a42fc0382",
     "scripts/core07/share-admission-source-contract.mjs": "ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d",
     "scripts/core07/share-admission-source-contract.test.mjs": "8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3",
-    "apps/mobile/app.config.js": "4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c",
-    "apps/mobile/src/lib/env.ts": "bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad",
-    "apps/mobile/src/lib/env.test.ts": "3a2791e73834c3086343a0a2a76c059529b61667665c8f67defed01dddd438f3",
+    "apps/mobile/app.config.js": "9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f",
+    "apps/mobile/src/lib/env.ts": "10d3095fdac566e4720f2e99e0791bb8617c8c09f21618873c3fc919cf166757",
+    "apps/mobile/src/lib/env.test.ts": "5d2cb946d79920cbaec54eae3c9f0409fc6636673ac1e0f14ee8e6c5b5558bdc",
     "apps/mobile/src/lib/launch/phase7.ts": "1d198075b9eed13f1b0b9cfcdff59043368999a46f2845df4c81ab518afa4f36",
     "apps/mobile/src/lib/launch/phase7.test.ts": "a940f412b4300c8e98e4a2d7265c8b04b755f5371ed0501530d087572f31c4c3",
     "apps/mobile/src/lib/launch/phase8.ts": "dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7",
@@ -311,15 +321,15 @@
     "docs/phase-8/public-site/.well-known/assetlinks.template.json": "1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319",
     "docs/HUMAN_SIMULATED_E2E_TESTING.md": "4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e",
     "docs/E2E_TESTING_CHECKLIST.md": "34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026",
-    "docs/USER_FLOW_TREE.md": "a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a",
+    "docs/USER_FLOW_TREE.md": "326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e",
     "docs/e2e/generated/human-e2e-manifest.json": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "docs/e2e/generated/human-e2e-manifest.md": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
-    "docs/phase-5/generated/device-qa-packet.json": "406feb2add61338cc919b618f3493f70c3489a137e8f8ac9372958fe7ba1c2e0",
-    "docs/phase-5/generated/device-qa-packet.md": "3fed27537f673c33c5d34e14b24a0fc9b4daa0a130957c4691673ee1d151d876",
-    "docs/phase-6/generated/payments-qa-packet.json": "b620bfb157eb2c054116727639acec3babc398af4216ef0008382ee2923593d9",
-    "docs/phase-6/generated/payments-qa-packet.md": "982714cee57c986962bd073a549cf7a26ab645272bbfded76e4acf75c77b1cae",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "1ed1bc8316f127a27d1e2e1df650143a42ab7d0d8b932a5aac3e9190170e123e",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "4b499ef4506f969024e3c7f3e80faf41ec5e32f3eab2968fa6ff56210a9ebeb1",
+    "docs/phase-5/generated/device-qa-packet.json": "dd85706740b9ba6e1c4642a8a8d292db8b2d64c0c1d1b59b7858c4d6608796cb",
+    "docs/phase-5/generated/device-qa-packet.md": "9b679d0653ebf9e6dd6e58e0290fbd77811cc81250a81f7fcc486af61361bfb7",
+    "docs/phase-6/generated/payments-qa-packet.json": "0003ab040cf84368f07df09ae04156ed0b7dbed1213ba422844dbf1de26a058a",
+    "docs/phase-6/generated/payments-qa-packet.md": "6f8af0789016f208fd39bec0cdef323067ee5e0287889852cbb34bc16118cf16",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "b399e7666284d75c1b218df1a3e9e6f7f35dbcc4d52f4594bdf06bc0d0df04bd",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "b93bb7f346de48d6a9a7dc49d7403d45a1ebe3cba006f7c5e14a76566198b59a",
     "scripts/phase8/build-growth-store-qa-packet.mjs": "ac6279c12bb2f5f3314db3d1333ec30fa0b873712a5d14424e28ad3976009683",
     "scripts/phase8/check-growth-store-readiness.mjs": "75106f91f70732d79811924589958cb7c469b477fef9278fb3d61da13aa8d3af",
     "scripts/phase8/check-growth-store-smoke.mjs": "f3557324dca81f8687fb75ee2d8d76183ab3da26112acf0dc0db1323dcc295d4",
