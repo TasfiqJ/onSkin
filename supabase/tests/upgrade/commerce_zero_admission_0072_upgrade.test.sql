@@ -110,21 +110,70 @@ select is(
 );
 
 select ok(
-  pg_catalog.has_table_privilege(
-    'authenticated',
-    'public.affiliate_links',
-    'SELECT'
-  ),
-  '0071 can still expose active affiliate rows to authenticated clients'
+  exists (
+    select 1
+      from pg_catalog.pg_policies as policies
+     where policies.schemaname = 'public'
+       and policies.tablename = 'affiliate_links'
+       and policies.policyname = 'affiliate_links_select_active'
+  )
+    and (
+      select count(*)
+        from pg_catalog.pg_policies as policies
+       where policies.schemaname = 'public'
+         and policies.tablename = 'commerce_click_events'
+         and policies.policyname in (
+           'commerce_click_events_insert_own',
+           'commerce_click_events_consent_insert'
+         )
+    ) = 2
+    and not pg_catalog.has_table_privilege(
+      'authenticated',
+      'public.affiliate_links',
+      'SELECT'
+    )
+    and not pg_catalog.has_table_privilege(
+      'authenticated',
+      'public.commerce_click_events',
+      'INSERT'
+    ),
+  'clean 0071 has dormant publication policies but no ambient client table ACL'
 );
+
+-- Supabase historically granted Data API DML on every new public table. Model
+-- that installed-base exposure explicitly so 0072 must close both old and new
+-- project histories instead of inheriting the verifier project's defaults.
+grant select, insert, update, delete
+  on table public.affiliate_links,
+    public.creator_stacks,
+    public.creator_stack_items
+  to authenticated, service_role;
+grant select, insert, update, delete
+  on table public.commerce_click_events
+  to authenticated, service_role;
 
 select ok(
   pg_catalog.has_table_privilege(
     'authenticated',
-    'public.commerce_click_events',
-    'INSERT'
-  ),
-  '0071 can still grant authenticated click insertion'
+    'public.affiliate_links',
+    'SELECT'
+  )
+    and pg_catalog.has_table_privilege(
+      'authenticated',
+      'public.commerce_click_events',
+      'INSERT'
+    )
+    and pg_catalog.has_table_privilege(
+      'service_role',
+      'public.creator_stacks',
+      'UPDATE'
+    )
+    and pg_catalog.has_table_privilege(
+      'service_role',
+      'public.commerce_click_events',
+      'UPDATE'
+    ),
+  'the fixture installs representative legacy ambient commerce DML before 0072'
 );
 
 -- @@INCLUDE_EXACT_0072_MIGRATION@@
@@ -173,41 +222,74 @@ select is(
 );
 
 select ok(
-  not pg_catalog.has_table_privilege(
-    'authenticated',
-    'public.affiliate_links',
-    'SELECT'
-  )
-    and not pg_catalog.has_table_privilege(
-      'authenticated',
-      'public.creator_stacks',
-      'SELECT'
-    )
-    and not pg_catalog.has_table_privilege(
-      'authenticated',
-      'public.creator_stack_items',
-      'SELECT'
-    ),
-  '0072 revokes every authenticated commerce publication read'
+  not exists (
+    select 1
+      from pg_catalog.unnest(
+        array['public', 'anon', 'authenticated', 'service_role']
+      ) as roles(name)
+      cross join pg_catalog.unnest(
+        array[
+          'public.affiliate_links',
+          'public.creator_stacks',
+          'public.creator_stack_items'
+        ]
+      ) as relations(name)
+      cross join pg_catalog.unnest(
+        array['SELECT', 'INSERT', 'UPDATE', 'DELETE']
+      ) as privileges(name)
+     where pg_catalog.has_table_privilege(
+       roles.name,
+       relations.name,
+       privileges.name
+     )
+  ),
+  '0072 removes legacy commerce publication DML from every runtime role'
 );
 
 select ok(
-  not pg_catalog.has_table_privilege(
-    'authenticated',
-    'public.commerce_click_events',
-    'INSERT'
+  not exists (
+    select 1
+      from pg_catalog.unnest(array['public', 'anon']) as roles(name)
+      cross join pg_catalog.unnest(
+        array['SELECT', 'INSERT', 'UPDATE', 'DELETE']
+      ) as privileges(name)
+     where pg_catalog.has_table_privilege(
+       roles.name,
+       'public.commerce_click_events',
+       privileges.name
+     )
   )
-    and not pg_catalog.has_table_privilege(
-      'authenticated',
-      'public.commerce_click_events',
-      'UPDATE'
+    and not exists (
+      select 1
+        from pg_catalog.unnest(
+          array['authenticated', 'service_role']
+        ) as roles(name)
+        cross join pg_catalog.unnest(
+          array['INSERT', 'UPDATE', 'TRUNCATE', 'REFERENCES', 'TRIGGER']
+        ) as privileges(name)
+       where pg_catalog.has_table_privilege(
+         roles.name,
+         'public.commerce_click_events',
+         privileges.name
+       )
     )
-    and pg_catalog.has_table_privilege(
-      'authenticated',
-      'public.commerce_click_events',
-      'DELETE'
+    and not exists (
+      select 1
+        from pg_catalog.unnest(
+          array['authenticated', 'service_role']
+        ) as roles(name)
+       where not pg_catalog.has_table_privilege(
+               roles.name,
+               'public.commerce_click_events',
+               'SELECT'
+             )
+          or not pg_catalog.has_table_privilege(
+               roles.name,
+               'public.commerce_click_events',
+               'DELETE'
+             )
     ),
-  '0072 removes click publication while retaining owner deletion'
+  '0072 returns only owner and service click read-delete cleanup authority'
 );
 
 select throws_ok(
@@ -319,12 +401,22 @@ select is(
 select ok(
   pg_catalog.has_table_privilege(
     'service_role',
-    'public.affiliate_links',
+    'public.commerce_click_events',
     'SELECT'
   )
     and pg_catalog.has_table_privilege(
       'service_role',
       'public.commerce_click_events',
+      'DELETE'
+    )
+    and pg_catalog.has_table_privilege(
+      'service_role',
+      'public.order_attributions',
+      'SELECT'
+    )
+    and pg_catalog.has_table_privilege(
+      'service_role',
+      'public.order_attributions',
       'DELETE'
     )
     and not pg_catalog.has_table_privilege(
@@ -336,6 +428,11 @@ select ok(
       'service_role',
       'public.order_attributions',
       'INSERT'
+    )
+    and not pg_catalog.has_table_privilege(
+      'service_role',
+      'public.order_attributions',
+      'TRUNCATE'
     )
     and pg_catalog.has_column_privilege(
       'service_role',
@@ -349,7 +446,7 @@ select ok(
       'commission_cents',
       'UPDATE'
     ),
-  'service migration inspection and exact data-rights cleanup remain available without publication DML'
+  'service click and attribution cleanup remain available without publication DML'
 );
 
 select ok(

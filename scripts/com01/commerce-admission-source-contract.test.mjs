@@ -398,6 +398,39 @@ test('database publication reads and click inserts cannot be restored', () => {
   );
 });
 
+test('legacy ambient commerce ACLs converge on the deterministic cleanup-only boundary', () => {
+  const snapshot = loadCom01aCommerceSourceSnapshot(root);
+  assertRejected(
+    mutate(snapshot, COM01A_SOURCE_PATHS.migration, (source) =>
+      replaceRequired(
+        source,
+        'revoke all on table public.affiliate_links\n  from public, anon, authenticated, service_role;',
+        'revoke all on table public.affiliate_links\n  from public, anon, authenticated;',
+      ),
+    ),
+    /must revoke every ambient runtime ACL from commerce publication tables/u,
+  );
+  assertRejected(
+    mutate(snapshot, COM01A_SOURCE_PATHS.migration, (source) =>
+      replaceRequired(
+        source,
+        'grant select, delete on table public.commerce_click_events\n  to authenticated, service_role;',
+        'grant select, delete on table public.commerce_click_events\n  to authenticated;',
+      ),
+    ),
+    /click runtime ACL must converge old and new projects on owner\/service read-delete only/u,
+  );
+  assertRejected(
+    mutate(
+      snapshot,
+      COM01A_SOURCE_PATHS.migration,
+      (source) =>
+        `${source}\ngrant update on table public.commerce_click_events to service_role;\n`,
+    ),
+    /click runtime ACL must converge old and new projects on owner\/service read-delete only/u,
+  );
+});
+
 test('stale pollers cannot regain order-attribution publication authority', () => {
   const snapshot = loadCom01aCommerceSourceSnapshot(root);
   assertRejected(

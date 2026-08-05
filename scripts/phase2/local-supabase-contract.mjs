@@ -779,9 +779,19 @@ check(
 check(
   /create table private\.commerce_admission_control/u.test(commerceZeroAdmissionMigration) &&
     /check \(admission_state = 'closed'\)/u.test(commerceZeroAdmissionMigration) &&
-    /revoke all on table public\.affiliate_links/u.test(commerceZeroAdmissionMigration) &&
-    /revoke all on table public\.creator_stacks/u.test(commerceZeroAdmissionMigration) &&
-    /grant select, delete on table public\.commerce_click_events/u.test(
+    /revoke all on table public\.affiliate_links\s+from public, anon, authenticated, service_role/u.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /revoke all on table public\.creator_stacks\s+from public, anon, authenticated, service_role/u.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /revoke all on table public\.creator_stack_items\s+from public, anon, authenticated, service_role/u.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /revoke all on table public\.commerce_click_events\s+from public, anon, authenticated, service_role/u.test(
+      commerceZeroAdmissionMigration,
+    ) &&
+    /grant select, delete on table public\.commerce_click_events\s+to authenticated, service_role/u.test(
       commerceZeroAdmissionMigration,
     ) &&
     /revoke all on table public\.order_attributions/u.test(commerceZeroAdmissionMigration) &&
@@ -820,6 +830,21 @@ check(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
     /alter table public\.order_attributions disable trigger user;\s*insert into public\.order_attributions\s*\([\s\S]{0,700}?\);\s*alter table public\.order_attributions enable trigger user;/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /clean 0071 has dormant publication policies but no ambient client table ACL/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /grant select, insert, update, delete\s+on table public\.commerce_click_events\s+to authenticated, service_role;/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /the fixture installs representative legacy ambient commerce DML before 0072/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /0072 removes legacy commerce publication DML from every runtime role/u.test(
+      commerceZeroAdmissionUpgradeRehearsal,
+    ) &&
+    /0072 returns only owner and service click read-delete cleanup authority/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
     /retains the legacy affiliate row without publishing it/u.test(

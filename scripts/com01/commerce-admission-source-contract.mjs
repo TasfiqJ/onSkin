@@ -889,12 +889,35 @@ export function auditCom01aCommerceSourceSnapshot(snapshot) {
       `zero-admission migration is missing ${fragment}`,
     );
   }
+  const commercePublicationTables = [
+    'affiliate_links',
+    'creator_stacks',
+    'creator_stack_items',
+  ];
   add(
-    /grant\s+select\s*,\s*delete\s+on\s+table\s+public\.commerce_click_events\s+to\s+authenticated/iu.test(
-      migration,
+    commercePublicationTables.every((table) =>
+      new RegExp(
+        `revoke\\s+all\\s+on\\s+table\\s+public\\.${table}\\s+from\\s+public\\s*,\\s*anon\\s*,\\s*authenticated\\s*,\\s*service_role`,
+        'iu',
+      ).test(migration),
     ),
     COM01A_SOURCE_PATHS.migration,
-    'migration must preserve only owner-scoped read/delete for explicit data-rights cleanup',
+    'migration must revoke every ambient runtime ACL from commerce publication tables',
+  );
+  const commerceClickGrants =
+    migration.match(
+      /grant\s+[^;]+\s+on\s+table\s+public\.commerce_click_events\s+to\s+[^;]+;/giu,
+    ) ?? [];
+  add(
+    /revoke\s+all\s+on\s+table\s+public\.commerce_click_events\s+from\s+public\s*,\s*anon\s*,\s*authenticated\s*,\s*service_role/iu.test(
+      migration,
+    ) &&
+      /grant\s+select\s*,\s*delete\s+on\s+table\s+public\.commerce_click_events\s+to\s+authenticated\s*,\s*service_role/iu.test(
+        migration,
+      ) &&
+      commerceClickGrants.length === 1,
+    COM01A_SOURCE_PATHS.migration,
+    'click runtime ACL must converge old and new projects on owner/service read-delete only',
   );
   add(
     !/grant\s+(?:select|insert|update)[^;]*affiliate_links[^;]*authenticated/iu.test(migration) &&

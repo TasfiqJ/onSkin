@@ -62,7 +62,9 @@ revoke all on function private.guard_commerce_admission_control()
   from public, anon, authenticated, service_role;
 
 -- Active legacy rows are retained for loss-averse migration-owner review, but
--- no app/API role can publish them. Existing service authority is not broadened.
+-- no app/API runtime role can inspect or publish them. Include service_role so
+-- projects created under the former ambient Data API grants converge on the
+-- same closed ACL as newer explicit-grant projects.
 drop policy if exists "affiliate_links_select_active"
   on public.affiliate_links;
 drop policy if exists "creator_stacks_select_active"
@@ -71,24 +73,25 @@ drop policy if exists "creator_stack_items_select_all"
   on public.creator_stack_items;
 
 revoke all on table public.affiliate_links
-  from public, anon, authenticated;
+  from public, anon, authenticated, service_role;
 revoke all on table public.creator_stacks
-  from public, anon, authenticated;
+  from public, anon, authenticated, service_role;
 revoke all on table public.creator_stack_items
-  from public, anon, authenticated;
+  from public, anon, authenticated, service_role;
 
 -- Consent cannot authorize a feature whose rail is not admitted. Remove both
--- permissive insert policies and the table privilege. Preserve owner SELECT and
--- DELETE so installed-base data-rights and explicit cleanup continue to work.
+-- permissive insert policies and every ambient table privilege. Return only
+-- owner/service SELECT and DELETE so installed-base data-rights cleanup can run
+-- without restoring click publication or mutation authority.
 drop policy if exists "commerce_click_events_insert_own"
   on public.commerce_click_events;
 drop policy if exists "commerce_click_events_consent_insert"
   on public.commerce_click_events;
 
 revoke all on table public.commerce_click_events
-  from public, anon, authenticated;
+  from public, anon, authenticated, service_role;
 grant select, delete on table public.commerce_click_events
-  to authenticated;
+  to authenticated, service_role;
 
 create or replace function private.guard_commerce_click_publication()
 returns trigger

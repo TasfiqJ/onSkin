@@ -125,22 +125,33 @@ select ok(
 );
 
 select ok(
-  pg_catalog.has_table_privilege(
-    'service_role',
-    'public.affiliate_links',
-    'SELECT'
-  )
-    and not pg_catalog.has_table_privilege(
-      'service_role',
-      'public.creator_stacks',
-      'SELECT'
-    )
-    and not pg_catalog.has_table_privilege(
-      'service_role',
-      'public.creator_stack_items',
-      'SELECT'
-    ),
-  '0072 preserves the narrower pre-existing service ACL without reopening clinical stack publication'
+  not exists (
+    select 1
+      from pg_catalog.unnest(
+        array[
+          'public.affiliate_links',
+          'public.creator_stacks',
+          'public.creator_stack_items'
+        ]
+      ) as relations(name)
+      cross join pg_catalog.unnest(
+        array[
+          'SELECT',
+          'INSERT',
+          'UPDATE',
+          'DELETE',
+          'TRUNCATE',
+          'REFERENCES',
+          'TRIGGER'
+        ]
+      ) as privileges(name)
+     where pg_catalog.has_table_privilege(
+       'service_role',
+       relations.name,
+       privileges.name
+     )
+  ),
+  'service role has no direct catalog or creator-stack publication authority'
 );
 
 select ok(
@@ -207,8 +218,24 @@ select ok(
   pg_catalog.has_table_privilege(
     'service_role',
     'public.commerce_click_events',
-    'DELETE'
+    'SELECT'
   )
+    and pg_catalog.has_table_privilege(
+      'service_role',
+      'public.commerce_click_events',
+      'DELETE'
+    )
+    and not exists (
+      select 1
+        from pg_catalog.unnest(
+          array['INSERT', 'UPDATE', 'TRUNCATE', 'REFERENCES', 'TRIGGER']
+        ) as privileges(name)
+       where pg_catalog.has_table_privilege(
+         'service_role',
+         'public.commerce_click_events',
+         privileges.name
+       )
+    )
     and pg_catalog.has_table_privilege(
       'service_role',
       'public.order_attributions',
