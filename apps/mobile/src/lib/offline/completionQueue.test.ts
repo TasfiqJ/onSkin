@@ -153,6 +153,30 @@ describe('v3 completion RPC replay worker', () => {
     expect(h.rpc).not.toHaveBeenCalled();
   });
 
+  it('retains impossible mixed-null and AM-marker payloads without touching the network', async () => {
+    const invalidOperations = [
+      operation(EVENT_A, { stepId: null }),
+      operation(EVENT_B, {
+        kind: 'routine_day',
+        routineType: 'AM',
+        stepId: null,
+        userProductId: null,
+        stepOrder: null,
+      }),
+    ];
+
+    for (const invalidOperation of invalidOperations) {
+      h.pending = [invalidOperation];
+      await expect(flushCompletions()).resolves.toEqual({
+        flushed: 0,
+        terminal: 0,
+        remaining: 1,
+      });
+    }
+
+    expect(h.rpc).not.toHaveBeenCalled();
+  });
+
   it('never purges the exportable legacy queue from an ordinary replay wake', () => {
     const source = readFileSync(
       fileURLToPath(new URL('./completionQueue.ts', import.meta.url)),

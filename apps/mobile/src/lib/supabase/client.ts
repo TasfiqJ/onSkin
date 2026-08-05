@@ -1,5 +1,5 @@
 import 'react-native-url-polyfill/auto'; // supabase-js needs a WHATWG URL on RN
-import type { Database } from '@onskin/types/database';
+import type { ClientDatabase } from '@onskin/types/database';
 import type { Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
 
@@ -175,7 +175,7 @@ export async function clearPersistedSupabaseSession(): Promise<void> {
 
 // docs/01 §5 client flags. Storage is the encrypted LargeSecureStore.
 // BLOCKED: B-SUPABASE. Url/key read from env placeholders until the project exists.
-export const supabase = createClient<Database>(env.supabaseUrl, env.supabasePublishableKey, {
+export const supabase = createClient<ClientDatabase>(env.supabaseUrl, env.supabasePublishableKey, {
   global: { fetch: healthEpochFetch },
   auth: {
     storage: authStorage,

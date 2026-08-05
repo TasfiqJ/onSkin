@@ -53,6 +53,59 @@ function read(path) {
   return readFileSync(resolve(root, path), 'utf8').replaceAll('\r\n', '\n');
 }
 
+function generatedFunctionBlock(source, functionName) {
+  const declaration = new RegExp(`^      ${functionName}: \\{`, 'mu').exec(source);
+  assert.ok(declaration, `generated DB types: missing ${functionName}`);
+
+  const bodyStart = source.indexOf('\n', declaration.index) + 1;
+  const nextDeclaration = /^      [a-z0-9_]+: \{/mu.exec(source.slice(bodyStart));
+  assert.ok(nextDeclaration, `generated DB types: could not bound ${functionName}`);
+  return source.slice(declaration.index, bodyStart + nextDeclaration.index);
+}
+
+function assertGeneratedObjectShape(functionBlock, sectionName, expectedProperties) {
+  const marker = `        ${sectionName}: {`;
+  const markerIndex = functionBlock.indexOf(marker);
+  assert.notEqual(markerIndex, -1, `generated DB types: missing ${sectionName} object`);
+
+  const bodyStart = functionBlock.indexOf('\n', markerIndex) + 1;
+  const closing = /^        \}(?:\[\])?$/mu.exec(functionBlock.slice(bodyStart));
+  assert.ok(closing, `generated DB types: could not bound ${sectionName} object`);
+  const body = functionBlock.slice(bodyStart, bodyStart + closing.index);
+  const actualProperties = new Map();
+
+  for (const line of body.split('\n')) {
+    if (line.length === 0) continue;
+    const property = /^          ([a-z0-9_]+)(\??): (.+)$/u.exec(line);
+    assert.ok(property, `generated DB types: unexpected ${sectionName} line ${line}`);
+    actualProperties.set(property[1], {
+      optional: property[2] === '?',
+      type: property[3],
+    });
+  }
+
+  assert.deepEqual(
+    [...actualProperties.keys()].sort(),
+    Object.keys(expectedProperties).sort(),
+    `generated DB types: ${sectionName} keys must remain exact`,
+  );
+  for (const [propertyName, expectedType] of Object.entries(expectedProperties)) {
+    assert.deepEqual(
+      actualProperties.get(propertyName),
+      { optional: false, type: expectedType },
+      `generated DB types: ${sectionName}.${propertyName} must remain required ${expectedType}`,
+    );
+  }
+}
+
+function assertGeneratedScalarReturn(functionBlock, expectedType) {
+  assert.match(
+    functionBlock,
+    new RegExp(`^        Returns: ${expectedType}$`, 'mu'),
+    `generated DB types: return type must remain ${expectedType}`,
+  );
+}
+
 function sourceBetween(source, start, end, label) {
   const startIndex = source.indexOf(start);
   const endIndex = source.indexOf(end, startIndex + start.length);
@@ -449,7 +502,7 @@ test('future tolerance rows cannot affect today and live clocks cross routine bo
   assert.match(progress, /completedDate > todayISO/u);
   assert.match(progress, /completedDate <= todayISO/u);
   assert.match(progress, /\.is\(['"]step_id['"],\s*null\)/u);
-  assert.match(progress, /setAdherenceTimezone\(['"]set_routine_adherence_timezone['"]/u);
+  assert.match(progress, /supabase\.rpc\(['"]set_routine_adherence_timezone['"]/u);
   assert.doesNotMatch(progress, /select\(['"]longest_streak['"]\)/u);
   assert.match(streak, /eligibleCompleted/u);
   assert.match(streak, /!throughDate\s*\|\|\s*day <= throughDate/u);
@@ -548,7 +601,7 @@ test('notification opt-in is exact-time, authorization-aware, local-only, and ca
   assert.match(timing, /Trial billing reminders follow the date shown at checkout\./u);
 });
 
-test('database adherence and atomic Shelf/completion sync remain server-owned at head 0071', () => {
+test('database adherence and atomic Shelf/completion sync remain server-owned at head 0072', () => {
   const migration = read(paths.adherenceMigration);
   const dbTest = read(paths.adherenceDbTest);
   const syncBridgeMigration = read(paths.syncBridgeMigration);
@@ -614,26 +667,88 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
   assert.match(schemaContract, /\b71::bigint\b/u);
   assert.match(schemaContract, /'20260729000072'::text/u);
   assert.match(databaseTypes, /shelf_product_identities:\s*\{/u);
-  assert.match(
+  const exportShelfIdentities = generatedFunctionBlock(
     databaseTypes,
-    /export_shelf_product_identities_for_subject:\s*\{[\s\S]*?p_after_created_at:\s*Timestamptz \| null;[\s\S]*?export_total_count:\s*number;[\s\S]*?deleted_received_at:\s*Timestamptz \| null;/u,
+    'export_shelf_product_identities_for_subject',
   );
-  assert.match(
+  assertGeneratedObjectShape(exportShelfIdentities, 'Args', {
+    p_after_created_at: 'string',
+    p_after_id: 'string',
+    p_limit: 'number',
+  });
+  assertGeneratedObjectShape(exportShelfIdentities, 'Returns', {
+    created_at: 'string',
+    deleted_effective_at: 'string',
+    deleted_received_at: 'string',
+    export_total_count: 'number',
+    id: 'string',
+    user_id: 'string',
+  });
+
+  const exportShelfReceipts = generatedFunctionBlock(
     databaseTypes,
-    /export_shelf_sync_receipts_for_subject:\s*\{[\s\S]*?p_after_id:\s*string \| null;[\s\S]*?operation_id:\s*string;[\s\S]*?finalized_at:\s*Timestamptz \| null;/u,
+    'export_shelf_sync_receipts_for_subject',
   );
-  assert.match(
+  assertGeneratedObjectShape(exportShelfReceipts, 'Args', {
+    p_after_created_at: 'string',
+    p_after_id: 'string',
+    p_limit: 'number',
+  });
+  assertGeneratedObjectShape(exportShelfReceipts, 'Returns', {
+    created_at: 'string',
+    export_total_count: 'number',
+    finalized_at: 'string',
+    operation_id: 'string',
+    result_code: 'string',
+    state: 'string',
+    user_id: 'string',
+  });
+
+  const exportCompletionReceipts = generatedFunctionBlock(
     databaseTypes,
-    /export_routine_completion_sync_receipts_for_subject:\s*\{[\s\S]*?p_limit:\s*number;[\s\S]*?event_id:\s*string;[\s\S]*?result_code:\s*string \| null;/u,
+    'export_routine_completion_sync_receipts_for_subject',
   );
-  assert.match(
+  assertGeneratedObjectShape(exportCompletionReceipts, 'Args', {
+    p_after_created_at: 'string',
+    p_after_id: 'string',
+    p_limit: 'number',
+  });
+  assertGeneratedObjectShape(exportCompletionReceipts, 'Returns', {
+    created_at: 'string',
+    event_id: 'string',
+    export_total_count: 'number',
+    finalized_at: 'string',
+    result_code: 'string',
+    state: 'string',
+    user_id: 'string',
+  });
+
+  const syncShelfProduct = generatedFunctionBlock(databaseTypes, 'sync_shelf_product');
+  assertGeneratedObjectShape(syncShelfProduct, 'Args', {
+    p_enqueued_at: 'string',
+    p_operation_id: 'string',
+    p_operation_kind: 'string',
+    p_payload: 'Json',
+    p_product_id: 'string',
+  });
+  assertGeneratedScalarReturn(syncShelfProduct, 'Json');
+
+  const recordRoutineCompletion = generatedFunctionBlock(
     databaseTypes,
-    /sync_shelf_product:\s*\{[\s\S]*?p_payload:\s*Json;[\s\S]*?Returns:\s*Json;/u,
+    'record_routine_completion',
   );
-  assert.match(
-    databaseTypes,
-    /record_routine_completion:\s*\{[\s\S]*?p_step_id:\s*string \| null;[\s\S]*?p_step_order:\s*number \| null;[\s\S]*?Returns:\s*Json;/u,
-  );
+  assertGeneratedObjectShape(recordRoutineCompletion, 'Args', {
+    p_completed_at: 'string',
+    p_completed_date: 'string',
+    p_event_id: 'string',
+    p_routine_id: 'string',
+    p_routine_type: 'string',
+    p_step_id: 'string',
+    p_step_order: 'number',
+    p_timezone: 'string',
+    p_user_product_id: 'string',
+  });
+  assertGeneratedScalarReturn(recordRoutineCompletion, 'Json');
 });
 
 test('the hashed corpus executes the actual client streak implementation and binds SQL parity', async () => {

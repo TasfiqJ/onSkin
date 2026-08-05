@@ -11,7 +11,49 @@ const check = (condition, message) => {
   if (!condition) errors.push(message);
 };
 
-const [migration, databaseTest, upgradeTest, runner, localContract, databaseTypes] =
+function generatedFunctionBlock(source, functionName) {
+  const declaration = new RegExp(`^      ${functionName}: \\{`, 'mu').exec(source);
+  if (!declaration) return null;
+
+  const bodyStart = source.indexOf('\n', declaration.index) + 1;
+  const nextDeclaration = /^      [a-z0-9_]+: \{/mu.exec(source.slice(bodyStart));
+  return nextDeclaration
+    ? source.slice(declaration.index, bodyStart + nextDeclaration.index)
+    : null;
+}
+
+function generatedObjectMatches(functionBlock, sectionName, expectedProperties) {
+  if (!functionBlock) return false;
+  const marker = `        ${sectionName}: {`;
+  const markerIndex = functionBlock.indexOf(marker);
+  if (markerIndex < 0) return false;
+
+  const bodyStart = functionBlock.indexOf('\n', markerIndex) + 1;
+  const closing = /^        \}(?:\[\])?$/mu.exec(functionBlock.slice(bodyStart));
+  if (!closing) return false;
+
+  const actualProperties = new Map();
+  for (const line of functionBlock.slice(bodyStart, bodyStart + closing.index).split('\n')) {
+    if (line.length === 0) continue;
+    const property = /^          ([a-z0-9_]+)(\??): (.+)$/u.exec(line);
+    if (!property || actualProperties.has(property[1])) return false;
+    actualProperties.set(property[1], {
+      optional: property[2] === '?',
+      type: property[3],
+    });
+  }
+
+  return (
+    actualProperties.size === Object.keys(expectedProperties).length &&
+    Object.entries(expectedProperties).every(
+      ([propertyName, expectedType]) =>
+        actualProperties.get(propertyName)?.optional === false &&
+        actualProperties.get(propertyName)?.type === expectedType,
+    )
+  );
+}
+
+const [migration, databaseTest, upgradeTest, runner, localContract, databaseTypes, clientTypes] =
   await Promise.all([
     read('supabase/migrations/20260726000071_recommendation_zero_admission.sql'),
     read('supabase/tests/database/recommendation_zero_admission.test.sql'),
@@ -19,6 +61,7 @@ const [migration, databaseTest, upgradeTest, runner, localContract, databaseType
     read('scripts/phase2/local-supabase-reset.mjs'),
     read('scripts/phase2/local-supabase-contract.mjs'),
     read('packages/types/src/database.types.ts'),
+    read('packages/types/src/client-database.types.ts'),
   ]);
 
 const migrations = (await readdir(join(root, 'supabase', 'migrations')))
@@ -141,13 +184,34 @@ check(
   'The exact local verifier and credential-free contract must execute CORE-06A DB coverage.',
 );
 check(
-  /recommendation_preferences:[\s\S]*?Insert: never;[\s\S]*?Update: never;/u.test(databaseTypes) &&
-    /recommendations:[\s\S]*?Insert: never;[\s\S]*?Update: never;/u.test(databaseTypes) &&
-    /set_recommendation_preferences:[\s\S]*?p_values_filters: string\[\][\s\S]*?p_budget_band: string \| null[\s\S]*?p_format_prefs: string\[\]/u.test(
-      databaseTypes,
+  /type MobileTableName = 'consents' \| 'photos' \| 'routine_completions' \| 'skin_profiles'/u.test(
+    clientTypes,
+  ) &&
+    /type DirectMobileInsertTable = 'consents' \| 'skin_profiles'/u.test(clientTypes) &&
+    /Update: never/u.test(clientTypes) &&
+    !/type MobileTableName[^;]*recommendation/u.test(clientTypes) &&
+    generatedObjectMatches(
+      generatedFunctionBlock(databaseTypes, 'set_recommendation_preferences'),
+      'Args',
+      {
+        p_budget_band: 'string',
+        p_format_prefs: 'string[]',
+        p_values_filters: 'string[]',
+      },
+    ) &&
+    generatedObjectMatches(
+      generatedFunctionBlock(databaseTypes, 'set_recommendation_preferences'),
+      'Returns',
+      {
+        budget_band: 'string',
+        format_prefs: 'string[]',
+        updated_at: 'string',
+        user_id: 'string',
+        values_filters: 'string[]',
+      },
     ) &&
     !/recommendation_admission_control/u.test(databaseTypes),
-  'Client DB types must expose only the owner RPC, never direct writes or private control.',
+  'Generated DB types plus the client overlay must expose only the owner RPC, never direct recommendation writes or private control.',
 );
 
 if (errors.length > 0) {

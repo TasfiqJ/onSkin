@@ -28,8 +28,8 @@ describe('Progress quality provenance contract', () => {
       migration.indexOf('photos_quality_metadata_requires_source'),
     );
 
-    expect(databaseTypes).toContain('quality_source: string | null;');
-    expect(databaseTypes).toContain('quality_source?: string | null;');
+    expect(databaseTypes).toContain('quality_source: string | null');
+    expect(databaseTypes).toContain('quality_source?: string | null');
     expect(store).toContain("value.qualitySource === 'post_capture_measurement'");
     expect(store).not.toContain("supabase.from('photos').insert");
     expect(store).not.toContain('getCloudBackupEnabled');

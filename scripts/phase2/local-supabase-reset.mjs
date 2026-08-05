@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { createHash, randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import {
   cp,
   lstat,
@@ -28,6 +28,11 @@ import {
   sanitizeBoundedCommandDiagnostic,
 } from './contained-command.mjs';
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
+import {
+  DATABASE_TYPES_RELATIVE_PATH,
+  summarizeCanonicalDatabaseTypes,
+  summarizeDatabaseTypes,
+} from './database-types-contract-lib.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
 const EXPECTED_MIGRATION_COUNT = 71;
@@ -74,9 +79,16 @@ let CLI_COMMAND = process.execPath;
 let CLI_ARGUMENT_PREFIX = [join(REPO_ROOT, 'node_modules', 'supabase', 'dist', 'supabase.js')];
 const mode = process.argv[2] ?? '--verify';
 
-if (!['--reset-only', '--verify'].includes(mode) || process.argv.length > 3) {
-  throw new Error('Usage: node scripts/phase2/local-supabase-reset.mjs [--reset-only|--verify]');
+if (
+  !['--reset-only', '--verify', '--types-check', '--types-update'].includes(mode) ||
+  process.argv.length > 3
+) {
+  throw new Error(
+    'Usage: node scripts/phase2/local-supabase-reset.mjs [--reset-only|--verify|--types-check|--types-update]',
+  );
 }
+const FULL_VERIFY = mode === '--verify';
+const TYPES_MODE = mode === '--types-check' || mode === '--types-update';
 
 const childEnv = { ...process.env };
 const sensitiveEnvironmentName =
@@ -381,12 +393,7 @@ try {
     ),
   );
   await stat(
-    join(
-      sandboxSupabaseDir,
-      'tests',
-      'upgrade',
-      'commerce_zero_admission_0072_upgrade.test.sql',
-    ),
+    join(sandboxSupabaseDir, 'tests', 'upgrade', 'commerce_zero_admission_0072_upgrade.test.sql'),
   );
   await stat(
     join(sandboxSupabaseDir, 'tests', 'upgrade', 'routine_adherence_0068_upgrade.test.sql'),
@@ -430,7 +437,7 @@ try {
     sandboxRoot,
     migrationFiles.find((name) => name.startsWith('20260726000068_')),
   );
-  if (mode === '--verify') {
+  if (FULL_VERIFY) {
     await rename(sandboxHeadMigration, withheldHeadMigration);
     await rename(sandboxRecommendationMigration, withheldRecommendationMigration);
     await rename(sandboxConsentDraftMigration, withheldConsentDraftMigration);
@@ -440,7 +447,7 @@ try {
 
   stackMayExist = true;
   await runLocalCli('start isolated credential-free stack', ['start']);
-  if (mode === '--verify') {
+  if (FULL_VERIFY) {
     await runLocalCli('reset through 0067 for the 0068 forward-upgrade rehearsal', [
       'db',
       'reset',
@@ -667,9 +674,11 @@ try {
   }
   await runLocalCli('reset 1 of 2 (migrations plus seed)', ['db', 'reset', '--local']);
 
-  if (mode === '--verify') {
+  if (FULL_VERIFY) {
     await runLocalCli('reset 2 of 2 (repeatability)', ['db', 'reset', '--local']);
+  }
 
+  if (FULL_VERIFY || TYPES_MODE) {
     const history = await runLocalCli(
       'read exact local migration history',
       ['migration', 'list', '--local', '--output-format', 'json'],
@@ -679,7 +688,9 @@ try {
     process.stdout.write(
       `[db05-local] migration history: PASS (${EXPECTED_MIGRATION_COUNT}, latest ${EXPECTED_LATEST_MIGRATION})\n`,
     );
+  }
 
+  if (FULL_VERIFY) {
     await runLocalCli(
       'run focused CORE-05 structural regressions',
       [
@@ -749,22 +760,6 @@ try {
       throw new Error(`Schema drift is not empty.\n${sanitizedTail(semanticDrift)}`);
     process.stdout.write('[db05-local] migration/schema drift: PASS (empty)\n');
 
-    const types = await runLocalCli(
-      'generate temporary local database types',
-      ['gen', 'types', '--local', '--lang', 'typescript', '--schema', 'public'],
-      { quiet: true },
-    );
-    if (!types.output.includes('export type Database')) {
-      throw new Error('Temporary local type generation did not produce the Database type.');
-    }
-    const typesPath = join(sandboxRoot, 'database.types.temporary.ts');
-    await writeFile(typesPath, types.output, 'utf8');
-    const typeHash = createHash('sha256').update(types.output).digest('hex');
-    process.stdout.write(
-      `[db05-local] temporary types: PASS (${types.output.split(/\r?\n/u).length} lines, sha256 ${typeHash})\n`,
-    );
-    process.stdout.write('[db05-local] DB-08 remains open; repository types were not replaced.\n');
-
     const rehearsalTargetDir = join(sandboxSupabaseDir, 'tests', 'rehearsal', 'generated');
     await mkdir(rehearsalTargetDir, { recursive: true });
     await writeFile(
@@ -794,13 +789,62 @@ select pg_catalog.set_config(
       },
     );
   }
+
+  if (FULL_VERIFY || TYPES_MODE) {
+    const types = await runLocalCli(
+      'generate canonical local database types',
+      ['gen', 'types', '--local', '--lang', 'typescript', '--schema', 'public'],
+      { quiet: true },
+    );
+    const generated = summarizeDatabaseTypes(types.output);
+    const typesPath = join(sandboxRoot, 'database.types.temporary.ts');
+    await writeFile(typesPath, generated.text, 'utf8');
+    process.stdout.write(
+      `[db05-local] temporary types: PASS (${generated.lineCount} lines, sha256 ${generated.sha256})\n`,
+    );
+
+    const repositoryTypesPath = join(REPO_ROOT, DATABASE_TYPES_RELATIVE_PATH);
+    const repositoryBefore = summarizeCanonicalDatabaseTypes(
+      await readFile(repositoryTypesPath, 'utf8'),
+    );
+    if (mode === '--types-update' && repositoryBefore.sha256 !== generated.sha256) {
+      const pendingTypesPath = `${repositoryTypesPath}.db08-${process.pid}.pending`;
+      try {
+        await writeFile(pendingTypesPath, generated.text, { encoding: 'utf8', flag: 'wx' });
+        const pending = summarizeDatabaseTypes(await readFile(pendingTypesPath, 'utf8'));
+        if (pending.sha256 !== generated.sha256) {
+          throw new Error('DB08_PENDING_TYPES_WRITE_MISMATCH');
+        }
+        await rename(pendingTypesPath, repositoryTypesPath);
+      } finally {
+        await rm(pendingTypesPath, { force: true });
+      }
+    }
+    const repositoryAfter = summarizeDatabaseTypes(await readFile(repositoryTypesPath, 'utf8'));
+    if (repositoryAfter.sha256 !== generated.sha256) {
+      throw new Error(
+        `DB08_REPOSITORY_TYPES_STALE: generated ${generated.sha256}, repository ${repositoryAfter.sha256}`,
+      );
+    }
+    process.stdout.write(
+      `[db08-types] repository parity: PASS (${repositoryAfter.lineCount} lines, sha256 ${repositoryAfter.sha256}, ${
+        repositoryBefore.sha256 === repositoryAfter.sha256 ? 'already-current' : 'updated'
+      })\n`,
+    );
+  }
 } finally {
   await cleanupSandbox();
   signalCleanup.dispose();
 }
 
 if (!signalCleanup.signal) {
-  process.stdout.write(
-    `[db05-local] ${mode === '--verify' ? 'full local verification' : 'local reset'}: PASS\n`,
-  );
+  const label =
+    mode === '--verify'
+      ? 'full local verification'
+      : mode === '--types-check'
+        ? 'generated types check'
+        : mode === '--types-update'
+          ? 'generated types update'
+          : 'local reset';
+  process.stdout.write(`[db05-local] ${label}: PASS\n`);
 }

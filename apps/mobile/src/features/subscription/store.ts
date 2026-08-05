@@ -1576,20 +1576,9 @@ export async function fetchServerEvidence(
       | Readonly<{ status: 'available'; response: EntitlementProjectionResponse }>
       | Readonly<{ status: 'transport_error' | 'rejected'; reason: string }>
     > => {
-      type ProjectionRpcBuilder = Readonly<{
-        abortSignal: (
-          requestedSignal: AbortSignal,
-        ) => PromiseLike<Readonly<{ data: unknown; error: unknown }>>;
-      }>;
-      const projectionClient = supabase as unknown as Readonly<{
-        rpc: (
-          name: 'read_entitlement_projections',
-          args: Record<string, never>,
-        ) => ProjectionRpcBuilder;
-      }>;
       await assertCurrentOwnerContext(context);
-      const { data, error } = await projectionClient
-        .rpc('read_entitlement_projections', {})
+      const { data, error } = await supabase
+        .rpc('read_entitlement_projections')
         .abortSignal(signal);
       await assertCurrentOwnerContext(context);
       if (error) return { status: 'transport_error', reason: 'server_projection_query_failed' };

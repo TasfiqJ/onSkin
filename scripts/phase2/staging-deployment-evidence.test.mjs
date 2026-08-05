@@ -767,8 +767,8 @@ test('cutover record is exact, current, source-bound, and zero-cohort only', () 
 });
 
 test('generated-type summaries require a real Database surface and an exact local summary', () => {
-  const text = `export type Database = {\n  public: { Tables: Record<string, never> }\n};\n${' '.repeat(100)}`;
-  assert.equal(summarizeGeneratedTypes(text).sha256, sha256(text));
+  const text = `export type Json = string\nexport type Database = {\n  public: {\n    Tables: {}\n    Views: {}\n    Functions: {}\n    Enums: {}\n    CompositeTypes: {}\n  }\n}\n${' '.repeat(100)}`;
+  assert.match(summarizeGeneratedTypes(text).sha256, /^[0-9a-f]{64}$/u);
   assert.deepEqual(
     parseLocalTypeSummary(
       `[db05-local] temporary types: PASS (5000 lines, sha256 ${'a'.repeat(64)})\n`,
@@ -812,6 +812,7 @@ test('completed deployment requires 71 migrations, all functions, 82 RLS tables,
       afterSecrets: secrets,
       localTypes: { sha256: 'f'.repeat(64) },
       linkedTypes: { sha256: 'f'.repeat(64) },
+      repositoryTypes: { sha256: 'f'.repeat(64) },
     }),
     true,
   );
@@ -827,6 +828,7 @@ test('completed deployment requires 71 migrations, all functions, 82 RLS tables,
         afterSecrets: secrets,
         localTypes: { sha256: 'f'.repeat(64) },
         linkedTypes: { sha256: 'f'.repeat(64) },
+        repositoryTypes: { sha256: 'f'.repeat(64) },
       }),
     'DB06_AFTER_SCHEMA_COUNTS_INVALID',
   );
@@ -842,8 +844,25 @@ test('completed deployment requires 71 migrations, all functions, 82 RLS tables,
         afterSecrets: secrets,
         localTypes: { sha256: 'f'.repeat(64) },
         linkedTypes: { sha256: 'e'.repeat(64) },
+        repositoryTypes: { sha256: 'f'.repeat(64) },
       }),
     'DB06_LOCAL_LINKED_TYPES_DIVERGED',
+  );
+  errorCode(
+    () =>
+      validateCompletedDeployment({
+        sourceInventory: source,
+        beforeMigrationIds: [],
+        preMigrationFunctions: functions,
+        afterMigrationIds: migrationIds,
+        afterFunctions: functions,
+        afterSchema,
+        afterSecrets: secrets,
+        localTypes: { sha256: 'f'.repeat(64) },
+        linkedTypes: { sha256: 'f'.repeat(64) },
+        repositoryTypes: { sha256: 'e'.repeat(64) },
+      }),
+    'DB08_REPOSITORY_TYPES_DIVERGED',
   );
 });
 
@@ -1006,6 +1025,7 @@ function passManifestInput(steps) {
     types: {
       localGenerated: { sha256: '2'.repeat(64) },
       linkedGenerated: { sha256: '2'.repeat(64) },
+      repositoryGenerated: { sha256: '2'.repeat(64) },
     },
     retentionReviewAt: '2027-01-15T12:00:00.000Z',
     retainedArtifactNames: ['manifest.json', 'deployment-log.jsonl', 'database.types.linked.ts'],

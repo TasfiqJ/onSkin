@@ -12,6 +12,8 @@ import {
 } from 'node:fs';
 import { dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
+import { summarizeDatabaseTypes } from './database-types-contract-lib.mjs';
+
 export const DB06_EVIDENCE_SCHEMA_VERSION = 1;
 export const DB06_RETENTION_CLASS = 'release-qa';
 export const DB06_CURRENT_SOURCE_CONTRACT = Object.freeze({
@@ -934,11 +936,15 @@ export function parseLocalTypeSummary(raw) {
 }
 
 export function summarizeGeneratedTypes(raw) {
-  const text = String(raw);
-  if (text.length < 100 || !text.includes('export type Database')) {
-    fail('DB06_LINKED_TYPES_INVALID');
+  try {
+    const { lineCount, sha256: generatedSha256 } = summarizeDatabaseTypes(raw, {
+      failureCode: 'DB06_LINKED_TYPES_INVALID',
+    });
+    return { lineCount, sha256: generatedSha256 };
+  } catch (error) {
+    if (error?.code === 'DB06_LINKED_TYPES_INVALID') fail('DB06_LINKED_TYPES_INVALID');
+    throw error;
   }
-  return { lineCount: text.split(/\r?\n/u).length, sha256: sha256(text) };
 }
 
 function exactArray(actual, expected) {
@@ -1316,6 +1322,7 @@ export function validateCompletedDeployment({
   afterSecrets,
   localTypes,
   linkedTypes,
+  repositoryTypes,
 }) {
   assertRemoteMigrationPrefix(sourceInventory, beforeMigrationIds);
   const sourceIds = sourceInventory.migrations.map(({ id }) => id);
@@ -1354,6 +1361,9 @@ export function validateCompletedDeployment({
     fail('DB06_REQUIRED_HOSTED_CONFIGURATION_MISSING');
   }
   if (localTypes.sha256 !== linkedTypes.sha256) fail('DB06_LOCAL_LINKED_TYPES_DIVERGED');
+  if (repositoryTypes?.sha256 !== localTypes.sha256) {
+    fail('DB08_REPOSITORY_TYPES_DIVERGED');
+  }
   return true;
 }
 
@@ -1465,7 +1475,8 @@ function passDeploymentStateComplete({ sourceInventory, before, preMigration, af
     !passFunctionInventoryComplete(after?.functions, sourceInventory) ||
     !passSchemaShape(after?.schema) ||
     !types?.localGenerated ||
-    !types?.linkedGenerated
+    !types?.linkedGenerated ||
+    !types?.repositoryGenerated
   ) {
     return false;
   }
@@ -1480,6 +1491,7 @@ function passDeploymentStateComplete({ sourceInventory, before, preMigration, af
       afterSecrets: after.secretConfiguration,
       localTypes: types.localGenerated,
       linkedTypes: types.linkedGenerated,
+      repositoryTypes: types.repositoryGenerated,
     });
   } catch {
     return false;

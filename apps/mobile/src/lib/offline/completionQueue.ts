@@ -19,20 +19,11 @@ import {
   type HealthDataWriteLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
+import type { Database } from '@onskin/types';
 
 export const COMPLETION_SYNC_RESPONSE_INVALID = 'COMPLETION_SYNC_RESPONSE_INVALID';
 
-type CompletionRpcArguments = Readonly<{
-  p_event_id: string;
-  p_routine_id: string;
-  p_routine_type: CompletionSyncOperation['routineType'];
-  p_step_id: string | null;
-  p_user_product_id: string | null;
-  p_step_order: number | null;
-  p_completed_at: string;
-  p_completed_date: string;
-  p_timezone: string;
-}>;
+type CompletionRpcArguments = Database['public']['Functions']['record_routine_completion']['Args'];
 
 type CompletionRpcResponse =
   | Readonly<{
@@ -105,16 +96,43 @@ function decodeCompletionRpcResponse(
 }
 
 function rpcArguments(operation: CompletionSyncOperation): CompletionRpcArguments {
-  return {
+  const common = {
     p_event_id: operation.eventId,
     p_routine_id: operation.routineId,
+    p_completed_at: operation.completedAt,
+    p_completed_date: operation.completedDate,
+    p_timezone: operation.timezone,
+  };
+  if (operation.kind === 'routine_day') {
+    if (
+      operation.routineType !== 'PM' ||
+      operation.stepId !== null ||
+      operation.userProductId !== null ||
+      operation.stepOrder !== null
+    ) {
+      throw new Error('COMPLETION_SYNC_INVALID');
+    }
+    return {
+      ...common,
+      p_routine_type: 'PM',
+      p_step_id: null,
+      p_user_product_id: null,
+      p_step_order: null,
+    };
+  }
+  if (
+    operation.stepId === null ||
+    operation.userProductId === null ||
+    operation.stepOrder === null
+  ) {
+    throw new Error('COMPLETION_SYNC_INVALID');
+  }
+  return {
+    ...common,
     p_routine_type: operation.routineType,
     p_step_id: operation.stepId,
     p_user_product_id: operation.userProductId,
     p_step_order: operation.stepOrder,
-    p_completed_at: operation.completedAt,
-    p_completed_date: operation.completedDate,
-    p_timezone: operation.timezone,
   };
 }
 

@@ -202,6 +202,7 @@ let gitObjectFormat;
 let localTypes;
 let repositoryTypesBeforeSha256;
 let repositoryTypesPath;
+let repositoryTypes;
 let failureReadback;
 let windowsJobRunnerPath;
 let activeAbort;
@@ -844,6 +845,10 @@ try {
 
   repositoryTypesPath = join(deploymentRoot, 'packages', 'types', 'src', 'database.types.ts');
   repositoryTypesBeforeSha256 = sha256(readFileSync(repositoryTypesPath));
+  repositoryTypes = summarizeGeneratedTypes(readFileSync(repositoryTypesPath, 'utf8'));
+  if (repositoryTypes.sha256 !== localTypes.sha256) {
+    stableFailure('DB08_REPOSITORY_TYPES_DIVERGED');
+  }
   await runSupabase('link-staging-project', ['link', '--project-ref', projectRef], {
     timeoutMs: 2 * 60_000,
   });
@@ -1046,7 +1051,10 @@ try {
   types = {
     localGenerated: localTypes,
     linkedGenerated: linkedTypes,
+    repositoryGenerated: repositoryTypes,
     localAndLinkedIdentical: localTypes.sha256 === linkedTypes.sha256,
+    repositoryLocalAndLinkedIdentical:
+      repositoryTypes.sha256 === localTypes.sha256 && localTypes.sha256 === linkedTypes.sha256,
     repositoryTypesBeforeSha256,
     repositoryTypesAfterSha256: null,
     repositoryTypesReplaced: false,
@@ -1094,6 +1102,7 @@ try {
     afterSecrets,
     localTypes,
     linkedTypes,
+    repositoryTypes,
   });
   if (interruptionCode) stableFailure(interruptionCode);
   validateSnapshotAndSources('source-snapshot-after-deployment', {

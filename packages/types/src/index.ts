@@ -3,13 +3,14 @@
  *
  * These literal unions mirror the data model in docs/01 §3 (and the catalog
  * sketch in docs/00 §2). They are the single source of truth for both the
- * mobile client and the Supabase Edge Functions. The generated Supabase
- * `Database` type lives in `./database.types.ts` (regenerate with
- * `supabase gen types typescript` once the project exists. See BLOCKERS
- * B-SUPABASE).
+ * mobile client and the Supabase Edge Functions. The raw Supabase schema type
+ * is generated from the clean local migration replay; the exported `Database`
+ * is the narrower publishable-key client capability overlay. Hosted
+ * repository/local/linked parity remains a separate DB-06/DB-08 launch gate.
  */
 
-export type * from './database.types';
+export type { Json } from './database.types';
+export type { ClientDatabase, Database } from './client-database.types';
 
 // --- Consent (docs/01 §3 `consents`, §4 placement map) -----------------------
 /** Each consent is unbundled. Collection is "separate and distinct" from

@@ -1257,6 +1257,7 @@ publishGovernedFixtureUnit({
   fixtureRoot,
   unitId: 'docs/phase-4/generated/beta-coverage-report',
 });
+const phase5PacketPrefixHead = currentGitSha();
 
 const passthroughKeys = [
   'ComSpec',
@@ -1573,7 +1574,7 @@ function runCheckWithForgedGovernedFields() {
   packet.governedEvidenceChain.downstreamCommitCount = 999;
   writeFileSync(committedPacketJsonPath, canonicalEvidenceJsonBytes(packet));
   git(fixtureRoot, ['add', '--', 'docs/phase-5/generated/device-qa-packet.json']);
-  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit forged Phase 5 governed fields']);
+  git(fixtureRoot, ['commit', '--quiet', '--amend', '--no-edit']);
   try {
     return runCheck();
   } finally {
@@ -1605,7 +1606,7 @@ function runCheckWithBackwardHumanManifestPrefix() {
     'docs/phase-5/generated/device-qa-packet.json',
     'docs/phase-5/generated/device-qa-packet.md',
   ]);
-  git(fixtureRoot, ['commit', '--quiet', '-m', 'Forge Phase 5 packet behind human manifest']);
+  git(fixtureRoot, ['commit', '--quiet', '--amend', '--no-edit']);
   try {
     return runCheck();
   } finally {
@@ -1618,7 +1619,7 @@ function runCheckWithForgedPacketField() {
   packet.purpose = 'Hand-edited forged Phase 5 packet purpose.';
   writeFileSync(committedPacketJsonPath, canonicalEvidenceJsonBytes(packet));
   git(fixtureRoot, ['add', '--', 'docs/phase-5/generated/device-qa-packet.json']);
-  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit forged Phase 5 packet field']);
+  git(fixtureRoot, ['commit', '--quiet', '--amend', '--no-edit']);
   try {
     return runCheck();
   } finally {
@@ -1632,7 +1633,7 @@ function runCheckWithStaleMarkdown() {
     Buffer.concat([readFileSync(committedPacketMarkdownPath), Buffer.from('stale hand edit\n')]),
   );
   git(fixtureRoot, ['add', '--', 'docs/phase-5/generated/device-qa-packet.md']);
-  git(fixtureRoot, ['commit', '--quiet', '-m', 'Commit stale Phase 5 packet Markdown']);
+  git(fixtureRoot, ['commit', '--quiet', '--amend', '--no-edit']);
   try {
     return runCheck();
   } finally {
@@ -2124,7 +2125,7 @@ const cases = [
         packet.governedEvidenceChain.cleanWorktree === true &&
         packet.governedEvidenceChain.hashesValid === true &&
         packet.governedEvidenceChain.downstreamGeneratedOnly === true &&
-        packet.governedEvidenceChain.downstreamCommitCount === 2 &&
+        packet.governedEvidenceChain.downstreamCommitCount === 3 &&
         packet.governedEvidenceChain.roleInventories['phase5-widget-lifecycle'].entries.length ===
           16 &&
         packet.governedEvidenceChain.roleInventories['phase5-native-ocr'].entries.length === 8 &&
@@ -2308,9 +2309,9 @@ const cases = [
       const packet = JSON.parse(readFileSync(committedPacketJsonPath, 'utf8'));
       return (
         /PASS committed Phase 5 QA packet matches canonical replay inputs/.test(output(result)) &&
-        packet.gitSha === humanManifestPrefixHead &&
-        packet.governedEvidenceChain.currentGitSha === humanManifestPrefixHead &&
-        packet.governedEvidenceChain.downstreamCommitCount === 1
+        packet.gitSha === phase5PacketPrefixHead &&
+        packet.governedEvidenceChain.currentGitSha === phase5PacketPrefixHead &&
+        packet.governedEvidenceChain.downstreamCommitCount === 2
       );
     },
   },

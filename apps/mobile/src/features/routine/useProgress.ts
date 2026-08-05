@@ -76,11 +76,7 @@ async function loadServerAdherence(
   }
   try {
     lease.assertCurrent();
-    const setAdherenceTimezone = supabase.rpc.bind(supabase) as unknown as (
-      functionName: 'set_routine_adherence_timezone',
-      args: { p_timezone: string },
-    ) => Promise<{ data: unknown; error: unknown }>;
-    const projectionResult = await setAdherenceTimezone('set_routine_adherence_timezone', {
+    const projectionResult = await supabase.rpc('set_routine_adherence_timezone', {
       p_timezone: timezone,
     });
     lease.assertCurrent();

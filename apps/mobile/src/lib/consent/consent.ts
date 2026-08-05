@@ -37,12 +37,6 @@ export type HealthDependentConsentStatus = Readonly<{
   consentTextHash: string | null;
 }>;
 
-type UntypedRpcResult = Promise<{ data: unknown; error: unknown }>;
-const invokeUntypedRpc = supabase.rpc as unknown as (
-  name: string,
-  args: Record<string, unknown>,
-) => { abortSignal: (signal: AbortSignal) => UntypedRpcResult };
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -163,7 +157,7 @@ export function getHealthDependentConsentStatus(
     lease.assertCurrent();
     if (userData.user?.id !== lease.ownerUserId) throw new Error('CONSENT_OWNER_CHANGED');
     lease.assertCurrent();
-    const { data, error } = await invokeUntypedRpc('get_health_dependent_consent_status', {
+    const { data, error } = await supabase.rpc('get_health_dependent_consent_status', {
       p_consent_type: type,
     })
       .abortSignal(lease.signal);
@@ -207,11 +201,13 @@ export async function recordConsent(params: {
     if (params.version !== canonical.version || params.consentText !== canonical.text) {
       throw new Error('HEALTH_DEPENDENT_CONSENT_COPY_INVALID');
     }
+    const expectedGeneration = params.expectedGeneration;
+    const idempotencyKey = params.idempotencyKey;
     if (
-      !Number.isSafeInteger(params.expectedGeneration) ||
-      (params.expectedGeneration ?? -1) < 0 ||
-      !params.idempotencyKey ||
-      !/^[a-f0-9]{64}$/u.test(params.idempotencyKey)
+      !Number.isSafeInteger(expectedGeneration) ||
+      (expectedGeneration ?? -1) < 0 ||
+      !idempotencyKey ||
+      !/^[a-f0-9]{64}$/u.test(idempotencyKey)
     ) {
       throw new Error('HEALTH_DEPENDENT_CONSENT_CAS_INVALID');
     }
@@ -229,14 +225,14 @@ export async function recordConsent(params: {
       if (userData.user?.id !== lease.ownerUserId) throw new Error('CONSENT_OWNER_CHANGED');
 
       lease.assertCurrent();
-      const { data, error } = await invokeUntypedRpc('record_health_dependent_consent', {
-          p_expected_epoch: lease.epoch,
-          p_expected_generation: params.expectedGeneration!,
-          p_idempotency_key: params.idempotencyKey,
-          p_consent_type: dependentType,
-          p_version: canonical.version,
-          p_consent_text_hash: canonical.sha256,
-        })
+      const { data, error } = await supabase.rpc('record_health_dependent_consent', {
+        p_expected_epoch: lease.epoch,
+        p_expected_generation: expectedGeneration!,
+        p_idempotency_key: idempotencyKey,
+        p_consent_type: dependentType,
+        p_version: canonical.version,
+        p_consent_text_hash: canonical.sha256,
+      })
         .abortSignal(lease.signal);
       lease.assertCurrent();
       if (error) throw error;

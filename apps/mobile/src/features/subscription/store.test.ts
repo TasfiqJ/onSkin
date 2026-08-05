@@ -928,7 +928,7 @@ describe('owner-bound entitlement evidence store', () => {
     await expect(fetchServerEvidence(contextA, firstSignal)).resolves.toEqual({
       status: 'absent',
     });
-    expect(mocks.rpc).toHaveBeenNthCalledWith(1, 'read_entitlement_projections', {});
+    expect(mocks.rpc).toHaveBeenNthCalledWith(1, 'read_entitlement_projections');
     expect(builder.abortSignal).toHaveBeenNthCalledWith(1, firstSignal);
     await expect(fetchServerEvidence(contextA, new AbortController().signal)).resolves.toEqual({
       status: 'transport_error',

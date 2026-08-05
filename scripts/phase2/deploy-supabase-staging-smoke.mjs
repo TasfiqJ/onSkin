@@ -242,10 +242,13 @@ assert(
 );
 assert(
   orchestrator.includes('localTypes.sha256 === linkedTypes.sha256') &&
+    orchestrator.includes('repositoryTypes.sha256 === localTypes.sha256') &&
+    orchestrator.includes("stableFailure('DB08_REPOSITORY_TYPES_DIVERGED')") &&
+    orchestrator.includes('repositoryGenerated: repositoryTypes') &&
     orchestrator.includes('repositoryTypesAfterSha256 !== repositoryTypesBeforeSha256') &&
     orchestrator.includes('repositoryTypesReplaced: false') &&
     !orchestrator.includes('Move-Item -LiteralPath'),
-  'DB-06 must prove local/linked type parity while leaving DB-08 repository replacement open.',
+  'DB-06 must prove repository/local/linked type parity without mutating the repository artifact.',
 );
 assert(
   orchestrator.includes('MAX_OUTPUT_BYTES') &&

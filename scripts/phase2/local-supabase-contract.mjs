@@ -206,6 +206,9 @@ check(
     packageJson.scripts?.['phase2:db-local-contract']?.includes(
       'local-supabase-target-guard.test.mjs',
     ) &&
+    packageJson.scripts?.['phase2:db-local-contract']?.includes(
+      'database-types-contract.test.mjs',
+    ) &&
     /installSignalCleanup\(\{ cleanup: cleanupSandbox \}\)/u.test(runner),
   'SIGINT/SIGTERM cleanup must be installed and exercised by the contract gate.',
 );
@@ -305,7 +308,16 @@ check(
     /dblink_disconnect\('cat08_race_b'\)/u.test(catalogOperatorRevocationRehearsal),
   'CAT-08 rehearsal must prove action-first and session-revocation-first commit order with real independent sessions.',
 );
-check(/DB-08 remains open/u.test(runner), 'Temporary type output must not close DB-08.');
+check(
+    /--types-check/u.test(runner) &&
+    /--types-update/u.test(runner) &&
+    /summarizeDatabaseTypes/u.test(runner) &&
+    /mode === '--types-update' && repositoryBefore\.sha256 !== generated\.sha256/u.test(runner) &&
+    !/LEGACY_HAND_AUTHORED_TYPES_SHA256/u.test(runner) &&
+    /DB08_REPOSITORY_TYPES_STALE/u.test(runner) &&
+    /\[db08-types\] repository parity: PASS/u.test(runner),
+  'DB-08 must expose explicit local check/update modes and fail closed on repository drift.',
+);
 
 const cat02ProductFixtureGtins = [
   ...catalogImportLifecycleTests.matchAll(/pg_temp\.cat02_product\(\s*'(\d{8,14})'/gu),
