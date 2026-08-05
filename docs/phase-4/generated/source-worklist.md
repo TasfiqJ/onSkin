@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-08-04T21:52:48.172Z
+Generated: 2026-08-05T05:50:02.792Z
 Status: pass
-Git SHA: 9416b48f35cf5e1d6c4957ec632c752775b1d1d2
+Git SHA: c8268070ac69615ff99c0b5e7a358477c0b82db9
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -60,7 +60,7 @@ Required evidence:
 
 Sources:
 
-- `.env.example` - 27692 bytes - sha256 `b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90`
+- `.env.example` - 29678 bytes - sha256 `41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217`
 - `scripts/phase4/check-source-env.mjs` - 2989 bytes - sha256 `ad8eaa253c3dd97fd6ea09a1cdbf11fb1aec96212a90a610e690a74981989a1a`
 - `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 11052 bytes - sha256 `8c4cd97589830a1dac8d65aa2468857cdd252dd5be9dfbcb1a69ac4a1d89f143`
 - `docs/phase-4/catalog-source-memo-cosing.md` - 6696 bytes - sha256 `4e8b2194655050f0df044e377ffb52d5b9a67e5bb96fc36618b9cf732b6baaa4`
@@ -326,7 +326,7 @@ Required evidence:
 Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
-- `package.json` - 43202 bytes - sha256 `8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706`
+- `package.json` - 43962 bytes - sha256 `8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb`
 - `.github/workflows/quality.yml` - 11249 bytes - sha256 `034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45248 bytes - sha256 `ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9408 bytes - sha256 `e53c6c5d2715392dab63930046836e1c7b832a007419508a778dd085c54846c1`
@@ -505,7 +505,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66848 bytes - sha256 `8e6c801570fc9943abc80b61f0d49f5f130090627c979f04e2017bd4f18123c6`
-- `docs/USER_FLOW_TREE.md` - 470486 bytes - sha256 `a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a`
+- `docs/USER_FLOW_TREE.md` - 479048 bytes - sha256 `326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e`
 - `apps/mobile/src/app/onboarding/products.tsx` - 15830 bytes - sha256 `d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b`
 - `apps/mobile/src/app/shelf/[id].tsx` - 45428 bytes - sha256 `1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18279 bytes - sha256 `f6def4491f22caae90590351f50f424c38397a8d6c8b6d2c3f77d7d8c0346f6d`
@@ -583,7 +583,7 @@ Sources:
 - `supabase/migrations/20260726000069_routine_completion_sync_bridge.sql` - 66673 bytes - sha256 `a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c`
 - `supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql` - 22228 bytes - sha256 `2e2abca7a88ab17992e7b3058d4b2f2c9ddbeb2accc59ae1cbf1a96b1b708706`
 - `supabase/migrations/20260726000071_recommendation_zero_admission.sql` - 14874 bytes - sha256 `4e3e0c46a246b97e98f014bf65499ea86b7f57119744466aebc8c1491331acc9`
-- `supabase/migrations/20260729000072_commerce_zero_admission.sql` - 6062 bytes - sha256 `876d12e4d9d917cd42b55ea480b4db6db129ba21a329bd052a979adeb303aa04`
+- `supabase/migrations/20260729000072_commerce_zero_admission.sql` - 6320 bytes - sha256 `a209915c6f3b860fdf06f2eacd46c8f10221078b042257fcdcb2b37578e45806`
 - `supabase/tests/database/catalog_serving_gate.test.sql` - 36707 bytes - sha256 `1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9`
 - `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109814 bytes - sha256 `d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899`
 - `supabase/tests/database/catalog_launch_curation.test.sql` - 202040 bytes - sha256 `2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376`
@@ -596,11 +596,11 @@ Sources:
 - `supabase/tests/database/routine_completion_sync_bridge.test.sql` - 50481 bytes - sha256 `cdfbbdde5445106103d7edb1faeafd4a5502f13dc4e3240cf4392a549ce93261`
 - `supabase/tests/database/health_consent_draft_successor_staging.test.sql` - 13947 bytes - sha256 `9e567ca792e5f8501270d00a14fed8327416fd21c24c46ed0317a1c3514e7a16`
 - `supabase/tests/database/recommendation_zero_admission.test.sql` - 17952 bytes - sha256 `6b913214063fde2879fc990e53e48dc46e3a3fb12998ded0f91b106ae6b454bf`
-- `supabase/tests/database/commerce_zero_admission.test.sql` - 12840 bytes - sha256 `631595dda1db2a861263de17ac249a7a16bda92018e41d64050773392a2a372e`
+- `supabase/tests/database/commerce_zero_admission.test.sql` - 13495 bytes - sha256 `cd12a7fa92ae52d4abd6155c0b7b9bafc8208be1d24054b434c02d811720249e`
 - `supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql` - 8430 bytes - sha256 `6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2`
 - `supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql` - 7066 bytes - sha256 `c714d1001be6ecb2579d4307621d0f45bcfdd1019c983551618cb42eb9a795db`
 - `supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql` - 7912 bytes - sha256 `011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77`
-- `supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql` - 8588 bytes - sha256 `a6589de84a09db42afb230e914984c17a93e643ba0707625d36016e38d86894d`
+- `supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql` - 11866 bytes - sha256 `0765f0c0b926a1a20297f94d6604d0f7557c0815315b36e3c115dbc5162c6f7b`
 - `supabase/tests/database/schema_contract.test.sql` - 36211 bytes - sha256 `e8fb6e8cc5e395bd5456ffe09009196495be43875821ebec89e31d3bb833e351`
 - `scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql` - 5846 bytes - sha256 `b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6`
 - `scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql` - 6577 bytes - sha256 `d7bfbfb7fed85a600c07d6c779aad6bc1e349c53f7d5eae1fba62597178647e7`
@@ -614,7 +614,7 @@ Sources:
 - `supabase/functions/catalog-search/catalogContract.test.ts` - 3041 bytes - sha256 `dd91fb0c009da68074d795d7819149d9bb970e47c2fba6bbdfc7a08f7f53922d`
 - `docs/phase-4/catalog-source-release-runbook.md` - 14878 bytes - sha256 `ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45248 bytes - sha256 `ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e`
-- `docs/phase-2-production-infrastructure-runbook.md` - 16921 bytes - sha256 `cfdf9a022f505fd8570dced36610f28c759bd869574913b87c033dcd74eebb80`
+- `docs/phase-2-production-infrastructure-runbook.md` - 17288 bytes - sha256 `3d72b8eb17319855177ce61e40a9556f9701776531792187f06554b93a607b81`
 
 ### first-party-correction-report - First-party missing-product and wrong-match operation
 

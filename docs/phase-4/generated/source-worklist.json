@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-08-04T21:52:48.172Z",
+  "generatedAt": "2026-08-05T05:50:02.792Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "9416b48f35cf5e1d6c4957ec632c752775b1d1d2",
+  "gitSha": "c8268070ac69615ff99c0b5e7a358477c0b82db9",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -61,8 +61,8 @@
         {
           "path": ".env.example",
           "exists": true,
-          "bytes": 27692,
-          "sha256": "b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90"
+          "bytes": 29678,
+          "sha256": "41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217"
         },
         {
           "path": "scripts/phase4/check-source-env.mjs",
@@ -1186,8 +1186,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 43202,
-          "sha256": "8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706"
+          "bytes": 43962,
+          "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -2086,8 +2086,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 470486,
-          "sha256": "a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a"
+          "bytes": 479048,
+          "sha256": "326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -2518,8 +2518,8 @@
         {
           "path": "supabase/migrations/20260729000072_commerce_zero_admission.sql",
           "exists": true,
-          "bytes": 6062,
-          "sha256": "876d12e4d9d917cd42b55ea480b4db6db129ba21a329bd052a979adeb303aa04"
+          "bytes": 6320,
+          "sha256": "a209915c6f3b860fdf06f2eacd46c8f10221078b042257fcdcb2b37578e45806"
         },
         {
           "path": "supabase/tests/database/catalog_serving_gate.test.sql",
@@ -2596,8 +2596,8 @@
         {
           "path": "supabase/tests/database/commerce_zero_admission.test.sql",
           "exists": true,
-          "bytes": 12840,
-          "sha256": "631595dda1db2a861263de17ac249a7a16bda92018e41d64050773392a2a372e"
+          "bytes": 13495,
+          "sha256": "cd12a7fa92ae52d4abd6155c0b7b9bafc8208be1d24054b434c02d811720249e"
         },
         {
           "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
@@ -2620,8 +2620,8 @@
         {
           "path": "supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql",
           "exists": true,
-          "bytes": 8588,
-          "sha256": "a6589de84a09db42afb230e914984c17a93e643ba0707625d36016e38d86894d"
+          "bytes": 11866,
+          "sha256": "0765f0c0b926a1a20297f94d6604d0f7557c0815315b36e3c115dbc5162c6f7b"
         },
         {
           "path": "supabase/tests/database/schema_contract.test.sql",
@@ -2704,8 +2704,8 @@
         {
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
-          "bytes": 16921,
-          "sha256": "cfdf9a022f505fd8570dced36610f28c759bd869574913b87c033dcd74eebb80"
+          "bytes": 17288,
+          "sha256": "3d72b8eb17319855177ce61e40a9556f9701776531792187f06554b93a607b81"
         }
       ]
     },
