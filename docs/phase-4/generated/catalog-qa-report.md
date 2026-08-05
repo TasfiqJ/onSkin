@@ -1,12 +1,12 @@
 # Catalog QA Report
 
-Generated: 2026-08-04T21:52:49.343Z
+Generated: 2026-08-05T05:49:36.018Z
 
 Source: open_beauty_facts
 
 Transform status: fixture
 
-Git SHA: 9416b48f35cf5e1d6c4957ec632c752775b1d1d2
+Git SHA: cb82c362f8dfea1f8c79a53d314bfe2f6697273b
 
 Build-source Git SHA: not verified
 
@@ -38,15 +38,15 @@ Launch clear reason: No. Source-transform QA is only one gate; launch still requ
 | --- | --- | ---: | --- |
 | .gitignore | present | 1644 | 066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a |
 | .github/workflows/quality.yml | present | 11249 | 034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb |
-| package.json | present | 43202 | 8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706 |
+| package.json | present | 43962 | 8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb |
 | package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
-| apps/mobile/app.config.js | present | 18109 | 4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c |
+| apps/mobile/app.config.js | present | 19143 | 9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f |
 | apps/mobile/app.base.json | present | 4123 | c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f |
-| apps/mobile/eas.json | present | 1477 | 074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051 |
+| apps/mobile/eas.json | present | 1636 | c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04 |
 | apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
 | apps/mobile/phase3-review-evidence.js | present | 28497 | e6dbe67277b536a4cf3e6ba5eb3e3682d2caffe455c624088890e862b2796c93 |
-| docs/hugeToDo/launch-contract.json | present | 6817 | d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07 |
-| scripts/launch/contract.mjs | present | 14603 | 51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c |
+| docs/hugeToDo/launch-contract.json | present | 7174 | ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb |
+| scripts/launch/contract.mjs | present | 15776 | 7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b |
 | scripts/phase4/catalog-qa-report.mjs | present | 27119 | c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09 |
 | scripts/phase4/build-source-worklist.mjs | present | 46184 | 28a02f5eadc7ea2fa54cc9995455a26e2a6a83db2821097ebe69549e7b11b640 |
 | scripts/phase4/beta-coverage-report.mjs | present | 41079 | 7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1 |
@@ -69,7 +69,7 @@ Launch clear reason: No. Source-transform QA is only one gate; launch still requ
 | scripts/phase4/catalog-source-policy-audit.mjs | present | 8633 | f477b1bcaa8b6b7997cded65b63c21e7dbfc23a3c75d169720961f5eb3b6879c |
 | scripts/phase4/source-policy.mjs | present | 89435 | 75242c44fe3ff9e46472647fbcfb9d59070a1306fb4638ae106117a30c9cc634 |
 | scripts/phase4/source-policy.test.mjs | present | 39752 | c8ff4534e7f7870930f1ee77e5aa7185f8cafea30e5aa87f5a50646383e4244f |
-| scripts/phase2/local-supabase-contract.mjs | present | 50988 | ae4552be8c42679548108ef862f3bee4007173ca4ee46db86dca1af64f159399 |
+| scripts/phase2/local-supabase-contract.mjs | present | 52725 | 7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83 |
 | scripts/phase2/local-supabase-reset.mjs | present | 29767 | 28edd35f996edde2b823351fd3644c010577d438798ce2357210b0397c58b2aa |
 | scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
 | scripts/phase9/rls-adversarial-smoke.mjs | present | 12932 | 3674c5483fb6517b718ddcda2da5841923289ec47bf71206d369535136721d40 |

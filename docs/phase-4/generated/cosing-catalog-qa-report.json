@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T21:52:50.593Z",
+  "generatedAt": "2026-08-05T05:49:42.372Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -191,10 +191,20 @@
       "externalNavigationAllowed": false,
       "analyticsAllowed": false,
       "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
     }
   },
   "inputPath": "docs/phase-4/generated/cosing-fixture-import.json",
-  "gitSha": "9416b48f35cf5e1d6c4957ec632c752775b1d1d2",
+  "gitSha": "cb82c362f8dfea1f8c79a53d314bfe2f6697273b",
   "buildSourceGitSha": null,
   "gitStatus": "",
   "source": "cosing",
@@ -239,8 +249,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43202,
-      "sha256": "8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706"
+      "bytes": 43962,
+      "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
     },
     {
       "path": "package-lock.json",
@@ -251,8 +261,8 @@
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 18109,
-      "sha256": "4c92065418906f4eaa6d5ff3ed5aea7997ef1c0c70734673c2f7fceba685932c"
+      "bytes": 19143,
+      "sha256": "9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -263,8 +273,8 @@
     {
       "path": "apps/mobile/eas.json",
       "exists": true,
-      "bytes": 1477,
-      "sha256": "074e0c2437c60101d805554dc89f3016ab3433df52d9fb9ccb5b59986b3c7051"
+      "bytes": 1636,
+      "sha256": "c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04"
     },
     {
       "path": "apps/mobile/package.json",
@@ -281,14 +291,14 @@
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 6817,
-      "sha256": "d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07"
+      "bytes": 7174,
+      "sha256": "ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb"
     },
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 14603,
-      "sha256": "51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c"
+      "bytes": 15776,
+      "sha256": "7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
@@ -425,8 +435,8 @@
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
-      "bytes": 50988,
-      "sha256": "ae4552be8c42679548108ef862f3bee4007173ca4ee46db86dca1af64f159399"
+      "bytes": 52725,
+      "sha256": "7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83"
     },
     {
       "path": "scripts/phase2/local-supabase-reset.mjs",
