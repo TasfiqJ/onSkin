@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-08-04T21:55:52.855Z
-Git SHA: ca85ec5f6cfa0cb3d47a852c115f5b62338806c9
+Generated at: 2026-08-05T05:56:28.148Z
+Git SHA: ba4c75c3a34f5015411258ee30d273454ea3cfe4
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -11,7 +11,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `ca85ec5f6cfa0cb3d47a852c115f5b62338806c9`
+- Current R/F HEAD: `ba4c75c3a34f5015411258ee30d273454ea3cfe4`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -23,7 +23,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 - Human-E2E manifest: blocked
 - Phase 5 device QA: blocked
-- Phase 5 recorded head: `92dec848003f32db88e3ec633b4f550a6ce78e25`
+- Phase 5 recorded head: `b2a048b60b6b69e5629bfb3bee8167da7193f05a`
 
 ## Evidence
 
@@ -73,19 +73,19 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 43202 | 8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706 |
-| docs/hugeToDo/launch-contract.json | present | 6817 | d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07 |
+| package.json | present | 43962 | 8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb |
+| docs/hugeToDo/launch-contract.json | present | 7174 | ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb |
 | docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md | present | 35333 | c852d2a97f979b23680069241b667ad2e15d7a7f298d364281955db8599888a2 |
 | docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md | present | 9943 | 36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab |
 | docs/09-personalized-recommendations.md | present | 46631 | 7d4544112256b1b026116a42357069ec3e4002c5bde7ef1b6612b82784fcd0f4 |
-| scripts/launch/contract.mjs | present | 14603 | 51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c |
+| scripts/launch/contract.mjs | present | 15776 | 7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b |
 | scripts/core02/clinical-rule-source-contract.test.mjs | present | 36083 | 627b0a03adc26059ed2828b55bc69d6a87b9662f8dbac9c5bdc89f6a42fc0382 |
 | scripts/core06/recommendation-admission-source-contract.test.mjs | present | 31795 | 2df02dfaa6e2698ebc8e02a97b010b380f07ba97d04fb64fafca7db0076857e9 |
 | scripts/core07/share-admission-source-contract.mjs | present | 34840 | ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d |
 | scripts/core07/share-admission-source-contract.test.mjs | present | 11145 | 8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3 |
 | scripts/phase9/recommendation-zero-admission-smoke.mjs | present | 7935 | efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd |
-| apps/mobile/src/lib/env.ts | present | 6892 | bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad |
-| apps/mobile/src/lib/env.test.ts | present | 7649 | 3a2791e73834c3086343a0a2a76c059529b61667665c8f67defed01dddd438f3 |
+| apps/mobile/src/lib/env.ts | present | 7878 | 10d3095fdac566e4720f2e99e0791bb8617c8c09f21618873c3fc919cf166757 |
+| apps/mobile/src/lib/env.test.ts | present | 9745 | 5d2cb946d79920cbaec54eae3c9f0409fc6636673ac1e0f14ee8e6c5b5558bdc |
 | apps/mobile/src/lib/launch/phase7.ts | present | 5454 | 1d198075b9eed13f1b0b9cfcdff59043368999a46f2845df4c81ab518afa4f36 |
 | apps/mobile/src/lib/launch/phase7.test.ts | present | 10230 | a940f412b4300c8e98e4a2d7265c8b04b755f5371ed0501530d087572f31c4c3 |
 | apps/mobile/src/lib/launch/phase8.ts | present | 2237 | dedaffd1350a4f8288dfb029fad187b00f6899de3f7e05bdbe09d123058564e7 |
@@ -251,7 +251,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/e2e/cat07-committed-evidence.mjs | present | 26706 | aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0 |
 | scripts/e2e/cat07-shelf-freshness-audit.mjs | present | 150904 | 84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229 |
 | scripts/e2e/cat07-shelf-freshness-audit.test.mjs | present | 60211 | a5a2f444cdf73cc914490101b1f90a4c3f5b48156e43eca3b219c1b0816615a6 |
-| scripts/phase2/local-supabase-contract.mjs | present | 50988 | ae4552be8c42679548108ef862f3bee4007173ca4ee46db86dca1af64f159399 |
+| scripts/phase2/local-supabase-contract.mjs | present | 52725 | 7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83 |
 | scripts/phase5/device-qa-packet-contract.mjs | present | 2100 | c7bb801c99819e83ad4971cfbea573c60e41c074ca31e6d9dd068b2579cdc8ee |
 | scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql | present | 12249 | e2ffde42d3da2cf35e19c717cb85d6ddf9ba576b99d21cf46806d5e83ebc30dc |
 | scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql | present | 28021 | b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919 |
@@ -264,15 +264,15 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase9/build-evidence-chain-ledger.test.mjs | present | 10832 | 97b39eff264003a715df958960f6b352f22b9061251a47e6fad69763558e0059 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10407 | 4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e |
 | docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
-| docs/USER_FLOW_TREE.md | present | 470486 | a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a |
+| docs/USER_FLOW_TREE.md | present | 479048 | 326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e |
 | docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md | present | 16934 | e8df50a7774196f97388b0b3aa0f29a0379c2b2380400f39b6e5350a40ecaf1f |
 | docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
 | docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
 | test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json | missing |  |  |
-| docs/phase-5/generated/device-qa-packet.json | present | 68105 | 406feb2add61338cc919b618f3493f70c3489a137e8f8ac9372958fe7ba1c2e0 |
-| docs/phase-5/generated/device-qa-packet.md | present | 54005 | 3fed27537f673c33c5d34e14b24a0fc9b4daa0a130957c4691673ee1d151d876 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 47429 | b620bfb157eb2c054116727639acec3babc398af4216ef0008382ee2923593d9 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 29731 | 982714cee57c986962bd073a549cf7a26ab645272bbfded76e4acf75c77b1cae |
+| docs/phase-5/generated/device-qa-packet.json | present | 68482 | dd85706740b9ba6e1c4642a8a8d292db8b2d64c0c1d1b59b7858c4d6608796cb |
+| docs/phase-5/generated/device-qa-packet.md | present | 54005 | 9b679d0653ebf9e6dd6e58e0290fbd77811cc81250a81f7fcc486af61361bfb7 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 52856 | 0003ab040cf84368f07df09ae04156ed0b7dbed1213ba422844dbf1de26a058a |
+| docs/phase-6/generated/payments-qa-packet.md | present | 33649 | 6f8af0789016f208fd39bec0cdef323067ee5e0287889852cbb34bc16118cf16 |
 | docs/phase-7/surface-inventory.md | present | 15505 | 3210ece9e29d343560a8fcbe7c98bff1334808e77a1a0491931186e3d3146ca0 |
 | docs/phase-7/launch-claim-matrix.md | present | 4516 | 62de4afeb06ae6a2731d193354aa0e29d2d7bb57d0bc36f5671a6efede751a19 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4972 | 8018b3cfa5f4c3c5092308a75854ac29e32f3a0c16deefc7f842eaa6e98a243e |
@@ -282,14 +282,14 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md | present | 21446 | 1e1f85728bcea9e473bbe010f9f6bf0930b4c14f196a67378c6fc2ae6db359c3 |
 | docs/06-photo-progress.md | present | 49432 | 6f27bf72cb232e7e2ed251c45a38b1900984c0b5efe7f3eaf6e4dddda34ad3b4 |
 | docs/12-ai-trend-analysis.md | present | 68251 | d03bc3f120dfb1a1bf4e77ab1c5b2d7f5a0f707b94b958f1811291dee15daf05 |
-| docs/MASTER_PLAN.md | present | 67542 | 14c7e657f70910eb44a7433ec9e88d0d5b0dc5eaf730de7ab1d24d2e5a9d644c |
-| docs/DECISIONS.md | present | 90999 | dcd8c96a1bcad498defe8bfa5eff3385e5d8768006c25d652e8bb16716552386 |
+| docs/MASTER_PLAN.md | present | 69802 | d2413a72bb9ec450762c3724d698da9363f8480588f8c5d82c4123e4d636dfe3 |
+| docs/DECISIONS.md | present | 94007 | c566c8eae25390f6d96d492639ddf0cfdbf0e27fd7d43636c51d0e50261137cf |
 | docs/FEATURE_INDEX.md | present | 9140 | 04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c |
 | docs/ROADMAP.md | present | 8546 | fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de |
-| docs/hugeToDo/README.md | present | 64865 | 91d018365075790dffd9988e25f6df8567da99c3f2c6f1069ffdfe3fb6d90624 |
-| scripts/launch/contract-smoke.mjs | present | 9050 | fc9bd3a701c39a822a84cd4e5fa21a962a0b0b2ccabce1faf77507ad8cf7a899 |
+| docs/hugeToDo/README.md | present | 65638 | c50f7dff469a9ad021a1e3cc5492a6a3159baf03ccbfc20ea9e08fa4df9bdf39 |
+| scripts/launch/contract-smoke.mjs | present | 10643 | 98beaccf94d02705a36e67c716af69a194897a6ec52c0edade49f3432bcd7de2 |
 | scripts/launch/check-contract.mjs | present | 1450 | f00772997c9bc422a77001d27d7eb5ab167f24b5e1074b641f87643bad99b4f3 |
-| .env.example | present | 27692 | b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90 |
+| .env.example | present | 29678 | 41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217 |
 | apps/mobile/src/lib/consent/dependentConsentContract.ts | present | 8999 | d6c24513171d35ad9c422a487d8331bed9013729b340348643962cbf46bb7c2d |
 | apps/mobile/src/lib/consent/dependentConsentContract.test.ts | present | 2510 | a7faed8bd978c885bcaba4810d595341a08477233092572a02fbdd5a852bdcee |
 | apps/mobile/src/lib/consent/dependentConsentLifecycle.ts | present | 25851 | ba0c425416000beb7aeebcacd90d792e7ae9bb7da1f93203d0fa6cdf06370baf |
@@ -307,15 +307,15 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/features/trend/TrendInsight.tsx | present | 462 | 0cb5fe60f475a09c85e89b5aea4dd8a5f0092b90f87191605c958f8d760723c5 |
 | apps/mobile/src/features/trend/useTrend.test.ts | present | 3959 | 0900e378011668323b49eb2cd6a2054dfd7393ed62efa808badce8cf7fe72f72 |
 | apps/mobile/src/features/photos/copy.ts | present | 7661 | 3921a01492072726177d549ec5353bf64768c20a400f0f4305b18d6b89dbaa13 |
-| packages/types/src/index.ts | present | 19110 | 015b60293c9252c54e99830ec390e7b518f8244649b105920d830dc1f3e55f25 |
+| packages/types/src/index.ts | present | 19296 | 99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4 |
 | supabase/migrations/20260613000024_photo_trend.sql | present | 4734 | af7618e6a91895b4d68f053f23f8321c38a4bdd33d1652488f7437720d4c05ce |
 | scripts/photo05/trend-admission-source-contract.mjs | present | 28244 | 97d3850c9474e889c112e1c0904ac9f16ede01f537165f78ff579373176f963a |
 | scripts/photo05/trend-admission-source-contract.test.mjs | present | 10427 | 5aaf71a04757e216e5d89196fa13c049f87bb551d0e052f4946c8b3ca5d6bd20 |
 | scripts/phase9/build-release-qa-packet.mjs | present | 62171 | b1af60d1ab0c1e0366d4d7aecf07401541e935d85b67a0239e3bf0f9c98fe7ab |
 | scripts/phase9/release-smoke.mjs | present | 76077 | 3fae0a968fae1afdd95a25b966c68907c7cd55b16913be2d6e19cbf77515cea1 |
 | scripts/phase9/release-qa-integrity.test.mjs | present | 35022 | ba97fd498d900ab76fa22ea968c37ba88406517da87ee9f1babd54f8dca5a679 |
-| BLOCKERS.md | present | 100700 | b44331a3498b1e8c3dd3784c5122ba5d8e35a11f1895ec05c52090d8776d371e |
-| PROGRESS.md | present | 521279 | 90c9600758f01e538dc9a105bb31ed97d37beba0cd2c16b16be7b07dcbd7af37 |
+| BLOCKERS.md | present | 102944 | a0731452ab4d24fa71b30969981442a0e8303735e5df7c32ead6961364609709 |
+| PROGRESS.md | present | 525015 | 3ada12a889a0f9b962edc0451b6712bcee9252db2579866b3b0e225ef9fa6add |
 | apps/mobile/src/app/commerce/_layout.tsx | present | 101 | f9c006f08624e8f8f3a6fc2a2ba015a71d5c2954af82aae09b2d6185c6283abb |
 | apps/mobile/src/app/commerce/consent.tsx | present | 178 | a2453382e5b3d1eed13160b4a27f675dd3f563fbbed7e3eba4a9f7d9f2fb6749 |
 | apps/mobile/src/app/commerce/stack/[slug].tsx | present | 176 | 37f630992967de1c4b87cf6e59599df93b2bb331afd87b63cacf60c1d64e14fa |
@@ -342,13 +342,13 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/features/commerce/useCommerce.ts | present | 698 | 09521e1e075a97111e59d0e32a55a9d0db9ad18987bfd3304a4726bbc719d92e |
 | docs/10-creator-stacks-build-spec.md | present | 23880 | 5696921b22652395370012948099e84a2235141d9b2bf31676c0cfe128bd34ef |
 | docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md | present | 13002 | 83bf977d2d7433c5dc8869293f695e42f8665cb6d378d66b652af272edfed049 |
-| scripts/com01/commerce-admission-source-contract.mjs | present | 40671 | c1543dfdf705534235a73e84cf6be7e952e880b76065ecd5ab529eb5db7f8b26 |
-| scripts/com01/commerce-admission-source-contract.test.mjs | present | 17622 | d85f429733175bd750ee191c987541bedb37cfa9e1996772f5f920f90ddcdb34 |
+| scripts/com01/commerce-admission-source-contract.mjs | present | 41547 | af9e410a976ff9f5f9aee7e2a988ea2441f660b85212cd345625ccb015db35df |
+| scripts/com01/commerce-admission-source-contract.test.mjs | present | 18887 | 5d45088061bf38b49ebf30cd41403c18e454643b89c7ce48a3ada5c805a42329 |
 | supabase/functions/order-report-poll/index.ts | present | 1125 | 5747e2e536851e325fcb25ca3c9f0cefa81fc0c0f94c6c34791b89b5651adc8c |
 | supabase/functions/order-report-poll/orderAttributionCore.ts | present | 10537 | 434abcf6f1f7424d503fcec137bd799dc66b520c26d0e76bd36d0820f1dfa7f0 |
-| supabase/migrations/20260729000072_commerce_zero_admission.sql | present | 6062 | 876d12e4d9d917cd42b55ea480b4db6db129ba21a329bd052a979adeb303aa04 |
-| supabase/tests/database/commerce_zero_admission.test.sql | present | 12840 | 631595dda1db2a861263de17ac249a7a16bda92018e41d64050773392a2a372e |
-| supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql | present | 8588 | a6589de84a09db42afb230e914984c17a93e643ba0707625d36016e38d86894d |
+| supabase/migrations/20260729000072_commerce_zero_admission.sql | present | 6320 | a209915c6f3b860fdf06f2eacd46c8f10221078b042257fcdcb2b37578e45806 |
+| supabase/tests/database/commerce_zero_admission.test.sql | present | 13495 | cd12a7fa92ae52d4abd6155c0b7b9bafc8208be1d24054b434c02d811720249e |
+| supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql | present | 11866 | 0765f0c0b926a1a20297f94d6604d0f7557c0815315b36e3c115dbc5162c6f7b |
 
 ## Blockers
 

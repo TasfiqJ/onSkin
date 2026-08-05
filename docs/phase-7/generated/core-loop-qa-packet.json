@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T21:55:52.855Z",
+  "generatedAt": "2026-08-05T05:56:28.148Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -191,10 +191,20 @@
       "externalNavigationAllowed": false,
       "analyticsAllowed": false,
       "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
     }
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "ca85ec5f6cfa0cb3d47a852c115f5b62338806c9",
+  "gitSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -223,7 +233,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "ca85ec5f6cfa0cb3d47a852c115f5b62338806c9",
+    "currentGitSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -247,7 +257,7 @@
     },
     "phase5DeviceQa": {
       "status": "blocked",
-      "gitSha": "92dec848003f32db88e3ec633b4f550a6ce78e25",
+      "gitSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
       "errors": [
         "pinned Phase 5 device QA packet must contain an empty blockers array",
         "pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing",
@@ -267,7 +277,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "ca85ec5f6cfa0cb3d47a852c115f5b62338806c9",
+    "headSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -277,7 +287,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "ca85ec5f6cfa0cb3d47a852c115f5b62338806c9",
+    "headSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
     "status": "blocked"
   },
   "scenarios": [
@@ -370,14 +380,14 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43202,
-      "sha256": "8aeadf5b1f0bb7cb5a045d3b9e39849a6bf6fb7beb9724e7872009cc6c608706"
+      "bytes": 43962,
+      "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
       "exists": true,
-      "bytes": 6817,
-      "sha256": "d9beeffb2ab3f88db4b51bd934d15e65c0284b1e95f8153c5b6f3417caf45c07"
+      "bytes": 7174,
+      "sha256": "ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb"
     },
     {
       "path": "docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md",
@@ -400,8 +410,8 @@
     {
       "path": "scripts/launch/contract.mjs",
       "exists": true,
-      "bytes": 14603,
-      "sha256": "51578e1ea8317114ddb7c4c46eb56958f716c272bc9c54745cb9cd8bc797f06c"
+      "bytes": 15776,
+      "sha256": "7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b"
     },
     {
       "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
@@ -436,14 +446,14 @@
     {
       "path": "apps/mobile/src/lib/env.ts",
       "exists": true,
-      "bytes": 6892,
-      "sha256": "bbc16d9f9e0c8875b2999915941845bddf4ee209480767766e2487c37950c3ad"
+      "bytes": 7878,
+      "sha256": "10d3095fdac566e4720f2e99e0791bb8617c8c09f21618873c3fc919cf166757"
     },
     {
       "path": "apps/mobile/src/lib/env.test.ts",
       "exists": true,
-      "bytes": 7649,
-      "sha256": "3a2791e73834c3086343a0a2a76c059529b61667665c8f67defed01dddd438f3"
+      "bytes": 9745,
+      "sha256": "5d2cb946d79920cbaec54eae3c9f0409fc6636673ac1e0f14ee8e6c5b5558bdc"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
@@ -1438,8 +1448,8 @@
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
-      "bytes": 50988,
-      "sha256": "ae4552be8c42679548108ef862f3bee4007173ca4ee46db86dca1af64f159399"
+      "bytes": 52725,
+      "sha256": "7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83"
     },
     {
       "path": "scripts/phase5/device-qa-packet-contract.mjs",
@@ -1516,8 +1526,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 470486,
-      "sha256": "a0e9502d299c3276ba1fc841fc948f580c41bf829810cd2ee6463cc20d1d5b5a"
+      "bytes": 479048,
+      "sha256": "326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e"
     },
     {
       "path": "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
@@ -1544,26 +1554,26 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 68105,
-      "sha256": "406feb2add61338cc919b618f3493f70c3489a137e8f8ac9372958fe7ba1c2e0"
+      "bytes": 68482,
+      "sha256": "dd85706740b9ba6e1c4642a8a8d292db8b2d64c0c1d1b59b7858c4d6608796cb"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 54005,
-      "sha256": "3fed27537f673c33c5d34e14b24a0fc9b4daa0a130957c4691673ee1d151d876"
+      "sha256": "9b679d0653ebf9e6dd6e58e0290fbd77811cc81250a81f7fcc486af61361bfb7"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 47429,
-      "sha256": "b620bfb157eb2c054116727639acec3babc398af4216ef0008382ee2923593d9"
+      "bytes": 52856,
+      "sha256": "0003ab040cf84368f07df09ae04156ed0b7dbed1213ba422844dbf1de26a058a"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 29731,
-      "sha256": "982714cee57c986962bd073a549cf7a26ab645272bbfded76e4acf75c77b1cae"
+      "bytes": 33649,
+      "sha256": "6f8af0789016f208fd39bec0cdef323067ee5e0287889852cbb34bc16118cf16"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -1622,14 +1632,14 @@
     {
       "path": "docs/MASTER_PLAN.md",
       "exists": true,
-      "bytes": 67542,
-      "sha256": "14c7e657f70910eb44a7433ec9e88d0d5b0dc5eaf730de7ab1d24d2e5a9d644c"
+      "bytes": 69802,
+      "sha256": "d2413a72bb9ec450762c3724d698da9363f8480588f8c5d82c4123e4d636dfe3"
     },
     {
       "path": "docs/DECISIONS.md",
       "exists": true,
-      "bytes": 90999,
-      "sha256": "dcd8c96a1bcad498defe8bfa5eff3385e5d8768006c25d652e8bb16716552386"
+      "bytes": 94007,
+      "sha256": "c566c8eae25390f6d96d492639ddf0cfdbf0e27fd7d43636c51d0e50261137cf"
     },
     {
       "path": "docs/FEATURE_INDEX.md",
@@ -1646,14 +1656,14 @@
     {
       "path": "docs/hugeToDo/README.md",
       "exists": true,
-      "bytes": 64865,
-      "sha256": "91d018365075790dffd9988e25f6df8567da99c3f2c6f1069ffdfe3fb6d90624"
+      "bytes": 65638,
+      "sha256": "c50f7dff469a9ad021a1e3cc5492a6a3159baf03ccbfc20ea9e08fa4df9bdf39"
     },
     {
       "path": "scripts/launch/contract-smoke.mjs",
       "exists": true,
-      "bytes": 9050,
-      "sha256": "fc9bd3a701c39a822a84cd4e5fa21a962a0b0b2ccabce1faf77507ad8cf7a899"
+      "bytes": 10643,
+      "sha256": "98beaccf94d02705a36e67c716af69a194897a6ec52c0edade49f3432bcd7de2"
     },
     {
       "path": "scripts/launch/check-contract.mjs",
@@ -1664,8 +1674,8 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 27692,
-      "sha256": "b4fd77b3eb6bd7e21238295841d91f3c995802ba79a340abb45ee9f18219bc90"
+      "bytes": 29678,
+      "sha256": "41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217"
     },
     {
       "path": "apps/mobile/src/lib/consent/dependentConsentContract.ts",
@@ -1772,8 +1782,8 @@
     {
       "path": "packages/types/src/index.ts",
       "exists": true,
-      "bytes": 19110,
-      "sha256": "015b60293c9252c54e99830ec390e7b518f8244649b105920d830dc1f3e55f25"
+      "bytes": 19296,
+      "sha256": "99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4"
     },
     {
       "path": "supabase/migrations/20260613000024_photo_trend.sql",
@@ -1814,14 +1824,14 @@
     {
       "path": "BLOCKERS.md",
       "exists": true,
-      "bytes": 100700,
-      "sha256": "b44331a3498b1e8c3dd3784c5122ba5d8e35a11f1895ec05c52090d8776d371e"
+      "bytes": 102944,
+      "sha256": "a0731452ab4d24fa71b30969981442a0e8303735e5df7c32ead6961364609709"
     },
     {
       "path": "PROGRESS.md",
       "exists": true,
-      "bytes": 521279,
-      "sha256": "90c9600758f01e538dc9a105bb31ed97d37beba0cd2c16b16be7b07dcbd7af37"
+      "bytes": 525015,
+      "sha256": "3ada12a889a0f9b962edc0451b6712bcee9252db2579866b3b0e225ef9fa6add"
     },
     {
       "path": "apps/mobile/src/app/commerce/_layout.tsx",
@@ -1982,14 +1992,14 @@
     {
       "path": "scripts/com01/commerce-admission-source-contract.mjs",
       "exists": true,
-      "bytes": 40671,
-      "sha256": "c1543dfdf705534235a73e84cf6be7e952e880b76065ecd5ab529eb5db7f8b26"
+      "bytes": 41547,
+      "sha256": "af9e410a976ff9f5f9aee7e2a988ea2441f660b85212cd345625ccb015db35df"
     },
     {
       "path": "scripts/com01/commerce-admission-source-contract.test.mjs",
       "exists": true,
-      "bytes": 17622,
-      "sha256": "d85f429733175bd750ee191c987541bedb37cfa9e1996772f5f920f90ddcdb34"
+      "bytes": 18887,
+      "sha256": "5d45088061bf38b49ebf30cd41403c18e454643b89c7ce48a3ada5c805a42329"
     },
     {
       "path": "supabase/functions/order-report-poll/index.ts",
@@ -2006,20 +2016,20 @@
     {
       "path": "supabase/migrations/20260729000072_commerce_zero_admission.sql",
       "exists": true,
-      "bytes": 6062,
-      "sha256": "876d12e4d9d917cd42b55ea480b4db6db129ba21a329bd052a979adeb303aa04"
+      "bytes": 6320,
+      "sha256": "a209915c6f3b860fdf06f2eacd46c8f10221078b042257fcdcb2b37578e45806"
     },
     {
       "path": "supabase/tests/database/commerce_zero_admission.test.sql",
       "exists": true,
-      "bytes": 12840,
-      "sha256": "631595dda1db2a861263de17ac249a7a16bda92018e41d64050773392a2a372e"
+      "bytes": 13495,
+      "sha256": "cd12a7fa92ae52d4abd6155c0b7b9bafc8208be1d24054b434c02d811720249e"
     },
     {
       "path": "supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql",
       "exists": true,
-      "bytes": 8588,
-      "sha256": "a6589de84a09db42afb230e914984c17a93e643ba0707625d36016e38d86894d"
+      "bytes": 11866,
+      "sha256": "0765f0c0b926a1a20297f94d6604d0f7557c0815315b36e3c115dbc5162c6f7b"
     }
   ],
   "blockers": [
