@@ -1,8 +1,8 @@
 # Generated Packet Status Audit
 
-Generated: 2026-08-05T05:59:00.921Z
+Generated: 2026-08-06T00:46:48.595Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit scans committed phase packet outputs for dirty-worktree
 status and stale recorded file hashes. It does not prove external launch
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 53
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 3428
+- Hash references checked: 3441
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -45,11 +45,11 @@ being treated as trustworthy launch evidence.
 | docs/phase-4/generated/obf-fixture-import.json            | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 383       | 0               |
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 235       | 0               |
+| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 242       | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 196       | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 275       | 0               |
+| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 281       | 0               |
 | docs/phase-7/generated/core-loop-qa-packet.md             | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 72        | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.md          | md   | 0                  | 0                          | 0         | 0               |
