@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-08-05T05:48:00.282Z
+Generated: 2026-08-06T00:37:50.155Z
 Status: pass
-Git SHA: e0cc45e88fc743aaaf131d848ab9b8479441f4b6
+Git SHA: 4ce9269f7efabedc84a4476c14dce5eee31a9370
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -126,7 +126,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `b5afa81fff0e49b4fb25f7ad87406c1aefca9fc2fdbe108800ecbcfc24239cf0`
+- Review snapshot SHA-256: `83f9076cfa9804ad5ce08cd454bf933671082ee57e0f47ee5501758540dd9664`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Auto-renew, restore, cancellation, trial, and win-back copy.
@@ -164,8 +164,8 @@ Sources:
 - `apps/mobile/src/features/subscription/proGatedRoutes.test.ts` - 16111 bytes - sha256 `44d56f7f13bab8928002e0ef441c45de7748877e4becf54d74dd7d9279733997`
 - `apps/mobile/src/features/subscription/ReverseTrialBanner.tsx` - 2326 bytes - sha256 `b3453ed2c4b8efa0529d97decf7c352c03cae0411bc6bfbfba231212a5ec335f`
 - `apps/mobile/src/features/subscription/serverContracts.test.ts` - 7049 bytes - sha256 `daca502833a84b5c01167cbe3b1c0c72e2042bc6514cbda4e56329f284f3f5be`
-- `apps/mobile/src/features/subscription/store.test.ts` - 43354 bytes - sha256 `2a5a03344b57a8c47a70caea79bf64b169d1a47690943de589acaf1c7b03438d`
-- `apps/mobile/src/features/subscription/store.ts` - 61784 bytes - sha256 `3862e0280143556f07a8514ccae8b0f6a59ee534ad0c026382bfebe017c39d54`
+- `apps/mobile/src/features/subscription/store.test.ts` - 43350 bytes - sha256 `c3147719d15e8d16c8bdf72d5b10a6bd661329bb138af76d4bd491d2edd832c7`
+- `apps/mobile/src/features/subscription/store.ts` - 61371 bytes - sha256 `0c7469b44bb2943d630f6a1c6d6e147d1929daeacc85b3d50af3804b49e345a9`
 - `apps/mobile/src/features/subscription/storefrontCopy.test.ts` - 2628 bytes - sha256 `44cc9d3ff4089821e69412f3150c855c0dd7a70e5b91af116df9773a192c263d`
 - `apps/mobile/src/features/subscription/storefrontCopy.ts` - 1897 bytes - sha256 `5f9def7dbafe7f302eb800376d47851e836fb1c97ff640db486b44523e7ccc3b`
 - `apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts` - 6647 bytes - sha256 `fe93dd56547bbdf2c7307897b80d9f6af56a660b261ba72089bf7ea2a4a8fd12`
@@ -478,14 +478,14 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `6189550f40aeb067715c7107ac28a2e74b2928419506699aa97e98ea73058243`
+- Review snapshot SHA-256: `ca63606cabd2829a1e78eb26db65dcd616595064f9b706f6a534d24c2b4dd123`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Verify naming and category boundaries.
 
 Sources:
 
-- `packages/types/src/index.ts` - 19296 bytes - sha256 `99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4`
+- `packages/types/src/index.ts` - 19452 bytes - sha256 `444e627d076e30397653a3de48dc3a2d9b2ca67372db26a6279784739d33c221`
 
 ### cosmeticChemistry - Conflict and synergy rules
 
@@ -653,7 +653,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `c64d441848d3d7f4ac8a385985453fb094b913175fb8a210a6a78d0a838d033d`
+- Review snapshot SHA-256: `c858bd5fa129ae0efa2c72b2260970d12d14f988253391d746777b67a8d8d747`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review age -> consent -> goals ordering; immediate local/server freeze; exact deletion/preservation scope; legacy users; terminal-only fresh reconsent; installed-client rollout; minimized receipt retention; Supabase backup/restore; processor versioning; and final consumer-health notice.
@@ -687,7 +687,7 @@ Sources:
 - `apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts` - 9432 bytes - sha256 `0f3f77f32bd7a72991dcfbb3d42981c6f086db09580fa652affafcf0902bab96`
 - `apps/mobile/src/features/healthConsent/selectiveCleanup.ts` - 6449 bytes - sha256 `06c7c5d8c7129d01d28ff258339e09ff114d5f8077fe35462832cb52380aee71`
 - `apps/mobile/src/lib/consent/consent.test.ts` - 10641 bytes - sha256 `13de0b484f39b7803eb586fddb2e1bb7af02087affe1a5d05b8aafe87be53f5a`
-- `apps/mobile/src/lib/consent/consent.ts` - 10426 bytes - sha256 `83bef9b4cefbe4204a06170b789beb4c05c4ea097c4b8682759de1c86b894cad`
+- `apps/mobile/src/lib/consent/consent.ts` - 10233 bytes - sha256 `0a27d608e3b169b35853752f6d02f11fda04d76cd2581ced3c26e727ca34d146`
 - `apps/mobile/src/lib/consent/dependentConsentContract.test.ts` - 2510 bytes - sha256 `a7faed8bd978c885bcaba4810d595341a08477233092572a02fbdd5a852bdcee`
 - `apps/mobile/src/lib/consent/dependentConsentContract.ts` - 8999 bytes - sha256 `d6c24513171d35ad9c422a487d8331bed9013729b340348643962cbf46bb7c2d`
 - `apps/mobile/src/lib/consent/dependentConsentLease.test.ts` - 4906 bytes - sha256 `0c1be5223c3ea5b5e37347e9267bc83c720b2f06b18540e1ea5c7b4742c3e8b2`
