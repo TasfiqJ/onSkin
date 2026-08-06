@@ -2545,6 +2545,50 @@ export function buildCat07CombinedRuntimeManifest(snapshotRoot, runtimeRootPaths
   };
 }
 
+export function buildCat07RuntimeDriftFingerprint(snapshotRoot, runtimeRootPaths) {
+  const fingerprint = new Map();
+  for (const repoPath of runtimeRootPaths) {
+    const runtimeRoot = path.join(snapshotRoot, ...repoPath.split('/'));
+    const visit = (directory, relativeDirectory = '') => {
+      const entries = readdirSync(directory, { withFileTypes: true }).sort((left, right) =>
+        comparePaths(left.name, right.name),
+      );
+      for (const entry of entries) {
+        const absolute = path.join(directory, entry.name);
+        const relative = normalizeRepoPath(path.join(repoPath, relativeDirectory, entry.name));
+        const stats = lstatSync(absolute, { bigint: true });
+        if (stats.isSymbolicLink()) {
+          fingerprint.set(relative, `link:${normalizeRepoPath(readlinkSync(absolute))}`);
+        } else if (stats.isDirectory()) {
+          fingerprint.set(relative, `directory:${stats.mtimeNs}:${stats.ctimeNs}`);
+          visit(absolute, normalizeRepoPath(path.join(relativeDirectory, entry.name)));
+        } else if (stats.isFile()) {
+          fingerprint.set(
+            relative,
+            `file:${stats.size}:${stats.mtimeNs}:${stats.ctimeNs}`,
+          );
+        }
+      }
+    };
+    visit(runtimeRoot);
+  }
+  return fingerprint;
+}
+
+export function collectCat07RuntimeDrift(before, after, { limit = 8 } = {}) {
+  const results = [];
+  const paths = [...new Set([...before.keys(), ...after.keys()])].sort(comparePaths);
+  for (const repoPath of paths) {
+    const beforeValue = before.get(repoPath);
+    const afterValue = after.get(repoPath);
+    if (beforeValue === afterValue) continue;
+    const state = beforeValue == null ? 'created' : afterValue == null ? 'removed' : 'changed';
+    results.push(`${state} ${repoPath}`);
+    if (results.length >= limit) break;
+  }
+  return results;
+}
+
 export function runCat07IsolatedNpmInstall({
   cacheContainmentRoot = path.resolve(repoRoot, '.tmp'),
   cacheRoot = path.resolve(repoRoot, '.tmp', 'cat07-npm-cache'),
@@ -2714,6 +2758,10 @@ export function createCat07ImmutableSourceSnapshot(
       },
     ).trim();
     const runtimeTree = buildCat07CombinedRuntimeManifest(snapshotRoot, runtimeRootPaths);
+    const runtimeDriftFingerprint = buildCat07RuntimeDriftFingerprint(
+      snapshotRoot,
+      runtimeRootPaths,
+    );
     const toolBindings = {
       expoCli: cat07ExecutableBinding(expoCliPath),
       git: extracted.gitBinding,
@@ -2792,10 +2840,17 @@ export function createCat07ImmutableSourceSnapshot(
           ),
           'CAT07 committed source bytes changed while the app was served.',
         );
-        assert(
-          canonicalEvidenceJsonBytes(after).equals(canonicalEvidenceJsonBytes(runtimeTree)),
-          'CAT07 runtime dependency bytes changed while the app was served.',
-        );
+        if (!canonicalEvidenceJsonBytes(after).equals(canonicalEvidenceJsonBytes(runtimeTree))) {
+          const runtimeDrift = collectCat07RuntimeDrift(
+            runtimeDriftFingerprint,
+            buildCat07RuntimeDriftFingerprint(snapshotRoot, runtimeRootPaths),
+          );
+          throw new Error(
+            `CAT07 runtime dependency bytes changed while the app was served${
+              runtimeDrift.length > 0 ? `: ${runtimeDrift.join(', ')}` : ''
+            }.`,
+          );
+        }
         for (const [name, binding] of Object.entries(toolBindings)) {
           const expectedTool = runtimeProvenance.tools[name];
           assert(expectedTool, 'CAT07 runtime tool binding is incomplete.');
@@ -4020,8 +4075,11 @@ export async function runCat07ShelfFreshnessAudit({
     if (immutableSource) {
       try {
         immutableSource.assertRuntimeStable();
-      } catch {
-        summary.fatalError = 'CAT07 immutable source or runtime bytes changed during the run.';
+      } catch (error) {
+        summary.fatalError =
+          sanitizeEvidenceDiagnosticForDisplay(
+            error instanceof Error ? error.message : String(error),
+          ) || 'CAT07 immutable source or runtime bytes changed during the run.';
       }
       try {
         immutableSource.cleanup();

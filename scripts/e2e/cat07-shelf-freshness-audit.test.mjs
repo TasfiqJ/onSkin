@@ -35,11 +35,13 @@ import {
   assertCat07FinalSourceProvenance,
   assertCat07SourceSafetyContract,
   buildCat07ChildEnvironment,
+  buildCat07RuntimeDriftFingerprint,
   buildCat07ScrubbedNodeArgs,
   Cat07CdpClient,
   clearPreviousEvidence,
   classifyCat07ProjectedBrowserFailures,
   collectCat07UndeclaredDirtyPaths,
+  collectCat07RuntimeDrift,
   createCat07SourceMutationMonitor,
   finalizeCat07ExpoLog,
   cat07BrowserMarker,
@@ -712,6 +714,28 @@ test('CAT07 app environment is a minimal positive allowlist and never inherits h
     Object.keys(JSON.parse(child.stdout)).sort(),
     Object.keys(childEnvironment).sort(),
   );
+});
+
+test('CAT07 runtime drift diagnostics are bounded to safe relative dependency paths', (t) => {
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'cat07-runtime-drift-'));
+  t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
+  const packageRoot = path.join(fixtureRoot, 'node_modules', 'fixture-package');
+  mkdirSync(packageRoot, { recursive: true });
+  writeFileSync(path.join(packageRoot, 'changed.txt'), 'before');
+  writeFileSync(path.join(packageRoot, 'removed.txt'), 'remove me');
+  const before = buildCat07RuntimeDriftFingerprint(fixtureRoot, ['node_modules']);
+
+  writeFileSync(path.join(packageRoot, 'changed.txt'), 'after with a different size');
+  rmSync(path.join(packageRoot, 'removed.txt'));
+  writeFileSync(path.join(packageRoot, 'created.txt'), 'new');
+  const after = buildCat07RuntimeDriftFingerprint(fixtureRoot, ['node_modules']);
+  const drift = collectCat07RuntimeDrift(before, after, { limit: 20 });
+
+  assert.ok(drift.includes('changed node_modules/fixture-package/changed.txt'));
+  assert.ok(drift.includes('created node_modules/fixture-package/created.txt'));
+  assert.ok(drift.includes('removed node_modules/fixture-package/removed.txt'));
+  assert.equal(collectCat07RuntimeDrift(before, after, { limit: 1 }).length, 1);
+  assert.equal(drift.some((entry) => entry.includes(fixtureRoot)), false);
 });
 
 test('CAT07 isolated npm install is offline, lockfile-bound, scrubbed, and has no fallback', (t) => {
