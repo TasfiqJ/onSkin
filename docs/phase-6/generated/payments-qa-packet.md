@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-08-05T01:57:35.409Z
-Git SHA: 7362f4bf7dfa1a4e2091b98c38cc53016882e285
+Generated at: 2026-08-06T00:44:25.406Z
+Git SHA: 0e5a4a910f11539b1206865a8e2a23ed74416716
 Git status: clean
 Required inputs committed and byte-matched to HEAD: yes
 Tracked secret environment files absent: yes
@@ -79,10 +79,10 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
 | .env.example | present | 29678 | 41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217 |
-| package.json | present | 43962 | 8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb |
+| package.json | present | 44194 | 6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f |
 | package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
 | apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
-| packages/types/src/index.ts | present | 19296 | 99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4 |
+| packages/types/src/index.ts | present | 19452 | 444e627d076e30397653a3de48dc3a2d9b2ca67372db26a6279784739d33c221 |
 | apps/mobile/app.config.js | present | 19143 | 9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f |
 | apps/mobile/eas.json | present | 1636 | c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04 |
 | supabase/functions/deno.lock | present | 2465 | b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7 |
@@ -96,7 +96,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | apps/mobile/src/lib/env.ts | present | 7878 | 10d3095fdac566e4720f2e99e0791bb8617c8c09f21618873c3fc919cf166757 |
 | apps/mobile/src/lib/env.test.ts | present | 9745 | 5d2cb946d79920cbaec54eae3c9f0409fc6636673ac1e0f14ee8e6c5b5558bdc |
 | apps/mobile/src/lib/appConfig.test.ts | present | 44283 | 2a0eb426c5ee91bbe172813db5fc478f02499a69d36395932d23548de6825288 |
-| apps/mobile/src/features/subscription/store.ts | present | 61784 | 3862e0280143556f07a8514ccae8b0f6a59ee534ad0c026382bfebe017c39d54 |
+| apps/mobile/src/features/subscription/store.ts | present | 61371 | 0c7469b44bb2943d630f6a1c6d6e147d1929daeacc85b3d50af3804b49e345a9 |
 | apps/mobile/src/features/subscription/entitlement.ts | present | 5813 | 735938df18d9a15c383c7017102c9626b538ab90f0f7e0ef9054d7b14de9e9ec |
 | apps/mobile/src/features/subscription/entitlementEvidence.ts | present | 18713 | 0f10f2b81600f7868eb376f1a8289bb65c8e00d53269daab2b23dbf8288e1c1c |
 | apps/mobile/src/features/subscription/entitlementEvidence.test.ts | present | 6620 | 3b54db67533690960a45168349bbad40dafb7a036ad31dbd669216a78f5e7c75 |
@@ -158,7 +158,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | supabase/migrations/20260713000052_account_publication_fence.sql | present | 77778 | b19dcada637f30c4a7756711aed2ad6809877f2e043fc79c9c36ed107169b05d |
 | supabase/migrations/20260714000053_entitlement_authority_lanes.sql | present | 36742 | d1aba134336ccb38292134dc5e10528b6a9370489413e5bd2b7992c03525cec1 |
 | apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 45302 | 20e29a36855d044849c47cdc8fcf204a9da41d43bebc2bfe724e575a5a50ee59 |
-| apps/mobile/src/features/subscription/store.test.ts | present | 43354 | 2a5a03344b57a8c47a70caea79bf64b169d1a47690943de589acaf1c7b03438d |
+| apps/mobile/src/features/subscription/store.test.ts | present | 43350 | c3147719d15e8d16c8bdf72d5b10a6bd661329bb138af76d4bd491d2edd832c7 |
 | apps/mobile/src/features/subscription/entitlement.test.ts | present | 3970 | 2ef807ac5ae4b4bdf0d83e47c3a37c7d1de4eb425c436fec17177991616a273a |
 | apps/mobile/src/features/subscription/serverContracts.test.ts | present | 7049 | daca502833a84b5c01167cbe3b1c0c72e2042bc6514cbda4e56329f284f3f5be |
 | scripts/phase6/build-payments-qa-packet.mjs | present | 40384 | caade2b96d77995fbac918e72b42ae3fb77257bf923ff8d11d2e0c74796d9fee |

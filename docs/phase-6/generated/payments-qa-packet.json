@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T01:57:35.409Z",
+  "generatedAt": "2026-08-06T00:44:25.406Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -212,7 +212,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "7362f4bf7dfa1a4e2091b98c38cc53016882e285",
+  "gitSha": "0e5a4a910f11539b1206865a8e2a23ed74416716",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
@@ -331,8 +331,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43962,
-      "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
+      "bytes": 44194,
+      "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
     },
     {
       "path": "package-lock.json",
@@ -349,8 +349,8 @@
     {
       "path": "packages/types/src/index.ts",
       "exists": true,
-      "bytes": 19296,
-      "sha256": "99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4"
+      "bytes": 19452,
+      "sha256": "444e627d076e30397653a3de48dc3a2d9b2ca67372db26a6279784739d33c221"
     },
     {
       "path": "apps/mobile/app.config.js",
@@ -433,8 +433,8 @@
     {
       "path": "apps/mobile/src/features/subscription/store.ts",
       "exists": true,
-      "bytes": 61784,
-      "sha256": "3862e0280143556f07a8514ccae8b0f6a59ee534ad0c026382bfebe017c39d54"
+      "bytes": 61371,
+      "sha256": "0c7469b44bb2943d630f6a1c6d6e147d1929daeacc85b3d50af3804b49e345a9"
     },
     {
       "path": "apps/mobile/src/features/subscription/entitlement.ts",
@@ -805,8 +805,8 @@
     {
       "path": "apps/mobile/src/features/subscription/store.test.ts",
       "exists": true,
-      "bytes": 43354,
-      "sha256": "2a5a03344b57a8c47a70caea79bf64b169d1a47690943de589acaf1c7b03438d"
+      "bytes": 43350,
+      "sha256": "c3147719d15e8d16c8bdf72d5b10a6bd661329bb138af76d4bd491d2edd832c7"
     },
     {
       "path": "apps/mobile/src/features/subscription/entitlement.test.ts",
