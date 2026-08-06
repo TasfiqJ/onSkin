@@ -180,6 +180,17 @@ const CAT07_SOURCE_PATHS = Object.freeze({
   shelfRoute: 'apps/mobile/src/app/(tabs)/shelf.tsx',
   store: 'apps/mobile/src/features/shelf/store.ts',
 });
+const CAT07_EXPO_ENV_PATH = 'apps/mobile/expo-env.d.ts';
+const CAT07_OPTIONAL_GENERATED_SOURCE_FILES = new Map([
+  [
+    CAT07_EXPO_ENV_PATH,
+    Buffer.from(
+      '/// <reference types="expo/types" />\n\n' +
+        '// NOTE: This file should not be edited and should be in your git ignore',
+      'utf8',
+    ),
+  ],
+]);
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -928,6 +939,7 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
       normalized.startsWith('.expo/') ||
       normalized === 'apps/mobile/.expo' ||
       normalized.startsWith('apps/mobile/.expo/') ||
+      normalized === CAT07_EXPO_ENV_PATH ||
       normalized === CAT07_EVIDENCE_RELATIVE_DIR ||
       normalized.startsWith(`${CAT07_EVIDENCE_RELATIVE_DIR}/`)
     );
@@ -2200,7 +2212,7 @@ function cat07SourceTreeManifest(entries, sizes) {
 export function verifyCat07ExtractedGitTree(
   snapshotRoot,
   entries,
-  { allowedExtraRoots = [] } = {},
+  { allowedExtraRoots = [], allowedGeneratedFiles = new Map() } = {},
 ) {
   const root = path.resolve(snapshotRoot);
   const rootStats = lstatSync(root);
@@ -2223,6 +2235,20 @@ export function verifyCat07ExtractedGitTree(
       ),
       'CAT07 runtime exclusion overlaps committed source.',
     );
+  }
+  const reviewedGeneratedFiles = new Map();
+  for (const [repoPath, expectedBytes] of allowedGeneratedFiles) {
+    const normalized = normalizeRepoPath(repoPath);
+    assertCat07SafeGitTreePath(normalized, new Map());
+    assert(Buffer.isBuffer(expectedBytes), 'CAT07 reviewed generated source must bind bytes.');
+    assert(
+      !expectedFiles.has(normalized) &&
+        ![...reviewedExtraRoots].some(
+          (extraRoot) => normalized === extraRoot || normalized.startsWith(`${extraRoot}/`),
+        ),
+      'CAT07 reviewed generated source overlaps committed source or runtime roots.',
+    );
+    reviewedGeneratedFiles.set(normalized, expectedBytes);
   }
   const actualFiles = new Set();
   const actualDirectories = new Set();
@@ -2254,6 +2280,21 @@ export function verifyCat07ExtractedGitTree(
             !extraContained.startsWith(`..${path.sep}`) &&
             !path.isAbsolute(extraContained),
           'CAT07 reviewed runtime or scratch root is an unsafe reparse boundary.',
+        );
+        continue;
+      }
+      if (reviewedGeneratedFiles.has(relative)) {
+        assert(
+          stats.isFile() && !stats.isSymbolicLink(),
+          'CAT07 reviewed generated source is not one regular file.',
+        );
+        const actualBytes = readBoundedRegularFile(absolute, {
+          containmentRoot: root,
+          maxBytes: CAT07_MAX_SOURCE_FILE_BYTES,
+        });
+        assert(
+          actualBytes.equals(reviewedGeneratedFiles.get(relative)),
+          `CAT07 reviewed generated source bytes do not match: ${relative}.`,
         );
         continue;
       }
@@ -2746,6 +2787,7 @@ export function createCat07ImmutableSourceSnapshot(
     const sourceExtraRoots = ['.expo', '.tmp', 'apps/mobile/.expo', ...runtimeRootPaths];
     const installedSourceTree = verifyCat07ExtractedGitTree(snapshotRoot, extracted.entries, {
       allowedExtraRoots: sourceExtraRoots,
+      allowedGeneratedFiles: CAT07_OPTIONAL_GENERATED_SOURCE_FILES,
     });
     assert(
       canonicalEvidenceJsonBytes(installedSourceTree).equals(
@@ -2862,6 +2904,7 @@ export function createCat07ImmutableSourceSnapshot(
       assertRuntimeStable() {
         const afterSource = verifyCat07ExtractedGitTree(snapshotRoot, extracted.entries, {
           allowedExtraRoots: sourceExtraRoots,
+          allowedGeneratedFiles: CAT07_OPTIONAL_GENERATED_SOURCE_FILES,
         });
         const after = buildCat07CombinedRuntimeManifest(snapshotRoot, runtimeRootPaths);
         assert(
