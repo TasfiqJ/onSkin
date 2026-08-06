@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-08-05T05:50:02.792Z
+Generated: 2026-08-06T00:43:28.538Z
 Status: pass
-Git SHA: c8268070ac69615ff99c0b5e7a358477c0b82db9
+Git SHA: 5a4dee5433fcffcfd3f71f95e95851ffd6ac3dba
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -301,7 +301,7 @@ Sources:
 - `scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql` - 5846 bytes - sha256 `b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6`
 - `scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql` - 6577 bytes - sha256 `d7bfbfb7fed85a600c07d6c779aad6bc1e349c53f7d5eae1fba62597178647e7`
 - `scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql` - 3956 bytes - sha256 `859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e`
-- `scripts/phase9/recommendation-zero-admission-smoke.mjs` - 7935 bytes - sha256 `efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd`
+- `scripts/phase9/recommendation-zero-admission-smoke.mjs` - 10172 bytes - sha256 `e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9`
 - `supabase/tests/database/catalog_import_lifecycle.test.sql` - 109814 bytes - sha256 `d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899`
 - `supabase/tests/database/catalog_serving_gate.test.sql` - 36707 bytes - sha256 `1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9`
 - `supabase/tests/database/cat07_truthful_freshness.test.sql` - 36165 bytes - sha256 `24fe6b485009f9733568b3e101c5278380d620e9a75894898a114a9f1670d6f3`
@@ -326,7 +326,7 @@ Required evidence:
 Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
-- `package.json` - 43962 bytes - sha256 `8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb`
+- `package.json` - 44194 bytes - sha256 `6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f`
 - `.github/workflows/quality.yml` - 11249 bytes - sha256 `034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45248 bytes - sha256 `ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9408 bytes - sha256 `e53c6c5d2715392dab63930046836e1c7b832a007419508a778dd085c54846c1`
@@ -487,7 +487,7 @@ Sources:
 - `supabase/migrations/20260726000071_recommendation_zero_admission.sql` - 14874 bytes - sha256 `4e3e0c46a246b97e98f014bf65499ea86b7f57119744466aebc8c1491331acc9`
 - `supabase/tests/database/recommendation_zero_admission.test.sql` - 17952 bytes - sha256 `6b913214063fde2879fc990e53e48dc46e3a3fb12998ded0f91b106ae6b454bf`
 - `supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql` - 7912 bytes - sha256 `011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77`
-- `scripts/phase9/recommendation-zero-admission-smoke.mjs` - 7935 bytes - sha256 `efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd`
+- `scripts/phase9/recommendation-zero-admission-smoke.mjs` - 10172 bytes - sha256 `e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9`
 
 ### catalog-freshness-provenance - Catalog-backed Shelf freshness and provenance contract
 
@@ -605,7 +605,7 @@ Sources:
 - `scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql` - 5846 bytes - sha256 `b6a914dc1e9d04bbf27933d3e969211482fbbc41e04efd5648fff0b5d56683d6`
 - `scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql` - 6577 bytes - sha256 `d7bfbfb7fed85a600c07d6c779aad6bc1e349c53f7d5eae1fba62597178647e7`
 - `scripts/phase9/catalog-release-0067-lint-contract-postgres-rehearsal.sql` - 3956 bytes - sha256 `859c79b291ff98ab81490780533d337fa98e7c4988167283567f4f13e142b18e`
-- `scripts/phase9/recommendation-zero-admission-smoke.mjs` - 7935 bytes - sha256 `efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd`
+- `scripts/phase9/recommendation-zero-admission-smoke.mjs` - 10172 bytes - sha256 `e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9`
 - `supabase/functions/catalog-lookup/index.ts` - 11843 bytes - sha256 `23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220`
 - `supabase/functions/catalog-lookup/catalogContract.ts` - 80 bytes - sha256 `9707c48c48465b279c2112d84a8a1459867c395490d3c184aaa4e6c2fbc7f81a`
 - `supabase/functions/catalog-lookup/catalogContract.test.ts` - 14681 bytes - sha256 `96ab5dd088984ce67115b993e84436205ebb1bfabee25ea2d60558e7eea85f46`
@@ -614,7 +614,7 @@ Sources:
 - `supabase/functions/catalog-search/catalogContract.test.ts` - 3041 bytes - sha256 `dd91fb0c009da68074d795d7819149d9bb970e47c2fba6bbdfc7a08f7f53922d`
 - `docs/phase-4/catalog-source-release-runbook.md` - 14878 bytes - sha256 `ad1c21bb30222a35dd6d618352a329e02d514eb5cd2cb75ab1a8d3708e52e620`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45248 bytes - sha256 `ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e`
-- `docs/phase-2-production-infrastructure-runbook.md` - 17288 bytes - sha256 `3d72b8eb17319855177ce61e40a9556f9701776531792187f06554b93a607b81`
+- `docs/phase-2-production-infrastructure-runbook.md` - 18257 bytes - sha256 `960da62f12775e7e14620d871699796670c8e26d3d701c92b0e3c03136d9ebba`
 
 ### first-party-correction-report - First-party missing-product and wrong-match operation
 

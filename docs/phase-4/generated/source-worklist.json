@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-08-05T05:50:02.792Z",
+  "generatedAt": "2026-08-06T00:43:28.538Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "c8268070ac69615ff99c0b5e7a358477c0b82db9",
+  "gitSha": "5a4dee5433fcffcfd3f71f95e95851ffd6ac3dba",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1098,8 +1098,8 @@
         {
           "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
           "exists": true,
-          "bytes": 7935,
-          "sha256": "efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd"
+          "bytes": 10172,
+          "sha256": "e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9"
         },
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -1186,8 +1186,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 43962,
-          "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
+          "bytes": 44194,
+          "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -2011,8 +2011,8 @@
         {
           "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
           "exists": true,
-          "bytes": 7935,
-          "sha256": "efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd"
+          "bytes": 10172,
+          "sha256": "e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9"
         }
       ]
     },
@@ -2650,8 +2650,8 @@
         {
           "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
           "exists": true,
-          "bytes": 7935,
-          "sha256": "efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd"
+          "bytes": 10172,
+          "sha256": "e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
@@ -2704,8 +2704,8 @@
         {
           "path": "docs/phase-2-production-infrastructure-runbook.md",
           "exists": true,
-          "bytes": 17288,
-          "sha256": "3d72b8eb17319855177ce61e40a9556f9701776531792187f06554b93a607b81"
+          "bytes": 18257,
+          "sha256": "960da62f12775e7e14620d871699796670c8e26d3d701c92b0e3c03136d9ebba"
         }
       ]
     },
