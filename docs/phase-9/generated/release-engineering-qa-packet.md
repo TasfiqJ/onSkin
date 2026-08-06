@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-08-05T05:57:51.955Z
+Generated: 2026-08-06T00:45:28.542Z
 Status: blocked
-Git SHA: 7436740ffd233c4d1ca8b093d369d9da193e7d64
+Git SHA: 6c3ca7c7d2aef4e5bab295fc5686dcea7a1d833f
 Git status: clean
 NUL Git status SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 Pinned input integrity: blocked
@@ -12,7 +12,7 @@ Pinned input integrity: blocked
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `7436740ffd233c4d1ca8b093d369d9da193e7d64`
+- Current R/F HEAD: `6c3ca7c7d2aef4e5bab295fc5686dcea7a1d833f`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -29,11 +29,11 @@ Pinned input integrity: blocked
 ## CAT07 Launch Evidence
 
 - Overall: blocked
-- Expected HEAD: `7436740ffd233c4d1ca8b093d369d9da193e7d64`
+- Expected HEAD: `6c3ca7c7d2aef4e5bab295fc5686dcea7a1d833f`
 - Committed validator: blocked
-- Committed validator HEAD: `7436740ffd233c4d1ca8b093d369d9da193e7d64`
+- Committed validator HEAD: `6c3ca7c7d2aef4e5bab295fc5686dcea7a1d833f`
 - Full manifest validator: blocked
-- Full manifest validator HEAD: `7436740ffd233c4d1ca8b093d369d9da193e7d64`
+- Full manifest validator HEAD: `6c3ca7c7d2aef4e5bab295fc5686dcea7a1d833f`
 - Summary SHA-256: `BLOCKED`
 - Manifest JSON SHA-256: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - Manifest Markdown SHA-256: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
@@ -229,7 +229,7 @@ Pinned input integrity: blocked
 - `scripts/core06/recommendation-admission-source-contract.test.mjs`: `2df02dfaa6e2698ebc8e02a97b010b380f07ba97d04fb64fafca7db0076857e9`
 - `scripts/core07/share-admission-source-contract.mjs`: `ffbe2846213eb33235b0dad2f3fde61685cff6db92db0d887fed5071392cfd9d`
 - `scripts/core07/share-admission-source-contract.test.mjs`: `8990c02aae82ed1271bc5e010373609a482ac40f1b565cfa60c70d3c9d9eb8a3`
-- `scripts/phase9/recommendation-zero-admission-smoke.mjs`: `efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd`
+- `scripts/phase9/recommendation-zero-admission-smoke.mjs`: `e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9`
 - `scripts/postinstall.mjs`: `0d68d89b51fda8a8c8c64ebfb12d5abf95c64add1c158f36786a8e3ca3f97bf7`
 - `scripts/cat05/native-label-ocr-source-contract.test.mjs`: `0039e0587a5bf2e3d0edb9b4bcaa8504fcab4a465894a3c3af5877431e9171d1`
 - `scripts/phase5/check-native-ocr-evidence.mjs`: `11792f4bb99fd1688b372be7fa4179b81288b9147348f36bce8601b21c49003f`
@@ -287,7 +287,7 @@ Pinned input integrity: blocked
 - `apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts`: `f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.ts`: `6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c`
 - `apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts`: `84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642`
-- `package.json`: `8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb`
+- `package.json`: `6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f`
 - `apps/mobile/package.json`: `c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80`
 - `.github/workflows/quality.yml`: `034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb`
 - `package-lock.json`: `65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480`
@@ -539,12 +539,12 @@ Pinned input integrity: blocked
 - `scripts/phase9/build-evidence-chain-ledger.test.mjs`: `97b39eff264003a715df958960f6b352f22b9061251a47e6fad69763558e0059`
 - `scripts/phase5/device-qa-packet-contract.mjs`: `c7bb801c99819e83ad4971cfbea573c60e41c074ca31e6d9dd068b2579cdc8ee`
 - `scripts/phase7/core-loop-qa-packet-contract.mjs`: `3cf50c30778d6704ef5e83debe4a8ab3d9e80f9bed04012fb4413a5270fcf994`
-- `scripts/phase7/core-loop-qa-packet-contract.test.mjs`: `236a4c10cbc0a04d080253b7fa53e1a7bcc9ec132e9c20cec024542bf8e4ae36`
+- `scripts/phase7/core-loop-qa-packet-contract.test.mjs`: `b69b4a712244d30a7802b0ac9699c4828e855e77f93d25ed8c0fdb01ef549b2b`
 - `scripts/phase9/upstream-packet-contract.mjs`: `46518896ff14b3124b240e317fcd0d36ff2b6b213fc0342efb6725ec4a72bc47`
 - `scripts/phase9/upstream-packet-contract.test.mjs`: `a7ab3c82ad976f8791a0ab815c0029be6e41de462e601e8ce78e985556e54e5b`
-- `docs/phase-5/generated/device-qa-packet.json`: `dd85706740b9ba6e1c4642a8a8d292db8b2d64c0c1d1b59b7858c4d6608796cb`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `b399e7666284d75c1b218df1a3e9e6f7f35dbcc4d52f4594bdf06bc0d0df04bd`
-- `docs/phase-4/generated/beta-coverage-report.json`: `e60cb5b4fffaa40e28773b3b22b6278063a4c97b1ecdc095cf13196d7c494d1c`
+- `docs/phase-5/generated/device-qa-packet.json`: `caeb01ef9b581ba5803de1907483754b9e965c6768de7e0ce88885cbd8629fdd`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `86f799181c8a72e3b46cc6613dc4f075420591020023ec6a726783ca97c6e952`
+- `docs/phase-4/generated/beta-coverage-report.json`: `6e7d244909a35748747390cd387ee485cb733cb86c50c1bea3b96da08aba4056`
 - `docs/e2e/generated/human-e2e-manifest.json`: `65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af`
 - `docs/e2e/generated/human-e2e-manifest.md`: `aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28`
 - `scripts/e2e/cat07-committed-evidence.mjs`: `aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0`
@@ -583,7 +583,7 @@ Pinned input integrity: blocked
 - `scripts/phase9/privacy-payload-audit.mjs`: `fbc8826a9097ee0fc6dfcb0719644efbae2c6d4bc2db58b2af43137c793d02ca`
 - `scripts/phase9/dependency-sbom.mjs`: `29b516cde5cb61dbf67e8c7a91b02a2e6a85f48d05b507a91686f90cbe4908cd`
 - `scripts/phase9/store-build-inspect.mjs`: `eda8aeb6d5035229d990f260ae23a19137fee187e0d4f86fecc438bd253da939`
-- `docs/phase-9/source-of-truth.md`: `20a358d57bdcb869797ee3dac5d58df8515c26a50035de91868cb7b5ab3da4e6`
+- `docs/phase-9/source-of-truth.md`: `bacf0332a106ae710ec0d3c4f9f130d03524ee4f69688efafede7951f3676af9`
 - `docs/phase-9/data-inventory.md`: `40b3cc5ff69873417161ec4e4fbc506a743a05769724ebf50ce92dd4bc363ccc`
 - `docs/phase-9/edge-function-auth-matrix.md`: `11349fa53e22f2759fdc934af7f724e2acfc741ca04ec34a9ae1a4c041e82d36`
 - `docs/phase-9/observability-payload-audit.md`: `54f233bac9811d394660937993699b270bde5945860d76256ac3d7859e5142d4`
@@ -614,7 +614,7 @@ Pinned input integrity: blocked
 - `docs/FEATURE_INDEX.md`: `04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c`
 - `docs/ROADMAP.md`: `fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de`
 - `docs/USER_FLOW_TREE.md`: `326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e`
-- `docs/hugeToDo/README.md`: `c50f7dff469a9ad021a1e3cc5492a6a3159baf03ccbfc20ea9e08fa4df9bdf39`
+- `docs/hugeToDo/README.md`: `f623f6f135dadfba2cf9e04bdd8b78dbea020259b647982a304b05e8ab74908f`
 - `docs/phase-7/surface-inventory.md`: `3210ece9e29d343560a8fcbe7c98bff1334808e77a1a0491931186e3d3146ca0`
 - `scripts/launch/contract-smoke.mjs`: `98beaccf94d02705a36e67c716af69a194897a6ec52c0edade49f3432bcd7de2`
 - `scripts/launch/check-contract.mjs`: `f00772997c9bc422a77001d27d7eb5ab167f24b5e1074b641f87643bad99b4f3`
@@ -645,16 +645,16 @@ Pinned input integrity: blocked
 - `apps/mobile/src/features/trend/useTrend.ts`: `f66040eaa2090ad36f2b35244e6c70814f6709981448e5210b5577ec71d98f75`
 - `apps/mobile/src/features/trend/useTrend.test.ts`: `0900e378011668323b49eb2cd6a2054dfd7393ed62efa808badce8cf7fe72f72`
 - `apps/mobile/src/features/photos/copy.ts`: `3921a01492072726177d549ec5353bf64768c20a400f0f4305b18d6b89dbaa13`
-- `packages/types/src/index.ts`: `99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4`
-- `packages/types/src/database.types.ts`: `33e67e9c9cb829624bed72693dfe2b4706838483a547b1d3d359384bef8bd434`
+- `packages/types/src/index.ts`: `444e627d076e30397653a3de48dc3a2d9b2ca67372db26a6279784739d33c221`
+- `packages/types/src/database.types.ts`: `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`
 - `supabase/migrations/20260613000024_photo_trend.sql`: `af7618e6a91895b4d68f053f23f8321c38a4bdd33d1652488f7437720d4c05ce`
 - `scripts/photo05/trend-admission-source-contract.mjs`: `97d3850c9474e889c112e1c0904ac9f16ede01f537165f78ff579373176f963a`
 - `scripts/photo05/trend-admission-source-contract.test.mjs`: `5aaf71a04757e216e5d89196fa13c049f87bb551d0e052f4946c8b3ca5d6bd20`
-- `scripts/phase7/build-core-loop-qa-packet.mjs`: `d7b638d35672ebab8ac51d5fdd7298809b11abd85b57368ced7065359c3fa11c`
+- `scripts/phase7/build-core-loop-qa-packet.mjs`: `f533e751b5aa254cc4f1d6816e90032d1c501b5a9c0c5d3db5305b3db2e21951`
 - `scripts/phase7/check-core-loop.mjs`: `5841e27ed49bc96b5a3c32812ee0a395eecc9f288de4a94e1e53fe626199ccf2`
 - `scripts/phase7/check-core-loop-smoke.mjs`: `22e0a78ce36833681d91b2940f5b7c994f1a3ce780fec3089c54a1ff0c25a168`
-- `BLOCKERS.md`: `a0731452ab4d24fa71b30969981442a0e8303735e5df7c32ead6961364609709`
-- `PROGRESS.md`: `3ada12a889a0f9b962edc0451b6712bcee9252db2579866b3b0e225ef9fa6add`
+- `BLOCKERS.md`: `867ae729492346963f71ef59b63c10c6ea4914120c79639e28658ade62fe9230`
+- `PROGRESS.md`: `030adbdd9b664da837a652aab98a86c7de4749cd32a9acbe92fa8636404522e9`
 - `apps/mobile/src/app/commerce/_layout.tsx`: `f9c006f08624e8f8f3a6fc2a2ba015a71d5c2954af82aae09b2d6185c6283abb`
 - `apps/mobile/src/app/commerce/consent.tsx`: `a2453382e5b3d1eed13160b4a27f675dd3f563fbbed7e3eba4a9f7d9f2fb6749`
 - `apps/mobile/src/app/commerce/stack/[slug].tsx`: `37f630992967de1c4b87cf6e59599df93b2bb331afd87b63cacf60c1d64e14fa`
