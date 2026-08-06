@@ -2269,16 +2269,46 @@ export function verifyCat07ExtractedGitTree(
     }
   };
   visit(root);
-  assert(
-    actualFiles.size === expectedFiles.size &&
-      [...actualFiles].every((repoPath) => expectedFiles.has(repoPath)),
-    'CAT07 snapshot file inventory does not exactly match the bound Git tree.',
-  );
-  assert(
-    actualDirectories.size === expectedDirectories.size &&
-      [...actualDirectories].every((repoPath) => expectedDirectories.has(repoPath)),
-    'CAT07 snapshot directory inventory does not exactly match the bound Git tree.',
-  );
+  if (
+    actualFiles.size !== expectedFiles.size ||
+    [...actualFiles].some((repoPath) => !expectedFiles.has(repoPath))
+  ) {
+    const details = [
+      ...[...actualFiles]
+        .filter((repoPath) => !expectedFiles.has(repoPath))
+        .sort(comparePaths)
+        .map((repoPath) => `unexpected ${repoPath}`),
+      ...[...expectedFiles.keys()]
+        .filter((repoPath) => !actualFiles.has(repoPath))
+        .sort(comparePaths)
+        .map((repoPath) => `missing ${repoPath}`),
+    ].slice(0, 8);
+    throw new Error(
+      `CAT07 snapshot file inventory does not exactly match the bound Git tree${
+        details.length > 0 ? `: ${details.join(', ')}` : ''
+      }.`,
+    );
+  }
+  if (
+    actualDirectories.size !== expectedDirectories.size ||
+    [...actualDirectories].some((repoPath) => !expectedDirectories.has(repoPath))
+  ) {
+    const details = [
+      ...[...actualDirectories]
+        .filter((repoPath) => !expectedDirectories.has(repoPath))
+        .sort(comparePaths)
+        .map((repoPath) => `unexpected ${repoPath}`),
+      ...[...expectedDirectories]
+        .filter((repoPath) => !actualDirectories.has(repoPath))
+        .sort(comparePaths)
+        .map((repoPath) => `missing ${repoPath}`),
+    ].slice(0, 8);
+    throw new Error(
+      `CAT07 snapshot directory inventory does not exactly match the bound Git tree${
+        details.length > 0 ? `: ${details.join(', ')}` : ''
+      }.`,
+    );
+  }
   const sizes = new Map();
   let totalBytes = 0;
   for (const [repoPath, expected] of [...expectedFiles.entries()].sort(([left], [right]) =>

@@ -918,7 +918,13 @@ test('CAT07 Git tree parser and verifier reject unsafe modes, paths, collisions,
   assert.throws(() => verifyCat07ExtractedGitTree(fixtureRoot, entries), /bytes do not match/u);
   writeFileSync(path.join(fixtureRoot, 'app', 'alpha.txt'), alpha);
   writeFileSync(path.join(fixtureRoot, 'extra.txt'), 'extra');
-  assert.throws(() => verifyCat07ExtractedGitTree(fixtureRoot, entries), /inventory/u);
+  assert.throws(
+    () => verifyCat07ExtractedGitTree(fixtureRoot, entries),
+    (error) =>
+      /inventory/u.test(error.message) &&
+      error.message.includes('unexpected extra.txt') &&
+      !error.message.includes(fixtureRoot),
+  );
 
   assert.throws(
     () => parseCat07GitTree(Buffer.from(`120000 blob ${alphaOid}\tlink\0`, 'utf8')),
