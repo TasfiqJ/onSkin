@@ -1821,6 +1821,7 @@ export function buildCat07ChildEnvironment({
     ...cat04ServerEnvironment(fixtureGroup, {}),
     EXPO_NO_TELEMETRY: '1',
     EXPO_OFFLINE: '1',
+    EXPO_UNSTABLE_HEADLESS: '1',
     FORCE_COLOR: '0',
     NODE_ENV: 'development',
     NO_COLOR: '1',

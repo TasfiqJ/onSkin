@@ -698,6 +698,7 @@ test('CAT07 app environment is a minimal positive allowlist and never inherits h
   ]) {
     assert.equal(forbidden in childEnvironment, false);
   }
+  assert.equal(childEnvironment.EXPO_UNSTABLE_HEADLESS, '1');
   const probePath = path.join(fixtureRoot, 'environment-probe.mjs');
   writeFileSync(probePath, 'process.stdout.write(JSON.stringify(process.env));\n');
   const child = spawnSync(
