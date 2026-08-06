@@ -2616,6 +2616,48 @@ export function buildCat07CombinedRuntimeManifest(snapshotRoot, runtimeRootPaths
   };
 }
 
+export function prepareCat07CssInteropRuntimeCache(snapshotRoot) {
+  const packageRoot = path.join(snapshotRoot, 'node_modules', 'react-native-css-interop');
+  const packageStats = lstatSync(packageRoot);
+  assert(
+    packageStats.isDirectory() && !packageStats.isSymbolicLink(),
+    'CAT07 CSS interop runtime package must be one real directory.',
+  );
+
+  const cacheRoot = path.join(packageRoot, '.cache');
+  const existingCache = lstatSync(cacheRoot, { throwIfNoEntry: false });
+  if (existingCache) {
+    assert(
+      existingCache.isDirectory() && !existingCache.isSymbolicLink(),
+      'CAT07 CSS interop runtime cache must be one real directory.',
+    );
+  } else {
+    mkdirSync(cacheRoot);
+  }
+
+  const expectedFiles = ['android.js', 'ios.js', 'macos.js', 'native.js', 'windows.js'];
+  for (const filename of expectedFiles) {
+    const filePath = path.join(cacheRoot, filename);
+    const existingFile = lstatSync(filePath, { throwIfNoEntry: false });
+    if (existingFile) {
+      assert(
+        existingFile.isFile() && !existingFile.isSymbolicLink() && existingFile.size === 0,
+        `CAT07 CSS interop runtime cache file must be empty: ${filename}`,
+      );
+    } else {
+      writeFileSync(filePath, Buffer.alloc(0), { flag: 'wx' });
+    }
+  }
+
+  const actualEntries = readdirSync(cacheRoot).sort(comparePaths);
+  assert(
+    actualEntries.length === expectedFiles.length &&
+      actualEntries.every((entry, index) => entry === expectedFiles[index]),
+    'CAT07 CSS interop runtime cache contains an undeclared runtime file.',
+  );
+  return normalizeRepoPath(path.relative(snapshotRoot, cacheRoot));
+}
+
 export function buildCat07RuntimeDriftFingerprint(snapshotRoot, runtimeRootPaths) {
   const fingerprint = new Map();
   for (const repoPath of runtimeRootPaths) {
@@ -2784,6 +2826,7 @@ export function createCat07ImmutableSourceSnapshot(
     const parsedPackageLock = JSON.parse(snapshotPackageLock.toString('utf8'));
     const runtimeRootPaths = cat07RuntimeRootPathsFromPackageLock(parsedPackageLock);
     const installation = runCat07IsolatedNpmInstall({ cacheOnly, online, snapshotRoot });
+    prepareCat07CssInteropRuntimeCache(snapshotRoot);
     const sourceExtraRoots = ['.expo', '.tmp', 'apps/mobile/.expo', ...runtimeRootPaths];
     const installedSourceTree = verifyCat07ExtractedGitTree(snapshotRoot, extracted.entries, {
       allowedExtraRoots: sourceExtraRoots,

@@ -53,6 +53,7 @@ import {
   parseCat07DevToolsActivePort,
   parseCat07GitTree,
   parseCat07WindowsTcpListeners,
+  prepareCat07CssInteropRuntimeCache,
   readCat07BoundedJsonResponse,
   runCat07IsolatedNpmInstall,
   startCat07ImmutableExpoServer,
@@ -736,6 +737,34 @@ test('CAT07 runtime drift diagnostics are bounded to safe relative dependency pa
   assert.ok(drift.includes('removed node_modules/fixture-package/removed.txt'));
   assert.equal(collectCat07RuntimeDrift(before, after, { limit: 1 }).length, 1);
   assert.equal(drift.some((entry) => entry.includes(fixtureRoot)), false);
+});
+
+test('CAT07 pre-initializes and binds only the exact CSS interop runtime cache', (t) => {
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'cat07-css-interop-cache-'));
+  t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
+  const packageRoot = path.join(fixtureRoot, 'node_modules', 'react-native-css-interop');
+  const cacheRoot = path.join(packageRoot, '.cache');
+  const expectedFiles = ['android.js', 'ios.js', 'macos.js', 'native.js', 'windows.js'];
+  mkdirSync(packageRoot, { recursive: true });
+
+  assert.equal(
+    prepareCat07CssInteropRuntimeCache(fixtureRoot),
+    'node_modules/react-native-css-interop/.cache',
+  );
+  assert.deepEqual(readdirSync(cacheRoot).sort(), expectedFiles);
+  for (const filename of expectedFiles) {
+    assert.equal(readFileSync(path.join(cacheRoot, filename)).length, 0);
+  }
+  assert.equal(
+    prepareCat07CssInteropRuntimeCache(fixtureRoot),
+    'node_modules/react-native-css-interop/.cache',
+  );
+
+  writeFileSync(path.join(cacheRoot, 'unexpected.js'), 'undeclared');
+  assert.throws(
+    () => prepareCat07CssInteropRuntimeCache(fixtureRoot),
+    /undeclared runtime file/u,
+  );
 });
 
 test('CAT07 isolated npm install is offline, lockfile-bound, scrubbed, and has no fallback', (t) => {
