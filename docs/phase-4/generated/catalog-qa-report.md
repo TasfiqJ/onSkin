@@ -1,12 +1,12 @@
 # Catalog QA Report
 
-Generated: 2026-08-05T05:49:36.018Z
+Generated: 2026-08-06T00:40:08.670Z
 
 Source: open_beauty_facts
 
 Transform status: fixture
 
-Git SHA: cb82c362f8dfea1f8c79a53d314bfe2f6697273b
+Git SHA: c7d91c89fd56fa357937e68b925a9040415c23d6
 
 Build-source Git SHA: not verified
 
@@ -38,7 +38,7 @@ Launch clear reason: No. Source-transform QA is only one gate; launch still requ
 | --- | --- | ---: | --- |
 | .gitignore | present | 1644 | 066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a |
 | .github/workflows/quality.yml | present | 11249 | 034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb |
-| package.json | present | 43962 | 8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb |
+| package.json | present | 44194 | 6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f |
 | package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
 | apps/mobile/app.config.js | present | 19143 | 9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f |
 | apps/mobile/app.base.json | present | 4123 | c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f |
@@ -69,8 +69,8 @@ Launch clear reason: No. Source-transform QA is only one gate; launch still requ
 | scripts/phase4/catalog-source-policy-audit.mjs | present | 8633 | f477b1bcaa8b6b7997cded65b63c21e7dbfc23a3c75d169720961f5eb3b6879c |
 | scripts/phase4/source-policy.mjs | present | 89435 | 75242c44fe3ff9e46472647fbcfb9d59070a1306fb4638ae106117a30c9cc634 |
 | scripts/phase4/source-policy.test.mjs | present | 39752 | c8ff4534e7f7870930f1ee77e5aa7185f8cafea30e5aa87f5a50646383e4244f |
-| scripts/phase2/local-supabase-contract.mjs | present | 52725 | 7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83 |
-| scripts/phase2/local-supabase-reset.mjs | present | 29767 | 28edd35f996edde2b823351fd3644c010577d438798ce2357210b0397c58b2aa |
+| scripts/phase2/local-supabase-contract.mjs | present | 53244 | f104824ecde526d55740a72515422b78faec7243afe8b58219c984fd1f6b4c21 |
+| scripts/phase2/local-supabase-reset.mjs | present | 31425 | 8c963c0bea81d68fc3dd54e66b0ea63330d2891e6639ef702c2bb770c74721a3 |
 | scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
 | scripts/phase9/rls-adversarial-smoke.mjs | present | 12932 | 3674c5483fb6517b718ddcda2da5841923289ec47bf71206d369535136721d40 |
 | scripts/phase9/supabase-function-acl.test.mjs | present | 3485 | 15bb9b38166c18e0682735d6854c91609b0a91f07dc4889a33d750cda886a3fc |

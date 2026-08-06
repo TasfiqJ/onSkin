@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T05:49:36.018Z",
+  "generatedAt": "2026-08-06T00:40:08.670Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -204,7 +204,7 @@
     }
   },
   "inputPath": "docs/phase-4/generated/obf-fixture-import.json",
-  "gitSha": "cb82c362f8dfea1f8c79a53d314bfe2f6697273b",
+  "gitSha": "c7d91c89fd56fa357937e68b925a9040415c23d6",
   "buildSourceGitSha": null,
   "gitStatus": "",
   "source": "open_beauty_facts",
@@ -249,8 +249,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43962,
-      "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
+      "bytes": 44194,
+      "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
     },
     {
       "path": "package-lock.json",
@@ -435,14 +435,14 @@
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
-      "bytes": 52725,
-      "sha256": "7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83"
+      "bytes": 53244,
+      "sha256": "f104824ecde526d55740a72515422b78faec7243afe8b58219c984fd1f6b4c21"
     },
     {
       "path": "scripts/phase2/local-supabase-reset.mjs",
       "exists": true,
-      "bytes": 29767,
-      "sha256": "28edd35f996edde2b823351fd3644c010577d438798ce2357210b0397c58b2aa"
+      "bytes": 31425,
+      "sha256": "8c963c0bea81d68fc3dd54e66b0ea63330d2891e6639ef702c2bb770c74721a3"
     },
     {
       "path": "scripts/phase9/lib.mjs",
