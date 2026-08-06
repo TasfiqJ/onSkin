@@ -104,8 +104,15 @@ clears the brand.
    seven cutover artifacts. A `pass` packet cannot omit these proofs.
 8. Require hosted pgTAP, error-level lint, empty linked drift, exact function
    versions/JWT posture/hosted hashes, exact migration IDs/source checksums, and
-   local/linked generated-type parity. DB-06 retains linked types but does not
-   replace repository types; DB-08 owns that later decision.
+   repository/local/linked generated-type parity. The local DB-08 canonical
+   replacement/drift gate is complete at clean commit `e5588ae69`: the verifier
+   exited 0 in 2,200.4 seconds and accepted the exact raw CLI-generated
+   `packages/types/src/database.types.ts` artifact at 6,770 lines with SHA-256
+   `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+   Client restrictions live in a separate overlay rather than edits to the raw
+   generated file. DB-06 must still retain the hosted linked artifact and prove
+   the three-way parity above in its reviewed hosted evidence packet; no staging
+   parity or DB-08 completion is claimed.
 9. Confirm the final DB-06 inventory is exactly 82 public tables with 82 RLS
    tables, one `photos` bucket, zero Auth users/identities/sessions, zero
    Storage objects, and zero Cron jobs. Confirm the final cutover revalidation

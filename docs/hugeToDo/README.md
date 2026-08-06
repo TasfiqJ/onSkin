@@ -796,6 +796,16 @@ replacement, live role/provider/TLS/load/concurrency behavior, PostgreSQL
 major-version compatibility, device behavior, professional approval, App Store
 acceptance, legal compliance, revenue, or release readiness.
 
+Later on 2026-08-05, the authoritative DB-08 clean verifier at clean commit
+`e5588ae69` exited 0 in 2,200.4 seconds with Supabase CLI `2.109.1` pinned and
+all 71 migrations through `20260729000072`. Canonical local generation and the
+checked-in repository artifact matched at 6,770 lines with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+This closes the current repository-versus-clean-local generated-type drift, but
+DB-08 remains `in_progress`: no hosted project was linked, no staging evidence
+packet exists, and equality across repository, clean local, and reviewed linked
+staging output remains open.
+
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. The fresh-only source procedure now binds all 71 migrations through
 `0072`, all 17 Edge functions, an active traffic/provider freeze, and an

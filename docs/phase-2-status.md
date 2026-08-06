@@ -43,7 +43,17 @@ Date: 2026-08-05
   remote-state-unknown and, when safe, carries a best-effort read-only snapshot;
   no failure is mislabeled as contained.
 - DB-06 retains linked generated types only after exact local/linked hash parity
-  and deliberately leaves repository type replacement to DB-08.
+  and never changes repository types during a hosted run. The later local DB-08
+  canonical replacement/drift gate is now complete: the authoritative clean
+  verifier at commit `e5588ae69` exited 0 in 2,200.4 seconds and accepted the
+  repository replacement with the exact raw CLI-generated
+  `packages/types/src/database.types.ts` artifact at 6,770 lines with SHA-256
+  `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+  Client write restrictions are not hand edits to that generated artifact;
+  they live in the separate client overlay. This closes the local canonical
+  replacement/drift gate only. DB-08 remains open until DB-06 produces the
+  reviewed hosted evidence packet and proves repository/local/linked parity
+  against the approved target.
 - The local DB gate now defines exact
   `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` forward rehearsals plus two
   clean 71-migration head resets. Those five
@@ -61,8 +71,9 @@ Date: 2026-08-05
   16 structural pgTAP files / 1,222 assertions, error-level lint, empty
   migration-shadow drift, temporary 6,771-line type generation, CAT-08 10/10,
   and awaited teardown plus removal of that run's own sandbox passed. Historical
-  roots were excluded. This is disposable local source evidence only; DB-08
-  type replacement and all hosted gates remain open.
+  roots were excluded. At that historical checkpoint, repository types had not
+  yet been replaced. This remains disposable local source evidence only; it
+  does not satisfy any hosted gate.
 - Store/privacy inventory and production infrastructure runbook are documented.
 
 ## Not Done Because It Requires External Accounts
@@ -83,6 +94,11 @@ Date: 2026-08-05
 
 DB-06 remains `in_progress` and `blockedBy: ["ACCT-03"]`. No approved hosted
 staging target was used and no live evidence directory was created.
+
+The DB-08 local canonical replacement/drift gate is complete at clean commit
+`e5588ae69`, but DB-08 is not complete: the DB-06 hosted packet and exact
+repository/local/linked generated-type parity remain open. No staging parity is
+claimed.
 
 No-go for public launch. The repo now has a reviewed source contract for a first
 empty staging deployment, but that contract is not a deployment. Launch

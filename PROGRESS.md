@@ -7788,6 +7788,31 @@ deployment, linked-type parity, live role/provider/TLS/load/concurrency,
 supported-device, professional, legal/privacy, App Store, and release gates
 remain open. No revenue outcome is implied.
 
+### DB-08 canonical database types source checkpoint (2026-08-05)
+
+At clean commit `e5588ae69`, `npm run phase2:db-local-verify` exited 0 in
+2,200.4 seconds against all 71 migrations through
+`20260729000072_commerce_zero_admission.sql`. The authoritative run passed all
+five sequential cutovers including commerce 21/21, two clean resets, exact
+71-version history, the focused five-file lane / 433 assertions, 16 structural
+pgTAP files / 1,222 assertions, error-level lint, empty migration-shadow drift,
+CAT-08 10/10, and awaited teardown. Canonical local generation and
+`packages/types/src/database.types.ts` matched at 6,770 lines with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+
+The checked-in `phase2:db-types:update` command now performs the isolated local
+replay and atomically updates only the validated canonical generated schema
+artifact; `phase2:db-types:check` reruns the same local generation and refuses
+repository drift without replacing it. Generated schema shape is kept separate
+from `packages/types/src/client-database.types.ts`, the reviewed mobile
+capability overlay that narrows the publishable-key table/RPC/write surface.
+PostgreSQL grants and RLS remain authoritative at runtime.
+
+DB-08 remains `in_progress`. Hosted repository/local/linked parity is still
+open, and no retained linked type artifact or hosted DB-06 packet exists.
+Accordingly, this source checkpoint does not prove hosted schema/history,
+deployment, live RLS, App Store acceptance, legal compliance, or revenue.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

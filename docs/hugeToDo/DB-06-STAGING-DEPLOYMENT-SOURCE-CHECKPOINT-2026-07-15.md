@@ -250,6 +250,15 @@ files/1,222 assertions, lint, empty drift, temporary types, CAT-08 10/10, and
 removal of that run's own sandbox. Historical roots were excluded. This does
 not provide the hosted DB-06 packet or linked-type parity.
 
+Later on 2026-08-05, the authoritative DB-08 clean verifier exited 0 in
+2,200.4 seconds at clean commit `e5588ae69`, with Supabase CLI `2.109.1` pinned
+and the same 71-migration history through `20260729000072`. The clean-local and
+checked-in repository type artifacts matched at 6,770 lines with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+That result supplies the local/repository side of DB-08 only. No hosted target
+was linked, no DB-06 staging packet was created, and the required
+repository/local/linked equality remains open.
+
 `npm run phase2:deploy-env-smoke` currently proves focused behavior tests,
 including real descendant process-tree settlement on normal, timeout, and
 output-limit paths, plus the static wrapper/orchestrator contract. The fixtures

@@ -517,6 +517,47 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: old binaries that read `entitlements` directly cannot see the app lane after relaunch. Database rollout requires the updated reader or a mandatory-version/zero-installed-cohort proof. Hosted RevenueCat, sandbox/TestFlight, device, privacy/legal, and App Review evidence remain open.
 - Status: Accepted for the source invariant; production rollout remains gated.
 
+### 2026-08-04 - Make Positive Entitlement Admission Native-Fail-Closed
+
+- Decision: Native/default runtime modules contain no positive E2E entitlement
+  constructor; only the Expo web development implementation may supply visual
+  fixtures. An unconfigured client cannot mint a reverse trial. RevenueCat
+  `FAILED` and `NOT_REQUESTED` states grant nothing, while `PROMOTIONAL` remains
+  a RevenueCat-granted out-of-store, non-billing `promotional` entitlement, not
+  an Apple/StoreKit promotional offer. `/paywall/success` confirms only after a
+  completed post-mount exact-owner query yields freshly verified active evidence
+  with a future exact expiry. Renewal/price copy additionally requires an exact
+  billing store, `willRenew=true`, the entitlement's own price, and cadence
+  derived from the configured product ID. The route advances on a live clock and
+  revalidates at evidence boundaries/foreground. Introductory-offer copy appears
+  only after RevenueCat reports the exact product eligible for the current iOS
+  customer. Native/public build environments must match; production and staging
+  reject the custom full-Pro grant switch. The Edge grant authority separately
+  refuses before authentication unless its resolved environment is
+  `development` and `SUPABASE_URL` is an exact HTTP loopback origin with an
+  explicit port; hosted URLs remain denied even if mislabeled development.
+- Alternatives: rely on environment naming alone, preserve a development local
+  grant, grandfather unverified positives, classify promotions as app grants,
+  or let route history imply purchase success.
+- Criteria: a misbuilt archive, public environment value, stale cache, direct
+  URL, or unverified SDK snapshot cannot create or describe paid access.
+- Evidence: PAY-07 source contract and adversarial tests; focused entitlement,
+  RevenueCat, environment, app-config, route, and server-mock tests; native bundle
+  string audit; Phase 6 checker; and the PAY-07 user-flow branch.
+- Risk: This admission decision does not make the custom server-issued full-Pro
+  reverse trial acceptable under App Review Guidelines 3.1.1/3.1.2. The safest
+  iOS release candidate removes that custom digital-feature grant and uses an
+  Apple-managed introductory offer. If the exception is retained, qualified
+  counsel analysis and any Apple correspondence are inputs only; they cannot
+  guarantee acceptance. The exact submitted build remains blocked unless Apple
+  accepts it for App Store distribution with that mechanism present, and hosted
+  authority, anti-abuse, signed-build StoreKit, physical-iPhone, legal, and
+  RevenueCat Trusted Entitlements evidence also remain required. That evidence
+  is a committed canonical artifact bound to the exact app, bundle, build, Git
+  SHA, SDK, product/entitlement identifiers, reviewer, and four sandbox/TestFlight
+  purchase/Restore observations; a boolean attestation alone is insufficient.
+- Status: Accepted for source behavior; PAY-06/PAY-07 and launch remain gated.
+
 ### 2026-07-14 - Journal Native Store Transactions Before Re-Admission
 
 - Decision: Before a native purchase or restore can outlive its initiating call, persist an

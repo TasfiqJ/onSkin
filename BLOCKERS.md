@@ -430,8 +430,8 @@ replacement until counsel and store/domain reservation evidence are attached.
 Status: `source-hardened / live-blocked`
 
 The repo contains a 71-migration source candidate through
-`20260729000072`, targeted hand-maintained
-RPC types with DB-08 still open, 17 deploy-by-default Edge Functions, a staging
+`20260729000072`, exact raw CLI-generated database types plus a separate
+client-restriction overlay, 17 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
 current source inventory classifies all 82 RLS-enabled public tables: 36 directly
 queryable private tables, 32 read-sealed private/authority tables, and 14
@@ -469,12 +469,22 @@ migration-shadow diff; temporary type generation of 6,771 lines with SHA-256
 `39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
 the CAT-08 two-connection rehearsal 10/10, and awaited teardown plus removal of
 that run's own sandbox. Historical or hard-timeout roots were excluded and are
-not claimed absent. Repository types were deliberately not replaced, so DB-08
-remains open. This is disposable local PostgreSQL 15 source evidence only; it
-does not prove hosted staging/production, generated-type parity or replacement,
+not claimed absent. At that historical checkpoint, repository types were
+deliberately not replaced. This is disposable local PostgreSQL 15 source
+evidence only; it does not prove hosted staging/production or hosted
+generated-type parity,
 live role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
 compatibility, device behavior, professional approval, App Store acceptance,
 legal compliance, revenue, or release readiness.
+The authoritative later clean verifier at commit `e5588ae69` exited 0 in
+2,200.4 seconds and completed the local DB-08 canonical replacement/drift gate:
+`packages/types/src/database.types.ts` is the exact raw CLI-generated 6,770-line
+artifact with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+Client restrictions remain in a separate overlay and are not edits to the raw
+artifact. DB-08 itself remains open because DB-06 has not produced its reviewed
+hosted evidence packet or proven repository/local/linked parity. No staging
+parity is claimed.
 Exact local evidence now passes; reviewed hosted evidence remains absent.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system,
 the separate RevenueCat/app-grant entitlement authorities, and the `0064`
@@ -610,8 +620,9 @@ Next action:
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
 - release the freeze only through a separately recorded downstream live gate;
-- after DB-06 live review, complete DB-08's deliberate
-  `packages/types/src/database.types.ts` replacement;
+- after DB-06 live review, compare its retained linked types with the canonical
+  repository artifact and a fresh local generation, require exact
+  repository/local/linked parity, and only then close DB-08;
 - run Security Advisor and Performance Advisor;
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;

@@ -32,19 +32,40 @@ npm ci
 npm run phase2:db-local-contract
 npm run phase2:db-local-reset
 npm run phase2:db-local-verify
+npm run phase2:db-types:update
+npm run phase2:db-types:check
 ```
 
 `phase2:db-local-verify` copies `supabase/` to a uniquely named temporary
 workdir, excludes `.temp`, `.branches`, every `.env` variant, inherited hosted
 credentials, and every linked-project input, allocates an isolated local port
 block, and uses explicit
-`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 54
-migrations plus `seed.sql` twice, verifies exact migration history, runs the
+`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 71
+migrations through `20260729000072_commerce_zero_admission.sql` plus `seed.sql`
+twice, verifies exact migration history, runs the
 structural pgTAP suite and database lint, requires an empty local-vs-migrations
-schema diff, generates database types only into the temporary workdir, then
-removes the containers, volumes, and temporary files. It never links, pushes,
-or accepts a database URL. DB-08 remains open until local output is reconciled
-with reviewed staging and the repository type file is deliberately replaced.
+schema diff, generates canonical database types in the temporary workdir,
+requires exact repository parity, then removes the containers, volumes, and
+temporary files. It never links, pushes, or accepts a database URL.
+
+`phase2:db-types:update` performs the same credential-free isolated replay and
+atomically replaces `packages/types/src/database.types.ts` only after generated
+shape and hash validation. `phase2:db-types:check` performs the isolated replay
+without replacing the repository file and fails on any mismatch. At clean
+commit `e5588ae69`, the full `phase2:db-local-verify` gate exited 0 in 2,200.4
+seconds across the exact 71-migration/`0072` chain. The canonical local and
+repository artifact is 6,770 lines with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+
+That raw generated file describes schema shape, not publishable-key authority.
+The mobile client separately imports the reviewed capability overlay from
+`packages/types/src/client-database.types.ts`, which narrows exposed tables,
+RPCs, and direct-write shapes without hand-editing the generated artifact.
+PostgreSQL grants and RLS remain the runtime security boundary.
+
+DB-08 remains `in_progress`: a reviewed hosted run must still prove exact
+repository/local/linked type parity and retain the linked artifact. No linked
+type artifact or hosted DB-06 packet exists yet.
 
 The empty diff proves only that a freshly replayed local schema matches the
 repository migration shadow. It does not compare, mutate, or attest hosted
@@ -86,10 +107,13 @@ The DB-06 wrapper is fresh-staging-only; it is not an incremental or production
 deployment path. It requires a clean fetched `origin/main`, exports and verifies
 an immutable Git snapshot, and refuses any pre-existing public object, migration
 ID, deployed function, Auth cohort, Storage bucket/object, or Cron job. It
-deploys all 54 migrations through `0055` and all 16 default functions from that
-snapshot. Linked generated types are retained only after exact local/linked
-hash parity; the wrapper does **not** replace
-`packages/types/src/database.types.ts`, which remains DB-08 work.
+deploys the complete migration and default-function inventory from that
+snapshot. The historical 2026-07-15 source checkpoint covered 54 migrations
+through `0055` and 16 default functions; it is not current hosted evidence.
+Before linking, the current wrapper requires repository/local canonical type
+parity. After deployment, it requires repository/local/linked hash parity,
+retains `database.types.linked.ts`, and does **not** replace the repository type
+file.
 
 Before execution, prepare the main cutover attestation, one
 `traffic-provider-freeze.json`, and five schema-v2 zero-cohort boundary files as

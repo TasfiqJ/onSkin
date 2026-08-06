@@ -133,6 +133,23 @@ PostgreSQL major-version compatibility, device behavior, professional
 approval, App Store acceptance, legal compliance, revenue, or release
 readiness.
 
+## 2026-08-05 DB-08 Generated-Type Parity Update
+
+A later authoritative clean run at commit `e5588ae69` executed
+`npm run phase2:db-local-verify` successfully in 2,200.4 seconds. It used the
+repository-pinned Supabase CLI `2.109.1`, replayed all 71 migrations through
+`20260729000072`, generated canonical public-schema types, and proved the
+checked-in repository artifact was already identical to the clean-local output:
+6,770 lines with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+
+This later result supersedes only the earlier current-state statement that the
+repository types had not been replaced; the dated 4,602-line and 6,771-line
+temporary-generation results above remain historical evidence. DB-08 remains
+`in_progress` because the run used no hosted link and created no staging packet.
+Repository/local/linked equality still requires the reviewed linked-staging
+generation and retained comparison.
+
 ## Boundary And Remaining Gates
 
 No project was linked. No access token, project ref, database password,
@@ -141,13 +158,15 @@ list, push, repair, reset, diff, type generation, or other mutation was run.
 
 Accordingly, “empty diff” in this evidence means only local replay versus a
 local migration shadow. It is not hosted drift parity. The historical
-4,602-line 2026-07-15 type file and the current 6,771-line 2026-08-05 type file
-were evidence only: the repository database types were not replaced, and DB-08
-remains open. DB-06 must still capture reviewed staging
-migration/checksum/deployment evidence. DB-08 must reconcile local generated
-types with reviewed staging before deliberately replacing the hand-authored
-repository types. DB-09/DB-10 hosted, provider, concurrency, and physical-iPhone
-gates also remain open.
+4,602-line 2026-07-15 and 6,771-line earlier-2026-08-05 temporary type files
+remain evidence only. The later clean `e5588ae69` verifier proves that the
+current 6,770-line checked-in artifact equals clean-local generation at SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+DB-06 must still capture reviewed staging migration/checksum/deployment
+evidence. DB-08 remains open until linked staging generation is retained and
+equality across repository, clean local, and linked output is proved.
+DB-09/DB-10 hosted, provider, concurrency, and physical-iPhone gates also
+remain open.
 
 Migration `0053` and the compatible function/mobile revision must be deployed
 as one ordered change. It separates RevenueCat/store entitlement snapshots from

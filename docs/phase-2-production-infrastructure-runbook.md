@@ -59,6 +59,15 @@ create irreversible production accounts under `OnSkin` until
   commerce 21/21, focused 5 files/433 assertions, structural 16 files/1,222
   assertions, lint, empty drift, temporary types, CAT-08 10/10, and run-scoped
   teardown. Historical roots were excluded.
+- The subsequent local DB-08 canonical replacement/drift verifier passed at
+  clean commit `e5588ae69` in 2,200.4 seconds. It accepted the exact raw
+  CLI-generated `packages/types/src/database.types.ts` artifact at 6,770 lines
+  with SHA-256
+  `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+  The generated artifact is not hand-restricted; the mobile/client access
+  boundary is a separate overlay. This is local canonical replacement and
+  drift evidence only. DB-08 remains open pending the DB-06 hosted evidence
+  packet and exact repository/local/linked parity, so it is not staging proof.
 - `supabase/ops/account-deletion-work-lane.sql`: credential-free, fail-closed
   Cron/Vault provisioning for the durable account-deletion worker.
 - `docs/phase-9/account-deletion-operations-runbook.md`: exact deletion
@@ -198,7 +207,10 @@ Read `docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md`,
 `docs/phase-9/account-deletion-operations-runbook.md`, and
 `docs/phase-9/apple-auth-lifecycle-operations-runbook.md` first. The wrapper
 requires their zero-cohort ordering evidence and leaves repository DB types
-unchanged; DB-08 owns any later deliberate replacement.
+unchanged during the hosted operation. The independent local DB-08 canonical
+replacement is already recorded above; the wrapper must still retain linked
+types and prove repository/local/linked parity without overwriting the canonical
+raw generated artifact.
 
 Expo config checks:
 
@@ -247,7 +259,9 @@ traffic/provider-freeze artifact, and all five boundary artifacts. The expected
 post-migration inventory is 82 public tables with RLS on all 82, one `photos`
 bucket, zero Auth users/identities/sessions, zero Storage objects, and zero Cron
 jobs. Linked types are retained only after exact local/linked parity; this
-procedure does not replace repository types.
+procedure does not replace repository types. Its reviewed packet must prove
+repository/local/linked parity against the canonical 6,770-line raw generated
+artifact; that hosted proof remains open.
 
 On Windows, commands run in a job object whose confirmed settlement includes
 descendant shutdown. If containment cannot be confirmed, the procedure keeps

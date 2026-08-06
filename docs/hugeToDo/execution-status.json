@@ -777,7 +777,7 @@
       "id": "DB-05",
       "status": "complete",
       "blockedBy": [],
-      "nextAction": "DB-05 is complete for the 2026-08-05 credential-free current-head local gate at clean commit 57da25f63: npm run phase2:db-local-verify exited 0 in 2,149.9 seconds against all 71 migrations through 0072; passed all five sequential forward cutovers including commerce 21/21, both clean resets, exact 71-migration history, the focused 5-file/433-assertion lane, all 16 structural pgTAP files and 1,222 assertions including CAT-03 99/99, error-level schema lint, an empty shadow diff, temporary type generation at 6,771 lines with SHA-256 39619a6870c33fc402323c61fce5601c0fb1460993026b8465f0ce56a0a9a91e, CAT-08 10/10, and awaited teardown plus removal of that run's own sandbox. Historical roots were excluded and are not claimed absent. Repository types remain deliberately unreplaced; route hosted reconciliation, reviewed type replacement, and live access-control proof through DB-06, DB-08, and DB-09/DB-10.",
+      "nextAction": "DB-05 is complete for the credential-free local gate. The later authoritative clean verifier at commit e5588ae69 exited 0 in 2,200.4 seconds with pinned Supabase CLI 2.109.1 and all 71 migrations through 20260729000072. Canonical clean-local generation matched the checked-in repository artifact at 6,770 lines with SHA-256 2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3. This proves local/repository parity only; route the hosted staging packet and repository/local/linked equality through DB-06 and DB-08, and live access-control proof through DB-09/DB-10.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "docs/hugeToDo/DB-05-LOCAL-RESET-2026-07-14.md",
@@ -821,7 +821,7 @@
       "id": "DB-06",
       "status": "in_progress",
       "blockedBy": ["ACCT-03"],
-      "nextAction": "The fresh-staging source procedure binds the exact 71-migration history through 0072. The 2026-08-05 credential-free current-head gate at clean 57da25f63 passed both resets, all five sequential cutovers including commerce 21/21, the focused 5-file/433-assertion lane, 16 pgTAP files/1,222 assertions, lint, empty shadow diff, temporary types, CAT-08 10/10, and removal of that run's own sandbox; historical roots were excluded. After ACCT-03 creates an approved empty staging project, prepare the full-target-bound cutover record, traffic/provider-freeze artifact, and five schema-v2 zero-cohort boundary files outside the worktree; close client/key distribution, hosted Auth, provider callback/retry, Apple notification, schedule, and Edge ingress; and execute the clean origin/main fresh-staging procedure. Review the mandatory before/immediate-pre-migration/after proofs, including 0068 adherence authority, 0069 Shelf/completion replay and export, 0070 draft-only consent, 0071 recommendation zero admission, and 0072 commerce zero admission and stale-poller retirement. Keep DB06_TRAFFIC_FREEZE=frozen and release only through a separately recorded downstream live gate. No hosted run or live DB-06 packet is recorded here.",
+      "nextAction": "The fresh-staging source procedure binds the exact 71-migration history through 20260729000072. The authoritative credential-free clean verifier at e5588ae69 exited 0 in 2,200.4 seconds with pinned Supabase CLI 2.109.1 and proved clean-local/repository type parity at 6,770 lines with SHA-256 2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3. After ACCT-03 creates an approved empty staging project, prepare the full target-bound cutover and freeze records, execute the clean origin/main fresh-staging procedure, retain every mandatory before/immediate-pre-migration/after proof, and generate linked public-schema types. Keep DB06_TRAFFIC_FREEZE=frozen pending the separate live gate. No hosted link or live DB-06 packet exists, and repository/local/linked equality remains open.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase2/deploy-supabase-staging.ps1",
@@ -882,11 +882,14 @@
     {
       "id": "DB-08",
       "status": "in_progress",
-      "blockedBy": ["DB-07", "ACCT-03"],
-      "nextAction": "After clean local and staging schemas exist, generate types from both, prove identical output, replace the hand-authored migration-0016 surface, and add a repeatable hash or drift gate covering every table, view, enum, and RPC.",
+      "blockedBy": ["DB-06", "ACCT-03"],
+      "nextAction": "The hand-authored migration-0016 surface has been replaced by canonical generated types, and explicit local check/update plus generated-artifact and deny-by-default client-overlay contracts are present. The authoritative clean verifier at commit e5588ae69 exited 0 in 2,200.4 seconds with pinned Supabase CLI 2.109.1 and all 71 migrations through 20260729000072; clean-local output matched the checked-in repository artifact at 6,770 lines with SHA-256 2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3. DB-08 remains in_progress: no hosted link or staging packet exists. After DB-06 provisions the reviewed staging candidate, retain linked generation and prove repository/local/linked equality.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "packages/types/src/database.types.ts",
+        "packages/types/src/client-database.types.ts",
+        "scripts/phase2/database-types-contract.test.mjs",
+        "scripts/phase2/local-supabase-reset.mjs",
         "scripts/phase2/deploy-supabase-staging.ps1"
       ]
     },

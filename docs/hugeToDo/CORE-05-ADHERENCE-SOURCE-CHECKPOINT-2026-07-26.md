@@ -287,6 +287,14 @@ It is wired into Phase 3 and launch verification. Focused mobile tests and the
 `0068`/`0069` database/upgrade contracts exercise the executable behavior.
 Passing those checks proves only the tested source and local database.
 
+The authoritative 2026-08-05 clean verifier at commit `e5588ae69` also exited
+0 in 2,200.4 seconds with pinned Supabase CLI `2.109.1` and all 71 migrations
+through `20260729000072`. It proved the checked-in repository types equal the
+clean-local generation at 6,770 lines with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+This is local source evidence only: no hosted link or staging packet exists, so
+DB-08 remains `in_progress` pending repository/local/linked equality.
+
 The mandatory contract separately binds:
 
 1. strict completion schema v3 and non-inventing historical reads;
@@ -388,11 +396,11 @@ close the native/live matrix below.
 CORE-05 cannot become `complete` until the accepted release revision has
 retained evidence for:
 
-- the 2026-07-29 local current-head replay and exact
-  `0067 -> 0068 -> 0069 -> 0070 -> 0071` upgrade path now pass, together with
-  the current pgTAP/lint/drift/temporary-type gates and teardown; the same gates
-  still must pass against the intended hosted staging candidate, and DB-08
-  still owns deliberate repository type replacement;
+- the 2026-08-05 clean `e5588ae69` local replay through all 71 migrations and
+  exact `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` upgrade path now pass,
+  together with the current pgTAP/lint/drift/type-parity gates and teardown;
+  the same gates still must pass against the intended hosted staging candidate,
+  and DB-08 still owns retained repository/local/linked type equality;
 - authenticated hosted Shelf/completion RPC, exact response-loss replay,
   deletion-wins, cross-owner denial, account/Apple denial, health-epoch denial,
   withdrawal erasure, account deletion, and schema-v4 export;

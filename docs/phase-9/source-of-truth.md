@@ -227,18 +227,29 @@ Negative database assertions accept only the exact expected PostgreSQL/PostgREST
 The focused local `0066` seal rehearsal/26-assertion pgTAP contract and `0067`
 checker-shape rehearsal/seven-assertion pgTAP contract prove those narrow
 source behaviors, but they do not by themselves prove the exact current head.
-On 2026-08-05 the complete credential-free local PostgreSQL 15 gate exited 0 at
-clean commit `57da25f63` across all 71 migrations through
-`20260729000072_commerce_zero_admission.sql`, including all five sequential
-cutovers and commerce 21/21, two clean resets, exact history, focused 5 files /
-433 assertions, 16 structural pgTAP files / 1,222 assertions, lint, empty
-migration-shadow drift, 6,771-line temporary type generation, CAT-08 10/10,
-and awaited teardown plus removal of that run's own sandbox. Historical roots
-were excluded. Repository types were deliberately not replaced. DB-09 and DB-10
-remain live-blocked until reviewed hosted resets and the complete
-82-public-table/68-public-schema-private/read-sealed classification plus every
-private-schema authority lane produce redacted, clean-revision staging and
-production evidence. Evidence flags cannot substitute for those runs.
+On 2026-08-05 the complete credential-free local PostgreSQL 15 gate exited 0 in
+2,200.4 seconds at clean commit `e5588ae69` across all 71 migrations through
+`20260729000072_commerce_zero_admission.sql`. The authoritative run passed all
+five sequential cutovers and commerce 21/21, two clean resets, exact history,
+focused 5 files / 433 assertions, 16 structural pgTAP files / 1,222 assertions,
+lint, empty migration-shadow drift, CAT-08 10/10, and awaited teardown. Its
+canonical local generation exactly matched
+`packages/types/src/database.types.ts`: 6,770 lines, SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+`phase2:db-types:update` owns validated atomic replacement of that raw generated
+schema artifact, while `phase2:db-types:check` proves local/repository parity
+without replacement. The separately reviewed
+`packages/types/src/client-database.types.ts` capability overlay narrows mobile
+table, RPC, and write shapes; it is not a substitute for database grants or
+RLS.
+
+DB-08 remains `in_progress` because hosted repository/local/linked parity has
+not been proven. No retained linked type artifact or hosted DB-06 packet exists.
+DB-09 and DB-10 remain live-blocked until reviewed hosted resets and the
+complete 82-public-table/68-public-schema-private/read-sealed classification
+plus every private-schema authority lane produce redacted, clean-revision
+staging and production evidence. Evidence flags cannot substitute for those
+runs.
 
 ## Current Non-Code Blockers
 
