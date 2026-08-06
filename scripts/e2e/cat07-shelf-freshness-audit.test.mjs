@@ -102,7 +102,7 @@ test('CAT07 audit covers every supported iPhone-class Expo-web viewport', () => 
     CAT07_AUDIT_LIMITATIONS.every((limitation) => typeof limitation === 'string'),
     true,
   );
-  assert.match(CAT07_EVIDENCE_RELATIVE_DIR, /2026-07-22\/cat07-shelf-freshness-current$/u);
+  assert.match(CAT07_EVIDENCE_RELATIVE_DIR, /2026-08-06\/cat07-shelf-freshness-current$/u);
 });
 
 test('CAT07 run markers bind one canonical run, viewport, and reviewed step', () => {
@@ -152,15 +152,15 @@ test('current CAT07 source satisfies its exact static safety contract', () => {
 test('CAT07 provenance permits only its evidence folder and scratch output', () => {
   const status = (...fields) => `${fields.join('\0')}\0`;
   const allowed = status(
-    ' M test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json',
-    '?? test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/new.png',
+    ' M test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
+    '?? test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/new.png',
     '?? .tmp/cat07/browser-profile/file',
   );
   assert.deepEqual(collectCat07UndeclaredDirtyPaths(allowed), []);
   assert.deepEqual(
     collectCat07UndeclaredDirtyPaths(
       status(
-        ' M test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json',
+        ' M test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
         '?? .tmp/cat07/browser-profile/file',
         ' M apps/mobile/src/features/shelf/store.ts',
         '?? scripts/e2e/uncommitted-runner.mjs',

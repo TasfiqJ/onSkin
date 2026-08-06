@@ -14,7 +14,7 @@ import {
 import { renderHumanE2eManifestMarkdown } from './human-e2e-manifest-render.mjs';
 
 export const CAT07_COMMITTED_SUMMARY_PATH =
-  'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json';
+  'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json';
 export const CAT07_COMMITTED_MANIFEST_JSON_PATH = 'docs/e2e/generated/human-e2e-manifest.json';
 export const CAT07_COMMITTED_MANIFEST_MD_PATH = 'docs/e2e/generated/human-e2e-manifest.md';
 export const CAT07_COMMITTED_INPUT_PATHS = Object.freeze([

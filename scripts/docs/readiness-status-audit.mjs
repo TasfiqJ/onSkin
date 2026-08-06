@@ -914,7 +914,7 @@ const cat07ShelfFreshnessGateContract = Object.freeze({
   kind: 'cat07-shelf-freshness',
   required: true,
   supportClass: 'supported-phone',
-  folder: 'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current',
+  folder: 'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current',
   evidence: 'summary.json',
   status: 'pass',
   verdict: 'pass',

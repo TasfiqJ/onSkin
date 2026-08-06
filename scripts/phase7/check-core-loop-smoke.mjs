@@ -360,7 +360,7 @@ function runCommittedCat07BindingSmoke() {
       { id: 'iphone-430x932', width: 430, height: 932 },
     ];
     const atSecond = (seconds) =>
-      new Date(Date.parse('2026-07-22T00:00:00.000Z') + seconds * 1_000).toISOString();
+      new Date(Date.parse('2026-08-06T00:00:00.000Z') + seconds * 1_000).toISOString();
     const summary = {
       artifacts: Array.from({ length: 99 }, (_, index) => `artifact-${index}`),
       bootstrapResults: viewports.map((viewport, index) => ({
@@ -466,9 +466,9 @@ function runCommittedCat07BindingSmoke() {
       const summaryBytes = canonicalEvidenceJsonBytes(candidate);
       writeFileSync(summaryPath, summaryBytes);
       const manifest = {
-        baselineEvidenceDate: '2026-07-22',
+        baselineEvidenceDate: '2026-08-06',
         blockers: [],
-        evidenceDate: '2026-07-22',
+        evidenceDate: '2026-08-06',
         gateResults: [
           {
             detail: 'Synthetic committed CAT07 binding fixture.',
@@ -490,7 +490,7 @@ function runCommittedCat07BindingSmoke() {
             verdict: 'pass',
           },
         ],
-        generatedAt: '2026-07-22T00:02:00.000Z',
+        generatedAt: '2026-08-06T00:02:00.000Z',
         gitSha: sourceGitSha,
         purpose: 'Synthetic CAT07 committed binding fixture.',
         status: 'pass',
@@ -770,7 +770,7 @@ const cases = [
         'supabase/tests/database/catalog_serving_gate.test.sql',
         'supabase/tests/database/cat07_truthful_freshness.test.sql',
         'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
-        'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json',
+        'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
         'apps/mobile/src/app/cycle/settings.tsx',
         'apps/mobile/src/app/cycle/week.tsx',
         'apps/mobile/src/app/cycle/why-tonight.tsx',

@@ -64,7 +64,7 @@ const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 
 export const CAT07_EVIDENCE_RELATIVE_DIR =
-  'test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current';
+  'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current';
 const CAT07_EVIDENCE_DIRECTORY = path.resolve(repoRoot, CAT07_EVIDENCE_RELATIVE_DIR);
 export const CAT07_EVIDENCE_SCHEMA_VERSION = 2;
 const CAT07_GIT_SHA = /^[0-9a-f]{40}$/u;
