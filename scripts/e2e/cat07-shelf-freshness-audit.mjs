@@ -928,6 +928,14 @@ export function parseCat07CdpFrame(
 
 export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
   let mutationObserved = false;
+  const cssInteropRuntimeCachePaths = new Set([
+    'node_modules/react-native-css-interop/.cache',
+    'node_modules/react-native-css-interop/.cache/android.js',
+    'node_modules/react-native-css-interop/.cache/ios.js',
+    'node_modules/react-native-css-interop/.cache/macos.js',
+    'node_modules/react-native-css-interop/.cache/native.js',
+    'node_modules/react-native-css-interop/.cache/windows.js',
+  ]);
   const allowed = (relativePath) => {
     const normalized = normalizeRepoPath(relativePath);
     return (
@@ -940,6 +948,7 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
       normalized === 'apps/mobile/.expo' ||
       normalized.startsWith('apps/mobile/.expo/') ||
       normalized === CAT07_EXPO_ENV_PATH ||
+      cssInteropRuntimeCachePaths.has(normalized) ||
       normalized === CAT07_EVIDENCE_RELATIVE_DIR ||
       normalized.startsWith(`${CAT07_EVIDENCE_RELATIVE_DIR}/`)
     );

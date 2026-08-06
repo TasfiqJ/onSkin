@@ -1550,16 +1550,41 @@ test('CAT07 source monitor records a transient edit even after bytes are restore
   assert.throws(() => monitor.assertClean(), /transient or persistent source-tree mutation/u);
 });
 
-test('CAT07 source monitor permits only the exact Expo generated declaration path', async (t) => {
+test('CAT07 source monitor permits only exact reviewed generated runtime paths', async (t) => {
   const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'cat07-expo-env-source-'));
   t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
   const mobileRoot = path.join(fixtureRoot, 'apps', 'mobile');
+  const cssInteropCacheRoot = path.join(
+    fixtureRoot,
+    'node_modules',
+    'react-native-css-interop',
+    '.cache',
+  );
   mkdirSync(mobileRoot, { recursive: true });
+  mkdirSync(cssInteropCacheRoot, { recursive: true });
   const monitor = createCat07SourceMutationMonitor({ rootPath: fixtureRoot });
   t.after(() => monitor.close());
   writeFileSync(path.join(mobileRoot, 'expo-env.d.ts'), 'reviewed later by exact byte contract');
+  writeFileSync(path.join(cssInteropCacheRoot, 'android.js'), Buffer.alloc(0));
   await delay(100);
   assert.equal(monitor.assertClean(), true);
+});
+
+test('CAT07 source monitor rejects undeclared CSS interop cache entries', async (t) => {
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'cat07-css-interop-source-'));
+  t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
+  const cacheRoot = path.join(
+    fixtureRoot,
+    'node_modules',
+    'react-native-css-interop',
+    '.cache',
+  );
+  mkdirSync(cacheRoot, { recursive: true });
+  const monitor = createCat07SourceMutationMonitor({ rootPath: fixtureRoot });
+  t.after(() => monitor.close());
+  writeFileSync(path.join(cacheRoot, 'unexpected.js'), Buffer.alloc(0));
+  await delay(100);
+  assert.throws(() => monitor.assertClean(), /transient or persistent source-tree mutation/u);
 });
 
 test('CAT07 full validator child has a hard timeout and output ceiling', () => {
