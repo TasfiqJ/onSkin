@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "phase5_device_qa_packet",
-  "generatedAt": "2026-08-05T05:50:38.183Z",
+  "generatedAt": "2026-08-06T00:43:59.610Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -206,7 +206,7 @@
       "hardcodedDiscountAllowed": false
     }
   },
-  "gitSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
+  "gitSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": null,
@@ -375,7 +375,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
+    "currentGitSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -424,7 +424,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
+    "headSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -434,7 +434,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
+    "headSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
     "status": "blocked"
   },
   "scenarios": [
@@ -517,8 +517,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43962,
-      "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
+      "bytes": 44194,
+      "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
     },
     {
       "path": "package-lock.json",
@@ -1111,8 +1111,50 @@
     {
       "path": "packages/types/src/database.types.ts",
       "exists": true,
-      "bytes": 58832,
-      "sha256": "33e67e9c9cb829624bed72693dfe2b4706838483a547b1d3d359384bef8bd434"
+      "bytes": 213300,
+      "sha256": "2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3"
+    },
+    {
+      "path": "packages/types/src/client-database.types.ts",
+      "exists": true,
+      "bytes": 3194,
+      "sha256": "7527a744c009f23b87c9ca88dee22df8192fcd7f288a1ef427e2efb42eab2c95"
+    },
+    {
+      "path": "packages/types/src/client-database.types.contract.ts",
+      "exists": true,
+      "bytes": 3849,
+      "sha256": "3de1fbfa0648aabd8f4f07a0e41ccba3a8992cfc7301b1248ffcecfa731ec00a"
+    },
+    {
+      "path": "packages/types/src/index.ts",
+      "exists": true,
+      "bytes": 19452,
+      "sha256": "444e627d076e30397653a3de48dc3a2d9b2ca67372db26a6279784739d33c221"
+    },
+    {
+      "path": "packages/types/package.json",
+      "exists": true,
+      "bytes": 392,
+      "sha256": "a1b64db36990980f7a1db044e846e2e301fe1aa22df15a690693e7a764d99ed3"
+    },
+    {
+      "path": "apps/mobile/src/lib/supabase/client.ts",
+      "exists": true,
+      "bytes": 7616,
+      "sha256": "aab69311bd33c278c4ade3c0fa95f1a48860308a8882cfe9186a0728ceb6a448"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract-lib.mjs",
+      "exists": true,
+      "bytes": 1380,
+      "sha256": "315402e9a0b8f77d8c922022ff9040c342769c9a57a122912ef5cff43f35355d"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract.test.mjs",
+      "exists": true,
+      "bytes": 5663,
+      "sha256": "8b8617536c1877200480db460683f3e476bc77f80affea00be4d9f61b79907d3"
     },
     {
       "path": "supabase/migrations/20260710000036_photo_quality_provenance.sql",
@@ -1393,8 +1435,8 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 72739,
-      "sha256": "407ba88e48475f0a9be6ef9d5f1006f52632117e1ed5817341b942552317eaa4"
+      "bytes": 73075,
+      "sha256": "1f3999dcb552e9446f59bfcbcc3a78b1eb580135d0dba1981ec61eb3384f8adc"
     },
     {
       "path": "scripts/phase5/device-qa-packet-contract.mjs",
@@ -1417,8 +1459,8 @@
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 37375,
-      "sha256": "e091783e50209cfdce050d0c5abf0ce6edae8a38b7f3c70b4d51a7e7637152e4"
+      "bytes": 37697,
+      "sha256": "f39ef5d9963137a342f9ee329f37467835ae015d6c8207d2abd697e8f909b6b6"
     },
     {
       "path": "scripts/phase5/ios-extension-contract.mjs",
@@ -1471,8 +1513,8 @@
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 99843,
-      "sha256": "076167357f49d2620a87e146039e7d98ac47d206ac6825ec1de4e0f3846b9979"
+      "bytes": 99796,
+      "sha256": "9552f9ebdba3e964032a7d9e833cc67c50147e76f89780c586e8252f937a3b2e"
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
@@ -1525,8 +1567,8 @@
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
-      "bytes": 52725,
-      "sha256": "7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83"
+      "bytes": 53244,
+      "sha256": "f104824ecde526d55740a72515422b78faec7243afe8b58219c984fd1f6b4c21"
     },
     {
       "path": "scripts/phase2/supabase-rls-smoke.mjs",
