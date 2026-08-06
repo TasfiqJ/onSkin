@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T19:50:23.829Z",
+  "generatedAt": "2026-08-06T00:48:17.156Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -177,6 +177,30 @@
       "disabledPathSideEffectsAllowed": false,
       "cloudPhotoProcessingAllowed": false,
       "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
     }
   },
   "platformStatus": {
