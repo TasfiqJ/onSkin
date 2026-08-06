@@ -55,6 +55,7 @@ import {
   parseCat07WindowsTcpListeners,
   prepareCat07CssInteropRuntimeCache,
   readCat07BoundedJsonResponse,
+  recordCat07Fatal,
   runCat07IsolatedNpmInstall,
   startCat07ImmutableExpoServer,
   validateCat07EvidenceDirectory,
@@ -1585,6 +1586,18 @@ test('CAT07 source monitor rejects undeclared CSS interop cache entries', async 
   writeFileSync(path.join(cacheRoot, 'unexpected.js'), Buffer.alloc(0));
   await delay(100);
   assert.throws(() => monitor.assertClean(), /transient or persistent source-tree mutation/u);
+});
+
+test('CAT07 fatal reporting preserves the first sanitized failure', () => {
+  const summary = {};
+  assert.equal(recordCat07Fatal(summary, new Error('first failure')), 'first failure');
+  assert.equal(recordCat07Fatal(summary, new Error('second failure')), 'first failure');
+  assert.equal(summary.fatalError, 'first failure');
+
+  const sanitizedSummary = {};
+  const secret = 'https://user:password@example.test/private';
+  const diagnostic = recordCat07Fatal(sanitizedSummary, new Error(secret));
+  assert.doesNotMatch(diagnostic, /password|example\.test|private/u);
 });
 
 test('CAT07 full validator child has a hard timeout and output ceiling', () => {

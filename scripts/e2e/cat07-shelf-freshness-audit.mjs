@@ -3987,6 +3987,21 @@ function assertPacketHygiene(evidenceDir, artifacts, summary) {
   );
 }
 
+export function recordCat07Fatal(
+  summary,
+  error,
+  fallback = 'CAT07 audit failed without safe diagnostics.',
+) {
+  assert(cat07PlainRecord(summary), 'CAT07 fatal diagnostics require one summary object.');
+  if (typeof summary.fatalError === 'string' && summary.fatalError.length > 0) {
+    return summary.fatalError;
+  }
+  summary.fatalError =
+    sanitizeEvidenceDiagnosticForDisplay(error instanceof Error ? error.message : String(error)) ||
+    fallback;
+  return summary.fatalError;
+}
+
 export async function runCat07ShelfFreshnessAudit({
   evidenceDir = process.env.CAT07_E2E_EVIDENCE_DIR
     ? path.resolve(repoRoot, process.env.CAT07_E2E_EVIDENCE_DIR)
@@ -4144,16 +4159,13 @@ export async function runCat07ShelfFreshnessAudit({
       `CAT07 full run emitted ${browserFailures.length} browser failure(s).`,
     );
   } catch (error) {
-    summary.fatalError =
-      sanitizeEvidenceDiagnosticForDisplay(
-        error instanceof Error ? error.message : String(error),
-      ) || 'CAT07 audit failed without safe diagnostics.';
+    recordCat07Fatal(summary, error);
   } finally {
     if (client) {
       try {
         client.assertHealthy();
       } catch {
-        summary.fatalError = 'CAT07 source or browser-event integrity changed during the run.';
+        recordCat07Fatal(summary, 'CAT07 source or browser-event integrity changed during the run.');
       }
       writeCat07Json(
         evidenceDir,
@@ -4170,29 +4182,29 @@ export async function runCat07ShelfFreshnessAudit({
       try {
         finalizeCat07ExpoLog(evidenceDir, server);
       } catch {
-        summary.fatalError = 'CAT07 Expo child log finalization failed.';
+        recordCat07Fatal(summary, 'CAT07 Expo child log finalization failed.');
       }
     }
     if (server?.cat07LogState?.launchFailure) {
-      summary.fatalError = 'CAT07 Expo child failed to launch.';
+      recordCat07Fatal(summary, 'CAT07 Expo child failed to launch.');
     }
     if (serverExitedBeforeStop) {
-      summary.fatalError = 'CAT07 Expo child exited before evidence finalization.';
+      recordCat07Fatal(summary, 'CAT07 Expo child exited before evidence finalization.');
     }
     if (browser?.cat07LaunchState?.launchFailure) {
-      summary.fatalError = 'CAT07 browser child failed to launch.';
+      recordCat07Fatal(summary, 'CAT07 browser child failed to launch.');
     }
     if (browserExitedBeforeStop) {
-      summary.fatalError = 'CAT07 browser child exited before evidence finalization.';
+      recordCat07Fatal(summary, 'CAT07 browser child exited before evidence finalization.');
     }
     if (server?.cat07LogState?.overflow) {
-      summary.fatalError = 'CAT07 Expo child log exceeded its reviewed byte ceiling.';
+      recordCat07Fatal(summary, 'CAT07 Expo child log exceeded its reviewed byte ceiling.');
     }
     if (sourceMonitor) {
       try {
         sourceMonitor.assertClean();
       } catch {
-        summary.fatalError = 'CAT07 immutable served source changed during the evidence run.';
+        recordCat07Fatal(summary, 'CAT07 immutable served source changed during the evidence run.');
       } finally {
         sourceMonitor.close();
       }
@@ -4201,15 +4213,16 @@ export async function runCat07ShelfFreshnessAudit({
       try {
         immutableSource.assertRuntimeStable();
       } catch (error) {
-        summary.fatalError =
-          sanitizeEvidenceDiagnosticForDisplay(
-            error instanceof Error ? error.message : String(error),
-          ) || 'CAT07 immutable source or runtime bytes changed during the run.';
+        recordCat07Fatal(
+          summary,
+          error,
+          'CAT07 immutable source or runtime bytes changed during the run.',
+        );
       }
       try {
         immutableSource.cleanup();
       } catch {
-        summary.fatalError = 'CAT07 immutable source snapshot cleanup failed.';
+        recordCat07Fatal(summary, 'CAT07 immutable source snapshot cleanup failed.');
       }
     }
     if (userDataDir) {
@@ -4229,7 +4242,7 @@ export async function runCat07ShelfFreshnessAudit({
   try {
     assertCat07FinalSourceProvenance(sourceGitSha);
   } catch {
-    summary.fatalError = 'CAT07 source provenance changed during the evidence run.';
+    recordCat07Fatal(summary, 'CAT07 source provenance changed during the evidence run.');
   }
 
   summary.completedAt = new Date().toISOString();
