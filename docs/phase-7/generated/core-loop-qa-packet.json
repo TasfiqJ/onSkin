@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T05:56:28.148Z",
+  "generatedAt": "2026-08-06T00:44:40.963Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -204,7 +204,7 @@
     }
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
+  "gitSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -233,7 +233,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
+    "currentGitSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -257,7 +257,7 @@
     },
     "phase5DeviceQa": {
       "status": "blocked",
-      "gitSha": "b2a048b60b6b69e5629bfb3bee8167da7193f05a",
+      "gitSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
       "errors": [
         "pinned Phase 5 device QA packet must contain an empty blockers array",
         "pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing",
@@ -277,7 +277,7 @@
       "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
       "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
     ],
-    "headSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
+    "headSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
     "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
     "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
     "status": "blocked",
@@ -287,7 +287,7 @@
     "errors": [
       "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "ba4c75c3a34f5015411258ee30d273454ea3cfe4",
+    "headSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
     "status": "blocked"
   },
   "scenarios": [
@@ -380,8 +380,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 43962,
-      "sha256": "8b4b3f7f05bd7c4a05267a6c08f84b258b90ac9a000010ac1436978ba88892cb"
+      "bytes": 44194,
+      "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -440,8 +440,8 @@
     {
       "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
       "exists": true,
-      "bytes": 7935,
-      "sha256": "efed24fb89ee2b08575c78cb5ca604f281a13e4ad4352e7fceb5c65798d6c4bd"
+      "bytes": 10172,
+      "sha256": "e0a502b43e551350852c6bb48301b54cb52526789f8e238bb47406c833205df9"
     },
     {
       "path": "apps/mobile/src/lib/env.ts",
@@ -1250,8 +1250,50 @@
     {
       "path": "packages/types/src/database.types.ts",
       "exists": true,
-      "bytes": 58832,
-      "sha256": "33e67e9c9cb829624bed72693dfe2b4706838483a547b1d3d359384bef8bd434"
+      "bytes": 213300,
+      "sha256": "2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3"
+    },
+    {
+      "path": "packages/types/src/client-database.types.ts",
+      "exists": true,
+      "bytes": 3194,
+      "sha256": "7527a744c009f23b87c9ca88dee22df8192fcd7f288a1ef427e2efb42eab2c95"
+    },
+    {
+      "path": "packages/types/src/client-database.types.contract.ts",
+      "exists": true,
+      "bytes": 3849,
+      "sha256": "3de1fbfa0648aabd8f4f07a0e41ccba3a8992cfc7301b1248ffcecfa731ec00a"
+    },
+    {
+      "path": "packages/types/src/index.ts",
+      "exists": true,
+      "bytes": 19452,
+      "sha256": "444e627d076e30397653a3de48dc3a2d9b2ca67372db26a6279784739d33c221"
+    },
+    {
+      "path": "packages/types/package.json",
+      "exists": true,
+      "bytes": 392,
+      "sha256": "a1b64db36990980f7a1db044e846e2e301fe1aa22df15a690693e7a764d99ed3"
+    },
+    {
+      "path": "apps/mobile/src/lib/supabase/client.ts",
+      "exists": true,
+      "bytes": 7616,
+      "sha256": "aab69311bd33c278c4ade3c0fa95f1a48860308a8882cfe9186a0728ceb6a448"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract-lib.mjs",
+      "exists": true,
+      "bytes": 1380,
+      "sha256": "315402e9a0b8f77d8c922022ff9040c342769c9a57a122912ef5cff43f35355d"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract.test.mjs",
+      "exists": true,
+      "bytes": 5663,
+      "sha256": "8b8617536c1877200480db460683f3e476bc77f80affea00be4d9f61b79907d3"
     },
     {
       "path": "supabase/functions/catalog-lookup/index.ts",
@@ -1364,8 +1406,8 @@
     {
       "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
       "exists": true,
-      "bytes": 50449,
-      "sha256": "d7b638d35672ebab8ac51d5fdd7298809b11abd85b57368ced7065359c3fa11c"
+      "bytes": 50771,
+      "sha256": "f533e751b5aa254cc4f1d6816e90032d1c501b5a9c0c5d3db5305b3db2e21951"
     },
     {
       "path": "scripts/phase7/check-core-loop.mjs",
@@ -1388,8 +1430,8 @@
     {
       "path": "scripts/phase7/core-loop-qa-packet-contract.test.mjs",
       "exists": true,
-      "bytes": 11637,
-      "sha256": "236a4c10cbc0a04d080253b7fa53e1a7bcc9ec132e9c20cec024542bf8e4ae36"
+      "bytes": 11973,
+      "sha256": "b69b4a712244d30a7802b0ac9699c4828e855e77f93d25ed8c0fdb01ef549b2b"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
@@ -1448,8 +1490,8 @@
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
       "exists": true,
-      "bytes": 52725,
-      "sha256": "7f43ad3701f210ee2ef0d501a3e3b2a86bf9c57b73d9820a3d334dcc1f482f83"
+      "bytes": 53244,
+      "sha256": "f104824ecde526d55740a72515422b78faec7243afe8b58219c984fd1f6b4c21"
     },
     {
       "path": "scripts/phase5/device-qa-packet-contract.mjs",
@@ -1554,26 +1596,26 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 68482,
-      "sha256": "dd85706740b9ba6e1c4642a8a8d292db8b2d64c0c1d1b59b7858c4d6608796cb"
+      "bytes": 69862,
+      "sha256": "caeb01ef9b581ba5803de1907483754b9e965c6768de7e0ce88885cbd8629fdd"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
-      "bytes": 54005,
-      "sha256": "9b679d0653ebf9e6dd6e58e0290fbd77811cc81250a81f7fcc486af61361bfb7"
+      "bytes": 55209,
+      "sha256": "5b8392d1a4f438bc50888297a2e3acd34d5551fd00e15d3efdb3ce1bfbf4ae30"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 52856,
-      "sha256": "0003ab040cf84368f07df09ae04156ed0b7dbed1213ba422844dbf1de26a058a"
+      "sha256": "55c0a23900d38fbe032a632767f14131be08b44649daf24687310b80aa464785"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 33649,
-      "sha256": "6f8af0789016f208fd39bec0cdef323067ee5e0287889852cbb34bc16118cf16"
+      "sha256": "4fc3d192d35008c63195b84a19950e0a26b80cbcce9bcaa6f859053a0eb786ad"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -1656,8 +1698,8 @@
     {
       "path": "docs/hugeToDo/README.md",
       "exists": true,
-      "bytes": 65638,
-      "sha256": "c50f7dff469a9ad021a1e3cc5492a6a3159baf03ccbfc20ea9e08fa4df9bdf39"
+      "bytes": 66276,
+      "sha256": "f623f6f135dadfba2cf9e04bdd8b78dbea020259b647982a304b05e8ab74908f"
     },
     {
       "path": "scripts/launch/contract-smoke.mjs",
@@ -1780,12 +1822,6 @@
       "sha256": "3921a01492072726177d549ec5353bf64768c20a400f0f4305b18d6b89dbaa13"
     },
     {
-      "path": "packages/types/src/index.ts",
-      "exists": true,
-      "bytes": 19296,
-      "sha256": "99805220d357d7cb63e0dc4c1a84f8318495f15fa9c87c32f553ec441c6d45b4"
-    },
-    {
       "path": "supabase/migrations/20260613000024_photo_trend.sql",
       "exists": true,
       "bytes": 4734,
@@ -1824,14 +1860,14 @@
     {
       "path": "BLOCKERS.md",
       "exists": true,
-      "bytes": 102944,
-      "sha256": "a0731452ab4d24fa71b30969981442a0e8303735e5df7c32ead6961364609709"
+      "bytes": 103646,
+      "sha256": "867ae729492346963f71ef59b63c10c6ea4914120c79639e28658ade62fe9230"
     },
     {
       "path": "PROGRESS.md",
       "exists": true,
-      "bytes": 525015,
-      "sha256": "3ada12a889a0f9b962edc0451b6712bcee9252db2579866b3b0e225ef9fa6add"
+      "bytes": 526552,
+      "sha256": "030adbdd9b664da837a652aab98a86c7de4749cd32a9acbe92fa8636404522e9"
     },
     {
       "path": "apps/mobile/src/app/commerce/_layout.tsx",
