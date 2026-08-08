@@ -14,7 +14,7 @@ import {
 import { renderHumanE2eManifestMarkdown } from './human-e2e-manifest-render.mjs';
 
 export const CAT07_COMMITTED_SUMMARY_PATH =
-  'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json';
+  'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json';
 export const CAT07_COMMITTED_MANIFEST_JSON_PATH = 'docs/e2e/generated/human-e2e-manifest.json';
 export const CAT07_COMMITTED_MANIFEST_MD_PATH = 'docs/e2e/generated/human-e2e-manifest.md';
 export const CAT07_COMMITTED_INPUT_PATHS = Object.freeze([
@@ -49,6 +49,7 @@ const CAT07_APP_ENVIRONMENT_COMMON_KEYS = [
   'EXPO_NO_DOTENV',
   'EXPO_NO_TELEMETRY',
   'EXPO_OFFLINE',
+  'EXPO_UNSTABLE_HEADLESS',
   'EXPO_PUBLIC_APP_ENV',
   'EXPO_PUBLIC_E2E_APP_LOCK_ENABLED',
   'EXPO_PUBLIC_E2E_LOCAL_RESET',
@@ -335,10 +336,11 @@ function collectSummaryFailures(summary, root, headSha, context) {
       'packageLock',
       'runtimeTree',
       'schemaVersion',
+      'serverListener',
       'sourceTree',
       'tools',
     ]) ||
-    runtime?.schemaVersion !== 1 ||
+    runtime?.schemaVersion !== 2 ||
     runtime?.installMode !== 'isolated-npm-ci-offline-ignore-scripts-then-repo-postinstall'
   ) {
     errors.push('committed CAT07 runtimeProvenance does not use the reviewed offline schema');
@@ -352,7 +354,7 @@ function collectSummaryFailures(summary, root, headSha, context) {
     }
     if (
       !hasExactObjectKeys(runtime.environmentBootstrap, ['bytes', 'schemaVersion', 'sha256']) ||
-      runtime.environmentBootstrap.schemaVersion !== 1 ||
+      runtime.environmentBootstrap.schemaVersion !== 2 ||
       !Number.isSafeInteger(runtime.environmentBootstrap.bytes) ||
       runtime.environmentBootstrap.bytes <= 0 ||
       !/^[0-9a-f]{64}$/u.test(String(runtime.environmentBootstrap.sha256 ?? ''))
@@ -367,6 +369,29 @@ function collectSummaryFailures(summary, root, headSha, context) {
       )
     ) {
       errors.push('committed CAT07 runtime child environment is not the exact allowlist');
+    }
+    if (
+      !hasExactObjectKeys(runtime.serverListener, [
+        'address',
+        'family',
+        'kind',
+        'method',
+        'port',
+        'schemaVersion',
+      ]) ||
+      runtime.serverListener.schemaVersion !== 1 ||
+      runtime.serverListener.kind !== 'cat07-loopback-listener' ||
+      runtime.serverListener.method !== 'inherited-node-ipc' ||
+      !Number.isSafeInteger(runtime.serverListener.port) ||
+      runtime.serverListener.port <= 0 ||
+      runtime.serverListener.port > 65_535 ||
+      !(
+        (runtime.serverListener.address === '127.0.0.1' &&
+          runtime.serverListener.family === 'IPv4') ||
+        (runtime.serverListener.address === '::1' && runtime.serverListener.family === 'IPv6')
+      )
+    ) {
+      errors.push('committed CAT07 runtime listener attestation is invalid');
     }
     if (
       !hasExactObjectKeys(runtime.packageLock, ['bytes', 'sha256']) ||

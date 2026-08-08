@@ -284,7 +284,7 @@ for (const file of [
   'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
   'docs/e2e/generated/human-e2e-manifest.json',
   'docs/e2e/generated/human-e2e-manifest.md',
-  'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
+  'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json',
   'docs/phase-5/generated/device-qa-packet.json',
   'docs/phase-5/generated/device-qa-packet.md',
   'docs/phase-6/generated/payments-qa-packet.json',
@@ -294,7 +294,7 @@ for (const file of [
 ]) {
   require(qaPacketBuilder.includes(`'${file}'`) ||
     qaPacketBuilder.includes(`"${file}"`) ||
-    (file === 'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json' &&
+    (file === 'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json' &&
       qaPacketBuilder.includes(
         'cat07ShelfFreshnessSummaryPath',
       )), `Phase 7 core-loop QA packet must hash ${file}.`);

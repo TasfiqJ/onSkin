@@ -16,6 +16,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { createServer } from 'node:net';
 import path from 'node:path';
 import { PassThrough } from 'node:stream';
 import test from 'node:test';
@@ -27,6 +28,7 @@ import { PNG } from 'pngjs';
 import {
   CAT07_AUDIT_LIMITATIONS,
   CAT07_EVIDENCE_RELATIVE_DIR,
+  CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
   CAT07_MAX_CDP_FRAME_BYTES,
   CAT07_REQUIRED_VIEWPORTS,
   CAT07_RUN_ID,
@@ -34,6 +36,7 @@ import {
   assertCat07SourceProvenance,
   assertCat07FinalSourceProvenance,
   assertCat07SourceSafetyContract,
+  buildCat07AttestedServerNodeArgs,
   buildCat07ChildEnvironment,
   buildCat07RuntimeDriftFingerprint,
   buildCat07ScrubbedNodeArgs,
@@ -52,7 +55,7 @@ import {
   parseCat07CdpFrame,
   parseCat07DevToolsActivePort,
   parseCat07GitTree,
-  parseCat07WindowsTcpListeners,
+  parseCat07LoopbackListenerAttestation,
   prepareCat07CssInteropRuntimeCache,
   readCat07BoundedJsonResponse,
   recordCat07Fatal,
@@ -63,6 +66,7 @@ import {
   validateCat07DebuggerWebSocketUrl,
   validateCat07ScreenshotArtifact,
   verifyCat07ExtractedGitTree,
+  waitForCat07LoopbackListenerAttestation,
   writeCat07EvidenceArtifact,
 } from './cat07-shelf-freshness-audit.mjs';
 import {
@@ -106,7 +110,7 @@ test('CAT07 audit covers every supported iPhone-class Expo-web viewport', () => 
     CAT07_AUDIT_LIMITATIONS.every((limitation) => typeof limitation === 'string'),
     true,
   );
-  assert.match(CAT07_EVIDENCE_RELATIVE_DIR, /2026-08-06\/cat07-shelf-freshness-current$/u);
+  assert.match(CAT07_EVIDENCE_RELATIVE_DIR, /2026-08-08\/cat07-shelf-freshness-current$/u);
 });
 
 test('CAT07 run markers bind one canonical run, viewport, and reviewed step', () => {
@@ -156,15 +160,15 @@ test('current CAT07 source satisfies its exact static safety contract', () => {
 test('CAT07 provenance permits only its evidence folder and scratch output', () => {
   const status = (...fields) => `${fields.join('\0')}\0`;
   const allowed = status(
-    ' M test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
-    '?? test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/new.png',
+    ' M test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json',
+    '?? test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/new.png',
     '?? .tmp/cat07/browser-profile/file',
   );
   assert.deepEqual(collectCat07UndeclaredDirtyPaths(allowed), []);
   assert.deepEqual(
     collectCat07UndeclaredDirtyPaths(
       status(
-        ' M test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
+        ' M test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json',
         '?? .tmp/cat07/browser-profile/file',
         ' M apps/mobile/src/features/shelf/store.ts',
         '?? scripts/e2e/uncommitted-runner.mjs',
@@ -715,6 +719,76 @@ test('CAT07 app environment is a minimal positive allowlist and never inherits h
   assert.deepEqual(
     Object.keys(JSON.parse(child.stdout)).sort(),
     Object.keys(childEnvironment).sort(),
+  );
+});
+
+test('CAT07 Expo launch attests its own exact loopback listener over inherited IPC', async (t) => {
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'cat07-listener-attestation-'));
+  t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
+  const snapshotRoot = path.join(fixtureRoot, 'source');
+  const evidenceDir = path.join(fixtureRoot, 'evidence');
+  const runtimeRoot = path.join(fixtureRoot, 'runtime');
+  mkdirSync(path.join(snapshotRoot, 'apps', 'mobile'), { recursive: true });
+  mkdirSync(evidenceDir);
+  const runtimePaths = {
+    appData: path.join(runtimeRoot, 'app-data'),
+    home: path.join(runtimeRoot, 'home'),
+    temp: path.join(runtimeRoot, 'temp'),
+  };
+  for (const directory of Object.values(runtimePaths)) mkdirSync(directory, { recursive: true });
+  const childEnvironment = buildCat07ChildEnvironment({
+    hostEnvironment:
+      process.platform === 'win32'
+        ? { SystemRoot: path.join(path.parse(process.execPath).root, 'Windows') }
+        : {},
+    runtimePaths,
+  });
+
+  const reservation = createServer();
+  const port = await new Promise((resolve, reject) => {
+    reservation.once('error', reject);
+    reservation.listen(0, 'localhost', () => resolve(reservation.address().port));
+  });
+  await new Promise((resolve, reject) =>
+    reservation.close((error) => (error ? reject(error) : resolve())),
+  );
+
+  const expoCliPath = path.join(snapshotRoot, 'expo-cli.mjs');
+  writeFileSync(
+    expoCliPath,
+    [
+      "import { createServer } from 'node:http';",
+      "const portIndex = process.argv.indexOf('--port');",
+      'const port = Number(process.argv[portIndex + 1]);',
+      "createServer((_request, response) => response.end('ok')).listen(port, 'localhost');",
+      '',
+    ].join('\n'),
+  );
+  const child = startCat07ImmutableExpoServer({
+    appPort: port,
+    childEnvironment,
+    evidenceDir,
+    expoCliPath,
+    snapshotRoot,
+  });
+  t.after(() => {
+    if (!child.killed) child.kill();
+  });
+
+  const attestation = await waitForCat07LoopbackListenerAttestation({
+    child,
+    port,
+    timeoutMs: 10_000,
+  });
+  assert.equal(attestation.pid, child.pid);
+  assert.equal(attestation.port, port);
+  assert.ok(['127.0.0.1', '::1'].includes(attestation.address));
+  child.kill();
+  await new Promise((resolve) => child.once('exit', resolve));
+
+  assert.throws(
+    () => buildCat07AttestedServerNodeArgs(expoCliPath, [], {}, 0),
+    /port is invalid/u,
   );
 });
 
@@ -1351,20 +1425,36 @@ test('CAT07 binds ephemeral DevTools and listener metadata to exact reviewed sha
   ]) {
     assert.throws(() => parseCat07DevToolsActivePort(Buffer.from(hostile)), /DevToolsActivePort/u);
   }
+  const attestation = {
+    address: '::1',
+    family: 'IPv6',
+    kind: 'cat07-loopback-listener',
+    pid: 4321,
+    port: 54321,
+    schemaVersion: CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
+  };
   assert.deepEqual(
-    parseCat07WindowsTcpListeners(
-      '  TCP    127.0.0.1:54321    0.0.0.0:0    LISTENING    4321\r\n',
-      54321,
-    ),
-    [{ address: '127.0.0.1', pid: 4321 }],
+    parseCat07LoopbackListenerAttestation(attestation, {
+      expectedPid: 4321,
+      expectedPort: 54321,
+    }),
+    attestation,
   );
   assert.throws(
     () =>
-      parseCat07WindowsTcpListeners(
-        '  TCP    0.0.0.0:54321    0.0.0.0:0    LISTENING    4321\r\n',
-        54321,
+      parseCat07LoopbackListenerAttestation(
+        { ...attestation, address: '0.0.0.0', family: 'IPv4' },
+        { expectedPid: 4321, expectedPort: 54321 },
       ),
     /escaped the loopback/u,
+  );
+  assert.throws(
+    () =>
+      parseCat07LoopbackListenerAttestation(
+        { ...attestation, pid: 4322 },
+        { expectedPid: 4321, expectedPort: 54321 },
+      ),
+    /not owned by the launched child/u,
   );
 });
 

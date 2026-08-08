@@ -27,6 +27,7 @@ import {
   CAT07_MAX_INPUT_CDP_BYTES,
   CAT07_MAX_INPUT_CDP_FRAMES,
   CAT07_MAX_RETAINED_BROWSER_EVENTS,
+  CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
   CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
   cat07BrowserArguments,
   createCat07TrustedGitContext,
@@ -232,7 +233,7 @@ const HUMAN_E2E_GENERATED_MANIFEST_PATHS = Object.freeze([
 ]);
 const CAT04_CATALOG_RECOVERY_EVIDENCE_FOLDER_NAME = 'cat04-catalog-recovery-current';
 const CAT05_NATIVE_OCR_EVIDENCE_FOLDER_NAME = 'cat05-native-ocr-web-ui-current';
-const CAT07_SHELF_FRESHNESS_EVIDENCE_DATE = '2026-08-06';
+const CAT07_SHELF_FRESHNESS_EVIDENCE_DATE = '2026-08-08';
 const CAT07_SHELF_FRESHNESS_EVIDENCE_FOLDER_NAME = 'cat07-shelf-freshness-current';
 const CAT07_SHELF_FRESHNESS_EVIDENCE_FOLDER_PREFIX =
   `test-results/human-e2e/${CAT07_SHELF_FRESHNESS_EVIDENCE_DATE}/` +
@@ -1044,6 +1045,7 @@ const CAT07_APP_ENVIRONMENT_COMMON_KEYS = Object.freeze([
   'EXPO_NO_DOTENV',
   'EXPO_NO_TELEMETRY',
   'EXPO_OFFLINE',
+  'EXPO_UNSTABLE_HEADLESS',
   'EXPO_PUBLIC_APP_ENV',
   'EXPO_PUBLIC_E2E_APP_LOCK_ENABLED',
   'EXPO_PUBLIC_E2E_LOCAL_RESET',
@@ -1093,6 +1095,7 @@ function collectCat07RuntimeProvenanceFailures(runtimeProvenance, sourceGitState
       'packageLock',
       'runtimeTree',
       'schemaVersion',
+      'serverListener',
       'sourceTree',
       'tools',
     ]) ||
@@ -1116,6 +1119,29 @@ function collectCat07RuntimeProvenanceFailures(runtimeProvenance, sourceGitState
     runtimeProvenance.installMode !== 'isolated-npm-ci-offline-ignore-scripts-then-repo-postinstall'
   ) {
     failures.push('runtimeProvenance installMode must be the reviewed offline npm-ci mode');
+  }
+  const serverListener = runtimeProvenance.serverListener;
+  if (
+    !hasExactObjectKeys(serverListener, [
+      'address',
+      'family',
+      'kind',
+      'method',
+      'port',
+      'schemaVersion',
+    ]) ||
+    serverListener?.schemaVersion !== CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION ||
+    serverListener?.kind !== 'cat07-loopback-listener' ||
+    serverListener?.method !== 'inherited-node-ipc' ||
+    !Number.isSafeInteger(serverListener?.port) ||
+    serverListener.port <= 0 ||
+    serverListener.port > 65_535 ||
+    !(
+      (serverListener.address === '127.0.0.1' && serverListener.family === 'IPv4') ||
+      (serverListener.address === '::1' && serverListener.family === 'IPv6')
+    )
+  ) {
+    failures.push('runtimeProvenance serverListener binding is invalid');
   }
   const environmentBootstrap = runtimeProvenance.environmentBootstrap;
   if (
@@ -5241,14 +5267,14 @@ function runCat04CatalogRecoveryContractSmoke() {
         untrackedRepoFiles: [`${cat07EvidenceFolder}/rerun-screenshot.png`],
       },
     }).length === 0,
-    'the exact governed 2026-08-06 CAT07 evidence folder may follow older CAT04 source',
+    'the exact governed 2026-08-08 CAT07 evidence folder may follow older CAT04 source',
   );
   for (const unrelatedEvidencePath of [
     'test-results/human-e2e/2099-01-01/cat06-camera-lifecycle-current/summary.json',
     'test-results/human-e2e/2099-01-02/cat05-native-ocr-web-ui-current/summary.json',
     'test-results/human-e2e/2099-01-01/cat07-shelf-freshness-current/summary.json',
     'test-results/human-e2e/2026-07-21/cat07-shelf-freshness-current/summary.json',
-    'test-results/human-e2e/2026-08-06/unscoped-evidence.json',
+    'test-results/human-e2e/2026-08-08/unscoped-evidence.json',
   ]) {
     assert(
       validate(summary, {
@@ -5899,14 +5925,14 @@ function runCat05NativeOcrReviewContractSmoke() {
         untrackedRepoFiles: [`${cat07EvidenceFolder}/rerun-screenshot.png`],
       },
     }).length === 0,
-    'the exact governed 2026-08-06 CAT07 evidence folder may follow older CAT05 source',
+    'the exact governed 2026-08-08 CAT07 evidence folder may follow older CAT05 source',
   );
   for (const unrelatedEvidencePath of [
     'test-results/human-e2e/2099-01-01/cat06-camera-lifecycle-current/summary.json',
     'test-results/human-e2e/2099-01-02/cat04-catalog-recovery-current/summary.json',
     'test-results/human-e2e/2099-01-01/cat07-shelf-freshness-current/summary.json',
     'test-results/human-e2e/2026-07-21/cat07-shelf-freshness-current/summary.json',
-    'test-results/human-e2e/2026-08-06/unscoped-evidence.json',
+    'test-results/human-e2e/2026-08-08/unscoped-evidence.json',
   ]) {
     assert(
       validate(summary, {
@@ -5960,8 +5986,8 @@ function runCat05NativeOcrReviewContractSmoke() {
 function runCat07ShelfFreshnessContractSmoke() {
   const folder = 'test-results/human-e2e/2099-01-01/cat07-shelf-freshness-current';
   const folderPrefix = `${folder}/`;
-  const timestamp = '2026-08-06T00:00:00.000Z';
-  const completedTimestamp = '2026-08-06T00:01:05.000Z';
+  const timestamp = '2026-08-08T00:00:00.000Z';
+  const completedTimestamp = '2026-08-08T00:01:05.000Z';
   const runId = 'cat07-11111111-1111-4111-8111-111111111111';
   const sourceGitSha = 'a'.repeat(40);
   const artifacts = expectedCat07ShelfFreshnessArtifacts();
@@ -6135,6 +6161,14 @@ function runCat07ShelfFreshnessContractSmoke() {
         };
       })(),
       schemaVersion: CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
+      serverListener: {
+        address: '::1',
+        family: 'IPv6',
+        kind: 'cat07-loopback-listener',
+        method: 'inherited-node-ipc',
+        port: 8720,
+        schemaVersion: CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
+      },
       sourceTree: {
         bytes: 12_288,
         entryCount: 3,

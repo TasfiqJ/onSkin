@@ -51,6 +51,11 @@ import {
   publishGovernedFixtureUnit,
 } from '../launch/governed-evidence-test-fixture.mjs';
 import {
+  CAT07_BROWSER_LAUNCH_SCHEMA_VERSION,
+  CAT07_CHILD_ENVIRONMENT_SCHEMA_VERSION,
+  CAT07_ENVIRONMENT_BOOTSTRAP_SCHEMA_VERSION,
+  CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
+  CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
   buildCat07ChildEnvironment,
   cat07BrowserArguments,
 } from '../e2e/cat07-shelf-freshness-audit.mjs';
@@ -95,7 +100,7 @@ for (const path of filteredChangedPaths) {
 git(fixtureRoot, ['config', 'user.email', 'phase5-smoke@example.invalid']);
 git(fixtureRoot, ['config', 'user.name', 'Phase 5 Smoke']);
 const cat07SummaryFixtureRelativePath =
-  'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json';
+  'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json';
 const cat07SummaryFixturePath = resolve(fixtureRoot, cat07SummaryFixtureRelativePath);
 mkdirSync(dirname(cat07SummaryFixturePath), { recursive: true });
 const cat07ManifestFixtureRelativePath = 'docs/e2e/generated/human-e2e-manifest.json';
@@ -124,7 +129,7 @@ const cat07Viewports = [
   { id: 'iphone-430x932', width: 430, height: 932 },
 ];
 const cat07AtSecond = (seconds) =>
-  new Date(Date.parse('2026-08-06T00:00:00.000Z') + seconds * 1_000).toISOString();
+  new Date(Date.parse('2026-08-08T00:00:00.000Z') + seconds * 1_000).toISOString();
 const cat07Steps = [
   '01-manual',
   '02-opening-required',
@@ -208,7 +213,7 @@ const cat07RuntimePaths = Object.fromEntries(
 cat07SummaryFixture.runtimeProvenance = {
   browserLaunch: {
     args: cat07BrowserArguments({ userDataDir: '<fresh-profile>' }),
-    schemaVersion: 1,
+    schemaVersion: CAT07_BROWSER_LAUNCH_SCHEMA_VERSION,
   },
   childEnvironment: {
     keys: Object.keys(
@@ -218,9 +223,13 @@ cat07SummaryFixture.runtimeProvenance = {
         runtimePaths: cat07RuntimePaths,
       }),
     ).sort(),
-    schemaVersion: 1,
+    schemaVersion: CAT07_CHILD_ENVIRONMENT_SCHEMA_VERSION,
   },
-  environmentBootstrap: { bytes: 1, schemaVersion: 1, sha256: '1'.repeat(64) },
+  environmentBootstrap: {
+    bytes: 1,
+    schemaVersion: CAT07_ENVIRONMENT_BOOTSTRAP_SCHEMA_VERSION,
+    sha256: '1'.repeat(64),
+  },
   installMode: 'isolated-npm-ci-offline-ignore-scripts-then-repo-postinstall',
   packageLock: {
     bytes: cat07SourcePackageLockBytes.length,
@@ -246,7 +255,15 @@ cat07SummaryFixture.runtimeProvenance = {
     ],
     sha256: '3'.repeat(64),
   },
-  schemaVersion: 1,
+  schemaVersion: CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
+  serverListener: {
+    address: '::1',
+    family: 'IPv6',
+    kind: 'cat07-loopback-listener',
+    method: 'inherited-node-ipc',
+    port: 8720,
+    schemaVersion: CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
+  },
   sourceTree: { bytes: 1, entryCount: 1, fileCount: 1, sha256: '4'.repeat(64) },
   tools: Object.fromEntries(
     ['browser', 'expoCli', 'git', 'node', 'npmCli'].map((name, index) => [
@@ -302,7 +319,7 @@ const writeCat07CommittedFixture = (summary) => {
     evidenceTracked: true,
     failureCount: 0,
     fileCount: 100,
-    folder: 'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current',
+    folder: 'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current',
     folderExists: true,
     id: 'cat07-shelf-freshness-supported-phone',
     kind: 'cat07-shelf-freshness',
@@ -1242,7 +1259,7 @@ if (git(fixtureRoot, ['status', '--short', '--untracked-files=all'])) {
   throw new Error('Phase 5 governed evidence smoke fixture is not clean after E.');
 }
 const finalHumanManifest = JSON.parse(readFileSync(cat07ManifestFixturePath, 'utf8'));
-finalHumanManifest.generatedAt = '2026-08-06T00:01:30.000Z';
+finalHumanManifest.generatedAt = '2026-08-08T00:01:30.000Z';
 writeFileSync(cat07ManifestFixturePath, canonicalEvidenceJsonBytes(finalHumanManifest));
 writeFileSync(cat07ManifestMarkdownFixturePath, renderHumanE2eManifestMarkdown(finalHumanManifest));
 git(fixtureRoot, [
@@ -2208,7 +2225,7 @@ const cases = [
           'supabase/tests/database/catalog_serving_gate.test.sql',
           'supabase/tests/database/cat07_truthful_freshness.test.sql',
           'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
-          'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
+          'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json',
         ].every((path) =>
           packet.files.some(
             (file) => file.path === path && /^[0-9a-f]{64}$/i.test(file.sha256 ?? ''),

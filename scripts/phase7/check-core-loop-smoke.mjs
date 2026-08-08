@@ -21,6 +21,11 @@ import {
   validateCat07CommittedEvidence,
 } from '../e2e/cat07-committed-evidence.mjs';
 import {
+  CAT07_BROWSER_LAUNCH_SCHEMA_VERSION,
+  CAT07_CHILD_ENVIRONMENT_SCHEMA_VERSION,
+  CAT07_ENVIRONMENT_BOOTSTRAP_SCHEMA_VERSION,
+  CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
+  CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
   buildCat07ChildEnvironment,
   cat07BrowserArguments,
 } from '../e2e/cat07-shelf-freshness-audit.mjs';
@@ -360,7 +365,7 @@ function runCommittedCat07BindingSmoke() {
       { id: 'iphone-430x932', width: 430, height: 932 },
     ];
     const atSecond = (seconds) =>
-      new Date(Date.parse('2026-08-06T00:00:00.000Z') + seconds * 1_000).toISOString();
+      new Date(Date.parse('2026-08-08T00:00:00.000Z') + seconds * 1_000).toISOString();
     const summary = {
       artifacts: Array.from({ length: 99 }, (_, index) => `artifact-${index}`),
       bootstrapResults: viewports.map((viewport, index) => ({
@@ -414,10 +419,17 @@ function runCommittedCat07BindingSmoke() {
     summary.runtimeProvenance = {
       browserLaunch: {
         args: cat07BrowserArguments({ userDataDir: '<fresh-profile>' }),
-        schemaVersion: 1,
+        schemaVersion: CAT07_BROWSER_LAUNCH_SCHEMA_VERSION,
       },
-      childEnvironment: { keys: childEnvironmentKeys, schemaVersion: 1 },
-      environmentBootstrap: { bytes: 1, schemaVersion: 1, sha256: '1'.repeat(64) },
+      childEnvironment: {
+        keys: childEnvironmentKeys,
+        schemaVersion: CAT07_CHILD_ENVIRONMENT_SCHEMA_VERSION,
+      },
+      environmentBootstrap: {
+        bytes: 1,
+        schemaVersion: CAT07_ENVIRONMENT_BOOTSTRAP_SCHEMA_VERSION,
+        sha256: '1'.repeat(64),
+      },
       installMode: 'isolated-npm-ci-offline-ignore-scripts-then-repo-postinstall',
       packageLock: {
         bytes: packageLockBytes.length,
@@ -443,7 +455,15 @@ function runCommittedCat07BindingSmoke() {
         ],
         sha256: '3'.repeat(64),
       },
-      schemaVersion: 1,
+      schemaVersion: CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
+      serverListener: {
+        address: '::1',
+        family: 'IPv6',
+        kind: 'cat07-loopback-listener',
+        method: 'inherited-node-ipc',
+        port: 8720,
+        schemaVersion: CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
+      },
       sourceTree: { bytes: 1, entryCount: 1, fileCount: 1, sha256: '4'.repeat(64) },
       tools: Object.fromEntries(
         ['browser', 'expoCli', 'git', 'node', 'npmCli'].map((name, index) => [
@@ -466,9 +486,9 @@ function runCommittedCat07BindingSmoke() {
       const summaryBytes = canonicalEvidenceJsonBytes(candidate);
       writeFileSync(summaryPath, summaryBytes);
       const manifest = {
-        baselineEvidenceDate: '2026-08-06',
+        baselineEvidenceDate: '2026-08-08',
         blockers: [],
-        evidenceDate: '2026-08-06',
+        evidenceDate: '2026-08-08',
         gateResults: [
           {
             detail: 'Synthetic committed CAT07 binding fixture.',
@@ -490,7 +510,7 @@ function runCommittedCat07BindingSmoke() {
             verdict: 'pass',
           },
         ],
-        generatedAt: '2026-08-06T00:02:00.000Z',
+        generatedAt: '2026-08-08T00:02:00.000Z',
         gitSha: sourceGitSha,
         purpose: 'Synthetic CAT07 committed binding fixture.',
         status: 'pass',
@@ -770,7 +790,7 @@ const cases = [
         'supabase/tests/database/catalog_serving_gate.test.sql',
         'supabase/tests/database/cat07_truthful_freshness.test.sql',
         'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
-        'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current/summary.json',
+        'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json',
         'apps/mobile/src/app/cycle/settings.tsx',
         'apps/mobile/src/app/cycle/week.tsx',
         'apps/mobile/src/app/cycle/why-tonight.tsx',

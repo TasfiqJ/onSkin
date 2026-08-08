@@ -64,7 +64,7 @@ const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 
 export const CAT07_EVIDENCE_RELATIVE_DIR =
-  'test-results/human-e2e/2026-08-06/cat07-shelf-freshness-current';
+  'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current';
 const CAT07_EVIDENCE_DIRECTORY = path.resolve(repoRoot, CAT07_EVIDENCE_RELATIVE_DIR);
 export const CAT07_EVIDENCE_SCHEMA_VERSION = 2;
 const CAT07_GIT_SHA = /^[0-9a-f]{40}$/u;
@@ -77,10 +77,11 @@ const CAT07_MAX_RUNTIME_TREE_ENTRIES = 200_000;
 const CAT07_MAX_SOURCE_FILE_BYTES = 32 * 1024 * 1024;
 const CAT07_MAX_SOURCE_TREE_BYTES = 512 * 1024 * 1024;
 const CAT07_MAX_SOURCE_TREE_ENTRIES = 20_000;
-export const CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION = 1;
+export const CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION = 2;
 export const CAT07_CHILD_ENVIRONMENT_SCHEMA_VERSION = 1;
-export const CAT07_ENVIRONMENT_BOOTSTRAP_SCHEMA_VERSION = 1;
+export const CAT07_ENVIRONMENT_BOOTSTRAP_SCHEMA_VERSION = 2;
 export const CAT07_BROWSER_LAUNCH_SCHEMA_VERSION = 1;
+export const CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION = 1;
 const CAT07_MAX_EXPO_LOG_BYTES = 256 * 1024;
 const CAT07_MAX_DIAGNOSTIC_STRING_BYTES = 128 * 1024;
 export const CAT07_MAX_INPUT_CDP_FRAMES = 20_000;
@@ -1801,6 +1802,30 @@ const CAT07_SCRUBBED_NODE_BOOTSTRAP = [
   'await import(pathToFileURL(target).href);',
 ].join('\n');
 
+const CAT07_ATTESTED_SERVER_BOOTSTRAP = [
+  "import { Server } from 'node:net';",
+  "import { pathToFileURL } from 'node:url';",
+  'const allowed = new Set(JSON.parse(process.argv[1]));',
+  'const expectedPort = Number(process.argv[2]);',
+  'const target = process.argv[3];',
+  'const targetArgs = process.argv.slice(4);',
+  'if (!Number.isSafeInteger(expectedPort) || expectedPort <= 0 || expectedPort > 65535) throw new Error(\'CAT07 attested server port is invalid.\');',
+  'if (typeof process.send !== \'function\') throw new Error(\'CAT07 attested server IPC is unavailable.\');',
+  'for (const key of Object.keys(process.env)) if (!allowed.has(key)) delete process.env[key];',
+  'const originalListen = Server.prototype.listen;',
+  'Server.prototype.listen = function cat07AttestedListen(...args) {',
+  '  this.once(\'listening\', () => {',
+  '    const address = this.address();',
+  '    if (address && typeof address === \'object\' && address.port === expectedPort) {',
+  '      process.send({ address: address.address, family: address.family, kind: \'cat07-loopback-listener\', pid: process.pid, port: address.port, schemaVersion: 1 });',
+  '    }',
+  '  });',
+  '  return Reflect.apply(originalListen, this, args);',
+  '};',
+  'process.argv = [process.execPath, target, ...targetArgs];',
+  'await import(pathToFileURL(target).href);',
+].join('\n');
+
 export function buildCat07ScrubbedNodeArgs(target, targetArgs, environment) {
   assert(path.isAbsolute(target), 'CAT07 scrubbed Node target must be absolute.');
   assert(Array.isArray(targetArgs), 'CAT07 scrubbed Node target arguments must be an array.');
@@ -1814,8 +1839,29 @@ export function buildCat07ScrubbedNodeArgs(target, targetArgs, environment) {
   ];
 }
 
+export function buildCat07AttestedServerNodeArgs(target, targetArgs, environment, port) {
+  assert(path.isAbsolute(target), 'CAT07 attested Node target must be absolute.');
+  assert(Array.isArray(targetArgs), 'CAT07 attested Node target arguments must be an array.');
+  assert(
+    Number.isSafeInteger(port) && port > 0 && port <= 65_535,
+    'CAT07 attested Node port is invalid.',
+  );
+  return [
+    '--input-type=module',
+    '--eval',
+    CAT07_ATTESTED_SERVER_BOOTSTRAP,
+    JSON.stringify(Object.keys(environment).sort(comparePaths)),
+    String(port),
+    target,
+    ...targetArgs,
+  ];
+}
+
 function cat07EnvironmentBootstrapRecord() {
-  const bytes = Buffer.from(CAT07_SCRUBBED_NODE_BOOTSTRAP, 'utf8');
+  const bytes = Buffer.from(
+    `${CAT07_SCRUBBED_NODE_BOOTSTRAP}\n\0\n${CAT07_ATTESTED_SERVER_BOOTSTRAP}`,
+    'utf8',
+  );
   return {
     bytes: bytes.length,
     schemaVersion: CAT07_ENVIRONMENT_BOOTSTRAP_SCHEMA_VERSION,
@@ -2917,6 +2963,7 @@ export function createCat07ImmutableSourceSnapshot(
       sourceTree: extracted.manifest,
       runtimeTree,
       schemaVersion: CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
+      serverListener: null,
       tools: {
         expoCli: cat07ToolRecordFromBinding(
           toolBindings.expoCli,
@@ -3034,7 +3081,12 @@ export function startCat07ImmutableExpoServer({
     'CAT07 Expo CLI must be inside the immutable source snapshot.',
   );
   const expoArgs = ['start', '--web', '--clear', '--port', String(appPort), '--host', 'localhost'];
-  const args = buildCat07ScrubbedNodeArgs(expoCliPath, expoArgs, childEnvironment);
+  const args = buildCat07AttestedServerNodeArgs(
+    expoCliPath,
+    expoArgs,
+    childEnvironment,
+    appPort,
+  );
   const logPath = path.join(evidenceDir, `expo-${safeArtifactId(CAT07_FIXTURE_GROUP.id)}.log`);
   writeCat07EvidenceArtifact(
     evidenceDir,
@@ -3044,7 +3096,7 @@ export function startCat07ImmutableExpoServer({
   const child = launch(nodeExecutable, args, {
     cwd: path.join(snapshotRoot, 'apps', 'mobile'),
     env: childEnvironment,
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
     windowsHide: true,
   });
   assertCat07ExecutableBindingStable(boundNode);
@@ -3060,6 +3112,21 @@ export function startCat07ImmutableExpoServer({
     signal: null,
   };
   Object.defineProperty(child, 'cat07LogState', { value: logState });
+  const listenerState = { invalid: false, records: [] };
+  Object.defineProperty(child, 'cat07ListenerState', { value: listenerState });
+  child.on('message', (message) => {
+    try {
+      listenerState.records.push(
+        parseCat07LoopbackListenerAttestation(message, {
+          expectedPid: child.pid,
+          expectedPort: appPort,
+        }),
+      );
+    } catch {
+      listenerState.invalid = true;
+      listenerState.records.length = 0;
+    }
+  });
   child.on('error', () => {
     logState.launchFailure = true;
     logState.rawChunks.length = 0;
@@ -3158,92 +3225,77 @@ export function parseCat07DevToolsActivePort(bytes) {
   return { browserPath: match[2], port };
 }
 
-export function parseCat07WindowsTcpListeners(output, port) {
+export function parseCat07LoopbackListenerAttestation(
+  value,
+  { expectedPid, expectedPort },
+) {
   assert(
-    Number.isSafeInteger(port) && port > 0 && port <= 65_535,
-    'CAT07 listener port is invalid.',
+    cat07PlainRecord(value) &&
+      canonicalEvidenceJsonBytes(Object.keys(value).sort(comparePaths)).equals(
+        canonicalEvidenceJsonBytes(
+          ['address', 'family', 'kind', 'pid', 'port', 'schemaVersion'].sort(comparePaths),
+        ),
+      ),
+    'CAT07 listener attestation does not use the exact reviewed shape.',
   );
   assert(
-    typeof output === 'string' && Buffer.byteLength(output, 'utf8') <= 2 * 1024 * 1024,
-    'CAT07 listener inventory exceeds its byte ceiling.',
+    value.schemaVersion === CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION &&
+      value.kind === 'cat07-loopback-listener',
+    'CAT07 listener attestation identity is invalid.',
   );
-  const listeners = [];
-  for (const line of output.split(/\r?\n/u)) {
-    const fields = line.trim().split(/\s+/u);
-    if (fields.length !== 5 || fields[0].toUpperCase() !== 'TCP' || fields[3] !== 'LISTENING') {
-      continue;
-    }
-    const portMatch = /:(\d{1,5})$/u.exec(fields[1]);
-    if (!portMatch || Number(portMatch[1]) !== port) continue;
-    const address = fields[1].slice(0, -(portMatch[1].length + 1)).toLowerCase();
-    assert(
-      address === '127.0.0.1' || address === '[::1]' || address === '::1',
-      'CAT07 listener escaped the loopback interface.',
-    );
-    const pid = Number(fields[4]);
-    assert(Number.isSafeInteger(pid) && pid > 0, 'CAT07 listener PID is invalid.');
-    listeners.push({ address, pid });
-  }
-  assert(listeners.length > 0, 'CAT07 could not bind the reviewed loopback listener.');
-  return listeners;
+  assert(
+    Number.isSafeInteger(expectedPid) && expectedPid > 0 && value.pid === expectedPid,
+    'CAT07 listener attestation is not owned by the launched child process.',
+  );
+  assert(
+    Number.isSafeInteger(expectedPort) &&
+      expectedPort > 0 &&
+      expectedPort <= 65_535 &&
+      value.port === expectedPort,
+    'CAT07 listener attestation port is invalid.',
+  );
+  assert(
+    (value.address === '127.0.0.1' && value.family === 'IPv4') ||
+      (value.address === '::1' && value.family === 'IPv6'),
+    'CAT07 listener attestation escaped the loopback interface.',
+  );
+  return {
+    address: value.address,
+    family: value.family,
+    kind: value.kind,
+    pid: value.pid,
+    port: value.port,
+    schemaVersion: value.schemaVersion,
+  };
 }
 
-export function assertCat07ListenerOwnedByChild({
+export async function waitForCat07LoopbackListenerAttestation({
   child,
-  execute = execFileSync,
-  platform = process.platform,
   port,
+  timeoutMs = 120_000,
 }) {
   assert(
     Number.isSafeInteger(child?.pid) && child.pid > 0,
     'CAT07 listener owner process is unavailable.',
   );
-  let ownerPids;
-  if (platform === 'win32') {
-    const systemRoot = path.join(path.parse(path.resolve(process.execPath)).root, 'Windows');
-    const netstatPath = path.join(systemRoot, 'System32', 'netstat.exe');
-    const binding = cat07ExecutableBinding(netstatPath);
-    const output = execute(netstatPath, ['-ano', '-p', 'tcp'], {
-      encoding: 'utf8',
-      env: {
-        PATH: path.join(systemRoot, 'System32'),
-        SystemRoot: systemRoot,
-        TEMP: path.resolve(tmpdir()),
-        TMP: path.resolve(tmpdir()),
-        WINDIR: systemRoot,
-      },
-      maxBuffer: 2 * 1024 * 1024,
-      stdio: ['ignore', 'pipe', 'pipe'],
-      timeout: 30_000,
-      windowsHide: true,
-    });
-    assertCat07ExecutableBindingStable(binding);
-    ownerPids = parseCat07WindowsTcpListeners(output, port).map(({ pid }) => pid);
-  } else {
-    const lsofPath = ['/usr/sbin/lsof', '/usr/bin/lsof']
-      .map((candidate) => cat07CanonicalRegularExecutable(candidate))
-      .find(Boolean);
-    assert(lsofPath, 'CAT07 requires a fixed trusted lsof executable to bind its listener PID.');
-    const binding = cat07ExecutableBinding(lsofPath);
-    const output = execute(lsofPath, ['-nP', '-a', `-iTCP:${port}`, '-sTCP:LISTEN', '-Fp'], {
-      encoding: 'utf8',
-      env: { LANG: 'C', LC_ALL: 'C', PATH: path.dirname(lsofPath) },
-      maxBuffer: 256 * 1024,
-      stdio: ['ignore', 'pipe', 'pipe'],
-      timeout: 30_000,
-    });
-    assertCat07ExecutableBindingStable(binding);
-    ownerPids = output
-      .split(/\r?\n/u)
-      .filter((line) => /^p[1-9][0-9]*$/u.test(line))
-      .map((line) => Number(line.slice(1)));
-    assert(ownerPids.length > 0, 'CAT07 could not bind the reviewed loopback listener.');
-  }
   assert(
-    ownerPids.every((pid) => pid === child.pid),
-    'CAT07 listener is not owned exclusively by its launched child process.',
+    Number.isSafeInteger(timeoutMs) && timeoutMs > 0 && timeoutMs <= 120_000,
+    'CAT07 listener attestation timeout is invalid.',
   );
-  return true;
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    assert(!child.cat07ListenerState?.invalid, 'CAT07 listener attestation channel is invalid.');
+    assert(!child.cat07LogState?.launchFailure, 'CAT07 Expo child failed to launch.');
+    assert(!child.cat07LogState?.exited, 'CAT07 Expo child exited before listener attestation.');
+    if (child.cat07ListenerState?.records.length > 0) break;
+    await delay(25);
+  }
+  const records = child.cat07ListenerState?.records ?? [];
+  assert(records.length === 1, 'CAT07 did not receive exactly one loopback listener attestation.');
+  return parseCat07LoopbackListenerAttestation(records[0], {
+    expectedPid: child.pid,
+    expectedPort: port,
+  });
 }
 
 export async function waitForCat07DevToolsActivePort({
@@ -4073,6 +4125,18 @@ export async function runCat07ShelfFreshnessAudit({
       nodeBinding: immutableSource.nodeBinding,
       snapshotRoot: immutableSource.root,
     });
+    const serverListener = await waitForCat07LoopbackListenerAttestation({
+      child: server,
+      port: appPort,
+    });
+    immutableSource.runtimeProvenance.serverListener = {
+      address: serverListener.address,
+      family: serverListener.family,
+      kind: serverListener.kind,
+      method: 'inherited-node-ipc',
+      port: serverListener.port,
+      schemaVersion: serverListener.schemaVersion,
+    };
     const startedAt = Date.now();
     let serverReady = false;
     while (Date.now() - startedAt < 120_000 && !serverReady) {
@@ -4091,7 +4155,6 @@ export async function runCat07ShelfFreshnessAudit({
     }
     assert(serverReady, `CAT07 Expo server did not become ready at ${baseUrl}.`);
     assert(!server.cat07LogState.exited, 'CAT07 Expo child exited after server readiness.');
-    assertCat07ListenerOwnedByChild({ child: server, port: appPort });
     browser = startCat07Browser({
       browserPath,
       environment: immutableSource.childEnvironment,
@@ -4104,7 +4167,6 @@ export async function runCat07ShelfFreshnessAudit({
       userDataDir,
     });
     const debugPort = devToolsBinding.port;
-    assertCat07ListenerOwnedByChild({ child: browser, port: debugPort });
     client = await connectToInstrumentedCat07Page(debugPort, baseUrl, {
       runId,
       sourceMonitor,
