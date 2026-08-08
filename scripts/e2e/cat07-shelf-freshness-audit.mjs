@@ -4145,12 +4145,6 @@ export async function runCat07ShelfFreshnessAudit({
     assertCat07DirectoryGuardStable(systemTempGuard);
     userDataGuard = cat07CreateDirectoryGuard(userDataDir, systemTempRoot);
     immutableSource = createCat07ImmutableSourceSnapshot(sourceGitSha);
-    immutableSource.runtimeProvenance.browserLaunch = {
-      args: cat07BrowserArguments({ userDataDir: '<fresh-profile>' }).map((argument) =>
-        argument.startsWith('--user-data-dir=') ? '--user-data-dir=<fresh-profile>' : argument,
-      ),
-      schemaVersion: CAT07_BROWSER_LAUNCH_SCHEMA_VERSION,
-    };
     summary.runtimeProvenance = immutableSource.runtimeProvenance;
     sourceMonitor = createCat07SourceMutationMonitor({ rootPath: immutableSource.root });
     server = startCat07ImmutableExpoServer({
@@ -4192,7 +4186,13 @@ export async function runCat07ShelfFreshnessAudit({
     }
     assert(serverReady, `CAT07 Expo server did not become ready at ${baseUrl}.`);
     assert(!server.cat07LogState.exited, 'CAT07 Expo child exited after server readiness.');
-    const debugPort = await findAvailablePort(0);
+    const debugPort = await findAvailablePort(9222);
+    immutableSource.runtimeProvenance.browserLaunch = {
+      args: cat07BrowserArguments({ debugPort, userDataDir: '<fresh-profile>' }).map((argument) =>
+        argument.startsWith('--user-data-dir=') ? '--user-data-dir=<fresh-profile>' : argument,
+      ),
+      schemaVersion: CAT07_BROWSER_LAUNCH_SCHEMA_VERSION,
+    };
     browser = startCat07Browser({
       browserPath,
       debugPort,

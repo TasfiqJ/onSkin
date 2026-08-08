@@ -469,6 +469,8 @@ test('CAT07 audit inherits the stable local-only browser and consent harness', (
   assert.match(runnerSource, /classifyCat07ProjectedBrowserFailures/u);
   assert.match(runnerSource, /assertPacketHygiene\(evidenceDir, summary\.artifacts, summary\)/u);
   assert.match(runnerSource, /createCat07ImmutableSourceSnapshot\(sourceGitSha\)/u);
+  assert.match(runnerSource, /findAvailablePort\(9222\)/u);
+  assert.doesNotMatch(runnerSource, /findAvailablePort\(0\)/u);
   assert.match(runnerSource, /snapshotRoot: immutableSource\.root/u);
   assert.match(runnerSource, /'cat-file', '--batch'/u);
   assert.doesNotMatch(runnerSource, /'archive'|execFileSync\('tar'/u);
