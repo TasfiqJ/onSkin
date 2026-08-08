@@ -51,7 +51,10 @@ function cleanup(root) {
   rmSync(absolute, { recursive: true, force: true });
 }
 
-function createFixture(t, { omitNewTarget = false } = {}) {
+function createFixture(
+  t,
+  { omitNewTarget = false, installDirectory = 'node_modules/expo-widgets' } = {},
+) {
   const root = mkdtempSync(join(tmpdir(), 'routinekind-expo-widgets-patch-'));
   t.after(() => cleanup(root));
   writeJson(join(root, 'apps/mobile/package.json'), {
@@ -63,14 +66,14 @@ function createFixture(t, { omitNewTarget = false } = {}) {
       'apps/mobile': {
         dependencies: { [EXPO_WIDGETS_PACKAGE_NAME]: EXPO_WIDGETS_PACKAGE_VERSION },
       },
-      'node_modules/expo-widgets': {
+      [installDirectory]: {
         version: EXPO_WIDGETS_PACKAGE_VERSION,
         resolved: EXPO_WIDGETS_LOCK_RESOLVED,
         integrity: EXPO_WIDGETS_LOCK_INTEGRITY,
       },
     },
   });
-  writeJson(join(root, 'node_modules/expo-widgets/package.json'), {
+  writeJson(join(root, installDirectory, 'package.json'), {
     name: EXPO_WIDGETS_PACKAGE_NAME,
     version: EXPO_WIDGETS_PACKAGE_VERSION,
   });
@@ -82,7 +85,11 @@ function createFixture(t, { omitNewTarget = false } = {}) {
     copyFileSync(payloadSource, fixturePayload);
 
     if (omitNewTarget && descriptor.original === null) continue;
-    const target = join(root, ...descriptor.target.split('/'));
+    const target = join(
+      root,
+      installDirectory,
+      ...descriptor.target.slice('node_modules/expo-widgets/'.length).split('/'),
+    );
     mkdirSync(dirname(target), { recursive: true });
     copyFileSync(payloadSource, target);
   }
@@ -142,6 +149,22 @@ test('check mode accepts a complete reviewed patch without writing', (t) => {
     files: 11,
   });
   assert.deepEqual(readFileSync(target), before);
+});
+
+test('accepts one exact workspace-nested reviewed installation', (t) => {
+  const installDirectory = 'apps/mobile/node_modules/expo-widgets';
+  const root = createFixture(t, { installDirectory });
+  const descriptor = EXPO_WIDGETS_PATCH_TARGETS[0];
+  const target = join(
+    root,
+    installDirectory,
+    ...descriptor.target.slice('node_modules/expo-widgets/'.length).split('/'),
+  );
+  assert.deepEqual(patchExpoWidgetsLifecycle({ root, check: true }), {
+    status: 'checked',
+    files: 11,
+  });
+  assert.equal(hash(readFileSync(target)), descriptor.patched);
 });
 
 test('idempotently completes a reviewed partial install by adding the missing native store', (t) => {

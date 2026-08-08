@@ -26,6 +26,11 @@ export const EXPO_WIDGETS_LOCK_INTEGRITY =
 
 const SCRIPT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const PAYLOAD_DIRECTORY = 'scripts/phase5/expo-widgets-56.0.23';
+const EXPO_WIDGETS_TARGET_PREFIX = 'node_modules/expo-widgets/';
+const REVIEWED_INSTALL_DIRECTORIES = new Set([
+  'node_modules/expo-widgets',
+  'apps/mobile/node_modules/expo-widgets',
+]);
 const MAX_JSON_BYTES = 32 * 1024 * 1024;
 const MAX_SOURCE_BYTES = 256 * 1024;
 
@@ -259,14 +264,14 @@ function validateProvenance(root) {
   ) {
     fail('LOCK_WORKSPACE_DEPENDENCY', 'The lockfile workspace spec is not exact.');
   }
-  const paths = Object.keys(lock.packages).filter(
-    (value) =>
-      value === 'node_modules/expo-widgets' || value.endsWith('/node_modules/expo-widgets'),
+  const paths = Object.keys(lock.packages).filter((value) =>
+    REVIEWED_INSTALL_DIRECTORIES.has(value),
   );
-  if (paths.length !== 1 || paths[0] !== 'node_modules/expo-widgets') {
+  if (paths.length !== 1) {
     fail('LOCK_ENTRY_PATH', 'The reviewed expo-widgets lock entry must be unique.');
   }
-  const entry = lock.packages['node_modules/expo-widgets'];
+  const installDirectory = paths[0];
+  const entry = lock.packages[installDirectory];
   if (!isRecord(entry) || entry.version !== EXPO_WIDGETS_PACKAGE_VERSION) {
     fail('LOCK_VERSION', 'The expo-widgets lock version is not reviewed.');
   }
@@ -280,35 +285,39 @@ function validateProvenance(root) {
     fail('LOCK_FLAGS', 'The expo-widgets lock placement has unreviewed flags.');
   }
 
-  const installed = readJson(root, 'node_modules/expo-widgets/package.json');
+  const installed = readJson(root, `${installDirectory}/package.json`);
   if (
     installed.name !== EXPO_WIDGETS_PACKAGE_NAME ||
     installed.version !== EXPO_WIDGETS_PACKAGE_VERSION
   ) {
     fail('PACKAGE_IDENTITY', 'Installed expo-widgets does not match the reviewed package.');
   }
+  return { installDirectory };
 }
 
 function preflight(root) {
-  validateProvenance(root);
+  const { installDirectory } = validateProvenance(root);
   return EXPO_WIDGETS_PATCH_TARGETS.map((descriptor) => {
     const payloadRelative = `${PAYLOAD_DIRECTORY}/${descriptor.payload}`;
     const payload = readBoundedFile(root, payloadRelative, MAX_SOURCE_BYTES);
     if (hash(payload.bytes) !== descriptor.patched) {
       fail('PAYLOAD_HASH', `Reviewed payload drifted: ${payloadRelative}.`);
     }
+    const targetRelative = `${installDirectory}/${descriptor.target.slice(
+      EXPO_WIDGETS_TARGET_PREFIX.length,
+    )}`;
     const target = readBoundedFile(
       root,
-      descriptor.target,
+      targetRelative,
       MAX_SOURCE_BYTES,
       descriptor.original === null,
     );
     const targetHash = target.bytes === null ? null : hash(target.bytes);
     const state = classifyExpoWidgetsPatchTarget(descriptor, targetHash);
     if (!state) {
-      fail('TARGET_HASH', `Target is neither reviewed original nor patched: ${descriptor.target}.`);
+      fail('TARGET_HASH', `Target is neither reviewed original nor patched: ${targetRelative}.`);
     }
-    return { descriptor, payload, target, state, targetHash };
+    return { descriptor, payload, target, targetRelative, state, targetHash };
   });
 }
 
@@ -391,13 +400,13 @@ export function patchExpoWidgetsLifecycle({ root = SCRIPT_ROOT, check = false } 
     for (const { item } of staged) {
       const current = readBoundedFile(
         checked,
-        item.descriptor.target,
+        item.targetRelative,
         MAX_SOURCE_BYTES,
         item.descriptor.original === null,
       );
       const currentHash = current.bytes === null ? null : hash(current.bytes);
       if (currentHash !== item.targetHash) {
-        fail('PATH_RACE', `Patch target changed after preflight: ${item.descriptor.target}.`);
+        fail('PATH_RACE', `Patch target changed after preflight: ${item.targetRelative}.`);
       }
     }
     for (const entry of staged) {
