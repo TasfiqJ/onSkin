@@ -330,17 +330,22 @@ block(
     /resetRevenueCatIdentity\(\)/.test(localPrivateDataSource),
   'Local private-data cleanup must reset PostHog and RevenueCat client identities.',
 );
-block(
-  errors,
-  /result:\s*'tmpfile'/.test(shareCardSource),
-  'Share-card export must keep using an OS tmpfile capture result.',
-);
-block(
-  errors,
+const shareCardIsLiteralZeroClosed =
+  /export async function shareConflictCard\([^)]*\): Promise<false>\s*\{\s*return false;\s*\}/.test(
+    shareCardSource,
+  ) &&
+  !/(?:captureRef|expo-file-system|expo-sharing|FileSystem\.|Sharing\.|fetch\s*\(|shareAsync|deleteAsync)/.test(
+    shareCardSource,
+  );
+const shareCardUsesSafeTmpfileLifecycle =
+  /result:\s*'tmpfile'/.test(shareCardSource) &&
   /try\s*\{[\s\S]*Sharing\.isAvailableAsync\(\)[\s\S]*Sharing\.shareAsync\(uri[\s\S]*return true;[\s\S]*\}\s*finally\s*\{[\s\S]*FileSystem\.deleteAsync\(uri,\s*\{\s*idempotent:\s*true\s*\}\)\.catch\(\(\)\s*=>\s*\{\}\)/.test(
     shareCardSource,
-  ),
-  'Share-card export must delete its generated tmpfile after the share attempt.',
+  );
+block(
+  errors,
+  shareCardIsLiteralZeroClosed || shareCardUsesSafeTmpfileLifecycle,
+  'Share-card export must remain literal-zero and side-effect free until admitted, or use an OS tmpfile result with cleanup when it is admitted.',
 );
 block(
   errors,
