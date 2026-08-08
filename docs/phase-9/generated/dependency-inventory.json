@@ -1,15 +1,350 @@
 {
-  "generatedAt": "2026-08-04T21:57:13.853Z",
+  "generatedAt": "2026-08-08T18:44:10.863Z",
   "auditProvenance": {
-    "requested": false,
-    "mode": "not_run",
-    "completed": false
+    "requested": true,
+    "mode": "registry",
+    "completed": true
   },
   "packageManager": null,
   "lockfileVersion": 3,
   "packageCount": 1102,
-  "vulnerabilities": null,
-  "auditFindings": [],
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 20,
+    "critical": 0,
+    "total": 20
+  },
+  "auditFindings": [
+    {
+      "name": "@expo/cli",
+      "severity": "high",
+      "isDirect": false,
+      "range": ">=0.25.0-canary-20250612-338ef55",
+      "via": [
+        "@expo/metro",
+        "@expo/metro-config"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/expo/node_modules/@expo/cli"
+      ],
+      "fixAvailable": "available"
+    },
+    {
+      "name": "@expo/metro",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "metro",
+        "metro-config",
+        "metro-transform-worker"
+      ],
+      "effects": [
+        "@expo/cli",
+        "@expo/metro-config",
+        "expo"
+      ],
+      "nodes": [
+        "node_modules/@expo/metro"
+      ],
+      "fixAvailable": "expo@53.0.27 (breaking)"
+    },
+    {
+      "name": "@expo/metro-config",
+      "severity": "high",
+      "isDirect": false,
+      "range": ">=0.21.0-canary-20250630-547cd82",
+      "via": [
+        "@expo/metro"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "nodes": [
+        "node_modules/@expo/metro-config"
+      ],
+      "fixAvailable": "expo@53.0.27 (breaking)"
+    },
+    {
+      "name": "@react-native/community-cli-plugin",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "metro",
+        "metro-config"
+      ],
+      "effects": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@react-native/community-cli-plugin"
+      ],
+      "fixAvailable": "react-native@0.72.17 (breaking)"
+    },
+    {
+      "name": "@react-native/virtualized-lists",
+      "severity": "high",
+      "isDirect": false,
+      "range": ">=0.85.0-nightly-20260108-1236b6be4",
+      "via": [
+        "react-native"
+      ],
+      "effects": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@react-native/virtualized-lists"
+      ],
+      "fixAvailable": "react-native@0.72.17 (breaking)"
+    },
+    {
+      "name": "brace-expansion",
+      "severity": "high",
+      "isDirect": false,
+      "range": "<=1.1.17 || 4.0.0 - 5.0.8",
+      "via": [
+        "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash (<1.1.17)",
+        "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash (>=4.0.0 <5.0.8)",
+        "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (>=4.0.0 <5.0.9)",
+        "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (<1.1.18)"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/@expo/fingerprint/node_modules/brace-expansion",
+        "node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion",
+        "node_modules/brace-expansion",
+        "node_modules/glob/node_modules/brace-expansion"
+      ],
+      "fixAvailable": "available"
+    },
+    {
+      "name": "expo",
+      "severity": "high",
+      "isDirect": true,
+      "range": "52.0.0-canary-20240625-2333e70 - 52.0.0-canary-20241018-f71b3e0 || >=54.0.0-canary-20250611-f0afe80",
+      "via": [
+        "@expo/cli",
+        "@expo/metro",
+        "@expo/metro-config"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/expo"
+      ],
+      "fixAvailable": "expo@53.0.27 (breaking)"
+    },
+    {
+      "name": "image-size",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "image-size: ICNS parser allows denial of service through an infinite loop (<=2.0.2)",
+        "image-size: JXL and HEIF parsers allow denial of service through infinite loops (<=2.0.2)"
+      ],
+      "effects": [
+        "metro"
+      ],
+      "nodes": [
+        "node_modules/image-size"
+      ],
+      "fixAvailable": "expo@53.0.27 (breaking)"
+    },
+    {
+      "name": "js-yaml",
+      "severity": "high",
+      "isDirect": false,
+      "range": "4.0.0 - 4.3.0",
+      "via": [
+        "JS-YAML: Quadratic CPU consumption in !!omap resolution (3.x and 4.x) — CVE-2026-59870 fix not backported (>=4.0.0 <4.3.1)"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/js-yaml"
+      ],
+      "fixAvailable": "available"
+    },
+    {
+      "name": "metro",
+      "severity": "high",
+      "isDirect": false,
+      "range": ">=0.22.1",
+      "via": [
+        "image-size",
+        "metro-config",
+        "metro-transform-worker"
+      ],
+      "effects": [
+        "@expo/metro",
+        "@react-native/community-cli-plugin",
+        "metro-config",
+        "metro-transform-worker"
+      ],
+      "nodes": [
+        "node_modules/metro"
+      ],
+      "fixAvailable": "expo@53.0.27 (breaking)"
+    },
+    {
+      "name": "metro-config",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "metro"
+      ],
+      "effects": [
+        "@react-native/community-cli-plugin",
+        "metro"
+      ],
+      "nodes": [
+        "node_modules/metro-config"
+      ],
+      "fixAvailable": "expo@53.0.27 (breaking)"
+    },
+    {
+      "name": "metro-transform-worker",
+      "severity": "high",
+      "isDirect": false,
+      "range": ">=0.60.0",
+      "via": [
+        "metro"
+      ],
+      "effects": [
+        "metro"
+      ],
+      "nodes": [
+        "node_modules/metro-transform-worker"
+      ],
+      "fixAvailable": "expo@53.0.27 (breaking)"
+    },
+    {
+      "name": "nanoid",
+      "severity": "high",
+      "isDirect": false,
+      "range": "<=3.3.16",
+      "via": [
+        "nanoid: non-secure generators can loop indefinitely with negative size (<3.3.16)",
+        "nanoid: custom generators can loop indefinitely when size is zero (<3.3.17)"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/nanoid"
+      ],
+      "fixAvailable": "available"
+    },
+    {
+      "name": "postcss",
+      "severity": "high",
+      "isDirect": false,
+      "range": "<=8.5.22",
+      "via": [
+        "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure (<=8.5.17)",
+        "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset (<=8.5.22)"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/postcss"
+      ],
+      "fixAvailable": "available"
+    },
+    {
+      "name": "react-native",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=0.73.0-nightly-20230506-1af868c52",
+      "via": [
+        "@react-native/community-cli-plugin",
+        "@react-native/virtualized-lists"
+      ],
+      "effects": [
+        "@react-native/virtualized-lists",
+        "react-native-purchases",
+        "react-native-reanimated",
+        "react-native-screens",
+        "react-native-view-shot",
+        "react-native-worklets"
+      ],
+      "nodes": [
+        "node_modules/react-native"
+      ],
+      "fixAvailable": "react-native@0.72.17 (breaking)"
+    },
+    {
+      "name": "react-native-purchases",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=9.0.0",
+      "via": [
+        "react-native"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/react-native-purchases"
+      ],
+      "fixAvailable": "react-native-purchases@8.12.0 (breaking)"
+    },
+    {
+      "name": "react-native-reanimated",
+      "severity": "high",
+      "isDirect": true,
+      "range": "4.1.7 || >=4.2.3",
+      "via": [
+        "react-native"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/react-native-reanimated"
+      ],
+      "fixAvailable": "react-native-reanimated@4.2.2 (breaking)"
+    },
+    {
+      "name": "react-native-screens",
+      "severity": "high",
+      "isDirect": true,
+      "range": "4.25.0-beta.1 - 4.26.0 || 4.27.0-nightly-20260710-f0a3a819f - 4.27.0-nightly-20260807-ba6bd9e22",
+      "via": [
+        "react-native"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/react-native-screens"
+      ],
+      "fixAvailable": "react-native-screens@4.27.0 (non-breaking)"
+    },
+    {
+      "name": "react-native-view-shot",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=5.0.0-alpha.0",
+      "via": [
+        "react-native"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/react-native-view-shot"
+      ],
+      "fixAvailable": "react-native-view-shot@4.0.3 (breaking)"
+    },
+    {
+      "name": "react-native-worklets",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=0.8.0-bundle-mode-preview-1",
+      "via": [
+        "react-native"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/react-native-worklets"
+      ],
+      "fixAvailable": "react-native-worklets@0.7.4 (breaking)"
+    }
+  ],
   "installScriptPackages": [
     {
       "path": "node_modules/@sentry/cli",
@@ -7761,9 +8096,10 @@
       "resolved": null
     }
   ],
-  "blockers": [],
+  "blockers": [
+    "npm audit found 20 high vulnerabilities."
+  ],
   "warnings": [
-    "npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.",
     "Missing registry-backed dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true after reviewing the exact RC scanner artifacts."
   ]
 }

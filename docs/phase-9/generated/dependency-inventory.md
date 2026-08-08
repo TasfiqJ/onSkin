@@ -1,18 +1,39 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-08-04T21:57:13.853Z
-Audit mode: not_run
-Audit completed: no
+Generated: 2026-08-08T18:44:10.863Z
+Audit mode: registry
+Audit completed: yes
 Package count: 1102
 Lockfile version: 3
 
 ## Vulnerabilities
 
-- npm audit not run in this invocation.
+`{"info":0,"low":0,"moderate":0,"high":20,"critical":0,"total":20}`
 
 ## Audit Findings
 
-- No npm audit findings recorded.
+| Package | Severity | Direct | Via | Fix available | Nodes |
+| --- | --- | --- | --- | --- | --- |
+| `@expo/cli` | high | no | @expo/metro, @expo/metro-config | available | node_modules/expo/node_modules/@expo/cli |
+| `@expo/metro` | high | no | metro, metro-config, metro-transform-worker | expo@53.0.27 (breaking) | node_modules/@expo/metro |
+| `@expo/metro-config` | high | no | @expo/metro | expo@53.0.27 (breaking) | node_modules/@expo/metro-config |
+| `@react-native/community-cli-plugin` | high | no | metro, metro-config | react-native@0.72.17 (breaking) | node_modules/@react-native/community-cli-plugin |
+| `@react-native/virtualized-lists` | high | no | react-native | react-native@0.72.17 (breaking) | node_modules/@react-native/virtualized-lists |
+| `brace-expansion` | high | no | brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash (<1.1.17), brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash (>=4.0.0 <5.0.8), brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (>=4.0.0 <5.0.9), brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (<1.1.18) | available | node_modules/@expo/fingerprint/node_modules/brace-expansion, node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion, node_modules/brace-expansion, node_modules/glob/node_modules/brace-expansion |
+| `expo` | high | yes | @expo/cli, @expo/metro, @expo/metro-config | expo@53.0.27 (breaking) | node_modules/expo |
+| `image-size` | high | no | image-size: ICNS parser allows denial of service through an infinite loop (<=2.0.2), image-size: JXL and HEIF parsers allow denial of service through infinite loops (<=2.0.2) | expo@53.0.27 (breaking) | node_modules/image-size |
+| `js-yaml` | high | no | JS-YAML: Quadratic CPU consumption in !!omap resolution (3.x and 4.x) — CVE-2026-59870 fix not backported (>=4.0.0 <4.3.1) | available | node_modules/js-yaml |
+| `metro` | high | no | image-size, metro-config, metro-transform-worker | expo@53.0.27 (breaking) | node_modules/metro |
+| `metro-config` | high | no | metro | expo@53.0.27 (breaking) | node_modules/metro-config |
+| `metro-transform-worker` | high | no | metro | expo@53.0.27 (breaking) | node_modules/metro-transform-worker |
+| `nanoid` | high | no | nanoid: non-secure generators can loop indefinitely with negative size (<3.3.16), nanoid: custom generators can loop indefinitely when size is zero (<3.3.17) | available | node_modules/nanoid |
+| `postcss` | high | no | PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure (<=8.5.17), PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset (<=8.5.22) | available | node_modules/postcss |
+| `react-native` | high | yes | @react-native/community-cli-plugin, @react-native/virtualized-lists | react-native@0.72.17 (breaking) | node_modules/react-native |
+| `react-native-purchases` | high | yes | react-native | react-native-purchases@8.12.0 (breaking) | node_modules/react-native-purchases |
+| `react-native-reanimated` | high | yes | react-native | react-native-reanimated@4.2.2 (breaking) | node_modules/react-native-reanimated |
+| `react-native-screens` | high | yes | react-native | react-native-screens@4.27.0 (non-breaking) | node_modules/react-native-screens |
+| `react-native-view-shot` | high | yes | react-native | react-native-view-shot@4.0.3 (breaking) | node_modules/react-native-view-shot |
+| `react-native-worklets` | high | yes | react-native | react-native-worklets@0.7.4 (breaking) | node_modules/react-native-worklets |
 
 ## Install Scripts
 
@@ -24,11 +45,10 @@ Lockfile version: 3
 
 ## Blockers
 
-- None.
+- npm audit found 20 high vulnerabilities.
 
 ## Warnings
 
-- npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.
 - Missing registry-backed dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true after reviewing the exact RC scanner artifacts.
 
 ## Packages
