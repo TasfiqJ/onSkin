@@ -949,8 +949,17 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
     'node_modules',
     'node_modules/react-native-css-interop',
   ]);
-  const allowed = (relativePath) => {
+  const normalizeWatchedPath = (filename) => {
+    const raw = String(filename ?? '');
+    const relativePath = path.isAbsolute(raw) ? path.relative(rootPath, raw) : raw;
     const normalized = normalizeRepoPath(relativePath);
+    return normalized === '..' || normalized.startsWith('../') || normalized.length === 0
+      ? null
+      : normalized;
+  };
+  const allowed = (filename) => {
+    const normalized = normalizeWatchedPath(filename);
+    if (normalized == null) return false;
     return (
       normalized === '.git' ||
       normalized.startsWith('.git/') ||
@@ -972,8 +981,9 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
       mutationObserved = true;
       if (mutationDiagnostic == null) {
         try {
-          const normalized = normalizeRepoPath(String(filename ?? ''));
-          mutationDiagnostic = /^[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$/u.test(normalized)
+          const normalized = normalizeWatchedPath(filename);
+          mutationDiagnostic =
+            normalized != null && /^[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$/u.test(normalized)
             ? normalized
             : 'untrusted-path';
         } catch {
