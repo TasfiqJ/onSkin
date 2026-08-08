@@ -476,11 +476,8 @@ test('CAT07 audit inherits the stable local-only browser and consent harness', (
   assert.match(cat04RunnerSource, /EXPO_PUBLIC_SUPABASE_URL/u);
   const browserArgs = cat07BrowserArguments({ debugPort: 9820, userDataDir: '<fresh-profile>' });
   assert.ok(browserArgs.includes('--headless'));
-  assert.ok(browserArgs.includes('--remote-debugging-port=0'));
-  assert.equal(
-    browserArgs.some((argument) => argument === '--remote-debugging-port=9820'),
-    false,
-  );
+  assert.ok(browserArgs.includes('--remote-debugging-port=9820'));
+  assert.equal(browserArgs.includes('--remote-debugging-port=0'), false);
   assert.ok(browserArgs.includes('--proxy-server=127.0.0.1:9'));
   assert.ok(browserArgs.includes('--proxy-bypass-list=localhost;127.0.0.1'));
   assert.equal(

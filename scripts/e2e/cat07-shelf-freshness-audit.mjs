@@ -3212,11 +3212,11 @@ export function finalizeCat07ExpoLog(evidenceDir, child) {
   return logPath;
 }
 
-export function cat07BrowserArguments({ userDataDir }) {
+export function cat07BrowserArguments({ debugPort = 0, userDataDir }) {
   return [
     '--headless',
     '--remote-debugging-address=127.0.0.1',
-    '--remote-debugging-port=0',
+    `--remote-debugging-port=${debugPort}`,
     `--user-data-dir=${userDataDir}`,
     '--no-first-run',
     '--no-default-browser-check',
@@ -3373,6 +3373,7 @@ export async function waitForCat07DevToolsActivePort({
 
 export function startCat07Browser({
   browserPath,
+  debugPort = 0,
   environment,
   executableBinding = null,
   launch = spawn,
@@ -3384,7 +3385,7 @@ export function startCat07Browser({
     'CAT07 browser launch path changed.',
   );
   assertCat07ExecutableBindingStable(binding);
-  const args = cat07BrowserArguments({ userDataDir });
+  const args = cat07BrowserArguments({ debugPort, userDataDir });
   const child = launch(browserPath, args, {
     env: environment,
     stdio: 'ignore',
@@ -4191,18 +4192,14 @@ export async function runCat07ShelfFreshnessAudit({
     }
     assert(serverReady, `CAT07 Expo server did not become ready at ${baseUrl}.`);
     assert(!server.cat07LogState.exited, 'CAT07 Expo child exited after server readiness.');
+    const debugPort = await findAvailablePort(0);
     browser = startCat07Browser({
       browserPath,
+      debugPort,
       environment: immutableSource.childEnvironment,
       executableBinding: browserExecutableBinding,
       userDataDir,
     });
-    const devToolsBinding = await waitForCat07DevToolsActivePort({
-      browser,
-      profileGuard: userDataGuard,
-      userDataDir,
-    });
-    const debugPort = devToolsBinding.port;
     client = await connectToInstrumentedCat07Page(debugPort, baseUrl, {
       runId,
       sourceMonitor,
