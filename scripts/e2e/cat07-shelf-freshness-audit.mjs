@@ -3215,6 +3215,7 @@ export function finalizeCat07ExpoLog(evidenceDir, child) {
 export function cat07BrowserArguments({ userDataDir }) {
   return [
     '--headless',
+    '--remote-debugging-address=127.0.0.1',
     '--remote-debugging-port=0',
     `--user-data-dir=${userDataDir}`,
     '--no-first-run',
