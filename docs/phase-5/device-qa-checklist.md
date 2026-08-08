@@ -84,7 +84,7 @@ nulls is a blocked work order, never evidence.
 ## IOS-02 Source-Candidate Gate
 
 The 2026-07-16 implementation is a **source candidate, not native QA
-evidence**. The exact-pinned `expo-widgets` `56.0.23` source overlay now
+evidence**. The exact-pinned `expo-widgets` `57.0.8` source overlay now
 contains the native App Group SQLite owner/snapshot/outbox lifecycle, POSIX
 locking plus immediate transactions, App Intent durable append-before-return,
 compare-and-swap reconciliation, a raw parse-independent privacy lane that

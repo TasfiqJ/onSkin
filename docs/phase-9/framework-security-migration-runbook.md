@@ -6,12 +6,14 @@ This runbook governs remediation of dependency advisories rooted in the Expo
 and React Native framework stack. It is not a license to suppress an audit or
 to replace the current stack with the version proposed by an automated fixer.
 
-As of the dependency inventory generated on 2026-08-08, compatible patch-level
-maintenance reduced the registry audit from 20 to 15 high findings and left no
-critical finding. The remaining high findings have an `npm audit` remediation
-that would downgrade the app from Expo SDK 56 / React Native 0.85 to an older,
-unsupported Expo SDK 53 / React Native 0.72 chain. That is not a security fix
-for this product and must not be applied.
+The SDK 56 inventory generated on 2026-08-08 recorded 15 high findings and no
+critical finding after compatible patch-level maintenance. The current SDK 57
+source checkpoint records 16 high findings and no critical finding from
+`npm audit --omit=dev --json`. Its suggested framework remediations still
+would downgrade the app to unsupported Expo SDK 53 / React Native 0.72 chains.
+That is not a security fix for this product and must not be applied. The change
+in count is an open migration result, not an improvement claim or a reason to
+relax the release gate.
 
 Do not run any of the following as a release remediation:
 
@@ -105,6 +107,33 @@ installation path. For each target package release:
    `npm run phase9:view-shot-privacy:test`.
 5. Require a fresh macOS/Xcode archive and physical-iPhone evidence before
    enabling or marketing widget and Live Activity behavior.
+
+## SDK 57 Source Checkpoint (Not a Release Signoff)
+
+The governed SDK 56-to-57 source migration aligns the mobile workspace to Expo
+SDK 57.0.11 and React Native 0.86.2, including the Expo-managed dependency
+set, Reanimated 4.5.1, Worklets 0.10.1, Screens 4.26.0, and the exact reviewed
+`expo-widgets` 57.0.8 artifact. The widget patch payload was re-reviewed
+against that exact artifact; its iOS source inputs are unchanged from the prior
+review, so the fail-closed hashes remain intentionally identical rather than
+being weakened or regenerated.
+
+NativeWind was moved to its current 4.x maintenance release (4.2.6). npm must
+retain older React Native peers at the repository root for unrelated SDK 56
+tooling, so NativeWind's published declaration can otherwise augment that
+older type tree rather than the SDK 57 workspace tree. The app-local
+`nativewind-env.d.ts` repeats NativeWind's public `className` declaration for
+the React Native 0.86 interfaces. It is a compile-time bridge only: it does not
+alter the Babel transform, style output, package resolution, or runtime
+behavior. Removing it requires a future dependency layout in which NativeWind
+resolves directly against the SDK 57 React Native package and a fresh
+typecheck proves the published declaration is sufficient.
+
+This source checkpoint requires, and records only, passing package alignment,
+Expo Doctor, postinstall contract checks, source typecheck, lint, repository
+tests, widget lifecycle/extension tests, and the native-config source check.
+It is deliberately not archive, simulator, physical-iPhone, App Store, legal,
+or security-release evidence. Those gates remain governed by the next section.
 
 ## Required Evidence Before Release Use
 

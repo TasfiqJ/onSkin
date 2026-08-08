@@ -14,15 +14,15 @@ resolution, and the release archive require separate verification.
 ## Input bindings
 
 - Baseline: `docs/phase-9/apple-ios-privacy-baseline.json` - `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
-- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `ac482b5579a4ff8ad9b4dc468162b2f8bdc92b7193d45e3661d1f97ce282717a`
-- Package lock: `package-lock.json` - `65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480`
+- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `ba0c235e9547c9af5154c59ea544464acb245264fc322efff5d71748484eaa3f`
+- Package lock: `package-lock.json` - `c54fcbece3dbb6d33262bd371f9626bc9dd1e262490b05db45a54dbc941f0988`
 
 ## Summary
 
-- Native packages: 63
-- Privacy manifests: 14 (14 source-valid; 0 source-invalid)
-- Manifest bindings requiring archive verification: 14
-- Podspecs: 139
+- Native packages: 72
+- Privacy manifests: 23 (23 source-valid; 0 source-invalid)
+- Manifest bindings requiring archive verification: 23
+- Podspecs: 228
 - XCFramework source candidates: 16
 - Framework source candidates: 0
 - Static-library/dylib source candidates: 0
@@ -32,11 +32,18 @@ resolution, and the release archive require separate verification.
 
 | Package                                        | Version | Status           | Manifests | Podspecs | XCFrameworks | Frameworks | Binary files |
 | ---------------------------------------------- | ------- | ---------------- | --------- | -------- | ------------ | ---------- | ------------ |
-| expo-store-review                              | 56.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| @expo/dom-webview                              | 56.0.6  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| @expo/expo-modules-macros-plugin               | 0.2.2   | archive_required | 0         | 0        | 0            | 0          | 0            |
-| @expo/log-box                                  | 56.0.14 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| @expo/ui                                       | 56.0.22 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/ui                                       | 57.0.9  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-constants                                 | 57.0.9  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-linking                                   | 57.0.5  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-router                                    | 57.0.11 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/log-box                                  | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/dom-webview                              | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-glass-effect                              | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-symbols                                   | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| react-native                                   | 0.86.2  | archive_required | 6         | 81       | 0            | 0          | 0            |
+| react-native-reanimated                        | 4.5.1   | archive_required | 0         | 1        | 0            | 0          | 0            |
+| react-native-worklets                          | 0.10.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/expo-modules-macros-plugin               | 0.6.1   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | @infinitered/react-native-mlkit-face-detection | 5.0.0   | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @infinitered/react-native-mlkit-core           | 5.0.0   | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @react-native-async-storage/async-storage      | 2.2.0   | archive_required | 1         | 1        | 0            | 0          | 0            |
@@ -47,73 +54,84 @@ resolution, and the release archive require separate verification.
 | @tanstack/react-query                          | 5.101.0 | archive_required | 0         | 0        | 0            | 0          | 0            |
 | asap                                           | 2.0.6   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | cross-fetch                                    | 3.2.0   | archive_required | 0         | 0        | 0            | 0          | 0            |
-| expo                                           | 56.0.15 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-apple-authentication                      | 56.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-application                               | 56.0.3  | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-asset                                     | 56.0.19 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-camera                                    | 56.0.8  | archive_required | 0         | 2        | 2            | 0          | 0            |
-| expo-constants                                 | 56.0.20 | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-crypto                                    | 56.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-dev-client                                | 56.0.22 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-dev-launcher                              | 56.0.23 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-dev-menu                                  | 56.0.19 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-dev-menu-interface                        | 56.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-device                                    | 56.0.4  | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-file-system                               | 56.0.8  | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-font                                      | 56.0.7  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-glass-effect                              | 56.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-haptics                                   | 56.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-image                                     | 56.0.11 | archive_required | 0         | 1        | 10           | 0          | 0            |
-| expo-image-manipulator                         | 56.0.21 | archive_required | 0         | 1        | 4            | 0          | 0            |
-| expo-json-utils                                | 56.0.0  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-keep-awake                                | 56.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-linking                                   | 56.0.15 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-local-authentication                      | 56.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-localization                              | 56.0.6  | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-manifests                                 | 56.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-modules-core                              | 56.0.20 | archive_required | 0         | 3        | 0            | 0          | 0            |
-| expo-modules-jsi                               | 56.0.12 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-network                                   | 56.0.5  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-notifications                             | 56.0.20 | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-router                                    | 56.2.14 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-secure-store                              | 56.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-sharing                                   | 56.0.21 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-splash-screen                             | 56.0.12 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-symbols                                   | 56.0.6  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-system-ui                                 | 56.0.5  | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-updates-interface                         | 56.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-web-browser                               | 56.0.5  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-widgets                                   | 56.0.23 | archive_required | 0         | 1        | 0            | 0          | 0            |
-| nanoid                                         | 3.3.12  | archive_required | 0         | 0        | 0            | 0          | 0            |
+| expo                                           | 57.0.11 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-apple-authentication                      | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-application                               | 57.0.2  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-asset                                     | 57.0.9  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-constants                                 | 57.0.9  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-camera                                    | 57.0.3  | archive_required | 0         | 2        | 2            | 0          | 0            |
+| expo-crypto                                    | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-dev-client                                | 57.0.10 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-dev-launcher                              | 57.0.10 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-dev-menu                                  | 57.0.10 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-dev-menu-interface                        | 57.0.0  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-device                                    | 57.0.1  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-file-system                               | 57.0.2  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-font                                      | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-haptics                                   | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-image                                     | 57.0.2  | archive_required | 0         | 1        | 10           | 0          | 0            |
+| expo-image-manipulator                         | 57.0.8  | archive_required | 0         | 1        | 4            | 0          | 0            |
+| expo-json-utils                                | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-keep-awake                                | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-local-authentication                      | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-localization                              | 57.0.1  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-manifests                                 | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-modules-core                              | 57.0.10 | archive_required | 0         | 3        | 0            | 0          | 0            |
+| expo-modules-jsi                               | 57.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-network                                   | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-notifications                             | 57.0.9  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-constants                                 | 57.0.9  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-secure-store                              | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-sharing                                   | 57.0.10 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-splash-screen                             | 57.0.5  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-store-review                              | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-system-ui                                 | 57.0.2  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-updates-interface                         | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-web-browser                               | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-widgets                                   | 57.0.8  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/ui                                       | 57.0.9  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/dom-webview                              | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/log-box                                  | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-constants                                 | 57.0.9  | archive_required | 1         | 1        | 0            | 0          | 0            |
+| nanoid                                         | 3.3.18  | archive_required | 0         | 0        | 0            | 0          | 0            |
 | react-freeze                                   | 1.0.4   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | react-native                                   | 0.85.3  | archive_required | 5         | 80       | 0            | 0          | 0            |
-| react-native-gesture-handler                   | 2.31.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| react-native-gesture-handler                   | 2.32.0  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | react-native-get-random-values                 | 1.11.0  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | react-native-purchases                         | 10.4.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | react-native-reanimated                        | 4.3.1   | archive_required | 0         | 1        | 0            | 0          | 0            |
 | react-native-safe-area-context                 | 5.7.0   | archive_required | 0         | 1        | 0            | 0          | 0            |
-| react-native-screens                           | 4.25.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| react-native-screens                           | 4.26.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | react-native-view-shot                         | 5.1.0   | archive_required | 1         | 1        | 0            | 0          | 0            |
 | react-native-worklets                          | 0.8.3   | archive_required | 0         | 1        | 0            | 0          | 0            |
 
 ## Privacy manifest ledger
 
-| Path                                                                             | Status       | SHA-256                                                          |
-| -------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------- |
-| node_modules/@react-native-async-storage/async-storage/ios/PrivacyInfo.xcprivacy | source_valid | 0b1287d0e686cf867d38d97cca5dc694b3029f27c4fe4270dd4bd2fd5458a2f0 |
-| node_modules/expo-application/ios/PrivacyInfo.xcprivacy                          | source_valid | b48763ffd29cbad815125ae56e1073273e418ae086103fc7dff7efbec1675aaa |
-| node_modules/expo-constants/ios/PrivacyInfo.xcprivacy                            | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
-| node_modules/expo-device/ios/PrivacyInfo.xcprivacy                               | source_valid | d898a8356dc87b7cd2b17921d68a4636d424067b3a75c83b7935fd797719c9cb |
-| node_modules/expo-file-system/ios/PrivacyInfo.xcprivacy                          | source_valid | 33b0e074f273f588a64ba5632909c6a8cf1f16db8e4cd84c6978bd222dfd65bd |
-| node_modules/expo-localization/ios/PrivacyInfo.xcprivacy                         | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
-| node_modules/expo-notifications/ios/PrivacyInfo.xcprivacy                        | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
-| node_modules/expo-system-ui/ios/PrivacyInfo.xcprivacy                            | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
-| node_modules/react-native-view-shot/ios/PrivacyInfo.xcprivacy                    | source_valid | 7a411ba0c8b0c43834b84b23b3959aa98df450c52db9e0a4efb4ba1b2786f0c9 |
-| node_modules/react-native/React/Resources/PrivacyInfo.xcprivacy                  | source_valid | 7c08969e459621a6ecec043ccdb9012651f185811945f75517c623dae2e11627 |
-| node_modules/react-native/ReactCommon/cxxreact/PrivacyInfo.xcprivacy             | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
-| node_modules/react-native/third-party-podspecs/RCT-Folly/PrivacyInfo.xcprivacy   | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
-| node_modules/react-native/third-party-podspecs/boost/PrivacyInfo.xcprivacy       | source_valid | d3559c988dff940d4f758f37a0ba1863208304e33ab0b97c0e3dd5d3762f5f1d |
-| node_modules/react-native/third-party-podspecs/glog/PrivacyInfo.xcprivacy        | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
+| Path                                                                                       | Status       | SHA-256                                                          |
+| ------------------------------------------------------------------------------------------ | ------------ | ---------------------------------------------------------------- |
+| apps/mobile/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy                          | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
+| apps/mobile/node_modules/react-native/React/Resources/PrivacyInfo.xcprivacy                | source_valid | 7c08969e459621a6ecec043ccdb9012651f185811945f75517c623dae2e11627 |
+| apps/mobile/node_modules/react-native/ReactCommon/cxxreact/PrivacyInfo.xcprivacy           | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
+| apps/mobile/node_modules/react-native/ReactCommon/react/timing/PrivacyInfo.xcprivacy       | source_valid | 23ddfa062a6d4392e65882d151fdececbd29904a227ad8918c0144ebc777ee61 |
+| apps/mobile/node_modules/react-native/third-party-podspecs/RCT-Folly/PrivacyInfo.xcprivacy | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
+| apps/mobile/node_modules/react-native/third-party-podspecs/boost/PrivacyInfo.xcprivacy     | source_valid | d3559c988dff940d4f758f37a0ba1863208304e33ab0b97c0e3dd5d3762f5f1d |
+| apps/mobile/node_modules/react-native/third-party-podspecs/glog/PrivacyInfo.xcprivacy      | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
+| node_modules/@react-native-async-storage/async-storage/ios/PrivacyInfo.xcprivacy           | source_valid | 0b1287d0e686cf867d38d97cca5dc694b3029f27c4fe4270dd4bd2fd5458a2f0 |
+| node_modules/expo-application/ios/PrivacyInfo.xcprivacy                                    | source_valid | b48763ffd29cbad815125ae56e1073273e418ae086103fc7dff7efbec1675aaa |
+| node_modules/expo-asset/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy              | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
+| node_modules/expo-device/ios/PrivacyInfo.xcprivacy                                         | source_valid | d898a8356dc87b7cd2b17921d68a4636d424067b3a75c83b7935fd797719c9cb |
+| node_modules/expo-file-system/ios/PrivacyInfo.xcprivacy                                    | source_valid | 33b0e074f273f588a64ba5632909c6a8cf1f16db8e4cd84c6978bd222dfd65bd |
+| node_modules/expo-localization/ios/PrivacyInfo.xcprivacy                                   | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
+| node_modules/expo-notifications/ios/PrivacyInfo.xcprivacy                                  | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
+| node_modules/expo-notifications/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy      | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
+| node_modules/expo-system-ui/ios/PrivacyInfo.xcprivacy                                      | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
+| node_modules/expo/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy                    | source_valid | 2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47 |
+| node_modules/react-native-view-shot/ios/PrivacyInfo.xcprivacy                              | source_valid | 7a411ba0c8b0c43834b84b23b3959aa98df450c52db9e0a4efb4ba1b2786f0c9 |
+| node_modules/react-native/React/Resources/PrivacyInfo.xcprivacy                            | source_valid | 7c08969e459621a6ecec043ccdb9012651f185811945f75517c623dae2e11627 |
+| node_modules/react-native/ReactCommon/cxxreact/PrivacyInfo.xcprivacy                       | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
+| node_modules/react-native/third-party-podspecs/RCT-Folly/PrivacyInfo.xcprivacy             | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
+| node_modules/react-native/third-party-podspecs/boost/PrivacyInfo.xcprivacy                 | source_valid | d3559c988dff940d4f758f37a0ba1863208304e33ab0b97c0e3dd5d3762f5f1d |
+| node_modules/react-native/third-party-podspecs/glog/PrivacyInfo.xcprivacy                  | source_valid | 0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335 |
 
 ## Exact Apple-list intersections
 
@@ -128,7 +146,7 @@ resolution, and the release archive require separate verification.
 | SDWebImage   | expo-image                                | source_text_podspec_dependency | archive_required | node_modules/expo-image/ios/ExpoImage.podspec                                                    |
 | SDWebImage   | expo-image-manipulator                    | exact_xcframework_basename     | archive_required | node_modules/expo-image-manipulator/prebuilds/spm-deps/SDWebImage/debug/SDWebImage.xcframework   |
 | SDWebImage   | expo-image-manipulator                    | exact_xcframework_basename     | archive_required | node_modules/expo-image-manipulator/prebuilds/spm-deps/SDWebImage/release/SDWebImage.xcframework |
-| hermes       | react-native                              | source_candidate               | archive_required | node_modules/hermes-compiler/package.json                                                        |
+| hermes       | react-native                              | source_candidate               | archive_required | apps/mobile/node_modules/hermes-compiler/package.json                                            |
 
 ## Errors
 
@@ -137,14 +155,23 @@ resolution, and the release archive require separate verification.
 ## Warnings
 
 - ARCHIVE_REQUIRED: A source-only audit cannot prove release-archive inclusion, binary signatures, merged privacy report, privacy labels, or App Store acceptance.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - apps/mobile/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - apps/mobile/node_modules/react-native/React/Resources/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - apps/mobile/node_modules/react-native/ReactCommon/cxxreact/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - apps/mobile/node_modules/react-native/ReactCommon/react/timing/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - apps/mobile/node_modules/react-native/third-party-podspecs/RCT-Folly/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - apps/mobile/node_modules/react-native/third-party-podspecs/boost/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - apps/mobile/node_modules/react-native/third-party-podspecs/glog/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/@react-native-async-storage/async-storage/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-application/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
-- MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-constants/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-asset/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-device/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-file-system/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-localization/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-notifications/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-notifications/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo-system-ui/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
+- MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/expo/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/react-native-view-shot/ios/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/react-native/React/Resources/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.
 - MANIFEST_BINDING_ARCHIVE_REQUIRED - node_modules/react-native/ReactCommon/cxxreact/PrivacyInfo.xcprivacy: No exact podspec or XCFramework source-container binding was proven; archive inspection is required.

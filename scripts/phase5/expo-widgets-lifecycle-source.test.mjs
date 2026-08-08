@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import test from 'node:test';
 
 const root = resolve(import.meta.dirname, '../..');
-const payloadRoot = resolve(root, 'scripts/phase5/expo-widgets-56.0.23');
+const payloadRoot = resolve(root, 'scripts/phase5/expo-widgets-57.0.8');
 
 function source(name) {
   return readFileSync(resolve(payloadRoot, name), 'utf8');

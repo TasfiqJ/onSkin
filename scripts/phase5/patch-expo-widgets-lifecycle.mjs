@@ -18,14 +18,14 @@ import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const EXPO_WIDGETS_PACKAGE_NAME = 'expo-widgets';
-export const EXPO_WIDGETS_PACKAGE_VERSION = '56.0.23';
+export const EXPO_WIDGETS_PACKAGE_VERSION = '57.0.8';
 export const EXPO_WIDGETS_LOCK_RESOLVED =
-  'https://registry.npmjs.org/expo-widgets/-/expo-widgets-56.0.23.tgz';
+  'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.8.tgz';
 export const EXPO_WIDGETS_LOCK_INTEGRITY =
-  'sha512-q7A+gqFBpYXSB6gtiiZTbvith1nZTlF8bbhQ0C/dA4A2UOL8+xOG4l9cHnj8MFabZmiArhxXN7uSCji9bRbIpg==';
+  'sha512-D5pSnmz48/AEYFfZAQuy+TS+HwkXxj0RB10n0jeORMc4gPM9LKqj0hWt1xCYZ6PpuyJ4QS8hrXSKLK8kXphWPg==';
 
 const SCRIPT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const PAYLOAD_DIRECTORY = 'scripts/phase5/expo-widgets-56.0.23';
+const PAYLOAD_DIRECTORY = 'scripts/phase5/expo-widgets-57.0.8';
 const EXPO_WIDGETS_TARGET_PREFIX = 'node_modules/expo-widgets/';
 const REVIEWED_INSTALL_DIRECTORIES = new Set([
   'node_modules/expo-widgets',

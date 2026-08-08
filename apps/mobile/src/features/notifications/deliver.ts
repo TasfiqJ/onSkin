@@ -261,7 +261,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
         assertCurrent();
         await schedule({
           content: notificationContentForLockScreen(kind),
-          // channelId belongs on the trigger in expo-notifications (SDK 56), not on
+          // channelId belongs on the trigger in expo-notifications (SDK 57), not on
           // content. So the calm 'routine' channel is actually applied on Android.
           trigger: {
             type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -406,7 +406,7 @@ export async function notifyBehavioural(
         await schedule({
           content: notificationContentForLockScreen(kind),
           // Immediate, on the calm 'routine' channel (Android); channelId must be on the
-          // trigger, not content (SDK 56). A bare { channelId } means deliver now.
+          // trigger, not content (SDK 57). A bare { channelId } means deliver now.
           trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
         });
         assertCurrent();

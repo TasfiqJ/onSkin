@@ -68,7 +68,7 @@ job timeout bound macOS consumption.
 
 The gate uses the official `macos-26` runner and the reviewed Xcode 26.4
 path, installs JavaScript dependencies from `package-lock.json`, generates a
-clean staging iOS project from the lockfile-installed Expo SDK 56 template,
+clean staging iOS project from the lockfile-installed Expo SDK 57 template,
 installs CocoaPods, verifies `NativeLabelOcr` autolinking, and runs a Release
 build for the generic iOS Simulator destination. Code signing is explicitly
 disabled. The final check requires one linked Mach-O `.app` Simulator product
@@ -171,7 +171,7 @@ Official references: [EAS Build infrastructure](https://docs.expo.dev/build-refe
 [selecting a base image](https://docs.expo.dev/build/eas-json/#selecting-a-base-image),
 the [EAS CLI reference](https://docs.expo.dev/eas/cli/),
 [build configuration](https://docs.expo.dev/build-reference/build-configuration/),
-and the [Expo SDK 56 changelog](https://expo.dev/changelog/sdk-56).
+and the [Expo SDK 57 changelog](https://expo.dev/changelog/sdk-57).
 
 Record the supported-device performance baseline separately. Generate the
 blocked schema before testing, set owner-approved p95 thresholds before the
@@ -266,7 +266,7 @@ archive digest, bundle ID, version/build, source SHA, and install receipts match
 
 ## RoutineKind Widget Lifecycle Candidate
 
-IOS-02 patches only the exact lockfile-installed `expo-widgets` 56.0.23 native
+IOS-02 patches only the exact lockfile-installed `expo-widgets` 57.0.8 native
 sources. Root postinstall applies both reviewed native patches, and
 `npm run postinstall:check` plus
 `npm run phase5:expo-widgets-lifecycle:test` must pass before any EAS upload.

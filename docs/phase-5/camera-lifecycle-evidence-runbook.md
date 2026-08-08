@@ -38,7 +38,7 @@ artifact contract.
 
 Primary implementation references to re-check immediately before the run:
 
-- [Expo Camera (SDK 56)](https://docs.expo.dev/versions/v56.0.0/sdk/camera/)
+- [Expo Camera (SDK 57)](https://docs.expo.dev/versions/v57.0.0/sdk/camera/)
 - [React Native AppState](https://reactnative.dev/docs/appstate)
 - [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 - [Apple privacy permission guidance](https://developer.apple.com/design/human-interface-guidelines/privacy)

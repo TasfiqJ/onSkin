@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T19:00:07.566Z",
+  "generatedAt": "2026-08-08T19:23:35.430Z",
   "auditProvenance": {
     "requested": true,
     "mode": "registry",
@@ -7,14 +7,14 @@
   },
   "packageManager": null,
   "lockfileVersion": 3,
-  "packageCount": 1123,
+  "packageCount": 1182,
   "vulnerabilities": {
     "info": 0,
     "low": 0,
     "moderate": 9,
-    "high": 15,
+    "high": 16,
     "critical": 0,
-    "total": 24
+    "total": 25
   },
   "auditFindings": [
     {
@@ -79,6 +79,7 @@
       "isDirect": false,
       "range": "*",
       "via": [
+        "@react-native/metro-config",
         "metro",
         "metro-config"
       ],
@@ -86,7 +87,25 @@
         "react-native"
       ],
       "nodes": [
+        "apps/mobile/node_modules/@react-native/community-cli-plugin",
         "node_modules/@react-native/community-cli-plugin"
+      ],
+      "fixAvailable": "react-native@0.72.17 (breaking)"
+    },
+    {
+      "name": "@react-native/metro-config",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "metro-config"
+      ],
+      "effects": [
+        "@react-native/community-cli-plugin"
+      ],
+      "nodes": [
+        "apps/mobile/node_modules/@react-native/metro-config",
+        "node_modules/@react-native/metro-config"
       ],
       "fixAvailable": "react-native@0.72.17 (breaking)"
     },
@@ -102,6 +121,7 @@
         "react-native"
       ],
       "nodes": [
+        "apps/mobile/node_modules/react-native/node_modules/@react-native/virtualized-lists",
         "node_modules/@react-native/virtualized-lists"
       ],
       "fixAvailable": "react-native@0.72.17 (breaking)"
@@ -173,12 +193,13 @@
       ],
       "effects": [
         "@react-native/community-cli-plugin",
+        "@react-native/metro-config",
         "metro"
       ],
       "nodes": [
         "node_modules/metro-config"
       ],
-      "fixAvailable": "expo@53.0.27 (breaking)"
+      "fixAvailable": "react-native@0.72.17 (breaking)"
     },
     {
       "name": "metro-transform-worker",
@@ -213,6 +234,7 @@
         "react-native-worklets"
       ],
       "nodes": [
+        "apps/mobile/node_modules/react-native",
         "node_modules/react-native"
       ],
       "fixAvailable": "react-native@0.72.17 (breaking)"
@@ -235,12 +257,14 @@
       "name": "react-native-reanimated",
       "severity": "high",
       "isDirect": true,
-      "range": "4.1.7 || >=4.2.3",
+      "range": "3.20.0-nightly-20250722-b6c8b9a3c - 4.0.0-nightly-20250309-9ce9085cb || 4.1.7 - 4.2.0-nightly-20251017-235c127fd || >=4.2.3",
       "via": [
-        "react-native"
+        "react-native",
+        "react-native-worklets"
       ],
       "effects": [],
       "nodes": [
+        "apps/mobile/node_modules/react-native-reanimated",
         "node_modules/react-native-reanimated"
       ],
       "fixAvailable": "react-native-reanimated@4.2.2 (breaking)"
@@ -265,10 +289,14 @@
       "isDirect": true,
       "range": ">=0.8.0-bundle-mode-preview-1",
       "via": [
+        "@react-native/metro-config",
         "react-native"
       ],
-      "effects": [],
+      "effects": [
+        "react-native-reanimated"
+      ],
       "nodes": [
+        "apps/mobile/node_modules/react-native-worklets",
         "node_modules/react-native-worklets"
       ],
       "fixAvailable": "react-native-worklets@0.7.4 (breaking)"
@@ -472,11 +500,228 @@
       "resolved": null
     },
     {
-      "path": "apps/mobile/node_modules/expo-store-review",
-      "name": "expo-store-review",
-      "version": "56.0.3",
+      "path": "apps/mobile/node_modules/@expo/schema-utils",
+      "name": "@expo/schema-utils",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/schema-utils/-/schema-utils-57.0.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@expo/ui",
+      "name": "@expo/ui",
+      "version": "57.0.9",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.9.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/assets-registry",
+      "name": "@react-native/assets-registry",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/codegen",
+      "name": "@react-native/codegen",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/codegen/-/codegen-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/community-cli-plugin",
+      "name": "@react-native/community-cli-plugin",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/community-cli-plugin/-/community-cli-plugin-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/debugger-frontend",
+      "name": "@react-native/debugger-frontend",
+      "version": "0.86.2",
+      "license": "BSD-3-Clause",
+      "resolved": "https://registry.npmjs.org/@react-native/debugger-frontend/-/debugger-frontend-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/debugger-shell",
+      "name": "@react-native/debugger-shell",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/debugger-shell/-/debugger-shell-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/dev-middleware",
+      "name": "@react-native/dev-middleware",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/dev-middleware/-/dev-middleware-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/gradle-plugin",
+      "name": "@react-native/gradle-plugin",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/gradle-plugin/-/gradle-plugin-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/js-polyfills",
+      "name": "@react-native/js-polyfills",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/js-polyfills/-/js-polyfills-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/metro-config",
+      "name": "@react-native/metro-config",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/metro-config/-/metro-config-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/@react-native/normalize-colors",
+      "name": "@react-native/normalize-colors",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/babel-plugin-syntax-hermes-parser",
+      "name": "babel-plugin-syntax-hermes-parser",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/babel-plugin-syntax-hermes-parser/-/babel-plugin-syntax-hermes-parser-0.36.0.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/commander",
+      "name": "commander",
+      "version": "12.1.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/commander/-/commander-12.1.0.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-constants",
+      "name": "expo-constants",
+      "version": "57.0.9",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.9.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-linking",
+      "name": "expo-linking",
+      "version": "57.0.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-linking/-/expo-linking-57.0.5.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-router",
+      "name": "expo-router",
+      "version": "57.0.11",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.11.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-router/node_modules/@expo/log-box",
+      "name": "expo-router/node_modules/@expo/log-box",
+      "version": "57.0.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/log-box/-/log-box-57.0.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-router/node_modules/@expo/log-box/node_modules/@expo/dom-webview",
+      "name": "expo-router/node_modules/@expo/log-box/node_modules/@expo/dom-webview",
+      "version": "57.0.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/dom-webview/-/dom-webview-57.0.1.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-router/node_modules/@expo/metro-runtime",
+      "name": "expo-router/node_modules/@expo/metro-runtime",
+      "version": "57.0.8",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/metro-runtime/-/metro-runtime-57.0.8.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-router/node_modules/expo-glass-effect",
+      "name": "expo-router/node_modules/expo-glass-effect",
+      "version": "57.0.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-57.0.1.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-router/node_modules/expo-symbols",
+      "name": "expo-router/node_modules/expo-symbols",
+      "version": "57.0.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-symbols/-/expo-symbols-57.0.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-server",
+      "name": "expo-server",
+      "version": "57.0.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-server/-/expo-server-57.0.1.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/hermes-compiler",
+      "name": "hermes-compiler",
+      "version": "250829098.0.16",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-compiler/-/hermes-compiler-250829098.0.16.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/hermes-estree",
+      "name": "hermes-estree",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.0.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/hermes-parser",
+      "name": "hermes-parser",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.0.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/react-native",
+      "name": "react-native",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/react-native/-/react-native-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/react-native-reanimated",
+      "name": "react-native-reanimated",
+      "version": "4.5.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-4.5.1.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/react-native-worklets",
+      "name": "react-native-worklets",
+      "version": "0.10.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/react-native-worklets/-/react-native-worklets-0.10.1.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/react-native/node_modules/@react-native/virtualized-lists",
+      "name": "react-native/node_modules/@react-native/virtualized-lists",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/virtualized-lists/-/virtualized-lists-0.86.2.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/semver",
+      "name": "semver",
+      "version": "7.8.5",
+      "license": "ISC",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/ws",
+      "name": "ws",
+      "version": "7.5.13",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.13.tgz"
     },
     {
       "path": "node_modules/@adobe/css-tools",
@@ -899,11 +1144,32 @@
       "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-development/-/plugin-transform-react-jsx-development-7.29.7.tgz"
     },
     {
+      "path": "node_modules/@babel/plugin-transform-react-jsx-self",
+      "name": "@babel/plugin-transform-react-jsx-self",
+      "version": "7.29.7",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-self/-/plugin-transform-react-jsx-self-7.29.7.tgz"
+    },
+    {
+      "path": "node_modules/@babel/plugin-transform-react-jsx-source",
+      "name": "@babel/plugin-transform-react-jsx-source",
+      "version": "7.29.7",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-source/-/plugin-transform-react-jsx-source-7.29.7.tgz"
+    },
+    {
       "path": "node_modules/@babel/plugin-transform-react-pure-annotations",
       "name": "@babel/plugin-transform-react-pure-annotations",
       "version": "7.29.7",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-pure-annotations/-/plugin-transform-react-pure-annotations-7.29.7.tgz"
+    },
+    {
+      "path": "node_modules/@babel/plugin-transform-regenerator",
+      "name": "@babel/plugin-transform-regenerator",
+      "version": "7.29.8",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-regenerator/-/plugin-transform-regenerator-7.29.8.tgz"
     },
     {
       "path": "node_modules/@babel/plugin-transform-runtime",
@@ -1111,16 +1377,23 @@
     {
       "path": "node_modules/@expo/config",
       "name": "@expo/config",
-      "version": "56.0.13",
+      "version": "57.0.7",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/config/-/config-56.0.13.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/config/-/config-57.0.7.tgz"
     },
     {
       "path": "node_modules/@expo/config-plugins",
       "name": "@expo/config-plugins",
-      "version": "56.0.14",
+      "version": "57.0.7",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-56.0.14.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-57.0.7.tgz"
+    },
+    {
+      "path": "node_modules/@expo/config-plugins/node_modules/@expo/plist",
+      "name": "@expo/config-plugins/node_modules/@expo/plist",
+      "version": "0.8.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
     },
     {
       "path": "node_modules/@expo/config-plugins/node_modules/semver",
@@ -1132,9 +1405,9 @@
     {
       "path": "node_modules/@expo/config-types",
       "name": "@expo/config-types",
-      "version": "56.0.7",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/config-types/-/config-types-56.0.7.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/config-types/-/config-types-57.0.2.tgz"
     },
     {
       "path": "node_modules/@expo/config/node_modules/semver",
@@ -1160,16 +1433,9 @@
     {
       "path": "node_modules/@expo/devtools",
       "name": "@expo/devtools",
-      "version": "56.0.2",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/devtools/-/devtools-56.0.2.tgz"
-    },
-    {
-      "path": "node_modules/@expo/dom-webview",
-      "name": "@expo/dom-webview",
-      "version": "56.0.6",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/dom-webview/-/dom-webview-56.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/devtools/-/devtools-57.0.1.tgz"
     },
     {
       "path": "node_modules/@expo/env",
@@ -1181,16 +1447,16 @@
     {
       "path": "node_modules/@expo/expo-modules-macros-plugin",
       "name": "@expo/expo-modules-macros-plugin",
-      "version": "0.2.2",
+      "version": "0.6.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/expo-modules-macros-plugin/-/expo-modules-macros-plugin-0.2.2.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/expo-modules-macros-plugin/-/expo-modules-macros-plugin-0.6.1.tgz"
     },
     {
       "path": "node_modules/@expo/fingerprint",
       "name": "@expo/fingerprint",
-      "version": "0.19.9",
+      "version": "0.20.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/fingerprint/-/fingerprint-0.19.9.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/fingerprint/-/fingerprint-0.20.6.tgz"
     },
     {
       "path": "node_modules/@expo/fingerprint/node_modules/balanced-match",
@@ -1223,9 +1489,9 @@
     {
       "path": "node_modules/@expo/image-utils",
       "name": "@expo/image-utils",
-      "version": "0.10.4",
+      "version": "0.11.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/image-utils/-/image-utils-0.10.4.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/image-utils/-/image-utils-0.11.4.tgz"
     },
     {
       "path": "node_modules/@expo/image-utils/node_modules/semver",
@@ -1237,30 +1503,23 @@
     {
       "path": "node_modules/@expo/inline-modules",
       "name": "@expo/inline-modules",
-      "version": "0.0.15",
+      "version": "0.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/inline-modules/-/inline-modules-0.0.15.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/inline-modules/-/inline-modules-0.1.4.tgz"
     },
     {
       "path": "node_modules/@expo/json-file",
       "name": "@expo/json-file",
-      "version": "10.2.0",
+      "version": "11.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/json-file/-/json-file-10.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/json-file/-/json-file-11.0.1.tgz"
     },
     {
       "path": "node_modules/@expo/local-build-cache-provider",
       "name": "@expo/local-build-cache-provider",
-      "version": "56.0.11",
+      "version": "57.0.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/local-build-cache-provider/-/local-build-cache-provider-56.0.11.tgz"
-    },
-    {
-      "path": "node_modules/@expo/log-box",
-      "name": "@expo/log-box",
-      "version": "56.0.14",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/log-box/-/log-box-56.0.14.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/local-build-cache-provider/-/local-build-cache-provider-57.0.5.tgz"
     },
     {
       "path": "node_modules/@expo/metro",
@@ -1272,30 +1531,30 @@
     {
       "path": "node_modules/@expo/metro-config",
       "name": "@expo/metro-config",
-      "version": "56.0.18",
+      "version": "57.0.7",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/metro-config/-/metro-config-56.0.18.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/metro-config/-/metro-config-57.0.7.tgz"
     },
     {
-      "path": "node_modules/@expo/metro-config/node_modules/@expo/env",
-      "name": "@expo/metro-config/node_modules/@expo/env",
-      "version": "2.3.1",
+      "path": "node_modules/@expo/metro-config/node_modules/hermes-estree",
+      "name": "@expo/metro-config/node_modules/hermes-estree",
+      "version": "0.36.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.1.tgz"
+    },
+    {
+      "path": "node_modules/@expo/metro-config/node_modules/hermes-parser",
+      "name": "@expo/metro-config/node_modules/hermes-parser",
+      "version": "0.36.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.1.tgz"
     },
     {
       "path": "node_modules/@expo/metro-file-map",
       "name": "@expo/metro-file-map",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/metro-file-map/-/metro-file-map-56.0.3.tgz"
-    },
-    {
-      "path": "node_modules/@expo/metro-runtime",
-      "name": "@expo/metro-runtime",
-      "version": "56.0.19",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/metro-runtime/-/metro-runtime-56.0.19.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/metro-file-map/-/metro-file-map-57.0.1.tgz"
     },
     {
       "path": "node_modules/@expo/osascript",
@@ -1312,13 +1571,6 @@
       "resolved": "https://registry.npmjs.org/@expo/package-manager/-/package-manager-1.13.1.tgz"
     },
     {
-      "path": "node_modules/@expo/package-manager/node_modules/@expo/json-file",
-      "name": "@expo/package-manager/node_modules/@expo/json-file",
-      "version": "11.0.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/json-file/-/json-file-11.0.1.tgz"
-    },
-    {
       "path": "node_modules/@expo/plist",
       "name": "@expo/plist",
       "version": "0.7.0",
@@ -1328,9 +1580,16 @@
     {
       "path": "node_modules/@expo/prebuild-config",
       "name": "@expo/prebuild-config",
-      "version": "56.0.21",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-56.0.21.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-57.0.10.tgz"
+    },
+    {
+      "path": "node_modules/@expo/prebuild-config/node_modules/@react-native/normalize-colors",
+      "name": "@expo/prebuild-config/node_modules/@react-native/normalize-colors",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.86.2.tgz"
     },
     {
       "path": "node_modules/@expo/prebuild-config/node_modules/semver",
@@ -1342,16 +1601,9 @@
     {
       "path": "node_modules/@expo/require-utils",
       "name": "@expo/require-utils",
-      "version": "56.1.6",
+      "version": "57.0.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/require-utils/-/require-utils-56.1.6.tgz"
-    },
-    {
-      "path": "node_modules/@expo/schema-utils",
-      "name": "@expo/schema-utils",
-      "version": "56.0.2",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/schema-utils/-/schema-utils-56.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/require-utils/-/require-utils-57.0.4.tgz"
     },
     {
       "path": "node_modules/@expo/sdk-runtime-versions",
@@ -1373,13 +1625,6 @@
       "version": "9.3.2",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@expo/sudo-prompt/-/sudo-prompt-9.3.2.tgz"
-    },
-    {
-      "path": "node_modules/@expo/ui",
-      "name": "@expo/ui",
-      "version": "56.0.25",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-56.0.25.tgz"
     },
     {
       "path": "node_modules/@expo/ws-tunnel",
@@ -1958,9 +2203,58 @@
     {
       "path": "node_modules/@react-native/babel-plugin-codegen",
       "name": "@react-native/babel-plugin-codegen",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/babel-plugin-codegen/-/babel-plugin-codegen-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/babel-plugin-codegen/-/babel-plugin-codegen-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-plugin-codegen/node_modules/@react-native/codegen",
+      "name": "@react-native/babel-plugin-codegen/node_modules/@react-native/codegen",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/codegen/-/codegen-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-plugin-codegen/node_modules/hermes-estree",
+      "name": "@react-native/babel-plugin-codegen/node_modules/hermes-estree",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.0.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-plugin-codegen/node_modules/hermes-parser",
+      "name": "@react-native/babel-plugin-codegen/node_modules/hermes-parser",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.0.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-preset",
+      "name": "@react-native/babel-preset",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/babel-preset/-/babel-preset-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-preset/node_modules/babel-plugin-syntax-hermes-parser",
+      "name": "@react-native/babel-preset/node_modules/babel-plugin-syntax-hermes-parser",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/babel-plugin-syntax-hermes-parser/-/babel-plugin-syntax-hermes-parser-0.36.0.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-preset/node_modules/hermes-estree",
+      "name": "@react-native/babel-preset/node_modules/hermes-estree",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.0.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-preset/node_modules/hermes-parser",
+      "name": "@react-native/babel-preset/node_modules/hermes-parser",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.0.tgz"
     },
     {
       "path": "node_modules/@react-native/codegen",
@@ -2024,6 +2318,55 @@
       "version": "0.85.3",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@react-native/js-polyfills/-/js-polyfills-0.85.3.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-babel-transformer",
+      "name": "@react-native/metro-babel-transformer",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/metro-babel-transformer/-/metro-babel-transformer-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-babel-transformer/node_modules/hermes-estree",
+      "name": "@react-native/metro-babel-transformer/node_modules/hermes-estree",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.0.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-babel-transformer/node_modules/hermes-parser",
+      "name": "@react-native/metro-babel-transformer/node_modules/hermes-parser",
+      "version": "0.36.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.0.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-config",
+      "name": "@react-native/metro-config",
+      "version": "0.85.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/metro-config/-/metro-config-0.85.3.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-config/node_modules/@react-native/babel-plugin-codegen",
+      "name": "@react-native/metro-config/node_modules/@react-native/babel-plugin-codegen",
+      "version": "0.85.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/babel-plugin-codegen/-/babel-plugin-codegen-0.85.3.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-config/node_modules/@react-native/babel-preset",
+      "name": "@react-native/metro-config/node_modules/@react-native/babel-preset",
+      "version": "0.85.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/babel-preset/-/babel-preset-0.85.3.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-config/node_modules/@react-native/metro-babel-transformer",
+      "name": "@react-native/metro-config/node_modules/@react-native/metro-babel-transformer",
+      "version": "0.85.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/metro-babel-transformer/-/metro-babel-transformer-0.85.3.tgz"
     },
     {
       "path": "node_modules/@react-native/normalize-colors",
@@ -4233,37 +4576,51 @@
     {
       "path": "node_modules/expo",
       "name": "expo",
-      "version": "56.0.19",
+      "version": "57.0.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo/-/expo-56.0.19.tgz"
+      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.11.tgz"
     },
     {
       "path": "node_modules/expo-apple-authentication",
       "name": "expo-apple-authentication",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-apple-authentication/-/expo-apple-authentication-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-apple-authentication/-/expo-apple-authentication-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-application",
       "name": "expo-application",
-      "version": "56.0.3",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-application/-/expo-application-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/expo-application/-/expo-application-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-asset",
       "name": "expo-asset",
-      "version": "56.0.22",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-56.0.22.tgz"
+      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.9.tgz"
+    },
+    {
+      "path": "node_modules/expo-asset/node_modules/expo-constants",
+      "name": "expo-asset/node_modules/expo-constants",
+      "version": "57.0.9",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.9.tgz"
     },
     {
       "path": "node_modules/expo-build-properties",
       "name": "expo-build-properties",
-      "version": "56.0.25",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-build-properties/-/expo-build-properties-56.0.25.tgz"
+      "resolved": "https://registry.npmjs.org/expo-build-properties/-/expo-build-properties-57.0.9.tgz"
+    },
+    {
+      "path": "node_modules/expo-build-properties/node_modules/@expo/schema-utils",
+      "name": "expo-build-properties/node_modules/@expo/schema-utils",
+      "version": "57.0.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/schema-utils/-/schema-utils-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-build-properties/node_modules/semver",
@@ -4275,296 +4632,380 @@
     {
       "path": "node_modules/expo-camera",
       "name": "expo-camera",
-      "version": "56.0.8",
+      "version": "57.0.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-camera/-/expo-camera-56.0.8.tgz"
-    },
-    {
-      "path": "node_modules/expo-constants",
-      "name": "expo-constants",
-      "version": "56.0.23",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-56.0.23.tgz"
-    },
-    {
-      "path": "node_modules/expo-constants/node_modules/@expo/env",
-      "name": "expo-constants/node_modules/@expo/env",
-      "version": "2.3.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/expo-camera/-/expo-camera-57.0.3.tgz"
     },
     {
       "path": "node_modules/expo-crypto",
       "name": "expo-crypto",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-dev-client",
       "name": "expo-dev-client",
-      "version": "56.0.24",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-56.0.24.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-dev-launcher",
       "name": "expo-dev-launcher",
-      "version": "56.0.25",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-56.0.25.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-57.0.10.tgz"
+    },
+    {
+      "path": "node_modules/expo-dev-launcher/node_modules/@expo/schema-utils",
+      "name": "expo-dev-launcher/node_modules/@expo/schema-utils",
+      "version": "57.0.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/schema-utils/-/schema-utils-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-dev-menu",
       "name": "expo-dev-menu",
-      "version": "56.0.21",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-56.0.21.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-dev-menu-interface",
       "name": "expo-dev-menu-interface",
-      "version": "56.0.1",
+      "version": "57.0.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-menu-interface/-/expo-dev-menu-interface-56.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-menu-interface/-/expo-dev-menu-interface-57.0.0.tgz"
     },
     {
       "path": "node_modules/expo-device",
       "name": "expo-device",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-device/-/expo-device-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-device/-/expo-device-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-file-system",
       "name": "expo-file-system",
-      "version": "56.0.9",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-file-system/-/expo-file-system-56.0.9.tgz"
+      "resolved": "https://registry.npmjs.org/expo-file-system/-/expo-file-system-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-font",
       "name": "expo-font",
-      "version": "56.0.7",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-56.0.7.tgz"
-    },
-    {
-      "path": "node_modules/expo-glass-effect",
-      "name": "expo-glass-effect",
-      "version": "56.0.4",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-haptics",
       "name": "expo-haptics",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-haptics/-/expo-haptics-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/expo-haptics/-/expo-haptics-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-image",
       "name": "expo-image",
-      "version": "56.0.11",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-56.0.11.tgz"
+      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-image-loader",
       "name": "expo-image-loader",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-image-manipulator",
       "name": "expo-image-manipulator",
-      "version": "56.0.24",
+      "version": "57.0.8",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-image-manipulator/-/expo-image-manipulator-56.0.24.tgz"
+      "resolved": "https://registry.npmjs.org/expo-image-manipulator/-/expo-image-manipulator-57.0.8.tgz"
     },
     {
       "path": "node_modules/expo-json-utils",
       "name": "expo-json-utils",
-      "version": "56.0.0",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-56.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-keep-awake",
       "name": "expo-keep-awake",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-56.0.3.tgz"
-    },
-    {
-      "path": "node_modules/expo-linking",
-      "name": "expo-linking",
-      "version": "56.0.16",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-linking/-/expo-linking-56.0.16.tgz"
+      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-local-authentication",
       "name": "expo-local-authentication",
-      "version": "56.0.5",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-local-authentication/-/expo-local-authentication-56.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/expo-local-authentication/-/expo-local-authentication-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-localization",
       "name": "expo-localization",
-      "version": "56.0.6",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-localization/-/expo-localization-56.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/expo-localization/-/expo-localization-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-manifests",
       "name": "expo-manifests",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-manifests/-/expo-manifests-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-manifests/-/expo-manifests-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-modules-autolinking",
       "name": "expo-modules-autolinking",
-      "version": "56.0.21",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-56.0.21.tgz"
+      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-57.0.9.tgz"
     },
     {
       "path": "node_modules/expo-modules-core",
       "name": "expo-modules-core",
-      "version": "56.0.23",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-56.0.23.tgz"
+      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-modules-jsi",
       "name": "expo-modules-jsi",
-      "version": "56.0.12",
+      "version": "57.0.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-56.0.12.tgz"
+      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.0.4.tgz"
     },
     {
       "path": "node_modules/expo-network",
       "name": "expo-network",
-      "version": "56.0.5",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-network/-/expo-network-56.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/expo-network/-/expo-network-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-notifications",
       "name": "expo-notifications",
-      "version": "56.0.23",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-56.0.23.tgz"
+      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.9.tgz"
     },
     {
-      "path": "node_modules/expo-router",
-      "name": "expo-router",
-      "version": "56.2.18",
+      "path": "node_modules/expo-notifications/node_modules/expo-constants",
+      "name": "expo-notifications/node_modules/expo-constants",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-56.2.18.tgz"
+      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.9.tgz"
     },
     {
       "path": "node_modules/expo-secure-store",
       "name": "expo-secure-store",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-56.0.4.tgz"
-    },
-    {
-      "path": "node_modules/expo-server",
-      "name": "expo-server",
-      "version": "56.0.5",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-server/-/expo-server-56.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-sharing",
       "name": "expo-sharing",
-      "version": "56.0.24",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-56.0.24.tgz"
+      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.10.tgz"
+    },
+    {
+      "path": "node_modules/expo-sharing/node_modules/@expo/plist",
+      "name": "expo-sharing/node_modules/@expo/plist",
+      "version": "0.8.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
     },
     {
       "path": "node_modules/expo-splash-screen",
       "name": "expo-splash-screen",
-      "version": "56.0.14",
+      "version": "57.0.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-56.0.14.tgz"
+      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-57.0.5.tgz"
     },
     {
       "path": "node_modules/expo-status-bar",
       "name": "expo-status-bar",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-57.0.1.tgz"
     },
     {
-      "path": "node_modules/expo-symbols",
-      "name": "expo-symbols",
-      "version": "56.0.7",
+      "path": "node_modules/expo-store-review",
+      "name": "expo-store-review",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-symbols/-/expo-symbols-56.0.7.tgz"
+      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-system-ui",
       "name": "expo-system-ui",
-      "version": "56.0.5",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-system-ui/-/expo-system-ui-56.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/expo-system-ui/-/expo-system-ui-57.0.2.tgz"
+    },
+    {
+      "path": "node_modules/expo-system-ui/node_modules/@react-native/normalize-colors",
+      "name": "expo-system-ui/node_modules/@react-native/normalize-colors",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.86.2.tgz"
     },
     {
       "path": "node_modules/expo-updates-interface",
       "name": "expo-updates-interface",
-      "version": "56.0.2",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-56.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-web-browser",
       "name": "expo-web-browser",
-      "version": "56.0.6",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-56.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-widgets",
       "name": "expo-widgets",
-      "version": "56.0.23",
+      "version": "57.0.8",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-56.0.23.tgz"
+      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.8.tgz"
+    },
+    {
+      "path": "node_modules/expo-widgets/node_modules/@expo/plist",
+      "name": "expo-widgets/node_modules/@expo/plist",
+      "version": "0.8.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
+    },
+    {
+      "path": "node_modules/expo-widgets/node_modules/@expo/ui",
+      "name": "expo-widgets/node_modules/@expo/ui",
+      "version": "57.0.9",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.9.tgz"
     },
     {
       "path": "node_modules/expo/node_modules/@expo/cli",
       "name": "expo/node_modules/@expo/cli",
-      "version": "56.1.23",
+      "version": "57.0.13",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-56.1.23.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-57.0.13.tgz"
     },
     {
       "path": "node_modules/expo/node_modules/@expo/cli/node_modules/@expo/router-server",
       "name": "expo/node_modules/@expo/cli/node_modules/@expo/router-server",
-      "version": "56.0.17",
+      "version": "57.0.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/router-server/-/router-server-56.0.17.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/router-server/-/router-server-57.0.5.tgz"
     },
     {
-      "path": "node_modules/expo/node_modules/@expo/env",
-      "name": "expo/node_modules/@expo/env",
-      "version": "2.3.1",
+      "path": "node_modules/expo/node_modules/@expo/dom-webview",
+      "name": "expo/node_modules/@expo/dom-webview",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/dom-webview/-/dom-webview-57.0.1.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/@expo/log-box",
+      "name": "expo/node_modules/@expo/log-box",
+      "version": "57.0.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/log-box/-/log-box-57.0.2.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/@expo/plist",
+      "name": "expo/node_modules/@expo/plist",
+      "version": "0.8.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/@expo/schema-utils",
+      "name": "expo/node_modules/@expo/schema-utils",
+      "version": "57.0.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/schema-utils/-/schema-utils-57.0.2.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/@react-native/debugger-frontend",
+      "name": "expo/node_modules/@react-native/debugger-frontend",
+      "version": "0.86.2",
+      "license": "BSD-3-Clause",
+      "resolved": "https://registry.npmjs.org/@react-native/debugger-frontend/-/debugger-frontend-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/@react-native/debugger-shell",
+      "name": "expo/node_modules/@react-native/debugger-shell",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/debugger-shell/-/debugger-shell-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/@react-native/dev-middleware",
+      "name": "expo/node_modules/@react-native/dev-middleware",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/dev-middleware/-/dev-middleware-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/@react-native/dev-middleware/node_modules/ws",
+      "name": "expo/node_modules/@react-native/dev-middleware/node_modules/ws",
+      "version": "7.5.13",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.13.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/babel-plugin-syntax-hermes-parser",
+      "name": "expo/node_modules/babel-plugin-syntax-hermes-parser",
+      "version": "0.36.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/babel-plugin-syntax-hermes-parser/-/babel-plugin-syntax-hermes-parser-0.36.1.tgz"
     },
     {
       "path": "node_modules/expo/node_modules/babel-preset-expo",
       "name": "expo/node_modules/babel-preset-expo",
-      "version": "56.0.19",
+      "version": "57.0.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/babel-preset-expo/-/babel-preset-expo-56.0.19.tgz"
+      "resolved": "https://registry.npmjs.org/babel-preset-expo/-/babel-preset-expo-57.0.6.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/expo-constants",
+      "name": "expo/node_modules/expo-constants",
+      "version": "57.0.9",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.9.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/expo-server",
+      "name": "expo/node_modules/expo-server",
+      "version": "57.0.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-server/-/expo-server-57.0.1.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/hermes-estree",
+      "name": "expo/node_modules/hermes-estree",
+      "version": "0.36.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.1.tgz"
+    },
+    {
+      "path": "node_modules/expo/node_modules/hermes-parser",
+      "name": "expo/node_modules/hermes-parser",
+      "version": "0.36.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.1.tgz"
     },
     {
       "path": "node_modules/expo/node_modules/semver",
@@ -6144,9 +6585,9 @@
     {
       "path": "node_modules/nativewind",
       "name": "nativewind",
-      "version": "4.2.5",
+      "version": "4.2.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/nativewind/-/nativewind-4.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/nativewind/-/nativewind-4.2.6.tgz"
     },
     {
       "path": "node_modules/natural-compare",
@@ -6767,9 +7208,9 @@
     {
       "path": "node_modules/react-native-css-interop",
       "name": "react-native-css-interop",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-css-interop/-/react-native-css-interop-0.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-css-interop/-/react-native-css-interop-0.2.6.tgz"
     },
     {
       "path": "node_modules/react-native-css-interop/node_modules/detect-libc",
@@ -6858,9 +7299,9 @@
     {
       "path": "node_modules/react-native-css-interop/node_modules/semver",
       "name": "react-native-css-interop/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/react-native-drawer-layout",
@@ -6872,9 +7313,9 @@
     {
       "path": "node_modules/react-native-gesture-handler",
       "name": "react-native-gesture-handler",
-      "version": "2.31.2",
+      "version": "2.32.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.31.2.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.32.0.tgz"
     },
     {
       "path": "node_modules/react-native-get-random-values",
@@ -8320,7 +8761,7 @@
     }
   ],
   "blockers": [
-    "npm audit found 15 high vulnerabilities."
+    "npm audit found 16 high vulnerabilities."
   ],
   "warnings": [
     "Missing registry-backed dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true after reviewing the exact RC scanner artifacts."

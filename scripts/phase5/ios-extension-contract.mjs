@@ -12,20 +12,20 @@ const EXPECTED_SOURCE_SCHEMES = Object.freeze({
 });
 const REVIEWED_DEPENDENCY_LOCKS = Object.freeze({
   '@expo/ui': Object.freeze({
-    specifier: '~56.0.22',
-    path: 'node_modules/@expo/ui',
-    version: '56.0.22',
-    resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-56.0.22.tgz',
+    specifier: '~57.0.9',
+    path: 'apps/mobile/node_modules/@expo/ui',
+    version: '57.0.9',
+    resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-57.0.9.tgz',
     integrity:
-      'sha512-B6CXc+WJg2GE4KF6LrCPTf+ozMWKMG9TAVc//gQYUsLzFZzm0vCgUqXRiaNJ6BukpHoZPLKsQZ95VsSyTVda3A==',
+      'sha512-VIxvk5ncgylBj2vrIP1iLaMc3XmYucKbf0hIcg3qx9l2anB9JzaYnH7cvVgNU3RfwV8R9m/tA7lX9BP7D8uMQw==',
   }),
   'expo-widgets': Object.freeze({
-    specifier: '56.0.23',
+    specifier: '57.0.8',
     path: 'node_modules/expo-widgets',
-    version: '56.0.23',
-    resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-56.0.23.tgz',
+    version: '57.0.8',
+    resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.8.tgz',
     integrity:
-      'sha512-q7A+gqFBpYXSB6gtiiZTbvith1nZTlF8bbhQ0C/dA4A2UOL8+xOG4l9cHnj8MFabZmiArhxXN7uSCji9bRbIpg==',
+      'sha512-D5pSnmz48/AEYFfZAQuy+TS+HwkXxj0RB10n0jeORMc4gPM9LKqj0hWt1xCYZ6PpuyJ4QS8hrXSKLK8kXphWPg==',
   }),
 });
 
@@ -80,7 +80,7 @@ export function validateIosExtensionConfig({ config, packageJson, packageLock, v
     3, 'package-lock.json must use reviewed lockfileVersion 3.');
   for (const [dependency, reviewed] of Object.entries(REVIEWED_DEPENDENCY_LOCKS)) {
     require(packageJson?.dependencies?.[dependency] ===
-      reviewed.specifier, `${dependency} must stay pinned to the reviewed Expo SDK 56 range ${reviewed.specifier}.`);
+      reviewed.specifier, `${dependency} must stay pinned to the reviewed Expo SDK 57 range ${reviewed.specifier}.`);
     require(packageLock?.packages?.['apps/mobile']?.dependencies?.[dependency] ===
       reviewed.specifier, `package-lock.json must preserve the ${dependency} workspace specifier ${reviewed.specifier}.`);
     const locked = packageLock?.packages?.[reviewed.path];

@@ -376,7 +376,7 @@ require(app.ios?.deploymentTarget ===
 require(buildProperties.android?.minSdkVersion ===
   29, 'Android minSdkVersion must stay at API 29 / Android 10+ for the launch support floor.');
 require(buildProperties.android?.compileSdkVersion ===
-  36, 'Android compileSdkVersion must stay at API 36 for Expo SDK 56 native builds.');
+  36, 'Android compileSdkVersion must stay at API 36 for Expo SDK 57 native builds.');
 require(buildProperties.android?.targetSdkVersion ===
   36, 'Android targetSdkVersion must stay at API 36 for current Play target policy.');
 require(Boolean(
@@ -549,7 +549,7 @@ require(/const defaultPacketOutDir = 'docs\/phase-5\/generated'/.test(qaPacketBu
   /\.tmp\\\/phase5-packet-fixtures/.test(qaPacketBuilder) &&
   /device-qa-packet\.json/.test(qaPacketBuilder) &&
   /device-qa-packet\.md/.test(qaPacketBuilder) &&
-  /captureReleaseQaSnapshot\(\{[\s\S]*inputPaths: requiredFiles,[\s\S]*outputPaths: packetOutputPaths,/.test(
+  /captureReleaseQaSnapshot\(\{[\s\S]*inputPaths: checkMode \? \[\.\.\.requiredFiles, \.\.\.packetOutputPaths\] : requiredFiles,[\s\S]*outputPaths: checkMode \? \[\] : packetOutputPaths,/.test(
     qaPacketBuilder,
   ) &&
   /captureEvidenceBindings\(observedEvidenceRecords\)/.test(qaPacketBuilder) &&
@@ -595,7 +595,7 @@ require(/rejects Boolean-only CAT-06 camera clearance/.test(qaPacketSmoke) &&
   /PHASE5_CAMERA_PERMISSION_QA_PASS is ignored/.test(
     qaPacketBuilder,
   ), 'Phase 5 QA packet smoke must reject the legacy camera Boolean and require the 54-run artifact-bound CAT-06 matrix.');
-require(/Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+require(/Phase 5 device QA packet requires a clean Git worktree for governed evidence validation/.test(qaPacketBuilder) &&
   /if \(strict\) blockers\.push\(dirtyMessage\)/.test(qaPacketBuilder) &&
   /strict Phase 5 QA packet rejects a dirty source worktree/.test(qaPacketSmoke) &&
   /non-strict Phase 5 QA packet warns on dirty source/.test(qaPacketSmoke) &&
@@ -690,17 +690,17 @@ for (const file of [
   'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
   'scripts/phase5/patch-expo-widgets-lifecycle.test.mjs',
   'scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
-  'scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift',
-  'scripts/phase5/expo-widgets-56.0.23/AppIntent.swift',
-  'scripts/phase5/expo-widgets-56.0.23/EntryView.swift',
-  'scripts/phase5/expo-widgets-56.0.23/ExpoWidgets.podspec',
-  'scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift',
-  'scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift',
-  'scripts/phase5/expo-widgets-56.0.23/TimelineProvider.swift',
-  'scripts/phase5/expo-widgets-56.0.23/Utils.swift',
-  'scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift',
-  'scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift',
-  'scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift',
+  'scripts/phase5/expo-widgets-57.0.8/RoutineKindWidgetLifecycleStore.swift',
+  'scripts/phase5/expo-widgets-57.0.8/AppIntent.swift',
+  'scripts/phase5/expo-widgets-57.0.8/EntryView.swift',
+  'scripts/phase5/expo-widgets-57.0.8/ExpoWidgets.podspec',
+  'scripts/phase5/expo-widgets-57.0.8/LiveActivity.swift',
+  'scripts/phase5/expo-widgets-57.0.8/LiveActivityFactory.swift',
+  'scripts/phase5/expo-widgets-57.0.8/TimelineProvider.swift',
+  'scripts/phase5/expo-widgets-57.0.8/Utils.swift',
+  'scripts/phase5/expo-widgets-57.0.8/WidgetLiveActivity.swift',
+  'scripts/phase5/expo-widgets-57.0.8/WidgetObject.swift',
+  'scripts/phase5/expo-widgets-57.0.8/WidgetsModule.swift',
   'scripts/phase5/build-device-qa-packet.mjs',
   'scripts/phase5/check-native-config.mjs',
   'scripts/phase5/ios-extension-contract.mjs',

@@ -1,14 +1,14 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-08-08T19:00:07.566Z
+Generated: 2026-08-08T19:23:35.430Z
 Audit mode: registry
 Audit completed: yes
-Package count: 1123
+Package count: 1182
 Lockfile version: 3
 
 ## Vulnerabilities
 
-`{"info":0,"low":0,"moderate":9,"high":15,"critical":0,"total":24}`
+`{"info":0,"low":0,"moderate":9,"high":16,"critical":0,"total":25}`
 
 ## Audit Findings
 
@@ -17,18 +17,19 @@ Lockfile version: 3
 | `@expo/cli` | high | no | @expo/config, @expo/config-plugins, @expo/inline-modules, @expo/metro, @expo/metro-config, @expo/prebuild-config | available | node_modules/expo/node_modules/@expo/cli |
 | `@expo/metro` | high | no | metro, metro-config, metro-transform-worker | expo@53.0.27 (breaking) | node_modules/@expo/metro |
 | `@expo/metro-config` | high | no | @expo/config, @expo/metro | expo@53.0.27 (breaking) | node_modules/@expo/metro-config |
-| `@react-native/community-cli-plugin` | high | no | metro, metro-config | react-native@0.72.17 (breaking) | node_modules/@react-native/community-cli-plugin |
-| `@react-native/virtualized-lists` | high | no | react-native | react-native@0.72.17 (breaking) | node_modules/@react-native/virtualized-lists |
+| `@react-native/community-cli-plugin` | high | no | @react-native/metro-config, metro, metro-config | react-native@0.72.17 (breaking) | apps/mobile/node_modules/@react-native/community-cli-plugin, node_modules/@react-native/community-cli-plugin |
+| `@react-native/metro-config` | high | no | metro-config | react-native@0.72.17 (breaking) | apps/mobile/node_modules/@react-native/metro-config, node_modules/@react-native/metro-config |
+| `@react-native/virtualized-lists` | high | no | react-native | react-native@0.72.17 (breaking) | apps/mobile/node_modules/react-native/node_modules/@react-native/virtualized-lists, node_modules/@react-native/virtualized-lists |
 | `expo` | high | yes | @expo/cli, @expo/config, @expo/config-plugins, @expo/local-build-cache-provider, @expo/metro, @expo/metro-config | expo@53.0.27 (breaking) | node_modules/expo |
 | `image-size` | high | no | image-size: ICNS parser allows denial of service through an infinite loop (<=2.0.2), image-size: JXL and HEIF parsers allow denial of service through infinite loops (<=2.0.2) | expo@53.0.27 (breaking) | node_modules/image-size |
 | `metro` | high | no | image-size, metro-config, metro-transform-worker | expo@53.0.27 (breaking) | node_modules/metro |
-| `metro-config` | high | no | metro | expo@53.0.27 (breaking) | node_modules/metro-config |
+| `metro-config` | high | no | metro | react-native@0.72.17 (breaking) | node_modules/metro-config |
 | `metro-transform-worker` | high | no | metro | expo@53.0.27 (breaking) | node_modules/metro-transform-worker |
-| `react-native` | high | yes | @react-native/community-cli-plugin, @react-native/virtualized-lists | react-native@0.72.17 (breaking) | node_modules/react-native |
+| `react-native` | high | yes | @react-native/community-cli-plugin, @react-native/virtualized-lists | react-native@0.72.17 (breaking) | apps/mobile/node_modules/react-native, node_modules/react-native |
 | `react-native-purchases` | high | yes | react-native | react-native-purchases@8.12.0 (breaking) | node_modules/react-native-purchases |
-| `react-native-reanimated` | high | yes | react-native | react-native-reanimated@4.2.2 (breaking) | node_modules/react-native-reanimated |
+| `react-native-reanimated` | high | yes | react-native, react-native-worklets | react-native-reanimated@4.2.2 (breaking) | apps/mobile/node_modules/react-native-reanimated, node_modules/react-native-reanimated |
 | `react-native-view-shot` | high | yes | react-native | react-native-view-shot@4.0.3 (breaking) | node_modules/react-native-view-shot |
-| `react-native-worklets` | high | yes | react-native | react-native-worklets@0.7.4 (breaking) | node_modules/react-native-worklets |
+| `react-native-worklets` | high | yes | @react-native/metro-config, react-native | react-native-worklets@0.7.4 (breaking) | apps/mobile/node_modules/react-native-worklets, node_modules/react-native-worklets |
 | `@expo/config` | moderate | no | @expo/config-plugins | expo@53.0.27 (breaking) | node_modules/@expo/config |
 | `@expo/config-plugins` | moderate | no | xcode | expo@53.0.27 (breaking) | node_modules/@expo/config-plugins |
 | `@expo/inline-modules` | moderate | no | @expo/config-plugins | available | node_modules/@expo/inline-modules |
@@ -49,7 +50,7 @@ Lockfile version: 3
 
 ## Blockers
 
-- npm audit found 15 high vulnerabilities.
+- npm audit found 16 high vulnerabilities.
 
 ## Warnings
 
@@ -59,7 +60,38 @@ Lockfile version: 3
 
 - `apps/catalog-operator-console` 0.1.0
 - `apps/mobile` 0.1.0
-- `expo-store-review` 56.0.3
+- `@expo/schema-utils` 57.0.2
+- `@expo/ui` 57.0.9
+- `@react-native/assets-registry` 0.86.2
+- `@react-native/codegen` 0.86.2
+- `@react-native/community-cli-plugin` 0.86.2
+- `@react-native/debugger-frontend` 0.86.2
+- `@react-native/debugger-shell` 0.86.2
+- `@react-native/dev-middleware` 0.86.2
+- `@react-native/gradle-plugin` 0.86.2
+- `@react-native/js-polyfills` 0.86.2
+- `@react-native/metro-config` 0.86.2
+- `@react-native/normalize-colors` 0.86.2
+- `babel-plugin-syntax-hermes-parser` 0.36.0
+- `commander` 12.1.0
+- `expo-constants` 57.0.9
+- `expo-linking` 57.0.5
+- `expo-router` 57.0.11
+- `expo-router/node_modules/@expo/log-box` 57.0.2
+- `expo-router/node_modules/@expo/log-box/node_modules/@expo/dom-webview` 57.0.1
+- `expo-router/node_modules/@expo/metro-runtime` 57.0.8
+- `expo-router/node_modules/expo-glass-effect` 57.0.1
+- `expo-router/node_modules/expo-symbols` 57.0.2
+- `expo-server` 57.0.1
+- `hermes-compiler` 250829098.0.16
+- `hermes-estree` 0.36.0
+- `hermes-parser` 0.36.0
+- `react-native` 0.86.2
+- `react-native-reanimated` 4.5.1
+- `react-native-worklets` 0.10.1
+- `react-native/node_modules/@react-native/virtualized-lists` 0.86.2
+- `semver` 7.8.5
+- `ws` 7.5.13
 - `@adobe/css-tools` 4.5.0
 - `@alloc/quick-lru` 5.2.0
 - `@babel/code-frame` 7.29.7
@@ -120,7 +152,10 @@ Lockfile version: 3
 - `@babel/plugin-transform-react-display-name` 7.29.7
 - `@babel/plugin-transform-react-jsx` 7.29.7
 - `@babel/plugin-transform-react-jsx-development` 7.29.7
+- `@babel/plugin-transform-react-jsx-self` 7.29.7
+- `@babel/plugin-transform-react-jsx-source` 7.29.7
 - `@babel/plugin-transform-react-pure-annotations` 7.29.7
+- `@babel/plugin-transform-regenerator` 7.29.8
 - `@babel/plugin-transform-runtime` 7.29.7
 - `@babel/plugin-transform-shorthand-properties` 7.29.7
 - `@babel/plugin-transform-template-literals` 7.29.7
@@ -150,45 +185,42 @@ Lockfile version: 3
 - `@expo-google-fonts/instrument-serif` 0.4.1
 - `@expo-google-fonts/material-symbols` 0.4.42
 - `@expo/code-signing-certificates` 0.0.6
-- `@expo/config` 56.0.13
-- `@expo/config-plugins` 56.0.14
+- `@expo/config` 57.0.7
+- `@expo/config-plugins` 57.0.7
+- `@expo/config-plugins/node_modules/@expo/plist` 0.8.1
 - `@expo/config-plugins/node_modules/semver` 7.8.5
-- `@expo/config-types` 56.0.7
+- `@expo/config-types` 57.0.2
 - `@expo/config/node_modules/semver` 7.8.5
 - `@expo/devcert` 1.2.1
 - `@expo/devcert/node_modules/debug` 3.2.7
-- `@expo/devtools` 56.0.2
-- `@expo/dom-webview` 56.0.6
+- `@expo/devtools` 57.0.1
 - `@expo/env` 2.4.2
-- `@expo/expo-modules-macros-plugin` 0.2.2
-- `@expo/fingerprint` 0.19.9
+- `@expo/expo-modules-macros-plugin` 0.6.1
+- `@expo/fingerprint` 0.20.6
 - `@expo/fingerprint/node_modules/balanced-match` 4.0.4
 - `@expo/fingerprint/node_modules/brace-expansion` 5.0.9
 - `@expo/fingerprint/node_modules/minimatch` 10.2.6
 - `@expo/fingerprint/node_modules/semver` 7.8.5
-- `@expo/image-utils` 0.10.4
+- `@expo/image-utils` 0.11.4
 - `@expo/image-utils/node_modules/semver` 7.8.5
-- `@expo/inline-modules` 0.0.15
-- `@expo/json-file` 10.2.0
-- `@expo/local-build-cache-provider` 56.0.11
-- `@expo/log-box` 56.0.14
+- `@expo/inline-modules` 0.1.4
+- `@expo/json-file` 11.0.1
+- `@expo/local-build-cache-provider` 57.0.5
 - `@expo/metro` 56.0.0
-- `@expo/metro-config` 56.0.18
-- `@expo/metro-config/node_modules/@expo/env` 2.3.1
-- `@expo/metro-file-map` 56.0.3
-- `@expo/metro-runtime` 56.0.19
+- `@expo/metro-config` 57.0.7
+- `@expo/metro-config/node_modules/hermes-estree` 0.36.1
+- `@expo/metro-config/node_modules/hermes-parser` 0.36.1
+- `@expo/metro-file-map` 57.0.1
 - `@expo/osascript` 2.7.1
 - `@expo/package-manager` 1.13.1
-- `@expo/package-manager/node_modules/@expo/json-file` 11.0.1
 - `@expo/plist` 0.7.0
-- `@expo/prebuild-config` 56.0.21
+- `@expo/prebuild-config` 57.0.10
+- `@expo/prebuild-config/node_modules/@react-native/normalize-colors` 0.86.2
 - `@expo/prebuild-config/node_modules/semver` 7.8.5
-- `@expo/require-utils` 56.1.6
-- `@expo/schema-utils` 56.0.2
+- `@expo/require-utils` 57.0.4
 - `@expo/sdk-runtime-versions` 1.0.0
 - `@expo/spawn-async` 1.8.0
 - `@expo/sudo-prompt` 9.3.2
-- `@expo/ui` 56.0.25
 - `@expo/ws-tunnel` 2.0.0
 - `@expo/xcpretty` 4.4.4
 - `@humanfs/core` 0.19.2
@@ -271,7 +303,14 @@ Lockfile version: 3
 - `@react-native-google-signin/google-signin` 16.1.2
 - `@react-native-masked-view/masked-view` 0.3.2
 - `@react-native/assets-registry` 0.85.3
-- `@react-native/babel-plugin-codegen` 0.85.3
+- `@react-native/babel-plugin-codegen` 0.86.2
+- `@react-native/babel-plugin-codegen/node_modules/@react-native/codegen` 0.86.2
+- `@react-native/babel-plugin-codegen/node_modules/hermes-estree` 0.36.0
+- `@react-native/babel-plugin-codegen/node_modules/hermes-parser` 0.36.0
+- `@react-native/babel-preset` 0.86.2
+- `@react-native/babel-preset/node_modules/babel-plugin-syntax-hermes-parser` 0.36.0
+- `@react-native/babel-preset/node_modules/hermes-estree` 0.36.0
+- `@react-native/babel-preset/node_modules/hermes-parser` 0.36.0
 - `@react-native/codegen` 0.85.3
 - `@react-native/community-cli-plugin` 0.85.3
 - `@react-native/community-cli-plugin/node_modules/semver` 7.8.4
@@ -281,6 +320,13 @@ Lockfile version: 3
 - `@react-native/dev-middleware/node_modules/ws` 7.5.11
 - `@react-native/gradle-plugin` 0.85.3
 - `@react-native/js-polyfills` 0.85.3
+- `@react-native/metro-babel-transformer` 0.86.2
+- `@react-native/metro-babel-transformer/node_modules/hermes-estree` 0.36.0
+- `@react-native/metro-babel-transformer/node_modules/hermes-parser` 0.36.0
+- `@react-native/metro-config` 0.85.3
+- `@react-native/metro-config/node_modules/@react-native/babel-plugin-codegen` 0.85.3
+- `@react-native/metro-config/node_modules/@react-native/babel-preset` 0.85.3
+- `@react-native/metro-config/node_modules/@react-native/metro-babel-transformer` 0.85.3
 - `@react-native/normalize-colors` 0.85.3
 - `@react-native/virtualized-lists` 0.85.3
 - `@revenuecat/purchases-js` 1.46.0
@@ -596,54 +642,68 @@ Lockfile version: 3
 - `etag` 1.8.1
 - `event-target-shim` 5.0.1
 - `expect-type` 1.3.0
-- `expo` 56.0.19
-- `expo-apple-authentication` 56.0.4
-- `expo-application` 56.0.3
-- `expo-asset` 56.0.22
-- `expo-build-properties` 56.0.25
+- `expo` 57.0.11
+- `expo-apple-authentication` 57.0.1
+- `expo-application` 57.0.2
+- `expo-asset` 57.0.9
+- `expo-asset/node_modules/expo-constants` 57.0.9
+- `expo-build-properties` 57.0.9
+- `expo-build-properties/node_modules/@expo/schema-utils` 57.0.2
 - `expo-build-properties/node_modules/semver` 7.8.5
-- `expo-camera` 56.0.8
-- `expo-constants` 56.0.23
-- `expo-constants/node_modules/@expo/env` 2.3.1
-- `expo-crypto` 56.0.4
-- `expo-dev-client` 56.0.24
-- `expo-dev-launcher` 56.0.25
-- `expo-dev-menu` 56.0.21
-- `expo-dev-menu-interface` 56.0.1
-- `expo-device` 56.0.4
-- `expo-file-system` 56.0.9
-- `expo-font` 56.0.7
-- `expo-glass-effect` 56.0.4
-- `expo-haptics` 56.0.3
-- `expo-image` 56.0.11
-- `expo-image-loader` 56.0.3
-- `expo-image-manipulator` 56.0.24
-- `expo-json-utils` 56.0.0
-- `expo-keep-awake` 56.0.3
-- `expo-linking` 56.0.16
-- `expo-local-authentication` 56.0.5
-- `expo-localization` 56.0.6
-- `expo-manifests` 56.0.4
-- `expo-modules-autolinking` 56.0.21
-- `expo-modules-core` 56.0.23
-- `expo-modules-jsi` 56.0.12
-- `expo-network` 56.0.5
-- `expo-notifications` 56.0.23
-- `expo-router` 56.2.18
-- `expo-secure-store` 56.0.4
-- `expo-server` 56.0.5
-- `expo-sharing` 56.0.24
-- `expo-splash-screen` 56.0.14
-- `expo-status-bar` 56.0.4
-- `expo-symbols` 56.0.7
-- `expo-system-ui` 56.0.5
-- `expo-updates-interface` 56.0.2
-- `expo-web-browser` 56.0.6
-- `expo-widgets` 56.0.23
-- `expo/node_modules/@expo/cli` 56.1.23
-- `expo/node_modules/@expo/cli/node_modules/@expo/router-server` 56.0.17
-- `expo/node_modules/@expo/env` 2.3.1
-- `expo/node_modules/babel-preset-expo` 56.0.19
+- `expo-camera` 57.0.3
+- `expo-crypto` 57.0.1
+- `expo-dev-client` 57.0.10
+- `expo-dev-launcher` 57.0.10
+- `expo-dev-launcher/node_modules/@expo/schema-utils` 57.0.2
+- `expo-dev-menu` 57.0.10
+- `expo-dev-menu-interface` 57.0.0
+- `expo-device` 57.0.1
+- `expo-file-system` 57.0.2
+- `expo-font` 57.0.1
+- `expo-haptics` 57.0.1
+- `expo-image` 57.0.2
+- `expo-image-loader` 57.0.1
+- `expo-image-manipulator` 57.0.8
+- `expo-json-utils` 57.0.1
+- `expo-keep-awake` 57.0.1
+- `expo-local-authentication` 57.0.2
+- `expo-localization` 57.0.1
+- `expo-manifests` 57.0.1
+- `expo-modules-autolinking` 57.0.9
+- `expo-modules-core` 57.0.10
+- `expo-modules-jsi` 57.0.4
+- `expo-network` 57.0.1
+- `expo-notifications` 57.0.9
+- `expo-notifications/node_modules/expo-constants` 57.0.9
+- `expo-secure-store` 57.0.1
+- `expo-sharing` 57.0.10
+- `expo-sharing/node_modules/@expo/plist` 0.8.1
+- `expo-splash-screen` 57.0.5
+- `expo-status-bar` 57.0.1
+- `expo-store-review` 57.0.1
+- `expo-system-ui` 57.0.2
+- `expo-system-ui/node_modules/@react-native/normalize-colors` 0.86.2
+- `expo-updates-interface` 57.0.1
+- `expo-web-browser` 57.0.2
+- `expo-widgets` 57.0.8
+- `expo-widgets/node_modules/@expo/plist` 0.8.1
+- `expo-widgets/node_modules/@expo/ui` 57.0.9
+- `expo/node_modules/@expo/cli` 57.0.13
+- `expo/node_modules/@expo/cli/node_modules/@expo/router-server` 57.0.5
+- `expo/node_modules/@expo/dom-webview` 57.0.1
+- `expo/node_modules/@expo/log-box` 57.0.2
+- `expo/node_modules/@expo/plist` 0.8.1
+- `expo/node_modules/@expo/schema-utils` 57.0.2
+- `expo/node_modules/@react-native/debugger-frontend` 0.86.2
+- `expo/node_modules/@react-native/debugger-shell` 0.86.2
+- `expo/node_modules/@react-native/dev-middleware` 0.86.2
+- `expo/node_modules/@react-native/dev-middleware/node_modules/ws` 7.5.13
+- `expo/node_modules/babel-plugin-syntax-hermes-parser` 0.36.1
+- `expo/node_modules/babel-preset-expo` 57.0.6
+- `expo/node_modules/expo-constants` 57.0.9
+- `expo/node_modules/expo-server` 57.0.1
+- `expo/node_modules/hermes-estree` 0.36.1
+- `expo/node_modules/hermes-parser` 0.36.1
 - `expo/node_modules/semver` 7.8.5
 - `expo/node_modules/zod` 3.25.76
 - `exponential-backoff` 3.1.3
@@ -869,7 +929,7 @@ Lockfile version: 3
 - `mz` 2.7.0
 - `nanoid` 3.3.18
 - `napi-postinstall` 0.3.4
-- `nativewind` 4.2.5
+- `nativewind` 4.2.6
 - `natural-compare` 1.4.0
 - `negotiator` 0.6.3
 - `node-exports-info` 1.6.0
@@ -958,7 +1018,7 @@ Lockfile version: 3
 - `react-freeze` 1.0.4
 - `react-is` 19.2.7
 - `react-native` 0.85.3
-- `react-native-css-interop` 0.2.5
+- `react-native-css-interop` 0.2.6
 - `react-native-css-interop/node_modules/detect-libc` 1.0.3
 - `react-native-css-interop/node_modules/lightningcss` 1.27.0
 - `react-native-css-interop/node_modules/lightningcss-darwin-arm64` 1.27.0
@@ -971,9 +1031,9 @@ Lockfile version: 3
 - `react-native-css-interop/node_modules/lightningcss-linux-x64-musl` 1.27.0
 - `react-native-css-interop/node_modules/lightningcss-win32-arm64-msvc` 1.27.0
 - `react-native-css-interop/node_modules/lightningcss-win32-x64-msvc` 1.27.0
-- `react-native-css-interop/node_modules/semver` 7.8.4
+- `react-native-css-interop/node_modules/semver` 7.8.5
 - `react-native-drawer-layout` 4.2.10
-- `react-native-gesture-handler` 2.31.2
+- `react-native-gesture-handler` 2.32.0
 - `react-native-get-random-values` 1.11.0
 - `react-native-is-edge-to-edge` 1.3.1
 - `react-native-purchases` 10.4.1
