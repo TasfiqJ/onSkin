@@ -3125,7 +3125,7 @@ export function startCat07ImmutableExpoServer({
     signal: null,
   };
   Object.defineProperty(child, 'cat07LogState', { value: logState });
-  const listenerState = { invalid: false, records: [] };
+  const listenerState = { failure: null, invalid: false, records: [] };
   Object.defineProperty(child, 'cat07ListenerState', { value: listenerState });
   child.on('message', (message) => {
     // Expo also uses the inherited IPC channel. Only messages claiming to be a
@@ -3142,9 +3142,13 @@ export function startCat07ImmutableExpoServer({
           expectedPort: appPort,
         }),
       );
-    } catch {
+    } catch (error) {
       listenerState.invalid = true;
       listenerState.records.length = 0;
+      listenerState.failure =
+        error instanceof Error
+          ? error.message.slice(0, CAT07_MAX_DIAGNOSTIC_STRING_BYTES)
+          : 'CAT07 listener attestation failed validation.';
     }
   });
   child.on('error', () => {
@@ -3304,7 +3308,10 @@ export async function waitForCat07LoopbackListenerAttestation({
   );
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    assert(!child.cat07ListenerState?.invalid, 'CAT07 listener attestation channel is invalid.');
+    assert(
+      !child.cat07ListenerState?.invalid,
+      child.cat07ListenerState?.failure ?? 'CAT07 listener attestation channel is invalid.',
+    );
     assert(!child.cat07LogState?.launchFailure, 'CAT07 Expo child failed to launch.');
     assert(!child.cat07LogState?.exited, 'CAT07 Expo child exited before listener attestation.');
     if (child.cat07ListenerState?.records.length > 0) break;
