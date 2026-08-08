@@ -37,3 +37,10 @@ Set `PHASE9_DEPENDENCY_AUDIT_PASS=true` only after a registry-backed audit has c
 The flag is review metadata only. It cannot replace the source audit, exact
 archive evidence, observed runtime reconciliation, or named professional and
 device signoffs.
+
+The framework-level remediation sequence for any remaining Expo or React Native
+advisories is defined in
+[framework-security-migration-runbook.md](framework-security-migration-runbook.md).
+It is intentionally separate from routine compatible dependency maintenance:
+the runbook requires an incremental SDK migration, re-review of native patches,
+and new archive and physical-device evidence.
