@@ -1668,7 +1668,10 @@ test('CAT07 source monitor records a transient edit even after bytes are restore
   writeFileSync(source, 'transient\n');
   writeFileSync(source, 'stable\n');
   await delay(100);
-  assert.throws(() => monitor.assertClean(), /transient or persistent source-tree mutation/u);
+  assert.throws(
+    () => monitor.assertClean(),
+    /transient or persistent source-tree mutation while the app was served \(source\.ts\)\./u,
+  );
 });
 
 test('CAT07 source monitor permits reviewed generated runtime paths and Windows watcher aliases', async (t) => {
@@ -1712,7 +1715,10 @@ test('CAT07 source monitor rejects undeclared CSS interop cache entries', async 
   t.after(() => monitor.close());
   writeFileSync(path.join(cacheRoot, 'unexpected.js'), Buffer.alloc(0));
   await delay(100);
-  assert.throws(() => monitor.assertClean(), /transient or persistent source-tree mutation/u);
+  assert.throws(
+    () => monitor.assertClean(),
+    /transient or persistent source-tree mutation while the app was served \(node_modules\/react-native-css-interop\/\.cache\/unexpected\.js\)\./u,
+  );
 });
 
 test('CAT07 fatal reporting preserves the first sanitized failure', () => {

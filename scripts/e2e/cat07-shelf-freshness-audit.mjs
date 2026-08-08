@@ -929,6 +929,7 @@ export function parseCat07CdpFrame(
 
 export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
   let mutationObserved = false;
+  let mutationDiagnostic = null;
   const cssInteropRuntimeCachePaths = new Set([
     'node_modules/react-native-css-interop/.cache',
     'node_modules/react-native-css-interop/.cache/android.js',
@@ -969,16 +970,27 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
   const watcher = watch(rootPath, { recursive: true }, (_eventType, filename) => {
     if (filename == null || !allowed(filename)) {
       mutationObserved = true;
+      if (mutationDiagnostic == null) {
+        try {
+          const normalized = normalizeRepoPath(String(filename ?? ''));
+          mutationDiagnostic = /^[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$/u.test(normalized)
+            ? normalized
+            : 'untrusted-path';
+        } catch {
+          mutationDiagnostic = 'untrusted-path';
+        }
+      }
     }
   });
   watcher.on('error', () => {
     mutationObserved = true;
+    mutationDiagnostic ??= 'watch-error';
   });
   return {
     assertClean() {
       assert(
         !mutationObserved,
-        'CAT07 detected a transient or persistent source-tree mutation while the app was served.',
+        `CAT07 detected a transient or persistent source-tree mutation while the app was served (${mutationDiagnostic ?? 'untrusted-path'}).`,
       );
       return true;
     },
