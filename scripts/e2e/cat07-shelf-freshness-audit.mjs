@@ -1960,6 +1960,31 @@ export function buildCat07ChildEnvironment({
   );
 }
 
+export function buildCat07BrowserEnvironment({
+  childEnvironment,
+  hostEnvironment = process.env,
+  platform = process.platform,
+} = {}) {
+  assert(
+    childEnvironment && typeof childEnvironment === 'object',
+    'CAT07 browser environment requires the governed child environment.',
+  );
+  const environment = { ...childEnvironment };
+  if (platform === 'win32') {
+    for (const key of ['APPDATA', 'LOCALAPPDATA', 'USERPROFILE']) {
+      const value = hostEnvironment[key];
+      assert(
+        typeof value === 'string' && value.length > 0 && path.isAbsolute(value),
+        `CAT07 browser requires one absolute host ${key} directory.`,
+      );
+      environment[key] = path.resolve(value);
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(environment).sort(([left], [right]) => comparePaths(left, right)),
+  );
+}
+
 function findCat07NpmCli(nodeExecutable = process.execPath) {
   const executableDirectory = path.dirname(path.resolve(nodeExecutable));
   const candidates = [
@@ -4187,6 +4212,9 @@ export async function runCat07ShelfFreshnessAudit({
     assert(serverReady, `CAT07 Expo server did not become ready at ${baseUrl}.`);
     assert(!server.cat07LogState.exited, 'CAT07 Expo child exited after server readiness.');
     const debugPort = await findAvailablePort(9222);
+    const browserEnvironment = buildCat07BrowserEnvironment({
+      childEnvironment: immutableSource.childEnvironment,
+    });
     immutableSource.runtimeProvenance.browserLaunch = {
       args: cat07BrowserArguments({ debugPort, userDataDir: '<fresh-profile>' }).map((argument) =>
         argument.startsWith('--user-data-dir=') ? '--user-data-dir=<fresh-profile>' : argument,
@@ -4196,7 +4224,7 @@ export async function runCat07ShelfFreshnessAudit({
     browser = startCat07Browser({
       browserPath,
       debugPort,
-      environment: immutableSource.childEnvironment,
+      environment: browserEnvironment,
       executableBinding: browserExecutableBinding,
       userDataDir,
     });

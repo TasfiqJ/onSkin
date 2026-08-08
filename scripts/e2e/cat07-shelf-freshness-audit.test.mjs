@@ -37,6 +37,7 @@ import {
   assertCat07FinalSourceProvenance,
   assertCat07SourceSafetyContract,
   buildCat07AttestedServerNodeArgs,
+  buildCat07BrowserEnvironment,
   buildCat07ChildEnvironment,
   buildCat07RuntimeDriftFingerprint,
   buildCat07ScrubbedNodeArgs,
@@ -706,6 +707,35 @@ test('CAT07 app environment is a minimal positive allowlist and never inherits h
     assert.equal(forbidden in childEnvironment, false);
   }
   assert.equal(childEnvironment.EXPO_UNSTABLE_HEADLESS, '1');
+  const browserHostEnvironment =
+    process.platform === 'win32'
+      ? {
+          APPDATA: path.join(fixtureRoot, 'host-app-data'),
+          LOCALAPPDATA: path.join(fixtureRoot, 'host-local-app-data'),
+          USERPROFILE: path.join(fixtureRoot, 'host-profile'),
+        }
+      : {};
+  for (const directory of Object.values(browserHostEnvironment)) {
+    mkdirSync(directory, { recursive: true });
+  }
+  const browserEnvironment = buildCat07BrowserEnvironment({
+    childEnvironment,
+    hostEnvironment: browserHostEnvironment,
+  });
+  for (const forbidden of [
+    'AWS_SECRET_ACCESS_KEY',
+    'NODE_OPTIONS',
+    'NODE_PATH',
+    'NPM_TOKEN',
+    'npm_config_userconfig',
+  ]) {
+    assert.equal(forbidden in browserEnvironment, false);
+  }
+  if (process.platform === 'win32') {
+    assert.equal(browserEnvironment.APPDATA, path.resolve(browserHostEnvironment.APPDATA));
+    assert.equal(browserEnvironment.LOCALAPPDATA, path.resolve(browserHostEnvironment.LOCALAPPDATA));
+    assert.equal(browserEnvironment.USERPROFILE, path.resolve(browserHostEnvironment.USERPROFILE));
+  }
   const probePath = path.join(fixtureRoot, 'environment-probe.mjs');
   writeFileSync(probePath, 'process.stdout.write(JSON.stringify(process.env));\n');
   const child = spawnSync(
