@@ -849,7 +849,7 @@ test('CAT07 pre-initializes and binds only the exact CSS interop runtime cache',
   t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
   const packageRoot = path.join(fixtureRoot, 'node_modules', 'react-native-css-interop');
   const cacheRoot = path.join(packageRoot, '.cache');
-  const expectedFiles = ['android.js', 'ios.js', 'macos.js', 'native.js', 'windows.js'];
+  const expectedFiles = ['android.js', 'ios.js', 'ios.map', 'macos.js', 'native.js', 'windows.js'];
   mkdirSync(packageRoot, { recursive: true });
 
   assert.equal(

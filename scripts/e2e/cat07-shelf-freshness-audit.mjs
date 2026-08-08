@@ -933,6 +933,7 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
     'node_modules/react-native-css-interop/.cache',
     'node_modules/react-native-css-interop/.cache/android.js',
     'node_modules/react-native-css-interop/.cache/ios.js',
+    'node_modules/react-native-css-interop/.cache/ios.map',
     'node_modules/react-native-css-interop/.cache/macos.js',
     'node_modules/react-native-css-interop/.cache/native.js',
     'node_modules/react-native-css-interop/.cache/windows.js',
@@ -2734,7 +2735,7 @@ export function prepareCat07CssInteropRuntimeCache(snapshotRoot) {
     mkdirSync(cacheRoot);
   }
 
-  const expectedFiles = ['android.js', 'ios.js', 'macos.js', 'native.js', 'windows.js'];
+  const expectedFiles = ['android.js', 'ios.js', 'ios.map', 'macos.js', 'native.js', 'windows.js'];
   for (const filename of expectedFiles) {
     const filePath = path.join(cacheRoot, filename);
     const existingFile = lstatSync(filePath, { throwIfNoEntry: false });
