@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-08-06T00:38:06.023Z
+Generated: 2026-08-08T18:27:27.925Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 60b4c80196b4ef511448f4a008b146ed27355990
+Git SHA: 75ae4e8a567adab19d82fdbb60a8bcf478edbd06
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -995,7 +995,7 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `3cbb82a8c65e9865fce862c40f56a34b28f21bdbfdad344c53f2bba077e2b1e1`
+- Review snapshot SHA-256: `4024285860c09a637f2c252516efe79532a18b4097bb5b9d65d4129fc92a397f`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -1004,7 +1004,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md` - 18597 bytes - sha256 `f365db66e5db9a4d0847de9c184558e946e21176587d587fc8bba6f8754c42d5`
-- `docs/phase-3/regulatory-positioning-memo.md` - 8907 bytes - sha256 `d0e67dde9ea011dd2846934f38f30b636b4233fccd4faf4773195c6a7016ea5d`
+- `docs/phase-3/regulatory-positioning-memo.md` - 10738 bytes - sha256 `856e44028f7f4ca36c3955fc85082f7a7404e97bb1c03a1f675d4f0f1cafe27e`
 - `docs/legal-readiness.md` - 16423 bytes - sha256 `0738dd5c741a5e666d0b3e0a0fdd0fd11cf3233ec69ede5a8b166c324cda1e7f`
 - `apps/mobile/src/lib/legal/disclaimer.ts` - 926 bytes - sha256 `b9cc550cb5802a61fbc0c782585b4fcc388719d2475e5f7d476005da4f26e174`
 
@@ -1133,7 +1133,7 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `60640c0b706c74b947cf01e3245639998c648be31c89cc74d270f1bb28dcb886`
+- Review snapshot SHA-256: `c94ef6afb7d510d2104156c8c5489b84a0c7c705c09c86fd5af56eaa029f9f4f`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -1141,7 +1141,7 @@ Sources:
 
 Sources:
 
-- `docs/phase-3/regulatory-positioning-memo.md` - 8907 bytes - sha256 `d0e67dde9ea011dd2846934f38f30b636b4233fccd4faf4773195c6a7016ea5d`
+- `docs/phase-3/regulatory-positioning-memo.md` - 10738 bytes - sha256 `856e44028f7f4ca36c3955fc85082f7a7404e97bb1c03a1f675d4f0f1cafe27e`
 - `docs/phase-3/store-metadata-review.md` - 2533 bytes - sha256 `eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1`
 - `docs/14-growth-to-seven-figures.md` - 57855 bytes - sha256 `a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0`
 

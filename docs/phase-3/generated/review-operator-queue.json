@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-08-06T00:38:06.023Z",
+  "generatedAt": "2026-08-08T18:27:27.925Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "60b4c80196b4ef511448f4a008b146ed27355990",
+  "gitSha": "75ae4e8a567adab19d82fdbb60a8bcf478edbd06",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 149485,
-    "sha256": "cd3e9738ab771584149cd0ee35c429c1d478bdda809508671bc43d4a35de9b54",
-    "currentSha256": "cd3e9738ab771584149cd0ee35c429c1d478bdda809508671bc43d4a35de9b54"
+    "bytes": 149487,
+    "sha256": "3fcaf9fa147a2c154e24ea4661ace76ad91b591db3c01b331bebadb8d27ec890",
+    "currentSha256": "3fcaf9fa147a2c154e24ea4661ace76ad91b591db3c01b331bebadb8d27ec890"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -3087,7 +3087,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "3cbb82a8c65e9865fce862c40f56a34b28f21bdbfdad344c53f2bba077e2b1e1",
+      "reviewSnapshotSha256": "4024285860c09a637f2c252516efe79532a18b4097bb5b9d65d4129fc92a397f",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -3104,8 +3104,8 @@
         {
           "path": "docs/phase-3/regulatory-positioning-memo.md",
           "exists": true,
-          "bytes": 8907,
-          "sha256": "d0e67dde9ea011dd2846934f38f30b636b4233fccd4faf4773195c6a7016ea5d"
+          "bytes": 10738,
+          "sha256": "856e44028f7f4ca36c3955fc85082f7a7404e97bb1c03a1f675d4f0f1cafe27e"
         },
         {
           "path": "docs/legal-readiness.md",
@@ -3623,7 +3623,7 @@
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "60640c0b706c74b947cf01e3245639998c648be31c89cc74d270f1bb28dcb886",
+      "reviewSnapshotSha256": "c94ef6afb7d510d2104156c8c5489b84a0c7c705c09c86fd5af56eaa029f9f4f",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -3634,8 +3634,8 @@
         {
           "path": "docs/phase-3/regulatory-positioning-memo.md",
           "exists": true,
-          "bytes": 8907,
-          "sha256": "d0e67dde9ea011dd2846934f38f30b636b4233fccd4faf4773195c6a7016ea5d"
+          "bytes": 10738,
+          "sha256": "856e44028f7f4ca36c3955fc85082f7a7404e97bb1c03a1f675d4f0f1cafe27e"
         },
         {
           "path": "docs/phase-3/store-metadata-review.md",
