@@ -14,6 +14,26 @@ for DB-06. It cannot run against a non-empty or incrementally migrated project.
 It does not turn the unavailable hosted Supabase project into a local pass and
 does not mark DB-06 complete.
 
+## Latest Source Revalidation (2026-08-08)
+
+The credential-free DB-06 source contract was revalidated at committed source
+revision `08b3022f1745939ca4e38f158cdfe2a40ff5f204` with:
+
+```text
+npm run phase2:deploy-env-smoke
+```
+
+The check passed its 32 Node contract tests, three Deno traffic-freeze tests,
+and the final staging deployment source smoke check. It confirms the
+source-bound migration, redaction, fresh-target, function inventory, traffic
+freeze, cutover-attestation, and evidence-finalization controls.
+
+The target-bound preparation command was also invoked without a project ref
+and correctly failed closed with `DB06_PREPARATION_PROJECT_REF_REQUIRED`.
+No project ref, credential, cutover attestation, live evidence directory, or
+hosted deployment was created. DB-06 therefore remains `in_progress` and
+blocked by `ACCT-03`; this revalidation is not staging acceptance evidence.
+
 The procedure is intentionally narrower than a general migration tool. Current
 account-deletion, publication, entitlement, health-consent, and Sign in with
 Apple migrations contain forward-only security boundaries. A generic
