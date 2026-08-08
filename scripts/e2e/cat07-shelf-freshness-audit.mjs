@@ -937,6 +937,16 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
     'node_modules/react-native-css-interop/.cache/native.js',
     'node_modules/react-native-css-interop/.cache/windows.js',
   ]);
+  // Windows recursive watchers emit the parent directory as a duplicate event
+  // when an existing approved generated file changes. These aliases are not
+  // source outputs: an unapproved descendant is still reported by its own
+  // event and fails closed.
+  const reviewedGeneratedWatcherAncestors = new Set([
+    'apps',
+    'apps/mobile',
+    'node_modules',
+    'node_modules/react-native-css-interop',
+  ]);
   const allowed = (relativePath) => {
     const normalized = normalizeRepoPath(relativePath);
     return (
@@ -950,12 +960,15 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
       normalized.startsWith('apps/mobile/.expo/') ||
       normalized === CAT07_EXPO_ENV_PATH ||
       cssInteropRuntimeCachePaths.has(normalized) ||
+      reviewedGeneratedWatcherAncestors.has(normalized) ||
       normalized === CAT07_EVIDENCE_RELATIVE_DIR ||
       normalized.startsWith(`${CAT07_EVIDENCE_RELATIVE_DIR}/`)
     );
   };
   const watcher = watch(rootPath, { recursive: true }, (_eventType, filename) => {
-    if (filename == null || !allowed(filename)) mutationObserved = true;
+    if (filename == null || !allowed(filename)) {
+      mutationObserved = true;
+    }
   });
   watcher.on('error', () => {
     mutationObserved = true;
@@ -3115,7 +3128,14 @@ export function startCat07ImmutableExpoServer({
   const listenerState = { invalid: false, records: [] };
   Object.defineProperty(child, 'cat07ListenerState', { value: listenerState });
   child.on('message', (message) => {
+    // Expo also uses the inherited IPC channel. Only messages claiming to be a
+    // CAT07 listener attestation participate in this security boundary; those
+    // must still be exact, unique, and child-owned.
+    if (!cat07PlainRecord(message) || message.kind !== 'cat07-loopback-listener') return;
     try {
+      if (listenerState.records.length > 0) {
+        throw new Error('CAT07 listener attestation is duplicated.');
+      }
       listenerState.records.push(
         parseCat07LoopbackListenerAttestation(message, {
           expectedPid: child.pid,

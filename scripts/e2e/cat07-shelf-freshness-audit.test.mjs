@@ -757,10 +757,11 @@ test('CAT07 Expo launch attests its own exact loopback listener over inherited I
   writeFileSync(
     expoCliPath,
     [
-      "import { createServer } from 'node:http';",
-      "const portIndex = process.argv.indexOf('--port');",
-      'const port = Number(process.argv[portIndex + 1]);',
-      "createServer((_request, response) => response.end('ok')).listen(port, 'localhost');",
+       "import { createServer } from 'node:http';",
+       "const portIndex = process.argv.indexOf('--port');",
+       'const port = Number(process.argv[portIndex + 1]);',
+       "process.send?.({ kind: 'expo-framework-message', value: 'ignored' });",
+       "createServer((_request, response) => response.end('ok')).listen(port, 'localhost');",
       '',
     ].join('\n'),
   );
@@ -1641,7 +1642,7 @@ test('CAT07 source monitor records a transient edit even after bytes are restore
   assert.throws(() => monitor.assertClean(), /transient or persistent source-tree mutation/u);
 });
 
-test('CAT07 source monitor permits only exact reviewed generated runtime paths', async (t) => {
+test('CAT07 source monitor permits reviewed generated runtime paths and Windows watcher aliases', async (t) => {
   const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'cat07-expo-env-source-'));
   t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
   const mobileRoot = path.join(fixtureRoot, 'apps', 'mobile');
@@ -1653,10 +1654,17 @@ test('CAT07 source monitor permits only exact reviewed generated runtime paths',
   );
   mkdirSync(mobileRoot, { recursive: true });
   mkdirSync(cssInteropCacheRoot, { recursive: true });
+  const expoEnvironmentPath = path.join(mobileRoot, 'expo-env.d.ts');
+  const androidCachePath = path.join(cssInteropCacheRoot, 'android.js');
+  // The runner creates these reviewed runtime outputs before installing the
+  // source monitor. Updating an existing allowed file must remain permitted.
+  writeFileSync(expoEnvironmentPath, 'initial reviewed generated runtime bytes');
+  writeFileSync(androidCachePath, Buffer.alloc(0));
+  await delay(100);
   const monitor = createCat07SourceMutationMonitor({ rootPath: fixtureRoot });
   t.after(() => monitor.close());
-  writeFileSync(path.join(mobileRoot, 'expo-env.d.ts'), 'reviewed later by exact byte contract');
-  writeFileSync(path.join(cssInteropCacheRoot, 'android.js'), Buffer.alloc(0));
+  writeFileSync(expoEnvironmentPath, 'reviewed later by exact byte contract');
+  writeFileSync(androidCachePath, Buffer.alloc(0));
   await delay(100);
   assert.equal(monitor.assertClean(), true);
 });
