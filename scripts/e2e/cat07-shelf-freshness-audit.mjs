@@ -950,7 +950,7 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
     'node_modules/react-native-css-interop',
   ]);
   const normalizeWatchedPath = (filename) => {
-    const raw = String(filename ?? '');
+    const raw = String(filename ?? '').replace(/^\\\\\?\\/u, '');
     const relativePath = path.isAbsolute(raw) ? path.relative(rootPath, raw) : raw;
     const normalized = normalizeRepoPath(relativePath);
     if (normalized.length === 0 || normalized === '.') return '.';
