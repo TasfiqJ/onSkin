@@ -17,7 +17,7 @@ does not mark DB-06 complete.
 ## Latest Source Revalidation (2026-08-08)
 
 The credential-free DB-06 source contract was revalidated at committed source
-revision `08b3022f1745939ca4e38f158cdfe2a40ff5f204` with:
+revision `c5e99aaf81a45fcc69df520f513ec390c10c7454` with:
 
 ```text
 npm run phase2:deploy-env-smoke
