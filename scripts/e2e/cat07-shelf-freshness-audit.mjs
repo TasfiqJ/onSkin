@@ -3093,7 +3093,9 @@ export function startCat07ImmutableExpoServer({
       !path.relative(snapshotRoot, expoCliPath).startsWith(`..${path.sep}`),
     'CAT07 Expo CLI must be inside the immutable source snapshot.',
   );
-  const expoArgs = ['start', '--web', '--clear', '--port', String(appPort), '--host', 'localhost'];
+  // Expo's supported localhost-only switch is --localhost. --host controls the
+  // URL type but can still bind the underlying server to the IPv6 wildcard.
+  const expoArgs = ['start', '--web', '--clear', '--port', String(appPort), '--localhost'];
   const args = buildCat07AttestedServerNodeArgs(
     expoCliPath,
     expoArgs,
