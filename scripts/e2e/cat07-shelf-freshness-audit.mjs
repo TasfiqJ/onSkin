@@ -953,14 +953,14 @@ export function createCat07SourceMutationMonitor({ rootPath = repoRoot } = {}) {
     const raw = String(filename ?? '');
     const relativePath = path.isAbsolute(raw) ? path.relative(rootPath, raw) : raw;
     const normalized = normalizeRepoPath(relativePath);
-    return normalized === '..' || normalized.startsWith('../') || normalized.length === 0
-      ? null
-      : normalized;
+    if (normalized.length === 0 || normalized === '.') return '.';
+    return normalized === '..' || normalized.startsWith('../') ? null : normalized;
   };
   const allowed = (filename) => {
     const normalized = normalizeWatchedPath(filename);
     if (normalized == null) return false;
     return (
+      normalized === '.' ||
       normalized === '.git' ||
       normalized.startsWith('.git/') ||
       normalized === '.tmp' ||
