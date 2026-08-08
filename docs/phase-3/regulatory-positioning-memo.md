@@ -2,7 +2,7 @@
 
 Status: not cleared for production launch  
 Owner: founder until counsel/clinical reviewers are retained  
-Last updated: 2026-07-29
+Last updated: 2026-08-08
 
 ## Executive Position
 
@@ -107,6 +107,34 @@ The current implementation already uses production gates for high-risk surfaces:
 - `apps/mobile/src/features/photos/copy.ts`: the no-score/no-diagnosis posture
   remains centralized and test-scanned. Historical Trend copy is not current
   publication authority; PHOTO-05A refuses before result selection or display.
+
+## Primary-Source Revalidation (2026-08-08)
+
+This is a research checkpoint, not legal, clinical, chemistry, or App Review
+approval. It rechecks the launch boundary against the current primary sources
+and does not replace the required named-reviewer signoffs below.
+
+- [Apple App Review Guidelines 5.1.1](https://developer.apple.com/app-store/review/guidelines/)
+  requires an accessible privacy policy both in App Store Connect metadata and
+  in the app; the policy must identify collected data, collection method, uses,
+  third-party protections, retention/deletion, and consent withdrawal. It also
+  requires in-app account deletion when the app supports account creation.
+- [Apple App Review Guidelines 5.1.2](https://developer.apple.com/app-store/review/guidelines/)
+  requires explicit permission before personal data is transmitted or shared,
+  including disclosure of third-party AI recipients. It forbids conditioning
+  core access on tracking, push, or location permissions.
+- [FTC Health Products Compliance Guidance](https://search.ftc.gov/business-guidance/resources/health-products-compliance-guidance)
+  says health-related marketing must be truthful, non-misleading, and supported
+  before dissemination; it evaluates both express claims and the reasonable
+  consumer's overall impression. The guidance specifically applies its
+  principles to health-related apps.
+
+Result: the current source-controlled posture remains the narrowest defensible
+one: no diagnosis, treatment, disease detection, score, or efficacy claim; no
+cloud Ask, paid-link sharing, Trend analysis, or external photo transfer before
+their separate consent, vendor, exact-build, privacy, and professional-review
+gates are positively cleared. This revalidation does **not** clear those gates
+or predict App Review, regulator, or counsel outcomes.
 
 ## Required Signoffs
 
