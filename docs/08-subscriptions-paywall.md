@@ -14,6 +14,22 @@ _The monetization + acquisition engine · the conversion-model choice (reverse t
 > disclose that health-related guidance is under independent review, and must
 > not claim dermatologist review or imply payment unlocks unavailable guidance.
 
+> **Primary-source App Store revalidation (2026-08-08):** This is a planning
+> checkpoint, not App Review approval. Apple’s current
+> [App Review Guidelines 3.1.2](https://developer.apple.com/app-store/review/guidelines/)
+> require an auto-renewable subscription to deliver ongoing value, run for at
+> least seven days, work on every device where the app is available, and never
+> use bait-and-switch or make users perform unrelated tasks to receive their
+> paid entitlement. The first subscription group and auto-renewable product
+> must be submitted with a new app version, with subscription review material,
+> under Apple’s current
+> [App Store Connect submission process](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase)
+> and [subscription setup guidance](https://developer.apple.com/help/app-store-connect/manage-subscriptions/offer-auto-renewable-subscriptions/).
+> The app-granted Explore-first period remains separate from StoreKit: it must
+> not be described as an Apple free trial, subscription offer, or an approved
+> product until the exact App Store Connect configuration, reviewer evidence,
+> and release signoffs exist.
+
 ---
 
 ## TL;DR
