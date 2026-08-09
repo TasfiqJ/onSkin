@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-08-06T00:51:55.515Z
+Generated: 2026-08-09T06:54:15.490Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 53
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 3441
+- Hash references checked: 3539
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -55,7 +55,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-8/generated/growth-store-qa-packet.md          | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.json          | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.md            | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/ios-privacy-source-audit.json      | json | 0                  | 0                          | 156       | 0               |
+| docs/phase-9/generated/ios-privacy-source-audit.json      | json | 0                  | 0                          | 254       | 0               |
 | docs/phase-9/generated/ios-privacy-source-audit.md        | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-catalog-rate-limit.json       | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-catalog-rate-limit.md         | md   | 0                  | 0                          | 0         | 0               |
