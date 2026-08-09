@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T21:58:46.399Z",
+  "generatedAt": "2026-08-09T06:50:45.982Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -191,6 +191,16 @@
       "externalNavigationAllowed": false,
       "analyticsAllowed": false,
       "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
     }
   },
   "platformStatus": {
@@ -300,18 +310,18 @@
       "releaseArchiveAudited": false
     },
     "summary": {
-      "nativePackageCount": 63,
-      "privacyManifestCount": 14,
-      "validPrivacyManifestCount": 14,
+      "nativePackageCount": 72,
+      "privacyManifestCount": 23,
+      "validPrivacyManifestCount": 23,
       "invalidPrivacyManifestCount": 0,
-      "manifestBindingArchiveRequiredCount": 14,
-      "podspecCount": 139,
+      "manifestBindingArchiveRequiredCount": 23,
+      "podspecCount": 228,
       "xcframeworkSourceCandidateCount": 16,
       "frameworkSourceCandidateCount": 0,
       "nativeBinaryFileSourceCandidateCount": 0,
       "appleSdkIntersectionCount": 10,
       "errorCount": 0,
-      "warningCount": 15
+      "warningCount": 24
     },
     "inputs": {
       "baseline": {
@@ -321,23 +331,23 @@
       },
       "mapping": {
         "path": "docs/phase-9/ios-sdk-package-mapping.json",
-        "bytes": 8352,
-        "sha256": "ac482b5579a4ff8ad9b4dc468162b2f8bdc92b7193d45e3661d1f97ce282717a"
+        "bytes": 8370,
+        "sha256": "ba0c235e9547c9af5154c59ea544464acb245264fc322efff5d71748484eaa3f"
       },
       "packageLock": {
         "path": "package-lock.json",
-        "bytes": 557676,
-        "sha256": "65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480"
+        "bytes": 607476,
+        "sha256": "c54fcbece3dbb6d33262bd371f9626bc9dd1e262490b05db45a54dbc941f0988"
       }
     },
     "ledgerHashes": {
-      "nativePackagesSha256": "63a06f5f7ab8d619623c9461ccf29bfd50ee4d576d686aa4ead7320419880dff",
-      "privacyManifestsSha256": "a03117b95f9b43f102b12c1eea4c0396c483067529bed82c38cd34663ab734f7",
-      "podspecsSha256": "a6c71e6ea42a8b22cb9bdaaa9b4aea0f79cc0e42cdac6c2cb728742f01beeb3e",
-      "xcframeworksSha256": "a794063d65e2f7b1c086beffcdf37fb0cd15009f35e6dbbc091e81a7eced54c6",
+      "nativePackagesSha256": "bb8d387764d362560a75798b49cbb8b91577c37d2b9ccb4047fbb0f89e56de81",
+      "privacyManifestsSha256": "2c6cc525899e121d2502adb57cf0b439aeeb9da01729837d77f00f134b6ffe75",
+      "podspecsSha256": "9dfc07e80bf3ac94441b138a7d8783e0cf2bf06b3e767988eeb1153a4ed1a2b0",
+      "xcframeworksSha256": "8aa177c6c9402d6216b5a95c48084a29f743093c5f36d44fb6b556c9656500c9",
       "frameworksSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
       "nativeBinaryFilesSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "appleSdkIntersectionsSha256": "d5540b26393cf10a0a7bdcd92ec886b57827bc332fee4ba03cbf8d401c995aef"
+      "appleSdkIntersectionsSha256": "6f3551f3ed4b7490b8190cc09125336c1715df11c6441fbeb604c1d52ff72112"
     },
     "archiveReviewerMetadataFlag": false,
     "archiveEvidenceIndexValidated": false,

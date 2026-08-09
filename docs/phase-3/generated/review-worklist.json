@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-08T18:31:59.489Z",
+  "generatedAt": "2026-08-09T06:50:11.190Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "089b1faa2cb9392ca460de277b219386c99e6a41",
+  "gitSha": "64e046b1b94ff0f574b4650b4a6b00025545e58d",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -96,8 +96,8 @@
         {
           "path": "docs/legal-readiness.md",
           "exists": true,
-          "bytes": 16423,
-          "sha256": "0738dd5c741a5e666d0b3e0a0fdd0fd11cf3233ec69ede5a8b166c324cda1e7f"
+          "bytes": 17682,
+          "sha256": "f62a23f02476eb87c788c0c78befac43209c217621557af1c6ad4865342e08dd"
         },
         {
           "path": "apps/mobile/src/lib/legal/disclaimer.ts",
@@ -107,7 +107,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "4024285860c09a637f2c252516efe79532a18b4097bb5b9d65d4129fc92a397f",
+      "reviewSnapshotSha256": "b2586b433cfc7196d0787f357932975e9e5a8e1574a5ae562fe187207684ee37",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -127,8 +127,8 @@
         {
           "path": "docs/phase-3/launch-claims-vocabulary.md",
           "exists": true,
-          "bytes": 3613,
-          "sha256": "18a587dde1f99b877e6489b44a6454488efa22ca020fe825b4e1246305912891"
+          "bytes": 4058,
+          "sha256": "2e4bd6258f7c1ef988f69627027136b4d15548d2dea16f291319f38ad7e9d92b"
         },
         {
           "path": "docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md",
@@ -144,7 +144,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "ea6e4340c1ccbdf2a157b06135d134d8b082542e9d6842c41c1e302bc2c927f0",
+      "reviewSnapshotSha256": "0328c0ef3abe88e8596fe44dbf44108c8a9c2aa8f02d18c2e578755da5be49fb",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -170,14 +170,14 @@
         {
           "path": "docs/phase-3/store-metadata-review.md",
           "exists": true,
-          "bytes": 2533,
-          "sha256": "eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1"
+          "bytes": 2962,
+          "sha256": "4741ad6f202401a20656463d6bb5592e21a192eade17bb4db1dda4f46656aca8"
         },
         {
           "path": "docs/phase-3/app-review-notes.md",
           "exists": true,
-          "bytes": 5319,
-          "sha256": "c7e521b926db2c8d3cdc62c9962538ed92da5822c8b1146ba1a1952a59bb7453"
+          "bytes": 5734,
+          "sha256": "526bfceeb7e227462f985d8fed79ae05d2b2afb82c94957d34b544a39f201cce"
         },
         {
           "path": "docs/phase-3/google-play-health-declaration-notes.md",
@@ -193,7 +193,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "5db51fe3c2e854377612c444e19e653cb2337e7ceb4d9de57cadce81d3207369",
+      "reviewSnapshotSha256": "4a3a7f28be367cbac25710232deea6bfe821eb2621e4fa518c0f42d43e6fee4f",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -810,8 +810,8 @@
         {
           "path": "apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts",
           "exists": true,
-          "bytes": 51808,
-          "sha256": "71263bcc56d86655d9057b5c3449b92c4056526439b3296c97e5680aae103dae"
+          "bytes": 51801,
+          "sha256": "fea4f85307c493daa0ce2189d4e2077d069b823fadcdde2f2376267943f91869"
         },
         {
           "path": "docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md",
@@ -821,7 +821,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "65a81aa77af1d98b329ac709fa750ace52455b39dafa879ad76f088168a3d100",
+      "reviewSnapshotSha256": "1d11c734c58bf7d043e7fa4c104dd6b8cbc246c68074e9182e38ac1fa2c45e10",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1375,8 +1375,8 @@
         {
           "path": "apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts",
           "exists": true,
-          "bytes": 51808,
-          "sha256": "71263bcc56d86655d9057b5c3449b92c4056526439b3296c97e5680aae103dae"
+          "bytes": 51801,
+          "sha256": "fea4f85307c493daa0ce2189d4e2077d069b823fadcdde2f2376267943f91869"
         },
         {
           "path": "docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md",
@@ -1386,7 +1386,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "cf40196866669e859b10aafa11de441a8a9fe539fd0fcfdfa5054429ab5d3dd4",
+      "reviewSnapshotSha256": "c0a2b56c759aa7ac6259696d20c34078b958682cf58408991cbb30b4178014b5",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1880,14 +1880,14 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17993,
-          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
+          "bytes": 18185,
+          "sha256": "40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b"
         },
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 41308,
-          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
+          "bytes": 41453,
+          "sha256": "daa7d558c44e3cb246623258a475d78577a6df43d27ec2c17d7022e37e8aea37"
         },
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
@@ -2257,7 +2257,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "c858bd5fa129ae0efa2c72b2260970d12d14f988253391d746777b67a8d8d747",
+      "reviewSnapshotSha256": "13781bfdd88ce6c9a09570cf0387908ada3db01de145967c54707e2a97da58db",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2459,12 +2459,12 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17993,
-          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
+          "bytes": 18185,
+          "sha256": "40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "d7cfefa6fd371e85ffc60752cce679feec2fe0034b98d1fa03cd8fa2217ee2e3",
+      "reviewSnapshotSha256": "b9e2d8082fc0dd8a898bedb6cb446c62566443a7dbe758fd7ae5a76907250db6",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -3234,8 +3234,8 @@
         {
           "path": "docs/phase-3/store-metadata-review.md",
           "exists": true,
-          "bytes": 2533,
-          "sha256": "eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1"
+          "bytes": 2962,
+          "sha256": "4741ad6f202401a20656463d6bb5592e21a192eade17bb4db1dda4f46656aca8"
         },
         {
           "path": "docs/14-growth-to-seven-figures.md",
@@ -3245,7 +3245,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "c94ef6afb7d510d2104156c8c5489b84a0c7c705c09c86fd5af56eaa029f9f4f",
+      "reviewSnapshotSha256": "f3cad0fae8568b976989189fd2f817b3fdc9ee3e3f291c86c7d1472f7e9de0ab",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

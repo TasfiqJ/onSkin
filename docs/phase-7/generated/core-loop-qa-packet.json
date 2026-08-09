@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-06T00:44:40.963Z",
+  "generatedAt": "2026-08-09T06:50:27.769Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -204,7 +204,7 @@
     }
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
+  "gitSha": "057a7cb7f9a3ec41fc05638f136f7eb947588826",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -233,7 +233,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
+    "currentGitSha": "057a7cb7f9a3ec41fc05638f136f7eb947588826",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -242,22 +242,56 @@
     "sourcePacketCodeBoundToSourceCommit": false,
     "errors": [
       "the governed evidence source must be one lowercase 40-character Git SHA",
-      "the governed evidence release candidate must be one strict immutable RC directory",
-      "pinned human-E2E manifest has no governed evidence-chain binding"
+      "the governed evidence release candidate must be one strict immutable RC directory"
     ]
   },
   "upstreamPackets": {
     "humanE2e": {
       "status": "blocked",
-      "gitSha": null,
+      "gitSha": "b40ce6fa965f7e2ca76fa5d1f1644806c9c9e69a",
       "errors": [
-        "human-E2E manifest must be one JSON object",
+        "human-E2E manifest status is not pass",
+        "human-E2E manifest blockers must be one empty array",
+        "human-E2E required gate iphone-375-667-200-text-pressure is not pass",
+        "human-E2E required gate iphone-375-200-text-pressure is not pass",
+        "human-E2E required gate modern-390-200-text-pressure is not pass",
+        "human-E2E required gate boundary-414-896-200-text-pressure is not pass",
+        "human-E2E required gate modern-430-200-text-pressure is not pass",
+        "human-E2E required gate skipped-routes-375-667-200-text-pressure is not pass",
+        "human-E2E required gate skipped-routes-390-844-200-text-pressure is not pass",
+        "human-E2E required gate skipped-routes-430-932-200-text-pressure is not pass",
+        "human-E2E required gate account-upgrade-supported-phone is not pass",
+        "human-E2E required gate account-isolation-supported-phone is not pass",
+        "human-E2E required gate account-deletion-durable-recovery-expo-web-stress is not pass",
+        "human-E2E required gate health-consent-withdrawal-expo-web-compatibility is not pass",
+        "human-E2E required gate cat04-catalog-recovery-supported-phone is not pass",
+        "human-E2E required gate cat05-native-ocr-review-supported-phone is not pass",
+        "human-E2E required gate progress-timelapse-supported-phone is not pass",
+        "human-E2E required gate progress-capture-analysis-supported-phone is not pass",
+        "human-E2E required gate progress-device-only-backup-supported-phone is not pass",
+        "human-E2E required gate progress-direct-route-lock-supported-phone is not pass",
+        "human-E2E required gate progress-storage-recovery-supported-phone is not pass",
+        "human-E2E required gate private-envelope-corruption-supported-phone is not pass",
+        "human-E2E required gate pregnancy-safety-status-supported-phone is not pass",
+        "human-E2E required gate multi-active-plan-today-supported-phone is not pass",
+        "human-E2E required gate routine-order-persistence-supported-phone is not pass",
+        "human-E2E required gate conflict-choice-schedule-supported-phone is not pass",
+        "human-E2E required gate cycle-disruption-reconciliation-supported-phone is not pass",
+        "human-E2E required gate authored-cycle-customization-supported-phone is not pass",
+        "human-E2E required gate cat07-shelf-freshness-supported-phone is not pass",
+        "human-E2E required gate required-surface-honesty-supported-phone is not pass",
+        "human-E2E required gate trend-route-group-gate-supported-phone is not pass",
+        "human-E2E required gate data-export-local-photo-disclosure-supported-phone is not pass",
+        "human-E2E required gate data-export-combined-device-supported-phone is not pass",
+        "human-E2E required gate data-export-account-generation-supported-phone is not pass",
+        "human-E2E manifest fresh governed evidence-chain audit is not pass",
+        "human-E2E manifest Git SHA does not match its governed current Git SHA",
         "fresh governed evidence-chain audit is not pass"
       ]
     },
     "phase5DeviceQa": {
       "status": "blocked",
-      "gitSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
+      "gitSha": "ce7d3fedc88e6333e72dad9c08b03dd9105dd73b",
       "errors": [
         "pinned Phase 5 device QA packet must contain an empty blockers array",
         "pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing",
@@ -273,21 +307,19 @@
   },
   "cat07CommittedEvidence": {
     "errors": [
-      "test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD",
-      "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
-      "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
+      "test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in HEAD"
     ],
-    "headSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
-    "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
-    "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
+    "headSha": "057a7cb7f9a3ec41fc05638f136f7eb947588826",
+    "manifestSha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0",
+    "markdownSha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd",
     "status": "blocked",
     "summarySha256": null
   },
   "cat07FullEvidenceContract": {
     "errors": [
-      "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
+      "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "6c0a09f4de255c48899149d059c49fab7076dbc2",
+    "headSha": "057a7cb7f9a3ec41fc05638f136f7eb947588826",
     "status": "blocked"
   },
   "scenarios": [
@@ -380,8 +412,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 44194,
-      "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
+      "bytes": 44358,
+      "sha256": "0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -1413,13 +1445,13 @@
       "path": "scripts/phase7/check-core-loop.mjs",
       "exists": true,
       "bytes": 32536,
-      "sha256": "5841e27ed49bc96b5a3c32812ee0a395eecc9f288de4a94e1e53fe626199ccf2"
+      "sha256": "4acb5ef04037dfca9062a3e06da799c2b31ee8b7defa5a56011551a2f35ae356"
     },
     {
       "path": "scripts/phase7/check-core-loop-smoke.mjs",
       "exists": true,
-      "bytes": 36123,
-      "sha256": "22e0a78ce36833681d91b2940f5b7c994f1a3ce780fec3089c54a1ff0c25a168"
+      "bytes": 36788,
+      "sha256": "26fb5ace5f9319de0836a2e27f8beeb864e7e2d0f3850f873bcdd120a88f18f4"
     },
     {
       "path": "scripts/phase7/core-loop-qa-packet-contract.mjs",
@@ -1436,8 +1468,8 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 365743,
-      "sha256": "de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615"
+      "bytes": 366879,
+      "sha256": "52644b6fdf6fe735977a69de436026536c71c22e9ee538b641c1caa54c196815"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest-render.mjs",
@@ -1472,20 +1504,20 @@
     {
       "path": "scripts/e2e/cat07-committed-evidence.mjs",
       "exists": true,
-      "bytes": 26706,
-      "sha256": "aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0"
+      "bytes": 27592,
+      "sha256": "3beef279abfe936f2edd35358d69bf192d6896cdc9eae61a88a0beb49bb4e9fa"
     },
     {
       "path": "scripts/e2e/cat07-shelf-freshness-audit.mjs",
       "exists": true,
-      "bytes": 150904,
-      "sha256": "84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229"
+      "bytes": 164464,
+      "sha256": "9bc0fb4bce13cdc167bb57b38ddc6dc6e70bd20ccb7d62ed947abdfa422fe110"
     },
     {
       "path": "scripts/e2e/cat07-shelf-freshness-audit.test.mjs",
       "exists": true,
-      "bytes": 60211,
-      "sha256": "a5a2f444cdf73cc914490101b1f90a4c3f5b48156e43eca3b219c1b0816615a6"
+      "bytes": 70903,
+      "sha256": "8e0c5806f0bb448b2b3f81446110a867d8041bb375625b822b1a088d93804006"
     },
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
@@ -1580,42 +1612,42 @@
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 51716,
-      "sha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af"
+      "bytes": 299477,
+      "sha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 29844,
-      "sha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28"
+      "bytes": 2244721,
+      "sha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd"
     },
     {
-      "path": "test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json",
+      "path": "test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json",
       "exists": false
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 69862,
-      "sha256": "caeb01ef9b581ba5803de1907483754b9e965c6768de7e0ce88885cbd8629fdd"
+      "bytes": 69265,
+      "sha256": "fae8aecd9c352ddedab6474dc800c04fddcfe503f93b5ef7d202503323548b24"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
-      "bytes": 55209,
-      "sha256": "5b8392d1a4f438bc50888297a2e3acd34d5551fd00e15d3efdb3ce1bfbf4ae30"
+      "bytes": 55144,
+      "sha256": "4ffc75d46d625965fe268a70352e413bfc4b9015fae7e8bfc8b7f14deac72bba"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 52856,
-      "sha256": "55c0a23900d38fbe032a632767f14131be08b44649daf24687310b80aa464785"
+      "bytes": 52859,
+      "sha256": "822ee96197eb4d22035c4062562e53c869ea971d73eb9c1325ac66a1292a6cd3"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 33649,
-      "sha256": "4fc3d192d35008c63195b84a19950e0a26b80cbcce9bcaa6f859053a0eb786ad"
+      "bytes": 33652,
+      "sha256": "6388483aa48cb2abe60062d4251f57569cec7f779146ae031abee5bf3910619a"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -1680,8 +1712,8 @@
     {
       "path": "docs/DECISIONS.md",
       "exists": true,
-      "bytes": 94007,
-      "sha256": "c566c8eae25390f6d96d492639ddf0cfdbf0e27fd7d43636c51d0e50261137cf"
+      "bytes": 94112,
+      "sha256": "9a99775fb26b2cc4941d532dca8c2eb5cd40b586911d4b40de1161551ed8b64a"
     },
     {
       "path": "docs/FEATURE_INDEX.md",
@@ -1698,8 +1730,8 @@
     {
       "path": "docs/hugeToDo/README.md",
       "exists": true,
-      "bytes": 66276,
-      "sha256": "f623f6f135dadfba2cf9e04bdd8b78dbea020259b647982a304b05e8ab74908f"
+      "bytes": 66564,
+      "sha256": "8f1b4f9a75fd8d902497b96efd092fd93ef0b22c742e25483c5b2d50d58b181b"
     },
     {
       "path": "scripts/launch/contract-smoke.mjs",
@@ -1842,14 +1874,14 @@
     {
       "path": "scripts/phase9/build-release-qa-packet.mjs",
       "exists": true,
-      "bytes": 62171,
-      "sha256": "b1af60d1ab0c1e0366d4d7aecf07401541e935d85b67a0239e3bf0f9c98fe7ab"
+      "bytes": 62160,
+      "sha256": "797b449ab4298cef21a6cabd152ba4dc2440c394c7ddad86d50851d3a07a4529"
     },
     {
       "path": "scripts/phase9/release-smoke.mjs",
       "exists": true,
-      "bytes": 76077,
-      "sha256": "3fae0a968fae1afdd95a25b966c68907c7cd55b16913be2d6e19cbf77515cea1"
+      "bytes": 76066,
+      "sha256": "2f3bd36821e0ec87457b7a389fd34b6352ee3b8673934a68e5e701147c10e62a"
     },
     {
       "path": "scripts/phase9/release-qa-integrity.test.mjs",
@@ -1860,8 +1892,8 @@
     {
       "path": "BLOCKERS.md",
       "exists": true,
-      "bytes": 103646,
-      "sha256": "867ae729492346963f71ef59b63c10c6ea4914120c79639e28658ade62fe9230"
+      "bytes": 103642,
+      "sha256": "e0a358bd63b0aa7ee70e333d6626856755e06c70268567f3a3c400f9029c902f"
     },
     {
       "path": "PROGRESS.md",
@@ -2069,11 +2101,10 @@
     }
   ],
   "blockers": [
-    "Phase 7 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.",
-    "Phase 7 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json is missing in the working tree.",
+    "Phase 7 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.",
+    "Phase 7 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json is missing in the working tree.",
     "Governed evidence chain: the governed evidence source must be one lowercase 40-character Git SHA.",
     "Governed evidence chain: the governed evidence release candidate must be one strict immutable RC directory.",
-    "Governed evidence chain: pinned human-E2E manifest has no governed evidence-chain binding.",
     "Phase 5 upstream packet: pinned Phase 5 device QA packet must contain an empty blockers array.",
     "Phase 5 upstream packet: pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing.",
     "Phase 5 upstream packet: pinned Phase 5 device QA packet does not contain completed named native-device signoff.",
@@ -2083,17 +2114,50 @@
     "Phase 5 upstream packet: pinned Phase 5 device QA packet required native OCR evidence is not pass.",
     "Phase 5 upstream packet: pinned Phase 5 device QA packet fresh governed evidence-chain audit is not pass.",
     "Phase 5 upstream packet: pinned Phase 5 device QA packet fresh governed evidence-chain audit is not pass.",
-    "Human-E2E upstream manifest: human-E2E manifest must be one JSON object.",
+    "Human-E2E upstream manifest: human-E2E manifest status is not pass.",
+    "Human-E2E upstream manifest: human-E2E manifest blockers must be one empty array.",
+    "Human-E2E upstream manifest: human-E2E required gate iphone-375-667-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate iphone-375-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate modern-390-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate boundary-414-896-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate modern-430-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate skipped-routes-375-667-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate skipped-routes-390-844-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate skipped-routes-430-932-200-text-pressure is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate account-upgrade-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate account-isolation-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate account-deletion-durable-recovery-expo-web-stress is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate health-consent-withdrawal-expo-web-compatibility is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate cat04-catalog-recovery-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate cat05-native-ocr-review-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate progress-timelapse-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate progress-capture-analysis-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate progress-device-only-backup-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate progress-direct-route-lock-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate progress-storage-recovery-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate private-envelope-corruption-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate pregnancy-safety-status-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate multi-active-plan-today-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate routine-order-persistence-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate conflict-choice-schedule-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate cycle-disruption-reconciliation-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate authored-cycle-customization-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate cat07-shelf-freshness-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate required-surface-honesty-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate trend-route-group-gate-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate data-export-local-photo-disclosure-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate data-export-combined-device-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E required gate data-export-account-generation-supported-phone is not pass.",
+    "Human-E2E upstream manifest: human-E2E manifest fresh governed evidence-chain audit is not pass.",
+    "Human-E2E upstream manifest: human-E2E manifest Git SHA does not match its governed current Git SHA.",
     "Human-E2E upstream manifest: fresh governed evidence-chain audit is not pass.",
-    "Missing test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json.",
+    "Missing test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json.",
     "CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag may substitute for a positive immutable exact-content share receipt.",
     "CORE-07A public links are not admitted; no token service, reviewed retention/revocation/deletion/abuse contract, or exact-destination confirmation is available.",
     "PHOTO-05A Trend insights remain literal-zero-admission; no environment, development, E2E, caller, fixture, legacy state, simulated metric, consent grant, QA flag, or stored row may substitute for a validated on-device engine and issuer-bound result.",
     "COM-01A commerce remains literal-zero-admission; no environment, domain, development/E2E mode, consent or legacy state, catalog row, reviewer string, affiliate URL, server credential, QA flag, or stored row may admit publication, partner polling, click recording, analytics, or retailer navigation.",
-    "CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.",
-    "CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).",
-    "CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.",
-    "CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD.",
+    "CAT07 committed evidence: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in HEAD.",
+    "CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD.",
     "Missing brandReady evidence.",
     "Missing supabaseRlsPass evidence.",
     "Missing clinicalReviewPass evidence.",

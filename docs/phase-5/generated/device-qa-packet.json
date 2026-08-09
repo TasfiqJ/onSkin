@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "phase5_device_qa_packet",
-  "generatedAt": "2026-08-06T00:43:59.610Z",
+  "generatedAt": "2026-08-09T06:50:18.486Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -206,7 +206,7 @@
       "hardcodedDiscountAllowed": false
     }
   },
-  "gitSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
+  "gitSha": "ce7d3fedc88e6333e72dad9c08b03dd9105dd73b",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": null,
@@ -375,7 +375,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
+    "currentGitSha": "ce7d3fedc88e6333e72dad9c08b03dd9105dd73b",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -420,21 +420,19 @@
   },
   "cat07CommittedEvidence": {
     "errors": [
-      "test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD",
-      "docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required)",
-      "committed human-E2E Markdown must exactly match the canonical rendering of its JSON"
+      "test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in HEAD"
     ],
-    "headSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
-    "manifestSha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af",
-    "markdownSha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28",
+    "headSha": "ce7d3fedc88e6333e72dad9c08b03dd9105dd73b",
+    "manifestSha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0",
+    "markdownSha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd",
     "status": "blocked",
     "summarySha256": null
   },
   "cat07FullEvidenceContract": {
     "errors": [
-      "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
+      "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
     ],
-    "headSha": "52593b7fe8dac7c045cf77e017546e40b2047487",
+    "headSha": "ce7d3fedc88e6333e72dad9c08b03dd9105dd73b",
     "status": "blocked"
   },
   "scenarios": [
@@ -517,14 +515,14 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 44194,
-      "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
+      "bytes": 44358,
+      "sha256": "0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540"
     },
     {
       "path": "package-lock.json",
       "exists": true,
-      "bytes": 557676,
-      "sha256": "65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480"
+      "bytes": 607476,
+      "sha256": "c54fcbece3dbb6d33262bd371f9626bc9dd1e262490b05db45a54dbc941f0988"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -565,8 +563,8 @@
     {
       "path": "apps/mobile/package.json",
       "exists": true,
-      "bytes": 2897,
-      "sha256": "c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80"
+      "bytes": 2889,
+      "sha256": "7d9499268f4a962e1ba4d953033f49ef04cac748706380e17657aa79ee2b0c30"
     },
     {
       "path": "apps/mobile/src/app/_layout.tsx",
@@ -1226,7 +1224,7 @@
       "path": "apps/mobile/src/features/notifications/deliver.ts",
       "exists": true,
       "bytes": 16639,
-      "sha256": "00bdf36c5c9e730f429581b63c0620a661d3867ebb2161f7cdf1d128eb5e46df"
+      "sha256": "05dc7a7870153e25d038a4d393b731e5ced3dffe1fc04cb2d0a9da08855c7262"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -1339,83 +1337,83 @@
     {
       "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
       "exists": true,
-      "bytes": 16330,
-      "sha256": "03ec26b5f20db80db15ed40189693b9cd43cba03d98f74ec2682170443b039c7"
+      "bytes": 16629,
+      "sha256": "68c42bc4e5e5f2b2dda9d0916f789705c1af2d1fb819e717ec1393175492f6d2"
     },
     {
       "path": "scripts/phase5/patch-expo-widgets-lifecycle.test.mjs",
       "exists": true,
-      "bytes": 9064,
-      "sha256": "aa66857e2dac860c90d86079411a93ee0d843e72dc4342986c4c5a797e02be8b"
+      "bytes": 9755,
+      "sha256": "72ed9e8ced558c074202b0216afc53c1d878b1bcd62818f5a2ef1077d2adae78"
     },
     {
       "path": "scripts/phase5/expo-widgets-lifecycle-source.test.mjs",
       "exists": true,
-      "bytes": 21309,
-      "sha256": "5f1f608d340f3f0582ccf1876f492d5c192645b420b16f35c9ae2370a5985874"
+      "bytes": 21308,
+      "sha256": "c9e1c92882673beded6e113c5ee9e90104d77d06b8e095ab25b8c7f185aaf31a"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/RoutineKindWidgetLifecycleStore.swift",
       "exists": true,
       "bytes": 75208,
       "sha256": "6b01f4e2cd54874eab2a8e5cb773e4dc87992d7ac179cf490ec88044fe5ef8bc"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/AppIntent.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/AppIntent.swift",
       "exists": true,
       "bytes": 5242,
       "sha256": "12f011532fd24abc3d8809eb4ee94b679ea8335bf1b77ae8d1cefcc0ea5e7310"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/EntryView.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/EntryView.swift",
       "exists": true,
       "bytes": 1564,
       "sha256": "35d07280d61a55fa159b7f9f30e32bbb3bf8ec4a350a7b0d6e73987bd4e11112"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/ExpoWidgets.podspec",
+      "path": "scripts/phase5/expo-widgets-57.0.8/ExpoWidgets.podspec",
       "exists": true,
       "bytes": 1933,
       "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/LiveActivity.swift",
       "exists": true,
       "bytes": 4663,
       "sha256": "f7e0548a5057743d27e0748b521e1e2873794f55be39b6f7739f22a57af17770"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/LiveActivityFactory.swift",
       "exists": true,
       "bytes": 3599,
       "sha256": "a612cab3a7071b7c12277b5230b7988432d5e15d565c0504301ebb922d2fbdaf"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/TimelineProvider.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/TimelineProvider.swift",
       "exists": true,
       "bytes": 1538,
       "sha256": "63d077ce0ea7d8d875f2af0dc15c7d6706e9d154f3ea747c4209353a4a51328e"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/Utils.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/Utils.swift",
       "exists": true,
       "bytes": 4387,
       "sha256": "d32a56a95515badc2abed0603e6fe14214a895e8ef5f4fcd5f7f1ac236f5688b"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/WidgetLiveActivity.swift",
       "exists": true,
       "bytes": 3647,
       "sha256": "2b12bc9aa8d900f5e9ad72e00e396a607f5dc6fdbd033a9b917b2062b8e67717"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/WidgetObject.swift",
       "exists": true,
       "bytes": 1332,
       "sha256": "ef703f95a235024a169a0a35aea301af5ded638fb9d572e278d7a283c729fe6a"
     },
     {
-      "path": "scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift",
+      "path": "scripts/phase5/expo-widgets-57.0.8/WidgetsModule.swift",
       "exists": true,
       "bytes": 7567,
       "sha256": "48cba3cdba4ad6de32cabf84769a59fcd8dc474f03de1e94a9d6c329fcb2b172"
@@ -1435,8 +1433,8 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 73075,
-      "sha256": "1f3999dcb552e9446f59bfcbcc3a78b1eb580135d0dba1981ec61eb3384f8adc"
+      "bytes": 73064,
+      "sha256": "c28439cfafbcdc24e32b7eb08bc15027058ab4205de556abe53d8770735788a4"
     },
     {
       "path": "scripts/phase5/device-qa-packet-contract.mjs",
@@ -1459,20 +1457,20 @@
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 37697,
-      "sha256": "f39ef5d9963137a342f9ee329f37467835ae015d6c8207d2abd697e8f909b6b6"
+      "bytes": 37797,
+      "sha256": "fc2e05f3d7033601d6f9eedce94d30fb845ceb64829d080784e99743ecf43efd"
     },
     {
       "path": "scripts/phase5/ios-extension-contract.mjs",
       "exists": true,
-      "bytes": 8251,
-      "sha256": "c7ae2e2398c7d5a16032374daf4d47b22fb7631b01b681f293fa57c0216c50b9"
+      "bytes": 8257,
+      "sha256": "9fc1ef61a8cd4440b629f7ec9efc4f793bb55d70e871e87d4646b759cd7c1910"
     },
     {
       "path": "scripts/phase5/ios-extension-contract.test.mjs",
       "exists": true,
-      "bytes": 5491,
-      "sha256": "2194cc6cbda679a660e27a8a6723d8fdc885d559332540e652b14bcc340c3f49"
+      "bytes": 5494,
+      "sha256": "014dea2df3f061d622d3be3eb938f14da8af6b76535c56e0917cc5e6c02b6205"
     },
     {
       "path": "scripts/phase5/widget-privacy-manifest.test.mjs",
@@ -1513,8 +1511,8 @@
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 99796,
-      "sha256": "9552f9ebdba3e964032a7d9e833cc67c50147e76f89780c586e8252f937a3b2e"
+      "bytes": 100379,
+      "sha256": "925ec6a4150eba8e6c777b388cbb651183f4b8c27773e6d3edc1a338b157c073"
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
@@ -1531,8 +1529,8 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 365743,
-      "sha256": "de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615"
+      "bytes": 366879,
+      "sha256": "52644b6fdf6fe735977a69de436026536c71c22e9ee538b641c1caa54c196815"
     },
     {
       "path": "scripts/e2e/evidence-diagnostic-hygiene.mjs",
@@ -1549,20 +1547,20 @@
     {
       "path": "scripts/e2e/cat07-committed-evidence.mjs",
       "exists": true,
-      "bytes": 26706,
-      "sha256": "aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0"
+      "bytes": 27592,
+      "sha256": "3beef279abfe936f2edd35358d69bf192d6896cdc9eae61a88a0beb49bb4e9fa"
     },
     {
       "path": "scripts/e2e/cat07-shelf-freshness-audit.mjs",
       "exists": true,
-      "bytes": 150904,
-      "sha256": "84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229"
+      "bytes": 164464,
+      "sha256": "9bc0fb4bce13cdc167bb57b38ddc6dc6e70bd20ccb7d62ed947abdfa422fe110"
     },
     {
       "path": "scripts/e2e/cat07-shelf-freshness-audit.test.mjs",
       "exists": true,
-      "bytes": 60211,
-      "sha256": "a5a2f444cdf73cc914490101b1f90a4c3f5b48156e43eca3b219c1b0816615a6"
+      "bytes": 70903,
+      "sha256": "8e0c5806f0bb448b2b3f81446110a867d8041bb375625b822b1a088d93804006"
     },
     {
       "path": "scripts/phase2/local-supabase-contract.mjs",
@@ -1622,7 +1620,7 @@
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
       "exists": true,
       "bytes": 4075,
-      "sha256": "f3dae5f12e9dea7b5232f990c5b05c7e95b82deafdf1e92f07ab35c8fa317d1e"
+      "sha256": "5c1baa8e38fd346cae314f78b09b61d3db6d2994bea7eef438ccef6083a0eb45"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -1651,30 +1649,30 @@
     {
       "path": "docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md",
       "exists": true,
-      "bytes": 16843,
-      "sha256": "6dd7a2416a0e35b416e1f765906dec003f621e8cc5b8032f4c0ca3e9ff7fca68"
+      "bytes": 16904,
+      "sha256": "fc491ce81b90c093d141428024e92b89ef08c52091adcc671c140c5483cf40c6"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 51716,
-      "sha256": "65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af"
+      "bytes": 299477,
+      "sha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 29844,
-      "sha256": "aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28"
+      "bytes": 2244721,
+      "sha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd"
     },
     {
-      "path": "test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json",
+      "path": "test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json",
       "exists": false
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 18343,
-      "sha256": "01992aebb5a4393d56396c22363e5f03115dbcb114fcda2d55aeb00a99b516e3"
+      "bytes": 18342,
+      "sha256": "a4f7af2f8670de490166f59a48c6290d17ee5e6b0b9f940813076e27f01f2593"
     },
     {
       "path": "docs/phase-5/widget-lifecycle-evidence.template.json",
@@ -1685,8 +1683,8 @@
     {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 22061,
-      "sha256": "8c76d9e3b68ca08824aec47075f3bbddc46052d6610d124a1259f6b363d40d23"
+      "bytes": 22060,
+      "sha256": "f1bd63d013a6da34687d58f640392144bab13bf1064fb974c229abc6b0acf051"
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
@@ -1703,8 +1701,8 @@
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 12066,
-      "sha256": "db51278d92eb09934f0db87b4b73f766628fb18f99417278c8a224e8bdabfaaa"
+      "bytes": 12065,
+      "sha256": "a516dad2e884ed2e566efdeae16aebe0e717dedf1a5e9fde10d7bcc01517200d"
     },
     {
       "path": "apps/mobile/src/features/catalog/normalization.ts",
@@ -1956,7 +1954,7 @@
       "path": "docs/phase-5/camera-lifecycle-evidence-runbook.md",
       "exists": true,
       "bytes": 16627,
-      "sha256": "2e393fae53edc2daee708205c1bc9245c4855f4f597a9146008dc72acd7c92b4"
+      "sha256": "0899472448f0563e4e9aa63ec328cf90fe572338a25f7597df93bcf6aba16e18"
     },
     {
       "path": "docs/phase-5/camera-lifecycle-evidence.template.json",
@@ -1966,8 +1964,8 @@
     }
   ],
   "blockers": [
-    "Phase 5 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.",
-    "Phase 5 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json is missing in the working tree.",
+    "Phase 5 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.",
+    "Phase 5 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json is missing in the working tree.",
     "Missing PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH; widget booleans do not substitute for artifact-bound archive/device/lifecycle evidence.",
     "Missing PHASE5_NATIVE_OCR_EVIDENCE_PATH; a Boolean pass flag cannot substitute for exact-build physical-iPhone OCR evidence.",
     "Missing PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH; camera QA Booleans cannot substitute for exact-build, signed-archive, two-physical-iPhone lifecycle evidence.",
@@ -1993,11 +1991,9 @@
     "Missing PHASE5_WIDGET_DEVICE_QA_PASS=true (physical-iPhone widget families, cold-start deep links, process death, and accessibility).",
     "Missing PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS=true (atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup).",
     "Missing PHASE5_LIVE_ACTIVITY_QA_PASS=true (physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior).",
-    "Missing test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json.",
-    "CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.",
-    "CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).",
-    "CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.",
-    "CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD."
+    "Missing test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json.",
+    "CAT07 committed evidence: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in HEAD.",
+    "CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD."
   ],
   "warnings": []
 }

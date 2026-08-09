@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T19:23:35.430Z",
+  "generatedAt": "2026-08-09T06:50:10.617Z",
   "auditProvenance": {
     "requested": true,
     "mode": "registry",
@@ -30,11 +30,13 @@
         "@expo/metro-config",
         "@expo/prebuild-config"
       ],
-      "effects": [],
+      "effects": [
+        "expo"
+      ],
       "nodes": [
         "node_modules/expo/node_modules/@expo/cli"
       ],
-      "fixAvailable": "available"
+      "fixAvailable": "expo@53.0.27 (breaking)"
     },
     {
       "name": "@expo/metro",
@@ -65,13 +67,11 @@
         "@expo/config",
         "@expo/metro"
       ],
-      "effects": [
-        "expo"
-      ],
+      "effects": [],
       "nodes": [
         "node_modules/@expo/metro-config"
       ],
-      "fixAvailable": "expo@53.0.27 (breaking)"
+      "fixAvailable": "available"
     },
     {
       "name": "@react-native/community-cli-plugin",
@@ -355,7 +355,7 @@
       "nodes": [
         "node_modules/@expo/inline-modules"
       ],
-      "fixAvailable": "available"
+      "fixAvailable": "expo@53.0.27 (breaking)"
     },
     {
       "name": "@expo/local-build-cache-provider",

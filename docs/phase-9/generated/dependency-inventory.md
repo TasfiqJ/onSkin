@@ -1,6 +1,6 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-08-08T19:23:35.430Z
+Generated: 2026-08-09T06:50:10.617Z
 Audit mode: registry
 Audit completed: yes
 Package count: 1182
@@ -14,9 +14,9 @@ Lockfile version: 3
 
 | Package | Severity | Direct | Via | Fix available | Nodes |
 | --- | --- | --- | --- | --- | --- |
-| `@expo/cli` | high | no | @expo/config, @expo/config-plugins, @expo/inline-modules, @expo/metro, @expo/metro-config, @expo/prebuild-config | available | node_modules/expo/node_modules/@expo/cli |
+| `@expo/cli` | high | no | @expo/config, @expo/config-plugins, @expo/inline-modules, @expo/metro, @expo/metro-config, @expo/prebuild-config | expo@53.0.27 (breaking) | node_modules/expo/node_modules/@expo/cli |
 | `@expo/metro` | high | no | metro, metro-config, metro-transform-worker | expo@53.0.27 (breaking) | node_modules/@expo/metro |
-| `@expo/metro-config` | high | no | @expo/config, @expo/metro | expo@53.0.27 (breaking) | node_modules/@expo/metro-config |
+| `@expo/metro-config` | high | no | @expo/config, @expo/metro | available | node_modules/@expo/metro-config |
 | `@react-native/community-cli-plugin` | high | no | @react-native/metro-config, metro, metro-config | react-native@0.72.17 (breaking) | apps/mobile/node_modules/@react-native/community-cli-plugin, node_modules/@react-native/community-cli-plugin |
 | `@react-native/metro-config` | high | no | metro-config | react-native@0.72.17 (breaking) | apps/mobile/node_modules/@react-native/metro-config, node_modules/@react-native/metro-config |
 | `@react-native/virtualized-lists` | high | no | react-native | react-native@0.72.17 (breaking) | apps/mobile/node_modules/react-native/node_modules/@react-native/virtualized-lists, node_modules/@react-native/virtualized-lists |
@@ -32,7 +32,7 @@ Lockfile version: 3
 | `react-native-worklets` | high | yes | @react-native/metro-config, react-native | react-native-worklets@0.7.4 (breaking) | apps/mobile/node_modules/react-native-worklets, node_modules/react-native-worklets |
 | `@expo/config` | moderate | no | @expo/config-plugins | expo@53.0.27 (breaking) | node_modules/@expo/config |
 | `@expo/config-plugins` | moderate | no | xcode | expo@53.0.27 (breaking) | node_modules/@expo/config-plugins |
-| `@expo/inline-modules` | moderate | no | @expo/config-plugins | available | node_modules/@expo/inline-modules |
+| `@expo/inline-modules` | moderate | no | @expo/config-plugins | expo@53.0.27 (breaking) | node_modules/@expo/inline-modules |
 | `@expo/local-build-cache-provider` | moderate | no | @expo/config | expo@53.0.27 (breaking) | node_modules/@expo/local-build-cache-provider |
 | `@expo/prebuild-config` | moderate | no | @expo/config, @expo/config-plugins | available | node_modules/@expo/prebuild-config |
 | `expo-sharing` | moderate | yes | @expo/config-plugins | expo-sharing@14.0.8 (breaking) | node_modules/expo-sharing |

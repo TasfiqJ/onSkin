@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-08-08T18:31:59.489Z
+Generated: 2026-08-09T06:50:11.190Z
 Status: pass
-Git SHA: 089b1faa2cb9392ca460de277b219386c99e6a41
+Git SHA: 64e046b1b94ff0f574b4650b4a6b00025545e58d
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -72,7 +72,7 @@ reviewers must inspect before launch gates can close.
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `4024285860c09a637f2c252516efe79532a18b4097bb5b9d65d4129fc92a397f`
+- Review snapshot SHA-256: `b2586b433cfc7196d0787f357932975e9e5a8e1574a5ae562fe187207684ee37`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Counsel must classify every exact release function and intended-use/claim surface; a disclaimer is not a device-classification safe harbor.
@@ -81,7 +81,7 @@ Sources:
 
 - `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md` - 18597 bytes - sha256 `f365db66e5db9a4d0847de9c184558e946e21176587d587fc8bba6f8754c42d5`
 - `docs/phase-3/regulatory-positioning-memo.md` - 10738 bytes - sha256 `856e44028f7f4ca36c3955fc85082f7a7404e97bb1c03a1f675d4f0f1cafe27e`
-- `docs/legal-readiness.md` - 16423 bytes - sha256 `0738dd5c741a5e666d0b3e0a0fdd0fd11cf3233ec69ede5a8b166c324cda1e7f`
+- `docs/legal-readiness.md` - 17682 bytes - sha256 `f62a23f02476eb87c788c0c78befac43209c217621557af1c6ad4865342e08dd`
 - `apps/mobile/src/lib/legal/disclaimer.ts` - 926 bytes - sha256 `b9cc550cb5802a61fbc0c782585b4fcc388719d2475e5f7d476005da4f26e174`
 
 ### legalRegulatory - Launch claims vocabulary
@@ -90,14 +90,14 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ea6e4340c1ccbdf2a157b06135d134d8b082542e9d6842c41c1e302bc2c927f0`
+- Review snapshot SHA-256: `0328c0ef3abe88e8596fe44dbf44108c8a9c2aa8f02d18c2e578755da5be49fb`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review health/cosmetic/drug claims and jurisdictional handling in addition to store, ads, screenshots, pushes, paywalls, and review replies.
 
 Sources:
 
-- `docs/phase-3/launch-claims-vocabulary.md` - 3613 bytes - sha256 `18a587dde1f99b877e6489b44a6454488efa22ca020fe825b4e1246305912891`
+- `docs/phase-3/launch-claims-vocabulary.md` - 4058 bytes - sha256 `2e4bd6258f7c1ef988f69627027136b4d15548d2dea16f291319f38ad7e9d92b`
 - `docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md` - 33920 bytes - sha256 `c09c16e8df76171b1e2f6e3522bc212ee785e8172e7822a65d2573002b4a4f9f`
 - `apps/mobile/src/lib/legal/storeMetadata.ts` - 7852 bytes - sha256 `eb209dc51a5639c1eaae942a9c5426a3044b15a49e0db8e636d3775f55acbb7c`
 
@@ -107,7 +107,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `5db51fe3c2e854377612c444e19e653cb2337e7ceb4d9de57cadce81d3207369`
+- Review snapshot SHA-256: `4a3a7f28be367cbac25710232deea6bfe821eb2621e4fa518c0f42d43e6fee4f`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Requires final brand, support/policy URLs, privacy labels, medical-device declaration, IAP, reviewer access, and exact-build evidence.
@@ -115,8 +115,8 @@ Sources:
 Sources:
 
 - `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md` - 18597 bytes - sha256 `f365db66e5db9a4d0847de9c184558e946e21176587d587fc8bba6f8754c42d5`
-- `docs/phase-3/store-metadata-review.md` - 2533 bytes - sha256 `eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1`
-- `docs/phase-3/app-review-notes.md` - 5319 bytes - sha256 `c7e521b926db2c8d3cdc62c9962538ed92da5822c8b1146ba1a1952a59bb7453`
+- `docs/phase-3/store-metadata-review.md` - 2962 bytes - sha256 `4741ad6f202401a20656463d6bb5592e21a192eade17bb4db1dda4f46656aca8`
+- `docs/phase-3/app-review-notes.md` - 5734 bytes - sha256 `526bfceeb7e227462f985d8fed79ae05d2b2afb82c94957d34b544a39f201cce`
 - `docs/phase-3/google-play-health-declaration-notes.md` - 1901 bytes - sha256 `12329457687f1d91a80099badea762832c3e123cfcf8dc82ce739c8ed1fb5658`
 - `apps/mobile/src/lib/legal/storeMetadata.ts` - 7852 bytes - sha256 `eb209dc51a5639c1eaae942a9c5426a3044b15a49e0db8e636d3775f55acbb7c`
 
@@ -257,7 +257,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `65a81aa77af1d98b329ac709fa750ace52455b39dafa879ad76f088168a3d100`
+- Review snapshot SHA-256: `1d11c734c58bf7d043e7fa4c104dd6b8cbc246c68074e9182e38ac1fa2c45e10`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review all 13 candidate rules, exact runtime admission logic, and audit constraints. Clinical approval must be independent of chemistry and regulatory-counsel review.
@@ -265,7 +265,7 @@ Sources:
 Sources:
 
 - `apps/mobile/src/features/intelligence/rules.ts` - 1389 bytes - sha256 `5c0d27f4b671a3fbe6dc57a8d715acfe3b817c2a171b14fb8e7e87624c39ad45`
-- `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts` - 51808 bytes - sha256 `71263bcc56d86655d9057b5c3449b92c4056526439b3296c97e5680aae103dae`
+- `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts` - 51801 bytes - sha256 `fea4f85307c493daa0ce2189d4e2077d069b823fadcdde2f2376267943f91869`
 - `docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md` - 33920 bytes - sha256 `c09c16e8df76171b1e2f6e3522bc212ee785e8172e7822a65d2573002b4a4f9f`
 
 ### clinical - Routine application ordering
@@ -493,14 +493,14 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `cf40196866669e859b10aafa11de441a8a9fe539fd0fcfdfa5054429ab5d3dd4`
+- Review snapshot SHA-256: `c0a2b56c759aa7ac6259696d20c34078b958682cf58408991cbb30b4178014b5`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review molecule, derivative, concentration, pH, vehicle, delivery-system, packaging, fixed-formulation, stability, and layering limits.
 
 Sources:
 
-- `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts` - 51808 bytes - sha256 `71263bcc56d86655d9057b5c3449b92c4056526439b3296c97e5680aae103dae`
+- `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts` - 51801 bytes - sha256 `fea4f85307c493daa0ce2189d4e2077d069b823fadcdde2f2376267943f91869`
 - `docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md` - 33920 bytes - sha256 `c09c16e8df76171b1e2f6e3522bc212ee785e8172e7822a65d2573002b4a4f9f`
 
 ### cosmeticChemistry - PAO defaults
@@ -653,15 +653,15 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `c858bd5fa129ae0efa2c72b2260970d12d14f988253391d746777b67a8d8d747`
+- Review snapshot SHA-256: `13781bfdd88ce6c9a09570cf0387908ada3db01de145967c54707e2a97da58db`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review age -> consent -> goals ordering; immediate local/server freeze; exact deletion/preservation scope; legacy users; terminal-only fresh reconsent; installed-client rollout; minimized receipt retention; Supabase backup/restore; processor versioning; and final consumer-health notice.
 
 Sources:
 
-- `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
-- `docs/store-privacy-inventory.md` - 41308 bytes - sha256 `27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5`
+- `docs/phase-3/consent-matrix.md` - 18185 bytes - sha256 `40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b`
+- `docs/store-privacy-inventory.md` - 41453 bytes - sha256 `daa7d558c44e3cb246623258a475d78577a6df43d27ec2c17d7022e37e8aea37`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 37059 bytes - sha256 `c7fcaeb47bd9a53591c8f5b1a0dd78bbfb9045c54588cc382a27a27ed6120289`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3386 bytes - sha256 `491c5389e410aae42006b22705bb5c6426c813d048c47b10dec131c3b897801a`
 - `docs/hugeToDo/credential-inventory.json` - 21138 bytes - sha256 `245be60b517158b1acea43635eab87f113d5cf70dd1009303dfee7dc1e1bda31`
@@ -779,7 +779,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `d7cfefa6fd371e85ffc60752cce679feec2fe0034b98d1fa03cd8fa2217ee2e3`
+- Review snapshot SHA-256: `b9e2d8082fc0dd8a898bedb6cb446c62566443a7dbe758fd7ae5a76907250db6`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Vendor/partner sharing and withdrawal copy must be reviewed.
@@ -789,7 +789,7 @@ Sources:
 - `apps/mobile/src/features/ask/consent.ts` - 833 bytes - sha256 `ba732d8c83bd8951f2c33a11ef7555bd2d6ee23dd1b02d6bfb8de20cd219885b`
 - `apps/mobile/src/features/commerce/consent.ts` - 1095 bytes - sha256 `80f0f30cacc7c0de3393568bb6fa4c23c703eccdba0c658788732cb1a66a73bd`
 - `apps/mobile/src/features/community/consent.ts` - 1121 bytes - sha256 `9bacdd40ad62d380a482bb4de5f911c62b87a03002d95ac8b4f4fb7d6a2ae8c6`
-- `docs/phase-3/consent-matrix.md` - 17993 bytes - sha256 `2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342`
+- `docs/phase-3/consent-matrix.md` - 18185 bytes - sha256 `40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b`
 
 ### privacySecurity - Account deletion and data export
 
@@ -986,7 +986,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `c94ef6afb7d510d2104156c8c5489b84a0c7c705c09c86fd5af56eaa029f9f4f`
+- Review snapshot SHA-256: `f3cad0fae8568b976989189fd2f817b3fdc9ee3e3f291c86c7d1472f7e9de0ab`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm copy avoids competitor confusion and unsupported superiority.
@@ -994,7 +994,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/regulatory-positioning-memo.md` - 10738 bytes - sha256 `856e44028f7f4ca36c3955fc85082f7a7404e97bb1c03a1f675d4f0f1cafe27e`
-- `docs/phase-3/store-metadata-review.md` - 2533 bytes - sha256 `eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1`
+- `docs/phase-3/store-metadata-review.md` - 2962 bytes - sha256 `4741ad6f202401a20656463d6bb5592e21a192eade17bb4db1dda4f46656aca8`
 - `docs/14-growth-to-seven-figures.md` - 57855 bytes - sha256 `a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0`
 
 ### ipFto - Catalog source and image rights

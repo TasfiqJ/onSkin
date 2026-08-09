@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-06T00:40:08.670Z",
+  "generatedAt": "2026-08-09T06:50:14.394Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -204,7 +204,7 @@
     }
   },
   "inputPath": "docs/phase-4/generated/obf-fixture-import.json",
-  "gitSha": "c7d91c89fd56fa357937e68b925a9040415c23d6",
+  "gitSha": "74dec8853c72d9f280511c8e22fd8dd86156b948",
   "buildSourceGitSha": null,
   "gitStatus": "",
   "source": "open_beauty_facts",
@@ -249,14 +249,14 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 44194,
-      "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
+      "bytes": 44358,
+      "sha256": "0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540"
     },
     {
       "path": "package-lock.json",
       "exists": true,
-      "bytes": 557676,
-      "sha256": "65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480"
+      "bytes": 607476,
+      "sha256": "c54fcbece3dbb6d33262bd371f9626bc9dd1e262490b05db45a54dbc941f0988"
     },
     {
       "path": "apps/mobile/app.config.js",
@@ -279,8 +279,8 @@
     {
       "path": "apps/mobile/package.json",
       "exists": true,
-      "bytes": 2897,
-      "sha256": "c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80"
+      "bytes": 2889,
+      "sha256": "7d9499268f4a962e1ba4d953033f49ef04cac748706380e17657aa79ee2b0c30"
     },
     {
       "path": "apps/mobile/phase3-review-evidence.js",
@@ -627,8 +627,8 @@
     {
       "path": "docs/phase-3/consent-matrix.md",
       "exists": true,
-      "bytes": 17993,
-      "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
+      "bytes": 18185,
+      "sha256": "40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b"
     },
     {
       "path": "docs/phase-3/data-inventory.md",
@@ -639,8 +639,8 @@
     {
       "path": "docs/store-privacy-inventory.md",
       "exists": true,
-      "bytes": 41308,
-      "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
+      "bytes": 41453,
+      "sha256": "daa7d558c44e3cb246623258a475d78577a6df43d27ec2c17d7022e37e8aea37"
     },
     {
       "path": "docs/phase-4/beta-coverage-report.md",

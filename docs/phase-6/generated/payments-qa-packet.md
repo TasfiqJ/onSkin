@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-08-06T00:44:25.406Z
-Git SHA: 0e5a4a910f11539b1206865a8e2a23ed74416716
+Generated at: 2026-08-09T06:50:24.434Z
+Git SHA: 99a22e3dff486601eec66eb0759885f6149c72a5
 Git status: clean
 Required inputs committed and byte-matched to HEAD: yes
 Tracked secret environment files absent: yes
@@ -79,9 +79,9 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
 | .env.example | present | 29678 | 41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217 |
-| package.json | present | 44194 | 6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f |
-| package-lock.json | present | 557676 | 65136b6bab78971945ede668c7328c2f53f94bc474abffee9225525087a4b480 |
-| apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
+| package.json | present | 44358 | 0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540 |
+| package-lock.json | present | 607476 | c54fcbece3dbb6d33262bd371f9626bc9dd1e262490b05db45a54dbc941f0988 |
+| apps/mobile/package.json | present | 2889 | 7d9499268f4a962e1ba4d953033f49ef04cac748706380e17657aa79ee2b0c30 |
 | packages/types/src/index.ts | present | 19452 | 444e627d076e30397653a3de48dc3a2d9b2ca67372db26a6279784739d33c221 |
 | apps/mobile/app.config.js | present | 19143 | 9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f |
 | apps/mobile/eas.json | present | 1636 | c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04 |
@@ -179,13 +179,13 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase9/supabase-policy-lint.mjs | present | 18126 | 6da0337e9605b44b1f2020f326626e7250644c9eafc3e285166819039211bef6 |
 | scripts/phase9/account-service-scrub-postgres-rehearsal.sql | present | 26077 | b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a |
 | scripts/phase9/live-data-rights.mjs | present | 76345 | 992a15a6471e68bce483359b3157b5f9df8950d7f7576342a28492f15ea22bd5 |
-| scripts/e2e/human-e2e-manifest.mjs | present | 365743 | de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 366879 | 52644b6fdf6fe735977a69de436026536c71c22e9ee538b641c1caa54c196815 |
 | scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10407 | 4eda39f0c47b2debcb7021ad2e71d010e217ee9970152f50e01890e61ef4891e |
 | docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
 | docs/USER_FLOW_TREE.md | present | 479048 | 326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e |
-| docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
-| docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 299477 | d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 2244721 | a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd |
 | docs/phase-6/payments-runbook.md | present | 19954 | b5b735efa6c55540002bca1cdd99cc98162cd810fb27f99192724a749cb2b57f |
 | docs/phase-6/payments-qa-checklist.md | present | 12675 | 9ed8e1e8ffa2c340e5f44c1e9a1689c01e2a224de820ccd822fd4a29c2a3a3d5 |
 | docs/phase-6/phase-6-exit-review.md | present | 6580 | 79cce6ed47536a911053a5d9fb0cde65717feee225655472f34a9e068fdf1dac |

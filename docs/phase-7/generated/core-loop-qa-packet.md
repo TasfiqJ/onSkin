@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-08-06T00:44:40.963Z
-Git SHA: 6c0a09f4de255c48899149d059c49fab7076dbc2
+Generated at: 2026-08-09T06:50:27.769Z
+Git SHA: 057a7cb7f9a3ec41fc05638f136f7eb947588826
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -11,7 +11,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `6c0a09f4de255c48899149d059c49fab7076dbc2`
+- Current R/F HEAD: `057a7cb7f9a3ec41fc05638f136f7eb947588826`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -23,7 +23,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 - Human-E2E manifest: blocked
 - Phase 5 device QA: blocked
-- Phase 5 recorded head: `52593b7fe8dac7c045cf77e017546e40b2047487`
+- Phase 5 recorded head: `ce7d3fedc88e6333e72dad9c08b03dd9105dd73b`
 
 ## Evidence
 
@@ -73,7 +73,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 44194 | 6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f |
+| package.json | present | 44358 | 0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540 |
 | docs/hugeToDo/launch-contract.json | present | 7174 | ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb |
 | docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md | present | 35333 | c852d2a97f979b23680069241b667ad2e15d7a7f298d364281955db8599888a2 |
 | docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md | present | 9943 | 36231f4132e2a6192048b7f48afad9d1cd2ccc013d4453c55912a628997fa9ab |
@@ -245,19 +245,19 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | supabase/tests/database/recommendation_zero_admission.test.sql | present | 17952 | 6b913214063fde2879fc990e53e48dc46e3a3fb12998ded0f91b106ae6b454bf |
 | supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql | present | 7912 | 011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77 |
 | scripts/phase7/build-core-loop-qa-packet.mjs | present | 50771 | f533e751b5aa254cc4f1d6816e90032d1c501b5a9c0c5d3db5305b3db2e21951 |
-| scripts/phase7/check-core-loop.mjs | present | 32536 | 5841e27ed49bc96b5a3c32812ee0a395eecc9f288de4a94e1e53fe626199ccf2 |
-| scripts/phase7/check-core-loop-smoke.mjs | present | 36123 | 22e0a78ce36833681d91b2940f5b7c994f1a3ce780fec3089c54a1ff0c25a168 |
+| scripts/phase7/check-core-loop.mjs | present | 32536 | 4acb5ef04037dfca9062a3e06da799c2b31ee8b7defa5a56011551a2f35ae356 |
+| scripts/phase7/check-core-loop-smoke.mjs | present | 36788 | 26fb5ace5f9319de0836a2e27f8beeb864e7e2d0f3850f873bcdd120a88f18f4 |
 | scripts/phase7/core-loop-qa-packet-contract.mjs | present | 1474 | 3cf50c30778d6704ef5e83debe4a8ab3d9e80f9bed04012fb4413a5270fcf994 |
 | scripts/phase7/core-loop-qa-packet-contract.test.mjs | present | 11973 | b69b4a712244d30a7802b0ac9699c4828e855e77f93d25ed8c0fdb01ef549b2b |
-| scripts/e2e/human-e2e-manifest.mjs | present | 365743 | de9185cc072f28c89183ae134ea35b24abdf4be8bf0fb23333dc3efd4c10b615 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 366879 | 52644b6fdf6fe735977a69de436026536c71c22e9ee538b641c1caa54c196815 |
 | scripts/e2e/human-e2e-manifest-render.mjs | present | 2593 | b868275b0ca1a3bb99ab681bf7b96e466b03aefd3d410c244a7d9a076fc5b41d |
 | scripts/e2e/human-e2e-manifest-contract.mjs | present | 3491 | 6e7f480614b95db86bcd3fd771a7de603cc4e1c9517fdd944c5846399e9bce0a |
 | scripts/e2e/human-e2e-manifest-contract.test.mjs | present | 3037 | 1567c0da6f8654d6362f7628680b87f0df73b1bbe86d8a29e6a38de1648c2415 |
 | scripts/e2e/evidence-diagnostic-hygiene.mjs | present | 26880 | 0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911 |
 | scripts/e2e/cat07-png-contract.mjs | present | 7176 | 1677a40874cc7797a9d0954d50c14c2dadde5111b85dcbc0b76cd2cdc1a53e9f |
-| scripts/e2e/cat07-committed-evidence.mjs | present | 26706 | aba171f0dff8e720edb5d3b2bf4637dce3902cc503aa0b13a11f238c3b754bd0 |
-| scripts/e2e/cat07-shelf-freshness-audit.mjs | present | 150904 | 84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229 |
-| scripts/e2e/cat07-shelf-freshness-audit.test.mjs | present | 60211 | a5a2f444cdf73cc914490101b1f90a4c3f5b48156e43eca3b219c1b0816615a6 |
+| scripts/e2e/cat07-committed-evidence.mjs | present | 27592 | 3beef279abfe936f2edd35358d69bf192d6896cdc9eae61a88a0beb49bb4e9fa |
+| scripts/e2e/cat07-shelf-freshness-audit.mjs | present | 164464 | 9bc0fb4bce13cdc167bb57b38ddc6dc6e70bd20ccb7d62ed947abdfa422fe110 |
+| scripts/e2e/cat07-shelf-freshness-audit.test.mjs | present | 70903 | 8e0c5806f0bb448b2b3f81446110a867d8041bb375625b822b1a088d93804006 |
 | scripts/phase2/local-supabase-contract.mjs | present | 53244 | f104824ecde526d55740a72515422b78faec7243afe8b58219c984fd1f6b4c21 |
 | scripts/phase5/device-qa-packet-contract.mjs | present | 2100 | c7bb801c99819e83ad4971cfbea573c60e41c074ca31e6d9dd068b2579cdc8ee |
 | scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql | present | 12249 | e2ffde42d3da2cf35e19c717cb85d6ddf9ba576b99d21cf46806d5e83ebc30dc |
@@ -273,13 +273,13 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/E2E_TESTING_CHECKLIST.md | present | 6998 | 34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026 |
 | docs/USER_FLOW_TREE.md | present | 479048 | 326c766318fbb18ba1f6d0c57ebc9ebe19333dbd3d9d81b7352bb22890eb345e |
 | docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md | present | 16934 | e8df50a7774196f97388b0b3aa0f29a0379c2b2380400f39b6e5350a40ecaf1f |
-| docs/e2e/generated/human-e2e-manifest.json | present | 51716 | 65b7e16ea6c5c4a1d1ea41e81aafb2860a78a8502c6687887163d011ae8a51af |
-| docs/e2e/generated/human-e2e-manifest.md | present | 29844 | aa4b36c47c6616c938189a1c98d4f7ee5bedde3b7834247595eb356d5fb73f28 |
-| test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json | missing |  |  |
-| docs/phase-5/generated/device-qa-packet.json | present | 69862 | caeb01ef9b581ba5803de1907483754b9e965c6768de7e0ce88885cbd8629fdd |
-| docs/phase-5/generated/device-qa-packet.md | present | 55209 | 5b8392d1a4f438bc50888297a2e3acd34d5551fd00e15d3efdb3ce1bfbf4ae30 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 52856 | 55c0a23900d38fbe032a632767f14131be08b44649daf24687310b80aa464785 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 33649 | 4fc3d192d35008c63195b84a19950e0a26b80cbcce9bcaa6f859053a0eb786ad |
+| docs/e2e/generated/human-e2e-manifest.json | present | 299477 | d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 2244721 | a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd |
+| test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json | missing |  |  |
+| docs/phase-5/generated/device-qa-packet.json | present | 69265 | fae8aecd9c352ddedab6474dc800c04fddcfe503f93b5ef7d202503323548b24 |
+| docs/phase-5/generated/device-qa-packet.md | present | 55144 | 4ffc75d46d625965fe268a70352e413bfc4b9015fae7e8bfc8b7f14deac72bba |
+| docs/phase-6/generated/payments-qa-packet.json | present | 52859 | 822ee96197eb4d22035c4062562e53c869ea971d73eb9c1325ac66a1292a6cd3 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 33652 | 6388483aa48cb2abe60062d4251f57569cec7f779146ae031abee5bf3910619a |
 | docs/phase-7/surface-inventory.md | present | 15505 | 3210ece9e29d343560a8fcbe7c98bff1334808e77a1a0491931186e3d3146ca0 |
 | docs/phase-7/launch-claim-matrix.md | present | 4516 | 62de4afeb06ae6a2731d193354aa0e29d2d7bb57d0bc36f5671a6efede751a19 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4972 | 8018b3cfa5f4c3c5092308a75854ac29e32f3a0c16deefc7f842eaa6e98a243e |
@@ -290,10 +290,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/06-photo-progress.md | present | 49432 | 6f27bf72cb232e7e2ed251c45a38b1900984c0b5efe7f3eaf6e4dddda34ad3b4 |
 | docs/12-ai-trend-analysis.md | present | 68251 | d03bc3f120dfb1a1bf4e77ab1c5b2d7f5a0f707b94b958f1811291dee15daf05 |
 | docs/MASTER_PLAN.md | present | 69802 | d2413a72bb9ec450762c3724d698da9363f8480588f8c5d82c4123e4d636dfe3 |
-| docs/DECISIONS.md | present | 94007 | c566c8eae25390f6d96d492639ddf0cfdbf0e27fd7d43636c51d0e50261137cf |
+| docs/DECISIONS.md | present | 94112 | 9a99775fb26b2cc4941d532dca8c2eb5cd40b586911d4b40de1161551ed8b64a |
 | docs/FEATURE_INDEX.md | present | 9140 | 04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c |
 | docs/ROADMAP.md | present | 8546 | fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de |
-| docs/hugeToDo/README.md | present | 66276 | f623f6f135dadfba2cf9e04bdd8b78dbea020259b647982a304b05e8ab74908f |
+| docs/hugeToDo/README.md | present | 66564 | 8f1b4f9a75fd8d902497b96efd092fd93ef0b22c742e25483c5b2d50d58b181b |
 | scripts/launch/contract-smoke.mjs | present | 10643 | 98beaccf94d02705a36e67c716af69a194897a6ec52c0edade49f3432bcd7de2 |
 | scripts/launch/check-contract.mjs | present | 1450 | f00772997c9bc422a77001d27d7eb5ab167f24b5e1074b641f87643bad99b4f3 |
 | .env.example | present | 29678 | 41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217 |
@@ -317,10 +317,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | supabase/migrations/20260613000024_photo_trend.sql | present | 4734 | af7618e6a91895b4d68f053f23f8321c38a4bdd33d1652488f7437720d4c05ce |
 | scripts/photo05/trend-admission-source-contract.mjs | present | 28244 | 97d3850c9474e889c112e1c0904ac9f16ede01f537165f78ff579373176f963a |
 | scripts/photo05/trend-admission-source-contract.test.mjs | present | 10427 | 5aaf71a04757e216e5d89196fa13c049f87bb551d0e052f4946c8b3ca5d6bd20 |
-| scripts/phase9/build-release-qa-packet.mjs | present | 62171 | b1af60d1ab0c1e0366d4d7aecf07401541e935d85b67a0239e3bf0f9c98fe7ab |
-| scripts/phase9/release-smoke.mjs | present | 76077 | 3fae0a968fae1afdd95a25b966c68907c7cd55b16913be2d6e19cbf77515cea1 |
+| scripts/phase9/build-release-qa-packet.mjs | present | 62160 | 797b449ab4298cef21a6cabd152ba4dc2440c394c7ddad86d50851d3a07a4529 |
+| scripts/phase9/release-smoke.mjs | present | 76066 | 2f3bd36821e0ec87457b7a389fd34b6352ee3b8673934a68e5e701147c10e62a |
 | scripts/phase9/release-qa-integrity.test.mjs | present | 35022 | ba97fd498d900ab76fa22ea968c37ba88406517da87ee9f1babd54f8dca5a679 |
-| BLOCKERS.md | present | 103646 | 867ae729492346963f71ef59b63c10c6ea4914120c79639e28658ade62fe9230 |
+| BLOCKERS.md | present | 103642 | e0a358bd63b0aa7ee70e333d6626856755e06c70268567f3a3c400f9029c902f |
 | PROGRESS.md | present | 526552 | 030adbdd9b664da837a652aab98a86c7de4749cd32a9acbe92fa8636404522e9 |
 | apps/mobile/src/app/commerce/_layout.tsx | present | 101 | f9c006f08624e8f8f3a6fc2a2ba015a71d5c2954af82aae09b2d6185c6283abb |
 | apps/mobile/src/app/commerce/consent.tsx | present | 178 | a2453382e5b3d1eed13160b4a27f675dd3f563fbbed7e3eba4a9f7d9f2fb6749 |
@@ -358,11 +358,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Blockers
 
-- Phase 7 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.
-- Phase 7 source snapshot: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json is missing in the working tree.
+- Phase 7 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.
+- Phase 7 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json is missing in the working tree.
 - Governed evidence chain: the governed evidence source must be one lowercase 40-character Git SHA.
 - Governed evidence chain: the governed evidence release candidate must be one strict immutable RC directory.
-- Governed evidence chain: pinned human-E2E manifest has no governed evidence-chain binding.
 - Phase 5 upstream packet: pinned Phase 5 device QA packet must contain an empty blockers array.
 - Phase 5 upstream packet: pinned Phase 5 device QA packet required QA evidence inventory is not exact and passing.
 - Phase 5 upstream packet: pinned Phase 5 device QA packet does not contain completed named native-device signoff.
@@ -372,17 +371,50 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Phase 5 upstream packet: pinned Phase 5 device QA packet required native OCR evidence is not pass.
 - Phase 5 upstream packet: pinned Phase 5 device QA packet fresh governed evidence-chain audit is not pass.
 - Phase 5 upstream packet: pinned Phase 5 device QA packet fresh governed evidence-chain audit is not pass.
-- Human-E2E upstream manifest: human-E2E manifest must be one JSON object.
+- Human-E2E upstream manifest: human-E2E manifest status is not pass.
+- Human-E2E upstream manifest: human-E2E manifest blockers must be one empty array.
+- Human-E2E upstream manifest: human-E2E required gate iphone-375-667-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate iphone-375-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate modern-390-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate boundary-414-896-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate modern-430-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate skipped-routes-375-667-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate skipped-routes-390-844-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate skipped-routes-430-932-200-text-pressure is not pass.
+- Human-E2E upstream manifest: human-E2E required gate account-upgrade-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate account-isolation-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate account-deletion-durable-recovery-expo-web-stress is not pass.
+- Human-E2E upstream manifest: human-E2E required gate health-consent-withdrawal-expo-web-compatibility is not pass.
+- Human-E2E upstream manifest: human-E2E required gate cat04-catalog-recovery-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate cat05-native-ocr-review-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate progress-timelapse-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate progress-capture-analysis-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate progress-device-only-backup-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate progress-direct-route-lock-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate progress-storage-recovery-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate private-envelope-corruption-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate pregnancy-safety-status-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate multi-active-plan-today-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate routine-order-persistence-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate conflict-choice-schedule-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate cycle-disruption-reconciliation-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate authored-cycle-customization-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate cat07-shelf-freshness-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate required-surface-honesty-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate trend-route-group-gate-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate data-export-local-photo-disclosure-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate data-export-combined-device-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E required gate data-export-account-generation-supported-phone is not pass.
+- Human-E2E upstream manifest: human-E2E manifest fresh governed evidence-chain audit is not pass.
+- Human-E2E upstream manifest: human-E2E manifest Git SHA does not match its governed current Git SHA.
 - Human-E2E upstream manifest: fresh governed evidence-chain audit is not pass.
-- Missing test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json.
+- Missing test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json.
 - CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag may substitute for a positive immutable exact-content share receipt.
 - CORE-07A public links are not admitted; no token service, reviewed retention/revocation/deletion/abuse contract, or exact-destination confirmation is available.
 - PHOTO-05A Trend insights remain literal-zero-admission; no environment, development, E2E, caller, fixture, legacy state, simulated metric, consent grant, QA flag, or stored row may substitute for a validated on-device engine and issuer-bound result.
 - COM-01A commerce remains literal-zero-admission; no environment, domain, development/E2E mode, consent or legacy state, catalog row, reviewer string, affiliate URL, server credential, QA flag, or stored row may admit publication, partner polling, click recording, analytics, or retailer navigation.
-- CAT07 committed evidence: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in HEAD.
-- CAT07 committed evidence: docs/e2e/generated/human-e2e-manifest.json in HEAD is not canonical JSON (two-space indentation, deterministic parsed key order, and one trailing newline are required).
-- CAT07 committed evidence: committed human-E2E Markdown must exactly match the canonical rendering of its JSON.
-- CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD.
+- CAT07 committed evidence: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in HEAD.
+- CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD.
 - Missing brandReady evidence.
 - Missing supabaseRlsPass evidence.
 - Missing clinicalReviewPass evidence.

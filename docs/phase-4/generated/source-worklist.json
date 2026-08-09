@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-08-06T00:43:28.538Z",
+  "generatedAt": "2026-08-09T06:50:13.121Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "5a4dee5433fcffcfd3f71f95e95851ffd6ac3dba",
+  "gitSha": "74dec8853c72d9f280511c8e22fd8dd86156b948",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -505,8 +505,8 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17993,
-          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
+          "bytes": 18185,
+          "sha256": "40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
@@ -517,8 +517,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 41308,
-          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
+          "bytes": 41453,
+          "sha256": "daa7d558c44e3cb246623258a475d78577a6df43d27ec2c17d7022e37e8aea37"
         },
         {
           "path": "docs/phase-4/catalog-source-release-runbook.md",
@@ -771,8 +771,8 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17993,
-          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
+          "bytes": 18185,
+          "sha256": "40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
@@ -783,8 +783,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 41308,
-          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
+          "bytes": 41453,
+          "sha256": "daa7d558c44e3cb246623258a475d78577a6df43d27ec2c17d7022e37e8aea37"
         },
         {
           "path": "scripts/phase4/beta-coverage-report.mjs",
@@ -1186,8 +1186,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 44194,
-          "sha256": "6c2fe18e810ab512587babc0991b7598f61e64369d28a90c204d56d91033556f"
+          "bytes": 44358,
+          "sha256": "0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -1234,8 +1234,8 @@
         {
           "path": "docs/phase-3/consent-matrix.md",
           "exists": true,
-          "bytes": 17993,
-          "sha256": "2ec41501d4fbd98e55f8edb4b7d83a9bd92ff8e5973f6eb37bd5117274d42342"
+          "bytes": 18185,
+          "sha256": "40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b"
         },
         {
           "path": "docs/phase-3/data-inventory.md",
@@ -1246,8 +1246,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 41308,
-          "sha256": "27ad6d8ef6f9a1702dc42cb7464f05f5eb872d8cc57177cf521de95520632ad5"
+          "bytes": 41453,
+          "sha256": "daa7d558c44e3cb246623258a475d78577a6df43d27ec2c17d7022e37e8aea37"
         },
         {
           "path": "scripts/phase4/catalog-curation-contract.mjs",
