@@ -169,8 +169,8 @@ historical only: the retained human manifest records a different, non-ancestor
 Git SHA and no current governed-chain binding. The current source revision must
 republish and recheck every required unit through the governed `E -> ... -> F`
 chain. At the current CORE-06A source checkpoint on 2026-07-29, repository
-typecheck and strict lint pass, and the 2026-08-04 full mobile run passes 336
-mobile test files / 4,183 tests. The prior catalog operator console baseline
+typecheck and strict lint pass, and the current full mobile run passes 337
+mobile test files / 4,204 tests. The prior catalog operator console baseline
 remains 7 files / 24 tests. These are
 local source facts only; they do not clear hosted, native, professional-review,
 App Review, market, or revenue gates.
@@ -1049,10 +1049,10 @@ release binary actually sends or stores, and placeholder links or a
 short-lived/privileged account cannot support App Review.
 
 Current source checkpoint: the deterministic installed-npm audit reports
-`archive_required` with 63 native packages, 14/14 source-valid manifests, 14
-manifest-resource source candidates still requiring archive verification, 139
+`archive_required` with 72 native packages, 23/23 source-valid manifests, 23
+manifest-resource source candidates still requiring archive verification, 228
 podspecs, 16 XCFramework candidates, ten Apple SDK-list intersections, zero
-errors, and 15 warnings. The exact-hash repair removes the invalid empty
+errors, and 24 warnings. The exact-hash repair removes the invalid empty
 `NSPrivacyAccessedAPITypes` array from the reviewed `react-native-view-shot`
 source and fails closed on drift. This closes the known installed-source defect
 only. Ruby podspec tokens are not evaluated CocoaPods output; first-party and
@@ -1486,7 +1486,7 @@ Exit criteria:
 Status: `launch-blocked`
 
 In-app previews and a signed-disabled native lifecycle source candidate now
-exist. The exact `expo-widgets` 56.0.23 patch uses a bounded SQLite App Group
+exist. The exact `expo-widgets` 57.0.8 patch uses a bounded SQLite App Group
 authority, rotating-nonce CAS, durable action outbox, owner/snapshot binding,
 lock-held final-outbox quiescence, two-entry stale timeline, typed
 `outbox_pending`/stale-Activity retries, finite RoutineKind Activity lifecycle,

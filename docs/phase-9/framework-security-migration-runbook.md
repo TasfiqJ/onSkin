@@ -97,7 +97,7 @@ installation path. For each target package release:
 1. Fetch the exact registry artifact and record its version, resolved URL,
    integrity, license, and original source hashes.
 2. Diff each reviewed native input against the currently patched source.
-   Reapply only the minimal required OnSkin lifecycle and privacy changes.
+   Reapply only the minimal required app lifecycle and privacy changes.
 3. Replace every expected original and patched hash in the patcher and its
    tests. Preserve fail-closed rejection of changed version, lockfile URL,
    integrity, duplicate installation, symlink, or source bytes.

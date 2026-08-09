@@ -125,9 +125,14 @@ _defers to a clinician_, the standing disclaimer, **and** professional sign-off.
 
 ### D. The skin-type quiz — patent/copyright · (docs/01 §2)
 
-The validated **Baumann Skin Type Indicator is patented + copyrighted.** You may
-implement the _concept_ of a 4-axis assessment but must author **original**
-questions + scoring and avoid the protected "16 types" branding.
+The rights and freedom-to-operate posture around the Baumann system is
+**unresolved**. Public records reviewed in
+`docs/phase-3/quiz-fto-summary.md` include abandoned and expired-fee-related
+statuses, but those labels do not resolve continuations, related families,
+territories, copyrights, trademarks, contracts, or claim scope. Do not infer
+permission from a public status. Any four-axis assessment must use original
+questions/scoring and avoid protected branding unless qualified IP counsel
+clears the exact release.
 
 - **Status:** the quiz engine is built with clearly-labelled placeholder
   questions; final questions + a patent/trademark **freedom-to-operate** opinion
@@ -170,15 +175,15 @@ provider proof is currently required.
 
 ## 3. What "approvals" actually means here
 
-| Gate                                          | Is it a government permit?           | What's required                                                                                                                |
-| --------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| FDA clearance / medical-device registration   | **Unresolved for the exact release** | Function-specific intended-use/device opinion; counsel determines regulator action, and App Store declaration must be truthful |
-| Standing **not-medical-advice disclaimer**    | No                                   | Counsel-drafted; shown in onboarding, Settings, and on conflict/safety screens                                                 |
-| **Apple App Store review**                    | Vendor gate (standard)               | Guidelines 4.8 (SIWA), 5.1.1(v) (account deletion), 3.1.2 (no trial toggle), health-app scrutiny — all already designed for    |
-| **Google Play review**                        | Vendor gate (standard)               | Data-safety form, account/data deletion route                                                                                  |
-| **Dermatologist + cosmetic-chemist sign-off** | No — professional review             | Mandatory before launch (B-DERM-REVIEW)                                                                                        |
-| **Privacy/health-data legal review**          | No — professional review             | Mandatory before launch (B-PRIVACY-COPY)                                                                                       |
-| **Patent/trademark opinion** (quiz)           | No — professional review             | Before shipping the real quiz (B-QUIZ-COPY)                                                                                    |
+| Gate                                          | Is it a government permit?           | What's required                                                                                                                                                                                       |
+| --------------------------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| FDA clearance / medical-device registration   | **Unresolved for the exact release** | Function-specific intended-use/device opinion; counsel determines regulator action, and App Store declaration must be truthful                                                                        |
+| Standing **not-medical-advice disclaimer**    | No                                   | Counsel-drafted; shown in onboarding, Settings, and on conflict/safety screens                                                                                                                        |
+| **Apple App Store review**                    | Vendor gate (standard)               | Guidelines 4.8 (SIWA), 5.1.1(v) (account deletion), and 3.1.2 subscription value, truthful offer/price/eligibility terms, restoration, and functional management; exact-build review remains required |
+| **Google Play review**                        | Vendor gate (standard)               | Data-safety form, account/data deletion route                                                                                                                                                         |
+| **Dermatologist + cosmetic-chemist sign-off** | No — professional review             | Mandatory before launch (B-DERM-REVIEW)                                                                                                                                                               |
+| **Privacy/health-data legal review**          | No — professional review             | Mandatory before launch (B-PRIVACY-COPY)                                                                                                                                                              |
+| **Patent/trademark opinion** (quiz)           | No — professional review             | Before shipping the real quiz (B-QUIZ-COPY)                                                                                                                                                           |
 
 No document in this repository can conclude that government action is
 unnecessary for the final build. The current source posture keeps
@@ -193,15 +198,15 @@ separate gates.
 Costs vary enormously by jurisdiction, scope, and whether you use a lean
 startup-focused service vs. a full-service firm. **Get 2–3 real quotes.**
 
-| Item                                                                                                         | Rough estimate                                          | Notes                                                                           |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Apple Developer Program                                                                                      | **$99 / year**                                          | Certain                                                                         |
-| Google Play Developer                                                                                        | **$25 one-time**                                        | Certain                                                                         |
-| Privacy/health-data lawyer (Consumer Health Data Privacy Policy + ToS + MHMDA/GDPR/CCPA consent text + DPIA) | **~$3k–$15k+** one-time                                 | Specialised privacy service cheaper; full-service firm more                     |
-| Dermatologist + cosmetic-chemist sign-off of the rule set                                                    | **~$2k–$10k+**                                          | One-time review; ongoing derm advisory costs more but is also a marketing asset |
-| Patent/trademark freedom-to-operate opinion (Baumann)                                                        | **~$2k–$5k**                                            |                                                                                 |
-| Trademark registration for "OnSkin" (optional, advisable)                                                    | **~$250–350 USPTO filing per class + ~$1k–2k attorney** |                                                                                 |
-| **Realistic lean total to be launch-ready**                                                                  | **~$8k–$30k+** in professional fees                     | Heavily dependent on providers; treat as a budget line, not a quote             |
+| Item                                                                                                         | Rough estimate                                          | Notes                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Apple Developer Program                                                                                      | **$99 / year**                                          | Certain                                                                                                             |
+| Google Play Developer                                                                                        | **$25 one-time**                                        | Certain                                                                                                             |
+| Privacy/health-data lawyer (Consumer Health Data Privacy Policy + ToS + MHMDA/GDPR/CCPA consent text + DPIA) | **~$3k–$15k+** one-time                                 | Specialised privacy service cheaper; full-service firm more                                                         |
+| Dermatologist + cosmetic-chemist sign-off of the rule set                                                    | **~$2k–$10k+**                                          | Independent professional review; never imply endorsement or marketing approval beyond the exact authenticated scope |
+| Patent/trademark freedom-to-operate opinion (Baumann)                                                        | **~$2k–$5k**                                            |                                                                                                                     |
+| Trademark registration for "OnSkin" (optional, advisable)                                                    | **~$250–350 USPTO filing per class + ~$1k–2k attorney** |                                                                                                                     |
+| **Realistic lean total to be launch-ready**                                                                  | **~$8k–$30k+** in professional fees                     | Heavily dependent on providers; treat as a budget line, not a quote                                                 |
 
 ---
 

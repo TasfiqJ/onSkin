@@ -1316,8 +1316,8 @@
       "id": "STORE-03",
       "owner": "C/R",
       "prerequisites": ["STORE-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete age rating including UGC/social/medical questions, regulated-device declaration, DSA trader status, content rights, and export compliance",
-      "acceptance": "App Store fields match legal decisions"
+      "nextAction": "Complete and capture acceptance evidence: Complete age rating including UGC, the social-media-capability answer required beginning September 2026, social/medical questions, regulated-device declaration, DSA trader status, content rights, and export compliance",
+      "acceptance": "App Store fields match legal decisions and the exact release feature inventory"
     },
     {
       "id": "STORE-04",

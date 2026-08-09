@@ -103,7 +103,7 @@ Do not remove required SDKs merely to make a bundle chart smaller. Establish a c
 
 ### 1.3 Current strengths to preserve
 
-- Expo SDK 56, React Native 0.85, React 19, Hermes, Expo Router, and React Compiler are a sound base.
+- Expo SDK 57, React Native 0.86, React 19, Hermes, Expo Router, and React Compiler are the current base.
 - React Compiler is enabled. Blanket manual memoization would add complexity without guaranteed benefit.
 - Gesture Handler and Reanimated keep comparison-slider gesture updates off the JavaScript thread.
 - Camera routes mount camera views only when focused.

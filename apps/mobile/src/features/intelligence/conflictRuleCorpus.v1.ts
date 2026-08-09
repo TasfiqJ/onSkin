@@ -611,7 +611,7 @@ export const CONFLICT_MARKET_SCOPE_POLICY = {
     'cosmetic_skincare_not_intended_for_diagnosis_cure_mitigation_prevention_or_treatment_subject_to_counsel_classification',
   excludedJurisdictions: ['CA', 'CA-QC'],
   legalGate: 'us_wave1_counsel_clearance_required',
-  policyId: 'onskin-us-wave1-legal-market-gate-v1',
+  policyId: 'us-wave1-legal-market-gate-v1',
   sourceDocumentPath: 'docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md',
   sourceDocumentSha256: '34ce160c765e9d7bde2e1d5e55de54c63b8c896e5db61de746a1f6a971080bce',
   storefrontJurisdictions: ['US'],
@@ -630,7 +630,7 @@ export const CONFLICT_RULE_CORPUS_CONTENT: ConflictRuleCorpusContent = {
   // Wave 1 only. Canada/Quebec requires a future separately reviewed corpus.
   targetJurisdictions: ['US'],
   marketScopePolicyId: CONFLICT_MARKET_SCOPE_POLICY.policyId,
-  marketScopeSha256: '0396f673a5bd7e7c720cdf551bf3de32722808b67b081d610001ab9db1b67967',
+  marketScopeSha256: '9d91895628425caa415b2874b0cd8e5ae49a738aae149954f4009a2e46024c51',
   profileContextContract: CONFLICT_PROFILE_CONTEXT_CONTRACT,
   sources: SOURCE_REGISTRY,
   coverage: {

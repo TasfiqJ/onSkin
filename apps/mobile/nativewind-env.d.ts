@@ -6,9 +6,9 @@
 // the public NativeWind interop augmentation from this workspace so `className`
 // is attached to the actual React Native 0.86 prop interfaces used by TypeScript.
 // This is type-only; NativeWind's Babel runtime transform remains unchanged.
-import "react-native";
+import 'react-native';
 
-declare module "react-native" {
+declare module 'react-native' {
   interface ViewProps {
     className?: string;
     cssInterop?: boolean;
@@ -43,6 +43,3 @@ declare module "react-native" {
     cssInterop?: boolean;
   }
 }
-
-// Allow side-effect imports of the Tailwind/NativeWind stylesheet.
-declare module '*.css';

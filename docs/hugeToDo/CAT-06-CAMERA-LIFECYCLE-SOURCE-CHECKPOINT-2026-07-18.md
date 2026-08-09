@@ -184,7 +184,7 @@ code compiles or links, or that the physical-device matrix passes.
 - [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/): Guideline 2.5.14 requires explicit consent and a clear visual and/or audible indication when recording user activity; Guideline 5.1.1 governs clear privacy disclosure, consent, minimization, permission choices, and data handling. These are review inputs, not an approval prediction.
 - [Apple Human Interface Guidelines: Privacy](https://developer.apple.com/design/human-interface-guidelines/privacy): request access in context and explain the purpose clearly and specifically.
 - [Apple `NSCameraUsageDescription`](https://developer.apple.com/documentation/bundleresources/information-property-list/nscamerausagedescription): the final app must declare why it accesses the camera.
-- [Expo Camera, SDK 56](https://docs.expo.dev/versions/v56.0.0/sdk/camera/): only one preview should be active, an unfocused preview should be unmounted, iOS has an `active` control, `takePictureAsync` must wait for camera-ready, and captured native URIs start in temporary app cache.
+- [Expo Camera, SDK 57](https://docs.expo.dev/versions/v57.0.0/sdk/camera/): only one preview should be active, an unfocused preview should be unmounted, iOS has an `active` control, `takePictureAsync` must wait for camera-ready, and captured native URIs start in temporary app cache.
 - [React Native `AppState`](https://reactnative.dev/docs/appstate): iOS can enter `inactive` during foreground transitions and interruptions such as system permission prompts.
 
 ## Release Rule

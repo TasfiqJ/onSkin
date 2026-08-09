@@ -5,9 +5,9 @@
 > this document is superseded by `docs/hugeToDo/launch-contract.json`; the
 > privacy, accessibility, lifecycle, and physical-device gates remain binding.
 
-> **2026-07-16 implementation status:** The repository now contains an
+> **2026-08-08 implementation status:** The repository now contains an
 > **implemented iOS source candidate** for the exact-pinned `expo-widgets`
-> `56.0.23` dependency: the app-side generation-bound lifecycle
+> `57.0.8` dependency on Expo SDK 57: the app-side generation-bound lifecycle
 > bridge/coordinator/host; a native App Group SQLite store protected by a POSIX
 > lock and `BEGIN IMMEDIATE` transactions; opaque owner-authority rotation;
 > bounded snapshots; an App Intent outbox append committed before return;

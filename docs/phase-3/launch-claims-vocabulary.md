@@ -34,7 +34,9 @@ These can be used when accurate:
 - product order
 - ingredient compatibility
 - possible conflict
-- evidence-graded
+- evidence-graded, only when the exact displayed grading method, sources,
+  limitations, market scope, and release bytes are independently reviewed and
+  bound to an authenticated exact-hash signoff
 - fit
 - appearance
 - look of texture
@@ -48,8 +50,12 @@ These can be used when accurate:
 - revocable
 - paid link
 - never affects what we recommend
-- dermatologist review, only after named reviewer/date are recorded
-- cosmetic chemist review, only after named reviewer/date are recorded
+- dermatologist review, only after credentials and independence are verified
+  and an authenticated dated decision binds the exact reviewed bytes, hashes,
+  scope, market, conditions, and limitations
+- cosmetic chemist review, only after credentials and independence are
+  verified and an authenticated dated decision binds the exact reviewed bytes,
+  hashes, scope, market, conditions, and limitations
 
 ## Restricted Terms
 

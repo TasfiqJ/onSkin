@@ -115,6 +115,20 @@
       "rationale": "This committed migration-local PostgreSQL setting is an internal transition guard; preserving its exact namespace avoids rewriting immutable migration history."
     },
     {
+      "path": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "literal": "'onskin/shelf-sync/v1'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This committed migration defines the historical Shelf synchronization advisory-lock namespace; rewriting it would change reviewed migration bytes and any compatible lock behavior."
+    },
+    {
+      "path": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "literal": "'onskin/routine-completion-sync/v1'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This committed migration defines the historical routine-completion synchronization advisory-lock namespace; rewriting it would change reviewed migration bytes and any compatible lock behavior."
+    },
+    {
       "path": "supabase/tests/database/catalog_launch_curation.test.sql",
       "literal": "'onskin.catalog_import_transition'",
       "expectedCount": 2,

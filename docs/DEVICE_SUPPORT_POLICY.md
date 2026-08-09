@@ -17,7 +17,7 @@ phone envelope.
 | Android  | Not this release | `docs/hugeToDo/launch-contract.json`               |
 
 Build and App Store submission targets still follow current Apple policy. Expo
-SDK 56 supports iOS 16.4+ by default; this app intentionally raises the iOS
+SDK 57 supports iOS 16.4+ by default; this app intentionally raises the iOS
 deployment floor to 17.0. Apple requires current App Store uploads to be built
 with Xcode 26 and the iOS 26 SDK or later. Android source configuration may
 remain healthy, but it is not release evidence and no Play Console or Android

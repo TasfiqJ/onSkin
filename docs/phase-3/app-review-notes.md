@@ -7,9 +7,23 @@ These notes are for App Store Connect review information after legal/privacy rev
 
 ## Reviewer Summary Draft
 
-`[FINAL DISPLAY NAME]` is a general-wellness skincare routine organizer. Users can complete a consented skin-profile quiz; add products through manual entry, catalog search, barcode, or native label OCR; build and check off reviewed routines; use a conservative cycle/ramp scheduler; keep private local-first progress photos; receive reminders; manage a StoreKit subscription or one-time app-granted Explore-first period; inspect reviewed recommendations and Skin Notes; use a disclosed cloud Ask advisor; share reviewed conflict cards; follow disclosed commerce links; participate in a moderated community; `[ONLY AFTER POSITIVE PHOTO-05/06/07 ADMISSION: view validated score-free Trend insights]`; and use privacy-redacted iOS widgets and Live Activities.
+Do not submit a fixed feature paragraph from this draft. Generate the reviewer
+summary from the exact signed release candidate's capability inventory and
+include only routes that are production-admitted and reachable by an ordinary
+user in that build. The current repository has no positive release admission
+for recommendations, sharing, commerce, community, Trend, cloud Ask, or
+widgets/Live Activities, and several other launch-required surfaces still lack
+archive/device/professional evidence.
 
-The app does not diagnose, treat, cure, prevent, screen for, or detect medical conditions. Photo progress and Trend have no skin score, skin age, grade, percentage improvement, lesion analysis, or disease detection. Progress photos stay encrypted on the device and are not sent to Ask, analytics, crash reporting, commerce, community, or advertising. Cloud photo backup is not offered unless a later separately consented and reviewed requirement replaces this statement.
+`[FINAL DISPLAY NAME]` is a general-wellness skincare routine organizer.
+`[INSERT ONLY CAPABILITIES PROVEN BY THE EXACT SIGNED RELEASE INVENTORY.]`
+
+The app must not diagnose, treat, cure, prevent, screen for, or detect medical
+conditions. Do not submit categorical photo-storage, encryption, processing,
+or network claims until PHOTO-01 through PHOTO-07 and the exact signed archive,
+filesystem, memory, network, deletion, export, and physical-device evidence all
+pass. Trend remains literal zero-admission and must not be described as a user
+feature.
 
 ## Health/Medical Boundary
 
@@ -24,12 +38,16 @@ The app does not diagnose, treat, cure, prevent, screen for, or detect medical c
 ## Privacy Boundary
 
 - Health-adjacent profile/routine data is collected only after consent.
-- Photos remain encrypted on device unless the user explicitly shares one.
+- The intended photo boundary is encrypted on-device storage and explicit
+  user-directed sharing only; this wording remains blocked until PHOTO-01
+  through PHOTO-07 and exact-build evidence pass.
 - Cloud backup and automatic photo-image sync are unavailable in the current contract.
 - Paid-link partner sharing is separate and off by default.
 - Ask cloud mode is separate and default-off for consent, but launch-required;
   it remains blocked until vendor, safety, privacy, clinical, and legal gates pass.
-- Account deletion is available in app.
+- Account deletion is a launch-blocked source candidate. Do not state that it
+  is available until malformed/unavailable local-store recovery, hosted/vendor
+  deletion, subscription disclosure, and exact-device evidence pass.
 - Account-data export is available in app. Its versioned JSON wrapper includes owner-scoped server data plus registered encrypted records from the current device, including local-first shelf/routine state and sanitized Progress metadata/notes. Progress image files, thumbnails, device paths, ciphertext, keys, credentials, and transient cache files are excluded; images can be shared individually from Progress.
 - Community posting requires filtering, report, block, contact, removal, appeal, audit, and real staffed response paths before these notes can be submitted.
 - Trend requires separate default-off consent and a validated score-free engine; no user is silently enrolled from legacy photo consent.
@@ -39,7 +57,9 @@ The app does not diagnose, treat, cure, prevent, screen for, or detect medical c
   only after the exact build has a real issuer plus complete measurement,
   fairness, privacy/legal/professional, archive, network, device, and release
   evidence.
-- Widgets/Live Activities use an allowlisted App Group payload and redact private detail while the device/app is locked.
+- The widget source candidate uses an allowlisted App Group payload and has a
+  locked-state redaction contract, but publication/start remain disabled and
+  this is not a user-facing reviewer claim until signed-build/device gates pass.
 
 ## Subscription Notes
 
@@ -50,7 +70,12 @@ The app does not diagnose, treat, cure, prevent, screen for, or detect medical c
 
 ## Test Account
 
-TBD before submission. Create a non-expiring reviewer account and include exact steps and sample resources for every route in the 20-feature matrix. Do not use a reviewer-only fixture or behavior unavailable to ordinary users.
+TBD before submission. Create a reliable reviewer account or approved demo
+route that remains usable for the review window, and include exact steps and
+sample resources for every admitted route in the submitted build. Long-lived
+access is an internal reliability control, not an Apple-authored non-expiry
+requirement. Do not use a reviewer-only fixture or behavior unavailable to
+ordinary users.
 
 ## URLs
 

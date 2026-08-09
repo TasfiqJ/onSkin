@@ -1,6 +1,7 @@
 # IOS-02 Widget Lifecycle Source Checkpoint
 
 Date: 2026-07-16
+Updated: 2026-08-08 for Expo SDK 57 and `expo-widgets` 57.0.8
 
 Status: `in_progress` native source candidate. The RoutineKind lifecycle is
 implemented and statically/model-tested in source, but interactive publication
@@ -52,16 +53,16 @@ Review acceptance, or revenue.
   matters because an ended activity can remain visible until removal. See
   [`Task.init(priority:operation:)`](https://developer.apple.com/documentation/swift/task/init%28name%3Apriority%3Aoperation%3A%29-2dll5) and
   [`Activity.end(_:dismissalPolicy:)`](https://developer.apple.com/documentation/activitykit/activity/end%28_%3Adismissalpolicy%3A%29).
-- Expo SDK 56 documents that widget code runs in an isolated runtime, an
+- Expo SDK 57 documents that widget code runs in an isolated runtime, an
   interactive `onPress` return value becomes new widget props, app interaction
   listeners fire only while the app process is alive, `updateSnapshot` creates
   a one-entry timeline, `getTimeline` returns past and future entries, and Live
   Activities may be recovered with `getInstances`. See
-  [Expo Widgets SDK 56](https://docs.expo.dev/versions/v56.0.0/sdk/widgets/).
+  [Expo Widgets SDK 57](https://docs.expo.dev/versions/v57.0.0/sdk/widgets/).
 
 ## Reviewed Dependency And Patch Boundary
 
-The source contract pins `expo-widgets` exactly to `56.0.23`, including the
+The source contract pins `expo-widgets` exactly to `57.0.8`, including the
 workspace dependency, lockfile version, registry URL, integrity, and installed
 package identity. The deterministic installer in
 `scripts/phase5/patch-expo-widgets-lifecycle.mjs` pins both the reviewed

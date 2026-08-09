@@ -106,14 +106,14 @@ They do not replace the hosted or physical-device matrix.
 
 ## Server Secret Inventory And Rotation
 
-| Boundary | Configuration | Rotation truth |
-| --- | --- | --- |
-| Apple client authentication | `APPLE_TEAM_ID`, `APPLE_SIWA_KEY_ID`, `APPLE_SIWA_PRIVATE_KEY`, `APPLE_SIWA_CLIENT_ID`, `APP_IOS_BUNDLE_IDENTIFIER` | Rotate through the Apple Developer account and deploy the matching key ID/private key together. Retain the old Apple key until canaries prove the new client-secret path. |
-| Apple-subject pseudonym | `APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION`, `APPLE_SIWA_SUBJECT_HMAC_KEYS` | JSON keyring of one to three named 32-byte lowercase-hex keys. New captures use the current version; event matching and validation can use retained versions. |
-| Refresh-token vault | `APPLE_SIWA_VAULT_CURRENT_VERSION`, `APPLE_SIWA_VAULT_KEYS` | JSON keyring of one to three named 32-byte lowercase-hex AES-256 keys. New captures use the current version. Every successful daily validation freshly seals the token under the current key; dormant, deferred, or failing rows do not advance merely because configuration changed. |
-| Capture replay digest | `APPLE_SIWA_CODE_HMAC_KEY_HEX` | One 32-byte lowercase-hex key, not a versioned keyring. Rotate only in a capture freeze after nonterminal captures expire and retained capture artifacts are reconciled/purged. |
-| Event replay and relay-email digests | `APPLE_SIWA_EVENT_HMAC_KEY_HEX` | One 32-byte lowercase-hex key, not a versioned keyring. Stored JTI/payload digests have no key version, so routine independent rotation is unsafe without a reviewed versioned migration and replay analysis. |
-| Worker authentication | `APPLE_AUTH_WORKER_SECRET` | Independent 64-character lowercase-hex value. It must exactly match the Vault value named `apple_auth_worker_secret`; no dual-secret overlap exists. |
+| Boundary                             | Configuration                                                                                                       | Rotation truth                                                                                                                                                                                                                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Apple client authentication          | `APPLE_TEAM_ID`, `APPLE_SIWA_KEY_ID`, `APPLE_SIWA_PRIVATE_KEY`, `APPLE_SIWA_CLIENT_ID`, `APP_IOS_BUNDLE_IDENTIFIER` | Rotate through the Apple Developer account and deploy the matching key ID/private key together. Retain the old Apple key until canaries prove the new client-secret path.                                                                                                             |
+| Apple-subject pseudonym              | `APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION`, `APPLE_SIWA_SUBJECT_HMAC_KEYS`                                           | JSON keyring of one to three named 32-byte lowercase-hex keys. New captures use the current version; event matching and validation can use retained versions.                                                                                                                         |
+| Refresh-token vault                  | `APPLE_SIWA_VAULT_CURRENT_VERSION`, `APPLE_SIWA_VAULT_KEYS`                                                         | JSON keyring of one to three named 32-byte lowercase-hex AES-256 keys. New captures use the current version. Every successful daily validation freshly seals the token under the current key; dormant, deferred, or failing rows do not advance merely because configuration changed. |
+| Capture replay digest                | `APPLE_SIWA_CODE_HMAC_KEY_HEX`                                                                                      | One 32-byte lowercase-hex key, not a versioned keyring. Rotate only in a capture freeze after nonterminal captures expire and retained capture artifacts are reconciled/purged.                                                                                                       |
+| Event replay and relay-email digests | `APPLE_SIWA_EVENT_HMAC_KEY_HEX`                                                                                     | One 32-byte lowercase-hex key, not a versioned keyring. Stored JTI/payload digests have no key version, so routine independent rotation is unsafe without a reviewed versioned migration and replay analysis.                                                                         |
+| Worker authentication                | `APPLE_AUTH_WORKER_SECRET`                                                                                          | Independent 64-character lowercase-hex value. It must exactly match the Vault value named `apple_auth_worker_secret`; no dual-secret overlap exists.                                                                                                                                  |
 
 Generate random values only inside an approved secret manager or private
 operator session. Record key versions and change references, never secret
@@ -205,6 +205,22 @@ Source verification cannot prove Apple registered the URL, delivered an event,
 or associated the intended App ID grouping. Duplicate delivery is possible, but
 recovery must not depend on Apple replaying a notification missed during an
 outage; reconcile through an approved account/provider procedure.
+
+## Private Email Relay Domain Compatibility
+
+Apple announced that new Sign in with Apple private-relay addresses transition
+from `privaterelay.appleid.com` to `private.icloud.com` beginning June 15, 2026,
+while existing legacy addresses continue to work. Before release, every email
+validator, sender allowlist, suppression/bounce processor, support workflow,
+and routing rule must accept and preserve both domains without assuming either
+one identifies a different user. Retain exact provider-console and end-to-end
+delivery/bounce evidence for both domains.
+
+The source HMAC test proves this repository can normalize and digest addresses
+from both domains without retaining plaintext. It does not prove that an email
+vendor, DNS configuration, Apple relay registration, suppression list, or live
+delivery path is configured. See Apple's
+[Private Email Relay domain update](https://developer.apple.com/news/?id=sus6t6ab).
 
 ## One-Minute Validation Worker
 

@@ -29,15 +29,23 @@ Deno.test('Apple lifecycle aliases are deterministic, domain-separated HMACs', a
   const code = await appleCodeDigest(secrets, 'apple-subject');
   const jti = await appleEventJtiDigest(secrets, 'apple-subject');
   const relay = await appleRelayEmailDigest(secrets, 'Relay@privaterelay.appleid.com');
+  const currentRelay = await appleRelayEmailDigest(secrets, 'Relay@private.icloud.com');
   assert(secrets.subjectKeyVersion === 'h2', 'current subject key version');
   assert(secrets.subjectKeys.size === 2, 'bounded previous subject keys are retained');
-  for (const digest of [subject, code, jti, relay]) {
+  for (const digest of [subject, code, jti, relay, currentRelay]) {
     assert(/^[a-f0-9]{64}$/.test(digest), 'digest must be canonical lowercase hex');
   }
-  assert(new Set([subject, code, jti, relay]).size === 4, 'purposes must be domain separated');
+  assert(
+    new Set([subject, code, jti, relay, currentRelay]).size === 5,
+    'purposes and distinct relay addresses must be domain separated',
+  );
   assert(
     relay === (await appleRelayEmailDigest(secrets, 'relay@privaterelay.appleid.com')),
-    'relay aliases normalize email case',
+    'legacy relay aliases normalize email case',
+  );
+  assert(
+    currentRelay === (await appleRelayEmailDigest(secrets, 'relay@private.icloud.com')),
+    'current relay aliases normalize email case',
   );
   assert(
     subject !== (await appleSubjectDigestForVersion(secrets, 'h1', 'apple-subject')),

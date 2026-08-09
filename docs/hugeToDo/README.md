@@ -736,7 +736,8 @@ checkpoint cites Apple, FTC, Washington, and California primary sources as a
 conservative research basis; it is not counsel, professional, Apple, market,
 growth, or revenue approval.
 
-PHOTO-05 remains `in_progress` and launch-blocked. PHOTO-05A removes the
+PHOTO-05A is a completed source checkpoint, while PHOTO-05 remains
+`not_started` and launch-blocked. PHOTO-05A removes the
 historical simulated-Trend result path and establishes literal zero admission:
 both `phase7Capabilities.trendEngine` and `phase7Flags.trend` are `false`, and
 the launch contract records no engine, result issuer, calibration authority,
@@ -814,8 +815,11 @@ controls, migrations, schema, Storage, and all Cron jobs. It leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No
 approved hosted target was used and no live DB-06 evidence directory exists.
 
-BRAND-03 is complete only for the governed 2026-07-16 preliminary public
-knockout scope. The sequence for counsel review remains `RoutineKind`,
+BRAND-02 through BRAND-05 have substantive provisional artifacts but remain
+`in_progress` under the authoritative dependency chain until the BRAND-01
+naming brief is approved and each downstream artifact is revalidated.
+BRAND-03's governed 2026-07-16 public knockout is evidence for that provisional
+scope, not task completion. The sequence for counsel review remains `RoutineKind`,
 `Ritunera`, then lower-confidence `Ritualoom`; `Rituvia` is suspended. The
 record includes UKIPO, TMview, public-handle, national-register, store, domain,
 and common-law issue spotting with explicit result-set limits. BRAND-06 remains
@@ -845,7 +849,7 @@ later foreground pass rather than being purged. Privacy reduction otherwise
 durably verifies `privacy-closing-v1` and returns a synchronous closed-admission
 receipt before the queued full purge. Withdrawal and account cleanup start this
 native closure at the boundary before JavaScript writer drains or
-replacement-owner publication. The exact `expo-widgets` `56.0.23` patch is
+replacement-owner publication. The exact `expo-widgets` `57.0.8` patch is
 hash-pinned and checked during local and EAS installation.
 
 Interactive publication and Live Activity start nevertheless remain disabled
@@ -873,9 +877,9 @@ compliance, guarantee Apple acceptance, or support a revenue claim.
 IOS-09 now has a deterministic installed-source privacy audit and an exact-hash
 repair for the invalid empty `NSPrivacyAccessedAPITypes` array shipped by the
 reviewed `react-native-view-shot` package. The current result is
-`archive_required`: 63 native packages, 14/14 source-valid manifests, 139
+`archive_required`: 72 native packages, 23/23 source-valid manifests, 228
 podspecs, 16 XCFramework candidates, ten Apple SDK-list intersections, zero
-errors, and 15 warnings. These are npm-source observations only. First-party
+errors, and 24 warnings. These are npm-source observations only. First-party
 and generated native sources have separate validators, while evaluated
 CocoaPods/SPM output, the production archive, merged privacy report, required
 API use, SDK signatures, entitlements, symbols, processing warnings, observed

@@ -4,10 +4,10 @@
 
 The separate `npm run phase9:ios-privacy-source-audit:check` gate binds the
 reviewed Apple baseline, repository SDK mapping, lockfile, and installed native
-npm package source. Its current result is `archive_required`: 63 native
-packages, 14/14 source-valid privacy manifests, 14 source bindings requiring
-archive verification, 139 podspecs, 16 XCFramework candidates, ten exact Apple
-SDK-list intersections, zero errors, and 15 warnings. The generated evidence is
+npm package source. Its current result is `archive_required`: 72 native
+packages, 23/23 source-valid privacy manifests, 23 source bindings requiring
+archive verification, 228 podspecs, 16 XCFramework candidates, ten exact Apple
+SDK-list intersections, zero errors, and 24 warnings. The generated evidence is
 `docs/phase-9/generated/ios-privacy-source-audit.{json,md}`.
 
 That source audit is not the release SBOM or binary inspection. Ruby podspec

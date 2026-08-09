@@ -128,11 +128,11 @@ The deterministic installed-source audit is a required pre-archive gate. It
 pins Apple's reviewed privacy baseline, the repository's explicit SDK mapping,
 `package-lock.json`, installed package identities, strict plist semantics,
 podspec source tokens, bounded native artifact candidates, and the generated
-JSON/Markdown ledgers. The current result is `archive_required`: 63 native
-packages, 14/14 source-valid privacy manifests, 14 manifest-resource source
-bindings requiring archive verification, 139 podspecs, 16 XCFramework
+JSON/Markdown ledgers. The current result is `archive_required`: 72 native
+packages, 23/23 source-valid privacy manifests, 23 manifest-resource source
+bindings requiring archive verification, 228 podspecs, 16 XCFramework
 candidates, no standalone frameworks or `.a`/`.dylib` candidates, ten exact
-Apple SDK-list intersections, zero errors, and 15 warnings.
+Apple SDK-list intersections, zero errors, and 24 warnings.
 
 The `react-native-view-shot` repair is exact-hash and fail-closed. It changes
 only the reviewed invalid empty `NSPrivacyAccessedAPITypes` key, and EAS runs a

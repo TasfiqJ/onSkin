@@ -81,7 +81,12 @@ Use this format for every significant product, architecture, pricing, privacy, o
   checks remain source-health/resilience inputs but are not release gates.
 - Alternatives: support Expo's lower Android 7+ default, require Android 12+, keep the earlier 320 x 480 browser floor as launch-blocking, or drop compact Android phones entirely.
 - Criteria: paid consumer market reach, QA burden, current Expo SDK support, App Store/Play submission requirements, camera/photo reliability, accessibility, and launch speed.
-- Evidence: Expo SDK 56 supports iOS 16.4+ and Android compile/target SDK 36; Apple and Google current submission rules require modern build SDK/target API; the repo has passing 360 x 640, 360 x 740, 375 x 667/812, 390 x 844, 412 x 915, and 430 x 932 evidence plus extensive 320-wide stress evidence.
+- Evidence at decision time: Expo SDK 56 supported iOS 16.4+ and Android
+  compile/target SDK 36. The source baseline has since moved to Expo SDK 57;
+  this historical rationale does not assert that the old SDK remains installed.
+  Apple and Google submission rules require modern build SDK/target API. The
+  recorded browser evidence does not replace current signed-build and physical-
+  device evidence.
 - Risk: iOS 16 users cannot install; iPad and Android are outside this release;
   smaller browser/device states can still reveal resilience bugs without
   becoming launch blockers unless reproduced on supported iPhone hardware or

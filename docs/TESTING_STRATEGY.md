@@ -192,8 +192,8 @@ non-expiring demo review access also remain launch blockers.
 
 ## 2026-07-29 CORE-06A Source Checkpoint
 
-The current 2026-08-04 mobile verification passes TypeScript and 336 mobile
-test files / 4,183 tests. The prior full repository baseline also passed strict
+The current mobile verification passes TypeScript and 337 mobile test files /
+4,204 tests. The prior full repository baseline also passed strict
 lint and the catalog operator console's 7 files /
 24 tests. Focused recommendation-admission verification additionally passes
 the CORE-06 source and static database contracts, the complete recommendation
