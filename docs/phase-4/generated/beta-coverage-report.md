@@ -1,8 +1,8 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-08-10T01:43:09.413Z
+Generated: 2026-08-10T01:48:49.442Z
 Status: blocked
-Git SHA: bb60967e7855aeaa637a0db92224d15a92e3e158
+Git SHA: 0e4f07089c4e9ecd7a7e6642d2798e38ce744d85
 Git status: clean
 
 
@@ -11,7 +11,7 @@ Git status: clean
 - Status: blocked
 - Source S: BLOCKED
 - Evidence E: BLOCKED
-- Current R/F HEAD: bb60967e7855aeaa637a0db92224d15a92e3e158
+- Current R/F HEAD: 0e4f07089c4e9ecd7a7e6642d2798e38ce744d85
 - Selected RC: BLOCKED
 - Ledger SHA-256: BLOCKED
 - Ledger entries: 0
@@ -124,8 +124,8 @@ This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires t
 | supabase/tests/database/catalog_launch_curation.test.sql | present | 202040 | 2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376 |
 | supabase/tests/database/catalog_serving_gate.test.sql | present | 36707 | 1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9 |
 | supabase/tests/database/cat07_truthful_freshness.test.sql | present | 36165 | 24fe6b485009f9733568b3e101c5278380d620e9a75894898a114a9f1670d6f3 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 53109 | 8df84d8ef92f1af9f89ced8a63da60745e566d55773843f0a1bf0a02d97bb026 |
-| docs/phase-4/generated/catalog-qa-report.md | present | 39934 | c720c54d21e2b929b89892ae06112dd2f049ca25824b4d5778c99e74abd1dcd6 |
+| docs/phase-4/generated/catalog-qa-report.json | present | 24992 | 6e797d9d57ff9271e7a6214651764a01effea7f19ca2e3a66322373e6510124c |
+| docs/phase-4/generated/catalog-qa-report.md | present | 12339 | d9a1649a72704e307cf56cde5aa6d00d52174d58c53971c5abe51d3091f54810 |
 | docs/phase-10/beta-event-schema.md | present | 15983 | b8d378bed2de90910be0932c60f6d526adfe55c4c1fc2ec21641ab04aba84e85 |
 | docs/phase-10/catalog-beta-report.md | present | 1680 | 28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28 |
 | docs/phase-10/support-beta-report.md | present | 2149 | f25c3841a8bc5649dbd1f38632c756898da46a5d7f4d59ff7c328726dc9d26ac |

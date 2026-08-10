@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T01:43:09.413Z",
+  "generatedAt": "2026-08-10T01:48:49.442Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -204,7 +204,7 @@
     }
   },
   "inputPath": "docs/phase-4/beta-coverage-input.json",
-  "gitSha": "bb60967e7855aeaa637a0db92224d15a92e3e158",
+  "gitSha": "0e4f07089c4e9ecd7a7e6642d2798e38ce744d85",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -550,14 +550,14 @@
     {
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
-      "bytes": 53109,
-      "sha256": "8df84d8ef92f1af9f89ced8a63da60745e566d55773843f0a1bf0a02d97bb026"
+      "bytes": 24992,
+      "sha256": "6e797d9d57ff9271e7a6214651764a01effea7f19ca2e3a66322373e6510124c"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
-      "bytes": 39934,
-      "sha256": "c720c54d21e2b929b89892ae06112dd2f049ca25824b4d5778c99e74abd1dcd6"
+      "bytes": 12339,
+      "sha256": "d9a1649a72704e307cf56cde5aa6d00d52174d58c53971c5abe51d3091f54810"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
@@ -588,7 +588,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "bb60967e7855aeaa637a0db92224d15a92e3e158",
+    "currentGitSha": "0e4f07089c4e9ecd7a7e6642d2798e38ce744d85",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
