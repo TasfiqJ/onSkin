@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-08-10T01:45:22.376Z
+Generated: 2026-08-10T01:49:23.603Z
 Status: blocked
-Git SHA: a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2
+Git SHA: 6b32d2b9a44d9d07efb85f524bda25ae8b37e414
 Git status: clean
 NUL Git status SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 Pinned input integrity: blocked
@@ -12,7 +12,7 @@ Pinned input integrity: blocked
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2`
+- Current R/F HEAD: `6b32d2b9a44d9d07efb85f524bda25ae8b37e414`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -29,11 +29,11 @@ Pinned input integrity: blocked
 ## CAT07 Launch Evidence
 
 - Overall: blocked
-- Expected HEAD: `a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2`
+- Expected HEAD: `6b32d2b9a44d9d07efb85f524bda25ae8b37e414`
 - Committed validator: blocked
-- Committed validator HEAD: `a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2`
+- Committed validator HEAD: `6b32d2b9a44d9d07efb85f524bda25ae8b37e414`
 - Full manifest validator: blocked
-- Full manifest validator HEAD: `a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2`
+- Full manifest validator HEAD: `6b32d2b9a44d9d07efb85f524bda25ae8b37e414`
 - Summary SHA-256: `BLOCKED`
 - Manifest JSON SHA-256: `d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0`
 - Manifest Markdown SHA-256: `a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd`
@@ -542,7 +542,7 @@ Pinned input integrity: blocked
 - `scripts/phase9/upstream-packet-contract.test.mjs`: `6de10ec49df13540370d972b0b97287cdb36e7f1a78ddcf9b06ffb78dc9d9dc2`
 - `docs/phase-5/generated/device-qa-packet.json`: `4c9604db2f25e6ababb5d3ef517b7c91a374de011b58853c7c9d7b4961ebfdec`
 - `docs/phase-7/generated/core-loop-qa-packet.json`: `c9bf0ec465a361e4d5d880c9ff4d725c8572064d5e850d23041738b4fe6a1c99`
-- `docs/phase-4/generated/beta-coverage-report.json`: `67ea10b97dab547f5fa0d9beea0fbc9c47c1e101a4a2f9128b719951dd2a48d7`
+- `docs/phase-4/generated/beta-coverage-report.json`: `fc3719afbfc69e82889cb899f9b1c07aa08cc0bf05bc641cb459ca78ad29e4d4`
 - `docs/e2e/generated/human-e2e-manifest.json`: `d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0`
 - `docs/e2e/generated/human-e2e-manifest.md`: `a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd`
 - `scripts/e2e/cat07-committed-evidence.mjs`: `3beef279abfe936f2edd35358d69bf192d6896cdc9eae61a88a0beb49bb4e9fa`

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T01:45:22.376Z",
+  "generatedAt": "2026-08-10T01:49:23.603Z",
   "status": "blocked",
   "launchContract": {
     "schemaVersion": 1,
@@ -208,10 +208,10 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "gitSha": "a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2",
+  "gitSha": "6b32d2b9a44d9d07efb85f524bda25ae8b37e414",
   "gitStatus": "",
   "sourceSnapshot": {
-    "headSha": "a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2",
+    "headSha": "6b32d2b9a44d9d07efb85f524bda25ae8b37e414",
     "gitStatusSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "inputCount": 473,
     "optionalWorkingInputCount": 1,
@@ -223,10 +223,10 @@
   },
   "cat07Evidence": {
     "status": "blocked",
-    "expectedHeadSha": "a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2",
+    "expectedHeadSha": "6b32d2b9a44d9d07efb85f524bda25ae8b37e414",
     "committed": {
       "status": "blocked",
-      "headSha": "a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2",
+      "headSha": "6b32d2b9a44d9d07efb85f524bda25ae8b37e414",
       "summarySha256": null,
       "manifestSha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0",
       "markdownSha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd",
@@ -236,7 +236,7 @@
     },
     "full": {
       "status": "blocked",
-      "headSha": "a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2",
+      "headSha": "6b32d2b9a44d9d07efb85f524bda25ae8b37e414",
       "errors": [
         "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
       ]
@@ -269,7 +269,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "a7f0f10e7e68ea8192d0905ffcfbd9ae213198f2",
+    "currentGitSha": "6b32d2b9a44d9d07efb85f524bda25ae8b37e414",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -765,7 +765,7 @@
     "scripts/phase9/upstream-packet-contract.test.mjs": "6de10ec49df13540370d972b0b97287cdb36e7f1a78ddcf9b06ffb78dc9d9dc2",
     "docs/phase-5/generated/device-qa-packet.json": "4c9604db2f25e6ababb5d3ef517b7c91a374de011b58853c7c9d7b4961ebfdec",
     "docs/phase-7/generated/core-loop-qa-packet.json": "c9bf0ec465a361e4d5d880c9ff4d725c8572064d5e850d23041738b4fe6a1c99",
-    "docs/phase-4/generated/beta-coverage-report.json": "67ea10b97dab547f5fa0d9beea0fbc9c47c1e101a4a2f9128b719951dd2a48d7",
+    "docs/phase-4/generated/beta-coverage-report.json": "fc3719afbfc69e82889cb899f9b1c07aa08cc0bf05bc641cb459ca78ad29e4d4",
     "docs/e2e/generated/human-e2e-manifest.json": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0",
     "docs/e2e/generated/human-e2e-manifest.md": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd",
     "scripts/e2e/cat07-committed-evidence.mjs": "3beef279abfe936f2edd35358d69bf192d6896cdc9eae61a88a0beb49bb4e9fa",
