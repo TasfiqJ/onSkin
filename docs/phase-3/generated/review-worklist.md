@@ -1,9 +1,9 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-08-10T01:37:13.108Z
+Generated: 2026-08-10T01:42:41.290Z
 Status: pass
-Git SHA: fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f
-Git status: DIRTY
+Git SHA: 0db65dc7a0eb5edb2513be8ff99f8b201129fae0
+Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
 privacy/security, and IP/FTO review logs into an operator handoff. It does
@@ -18,7 +18,7 @@ reviewers must inspect before launch gates can close.
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
 - Blockers: 0
-- Warnings: 1
+- Warnings: 0
 
 ## Items
 
@@ -926,7 +926,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `539ee31fcd16272f41eb3835a29b748b76f2cd8355ad7b08cc592c923e10b4f2`
+- Review snapshot SHA-256: `7ef26c1ae19549674fe69b9aaf74c3f79023e390d2a2dd0e2dd6b19f6824e246`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Counsel must independently clear or reject the exact sequence and review the recorded comparators. Preliminary search completion is not clearance. Later founder selection and asset reservations are separate identity gates.
@@ -936,7 +936,7 @@ Sources:
 - `docs/brand-decision-memo.md` - 3386 bytes - sha256 `4232d7b51cf51a1a08774155cea30adb1b9a6f46fa7a52b8f4e2a8fe61648245`
 - `docs/brand-evidence.md` - 16884 bytes - sha256 `2a3dd031af6306949384b2ccdcadc1753a2624917eb06df6a6f4ededa8343b4d`
 - `docs/hugeToDo/BRAND-01-naming-brief.md` - 6818 bytes - sha256 `7ff568218174d861f7e47e79af3a3f0d0f77831ec444c8fe56cbc7e4f894a38c`
-- `docs/hugeToDo/BRAND-02-scored-longlist.md` - 11094 bytes - sha256 `b32af81baa38e6905753c321de3278d0d085e4dacc08c0cc43456fabece7cd43`
+- `docs/hugeToDo/BRAND-02-scored-longlist.md` - 10954 bytes - sha256 `ebcd176837181cf7bc27d60c07b70633122d17a885eb6fc3d9bb07e06c483de4`
 - `docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md` - 39101 bytes - sha256 `e06e30ed883175f267b4b179310388cc91b5fb80c30e9c15890424295d8adfc2`
 - `docs/hugeToDo/BRAND-04-recommendation.md` - 6763 bytes - sha256 `235a4a4f23f22db1e3beab5fae20225db39d6f793d8295152fb3686cabe39cc1`
 - `docs/hugeToDo/BRAND-05-counsel-clearance-packet.md` - 25569 bytes - sha256 `26e61d98d50f182a00ca1d3ad62ba512b5a88425b8bca7055b50602494cdaed8`
@@ -1071,4 +1071,4 @@ Sources:
 
 ## Warnings
 
-- Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.
+- None.
