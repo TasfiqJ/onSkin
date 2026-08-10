@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-08-10T01:45:52.063Z
+Generated: 2026-08-10T01:48:52.120Z
 Status: blocked
-Git SHA: e5ac82670fa8ff72ca39048faba8f1a964fd3995
+Git SHA: 7ee7c4f22c69678953235bb9407416b8c4a6bd5b
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -67,8 +67,8 @@ Phase 9 packet status: blocked
 - `scripts/phase10/beta-analytics-audit.mjs`: `6b59019b485e4e2eb9dfed6d34cf4e6362e8b62728ece9567f9974e74836fa9b`
 - `scripts/phase10/build-support-handoff-packet.mjs`: `504e2eb26fbbb612b321d9e636d8d5d5038aab4f3f9ea0fcb7c9c92ba806be7e`
 - `scripts/phase10/build-beta-packet.mjs`: `bb789bb5a40f00a8d2f14e265b538b31a90c7269e84d069d71f99b0946d7ca60`
-- `docs/phase-10/generated/support-handoff-packet.json`: `8ac97198fe40df64c7408756c01d9420648d1570238eed272e721cf068ea6fb2`
-- `docs/phase-10/generated/support-handoff-packet.md`: `c4c5d6d26ff2863ea7805fb19e4b19672e0d8da28b3bf969c83776efd52980d7`
+- `docs/phase-10/generated/support-handoff-packet.json`: `16cefc9aff5b8cc299a8a3b03bfc59b356b8131ca8a3e260db4af32be5b34f98`
+- `docs/phase-10/generated/support-handoff-packet.md`: `43f8ebc929a075fef645f871b8013ce40394cbb21ad3886b84ad8efcca0ed271`
 - `apps/mobile/eas.json`: `c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04`
 - `apps/mobile/app.config.js`: `81851010e4eb58d23f8e61ca270d979776390f3607d4a6afdf6106936756eb5c`
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `51de958c223a1b32cf5d6fffdfff03ac1631bbfe9735de41995b084a90f23f53`
