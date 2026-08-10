@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T01:38:27.319Z",
+  "generatedAt": "2026-08-10T01:45:05.450Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -290,7 +290,7 @@
   "artifacts": {},
   "iosArchivePrivacyEvidence": null,
   "iosPrivacySourceAudit": {
-    "status": "source_invalid",
+    "status": "archive_required",
     "claims": {
       "appStoreAcceptanceProven": false,
       "appStorePrivacyLabelsVerified": false,
@@ -320,7 +320,7 @@
       "frameworkSourceCandidateCount": 0,
       "nativeBinaryFileSourceCandidateCount": 0,
       "appleSdkIntersectionCount": 10,
-      "errorCount": 3,
+      "errorCount": 0,
       "warningCount": 24
     },
     "inputs": {
@@ -332,7 +332,7 @@
       "mapping": {
         "path": "docs/phase-9/ios-sdk-package-mapping.json",
         "bytes": 8370,
-        "sha256": "ba0c235e9547c9af5154c59ea544464acb245264fc322efff5d71748484eaa3f"
+        "sha256": "a386fbed9e85957844e98dd6cff0d6466f7ee8ad01f821e224c9dbbeea63d564"
       },
       "packageLock": {
         "path": "package-lock.json",
@@ -355,9 +355,7 @@
     "archiveContainerIntegrityMachineValidated": false,
     "provisioningCmsSignatureTrusted": false
   },
-  "blockers": [
-    "Installed iOS privacy source audit is invalid (3 errors)."
-  ],
+  "blockers": [],
   "warnings": [
     "Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.",
     "Exact iOS archive evidence not supplied: set PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH to the completed RC JSON.",
