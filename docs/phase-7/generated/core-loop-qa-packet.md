@@ -1,8 +1,8 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-08-10T01:37:52.760Z
-Git SHA: fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f
-Git status: DIRTY
+Generated at: 2026-08-10T01:44:03.030Z
+Git SHA: 6b77ce8a5a2c70ab191b09884441e8f067e8986b
+Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -11,7 +11,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f`
+- Current R/F HEAD: `6b77ce8a5a2c70ab191b09884441e8f067e8986b`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -23,7 +23,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 - Human-E2E manifest: blocked
 - Phase 5 device QA: blocked
-- Phase 5 recorded head: `ce7d3fedc88e6333e72dad9c08b03dd9105dd73b`
+- Phase 5 recorded head: `7d503129c9e1d0a16818c532286b46a97daf636e`
 
 ## Evidence
 
@@ -276,10 +276,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/e2e/generated/human-e2e-manifest.json | present | 299477 | d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0 |
 | docs/e2e/generated/human-e2e-manifest.md | present | 2244721 | a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd |
 | test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json | missing |  |  |
-| docs/phase-5/generated/device-qa-packet.json | present | 112286 | d4e45943f61b1a7675e5f03a2d1aa3bc9603916b5a8b45b99b8c4ae0a695dafb |
-| docs/phase-5/generated/device-qa-packet.md | present | 66218 | efd4b42003b0ea5916544abe6b6bfcf6e47dfe9790218996c312a546694ca5df |
-| docs/phase-6/generated/payments-qa-packet.json | present | 90232 | 7f7b80ceb90c64238f79386c2fa61a1277664b8079e1348108fd85100762ffd7 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 38699 | 459fd0d57f7bef61ccf07c70d072e9dd6ba7cde766b86bc25207964d55af7f2b |
+| docs/phase-5/generated/device-qa-packet.json | present | 69261 | 4c9604db2f25e6ababb5d3ef517b7c91a374de011b58853c7c9d7b4961ebfdec |
+| docs/phase-5/generated/device-qa-packet.md | present | 55144 | 6afc35deaa8e6ceaa8b2a99f7500ceed49473e5dc28634d5e4433cc7fe9c282b |
+| docs/phase-6/generated/payments-qa-packet.json | present | 52859 | 289814782ff1256043c4aaf3c487ac41b0aaf945cb7fe8ee61a9e1e5592fe1f0 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 33652 | 4ea09e4da916084d6615e43de47a22a3b35a680405c7b4fa41f9e5147e68c22f |
 | docs/phase-7/surface-inventory.md | present | 15505 | 3210ece9e29d343560a8fcbe7c98bff1334808e77a1a0491931186e3d3146ca0 |
 | docs/phase-7/launch-claim-matrix.md | present | 4516 | 62de4afeb06ae6a2731d193354aa0e29d2d7bb57d0bc36f5671a6efede751a19 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4972 | 8018b3cfa5f4c3c5092308a75854ac29e32f3a0c16deefc7f842eaa6e98a243e |
@@ -289,8 +289,8 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md | present | 21451 | 74235e8ab2c228f6f97baf0a18081e7b4219a7d91859c2ae28d4be2e23ba30da |
 | docs/06-photo-progress.md | present | 49458 | ac72f41a97294ddf25a9ed6b84442d2112f3facff36707ab0ebeda1853be93b5 |
 | docs/12-ai-trend-analysis.md | present | 68321 | 87041be91399b2cee40486fec7d8a360e522bdbbd7ca2f62fcccd240fc837ed6 |
-| docs/MASTER_PLAN.md | present | 69870 | 9cd41d4a19e5932677dc69cd077178316ce34b26a9f6921df02d578343996e99 |
-| docs/DECISIONS.md | present | 94119 | f2862262e79bff5df0a480f66510547745a765038a9e4bec4eec6a119edda7fb |
+| docs/MASTER_PLAN.md | present | 69706 | 6e08011d1d7f4c5dd11cef4dec1fafdc26ab87aa0810a303bb266f64b3a5794b |
+| docs/DECISIONS.md | present | 94996 | c1c1ee6c4b30840a64e034548fe0e66f547666696f596cfee7823a9d8bd30dda |
 | docs/FEATURE_INDEX.md | present | 9140 | 04a1be15af74e79b7cf193dd77618e62573048d44741d4e2b1df037accc6870c |
 | docs/ROADMAP.md | present | 8546 | fb13e339e545ceb4aca975be741f7bdf01880bd4bbd3cb821c7fb812890ff3de |
 | docs/hugeToDo/README.md | present | 66552 | 6070f6a29246c30f016c4e57159d82d424e0b5c89a9780d007415b64469090ab |
@@ -358,111 +358,8 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Blockers
 
-- Phase 7 source snapshot: package.json working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/09-personalized-recommendations.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/core06/recommendation-admission-source-contract.test.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/lib/env.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/lib/launch/phase7.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/lib/launch/phase8.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/app/cycle/settings.tsx working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/app/recommendations/[id].tsx working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/app/recommendations/index.tsx working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/app/recommendations/preferences.tsx working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/app/shelf/opened.tsx working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/app/shelf/scan.tsx working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/ask/answer.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/catalog/client.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/growth/shareAdmission.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/growth/publicLinkAdmission.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/growth/shareProjection.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/growth/shareLinks.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/growth/cardCopy.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/growth/cardCopy.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/notifications/copy.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/notifications/store.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/notifications/store.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/onboarding/serverSkinProfile.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/onboarding/serverSkinProfile.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/claimsafety.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/catalog.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/copy.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/engine.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/engine.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/fit.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/fit.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/goalAdmission.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/goalProvenance.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/preferences.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/replenishment.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/store.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/recommendations/store.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/routine/activationAnalytics.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/routine/activationAnalytics.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/scheduler/cycleStore.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/scheduler/cycleStore.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/scheduler/orchestrate.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/scheduler/orchestrate.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/scheduler/profile.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/scheduler/useCycle.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/shelf/freshness.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/shelf/freshness.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/shelf/paoProvenance.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/shelf/store.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/shelf/store.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/today/completionsStore.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/today/completionsStore.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/trend/copy.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/lib/consent/healthProcessingEpoch.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: packages/types/src/index.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: packages/types/package.json working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/lib/supabase/client.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/phase7/check-core-loop-smoke.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/e2e/human-e2e-manifest.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/e2e/human-e2e-manifest-contract.test.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/e2e/cat07-png-contract.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/e2e/cat07-shelf-freshness-audit.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/launch/governed-evidence-chain.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/launch/governed-evidence-chain.test.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/phase9/build-evidence-chain-ledger.test.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/HUMAN_SIMULATED_E2E_TESTING.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/USER_FLOW_TREE.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md working bytes do not match pinned HEAD.
 - Phase 7 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.
 - Phase 7 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json is missing in the working tree.
-- Phase 7 source snapshot: docs/phase-5/generated/device-qa-packet.json working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/phase-5/generated/device-qa-packet.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/phase-6/generated/payments-qa-packet.json working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/phase-6/generated/payments-qa-packet.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/phase-7/core-loop-qa-checklist.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/06-photo-progress.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/12-ai-trend-analysis.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/MASTER_PLAN.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/DECISIONS.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/hugeToDo/README.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: .env.example working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/lib/consent/dependentConsentContract.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/trend/claimsafety.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/trend/store.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/trend/store.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/trend/trend.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/photos/copy.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/phase9/build-release-qa-packet.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/phase9/release-smoke.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: scripts/phase9/release-qa-integrity.test.mjs working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: BLOCKERS.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: PROGRESS.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/commerce/attribution.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/commerce/claimsafety.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/commerce/copy.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/commerce/links.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/commerce/stacks.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/commerce/store.test.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: apps/mobile/src/features/commerce/store.ts working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/10-creator-stacks-build-spec.md working bytes do not match pinned HEAD.
-- Phase 7 source snapshot: docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md working bytes do not match pinned HEAD.
 - Governed evidence chain: the governed evidence source must be one lowercase 40-character Git SHA.
 - Governed evidence chain: the governed evidence release candidate must be one strict immutable RC directory.
 - Phase 5 upstream packet: pinned Phase 5 device QA packet must contain an empty blockers array.
@@ -563,4 +460,4 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Warnings
 
-- Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.
+- none
