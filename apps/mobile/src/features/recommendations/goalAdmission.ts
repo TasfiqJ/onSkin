@@ -1,4 +1,4 @@
-import type { GoalId } from '@onskin/types';
+import type { GoalId } from '@layerwell/types';
 
 import { phase7Flags } from '@/lib/launch/phase7';
 

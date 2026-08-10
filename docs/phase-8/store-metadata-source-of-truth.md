@@ -29,7 +29,7 @@ Store copy must not describe:
 
 ## iOS Packet
 
-- App name: `RoutineKind` (working candidate; final legal/store-console clearance still required)
+- App name: `Layerwell` (working candidate; final legal/store-console clearance still required)
 - Subtitle: `Routine and shelf tracker`
 - Promotional text: configured in code
 - Keywords: configured in code
@@ -39,7 +39,7 @@ Store copy must not describe:
 
 ## Google Play Packet
 
-- Title: `RoutineKind` (working candidate; final legal/store-console clearance still required)
+- Title: `Layerwell` (working candidate; final legal/store-console clearance still required)
 - Short description: configured in code
 - Full description: configured in code
 - Screenshot captions: configured in code

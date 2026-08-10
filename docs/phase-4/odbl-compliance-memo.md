@@ -10,7 +10,7 @@ Open Data Commons ODbL: https://opendatacommons.org/licenses/odbl/
 
 This memo is an engineering control document, not legal advice. ODbL obligations must be reviewed by counsel before public launch.
 
-OnSkin should assume that Open Beauty Facts/Open Food Facts data requires:
+Layerwell should assume that Open Beauty Facts/Open Food Facts data requires:
 
 - clear attribution;
 - preservation of source notices;
@@ -26,7 +26,7 @@ Do:
 - Show source and last updated date on product detail.
 - Keep product images disabled until image rights are reviewed.
 - Use exports for bulk import.
-- Resolve user barcode/search requests only against OnSkin's reviewed catalog. Any OBF-derived data is transformed from a detached, hash-bound offline artifact; no user lookup is disclosed to OBF at runtime.
+- Resolve user barcode/search requests only against Layerwell's reviewed catalog. Any OBF-derived data is transformed from a detached, hash-bound offline artifact; no user lookup is disclosed to OBF at runtime.
 - Keep the OBF-derived component logically separable and exportable from proprietary/editorial catalog components until counsel records the derivative-versus-collective-database posture.
 - Treat the current filtering/normalization transformer conservatively as the
   derivative-database path: it cannot pass production validation without the
@@ -65,7 +65,7 @@ Do not:
   all runtime table and enqueue-RPC authority, and retains the empty relation
   only for migration/account-erasure compatibility. There is no launch
   restoration path; neither the client nor `catalog-report` publishes into it.
-- `catalog_corrections` lets users report wrong matches through OnSkin's
+- `catalog_corrections` lets users report wrong matches through Layerwell's
   owner-scoped first-party operation without exposing global import queues or
   forwarding reports to OBF.
 - Client copy now avoids claiming unmatched products are contributed back.

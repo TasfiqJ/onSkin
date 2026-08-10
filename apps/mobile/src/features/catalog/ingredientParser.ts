@@ -1,4 +1,4 @@
-import type { FunctionalTag, IngredientSubflag } from '@onskin/types';
+import type { FunctionalTag, IngredientSubflag } from '@layerwell/types';
 
 import { tagsForIngredient } from '@/features/intelligence/tags';
 

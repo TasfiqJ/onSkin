@@ -40,7 +40,7 @@ function currentProps() {
     completedCount: 0,
     totalCount: 2,
     actionTokens: [TOKEN_ONE, TOKEN_TWO],
-    deepLink: 'routinekind-development://today',
+    deepLink: 'layerwell-development://today',
     updatedAtMs: 1_000,
     staleAtMs: 10_000,
   });
@@ -52,7 +52,7 @@ function staleProps() {
     snapshotNonce: SNAPSHOT,
     status: 'stale',
     localDate: '2026-07-16',
-    deepLink: 'routinekind-development://today',
+    deepLink: 'layerwell-development://today',
     updatedAtMs: 1_000,
     staleAtMs: 10_000,
   });

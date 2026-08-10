@@ -9,7 +9,7 @@ import {
   revenueCatUnconfirmedStoreMessage,
 } from './revenuecat';
 
-export const STORE_TRANSACTION_NOTICE_STORAGE_KEY = 'routinekind.store_transaction_notice.v2';
+export const STORE_TRANSACTION_NOTICE_STORAGE_KEY = 'layerwell.store_transaction_notice.v2';
 export const STORE_TRANSACTION_PURCHASE_BLOCKED = 'STORE_TRANSACTION_PURCHASE_BLOCKED';
 export const STORE_TRANSACTION_OPERATION_IN_PROGRESS = 'STORE_TRANSACTION_OPERATION_IN_PROGRESS';
 export const STORE_TRANSACTION_NOTICE_STORAGE_UNAVAILABLE =

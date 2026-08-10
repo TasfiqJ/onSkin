@@ -70,4 +70,4 @@ Add a Search catalog row to `/shelf/no-match`, route it to `/shelf/search` with 
 
 - Untested branches: Native camera barcode miss on iOS and Android.
 - Missing fixtures: A durable seeded barcode no-match fixture for native simulator E2E.
-- Follow-up needed: Promote the barcode no-match recovery flow into the selected native mobile E2E harness once OnSkin standardizes one.
+- Follow-up needed: Promote the barcode no-match recovery flow into the selected native mobile E2E harness once Layerwell standardizes one.

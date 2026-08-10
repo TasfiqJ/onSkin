@@ -80,7 +80,7 @@ select ok(
       from pg_catalog.pg_constraint as constraint_row
      where constraint_row.conrelid = 'public.skin_profiles'::pg_catalog.regclass
        and constraint_row.conname = 'skin_profiles_quiz_v2_provenance_coherent'
-  ) like '%urn:routinekind:onboarding:skin-profile%'
+  ) like '%urn:layerwell:onboarding:skin-profile%'
   and (
     select pg_catalog.pg_get_constraintdef(constraint_row.oid)
       from pg_catalog.pg_constraint as constraint_row
@@ -252,7 +252,7 @@ as $$
     p_sensitive_resistant_basis_points,
     p_pigmented_non_basis_points,
     p_wrinkled_tight_basis_points,
-    'urn:routinekind:onboarding:skin-profile',
+    'urn:layerwell:onboarding:skin-profile',
     'draft-2026-07-04',
     'draft-1',
     1,
@@ -316,7 +316,7 @@ select results_eq(
 select ok(
   pg_temp.core01_check_rejected(
     $$update pg_temp.core01_skin_profiles
-         set quiz_contract_id = 'urn:routinekind:onboarding:skin-profile'
+         set quiz_contract_id = 'urn:layerwell:onboarding:skin-profile'
        where user_id = '64000000-0000-4000-8000-000000000001'$$
   ),
   'version 1 rejects a partially populated new provenance tuple'
@@ -403,7 +403,7 @@ select results_eq(
 select ok(
   pg_temp.core01_check_rejected(
     $$update pg_temp.core01_skin_profiles
-         set quiz_contract_id = 'urn:routinekind:onboarding:other'
+         set quiz_contract_id = 'urn:layerwell:onboarding:other'
        where user_id = '64000000-0000-4000-8000-000000000010'$$
   ),
   'v2 rejects a different quiz contract identifier'

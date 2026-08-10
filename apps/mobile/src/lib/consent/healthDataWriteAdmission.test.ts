@@ -24,7 +24,7 @@ describe('local health-data write admission', () => {
   });
 
   it('blocks classified writes with no epoch or an expired status lease', () => {
-    expect(() => assertHealthPurposePrivateDataWriteAllowed('onskin.skinprofile.v1')).toThrow(
+    expect(() => assertHealthPurposePrivateDataWriteAllowed('layerwell.skinprofile.v1')).toThrow(
       'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
     );
 
@@ -36,7 +36,7 @@ describe('local health-data write admission', () => {
       serverVerifiedAt: '2026-07-15T12:00:00.000Z',
     });
     vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
-    expect(() => assertHealthPurposePrivateDataWriteAllowed('onskin.skinprofile.v1')).toThrow(
+    expect(() => assertHealthPurposePrivateDataWriteAllowed('layerwell.skinprofile.v1')).toThrow(
       'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
     );
   });
@@ -61,13 +61,13 @@ describe('local health-data write admission', () => {
       serverVerifiedAt: null,
     });
 
-    expect(() => assertHealthPurposePrivateDataWriteAllowed('onskin.skinprofile.v1')).not.toThrow();
-    expect(captureHealthPurposePrivateDataWriteLease('onskin.commerceConsent.v1')).not.toBeNull();
-    expect(captureHealthPurposePrivateDataWriteLease('onskin.communityConsent.v1')).not.toBeNull();
-    expect(captureHealthPurposePrivateDataWriteLease('onskin.communityAge16.v1')).toBeNull();
+    expect(() => assertHealthPurposePrivateDataWriteAllowed('layerwell.skinprofile.v1')).not.toThrow();
+    expect(captureHealthPurposePrivateDataWriteLease('layerwell.commerceConsent.v1')).not.toBeNull();
+    expect(captureHealthPurposePrivateDataWriteLease('layerwell.communityConsent.v1')).not.toBeNull();
+    expect(captureHealthPurposePrivateDataWriteLease('layerwell.communityAge16.v1')).toBeNull();
     // Non-health account and billing records remain outside this purpose gate.
     clearActiveHealthProcessingEpoch();
-    expect(() => assertHealthPurposePrivateDataWriteAllowed('onskin.entitlement.v2')).not.toThrow();
+    expect(() => assertHealthPurposePrivateDataWriteAllowed('layerwell.entitlement.v2')).not.toThrow();
   });
 
   it('invalidates captured work across clear and same-value re-grant', () => {

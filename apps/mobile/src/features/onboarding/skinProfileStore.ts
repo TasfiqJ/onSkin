@@ -1,5 +1,5 @@
-import type { GoalId, PregnancyStatus, SkinAxis } from '@onskin/types';
-import { GOALS, SKIN_AXES } from '@onskin/types';
+import type { GoalId, PregnancyStatus, SkinAxis } from '@layerwell/types';
+import { GOALS, SKIN_AXES } from '@layerwell/types';
 
 import {
   runCurrentHealthDataOperation,
@@ -18,7 +18,7 @@ import {
 // Keep the original key so pre-contract bytes remain discoverable for explicit
 // recovery. Only an exact v2 receipt produced by the pinned quiz contract is an
 // onboarding-completion authority.
-const KEY = 'onskin.skinprofile.v1';
+const KEY = 'layerwell.skinprofile.v1';
 const SCHEMA_VERSION = 2 as const;
 const GOAL_IDS = new Set<GoalId>(GOALS.map((goal) => goal.id));
 const PREGNANCY_STATUSES = new Set<PregnancyStatus>([

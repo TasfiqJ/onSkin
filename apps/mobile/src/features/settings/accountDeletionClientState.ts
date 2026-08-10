@@ -7,7 +7,7 @@ import { setAccountActivityBlockedForDeletion } from './accountDeletionBarrier';
 
 export { isAccountActivityBlockedForDeletion } from './accountDeletionBarrier';
 
-export const ACCOUNT_DELETION_CLIENT_STATE_KEY = 'routinekind.account_deletion.pending.v1';
+export const ACCOUNT_DELETION_CLIENT_STATE_KEY = 'layerwell.account_deletion.pending.v1';
 export const ACCOUNT_DELETION_TOKEN_BYTES = 32;
 
 const TOKEN_PATTERN = /^[a-f0-9]{64}$/;

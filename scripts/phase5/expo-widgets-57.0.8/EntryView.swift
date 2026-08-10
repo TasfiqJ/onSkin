@@ -27,7 +27,7 @@ public struct WidgetsEntryView: View {
   public var body: some View {
     if let layout = WidgetsStorage.getString(forKey: "__expo_widgets_\(entry.name)_layout"),
        !layout.isEmpty {
-      let props = RoutineKindWidgetLifecycleStore.sanitizedWidgetProps(
+      let props = LayerwellWidgetLifecycleStore.sanitizedWidgetProps(
         name: entry.name,
         props: entry.props ?? [:]
       )

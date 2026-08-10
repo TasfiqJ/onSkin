@@ -19,7 +19,7 @@ function section(value, start, end) {
 }
 
 test('native authority is cross-process serialized, durable, and ABA-resistant', () => {
-  const store = source('RoutineKindWidgetLifecycleStore.swift');
+  const store = source('LayerwellWidgetLifecycleStore.swift');
   for (const contract of [
     'flock(handle.fileDescriptor, LOCK_EX | LOCK_NB)',
     'var attemptsRemaining = 25',
@@ -47,7 +47,7 @@ test('native authority is cross-process serialized, durable, and ABA-resistant',
 });
 
 test('unconditional cleanup closes authority before clearing derived presentation and activities', () => {
-  const store = source('RoutineKindWidgetLifecycleStore.swift');
+  const store = source('LayerwellWidgetLifecycleStore.swift');
   const module = source('WidgetsModule.swift');
   const cleanup = section(
     store,
@@ -75,8 +75,8 @@ test('unconditional cleanup closes authority before clearing derived presentatio
 
   const serialization = section(
     store,
-    'private struct RoutineKindAuthorityReceipt',
-    'private final class RoutineKindStoreLock',
+    'private struct LayerwellAuthorityReceipt',
+    'private final class LayerwellStoreLock',
   );
   assert.ok(serialization.includes('try container.encodeNil(forKey: .ownerGeneration)'));
   const coordination = section(
@@ -136,8 +136,8 @@ test('unconditional cleanup closes authority before clearing derived presentatio
 
   const bridgeCleanup = section(
     module,
-    'AsyncFunction("routineKindClearNativeState")',
-    'AsyncFunction("routineKindReconcileActivities")',
+    'AsyncFunction("layerwellClearNativeState")',
+    'AsyncFunction("layerwellReconcileActivities")',
   );
   assert.ok(bridgeCleanup.indexOf('invalidateAndPurge()') >= 0);
   assert.ok(bridgeCleanup.indexOf('endAllActivitiesImmediately()') >= 0);
@@ -192,15 +192,15 @@ test('unconditional cleanup closes authority before clearing derived presentatio
 
   const bridgeAdmission = section(
     module,
-    'Function("routineKindCloseAdmissionJSON")',
-    'AsyncFunction("routineKindClearNativeState")',
+    'Function("layerwellCloseAdmissionJSON")',
+    'AsyncFunction("layerwellClearNativeState")',
   );
   assert.ok(bridgeAdmission.includes('closeAdmissionJSON()'));
   assert.equal(bridgeAdmission.includes('AsyncFunction'), false);
 });
 
-test('SQLite is the sole RoutineKind timeline authority with a killed-app redaction entry', () => {
-  const store = source('RoutineKindWidgetLifecycleStore.swift');
+test('SQLite is the sole Layerwell timeline authority with a killed-app redaction entry', () => {
+  const store = source('LayerwellWidgetLifecycleStore.swift');
   const object = source('WidgetObject.swift');
   const utils = source('Utils.swift');
   const provider = source('TimelineProvider.swift');
@@ -218,7 +218,7 @@ test('SQLite is the sole RoutineKind timeline authority with a killed-app redact
   assert.ok(store.includes('current_props_json TEXT NOT NULL'));
   assert.ok(store.includes('stale_props_json TEXT NOT NULL'));
   assert.ok(store.includes('if nowMs >= staleAtMs { return [staleEntry] }'));
-  assert.ok(store.includes('RoutineKindWidgetDeepLink'));
+  assert.ok(store.includes('LayerwellWidgetDeepLink'));
   assert.ok(store.includes('deepLink == configuredDeepLink'));
   assert.equal(store.includes('allowedDeepLinks'), false);
   const publish = section(
@@ -230,34 +230,34 @@ test('SQLite is the sole RoutineKind timeline authority with a killed-app redact
   assert.ok(publish.includes('return "published"'));
   assert.ok(publish.indexOf('return "outbox_pending"') < publish.indexOf('try purgeDerivedTables'));
 
-  assert.ok(object.includes('RoutineKindWidgetLifecycleStore.publishTimelineEntries'));
-  assert.ok(object.includes('RoutineKindWidgetLifecycleStore.currentTimelineDictionaries'));
+  assert.ok(object.includes('LayerwellWidgetLifecycleStore.publishTimelineEntries'));
+  assert.ok(object.includes('LayerwellWidgetLifecycleStore.currentTimelineDictionaries'));
   assert.ok(
     utils.includes(
-      'timeline = (try? RoutineKindWidgetLifecycleStore.currentTimelineDictionaries()) ?? []',
+      'timeline = (try? LayerwellWidgetLifecycleStore.currentTimelineDictionaries()) ?? []',
     ),
   );
   assert.ok(provider.includes('entries.last(where: { $0.date <= now })'));
   assert.ok(provider.includes('parsed.isEmpty ? [genericEntry()] : parsed'));
   assert.equal(provider.includes('fatalError'), false);
-  assert.ok(entryView.includes('RoutineKindWidgetLifecycleStore.sanitizedWidgetProps'));
+  assert.ok(entryView.includes('LayerwellWidgetLifecycleStore.sanitizedWidgetProps'));
 });
 
-test('AppIntent commits the native outbox and never writes RoutineKind UserDefaults', () => {
+test('AppIntent commits the native outbox and never writes Layerwell UserDefaults', () => {
   const intent = source('AppIntent.swift');
   const routine = section(
     intent,
-    'private func performRoutineKindInteraction',
+    'private func performLayerwellInteraction',
     '@available(iOS 16.0, *)',
   );
   assert.ok(routine.includes('currentTimelineDictionaries()'));
   assert.ok(routine.includes('props.merging(result)'));
-  assert.ok(routine.includes('RoutineKindWidgetLifecycleStore.appendInteraction'));
+  assert.ok(routine.includes('LayerwellWidgetLifecycleStore.appendInteraction'));
   assert.equal(routine.includes('WidgetsStorage.set'), false);
   assert.equal(routine.includes('WidgetsEvents.shared.sendNotification'), false);
   assert.ok(intent.includes('@available(iOS 17.0, *)\nstruct WidgetUserInteraction'));
 
-  const store = source('RoutineKindWidgetLifecycleStore.swift');
+  const store = source('LayerwellWidgetLifecycleStore.swift');
   const append = section(store, 'static func appendInteraction(', 'static func readOutboxJSON');
   assert.ok(append.includes('stored.2 == old.canonicalJSON'));
   assert.ok(append.includes('INSERT INTO outbox'));
@@ -267,7 +267,7 @@ test('AppIntent commits the native outbox and never writes RoutineKind UserDefau
 });
 
 test('reconciliation is exact all-or-redact and persisted rows are strictly bounded', () => {
-  const store = source('RoutineKindWidgetLifecycleStore.swift');
+  const store = source('LayerwellWidgetLifecycleStore.swift');
   const read = section(
     store,
     'private static func outboxPayload(',
@@ -298,8 +298,8 @@ test('reconciliation is exact all-or-redact and persisted rows are strictly boun
   );
 });
 
-test('Live Activity APIs globally gate RoutineKind and destroy aliases or duplicates', () => {
-  const store = source('RoutineKindWidgetLifecycleStore.swift');
+test('Live Activity APIs globally gate Layerwell and destroy aliases or duplicates', () => {
+  const store = source('LayerwellWidgetLifecycleStore.swift');
   const factory = source('LiveActivityFactory.swift');
   const activity = source('LiveActivity.swift');
   const module = source('WidgetsModule.swift');
@@ -326,19 +326,19 @@ test('Live Activity APIs globally gate RoutineKind and destroy aliases or duplic
   assert.ok(store.includes('props.staleAtMs > nowMs'));
 
   const start = section(factory, 'func start(', 'func getInstances');
-  assert.ok(start.includes('guard name == RoutineKindWidgetLifecycleStore.activityName else'));
+  assert.ok(start.includes('guard name == LayerwellWidgetLifecycleStore.activityName else'));
   assert.ok(start.includes('content: .init(state: initialState, staleDate: staleDate)'));
-  assert.ok(start.includes('RoutineKindWidgetLifecycleStore.authorizedDeepLink(url)'));
+  assert.ok(start.includes('LayerwellWidgetLifecycleStore.authorizedDeepLink(url)'));
   assert.ok(
-    start.indexOf('RoutineKindWidgetLifecycleStore.authorizedDeepLink(url)') <
+    start.indexOf('LayerwellWidgetLifecycleStore.authorizedDeepLink(url)') <
       start.indexOf('Activity.request('),
   );
   assert.ok(start.includes('authorizedURL.absoluteString'));
   assert.equal(start.includes('WidgetsStorage.set(url.absoluteString'), false);
   const instances = factory.slice(factory.indexOf('func getInstances'));
-  assert.ok(instances.includes('guard name == RoutineKindWidgetLifecycleStore.activityName else'));
+  assert.ok(instances.includes('guard name == LayerwellWidgetLifecycleStore.activityName else'));
   assert.ok(
-    instances.includes('$0.content.state.name == RoutineKindWidgetLifecycleStore.activityName'),
+    instances.includes('$0.content.state.name == LayerwellWidgetLifecycleStore.activityName'),
   );
   assert.ok(instances.includes('$0.activityState == .active'));
   assert.ok(instances.includes('.sorted { $0.id < $1.id }'));
@@ -347,33 +347,33 @@ test('Live Activity APIs globally gate RoutineKind and destroy aliases or duplic
   const end = section(activity, 'func end(', 'func getPushToken');
   const getPushToken = section(activity, 'func getPushToken', '@available(iOS 16.1, *)');
   for (const guarded of [update, getPushToken]) {
-    assert.ok(guarded.includes('guard name == RoutineKindWidgetLifecycleStore.activityName else'));
-    assert.ok(guarded.includes('throw RoutineKindWidgetLifecycleError.unavailable'));
+    assert.ok(guarded.includes('guard name == LayerwellWidgetLifecycleStore.activityName else'));
+    assert.ok(guarded.includes('throw LayerwellWidgetLifecycleError.unavailable'));
     assert.ok(guarded.includes('$0.activityState == .active'));
   }
-  assert.ok(activity.includes('RoutineKindLiveActivityStaleException'));
-  assert.ok(update.match(/RoutineKindWidgetLifecycleStore\.staleDate/g)?.length >= 2);
+  assert.ok(activity.includes('LayerwellLiveActivityStaleException'));
+  assert.ok(update.match(/LayerwellWidgetLifecycleStore\.staleDate/g)?.length >= 2);
   assert.ok(update.includes('dismissalPolicy: .immediate'));
-  assert.ok(start.match(/RoutineKindWidgetLifecycleStore\.staleDate/g)?.length >= 2);
+  assert.ok(start.match(/LayerwellWidgetLifecycleStore\.staleDate/g)?.length >= 2);
   assert.ok(start.includes('Task(priority: .userInitiated)'));
   assert.ok(start.includes('dismissalPolicy: .immediate'));
   assert.ok(getPushToken.includes('LiveActivityFactory.pushNotificationsEnabled'));
-  assert.ok(getPushToken.includes('RoutineKindWidgetLifecycleStore.staleDate'));
+  assert.ok(getPushToken.includes('LayerwellWidgetLifecycleStore.staleDate'));
   assert.ok(activity.includes('for await data in activity.pushTokenUpdates'));
   assert.ok(
-    activity.indexOf('RoutineKindWidgetLifecycleStore.staleDate(', activity.indexOf('for await')) <
+    activity.indexOf('LayerwellWidgetLifecycleStore.staleDate(', activity.indexOf('for await')) <
       activity.indexOf('emit(event: onTokenReceived', activity.indexOf('for await')),
   );
   assert.equal(module.includes('Activity<LiveActivityAttributes>.pushToStartToken'), false);
   assert.equal(module.includes('observePushToStartToken()'), false);
   assert.equal(module.includes('sendPushToStartToken('), false);
   assert.equal(
-    end.includes('guard name == RoutineKindWidgetLifecycleStore.activityName else'),
+    end.includes('guard name == LayerwellWidgetLifecycleStore.activityName else'),
     false,
   );
   assert.ok(end.includes('$0.id == id'));
   assert.equal(end.includes('$0.content.state.name == name'), false);
-  assert.ok(end.includes('name: RoutineKindWidgetLifecycleStore.activityName'));
+  assert.ok(end.includes('name: LayerwellWidgetLifecycleStore.activityName'));
   assert.ok(end.includes('props: "{}"'));
   assert.ok(end.includes('ActivityContent(state: finalState, staleDate: Date())'));
   assert.ok(end.includes('dismissalPolicy: .immediate'));
@@ -385,7 +385,7 @@ test('Live Activity APIs globally gate RoutineKind and destroy aliases or duplic
   );
   assert.ok(
     authorization.includes(
-      'guard name == activityName else { throw RoutineKindWidgetLifecycleError.unavailable }',
+      'guard name == activityName else { throw LayerwellWidgetLifecycleError.unavailable }',
     ),
   );
   const sanitizer = section(
@@ -416,15 +416,15 @@ test('Live Activity APIs globally gate RoutineKind and destroy aliases or duplic
 
 test('signed flags remain literal false and cleanup does not consult them', () => {
   const plugin = readFileSync(
-    resolve(root, 'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js'),
+    resolve(root, 'apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js'),
     'utf8',
   );
-  const store = source('RoutineKindWidgetLifecycleStore.swift');
+  const store = source('LayerwellWidgetLifecycleStore.swift');
   assert.match(plugin, /infoPlist\[WIDGET_PUBLICATION_ENABLED_KEY\] = false/);
   assert.match(plugin, /infoPlist\[LIVE_ACTIVITY_START_ENABLED_KEY\] = false/);
   assert.match(plugin, /infoPlist\[WIDGET_DEEP_LINK_KEY\] = deepLink/);
-  assert.ok(store.includes('RoutineKindWidgetInteractivePublicationEnabled'));
-  assert.ok(store.includes('RoutineKindLiveActivityStartEnabled'));
+  assert.ok(store.includes('LayerwellWidgetInteractivePublicationEnabled'));
+  assert.ok(store.includes('LayerwellLiveActivityStartEnabled'));
   const cleanup = section(
     store,
     'static func invalidateAndPurge()',
@@ -439,21 +439,21 @@ test('the exact dependency patch links SQLite and exposes only bounded JSON brid
   const module = source('WidgetsModule.swift');
   assert.ok(podspec.includes("s.libraries = 'sqlite3'"));
   for (const method of [
-    'routineKindReadAuthorityJSON',
-    'routineKindActivateOwnerGeneration',
-    'routineKindPublishTimelineJSON',
-    'routineKindReadTimelineJSON',
-    'routineKindReadOutboxJSON',
-    'routineKindCommitReconciliationJSON',
-    'routineKindCommitQuiescedReconciliationJSON',
-    'routineKindCloseAdmissionJSON',
-    'routineKindQuiesceAdmissionJSON',
-    'routineKindClearNativeState',
-    'routineKindReconcileActivities',
+    'layerwellReadAuthorityJSON',
+    'layerwellActivateOwnerGeneration',
+    'layerwellPublishTimelineJSON',
+    'layerwellReadTimelineJSON',
+    'layerwellReadOutboxJSON',
+    'layerwellCommitReconciliationJSON',
+    'layerwellCommitQuiescedReconciliationJSON',
+    'layerwellCloseAdmissionJSON',
+    'layerwellQuiesceAdmissionJSON',
+    'layerwellClearNativeState',
+    'layerwellReconcileActivities',
   ]) {
     assert.ok(module.includes(`"${method}"`), method);
   }
-  assert.equal(source('RoutineKindWidgetLifecycleStore.swift').includes('userId'), false);
-  assert.equal(source('RoutineKindWidgetLifecycleStore.swift').includes('accountId'), false);
-  assert.equal(source('RoutineKindWidgetLifecycleStore.swift').includes('productId'), false);
+  assert.equal(source('LayerwellWidgetLifecycleStore.swift').includes('userId'), false);
+  assert.equal(source('LayerwellWidgetLifecycleStore.swift').includes('accountId'), false);
+  assert.equal(source('LayerwellWidgetLifecycleStore.swift').includes('productId'), false);
 });

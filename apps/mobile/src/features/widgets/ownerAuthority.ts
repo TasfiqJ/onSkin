@@ -6,7 +6,7 @@ import {
 } from '@/lib/consent/healthDataWriteAdmission';
 import { updatePrivateItem } from '@/lib/storage/privateKV';
 
-export const ROUTINE_WIDGET_OWNER_AUTHORITY_KEY = 'routinekind.widgetOwnerAuthority.v1';
+export const ROUTINE_WIDGET_OWNER_AUTHORITY_KEY = 'layerwell.widgetOwnerAuthority.v1';
 export const ROUTINE_WIDGET_OWNER_AUTHORITY_INVALID = 'ROUTINE_WIDGET_OWNER_AUTHORITY_INVALID';
 export const ROUTINE_WIDGET_OWNER_AUTHORITY_UNSUPPORTED_VERSION =
   'ROUTINE_WIDGET_OWNER_AUTHORITY_UNSUPPORTED_VERSION';

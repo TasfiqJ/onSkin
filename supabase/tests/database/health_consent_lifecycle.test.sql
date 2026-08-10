@@ -333,7 +333,7 @@ select throws_ok(
 );
 select throws_ok(
   $$select * from public.record_health_dependent_consent(
-    1, 0, repeat('4', 64), 'ask_onskin',
+    1, 0, repeat('4', 64), 'ask_layerwell',
     'ask-advisor-2026-06-14-placeholder',
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
   )$$,
@@ -513,7 +513,7 @@ select lives_ok(
           '3964f0829f0c5a1369b3e413d6edaa2585cda671333a6efb0d1f8d84d6f5e8b8'),
         ('photo_trend_insights', 'photo-trend-insights-2026-06-13-placeholder',
           '58997d5c3ef5098edf6544aa2752e6878765065831ddbf42c24a364ab36cd1aa'),
-        ('ask_onskin', 'ask-advisor-2026-06-14-placeholder',
+        ('ask_layerwell', 'ask-advisor-2026-06-14-placeholder',
           '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'),
         ('community_participation', 'community-participation-2026-06-13-placeholder',
           '416da3ba3cd3496c1008cff937b4d7ad0efa7093d40bcfed2636b480e603ca5e'),
@@ -672,7 +672,7 @@ select is(
 );
 select throws_ok(
   $$select * from public.record_health_dependent_consent(
-    1, 0, repeat('8', 64), 'ask_onskin',
+    1, 0, repeat('8', 64), 'ask_layerwell',
     'ask-advisor-2026-06-14-placeholder',
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
   )$$,
@@ -888,13 +888,13 @@ select lives_ok(
 );
 select lives_ok(
   $$select public.pgtap_grant_health_dependent_consent(
-    1, 'ask_onskin', repeat('0', 64)
+    1, 'ask_layerwell', repeat('0', 64)
   )$$,
   'Ask consent opens independently for base-interleaving proof'
 );
 select lives_ok(
   $$select * from public.begin_health_dependent_consent_withdrawal(
-    1, 1, 'ask_onskin', repeat('c', 64),
+    1, 1, 'ask_layerwell', repeat('c', 64),
     'ask-advisor-2026-06-14-placeholder',
     '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff'
   )$$,
@@ -906,7 +906,7 @@ select pg_catalog.set_config(
   (select current_operation_id::text
     from public.health_dependent_consent_states
    where user_id = '70000000-0000-4000-8000-000000000004'
-     and consent_type = 'ask_onskin'),
+     and consent_type = 'ask_layerwell'),
   true
 );
 set local role authenticated;
@@ -928,7 +928,7 @@ select ok(
   exists (
     select 1 from public.health_dependent_consent_states as states
      where states.user_id = '70000000-0000-4000-8000-000000000004'
-       and states.consent_type = 'ask_onskin'
+       and states.consent_type = 'ask_layerwell'
        and states.current_operation_id =
          pg_catalog.current_setting('test.owner4_ask_operation')::uuid
        and states.base_withdrawal_operation_id is null
@@ -979,7 +979,7 @@ set local role authenticated;
 select results_eq(
   $$select operation_id, state, consent_generation
       from public.begin_health_dependent_consent_withdrawal(
-        1, 1, 'ask_onskin', repeat('c', 64),
+        1, 1, 'ask_layerwell', repeat('c', 64),
         'ask-advisor-2026-06-14-placeholder',
         '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff'
       )$$,
@@ -999,7 +999,7 @@ select lives_ok(
 );
 select results_eq(
   $$select state, generation, health_epoch
-      from public.get_health_dependent_consent_status('ask_onskin')$$,
+      from public.get_health_dependent_consent_status('ask_layerwell')$$,
   $$values ('withdrawn'::text, 2::bigint, 2::bigint)$$,
   'withdrawn status exposes fresh active base epoch context instead of stale row authority'
 );
@@ -1008,7 +1008,7 @@ select is(
   (select health_epoch
      from public.health_dependent_consent_states
     where user_id = '70000000-0000-4000-8000-000000000004'
-      and consent_type = 'ask_onskin'),
+      and consent_type = 'ask_layerwell'),
   1::bigint,
   'fresh base consent does not rewrite the withdrawn purpose historical epoch'
 );
@@ -1226,7 +1226,7 @@ set search_path = ''
 as $$
 begin
   if pg_catalog.current_setting('pgtap.fail_dependent_insert', true) = '1'
-     and new.consent_type = 'ask_onskin'
+     and new.consent_type = 'ask_layerwell'
      and new.granted then
     raise exception 'PGTAP_DEPENDENT_INSERT_FAILURE' using errcode = 'P0001';
   end if;
@@ -1289,7 +1289,7 @@ select lives_ok(
       2,
       'OSPW',
       5000, 5000, 5000, 5000,
-      'urn:routinekind:onboarding:skin-profile',
+      'urn:layerwell:onboarding:skin-profile',
       'draft-2026-07-04',
       'draft-1',
       1,
@@ -1415,7 +1415,7 @@ select is(
 select pg_catalog.set_config('pgtap.fail_dependent_insert', '1', true);
 select throws_ok(
   $$select public.pgtap_grant_health_dependent_consent(
-      1, 'ask_onskin', repeat('4', 64)
+      1, 'ask_layerwell', repeat('4', 64)
     )$$,
   'P0001',
   'PGTAP_DEPENDENT_INSERT_FAILURE',
@@ -1440,7 +1440,7 @@ drop function public.pgtap_fail_dependent_consent_after_insert();
 set local role authenticated;
 select lives_ok(
   $$select public.pgtap_grant_health_dependent_consent(
-      1, 'ask_onskin', repeat('4', 64)
+      1, 'ask_layerwell', repeat('4', 64)
     )$$,
   'the exact dependent grant can be retried after transaction rollback'
 );
@@ -1449,7 +1449,7 @@ select throws_ok(
       user_id, consent_type, granted, version, consent_text_hash, revoked_at
     ) values (
       '70000000-0000-4000-8000-000000000001',
-      'ask_onskin', false, 'ask-advisor-2026-06-14-placeholder',
+      'ask_layerwell', false, 'ask-advisor-2026-06-14-placeholder',
       '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff', now()
     )$$,
   '42501',
@@ -1459,7 +1459,7 @@ select throws_ok(
 select is(
   (select count(*) from public.consents
     where user_id = '70000000-0000-4000-8000-000000000001'
-      and consent_type = 'ask_onskin'
+      and consent_type = 'ask_layerwell'
       and granted is false),
   0::bigint,
   'a rejected direct protected false receipt appends nothing'

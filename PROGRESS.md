@@ -195,7 +195,7 @@ registry schemas are preserved rather than overwritten. Completion analytics
 fire only for a newly inserted append-only completion, not a repeated tap.
 
 The exact lockfile-installed `expo-widgets` 56.0.23 native sources now have an
-eleven-file, hash-pinned patch candidate. RoutineKind timeline/action authority
+eleven-file, hash-pinned patch candidate. Layerwell timeline/action authority
 lives in a bounded SQLite App Group store; UserDefaults remains
 presentation/layout-only. A rotating authority nonce gates compare-and-swap
 activation/publication/reconciliation. AppIntent persists its native outbox
@@ -213,7 +213,7 @@ Ordinary reconciliation stays denied after quiescence. Privacy reduction
 otherwise first durably creates and verifies `privacy-closing-v1` and returns a
 synchronous closed-admission receipt. The queued full cleanup leaves a closed
 authority tombstone and asks every activity using the shared
-`LiveActivityAttributes` type, including legacy non-RoutineKind aliases, to
+`LiveActivityAttributes` type, including legacy non-Layerwell aliases, to
 redact/end. The receipt proves admission closure, not completed ActivityKit
 dismissal.
 
@@ -273,9 +273,9 @@ same-key taps yield exactly one insertion. This fixes the local decision race;
 it does not claim the analytics transport is durable or production-enabled.
 
 This is an implemented source candidate, not a shippable native feature.
-RoutineKind interactive publication and Live Activity start remain signed
+Layerwell interactive publication and Live Activity start remain signed
 Info.plist configuration `false`. The finite stale/recovery/end policy applies
-only to the custom RoutineKind Activity path, not every generic Expo activity.
+only to the custom Layerwell Activity path, not every generic Expo activity.
 This Windows host can verify hashes, TypeScript contracts, model races, cleanup
 ordering, and source invariants, but it cannot compile Swift, link SQLite,
 inspect a signed archive/`.app`/`.appex`, or prove extension-process locking,
@@ -932,10 +932,10 @@ skin?` no longer peeks into the bottom edge as a 26 px partial target. The
   the readiness-status audit so the root launch gate now fails if public
   launch-risk or review-needed legacy brand references return.
 
-- Refreshed the RoutineKind brand evidence packet with 2026-07-09 Apple public
+- Refreshed the Layerwell brand evidence packet with 2026-07-09 Apple public
   app search, Google Play exact-search, web-indexed store search, and DNS spot
-  checks. The current screening still finds no exact public `RoutineKind` app
-  title or DNS record for `routinekind.app` / `routinekind.com`, but it now
+  checks. The current screening still finds no exact public `Layerwell` app
+  title or DNS record for `layerwell.app` / `layerwell.com`, but it now
   explicitly records adjacent `Routine`, `Routinery`, `MyRoutine`, and
   `Kind App` name-risk inputs for counsel/founder review. This remains
   evidence for decision-making, not legal clearance or store/domain
@@ -2724,11 +2724,11 @@ captured` recovery instead of a platform alert, with a foreground retry, a
   cycle promises stay hidden. Evidence is in
   `test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`.
 
-- Verified the critical public-copy smoke under the working `RoutineKind`
+- Verified the critical public-copy smoke under the working `Layerwell`
   display name. Expo web at 320 x 568 covers age gate, public share landing,
   catalog search, timing lock-screen preview, and free `/routine/widgets`
   before/after the no-card Pro week. The required public surfaces show
-  `RoutineKind`, all captured states show no visible `OnSkin`, widgets still
+  `Layerwell`, all captured states show no visible `Layerwell`, widgets still
   defer behind native-device QA, and current-origin browser warn/error logs are
   empty. Evidence is in
   `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`.
@@ -3769,7 +3769,7 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   for Tas-provided beta, store, legal, account, and signoff proof.
 
 - Cleared the remaining strict brand-audit launch-risk hits. The routine
-  activation analytics marker now uses the working `RoutineKind` namespace, the
+  activation analytics marker now uses the working `Layerwell` namespace, the
   local private-data registry test covers both legacy internal and current
   private storage namespaces, and Phase 5 / Phase 10-11 smoke temp directories
   no longer use the legacy brand prefix. `brand:audit:strict`, focused storage
@@ -4294,9 +4294,9 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   Expo web evidence is in
   `test-results/human-e2e/2026-07-07/onboarding-products-category-rail/`.
 
-- Aligned the top-level launch/blocker docs with the current RoutineKind
+- Aligned the top-level launch/blocker docs with the current Layerwell
   identity state. `BLOCKERS.md` and `LAUNCH_READINESS.md` now say the app has
-  moved off legacy OnSkin defaults locally while production remains blocked
+  moved off legacy Layerwell defaults locally while production remains blocked
   until counsel, domain/store reservation, and final identity evidence exist.
 
 - Fixed the Ask advisor compact-phone footer so the AI/privacy disclosure no
@@ -4312,10 +4312,10 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   Expo web evidence in
   `test-results/human-e2e/2026-07-07/ask-disclosure-footer-polish/`.
 
-- Completed the RoutineKind public identity sweep for local/native launch
+- Completed the Layerwell public identity sweep for local/native launch
   surfaces. Expo defaults, root package identity, Supabase local auth
   placeholders, catalog/commerce/community labels, and brand evidence docs now
-  use RoutineKind; `npm run brand:audit:strict` passes with only deliberate
+  use Layerwell; `npm run brand:audit:strict` passes with only deliberate
   guard-rail, internal-namespace, and historical-context counts remaining.
 
 - Improved first-use Progress photo consent legibility on compact dark capture
@@ -4357,7 +4357,7 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   Expo web E2E verify one selected tab, zero horizontal overflow, 56 px tab
   height, and about 74.6 px per tab at 320 px.
 
-- Added a dated `RoutineKind` candidate spot-check to the brand evidence packet:
+- Added a dated `Layerwell` candidate spot-check to the brand evidence packet:
   Apple public app search, Google Play public search, web-indexed App
   Store/Play queries, and DNS did not surface an exact app listing or active
   domain record on 2026-07-07. The docs keep this correctly scoped as screening
@@ -4376,7 +4376,7 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   requires both recorded brand clearance and explicit final display/slug/scheme
   bundle/package env values before Expo config can resolve. This prevents an
   uncleared working-candidate identity from slipping through simply because it
-  no longer matches the legacy `OnSkin` audit pattern. The Phase 2 environment
+  no longer matches the legacy `Layerwell` audit pattern. The Phase 2 environment
   checker now mirrors the same final native identity requirement for staging and
   production readiness, with a repeatable `phase2:check-env-smoke` regression
   command for the missing-identity and explicit-identity boundary.
@@ -4386,8 +4386,8 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   audited against `BRAND.appName`, and the app-switcher shield is documented as
   a neutral app privacy shield instead of a hardcoded legacy brand surface.
 
-- Replaced legacy `OnSkin` wording in Phase 10 beta-facing tester templates
-  with the working `RoutineKind` candidate while keeping the final-brand
+- Replaced legacy `Layerwell` wording in Phase 10 beta-facing tester templates
+  with the working `Layerwell` candidate while keeping the final-brand
   clearance caveat. The tester brief and Day 14 survey no longer train beta
   operations around the conflicted public identity.
 - Fixed the compact Recommendation preferences budget row after a 320x568 route
@@ -4405,13 +4405,13 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   `test-results/human-e2e/2026-07-06/shelf-empty-overflow/`; native thumbnail
   rendering still needs simulator/device visual QA.
 - Added a production native identity guard for the rebrand path. Expo production
-  config now refuses to resolve legacy `OnSkin` app names, schemes, permission
+  config now refuses to resolve legacy `Layerwell` app names, schemes, permission
   copy, bundle IDs, or Android package IDs unless
   `BRAND_LEGAL_CLEARANCE=cleared`; development builds still use isolated local
   install identities. Phase 9 store-build inspection records this as a blocker
   instead of crashing, and Phase 5 warns when production EAS profiles do not
   declare final identity keys.
-- Added a runtime brand identity module for the working `RoutineKind` rebrand and
+- Added a runtime brand identity module for the working `Layerwell` rebrand and
   moved high-visibility app copy through it: Pro/paywall labels, Ask labels,
   app-lock prompts and shields, lock-screen notification title, share-card
   watermark/deep link fallback, catalog provenance, commerce paid-link
@@ -4430,16 +4430,16 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local
   reverse-trial route into `/routine/widgets` at 390x844 in
   `test-results/human-e2e/2026-07-06/runtime-brand-public-copy/`; visible
-  checked screens show `RoutineKind` and no `OnSkin`. Widgets still show the
+  checked screens show `Layerwell` and no `Layerwell`. Widgets still show the
   existing deferred native-widget gate until device QA enables that surface.
   `npm run brand:audit` now reports 44 public launch-risk references, down from
   74 before this copy sweep.
-- Updated Phase 8 public launch assets for the `RoutineKind` working identity:
+- Updated Phase 8 public launch assets for the `Layerwell` working identity:
   creator disclosure brief, support/review response template, store metadata
   source-of-truth labels, public-site title/landing/share/support/waitlist copy,
   and app-link association templates. The AASA and Android assetlinks templates
   now use explicit final bundle/package placeholders instead of stale
-  `com.onskin.app` identifiers. Human-simulated E2E served the static public
+  `com.layerwell.app` identifiers. Human-simulated E2E served the static public
   site locally and checked `index.html`, `share.html`, `support.html`, and
   `waitlist.html` at 390x844 in
   `test-results/human-e2e/2026-07-06/phase8-public-site-brand/`. E2E then found
@@ -4496,7 +4496,7 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   native RevenueCat/device QA remains outstanding.
 - Made RevenueCat product identifiers config-driven for the rebrand path. Annual,
   monthly, and local reverse-trial IDs now read from public env keys with neutral
-  `routinekind_*` development defaults, while strict Phase 6 payments gates warn
+  `layerwell_*` development defaults, while strict Phase 6 payments gates warn
   until final App Store/Play/RevenueCat product IDs replace the placeholders.
 - Refined the bottom navigation into a stronger premium floating control. The
   selected tab now uses a dark rounded pill with white icon/label contrast,
@@ -4540,12 +4540,12 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   inventory of remaining public identity references. Non-strict audit currently
   reports 144 public launch-risk references and 52 review-needed references;
   strict mode correctly fails until the brand migration is executed or counsel
-  clears `OnSkin`. `apps/mobile/app.config.js` now derives native camera and
+  clears `Layerwell`. `apps/mobile/app.config.js` now derives native camera and
   Face ID permission copy from `APP_DISPLAY_NAME`, with optional env overrides,
   so future cleared brands do not require hardcoded native-copy edits. Unset
   local `APP_VARIANT` now resolves to the development install identity instead
   of silently reading production identifiers, with a Vitest contract guarding the
-  behavior. Verified with `APP_DISPLAY_NAME=RoutineKind`,
+  behavior. Verified with `APP_DISPLAY_NAME=Layerwell`,
   `npm --workspace apps/mobile run test -- src/lib/appConfig.test.ts`,
   `npm run phase5:check-native-config`, `npm run phase9:store-build-inspect`,
   `npm run typecheck`, `npm run lint`, and `npm test`.
@@ -4635,7 +4635,7 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   lower options, selecting "Something else", and validating no small controls,
   clipped text, or bad visible hit targets in
   `test-results/human-e2e/2026-07-06/shelf-add-phone-sweep/`.
-- Fixed the Ask OnSkin empty-shelf conflict reassurance after 320x568 E2E showed a
+- Fixed the Ask Layerwell empty-shelf conflict reassurance after 320x568 E2E showed a
   typed retinol/glycolic question on `/ask` replying that nothing on the shelf
   clashed even though there were no shelf products to check. The
   deterministic Ask context now distinguishes an empty shelf from a populated shelf
@@ -4701,7 +4701,7 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   denser account, subscription, and routine spacing, 48 px compact account and
   row targets, and a larger scroll buffer; E2E verified the last visible routine
   row taps through cleanly and the bottom data actions remain reachable.
-- Fixed the Ask OnSkin proactive-answer layout after 320x568 E2E showed the
+- Fixed the Ask Layerwell proactive-answer layout after 320x568 E2E showed the
   automatic first answer starting scrolled under the header and a follow-up
   prompt clipping behind the composer. Automatic lead-in answers now stay
   anchored below the title, user-triggered turns still scroll to the latest
@@ -4777,7 +4777,7 @@ week` from `/settings/subscription` showed the fixed CTA before the annual
   scheduler week view correctly wraps zero-based indexes for users but settings
   still rendered raw `N0`-style night numbers. Settings now uses the same
   one-based cycle-night label as the week overview.
-- Fixed the Ask OnSkin empty state after 320 px E2E showed the third suggested
+- Fixed the Ask Layerwell empty state after 320 px E2E showed the third suggested
   prompt sliding under the fixed composer. The prompt rows keep 48 px touch
   targets but use tighter short-phone spacing so all starter prompts clear the
   input bar.
@@ -4940,7 +4940,7 @@ Phase 5 native/device scaffolding added on 2026-07-04:
   user-confirmed text; native OCR remains off until ML Kit/Vision is reviewed
   and device-tested.
 - Guided progress photo capture with front camera stills, review screen, and
-  encrypted app-private `.onskinphoto` storage using SecureStore-held keys.
+  encrypted app-private `.layerwellphoto` storage using SecureStore-held keys.
 - Encrypted-aware timeline/detail/compare rendering and local encrypted-file
   cleanup on deletion.
 - `scripts/phase5/*`, `docs/phase-5/*`, and generated device QA packet support.
@@ -4951,7 +4951,7 @@ used, notification device QA, RevenueCat native smoke, and native Sentry smoke.
 
 Current priority stack:
 
-1. Brand/legal decision: do not launch as `OnSkin` unless counsel clears it.
+1. Brand/legal decision: do not launch as `Layerwell` unless counsel clears it.
 2. Supabase live backend and RLS verification.
 3. Clinical/legal review for guidance, policies, claims, and consents.
 4. Product/ingredient catalog source review, real import, and curated beta-driven seed.
@@ -4965,13 +4965,13 @@ Current priority stack:
 
 ### Slice 0 — Project scaffold & tooling ✅ (2026-06-12)
 
-- Turborepo monorepo: `apps/mobile` (Expo SDK 56) + `packages/types` (`@onskin/types`) + `supabase/` (next slice).
+- Turborepo monorepo: `apps/mobile` (Expo SDK 56) + `packages/types` (`@layerwell/types`) + `supabase/` (next slice).
 - Expo SDK 56 baseline (RN 0.85.3 / React 19.2.3), expo-router, New Architecture on.
 - NativeWind v4 + Tailwind v3.4 wired (babel/metro/tailwind config) with the
   "paper · greige · clay · ink · night" design-token palette + Instrument Serif /
   Hanken Grotesk font families from the design spec.
 - TypeScript (strict) + ESLint 9 flat config (eslint-config-expo) + Prettier.
-- `@onskin/types` shared domain enums (consents, axes, goals, routines, conflicts,
+- `@layerwell/types` shared domain enums (consents, axes, goals, routines, conflicts,
   analytics taxonomy) derived from docs/01 §3 + design spec.
 - Tracking files: DECISIONS.md, BLOCKERS.md (seeded), .env.example (every var documented).
 - **Gates:** `turbo run typecheck` ✅ · `eslint` ✅. (App not runtime-tested — no
@@ -4993,7 +4993,7 @@ Current priority stack:
   / spec-fidelity / advisor-lints); fixed a definer-RPC IDOR, ownership-checked
   completion inserts, NULLS-NOT-DISTINCT dedup, tz-tolerant backfill, delete-streak
   recompute, and DB-level consent immutability. See DECISIONS D-011…D-015.
-- Hand-authored `Database` type in `@onskin/types` matching the migrations
+- Hand-authored `Database` type in `@layerwell/types` matching the migrations
   (regenerate via `supabase gen types` once the project exists).
 - **Gates:** typecheck ✅ · lint ✅. (Migrations not applied — no live DB; re-run
   Supabase Advisors on first `db push`.)
@@ -5022,7 +5022,7 @@ Current priority stack:
 - Instrument Serif + Hanken Grotesk loaded; splash held until ready. JS tokens,
   haptics. Primitives: Text/Button/Card/ProgressBar/OptionCard/Chip/Screen.
 - **Bundle validated:** `expo export --platform ios` succeeded (Metro resolved the
-  `@onskin/types` workspace import + NativeWind transform + fonts) → B-VERIFY-METRO
+  `@layerwell/types` workspace import + NativeWind transform + fonts) → B-VERIFY-METRO
   largely de-risked.
 
 ### Slice 4 — Onboarding flow ✅ (2026-06-12)
@@ -5081,7 +5081,7 @@ Current priority stack:
 - New per-user `routine_conflicts` cache (owner RLS + `owns_user_product()` check).
 - Seeded the ~14 starter rules (docs/02 §4.4/§4.8) + PAO category defaults — all
   `reviewed_by = NULL` (BLOCKED: **B-DERM-REVIEW**, launch gate).
-- `@onskin/types` extended (InteractionType, EvidenceLabel/Grade, ResolutionType,
+- `@layerwell/types` extended (InteractionType, EvidenceLabel/Grade, ResolutionType,
   FunctionalTag, …) + Database type updated.
 - **Adversarially reviewed by 3 agents** (RLS / SQL+fidelity / claim-safety) →
   fixed product-ownership RLS, nullable evidence_grade for refuted myths,
@@ -5139,7 +5139,7 @@ Current priority stack:
 ### Slice 12 — Routine-builder schema + generation engine (docs/03 §2–§5) ✅ (2026-06-13)
 
 - Migrations: `sequencing_rules` (catalog, ~10 starter rules) + `active_ramp`
-  (per-user, owner RLS). `@onskin/types` + Database type extended.
+  (per-user, owner RLS). `@layerwell/types` + Database type extended.
 - Pure TS engine: role classification (tags>name), canonical sequencing,
   AM/PM allocation, retinoid ramp (offer-only step-up + de-escalation),
   `generatePlan` pipeline consuming the docs/02 engine + scheduler.
@@ -5187,13 +5187,13 @@ B-SUPABASE (data surfaces render the exact design but are empty until then),
 full drag-and-drop (handles + nudge built; needs react-native-draggable-flatlist),
 and routine persistence (server `build_routine`, docs/03 §11).
 
-### Slice 18 — Doc 4 Smart Shelf + new design (docs/04, "OnSkin Smart Shelf") ✅ (2026-06-13)
+### Slice 18 — Doc 4 Smart Shelf + new design (docs/04, "Layerwell Smart Shelf") ✅ (2026-06-13)
 
 - **Schema** (migration 0016): additive `user_products` columns (`is_opened`,
   `finished_at`, `nickname`, `notes`, `thumbnail_path`, `pao_source`,
   `expiry_source`, `added_via`) + the owner-RLS `shelf_scans` intake/contribute-back
   log + the `(user_id, status, expiry_computed)` Expiring index. `created_at`/
-  `updated_at` already existed (0005) — not re-added. `Database` type + `@onskin/
+  `updated_at` already existed (0005) — not re-added. `Database` type + `@layerwell/
 types` extended to match. Owner-only RLS throughout (D-028 adds the contribute-
   back UPDATE policy); no RLS weakened.
 - **Local-first store** (D-029): `features/shelf/store.ts` (AsyncStorage) is the
@@ -5258,7 +5258,7 @@ types` extended to match. Owner-only RLS throughout (D-028 adds the contribute-
   onto the profile-aware engine. D-034…D-037.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (104).
 
-### Slice 20 — Doc 6 Guided Photo Progress + new design ("OnSkin Photo Progress") ✅ (2026-06-13)
+### Slice 20 — Doc 6 Guided Photo Progress + new design ("Layerwell Photo Progress") ✅ (2026-06-13)
 
 - **Schema** (migration 0018): additive `photos` columns (`reference_photo_id`,
   `series`, `capture_session_id`, coarse `head_roll/yaw/pitch` pose QA — **never a
@@ -5266,7 +5266,7 @@ types` extended to match. Owner-only RLS throughout (D-028 adds the contribute-
   `is_encrypted`) + `(user_id, series, taken_local_date)` index. Owner-only RLS
   (0008) **unchanged**; added a hardened `owns_photo()` definer + restrictive
   policies so a shot's `reference_photo_id` must be owner-owned (the D-014 pattern).
-  `Database` type + `@onskin/types` extended.
+  `Database` type + `@layerwell/types` extended.
 - **Pure, tested helpers** (`features/photos/`): `quality.ts` (capture readiness
   gate, calm coaching line, lighting state, review verdict — **flagged, never
   blocked**, D-040) + `timeline.ts` (default compare pair + one-cycle interval,
@@ -5315,7 +5315,7 @@ types` extended to match. Owner-only RLS throughout (D-028 adds the contribute-
   `live_activity_enabled`, `promotional_opt_in`, `lockscreen_discreet`; **`updated_at`
   already existed — not re-added**), the `streak_freezes` forgiveness ledger
   (append-only, owner-RLS), and a **content-free** `notification_log` (tier/kind/ts
-  only). `Database` type + `@onskin/types` extended.
+  only). `Database` type + `@layerwell/types` extended.
 - **Pure, tested cores**: `features/streak/streak.ts` — the calm forgiving streak
   (a "completion day"; recovery nights count; **auto-freezes** absorb ≤2 _interior_
   misses, committed only when a further-back completion proves the gap was interior,
@@ -5359,7 +5359,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
 - **Schema** (migration 0020): additive `entitlements` columns (`store`, `period_type`,
   `will_renew`, `original_purchase_at`, `offering_id`, `experiment_id`,
   `acquisition_channel`). RLS **unchanged** — SELECT owner-only, writes service-role
-  only (clients can never self-grant Pro). Database type + `@onskin/types` extended.
+  only (clients can never self-grant Pro). Database type + `@layerwell/types` extended.
 - **Pure, tested cores** (`features/subscription/`): `plans.ts` (catalog + fallback
   prices + the floored "$4.16/mo"), `entitlement.ts` (the gating brain —
   `deriveState`: isPro / periodType / daysLeft / willRenew / expired + `priorPeriodType`
@@ -5409,7 +5409,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
   filters) + the `recommendations` cache — both **owner-only RLS** (the skin_profiles
   posture), and **NO commission/affiliate/partnership column anywhere in the ranking
   path** (church and state, D-054; a SQL comment records it). `Database` type +
-  `@onskin/types` (`RECOMMENDATION_TRIGGERS`/`VALUES_FILTERS`/`BudgetBand`/
+  `@layerwell/types` (`RECOMMENDATION_TRIGGERS`/`VALUES_FILTERS`/`BudgetBand`/
   `RECOMMENDATION_EVENTS`) extended; no RLS weakened.
 - **Pure, tested engine** (`features/recommendations/`): `catalog.ts` (the
   recommendable type catalog + the **B-DERM-REVIEW launch gate** `RECS_REVIEWED` /
@@ -5471,7 +5471,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
   **service-role only** (RLS enabled, zero client policies — the row-level wall);
   `commerce_click_events` is owner-RLS + content-free; the catalog tables are
   world-readable-to-authenticated / service-role-write (the D-016 pattern). The ranking
-  modules import **nothing** from `features/commerce`. `Database` type + `@onskin/types`
+  modules import **nothing** from `features/commerce`. `Database` type + `@layerwell/types`
   (`AffiliateSource`/`CuratorKind`/`OrderStatus`/`COMMERCE_EVENTS`) extended; no RLS weakened.
 - **Pure, tested modules** (`features/commerce/`): `attribution.ts` (the **opaque-token
   trust guard** — `buildOutboundUrl` takes no profile, a health denylist + fixtures
@@ -5527,7 +5527,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
   `is_anonymous`-JWT policy + an `owns_consent()` definer requiring a current
   `community_participation` grant; `order`/audit tables service-role-only; reports/blocks
   (the Apple-1.2 floor) owner-only. The `consents` enum gains a 7th unbundled type
-  `community_participation`. `Database` type + `@onskin/types` extended; no RLS weakened.
+  `community_participation`. `Database` type + `@layerwell/types` extended; no RLS weakened.
 - **Pure, tested modules** (`features/community/`): `notes.ts` (the seeded expert "myth
   vs evidence" corpus + the **B-DERM-REVIEW gate** `NOTES_REVIEWED`/`shippableNotes()` +
   the docs/02 evidence-pill mapping + the rule→note bridge), `claimSafetyScan.ts` (the
@@ -5558,7 +5558,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
 ### Slice 26 — Doc 12 AI Trend Analysis ("Changes in your own photos") + new design ✅ (2026-06-13) — the LAST build item
 
 - **Validated first** (cited deep-research, 25 claims → 20 confirmed, primary sources):
-  AI trend analysis is **NOT a seven-figure pillar** and the population skin score is a
+  AI trend analysis is **NOT a seven-figure pillar** and the populatilayerwell score is a
   trust destroyer. Confirmed: the skin-tone fairness gap is **persistent into Dec 2025**
   (AUROC 0.82 darker vs 0.89 lighter, p<0.01); smartphone capture degrades AI (~0.90 →
   0.81); **Monk > Fitzpatrick** (Nature npj 2025 + Google, who _forbid_ training on
@@ -5573,7 +5573,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
 - **Schema** (migration 0024): `photo_trend` (on-device-derived abstract deltas + a
   change-state + a copy key — **no score/image/faceprint column**), owner-RLS; the
   `consents` enum gains an 8th type **`photo_trend_insights`** (separate, default-OFF).
-  `Database` type + `@onskin/types` (`TrendChangeState`/`TREND_EVENTS`) extended; no RLS
+  `Database` type + `@layerwell/types` (`TrendChangeState`/`TREND_EVENTS`) extended; no RLS
   weakened.
 - **Pure, tested engine** (`features/trend/`): `trend.ts` (the change-state classifier +
   the **tone-adjusted MDC noise floor** — provably **equal-or-higher for darker Monk
@@ -5607,7 +5607,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
 - **Historical gates:** typecheck ✅ · lint ✅ · test ✅ (817 at this slice; current
   full-suite verification is 986 tests as of 2026-07-04).
 
-### Slice 27 — Doc 13 "Ask OnSkin" assistant + new design ("OnSkin Ask Assistant") ✅ (2026-06-14) — founder-delegated, beyond the 12
+### Slice 27 — Doc 13 "Ask Layerwell" assistant + new design ("Layerwell Ask Assistant") ✅ (2026-06-14) — founder-delegated, beyond the 12
 
 - **Stress-tested first** (a 13-agent adversarial fact-check + red-team + completeness pass
   on the written doc): retired the falsified "non-copyable context moat" (ChatGPT free-tier
@@ -5619,13 +5619,13 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
   model is the interface, the curated engine is the truth, and **substantive health claims
   are template-filled from the engine, never free-generated** (D-073). The cloud-grounded
   layer is deferred (**B-AI-ASSISTANT-VENDOR**) and degrades honestly.
-- **Schema** (migration 0025): the `consents` enum gains a 9th type **`ask_onskin`**
+- **Schema** (migration 0025): the `consents` enum gains a 9th type **`ask_layerwell`**
   (separate, default-OFF — the question is a health disclosure _transmitted_ to the cloud,
   Art. 9); **content-free** `ask_sessions`/`ask_turn_audit` (intent + verdicts + version
   pointers + a `narration_engine_mismatch` counter, **no message text**); the short,
   consented, encrypted `ask_safety_audit` window (resolving the "no transcript" vs
   auditable/EU-AI-Act contradiction); owner-RLS; **no commission/score/photo column** in any
-  Ask path. `@onskin/types` (`ASK_INTENTS`/`ASK_EVENTS`, `GatedFeature += 'ask'`) extended.
+  Ask path. `@layerwell/types` (`ASK_INTENTS`/`ASK_EVENTS`, `GatedFeature += 'ask'`) extended.
 - **Pure, tested feature** (`features/ask/`): the medical-first **intent router**
   (`intent.ts`), the engine-reuse, template-bounded **answer builder** (`answer.ts` —
   reuses `detectConflicts`/`recommend`/`generatePlan` + claim-safe copy), the **broadened
@@ -5638,7 +5638,7 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
   intro + input bar + the honest AI-disclosure footer), the **deterministic $0 answer** (the
   green ✓ badge + what/why/how + citation/severity chips + "recommendation, not a rule"), the
   **fit** answer, the **refuse + verbal escalation**, and the **default-OFF privacy gate**
-  (`ask_onskin`). Surfaced free on Today (`AskTeaser`) + You. Calm, reactive, non-
+  (`ask_layerwell`). Surfaced free on Today (`AskTeaser`) + You. Calm, reactive, non-
   anthropomorphic; ends clean; no re-engagement.
 - **Adversarially reviewed** (a 4-dimension review, each finding independently verified: 18
   findings → 17 confirmed → fixed). Two HIGH safety fixes: **safety conflicts (e.g. a
@@ -5680,16 +5680,16 @@ policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-k
 7. ✅ Reminders / streaks / widgets — Doc 7 (Slice 21): tiered local-first notifications + frequency caps + quiet hours, the calm forgiving streak, soft-ask + settings hub + timing + welcome-back + widget/Live-Activity previews; native widgets/delivery deferred to **B-WIDGETS** / **B-NOTIF-VERIFY**
 8. ✅ Subscriptions / paywall — Doc 8 (Slice 22): reverse-trial conversion model, honest paywall + lifecycle screens, local-first entitlement gating; native IAP deferred to **B-REVENUECAT**, store/ARL review to **B-LEGAL**
 9. ✅ Personalized recommendations — Doc 9 (Slice 23): the independent, needs-based "church and state" advisor — the six honest triggers + an honest "you're set", the merit-only six-input FIT score (no commercial input), type-first + restrained, the what/why/how explainability, the "For you" hub + card + preferences + in-routine gap prompt; goal-active rec types launch-gated under **B-DERM-REVIEW**, the commerce/affiliate path deferred + inert (doc #10 / **B-PRIVACY** / **B-CATALOG-SEED**)
-10. ✅ Creator stacks + ShopMy — Doc 10 (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own independent recommendations — church-and-state schema (commission service-role-only, never client-readable, never in ranking), opaque-token attribution (no skin data to retailers), FTC "paid link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the transparency page; validated as a **six-figure supplement** (not 7-figure). The live ShopMy rail is **rail-agnostic + stubbed/inert** — the house-account model is unconfirmed (**B-SHOPMY**), real catalogue/prices (**B-CATALOG-SEED**), final consent copy/DPIA (**B-PRIVACY**), stacks sign-off (**B-DERM-REVIEW**)
+10. ✅ Creator stacks + ShopMy — Doc 10 (Slice 24): the walled-off "where to buy" commerce layer on Layerwell's own independent recommendations — church-and-state schema (commission service-role-only, never client-readable, never in ranking), opaque-token attribution (no skin data to retailers), FTC "paid link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the transparency page; validated as a **six-figure supplement** (not 7-figure). The live ShopMy rail is **rail-agnostic + stubbed/inert** — the house-account model is unconfirmed (**B-SHOPMY**), real catalogue/prices (**B-CATALOG-SEED**), final consent copy/DPIA (**B-PRIVACY**), stacks sign-off (**B-DERM-REVIEW**)
 11. ✅ Community layer — Doc 11 (Slice 25): the expert-anchored, anonymous, claim-safe "Skin Notes" myth-vs-evidence trust layer — NOT an open feed. Photo-free + anon-locked-out + consent-scoped schema; the B-DERM-REVIEW-gated expert corpus; the claim-safety pre-moderation flag; the 5 surfaces (hub, card, in-context, Ask, people-like-you). Validated as a retention **multiplier, not a 7-figure pillar**. Phase 1 live; peer posting deferred behind the moderation/legal floor (**B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** / **B-EXPERT-NETWORK**), clinical sign-off (**B-DERM-REVIEW**), consent copy/DPIA (**B-PRIVACY**)
-12. ✅ AI trend analysis — Doc 12 (Slice 26, intentionally last): the population skin score **killed outright**; the shipped no-AI-score **refusal preserved + marketed** (Phase 0); the only-defensible narrow exception built — on-device, within-person, descriptive, **no-number** "Changes in your own photos" (off by default, separate `photo_trend_insights` consent, tone-adjusted MDC floor, redness-never-the-metric, classical CV not an LLM, never marketed as "AI"). Validated as **not a 7-figure pillar**. The real on-device CV engine + fairness cohort + legal sign-off deferred (**B-AI-ONDEVICE** / **B-AI-FAIRNESS** / **B-AI-LEGAL**)
+12. ✅ AI trend analysis — Doc 12 (Slice 26, intentionally last): the populatilayerwell score **killed outright**; the shipped no-AI-score **refusal preserved + marketed** (Phase 0); the only-defensible narrow exception built — on-device, within-person, descriptive, **no-number** "Changes in your own photos" (off by default, separate `photo_trend_insights` consent, tone-adjusted MDC floor, redness-never-the-metric, classical CV not an LLM, never marketed as "AI"). Validated as **not a 7-figure pillar**. The real on-device CV engine + fairness cohort + legal sign-off deferred (**B-AI-ONDEVICE** / **B-AI-FAIRNESS** / **B-AI-LEGAL**)
 
 **🎉 All 12 build-order documents are now BUILT (Slices 0–26).** Every remaining item is a
 founder blocker (accounts/keys/legal/clinical/native dev build/catalog seed) — see BLOCKERS.md.
 
 **Founder-delegated extensions (beyond the 12):**
 
-13. ✅ "Ask OnSkin" assistant — Doc 13 (Slice 27): the grounded, **template-bounded** conversational front-end to the on-device intelligence layer — NOT an open chatbot. The deterministic, on-device, $0 advisor (conflict/routine/fit answers about your own shelf, refuse-over-guess, verbal clinician escalation, **safety conflicts always escalate**) ships as v1; substantive claims are template-filled from `detectConflicts`/`recommend`/`generatePlan`, never free-generated. New `ask_onskin` default-OFF consent + content-free/safety-audit-only schema (migration 0025); the broadened runtime claim-safety guard; the 5 surfaces + Today/You entry. Stress-tested + adversarially reviewed. Validated as a seven-figure **contributor, not a king-maker** (narrow/structural moat). The whole **cloud-grounded language layer is deferred** (**B-AI-ASSISTANT-VENDOR** / **B-AI-ASSISTANT-SAFETY** / **B-AI-ASSISTANT-LEGAL**, + **B-CATALOG-SEED** / **B-DERM-REVIEW** for the corpus).
+13. ✅ "Ask Layerwell" assistant — Doc 13 (Slice 27): the grounded, **template-bounded** conversational front-end to the on-device intelligence layer — NOT an open chatbot. The deterministic, on-device, $0 advisor (conflict/routine/fit answers about your own shelf, refuse-over-guess, verbal clinician escalation, **safety conflicts always escalate**) ships as v1; substantive claims are template-filled from `detectConflicts`/`recommend`/`generatePlan`, never free-generated. New `ask_layerwell` default-OFF consent + content-free/safety-audit-only schema (migration 0025); the broadened runtime claim-safety guard; the 5 surfaces + Today/You entry. Stress-tested + adversarially reviewed. Validated as a seven-figure **contributor, not a king-maker** (narrow/structural moat). The whole **cloud-grounded language layer is deferred** (**B-AI-ASSISTANT-VENDOR** / **B-AI-ASSISTANT-SAFETY** / **B-AI-ASSISTANT-LEGAL**, + **B-CATALOG-SEED** / **B-DERM-REVIEW** for the corpus).
 
 ## Post-build audit (per-doc fidelity pass)
 
@@ -5896,7 +5896,7 @@ copy + DPIA (B-PRIVACY/B-PRIVACY-COPY), server persistence (B-SUPABASE). **Gates
 ### docs/12 — AI trend analysis ("Changes in your own photos") ✅ CLEAN (2026-06-25)
 
 Feature-fidelity re-audit against docs/12. Verdict: faithful and complete — **no unblocked gap**. The
-population skin score is **killed**; the no-AI-score refusal is preserved + marketed; the only-defensible
+populatilayerwell score is **killed**; the no-AI-score refusal is preserved + marketed; the only-defensible
 narrow exception is built. Migration 0024 has **NO score/grade/percentage/skin_age column** (D-068/D-070,
 "by construction" — verified) and **no image/storage/faceprint column** (source stays local_only); the
 **separate default-off `photo_trend_insights` consent** is added (installed base re-consented, D-072), owner
@@ -5908,13 +5908,13 @@ gates, and a no-number `changeState`. Classical CV (not an LLM, never marketed a
 (correct): real on-device CV engine (B-AI-ONDEVICE), skin-tone fairness cohort validation (B-AI-FAIRNESS),
 FDA/FTC/EU legal sign-off + DPIA (B-AI-LEGAL). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
-### docs/13 — "Ask OnSkin" assistant ✅ CLEAN (2026-06-25)
+### docs/13 — "Ask Layerwell" assistant ✅ CLEAN (2026-06-25)
 
 Feature-fidelity re-audit against docs/13. Verdict: faithful and complete — **no unblocked gap**. The
 deterministic, on-device, $0, **template-bounded** conversational front-end (NOT an open chatbot) is built
-to spec. Migration 0025: `ask_onskin` default-off consent #9; `ask_sessions`/`ask_turn_audit` are
+to spec. Migration 0025: `ask_layerwell` default-off consent #9; `ask_sessions`/`ask_turn_audit` are
 **content-free** (NO message_text/transcript column "by construction"); `ask_safety_audit` is the only
-health-content store, exists **only with ask_onskin consent** (excluded from training/backup/sale,
+health-content store, exists **only with ask_layerwell consent** (excluded from training/backup/sale,
 deletion-on-revocation); **NO commission/affiliate/photo/score column** in any Ask path (church-and-state +
 doc-12 no-score). `answer.ts` is template-bounded (D-057 — every substantive claim filled from
 `detectConflicts`/`recommend`/`generatePlan`, model never free-generates a health claim), with the
@@ -5942,7 +5942,7 @@ one open docs/14 implementation gap, and it is now **built**:
 - **`app/share/conflict/[ruleId].tsx`** — the share screen (renders the card + "Share to Stories"), reached
   from a "Share this card" affordance on the conflict-detail sheet (gated OFF for safety contraindications —
   a clinician matter, never a growth share).
-- Installed `react-native-view-shot` 5.1.0 (Expo-pinned); the `onskin://` deep-link scheme already existed.
+- Installed `react-native-view-shot` 5.1.0 (Expo-pinned); the `layerwell://` deep-link scheme already existed.
   Blocked/launch items (correct): the live universal / App-Store **smart link** with a web fallback for
   not-yet-users needs the marketing domain + store listing (**B-GROWTH-LINK**); `captureRef` needs a **custom
   dev build** to run natively (the card renders everywhere; the export is dev-build-only, like B-CAMERA); the
@@ -5963,7 +5963,7 @@ ARE king-making only in their _compounding-data_ reconfiguration: resolution-fir
 intelligence (never a hazard score), the routine builder demoted to a **calm forgiving daily adherence loop**
 (the real moat, Lally 2010 + Duolingo grace), and the shelf as the **system of record** with switching-cost
 lock-in + the highest-intent affiliate trigger — plus an organic share artifact (the Conflict Card) to close
-the distribution gap. OnSkin's architecture already implements most of the best-execution plan. Yuka ($7.17M
+the distribution gap. Layerwell's architecture already implements most of the best-execution plan. Yuka ($7.17M
 subs, zero marketing) proves the ceiling but is survivorship, not a blueprint. Full verdict + 10 best-execution
 recs + 8 risks in the workflow output.
 
@@ -6100,7 +6100,7 @@ failures in `test-results/human-e2e/2026-07-06/commerce-touch-targets/`.
 
 ### Floating tab bar polish (2026-07-06)
 
-Reworked the bottom tab bar from a tiny active dot to a floating OnSkin-style raised-paper capsule with
+Reworked the bottom tab bar from a tiny active dot to a floating Layerwell-style raised-paper capsule with
 compact geometric line icons, readable 12 px labels, a clay-tinted active state, and tab-scene bottom
 clearance so content does not sit under the pill. The four existing destinations remain unchanged.
 Expo web evidence at a confirmed 320 px CSS viewport found one active tab, no horizontal overflow, and four
@@ -6509,7 +6509,7 @@ check pass; final production domain and app-link evidence remain external blocke
 ### Phase 6 payment env readiness hardening (2026-07-07)
 
 Hardened the payments/entitlements readiness gate so strict production payment exit cannot pass with copied RevenueCat
-placeholders, local `routinekind_*_dev` product IDs, blocked webhook secrets, or malformed policy/support URLs. The
+placeholders, local `layerwell_*_dev` product IDs, blocked webhook secrets, or malformed policy/support URLs. The
 checker now accepts process-env overrides for CI/staging evidence, validates `appl_` and `goog_` RevenueCat public keys,
 requires final product-ID shape, and reuses the shared production HTTPS URL guard. Added a no-network
 `phase6:check-payments-env-smoke` and wired it into `phase6:verify`; real RevenueCat dashboard keys, products, webhook
@@ -6570,8 +6570,8 @@ blocked on RevenueCat/store setup.
 
 ### Brand-safe privacy cache filenames (2026-07-07)
 
-Moved generated data-export JSON files and decrypted photo-share cache files off legacy `onskin-*` names to runtime
-brand-safe prefixes while preserving cleanup for both current `routinekind-*` and legacy `onskin-*` cache files.
+Moved generated data-export JSON files and decrypted photo-share cache files off legacy `layerwell-*` names to runtime
+brand-safe prefixes while preserving cleanup for both current `layerwell-*` and legacy `layerwell-*` cache files.
 Updated Phase 9 data-rights and privacy-payload smoke checks so generated plaintext/share artifacts must use current
 brand prefixes and old cache files are only retained as cleanup targets. Focused data-rights, local-cleanup, photo
 encryption, and Phase 9 smoke/audit checks pass; live data export/delete and observability payload evidence remain
@@ -6685,11 +6685,11 @@ device QA follow-up.
 
 ### Runtime brand identity smoke (2026-07-07)
 
-Verified the working `RoutineKind` runtime identity on high-visibility app
+Verified the working `Layerwell` runtime identity on high-visibility app
 surfaces without changing app code. Expo web human E2E at 320 x 568 opened
 `/ask`, `/paywall/upsell?feature=full_routine`, and
-`/settings/subscription`; visible copy rendered `Ask RoutineKind`,
-`Part of RoutineKind Pro.`, and `RoutineKind Pro`, with no visible `OnSkin`
+`/settings/subscription`; visible copy rendered `Ask Layerwell`,
+`Part of Layerwell Pro.`, and `Layerwell Pro`, with no visible `Layerwell`
 labels and no browser console errors. `npm run brand:audit:strict` reports zero
 public-launch-risk and zero review-needed references. Evidence is in
 `test-results/human-e2e/2026-07-07/runtime-brand-identity/`. This closes only
@@ -6699,13 +6699,13 @@ device QA remain founder/vendor/legal launch blockers.
 
 ### Public-copy smoke evidence (2026-07-08)
 
-Verified the working `RoutineKind` public-copy smoke without changing app code.
+Verified the working `Layerwell` public-copy smoke without changing app code.
 Codex in-app browser Expo web at 320 x 568 opened `/onboarding/age`,
 `/s/sharecard01`, `/shelf/search`, `/settings/timing`, and free
 `/routine/widgets` before and after tapping `Explore first. 7 days of Pro`.
 Age gate, public share landing, catalog search, timing lock-screen preview, and
-the widgets paywall show `RoutineKind`; all six captured states show no visible
-`OnSkin`. The no-card Pro week reaches the widgets deferred surface
+the widgets paywall show `Layerwell`; all six captured states show no visible
+`Layerwell`. The no-card Pro week reaches the widgets deferred surface
 (`Widgets are not in this beta` / `Back to Today`), visible controls are
 48 px+, horizontal overflow is zero, and current-origin browser warn/error logs
 are empty. Evidence and report are in
@@ -6754,7 +6754,7 @@ Verified commerce trust surfaces without changing app code. Default Expo web at
 deferred commerce beta surface; every direct entry showed `Back to You`, returned
 to `/you`, had zero horizontal overflow, and logged no browser errors. A
 temporary commerce-enabled web server on port 8127 with
-`EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app` verified direct
+`EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://layerwell.app` verified direct
 transparency/stacks/consent recovery, stack-detail recovery to
 `/commerce/stacks`, stack-list to detail to transparency hierarchy, unavailable
 stack recovery, recommendation where-to-buy locking with commerce consent off,
@@ -7164,7 +7164,7 @@ features and 14 required surface keys. Android release evidence is explicitly
 Created the 202-item execution baseline, repository/credential/evidence
 inventories, task DAG, status tracker, legal/Apple primary-source packet, dated
 brand longlist/knockout/recommendation/counsel packet, and founder enrollment
-handoff. `RoutineKind` is still provisional: manual official trademark grids,
+handoff. `Layerwell` is still provisional: manual official trademark grids,
 launch-country counsel clearance, founder approval, and authorized reservations
 remain open.
 
@@ -7332,7 +7332,7 @@ Refreshed BRAND-03 evidence through official Apple public search, CIPO, USPTO,
 IP Australia, and registry RDAP sources plus indexed common-law/social screens.
 The USPTO pass reviewed all 97 live target-class `routin*` records and closed
 the old first-100 gap by paging all 192 live target-class `ritu*` records. The
-current sequence for counsel review is `RoutineKind`, `Ritunera`, then
+current sequence for counsel review is `Layerwell`, `Ritunera`, then
 lower-confidence `Ritualoom`. `Rituvia` is suspended: active `Rituva` differs
 by one letter and sells routine-based skincare, active Florida-company
 `Retuvia` targets hair products, `RITUVÉ` is another close storefront lead,
@@ -7350,7 +7350,7 @@ governed query ledger/evidence record bound to source revision
 UKIPO Similar sets for the three-name sequence and suspended `Rituvia`, TMview
 Contains/Fuzzy grids with explicit result-set bounds, direct public-handle
 constraints, and current UK journal leads. Material inputs include occupied
-YouTube `@routinekind`, a redirecting Facebook `ritunera` path, registered UK
+YouTube `@layerwell`, a redirecting Facebook `ritunera` path, registered UK
 class-9 `Trunera`, `RITULIA` goods including dermatological creams, published
 UK `Ritjuva`, and a dense current `RITUAL` skincare/beauty field. The retained
 personal-data footprint was minimized by omitting an unrelated individual's
@@ -7778,7 +7778,7 @@ assertions including CAT-03 99/99; error-level lint; empty migration-shadow
 drift; temporary 6,771-line type generation with SHA-256
 `39619a6870c33fc402323c61fce5601c0fb1460993026b8465f0ce56a0a9a91e`;
 CAT-08 10/10; and awaited teardown plus recursive removal of this run's own
-random sandbox `routinekind-db05-local-1fKYbR`. The run emitted no stderr or
+random sandbox `layerwell-db05-local-1fKYbR`. The run emitted no stderr or
 cleanup diagnostic, and the worktree remained clean. Historical or hard-timeout
 roots from other runs were excluded and are not claimed absent.
 
@@ -7820,10 +7820,10 @@ and the Phase 1 docs under `docs/`.
 
 Highest priority:
 
-1. Brand decision: reject the conflicted `OnSkin` path; confirm launch countries
-   and owner entity; have qualified counsel accept or reject `RoutineKind`,
+1. Brand decision: reject the conflicted `Layerwell` path; confirm launch countries
+   and owner entity; have qualified counsel accept or reject `Layerwell`,
    `Ritunera`, and `Ritualoom` for the exact proposed use; then founder-select
-   and authenticate reservations. `RoutineKind` is only the working engineering
+   and authenticate reservations. `Layerwell` is only the working engineering
    identity and first candidate for review.
 2. Assign account owners and billing for Supabase, Apple, Google, RevenueCat,
    PostHog, Sentry, Turnstile, and domain registration.

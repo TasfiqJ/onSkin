@@ -21,9 +21,9 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 
-const COMMERCE_KEY = 'onskin.commerceConsent.v1';
-const COMMUNITY_KEY = 'onskin.communityConsent.v1';
-const COMMUNITY_AGE_KEY = 'onskin.communityAge16.v1';
+const COMMERCE_KEY = 'layerwell.commerceConsent.v1';
+const COMMUNITY_KEY = 'layerwell.communityConsent.v1';
+const COMMUNITY_AGE_KEY = 'layerwell.communityAge16.v1';
 
 const mocks = vi.hoisted(() => ({
   getLatestConsents: vi.fn(),

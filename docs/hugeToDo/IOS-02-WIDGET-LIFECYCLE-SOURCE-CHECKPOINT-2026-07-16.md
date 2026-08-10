@@ -3,7 +3,7 @@
 Date: 2026-07-16
 Updated: 2026-08-08 for Expo SDK 57 and `expo-widgets` 57.0.8
 
-Status: `in_progress` native source candidate. The RoutineKind lifecycle is
+Status: `in_progress` native source candidate. The Layerwell lifecycle is
 implemented and statically/model-tested in source, but interactive publication
 and Live Activity start remain disabled by signed configuration. Feature 19
 remains launch-blocked.
@@ -11,7 +11,7 @@ remains launch-blocked.
 ## Decision
 
 The checked-in source now closes the previously identified JavaScript-only
-cross-process race with a RoutineKind-specific App Group SQLite authority,
+cross-process race with a Layerwell-specific App Group SQLite authority,
 rotating compare-and-swap nonces, a durable action outbox, deterministic stale
 state, a lock-held lease-close quiescence handoff, and an unconditional native
 privacy kill lane. The quiescence handoff uses the same cross-process lock as
@@ -24,8 +24,8 @@ owner-generation coordinator, host slot, and boundary-first cleanup call sites
 needed to integrate that authority with app lifecycle and account boundaries.
 
 This is not release evidence. The current generated-Info.plist source keeps
-`RoutineKindWidgetInteractivePublicationEnabled` and
-`RoutineKindLiveActivityStartEnabled` literal `false`; no signed artifact exists
+`LayerwellWidgetInteractivePublicationEnabled` and
+`LayerwellLiveActivityStartEnabled` literal `false`; no signed artifact exists
 yet. No Xcode or Swift compiler is available in the Windows workspace, so the
 local result does not prove that the patched Swift compiles, that an extension
 is generated or signed, or that an archive contains the expected entitlements,
@@ -67,7 +67,7 @@ workspace dependency, lockfile version, registry URL, integrity, and installed
 package identity. The deterministic installer in
 `scripts/phase5/patch-expo-widgets-lifecycle.mjs` pins both the reviewed
 upstream hash and patched hash for ten replaced native files plus one new
-RoutineKind lifecycle store. It validates every payload and target before
+Layerwell lifecycle store. It validates every payload and target before
 staging, installs each reviewed file with a durable per-file rename and
 rollback path, accepts a reviewed mixed state so an interrupted run can safely
 finish, rejects unknown drift, supports non-writing check mode, and is run by
@@ -92,8 +92,8 @@ finding and requires a new hash review.
 
 ## Implemented Native Source Candidate
 
-- **Single native authority.** RoutineKind timeline state lives in an App
-  Group SQLite database. UserDefaults is not the RoutineKind transaction
+- **Single native authority.** Layerwell timeline state lives in an App
+  Group SQLite database. UserDefaults is not the Layerwell transaction
   authority; it remains only for generic/derived presentation compatibility.
   Cross-process access uses a permanent coordination file with bounded
   nonblocking `flock`, SQLite `BEGIN IMMEDIATE`, full synchronous writes,
@@ -102,10 +102,10 @@ finding and requires a new hash review.
   a rotating opaque authority nonce. Activation, publication, outbox reads,
   reconciliation, and cleanup use exact authority receipts rather than a
   reusable account identifier or a JavaScript-only generation check.
-- **Atomic App Intent path.** The RoutineKind App Intent validates the complete
+- **Atomic App Intent path.** The Layerwell App Intent validates the complete
   stored snapshot, exact owner generation, snapshot nonce, revision, date,
   phase, and expiry. The interaction outbox row and optimistic revision are
-  persisted transactionally before `perform()` returns. RoutineKind does not
+  persisted transactionally before `perform()` returns. Layerwell does not
   depend on process-local notification delivery or a UserDefaults timeline
   replacement for canonical reconciliation.
 - **Deterministic expiry and rendering.** Publication accepts exactly a current
@@ -150,7 +150,7 @@ finding and requires a new hash review.
   queued full purge rotates a closed authority tombstone, removes
   snapshots/outbox and derived presentation, reloads widget timelines, and
   ends/redacts every activity using the shared
-  `LiveActivityAttributes` type, including legacy non-RoutineKind aliases that
+  `LiveActivityAttributes` type, including legacy non-Layerwell aliases that
   could otherwise retain old content. Source call sites cover health
   consent withdrawal, full local-private cleanup/account deletion, forced
   sign-out, and foreign or unclaimed credential activity. Health withdrawal
@@ -161,7 +161,7 @@ finding and requires a new hash review.
   minimum owner/quarantine proofs needed for safe retry.
 - **Synchronous close admission, asynchronous ActivityKit dismissal.** Privacy
   reduction first durably creates and verifies the exact
-  `privacy-closing-v1` RoutineKind sentinel, so its synchronous bridge
+  `privacy-closing-v1` Layerwell sentinel, so its synchronous bridge
   closed-admission receipt proves that later store reads, writes, intents,
   publication, reconciliation, and activity mutation authorization are denied
   even if an older JavaScript FIFO operation never settles. Before
@@ -171,17 +171,17 @@ finding and requires a new hash review.
   the last content until the scheduled task runs. The queued full purge awaits
   the same end operation, and exact device tests must measure the residual
   display interval while the app is foregrounded, backgrounded, and terminating.
-- **RoutineKind Live Activity lifecycle.** The named RoutineKind activity has a
+- **Layerwell Live Activity lifecycle.** The named Layerwell activity has a
   strict bounded decoder, a finite `staleDate`, owner-authorized update and
   recovery, explicit immediate end, and fail-safe cleanup after process death
-  or restart. Start requires the exact signed `RoutineKindWidgetDeepLink` before
+  or restart. Start requires the exact signed `LayerwellWidgetDeepLink` before
   `Activity.request`. Start and update reauthorize after the ActivityKit
   operation and request an immediate generic end if authority changed during
   the call. The typed post-start stale handler rereads current JS instances and
   awaits their immediate end requests before the bounded retry. Global
   push-to-start token observation/emission is removed because those tokens are
   not owner-bound or revocable; per-activity push remains signed `false` and
-  authority-gated. The patched factory rejects every non-RoutineKind start, and
+  authority-gated. The patched factory rejects every non-Layerwell start, and
   update/token APIs reject nonexact or inactive instances. End and privacy
   cleanup remain permissive so legacy aliases can be redacted and asked to
   dismiss.
@@ -227,7 +227,7 @@ signed flags.
    warm/cold/killed deep links; locked-state privacy; corrupt/oversized-state
    recovery; expiry, withdrawal, sign-out, switch, and deletion cleanup; and
    VoiceOver/Dynamic Type checks.
-6. Prove the RoutineKind Live Activity start/update/stale/complete/end path on
+6. Prove the Layerwell Live Activity start/update/stale/complete/end path on
    the exact signed build across app termination, device restart, lock state,
    disablement, withdrawal, and account transitions. Measure the interval from
    native admission closure to actual ActivityKit presentation removal; neither

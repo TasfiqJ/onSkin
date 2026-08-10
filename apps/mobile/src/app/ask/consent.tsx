@@ -13,7 +13,7 @@ import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-// The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_onskin consent
+// The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_layerwell consent
 // for the CLOUD-grounded language layer. Distinct, revocable, never default-on. The
 // deterministic on-device advisor needs no consent; this gate is only for the deeper
 // cloud path (deferred, B-AI-ASSISTANT-VENDOR). Honest posture (the stress-tested §7):
@@ -69,7 +69,7 @@ export default function AskConsentScreen() {
   const scrollRef = useRef<ScrollView | null>(null);
   const failureModes = devAskConsentFailureModes();
   const consented = useQuery({
-    queryKey: ['ask_onskin'],
+    queryKey: ['ask_layerwell'],
     queryFn: isAskConsented,
     enabled: phase7Flags.cloudAsk,
     retry: 0,
@@ -123,10 +123,10 @@ export default function AskConsentScreen() {
         grant,
         revoke,
         onSaved: () => {
-          qc.setQueryData(['ask_onskin'], enabled);
+          qc.setQueryData(['ask_layerwell'], enabled);
         },
         onFailure: showSaveFailure,
-        invalidate: () => qc.invalidateQueries({ queryKey: ['ask_onskin'] }),
+        invalidate: () => qc.invalidateQueries({ queryKey: ['ask_layerwell'] }),
       });
       if (saved) setSaveFailed(false);
     } finally {

@@ -116,7 +116,7 @@ assert(
     combinedCore.includes('Promise.allSettled') &&
     combinedCore.includes("failedLanes.push('base')") &&
     combinedCore.includes("failedLanes.push('dependent')") &&
-    dependentCleanup.includes('runAskOnSkinCleanup') &&
+    dependentCleanup.includes('runAskLayerwellCleanup') &&
     dependentCleanup.includes('runGranularPhotoCaptureCleanup'),
   'Scheduled recovery must independently claim dependent withdrawals, reuse bounded cleanup, durably mark provider bounds, and isolate lane failures.',
 );

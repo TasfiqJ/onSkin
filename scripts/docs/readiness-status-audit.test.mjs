@@ -94,7 +94,7 @@ function writeRepoFile(root, repoPath, contents) {
 }
 
 function createFixtureRepo(t) {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-readiness-integrity-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-readiness-integrity-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   git(root, ['init', '--quiet']);
   git(root, ['config', 'user.name', 'Readiness Test']);
@@ -468,7 +468,7 @@ test('readiness input reader rejects oversize and linked ancestors and detects p
   assert.equal(oversized.kind, 'too-large');
   assert.equal(oversized.bytes, null);
 
-  const outside = mkdtempSync(join(tmpdir(), 'onskin-readiness-outside-'));
+  const outside = mkdtempSync(join(tmpdir(), 'layerwell-readiness-outside-'));
   t.after(() => rmSync(outside, { recursive: true, force: true }));
   writeRepoFile(outside, 'secret.txt', 'outside\n');
   const linkedParent = join(root, 'linked-parent');
@@ -553,7 +553,7 @@ test('readiness Git discovery ignores malicious PATH, repository redirection, an
     assert.equal(Object.hasOwn(trustedEnvironment, key), false);
   }
 
-  const maliciousPath = mkdtempSync(join(tmpdir(), 'onskin-readiness-path-'));
+  const maliciousPath = mkdtempSync(join(tmpdir(), 'layerwell-readiness-path-'));
   t.after(() => rmSync(maliciousPath, { recursive: true, force: true }));
   writeRepoFile(maliciousPath, process.platform === 'win32' ? 'git.cmd' : 'git', 'exit 99\n');
   const poisoned = {
@@ -968,7 +968,7 @@ test('atomic readiness publication rejects same-byte governed evidence replaceme
     outputPaths: [jsonPath, mdPath],
   });
   const bindings = captureGovernedEvidenceWorkingBindings(value.evidenceAudit, value.root);
-  const displaced = mkdtempSync(join(tmpdir(), 'onskin-readiness-displaced-evidence-'));
+  const displaced = mkdtempSync(join(tmpdir(), 'layerwell-readiness-displaced-evidence-'));
   t.after(() => rmSync(displaced, { recursive: true, force: true }));
 
   atomicWriteReadinessStatusOutputs({
@@ -1046,7 +1046,7 @@ test('atomic readiness publication deletes both outputs on status or HEAD drift'
 
 test('atomic readiness publication never follows a linked output parent', (t) => {
   const root = createFixtureRepo(t);
-  const outside = mkdtempSync(join(tmpdir(), 'onskin-readiness-output-outside-'));
+  const outside = mkdtempSync(join(tmpdir(), 'layerwell-readiness-output-outside-'));
   t.after(() => rmSync(outside, { recursive: true, force: true }));
   const linkedParent = join(root, 'linked-output');
   try {

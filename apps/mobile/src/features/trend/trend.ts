@@ -1,4 +1,4 @@
-import type { TrendChangeState } from '@onskin/types';
+import type { TrendChangeState } from '@layerwell/types';
 
 // The within-person trend engine (docs/12 §6). The noise floor + the change-state
 // classification. *** It produces NO score, grade, or number. *** It only decides

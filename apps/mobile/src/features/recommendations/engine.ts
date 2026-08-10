@@ -4,7 +4,7 @@ import type {
   GoalId,
   RecommendationTrigger,
   SequencingRole,
-} from '@onskin/types';
+} from '@layerwell/types';
 
 import type {
   ConflictEvaluationStatus,

@@ -19,7 +19,7 @@ const releaseCandidateDir = 'docs/phase-9/release-candidates/rc-2099-01-01-b001'
 const ledgerPath = `${releaseCandidateDir}/evidence-chain.json`;
 const ledger = {
   schemaVersion: 1,
-  kind: 'onskin_governed_evidence_chain',
+  kind: 'layerwell_governed_evidence_chain',
   sourceGitSha,
   releaseCandidateDir,
   publicationPolicy: buildGovernedPublicationPolicyTemplate(),

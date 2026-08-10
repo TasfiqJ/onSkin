@@ -1,4 +1,4 @@
-import type { EntitlementStore, PeriodType, SubscriptionTier } from '@onskin/types';
+import type { EntitlementStore, PeriodType, SubscriptionTier } from '@layerwell/types';
 
 export const ENTITLEMENT_QUERY_KEY = ['entitlement'] as const;
 export const ENTITLEMENT_OWNER_BINDING_PATTERN = /^[a-f0-9]{64}$/;

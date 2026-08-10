@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T06:50:15.588Z",
+  "generatedAt": "2026-08-10T01:37:25.257Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -204,8 +204,8 @@
     }
   },
   "inputPath": "docs/phase-4/beta-coverage-input.json",
-  "gitSha": "8cc862b81163fe1b04ca0c1e3ca9957671a5a463",
-  "gitStatus": "",
+  "gitSha": "fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f",
+  "gitStatus": "M .env.example\n M .github/workflows/ios-simulator-compile.yml\n M .github/workflows/quality.yml\n M 04_repo_docs/AGENTS.md\n M 04_repo_docs/README.md\n M 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md\n M 04_repo_docs/docs/DECISIONS.md\n M 04_repo_docs/docs/MASTER_PLAN.md\n M 04_repo_docs/docs/TESTING_STRATEGY.md\n M AGENTS.md\n M BLOCKERS.md\n M CLAUDE.md\n M COMPLIANCE_SUPPORT_MAP.md\n M DATA_FLOW_MAP.md\n M DECISIONS.md\n M LAUNCH_READINESS.md\n M PATCH_NOTES_SECURITY.md\n M PROGRESS.md\n M SECURITY_AUDIT_REPORT.md\n M SECURITY_TEST_PLAN.md\n M THREAT_MODEL.md\n M apps/catalog-operator-console/README.md\n M apps/catalog-operator-console/package.json\n M apps/catalog-operator-console/src/auth.ts\n M apps/catalog-operator-console/src/main.ts\n M apps/mobile/app.base.json\n M apps/mobile/app.config.js\n M apps/mobile/assets/images/android-icon-background.png\n M apps/mobile/assets/images/android-icon-foreground.png\n M apps/mobile/assets/images/android-icon-monochrome.png\n M apps/mobile/assets/images/favicon.png\n M apps/mobile/assets/images/icon.png\n M apps/mobile/assets/images/splash-icon.png\n M apps/mobile/metro.config.js\n M apps/mobile/modules/native-age-assurance/ios/NativeAgeAssurance.podspec\n M apps/mobile/modules/native-label-ocr/ios/NativeLabelOcr.podspec\n M apps/mobile/package.json\n D apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js\n M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/app/ask/consent.tsx\n M apps/mobile/src/app/cycle/disruption.tsx\n M apps/mobile/src/app/cycle/settings.tsx\n M apps/mobile/src/app/onboarding/goals.tsx\n M apps/mobile/src/app/onboarding/reveal.tsx\n M apps/mobile/src/app/paywall/upsell.tsx\n M apps/mobile/src/app/progress/review.tsx\n M apps/mobile/src/app/recommendations/[id].tsx\n M apps/mobile/src/app/recommendations/index.tsx\n M apps/mobile/src/app/recommendations/preferences.tsx\n M apps/mobile/src/app/settings/skin-profile.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/app/shelf/scan.tsx\n M apps/mobile/src/features/ask/answer.ts\n M apps/mobile/src/features/ask/consent.test.ts\n M apps/mobile/src/features/ask/consent.ts\n M apps/mobile/src/features/ask/intent.ts\n M apps/mobile/src/features/ask/routeContract.test.ts\n M apps/mobile/src/features/ask/store.test.ts\n M apps/mobile/src/features/ask/store.ts\n M apps/mobile/src/features/catalog/client.ts\n M apps/mobile/src/features/catalog/ingredientParser.ts\n M apps/mobile/src/features/catalog/obf.test.ts\n M apps/mobile/src/features/commerce/attribution.test.ts\n M apps/mobile/src/features/commerce/claimsafety.test.ts\n M apps/mobile/src/features/commerce/copy.ts\n M apps/mobile/src/features/commerce/links.ts\n M apps/mobile/src/features/commerce/stacks.ts\n M apps/mobile/src/features/commerce/store.test.ts\n M apps/mobile/src/features/commerce/store.ts\n M apps/mobile/src/features/community/notes.ts\n M apps/mobile/src/features/community/reactionStore.test.ts\n M apps/mobile/src/features/community/reactionStore.ts\n M apps/mobile/src/features/community/store.test.ts\n M apps/mobile/src/features/community/store.ts\n M apps/mobile/src/features/growth/cardCopy.test.ts\n M apps/mobile/src/features/growth/cardCopy.ts\n M apps/mobile/src/features/growth/publicLinkAdmission.test.ts\n M apps/mobile/src/features/growth/shareAdmission.test.ts\n M apps/mobile/src/features/growth/shareLinks.test.ts\n M apps/mobile/src/features/growth/shareProjection.test.ts\n M apps/mobile/src/features/healthConsent/dependentConsentCleanup.test.ts\n M apps/mobile/src/features/healthConsent/lifecycleStore.ts\n M apps/mobile/src/features/healthConsent/pendingIntent.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts\n M apps/mobile/src/features/intelligence/concentration.ts\n M apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts\n M apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts\n M apps/mobile/src/features/intelligence/engine.ts\n M apps/mobile/src/features/intelligence/overrides.test.ts\n M apps/mobile/src/features/intelligence/overrides.ts\n M apps/mobile/src/features/intelligence/pregnancySafety.ts\n M apps/mobile/src/features/intelligence/presentation.ts\n M apps/mobile/src/features/intelligence/scheduler.ts\n M apps/mobile/src/features/intelligence/tags.ts\n M apps/mobile/src/features/notifications/copy.ts\n M apps/mobile/src/features/notifications/deliver.test.ts\n M apps/mobile/src/features/notifications/deliver.ts\n M apps/mobile/src/features/notifications/policy.ts\n M apps/mobile/src/features/notifications/sentStore.test.ts\n M apps/mobile/src/features/notifications/sentStore.ts\n M apps/mobile/src/features/notifications/store.test.ts\n M apps/mobile/src/features/notifications/store.ts\n M apps/mobile/src/features/onboarding/AgePolicyGate.lifecycle.test.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.tsx\n M apps/mobile/src/features/onboarding/ageGate.ts\n M apps/mobile/src/features/onboarding/healthConsentStore.test.ts\n M apps/mobile/src/features/onboarding/healthConsentStore.ts\n M apps/mobile/src/features/onboarding/quiz.ts\n M apps/mobile/src/features/onboarding/quizContract.ts\n M apps/mobile/src/features/onboarding/serverSkinProfile.test.ts\n M apps/mobile/src/features/onboarding/serverSkinProfile.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.test.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.ts\n M apps/mobile/src/features/photos/consent.test.ts\n M apps/mobile/src/features/photos/consent.ts\n M apps/mobile/src/features/photos/copy.ts\n M apps/mobile/src/features/photos/encryptedStorage.test.ts\n M apps/mobile/src/features/photos/encryptedStorage.ts\n M apps/mobile/src/features/photos/progressCapturePrivacy.ts\n M apps/mobile/src/features/photos/quality.ts\n M apps/mobile/src/features/photos/sharePhoto.test.ts\n M apps/mobile/src/features/photos/store.test.ts\n M apps/mobile/src/features/photos/store.ts\n M apps/mobile/src/features/photos/timelapse.test.ts\n M apps/mobile/src/features/photos/timeline.ts\n M apps/mobile/src/features/photos/usePhotos.ts\n M apps/mobile/src/features/recommendations/catalog.ts\n M apps/mobile/src/features/recommendations/claimsafety.test.ts\n M apps/mobile/src/features/recommendations/copy.ts\n M apps/mobile/src/features/recommendations/engine.test.ts\n M apps/mobile/src/features/recommendations/engine.ts\n M apps/mobile/src/features/recommendations/fit.test.ts\n M apps/mobile/src/features/recommendations/fit.ts\n M apps/mobile/src/features/recommendations/goalAdmission.ts\n M apps/mobile/src/features/recommendations/goalProvenance.ts\n M apps/mobile/src/features/recommendations/preferences.ts\n M apps/mobile/src/features/recommendations/replenishment.test.ts\n M apps/mobile/src/features/recommendations/store.test.ts\n M apps/mobile/src/features/recommendations/store.ts\n M apps/mobile/src/features/review/prompt.test.ts\n M apps/mobile/src/features/review/prompt.ts\n M apps/mobile/src/features/routine/activationAnalytics.test.ts\n M apps/mobile/src/features/routine/activationAnalytics.ts\n M apps/mobile/src/features/routine/cycleAnchor.test.ts\n M apps/mobile/src/features/routine/cycleAnchor.ts\n M apps/mobile/src/features/routine/generate.ts\n M apps/mobile/src/features/routine/orderStore.test.ts\n M apps/mobile/src/features/routine/orderStore.ts\n M apps/mobile/src/features/routine/ramp.ts\n M apps/mobile/src/features/routine/rampStore.test.ts\n M apps/mobile/src/features/routine/rampStore.ts\n M apps/mobile/src/features/routine/routineSequencingCorpus.v1.ts\n M apps/mobile/src/features/routine/sequencing.ts\n M apps/mobile/src/features/scheduler/classes.ts\n M apps/mobile/src/features/scheduler/cycleStore.test.ts\n M apps/mobile/src/features/scheduler/cycleStore.ts\n M apps/mobile/src/features/scheduler/orchestrate.test.ts\n M apps/mobile/src/features/scheduler/orchestrate.ts\n M apps/mobile/src/features/scheduler/profile.ts\n M apps/mobile/src/features/scheduler/profileMapping.ts\n M apps/mobile/src/features/scheduler/useCycle.ts\n M apps/mobile/src/features/settings/accountDeletionClientState.ts\n M apps/mobile/src/features/settings/accountDeletionForeignOwnerPreservation.test.ts\n M apps/mobile/src/features/settings/accountDeletionNotice.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/catalogLookupRecovery.test.ts\n M apps/mobile/src/features/shelf/catalogRecoveryAsync.test.ts\n M apps/mobile/src/features/shelf/categories.ts\n M apps/mobile/src/features/shelf/freshness.test.ts\n M apps/mobile/src/features/shelf/freshness.ts\n M apps/mobile/src/features/shelf/intakeSession.ts\n M apps/mobile/src/features/shelf/labels.ts\n M apps/mobile/src/features/shelf/paoProvenance.ts\n M apps/mobile/src/features/shelf/scanLog.ts\n M apps/mobile/src/features/shelf/store.test.ts\n M apps/mobile/src/features/shelf/store.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M apps/mobile/src/features/streak/milestoneStore.test.ts\n M apps/mobile/src/features/streak/milestoneStore.ts\n M apps/mobile/src/features/subscription/ProGate.tsx\n M apps/mobile/src/features/subscription/conflictQuota.test.ts\n M apps/mobile/src/features/subscription/conflictQuota.ts\n M apps/mobile/src/features/subscription/copy.ts\n M apps/mobile/src/features/subscription/dismissPaywall.ts\n M apps/mobile/src/features/subscription/entitlement.test.ts\n M apps/mobile/src/features/subscription/entitlement.ts\n M apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts\n M apps/mobile/src/features/subscription/gatedRoutes.ts\n M apps/mobile/src/features/subscription/lifecycle.test.ts\n M apps/mobile/src/features/subscription/lifecycle.ts\n M apps/mobile/src/features/subscription/plans.test.ts\n M apps/mobile/src/features/subscription/plans.ts\n M apps/mobile/src/features/subscription/priceDisplay.test.ts\n M apps/mobile/src/features/subscription/priceDisplay.ts\n M apps/mobile/src/features/subscription/serverContracts.test.ts\n M apps/mobile/src/features/subscription/store.test.ts\n M apps/mobile/src/features/subscription/store.ts\n M apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts\n M apps/mobile/src/features/today/completionsStore.test.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/features/today/useToday.ts\n M apps/mobile/src/features/trend/claimsafety.test.ts\n M apps/mobile/src/features/trend/copy.ts\n M apps/mobile/src/features/trend/store.test.ts\n M apps/mobile/src/features/trend/store.ts\n M apps/mobile/src/features/trend/trend.ts\n M apps/mobile/src/features/widgets/TodayWidget.ios.tsx\n M apps/mobile/src/features/widgets/TonightActivity.ios.tsx\n M apps/mobile/src/features/widgets/actionRegistry.ts\n M apps/mobile/src/features/widgets/contract.test.ts\n M apps/mobile/src/features/widgets/contract.ts\n M apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts\n M apps/mobile/src/features/widgets/lifecycleRuntime.test.ts\n M apps/mobile/src/features/widgets/nativeLifecycle.ios.ts\n M apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts\n M apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts\n M apps/mobile/src/features/widgets/nativeOutboxModel.test.ts\n M apps/mobile/src/features/widgets/ownerAuthority.ts\n M apps/mobile/src/features/widgets/widgetViews.test.ts\n M apps/mobile/src/lib/analytics/track.ts\n M apps/mobile/src/lib/appConfig.test.ts\n M apps/mobile/src/lib/applock/store.test.ts\n M apps/mobile/src/lib/applock/store.ts\n M apps/mobile/src/lib/auth/AuthProvider.tsx\n M apps/mobile/src/lib/auth/appleCredentialQuarantine.ts\n M apps/mobile/src/lib/auth/authDerivedCleanupRequired.ts\n M apps/mobile/src/lib/auth/sessionOwner.test.ts\n M apps/mobile/src/lib/auth/sessionOwner.ts\n M apps/mobile/src/lib/auth/sessionOwnerKey.ts\n M apps/mobile/src/lib/brand.test.ts\n M apps/mobile/src/lib/brand.ts\n M apps/mobile/src/lib/consent/consent.test.ts\n M apps/mobile/src/lib/consent/consent.ts\n M apps/mobile/src/lib/consent/dependentConsentContract.ts\n M apps/mobile/src/lib/consent/dependentConsentLease.test.ts\n M apps/mobile/src/lib/consent/dependentConsentLocal.test.ts\n M apps/mobile/src/lib/consent/dependentConsentLocal.ts\n M apps/mobile/src/lib/consent/dependentConsentRecoveryContract.ts\n M apps/mobile/src/lib/consent/dependentConsentRecoveryStore.test.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/consent/healthProcessingEpoch.ts\n M apps/mobile/src/lib/consent/withdrawal.test.ts\n M apps/mobile/src/lib/consent/withdrawal.ts\n M apps/mobile/src/lib/env.ts\n M apps/mobile/src/lib/growth/attribution.test.ts\n M apps/mobile/src/lib/iap/revenuecat.ts\n M apps/mobile/src/lib/iap/revenuecatPublication.test.ts\n M apps/mobile/src/lib/iap/storeTransactionNotice.ts\n M apps/mobile/src/lib/launch/phase7.test.ts\n M apps/mobile/src/lib/launch/phase8.test.ts\n M apps/mobile/src/lib/navigation/externalUrl.test.ts\n M apps/mobile/src/lib/offline/catalogLookupQueue.test.ts\n M apps/mobile/src/lib/offline/catalogLookupQueue.ts\n M apps/mobile/src/lib/offline/completionQueue.test.ts\n M apps/mobile/src/lib/offline/completionQueue.ts\n M apps/mobile/src/lib/storage/plaintextStagingCore.test.ts\n M apps/mobile/src/lib/storage/plaintextStagingCore.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M apps/mobile/src/lib/supabase/client.ts\n M blocker.md\n M docs/00-architecture.md\n M docs/02-ingredient-intelligence.md\n M docs/03-routine-builder.md\n M docs/04-smart-shelf.md\n M docs/05-actives-scheduler.md\n M docs/06-photo-progress.md\n M docs/07-reminders-streaks-widgets.md\n M docs/08-subscriptions-paywall.md\n M docs/09-personalized-recommendations.md\n M docs/10-compass-artifact.md\n M docs/10-creator-stacks-build-spec.md\n M docs/11-community-layer.md\n M docs/12-ai-trend-analysis.md\n D docs/13-ask-onskin-assistant.md\n M docs/14-growth-to-seven-figures.md\n M docs/CODEX_IMPLEMENTATION_PROMPT.md\n M docs/DECISIONS.md\n M docs/HUMAN_SIMULATED_E2E_TESTING.md\n M docs/MASTER_PLAN.md\n M docs/MAXIMUM_OPTIMIZATION_CODEX_IMPLEMENTATION_PROMPT.md\n M docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md\n M docs/USER_FLOW_TREE.md\n M docs/brand-decision-memo.md\n M docs/e2e-bug-reports/2026-07-07-ask-active-frequency-misroute.md\n M docs/e2e-bug-reports/2026-07-07-ask-consent-deferred-cta.md\n M docs/e2e-bug-reports/2026-07-07-ask-disclosure-footer-clipped.md\n M docs/e2e-bug-reports/2026-07-07-ask-disclosure-footer-compact-clearance.md\n M docs/e2e-bug-reports/2026-07-07-ask-first-prompt-compact-composer-overlap.md\n M docs/e2e-bug-reports/2026-07-07-commerce-missing-stack-recovery.md\n M docs/e2e-bug-reports/2026-07-07-onboarding-quiz-consent-bypass.md\n M docs/e2e-bug-reports/2026-07-07-shelf-manual-category-picker-sheet.md\n M docs/e2e-bug-reports/2026-07-07-shelf-no-match-search-fallback.md\n M docs/e2e-bug-reports/2026-07-07-start-today-cycle-anchor.md\n M docs/e2e-bug-reports/2026-07-07-subscription-reverse-trial-status-pill.md\n M docs/e2e-bug-reports/2026-07-08-ask-consent-native-alert.md\n M docs/e2e-bug-reports/2026-07-08-ask-short-phone-composer-overlap.md\n M docs/e2e-bug-reports/2026-07-08-commerce-paid-link-inline-recovery.md\n M docs/e2e-bug-reports/2026-07-08-commerce-stack-paid-links-before-consent.md\n M docs/e2e-bug-reports/2026-07-08-shelf-replenish-similar-inline-recovery.md\n M docs/e2e-bug-reports/2026-07-08-toggle-switch-web-inert.md\n M docs/e2e-bug-reports/2026-07-10-private-envelope-corruption-app-lock-recovery.md\n M docs/e2e-bug-reports/2026-07-10-progress-encrypted-storage-false-empty-state.md\n M docs/e2e-bug-reports/2026-07-26-core03-metro-temp-collision.md\n M docs/generated/source-packet-audit.json\n M docs/generated/source-packet-audit.md\n M docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md\n M docs/hugeToDo/APPLE_AND_LEGAL_PRIMARY_RESEARCH.md\n M docs/hugeToDo/BRAND-01-naming-brief.md\n M docs/hugeToDo/BRAND-02-scored-longlist.md\n M docs/hugeToDo/BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md\n M docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md\n M docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md\n M docs/hugeToDo/CORE-03-ROUTINE-GUIDANCE-SOURCE-CHECKPOINT-2026-07-26.md\n M docs/hugeToDo/CORE-04-PERSISTENCE-SOURCE-CHECKPOINT-2026-07-26.md\n M docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md\n M docs/hugeToDo/CORE-07-SHARE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md\n M docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md\n M docs/hugeToDo/DB-05-LOCAL-RESET-2026-07-14.md\n M docs/hugeToDo/DURABLE_ACCOUNT_DELETION_RESEARCH_2026-07-13.md\n M docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md\n M docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md\n M docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md\n M docs/hugeToDo/IOS-10-EXPORT-COMPLIANCE-GATE.md\n M docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md\n M docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md\n M docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/legal-readiness.md\n M docs/phase-10/surveys.md\n M docs/phase-10/tester-brief.md\n M docs/phase-2-production-infrastructure-runbook.md\n M docs/phase-2-readiness-checklist.md\n M docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md\n M docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md\n M docs/phase-3/clinical-review-log.md\n M docs/phase-3/data-inventory.md\n M docs/phase-3/generated/review-operator-queue.json\n M docs/phase-3/generated/review-operator-queue.md\n M docs/phase-3/generated/review-packet-manifest.json\n M docs/phase-3/generated/review-packet.md\n M docs/phase-3/generated/review-worklist.json\n M docs/phase-3/generated/review-worklist.md\n M docs/phase-3/google-play-health-declaration-notes.md\n M docs/phase-3/ip-fto-review-log.md\n M docs/phase-3/launch-claims-vocabulary.md\n M docs/phase-3/legal-regulatory-review-log.md\n M docs/phase-3/quiz-fto-summary.md\n M docs/phase-3/regulatory-positioning-memo.md\n M docs/phase-4/beta-shelf-corpus.template.json\n M docs/phase-4/catalog-cat02-membership-proof.template.json\n M docs/phase-4/catalog-coverage-quality-targets.template.json\n M docs/phase-4/catalog-curation-database-readback.template.json\n M docs/phase-4/catalog-curation-review.template.json\n M docs/phase-4/catalog-import-promotion-runbook.md\n M docs/phase-4/catalog-source-memo-cosing.md\n M docs/phase-4/catalog-source-memo-open-beauty-facts.md\n M docs/phase-4/catalog-source-release-runbook.md\n M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md\n M docs/phase-4/odbl-compliance-memo.md\n M docs/phase-5/camera-lifecycle-evidence-runbook.md\n M docs/phase-5/device-qa-checklist.md\n M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md\n M docs/phase-5/native-build-runbook.md\n M docs/phase-5/phase-5-exit-review.md\n M docs/phase-6/payments-runbook.md\n M docs/phase-7/core-loop-qa-checklist.md\n M docs/phase-8/creator-brief.md\n M docs/phase-8/public-site/index.html\n M docs/phase-8/public-site/support.html\n M docs/phase-8/public-site/waitlist.html\n M docs/phase-8/store-metadata-source-of-truth.md\n M docs/phase-8/support-review-response-playbook.md\n M docs/phase-9/account-deletion-operations-runbook.md\n M docs/phase-9/data-inventory.md\n M docs/phase-9/generated/dependency-inventory.json\n M docs/phase-9/generated/dependency-inventory.md\n M docs/phase-9/generated/live-consent-withdrawal.json\n M docs/phase-9/generated/release-engineering-qa-packet.json\n M docs/phase-9/generated/release-engineering-qa-packet.md\n M docs/phase-9/generated/store-build-inspection.json\n M docs/phase-9/release-candidates/_template/evidence-chain.json\n M docs/rebrand-and-core-loop-migration-checklist.md\n M docs/seven-figure-readiness.md\n M package-lock.json\n M package.json\n M packages/types/package.json\n M packages/types/src/index.ts\n M scripts/brand-audit-lib.mjs\n M scripts/brand-audit.test.mjs\n M scripts/cat05/native-label-ocr-source-contract.test.mjs\n M scripts/core04/persistence-source-contract.test.mjs\n M scripts/core05/adherence-source-contract.test.mjs\n M scripts/core06/recommendation-admission-source-contract.test.mjs\n M scripts/docs/device-support-policy-audit.test.mjs\n M scripts/docs/readiness-status-audit.test.mjs\n M scripts/e2e/cat04-catalog-recovery-audit.mjs\n M scripts/e2e/cat04-catalog-recovery-audit.test.mjs\n M scripts/e2e/cat07-png-contract.mjs\n M scripts/e2e/cat07-shelf-freshness-audit.mjs\n M scripts/e2e/catalog-operator-console-fixture-server.mjs\n M scripts/e2e/catalog-search-wrong-match.mjs\n M scripts/e2e/human-e2e-manifest-contract.test.mjs\n M scripts/e2e/human-e2e-manifest.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/public-site-support.mjs\n M scripts/e2e/tabbar-geometry.mjs\n M scripts/e2e/text-pressure-route-audit.mjs\n M scripts/launch/governed-evidence-chain.mjs\n M scripts/launch/governed-evidence-chain.test.mjs\n M scripts/optimization/export-stats-smoke.mjs\n M scripts/optimization/generate-fixtures-smoke.mjs\n M scripts/optimization/generate-fixtures.mjs\n M scripts/phase10-11/public-contact-smoke.mjs\n M scripts/phase2/check-env-smoke.mjs\n M scripts/phase2/check-env.mjs\n M scripts/phase2/deploy-supabase-staging.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase3/review-signoff-template-smoke.mjs\n M scripts/phase4/beta-coverage-committed-check.test.mjs\n M scripts/phase4/beta-coverage-report-smoke.mjs\n M scripts/phase4/catalog-curation-contract.mjs\n M scripts/phase4/catalog-curation-contract.test.mjs\n M scripts/phase4/catalog-promotion-contract.mjs\n M scripts/phase4/catalog-promotion-contract.test.mjs\n M scripts/phase4/check-source-env-smoke.mjs\n M scripts/phase4/source-policy.test.mjs\n M scripts/phase5/build-device-qa-packet.mjs\n M scripts/phase5/camera-lifecycle-evidence-contract.mjs\n M scripts/phase5/camera-lifecycle-evidence-smoke.mjs\n M scripts/phase5/check-native-config.mjs\n M scripts/phase5/device-qa-packet-smoke.mjs\n M scripts/phase5/expo-widgets-56.0.23/AppIntent.swift\n M scripts/phase5/expo-widgets-56.0.23/EntryView.swift\n M scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift\n M scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift\n D scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift\n M scripts/phase5/expo-widgets-56.0.23/Utils.swift\n M scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift\n M scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift\n M scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift\n M scripts/phase5/expo-widgets-57.0.8/AppIntent.swift\n M scripts/phase5/expo-widgets-57.0.8/EntryView.swift\n M scripts/phase5/expo-widgets-57.0.8/LiveActivity.swift\n M scripts/phase5/expo-widgets-57.0.8/LiveActivityFactory.swift\n D scripts/phase5/expo-widgets-57.0.8/RoutineKindWidgetLifecycleStore.swift\n M scripts/phase5/expo-widgets-57.0.8/Utils.swift\n M scripts/phase5/expo-widgets-57.0.8/WidgetLiveActivity.swift\n M scripts/phase5/expo-widgets-57.0.8/WidgetObject.swift\n M scripts/phase5/expo-widgets-57.0.8/WidgetsModule.swift\n M scripts/phase5/expo-widgets-lifecycle-source.test.mjs\n M scripts/phase5/ios-extension-contract.mjs\n M scripts/phase5/ios-extension-contract.test.mjs\n M scripts/phase5/native-ocr-evidence-smoke.mjs\n M scripts/phase5/patch-expo-widgets-lifecycle.mjs\n M scripts/phase5/patch-expo-widgets-lifecycle.test.mjs\n M scripts/phase5/performance-evidence-smoke.mjs\n M scripts/phase5/widget-lifecycle-evidence-smoke.mjs\n M scripts/phase5/widget-privacy-manifest.test.mjs\n M scripts/phase6/check-payments-env-smoke.mjs\n M scripts/phase6/payments-git-provenance.test.mjs\n M scripts/phase6/payments-revenuecat-access-evidence.test.mjs\n M scripts/phase6/payments-trusted-entitlements-evidence.test.mjs\n M scripts/phase7/check-core-loop-smoke.mjs\n M scripts/phase8/check-growth-store-smoke.mjs\n M scripts/phase9/build-evidence-chain-ledger.test.mjs\n M scripts/phase9/build-release-qa-packet.mjs\n M scripts/phase9/consent-withdrawal-evidence.mjs\n M scripts/phase9/consent-withdrawal-smoke.mjs\n M scripts/phase9/data-rights-smoke.mjs\n M scripts/phase9/edge-function-manifest-smoke.mjs\n M scripts/phase9/git-status-exclusion.test.mjs\n M scripts/phase9/health-consent-work-lane-smoke.mjs\n M scripts/phase9/ios-archive-privacy-evidence.test.mjs\n M scripts/phase9/ios-privacy-source-audit.mjs\n M scripts/phase9/ios-privacy-source-audit.test.mjs\n M scripts/phase9/live-consent-withdrawal.mjs\n M scripts/phase9/live-revenuecat-webhook.mjs\n M scripts/phase9/live-supabase-adversarial.mjs\n M scripts/phase9/patch-react-native-view-shot-privacy.mjs\n M scripts/phase9/patch-react-native-view-shot-privacy.test.mjs\n M scripts/phase9/release-candidate-git-contract.test.mjs\n M scripts/phase9/release-contact-smoke.mjs\n M scripts/phase9/release-qa-integrity.test.mjs\n M scripts/phase9/release-smoke.mjs\n M scripts/phase9/revenuecat-deletion-barrier-postgres-rehearsal.sql\n M scripts/phase9/revenuecat-identity-tombstones-postgres-rehearsal.sql\n M scripts/phase9/rls-adversarial.mjs\n M scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql\n M scripts/phase9/upstream-packet-contract.test.mjs\n M supabase/README.md\n M supabase/config.toml\n M supabase/functions/_shared/appleLifecycleSecrets.ts\n M supabase/functions/_shared/appleVault.test.ts\n M supabase/functions/_shared/appleVault.ts\n M supabase/functions/account-deletion/appleDeletionNetwork.test.ts\n M supabase/functions/account-deletion/durableDeletionCore.test.ts\n M supabase/functions/account-deletion/durableDeletionDatabaseGateway.test.ts\n M supabase/functions/account-deletion/durableDeletionRuntime.test.ts\n M supabase/functions/account-deletion/providerDeletion.ts\n M supabase/functions/apple-account-events/core.test.ts\n M supabase/functions/apple-account-events/httpHandler.test.ts\n M supabase/functions/apple-account-events/verifier.test.ts\n M supabase/functions/apple-auth-lifecycle/core.test.ts\n M supabase/functions/apple-auth-lifecycle/database.test.ts\n M supabase/functions/apple-auth-worker/core.test.ts\n M supabase/functions/consent-withdrawal/dependentCleanupRuntime.ts\n M supabase/functions/consent-withdrawal/granularWithdrawalCore.test.ts\n M supabase/functions/consent-withdrawal/granularWithdrawalCore.ts\n M supabase/functions/data-export/index.ts\n M supabase/functions/health-consent-worker/dependentWorkerCore.test.ts\n M supabase/functions/health-consent-worker/dependentWorkerCore.ts\n M supabase/functions/revenuecat-webhook/webhookCore.test.ts\n M supabase/functions/subscription-reconciliation/reconciliationCore.test.ts\n M supabase/migrations/20260613000022_commerce.sql\n M supabase/migrations/20260613000023_community.sql\n D supabase/migrations/20260614000025_ask_onskin.sql\n M supabase/migrations/20260614000026_phase4_catalog.sql\n M supabase/migrations/20260705000032_phase9_consent_withdrawal.sql\n M supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql\n M supabase/migrations/20260715000055_apple_auth_lifecycle.sql\n M supabase/migrations/20260718000059_catalog_scan_minimization.sql\n M supabase/migrations/20260722000063_catalog_operator_authority.sql\n M supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql\n M supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql\n M supabase/tests/database/apple_auth_lifecycle.test.sql\n M supabase/tests/database/health_consent_draft_successor_staging.test.sql\n M supabase/tests/database/health_consent_lifecycle.test.sql\n M supabase/tests/database/skin_profile_quiz_provenance.test.sql\n M supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql\n?? apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js\n?? docs/13-ask-layerwell-assistant.md\n?? scripts/phase5/expo-widgets-56.0.23/LayerwellWidgetLifecycleStore.swift\n?? scripts/phase5/expo-widgets-57.0.8/LayerwellWidgetLifecycleStore.swift\n?? supabase/migrations/20260614000025_ask_layerwell.sql\n?? tmp/imagegen/layerwell-icon-source.png\n?? tmp/imagegen/layerwell-mark-magenta.png\n?? tmp/imagegen/layerwell-mark.png",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
     "exists": false
@@ -220,8 +220,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 44358,
-      "sha256": "0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540"
+      "bytes": 44354,
+      "sha256": "af6cec1697c363daf266bcd4032a184aa9a994a51cc6a8c0991da4c67b0d8c8e"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -238,8 +238,8 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 29678,
-      "sha256": "41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217"
+      "bytes": 29662,
+      "sha256": "d9825f22149f8d15e491d4f1d97fbc8311ce739564a36e1f0ed0ecc64464e091"
     },
     {
       "path": "scripts/phase4/build-source-worklist.mjs",
@@ -256,8 +256,8 @@
     {
       "path": "scripts/phase4/beta-coverage-report-smoke.mjs",
       "exists": true,
-      "bytes": 11145,
-      "sha256": "5296dda1c926ddbb7021a91251db2405f9748534d63f76d488e7b71ebd16120c"
+      "bytes": 11135,
+      "sha256": "5a0b2c40953c5a3ce641320d3df1b555872da27732d4c6b6da7bd2aba8234d7f"
     },
     {
       "path": "scripts/phase4/beta-coverage-packet-contract.mjs",
@@ -280,8 +280,8 @@
     {
       "path": "scripts/phase4/beta-coverage-committed-check.test.mjs",
       "exists": true,
-      "bytes": 9362,
-      "sha256": "deb3a3d39ed3b8e86c5e4ba5cad959f5b69327ef29ac466577d8c84966310a13"
+      "bytes": 9365,
+      "sha256": "f86658f38009adcfa1cd65a092684441a4f57f76c90814e44d2e3eed1767b7c6"
     },
     {
       "path": "scripts/phase4/source-policy.mjs",
@@ -292,20 +292,20 @@
     {
       "path": "scripts/phase4/source-policy.test.mjs",
       "exists": true,
-      "bytes": 39752,
-      "sha256": "c8ff4534e7f7870930f1ee77e5aa7185f8cafea30e5aa87f5a50646383e4244f"
+      "bytes": 39730,
+      "sha256": "dedc9ebdb80bb022e9f0ad4769c369a4641fbfc03993a4d892ff7f3406659118"
     },
     {
       "path": "scripts/phase4/catalog-curation-contract.mjs",
       "exists": true,
-      "bytes": 229798,
-      "sha256": "22acca7d8bbb543c77bb8ececef160185f4bad2ab17de0c41f717b03d5552627"
+      "bytes": 229778,
+      "sha256": "d5b6565b893b8815eb29ffc5b50665684c86541b0f7580d2a0f80c2db8b56221"
     },
     {
       "path": "scripts/phase4/catalog-curation-contract.test.mjs",
       "exists": true,
-      "bytes": 114891,
-      "sha256": "a7d2e97697d96f619bc47b0a1ac3a843834dd018bb9262df0a052e8c1cad1eb4"
+      "bytes": 114869,
+      "sha256": "6f0bb1578661a3951bf4b4b370c003debe0f3d2505439077c91119e7d1d28c3c"
     },
     {
       "path": "scripts/phase4/build-catalog-curation-envelope.mjs",
@@ -376,20 +376,20 @@
     {
       "path": "scripts/phase9/release-qa-integrity.test.mjs",
       "exists": true,
-      "bytes": 35022,
-      "sha256": "ba97fd498d900ab76fa22ea968c37ba88406517da87ee9f1babd54f8dca5a679"
+      "bytes": 35031,
+      "sha256": "dc21754b7660bf356633471ad8479a26626d7dad046b7876c2c39902c2831dec"
     },
     {
       "path": "scripts/launch/governed-evidence-chain.mjs",
       "exists": true,
-      "bytes": 64286,
-      "sha256": "01a86c396964ffa8ab630341c46dc599f851cc0327e54563ec3366ef771aecb7"
+      "bytes": 64289,
+      "sha256": "e0ca8221da0ed5561fb68ae32c1eec28fc0291dd94518ddaeabb5e191c58ca1a"
     },
     {
       "path": "scripts/launch/governed-evidence-chain.test.mjs",
       "exists": true,
-      "bytes": 35858,
-      "sha256": "1361abf142d7ef3e50a321637dc02c7374ac7f64e0710146849f38498a62e43a"
+      "bytes": 35870,
+      "sha256": "93dc7808c2e81f47fa1e5fb317c60050932955a236d135467ae2bcdfb1e7fddd"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -406,8 +406,8 @@
     {
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 60082,
-      "sha256": "0adcbf9be7cbaf7908377e55d0ca482101f37f7ce0a048f3d020d4d4a4b52483"
+      "bytes": 60091,
+      "sha256": "b5e153f31311d3fa7af2dd16f553f05624b09e27da5d2ed10e44a5018a14aa5c"
     },
     {
       "path": "docs/store-privacy-inventory.md",
@@ -424,8 +424,8 @@
     {
       "path": "docs/phase-4/beta-shelf-corpus.template.json",
       "exists": true,
-      "bytes": 24386,
-      "sha256": "55a44a32ecd47ed53a7a7ba1b8a1694ea936a69768668e9a739f0218d98420a5"
+      "bytes": 24378,
+      "sha256": "eab0f3ab1ac78f53307b69976163c9edd07350a7fdc5dd52c05cb7c3b40106d5"
     },
     {
       "path": "docs/phase-4/beta-coverage-report.md",
@@ -436,26 +436,26 @@
     {
       "path": "docs/phase-4/catalog-coverage-quality-targets.template.json",
       "exists": true,
-      "bytes": 9408,
-      "sha256": "e53c6c5d2715392dab63930046836e1c7b832a007419508a778dd085c54846c1"
+      "bytes": 9406,
+      "sha256": "bd6a316f1d520cee3d5ef347d82bff445cbf810b0ca5c8a551b0c13a083dca7a"
     },
     {
       "path": "docs/phase-4/catalog-curation-review.template.json",
       "exists": true,
-      "bytes": 22649,
-      "sha256": "4dcf0f76ece3ceee0328e0a97dff39a460d270474074b8abe1d5b9f568fb46f9"
+      "bytes": 22645,
+      "sha256": "90f7348843f623d30b142d27a59a3d93c33978f9d163c06eea0b78ca2bc8283a"
     },
     {
       "path": "docs/phase-4/catalog-cat02-membership-proof.template.json",
       "exists": true,
-      "bytes": 9254,
-      "sha256": "e4d9ec3cfc09aca71972eb141577492e7bf17cab3a0a78ebd393cdc3fe152c56"
+      "bytes": 9252,
+      "sha256": "e4bf0f76e0ca82047ffe90700a768ddd12d79d0199da1522369f51a48a67e9d7"
     },
     {
       "path": "docs/phase-4/catalog-curation-database-readback.template.json",
       "exists": true,
-      "bytes": 8239,
-      "sha256": "9930f9302215af9d73d4bde4b8992f89d9b83af9b1132fe122afd3f268833c0a"
+      "bytes": 8237,
+      "sha256": "d2a01a45d7af0d2cf428a144d589a916b1d2089ab1fa809502a0bcb694ac317e"
     },
     {
       "path": "docs/phase-4/catalog-curation-release-runbook.md",
@@ -466,14 +466,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 129168,
-      "sha256": "6df9e8ef1b2eefd6a847ee6cecc14ab3d1b365cfd4a79c09f1bcbf68ae0ce7c3"
+      "bytes": 157290,
+      "sha256": "095b05b66bbfd6ca4facc1964ba9c555cf3606678bc949324346663049cf1686"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 76995,
-      "sha256": "1a41e4ca3546bacdac9fd2464aab6f679e275f1000b7d483c6ceffbb616faa13"
+      "bytes": 77098,
+      "sha256": "4b81addec333f9191e2ab89ef8f932bc44f7632791c67b3129d98f724e366be3"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -496,8 +496,8 @@
     {
       "path": "supabase/migrations/20260718000059_catalog_scan_minimization.sql",
       "exists": true,
-      "bytes": 33321,
-      "sha256": "27e60d3a763d80c4db641cc469361e7593f36f4fb4b49663f400879874207c6e"
+      "bytes": 33319,
+      "sha256": "46c3128d68dccb17b50e28363c478ec7de032a180faf3a5298b0620bfe6e81ec"
     },
     {
       "path": "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
@@ -588,7 +588,7 @@
     "status": "blocked",
     "sourceGitSha": null,
     "evidenceCommitSha": null,
-    "currentGitSha": "8cc862b81163fe1b04ca0c1e3ca9957671a5a463",
+    "currentGitSha": "fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f",
     "releaseCandidateDir": null,
     "ledgerPath": null,
     "ledgerSha256": null,
@@ -657,7 +657,9 @@
     "Governed evidence chain: governed beta evidence requires one lowercase source commit S",
     "Governed evidence chain: governed beta evidence requires one immutable selected RC"
   ],
-  "warnings": [],
+  "warnings": [
+    "Beta coverage report generated with a dirty Git worktree; do not use it as final beta evidence."
+  ],
   "authorityLimitations": [
     "This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires the signed catalog-curation contract and privacy-minimized holdout report."
   ],

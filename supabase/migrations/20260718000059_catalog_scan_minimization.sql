@@ -635,7 +635,7 @@ as $$
   select pg_catalog.encode(
     extensions.digest(
       pg_catalog.convert_to(
-        'routinekind-catalog-report-request:v1:' ||
+        'layerwell-catalog-report-request:v1:' ||
         pg_catalog.jsonb_build_object(
           'productId', p_product_id,
           'barcode', p_barcode,

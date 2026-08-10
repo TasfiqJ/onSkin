@@ -796,9 +796,9 @@ test('completion records remain registered for cleanup/export and this contract 
   const localExport = read(paths.localExport);
   const completionQueue = read(paths.completionQueue);
   for (const key of [
-    'onskin.completions.v1',
-    'onskin.completions.firstCompletion.v1',
-    'onskin.completions.pending',
+    'layerwell.completions.v1',
+    'layerwell.completions.firstCompletion.v1',
+    'layerwell.completions.pending',
   ]) {
     assert.match(cleanup, new RegExp(key.replaceAll('.', '\\.'), 'u'));
     assert.match(localExport, new RegExp(key.replaceAll('.', '\\.'), 'u'));
@@ -812,7 +812,7 @@ test('completion records remain registered for cleanup/export and this contract 
   assert.match(completionFlush, /getPendingCompletionSyncOperations\(\)/u);
   assert.doesNotMatch(
     completionQueue,
-    /removePrivateItem|LEGACY_COMPLETION_QUEUE_KEY|onskin\.completions\.pending/u,
+    /removePrivateItem|LEGACY_COMPLETION_QUEUE_KEY|layerwell\.completions\.pending/u,
     'completion replay must preserve and never read the exportable legacy quarantine',
   );
   assert.doesNotMatch(
@@ -821,7 +821,7 @@ test('completion records remain registered for cleanup/export and this contract 
   );
   assert.match(
     localExport,
-    /key:\s*['"]onskin\.completions\.pending['"][\s\S]*?field:\s*['"]legacy_pending_completion_sync['"]/u,
+    /key:\s*['"]layerwell\.completions\.pending['"][\s\S]*?field:\s*['"]legacy_pending_completion_sync['"]/u,
   );
   assert.match(
     localExport,

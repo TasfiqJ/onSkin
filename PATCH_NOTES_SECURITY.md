@@ -26,14 +26,14 @@
 - Files: `apps/mobile/src/features/notifications/copy.ts`, `apps/mobile/src/features/notifications/deliver.ts`, `apps/mobile/src/features/notifications/store.ts`, `apps/mobile/src/features/notifications/useNotifications.ts`, `apps/mobile/src/app/settings/timing.tsx`, `supabase/migrations/20260705000033_phase9_notification_lock_screen_privacy.sql`, `scripts/phase9/privacy-payload-audit.mjs`.
 - Change: OS notification payloads for routine, photo-capture, shelf, ramp, and winback nudges now always use the generic lock-screen copy helper. Legacy or modified-client attempts to save `lockscreenDiscreet: false` are coerced to true locally and in the Supabase mirror, the settings screen no longer exposes a discretion-off switch, and the database now rejects `notification_preferences.lockscreen_discreet = false`.
 - Why safe: Lock-screen text is visible outside the authenticated app context. Progress-photo, product, ingredient, skin, or escalation language should stay inside the app even if a user previously disabled discretion or restores an old local preference.
-- Regression: Notification claims-safety tests prove all OS notification payloads use `OnSkin` plus generic body copy and deny sensitive reminder terms. Notification store tests prove legacy and new false discretion values cannot persist or mirror. Phase 9 privacy payload audit now fails if delivery stops using the generic helper, the discretion-off settings switch returns, or the database constraint disappears.
+- Regression: Notification claims-safety tests prove all OS notification payloads use `Layerwell` plus generic body copy and deny sensitive reminder terms. Notification store tests prove legacy and new false discretion values cannot persist or mirror. Phase 9 privacy payload audit now fails if delivery stops using the generic helper, the discretion-off settings switch returns, or the database constraint disappears.
 
 ## Local private data wipe
 
 - Files: `apps/mobile/src/features/settings/localPrivateData.ts`, `localPrivateDataKeys.ts`, `settings/actions.ts`, `lib/auth/AuthProvider.tsx`.
 - Change: Sign-out and successful account deletion clear registered local storage keys, SecureStore content keys, encrypted photo files, generated export/share cache files, and scheduled local notifications.
 - Why safe: Prevents stale health-adjacent data from a deleted/signed-out account appearing to the next user on the same device.
-- Regression: `localPrivateDataKeys.test.ts` scans source for `onskin.*` storage keys and requires them to be in the wipe registry.
+- Regression: `localPrivateDataKeys.test.ts` scans source for `layerwell.*` storage keys and requires them to be in the wipe registry.
 
 ## Auth session boundary wipe
 
@@ -222,7 +222,7 @@
 ## Data export cache cleanup
 
 - Files: `apps/mobile/src/features/settings/actions.ts`, `apps/mobile/src/features/settings/localPrivateDataKeys.ts`, `scripts/phase9/data-rights-smoke.mjs`.
-- Change: Mobile data export now requires a real cache directory, writes the JSON bundle to a unique `onskin-export-*` cache file inside a cleanup `try/finally`, hands that file to the OS share sheet, and deletes it after the write/share attempt. The local private-data cleanup registry now also removes stale one-time export cache files.
+- Change: Mobile data export now requires a real cache directory, writes the JSON bundle to a unique `layerwell-export-*` cache file inside a cleanup `try/finally`, hands that file to the OS share sheet, and deletes it after the write/share attempt. The local private-data cleanup registry now also removes stale one-time export cache files.
 - Why safe: The export bundle contains the user's health-adjacent account data. It should not remain as a stable plaintext file in app cache after the intentional share handoff, and stale files should be swept during sign-out/account deletion cleanup.
 - Regression: `phase9:data-rights-smoke` fails if the mobile export path returns to the legacy stable filename, writes outside the cleanup block, or stops deleting the plaintext cache file after sharing.
 
@@ -236,7 +236,7 @@
 ## Generated share cache cleanup
 
 - Files: `apps/mobile/src/features/photos/encryptedStorage.ts`, `apps/mobile/src/app/progress/[id].tsx`, `apps/mobile/src/features/growth/shareCard.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
-- Change: Decrypted photo share files now use sanitized, unique `onskin-share-*` cache filenames and a scoped cleanup helper that deletes only generated cache files, never the original source photo URI. Photo detail sharing deletes generated share files in a `finally` block. Shelf share-card PNG tmpfiles are also deleted in a `finally` block when sharing succeeds, fails, or is unavailable.
+- Change: Decrypted photo share files now use sanitized, unique `layerwell-share-*` cache filenames and a scoped cleanup helper that deletes only generated cache files, never the original source photo URI. Photo detail sharing deletes generated share files in a `finally` block. Shelf share-card PNG tmpfiles are also deleted in a `finally` block when sharing succeeds, fails, or is unavailable.
 - Why safe: Progress photos are sensitive health-adjacent data. Even when a user intentionally opens a share sheet, the app should not leave a decrypted copy or generated social image in local cache after the handoff.
 - Regression: `phase9:privacy-payload-audit` fails if photo/share-card cache cleanup, cache-directory guards, filename sanitization, or scoped deletion disappears.
 
@@ -589,7 +589,7 @@
 ## Cloud Ask consent save recovery
 
 - Files: `apps/mobile/src/features/ask/applyConsentChoice.ts`, `apps/mobile/src/features/ask/applyConsentChoice.test.ts`, `apps/mobile/src/app/ask/consent.tsx`, `apps/mobile/src/features/ask/consent.ts`, `apps/mobile/src/features/ask/copy.ts`, `apps/mobile/src/features/ask/routeContract.test.ts`.
-- Change: Cloud Ask consent changes now grant or revoke `ask_onskin` through a helper before the consent switch updates visible query state. The switch disables while saving, rapid duplicate writes are ignored, failed persistence shows stable "Choice not saved" copy, and stale consent state is refreshed after success or failure. Revocation analytics now emit only after withdrawal succeeds.
+- Change: Cloud Ask consent changes now grant or revoke `ask_layerwell` through a helper before the consent switch updates visible query state. The switch disables while saving, rapid duplicate writes are ignored, failed persistence shows stable "Choice not saved" copy, and stale consent state is refreshed after success or failure. Revocation analytics now emit only after withdrawal succeeds.
 - Why safe: Ask prompts are health-adjacent disclosures to a cloud language layer. The consent UI should not look enabled or revoked, and analytics should not say a revoke completed, unless the relevant local/ledger operation actually completed.
 - Regression: `applyConsentChoice.test.ts` covers grant/revoke save-before-apply and fail-closed persistence errors. `routeContract.test.ts` locks the route to the helper, disabled switch, immediate write guard, stable alert copy, and non-optimistic query update. `claimsafety.test.ts` scans the new copy.
 

@@ -35,30 +35,30 @@ export const CATALOG_HOLDOUT_CONTROL_SIGNATURE_ENVELOPE =
   'catalog-holdout-custody-evaluation-receipt-signature-v1';
 export const CATALOG_PRIVACY_EXECUTION_SIGNATURE_ENVELOPE =
   'catalog-privacy-execution-receipt-signature-v1';
-export const CATALOG_TARGET_SIGNING_DOMAIN = 'routinekind.catalog-launch-target-policy.v1';
-export const CATALOG_CURATION_SIGNING_DOMAIN = 'routinekind.catalog-curation-review.v1';
+export const CATALOG_TARGET_SIGNING_DOMAIN = 'layerwell.catalog-launch-target-policy.v1';
+export const CATALOG_CURATION_SIGNING_DOMAIN = 'layerwell.catalog-curation-review.v1';
 export const CATALOG_DATABASE_READBACK_SIGNING_DOMAIN =
-  'routinekind.catalog-curation-database-readback.v1';
+  'layerwell.catalog-curation-database-readback.v1';
 export const CATALOG_PREHOLDOUT_DECISION_SIGNING_DOMAIN =
-  'routinekind.catalog-curation-preholdout-decision.v1';
+  'layerwell.catalog-curation-preholdout-decision.v1';
 export const CATALOG_CAT02_MEMBERSHIP_PROOF_SIGNING_DOMAIN =
-  'routinekind.catalog-cat02-curation-membership-proof.v1';
+  'layerwell.catalog-cat02-curation-membership-proof.v1';
 export const CATALOG_HOLDOUT_CONTROL_SIGNING_DOMAIN =
-  'routinekind.catalog-holdout-custody-evaluation-receipt.v1';
+  'layerwell.catalog-holdout-custody-evaluation-receipt.v1';
 export const CATALOG_PRIVACY_EXECUTION_SIGNING_DOMAIN =
-  'routinekind.catalog-privacy-execution-receipt.v1';
+  'layerwell.catalog-privacy-execution-receipt.v1';
 export const CATALOG_ACTIVATION_AUTHORIZATION_SIGNATURE_ENVELOPE =
   'catalog-curation-activation-authorization-signature-v1';
 export const CATALOG_ACTIVATION_AUTHORIZATION_SIGNING_DOMAIN =
-  'routinekind.catalog-curation-activation-authorization.v1';
+  'layerwell.catalog-curation-activation-authorization.v1';
 export const CATALOG_DATABASE_REVIEW_SIGNATURE_ENVELOPE =
   'catalog-curation-database-review-authorization-signature-v1';
 export const CATALOG_DATABASE_REVIEW_SIGNING_DOMAIN =
-  'routinekind.catalog-curation-database-review-authorization.v1';
+  'layerwell.catalog-curation-database-review-authorization.v1';
 export const CATALOG_EXTERNAL_TIMESTAMP_SIGNATURE_ENVELOPE =
   'catalog-curation-external-timestamp-receipt-signature-v1';
 export const CATALOG_EXTERNAL_TIMESTAMP_SIGNING_DOMAIN =
-  'routinekind.catalog-curation-external-timestamp-receipt.v1';
+  'layerwell.catalog-curation-external-timestamp-receipt.v1';
 export const CATALOG_CURATION_DECISION_COMMITMENT_ID = 'catalog-curation-decision-commitment-v1';
 export const CATALOG_CURATION_CANDIDATE_SET_ID = 'catalog-curation-candidate-set-v1';
 export const CATALOG_DB_ELIGIBILITY_POLICY_ID = 'catalog-launch-db-eligibility-policy-v1';

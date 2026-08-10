@@ -110,7 +110,7 @@ signoff.
 ## Primary-Source Research Basis
 
 The following primary sources support the conservative boundary; they do not
-decide OnSkin's applicability, supply legal advice, or constitute counsel or
+decide Layerwell's applicability, supply legal advice, or constitute counsel or
 Apple approval:
 
 - [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/):

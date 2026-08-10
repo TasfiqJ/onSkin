@@ -634,9 +634,9 @@ async function main() {
 
         const withdrawal = await invokeWithdrawal(
           state.user.client,
-          'ask_onskin',
+          'ask_layerwell',
           epoch,
-          generations.ask_onskin,
+          generations.ask_layerwell,
         );
         assert(
           withdrawal.status === 200 &&
@@ -645,9 +645,9 @@ async function main() {
             withdrawal.data.cleanup?.ask_safety_audit_deleted >= 1 &&
             withdrawal.data.cleanup?.ask_turn_audit_deleted >= 1 &&
             withdrawal.data.cleanup?.ask_sessions_deleted >= 1,
-          'ask_onskin did not attest complete server-side Ask cleanup.',
+          'ask_layerwell did not attest complete server-side Ask cleanup.',
         );
-        await expectRevocationRecorded(state.user.client, 'ask_onskin');
+        await expectRevocationRecorded(state.user.client, 'ask_layerwell');
         await expectRowCount(
           admin,
           'ask_safety_audit',

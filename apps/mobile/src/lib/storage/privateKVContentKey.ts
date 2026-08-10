@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-export const PRIVATE_KV_CONTENT_KEY_NAME = 'onskin.private_kv.content_key.v1';
+export const PRIVATE_KV_CONTENT_KEY_NAME = 'layerwell.private_kv.content_key.v1';
 export const PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE =
   'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE';
 

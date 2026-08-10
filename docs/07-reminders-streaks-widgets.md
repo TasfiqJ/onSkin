@@ -22,8 +22,8 @@
 > It is still **not a compiled or signed iOS artifact**, has no physical-iPhone
 > proof, and is not enabled for customers: interactive publication and the
 > public native-widgets capability remain literal `false`; the generated
-> `RoutineKindWidgetInteractivePublicationEnabled` and
-> `RoutineKindLiveActivityStartEnabled` Info.plist values are also literal
+> `LayerwellWidgetInteractivePublicationEnabled` and
+> `LayerwellLiveActivityStartEnabled` Info.plist values are also literal
 > `false`. Ordinary shipping config does not generate the extension or
 > advertise Live Activities, and
 > `/routine/widgets` remains an honest unavailable recovery route. Source
@@ -63,11 +63,11 @@ _The engagement & delivery layer · local-first reminders with permission-primin
 
 - **This layer is the app's re-engagement engine — and done calmly, it is one of the highest-leverage retention levers in the product.** Reminders bring people back to the daily loop, the streak anchors the habit, and widgets keep the app present on the home screen. The evidence is strong on all three: users who receive any push in their first 90 days have **~3× higher retention**; Duolingo users are **3× more likely to return daily when a streak is active** (and a streak **widget lifted commitment ~60%**). This is the surface that converts a good product into a daily habit.
 
-- **The cardinal rule is restraint, and restraint is empirically correct — not just on-brand.** Over-notification is one of the top uninstall drivers: **>6 pushes/week from one brand → 3.4× more likely to uninstall within 30 days** (Klaviyo 2026, n=6,200); even one weekly push makes ~10% disable notifications. The validated fix — **segment notifications into tiers (utility / behavioural-trigger / promotional), opt-in, frequency-capped** — _is_ OnSkin's calm design, and its reminders are **user-set times the person chose for their own routine**. The brand's calmness and the retention data point the same way.
+- **The cardinal rule is restraint, and restraint is empirically correct — not just on-brand.** Over-notification is one of the top uninstall drivers: **>6 pushes/week from one brand → 3.4× more likely to uninstall within 30 days** (Klaviyo 2026, n=6,200); even one weekly push makes ~10% disable notifications. The validated fix — **segment notifications into tiers (utility / behavioural-trigger / promotional), opt-in, frequency-capped** — _is_ Layerwell's calm design, and its reminders are **user-set times the person chose for their own routine**. The brand's calmness and the retention data point the same way.
 
 - **Reminders genuinely improve daily-regimen adherence — the medication-adherence literature is the closest analog.** Systematic reviews and meta-analyses find reminder apps are associated with **higher medication adherence** for chronic conditions (against a baseline where only ~50% of patients adhere) — "promising, interpret with caution." Since **consistency is the single biggest determinant of skin results** (docs/06), the chain _reminder → adherence → results → retention_ is well-grounded, with appropriate humility.
 
-- **The streak is calm and forgiving — and forgiving streaks retain _better_ than punitive ones.** Lally's habit research shows a single missed day doesn't impair habit formation (docs/03 §6); Duolingo's data shows the same in reverse — **Streak Freeze cut churn 21%**, _adding_ forgiveness made DAU "skyrocket," and an _achievable_ threshold added Day-14 retention, while an over-pressured streak produced "hollow engagement" until they softened it ("sticky but humane"). OnSkin therefore takes the **forgiveness and achievability** lessons (grace days/freezes, recovery nights count, low bar, weekly adherence + a heat-map) and deliberately **rejects the dark-pattern half** (aggressive loss-aversion, guilt copy, default leaderboards) — the combination that is both humane and retention-optimal, and uniquely right for a skincare context where recovery nights and occasional misses are _healthy_.
+- **The streak is calm and forgiving — and forgiving streaks retain _better_ than punitive ones.** Lally's habit research shows a single missed day doesn't impair habit formation (docs/03 §6); Duolingo's data shows the same in reverse — **Streak Freeze cut churn 21%**, _adding_ forgiveness made DAU "skyrocket," and an _achievable_ threshold added Day-14 retention, while an over-pressured streak produced "hollow engagement" until they softened it ("sticky but humane"). Layerwell therefore takes the **forgiveness and achievability** lessons (grace days/freezes, recovery nights count, low bar, weekly adherence + a heat-map) and deliberately **rejects the dark-pattern half** (aggressive loss-aversion, guilt copy, default leaderboards) — the combination that is both humane and retention-optimal, and uniquely right for a skincare context where recovery nights and occasional misses are _healthy_.
 
 - **Notifications are tiered, user-controlled, discreet, and platform-correct.** Three tiers — **utility** (the AM/PM routine reminders and "tonight's step," at user-set times, local notifications), **behavioural-trigger** (gentle streak/adherence nudges, replenishment, ramp step-ups, irritation de-escalation), and **promotional** (sparse win-backs/announcements, explicit opt-in) — each independently toggleable, frequency-capped, quiet-hours-aware, and **discreet on the lock screen** (skincare content is health-adjacent). Permission is requested via a **soft-ask at the value moment** (55–70% opt-in vs 30–40% cold), and the platform mechanics handle **Android-14 exact-alarm restrictions** and **iOS time-sensitive** justification correctly.
 
@@ -91,9 +91,9 @@ _The engagement & delivery layer · local-first reminders with permission-primin
 
 5. **Streaks are a top retention mechanic.** Duolingo users are **3× more likely to return daily** with an active streak; a **7-day streak → 3.6× more likely to stay long-term**; a streak **widget lifted commitment ~60%**. Streaks drive early habit formation (day 0→7→14→30) — but only when layered on a product that already delivers real value.
 
-6. **Forgiving streaks retain better than punitive ones — this is the key design validation.** **Streak Freeze reduced churn 21%**; _adding_ a second freeze made DAU "skyrocket" ("reducing anxiety about streak loss increases long-term engagement"); an _achievable_ threshold added ~3.3% Day-14 retention. Conversely, over-pressure produced "hollow engagement… the experience eroding" until Duolingo softened it. OnSkin adopts forgiveness + achievability and rejects the loss-aversion/guilt/leaderboard half (docs/03 §6).
+6. **Forgiving streaks retain better than punitive ones — this is the key design validation.** **Streak Freeze reduced churn 21%**; _adding_ a second freeze made DAU "skyrocket" ("reducing anxiety about streak loss increases long-term engagement"); an _achievable_ threshold added ~3.3% Day-14 retention. Conversely, over-pressure produced "hollow engagement… the experience eroding" until Duolingo softened it. Layerwell adopts forgiveness + achievability and rejects the loss-aversion/guilt/leaderboard half (docs/03 §6).
 
-7. **The calm streak fits skincare uniquely well.** Recovery nights (docs/05) and the occasional missed evening are _expected and healthy_, so an all-or-nothing daily counter is actively wrong here; OnSkin's "completion day" counts recovery nights, forgives misses (grace/freeze), and frames progress as **weekly adherence + a heat-map**, not a fragile chain.
+7. **The calm streak fits skincare uniquely well.** Recovery nights (docs/05) and the occasional missed evening are _expected and healthy_, so an all-or-nothing daily counter is actively wrong here; Layerwell's "completion day" counts recovery nights, forgives misses (grace/freeze), and frames progress as **weekly adherence + a heat-map**, not a fragile chain.
 
 8. **Widgets boost engagement/retention and are now interactive.** Always-visible widgets keep the app top-of-mind and increase stickiness; the glanceability law caps content at **1–3 data points** readable in under two seconds; **iOS 17 interactive widgets** (and Android `RemoteViews`) allow **checking off a step from the home screen without opening the app** — a one-tap habit reinforcement docs/00 predated.
 
@@ -123,7 +123,7 @@ _The engagement & delivery layer · local-first reminders with permission-primin
 
 ### 2. The engagement philosophy — calm, not gamified, and why it is also the retention-optimal choice
 
-OnSkin's engagement layer is deliberately calm, and this document's central argument is that **calm is not a trade-off against retention — it is the retention-optimal strategy** for this product:
+Layerwell's engagement layer is deliberately calm, and this document's central argument is that **calm is not a trade-off against retention — it is the retention-optimal strategy** for this product:
 
 - **Over-notification backfires** (>6/week → 3.4× uninstall); restraint + tiering + caps is what keeps users (and uninstalls <1%).
 - **Forgiving, achievable streaks retain _better_** (freeze −21% churn; leniency ↑ DAU; low threshold ↑ D14) than punitive ones, which produce "hollow engagement."
@@ -234,7 +234,7 @@ No guilt copy; no manufactured loss-aversion ("Duo desperation"); no default lea
 
 #### 5.1 The glanceability law
 
-A widget shows **one to three data points, readable in under two seconds** — "more than that and the glance becomes a read, which breaks the interaction model." Widgets that survive the home-screen reorg deliver their payload instantly. So OnSkin's widgets are spare and purposeful.
+A widget shows **one to three data points, readable in under two seconds** — "more than that and the glance becomes a read, which breaks the interaction model." Widgets that survive the home-screen reorg deliver their payload instantly. So Layerwell's widgets are spare and purposeful.
 
 #### 5.2 The widget set
 
@@ -245,7 +245,7 @@ A widget shows **one to three data points, readable in under two seconds** — "
 
 Each is a separate, user-chosen widget; none crams multiple of these together.
 
-**IOS-02 launch source candidate:** the checked-in `RoutineKindToday` target
+**IOS-02 launch source candidate:** the checked-in `LayerwellToday` target
 implements one privacy-bounded Today experience across exactly four declared
 WidgetKit families: `systemSmall`, `systemMedium`, `accessoryInline`, and
 `accessoryRectangular`. The content concepts above remain the product
@@ -295,14 +295,14 @@ foreground refresh rather than purging them.
 
 #### 5.5 Data sharing & refresh
 
-- **iOS** WidgetKit runs separately from the app. For `RoutineKindToday`, the
+- **iOS** WidgetKit runs separately from the app. For `LayerwellToday`, the
   source candidate uses an **App Group SQLite lifecycle store**, not
   `UserDefaults` whole-timeline replacement as the authority. A process-shared
   lock plus immediate transactions protect owner authority, the current
   snapshot, and the append-only action outbox. Shared payloads use a closed,
   bounded schema with random, user-independent owner generations and no user
   ID or user-derived hash. Publication, reconciliation, expiry, account
-  transitions, and privacy withdrawal reload the RoutineKind WidgetKit timeline
+  transitions, and privacy withdrawal reload the Layerwell WidgetKit timeline
   only after their native transaction. Health withdrawal starts native closure
   immediately after exact-owner destructive authority and before JavaScript,
   private-store, or photo writer drains; Auth boundaries close native admission
@@ -322,7 +322,7 @@ foreground refresh rather than purging them.
 
 ### 6. Live Activities (iOS) / ongoing notifications (Android)
 
-For the **PM skin-cycling session**, an optional `RoutineKindEvening` Live
+For the **PM skin-cycling session**, an optional `LayerwellEvening` Live
 Activity (iOS ActivityKit via the exact-pinned `expo-widgets` source) displays
 the current evening progress on the Lock Screen and Dynamic Island. The source
 candidate now derives a bounded deterministic `staleDate` from strict props,
@@ -340,7 +340,7 @@ ordinary shipping config does not advertise Live Activities, so this paragraph
 is product intent plus implemented-source status—not a shipped capability. The
 Android ongoing notification remains later scope.
 
-The start path requires the exact signed RoutineKind deep link before
+The start path requires the exact signed Layerwell deep link before
 `Activity.request`. A typed stale result after start rereads current JavaScript
 instances and awaits their immediate end requests before retry. Global
 push-to-start token observation/emission is intentionally removed because those
@@ -421,7 +421,7 @@ does not infer adherence from partial step rows.
 - **Frequency-cap engine:** atomically reserve the encrypted current-device scheduling-attempt ledger before any event-triggered native schedule request. Behavioural suggestions admit at most three attempts and promotional at most one in a rolling seven days. Keep the reservation after native failure; it is not sent/open proof. Weekly photo reminders are separately opted in and separately described.
 - **Widgets:** **iOS** WidgetKit (SwiftUI) via the exact-pinned
   `expo-widgets` source; App Group SQLite authority with a native durable
-  outbox/CAS and one-shot final-quiescence lifecycle; RoutineKind timeline
+  outbox/CAS and one-shot final-quiescence lifecycle; Layerwell timeline
   reload only after meaningful native transitions; four launch families
   (`systemSmall`/`systemMedium`/`accessoryInline`/`accessoryRectangular`).
   The publication flag remains false until signed and device gates pass.
@@ -434,7 +434,7 @@ does not infer adherence from partial step rows.
 - **Notification instrumentation is closed.** The current notification path produces no prompt, sent, opened, or reminder-time analytics. A future CAT-09 schema may use only mechanically observable names and must separately approve consent, payload, linkage, recipients, retention, deletion, and exact-build transport. Never infer that an OS prompt was shown or that a schedule attempt was delivered/opened.
 - **Performance:** the frequency-cap check is a single indexed query and
   reminder scheduling is local and battery-friendly (inexact alarms). The
-  RoutineKind WidgetKit provider/render read path is not yet performance-cleared:
+  Layerwell WidgetKit provider/render read path is not yet performance-cleared:
   it synchronously acquires the exclusive cross-process `flock` and opens SQLite
   read-write. Instruments must measure lock wait, schema/read work, memory,
   timeout, and AppIntent/publication/cleanup contention on supported physical
@@ -449,7 +449,7 @@ Re-engagement and habit-anchoring are where subscription retention is decided, a
 - **It drives the daily return that compounds into retention.** Push-enabled users retain ~3× better at 90 days; streak-active users return ~3× more daily; a streak widget lifted commitment ~60%. The daily loop this layer sustains is what makes annual plans (which retain ~44% at one year vs ~17% monthly, docs/01 §9) pay off — and annual is the paywall default precisely because retention is the business.
 - **It powers the paywall's #4 value prop** — _"Reminders, streaks & home-screen widgets"_ (spec p7) — and the interactive widget + Live Activity make the product feel present and effortless, deepening perceived value.
 - **It reinforces the activation metric.** The interactive-widget check-off collapses the north-star action (first/again check-off, docs/01 §7) to a single home-screen tap, raising the odds users form the habit that predicts retention.
-- **Restraint is what makes the retention durable.** The same evidence that says reminders/streaks/widgets drive retention says **over-notification and pressure-streaks destroy it** (>6 pushes/week → 3.4× uninstall; hollow-grind streaks erode the experience). OnSkin's tiered, capped, forgiving, discreet design captures the upside _without_ the churn — which is why the calm approach is the seven-figure approach, not a softer alternative to it.
+- **Restraint is what makes the retention durable.** The same evidence that says reminders/streaks/widgets drive retention says **over-notification and pressure-streaks destroy it** (>6 pushes/week → 3.4× uninstall; hollow-grind streaks erode the experience). Layerwell's tiered, capped, forgiving, discreet design captures the upside _without_ the churn — which is why the calm approach is the seven-figure approach, not a softer alternative to it.
 - **It compounds the trust thesis.** A calm, private, non-manipulative engagement layer (discreet lock-screen content, no dark patterns, no data sold) reinforces the privacy-as-trust word-of-mouth engine behind Yuka's $7.3M (docs/01 §7) — the opposite of the "Duo desperation" pattern users increasingly resent.
 
 **Business hypothesis:** the reminders/streaks/widgets layer can be a
@@ -505,7 +505,7 @@ screens.
 
 ## Caveats (confidence flags)
 
-- **Notifications drive retention _only when relevant and restrained_** — the 3× retention upside and the 3.4×-uninstall downside are two faces of the same lever; the tiering + caps + user-set-times design is what keeps OnSkin on the right side, and frequency discipline must be enforced, not aspirational. _High confidence on the direction; the specific magnitudes are vendor/benchmark figures._
+- **Notifications drive retention _only when relevant and restrained_** — the 3× retention upside and the 3.4×-uninstall downside are two faces of the same lever; the tiering + caps + user-set-times design is what keeps Layerwell on the right side, and frequency discipline must be enforced, not aspirational. _High confidence on the direction; the specific magnitudes are vendor/benchmark figures._
 - **The reminder-adherence evidence is "promising, interpret with caution"** (medication meta-analyses: varied effect sizes, self-report, short durations) — reminders plausibly improve routine adherence, but don't overclaim a guaranteed effect. _Medium-high confidence on direction._
 - **Permission-priming and opt-in lift figures are largely vendor-sourced** (OneSignal/CleverTap/Adjust; docs/01 §8) — the _direction_ (soft-ask at the value moment) is well established; treat the magnitudes directionally. _Medium-high confidence on direction._
 - **The forgiving streak is the retention-optimal _and_ humane choice** (freeze −21% churn; leniency ↑ DAU; achievable threshold ↑ D14; over-pressure → hollow engagement), but these are platform case studies (Duolingo), not RCTs; the principle is robust and converges with Lally (docs/03 §6). _Medium-high confidence; hold the calm line._

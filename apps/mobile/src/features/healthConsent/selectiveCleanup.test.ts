@@ -103,7 +103,7 @@ describe('health-purpose local cleanup', () => {
     expect(mocks.beginPhoto).toHaveBeenCalledOnce();
     expect(mocks.multiRemove).toHaveBeenCalledWith([...HEALTH_PURPOSE_PRIVATE_DATA_KEYS]);
     expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toEqual(
-      expect.arrayContaining(['routinekind.widgetActionMap.v1', 'routinekind.widgetActionMap.v2']),
+      expect.arrayContaining(['layerwell.widgetActionMap.v1', 'layerwell.widgetActionMap.v2']),
     );
     expect(mocks.clearPhotos).toHaveBeenCalledOnce();
     expect(mocks.clearNativeWidgets).toHaveBeenCalledOnce();
@@ -149,17 +149,17 @@ describe('health-purpose local cleanup', () => {
   });
 
   it('does not include account, App Lock, entitlement, or store-safety authority', () => {
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toContain('onskin.commerceConsent.v1');
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toContain('onskin.communityConsent.v1');
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.communityAge16.v1');
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.appLock.enabled');
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.entitlement.v2');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toContain('layerwell.commerceConsent.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toContain('layerwell.communityConsent.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('layerwell.communityAge16.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('layerwell.appLock.enabled');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('layerwell.entitlement.v2');
     expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain(
-      'routinekind.store_transaction_notice.v2',
+      'layerwell.store_transaction_notice.v2',
     );
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('routinekind.healthDataLifecycle.v1');
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.ageVerified');
-    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.subscription.promptedExpiry');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('layerwell.healthDataLifecycle.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('layerwell.ageVerified');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('layerwell.subscription.promptedExpiry');
   });
 
   it('keeps every boundary closed until a failed cleanup has been observed', async () => {

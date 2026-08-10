@@ -299,8 +299,8 @@ remains Auto-derived. Structural edits keep the existing anchor rather than
 silently restarting at Night 1. One product per night, applied safety/cadence
 bounds, and one recovery slot are firm; repeated same-class adjacency remains a
 non-blocking spacing nudge with a recommended reset action. The current record
-uses isolated encrypted key `routinekind.cycle.v2`; valid legacy
-`onskin.cycle.v1` state migrates one way, and unreadable or future-schema data is
+uses isolated encrypted key `layerwell.cycle.v2`; valid legacy
+`layerwell.cycle.v1` state migrates one way, and unreadable or future-schema data is
 preserved and fails closed. Current v2 requires an explicit schema. Device export
 uses v2 as `cycle_configuration` and labels the retained old value as legacy.
 Persistence, cache publication, route-level pending exits, and failure/retry

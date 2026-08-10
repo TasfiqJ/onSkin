@@ -1,4 +1,4 @@
-import type { GoalId, RecommendationTrigger } from '@onskin/types';
+import type { GoalId, RecommendationTrigger } from '@layerwell/types';
 
 import type { ReplenishmentReason } from './replenishment';
 

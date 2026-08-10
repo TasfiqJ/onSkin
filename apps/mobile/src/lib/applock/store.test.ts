@@ -25,7 +25,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   PRIVATE_KV_ENVELOPE_UNSUPPORTED: 'PRIVATE_KV_ENVELOPE_UNSUPPORTED',
 }));
 
-const KEY = 'onskin.appLock.enabled';
+const KEY = 'layerwell.appLock.enabled';
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
 const originalDev = runtime.__DEV__;
 
@@ -114,12 +114,12 @@ describe('app lock preference storage', () => {
 
   it('removes only the malformed app-lock preference during explicit recovery', async () => {
     mocks.privateKV.set(KEY, 'enabled');
-    mocks.privateKV.set('onskin.shelf.v1', 'shelf-ciphertext');
+    mocks.privateKV.set('layerwell.shelf.v1', 'shelf-ciphertext');
 
     await clearMalformedAppLockPreference();
 
     expect(mocks.privateKV.has(KEY)).toBe(false);
-    expect(mocks.privateKV.get('onskin.shelf.v1')).toBe('shelf-ciphertext');
+    expect(mocks.privateKV.get('layerwell.shelf.v1')).toBe('shelf-ciphertext');
   });
 
   it('uses the dev-only E2E fixture before private storage', async () => {

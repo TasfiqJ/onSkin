@@ -28,7 +28,7 @@ describe('account deletion completion notice', () => {
       kind: 'apple_manual_revocation',
       title: 'One Apple step remains',
       message:
-        'Your RoutineKind account and data were deleted, but the Sign in with Apple connection could not be revoked automatically. On iPhone, open Settings, tap your name, tap Sign in with Apple, choose RoutineKind, then tap Delete.',
+        'Your Layerwell account and data were deleted, but the Sign in with Apple connection could not be revoked automatically. On iPhone, open Settings, tap your name, tap Sign in with Apple, choose Layerwell, then tap Delete.',
       instructionUrl: APPLE_MANUAL_REVOCATION_URL,
     });
     expect(consumeAccountDeletionNotice()).toBeNull();

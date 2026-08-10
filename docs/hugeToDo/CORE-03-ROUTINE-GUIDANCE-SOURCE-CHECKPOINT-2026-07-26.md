@@ -99,7 +99,7 @@ launch blockers, not TODO values that a build flag can bypass.
 
 The runtime source registry currently includes the American Academy of
 Dermatology's general product-order page only as `candidate_unreviewed`. It is
-useful background, but it does not independently substantiate OnSkin's exact
+useful background, but it does not independently substantiate Layerwell's exact
 product eligibility, cadence, ramp, recovery, or stop/refer instructions:
 
 - AAD, “Should I apply my skin care products in a certain order?”:
@@ -124,7 +124,7 @@ with a doctor before making medical decisions. Guideline 2.5.18 restricts
 behavioral advertising based on sensitive health/medical data, while section
 5.1 imposes privacy, consent, minimization, retention, and use constraints.
 
-The FDA document is a boundary policy, not an OnSkin classification. Regulatory
+The FDA document is a boundary policy, not an Layerwell classification. Regulatory
 counsel must decide whether each exact feature and claim remains general
 wellness, becomes device functionality, or must be removed. The FTC source
 requires competent substantiation matched to the exact health claim and

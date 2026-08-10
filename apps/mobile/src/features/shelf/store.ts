@@ -1,6 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 
-import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
+import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@layerwell/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
@@ -32,7 +32,7 @@ export {
 // Each committed lifecycle mutation also appends owner-free Supabase replay
 // work inside this same encrypted envelope. The authenticated sync boundary
 // supplies the owner later, so a local commit cannot race a separate queue write.
-const KEY = 'onskin.shelf.v1';
+const KEY = 'layerwell.shelf.v1';
 const LEGACY_SCHEMA_VERSION = 1 as const;
 const PREVIOUS_SCHEMA_VERSION = 2 as const;
 const SCHEMA_VERSION = 3 as const;

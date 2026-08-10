@@ -33,8 +33,8 @@ import { stripImageMetadataFromBase64 } from './metadata';
 
 const PHOTO_DIR = `${FileSystem.documentDirectory ?? ''}photos/v1/`;
 const KEY_ID = 'photo-content-key-v1';
-const KEY_STORE_NAME = 'onskin.photo.content_key.v1';
-const KEY_CREATION_MARKER = 'onskin.photo.content_key_created.v1';
+const KEY_STORE_NAME = 'layerwell.photo.content_key.v1';
+const KEY_CREATION_MARKER = 'layerwell.photo.content_key_created.v1';
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
 export const PHOTO_CONTENT_KEY_MISSING = 'PHOTO_CONTENT_KEY_MISSING';
@@ -177,9 +177,9 @@ async function hasPriorEncryptedPhotoData(): Promise<boolean> {
     const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
     return entries.some(
       (name) =>
-        name.endsWith('.onskinphoto') ||
-        name.includes('.onskinphoto.pending-delete-') ||
-        name.includes('.onskinphoto.tmp-'),
+        name.endsWith('.layerwellphoto') ||
+        name.includes('.layerwellphoto.pending-delete-') ||
+        name.includes('.layerwellphoto.tmp-'),
     );
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
@@ -326,7 +326,7 @@ function decryptEnvelopeToUtf8(envelope: EncryptedTextEnvelope, key: Uint8Array)
 }
 
 export function isEncryptedPhotoUri(uri?: string | null): boolean {
-  return Boolean(uri?.endsWith('.onskinphoto'));
+  return Boolean(uri?.endsWith('.layerwellphoto'));
 }
 
 export async function encryptCapturedPhoto(
@@ -350,7 +350,7 @@ export async function encryptCapturedPhoto(
       ...encrypted,
       mimeType,
     };
-    const encryptedLocalUri = `${PHOTO_DIR}${photoId}.onskinphoto`;
+    const encryptedLocalUri = `${PHOTO_DIR}${photoId}.layerwellphoto`;
     const temporaryUri = `${encryptedLocalUri}.tmp-${Date.now()}`;
     let finalMoveCompleted = false;
     try {
@@ -550,7 +550,7 @@ export async function reconcileEncryptedPhotoStorage(
       for (const entry of entries) {
         assertAuthorized();
         const uri = `${PHOTO_DIR}${entry}`;
-        const quarantined = /^(.+\.onskinphoto)\.pending-delete-.+$/.exec(entry);
+        const quarantined = /^(.+\.layerwellphoto)\.pending-delete-.+$/.exec(entry);
         if (quarantined) {
           const originalUri = `${PHOTO_DIR}${quarantined[1]}`;
           if (referenced.has(originalUri)) {
@@ -572,7 +572,7 @@ export async function reconcileEncryptedPhotoStorage(
           continue;
         }
 
-        if (/\.onskinphoto\.tmp-.+$/.test(entry)) {
+        if (/\.layerwellphoto\.tmp-.+$/.test(entry)) {
           await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
           assertAuthorized();
           continue;
@@ -580,7 +580,7 @@ export async function reconcileEncryptedPhotoStorage(
 
         if (
           options.removeUnreferencedFinals !== false &&
-          entry.endsWith('.onskinphoto') &&
+          entry.endsWith('.layerwellphoto') &&
           !referenced.has(uri)
         ) {
           await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);

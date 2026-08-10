@@ -69,7 +69,7 @@ vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
 vi.mock('@/lib/auth/AuthProvider', () => ({
   useAuth: () => ({ ensureAnonymousSession: vi.fn(async () => undefined) }),
 }));
-vi.mock('@/lib/brand', () => ({ BRAND: { appName: 'OnSkin' } }));
+vi.mock('@/lib/brand', () => ({ BRAND: { appName: 'Layerwell' } }));
 vi.mock('@/lib/query/queryClient', () => ({
   queryClient: {
     getQueryCache: () => ({

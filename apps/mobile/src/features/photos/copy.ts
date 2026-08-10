@@ -1,4 +1,4 @@
-import type { PhotoMilestone, PhotoQualityFlag } from '@onskin/types';
+import type { PhotoMilestone, PhotoQualityFlag } from '@layerwell/types';
 
 /**
  * Centralised, claim-safe copy for the photo-progress feature (docs/06 §9).

@@ -104,16 +104,16 @@ create policy "community_reactions_consent_insert" on public.community_reactions
 
 create policy "ask_sessions_consent_insert" on public.ask_sessions
   as restrictive for insert to authenticated
-  with check (public.has_current_consent('ask_onskin'));
+  with check (public.has_current_consent('ask_layerwell'));
 
 create policy "ask_sessions_consent_update" on public.ask_sessions
   as restrictive for update to authenticated
-  with check (public.has_current_consent('ask_onskin'));
+  with check (public.has_current_consent('ask_layerwell'));
 
 create policy "ask_turn_audit_consent_insert" on public.ask_turn_audit
   as restrictive for insert to authenticated
-  with check (public.has_current_consent('ask_onskin'));
+  with check (public.has_current_consent('ask_layerwell'));
 
 create policy "ask_safety_audit_consent_insert" on public.ask_safety_audit
   as restrictive for insert to authenticated
-  with check (public.has_current_consent('ask_onskin'));
+  with check (public.has_current_consent('ask_layerwell'));

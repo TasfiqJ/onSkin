@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const APPLE_CREDENTIAL_QUARANTINE_KEY = 'routinekind.appleCredentialQuarantine.v1';
+export const APPLE_CREDENTIAL_QUARANTINE_KEY = 'layerwell.appleCredentialQuarantine.v1';
 
 export async function isAppleCredentialQuarantined(): Promise<boolean> {
   // Any non-null value is a fail-closed quarantine. Treating corrupt control

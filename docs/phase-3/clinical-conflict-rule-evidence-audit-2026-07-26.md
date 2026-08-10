@@ -14,7 +14,7 @@ or a substitute for the detached phase-3 signoff process.
 ## Launch-blocking approval contract
 
 No rule in this document is cleared for user exposure. Before any rule can be
-admitted to production, OnSkin must bind all approvals to the exact canonical
+admitted to production, Layerwell must bind all approvals to the exact canonical
 rule bytes, source-corpus bytes, rule version, and SHA-256 hashes used by the
 release:
 
@@ -300,7 +300,7 @@ Disposition: **Hold user-facing output.**
 Evidence assessment: primary solution-chemistry studies support copper-catalyzed
 ascorbic-acid oxidation under specified aqueous conditions. They do not
 establish clinically meaningful loss of topical vitamin C when a chelated
-cosmetic copper peptide such as GHK-Cu is layered on skin. A GHK-Cu
+cosmetic copper peptide such as GHK-Cu is layered layerwell. A GHK-Cu
 preformulation study is formulation-specific and cannot bridge that gap.
 
 Mechanism constraint: do not equate free copper ions with every copper-peptide

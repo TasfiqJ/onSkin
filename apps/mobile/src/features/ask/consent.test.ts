@@ -29,14 +29,14 @@ describe('Ask consent facade', () => {
   it('uses only the authoritative dependent status gate', async () => {
     mocks.active.mockResolvedValueOnce(true);
     await expect(isAskConsented()).resolves.toBe(true);
-    expect(mocks.active).toHaveBeenCalledWith('ask_onskin', {
+    expect(mocks.active).toHaveBeenCalledWith('ask_layerwell', {
       deleteLocalOnAuthoritativeClose: mocks.clear,
     });
   });
 
   it('publishes grant analytics only after the exact CAS succeeds', async () => {
     await grantAskConsent();
-    expect(mocks.grant).toHaveBeenCalledWith('ask_onskin');
+    expect(mocks.grant).toHaveBeenCalledWith('ask_layerwell');
     expect(mocks.grant.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.track.mock.invocationCallOrder[0],
     );
@@ -51,7 +51,7 @@ describe('Ask consent facade', () => {
   it('passes local deletion into the durable withdrawal and reports no false success', async () => {
     await revokeAskConsent();
     expect(mocks.withdraw).toHaveBeenCalledWith({
-      type: 'ask_onskin',
+      type: 'ask_layerwell',
       deleteLocal: mocks.clear,
     });
     mocks.withdraw.mockRejectedValueOnce(new Error('withdrawal pending'));

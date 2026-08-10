@@ -13,7 +13,7 @@ function commands(scriptName) {
 }
 
 test('pre-S source contract runs the real strict device audit without touching governed outputs', (t) => {
-  const outputDirectory = mkdtempSync(join(tmpdir(), 'onskin-device-support-source-'));
+  const outputDirectory = mkdtempSync(join(tmpdir(), 'layerwell-device-support-source-'));
   const outJson = join(outputDirectory, 'device-support-policy-audit.json');
   const outMd = join(outputDirectory, 'device-support-policy-audit.md');
   t.after(() => rmSync(outputDirectory, { recursive: true, force: true }));

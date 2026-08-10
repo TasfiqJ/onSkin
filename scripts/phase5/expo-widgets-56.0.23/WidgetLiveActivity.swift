@@ -24,7 +24,7 @@ public struct WidgetLiveActivity: Widget {
 
   public var body: some WidgetConfiguration {
     ActivityConfiguration(for: LiveActivityAttributes.self) { context in
-      let props = RoutineKindWidgetLifecycleStore.sanitizedLiveActivityProps(
+      let props = LayerwellWidgetLifecycleStore.sanitizedLiveActivityProps(
         name: context.state.name,
         propsJSON: context.state.props,
         isSystemStale: context.isStale
@@ -36,7 +36,7 @@ public struct WidgetLiveActivity: Widget {
       )
       LiveActivityBannerView(context: context, nodes: nodes)
     } dynamicIsland: { context in
-      let props = RoutineKindWidgetLifecycleStore.sanitizedLiveActivityProps(
+      let props = LayerwellWidgetLifecycleStore.sanitizedLiveActivityProps(
         name: context.state.name,
         propsJSON: context.state.props,
         isSystemStale: context.isStale

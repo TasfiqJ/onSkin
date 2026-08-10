@@ -91,7 +91,7 @@ const liveArtifactValidation = validateLiveConsentWithdrawalArtifact(liveArtifac
 });
 const migrations =
   read('supabase/migrations/20260613000023_community.sql') +
-  read('supabase/migrations/20260614000025_ask_onskin.sql');
+  read('supabase/migrations/20260614000025_ask_layerwell.sql');
 const phase9ConsentMigration = read(
   'supabase/migrations/20260705000032_phase9_consent_withdrawal.sql',
 );
@@ -237,7 +237,7 @@ block(errors, /revokeAskConsent/.test(ask), 'Ask consent revocation function is 
 block(errors, /clearAskStore/.test(ask), 'Ask consent revocation must clear local Ask state.');
 block(
   errors,
-  /withdrawHealthDependentConsent\(\{[\s\S]*type:\s*'ask_onskin',[\s\S]*deleteLocal:\s*clearAskStore/.test(
+  /withdrawHealthDependentConsent\(\{[\s\S]*type:\s*'ask_layerwell',[\s\S]*deleteLocal:\s*clearAskStore/.test(
     askRevocation,
   ) && /const attestation = await withdrawConsent\(\{/.test(dependentConsentLifecycle),
   'Ask consent revocation must call the server withdrawal path.',
@@ -369,7 +369,7 @@ block(
 );
 block(
   errors,
-  /withdrawAskOnSkin/.test(dependentCleanupRuntime) &&
+  /withdrawAskLayerwell/.test(dependentCleanupRuntime) &&
     /ask_safety_audit/.test(dependentCleanupRuntime),
   'Ask withdrawal must delete server-side safety audit content.',
 );
@@ -611,7 +611,7 @@ block(
     /private\.health_dependent_read_allowed\([\s\S]*'photo_cloud_backup'/.test(
       readFencedOwnershipHelpers.owns_photo,
     ) &&
-    /private\.health_dependent_read_allowed\([\s\S]*'ask_onskin'/.test(
+    /private\.health_dependent_read_allowed\([\s\S]*'ask_layerwell'/.test(
       readFencedOwnershipHelpers.owns_ask_turn_audit,
     ),
   'Authenticated SECURITY DEFINER ownership helpers must not expose residual health-row existence across the read barrier.',
@@ -781,7 +781,7 @@ for (const [type, policy] of [
   ['photo_cloud_backup', 'photos_cloud_backup_consent_insert'],
   ['photo_trend_insights', 'photo_trend_consent_insert'],
   ['community_participation', 'community_reactions_consent_insert'],
-  ['ask_onskin', 'ask_sessions_consent_insert'],
+  ['ask_layerwell', 'ask_sessions_consent_insert'],
 ]) {
   block(
     errors,

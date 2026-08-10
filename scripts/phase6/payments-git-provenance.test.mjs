@@ -62,7 +62,7 @@ test('rejects malformed Git provenance input', () => {
 });
 
 test('Git status collection forces all untracked files visible despite local config', () => {
-  const repository = mkdtempSync(join(tmpdir(), 'routinekind-phase6-git-status-'));
+  const repository = mkdtempSync(join(tmpdir(), 'layerwell-phase6-git-status-'));
   try {
     for (const args of [
       ['init', '--quiet'],

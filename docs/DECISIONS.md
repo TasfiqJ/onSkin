@@ -22,12 +22,30 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ### 2026-07-06 - Rebrand Before Launch
 
-- Decision: Do not launch publicly as `OnSkin` unless counsel gives strong written clearance.
+- Decision: Reject the prior working identity because a same-name skincare
+  scanner already occupied the category. This historical decision did not
+  assess or clear Layerwell.
 - Alternatives: keep name, add modifier, acquire/coordinate with incumbent, full rebrand.
 - Criteria: customer confusion, App Store search, support, trademark risk, rework cost.
-- Evidence: existing public OnSkin app/site in same category with scanner language and claimed 8M users/2M products.
+- Evidence: exact-source research retained in `docs/brand-evidence.md` and the
+  governed BRAND-03 evidence packet.
 - Risk: rebrand delays launch, but keeping name is higher risk.
-- Status: Accepted.
+- Status: Superseded by the founder's 2026-08-09 Layerwell selection; the legal
+  clearance requirement remains active.
+
+### 2026-08-09 - Select Layerwell As Product Identity
+
+- Decision: Use `Layerwell` for active product branding and engineering
+  identity.
+- Alternatives: retain the rejected working identity or continue candidate
+  exploration.
+- Criteria: founder direction, product fit, migration cost, launch consistency,
+  and ability to fail closed before public production activation.
+- Evidence: founder direction recorded in the repository task; exact identity
+  values are defined in `docs/brand-decision-memo.md`.
+- Risk: founder selection is not trademark clearance or asset ownership.
+- Status: Accepted for engineering; public launch remains pending qualified
+  counsel and authenticated reservations.
 
 ### 2026-07-06 - Position As Shelf And Routine, Not Scanner
 
@@ -251,7 +269,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ### 2026-07-10 - Project Authored Cycles Through Safety And Cadence Authority
 
-- Decision: A V1 Custom cycle is a schema-versioned record inside the encrypted current-owner cycle configuration. It stores a 1-14-night ordered list whose entries are either one stable shelf-product ID or recovery, plus the existing variant and anchor. The editor is an explicit Save/Cancel transaction; one private-key mutation persists the whole definition and any selected phased-introduction override before cache publication, analytics, or navigation. Visible controls and route removal remain locked while that write is pending; only the committed success path may leave. Structural edits preserve the existing anchor. Preset variants regenerate without deleting the saved Custom definition; the first Custom edit starts from an Auto recommendation rather than treating Custom as a generated preset, and returning to Custom restores the saved definition. Current cycle state lives at the isolated `routinekind.cycle.v2` private key; a valid `onskin.cycle.v1` record migrates one way and remains isolated for downgrade/account-cleanup safety. Current v2 requires its explicit schema; unreadable, malformed, missing-schema, or future-schema current data is preserved and fails closed instead of being deleted or replaced with defaults. Device export includes v2 as `cycle_configuration` and labels the retained old value `legacy_cycle_configuration` rather than exporting stale state as authoritative.
+- Decision: A V1 Custom cycle is a schema-versioned record inside the encrypted current-owner cycle configuration. It stores a 1-14-night ordered list whose entries are either one stable shelf-product ID or recovery, plus the existing variant and anchor. The editor is an explicit Save/Cancel transaction; one private-key mutation persists the whole definition and any selected phased-introduction override before cache publication, analytics, or navigation. Visible controls and route removal remain locked while that write is pending; only the committed success path may leave. Structural edits preserve the existing anchor. Preset variants regenerate without deleting the saved Custom definition; the first Custom edit starts from an Auto recommendation rather than treating Custom as a generated preset, and returning to Custom restores the saved definition. Current cycle state lives at the isolated `layerwell.cycle.v2` private key; a valid `layerwell.cycle.v1` record migrates one way and remains isolated for downgrade/account-cleanup safety. Current v2 requires its explicit schema; unreadable, malformed, missing-schema, or future-schema current data is preserved and fails closed instead of being deleted or replaced with defaults. Device export includes v2 as `cycle_configuration` and labels the retained old value `legacy_cycle_configuration` rather than exporting stale state as authoritative.
 - Reconciliation: Safety filtering, reviewed cadence eligibility, and the current ramp run before an authored slot can project. A closed global cadence-review gate withholds both generated and Custom projection; it never reclassifies known authored IDs as missing. One product per slot makes same-night potent collisions impossible. At least one recovery slot is required. Requested frequency is derived from authored occurrences and displayed as an approximate weekly cadence; it does not mutate `active_ramp`. Generated and Custom cycles share the length-aware occurrence budget `floor(max_per_week * length / 7)`, while retaining one recovery slot. If a later profile/ramp/safety change lowers that budget, earliest authored occurrences remain and excess or ineligible slots project as recovery without erasing intent or blocking an unrelated Save/length edit. Every Custom projection records the authored product identity and one exact applied-state reason: authored recovery, missing shelf product, safety exclusion, staged introduction, cadence cap, or applied. New shelf actives are not silently inserted. Missing shelf IDs project as recovery and prune on the next explicit save; known but temporarily safety-ineligible IDs and cadence-excess occurrences remain retained for later restoration. Same-class adjacency is advisory and may be saved after a calm spacing nudge.
 - Alternatives: commit every control immediately, re-anchor every edit to Night 1, mutate ramp state from the cycle editor, silently auto-insert new products, erase safety-filtered intent, allow an authored schedule to bypass caps, store invalid intent without an applied-state distinction, or wait for server cycle history.
 - Criteria: deterministic and idempotent recompute; no safety restoration; no silent cadence escalation; stable product identity; exact Plan/Today/Week/Why Tonight agreement; offline operation; reversible editing; and non-destructive failed-write recovery.

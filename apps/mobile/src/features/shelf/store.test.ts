@@ -73,7 +73,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.shelf.v1';
+const KEY = 'layerwell.shelf.v1';
 
 function operationId(sequence: number): string {
   return `00000000-0000-4000-8000-${String(sequence).padStart(12, '0')}`;
@@ -130,8 +130,8 @@ function catalogRecoveryInput(
     useCatalogIdentity,
     catalogProductId: '00000000-0000-4000-8000-000000000044',
     catalogSourceId: '00000000-0000-4000-8000-000000000043',
-    catalogSource: 'routinekind_reviewed',
-    catalogSourceName: 'RoutineKind reviewed catalog',
+    catalogSource: 'layerwell_reviewed',
+    catalogSourceName: 'Layerwell reviewed catalog',
     catalogSourceRef: 'catalog-row-44',
     catalogSourceUrl: 'https://example.invalid/catalog-row-44',
     catalogSourceSnapshotDate: '2026-07-17',
@@ -321,7 +321,7 @@ describe('shelf local store recovery', () => {
       addedVia: 'search',
       catalogProductId: operationId(601),
       catalogSourceId: operationId(602),
-      catalogSource: 'routinekind_reviewed',
+      catalogSource: 'layerwell_reviewed',
       catalogMatchQuality: 'usable',
       sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
       isOpened: true,
@@ -373,7 +373,7 @@ describe('shelf local store recovery', () => {
         addedVia: 'search',
         catalogProductId: operationId(605),
         catalogSourceId: operationId(606),
-        catalogSource: 'routinekind_reviewed',
+        catalogSource: 'layerwell_reviewed',
         catalogMatchQuality: 'usable',
         sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
         isOpened: true,
@@ -413,7 +413,7 @@ describe('shelf local store recovery', () => {
       category: 'spf',
       catalogProductId: operationId(603),
       catalogSourceId: operationId(604),
-      catalogSource: 'routinekind_reviewed',
+      catalogSource: 'layerwell_reviewed',
       catalogMatchQuality: 'verified',
       sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
       addedVia: 'search',
@@ -653,7 +653,7 @@ describe('shelf local store recovery', () => {
       expirySource: 'printed',
       catalogProductId: '00000000-0000-4000-8000-000000000044',
       catalogSourceId: '00000000-0000-4000-8000-000000000043',
-      catalogSource: 'routinekind_reviewed',
+      catalogSource: 'layerwell_reviewed',
     });
   });
 
@@ -782,7 +782,7 @@ describe('shelf local store recovery', () => {
       addedVia: 'search',
       catalogProductId: operationId(501),
       catalogSourceId: operationId(502),
-      catalogSource: 'routinekind_reviewed',
+      catalogSource: 'layerwell_reviewed',
       catalogMatchQuality: 'usable',
       sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
       isOpened: true,
@@ -1032,7 +1032,7 @@ describe('shelf local store recovery', () => {
       addedVia: 'search',
       catalogProductId: operationId(610),
       catalogSourceId: operationId(611),
-      catalogSource: 'routinekind_reviewed',
+      catalogSource: 'layerwell_reviewed',
       catalogMatchQuality: 'usable',
       sourceDisclosureAckAt: '2026-07-18T12:00:00.000Z',
       isOpened: true,

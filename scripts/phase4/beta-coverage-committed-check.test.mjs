@@ -28,7 +28,7 @@ const sourceBytes = Buffer.from('source bytes\n', 'utf8');
 const aggregateBytes = Buffer.from('{"aggregate":true}\n', 'utf8');
 const ledger = {
   schemaVersion: 1,
-  kind: 'onskin_governed_evidence_chain',
+  kind: 'layerwell_governed_evidence_chain',
   sourceGitSha,
   releaseCandidateDir,
   publicationPolicy: buildGovernedPublicationPolicyTemplate(),

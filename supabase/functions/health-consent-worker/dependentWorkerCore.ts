@@ -17,7 +17,7 @@ const DEPENDENT_TYPES = new Set<HealthDependentConsentType>([
   'photo_capture',
   'photo_cloud_backup',
   'photo_trend_insights',
-  'ask_onskin',
+  'ask_layerwell',
   'community_participation',
   'data_sharing',
 ]);

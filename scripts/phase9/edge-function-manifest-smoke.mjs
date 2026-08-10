@@ -19,7 +19,7 @@ function sourceConfig(manifest) {
 }
 
 function createFixture() {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-edge-manifest-'));
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'layerwell-edge-manifest-'));
   const manifest = structuredClone(sourceManifest);
   mkdirSync(join(fixtureRoot, 'supabase', 'functions'), { recursive: true });
   for (const [name, definition] of Object.entries(manifest.functions)) {

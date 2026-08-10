@@ -117,7 +117,7 @@ ownership. Every exact-match cleanup stage is attempted, and any partial
 failure keeps the retry boundary closed.
 
 A separate AsyncStorage control,
-`routinekind.authDerivedCleanupRequired.v1`, protects the forced-session
+`layerwell.authDerivedCleanupRequired.v1`, protects the forced-session
 invalidation sequence itself. It accepts only exact `1`, is written before any
 local or global Auth sign-out, and survives ordinary private-data cleanup as a
 control key. Session removal, persisted-session removal, in-flight

@@ -11,7 +11,7 @@ import { createLiveActivity, type LiveActivityEnvironment } from 'expo-widgets';
 
 import type { RoutineLiveActivityProps } from './contract';
 
-export const RoutineKindEveningActivityLayout = (
+export const LayerwellEveningActivityLayout = (
   props: RoutineLiveActivityProps,
   environment: LiveActivityEnvironment,
 ) => {
@@ -80,7 +80,7 @@ export const RoutineKindEveningActivityLayout = (
     renderTimeMs >= props.updatedAtMs &&
     renderTimeMs < props.staleAtMs;
   const statusLabel = !currentAtRender
-    ? 'Open RoutineKind to refresh'
+    ? 'Open Layerwell to refresh'
     : props.status === 'complete'
       ? 'Routine complete'
       : 'In progress';
@@ -176,6 +176,6 @@ export const RoutineKindEveningActivityLayout = (
 };
 
 export default createLiveActivity<RoutineLiveActivityProps>(
-  'RoutineKindEvening',
-  RoutineKindEveningActivityLayout,
+  'LayerwellEvening',
+  LayerwellEveningActivityLayout,
 );

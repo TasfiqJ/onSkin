@@ -8,10 +8,10 @@ const TARGET_NAME = 'ExpoWidgetsTarget';
 const PRIVACY_MANIFEST_FILENAME = 'PrivacyInfo.xcprivacy';
 const USER_DEFAULTS_API_TYPE = 'NSPrivacyAccessedAPICategoryUserDefaults';
 const APP_GROUP_USER_DEFAULTS_REASON = '1C8F.1';
-const WIDGET_LIFECYCLE_VERSION_KEY = 'RoutineKindWidgetLifecycleVersion';
-const WIDGET_PUBLICATION_ENABLED_KEY = 'RoutineKindWidgetInteractivePublicationEnabled';
-const LIVE_ACTIVITY_START_ENABLED_KEY = 'RoutineKindLiveActivityStartEnabled';
-const WIDGET_DEEP_LINK_KEY = 'RoutineKindWidgetDeepLink';
+const WIDGET_LIFECYCLE_VERSION_KEY = 'LayerwellWidgetLifecycleVersion';
+const WIDGET_PUBLICATION_ENABLED_KEY = 'LayerwellWidgetInteractivePublicationEnabled';
+const LIVE_ACTIVITY_START_ENABLED_KEY = 'LayerwellLiveActivityStartEnabled';
+const WIDGET_DEEP_LINK_KEY = 'LayerwellWidgetDeepLink';
 const WIDGET_LIFECYCLE_VERSION = 1;
 const WIDGET_DEEP_LINK_RE = /^[a-z][a-z0-9+.-]{0,63}:\/\/today$/;
 
@@ -267,7 +267,7 @@ function ensureWidgetPrivacyManifestResource(
   return project;
 }
 
-const withRoutineKindWidgetPrivacyManifest = (config, props = {}) => {
+const withLayerwellWidgetPrivacyManifest = (config, props = {}) => {
   const targetName = props.targetName ?? TARGET_NAME;
   const deepLink = props.deepLink;
   if (typeof deepLink !== 'string' || !WIDGET_DEEP_LINK_RE.test(deepLink)) {
@@ -300,7 +300,7 @@ const withRoutineKindWidgetPrivacyManifest = (config, props = {}) => {
   });
 };
 
-module.exports = withRoutineKindWidgetPrivacyManifest;
+module.exports = withLayerwellWidgetPrivacyManifest;
 module.exports.APP_GROUP_USER_DEFAULTS_REASON = APP_GROUP_USER_DEFAULTS_REASON;
 module.exports.LIVE_ACTIVITY_START_ENABLED_KEY = LIVE_ACTIVITY_START_ENABLED_KEY;
 module.exports.PRIVACY_MANIFEST_FILENAME = PRIVACY_MANIFEST_FILENAME;

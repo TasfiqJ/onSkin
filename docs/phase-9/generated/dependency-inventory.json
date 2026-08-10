@@ -1809,22 +1809,22 @@
       "resolved": "https://registry.npmjs.org/@nolyfill/is-core-module/-/is-core-module-1.0.39.tgz"
     },
     {
-      "path": "node_modules/@onskin/catalog-operator-console",
-      "name": "@onskin/catalog-operator-console",
+      "path": "node_modules/@layerwell/catalog-operator-console",
+      "name": "@layerwell/catalog-operator-console",
       "version": null,
       "license": null,
       "resolved": "apps/catalog-operator-console"
     },
     {
-      "path": "node_modules/@onskin/mobile",
-      "name": "@onskin/mobile",
+      "path": "node_modules/@layerwell/mobile",
+      "name": "@layerwell/mobile",
       "version": null,
       "license": null,
       "resolved": "apps/mobile"
     },
     {
-      "path": "node_modules/@onskin/types",
-      "name": "@onskin/types",
+      "path": "node_modules/@layerwell/types",
+      "name": "@layerwell/types",
       "version": null,
       "license": null,
       "resolved": "packages/types"

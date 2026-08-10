@@ -6,7 +6,7 @@ import { COMMERCE_ADMISSION_CLOSED } from './admission';
 // COM-01A keeps the legacy key only for explicit cleanup. Reads cannot issue
 // authority, positive writes fail before storage, and click persistence is closed.
 
-const CONSENT_KEY = 'onskin.commerceConsent.v1';
+const CONSENT_KEY = 'layerwell.commerceConsent.v1';
 
 export async function getCommerceConsentLocal(): Promise<boolean> {
   return false;

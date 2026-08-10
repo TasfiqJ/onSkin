@@ -74,7 +74,7 @@ category rows. Keep the main form footer outside the picker sheet.
 ## Verification Flow After Fix
 
 1. Open `/shelf/manual` at 320 x 568.
-2. Enter `Barrier Balm` and `RoutineKind Test`.
+2. Enter `Barrier Balm` and `Layerwell Test`.
 3. Open the category picker.
 4. Scroll the sheet to `Something else`.
 5. Confirm the `Something else` row is visible and center-tappable.

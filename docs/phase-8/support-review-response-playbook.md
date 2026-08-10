@@ -43,7 +43,7 @@ You can export your data in the app from You -> Export my data. If the export fa
 
 ### Feature Confusion
 
-RoutineKind is for routine and shelf organization with general cosmetic information. It is not medical advice. Please contact support at `SUPPORT_EMAIL` if something in the app was unclear.
+Layerwell is for routine and shelf organization with general cosmetic information. It is not medical advice. Please contact support at `SUPPORT_EMAIL` if something in the app was unclear.
 
 ## Review Theme Monitoring
 

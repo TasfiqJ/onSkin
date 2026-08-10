@@ -35,13 +35,13 @@ describe('Shelf Conflict Card copy (docs/14 §3) is claim-safe and calm', () => 
   });
 
   it('uses only a normalized first-party public domain for share-card URLs', () => {
-    expect(resolveCardPublicDomain('https://RoutineKind.app/share')).toBe('routinekind.app');
-    expect(resolveCardPublicDomain('https://example.com')).toBe('routinekind.example');
-    expect(resolveCardPublicDomain('http://localhost:19006')).toBe('routinekind.example');
-    expect(resolveCardPublicDomain('https://routinekind.local')).toBe('routinekind.example');
-    expect(resolveCardPublicDomain('https://routinekind.localhost')).toBe('routinekind.example');
-    expect(resolveCardPublicDomain('https://routinekind.test')).toBe('routinekind.example');
-    expect(resolveCardPublicDomain('routinekind.app@evil.com')).toBe('routinekind.example');
+    expect(resolveCardPublicDomain('https://Layerwell.app/share')).toBe('layerwell.app');
+    expect(resolveCardPublicDomain('https://example.com')).toBe('layerwell.example');
+    expect(resolveCardPublicDomain('http://localhost:19006')).toBe('layerwell.example');
+    expect(resolveCardPublicDomain('https://layerwell.local')).toBe('layerwell.example');
+    expect(resolveCardPublicDomain('https://layerwell.localhost')).toBe('layerwell.example');
+    expect(resolveCardPublicDomain('https://layerwell.test')).toBe('layerwell.example');
+    expect(resolveCardPublicDomain('layerwell.app@evil.com')).toBe('layerwell.example');
     expect(CARD_SHARE_URL).toBe(`https://${CARD_COPY.handle}`);
   });
 });

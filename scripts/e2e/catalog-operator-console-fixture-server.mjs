@@ -252,7 +252,7 @@ function detailResult(itemKind, itemId) {
         product: {
           id: "dd30b420-2c1d-4f17-99c2-c31058e79917",
           name: "Synthetic Barrier Cream",
-          brand: "RoutineKind test fixture",
+          brand: "Layerwell test fixture",
           category: "moisturizer",
         },
       },
@@ -278,7 +278,7 @@ function detailResult(itemKind, itemId) {
         product: {
           id: "dd30b420-2c1d-4f17-99c2-c31058e79917",
           name: "Synthetic Held Serum",
-          brand: "RoutineKind test fixture",
+          brand: "Layerwell test fixture",
           category: "serum",
         },
       },

@@ -45,7 +45,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.community.reactions.v1';
+const KEY = 'layerwell.community.reactions.v1';
 let accountGeneration = 0;
 
 describe('community reaction store', () => {

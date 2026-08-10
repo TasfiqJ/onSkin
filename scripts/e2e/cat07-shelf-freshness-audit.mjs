@@ -3517,7 +3517,7 @@ async function installCat07CaptureMarker(client, { artifact, runId, viewport }) 
   const installed = await evaluate(
     client,
     `(() => {
-      const markerId = '__onskin_cat07_capture_binding__';
+      const markerId = '__layerwell_cat07_capture_binding__';
       document.getElementById(markerId)?.remove();
       const canvas = document.createElement('canvas');
       canvas.id = markerId;
@@ -3553,7 +3553,7 @@ async function removeCat07CaptureMarker(client) {
     await evaluate(
       client,
       `(() => {
-        document.getElementById('__onskin_cat07_capture_binding__')?.remove();
+        document.getElementById('__layerwell_cat07_capture_binding__')?.remove();
         return true;
       })()`,
     );

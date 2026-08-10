@@ -77,9 +77,9 @@ Read this with:
 
 ## Current Launch Gates
 
-1. RoutineKind working identity is implemented locally and remains the first
+1. Layerwell working identity is implemented locally and remains the first
    candidate in the sequence for counsel review. The provisional sequence is
-   `RoutineKind`, `Ritunera`, `Ritualoom`; `Rituvia` is suspended. The governed
+   `Layerwell`, `Ritunera`, `Ritualoom`; `Rituvia` is suspended. The governed
    2026-07-16 public knockout is complete for its declared preliminary scope.
    Comprehensive WIPO/Madrid, final-country, company/trade-name, common-law,
    linguistic, legal-decision, reservation, and production-identity evidence
@@ -347,14 +347,14 @@ and retained evidence reference. The flag must remain pending, and the strict
 Phase 3 audit must remain blocking, until counsel, dermatologist,
 cosmetic-chemist, privacy/security, and IP/FTO signoffs are real.
 
-## B-BRAND - RoutineKind candidate clearance and launch identity
+## B-BRAND - Layerwell candidate clearance and launch identity
 
 Status: `launch-blocked`
 
-There is already a public skincare/cosmetic scanner branded `OnSkin` at
-`onskin.com`, with App Store and Google Play presence. This repo no longer uses
+There is already a public skincare/cosmetic scanner branded `Layerwell` at
+`layerwell.com`, with App Store and Google Play presence. This repo no longer uses
 the legacy identity for local/native launch defaults: the current working
-candidate is `RoutineKind`, with `routinekind://` and `com.routinekind.app`
+candidate is `Layerwell`, with `layerwell://` and `com.layerwell.app`
 development/staging defaults. `npm run brand:audit:strict` passes with zero
 public launch-risk, zero review-needed, and 23 exact reviewed
 `legacy-compatibility` hits. The retained 23 are cryptographic/domain-separation
@@ -374,9 +374,9 @@ issued an opinion.
 
 The governed 2026-07-16 knockout refresh completed the declared Apple public
 store, CIPO, USPTO, IP Australia, RDAP, common-law, public-handle, UKIPO, and
-TMview preliminary scope. It retains `RoutineKind` first, `Ritunera` backup 1,
+TMview preliminary scope. It retains `Layerwell` first, `Ritunera` backup 1,
 and lower-confidence `Ritualoom` backup 2. It records occupied YouTube
-`@routinekind`, a redirecting Facebook `ritunera` path, UK class-9 `Trunera`,
+`@layerwell`, a redirecting Facebook `ritunera` path, UK class-9 `Trunera`,
 and the dense `RITUAL` field. It suspends `Rituvia` after `Rituva`, `Retuvia`,
 `RITUVÉ`, `Ritjuva`, `RITULIA`, and registered `rituvia.com` evidence.
 Comprehensive WIPO/Madrid, final-country, company/trade-name, common-law,
@@ -386,7 +386,7 @@ non-infringing, reserved, or Apple-approved.
 
 Risk:
 
-- trademark/customer-confusion exposure if the app reverts to `OnSkin` or uses
+- trademark/customer-confusion exposure if the app reverts to `Layerwell` or uses
   a confusingly similar identity
 - users downloading or contacting the wrong app if public surfaces are created
   before final reservation
@@ -400,9 +400,9 @@ Risk:
 Next action:
 
 - Give counsel `docs/brand-evidence.md`.
-- Ask counsel to clear or reject the exact `RoutineKind`, `Ritunera`, and
+- Ask counsel to clear or reject the exact `Layerwell`, `Ritunera`, and
   `Ritualoom` sequence and review the rejected `Rituvia` comparators; do not
-  revert to `OnSkin` unless counsel explicitly clears it.
+  revert to `Layerwell` unless counsel explicitly clears it.
 - Have qualified counsel independently reproduce and expand the preliminary
   grids and complete WIPO/Madrid, final-country, company/trade-name,
   common-law, linguistic, priority, and goods/services analysis.
@@ -421,8 +421,8 @@ Exit criteria:
 - code/copy/share-card/policy/env references match the final identity and
   typecheck/lint/tests pass.
 
-Default until cleared: do not launch as `OnSkin`, and do not treat
-`RoutineKind` as final, do not advance `Rituvia`, and do not freeze any
+Default until cleared: do not launch as `Layerwell`, and do not treat
+`Layerwell` as final, do not advance `Rituvia`, and do not freeze any
 replacement until counsel and store/domain reservation evidence are attached.
 
 ## B-SUPABASE - Live backend
@@ -652,7 +652,7 @@ Exit criteria:
 Status: `source-hardened / external-blocked`
 
 Apple account and App Store records should be created only under the
-counsel-cleared final identity. Do not use legacy `OnSkin` identifiers.
+counsel-cleared final identity. Do not use legacy `Layerwell` identifiers.
 
 Next action:
 
@@ -1367,7 +1367,7 @@ Risk:
   while analyzer timeouts can hide device-specific incompatibility;
 - slow local photo loading or high memory use in photo timeline weakens the
   progress moat and can cause native crashes under real photo volume;
-- the RoutineKind WidgetKit provider/render read path synchronously acquires an
+- the Layerwell WidgetKit provider/render read path synchronously acquires an
   exclusive cross-process `flock` and opens SQLite read-write, so contention,
   schema work, or busy waits can consume the extension execution budget and
   leave the system presenting stale/generic content.
@@ -1390,7 +1390,7 @@ Next action:
 - measure local photo loading and memory use in photo timeline with realistic
   encrypted local photo volume;
 - use Instruments and extension diagnostics on the oldest supported and current
-  physical iPhones to measure RoutineKind provider/render lock wait, read-write
+  physical iPhones to measure Layerwell provider/render lock wait, read-write
   SQLite open/schema/read work, memory, timeout, and concurrent
   AppIntent/publication/cleanup pressure;
 - set explicit beta pass/fail thresholds before recruiting testers;
@@ -1489,7 +1489,7 @@ In-app previews and a signed-disabled native lifecycle source candidate now
 exist. The exact `expo-widgets` 57.0.8 patch uses a bounded SQLite App Group
 authority, rotating-nonce CAS, durable action outbox, owner/snapshot binding,
 lock-held final-outbox quiescence, two-entry stale timeline, typed
-`outbox_pending`/stale-Activity retries, finite RoutineKind Activity lifecycle,
+`outbox_pending`/stale-Activity retries, finite Layerwell Activity lifecycle,
 and a closed cleanup tombstone; UserDefaults is presentation-only. A nonempty
 quiescence capture permits only one exact receipt/authority/owner/snapshot/
 revision-bound commit before native admission remains closed; an empty capture

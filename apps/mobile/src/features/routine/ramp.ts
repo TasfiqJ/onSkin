@@ -1,4 +1,4 @@
-import type { RampClass, ToleranceState } from '@onskin/types';
+import type { RampClass, ToleranceState } from '@layerwell/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
 import { shippableRoutineCadencePolicy } from './sequencing';

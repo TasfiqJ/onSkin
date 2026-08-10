@@ -31,7 +31,7 @@ public final class WidgetsModule: Module {
       )
     }
 
-    // Global push-to-start tokens are not scoped to a RoutineKind owner and
+    // Global push-to-start tokens are not scoped to a Layerwell owner and
     // cannot be revoked by the privacy-closing sentinel. Keep the event name
     // registered for API compatibility, but never observe or emit this token.
 
@@ -51,81 +51,81 @@ public final class WidgetsModule: Module {
       }
     }
 
-    Constant("routineKindWidgetLifecycleVersion") {
-      RoutineKindWidgetLifecycleStore.nativeSchemaVersion
+    Constant("layerwellWidgetLifecycleVersion") {
+      LayerwellWidgetLifecycleStore.nativeSchemaVersion
     }
 
-    Constant("routineKindWidgetLifecycleConfigured") {
-      RoutineKindWidgetLifecycleStore.nativeStateIsConfigured
+    Constant("layerwellWidgetLifecycleConfigured") {
+      LayerwellWidgetLifecycleStore.nativeStateIsConfigured
     }
 
     Function("reloadAllWidgets") {
       WidgetCenter.shared.reloadAllTimelines()
     }
 
-    Function("routineKindReadAuthorityJSON") { () -> String in
-      try RoutineKindWidgetLifecycleStore.readAuthorityJSON()
+    Function("layerwellReadAuthorityJSON") { () -> String in
+      try LayerwellWidgetLifecycleStore.readAuthorityJSON()
     }
 
-    Function("routineKindActivateOwnerGeneration") {
+    Function("layerwellActivateOwnerGeneration") {
       (expectedAuthorityNonce: String, ownerGeneration: String) -> String in
-      try RoutineKindWidgetLifecycleStore.activateOwner(
+      try LayerwellWidgetLifecycleStore.activateOwner(
         expectedAuthorityNonce: expectedAuthorityNonce,
         ownerGeneration: ownerGeneration
       )
     }
 
-    Function("routineKindPublishTimelineJSON") {
+    Function("layerwellPublishTimelineJSON") {
       (expectedAuthorityNonce: String, timelineJSON: String) -> String in
-      try RoutineKindWidgetLifecycleStore.publishTimelineJSON(
+      try LayerwellWidgetLifecycleStore.publishTimelineJSON(
         expectedAuthorityNonce: expectedAuthorityNonce,
         timelineJSON: timelineJSON
       )
     }
 
-    Function("routineKindReadTimelineJSON") { (expectedAuthorityNonce: String) -> String in
-      try RoutineKindWidgetLifecycleStore.currentTimelineJSON(
+    Function("layerwellReadTimelineJSON") { (expectedAuthorityNonce: String) -> String in
+      try LayerwellWidgetLifecycleStore.currentTimelineJSON(
         expectedAuthorityNonce: expectedAuthorityNonce
       )
     }
 
-    Function("routineKindReadOutboxJSON") { (expectedAuthorityNonce: String) -> String in
-      try RoutineKindWidgetLifecycleStore.readOutboxJSON(
+    Function("layerwellReadOutboxJSON") { (expectedAuthorityNonce: String) -> String in
+      try LayerwellWidgetLifecycleStore.readOutboxJSON(
         expectedAuthorityNonce: expectedAuthorityNonce
       )
     }
 
-    Function("routineKindCommitReconciliationJSON") { (json: String) -> String in
-      try RoutineKindWidgetLifecycleStore.commitReconciliationJSON(json)
+    Function("layerwellCommitReconciliationJSON") { (json: String) -> String in
+      try LayerwellWidgetLifecycleStore.commitReconciliationJSON(json)
     }
 
-    Function("routineKindCommitQuiescedReconciliationJSON") { (json: String) -> String in
-      try RoutineKindWidgetLifecycleStore.commitQuiescedReconciliationJSON(json)
+    Function("layerwellCommitQuiescedReconciliationJSON") { (json: String) -> String in
+      try LayerwellWidgetLifecycleStore.commitQuiescedReconciliationJSON(json)
     }
 
-    Function("routineKindCloseAdmissionJSON") { () -> String in
-      try RoutineKindWidgetLifecycleStore.closeAdmissionJSON()
+    Function("layerwellCloseAdmissionJSON") { () -> String in
+      try LayerwellWidgetLifecycleStore.closeAdmissionJSON()
     }
 
-    Function("routineKindQuiesceAdmissionJSON") {
+    Function("layerwellQuiesceAdmissionJSON") {
       (expectedAuthorityNonce: String, ownerGeneration: String) -> String in
-      try RoutineKindWidgetLifecycleStore.quiesceAdmissionJSON(
+      try LayerwellWidgetLifecycleStore.quiesceAdmissionJSON(
         expectedAuthorityNonce: expectedAuthorityNonce,
         ownerGeneration: ownerGeneration
       )
     }
 
-    AsyncFunction("routineKindClearNativeState") { () async throws -> String in
+    AsyncFunction("layerwellClearNativeState") { () async throws -> String in
       var storageReceipt: String?
       var storageError: Error?
       do {
-        storageReceipt = try RoutineKindWidgetLifecycleStore.invalidateAndPurge()
+        storageReceipt = try LayerwellWidgetLifecycleStore.invalidateAndPurge()
       } catch {
         storageError = error
       }
       let endedActivities: Int
       if #available(iOS 16.2, *) {
-        endedActivities = await RoutineKindWidgetLifecycleStore.endAllActivitiesImmediately()
+        endedActivities = await LayerwellWidgetLifecycleStore.endAllActivitiesImmediately()
       } else {
         endedActivities = 0
       }
@@ -134,23 +134,23 @@ public final class WidgetsModule: Module {
             let receiptData = storageReceipt.data(using: .utf8),
             let receipt = try JSONSerialization.jsonObject(with: receiptData) as? [String: Any]
       else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       let result: [String: Any] = [
         "authority": receipt,
         "endedActivities": endedActivities,
-        "schemaVersion": RoutineKindWidgetLifecycleStore.nativeSchemaVersion
+        "schemaVersion": LayerwellWidgetLifecycleStore.nativeSchemaVersion
       ]
       let data = try JSONSerialization.data(withJSONObject: result, options: [.sortedKeys])
       guard let json = String(data: data, encoding: .utf8) else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       return json
     }
 
-    AsyncFunction("routineKindReconcileActivities") { () async -> [String: Int] in
+    AsyncFunction("layerwellReconcileActivities") { () async -> [String: Int] in
       guard #available(iOS 16.2, *) else { return ["kept": 0, "ended": 0] }
-      return await RoutineKindWidgetLifecycleStore.reconcileActivities()
+      return await LayerwellWidgetLifecycleStore.reconcileActivities()
     }
 
     Class("Widget", WidgetObject.self) {

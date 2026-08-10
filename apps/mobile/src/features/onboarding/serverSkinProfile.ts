@@ -1,5 +1,5 @@
-import type { GoalId, PregnancyStatus, SkinAxis } from '@onskin/types';
-import { GOALS } from '@onskin/types';
+import type { GoalId, PregnancyStatus, SkinAxis } from '@layerwell/types';
+import { GOALS } from '@layerwell/types';
 
 import {
   ONBOARDING_QUIZ,

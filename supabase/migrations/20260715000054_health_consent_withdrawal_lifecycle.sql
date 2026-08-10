@@ -149,7 +149,7 @@ create table public.health_processing_states (
         'photo_capture',
         'photo_cloud_backup',
         'photo_trend_insights',
-        'ask_onskin',
+        'ask_layerwell',
         'community_participation',
         'data_sharing'
       ]::text[])
@@ -197,7 +197,7 @@ create table public.health_consent_copy_registry (
       'photo_capture',
       'photo_cloud_backup',
       'photo_trend_insights',
-      'ask_onskin',
+      'ask_layerwell',
       'community_participation',
       'data_sharing'
     ]::text[])
@@ -237,9 +237,9 @@ insert into public.health_consent_copy_registry (
     '58997d5c3ef5098edf6544aa2752e6878765065831ddbf42c24a364ab36cd1aa', 'draft_blocked'),
   ('photo_trend_insights', 'withdraw', 'photo-trend-insights-2026-06-13-placeholder',
     'd6bd89ffbb0900784d4af6d8ae1501c7e10385eeba199e1bd8e932d957eec6ba', 'draft_blocked'),
-  ('ask_onskin', 'grant', 'ask-advisor-2026-06-14-placeholder',
+  ('ask_layerwell', 'grant', 'ask-advisor-2026-06-14-placeholder',
     '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18', 'draft_blocked'),
-  ('ask_onskin', 'withdraw', 'ask-advisor-2026-06-14-placeholder',
+  ('ask_layerwell', 'withdraw', 'ask-advisor-2026-06-14-placeholder',
     '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff', 'draft_blocked'),
   ('community_participation', 'grant', 'community-participation-2026-06-13-placeholder',
     '416da3ba3cd3496c1008cff937b4d7ad0efa7093d40bcfed2636b480e603ca5e', 'draft_blocked'),
@@ -1018,7 +1018,7 @@ create table public.health_dependent_consent_operations (
       'photo_capture',
       'photo_cloud_backup',
       'photo_trend_insights',
-      'ask_onskin',
+      'ask_layerwell',
       'community_participation',
       'data_sharing'
     ]::text[])
@@ -1076,7 +1076,7 @@ create table public.health_dependent_consent_states (
       'photo_capture',
       'photo_cloud_backup',
       'photo_trend_insights',
-      'ask_onskin',
+      'ask_layerwell',
       'community_participation',
       'data_sharing'
     ]::text[])
@@ -1280,7 +1280,7 @@ as $$
     'photo_capture',
     'photo_cloud_backup',
     'photo_trend_insights',
-    'ask_onskin',
+    'ask_layerwell',
     'community_participation',
     'data_sharing'
   ]::text[]);
@@ -1705,7 +1705,7 @@ begin
       pg_catalog.lower(v_segment), 'health-consent-generation'
     ) > 0 then
       v_segment := pg_catalog.btrim(v_segment, ' ');
-      if v_segment !~ '^health-consent-generation=(photo_capture|photo_cloud_backup|photo_trend_insights|ask_onskin|community_participation|data_sharing):[1-9][0-9]{0,18}$' then
+      if v_segment !~ '^health-consent-generation=(photo_capture|photo_cloud_backup|photo_trend_insights|ask_layerwell|community_participation|data_sharing):[1-9][0-9]{0,18}$' then
         raise exception 'HEALTH_DEPENDENT_GENERATION_REQUIRED' using errcode = '55000';
       end if;
       v_type := pg_catalog.split_part(
@@ -2316,7 +2316,7 @@ begin
       raise exception 'HEALTH_PROCESSING_OWNER_IMMUTABLE' using errcode = '22023';
     end if;
   end if;
-  perform public._assert_health_dependent_active_locked(v_owner, 'ask_onskin');
+  perform public._assert_health_dependent_active_locked(v_owner, 'ask_layerwell');
   return new;
 end;
 $$;
@@ -2476,13 +2476,13 @@ create trigger trg_photo_trend_health_write
   for each row execute function public._guard_direct_health_write('user_id', 'photo_trend_insights');
 create trigger trg_ask_sessions_health_write
   before insert or update on public.ask_sessions
-  for each row execute function public._guard_direct_health_write('user_id', 'ask_onskin');
+  for each row execute function public._guard_direct_health_write('user_id', 'ask_layerwell');
 create trigger trg_ask_turn_audit_health_write
   before insert or update on public.ask_turn_audit
   for each row execute function public._guard_ask_turn_health_write();
 create trigger trg_ask_safety_audit_health_write
   before insert or update on public.ask_safety_audit
-  for each row execute function public._guard_direct_health_write('user_id', 'ask_onskin');
+  for each row execute function public._guard_direct_health_write('user_id', 'ask_layerwell');
 create trigger trg_photo_storage_health_write
   before insert or update on storage.objects
   for each row execute function public._guard_photo_storage_health_write();
@@ -2804,7 +2804,7 @@ stable
 security definer
 set search_path = ''
 as $$
-  select private.health_dependent_read_allowed((select auth.uid()), 'ask_onskin')
+  select private.health_dependent_read_allowed((select auth.uid()), 'ask_layerwell')
     and exists (
       select 1
         from public.ask_turn_audit as turns
@@ -2956,17 +2956,17 @@ create policy "health_processing_read_fence" on public.photo_trend
 create policy "health_processing_read_fence" on public.ask_sessions
   as restrictive for select to authenticated
   using (
-    private.health_dependent_read_allowed((select auth.uid()), 'ask_onskin')
+    private.health_dependent_read_allowed((select auth.uid()), 'ask_layerwell')
   );
 create policy "health_processing_read_fence" on public.ask_turn_audit
   as restrictive for select to authenticated
   using (
-    private.health_dependent_read_allowed((select auth.uid()), 'ask_onskin')
+    private.health_dependent_read_allowed((select auth.uid()), 'ask_layerwell')
   );
 create policy "health_processing_read_fence" on public.ask_safety_audit
   as restrictive for select to authenticated
   using (
-    private.health_dependent_read_allowed((select auth.uid()), 'ask_onskin')
+    private.health_dependent_read_allowed((select auth.uid()), 'ask_layerwell')
   );
 create policy "health_processing_read_fence" on storage.objects
   as restrictive for select to authenticated
@@ -3232,7 +3232,7 @@ create policy "consents_insert_own" on public.consents
       'photo_capture',
       'photo_cloud_backup',
       'photo_trend_insights',
-      'ask_onskin',
+      'ask_layerwell',
       'community_participation',
       'data_sharing'
     ]::text[])
@@ -3258,7 +3258,7 @@ begin
       'photo_capture',
       'photo_cloud_backup',
       'photo_trend_insights',
-      'ask_onskin',
+      'ask_layerwell',
       'community_participation',
       'data_sharing'
     ]::text[]) as types(consent_type)
@@ -3282,7 +3282,7 @@ select users.id, types.consent_type, 'unconsented', 0
    'photo_capture',
    'photo_cloud_backup',
    'photo_trend_insights',
-   'ask_onskin',
+   'ask_layerwell',
    'community_participation',
    'data_sharing'
  ]::text[]) as types(consent_type)
@@ -3792,7 +3792,7 @@ begin
       return exists (
         select 1 from public.photo_trend as trends where trends.user_id = p_user_id
       );
-    when 'ask_onskin' then
+    when 'ask_layerwell' then
       return exists (
         select 1 from public.ask_sessions as sessions where sessions.user_id = p_user_id
       ) or exists (

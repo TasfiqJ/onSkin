@@ -101,7 +101,7 @@ systems. They govern the same five decisions:
 
 | Feature-document decision | Root decision | Governing rule                                                                                                                 |
 | ------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `D-046`                   | `D-068`       | No population skin score, skin age, grade, or percentage; Trend is not a seven-figure pillar.                                  |
+| `D-046`                   | `D-068`       | No populatilayerwell score, skin age, grade, or percentage; Trend is not a seven-figure pillar.                                  |
 | `D-047`                   | `D-069`       | Any future engine is on-device only; cloud and general multimodal models are not a phase.                                      |
 | `D-048`                   | `D-070`       | A future output is within-person descriptive change above a validated noise floor, never a population verdict.                 |
 | `D-049`                   | `D-071`       | Fairness is a launch gate, redness is not the metric, and claimed performance requires predeclared diverse-condition evidence. |
@@ -171,7 +171,7 @@ of the unfinished PHOTO-05 engine.
 
 Accessed 2026-07-29. These primary sources support a conservative engineering
 boundary. They do not determine every law's applicability, provide legal or
-medical advice, approve OnSkin, or guarantee App Review.
+medical advice, approve Layerwell, or guarantee App Review.
 
 | Authority                                                                                                                                                                                                                                                                                                                                                                 | Current engineering implication                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -88,7 +88,7 @@ describe('plaintext staging journal', () => {
     );
     harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
 
-    expect(PLAINTEXT_STAGING_JOURNAL_KEY).toBe('routinekind.plaintext_staging_journal.v1');
+    expect(PLAINTEXT_STAGING_JOURNAL_KEY).toBe('layerwell.plaintext_staging_journal.v1');
     await expect(harness.coordinator.scavenge()).resolves.toBe(1);
 
     expect(harness.files).toEqual(new Set());

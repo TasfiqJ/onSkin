@@ -11,7 +11,7 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
 // night tonight is (docs/02 §5 / docs/03 §5). Set on "Start today"; defaults to
 // today so the cycle begins on night 1. (Persisting per-user belongs to the
 // routine-builder server persistence. B-SUPABASE.)
-const KEY = 'onskin.cycleAnchor';
+const KEY = 'layerwell.cycleAnchor';
 
 function normalizeLocalDateISO(value: unknown): string | null {
   if (typeof value !== 'string') return null;

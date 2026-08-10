@@ -1,5 +1,5 @@
 {
-  "name": "@onskin/mobile",
+  "name": "@layerwell/mobile",
   "main": "expo-router/entry",
   "version": "0.1.0",
   "private": true,
@@ -20,7 +20,7 @@
     "@expo/ui": "~57.0.9",
     "@infinitered/react-native-mlkit-face-detection": "^5.0.0",
     "@noble/ciphers": "^2.2.0",
-    "@onskin/types": "*",
+    "@layerwell/types": "*",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-google-signin/google-signin": "^16.1.2",
     "@sentry/react-native": "~7.11.0",

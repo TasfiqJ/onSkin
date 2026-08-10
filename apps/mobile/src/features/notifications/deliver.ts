@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-import type { NotificationKind } from '@onskin/types';
+import type { NotificationKind } from '@layerwell/types';
 
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { billingCadenceForProductId } from '@/features/subscription/billingCadence';
@@ -307,7 +307,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
   await scheduleTrialReminder();
 }
 
-const TRIAL_REMINDER_ID = 'onskin-trial-reminder';
+const TRIAL_REMINDER_ID = 'layerwell-trial-reminder';
 
 function fmtShortDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });

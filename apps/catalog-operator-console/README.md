@@ -43,7 +43,7 @@ phishing-resistant authentication.
 Copy `.env.example` to an ignored `.env.local` and use local-project values:
 
 ```powershell
-npm.cmd --workspace @onskin/catalog-operator-console run dev
+npm.cmd --workspace @layerwell/catalog-operator-console run dev
 ```
 
 The local database must include migration `0063`, an explicitly provisioned
@@ -59,13 +59,13 @@ the checked-in `style-src 'self'` policy correctly blocks.
 $env:VITE_OPERATOR_CONSOLE_ENV='local'
 $env:VITE_SUPABASE_URL='http://127.0.0.1:54329'
 $env:VITE_SUPABASE_PUBLISHABLE_KEY='sb_publishable_0123456789abcdefghijklmnopqrstuvwxyz'
-npm.cmd --workspace @onskin/catalog-operator-console run build
+npm.cmd --workspace @layerwell/catalog-operator-console run build
 
 # Separate local-only terminal:
 $env:CATALOG_OPERATOR_FIXTURE_ORIGIN='http://127.0.0.1:4318'
 node scripts/e2e/catalog-operator-console-fixture-server.mjs
 
-npm.cmd --workspace @onskin/catalog-operator-console run preview -- --port 4318
+npm.cmd --workspace @layerwell/catalog-operator-console run preview -- --port 4318
 ```
 
 The fixture models email OTP -> `aal1` -> verified TOTP challenge -> `aal2`;

@@ -178,7 +178,7 @@ if (process.env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF !== projectRef) {
 if (!process.env.SUPABASE_ACCESS_TOKEN) stableFailure('DB06_ACCESS_TOKEN_NOT_CONFIGURED');
 
 const started = new Date();
-const runtimeRoot = mkdtempSync(join(tmpdir(), 'routinekind-db06-staging-'));
+const runtimeRoot = mkdtempSync(join(tmpdir(), 'layerwell-db06-staging-'));
 const deploymentRoot = join(runtimeRoot, 'source');
 const deploymentScriptDir = join(deploymentRoot, 'scripts', 'phase2');
 const steps = [];

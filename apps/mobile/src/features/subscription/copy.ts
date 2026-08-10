@@ -1,4 +1,4 @@
-import type { GatedFeature } from '@onskin/types';
+import type { GatedFeature } from '@layerwell/types';
 
 import { BRAND } from '@/lib/brand';
 

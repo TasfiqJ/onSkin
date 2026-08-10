@@ -1,4 +1,4 @@
-export const PLAINTEXT_STAGING_JOURNAL_KEY = 'routinekind.plaintext_staging_journal.v1';
+export const PLAINTEXT_STAGING_JOURNAL_KEY = 'layerwell.plaintext_staging_journal.v1';
 export const LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY = 'onskin.plaintext_staging_journal.v1';
 export const PLAINTEXT_STAGING_CACHE_UNAVAILABLE = 'PLAINTEXT_STAGING_CACHE_UNAVAILABLE';
 export const PLAINTEXT_STAGING_JOURNAL_INVALID = 'PLAINTEXT_STAGING_JOURNAL_INVALID';

@@ -14,13 +14,13 @@ import {
 
 const NOW_MS = Date.parse('2026-08-04T12:00:00.000Z');
 const APP_ID = 'appProductionIos2026';
-const BUNDLE_ID = 'com.routinekind.app';
+const BUNDLE_ID = 'com.layerwell.app';
 const BUILD_NUMBER = '104';
 const SOURCE_GIT_SHA = 'a'.repeat(40);
 const PACKAGE_VERSION = '10.4.1';
 const ENTITLEMENT_ID = 'pro';
-const ANNUAL_PRODUCT_ID = 'routinekind.pro.annual';
-const MONTHLY_PRODUCT_ID = 'routinekind.pro.monthly';
+const ANNUAL_PRODUCT_ID = 'layerwell.pro.annual';
+const MONTHLY_PRODUCT_ID = 'layerwell.pro.monthly';
 const SIGNED_OFF_BY = 'Tas Mohammed';
 const TRUSTED_ENTITLEMENTS_SOURCE = `
 const Purchases = await loadPurchases();
@@ -96,7 +96,7 @@ function validDocument() {
   };
 }
 
-function createRoot(prefix = 'routinekind-trusted-entitlements-') {
+function createRoot(prefix = 'layerwell-trusted-entitlements-') {
   const root = mkdtempSync(join(tmpdir(), prefix));
   mkdirSync(join(root, 'docs', 'phase-6'), { recursive: true });
   return root;
@@ -383,8 +383,8 @@ test('cross-binds app, bundle, build, source Git SHA, package version, IDs, and 
   document.app.sourceGitSha = 'b'.repeat(40);
   document.app.reactNativePurchasesVersion = '10.4.2';
   document.entitlementId = 'pro_other';
-  document.productIds.annual = 'routinekind.pro.otherannual';
-  document.productIds.monthly = 'routinekind.pro.othermonthly';
+  document.productIds.annual = 'layerwell.pro.otherannual';
+  document.productIds.monthly = 'layerwell.pro.othermonthly';
   document.reviewedBy = 'Different Reviewer';
   withEvidence(document, ({ root, evidencePath }) => {
     const result = audit(root, evidencePath);

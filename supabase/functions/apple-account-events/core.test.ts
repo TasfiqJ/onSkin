@@ -30,7 +30,7 @@ function claims(
   overrides: Partial<AppleServerEventClaims> = {},
 ): AppleServerEventClaims {
   return {
-    audience: "com.example.routinekind",
+    audience: "com.example.layerwell",
     eventAtSeconds: 1_800_000_000,
     eventType: "email-disabled",
     issuer: "https://appleid.apple.com",
@@ -107,7 +107,7 @@ Deno.test(
       "nonterminal subject is minimized at the RPC boundary",
     );
     assert(
-      observed.clientId === "com.example.routinekind",
+      observed.clientId === "com.example.layerwell",
       "verified audience is forwarded exactly",
     );
     for (

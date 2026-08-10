@@ -205,14 +205,14 @@ describe('private KV encrypted storage', () => {
   it('blocks a classified health record when local processing is closed', async () => {
     clearActiveHealthProcessingEpoch();
 
-    await expect(setPrivateItem('onskin.skinprofile.v1', 'stale-profile')).rejects.toThrow(
+    await expect(setPrivateItem('layerwell.skinprofile.v1', 'stale-profile')).rejects.toThrow(
       'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
     );
-    expect(mocks.asyncStorage.has('onskin.skinprofile.v1')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.skinprofile.v1')).toBe(false);
   });
 
   it('does not return a classified pre-withdrawal read after same-value re-grant', async () => {
-    await setPrivateItem('onskin.skinprofile.v1', 'prior-profile');
+    await setPrivateItem('layerwell.skinprofile.v1', 'prior-profile');
     let releaseRead!: () => void;
     let markReadStarted!: () => void;
     mocks.getItemGate = new Promise<void>((resolve) => {
@@ -223,7 +223,7 @@ describe('private KV encrypted storage', () => {
     });
     mocks.getItemStarted = markReadStarted;
 
-    const staleRead = getPrivateItem('onskin.skinprofile.v1');
+    const staleRead = getPrivateItem('layerwell.skinprofile.v1');
     await readStarted;
     clearActiveHealthProcessingEpoch();
     setActiveHealthProcessingEpoch(1, {
@@ -256,19 +256,19 @@ describe('private KV encrypted storage', () => {
     });
     mocks.setItemStarted = markWriteStarted;
 
-    const write = setPrivateItem('onskin.skinprofile.v1', 'lease-bound-profile');
+    const write = setPrivateItem('layerwell.skinprofile.v1', 'lease-bound-profile');
     await writeStarted;
     const rejection = expect(write).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
     vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
     releaseWrite();
 
     await rejection;
-    expect(mocks.asyncStorage.has('onskin.skinprofile.v1')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.skinprofile.v1')).toBe(false);
   });
 
   it('restores the exact prior ciphertext when a classified update outlives its status lease', async () => {
-    await setPrivateItem('onskin.skinprofile.v1', 'prior-profile');
-    const priorRaw = mocks.asyncStorage.get('onskin.skinprofile.v1');
+    await setPrivateItem('layerwell.skinprofile.v1', 'prior-profile');
+    const priorRaw = mocks.asyncStorage.get('layerwell.skinprofile.v1');
 
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-07-15T16:00:00.000Z'));
@@ -288,24 +288,24 @@ describe('private KV encrypted storage', () => {
     });
     mocks.setItemStarted = markWriteStarted;
 
-    const write = setPrivateItem('onskin.skinprofile.v1', 'expired-update');
+    const write = setPrivateItem('layerwell.skinprofile.v1', 'expired-update');
     await writeStarted;
     const rejection = expect(write).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
     vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
     releaseWrite();
 
     await rejection;
-    expect(mocks.asyncStorage.get('onskin.skinprofile.v1')).toBe(priorRaw);
+    expect(mocks.asyncStorage.get('layerwell.skinprofile.v1')).toBe(priorRaw);
     setActiveHealthProcessingEpoch(8, {
       ownerUserId: 'test-owner',
       accountGeneration: 0,
       serverVerifiedAt: null,
     });
-    await expect(getPrivateItem('onskin.skinprofile.v1')).resolves.toBe('prior-profile');
+    await expect(getPrivateItem('layerwell.skinprofile.v1')).resolves.toBe('prior-profile');
   });
 
   it('restores exact prior ciphertext when setItem commits and then rejects', async () => {
-    const key = 'onskin.set-commit-reject-existing';
+    const key = 'layerwell.set-commit-reject-existing';
     await setPrivateItem(key, 'prior-value');
     const priorRaw = mocks.asyncStorage.get(key);
     mocks.setItemOutcomeKey = key;
@@ -320,7 +320,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('restores exact prior absence when first setItem commits and then rejects', async () => {
-    const key = 'onskin.set-commit-reject-new';
+    const key = 'layerwell.set-commit-reject-new';
     mocks.setItemOutcomeKey = key;
     mocks.setItemOutcomes.push('reject-after');
 
@@ -332,7 +332,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('preserves exact prior ciphertext when setItem rejects before committing', async () => {
-    const key = 'onskin.set-reject-before-commit';
+    const key = 'layerwell.set-reject-before-commit';
     await setPrivateItem(key, 'prior-value');
     const priorRaw = mocks.asyncStorage.get(key);
     mocks.setItemOutcomeKey = key;
@@ -346,7 +346,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('fails closed when committed setItem bytes cannot be rolled back', async () => {
-    const key = 'onskin.set-rollback-failure';
+    const key = 'layerwell.set-rollback-failure';
     await setPrivateItem(key, 'prior-value');
     const priorRaw = mocks.asyncStorage.get(key);
     mocks.setItemOutcomeKey = key;
@@ -360,7 +360,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('fails closed without overwriting conflicting bytes after setItem rejection', async () => {
-    const key = 'onskin.set-rollback-conflict';
+    const key = 'layerwell.set-rollback-conflict';
     await setPrivateItem(key, 'prior-value');
     const replacement = 'concurrent-authoritative-replacement';
     const priorRaw = mocks.asyncStorage.get(key);
@@ -380,7 +380,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('restores exact prior ciphertext when a delayed guarded removal loses health authority', async () => {
-    const key = 'onskin.skinprofile.v1';
+    const key = 'layerwell.skinprofile.v1';
     await setPrivateItem(key, 'prior-profile');
     const priorRaw = mocks.asyncStorage.get(key);
     let releaseRemoval!: () => void;
@@ -411,7 +411,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('restores exact prior ciphertext when a delayed guarded removal loses account authority', async () => {
-    const key = 'routinekind.catalog.lookupQueue.v1';
+    const key = 'layerwell.catalog.lookupQueue.v1';
     await setPrivateItem(key, 'prior-catalog-queue');
     const priorRaw = mocks.asyncStorage.get(key);
     clearActiveHealthProcessingEpoch();
@@ -445,7 +445,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('restores exact prior ciphertext when guarded remove commits and then rejects', async () => {
-    const key = 'onskin.remove-commit-reject';
+    const key = 'layerwell.remove-commit-reject';
     await setPrivateItem(key, 'prior-value');
     const priorRaw = mocks.asyncStorage.get(key);
     mocks.removeItemOutcomeKey = key;
@@ -460,7 +460,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('fails closed when guarded removal rollback cannot restore prior ciphertext', async () => {
-    const key = 'onskin.skinprofile.v1';
+    const key = 'layerwell.skinprofile.v1';
     await setPrivateItem(key, 'prior-value');
     const priorRaw = mocks.asyncStorage.get(key);
     mocks.setItemOutcomeKey = key;
@@ -492,7 +492,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('fails closed without overwriting a conflicting guarded-removal replacement', async () => {
-    const key = 'onskin.skinprofile.v1';
+    const key = 'layerwell.skinprofile.v1';
     await setPrivateItem(key, 'prior-profile');
     const replacement = 'concurrent-authoritative-replacement';
     mocks.removeItemCommitted = (committedKey) => {
@@ -526,30 +526,30 @@ describe('private KV encrypted storage', () => {
 
   it('keeps classified deletion and nonclassified account state available after withdrawal', async () => {
     await Promise.all([
-      setPrivateItem('onskin.skinprofile.v1', 'profile'),
-      setPrivateItem('onskin.shelf.v1', 'shelf'),
-      setPrivateItem('onskin.notifPrefs.v1', 'notifications'),
+      setPrivateItem('layerwell.skinprofile.v1', 'profile'),
+      setPrivateItem('layerwell.shelf.v1', 'shelf'),
+      setPrivateItem('layerwell.notifPrefs.v1', 'notifications'),
     ]);
     clearActiveHealthProcessingEpoch();
 
     const genericUpdater = vi.fn(() => null);
-    await expect(updatePrivateItem('onskin.skinprofile.v1', genericUpdater)).rejects.toThrow(
+    await expect(updatePrivateItem('layerwell.skinprofile.v1', genericUpdater)).rejects.toThrow(
       'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
     );
     expect(genericUpdater).not.toHaveBeenCalled();
-    await removePrivateItem('onskin.skinprofile.v1');
-    await removePrivateItem('onskin.shelf.v1');
-    await multiRemovePrivateItems(['onskin.notifPrefs.v1']);
-    await setPrivateItem('onskin.account-control.v1', 'retained-control');
+    await removePrivateItem('layerwell.skinprofile.v1');
+    await removePrivateItem('layerwell.shelf.v1');
+    await multiRemovePrivateItems(['layerwell.notifPrefs.v1']);
+    await setPrivateItem('layerwell.account-control.v1', 'retained-control');
 
-    expect(mocks.asyncStorage.has('onskin.skinprofile.v1')).toBe(false);
-    expect(mocks.asyncStorage.has('onskin.shelf.v1')).toBe(false);
-    expect(mocks.asyncStorage.has('onskin.notifPrefs.v1')).toBe(false);
-    await expect(getPrivateItem('onskin.account-control.v1')).resolves.toBe('retained-control');
+    expect(mocks.asyncStorage.has('layerwell.skinprofile.v1')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.shelf.v1')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.notifPrefs.v1')).toBe(false);
+    await expect(getPrivateItem('layerwell.account-control.v1')).resolves.toBe('retained-control');
   });
 
   it('never exposes decrypted classified bytes to an updater after withdrawal during key read', async () => {
-    await setPrivateItem('onskin.skinprofile.v1', 'prior-profile');
+    await setPrivateItem('layerwell.skinprofile.v1', 'prior-profile');
     let releaseKeyRead!: () => void;
     let markKeyReadStarted!: () => void;
     mocks.secureGetGate = new Promise<void>((resolve) => {
@@ -561,7 +561,7 @@ describe('private KV encrypted storage', () => {
     mocks.secureGetStarted = markKeyReadStarted;
     const updater = vi.fn(() => 'resurrected-profile');
 
-    const staleUpdate = updatePrivateItem('onskin.skinprofile.v1', updater);
+    const staleUpdate = updatePrivateItem('layerwell.skinprofile.v1', updater);
     await keyReadStarted;
     clearActiveHealthProcessingEpoch();
     setActiveHealthProcessingEpoch(2, {
@@ -576,13 +576,13 @@ describe('private KV encrypted storage', () => {
   });
 
   it('preserves structurally invalid encrypted envelopes and blocks replacement', async () => {
-    await setPrivateItem('onskin.seed', 'seed');
+    await setPrivateItem('layerwell.seed', 'seed');
     const raw = JSON.stringify({
       version: privateKVEncryptionInfo.version,
       nonceHex: 'not-hex',
       ciphertextHex: 'also-not-hex',
     });
-    const key = 'onskin.corrupt-key';
+    const key = 'layerwell.corrupt-key';
     mocks.asyncStorage.set(key, raw);
 
     await expect(getPrivateItem(key)).rejects.toThrow(PRIVATE_KV_ENVELOPE_INVALID);
@@ -607,10 +607,10 @@ describe('private KV encrypted storage', () => {
       }),
     ],
   ])('fails the full audit without changing a %s envelope', async (_label, raw) => {
-    mocks.asyncStorage.set('onskin.corrupt', raw);
+    mocks.asyncStorage.set('layerwell.corrupt', raw);
 
     await expect(assertPrivateKVReadable()).rejects.toThrow(PRIVATE_KV_ENVELOPE_INVALID);
-    expect(mocks.asyncStorage.get('onskin.corrupt')).toBe(raw);
+    expect(mocks.asyncStorage.get('layerwell.corrupt')).toBe(raw);
   });
 
   it('preserves unsupported private envelope versions', async () => {
@@ -619,10 +619,10 @@ describe('private KV encrypted storage', () => {
       nonceHex: '00'.repeat(24),
       ciphertextHex: '00'.repeat(16),
     });
-    mocks.asyncStorage.set('onskin.future', raw);
+    mocks.asyncStorage.set('layerwell.future', raw);
 
     await expect(assertPrivateKVReadable()).rejects.toThrow(PRIVATE_KV_ENVELOPE_UNSUPPORTED);
-    expect(mocks.asyncStorage.get('onskin.future')).toBe(raw);
+    expect(mocks.asyncStorage.get('layerwell.future')).toBe(raw);
   });
 
   it('rejects a direct overwrite of malformed ciphertext before creating a key', async () => {
@@ -631,24 +631,24 @@ describe('private KV encrypted storage', () => {
       nonceHex: '00'.repeat(24),
       ciphertextHex: '00',
     });
-    mocks.asyncStorage.set('onskin.corrupt', raw);
+    mocks.asyncStorage.set('layerwell.corrupt', raw);
 
-    await expect(setPrivateItem('onskin.corrupt', 'replacement')).rejects.toThrow(
+    await expect(setPrivateItem('layerwell.corrupt', 'replacement')).rejects.toThrow(
       PRIVATE_KV_ENVELOPE_INVALID,
     );
-    expect(mocks.asyncStorage.get('onskin.corrupt')).toBe(raw);
+    expect(mocks.asyncStorage.get('layerwell.corrupt')).toBe(raw);
     expect(mocks.secureStorage.size).toBe(0);
   });
 
   it('treats malformed private envelopes as orphaned ciphertext before key creation', async () => {
     const raw = `{"version":"${privateKVEncryptionInfo.version}","nonceHex":"00"`;
-    mocks.asyncStorage.set('onskin.orphaned', raw);
+    mocks.asyncStorage.set('layerwell.orphaned', raw);
 
-    await expect(setPrivateItem('onskin.new-record', 'new-value')).rejects.toThrow(
+    await expect(setPrivateItem('layerwell.new-record', 'new-value')).rejects.toThrow(
       PRIVATE_KV_CONTENT_KEY_MISSING,
     );
-    expect(mocks.asyncStorage.get('onskin.orphaned')).toBe(raw);
-    expect(mocks.asyncStorage.has('onskin.new-record')).toBe(false);
+    expect(mocks.asyncStorage.get('layerwell.orphaned')).toBe(raw);
+    expect(mocks.asyncStorage.has('layerwell.new-record')).toBe(false);
     expect(mocks.secureStorage.size).toBe(0);
   });
 
@@ -670,21 +670,21 @@ describe('private KV encrypted storage', () => {
   });
 
   it('keeps ordinary health reads closed while a verified data export can read them', async () => {
-    await setPrivateItem('onskin.skinprofile.v1', 'exportable-profile');
+    await setPrivateItem('layerwell.skinprofile.v1', 'exportable-profile');
     clearActiveHealthProcessingEpoch();
 
-    await expect(getPrivateItems(['onskin.skinprofile.v1'])).rejects.toThrow(
+    await expect(getPrivateItems(['layerwell.skinprofile.v1'])).rejects.toThrow(
       'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
     );
     await expect(
       runAccountGenerationOperation((accountLease) =>
-        getPrivateItemsForPurposeLimitedExport(['onskin.skinprofile.v1'], accountLease),
+        getPrivateItemsForPurposeLimitedExport(['layerwell.skinprofile.v1'], accountLease),
       ),
-    ).resolves.toEqual(new Map([['onskin.skinprofile.v1', 'exportable-profile']]));
+    ).resolves.toEqual(new Map([['layerwell.skinprofile.v1', 'exportable-profile']]));
   });
 
   it('allows only account-bound catalog queue TTL reduction after health processing closes', async () => {
-    const key = 'routinekind.catalog.lookupQueue.v1';
+    const key = 'layerwell.catalog.lookupQueue.v1';
     await setPrivateItem(key, 'expired-catalog-queue');
     clearActiveHealthProcessingEpoch();
 
@@ -700,7 +700,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('rejects a purpose-limited export read after an A-to-B-to-A account boundary', async () => {
-    await setPrivateItem('onskin.skinprofile.v1', 'account-a-profile');
+    await setPrivateItem('layerwell.skinprofile.v1', 'account-a-profile');
     clearActiveHealthProcessingEpoch();
     let releaseRead!: () => void;
     let markReadStarted!: () => void;
@@ -713,7 +713,7 @@ describe('private KV encrypted storage', () => {
     mocks.multiGetStarted = markReadStarted;
 
     const pending = runAccountGenerationOperation((accountLease) =>
-      getPrivateItemsForPurposeLimitedExport(['onskin.skinprofile.v1'], accountLease),
+      getPrivateItemsForPurposeLimitedExport(['layerwell.skinprofile.v1'], accountLease),
     );
     await readStarted;
     beginAccountGenerationBoundary();
@@ -726,7 +726,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('audits every private envelope without treating other encrypted formats as private KV', async () => {
-    await setPrivateItem('onskin.profile', 'profile-value');
+    await setPrivateItem('layerwell.profile', 'profile-value');
     mocks.asyncStorage.set('legacy', 'legacy-value');
     const foreignRaw = JSON.stringify({
       version: privateKVEncryptionInfo.version,
@@ -738,7 +738,7 @@ describe('private KV encrypted storage', () => {
     mocks.asyncStorage.set(foreignKey, foreignRaw);
 
     await expect(assertPrivateKVReadable()).resolves.toBeUndefined();
-    await expect(getPrivateItem('onskin.profile')).resolves.toBe('profile-value');
+    await expect(getPrivateItem('layerwell.profile')).resolves.toBe('profile-value');
     await expect(getPrivateItem(foreignKey)).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
     await expect(getPrivateItems([foreignKey])).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
     await expect(setPrivateItem(foreignKey, 'replacement')).rejects.toThrow(
@@ -748,7 +748,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('authenticates availability without retaining decrypted byte buffers', async () => {
-    await setPrivateItem('onskin.profile', 'sensitive-profile');
+    await setPrivateItem('layerwell.profile', 'sensitive-profile');
     const fillSpy = vi.spyOn(Uint8Array.prototype, 'fill');
     try {
       await expect(assertPrivateKVReadable()).resolves.toBeUndefined();
@@ -759,7 +759,7 @@ describe('private KV encrypted storage', () => {
   });
 
   it('invalidates availability authentication at an account boundary', async () => {
-    await setPrivateItem('onskin.profile', 'account-a-profile');
+    await setPrivateItem('layerwell.profile', 'account-a-profile');
     let releaseRead!: () => void;
     let markReadStarted!: () => void;
     mocks.multiGetGate = new Promise<void>((resolve) => {
@@ -786,7 +786,7 @@ describe('private KV encrypted storage', () => {
     mocks.asyncStorage.set(contentKey, 'legacy-content-key');
 
     await expect(removePrivateItem(foreignKey)).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
-    await expect(multiRemovePrivateItems(['onskin.profile', foreignKey])).rejects.toThrow(
+    await expect(multiRemovePrivateItems(['layerwell.profile', foreignKey])).rejects.toThrow(
       PRIVATE_KV_ENVELOPE_FOREIGN,
     );
     await expect(getPrivateItem(contentKey)).rejects.toThrow(PRIVATE_KV_RESERVED_KEY);
@@ -795,7 +795,7 @@ describe('private KV encrypted storage', () => {
       PRIVATE_KV_RESERVED_KEY,
     );
     await expect(removePrivateItem(contentKey)).rejects.toThrow(PRIVATE_KV_RESERVED_KEY);
-    await expect(multiRemovePrivateItems(['onskin.profile', contentKey])).rejects.toThrow(
+    await expect(multiRemovePrivateItems(['layerwell.profile', contentKey])).rejects.toThrow(
       PRIVATE_KV_RESERVED_KEY,
     );
 
@@ -810,10 +810,10 @@ describe('private KV encrypted storage', () => {
       nonceHex: '00'.repeat(24),
       ciphertextHex: '00'.repeat(16),
     });
-    mocks.asyncStorage.set('onskin.profile', raw);
+    mocks.asyncStorage.set('layerwell.profile', raw);
 
     await expect(assertPrivateKVReadable()).rejects.toThrow(PRIVATE_KV_ENVELOPE_INVALID);
-    expect(mocks.asyncStorage.get('onskin.profile')).toBe(raw);
+    expect(mocks.asyncStorage.get('layerwell.profile')).toBe(raw);
   });
 
   it('keeps unrelated legacy nonce/ciphertext payloads outside private-KV ownership', async () => {
@@ -825,31 +825,31 @@ describe('private KV encrypted storage', () => {
   });
 
   it('preserves every private envelope when the shared content key is unavailable', async () => {
-    await setPrivateItem('onskin.profile', 'profile-value');
-    await setPrivateItem('onskin.shelf', 'shelf-value');
-    const profileCiphertext = mocks.asyncStorage.get('onskin.profile');
-    const shelfCiphertext = mocks.asyncStorage.get('onskin.shelf');
+    await setPrivateItem('layerwell.profile', 'profile-value');
+    await setPrivateItem('layerwell.shelf', 'shelf-value');
+    const profileCiphertext = mocks.asyncStorage.get('layerwell.profile');
+    const shelfCiphertext = mocks.asyncStorage.get('layerwell.shelf');
     mocks.secureGetThrows = true;
 
     await expect(assertPrivateKVReadable()).rejects.toThrow(
       'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
     );
 
-    expect(mocks.asyncStorage.get('onskin.profile')).toBe(profileCiphertext);
-    expect(mocks.asyncStorage.get('onskin.shelf')).toBe(shelfCiphertext);
+    expect(mocks.asyncStorage.get('layerwell.profile')).toBe(profileCiphertext);
+    expect(mocks.asyncStorage.get('layerwell.shelf')).toBe(shelfCiphertext);
     expect(mocks.secureStorage.size).toBe(1);
   });
 
   it('shares one content key across concurrent first writes', async () => {
     await Promise.all([
-      setPrivateItem('onskin.concurrent-a', 'value-a'),
-      setPrivateItem('onskin.concurrent-b', 'value-b'),
+      setPrivateItem('layerwell.concurrent-a', 'value-a'),
+      setPrivateItem('layerwell.concurrent-b', 'value-b'),
     ]);
 
-    await expect(getPrivateItems(['onskin.concurrent-a', 'onskin.concurrent-b'])).resolves.toEqual(
+    await expect(getPrivateItems(['layerwell.concurrent-a', 'layerwell.concurrent-b'])).resolves.toEqual(
       new Map([
-        ['onskin.concurrent-a', 'value-a'],
-        ['onskin.concurrent-b', 'value-b'],
+        ['layerwell.concurrent-a', 'value-a'],
+        ['layerwell.concurrent-b', 'value-b'],
       ]),
     );
   });
@@ -869,9 +869,9 @@ describe('private KV encrypted storage', () => {
       if (writeStarts === 1) markFirstWriteStarted();
     };
 
-    const first = setPrivateItem('onskin.serialized', 'first');
+    const first = setPrivateItem('layerwell.serialized', 'first');
     await firstWriteStarted;
-    const second = setPrivateItem('onskin.serialized', 'second');
+    const second = setPrivateItem('layerwell.serialized', 'second');
     await Promise.resolve();
     expect(writeStarts).toBe(1);
 
@@ -880,11 +880,11 @@ describe('private KV encrypted storage', () => {
     await second;
 
     expect(writeStarts).toBe(2);
-    await expect(getPrivateItem('onskin.serialized')).resolves.toBe('second');
+    await expect(getPrivateItem('layerwell.serialized')).resolves.toBe('second');
   });
 
   it('preserves a concurrent replacement detected before the final write', async () => {
-    await setPrivateItem('onskin.race', 'original');
+    await setPrivateItem('layerwell.race', 'original');
     const replacement = JSON.stringify({
       version: privateKVEncryptionInfo.version,
       keyId: 'unexpected-authority',
@@ -901,22 +901,22 @@ describe('private KV encrypted storage', () => {
     });
     mocks.secureGetStarted = markSecureReadStarted;
 
-    const write = setPrivateItem('onskin.race', 'updated');
+    const write = setPrivateItem('layerwell.race', 'updated');
     await secureReadStarted;
-    mocks.asyncStorage.set('onskin.race', replacement);
+    mocks.asyncStorage.set('layerwell.race', replacement);
     releaseSecureRead();
 
     await expect(write).rejects.toThrow(PRIVATE_KV_WRITE_CONFLICT);
-    expect(mocks.asyncStorage.get('onskin.race')).toBe(replacement);
+    expect(mocks.asyncStorage.get('layerwell.race')).toBe(replacement);
   });
 
   it('blocks private writes while an account boundary is active', async () => {
     beginPrivateKVAccountBoundary();
 
-    await expect(setPrivateItem('onskin.account-b', 'value-b')).rejects.toThrow(
+    await expect(setPrivateItem('layerwell.account-b', 'value-b')).rejects.toThrow(
       PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
     );
-    expect(mocks.asyncStorage.has('onskin.account-b')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.account-b')).toBe(false);
   });
 
   it('rejects a write that had not reached storage before the boundary began', async () => {
@@ -930,17 +930,17 @@ describe('private KV encrypted storage', () => {
     });
     mocks.getItemStarted = markReadStarted;
 
-    const write = setPrivateItem('onskin.account-a', 'late-value');
+    const write = setPrivateItem('layerwell.account-a', 'late-value');
     await readStarted;
     beginPrivateKVAccountBoundary();
     releaseRead();
 
     await expect(write).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
-    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.account-a')).toBe(false);
   });
 
   it('restores a guarded removal that commits across a private account boundary', async () => {
-    const key = 'onskin.account-a';
+    const key = 'layerwell.account-a';
     await setPrivateItem(key, 'prior-account-value');
     const priorRaw = mocks.asyncStorage.get(key);
     let releaseRemoval!: () => void;
@@ -979,7 +979,7 @@ describe('private KV encrypted storage', () => {
     });
     mocks.setItemStarted = markWriteStarted;
 
-    const write = setPrivateItem('onskin.account-a', 'committed-before-clear');
+    const write = setPrivateItem('layerwell.account-a', 'committed-before-clear');
     await writeStarted;
     beginPrivateKVAccountBoundary();
     let drainFinished = false;
@@ -993,7 +993,7 @@ describe('private KV encrypted storage', () => {
     await write;
     await drain;
     expect(drainFinished).toBe(true);
-    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(true);
+    expect(mocks.asyncStorage.has('layerwell.account-a')).toBe(true);
   });
 
   it('tracks a queued same-key mutation until the account boundary rejects it', async () => {
@@ -1007,9 +1007,9 @@ describe('private KV encrypted storage', () => {
     });
     mocks.setItemStarted = markWriteStarted;
 
-    const first = setPrivateItem('onskin.account-a', 'first');
+    const first = setPrivateItem('layerwell.account-a', 'first');
     await writeStarted;
-    const queued = setPrivateItem('onskin.account-a', 'second');
+    const queued = setPrivateItem('layerwell.account-a', 'second');
     beginPrivateKVAccountBoundary();
     const queuedRejection = expect(queued).rejects.toThrow(
       PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
@@ -1027,11 +1027,11 @@ describe('private KV encrypted storage', () => {
     await drain;
     expect(drainFinished).toBe(true);
     endPrivateKVAccountBoundary();
-    await expect(getPrivateItem('onskin.account-a')).resolves.toBe('first');
+    await expect(getPrivateItem('layerwell.account-a')).resolves.toBe('first');
   });
 
   it('blocks new removals and drains a removal already in progress', async () => {
-    mocks.asyncStorage.set('onskin.account-a', 'account-a-value');
+    mocks.asyncStorage.set('layerwell.account-a', 'account-a-value');
     let releaseRemoval!: () => void;
     let markRemovalStarted!: () => void;
     mocks.removeItemGate = new Promise<void>((resolve) => {
@@ -1042,10 +1042,10 @@ describe('private KV encrypted storage', () => {
     });
     mocks.removeItemStarted = markRemovalStarted;
 
-    const removal = removePrivateItem('onskin.account-a');
+    const removal = removePrivateItem('layerwell.account-a');
     await removalStarted;
     beginPrivateKVAccountBoundary();
-    await expect(multiRemovePrivateItems(['onskin.account-b'])).rejects.toThrow(
+    await expect(multiRemovePrivateItems(['layerwell.account-b'])).rejects.toThrow(
       PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
     );
     let drainFinished = false;
@@ -1059,7 +1059,7 @@ describe('private KV encrypted storage', () => {
     await removal;
     await drain;
     expect(drainFinished).toBe(true);
-    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.account-a')).toBe(false);
   });
 
   it('preserves keyless ciphertext and refuses replacement key material', async () => {
@@ -1069,75 +1069,75 @@ describe('private KV encrypted storage', () => {
     await expect(getPrivateItems(['custom.encrypted-a'])).rejects.toThrow(
       PRIVATE_KV_CONTENT_KEY_MISSING,
     );
-    await expect(setPrivateItem('onskin.new-record', 'new-value')).rejects.toThrow(
+    await expect(setPrivateItem('layerwell.new-record', 'new-value')).rejects.toThrow(
       PRIVATE_KV_CONTENT_KEY_MISSING,
     );
 
     expect(mocks.secureStorage.size).toBe(0);
     expect(mocks.asyncStorage.has('custom.encrypted-a')).toBe(true);
-    expect(mocks.asyncStorage.has('onskin.new-record')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.new-record')).toBe(false);
   });
 
   it('preserves ciphertext and rejects a malformed existing content key', async () => {
-    await setPrivateItem('onskin.encrypted-a', 'value-a');
+    await setPrivateItem('layerwell.encrypted-a', 'value-a');
     mocks.secureStorage.set(privateKVEncryptionInfo.secureStoreKey, 'malformed-key');
 
-    await expect(getPrivateItem('onskin.encrypted-a')).rejects.toThrow(
+    await expect(getPrivateItem('layerwell.encrypted-a')).rejects.toThrow(
       PRIVATE_KV_CONTENT_KEY_INVALID,
     );
 
     expect(mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey)).toBe('malformed-key');
-    expect(mocks.asyncStorage.has('onskin.encrypted-a')).toBe(true);
+    expect(mocks.asyncStorage.has('layerwell.encrypted-a')).toBe(true);
   });
 
   it('preserves ciphertext when a different valid content key cannot authenticate it', async () => {
-    await setPrivateItem('onskin.encrypted-a', 'value-a');
-    const originalCiphertext = mocks.asyncStorage.get('onskin.encrypted-a');
+    await setPrivateItem('layerwell.encrypted-a', 'value-a');
+    const originalCiphertext = mocks.asyncStorage.get('layerwell.encrypted-a');
     mocks.secureStorage.set(privateKVEncryptionInfo.secureStoreKey, 'a'.repeat(64));
 
-    await expect(setPrivateItem('onskin.encrypted-a', 'replacement')).rejects.toThrow(
+    await expect(setPrivateItem('layerwell.encrypted-a', 'replacement')).rejects.toThrow(
       PRIVATE_KV_DECRYPTION_FAILED,
     );
-    await expect(getPrivateItem('onskin.encrypted-a')).rejects.toThrow(
+    await expect(getPrivateItem('layerwell.encrypted-a')).rejects.toThrow(
       PRIVATE_KV_DECRYPTION_FAILED,
     );
 
-    expect(mocks.asyncStorage.get('onskin.encrypted-a')).toBe(originalCiphertext);
+    expect(mocks.asyncStorage.get('layerwell.encrypted-a')).toBe(originalCiphertext);
   });
 
   it('blocks a fallback rewrite until the failed encrypted read succeeds', async () => {
-    await setPrivateItem('onskin.profile', 'original-value');
-    const originalCiphertext = mocks.asyncStorage.get('onskin.profile');
+    await setPrivateItem('layerwell.profile', 'original-value');
+    const originalCiphertext = mocks.asyncStorage.get('layerwell.profile');
     mocks.secureGetThrows = true;
 
-    await expect(getPrivateItem('onskin.profile')).rejects.toThrow(
+    await expect(getPrivateItem('layerwell.profile')).rejects.toThrow(
       'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
     );
     mocks.secureGetThrows = false;
 
-    await expect(setPrivateItem('onskin.profile', 'fallback-value')).rejects.toThrow(
+    await expect(setPrivateItem('layerwell.profile', 'fallback-value')).rejects.toThrow(
       PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
     );
-    expect(mocks.asyncStorage.get('onskin.profile')).toBe(originalCiphertext);
+    expect(mocks.asyncStorage.get('layerwell.profile')).toBe(originalCiphertext);
 
-    await expect(getPrivateItem('onskin.profile')).resolves.toBe('original-value');
-    await expect(setPrivateItem('onskin.profile', 'updated-value')).resolves.toBeUndefined();
-    await expect(getPrivateItem('onskin.profile')).resolves.toBe('updated-value');
+    await expect(getPrivateItem('layerwell.profile')).resolves.toBe('original-value');
+    await expect(setPrivateItem('layerwell.profile', 'updated-value')).resolves.toBeUndefined();
+    await expect(getPrivateItem('layerwell.profile')).resolves.toBe('updated-value');
   });
 
   it('serializes complete read-modify-write transforms for one private key', async () => {
-    await setPrivateItem('onskin.conflict.overrides', JSON.stringify({ first: true }));
+    await setPrivateItem('layerwell.conflict.overrides', JSON.stringify({ first: true }));
 
     await Promise.all([
-      updatePrivateItem('onskin.conflict.overrides', (raw) =>
+      updatePrivateItem('layerwell.conflict.overrides', (raw) =>
         JSON.stringify({ ...(JSON.parse(raw ?? '{}') as object), second: true }),
       ),
-      updatePrivateItem('onskin.conflict.overrides', (raw) =>
+      updatePrivateItem('layerwell.conflict.overrides', (raw) =>
         JSON.stringify({ ...(JSON.parse(raw ?? '{}') as object), third: true }),
       ),
     ]);
 
-    const stored = await getPrivateItem('onskin.conflict.overrides');
+    const stored = await getPrivateItem('layerwell.conflict.overrides');
     expect(JSON.parse(stored ?? '{}')).toEqual({ first: true, second: true, third: true });
   });
 });

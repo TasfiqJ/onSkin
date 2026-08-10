@@ -204,18 +204,18 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   VoiceOver/TalkBack, or a stable modal-open browser run.
 - 2026-07-07: Expo web E2E at 320 x 568 covers runtime brand identity on
   `/ask`, `/paywall/upsell?feature=full_routine`, and
-  `/settings/subscription`: the checked surfaces render `Ask RoutineKind` and
-  `RoutineKind Pro`, no visible `OnSkin` labels appear, and browser console
+  `/settings/subscription`: the checked surfaces render `Ask Layerwell` and
+  `Layerwell Pro`, no visible `Layerwell` labels appear, and browser console
   errors are empty. `npm run brand:audit:strict` also reports zero
   public-launch-risk and zero review-needed references. Evidence is in
   `test-results/human-e2e/2026-07-07/runtime-brand-identity/`; it does not
   replace final brand/legal clearance, native identifier QA, store listing QA, or
   final-domain/share-card QA.
 - 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the
-  public-copy smoke with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind`.
+  public-copy smoke with `EXPO_PUBLIC_APP_DISPLAY_NAME=Layerwell`.
   `/onboarding/age`, `/s/sharecard01`, `/shelf/search`, and `/settings/timing`
-  show `RoutineKind`, all six captured states including free `/routine/widgets`
-  before and after `Explore first. 7 days of Pro` show no visible `OnSkin`, the
+  show `Layerwell`, all six captured states including free `/routine/widgets`
+  before and after `Explore first. 7 days of Pro` show no visible `Layerwell`, the
   no-card Pro week reaches the widgets deferred surface (`Widgets are not in
 this beta` / `Back to Today`), visible controls are 48 px+, horizontal
   overflow is zero, and current-origin browser warn/error logs are empty.
@@ -377,7 +377,7 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   `/commerce/transparency`, `/commerce/consent`, and
   `/commerce/stack/sensitive-skin-starter-set` show the deferred beta surface and
   return `Back to You` to `/you`. With `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`
-  and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`, direct
+  and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://layerwell.app`, direct
   transparency/stacks/consent recover to `/you`, direct stack detail recovers to
   `/commerce/stacks`, stack hierarchy keeps paid-link disclosure and 48 px
   transparency control visible, unavailable stack recovery exposes no retailer
@@ -405,7 +405,7 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, direct
   `/paywall/upsell?feature=full_routine` renders row-local `Link unavailable`
   after Terms/Privacy failure and a visible restore-empty message after Restore.
-  Direct `/settings/subscription` renders store-backed `RoutineKind Pro`,
+  Direct `/settings/subscription` renders store-backed `Layerwell Pro`,
   `Manage in App Store`, Restore, Terms, and Privacy; failed billing management
   renders visible recovery copy and policy/restore failures stay on the current
   surface. Paywall compliance controls are 48 px+ tall, subscription rows are
@@ -692,7 +692,7 @@ FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
   in `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`;
   it does not replace native iOS/Android share-sheet and encrypted export QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers Ask route parity: `/ask`
-  renders the free deterministic `Ask RoutineKind` advisor, a 48 px composer
+  renders the free deterministic `Ask Layerwell` advisor, a 48 px composer
   and Send control, and the disclosure footer with zero horizontal overflow;
   `/ask/consent` renders cloud-Ask deferred beta copy plus a 56 px `Back to Ask`
   CTA that returns to `/ask`. Evidence is in

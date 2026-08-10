@@ -278,7 +278,7 @@ as $$
   select pg_catalog.encode(
     extensions.digest(
       pg_catalog.convert_to(
-        'routinekind-catalog-operator:v1:' || p_value::text,
+        'layerwell-catalog-operator:v1:' || p_value::text,
         'UTF8'
       ),
       'sha256'

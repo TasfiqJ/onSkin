@@ -120,7 +120,7 @@ release-binary network inspection; source inspection cannot prove a live vendor
 configuration.
 
 The planned commerce click token is opaque and contains no profile fields, but
-it is **not anonymous**: OnSkin stores it beside an owner-scoped click and an
+it is **not anonymous**: Layerwell stores it beside an owner-scoped click and an
 affiliate may return the same token with purchase attribution. Placeholder UI
 that calls it anonymous is not eligible for production clearance. Final copy,
 App Privacy answers, the partner contract, and the technical payload must
@@ -232,7 +232,7 @@ outer allowance can reach two years. Neither limit is a product waiting period.
 - Apple's health-and-fitness guidance requires data minimization, permission for
   health-data collection, accurate App Privacy declarations, and prohibits using
   health/fitness data for advertising, marketing, use-based data mining, or sale
-  to data brokers. OnSkin therefore treats health-purpose data and the separate
+  to data brokers. Layerwell therefore treats health-purpose data and the separate
   affiliate click purpose as non-composable authorities; a commerce opt-in must
   never authorize health-data disclosure.
   [Apple Health and fitness apps](https://developer.apple.com/health-fitness/)
@@ -275,7 +275,7 @@ outer allowance can reach two years. Neither limit is a product waiting period.
   not an engineering control.
   [Connecticut Chapter 743jj](https://www.cga.ct.gov/2026/sup/chap_743jj.htm)
 - California Civil Code sections 56.05-56.06 can deem qualifying consumer
-  health software a health-care provider for CMIA purposes. OnSkin's exact
+  health software a health-care provider for CMIA purposes. Layerwell's exact
   pregnancy, health-profile, and condition-management behavior therefore needs
   a written counsel classification; this matrix does not decide coverage.
   [California Civil Code sections 56.05-56.06](https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?chapter=1.&division=1.&lawCode=CIV&part=2.6.)

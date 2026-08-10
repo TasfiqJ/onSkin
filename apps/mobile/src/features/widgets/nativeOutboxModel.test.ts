@@ -37,7 +37,7 @@ function props(ownerGeneration = OWNER_A, snapshotNonce = SNAPSHOT_A) {
     completedCount: 0,
     totalCount: 2,
     actionTokens: [TOKEN_ONE, TOKEN_TWO],
-    deepLink: 'routinekind-development://today',
+    deepLink: 'layerwell-development://today',
     updatedAtMs: 1_000,
     staleAtMs: 10_000,
   });

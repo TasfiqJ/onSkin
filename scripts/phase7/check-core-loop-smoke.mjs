@@ -71,13 +71,13 @@ const processBaseEnv = Object.fromEntries(
 );
 
 const validPublicIdentity = {
-  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.app',
-  EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
-  EXPO_PUBLIC_TERMS_URL: 'https://routinekind.app/terms',
-  EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.app/support',
-  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://routinekind.app/account-deletion',
-  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://routinekind.app/data-export',
-  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://routinekind.app/consumer-health-privacy',
+  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.app',
+  EXPO_PUBLIC_PRIVACY_URL: 'https://layerwell.app/privacy',
+  EXPO_PUBLIC_TERMS_URL: 'https://layerwell.app/terms',
+  EXPO_PUBLIC_SUPPORT_URL: 'https://layerwell.app/support',
+  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://layerwell.app/account-deletion',
+  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://layerwell.app/data-export',
+  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://layerwell.app/consumer-health-privacy',
 };
 
 const validEvidence = {
@@ -204,7 +204,7 @@ function parseNulTerminatedPaths(bytes, label) {
 
 function packetSmokeRepositoryRoot() {
   if (packetFixtureRepositoryRoot) return packetFixtureRepositoryRoot;
-  packetFixtureRepositoryParent = mkdtempSync(join(tmpdir(), 'routinekind-phase7-packet-smoke-'));
+  packetFixtureRepositoryParent = mkdtempSync(join(tmpdir(), 'layerwell-phase7-packet-smoke-'));
   packetFixtureRepositoryRoot = resolve(packetFixtureRepositoryParent, 'repo');
   gitFixture(packetFixtureRepositoryParent, [
     'clone',
@@ -344,7 +344,7 @@ function gitFixture(cwd, args) {
 }
 
 function runCommittedCat07BindingSmoke() {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-phase7-cat07-binding-'));
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'layerwell-phase7-cat07-binding-'));
   try {
     gitFixture(fixtureRoot, ['init', '--quiet']);
     gitFixture(fixtureRoot, ['config', 'user.email', 'phase7-smoke@example.invalid']);
@@ -682,7 +682,7 @@ const cases = [
     name: 'Phase 7 rejects reserved final brand domains',
     result: run({
       ...validPublicIdentity,
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.localhost',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.localhost',
     }),
     expect(result) {
       return (
@@ -695,7 +695,7 @@ const cases = [
     name: 'Phase 7 rejects credentialed policy URLs',
     result: run({
       ...validPublicIdentity,
-      EXPO_PUBLIC_SUPPORT_URL: 'https://user:pass@routinekind.app/support',
+      EXPO_PUBLIC_SUPPORT_URL: 'https://user:pass@layerwell.app/support',
     }),
     expect(result) {
       return (
@@ -708,7 +708,7 @@ const cases = [
     name: 'Phase 7 rejects plaintext consumer health policy URLs',
     result: run({
       ...validPublicIdentity,
-      EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'http://routinekind.app/consumer-health-privacy',
+      EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'http://layerwell.app/consumer-health-privacy',
     }),
     expect(result) {
       return (

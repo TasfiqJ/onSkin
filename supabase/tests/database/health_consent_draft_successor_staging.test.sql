@@ -24,7 +24,7 @@ select is(
       'isCurrent', registry.is_current
     )
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
        and registry.version = 'ask-advisor-2026-06-14-placeholder'
        and registry.consent_text_hash =
@@ -41,7 +41,7 @@ select is(
       'isCurrent', registry.is_current
     )
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
        and registry.version = 'ask-advisor-2026-06-14-placeholder'
        and registry.consent_text_hash =
@@ -55,7 +55,7 @@ select is(
   (
     select count(*)
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
        and registry.is_current
   ),
@@ -67,7 +67,7 @@ select is(
   (
     select count(*)
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
   ),
   2::bigint,
@@ -92,7 +92,7 @@ select is(
       'evidenceHash', events.staging_evidence_hash
     )
       from public.health_consent_copy_staging_events as events
-     where events.consent_type = 'ask_onskin'
+     where events.consent_type = 'ask_layerwell'
        and events.action = 'grant'
   ),
   pg_catalog.jsonb_build_object(
@@ -118,7 +118,7 @@ select is(
 
 select is(
   public._health_consent_copy_staging_evidence_hash(
-    'ask_onskin',
+    'ask_layerwell',
     'grant',
     'ask-advisor-2026-06-14-placeholder',
     '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
@@ -135,7 +135,7 @@ select is(
   (
     select count(*)
       from public.health_consent_copy_review_events as events
-     where events.consent_type = 'ask_onskin'
+     where events.consent_type = 'ask_layerwell'
        and events.action = 'grant'
        and (
          (
@@ -248,7 +248,7 @@ select ok(
 set local role authenticated;
 select throws_ok(
   $$select * from public.stage_health_consent_copy_draft_successor(
-    'ask_onskin', 'grant',
+    'ask_layerwell', 'grant',
     'ask-advisor-2026-06-14-placeholder',
     '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
     'ask-advisor-2026-06-14-placeholder',
@@ -266,7 +266,7 @@ reset role;
 set local role anon;
 select throws_ok(
   $$select * from public.stage_health_consent_copy_draft_successor(
-    'ask_onskin', 'grant',
+    'ask_layerwell', 'grant',
     'ask-advisor-2026-06-14-placeholder',
     '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
     'ask-advisor-2026-06-14-placeholder',
@@ -284,7 +284,7 @@ reset role;
 set local role service_role;
 select throws_ok(
   $$select * from public.stage_health_consent_copy_draft_successor(
-    'ask_onskin', 'grant',
+    'ask_layerwell', 'grant',
     'ask-advisor-2026-06-14-placeholder',
     '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
     'ask-advisor-2026-06-14-placeholder',
@@ -303,7 +303,7 @@ set local role authenticated;
 select throws_ok(
   $$update public.health_consent_copy_registry
        set is_current = false
-     where consent_type = 'ask_onskin' and action = 'grant' and is_current$$,
+     where consent_type = 'ask_layerwell' and action = 'grant' and is_current$$,
   '42501',
   'permission denied for table health_consent_copy_registry',
   'authenticated direct registry mutation remains denied'
@@ -321,7 +321,7 @@ select throws_ok(
       staging_change_reference, staged_by, staging_evidence_hash,
       lifecycle_xid, lifecycle_backend_pid
     ) values (
-      'ask_onskin', 'grant',
+      'ask_layerwell', 'grant',
       'ask-advisor-2026-06-14-placeholder', repeat('1', 64),
       'draft_blocked', true, false,
       'ask-advisor-2026-06-14-placeholder', repeat('2', 64),
@@ -352,7 +352,7 @@ select throws_ok(
 
 select throws_ok(
   $$select public._assert_health_consent_copy_for_type(
-    'ask_onskin',
+    'ask_layerwell',
     'grant',
     'ask-advisor-2026-06-14-placeholder',
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
@@ -364,7 +364,7 @@ select throws_ok(
 
 select lives_ok(
   $$select * from public.stage_health_consent_copy_draft_successor(
-    'ask_onskin', 'grant',
+    'ask_layerwell', 'grant',
     'ask-advisor-2026-06-14-placeholder',
     '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
     'ask-advisor-2026-06-14-placeholder',
@@ -380,7 +380,7 @@ select is(
   (
     select count(*)
       from public.health_consent_copy_staging_events
-     where consent_type = 'ask_onskin' and action = 'grant'
+     where consent_type = 'ask_layerwell' and action = 'grant'
   ),
   1::bigint,
   'an exact replay appends no duplicate staging evidence'
@@ -388,7 +388,7 @@ select is(
 
 select throws_ok(
   $$select * from public.stage_health_consent_copy_draft_successor(
-    'ask_onskin', 'grant',
+    'ask_layerwell', 'grant',
     'ask-advisor-2026-06-14-placeholder',
     '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
     'ask-advisor-2026-06-14-placeholder',

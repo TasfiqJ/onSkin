@@ -5,7 +5,7 @@ import {
 import { removePrivateItem } from '@/lib/storage/privateKV';
 import { clearPhotos } from './store';
 
-const CLOUD_KEY = 'onskin.photos.cloudBackup';
+const CLOUD_KEY = 'layerwell.photos.cloudBackup';
 
 export const PHOTO_CAPTURE_CONSENT_INVALID = 'PHOTO_CAPTURE_CONSENT_INVALID';
 export const PHOTO_CAPTURE_CONSENT_UNSUPPORTED_VERSION =

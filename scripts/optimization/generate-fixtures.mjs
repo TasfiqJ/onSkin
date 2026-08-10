@@ -4,7 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 export const OPTIMIZATION_FIXTURE_VERSION = 'optimization-fixtures:v1';
-export const OPTIMIZATION_FIXTURE_SEED = 'routinekind-synthetic-2026-07-12';
+export const OPTIMIZATION_FIXTURE_SEED = 'layerwell-synthetic-2026-07-12';
 
 const SCALE_COUNTS = Object.freeze({
   empty: {

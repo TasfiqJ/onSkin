@@ -77,7 +77,7 @@ Completed in repo:
   UserDefaults reason `1C8F.1`. Ordinary builds omit the target and production
   config rejects its QA-only opt-in.
 - IOS-02 now also has a reviewed, hash-pinned patch for the exact installed
-  `expo-widgets` 57.0.8 native sources. RoutineKind uses a bounded SQLite App
+  `expo-widgets` 57.0.8 native sources. Layerwell uses a bounded SQLite App
   Group store as its sole timeline/action authority and keeps UserDefaults for
   presentation/layout only. The native candidate provides rotating
   authority-nonce CAS, opaque owner generations, action-outbox persistence
@@ -90,7 +90,7 @@ Completed in repo:
   The app-side host is mounted in a stable lifecycle slot and serializes owner
   activation/release with expiry, withdrawal, sign-out, deletion, and account
   transition cleanup. Exact source hashes are checked after install and in CI.
-  Interactive publication and RoutineKind Live Activity start remain signed
+  Interactive publication and Layerwell Live Activity start remain signed
   configuration `false`; no Windows check proves Swift compilation or runtime.
 - A structured performance-evidence template, strict validator, and smoke suite
   now require predeclared thresholds, supported physical-device/build proof,
@@ -155,13 +155,13 @@ Still blocked before beta:
 - RevenueCat Test Store/sandbox native smoke.
 - Sentry native crash/source-map smoke.
 - Notification timing matrix on supported iPhones and iOS versions.
-- macOS/Xcode compilation of the exact hash-pinned RoutineKind native lifecycle
+- macOS/Xcode compilation of the exact hash-pinned Layerwell native lifecycle
   candidate. Local Windows source, installer, contract, and state-machine tests
   cannot establish Swift compilation, linker behavior, extension-process
   locking, signing, or ActivityKit/WidgetKit runtime correctness.
 - Final cleared identifiers/deep links and a controlled signed-config change
-  enabling RoutineKind publication/start only after disabled-archive inspection.
-  The generic Expo activity paths are not covered by the finite RoutineKind
+  enabling Layerwell publication/start only after disabled-archive inspection.
+  The generic Expo activity paths are not covered by the finite Layerwell
   lifecycle and must not be represented as covered.
 - macOS archive inspection proving the extension privacy manifest is inside the
   signed `.appex`, followed by physical-iPhone widget families, locked-state

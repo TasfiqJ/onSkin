@@ -9,7 +9,7 @@ Required dashboard configuration:
 - Entitlement: `pro`
 - Products: set final App Store/Play/RevenueCat IDs in
   `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID` and
-  `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`; committed `routinekind_*_dev`
+  `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`; committed `layerwell_*_dev`
   defaults are local placeholders only.
 - Current offering: annual and monthly packages present for iOS. Android
   products, keys, and license-test evidence are not launch requirements while

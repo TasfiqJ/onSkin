@@ -121,7 +121,7 @@ commit `57da25f63` against the complete 71-migration chain through
   `39619a6870c33fc402323c61fce5601c0fb1460993026b8465f0ce56a0a9a91e`;
 - the CAT-08 two-connection revocation rehearsal 10/10; and
 - awaited shutdown plus recursive removal of this authoritative run's own
-  random sandbox `routinekind-db05-local-1fKYbR`.
+  random sandbox `layerwell-db05-local-1fKYbR`.
 
 The run emitted no stderr or cleanup diagnostic, and the worktree remained
 clean. Historical or hard-timeout verifier roots from other runs were not part

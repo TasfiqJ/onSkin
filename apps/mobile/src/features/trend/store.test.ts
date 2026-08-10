@@ -29,8 +29,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
   }),
 }));
 
-const CONSENT_KEY = 'onskin.trendInsights.v1';
-const STATE_KEY = 'onskin.trendState.v1';
+const CONSENT_KEY = 'layerwell.trendInsights.v1';
+const STATE_KEY = 'layerwell.trendState.v1';
 
 describe('trend insight store', () => {
   beforeEach(() => {

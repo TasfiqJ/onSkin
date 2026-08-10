@@ -1,4 +1,4 @@
-import type { FunctionalTag } from '@onskin/types';
+import type { FunctionalTag } from '@layerwell/types';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { previewDetectConflicts } from '@/features/intelligence/engine';

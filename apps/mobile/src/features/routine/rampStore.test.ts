@@ -32,7 +32,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   updatePrivateItem: mocks.updatePrivateItem,
 }));
 
-const KEY = 'onskin.ramp.v1';
+const KEY = 'layerwell.ramp.v1';
 const runtime = globalThis as { __DEV__?: boolean };
 const originalDev = runtime.__DEV__;
 

@@ -1,4 +1,4 @@
-import type { SkinAxis } from '@onskin/types';
+import type { SkinAxis } from '@layerwell/types';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef } from 'react';
 import { View } from 'react-native';

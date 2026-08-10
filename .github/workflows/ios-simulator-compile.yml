@@ -155,7 +155,7 @@ jobs:
             -configuration Release \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath "$RUNNER_TEMP/onskin-derived-data" \
+            -derivedDataPath "$RUNNER_TEMP/layerwell-derived-data" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY= \
@@ -164,7 +164,7 @@ jobs:
 
       - name: Verify the linked Simulator product
         run: |
-          product_dir="$RUNNER_TEMP/onskin-derived-data/Build/Products/Release-iphonesimulator"
+          product_dir="$RUNNER_TEMP/layerwell-derived-data/Build/Products/Release-iphonesimulator"
           app_count="$(find "$product_dir" -maxdepth 1 -type d -name '*.app' -print | awk 'END { print NR + 0 }')"
           test "$app_count" -eq 1
           app="$(find "$product_dir" -maxdepth 1 -type d -name '*.app' -print -quit)"

@@ -1,4 +1,4 @@
-import type { GoalId } from '@onskin/types';
+import type { GoalId } from '@layerwell/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 

@@ -24,35 +24,35 @@ import {
 } from './nativeLifecycleContract';
 
 type ExpoWidgetsLifecycleModule = Readonly<{
-  routineKindWidgetLifecycleVersion?: unknown;
-  routineKindWidgetLifecycleConfigured?: unknown;
-  routineKindReadAuthorityJSON?: () => unknown;
-  routineKindActivateOwnerGeneration?: (
+  layerwellWidgetLifecycleVersion?: unknown;
+  layerwellWidgetLifecycleConfigured?: unknown;
+  layerwellReadAuthorityJSON?: () => unknown;
+  layerwellActivateOwnerGeneration?: (
     expectedAuthorityNonce: string,
     ownerGeneration: string,
   ) => unknown;
-  routineKindPublishTimelineJSON?: (
+  layerwellPublishTimelineJSON?: (
     expectedAuthorityNonce: string,
     timelineJSON: string,
   ) => unknown;
-  routineKindReadOutboxJSON?: (expectedAuthorityNonce: string) => unknown;
-  routineKindCommitReconciliationJSON?: (json: string) => unknown;
-  routineKindCommitQuiescedReconciliationJSON?: (json: string) => unknown;
-  routineKindCloseAdmissionJSON?: () => unknown;
-  routineKindQuiesceAdmissionJSON?: (
+  layerwellReadOutboxJSON?: (expectedAuthorityNonce: string) => unknown;
+  layerwellCommitReconciliationJSON?: (json: string) => unknown;
+  layerwellCommitQuiescedReconciliationJSON?: (json: string) => unknown;
+  layerwellCloseAdmissionJSON?: () => unknown;
+  layerwellQuiesceAdmissionJSON?: (
     expectedAuthorityNonce: string,
     ownerGeneration: string,
   ) => unknown;
-  routineKindClearNativeState?: () => Promise<unknown>;
-  routineKindReconcileActivities?: () => Promise<unknown>;
+  layerwellClearNativeState?: () => Promise<unknown>;
+  layerwellReconcileActivities?: () => Promise<unknown>;
 }>;
 
 const nativeModule = requireOptionalNativeModule<ExpoWidgetsLifecycleModule>('ExpoWidgets');
 
 function configuredModule(): ExpoWidgetsLifecycleModule | null {
   if (
-    nativeModule?.routineKindWidgetLifecycleVersion !== ROUTINE_WIDGET_NATIVE_LIFECYCLE_VERSION ||
-    nativeModule.routineKindWidgetLifecycleConfigured !== true
+    nativeModule?.layerwellWidgetLifecycleVersion !== ROUTINE_WIDGET_NATIVE_LIFECYCLE_VERSION ||
+    nativeModule.layerwellWidgetLifecycleConfigured !== true
   ) {
     return null;
   }
@@ -63,10 +63,10 @@ function definitivelyUnconfigured(): boolean {
   return (
     nativeModule === null ||
     nativeModule === undefined ||
-    (nativeModule.routineKindWidgetLifecycleVersion === undefined &&
-      nativeModule.routineKindWidgetLifecycleConfigured === undefined) ||
-    (nativeModule.routineKindWidgetLifecycleVersion === ROUTINE_WIDGET_NATIVE_LIFECYCLE_VERSION &&
-      nativeModule.routineKindWidgetLifecycleConfigured === false)
+    (nativeModule.layerwellWidgetLifecycleVersion === undefined &&
+      nativeModule.layerwellWidgetLifecycleConfigured === undefined) ||
+    (nativeModule.layerwellWidgetLifecycleVersion === ROUTINE_WIDGET_NATIVE_LIFECYCLE_VERSION &&
+      nativeModule.layerwellWidgetLifecycleConfigured === false)
   );
 }
 
@@ -84,7 +84,7 @@ export function routineWidgetNativeStateConfigured(): boolean {
 }
 
 export function readRoutineWidgetNativeAuthority(): RoutineWidgetNativeAuthority {
-  const value = requiredMethod('routineKindReadAuthorityJSON')();
+  const value = requiredMethod('layerwellReadAuthorityJSON')();
   return decodeRoutineWidgetNativeAuthorityJSON(value);
 }
 
@@ -92,7 +92,7 @@ export function activateRoutineWidgetNativeOwner(input: {
   expectedAuthorityNonce: string;
   ownerGeneration: string;
 }): RoutineWidgetNativeAuthority {
-  const value = requiredMethod('routineKindActivateOwnerGeneration')(
+  const value = requiredMethod('layerwellActivateOwnerGeneration')(
     input.expectedAuthorityNonce,
     input.ownerGeneration,
   );
@@ -104,7 +104,7 @@ export function publishRoutineWidgetNativeTimeline(
   entries: readonly RoutineWidgetTimelineEntry[],
 ): RoutineWidgetNativePublicationResult {
   return decodeRoutineWidgetNativePublicationJSON(
-    requiredMethod('routineKindPublishTimelineJSON')(
+    requiredMethod('layerwellPublishTimelineJSON')(
       expectedAuthorityNonce,
       encodeRoutineWidgetNativeTimeline(entries),
     ),
@@ -114,7 +114,7 @@ export function publishRoutineWidgetNativeTimeline(
 export function readRoutineWidgetNativeOutbox(
   expectedAuthorityNonce: string,
 ): RoutineWidgetNativeOutbox {
-  const value = requiredMethod('routineKindReadOutboxJSON')(expectedAuthorityNonce);
+  const value = requiredMethod('layerwellReadOutboxJSON')(expectedAuthorityNonce);
   return decodeRoutineWidgetNativeOutboxJSON(value);
 }
 
@@ -125,7 +125,7 @@ export function commitRoutineWidgetNativeReconciliation(input: {
   ownerGeneration: string;
   snapshotNonce: string;
 }): RoutineWidgetNativeReconciliationResult {
-  const value = requiredMethod('routineKindCommitReconciliationJSON')(
+  const value = requiredMethod('layerwellCommitReconciliationJSON')(
     encodeRoutineWidgetNativeReconciliation(input),
   );
   return decodeRoutineWidgetNativeReconciliationJSON(value);
@@ -139,7 +139,7 @@ export function commitRoutineWidgetNativeQuiescedReconciliation(input: {
   quiescenceNonce: string;
   snapshotNonce: string;
 }): RoutineWidgetNativeReconciliationResult {
-  const value = requiredMethod('routineKindCommitQuiescedReconciliationJSON')(
+  const value = requiredMethod('layerwellCommitQuiescedReconciliationJSON')(
     encodeRoutineWidgetNativeQuiescedReconciliation(input),
   );
   return decodeRoutineWidgetNativeReconciliationJSON(value);
@@ -150,7 +150,7 @@ export function closeRoutineWidgetNativeAdmission(): RoutineWidgetNativeAdmissio
     return Object.freeze({ status: 'not_configured' });
   }
   return decodeRoutineWidgetNativeCloseAdmissionJSON(
-    requiredMethod('routineKindCloseAdmissionJSON')(),
+    requiredMethod('layerwellCloseAdmissionJSON')(),
   );
 }
 
@@ -162,7 +162,7 @@ export function quiesceRoutineWidgetNativeAdmission(input: {
     return Object.freeze({ status: 'not_configured', outbox: null });
   }
   return decodeRoutineWidgetNativeQuiescenceJSON(
-    requiredMethod('routineKindQuiesceAdmissionJSON')(
+    requiredMethod('layerwellQuiesceAdmissionJSON')(
       input.expectedAuthorityNonce,
       input.ownerGeneration,
     ),
@@ -177,7 +177,7 @@ export async function clearRoutineWidgetNativeState(): Promise<RoutineWidgetNati
   }
   closeRoutineWidgetNativeAdmission();
   return decodeRoutineWidgetNativeCleanupJSON(
-    await requiredMethod('routineKindClearNativeState')(),
+    await requiredMethod('layerwellClearNativeState')(),
   );
 }
 
@@ -187,7 +187,7 @@ export async function reconcileRoutineWidgetNativeActivities(): Promise<
     kept: number;
   }>
 > {
-  const value = await requiredMethod('routineKindReconcileActivities')();
+  const value = await requiredMethod('layerwellReconcileActivities')();
   if (
     typeof value !== 'object' ||
     value === null ||

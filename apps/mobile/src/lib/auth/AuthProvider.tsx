@@ -164,7 +164,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 type AccountIsolationE2EGlobal = typeof globalThis & {
-  __ROUTINEKIND_E2E_NAVIGATE__?: (href: string) => void;
+  __LAYERWELL_E2E_NAVIGATE__?: (href: string) => void;
 };
 
 const revokedCredentialActivityDependencies = {
@@ -1489,13 +1489,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (accountIsolationE2EFixture) {
       const globalLike = globalThis as AccountIsolationE2EGlobal;
-      globalLike.__ROUTINEKIND_E2E_NAVIGATE__ = (href) => router.replace(href as Href);
+      globalLike.__LAYERWELL_E2E_NAVIGATE__ = (href) => router.replace(href as Href);
       return () => {
         shutdownPublication();
         mounted = false;
         unsubscribePublicationClosed();
         unsubscribeDeletionIntakeHold();
-        delete globalLike.__ROUTINEKIND_E2E_NAVIGATE__;
+        delete globalLike.__LAYERWELL_E2E_NAVIGATE__;
         applySessionBoundaryRef.current = async () => {};
         showSessionBoundaryRef.current = () => {};
         retrySessionRestoreRef.current = null;

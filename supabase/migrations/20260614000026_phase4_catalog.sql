@@ -549,12 +549,12 @@ insert into public.catalog_sources (
   review_status,
   notes
 ) values
-  ('curated', 'RoutineKind curated catalog', null, 'Internal review', null, 'Curated by RoutineKind reviewers.', null, false, false, false, false, 'pending', 'Requires reviewer workflow and launch QA before product recommendations.'),
+  ('curated', 'Layerwell curated catalog', null, 'Internal review', null, 'Curated by Layerwell reviewers.', null, false, false, false, false, 'pending', 'Requires reviewer workflow and launch QA before product recommendations.'),
   ('open_beauty_facts', 'Open Beauty Facts', 'https://world.openbeautyfacts.org/', 'Open Database License / Database Contents License / CC BY-SA images', 'https://openfoodfacts.github.io/openfoodfacts-server/api/', 'Product data from Open Beauty Facts/Open Food Facts.', 'https://world.openbeautyfacts.org/', true, true, false, false, 'pending', 'Images disabled until image-rights and share-alike handling are approved. Bulk import must use exports, not API crawling.'),
   ('cosing', 'European Commission CosIng', 'https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en', 'European Commission reuse review required', null, 'Ingredient names and regulatory references from CosIng when approved.', 'https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en', true, false, false, false, 'pending', 'Informative only. An INCI name in CosIng is not an approval or safety claim.'),
   ('brand_label', 'Brand or product label', null, 'Label/manufacturer source', null, 'Ingredient or expiry data recorded from product label or manufacturer source.', null, false, false, false, false, 'pending', 'Requires reviewer/source capture before driving recommendations.'),
   ('user_local', 'User local entry', null, 'User-entered local shelf data', null, 'User-entered product information.', null, false, false, false, true, 'draft', 'Can power the user shelf, but not global catalog recommendations unless reviewed.'),
-  ('internal_derived', 'Internal derived field', null, 'Derived from sourced inputs', null, 'Derived by RoutineKind parser or quality model.', null, false, false, false, false, 'pending', 'Must store parser/model version and upstream source.')
+  ('internal_derived', 'Internal derived field', null, 'Derived from sourced inputs', null, 'Derived by Layerwell parser or quality model.', null, false, false, false, false, 'pending', 'Must store parser/model version and upstream source.')
 on conflict (source_key) do update set
   display_name = excluded.display_name,
   source_url = excluded.source_url,

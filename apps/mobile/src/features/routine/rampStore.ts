@@ -18,7 +18,7 @@ import { shippableRoutineCadencePolicy } from './sequencing';
 // completions stores). The plan generates the INITIAL ramp (initRamp); this store
 // persists the user-driven changes that were previously dropped on the floor: the
 // offer-only step-up and the tolerance de-escalation. Keyed by user_product id.
-const KEY = 'onskin.ramp.v1';
+const KEY = 'layerwell.ramp.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const RAMP_STATE_INVALID = 'RAMP_STATE_INVALID';

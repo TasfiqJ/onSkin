@@ -1,5 +1,5 @@
-import type { BudgetBand, ValuesFilter } from '@onskin/types';
-import { VALUES_FILTERS } from '@onskin/types';
+import type { BudgetBand, ValuesFilter } from '@layerwell/types';
+import { VALUES_FILTERS } from '@layerwell/types';
 
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
@@ -30,8 +30,8 @@ import {
 // The pure engine recomputes live. We persist only the user's PREFERENCES and
 // which suggestions they have DISMISSED ("not for me").
 
-const PREF_KEY = 'onskin.recPrefs.v1';
-const DISMISSED_KEY = 'onskin.recDismissed.v1';
+const PREF_KEY = 'layerwell.recPrefs.v1';
+const DISMISSED_KEY = 'layerwell.recDismissed.v1';
 const PREF_SCHEMA_VERSION = 1 as const;
 
 export const REC_PREFERENCES_INVALID = 'REC_PREFERENCES_INVALID';

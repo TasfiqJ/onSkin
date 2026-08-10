@@ -65,7 +65,7 @@ vi.mock('@/features/shelf/IntakeContext', () => ({
   }),
 }));
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
-vi.mock('@/lib/brand', () => ({ BRAND: { appName: 'RoutineKind' } }));
+vi.mock('@/lib/brand', () => ({ BRAND: { appName: 'Layerwell' } }));
 vi.mock('@/lib/cn', () => ({ cn: (...values: unknown[]) => values.filter(Boolean).join(' ') }));
 vi.mock('@/lib/navigation/safeBack', () => ({
   APP_SHELF_ROUTE: '/shelf',
@@ -246,7 +246,7 @@ describe('catalog recovery async behavior', () => {
     expect(h.reportCatalogIssue).not.toHaveBeenCalled();
     expect(renderedText()).toContain('Confirm catalog report');
     expect(renderedText()).toContain('Catalog product ID');
-    expect(renderedText()).toContain('RoutineKind account ID');
+    expect(renderedText()).toContain('Layerwell account ID');
     expect(renderedText()).toContain('Open Beauty Facts');
 
     await act(async () => {
@@ -326,7 +326,7 @@ describe('catalog recovery async behavior', () => {
     expect(h.reportCatalogIssue).not.toHaveBeenCalled();
     expect(renderedText()).toContain('Confirm catalog report');
     expect(renderedText()).toContain('Barcode: 012345678905');
-    expect(renderedText()).toContain("RoutineKind's catalog-review team and authorized operators");
+    expect(renderedText()).toContain("Layerwell's catalog-review team and authorized operators");
     expect(renderedText()).toContain('Nothing is sent to Open Beauty Facts');
 
     await act(async () => {

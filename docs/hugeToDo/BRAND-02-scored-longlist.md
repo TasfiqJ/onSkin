@@ -13,7 +13,7 @@ even when its branding score is otherwise high.
 
 | Candidate   | Distinctive /20 | Fit /15 | Memorable /15 | Pronounce /10 | Spell /10 | Expand /10 | Collision /20 |  Total | Disposition                         |
 | ----------- | --------------: | ------: | ------------: | ------------: | --------: | ---------: | ------------: | -----: | ----------------------------------- |
-| RoutineKind |              14 |      15 |            13 |            10 |        10 |         10 |            14 | **86** | Advance; recommended, conditional   |
+| Layerwell |              14 |      15 |            13 |            10 |        10 |         10 |            14 | **86** | Advance; recommended, conditional   |
 | Ritunera    |              19 |      10 |            13 |             8 |         7 |         10 |            18 | **85** | Advance; backup 1                   |
 | Ritualoom   |              16 |      12 |            12 |             7 |         7 |          8 |            13 | **75** | Advance; backup 2, lower confidence |
 | Shelfkind   |              14 |      15 |            12 |            10 |        10 |          6 |             7 | **74** | Hold; domain and adjacent-mark risk |
@@ -27,11 +27,11 @@ even when its branding score is otherwise high.
 | Routora     |              17 |       8 |            13 |             9 |         9 |          9 |             0 | **65** | Knock out                           |
 | Carefolio   |              13 |      12 |            12 |             9 |         9 |          9 |             0 | **64** | Knock out                           |
 | Shelfwise   |              10 |      14 |            12 |            10 |        10 |          7 |             0 | **63** | Knock out                           |
-| OnSkin      |               5 |      14 |            13 |            10 |        10 |          4 |             0 | **56** | Hard knock out                      |
+| Layerwell      |               5 |      14 |            13 |            10 |        10 |          4 |             0 | **56** | Hard knock out                      |
 
 ## Advanced candidates
 
-### 1. RoutineKind
+### 1. Layerwell
 
 Meaning: a kinder way to manage a routine. It directly supports the calm,
 non-punitive promise and is immediately intelligible. It is already the
@@ -54,7 +54,7 @@ Risks:
   including software, skincare, beauty, and service adjacency;
 - CIPO includes `Skin&Routine` in classes 3, 9, 35, 42, and 44 and `Routine
 Review` in 42, 44, and 45;
-- exact YouTube handle `@routinekind` is occupied and requires a different
+- exact YouTube handle `@layerwell` is occupied and requires a different
   handle strategy if the mark is later cleared;
 - enforceability and registrability may be weaker than for a coined word;
 - `Kind` means “child” in German and Dutch, an ambiguity requiring launch-market
@@ -125,7 +125,7 @@ Risks:
 | Candidate   | Evidence-based reason                                                                                                                                                                                                                                                                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Rituvia     | Active [Rituva](https://www.byrituva.com/) differs by one letter and sells routine-based skincare; [Retuvia](https://www.retuvia.com/) is an active Florida-company beauty lead; `RITUVÉ` is a further close storefront lead; `rituvia.com` is registered; UK `Ritjuva` and TMview `RITULIA` add near-form health/skincare inputs; and the `RITU-`/`RITUAL` field is crowded. |
-| OnSkin      | Exact incumbent skincare scanner at [onskin.com](https://onskin.com/) and on the [App Store](https://apps.apple.com/us/app/onskin-beauty-product-scanner/id1630768985).                                                                                                                               |
+| Prior working identity | Rejected because an exact incumbent skincare scanner was documented in the immutable BRAND-03 evidence. This historical finding does not assess Layerwell. |
 | RoutineNest | Exact active routine website with a skincare-routine category: [routinenest.com](https://www.routinenest.com/).                                                                                                                                                                                       |
 | Rutiva      | Exact active payments technology brand at [rutiva.tech](https://www.rutiva.tech/) plus public wellness/social use.                                                                                                                                                                                    |
 | Routora     | Exact active iOS/Android route-planning app: [Google Play](https://play.google.com/store/apps/details?id=com.routora.app).                                                                                                                                                                            |

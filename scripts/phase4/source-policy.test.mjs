@@ -89,7 +89,7 @@ test('catalog GTIN authority requires exact checksums and one canonical padded i
 function evidence(recordId) {
   return {
     recordId,
-    uri: `https://evidence.routinekind.app/catalog/${recordId}`,
+    uri: `https://evidence.layerwell.app/catalog/${recordId}`,
     sha256: evidenceDigest,
   };
 }
@@ -175,15 +175,15 @@ const releaseScope = {
   scopeId: 'catalog-release-scope-v1',
   status: 'approved',
   appIdentity: {
-    displayName: 'RoutineKind',
-    bundleId: 'com.routinekind.app',
+    displayName: 'Layerwell',
+    bundleId: 'com.layerwell.app',
     version: '0.1.0',
     build: '1',
-    publicHost: 'routinekind.app',
-    supportEmail: 'catalog@routinekind.app',
+    publicHost: 'layerwell.app',
+    supportEmail: 'catalog@layerwell.app',
   },
   territories: ['US'],
-  attribution: { publicUrl: 'https://routinekind.app/catalog-sources' },
+  attribution: { publicUrl: 'https://layerwell.app/catalog-sources' },
   approvedAt: '2026-07-15T11:00:00.000Z',
   expiresAt: '2027-07-15T11:00:00.000Z',
   evidence: {
@@ -304,7 +304,7 @@ function signedApproval(sourceKey, overrides = {}) {
           ? 'https://static.openfoodfacts.org/data/openbeautyfacts-products.jsonl.gz'
           : 'https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en',
       upstreamSha256: 'd'.repeat(64),
-      acquisitionEvidenceUri: `https://evidence.routinekind.app/catalog/${sourceKey}-acquisition`,
+      acquisitionEvidenceUri: `https://evidence.layerwell.app/catalog/${sourceKey}-acquisition`,
       acquisitionEvidenceSha256: evidenceDigest,
       transformationRecordContractId: CATALOG_TRANSFORMED_PAYLOAD_CONTRACT.contractId,
       transformationRecordSha256: 'f'.repeat(64),
@@ -321,13 +321,13 @@ function signedApproval(sourceKey, overrides = {}) {
       noticeText,
       noticeSha256: sha256(noticeText),
       publicSurfaceArtifactSha256: '1'.repeat(64),
-      publicSurfaceEvidenceUri: 'https://evidence.routinekind.app/catalog/attribution-render',
+      publicSurfaceEvidenceUri: 'https://evidence.layerwell.app/catalog/attribution-render',
       sourceDatabaseUrl: source.sourceUrl,
       ...(sourceKey === 'open_beauty_facts'
         ? {
             machineReadableDelivery: {
               status: 'deployed_before_production_promotion',
-              publicUrl: 'https://routinekind.app/catalog-sources/open-beauty-facts-data',
+              publicUrl: 'https://layerwell.app/catalog-sources/open-beauty-facts-data',
               owner: 'Catalog source compliance owner',
               artifactSha256: '2'.repeat(64),
               evidence: evidence('obf-machine-readable-delivery'),
@@ -705,7 +705,7 @@ test('build-source commit permits only the fixed post-build evidence descendants
     }).trim();
   try {
     git('init');
-    git('config', 'user.email', 'catalog-test@routinekind.app');
+    git('config', 'user.email', 'catalog-test@layerwell.app');
     git('config', 'user.name', 'Catalog Test');
     mkdirSync(join(tempRoot, 'docs', 'phase-4'), { recursive: true });
     writeFileSync(join(tempRoot, 'source.txt'), 'build source\n');
@@ -752,7 +752,7 @@ test('build-source commit cannot hide a source deletion as an evidence-path rena
     }).trim();
   try {
     git('init');
-    git('config', 'user.email', 'catalog-test@routinekind.app');
+    git('config', 'user.email', 'catalog-test@layerwell.app');
     git('config', 'user.name', 'Catalog Test');
     mkdirSync(join(tempRoot, 'docs', 'phase-4', 'generated'), { recursive: true });
     writeFileSync(join(tempRoot, 'source.txt'), 'build source\n');

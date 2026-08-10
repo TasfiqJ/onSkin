@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "contractId": "catalog-cat02-curation-membership-proof-v1",
   "signatureEnvelopeVersion": "catalog-cat02-curation-membership-proof-signature-v1",
-  "signingDomain": "routinekind.catalog-cat02-curation-membership-proof.v1",
+  "signingDomain": "layerwell.catalog-cat02-curation-membership-proof.v1",
   "proofId": "pending-cat02-membership-proof",
   "releaseId": "pending-catalog-curation-release",
   "targetPolicySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",

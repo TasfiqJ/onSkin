@@ -23,12 +23,12 @@ const LOCAL_RECEIPT_SCHEMA_VERSION = 1 as const;
 const WITHDRAWAL_TOMBSTONE_SCHEMA_VERSION = 1 as const;
 
 const LOCAL_RECEIPT_KEYS: Record<HealthDependentConsentType, string> = {
-  photo_capture: 'onskin.photos.captureConsent.v1',
-  photo_cloud_backup: 'onskin.photos.cloudBackup',
-  photo_trend_insights: 'onskin.trendInsights.v1',
-  ask_onskin: 'onskin.ask.consent.v1',
-  community_participation: 'onskin.communityConsent.v1',
-  data_sharing: 'onskin.commerceConsent.v1',
+  photo_capture: 'layerwell.photos.captureConsent.v1',
+  photo_cloud_backup: 'layerwell.photos.cloudBackup',
+  photo_trend_insights: 'layerwell.trendInsights.v1',
+  ask_layerwell: 'layerwell.ask.consent.v1',
+  community_participation: 'layerwell.communityConsent.v1',
+  data_sharing: 'layerwell.commerceConsent.v1',
 };
 
 export type LocalDependentConsentReceipt = Readonly<{
@@ -64,7 +64,7 @@ export const HEALTH_DEPENDENT_CONSENT_TOMBSTONE_TYPES = Object.freeze([
   'photo_capture',
   'photo_cloud_backup',
   'photo_trend_insights',
-  'ask_onskin',
+  'ask_layerwell',
   'community_participation',
   'data_sharing',
 ] satisfies HealthDependentConsentType[]);

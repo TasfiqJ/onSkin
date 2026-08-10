@@ -50,7 +50,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'routinekind.routineActivation.v1';
+const KEY = 'layerwell.routineActivation.v1';
 
 describe('routine activation analytics', () => {
   beforeEach(() => {

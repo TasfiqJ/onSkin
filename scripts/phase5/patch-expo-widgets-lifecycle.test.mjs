@@ -44,7 +44,7 @@ function cleanup(root) {
   if (
     rel.startsWith('..') ||
     rel.includes(sep) ||
-    !rel.startsWith('routinekind-expo-widgets-patch-')
+    !rel.startsWith('layerwell-expo-widgets-patch-')
   ) {
     throw new Error('Refusing to remove an unexpected fixture path.');
   }
@@ -55,7 +55,7 @@ function createFixture(
   t,
   { omitNewTarget = false, installDirectory = 'node_modules/expo-widgets' } = {},
 ) {
-  const root = mkdtempSync(join(tmpdir(), 'routinekind-expo-widgets-patch-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-expo-widgets-patch-'));
   t.after(() => cleanup(root));
   writeJson(join(root, 'apps/mobile/package.json'), {
     dependencies: { [EXPO_WIDGETS_PACKAGE_NAME]: EXPO_WIDGETS_PACKAGE_VERSION },
@@ -182,7 +182,7 @@ test('idempotently completes a reviewed partial install by adding the missing na
   const target = join(root, ...newDescriptor.target.split('/'));
   assert.equal(hash(readFileSync(target)), newDescriptor.patched);
   assert.equal(
-    readdirSync(dirname(target)).some((name) => name.includes('.routinekind-')),
+    readdirSync(dirname(target)).some((name) => name.includes('.layerwell-')),
     false,
   );
 });

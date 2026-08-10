@@ -157,9 +157,9 @@ if (
   );
 }
 
-const sandboxRoot = await mkdtemp(join(tmpdir(), 'routinekind-db05-local-'));
+const sandboxRoot = await mkdtemp(join(tmpdir(), 'layerwell-db05-local-'));
 const sandboxSupabaseDir = join(sandboxRoot, 'supabase');
-const sandboxProjectId = `routinekind_db05_${randomBytes(8).toString('hex')}`;
+const sandboxProjectId = `layerwell_db05_${randomBytes(8).toString('hex')}`;
 let stackMayExist = false;
 let activeCliProcess;
 let cleanupPromise;

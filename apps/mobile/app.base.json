@@ -1,24 +1,24 @@
 {
   "expo": {
-    "name": "RoutineKind",
-    "slug": "routinekind",
+    "name": "Layerwell",
+    "slug": "layerwell",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "routinekind",
+    "scheme": "layerwell",
     "userInterfaceStyle": "automatic",
     "runtimeVersion": {
       "policy": "fingerprint"
     },
     "ios": {
-      "bundleIdentifier": "com.routinekind.app",
+      "bundleIdentifier": "com.layerwell.app",
       "supportsTablet": false,
       "usesAppleSignIn": true,
       "deploymentTarget": "17.0",
       "icon": "./assets/expo.icon",
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.",
-        "NSFaceIDUsageDescription": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only.",
+        "NSFaceIDUsageDescription": "Layerwell uses Face ID to keep your private photo timeline for your eyes only.",
         "NSSupportsLiveActivities": true
       },
       "privacyManifests": {
@@ -31,7 +31,7 @@
       }
     },
     "android": {
-      "package": "com.routinekind.app",
+      "package": "com.layerwell.app",
       "allowBackup": false,
       "permissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"],
       "adaptiveIcon": {
@@ -93,7 +93,7 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only."
+          "faceIDPermission": "Layerwell uses Face ID to keep your private photo timeline for your eyes only."
         }
       ],
       "expo-localization",
@@ -105,7 +105,7 @@
           "frequentUpdates": false,
           "widgets": [
             {
-              "name": "RoutineKindToday",
+              "name": "LayerwellToday",
               "displayName": "Today",
               "description": "See today’s routine progress and check off the next step.",
               "ios": {
@@ -121,7 +121,7 @@
           ]
         }
       ],
-      "./plugins/withRoutineKindWidgetPrivacyManifest",
+      "./plugins/withLayerwellWidgetPrivacyManifest",
       "@sentry/react-native"
     ],
     "experiments": {

@@ -1,4 +1,4 @@
-import type { CuratorKind } from '@onskin/types';
+import type { CuratorKind } from '@layerwell/types';
 import { describe, expect, it } from 'vitest';
 
 import { COMMERCE_COPY } from './copy';

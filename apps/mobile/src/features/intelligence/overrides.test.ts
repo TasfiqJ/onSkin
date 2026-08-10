@@ -31,7 +31,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   updatePrivateItem: mocks.updatePrivateItem,
 }));
 
-const KEY = 'onskin.conflict.overrides';
+const KEY = 'layerwell.conflict.overrides';
 let accountGeneration = 0;
 
 function candidateConflict(): DetectedConflict {

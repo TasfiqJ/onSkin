@@ -1,4 +1,4 @@
-import type { CuratorKind } from '@onskin/types';
+import type { CuratorKind } from '@layerwell/types';
 
 // Dormant stack shapes remain for compatibility, but COM-01A admits no stack
 // corpus, including development or injected fixtures.

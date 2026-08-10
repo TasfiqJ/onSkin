@@ -1,9 +1,9 @@
 import ActivityKit
 import ExpoModulesCore
 
-final class RoutineKindLiveActivityStaleException: Exception, @unchecked Sendable {
+final class LayerwellLiveActivityStaleException: Exception, @unchecked Sendable {
   override var reason: String {
-    "RoutineKind Live Activity authorization changed during publication"
+    "Layerwell Live Activity authorization changed during publication"
   }
 }
 
@@ -20,8 +20,8 @@ final class LiveActivity: SharedObject {
 
   func update(props: String) async throws {
     guard #available(iOS 16.2, *) else { throw LiveActivitiesNotSupportedException() }
-    guard name == RoutineKindWidgetLifecycleStore.activityName else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+    guard name == LayerwellWidgetLifecycleStore.activityName else {
+      throw LayerwellWidgetLifecycleError.unavailable
     }
 
     guard let activity = Activity<LiveActivityAttributes>.activities.first(where: {
@@ -32,30 +32,30 @@ final class LiveActivity: SharedObject {
 
     let staleDate: Date?
     do {
-      staleDate = try RoutineKindWidgetLifecycleStore.staleDate(name: name, propsJSON: props)
-    } catch RoutineKindWidgetLifecycleError.stale {
-      throw RoutineKindLiveActivityStaleException()
-    } catch RoutineKindWidgetLifecycleError.unauthorized {
-      throw RoutineKindLiveActivityStaleException()
+      staleDate = try LayerwellWidgetLifecycleStore.staleDate(name: name, propsJSON: props)
+    } catch LayerwellWidgetLifecycleError.stale {
+      throw LayerwellLiveActivityStaleException()
+    } catch LayerwellWidgetLifecycleError.unauthorized {
+      throw LayerwellLiveActivityStaleException()
     }
     let newState = LiveActivityAttributes.ContentState(name: name, props: props)
     await activity.update(ActivityContent(state: newState, staleDate: staleDate))
     do {
-      _ = try RoutineKindWidgetLifecycleStore.staleDate(name: name, propsJSON: props)
-    } catch RoutineKindWidgetLifecycleError.stale {
+      _ = try LayerwellWidgetLifecycleStore.staleDate(name: name, propsJSON: props)
+    } catch LayerwellWidgetLifecycleError.stale {
       let finalState = LiveActivityAttributes.ContentState(name: name, props: "{}")
       await activity.end(
         ActivityContent(state: finalState, staleDate: Date()),
         dismissalPolicy: .immediate
       )
-      throw RoutineKindLiveActivityStaleException()
-    } catch RoutineKindWidgetLifecycleError.unauthorized {
+      throw LayerwellLiveActivityStaleException()
+    } catch LayerwellWidgetLifecycleError.unauthorized {
       let finalState = LiveActivityAttributes.ContentState(name: name, props: "{}")
       await activity.end(
         ActivityContent(state: finalState, staleDate: Date()),
         dismissalPolicy: .immediate
       )
-      throw RoutineKindLiveActivityStaleException()
+      throw LayerwellLiveActivityStaleException()
     }
   }
 
@@ -74,7 +74,7 @@ final class LiveActivity: SharedObject {
     }
 
     let finalState = LiveActivityAttributes.ContentState(
-      name: RoutineKindWidgetLifecycleStore.activityName,
+      name: LayerwellWidgetLifecycleStore.activityName,
       props: "{}"
     )
     await activity.end(
@@ -85,11 +85,11 @@ final class LiveActivity: SharedObject {
 
   func getPushToken() throws -> String? {
     guard #available(iOS 16.1, *) else { throw LiveActivitiesNotSupportedException() }
-    guard name == RoutineKindWidgetLifecycleStore.activityName else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+    guard name == LayerwellWidgetLifecycleStore.activityName else {
+      throw LayerwellWidgetLifecycleError.unavailable
     }
     guard LiveActivityFactory.pushNotificationsEnabled else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+      throw LayerwellWidgetLifecycleError.unavailable
     }
 
     guard let activity = Activity<LiveActivityAttributes>.activities.first(where: {
@@ -97,7 +97,7 @@ final class LiveActivity: SharedObject {
     }) else {
       throw LiveActivityNotFoundException(id)
     }
-    _ = try RoutineKindWidgetLifecycleStore.staleDate(
+    _ = try LayerwellWidgetLifecycleStore.staleDate(
       name: activity.content.state.name,
       propsJSON: activity.content.state.props
     )
@@ -116,7 +116,7 @@ final class LiveActivity: SharedObject {
     pushTokenObserverTask?.cancel()
     pushTokenObserverTask = Task {
       for await data in activity.pushTokenUpdates {
-        guard (try? RoutineKindWidgetLifecycleStore.staleDate(
+        guard (try? LayerwellWidgetLifecycleStore.staleDate(
           name: activity.content.state.name,
           propsJSON: activity.content.state.props
         )) != nil else { return }

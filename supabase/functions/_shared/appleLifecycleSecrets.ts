@@ -149,7 +149,7 @@ export async function keyedDigest(
 export const appleSubjectDigest = (
   secrets: AppleLifecycleSecrets,
   subject: string,
-) => keyedDigest(secrets.subjectKey, "routinekind:apple-subject:v1", subject);
+) => keyedDigest(secrets.subjectKey, "layerwell:apple-subject:v1", subject);
 export function appleSubjectDigestForVersion(
   secrets: AppleLifecycleSecrets,
   version: string,
@@ -157,25 +157,25 @@ export function appleSubjectDigestForVersion(
 ): Promise<string> {
   const key = secrets.subjectKeys.get(version);
   if (!key) throw new AppleLifecycleSecretError();
-  return keyedDigest(key, "routinekind:apple-subject:v1", subject);
+  return keyedDigest(key, "layerwell:apple-subject:v1", subject);
 }
 export const appleCodeDigest = (secrets: AppleLifecycleSecrets, code: string) =>
-  keyedDigest(secrets.codeKey, "routinekind:apple-code:v1", code);
+  keyedDigest(secrets.codeKey, "layerwell:apple-code:v1", code);
 export const appleEventJtiDigest = (
   secrets: AppleLifecycleSecrets,
   jti: string,
-) => keyedDigest(secrets.eventKey, "routinekind:apple-event-jti:v1", jti);
+) => keyedDigest(secrets.eventKey, "layerwell:apple-event-jti:v1", jti);
 export const appleEventPayloadDigest = (
   secrets: AppleLifecycleSecrets,
   payload: string,
 ) =>
-  keyedDigest(secrets.eventKey, "routinekind:apple-event-payload:v1", payload);
+  keyedDigest(secrets.eventKey, "layerwell:apple-event-payload:v1", payload);
 export const appleRelayEmailDigest = (
   secrets: AppleLifecycleSecrets,
   email: string,
 ) =>
   keyedDigest(
     secrets.eventKey,
-    "routinekind:apple-relay-email:v1",
+    "layerwell:apple-relay-email:v1",
     email.toLowerCase(),
   );

@@ -7,8 +7,8 @@ import {
 import { HEALTH_PROCESSING_STATUS_LEASE_MS } from '@/lib/consent/healthProcessingEpoch';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
-export const ROUTINE_WIDGET_ACTION_REGISTRY_KEY = 'routinekind.widgetActionMap.v2';
-export const ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY = 'routinekind.widgetActionMap.v1';
+export const ROUTINE_WIDGET_ACTION_REGISTRY_KEY = 'layerwell.widgetActionMap.v2';
+export const ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY = 'layerwell.widgetActionMap.v1';
 export const ROUTINE_WIDGET_ACTION_REGISTRY_INVALID = 'ROUTINE_WIDGET_ACTION_REGISTRY_INVALID';
 export const ROUTINE_WIDGET_ACTION_REGISTRY_UNSUPPORTED_VERSION =
   'ROUTINE_WIDGET_ACTION_REGISTRY_UNSUPPORTED_VERSION';

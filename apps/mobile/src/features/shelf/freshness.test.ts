@@ -12,7 +12,7 @@ const TODAY = '2026-07-11';
 const REVIEWED_CATALOG = {
   catalogProductId: '00000000-0000-4000-8000-000000000001',
   catalogSourceId: '00000000-0000-4000-8000-000000000002',
-  catalogSource: 'routinekind_reviewed',
+  catalogSource: 'layerwell_reviewed',
   catalogMatchQuality: 'usable',
   sourceDisclosureAckAt: '2026-07-11T12:00:00.000Z',
 } as const;

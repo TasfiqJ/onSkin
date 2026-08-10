@@ -1,4 +1,4 @@
-import type { CycleVariant, FunctionalTag, GoalId, IngredientSubflag } from '@onskin/types';
+import type { CycleVariant, FunctionalTag, GoalId, IngredientSubflag } from '@layerwell/types';
 
 import {
   evaluateConflicts,

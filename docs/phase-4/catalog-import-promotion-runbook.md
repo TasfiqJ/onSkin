@@ -125,7 +125,7 @@ npm run phase4:stage-envelope -- `
 
 The review overlay is exclusively `catalog-row-review-overlay-v2` with schema
 version 2, signature envelope `catalog-row-review-signature-v2`, and signing
-domain `routinekind.catalog-row-review-overlay.v2`. Every record contains the
+domain `layerwell.catalog-row-review-overlay.v2`. Every record contains the
 three category-override fields, using explicit `null` values when there is no
 override. It must contain exactly two current, independent Ed25519 reviewers
 from the trust registry. Both signatures cover the complete unsigned overlay,

@@ -6,7 +6,7 @@ import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { colors } from '@/theme/tokens';
-import type { GatedFeature } from '@onskin/types';
+import type { GatedFeature } from '@layerwell/types';
 
 import { ComplianceRow } from './ComplianceRow';
 import { PAYWALL_COPY, UPSELL_COPY } from './copy';

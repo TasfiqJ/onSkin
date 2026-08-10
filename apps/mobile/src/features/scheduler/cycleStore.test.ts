@@ -37,9 +37,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
   updatePrivateItem: mocks.updatePrivateItem,
 }));
 
-const CYCLE_KEY = 'routinekind.cycle.v2';
-const LEGACY_CYCLE_KEY = 'onskin.cycle.v1';
-const LEGACY_ANCHOR_KEY = 'onskin.cycleAnchor';
+const CYCLE_KEY = 'layerwell.cycle.v2';
+const LEGACY_CYCLE_KEY = 'layerwell.cycle.v1';
+const LEGACY_ANCHOR_KEY = 'layerwell.cycleAnchor';
 const TODAY = '2026-07-10';
 const runtime = globalThis as { __DEV__?: boolean };
 const originalDev = runtime.__DEV__;

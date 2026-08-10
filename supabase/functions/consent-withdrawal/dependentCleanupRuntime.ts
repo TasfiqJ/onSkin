@@ -8,7 +8,7 @@ import {
   GRANULAR_PHOTO_MAX_STORAGE_PREFIXES,
   GRANULAR_PHOTO_STORAGE_BATCH_SIZE,
   type GranularWithdrawalOperation,
-  runAskOnSkinCleanup,
+  runAskLayerwellCleanup,
   runBoundedRowDelete,
   runDataSharingCleanup,
   runGranularPhotoCaptureCleanup,
@@ -138,7 +138,7 @@ function withdrawPhotoCapture(
   });
 }
 
-async function withdrawAskOnSkin(
+async function withdrawAskLayerwell(
   supabase: DependentCleanupSupabaseClient,
   userId: string,
 ) {
@@ -157,7 +157,7 @@ async function withdrawAskOnSkin(
     };
   }
 
-  const graph = await runAskOnSkinCleanup({
+  const graph = await runAskLayerwellCleanup({
     listSessionRows: (limit) =>
       supabase
         .from('ask_sessions')
@@ -317,8 +317,8 @@ export async function runHealthDependentCleanup(
     }
     case 'photo_cloud_backup':
       return await withdrawPhotoCloudBackup(supabase, userId);
-    case 'ask_onskin':
-      return await withdrawAskOnSkin(supabase, userId);
+    case 'ask_layerwell':
+      return await withdrawAskLayerwell(supabase, userId);
     case 'photo_trend_insights':
       return await withdrawTrendInsights(supabase, userId);
     case 'community_participation':

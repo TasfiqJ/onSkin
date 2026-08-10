@@ -16,7 +16,7 @@ function ent(over: Partial<StoredEntitlement>): StoredEntitlement {
     isActive: true,
     periodType: 'normal',
     store: 'app_store',
-    productId: 'routinekind_pro_annual_dev',
+    productId: 'layerwell_pro_annual_dev',
     expiresAt: null,
     willRenew: true,
     grantedAt: NOW,

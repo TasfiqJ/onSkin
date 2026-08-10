@@ -1,4 +1,4 @@
-import type { CycleVariant } from '@onskin/types';
+import type { CycleVariant } from '@layerwell/types';
 import { router } from 'expo-router';
 import { usePreventRemove } from 'expo-router/react-navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -40,7 +40,7 @@ const VARIANTS: { id: CycleVariant; label: string; sub: string }[] = [
   { id: 'advanced', label: 'Advanced', sub: 'Fewer rest nights' },
   { id: 'custom', label: 'Custom', sub: 'Your night plan' },
 ];
-const PENDING_CYCLE_SAVE_HISTORY_KEY = '__routinekindPendingCycleSave';
+const PENDING_CYCLE_SAVE_HISTORY_KEY = '__layerwellPendingCycleSave';
 type BrowserNavigation = {
   addEventListener: (type: 'navigate', listener: (event: Event) => void) => void;
   removeEventListener: (type: 'navigate', listener: (event: Event) => void) => void;

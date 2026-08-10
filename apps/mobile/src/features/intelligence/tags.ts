@@ -1,4 +1,4 @@
-import type { FunctionalTag, IngredientSubflag } from '@onskin/types';
+import type { FunctionalTag, IngredientSubflag } from '@layerwell/types';
 
 // Starter INCI → functional-tag dictionary (docs/02 §2.4). The AUTHORITATIVE
 // mapping lives in the DB (ingredient_tags, populated by the CosIng/OBF seed ,

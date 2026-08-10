@@ -39,13 +39,13 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
     target: 'node_modules/expo-widgets/ios/Widgets/AppIntent.swift',
     payload: 'AppIntent.swift',
     original: 'f9c61057350a4f42cba5d90642688ea1abe182fec6c503702238d48e828f5fbd',
-    patched: '12f011532fd24abc3d8809eb4ee94b679ea8335bf1b77ae8d1cefcc0ea5e7310',
+    patched: '4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/EntryView.swift',
     payload: 'EntryView.swift',
     original: 'd03d043c4941060bc98f2ad7d8c647de45527e961fbb14de2f2587d16273fc7f',
-    patched: '35d07280d61a55fa159b7f9f30e32bbb3bf8ec4a350a7b0d6e73987bd4e11112',
+    patched: '67df36562fd9d2d64069ae9ad7b300f88717599ce492febdb5ba61fda38f0450',
   },
   {
     target: 'node_modules/expo-widgets/ios/ExpoWidgets.podspec',
@@ -58,7 +58,7 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
     payload: 'LiveActivity.swift',
     original: 'ad5a9c4665074b186ba00e4d6f43fe23c494401fb2e23d9e9032f0d06a803be7',
     priorPatched: ['63dd154a7f0a4fba90cce7a2656badf9682b871343616e3f14324aff2a09c99e'],
-    patched: 'f7e0548a5057743d27e0748b521e1e2873794f55be39b6f7739f22a57af17770',
+    patched: '3a3783e3a3246ecda6a2299c81af7749078360287d20e10bb80cbd3fdae4a5ab',
   },
   {
     target: 'node_modules/expo-widgets/ios/LiveActivityFactory.swift',
@@ -68,17 +68,17 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
       'b87dfc25badeb66e8e009316b3004d1318d82ac686029562281f3dc48cfc3a5c',
       '71e1307e35bfc7a7e22256548ddd77d359e6ecacb0d65d7202e59f49ba61a48e',
     ],
-    patched: 'a612cab3a7071b7c12277b5230b7988432d5e15d565c0504301ebb922d2fbdaf',
+    patched: '5d3e0860a06d29e6b96b0ed1287ba735499b6c012c039d706114238e6db4a5af',
   },
   {
-    target: 'node_modules/expo-widgets/ios/RoutineKindWidgetLifecycleStore.swift',
-    payload: 'RoutineKindWidgetLifecycleStore.swift',
+    target: 'node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift',
+    payload: 'LayerwellWidgetLifecycleStore.swift',
     original: null,
     priorPatched: [
       '486041f38b7b600b4d2e4b40be03cfa11994d85048ead09751d24735ccdea2a2',
       '47a9ffdfbc63c7ecaa477df6e3d7ff67c57572333d8b608d4e74a39e6884a83c',
     ],
-    patched: '6b01f4e2cd54874eab2a8e5cb773e4dc87992d7ac179cf490ec88044fe5ef8bc',
+    patched: 'b688c74b340c6ec36a38602d5466e57f1723f8fee5f43abd12a45e78f24959c4',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/TimelineProvider.swift',
@@ -90,19 +90,19 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
     target: 'node_modules/expo-widgets/ios/Widgets/Utils.swift',
     payload: 'Utils.swift',
     original: '3ff98e21d29d43d358fec29069795781e31961ad1ebd77d5cae13178e30cfd49',
-    patched: 'd32a56a95515badc2abed0603e6fe14214a895e8ef5f4fcd5f7f1ac236f5688b',
+    patched: 'ee604723e5a8ffe531d01892a5e5cd4776ff920c5ab37520f19ba27a10da8074',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/WidgetLiveActivity.swift',
     payload: 'WidgetLiveActivity.swift',
     original: '36c7448b31a6791d996015859bea1e87cf8df884837c0b895c7963d8569efe3c',
-    patched: '2b12bc9aa8d900f5e9ad72e00e396a607f5dc6fdbd033a9b917b2062b8e67717',
+    patched: '01b0084d8dce0bd253007d936a6a5ea597159533913250d3daeba805b91d9256',
   },
   {
     target: 'node_modules/expo-widgets/ios/WidgetObject.swift',
     payload: 'WidgetObject.swift',
     original: '3bbbc29258eaa549d2074e17664f3804511053b9cb5396761c960b3cb5ee9d4e',
-    patched: 'ef703f95a235024a169a0a35aea301af5ded638fb9d572e278d7a283c729fe6a',
+    patched: '2ccab1755d4889c93def15e2fa2715672d6f578fb982f81824496c749e5bf83d',
   },
   {
     target: 'node_modules/expo-widgets/ios/WidgetsModule.swift',
@@ -112,7 +112,7 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
       '357649a8d57b3a41b08ad0d582498dacdecca20e05d05515a17922c81b7ca06a',
       '7952c4b55e73a1f3cec15554051ee2ccfd91f1ae3ac5d7b101489b7eca5640b1',
     ],
-    patched: '48cba3cdba4ad6de32cabf84769a59fcd8dc474f03de1e94a9d6c329fcb2b172',
+    patched: '79fac38010abcd9a2b2b6dee7203fc61d053fc3b953e4097d8a6c34296b8cba4',
   },
 ]);
 
@@ -324,7 +324,7 @@ function preflight(root) {
 function makeTemporary(path, bytes, mode) {
   const temporary = join(
     path.parent,
-    `.${path.leaf}.routinekind-${process.pid}-${randomBytes(8).toString('hex')}.tmp`,
+    `.${path.leaf}.layerwell-${process.pid}-${randomBytes(8).toString('hex')}.tmp`,
   );
   let descriptor;
   try {

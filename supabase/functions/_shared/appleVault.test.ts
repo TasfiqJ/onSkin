@@ -15,7 +15,7 @@ function assert(condition: unknown, message: string): asserts condition {
 
 const USER_ID = '00000000-0000-4000-8000-000000000001';
 const SUBJECT_HMAC = 'a'.repeat(64);
-const CLIENT_ID = 'com.example.routinekind';
+const CLIENT_ID = 'com.example.layerwell';
 
 function env(values: Record<string, string>) {
   return (name: string) => values[name];

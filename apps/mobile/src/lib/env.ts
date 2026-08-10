@@ -13,8 +13,8 @@ const SUPABASE_EXAMPLE_URL = 'https://YOUR-PROJECT-ref.supabase.co';
 const SUPABASE_EXAMPLE_KEY = 'sb_publishable_xxxxxxxxxxxxxxxxxxxx';
 const APP_ENVIRONMENTS = new Set(['development', 'staging', 'production']);
 const REVENUECAT_DEFAULT_PRODUCT_IDS = {
-  annual: 'routinekind_pro_annual_dev',
-  monthly: 'routinekind_pro_monthly_dev',
+  annual: 'layerwell_pro_annual_dev',
+  monthly: 'layerwell_pro_monthly_dev',
 } as const;
 
 export type AppEnvironment = 'development' | 'staging' | 'production';

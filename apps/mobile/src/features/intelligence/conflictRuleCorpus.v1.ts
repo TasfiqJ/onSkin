@@ -5,7 +5,7 @@ import type {
   FunctionalTag,
   InteractionType,
   ResolutionType,
-} from '@onskin/types';
+} from '@layerwell/types';
 
 // Canonical bundled candidate corpus for the conflict matrix (docs/02 sections 4.4/4.8). IDs +
 // The legacy ids stay aligned with the database fixture, but this TypeScript
@@ -621,7 +621,7 @@ export const CONFLICT_PROFILE_CONTEXT_CONTRACT = {
   storedValue: 'pregnant',
   semanticValue: 'pregnant_or_trying_combined',
   sourceDocumentPath: 'apps/mobile/src/features/onboarding/quizContract.ts',
-  sourceDocumentSha256: '2bbcbe2ab01b444fde4c0ffb132eef721a078a6f1118f044b5c4eb26303b9451',
+  sourceDocumentSha256: '42b2e71a6c5b4b5506dbc6ee7f16d767d56cf54e7bf23b8733407e317deaad26',
 } as const;
 
 export const CONFLICT_RULE_CORPUS_CONTENT: ConflictRuleCorpusContent = {

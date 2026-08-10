@@ -19,7 +19,7 @@ assert.equal(first.data.metadata.containsImageBytes, false);
 assert.doesNotMatch(JSON.stringify(first), /base64|data:image|file:\/\//i);
 assert.throws(() => createOptimizationFixture('unknown'), /Unknown fixture scale/);
 
-const directory = await mkdtemp(join(tmpdir(), 'routinekind-optimization-fixtures-'));
+const directory = await mkdtemp(join(tmpdir(), 'layerwell-optimization-fixtures-'));
 try {
   const output = join(directory, 'empty.json');
   const result = spawnSync(

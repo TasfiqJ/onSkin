@@ -417,13 +417,13 @@ if (publicSecretValues.length > 0) {
 }
 
 const displayName =
-  valueFor('APP_DISPLAY_NAME') || valueFor('EXPO_PUBLIC_APP_DISPLAY_NAME') || 'RoutineKind';
+  valueFor('APP_DISPLAY_NAME') || valueFor('EXPO_PUBLIC_APP_DISPLAY_NAME') || 'Layerwell';
 if (
   (appVariant === 'production' || appEnv === 'production') &&
   /onskin/i.test(displayName) &&
   valueFor('BRAND_LEGAL_CLEARANCE') !== 'cleared'
 ) {
-  errors.push('Production identity still uses OnSkin without BRAND_LEGAL_CLEARANCE=cleared.');
+  errors.push('Production identity still uses Layerwell without BRAND_LEGAL_CLEARANCE=cleared.');
 }
 
 if (

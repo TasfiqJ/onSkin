@@ -2,7 +2,7 @@
 // category taxonomy used by shelf intake and functional tagging. Labels are the
 // UI strings; categories alone never establish a freshness date.
 
-import type { FunctionalTag } from '@onskin/types';
+import type { FunctionalTag } from '@layerwell/types';
 
 export type ProductCategory =
   | 'cleanser'

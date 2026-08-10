@@ -1,4 +1,4 @@
-import type { PaoSource } from '@onskin/types';
+import type { PaoSource } from '@layerwell/types';
 
 import type { ProductCategory } from '@/features/shelf/categories';
 import { MAX_PAO_MONTHS, validLocalDate } from '@/features/shelf/freshness';
@@ -395,16 +395,16 @@ function devCatalogSearchFixture():
       id: '00000000-0000-4000-8000-000000000044',
       barcode: '036000291452',
       name: 'Reviewed Barrier Serum',
-      brand: 'RoutineKind Fixture',
+      brand: 'Layerwell Fixture',
       category: 'serum',
       region: 'CA',
       default_pao_months: 12,
-      source: 'routinekind_fixture',
+      source: 'layerwell_fixture',
       catalog_source_id: '00000000-0000-4000-8000-000000000043',
       catalog_sources: {
         id: '00000000-0000-4000-8000-000000000043',
         display_name: `Reviewed ${BRAND.appName} fixture`,
-        source_key: 'routinekind_fixture',
+        source_key: 'layerwell_fixture',
         attribution_text: 'Development-only reviewed catalog fixture',
         attribution_url: null,
       },

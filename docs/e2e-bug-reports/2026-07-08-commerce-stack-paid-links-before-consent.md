@@ -9,7 +9,7 @@ Tester: Codex
 
 ## Reproduction Steps
 
-1. Start Expo web with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`.
+1. Start Expo web with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://layerwell.app`.
 2. Open `/commerce/stack/sensitive-skin-starter-set` on a fresh origin with commerce consent off.
 3. Inspect the stack item rows, footer disclosure, external glyphs, and accessibility labels.
 

@@ -37,7 +37,7 @@ Read first, in order:
 15. docs/hugeToDo/launch-contract.json
 
 Non-negotiables:
-- Do not launch or configure production assets under `OnSkin` unless written counsel clearance exists.
+- Do not launch or configure production assets under `Layerwell` unless written counsel clearance exists.
 - Do not expose unreviewed conflict, routine, pregnancy, Ask, recommendation, or clinical-adjacent copy in production.
 - Do not market AI skin scores, skin age, diagnosis, treatment, cure, prevention, or guaranteed improvement.
 - Keep photos local by default.
@@ -76,7 +76,7 @@ Phase A: Documentation Integration
 
 Phase B: Rebrand Preparation
 - Search for public identity references:
-  OnSkin, onskin, com.onskin.app, onskin://, onskin.app, onskin_pro, @onskin.
+  Layerwell, layerwell, com.layerwell.app, layerwell://, layerwell.app, layerwell_pro, @layerwell.
 - Create a rebrand migration plan first.
 - Do not mechanically rename until the founder provides final cleared name, bundle ID, package ID, scheme, domain, support email, and policy URLs.
 - Add code comments or config placeholders only if they reduce future migration risk.
@@ -191,7 +191,7 @@ Using the docs in 04_repo_docs, reconcile the master plan with the current repo 
 ## Second Recommended Codex Ticket
 
 ```text
-Implement the brand migration scaffolding for a future rebrand, without choosing a final name. Make app identity values fully env/config-driven where they are not already, add a safe checklist command or script that reports remaining public `OnSkin` references, and ensure no production setup is implied. Run typecheck, lint, and tests.
+Implement the brand migration scaffolding for a future rebrand, without choosing a final name. Make app identity values fully env/config-driven where they are not already, add a safe checklist command or script that reports remaining public `Layerwell` references, and ensure no production setup is implied. Run typecheck, lint, and tests.
 ```
 
 ## Third Recommended Codex Ticket

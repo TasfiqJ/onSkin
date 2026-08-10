@@ -15,7 +15,7 @@ import { createWidget, type WidgetEnvironment } from 'expo-widgets';
 
 import type { RoutineWidgetProps } from './contract';
 
-export const RoutineKindTodayWidgetLayout = (
+export const LayerwellTodayWidgetLayout = (
   props: RoutineWidgetProps,
   environment: WidgetEnvironment,
 ) => {
@@ -108,9 +108,9 @@ export const RoutineKindTodayWidgetLayout = (
     ['AM', 'PM', 'none'].includes(props.phase) &&
     localDateIsSafe &&
     [
-      'routinekind-development://today',
-      'routinekind-staging://today',
-      'routinekind://today',
+      'layerwell-development://today',
+      'layerwell-staging://today',
+      'layerwell://today',
     ].includes(props.deepLink) &&
     Number.isSafeInteger(props.interactionRevision) &&
     props.interactionRevision >= 0 &&
@@ -172,7 +172,7 @@ export const RoutineKindTodayWidgetLayout = (
   const showsCounts = currentAtRender && (props.status === 'ready' || props.status === 'complete');
   const statusLabel =
     !stateIsSafe || !currentAtRender
-      ? 'Open RoutineKind to refresh'
+      ? 'Open Layerwell to refresh'
       : props.status === 'complete'
         ? 'Done for today'
         : props.status === 'empty'
@@ -307,4 +307,4 @@ export const RoutineKindTodayWidgetLayout = (
   );
 };
 
-export default createWidget<RoutineWidgetProps>('RoutineKindToday', RoutineKindTodayWidgetLayout);
+export default createWidget<RoutineWidgetProps>('LayerwellToday', LayerwellTodayWidgetLayout);

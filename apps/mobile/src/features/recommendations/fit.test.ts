@@ -1,4 +1,4 @@
-import type { FunctionalTag } from '@onskin/types';
+import type { FunctionalTag } from '@layerwell/types';
 import { describe, expect, it } from 'vitest';
 
 import { recTypeByKey, REC_TYPES, type RecType } from './catalog';

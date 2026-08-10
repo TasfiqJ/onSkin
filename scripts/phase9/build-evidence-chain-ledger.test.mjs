@@ -52,7 +52,7 @@ function commit(root, message) {
 }
 
 function fixture(t, { stageManifest = true } = {}) {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-ledger-builder-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-ledger-builder-'));
   t.after(() => rmSync(root, { force: true, recursive: true }));
   git(root, ['init', '--initial-branch=main']);
   git(root, ['config', 'user.email', 'ledger-builder@example.invalid']);
@@ -181,7 +181,7 @@ test('rejects non-normal index/mode, oversized, and hardlinked evidence', async 
   });
   await t.test('hardlinked working evidence', (child) => {
     const value = fixture(child);
-    const outside = mkdtempSync(join(tmpdir(), 'onskin-ledger-builder-link-'));
+    const outside = mkdtempSync(join(tmpdir(), 'layerwell-ledger-builder-link-'));
     child.after(() => rmSync(outside, { force: true, recursive: true }));
     linkSync(join(value.root, ...MANIFEST.split('/')), join(outside, 'alias'));
     assert.throws(() => build(value), /working bytes do not exactly match/u);
@@ -236,7 +236,7 @@ test('detects staged/working/output races and cleans a failed publication', asyn
   await t.test('hardlinked pre-existing output', (child) => {
     const value = fixture(child);
     write(value.root, LEDGER, '{}\n');
-    const outside = mkdtempSync(join(tmpdir(), 'onskin-ledger-output-link-'));
+    const outside = mkdtempSync(join(tmpdir(), 'layerwell-ledger-output-link-'));
     child.after(() => rmSync(outside, { force: true, recursive: true }));
     linkSync(join(value.root, ...LEDGER.split('/')), join(outside, 'alias'));
     assert.throws(() => build(value), /single-link|snapshot drift/u);

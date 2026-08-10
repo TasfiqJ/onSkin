@@ -10,7 +10,7 @@ Tester: Codex
 ## Reproduction Steps
 
 1. Store a truncated or wrong-shaped XChaCha20-Poly1305 envelope under an app-owned private key and cold-open `/shelf`.
-2. Separately store an unsupported value under `onskin.appLock.enabled` and cold-open `/shelf`.
+2. Separately store an unsupported value under `layerwell.appLock.enabled` and cold-open `/shelf`.
 3. Retry or authenticate through the surfaced recovery.
 
 ## Expected Result

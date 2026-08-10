@@ -4,7 +4,7 @@ import {
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 
-const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
+const KEY = 'layerwell.subscription.freeConflictCheckRuleIds.v1';
 
 export const FREE_CONFLICT_CHECK_LIMIT = 1;
 

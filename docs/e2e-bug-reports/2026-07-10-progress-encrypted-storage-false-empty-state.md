@@ -58,4 +58,4 @@ The encrypted store correctly propagated key/read failures through TanStack Quer
 
 ## Remaining Risk
 
-Expo web cannot prove iOS Keychain, Android Keystore, or native SecureStore fault behavior. Physical staging builds must force key unavailability after encrypted records exist, verify envelopes and `.onskinphoto` files remain byte-identical, restore key access, retry successfully, and verify VoiceOver/TalkBack announcement and focus.
+Expo web cannot prove iOS Keychain, Android Keystore, or native SecureStore fault behavior. Physical staging builds must force key unavailability after encrypted records exist, verify envelopes and `.layerwellphoto` files remain byte-identical, restore key access, retry successfully, and verify VoiceOver/TalkBack announcement and focus.

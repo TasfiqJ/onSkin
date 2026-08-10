@@ -792,8 +792,8 @@ block(
   errors,
   /EXPO_PUBLIC_APP_DISPLAY_NAME/.test(exportSource) &&
     /APP_DISPLAY_NAME/.test(exportSource) &&
-    /RoutineKind/.test(exportSource),
-  'data-export attachment filename must use the runtime display name with a RoutineKind fallback.',
+    /Layerwell/.test(exportSource),
+  'data-export attachment filename must use the runtime display name with a Layerwell fallback.',
 );
 block(
   errors,
@@ -808,8 +808,8 @@ block(
 );
 block(
   errors,
-  !/filename="onskin-export\.json"/.test(exportSource) &&
-    !/const dataExportFileName = 'onskin-export\.json'/.test(exportSource),
+  !/filename="layerwell-export\.json"/.test(exportSource) &&
+    !/const dataExportFileName = 'layerwell-export\.json'/.test(exportSource),
   'data-export must not expose the legacy export filename in response headers.',
 );
 
@@ -1388,8 +1388,8 @@ block(
 );
 block(
   errors,
-  !/onskin-export-\$\{Date\.now\(\)\}/.test(settingsActionsSource) &&
-    !/onskin-export\.json/.test(settingsActionsSource),
+  !/layerwell-export-\$\{Date\.now\(\)\}/.test(settingsActionsSource) &&
+    !/layerwell-export\.json/.test(settingsActionsSource),
   'Mobile data export must not generate legacy plaintext cache filenames.',
 );
 block(

@@ -28,7 +28,7 @@ import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import type { TimeOfDay } from '@onskin/types';
+import type { TimeOfDay } from '@layerwell/types';
 
 // Review & retake (docs/06 §2, design screen 02). Quality is FLAGGED, never blocked
 // (D-029). The calm note compares to the series reference, and Save always works.

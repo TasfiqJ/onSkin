@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { PhotoSeries } from '@onskin/types';
+import type { PhotoSeries } from '@layerwell/types';
 
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 

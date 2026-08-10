@@ -505,9 +505,9 @@ for (const [type, tablePolicy] of [
   ['photo_cloud_backup', 'photos_objects_insert_own'],
   ['photo_trend_insights', 'photo_trend_consent_insert'],
   ['community_participation', 'community_reactions_consent_insert'],
-  ['ask_onskin', 'ask_sessions_consent_insert'],
-  ['ask_onskin', 'ask_turn_audit_consent_insert'],
-  ['ask_onskin', 'ask_safety_audit_consent_insert'],
+  ['ask_layerwell', 'ask_sessions_consent_insert'],
+  ['ask_layerwell', 'ask_turn_audit_consent_insert'],
+  ['ask_layerwell', 'ask_safety_audit_consent_insert'],
 ]) {
   block(
     errors,

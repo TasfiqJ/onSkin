@@ -15,7 +15,7 @@ select is(
       'isCurrent', registry.is_current
     )
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
        and registry.version = 'ask-advisor-2026-06-14-placeholder'
        and registry.consent_text_hash =
@@ -29,7 +29,7 @@ select is(
   (
     select count(*)
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
        and registry.consent_text_hash =
          '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
@@ -53,7 +53,7 @@ select is(
       'isCurrent', registry.is_current
     )
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
        and registry.version = 'ask-advisor-2026-06-14-placeholder'
        and registry.consent_text_hash =
@@ -70,7 +70,7 @@ select is(
       'isCurrent', registry.is_current
     )
       from public.health_consent_copy_registry as registry
-     where registry.consent_type = 'ask_onskin'
+     where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
        and registry.version = 'ask-advisor-2026-06-14-placeholder'
        and registry.consent_text_hash =
@@ -106,7 +106,7 @@ select is(
       'evidenceHash', events.staging_evidence_hash
     )
       from public.health_consent_copy_staging_events as events
-     where events.consent_type = 'ask_onskin'
+     where events.consent_type = 'ask_layerwell'
        and events.action = 'grant'
   ),
   pg_catalog.jsonb_build_object(
@@ -134,7 +134,7 @@ select is(
     select count(*)
       from public.health_consent_copy_review_events as events
      where events.event_type in ('promotion', 'supersession')
-       and events.consent_type = 'ask_onskin'
+       and events.consent_type = 'ask_layerwell'
        and events.action = 'grant'
   ),
   0::bigint,
@@ -203,7 +203,7 @@ select ok(
 
 select throws_ok(
   $$select public._assert_health_consent_copy_for_type(
-    'ask_onskin',
+    'ask_layerwell',
     'grant',
     'ask-advisor-2026-06-14-placeholder',
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'

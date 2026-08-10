@@ -1,4 +1,4 @@
-import type { PregnancyStatus, SkinAxis } from '@onskin/types';
+import type { PregnancyStatus, SkinAxis } from '@layerwell/types';
 
 import {
   ONBOARDING_QUIZ,

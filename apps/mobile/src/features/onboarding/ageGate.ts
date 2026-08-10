@@ -6,7 +6,7 @@
 export const MINIMUM_AGE = 16;
 export const INVALID_DOB_MESSAGE = 'Enter a real birth date that is not in the future.';
 export const AGE_POLICY_REVIEW_STATUS = 'draft_blocked' as const;
-export const AGE_POLICY_RECEIPT_KEY = 'onskin.ageVerified' as const;
+export const AGE_POLICY_RECEIPT_KEY = 'layerwell.ageVerified' as const;
 
 /**
  * Canonical semantic policy tuple. Its order and newline encoding are part of

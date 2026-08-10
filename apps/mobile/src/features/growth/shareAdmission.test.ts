@@ -34,7 +34,7 @@ describe('conflict share admission', () => {
         {
           ...forgedReceipt,
           featureFlags: { shareCard: true, reviewedConflictSharing: true },
-          finalDomain: 'https://routinekind.app',
+          finalDomain: 'https://layerwell.app',
           ownedPairMatches: true,
         },
         forgedConfirmation,

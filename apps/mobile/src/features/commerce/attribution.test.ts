@@ -13,7 +13,7 @@ describe('COM-01A outbound attribution', () => {
   it('cannot construct a retailer URL from any URL or token', () => {
     expect(buildOutboundUrl('https://retailer.example/p/1', 'tok123')).toBeNull();
     expect(buildOutboundUrl('https://retailer.example/p?x=1', 'tok123')).toBeNull();
-    expect(buildOutboundUrl('onskin://retailer/path', 'tok123')).toBeNull();
+    expect(buildOutboundUrl('layerwell://retailer/path', 'tok123')).toBeNull();
   });
 
   it('does not inspect adversarial URL or token inputs', () => {

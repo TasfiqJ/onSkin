@@ -1931,8 +1931,8 @@ async function main() {
     });
 
     await runCheck('Ask metadata and safety audit isolation', async () => {
-      await grantConsent(userA.client, userA.id, 'ask_onskin');
-      await grantConsent(userB.client, userB.id, 'ask_onskin');
+      await grantConsent(userA.client, userA.id, 'ask_layerwell');
+      await grantConsent(userB.client, userB.id, 'ask_layerwell');
       const session = await insertOne(userA.client, 'ask_sessions', {
         user_id: userA.id,
         turn_count: 1,
@@ -2028,7 +2028,7 @@ async function main() {
           expires_at: new Date(Date.now() + 86_400_000).toISOString(),
         }),
       );
-      await revokeConsent(userA.client, userA.id, 'ask_onskin');
+      await revokeConsent(userA.client, userA.id, 'ask_layerwell');
       await expectBlockedInsert(
         'Ask session revoked consent insert',
         userA.client.from('ask_sessions').insert({ user_id: userA.id, turn_count: 1 }),

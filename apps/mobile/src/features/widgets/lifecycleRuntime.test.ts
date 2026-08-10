@@ -346,7 +346,7 @@ describe('iOS routine widget lifecycle production wiring', () => {
         snapshotNonce: SNAPSHOT_NONCE,
         status: 'in_progress',
       }),
-      'routinekind://today',
+      'layerwell://today',
     );
   });
 
@@ -490,7 +490,7 @@ describe('iOS routine widget lifecycle production wiring', () => {
     enableProductionWiring();
     arrangeSuccessfulMount();
     const staleError = Object.assign(new Error('stale activity'), {
-      code: 'ERR_ROUTINE_KIND_LIVE_ACTIVITY_STALE',
+      code: 'ERR_LAYERWELL_LIVE_ACTIVITY_STALE',
     });
     const current = {
       update: vi.fn().mockRejectedValueOnce(staleError).mockResolvedValue(undefined),
@@ -537,7 +537,7 @@ describe('iOS routine widget lifecycle production wiring', () => {
     enableProductionWiring();
     arrangeSuccessfulMount();
     const staleError = Object.assign(new Error('post-start authority race'), {
-      code: 'ERR_ROUTINE_KIND_LIVE_ACTIVITY_STALE',
+      code: 'ERR_LAYERWELL_LIVE_ACTIVITY_STALE',
     });
     let endFinished = false;
     let finishEnd!: () => void;

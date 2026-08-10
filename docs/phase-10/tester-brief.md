@@ -1,15 +1,15 @@
 # Phase 10 Tester Brief
 
-Status: TEMPLATE. Send only after final brand, support address, privacy policy, terms, beta build, and support desk are live. Uses `RoutineKind` as the current working brand candidate; replace it if the final brand memo chooses a different cleared name.
+Status: TEMPLATE. Send only after final brand, support address, privacy policy, terms, beta build, and support desk are live. Uses `Layerwell` as the current working brand candidate; replace it if the final brand memo chooses a different cleared name.
 
 ## What You Are Testing
 
-You are testing a pre-release version of RoutineKind focused on routine organization, product shelf setup, reviewed product-order conflict guidance, progress capture, reminders, and Pro subscription flows. The beta is meant to find confusing, broken, unsafe, or untrusted parts of the experience before public launch.
+You are testing a pre-release version of Layerwell focused on routine organization, product shelf setup, reviewed product-order conflict guidance, progress capture, reminders, and Pro subscription flows. The beta is meant to find confusing, broken, unsafe, or untrusted parts of the experience before public launch.
 
 ## Important Boundaries
 
-- RoutineKind is not medical advice.
-- RoutineKind does not diagnose, treat, cure, prevent, or detect skin conditions.
+- Layerwell is not medical advice.
+- Layerwell does not diagnose, treat, cure, prevent, or detect skin conditions.
 - Do not use beta feedback channels for urgent health concerns.
 - Do not upload or type sensitive medical, prescription, pregnancy, or identity details unless the app explicitly asks and the policy explains why.
 - Photo features are optional. You can test the app without sharing photos.

@@ -19,14 +19,14 @@ The source contract covers exactly two current private-KV keys. New native
 writes target an XChaCha20-Poly1305 envelope whose content key targets
 SecureStore:
 
-- `routinekind.routineOrder.v1` stores separate schema-versioned AM and PM
+- `layerwell.routineOrder.v1` stores separate schema-versioned AM and PM
   arrays of stable shelf-product IDs.
-- `routinekind.cycle.v2` stores one schema-versioned cycle configuration,
+- `layerwell.cycle.v2` stores one schema-versioned cycle configuration,
   including the complete schema-versioned Custom-cycle definition.
 
 Legacy plaintext-compatible private-KV reads and native content-key migration
 paths still exist for upgrades, so this checkpoint does not claim every
-historical byte is already encrypted. Legacy `onskin.cycle.v1` remains a
+historical byte is already encrypted. Legacy `layerwell.cycle.v1` remains a
 migration and export-compatibility input and is not the current cycle authority
 once v2 exists. Routine-order legacy values without a schema can be normalized
 in memory, while malformed current v1 and future-version records fail closed

@@ -26,7 +26,7 @@ const USER_ID = '00000000-0000-4000-8000-000000000001';
 const OPERATION_ID = '10000000-0000-4000-8000-000000000001';
 const CLAIM_TOKEN = 'b'.repeat(64);
 
-function claimRow(consentType = 'ask_onskin') {
+function claimRow(consentType = 'ask_layerwell') {
   return {
     operation_id: OPERATION_ID,
     user_id: USER_ID,
@@ -36,7 +36,7 @@ function claimRow(consentType = 'ask_onskin') {
   };
 }
 
-function completedRow(consentType = 'ask_onskin') {
+function completedRow(consentType = 'ask_layerwell') {
   return [{
     operation_id: OPERATION_ID,
     user_id: USER_ID,
@@ -132,7 +132,7 @@ Deno.test('dependent worker adopts claim, shared cleanup, and exact completion c
     calls,
     [
       `claim:${CLAIM_TOKEN}:10`,
-      `cleanup:${USER_ID}:ask_onskin:7:4`,
+      `cleanup:${USER_ID}:ask_layerwell:7:4`,
       `complete:${OPERATION_ID}`,
     ],
     'dependent lost-device order',

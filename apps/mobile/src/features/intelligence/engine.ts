@@ -1,4 +1,4 @@
-import type { ConflictSeverity, FunctionalTag, IngredientSubflag } from '@onskin/types';
+import type { ConflictSeverity, FunctionalTag, IngredientSubflag } from '@layerwell/types';
 
 import {
   isReviewedRule,

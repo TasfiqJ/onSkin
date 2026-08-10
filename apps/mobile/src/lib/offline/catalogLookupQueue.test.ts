@@ -123,7 +123,7 @@ function product(
     id: PRODUCT_ID,
     barcode,
     name: 'Reviewed Barrier Serum',
-    brand: 'RoutineKind Lab',
+    brand: 'Layerwell Lab',
     category: 'serum',
     source: 'reviewed_catalog',
     catalog_source_id: SOURCE_ID,

@@ -47,7 +47,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.notiflog.v1';
+const KEY = 'layerwell.notiflog.v1';
 const NOW = Date.parse('2026-07-07T12:00:00.000Z');
 
 describe('notification scheduling-attempt ledger', () => {

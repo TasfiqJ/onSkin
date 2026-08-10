@@ -35,7 +35,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   }),
 }));
 
-const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
+const KEY = 'layerwell.subscription.freeConflictCheckRuleIds.v1';
 let accountGeneration = 0;
 
 describe('free conflict-check quota', () => {

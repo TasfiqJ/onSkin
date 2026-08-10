@@ -15,7 +15,7 @@ review manifest at `scripts/brand-legacy-compatibility.json`.
 
 This checkpoint is technical migration hygiene only. It is **not** trademark
 or legal clearance, a domain or social-handle finding, an App Store name
-reservation, approval of `RoutineKind`, or final production identity evidence.
+reservation, approval of `Layerwell`, or final production identity evidence.
 No live Supabase schema or persisted row was inspected. Hosted migration state
 remains a DB-06 reconciliation gate, so deployed-or-persisted compatibility is
 conservatively preserved rather than assumed absent.
@@ -132,7 +132,7 @@ No such migration is authorized or justified by this audit-only checkpoint.
 
 ## Remaining brand and launch gates
 
-- `RoutineKind` remains a working engineering candidate, not a cleared mark.
+- `Layerwell` remains a working engineering candidate, not a cleared mark.
 - Written trademark-counsel output and the founder's exact final-name decision
   remain required.
 - Domain, store name, public handles, bundle ID, scheme, policy/support URLs,

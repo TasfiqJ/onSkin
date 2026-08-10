@@ -1,4 +1,4 @@
-import type { ExpirySource, PaoSource } from '@onskin/types';
+import type { ExpirySource, PaoSource } from '@layerwell/types';
 
 // One consistent provenance label across every shelf surface (docs/04 §3/§5.6) ,
 // the opened-date sheet, the product-detail freshness block, etc.. So the same

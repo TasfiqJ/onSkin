@@ -1,4 +1,4 @@
-import type { NotificationKind, NotificationTier } from '@onskin/types';
+import type { NotificationKind, NotificationTier } from '@layerwell/types';
 
 /**
  * Pure notification policy (docs/07 §3.1/§3.4, D-031): which tier a kind belongs

@@ -36,14 +36,14 @@ function readyProps() {
 }
 
 describe('routine widget closed App Group schema', () => {
-  it('accepts only the exact static RoutineKind Today links for the three build variants', () => {
-    expect(isRoutineWidgetDeepLink('routinekind-development://today')).toBe(true);
-    expect(isRoutineWidgetDeepLink('routinekind-staging://today')).toBe(true);
-    expect(isRoutineWidgetDeepLink('routinekind://today')).toBe(true);
-    expect(isRoutineWidgetDeepLink('routinekind://today/')).toBe(false);
-    expect(isRoutineWidgetDeepLink('routinekind://today?step=1')).toBe(false);
-    expect(isRoutineWidgetDeepLink('routinekind-preview://today')).toBe(false);
-    expect(isRoutineWidgetDeepLink('ROUTINEKIND://today')).toBe(false);
+  it('accepts only the exact static Layerwell Today links for the three build variants', () => {
+    expect(isRoutineWidgetDeepLink('layerwell-development://today')).toBe(true);
+    expect(isRoutineWidgetDeepLink('layerwell-staging://today')).toBe(true);
+    expect(isRoutineWidgetDeepLink('layerwell://today')).toBe(true);
+    expect(isRoutineWidgetDeepLink('layerwell://today/')).toBe(false);
+    expect(isRoutineWidgetDeepLink('layerwell://today?step=1')).toBe(false);
+    expect(isRoutineWidgetDeepLink('layerwell-preview://today')).toBe(false);
+    expect(isRoutineWidgetDeepLink('LAYERWELL://today')).toBe(false);
   });
 
   it('selects the matching static link from a fail-closed app-variant helper', () => {

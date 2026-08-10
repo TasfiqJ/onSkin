@@ -236,7 +236,7 @@ describe('exact consent backend contract', () => {
   it('rejects wrong copy, foreign owner, and malformed authoritative status', async () => {
     await expect(
       recordConsent({
-        type: 'ask_onskin',
+        type: 'ask_layerwell',
         granted: true,
         version: 'stale',
         consentText: 'wrong',
@@ -246,11 +246,11 @@ describe('exact consent backend contract', () => {
     ).rejects.toThrow('HEALTH_DEPENDENT_CONSENT_COPY_INVALID');
     expect(mocks.rpc).not.toHaveBeenCalled();
 
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.grant;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.grant;
     mocks.getPersistedUser.mockResolvedValueOnce({ data: { user: { id: 'user-b' } }, error: null });
     await expect(
       recordConsent({
-        type: 'ask_onskin',
+        type: 'ask_layerwell',
         granted: true,
         version: copy.version,
         consentText: copy.text,
@@ -260,10 +260,10 @@ describe('exact consent backend contract', () => {
     ).rejects.toThrow('CONSENT_OWNER_CHANGED');
 
     mocks.rpcResults.set('get_health_dependent_consent_status', {
-      data: [{ ...status('ask_onskin', 'active', 2)[0], consent_text_hash: '0'.repeat(64) }],
+      data: [{ ...status('ask_layerwell', 'active', 2)[0], consent_text_hash: '0'.repeat(64) }],
       error: null,
     });
-    await expect(getHealthDependentConsentStatus('ask_onskin')).rejects.toThrow(
+    await expect(getHealthDependentConsentStatus('ask_layerwell')).rejects.toThrow(
       'HEALTH_DEPENDENT_CONSENT_STATUS_INVALID',
     );
   });

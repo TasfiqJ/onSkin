@@ -6,8 +6,8 @@ import { multiRemovePrivateItems } from '@/lib/storage/privateKV';
 // truth (offline-safe), with a guarded ledger mirror in consent.ts. Peer POSTING is
 // deferred (B-COMMUNITY-MOD), so this only governs the Phase-1/2 gates today.
 
-const CONSENT_KEY = 'onskin.communityConsent.v1';
-const AGE_KEY = 'onskin.communityAge16.v1';
+const CONSENT_KEY = 'layerwell.communityConsent.v1';
+const AGE_KEY = 'layerwell.communityAge16.v1';
 
 export async function getCommunityConsentLocal(): Promise<boolean> {
   return getPrivateBoolean(CONSENT_KEY);

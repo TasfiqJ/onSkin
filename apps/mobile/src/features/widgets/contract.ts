@@ -1,11 +1,11 @@
 import { HEALTH_PROCESSING_STATUS_LEASE_MS } from '@/lib/consent/healthProcessingEpoch';
 
-export const ROUTINE_WIDGET_NAME = 'RoutineKindToday';
-export const ROUTINE_LIVE_ACTIVITY_NAME = 'RoutineKindEvening';
+export const ROUTINE_WIDGET_NAME = 'LayerwellToday';
+export const ROUTINE_LIVE_ACTIVITY_NAME = 'LayerwellEvening';
 export const ROUTINE_WIDGET_TODAY_DEEP_LINKS = {
-  development: 'routinekind-development://today',
-  staging: 'routinekind-staging://today',
-  production: 'routinekind://today',
+  development: 'layerwell-development://today',
+  staging: 'layerwell-staging://today',
+  production: 'layerwell://today',
 } as const;
 export const ROUTINE_WIDGET_TODAY_DEEP_LINK = ROUTINE_WIDGET_TODAY_DEEP_LINKS.production;
 export const ROUTINE_WIDGET_CHECK_OFF_TARGET = 'widget-action:complete-next' as const;

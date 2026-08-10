@@ -1,4 +1,4 @@
-import type { ConsentType } from '@onskin/types';
+import type { ConsentType } from '@layerwell/types';
 import * as Crypto from 'expo-crypto';
 
 import { env, isSupabaseConfigured } from '@/lib/env';

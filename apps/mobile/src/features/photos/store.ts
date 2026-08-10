@@ -1,7 +1,7 @@
 import { randomUUID } from 'expo-crypto';
 
-import type { PhotoSeries, TimeOfDay } from '@onskin/types';
-import { PHOTO_SERIES } from '@onskin/types';
+import type { PhotoSeries, TimeOfDay } from '@layerwell/types';
+import { PHOTO_SERIES } from '@layerwell/types';
 
 import { supabase } from '@/lib/supabase/client';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
@@ -33,11 +33,11 @@ import type { PhotoMeta, PhotoQualitySource } from './timeline';
 
 /**
  * Local-first photo store. Metadata is encrypted before it enters AsyncStorage;
- * image bytes are encrypted into app-private `.onskinphoto` envelopes and never
+ * image bytes are encrypted into app-private `.layerwellphoto` envelopes and never
  * uploaded or mirrored by local save. Notes are encrypted separately inside the
  * encrypted metadata envelope for legacy migration safety.
  */
-const KEY = 'onskin.photos.v1';
+const KEY = 'layerwell.photos.v1';
 const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
 const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
 export const PHOTO_METADATA_INVALID = 'PHOTO_METADATA_INVALID';

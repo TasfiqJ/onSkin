@@ -1,4 +1,4 @@
-import type { PlanId } from '@onskin/types';
+import type { PlanId } from '@layerwell/types';
 
 import type { SubscriptionOfferingView, SubscriptionPackageView } from '@/lib/iap/revenuecat';
 

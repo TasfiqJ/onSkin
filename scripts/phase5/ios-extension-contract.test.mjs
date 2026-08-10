@@ -7,7 +7,7 @@ import {
 } from './ios-extension-contract.mjs';
 
 function fixture(variant = 'development') {
-  const appBundleIdentifier = `com.routinekind.app.${variant}`;
+  const appBundleIdentifier = `com.layerwell.app.${variant}`;
   return {
     packageJson: {
       dependencies: { '@expo/ui': '~57.0.9', 'expo-widgets': '57.0.8' },
@@ -33,7 +33,7 @@ function fixture(variant = 'development') {
       },
     },
     config: {
-      scheme: `routinekind-${variant}`,
+      scheme: `layerwell-${variant}`,
       ios: {
         bundleIdentifier: appBundleIdentifier,
         supportsTablet: false,
@@ -48,7 +48,7 @@ function fixture(variant = 'development') {
             frequentUpdates: false,
             widgets: [
               {
-                name: 'RoutineKindToday',
+                name: 'LayerwellToday',
                 displayName: 'Today',
                 description: 'Generic progress.',
                 ios: {
@@ -94,7 +94,7 @@ test('accepts the single derived iOS WidgetKit + ActivityKit extension contract'
   assert.deepEqual(result.errors, []);
   assert.equal(
     result.identity.extensionBundleIdentifier,
-    'com.routinekind.app.development.ExpoWidgetsTarget',
+    'com.layerwell.app.development.ExpoWidgetsTarget',
   );
 });
 
@@ -126,7 +126,7 @@ for (const [name, mutate, pattern] of [
     'rejects a colliding or wrong extension identifier',
     (value) => {
       value.config.extra.eas.build.experimental.ios.appExtensions[0].bundleIdentifier =
-        'com.routinekind.shared.ExpoWidgetsTarget';
+        'com.layerwell.shared.ExpoWidgetsTarget';
     },
     /extension bundle identifier must be/,
   ],

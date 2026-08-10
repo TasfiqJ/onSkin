@@ -15,7 +15,7 @@ import {
 } from './localPrivateDataKeys';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
-const STORAGE_KEY_RE = /['"`]((?:onskin|routinekind)\.[^'"`]+)['"`]/g;
+const STORAGE_KEY_RE = /['"`]((?:layerwell|onskin)\.[^'"`]+)['"`]/g;
 
 function walk(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -43,7 +43,7 @@ describe('local private data registry', () => {
       const source = readFileSync(file, 'utf8');
       for (const match of source.matchAll(STORAGE_KEY_RE)) discovered.add(match[1]!);
     }
-    discovered.delete('onskin.app');
+    discovered.delete('layerwell.app');
 
     expect([...discovered].sort()).toEqual([...registered].sort());
   });

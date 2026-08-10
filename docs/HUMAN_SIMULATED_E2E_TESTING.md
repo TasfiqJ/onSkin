@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repo uses human-simulated end-to-end testing to verify that OnSkin works
+This repo uses human-simulated end-to-end testing to verify that Layerwell works
 through the same surface a real person uses: physical iPhone/iOS Simulator,
 Expo web where compatible, or another explicit target surface. Android may be
 used for source-health/resilience work, but it is not release evidence under
@@ -270,7 +270,7 @@ A UI-facing task is done only when:
 
 ## Open Questions
 
-- Which native E2E harness should OnSkin standardize on: Detox, Maestro, native XCTest/XCUIAutomation, Android UI Automator, or another tool?
+- Which native E2E harness should Layerwell standardize on: Detox, Maestro, native XCTest/XCUIAutomation, Android UI Automator, or another tool?
 - Which flows are safe to test against local fixtures without live Supabase, RevenueCat, Sentry, PostHog, Apple, or Google services?
 - What test accounts, seed data, and local reset scripts should be used for onboarding, subscription, photo, recommendation, and account-deletion flows?
 - Which Expo web routes should graduate from human-simulated evidence plus `e2e:human:manifest` into a committed Playwright suite after dependency approval?

@@ -1,6 +1,6 @@
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
-export const HEALTH_DATA_LIFECYCLE_KEY = 'routinekind.healthDataLifecycle.v1';
+export const HEALTH_DATA_LIFECYCLE_KEY = 'layerwell.healthDataLifecycle.v1';
 const SCHEMA_VERSION = 3 as const;
 
 export const HEALTH_DATA_LIFECYCLE_INVALID = 'HEALTH_DATA_LIFECYCLE_INVALID';

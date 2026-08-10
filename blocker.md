@@ -12,7 +12,7 @@ flags until the exact tracked release-candidate evidence exists.
 ## Required Founder/Operator Actions
 
 1. Final identity and legal clearance
-   - Select only from the counsel-reviewed candidate sequence (`RoutineKind`, then `Ritunera`, then `Ritualoom`) after written trademark clearance, domain acquisition, and App Store name reservation. The legacy `OnSkin` identity is excluded because a public skincare scanner already uses it.
+   - Select only from the counsel-reviewed candidate sequence (`Layerwell`, then `Ritunera`, then `Ritualoom`) after written trademark clearance, domain acquisition, and App Store name reservation. The legacy `Layerwell` identity is excluded because a public skincare scanner already uses it.
    - Record final app name, domain, support email, privacy URL, terms URL, account deletion URL, data export URL, and App Store URL. Play Store is N/A under the iOS-only contract.
    - Obtain named legal/privacy/clinical signoff for claims, policies, health-adjacent copy, exact iOS App Privacy answers, and App Store metadata.
 

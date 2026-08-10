@@ -16,11 +16,11 @@ external accounts.
 
 | Item                  | Decision needed                                                                             | Current Phase 1 state                                                                                                                 |
 | --------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Brand name            | Reject conflicted `OnSkin`; select only after written counsel decision and founder approval | Sequence for counsel review is `RoutineKind`, `Ritunera`, then lower-confidence `Ritualoom`; `Rituvia` is suspended                   |
-| Domain                | Final policy, support, app link, and fallback domain                                        | Provisional first-candidate order is `routinekind.com`, then `routinekind.app`; authenticated reservation and legal decision required |
-| iOS bundle ID         | Final App Store identifier                                                                  | Candidate `com.routinekind.app` if rebrand clears                                                                                     |
-| Android package       | Final Play package identifier                                                               | Candidate `com.routinekind.app` if rebrand clears                                                                                     |
-| URL scheme            | Final deep link scheme                                                                      | Candidate `routinekind` if rebrand clears                                                                                             |
+| Brand name            | Obtain written counsel decision for the founder-selected `Layerwell` identity                | Selected for engineering; not legally cleared for public production                                                                  |
+| Domain                | Final policy, support, app link, and fallback domain                                        | No domain is claimed until authenticated reservation evidence exists                                                                 |
+| iOS bundle ID         | Final App Store identifier                                                                  | Candidate `com.layerwell.app` if rebrand clears                                                                                     |
+| Android package       | Final Play package identifier                                                               | Candidate `com.layerwell.app` if rebrand clears                                                                                     |
+| URL scheme            | Final deep link scheme                                                                      | Candidate `layerwell` if rebrand clears                                                                                             |
 | Environment split     | Naming for dev/staging/prod                                                                 | Use `development`, `staging`, `production`                                                                                            |
 | Supabase projects     | Project names and region                                                                    | Create separate staging and production projects after brand decision                                                                  |
 | RevenueCat project    | App and entitlement naming                                                                  | Create after final app identity; entitlement `pro` remains stable unless pricing changes                                              |
@@ -39,7 +39,7 @@ Use exactly:
 - `staging`
 - `production`
 
-Do not create production service accounts under the `OnSkin` name unless counsel
+Do not create production service accounts under the `Layerwell` name unless counsel
 clears the brand.
 
 ## Supabase Start Order

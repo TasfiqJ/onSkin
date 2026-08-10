@@ -9,14 +9,14 @@ import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmi
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
 
 // Local-first Ask state (docs/13 §7/§15, the D-029 pattern). Two pieces of state, both
-// offline-safe: (1) the ask_onskin consent flag. DEFAULT-OFF, the v1 source of truth
+// offline-safe: (1) the ask_layerwell consent flag. DEFAULT-OFF, the v1 source of truth
 // with a guarded ledger mirror in consent.ts; (2) a per-period counter of GROUNDED
 // (cloud) turns used, to enforce the hard trial cap (gate.ts). The deterministic,
 // on-device advisor needs neither. It is always free and stores nothing. No question
 // or answer text is ever written here (no transcript, docs/13 §10).
 
-const CONSENT_KEY = 'onskin.ask.consent.v1'; // default-OFF
-const TURNS_KEY = 'onskin.ask.groundedTurns.v1'; // { period: 'YYYY-MM', count: number }
+const CONSENT_KEY = 'layerwell.ask.consent.v1'; // default-OFF
+const TURNS_KEY = 'layerwell.ask.groundedTurns.v1'; // { period: 'YYYY-MM', count: number }
 const PERIOD = /^\d{4}-(0[1-9]|1[0-2])$/;
 const TURNS_SCHEMA_VERSION = 1 as const;
 

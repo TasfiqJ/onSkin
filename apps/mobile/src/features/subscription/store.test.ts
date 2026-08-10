@@ -21,8 +21,8 @@ import {
 
 const A = 'a'.repeat(64);
 const B = 'b'.repeat(64);
-const KEY = 'onskin.entitlement.v2';
-const LEGACY_KEY = 'onskin.entitlement.v1';
+const KEY = 'layerwell.entitlement.v2';
+const LEGACY_KEY = 'layerwell.entitlement.v1';
 const NOW = '2026-07-14T12:00:00.000Z';
 
 const mocks = vi.hoisted(() => ({
@@ -122,7 +122,7 @@ function storeEntitlement(overrides: Partial<StoredEntitlement> = {}): StoredEnt
     isActive: true,
     periodType: 'normal',
     store: 'app_store',
-    productId: 'routinekind_pro_annual',
+    productId: 'layerwell_pro_annual',
     expiresAt: '2027-07-14T12:00:00.000Z',
     willRenew: true,
     grantedAt: '2026-07-01T00:00:00.000Z',
@@ -180,7 +180,7 @@ function customerInfo(
               pro: {
                 verification: activeVerification,
                 isActive: true,
-                productIdentifier: 'routinekind_pro_annual',
+                productIdentifier: 'layerwell_pro_annual',
               },
             }
           : {},
@@ -204,7 +204,7 @@ function webhookRow(overrides: Record<string, unknown> = {}) {
     is_active: true,
     period_type: 'normal',
     store: 'app_store',
-    product_id: 'routinekind_pro_annual',
+    product_id: 'layerwell_pro_annual',
     expires_at: '2027-07-14T12:00:00.000Z',
     will_renew: true,
     original_purchase_at: '2026-07-01T00:00:00.000Z',
@@ -226,7 +226,7 @@ function storeProjectionRow(overrides: Record<string, unknown> = {}) {
   return {
     tier: 'pro',
     is_active: true,
-    product_id: 'routinekind_pro_annual',
+    product_id: 'layerwell_pro_annual',
     expires_at: '2027-07-14T12:00:00.000Z',
     store: 'app_store',
     period_type: 'normal',
@@ -340,14 +340,14 @@ describe('owner-bound entitlement evidence store', () => {
     expect(empty.status).toBe('committed');
     expect(empty.snapshot?.activeStoreEntitlement).toBeNull();
     expect(empty.snapshot?.priorEntitlement).toMatchObject({
-      productId: 'routinekind_pro_annual',
+      productId: 'layerwell_pro_annual',
       isActive: false,
     });
     const raw = mocks.storage.get(KEY)!;
     expect(JSON.parse(raw).store.definitive).toMatchObject({
       state: 'empty',
       entitlement: null,
-      priorEntitlement: { productId: 'routinekind_pro_annual' },
+      priorEntitlement: { productId: 'layerwell_pro_annual' },
     });
 
     const relaunched = await readEntitlementSnapshot(contextA, '2026-07-14T12:01:00.000Z');
@@ -976,7 +976,7 @@ describe('owner-bound entitlement evidence store', () => {
     expect(merged.status).toBe('committed');
     expect(merged.snapshot?.activeStoreEntitlement).toMatchObject({
       source: 'revenuecat',
-      productId: 'routinekind_pro_annual',
+      productId: 'layerwell_pro_annual',
     });
     expect(merged.snapshot?.activeAppGrantEntitlement).toMatchObject({
       source: 'app_granted',

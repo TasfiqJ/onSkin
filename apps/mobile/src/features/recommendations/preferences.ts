@@ -1,4 +1,4 @@
-import type { BudgetBand, ValuesFilter } from '@onskin/types';
+import type { BudgetBand, ValuesFilter } from '@layerwell/types';
 
 // The user's values / format / budget filters (docs/09 §8). These are HONEST
 // personalisation. Fragrance-free can shape current type guidance when the

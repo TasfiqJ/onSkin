@@ -1,4 +1,4 @@
-import type { EvidenceLabel, FunctionalTag, GoalId, SequencingRole } from '@onskin/types';
+import type { EvidenceLabel, FunctionalTag, GoalId, SequencingRole } from '@layerwell/types';
 
 import type { EngineProduct } from '@/features/intelligence/engine';
 

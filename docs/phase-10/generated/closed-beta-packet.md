@@ -1,9 +1,9 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-08-09T06:51:02.706Z
+Generated: 2026-08-10T01:38:46.710Z
 Status: blocked
-Git SHA: 443b5105b7142eafb5f52adca508953db944889e
-Git status: clean
+Git SHA: fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f
+Git status: DIRTY
 Phase 9 packet status: blocked
 
 ## Beta Identity
@@ -21,6 +21,7 @@ Phase 9 packet status: blocked
 
 ## Warnings
 
+- Closed beta packet generated with a dirty Git worktree; do not use it as final beta evidence.
 - Phase 9 packet status is blocked.
 - External closed beta evidence missing: PHASE10_PHASE9_BETA_CANDIDATE_PASS=true.
 - External closed beta evidence missing: PHASE10_BETA_IDENTITY_PASS=true.
@@ -54,14 +55,14 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `0e4f018aa53711f137cf17c7cfdd3a94ee79f4d0caa816c50c541f4486c62540`
+- `package.json`: `af6cec1697c363daf266bcd4032a184aa9a994a51cc6a8c0991da4c67b0d8c8e`
 - `docs/hugeToDo/launch-contract.json`: `ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb`
 - `scripts/launch/contract.mjs`: `7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
-- `.env.example`: `41af16d44a9531286d9dbe8339b15c0777f9246c5f84f4fd03efc19dbe14d217`
+- `.env.example`: `d9825f22149f8d15e491d4f1d97fbc8311ce739564a36e1f0ed0ecc64464e091`
 - `scripts/phase9/lib.mjs`: `2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `9dcb0f7924e75a73d213129453d4cfd7f2f991d0ab6ff75993ad273737060b06`
-- `scripts/phase10-11/public-contact-smoke.mjs`: `e9dbae68cacb7118a246c9ae260bd87007d1d847298a09920b755cd89a6a5eca`
+- `scripts/phase10-11/public-contact-smoke.mjs`: `c2677edb5f441c0822749b6643e8016266cf4a7c981455ad569d155289073af0`
 - `scripts/phase10/lib.mjs`: `8aadf10a2f267366b2d23166793476ed4cb7c3511856f27858801c43884b98e3`
 - `scripts/phase10/beta-readiness.mjs`: `a766be5eae56fd6416cf26219d7937fd4261768653ef12ae84d7828a0de0555a`
 - `scripts/phase10/beta-analytics-audit.mjs`: `6b59019b485e4e2eb9dfed6d34cf4e6362e8b62728ece9567f9974e74836fa9b`
@@ -70,19 +71,19 @@ Phase 9 packet status: blocked
 - `docs/phase-10/generated/support-handoff-packet.json`: `e30460c5c15393e6600a6a23a628e6a9d13b049e7c51357a17de563fa6b8544d`
 - `docs/phase-10/generated/support-handoff-packet.md`: `469fd793699e4dae1ce606be9c985f8a1184f7e93683e3ae71e50ea79b537aa5`
 - `apps/mobile/eas.json`: `c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04`
-- `apps/mobile/app.config.js`: `9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f`
+- `apps/mobile/app.config.js`: `81851010e4eb58d23f8e61ca270d979776390f3607d4a6afdf6106936756eb5c`
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `51de958c223a1b32cf5d6fffdfff03ac1631bbfe9735de41995b084a90f23f53`
-- `apps/mobile/src/lib/analytics/track.ts`: `3087aac6c5d81fd34e070c2ee0fab7107e9fd911113c93febd3e3b9385c293ef`
+- `apps/mobile/src/lib/analytics/track.ts`: `6f8c960614917f788a2fea689d8bd9eefea30506625a50cc2ff1f1941b0d6881`
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `e785aa002ab14ff33bb74612fa3d975f22dbd4693d195d6f11baf66d88462541`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `50c82615ea573fc34b96b4d3c7469ed8a53145b932d84f702ca3983c2b4d8f2e`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `97d09aa385b756f4157b1662a6094d2861ac52364dbbec45aa0a7f2a4eddd3de`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `66e4f9ea2a39fb45d2d33a71bec58b28a39f2f4d8835bf94a2ae3ab1b9219e9a`
 - `docs/phase-10/beta-source-of-truth.md`: `f6b787b49f26ca90adaf34f217a2e15387011959af83575a8a661b39c381d027`
 - `docs/phase-10/tester-recruitment-sheet.md`: `9b5d0fe3e3f1564b01f74e5b662a61511a6d6676a1ba46b0b012531baaa654ba`
-- `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
+- `docs/phase-10/tester-brief.md`: `0359d46525ae371f155363ce6431583062991536f2276badf31580f6b19d8323`
 - `docs/phase-10/testflight-packet.md`: `375cfc991519dfd081f28b1ea5495cd457c2d4e2bc8fcd7d87887c3e9756b12c`
 - `docs/phase-10/beta-event-schema.md`: `b8d378bed2de90910be0932c60f6d526adfe55c4c1fc2ec21641ab04aba84e85`
 - `docs/phase-10/support-operations.md`: `bed258fc581aa469539542cbad95184e5314adb4a3b3ac11983b677cd4a00c7e`
-- `docs/phase-10/surveys.md`: `7500508e1ddd2f449ad8ab06584e990ba936869dae70f3db519a9a1efc474276`
+- `docs/phase-10/surveys.md`: `805a3412b6fb06d51e865eae478c244febc38ef4f7d656ea7ab38076a31b2620`
 - `docs/phase-10/interview-script.md`: `8df63d8d049ebb3c573865a928e258adde7e59e81bb04eac256eed174a71cd1e`
 - `docs/phase-10/catalog-beta-report.md`: `28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28`
 - `docs/phase-10/payment-beta-report.md`: `eee2a88c529c13fd08a62725180ff12362d681e0be64e368cfea6edcf99bf776`

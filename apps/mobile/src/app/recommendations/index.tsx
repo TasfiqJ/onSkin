@@ -1,4 +1,4 @@
-import type { RecommendationTrigger } from '@onskin/types';
+import type { RecommendationTrigger } from '@layerwell/types';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';

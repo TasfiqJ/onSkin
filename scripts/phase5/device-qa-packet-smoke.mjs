@@ -62,7 +62,7 @@ import {
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const sourceRoot = resolve(scriptDir, '..', '..');
-const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-phase5-repo-'));
+const fixtureRoot = mkdtempSync(join(tmpdir(), 'layerwell-phase5-repo-'));
 const packetOutDirs = [];
 process.on('exit', () => {
   for (const path of packetOutDirs) rmSync(path, { recursive: true, force: true });
@@ -342,7 +342,7 @@ const root = fixtureRoot;
 const phase5SourceGitSha = currentGitSha();
 const packetPath = resolve(root, 'scripts/phase5/build-device-qa-packet.mjs');
 const iosBuildId = '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5';
-const appBundleIdentifier = 'com.routinekind.phase5smoke';
+const appBundleIdentifier = 'com.layerwell.phase5smoke';
 const extensionBundleIdentifier = `${appBundleIdentifier}.ExpoWidgetsTarget`;
 const appGroupIdentifier = `group.${appBundleIdentifier}`;
 const appleTeamId = 'ABCDE12345';
@@ -854,7 +854,7 @@ function writeCameraLifecycleEvidenceFixture() {
     appBundleIdentifier,
     appVersion: '1.0.0',
     iosBuildNumber: '42',
-    displayName: 'RoutineKind Staging',
+    displayName: 'Layerwell Staging',
     archiveSha256: '9'.repeat(64),
     xcodeVersion: 'Xcode 26.4 (17E202)',
     iosSdkVersion: 'iOS 26.4',
@@ -869,11 +869,11 @@ function writeCameraLifecycleEvidenceFixture() {
     codeSignatureValid: true,
     finalInfoPlist: {
       bundleIdentifier: appBundleIdentifier,
-      displayName: 'RoutineKind Staging',
+      displayName: 'Layerwell Staging',
       appVersion: '1.0.0',
       iosBuildNumber: '42',
       cameraUsageDescription:
-        'Allow RoutineKind Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.',
+        'Allow Layerwell Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.',
       cameraUsageDescriptionOccurrenceCount: 1,
       unresolvedBuildVariablesAbsent: true,
     },
@@ -996,7 +996,7 @@ function writeCameraLifecycleEvidenceFixture() {
     final_info_plist_report: {
       extractedFromSignedArchive: true,
       infoPlistRelativePath:
-        'RoutineKind.xcarchive/Products/Applications/RoutineKind.app/Info.plist',
+        'Layerwell.xcarchive/Products/Applications/Layerwell.app/Info.plist',
       finalInfoPlist: evidence.signedArchive.finalInfoPlist,
     },
     device_inventory_report: {
@@ -1068,7 +1068,7 @@ function writeCameraLifecycleEvidenceFixture() {
       textArtifact(
         `${cameraEvidenceRelativeRoot}/eas-build-log.txt`,
         [
-          'ROUTINEKIND_CAMERA_BUILD_BINDING_V1',
+          'LAYERWELL_CAMERA_BUILD_BINDING_V1',
           `sourceGitSha=${evidence.sourceGitSha}`,
           `easIosBuildId=${iosBuildId}`,
           'profile=staging',
@@ -1299,7 +1299,7 @@ const validEvidence = {
   PHASE5_IOS_BUILD_ID: iosBuildId,
   PHASE5_IOS_BUILD_PROFILE: 'staging',
   PHASE5_ANDROID_BUILD_ID:
-    'https://expo.dev/accounts/routinekind/projects/mobile/builds/7a4d74ae-2acd-4af5-931f-b768565bcd64',
+    'https://expo.dev/accounts/layerwell/projects/mobile/builds/7a4d74ae-2acd-4af5-931f-b768565bcd64',
   PHASE5_IOS_DEVICE: 'iPhone 17 Pro / iOS 26.5.2',
   PHASE5_ANDROID_DEVICE: 'Pixel 8 / Android 15',
   PHASE5_QA_SIGNOFF: 'true',
@@ -1717,7 +1717,7 @@ function runWithCat07SummaryOutsideHead() {
 }
 
 function runWithCameraEvidenceJunctionEscape() {
-  const outside = mkdtempSync(join(tmpdir(), 'routinekind-camera-packet-outside-'));
+  const outside = mkdtempSync(join(tmpdir(), 'layerwell-camera-packet-outside-'));
   const linkRelative = `docs/phase-5/evidence/camera-lifecycle/packet-escape-${process.pid}`;
   const link = resolve(root, linkRelative);
   copyFileSync(resolve(root, cameraLifecycleEvidencePath), resolve(outside, 'evidence.json'));
@@ -1965,7 +1965,7 @@ const cases = [
   {
     name: 'strict Phase 5 QA packet rejects and does not echo a secret-bearing EAS URL',
     result: run({
-      PHASE5_IOS_BUILD_ID: `https://expo.dev/accounts/routinekind/projects/mobile/builds/${iosBuildId}?token=packet-secret-value`,
+      PHASE5_IOS_BUILD_ID: `https://expo.dev/accounts/layerwell/projects/mobile/builds/${iosBuildId}?token=packet-secret-value`,
     }),
     expect(result) {
       const text = output(result);
@@ -2299,7 +2299,7 @@ const cases = [
           ...NATIVE_OCR_REQUIRED_SOURCE_FILES,
           ...CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES,
           'scripts/cat05/native-label-ocr-source-contract.test.mjs',
-          'scripts/phase5/expo-widgets-57.0.8/RoutineKindWidgetLifecycleStore.swift',
+          'scripts/phase5/expo-widgets-57.0.8/LayerwellWidgetLifecycleStore.swift',
           'scripts/phase5/expo-widgets-57.0.8/AppIntent.swift',
           'scripts/phase5/expo-widgets-57.0.8/EntryView.swift',
           'scripts/phase5/expo-widgets-57.0.8/ExpoWidgets.podspec',

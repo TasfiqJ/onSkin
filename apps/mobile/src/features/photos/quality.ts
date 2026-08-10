@@ -1,4 +1,4 @@
-import type { PhotoQualityFlag } from '@onskin/types';
+import type { PhotoQualityFlag } from '@layerwell/types';
 
 import type { FramingAssessment, LightingAssessment } from './captureAnalysis';
 

@@ -1,4 +1,4 @@
-import type { FunctionalTag } from '@onskin/types';
+import type { FunctionalTag } from '@layerwell/types';
 
 // Coarse concentration band (docs/02 §4.2). The engine escalates irritation/stability
 // severity by +1 for a high-dose product, and gates the high-dose-salicylic x

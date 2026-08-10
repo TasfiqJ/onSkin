@@ -37,8 +37,8 @@ import {
   waitForEncryptedPhotoWritesToSettle,
 } from './encryptedStorage';
 
-const CONTENT_KEY_NAME = 'onskin.photo.content_key.v1';
-const CONTENT_KEY_MARKER = 'onskin.photo.content_key_created.v1';
+const CONTENT_KEY_NAME = 'layerwell.photo.content_key.v1';
+const CONTENT_KEY_MARKER = 'layerwell.photo.content_key_created.v1';
 
 function activateExpiringHealthLease(epoch: number): void {
   vi.useFakeTimers();
@@ -236,7 +236,7 @@ describe('encrypted photo storage', () => {
   it('purges a final encrypted photo when its status lease expires during the atomic move', async () => {
     activateExpiringHealthLease(10);
     const sourceUri = 'file://capture/lease-expiry.jpg';
-    const finalUri = 'file://document/photos/v1/lease-expiry.onskinphoto';
+    const finalUri = 'file://document/photos/v1/lease-expiry.layerwellphoto';
     mocks.files.set(sourceUri, Buffer.from('image bytes').toString('base64'));
     let releaseMove!: () => void;
     let markMoveStarted!: () => void;
@@ -257,7 +257,7 @@ describe('encrypted photo storage', () => {
     await rejection;
     expect(mocks.files.has(finalUri)).toBe(false);
     expect(
-      [...mocks.files.keys()].some((uri) => uri.includes('lease-expiry.onskinphoto.tmp-')),
+      [...mocks.files.keys()].some((uri) => uri.includes('lease-expiry.layerwellphoto.tmp-')),
     ).toBe(false);
     expect(mocks.files.has(sourceUri)).toBe(true);
   });
@@ -376,7 +376,7 @@ describe('encrypted photo storage', () => {
   });
 
   it('purges a restored live photo when its status lease expires during restore', async () => {
-    const originalUri = 'file://document/photos/v1/restore-expiry.onskinphoto';
+    const originalUri = 'file://document/photos/v1/restore-expiry.layerwellphoto';
     const quarantinedUri = `${originalUri}.pending-delete-operation`;
     mocks.files.set(quarantinedUri, 'encrypted');
     activateExpiringHealthLease(15);
@@ -403,14 +403,14 @@ describe('encrypted photo storage', () => {
 
   it('purges a reconciled live photo when its status lease expires during restoration', async () => {
     const directory = 'file://document/photos/v1/';
-    const originalUri = `${directory}reconcile-expiry.onskinphoto`;
+    const originalUri = `${directory}reconcile-expiry.layerwellphoto`;
     const quarantinedUri = `${originalUri}.pending-delete-operation`;
     mocks.files.set(quarantinedUri, 'encrypted');
     mocks.getInfoAsync.mockImplementation(async (uri: string) => ({
       exists: uri === directory || mocks.files.has(uri),
     }));
     mocks.readDirectoryAsync.mockResolvedValue([
-      'reconcile-expiry.onskinphoto.pending-delete-operation',
+      'reconcile-expiry.layerwellphoto.pending-delete-operation',
     ]);
     activateExpiringHealthLease(16);
     let releaseMove!: () => void;
@@ -460,7 +460,7 @@ describe('encrypted photo storage', () => {
     await write;
     await drain;
     expect(drainFinished).toBe(true);
-    expect(mocks.files.has('file://document/photos/v1/account-a-photo.onskinphoto')).toBe(true);
+    expect(mocks.files.has('file://document/photos/v1/account-a-photo.layerwellphoto')).toBe(true);
   });
 
   it('keeps decryption read-only instead of repopulating a cleared marker', async () => {
@@ -527,14 +527,14 @@ describe('encrypted photo storage', () => {
 
   it('publishes encrypted photos with an atomic move and preserves the source on interruption', async () => {
     const sourceUri = 'file://capture/atomic.jpg';
-    const finalUri = 'file://document/photos/v1/atomic-photo.onskinphoto';
+    const finalUri = 'file://document/photos/v1/atomic-photo.layerwellphoto';
     mocks.files.set(sourceUri, Buffer.from('image bytes').toString('base64'));
 
     const result = await encryptCapturedPhoto(sourceUri, 'atomic-photo');
 
     expect(result.encryptedLocalUri).toBe(finalUri);
     expect(mocks.moveAsync).toHaveBeenCalledWith({
-      from: expect.stringMatching(/atomic-photo\.onskinphoto\.tmp-/),
+      from: expect.stringMatching(/atomic-photo\.layerwellphoto\.tmp-/),
       to: finalUri,
     });
     expect(mocks.files.has(finalUri)).toBe(true);
@@ -551,15 +551,15 @@ describe('encrypted photo storage', () => {
     ).rejects.toThrow('interrupted move');
 
     expect(mocks.files.has('file://capture/interrupted.jpg')).toBe(true);
-    expect(mocks.files.has('file://document/photos/v1/interrupted-photo.onskinphoto')).toBe(false);
+    expect(mocks.files.has('file://document/photos/v1/interrupted-photo.layerwellphoto')).toBe(false);
     expect(
-      [...mocks.files.keys()].some((uri) => uri.includes('interrupted-photo.onskinphoto.tmp-')),
+      [...mocks.files.keys()].some((uri) => uri.includes('interrupted-photo.layerwellphoto.tmp-')),
     ).toBe(false);
   });
 
   it('preserves a pre-existing final when an atomic move fails before completion', async () => {
     const sourceUri = 'file://capture/existing-final.jpg';
-    const finalUri = 'file://document/photos/v1/existing-final.onskinphoto';
+    const finalUri = 'file://document/photos/v1/existing-final.layerwellphoto';
     mocks.files.set(sourceUri, Buffer.from('new image').toString('base64'));
     mocks.files.set(finalUri, 'prior-encrypted-envelope');
     mocks.moveAsync.mockRejectedValueOnce(new Error('target already exists'));
@@ -570,13 +570,13 @@ describe('encrypted photo storage', () => {
 
     expect(mocks.files.get(finalUri)).toBe('prior-encrypted-envelope');
     expect(
-      [...mocks.files.keys()].some((uri) => uri.includes('existing-final.onskinphoto.tmp-')),
+      [...mocks.files.keys()].some((uri) => uri.includes('existing-final.layerwellphoto.tmp-')),
     ).toBe(false);
   });
 
   it('restores or removes quarantined files according to committed metadata', async () => {
     const directory = 'file://document/photos/v1/';
-    const originalUri = `${directory}photo-1.onskinphoto`;
+    const originalUri = `${directory}photo-1.layerwellphoto`;
     mocks.files.set(originalUri, 'encrypted');
     mocks.getInfoAsync.mockImplementation(async (uri: string) => ({
       exists: uri === directory || mocks.files.has(uri),
@@ -606,9 +606,9 @@ describe('encrypted photo storage', () => {
     await deleteQuarantinedPhoto(fourth!);
     expect(mocks.files.has(fourth!.quarantinedUri)).toBe(false);
 
-    const orphanUri = `${directory}orphan.onskinphoto`;
-    const staleQuarantineUri = `${directory}stale.onskinphoto.pending-delete-delete-5`;
-    const incompleteUri = `${directory}unfinished.onskinphoto.tmp-1234`;
+    const orphanUri = `${directory}orphan.layerwellphoto`;
+    const staleQuarantineUri = `${directory}stale.layerwellphoto.pending-delete-delete-5`;
+    const incompleteUri = `${directory}unfinished.layerwellphoto.tmp-1234`;
     mocks.files.set(orphanUri, 'unreferenced-but-unproven');
     mocks.files.set(staleQuarantineUri, 'committed-delete');
     mocks.files.set(incompleteUri, 'partial-write');
@@ -620,7 +620,7 @@ describe('encrypted photo storage', () => {
 
   it('aborts and drains stale reconciliation before an account switch can publish', async () => {
     const directory = 'file://document/photos/v1/';
-    const staleUri = `${directory}account-a.onskinphoto.pending-delete-delete-1`;
+    const staleUri = `${directory}account-a.layerwellphoto.pending-delete-delete-1`;
     mocks.files.set(staleUri, 'account-a-encrypted');
     mocks.getInfoAsync.mockResolvedValue({ exists: true });
 
@@ -635,7 +635,7 @@ describe('encrypted photo storage', () => {
     mocks.readDirectoryAsync.mockImplementationOnce(async () => {
       markDirectoryReadStarted();
       await directoryReadGate;
-      return ['account-a.onskinphoto.pending-delete-delete-1'];
+      return ['account-a.layerwellphoto.pending-delete-delete-1'];
     });
 
     const reconciliation = reconcileEncryptedPhotoStorage([]);
@@ -665,7 +665,7 @@ describe('encrypted photo storage', () => {
       endAccountGenerationBoundary();
     }
 
-    mocks.readDirectoryAsync.mockResolvedValue(['account-a.onskinphoto.pending-delete-delete-1']);
+    mocks.readDirectoryAsync.mockResolvedValue(['account-a.layerwellphoto.pending-delete-delete-1']);
     await runAccountGenerationOperation((accountLease) => {
       setActiveHealthProcessingEpoch(2, {
         ownerUserId: 'test-owner',
@@ -704,7 +704,7 @@ describe('encrypted photo storage', () => {
 
   it('detects legacy encrypted photo files before creating an unmarked replacement key', async () => {
     mocks.getInfoAsync.mockResolvedValue({ exists: true });
-    mocks.readDirectoryAsync.mockResolvedValue(['legacy-photo.onskinphoto']);
+    mocks.readDirectoryAsync.mockResolvedValue(['legacy-photo.layerwellphoto']);
 
     await expect(encryptPhotoNote('new note')).rejects.toThrow(PHOTO_CONTENT_KEY_MISSING);
 
@@ -715,8 +715,8 @@ describe('encrypted photo storage', () => {
   it('detects interrupted encrypted-photo files before creating a replacement key', async () => {
     mocks.getInfoAsync.mockResolvedValue({ exists: true });
     mocks.readDirectoryAsync.mockResolvedValue([
-      'interrupted.onskinphoto.pending-delete-delete-1',
-      'unfinished.onskinphoto.tmp-1234',
+      'interrupted.layerwellphoto.pending-delete-delete-1',
+      'unfinished.layerwellphoto.tmp-1234',
     ]);
 
     await expect(encryptPhotoNote('new note')).rejects.toThrow(PHOTO_CONTENT_KEY_MISSING);
@@ -807,14 +807,14 @@ describe('encrypted photo storage', () => {
   });
 
   it('rejects malformed photo envelopes with a stable storage error', async () => {
-    mocks.files.set('file://document/photos/v1/bad.onskinphoto', '{not-json');
+    mocks.files.set('file://document/photos/v1/bad.layerwellphoto', '{not-json');
 
     await expect(
-      decryptPhotoToDataUri('file://document/photos/v1/bad.onskinphoto'),
+      decryptPhotoToDataUri('file://document/photos/v1/bad.layerwellphoto'),
     ).rejects.toThrow('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
 
     mocks.files.set(
-      'file://document/photos/v1/gif.onskinphoto',
+      'file://document/photos/v1/gif.layerwellphoto',
       JSON.stringify({
         version: 'xchacha20poly1305:v1',
         keyId: 'photo-content-key-v1',
@@ -824,7 +824,7 @@ describe('encrypted photo storage', () => {
       }),
     );
 
-    await expect(createPhotoShareFile('file://document/photos/v1/gif.onskinphoto')).rejects.toThrow(
+    await expect(createPhotoShareFile('file://document/photos/v1/gif.layerwellphoto')).rejects.toThrow(
       'PHOTO_ENCRYPTION_ENVELOPE_INVALID',
     );
   });

@@ -1,4 +1,4 @@
-import type { PaoSource } from '@onskin/types';
+import type { PaoSource } from '@layerwell/types';
 
 // A changed number is not evidence by itself. Only an explicit confirmation that
 // the user read the open-jar symbol may promote the source to `label`.

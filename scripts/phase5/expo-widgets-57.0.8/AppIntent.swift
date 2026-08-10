@@ -51,8 +51,8 @@ struct WidgetUserInteraction: AppIntent {
       return .result()
     }
 
-    if source == RoutineKindWidgetLifecycleStore.widgetName {
-      performRoutineKindInteraction(source: source)
+    if source == LayerwellWidgetLifecycleStore.widgetName {
+      performLayerwellInteraction(source: source)
       return .result()
     }
 
@@ -99,18 +99,18 @@ struct WidgetUserInteraction: AppIntent {
     return .result()
   }
 
-  private func performRoutineKindInteraction(source: String) {
+  private func performLayerwellInteraction(source: String) {
     let eventTimeMs = Int64(Date().timeIntervalSince1970 * 1_000)
     do {
       let layout = WidgetsStorage.getString(forKey: "__expo_widgets_\(source)_layout") ?? ""
-      let timeline = try RoutineKindWidgetLifecycleStore.currentTimelineDictionaries()
+      let timeline = try LayerwellWidgetLifecycleStore.currentTimelineDictionaries()
       guard !layout.isEmpty,
             let entryIndex,
             timeline.indices.contains(entryIndex),
             let props = timeline[entryIndex]["props"] as? [String: Any],
             let environmentData = environmentString?.data(using: .utf8),
             var environment = try JSONSerialization.jsonObject(with: environmentData) as? [String: Any] else {
-        throw RoutineKindWidgetLifecycleError.invalidInput
+        throw LayerwellWidgetLifecycleError.invalidInput
       }
       environment["target"] = target
       let proposed: [String: Any]
@@ -118,10 +118,10 @@ struct WidgetUserInteraction: AppIntent {
       case .success(let result):
         proposed = props.merging(result) { _, new in new }
       case .failure(let error):
-        print("[ExpoWidgets] RoutineKind button evaluation failed: \(error.message)")
-        throw RoutineKindWidgetLifecycleError.invalidInput
+        print("[ExpoWidgets] Layerwell button evaluation failed: \(error.message)")
+        throw LayerwellWidgetLifecycleError.invalidInput
       }
-      _ = try RoutineKindWidgetLifecycleStore.appendInteraction(
+      _ = try LayerwellWidgetLifecycleStore.appendInteraction(
         source: source,
         target: target,
         oldProps: props,
@@ -129,7 +129,7 @@ struct WidgetUserInteraction: AppIntent {
         eventTimeMs: eventTimeMs
       )
     } catch {
-      print("[ExpoWidgets] RoutineKind interaction rejected: \(error.localizedDescription)")
+      print("[ExpoWidgets] Layerwell interaction rejected: \(error.localizedDescription)")
     }
     WidgetCenter.shared.reloadTimelines(ofKind: source)
   }

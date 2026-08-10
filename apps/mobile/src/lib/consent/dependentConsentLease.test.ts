@@ -38,7 +38,7 @@ describe('health-dependent consent operation leases', () => {
     resetHealthDependentConsentLeasesForTests();
   });
 
-  function activate(type: 'ask_onskin' | 'data_sharing' = 'ask_onskin') {
+  function activate(type: 'ask_layerwell' | 'data_sharing' = 'ask_layerwell') {
     const checking = beginHealthDependentConsentCheck(type);
     return publishHealthDependentConsentActive({ lease: checking, serverGeneration: 11 });
   }
@@ -47,7 +47,7 @@ describe('health-dependent consent operation leases', () => {
     activate();
 
     await expect(
-      runHealthDependentConsentOperation('ask_onskin', async (lease) => {
+      runHealthDependentConsentOperation('ask_layerwell', async (lease) => {
         expect(lease.ownerUserId).toBe('user-a');
         expect(lease.healthEpoch).toBe(7);
         expect(lease.serverGeneration).toBe(11);
@@ -94,19 +94,19 @@ describe('health-dependent consent operation leases', () => {
 
   it('rejects close/regrant ABA even when owner and base epoch are numerically identical', async () => {
     const first = activate();
-    closeHealthDependentConsent('ask_onskin', 'user-a');
-    const secondGrant = beginHealthDependentConsentGrant('ask_onskin');
+    closeHealthDependentConsent('ask_layerwell', 'user-a');
+    const secondGrant = beginHealthDependentConsentGrant('ask_layerwell');
     const second = publishHealthDependentConsentActive({
       lease: secondGrant,
       serverGeneration: 13,
     });
 
     expect(second.generation).toBeGreaterThan(first.generation);
-    expect(activeHealthDependentConsentLeaseSnapshot('ask_onskin')?.generation).toBe(
+    expect(activeHealthDependentConsentLeaseSnapshot('ask_layerwell')?.generation).toBe(
       second.generation,
     );
     await expect(
-      runHealthDependentConsentOperation('ask_onskin', (lease) => lease.generation),
+      runHealthDependentConsentOperation('ask_layerwell', (lease) => lease.generation),
     ).resolves.toBe(second.generation);
   });
 
@@ -117,15 +117,15 @@ describe('health-dependent consent operation leases', () => {
       accountGeneration,
     });
 
-    expect(activeHealthDependentConsentLeaseSnapshot('ask_onskin')).toBeNull();
+    expect(activeHealthDependentConsentLeaseSnapshot('ask_layerwell')).toBeNull();
     await expect(
-      runHealthDependentConsentOperation('ask_onskin', async () => undefined),
+      runHealthDependentConsentOperation('ask_layerwell', async () => undefined),
     ).rejects.toThrow('HEALTH_DEPENDENT_CONSENT_CLOSED');
   });
 
   it('keeps a privacy-reducing close current across same-owner base renewal', () => {
     activate();
-    const closed = closeHealthDependentConsent('ask_onskin', 'user-a');
+    const closed = closeHealthDependentConsent('ask_layerwell', 'user-a');
     clearActiveHealthProcessingEpoch({ ownerUserId: 'user-a' });
     setActiveHealthProcessingEpoch(7, {
       ownerUserId: 'user-a',
@@ -133,6 +133,6 @@ describe('health-dependent consent operation leases', () => {
     });
 
     expect(() => assertClosedHealthDependentConsentLease(closed)).not.toThrow();
-    expect(activeHealthDependentConsentLeaseSnapshot('ask_onskin')).toBeNull();
+    expect(activeHealthDependentConsentLeaseSnapshot('ask_layerwell')).toBeNull();
   });
 });

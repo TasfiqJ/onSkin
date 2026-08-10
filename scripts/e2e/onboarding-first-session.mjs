@@ -640,7 +640,7 @@ async function navigateClientSide(client, pathname) {
   await client.send('Runtime.evaluate', {
     awaitPromise: true,
     expression: `(() => {
-      const navigate = globalThis.__ROUTINEKIND_E2E_NAVIGATE__;
+      const navigate = globalThis.__LAYERWELL_E2E_NAVIGATE__;
       if (typeof navigate !== 'function') throw new Error('Account-isolation E2E navigator unavailable.');
       navigate(${JSON.stringify(pathname)});
     })()`,
@@ -830,7 +830,7 @@ async function run() {
   clearPreviousEvidence();
 
   const browserPath = findBrowserPath();
-  const userDataDir = path.join(tmpdir(), `routinekind-onboarding-e2e-${Date.now()}`);
+  const userDataDir = path.join(tmpdir(), `layerwell-onboarding-e2e-${Date.now()}`);
   const server = shouldStartServer ? startExpoServer() : null;
   const browser = startBrowser(browserPath, userDataDir);
   let client = null;

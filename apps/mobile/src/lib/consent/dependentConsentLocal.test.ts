@@ -36,7 +36,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 vi.mock('./dependentConsentRecoveryStore', () => ({
   HEALTH_DEPENDENT_CONSENT_RECOVERY_KEY_PREFIX:
-    'routinekind.health_dependent_withdrawal.owner.',
+    'layerwell.health_dependent_withdrawal.owner.',
   readDependentConsentRecoveryRaw: vi.fn(
     async (owner: string, type: string) =>
       mocks.recoveryStorage.get(`${owner}:${type}`) ?? null,
@@ -76,7 +76,7 @@ describe('dependent consent local receipts and control tombstones', () => {
       ownerUserId: 'user-a', type: 'photo_capture', healthEpoch: 7, granted: true,
     });
 
-    const key = 'onskin.photos.captureConsent.v1';
+    const key = 'layerwell.photos.captureConsent.v1';
     const corrupt = JSON.parse(mocks.privateStorage.get(key)!) as Record<string, unknown>;
     corrupt.consentTextHash = '0'.repeat(64);
     mocks.privateStorage.set(key, JSON.stringify(corrupt));
@@ -109,16 +109,16 @@ describe('dependent consent local receipts and control tombstones', () => {
   it('keeps recovery capabilities non-exported and outside ordinary account cleanup', () => {
     expect(HEALTH_DEPENDENT_CONSENT_TOMBSTONE_TYPES).toHaveLength(6);
     expect(LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES).toContain(
-      'routinekind.health_dependent_withdrawal.owner.',
+      'layerwell.health_dependent_withdrawal.owner.',
     );
     expect(LOCAL_PRIVATE_SECURE_CONTROL_KEYS).not.toContain(
-      'routinekind.health_dependent_withdrawal.owner.' as never,
+      'layerwell.health_dependent_withdrawal.owner.' as never,
     );
     expect(LOCAL_PRIVATE_DATA_KEYS.some((key) =>
-      key.startsWith('routinekind.health_dependent_withdrawal.owner.'),
+      key.startsWith('layerwell.health_dependent_withdrawal.owner.'),
     )).toBe(false);
     expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS.some((key) =>
-      key.startsWith('routinekind.health_dependent_withdrawal.owner.'),
+      key.startsWith('layerwell.health_dependent_withdrawal.owner.'),
     )).toBe(false);
   });
 

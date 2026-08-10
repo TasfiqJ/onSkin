@@ -90,7 +90,7 @@ vi.mock('./encryptedStorage', () => ({
     (error: unknown) => error instanceof Error && error.message.startsWith('PHOTO_'),
   ),
   isEncryptedPhotoUri: vi.fn((uri: string | null | undefined) =>
-    Boolean(uri?.endsWith('.onskinphoto')),
+    Boolean(uri?.endsWith('.layerwellphoto')),
   ),
   quarantineEncryptedPhoto: mocks.quarantineEncryptedPhoto,
   reconcileEncryptedPhotoStorage: mocks.reconcileEncryptedPhotoStorage,
@@ -101,7 +101,7 @@ vi.mock('./encryptedStorage', () => ({
   },
 }));
 
-const KEY = 'onskin.photos.v1';
+const KEY = 'layerwell.photos.v1';
 const CAPTURE_SESSION_ID = '123e4567-e89b-42d3-a456-426614174000';
 let testAccountGeneration = 0;
 
@@ -133,7 +133,7 @@ describe('photo local store recovery', () => {
     mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
     mocks.deleteQuarantinedPhoto.mockResolvedValue(undefined);
     mocks.encryptCapturedPhoto.mockImplementation(async (uri: string, id: string) => {
-      const encryptedLocalUri = `${uri}.${id}.onskinphoto`;
+      const encryptedLocalUri = `${uri}.${id}.layerwellphoto`;
       mocks.encryptedFiles.add(encryptedLocalUri);
       return {
         encryptedLocalUri,
@@ -144,7 +144,7 @@ describe('photo local store recovery', () => {
     mocks.quarantineEncryptedPhoto.mockImplementation(
       async (uri: string | null, operationId: string) => {
         if (mocks.quarantineError) throw mocks.quarantineError;
-        if (!uri?.endsWith('.onskinphoto')) return null;
+        if (!uri?.endsWith('.layerwellphoto')) return null;
         const quarantinedUri = `${uri}.pending-delete-${operationId}`;
         mocks.encryptedFiles.delete(uri);
         mocks.encryptedFiles.add(quarantinedUri);
@@ -154,7 +154,7 @@ describe('photo local store recovery', () => {
     mocks.reconcileEncryptedPhotoStorage.mockImplementation(async (referencedUris: string[]) => {
       const referenced = new Set(referencedUris);
       for (const uri of [...mocks.encryptedFiles]) {
-        const match = /^(.+\.onskinphoto)\.pending-delete-.+$/u.exec(uri);
+        const match = /^(.+\.layerwellphoto)\.pending-delete-.+$/u.exec(uri);
         if (!match) continue;
         mocks.encryptedFiles.delete(uri);
         if (referenced.has(match[1])) mocks.encryptedFiles.add(match[1]);
@@ -226,9 +226,9 @@ describe('photo local store recovery', () => {
         series: ' left ',
         takenLocalDate: ' 2026-07-01 ',
         timeOfDay: ' morning ',
-        localUri: ' file:///photo-1.onskinphoto ',
+        localUri: ' file:///photo-1.layerwellphoto ',
         notesCiphertext: ' ciphertext ',
-        thumbnailLocalUri: ' file:///photo-1-thumb.onskinphoto ',
+        thumbnailLocalUri: ' file:///photo-1-thumb.layerwellphoto ',
         alignmentScore: 2,
         lightingScore: 0.75,
         isReference: 'yes',
@@ -281,7 +281,7 @@ describe('photo local store recovery', () => {
       }),
     ).rejects.toThrow('metadata unavailable');
 
-    const encryptedUri = 'file:///captured.jpg.photo-id.onskinphoto';
+    const encryptedUri = 'file:///captured.jpg.photo-id.layerwellphoto';
     expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(encryptedUri, 'add-photo-id');
     expect(mocks.deleteQuarantinedPhoto).not.toHaveBeenCalled();
     expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
@@ -422,15 +422,15 @@ describe('photo local store recovery', () => {
     await expect(addPhotoWithOutcome(input)).rejects.toThrow('ambiguous private-store response');
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
     expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(
-      'file:///ambiguous.jpg.photo-ambiguous.onskinphoto',
+      'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto',
       'add-photo-ambiguous',
     );
-    expect(mocks.encryptedFiles.has('file:///ambiguous.jpg.photo-ambiguous.onskinphoto')).toBe(
+    expect(mocks.encryptedFiles.has('file:///ambiguous.jpg.photo-ambiguous.layerwellphoto')).toBe(
       false,
     );
     expect(
       mocks.encryptedFiles.has(
-        'file:///ambiguous.jpg.photo-ambiguous.onskinphoto.pending-delete-add-photo-ambiguous',
+        'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto.pending-delete-add-photo-ambiguous',
       ),
     ).toBe(true);
     expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
@@ -440,10 +440,10 @@ describe('photo local store recovery', () => {
     expect(replay).toMatchObject({ createdNow: false, photo: { id: 'photo-ambiguous' } });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
     expect(mocks.reconcileEncryptedPhotoStorage).toHaveBeenLastCalledWith([
-      'file:///ambiguous.jpg.photo-ambiguous.onskinphoto',
+      'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto',
     ]);
     expect(mocks.encryptedFiles).toEqual(
-      new Set(['file:///ambiguous.jpg.photo-ambiguous.onskinphoto']),
+      new Set(['file:///ambiguous.jpg.photo-ambiguous.layerwellphoto']),
     );
     expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
     expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledOnce();
@@ -719,7 +719,7 @@ describe('photo local store recovery', () => {
         id: 'photo-1',
         series: 'front',
         takenLocalDate: '2026-07-01',
-        localUri: 'file:///photo-1.onskinphoto',
+        localUri: 'file:///photo-1.layerwellphoto',
       },
     ]);
     mocks.storage.set(KEY, stored);
@@ -738,7 +738,7 @@ describe('photo local store recovery', () => {
         id: 'photo-1',
         series: 'front',
         takenLocalDate: '2026-07-01',
-        localUri: 'file:///photo-1.onskinphoto',
+        localUri: 'file:///photo-1.layerwellphoto',
       },
     ]);
     mocks.storage.set(KEY, stored);
@@ -747,9 +747,9 @@ describe('photo local store recovery', () => {
     await expect(removePhoto('photo-1')).rejects.toThrow('metadata unavailable');
 
     expect(mocks.restoreQuarantinedPhoto).toHaveBeenCalledWith({
-      originalUri: 'file:///photo-1.onskinphoto',
+      originalUri: 'file:///photo-1.layerwellphoto',
       quarantinedUri: expect.stringContaining(
-        'file:///photo-1.onskinphoto.pending-delete-delete-photo-1-',
+        'file:///photo-1.layerwellphoto.pending-delete-delete-photo-1-',
       ),
     });
     expect(mocks.storage.get(KEY)).toBe(stored);
@@ -831,8 +831,8 @@ describe('photo local store recovery', () => {
           id: 'photo-1',
           series: 'front',
           takenLocalDate: '2026-07-01',
-          localUri: 'file:///photo-1.onskinphoto',
-          thumbnailLocalUri: 'file:///photo-1-thumb.onskinphoto',
+          localUri: 'file:///photo-1.layerwellphoto',
+          thumbnailLocalUri: 'file:///photo-1-thumb.layerwellphoto',
         },
       ]),
     );

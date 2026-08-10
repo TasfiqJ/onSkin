@@ -545,8 +545,8 @@ overwrites after failed reads, and models exact-byte rollback for
 commit-ambiguous writes. New native private-record writes use encrypted
 envelopes; legacy plaintext-compatible upgrade paths remain an explicit native
 migration gate. Versioned
-`routinekind.routineOrder.v1` keeps AM and PM stable shelf-product IDs, while
-`routinekind.cycle.v2` keeps one complete versioned cycle configuration and
+`layerwell.routineOrder.v1` keeps AM and PM stable shelf-product IDs, while
+`layerwell.cycle.v2` keeps one complete versioned cycle configuration and
 Custom-cycle definition. Independent concurrent AM and PM edits merge by
 phase; incomplete, malformed, future-version, read-failed, and modeled
 write-failed state cannot silently become empty state. Cycle reconciliation and
@@ -787,7 +787,7 @@ an empty migration-shadow diff; temporary type generation of 6,771 lines with
 SHA-256
 `39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
 the CAT-08 two-connection rehearsal 10/10; and awaited teardown plus recursive
-removal of this run's own random sandbox `routinekind-db05-local-1fKYbR`. The
+removal of this run's own random sandbox `layerwell-db05-local-1fKYbR`. The
 run emitted no stderr or cleanup diagnostic and left the worktree clean.
 Historical or hard-timeout verifier roots from other runs were excluded and
 are not claimed absent. Repository types were deliberately not replaced, so
@@ -819,7 +819,7 @@ BRAND-02 through BRAND-05 have substantive provisional artifacts but remain
 `in_progress` under the authoritative dependency chain until the BRAND-01
 naming brief is approved and each downstream artifact is revalidated.
 BRAND-03's governed 2026-07-16 public knockout is evidence for that provisional
-scope, not task completion. The sequence for counsel review remains `RoutineKind`,
+scope, not task completion. The sequence for counsel review remains `Layerwell`,
 `Ritunera`, then lower-confidence `Ritualoom`; `Rituvia` is suspended. The
 record includes UKIPO, TMview, public-handle, national-register, store, domain,
 and common-law issue spotting with explicit result-set limits. BRAND-06 remains
@@ -831,10 +831,10 @@ available, registrable, non-infringing, reserved, Apple-approved, or guaranteed
 to pass App Review.
 
 IOS-02 is also an `in_progress` native source checkpoint, not a released
-feature. The reviewed source candidate now replaces the RoutineKind stock
+feature. The reviewed source candidate now replaces the Layerwell stock
 whole-value timeline path with an App Group SQLite authority, rotating
 authority-nonce CAS, a durable action outbox, an exact current-plus-stale
-timeline, owner/snapshot-bound reconciliation, finite RoutineKind Live Activity
+timeline, owner/snapshot-bound reconciliation, finite Layerwell Live Activity
 deadlines, a generation-bound coordinator/host slot, lock-held lease-close
 quiescence, and unconditional native privacy cleanup across withdrawal,
 deletion, sign-out, and account-boundary paths. At a planned health-lease close,

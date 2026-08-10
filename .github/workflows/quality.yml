@@ -75,7 +75,7 @@ jobs:
       postgres:
         image: postgres:${{ matrix.postgres }}
         env:
-          POSTGRES_PASSWORD: onskin_rehearsal
+          POSTGRES_PASSWORD: layerwell_rehearsal
         ports:
           - 5432:5432
         options: >-
@@ -92,7 +92,7 @@ jobs:
 
       - name: Execute isolated PostgreSQL rehearsal
         env:
-          PGPASSWORD: onskin_rehearsal
+          PGPASSWORD: layerwell_rehearsal
         run: |
           createdb -h 127.0.0.1 -U postgres "${{ matrix.rehearsal.database }}"
           psql -h 127.0.0.1 -U postgres -d "${{ matrix.rehearsal.database }}" -v ON_ERROR_STOP=1 -f "scripts/phase9/${{ matrix.rehearsal.script }}"
@@ -131,7 +131,7 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_PASSWORD: onskin_rehearsal
+          POSTGRES_PASSWORD: layerwell_rehearsal
         ports:
           - 5432:5432
         options: >-
@@ -232,7 +232,7 @@ jobs:
 
       - name: Execute account service scrub migration rehearsal
         env:
-          PGPASSWORD: onskin_rehearsal
+          PGPASSWORD: layerwell_rehearsal
         run: >-
           psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1
           -f scripts/phase9/account-service-scrub-postgres-rehearsal.sql

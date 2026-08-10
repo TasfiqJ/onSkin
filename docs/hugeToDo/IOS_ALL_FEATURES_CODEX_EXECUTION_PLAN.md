@@ -666,7 +666,7 @@ fails closed without corrupting data:
 
 OBF request-time API access and external contribution are excluded from the
 launch architecture, not hidden behind a kill switch. Product Opener documents
-API v3 as current and v2 as deprecated, but OnSkin calls neither. Any future
+API v3 as current and v2 as deprecated, but Layerwell calls neither. Any future
 proposal to add OBF as a runtime recipient is a new privacy, legal, architecture,
 and release decision. Counsel must first classify the exact OBF database use and
 approve the resulting ODbL obligations.
@@ -749,13 +749,13 @@ As of this document date:
 - No live staging or production Supabase project is verified.
 - RevenueCat runtime code exists, but real Apple products, keys, offering,
   webhook, sandbox lifecycle, and finance signoff are missing.
-- Current working identity RoutineKind is not legally cleared.
+- Current working identity Layerwell is not legally cleared.
 - Production config deliberately fails closed without final brand and Phase 3
   review clearance.
 - All Phase 7 and Phase 8 public feature flags are false.
 - Community aggregates/submissions and the trend engine retain hardcoded
   incapability paths that require implementation, not flag changes. Native
-  widgets now have a RoutineKind-specific SQLite/CAS/outbox source candidate,
+  widgets now have a Layerwell-specific SQLite/CAS/outbox source candidate,
   but publication and Live Activity start remain disabled by literal signed
   flags and cannot be enabled by an environment or OTA flag alone.
 - Native OCR now has an Apple Vision revision-3 source candidate. Only the

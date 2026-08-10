@@ -55,7 +55,7 @@ function allReportedPaths(stats) {
   ];
 }
 
-const temporaryRoot = mkdtempSync(join(tmpdir(), 'routinekind-export-stats-smoke-'));
+const temporaryRoot = mkdtempSync(join(tmpdir(), 'layerwell-export-stats-smoke-'));
 try {
   const exportRoot = resolve(temporaryRoot, 'expo-export');
   const outputRoot = resolve(temporaryRoot, 'stats');

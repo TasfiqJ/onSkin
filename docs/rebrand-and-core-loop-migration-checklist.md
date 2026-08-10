@@ -1,14 +1,12 @@
 # Rebrand And Core-Loop Migration Checklist
 
-Date: 2026-07-12
+Date: 2026-08-09
 
 Purpose: turn the master plan into executable engineering slices without weakening launch gates.
 
 ## Current Strategic Position
 
-- Working engineering default and first candidate in the sequence for counsel
-  review: `RoutineKind`; backups are `Ritunera` and lower-confidence
-  `Ritualoom`; `Rituvia` is suspended.
+- Founder-selected product identity and engineering default: `Layerwell`.
 - Final brand status: not legally cleared; production builds still require
   explicit final identity env values and `BRAND_LEGAL_CLEARANCE=cleared`. The
   value is a fail-closed build assertion, not evidence of a legal opinion.
@@ -19,9 +17,9 @@ Purpose: turn the master plan into executable engineering slices without weakeni
 
 ## Rebrand Migration Checklist
 
-Do not create production accounts or store records until the founder selects a
-candidate covered by qualified counsel's written decision for the exact use,
-countries, classes, and conditions.
+Do not create public production records until qualified counsel covers
+`Layerwell` in a written decision for the exact use, countries, classes, and
+conditions and the required identity assets are authenticated.
 
 1. Inventory public identity references.
 
@@ -50,7 +48,7 @@ countries, classes, and conditions.
    legal clearance or approve the working candidate.
 
 3. Make identity values config-driven where safe. Status: native
-   development/staging defaults now use RoutineKind; production still fails
+   development/staging defaults now use Layerwell; production still fails
    closed without final identity evidence.
 
    - Display name.
@@ -62,9 +60,9 @@ countries, classes, and conditions.
    - Default local config reads must resolve to a development install identity;
      production identity must require `APP_VARIANT=production`.
 
-4. Prepare, but do not execute, final account/domain migration.
+4. Prepare, but do not execute, final production account/domain activation.
 
-   - Replace remaining public `OnSkin` references after final decision.
+   - Confirm every public identity reference resolves to `Layerwell`.
    - Keep historical docs honest if they refer to past state.
    - Update Supabase config, policy-link registry, store metadata source,
      share-link helpers, and public-site pages.

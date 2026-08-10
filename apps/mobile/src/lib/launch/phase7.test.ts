@@ -105,10 +105,10 @@ describe('Phase 7 launch flags', () => {
 
   it('rejects reserved or malformed final domains in production', async () => {
     const invalidDomains = [
-      'https://routinekind.localhost',
-      'https://user:pass@routinekind.app',
-      'routinekind.app?redirect=https://evil.example',
-      'routinekind',
+      'https://layerwell.localhost',
+      'https://user:pass@layerwell.app',
+      'layerwell.app?redirect=https://evil.example',
+      'layerwell',
       'http://127.0.0.1',
     ];
 
@@ -155,7 +155,7 @@ describe('Phase 7 launch flags', () => {
   it('enables implemented production surfaces only when public identity is ready', async () => {
     const { phase7Flags } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
       ...enableAllPhase7Flags(),
     });
 
@@ -175,7 +175,7 @@ describe('Phase 7 launch flags', () => {
     const { phase7Capabilities, phase7Flags, isPhase7SurfaceEnabled } = await loadPhase7With(
       {
         EXPO_PUBLIC_APP_ENV: 'development',
-        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
         ...enableAllPhase7Flags(),
       },
       { dev: true },
@@ -199,7 +199,7 @@ describe('Phase 7 launch flags', () => {
     const { phase7Capabilities, phase7Flags, isPhase7SurfaceEnabled } = await loadPhase7With(
       {
         EXPO_PUBLIC_APP_ENV: 'development',
-        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
         ...enableAllPhase7Flags(),
       },
       { dev: true },
@@ -223,7 +223,7 @@ describe('Phase 7 share-card eligibility', () => {
   it('rejects every conflict even when all flags and public identity look ready', async () => {
     const { canShareConflictCard } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
       ...enableAllPhase7Flags(),
     });
 
@@ -246,7 +246,7 @@ describe('Phase 7 share-card eligibility', () => {
   it('does not let a development fixture grant share authority', async () => {
     const flags = {
       EXPO_PUBLIC_APP_ENV: 'development',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
       ...enableAllPhase7Flags(),
       EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING: 'true',
     };

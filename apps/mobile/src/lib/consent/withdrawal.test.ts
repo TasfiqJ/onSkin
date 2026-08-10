@@ -119,14 +119,14 @@ describe('consent withdrawal transport guard', () => {
 
   it('allows an exact terminal withdrawal replay in production', async () => {
     mocks.appEnvironment = 'production';
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     mocks.invoke.mockResolvedValueOnce({
       data: {
         withdrawn: true,
         pending: false,
         retry_required: false,
         operation_id: OPERATION_ID,
-        consent_type: 'ask_onskin',
+        consent_type: 'ask_layerwell',
         state: 'withdrawn',
         processing_epoch: 7,
         consent_generation: 3,
@@ -137,7 +137,7 @@ describe('consent withdrawal transport guard', () => {
 
     await expect(
       withdrawConsent({
-        type: 'ask_onskin',
+        type: 'ask_layerwell',
         version: copy.version,
         consentText: copy.text,
         expectedUserId: 'user-a',
@@ -146,30 +146,30 @@ describe('consent withdrawal transport guard', () => {
         idempotencyKey: 'ac'.repeat(32),
       }),
     ).resolves.toMatchObject({
-      consentType: 'ask_onskin',
+      consentType: 'ask_layerwell',
       consentGeneration: 3,
       replayed: true,
     });
   });
 
   it('rejects missing dependent CAS fields before auth or network', async () => {
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     await expect(withdrawConsent({
-      type: 'ask_onskin', version: copy.version, consentText: copy.text, expectedUserId: 'user-a',
+      type: 'ask_layerwell', version: copy.version, consentText: copy.text, expectedUserId: 'user-a',
     })).rejects.toThrow('HEALTH_DEPENDENT_WITHDRAWAL_CONTRACT_INVALID');
     expect(mocks.readCandidate).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
   it('treats an HTTP-202-shaped body as pending, never terminal success', async () => {
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     mocks.invoke.mockResolvedValueOnce({
       data: {
         withdrawn: false,
         pending: true,
         retry_required: true,
         operation_id: OPERATION_ID,
-        consent_type: 'ask_onskin',
+        consent_type: 'ask_layerwell',
         state: 'withdrawing',
         processing_epoch: 7,
         consent_generation: 3,
@@ -180,7 +180,7 @@ describe('consent withdrawal transport guard', () => {
     });
     await expect(
       withdrawConsent({
-        type: 'ask_onskin',
+        type: 'ask_layerwell',
         version: copy.version,
         consentText: copy.text,
         expectedUserId: 'user-a',
@@ -192,14 +192,14 @@ describe('consent withdrawal transport guard', () => {
   });
 
   it('rejects a terminal body that does not attest the exact generation', async () => {
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     mocks.invoke.mockResolvedValueOnce({
       data: {
         withdrawn: true,
         pending: false,
         retry_required: false,
         operation_id: OPERATION_ID,
-        consent_type: 'ask_onskin',
+        consent_type: 'ask_layerwell',
         state: 'withdrawn',
         processing_epoch: 7,
         consent_generation: 99,
@@ -209,7 +209,7 @@ describe('consent withdrawal transport guard', () => {
     });
     await expect(
       withdrawConsent({
-        type: 'ask_onskin',
+        type: 'ask_layerwell',
         version: copy.version,
         consentText: copy.text,
         expectedUserId: 'user-a',
@@ -221,14 +221,14 @@ describe('consent withdrawal transport guard', () => {
   });
 
   it('rejects a terminal response with an invalid UUID or any undeclared key', async () => {
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     const invoke = (operationId: string, extra: Record<string, unknown> = {}) => ({
       data: {
         withdrawn: true,
         pending: false,
         retry_required: false,
         operation_id: operationId,
-        consent_type: 'ask_onskin',
+        consent_type: 'ask_layerwell',
         state: 'withdrawn',
         processing_epoch: 7,
         consent_generation: 3,
@@ -238,7 +238,7 @@ describe('consent withdrawal transport guard', () => {
       error: null,
     });
     const request = () => withdrawConsent({
-      type: 'ask_onskin',
+      type: 'ask_layerwell',
       version: copy.version,
       consentText: copy.text,
       expectedUserId: 'user-a',
@@ -258,14 +258,14 @@ describe('consent withdrawal transport guard', () => {
   });
 
   it('rejects a pending response with an invalid UUID or any undeclared key', async () => {
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     const pending = (operationId: string, extra: Record<string, unknown> = {}) => ({
       data: {
         withdrawn: false,
         pending: true,
         retry_required: true,
         operation_id: operationId,
-        consent_type: 'ask_onskin',
+        consent_type: 'ask_layerwell',
         state: 'withdrawing',
         processing_epoch: 7,
         consent_generation: 3,
@@ -276,7 +276,7 @@ describe('consent withdrawal transport guard', () => {
       error: null,
     });
     const request = () => withdrawConsent({
-      type: 'ask_onskin',
+      type: 'ask_layerwell',
       version: copy.version,
       consentText: copy.text,
       expectedUserId: 'user-a',
@@ -353,9 +353,9 @@ describe('consent withdrawal transport guard', () => {
 
   it('rejects a foreign persisted JWT subject before mutation', async () => {
     mocks.readCandidate.mockResolvedValueOnce(candidate('user-b'));
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     await expect(withdrawConsent({
-      type: 'ask_onskin',
+      type: 'ask_layerwell',
       version: copy.version,
       consentText: copy.text,
       expectedUserId: 'user-a',
@@ -379,9 +379,9 @@ describe('consent withdrawal transport guard', () => {
       await gate;
       return { data: {}, error: null };
     });
-    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_onskin.withdrawal;
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
     const pending = withdrawConsent({
-      type: 'ask_onskin',
+      type: 'ask_layerwell',
       version: copy.version,
       consentText: copy.text,
       expectedUserId: 'user-a',

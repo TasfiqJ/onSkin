@@ -1,4 +1,4 @@
-import { GOALS, type GoalId } from '@onskin/types';
+import { GOALS, type GoalId } from '@layerwell/types';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';

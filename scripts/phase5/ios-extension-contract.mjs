@@ -1,5 +1,5 @@
 const TARGET_NAME = 'ExpoWidgetsTarget';
-const WIDGET_NAME = 'RoutineKindToday';
+const WIDGET_NAME = 'LayerwellToday';
 const REQUIRED_FAMILIES = [
   'accessoryInline',
   'accessoryRectangular',
@@ -7,8 +7,8 @@ const REQUIRED_FAMILIES = [
   'systemSmall',
 ];
 const EXPECTED_SOURCE_SCHEMES = Object.freeze({
-  development: 'routinekind-development',
-  staging: 'routinekind-staging',
+  development: 'layerwell-development',
+  staging: 'layerwell-staging',
 });
 const REVIEWED_DEPENDENCY_LOCKS = Object.freeze({
   '@expo/ui': Object.freeze({

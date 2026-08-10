@@ -83,7 +83,7 @@ const reviewEvidence = requireConfig(REVIEW_EVIDENCE_PATH) as {
 };
 
 const runtime = globalThis as typeof globalThis & {
-  __ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__?: ReviewWorklist;
+  __LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__?: ReviewWorklist;
 };
 
 const APP_ENV_KEYS = [
@@ -120,7 +120,7 @@ function buildExpoConfig(
   options: { releaseReadyReviewEvidence?: boolean } = {},
 ) {
   const previous = new Map<string, string | undefined>();
-  const previousTestWorklist = runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__;
+  const previousTestWorklist = runtime.__LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__;
   for (const key of APP_ENV_KEYS) {
     previous.set(key, process.env[key]);
     delete process.env[key];
@@ -136,15 +136,15 @@ function buildExpoConfig(
       effectiveEnv.CATALOG_RELEASE_IOS_BUILD_NUMBER = '1';
     }
     if (!Object.hasOwn(env, 'EXPO_PUBLIC_SUPPORT_EMAIL')) {
-      effectiveEnv.EXPO_PUBLIC_SUPPORT_EMAIL = 'support@routinekind.app';
+      effectiveEnv.EXPO_PUBLIC_SUPPORT_EMAIL = 'support@layerwell.app';
     }
   }
   Object.assign(process.env, effectiveEnv);
   if (options.releaseReadyReviewEvidence) {
-    runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__ =
+    runtime.__LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__ =
       reviewEvidence.createReleaseReadyTestWorklist();
   } else {
-    delete runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__;
+    delete runtime.__LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__;
   }
   delete requireConfig.cache[APP_CONFIG_PATH];
 
@@ -153,9 +153,9 @@ function buildExpoConfig(
   } finally {
     delete requireConfig.cache[APP_CONFIG_PATH];
     if (previousTestWorklist === undefined) {
-      delete runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__;
+      delete runtime.__LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__;
     } else {
-      runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__ = previousTestWorklist;
+      runtime.__LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__ = previousTestWorklist;
     }
     for (const [key, value] of previous) {
       if (value === undefined) {
@@ -187,11 +187,11 @@ describe('Expo app identity config', () => {
   it('defaults unset local config reads to the development install identity', () => {
     const expo = buildExpoConfig({});
 
-    expect(expo.name).toBe('RoutineKind Dev');
-    expect(expo.slug).toBe('routinekind');
-    expect(expo.scheme).toBe('routinekind-development');
-    expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app.development');
-    expect(expo.android.package).toBe('com.routinekind.app.development');
+    expect(expo.name).toBe('Layerwell Dev');
+    expect(expo.slug).toBe('layerwell');
+    expect(expo.scheme).toBe('layerwell-development');
+    expect(expo.ios.bundleIdentifier).toBe('com.layerwell.app.development');
+    expect(expo.android.package).toBe('com.layerwell.app.development');
     expect(expo.extra.appVariant).toBe('development');
     expect(expo.extra.appEnvironment).toBe('development');
   });
@@ -236,7 +236,7 @@ describe('Expo app identity config', () => {
   it('uses one exact reviewed camera purpose string in both generated iOS locations', () => {
     const expo = buildExpoConfig({});
     const expected =
-      'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+      'Allow Layerwell Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
 
     expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(expected);
     expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(expected);
@@ -248,16 +248,16 @@ describe('Expo app identity config', () => {
       EXPO_PUBLIC_APP_ENV: 'staging',
     });
     const expected =
-      'Allow RoutineKind Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+      'Allow Layerwell Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
 
-    expect(expo.name).toBe('RoutineKind Staging');
+    expect(expo.name).toBe('Layerwell Staging');
     expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(expected);
     expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(expected);
   });
 
   it.each([
-    ' RoutineKind',
-    'RoutineKind ',
+    ' Layerwell',
+    'Layerwell ',
     'Routine\nKind',
     'Routine\u007fKind',
     'Routine\u0085Kind',
@@ -274,7 +274,7 @@ describe('Expo app identity config', () => {
 
   it('applies camera-purpose display-name validation to the public identity fallback', () => {
     expect(() =>
-      buildExpoConfig({ EXPO_PUBLIC_APP_DISPLAY_NAME: 'RoutineKind\tCandidate' }),
+      buildExpoConfig({ EXPO_PUBLIC_APP_DISPLAY_NAME: 'Layerwell\tCandidate' }),
     ).toThrow(/resolved app display name used in camera permission copy must be non-empty/);
   });
 
@@ -284,7 +284,7 @@ describe('Expo app identity config', () => {
       APP_CAMERA_PERMISSION: '',
     });
     const expected =
-      'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+      'Allow Layerwell Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
 
     expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(expected);
     expect(pluginOptions(expo, 'expo-camera').cameraPermission).toBe(expected);
@@ -294,7 +294,7 @@ describe('Expo app identity config', () => {
     'accepts the exact derived camera copy through legacy %s without changing either iOS location',
     (key) => {
       const reviewedCopy =
-        'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+        'Allow Layerwell Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
       const expo = buildExpoConfig({ [key]: reviewedCopy });
 
       expect(expo.ios.infoPlist.NSCameraUsageDescription).toBe(reviewedCopy);
@@ -304,7 +304,7 @@ describe('Expo app identity config', () => {
 
   it('accepts the exact derived camera copy through both legacy env keys', () => {
     const reviewedCopy =
-      'Allow RoutineKind Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+      'Allow Layerwell Dev to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
     const expo = buildExpoConfig({
       APP_CAMERA_USAGE_DESCRIPTION: reviewedCopy,
       APP_CAMERA_PERMISSION: reviewedCopy,
@@ -316,7 +316,7 @@ describe('Expo app identity config', () => {
 
   it('derives the exact reviewed production camera copy from the resolved display name', () => {
     const reviewedCopy =
-      'Allow RoutineKind to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
+      'Allow Layerwell to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
     const expo = buildExpoConfig(
       {
         APP_VARIANT: 'production',
@@ -325,10 +325,10 @@ describe('Expo app identity config', () => {
         PHASE3_RELEASE_CLEARANCE: 'cleared',
         EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
         APP_ENCRYPTION_CLASSIFICATION: 'exempt',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
       },
       { releaseReadyReviewEvidence: true },
     );
@@ -343,14 +343,14 @@ describe('Expo app identity config', () => {
       expect(() =>
         buildExpoConfig({
           [key]:
-            'Allow RoutineKind Dev to use the camera for reviewed barcode, label, and local progress-photo capture.',
+            'Allow Layerwell Dev to use the camera for reviewed barcode, label, and local progress-photo capture.',
         }),
       ).toThrow(/must be blank or exactly equal the reviewed camera permission copy/);
     },
   );
 
   it('fails closed when matching legacy camera values try to replace the reviewed wording', () => {
-    const alternateCopy = 'Allow RoutineKind Dev to use the camera for local capture flows.';
+    const alternateCopy = 'Allow Layerwell Dev to use the camera for local capture flows.';
     expect(() =>
       buildExpoConfig({
         APP_CAMERA_USAGE_DESCRIPTION: alternateCopy,
@@ -388,11 +388,11 @@ describe('Expo app identity config', () => {
       (expo.plugins ?? []).map((plugin: unknown) => (Array.isArray(plugin) ? plugin[0] : plugin));
 
     expect(pluginNames(ordinary)).not.toContain('expo-widgets');
-    expect(pluginNames(ordinary)).not.toContain('./plugins/withRoutineKindWidgetPrivacyManifest');
+    expect(pluginNames(ordinary)).not.toContain('./plugins/withLayerwellWidgetPrivacyManifest');
     expect(ordinary.ios.infoPlist.NSSupportsLiveActivities).toBeUndefined();
     expect(ordinary.extra.iosWidgetExtensionBuildEnabled).toBe(false);
     expect(pluginNames(qa)).toContain('expo-widgets');
-    expect(pluginNames(qa)).toContain('./plugins/withRoutineKindWidgetPrivacyManifest');
+    expect(pluginNames(qa)).toContain('./plugins/withLayerwellWidgetPrivacyManifest');
     expect(qa.ios.infoPlist.NSSupportsLiveActivities).toBe(true);
     expect(qa.extra.iosWidgetExtensionBuildEnabled).toBe(true);
     expect(() => buildExpoConfig({ IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'enabled' })).toThrow(
@@ -422,23 +422,23 @@ describe('Expo app identity config', () => {
         PHASE3_RELEASE_CLEARANCE: 'cleared',
         EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
         APP_ENCRYPTION_CLASSIFICATION: 'exempt',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        APP_ANDROID_PACKAGE: 'com.layerwell.app',
       },
       { releaseReadyReviewEvidence: true },
     );
 
-    expect(expo.name).toBe('RoutineKind');
-    expect(expo.slug).toBe('routinekind');
-    expect(expo.scheme).toBe('routinekind');
-    expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app');
-    expect(expo.android.package).toBe('com.routinekind.app');
+    expect(expo.name).toBe('Layerwell');
+    expect(expo.slug).toBe('layerwell');
+    expect(expo.scheme).toBe('layerwell');
+    expect(expo.ios.bundleIdentifier).toBe('com.layerwell.app');
+    expect(expo.android.package).toBe('com.layerwell.app');
     expect(expo.extra.appVariant).toBe('production');
     expect(expo.extra.appEnvironment).toBe('production');
-    expect(expo.extra.supportEmail).toBe('support@routinekind.app');
+    expect(expo.extra.supportEmail).toBe('support@layerwell.app');
     expect(expo.ios.buildNumber).toBe('1');
     expect(expo.ios.infoPlist.ITSAppUsesNonExemptEncryption).toBe(false);
   });
@@ -455,10 +455,10 @@ describe('Expo app identity config', () => {
       PHASE3_RELEASE_CLEARANCE: 'cleared',
       EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
       APP_ENCRYPTION_CLASSIFICATION: 'exempt',
-      APP_DISPLAY_NAME: 'RoutineKind',
-      APP_SLUG: 'routinekind',
-      APP_SCHEME: 'routinekind',
-      APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+      APP_DISPLAY_NAME: 'Layerwell',
+      APP_SLUG: 'layerwell',
+      APP_SCHEME: 'layerwell',
+      APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
     } as const;
     const expo = buildExpoConfig(
       { ...baseEnv, CATALOG_RELEASE_IOS_BUILD_NUMBER: '42' },
@@ -485,10 +485,10 @@ describe('Expo app identity config', () => {
           PHASE3_RELEASE_CLEARANCE: 'cleared',
           EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
           APP_ENCRYPTION_CLASSIFICATION: 'exempt',
-          APP_DISPLAY_NAME: 'RoutineKind',
-          APP_SLUG: 'routinekind',
-          APP_SCHEME: 'routinekind',
-          APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+          APP_DISPLAY_NAME: 'Layerwell',
+          APP_SLUG: 'layerwell',
+          APP_SCHEME: 'layerwell',
+          APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
           EXPO_PUBLIC_SUPPORT_EMAIL: 'pending@example.com',
         },
         { releaseReadyReviewEvidence: true },
@@ -505,16 +505,16 @@ describe('Expo app identity config', () => {
         PHASE3_RELEASE_CLEARANCE: 'cleared',
         EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
         APP_ENCRYPTION_CLASSIFICATION: 'exempt',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
       },
       { releaseReadyReviewEvidence: true },
     );
 
-    expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app');
-    expect(expo.android.package).toBe('com.routinekind.app');
+    expect(expo.ios.bundleIdentifier).toBe('com.layerwell.app');
+    expect(expo.android.package).toBe('com.layerwell.app');
   });
 
   it('normalizes supported app variant and environment values before resolving identity', () => {
@@ -526,17 +526,17 @@ describe('Expo app identity config', () => {
         PHASE3_RELEASE_CLEARANCE: 'cleared',
         EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
         APP_ENCRYPTION_CLASSIFICATION: 'exempt',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        APP_ANDROID_PACKAGE: 'com.layerwell.app',
       },
       { releaseReadyReviewEvidence: true },
     );
 
-    expect(expo.name).toBe('RoutineKind');
-    expect(expo.scheme).toBe('routinekind');
+    expect(expo.name).toBe('Layerwell');
+    expect(expo.scheme).toBe('layerwell');
     expect(expo.extra.appVariant).toBe('production');
     expect(expo.extra.appEnvironment).toBe('production');
   });
@@ -564,11 +564,11 @@ describe('Expo app identity config', () => {
       buildExpoConfig({
         APP_VARIANT: 'production',
         EXPO_PUBLIC_APP_ENV: 'production',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        APP_ANDROID_PACKAGE: 'com.layerwell.app',
       }),
     ).toThrow(/requires BRAND_LEGAL_CLEARANCE=cleared/);
   });
@@ -589,9 +589,9 @@ describe('Expo app identity config', () => {
         APP_VARIANT: 'production',
         EXPO_PUBLIC_APP_ENV: 'production',
         BRAND_LEGAL_CLEARANCE: 'cleared',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
       }),
     ).toThrow(/APP_IOS_BUNDLE_IDENTIFIER/);
   });
@@ -602,11 +602,11 @@ describe('Expo app identity config', () => {
         APP_VARIANT: 'production',
         EXPO_PUBLIC_APP_ENV: 'production',
         BRAND_LEGAL_CLEARANCE: 'cleared',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        APP_ANDROID_PACKAGE: 'com.layerwell.app',
       }),
     ).toThrow(/requires PHASE3_RELEASE_CLEARANCE=cleared/);
   });
@@ -618,11 +618,11 @@ describe('Expo app identity config', () => {
         EXPO_PUBLIC_APP_ENV: 'production',
         BRAND_LEGAL_CLEARANCE: 'cleared',
         PHASE3_RELEASE_CLEARANCE: 'pending',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        APP_ANDROID_PACKAGE: 'com.layerwell.app',
       }),
     ).toThrow(/requires PHASE3_RELEASE_CLEARANCE=cleared/);
   });
@@ -634,11 +634,11 @@ describe('Expo app identity config', () => {
         EXPO_PUBLIC_APP_ENV: 'production',
         BRAND_LEGAL_CLEARANCE: 'cleared',
         PHASE3_RELEASE_CLEARANCE: 'cleared',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        APP_ANDROID_PACKAGE: 'com.layerwell.app',
       }),
     ).toThrow(/review evidence is not release-ready/);
   });
@@ -651,10 +651,10 @@ describe('Expo app identity config', () => {
           EXPO_PUBLIC_APP_ENV: 'production',
           BRAND_LEGAL_CLEARANCE: 'cleared',
           PHASE3_RELEASE_CLEARANCE: 'cleared',
-          APP_DISPLAY_NAME: 'RoutineKind',
-          APP_SLUG: 'routinekind',
-          APP_SCHEME: 'routinekind',
-          APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+          APP_DISPLAY_NAME: 'Layerwell',
+          APP_SLUG: 'layerwell',
+          APP_SCHEME: 'layerwell',
+          APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
         },
         { releaseReadyReviewEvidence: true },
       ),
@@ -671,10 +671,10 @@ describe('Expo app identity config', () => {
         EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
         APP_ENCRYPTION_CLASSIFICATION: 'non_exempt',
         APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE: 'APPLE-CODE_1234',
-        APP_DISPLAY_NAME: 'RoutineKind',
-        APP_SLUG: 'routinekind',
-        APP_SCHEME: 'routinekind',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
       },
       { releaseReadyReviewEvidence: true },
     );
@@ -694,10 +694,10 @@ describe('Expo app identity config', () => {
           EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
           APP_ENCRYPTION_CLASSIFICATION: 'non_exempt',
           APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE: 'pending',
-          APP_DISPLAY_NAME: 'RoutineKind',
-          APP_SLUG: 'routinekind',
-          APP_SCHEME: 'routinekind',
-          APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+          APP_DISPLAY_NAME: 'Layerwell',
+          APP_SLUG: 'layerwell',
+          APP_SCHEME: 'layerwell',
+          APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
         },
         { releaseReadyReviewEvidence: true },
       ),
@@ -767,59 +767,59 @@ describe('Expo app identity config', () => {
         PHASE3_RELEASE_CLEARANCE: 'cleared',
         EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
         APP_ENCRYPTION_CLASSIFICATION: 'exempt',
-        APP_DISPLAY_NAME: 'OnSkin',
-        APP_SLUG: 'onskin',
-        APP_SCHEME: 'onskin',
-        APP_IOS_BUNDLE_IDENTIFIER: 'com.onskin.app',
-        APP_ANDROID_PACKAGE: 'com.onskin.app',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        APP_ANDROID_PACKAGE: 'com.layerwell.app',
       },
       { releaseReadyReviewEvidence: true },
     );
 
-    expect(expo.name).toBe('OnSkin');
-    expect(expo.slug).toBe('onskin');
-    expect(expo.scheme).toBe('onskin');
-    expect(expo.ios.bundleIdentifier).toBe('com.onskin.app');
-    expect(expo.android.package).toBe('com.onskin.app');
+    expect(expo.name).toBe('Layerwell');
+    expect(expo.slug).toBe('layerwell');
+    expect(expo.scheme).toBe('layerwell');
+    expect(expo.ios.bundleIdentifier).toBe('com.layerwell.app');
+    expect(expo.android.package).toBe('com.layerwell.app');
   });
 
   it('allows public runtime identity env to drive native display and scheme fallbacks', () => {
     const expo = buildExpoConfig({
-      EXPO_PUBLIC_APP_DISPLAY_NAME: 'RoutineKind',
-      EXPO_PUBLIC_APP_SCHEME: 'routinekind',
+      EXPO_PUBLIC_APP_DISPLAY_NAME: 'Layerwell',
+      EXPO_PUBLIC_APP_SCHEME: 'layerwell',
     });
 
-    expect(expo.name).toBe('RoutineKind');
-    expect(expo.scheme).toBe('routinekind');
-    expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app.development');
-    expect(expo.android.package).toBe('com.routinekind.app.development');
+    expect(expo.name).toBe('Layerwell');
+    expect(expo.scheme).toBe('layerwell');
+    expect(expo.ios.bundleIdentifier).toBe('com.layerwell.app.development');
+    expect(expo.android.package).toBe('com.layerwell.app.development');
   });
 
   it('configures native app links only for normalized production domains', () => {
     const expo = buildExpoConfig({
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: ' https://RoutineKind.app/share ',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: ' https://Layerwell.app/share ',
     });
 
-    expect(expo.extra.publicLinkDomain).toBe('routinekind.app');
-    expect(expo.ios.associatedDomains).toContain('applinks:routinekind.app');
-    expect(intentFilterText(expo)).toContain('"host":"routinekind.app"');
+    expect(expo.extra.publicLinkDomain).toBe('layerwell.app');
+    expect(expo.ios.associatedDomains).toContain('applinks:layerwell.app');
+    expect(intentFilterText(expo)).toContain('"host":"layerwell.app"');
   });
 
   it('keeps native app links inert for malformed, reserved, or placeholder domains', () => {
     const badDomains = [
       'https://example.com',
-      'https://routinekind.local',
-      'https://routinekind.localhost',
-      'https://routinekind.test',
-      'https://routinekind.invalid',
-      'https://routinekind.example',
-      'http://routinekind.app',
-      'https://routinekind.app?redirect=https://evil.example',
-      'https://routinekind.app:444',
-      'https://user:pass@routinekind.app',
-      'routinekind.app@evil.com',
-      'javascript://routinekind.app',
-      'routinekind',
+      'https://layerwell.local',
+      'https://layerwell.localhost',
+      'https://layerwell.test',
+      'https://layerwell.invalid',
+      'https://layerwell.example',
+      'http://layerwell.app',
+      'https://layerwell.app?redirect=https://evil.example',
+      'https://layerwell.app:444',
+      'https://user:pass@layerwell.app',
+      'layerwell.app@evil.com',
+      'javascript://layerwell.app',
+      'layerwell',
     ];
 
     for (const badDomain of badDomains) {
@@ -834,16 +834,16 @@ describe('Expo app identity config', () => {
     const expo = buildExpoConfig({
       EXPO_PUBLIC_APP_STORE_URL: ' https://apps.apple.com/app/id123456789#token ',
       EXPO_PUBLIC_PLAY_STORE_URL:
-        'https://play.google.com/store/apps/details?id=com.routinekind.app#token',
+        'https://play.google.com/store/apps/details?id=com.layerwell.app#token',
     });
 
     expect(expo.ios.appStoreUrl).toBe('https://apps.apple.com/app/id123456789');
     expect(expo.android.playStoreUrl).toBe(
-      'https://play.google.com/store/apps/details?id=com.routinekind.app',
+      'https://play.google.com/store/apps/details?id=com.layerwell.app',
     );
     expect(expo.extra.appStoreUrl).toBe('https://apps.apple.com/app/id123456789');
     expect(expo.extra.playStoreUrl).toBe(
-      'https://play.google.com/store/apps/details?id=com.routinekind.app',
+      'https://play.google.com/store/apps/details?id=com.layerwell.app',
     );
   });
 
@@ -851,7 +851,7 @@ describe('Expo app identity config', () => {
     const expo = buildExpoConfig({
       EXPO_PUBLIC_APP_STORE_URL: 'http://apps.apple.com/app/id123456789',
       EXPO_PUBLIC_PLAY_STORE_URL:
-        'https://user:pass@play.google.com/store/apps/details?id=com.routinekind.app',
+        'https://user:pass@play.google.com/store/apps/details?id=com.layerwell.app',
     });
 
     expect(expo.ios.appStoreUrl).toBeUndefined();
@@ -861,7 +861,7 @@ describe('Expo app identity config', () => {
 
     const placeholder = buildExpoConfig({
       EXPO_PUBLIC_APP_STORE_URL: 'https://example.com/app',
-      EXPO_PUBLIC_PLAY_STORE_URL: 'https://routinekind.test/store',
+      EXPO_PUBLIC_PLAY_STORE_URL: 'https://layerwell.test/store',
     });
     expect(placeholder.ios.appStoreUrl).toBeUndefined();
     expect(placeholder.android.playStoreUrl).toBeUndefined();
@@ -1026,7 +1026,7 @@ describe('Phase 3 review evidence contract', () => {
   });
 
   it('reparses review logs instead of trusting a tampered JSON disposition', () => {
-    const rootDir = mkdtempSync(join(tmpdir(), 'routinekind-phase3-review-'));
+    const rootDir = mkdtempSync(join(tmpdir(), 'layerwell-phase3-review-'));
     try {
       writeFileSync(resolve(rootDir, 'package.json'), '{}\n');
       const packageBytes = readFileSync(resolve(rootDir, 'package.json'));
@@ -1106,7 +1106,7 @@ describe('Phase 3 review evidence contract', () => {
   });
 
   it('re-reads detached signoff files instead of trusting embedded JSON', () => {
-    const rootDir = mkdtempSync(join(tmpdir(), 'routinekind-phase3-signoff-'));
+    const rootDir = mkdtempSync(join(tmpdir(), 'layerwell-phase3-signoff-'));
     try {
       const worklist = releaseReadyWorklist();
       for (const item of worklist.items) {

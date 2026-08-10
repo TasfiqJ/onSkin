@@ -35,14 +35,14 @@ function response(overrides: Record<string, unknown> = {}): Record<string, unkno
     subscriber: {
       entitlements: {
         pro: {
-          product_identifier: 'routinekind_pro_annual',
+          product_identifier: 'layerwell_pro_annual',
           purchase_date: '2026-07-01T12:00:00Z',
           expires_date: '2027-07-01T12:00:00Z',
           grace_period_expires_date: null,
         },
       },
       subscriptions: {
-        routinekind_pro_annual: {
+        layerwell_pro_annual: {
           expires_date: '2027-07-01T12:00:00Z',
           grace_period_expires_date: null,
           store: 'APP_STORE',
@@ -66,7 +66,7 @@ Deno.test('RevenueCat reconciliation maps a fresh provider CustomerInfo snapshot
   assert(snapshot.p_user_id === USER_ID, 'the server-derived subject changed.');
   assert(snapshot.p_snapshot_at === '2026-07-14T11:59:30.000Z', 'request_date was not used.');
   assert(snapshot.p_entitlement === 'pro' && snapshot.p_is_active, 'active pro was lost.');
-  assert(snapshot.p_product_id === 'routinekind_pro_annual', 'product was not mapped.');
+  assert(snapshot.p_product_id === 'layerwell_pro_annual', 'product was not mapped.');
   assert(snapshot.p_store === 'app_store', 'store was not normalized.');
   assert(snapshot.p_environment === 'production', 'environment was not provider-derived.');
   assert(snapshot.p_will_renew, 'renewal state was not conservatively inferred.');
@@ -77,12 +77,12 @@ Deno.test('RevenueCat reconciliation uses grace expiry and prefers active pro_pl
   const body = response();
   const subscriber = body.subscriber as TestSubscriber;
   subscriber.entitlements.pro_plus = {
-    product_identifier: 'routinekind_pro_plus',
+    product_identifier: 'layerwell_pro_plus',
     purchase_date: '2026-07-10T12:00:00Z',
     expires_date: '2026-07-14T11:00:00Z',
     grace_period_expires_date: '2026-07-16T12:00:00Z',
   };
-  subscriber.subscriptions.routinekind_pro_plus = {
+  subscriber.subscriptions.layerwell_pro_plus = {
     expires_date: '2026-07-14T11:00:00Z',
     grace_period_expires_date: '2026-07-16T12:00:00Z',
     store: 'PLAY_STORE',
@@ -120,7 +120,7 @@ Deno.test(
   () => {
     const body = response();
     const subscriber = body.subscriber as TestSubscriber;
-    subscriber.subscriptions.routinekind_pro_annual.store = 'PROMOTIONAL';
+    subscriber.subscriptions.layerwell_pro_annual.store = 'PROMOTIONAL';
     const snapshot = parseRevenueCatCustomerInfoSnapshot(body, USER_ID, NOW, 120_000);
     assert(snapshot.p_store === 'promotional', 'promotional store was misclassified.');
     assert(!snapshot.p_will_renew, 'a promotional entitlement must not claim renewal.');
@@ -131,13 +131,13 @@ Deno.test('RevenueCat reconciliation accepts a product tied to non-subscription 
   const body = response();
   const subscriber = body.subscriber as TestSubscriber;
   subscriber.entitlements.pro = {
-    product_identifier: 'routinekind_pro_lifetime',
+    product_identifier: 'layerwell_pro_lifetime',
     purchase_date: '2026-07-01T12:00:00Z',
     expires_date: null,
     grace_period_expires_date: null,
   };
   subscriber.subscriptions = {};
-  subscriber.non_subscriptions.routinekind_pro_lifetime = [
+  subscriber.non_subscriptions.layerwell_pro_lifetime = [
     {
       id: 'lifetime-transaction',
       is_sandbox: false,
@@ -147,7 +147,7 @@ Deno.test('RevenueCat reconciliation accepts a product tied to non-subscription 
   ];
 
   const snapshot = parseRevenueCatCustomerInfoSnapshot(body, USER_ID, NOW, 120_000);
-  assert(snapshot.p_product_id === 'routinekind_pro_lifetime', 'lifetime product was lost.');
+  assert(snapshot.p_product_id === 'layerwell_pro_lifetime', 'lifetime product was lost.');
   assert(snapshot.p_store === 'app_store' && snapshot.p_is_active, 'lifetime proof was lost.');
   assert(snapshot.p_period_type === null && !snapshot.p_will_renew, 'lifetime renewed.');
 });
@@ -168,11 +168,11 @@ Deno.test('RevenueCat reconciliation rejects malformed positive product evidence
     },
     (body) => {
       const subscriber = body.subscriber as TestSubscriber;
-      delete subscriber.subscriptions.routinekind_pro_annual.store;
+      delete subscriber.subscriptions.layerwell_pro_annual.store;
     },
     (body) => {
       const subscriber = body.subscriber as TestSubscriber;
-      subscriber.non_subscriptions.routinekind_pro_annual = [
+      subscriber.non_subscriptions.layerwell_pro_annual = [
         {
           id: 'contradictory-transaction',
           is_sandbox: false,
@@ -184,7 +184,7 @@ Deno.test('RevenueCat reconciliation rejects malformed positive product evidence
     (body) => {
       const subscriber = body.subscriber as TestSubscriber;
       subscriber.entitlements.pro.expires_date = null;
-      subscriber.subscriptions.routinekind_pro_annual.expires_date = '2026-07-14T11:00:00Z';
+      subscriber.subscriptions.layerwell_pro_annual.expires_date = '2026-07-14T11:00:00Z';
     },
     (body) => {
       const subscriber = body.subscriber as TestSubscriber;
@@ -192,7 +192,7 @@ Deno.test('RevenueCat reconciliation rejects malformed positive product evidence
     },
     (body) => {
       const subscriber = body.subscriber as TestSubscriber;
-      subscriber.subscriptions.routinekind_pro_annual.grace_period_expires_date =
+      subscriber.subscriptions.layerwell_pro_annual.grace_period_expires_date =
         '2027-07-02T12:00:00Z';
     },
   ];
@@ -268,7 +268,7 @@ Deno.test(
     for (const store of ['APP_GRANTED', 'UNREVIEWED_STORE']) {
       const body = response();
       const subscriber = body.subscriber as TestSubscriber;
-      subscriber.subscriptions.routinekind_pro_annual.store = store;
+      subscriber.subscriptions.layerwell_pro_annual.store = store;
       assertSnapshotError(
         () => parseRevenueCatCustomerInfoSnapshot(body, USER_ID, NOW, 120_000),
         'REVENUECAT_CUSTOMER_INFO_INVALID',

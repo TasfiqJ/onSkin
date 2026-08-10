@@ -27,7 +27,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   updatePrivateItem: mocks.updatePrivateItem,
 }));
 
-const KEY = 'routinekind.routineOrder.v1';
+const KEY = 'layerwell.routineOrder.v1';
 const EMPTY_OVERRIDES: RoutineOrderOverrides = { schemaVersion: 1, am: [], pm: [] };
 
 function saveOverrides(

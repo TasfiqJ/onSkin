@@ -12,7 +12,7 @@ import {
   type ReviewValueMoment,
 } from './policy';
 
-const REVIEW_PROMPT_KEY = 'onskin.reviewPrompt.v1';
+const REVIEW_PROMPT_KEY = 'layerwell.reviewPrompt.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const REVIEW_PROMPT_STATE_INVALID = 'REVIEW_PROMPT_STATE_INVALID';

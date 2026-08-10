@@ -86,8 +86,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.completions.v1';
-const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
+const KEY = 'layerwell.completions.v1';
+const FIRST_COMPLETION_KEY = 'layerwell.completions.firstCompletion.v1';
 const DAY = '2026-07-07';
 const NOW = new Date('2026-07-08T16:00:00.000Z');
 const REMOTE_PRODUCT_A = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';

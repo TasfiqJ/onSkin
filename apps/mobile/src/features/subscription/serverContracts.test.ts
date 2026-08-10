@@ -110,7 +110,7 @@ describe('subscription server contracts', () => {
     expect(edgeFunction).not.toContain(".from('entitlements').upsert");
     expect(edgeFunction).not.toContain("supabase.rpc('expire_app_granted_reverse_trials')");
     expect(entitlementStore).not.toContain('revenueCatReverseTrialProductId');
-    expect(entitlementHook).not.toContain('routinekind_pro_reverse_trial_local');
+    expect(entitlementHook).not.toContain('layerwell_pro_reverse_trial_local');
 
     expect(policyLint).toContain("'grant_app_granted_reverse_trial(uuid, timestamptz, text)'");
     expect(policyLint).toContain(

@@ -22,7 +22,7 @@ import {
   seedGovernedPublicationSourceFixture,
 } from '../launch/governed-evidence-test-fixture.mjs';
 
-const root = mkdtempSync(join(tmpdir(), 'routinekind-performance-evidence-'));
+const root = mkdtempSync(join(tmpdir(), 'layerwell-performance-evidence-'));
 const repoRoot = resolve(import.meta.dirname, '../..');
 const checker = resolve(import.meta.dirname, 'check-performance-evidence.mjs');
 const evidencePath = 'docs/phase-5/evidence/performance/smoke/evidence.json';

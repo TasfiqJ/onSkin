@@ -62,7 +62,7 @@ if ((isProduction || appEnvironment === 'production') && iosWidgetExtensionBuild
   );
 }
 const androidReleaseRequired = launchContract.release.platforms.includes('android');
-const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|onskin/i;
+const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|on\s*skin/i;
 const CONTROL_CHAR_RE = /[\u0000-\u001F\u007F]/;
 const MAX_EXTERNAL_URL_LENGTH = 2048;
 const PLACEHOLDER_ENV_VALUE =
@@ -122,7 +122,7 @@ function buildPlugins(plugins, permissionCopy, widgetDeepLink) {
     // binaries. Dedicated QA builds opt in explicitly; production config still
     // has to pass every identity, review, and evidence gate below.
     if (
-      (name === 'expo-widgets' || name === './plugins/withRoutineKindWidgetPrivacyManifest') &&
+      (name === 'expo-widgets' || name === './plugins/withLayerwellWidgetPrivacyManifest') &&
       !iosWidgetExtensionBuildEnabled
     ) {
       return [];
@@ -173,7 +173,7 @@ function buildPlugins(plugins, permissionCopy, widgetDeepLink) {
       ];
     }
 
-    if (name === './plugins/withRoutineKindWidgetPrivacyManifest') {
+    if (name === './plugins/withLayerwellWidgetPrivacyManifest') {
       return [[name, { ...pluginOptions(plugin), deepLink: widgetDeepLink }]];
     }
 
@@ -372,7 +372,7 @@ function assertProductionReviewClearance() {
 
   const testWorklist =
     process.env.NODE_ENV === 'test'
-      ? globalThis.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__
+      ? globalThis.__LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__
       : undefined;
   assertReleaseReadyReviewEvidence({ worklist: testWorklist });
 }

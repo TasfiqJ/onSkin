@@ -19,7 +19,7 @@ import {
   type HealthDataWriteLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
-import type { Database } from '@onskin/types';
+import type { Database } from '@layerwell/types';
 
 export const COMPLETION_SYNC_RESPONSE_INVALID = 'COMPLETION_SYNC_RESPONSE_INVALID';
 

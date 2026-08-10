@@ -12,7 +12,7 @@ import {
   synchronizeAuthoritativeHealthDataCollectionConsent,
 } from './healthConsentStore';
 
-const HEALTH_DATA_CONSENT_KEY = 'onskin.healthDataCollectionConsent.v1';
+const HEALTH_DATA_CONSENT_KEY = 'layerwell.healthDataCollectionConsent.v1';
 const CURRENT_GRANT_HASH =
   '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
 

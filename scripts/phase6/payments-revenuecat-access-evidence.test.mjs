@@ -45,7 +45,7 @@ function validDocument() {
 }
 
 function withEvidence(document, callback) {
-  const root = mkdtempSync(join(tmpdir(), 'routinekind-phase6-access-evidence-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-phase6-access-evidence-'));
   const evidencePath = 'docs/phase-6/revenuecat-v2-access-evidence.test.json';
   const directory = join(root, 'docs', 'phase-6');
   const absolutePath = join(root, evidencePath);
@@ -59,7 +59,7 @@ function withEvidence(document, callback) {
 }
 
 function withEvidenceBytes(bytes, callback) {
-  const root = mkdtempSync(join(tmpdir(), 'routinekind-phase6-access-evidence-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-phase6-access-evidence-'));
   const evidencePath = 'docs/phase-6/revenuecat-v2-access-evidence.test.json';
   const directory = join(root, 'docs', 'phase-6');
   const absolutePath = join(root, evidencePath);

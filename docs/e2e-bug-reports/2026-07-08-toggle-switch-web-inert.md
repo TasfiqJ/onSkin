@@ -11,7 +11,7 @@ Tester: Codex
 
 1. Start Expo web with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`.
 2. Open `/ask/consent` at a 320 x 568 viewport.
-3. Scroll until `Enable Ask RoutineKind` is visible.
+3. Scroll until `Enable Ask Layerwell` is visible.
 4. Activate the switch by role click, visible coordinate click, or DOM-node click.
 
 ## Expected Result
@@ -51,7 +51,7 @@ Use React Native `Pressable`'s `onPress={activate}` across platforms, keep the e
 ## Verification Flow After Fix
 
 1. Reload `/ask/consent` with the same fixtures and normalize the switch to off.
-2. Scroll to `Enable Ask RoutineKind`.
+2. Scroll to `Enable Ask Layerwell`.
 3. Activate the switch: failed grant keeps the switch off and renders inline `Choice not saved`.
 4. Retry: grant succeeds, switch turns on, and the alert clears.
 5. Activate again: failed withdrawal keeps the switch on and renders inline `Choice not saved`.

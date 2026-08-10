@@ -22,7 +22,7 @@ Deno.test("Apple capture begin sends every active subject alias and accepts comm
     appleSubjectHmacs: ["a".repeat(64), "b".repeat(64)],
     subjectHmacKeyVersions: ["h2", "h1"],
     codeHmac: "c".repeat(64),
-    clientId: "com.example.routinekind",
+    clientId: "com.example.layerwell",
   });
   assert(
     result === "blocked",
@@ -39,7 +39,7 @@ Deno.test("Apple capture begin sends every active subject alias and accepts comm
         p_apple_subject_hmacs: ["a".repeat(64), "b".repeat(64)],
         p_subject_hmac_key_versions: ["h2", "h1"],
         p_code_hmac: "c".repeat(64),
-        p_client_id: "com.example.routinekind",
+        p_client_id: "com.example.layerwell",
       }),
     "RPC argument names and alias ordering are exact",
   );

@@ -1,4 +1,4 @@
-import type { FunctionalTag } from '@onskin/types';
+import type { FunctionalTag } from '@layerwell/types';
 
 import { isAdmittedDetectedConflict, type DetectedConflict } from './engine';
 

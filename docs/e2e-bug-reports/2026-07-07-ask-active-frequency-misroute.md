@@ -3,7 +3,7 @@
 Severity: High
 Surface: Expo web
 Environment: Expo web on localhost:19131, 320 x 568 compact phone viewport
-Feature: Ask RoutineKind deterministic advisor
+Feature: Ask Layerwell deterministic advisor
 Date: 2026-07-07
 Tester: Codex human-simulated E2E
 

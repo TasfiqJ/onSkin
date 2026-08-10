@@ -1,4 +1,4 @@
-import type { ProductStatus } from '@onskin/types';
+import type { ProductStatus } from '@layerwell/types';
 import { useQuery } from '@tanstack/react-query';
 
 import {

@@ -6,7 +6,7 @@ Last updated: 2026-08-08
 
 ## Executive Position
 
-OnSkin should launch, if cleared, as a cosmetic wellness and routine-support app. The product must avoid disease diagnosis, disease treatment, dose instructions, skin-health scoring, condition detection, and any claim that a phone photo or language model can provide clinical judgment.
+Layerwell should launch, if cleared, as a cosmetic wellness and routine-support app. The product must avoid disease diagnosis, disease treatment, dose instructions, skin-health scoring, condition detection, and any claim that a phone photo or language model can provide clinical judgment.
 
 The strongest seven-figure path is trust, retention, and paid convenience: a private shelf, sequencing, reminders, progress photos, fit-based recommendations, and transparent paid links. It is not a defensible path to claim medical outcomes before substantiation. That path increases app-review, FTC, FDA, state privacy, and customer-trust risk.
 
@@ -58,7 +58,7 @@ Allowed claims must be about organization, appearance, privacy, and user control
 - Helps compare your own progress photos under similar conditions.
 - Progress photos stay encrypted on the device unless the user explicitly shares one.
 - Paid links are disclosed and do not affect recommendations.
-- Ask OnSkin answers bounded questions from the user's shelf/routine, and refuses or escalates out-of-scope questions.
+- Ask Layerwell answers bounded questions from the user's shelf/routine, and refuses or escalates out-of-scope questions.
 
 ## Forbidden Launch Claims
 
@@ -86,7 +86,7 @@ Deferred or hidden until signoff:
 
 - Placeholder quiz copy.
 - Any derm-reviewed recommendation, rule, PAO default, community note, or shoppable stack without reviewer identity/date.
-- Cloud Ask OnSkin beyond deterministic shelf/routine/conflict answers.
+- Cloud Ask Layerwell beyond deterministic shelf/routine/conflict answers.
 - Automated Trend processing or claims until a real exact-build engine/result
   issuer, measurement/calibration and failure evidence, diverse-condition
   fairness, exact consent/data-lifecycle, clinical/regulatory/privacy review,

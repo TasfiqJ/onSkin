@@ -63,6 +63,7 @@ const textExtensions = new Set([
 
 const identityPatterns = [
   { id: 'display-name', regex: /\bOnSkin\b/g },
+  { id: 'spaced-name', regex: /\bOn Skin\b/g },
   { id: 'lowercase-name', regex: /\bonskin\b/g },
   { id: 'bundle-id', regex: /com\.onskin\.app/g },
   { id: 'url-scheme', regex: /onskin:\/\//g },
@@ -84,14 +85,14 @@ const contextDocs = [
 ];
 
 const internalNamespacePatterns = [
-  /@onskin\//,
-  /\bask_onskin\b/,
-  /\bonskin\.(ageVerified|appLock|ask|commerce|community|completions|conflict|cycle|entitlement|healthData|milestones|notif|photo|photos|private|ramp|rec|reviewPrompt|shelf|skinprofile|subscription|trend)/,
-  /\bonskin-(export|share|trial-reminder)\b/,
-  /\bonskin:user:/,
-  /\.onskinphoto\b/,
-  /"name"\s*:\s*"@onskin\//,
-  /"name"\s*:\s*"onskin"/,
+  /@layerwell\//,
+  /\bask_layerwell\b/,
+  /\blayerwell\.(ageVerified|appLock|ask|commerce|community|completions|conflict|cycle|entitlement|healthData|milestones|notif|photo|photos|private|ramp|rec|reviewPrompt|shelf|skinprofile|subscription|trend)/,
+  /\blayerwell-(export|share|trial-reminder)\b/,
+  /\blayerwell:user:/,
+  /\.layerwellphoto\b/,
+  /"name"\s*:\s*"@layerwell\//,
+  /"name"\s*:\s*"layerwell"/,
 ];
 
 const publicAssetPatterns = [
@@ -133,6 +134,12 @@ function isMatch(patterns, relPath) {
 
 function isGuardRail(relPath, line) {
   if (relPath === 'apps/mobile/app.config.js' && /legacyIdentityPattern/.test(line)) return true;
+  if (
+    relPath === 'apps/mobile/src/features/settings/localPrivateDataKeys.ts' &&
+    /LEGACY_LOCAL_PRIVATE_CACHE_PREFIXES/.test(line)
+  ) {
+    return true;
+  }
   if (
     relPath === 'apps/mobile/src/lib/storage/plaintextStagingCore.ts' &&
     /LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY/.test(line)
@@ -258,7 +265,7 @@ async function loadLegacyCompatibilityManifest(repoRoot, manifestRelPath) {
     }
     if (
       typeof entry.literal !== 'string' ||
-      entry.literal.length <= 'onskin'.length ||
+      entry.literal.length <= 'layerwell'.length ||
       entry.literal.includes('\n') ||
       entry.literal.includes('\r') ||
       ![`'`, '"', '`'].includes(entry.literal[0]) ||

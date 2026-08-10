@@ -49,6 +49,6 @@ describe('photo capture consent facade', () => {
   it('keeps cloud backup unavailable and removes legacy preference bytes', async () => {
     expect(PHOTO_CLOUD_BACKUP_AVAILABLE).toBe(false);
     await clearUnavailableCloudBackupPreference();
-    expect(mocks.remove).toHaveBeenCalledWith('onskin.photos.cloudBackup');
+    expect(mocks.remove).toHaveBeenCalledWith('layerwell.photos.cloudBackup');
   });
 });

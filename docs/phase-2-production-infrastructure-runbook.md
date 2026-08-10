@@ -4,7 +4,7 @@ Date: 2026-07-15
 Updated: 2026-08-05 for the 71-migration chain through `0072`
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
-create irreversible production accounts under `OnSkin` until
+create irreversible production accounts under `Layerwell` until
 `docs/brand-decision-memo.md` records counsel/founder clearance.
 
 ## Implemented Locally

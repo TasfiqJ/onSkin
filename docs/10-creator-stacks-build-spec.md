@@ -126,7 +126,7 @@ divider**, never competing with the why.
     **`Paid link` mono chip** (greige `#F0EBE2` pill, 9px) + the `↗` external glyph.
     Row has a hairline inset border, 12px radius, 11×13 padding.
   - **The FTC disclosure line directly beneath the rows** (never collapsed, always
-    visible with the links — 16 CFR 255 "unavoidable"): _"Paid link — OnSkin may earn a
+    visible with the links — 16 CFR 255 "unavoidable"): _"Paid link — Layerwell may earn a
     commission. **It never affects what we recommend.**"_ (the independence clause
     bold-inked). A small `How this works →` opens the transparency page.
   - Footer (unchanged): _"Already own one? Add it to your shelf instead."_
@@ -167,7 +167,7 @@ in Doc 4 pending B-PRIVACY); now it shares the commerce module's gate + copy.
   role/role-note (_"Cleanse · fragrance-free"_, 11px muted), then a **`Paid link` chip +
   `↗`** on the right. Tapping an item → the same attribution + deep-link-out as §3,
   consent-gated.
-- **Footer disclosure** (always visible): _"Paid links — OnSkin may earn a commission.
+- **Footer disclosure** (always visible): _"Paid links — Layerwell may earn a commission.
   We picked these on merit; the commission never changed the list."_
 - **Trust guarantee in copy + data:** the stack is ordered by the **routine sequence**
   (Doc 3) and curated by merit; it carries **no rate/commission field** in its ordering
@@ -350,7 +350,7 @@ service-role only (clients never read commission).
   **Service-role only** — RLS enabled, **no client policies** (clients can never read
   commission data; this is the church-and-state wall at the row level).
 
-`@onskin/types` + `database.types.ts` extended. The original 0022 policy description is
+`@layerwell/types` + `database.types.ts` extended. The original 0022 policy description is
 historical; migration `0058` is the effective direct-read authority. No ranking table is
 touched.
 

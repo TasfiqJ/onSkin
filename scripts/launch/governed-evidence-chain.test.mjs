@@ -150,7 +150,7 @@ function publishRequiredTail(value, unitIds = REQUIRED_POST_E_ORDER) {
 }
 
 function createRepository(t) {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-evidence-chain-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-evidence-chain-'));
   t.after(() => rmSync(root, { force: true, recursive: true }));
   git(root, ['init', '--initial-branch=main']);
   git(root, ['config', 'user.email', 'evidence-chain@example.invalid']);
@@ -612,7 +612,7 @@ test('retained governed evidence bindings reject same-byte identity replacement'
   const bindings = captureGovernedEvidenceWorkingBindings(result, value.root);
   assert.deepEqual(verifyGovernedEvidenceWorkingBindings(bindings, value.root), []);
 
-  const displaced = mkdtempSync(join(tmpdir(), 'onskin-governed-binding-displaced-'));
+  const displaced = mkdtempSync(join(tmpdir(), 'layerwell-governed-binding-displaced-'));
   t.after(() => rmSync(displaced, { force: true, recursive: true }));
   renameSync(join(value.root, ...GENERATED.split('/')), join(displaced, 'generated.json'));
   write(value.root, GENERATED, '{"generated":true}\n');
@@ -787,7 +787,7 @@ test('rejects bounded-size, hardlink, dirty/index, and mid-audit race violations
   });
   await t.test('hardlinked evidence file', (child) => {
     const value = fixture(child);
-    const linkDirectory = mkdtempSync(join(tmpdir(), 'onskin-evidence-hardlink-'));
+    const linkDirectory = mkdtempSync(join(tmpdir(), 'layerwell-evidence-hardlink-'));
     child.after(() => rmSync(linkDirectory, { force: true, recursive: true }));
     linkSync(join(value.root, ...MANIFEST.split('/')), join(linkDirectory, 'alias'));
     const result = audit(value);
@@ -816,7 +816,7 @@ test('rejects bounded-size, hardlink, dirty/index, and mid-audit race violations
     const value = fixture(child);
     writePair(value.root, GENERATED, GENERATED_MD);
     commit(value.root, 'generated packet');
-    const linkDirectory = mkdtempSync(join(tmpdir(), 'onskin-generated-hardlink-'));
+    const linkDirectory = mkdtempSync(join(tmpdir(), 'layerwell-generated-hardlink-'));
     child.after(() => rmSync(linkDirectory, { force: true, recursive: true }));
     linkSync(join(value.root, ...GENERATED.split('/')), join(linkDirectory, 'alias'));
     const result = audit(value);

@@ -25,7 +25,7 @@ export {
 // section 7). The existing key is retained so current-device export and account
 // cleanup remain compatible. Legacy string arrays migrate as use-together
 // choices for rule version 1.
-const KEY = 'onskin.conflict.overrides';
+const KEY = 'layerwell.conflict.overrides';
 
 export const CONFLICT_CHOICES_INVALID = 'CONFLICT_CHOICES_INVALID';
 export const CONFLICT_CHOICES_SCHEMA_UNSUPPORTED = 'CONFLICT_CHOICES_SCHEMA_UNSUPPORTED';

@@ -45,18 +45,18 @@ describe('progress photo sharing', () => {
 
   it('opens the native share sheet with a temporary export and deletes it afterwards', async () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(true);
-    mocks.createPhotoShareFile.mockResolvedValueOnce('file://cache/onskin-share-photo-1.jpg');
+    mocks.createPhotoShareFile.mockResolvedValueOnce('file://cache/layerwell-share-photo-1.jpg');
     mocks.shareAsync.mockResolvedValueOnce(undefined);
 
     await expect(
-      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.onskinphoto' }),
+      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.layerwellphoto' }),
     ).resolves.toBe(true);
 
-    expect(mocks.createPhotoShareFile).toHaveBeenCalledWith('file://photos/photo-1.onskinphoto');
-    expect(mocks.shareAsync).toHaveBeenCalledWith('file://cache/onskin-share-photo-1.jpg');
+    expect(mocks.createPhotoShareFile).toHaveBeenCalledWith('file://photos/photo-1.layerwellphoto');
+    expect(mocks.shareAsync).toHaveBeenCalledWith('file://cache/layerwell-share-photo-1.jpg');
     expect(mocks.deletePhotoShareFile).toHaveBeenCalledWith(
-      'file://cache/onskin-share-photo-1.jpg',
-      'file://photos/photo-1.onskinphoto',
+      'file://cache/layerwell-share-photo-1.jpg',
+      'file://photos/photo-1.layerwellphoto',
     );
   });
 
@@ -72,7 +72,7 @@ describe('progress photo sharing', () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(false);
 
     await expect(
-      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.onskinphoto' }),
+      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.layerwellphoto' }),
     ).resolves.toBe(false);
 
     expect(mocks.createPhotoShareFile).not.toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe('progress photo sharing', () => {
 
     try {
       await expect(
-        sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.onskinphoto' }),
+        sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.layerwellphoto' }),
       ).resolves.toBe(false);
     } finally {
       if (previousDev === undefined) {
@@ -105,16 +105,16 @@ describe('progress photo sharing', () => {
 
   it('returns false and deletes the temporary export when the share sheet rejects', async () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(true);
-    mocks.createPhotoShareFile.mockResolvedValueOnce('file://cache/onskin-share-photo-1.jpg');
+    mocks.createPhotoShareFile.mockResolvedValueOnce('file://cache/layerwell-share-photo-1.jpg');
     mocks.shareAsync.mockRejectedValueOnce(new Error('share unavailable'));
 
     await expect(
-      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.onskinphoto' }),
+      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.layerwellphoto' }),
     ).resolves.toBe(false);
 
     expect(mocks.deletePhotoShareFile).toHaveBeenCalledWith(
-      'file://cache/onskin-share-photo-1.jpg',
-      'file://photos/photo-1.onskinphoto',
+      'file://cache/layerwell-share-photo-1.jpg',
+      'file://photos/photo-1.layerwellphoto',
     );
   });
 
@@ -123,13 +123,13 @@ describe('progress photo sharing', () => {
     mocks.createPhotoShareFile.mockRejectedValueOnce(new Error('cache unavailable'));
 
     await expect(
-      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.onskinphoto' }),
+      sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.layerwellphoto' }),
     ).resolves.toBe(false);
 
     expect(mocks.shareAsync).not.toHaveBeenCalled();
     expect(mocks.deletePhotoShareFile).toHaveBeenCalledWith(
       null,
-      'file://photos/photo-1.onskinphoto',
+      'file://photos/photo-1.layerwellphoto',
     );
   });
 
@@ -144,7 +144,7 @@ describe('progress photo sharing', () => {
 
     const pendingShare = sharePhotoImageOnly({
       id: 'photo-1',
-      localUri: 'file://photos/photo-1.onskinphoto',
+      localUri: 'file://photos/photo-1.layerwellphoto',
     });
     await vi.waitFor(() => expect(mocks.shareAsync).toHaveBeenCalledOnce());
     beginAccountGenerationBoundary();
@@ -161,7 +161,7 @@ describe('progress photo sharing', () => {
       await drain;
       expect(mocks.deletePhotoShareFile).toHaveBeenCalledWith(
         'file://cache/private/photo.jpg',
-        'file://photos/photo-1.onskinphoto',
+        'file://photos/photo-1.layerwellphoto',
       );
     } finally {
       endAccountGenerationBoundary();

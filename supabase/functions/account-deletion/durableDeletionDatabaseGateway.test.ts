@@ -67,7 +67,7 @@ Deno.test('database gateway accepts the installed Supabase PostgREST RPC envelop
 Deno.test('database gateway reads only an exact session-bound Apple deletion vault row', async () => {
   const exact = {
     apple_subject_hmac: '45'.repeat(32),
-    client_id: 'com.routinekind.app',
+    client_id: 'com.layerwell.app',
     encrypted_refresh_token: '\\x0102',
     vault_key_version: 'v1',
     generation: '7',

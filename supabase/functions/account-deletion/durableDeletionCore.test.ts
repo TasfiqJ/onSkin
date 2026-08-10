@@ -84,11 +84,11 @@ Deno.test(
 Deno.test('capability and idempotency digests match schema domain separation', async () => {
   const token = '0'.repeat(64);
   assert(
-    DELETION_STATUS_CAPABILITY_DIGEST_CONTEXT === 'onskin-account-deletion-status-capability:v1:',
+    DELETION_STATUS_CAPABILITY_DIGEST_CONTEXT === 'layerwell-account-deletion-status-capability:v1:',
     'capability context must remain byte-for-byte aligned with schema48.',
   );
   assert(
-    DELETION_IDEMPOTENCY_DIGEST_CONTEXT === 'onskin-account-deletion-intake-idempotency:v1:',
+    DELETION_IDEMPOTENCY_DIGEST_CONTEXT === 'layerwell-account-deletion-intake-idempotency:v1:',
     'idempotency context must remain byte-for-byte aligned with schema48.',
   );
   const capabilityDigest = await hashDeletionCapability(token);

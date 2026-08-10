@@ -18,22 +18,22 @@ type LocalExportSection =
 type LocalExportSpec = {
   key: Exclude<
     LocalPrivateDataKey,
-    | 'onskin.photos.v1'
-    | 'routinekind.widgetActionMap.v1'
-    | 'routinekind.widgetActionMap.v2'
-    | 'routinekind.widgetOwnerAuthority.v1'
+    | 'layerwell.photos.v1'
+    | 'layerwell.widgetActionMap.v1'
+    | 'layerwell.widgetActionMap.v2'
+    | 'layerwell.widgetOwnerAuthority.v1'
   >;
   section: LocalExportSection;
   field: string;
 };
 
-const PHOTO_RECORDS_KEY = 'onskin.photos.v1' as const;
+const PHOTO_RECORDS_KEY = 'layerwell.photos.v1' as const;
 
 /** Ephemeral security capabilities are accounted for but never read into an export. */
 export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
-  'routinekind.widgetActionMap.v1',
-  'routinekind.widgetActionMap.v2',
-  'routinekind.widgetOwnerAuthority.v1',
+  'layerwell.widgetActionMap.v1',
+  'layerwell.widgetActionMap.v2',
+  'layerwell.widgetOwnerAuthority.v1',
 ] as const satisfies readonly LocalPrivateDataKey[];
 
 const LOCAL_EXPORT_SPECS = [
@@ -43,82 +43,82 @@ const LOCAL_EXPORT_SPECS = [
     field: 'age_policy_receipt',
   },
   {
-    key: 'onskin.appLock.enabled',
+    key: 'layerwell.appLock.enabled',
     section: 'account_and_privacy',
     field: 'app_lock_enabled',
   },
   {
-    key: 'onskin.ask.consent.v1',
+    key: 'layerwell.ask.consent.v1',
     section: 'account_and_privacy',
     field: 'ask_consent',
   },
   {
-    key: 'onskin.commerceConsent.v1',
+    key: 'layerwell.commerceConsent.v1',
     section: 'account_and_privacy',
     field: 'commerce_consent',
   },
   {
-    key: 'routinekind.catalog.lookupQueue.v1',
+    key: 'layerwell.catalog.lookupQueue.v1',
     section: 'shelf_and_routine',
     field: 'pending_catalog_lookups',
   },
   {
-    key: 'onskin.communityAge16.v1',
+    key: 'layerwell.communityAge16.v1',
     section: 'account_and_privacy',
     field: 'community_age_16_verified',
   },
   {
-    key: 'onskin.communityConsent.v1',
+    key: 'layerwell.communityConsent.v1',
     section: 'account_and_privacy',
     field: 'community_consent',
   },
   {
-    key: 'onskin.healthDataCollectionConsent.v1',
+    key: 'layerwell.healthDataCollectionConsent.v1',
     section: 'account_and_privacy',
     field: 'health_data_collection_consent',
   },
   {
-    key: 'routinekind.healthDataLifecycle.v1',
+    key: 'layerwell.healthDataLifecycle.v1',
     section: 'account_and_privacy',
     field: 'health_data_lifecycle',
   },
   {
-    key: 'onskin.photos.captureConsent',
+    key: 'layerwell.photos.captureConsent',
     section: 'account_and_privacy',
     field: 'legacy_photo_capture_consent',
   },
   {
-    key: 'onskin.photos.captureConsent.v1',
+    key: 'layerwell.photos.captureConsent.v1',
     section: 'account_and_privacy',
     field: 'photo_capture_consent',
   },
   {
-    key: 'onskin.photos.cloudBackup',
+    key: 'layerwell.photos.cloudBackup',
     section: 'account_and_privacy',
     field: 'legacy_unavailable_cloud_backup_preference',
   },
   {
-    key: 'onskin.trendInsights.v1',
+    key: 'layerwell.trendInsights.v1',
     section: 'account_and_privacy',
     field: 'photo_trend_insights_consent',
   },
   {
-    key: 'onskin.notifPrefs.v1',
+    key: 'layerwell.notifPrefs.v1',
     section: 'profile_and_preferences',
     field: 'notification_preferences',
   },
   {
-    key: 'onskin.recPrefs.v1',
+    key: 'layerwell.recPrefs.v1',
     section: 'profile_and_preferences',
     field: 'recommendation_preferences',
   },
   {
-    key: 'onskin.skinprofile.v1',
+    key: 'layerwell.skinprofile.v1',
     section: 'profile_and_preferences',
     field: 'skin_profile',
   },
   {
-    key: 'onskin.completions.firstCompletion.v1',
+    key: 'layerwell.completions.firstCompletion.v1',
     section: 'shelf_and_routine',
     field: 'first_completion_marker',
   },
@@ -127,103 +127,103 @@ const LOCAL_EXPORT_SPECS = [
     // replay worker, but a purpose-limited export must still account for them
     // if the user requests access before that cleanup runs. Recursive export
     // sanitization strips the historical ownerUserId field.
-    key: 'onskin.completions.pending',
+    key: 'layerwell.completions.pending',
     section: 'shelf_and_routine',
     field: 'legacy_pending_completion_sync',
   },
   {
-    key: 'onskin.completions.v1',
+    key: 'layerwell.completions.v1',
     section: 'shelf_and_routine',
     field: 'completion_and_sync_state',
   },
   {
-    key: 'onskin.conflict.overrides',
+    key: 'layerwell.conflict.overrides',
     section: 'shelf_and_routine',
     field: 'conflict_overrides',
   },
   {
-    key: 'onskin.cycle.v1',
+    key: 'layerwell.cycle.v1',
     section: 'shelf_and_routine',
     field: 'legacy_cycle_configuration',
   },
   {
-    key: 'routinekind.cycle.v2',
+    key: 'layerwell.cycle.v2',
     section: 'shelf_and_routine',
     field: 'cycle_configuration',
   },
   {
-    key: 'onskin.cycleAnchor',
+    key: 'layerwell.cycleAnchor',
     section: 'shelf_and_routine',
     field: 'legacy_cycle_anchor',
   },
   {
-    key: 'routinekind.routineOrder.v1',
+    key: 'layerwell.routineOrder.v1',
     section: 'shelf_and_routine',
     field: 'routine_order_overrides',
   },
-  { key: 'onskin.ramp.v1', section: 'shelf_and_routine', field: 'active_ramps' },
+  { key: 'layerwell.ramp.v1', section: 'shelf_and_routine', field: 'active_ramps' },
   {
-    key: 'onskin.shelf.v1',
+    key: 'layerwell.shelf.v1',
     section: 'shelf_and_routine',
     field: 'shelf_and_sync_state',
   },
   {
-    key: 'onskin.ask.groundedTurns.v1',
+    key: 'layerwell.ask.groundedTurns.v1',
     section: 'activity_and_app_state',
     field: 'ask_grounded_turn_counts',
   },
   {
-    key: 'onskin.community.reactions.v1',
+    key: 'layerwell.community.reactions.v1',
     section: 'activity_and_app_state',
     field: 'community_reactions',
   },
   {
-    key: 'onskin.milestones.v1',
+    key: 'layerwell.milestones.v1',
     section: 'activity_and_app_state',
     field: 'seen_milestones',
   },
   {
-    key: 'onskin.notiflog.v1',
+    key: 'layerwell.notiflog.v1',
     section: 'activity_and_app_state',
     field: 'notification_delivery_log',
   },
   {
-    key: 'onskin.recDismissed.v1',
+    key: 'layerwell.recDismissed.v1',
     section: 'activity_and_app_state',
     field: 'dismissed_recommendations',
   },
   {
-    key: 'onskin.reviewPrompt.v1',
+    key: 'layerwell.reviewPrompt.v1',
     section: 'activity_and_app_state',
     field: 'review_prompt_state',
   },
   {
-    key: 'routinekind.routineActivation.v1',
+    key: 'layerwell.routineActivation.v1',
     section: 'activity_and_app_state',
     field: 'routine_activation_state',
   },
   {
-    key: 'onskin.trendState.v1',
+    key: 'layerwell.trendState.v1',
     section: 'activity_and_app_state',
     field: 'photo_trend_state',
   },
   {
-    key: 'onskin.entitlement.v1',
+    key: 'layerwell.entitlement.v1',
     section: 'subscription',
     field: 'legacy_entitlement_cache',
   },
   {
-    key: 'onskin.entitlement.v2',
+    key: 'layerwell.entitlement.v2',
     section: 'subscription',
     field: 'entitlement_cache',
   },
   {
-    key: 'onskin.subscription.freeConflictCheckRuleIds.v1',
+    key: 'layerwell.subscription.freeConflictCheckRuleIds.v1',
     section: 'subscription',
     field: 'free_conflict_check_rule_ids',
   },
   {
-    key: 'onskin.subscription.promptedExpiry',
+    key: 'layerwell.subscription.promptedExpiry',
     section: 'subscription',
     field: 'prompted_expiry',
   },
@@ -402,7 +402,7 @@ export async function collectLocalDeviceExportData(
     if (raw !== null) {
       const parsed = parseStoredValue(raw);
       const exportValue =
-        spec.key === 'onskin.conflict.overrides'
+        spec.key === 'layerwell.conflict.overrides'
           ? normalizeConflictChoicesForExport(parsed)
           : parsed;
       sections[spec.section][spec.field] = redactLocalFields(exportValue);

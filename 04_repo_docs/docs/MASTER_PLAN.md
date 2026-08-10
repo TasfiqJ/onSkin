@@ -83,21 +83,24 @@ and Apple's independent App Review.
 
 ### Final Project Name Recommendation
 
-[Decision] Rebrand before launch. Use `RoutineKind` only as the working
+[Decision] Rebrand before launch. Use `Layerwell` only as the working
 engineering identity and first counsel candidate. The current sequence for
-counsel review is `RoutineKind`, `Ritunera`, then lower-confidence `Ritualoom`;
+counsel review is `Layerwell`, `Ritunera`, then lower-confidence `Ritualoom`;
 `Rituvia` is suspended. No candidate is final until founder-approved, covered
 by qualified counsel's written decision, and supported by authenticated
 reservation evidence.
 
-[Confirmed] Current launch-facing local/native defaults use `RoutineKind`.
-Remaining `OnSkin`, `onskin`, `onskin://`, and `com.onskin.app` references are
+[Confirmed] Current launch-facing local/native defaults use `Layerwell`.
+Remaining `Layerwell`, `layerwell`, `layerwell://`, and `com.layerwell.app` references are
 classified internal namespaces, fail-closed compatibility guards, or historical
 records; `npm run brand:audit:strict` enforces that boundary. Existing public
-competitors still use the exact `OnSkin` name in the same skincare/cosmetic
+competitors still use the exact `Layerwell` name in the same skincare/cosmetic
 scanner category, so the legacy identity remains launch-blocked.
 
-[Researched] The public OnSkin listing describes a beauty product scanner with over 8M users and a 2M product database. Source: [OnSkin App Store](https://apps.apple.com/kz/app/onskin-beauty-product-scanner/id1630768985), [OnSkin website](https://onskin.com/).
+[Researched] A same-name incumbent tied to the rejected prior working identity
+described a beauty product scanner with large user and product-database claims.
+Exact sources remain in the immutable brand evidence; this does not describe or
+assess Layerwell.
 
 ### One-Sentence Product Description
 
@@ -154,7 +157,7 @@ Users add products by barcode, OCR/search, or manual entry. The app turns those 
 ### Adjacent Categories
 
 - AI skin analysis apps: Thea, Nolla Skin, Skin Bliss.
-- Ingredient scanners: OnSkin, Yuka, Think Dirty, INCI Beauty, EWG Skin Deep.
+- Ingredient scanners: Layerwell, Yuka, Think Dirty, INCI Beauty, EWG Skin Deep.
 - Routine builders: SkinSort, HadaBuddy, Skin Bliss.
 - Commerce/deal apps: Thea, affiliate beauty tools.
 - Medical skincare/telehealth: Nolla Skin and prescription acne/rosacea services.
@@ -175,7 +178,7 @@ owned products -> shelf intelligence -> reviewed conflicts -> routine plan -> da
 
 **Project name ideas**
 
-- [Decision under uncertainty] `RoutineKind` — first counsel candidate and
+- [Decision under uncertainty] `Layerwell` — first counsel candidate and
   working engineering identity; exact YouTube handle is occupied and the
   `Routine` field is crowded.
 - [Decision under uncertainty] `Ritunera` — backup 1; current UK and public
@@ -230,7 +233,7 @@ People buy skincare products faster than they learn how to use them. This app he
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Exact problem         | [Decision] Users do not know how to use owned skincare products together consistently and safely.                                       |
 | Why it matters        | [Assumption] Wrong timing and overuse cause irritation, waste, and inconsistent behavior.                                               |
-| Current solutions     | [Researched] OnSkin, Yuka, Think Dirty, SkinSort, HadaBuddy, Skin Bliss, Thea, Nolla Skin, Reddit, TikTok, Google.                      |
+| Current solutions     | [Researched] Layerwell, Yuka, Think Dirty, SkinSort, HadaBuddy, Skin Bliss, Thea, Nolla Skin, Reddit, TikTok, Google.                      |
 | Why painful           | Existing tools often score or scan products but do not always convert owned products into a daily plan.                                 |
 | Cost of doing nothing | More unused products, avoidable irritation, continued confusion, subscription churn.                                                    |
 | Trigger events        | Retinol purchase, acid irritation, new product haul, pregnancy/sensitivity concern, expiry concern, TikTok trend, dermatologist advice. |
@@ -363,7 +366,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 
 | Name               | Source                                                                                                                                                            | What it does                                                                                 | Pricing public?                   | Strengths                                                 | Weaknesses / gaps                                                                  | Risk              |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------- |
-| OnSkin             | [App Store](https://apps.apple.com/kz/app/onskin-beauty-product-scanner/id1630768985), [site](https://onskin.com/)                                                | Cosmetic scanner, ingredient safety, product database                                        | IAP visible; exact pricing varies | Exact name, scanner SEO, claimed 8M users and 2M products | Scanner/safety-score positioning, not obviously a private routine operating system | Critical          |
+| Legacy same-name scanner | See immutable brand evidence | Cosmetic scanner, ingredient safety, product database | IAP visible; exact pricing varies | Conflict applied to the rejected prior working identity, not Layerwell | Scanner/safety-score positioning, not obviously a private routine operating system | Historical |
 | HadaBuddy          | [site](https://www.hadabuddy.com/), [FAQ](https://www.hadabuddy.com/faq)                                                                                          | Scans shelf, builds 7-day AM/PM routine, AI advisor, conflict detection                      | $3.99/mo or $29.99/yr Pro         | Closest direct workflow competitor                        | AI framing, lower price anchors market, unclear review rigor from public pages     | Critical          |
 | Thea               | [App Store](https://apps.apple.com/us/app/thea-1-beauty-app/id6523434295)                                                                                         | AI beauty expert, face scan, routine analysis, product/deal finding                          | IAP                               | Strong AI/beauty/deal positioning                         | More shopping/AI, less privacy-first shelf habit                                   | High              |
 | Nolla Skin         | [App Store](https://apps.apple.com/us/app/nolla-skin/id6741805934), [site](https://www.nollahealth.com/)                                                          | Clinician-backed medical skincare, treatment and medication                                  | Needs research                    | Medical care credibility                                  | Different category; higher regulatory burden                                       | Medium            |
@@ -375,7 +378,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 
 ### 4.3 Differentiation Map
 
-| Capability                               | This Product Target | OnSkin                           | HadaBuddy | SkinSort          | Skin Bliss   | Yuka/Think Dirty    |
+| Capability                               | This Product Target | Layerwell                           | HadaBuddy | SkinSort          | Skin Bliss   | Yuka/Think Dirty    |
 | ---------------------------------------- | ------------------- | -------------------------------- | --------- | ----------------- | ------------ | ------------------- |
 | Barcode/product scan                     | Yes                 | Yes                              | Yes       | Yes               | Yes          | Yes                 |
 | Manual shelf as core object              | Yes                 | Some                             | Yes       | Some              | Some         | Lists/saves         |
@@ -585,7 +588,7 @@ and remain useful only for product detail.
 
 Feature 1: Rebrand And Identity Migration
 
-- Feature summary: Replace public `OnSkin` identity with cleared brand.
+- Feature summary: Replace public `Layerwell` identity with cleared brand.
 - User problem solved: Avoid confusion with incumbent app.
 - Business reason: Prevent legal, ASO, support, and store-review risk.
 - Priority: Must-have.
@@ -599,9 +602,9 @@ Feature 1: Rebrand And Identity Migration
 - Frontend/UI needs: copy/branding replacement.
 - Security/privacy concerns: policy links must match final legal entity.
 - Analytics events: brand migration QA only.
-- Acceptance criteria: no public `OnSkin` references in launch assets.
+- Acceptance criteria: no public `Layerwell` references in launch assets.
 - Edge cases: internal package names may remain temporarily if not user-facing.
-- Codex implementation notes: search for `OnSkin`, `onskin`, `com.onskin.app`.
+- Codex implementation notes: search for `Layerwell`, `layerwell`, `com.layerwell.app`.
 - Open questions: final cleared mark.
 
 Feature 2: Shelf Intake
@@ -985,7 +988,7 @@ Compliance areas:
 
 ### Paid Tier
 
-RoutineKind Pro:
+Layerwell Pro:
 
 - Unlimited conflict checks.
 - Full routine builder.
@@ -1189,7 +1192,7 @@ Done criteria:
 
 ### Market Risks
 
-- Existing OnSkin owns the scanner/name lane.
+- Existing Layerwell owns the scanner/name lane.
 - HadaBuddy attacks the same shelf-to-routine workflow at lower price.
 - AI beauty apps may capture attention with bolder claims.
 
@@ -1260,8 +1263,8 @@ No major strategy, architecture, pricing, privacy, or launch claim change should
 - [Apple App Store Small Business Program](https://developer.apple.com/app-store/small-business-program/)
 - [Google Play service fees](https://support.google.com/googleplay/android-developer/answer/112622?hl=en)
 - [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
-- [OnSkin App Store](https://apps.apple.com/kz/app/onskin-beauty-product-scanner/id1630768985)
-- [OnSkin website](https://onskin.com/)
+- [Layerwell App Store](https://apps.apple.com/kz/app/layerwell-beauty-product-scanner/id1630768985)
+- Immutable prior-name competitor sources in `docs/brand-evidence.md`
 - [HadaBuddy](https://www.hadabuddy.com/)
 - [HadaBuddy FAQ](https://www.hadabuddy.com/faq)
 - [Thea App Store](https://apps.apple.com/us/app/thea-1-beauty-app/id6523434295)

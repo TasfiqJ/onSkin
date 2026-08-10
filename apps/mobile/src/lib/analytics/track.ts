@@ -1,4 +1,4 @@
-import type { OnboardingEvent } from '@onskin/types';
+import type { OnboardingEvent } from '@layerwell/types';
 
 import { isAccountActivityBlockedForDeletion } from '@/features/settings/accountDeletionBarrier';
 import {

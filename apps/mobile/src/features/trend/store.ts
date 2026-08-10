@@ -9,8 +9,8 @@ import { multiRemovePrivateItems, removePrivateItem } from '@/lib/storage/privat
 // it is EXCLUDED from any cloud backup and DELETED on revocation. The source image
 // never leaves the device. This flag gates behaviour, not storage location.
 
-const CONSENT_KEY = 'onskin.trendInsights.v1';
-const STATE_KEY = 'onskin.trendState.v1'; // the derived narrative state (no image, no score)
+const CONSENT_KEY = 'layerwell.trendInsights.v1';
+const STATE_KEY = 'layerwell.trendState.v1'; // the derived narrative state (no image, no score)
 
 export function getTrendInsightsLocal(): Promise<boolean> {
   return runCurrentHealthDataOperation(async (lease) => {

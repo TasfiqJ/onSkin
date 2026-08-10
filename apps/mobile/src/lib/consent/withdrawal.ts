@@ -1,4 +1,4 @@
-import type { ConsentType } from '@onskin/types';
+import type { ConsentType } from '@layerwell/types';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
@@ -33,7 +33,7 @@ export type WithdrawableConsentType =
   | 'photo_capture'
   | 'photo_cloud_backup'
   | 'photo_trend_insights'
-  | 'ask_onskin'
+  | 'ask_layerwell'
   | 'community_participation'
   | 'data_sharing';
 
@@ -265,7 +265,7 @@ const CLEANUP_KEYS: Readonly<Record<HealthDependentConsentType, readonly string[
     'skipped_storage_paths',
   ],
   photo_trend_insights: ['photo_trend_deleted'],
-  ask_onskin: [
+  ask_layerwell: [
     'ask_safety_audit_deleted',
     'ask_turn_audit_deleted',
     'ask_sessions_deleted',

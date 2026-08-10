@@ -63,7 +63,7 @@ function writeRepoFile(root, repoPath, contents) {
 }
 
 function createFixtureRepo(t) {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-phase9-release-integrity-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-phase9-release-integrity-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   git(root, ['init', '--quiet']);
   git(root, ['config', 'user.name', 'Phase 9 Test']);
@@ -179,7 +179,7 @@ test('stable working-file reads reject oversized optional inputs and unsafe ance
   assert.equal(oversized.workingRecords['.env'].bytes, null);
   assert.ok(oversized.integrityIssues.includes('.env optional working input is too-large'));
 
-  const outside = mkdtempSync(join(tmpdir(), 'onskin-phase9-outside-'));
+  const outside = mkdtempSync(join(tmpdir(), 'layerwell-phase9-outside-'));
   t.after(() => rmSync(outside, { recursive: true, force: true }));
   writeRepoFile(outside, 'secret.txt', 'outside\n');
   const linked = join(root, 'linked-parent');
@@ -907,7 +907,7 @@ test('atomic packet publication detects post-verification byte tampering and rem
 
 test('atomic packet publication rejects an output-parent junction swap without writing outside', (t) => {
   const root = createFixtureRepo(t);
-  const outside = mkdtempSync(join(tmpdir(), 'onskin-phase9-output-outside-'));
+  const outside = mkdtempSync(join(tmpdir(), 'layerwell-phase9-output-outside-'));
   t.after(() => rmSync(outside, { recursive: true, force: true }));
   const outputPaths = ['out/release.json', 'out/release.md'];
   const snapshot = captureReleaseQaSnapshot({

@@ -1,4 +1,4 @@
-import type { NotificationKind, NotificationTier } from '@onskin/types';
+import type { NotificationKind, NotificationTier } from '@layerwell/types';
 import {
   runCurrentHealthDataOperation,
   type HealthDataWriteOperationLease,
@@ -12,7 +12,7 @@ import { TIER_OF, tierOf, WEEKLY_CAP } from './policy';
 // consent approval. The encrypted device ledger is the source of truth for the
 // current-device cap and prevents a foreground trigger from firing on every app
 // open.
-const KEY = 'onskin.notiflog.v1';
+const KEY = 'layerwell.notiflog.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const ATTEMPT_LEDGER_INVALID = 'ATTEMPT_LEDGER_INVALID';

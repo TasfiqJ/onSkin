@@ -203,7 +203,7 @@ function rawLooksLikeEncryptedEnvelope(raw: string): boolean {
 }
 
 function isPrivateKVOwnedKey(key: string): boolean {
-  return key.startsWith(LEGACY_PRIVATE_KV_PREFIX) || key.startsWith('routinekind.');
+  return key.startsWith(LEGACY_PRIVATE_KV_PREFIX) || key.startsWith('layerwell.');
 }
 
 function isKnownForeignStorageKey(key: string): boolean {
@@ -598,7 +598,7 @@ export function assertPrivateKVReadable(): Promise<void> {
   });
 }
 
-const CONFLICT_CHOICE_STORAGE_KEY = 'onskin.conflict.overrides';
+const CONFLICT_CHOICE_STORAGE_KEY = 'layerwell.conflict.overrides';
 let devConflictChoiceWriteFailureUsed = false;
 
 async function maybeRejectConflictChoiceWrite(key: string): Promise<void> {
@@ -751,7 +751,7 @@ export async function updatePrivateItem(
   return updatePrivateItemWithGuard(key, updater, assertHealthMutationCurrent);
 }
 
-const CATALOG_LOOKUP_QUEUE_STORAGE_KEY = 'routinekind.catalog.lookupQueue.v1';
+const CATALOG_LOOKUP_QUEUE_STORAGE_KEY = 'layerwell.catalog.lookupQueue.v1';
 
 /**
  * Narrow data-rights maintenance lane for physically removing expired or

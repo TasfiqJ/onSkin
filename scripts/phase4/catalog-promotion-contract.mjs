@@ -30,7 +30,7 @@ import {
 export const CATALOG_STAGE_CONTRACT_ID = 'catalog-stage-envelope-v2';
 export const CATALOG_REVIEW_OVERLAY_ID = 'catalog-row-review-overlay-v2';
 export const CATALOG_ROW_REVIEW_SIGNATURE_ENVELOPE = 'catalog-row-review-signature-v2';
-export const CATALOG_ROW_REVIEW_SIGNING_DOMAIN = 'routinekind.catalog-row-review-overlay.v2';
+export const CATALOG_ROW_REVIEW_SIGNING_DOMAIN = 'layerwell.catalog-row-review-overlay.v2';
 export const CATALOG_DATABASE_RECEIPT_EVIDENCE_CONTRACT_ID =
   'catalog-import-database-receipt-evidence-v1';
 export const CATALOG_DATABASE_RECEIPT_COMPLETION_CONTRACT_ID =

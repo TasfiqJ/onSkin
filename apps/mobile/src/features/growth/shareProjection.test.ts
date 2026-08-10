@@ -5,14 +5,14 @@ import { CONFLICT_SHARE_PROJECTION_KEYS, parseConflictShareProjection } from './
 function validProjection(): Record<string, unknown> {
   return {
     schemaVersion: 1,
-    brandName: 'RoutineKind',
+    brandName: 'Layerwell',
     eyebrow: 'SHELF CHECK',
     title: 'Use on different nights',
     severityLabel: 'Timing note',
     evidenceLabel: 'Reviewed guidance',
     claim: 'Spacing these cosmetic ingredients may make a routine easier to tolerate.',
     actionLabel: 'Check your own shelf',
-    attributionLabel: 'routinekind.app',
+    attributionLabel: 'layerwell.app',
     disclaimer: 'General cosmetic information, not medical advice.',
     tone: 'caution',
   };
@@ -49,7 +49,7 @@ describe('conflict share projection', () => {
     ['safety state', { pregnancyStatus: 'pregnant' }],
     ['reviewer metadata', { reviewedBy: 'Dr Private' }],
     ['account id', { userId: 'private-user-id' }],
-    ['public URL', { shareUrl: 'https://routinekind.app/s/forged' }],
+    ['public URL', { shareUrl: 'https://layerwell.app/s/forged' }],
     ['arbitrary extra', { extra: true }],
   ])(
     'rejects the exact projection when it contains a private or extra %s field',

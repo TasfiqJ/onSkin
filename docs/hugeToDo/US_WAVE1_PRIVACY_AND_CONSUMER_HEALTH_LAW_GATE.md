@@ -1,6 +1,6 @@
 # US Wave 1 Privacy and Consumer-Health Law Gate
 
-**Product:** OnSkin
+**Product:** Layerwell
 
 **Decision scope:** public launch in the 50 United States and District of Columbia only
 
@@ -21,7 +21,7 @@
 
 ## 1. Executive decision
 
-OnSkin must not ship its current all-features iOS launch contract merely because it
+Layerwell must not ship its current all-features iOS launch contract merely because it
 is small, local-first, age-gated, or distributed through Apple. Those facts reduce
 risk but do not eliminate it.
 
@@ -30,7 +30,7 @@ The controlling launch posture is:
 | Question                                                                             | Decision as of cutoff                                                                                                    |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
 | Is the legal research packet complete enough to set engineering gates?               | **In progress for planning** until the classifications below are resolved and counsel validates them                     |
-| Is OnSkin legally cleared for a US public launch?                                    | **No; blocked**                                                                                                          |
+| Is Layerwell legally cleared for a US public launch?                                    | **No; blocked**                                                                                                          |
 | Is Apple approval assured?                                                           | **No; it cannot be assured**                                                                                             |
 | Can ordinary startup-size exemptions be relied on?                                   | **No**                                                                                                                   |
 | Can App Store territory selection alone control legal scope?                         | **No**                                                                                                                   |
@@ -43,14 +43,14 @@ The controlling launch posture is:
 
 ### Why launch is blocked
 
-1. OnSkin processes or can infer consumer health data: skin concerns, pregnancy or
+1. Layerwell processes or can infer consumer health data: skin concerns, pregnancy or
    reproductive status, sensitivities, routines, adherence, product reactions,
    progress, and related recommendations.
 2. Washington's My Health My Data Act, Nevada's consumer-health law, and
    Connecticut's health/sensitive-data provisions can apply without the ordinary
    revenue or consumer-count thresholds founders often expect.
 3. California's CMIA may deem qualifying consumer-health software a provider of
-   health care for that statute, and OnSkin's pregnancy/TTC and condition-management
+   health care for that statute, and Layerwell's pregnancy/TTC and condition-management
    facts require a written classification.
 4. Colorado's biometric amendments apply to covered biometric processing without
    ordinary volume thresholds; transient face bounds require written classification.
@@ -113,7 +113,7 @@ explicit proposed migration is identified:
 - any face-bound calculation is transient and does not create a persistent face
   template or identifier;
 - health and routine data are local-first, with narrowly approved synchronization;
-- OnSkin does not diagnose, treat, cure, prevent, or claim to measure disease;
+- Layerwell does not diagnose, treat, cure, prevent, or claim to measure disease;
 - no “skin age,” “AI skin score,” percentage-improvement, or equivalent medical or
   objective-performance claim is made;
 - no sale of health data, targeted advertising based on health data, or data-broker
@@ -153,7 +153,7 @@ Exact citation queries run separately for ss. 501.701 through 501.722 returned n
 bill for ss. 501.701 through 501.721 and only companion HB 7017 and SB 7026 for s.
 501.722. Only SB 7026 was enacted; its enrolled section 12 makes a conforming
 trade-secret change within the public-records exemption, not a substantive change
-to OnSkin's controller or consumer duties.
+to Layerwell's controller or consumer duties.
 
 Indiana's official **2026 Table of Citations Affected** was also reproduced and
 visually checked on July 13, 2026 using records current through the cutoff. Its
@@ -223,7 +223,7 @@ every item, and it does not establish compliance by itself.
 | Amended COPPA Rule                                                                   | Effective; principal compliance date April 22, 2026                                             | Reconciled selected-age gate plus actual-knowledge response required                                   |
 | ROSCA                                                                                | Effective                                                                                       | Applies to online negative-option transactions within scope                                            |
 | FTC 2024 amended “click-to-cancel” rule                                              | **Vacated in July 2025**                                                                        | Do not cite it as operative law; retain strict UX because ROSCA, FTC Act, Apple, and state laws remain |
-| TAKE IT DOWN Act platform notice/removal duties                                      | Effective May 19, 2026                                                                          | Community gate if OnSkin is a covered platform                                                         |
+| TAKE IT DOWN Act platform notice/removal duties                                      | Effective May 19, 2026                                                                          | Community gate if Layerwell is a covered platform                                                         |
 | Washington My Health My Data Act                                                     | Effective; general March 31, 2024, small-business June 30, 2024                                 | Treat as applicable                                                                                    |
 | Nevada SB 370 consumer-health law                                                    | Effective March 31, 2024                                                                        | Treat as applicable                                                                                    |
 | Connecticut consumer-health provisions                                               | Effective July 1, 2023                                                                          | Treat as applicable                                                                                    |
@@ -250,7 +250,7 @@ and production release.
 ### 5.1 FTC Act: privacy, security, product claims, and dark patterns
 
 [15 U.S.C. § 45](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title15-section45&num=0&edition=prelim)
-prohibits unfair or deceptive acts or practices. For OnSkin, that makes the product,
+prohibits unfair or deceptive acts or practices. For Layerwell, that makes the product,
 privacy policy, App Store disclosures, onboarding, consent copy, SDK behavior,
 support promises, claims, paywall, deletion flow, and actual backend behavior one
 testable system. A statement such as “photos never leave your device” is unsafe if
@@ -259,7 +259,7 @@ crash reporting, backup, support upload, or a later feature can transmit them.
 The FTC's
 [health-products claims guidance](https://www.ftc.gov/business-guidance/resources/health-products-compliance-guidance)
 requires truthful, nonmisleading, adequately substantiated health-related claims.
-OnSkin therefore needs a claims register containing the exact copy, intended and
+Layerwell therefore needs a claims register containing the exact copy, intended and
 reasonably implied meaning, audience, evidence, reviewer, channel, and expiry/review
 date. A cosmetic disclaimer does not cure a diagnostic or treatment impression.
 
@@ -289,14 +289,14 @@ and
 [HBNR business guidance](https://www.ftc.gov/business-guidance/resources/health-breach-notification-rule-basics-business)
 must be applied to the final architecture.
 
-OnSkin combines user-supplied or inferred skin/health information with data from
+Layerwell combines user-supplied or inferred skin/health information with data from
 more than one source, including product/catalog, account, subscription, routine, and
 possibly cloud-service inputs. Counsel must decide the precise classification, but
 engineering must presume HBNR coverage.
 
 Required readiness includes:
 
-- written identification of OnSkin and applicable vendors as vendor, related
+- written identification of Layerwell and applicable vendors as vendor, related
   entity, or third-party service provider;
 - contracts naming an incident-notice recipient and requiring immediate notice and
   affected-customer detail;
@@ -376,7 +376,7 @@ The FTC's
 and
 [staff FAQ](https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking)
 require material connections to be disclosed clearly and conspicuously. Commerce
-links must show an adjacent disclosure such as “OnSkin may earn a commission,” not
+links must show an adjacent disclosure such as “Layerwell may earn a commission,” not
 only a footer or policy link. Recommendation ranking must be generated independently
 of commission, and the ranking inputs must be auditable.
 
@@ -388,15 +388,15 @@ states that covered platforms had to establish the Act's notice-and-removal proc
 by May 19, 2026. A valid request can require removal of nonconsensual intimate visual
 depictions and known identical copies within 48 hours.
 
-OnSkin prohibits public before/after imagery, but prohibition does not replace an
-operational process if the community feature makes OnSkin a covered platform.
+Layerwell prohibits public before/after imagery, but prohibition does not replace an
+operational process if the community feature makes Layerwell a covered platform.
 Counsel must also assess the
 [DMCA safe-harbor conditions in 17 U.S.C. § 512](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title17-section512&num=0&edition=prelim)
 and
 [47 U.S.C. § 230](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title47-section230&num=0&edition=prelim)
 without treating either as blanket immunity.
 
-**Gate:** public notice and a publicly accessible intake requiring no OnSkin
+**Gate:** public notice and a publicly accessible intake requiring no Layerwell
 account; collection and validation of the statutory signature, attestation, contact,
 and request information; rapid preservation and review; 48-hour removal capability;
 known-copy handling; reporter/subject communications; moderator coverage;
@@ -405,7 +405,7 @@ law-enforcement/emergency procedures.
 
 ## 6. Consumer-health law gate
 
-### 6.1 Why OnSkin data is consumer health data
+### 6.1 Why Layerwell data is consumer health data
 
 The relevant statutes define health data more broadly than medical records.
 Information can qualify when it identifies or is linkable to a consumer and
@@ -413,7 +413,7 @@ indicates, relates to, or is used to infer a health condition, bodily function,
 treatment/intervention, reproductive status, medication/product use, or precise
 location connected with health services.
 
-OnSkin's strongest risk signals are:
+Layerwell's strongest risk signals are:
 
 - pregnancy, trying-to-conceive, and breastfeeding flags;
 - skin concerns, sensitivities, allergies/reactions, and contraindications;
@@ -445,7 +445,7 @@ The final product must satisfy, as applicable:
 - prior consent to collection unless necessary to provide the user-requested
   product or service;
 - consent to sharing that is separate and distinct from collection consent;
-- a separate signed authorization for any sale—OnSkin instead prohibits sale;
+- a separate signed authorization for any sale—Layerwell instead prohibits sale;
 - access, withdrawal, and deletion rights, including data at processors and other
   third parties;
 - response within 45 days, with only the statutory extension and notice;
@@ -478,7 +478,7 @@ The launch implementation must provide, as applicable:
 - affirmative, voluntary consent before collection, with the service-requested
   exception analyzed narrowly;
 - separate consent before sharing;
-- written authorization for sale—OnSkin prohibits sale;
+- written authorization for sale—Layerwell prohibits sale;
 - access, confirmation, review, correction, deletion, withdrawal, and appeal/intake
   operations;
 - security and processor contracts;
@@ -502,7 +502,7 @@ rights, and a health-related geofence restriction.
 The Connecticut Attorney General's
 [2026 business guidance](https://portal.ct.gov/-/media/ag/press_releases/2026/cdpa-business.pdf?hash=112BB88A1ADEBDEEF4C7E3AC5D426A1C&rev=7c686fc401434d0d8ac900a9e57989f9)
 states that, beginning July 1, 2026, any business processing sensitive data outside
-specified payment processing is subject to the Act. OnSkin therefore must not rely
+specified payment processing is subject to the Act. Layerwell therefore must not rely
 on an ordinary startup-size exemption.
 
 ### 6.5 California Confidentiality of Medical Information Act
@@ -517,7 +517,7 @@ current medical-information definition expressly includes qualifying reproductiv
 or sexual-health application information, including pregnancy, plans to conceive,
 and inferences about pregnancy status.
 
-OnSkin collects pregnancy/TTC/breastfeeding status and uses health profile,
+Layerwell collects pregnancy/TTC/breastfeeding status and uses health profile,
 reaction, routine, conflict, recommendation, and Ask information to organize or
 guide user decisions. A cosmetic or non-diagnostic label does not itself decide
 whether those facts satisfy § 56.06. The California Attorney General's
@@ -530,13 +530,13 @@ The
 [People v. Glow final judgment](https://oag.ca.gov/sites/default/files/People%20v.%20Glow%20-%20Final%20Judgment%20and%20Permanent%20Injunction%20-%2007374856.pdf)
 is an enforcement signal involving a reproductive-health app. It was a stipulated
 judgment without trial, adjudication, admission, or general precedential effect; its
-app-specific terms are not automatically OnSkin's legal duties. It nevertheless
+app-specific terms are not automatically Layerwell's legal duties. It nevertheless
 shows the Attorney General using CMIA, unfair-competition, authorization,
 confidentiality, security, purpose-change, and privacy-by-design theories against a
 consumer app.
 
 **Launch gate:** California health/privacy counsel must issue a written,
-version-specific decision on whether OnSkin or any feature is within § 56.06 and
+version-specific decision on whether Layerwell or any feature is within § 56.06 and
 which data is “medical information.” If coverage exists, counsel must map and
 approve every applicable CMIA authorization, confidentiality, access, disclosure,
 purpose-change, reproductive-health segregation/location, contractor, security,
@@ -550,7 +550,7 @@ vendor based only on a general privacy policy or terms acceptance.
 
 ### 6.6 Strictest-common-denominator health implementation
 
-| Control             | Required OnSkin decision                                                                                                       |
+| Control             | Required Layerwell decision                                                                                                       |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Health data map     | Enumerate direct, inferred, derived, transient, logged, and processor-held data by field and event                             |
 | Collection basis    | Document “necessary to provide requested service” narrowly; otherwise obtain affirmative consent                               |
@@ -575,7 +575,7 @@ identified as effective at the cutoff; it does **not** mean no privacy law appli
 Every row remains subject to federal law, breach-notification law, unfair/deceptive
 practices law, subscription rules, and sector-specific rules.
 
-| Jurisdiction         | Comprehensive privacy status at cutoff                                                                     | Practical OnSkin gate or overlay                                                                                   |
+| Jurisdiction         | Comprehensive privacy status at cutoff                                                                     | Practical Layerwell gate or overlay                                                                                   |
 | -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Alabama              | No effective omnibus identified                                                                            | National baseline; breach, consumer-protection, subscription screen                                                |
 | Alaska               | No effective omnibus; HB 367 pending                                                                       | Do not treat proposal as law; national baseline and monitoring                                                     |
@@ -681,11 +681,11 @@ resolve the merits. The safe launch status is: **effective; injunction litigatio
 ongoing; universal injunctions stayed pending appeal; counsel must determine the
 operative scope on the release date.**
 
-**Gate:** do not assume Apple will perform OnSkin's developer duties. Counsel and
+**Gate:** do not assume Apple will perform Layerwell's developer duties. Counsel and
 Apple operations must approve the rating, rating rationale, each in-app purchase,
 store signal interface, fallback when no signal is available, purpose isolation,
 immediate post-verification deletion, logging minimization, and pre-change
-notification workflow. The selected OnSkin age threshold may be stricter than a
+notification workflow. The selected Layerwell age threshold may be stricter than a
 store category, but it may not misuse or retain the store signal.
 
 #### Texas SCOPE
@@ -742,7 +742,7 @@ data, the act can require:
 types, memory lifetime, logs, and test fixtures. If covered, the written policy,
 retention/deletion timer, annual review, consumer notice/consent, access/correction,
 processor terms, and § 6-1-716 incident/notification path must exist and be tested.
-Immediate volatile deletion remains OnSkin's product rule even if a longer
+Immediate volatile deletion remains Layerwell's product rule even if a longer
 statutory outer limit could be available.
 
 ### 8.2 Illinois BIPA
@@ -772,7 +772,7 @@ regulates enrollment of biometric identifiers in a database for a commercial
 purpose and includes notice/consent, use, disclosure, security, and retention
 controls.
 
-### 8.4 OnSkin decision
+### 8.4 Layerwell decision
 
 Transient face bounds used only in volatile device memory to help align a local
 photo may be outside one or more biometric definitions, including where data
@@ -787,7 +787,7 @@ The permitted implementation is:
   comparison across users or images;
 - never create or persist face geometry, an embedding, landmark vector, template,
   signature, or inferred identity;
-- never send the photo or derived bounds to OnSkin, analytics, crash, support, AI,
+- never send the photo or derived bounds to Layerwell, analytics, crash, support, AI,
   moderation, or any other server;
 - clear all bounds from memory when the operation or screen ends;
 - strip metadata before an explicit user-directed share and show exactly what will
@@ -842,14 +842,14 @@ After purchase:
 - expose Restore Purchases and Manage Subscription from the paywall, account, and
   relevant entitlement state;
 - explain that Apple controls billing and provide a direct system management path;
-- send only counsel-approved notices and do not imply OnSkin can cancel a
+- send only counsel-approved notices and do not imply Layerwell can cancel a
   subscription that Apple controls;
 - ensure entitlement loss, billing retry, grace period, refund, upgrade,
   downgrade, restore, device change, and account deletion are truthful.
 
 For account deletion:
 
-- delete the OnSkin account and covered data through the in-app flow;
+- delete the Layerwell account and covered data through the in-app flow;
 - clearly warn, before confirmation and again in the completion record, that
   deleting an account does not itself cancel an Apple subscription;
 - provide the direct Apple subscription-management route;
@@ -923,7 +923,7 @@ The incident process must:
 8. complete root-cause, remediation, affected-data deletion/rotation, and
    post-incident testing.
 
-Vendor contracts should require notice to OnSkin without undue delay and target
+Vendor contracts should require notice to Layerwell without undue delay and target
 24 hours from discovery, with continuing updates, affected-data detail,
 preservation, cooperation, and no unauthorized public statement. That contractual
 target is not a claim that every statute uses 24 hours.
@@ -987,7 +987,7 @@ propagate downstream, and place backup records on a verified expiry path.
 “Deidentified” is not a label: counsel and engineering must document the technical
 and contractual controls that prevent reidentification.
 
-## 11. Exact OnSkin data and feature risk map
+## 11. Exact Layerwell data and feature risk map
 
 | Feature or data path                  | Principal data/risk                                                      | Mandatory launch control                                                                                                          |
 | ------------------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1174,7 +1174,7 @@ transaction logs, and consumer-protection review.
 - Posting is restricted to the selected, reconciled launch threshold and has no
   public before/after imagery.
 - Report, block, moderation, appeal, preservation, takedown, and emergency paths.
-- Public TAKE IT DOWN intake requires no OnSkin account and validates the statutory
+- Public TAKE IT DOWN intake requires no Layerwell account and validates the statutory
   signature, attestation, contact, and request information; a 48-hour operational
   timer applies to valid requests if covered, with known-identical-copy
   discovery/removal.
@@ -1510,7 +1510,7 @@ respect for permission settings; in-app account deletion when account creation i
 supported; and special care for health/medical data and claims. The final reviewer
 notes must explain, without overclaiming:
 
-- OnSkin is a cosmetic skincare organization and education tool, not a diagnostic
+- Layerwell is a cosmetic skincare organization and education tool, not a diagnostic
   or treatment service;
 - pregnancy, sensitivity, conflict, and recommendation copy is bounded and directs
   appropriate questions to a qualified professional;
@@ -1528,13 +1528,13 @@ Apple's
 [App privacy details instructions](https://developer.apple.com/app-store/app-privacy-details/)
 require declarations to include data collected by third-party partners. Labels must
 be generated from verified production flows, not copied from vendor marketing or a
-design document. OnSkin must separately complete applicable SDK privacy manifests
+design document. Layerwell must separately complete applicable SDK privacy manifests
 and required-reason API declarations.
 
 Apple's
 [account-deletion technical note](https://developer.apple.com/documentation/technotes/tn3194-handling-account-deletions-and-revoking-tokens-for-sign-in-with-apple)
 must be applied to Sign in with Apple and account deletion. Apple controls
-subscription billing, so deleting an OnSkin account and managing an Apple
+subscription billing, so deleting an Layerwell account and managing an Apple
 subscription remain truthful, distinct actions.
 
 Apple's
@@ -1542,7 +1542,7 @@ Apple's
 and the App Review Guidelines reinforce that sensitive health/fitness/medical data
 must not become advertising, marketing, or unrelated data-mining material.
 
-Texas SB 2420 is a separate state-law layer over app-store operations. OnSkin must
+Texas SB 2420 is a separate state-law layer over app-store operations. Layerwell must
 not infer that Apple's platform controls automatically discharge the developer's
 rating, content-rationale, store age/consent signal, purpose-limitation,
 post-verification deletion, or significant-change notice duties. Conversely, the
@@ -1680,7 +1680,7 @@ quoted or that no other law applies.
 
 1. What is the exact operating/legal entity, principal place of business, corporate
    structure, revenue, funding, insurance, and state nexus?
-2. Which data combinations make OnSkin a vendor of personal health records, PHR
+2. Which data combinations make Layerwell a vendor of personal health records, PHR
    related entity, or another HBNR-covered actor, and which vendors are third-party
    service providers?
 3. Which WA, NV, CT, California CMIA, and other state exemptions or
@@ -1699,7 +1699,7 @@ quoted or that no other law applies.
    entity-wide affiliates/revenue/data counts be calculated?
 8. Which automatic-renewal notices and cancellation channels apply to the final
    Apple products and marketing, including reverse trial?
-9. Is OnSkin a covered platform under TAKE IT DOWN, and what DMCA registration,
+9. Is Layerwell a covered platform under TAKE IT DOWN, and what DMCA registration,
    designated agent, repeat-infringer, preservation, and transparency process is
    required?
 10. What health, cosmetic, safety, ingredient, comparative, testimonial, and
@@ -1709,7 +1709,7 @@ quoted or that no other law applies.
     posture?
 12. Which state breach definitions and deadlines apply to each modeled incident,
     including an unauthorized disclosure where data was encrypted in transit?
-13. Does Civil Code § 56.06 deem OnSkin or any feature a CMIA provider, which fields
+13. Does Civil Code § 56.06 deem Layerwell or any feature a CMIA provider, which fields
     are medical information, and what authorization, confidentiality, access,
     disclosure, purpose-change, segregation, contractor, retention, and incident
     duties follow?
@@ -1717,7 +1717,7 @@ quoted or that no other law applies.
     the proposed conservative 18+ migration, and what exact source/build evidence
     proves the decision?
 15. What provisions of Texas SB 2420 are operative on the release date, what
-    age/consent interface does Apple actually provide, and how will OnSkin prove
+    age/consent interface does Apple actually provide, and how will Layerwell prove
     rating, purpose limitation, deletion, and pre-change notice?
 16. Does any Skin Notes phase fall within Texas SCOPE, and what age registration,
     parental, minor-data, purchase, safety, geolocation, advertising, or algorithmic

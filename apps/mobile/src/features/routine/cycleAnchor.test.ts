@@ -19,7 +19,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   }),
 }));
 
-const KEY = 'onskin.cycleAnchor';
+const KEY = 'layerwell.cycleAnchor';
 
 describe('cycle anchor store', () => {
   beforeEach(() => {

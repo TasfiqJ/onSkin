@@ -67,8 +67,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const TURNS_KEY = 'onskin.ask.groundedTurns.v1';
-const CONSENT_KEY = 'onskin.ask.consent.v1';
+const TURNS_KEY = 'layerwell.ask.groundedTurns.v1';
+const CONSENT_KEY = 'layerwell.ask.consent.v1';
 let accountGeneration = 0;
 
 async function openHealthProcessing(ownerUserId = 'user-a', epoch = 1): Promise<void> {

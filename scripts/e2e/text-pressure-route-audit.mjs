@@ -854,7 +854,7 @@ async function run() {
   let browser = null;
   let client = null;
   let server = null;
-  const userDataDir = path.join(tmpdir(), `routinekind-text-pressure-${process.pid}`);
+  const userDataDir = path.join(tmpdir(), `layerwell-text-pressure-${process.pid}`);
   const summary = {
     baseUrl,
     evidenceDir,

@@ -7,7 +7,7 @@ These notes are for Play Console declarations and reviewer notes after legal/pri
 
 ## App Functionality Summary
 
-OnSkin helps users organize a skincare routine, maintain a product shelf, compare their own progress photos, and understand conservative routine-order conflicts. It is not a medical, diagnostic, treatment, or disease-detection app.
+Layerwell helps users organize a skincare routine, maintain a product shelf, compare their own progress photos, and understand conservative routine-order conflicts. It is not a medical, diagnostic, treatment, or disease-detection app.
 
 ## Health Content Boundary
 

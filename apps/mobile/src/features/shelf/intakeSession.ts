@@ -1,4 +1,4 @@
-import type { AddedVia, PaoSource } from '@onskin/types';
+import type { AddedVia, PaoSource } from '@layerwell/types';
 
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
 

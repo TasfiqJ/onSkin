@@ -33,7 +33,7 @@ import {
 } from '../launch/governed-evidence-test-fixture.mjs';
 
 const sourceRoot = resolve(import.meta.dirname, '..', '..');
-const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-native-ocr-evidence-'));
+const fixtureRoot = mkdtempSync(join(tmpdir(), 'layerwell-native-ocr-evidence-'));
 const evidenceRelativeRoot = `docs/phase-5/evidence/native-ocr/smoke-${process.pid}`;
 const evidenceRoot = resolve(fixtureRoot, evidenceRelativeRoot);
 const evidencePath = `${evidenceRelativeRoot}/evidence.json`;
@@ -173,7 +173,7 @@ function validEvidence() {
   Object.assign(evidence.build, {
     easIosBuildId: iosBuildId,
     profile: buildProfile,
-    appBundleIdentifier: 'com.routinekind.phase5ocrsmoke',
+    appBundleIdentifier: 'com.layerwell.phase5ocrsmoke',
     appVersion: '1.0.0',
     iosBuildNumber: '42',
     archiveSha256: 'a'.repeat(64),
@@ -533,7 +533,7 @@ function runWithDirtySource() {
 }
 
 function runWithCommittedSourceDrift() {
-  const driftRoot = mkdtempSync(join(tmpdir(), 'routinekind-native-ocr-source-drift-'));
+  const driftRoot = mkdtempSync(join(tmpdir(), 'layerwell-native-ocr-source-drift-'));
   try {
     git(dirname(driftRoot), ['clone', '--quiet', '--no-local', fixtureRoot, driftRoot]);
     git(driftRoot, ['config', 'user.email', 'phase5-native-ocr-smoke@example.invalid']);
@@ -564,7 +564,7 @@ function runWithCommittedSourceDrift() {
 }
 
 function runWithCommittedAllowedManifest() {
-  const manifestRoot = mkdtempSync(join(tmpdir(), 'routinekind-native-ocr-manifest-'));
+  const manifestRoot = mkdtempSync(join(tmpdir(), 'layerwell-native-ocr-manifest-'));
   try {
     git(dirname(manifestRoot), ['clone', '--quiet', '--no-local', fixtureRoot, manifestRoot]);
     git(manifestRoot, ['config', 'user.email', 'phase5-native-ocr-smoke@example.invalid']);
@@ -604,7 +604,7 @@ function runWithCommittedAllowedManifest() {
 }
 
 function runWithGovernedTail({ mode }) {
-  const tailRoot = mkdtempSync(join(tmpdir(), `routinekind-native-ocr-${mode}-`));
+  const tailRoot = mkdtempSync(join(tmpdir(), `layerwell-native-ocr-${mode}-`));
   try {
     git(dirname(tailRoot), ['clone', '--quiet', '--no-local', fixtureRoot, tailRoot]);
     git(tailRoot, ['config', 'user.email', 'phase5-native-ocr-smoke@example.invalid']);

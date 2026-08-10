@@ -14,7 +14,7 @@ const CAT07_CAPTURE_MARKER_ONE = Object.freeze([229, 53, 83, 255]);
 
 export function cat07CaptureBindingDigest(runId, viewportId, artifact) {
   return createHash('sha256')
-    .update('routinekind-cat07-capture-binding-v1\0', 'utf8')
+    .update('layerwell-cat07-capture-binding-v1\0', 'utf8')
     .update(String(runId), 'utf8')
     .update('\0', 'utf8')
     .update(String(viewportId), 'utf8')

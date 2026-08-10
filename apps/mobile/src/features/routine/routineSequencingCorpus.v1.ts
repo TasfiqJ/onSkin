@@ -1,4 +1,4 @@
-import type { RoutinePhase, SequencingRole } from '@onskin/types';
+import type { RoutinePhase, SequencingRole } from '@layerwell/types';
 
 import {
   canonicalJson,
@@ -200,7 +200,7 @@ export type AdmittedRoutineSequencingCorpus = {
 };
 
 export const ROUTINE_SEQUENCING_MARKET_SCOPE_POLICY = {
-  policyId: 'routinekind-us-wave1-routine-guidance-market-gate-v1',
+  policyId: 'layerwell-us-wave1-routine-guidance-market-gate-v1',
   targetJurisdictions: ['US'],
   sourceDocumentPath: 'docs/hugeToDo/CORE-03-ROUTINE-GUIDANCE-SOURCE-CHECKPOINT-2026-07-26.md',
   excludedMarkets: ['CA', 'CA-QC'],

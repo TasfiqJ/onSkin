@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import type { SequencingRole } from '@onskin/types';
+import type { SequencingRole } from '@layerwell/types';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { WhereToBuy } from '@/features/commerce/WhereToBuy';

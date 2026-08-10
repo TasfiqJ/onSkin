@@ -79,10 +79,10 @@ describe('local private data cleanup', () => {
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.multiRemove.mockResolvedValue(undefined);
     mocks.readDirectoryAsync.mockResolvedValue([
-      'routinekind-export-456.json',
-      'routinekind-share-card.png',
-      'onskin-export-123.json',
-      'onskin-share-card.png',
+      'layerwell-export-456.json',
+      'layerwell-share-card.png',
+      'layerwell-export-123.json',
+      'layerwell-share-card.png',
       'public-cache.json',
     ]);
     mocks.resetAnalyticsIdentity.mockResolvedValue(undefined);
@@ -94,58 +94,58 @@ describe('local private data cleanup', () => {
 
     expect(mocks.multiRemove).toHaveBeenCalledWith(
       expect.arrayContaining([
-        'routinekind.routineActivation.v1',
-        'routinekind.routineOrder.v1',
-        'onskin.photo.content_key_created.v1',
-        'onskin.skinprofile.v1',
+        'layerwell.routineActivation.v1',
+        'layerwell.routineOrder.v1',
+        'layerwell.photo.content_key_created.v1',
+        'layerwell.skinprofile.v1',
       ]),
     );
     expect(mocks.clearRoutineWidgetNativeState).toHaveBeenCalledOnce();
     expect(mocks.clearRoutineWidgetNativeState.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.multiRemove.mock.invocationCallOrder[0]!,
     );
-    expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain('routinekind.localDataOwnerHash.v1');
+    expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain('layerwell.localDataOwnerHash.v1');
     expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
-      'routinekind.localDataRetainedOwnerHash.v1',
+      'layerwell.localDataRetainedOwnerHash.v1',
     );
     expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
-      'routinekind.localDataUnclaimedQuarantine.v1',
+      'layerwell.localDataUnclaimedQuarantine.v1',
     );
     expect(mocks.multiRemove).toHaveBeenNthCalledWith(2, [
-      'routinekind.localDataOwnerHash.v1',
-      'routinekind.localDataRetainedOwnerHash.v1',
-      'routinekind.localDataUnclaimedQuarantine.v1',
+      'layerwell.localDataOwnerHash.v1',
+      'layerwell.localDataRetainedOwnerHash.v1',
+      'layerwell.localDataUnclaimedQuarantine.v1',
     ]);
     expect(mocks.multiRemove.mock.invocationCallOrder[1]).toBeGreaterThan(
       mocks.resetRevenueCatIdentity.mock.invocationCallOrder[0]!,
     );
     expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
-      'routinekind.localDataCleanupRequired.v1',
+      'layerwell.localDataCleanupRequired.v1',
     );
     expect(mocks.multiRemove.mock.calls.flatMap(([keys]) => keys)).not.toContain(
-      'routinekind.authDerivedCleanupRequired.v1',
+      'layerwell.authDerivedCleanupRequired.v1',
     );
     expect(mocks.multiRemove.mock.calls.flatMap(([keys]) => keys)).not.toContain(
-      'routinekind.store_transaction_notice.v2',
+      'layerwell.store_transaction_notice.v2',
     );
     expect(
       mocks.multiRemove.mock.calls
         .flatMap(([keys]) => keys as string[])
-        .some((key) => key.startsWith('routinekind.health_dependent_withdrawal.owner.')),
+        .some((key) => key.startsWith('layerwell.health_dependent_withdrawal.owner.')),
     ).toBe(false);
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);
-    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/onskin-export-123.json', {
+    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/layerwell-export-123.json', {
       idempotent: true,
     });
-    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/onskin-share-card.png', {
+    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/layerwell-share-card.png', {
       idempotent: true,
     });
-    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/routinekind-export-456.json', {
+    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/layerwell-export-456.json', {
       idempotent: true,
     });
-    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/routinekind-share-card.png', {
+    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/layerwell-share-card.png', {
       idempotent: true,
     });
     expect(mocks.deleteAsync).not.toHaveBeenCalledWith('file://cache/public-cache.json', {
@@ -196,9 +196,9 @@ describe('local private data cleanup', () => {
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
     expect(mocks.multiRemove).toHaveBeenNthCalledWith(2, [
-      'routinekind.localDataOwnerHash.v1',
-      'routinekind.localDataRetainedOwnerHash.v1',
-      'routinekind.localDataUnclaimedQuarantine.v1',
+      'layerwell.localDataOwnerHash.v1',
+      'layerwell.localDataRetainedOwnerHash.v1',
+      'layerwell.localDataUnclaimedQuarantine.v1',
     ]);
   });
 

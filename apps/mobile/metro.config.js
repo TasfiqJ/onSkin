@@ -41,7 +41,7 @@ config.resolver.blockList = [
   repoTempPattern,
 ];
 
-// 3. Allow importing the workspace TS source of @onskin/* packages directly.
+// 3. Allow importing the workspace TS source of @layerwell/* packages directly.
 config.resolver.disableHierarchicalLookup = false;
 config.resolver.enableGlobalPackages = true;
 

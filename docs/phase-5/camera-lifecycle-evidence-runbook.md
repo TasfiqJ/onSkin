@@ -69,7 +69,7 @@ blocked work order, never evidence.
 3. Retain the EAS UUID or canonical Expo build URL and build log. The log must
    show the pinned EAS CLI, full EAS image, resolved Xcode version/build, and
    iOS SDK. Commit only a reviewed canonical binding excerpt beginning with
-   `ROUTINEKIND_CAMERA_BUILD_BINDING_V1` and exactly one line for source
+   `LAYERWELL_CAMERA_BUILD_BINDING_V1` and exactly one line for source
    SHA, EAS build ID, profile, image, EAS CLI, Xcode, iOS SDK, bundle ID, app
    version, iOS build number, and archive SHA-256, in template order, with no
    other lines. Retain the untouched raw build log only in the access-controlled

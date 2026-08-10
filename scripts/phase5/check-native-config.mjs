@@ -160,16 +160,16 @@ for (const variant of ['development', 'staging', 'production']) {
     assertCameraPermissionDriftRejected(variant, overrideKey);
   }
   for (const [label, appDisplayName] of [
-    ['whitespace and C1 control', ' RoutineKind\u0085'],
-    ['parenthesized Xcode variable', 'RoutineKind $(EXECUTABLE_NAME)'],
-    ['braced build variable', 'RoutineKind ${PRODUCT_NAME}'],
+    ['whitespace and C1 control', ' Layerwell\u0085'],
+    ['parenthesized Xcode variable', 'Layerwell $(EXECUTABLE_NAME)'],
+    ['braced build variable', 'Layerwell ${PRODUCT_NAME}'],
   ]) {
     assertMalformedCameraProductNameRejected(variant, label, appDisplayName);
   }
 }
 
 const widgetPluginIndex = orderedPlugins.indexOf('expo-widgets');
-const widgetPrivacyPluginName = './plugins/withRoutineKindWidgetPrivacyManifest';
+const widgetPrivacyPluginName = './plugins/withLayerwellWidgetPrivacyManifest';
 const widgetPrivacyPluginIndexes = orderedPlugins.flatMap((name, index) =>
   name === widgetPrivacyPluginName ? [index] : [],
 );
@@ -187,7 +187,7 @@ require(widgetPluginIndex >= 0 &&
     widgetPluginIndex +
       1, 'The widget privacy-manifest plugin must appear exactly once, immediately after expo-widgets.');
 require(existsSync(
-  resolve(root, 'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js'),
+  resolve(root, 'apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js'),
 ), 'The widget extension privacy-manifest config plugin source is missing.');
 require(String(rootPkg.scripts?.['phase5:ios-extension-contract:smoke'] ?? '').includes(
   'scripts/phase5/widget-privacy-manifest.test.mjs',
@@ -613,7 +613,7 @@ for (const file of [
   'apps/mobile/src/lib/appConfig.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
-  'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js',
+  'apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js',
   'apps/mobile/eas.json',
   'apps/mobile/package.json',
   'apps/mobile/src/app/_layout.tsx',
@@ -690,7 +690,7 @@ for (const file of [
   'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
   'scripts/phase5/patch-expo-widgets-lifecycle.test.mjs',
   'scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
-  'scripts/phase5/expo-widgets-57.0.8/RoutineKindWidgetLifecycleStore.swift',
+  'scripts/phase5/expo-widgets-57.0.8/LayerwellWidgetLifecycleStore.swift',
   'scripts/phase5/expo-widgets-57.0.8/AppIntent.swift',
   'scripts/phase5/expo-widgets-57.0.8/EntryView.swift',
   'scripts/phase5/expo-widgets-57.0.8/ExpoWidgets.podspec',

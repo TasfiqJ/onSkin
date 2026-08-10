@@ -59,7 +59,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.skinprofile.v1';
+const KEY = 'layerwell.skinprofile.v1';
 const COMPLETE_ANSWERS = Object.fromEntries(
   ONBOARDING_QUIZ.map((question) => [
     question.id,

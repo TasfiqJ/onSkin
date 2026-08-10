@@ -23,7 +23,7 @@ import {
  * mutates the Shelf store: a later user-confirmation surface must explicitly
  * accept a candidate before deciding which Shelf fields to change.
  */
-export const CATALOG_LOOKUP_QUEUE_KEY = 'routinekind.catalog.lookupQueue.v1';
+export const CATALOG_LOOKUP_QUEUE_KEY = 'layerwell.catalog.lookupQueue.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const CATALOG_LOOKUP_QUEUE_INVALID = 'CATALOG_LOOKUP_QUEUE_INVALID';

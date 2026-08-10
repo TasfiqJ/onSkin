@@ -75,7 +75,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.notifPrefs.v1';
+const KEY = 'layerwell.notifPrefs.v1';
 
 describe('notification lock-screen privacy preference', () => {
   beforeEach(() => {

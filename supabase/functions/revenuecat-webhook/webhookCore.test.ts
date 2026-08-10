@@ -68,7 +68,7 @@ function event(
     original_app_user_id: USER_ID,
     aliases: [USER_ID],
     entitlement_ids: ['pro'],
-    product_id: 'routinekind_pro_annual',
+    product_id: 'layerwell_pro_annual',
     store: 'APP_STORE',
     environment: 'PRODUCTION',
     purchased_at_ms: eventTimestampMs - 1_000,

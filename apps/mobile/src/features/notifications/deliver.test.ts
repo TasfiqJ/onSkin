@@ -90,7 +90,7 @@ vi.mock('@/features/routine/reviewGate', () => ({
 vi.mock('./copy', () => ({
   notificationContentForLockScreen: vi.fn((kind: string) => ({
     body: `body:${kind}`,
-    title: 'RoutineKind',
+    title: 'Layerwell',
   })),
 }));
 
@@ -427,7 +427,7 @@ describe('rescheduleReminders', () => {
       isActive: true,
       periodType: 'trial',
       expiresAt: '2026-07-12T12:00:00.000Z',
-      productId: 'routinekind_pro_annual_dev',
+      productId: 'layerwell_pro_annual_dev',
       priceLabel: 'CA$69.99',
     });
 
@@ -438,7 +438,7 @@ describe('rescheduleReminders', () => {
       expect(mocks.cancelAllScheduledNotificationsAsync).not.toHaveBeenCalled();
       expect(mocks.scheduleNotificationAsync).toHaveBeenCalledOnce();
       expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith(
-        expect.objectContaining({ identifier: 'onskin-trial-reminder' }),
+        expect.objectContaining({ identifier: 'layerwell-trial-reminder' }),
       );
     } finally {
       vi.useRealTimers();
@@ -466,7 +466,7 @@ describe('scheduleTrialReminder', () => {
         isActive: true,
         periodType: 'trial',
         expiresAt: '2026-07-12T12:00:00.000Z',
-        productId: 'routinekind_pro_annual_dev',
+        productId: 'layerwell_pro_annual_dev',
         priceLabel: 'CA$69.99',
       });
 
@@ -529,7 +529,7 @@ describe('notifyBehavioural', () => {
     await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
 
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith({
-      content: { body: 'body:replenishment', title: 'RoutineKind' },
+      content: { body: 'body:replenishment', title: 'Layerwell' },
       trigger: null,
     });
     expect(mocks.reserveNotificationSlotLocal).toHaveBeenCalledWith(

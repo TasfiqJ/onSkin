@@ -30,7 +30,7 @@ function createOperatorAuthClient(
       persistSession: false,
     },
     global: {
-      headers: { 'X-Client-Info': 'routinekind-catalog-operator-console/0.1' },
+      headers: { 'X-Client-Info': 'layerwell-catalog-operator-console/0.1' },
     },
   });
 }

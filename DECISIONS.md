@@ -19,9 +19,9 @@ Format: `D-NNN — date — decision — rationale`.
 
 - **D-002 — 2026-06-12 — Turborepo monorepo** (`apps/mobile` + `packages/types`
   - `supabase/`), per docs/00 §9 ("Turborepo monorepo with shared TS packages").
-    Shared `@onskin/types` package holds the Supabase `Database` type + domain
+    Shared `@layerwell/types` package holds the Supabase `Database` type + domain
     enums so the mobile client and Edge Functions share one source of truth.
-    Expo web now runtime-verifies `@onskin/types` and hoisted dependencies in
+    Expo web now runtime-verifies `@layerwell/types` and hoisted dependencies in
     the current installed worktree. The Metro config also watches a resolved
     linked-dependency target when one exists. Native first-device/build
     verification remains a Phase 5 gate because this Windows host cannot run
@@ -43,8 +43,8 @@ Format: `D-NNN — date — decision — rationale`.
   route. A monospaced face (system mono) is used for the spec's caption/label
   treatment ("01 · Welcome", "2 of 4", "NEXT").
 
-- **D-006 — 2026-06-12 — App identifiers:** bundle id `com.onskin.app`, URL
-  scheme `onskin://`. Placeholder defaults; must match the registered App
+- **D-006 — 2026-06-12 — App identifiers:** bundle id `com.layerwell.app`, URL
+  scheme `layerwell://`. Placeholder defaults; must match the registered App
   ID / Play package once accounts exist (see BLOCKERS B-APPLE / B-GOOGLE).
 
 - **D-007 — 2026-06-12 — Offline/data layer: TanStack Query + a persisted
@@ -299,7 +299,7 @@ B-DERM-REVIEW` banner as `rules.ts` plus `PAO_DEFAULTS_REVIEWED = false` and a
 - **D-038 — 2026-06-13 — The Progress tab IS the photo timeline (docs/06); the calm
   streak relocated to `/routine/streak`.** docs/06 explicitly and repeatedly defines
   the Progress tab as the guided-photo feature ("It is the Progress tab"), and the
-  new "OnSkin Photo Progress" design confirms it (Compare/Timeline). The calm
+  new "Layerwell Photo Progress" design confirms it (Compare/Timeline). The calm
   adherence streak (docs/03 §6, briefly the Progress tab in Slice 14) was **moved**,
   not removed — it now lives in the routine stack (`app/routine/streak.tsx`) and is
   reachable from **Today's streak pill** (now tappable) and the **You** tab's "Streak
@@ -356,7 +356,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 
 - **D-044 — 2026-06-13 — Photo capture/review/detail use the design's near-black
   `#16130F` backdrop**, distinct from the `night` token (`#1B1813`), to match the
-  "OnSkin Photo Progress" `.dc.html` exactly (it uses a darker capture palette so the
+  "Layerwell Photo Progress" `.dc.html` exactly (it uses a darker capture palette so the
   face is the brightest thing on screen). Logged so the divergence from the night
   token is intentional, not drift.
 
@@ -559,7 +559,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   fixtures assert the URL and the persisted click payload carry no concern/goal/skin/
   pregnancy/photo/profile attribute. This is Doc 10's analogue of the docs/09 "FIT score
   has no commercial input" guard. Deep-link straight out (no in-app webview) — keeps
-  OnSkin out of the transaction and reduces data-handling liability.
+  Layerwell out of the transaction and reduces data-handling liability.
 
 - **D-061 — 2026-06-13 — MHMDA-strict consent gate (docs/10 §6).** The "where to buy"
   affordance is gated behind a **separate, distinct, opt-in, revocable** consent
@@ -651,7 +651,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 
 > docs/12 pre-specifies "D-046…D-050"; those numbers were long taken. Recorded here as
 > D-068…D-072. Validated by a cited deep-research pass: AI trend analysis is NOT a
-> seven-figure pillar; the population skin score is a trust destroyer; the highest-value
+> seven-figure pillar; the populatilayerwell score is a trust destroyer; the highest-value
 > move is to KEEP REFUSING AI scores and MARKET THE REFUSAL (the same trust engine behind
 > Yuka's $7.37M, zero AI face analysis). The verdict rests on four HIGH-confidence grounds
 > (trust-promise reversal, unfixable fairness physics, the regulatory claim-surface, the
@@ -736,7 +736,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   nor granted. Explicit withdrawal/deletion may still erase legacy private state as a
   data-rights operation and can never activate the feature.
 
-- **D-073 — 2026-06-14 — "Ask OnSkin" is the grounded, TEMPLATE-BOUNDED front-end to the
+- **D-073 — 2026-06-14 — "Ask Layerwell" is the grounded, TEMPLATE-BOUNDED front-end to the
   on-device intelligence layer, never an open chatbot (docs/13, the doc's "D-051/D-057").**
   Slice 27 — the founder-delegated feature beyond the 12 build-order docs (chosen by
   objective reasoning). The TRUTH SOURCE is the deterministic engine (`detectConflicts`
@@ -762,9 +762,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   honestly (exempt from the AI-marketing scan, like the Slice-24 pattern); marketing leads
   with independent/grounded/knows-your-shelf/private, never "AI".
 
-- **D-075 — 2026-06-14 — A separate, explicit, DEFAULT-OFF `ask_onskin` consent + a
+- **D-075 — 2026-06-14 — A separate, explicit, DEFAULT-OFF `ask_layerwell` consent + a
   content-free / safety-audit-only data model (docs/13 §7/§10, "D-053/D-058").** The
-  consents enum gains a 9th type `ask_onskin` (migration 0025), distinct from every other
+  consents enum gains a 9th type `ask_layerwell` (migration 0025), distinct from every other
   consent — the user's question is a health disclosure transmitted to the cloud (MHMDA /
   GDPR Art. 9 attaches to the TRANSMISSION). Default-off, revocable, ledger-authoritative-
   then-local; **deletion-on-revocation clears the local turn counter** (`clearAskStore`).
@@ -779,7 +779,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 - **D-076 — 2026-06-14 — Pro-gating: the deterministic on-device advisor is FREE (the moat
   taste); only the cloud-grounded layer is Pro-gated + trial-capped (docs/13 §15, "D-054").**
   `GatedFeature` gains `ask` + `UPSELL_COPY.ask`. The pure `askGate` + the local-first
-  per-period grounded-turn counter (`onskin.ask.groundedTurns.v1`) enforce: free → grounded
+  per-period grounded-turn counter (`layerwell.ask.groundedTurns.v1`) enforce: free → grounded
   is Pro; trial/reverse-trial → a hard cap then the paywall; fully paid → uncapped. The
   authoritative cap is server-side at the Edge Function (deferred); the client counter is a
   best-effort cost guardrail. The first-session moat taste (the deterministic conflict
@@ -812,9 +812,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 - **D-079 — 2026-07-04 — Phase 1 source-of-truth cleanup added launch-readiness,
   brand, V1 scope, Phase 2, and seven-figure-readiness docs.** This does not
   legally clear a brand. `B-BRAND` remains a founder/counsel launch blocker, but
-  engineering should not create production infrastructure under the `OnSkin`
+  engineering should not create production infrastructure under the `Layerwell`
   identity unless counsel clears it in writing. The default planning path is a
-  rebrand before Phase 2; `RoutineKind` is a working clearance candidate only.
+  rebrand before Phase 2; `Layerwell` is a working clearance candidate only.
 
 - **D-080 — 2026-07-04 — Phase 2 infrastructure is scaffolded locally, but live
   accounts remain blocked by brand/account/secret ownership.** The repo now has
@@ -862,7 +862,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 
 - **D-084 - 2026-07-04 - Phase 5 local photo storage uses authenticated local
   encryption and no exact-alarm escalation.** Captured progress-photo temp files
-  are encrypted into app-private `.onskinphoto` envelopes using
+  are encrypted into app-private `.layerwellphoto` envelopes using
   XChaCha20-Poly1305 with a SecureStore-held content key; renderers decrypt to
   memory for display/share, and deletion removes ciphertext. Routine reminders
   stay gentle/inexact and the app does not request Android exact-alarm

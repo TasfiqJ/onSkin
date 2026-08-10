@@ -1,4 +1,4 @@
-import type { FunctionalTag } from '@onskin/types';
+import type { FunctionalTag } from '@layerwell/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
 import { shippableRoutineCadencePolicy } from '@/features/routine/sequencing';

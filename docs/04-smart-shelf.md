@@ -26,7 +26,7 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 > storage durability, withdrawal cleanup, or App Store readiness. See
 > [the CORE-05 source checkpoint](hugeToDo/CORE-05-ADHERENCE-SOURCE-CHECKPOINT-2026-07-26.md).
 
-- **The Smart Shelf is intended to be the product-data capture engine, with barcode intake as a candidate activation moment.** Products can currently enter by reviewed-catalog scan/search or manual intake; the internal staging label path has a bounded Apple Vision candidate with editable review, while every build retains manual text recovery and production remains disabled. PAO/expiry lives on the Shelf, and downstream conflict/routine logic reads the stored products. Competitor adoption suggests that scanning can reduce intake friction, but OnSkin must measure scan-to-save activation, repeat use, and retention in a consented beta before claiming that this behavior or switching cost transfers to this app.
+- **The Smart Shelf is intended to be the product-data capture engine, with barcode intake as a candidate activation moment.** Products can currently enter by reviewed-catalog scan/search or manual intake; the internal staging label path has a bounded Apple Vision candidate with editable review, while every build retains manual text recovery and production remains disabled. PAO/expiry lives on the Shelf, and downstream conflict/routine logic reads the stored products. Competitor adoption suggests that scanning can reduce intake friction, but Layerwell must measure scan-to-save activation, repeat use, and retention in a consented beta before claiming that this behavior or switching cost transfers to this app.
 
 - **Scope is deliberately narrow against docs/02.** docs/02 owns the **catalog** (`products`, `ingredients`, `product_ingredients`, product-specific PAO evidence, and future category metadata) and the freshness truth table: a date recorded/reconfirmed from this physical package, explicit label PAO, reviewed catalog PAO, disabled future catalog-linked category estimate, or unknown. A product-level catalog expiry date has no lot/package binding and never enters Shelf. Migration `0060` purges, force-RLS seals, and prevents repopulation of legacy `ingredient_pao_defaults`; Shelf never reads it. Document 4 owns the **shelf _feature and experience_** — intake and its edge cases, Shelf screens, product-detail management, lifecycle, replacement, and replenishment. docs/02 determines the evidence semantics; doc 4 determines how the user adds, sees, manages, and replaces a unit.
 
@@ -36,17 +36,17 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 
 - **`opened_at` is required only for a PAO clock, and the unopened choice is explicit.** Every intake and replacement path asks the user to choose **Just opened it**, an exact past date, or **Not opened yet**. Unopened products have no PAO clock: a real printed date can still display, but an unopened unit without one remains unknown and receives no app-derived shelf-life estimate.
 
-- **Intake is a multi-path funnel with scan first and explicit fallbacks.** Barcode decoding happens on-device, then the app queries **OnSkin's reviewed catalog** → match → opened-date → save. No barcode, search, or correction is sent to Open Beauty Facts (OBF) at runtime. Current fallbacks are **Search** the same catalog → **capture a label as a reference and type/paste its INCI text** → **Add manually** (the always-works path). Unknown/new products remain user-local and can create an owner-scoped OnSkin missing-product report; they are not published externally. Ambiguous-match and non-beauty classification remain target behavior, not current claims.
+- **Intake is a multi-path funnel with scan first and explicit fallbacks.** Barcode decoding happens on-device, then the app queries **Layerwell's reviewed catalog** → match → opened-date → save. No barcode, search, or correction is sent to Open Beauty Facts (OBF) at runtime. Current fallbacks are **Search** the same catalog → **capture a label as a reference and type/paste its INCI text** → **Add manually** (the always-works path). Unknown/new products remain user-local and can create an owner-scoped Layerwell missing-product report; they are not published externally. Ambiguous-match and non-beauty classification remain target behavior, not current claims.
 
 - **The Shelf surfaces are calm, evidence-graded, and exactly as the spec draws them.** Title + count, **All / Actives / Expiring** filter chips, the **clay, resolution-first conflict banner** (never red; absent when all-clear), product cards with source-specific future-date, countdown, "paired," expired, estimated, and unknown states, and the **"Scan a barcode"** FAB (spec p12). Tapping a card opens the **product-detail management hub** — full active breakdown, PAO/expiry with its source, the conflicts the product is part of, the routines it's used in, and the lifecycle actions (mark opened, edit opened-date, mark finished/discarded, replace, remove).
 
-- **Commercial hypothesis, not a revenue verdict:** a well-populated Shelf could support activation, retention, and an optional replenishment surface because it supplies product context to the rest of the app. That thesis remains unvalidated for OnSkin. Catalog coverage, scan reliability, user willingness to maintain opened dates, professional review, commerce consent, partner approval, conversion, retention, and unit economics are all material risks. No feature or market statistic establishes a seven-figure outcome.
+- **Commercial hypothesis, not a revenue verdict:** a well-populated Shelf could support activation, retention, and an optional replenishment surface because it supplies product context to the rest of the app. That thesis remains unvalidated for Layerwell. Catalog coverage, scan reliability, user willingness to maintain opened dates, professional review, commerce consent, partner approval, conversion, retention, and unit economics are all material risks. No feature or market statistic establishes a seven-figure outcome.
 
 ---
 
 ## Key Findings
 
-1. **The shelf is the product-data capture engine, and scan-to-save is an activation hypothesis.** Everything downstream — the conflict engine (docs/02), the routine builder (docs/03), personalisation, and replenishment — depends on knowing what the user owns. Other products demonstrate familiarity with barcode scanning, but only OnSkin beta telemetry can establish acquisition speed, match rate, completion, repeat use, or retention impact here.
+1. **The shelf is the product-data capture engine, and scan-to-save is an activation hypothesis.** Everything downstream — the conflict engine (docs/02), the routine builder (docs/03), personalisation, and replenishment — depends on knowing what the user owns. Other products demonstrate familiarity with barcode scanning, but only Layerwell beta telemetry can establish acquisition speed, match rate, completion, repeat use, or retention impact here.
 
 2. **Freshness is an evidence-reporting surface, not a product-safety or efficacy determination.** The source of a date matters more than a generic product-category narrative. The launch Shelf does not infer potency, contamination, infection risk, or a product-type exception; it surfaces only an explicitly recorded/reconfirmed physical-package date, a reviewed PAO computation, or unknown. A visibly approximate category estimate is future-gated and unavailable until the exact retained-marker, database, and named-review gates close.
 
@@ -56,7 +56,7 @@ _The personal product inventory · barcode / search / OCR / manual intake · the
 
 5. **No category number is launch-approved merely because it sounds conservative.** A category fallback may be activated only when a qualified cosmetic chemist reviews the exact rule, it is linked to a reviewed catalog category, and a bounded server-attested projection gives the client enough authority to validate it. The current catalog payload does not, so category-only intake fails to `unknown`. Once that stronger path exists, the value is surfaced as `estimated`, remains distinct from `unknown`, and cannot drive countdown, expired, or replenishment state. Sunscreen receives no numeric category fallback.
 
-6. **Data sourcing is an offline, exact-artifact release process with hard constraints.** A candidate OBF export/snapshot can be transformed only after a detached approval manifest binds the source URL/date, exact SHA-256, projected fields, attribution surface, database-component separation, and named review. The importer performs no network I/O. The [current Product Opener API documentation](https://openfoodfacts.github.io/openfoodfacts-server/api/) identifies v3 as current and v2 as deprecated; OnSkin calls neither version at runtime. The [source license guide](https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/) distinguishes database, individual-content, and image rights, so OBF images stay disabled. Whether the exact OBF component is a derivative or collective database, and which attribution/share-alike/offer-of-data duties apply, remain counsel decisions under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). Coverage gaps make **search/OCR/manual fallbacks essential, not optional.** Ingredient parsing uses an equivalently reviewed offline CosIng component (docs/02).
+6. **Data sourcing is an offline, exact-artifact release process with hard constraints.** A candidate OBF export/snapshot can be transformed only after a detached approval manifest binds the source URL/date, exact SHA-256, projected fields, attribution surface, database-component separation, and named review. The importer performs no network I/O. The [current Product Opener API documentation](https://openfoodfacts.github.io/openfoodfacts-server/api/) identifies v3 as current and v2 as deprecated; Layerwell calls neither version at runtime. The [source license guide](https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/) distinguishes database, individual-content, and image rights, so OBF images stay disabled. Whether the exact OBF component is a derivative or collective database, and which attribution/share-alike/offer-of-data duties apply, remain counsel decisions under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). Coverage gaps make **search/OCR/manual fallbacks essential, not optional.** Ingredient parsing uses an equivalently reviewed offline CosIng component (docs/02).
 
 7. **Barcode frame decoding is designed to stay on-device, and scan reliability is a release gate.** The current `expo-camera` integration sends the decoded package identifier—not a camera frame or image—to the first-party catalog request. The UI therefore says **“Decoding happens on your device”** rather than implying that the entire lookup is local. CAT-06 source now acquires a generation-bound camera lease before a queued barcode callback can parse, emit derived state, or start lookup work; foreground/focus/permission invalidation makes the callback inert. Physical-iPhone traffic, interruption, Settings, mount/retry, and accessibility inspection must still verify that behavior before it becomes a store claim.
 
@@ -146,7 +146,7 @@ alter table public.shelf_scans force row level security;
 revoke all on table public.shelf_scans from public, anon, authenticated, service_role;
 
 -- Offline lookup recovery instead uses the encrypted, account-bound
--- `routinekind.catalog.lookupQueue.v1` device record: normalized barcode, optional
+-- `layerwell.catalog.lookupQueue.v1` device record: normalized barcode, optional
 -- local Shelf row id, bounded retry state, seven-day logical expiry, and a
 -- minimal reviewed candidate. Its bytes are purged on the next activation,
 -- read/export, or lifecycle cleanup; OS suspension/termination can delay that
@@ -208,7 +208,7 @@ occurs only through `sync_shelf_product`.
 
 1. **Entry:** the **"Scan a barcode"** FAB (spec p12), the onboarding "current products" step (docs/01 §2 step 6), or an empty-shelf prompt.
 2. **Camera:** the current `expo-camera` native barcode scanner (docs/00 §4) decodes barcode frames **on-device**, with a clear framing reticle, a steadying hint ("Line up the barcode"), privacy microcopy ("Decoding happens on your device"), a torch toggle, and a selection haptic on a successful read. The shared CAT-06 source gate admits one focused/foreground preview only after fresh permission verification and camera-ready, uses a fresh keyed generation after mount failure, and invalidates queued callbacks before barcode parsing when lifecycle authority closes. The decoded identifier is then sent to the first-party catalog service; exact signed-build device and traffic proof remains required.
-3. **Lookup:** on a decoded barcode, query OnSkin's reviewed catalog service. The service queries only promoted catalog rows and has no OBF/OFF origin, request helper, live-API flag, or external candidate response.
+3. **Lookup:** on a decoded barcode, query Layerwell's reviewed catalog service. The service queries only promoted catalog rows and has no OBF/OFF origin, request helper, live-API flag, or external candidate response.
 4. **Result card:** the current source confirms product name, brand, and reviewed catalog/source quality before **“Add this.”** Parsed actives and catalog-derived PAO are not currently rendered on this card; adding either requires strict served-field decoding, provenance copy, and UI/device evidence. Product detail and opened-date intake remain the places where available freshness/ingredient context is shown.
 5. **Opened state (§4.5)** → choose opened/unopened and confirm only the freshness
    evidence actually available for this unit (physical-package date
@@ -231,7 +231,7 @@ occurs only through `sync_shelf_product`.
 
 #### 4.2 Search the catalog
 
-Typeahead over OnSkin's reviewed `products` rows (the GIN full-text index, docs/02 §3) by name/brand, biased to the user's locale/market. Select a result → opened-date → save (`added_via='search'`). For the long tail not in the catalog, the search empty-state offers OCR/manual plus an optional OnSkin missing-product report.
+Typeahead over Layerwell's reviewed `products` rows (the GIN full-text index, docs/02 §3) by name/brand, biased to the user's locale/market. Select a result → opened-date → save (`added_via='search'`). For the long tail not in the catalog, the search empty-state offers OCR/manual plus an optional Layerwell missing-product report.
 
 #### 4.3 Capture the ingredient list (manual floor; staging-only OCR candidate)
 
@@ -254,9 +254,9 @@ A simple form: **name, brand, category**, optional **barcode**, optional **ingre
 
 Every intake path converges here. A calm sheet asks **"When did you open it?"** with **Just opened it** (`opened_at = today`), **Pick a date** (a valid past date), and **Not opened yet** (`is_opened=false`, `opened_at=null`, no PAO clock). The app does not substitute add time when the user is unsure. Explicit open-jar PAO can be confirmed here with its source; reviewed catalog PAO remains catalog provenance; a printed package date becomes actionable only after the user enters or reconfirms it from this physical unit; and unknown remains a valid completion state. Product-level catalog expiry rows remain in catalog/correction surfaces. Replacement uses an equivalent explicit opening-state choice rather than silently starting a PAO clock. Confirmation commits the canonical product and stable upsert intent to the encrypted local Shelf-v3 record before UI success; `user_products` changes later only through the `0069` replay RPC.
 
-#### 4.6 Missing-product and correction path (OnSkin only)
+#### 4.6 Missing-product and correction path (Layerwell only)
 
-Any no-match, OCR-built, or manually entered product remains user-local. With health-data collection authority current, the user may submit an owner-scoped missing-product or wrong-match report to OnSkin's correction queue. The report is minimized to the fields required for review, remains subject to deletion/withdrawal controls, and is never forwarded automatically or manually by the app to OBF. The legacy `contributed_back` field and contribution queue remain inert and cannot be enabled by environment flags. ODbL does not become an assumed user-data transmission mandate: counsel must classify the exact OBF database use and approve whatever attribution, share-alike, or offer-of-data operations actually apply. Any future proposal to make a source a runtime recipient is a new privacy/legal/architecture decision, not this flow.
+Any no-match, OCR-built, or manually entered product remains user-local. With health-data collection authority current, the user may submit an owner-scoped missing-product or wrong-match report to Layerwell's correction queue. The report is minimized to the fields required for review, remains subject to deletion/withdrawal controls, and is never forwarded automatically or manually by the app to OBF. The legacy `contributed_back` field and contribution queue remain inert and cannot be enabled by environment flags. ODbL does not become an assumed user-data transmission mandate: counsel must classify the exact OBF database use and approve whatever attribution, share-alike, or offer-of-data operations actually apply. Any future proposal to make a source a runtime recipient is a new privacy/legal/architecture decision, not this flow.
 
 #### 4.7 First intake from onboarding
 
@@ -323,7 +323,7 @@ The shelf's deepest screen and the place product management happens. Top to bott
 
 #### 5.8 Empty, sparse, loading & error states
 
-**Empty shelf** — a warm illustration-light prompt: "Add your first product — scan a barcode, or add it by hand." **Sparse** (1–2 products) — the same calm tone, plus a gentle nudge toward completing the routine's missing roles (claim-safe, e.g. "A daily SPF would round out your mornings"). **Loading** — skeleton cards. **Errors** — OnSkin catalog/network errors degrade to the manual path, never a hard wall; a quiet "Couldn't reach the product catalog — you can still add it by hand."
+**Empty shelf** — a warm illustration-light prompt: "Add your first product — scan a barcode, or add it by hand." **Sparse** (1–2 products) — the same calm tone, plus a gentle nudge toward completing the routine's missing roles (claim-safe, e.g. "A daily SPF would round out your mornings"). **Loading** — skeleton cards. **Errors** — Layerwell catalog/network errors degrade to the manual path, never a hard wall; a quiet "Couldn't reach the product catalog — you can still add it by hand."
 
 #### 5.9 Microcopy, motion, haptics, accessibility, localisation (extends docs/02 §7.7)
 
@@ -400,9 +400,9 @@ open gates.
 
 ### 9. Engineering / implementation notes
 
-- **Barcode scanning:** `expo-camera` native barcode scanning (docs/00 §1/§4), on-device; query only OnSkin's reviewed catalog. Yuka-grade scan reliability is the bar (SkinSort's is weaker) — invest in fast acquisition, good low-light handling, duplicate suppression, UPC-E expansion, and forgiving framing.
+- **Barcode scanning:** `expo-camera` native barcode scanning (docs/00 §1/§4), on-device; query only Layerwell's reviewed catalog. Yuka-grade scan reliability is the bar (SkinSort's is weaker) — invest in fast acquisition, good low-light handling, duplicate suppression, UPC-E expansion, and forgiving framing.
 - **OCR:** an Apple Vision revision-3 source candidate is enabled only in the internal staging profile. Its text remains confirmable/editable and manual entry remains available. Development and production stay disabled until exact-build CAT-05 privacy/accuracy/latency/accessibility/cleanup evidence and CAT-06 permission/lifecycle/mount/offline evidence pass on both required physical iPhones.
-- **Corrections:** owner-scoped missing/wrong-match reports stay inside OnSkin's reviewed correction workflow. No source credential, OBF POST, environment flag, or queue may publish them externally. Show approved source attribution on each derived catalog row.
+- **Corrections:** owner-scoped missing/wrong-match reports stay inside Layerwell's reviewed correction workflow. No source credential, OBF POST, environment flag, or queue may publish them externally. Show approved source attribution on each derived catalog row.
 - **Schema summary:** the `user_products` additive content columns; migration
   `0059` purges and seals legacy `shelf_scans`; CAT-07 supplies strict freshness
   provenance history; current local Shelf state is strict v3; and migration
@@ -420,7 +420,7 @@ open gates.
 
 ## Commercial Hypothesis And Validation Plan
 
-The Smart Shelf could contribute to activation, retention, and optional commerce, but source completeness and competitor scale do not establish business impact for OnSkin:
+The Smart Shelf could contribute to activation, retention, and optional commerce, but source completeness and competitor scale do not establish business impact for Layerwell:
 
 - **Test scan-to-save as an activation hypothesis.** Measure permission acceptance, successful decode, eligible match, opened-date completion, save completion, time-to-value, and seven-/thirty-day retention in a consented beta. Do not call it a magic moment until those cohorts support the claim.
 - **The shelf is the input to everything monetisable.** Personalisation, conflict detection (docs/02), and routine building (docs/03) all depend on knowing what the user owns — so a well-populated shelf is the precondition for the value the paywall sells.
@@ -448,7 +448,7 @@ Shelf without explicit acceptance.
 
 **(c) PAO/expiry rules:** a strict truth table preserves printed, explicit label PAO, reviewed catalog PAO, reserved future category estimate, and unknown as distinct states. Only printed or label/catalog PAO evidence may drive countdown, expired, or replenishment UI. The app makes no elapsed-time efficacy, contamination, infection, or special eye/SPF safety determination.
 
-**(d) Intake funnel:** scan (hero) → OnSkin catalog search → OCR → manual, every edge case handled, all converging on the opened-date linchpin; unknown products remain local with an optional owner-scoped OnSkin report. No OBF runtime request or contribution occurs.
+**(d) Intake funnel:** scan (hero) → Layerwell catalog search → OCR → manual, every edge case handled, all converging on the opened-date linchpin; unknown products remain local with an optional owner-scoped Layerwell report. No OBF runtime request or contribution occurs.
 
 **(e) Surfaces:** the Shelf list (title/count, All/Actives/Expiring, calm conflict banner, cards, scan FAB), the badge taxonomy (date/countdown/paired/expired/estimated/unknown), and the product-detail management hub (freshness, actives, conflicts, usage, lifecycle actions) — all light-mode, calm, claim-safe, accessible, localised.
 
@@ -457,7 +457,7 @@ Shelf without explicit acceptance.
 **(g) Privacy & offline:** health-inference data → encrypted local Shelf v3,
 owner/account/health-fenced server RPCs, on-device thumbnails, and sharing only
 on the separate MHMDA consent. Full offline view/manual add uses the durable
-Shelf FIFO; the explicit OnSkin-catalog lookup queue remains separate, with no
+Shelf FIFO; the explicit Layerwell-catalog lookup queue remains separate, with no
 third-party source recipient. Local export schema v2 includes
 `shelf_and_sync_state`; server schema v4 includes subject-facing stable identity
 and receipt fields. Catalog correction reports are separate online,
@@ -469,7 +469,7 @@ identity-bearing user actions and are never silently queued.
 
 ## Recommendations
 
-1. **Build the scan-first intake with robust fallbacks and the OnSkin correction loop.** Treat the scan as a hero activation moment; never let any path dead-end — reviewed-catalog search, OCR, and manual must always be one tap away. Keep OBF absent from the runtime network graph.
+1. **Build the scan-first intake with robust fallbacks and the Layerwell correction loop.** Treat the scan as a hero activation moment; never let any path dead-end — reviewed-catalog search, OCR, and manual must always be one tap away. Keep OBF absent from the runtime network graph.
 2. **Capture opening state explicitly at intake and replacement.** Offer today, an exact past date, or unopened; never substitute add/replacement time when the user is unsure (D-022).
 3. **Implement the source truth table exactly.** Record `pao_source`/`expiry_source` provenance (D-023), keep unknown separate from reviewed estimate, and never assume a sunscreen has a printed date or numeric PAO.
 4. **Keep category estimates non-actionable and externally gated.** No category value activates without qualified chemistry review and reviewed catalog linkage; even then it stays approximate and cannot drive countdown, expired, or replacement messaging.
@@ -479,7 +479,7 @@ identity-bearing user actions and are never silently queued.
 8. **Store product thumbnails on-device by default** (D-024) and keep the shelf owner-only RLS, consistent with the privacy-as-trust positioning.
 9. **Make the Shelf fully offline-capable** — view and manual mutations persist
    through the strict encrypted Shelf-v3 FIFO before UI success; the explicitly
-   queued OnSkin-catalog lookup remains a separate recovery purpose. Drain
+   queued Layerwell-catalog lookup remains a separate recovery purpose. Drain
    Shelf before completion, preserve deletion-wins identity, and do not claim
    cross-device parity until hosted two-device evidence passes. Keep
    identity-bearing correction reports as separate online actions with visible

@@ -67,7 +67,7 @@ vi.mock('@/lib/env', () => ({
   env: { phase8ReviewPromptEnabled: true },
 }));
 
-const KEY = 'onskin.reviewPrompt.v1';
+const KEY = 'layerwell.reviewPrompt.v1';
 const NOW = new Date('2026-07-04T12:00:00.000Z');
 
 describe('review prompt local history', () => {

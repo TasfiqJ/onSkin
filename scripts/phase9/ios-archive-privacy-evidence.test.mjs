@@ -51,7 +51,7 @@ const REVIEWED_AT = '2026-07-16T14:00:00.000Z';
 const EXPECTED_BUILD = Object.freeze({
   appVersion: '1.0.0',
   buildNumber: '42',
-  bundleIdentifier: 'com.routinekind.app',
+  bundleIdentifier: 'com.layerwell.app',
   teamIdentifier: 'ABCDE12345',
 });
 
@@ -114,7 +114,7 @@ function safeCleanup(root) {
     isAbsolute(rel) ||
     rel.startsWith('..') ||
     rel.includes(sep) ||
-    !rel.startsWith('routinekind-ios-archive-privacy-')
+    !rel.startsWith('layerwell-ios-archive-privacy-')
   ) {
     throw new Error('Refusing to clean an unexpected archive-evidence fixture path.');
   }
@@ -203,14 +203,14 @@ function appInfoPlist() {
 <key>CFBundleIdentifier</key><string>${EXPECTED_BUILD.bundleIdentifier}</string>
 <key>CFBundleShortVersionString</key><string>${EXPECTED_BUILD.appVersion}</string>
 <key>CFBundleVersion</key><string>${EXPECTED_BUILD.buildNumber}</string>
-<key>CFBundleExecutable</key><string>RoutineKind</string>
+<key>CFBundleExecutable</key><string>Layerwell</string>
 </dict></plist>\n`;
 }
 
 function archiveInfoPlist() {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0"><dict><key>ApplicationProperties</key><dict>
-<key>ApplicationPath</key><string>Applications/RoutineKind.app</string>
+<key>ApplicationPath</key><string>Applications/Layerwell.app</string>
 <key>CFBundleIdentifier</key><string>${EXPECTED_BUILD.bundleIdentifier}</string>
 <key>CFBundleShortVersionString</key><string>${EXPECTED_BUILD.appVersion}</string>
 <key>CFBundleVersion</key><string>${EXPECTED_BUILD.buildNumber}</string>
@@ -230,7 +230,7 @@ function provisioningProfileCms(overrides = {}) {
   const profile = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-<key>Name</key><string>RoutineKind App Store</string>
+<key>Name</key><string>Layerwell App Store</string>
 <key>UUID</key><string>123E4567-E89B-42D3-A456-426614174111</string>
 <key>CreationDate</key><date>2026-07-15T00:00:00Z</date>
 <key>ExpirationDate</key><date>${overrides.expirationDate ?? '2030-07-15T00:00:00Z'}</date>
@@ -270,11 +270,11 @@ function provisioningProfileCms(overrides = {}) {
 function archiveZipFixture(format, options = {}) {
   const appRoot =
     format === 'ipa'
-      ? 'Payload/RoutineKind.app'
-      : 'RoutineKind.xcarchive/Products/Applications/RoutineKind.app';
+      ? 'Payload/Layerwell.app'
+      : 'Layerwell.xcarchive/Products/Applications/Layerwell.app';
   const entries = [
     [`${appRoot}/Info.plist`, options.appInfo ?? appInfoPlist(), options.appInfoOptions],
-    [`${appRoot}/RoutineKind`, Buffer.from([0xcf, 0xfa, 0xed, 0xfe]), options.executableOptions],
+    [`${appRoot}/Layerwell`, Buffer.from([0xcf, 0xfa, 0xed, 0xfe]), options.executableOptions],
     [`${appRoot}/_CodeSignature/CodeResources`, 'sealed resources\n', options.codeResourcesOptions],
     [
       `${appRoot}/embedded.mobileprovision`,
@@ -284,7 +284,7 @@ function archiveZipFixture(format, options = {}) {
   ];
   if (format === 'xcarchive_zip') {
     entries.unshift([
-      'RoutineKind.xcarchive/Info.plist',
+      'Layerwell.xcarchive/Info.plist',
       options.archiveInfo ?? archiveInfoPlist(),
       options.archiveInfoOptions,
     ]);
@@ -330,7 +330,7 @@ function writeEvidenceJson(fixture, bytes = canonicalJson(fixture.evidence)) {
 }
 
 function createFixture(t, { format = 'xcarchive_zip' } = {}) {
-  const root = mkdtempSync(join(tmpdir(), 'routinekind-ios-archive-privacy-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-ios-archive-privacy-'));
   t.after(() => safeCleanup(root));
 
   const sourceAudit = structuredClone(CURRENT_SOURCE_AUDIT);
@@ -671,7 +671,7 @@ test('rejects missing, extra, and wrong-typed exact-schema fields', async (t) =>
     ['missing archive field', (value) => delete value.archive.immutable],
     ['extra archive field', (value) => (value.archive.path = value.archive.file.path)],
     ['wrong build type', (value) => (value.build = null)],
-    ['extra build field', (value) => (value.build.marketingName = 'RoutineKind')],
+    ['extra build field', (value) => (value.build.marketingName = 'Layerwell')],
     ['missing toolchain field', (value) => delete value.toolchain.xcodeVersion],
     ['extra toolchain field', (value) => (value.toolchain.fastlaneVersion = '2.0.0')],
     ['missing provenance field', (value) => delete value.provenance.easBuildLog],
@@ -891,7 +891,7 @@ test('binds archive format to reviewed ZIP magic and exact extensions', async (t
     rewriteReference(
       fixture.root,
       fixture.evidence.archive.file,
-      storedZip('../RoutineKind.xcarchive/Info.plist', 'unsafe'),
+      storedZip('../Layerwell.xcarchive/Info.plist', 'unsafe'),
     );
     const error = validationFailure(fixture);
     assert.equal(error.code, 'ARCHIVE_ZIP_PATH');
@@ -1018,8 +1018,8 @@ test('rejects adversarial ZIP, plist, layout, and provisioning-profile different
     'ipa',
     archiveZipFixture('ipa', {
       extraEntries: [
-        ['Payload/RoutineKind.app/Collision', 'file'],
-        ['Payload/RoutineKind.app/Collision/', Buffer.alloc(0), { externalAttributes: 0x10 }],
+        ['Payload/Layerwell.app/Collision', 'file'],
+        ['Payload/Layerwell.app/Collision/', Buffer.alloc(0), { externalAttributes: 0x10 }],
       ],
     }),
     'ARCHIVE_ZIP_DUPLICATE',
@@ -1657,7 +1657,7 @@ function rcBindingFixture() {
       `| iOS EAS build ID | ${EAS_BUILD_ID} |`,
       '| iOS app version | 1.0.0 |',
       '| iOS build number | 42 |',
-      '| iOS bundle identifier | com.routinekind.app |',
+      '| iOS bundle identifier | com.layerwell.app |',
       '| EAS channel | production |',
       '',
     ].join('\n'),
@@ -1667,7 +1667,7 @@ function rcBindingFixture() {
       `- EAS build ID: ${EAS_BUILD_ID}`,
       '- iOS app version: 1.0.0',
       '- iOS build number: 42',
-      '- iOS bundle identifier: com.routinekind.app',
+      '- iOS bundle identifier: com.layerwell.app',
       `- Archive SHA-256: ${RC_BINDING_ARCHIVE_SHA}`,
       `- Processing/symbols report SHA-256: ${RC_BINDING_SYMBOLS_SHA}`,
       `- App Privacy answers SHA-256: ${RC_BINDING_APP_PRIVACY_SHA}`,
@@ -1700,7 +1700,7 @@ function rcBindingFixture() {
       build: {
         appVersion: '1.0.0',
         buildNumber: '42',
-        bundleIdentifier: 'com.routinekind.app',
+        bundleIdentifier: 'com.layerwell.app',
       },
       toolchain: {
         easBuildImage: 'macos-tahoe-26.4-xcode-26.4',
@@ -1841,7 +1841,7 @@ test('rejects drift in every reviewed toolchain and provenance equality', async 
 test('rejects RC identity, hash, and evidence-path drift', async (t) => {
   await t.test('manifest bundle identity', () => {
     const value = rcBindingFixture();
-    value.manifestSource = value.manifestSource.replace('com.routinekind.app', 'com.attacker.app');
+    value.manifestSource = value.manifestSource.replace('com.layerwell.app', 'com.attacker.app');
     const result = invalidRcBinding(value);
     assert.equal(result.manifestMatched, false);
     assert.match(result.errors.join('\n'), /iOS bundle identifier does not match/u);

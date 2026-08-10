@@ -1,4 +1,4 @@
-import type { CycleVariant, DisruptionReason } from '@onskin/types';
+import type { CycleVariant, DisruptionReason } from '@layerwell/types';
 
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
@@ -20,9 +20,9 @@ import {
 // Local-first cycle configuration (docs/05 sections 3 and 7). The generated
 // per-night schedule remains derived from the shelf; this store holds only the
 // user's persistent choices and disruption state on top of that schedule.
-const KEY = 'routinekind.cycle.v2';
-const LEGACY_KEY = 'onskin.cycle.v1';
-const LEGACY_ANCHOR_KEY = 'onskin.cycleAnchor';
+const KEY = 'layerwell.cycle.v2';
+const LEGACY_KEY = 'layerwell.cycle.v1';
+const LEGACY_ANCHOR_KEY = 'layerwell.cycleAnchor';
 const CYCLE_CONFIG_SCHEMA_VERSION = 1 as const;
 export const ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED =
   'ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED';

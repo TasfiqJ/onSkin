@@ -121,7 +121,7 @@ async function configuration(): Promise<AppleRevocationConfiguration> {
   return {
     teamId: "TEAM123456",
     keyId: "KEY123456",
-    clientId: "com.example.routinekind",
+    clientId: "com.example.layerwell",
     privateKey:
       `-----BEGIN PRIVATE KEY-----\n${encoded}\n-----END PRIVATE KEY-----`,
   };

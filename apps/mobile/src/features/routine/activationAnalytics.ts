@@ -2,7 +2,7 @@ import { track } from '@/lib/analytics/track';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
-const KEY = 'routinekind.routineActivation.v1';
+const KEY = 'layerwell.routineActivation.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const ROUTINE_ACTIVATION_INVALID = 'ROUTINE_ACTIVATION_INVALID';

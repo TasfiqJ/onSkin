@@ -22,7 +22,7 @@ describe('public conflict-link admission', () => {
         tokenPolicySha256: 'b'.repeat(64),
         retentionPolicySha256: 'c'.repeat(64),
         revocationPolicySha256: 'd'.repeat(64),
-        finalDomain: 'https://routinekind.app',
+        finalDomain: 'https://layerwell.app',
         publicLinksFlag: true,
         shareAdmissionOpen: true,
         token: 'valid-looking-token',

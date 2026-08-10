@@ -1,4 +1,4 @@
-import type { FunctionalTag, RecommendationTrigger } from '@onskin/types';
+import type { FunctionalTag, RecommendationTrigger } from '@layerwell/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
 import type { ConflictSafetyContext } from '@/features/intelligence/rules';

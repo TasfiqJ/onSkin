@@ -46,8 +46,8 @@ import {
  * in separate lanes so a lagging webhook, a verified-empty RevenueCat snapshot,
  * or a transport failure cannot erase an unrelated reverse trial.
  */
-const KEY = 'onskin.entitlement.v2';
-const LEGACY_KEY = 'onskin.entitlement.v1';
+const KEY = 'layerwell.entitlement.v2';
+const LEGACY_KEY = 'layerwell.entitlement.v1';
 
 export const ENTITLEMENT_CACHE_INVALID = 'ENTITLEMENT_CACHE_INVALID';
 export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION = 'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';

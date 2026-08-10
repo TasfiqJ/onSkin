@@ -95,9 +95,9 @@ const validInput = {
   },
   evidence: {
     realBetaData: true,
-    dashboardUrl: 'https://posthog.routinekind.app/project/1/dashboard/phase4-catalog',
-    analyticsDashboardUrl: 'https://posthog.routinekind.app/project/1/dashboard/beta',
-    supportDashboardUrl: 'https://support.routinekind.app/dashboard/beta',
+    dashboardUrl: 'https://posthog.layerwell.app/project/1/dashboard/phase4-catalog',
+    analyticsDashboardUrl: 'https://posthog.layerwell.app/project/1/dashboard/beta',
+    supportDashboardUrl: 'https://support.layerwell.app/dashboard/beta',
     sourceExportHash: '8d71fdbb3d6f9a48e31ac99e60f1c7800a9aa2a8e81a6adf73f2f56f0a9f4e1a',
     signedOffBy: 'Avery Chen',
   },
@@ -120,7 +120,7 @@ const requiredSourceHashes = [
 ];
 
 function runReport({ input = validInput, strict = false, missingInput = false } = {}) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase4-beta-coverage-'));
+  const outDir = mkdtempSync(join(tmpdir(), 'layerwell-phase4-beta-coverage-'));
   const inputPath = resolve(outDir, 'beta-coverage-input.json');
   const outputPath = resolve(outDir, 'beta-coverage-report.json');
   if (!missingInput) writeFileSync(inputPath, `${JSON.stringify(input, null, 2)}\n`);
@@ -166,7 +166,7 @@ const cases = [
         result.packet.privacy.rawShelfLabelsCommitted === false &&
         !serialized.includes('madecassoside derivative') &&
         !serialized.includes('regional sunscreen barcode') &&
-        !serialized.includes('posthog.routinekind.app') &&
+        !serialized.includes('posthog.layerwell.app') &&
         !Object.hasOwn(result.packet, 'topNoMatches') &&
         requiredSourceHashes.every((path) => sourceHashes[path]?.exists === true) &&
         result.markdown.includes('Completed beta users')

@@ -1,4 +1,4 @@
-# OnSkin — Legal & Regulatory Readiness Checklist
+# Layerwell — Legal & Regulatory Readiness Checklist
 
 > **Historical checklist, not legal clearance.** The active iOS-only,
 > provisional U.S.-only launch contract, `docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md`,
@@ -10,9 +10,9 @@
 > classification safe harbor.
 
 > **This is not legal advice, and it was not written by a lawyer.** It's a
-> practical map of the legal/regulatory surface for OnSkin, synthesised from the
+> practical map of the legal/regulatory surface for Layerwell, synthesised from the
 > research already in `docs/00 §7`, `docs/01 §4`, and `docs/02 §9`, plus the
-> common-sense framing below. OnSkin handles skin photos + skin-health inferences
+> common-sense framing below. Layerwell handles skin photos + skin-health inferences
 > and carries exposure under a law with a **private right of action** (Washington
 > MHMDA) and under FDA/FTC claims rules — so **before any public launch you must
 > engage real attorneys** (privacy/health-data + patent) and a **board-certified
@@ -205,7 +205,7 @@ startup-focused service vs. a full-service firm. **Get 2–3 real quotes.**
 | Privacy/health-data lawyer (Consumer Health Data Privacy Policy + ToS + MHMDA/GDPR/CCPA consent text + DPIA) | **~$3k–$15k+** one-time                                 | Specialised privacy service cheaper; full-service firm more                                                         |
 | Dermatologist + cosmetic-chemist sign-off of the rule set                                                    | **~$2k–$10k+**                                          | Independent professional review; never imply endorsement or marketing approval beyond the exact authenticated scope |
 | Patent/trademark freedom-to-operate opinion (Baumann)                                                        | **~$2k–$5k**                                            |                                                                                                                     |
-| Trademark registration for "OnSkin" (optional, advisable)                                                    | **~$250–350 USPTO filing per class + ~$1k–2k attorney** |                                                                                                                     |
+| Trademark registration for "Layerwell" (optional, advisable)                                                    | **~$250–350 USPTO filing per class + ~$1k–2k attorney** |                                                                                                                     |
 | **Realistic lean total to be launch-ready**                                                                  | **~$8k–$30k+** in professional fees                     | Heavily dependent on providers; treat as a budget line, not a quote                                                 |
 
 ---

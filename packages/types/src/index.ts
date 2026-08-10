@@ -1,5 +1,5 @@
 /**
- * @onskin/types. Shared domain types.
+ * @layerwell/types. Shared domain types.
  *
  * These literal unions mirror the data model in docs/01 §3 (and the catalog
  * sketch in docs/00 §2). They are the single source of truth for both the
@@ -29,11 +29,11 @@ export const CONSENT_TYPES = [
   // within-person photo trend insight (still a health inference; distinct from
   // photo_capture / photo_cloud_backup). Installed base is re-consented, never enrolled.
   'photo_trend_insights',
-  // docs/13 §7 / D-053: a NEW, separate, DEFAULT-OFF consent for "Ask RoutineKind". The
+  // docs/13 §7 / D-053: a NEW, separate, DEFAULT-OFF consent for "Ask Layerwell". The
   // user's question is a health disclosure transmitted to a zero-retention cloud
   // language layer (MHMDA / GDPR Art. 9 attaches to the TRANSMISSION). Distinct from
   // every other consent; the deterministic on-device advisor needs no consent at all.
-  'ask_onskin',
+  'ask_layerwell',
 ] as const;
 export type ConsentType = (typeof CONSENT_TYPES)[number];
 
@@ -253,7 +253,7 @@ export type RecommendationEvent = (typeof RECOMMENDATION_EVENTS)[number];
 
 // --- Creator stacks + commerce (docs/10) -------------------------------------
 /** The affiliate rail a "where to buy" link resolves through. Rail-agnostic by
- *  design (docs/10 §5, the B-SHOPMY hedge): if ShopMy can't mint links on RoutineKind's
+ *  design (docs/10 §5, the B-SHOPMY hedge): if ShopMy can't mint links on Layerwell's
  *  own recommendations under a house account, swap rails without re-architecting. */
 export type AffiliateSource = 'shopmy' | 'skimlinks' | 'direct' | 'none';
 /** Who curated a shoppable stack. Expert/derm curation is the differentiator;
@@ -293,7 +293,7 @@ export const TREND_EVENTS = [
 ] as const;
 export type TrendEvent = (typeof TREND_EVENTS)[number];
 
-// --- "Ask RoutineKind" conversational advisor (docs/13) ----------------------
+// --- "Ask Layerwell" conversational advisor (docs/13) ----------------------
 /** The deterministic intent router (docs/13 §4). The router runs FIRST, BEFORE any
  *  language model, so medical/dosing/diagnosis intent is caught at the door and
  *  escalated. Never narrated. Deterministic intents are answered on-device at $0;

@@ -13,7 +13,7 @@ export const LIVE_CONSENT_WITHDRAWAL_EVIDENCE_CONTRACT_PATH =
 export const REQUIRED_LIVE_CONSENT_WITHDRAWAL_CHECKS = Object.freeze([
   'authoritative base and dependent grant RPCs establish exact owner-bound authorities',
   'photo_cloud_backup withdrawal is accepted pending and the scheduled worker removes owned Storage before terminal relocalization',
-  'ask_onskin withdrawal deletes the complete server-side Ask graph',
+  'ask_layerwell withdrawal deletes the complete server-side Ask graph',
   'photo_trend_insights withdrawal deletes trend rows',
   'community_participation withdrawal deletes owner community rows',
   'data_sharing withdrawal preserves COM-01A zero publication and returns truthful zero cleanup',
@@ -57,7 +57,7 @@ export const LIVE_HEALTH_CONSENT_COPY = Object.freeze({
         hash: 'd6bd89ffbb0900784d4af6d8ae1501c7e10385eeba199e1bd8e932d957eec6ba',
       }),
     }),
-    ask_onskin: Object.freeze({
+    ask_layerwell: Object.freeze({
       grant: Object.freeze({
         version: 'ask-advisor-2026-06-14-placeholder',
         hash: '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',

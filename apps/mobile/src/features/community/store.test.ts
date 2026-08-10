@@ -22,8 +22,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
   }),
 }));
 
-const CONSENT_KEY = 'onskin.communityConsent.v1';
-const AGE_KEY = 'onskin.communityAge16.v1';
+const CONSENT_KEY = 'layerwell.communityConsent.v1';
+const AGE_KEY = 'layerwell.communityAge16.v1';
 
 describe('community consent store', () => {
   beforeEach(() => {

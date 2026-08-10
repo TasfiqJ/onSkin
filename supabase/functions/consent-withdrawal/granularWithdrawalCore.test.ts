@@ -2,7 +2,7 @@
 // provider/RPC boundaries without introducing unrelated scheduling machinery.
 // deno-lint-ignore-file require-await
 import {
-  type AskOnSkinCleanupDependencies,
+  type AskLayerwellCleanupDependencies,
   assertBaseHealthGrantCopyEnvironment,
   CONSENT_GRANT_COPY_PRODUCTION_ERROR,
   CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT,
@@ -17,7 +17,7 @@ import {
   type GranularWithdrawalDependencies,
   type GranularWithdrawalRequest,
   parseGranularWithdrawalRequest,
-  runAskOnSkinCleanup,
+  runAskLayerwellCleanup,
   runDataSharingCleanup,
   runGranularPhotoCaptureCleanup,
   runGranularPhotoCloudCleanup,
@@ -276,7 +276,7 @@ Deno.test(
 );
 
 function request(
-  consentType: GranularWithdrawalRequest['consentType'] = 'ask_onskin',
+  consentType: GranularWithdrawalRequest['consentType'] = 'ask_layerwell',
 ): GranularWithdrawalRequest {
   const contract = CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT[consentType];
   return {
@@ -415,9 +415,9 @@ Deno.test('granular request parser requires exact keys, strong idempotency, and 
   assert(
     parseGranularWithdrawalRequest({
       ...valid,
-      version: CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT.ask_onskin.version,
+      version: CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT.ask_layerwell.version,
       consentTextHash:
-        CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT.ask_onskin.hash,
+        CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT.ask_layerwell.hash,
     }) === null,
     'cross-purpose copy',
   );
@@ -504,7 +504,7 @@ Deno.test('cleanup failure remains pending and never invokes completion', async 
 });
 
 Deno.test('cleanup must exactly match its purpose and have no pending batch before completion', async () => {
-  const withdrawal = request('ask_onskin');
+  const withdrawal = request('ask_layerwell');
   for (const cleanup of [{ photo_trend_deleted: 1 }, askCleanupResult(true)]) {
     let completed = false;
     const result = await runGranularWithdrawalLifecycle(withdrawal, {
@@ -528,7 +528,7 @@ Deno.test('cleanup must exactly match its purpose and have no pending batch befo
 });
 
 Deno.test('lost begin response is ambiguous pending and safe to retry with the same key', async () => {
-  const withdrawal = request('ask_onskin');
+  const withdrawal = request('ask_layerwell');
   let cleaned = false;
   const result = await runGranularWithdrawalLifecycle(withdrawal, {
     authenticatedUserId: USER_ID,
@@ -559,7 +559,7 @@ Deno.test('lost begin response is ambiguous pending and safe to retry with the s
 });
 
 Deno.test('definite begin RPC rejection is not reported as a pending withdrawal', async () => {
-  const withdrawal = request('ask_onskin');
+  const withdrawal = request('ask_layerwell');
   let cleaned = false;
   const result = await runGranularWithdrawalLifecycle(withdrawal, {
     authenticatedUserId: USER_ID,
@@ -590,7 +590,7 @@ Deno.test('definite begin RPC rejection is not reported as a pending withdrawal'
 });
 
 Deno.test('supabase-normalized begin transport error remains state-unknown', async () => {
-  const withdrawal = request('ask_onskin');
+  const withdrawal = request('ask_layerwell');
   const result = await runGranularWithdrawalLifecycle(withdrawal, {
     authenticatedUserId: USER_ID,
     begin: async () => ({
@@ -852,7 +852,7 @@ Deno.test('A to B begin attestation mismatch issues no cleanup and returns no op
 });
 
 Deno.test('completion residue or provider failure remains withdrawing and retry-required', async () => {
-  const withdrawal = request('ask_onskin');
+  const withdrawal = request('ask_layerwell');
   const result = await runGranularWithdrawalLifecycle(withdrawal, {
     authenticatedUserId: USER_ID,
     begin: async () => ({
@@ -913,12 +913,12 @@ Deno.test('Edge adapters mirror the exact Ask and photo residual contract', asyn
     'capture withdrawal must aggregate remote photo and trend cleanup',
   );
   const askCleanup = source.slice(
-    source.indexOf('async function withdrawAskOnSkin'),
+    source.indexOf('async function withdrawAskLayerwell'),
     source.indexOf('async function withdrawTrendInsights'),
   );
   assert(
     askCleanup.indexOf("'ask_safety_audit'") <
-      askCleanup.indexOf('runAskOnSkinCleanup'),
+      askCleanup.indexOf('runAskLayerwellCleanup'),
     'Ask safety children must be bounded before turn/session cleanup',
   );
   const edgeSource = await Deno.readTextFile(
@@ -1002,7 +1002,7 @@ Deno.test('Ask cleanup deletes turns before sessions and verifies every child st
   const turnId = photoId(102);
   const calls: string[] = [];
   let turnListCount = 0;
-  const dependencies: AskOnSkinCleanupDependencies = {
+  const dependencies: AskLayerwellCleanupDependencies = {
     listSessionRows: async () => {
       calls.push('list-sessions');
       return { data: [{ id: sessionId }], error: null };
@@ -1041,7 +1041,7 @@ Deno.test('Ask cleanup deletes turns before sessions and verifies every child st
       return { data: [], error: null };
     },
   };
-  const result = await runAskOnSkinCleanup(dependencies);
+  const result = await runAskLayerwellCleanup(dependencies);
   assert(
     JSON.stringify(calls) ===
       JSON.stringify([
@@ -1069,7 +1069,7 @@ Deno.test('Ask cleanup escalates a residual safety child without cascading forei
   const turnId = photoId(152);
   let turnDeleted = false;
   await assertActionRequired(() =>
-    runAskOnSkinCleanup({
+    runAskLayerwellCleanup({
       listSessionRows: async () => ({
         data: [{ id: sessionId }],
         error: null,
@@ -1104,7 +1104,7 @@ Deno.test('Ask cleanup bounds one turn batch and preserves parent sessions for r
     }),
   );
   let sessionsDeleted = false;
-  const result = await runAskOnSkinCleanup({
+  const result = await runAskLayerwellCleanup({
     listSessionRows: async () => ({
       data: [{ id: sessionId }],
       error: null,

@@ -21,9 +21,9 @@ const storage = new Map<string, string>();
 const peripheral = vi.hoisted(() => ({
   clearDependentRecovery: vi.fn(async (_ownerBinding: string) => {}),
   clearPersistedPrivateData: vi.fn(async () => {
-    storage.delete('routinekind.localDataOwnerHash.v1');
-    storage.delete('routinekind.localDataRetainedOwnerHash.v1');
-    storage.delete('routinekind.localDataUnclaimedQuarantine.v1');
+    storage.delete('layerwell.localDataOwnerHash.v1');
+    storage.delete('layerwell.localDataRetainedOwnerHash.v1');
+    storage.delete('layerwell.localDataUnclaimedQuarantine.v1');
   }),
 }));
 

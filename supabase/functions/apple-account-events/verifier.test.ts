@@ -9,7 +9,7 @@ function assert(condition: unknown, message: string): asserts condition {
 }
 
 const NOW_SECONDS = 1_800_000_000;
-const CLIENT_ID = "com.example.routinekind";
+const CLIENT_ID = "com.example.layerwell";
 const KEY_ID = "apple-key-1";
 
 function binary(bytes: Uint8Array): string {

@@ -5,9 +5,9 @@ import Foundation
 import SQLite3
 import WidgetKit
 
-private let routineKindSQLiteTransient = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+private let layerwellSQLiteTransient = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
-enum RoutineKindWidgetLifecycleError: Error, LocalizedError {
+enum LayerwellWidgetLifecycleError: Error, LocalizedError {
   case invalidInput
   case unavailable
   case unauthorized
@@ -16,16 +16,16 @@ enum RoutineKindWidgetLifecycleError: Error, LocalizedError {
 
   var errorDescription: String? {
     switch self {
-    case .invalidInput: "RoutineKind widget input was invalid."
-    case .unavailable: "RoutineKind widget lifecycle is unavailable."
-    case .unauthorized: "RoutineKind widget authority is no longer current."
-    case .stale: "RoutineKind widget state is stale."
-    case .storage: "RoutineKind widget lifecycle storage failed."
+    case .invalidInput: "Layerwell widget input was invalid."
+    case .unavailable: "Layerwell widget lifecycle is unavailable."
+    case .unauthorized: "Layerwell widget authority is no longer current."
+    case .stale: "Layerwell widget state is stale."
+    case .storage: "Layerwell widget lifecycle storage failed."
     }
   }
 }
 
-private struct RoutineKindWidgetPropsRecord {
+private struct LayerwellWidgetPropsRecord {
   let raw: [String: Any]
   let canonicalJSON: String
   let ownerGeneration: String
@@ -43,7 +43,7 @@ private struct RoutineKindWidgetPropsRecord {
   let staleAtMs: Int64
 }
 
-private struct RoutineKindLiveActivityPropsRecord {
+private struct LayerwellLiveActivityPropsRecord {
   let raw: [String: Any]
   let ownerGeneration: String
   let snapshotNonce: String
@@ -54,13 +54,13 @@ private struct RoutineKindLiveActivityPropsRecord {
   let staleAtMs: Int64
 }
 
-private struct RoutineKindAuthorityRecord {
+private struct LayerwellAuthorityRecord {
   let authorityNonce: String
   let enabled: Bool
   let ownerGeneration: String?
 }
 
-private struct RoutineKindOutboxRecord: Encodable {
+private struct LayerwellOutboxRecord: Encodable {
   let actionToken: String
   let createdAtMs: Int64
   let localDate: String
@@ -71,7 +71,7 @@ private struct RoutineKindOutboxRecord: Encodable {
   let staleAtMs: Int64
 }
 
-private struct RoutineKindAuthorityReceipt: Encodable {
+private struct LayerwellAuthorityReceipt: Encodable {
   let authorityNonce: String
   let enabled: Bool
   let ownerGeneration: String?
@@ -97,14 +97,14 @@ private struct RoutineKindAuthorityReceipt: Encodable {
   }
 }
 
-private struct RoutineKindQuiescenceReceipt: Encodable {
+private struct LayerwellQuiescenceReceipt: Encodable {
   let authorityNonce: String
   let ownerGeneration: String
   let quiescenceNonce: String
   let schemaVersion: Int
 }
 
-private final class RoutineKindStoreLock {
+private final class LayerwellStoreLock {
   private let handle: FileHandle
 
   init(url: URL) throws {
@@ -115,11 +115,11 @@ private final class RoutineKindStoreLock {
         contents: Data(),
         attributes: [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication]
       ) else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
     }
     guard let handle = FileHandle(forUpdatingAtPath: url.path) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     self.handle = handle
     var attemptsRemaining = 25
@@ -129,7 +129,7 @@ private final class RoutineKindStoreLock {
       guard attemptsRemaining > 0,
             lockError == EWOULDBLOCK || lockError == EAGAIN || lockError == EINTR else {
         try? handle.close()
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       if lockError != EINTR {
         usleep(10_000)
@@ -143,7 +143,7 @@ private final class RoutineKindStoreLock {
   }
 }
 
-private final class RoutineKindSQLiteConnection {
+private final class LayerwellSQLiteConnection {
   let handle: OpaquePointer
 
   init(path: String) throws {
@@ -151,12 +151,12 @@ private final class RoutineKindSQLiteConnection {
     let flags = SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX
     guard sqlite3_open_v2(path, &candidate, flags, nil) == SQLITE_OK, let candidate else {
       if let candidate { sqlite3_close_v2(candidate) }
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     handle = candidate
     do {
       guard sqlite3_busy_timeout(handle, 250) == SQLITE_OK else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       try execute("PRAGMA journal_mode=DELETE")
       try execute("PRAGMA synchronous=FULL")
@@ -176,7 +176,7 @@ private final class RoutineKindSQLiteConnection {
 
   func execute(_ sql: String) throws {
     guard sqlite3_exec(handle, sql, nil, nil, nil) == SQLITE_OK else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
@@ -188,7 +188,7 @@ private final class RoutineKindSQLiteConnection {
     guard sqlite3_prepare_v2(handle, sql, -1, &candidate, nil) == SQLITE_OK,
           let statement = candidate else {
       if let candidate { sqlite3_finalize(candidate) }
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     defer { sqlite3_finalize(statement) }
     return try operation(statement)
@@ -207,18 +207,18 @@ private final class RoutineKindSQLiteConnection {
   }
 }
 
-enum RoutineKindWidgetLifecycleStore {
-  static let widgetName = "RoutineKindToday"
-  static let activityName = "RoutineKindEvening"
+enum LayerwellWidgetLifecycleStore {
+  static let widgetName = "LayerwellToday"
+  static let activityName = "LayerwellEvening"
   static let interactionTarget = "widget-action:complete-next"
   static let nativeSchemaVersion = 1
 
-  private static let widgetTimelineKey = "__expo_widgets_RoutineKindToday_timeline"
-  private static let activityURLKey = "__expo_widgets_live_activity_RoutineKindEvening_url"
-  private static let lifecycleVersionKey = "RoutineKindWidgetLifecycleVersion"
-  private static let publicationEnabledKey = "RoutineKindWidgetInteractivePublicationEnabled"
-  private static let liveActivityEnabledKey = "RoutineKindLiveActivityStartEnabled"
-  private static let deepLinkKey = "RoutineKindWidgetDeepLink"
+  private static let widgetTimelineKey = "__expo_widgets_LayerwellToday_timeline"
+  private static let activityURLKey = "__expo_widgets_live_activity_LayerwellEvening_url"
+  private static let lifecycleVersionKey = "LayerwellWidgetLifecycleVersion"
+  private static let publicationEnabledKey = "LayerwellWidgetInteractivePublicationEnabled"
+  private static let liveActivityEnabledKey = "LayerwellLiveActivityStartEnabled"
+  private static let deepLinkKey = "LayerwellWidgetDeepLink"
   private static let propsSchemaVersion: Int64 = 2
   private static let maximumActions = 32
   private static let maximumOutboxRecords = 32
@@ -316,7 +316,7 @@ enum RoutineKindWidgetLifecycleStore {
     guard let candidate,
           let configuredDeepLink,
           candidate.absoluteString == configuredDeepLink else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+      throw LayerwellWidgetLifecycleError.unavailable
     }
     return candidate
   }
@@ -325,7 +325,7 @@ enum RoutineKindWidgetLifecycleStore {
     guard let identifier = WidgetsStorage.appGroupIdentifier,
           identifier.hasPrefix("group."),
           !identifier.contains("/") else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+      throw LayerwellWidgetLifecycleError.unavailable
     }
     return identifier
   }
@@ -335,12 +335,12 @@ enum RoutineKindWidgetLifecycleStore {
     guard let container = FileManager.default.containerURL(
       forSecurityApplicationGroupIdentifier: identifier
     ) else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+      throw LayerwellWidgetLifecycleError.unavailable
     }
     let directory = container
       .appendingPathComponent("Library", isDirectory: true)
       .appendingPathComponent("Application Support", isDirectory: true)
-      .appendingPathComponent("RoutineKindWidgets", isDirectory: true)
+      .appendingPathComponent("LayerwellWidgets", isDirectory: true)
     try FileManager.default.createDirectory(
       at: directory,
       withIntermediateDirectories: true,
@@ -367,30 +367,30 @@ enum RoutineKindWidgetLifecycleStore {
     let urls = try storeURLs()
     if !allowPrivacyClosing,
        FileManager.default.fileExists(atPath: urls.privacyClosing.path) {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
     if !allowPrivacyClosed,
        FileManager.default.fileExists(atPath: urls.privacyClosed.path) {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
-    let storeLock = try RoutineKindStoreLock(url: urls.lock)
+    let storeLock = try LayerwellStoreLock(url: urls.lock)
     return try withExtendedLifetime(storeLock) {
       if !allowPrivacyClosing,
          FileManager.default.fileExists(atPath: urls.privacyClosing.path) {
-        throw RoutineKindWidgetLifecycleError.unauthorized
+        throw LayerwellWidgetLifecycleError.unauthorized
       }
       if !allowPrivacyClosed,
          FileManager.default.fileExists(atPath: urls.privacyClosed.path) {
-        throw RoutineKindWidgetLifecycleError.unauthorized
+        throw LayerwellWidgetLifecycleError.unauthorized
       }
       let result = try operation(urls)
       if !allowPrivacyClosing,
          FileManager.default.fileExists(atPath: urls.privacyClosing.path) {
-        throw RoutineKindWidgetLifecycleError.unauthorized
+        throw LayerwellWidgetLifecycleError.unauthorized
       }
       if !allowPrivacyClosed,
          FileManager.default.fileExists(atPath: urls.privacyClosed.path) {
-        throw RoutineKindWidgetLifecycleError.unauthorized
+        throw LayerwellWidgetLifecycleError.unauthorized
       }
       return result
     }
@@ -398,16 +398,16 @@ enum RoutineKindWidgetLifecycleStore {
 
   private static func openDatabase(
     _ urls: StoreURLs
-  ) throws -> RoutineKindSQLiteConnection {
-    let connection = try RoutineKindSQLiteConnection(path: urls.database.path)
+  ) throws -> LayerwellSQLiteConnection {
+    let connection = try LayerwellSQLiteConnection(path: urls.database.path)
     let existingVersion = try connection.withStatement("PRAGMA user_version") { statement in
       guard sqlite3_step(statement) == SQLITE_ROW else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       return sqlite3_column_int64(statement, 0)
     }
     guard existingVersion == 0 || existingVersion == Int64(nativeSchemaVersion) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     try connection.execute(schema)
     if existingVersion == 0 {
@@ -424,7 +424,7 @@ enum RoutineKindWidgetLifecycleStore {
     try connection.withStatement("PRAGMA user_version") { statement in
       guard sqlite3_step(statement) == SQLITE_ROW,
             sqlite3_column_int64(statement, 0) == Int64(nativeSchemaVersion) else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
     }
     try FileManager.default.setAttributes(
@@ -436,7 +436,7 @@ enum RoutineKindWidgetLifecycleStore {
 
   private static func readPrivacyClosedReceipt(
     _ url: URL
-  ) throws -> RoutineKindAuthorityReceipt? {
+  ) throws -> LayerwellAuthorityReceipt? {
     guard FileManager.default.fileExists(atPath: url.path) else { return nil }
     let data = try Data(contentsOf: url)
     guard data.count > 0,
@@ -449,9 +449,9 @@ enum RoutineKindWidgetLifecycleStore {
           let authorityNonce = uuid(object["authorityNonce"]),
           object["enabled"] as? Bool == false,
           object["ownerGeneration"] is NSNull else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
-    return RoutineKindAuthorityReceipt(
+    return LayerwellAuthorityReceipt(
       authorityNonce: authorityNonce,
       enabled: false,
       ownerGeneration: nil,
@@ -461,10 +461,10 @@ enum RoutineKindWidgetLifecycleStore {
 
   private static func synchronizeDirectory(_ directory: URL) throws {
     let descriptor = open(directory.path, O_RDONLY)
-    guard descriptor >= 0 else { throw RoutineKindWidgetLifecycleError.storage }
+    guard descriptor >= 0 else { throw LayerwellWidgetLifecycleError.storage }
     defer { _ = Darwin.close(descriptor) }
     guard Darwin.fsync(descriptor) == 0 else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
@@ -478,14 +478,14 @@ enum RoutineKindWidgetLifecycleStore {
       )
     }
     guard manager.fileExists(atPath: url.path) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     try manager.setAttributes(
       [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication],
       ofItemAtPath: url.path
     )
     guard let handle = FileHandle(forWritingAtPath: url.path) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     do {
       try handle.truncate(atOffset: 0)
@@ -498,13 +498,13 @@ enum RoutineKindWidgetLifecycleStore {
     }
     try synchronizeDirectory(url.deletingLastPathComponent())
     guard manager.fileExists(atPath: url.path) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
   private static func readPrivacyQuiescenceReceipt(
     _ url: URL
-  ) throws -> RoutineKindQuiescenceReceipt {
+  ) throws -> LayerwellQuiescenceReceipt {
     let data = try Data(contentsOf: url)
     guard data.count > 0,
           data.count <= 512,
@@ -517,9 +517,9 @@ enum RoutineKindWidgetLifecycleStore {
           let ownerGeneration = uuid(object["ownerGeneration"]),
           let quiescenceNonce = uuid(object["quiescenceNonce"]),
           Set([authorityNonce, ownerGeneration, quiescenceNonce]).count == 3 else {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
-    return RoutineKindQuiescenceReceipt(
+    return LayerwellQuiescenceReceipt(
       authorityNonce: authorityNonce,
       ownerGeneration: ownerGeneration,
       quiescenceNonce: quiescenceNonce,
@@ -528,7 +528,7 @@ enum RoutineKindWidgetLifecycleStore {
   }
 
   private static func persistPrivacyQuiescenceReceipt(
-    _ receipt: RoutineKindQuiescenceReceipt,
+    _ receipt: LayerwellQuiescenceReceipt,
     to url: URL
   ) throws {
     guard uuid(receipt.authorityNonce) != nil,
@@ -539,7 +539,7 @@ enum RoutineKindWidgetLifecycleStore {
           ]).count == 3,
           let data = try encode(receipt).data(using: .utf8),
           data.count <= 512 else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     let manager = FileManager.default
     guard !manager.fileExists(atPath: url.path),
@@ -549,7 +549,7 @@ enum RoutineKindWidgetLifecycleStore {
             attributes: [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication]
           ),
           let handle = FileHandle(forWritingAtPath: url.path) else {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
     do {
       try handle.truncate(atOffset: 0)
@@ -569,19 +569,19 @@ enum RoutineKindWidgetLifecycleStore {
     guard verified.authorityNonce == receipt.authorityNonce,
           verified.ownerGeneration == receipt.ownerGeneration,
           verified.quiescenceNonce == receipt.quiescenceNonce else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
   private static func persistPrivacyClosedReceipt(
-    _ receipt: RoutineKindAuthorityReceipt,
+    _ receipt: LayerwellAuthorityReceipt,
     to url: URL
   ) throws {
     guard !receipt.enabled,
           receipt.ownerGeneration == nil,
           uuid(receipt.authorityNonce) != nil,
           let data = try encode(receipt).data(using: .utf8) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     let manager = FileManager.default
     if !manager.fileExists(atPath: url.path) {
@@ -590,11 +590,11 @@ enum RoutineKindWidgetLifecycleStore {
         contents: Data(),
         attributes: [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication]
       ) else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
     }
     guard let handle = FileHandle(forWritingAtPath: url.path) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     do {
       try handle.truncate(atOffset: 0)
@@ -612,7 +612,7 @@ enum RoutineKindWidgetLifecycleStore {
     try synchronizeDirectory(url.deletingLastPathComponent())
     guard let verified = try readPrivacyClosedReceipt(url),
           verified.authorityNonce == receipt.authorityNonce else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
@@ -620,8 +620,8 @@ enum RoutineKindWidgetLifecycleStore {
   private static func writePrivacyClosedReceipt(
     _ url: URL,
     excluding: Set<String> = []
-  ) throws -> RoutineKindAuthorityReceipt {
-    let receipt = RoutineKindAuthorityReceipt(
+  ) throws -> LayerwellAuthorityReceipt {
+    let receipt = LayerwellAuthorityReceipt(
       authorityNonce: freshOpaqueUuid(excluding: excluding),
       enabled: false,
       ownerGeneration: nil,
@@ -649,8 +649,8 @@ enum RoutineKindWidgetLifecycleStore {
     to index: Int32,
     in statement: OpaquePointer
   ) throws {
-    guard sqlite3_bind_text(statement, index, value, -1, routineKindSQLiteTransient) == SQLITE_OK else {
-      throw RoutineKindWidgetLifecycleError.storage
+    guard sqlite3_bind_text(statement, index, value, -1, layerwellSQLiteTransient) == SQLITE_OK else {
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
@@ -660,19 +660,19 @@ enum RoutineKindWidgetLifecycleStore {
     in statement: OpaquePointer
   ) throws {
     guard sqlite3_bind_int64(statement, index, value) == SQLITE_OK else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
   private static func stepDone(_ statement: OpaquePointer) throws {
     guard sqlite3_step(statement) == SQLITE_DONE else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
   }
 
   private static func columnText(_ statement: OpaquePointer, _ index: Int32) throws -> String {
     guard let pointer = sqlite3_column_text(statement, index) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     return String(cString: pointer)
   }
@@ -728,12 +728,12 @@ enum RoutineKindWidgetLifecycleStore {
 
   private static func canonicalJSON(_ value: Any, maximumBytes: Int = maximumJSONBytes) throws -> String {
     guard JSONSerialization.isValidJSONObject(value) else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let data = try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
     guard data.count <= maximumBytes,
           let json = String(data: data, encoding: .utf8) else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     return json
   }
@@ -741,14 +741,14 @@ enum RoutineKindWidgetLifecycleStore {
   private static func dictionary(from json: String) throws -> [String: Any] {
     guard let data = json.data(using: .utf8), data.count <= maximumJSONBytes,
           let value = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     return value
   }
 
-  private static func decodeWidgetProps(_ value: Any) throws -> RoutineKindWidgetPropsRecord {
+  private static func decodeWidgetProps(_ value: Any) throws -> LayerwellWidgetPropsRecord {
     guard let raw = value as? [String: Any] else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let expectedKeys = Set([
       "actionTokens", "completedCount", "deepLink", "interactionRevision", "localDate",
@@ -782,7 +782,7 @@ enum RoutineKindWidgetLifecycleStore {
           let staleAtMs = exactInt(raw["staleAtMs"]),
           staleAtMs > updatedAtMs,
           staleAtMs - updatedAtMs <= maximumLeaseMs else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
 
     let stateValid =
@@ -795,8 +795,8 @@ enum RoutineKindWidgetLifecycleStore {
       (status == "complete" && phase != "none" && totalCount > 0 &&
         completedCount == totalCount && actionTokens.isEmpty &&
         pendingActionTokens.count <= Int(completedCount))
-    guard stateValid else { throw RoutineKindWidgetLifecycleError.invalidInput }
-    return RoutineKindWidgetPropsRecord(
+    guard stateValid else { throw LayerwellWidgetLifecycleError.invalidInput }
+    return LayerwellWidgetPropsRecord(
       raw: raw,
       canonicalJSON: try canonicalJSON(raw),
       ownerGeneration: ownerGeneration,
@@ -817,7 +817,7 @@ enum RoutineKindWidgetLifecycleStore {
 
   private static func decodeLiveActivityProps(
     _ value: Any
-  ) throws -> RoutineKindLiveActivityPropsRecord {
+  ) throws -> LayerwellLiveActivityPropsRecord {
     guard let raw = value as? [String: Any],
           Set(raw.keys) == Set([
             "completedCount", "ownerGeneration", "schemaVersion", "snapshotNonce",
@@ -837,14 +837,14 @@ enum RoutineKindWidgetLifecycleStore {
           let staleAtMs = exactInt(raw["staleAtMs"]),
           staleAtMs > updatedAtMs,
           staleAtMs - updatedAtMs <= maximumLeaseMs else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let stateValid =
       (status == "stale" && completedCount == 0 && totalCount == 0) ||
       (status == "in_progress" && totalCount > 0 && completedCount < totalCount) ||
       (status == "complete" && totalCount > 0 && completedCount == totalCount)
-    guard stateValid else { throw RoutineKindWidgetLifecycleError.invalidInput }
-    return RoutineKindLiveActivityPropsRecord(
+    guard stateValid else { throw LayerwellWidgetLifecycleError.invalidInput }
+    return LayerwellLiveActivityPropsRecord(
       raw: raw,
       ownerGeneration: ownerGeneration,
       snapshotNonce: snapshotNonce,
@@ -861,8 +861,8 @@ enum RoutineKindWidgetLifecycleStore {
   }
 
   private static func validateTransition(
-    old: RoutineKindWidgetPropsRecord,
-    new: RoutineKindWidgetPropsRecord,
+    old: LayerwellWidgetPropsRecord,
+    new: LayerwellWidgetPropsRecord,
     eventTimeMs: Int64
   ) throws -> String {
     guard old.status == "ready",
@@ -884,24 +884,24 @@ enum RoutineKindWidgetLifecycleStore {
           new.updatedAtMs >= old.updatedAtMs,
           abs(new.updatedAtMs - eventTimeMs) <= 5_000,
           new.status == (new.completedCount == new.totalCount ? "complete" : "ready") else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     return actionToken
   }
 
   private static func readAuthority(
-    _ connection: RoutineKindSQLiteConnection
-  ) throws -> RoutineKindAuthorityRecord {
+    _ connection: LayerwellSQLiteConnection
+  ) throws -> LayerwellAuthorityRecord {
     try connection.withStatement(
       "SELECT schema_version, authority_nonce, enabled, owner_generation " +
         "FROM authority WHERE singleton=1"
     ) { statement in
       guard sqlite3_step(statement) == SQLITE_ROW,
             sqlite3_column_int64(statement, 0) == Int64(nativeSchemaVersion) else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       let nonce = try columnText(statement, 1)
-      guard uuid(nonce) != nil else { throw RoutineKindWidgetLifecycleError.storage }
+      guard uuid(nonce) != nil else { throw LayerwellWidgetLifecycleError.storage }
       let enabled = sqlite3_column_int(statement, 2) == 1
       let owner: String?
       if sqlite3_column_type(statement, 3) == SQLITE_NULL {
@@ -910,9 +910,9 @@ enum RoutineKindWidgetLifecycleStore {
         owner = try columnText(statement, 3)
       }
       guard (!enabled && owner == nil) || (enabled && uuid(owner) != nil) else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
-      return RoutineKindAuthorityRecord(
+      return LayerwellAuthorityRecord(
         authorityNonce: nonce,
         enabled: enabled,
         ownerGeneration: owner
@@ -921,34 +921,34 @@ enum RoutineKindWidgetLifecycleStore {
   }
 
   private static func requireAuthority(
-    _ connection: RoutineKindSQLiteConnection,
+    _ connection: LayerwellSQLiteConnection,
     expectedNonce: String? = nil,
     ownerGeneration: String? = nil
-  ) throws -> RoutineKindAuthorityRecord {
+  ) throws -> LayerwellAuthorityRecord {
     let authority = try readAuthority(connection)
-    guard authority.enabled else { throw RoutineKindWidgetLifecycleError.unauthorized }
+    guard authority.enabled else { throw LayerwellWidgetLifecycleError.unauthorized }
     if let expectedNonce, authority.authorityNonce != expectedNonce {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
     if let ownerGeneration, authority.ownerGeneration != ownerGeneration {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
     return authority
   }
 
-  private static func purgeDerivedTables(_ connection: RoutineKindSQLiteConnection) throws {
+  private static func purgeDerivedTables(_ connection: LayerwellSQLiteConnection) throws {
     try connection.execute("DELETE FROM outbox")
     try connection.execute("DELETE FROM snapshot_actions")
     try connection.execute("DELETE FROM snapshots")
   }
 
   private static func scalarCount(
-    _ connection: RoutineKindSQLiteConnection,
+    _ connection: LayerwellSQLiteConnection,
     sql: String
   ) throws -> Int64 {
     try connection.withStatement(sql) { statement in
       guard sqlite3_step(statement) == SQLITE_ROW else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       return sqlite3_column_int64(statement, 0)
     }
@@ -960,7 +960,7 @@ enum RoutineKindWidgetLifecycleStore {
     let data = try encoder.encode(value)
     guard data.count <= maximumJSONBytes,
           let json = String(data: data, encoding: .utf8) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     return json
   }
@@ -968,7 +968,7 @@ enum RoutineKindWidgetLifecycleStore {
   static func readAuthorityJSON() throws -> String {
     let urls = try storeURLs()
     guard !FileManager.default.fileExists(atPath: urls.privacyClosing.path) else {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
     if let closed = try readPrivacyClosedReceipt(urls.privacyClosed) {
       return try encode(closed)
@@ -976,7 +976,7 @@ enum RoutineKindWidgetLifecycleStore {
     return try withExclusiveStore { urls in
       let connection = try openDatabase(urls)
       let authority = try readAuthority(connection)
-      return try encode(RoutineKindAuthorityReceipt(
+      return try encode(LayerwellAuthorityReceipt(
         authorityNonce: authority.authorityNonce,
         enabled: authority.enabled,
         ownerGeneration: authority.ownerGeneration,
@@ -993,25 +993,25 @@ enum RoutineKindWidgetLifecycleStore {
           let expectedNonce = uuid(expectedAuthorityNonce),
           let owner = uuid(ownerGeneration),
           expectedNonce != owner else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+      throw LayerwellWidgetLifecycleError.unavailable
     }
     let receipt = try withExclusiveStore(allowPrivacyClosed: true) { urls in
       let closed = try readPrivacyClosedReceipt(urls.privacyClosed)
       if let closed, closed.authorityNonce != expectedNonce {
-        throw RoutineKindWidgetLifecycleError.unauthorized
+        throw LayerwellWidgetLifecycleError.unauthorized
       }
       let connection = try openDatabase(urls)
-      let next = try connection.transaction { () -> RoutineKindAuthorityReceipt in
+      let next = try connection.transaction { () -> LayerwellAuthorityReceipt in
         let current = try readAuthority(connection)
         if let closed {
           guard !current.enabled,
                 current.ownerGeneration == nil,
                 current.authorityNonce == closed.authorityNonce,
                 current.authorityNonce == expectedNonce else {
-            throw RoutineKindWidgetLifecycleError.unauthorized
+            throw LayerwellWidgetLifecycleError.unauthorized
           }
         } else if current.authorityNonce != expectedNonce {
-          throw RoutineKindWidgetLifecycleError.unauthorized
+          throw LayerwellWidgetLifecycleError.unauthorized
         }
         try purgeDerivedTables(connection)
         let nextNonce = freshOpaqueUuid(excluding: [expectedNonce, current.authorityNonce, owner])
@@ -1024,10 +1024,10 @@ enum RoutineKindWidgetLifecycleStore {
           try bindText(expectedNonce, to: 3, in: statement)
           try stepDone(statement)
           guard sqlite3_changes(connection.handle) == 1 else {
-            throw RoutineKindWidgetLifecycleError.unauthorized
+            throw LayerwellWidgetLifecycleError.unauthorized
           }
         }
-        return RoutineKindAuthorityReceipt(
+        return LayerwellAuthorityReceipt(
           authorityNonce: nextNonce,
           enabled: true,
           ownerGeneration: owner,
@@ -1038,17 +1038,17 @@ enum RoutineKindWidgetLifecycleStore {
       guard verified.enabled,
             verified.authorityNonce == next.authorityNonce,
             verified.ownerGeneration == owner else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       if let closed {
         guard let currentMarker = try readPrivacyClosedReceipt(urls.privacyClosed),
               currentMarker.authorityNonce == closed.authorityNonce else {
-          throw RoutineKindWidgetLifecycleError.unauthorized
+          throw LayerwellWidgetLifecycleError.unauthorized
         }
         try FileManager.default.removeItem(at: urls.privacyClosed)
         try synchronizeDirectory(urls.directory)
       } else if FileManager.default.fileExists(atPath: urls.privacyClosed.path) {
-        throw RoutineKindWidgetLifecycleError.unauthorized
+        throw LayerwellWidgetLifecycleError.unauthorized
       }
       return next
     }
@@ -1061,9 +1061,9 @@ enum RoutineKindWidgetLifecycleStore {
     _ entries: [[String: Any]]
   ) throws -> (
     currentTimestamp: Int64,
-    current: RoutineKindWidgetPropsRecord,
+    current: LayerwellWidgetPropsRecord,
     staleTimestamp: Int64,
-    stale: RoutineKindWidgetPropsRecord
+    stale: LayerwellWidgetPropsRecord
   ) {
     guard entries.count == 2,
           Set(entries[0].keys) == Set(["timestamp", "props"]),
@@ -1072,7 +1072,7 @@ enum RoutineKindWidgetLifecycleStore {
           let staleTimestamp = exactInt(entries[1]["timestamp"]),
           let currentValue = entries[0]["props"],
           let staleValue = entries[1]["props"] else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let current = try decodeWidgetProps(currentValue)
     let stale = try decodeWidgetProps(staleValue)
@@ -1092,7 +1092,7 @@ enum RoutineKindWidgetLifecycleStore {
           stale.updatedAtMs == current.updatedAtMs,
           stale.staleAtMs == current.staleAtMs,
           stale.pendingActionTokens.isEmpty else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     return (currentTimestamp, current, staleTimestamp, stale)
   }
@@ -1106,7 +1106,7 @@ enum RoutineKindWidgetLifecycleStore {
           let data = timelineJSON.data(using: .utf8),
           data.count <= maximumJSONBytes,
           let entries = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let publication = try validatedPublication(entries)
     let status = try withExclusiveStore { urls in
@@ -1163,26 +1163,26 @@ enum RoutineKindWidgetLifecycleStore {
   }
 
   static func publishTimelineEntries(_ entries: [[String: Any]]) throws {
-    guard publicationIsEnabled else { throw RoutineKindWidgetLifecycleError.unavailable }
+    guard publicationIsEnabled else { throw LayerwellWidgetLifecycleError.unavailable }
     let publication = try validatedPublication(entries)
     let authority = try readAuthorityJSON()
     guard let data = authority.data(using: .utf8),
           let object = try JSONSerialization.jsonObject(with: data) as? [String: Any],
           let expectedNonce = uuid(object["authorityNonce"]),
           object["ownerGeneration"] as? String == publication.current.ownerGeneration else {
-      throw RoutineKindWidgetLifecycleError.unauthorized
+      throw LayerwellWidgetLifecycleError.unauthorized
     }
     let result = try publishTimelineJSON(
       expectedAuthorityNonce: expectedNonce,
       timelineJSON: try canonicalJSON(entries)
     )
     guard result == try canonicalJSON(["status": "published"]) else {
-      throw RoutineKindWidgetLifecycleError.stale
+      throw LayerwellWidgetLifecycleError.stale
     }
   }
 
   private static func timelineDictionaries(
-    connection: RoutineKindSQLiteConnection,
+    connection: LayerwellSQLiteConnection,
     nowMs: Int64
   ) throws -> [[String: Any]] {
     _ = try requireAuthority(connection)
@@ -1201,7 +1201,7 @@ enum RoutineKindWidgetLifecycleStore {
             currentTimestamp == updatedAtMs,
             staleTimestamp == staleAtMs,
             currentTimestamp < staleTimestamp else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       let current = try decodeWidgetProps(try dictionary(from: currentPropsJSON))
       let stale = try decodeWidgetProps(try dictionary(from: stalePropsJSON))
@@ -1210,7 +1210,7 @@ enum RoutineKindWidgetLifecycleStore {
             stale.status == "stale",
             stale.ownerGeneration == current.ownerGeneration,
             stale.snapshotNonce == current.snapshotNonce else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       if nowMs < updatedAtMs { return [] }
       let staleEntry: [String: Any] = ["timestamp": staleTimestamp, "props": stale.raw]
@@ -1233,7 +1233,7 @@ enum RoutineKindWidgetLifecycleStore {
 
   static func currentTimelineJSON(expectedAuthorityNonce: String) throws -> String {
     guard let expectedNonce = uuid(expectedAuthorityNonce) else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let nowMs = Int64(Date().timeIntervalSince1970 * 1_000)
     let entries = try withExclusiveStore { urls in
@@ -1265,7 +1265,7 @@ enum RoutineKindWidgetLifecycleStore {
               let staleJSON = try columnText(statement, 1)
               let staleAtMs = sqlite3_column_int64(statement, 2)
               guard sqlite3_step(statement) == SQLITE_DONE else {
-                throw RoutineKindWidgetLifecycleError.storage
+                throw LayerwellWidgetLifecycleError.storage
               }
               let nowMs = Int64(Date().timeIntervalSince1970 * 1_000)
               let expected = nowMs >= staleAtMs ? staleJSON : currentJSON
@@ -1290,7 +1290,7 @@ enum RoutineKindWidgetLifecycleStore {
           target == interactionTarget,
           eventTimeMs >= 0,
           eventTimeMs <= maximumSafeInteger else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+      throw LayerwellWidgetLifecycleError.unavailable
     }
     let old = try decodeWidgetProps(oldProps)
     let new = try decodeWidgetProps(newProps)
@@ -1309,16 +1309,16 @@ enum RoutineKindWidgetLifecycleStore {
           try bindText(actionToken, to: 3, in: statement)
           let result = sqlite3_step(statement)
           if result == SQLITE_DONE { return nil }
-          guard result == SQLITE_ROW else { throw RoutineKindWidgetLifecycleError.storage }
+          guard result == SQLITE_ROW else { throw LayerwellWidgetLifecycleError.storage }
           let revision = sqlite3_column_int64(statement, 0)
           guard sqlite3_step(statement) == SQLITE_DONE else {
-            throw RoutineKindWidgetLifecycleError.storage
+            throw LayerwellWidgetLifecycleError.storage
           }
           return revision
         }
         if let existing {
           guard existing == new.interactionRevision else {
-            throw RoutineKindWidgetLifecycleError.stale
+            throw LayerwellWidgetLifecycleError.stale
           }
           return false
         }
@@ -1330,7 +1330,7 @@ enum RoutineKindWidgetLifecycleStore {
           try bindText(old.snapshotNonce, to: 1, in: statement)
           try bindText(old.ownerGeneration, to: 2, in: statement)
           guard sqlite3_step(statement) == SQLITE_ROW else {
-            throw RoutineKindWidgetLifecycleError.stale
+            throw LayerwellWidgetLifecycleError.stale
           }
           let result = (
             sqlite3_column_int64(statement, 0),
@@ -1338,7 +1338,7 @@ enum RoutineKindWidgetLifecycleStore {
             try columnText(statement, 2)
           )
           guard sqlite3_step(statement) == SQLITE_DONE else {
-            throw RoutineKindWidgetLifecycleError.storage
+            throw LayerwellWidgetLifecycleError.storage
           }
           return result
         }
@@ -1348,7 +1348,7 @@ enum RoutineKindWidgetLifecycleStore {
               eventTimeMs < stored.1,
               try scalarCount(connection, sql: "SELECT COUNT(*) FROM outbox") <
                 Int64(maximumOutboxRecords) else {
-          throw RoutineKindWidgetLifecycleError.stale
+          throw LayerwellWidgetLifecycleError.stale
         }
 
         try connection.withStatement(
@@ -1361,7 +1361,7 @@ enum RoutineKindWidgetLifecycleStore {
                 sqlite3_column_int(statement, 0) == 0,
                 sqlite3_column_int64(statement, 1) == old.interactionRevision,
                 sqlite3_step(statement) == SQLITE_DONE else {
-            throw RoutineKindWidgetLifecycleError.stale
+            throw LayerwellWidgetLifecycleError.stale
           }
         }
 
@@ -1391,7 +1391,7 @@ enum RoutineKindWidgetLifecycleStore {
           try bindText(actionToken, to: 2, in: statement)
           try stepDone(statement)
           guard sqlite3_changes(connection.handle) == 1 else {
-            throw RoutineKindWidgetLifecycleError.stale
+            throw LayerwellWidgetLifecycleError.stale
           }
         }
 
@@ -1408,7 +1408,7 @@ enum RoutineKindWidgetLifecycleStore {
           try bindInt(old.interactionRevision, to: 7, in: statement)
           try stepDone(statement)
           guard sqlite3_changes(connection.handle) == 1 else {
-            throw RoutineKindWidgetLifecycleError.stale
+            throw LayerwellWidgetLifecycleError.stale
           }
         }
         return true
@@ -1419,24 +1419,24 @@ enum RoutineKindWidgetLifecycleStore {
   }
 
   private static func outboxPayload(
-    connection: RoutineKindSQLiteConnection,
-    authority: RoutineKindAuthorityRecord
+    connection: LayerwellSQLiteConnection,
+    authority: LayerwellAuthorityRecord
   ) throws -> [String: Any] {
     let count = try scalarCount(connection, sql: "SELECT COUNT(*) FROM outbox")
     guard count <= Int64(maximumOutboxRecords) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     let records = try connection.withStatement(
       "SELECT action_token, created_at_ms, local_date, owner_generation, phase, revision, " +
         "snapshot_nonce, stale_at_ms FROM outbox " +
         "ORDER BY revision ASC, action_token ASC"
-    ) { statement -> [RoutineKindOutboxRecord] in
-      var values: [RoutineKindOutboxRecord] = []
+    ) { statement -> [LayerwellOutboxRecord] in
+      var values: [LayerwellOutboxRecord] = []
       while true {
         let result = sqlite3_step(statement)
         if result == SQLITE_DONE { break }
-        guard result == SQLITE_ROW else { throw RoutineKindWidgetLifecycleError.storage }
-        let record = RoutineKindOutboxRecord(
+        guard result == SQLITE_ROW else { throw LayerwellWidgetLifecycleError.storage }
+        let record = LayerwellOutboxRecord(
           actionToken: try columnText(statement, 0),
           createdAtMs: sqlite3_column_int64(statement, 1),
           localDate: try columnText(statement, 2),
@@ -1455,7 +1455,7 @@ enum RoutineKindWidgetLifecycleStore {
               record.revision <= 10_000,
               record.createdAtMs >= 0,
               record.createdAtMs < record.staleAtMs else {
-          throw RoutineKindWidgetLifecycleError.storage
+          throw LayerwellWidgetLifecycleError.storage
         }
         values.append(record)
       }
@@ -1466,7 +1466,7 @@ enum RoutineKindWidgetLifecycleStore {
       "records": try records.map { record -> [String: Any] in
         guard let data = try encode(record).data(using: .utf8),
               let object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-          throw RoutineKindWidgetLifecycleError.storage
+          throw LayerwellWidgetLifecycleError.storage
         }
         return object
       },
@@ -1476,7 +1476,7 @@ enum RoutineKindWidgetLifecycleStore {
 
   static func readOutboxJSON(expectedAuthorityNonce: String) throws -> String {
     guard let expectedNonce = uuid(expectedAuthorityNonce) else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let payload = try withExclusiveStore { urls in
       let connection = try openDatabase(urls)
@@ -1492,7 +1492,7 @@ enum RoutineKindWidgetLifecycleStore {
   ) throws -> String {
     guard let data = json.data(using: .utf8), data.count <= maximumJSONBytes,
           let object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let expectedKeys = Set([
             "acceptedTokens", "expectedAuthorityNonce", "expectedRevision",
@@ -1505,11 +1505,11 @@ enum RoutineKindWidgetLifecycleStore {
           let expectedRevision = exactInt(object["expectedRevision"]),
           expectedRevision <= 10_000,
           let acceptedTokens = tokenArray(object["acceptedTokens"]) else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let quiescenceNonce = quiesced ? uuid(object["quiescenceNonce"]) : nil
     guard !quiesced || quiescenceNonce != nil else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
 
     let result = try withExclusiveStore(allowPrivacyClosing: quiesced) { urls in
@@ -1518,7 +1518,7 @@ enum RoutineKindWidgetLifecycleStore {
         guard receipt.authorityNonce == expectedNonce,
               receipt.ownerGeneration == ownerGeneration,
               receipt.quiescenceNonce == quiescenceNonce else {
-          throw RoutineKindWidgetLifecycleError.unauthorized
+          throw LayerwellWidgetLifecycleError.unauthorized
         }
       }
       let connection = try openDatabase(urls)
@@ -1535,16 +1535,16 @@ enum RoutineKindWidgetLifecycleStore {
           try bindText(snapshotNonce, to: 1, in: statement)
           try bindText(ownerGeneration, to: 2, in: statement)
           guard sqlite3_step(statement) == SQLITE_ROW else {
-            throw RoutineKindWidgetLifecycleError.stale
+            throw LayerwellWidgetLifecycleError.stale
           }
           let value = (sqlite3_column_int64(statement, 0), try columnText(statement, 1))
           guard sqlite3_step(statement) == SQLITE_DONE else {
-            throw RoutineKindWidgetLifecycleError.storage
+            throw LayerwellWidgetLifecycleError.storage
           }
           return value
         }
         guard current.0 == expectedRevision else {
-          throw RoutineKindWidgetLifecycleError.stale
+          throw LayerwellWidgetLifecycleError.stale
         }
         let outboxTokens = try connection.withStatement(
           "SELECT action_token FROM outbox WHERE owner_generation=? AND snapshot_nonce=? " +
@@ -1556,12 +1556,12 @@ enum RoutineKindWidgetLifecycleStore {
           while true {
             let step = sqlite3_step(statement)
             if step == SQLITE_DONE { break }
-            guard step == SQLITE_ROW else { throw RoutineKindWidgetLifecycleError.storage }
+            guard step == SQLITE_ROW else { throw LayerwellWidgetLifecycleError.storage }
             values.append(try columnText(statement, 0))
           }
           return values
         }
-        guard !outboxTokens.isEmpty else { throw RoutineKindWidgetLifecycleError.stale }
+        guard !outboxTokens.isEmpty else { throw LayerwellWidgetLifecycleError.stale }
         if !sameStrings(acceptedTokens, outboxTokens) {
           try purgeDerivedTables(connection)
           return "redacted"
@@ -1584,7 +1584,7 @@ enum RoutineKindWidgetLifecycleStore {
           try bindInt(expectedRevision, to: 4, in: statement)
           try stepDone(statement)
           guard sqlite3_changes(connection.handle) == 1 else {
-            throw RoutineKindWidgetLifecycleError.stale
+            throw LayerwellWidgetLifecycleError.stale
           }
         }
         try connection.withStatement(
@@ -1594,7 +1594,7 @@ enum RoutineKindWidgetLifecycleStore {
           try bindText(snapshotNonce, to: 2, in: statement)
           try stepDone(statement)
           guard sqlite3_changes(connection.handle) == Int32(outboxTokens.count) else {
-            throw RoutineKindWidgetLifecycleError.storage
+            throw LayerwellWidgetLifecycleError.storage
           }
         }
         return "committed"
@@ -1624,11 +1624,11 @@ enum RoutineKindWidgetLifecycleStore {
     guard let expectedNonce = uuid(expectedAuthorityNonce),
           let expectedOwner = uuid(ownerGeneration),
           expectedNonce != expectedOwner else {
-      throw RoutineKindWidgetLifecycleError.invalidInput
+      throw LayerwellWidgetLifecycleError.invalidInput
     }
     let capturedOutbox = try withExclusiveStore(allowPrivacyClosing: true) { urls in
       guard !FileManager.default.fileExists(atPath: urls.privacyClosing.path) else {
-        throw RoutineKindWidgetLifecycleError.unauthorized
+        throw LayerwellWidgetLifecycleError.unauthorized
       }
       let connection = try openDatabase(urls)
       let authority = try requireAuthority(
@@ -1639,7 +1639,7 @@ enum RoutineKindWidgetLifecycleStore {
       // The same cross-process lock guards AppIntent append. Once this durable
       // sentinel is written while holding it, a tap either committed before
       // this capture or must fail both the pre-lock and post-lock admission checks.
-      let quiescence = RoutineKindQuiescenceReceipt(
+      let quiescence = LayerwellQuiescenceReceipt(
         authorityNonce: expectedNonce,
         ownerGeneration: expectedOwner,
         quiescenceNonce: freshOpaqueUuid(excluding: [expectedNonce, expectedOwner]),
@@ -1647,7 +1647,7 @@ enum RoutineKindWidgetLifecycleStore {
       )
       try persistPrivacyQuiescenceReceipt(quiescence, to: urls.privacyClosing)
       guard FileManager.default.fileExists(atPath: urls.privacyClosing.path) else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       let verified = try requireAuthority(
         connection,
@@ -1656,7 +1656,7 @@ enum RoutineKindWidgetLifecycleStore {
       )
       let outbox = try outboxPayload(connection: connection, authority: verified)
       guard let records = outbox["records"] as? [[String: Any]] else {
-        throw RoutineKindWidgetLifecycleError.storage
+        throw LayerwellWidgetLifecycleError.storage
       }
       if records.isEmpty {
         // No reconciliation can be committed for an empty outbox. Revoke the
@@ -1690,7 +1690,7 @@ enum RoutineKindWidgetLifecycleStore {
     let urls = try storeURLs()
     try persistPrivacyClosingSentinel(urls.privacyClosing)
     guard FileManager.default.fileExists(atPath: urls.privacyClosing.path) else {
-      throw RoutineKindWidgetLifecycleError.storage
+      throw LayerwellWidgetLifecycleError.storage
     }
     WidgetsStorage.removeObject(forKey: widgetTimelineKey)
     WidgetsStorage.removeObject(forKey: activityURLKey)
@@ -1710,14 +1710,14 @@ enum RoutineKindWidgetLifecycleStore {
     let urls = try storeURLs()
     try persistPrivacyClosingSentinel(urls.privacyClosing)
     var storageError: Error?
-    var receipt: RoutineKindAuthorityReceipt?
+    var receipt: LayerwellAuthorityReceipt?
     do {
       receipt = try withExclusiveStore(
         allowPrivacyClosed: true,
         allowPrivacyClosing: true
       ) { urls in
         guard FileManager.default.fileExists(atPath: urls.privacyClosing.path) else {
-          throw RoutineKindWidgetLifecycleError.storage
+          throw LayerwellWidgetLifecycleError.storage
         }
         let priorMarker = try? readPrivacyClosedReceipt(urls.privacyClosed)
         let closedReceipt = try writePrivacyClosedReceipt(
@@ -1726,7 +1726,7 @@ enum RoutineKindWidgetLifecycleStore {
         )
         try removeDatabaseFamily(urls.database)
         let connection = try openDatabase(urls)
-        let result = try connection.transaction { () -> RoutineKindAuthorityReceipt in
+        let result = try connection.transaction { () -> LayerwellAuthorityReceipt in
           _ = try readAuthority(connection)
           try purgeDerivedTables(connection)
           try connection.withStatement(
@@ -1736,10 +1736,10 @@ enum RoutineKindWidgetLifecycleStore {
             try bindText(closedReceipt.authorityNonce, to: 1, in: statement)
             try stepDone(statement)
             guard sqlite3_changes(connection.handle) == 1 else {
-              throw RoutineKindWidgetLifecycleError.storage
+              throw LayerwellWidgetLifecycleError.storage
             }
           }
-          return RoutineKindAuthorityReceipt(
+          return LayerwellAuthorityReceipt(
             authorityNonce: closedReceipt.authorityNonce,
             enabled: false,
             ownerGeneration: nil,
@@ -1756,7 +1756,7 @@ enum RoutineKindWidgetLifecycleStore {
               try scalarCount(connection, sql: "SELECT COUNT(*) FROM outbox") == 0,
               try scalarCount(connection, sql: "SELECT COUNT(*) FROM snapshot_actions") == 0,
               try scalarCount(connection, sql: "SELECT COUNT(*) FROM snapshots") == 0 else {
-          throw RoutineKindWidgetLifecycleError.storage
+          throw LayerwellWidgetLifecycleError.storage
         }
         do {
           try FileManager.default.removeItem(at: urls.privacyClosing)
@@ -1766,7 +1766,7 @@ enum RoutineKindWidgetLifecycleStore {
           throw error
         }
         guard !FileManager.default.fileExists(atPath: urls.privacyClosing.path) else {
-          throw RoutineKindWidgetLifecycleError.storage
+          throw LayerwellWidgetLifecycleError.storage
         }
         return result
       }
@@ -1778,25 +1778,25 @@ enum RoutineKindWidgetLifecycleStore {
     WidgetsStorage.removeObject(forKey: activityURLKey)
     WidgetCenter.shared.reloadAllTimelines()
     if let storageError { throw storageError }
-    guard let receipt else { throw RoutineKindWidgetLifecycleError.storage }
+    guard let receipt else { throw LayerwellWidgetLifecycleError.storage }
     return try encode(receipt)
   }
 
   private static func authorizedLiveActivityProps(
     name: String,
     propsJSON: String
-  ) throws -> RoutineKindLiveActivityPropsRecord? {
-    guard name == activityName else { throw RoutineKindWidgetLifecycleError.unavailable }
+  ) throws -> LayerwellLiveActivityPropsRecord? {
+    guard name == activityName else { throw LayerwellWidgetLifecycleError.unavailable }
     guard liveActivityIsEnabled,
           let data = propsJSON.data(using: .utf8),
           data.count <= maximumLiveActivityJSONBytes,
           let object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-      throw RoutineKindWidgetLifecycleError.unavailable
+      throw LayerwellWidgetLifecycleError.unavailable
     }
     let props = try decodeLiveActivityProps(object)
     let nowMs = Int64(Date().timeIntervalSince1970 * 1_000)
     guard props.status != "stale", props.staleAtMs > nowMs else {
-      throw RoutineKindWidgetLifecycleError.stale
+      throw LayerwellWidgetLifecycleError.stale
     }
     try withExclusiveStore { urls in
       let connection = try openDatabase(urls)
@@ -1804,17 +1804,17 @@ enum RoutineKindWidgetLifecycleStore {
       let widget = try connection.withStatement(
         "SELECT current_props_json, phase, stale_at_ms FROM snapshots " +
           "WHERE snapshot_nonce=? AND owner_generation=?"
-      ) { statement -> RoutineKindWidgetPropsRecord in
+      ) { statement -> LayerwellWidgetPropsRecord in
         try bindText(props.snapshotNonce, to: 1, in: statement)
         try bindText(props.ownerGeneration, to: 2, in: statement)
         guard sqlite3_step(statement) == SQLITE_ROW,
               try columnText(statement, 1) == "PM",
               sqlite3_column_int64(statement, 2) == props.staleAtMs else {
-          throw RoutineKindWidgetLifecycleError.stale
+          throw LayerwellWidgetLifecycleError.stale
         }
         let value = try decodeWidgetProps(try dictionary(from: columnText(statement, 0)))
         guard sqlite3_step(statement) == SQLITE_DONE else {
-          throw RoutineKindWidgetLifecycleError.storage
+          throw LayerwellWidgetLifecycleError.storage
         }
         return value
       }
@@ -1823,7 +1823,7 @@ enum RoutineKindWidgetLifecycleStore {
             props.completedCount == widget.completedCount,
             props.totalCount == widget.totalCount,
             props.updatedAtMs == widget.updatedAtMs else {
-        throw RoutineKindWidgetLifecycleError.stale
+        throw LayerwellWidgetLifecycleError.stale
       }
     }
     return props

@@ -1,4 +1,4 @@
-import type { SkinAxis } from '@onskin/types';
+import type { SkinAxis } from '@layerwell/types';
 
 /**
  * The current content and scoring rules remain blocked by B-QUIZ-COPY.
@@ -9,7 +9,7 @@ import type { SkinAxis } from '@onskin/types';
  * satisfied against the pinned hashes.
  */
 export const QUIZ_CONTRACT_REVIEW_STATUS = 'launch-blocked' as const;
-export const QUIZ_CONTRACT_ID = 'urn:routinekind:onboarding:skin-profile' as const;
+export const QUIZ_CONTRACT_ID = 'urn:layerwell:onboarding:skin-profile' as const;
 export const QUIZ_CONTENT_VERSION = 'draft-2026-07-04' as const;
 export const QUIZ_SCORING_VERSION = 'draft-1' as const;
 export const QUIZ_OUTPUT_SCHEMA_VERSION = 1 as const;
@@ -340,11 +340,11 @@ export const QUIZ_COMBINED_MANIFEST = {
 // Pinned by quizContract.test.ts. Changing any reviewed semantic byte requires
 // an explicit version/hash update and a fresh professional review.
 export const QUIZ_CONTENT_SHA256 =
-  'be00ee6008ca03fbcb53e7256432cd044e6131e9aecd5bf90809b2a57cde39bb' as const;
+  '8398b025f7ebfa8cd823c180ba6d98475554b82651970b569c736d662c7c7f2f' as const;
 export const QUIZ_SCORING_SHA256 =
-  'ffd16579edad35b21377244c41af69419248faa3f8f2238183c58a5a8893c893' as const;
+  'be3a05c5c9494d0976868c4d4e34c4c71fd01b8be19f9207e0198b930e1b982a' as const;
 export const QUIZ_CONTRACT_SHA256 =
-  '95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16' as const;
+  'c434e4f031d2d9d18218a0ccddcecf3fff182e8208367375aee16c574c814007' as const;
 
 export const QUIZ_SCORING_PROVENANCE = Object.freeze({
   contractId: QUIZ_CONTRACT_ID,

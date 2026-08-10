@@ -170,7 +170,7 @@ the destructive boundary must finish before a new owner can be claimed. Partial
 cleanup keeps the tuple gated for retry.
 
 Forced invalidation also uses the separate durable exact-`1`
-`routinekind.authDerivedCleanupRequired.v1` control. It is committed before
+`layerwell.authDerivedCleanupRequired.v1` control. It is committed before
 Auth sign-out, is not removed by ordinary private-data cleanup, and is cleared
 only after session/persisted-session removal, write settling, any authorized
 private cleanup, and auth-derived query/notification/analytics/image-memory and
@@ -312,7 +312,7 @@ The local collector is registry-driven and tested against every entry in `LOCAL_
 
 Native private-record content keys are written only to SecureStore; AsyncStorage is an explicit Expo web path and a read-only migration source for keys written by older native builds. SecureStore unavailable/missing results, malformed keys, and authentication failures preserve the original encrypted envelope. A failed encrypted read records the exact ciphertext snapshot and blocks a feature store from replacing that snapshot with an empty/default value until a successful read or explicit deletion occurs. First writes share one in-flight key creation, and missing-key creation scans all app storage for existing private envelopes before generating anything.
 
-Progress image/note key reads are also non-creating. A non-sensitive AsyncStorage marker records that Progress key material has existed; write paths require that marker to persist, and an upgrade-time encrypted-file scan prevents a missing key from being silently replaced when older `.onskinphoto` files exist. The marker is cleanup metadata, is excluded from account export, and is removed with local private data. Genuine OS key loss remains unrecoverable in V1 because cloud backup/key escrow is intentionally unavailable.
+Progress image/note key reads are also non-creating. A non-sensitive AsyncStorage marker records that Progress key material has existed; write paths require that marker to persist, and an upgrade-time encrypted-file scan prevents a missing key from being silently replaced when older `.layerwellphoto` files exist. The marker is cleanup metadata, is excluded from account export, and is removed with local private data. Genuine OS key loss remains unrecoverable in V1 because cloud backup/key escrow is intentionally unavailable.
 
 Every data-bearing Progress route consumes that failure boundary after entitlement and biometric unlock. The tab, capture, review, and detail remain unmounted behind shared recovery until one encrypted metadata query succeeds; retry performs a real reread, and an unreadable store cannot become an empty-timeline or missing-photo state.
 

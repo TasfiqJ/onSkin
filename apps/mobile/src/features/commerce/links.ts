@@ -1,4 +1,4 @@
-import type { AffiliateSource } from '@onskin/types';
+import type { AffiliateSource } from '@layerwell/types';
 
 // Dormant rail-agnostic shapes remain for compatibility. COM-01A admits no
 // retailer rows or outbound URL in any runtime.

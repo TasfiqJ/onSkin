@@ -145,7 +145,7 @@ function exportFileSlug(): string {
   const displayName =
     Deno.env.get('EXPO_PUBLIC_APP_DISPLAY_NAME') ??
     Deno.env.get('APP_DISPLAY_NAME') ??
-    'RoutineKind';
+    'Layerwell';
   const slug = displayName
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -153,7 +153,7 @@ function exportFileSlug(): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
-  return slug || 'routinekind';
+  return slug || 'layerwell';
 }
 
 function exportFileName(): string {

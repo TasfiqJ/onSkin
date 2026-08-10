@@ -1,4 +1,4 @@
-import type { FunctionalTag, RoutinePhase, SequencingRole } from '@onskin/types';
+import type { FunctionalTag, RoutinePhase, SequencingRole } from '@layerwell/types';
 
 import { canonicalSha256 } from '@/features/intelligence/conflictRuleCorpus.v1';
 
@@ -140,7 +140,7 @@ export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
 
 export const ROUTINE_SEQUENCING_CORPUS_CONTENT: RoutineSequencingCorpusContent = {
   schemaVersion: 1,
-  policyId: 'routinekind-routine-sequencing-v1',
+  policyId: 'layerwell-routine-sequencing-v1',
   policyVersion: 1,
   targetJurisdictions: ['US'],
   marketScopePolicyId: ROUTINE_SEQUENCING_MARKET_SCOPE_POLICY.policyId,

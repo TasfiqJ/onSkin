@@ -266,7 +266,7 @@ export function activeHealthProcessingLeaseSnapshot(
 type DependentTransportConsentType =
   | 'photo_cloud_backup'
   | 'photo_trend_insights'
-  | 'ask_onskin'
+  | 'ask_layerwell'
   | 'community_participation'
   | 'data_sharing';
 
@@ -315,9 +315,9 @@ const DEPENDENT_POSTGREST_TABLES: Readonly<
     Record<(typeof HEALTH_PROCESSING_POSTGREST_TABLES)[number], DependentTransportConsentType>
   >
 > = Object.freeze({
-  ask_safety_audit: 'ask_onskin',
-  ask_sessions: 'ask_onskin',
-  ask_turn_audit: 'ask_onskin',
+  ask_safety_audit: 'ask_layerwell',
+  ask_sessions: 'ask_layerwell',
+  ask_turn_audit: 'ask_layerwell',
   commerce_click_events: 'data_sharing',
   community_blocks: 'community_participation',
   community_questions: 'community_participation',

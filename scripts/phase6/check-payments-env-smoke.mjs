@@ -64,7 +64,7 @@ const accessEvidenceReviewedAt = new Date().toISOString();
 const accessEvidenceFixturePath = `docs/phase-6/revenuecat-v2-access-evidence.smoke-${process.pid}.json`;
 const accessEvidenceFixtureAbsolutePath = resolve(root, accessEvidenceFixturePath);
 const revenueCatAppId = 'appProductionIos2026';
-const productionBundleIdentifier = 'com.routinekind.app';
+const productionBundleIdentifier = 'com.layerwell.app';
 const productionBuildNumber = '104';
 const trustedEntitlementsSourceGitSha = String(
   spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', env: processBaseEnv })
@@ -128,7 +128,7 @@ function trustedObservation(environment, operation, ageMinutes, appUserId) {
     appUserIdSha256: sha256RevenueCatAppUserId(appUserId),
     artifactPath,
     artifactSha256: createHash('sha256').update(artifactBytes).digest('hex'),
-    productId: 'routinekind.pro.annual',
+    productId: 'layerwell.pro.annual',
     entitlementId: 'pro',
     verificationResult: operation === 'purchase' ? 'VERIFIED' : 'VERIFIED_ON_DEVICE',
     isActive: true,
@@ -154,8 +154,8 @@ function trustedEntitlementsDocument() {
     },
     entitlementId: 'pro',
     productIds: {
-      annual: 'routinekind.pro.annual',
-      monthly: 'routinekind.pro.monthly',
+      annual: 'layerwell.pro.annual',
+      monthly: 'layerwell.pro.monthly',
     },
     observations: {
       sandbox: {
@@ -193,8 +193,8 @@ const completeEnv = {
   EXPO_PUBLIC_REVENUECAT_IOS_KEY: 'appl_livevalue123',
   EXPO_PUBLIC_REVENUECAT_ANDROID_KEY: 'goog_livevalue123',
   EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID: 'pro',
-  EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual',
-  EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'routinekind.pro.monthly',
+  EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'layerwell.pro.annual',
+  EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'layerwell.pro.monthly',
   REVENUECAT_WEBHOOK_AUTH: 'RevenueCatWebhookSharedAuth2026_AlphaBeta789',
   REVENUECAT_WEBHOOK_SIGNING_SECRET: 'whsec_RevenueCatSigning2026_AlphaBeta789',
   REVENUECAT_SECRET_API_KEY: revenueCatLegacySecretApiKey,
@@ -208,9 +208,9 @@ const completeEnv = {
   CATALOG_RELEASE_IOS_BUILD_NUMBER: productionBuildNumber,
   PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS: 'true',
   BRAND_LEGAL_CLEARANCE: 'cleared',
-  EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
-  EXPO_PUBLIC_TERMS_URL: 'https://routinekind.app/terms',
-  EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.app/support',
+  EXPO_PUBLIC_PRIVACY_URL: 'https://layerwell.app/privacy',
+  EXPO_PUBLIC_TERMS_URL: 'https://layerwell.app/terms',
+  EXPO_PUBLIC_SUPPORT_URL: 'https://layerwell.app/support',
   PHASE6_RC_OFFERING_REVIEWED: ' TRUE ',
   PHASE6_IOS_SANDBOX_RESTORE_PASS: 'true',
   PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS: ' true ',
@@ -233,7 +233,7 @@ function output(result) {
 }
 
 function runPacket(extraEnv, args = []) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase6-packet-'));
+  const outDir = mkdtempSync(join(tmpdir(), 'layerwell-phase6-packet-'));
   try {
     const result = spawnSync(process.execPath, [packetPath, ...args], {
       cwd: root,
@@ -257,7 +257,7 @@ function runSourceContractTests() {
 }
 
 function runPacketWithUnavailableGit(extraEnv, args = []) {
-  const unavailablePath = join(tmpdir(), `routinekind-phase6-no-git-${process.pid}`);
+  const unavailablePath = join(tmpdir(), `layerwell-phase6-no-git-${process.pid}`);
   return runPacket({ ...extraEnv, PATH: unavailablePath, Path: unavailablePath }, args);
 }
 
@@ -364,7 +364,7 @@ const cases = [
   },
   {
     name: 'strict payments env rejects local product ids',
-    result: run({ EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind_pro_annual_dev' }),
+    result: run({ EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'layerwell_pro_annual_dev' }),
     expect(result) {
       return (
         result.status === 1 &&
@@ -509,7 +509,7 @@ const cases = [
   },
   {
     name: 'strict payments env rejects malformed production policy URLs',
-    result: run({ EXPO_PUBLIC_SUPPORT_URL: 'https://user:pass@routinekind.app/support' }),
+    result: run({ EXPO_PUBLIC_SUPPORT_URL: 'https://user:pass@layerwell.app/support' }),
     expect(result) {
       return (
         result.status === 1 &&
@@ -863,7 +863,7 @@ const cases = [
   {
     name: 'Phase 6 packet blocks placeholder production config without leaking secrets',
     result: runPacket({
-      EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual.dev',
+      EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'layerwell.pro.annual.dev',
       REVENUECAT_WEBHOOK_SIGNING_SECRET: '__BLOCKED_PLACEHOLDER__',
       REVENUECAT_PROJECT_ID: '',
       REVENUECAT_V2_SECRET_API_KEY: '__BLOCKED_PLACEHOLDER__',

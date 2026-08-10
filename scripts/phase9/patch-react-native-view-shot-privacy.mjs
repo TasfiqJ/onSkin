@@ -339,7 +339,7 @@ function verifyCurrentManifest(root) {
 function atomicPatch(root, original) {
   const parentRelative = dirname(INSTALLED_MANIFEST_PATH).replaceAll('\\', '/');
   const parent = checkedPath(root, parentRelative, 'directory');
-  const temporaryName = `.${basename(INSTALLED_MANIFEST_PATH)}.routinekind-${process.pid}-${randomBytes(8).toString('hex')}.tmp`;
+  const temporaryName = `.${basename(INSTALLED_MANIFEST_PATH)}.layerwell-${process.pid}-${randomBytes(8).toString('hex')}.tmp`;
   const temporaryPath = join(parent.absolute, temporaryName);
   let descriptor;
   let temporaryCreated = false;

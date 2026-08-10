@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import { localDataOwnerBinding } from '@/lib/auth/sessionOwner';
 
 export const HEALTH_WITHDRAWAL_PENDING_INTENTS_KEY =
-  'routinekind.health_data_withdrawal.pending.v1';
+  'layerwell.health_data_withdrawal.pending.v1';
 export const HEALTH_WITHDRAWAL_PENDING_INTENT_INVALID = 'HEALTH_WITHDRAWAL_PENDING_INTENT_INVALID';
 export const HEALTH_WITHDRAWAL_PENDING_INTENT_STORE_UNAVAILABLE =
   'HEALTH_WITHDRAWAL_PENDING_INTENT_STORE_UNAVAILABLE';

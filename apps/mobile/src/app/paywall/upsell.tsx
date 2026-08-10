@@ -16,7 +16,7 @@ import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
-import type { GatedFeature } from '@onskin/types';
+import type { GatedFeature } from '@layerwell/types';
 
 // Contextual upsell (design 04, docs/08 §3.2). A dimmed bottom sheet framed around
 // the gated feature, same compliance elements, dismissible. Reached when a free /

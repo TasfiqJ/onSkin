@@ -2,7 +2,7 @@
 
 Date: 2026-07-12
 Status: proposed engineering source document; not proof of completion
-Scope: RoutineKind mobile app, Supabase backend, native build pipeline, release evidence, and production operations
+Scope: Layerwell mobile app, Supabase backend, native build pipeline, release evidence, and production operations
 Primary objective: maximize the practical performance, reliability, privacy, and native quality ceiling of the existing Expo React Native architecture on supported iOS and Android phones
 
 ## 0. Executive Verdict

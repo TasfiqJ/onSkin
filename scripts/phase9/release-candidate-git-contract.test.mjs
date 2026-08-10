@@ -53,7 +53,7 @@ function fixture(
   t,
   { externalChange = false, externalRenameIntoRc = false, omitIndexFromLedger = false } = {},
 ) {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-rc-git-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-rc-git-'));
   t.after(() => rmSync(root, { force: true, recursive: true }));
   git(root, 'init', '--initial-branch=main');
   git(root, 'config', 'user.email', 'release-contract@example.invalid');
@@ -172,7 +172,7 @@ test('rejects modified, hardlinked, skip-worktree, and ignored-untracked metadat
   });
   await t.test('hardlinked file', (child) => {
     const value = fixture(child);
-    const outside = mkdtempSync(join(tmpdir(), 'onskin-rc-hardlink-'));
+    const outside = mkdtempSync(join(tmpdir(), 'layerwell-rc-hardlink-'));
     child.after(() => rmSync(outside, { force: true, recursive: true }));
     linkSync(join(value.root, ...MANIFEST.split('/')), join(outside, 'alias'));
     const result = auditFixture(value);
@@ -196,7 +196,7 @@ test('rejects modified, hardlinked, skip-worktree, and ignored-untracked metadat
     assert.equal(result.normalIndexState, false);
   });
   await t.test('ignored untracked packet', (child) => {
-    const root = mkdtempSync(join(tmpdir(), 'onskin-rc-git-'));
+    const root = mkdtempSync(join(tmpdir(), 'layerwell-rc-git-'));
     child.after(() => rmSync(root, { force: true, recursive: true }));
     git(root, 'init', '--initial-branch=main');
     git(root, 'config', 'user.email', 'release-contract@example.invalid');
@@ -217,7 +217,7 @@ test('rejects modified, hardlinked, skip-worktree, and ignored-untracked metadat
 test('ignores inherited Git repository, config, and PATH selection environment', (t) => {
   const value = fixture(t);
   const expectedHeadGitSha = git(value.root, 'rev-parse', 'HEAD');
-  const decoyRoot = mkdtempSync(join(tmpdir(), 'onskin-rc-git-decoy-'));
+  const decoyRoot = mkdtempSync(join(tmpdir(), 'layerwell-rc-git-decoy-'));
   t.after(() => rmSync(decoyRoot, { force: true, recursive: true }));
   git(decoyRoot, 'init', '--initial-branch=main');
   git(decoyRoot, 'config', 'user.email', 'decoy@example.invalid');

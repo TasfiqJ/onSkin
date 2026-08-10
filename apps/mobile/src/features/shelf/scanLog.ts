@@ -1,4 +1,4 @@
-import type { ShelfScanResult } from '@onskin/types';
+import type { ShelfScanResult } from '@layerwell/types';
 
 import type { CatalogLookupResponse } from '@/features/catalog/client';
 import { track } from '@/lib/analytics/track';

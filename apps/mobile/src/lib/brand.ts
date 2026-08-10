@@ -1,4 +1,4 @@
-const WORKING_APP_NAME = 'RoutineKind';
+const WORKING_APP_NAME = 'Layerwell';
 
 function normalizeName(value: string | undefined, fallback: string): string {
   const candidate = value?.trim().replace(/\s+/g, ' ');

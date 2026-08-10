@@ -14,7 +14,7 @@ evidence, and approval templates are deliberately pending.
 
 - Importers perform no network I/O. OBF and CosIng are not runtime recipients.
 - OBF images and every source image field remain excluded.
-- Missing-product and wrong-match reports stay in OnSkin's owner-scoped,
+- Missing-product and wrong-match reports stay in Layerwell's owner-scoped,
   first-party correction workflow. No report or user lookup is published to a
   source.
 - A fixture or unsigned candidate can test mechanics and compute exact hashes,

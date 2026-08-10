@@ -183,7 +183,7 @@ describe('v3 completion RPC replay worker', () => {
       'utf8',
     );
     expect(source).toContain('legacy_pending_completion_sync');
-    expect(source).not.toContain("removePrivateItem('onskin.completions.pending')");
+    expect(source).not.toContain("removePrivateItem('layerwell.completions.pending')");
     expect(source).not.toContain('LEGACY_COMPLETION_QUEUE_KEY');
   });
 

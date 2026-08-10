@@ -1,11 +1,11 @@
-import type { ConsentType } from '@onskin/types';
+import type { ConsentType } from '@layerwell/types';
 import * as Crypto from 'expo-crypto';
 
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { HEALTH_DATA_CONSENT, HEALTH_DATA_WITHDRAWAL } from './consentCopy';
 
-const HEALTH_DATA_CONSENT_KEY = 'onskin.healthDataCollectionConsent.v1';
+const HEALTH_DATA_CONSENT_KEY = 'layerwell.healthDataCollectionConsent.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const HEALTH_CONSENT_INVALID = 'HEALTH_CONSENT_INVALID';

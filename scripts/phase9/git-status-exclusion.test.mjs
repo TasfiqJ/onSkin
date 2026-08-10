@@ -20,7 +20,7 @@ function writeRepoFile(root, repoPath, contents) {
 }
 
 test('an exact packet-output exclusion still reports another dirty governed output', async (t) => {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'onskin-exact-status-exclusion-'));
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'layerwell-exact-status-exclusion-'));
   t.after(() => rmSync(fixtureRoot, { recursive: true, force: true }));
   git(fixtureRoot, ['init', '--quiet']);
   git(fixtureRoot, ['config', 'user.name', 'Git Status Test']);

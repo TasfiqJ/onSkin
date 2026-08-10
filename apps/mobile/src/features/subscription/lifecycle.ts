@@ -7,7 +7,7 @@ import { loadEntitlement } from './store';
  * A route is returned only after an atomic durable reservation for the exact
  * expiry succeeds, so concurrent mounts cannot present the prompt twice.
  */
-const PROMPT_KEY = 'onskin.subscription.promptedExpiry';
+const PROMPT_KEY = 'layerwell.subscription.promptedExpiry';
 const SCHEMA_VERSION = 1 as const;
 
 export const SUBSCRIPTION_PROMPT_INVALID = 'SUBSCRIPTION_PROMPT_INVALID';

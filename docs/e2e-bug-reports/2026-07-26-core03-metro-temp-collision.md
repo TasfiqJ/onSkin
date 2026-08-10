@@ -22,7 +22,7 @@ verification copies as packages.
 
 Metro reported a Haste package-name collision because the root `package.json`
 and `.tmp/cat08-local-verify-v2/package.json` both named the package
-`routinekind`.
+`layerwell`.
 
 ## Evidence
 

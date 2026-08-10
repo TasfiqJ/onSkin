@@ -1,8 +1,8 @@
 {
-  "name": "routinekind",
+  "name": "layerwell",
   "version": "0.1.0",
   "private": true,
-  "description": "RoutineKind - cross-platform skincare routine app (Expo + Supabase)",
+  "description": "Layerwell - cross-platform skincare routine app (Expo + Supabase)",
   "workspaces": [
     "apps/*",
     "packages/*"

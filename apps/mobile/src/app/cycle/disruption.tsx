@@ -1,4 +1,4 @@
-import type { DisruptionReason } from '@onskin/types';
+import type { DisruptionReason } from '@layerwell/types';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';

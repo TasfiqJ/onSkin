@@ -67,7 +67,7 @@ function safeCleanup(root) {
   if (
     rel.startsWith('..') ||
     rel.includes(sep) ||
-    !rel.startsWith('routinekind-view-shot-patch-')
+    !rel.startsWith('layerwell-view-shot-patch-')
   ) {
     throw new Error('Refusing to clean an unexpected test fixture path.');
   }
@@ -75,7 +75,7 @@ function safeCleanup(root) {
 }
 
 function createFixture(t, manifest = ORIGINAL_MANIFEST) {
-  const root = mkdtempSync(join(tmpdir(), 'routinekind-view-shot-patch-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-view-shot-patch-'));
   t.after(() => safeCleanup(root));
   mkdirSync(join(root, 'apps/mobile'), { recursive: true });
   mkdirSync(join(root, 'node_modules/react-native-view-shot/ios'), { recursive: true });

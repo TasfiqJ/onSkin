@@ -4,9 +4,9 @@ import WidgetKit
 
 func parseTimeline(identifier: String, name: String, family: WidgetFamily) -> [WidgetsTimelineEntry] {
   let timeline: [Any]
-  if name == RoutineKindWidgetLifecycleStore.widgetName {
+  if name == LayerwellWidgetLifecycleStore.widgetName {
     guard WidgetsStorage.appGroupIdentifier == identifier else { return [] }
-    timeline = (try? RoutineKindWidgetLifecycleStore.currentTimelineDictionaries()) ?? []
+    timeline = (try? LayerwellWidgetLifecycleStore.currentTimelineDictionaries()) ?? []
   } else {
     timeline = WidgetsStorage.getArray(forKey: "__expo_widgets_\(name)_timeline") ?? []
   }

@@ -1,4 +1,4 @@
-import type { PregnancyStatus } from '@onskin/types';
+import type { PregnancyStatus } from '@layerwell/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';

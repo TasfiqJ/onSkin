@@ -39,7 +39,7 @@ Apple’s current rules create a higher-order restriction that minimization alon
 does not solve. [App Review Guideline 5.1.2(vi)](https://developer.apple.com/app-store/review/guidelines/)
 bars data gathered from depth and/or facial-mapping tools, including the listed
 Camera and Photo APIs, from marketing, advertising, or use-based data mining.
-OnSkin’s face/skin-photo context therefore must be treated as disqualified from
+Layerwell’s face/skin-photo context therefore must be treated as disqualified from
 commerce selection, targeting, attribution, or optimization unless Apple and
 qualified counsel accept an exact, independently sourced future architecture.
 Turning a photo-derived result into a category and then sending only an opaque

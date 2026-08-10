@@ -1,5 +1,5 @@
 import 'react-native-url-polyfill/auto'; // supabase-js needs a WHATWG URL on RN
-import type { ClientDatabase } from '@onskin/types/database';
+import type { ClientDatabase } from '@layerwell/types/database';
 import type { Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
 

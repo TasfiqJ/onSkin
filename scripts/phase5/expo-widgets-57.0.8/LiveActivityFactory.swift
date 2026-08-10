@@ -15,16 +15,16 @@ final class LiveActivityFactory: SharedObject {
 
   func start(props: String, url: URL?) throws -> LiveActivity {
     guard #available(iOS 16.2, *) else { throw LiveActivitiesNotSupportedException() }
-    guard name == RoutineKindWidgetLifecycleStore.activityName else {
-      throw StartLiveActivityException("Only RoutineKindEvening Live Activities are supported.")
+    guard name == LayerwellWidgetLifecycleStore.activityName else {
+      throw StartLiveActivityException("Only LayerwellEvening Live Activities are supported.")
     }
     guard ActivityAuthorizationInfo().areActivitiesEnabled else {
       throw LiveActivitiesNotSupportedException()
     }
 
     do {
-      let authorizedURL = try RoutineKindWidgetLifecycleStore.authorizedDeepLink(url)
-      let staleDate = try RoutineKindWidgetLifecycleStore.staleDate(
+      let authorizedURL = try LayerwellWidgetLifecycleStore.authorizedDeepLink(url)
+      let staleDate = try LayerwellWidgetLifecycleStore.staleDate(
         name: name,
         propsJSON: props
       )
@@ -35,8 +35,8 @@ final class LiveActivityFactory: SharedObject {
         pushType: LiveActivityFactory.pushNotificationsEnabled ? .token : nil
       )
       do {
-        _ = try RoutineKindWidgetLifecycleStore.staleDate(name: name, propsJSON: props)
-      } catch RoutineKindWidgetLifecycleError.stale {
+        _ = try LayerwellWidgetLifecycleStore.staleDate(name: name, propsJSON: props)
+      } catch LayerwellWidgetLifecycleError.stale {
         Task(priority: .userInitiated) {
           let finalState = LiveActivityAttributes.ContentState(name: name, props: "{}")
           await activity.end(
@@ -44,8 +44,8 @@ final class LiveActivityFactory: SharedObject {
             dismissalPolicy: .immediate
           )
         }
-        throw RoutineKindLiveActivityStaleException()
-      } catch RoutineKindWidgetLifecycleError.unauthorized {
+        throw LayerwellLiveActivityStaleException()
+      } catch LayerwellWidgetLifecycleError.unauthorized {
         Task(priority: .userInitiated) {
           let finalState = LiveActivityAttributes.ContentState(name: name, props: "{}")
           await activity.end(
@@ -53,7 +53,7 @@ final class LiveActivityFactory: SharedObject {
             dismissalPolicy: .immediate
           )
         }
-        throw RoutineKindLiveActivityStaleException()
+        throw LayerwellLiveActivityStaleException()
       }
       WidgetsStorage.set(
         authorizedURL.absoluteString,
@@ -66,12 +66,12 @@ final class LiveActivityFactory: SharedObject {
         pushNotificationsEnabled: LiveActivityFactory.pushNotificationsEnabled
       )
       return instance
-    } catch let error as RoutineKindLiveActivityStaleException {
+    } catch let error as LayerwellLiveActivityStaleException {
       throw error
-    } catch RoutineKindWidgetLifecycleError.stale {
-      throw RoutineKindLiveActivityStaleException()
-    } catch RoutineKindWidgetLifecycleError.unauthorized {
-      throw RoutineKindLiveActivityStaleException()
+    } catch LayerwellWidgetLifecycleError.stale {
+      throw LayerwellLiveActivityStaleException()
+    } catch LayerwellWidgetLifecycleError.unauthorized {
+      throw LayerwellLiveActivityStaleException()
     } catch {
       throw StartLiveActivityException(error.localizedDescription)
     }
@@ -79,11 +79,11 @@ final class LiveActivityFactory: SharedObject {
 
   func getInstances() throws -> [LiveActivity] {
     guard #available(iOS 16.1, *) else { throw LiveActivitiesNotSupportedException() }
-    guard name == RoutineKindWidgetLifecycleStore.activityName else { return [] }
+    guard name == LayerwellWidgetLifecycleStore.activityName else { return [] }
 
     return Activity<LiveActivityAttributes>.activities
       .filter {
-        $0.content.state.name == RoutineKindWidgetLifecycleStore.activityName &&
+        $0.content.state.name == LayerwellWidgetLifecycleStore.activityName &&
           $0.activityState == .active
       }
       .sorted { $0.id < $1.id }

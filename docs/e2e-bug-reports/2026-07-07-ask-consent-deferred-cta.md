@@ -24,7 +24,7 @@ The screen correctly deferred cloud Ask and returned to `/ask`, but the CTA used
 ## Evidence
 
 - Source review: `apps/mobile/src/app/ask/consent.tsx`
-- User-flow branch: `docs/USER_FLOW_TREE.md` Ask RoutineKind Deterministic Advisor / cloud consent direct route while cloud Ask is disabled
+- User-flow branch: `docs/USER_FLOW_TREE.md` Ask Layerwell Deterministic Advisor / cloud consent direct route while cloud Ask is disabled
 
 ## Frequency
 

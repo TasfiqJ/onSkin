@@ -1,4 +1,4 @@
-import type { GoalId, SequencingRole } from '@onskin/types';
+import type { GoalId, SequencingRole } from '@layerwell/types';
 
 import {
   evaluateConflicts,

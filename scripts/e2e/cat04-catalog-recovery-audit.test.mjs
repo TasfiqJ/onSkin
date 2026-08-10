@@ -306,8 +306,8 @@ test('report lanes prove disclosure and explicit confirmation before transport',
     source,
     /fillByLabel\(client, 'Product name for report', 'Confirmed missing product'\)/,
   );
-  assert.match(source, /includes\('RoutineKind account ID'\)/);
-  assert.match(source, /includes\('included in your RoutineKind data export'\)/);
+  assert.match(source, /includes\('Layerwell account ID'\)/);
+  assert.match(source, /includes\('included in your Layerwell data export'\)/);
   assert.match(source, /includes\('Nothing is sent to Open Beauty Facts'\)/);
   assert.equal((source.match(/clickByText\(client, 'Send report'\)/g) ?? []).length, 3);
 });

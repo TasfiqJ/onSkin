@@ -1,4 +1,4 @@
-import type { CuratorKind } from '@onskin/types';
+import type { CuratorKind } from '@layerwell/types';
 
 import { BRAND } from '@/lib/brand';
 

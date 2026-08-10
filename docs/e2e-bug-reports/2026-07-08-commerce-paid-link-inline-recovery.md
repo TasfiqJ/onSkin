@@ -2,7 +2,7 @@
 
 Severity: Medium
 Surface: Mixed: Expo web verification, iOS/Android native risk
-Environment: Expo web at 320 x 568, `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`
+Environment: Expo web at 320 x 568, `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://layerwell.app`
 Feature: Commerce where-to-buy and shoppable stack paid links
 Date: 2026-07-08
 Tester: Codex

@@ -74,9 +74,9 @@ describe('local device data export', () => {
     ];
     expect(accountedKeys.sort()).toEqual([...LOCAL_PRIVATE_DATA_KEYS].sort());
     expect(new Set(accountedKeys).size).toBe(accountedKeys.length);
-    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('routinekind.widgetActionMap.v1');
-    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('routinekind.widgetActionMap.v2');
-    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('routinekind.widgetOwnerAuthority.v1');
+    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('layerwell.widgetActionMap.v1');
+    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('layerwell.widgetActionMap.v2');
+    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('layerwell.widgetOwnerAuthority.v1');
   });
 
   it('never reads or exports durable privacy-request recovery capabilities', async () => {
@@ -124,7 +124,7 @@ describe('local device data export', () => {
         }),
       ],
       [
-        'onskin.skinprofile.v1',
+        'layerwell.skinprofile.v1',
         JSON.stringify({
           version: 2,
           profile: {
@@ -135,7 +135,7 @@ describe('local device data export', () => {
         }),
       ],
       [
-        'onskin.shelf.v1',
+        'layerwell.shelf.v1',
         JSON.stringify([
           {
             id: 'shelf-1',
@@ -145,14 +145,14 @@ describe('local device data export', () => {
           },
         ]),
       ],
-      ['onskin.completions.v1', JSON.stringify({ '2026-07-09': ['PM:shelf-1'] })],
-      ['onskin.conflict.overrides', JSON.stringify(['rule-1:acid+retinoid'])],
+      ['layerwell.completions.v1', JSON.stringify({ '2026-07-09': ['PM:shelf-1'] })],
+      ['layerwell.conflict.overrides', JSON.stringify(['rule-1:acid+retinoid'])],
       [
-        'onskin.cycle.v1',
+        'layerwell.cycle.v1',
         JSON.stringify({ schemaVersion: 1, variant: 'gentle', customCycle: null }),
       ],
       [
-        'routinekind.cycle.v2',
+        'layerwell.cycle.v2',
         JSON.stringify({
           schemaVersion: 1,
           variant: 'custom',
@@ -164,11 +164,11 @@ describe('local device data export', () => {
         }),
       ],
       [
-        'routinekind.routineOrder.v1',
+        'layerwell.routineOrder.v1',
         JSON.stringify({ schemaVersion: 1, am: ['shelf-1'], pm: ['shelf-1'] }),
       ],
       [
-        'routinekind.healthDataLifecycle.v1',
+        'layerwell.healthDataLifecycle.v1',
         JSON.stringify({
           schemaVersion: 3,
           ownerUserId: 'user-1',
@@ -185,7 +185,7 @@ describe('local device data export', () => {
         }),
       ],
       [
-        'routinekind.catalog.lookupQueue.v1',
+        'layerwell.catalog.lookupQueue.v1',
         JSON.stringify({
           version: 1,
           items: [
@@ -205,7 +205,7 @@ describe('local device data export', () => {
         }),
       ],
       [
-        'onskin.photos.v1',
+        'layerwell.photos.v1',
         JSON.stringify([
           {
             id: 'photo-1',
@@ -213,8 +213,8 @@ describe('local device data export', () => {
             takenLocalDate: '2026-07-09',
             notes: null,
             notesCiphertext: 'encrypted-note',
-            localUri: 'file:///private/photo-1.onskinphoto',
-            encryptedLocalUri: 'file:///private/photo-1.onskinphoto',
+            localUri: 'file:///private/photo-1.layerwellphoto',
+            encryptedLocalUri: 'file:///private/photo-1.layerwellphoto',
             thumbnailLocalUri: 'file:///private/photo-1-thumb.jpg',
             storagePath: 'user-1/photo-1.jpg',
             keyId: 'photo-content-key-v1',
@@ -347,7 +347,7 @@ describe('local device data export', () => {
         new Map(
           keys.map((key) => [
             key,
-            key === 'onskin.photos.v1'
+            key === 'layerwell.photos.v1'
               ? JSON.stringify([{ id: 'photo-1', notesCiphertext: 'invalid-envelope' }])
               : null,
           ]),
@@ -461,9 +461,9 @@ describe('local device data export', () => {
         new Map(
           keys.map((key) => [
             key,
-            key === 'onskin.completions.v1'
+            key === 'layerwell.completions.v1'
               ? JSON.stringify(completionState)
-              : key === 'onskin.shelf.v1'
+              : key === 'layerwell.shelf.v1'
                 ? JSON.stringify(shelfState)
                 : null,
           ]),
@@ -489,7 +489,7 @@ describe('local device data export', () => {
         new Map(
           keys.map((key) => [
             key,
-            key === 'onskin.conflict.overrides' ? JSON.stringify(future) : null,
+            key === 'layerwell.conflict.overrides' ? JSON.stringify(future) : null,
           ]),
         ),
     );

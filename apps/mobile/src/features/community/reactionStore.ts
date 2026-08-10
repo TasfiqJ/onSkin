@@ -10,7 +10,7 @@ import {
 // deferred sync target (B-COMMUNITY-MOD); this AsyncStorage set is the v1 source
 // of truth (D-029) so the reaction survives navigation/remount instead of living
 // only in component state. Stores note ids only, no content.
-const KEY = 'onskin.community.reactions.v1';
+const KEY = 'layerwell.community.reactions.v1';
 
 async function load(lease: HealthDataWriteOperationLease): Promise<string[]> {
   try {

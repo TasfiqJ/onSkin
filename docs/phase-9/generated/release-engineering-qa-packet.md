@@ -1,10 +1,10 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-08-09T06:50:49.987Z
+Generated: 2026-08-10T01:38:32.106Z
 Status: blocked
-Git SHA: b3242aa403cc9ae631d3d6a3e85c2ebe916576c6
-Git status: clean
-NUL Git status SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+Git SHA: fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f
+Git status: DIRTY
+NUL Git status SHA-256: 2b1efff96f202b5ab111f1a63c4e13a1db18a6edda04fb362029cc060089c8e5
 Pinned input integrity: blocked
 
 ## Governed Evidence Chain
@@ -12,7 +12,7 @@ Pinned input integrity: blocked
 - Status: blocked
 - Source S: `BLOCKED`
 - Evidence E: `BLOCKED`
-- Current R/F HEAD: `b3242aa403cc9ae631d3d6a3e85c2ebe916576c6`
+- Current R/F HEAD: `fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f`
 - Selected RC: `BLOCKED`
 - Ledger path: `BLOCKED`
 - Ledger SHA-256: `BLOCKED`
@@ -29,11 +29,11 @@ Pinned input integrity: blocked
 ## CAT07 Launch Evidence
 
 - Overall: blocked
-- Expected HEAD: `b3242aa403cc9ae631d3d6a3e85c2ebe916576c6`
+- Expected HEAD: `fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f`
 - Committed validator: blocked
-- Committed validator HEAD: `b3242aa403cc9ae631d3d6a3e85c2ebe916576c6`
+- Committed validator HEAD: `fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f`
 - Full manifest validator: blocked
-- Full manifest validator HEAD: `b3242aa403cc9ae631d3d6a3e85c2ebe916576c6`
+- Full manifest validator HEAD: `fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f`
 - Summary SHA-256: `BLOCKED`
 - Manifest JSON SHA-256: `d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0`
 - Manifest Markdown SHA-256: `a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd`
@@ -160,6 +160,7 @@ Pinned input integrity: blocked
 
 ## Warnings
 
+- Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.
 - Release QA packet inputs do not all match regular, byte-identical blobs in pinned HEAD.
 - External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.
 - External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.
@@ -236,7 +237,6 @@ Pinned input integrity: blocked
 - `scripts/phase5/patch-expo-widgets-lifecycle.mjs`: `68c42bc4e5e5f2b2dda9d0916f789705c1af2d1fb819e717ec1393175492f6d2`
 - `scripts/phase5/patch-expo-widgets-lifecycle.test.mjs`: `72ed9e8ced558c074202b0216afc53c1d878b1bcd62818f5a2ef1077d2adae78`
 - `scripts/phase5/expo-widgets-lifecycle-source.test.mjs`: `c9e1c92882673beded6e113c5ee9e90104d77d06b8e095ab25b8c7f185aaf31a`
-- `scripts/phase5/expo-widgets-57.0.8/RoutineKindWidgetLifecycleStore.swift`: `6b01f4e2cd54874eab2a8e5cb773e4dc87992d7ac179cf490ec88044fe5ef8bc`
 - `scripts/phase5/expo-widgets-57.0.8/AppIntent.swift`: `12f011532fd24abc3d8809eb4ee94b679ea8335bf1b77ae8d1cefcc0ea5e7310`
 - `scripts/phase5/expo-widgets-57.0.8/EntryView.swift`: `35d07280d61a55fa159b7f9f30e32bbb3bf8ec4a350a7b0d6e73987bd4e11112`
 - `scripts/phase5/expo-widgets-57.0.8/ExpoWidgets.podspec`: `616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a`
@@ -294,7 +294,6 @@ Pinned input integrity: blocked
 - `supabase/functions/manifest.json`: `3f16b90be7ad4883c6940fc04eff938b5a9bb60635afa04cdf6363c065b2ff96`
 - `apps/mobile/app.base.json`: `c33864f530527e0b2aadc399a5bb773498e8e99e258cd94e6225d0a9acb8334f`
 - `apps/mobile/app.config.js`: `9153d53ac6e9b4b4688066c1ce94cf06758712dac646a1f0e7df10b9337e8c5f`
-- `apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js`: `ab40bcc6285d40e21343adcb02885c5cd920c36cd669f04994b536955795a292`
 - `apps/mobile/eas.json`: `c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04`
 - `docs/phase-9/apple-ios-privacy-baseline.json`: `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
 - `docs/phase-9/ios-sdk-package-mapping.json`: `ba0c235e9547c9af5154c59ea544464acb245264fc322efff5d71748484eaa3f`

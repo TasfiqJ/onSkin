@@ -47,7 +47,7 @@ beforeEach(() => {
 describe('iOS native widget lifecycle bridge', () => {
   it('treats absent upstream constants as definitively unconfigured', async () => {
     const clear = vi.fn();
-    mocks.values.routineKindClearNativeState = clear;
+    mocks.values.layerwellClearNativeState = clear;
 
     expect(routineWidgetNativeStateConfigured()).toBe(false);
     expect(closeRoutineWidgetNativeAdmission()).toEqual({ status: 'not_configured' });
@@ -66,8 +66,8 @@ describe('iOS native widget lifecycle bridge', () => {
   });
 
   it('accepts exact version one configured false as a cleanup no-op', async () => {
-    mocks.values.routineKindWidgetLifecycleVersion = 1;
-    mocks.values.routineKindWidgetLifecycleConfigured = false;
+    mocks.values.layerwellWidgetLifecycleVersion = 1;
+    mocks.values.layerwellWidgetLifecycleConfigured = false;
 
     expect(closeRoutineWidgetNativeAdmission()).toEqual({ status: 'not_configured' });
     await expect(clearRoutineWidgetNativeState()).resolves.toMatchObject({
@@ -83,26 +83,26 @@ describe('iOS native widget lifecycle bridge', () => {
     [undefined, true],
     [1, undefined],
   ])('fails cleanup closed for malformed or future constants %#', async (version, configured) => {
-    mocks.values.routineKindWidgetLifecycleVersion = version;
-    mocks.values.routineKindWidgetLifecycleConfigured = configured;
-    mocks.values.routineKindCloseAdmissionJSON = vi.fn();
-    mocks.values.routineKindClearNativeState = vi.fn();
+    mocks.values.layerwellWidgetLifecycleVersion = version;
+    mocks.values.layerwellWidgetLifecycleConfigured = configured;
+    mocks.values.layerwellCloseAdmissionJSON = vi.fn();
+    mocks.values.layerwellClearNativeState = vi.fn();
 
     expect(() => closeRoutineWidgetNativeAdmission()).toThrow(ROUTINE_WIDGET_NATIVE_UNAVAILABLE);
     await expect(clearRoutineWidgetNativeState()).rejects.toThrow(
       ROUTINE_WIDGET_NATIVE_UNAVAILABLE,
     );
-    expect(mocks.values.routineKindClearNativeState).not.toHaveBeenCalled();
+    expect(mocks.values.layerwellClearNativeState).not.toHaveBeenCalled();
   });
 
   it('decodes an exact cleanup tombstone and exposes configured reads', async () => {
-    mocks.values.routineKindWidgetLifecycleVersion = 1;
-    mocks.values.routineKindWidgetLifecycleConfigured = true;
-    mocks.values.routineKindReadAuthorityJSON = vi.fn(() => JSON.stringify(closedAuthority()));
-    mocks.values.routineKindCloseAdmissionJSON = vi.fn(() =>
+    mocks.values.layerwellWidgetLifecycleVersion = 1;
+    mocks.values.layerwellWidgetLifecycleConfigured = true;
+    mocks.values.layerwellReadAuthorityJSON = vi.fn(() => JSON.stringify(closedAuthority()));
+    mocks.values.layerwellCloseAdmissionJSON = vi.fn(() =>
       JSON.stringify({ schemaVersion: 1, status: 'closed' }),
     );
-    mocks.values.routineKindClearNativeState = vi.fn(async () =>
+    mocks.values.layerwellClearNativeState = vi.fn(async () =>
       JSON.stringify({
         authority: closedAuthority(),
         endedActivities: 2,
@@ -118,23 +118,23 @@ describe('iOS native widget lifecycle bridge', () => {
       authority: closedAuthority(),
       endedActivities: 2,
     });
-    expect(mocks.values.routineKindCloseAdmissionJSON).toHaveBeenCalledTimes(2);
+    expect(mocks.values.layerwellCloseAdmissionJSON).toHaveBeenCalledTimes(2);
     expect(
-      (mocks.values.routineKindCloseAdmissionJSON as ReturnType<typeof vi.fn>).mock
+      (mocks.values.layerwellCloseAdmissionJSON as ReturnType<typeof vi.fn>).mock
         .invocationCallOrder[1],
     ).toBeLessThan(
-      (mocks.values.routineKindClearNativeState as ReturnType<typeof vi.fn>).mock
+      (mocks.values.layerwellClearNativeState as ReturnType<typeof vi.fn>).mock
         .invocationCallOrder[0]!,
     );
   });
 
   it('rejects a malformed close receipt before starting the asynchronous purge', async () => {
-    mocks.values.routineKindWidgetLifecycleVersion = 1;
-    mocks.values.routineKindWidgetLifecycleConfigured = true;
-    mocks.values.routineKindCloseAdmissionJSON = vi.fn(() =>
+    mocks.values.layerwellWidgetLifecycleVersion = 1;
+    mocks.values.layerwellWidgetLifecycleConfigured = true;
+    mocks.values.layerwellCloseAdmissionJSON = vi.fn(() =>
       JSON.stringify({ schemaVersion: 1, status: 'open' }),
     );
-    mocks.values.routineKindClearNativeState = vi.fn();
+    mocks.values.layerwellClearNativeState = vi.fn();
 
     expect(() => closeRoutineWidgetNativeAdmission()).toThrow(
       'ROUTINE_WIDGET_NATIVE_RESPONSE_INVALID',
@@ -142,18 +142,18 @@ describe('iOS native widget lifecycle bridge', () => {
     await expect(clearRoutineWidgetNativeState()).rejects.toThrow(
       'ROUTINE_WIDGET_NATIVE_RESPONSE_INVALID',
     );
-    expect(mocks.values.routineKindClearNativeState).not.toHaveBeenCalled();
+    expect(mocks.values.layerwellClearNativeState).not.toHaveBeenCalled();
   });
 
   it('binds an exact quiescence receipt and final outbox to the requested owner authority', () => {
-    mocks.values.routineKindWidgetLifecycleVersion = 1;
-    mocks.values.routineKindWidgetLifecycleConfigured = true;
+    mocks.values.layerwellWidgetLifecycleVersion = 1;
+    mocks.values.layerwellWidgetLifecycleConfigured = true;
     const outbox = {
       schemaVersion: 1,
       authorityNonce: AUTHORITY_NONCE,
       records: [],
     };
-    mocks.values.routineKindQuiesceAdmissionJSON = vi.fn(() =>
+    mocks.values.layerwellQuiesceAdmissionJSON = vi.fn(() =>
       JSON.stringify({
         outbox,
         ownerGeneration: OWNER_GENERATION,
@@ -174,12 +174,12 @@ describe('iOS native widget lifecycle bridge', () => {
       ownerGeneration: OWNER_GENERATION,
       quiescenceNonce: QUIESCENCE_NONCE,
     });
-    expect(mocks.values.routineKindQuiesceAdmissionJSON).toHaveBeenCalledWith(
+    expect(mocks.values.layerwellQuiesceAdmissionJSON).toHaveBeenCalledWith(
       AUTHORITY_NONCE,
       OWNER_GENERATION,
     );
 
-    mocks.values.routineKindQuiesceAdmissionJSON = vi.fn(() =>
+    mocks.values.layerwellQuiesceAdmissionJSON = vi.fn(() =>
       JSON.stringify({
         outbox: { ...outbox, authorityNonce: OWNER_GENERATION },
         ownerGeneration: OWNER_GENERATION,
@@ -197,10 +197,10 @@ describe('iOS native widget lifecycle bridge', () => {
   });
 
   it('uses a separate receipt-bound native method for the one-shot frozen commit', () => {
-    mocks.values.routineKindWidgetLifecycleVersion = 1;
-    mocks.values.routineKindWidgetLifecycleConfigured = true;
-    mocks.values.routineKindCommitReconciliationJSON = vi.fn(() => '{"status":"committed"}');
-    mocks.values.routineKindCommitQuiescedReconciliationJSON = vi.fn(
+    mocks.values.layerwellWidgetLifecycleVersion = 1;
+    mocks.values.layerwellWidgetLifecycleConfigured = true;
+    mocks.values.layerwellCommitReconciliationJSON = vi.fn(() => '{"status":"committed"}');
+    mocks.values.layerwellCommitQuiescedReconciliationJSON = vi.fn(
       () => '{"status":"committed"}',
     );
     const common = {
@@ -218,10 +218,10 @@ describe('iOS native widget lifecycle bridge', () => {
         quiescenceNonce: QUIESCENCE_NONCE,
       }),
     ).toEqual({ status: 'committed' });
-    expect(mocks.values.routineKindCommitReconciliationJSON).toHaveBeenCalledWith(
+    expect(mocks.values.layerwellCommitReconciliationJSON).toHaveBeenCalledWith(
       JSON.stringify(common),
     );
-    expect(mocks.values.routineKindCommitQuiescedReconciliationJSON).toHaveBeenCalledWith(
+    expect(mocks.values.layerwellCommitQuiescedReconciliationJSON).toHaveBeenCalledWith(
       JSON.stringify({ ...common, quiescenceNonce: QUIESCENCE_NONCE }),
     );
   });

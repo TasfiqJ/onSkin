@@ -42,7 +42,7 @@ import {
   seedGovernedPublicationSourceFixture,
 } from '../launch/governed-evidence-test-fixture.mjs';
 
-const root = mkdtempSync(join(tmpdir(), 'routinekind-camera-lifecycle-'));
+const root = mkdtempSync(join(tmpdir(), 'layerwell-camera-lifecycle-'));
 const repoRoot = resolve(import.meta.dirname, '../..');
 process.on('exit', () => rmSync(root, { recursive: true, force: true }));
 
@@ -77,7 +77,7 @@ const evidenceRoot = 'docs/phase-5/evidence/camera-lifecycle/smoke';
 let sourceGitSha = '1'.repeat(40);
 const easIosBuildId = '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5';
 const archiveSha256 = 'a'.repeat(64);
-const appBundleIdentifier = 'com.routinekind.staging';
+const appBundleIdentifier = 'com.layerwell.staging';
 const appVersion = '1.0.0';
 const iosBuildNumber = '42';
 const executableSha256 = 'c'.repeat(64);
@@ -146,7 +146,7 @@ function createValidFixture() {
     appBundleIdentifier,
     appVersion,
     iosBuildNumber,
-    displayName: 'RoutineKind Staging',
+    displayName: 'Layerwell Staging',
     archiveSha256,
     xcodeVersion: 'Xcode 26.4 (17E202)',
     iosSdkVersion: 'iOS 26.4',
@@ -161,11 +161,11 @@ function createValidFixture() {
     codeSignatureValid: true,
     finalInfoPlist: {
       bundleIdentifier: appBundleIdentifier,
-      displayName: 'RoutineKind Staging',
+      displayName: 'Layerwell Staging',
       appVersion,
       iosBuildNumber,
       cameraUsageDescription:
-        'Allow RoutineKind Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.',
+        'Allow Layerwell Staging to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.',
       cameraUsageDescriptionOccurrenceCount: 1,
       unresolvedBuildVariablesAbsent: true,
     },
@@ -263,7 +263,7 @@ function createValidFixture() {
     final_info_plist_report: {
       extractedFromSignedArchive: true,
       infoPlistRelativePath:
-        'RoutineKind.xcarchive/Products/Applications/RoutineKind.app/Info.plist',
+        'Layerwell.xcarchive/Products/Applications/Layerwell.app/Info.plist',
       finalInfoPlist: evidence.signedArchive.finalInfoPlist,
     },
     device_inventory_report: {
@@ -328,7 +328,7 @@ function createValidFixture() {
     `${evidenceRoot}/eas-build-log.txt`,
     Buffer.from(
       [
-        'ROUTINEKIND_CAMERA_BUILD_BINDING_V1',
+        'LAYERWELL_CAMERA_BUILD_BINDING_V1',
         `sourceGitSha=${sourceGitSha}`,
         `easIosBuildId=${easIosBuildId}`,
         'profile=staging',
@@ -733,7 +733,7 @@ const cases = [
   {
     name: 'rejects EAS build URLs with a query',
     run() {
-      const value = `https://expo.dev/accounts/routinekind/projects/mobile/builds/${easIosBuildId}?token=secret`;
+      const value = `https://expo.dev/accounts/layerwell/projects/mobile/builds/${easIosBuildId}?token=secret`;
       const evidence = clone();
       evidence.build.easIosBuildId = value;
       return (
@@ -747,7 +747,7 @@ const cases = [
   {
     name: 'rejects EAS build URLs with a fragment',
     run() {
-      const value = `https://expo.dev/accounts/routinekind/projects/mobile/builds/${easIosBuildId}#secret`;
+      const value = `https://expo.dev/accounts/layerwell/projects/mobile/builds/${easIosBuildId}#secret`;
       const evidence = clone();
       evidence.build.easIosBuildId = value;
       return (
@@ -906,7 +906,7 @@ const cases = [
     run() {
       const evidence = clone();
       replaceJsonArtifact(evidence, 'final_info_plist_report', 'unsafe-member-path', (value) => {
-        value.claims.infoPlistRelativePath = 'RoutineKind.xcarchive/Products/C:secret/Info.plist';
+        value.claims.infoPlistRelativePath = 'Layerwell.xcarchive/Products/C:secret/Info.plist';
       });
       return validate(evidence).errors.some((error) =>
         /normalized portable archive-member path/.test(error),
@@ -940,7 +940,7 @@ const cases = [
   {
     name: 'rejects intermediate symlink or junction escape where supported',
     run() {
-      const outside = mkdtempSync(join(tmpdir(), 'routinekind-camera-outside-'));
+      const outside = mkdtempSync(join(tmpdir(), 'layerwell-camera-outside-'));
       const linkRelative = `${evidenceRoot}/escape-link`;
       const link = resolve(root, linkRelative);
       writeFileSync(resolve(outside, 'secret.json'), '{"outside":true}\n');
@@ -1033,7 +1033,7 @@ if (failures > 0) {
   process.exit(1);
 }
 
-const governanceRoot = mkdtempSync(join(tmpdir(), 'routinekind-camera-governance-'));
+const governanceRoot = mkdtempSync(join(tmpdir(), 'layerwell-camera-governance-'));
 try {
   git(governanceRoot, ['init']);
   git(governanceRoot, ['config', 'user.email', 'camera-governance@example.invalid']);

@@ -782,7 +782,7 @@ async function run() {
   let server = null;
   let browser = null;
   let client = null;
-  const userDataDir = mkdtempSync(path.join(tmpdir(), 'routinekind-catalog-wrong-match-'));
+  const userDataDir = mkdtempSync(path.join(tmpdir(), 'layerwell-catalog-wrong-match-'));
   const summary = {
     date: today,
     endUrl: null,
@@ -826,7 +826,7 @@ async function run() {
     assertInteractiveControl(confirmation, 'Send report');
     assert(
       confirmation.bodyText.includes('Catalog product ID') &&
-        confirmation.bodyText.includes('RoutineKind account ID') &&
+        confirmation.bodyText.includes('Layerwell account ID') &&
         confirmation.bodyText.includes('Nothing is sent to Open Beauty Facts'),
       'Wrong-match confirmation did not disclose identity, account linkage, and recipients.',
     );

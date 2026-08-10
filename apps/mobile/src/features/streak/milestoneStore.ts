@@ -5,7 +5,7 @@ import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmi
 // Local record of milestones already celebrated (docs/07 §4.5), so the gentle
 // marker fires its analytics event once per milestone rather than on every visit
 // to the streak screen. Local-first (D-029); no server dependency.
-const KEY = 'onskin.milestones.v1';
+const KEY = 'layerwell.milestones.v1';
 
 /** Mark a milestone seen. Returns true the first time (a fresh crossing), else false. */
 export async function markMilestoneSeen(key: string): Promise<boolean> {

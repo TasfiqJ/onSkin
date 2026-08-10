@@ -28,14 +28,14 @@ const processBaseEnv = Object.fromEntries(
 );
 
 const completeEnv = {
-  CATALOG_APP_NAME: 'RoutineKind',
+  CATALOG_APP_NAME: 'Layerwell',
   CATALOG_APP_VERSION: '0.1.0',
-  CATALOG_CONTACT_EMAIL: 'catalog@routinekind.app',
-  CATALOG_ATTRIBUTION_URL: 'https://routinekind.app/catalog-sources',
+  CATALOG_CONTACT_EMAIL: 'catalog@layerwell.app',
+  CATALOG_ATTRIBUTION_URL: 'https://layerwell.app/catalog-sources',
 };
 
 function runCheck(extraEnv) {
-  const cwd = mkdtempSync(join(tmpdir(), 'routinekind-phase4-check-source-env-'));
+  const cwd = mkdtempSync(join(tmpdir(), 'layerwell-phase4-check-source-env-'));
   try {
     return spawnSync(process.execPath, [checkEnvPath, '--strict'], {
       cwd,
@@ -74,7 +74,7 @@ const cases = [
     name: 'strict catalog source env rejects reserved attribution hosts',
     result: runCheck({
       ...completeEnv,
-      CATALOG_ATTRIBUTION_URL: 'https://routinekind.local/catalog-sources',
+      CATALOG_ATTRIBUTION_URL: 'https://layerwell.local/catalog-sources',
     }),
     expect(result) {
       return (

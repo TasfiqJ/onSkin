@@ -28,17 +28,17 @@ const processBaseEnv = Object.fromEntries(
 );
 
 const finalContactEnv = {
-  EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
-  EXPO_PUBLIC_TERMS_URL: 'https://routinekind.app/terms',
-  EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.app/support',
-  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://routinekind.app/account-deletion',
-  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://routinekind.app/data-export',
-  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://routinekind.app/consumer-health-privacy',
-  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.app',
-  EXPO_PUBLIC_MARKETING_URL: 'https://routinekind.app',
-  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@routinekind.app',
+  EXPO_PUBLIC_PRIVACY_URL: 'https://layerwell.app/privacy',
+  EXPO_PUBLIC_TERMS_URL: 'https://layerwell.app/terms',
+  EXPO_PUBLIC_SUPPORT_URL: 'https://layerwell.app/support',
+  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://layerwell.app/account-deletion',
+  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://layerwell.app/data-export',
+  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://layerwell.app/consumer-health-privacy',
+  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.app',
+  EXPO_PUBLIC_MARKETING_URL: 'https://layerwell.app',
+  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@layerwell.app',
   EXPO_PUBLIC_APP_STORE_URL: 'https://apps.apple.com/app/id123456789',
-  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.routinekind.app',
+  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.layerwell.app',
 };
 
 const validPhase7ShareEvidence = {
@@ -112,8 +112,8 @@ const cases = [
   {
     name: 'Phase 9 requires the Apple revocation client ID to match the iOS bundle',
     result: run({
-      APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-      APPLE_SIWA_CLIENT_ID: 'com.routinekind.other',
+      APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+      APPLE_SIWA_CLIENT_ID: 'com.layerwell.other',
     }),
     expect(result) {
       return (
@@ -205,7 +205,7 @@ const cases = [
   },
   {
     name: 'Phase 9 rejects credential-bearing final policy URLs',
-    result: run({ EXPO_PUBLIC_PRIVACY_URL: 'https://user:pass@routinekind.app/privacy' }),
+    result: run({ EXPO_PUBLIC_PRIVACY_URL: 'https://user:pass@layerwell.app/privacy' }),
     expect(result) {
       return (
         result.status === 0 &&
@@ -217,7 +217,7 @@ const cases = [
   },
   {
     name: 'Phase 9 rejects reserved final domains',
-    result: run({ EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.local' }),
+    result: run({ EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.local' }),
     expect(result) {
       return (
         result.status === 0 &&
@@ -243,7 +243,7 @@ const cases = [
     name: 'Phase 9 blocks production deferred surfaces before final domain readiness',
     result: run({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.local',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.local',
       EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED: 'true',
     }),
     expect(result) {

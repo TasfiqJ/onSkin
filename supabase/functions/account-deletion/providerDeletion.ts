@@ -214,7 +214,7 @@ function bytesToHex(bytes: ArrayBuffer): string {
 export async function pseudonymousUserId(userId: string): Promise<string> {
   const digest = await crypto.subtle.digest(
     'SHA-256',
-    new TextEncoder().encode(`onskin:user:${userId}`),
+    new TextEncoder().encode(`layerwell:user:${userId}`),
   );
   return `u_${bytesToHex(digest).slice(0, 32)}`;
 }

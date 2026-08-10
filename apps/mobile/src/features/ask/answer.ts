@@ -4,7 +4,7 @@ import type {
   ConflictSeverity,
   EvidenceLabel,
   RecommendationTrigger,
-} from '@onskin/types';
+} from '@layerwell/types';
 import type { Href } from 'expo-router';
 
 import {

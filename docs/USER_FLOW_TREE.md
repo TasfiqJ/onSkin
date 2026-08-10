@@ -1,6 +1,6 @@
 # User Flow Tree
 
-This file maps human-simulated E2E branches for OnSkin. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
+This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
 ## Surface Inventory
 
@@ -564,9 +564,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 - Goal: A user sees one coherent public app identity across high-visibility runtime surfaces.
 - Persona: New or returning user using a build configured with the working rebrand candidate.
-- Entry state: Local Expo web build with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` and `EXPO_PUBLIC_APP_SCHEME=routinekind`.
+- Entry state: Local Expo web build with `EXPO_PUBLIC_APP_DISPLAY_NAME=Layerwell` and `EXPO_PUBLIC_APP_SCHEME=layerwell`.
 - Start screen/URL/window: Direct routes `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`.
-- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `RoutineKind` through runtime configuration; old public `OnSkin` copy is absent from the checked surfaces.
+- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `Layerwell` through runtime configuration; old public `Layerwell` copy is absent from the checked surfaces.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web smoke; iOS and Android after final native identifiers are cleared.
@@ -576,8 +576,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Configured Runtime Copy
 
 1. Action: Start Expo web with the working public display name, open `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`, then inspect visible page copy.
-   Expected result: `/ask` renders `Ask RoutineKind`; the paywall/subscription surfaces render `RoutineKind Pro`; no checked surface displays old public `OnSkin` labels.
-   Evidence: Screenshots, visible-text snapshots, and browser console logs. Current local evidence: 2026-07-07 Expo web at 320 x 568 renders `Ask RoutineKind`, `Part of RoutineKind Pro.`, and `RoutineKind Pro` in subscription settings, with zero visible `OnSkin` labels and no browser console errors. This does not close final brand/legal clearance or native identifier QA.
+   Expected result: `/ask` renders `Ask Layerwell`; the paywall/subscription surfaces render `Layerwell Pro`; no checked surface displays old public `Layerwell` labels.
+   Evidence: Screenshots, visible-text snapshots, and browser console logs. Current local evidence: 2026-07-07 Expo web at 320 x 568 renders `Ask Layerwell`, `Part of Layerwell Pro.`, and `Layerwell Pro` in subscription settings, with zero visible `Layerwell` labels and no browser console errors. This does not close final brand/legal clearance or native identifier QA.
 
 ### Branches
 
@@ -585,15 +585,15 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Inspect the runtime share-card constants without a final brand domain.
-  - Expected result: The card watermark uses `RoutineKind`, the URL fallback uses a reserved `.example` domain, and the deep link uses the configured public scheme.
+  - Expected result: The card watermark uses `Layerwell`, the URL fallback uses a reserved `.example` domain, and the deep link uses the configured public scheme.
   - Evidence: Unit test output and source snapshot.
 - Branch: public-copy sweep smoke
   - Priority: Critical
   - Automate later: Yes
   - Action: Start Expo web with the working public display name, open `/onboarding/age`, `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local reverse-trial path before `/routine/widgets`.
-  - Expected result: Visible public copy on the age gate, catalog search, and timing lock-screen preview uses `RoutineKind` and does not show legacy `OnSkin`; every `/s/[shareId]` path renders the same product-free `Public sharing is unavailable.` recovery without deriving content from the path; widgets remain the existing native-widget deferred surface until device QA enables them.
+  - Expected result: Visible public copy on the age gate, catalog search, and timing lock-screen preview uses `Layerwell` and does not show legacy `Layerwell`; every `/s/[shareId]` path renders the same product-free `Public sharing is unavailable.` recovery without deriving content from the path; widgets remain the existing native-widget deferred surface until device QA enables them.
   - Evidence: Phone-width screenshots, visible-text snapshots, local reverse-trial route snapshot, and browser console logs.
-  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` verified the pre-CORE-07A `/s/sharecard01` surface alongside the age, catalog, timing, and widget surfaces. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; the former public-share behavior is superseded and is not current acceptance evidence. Final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_APP_DISPLAY_NAME=Layerwell` verified the pre-CORE-07A `/s/sharecard01` surface alongside the age, catalog, timing, and widget surfaces. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; the former public-share behavior is superseded and is not current acceptance evidence. Final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
 - Branch: public share landing attribution
   - Priority: Critical
   - Automate later: Yes
@@ -606,9 +606,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Serve `docs/phase-8/public-site` locally, open `index.html`, `share.html`, `support.html`, and `waitlist.html` at phone width, and inspect titles plus visible copy.
-  - Expected result: The branded launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared. `share.html` instead remains a brand-neutral, inert `Public links are unavailable.` recovery that does not derive content from the address. `support.html` discloses the V1 support floor: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
+  - Expected result: The branded launch pages use `Layerwell`, show no legacy `Layerwell`, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared. `share.html` instead remains a brand-neutral, inert `Public links are unavailable.` recovery that does not derive content from the address. `support.html` discloses the V1 support floor: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
   - Evidence: Phone-width screenshots, visible-text snapshots, static-server transcript, and brand audit output.
-  - Current local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700, verified the visible support copy includes RoutineKind's V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no visible legacy `OnSkin`, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`.
+  - Current local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700, verified the visible support copy includes Layerwell's V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no visible legacy `Layerwell`, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`.
 - Branch: Phase 8 public-site placeholder store links
   - Priority: Critical
   - Automate later: Yes
@@ -866,7 +866,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Shelf manual add in a 320 px phone viewport, enter product and brand, open the category picker, scroll through all category options, and select the lower "Something else" option.
   - Expected result: The category picker opens as a named bottom sheet instead of an inline list, category rows remain at least 48 px targets, lower options are reachable by scroll, visible option taps are not intercepted by the fixed Continue footer, and the collapsed category field stays polished on compact phones.
   - Evidence: Screenshot sequence and hit-test geometry.
-  - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 opens `/shelf/manual`, enters `Barrier Balm` / `RoutineKind Test`, opens the category picker, scrolls the modal sheet to `Something else`, verifies the row is visible and center-tappable, selects it, confirms the collapsed field reads `Other`, and continues to `/shelf/opened` with zero horizontal overflow and no clipped or sub-44 px visible controls.
+  - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 opens `/shelf/manual`, enters `Barrier Balm` / `Layerwell Test`, opens the category picker, scrolls the modal sheet to `Something else`, verifies the row is visible and center-tappable, selects it, confirms the collapsed field reads `Other`, and continues to `/shelf/opened` with zero horizontal overflow and no clipped or sub-44 px visible controls.
   - 2026-07-08 current safe-area follow-up: Source contracts now require the route-local sheet to own its viewport height, reserve a 48 px outside-dismiss space, add native bottom-inset padding only when present, expose a named web dialog, pad the internal category list, and keep the collapsed category accessibility label aligned with the visible compact label. Codex in-app browser Expo web at 320 x 480 opens `/shelf/manual`, fills product and brand, opens the named `Choose product category` dialog, verifies no open-state control issues or horizontal overflow, scrolls to fully visible `Something else`, selects it, confirms the collapsed field exposes `Category, Other`, continues to `/shelf/opened`, and records zero unexpected warn/error logs. Evidence is in `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-320x480-postfix/`; native iOS/Android safe-area, Dynamic Type, keyboard, and screen-reader traversal remain open QA.
   - 2026-07-08 320 x 430 / 320 x 440 follow-up: a shortest-height route sweep found `/shelf/manual` Ingredients hit-blocked by the sticky Continue footer, `/shelf/ocr` clipping `Continue with manual text`, and `/shelf/no-match` clipping and blocking `Add it by hand`. Post-fix Codex in-app browser evidence verifies `/shelf/manual`, `/shelf/ocr`, and `/shelf/no-match` have zero user-facing clipped controls, hit-blocked controls, tiny targets, horizontal overflow, or unexpected route logs. A later 320 x 440 pass added extra ultra-short category-sheet bottom padding so `Something else` scrolls fully into view before selection, verified OCR capture-failure/manual-text continuation into `/shelf/manual`, and added explicit no-match row accessibility labels. The 320 x 430 / 120% text-pressure pass then hid no-match subtitles below 460 px so all three recovery rows remain complete under enlarged text. The broader 49-route post-fix sweep confirms shelf routes are no longer in the failure list. Evidence and bug reports are in `test-results/human-e2e/2026-07-08/shelf-short-phone-430-clearance/`, `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postfix-sweep/`, `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/`, `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/`, `docs/e2e-bug-reports/2026-07-08-shelf-short-phone-430-intake-clearance.md`, and `docs/e2e-bug-reports/2026-07-08-text-pressure-short-phone-430-clearance.md`; native iOS/Android safe-area, keyboard, Dynamic Type, barcode camera, and OCR capture remain open QA.
   - 2026-07-08 320 x 370 / 320 x 360 / 130% micro-short text-pressure follow-up: the initial route sweep found `/shelf/manual` exposing the optional Ingredients textarea under the sticky Continue footer. Post-fix, manual add reserves extra split-short spacing below 410 px before optional ingredients and the final 49-route sweeps report zero failed routes. Evidence and bug report are in `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`, `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`, `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`, and `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`; native iOS/Android safe-area, keyboard, Dynamic Type, barcode camera, and OCR capture remain open QA.
@@ -1389,7 +1389,7 @@ it to the exact source/archive under test. See
   - Priority: Critical
   - Automate later: Yes
   - Action: With Pro and the cadence development fixture available, open `/cycle/settings`, enter Custom, change the 1-14-night length, add/remove an eligible active, change its frequency, assign nights, Cancel once, then Save. Reload, inspect Settings, Week, Plan, and Today; switch to a preset and back to Custom; repeat Save with `EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE=once`. Inspect Why Tonight only under the separately named `EXPO_PUBLIC_E2E_ROUTINE_EXPLAINABILITY_COPY_GATE=open_fixture` development fixture.
-  - Expected result: Custom starts from the Auto-recommended projection once, then persists one stable product ID or recovery per night without changing the anchor or ramp. Cancel is non-mutating. Save commits the whole versioned definition before cache publication, navigation, or success analytics; repeated Custom edits do not emit a false variant-change event. Visible controls, Android/system Back, swipe removal, and browser Back cannot leave while persistence is pending, but committed success can exit normally. One product per night, at least one recovery night, safety filtering, phased introduction, and the shared length-aware ramp/reviewed weekly budget remain authoritative. A closed cadence-review gate withholds Custom rather than labeling known products missing. Cadence-excess or temporarily ineligible intent remains saved and does not block unrelated Save/length edits, while the preview shows requested versus currently scheduled cadence and projects withheld occurrences as recovery with an exact Why Tonight reason. New shelf products are not silently inserted; explicitly selected staged products preview and save as introduced; removed products become recovery and prune on explicit save. Presets recalculate without deleting Custom, and returning to Custom restores it. A valid legacy cycle migrates to isolated `routinekind.cycle.v2`; current v2 requires an explicit schema; malformed, unreadable, missing-schema, and future-schema current data is preserved and fails closed. Device export uses v2 as authoritative and labels the retained v1 value as legacy. A failed write leaves the previous projection active, keeps the complete draft and retry visible, and disables competing edits/exits while pending. Every downstream surface consumes the same committed projection with no stale intermediate frame, and paused/skipped/recovery-only PM completions do not advance the active-cycle milestone.
+  - Expected result: Custom starts from the Auto-recommended projection once, then persists one stable product ID or recovery per night without changing the anchor or ramp. Cancel is non-mutating. Save commits the whole versioned definition before cache publication, navigation, or success analytics; repeated Custom edits do not emit a false variant-change event. Visible controls, Android/system Back, swipe removal, and browser Back cannot leave while persistence is pending, but committed success can exit normally. One product per night, at least one recovery night, safety filtering, phased introduction, and the shared length-aware ramp/reviewed weekly budget remain authoritative. A closed cadence-review gate withholds Custom rather than labeling known products missing. Cadence-excess or temporarily ineligible intent remains saved and does not block unrelated Save/length edits, while the preview shows requested versus currently scheduled cadence and projects withheld occurrences as recovery with an exact Why Tonight reason. New shelf products are not silently inserted; explicitly selected staged products preview and save as introduced; removed products become recovery and prune on explicit save. Presets recalculate without deleting Custom, and returning to Custom restores it. A valid legacy cycle migrates to isolated `layerwell.cycle.v2`; current v2 requires an explicit schema; malformed, unreadable, missing-schema, and future-schema current data is preserved and fails closed. Device export uses v2 as authoritative and labels the retained v1 value as legacy. A failed write leaves the previous projection active, keeps the complete draft and retry visible, and disables competing edits/exits while pending. Every downstream surface consumes the same committed projection with no stale intermediate frame, and paused/skipped/recovery-only PM completions do not advance the active-cycle milestone.
   - Evidence: Supported-phone screenshots at 360 x 640 and 390 x 844; Save/Cancel/reload/preset-round-trip state snapshots; failed-write and pending-control snapshots; Settings/Week/Why Tonight/Plan/Today agreement; 44 pt geometry, overflow, selected/disabled accessibility state, dialog count, and browser logs; focused customization/store/route tests.
   - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/cycle-customization-current/`
   - Historical persistence/geometry evidence: 2026-07-10 to 2026-07-11 Codex in-app browser Expo web at supported 390 x 844 and 360 x 640 verified Auto-to-Custom initialization, assignment, cadence-safe extension to 14 nights, non-mutating Cancel, encrypted reload, retained over-cap intent, preset round trip, one-shot failed save with draft retention, pending Back prevention, retry, and downstream agreement. It also historically observed Why Tonight, but predates the independent explainability-copy admission gate and is not current proof that this route may open. The 360 x 640 audit found zero overflow and no interactive dimension below 48 px, and the pass fixed a Metro import cycle, wrapped trace label, and web pending-Back escape. Evidence is in `test-results/human-e2e/2026-07-10/cycle-customization-current/`. A current Why Tonight run must use the named explainability fixture. Physical iOS/Android secure-storage relaunch, process death, native Back/swipe gestures, timezone/DST, Dynamic Type, and VoiceOver/TalkBack proof remains Tas-owned.
@@ -1425,7 +1425,7 @@ it to the exact source/archive under test. See
   - Current 320 x 390 / 320 x 360 / 200% contextual upsell follow-up: 2026-07-08 headless Chrome Expo web passed the 320 x 390 sweep, then found the 320 x 360 direct upsell CTA and contextual Progress CTA could land as partial or blocked targets under 200% text pressure. Post-fix, direct upsell and contextual ProGate use micro-short fitted titles, one-line price/CTA treatments, compact compliance, and a tappable store-unavailable CTA path so the user receives route-owned feedback instead of a dead disabled control. The final 49-route 320 x 360 sweep reports zero failed routes with evidence in `test-results/human-e2e/2026-07-08/text-pressure-200-micro-short-360-postfix-8/` and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-micro-short-360-clearance.md`; native iOS/Android safe-area, Dynamic Type, and store-sheet behavior remain release QA.
   - Current 320 x 568 / 140% contextual upsell follow-up: 2026-07-08 headless Chrome Expo web reproduced direct upsell CTA clipping and routine/cycle ProGate header overlap at 140% text pressure. Post-fix, narrow 320 px short paywalls use an icon dismiss, omit nonessential body copy, hide the monthly-equivalent price, and keep annual price, store-unavailable reason, compliance links, dismiss, and Start free trial complete and hit-testable. The final 49-route sweep reports zero failed routes with evidence in `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/` and `docs/e2e-bug-reports/2026-07-08-text-pressure-140-compact-568-clearance.md`; native iOS/Android Dynamic Type behavior remains release QA.
   - Current 390 x 740 / 200% direct-upsell follow-up: 2026-07-09 headless Chrome Expo web found direct `/paywall/upsell?feature=full_routine` exposing `Start free trial` as a 19 px partial target whose center hit the surrounding sheet instead of the button. Post-fix, the 390-wide 700-779 px text-pressure band uses the short paywall layout with header compliance, compact action spacing, complete `Start free trial`, and no partial bottom-edge purchase target. The focused upsell rerun and final 49-route 390 x 740 sweep report zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-740-upsell-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-740-postfix2/`, and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-android-390-740-clearance.md`; native iOS/Android safe-area, Dynamic Type, and store-sheet behavior remain release QA.
-  - Current shortest-phone contextual upsell evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 opens direct `/paywall/upsell?feature=full_routine` and `/paywall/upsell?feature=reminders_widgets`, verifies RoutineKind Pro copy, preview-store fallback copy, `Start free trial`, Terms, Privacy, Restore, and `Maybe later` are visible without scrolling, visible user-facing controls are 48 px+, horizontal overflow is zero, no center hit-test is blocked, no JavaScript dialog appears, and `Maybe later` recovers to `/today`. The only sub-44 geometry node in the follow-up run was an `aria-hidden="true"` / `tabindex="-1"` sheet spacer, not a user-facing target. Evidence is in `test-results/human-e2e/2026-07-08/shelf-paywall-short-phone-clearance/`, `test-results/human-e2e/2026-07-08/commerce-attribution-and-short-phone-ui/`, and `docs/e2e-bug-reports/2026-07-08-shelf-paywall-short-phone-bottom-actions.md`.
+  - Current shortest-phone contextual upsell evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 opens direct `/paywall/upsell?feature=full_routine` and `/paywall/upsell?feature=reminders_widgets`, verifies Layerwell Pro copy, preview-store fallback copy, `Start free trial`, Terms, Privacy, Restore, and `Maybe later` are visible without scrolling, visible user-facing controls are 48 px+, horizontal overflow is zero, no center hit-test is blocked, no JavaScript dialog appears, and `Maybe later` recovers to `/today`. The only sub-44 geometry node in the follow-up run was an `aria-hidden="true"` / `tabindex="-1"` sheet spacer, not a user-facing target. Evidence is in `test-results/human-e2e/2026-07-08/shelf-paywall-short-phone-clearance/`, `test-results/human-e2e/2026-07-08/commerce-attribution-and-short-phone-ui/`, and `docs/e2e-bug-reports/2026-07-08-shelf-paywall-short-phone-bottom-actions.md`.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes
@@ -1433,7 +1433,7 @@ it to the exact source/archive under test. See
   - Expected result: Controls have roles, labels, and visible feedback without trapping focus.
   - Evidence: UI snapshot or accessibility notes.
 
-## Flow: IOS-02 Native Widgets And RoutineKind Live Activity
+## Flow: IOS-02 Native Widgets And Layerwell Live Activity
 
 - Goal: A supported iPhone user can glance at current routine state, deep-link
   safely into Today, and complete an eligible step from an interactive widget
@@ -1446,9 +1446,9 @@ it to the exact source/archive under test. See
   extension, App Group, App Intent, and ActivityKit target; test accounts A and
   B; App Lock and device-lock fixtures; and controllable current, stale,
   malformed, oversized, foreign, and unclaimed native state.
-- Start screen/URL/window: `RoutineKindToday` in `systemSmall`,
+- Start screen/URL/window: `LayerwellToday` in `systemSmall`,
   `systemMedium`, `accessoryInline`, and `accessoryRectangular`; the
-  `RoutineKindEvening` Live Activity on the Lock Screen/Dynamic Island; and
+  `LayerwellEvening` Live Activity on the Lock Screen/Dynamic Island; and
   the app in warm, cold, killed, signed-out, switching-account, and
   post-reboot states.
 - Success state: Every valid action converges exactly once through the
@@ -1479,8 +1479,8 @@ it to the exact source/archive under test. See
   but a close receipt does not prove ActivityKit removed the presentation. The
   source has not been compiled or signed on macOS and has no physical-iPhone
   proof.
-  `RoutineKindWidgetInteractivePublicationEnabled` and
-  `RoutineKindLiveActivityStartEnabled` remain literal generated-Info.plist
+  `LayerwellWidgetInteractivePublicationEnabled` and
+  `LayerwellLiveActivityStartEnabled` remain literal generated-Info.plist
   `false`; `ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED` and
   `phase7Capabilities.nativeWidgets` also remain literal `false`. Ordinary
   shipping config does not generate the extension or advertise Live
@@ -1494,7 +1494,7 @@ it to the exact source/archive under test. See
 - Branch: four declared WidgetKit families
   - Priority: Critical
   - Automate later: Yes
-  - Action: Add `RoutineKindToday` as `systemSmall`, `systemMedium`,
+  - Action: Add `LayerwellToday` as `systemSmall`, `systemMedium`,
     `accessoryInline`, and `accessoryRectangular`. Exercise current,
     partially completed, completed, stale, and generic/redacted timelines in
     light/dark mode on the oldest-supported and current iPhone classes.
@@ -1636,7 +1636,7 @@ it to the exact source/archive under test. See
   - Evidence: Separate before/after App Group and private-registry reports for
     all seven cases, activity enumeration, timeline reload log, forced-failure
     retry trace, cross-account screenshots, and zero-residual assertion.
-- Branch: `RoutineKindEvening` lifecycle, process death, and reboot
+- Branch: `LayerwellEvening` lifecycle, process death, and reboot
   - Priority: Critical
   - Automate later: Yes
   - Action: In an explicitly enabled signed QA build, opt in and start the
@@ -1644,7 +1644,7 @@ it to the exact source/archive under test. See
     disable it; kill the app during each phase; and reboot with active, stale,
     malformed, and already-completed instances.
   - Expected result: Start/update accepts only current strict props with a
-    deterministic bounded `staleDate` and the exact signed RoutineKind deep
+    deterministic bounded `staleDate` and the exact signed Layerwell deep
     link, then reauthorizes after the ActivityKit operation and immediately
     requests generic end if the boundary changed. Post-start typed stale
     handling rereads current JS instances and awaits their end requests before
@@ -2369,7 +2369,7 @@ Passing source tests does not satisfy any of those gates.
   - Action: Seed a store-backed Pro entitlement, open `/settings/subscription`, then tap Manage in App Store, Restore purchases, Terms, and Privacy while external handoffs fail.
   - Expected result: The screen keeps the user in Subscription Settings, exposes visible row-local feedback for billing-management and policy-link failure, Restore reports an empty/success/failure state, and all rows remain at least 44 px tall on compact phones.
   - Evidence: Alert text or row-local feedback, visible route snapshot, and control-geometry snapshot.
-  - Current local evidence: 2026-07-08 System Chrome CDP Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all` verifies `/settings/subscription` shows `RoutineKind Pro`, `Manage in App Store`, Restore, Terms, and Privacy. Manage failure renders `We could not open subscription management...`, Terms/Privacy failure renders `Link unavailable`, Restore renders `No active subscription was found for this account.`, controls are 52-53 px tall, and horizontal overflow is zero. Follow-up Codex in-app browser evidence on the same fixture verifies Manage, Terms, and Restore all render route-owned `role="alert"` feedback, open no JavaScript dialog, keep the route on `/settings/subscription`, keep current-run warn/error logs empty after expected local placeholder warnings, and keep horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/` and `test-results/human-e2e/2026-07-08/paywall-inline-recovery-current/`. Native iOS RevenueCat Restore and App Store management-sheet evidence remain Phase 5/6 launch QA; Android is a later compatibility pass.
+  - Current local evidence: 2026-07-08 System Chrome CDP Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all` verifies `/settings/subscription` shows `Layerwell Pro`, `Manage in App Store`, Restore, Terms, and Privacy. Manage failure renders `We could not open subscription management...`, Terms/Privacy failure renders `Link unavailable`, Restore renders `No active subscription was found for this account.`, controls are 52-53 px tall, and horizontal overflow is zero. Follow-up Codex in-app browser evidence on the same fixture verifies Manage, Terms, and Restore all render route-owned `role="alert"` feedback, open no JavaScript dialog, keep the route on `/settings/subscription`, keep current-run warn/error logs empty after expected local placeholder warnings, and keep horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/` and `test-results/human-e2e/2026-07-08/paywall-inline-recovery-current/`. Native iOS RevenueCat Restore and App Store management-sheet evidence remain Phase 5/6 launch QA; Android is a later compatibility pass.
   - Current ultra-short evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 430 reproduced the free-plan `Privacy` compliance row clipping in the post-Recommendations route sweep. Post-fix, `/settings/subscription` uses a sub-460 px density for the free-plan card and compliance rows while keeping Restore, Terms, and Privacy as complete 48 px controls; tapping Restore purchases stays on Subscription Settings, renders route-owned feedback, and opens no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/` and the fresh 49-route zero-failure sweep `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`.
   - Current split-short text-pressure evidence: 2026-07-08 headless Chrome Expo web at 320 x 390 / 130% verifies `/settings/subscription` keeps the free-state card, Restore, Terms, Privacy, and upgrade action complete without clipping or blocked hit centers after dropping lower-priority free-plan body copy below 410 px. The 49-route sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-08/text-pressure-130-split-short-390-postfix-4/` and `docs/e2e-bug-reports/2026-07-08-text-pressure-130-split-short-390-route-clearance.md`; native Dynamic Type remains device QA.
 - Branch: policy link handoff failure
@@ -2472,7 +2472,7 @@ Passing source tests does not satisfy any of those gates.
   - Expected result: Exactly one further event-triggered suggestion is admitted on that device within the rolling seven-day cap; malformed or unavailable encrypted ledger state schedules nothing. A reservation remains cap-counted across relaunch even if native scheduling fails. The weekly progress-photo reminder is described separately from the event-triggered cap. Reminder times, timezone, quiet hours, purpose toggles, and scheduling-attempt metadata remain device-local; no `notification_preferences`, `notification_log`, or analytics request is emitted.
   - Evidence: Atomic-ledger snapshot, concurrency transcript, scheduled-notification inventory, relaunch/offline transcript, and network log.
 
-## Flow: Ask RoutineKind Deterministic Advisor
+## Flow: Ask Layerwell Deterministic Advisor
 
 - Goal: A user can open the free deterministic Ask advisor without cloud
   consent, while unavailable cloud Ask and unadmitted interaction guidance stay
@@ -2480,7 +2480,7 @@ Passing source tests does not satisfy any of those gates.
 - Persona: Free user exploring shelf/routine guidance.
 - Entry state: Fresh local app state or seeded shelf state; `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=false`.
 - Start screen/URL/window: Direct route `/ask`, or Today Ask teaser when available.
-- Success state: `/ask` renders the Ask RoutineKind advisor surface and hides
+- Success state: `/ask` renders the Ask Layerwell advisor surface and hides
   its proactive conflict lead and conflict suggested prompt while exact
   interaction coverage is unavailable. `/ask/consent` renders the cloud Ask
   deferred screen while the cloud flag is off.
@@ -2495,7 +2495,7 @@ Passing source tests does not satisfy any of those gates.
 ### Path A: Deterministic Ask Opens
 
 1. Action: Open `/ask` directly with cloud Ask disabled.
-   Expected result: The Ask RoutineKind advisor renders with
+   Expected result: The Ask Layerwell advisor renders with
    deterministic/free copy. At zero admission it shows neither a proactive
    conflict turn nor `Is there a conflict on my shelf?`; routine/fit prompts
    may remain where the supported-phone layout permits. It must not show the
@@ -2515,12 +2515,12 @@ Passing source tests does not satisfy any of those gates.
   - Action: Open `/ask/consent` directly with cloud Ask disabled.
   - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature. Its `Back to Ask` deferred CTA returns to `/ask` on direct entry.
   - Evidence: Screenshot and visible-text snapshot.
-  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask RoutineKind is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask Layerwell is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
   - Current navigation evidence: 2026-07-08 system Chrome Expo web at 320 x 568 directly opens `/ask/consent`, verifies the cloud Ask deferred beta surface with a 272 x 56 `Back to Ask` CTA, then taps it and recovers to `/ask` with zero horizontal overflow and no browser errors. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
 - Branch: cloud consent save or withdrawal failure
   - Priority: Critical
   - Automate later: Yes
-  - Action: In a dev build started with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`, open `/ask/consent`, toggle `Enable Ask RoutineKind` on, retry the grant, toggle it off, then retry the withdrawal.
+  - Action: In a dev build started with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`, open `/ask/consent`, toggle `Enable Ask Layerwell` on, retry the grant, toggle it off, then retry the withdrawal.
   - Expected result: Failed grant and withdrawal attempts do not open a native or JavaScript dialog, do not flip the visible consent state before persistence, render persistent route-owned `Choice not saved` feedback with `role="alert"`, keep retry possible on a 320 x 568 phone viewport, clear the alert after successful retry, and show no raw backend/provider error.
   - Evidence: Screenshot sequence, dialog count, compact control geometry, route text snapshot, and browser warn/error logs.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only` verifies the switch starts off, failed grant keeps it off with route-owned `Choice not saved` alert and no JavaScript dialog, retry turns it on and clears the alert, failed withdrawal keeps it on with the same inline alert, retry turns it off and clears the alert, visible controls remain 48 px+, horizontal overflow is zero, no raw fixture/provider error appears, and current-run browser warn/error logs are empty. The first pass found the shared web `ToggleSwitch` was inert because web disabled `onPress`; `docs/e2e-bug-reports/2026-07-08-toggle-switch-web-inert.md` records the bug and fix. Evidence is in `test-results/human-e2e/2026-07-08/ask-consent-failure-current/`.
@@ -2560,7 +2560,7 @@ Passing source tests does not satisfy any of those gates.
   - Action: Refresh `/ask`, directly open `/ask` and use the Back control, then directly open `/ask/consent` and use the deferred Back CTA.
   - Expected result: Deterministic Ask remains reachable, only the cloud consent route is deferred while the flag is off, and direct-entry Back controls return to a safe app surface instead of no-oping. Visible Ask Back, report-answer, CTA, and send controls meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence and small-phone button-geometry snapshot.
-  - Current local evidence: 2026-07-08 system Chrome Expo web at 320 x 568 verifies direct `/ask` renders Ask RoutineKind, reload preserves the deterministic advisor, the 48 px Back control routes to `/today`, direct `/ask/consent` shows the deferred cloud surface, and its 272 x 56 `Back to Ask` CTA routes to `/ask`. Ask Back, composer, and Send controls are 48 px tall, horizontal overflow is zero in all five states, and no browser errors were recorded. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
+  - Current local evidence: 2026-07-08 system Chrome Expo web at 320 x 568 verifies direct `/ask` renders Ask Layerwell, reload preserves the deterministic advisor, the 48 px Back control routes to `/today`, direct `/ask/consent` shows the deferred cloud surface, and its 272 x 56 `Back to Ask` CTA routes to `/ask`. Ask Back, composer, and Send controls are 48 px tall, horizontal overflow is zero in all five states, and no browser errors were recorded. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes

@@ -254,8 +254,8 @@ test('relaunch loaders decode versioned state and never silently replace unsuppo
     /normalizes legacy ids in memory without rewriting storage during a read/u,
   );
   assert.match(usePlan, /queryFn:\s*loadRoutineOrderForCurrentHealthLease/u);
-  assert.match(cycleStore, /const KEY\s*=\s*['"]routinekind\.cycle\.v2['"]/u);
-  assert.match(cycleStore, /const LEGACY_KEY\s*=\s*['"]onskin\.cycle\.v1['"]/u);
+  assert.match(cycleStore, /const KEY\s*=\s*['"]layerwell\.cycle\.v2['"]/u);
+  assert.match(cycleStore, /const LEGACY_KEY\s*=\s*['"]layerwell\.cycle\.v1['"]/u);
   assert.match(cycleStore, /allowMissingSchemaVersion\s*=\s*false/u);
   assert.match(
     cycleStoreTest,
@@ -322,11 +322,11 @@ test('cleanup and purpose-limited export register both current persistence recor
   const localExport = read(paths.localExport);
   const localExportTest = read(paths.localExportTest);
 
-  for (const key of ['routinekind.routineOrder.v1', 'routinekind.cycle.v2']) {
+  for (const key of ['layerwell.routineOrder.v1', 'layerwell.cycle.v2']) {
     assert.match(cleanupKeys, new RegExp(`['"]${key.replaceAll('.', '\\.')}['"]`, 'u'));
     assert.match(localExport, new RegExp(`key:\\s*['"]${key.replaceAll('.', '\\.')}['"]`, 'u'));
   }
-  assert.match(cleanupTest, /routinekind\.routineOrder\.v1/u);
+  assert.match(cleanupTest, /layerwell\.routineOrder\.v1/u);
   assert.match(localExport, /field:\s*['"]routine_order_overrides['"]/u);
   assert.match(localExport, /field:\s*['"]cycle_configuration['"]/u);
   assert.match(localExportTest, /routine_order_overrides/u);

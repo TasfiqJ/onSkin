@@ -1,4 +1,4 @@
-import type { ExpirySource, PaoSource } from '@onskin/types';
+import type { ExpirySource, PaoSource } from '@layerwell/types';
 
 import { computeExpiryWithSource } from '@/features/intelligence/pao';
 

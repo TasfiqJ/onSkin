@@ -11,7 +11,7 @@ Tester: Codex
 
 1. Seed or use an active app-granted reverse-trial entitlement.
 2. Open `/settings/subscription` at a compact phone viewport.
-3. Inspect the status pill in the `RoutineKind Pro` plan card.
+3. Inspect the status pill in the `Layerwell Pro` plan card.
 
 ## Expected Result
 

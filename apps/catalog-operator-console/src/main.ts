@@ -397,7 +397,7 @@ function workspaceTopbar(): HTMLElement {
   const bar = element('header', { className: 'topbar' });
   const brand = element('div', { className: 'brand' });
   brand.append(
-    element('strong', { text: 'RoutineKind catalog operations' }),
+    element('strong', { text: 'Layerwell catalog operations' }),
     element('span', { className: 'environment', text: operatorSession.environment }),
   );
   const actions = element('div', { className: 'actions' });

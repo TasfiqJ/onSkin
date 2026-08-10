@@ -1542,11 +1542,11 @@ async function exerciseQueuedRetry({
   await clickByText(client, 'Retry when online');
   await waitForText(
     client,
-    'Retry saved on this device. We will check the RoutineKind catalog when the app is online.',
+    'Retry saved on this device. We will check the Layerwell catalog when the app is online.',
   );
   await scrollTextIntoView(
     client,
-    'Retry saved on this device. We will check the RoutineKind catalog when the app is online.',
+    'Retry saved on this device. We will check the Layerwell catalog when the app is online.',
   );
   const saved = await captureStep(client, evidenceDir, `${artifactPrefix}-retry-saved`);
   assert(
@@ -1622,7 +1622,7 @@ async function executeScenario({
       assertInteractiveControl(confirmation, 'Send report');
       assert(
         confirmation.bodyText.includes('Catalog product ID') &&
-          confirmation.bodyText.includes('RoutineKind account ID') &&
+          confirmation.bodyText.includes('Layerwell account ID') &&
           confirmation.bodyText.includes('Nothing is sent to Open Beauty Facts'),
         'Wrong-match confirmation did not disclose exact identity, account linkage, and recipient boundary.',
       );
@@ -1666,9 +1666,9 @@ async function executeScenario({
       assertInteractiveControl(confirmation, 'Send report');
       assert(
         confirmation.bodyText.includes(
-          "RoutineKind's catalog-review team and authorized operators",
+          "Layerwell's catalog-review team and authorized operators",
         ) &&
-          confirmation.bodyText.includes('included in your RoutineKind data export') &&
+          confirmation.bodyText.includes('included in your Layerwell data export') &&
           confirmation.bodyText.includes('Nothing is sent to Open Beauty Facts'),
         'Missing-product confirmation did not disclose recipients and data-rights treatment.',
       );

@@ -299,8 +299,8 @@ describe('RevenueCat publication integration', () => {
       identifier: 'annual',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_annual',
-        title: 'RoutineKind Pro Annual',
+        identifier: 'layerwell_pro_annual',
+        title: 'Layerwell Pro Annual',
         priceString: 'US$49.99',
         pricePerMonthString: 'US$4.17',
         subscriptionPeriod: 'P1Y',
@@ -311,8 +311,8 @@ describe('RevenueCat publication integration', () => {
       identifier: 'monthly',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_monthly',
-        title: 'RoutineKind Pro Monthly',
+        identifier: 'layerwell_pro_monthly',
+        title: 'Layerwell Pro Monthly',
         priceString: 'US$9.99',
         pricePerMonthString: 'US$9.99',
         subscriptionPeriod: 'P1M',
@@ -346,8 +346,8 @@ describe('RevenueCat publication integration', () => {
       identifier: 'annual',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_annual',
-        title: 'OnSkin Pro Annual',
+        identifier: 'layerwell_pro_annual',
+        title: 'Layerwell Pro Annual',
         priceString: '$49.99',
         pricePerMonthString: '$4.17',
         subscriptionPeriod: 'P1Y',
@@ -363,8 +363,8 @@ describe('RevenueCat publication integration', () => {
       identifier: 'monthly',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_monthly',
-        title: 'OnSkin Pro Monthly',
+        identifier: 'layerwell_pro_monthly',
+        title: 'Layerwell Pro Monthly',
         priceString: '$7.99',
         pricePerMonthString: '$7.99',
         subscriptionPeriod: 'P1M',
@@ -377,8 +377,8 @@ describe('RevenueCat publication integration', () => {
     });
     mocks.purchases.getEligibleWinBackOffersForPackage.mockResolvedValue([]);
     mocks.purchases.checkTrialOrIntroductoryPriceEligibility
-      .mockResolvedValueOnce({ routinekind_pro_annual: { status: 2 } })
-      .mockResolvedValueOnce({ routinekind_pro_annual: { status: 0 } });
+      .mockResolvedValueOnce({ layerwell_pro_annual: { status: 2 } })
+      .mockResolvedValueOnce({ layerwell_pro_annual: { status: 0 } });
 
     await reserveRevenueCatPublication(USER_ID, 'session-token-eligibility');
     await activateRevenueCatPublication(USER_ID, 'session-token-eligibility');
@@ -393,7 +393,7 @@ describe('RevenueCat publication integration', () => {
       annual: { trialDays: null, introLabel: null },
     });
     expect(mocks.purchases.checkTrialOrIntroductoryPriceEligibility).toHaveBeenNthCalledWith(1, [
-      'routinekind_pro_annual',
+      'layerwell_pro_annual',
     ]);
     expect(mocks.purchases.getEligibleWinBackOffersForPackage).not.toHaveBeenCalled();
   });
@@ -455,8 +455,8 @@ describe('RevenueCat publication integration', () => {
       identifier: 'annual',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_annual',
-        title: 'RoutineKind Pro Annual',
+        identifier: 'layerwell_pro_annual',
+        title: 'Layerwell Pro Annual',
         price: 49.99,
         priceString: 'US$49.99',
         pricePerMonthString: 'US$4.17',
@@ -468,8 +468,8 @@ describe('RevenueCat publication integration', () => {
       identifier: 'monthly',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_monthly',
-        title: 'RoutineKind Pro Monthly',
+        identifier: 'layerwell_pro_monthly',
+        title: 'Layerwell Pro Monthly',
         price: 9.99,
         priceString: 'US$9.99',
         pricePerMonthString: 'US$9.99',
@@ -494,7 +494,7 @@ describe('RevenueCat publication integration', () => {
     mocks.purchases.getEligibleWinBackOffersForPackage.mockResolvedValue([nativeOffer]);
     mocks.purchases.purchasePackageWithWinBackOffer.mockResolvedValue({
       customerInfo,
-      productIdentifier: 'routinekind_pro_annual',
+      productIdentifier: 'layerwell_pro_annual',
     });
 
     await reserveRevenueCatPublication(USER_ID, 'session-token-enabled-win-back');
@@ -506,7 +506,7 @@ describe('RevenueCat publication integration', () => {
       status: 'available',
       winBack: {
         offerId: 'native-win-back-2026',
-        productId: 'routinekind_pro_annual',
+        productId: 'layerwell_pro_annual',
         priceLabel: 'US$34.99',
         originalPriceLabel: 'US$49.99',
         percentOff: 30,
@@ -522,7 +522,7 @@ describe('RevenueCat publication integration', () => {
     };
     await expect(purchaseWinBackPackage(USER_ID, nativeCall)).resolves.toMatchObject({
       purchased: true,
-      productId: 'routinekind_pro_annual',
+      productId: 'layerwell_pro_annual',
       priceLabel: 'US$34.99',
     });
     expect(mocks.purchases.purchasePackageWithWinBackOffer).toHaveBeenCalledWith(
@@ -555,7 +555,7 @@ describe('RevenueCat publication integration', () => {
       identifier: 'annual',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_annual',
+        identifier: 'layerwell_pro_annual',
         priceString: '$49.99',
       },
     };
@@ -594,7 +594,7 @@ describe('RevenueCat publication integration', () => {
       identifier: 'annual',
       offeringIdentifier: 'default',
       product: {
-        identifier: 'routinekind_pro_annual',
+        identifier: 'layerwell_pro_annual',
         priceString: '$49.99',
       },
     };

@@ -137,7 +137,7 @@ function safeCleanup(root) {
   const temporaryRoot = resolve(tmpdir());
   const fromTemporaryRoot = relative(temporaryRoot, absolute);
   if (
-    !fromTemporaryRoot.startsWith('routinekind-ios-privacy-audit-') ||
+    !fromTemporaryRoot.startsWith('layerwell-ios-privacy-audit-') ||
     fromTemporaryRoot.startsWith('..') ||
     fromTemporaryRoot.includes(sep)
   ) {
@@ -151,7 +151,7 @@ function packagePathFor(name) {
 }
 
 function createAuditFixture(t, packageSpecs = []) {
-  const root = mkdtempSync(join(tmpdir(), 'routinekind-ios-privacy-audit-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-ios-privacy-audit-'));
   t.after(() => safeCleanup(root));
 
   const baselinePath = join(root, ...IOS_PRIVACY_BASELINE_PATH.split('/'));

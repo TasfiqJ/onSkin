@@ -1,4 +1,4 @@
-import type { NotificationKind } from '@onskin/types';
+import type { NotificationKind } from '@layerwell/types';
 
 import { BRAND } from '@/lib/brand';
 import { DEFAULT_ROUTINE_REMINDER_TIMES } from './defaults';

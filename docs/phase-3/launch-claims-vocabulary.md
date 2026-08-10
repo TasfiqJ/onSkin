@@ -91,8 +91,8 @@ Use patterns like:
 - "Shows your own photos side by side, without scores."
 - "Photos stay on your phone by default."
 - "A separate, revocable choice."
-- "Paid link. OnSkin may earn a commission. It never affects what we recommend."
-- "This is outside what OnSkin can advise on. It is worth asking a board-certified dermatologist."
+- "Paid link. Layerwell may earn a commission. It never affects what we recommend."
+- "This is outside what Layerwell can advise on. It is worth asking a board-certified dermatologist."
 
 ## Blocked Claim Patterns
 

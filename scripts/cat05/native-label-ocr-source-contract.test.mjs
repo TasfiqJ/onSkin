@@ -286,7 +286,7 @@ test('CAT05 output, Unicode, concurrency, timeout, and cancellation are bounded'
     /let tolerance = 0\.000_001[\s\S]*rawX >= -tolerance[\s\S]*rawMaxX <= 1 \+ tolerance/u,
     'Bounding boxes must reject material out-of-range geometry before clamping.',
   );
-  assert.doesNotMatch(swift, /app\.onskin/iu);
+  assert.doesNotMatch(swift, /app\.layerwell/iu);
   for (const field of [
     'schemaVersion',
     'requestId',

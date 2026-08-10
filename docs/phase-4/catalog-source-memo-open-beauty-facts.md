@@ -11,18 +11,18 @@ Open Beauty Facts is the cosmetic/personal-care sibling of Open Food Facts.
 - Product Opener API documentation: https://openfoodfacts.github.io/openfoodfacts-server/api/
 - Official license guide: https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/
 - ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/
-- Source-candidate use in OnSkin: reviewed offline catalog artifacts for product identity, brand/name/category, and ingredient text. Request-time lookup and external contribution are excluded from the launch architecture; no environment flag can add OBF to the runtime recipient graph.
+- Source-candidate use in Layerwell: reviewed offline catalog artifacts for product identity, brand/name/category, and ingredient text. Request-time lookup and external contribution are excluded from the launch architecture; no environment flag can add OBF to the runtime recipient graph.
 
 ## Primary-Source Findings (Not Legal Approval)
 
 - Product Opener documentation describes an open database model with ODbL/database-content/image licensing distinctions.
-- Product Opener's current API documentation identifies v3 as current and v2 as deprecated. This is recorded for source due diligence, not as authorization for OnSkin to call either version.
+- Product Opener's current API documentation identifies v3 as current and v2 as deprecated. This is recorded for source due diligence, not as authorization for Layerwell to call either version.
 - Product Opener requires a custom User-Agent for API reads.
 - Product Opener warns bulk users to use exports rather than API crawling.
-- Search-as-you-type and bulk API import are disallowed for OnSkin until explicit permission exists.
+- Search-as-you-type and bulk API import are disallowed for Layerwell until explicit permission exists.
 - Product data is community-maintained and must be treated as possibly incomplete or inaccurate.
 - The database, individual database contents, and images have different stated license layers. Packaging imagery can also carry rights outside those licenses, so product images stay disabled.
-- ODbL permits commercial use but can impose attribution, share-alike, and offer-of-data duties for public derivative databases/produced works. Whether OnSkin's exact combination is derivative or collective remains a counsel decision.
+- ODbL permits commercial use but can impose attribution, share-alike, and offer-of-data duties for public derivative databases/produced works. Whether Layerwell's exact combination is derivative or collective remains a counsel decision.
 - The current filtering/normalization transformer is deliberately narrower
   than that legal question: production validation accepts only the conservative
   derivative-database plus entire-derivative-or-alterations machine-readable
@@ -36,7 +36,7 @@ The following actions are not production promotion. Candidate mode computes the
 deterministic exact hashes reviewers need and is always non-promotable.
 Production mode requires a completed exact-artifact approval manifest, active
 externally anchored trust registry, approved fixed release scope, and the exact
-production environment; fixture and reviewed OnSkin-catalog flows do not:
+production environment; fixture and reviewed Layerwell-catalog flows do not:
 
 - Fixture import from local sample data.
 - Exact barcode lookup against reviewed rows already stored in the local Supabase catalog.

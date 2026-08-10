@@ -3,7 +3,7 @@ import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmi
 
 import type { GeneratedPlan, PlanStep } from './generate';
 
-const STORAGE_KEY = 'routinekind.routineOrder.v1';
+const STORAGE_KEY = 'layerwell.routineOrder.v1';
 
 export const ROUTINE_ORDER_INVALID = 'ROUTINE_ORDER_INVALID';
 export const ROUTINE_ORDER_UNSUPPORTED_VERSION = 'ROUTINE_ORDER_UNSUPPORTED_VERSION';

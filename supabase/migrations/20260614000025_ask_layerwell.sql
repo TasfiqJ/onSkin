@@ -1,5 +1,5 @@
 -- =============================================================================
--- 0025 · "Ask RoutineKind" — the evidence-grounded conversational advisor (docs/13).
+-- 0025 · "Ask Layerwell" — the evidence-grounded conversational advisor (docs/13).
 -- =============================================================================
 -- The deferred, chosen-not-lifted feature. The TRUTH SOURCE is the on-device
 -- deterministic engine (detectConflicts / generatePlan / recommend, docs/02/03/05/09)
@@ -29,7 +29,7 @@ alter table public.consents
   add constraint consents_consent_type_check check (consent_type in (
     'account', 'health_data_collection', 'photo_capture',
     'photo_cloud_backup', 'marketing', 'data_sharing', 'community_participation',
-    'photo_trend_insights', 'ask_onskin'));
+    'photo_trend_insights', 'ask_layerwell'));
 
 -- --- ask_sessions — conversation METADATA only (NEVER the health-adjacent content) ---
 create table public.ask_sessions (
@@ -68,7 +68,7 @@ create table public.ask_turn_audit (
 create index ask_turn_audit_session_idx on public.ask_turn_audit (session_id, created_at);
 
 -- --- ask_safety_audit — the SHORT, consented, encrypted breach-detection window (D-058)
--- The ONLY health-content store. Exists ONLY with ask_onskin consent; excluded from
+-- The ONLY health-content store. Exists ONLY with ask_layerwell consent; excluded from
 -- training / cloud backup / sale; auto-purged after expires_at; deleted on consent
 -- revocation and account deletion. Resolves the "no transcript" vs "auditable / appealable
 -- / EU-AI-Act-compliant" contradiction (docs/13 §7) — one coherent posture, not both.
@@ -84,7 +84,7 @@ create table public.ask_safety_audit (
 create index ask_safety_audit_expiry_idx on public.ask_safety_audit (expires_at);
 
 -- --- Owner-only RLS (docs/01 §3 pattern) on all three. Writes are local-first /
--- best-effort (the D-029 pattern); a server mirror is gated on the ask_onskin consent.
+-- best-effort (the D-029 pattern); a server mirror is gated on the ask_layerwell consent.
 alter table public.ask_sessions enable row level security;
 create policy "ask_sessions_select_own" on public.ask_sessions
   for select to authenticated using ((select auth.uid()) = user_id);
@@ -119,7 +119,7 @@ create policy "ask_safety_audit_insert_own" on public.ask_safety_audit
 create policy "ask_safety_audit_delete_own" on public.ask_safety_audit
   for delete to authenticated using ((select auth.uid()) = user_id);
 
--- NOTE (deletion-on-revocation, docs/13 §7/§10): on ask_onskin consent withdrawal an
+-- NOTE (deletion-on-revocation, docs/13 §7/§10): on ask_layerwell consent withdrawal an
 -- Edge Function / local task DELETES the user's ask_safety_audit rows (no retention
 -- exception, MHMDA / GDPR Art. 17); account deletion cascades from auth.users. The
 -- content-free metadata may be retained for the kill-criteria dashboards. The whole

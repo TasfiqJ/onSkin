@@ -1,4 +1,4 @@
-import type { FunctionalTag, GoalId, SequencingRole } from '@onskin/types';
+import type { FunctionalTag, GoalId, SequencingRole } from '@layerwell/types';
 import { describe, expect, it } from 'vitest';
 
 import { previewDetectConflicts, type EngineProduct } from '@/features/intelligence/engine';

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "contractId": "catalog-launch-target-policy-v1",
   "signatureEnvelopeVersion": "catalog-launch-target-policy-signature-v1",
-  "signingDomain": "routinekind.catalog-launch-target-policy.v1",
+  "signingDomain": "layerwell.catalog-launch-target-policy.v1",
   "policyId": "catalog-launch-target-policy-pending",
   "authoredAt": "2026-07-17T12:00:00.000Z",
   "collectionWindow": {

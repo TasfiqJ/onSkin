@@ -1,5 +1,5 @@
-import type { GoalId } from '@onskin/types';
-import { GOALS } from '@onskin/types';
+import type { GoalId } from '@layerwell/types';
+import { GOALS } from '@layerwell/types';
 
 import { QUIZ_SCORING_PROVENANCE } from '@/features/onboarding/quizContract';
 

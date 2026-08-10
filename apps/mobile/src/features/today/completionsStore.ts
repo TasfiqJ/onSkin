@@ -41,8 +41,8 @@ import { localDateString } from './useToday';
 // stricter: a date counts only after every step in that day's projected PM/recovery
 // routine is durable. Replaces the old local-useState check-off in today.tsx that
 // never persisted (it broke activation + every streak surface).
-const KEY = 'onskin.completions.v1';
-const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
+const KEY = 'layerwell.completions.v1';
+const FIRST_COMPLETION_KEY = 'layerwell.completions.firstCompletion.v1';
 const SCHEMA_VERSION = 3 as const;
 
 export const COMPLETION_LOG_INVALID = 'COMPLETION_LOG_INVALID';

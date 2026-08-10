@@ -10,7 +10,7 @@ separate launch gates.
 
 ## Outcome Required
 
-OnSkin must let every account holder, including a signed-anonymous user, start
+Layerwell must let every account holder, including a signed-anonymous user, start
 whole-account deletion inside the app. The request must immediately stop new
 account writes, survive client and worker crashes, continue after the Auth user
 is hard-deleted, expose a privacy-minimized status channel, verify first-party
@@ -222,7 +222,7 @@ requires two fresh full-family absence rounds separated by database time:
 - [PostgreSQL advisory-lock semantics](https://www.postgresql.org/docs/current/explicit-locking.html#ADVISORY-LOCKS)
 - [Supabase database-function security](https://supabase.com/docs/guides/database/functions)
 
-This fence controls current cooperating OnSkin clients and the deletion worker;
+This fence controls current cooperating Layerwell clients and the deletion worker;
 it is not a RevenueCat-side tombstone. RevenueCat documents that configuring
 without an App User ID creates an anonymous customer, `logIn()` can create a
 missing custom identity, `logOut()` creates a new anonymous identity, cached or

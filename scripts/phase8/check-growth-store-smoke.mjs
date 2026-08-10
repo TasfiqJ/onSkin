@@ -34,11 +34,11 @@ const processBaseEnv = Object.fromEntries(
 );
 
 const validPublicIdentity = {
-  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.app',
-  EXPO_PUBLIC_MARKETING_URL: 'https://routinekind.app',
-  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@routinekind.app',
+  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.app',
+  EXPO_PUBLIC_MARKETING_URL: 'https://layerwell.app',
+  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@layerwell.app',
   EXPO_PUBLIC_APP_STORE_URL: 'https://apps.apple.com/app/id123456789',
-  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.routinekind.app',
+  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.layerwell.app',
 };
 
 const validEvidence = {
@@ -93,7 +93,7 @@ function runCore07aContract() {
 }
 
 function runPacket(extraEnv) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase8-packet-'));
+  const outDir = mkdtempSync(join(tmpdir(), 'layerwell-phase8-packet-'));
   try {
     const result = spawnSync(process.execPath, [packetPath], {
       cwd: root,
@@ -144,7 +144,7 @@ const cases = [
     name: 'Phase 8 rejects reserved final domains',
     result: run({
       ...validPublicIdentity,
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.local',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.local',
     }),
     expect(result) {
       return result.status === 0 && /Missing final brand domain/.test(output(result));

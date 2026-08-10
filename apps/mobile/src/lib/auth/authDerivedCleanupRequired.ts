@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const AUTH_DERIVED_CLEANUP_REQUIRED_KEY = 'routinekind.authDerivedCleanupRequired.v1';
+export const AUTH_DERIVED_CLEANUP_REQUIRED_KEY = 'layerwell.authDerivedCleanupRequired.v1';
 
 const AUTH_DERIVED_CLEANUP_REQUIRED_VALUE = '1';
 

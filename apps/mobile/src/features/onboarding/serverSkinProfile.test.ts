@@ -1,4 +1,4 @@
-import type { SkinAxis } from '@onskin/types';
+import type { SkinAxis } from '@layerwell/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { QUIZ_AXIS_ORDER, QUIZ_SCORING_PROVENANCE } from './quizContract';

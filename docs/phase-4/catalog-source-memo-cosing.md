@@ -10,13 +10,13 @@ CosIng is the European Commission cosmetic ingredient database:
 - Source URL: https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en
 - CosIng glossary: https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database/cosing-glossary-ingredients_en
 - Commission reuse decision: https://eur-lex.europa.eu/eli/dec/2011/833/oj/eng
-- Intended use in OnSkin: ingredient dictionary baseline, INCI names, synonyms where allowed, regulatory-reference flags, and reviewer workflow support.
+- Intended use in Layerwell: ingredient dictionary baseline, INCI names, synonyms where allowed, regulatory-reference flags, and reviewer workflow support.
 
 ## Primary-Source Findings (Not Legal Approval)
 
 - CosIng is maintained by the European Commission for cosmetic substances and ingredients in the EU cosmetics framework.
 - The Commission describes CosIng as informative. It is not a substitute for legal review.
-- An ingredient appearing in CosIng must not be presented as "approved", "safe", or "recommended" by OnSkin.
+- An ingredient appearing in CosIng must not be presented as "approved", "safe", or "recommended" by Layerwell.
 - Annex status for colorants, preservatives, and UV filters is not equivalent to product-level safety or legality in every market.
 - The Commission says the glossary is not an authorized list, is not exhaustive, and is updated over time. The applicable cosmetics regulation/annexes and a product safety assessment remain authoritative.
 - The Commission reuse framework generally permits reuse subject to conditions, but excludes third-party intellectual property and industrial property; counsel must review the exact export, fields, notices, and attribution before production use.

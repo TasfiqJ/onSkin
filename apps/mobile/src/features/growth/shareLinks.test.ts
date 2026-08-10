@@ -19,7 +19,7 @@ describe('conflict public-link creation', () => {
     await expect(
       createConflictShareLink({
         publicLinksFlag: true,
-        finalDomain: 'https://routinekind.app',
+        finalDomain: 'https://layerwell.app',
         authority: { decision: 'admitted' },
       }),
     ).resolves.toBeNull();

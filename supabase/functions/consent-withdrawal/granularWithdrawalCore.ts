@@ -25,7 +25,7 @@ export type HealthDependentConsentType =
   | 'photo_capture'
   | 'photo_cloud_backup'
   | 'photo_trend_insights'
-  | 'ask_onskin'
+  | 'ask_layerwell'
   | 'community_participation'
   | 'data_sharing';
 
@@ -66,9 +66,9 @@ export const CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT = Object.freeze({
     hash: 'd6bd89ffbb0900784d4af6d8ae1501c7e10385eeba199e1bd8e932d957eec6ba',
     reviewStatus: 'draft_blocked',
   }),
-  ask_onskin: Object.freeze({
+  ask_layerwell: Object.freeze({
     version: 'ask-advisor-2026-06-14-placeholder',
-    text: '[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]',
+    text: '[PLACEHOLDER ask_layerwell withdrawal. B-PRIVACY-COPY]',
     hash: '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff',
     reviewStatus: 'draft_blocked',
   }),
@@ -169,7 +169,7 @@ const CLEANUP_RESULT_KEYS: Readonly<
     'skipped_storage_paths',
   ]),
   photo_trend_insights: Object.freeze(['photo_trend_deleted']),
-  ask_onskin: Object.freeze([
+  ask_layerwell: Object.freeze([
     'ask_safety_audit_deleted',
     'ask_turn_audit_deleted',
     'ask_sessions_deleted',
@@ -240,7 +240,7 @@ export type DataSharingCleanupResult = {
   more_pending: boolean;
 };
 
-export type AskOnSkinCleanupDependencies = {
+export type AskLayerwellCleanupDependencies = {
   listSessionRows: (limit: number) => PromiseLike<DependencyResult>;
   listTurnRows: (
     sessionIds: readonly string[],
@@ -255,7 +255,7 @@ export type AskOnSkinCleanupDependencies = {
   findSessionRows: (ids: readonly string[]) => PromiseLike<DependencyResult>;
 };
 
-export type AskOnSkinCleanupResult = {
+export type AskLayerwellCleanupResult = {
   ask_turn_audit_deleted: number;
   ask_sessions_deleted: number;
   more_pending: boolean;
@@ -741,9 +741,9 @@ function attestExactAskTurnRows(
  * before entering this helper; the safety lookup prevents an invalid legacy
  * cross-owner child from being cascaded through a turn deletion.
  */
-export async function runAskOnSkinCleanup(
-  dependencies: AskOnSkinCleanupDependencies,
-): Promise<AskOnSkinCleanupResult> {
+export async function runAskLayerwellCleanup(
+  dependencies: AskLayerwellCleanupDependencies,
+): Promise<AskLayerwellCleanupResult> {
   const listedSessions = await dependencies.listSessionRows(
     GRANULAR_DB_MAX_ROWS_PER_SCOPE + 1,
   );

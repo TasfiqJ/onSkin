@@ -54,7 +54,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.milestones.v1';
+const KEY = 'layerwell.milestones.v1';
 
 describe('streak milestone store', () => {
   beforeEach(() => {

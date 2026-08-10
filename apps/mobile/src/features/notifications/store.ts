@@ -17,7 +17,7 @@ import { DEFAULT_ROUTINE_REMINDER_TIMES } from './defaults';
  * values below are proposals that become active only after the exact times are
  * shown and accepted.
  */
-const KEY = 'onskin.notifPrefs.v1';
+const KEY = 'layerwell.notifPrefs.v1';
 const SCHEMA_VERSION = 1 as const;
 const REPLENISHMENT_OPT_IN_MARKER = 'replenishmentAlertsOptInConfirmed';
 const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;

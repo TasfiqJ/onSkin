@@ -1,8 +1,8 @@
 import { isValidElement, type ReactElement, type ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import TodayWidget, { RoutineKindTodayWidgetLayout } from './TodayWidget.ios';
-import TonightActivity, { RoutineKindEveningActivityLayout } from './TonightActivity.ios';
+import TodayWidget, { LayerwellTodayWidgetLayout } from './TodayWidget.ios';
+import TonightActivity, { LayerwellEveningActivityLayout } from './TonightActivity.ios';
 import {
   ROUTINE_WIDGET_CHECK_OFF_TARGET,
   ROUTINE_WIDGET_TODAY_DEEP_LINK,
@@ -118,17 +118,17 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('RoutineKind Today WidgetKit view', () => {
+describe('Layerwell Today WidgetKit view', () => {
   it('registers exactly the configured widget kind', () => {
     expect(TodayWidget as unknown).toMatchObject({
       kind: 'widget',
-      name: 'RoutineKindToday',
+      name: 'LayerwellToday',
     });
   });
 
   it('uses the WidgetKit container background and exact static Today URL', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
-    const root = RoutineKindTodayWidgetLayout(interactiveProps(), environment('systemMedium'));
+    const root = LayerwellTodayWidgetLayout(interactiveProps(), environment('systemMedium'));
     const rootModifiers = modifiersOf(root);
 
     expect(rootModifiers).toContainEqual({
@@ -147,7 +147,7 @@ describe('RoutineKind Today WidgetKit view', () => {
     for (const deepLink of Object.values(ROUTINE_WIDGET_TODAY_DEEP_LINKS)) {
       const props = normalizeRoutineWidgetProps({ ...interactiveProps(), deepLink });
       expect(props).not.toBeNull();
-      const root = RoutineKindTodayWidgetLayout(props!, environment('systemMedium'));
+      const root = LayerwellTodayWidgetLayout(props!, environment('systemMedium'));
       expect(modifiersOf(root)).toContainEqual({ modifier: 'widgetURL', args: [deepLink] });
       const button = collectElements(root).find((element) => element.type === 'Button');
       expect(button).toBeDefined();
@@ -159,7 +159,7 @@ describe('RoutineKind Today WidgetKit view', () => {
 
   it('persists an optimistic check-off as a closed-schema pending outbox transition', () => {
     const now = vi.spyOn(Date, 'now').mockReturnValue(2_000);
-    const root = RoutineKindTodayWidgetLayout(interactiveProps(), environment('systemMedium'));
+    const root = LayerwellTodayWidgetLayout(interactiveProps(), environment('systemMedium'));
     const button = collectElements(root).find((element) => element.type === 'Button');
     expect(button).toBeDefined();
     expect(propsOf(button!).target).toBe(ROUTINE_WIDGET_CHECK_OFF_TARGET);
@@ -202,7 +202,7 @@ describe('RoutineKind Today WidgetKit view', () => {
 
   it('fails a boundary-time press closed without dropping the existing outbox', () => {
     const now = vi.spyOn(Date, 'now').mockReturnValue(2_000);
-    const root = RoutineKindTodayWidgetLayout(interactiveProps(), environment('systemSmall'));
+    const root = LayerwellTodayWidgetLayout(interactiveProps(), environment('systemSmall'));
     const button = collectElements(root).find((element) => element.type === 'Button');
     expect(button).toBeDefined();
 
@@ -222,17 +222,17 @@ describe('RoutineKind Today WidgetKit view', () => {
 
   it('fails clock rollback and an overlong display lease closed', () => {
     const now = vi.spyOn(Date, 'now').mockReturnValue(999);
-    const rollback = RoutineKindTodayWidgetLayout(interactiveProps(), environment('systemMedium'));
-    expect(textContent(rollback)).toContain('Open RoutineKind to refresh');
+    const rollback = LayerwellTodayWidgetLayout(interactiveProps(), environment('systemMedium'));
+    expect(textContent(rollback)).toContain('Open Layerwell to refresh');
     expect(collectElements(rollback).some((element) => element.type === 'Button')).toBe(false);
     expect(textContent(rollback)).not.toContain('1 of 3');
 
     now.mockReturnValue(2_000);
-    const overlong = RoutineKindTodayWidgetLayout(
+    const overlong = LayerwellTodayWidgetLayout(
       { ...interactiveProps(), staleAtMs: 301_001 },
       environment('systemMedium'),
     );
-    expect(textContent(overlong)).toContain('Open RoutineKind to refresh');
+    expect(textContent(overlong)).toContain('Open Layerwell to refresh');
     expect(collectElements(overlong).some((element) => element.type === 'Button')).toBe(false);
     expect(textContent(overlong)).not.toContain('1 of 3');
   });
@@ -248,9 +248,9 @@ describe('RoutineKind Today WidgetKit view', () => {
       updatedAtMs: 1_000,
       staleAtMs: 10_000,
     });
-    const root = RoutineKindTodayWidgetLayout(stale, environment('systemSmall'));
+    const root = LayerwellTodayWidgetLayout(stale, environment('systemSmall'));
 
-    expect(textContent(root)).toContain('Open RoutineKind to refresh');
+    expect(textContent(root)).toContain('Open Layerwell to refresh');
     expect(textContent(root)).not.toContain('Morning routine');
     expect(textContent(root)).not.toContain('Evening routine');
     expect(collectElements(root).some((element) => element.type === 'Button')).toBe(false);
@@ -259,7 +259,7 @@ describe('RoutineKind Today WidgetKit view', () => {
   it('never renders an interactive control in accessory families and marks counts private', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
     for (const family of ['accessoryInline', 'accessoryRectangular'] as const) {
-      const root = RoutineKindTodayWidgetLayout(interactiveProps(), environment(family));
+      const root = LayerwellTodayWidgetLayout(interactiveProps(), environment(family));
       const elements = collectElements(root);
       expect(elements.some((element) => element.type === 'Button')).toBe(false);
       const count = elements.find(
@@ -275,11 +275,11 @@ describe('RoutineKind Today WidgetKit view', () => {
   it('rejects unknown App Group fields without rendering injected detail or a button', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
     const injected = { ...interactiveProps(), productName: 'Secret retinoid' };
-    const root = RoutineKindTodayWidgetLayout(injected, environment('systemMedium'));
+    const root = LayerwellTodayWidgetLayout(injected, environment('systemMedium'));
     const elements = collectElements(root);
 
     expect(elements.some((element) => element.type === 'Button')).toBe(false);
-    expect(textContent(root)).toContain('Open RoutineKind to refresh');
+    expect(textContent(root)).toContain('Open Layerwell to refresh');
     expect(textContent(root)).not.toContain('Secret retinoid');
     expect(textContent(root)).not.toContain('1 of 3');
   });
@@ -288,22 +288,22 @@ describe('RoutineKind Today WidgetKit view', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
     for (const value of [null, [], 'bad']) {
       expect(() =>
-        RoutineKindTodayWidgetLayout(
+        LayerwellTodayWidgetLayout(
           value as unknown as RoutineWidgetProps,
           environment('systemSmall'),
         ),
       ).not.toThrow();
-      const root = RoutineKindTodayWidgetLayout(
+      const root = LayerwellTodayWidgetLayout(
         value as unknown as RoutineWidgetProps,
         environment('systemSmall'),
       );
-      expect(textContent(root)).toContain('Open RoutineKind to refresh');
+      expect(textContent(root)).toContain('Open Layerwell to refresh');
       expect(collectElements(root).some((element) => element.type === 'Button')).toBe(false);
     }
   });
 });
 
-describe('RoutineKind passive Evening Live Activity view', () => {
+describe('Layerwell passive Evening Live Activity view', () => {
   const props: RoutineLiveActivityProps = {
     schemaVersion: 2,
     ownerGeneration: OWNER_GENERATION,
@@ -318,13 +318,13 @@ describe('RoutineKind passive Evening Live Activity view', () => {
   it('registers one factory with the runtime-only Live Activity name', () => {
     expect(TonightActivity as unknown).toMatchObject({
       kind: 'activity',
-      name: 'RoutineKindEvening',
+      name: 'LayerwellEvening',
     });
   });
 
   it('renders only generic evening copy and privacy-sensitive counts with no controls', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
-    const layout = RoutineKindEveningActivityLayout(props, {
+    const layout = LayerwellEveningActivityLayout(props, {
       colorScheme: 'light',
       isLuminanceReduced: false,
     });
@@ -359,45 +359,45 @@ describe('RoutineKind passive Evening Live Activity view', () => {
 
   it('fails clock rollback, overlong leases, and stale non-zero counts closed', () => {
     const now = vi.spyOn(Date, 'now').mockReturnValue(999);
-    const rollback = RoutineKindEveningActivityLayout(props, {
+    const rollback = LayerwellEveningActivityLayout(props, {
       colorScheme: 'light',
     });
-    expect(textContent(rollback.banner)).toContain('Open RoutineKind to refresh');
+    expect(textContent(rollback.banner)).toContain('Open Layerwell to refresh');
     expect(textContent(rollback.banner)).not.toMatch(/1(?: of |\/)3/);
 
     now.mockReturnValue(2_000);
-    const overlong = RoutineKindEveningActivityLayout(
+    const overlong = LayerwellEveningActivityLayout(
       { ...props, staleAtMs: 301_001 },
       { colorScheme: 'light' },
     );
-    expect(textContent(overlong.banner)).toContain('Open RoutineKind to refresh');
+    expect(textContent(overlong.banner)).toContain('Open Layerwell to refresh');
     expect(textContent(overlong.banner)).not.toMatch(/1(?: of |\/)3/);
 
-    const malformedStale = RoutineKindEveningActivityLayout(
+    const malformedStale = LayerwellEveningActivityLayout(
       { ...props, status: 'stale' },
       { colorScheme: 'light' },
     );
-    expect(textContent(malformedStale.banner)).toContain('Open RoutineKind to refresh');
+    expect(textContent(malformedStale.banner)).toContain('Open Layerwell to refresh');
     expect(textContent(malformedStale.banner)).not.toMatch(/1(?: of |\/)3/);
   });
 
   it('keeps valid stale zero-count state generic before its expiry timestamp', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
-    const stale = RoutineKindEveningActivityLayout(
+    const stale = LayerwellEveningActivityLayout(
       { ...props, status: 'stale', completedCount: 0, totalCount: 0 },
       { colorScheme: 'light' },
     );
     const allText = Object.values(stale)
       .map((node) => textContent(node))
       .join(' ');
-    expect(allText).toContain('Open RoutineKind to refresh');
+    expect(allText).toContain('Open Layerwell to refresh');
     expect(allText).not.toMatch(/\d+(?: of |\/)\d+/);
   });
 
   it('fails unknown or expired state closed and hides its counts', () => {
     vi.spyOn(Date, 'now').mockReturnValue(10_000);
     const injected = { ...props, productName: 'Secret acid' };
-    const layout = RoutineKindEveningActivityLayout(injected, {
+    const layout = LayerwellEveningActivityLayout(injected, {
       colorScheme: 'dark',
       isLuminanceReduced: true,
     });
@@ -405,7 +405,7 @@ describe('RoutineKind passive Evening Live Activity view', () => {
       .map((node) => textContent(node))
       .join(' ');
 
-    expect(allText).toContain('Open RoutineKind to refresh');
+    expect(allText).toContain('Open Layerwell to refresh');
     expect(allText).not.toContain('Secret acid');
     expect(allText).not.toMatch(/1(?: of |\/)3/);
   });
@@ -413,13 +413,13 @@ describe('RoutineKind passive Evening Live Activity view', () => {
   it('fails null Live Activity state closed without throwing', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
     expect(() =>
-      RoutineKindEveningActivityLayout(null as unknown as RoutineLiveActivityProps, {
+      LayerwellEveningActivityLayout(null as unknown as RoutineLiveActivityProps, {
         colorScheme: 'light',
       }),
     ).not.toThrow();
-    const layout = RoutineKindEveningActivityLayout(null as unknown as RoutineLiveActivityProps, {
+    const layout = LayerwellEveningActivityLayout(null as unknown as RoutineLiveActivityProps, {
       colorScheme: 'light',
     });
-    expect(textContent(layout.banner)).toContain('Open RoutineKind to refresh');
+    expect(textContent(layout.banner)).toContain('Open Layerwell to refresh');
   });
 });

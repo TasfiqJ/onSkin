@@ -1,4 +1,4 @@
-# OnSkin - Skincare Routine App
+# Layerwell - Skincare Routine App
 
 ## What This Is
 
@@ -42,7 +42,7 @@ authoritative for product behavior, schema, privacy posture, and launch scope:
 - `docs/10-creator-stacks-build-spec.md`
 - `docs/11-community-layer.md`
 - `docs/12-ai-trend-analysis.md`
-- `docs/13-ask-onskin-assistant.md`
+- `docs/13-ask-layerwell-assistant.md`
 - `docs/14-growth-to-seven-figures.md`
 - `docs/legal-readiness.md`
 - `LAUNCH_READINESS.md`
@@ -144,5 +144,5 @@ npm --workspace apps/mobile run web
 - After each slice, run typecheck, lint, and tests when feasible, then update
   `PROGRESS.md` and any affected readiness docs.
 - Do not configure Apple, Google, Supabase, RevenueCat, Sentry, PostHog, or
-  domains under the `OnSkin` identity until `docs/brand-decision-memo.md` is
+  domains under the `Layerwell` identity until `docs/brand-decision-memo.md` is
   resolved by counsel/founder decision.

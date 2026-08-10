@@ -21,7 +21,7 @@ const {
   mergeWidgetPrivacyManifest,
   writeWidgetLifecycleConfiguration,
   writeWidgetPrivacyManifest,
-} = require('../../apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js');
+} = require('../../apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js');
 
 const root = path.resolve(import.meta.dirname, '..', '..');
 
@@ -141,7 +141,7 @@ test('main Expo config declares the App Group UserDefaults reason and orders the
 
   const pluginNames = app.plugins.map((plugin) => (Array.isArray(plugin) ? plugin[0] : plugin));
   const widgetsIndex = pluginNames.indexOf('expo-widgets');
-  const privacyIndex = pluginNames.indexOf('./plugins/withRoutineKindWidgetPrivacyManifest');
+  const privacyIndex = pluginNames.indexOf('./plugins/withLayerwellWidgetPrivacyManifest');
   assert.ok(widgetsIndex >= 0);
   assert.equal(privacyIndex, widgetsIndex + 1);
 });
@@ -173,7 +173,7 @@ test('widget manifest merge is idempotent and preserves unrelated declarations',
 });
 
 test('writes a stable target manifest after expo-widgets and preserves invalid source bytes', () => {
-  const platformRoot = mkdtempSync(path.join(tmpdir(), 'routinekind-widget-privacy-'));
+  const platformRoot = mkdtempSync(path.join(tmpdir(), 'layerwell-widget-privacy-'));
   const targetDirectory = path.join(platformRoot, TARGET_NAME);
   const infoPlistPath = path.join(targetDirectory, 'Info.plist');
   const manifestPath = path.join(targetDirectory, PRIVACY_MANIFEST_FILENAME);
@@ -202,7 +202,7 @@ test('writes a stable target manifest after expo-widgets and preserves invalid s
 });
 
 test('writes immutable disabled lifecycle flags into the generated extension plist', () => {
-  const platformRoot = mkdtempSync(path.join(tmpdir(), 'routinekind-widget-flags-'));
+  const platformRoot = mkdtempSync(path.join(tmpdir(), 'layerwell-widget-flags-'));
   const targetDirectory = path.join(platformRoot, TARGET_NAME);
   const infoPlistPath = path.join(targetDirectory, 'Info.plist');
   try {
@@ -215,7 +215,7 @@ test('writes immutable disabled lifecycle flags into the generated extension pli
       writeWidgetLifecycleConfiguration(
         platformRoot,
         TARGET_NAME,
-        'routinekind-development://today',
+        'layerwell-development://today',
       ),
       infoPlistPath,
     );
@@ -224,9 +224,9 @@ test('writes immutable disabled lifecycle flags into the generated extension pli
     assert.equal(value[WIDGET_LIFECYCLE_VERSION_KEY], WIDGET_LIFECYCLE_VERSION);
     assert.equal(value[WIDGET_PUBLICATION_ENABLED_KEY], false);
     assert.equal(value[LIVE_ACTIVITY_START_ENABLED_KEY], false);
-    assert.equal(value[WIDGET_DEEP_LINK_KEY], 'routinekind-development://today');
+    assert.equal(value[WIDGET_DEEP_LINK_KEY], 'layerwell-development://today');
     assert.equal(value.UnrelatedSignedSetting, 'preserved');
-    writeWidgetLifecycleConfiguration(platformRoot, TARGET_NAME, 'routinekind-development://today');
+    writeWidgetLifecycleConfiguration(platformRoot, TARGET_NAME, 'layerwell-development://today');
     assert.equal(readFileSync(infoPlistPath, 'utf8'), first);
   } finally {
     rmSync(platformRoot, { recursive: true, force: true });

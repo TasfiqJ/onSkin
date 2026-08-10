@@ -1,6 +1,6 @@
 # Phase 5 Native Build Runbook
 
-Phase 5 moves RoutineKind from Expo preview behavior to installable native
+Phase 5 moves Layerwell from Expo preview behavior to installable native
 builds. The active launch contract is iOS-only. The product is not beta-ready
 until the generated device QA packet has a real iOS build ID, physical-iPhone
 details, and named signoff. Android source health remains useful but is neither
@@ -264,7 +264,7 @@ archive digest, bundle ID, version/build, source SHA, and install receipts match
 
 `app.base.json` uses `runtimeVersion.policy=fingerprint` and is consumed by `app.config.js`. Any native dependency, plugin, permission, or app config change must ship through a new native binary, not only OTA.
 
-## RoutineKind Widget Lifecycle Candidate
+## Layerwell Widget Lifecycle Candidate
 
 IOS-02 patches only the exact lockfile-installed `expo-widgets` 57.0.8 native
 sources. Root postinstall applies both reviewed native patches, and
@@ -273,7 +273,7 @@ sources. Root postinstall applies both reviewed native patches, and
 Do not accept a changed package version, source hash, missing patch file, or
 unverified installed output.
 
-The RoutineKind candidate treats the bounded SQLite App Group database as the
+The Layerwell candidate treats the bounded SQLite App Group database as the
 sole timeline/action authority. App Group UserDefaults is layout/presentation
 storage, not an interaction transaction. The native flow uses rotating
 authority-nonce compare-and-swap, persists its outbox before AppIntent returns,
@@ -282,7 +282,7 @@ future-stale entry, and redacts on non-exact reconciliation. Privacy reduction
 durably verifies the `privacy-closing-v1` sentinel and returns a synchronous
 closed-admission receipt before queued full cleanup leaves a closed authority
 tombstone. The mounted app host serializes activation and release with privacy
-cleanup. Only the custom RoutineKind Activity path receives the finite
+cleanup. Only the custom Layerwell Activity path receives the finite
 stale/recovery/end policy; this does not change every generic Expo activity.
 The closed receipt proves admission denial, not completed ActivityKit dismissal.
 

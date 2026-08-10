@@ -65,4 +65,4 @@ Read the local health-data collection consent on quiz mount. Render only a short
 
 - Untested branches: native iOS and Android secure-storage timing for the same direct-entry route.
 - Missing fixtures: no standard local reset fixture for onboarding consent state yet.
-- Follow-up needed: promote this branch to a durable web or native E2E test after OnSkin chooses an E2E harness.
+- Follow-up needed: promote this branch to a durable web or native E2E test after Layerwell chooses an E2E harness.

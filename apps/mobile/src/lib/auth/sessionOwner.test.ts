@@ -81,7 +81,7 @@ describe('local account data ownership marker', () => {
     const stored = mocks.storage.get(LOCAL_DATA_OWNER_HASH_KEY);
     expect(stored).toBe('a1'.repeat(32));
     expect(stored).not.toBe('user-a');
-    expect(mocks.digest).toHaveBeenCalledWith('SHA-256', 'routinekind:local-data-owner:v1:user-a');
+    expect(mocks.digest).toHaveBeenCalledWith('SHA-256', 'layerwell:local-data-owner:v1:user-a');
   });
 
   it('durably preserves signed-out data until the exact owner reauthenticates', async () => {

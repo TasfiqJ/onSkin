@@ -89,7 +89,7 @@ contains the native App Group SQLite owner/snapshot/outbox lifecycle, POSIX
 locking plus immediate transactions, App Intent durable append-before-return,
 compare-and-swap reconciliation, a raw parse-independent privacy lane that
 durably verifies `privacy-closing-v1` and returns a closed-admission receipt
-before its queued purge, and `RoutineKindEvening` deterministic
+before its queued purge, and `LayerwellEvening` deterministic
 stale/recovery/end paths. The app contains the generation-bound
 bridge/coordinator/host and canonical reconciliation ordering.
 
@@ -155,7 +155,7 @@ rows to Pass:
       Activity end, no cross-account frame, and safe retry after forced cleanup
       failure. Separately measure ActivityKit dismissal because the receipt
       proves admission closure only.
-- [ ] Start/update/stale/complete/end `RoutineKindEvening`; kill the app at
+- [ ] Start/update/stale/complete/end `LayerwellEvening`; kill the app at
       each phase and reboot with active/stale/malformed/completed instances;
       prove deterministic stale time, recovery, generic final content, and no
       duplicate or orphaned Activity.

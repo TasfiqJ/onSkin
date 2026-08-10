@@ -4,7 +4,7 @@ export const HEALTH_DEPENDENT_CONSENT_TYPES = [
   'photo_capture',
   'photo_cloud_backup',
   'photo_trend_insights',
-  'ask_onskin',
+  'ask_layerwell',
   'community_participation',
   'data_sharing',
 ] as const;
@@ -101,18 +101,18 @@ export const HEALTH_DEPENDENT_CONSENT_COPY = Object.freeze({
       sha256: 'd6bd89ffbb0900784d4af6d8ae1501c7e10385eeba199e1bd8e932d957eec6ba',
     }),
   }),
-  ask_onskin: Object.freeze({
+  ask_layerwell: Object.freeze({
     grant: Object.freeze({
       version: 'ask-advisor-2026-06-14-placeholder',
       text:
-        '[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ' +
+        '[PLACEHOLDER ask_layerwell consent. B-PRIVACY-COPY] ' +
         'Cloud Ask is unavailable in this release. No shelf summary is sent to a cloud model until an approved provider, exact transmitted-field and retention disclosures, explicit permission, deletion controls, safety validation, and professional review are in place.',
-      sha256: '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
+      sha256: '242f45399eb0fc3a792124b641f733feae9bf8321291d7e2c49e2799b8623303',
     }),
     withdrawal: Object.freeze({
       version: 'ask-advisor-2026-06-14-placeholder',
-      text: '[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]',
-      sha256: '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff',
+      text: '[PLACEHOLDER ask_layerwell withdrawal. B-PRIVACY-COPY]',
+      sha256: '4d0b588ed43f4680adaf6e7699641c706e113bed7b9212b408532235e4fe1e57',
     }),
   }),
   community_participation: Object.freeze({

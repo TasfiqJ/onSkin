@@ -67,30 +67,30 @@ describe('owner-scoped dependent consent recovery store', () => {
   });
 
   it('clears only the exact terminal owner and preserves every foreign capability', async () => {
-    await writeDependentConsentRecoveryRaw('owner-a', 'ask_onskin', 'pending-a');
-    await writeDependentConsentRecoveryRaw('owner-b', 'ask_onskin', 'pending-b');
+    await writeDependentConsentRecoveryRaw('owner-a', 'ask_layerwell', 'pending-a');
+    await writeDependentConsentRecoveryRaw('owner-b', 'ask_layerwell', 'pending-b');
 
     await clearOwnerDependentConsentRecoveryRaw('owner-b');
 
     await expect(
-      readDependentConsentRecoveryRaw('owner-b', 'ask_onskin'),
+      readDependentConsentRecoveryRaw('owner-b', 'ask_layerwell'),
     ).resolves.toBeNull();
     await expect(
-      readDependentConsentRecoveryRaw('owner-a', 'ask_onskin'),
+      readDependentConsentRecoveryRaw('owner-a', 'ask_layerwell'),
     ).resolves.toBe('pending-a');
   });
 
   it('accepts the exact durable owner binding after terminal account deletion', async () => {
-    await writeDependentConsentRecoveryRaw('owner-a', 'ask_onskin', 'pending-a');
-    await writeDependentConsentRecoveryRaw('owner-b', 'ask_onskin', 'pending-b');
+    await writeDependentConsentRecoveryRaw('owner-a', 'ask_layerwell', 'pending-a');
+    await writeDependentConsentRecoveryRaw('owner-b', 'ask_layerwell', 'pending-b');
 
     await clearOwnerDependentConsentRecoveryRawByBinding('a'.repeat(64));
 
     await expect(
-      readDependentConsentRecoveryRaw('owner-a', 'ask_onskin'),
+      readDependentConsentRecoveryRaw('owner-a', 'ask_layerwell'),
     ).resolves.toBeNull();
     await expect(
-      readDependentConsentRecoveryRaw('owner-b', 'ask_onskin'),
+      readDependentConsentRecoveryRaw('owner-b', 'ask_layerwell'),
     ).resolves.toBe('pending-b');
   });
 

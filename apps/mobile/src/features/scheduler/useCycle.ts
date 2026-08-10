@@ -1,4 +1,4 @@
-import type { DisruptionReason } from '@onskin/types';
+import type { DisruptionReason } from '@layerwell/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';

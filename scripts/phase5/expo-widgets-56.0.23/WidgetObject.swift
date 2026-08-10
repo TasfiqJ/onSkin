@@ -17,8 +17,8 @@ final class WidgetObject: SharedObject {
       throw UpdatedTimelineWithoutLayout(name)
     }
     let dictionaries = entries.map { $0.toDictionary() }
-    if name == RoutineKindWidgetLifecycleStore.widgetName {
-      try RoutineKindWidgetLifecycleStore.publishTimelineEntries(dictionaries)
+    if name == LayerwellWidgetLifecycleStore.widgetName {
+      try LayerwellWidgetLifecycleStore.publishTimelineEntries(dictionaries)
       return
     }
     WidgetsStorage.set(dictionaries, forKey: "__expo_widgets_\(name)_timeline")
@@ -28,8 +28,8 @@ final class WidgetObject: SharedObject {
   func getTimeline() throws -> [WidgetsJSTimelineEntry] {
     guard let appContext else { return [] }
     let entries: [[String: Any]]
-    if name == RoutineKindWidgetLifecycleStore.widgetName {
-      entries = try RoutineKindWidgetLifecycleStore.currentTimelineDictionaries()
+    if name == LayerwellWidgetLifecycleStore.widgetName {
+      entries = try LayerwellWidgetLifecycleStore.currentTimelineDictionaries()
     } else {
       entries = WidgetsStorage.getArray(forKey: "__expo_widgets_\(name)_timeline") as? [[String: Any]] ?? []
     }

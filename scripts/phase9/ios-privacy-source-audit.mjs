@@ -199,7 +199,7 @@ function writeCheckedOutput(root, output, contents) {
   }
   const temporary = resolve(
     dirname(output.absolute),
-    `.${basename(output.absolute)}.routinekind-${process.pid}-${randomBytes(12).toString('hex')}.tmp`,
+    `.${basename(output.absolute)}.layerwell-${process.pid}-${randomBytes(12).toString('hex')}.tmp`,
   );
   let descriptor;
   try {

@@ -59,9 +59,9 @@ describe('root Store transaction notice contracts', () => {
       keys.indexOf('export const LOCAL_PRIVATE_CACHE_FILENAMES'),
     );
 
-    expect(controlSection).toContain('routinekind.store_transaction_notice.v2');
-    expect(dataSection).not.toContain('routinekind.store_transaction_notice.v2');
-    expect(metadataSection).not.toContain('routinekind.store_transaction_notice.v2');
+    expect(controlSection).toContain('layerwell.store_transaction_notice.v2');
+    expect(dataSection).not.toContain('layerwell.store_transaction_notice.v2');
+    expect(metadataSection).not.toContain('layerwell.store_transaction_notice.v2');
     expect(cleanup).not.toContain('LOCAL_PRIVATE_CONTROL_KEYS');
     expect(isolation).toContain('clearPersistedPrivateData: clearLocalPrivateData');
     expect(deletionRecovery).toContain('clearIsolatedState: clearAccountIsolatedState');

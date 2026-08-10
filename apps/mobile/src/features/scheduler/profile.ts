@@ -1,4 +1,4 @@
-import type { GoalId, PregnancyStatus } from '@onskin/types';
+import type { GoalId, PregnancyStatus } from '@layerwell/types';
 import { useQuery } from '@tanstack/react-query';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';

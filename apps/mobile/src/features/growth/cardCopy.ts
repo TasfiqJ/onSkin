@@ -3,7 +3,7 @@ import { env } from '@/lib/env';
 import { normalizePublicDomain } from '@/lib/growth/attribution';
 
 function brandSlug(): string {
-  return BRAND.appName.toLowerCase().replace(/[^a-z0-9]+/g, '') || 'routinekind';
+  return BRAND.appName.toLowerCase().replace(/[^a-z0-9]+/g, '') || 'layerwell';
 }
 
 export function resolveCardPublicDomain(domain: string = env.finalBrandDomain): string {

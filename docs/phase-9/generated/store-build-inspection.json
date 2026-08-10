@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T06:50:45.982Z",
+  "generatedAt": "2026-08-10T01:38:27.319Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -208,15 +208,15 @@
     "android": "not_applicable"
   },
   "app": {
-    "name": "RoutineKind",
-    "slug": "routinekind",
+    "name": "Layerwell",
+    "slug": "layerwell",
     "version": "0.1.0",
     "runtimeVersion": {
       "policy": "fingerprint"
     },
-    "scheme": "routinekind",
-    "iosBundleIdentifier": "com.routinekind.app",
-    "androidPackage": "com.routinekind.app",
+    "scheme": "layerwell",
+    "iosBundleIdentifier": "com.layerwell.app",
+    "androidPackage": "com.layerwell.app",
     "androidAllowBackup": false,
     "androidPermissions": [
       "android.permission.CAMERA",
@@ -266,19 +266,19 @@
   },
   "resolvedVariants": {
     "development": {
-      "name": "RoutineKind Dev",
-      "scheme": "routinekind-development",
-      "iosBundleIdentifier": "com.routinekind.app.development",
-      "androidPackage": "com.routinekind.app.development",
+      "name": "Layerwell Dev",
+      "scheme": "layerwell-development",
+      "iosBundleIdentifier": "com.layerwell.app.development",
+      "androidPackage": "com.layerwell.app.development",
       "androidAllowBackup": false,
       "appVariant": "development",
       "appEnvironment": "development"
     },
     "staging": {
-      "name": "RoutineKind Staging",
-      "scheme": "routinekind-staging",
-      "iosBundleIdentifier": "com.routinekind.app.staging",
-      "androidPackage": "com.routinekind.app.staging",
+      "name": "Layerwell Staging",
+      "scheme": "layerwell-staging",
+      "iosBundleIdentifier": "com.layerwell.app.staging",
+      "androidPackage": "com.layerwell.app.staging",
       "androidAllowBackup": false,
       "appVariant": "staging",
       "appEnvironment": "staging"
@@ -290,7 +290,7 @@
   "artifacts": {},
   "iosArchivePrivacyEvidence": null,
   "iosPrivacySourceAudit": {
-    "status": "archive_required",
+    "status": "source_invalid",
     "claims": {
       "appStoreAcceptanceProven": false,
       "appStorePrivacyLabelsVerified": false,
@@ -320,7 +320,7 @@
       "frameworkSourceCandidateCount": 0,
       "nativeBinaryFileSourceCandidateCount": 0,
       "appleSdkIntersectionCount": 10,
-      "errorCount": 0,
+      "errorCount": 3,
       "warningCount": 24
     },
     "inputs": {
@@ -336,8 +336,8 @@
       },
       "packageLock": {
         "path": "package-lock.json",
-        "bytes": 607476,
-        "sha256": "c54fcbece3dbb6d33262bd371f9626bc9dd1e262490b05db45a54dbc941f0988"
+        "bytes": 607493,
+        "sha256": "c7d3880abf0211eadd0644ee2531fbba507d8661ed379c8cead68095c7bd1318"
       }
     },
     "ledgerHashes": {
@@ -355,7 +355,9 @@
     "archiveContainerIntegrityMachineValidated": false,
     "provisioningCmsSignatureTrusted": false
   },
-  "blockers": [],
+  "blockers": [
+    "Installed iOS privacy source audit is invalid (3 errors)."
+  ],
   "warnings": [
     "Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.",
     "Exact iOS archive evidence not supplied: set PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH to the completed RC JSON.",

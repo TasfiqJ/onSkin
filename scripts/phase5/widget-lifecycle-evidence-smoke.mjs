@@ -375,7 +375,7 @@ function commitGovernedEvidence(
 
 const temporaryRoots = [];
 function temporaryRoot() {
-  const root = mkdtempSync(join(tmpdir(), 'routinekind-widget-lifecycle-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-widget-lifecycle-'));
   temporaryRoots.push(root);
   return root;
 }

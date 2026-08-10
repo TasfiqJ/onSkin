@@ -1,4 +1,4 @@
-import type { FunctionalTag, PregnancyStatus } from '@onskin/types';
+import type { FunctionalTag, PregnancyStatus } from '@layerwell/types';
 
 import { evaluateExactApplicabilityForReview, type EngineProduct } from './engine';
 import { shippableRules, type ConflictRule } from './rules';

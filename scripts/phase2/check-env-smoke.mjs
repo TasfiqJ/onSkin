@@ -37,14 +37,14 @@ const completeEnv = {
   APP_ENV: 'staging',
   EXPO_PUBLIC_APP_ENV: 'staging',
   BRAND_LEGAL_CLEARANCE: 'cleared',
-  EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
-  EXPO_PUBLIC_TERMS_URL: 'https://routinekind.app/terms',
-  EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.app/support',
-  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://routinekind.app/account-deletion',
-  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://routinekind.app/data-export',
-  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://routinekind.app/consumer-health-privacy',
-  SUPABASE_PROJECT_REF: 'routinekind-staging',
-  EXPO_PUBLIC_SUPABASE_URL: 'https://routinekind.supabase.co',
+  EXPO_PUBLIC_PRIVACY_URL: 'https://layerwell.app/privacy',
+  EXPO_PUBLIC_TERMS_URL: 'https://layerwell.app/terms',
+  EXPO_PUBLIC_SUPPORT_URL: 'https://layerwell.app/support',
+  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://layerwell.app/account-deletion',
+  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://layerwell.app/data-export',
+  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://layerwell.app/consumer-health-privacy',
+  SUPABASE_PROJECT_REF: 'layerwell-staging',
+  EXPO_PUBLIC_SUPABASE_URL: 'https://layerwell.supabase.co',
   EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_livevalue',
   SUPABASE_SECRET_KEY: 'sb_secret_livevalue',
   USER_EDGE_BODY_MAX_BYTES: '16384',
@@ -53,20 +53,20 @@ const completeEnv = {
   EXPO_PUBLIC_REVENUECAT_IOS_KEY: 'appl_livevalue',
   EXPO_PUBLIC_REVENUECAT_ANDROID_KEY: 'goog_livevalue',
   EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID: 'pro',
-  EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual',
-  EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'routinekind.pro.monthly',
+  EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'layerwell.pro.annual',
+  EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'layerwell.pro.monthly',
   REVENUECAT_WEBHOOK_AUTH: 'revenuecat-webhook-auth',
-  REVENUECAT_PROJECT_ID: 'proj_routinekind_staging',
+  REVENUECAT_PROJECT_ID: 'proj_layerwell_staging',
   REVENUECAT_SECRET_API_KEY: 'sk_live_revenuecat_customer_deletion',
   REVENUECAT_V2_SECRET_API_KEY: 'sk_live_revenuecat_v2_customer_deletion',
   REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION: '1',
   REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS: `1=${'40'.repeat(32)}`,
-  EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: 'routinekind-ios.apps.googleusercontent.com',
-  EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: 'routinekind-web.apps.googleusercontent.com',
-  EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME: 'com.googleusercontent.apps.routinekind',
+  EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: 'layerwell-ios.apps.googleusercontent.com',
+  EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: 'layerwell-web.apps.googleusercontent.com',
+  EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME: 'com.googleusercontent.apps.layerwell',
   APPLE_TEAM_ID: 'TEAMID1234',
-  APPLE_SIWA_CLIENT_ID: 'com.routinekind.app',
-  APPLE_SIWA_SERVICE_ID: 'com.routinekind.app.signin',
+  APPLE_SIWA_CLIENT_ID: 'com.layerwell.app',
+  APPLE_SIWA_SERVICE_ID: 'com.layerwell.app.signin',
   APPLE_SIWA_KEY_ID: 'KEYID12345',
   APPLE_SIWA_PRIVATE_KEY: 'apple-siwa-key',
   EXPO_PUBLIC_POSTHOG_KEY: 'phc_livevalue',
@@ -80,18 +80,18 @@ const completeEnv = {
   POSTHOG_NO_RECORDINGS_VERIFIED_AT: '2026-01-02T00:00:00.000Z',
   EXPO_PUBLIC_SENTRY_DSN: 'https://abc@o123.ingest.sentry.io/123',
   SENTRY_AUTH_TOKEN: 'sntrys_livevalue',
-  SENTRY_ORG: 'routinekind',
-  SENTRY_PROJECT: 'routinekind',
+  SENTRY_ORG: 'layerwell',
+  SENTRY_PROJECT: 'layerwell',
   EXPO_PUBLIC_TURNSTILE_SITE_KEY: '0x4sitekey',
   TURNSTILE_SECRET_KEY: '0x4secretkey',
   PUBLIC_FORMS_RATE_LIMIT_MAX: '20',
   PUBLIC_FORMS_RATE_LIMIT_WINDOW_SECONDS: '900',
   PUBLIC_FORMS_MAX_BYTES: '8192',
-  EXPO_PUBLIC_APP_DISPLAY_NAME: 'RoutineKind',
-  APP_SLUG: 'routinekind',
-  EXPO_PUBLIC_APP_SCHEME: 'routinekind',
-  APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-  APP_ANDROID_PACKAGE: 'com.routinekind.app',
+  EXPO_PUBLIC_APP_DISPLAY_NAME: 'Layerwell',
+  APP_SLUG: 'layerwell',
+  EXPO_PUBLIC_APP_SCHEME: 'layerwell',
+  APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+  APP_ANDROID_PACKAGE: 'com.layerwell.app',
   ACCOUNT_DELETION_PAYLOAD_KEY_HEX: '10'.repeat(32),
   ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX: '20'.repeat(32),
   ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION: '1',
@@ -130,7 +130,7 @@ function withoutKeys(env, keys) {
 }
 
 function runCheck(extraEnv) {
-  const cwd = mkdtempSync(join(tmpdir(), 'routinekind-phase2-check-env-'));
+  const cwd = mkdtempSync(join(tmpdir(), 'layerwell-phase2-check-env-'));
   try {
     return spawnSync(process.execPath, [checkEnvPath, '--strict'], {
       cwd,
@@ -143,7 +143,7 @@ function runCheck(extraEnv) {
 }
 
 function runRlsSmoke(extraEnv) {
-  const cwd = mkdtempSync(join(tmpdir(), 'routinekind-phase2-rls-smoke-'));
+  const cwd = mkdtempSync(join(tmpdir(), 'layerwell-phase2-rls-smoke-'));
   try {
     return spawnSync(process.execPath, [rlsSmokePath], {
       cwd,
@@ -422,8 +422,8 @@ const cases = [
     result: runCheck({
       ...completeEnv,
       PHASE9_RUN_LIVE_EDGE_AUTH: 'true',
-      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: 'routinekind-staging',
-      SUPABASE_URL: 'https://routinekind-staging.supabase.co',
+      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: 'layerwell-staging',
+      SUPABASE_URL: 'https://layerwell-staging.supabase.co',
     }),
     expect(result) {
       return (
@@ -515,7 +515,7 @@ const cases = [
     name: 'Apple revocation client ID must match the iOS bundle identifier',
     result: runCheck({
       ...completeEnv,
-      APPLE_SIWA_CLIENT_ID: 'com.routinekind.other',
+      APPLE_SIWA_CLIENT_ID: 'com.layerwell.other',
     }),
     expect(result) {
       return (
@@ -593,7 +593,7 @@ const cases = [
     name: 'strict env rejects reserved policy hosts',
     result: runCheck({
       ...completeEnv,
-      EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.localhost/support',
+      EXPO_PUBLIC_SUPPORT_URL: 'https://layerwell.localhost/support',
     }),
     expect(result) {
       return (
@@ -606,7 +606,7 @@ const cases = [
     name: 'strict env rejects credentialed policy URLs',
     result: runCheck({
       ...completeEnv,
-      EXPO_PUBLIC_TERMS_URL: 'https://user:pass@routinekind.app/terms',
+      EXPO_PUBLIC_TERMS_URL: 'https://user:pass@layerwell.app/terms',
     }),
     expect(result) {
       return (
@@ -619,7 +619,7 @@ const cases = [
     name: 'strict env rejects non-Supabase client hosts',
     result: runCheck({
       ...completeEnv,
-      EXPO_PUBLIC_SUPABASE_URL: 'https://routinekind.app',
+      EXPO_PUBLIC_SUPABASE_URL: 'https://layerwell.app',
     }),
     expect(result) {
       return (

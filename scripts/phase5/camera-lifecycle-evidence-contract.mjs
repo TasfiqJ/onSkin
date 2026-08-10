@@ -1649,7 +1649,7 @@ function validateReports(evidence, artifactById, validRuns, errors) {
   const report = (id) => artifactById.get(id)?.parsedJson;
   const buildLog = artifactById.get('eas_build_log')?.textContent;
   const requiredBuildLogLines = [
-    'ROUTINEKIND_CAMERA_BUILD_BINDING_V1',
+    'LAYERWELL_CAMERA_BUILD_BINDING_V1',
     `sourceGitSha=${evidence.sourceGitSha}`,
     `easIosBuildId=${evidence.build?.easIosBuildId}`,
     `profile=${evidence.build?.profile}`,

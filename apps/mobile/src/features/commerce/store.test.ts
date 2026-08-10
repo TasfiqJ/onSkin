@@ -35,8 +35,8 @@ describe('COM-01A commerce persistence boundary', () => {
   it('preserves explicit negative and deletion cleanup', async () => {
     await expect(setCommerceConsentLocal(false)).resolves.toBeUndefined();
     await expect(clearCommerceState()).resolves.toBeUndefined();
-    expect(mocks.removePrivateItem).toHaveBeenNthCalledWith(1, 'onskin.commerceConsent.v1');
-    expect(mocks.removePrivateItem).toHaveBeenNthCalledWith(2, 'onskin.commerceConsent.v1');
+    expect(mocks.removePrivateItem).toHaveBeenNthCalledWith(1, 'layerwell.commerceConsent.v1');
+    expect(mocks.removePrivateItem).toHaveBeenNthCalledWith(2, 'layerwell.commerceConsent.v1');
   });
 
   it('rejects click persistence before inspecting an adversarial payload', async () => {

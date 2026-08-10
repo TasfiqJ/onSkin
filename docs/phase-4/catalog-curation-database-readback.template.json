@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "contractId": "catalog-curation-database-readback-v1",
   "signatureEnvelopeVersion": "catalog-curation-database-readback-signature-v1",
-  "signingDomain": "routinekind.catalog-curation-database-readback.v1",
+  "signingDomain": "layerwell.catalog-curation-database-readback.v1",
   "receiptId": "pending-catalog-curation-database-readback",
   "verifiedAt": "2026-09-10T16:00:00.000Z",
   "authority": {

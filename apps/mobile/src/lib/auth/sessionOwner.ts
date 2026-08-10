@@ -15,7 +15,7 @@ export {
   LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
   LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
 } from './sessionOwnerKey';
-const OWNER_HASH_DOMAIN = 'routinekind:local-data-owner:v1:';
+const OWNER_HASH_DOMAIN = 'layerwell:local-data-owner:v1:';
 const OWNER_HASH_PATTERN = /^[a-f0-9]{64}$/;
 const UNCLAIMED_QUARANTINE_VALUE = '1';
 const CLEANUP_REQUIRED_VALUE = '1';

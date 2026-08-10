@@ -23,7 +23,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.subscription.promptedExpiry';
+const KEY = 'layerwell.subscription.promptedExpiry';
 const NOW = '2026-07-12T12:00:00.000Z';
 
 function entitlement(overrides: Record<string, unknown> = {}): Record<string, unknown> {

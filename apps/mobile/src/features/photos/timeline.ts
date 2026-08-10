@@ -1,4 +1,4 @@
-import type { PhotoMilestone, PhotoSeries, TimeOfDay } from '@onskin/types';
+import type { PhotoMilestone, PhotoSeries, TimeOfDay } from '@layerwell/types';
 
 export type PhotoQualitySource = 'post_capture_measurement';
 

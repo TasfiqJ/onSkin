@@ -7,7 +7,7 @@ Last updated: 2026-07-26
 
 The app now has one deterministic draft quiz and scorer:
 
-- Contract ID: `urn:routinekind:onboarding:skin-profile`
+- Contract ID: `urn:layerwell:onboarding:skin-profile`
 - Content version: `draft-2026-07-04`
 - Scoring version: `draft-1`
 - Output schema version: `1`

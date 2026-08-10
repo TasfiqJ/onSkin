@@ -219,7 +219,7 @@ as $$
       p_transferred_to,
       'production',
       'app_store',
-      'routinekind_pro_annual',
+  'layerwell_pro_annual',
       'pro',
       '2027-07-13T00:00:00Z'::timestamptz,
       '2026-07-13T00:00:00Z'::timestamptz,

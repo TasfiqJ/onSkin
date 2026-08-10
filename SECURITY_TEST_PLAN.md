@@ -64,35 +64,35 @@
 - `npx vitest run src/features/notifications/claimsafety.test.ts src/features/notifications/store.test.ts src/features/notifications/policy.test.ts`
 - `npx vitest run src/lib/analytics/track.test.ts src/lib/observability/scrub.test.ts`
 - `npx vitest run src/lib/navigation/externalUrl.test.ts src/features/commerce/attribution.test.ts src/features/commerce/commerce.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/externalOpen.test.ts src/lib/navigation/externalUrl.test.ts src/features/commerce/commerce.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/appSettings.test.ts src/features/navigation/sheetRouteContracts.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/features/photos/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/community/shareNote.test.ts src/features/community/community.test.ts src/features/community/claimsafety.test.ts src/features/community/communityRoutes.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/onboarding/healthConsent.test.ts src/features/onboarding/consentCopy.test.ts src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/photos/sharePhoto.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/settings/actions.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/settings/applyPrivacyChoice.test.ts src/lib/errors/userFacing.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/ask/consent.test.ts src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/trend/consent.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/ask/consent.test.ts src/features/ask/applyConsentChoice.test.ts src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/commerce/commerce.test.ts src/features/community/community.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/notifications/applyPreferences.test.ts src/features/notifications/store.test.ts src/features/notifications/claimsafety.test.ts src/features/notifications/policy.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/externalOpen.test.ts src/lib/navigation/externalUrl.test.ts src/features/commerce/commerce.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/appSettings.test.ts src/features/navigation/sheetRouteContracts.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/features/photos/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/community/shareNote.test.ts src/features/community/community.test.ts src/features/community/claimsafety.test.ts src/features/community/communityRoutes.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/onboarding/healthConsent.test.ts src/features/onboarding/consentCopy.test.ts src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/photos/sharePhoto.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/settings/actions.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/settings/applyPrivacyChoice.test.ts src/lib/errors/userFacing.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/ask/consent.test.ts src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/trend/consent.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/ask/consent.test.ts src/features/ask/applyConsentChoice.test.ts src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/commerce/commerce.test.ts src/features/community/community.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/notifications/applyPreferences.test.ts src/features/notifications/store.test.ts src/features/notifications/claimsafety.test.ts src/features/notifications/policy.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
 - `npx vitest run src/lib/launch/phase7.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/onboarding/quizCompletion.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/subscription/priceDisplay.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts src/features/today/useToday.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/externalOpen.test.ts src/features/community/shareNote.test.ts`
-- `npm --workspace @onskin/mobile run typecheck`
-- `npm --workspace @onskin/mobile run lint`
+- `npm --workspace @layerwell/mobile run test -- src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/subscription/priceDisplay.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts src/features/today/useToday.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/externalOpen.test.ts src/features/community/shareNote.test.ts`
+- `npm --workspace @layerwell/mobile run typecheck`
+- `npm --workspace @layerwell/mobile run lint`
 - `npm run phase7:check-core-loop`
 - `npm run phase7:qa-packet`
 - `npm run phase9:store-build-inspect`
@@ -115,13 +115,13 @@
 ## Tests added
 
 - `apps/mobile/src/features/settings/localPrivateDataKeys.test.ts`
-  - Proves every `onskin.*` local storage key in source is registered for deletion.
+  - Proves every `layerwell.*` local storage key in source is registered for deletion.
   - Proves there are no duplicate local wipe keys.
 - `apps/mobile/src/features/settings/localPrivateData.test.ts`
   - Proves local private-data cleanup clears app stores, generated cache files, scheduled notifications, and PostHog/RevenueCat client identities.
   - Proves account-boundary cleanup fails closed when a client identity reset rejects.
 - `apps/mobile/src/features/notifications/claimsafety.test.ts`
-  - Proves every lock-screen notification payload uses the generic `OnSkin` title and discreet body copy.
+  - Proves every lock-screen notification payload uses the generic `Layerwell` title and discreet body copy.
   - Proves OS notification bodies do not contain progress-photo, product, skin, treatment, ingredient, or escalation details.
 - `apps/mobile/src/features/notifications/store.test.ts`
   - Proves legacy local notification prefs with `lockscreenDiscreet: false` load as discreet.
@@ -313,7 +313,7 @@
   - Writes `docs/phase-9/generated/live-data-rights.*` as an evidence packet.
 - `scripts/phase9/live-consent-withdrawal.mjs`
   - When explicitly enabled, creates a temporary staging user and seeds each consent-gated data class.
-  - Invokes deployed `consent-withdrawal` for `photo_cloud_backup`, `ask_onskin`, `photo_trend_insights`, `community_participation`, and `data_sharing`.
+  - Invokes deployed `consent-withdrawal` for `photo_cloud_backup`, `ask_layerwell`, `photo_trend_insights`, `community_participation`, and `data_sharing`.
   - Verifies false ledger rows, cloud photo storage removal plus metadata relocalization, Ask safety-audit deletion, trend-row deletion, community row deletion, commerce click deletion, and order-attribution token detachment.
   - Refuses production unless `PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL=true` and writes `docs/phase-9/generated/live-consent-withdrawal.*` as an evidence packet.
 - `scripts/phase9/data-rights-smoke.mjs`

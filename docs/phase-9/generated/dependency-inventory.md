@@ -247,9 +247,9 @@ Lockfile version: 3
 - `@nodelib/fs.stat` 2.0.5
 - `@nodelib/fs.walk` 1.2.8
 - `@nolyfill/is-core-module` 1.0.39
-- `@onskin/catalog-operator-console` unknown
-- `@onskin/mobile` unknown
-- `@onskin/types` unknown
+- `@layerwell/catalog-operator-console` unknown
+- `@layerwell/mobile` unknown
+- `@layerwell/types` unknown
 - `@oxc-project/types` 0.138.0
 - `@posthog/core` 1.39.6
 - `@posthog/types` 1.392.1

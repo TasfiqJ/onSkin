@@ -43,7 +43,7 @@ alter table public.skin_profiles
     coalesce(
       (
         version = 2
-        and quiz_contract_id = 'urn:routinekind:onboarding:skin-profile'
+        and quiz_contract_id = 'urn:layerwell:onboarding:skin-profile'
         and quiz_content_version = 'draft-2026-07-04'
         and quiz_scoring_version = 'draft-1'
         and quiz_output_schema_version = 1

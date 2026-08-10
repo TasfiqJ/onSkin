@@ -504,21 +504,21 @@
     {
       "id": "data-store:postgres:ask_safety_audit",
       "category": "data-store",
-      "source": "supabase/migrations/20260614000025_ask_onskin.sql",
+      "source": "supabase/migrations/20260614000025_ask_layerwell.sql",
       "featureIds": ["F-14"],
       "readiness": "implemented"
     },
     {
       "id": "data-store:postgres:ask_sessions",
       "category": "data-store",
-      "source": "supabase/migrations/20260614000025_ask_onskin.sql",
+      "source": "supabase/migrations/20260614000025_ask_layerwell.sql",
       "featureIds": ["F-14"],
       "readiness": "implemented"
     },
     {
       "id": "data-store:postgres:ask_turn_audit",
       "category": "data-store",
-      "source": "supabase/migrations/20260614000025_ask_onskin.sql",
+      "source": "supabase/migrations/20260614000025_ask_layerwell.sql",
       "featureIds": ["F-14"],
       "readiness": "implemented"
     },

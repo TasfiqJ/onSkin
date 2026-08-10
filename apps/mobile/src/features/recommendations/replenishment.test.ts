@@ -1,4 +1,4 @@
-import type { ProductStatus } from '@onskin/types';
+import type { ProductStatus } from '@layerwell/types';
 import { describe, expect, it } from 'vitest';
 
 import type { ShelfItem } from '@/features/shelf/useShelf';

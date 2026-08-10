@@ -90,7 +90,7 @@ test('a drifted reviewed literal fails both manifest validation and strict audit
 
 test('a stale manifest entry fails even when no legacy source hit remains', async (t) => {
   const { root } = await fixture(t, {
-    source: "export const domain = 'routinekind-reviewed-domain:v1:';\n",
+    source: "export const domain = 'layerwell-reviewed-domain:v1:';\n",
     entries: [entry()],
   });
   const result = await runFixture(root, 'supabase');
@@ -144,7 +144,7 @@ test('public asset risk cannot be compatibility-allowlisted', async (t) => {
 
 test('missing compatibility manifest fails closed', async (t) => {
   const { root } = await fixture(t, {
-    source: "export const domain = 'routinekind-reviewed-domain:v1:';\n",
+    source: "export const domain = 'layerwell-reviewed-domain:v1:';\n",
     entries: [],
     manifest: false,
   });

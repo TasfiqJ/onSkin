@@ -155,7 +155,7 @@ function aad(options: {
 }): Uint8Array<ArrayBuffer> {
   return UTF8.encode(
     JSON.stringify({
-      purpose: "routinekind-apple-refresh-token-vault",
+      purpose: "layerwell-apple-refresh-token-vault",
       version: APPLE_VAULT_ENVELOPE_VERSION,
       userId: options.userId,
       subjectHmac: options.subjectHmac,

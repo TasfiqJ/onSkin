@@ -195,12 +195,12 @@ function buildTransform(source, records) {
     rootSignature: { algorithm: 'Ed25519', valueBase64: 'c2lnbmF0dXJl' },
   });
   const appIdentity = {
-    displayName: 'RoutineKind',
-    bundleId: 'com.routinekind.app',
+    displayName: 'Layerwell',
+    bundleId: 'com.layerwell.app',
     version: '1.0.0',
     build: '1',
-    publicHost: 'routinekind.app',
-    supportEmail: 'support@routinekind.app',
+    publicHost: 'layerwell.app',
+    supportEmail: 'support@layerwell.app',
   };
   const release = retainedSnapshot({
     schemaVersion: 1,
@@ -208,7 +208,7 @@ function buildTransform(source, records) {
     status: 'approved',
     appIdentity,
     territories: ['US'],
-    attribution: { publicUrl: 'https://routinekind.app/catalog-sources' },
+    attribution: { publicUrl: 'https://layerwell.app/catalog-sources' },
     approvedAt: '2026-07-15T01:00:00.000Z',
     expiresAt: '2027-07-15T01:00:00.000Z',
     evidence: { identity: {}, territory: {}, attributionSurface: {} },
@@ -273,7 +273,7 @@ function buildTransform(source, records) {
           ? 'https://static.openfoodfacts.org/data/openbeautyfacts-products.jsonl.gz'
           : 'https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en',
       upstreamSha256: digest('6'),
-      acquisitionEvidenceUri: 'https://evidence.routinekind.app/catalog/acquisition',
+      acquisitionEvidenceUri: 'https://evidence.layerwell.app/catalog/acquisition',
       acquisitionEvidenceSha256: digest('7'),
       transformationRecordContractId: CATALOG_TRANSFORMED_PAYLOAD_CONTRACT.contractId,
       transformationRecordSha256: transformedPayloadSha256,
@@ -524,7 +524,7 @@ function fixture({
       trustRegistryRole: 'engineering',
       independenceGroup: 'catalog-operations',
       publicKeySha256: digest('b'),
-      evidenceUri: 'https://evidence.routinekind.app/reviews/catalog-reviewer-1',
+      evidenceUri: 'https://evidence.layerwell.app/reviews/catalog-reviewer-1',
       evidenceSha256: digest('9'),
     },
     {
@@ -534,7 +534,7 @@ function fixture({
       trustRegistryRole: 'legal',
       independenceGroup: 'data-quality',
       publicKeySha256: digest('c'),
-      evidenceUri: 'https://evidence.routinekind.app/reviews/quality-reviewer-1',
+      evidenceUri: 'https://evidence.layerwell.app/reviews/quality-reviewer-1',
       evidenceSha256: digest('a'),
     },
   ];
@@ -795,7 +795,7 @@ test('builds deterministic content-addressed envelopes and exact per-record hash
 test('admits benzoyl peroxide only through a signed evidence-bound category override', (t) => {
   const categoryOverride = {
     category: 'benzoyl_peroxide',
-    evidenceUri: 'https://evidence.routinekind.app/products/12345670/category-review',
+    evidenceUri: 'https://evidence.layerwell.app/products/12345670/category-review',
     evidenceSha256: digest('7'),
   };
   const reviewed = cleanup(t, fixture({ categoryOverrides: [categoryOverride] }));
@@ -824,11 +824,11 @@ test('admits benzoyl peroxide only through a signed evidence-bound category over
     },
     (review) => {
       review.records[0].categoryOverrideEvidenceUri =
-        'https://evidence.routinekind.app/products/12345670/bad path';
+        'https://evidence.layerwell.app/products/12345670/bad path';
     },
     (review) => {
       review.records[0].categoryOverrideEvidenceUri =
-        'https://reviewer:secret@evidence.routinekind.app/products/12345670/category-review';
+        'https://reviewer:secret@evidence.layerwell.app/products/12345670/category-review';
     },
     (review) => {
       review.records[0].categoryOverrideEvidenceUri =
@@ -840,19 +840,19 @@ test('admits benzoyl peroxide only through a signed evidence-bound category over
     },
     (review) => {
       review.records[0].categoryOverrideEvidenceUri =
-        'http://evidence.routinekind.app/products/12345670/category-review';
+        'http://evidence.layerwell.app/products/12345670/category-review';
     },
     (review) => {
       review.records[0].categoryOverrideEvidenceUri =
-        'https://evidence.routinekind.app/products/12345670/category-review#mutable-fragment';
+        'https://evidence.layerwell.app/products/12345670/category-review#mutable-fragment';
     },
     (review) => {
       review.records[0].categoryOverrideEvidenceUri =
-        'https://evidence.routinekind.app/products/12345670/category-review?token=secret';
+        'https://evidence.layerwell.app/products/12345670/category-review?token=secret';
     },
     (review) => {
       review.records[0].categoryOverrideEvidenceUri =
-        'https://evidence.routinekind.app/products/12345670/category-review?X-Amz-Signature=secret';
+        'https://evidence.layerwell.app/products/12345670/category-review?X-Amz-Signature=secret';
     },
     (review) => {
       review.records[0].disposition = 'rejected';
@@ -930,7 +930,7 @@ test('pre-production v2 cutover invalidates every legacy row-review and stage do
         review.schemaVersion = 1;
         review.contractId = 'catalog-row-review-overlay-v1';
         review.signatureEnvelopeVersion = 'catalog-row-review-signature-v1';
-        review.signingDomain = 'routinekind.catalog-row-review-overlay.v1';
+        review.signingDomain = 'layerwell.catalog-row-review-overlay.v1';
         for (const record of review.records) {
           delete record.categoryOverride;
           delete record.categoryOverrideEvidenceUri;
@@ -1461,11 +1461,11 @@ test('requires complete explicit reviews, exact fields, and independent reviewer
       review.reviewers[1].trustRegistryRole = review.reviewers[0].trustRegistryRole;
     },
     (review) => {
-      review.reviewers[0].evidenceUri = 'https://evidence.routinekind.app/reviews/bad reviewer';
+      review.reviewers[0].evidenceUri = 'https://evidence.layerwell.app/reviews/bad reviewer';
     },
     (review) => {
       review.reviewers[0].evidenceUri =
-        'https://reviewer:secret@evidence.routinekind.app/reviews/catalog-reviewer-1';
+        'https://reviewer:secret@evidence.layerwell.app/reviews/catalog-reviewer-1';
     },
     (review) => {
       review.reviewers[0].evidenceUri = 'https://localhost/reviews/catalog-reviewer-1';
@@ -1475,19 +1475,19 @@ test('requires complete explicit reviews, exact fields, and independent reviewer
     },
     (review) => {
       review.reviewers[0].evidenceUri =
-        'http://evidence.routinekind.app/reviews/catalog-reviewer-1';
+        'http://evidence.layerwell.app/reviews/catalog-reviewer-1';
     },
     (review) => {
       review.reviewers[0].evidenceUri =
-        'https://evidence.routinekind.app/reviews/catalog-reviewer-1#mutable-fragment';
+        'https://evidence.layerwell.app/reviews/catalog-reviewer-1#mutable-fragment';
     },
     (review) => {
       review.reviewers[0].evidenceUri =
-        'https://evidence.routinekind.app/reviews/catalog-reviewer-1?token=secret';
+        'https://evidence.layerwell.app/reviews/catalog-reviewer-1?token=secret';
     },
     (review) => {
       review.reviewers[0].evidenceUri =
-        'https://evidence.routinekind.app/reviews/catalog-reviewer-1?X-Amz-Signature=secret';
+        'https://evidence.layerwell.app/reviews/catalog-reviewer-1?X-Amz-Signature=secret';
     },
     (review) => {
       review.reviewers.push({
@@ -1496,7 +1496,7 @@ test('requires complete explicit reviews, exact fields, and independent reviewer
         trustRegistryKeyId: 'third-review-key-1',
         independenceGroup: 'third-review-group',
         publicKeySha256: digest('d'),
-        evidenceUri: 'https://evidence.routinekind.app/reviews/third-reviewer-1',
+        evidenceUri: 'https://evidence.layerwell.app/reviews/third-reviewer-1',
         evidenceSha256: digest('e'),
       });
     },
@@ -1527,7 +1527,7 @@ test('real Ed25519 row reviewers bind the v2 regulated override and cannot reuse
       trustRegistryKeyId: 'catalog-review-key-1',
       trustRegistryRole: 'engineering',
       independenceGroup: 'catalog-operations',
-      evidenceUri: 'https://evidence.routinekind.app/reviews/catalog-reviewer-1',
+      evidenceUri: 'https://evidence.layerwell.app/reviews/catalog-reviewer-1',
       evidenceSha256: digest('9'),
     },
     {
@@ -1536,7 +1536,7 @@ test('real Ed25519 row reviewers bind the v2 regulated override and cannot reuse
       trustRegistryKeyId: 'quality-review-key-1',
       trustRegistryRole: 'legal',
       independenceGroup: 'data-quality',
-      evidenceUri: 'https://evidence.routinekind.app/reviews/quality-reviewer-1',
+      evidenceUri: 'https://evidence.layerwell.app/reviews/quality-reviewer-1',
       evidenceSha256: digest('a'),
     },
   ];
@@ -1601,7 +1601,7 @@ test('real Ed25519 row reviewers bind the v2 regulated override and cannot reuse
         duplicateOfNaturalKey: null,
         categoryOverride: 'benzoyl_peroxide',
         categoryOverrideEvidenceUri:
-          'https://evidence.routinekind.app/products/12345670/category-review',
+          'https://evidence.layerwell.app/products/12345670/category-review',
         categoryOverrideEvidenceSha256: digest('7'),
         reviewerIds: reviewers.map((reviewer) => reviewer.reviewerId),
       },
@@ -1638,7 +1638,7 @@ test('real Ed25519 row reviewers bind the v2 regulated override and cannot reuse
     },
     (candidate) => {
       candidate.records[0].categoryOverrideEvidenceUri =
-        'https://evidence.routinekind.app/products/12345670/different-review';
+        'https://evidence.layerwell.app/products/12345670/different-review';
     },
     (candidate) => {
       candidate.records[0].categoryOverrideEvidenceSha256 = digest('8');

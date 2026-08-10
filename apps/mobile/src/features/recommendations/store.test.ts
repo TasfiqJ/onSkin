@@ -64,8 +64,8 @@ vi.mock('@/lib/supabase/client', () => ({
   },
 }));
 
-const PREF_KEY = 'onskin.recPrefs.v1';
-const DISMISSED_KEY = 'onskin.recDismissed.v1';
+const PREF_KEY = 'layerwell.recPrefs.v1';
+const DISMISSED_KEY = 'layerwell.recDismissed.v1';
 
 describe('recommendation local store recovery', () => {
   beforeEach(() => {

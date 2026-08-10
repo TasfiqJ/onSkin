@@ -443,7 +443,7 @@ test('the mobile preference mirror uses the exact closed-vocabulary owner RPC', 
   );
   assertIncludesAll(
     healthDataWriteAdmission,
-    ["'onskin.recDismissed.v1'", "'onskin.recPrefs.v1'"],
+    ["'layerwell.recDismissed.v1'", "'layerwell.recPrefs.v1'"],
     'recommendation health-purpose private keys',
   );
   assertIncludesAll(

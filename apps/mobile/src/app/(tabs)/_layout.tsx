@@ -1,4 +1,4 @@
-import type { RoutineType } from '@onskin/types';
+import type { RoutineType } from '@layerwell/types';
 import { router, Tabs } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
 import { useEffect, useState } from 'react';
