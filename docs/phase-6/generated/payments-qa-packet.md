@@ -1,9 +1,9 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-08-10T01:37:48.524Z
-Git SHA: fa0aa21c1fa2020a3e2a9624daf4051f4564dd8f
-Git status: DIRTY
-Required inputs committed and byte-matched to HEAD: BLOCKED
+Generated at: 2026-08-10T01:43:57.357Z
+Git SHA: 6c612c2dc17cf2a941bcd28acd744891e99d80a0
+Git status: clean
+Required inputs committed and byte-matched to HEAD: yes
 Tracked secret environment files absent: yes
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -277,57 +277,6 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 ## Blockers
 
-- Phase 6 final payments evidence requires a clean Git worktree.
-- Phase 6 required input bytes differ from HEAD: .env.example.
-- Phase 6 required input bytes differ from HEAD: package.json.
-- Phase 6 required input bytes differ from HEAD: package-lock.json.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/package.json.
-- Phase 6 required input bytes differ from HEAD: packages/types/src/index.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/app.config.js.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/lib/iap/revenuecat.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/lib/iap/revenuecatPublication.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/lib/env.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/lib/appConfig.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/store.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/entitlement.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/copy.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/app/paywall/upsell.tsx.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/revenuecat-webhook/webhookCore.test.ts.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/subscription-reconciliation/reconciliationCore.test.ts.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/account-deletion/durableDeletionRuntime.test.ts.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/account-deletion/providerDeletion.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/store.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/entitlement.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/serverContracts.test.ts.
-- Phase 6 required input bytes differ from HEAD: scripts/phase6/check-payments-env-smoke.mjs.
-- Phase 6 required input bytes differ from HEAD: scripts/phase6/payments-git-provenance.test.mjs.
-- Phase 6 required input bytes differ from HEAD: scripts/phase6/payments-revenuecat-access-evidence.test.mjs.
-- Phase 6 required input bytes differ from HEAD: scripts/phase6/payments-trusted-entitlements-evidence.test.mjs.
-- Phase 6 required input bytes differ from HEAD: scripts/phase2/check-env.mjs.
-- Phase 6 required input bytes differ from HEAD: scripts/phase2/check-env-smoke.mjs.
-- Phase 6 required input bytes differ from HEAD: scripts/e2e/human-e2e-manifest.mjs.
-- Phase 6 required input bytes differ from HEAD: docs/HUMAN_SIMULATED_E2E_TESTING.md.
-- Phase 6 required input bytes differ from HEAD: docs/USER_FLOW_TREE.md.
-- Phase 6 required input bytes differ from HEAD: docs/phase-6/payments-runbook.md.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/_shared/appleVault.test.ts.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/_shared/appleVault.ts.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/account-deletion/appleDeletionNetwork.test.ts.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/account-deletion/durableDeletionCore.test.ts.
-- Phase 6 required input bytes differ from HEAD: supabase/functions/account-deletion/durableDeletionDatabaseGateway.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/ProGate.tsx.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/conflictQuota.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/conflictQuota.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/dismissPaywall.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/gatedRoutes.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/lifecycle.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/lifecycle.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/plans.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/plans.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/priceDisplay.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/priceDisplay.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts.
-- Phase 6 required input bytes differ from HEAD: apps/mobile/src/lib/iap/storeTransactionNotice.ts.
 - Missing PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.
 - Missing RevenueCat Trusted Entitlements evidence path.
 - Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.
@@ -352,4 +301,4 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 ## Warnings
 
-- Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence.
+- none
