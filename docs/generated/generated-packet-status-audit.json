@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T01:49:00.641Z",
+  "generatedAt": "2026-08-10T01:49:53.103Z",
   "status": "blocked",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
@@ -53,7 +53,7 @@
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 42,
-      "staleHashReferenceCount": 2
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-11/generated/public-launch-packet.md",
@@ -421,7 +421,7 @@
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 480,
-      "staleHashReferenceCount": 1
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/release-engineering-qa-packet.md",
@@ -450,17 +450,14 @@
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
     "hashReferenceCount": 3539,
-    "staleHashReferenceCount": 6,
-    "blockerCount": 6,
+    "staleHashReferenceCount": 3,
+    "blockerCount": 3,
     "warningCount": 0
   },
   "blockers": [
-    "docs/phase-11/generated/public-launch-packet.json has stale hash reference sourceHashes.docs/phase-10/generated/closed-beta-packet.json -> docs/phase-10/generated/closed-beta-packet.json: sha256 does not match current file.",
-    "docs/phase-11/generated/public-launch-packet.json has stale hash reference sourceHashes.docs/phase-10/generated/closed-beta-packet.md -> docs/phase-10/generated/closed-beta-packet.md: sha256 does not match current file.",
     "docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference schemaRevision -> supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql: sha256 does not match current file.",
     "docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference harnessRevision -> scripts/phase9/live-consent-withdrawal.mjs: sha256 does not match current file.",
-    "docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference evidenceContractRevision -> scripts/phase9/consent-withdrawal-evidence.mjs: sha256 does not match current file.",
-    "docs/phase-9/generated/release-engineering-qa-packet.json has stale hash reference sourceHashes.docs/phase-4/generated/beta-coverage-report.json -> docs/phase-4/generated/beta-coverage-report.json: sha256 does not match current file."
+    "docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference evidenceContractRevision -> scripts/phase9/consent-withdrawal-evidence.mjs: sha256 does not match current file."
   ],
   "warnings": []
 }

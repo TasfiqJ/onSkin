@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-08-10T01:49:00.641Z
+Generated: 2026-08-10T01:49:53.103Z
 Status: blocked
 Strict mode: yes
 
@@ -15,8 +15,8 @@ being treated as trustworthy launch evidence.
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
 - Hash references checked: 3539
-- Stale hash references: 6
-- Blockers: 6
+- Stale hash references: 3
+- Blockers: 3
 - Warnings: 0
 
 ## Files
@@ -27,7 +27,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-10/generated/closed-beta-packet.md             | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-10/generated/support-handoff-packet.json       | json | 0                  | 0                          | 5         | 0               |
 | docs/phase-10/generated/support-handoff-packet.md         | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 42        | 2               |
+| docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 42        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 454       | 0               |
 | docs/phase-3/generated/review-operator-queue.md           | md   | 0                  | 0                          | 0         | 0               |
@@ -73,18 +73,15 @@ being treated as trustworthy launch evidence.
 | docs/phase-9/generated/live-revenuecat-webhook.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.json     | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.md       | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 480       | 1               |
+| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 480       | 0               |
 | docs/phase-9/generated/release-engineering-qa-packet.md   | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 3         | 0               |
 
 ## Blockers
 
-- docs/phase-11/generated/public-launch-packet.json has stale hash reference sourceHashes.docs/phase-10/generated/closed-beta-packet.json -> docs/phase-10/generated/closed-beta-packet.json: sha256 does not match current file.
-- docs/phase-11/generated/public-launch-packet.json has stale hash reference sourceHashes.docs/phase-10/generated/closed-beta-packet.md -> docs/phase-10/generated/closed-beta-packet.md: sha256 does not match current file.
 - docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference schemaRevision -> supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql: sha256 does not match current file.
 - docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference harnessRevision -> scripts/phase9/live-consent-withdrawal.mjs: sha256 does not match current file.
 - docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference evidenceContractRevision -> scripts/phase9/consent-withdrawal-evidence.mjs: sha256 does not match current file.
-- docs/phase-9/generated/release-engineering-qa-packet.json has stale hash reference sourceHashes.docs/phase-4/generated/beta-coverage-report.json -> docs/phase-4/generated/beta-coverage-report.json: sha256 does not match current file.
 
 ## Warnings
 
