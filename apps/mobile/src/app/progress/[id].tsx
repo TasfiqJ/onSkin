@@ -12,6 +12,10 @@ import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -29,6 +33,7 @@ function e2ePhotoDeleteFailure(): boolean {
 
 function PhotoDetailScreenContent() {
   const insets = useSafeAreaInsets();
+  const reduceMotion = useReduceMotionPreference();
   const { height } = useWindowDimensions();
   const compact = height < 640;
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -158,7 +163,8 @@ function PhotoDetailScreenContent() {
   const actionFeedback = deleteFeedback ?? shareFeedback;
 
   function nudgeActionFeedbackIntoView() {
-    const scrollToEnd = () => scrollRef.current?.scrollToEnd({ animated: true });
+    const scrollToEnd = () =>
+      scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) });
     requestAnimationFrame(scrollToEnd);
     setTimeout(scrollToEnd, 120);
     setTimeout(scrollToEnd, 280);

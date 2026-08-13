@@ -41,4 +41,20 @@ describe('safe dev logging', () => {
 
     expect(warn).not.toHaveBeenCalled();
   });
+
+  it('does not read hostile exception names in the unconfigured vendor path', () => {
+    (globalThis as { __DEV__?: boolean }).__DEV__ = true;
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    let getterCalls = 0;
+    const error = Object.defineProperty(new Error('raw provider detail'), 'name', {
+      get: () => {
+        getterCalls += 1;
+        throw new Error('raw name');
+      },
+    });
+
+    expect(() => devWarn('[sentry] skipped', error)).not.toThrow();
+    expect(getterCalls).toBe(0);
+    expect(warn).toHaveBeenCalledWith('[sentry] skipped', { kind: 'error', name: 'Error' });
+  });
 });

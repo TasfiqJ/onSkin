@@ -1,7 +1,9 @@
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
+
+import { Text } from './Text';
 
 // Multi-select chip (design spec): for sensitivities/allergies and other
 // multi-select inputs. Pill, bordered, fills clay-tinted when selected.

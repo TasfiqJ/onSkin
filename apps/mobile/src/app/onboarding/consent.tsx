@@ -13,6 +13,10 @@ import {
   resetHealthProfileConsumers,
 } from '@/features/onboarding/healthConsent';
 import { openPolicy } from '@/features/subscription/ComplianceRow';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { isSupabaseConfigured } from '@/lib/env';
@@ -47,6 +51,7 @@ function Block({
 
 export default function HealthConsentScreen() {
   const { height } = useWindowDimensions();
+  const reduceMotion = useReduceMotionPreference();
   const compactPhone = height < 640;
   const scrollRef = useRef<ScrollView>(null);
   const actionInFlightRef = useRef(false);
@@ -85,7 +90,7 @@ export default function HealthConsentScreen() {
   }
 
   function scrollToStatus() {
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) });
   }
 
   function beginConsentAction(): boolean {

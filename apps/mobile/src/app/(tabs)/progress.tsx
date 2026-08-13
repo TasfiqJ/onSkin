@@ -14,6 +14,10 @@ import { parseLocalDate } from '@/features/photos/timeline';
 import { timelapseFrames } from '@/features/photos/timelapse';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
+import {
+  motionAwareModalAnimation,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -152,6 +156,7 @@ function PairPicker({
 }) {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const reduceMotion = useReduceMotionPreference();
   const sheetMaxHeight = Math.max(0, viewportHeight - 44);
   const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const title = which === 'before' ? 'Choose the first photo' : 'Choose the second photo';
@@ -161,7 +166,7 @@ function PairPicker({
     <Modal
       visible={which !== null}
       transparent
-      animationType="slide"
+      animationType={motionAwareModalAnimation(reduceMotion, 'slide')}
       accessibilityLabel={title}
       onRequestClose={onClose}
     >

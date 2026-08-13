@@ -1,9 +1,9 @@
 import { router, useUnstableGlobalHref, type Href } from 'expo-router';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { AppState, Pressable, ScrollView, View } from 'react-native';
+import { AppState, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { Button, StateLoading, StateNotice } from '@/components/ui';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { colors } from '@/theme/tokens';
@@ -78,6 +78,7 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
     try {
       await verifyPrivateStorage(reason);
       if (checkId.current === id) {
+        markStartupPhase('vault_decision_complete');
         setRetrying(false);
         setAvailability(recoveryHrefRef.current ? 'restoring' : 'ready');
       }
@@ -134,12 +135,6 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
     };
   }, [availability]);
 
-  useEffect(() => {
-    if (appUnlocked && (availability === 'ready' || availability === 'restoring')) {
-      markStartupPhase('vault_decision_complete');
-    }
-  }, [appUnlocked, availability]);
-
   if (appUnlocked && (availability === 'ready' || availability === 'restoring')) {
     const restoring = availability === 'restoring';
     return (
@@ -159,9 +154,7 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
             className="absolute inset-0 items-center justify-center px-7"
             style={{ backgroundColor: colors.paper }}
           >
-            <Text variant="bodySm" tone="muted" className="text-center">
-              {PRIVATE_STORAGE_COPY.loading}
-            </Text>
+            <StateLoading label={PRIVATE_STORAGE_COPY.loading} />
           </View>
         ) : null}
       </View>
@@ -179,9 +172,7 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
         style={{ backgroundColor: colors.paper }}
       >
         {appUnlocked ? (
-          <Text variant="bodySm" tone="muted" className="text-center">
-            {PRIVATE_STORAGE_COPY.loading}
-          </Text>
+          <StateLoading label={PRIVATE_STORAGE_COPY.loading} />
         ) : null}
       </View>
     );
@@ -199,43 +190,23 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
       }}
       showsVerticalScrollIndicator={false}
     >
-      <View accessibilityLiveRegion="polite" accessibilityRole="alert">
-        <Text variant="label" style={{ color: colors.clayDeep, textAlign: 'center' }}>
-          {PRIVATE_STORAGE_COPY.eyebrow}
-        </Text>
-        <Text
-          variant="title"
-          className="mt-3"
-          style={{ color: colors.ink, fontSize: 30, lineHeight: 34, textAlign: 'center' }}
-        >
-          {PRIVATE_STORAGE_COPY.title}
-        </Text>
-        <Text variant="bodySm" tone="muted" className="mt-3 text-center" style={{ lineHeight: 22 }}>
-          {PRIVATE_STORAGE_COPY.body}
-        </Text>
-        {retryFailed ? (
-          <Text
-            variant="bodySm"
-            className="mt-3 text-center"
-            style={{ color: colors.ink, lineHeight: 20 }}
-          >
-            {PRIVATE_STORAGE_COPY.retryFailed}
-          </Text>
-        ) : null}
-      </View>
-
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ disabled: retrying }}
-        disabled={retrying}
-        onPress={() => void check('retry')}
-        className="mt-7 min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
-        style={{ backgroundColor: colors.ink, opacity: retrying ? 0.68 : 1 }}
+      <StateNotice
+        kind="unavailable"
+        presentation="plain"
+        align="center"
+        title={PRIVATE_STORAGE_COPY.title}
+        body={PRIVATE_STORAGE_COPY.body}
+        detail={retryFailed ? PRIVATE_STORAGE_COPY.retryFailed : null}
+        accessibilityLabel={`${PRIVATE_STORAGE_COPY.eyebrow}. ${PRIVATE_STORAGE_COPY.title}`}
       >
-        <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
-          {retrying ? PRIVATE_STORAGE_COPY.retrying : PRIVATE_STORAGE_COPY.retry}
-        </Text>
-      </Pressable>
+        <Button
+          accessibilityLabel="Retry opening private storage"
+          className="mt-7"
+          disabled={retrying}
+          label={retrying ? PRIVATE_STORAGE_COPY.retrying : PRIVATE_STORAGE_COPY.retry}
+          onPress={() => void check('retry')}
+        />
+      </StateNotice>
     </ScrollView>
   );
 }

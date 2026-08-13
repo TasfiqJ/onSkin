@@ -22,8 +22,33 @@ as a non-negotiable subset of the minimum coverage. Do not remove or rename:
 
 ## Privacy Rules
 
-- Event properties must be from `ANALYTICS_ALLOWED_PROP_KEYS`.
-- The sanitizer in `apps/mobile/src/lib/analytics/track.ts` must continue dropping sensitive keys and values.
+- Every event must have exactly one key/type/value schema in
+  `ANALYTICS_EVENT_SCHEMAS`; the global `ANALYTICS_ALLOWED_PROP_KEYS` list is
+  only the union of keys used by those event schemas. A key approved for one
+  event is not approved for another event.
+- Runtime filtering and the TypeScript `track(...)` signature use the same
+  schema, including required keys, optional key groups, and mutually exclusive
+  payload branches. An unknown key, cross-event key, missing required key,
+  accessor, nested value, unsupported bucket, unsafe opaque ID, malformed
+  app/build version, decimal, negative count, or count above 10,000 suppresses
+  the event entirely; it is not converted into a misleading bare event.
+- The source audit parses production TypeScript/JavaScript with the TypeScript
+  AST. Calls must use a literal event and an inline object payload. Dynamic
+  event names, payload identifiers, spreads, computed/duplicate keys,
+  methods/accessors, relative/dynamic/barrel tracker acquisition, tracker
+  escapes, parse failures, and event-schema drift are errors in ordinary Phase
+  9 and Phase 10 verification. A 1-positive/36-negative isolated fixture matrix
+  guards the parser, payload-shape coverage, immutable sanitizer handoff, and
+  vendor boundary.
+- Events with no property schema must be called without a payload. Events with
+  property schemas must use an explicit inline payload. The two previously
+  unused allowlist entries (`cloud_backup_opted_in` and `product_scanned`) are
+  not registered events.
+- Share-link attribution is limited to the fixed conflict-card campaign/source/
+  medium/content/creative values, `ios|android|web`, a version-shaped app
+  version, a numeric-or-`dev` build number, and an 8-64 character opaque share
+  ID. `term`, arbitrary campaigns, and raw query values are not analytics
+  properties.
 - No product names, ingredient strings, free text, photo paths, image data, medical details, pregnancy status, user IDs, emails, names, raw OCR, diagnoses, or skin profile details may be sent to analytics.
 - Do not allow or emit `conflict_detected`, `conflict_detail_viewed`,
   `conflict_overridden`, or `conflict_resolution_chosen`. Do not substitute a

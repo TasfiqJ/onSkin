@@ -12,6 +12,10 @@ import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoi
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
 import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCopy';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
@@ -282,6 +286,7 @@ function openPolicyUrl(url: string): Promise<boolean> {
 
 export default function YouScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
+  const reduceMotion = useReduceMotionPreference();
   const params = useLocalSearchParams<{ section?: string }>();
   const { user, isAnonymous, signOut } = useAuth();
   const healthDataOwnerId =
@@ -582,7 +587,7 @@ export default function YouScreen() {
   function nudgeDataRightsConfirmationIntoView() {
     const scrollToConfirmation = () => {
       scrollRef.current?.scrollTo({
-        animated: true,
+        animated: motionAllowed(reduceMotion),
         y: Math.max(scrollY.current + DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE, 0),
       });
     };

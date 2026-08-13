@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createHash } from 'node:crypto';
 import {
   existsSync,
   lstatSync,
@@ -9,12 +10,21 @@ import {
 } from 'node:fs';
 import { brotliCompressSync, constants as zlibConstants, gzipSync } from 'node:zlib';
 import { dirname, extname, isAbsolute, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const FONT_EXTENSIONS = new Set(['.otf', '.ttf', '.woff', '.woff2']);
 const HERMES_EXTENSIONS = new Set(['.hbc', '.hermes']);
 const JAVASCRIPT_BUNDLE_EXTENSIONS = new Set(['.bundle', '.js']);
 const SUPPORTED_PLATFORMS = new Set(['android', 'ios', 'web']);
 const CONTROL_CHARACTER_RE = /[\u0000-\u001f\u007f]/;
+const NPM_PACKAGE_SEGMENT_RE = /^[a-z0-9][a-z0-9._~-]{0,213}$/i;
+const SOURCE_GROUP_LIMIT = 50;
+const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
+const SOURCE_MAP_BASE64_ALPHABET =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+const SOURCE_MAP_BASE64_VALUES = new Map(
+  [...SOURCE_MAP_BASE64_ALPHABET].map((character, index) => [character, index]),
+);
 
 function compareText(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
@@ -145,6 +155,392 @@ function isSourceMap(file) {
   return lowerExtension(file.path) === '.map';
 }
 
+function safePackageName(segments, nodeModulesIndex) {
+  const firstSegment = segments[nodeModulesIndex + 1];
+  if (!firstSegment) return null;
+
+  if (firstSegment.startsWith('@')) {
+    const secondSegment = segments[nodeModulesIndex + 2];
+    if (
+      !NPM_PACKAGE_SEGMENT_RE.test(firstSegment.slice(1)) ||
+      !NPM_PACKAGE_SEGMENT_RE.test(secondSegment ?? '')
+    ) {
+      return null;
+    }
+    return `${firstSegment}/${secondSegment}`.toLowerCase();
+  }
+
+  return NPM_PACKAGE_SEGMENT_RE.test(firstSegment) ? firstSegment.toLowerCase() : null;
+}
+
+function checkedInPackageNames() {
+  let lockfile;
+  try {
+    lockfile = JSON.parse(
+      readFileSync(resolve(SCRIPT_DIRECTORY, '../../package-lock.json'), 'utf8'),
+    );
+  } catch {
+    fail('The checked-in package lock is unavailable or invalid.');
+  }
+  if (!lockfile?.packages || typeof lockfile.packages !== 'object') {
+    fail('The checked-in package lock has no package inventory.');
+  }
+
+  const packageNames = new Set();
+  for (const packagePath of Object.keys(lockfile.packages)) {
+    const match = packagePath
+      .replaceAll('\\', '/')
+      .match(/(?:^|\/)node_modules\/(@[^/]+\/[^/]+|[^/]+)$/u);
+    if (!match) continue;
+    const packageName = match[1].toLowerCase();
+    const parts = packageName.split('/');
+    const isValid =
+      parts.length === 1
+        ? NPM_PACKAGE_SEGMENT_RE.test(parts[0])
+        : parts.length === 2 &&
+          parts[0].startsWith('@') &&
+          NPM_PACKAGE_SEGMENT_RE.test(parts[0].slice(1)) &&
+          NPM_PACKAGE_SEGMENT_RE.test(parts[1]);
+    if (isValid) packageNames.add(packageName);
+  }
+  if (packageNames.size === 0) fail('The checked-in package inventory is empty.');
+  return packageNames;
+}
+
+function isAbsoluteSource(source) {
+  return (
+    source.startsWith('/') ||
+    source.startsWith('\\') ||
+    /^[a-z]:[\\/]/iu.test(source) ||
+    /^[a-z][a-z0-9+.-]*:\/\//iu.test(source)
+  );
+}
+
+function canonicalSourceIdentity(sourceRoot, source) {
+  const rawPath = sourceRoot && !isAbsoluteSource(source) ? `${sourceRoot}/${source}` : source;
+  const slashPath = rawPath.replaceAll('\\', '/').replace(/^(?:webpack|file):\/\/(?:\/)?/iu, '/');
+  const prefix = slashPath.startsWith('/') ? '/' : '';
+  const segments = [];
+  for (const segment of slashPath.split('/')) {
+    if (segment === '' || segment === '.') continue;
+    if (segment === '..') {
+      segments.pop();
+      continue;
+    }
+    segments.push(segment);
+  }
+  return `${prefix}${segments.join('/')}`;
+}
+
+function sourceGroup(sourceRoot, source, packageNames) {
+  if (source.startsWith('\0polyfill:')) return 'virtual:metro-polyfill';
+  const rawPath = sourceRoot && !isAbsoluteSource(source) ? `${sourceRoot}/${source}` : source;
+  if (CONTROL_CHARACTER_RE.test(rawPath)) return 'unattributed:unsafe';
+
+  const slashPath = rawPath.replaceAll('\\', '/');
+  const isWebpackOrFileUrl = /^(?:webpack|file):\/\//iu.test(slashPath);
+  const isOtherUri = /^[a-z][a-z0-9+.-]*:\/\//iu.test(slashPath) && !isWebpackOrFileUrl;
+  if (isOtherUri) return 'unattributed:uri';
+  const isExternalPath =
+    slashPath.startsWith('/') ||
+    slashPath.startsWith('//') ||
+    /^[a-z]:\//iu.test(slashPath) ||
+    /^file:\/\//iu.test(slashPath);
+  const combinedPath = slashPath
+    .replace(/^(?:webpack|file):\/\/(?:\/)?/iu, '/')
+    .replace(/[?#].*$/u, '');
+  const segments = combinedPath
+    .split('/')
+    .filter((segment) => segment !== '' && segment !== '.' && segment !== '..');
+  const lowerSegments = segments.map((segment) => segment.toLowerCase());
+
+  for (let index = lowerSegments.length - 1; index >= 0; index -= 1) {
+    if (lowerSegments[index] !== 'node_modules') continue;
+    const packageName = safePackageName(segments, index);
+    if (packageName) {
+      return packageNames.has(packageName) ? `npm:${packageName}` : 'unattributed:npm';
+    }
+  }
+
+  const appsIndex = lowerSegments.findIndex(
+    (segment, index) => segment === 'apps' && lowerSegments[index + 1] === 'mobile',
+  );
+  const mobileSourceIndex =
+    appsIndex >= 0
+      ? lowerSegments.findIndex((segment, index) => index > appsIndex + 1 && segment === 'src')
+      : lowerSegments[0] === 'src'
+        ? 0
+        : -1;
+
+  if (mobileSourceIndex >= 0) {
+    const sourceArea = lowerSegments[mobileSourceIndex + 1];
+    if (sourceArea === 'app') return 'workspace:mobile/app';
+    if (sourceArea === 'components') return 'workspace:mobile/components';
+    if (sourceArea === 'features') return 'workspace:mobile/features';
+    if (sourceArea === 'lib') return 'workspace:mobile/lib';
+    if (sourceArea === 'theme') return 'workspace:mobile/theme';
+    return 'workspace:mobile/other';
+  }
+
+  const packagesIndex = lowerSegments.findIndex((segment) => segment === 'packages');
+  if (packagesIndex >= 0) {
+    return lowerSegments[packagesIndex + 1] === 'types'
+      ? 'workspace:packages/types'
+      : 'workspace:packages/other';
+  }
+
+  return isExternalPath ? 'unattributed:external' : 'unattributed:relative';
+}
+
+function decodeVlqSegment(segment) {
+  if (segment.length === 0) fail('SOURCE_MAP_INVALID_STRUCTURE');
+
+  const values = [];
+  let cursor = 0;
+  while (cursor < segment.length) {
+    let encodedValue = 0;
+    let placeValue = 1;
+    let continuation = true;
+
+    while (continuation) {
+      if (cursor >= segment.length) fail('SOURCE_MAP_INVALID_STRUCTURE');
+      const digit = SOURCE_MAP_BASE64_VALUES.get(segment[cursor]);
+      cursor += 1;
+      if (digit === undefined) fail('SOURCE_MAP_INVALID_STRUCTURE');
+
+      continuation = (digit & 32) !== 0;
+      encodedValue += (digit & 31) * placeValue;
+      if (!Number.isSafeInteger(encodedValue)) fail('SOURCE_MAP_LIMIT_EXCEEDED');
+      placeValue *= 32;
+      if (!Number.isSafeInteger(placeValue)) fail('SOURCE_MAP_LIMIT_EXCEEDED');
+    }
+
+    const magnitude = Math.floor(encodedValue / 2);
+    values.push((encodedValue & 1) === 1 ? -magnitude : magnitude);
+  }
+  return values;
+}
+
+function referencedSourceIndexes(sourceMap) {
+  const referenced = new Set();
+  let sourceIndex = 0;
+  let originalLine = 0;
+  let originalColumn = 0;
+  let nameIndex = 0;
+  const names =
+    sourceMap.names === undefined
+      ? []
+      : Array.isArray(sourceMap.names) && sourceMap.names.every((name) => typeof name === 'string')
+        ? sourceMap.names
+        : null;
+  if (names === null) fail('SOURCE_MAP_INVALID_STRUCTURE');
+
+  for (const generatedLine of sourceMap.mappings.split(';')) {
+    if (generatedLine === '') continue;
+    let generatedColumn = 0;
+
+    for (const rawSegment of generatedLine.split(',')) {
+      const values = decodeVlqSegment(rawSegment);
+      if (values.length !== 1 && values.length !== 4 && values.length !== 5) {
+        fail('SOURCE_MAP_INVALID_STRUCTURE');
+      }
+
+      generatedColumn += values[0];
+      if (!Number.isSafeInteger(generatedColumn) || generatedColumn < 0) {
+        fail('SOURCE_MAP_INVALID_STRUCTURE');
+      }
+      if (values.length === 1) continue;
+
+      sourceIndex += values[1];
+      originalLine += values[2];
+      originalColumn += values[3];
+      if (
+        !Number.isSafeInteger(sourceIndex) ||
+        !Number.isSafeInteger(originalLine) ||
+        !Number.isSafeInteger(originalColumn) ||
+        sourceIndex < 0 ||
+        sourceIndex >= sourceMap.sources.length ||
+        originalLine < 0 ||
+        originalColumn < 0
+      ) {
+        fail('SOURCE_MAP_INVALID_STRUCTURE');
+      }
+      referenced.add(sourceIndex);
+
+      if (values.length === 5) {
+        nameIndex += values[4];
+        if (!Number.isSafeInteger(nameIndex) || nameIndex < 0 || nameIndex >= names.length) {
+          fail('SOURCE_MAP_INVALID_STRUCTURE');
+        }
+      }
+    }
+  }
+  return referenced;
+}
+
+function parseSourceMap(file) {
+  if (file.bytes > 128 * 1024 * 1024) fail('SOURCE_MAP_TOO_LARGE');
+
+  let sourceMap;
+  try {
+    sourceMap = JSON.parse(readFileSync(file.absolutePath, 'utf8'));
+  } catch {
+    fail('SOURCE_MAP_INVALID_JSON');
+  }
+
+  if (!sourceMap || typeof sourceMap !== 'object' || Array.isArray(sourceMap)) {
+    fail('SOURCE_MAP_INVALID_STRUCTURE');
+  }
+  if (sourceMap.version !== 3) fail('SOURCE_MAP_UNSUPPORTED_VERSION');
+  if (sourceMap.sections !== undefined) fail('SOURCE_MAP_INDEX_UNSUPPORTED');
+  if (
+    sourceMap.sourceRoot !== undefined &&
+    sourceMap.sourceRoot !== null &&
+    (typeof sourceMap.sourceRoot !== 'string' ||
+      sourceMap.sourceRoot.length > 32_768 ||
+      CONTROL_CHARACTER_RE.test(sourceMap.sourceRoot))
+  ) {
+    fail('SOURCE_MAP_INVALID_STRUCTURE');
+  }
+  if (
+    !Array.isArray(sourceMap.sources) ||
+    sourceMap.sources.length > 50_000 ||
+    !sourceMap.sources.every(
+      (source) => typeof source === 'string' && source.length > 0 && source.length <= 32_768,
+    ) ||
+    typeof sourceMap.mappings !== 'string'
+  ) {
+    fail('SOURCE_MAP_INVALID_STRUCTURE');
+  }
+  if (
+    !Array.isArray(sourceMap.sourcesContent) ||
+    sourceMap.sourcesContent.length !== sourceMap.sources.length ||
+    !sourceMap.sourcesContent.every((content) => typeof content === 'string')
+  ) {
+    fail('SOURCE_MAP_CONTENT_UNAVAILABLE');
+  }
+  const referencedSources = referencedSourceIndexes(sourceMap);
+  if (referencedSources.size === 0) fail('SOURCE_MAP_CONTENT_UNAVAILABLE');
+  if (referencedSources.size !== sourceMap.sources.length) {
+    fail('SOURCE_MAP_COVERAGE_INCOMPLETE');
+  }
+
+  return {
+    referencedSourceCount: referencedSources.size,
+    sourceRoot: sourceMap.sourceRoot ?? '',
+    sources: sourceMap.sources,
+    sourcesContent: sourceMap.sourcesContent,
+  };
+}
+
+function sourceMapAttribution(sourceMaps) {
+  if (sourceMaps.length === 0) {
+    fail('SOURCE_MAP_REQUIRED');
+  }
+
+  const packageNames = checkedInPackageNames();
+  const groups = new Map();
+  const uniqueSources = new Set();
+  let sourceOccurrenceCount = 0;
+  let referencedSourceCount = 0;
+  let totalSourceContentBytes = 0;
+
+  for (const sourceMap of sourceMaps) {
+    const parsed = parseSourceMap(sourceMap);
+    referencedSourceCount += parsed.referencedSourceCount;
+    for (let index = 0; index < parsed.sources.length; index += 1) {
+      const source = parsed.sources[index];
+      const content = parsed.sourcesContent[index];
+      const contentBytes = Buffer.byteLength(content);
+      const groupName = sourceGroup(parsed.sourceRoot, source, packageNames);
+      const fingerprint = createHash('sha256')
+        .update(canonicalSourceIdentity(parsed.sourceRoot, source))
+        .update('\0')
+        .update(content)
+        .digest('hex');
+      const group = groups.get(groupName) ?? {
+        group: groupName,
+        sourceOccurrenceCount: 0,
+        sourceContentBytes: 0,
+        uniqueSources: new Set(),
+      };
+
+      sourceOccurrenceCount += 1;
+      totalSourceContentBytes += contentBytes;
+      uniqueSources.add(fingerprint);
+      group.sourceOccurrenceCount += 1;
+      group.sourceContentBytes += contentBytes;
+      group.uniqueSources.add(fingerprint);
+      groups.set(groupName, group);
+    }
+  }
+
+  if (sourceOccurrenceCount === 0) fail('SOURCE_MAP_CONTENT_UNAVAILABLE');
+  if (
+    !Number.isSafeInteger(sourceOccurrenceCount) ||
+    !Number.isSafeInteger(totalSourceContentBytes)
+  ) {
+    fail('SOURCE_MAP_LIMIT_EXCEEDED');
+  }
+
+  const allGroups = [...groups.values()]
+    .map(
+      ({
+        group,
+        sourceOccurrenceCount: occurrences,
+        sourceContentBytes,
+        uniqueSources: unique,
+      }) => ({
+        group,
+        sourceOccurrenceCount: occurrences,
+        uniqueSourceCount: unique.size,
+        sourceContentBytes,
+      }),
+    )
+    .sort(
+      (left, right) =>
+        right.sourceContentBytes - left.sourceContentBytes ||
+        right.sourceOccurrenceCount - left.sourceOccurrenceCount ||
+        compareText(left.group, right.group),
+    );
+  const unattributedGroups = allGroups.filter((group) => group.group.startsWith('unattributed:'));
+  const reportedGroups = allGroups.slice(0, SOURCE_GROUP_LIMIT);
+  const reportedSourceContentBytes = sum(reportedGroups, (group) => group.sourceContentBytes);
+  const unattributedSourceContentBytes = sum(
+    unattributedGroups,
+    (group) => group.sourceContentBytes,
+  );
+
+  return {
+    basis: 'utf8_sources_content',
+    complete: true,
+    mapCount: sourceMaps.length,
+    sourceOccurrenceCount,
+    referencedSourceCount,
+    uniqueSourceCount: uniqueSources.size,
+    sourceContentBytes: totalSourceContentBytes,
+    totalGroupCount: allGroups.length,
+    reportedGroupCount: reportedGroups.length,
+    omittedGroupCount: allGroups.length - reportedGroups.length,
+    reportedSourceContentBytes,
+    omittedSourceContentBytes: totalSourceContentBytes - reportedSourceContentBytes,
+    unattributedSourceCount: sum(unattributedGroups, (group) => group.sourceOccurrenceCount),
+    unattributedSourceContentBytes,
+    groups: reportedGroups,
+  };
+}
+
+function validateSourceMapCoverage(bundleFiles, sourceMaps) {
+  const bundlePaths = new Set(bundleFiles.map((file) => file.path));
+  const sourceMapPaths = new Set(sourceMaps.map((file) => file.path));
+  if (
+    bundleFiles.some((bundle) => !sourceMapPaths.has(`${bundle.path}.map`)) ||
+    sourceMaps.some((sourceMap) => !bundlePaths.has(sourceMap.path.slice(0, -4)))
+  ) {
+    fail('SOURCE_MAP_COVERAGE_INCOMPLETE');
+  }
+}
+
 function bundleKind(file) {
   const extension = lowerExtension(file.path);
   if (HERMES_EXTENSIONS.has(extension)) return 'hermes';
@@ -226,6 +622,8 @@ function buildStats({ files, generatedAt, platform, sourceSha }) {
       bytes: file.bytes,
       ...compressionStats(file),
     }));
+  validateSourceMapCoverage(bundleFiles, sourceMaps);
+  const sourceAttribution = sourceMapAttribution(sourceMaps);
   const javascriptBundles = bundleFiles.filter((bundle) => bundle.kind === 'javascript');
   const hermesBundles = bundleFiles.filter((bundle) => bundle.kind === 'hermes');
   const assetFiles = sortedFiles.filter(isAsset);
@@ -249,7 +647,7 @@ function buildStats({ files, generatedAt, platform, sourceSha }) {
     .map(({ path, bytes }) => ({ path, bytes }));
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     platform,
     generatedAt,
     sourceSha,
@@ -278,6 +676,7 @@ function buildStats({ files, generatedAt, platform, sourceSha }) {
       bytes: sum(sourceMaps, (file) => file.bytes),
       files: sourceMaps.map(({ path, bytes }) => ({ path, bytes })),
     },
+    sourceGroups: sourceAttribution,
     assets: {
       count: assetFiles.length,
       bytes: sum(assetFiles, (file) => file.bytes),
@@ -318,6 +717,13 @@ function renderMarkdown(stats) {
     `\`${file.path}\``,
     file.bytes,
   ]);
+  const largestSourceGroupRows = stats.sourceGroups.groups.map((group, index) => [
+    index + 1,
+    `\`${group.group}\``,
+    group.sourceOccurrenceCount,
+    group.uniqueSourceCount,
+    group.sourceContentBytes,
+  ]);
 
   return `${[
     '# Expo Export Statistics',
@@ -345,6 +751,23 @@ function renderMarkdown(stats) {
     '',
     '- Shipped: no',
     `- Files / bytes: ${stats.sourceMaps.count} / ${stats.sourceMaps.bytes}`,
+    `- Source occurrences / referenced / unique sources: ${stats.sourceGroups.sourceOccurrenceCount} / ${stats.sourceGroups.referencedSourceCount} / ${stats.sourceGroups.uniqueSourceCount}`,
+    `- UTF-8 source-content bytes: ${stats.sourceGroups.sourceContentBytes}`,
+    `- Source groups: ${stats.sourceGroups.totalGroupCount}`,
+    `- Unattributed source occurrences: ${stats.sourceGroups.unattributedSourceCount}`,
+    `- Reported / omitted groups: ${stats.sourceGroups.reportedGroupCount} / ${stats.sourceGroups.omittedGroupCount}`,
+    `- Reported / omitted source-content bytes: ${stats.sourceGroups.reportedSourceContentBytes} / ${stats.sourceGroups.omittedSourceContentBytes}`,
+    '',
+    '## Largest 50 Mapped Source Groups',
+    '',
+    'Source-content bytes identify investigation targets; they do not equal generated JavaScript or Hermes bytecode bytes.',
+    '',
+    largestSourceGroupRows.length
+      ? markdownTable(
+          ['Rank', 'Source group', 'Occurrences', 'Unique sources', 'Source-content bytes'],
+          largestSourceGroupRows,
+        )
+      : 'No attributable mapped sources were found.',
     '',
     '## Assets by Extension',
     '',

@@ -81,18 +81,32 @@ export const ACCOUNT_CONSENT = {
  * Skin photos are Art. 9 / MHMDA health-inference data: explicit, unbundled, and
  * separate from cloud backup. B-PRIVACY-COPY owns final wording.
  */
+const PHOTO_CAPTURE_CONSENT_VERSION = 'draft-photo-v3-2026-07-14';
+const PHOTO_CAPTURE_CONSENT_TITLE = 'Your photos stay on this phone.';
+const PHOTO_CAPTURE_CONSENT_WHAT = 'Photos you choose to take with guided capture.';
+const PHOTO_CAPTURE_CONSENT_WHY = 'To build your private progress timeline on this device.';
+const PHOTO_CAPTURE_CONSENT_NEVER =
+  'Never uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.';
+const PHOTO_CAPTURE_CONSENT_FOOTNOTE =
+  'No faceprint or biometric template is stored. A lost phone can mean lost photos. Choosing Not now keeps the camera closed.';
+
 export const PHOTO_CAPTURE_CONSENT = {
-  version: CONSENT_COPY_VERSION,
-  what: 'Photos you choose to take with guided capture.',
-  why: 'To build your private progress timeline on this device.',
-  never:
-    'Never uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.',
-  footnote:
-    'No faceprint or biometric template is stored. A lost phone can mean lost photos. You can withdraw anytime in Settings.',
-  fullText:
-    '[DRAFT. Pending legal review B-PRIVACY-COPY] Photo CAPTURE consent. Covers ' +
-    'on-device capture and on-device storage only; this build does not offer cloud backup. ' +
-    'No biometric faceprint/template is computed or stored. Device loss can mean photo loss.',
+  version: PHOTO_CAPTURE_CONSENT_VERSION,
+  title: PHOTO_CAPTURE_CONSENT_TITLE,
+  what: PHOTO_CAPTURE_CONSENT_WHAT,
+  why: PHOTO_CAPTURE_CONSENT_WHY,
+  never: PHOTO_CAPTURE_CONSENT_NEVER,
+  footnote: PHOTO_CAPTURE_CONSENT_FOOTNOTE,
+  // Exact disclosure text rendered by the capture gate and hashed into both
+  // the local proof and consent ledger. Layout and the affirmative CTA are not
+  // part of the disclosure, but every displayed disclosure word is sourced here.
+  fullText: [
+    PHOTO_CAPTURE_CONSENT_TITLE,
+    `WHAT\n${PHOTO_CAPTURE_CONSENT_WHAT}`,
+    `WHY\n${PHOTO_CAPTURE_CONSENT_WHY}`,
+    `NEVER\n${PHOTO_CAPTURE_CONSENT_NEVER}`,
+    PHOTO_CAPTURE_CONSENT_FOOTNOTE,
+  ].join('\n\n'),
 } as const;
 
 /**

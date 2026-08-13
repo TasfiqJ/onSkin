@@ -394,7 +394,9 @@ describe('Progress route mobile contracts', () => {
     );
     expect(source).toContain('const actionFeedback = deleteFeedback ?? shareFeedback;');
     expect(source).toContain('function nudgeActionFeedbackIntoView()');
-    expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
+    expect(source).toContain(
+      'scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) })',
+    );
     expect(source).toContain('requestAnimationFrame(scrollToEnd);');
     expect(source).toContain('setTimeout(scrollToEnd, 280);');
     expect(source).toContain('<ScrollView');

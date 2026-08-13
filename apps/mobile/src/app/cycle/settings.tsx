@@ -5,6 +5,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Modal, Platform, Pressable, ScrollView, View } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Sheet, Text } from '@/components/ui';
+import {
+  motionAwareModalAnimation,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { classLabel } from '@/features/scheduler/classes';
 import {
@@ -600,6 +604,7 @@ function NightAssignmentSheet({
   onClose: () => void;
   onChange: (result: ReturnType<typeof assignCustomCycleNight>) => void;
 }) {
+  const reduceMotion = useReduceMotionPreference();
   if (index === null) return null;
   const selectedId = definition.nights[index]?.productId ?? null;
   const options: { id: string | null; label: string; disabled: boolean }[] = [
@@ -614,7 +619,7 @@ function NightAssignmentSheet({
   return (
     <Modal
       transparent
-      animationType="fade"
+      animationType={motionAwareModalAnimation(reduceMotion, 'fade')}
       visible
       onRequestClose={() => {
         if (!disabled) onClose();

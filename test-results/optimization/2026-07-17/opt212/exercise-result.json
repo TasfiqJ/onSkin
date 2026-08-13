@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T07:45:00.000Z",
+  "parentSha": "e72da9a06b01590e5a32ab5c7685ee7c4497dbdf",
+  "incidentId": "OPT212-DRILL-001",
+  "exerciseOnly": true,
+  "status": "pass",
+  "dashboardContractStatus": "definition-only",
+  "decision": {
+    "freezeRollout": true,
+    "otaAllowed": false,
+    "rollbackPath": "binary_halt_hotfix",
+    "exerciseClosure": "complete-with-live-monitoring-blocker"
+  },
+  "checks": {
+    "contentFreeScenario": true,
+    "rolloutFrozen": true,
+    "runtimeFingerprintCompared": true,
+    "rollbackTargetReviewed": true,
+    "otaRejectedWhenIneligible": true,
+    "expectedDecisionMatched": true,
+    "liveRecoverySignalAvailable": false
+  },
+  "timeline": [
+    { "offsetMinutes": 0, "action": "declare-and-freeze" },
+    { "offsetMinutes": 5, "action": "classify-and-preserve-artifact-identity" },
+    { "offsetMinutes": 10, "action": "select-compatible-rollback-path" },
+    { "offsetMinutes": 15, "action": "prepare-smoke-and-communication" },
+    { "offsetMinutes": 20, "action": "retain-live-monitoring-blocker" }
+  ],
+  "unresolvedExternal": [
+    "named primary and backup responders",
+    "live dashboard URLs and validated sources",
+    "pre-approved production thresholds and cadence",
+    "staging or production rollback identifiers",
+    "independent live recovery signal"
+  ]
+}

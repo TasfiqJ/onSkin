@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-15",
+  "timeZone": "America/Toronto",
+  "branch": "optimization",
+  "implementationSha": "8bc2c14a64c8c05c28602f6220dfbf678b1faf90",
+  "surface": "Expo web through the Codex in-app Browser",
+  "buildMode": "development",
+  "fixture": {
+    "environmentVariable": "EXPO_PUBLIC_E2E_ASK_HISTORY_TURNS=100",
+    "turns": 100,
+    "initialLogicalMessages": 200,
+    "initialActiveMessages": 16,
+    "activeMessagesAfterOnePrepend": 32,
+    "allLogicalMessagesRetainedInRouteState": true,
+    "storagePaginationClaimed": false
+  },
+  "viewport": {
+    "requestedWidth": 390,
+    "requestedHeight": 844,
+    "observedDocumentWidth": 390,
+    "observedDocumentHeight": 845,
+    "horizontalOverflowPx": 0
+  },
+  "settledBaseline": {
+    "acceptedTurns": 0,
+    "historyCommits": 6,
+    "logicalMessages": 200,
+    "messageRenders": 16,
+    "activeMessages": 16,
+    "scrollTopPx": 3479.61181640625,
+    "scrollHeightPx": 4157,
+    "clientHeightPx": 677,
+    "latestEdgeDistancePx": 0.38818359375
+  },
+  "rapidTyping": {
+    "inputMethod": "in-app Browser computer-use typing into the named textbox",
+    "sanitizedDraftLength": 158,
+    "exactDraftRetained": true,
+    "before": {
+      "acceptedTurns": 0,
+      "historyCommits": 6,
+      "logicalMessages": 200,
+      "messageRenders": 16,
+      "activeMessages": 16
+    },
+    "after": {
+      "acceptedTurns": 0,
+      "historyCommits": 6,
+      "logicalMessages": 200,
+      "messageRenders": 16,
+      "activeMessages": 16
+    }
+  },
+  "nearSimultaneousSubmission": {
+    "interaction": "keyboard Enter and visible Send dispatched together",
+    "before": {
+      "acceptedTurns": 0,
+      "historyCommits": 6,
+      "logicalMessages": 200,
+      "messageRenders": 16,
+      "activeMessages": 16
+    },
+    "after": {
+      "acceptedTurns": 1,
+      "draftLength": 0,
+      "historyCommits": 9,
+      "logicalMessages": 202,
+      "messageRenders": 18,
+      "activeMessages": 16
+    },
+    "acceptedTurnDelta": 1,
+    "logicalMessageDelta": 2,
+    "historyCommitDelta": 3,
+    "messageRenderDelta": 2
+  },
+  "delayedCollapseRegression": {
+    "sampleCount": 24,
+    "sampleIntervalMs": 250,
+    "durationMs": 6000,
+    "scrollTopPxSamples": {
+      "value": 3262.135986328125,
+      "occurrences": 24
+    },
+    "scrollHeightPxSamples": {
+      "value": 3939,
+      "occurrences": 24
+    },
+    "clientHeightPxSamples": {
+      "value": 677,
+      "occurrences": 24
+    },
+    "topReboundSamples": [],
+    "maximumAbsoluteLatestEdgeDistancePx": 0.135986328125,
+    "submittedRowPresentAtEnd": true,
+    "latestAnswerPresentAtEnd": true
+  },
+  "whitespaceSubmission": {
+    "draftLength": 3,
+    "acceptedTurns": 1,
+    "historyCommits": 9,
+    "logicalMessages": 202,
+    "messageRenders": 18,
+    "activeMessages": 16,
+    "publishedDelta": 0
+  },
+  "recycling": {
+    "acknowledgementCountBeforePaging": 1,
+    "acknowledgementCountAfterReturn": 1,
+    "submittedRowPresentAfterReturn": true,
+    "acknowledgementPersisted": true
+  },
+  "olderPage": {
+    "logicalMessagesBefore": 202,
+    "logicalMessagesAfter": 202,
+    "activeMessagesBefore": 16,
+    "activeMessagesAfter": 32,
+    "settledScrollHeightPx": 7168,
+    "priorFirstActiveRowTopPx": 182.09951782226562,
+    "historyViewportTopPx": 55.97694396972656,
+    "preciseAnchorRetentionClaimed": false
+  },
+  "geometry": {
+    "submittedRowTopPx": 328.79248046875,
+    "submittedRowBottomPx": 436.83253479003906,
+    "latestReportTopPx": 542.7184448242188,
+    "latestReportBottomPx": 590.7160186767578,
+    "inputHeightPx": 47.99757385253906,
+    "inputWidthPx": 254.3841094970703,
+    "sendHeightPx": 47.99757385253906,
+    "sendWidthPx": 47.99757385253906,
+    "historyTopPx": 55.97694396972656,
+    "historyBottomPx": 732.7367095947266,
+    "historyHeightPx": 676.759765625
+  },
+  "runtime": {
+    "javascriptDialogs": 0,
+    "metroAppExceptions": 0,
+    "browserConsoleErrors": "not-captured",
+    "expectedWarnings": [
+      "placeholder Supabase URL",
+      "missing placeholder Supabase publishable key",
+      "Expo notifications listener unsupported on web"
+    ]
+  },
+  "automatedChecks": {
+    "askSuite": "17 files / 252 tests passed",
+    "fullRootSuite": "309 files / 3854 tests passed",
+    "rootTypecheck": "passed, 2 workspaces",
+    "rootLint": "passed, 2 workspaces, zero warnings",
+    "gitDiffCheck": "passed"
+  },
+  "limitations": [
+    "Development-mode Expo web evidence is not a production Hermes timing profile.",
+    "No native keyboard, VoiceOver, TalkBack, frame, memory, or oldest-device evidence was captured.",
+    "The content-free accepted-turn counter is not an intercepted analytics transport event.",
+    "Precise prepend anchoring, repeated/all-page traversal, and mixed-height history remain open.",
+    "The prior one-shot private-storage recovery run remains separate evidence.",
+    "No screenshot, video, browser-console capture, or native trace was retained."
+  ]
+}

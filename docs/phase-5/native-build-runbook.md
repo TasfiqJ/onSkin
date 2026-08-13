@@ -266,7 +266,7 @@ archive digest, bundle ID, version/build, source SHA, and install receipts match
 
 ## Layerwell Widget Lifecycle Candidate
 
-IOS-02 patches only the exact lockfile-installed `expo-widgets` 57.0.8 native
+IOS-02 patches only the exact lockfile-installed `expo-widgets` 57.0.9 native
 sources. Root postinstall applies both reviewed native patches, and
 `npm run postinstall:check` plus
 `npm run phase5:expo-widgets-lifecycle:test` must pass before any EAS upload.

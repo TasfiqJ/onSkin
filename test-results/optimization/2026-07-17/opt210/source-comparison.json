@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T07:00:00.000Z",
+  "parentSha": "c3656e0e1b9d5033bf7485ee3afa863d8e6f0381",
+  "assets": [
+    {
+      "path": "apps/mobile/assets/images/icon.png",
+      "baselineBytes": 799005,
+      "candidateBytes": 740396,
+      "deltaBytes": -58609,
+      "pixelStreamIdentical": true,
+      "scanlineSha256": "389665bebba42af4657d415f996e4b4b38a10f02a58cb293501cd571fdf383a7"
+    },
+    {
+      "path": "apps/mobile/assets/images/splash-icon.png",
+      "baselineBytes": 3317,
+      "candidateBytes": 3017,
+      "deltaBytes": -300,
+      "pixelStreamIdentical": true,
+      "scanlineSha256": "5a5dfaf10693f1c6fc6ad267056fc6929542cba5180adcd99b574f2fd9738340"
+    },
+    {
+      "path": "apps/mobile/assets/images/android-icon-foreground.png",
+      "baselineBytes": 78796,
+      "candidateBytes": 76689,
+      "deltaBytes": -2107,
+      "pixelStreamIdentical": true,
+      "scanlineSha256": "b86af18520fd2a630e340d09db8c1b7d860cdd0560f1b68756c607313343a278"
+    },
+    {
+      "path": "apps/mobile/assets/images/android-icon-background.png",
+      "baselineBytes": 17549,
+      "candidateBytes": 17066,
+      "deltaBytes": -483,
+      "pixelStreamIdentical": true,
+      "scanlineSha256": "6eb7bbabf2fa74872ae02a60c32abee7a82575f50bc4f4d9af331f07d8f97587"
+    },
+    {
+      "path": "apps/mobile/assets/images/android-icon-monochrome.png",
+      "baselineBytes": 4140,
+      "candidateBytes": 3944,
+      "deltaBytes": -196,
+      "pixelStreamIdentical": true,
+      "scanlineSha256": "52734581373f4f53fc88da3d1ca2b528a48681da1b67c6d8b0eed90b5b8f1135"
+    },
+    {
+      "path": "apps/mobile/assets/images/favicon.png",
+      "baselineBytes": 1129,
+      "candidateBytes": 1065,
+      "deltaBytes": -64,
+      "pixelStreamIdentical": true,
+      "scanlineSha256": "6f082152c7d7cb3fddb1014fa214915720ccfd8358eb228917510fe1b80e6d6c"
+    },
+    {
+      "path": "apps/mobile/assets/expo.icon/Assets/grid.png",
+      "baselineBytes": 53681,
+      "candidateBytes": 46700,
+      "deltaBytes": -6981,
+      "pixelStreamIdentical": true,
+      "scanlineSha256": "f143f442561dd1a4107a11023face52ca1810664dfd07453a8627e955d1aa06d"
+    }
+  ],
+  "baselineBytes": 957617,
+  "candidateBytes": 888877,
+  "deltaBytes": -68740,
+  "deltaPercent": -7.1782,
+  "validation": {
+    "pixelStreamsIdentical": true,
+    "nonIdatChunksByteIdentical": true,
+    "optimizerIdempotent": true,
+    "remainingOptimizableBytes": 0
+  }
+}

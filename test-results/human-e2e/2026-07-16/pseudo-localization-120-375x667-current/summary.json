@@ -1,0 +1,65 @@
+{
+  "baseUrl": "http://localhost:8300",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\layerwell\\test-results\\human-e2e\\2026-07-16\\pseudo-localization-120-375x667-current",
+  "generatedAt": "2026-07-17T05:05:41.150Z",
+  "pseudoLocale": "expanded",
+  "routeCount": 8,
+  "scale": 1.2,
+  "status": "pass",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress",
+      "scaledCount": 13
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/plan",
+      "scaledCount": 13
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/preferences",
+      "scaledCount": 22
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 59
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask",
+      "scaledCount": 12
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/search",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/upsell?feature=full_routine",
+      "scaledCount": 11
+    }
+  ]
+}

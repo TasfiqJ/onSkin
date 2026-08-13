@@ -1,0 +1,122 @@
+{
+  "date": "2026-07-13",
+  "surface": "Expo web development build",
+  "fixtureProducts": [
+    "Optimization Glycolic Toner",
+    "Optimization Retinol Serum"
+  ],
+  "persistentFailure": {
+    "requestedViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "cssViewport": {
+      "width": 390,
+      "height": 845
+    },
+    "routes": [
+      { "label": "Shelf", "path": "/shelf", "pass": true },
+      {
+        "label": "Shelf detail",
+        "path": "/shelf/7daf9e8b-8c08-4767-9b14-7f339e029943",
+        "pass": true
+      },
+      { "label": "Manual add", "path": "/shelf/manual", "pass": true },
+      { "label": "Archive", "path": "/shelf/archive", "pass": true },
+      {
+        "label": "Replenish",
+        "path": "/shelf/replenish?id=7daf9e8b-8c08-4767-9b14-7f339e029943",
+        "pass": true
+      },
+      { "label": "Today", "path": "/today", "pass": true },
+      { "label": "Routine plan", "path": "/routine/plan", "pass": true },
+      { "label": "Ask", "path": "/ask", "pass": true },
+      { "label": "Recommendations", "path": "/recommendations", "pass": true },
+      {
+        "label": "Recommendation detail",
+        "path": "/recommendations/7daf9e8b-8c08-4767-9b14-7f339e029943",
+        "pass": true
+      },
+      {
+        "label": "Conflict",
+        "path": "/conflict/00000000-0000-4000-8000-000000000001",
+        "pass": true
+      },
+      {
+        "label": "Share",
+        "path": "/share/conflict/00000000-0000-4000-8000-000000000001",
+        "pass": true
+      }
+    ],
+    "commonAssertions": {
+      "accessibleAlertCount": 1,
+      "recoveryCopyVisible": true,
+      "nonDestructiveCopyVisible": true,
+      "seededProductNamesVisible": false,
+      "falseEmptyCopyVisible": false,
+      "allClearCopyVisible": false,
+      "youAreSetCopyVisible": false,
+      "addByHandActionVisible": false,
+      "horizontalOverflowPx": 0,
+      "routePreserved": true
+    },
+    "retry": {
+      "failureRemainsVisible": true,
+      "retryFailureCopyVisible": true,
+      "retryMinHeightCss": "56px",
+      "horizontalOverflowPx": 0
+    }
+  },
+  "compactFailure": {
+    "requestedViewport": {
+      "width": 375,
+      "height": 667
+    },
+    "cssViewport": {
+      "width": 376,
+      "height": 668
+    },
+    "path": "/shelf",
+    "accessibleAlertCount": 1,
+    "recoveryCopyVisible": true,
+    "seededProductNamesVisible": false,
+    "falseEmptyCopyVisible": false,
+    "retryMinHeightCss": "56px",
+    "horizontalOverflowPx": 0,
+    "maximumUpdateDepthOverlayVisible": false,
+    "pass": true
+  },
+  "oneShotRecovery": {
+    "beforeRetry": {
+      "path": "/shelf",
+      "accessibleAlertCount": 1,
+      "recoveryCopyVisible": true,
+      "seededProductNamesVisible": false,
+      "horizontalOverflowPx": 0
+    },
+    "afterRetry": {
+      "path": "/shelf",
+      "accessibleAlertCount": 0,
+      "recoveryCopyVisible": false,
+      "productCountVisible": "2 products",
+      "optimizationGlycolicTonerCount": 1,
+      "optimizationRetinolSerumCount": 1,
+      "conflictVisible": true,
+      "falseEmptyCopyVisible": false,
+      "horizontalOverflowPx": 0
+    },
+    "pass": true
+  },
+  "navigatorRegression": {
+    "route": "/routine/plan",
+    "beforeFix": "Maximum update depth exceeded overlay",
+    "afterFix": {
+      "routePreserved": true,
+      "accessibleAlertCount": 1,
+      "recoveryCopyVisible": true,
+      "maximumUpdateDepthOverlayVisible": false,
+      "horizontalOverflowPx": 0
+    },
+    "pass": true
+  }
+}

@@ -8,6 +8,10 @@ import { Button, Card, RouteIconButton, Screen, Text, ToggleSwitch } from '@/com
 import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { BRAND } from '@/lib/brand';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -59,6 +63,7 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
 
 export default function AskConsentScreen() {
   const qc = useQueryClient();
+  const reduceMotion = useReduceMotionPreference();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [askConsentFailureUsed, setAskConsentFailureUsed] = useState({
@@ -87,7 +92,7 @@ export default function AskConsentScreen() {
   const showSaveFailure = () => {
     setSaveFailed(true);
     requestAnimationFrame(() => {
-      scrollRef.current?.scrollToEnd({ animated: true });
+      scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) });
     });
   };
 

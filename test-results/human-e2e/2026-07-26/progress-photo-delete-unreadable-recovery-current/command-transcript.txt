@@ -1,0 +1,21 @@
+EMPTY SERVER
+$env:EXPO_PUBLIC_E2E_ENTITLEMENT='store_pro'
+$env:EXPO_PUBLIC_E2E_APP_LOCK_ENABLED='disabled'
+$env:EXPO_PUBLIC_E2E_PROGRESS_PHOTOS='0'
+$env:EXPO_PUBLIC_E2E_PHOTO_DELETE_SYNC_STATUS='unavailable_once'
+npm.cmd --workspace apps/mobile run web -- --port 8394 --host localhost --clear
+
+POPULATED SERVER
+$env:EXPO_PUBLIC_E2E_ENTITLEMENT='store_pro'
+$env:EXPO_PUBLIC_E2E_APP_LOCK_ENABLED='disabled'
+$env:EXPO_PUBLIC_E2E_PROGRESS_PHOTOS='populated'
+$env:EXPO_PUBLIC_E2E_PHOTO_DELETE_SYNC_STATUS='unavailable_once'
+npm.cmd --workspace apps/mobile run web -- --port 8395 --host localhost --clear
+
+FOCUSED VERIFICATION
+npm.cmd --workspace apps/mobile exec vitest run src/features/photos/photoDeleteSyncStatusFixture.test.ts src/features/photos/PhotoDeleteSyncStatus.test.ts src/features/photos/photoDeleteRetrySingleFlight.test.ts src/lib/offline/outbox.test.ts src/features/photos/store.test.ts src/features/photos/usePhotos.test.ts src/features/photos/progressRoutes.test.ts src/lib/query/queryKeys.test.ts
+
+RESULT
+8 files / 154 tests passed
+Mobile typecheck passed
+Mobile lint passed with zero warnings

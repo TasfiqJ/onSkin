@@ -41,7 +41,7 @@ The initial task transcript remains the source for the baseline repository check
 
 - Deterministic production Expo export analysis now records Hermes, compression, asset, and font statistics for iOS and Android.
 - Deterministic empty, median, and stress fixtures now cover Shelf, completions, photo metadata, a future outbox shape, Ask messages, and more-than-1,000-row export pagination without image bytes.
-- Bounded content-free operation/startup markers now cover private-KV work and the implemented startup privacy-gate decisions.
+- Bounded content-free operation/startup markers now cover private-KV work, captured-photo encryption, encrypted display decode, logical network requests, and the implemented startup privacy-gate decisions.
 - `evidence/2026-07-12_local-verification-summary.md` records the focused local checks and the web-compatible sensitive-image E2E boundary.
 
 These additions establish reproducibility, not threshold approval. The current reports were produced from the preserved dirty worktree at the baseline SHA.

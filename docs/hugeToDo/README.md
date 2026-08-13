@@ -849,7 +849,7 @@ later foreground pass rather than being purged. Privacy reduction otherwise
 durably verifies `privacy-closing-v1` and returns a synchronous closed-admission
 receipt before the queued full purge. Withdrawal and account cleanup start this
 native closure at the boundary before JavaScript writer drains or
-replacement-owner publication. The exact `expo-widgets` `57.0.8` patch is
+replacement-owner publication. The exact `expo-widgets` `57.0.9` patch is
 hash-pinned and checked during local and EAS installation.
 
 Interactive publication and Live Activity start nevertheless remain disabled

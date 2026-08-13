@@ -113,7 +113,7 @@ installation path. For each target package release:
 The governed SDK 56-to-57 source migration aligns the mobile workspace to Expo
 SDK 57.0.11 and React Native 0.86.2, including the Expo-managed dependency
 set, Reanimated 4.5.1, Worklets 0.10.1, Screens 4.26.0, and the exact reviewed
-`expo-widgets` 57.0.8 artifact. The widget patch payload was re-reviewed
+`expo-widgets` 57.0.9 artifact. The widget patch payload was re-reviewed
 against that exact artifact; its iOS source inputs are unchanged from the prior
 review, so the fail-closed hashes remain intentionally identical rather than
 being weakened or regenerated.

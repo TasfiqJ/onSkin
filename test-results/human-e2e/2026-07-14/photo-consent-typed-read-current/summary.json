@@ -1,0 +1,100 @@
+{
+  "date": "2026-07-14",
+  "surface": "Expo web via Codex in-app browser",
+  "verdict": "pass_with_native_follow_up",
+  "routes": [
+    "/progress/capture",
+    "/photos/capture",
+    "/progress"
+  ],
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "classification": "launch_supported"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "classification": "launch_supported"
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "classification": "stress_only"
+    }
+  ],
+  "fixtures": [
+    "read_failure:always",
+    "read_failure:once",
+    "read_failure:hang",
+    "state:stale_version",
+    "state:wrong_hash",
+    "state:legacy_true",
+    "state:malformed",
+    "state:future",
+    "write_failure:uncertain_once"
+  ],
+  "assertions": {
+    "persistent_failure_is_retry_only": true,
+    "one_shot_retry_reveals_underlying_state": true,
+    "refresh_preserves_current_proof": true,
+    "stale_wrong_hash_and_legacy_require_reconsent": true,
+    "malformed_and_future_never_render_grant_or_camera": true,
+    "hung_read_shows_named_progress_and_times_out_fail_closed": true,
+    "uncertain_committed_write_never_requests_permission_before_retry": true,
+    "uncertain_retry_reads_committed_exact_proof": true,
+    "uncertain_retry_reaches_permission_without_reconsent": true,
+    "legacy_alias_redirects": true,
+    "recovery_exit_replaces_to_progress": true,
+    "captured_updated_case_javascript_dialogs": 0,
+    "captured_persistent_uncertain_and_hung_browser_errors": 0,
+    "horizontal_overflow": 0
+  },
+  "geometry": {
+    "persistent_375x667": {
+      "retry_height": 55.9921,
+      "back_height": 47.9976,
+      "both_center_hit": true
+    },
+    "persistent_320x568": {
+      "retry_height": 55.9921,
+      "back_height": 47.9976,
+      "both_center_hit": true
+    },
+    "stale_375x667": {
+      "grant_height": 55.9921,
+      "not_now_height": 47.9976,
+      "both_center_hit": true
+    },
+    "legacy_fixed_320x568": {
+      "grant_height": 51.9873,
+      "grant_bottom": 483.8896,
+      "not_now_height": 47.9976,
+      "not_now_bottom": 535.8768,
+      "measured_viewport_height": 569,
+      "both_center_hit": true
+    },
+    "write_uncertain_320x568": {
+      "retry_height": 55.9921,
+      "back_height": 47.9976,
+      "both_center_hit": true
+    },
+    "hung_read_375x667": {
+      "consent_loading_to_recovery_ms": 10025,
+      "loading_back_height": 47.9976,
+      "recovery_retry_height": 55.9921,
+      "recovery_back_height": 47.9976,
+      "all_center_hit": true
+    }
+  },
+  "raw_artifacts": [
+    "steps.json",
+    "browser-logs.json",
+    "persistent-browser-logs.json",
+    "dialogs.json",
+    "environment.json"
+  ],
+  "network_capture": "not_captured",
+  "native_follow_up_required": true
+}

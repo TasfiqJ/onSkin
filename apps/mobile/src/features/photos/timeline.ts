@@ -41,7 +41,10 @@ export function daysBetween(a: string, b: string): number {
 }
 
 /** Photos of one series, oldest → newest (a series is internally consistent). */
-export function forSeries(photos: PhotoMeta[], series: PhotoSeries = 'front'): PhotoMeta[] {
+export function forSeries<TPhoto extends PhotoMeta>(
+  photos: TPhoto[],
+  series: PhotoSeries = 'front',
+): TPhoto[] {
   return photos
     .filter((p) => p.series === series)
     .slice()
@@ -49,7 +52,10 @@ export function forSeries(photos: PhotoMeta[], series: PhotoSeries = 'front'): P
 }
 
 /** The reference for a series: the explicit one, else the earliest (docs/06 §3). */
-export function referenceFor(photos: PhotoMeta[], series: PhotoSeries = 'front'): PhotoMeta | null {
+export function referenceFor<TPhoto extends PhotoMeta>(
+  photos: TPhoto[],
+  series: PhotoSeries = 'front',
+): TPhoto | null {
   const list = forSeries(photos, series);
   return list.find((p) => p.isReference) ?? list[0] ?? null;
 }
@@ -60,10 +66,10 @@ export function referenceFor(photos: PhotoMeta[], series: PhotoSeries = 'front')
  * ask for a one-cycle window instead. The before becomes the photo closest to
  * (latest − intervalDays). Returns null if a series has fewer than two photos.
  */
-export function defaultComparePair(
-  photos: PhotoMeta[],
+export function defaultComparePair<TPhoto extends PhotoMeta>(
+  photos: TPhoto[],
   opts: { series?: PhotoSeries; intervalDays?: number } = {},
-): { before: PhotoMeta; after: PhotoMeta } | null {
+): { before: TPhoto; after: TPhoto } | null {
   const list = forSeries(photos, opts.series);
   if (list.length < 2) return null;
   const after = list[list.length - 1]!;
@@ -85,7 +91,11 @@ export function defaultComparePair(
   return { before, after };
 }
 
-export type MonthGroup = { key: string; label: string; photos: PhotoMeta[] };
+export type MonthGroup<TPhoto extends PhotoMeta = PhotoMeta> = {
+  key: string;
+  label: string;
+  photos: TPhoto[];
+};
 
 const MONTHS = [
   'January',
@@ -106,13 +116,13 @@ const MONTHS = [
  * Group the film strip by month, newest month first, newest photo first within a
  * month (docs/06 §4). `todayYmd` lets the current month read "This month · June".
  */
-export function groupByMonth(
-  photos: PhotoMeta[],
+export function groupByMonth<TPhoto extends PhotoMeta>(
+  photos: TPhoto[],
   series: PhotoSeries = 'front',
   todayYmd?: string,
-): MonthGroup[] {
+): MonthGroup<TPhoto>[] {
   const list = forSeries(photos, series);
-  const byKey = new Map<string, PhotoMeta[]>();
+  const byKey = new Map<string, TPhoto[]>();
   for (const p of list) {
     const key = p.takenLocalDate.slice(0, 7); // YYYY-MM
     const bucket = byKey.get(key);
@@ -145,14 +155,14 @@ const MILESTONE_DAYS: { milestone: PhotoMilestone; days: number }[] = [
  * each threshold crossed measured from the first photo of the series. Returns the
  * photo that crossed each threshold so the timeline can mark it.
  */
-export function detectMilestones(
-  photos: PhotoMeta[],
+export function detectMilestones<TPhoto extends PhotoMeta>(
+  photos: TPhoto[],
   series: PhotoSeries = 'front',
-): { milestone: PhotoMilestone; photo: PhotoMeta }[] {
+): { milestone: PhotoMilestone; photo: TPhoto }[] {
   const list = forSeries(photos, series);
   if (list.length === 0) return [];
   const first = list[0]!;
-  const out: { milestone: PhotoMilestone; photo: PhotoMeta }[] = [
+  const out: { milestone: PhotoMilestone; photo: TPhoto }[] = [
     { milestone: 'first', photo: first },
   ];
   for (const { milestone, days } of MILESTONE_DAYS) {

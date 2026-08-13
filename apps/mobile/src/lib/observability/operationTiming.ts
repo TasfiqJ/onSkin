@@ -14,11 +14,12 @@ export const STARTUP_PHASE_NAMES = [
   'font_decision_complete',
   'authentication_hydration_complete',
   'account_generation_complete',
-  'vault_decision_complete',
+  'plaintext_recovery_complete',
   'app_lock_decision_complete',
+  'vault_decision_complete',
   'navigation_ready',
   'first_meaningful_content',
-  'first_interaction_accepted',
+  'first_route_interaction_observed',
   'first_critical_data_ready',
   'startup_reconciliation_complete',
 ] as const;
@@ -36,6 +37,14 @@ export type OperationTimingSample = Readonly<{
 export type StartupPhaseSample = Readonly<{
   phase: StartupPhaseName;
   elapsedMs: number;
+}>;
+
+export type OperationTimingAggregate = Readonly<{
+  name: OperationTimingName;
+  count: number;
+  errorCount: number;
+  p50Ms: number;
+  p95Ms: number;
 }>;
 
 const MAX_OPERATION_SAMPLES = 200;
@@ -106,6 +115,29 @@ export function markStartupPhase(phase: StartupPhaseName, now: () => number = mo
 
 export function readOperationTimingSamples(): readonly OperationTimingSample[] {
   return operationSamples.map((sample) => ({ ...sample }));
+}
+
+function percentile(sorted: readonly number[], quantile: number): number {
+  if (sorted.length === 0) return 0;
+  const index = Math.min(Math.ceil(sorted.length * quantile) - 1, sorted.length - 1);
+  return sorted[Math.max(index, 0)] ?? 0;
+}
+
+export function readOperationTimingAggregates(): readonly OperationTimingAggregate[] {
+  return OPERATION_TIMING_NAMES.flatMap((name) => {
+    const samples = operationSamples.filter((sample) => sample.name === name);
+    if (samples.length === 0) return [];
+    const durations = samples.map((sample) => sample.durationMs).sort((a, b) => a - b);
+    return [
+      {
+        name,
+        count: samples.length,
+        errorCount: samples.filter((sample) => sample.outcome === 'error').length,
+        p50Ms: percentile(durations, 0.5),
+        p95Ms: percentile(durations, 0.95),
+      },
+    ];
+  });
 }
 
 export function readStartupPhaseSamples(): readonly StartupPhaseSample[] {

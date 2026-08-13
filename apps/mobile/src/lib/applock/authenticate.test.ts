@@ -161,7 +161,8 @@ describe('app lock local authentication', () => {
     expect(timelineGate).toContain('unlockPhotoTimeline()');
     expect(timelineGate).toContain('locked && appUnlocked');
     expect(timelineGate).toContain('setLockFeedback(appLockUserMessage());');
-    expect(timelineGate).toContain('accessibilityRole="alert"');
+    expect(timelineGate).toContain('kind="error"');
+    expect(timelineGate).toContain('title="Unlock unavailable"');
     expect(timelineGate).not.toContain("Alert.alert('Photo timeline locked'");
     expect(timelineGate).not.toContain('LocalAuthentication.authenticateAsync');
 

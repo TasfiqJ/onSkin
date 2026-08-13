@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-16",
+  "feature": "OPT-115 OCR review input isolation",
+  "surface": "Expo web development build in Codex in-app browser",
+  "start": {
+    "command": "npm --workspace apps/mobile run web -- --port 8277",
+    "fixture": "EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE=once",
+    "externalServices": false
+  },
+  "viewport": {
+    "modernRequested": {
+      "width": 390,
+      "height": 844
+    },
+    "modernObserved": {
+      "width": 390,
+      "height": 845
+    },
+    "compactRequested": {
+      "width": 375,
+      "height": 667
+    },
+    "compactObserved": {
+      "width": 376,
+      "height": 668
+    }
+  },
+  "syntheticDraft": {
+    "recipe": {
+      "indexedLabels": "one-based, three-digit suffixes",
+      "activeLabel": "Retinol Stress",
+      "activeCount": 96,
+      "unknownLabel": "Synthetic Inci",
+      "unknownCount": 100,
+      "separator": ", ",
+      "numericPaddingCharacter": "1",
+      "numericPaddingLength": 60,
+      "prefixSliceIndex": 3852,
+      "finalMarker": ", Hydroquinone Exact"
+    },
+    "settledPrefixLength": 3852,
+    "rapidSuffixLength": 128,
+    "preSubmitLength": 3980,
+    "finalMarkerLength": 20,
+    "boundedLength": 4000,
+    "rawSha256": "dd2366c8f49188041f9409c62713b7c29c9707a1433f9a7cc9f79202e90fc977"
+  },
+  "preFixObservation": {
+    "inputAction": "one browser type action appended the 128-character suffix",
+    "screenRenderDelta": 0,
+    "capturePanelRenderDelta": 0,
+    "previewParseDeltaBeforeDebounce": 1,
+    "previewRenderDeltaBeforeDebounce": 0,
+    "finding": "The editor-owned useMemo parse calculation re-executed during a raw-only development render; the diagnostics did not identify React's internal scheduling cause. Parsing was moved into the memoized preview leaf before the full run."
+  },
+  "rapidTypingPostFix": {
+    "individualKeyActions": 128,
+    "driverElapsedMs": 2141,
+    "driverElapsedIsAppLatency": false,
+    "before": {
+      "screenRenders": 5,
+      "capturePanelRenders": 3,
+      "editorCommits": 3,
+      "editorDurationTotalMs": 58.39999997615814,
+      "editorDurationMaxMs": 56.09999996423721,
+      "draftChanges": 1,
+      "previewParses": 1,
+      "previewRenders": 1,
+      "exactSubmissions": 0,
+      "inputLength": 3852
+    },
+    "immediate": {
+      "screenRenders": 5,
+      "capturePanelRenders": 3,
+      "editorCommits": 131,
+      "editorDurationTotalMs": 119.7999999076128,
+      "editorDurationMaxMs": 56.09999996423721,
+      "draftChanges": 129,
+      "previewParses": 1,
+      "previewRenders": 1,
+      "exactSubmissions": 0,
+      "inputLength": 3980,
+      "previewPending": true
+    },
+    "immediateDelta": {
+      "screenRenders": 0,
+      "capturePanelRenders": 0,
+      "editorCommits": 128,
+      "editorDurationTotalMs": 61.39999993145466,
+      "draftChanges": 128,
+      "previewParses": 0,
+      "previewRenders": 0,
+      "exactSubmissions": 0
+    },
+    "after300Ms": {
+      "screenRenders": 5,
+      "capturePanelRenders": 3,
+      "editorCommits": 132,
+      "editorDurationTotalMs": 155.0999999344349,
+      "editorDurationMaxMs": 56.09999996423721,
+      "draftChanges": 129,
+      "previewParses": 2,
+      "previewRenders": 2,
+      "exactSubmissions": 0,
+      "inputLength": 3980,
+      "previewPending": false
+    },
+    "settledDelta": {
+      "screenRenders": 0,
+      "capturePanelRenders": 0,
+      "editorCommits": 129,
+      "draftChanges": 128,
+      "previewParses": 1,
+      "previewRenders": 1
+    },
+    "rawInputCommitDurationMeanMs": 0.4796874994644895
+  },
+  "previewBound": {
+    "parsedActiveCount": 96,
+    "visibleActiveRows": 64,
+    "overflowSummaryVisible": true,
+    "horizontalOverflowPx": 0,
+    "textareaFooterOverlapPx": 0
+  },
+  "exactPendingSubmit": {
+    "inputLengthBeforeSubmit": 4000,
+    "previewPendingBeforeSubmit": true,
+    "markerKeyActions": 20,
+    "markerDriverElapsedMs": 323,
+    "boundaryReadToClickMs": 31,
+    "driverDurationsAreAppLatency": false,
+    "attemptedCharacter4001": true,
+    "character4001Accepted": false,
+    "destination": "/shelf/manual",
+    "canonicalLength": 3938,
+    "rawTokenCount": 198,
+    "canonicalTokenCount": 197,
+    "omittedToken": "the 60-digit-only padding token normalizes to empty",
+    "canonicalLengthDeltaExplanation": "canonical joining removes the 60 digits and one redundant two-code-unit separator",
+    "canonicalSha256": "f3af62ef4dbe64e5b81a1014e198e47d37854350421d81cc13d52cd6cc9e92e9",
+    "expectedCanonicalSha256": "f3af62ef4dbe64e5b81a1014e198e47d37854350421d81cc13d52cd6cc9e92e9",
+    "exactCanonicalMatch": true,
+    "finalMarkerPresent": true,
+    "rejectedCharacterAbsent": true
+  },
+  "layout": {
+    "modern": {
+      "horizontalOverflowPx": 0,
+      "textareaFooterOverlapPx": 0,
+      "backHeightPx": 47.99757385253906,
+      "retryHeightPx": 47.99757385253906,
+      "textareaHeightPx": 131.9933319091797,
+      "continueHeightPx": 55.99211502075195,
+      "allVisibleControlCentersHit": true
+    },
+    "compact": {
+      "horizontalOverflowPx": 0,
+      "textareaFooterOverlapPx": 0,
+      "minimumVisibleControlHeightPx": 47.99757385253906,
+      "partialVisibleControls": 0,
+      "blockedControlCenters": 0
+    }
+  },
+  "browserHealth": {
+    "javascriptDialog": null,
+    "warnOrErrorEntries": 12,
+    "errorEntries": 0,
+    "unexpectedEntries": 0,
+    "duplicateKeyWarnings": 0,
+    "expectedWarningSignatures": [
+      "placeholder Supabase URL",
+      "missing placeholder Supabase publishable key",
+      "Expo notifications listener unsupported on web"
+    ]
+  },
+  "screenshots": [
+    "01-capture-failure-review-390x844.png",
+    "02-long-draft-preview-390x844.png",
+    "03-exact-canonical-manual-carryover-390x844.png",
+    "04-compact-review-375x667.png"
+  ],
+  "claimBoundary": {
+    "fullHumanSimulatedE2eChecklistAccepted": false,
+    "proves": [
+      "development Expo-web raw-input ownership and capture-panel render isolation",
+      "200 ms preview debounce coalescing for the measured 128-key burst",
+      "64-row active preview bound",
+      "4000-code-unit input bound",
+      "exact latest bounded draft parsing while the preview is pending",
+      "canonical manual carryover",
+      "supported-phone Expo-web geometry"
+    ],
+    "doesNotProve": [
+      "production Hermes keystroke or parse latency",
+      "native keyboard or IME composition",
+      "VoiceOver or TalkBack behavior",
+      "native safe areas or camera lifecycle",
+      "OCR recognition accuracy",
+      "physical-device frames, CPU, thermal impact, or memory"
+    ]
+  }
+}

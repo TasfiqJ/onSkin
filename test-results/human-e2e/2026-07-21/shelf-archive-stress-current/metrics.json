@@ -1,0 +1,83 @@
+{
+  "activeCount": 100,
+  "activeFilter": {
+    "maxMountedRows": 34,
+    "maxScrollTop": 5496,
+    "minMountedRows": 34,
+    "sampleCount": 14,
+    "uniqueRowsSeen": 34,
+    "visibleRowsAtBottom": 4
+  },
+  "activeFilterInitialScrollTop": 0,
+  "activeFilterRestoredScrollTop": 5496,
+  "allFilter": {
+    "maxMountedRows": 100,
+    "maxScrollTop": 16260,
+    "minMountedRows": 30,
+    "sampleCount": 36,
+    "uniqueRowsSeen": 100,
+    "visibleRowsAtBottom": 4
+  },
+  "allFilterRestoredScrollTop": 15874,
+  "archive": {
+    "maxMountedRows": 100,
+    "maxScrollTop": 9782,
+    "minMountedRows": 30,
+    "sampleCount": 25,
+    "uniqueRowsSeen": 100,
+    "visibleRowsAtBottom": 9
+  },
+  "archiveCount": 100,
+  "browserLogs": [
+    {
+      "level": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+    },
+    {
+      "level": "log",
+      "text": "Running application \"main\" with appParams:\n Object \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+    },
+    {
+      "level": "warning",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "level": "warning",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "level": "warning",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+    }
+  ],
+  "diagnostics": {
+    "archiveListCommits": 54,
+    "archiveListDurationMaxMs": 30.599999994039536,
+    "archiveListDurationTotalMs": 335.2999998629093,
+    "archiveRowRenders": 102,
+    "footerRenders": 8,
+    "headerRenders": 2,
+    "mainListCommits": 179,
+    "mainListDurationMaxMs": 56.5,
+    "mainListDurationTotalMs": 1673.9999999701977,
+    "productRowRenders": 445
+  },
+  "dialogCount": 0,
+  "expiringFilter": {
+    "maxMountedRows": 40,
+    "maxScrollTop": 8120,
+    "minMountedRows": 38,
+    "sampleCount": 19,
+    "uniqueRowsSeen": 40,
+    "visibleRowsAtBottom": 3
+  },
+  "expiringFilterInitialScrollTop": 0,
+  "expiringFilterRestoredScrollTop": 8021,
+  "horizontalOverflowPixels": 0,
+  "shelfAfterArchiveBackScrollTop": 16132,
+  "unexpectedLogs": [],
+  "viewport": {
+    "width": 390,
+    "height": 844
+  }
+}

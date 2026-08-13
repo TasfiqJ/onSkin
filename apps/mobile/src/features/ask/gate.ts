@@ -26,6 +26,22 @@ export type AskGateResult = {
   remaining: number | null;
 };
 
+/** Only trial-shaped Pro access consumes the private monthly turn journal. */
+export function requiresTrialGroundedQuota(
+  input: Pick<AskGateInput, 'isPro' | 'inTrial' | 'inReverseTrial'>,
+): boolean {
+  return input.isPro && (input.inTrial || input.inReverseTrial);
+}
+
+/** Do not mislabel unavailable cloud access as a free-user paywall decision. */
+export function groundedReasonForCloudReadiness(
+  gateReason: AskGateResult['reason'],
+  cloudGateEnabled: boolean,
+  cloudGroundingReady: boolean,
+): AskGateResult['reason'] {
+  return cloudGateEnabled && !cloudGroundingReady ? null : gateReason;
+}
+
 /** Decide whether a cloud-grounded turn is permitted (docs/13 §15). */
 export function askGate(input: AskGateInput): AskGateResult {
   const cap = input.cap ?? ASK_TRIAL_GROUNDED_CAP;
@@ -36,7 +52,7 @@ export function askGate(input: AskGateInput): AskGateResult {
   }
 
   // Trial / reverse-trial: a hard cap on the grounded taste.
-  const capped = input.inTrial || input.inReverseTrial;
+  const capped = requiresTrialGroundedQuota(input);
   if (capped) {
     const remaining = Math.max(0, cap - input.groundedTurnsUsed);
     if (remaining <= 0) {

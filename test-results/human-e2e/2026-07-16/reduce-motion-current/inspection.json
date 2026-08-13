@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-16",
+  "surface": "Expo web",
+  "url": "http://localhost:8292/progress",
+  "viewport": {
+    "width": 1281,
+    "height": 720
+  },
+  "fixture": {
+    "entitlement": "store_pro",
+    "progressPhotos": "populated",
+    "appLock": "disabled",
+    "reduceMotion": "enabled"
+  },
+  "checks": {
+    "expectedStartVisible": true,
+    "timelineOpened": true,
+    "namedTimelapseDialog": true,
+    "initialFrame": "Apr 1, 2026",
+    "initialPosition": "1 of 3",
+    "waitDurationMs": 2200,
+    "normalFrameDurationMs": 1800,
+    "frameStableAfterWait": true,
+    "reducedMotionAlertVisible": true,
+    "dialogPlayPauseControlCount": 0,
+    "manualNextFrame": "May 12, 2026",
+    "manualNextPosition": "2 of 3",
+    "manualSteppingWorked": true,
+    "namedDatePickerOpened": true,
+    "firstDateUpdatedToMay12": true,
+    "sideBySideOpened": true,
+    "javascriptDialog": null
+  },
+  "limitations": [
+    "The in-app browser exposed only its 1281 x 720 viewport.",
+    "Physical iOS Reduce Motion, VoiceOver, and platform animation-scale behavior remain release QA."
+  ]
+}

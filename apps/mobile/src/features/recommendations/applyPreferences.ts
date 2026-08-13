@@ -3,7 +3,7 @@ import type { RecPreferences } from './preferences';
 type ApplyRecommendationPreferencesDeps = {
   save: (prefs: RecPreferences) => Promise<void>;
   onSaved: () => void | Promise<void>;
-  onFailure: () => void;
+  onFailure: () => void | Promise<void>;
 };
 
 export async function applyRecommendationPreferences(
@@ -13,7 +13,7 @@ export async function applyRecommendationPreferences(
   try {
     await deps.save(next);
   } catch {
-    deps.onFailure();
+    await deps.onFailure();
     return false;
   }
 

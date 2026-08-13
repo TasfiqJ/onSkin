@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-18",
+  "endpointCount": 21,
+  "policyBoundDirectReadOperations": 9,
+  "policyBoundReplaySafeMutationOperations": 4,
+  "policyBoundReplaySafeMutationFiles": 4,
+  "databaseUniquenessReceipts": 2,
+  "commutativeDeleteOperations": 2,
+  "deferredMutationPolicyFiles": 8,
+  "unsafeRetriesAdded": 0,
+  "authorizationChanges": 0,
+  "telemetryPayloadFieldsAdded": 0
+}

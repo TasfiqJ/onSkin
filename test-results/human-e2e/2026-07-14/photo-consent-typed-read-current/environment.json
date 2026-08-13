@@ -1,0 +1,23 @@
+{
+  "capturedAt": "2026-07-14T07:56:18.070Z",
+  "surface": "Expo web in Codex in-app browser",
+  "routes": [
+    "http://localhost:8205/progress/capture",
+    "http://localhost:8206/progress/capture"
+  ],
+  "fixtures": {
+    "write": "EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=uncertain_once",
+    "read": "EXPO_PUBLIC_E2E_PHOTO_CONSENT_READ_FAILURE=hang"
+  },
+  "viewports": [
+    {
+      "width": 320,
+      "height": 568
+    },
+    {
+      "width": 375,
+      "height": 667
+    }
+  ],
+  "networkCapture": "not captured"
+}

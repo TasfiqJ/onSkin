@@ -1,0 +1,45 @@
+SETTINGS DATA-SHARING WITHDRAWAL ACCESSIBILITY SNAPSHOTS
+Date: 2026-07-26
+Viewport: 390 x 844
+
+PENDING WITHDRAWAL
+- text: Share data with partners (where-to-buy)
+- switch "Share data with partners for where-to-buy"
+- alert: Choice not saved We couldn't save that choice. Please try again.
+- button "Try saving data sharing choice again": Try again
+- tab "Today tab"
+- tab "Progress tab"
+- tab "Shelf tab"
+- tab "You tab"
+
+TARGET GEOMETRY
+- switch "Share data with partners for where-to-buy": 52 x 48 px
+- button "Try saving data sharing choice again": 113.91 x 56 px
+- horizontal overflow: 0
+
+AFTER EXACT THIRD ACKNOWLEDGEMENT
+- text: Share data with partners (where-to-buy)
+- switch "Share data with partners for where-to-buy"
+- alert "Choice not saved": absent
+- button "Try saving data sharing choice again": absent
+
+AFTER FINAL RELOAD AND REGRANT
+- text: Share data with partners (where-to-buy)
+- switch "Share data with partners for where-to-buy" [checked]
+- switch "Share data with partners" [checked]
+- alert "Choice not saved": absent
+- button "Try saving data sharing choice again": absent
+
+ACCOUNT-ISOLATION FIRST CLEAR FAILURE
+- alert: Unavailable Your private data could not be secured. App content remains locked while Layerwell verifies or finishes clearing local private data. Try again to continue safely.
+- button "Try again"
+- You surface: absent
+- account-A "Choice not saved": absent
+
+AFTER LATE RELEASE AND BOUNDARY RETRY
+- text: Healthier skin in eight weeks, built around your skin.
+- button "Begin"
+- button "I already have an account"
+- You surface: absent
+- alert: absent
+- account-A "Choice not saved": absent

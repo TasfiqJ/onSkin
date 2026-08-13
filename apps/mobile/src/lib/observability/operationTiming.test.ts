@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
   markStartupPhase,
+  readOperationTimingAggregates,
   readOperationTimingSamples,
   readStartupPhaseSamples,
   resetOperationTimingForTests,
@@ -30,6 +31,39 @@ describe('content-free operation timing', () => {
     }
 
     expect(readOperationTimingSamples()).toHaveLength(200);
+  });
+
+  it('returns bounded content-free timing aggregates in fixed label order', () => {
+    for (const [duration, outcome] of [
+      [40, 'ok'],
+      [10, 'ok'],
+      [20, 'error'],
+      [30, 'cancelled'],
+    ] as const) {
+      const readings = [0, duration];
+      const finish = startOperationTiming('network_request', () => readings.shift() ?? 0);
+      finish(outcome);
+    }
+    const photoReadings = [0, 5];
+    const finishPhoto = startOperationTiming('photo_decrypt', () => photoReadings.shift() ?? 0);
+    finishPhoto();
+
+    expect(readOperationTimingAggregates()).toEqual([
+      {
+        name: 'photo_decrypt',
+        count: 1,
+        errorCount: 0,
+        p50Ms: 5,
+        p95Ms: 5,
+      },
+      {
+        name: 'network_request',
+        count: 4,
+        errorCount: 1,
+        p50Ms: 20,
+        p95Ms: 40,
+      },
+    ]);
   });
 
   it('records each startup phase once and preserves phase order', () => {

@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "checkpoint": "catalog_import_postgres_replay",
+  "status": "pass",
+  "started_at": "2026-07-26T03:59:54.257Z",
+  "finished_at": "2026-07-26T04:00:48.514Z",
+  "branch": "optimization",
+  "checkpoint_parent_sha": "e84ac8565f2aa3b27571688d2ce12464a558398d",
+  "tested_source_sha256": {
+    "forward_migration": "a8723777ab9df3dc376b923a8bd8921265c489ecc1aab994dc07c23760f9242e",
+    "importer_core": "eec0a2cbe245d123d16e2c24a7f44f4adf61ac4db7b44c94cf6d627a17e643bf",
+    "replay_harness": "aa35f203dc67fe838312618ee3ad9c19611830ca2ba99926182785b3579a5c08"
+  },
+  "docker_engine_version": "29.2.1",
+  "postgres_image": "postgres:15-alpine",
+  "postgres_image_id": "sha256:3d0f7584ed7d04e27fa050d6683a74746608faf21f202be78460d679cc56461f",
+  "postgres_version": "15.18",
+  "migration_chain": [
+    "20260612000001_extensions_and_helpers.sql",
+    "20260612000003_catalog.sql",
+    "20260612000005_user_products.sql",
+    "20260614000026_phase4_catalog.sql",
+    "20260713000042_catalog_search_indexed_rpc.sql",
+    "20260718000045_catalog_import_pipeline.sql",
+    "20260718000052_catalog_search_bigram_index.sql",
+    "20260725000054_catalog_import_identity_and_visibility.sql"
+  ],
+  "fixture": {
+    "synthetic_only": true,
+    "input_records": 50000,
+    "accepted_records": 49950,
+    "rejected_records": 50,
+    "staged_products": 49949,
+    "fixture_build_ms": 263.3059
+  },
+  "failure_recovery": {
+    "commit_then_response_loss_replayed_once": true,
+    "precommit_transaction_rolled_back_twice": true,
+    "interrupted_checkpoint_line": 500,
+    "interrupted_receipts": 1,
+    "fresh_worker_resumed_from_server_receipt": true,
+    "interruption_ms": 839.9117000000006,
+    "resume_and_primary_promotion_ms": 40099.1231
+  },
+  "role_boundaries": {
+    "serviceRoleImportExecution": true,
+    "anonImportDenied": true,
+    "authenticatedImportDenied": true,
+    "anonSearchDenied": true,
+    "authenticatedSearchDenied": true
+  },
+  "promotion_gates": {
+    "runningImportPromotionDenied": true,
+    "unapprovedSourcePromotionDenied": true
+  },
+  "identity": {
+    "exactReplaySameImport": true,
+    "artifactMismatchRejected": true,
+    "importerMismatchRejected": true,
+    "mismatchStateUnchanged": true,
+    "uniqueIndex": {
+      "duplicate_pairs": 0,
+      "valid": true,
+      "ready": true,
+      "unique": true,
+      "keys": 2,
+      "definition": "CREATE UNIQUE INDEX catalog_import_versions_source_revision_uidx ON public.catalog_import_versions USING btree (source_id, source_revision)"
+    }
+  },
+  "replacement": {
+    "previous_active_pointer_preserved": true,
+    "primary_status": "superseded",
+    "replacement_status": "active",
+    "active_products": 2,
+    "retired_products": 49948,
+    "promotion_ms": 2577.773699999998
+  },
+  "visibility": {
+    "two_character_active_only": true,
+    "long_query_active_only": true,
+    "retired_snapshot_hidden": true,
+    "active_index_plans_before_replacement": {
+      "twoCharacter": {
+        "nodeTypes": ["Bitmap Heap Scan", "Bitmap Index Scan"],
+        "indexNames": ["products_catalog_active_bigram_idx"],
+        "productsSequentialScan": false
+      },
+      "longQuery": {
+        "nodeTypes": ["Bitmap Heap Scan", "Bitmap Index Scan"],
+        "indexNames": ["products_catalog_active_name_trgm_idx"],
+        "productsSequentialScan": false
+      },
+      "ranked": {
+        "nodeTypes": ["Index Scan", "Limit"],
+        "indexNames": ["products_catalog_active_rank_idx"],
+        "productsSequentialScan": false
+      }
+    }
+  },
+  "indexes": {
+    "indexes": [
+      {
+        "name": "products_catalog_active_bigram_idx",
+        "access_method": "gin",
+        "key_count": 1,
+        "is_unique": false,
+        "is_valid": true,
+        "is_ready": true,
+        "definition": "CREATE INDEX products_catalog_active_bigram_idx ON public.products USING gin (((catalog_search_bigram_tokens(name) || catalog_search_bigram_tokens(COALESCE(brand, ''::text))))) WHERE (status = 'active'::text)"
+      },
+      {
+        "name": "products_catalog_active_brand_trgm_idx",
+        "access_method": "gin",
+        "key_count": 1,
+        "is_unique": false,
+        "is_valid": true,
+        "is_ready": true,
+        "definition": "CREATE INDEX products_catalog_active_brand_trgm_idx ON public.products USING gin (lower(COALESCE(brand, ''::text)) extensions.gin_trgm_ops) WHERE (status = 'active'::text)"
+      },
+      {
+        "name": "products_catalog_active_name_trgm_idx",
+        "access_method": "gin",
+        "key_count": 1,
+        "is_unique": false,
+        "is_valid": true,
+        "is_ready": true,
+        "definition": "CREATE INDEX products_catalog_active_name_trgm_idx ON public.products USING gin (lower(name) extensions.gin_trgm_ops) WHERE (status = 'active'::text)"
+      },
+      {
+        "name": "products_catalog_active_rank_idx",
+        "access_method": "btree",
+        "key_count": 3,
+        "is_unique": false,
+        "is_valid": true,
+        "is_ready": true,
+        "definition": "CREATE INDEX products_catalog_active_rank_idx ON public.products USING btree (data_quality_score DESC, lower(name), id) WHERE (status = 'active'::text)"
+      }
+    ],
+    "activePredicates": 3,
+    "legacyPredicatePresent": false
+  },
+  "migration_ms": 1588.4183000000003,
+  "forward_migration_replay_ms": 159.65920000000006,
+  "verification_boundary": "Local synthetic PostgreSQL replay; hosted staging and full OBF artifact rehearsal remain required."
+}

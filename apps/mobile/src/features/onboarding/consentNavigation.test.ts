@@ -14,6 +14,10 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('react-native', () => ({
+  AccessibilityInfo: {
+    addEventListener: () => ({ remove: vi.fn() }),
+    isReduceMotionEnabled: vi.fn().mockResolvedValue(false),
+  },
   Pressable: 'Pressable',
   ScrollView: 'ScrollView',
   View: 'View',

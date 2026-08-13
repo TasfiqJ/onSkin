@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T06:00:00.000Z",
+  "checkpointParent": "523eacc077ff7e078b4106e76896d9f342d94e35",
+  "worktree": "dirty; identical user-owned changes in baseline and candidate",
+  "candidate": {
+    "description": "@sentry/react-native 7.11 supported includeWebReplay=false Metro option",
+    "sourceFile": "apps/mobile/metro.config.js"
+  },
+  "platforms": {
+    "ios": {
+      "baseline": {
+        "modules": 2835,
+        "bundleBytes": 10858809,
+        "gzipBytes": 4672068,
+        "brotliBytes": 3647926,
+        "totalExportBytes": 10883558
+      },
+      "candidate": {
+        "modules": 2834,
+        "bundleBytes": 10623734,
+        "gzipBytes": 4549060,
+        "brotliBytes": 3539544,
+        "totalExportBytes": 10648483
+      },
+      "delta": {
+        "bundleBytes": -235075,
+        "bundlePercent": -2.1648,
+        "gzipBytes": -123008,
+        "gzipPercent": -2.6328,
+        "brotliBytes": -108382,
+        "brotliPercent": -2.9711,
+        "totalExportBytes": -235075,
+        "totalExportPercent": -2.1599
+      }
+    },
+    "web": {
+      "baseline": {
+        "clientModules": 2605,
+        "bundleBytes": 6881856,
+        "gzipBytes": 1774554,
+        "brotliBytes": 1370574,
+        "totalExportBytes": 9679452,
+        "staticRoutes": 83
+      },
+      "candidate": {
+        "clientModules": 2604,
+        "bundleBytes": 6742247,
+        "gzipBytes": 1730619,
+        "brotliBytes": 1336378,
+        "totalExportBytes": 9539843,
+        "staticRoutes": 83
+      },
+      "delta": {
+        "bundleBytes": -139609,
+        "bundlePercent": -2.0287,
+        "gzipBytes": -43935,
+        "gzipPercent": -2.4758,
+        "brotliBytes": -34196,
+        "brotliPercent": -2.495,
+        "totalExportBytes": -139609,
+        "totalExportPercent": -1.4423
+      }
+    }
+  },
+  "iosHermesStringProbe": {
+    "baseline": {
+      "rrweb": 4,
+      "replayIntegration": 1,
+      "feedbackWidget": 3
+    },
+    "candidate": {
+      "rrweb": 0,
+      "replayIntegration": 1,
+      "feedbackWidget": 3
+    }
+  },
+  "unchanged": {
+    "iosAssetsBytes": 23136,
+    "webAssetsBytes": 695373,
+    "webBundleCount": 10,
+    "webStaticRoutes": 83
+  }
+}

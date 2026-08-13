@@ -1,0 +1,31 @@
+{
+  "date": "2026-07-21",
+  "surface": "Expo web development build",
+  "browser": "Codex in-app browser",
+  "route": "http://localhost:8310/you?section=privacy",
+  "requested_viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "observed_viewport": {
+    "width": 390,
+    "height": 845
+  },
+  "horizontal_overflow_px": 0,
+  "scope_disclosure": "Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, and Progress notes. Photo files and thumbnails stay encrypted here; share images individually from Progress.",
+  "export_button": {
+    "width_px": 302.30584716796875,
+    "height_px": 55.99211502075195
+  },
+  "result_alert": {
+    "role": "alert",
+    "title": "Export failed",
+    "message": "We could not complete that privacy request. Please try again.",
+    "width_px": 302.30584716796875,
+    "height_px": 113.91080474853516
+  },
+  "raw_mobile_writer_failure_code_visible": false,
+  "javascript_dialog": null,
+  "browser_warn_error_count": 0,
+  "final_route": "http://localhost:8310/you?section=privacy"
+}

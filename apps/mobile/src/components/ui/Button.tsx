@@ -1,23 +1,28 @@
-import { Pressable, type PressableProps, Text } from 'react-native';
+import { Pressable, type PressableProps } from 'react-native';
 
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
 
+import { Text } from './Text';
+
 // Pill buttons (design spec). primary = ink (light screens), accent = clay (the
-// paywall CTA), inverse = paper (on dark "night" screens), ghost = text-only.
-type ButtonVariant = 'primary' | 'accent' | 'ghost' | 'inverse';
+// paywall CTA), inverse = paper (on dark "night" screens), and ghost variants
+// preserve secondary hierarchy on light and dark surfaces.
+type ButtonVariant = 'primary' | 'accent' | 'ghost' | 'inverse' | 'inverseGhost';
 
 const CONTAINER: Record<ButtonVariant, string> = {
   primary: 'bg-ink',
   accent: 'bg-clay',
   inverse: 'bg-paper',
   ghost: 'bg-transparent',
+  inverseGhost: 'border border-cream/15 bg-cream/10',
 };
 const LABEL: Record<ButtonVariant, string> = {
   primary: 'text-paper',
   accent: 'text-paper',
   inverse: 'text-ink',
   ghost: 'text-ink',
+  inverseGhost: 'text-cream',
 };
 
 export type ButtonProps = Omit<PressableProps, 'children'> & {

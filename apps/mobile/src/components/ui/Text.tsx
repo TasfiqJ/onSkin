@@ -1,6 +1,7 @@
 import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
 import { cn } from '@/lib/cn';
+import { pseudoLocalizeNode } from '@/lib/accessibility/pseudoLocalization';
 
 // Editorial-clinical type scale (design spec). `variant` sets family/size/leading;
 // `tone` sets colour (so dark "night" screens just pass tone="inverse"); `italic`
@@ -49,11 +50,16 @@ export function Text({
   tone = 'ink',
   italic = false,
   className,
+  children,
   ...rest
 }: TextProps) {
   const family =
     italic && (variant === 'display' || variant === 'title' || variant === 'titleSm')
       ? 'font-serif-italic'
       : undefined;
-  return <RNText className={cn(VARIANT[variant], TONE[tone], family, className)} {...rest} />;
+  return (
+    <RNText className={cn(VARIANT[variant], TONE[tone], family, className)} {...rest}>
+      {pseudoLocalizeNode(children)}
+    </RNText>
+  );
 }

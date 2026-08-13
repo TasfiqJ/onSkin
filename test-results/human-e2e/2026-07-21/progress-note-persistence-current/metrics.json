@@ -1,0 +1,21 @@
+{
+  "date": "2026-07-21",
+  "surface": "expo-web",
+  "requestedViewport": {
+    "width": 390,
+    "height": 844
+  },
+  "observedViewport": {
+    "width": 390,
+    "height": 845
+  },
+  "horizontalOverflowPixels": 0,
+  "retryControlHeightPixels": 47.9976,
+  "failureAlertCount": 1,
+  "savedAlertCount": 0,
+  "freshLoadAlertCount": 0,
+  "freshLoadDirtySaveActionCount": 0,
+  "javascriptDialogCount": 0,
+  "exactDraftRetainedAfterFailure": true,
+  "exactNoteRestoredAfterFreshLoad": true
+}

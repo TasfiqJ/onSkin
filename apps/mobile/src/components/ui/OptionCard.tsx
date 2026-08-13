@@ -1,7 +1,9 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
+
+import { Text } from './Text';
 
 // Large tappable selection card (design spec): the premium tap target for goals
 // and single-select quiz answers. Title + optional subtitle, selected state with

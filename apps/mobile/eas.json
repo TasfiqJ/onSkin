@@ -8,7 +8,6 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development",
       "ios": {
         "image": "macos-tahoe-26.4-xcode-26.4"
       },
@@ -23,7 +22,6 @@
     },
     "staging": {
       "distribution": "internal",
-      "channel": "staging",
       "ios": {
         "image": "macos-tahoe-26.4-xcode-26.4"
       },
@@ -39,7 +37,6 @@
     "production": {
       "autoIncrement": false,
       "distribution": "store",
-      "channel": "production",
       "ios": {
         "image": "macos-tahoe-26.4-xcode-26.4"
       },

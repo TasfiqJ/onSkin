@@ -47,6 +47,19 @@ export const PHOTO_COPY = {
     consentFailedTitle: 'Photo choice not saved',
     consentFailedBody:
       "We couldn't save your photo choice. Please try again before opening the camera.",
+    consentWriteUncertainTitle: 'Photo choice not confirmed',
+    consentWriteUncertainBody:
+      "We couldn't confirm whether your choice finished saving. The camera stayed closed. Try again when private storage is available.",
+    consentReadTitle: 'Your photo choice could not open.',
+    consentReadBody:
+      "We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.",
+    consentReadLoadingTitle: 'Checking your saved photo choice…',
+    consentReadLoadingBody: 'The camera stays closed until this check finishes.',
+    consentReadRetry: 'Try again',
+    consentReadRetrying: 'Trying again...',
+    consentReadRetryFailed: 'It is still unavailable. Your saved photo choice remains unchanged.',
+    consentReadExit: 'Back to Progress',
+    reconsentNotice: 'Please review this photo choice again before the camera opens.',
   },
   // Review & retake (design screen 02). Quality is FLAGGED, never blocked (D-029).
   review: {
@@ -95,6 +108,28 @@ export const PHOTO_COPY = {
     deleteUnavailable:
       "We couldn't delete this photo right now. It stays on this phone unless you try again.",
     notePlaceholder: 'Add a note. “started retinol”, “travel breakout”',
+    noteSaving: 'Saving on this device…',
+    noteSaved: 'Saved on this device',
+    noteSave: 'Save note',
+    noteSaveUnavailable: "We couldn't confirm this note was saved. Your text is still here.",
+    noteSaveRetry: 'Try save again',
+  },
+  deleteSync: {
+    savedTitle: 'Deletion saved',
+    savedBody:
+      "Any deleted photos are already gone from this phone. We'll finish removing matching account records when a connection is ready. Progress photo images are not uploaded in this build.",
+    syncingTitle: 'Finishing deletion',
+    syncingBody:
+      "Any deleted photos are already gone from this phone. We're removing matching account records now. Progress photo images are not uploaded in this build.",
+    attentionTitle: 'Deletion needs attention',
+    attentionBody:
+      "Any deleted photos are already gone from this phone, but we couldn't finish removing matching account records. Progress photo images are not uploaded in this build.",
+    retry: 'Try deletion again',
+    retrying: 'Trying again...',
+    unavailableTitle: 'Deletion status unavailable',
+    unavailableBody:
+      "We couldn't safely read the deletion queue. No photo was restored or changed.",
+    checkAgain: 'Check again',
   },
   // Privacy / app-lock (design screen 08, docs/06 §7).
   lock: {

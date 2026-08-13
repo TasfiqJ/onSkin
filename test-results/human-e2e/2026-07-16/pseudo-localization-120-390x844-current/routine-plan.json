@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 273.1015625,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ṁåäýÿɓéë ļåäŧéëŕ⟧",
+      "label": "⟦Ṁåäýÿɓéë ļåäŧéëŕ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 180.203125,
+        "right": 366,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 185.796875,
+        "width": 185.796875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 545.1875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧",
+      "label": "Subscribe to Pro",
+      "partialClip": false,
+      "rect": {
+        "bottom": 572.1875,
+        "height": 54,
+        "left": 24,
+        "right": 366,
+        "top": 518.1875,
+        "visibleHeight": 54,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 694.7890625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ÉËẍþļøóŕéë ƒïíŕšŧ⟧",
+      "label": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 729.390625,
+        "height": 69.203125,
+        "left": 24,
+        "right": 366,
+        "top": 660.1875,
+        "visibleHeight": 69.203125,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 77.0390625,
+        "y": 753.390625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŧéëŕṁš⟧",
+      "label": "⟦Ŧéëŕṁš⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 777.390625,
+        "height": 48,
+        "left": 42.890625,
+        "right": 111.1875,
+        "top": 729.390625,
+        "visibleHeight": 48,
+        "visibleWidth": 68.296875,
+        "width": 68.296875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 181.875,
+        "y": 753.390625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Þŕïíṽåäçýÿ⟧",
+      "label": "⟦Þŕïíṽåäçýÿ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 777.390625,
+        "height": 48,
+        "left": 137.609375,
+        "right": 226.140625,
+        "top": 729.390625,
+        "visibleHeight": 48,
+        "visibleWidth": 88.53125,
+        "width": 88.53125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 299.8359375,
+        "y": 753.390625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŕéëšŧøóŕéë⟧",
+      "label": "⟦Ŕéëšŧøóŕéë⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 777.390625,
+        "height": 48,
+        "left": 252.5625,
+        "right": 347.109375,
+        "top": 729.390625,
+        "visibleHeight": 48,
+        "visibleWidth": 94.546875,
+        "width": 94.546875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8299/routine/adaptation",
+  "textOverflows": [],
+  "textStart": "⟦Ṁåäýÿɓéë ļåäŧéëŕ⟧ ⟦ÜÚñļøóçķ ýÿøóüúŕ ƒüúļļ ŕøóüúŧïíñéë.⟧ ⟦Ŧħéë çøóṁþļéëŧéë ɓüúïíļđéëŕ, šéëǫüúéëñçïíñğ åäñđ ŕåäṁþ. Ɓüúïíļŧ åäŕøóüúñđ ýÿøóüúŕ šķïíñ. Þåäŕŧ øóƒ ŔøóüúŧïíñéëĶïíñđ Þŕøó.⟧ ⟦Šŧøóŕéë þŕïíçïíñğ⟧ ⟦Çħéëçķïíñğ þŕïíçéë⟧ ⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧ ⟦ÉËẍþļøóŕéë ƒïíŕšŧ⟧ ⟦Ñøó çåäŕđ ñéëéëđéëđ.⟧ › ⟦Ŧéëŕṁš⟧ · ⟦Þŕïíṽåäçýÿ⟧ · ⟦Ŕéëšŧøóŕéë⟧",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/routine/plan",
+  "scaledCount": 14,
+  "textScale": 1.2,
+  "url": "http://localhost:8299/routine/plan",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

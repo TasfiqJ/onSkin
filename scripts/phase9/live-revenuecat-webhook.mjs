@@ -11,6 +11,7 @@ import {
   redactedErrorKind,
   write,
 } from './lib.mjs';
+import { cleanupLiveTestAccounts } from './live-account-cleanup.mjs';
 
 const errors = [];
 const warnings = [];
@@ -110,6 +111,12 @@ function functionUrl(name) {
   return `${supabaseUrl.replace(/\/+$/g, '')}/functions/v1/${name}`;
 }
 
+function publicClient() {
+  return createClient(supabaseUrl, publishableKey, {
+    auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+  });
+}
+
 function sign(rawBody, timestamp = Math.floor(Date.now() / 1000)) {
   const signature = createHmac('sha256', signingSecret)
     .update(`${timestamp}.${rawBody}`)
@@ -173,7 +180,10 @@ async function createLiveUser(admin) {
   });
   if (error) throw error;
   if (!data.user) throw new Error('Supabase did not return a RevenueCat harness user.');
-  return { id: data.user.id, email };
+  const client = publicClient();
+  const signedIn = await client.auth.signInWithPassword({ email, password });
+  if (signedIn.error) throw signedIn.error;
+  return { id: data.user.id, client, email };
 }
 
 function validOptions() {
@@ -813,9 +823,13 @@ async function main() {
     );
   } finally {
     await admin.from('subscriptions_events').delete().in('rc_event_id', Object.values(eventIds));
-    const { error } = await admin.auth.admin.deleteUser(user.id);
-    if (error)
-      warnings.push(`RevenueCat webhook user cleanup warning: ${redactedErrorKind(error)}`);
+    await cleanupLiveTestAccounts({
+      admin,
+      users: [user],
+      errors,
+      label: 'RevenueCat webhook user cleanup',
+      errorKind: redactedErrorKind,
+    });
   }
 
   writeArtifacts(errors.length > 0 ? 'fail' : 'pass');

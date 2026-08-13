@@ -1,0 +1,47 @@
+SETTINGS DATA-SHARING WITHDRAWAL COMMAND TRANSCRIPT
+Date: 2026-07-26 (America/Toronto)
+
+PRIMARY SERVER
+EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true
+EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app
+EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry
+EXPO_PUBLIC_E2E_APP_LOCK_ENABLED=disabled
+EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro
+EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL=fail_twice_then_succeed
+npm.cmd --workspace apps/mobile run web -- --port 8396 --clear
+
+PRIMARY BROWSER
+Installed Chrome, headless Playwright
+Viewport 390 x 844
+Open /you
+Confirm switch off, attempts 0, consent starts 0
+Turn switch on
+Turn switch off -> attempt 1 / pending alert
+Try regrant -> remains off / no new workflow
+Dispatch two same-frame retry activations -> attempt 2 only
+Reload same tab -> attempts remain 2 / no automatic call / pending alert restored
+Activate one retry -> attempt 3 / alert and retry removed
+Reload same tab -> attempts remain 3 / no alert
+Turn switch on -> checked / attempts remain 3
+
+OWNER-BOUNDARY SERVER
+EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true
+EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app
+EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry
+EXPO_PUBLIC_E2E_APP_LOCK_ENABLED=disabled
+EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro
+EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL=hold_then_succeed
+npm.cmd --workspace apps/mobile run web -- --port 8397
+
+OWNER-BOUNDARY BROWSER
+Installed Chrome, headless Playwright
+Viewport 390 x 844
+Open /you
+Turn switch on
+Turn switch off -> local false / held attempt 1 / release hook present
+Activate Sign out -> You removed / account boundary begins
+Observe intentional first local-clear failure and locked Unavailable recovery state
+Release stale withdrawal -> no You surface, no account-A feedback, hook removed
+Activate account-boundary Try again -> signed-out Welcome / Begin
+
+Both Expo servers and all browser contexts were stopped after capture.

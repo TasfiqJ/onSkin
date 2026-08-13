@@ -228,6 +228,18 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ## Architecture Decisions
 
+### 2026-07-18 - Stage And Atomically Promote Versioned Catalog Imports
+
+- Decision: Import production Open Beauty Facts artifacts with a service-role-only, two-pass streaming worker. Bind every run to the source revision, complete artifact SHA-256, importer version, durable server checkpoint, idempotent per-batch receipt, content-free rejection manifest, and an optional mode-0600 local checkpoint. Normalize into version-isolated staging, deduplicate canonical GTIN identity by latest source line, and expose no staged row to clients. Only a complete, count-reconciled version from a production-approved source may atomically update source-owned catalog rows, retire missing rows, switch the active pointer, and retain the predecessor and prior staged rows for rollback reconstruction.
+- Type: Architecture
+- Alternatives: load the entire export into memory, write directly into client-readable products while parsing, crawl the public API for the bulk seed, retry batches without receipts, or replace curated rows on barcode conflict.
+- Criteria: bounded memory, deterministic provenance, safe restart after worker/process/transport failure, no partial visibility, exact replay semantics, curated-source precedence, and auditable rollback metadata.
+- Evidence: migration `20260718000045_catalog_import_pipeline.sql`; `catalog-import-core.mjs`; `import-obf-production.mjs`; deterministic restart/promotion smoke; and `docs/optimization/evidence/2026-07-18_restartable-catalog-ingestion-checkpoint.md`.
+- Risk: hosted migration syntax/RLS, full-scale import duration/storage, realistic search plans, and an operator rollback drill remain unverified until a production-like staging project and approved artifact are available.
+- Status: Accepted
+- Owner: Engineering and catalog operations
+- Review date: 2026-08-18
+
 ### 2026-07-11 - Make Shelf Freshness Provenance-Derived And Replenishment Opt-In
 
 - Decision: Normalize every Shelf lifecycle write through one freshness contract. A PAO clock exists only when `opened_at` is a valid, non-future device-local calendar date; unopened units keep `opened_at=null`. Actionable `printed` dates must be explicitly entered or reconfirmed from the exact physical package. A product-level catalog row has no lot/package binding and never populates Shelf `expiryDate`; historical catalog-linked dates are retained only in a non-actionable legacy-unverified quarantine pending separate package reconfirmation and are never silently promoted, deleted, or used for time-pressure/recommendation state. `expirySource` follows the actual winning trusted date candidate, with the earlier of physical-package printed expiry and opened date plus PAO controlling the surfaced state and an exact tie resolving to printed. Shelf `label` is reserved for direct product-label entry; reviewed catalog-delivered `label`, `brand_label`, or `catalog` rows persist as Shelf `catalog`, while the catalog retains the finer evidence origin. Historical v1 `label` rows may be actor-ambiguous, so downstream copy describes the recorded product-label PAO without claiming who entered it. Ambiguous, unreviewed, stale, source-mismatched, or region-mismatched catalog PAO evidence degrades to unknown instead of becoming a default. Current category-only intake and v1 upgrade also fail closed until an exact server-attested category marker is retained locally and both database and named chemistry-review gates pass. Re-add requires an explicit choice of opened today, exact past opened date, or unopened; it archives the prior package, creates an operation-UUID-backed new unit, preserves the immutable `replacementRootId`, records `replacesProductId`, preserves eligible product-level PAO provenance, and clears package-specific printed expiry. Authenticated canonical v1 bytes remain unchanged on read or failed mutation and are emitted as v2 only after a successful authorized atomic mutation. Replenishment uses only trusted tracked label/catalog PAO, physical-package printed-expiry state, or an unsuperseded user-marked-finished unit; category estimates, legacy-unverified dates, and unknown states are non-actionable, and notification preferences default off and require explicit Settings opt-in.
@@ -497,11 +509,11 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ### 2026-07-10 - Gate Every Sensitive Progress Entry With Shared App-Lock State
 
-- Decision: When app lock is enabled, the app tree does not mount until its encrypted preference resolves; an unreadable preference fails closed as enabled and locked. A malformed or unsupported app-lock preference does not auto-prompt, rewrite to disabled, or strand the user behind a retry-only gate: the lock explains the exact setting-level recovery, and only an explicit successful device authentication removes that one malformed preference before app content can mount. Key-access or authentication failures remain non-destructive and do not offer this reset. The app-wide unlock must finish before the separate photo-timeline prompt can start. Progress tab, capture, review, and single-photo detail all use one provider-owned timeline unlock inside their Pro gates; navigation reuses that unlock only while the app remains active, and every non-active AppState transition clears it. The generic no-score explainer remains outside the second lock.
+- Decision: When app lock is enabled, the app tree does not mount until its encrypted preference resolves; an unreadable preference fails closed as enabled and locked. The preference reader returns typed absent, available current/legacy, unavailable, corrupt, and unsupported outcomes without read-time repair. A malformed or unsupported app-lock preference does not auto-prompt or rewrite to disabled: the lock explains the exact setting-level recovery, and only an explicit successful device authentication removes that one malformed preference before app content can mount. Missing/conflicting key material, decryption failure, and transient storage failure instead expose a real non-destructive reread and never offer setting reset. Every preference reread temporarily locks and disables actions, advances a preference generation, and invalidates older work. The initiating account-generation lease plus the exact provider interaction covers readiness, serialized native authentication, optional reset or strict atomic write, and React-state publication, so a delayed account-A prompt or stale provider cannot present over, touch, or unlock account B. Device PIN/passcode fallback remains enabled. The exact first OS-owned non-active hop for the presented prompt may survive iOS `inactive` or Android API 29 credential fallback; it cannot publish before `active`, a second non-active event hard-invalidates it, and a missing foreground event times out after ten seconds. Real background/non-prompt transitions clear the photo-timeline session and relock globally. The app-wide unlock must finish before the separate photo-timeline prompt can start. Progress tab, capture, review, and single-photo detail all use one provider-owned timeline unlock inside their Pro gates; navigation reuses that unlock only while the app remains active. The generic no-score explainer remains outside the second lock.
 - Alternatives: keep a tab-local gallery gate, authenticate independently on every nested screen, put the timeline gate outside entitlement checks, treat unreadable lock preference as disabled, or rely only on the app-wide overlay.
 - Criteria: direct-link privacy, no pre-lock content mount/flash, prompt ordering, usable in-session navigation, background relock, free-user paywall ordering, and deterministic browser/native verification.
-- Evidence: `PhotoTimelineLockGate.tsx`, `AppLockProvider.tsx`, app-lock and Progress route contracts, plus 360 x 640 and 390 x 844 direct-route/session evidence in `test-results/human-e2e/2026-07-10/progress-direct-route-lock-current/`. A real malformed web preference stays unchanged behind the lock and then recovers through the named authenticated reset in `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`.
-- Risk: Expo web proves routing, mounting, geometry, and state transitions but not native biometric security. Physical-iPhone LocalAuthentication ordering, background transitions, cancellation, and VoiceOver focus restoration remain release QA.
+- Evidence: `PhotoTimelineLockGate.tsx`, `AppLockProvider.tsx`, typed preference/decision tests, delayed account-generation and interaction-lifecycle tests, app-lock and Progress route contracts, plus 360 x 640 and 390 x 844 direct-route/session evidence in `test-results/human-e2e/2026-07-10/progress-direct-route-lock-current/`. A real malformed web preference stays unchanged behind the lock and then recovers through the named authenticated reset in `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`. Persistent and one-shot typed reread behavior is recorded in `test-results/human-e2e/2026-07-14/app-lock-typed-preference-current/`.
+- Risk: Expo web proves routing, mounting, geometry, retry/relaunch, and state transitions but not native authentication security. Physical iPhone and API-29 Android LocalAuthentication ordering, A-to-B prompt interruption, true background/cancellation timing, VoiceOver/TalkBack focus restoration, and real Keychain/Keystore failure/recovery remain release QA.
 - Status: Accepted.
 
 ### 2026-07-10 - Treat Progress Read Failure As Blocked, Never Empty
@@ -902,3 +914,71 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Evidence: RevenueCat reports hard paywalls convert better but first-session aha is critical; this category benefits from experiencing value.
 - Risk: if users do not engage during the trial, value is given away.
 - Status: Proposed.
+
+## Appearance Decisions
+
+### 2026-07-17 - Ship An Explicit Light-Only UI With Route-Owned Night Contrast
+
+- Decision: V1 launches with `userInterfaceStyle` fixed to `light`, one light
+  splash configuration, and dark status icons on paper surfaces. The existing
+  intentionally dark product surfaces remain dark and mount light status icons
+  only while visible: PM Today, onboarding reveal, commerce transparency, cycle
+  week, Shelf scan, Progress capture/review/detail, win-back, and the safety
+  conflict variant. Shared `Screen` owns paper/night contrast; direct dark roots
+  use the same two-tone policy. Transparent sheets inherit the underlying route
+  status style because their sheet tone does not fill the status-bar area.
+- Alternatives: advertise full automatic dark mode without a complete semantic
+  token/route/accessibility pass; remove intentional night surfaces; or let each
+  route choose untyped literal icon styles.
+- Criteria: deterministic launch appearance, readable system-icon contrast,
+  no unreviewed palette selected by device appearance, minimal route-specific
+  code, and a reversible path to a future full dark-mode review.
+- Evidence: the resolved Expo public config reports `userInterfaceStyle=light`;
+  a source/config contract covers the root default, shared `Screen`, direct
+  full-night routes, dynamic safety conflict, light-only splash, and retained
+  Android back flag. See
+  `docs/optimization/evidence/2026-07-17_theme-system-bar-and-predictive-back-scope.md`.
+- Risk: native status icons and launch-screen transitions cannot be proven by
+  Expo web. Supported-iPhone screenshots in both device appearance settings,
+  including gated and back-navigation transitions, remain release-device QA.
+  Full dark mode requires a new reviewed semantic-token, route, Dynamic Type,
+  contrast, VoiceOver, screenshot, and rollback matrix.
+- Status: Accepted.
+
+## Release Delivery Decisions
+
+### 2026-07-18 - Use An Encrypted Owner-Bound Transactional Outbox For Local Sync
+
+- Decision: Replace fire-and-forget Shelf, notification-preference, recommendation-preference, and immediate notification-delivery mirrors with one encrypted, bounded `layerwell.outbox.v1` state machine. Authenticated state mutations append sanitized intent through crash-recoverable encrypted private-KV transactions without changing their source codecs. Immediate delivery reserves its encrypted cap event before the native call and, only after OS schedule acceptance, atomically marks that exact event delivered plus appends a unique content-free outbox row; signed-out delivery remains local-only. Each row carries an operation UUID, domain-separated owner hash, captured account generation, stable entity UUID, revision/payload-bound idempotency key, enqueue/retry/lease state, and safe error class. Raw user IDs, credentials, notification content, health data, ingredients, and device paths are invalid payload data. Ready state mirrors may coalesce, obsolete state snapshots are pruned/fenced, and immutable delivery events never coalesce; settled delivery revision entries are reclaimed. One account-generation-fenced worker drains bounded batches after mutation, reconnect, and foreground, with expired-lease takeover, full-jitter backoff, bounded `Retry-After`, duplicate/stale success, and poison-row isolation. Authenticated Postgres RPCs derive ownership from `auth.uid()`, own receipt/revision serialization, reject direct notification-log inserts, and never trust client-supplied ownership.
+- Alternatives: retain best-effort direct writes; retry individual requests in memory; store raw owner IDs in a plaintext queue; put server sync fields inside each source codec; coalesce immutable event history; log before native acceptance; allocate replay identity after native acceptance; or adopt a new native database before proving the protocol.
+- Criteria: offline bathroom use, atomic local durability, response-loss safety, duplicate/reordered convergence, bounded work and storage, content-free diagnostics, account A-to-B isolation, rollback compatibility, and an extensible but strictly versioned protocol.
+- Evidence: `apps/mobile/src/lib/storage/privateKVTransactionCore.ts`, `apps/mobile/src/lib/offline/outbox.pure.ts`, `apps/mobile/src/lib/offline/outbox.ts`, the Shelf/notification/recommendation stores and migrations, and the five dated transactional-outbox checkpoint files in `docs/optimization/evidence/`.
+- Risk: completion history remains on its legacy isolated path until authoritative server routine/step IDs exist; it must become a non-coalescing event entity rather than borrowing Shelf semantics. Private KV rewrites a bounded JSON snapshot, so the separately governed encrypted local-database decision remains open. A process kill between OS acceptance and the confirmation transaction can conservatively leave a reserved cap row without telemetry; it cannot create a false server delivery. Hosted Supabase replay/RLS/concurrency and supported-iPhone process-kill/offline/reconnect/presentation evidence remain release gates.
+- Status: Accepted as the technical architecture; locally implemented, release verification pending.
+
+### 2026-07-17 - Ship Client Changes Only In Store-Bundled Binaries
+
+- Decision: V1 client JavaScript, assets, native code, plugins, permissions,
+  entitlements, privacy configuration, and app configuration ship only in
+  reviewed App Store binaries. EAS Build and Submit remain supported, while
+  EAS Update is disabled, is not a direct mobile dependency, has no update URL
+  or build-profile channel, and is not an incident rollback path. The
+  `runtimeVersion` fingerprint remains an artifact and migration compatibility
+  identity, not proof of OTA capability.
+- Alternatives: fully adopt EAS Update with governed runtime compatibility,
+  immutable update identity, staged rollout, rollback/forward-fix exercises,
+  prior-runtime migration testing, named ownership, and production monitoring;
+  or leave ambiguous channel and OTA claims in release documentation.
+- Criteria: shipped behavior must match repository configuration; recovery must
+  not bypass store-reviewed privacy/native changes; encrypted-storage and
+  native migrations must remain binary-compatible; no unavailable capability
+  may appear in launch, incident, or compliance claims.
+- Evidence: `docs/UPDATE_DELIVERY_POLICY.md`, `docs/ARCHITECTURE.md` A-007,
+  `apps/mobile/app.base.json`, `apps/mobile/eas.json`, and
+  `scripts/optimization/store-only-release-audit.mjs`.
+- Risk: client fixes require a new binary and store rollout, so incident
+  response must emphasize rollout halt, server/flag/provider containment when
+  appropriate, and a reviewed hotfix. Future EAS Update adoption requires the
+  complete reactivation gate in `docs/UPDATE_DELIVERY_POLICY.md` and cannot be
+  inferred from the fingerprint policy.
+- Status: Accepted.

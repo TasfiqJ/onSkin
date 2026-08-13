@@ -26,7 +26,7 @@ import {
 } from './patch-expo-widgets-lifecycle.mjs';
 
 const REPOSITORY_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const PAYLOAD_ROOT = join(REPOSITORY_ROOT, 'scripts/phase5/expo-widgets-57.0.8');
+const PAYLOAD_ROOT = join(REPOSITORY_ROOT, 'scripts/phase5/expo-widgets-57.0.9');
 
 function hash(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
@@ -80,7 +80,7 @@ function createFixture(
 
   for (const descriptor of EXPO_WIDGETS_PATCH_TARGETS) {
     const payloadSource = join(PAYLOAD_ROOT, descriptor.payload);
-    const fixturePayload = join(root, 'scripts/phase5/expo-widgets-57.0.8', descriptor.payload);
+    const fixturePayload = join(root, 'scripts/phase5/expo-widgets-57.0.9', descriptor.payload);
     mkdirSync(dirname(fixturePayload), { recursive: true });
     copyFileSync(payloadSource, fixturePayload);
 
@@ -207,7 +207,7 @@ test('rejects payload or installed target byte drift before mutation', async (t)
     const target = join(root, ...descriptor.target.split('/'));
     const before = readFileSync(target);
     writeFileSync(
-      join(root, 'scripts/phase5/expo-widgets-57.0.8', descriptor.payload),
+      join(root, 'scripts/phase5/expo-widgets-57.0.9', descriptor.payload),
       Buffer.concat([before, Buffer.from(' ')]),
     );
     expectFailure(root, 'PAYLOAD_HASH');
@@ -228,14 +228,14 @@ test('rejects reviewed package and lock provenance drift', async (t) => {
     [
       'mobile range',
       'apps/mobile/package.json',
-      (value) => (value.dependencies[EXPO_WIDGETS_PACKAGE_NAME] = '~57.0.8'),
+      (value) => (value.dependencies[EXPO_WIDGETS_PACKAGE_NAME] = '~57.0.9'),
       'MOBILE_DEPENDENCY',
     ],
     [
       'workspace range',
       'package-lock.json',
       (value) =>
-        (value.packages['apps/mobile'].dependencies[EXPO_WIDGETS_PACKAGE_NAME] = '~57.0.8'),
+        (value.packages['apps/mobile'].dependencies[EXPO_WIDGETS_PACKAGE_NAME] = '~57.0.9'),
       'LOCK_WORKSPACE_DEPENDENCY',
     ],
     [
@@ -253,7 +253,7 @@ test('rejects reviewed package and lock provenance drift', async (t) => {
     [
       'installed version',
       'node_modules/expo-widgets/package.json',
-      (value) => (value.version = '57.0.9'),
+      (value) => (value.version = '57.0.8'),
       'PACKAGE_IDENTITY',
     ],
   ];

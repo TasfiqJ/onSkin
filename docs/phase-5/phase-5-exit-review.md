@@ -77,7 +77,7 @@ Completed in repo:
   UserDefaults reason `1C8F.1`. Ordinary builds omit the target and production
   config rejects its QA-only opt-in.
 - IOS-02 now also has a reviewed, hash-pinned patch for the exact installed
-  `expo-widgets` 57.0.8 native sources. Layerwell uses a bounded SQLite App
+  `expo-widgets` 57.0.9 native sources. Layerwell uses a bounded SQLite App
   Group store as its sole timeline/action authority and keeps UserDefaults for
   presentation/layout only. The native candidate provides rotating
   authority-nonce CAS, opaque owner generations, action-outbox persistence

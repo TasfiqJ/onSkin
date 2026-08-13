@@ -4,6 +4,7 @@ import {
   canStartContextualReverseTrial,
   daysUntil,
   deriveState,
+  isEntitlementEvidenceUncertain,
   shouldLoadContextualOffering,
   type StoredEntitlement,
 } from './entitlement';
@@ -125,5 +126,26 @@ describe('contextual offering lifecycle', () => {
     expect(shouldLoadContextualOffering(null)).toBe(false);
     expect(shouldLoadContextualOffering(deriveState(ent({}), NOW))).toBe(false);
     expect(shouldLoadContextualOffering(deriveState(null, NOW))).toBe(true);
+  });
+});
+
+describe('uncertain entitlement evidence', () => {
+  it.each(['stale', 'invalid', 'unavailable', 'corrupt', 'unsupported_version'] as const)(
+    'treats %s as uncertain instead of verified Free',
+    (evidenceStatus) => {
+      expect(isEntitlementEvidenceUncertain({ evidenceStatus })).toBe(true);
+    },
+  );
+
+  it.each(['fresh', 'reconciliation_due', 'expired', 'absent'] as const)(
+    'keeps %s out of the uncertainty recovery state',
+    (evidenceStatus) => {
+      expect(isEntitlementEvidenceUncertain({ evidenceStatus })).toBe(false);
+    },
+  );
+
+  it('does not treat an unresolved query object as evidence', () => {
+    expect(isEntitlementEvidenceUncertain(undefined)).toBe(false);
+    expect(isEntitlementEvidenceUncertain(null)).toBe(false);
   });
 });

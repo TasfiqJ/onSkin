@@ -9,4 +9,12 @@ describe('Screen background', () => {
     expect(source).toContain("tone === 'night' ? colors.night : colors.paper");
     expect(source).toContain("tone === 'night' ? 'bg-night' : 'bg-paper'");
   });
+
+  it('records only content-free first-content and route-interaction milestones', () => {
+    expect(source).toContain("markStartupPhase('first_meaningful_content')");
+    expect(source).toContain("markStartupPhase('first_route_interaction_observed')");
+    expect(source).toContain('onPointerDown=');
+    expect(source).toContain('onTouchStart=');
+    expect(source).not.toMatch(/markStartupPhase\([^)]*(children|className|tone)/);
+  });
 });

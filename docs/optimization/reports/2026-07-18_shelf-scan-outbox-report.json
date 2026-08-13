@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "checkpoint": "shelf_scan_outbox",
+  "date": "2026-07-18",
+  "branch": "optimization",
+  "parent_sha": "352435cc18ec61cb64fedec0faa14dddb4e3670f",
+  "outbox": {
+    "schema_version": 4,
+    "entity_type_count": 5,
+    "global_row_cap": 512,
+    "shelf_scan_row_cap": 128,
+    "batch_cap": 25,
+    "state_dispatched_before_immutable_events": true,
+    "entity_scoped_settlement": true
+  },
+  "shelf_scan": {
+    "immutable_revision": 1,
+    "barcode_numeric_min_length": 6,
+    "barcode_numeric_max_length": 14,
+    "raw_barcode_in_receipt": false,
+    "direct_authenticated_insert": false,
+    "direct_authenticated_update": false,
+    "payload_hash": "sha256",
+    "stale_after_days": 30
+  },
+  "verification": {
+    "focused_test_files": 7,
+    "focused_tests": 111,
+    "full_test_files": 344,
+    "full_tests": 4087,
+    "typecheck": "pass",
+    "lint_zero_warning": "pass",
+    "independent_reviews_unresolved_p0_p1": 0,
+    "human_e2e": {
+      "surface": "expo_web",
+      "route": "/shelf/scan",
+      "viewport": "390x844",
+      "fallback_routes_verified": [
+        "/shelf/ocr",
+        "/shelf/search",
+        "/shelf/manual",
+        "/shelf"
+      ],
+      "horizontal_overflow_px": 0,
+      "route_warning_error_logs": 0
+    }
+  },
+  "remaining_deferred_direct_mutation_files": [
+    "features/intelligence/conflictChoiceMirror.ts",
+    "features/onboarding/OnboardingContext.tsx",
+    "lib/consent/consent.ts"
+  ],
+  "external_gates": [
+    "hosted_postgresql_rpc_rls_concurrency",
+    "signed_ios_offline_reconnect_process_kill_account_switch"
+  ]
+}

@@ -1,7 +1,7 @@
 # IOS-02 Widget Lifecycle Source Checkpoint
 
 Date: 2026-07-16
-Updated: 2026-08-08 for Expo SDK 57 and `expo-widgets` 57.0.8
+Updated: 2026-08-08 for Expo SDK 57 and `expo-widgets` 57.0.9
 
 Status: `in_progress` native source candidate. The Layerwell lifecycle is
 implemented and statically/model-tested in source, but interactive publication
@@ -62,7 +62,7 @@ Review acceptance, or revenue.
 
 ## Reviewed Dependency And Patch Boundary
 
-The source contract pins `expo-widgets` exactly to `57.0.8`, including the
+The source contract pins `expo-widgets` exactly to `57.0.9`, including the
 workspace dependency, lockfile version, registry URL, integrity, and installed
 package identity. The deterministic installer in
 `scripts/phase5/patch-expo-widgets-lifecycle.mjs` pins both the reviewed

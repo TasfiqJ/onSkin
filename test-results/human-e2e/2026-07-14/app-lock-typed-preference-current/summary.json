@@ -1,0 +1,33 @@
+{
+  "date": "2026-07-14",
+  "timezone": "America/Toronto",
+  "surface": "expo-web",
+  "route": "/shelf",
+  "result": "pass",
+  "scenarios": {
+    "persistent_read_failure": {
+      "result": "pass",
+      "retries": 2,
+      "refresh": "blocked",
+      "relaunch": "blocked"
+    },
+    "one_shot_disabled": {
+      "result": "pass",
+      "after_retry": "shelf-mounted"
+    },
+    "one_shot_enabled": {
+      "result": "pass",
+      "after_retry": "ordinary-lock",
+      "after_cancel": "locked"
+    }
+  },
+  "compact_geometry": {
+    "requested_viewport": "375x667",
+    "reported_viewport": "376x668",
+    "button_width": 319.751220703125,
+    "button_height": 48.36165237426758,
+    "horizontal_overflow": false
+  },
+  "javascript_dialogs": 0,
+  "native_release_qa_required": true
+}

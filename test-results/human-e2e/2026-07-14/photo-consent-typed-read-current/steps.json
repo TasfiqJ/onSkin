@@ -1,0 +1,306 @@
+[
+  {
+    "case": "persistent-375x667-initial",
+    "bodyText": "Your photo choice could not open.\nWe couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\nTry again\nBack to Progress",
+    "buttons": [
+      {
+        "centerHit": true,
+        "disabled": null,
+        "height": 55.99211502075195,
+        "name": "Retry reading saved photo choice",
+        "width": 319.751220703125,
+        "x": 27.98847198486328,
+        "y": 360.4672546386719
+      },
+      {
+        "centerHit": true,
+        "disabled": null,
+        "height": 47.99757385253906,
+        "name": "Back to Progress",
+        "width": 319.751220703125,
+        "x": 27.98847198486328,
+        "y": 424.45391845703125
+      }
+    ],
+    "forbidden": {
+      "camera": false,
+      "consentCta": false,
+      "rawFixture": false,
+      "shutter": false
+    },
+    "scroll": {
+      "height": 668,
+      "width": 376
+    },
+    "viewport": {
+      "height": 668,
+      "width": 376
+    }
+  },
+  {
+    "case": "persistent-retry-remains-blocked",
+    "snapshot": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n  - generic: It is still unavailable. Your saved photo choice remains unchanged.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress"
+  },
+  {
+    "case": "persistent-320x568-refresh",
+    "viewport": {
+      "height": 569,
+      "scrollHeight": 569,
+      "scrollWidth": 320,
+      "width": 320
+    },
+    "retry": {
+      "centerHit": true,
+      "height": 55.99211502075195,
+      "width": 264.4114074707031,
+      "x": 27.98847198486328,
+      "y": 180.96177673339844
+    },
+    "back": {
+      "centerHit": true,
+      "height": 47.99757385253906,
+      "width": 264.4114074707031,
+      "x": 27.98847198486328,
+      "y": 244.9484405517578
+    },
+    "snapshot": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress"
+  },
+  {
+    "case": "legacy-redirect-explicit-progress-exit",
+    "redirectUrl": "http://localhost:8197/progress/capture",
+    "exitUrl": "http://localhost:8197/progress"
+  },
+  {
+    "case": "one-shot-retry-reveals-absence",
+    "snapshot": "- generic: Your photos stay on this phone.\n- generic: WHAT\n- generic: Photos you choose to take with guided capture.\n- generic: WHY\n- generic: To build your private progress timeline on this device.\n- generic: NEVER\n- generic: Never uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.\n- generic: No faceprint or biometric template is stored. A lost phone can mean lost photos. Choosing Not now keeps the camera closed.\n- generic: Clean skin, no makeup, hair back. Same time of day as last week.\n- button \"Take photos. On device only\":\n  - generic: Take photos. On device only\n- button \"Not now\":\n  - generic: Not now"
+  },
+  {
+    "case": "one-shot-grant-reaches-web-permission-gate",
+    "snapshot": "- button \"Close\":\n  - generic: x\n- generic: Front · weekly\n- generic: Center one face inside the guide\n- generic: framing guide\n- generic: Center one face inside the guide\n- generic: Camera access is needed for progress photos.\n- generic: The photo is captured on this device and saved into encrypted app-private storage.\n- button \"Allow camera\":\n  - generic: Allow camera\n- button \"Not now\":\n  - generic: Not now"
+  },
+  {
+    "case": "one-shot-refresh-preserves-current-proof",
+    "initial": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "recovered": "- button \"Close\":\n  - generic: x\n- generic: Front · weekly\n- generic: Center one face inside the guide\n- generic: framing guide\n- generic: Center one face inside the guide\n- generic: Camera access is needed for progress photos.\n- generic: The photo is captured on this device and saved into encrypted app-private storage.\n- button \"Allow camera\":\n  - generic: Allow camera\n- button \"Not now\":\n  - generic: Not now",
+    "viewport": {
+      "height": 668,
+      "scrollHeight": 668,
+      "scrollWidth": 376,
+      "width": 376
+    }
+  },
+  {
+    "case": "stale-version-reconsent-375x667",
+    "metrics": {
+      "viewport": {
+        "height": 668,
+        "scrollHeight": 668,
+        "scrollWidth": 376,
+        "width": 376
+      },
+      "grant": {
+        "centerHit": true,
+        "height": 55.99211502075195,
+        "width": 319.751220703125,
+        "x": 27.98847198486328,
+        "y": 507.918701171875
+      },
+      "notNow": {
+        "centerHit": true,
+        "height": 47.99757385253906,
+        "width": 319.751220703125,
+        "x": 27.98847198486328,
+        "y": 571.9053955078125
+      }
+    },
+    "afterGrant": "- button \"Close\":\n  - generic: x\n- generic: Front · weekly\n- generic: Center one face inside the guide\n- generic: framing guide\n- generic: Center one face inside the guide\n- generic: Camera access is needed for progress photos.\n- generic: The photo is captured on this device and saved into encrypted app-private storage.\n- button \"Allow camera\":\n  - generic: Allow camera\n- button \"Not now\":\n  - generic: Not now"
+  },
+  {
+    "case": "wrong-hash-reconsent-390x844",
+    "snapshot": "- generic: Your photos stay on this phone.\n- alert: Please review this photo choice again before the camera opens.\n- generic: WHAT\n- generic: Photos you choose to take with guided capture.\n- generic: WHY\n- generic: To build your private progress timeline on this device.\n- generic: NEVER\n- generic: Never uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.\n- generic: No faceprint or biometric template is stored. A lost phone can mean lost photos. Choosing Not now keeps the camera closed.\n- generic: Clean skin, no makeup, hair back. Same time of day as last week.\n- button \"Take photos. On device only\":\n  - generic: Take photos. On device only\n- button \"Not now\":\n  - generic: Not now",
+    "viewport": {
+      "height": 845,
+      "scrollHeight": 845,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "case": "legacy-boolean-compact-not-now",
+    "visibility": {
+      "ancestors": [
+        {
+          "clientHeight": 569,
+          "role": null,
+          "scrollHeight": 602,
+          "scrollTop": 0,
+          "tag": "DIV"
+        }
+      ],
+      "centerHit": true,
+      "centerWithinViewport": true,
+      "rect": {
+        "bottom": 581.8719635009766,
+        "height": 47.99757385253906,
+        "width": 264.4114074707031,
+        "x": 27.98847198486328,
+        "y": 533.8743896484375
+      }
+    },
+    "exitUrl": "http://localhost:8201/progress"
+  },
+  {
+    "case": "legacy-boolean-reconsent-320x568-fixed",
+    "metrics": {
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "grant": {
+        "bottom": 483.8895721435547,
+        "centerHit": true,
+        "height": 51.98725891113281,
+        "y": 431.9023132324219
+      },
+      "notNow": {
+        "bottom": 535.8768463134766,
+        "centerHit": true,
+        "height": 47.99757385253906,
+        "y": 487.8792724609375
+      },
+      "snapshot": "- generic: Your photos stay on this phone.\n- alert: Please review this photo choice again before the camera opens.\n- generic: WHAT\n- generic: Photos you choose to take with guided capture.\n- generic: WHY\n- generic: To build your private progress timeline on this device.\n- generic: NEVER\n- generic: Never uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.\n- generic: No faceprint or biometric template is stored. A lost phone can mean lost photos. Choosing Not now keeps the camera closed.\n- button \"Take photos. On device only\":\n  - generic: Take photos. On device only\n- button \"Not now\":\n  - generic: Not now"
+    }
+  },
+  {
+    "case": "malformed-proof-recovery-375x667",
+    "initial": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "retry": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n  - generic: It is still unavailable. Your saved photo choice remains unchanged.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "metrics": {
+      "height": 668,
+      "scrollHeight": 668,
+      "scrollWidth": 376,
+      "text": "Your photo choice could not open.\nWe couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\nIt is still unavailable. Your saved photo choice remains unchanged.\nTry again\nBack to Progress",
+      "width": 376
+    }
+  },
+  {
+    "case": "future-proof-legacy-route-recovery-390x844",
+    "url": "http://localhost:8203/progress/capture",
+    "initial": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "retry": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n  - generic: It is still unavailable. Your saved photo choice remains unchanged.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "metrics": {
+      "height": 845,
+      "scrollHeight": 845,
+      "scrollWidth": 390,
+      "text": "Your photo choice could not open.\nWe couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\nIt is still unavailable. Your saved photo choice remains unchanged.\nTry again\nBack to Progress",
+      "width": 390
+    }
+  },
+  {
+    "case": "write-committed-confirmation-lost-320x568",
+    "fixture": "EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=uncertain_once",
+    "url": "http://localhost:8205/progress/capture",
+    "initial": "- generic: Your photos stay on this phone.\n- generic: WHAT\n- generic: Photos you choose to take with guided capture.\n- generic: WHY\n- generic: To build your private progress timeline on this device.\n- generic: NEVER\n- generic: Never uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.\n- generic: No faceprint or biometric template is stored. A lost phone can mean lost photos. Choosing Not now keeps the camera closed.\n- generic: Clean skin, no makeup, hair back. Same time of day as last week.\n- button \"Take photos. On device only\":\n  - generic: Take photos. On device only\n- button \"Not now\":\n  - generic: Not now",
+    "afterCommittedWriteLostConfirmation": "- alert:\n  - generic: Photo choice not confirmed\n  - generic: We couldn't confirm whether your choice finished saving. The camera stayed closed. Try again when private storage is available.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "afterRetry": "- button \"Close\":\n  - generic: x\n- generic: Front · weekly\n- generic: Center one face inside the guide\n- generic: framing guide\n- generic: Center one face inside the guide\n- generic: Camera access is needed for progress photos.\n- generic: The photo is captured on this device and saved into encrypted app-private storage.\n- button \"Allow camera\":\n  - generic: Allow camera\n- button \"Not now\":\n  - generic: Not now",
+    "assertions": {
+      "distinctUncertainRecovery": true,
+      "cameraClosedBeforeRetry": true,
+      "retryReadCommittedExactProof": true,
+      "permissionGateReachedDirectly": true,
+      "firstUseChoiceNotRepeated": true
+    },
+    "metrics": {
+      "viewport": {
+        "height": 569,
+        "scrollHeight": 569,
+        "scrollWidth": 320,
+        "text": "Photo choice not confirmedWe couldn't confirm whether your choice finished saving. The camera stayed closed. Try again when private storage is available.",
+        "width": 320
+      },
+      "retry": {
+        "bottom": 205.94661331176758,
+        "centerHit": true,
+        "height": 55.99211502075195,
+        "y": 149.95449829101562
+      },
+      "back": {
+        "bottom": 261.938720703125,
+        "centerHit": true,
+        "height": 47.99757385253906,
+        "y": 213.94114685058594
+      }
+    },
+    "screenshot": "write-uncertain-320x568.png"
+  },
+  {
+    "case": "hung-read-timeout-375x667",
+    "fixture": "EXPO_PUBLIC_E2E_PHOTO_CONSENT_READ_FAILURE=hang",
+    "url": "http://localhost:8206/progress/capture",
+    "loading": "- progressbar \"Checking your saved photo choice…\":\n  - generic: Checking your saved photo choice…\n  - generic: The camera stays closed until this check finishes.\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "recovery": "- alert:\n  - generic: Your photo choice could not open.\n  - generic: We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.\n- button \"Retry reading saved photo choice\":\n  - generic: Try again\n- button \"Back to Progress\":\n  - generic: Back to Progress",
+    "afterBack": {
+      "url": "http://localhost:8206/progress",
+      "dom": "- generic: Progress\n- generic: Skin changes slowly. That’s normal.\n- generic: Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early.\n- generic: week 1\n- generic: week 6\n- generic: week 12\n- generic: Guided, on your phone, and never scored.\n- button \"Take my first photo\":\n  - generic: Take my first photo\n- tablist:\n  - tab \"Today tab\":\n    - generic: Today\n  - tab \"Progress tab\" [selected]:\n    - generic: Prog.\n  - tab \"Shelf tab\":\n    - generic: Shelf\n  - tab \"You tab\":\n    - generic: You"
+    },
+    "timing": {
+      "navigationToConsentLoadingMs": 214,
+      "consentLoadingToRecoveryMs": 10025
+    },
+    "assertions": {
+      "accessibleProgressbar": true,
+      "loadingExplainsCameraClosed": true,
+      "recoveryAlert": true,
+      "cameraNeverOpened": true,
+      "explicitBackReachedProgress": true
+    },
+    "metrics": {
+      "loading": {
+        "progress": {
+          "busy": null,
+          "label": "Checking your saved photo choice…",
+          "role": "progressbar",
+          "valueText": null
+        },
+        "viewport": {
+          "height": 668,
+          "scrollHeight": 668,
+          "scrollWidth": 376,
+          "text": "Checking your saved photo choice…The camera stays closed until this check finishes.",
+          "width": 376
+        },
+        "back": {
+          "bottom": 472.4514923095703,
+          "centerHit": true,
+          "height": 47.99757385253906,
+          "y": 424.45391845703125
+        }
+      },
+      "recovery": {
+        "viewport": {
+          "height": 668,
+          "scrollHeight": 668,
+          "scrollWidth": 376,
+          "text": "Your photo choice could not open.We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.",
+          "width": 376
+        },
+        "retry": {
+          "bottom": 416.4593696594238,
+          "centerHit": true,
+          "height": 55.99211502075195,
+          "y": 360.4672546386719
+        },
+        "back": {
+          "bottom": 472.4514923095703,
+          "centerHit": true,
+          "height": 47.99757385253906,
+          "y": 424.45391845703125
+        }
+      }
+    },
+    "screenshots": [
+      "hung-read-loading-375x667.png",
+      "hung-read-timeout-recovery-375x667.png"
+    ]
+  }
+]

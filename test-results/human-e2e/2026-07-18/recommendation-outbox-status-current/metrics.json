@@ -1,0 +1,46 @@
+{
+  "date": "2026-07-18",
+  "surface": "expo-web",
+  "browser": "codex-in-app-browser",
+  "requestedViewport": { "width": 390, "height": 844 },
+  "observedViewport": { "width": 390, "height": 845 },
+  "fixtures": {
+    "savedLocal": {
+      "horizontalOverflowPx": 0,
+      "sub44VisibleControls": 0,
+      "blockedControlCenters": 0,
+      "partialControls": 0,
+      "backHeightPx": 48,
+      "valueControlHeightPx": 48,
+      "preferenceReloadPersisted": true
+    },
+    "syncingBeforeFix": {
+      "horizontalOverflowPx": 0,
+      "sub44VisibleControls": 0,
+      "blockedControlCenters": 0,
+      "partialControls": 3,
+      "partialControlTopPx": 841.82,
+      "partialControlBottomPx": 889.82,
+      "visiblePartialHeightPx": 3.18
+    },
+    "syncingAfterFix": {
+      "horizontalOverflowPx": 0,
+      "sub44VisibleControls": 0,
+      "blockedControlCenters": 0,
+      "partialControls": 0,
+      "namedProgressbar": true
+    },
+    "needsAttention": {
+      "horizontalOverflowPx": 0,
+      "sub44VisibleControls": 0,
+      "blockedControlCenters": 0,
+      "partialControls": 0,
+      "alertCount": 1,
+      "retryWidthPx": 308.37,
+      "retryHeightPx": 55.99,
+      "retryEnabled": true,
+      "retryActivated": true,
+      "javascriptDialogCount": 0
+    }
+  }
+}

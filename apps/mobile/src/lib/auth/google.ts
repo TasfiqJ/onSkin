@@ -17,10 +17,14 @@ export function configureGoogleSignIn(): void {
 }
 
 // v16 returns { type: 'success', data: User } | { type: 'cancelled' }.
-export async function getGoogleIdToken(): Promise<{ idToken: string; email: string } | null> {
+export async function getGoogleIdToken(
+  assertRequestCurrent: () => void = () => {},
+): Promise<{ idToken: string; email: string } | null> {
   configureGoogleSignIn();
   await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+  assertRequestCurrent();
   const response = await GoogleSignin.signIn();
+  assertRequestCurrent();
   if (response.type !== 'success') return null; // cancelled
   const { idToken, user } = response.data;
   if (!idToken) return null;

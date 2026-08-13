@@ -1,0 +1,27 @@
+URL: http://localhost:8291/progress
+Fixture: store_pro entitlement; populated local Progress photos; app lock disabled
+
+Initial draggable comparison:
+- slider "Before Apr 1 and after Jun 24 comparison divider"
+- aria-valuemin="0"
+- aria-valuemax="100"
+- aria-valuenow="52"
+- aria-valuetext="52 percent of the before photo visible"
+- button "Use side-by-side comparison"
+
+Side-by-side action result:
+- slider count: 0
+- button "Use draggable comparison": 1
+- both date controls remained available
+
+Date-change branch:
+- opened dialog "Choose the first photo"
+- chose button "Choose May 12 as the first comparison photo"
+- dialog count after choice: 0
+- button "Change to a different date (currently May 12)": 1
+
+Final draggable comparison:
+- slider "Before May 12 and after Jun 24 comparison divider"
+- aria-valuenow="52"
+- aria-valuetext="52 percent of the before photo visible"
+- JavaScript dialog: none

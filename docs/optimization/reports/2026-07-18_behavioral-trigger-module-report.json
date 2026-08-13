@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-18",
+  "platform": "web",
+  "routes": 83,
+  "webBundles": 12,
+  "behavioralSnapshotChunk": {
+    "file": "behaviouralSnapshot-d380627f46f5ab3f91eea2330d94d239.js",
+    "bytes": 1646
+  },
+  "runtimeStaticDomainHooks": 0,
+  "disabledDomainReads": 0,
+  "authorizationChanges": 0
+}

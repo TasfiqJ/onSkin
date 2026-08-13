@@ -1,0 +1,22 @@
+{
+  "url": "http://localhost:8291/progress",
+  "viewport": {
+    "width": 1281,
+    "height": 720,
+    "scrollWidth": 1281,
+    "horizontalOverflow": 0
+  },
+  "comparisonDivider": {
+    "width": 45.995147705078125,
+    "height": 45.995147705078125,
+    "minimum": 0,
+    "maximum": 100,
+    "current": 52,
+    "valueText": "52 percent of the before photo visible"
+  },
+  "sideBySideButton": {
+    "width": 132.3270721435547,
+    "height": 47.99757385253906,
+    "enabled": true
+  }
+}

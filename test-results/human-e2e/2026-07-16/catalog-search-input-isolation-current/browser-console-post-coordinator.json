@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-16",
+  "artifactKind": "sanitized in-app browser console export",
+  "surface": "Expo web development build",
+  "entryCounts": {
+    "total": 15,
+    "info": 3,
+    "log": 3,
+    "warn": 9,
+    "error": 0
+  },
+  "warningSignatures": [
+    {
+      "level": "warn",
+      "count": 3,
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "level": "warn",
+      "count": 3,
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "level": "warn",
+      "count": 3,
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+    }
+  ],
+  "unexpectedWarningCount": 0,
+  "errorEntries": [],
+  "privacy": "Repeated development info/log entries and bundle URLs were reduced to counts; no query or product content is retained."
+}

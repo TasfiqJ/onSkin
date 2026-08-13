@@ -1,0 +1,57 @@
+{
+  "date": "2026-07-18",
+  "branch": "optimization",
+  "implementationSha": "a53cfeca994e242b7e45fd43279909b1d59f2041",
+  "surface": "expo-web-development",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "fixturePhotoCount": 100,
+  "timeline": {
+    "initialMountedPhotoRows": 34,
+    "peakMountedPhotoRows": 51,
+    "settledOldestMountedPhotoRows": 42,
+    "settledOldestMountedImages": 6,
+    "oldestAccessibleName": "Photo Jul 31",
+    "oldestCount": 1,
+    "oldestVisible": true,
+    "visibleOldestBoundary": [
+      "Photo Sep 4",
+      "Photo Aug 28",
+      "Photo Aug 21",
+      "Photo Aug 14",
+      "Photo Aug 7",
+      "Photo Jul 31"
+    ],
+    "scrollTop": 7843.689,
+    "maxScrollTop": 7844,
+    "blankViewport": false,
+    "documentHorizontalOverflowPx": 0
+  },
+  "comparisonPicker": {
+    "initialMountedCards": 11,
+    "peakMountedCards": 22,
+    "settledOldestMountedCards": 15,
+    "settledOldestMountedImages": 3,
+    "scrollLeft": 9857.282,
+    "maxScrollLeft": 9858,
+    "oldestAccessibleName": "Choose Jul 31 as the first comparison photo",
+    "oldestCount": 1,
+    "oldestVisible": true,
+    "visibleOldestBoundary": [
+      "Choose Aug 21 as the first comparison photo",
+      "Choose Aug 14 as the first comparison photo",
+      "Choose Aug 7 as the first comparison photo",
+      "Choose Jul 31 as the first comparison photo"
+    ],
+    "blankViewport": false,
+    "documentHorizontalOverflowPx": 0
+  },
+  "selection": {
+    "selectedBeforeDate": "Aug 7",
+    "selectedAfterDate": "Jun 24",
+    "dialogCountAfterSelection": 0,
+    "selectedDateControlCount": 1
+  }
+}

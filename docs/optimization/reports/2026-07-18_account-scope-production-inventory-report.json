@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-18",
+  "parentSha": "75aacefc293a8ae160cc21624c8096ca365518db",
+  "directSupabaseClientFiles": 19,
+  "directAccountOperationFiles": 18,
+  "abortableAccountDataFiles": 17,
+  "centralEdgeAdapters": 1,
+  "postHogRuntimeAdapters": 1,
+  "revenueCatRuntimeAdapters": 1,
+  "rawDurableStorageFiles": 10,
+  "rawFileSystemFiles": 9,
+  "shelfDelayedAccountBoundaryBranches": 8,
+  "focusedTestFiles": 5,
+  "focusedTests": 35,
+  "fullTestFiles": 334,
+  "fullTests": 3993,
+  "authenticationValuesRecorded": 0,
+  "privatePayloadFieldsRecorded": 0
+}

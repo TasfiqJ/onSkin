@@ -1,0 +1,63 @@
+{
+  "browserLogs": [
+    {
+      "level": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+    },
+    {
+      "level": "log",
+      "text": "Running application \"main\" with appParams:\n Object \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+    },
+    {
+      "level": "warning",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "level": "warning",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "level": "warning",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+    }
+  ],
+  "dialogCount": 0,
+  "firstReturn": {
+    "diagnostics": {
+      "queryExecutions": 2
+    },
+    "documentHorizontalOverflow": 0,
+    "loadingVisible": false,
+    "pathname": "/progress",
+    "photoActionCount": 10,
+    "storageUnavailableVisible": false,
+    "timelineListPresent": true
+  },
+  "initial": {
+    "diagnostics": {
+      "queryExecutions": 1
+    },
+    "documentHorizontalOverflow": 0,
+    "loadingVisible": false,
+    "pathname": "/progress",
+    "photoActionCount": 10,
+    "storageUnavailableVisible": false,
+    "timelineListPresent": true
+  },
+  "secondReturn": {
+    "diagnostics": {
+      "queryExecutions": 3
+    },
+    "documentHorizontalOverflow": 0,
+    "loadingVisible": false,
+    "pathname": "/progress",
+    "photoActionCount": 10,
+    "storageUnavailableVisible": false,
+    "timelineListPresent": true
+  },
+  "unexpectedLogs": [],
+  "viewport": {
+    "width": 390,
+    "height": 844
+  }
+}

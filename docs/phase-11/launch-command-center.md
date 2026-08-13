@@ -76,5 +76,5 @@ Review every 4-6 hours:
 
 - Continue: no P0/P1 launch risk and metrics are within guardrails.
 - Hold: stop expansion while fixing unresolved risk.
-- Roll back or halt: use app-store, Play, EAS Update, feature flags, or server-side disablement depending on issue type.
+- Roll back or halt: stop App Store expansion and prepare a reviewed binary hotfix for client defects; use reviewed feature flags, provider containment, or server-side disablement for their matching issue types.
 - No-go: stop launch when trust, safety, payment, privacy, or retention evidence invalidates public expansion.

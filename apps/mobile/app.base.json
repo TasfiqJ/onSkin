@@ -16,6 +16,9 @@
       "usesAppleSignIn": true,
       "deploymentTarget": "17.0",
       "icon": "./assets/expo.icon",
+      "entitlements": {
+        "com.apple.developer.default-data-protection": "NSFileProtectionComplete"
+      },
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.",
         "NSFaceIDUsageDescription": "Layerwell uses Face ID to keep your private photo timeline for your eyes only.",
@@ -32,7 +35,6 @@
     },
     "android": {
       "package": "com.layerwell.app",
-      "allowBackup": false,
       "permissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"],
       "adaptiveIcon": {
         "backgroundColor": "#F5F1EA",
@@ -48,6 +50,7 @@
     },
     "plugins": [
       "expo-router",
+      "./plugins/withPrivateStorageProtection",
       "expo-apple-authentication",
       [
         "expo-build-properties",
@@ -79,7 +82,7 @@
           "barcodeScannerEnabled": true
         }
       ],
-      "expo-secure-store",
+      ["expo-secure-store", { "configureAndroidBackup": false }],
       [
         "expo-notifications",
         {
@@ -122,7 +125,8 @@
         }
       ],
       "./plugins/withLayerwellWidgetPrivacyManifest",
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "./plugins/withReleaseTransportSecurity"
     ],
     "experiments": {
       "typedRoutes": true,

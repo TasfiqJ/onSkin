@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "error_count": 0,
+  "dialog_count": 0,
+  "warnings": [
+    {
+      "signature": "placeholder-supabase-url",
+      "count": 2,
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "signature": "placeholder-supabase-key",
+      "count": 2,
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+    },
+    {
+      "signature": "expo-notifications-web-listener",
+      "count": 2,
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+    }
+  ]
+}

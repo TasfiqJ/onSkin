@@ -1,0 +1,113 @@
+{
+  "runDate": "2026-07-14",
+  "surface": "Expo web",
+  "browser": "Codex in-app browser",
+  "viewport": {
+    "requestedCssPixels": { "width": 390, "height": 844 },
+    "observedDomCssPixels": { "width": 390, "height": 845 },
+    "capturedJpegPixels": { "width": 390, "height": 843 },
+    "jpegMagic": "FFD8FF"
+  },
+  "retainedCaptures": [
+    "persistent-recovery.jpg",
+    "persistent-after-retry.jpg",
+    "one-shot-restored.jpg",
+    "one-shot-deterministic-answer.jpg",
+    "future-version-after-retry.jpg"
+  ],
+  "persistentFailure": {
+    "origin": "http://localhost:8270",
+    "fixture": "always",
+    "initialVisibleText": [
+      "Private data",
+      "Guidance unavailable",
+      "We couldn't safely read the private data this guidance needs. Layerwell did not reset or remove it. Guidance and related actions are paused until Layerwell can read it again.",
+      "Try again",
+      "Back to Today"
+    ],
+    "afterRetryVisibleText": [
+      "Guidance unavailable",
+      "The private data is still unavailable. Layerwell did not reset or remove it.",
+      "Try again",
+      "Back to Today"
+    ],
+    "directRouteReloadStayedInRecovery": true,
+    "backToTodayUrl": "http://localhost:8270/today",
+    "todayVisibleText": "Good morning.",
+    "geometry": {
+      "documentWidth": 390,
+      "horizontalOverflow": false,
+      "tryAgain": { "width": 342, "height": 56, "centerHit": true },
+      "backToToday": { "width": 342, "height": 50, "centerHit": true }
+    },
+    "javascriptDialog": false
+  },
+  "oneShotFailure": {
+    "origin": "http://localhost:8271",
+    "fixture": "once",
+    "initialRecoveryVisible": true,
+    "initialRecoveryRetainedAsTextSnapshot": true,
+    "retryRestoredVisibleText": [
+      "Ask RoutineKind",
+      "knows your shelf",
+      "evidence-grounded",
+      "private",
+      "Is there a conflict on my shelf?",
+      "What should I do tonight?",
+      "Is this product a fit for me?",
+      "Ask a question about your shelf",
+      "Send"
+    ],
+    "typedQuestion": "What should I do tonight?",
+    "answerVisibleText": [
+      "answered by your conflict engine · $0",
+      "Add your products and I’ll build tonight in order. Here’s an example for now:",
+      "Cream cleanser → Retinol 0.3% → Glycolic 7% Toner → Ceramide moisturizer",
+      "From your generated plan. Your products, in your sequence."
+    ],
+    "answerClassification": "deterministic local conflict-engine answer; not a cloud-grounded quota turn",
+    "geometry": {
+      "documentWidth": 390,
+      "horizontalOverflow": false,
+      "back": { "width": 48, "height": 48, "centerHit": true },
+      "textbox": { "width": 254, "height": 48, "centerHit": true },
+      "send": { "width": 48, "height": 48, "centerHit": true }
+    },
+    "javascriptDialog": false
+  },
+  "futureVersion": {
+    "origin": "http://localhost:8272",
+    "fixture": "future",
+    "initialRecoveryVisible": true,
+    "initialRecoveryRetainedAsTextSnapshot": true,
+    "retryStayedInRecovery": true,
+    "rawInternalCodeVisible": false,
+    "horizontalOverflow": false,
+    "geometry": {
+      "tryAgain": { "width": 342, "height": 56, "centerHit": true },
+      "backToToday": { "width": 342, "height": 50, "centerHit": true }
+    },
+    "javascriptDialog": false
+  },
+  "productionReadinessSeparation": {
+    "cloudFeatureFlagDuringFixtureRun": false,
+    "fixtureForcedQuotaRead": true,
+    "productionCloudFailureBlocksDeterministicAdvisor": false,
+    "behavioralOfflineTest": "apps/mobile/src/features/ask/readiness.test.ts"
+  },
+  "browserLogs": {
+    "errors": [],
+    "expectedWarningsByOrigin": [
+      "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "Multiple GoTrueClient instances detected in the same browser context after development route reload"
+    ],
+    "unexpectedWarnings": []
+  },
+  "bytePreservationProof": {
+    "browserClaim": "The UI copy states that Layerwell did not reset or remove private data.",
+    "testProof": "apps/mobile/src/features/ask/store.test.ts asserts exact malformed, unavailable, future-version, and stale-period bytes remain unchanged with zero destructive writes.",
+    "nativeFilesystemProof": false
+  }
+}

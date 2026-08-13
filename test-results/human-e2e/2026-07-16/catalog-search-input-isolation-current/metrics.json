@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-16",
+  "feature": "OPT-115 catalog search input isolation",
+  "surface": "Expo web development build in Codex in-app browser",
+  "start": {
+    "command": "npm --workspace apps/mobile run web -- --port 8276",
+    "fixture": "EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=stress",
+    "delayMs": 5000,
+    "externalServices": false
+  },
+  "viewport": {
+    "requested": {
+      "width": 390,
+      "height": 844
+    },
+    "observed": {
+      "width": 390,
+      "height": 845
+    },
+    "classification": "launch-supported Expo-web modern iPhone-class viewport"
+  },
+  "typingProfile": {
+    "inputLength": 80,
+    "inputSha256": "d68d62c262c2ec08961c1104188cde86f51695878759666ad61490c8ec66745c",
+    "inputMaxLength": 80,
+    "individualKeyActions": 80,
+    "driverElapsedMs": 1521,
+    "driverElapsedIsAppLatency": false,
+    "before": {
+      "composerCommits": 19,
+      "composerDurationTotalMs": 10.699999988079071,
+      "composerDurationMaxMs": 2.2000000029802322,
+      "draftChanges": 16,
+      "resultsCommits": 3,
+      "cardRenders": 12,
+      "searchStarts": 1,
+      "cancellations": 0,
+      "publications": 1,
+      "duplicateSubmits": 0
+    },
+    "after": {
+      "composerCommits": 99,
+      "composerDurationTotalMs": 41.59999996423721,
+      "composerDurationMaxMs": 2.2000000029802322,
+      "draftChanges": 96,
+      "resultsCommits": 3,
+      "cardRenders": 12,
+      "searchStarts": 1,
+      "cancellations": 0,
+      "publications": 1,
+      "duplicateSubmits": 0
+    },
+    "delta": {
+      "composerCommits": 80,
+      "composerDurationTotalMs": 30.89999997615814,
+      "composerDurationMeanMs": 0.3862499997019768,
+      "composerDurationMaxCounterIncreaseMs": 0,
+      "draftChanges": 80,
+      "resultsCommits": 0,
+      "cardRenders": 0,
+      "searchStarts": 0,
+      "cancellations": 0,
+      "publications": 0,
+      "duplicateSubmits": 0
+    },
+    "eightyFirstCharacterAccepted": false
+  },
+  "supersededRequest": {
+    "delayMs": 5000,
+    "beforeDraftEdit": {
+      "searchStarts": 1,
+      "cancellations": 0,
+      "publications": 0,
+      "resultsCommits": 2,
+      "cardRenders": 0
+    },
+    "immediatelyAfterDraftEdit": {
+      "searchStarts": 1,
+      "cancellations": 1,
+      "publications": 0,
+      "resultsCommits": 3,
+      "cardRenders": 0
+    },
+    "afterDelayPlus200Ms": {
+      "searchStarts": 1,
+      "cancellations": 1,
+      "publications": 0,
+      "resultsCommits": 3,
+      "cardRenders": 0
+    },
+    "stalePublicationObserved": false
+  },
+  "duplicateAndRecovery": {
+    "rapidReturnCount": 2,
+    "afterTwoReturns": {
+      "searchStarts": 1,
+      "duplicateSubmits": 1,
+      "publications": 0
+    },
+    "afterSupersedeAndReplacement": {
+      "searchStarts": 2,
+      "cancellations": 1,
+      "duplicateSubmits": 1,
+      "publications": 1,
+      "cardRenders": 12,
+      "visibleCards": 12
+    }
+  },
+  "manualFallback": {
+    "latestSyntheticDraftPreserved": true,
+    "destination": "/shelf/manual",
+    "productNameFieldMatchedLatestDraft": true
+  },
+  "layout": {
+    "horizontalOverflowPx": 0,
+    "inputHeightPx": 50.000003814697266,
+    "searchHeightPx": 50.000003814697266,
+    "addByHandHeightPx": 55.99211502075195
+  },
+  "browserHealth": {
+    "evidenceKind": "in-session browser summary",
+    "rawConsoleArtifactCaptured": false,
+    "javascriptDialog": null,
+    "errorEntries": 0,
+    "warningEntries": 18,
+    "expectedWarningSignatures": [
+      "placeholder Supabase URL",
+      "missing placeholder Supabase publishable key",
+      "expo-notifications listener unsupported on web"
+    ],
+    "unexpectedWarningSignatures": 0
+  },
+  "screenshots": [
+    "01-baseline-12-results.png",
+    "03-manual-latest-draft.png",
+    "04-pending-cancellation.png"
+  ],
+  "screenshotLimitations": {
+    "omittedArtifacts": [
+      "02-80-character-draft.png",
+      "05-cancelled-draft.png",
+      "06-replacement-12-results.png"
+    ],
+    "reason": "captured artifacts contain opaque occlusion",
+    "committed": false,
+    "numericDomMetricsRemainUsable": true
+  },
+  "claimBoundary": {
+    "fullHumanSimulatedE2eChecklistAccepted": false,
+    "proves": [
+      "Expo-web input ownership and sibling result-render isolation",
+      "80-character UI bound",
+      "draft-supersession cancellation and current-controller publication fencing",
+      "synchronous duplicate-submit suppression",
+      "replacement recovery and latest-draft manual fallback"
+    ],
+    "sourceAndUnitOnly": [
+      "server-equivalent local query eligibility, including the sanitized-short a% case",
+      "exact-current-request analytics fencing, including deterministic coordinator coverage"
+    ],
+    "notRerunInThisSlice": [
+      "blur, unmount, back, and re-entry",
+      "no-match, empty, and reporting",
+      "wrong-match and use-match",
+      "visible Search button submission",
+      "refresh and relaunch",
+      "accessibility and native keyboard"
+    ],
+    "doesNotProve": [
+      "production Hermes keystroke latency, frames, CPU, thermal impact, or memory",
+      "native iOS keyboard, VoiceOver, or physical-device behavior",
+      "live Supabase network latency or server query-plan performance"
+    ]
+  }
+}

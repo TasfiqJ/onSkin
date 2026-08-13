@@ -14,7 +14,7 @@ function readSource(path: string): string {
 const deps = {
   grant: vi.fn<() => Promise<void>>(),
   requestPermission: vi.fn<() => Promise<unknown>>(),
-  onSaved: vi.fn<() => void>(),
+  onSaved: vi.fn<() => boolean>(),
   onFailure: vi.fn<() => void>(),
 };
 
@@ -26,6 +26,7 @@ describe('photo capture consent application', () => {
     deps.onFailure.mockReset();
     deps.grant.mockResolvedValue(undefined);
     deps.requestPermission.mockResolvedValue(undefined);
+    deps.onSaved.mockReturnValue(true);
   });
 
   it('saves consent before marking the gate as passed or asking for camera permission', async () => {

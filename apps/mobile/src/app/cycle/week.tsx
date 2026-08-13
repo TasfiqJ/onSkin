@@ -1,8 +1,10 @@
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
+import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { withProGate } from '@/features/subscription/ProGate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
@@ -33,6 +35,7 @@ function AdmittedWeekScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
+      <StatusBar style={statusBarStyleForSurface('night')} />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-7 pb-10">
         <View className="mt-2 flex-row items-center justify-between">
           <RouteIconButton

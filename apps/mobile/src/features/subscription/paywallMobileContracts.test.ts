@@ -546,7 +546,7 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('if (!opened) setFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);');
     expect(source).toContain('onPress={() => void onPolicy(TERMS_URL)}');
     expect(source).toContain('onPress={() => void onPolicy(PRIVACY_URL)}');
-    expect(source).toContain('function restoreFeedbackMessage(active: boolean): string');
+    expect(source).toContain("import { restoreFeedbackMessage } from './restoreFeedback';");
     expect(source).toContain('setFeedback(message);');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain("'pb-1 pr-2 text-left'");

@@ -1,0 +1,58 @@
+EMPTY 360x640 — BEFORE
+- text: Progress
+- alert:
+  - text: Unavailable Deletion status unavailable We couldn't safely read the deletion queue. No photo was restored or changed.
+  - button "Check again"
+- text: Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show.
+- button "Take my first photo"
+- tablist:
+  - tab "Today tab"
+  - tab "Progress tab" [selected]
+  - tab "Shelf tab"
+  - tab "You tab"
+
+EMPTY 360x640 — AFTER
+- text: Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show.
+- button "Take my first photo"
+- tablist:
+  - tab "Today tab"
+  - tab "Progress tab" [selected]
+  - tab "Shelf tab"
+  - tab "You tab"
+
+POPULATED 390x844 — BEFORE
+- text: Progress
+- button "Take a progress photo"
+- text: 12 weeks · 3 photos · all on this phone
+- alert:
+  - text: Unavailable Deletion status unavailable We couldn't safely read the deletion queue. No photo was restored or changed.
+  - button "Check again"
+- button "Compare"
+- button "Timeline"
+- link "Why no AI score"
+- button "Use side-by-side comparison"
+- slider "Before Apr 1 and after Jun 24 comparison divider"
+- button "Change to a different date (currently Apr 1)"
+- button "Change to a different date (currently Jun 24)"
+- tablist:
+  - tab "Today tab"
+  - tab "Progress tab" [selected]
+  - tab "Shelf tab"
+  - tab "You tab"
+
+POPULATED 390x844 — AFTER
+- text: Progress
+- button "Take a progress photo"
+- text: 12 weeks · 3 photos · all on this phone
+- button "Compare"
+- button "Timeline"
+- link "Why no AI score"
+- button "Use side-by-side comparison"
+- slider "Before Apr 1 and after Jun 24 comparison divider"
+- button "Change to a different date (currently Apr 1)"
+- button "Change to a different date (currently Jun 24)"
+- tablist:
+  - tab "Today tab"
+  - tab "Progress tab" [selected]
+  - tab "Shelf tab"
+  - tab "You tab"

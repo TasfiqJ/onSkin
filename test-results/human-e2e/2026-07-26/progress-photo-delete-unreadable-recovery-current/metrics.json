@@ -1,0 +1,68 @@
+{
+  "date": "2026-07-26",
+  "fixture": "unavailable_once",
+  "scenarios": {
+    "empty_360x640": {
+      "before": {
+        "viewport": [360, 640],
+        "horizontalOverflow": 0,
+        "alertCount": 1,
+        "checkAgainCount": 1,
+        "checkAgainRect": [41, 163, 278, 56],
+        "checkAgainCenterHit": true,
+        "partialControls": 0,
+        "sub44Controls": 0,
+        "failedCenterHits": 0,
+        "forbiddenMatches": [],
+        "primaryCaptureRect": [24, 446, 312, 52]
+      },
+      "afterRapidDoubleActivation": {
+        "viewport": [360, 640],
+        "horizontalOverflow": 0,
+        "alertCount": 0,
+        "checkAgainCount": 0,
+        "partialControls": 0,
+        "sub44Controls": 0,
+        "failedCenterHits": 0,
+        "forbiddenMatches": [],
+        "primaryCaptureRect": [24, 256, 312, 52]
+      }
+    },
+    "populated_390x844": {
+      "before": {
+        "viewport": [390, 844],
+        "horizontalOverflow": 0,
+        "alertCount": 1,
+        "checkAgainCount": 1,
+        "checkAgainRect": [41, 255, 308, 56],
+        "checkAgainCenterHit": true,
+        "partialControls": 0,
+        "sub44Controls": 0,
+        "failedCenterHits": 0,
+        "forbiddenMatches": [],
+        "photoCountText": "3 photos"
+      },
+      "afterRapidDoubleActivation": {
+        "viewport": [390, 844],
+        "horizontalOverflow": 0,
+        "alertCount": 0,
+        "checkAgainCount": 0,
+        "partialControls": 0,
+        "sub44Controls": 0,
+        "failedCenterHits": 0,
+        "forbiddenMatches": [],
+        "photoCountText": "3 photos"
+      },
+      "remount": {
+        "beforeAlertCount": 1,
+        "beforeCheckAgainCount": 1,
+        "afterAlertCount": 0,
+        "afterCheckAgainCount": 0,
+        "afterPhotoActionCount": 1
+      }
+    }
+  },
+  "dialogs": 0,
+  "pageErrors": 0,
+  "unexpectedWarningsOrErrors": 0
+}

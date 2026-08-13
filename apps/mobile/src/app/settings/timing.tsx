@@ -6,6 +6,10 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { RouteIconButton, Text } from '@/components/ui';
 import { REMINDER_COPY, SETTINGS_COPY } from '@/features/notifications/copy';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
+import {
+  motionAwareModalAnimation,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { BRAND } from '@/lib/brand';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -36,6 +40,7 @@ function TimePickerModal({
 }) {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const reduceMotion = useReduceMotionPreference();
   const sheetMaxHeight = Math.max(0, viewportHeight - 44);
   const listMaxHeight = Math.min(340, Math.max(160, sheetMaxHeight - 115));
   const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
@@ -51,7 +56,7 @@ function TimePickerModal({
     <Modal
       visible={field !== null}
       transparent
-      animationType="slide"
+      animationType={motionAwareModalAnimation(reduceMotion, 'slide')}
       accessibilityLabel={title}
       onRequestClose={onClose}
     >

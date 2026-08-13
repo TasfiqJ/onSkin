@@ -4,7 +4,12 @@
 import 'react-native-get-random-values'; // polyfills crypto.getRandomValues
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bytesToHex, hexToBytes, randomBytes } from '@noble/ciphers/utils.js';
-import * as SecureStore from 'expo-secure-store';
+
+import {
+  deletePrivateSecureStoreItemAsync,
+  getPrivateSecureStoreItemAsync,
+  setPrivateSecureStoreItemAsync,
+} from '@/lib/storage/privateSecureStore';
 
 import {
   decryptLargeSecureStoreValue,
@@ -18,89 +23,197 @@ export const LARGE_SECURE_STORE_CONTENT_KEY_INVALID = 'LARGE_SECURE_STORE_CONTEN
 export const LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE =
   'LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE';
 export const LARGE_SECURE_STORE_DECRYPTION_FAILED = 'LARGE_SECURE_STORE_DECRYPTION_FAILED';
+export const LARGE_SECURE_STORE_ENVELOPE_UNSUPPORTED = 'LARGE_SECURE_STORE_ENVELOPE_UNSUPPORTED';
+export const LARGE_SECURE_STORE_ROLLBACK_FAILED = 'LARGE_SECURE_STORE_ROLLBACK_FAILED';
 
-const contentKeyCreations = new Map<string, Promise<Uint8Array>>();
+type StorageSnapshot = {
+  asyncValue: string | null;
+  secureValue: string | null;
+};
+
+type AttemptedWrites = {
+  async: boolean;
+  secure: boolean;
+};
+
+const storageOperationTails = new Map<string, Promise<void>>();
+
+async function runSerializedStorageOperation<T>(
+  key: string,
+  operation: () => Promise<T>,
+): Promise<T> {
+  const previous = storageOperationTails.get(key) ?? Promise.resolve();
+  const ready = previous.catch(() => undefined);
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const tail = ready.then(() => gate);
+  storageOperationTails.set(key, tail);
+
+  await ready;
+  try {
+    return await operation();
+  } finally {
+    release();
+    if (storageOperationTails.get(key) === tail) storageOperationTails.delete(key);
+  }
+}
+
+async function readSecureValue(key: string): Promise<string | null> {
+  try {
+    return await getPrivateSecureStoreItemAsync(key);
+  } catch {
+    throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE);
+  }
+}
+
+function contentKeyFromStored(value: string | null): Uint8Array | null {
+  if (value === null) return null;
+  if (!/^[0-9a-f]{64}$/i.test(value)) {
+    throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_INVALID);
+  }
+  try {
+    const decoded = hexToBytes(value);
+    if (decoded.length !== CONTENT_KEY_BYTES) {
+      throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_INVALID);
+    }
+    return decoded;
+  } catch {
+    throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_INVALID);
+  }
+}
+
+function decodeReadableValue(value: string, contentKey: Uint8Array): string {
+  const result = decryptLargeSecureStoreValue(value, contentKey);
+  if (result.kind === 'current' || result.kind === 'legacy') return result.plaintext;
+  if (result.kind === 'unsupported_version') {
+    throw new Error(LARGE_SECURE_STORE_ENVELOPE_UNSUPPORTED);
+  }
+  throw new Error(LARGE_SECURE_STORE_DECRYPTION_FAILED);
+}
+
+async function restoreAttemptedWrites(
+  key: string,
+  snapshot: StorageSnapshot,
+  attempted: AttemptedWrites,
+): Promise<void> {
+  const restoreAsyncAuthority = async (): Promise<void> => {
+    try {
+      if (snapshot.asyncValue === null) await AsyncStorage.removeItem(key);
+      else await AsyncStorage.setItem(key, snapshot.asyncValue);
+    } catch {
+      // A native write may commit and then reject. The readback below is authoritative.
+    }
+
+    let restored: string | null;
+    try {
+      restored = await AsyncStorage.getItem(key);
+    } catch {
+      throw new Error(LARGE_SECURE_STORE_ROLLBACK_FAILED);
+    }
+    if (restored !== snapshot.asyncValue) {
+      throw new Error(LARGE_SECURE_STORE_ROLLBACK_FAILED);
+    }
+  };
+
+  const restoreSecureAuthority = async (): Promise<void> => {
+    try {
+      if (snapshot.secureValue === null) await deletePrivateSecureStoreItemAsync(key);
+      else await setPrivateSecureStoreItemAsync(key, snapshot.secureValue);
+    } catch {
+      // A native write may commit and then reject. The readback below is authoritative.
+    }
+
+    let restored: string | null;
+    try {
+      restored = await getPrivateSecureStoreItemAsync(key);
+    } catch {
+      throw new Error(LARGE_SECURE_STORE_ROLLBACK_FAILED);
+    }
+    if (restored !== snapshot.secureValue) {
+      throw new Error(LARGE_SECURE_STORE_ROLLBACK_FAILED);
+    }
+  };
+
+  try {
+    const revertingFirstCreation =
+      attempted.async &&
+      attempted.secure &&
+      snapshot.asyncValue === null &&
+      snapshot.secureValue === null;
+
+    if (revertingFirstCreation) {
+      // Never delete a newly-created key until ciphertext removal is confirmed.
+      await restoreAsyncAuthority();
+      await restoreSecureAuthority();
+      return;
+    }
+
+    // A removed ciphertext must not be restored until its key is confirmed present.
+    if (attempted.secure) await restoreSecureAuthority();
+    if (attempted.async) await restoreAsyncAuthority();
+  } catch {
+    throw new Error(LARGE_SECURE_STORE_ROLLBACK_FAILED);
+  }
+}
 
 export class LargeSecureStore {
-  private async getContentKey(key: string): Promise<Uint8Array | null> {
-    let existing: string | null;
-    try {
-      existing = await SecureStore.getItemAsync(key);
-    } catch {
-      throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE);
-    }
-    if (!existing) return null;
-    if (!/^[0-9a-f]{64}$/i.test(existing)) {
-      throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_INVALID);
-    }
-    try {
-      const decoded = hexToBytes(existing);
-      if (decoded.length !== CONTENT_KEY_BYTES) {
-        throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_INVALID);
-      }
-      return decoded;
-    } catch {
-      throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_INVALID);
-    }
-  }
-
-  private async ensureContentKey(key: string): Promise<Uint8Array> {
-    const existing = await this.getContentKey(key);
-    if (existing) return existing;
-
-    let creation = contentKeyCreations.get(key);
-    if (!creation) {
-      creation = (async () => {
-        const rechecked = await this.getContentKey(key);
-        if (rechecked) return rechecked;
-        if ((await AsyncStorage.getItem(key)) !== null) {
-          throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_MISSING);
-        }
-
-        const contentKey = randomBytes(CONTENT_KEY_BYTES);
-        try {
-          await SecureStore.setItemAsync(key, bytesToHex(contentKey));
-        } catch {
-          throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE);
-        }
-        return contentKey;
-      })();
-      contentKeyCreations.set(key, creation);
-    }
-
-    try {
-      return await creation;
-    } finally {
-      if (contentKeyCreations.get(key) === creation) contentKeyCreations.delete(key);
-    }
-  }
-
   async getItem(key: string): Promise<string | null> {
-    const encrypted = await AsyncStorage.getItem(key);
-    if (encrypted === null) return null;
-    const contentKey = await this.getContentKey(key);
-    if (!contentKey) {
-      throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_MISSING);
-    }
-
-    const result = decryptLargeSecureStoreValue(encrypted, contentKey);
-    if (result.plaintext === null) {
-      throw new Error(LARGE_SECURE_STORE_DECRYPTION_FAILED);
-    }
-    if (result.needsMigration) {
-      await AsyncStorage.setItem(key, encryptLargeSecureStoreValue(result.plaintext, contentKey));
-    }
-    return result.plaintext;
+    return runSerializedStorageOperation(key, async () => {
+      const encrypted = await AsyncStorage.getItem(key);
+      if (encrypted === null) return null;
+      const contentKey = contentKeyFromStored(await readSecureValue(key));
+      if (!contentKey) throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_MISSING);
+      return decodeReadableValue(encrypted, contentKey);
+    });
   }
 
   async setItem(key: string, value: string): Promise<void> {
-    const contentKey = await this.ensureContentKey(key);
-    const encrypted = encryptLargeSecureStoreValue(value, contentKey);
-    await AsyncStorage.setItem(key, encrypted);
+    return runSerializedStorageOperation(key, async () => {
+      const snapshot: StorageSnapshot = {
+        asyncValue: await AsyncStorage.getItem(key),
+        secureValue: await readSecureValue(key),
+      };
+      let contentKey = contentKeyFromStored(snapshot.secureValue);
+      if (snapshot.asyncValue !== null) {
+        if (!contentKey) throw new Error(LARGE_SECURE_STORE_CONTENT_KEY_MISSING);
+        decodeReadableValue(snapshot.asyncValue, contentKey);
+      }
+
+      contentKey ??= randomBytes(CONTENT_KEY_BYTES);
+      const encrypted = encryptLargeSecureStoreValue(value, contentKey);
+      const attempted: AttemptedWrites = { async: false, secure: false };
+      try {
+        if (snapshot.secureValue === null) {
+          attempted.secure = true;
+          await setPrivateSecureStoreItemAsync(key, bytesToHex(contentKey));
+        }
+        attempted.async = true;
+        await AsyncStorage.setItem(key, encrypted);
+      } catch (error) {
+        await restoreAttemptedWrites(key, snapshot, attempted);
+        throw error;
+      }
+    });
   }
 
   async removeItem(key: string): Promise<void> {
-    await AsyncStorage.removeItem(key);
-    await SecureStore.deleteItemAsync(key);
+    return runSerializedStorageOperation(key, async () => {
+      const snapshot: StorageSnapshot = {
+        asyncValue: await AsyncStorage.getItem(key),
+        secureValue: await readSecureValue(key),
+      };
+      const attempted: AttemptedWrites = { async: false, secure: false };
+      try {
+        attempted.async = true;
+        await AsyncStorage.removeItem(key);
+        attempted.secure = true;
+        await deletePrivateSecureStoreItemAsync(key);
+      } catch (error) {
+        await restoreAttemptedWrites(key, snapshot, attempted);
+        throw error;
+      }
+    });
   }
 }

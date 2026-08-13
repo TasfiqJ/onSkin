@@ -1,0 +1,113 @@
+{
+  "date": "2026-07-26",
+  "viewport": [390, 844],
+  "primaryFixture": "fail_twice_then_succeed",
+  "primaryFlow": {
+    "initial": {
+      "switchChecked": false,
+      "switchDisabled": false,
+      "switchRect": [294, 346, 52, 48],
+      "attempts": 0,
+      "consentStarts": 0
+    },
+    "afterGrant": {
+      "switchChecked": true,
+      "attempts": 0,
+      "consentStarts": 1,
+      "alertCount": 0
+    },
+    "firstFailure": {
+      "switchChecked": false,
+      "attempts": 1,
+      "consentStarts": 2,
+      "alertCount": 1,
+      "retryCount": 1,
+      "retryRect": [138.046875, 481, 113.90625, 56],
+      "horizontalOverflow": 0
+    },
+    "blockedRegrant": {
+      "switchChecked": false,
+      "attempts": 1,
+      "consentStarts": 2,
+      "alertCount": 1,
+      "retryCount": 1
+    },
+    "sameFrameDoubleRetry": {
+      "switchChecked": false,
+      "attempts": 2,
+      "consentStarts": 3,
+      "alertCount": 1,
+      "retryCount": 1
+    },
+    "pendingAfterReload": {
+      "switchChecked": false,
+      "attempts": 2,
+      "consentStarts": 0,
+      "alertCount": 1,
+      "retryCount": 1,
+      "retryRect": [138.046875, 342, 113.90625, 56],
+      "horizontalOverflow": 0
+    },
+    "thirdAttemptConfirmed": {
+      "switchChecked": false,
+      "switchDisabled": false,
+      "attempts": 3,
+      "consentStarts": 1,
+      "alertCount": 0,
+      "retryCount": 0,
+      "horizontalOverflow": 0
+    },
+    "finalReload": {
+      "switchChecked": false,
+      "switchDisabled": false,
+      "attempts": 3,
+      "consentStarts": 0,
+      "alertCount": 0,
+      "retryCount": 0
+    },
+    "finalRegrant": {
+      "switchChecked": true,
+      "attempts": 3,
+      "consentStarts": 1,
+      "alertCount": 0,
+      "retryCount": 0,
+      "horizontalOverflow": 0
+    }
+  },
+  "ownerBoundaryFixture": "hold_then_succeed",
+  "ownerBoundary": {
+    "heldBeforeSignOut": {
+      "switchChecked": false,
+      "switchDisabled": true,
+      "attempts": 1,
+      "consentStarts": 2,
+      "releaseHookPresent": true,
+      "horizontalOverflow": 0
+    },
+    "firstClearFailure": {
+      "youSurfaceCount": 0,
+      "unavailableAlertCount": 1,
+      "attempts": 1,
+      "releaseHookPresent": true
+    },
+    "afterLateRelease": {
+      "youSurfaceCount": 0,
+      "choiceNotSavedVisible": false,
+      "unavailableAlertCount": 1,
+      "attempts": 1,
+      "releaseHookPresent": false
+    },
+    "afterBoundaryRetry": {
+      "youSurfaceCount": 0,
+      "welcomeBeginVisible": true,
+      "choiceNotSavedVisible": false,
+      "alertCount": 0,
+      "attempts": 1,
+      "releaseHookPresent": false,
+      "horizontalOverflow": 0
+    }
+  },
+  "dialogs": 0,
+  "pageErrors": 0,
+  "unexpectedWarningsOrErrors": 0
+}

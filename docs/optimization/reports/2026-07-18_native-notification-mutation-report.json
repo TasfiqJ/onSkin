@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-18",
+  "parentSha": "fe2c478d14be7e7528958591deba58c56015358a",
+  "directNativeWriteFiles": 1,
+  "ordinaryWrapperFiles": 2,
+  "cleanupWrapperFiles": 2,
+  "expoWriteSymbols": 5,
+  "synchronousThrowReconciled": true,
+  "unsafeCompensationRequiresGlobalCleanup": true,
+  "focusedTestFiles": 4,
+  "focusedTests": 54,
+  "fullTestFiles": 333,
+  "fullTests": 3990,
+  "authenticationValuesRecorded": 0,
+  "notificationContentFieldsRecorded": 0
+}

@@ -7,7 +7,7 @@ Status: BLOCKED until production environment smoke evidence is attached.
 | Area          | Evidence                                                                    | Status  |
 | ------------- | --------------------------------------------------------------------------- | ------- |
 | App variant   | production build uses `APP_VARIANT=production`                              | BLOCKED |
-| EAS channel   | production build channel is `production`                                    | BLOCKED |
+| Update delivery | signed production config proves updates disabled and no URL/channel          | BLOCKED |
 | Supabase      | production URL and publishable key set                                      | BLOCKED |
 | Auth          | Apple and Google sign-in configured for production IDs                      | BLOCKED |
 | App links     | Universal Links and Android App Links verified                              | BLOCKED |
@@ -30,7 +30,7 @@ Status: BLOCKED until production environment smoke evidence is attached.
 8. Exercise purchase and restore on native build.
 9. Confirm PostHog event is sanitized.
 10. Confirm Sentry release receives no P0/P1 crash.
-11. Confirm EAS Update production branch/channel is correct.
+11. Confirm the signed candidate keeps Expo updates disabled and contains no update URL or channel.
 
 ## Launch Blockers
 

@@ -1,0 +1,23 @@
+{
+  "date": "2026-07-26",
+  "primaryFlow": {
+    "dialogs": [],
+    "pageErrors": [],
+    "unexpectedWarningsOrErrors": [],
+    "expectedWarnings": [
+      "EXPO_PUBLIC_SUPABASE_URL placeholder warning",
+      "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY placeholder warning",
+      "Expo web notification-listener warning"
+    ]
+  },
+  "ownerBoundaryFlow": {
+    "dialogs": [],
+    "pageErrors": [],
+    "unexpectedWarningsOrErrors": [],
+    "expectedWarnings": [
+      "EXPO_PUBLIC_SUPABASE_URL placeholder warning",
+      "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY placeholder warning",
+      "Expo web notification-listener warning"
+    ]
+  }
+}

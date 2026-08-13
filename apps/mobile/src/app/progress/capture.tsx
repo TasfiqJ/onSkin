@@ -938,6 +938,7 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
         onSaved: () => {
           setConsentSaveFailed(false);
           setConsented(true);
+          return true;
         },
         onFailure: () => {
           setConsentSaveFailed(true);

@@ -1,8 +1,15 @@
 import { Stack } from 'expo-router';
 
+import {
+  shouldReduceMotion,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
+
 // Shelf intake + management stack (docs/04), presented over the tabs. The root
 // IntakeProvider keeps one transient draft across onboarding and Shelf routes.
 export default function ShelfLayout() {
+  const reduceMotion = useReduceMotionPreference();
+  const modalAnimation = shouldReduceMotion(reduceMotion) ? 'none' : 'fade';
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="scan" />
@@ -14,15 +21,15 @@ export default function ShelfLayout() {
       <Stack.Screen name="archive" />
       <Stack.Screen
         name="no-match"
-        options={{ presentation: 'transparentModal', animation: 'fade' }}
+        options={{ presentation: 'transparentModal', animation: modalAnimation }}
       />
       <Stack.Screen
         name="opened"
-        options={{ presentation: 'transparentModal', animation: 'fade' }}
+        options={{ presentation: 'transparentModal', animation: modalAnimation }}
       />
       <Stack.Screen
         name="replenish"
-        options={{ presentation: 'transparentModal', animation: 'fade' }}
+        options={{ presentation: 'transparentModal', animation: modalAnimation }}
       />
     </Stack>
   );

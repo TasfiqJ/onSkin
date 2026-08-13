@@ -1,0 +1,45 @@
+{
+  "date": "2026-07-13",
+  "surface": "expo_web",
+  "browser": "codex_in_app_browser",
+  "configuredViewport": {
+    "width": 390,
+    "height": 844
+  },
+  "reportedViewport": {
+    "width": 390,
+    "height": 845
+  },
+  "happyPath": {
+    "url": "http://localhost:8255/shelf/search?e2eQuery=ceramide",
+    "horizontalOverflowPx": 0,
+    "controls": [
+      { "label": "Back", "heightPx": 48 },
+      { "label": "Search", "heightPx": 50 },
+      { "label": "Report missing product", "heightPx": 48 },
+      { "label": "Add by hand", "heightPx": 55.99 }
+    ]
+  },
+  "pendingRequest": {
+    "query": "different cleanser",
+    "searchDisabled": true,
+    "fixtureDelayMs": 1500
+  },
+  "afterCancellation": {
+    "url": "http://localhost:8255/shelf",
+    "waitedBeyondFixtureDelay": true,
+    "staleResultPublished": false
+  },
+  "recovery": {
+    "url": "http://localhost:8255/shelf/search?e2eQuery=recovery",
+    "searchDisabled": false,
+    "horizontalOverflowPx": 0,
+    "noMatchVisible": true
+  },
+  "unexpectedBrowserErrors": 0,
+  "expectedWarnings": [
+    "placeholder Supabase URL",
+    "placeholder Supabase publishable key",
+    "Expo notifications listener unsupported on web"
+  ]
+}

@@ -24,3 +24,5 @@ export { ExpiryBadge } from './ExpiryBadge';
 export { Sheet } from './Sheet';
 export type { SheetProps } from './Sheet';
 export { StripedThumb } from './StripedThumb';
+export { StateLoading, StateNotice } from './StateNotice';
+export type { StateNoticeProps } from './StateNotice';

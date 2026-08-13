@@ -1,0 +1,44 @@
+{
+  "date": "2026-07-18",
+  "surface": "Expo web",
+  "browser": "Codex in-app browser",
+  "requestedViewport": [390, 844],
+  "observedViewport": [390, 845],
+  "notifications": {
+    "savedLocal": {
+      "statusCount": 1,
+      "alertCount": 0,
+      "progressbarCount": 0,
+      "horizontalOverflowPx": 0,
+      "switchSizePx": [52, 48]
+    },
+    "syncing": {
+      "statusCount": 1,
+      "alertCount": 0,
+      "progressbarCount": 1,
+      "progressbarName": "Syncing notification settings",
+      "horizontalOverflowPx": 0
+    },
+    "needsAttention": {
+      "statusCount": 1,
+      "alertCount": 1,
+      "progressbarCount": 0,
+      "retryName": "Try sync again",
+      "retrySizePx": [316, 56],
+      "horizontalOverflowPx": 0,
+      "dialogAfterRetry": false
+    },
+    "morningToggle": {
+      "before": false,
+      "afterClick": true,
+      "afterReload": true
+    }
+  },
+  "timing": {
+    "savedLocalStatusCount": 1,
+    "alertCount": 0,
+    "horizontalOverflowPx": 0,
+    "quietHoursAfterClick": "off",
+    "quietHoursAfterReload": "off"
+  }
+}

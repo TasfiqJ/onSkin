@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 681
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧",
+      "label": "⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 708,
+        "height": 54,
+        "left": 28,
+        "right": 362,
+        "top": 654,
+        "visibleHeight": 54,
+        "visibleWidth": 334,
+        "width": 334
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 77.0390625,
+        "y": 732
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŧéëŕṁš⟧",
+      "label": "⟦Ŧéëŕṁš⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 756,
+        "height": 48,
+        "left": 42.890625,
+        "right": 111.1875,
+        "top": 708,
+        "visibleHeight": 48,
+        "visibleWidth": 68.296875,
+        "width": 68.296875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 181.875,
+        "y": 732
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Þŕïíṽåäçýÿ⟧",
+      "label": "⟦Þŕïíṽåäçýÿ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 756,
+        "height": 48,
+        "left": 137.609375,
+        "right": 226.140625,
+        "top": 708,
+        "visibleHeight": 48,
+        "visibleWidth": 88.53125,
+        "width": 88.53125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 299.8359375,
+        "y": 732
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŕéëšŧøóŕéë⟧",
+      "label": "⟦Ŕéëšŧøóŕéë⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 756,
+        "height": 48,
+        "left": 252.5625,
+        "right": 347.109375,
+        "top": 708,
+        "visibleHeight": 48,
+        "visibleWidth": 94.546875,
+        "width": 94.546875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 780
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ṁåäýÿɓéë ļåäŧéëŕ⟧",
+      "label": "⟦Ṁåäýÿɓéë ļåäŧéëŕ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 804,
+        "height": 48,
+        "left": 28,
+        "right": 362,
+        "top": 756,
+        "visibleHeight": 48,
+        "visibleWidth": 334,
+        "width": 334
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8299/paywall/upsell?feature=full_routine",
+  "textOverflows": [],
+  "textStart": "⟦ÜÚñļøóçķ ýÿøóüúŕ ƒüúļļ ŕøóüúŧïíñéë.⟧ ⟦Ŧħéë çøóṁþļéëŧéë ɓüúïíļđéëŕ, šéëǫüúéëñçïíñğ åäñđ ŕåäṁþ. Ɓüúïíļŧ åäŕøóüúñđ ýÿøóüúŕ šķïíñ. Þåäŕŧ øóƒ ŔøóüúŧïíñéëĶïíñđ Þŕøó.⟧ ⟦Šŧøóŕéë þŕïíçïíñğ⟧ ⟦Çħéëçķïíñğ þŕïíçéë⟧ ⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧ ⟦Ŧéëŕṁš⟧ · ⟦Þŕïíṽåäçýÿ⟧ · ⟦Ŕéëšŧøóŕéë⟧ ⟦Ṁåäýÿɓéë ļåäŧéëŕ⟧",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/paywall/upsell?feature=full_routine",
+  "scaledCount": 11,
+  "textScale": 1.2,
+  "url": "http://localhost:8299/paywall/upsell?feature=full_routine",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

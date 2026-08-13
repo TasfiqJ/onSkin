@@ -3,11 +3,20 @@ type SafeLogError = {
   name: string;
 };
 
-const SAFE_ERROR_NAME = /^[A-Za-z][A-Za-z0-9_.:-]{0,48}$/;
-
 function safeErrorName(error: unknown): string {
-  if (!(error instanceof Error)) return typeof error;
-  return SAFE_ERROR_NAME.test(error.name) ? error.name : 'Error';
+  try {
+    if (error instanceof AggregateError) return 'AggregateError';
+    if (error instanceof EvalError) return 'EvalError';
+    if (error instanceof RangeError) return 'RangeError';
+    if (error instanceof ReferenceError) return 'ReferenceError';
+    if (error instanceof SyntaxError) return 'SyntaxError';
+    if (error instanceof TypeError) return 'TypeError';
+    if (error instanceof URIError) return 'URIError';
+    if (error instanceof Error) return 'Error';
+    return typeof error;
+  } catch {
+    return 'unknown';
+  }
 }
 
 export function redactedErrorForLog(error: unknown): SafeLogError {
