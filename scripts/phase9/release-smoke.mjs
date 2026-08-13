@@ -774,49 +774,31 @@ block(
 block(
   errors,
   has('.github/workflows/quality.yml', /postgres:\s*\n\s*- 15-alpine\s*\n\s*- 17-alpine/) &&
+    [
+      'account_deletion_0048|account-deletion-lifecycle-postgres-rehearsal.sql',
+      'revenuecat_barrier_0049|revenuecat-deletion-barrier-postgres-rehearsal.sql',
+      'service_writers_0050|service-writer-deletion-barriers-postgres-rehearsal.sql',
+      'revenuecat_tombstones_0051|revenuecat-identity-tombstones-postgres-rehearsal.sql',
+      'account_publication_fence_0052|account-publication-fence-postgres-rehearsal.sql',
+      'entitlement_lanes_0053|entitlement-authority-lanes-postgres-rehearsal.sql',
+      'catalog_scan_minimization_0059|catalog-scan-minimization-postgres-rehearsal.sql',
+      'cat07_truthful_freshness_0060|cat07-truthful-freshness-postgres-rehearsal.sql',
+      'catalog_import_upgrade_0061|catalog-import-0061-upgrade-postgres-rehearsal.sql',
+      'catalog_curation_upgrade_0062|catalog-curation-0062-upgrade-postgres-rehearsal.sql',
+      'skin_profile_upgrade_0064|skin-profile-0064-upgrade-postgres-rehearsal.sql',
+      'catalog_operator_upgrade_0065|catalog-operator-0065-upgrade-postgres-rehearsal.sql',
+      'clinical_content_upgrade_0066|clinical-content-0066-upgrade-postgres-rehearsal.sql',
+      'catalog_release_lint_contract_0067|catalog-release-0067-lint-contract-postgres-rehearsal.sql',
+    ].every((entry) => qualityWorkflowText.includes(entry)) &&
+    has('.github/workflows/quality.yml', /\"postgres:\$\{\{ matrix\.postgres \}\}\"/) &&
+    has('.github/workflows/quality.yml', /while IFS='\|' read -r database script/) &&
+    has('.github/workflows/quality.yml', /docker run --detach/) &&
     has(
       '.github/workflows/quality.yml',
-      /database:\s*account_deletion_0048[\s\S]{0,120}script:\s*account-deletion-lifecycle-postgres-rehearsal\.sql/,
+      /docker exec[\s\S]{0,500}createdb[\s\S]{0,80}\"\$database\"/,
     ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*revenuecat_barrier_0049[\s\S]{0,120}script:\s*revenuecat-deletion-barrier-postgres-rehearsal\.sql/,
-    ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*service_writers_0050[\s\S]{0,120}script:\s*service-writer-deletion-barriers-postgres-rehearsal\.sql/,
-    ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*revenuecat_tombstones_0051[\s\S]{0,120}script:\s*revenuecat-identity-tombstones-postgres-rehearsal\.sql/,
-    ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*account_publication_fence_0052[\s\S]{0,120}script:\s*account-publication-fence-postgres-rehearsal\.sql/,
-    ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*entitlement_lanes_0053[\s\S]{0,120}script:\s*entitlement-authority-lanes-postgres-rehearsal\.sql/,
-    ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*catalog_scan_minimization_0059[\s\S]{0,140}script:\s*catalog-scan-minimization-postgres-rehearsal\.sql/,
-    ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*cat07_truthful_freshness_0060[\s\S]{0,140}script:\s*cat07-truthful-freshness-postgres-rehearsal\.sql/,
-    ) &&
-    has(
-      '.github/workflows/quality.yml',
-      /database:\s*catalog_import_upgrade_0061[\s\S]{0,140}script:\s*catalog-import-0061-upgrade-postgres-rehearsal\.sql/,
-      /database:\s*catalog_curation_upgrade_0062[\s\S]{0,140}script:\s*catalog-curation-0062-upgrade-postgres-rehearsal\.sql/,
-    ) &&
-    has('.github/workflows/quality.yml', /image:\s*postgres:\$\{\{ matrix\.postgres \}\}/) &&
-    has(
-      '.github/workflows/quality.yml',
-      /-f \"scripts\/phase9\/\$\{\{ matrix\.rehearsal\.script \}\}\"/,
-    ),
-  'CI must execute the 0048-0053 lifecycle lanes plus the 0059, 0060, 0061, and 0062 catalog rehearsals in isolated PostgreSQL 15 and 17 databases.',
+    has('.github/workflows/quality.yml', /docker rm -f \"\$current_container\"/),
+  'CI must execute every 0048-0067 account, entitlement, catalog, and clinical rehearsal in fresh PostgreSQL 15 and 17 clusters without a per-script runner matrix.',
 );
 block(
   errors,

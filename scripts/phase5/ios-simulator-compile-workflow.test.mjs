@@ -9,37 +9,6 @@ const repoRoot = resolve(import.meta.dirname, '../..');
 const workflowPath = resolve(repoRoot, '.github/workflows/ios-simulator-compile.yml');
 const workflowText = readFileSync(workflowPath, 'utf8');
 
-const expectedPaths = [
-  '.github/workflows/ios-simulator-compile.yml',
-  '.npmrc',
-  'package.json',
-  'package-lock.json',
-  'apps/mobile/.npmrc',
-  'apps/mobile/app.base.json',
-  'apps/mobile/app.config.js',
-  'apps/mobile/assets/**',
-  'apps/mobile/babel.config.js',
-  'apps/mobile/eas.json',
-  'apps/mobile/font-assets.js',
-  'apps/mobile/metro.config.js',
-  'apps/mobile/modules/**',
-  'apps/mobile/package.json',
-  'apps/mobile/phase3-review-evidence.js',
-  'apps/mobile/plugins/**',
-  'apps/mobile/src/**',
-  '!apps/mobile/src/**/*.spec.*',
-  '!apps/mobile/src/**/*.test.*',
-  '!apps/mobile/src/**/__snapshots__/**',
-  'apps/mobile/tailwind.config.js',
-  'packages/*/package.json',
-  'packages/*/src/**',
-  'docs/hugeToDo/launch-contract.json',
-  'scripts/postinstall.mjs',
-  'scripts/phase5/ios-simulator-compile-workflow.test.mjs',
-  'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
-  'scripts/phase9/patch-react-native-view-shot-privacy.mjs',
-];
-
 const expectedEnvironment = {
   APP_VARIANT: 'staging',
   CI: 'true',
@@ -92,9 +61,7 @@ function validateWorkflow(text) {
   });
   assert.deepEqual(workflow.env, expectedEnvironment);
 
-  assert.deepEqual(Object.keys(workflow.on).sort(), ['pull_request', 'push', 'workflow_dispatch']);
-  assert.deepEqual(workflow.on.pull_request, { paths: expectedPaths });
-  assert.deepEqual(workflow.on.push, { branches: ['main'], paths: expectedPaths });
+  assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch']);
   assert.equal(workflow.on.workflow_dispatch, null);
 
   assert.deepEqual(Object.keys(workflow.jobs), ['simulator-compile']);
@@ -178,14 +145,14 @@ function validateWorkflow(text) {
   assert.doesNotMatch(text, /\bnpm\s+(?:install|i)\b/u);
 }
 
-test('macOS workflow is a path-scoped, unsigned Simulator compile/link gate', () => {
+test('macOS workflow is a manual, unsigned Simulator compile/link release gate', () => {
   assert.doesNotThrow(() => validateWorkflow(workflowText));
 });
 
 test('workflow contract rejects privilege, signing, submission, portability, and proof regressions', () => {
   const mutations = [
     ['contents: read', 'contents: write'],
-    ['pull_request:', 'pull_request_target:'],
+    ['workflow_dispatch:', 'push:'],
     ['actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0', 'actions/checkout@main'],
     ['timeout-minutes: 50', 'timeout-minutes: 0'],
     ['-sdk iphonesimulator', '-sdk iphoneos'],

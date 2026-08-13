@@ -1,68 +1,8 @@
 name: iOS Simulator compile
 
+# macOS hosted-runner minutes are deliberately reserved for release candidates.
+# The Quality workflow validates this workflow's structure on every normal push.
 on:
-  pull_request:
-    paths:
-      - .github/workflows/ios-simulator-compile.yml
-      - .npmrc
-      - package.json
-      - package-lock.json
-      - apps/mobile/.npmrc
-      - apps/mobile/app.base.json
-      - apps/mobile/app.config.js
-      - apps/mobile/assets/**
-      - apps/mobile/babel.config.js
-      - apps/mobile/eas.json
-      - apps/mobile/font-assets.js
-      - apps/mobile/metro.config.js
-      - apps/mobile/modules/**
-      - apps/mobile/package.json
-      - apps/mobile/phase3-review-evidence.js
-      - apps/mobile/plugins/**
-      - apps/mobile/src/**
-      - '!apps/mobile/src/**/*.spec.*'
-      - '!apps/mobile/src/**/*.test.*'
-      - '!apps/mobile/src/**/__snapshots__/**'
-      - apps/mobile/tailwind.config.js
-      - packages/*/package.json
-      - packages/*/src/**
-      - docs/hugeToDo/launch-contract.json
-      - scripts/postinstall.mjs
-      - scripts/phase5/ios-simulator-compile-workflow.test.mjs
-      - scripts/phase5/patch-expo-widgets-lifecycle.mjs
-      - scripts/phase9/patch-react-native-view-shot-privacy.mjs
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/ios-simulator-compile.yml
-      - .npmrc
-      - package.json
-      - package-lock.json
-      - apps/mobile/.npmrc
-      - apps/mobile/app.base.json
-      - apps/mobile/app.config.js
-      - apps/mobile/assets/**
-      - apps/mobile/babel.config.js
-      - apps/mobile/eas.json
-      - apps/mobile/font-assets.js
-      - apps/mobile/metro.config.js
-      - apps/mobile/modules/**
-      - apps/mobile/package.json
-      - apps/mobile/phase3-review-evidence.js
-      - apps/mobile/plugins/**
-      - apps/mobile/src/**
-      - '!apps/mobile/src/**/*.spec.*'
-      - '!apps/mobile/src/**/*.test.*'
-      - '!apps/mobile/src/**/__snapshots__/**'
-      - apps/mobile/tailwind.config.js
-      - packages/*/package.json
-      - packages/*/src/**
-      - docs/hugeToDo/launch-contract.json
-      - scripts/postinstall.mjs
-      - scripts/phase5/ios-simulator-compile-workflow.test.mjs
-      - scripts/phase5/patch-expo-widgets-lifecycle.mjs
-      - scripts/phase9/patch-react-native-view-shot-privacy.mjs
   workflow_dispatch:
 
 permissions:

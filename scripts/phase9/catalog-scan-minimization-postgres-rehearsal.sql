@@ -6,6 +6,8 @@
 create role anon noinherit;
 create role authenticated noinherit;
 create role service_role noinherit bypassrls;
+create schema extensions;
+create extension pgcrypto with schema extensions;
 create schema private;
 
 create table public.shelf_scans (
@@ -617,10 +619,10 @@ begin
     from public.catalog_corrections
     where correction_type = 'category_issue'
       and description is null
-      and proposed_payload = '{}'::jsonb
-      and client_context = '{}'::jsonb
+      and proposed_payload = '{"productName":"Oversized legacy payload"}'::jsonb
+      and client_context = '{"route":"shelf_detail"}'::jsonb
   ) then
-    raise exception 'unbounded legacy correction text or JSON did not fail closed';
+    raise exception 'unbounded legacy correction fields were not dropped while bounded allowlisted fields were preserved';
   end if;
   if (select count(*) from public.catalog_corrections where barcode = '036000291452') <> 1 then
     raise exception 'leading-zero EAN shape was not canonicalized to UPC-A';

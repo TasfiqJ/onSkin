@@ -20,69 +20,15 @@ env:
 
 jobs:
   account-deletion-postgres:
-    name: Account deletion ${{ matrix.rehearsal.name }} on PostgreSQL ${{ matrix.postgres }}
+    name: Account deletion rehearsals on PostgreSQL ${{ matrix.postgres }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 2
       matrix:
         postgres:
           - 15-alpine
           - 17-alpine
-        rehearsal:
-          - name: lifecycle
-            database: account_deletion_0048
-            script: account-deletion-lifecycle-postgres-rehearsal.sql
-          - name: revenuecat-barrier
-            database: revenuecat_barrier_0049
-            script: revenuecat-deletion-barrier-postgres-rehearsal.sql
-          - name: service-writers
-            database: service_writers_0050
-            script: service-writer-deletion-barriers-postgres-rehearsal.sql
-          - name: revenuecat-tombstones
-            database: revenuecat_tombstones_0051
-            script: revenuecat-identity-tombstones-postgres-rehearsal.sql
-          - name: publication-fence
-            database: account_publication_fence_0052
-            script: account-publication-fence-postgres-rehearsal.sql
-          - name: entitlement-lanes
-            database: entitlement_lanes_0053
-            script: entitlement-authority-lanes-postgres-rehearsal.sql
-          - name: catalog-scan-minimization
-            database: catalog_scan_minimization_0059
-            script: catalog-scan-minimization-postgres-rehearsal.sql
-          - name: cat07-truthful-freshness
-            database: cat07_truthful_freshness_0060
-            script: cat07-truthful-freshness-postgres-rehearsal.sql
-          - name: catalog-import-0061-upgrade
-            database: catalog_import_upgrade_0061
-            script: catalog-import-0061-upgrade-postgres-rehearsal.sql
-          - name: catalog-curation-0062-upgrade
-            database: catalog_curation_upgrade_0062
-            script: catalog-curation-0062-upgrade-postgres-rehearsal.sql
-          - name: skin-profile-0064-upgrade
-            database: skin_profile_upgrade_0064
-            script: skin-profile-0064-upgrade-postgres-rehearsal.sql
-          - name: catalog-operator-0065-upgrade
-            database: catalog_operator_upgrade_0065
-            script: catalog-operator-0065-upgrade-postgres-rehearsal.sql
-          - name: clinical-content-0066-upgrade
-            database: clinical_content_upgrade_0066
-            script: clinical-content-0066-upgrade-postgres-rehearsal.sql
-          - name: catalog-release-0067-lint-contract
-            database: catalog_release_lint_contract_0067
-            script: catalog-release-0067-lint-contract-postgres-rehearsal.sql
-    services:
-      postgres:
-        image: postgres:${{ matrix.postgres }}
-        env:
-          POSTGRES_PASSWORD: layerwell_rehearsal
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - name: Checkout
         # actions/checkout v6.0.3
@@ -90,12 +36,79 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Execute isolated PostgreSQL rehearsal
-        env:
-          PGPASSWORD: layerwell_rehearsal
+      - name: Execute all isolated PostgreSQL rehearsals
         run: |
-          createdb -h 127.0.0.1 -U postgres "${{ matrix.rehearsal.database }}"
-          psql -h 127.0.0.1 -U postgres -d "${{ matrix.rehearsal.database }}" -v ON_ERROR_STOP=1 -f "scripts/phase9/${{ matrix.rehearsal.script }}"
+          set -euo pipefail
+          current_container=''
+          cleanup() {
+            if [ -n "$current_container" ]; then
+              docker rm -f "$current_container" >/dev/null 2>&1 || true
+            fi
+          }
+          trap cleanup EXIT
+          while IFS='|' read -r database script; do
+            if [ -z "$database" ]; then
+              continue
+            fi
+            current_container="layerwell-${database}-${{ matrix.postgres }}"
+            echo "Running $script in isolated PostgreSQL ${{ matrix.postgres }} cluster"
+            docker run --detach \
+              --name "$current_container" \
+              --env POSTGRES_PASSWORD=layerwell_rehearsal \
+              --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace,readonly" \
+              --workdir /workspace/scripts/phase9 \
+              "postgres:${{ matrix.postgres }}" >/dev/null
+            ready='false'
+            for attempt in $(seq 1 60); do
+              if docker exec "$current_container" pg_isready -U postgres >/dev/null 2>&1; then
+                ready='true'
+                break
+              fi
+              sleep 1
+            done
+            if [ "$ready" != 'true' ]; then
+              echo "PostgreSQL did not become ready for $script" >&2
+              exit 1
+            fi
+            # The official image briefly accepts connections during initdb,
+            # then restarts the server. Wait through that handoff and require
+            # the final post-init server to accept connections.
+            sleep 2
+            ready='false'
+            for attempt in $(seq 1 60); do
+              if docker exec "$current_container" pg_isready -U postgres >/dev/null 2>&1; then
+                ready='true'
+                break
+              fi
+              sleep 1
+            done
+            if [ "$ready" != 'true' ]; then
+              echo "PostgreSQL final server did not become ready for $script" >&2
+              exit 1
+            fi
+            docker exec "$current_container" createdb -U postgres "$database"
+            docker exec \
+              --workdir /workspace/scripts/phase9 \
+              "$current_container" \
+              psql -U postgres -d "$database" -v ON_ERROR_STOP=1 -f "$script"
+            docker rm -f "$current_container" >/dev/null
+            current_container=''
+          done <<'REHEARSALS'
+          account_deletion_0048|account-deletion-lifecycle-postgres-rehearsal.sql
+          revenuecat_barrier_0049|revenuecat-deletion-barrier-postgres-rehearsal.sql
+          service_writers_0050|service-writer-deletion-barriers-postgres-rehearsal.sql
+          revenuecat_tombstones_0051|revenuecat-identity-tombstones-postgres-rehearsal.sql
+          account_publication_fence_0052|account-publication-fence-postgres-rehearsal.sql
+          entitlement_lanes_0053|entitlement-authority-lanes-postgres-rehearsal.sql
+          catalog_scan_minimization_0059|catalog-scan-minimization-postgres-rehearsal.sql
+          cat07_truthful_freshness_0060|cat07-truthful-freshness-postgres-rehearsal.sql
+          catalog_import_upgrade_0061|catalog-import-0061-upgrade-postgres-rehearsal.sql
+          catalog_curation_upgrade_0062|catalog-curation-0062-upgrade-postgres-rehearsal.sql
+          skin_profile_upgrade_0064|skin-profile-0064-upgrade-postgres-rehearsal.sql
+          catalog_operator_upgrade_0065|catalog-operator-0065-upgrade-postgres-rehearsal.sql
+          clinical_content_upgrade_0066|clinical-content-0066-upgrade-postgres-rehearsal.sql
+          catalog_release_lint_contract_0067|catalog-release-0067-lint-contract-postgres-rehearsal.sql
+          REHEARSALS
 
   supabase-local-reset:
     name: Credential-free Supabase reset and database tests

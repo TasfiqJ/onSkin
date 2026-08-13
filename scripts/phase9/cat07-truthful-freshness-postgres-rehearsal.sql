@@ -169,7 +169,7 @@ insert into public.products (
     'serum', 'cat07-reviewed-serum', 'internal_derived',
     '62000000-0000-4000-8000-000000000001', 'cat07-catalog',
     current_date, 'US', 'active', 'reviewed', 'usable', true,
-    statement_timestamp() - interval '1 minute', 180
+    statement_timestamp() - interval '1 minute', 12
   ),
   (
     '61000000-0000-4000-8000-000000000002', '10000014', 'CAT07 category serum',
@@ -177,6 +177,13 @@ insert into public.products (
     '62000000-0000-4000-8000-000000000001', 'cat07-category',
     current_date, 'US', 'active', 'reviewed', 'usable', true,
     statement_timestamp() - interval '1 minute', null
+  ),
+  (
+    '61000000-0000-4000-8000-000000000003', '10000021', 'CAT07 invalid default',
+    'serum', 'cat07-reviewed-serum', 'internal_derived',
+    '62000000-0000-4000-8000-000000000001', 'cat07-invalid-default',
+    current_date, 'US', 'active', 'reviewed', 'usable', true,
+    statement_timestamp() - interval '1 minute', 180
   );
 
 insert into public.product_pao_expiry (
@@ -269,6 +276,16 @@ begin
       and catalog_pao_recorded_at is not null
   ) then
     raise exception 'CAT07_CATALOG_PAO_SNAPSHOT_NOT_BACKFILLED';
+  end if;
+
+  if not exists (
+    select 1 from public.products
+    where id = '61000000-0000-4000-8000-000000000003'
+      and default_pao_months is null
+      and review_status = 'needs_review'
+      and recommendation_eligible = false
+  ) then
+    raise exception 'CAT07_OVERSIZED_PRODUCT_DEFAULT_NOT_QUARANTINED';
   end if;
 
   if exists (
