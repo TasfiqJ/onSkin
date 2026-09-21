@@ -7,7 +7,7 @@ select plan(23);
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260921000075'::text,
+  '20260921000076'::text,
   'migration history retains COM-01A zero admission through the current head'
 );
 
@@ -471,8 +471,6 @@ select is(
 
 delete from public.commerce_click_events
  where id = '72000000-0000-4000-8000-000000000030';
-delete from auth.users
- where id = '72000000-0000-4000-8000-000000000001';
 
 select ok(
   not pg_catalog.has_table_privilege(

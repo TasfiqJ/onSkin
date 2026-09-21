@@ -7,13 +7,13 @@ select plan(53);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  91::bigint,
-  'CAT-07 behavior from 20260718000060 runs against the exact 91-migration source history'
+  92::bigint,
+  'CAT-07 behavior from 20260718000060 runs against the exact 92-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260921000075'::text,
+  '20260921000076'::text,
   'CAT-07 remains effective through the current quiz-contract successor head'
 );
 

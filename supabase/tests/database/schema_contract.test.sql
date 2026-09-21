@@ -31,13 +31,13 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  91::bigint,
-  'all 91 repository migrations are recorded'
+  92::bigint,
+  'all 92 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260921000075'::text,
+  '20260921000076'::text,
   'migration history reaches the current quiz-contract successor'
 );
 

@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(215);
+select plan(222);
 
 -- Supabase API grants are hosted-bootstrap state rather than migration-owned.
 -- Rehearse the trigger/RPC contract with only the table privileges the normal
@@ -40,13 +40,15 @@ insert into auth.users (id) values
   ('70000000-0000-4000-8000-000000000002'),
   ('70000000-0000-4000-8000-000000000003'),
   ('70000000-0000-4000-8000-000000000004'),
-  ('70000000-0000-4000-8000-000000000005');
+  ('70000000-0000-4000-8000-000000000005'),
+  ('70000000-0000-4000-8000-000000000006');
 insert into auth.sessions (id, user_id) values
   ('71000000-0000-4000-8000-000000000001', '70000000-0000-4000-8000-000000000001'),
   ('71000000-0000-4000-8000-000000000002', '70000000-0000-4000-8000-000000000002'),
   ('71000000-0000-4000-8000-000000000003', '70000000-0000-4000-8000-000000000003'),
   ('71000000-0000-4000-8000-000000000004', '70000000-0000-4000-8000-000000000004'),
-  ('71000000-0000-4000-8000-000000000005', '70000000-0000-4000-8000-000000000005');
+  ('71000000-0000-4000-8000-000000000005', '70000000-0000-4000-8000-000000000005'),
+  ('71000000-0000-4000-8000-000000000006', '70000000-0000-4000-8000-000000000006');
 
 select ok(
   pg_catalog.pg_get_functiondef(
@@ -274,7 +276,7 @@ select throws_ok(
 select is(
   (select count(*) from public.health_consent_copy_registry
     where review_status = 'draft_blocked'),
-  16::bigint,
+  18::bigint,
   'installed current and historical disclosure copies are truthfully draft-blocked'
 );
 
@@ -549,7 +551,7 @@ select results_eq(
      order by review_status$$,
   $$values
     ('approved'::text, 7::bigint),
-    ('draft_blocked'::text, 9::bigint)$$,
+    ('draft_blocked'::text, 11::bigint)$$,
   'only grant rows are promoted; refusal and withdrawal copy remains draft truth'
 );
 select results_eq(
@@ -608,6 +610,69 @@ select ok(
        and state = 'active' and epoch = 1
   ),
   'the first processing epoch is active'
+);
+
+-- The grant RPC stamps its receipt with clock_timestamp(), later than this
+-- file's BEGIN. A subsequent statement in that same transaction must accept
+-- it, while a genuinely future-dated ledger row must still fail closed.
+set local role authenticated;
+select ok(
+  public.has_current_consent('health_data_collection'),
+  'a same-transaction grant is current for the next authenticated statement'
+);
+select ok(
+  public.has_current_exact_consent(
+    'health_data_collection',
+    'draft-v1-2026-07-10',
+    '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd'
+  ),
+  'the exact same-transaction grant satisfies the health-profile read and write fence'
+);
+reset role;
+
+select pg_catalog.set_config(
+  'request.jwt.claims',
+  '{"sub":"70000000-0000-4000-8000-000000000006","role":"authenticated","session_id":"71000000-0000-4000-8000-000000000006"}',
+  true
+);
+insert into public.consents (
+  user_id, consent_type, granted, version, consent_text_hash, granted_at
+) values (
+  '70000000-0000-4000-8000-000000000006',
+  'marketing', true, 'pgtap-marketing-v1', repeat('a', 64),
+  pg_catalog.statement_timestamp() - interval '1 second'
+);
+set local role authenticated;
+select ok(
+  public.has_current_consent('marketing'),
+  'a past-dated owner receipt remains admissible'
+);
+select ok(
+  public.has_current_exact_consent('marketing', 'pgtap-marketing-v1', repeat('a', 64)),
+  'a past-dated exact owner receipt remains admissible'
+);
+reset role;
+insert into public.consents (
+  user_id, consent_type, granted, version, consent_text_hash, granted_at
+) values (
+  '70000000-0000-4000-8000-000000000006',
+  'marketing', true, 'pgtap-marketing-v1', repeat('a', 64),
+  pg_catalog.statement_timestamp() + interval '1 day'
+);
+set local role authenticated;
+select ok(
+  not public.has_current_consent('marketing'),
+  'a truly future-dated receipt cannot satisfy the generic consent helper'
+);
+select ok(
+  not public.has_current_exact_consent('marketing', 'pgtap-marketing-v1', repeat('a', 64)),
+  'a truly future-dated receipt cannot satisfy the exact consent helper'
+);
+reset role;
+select pg_catalog.set_config(
+  'request.jwt.claims',
+  '{"sub":"70000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"71000000-0000-4000-8000-000000000001"}',
+  true
 );
 
 -- Dedicated dependent-lifecycle adversary owner. This proves exact copy,
@@ -2670,19 +2735,63 @@ select lives_ok(
   'the second epoch can enter withdrawal with a fresh key'
 );
 reset role;
+select throws_ok(
+  $$delete from auth.users where id = '70000000-0000-4000-8000-000000000001'$$,
+  '55000',
+  'ACCOUNT_DELETION_AUTH_NOT_READY',
+  'direct auth deletion cannot bypass the required account-deletion lease'
+);
+-- This transaction-local fixture supplies only the final auth lease needed
+-- to isolate health/photo cascade behavior; the broader deletion workflow is
+-- exercised by its own database and Edge rehearsals. Nothing here commits.
+insert into public.account_deletion_requests (
+  user_id,
+  initiating_session_id,
+  completion_token_hash,
+  user_hash,
+  user_lookup_hash,
+  next_step,
+  revenuecat_result,
+  posthog_result,
+  sessions_result,
+  apple_result,
+  providers_final_result,
+  lease_token,
+  lease_expires_at
+) values (
+  '70000000-0000-4000-8000-000000000001',
+  '71000000-0000-4000-8000-000000000001',
+  't_' || repeat('a', 64),
+  'u_' || repeat('b', 32),
+  'd_' || repeat('c', 32),
+  'auth',
+  'already_absent',
+  'skipped',
+  'revoked',
+  'skipped',
+  'reconciled',
+  pg_catalog.gen_random_uuid(),
+  pg_catalog.clock_timestamp() + interval '10 minutes'
+);
 select lives_ok(
   $$delete from auth.users where id = '70000000-0000-4000-8000-000000000001'$$,
-  'hard account deletion composes with an in-flight health withdrawal and photo self-FK'
+  'leased hard account deletion composes with an in-flight health withdrawal and photo self-FK'
 );
 select ok(
   not exists (select 1 from public.health_processing_states where user_id = '70000000-0000-4000-8000-000000000001')
     and not exists (select 1 from public.health_consent_withdrawal_operations where user_id = '70000000-0000-4000-8000-000000000001')
-    and not exists (select 1 from public.photos where user_id = '70000000-0000-4000-8000-000000000001'),
-  'account deletion cascades all health lifecycle and photo rows'
+    and not exists (select 1 from public.photos where user_id = '70000000-0000-4000-8000-000000000001')
+    and exists (
+      select 1 from public.account_deletion_requests
+       where completion_token_hash = 't_' || repeat('a', 64)
+         and user_id is null
+         and next_step = 'complete'
+    ),
+  'leased account deletion cascades health/photo rows and retains only the terminal receipt'
 );
 
 -- Migration-owner-only disclosure lifecycle rehearsal. This pgTAP transaction
--- rolls back, so the installed 15 current tuples remain draft_blocked rows.
+-- rolls back, so the installed draft disclosure copies retain their status.
 select throws_ok(
   $$update public.health_consent_copy_registry
        set is_current = false

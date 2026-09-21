@@ -35,8 +35,8 @@ import {
 } from './database-types-contract-lib.mjs';
 
 const PINNED_CLI_VERSION = '2.117.0';
-const EXPECTED_MIGRATION_COUNT = 91;
-const EXPECTED_LATEST_MIGRATION = '20260921000075';
+const EXPECTED_MIGRATION_COUNT = 92;
+const EXPECTED_LATEST_MIGRATION = '20260921000076';
 const COMMERCE_UPGRADE_MIGRATION = '20260729000072';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
@@ -169,7 +169,7 @@ const laterRehearsalMigrationNames = migrationFiles.filter((name) => {
 });
 if (
   laterRehearsalMigrationNames.map((name) => name.slice(0, 14)).join(',') !==
-  '20260921000073,20260921000074'
+  '20260921000073,20260921000074,20260921000075'
 ) {
   throw new Error('The post-0072 rehearsal migration inventory changed without review.');
 }
@@ -706,6 +706,7 @@ try {
     );
     // Preserve the exact 0067-to-0072 predecessor states. The 0073 catalog
     // boundary and 0074 consent correction cannot run before 0070 exists;
+    // 0075 quiz provenance follows only after the earlier chain is restored.
     // restore all later migrations only after the exact 0072 rehearsal.
     for (const migration of laterRehearsalMigrations) {
       await rename(migration.withheld, migration.installed);

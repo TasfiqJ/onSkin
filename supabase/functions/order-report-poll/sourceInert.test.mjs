@@ -96,7 +96,7 @@ test('migration 0072 revokes publication and stale-poller writes without revokin
 
 test('pgTAP contracts bind exact head and forward-only 0071 to 0072 cutover', () => {
   assert.match(databaseContract, /select plan\(23\)/u);
-  assert.match(databaseContract, /'20260921000075'::text/u);
+  assert.match(databaseContract, /'20260921000076'::text/u);
   assert.match(databaseContract, /COMMERCE_ADMISSION_CONTROL_MIGRATION_OWNED/u);
   assert.match(databaseContract, /COMMERCE_ADMISSION_CLOSED/u);
   assert.match(databaseContract, /COMMERCE_ORDER_ATTRIBUTION_PUBLICATION_CLOSED/u);
