@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 
 import {
+  auditStoreOnlyResolvedApp,
   auditStoreOnlyRelease,
   readStoreOnlyReleaseInputs,
 } from './store-only-release-audit.mjs';
@@ -12,6 +13,15 @@ assert.equal(result.status, 'pass');
 assert.equal(result.clientDelivery, 'store-build-only');
 assert.equal(result.easUpdateEnabled, false);
 console.log('OK accepted store-only release policy passes');
+
+auditStoreOnlyResolvedApp(inputs.app, 'development');
+const resolvedOverride = structuredClone(inputs.app);
+resolvedOverride.updates.enabled = true;
+assert.throws(
+  () => auditStoreOnlyResolvedApp(resolvedOverride, 'staging'),
+  /Resolved staging config updates.enabled must be false/,
+);
+console.log('OK resolved variant OTA overrides fail closed');
 
 const updateEnabled = structuredClone(inputs);
 updateEnabled.app.updates.enabled = true;

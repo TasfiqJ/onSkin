@@ -38,8 +38,9 @@ number rather than trusting configuration alone.
 The Progress review pipeline includes native ML Kit face detection and Expo
 image manipulation. Any build created before those dependencies were added is
 not valid capture-analysis evidence. Create a fresh binary; do not deliver the
-change as an OTA-only update. The repo-owned platform adapter intentionally
-keeps Expo web from loading ML Kit, while native autolinking must resolve
+change through an OTA update; client delivery is store-bundled only. The
+repo-owned platform adapter intentionally keeps Expo web from loading ML Kit,
+while native autolinking must resolve
 `RNMLKitFaceDetection` and `expo-image-manipulator` on both platforms.
 Deploy the additive photo-quality provenance migration to staging before any
 future server-side photo metadata work. The database must clear old synthetic
@@ -52,7 +53,10 @@ photo image or metadata request during local save.
 
 - `development`: internal dev client, `APP_VARIANT=development`, native camera enabled, native OCR disabled by default until an evidence build is intentionally selected.
 - `staging`: internal evidence candidate, `APP_VARIANT=staging`, native camera enabled, and native OCR enabled so the Apple Vision candidate can be compiled and subjected to the artifact-bound physical-device gate. This is not a release clearance or device-proof signal.
-- `production`: production channel only after brand/legal clearance and store credentials are complete; native OCR remains disabled until its exact artifact-bound evidence gate is complete.
+- `production`: store-distribution build profile only after brand/legal
+  clearance and store credentials are complete; native OCR remains disabled
+  until its exact artifact-bound evidence gate is complete. No update channel
+  is configured.
 
 All three profiles use `macos-tahoe-26.4-xcode-26.4` for build/test parity.
 Production builds must not silently fall back to a different profile or

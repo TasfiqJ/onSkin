@@ -55,13 +55,20 @@ function bulletValues(source, label) {
     .filter((value) => value !== null);
 }
 
-function exactPacketValue({ values, expected, label, packet, errors }) {
+function exactPacketValue({
+  values,
+  expected,
+  label,
+  packet,
+  errors,
+  mismatchSource = 'archive evidence index',
+}) {
   if (values.length !== 1 || values[0] === null || values[0] === '') {
     errors.push(`${packet} ${label} must appear exactly once with one non-empty value.`);
     return false;
   }
   if (values[0] !== expected) {
-    errors.push(`${packet} ${label} does not match the archive evidence index.`);
+    errors.push(`${packet} ${label} does not match the ${mismatchSource}.`);
     return false;
   }
   return true;
@@ -280,17 +287,24 @@ export function auditIosReleaseCandidateCrossBinding({
       'iOS bundle identifier',
       requireString(validation.build?.bundleIdentifier, 'validation.build.bundleIdentifier'),
     ],
-    ['EAS channel', 'production'],
+    ['Client delivery', 'store-build-only', 'accepted store-only release policy'],
+    ['EAS Update channel', 'none', 'accepted store-only release policy'],
   ];
-  const manifestMatched = manifestChecks.every(([label, expected]) =>
+  const requiredManifestMatched = manifestChecks.every(([label, expected, mismatchSource]) =>
     exactPacketValue({
       values: tableValues(manifest, label),
       expected,
       label,
       packet: 'RC manifest',
       errors,
+      mismatchSource,
     }),
   );
+  const legacyChannelRows = tableValues(manifest, 'EAS channel');
+  if (legacyChannelRows.length > 0) {
+    errors.push('RC manifest must omit the legacy EAS channel row under store-only delivery.');
+  }
+  const manifestMatched = requiredManifestMatched && legacyChannelRows.length === 0;
 
   const storePacketChecks = [
     [

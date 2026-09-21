@@ -651,7 +651,7 @@
       "id": "IOS-06",
       "status": "blocked",
       "blockedBy": ["IOS-05", "ACCT-02"],
-      "nextAction": "After the founder-controlled Expo organization grants access, link the EAS project, record the public owner and project ID, configure audited development, staging, and production environments and channels, and retain redacted project-info and build evidence.",
+      "nextAction": "After the founder-controlled Expo organization grants access, link the EAS project, record the public owner and project ID, configure audited development, staging, and production build environments without update channels, and retain redacted project-info and build evidence.",
       "evidenceRefs": [
         "apps/mobile/eas.json",
         "docs/phase-2-production-infrastructure-runbook.md",
@@ -717,7 +717,7 @@
       "id": "IOS-11",
       "status": "in_progress",
       "blockedBy": ["IOS-10"],
-      "nextAction": "Link the real EAS channels, freeze a release candidate and runtime fingerprint, execute a staging OTA rollback and native-change rejection drill, and retain update IDs, logs, owners, and proof that no update crossed a native, privacy, export, or feature-contract boundary.",
+      "nextAction": "Keep EAS Update and build channels disabled; freeze an exact release candidate and runtime fingerprint, rehearse staging release halt, reviewed server containment, and store-binary hotfix paths, and retain build IDs, logs, owners, and supported-binary compatibility evidence.",
       "evidenceRefs": [
         "apps/mobile/eas.json",
         "apps/mobile/app.base.json",
@@ -2111,7 +2111,7 @@
       "id": "OPS-05",
       "status": "in_progress",
       "blockedBy": ["OPS-04"],
-      "nextAction": "Set approved RPO and RTO targets, configure real backups and recovery controls, finish migration and feature-kill-switch paths, and run retained staging drills for restore, server rollback, EAS Update rollback, native hotfix rejection, and incident communications.",
+      "nextAction": "Set approved RPO and RTO targets, configure real backups and recovery controls, finish migration and feature-kill-switch paths, and run retained staging drills for restore, reviewed server recovery, store-binary hotfix, release halt, and incident communications without OTA rollback.",
       "evidenceRefs": [
         "docs/phase-9/rollout-rollback-plan.md",
         "docs/phase-11/incident-rollback-drill.md",

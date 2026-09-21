@@ -1658,7 +1658,8 @@ function rcBindingFixture() {
       '| iOS app version | 1.0.0 |',
       '| iOS build number | 42 |',
       '| iOS bundle identifier | com.layerwell.app |',
-      '| EAS channel | production |',
+      '| Client delivery | store-build-only |',
+      '| EAS Update channel | none |',
       '',
     ].join('\n'),
     storePacketSource: [
@@ -1803,6 +1804,46 @@ test('rejects duplicate or ambiguous RC manifest and store-packet values', async
     const result = invalidRcBinding(value);
     assert.equal(result.storePacketMatched, false);
     assert.match(result.errors.join('\n'), /Archive SHA-256 must appear exactly once/u);
+  });
+});
+
+test('rejects OTA claims and legacy channel rows in a store-only RC manifest', async (t) => {
+  await t.test('delivery policy drift', () => {
+    const value = rcBindingFixture();
+    value.manifestSource = value.manifestSource.replace(
+      '| Client delivery | store-build-only |',
+      '| Client delivery | eas-update |',
+    );
+    const result = invalidRcBinding(value);
+    assert.equal(result.manifestMatched, false);
+    assert.match(result.errors.join('\n'), /Client delivery does not match/u);
+  });
+
+  await t.test('configured EAS Update channel claim', () => {
+    const value = rcBindingFixture();
+    value.manifestSource = value.manifestSource.replace(
+      '| EAS Update channel | none |',
+      '| EAS Update channel | production |',
+    );
+    const result = invalidRcBinding(value);
+    assert.equal(result.manifestMatched, false);
+    assert.match(result.errors.join('\n'), /EAS Update channel does not match/u);
+  });
+
+  await t.test('missing no-channel declaration', () => {
+    const value = rcBindingFixture();
+    value.manifestSource = value.manifestSource.replace('| EAS Update channel | none |\n', '');
+    const result = invalidRcBinding(value);
+    assert.equal(result.manifestMatched, false);
+    assert.match(result.errors.join('\n'), /EAS Update channel must appear exactly once/u);
+  });
+
+  await t.test('legacy channel row', () => {
+    const value = rcBindingFixture();
+    value.manifestSource += '| EAS channel | production |\n';
+    const result = invalidRcBinding(value);
+    assert.equal(result.manifestMatched, false);
+    assert.match(result.errors.join('\n'), /must omit the legacy EAS channel row/u);
   });
 });
 

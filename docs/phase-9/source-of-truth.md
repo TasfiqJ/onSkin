@@ -1,6 +1,12 @@
 # Phase 9 Source Of Truth
 
-Phase 9 turns the exact release candidate into evidence. A build is not release-ready until the release-candidate folder for that build contains the exact build-source Git SHA, iOS EAS build ID, EAS channel/runtime, Supabase project, RevenueCat project, Sentry project, PostHog project, App Store records, QA evidence, rollback proof, and named signoff.
+Phase 9 turns the exact release candidate into evidence. A build is not
+release-ready until its folder contains the exact build-source Git SHA, iOS EAS
+build ID, store-only client-delivery and no-update-channel declaration,
+runtime fingerprint, Supabase project, RevenueCat project, Sentry project,
+PostHog project, App Store records, QA evidence, store-only recovery proof,
+and named signoff. The fingerprint does not authorize EAS Update;
+`docs/UPDATE_DELIVERY_POLICY.md` governs client delivery.
 
 Do not treat generated scripts or templates as launch evidence. Non-strict
 checks prove the repo has the right gates. Strict checks require recorded live

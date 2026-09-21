@@ -75,34 +75,24 @@ live encrypted steps remain. Re-enable work after the repaired same-schema
 function passes a reviewed canary and ambiguous operations are reconciled; that
 worker recovery does not itself authorize user traffic.
 
-## EAS Update Eligibility
+## Client Delivery And Recovery
 
-An EAS Update may contain reviewed JavaScript/assets only when all of these are
-true:
+The accepted `docs/UPDATE_DELIVERY_POLICY.md` permits store-bundled client
+releases only. EAS Update, its channels, and OTA rollback are not configured or
+available for this release. A JavaScript, asset, native, privacy, signing,
+capability, or runtime defect requires a reviewed new binary and App Store
+hotfix. Halt expansion while the hotfix is built and tested; use a reviewed
+server-side flag or provider containment only when it safely limits the defect
+without bypassing privacy, payment, deletion, or owner-isolation controls.
 
-- its runtime fingerprint exactly matches the target installed binary;
-- the update was first published to `staging`, installed on a matching native
-  build, and passed the affected smoke, privacy, payment, accessibility, and
-  owner-isolation tests;
-- no native module, plugin, entitlement, permission, Info.plist value, privacy
-  manifest, SDK signature, export declaration, WidgetKit/ActivityKit target,
-  bundle identity, cryptography, or native data-protection behavior changes;
-- it does not make an unavailable feature appear available or change a
-  professionally reviewed health, privacy, subscription, legal, or store claim
-  without the same approval required for a binary release; and
-- server/database changes remain backward-compatible with every supported
-  binary and retained rollback target.
-
-Use a new App Store binary for every native, signing, entitlement, privacy,
-export, SDK, capability, or runtime-contract change. EAS Update cannot repair a
-bad binary or cross a runtime boundary.
+Keep server and database changes backward-compatible with supported binaries.
+The runtime fingerprint is retained for build and migration identity, not OTA
+eligibility.
 
 ## Recovery Paths
 
-- OTA rollback: update-caused JavaScript/content regressions within the exact
-  same runtime fingerprint, using `eas update:rollback` to a reviewed prior
-  update or embedded build.
-- New binary: native/plugin/permission/runtimeVersion/config changes.
+- New App Store binary: JavaScript, asset, native, plugin, permission, privacy,
+  runtime, or configuration defects in the client.
 - Server flag disable: risky backend or feature-gated surfaces.
 - RevenueCat pause: stop processing webhook grants only with finance/engineering approval and a reconciliation plan.
 - Store halt: hold manual release, pause an Apple phased **version update**, or
@@ -114,18 +104,14 @@ account deletion, export, payment truth, owner-scoped data, and consent state.
 
 ## Required Drill Evidence
 
-Retain the incident ID, frozen and rollback SHAs, EAS update IDs, channel,
-branch, runtime fingerprint, commands, authorized publisher, timestamps,
-monitoring screenshots/exports, privacy/payment smoke, support decision, and
-recovery signoff. A typed command in this document is not drill evidence.
+Retain the incident ID, frozen and hotfix source SHAs, exact iOS EAS build IDs,
+native build numbers, runtime fingerprints, authorized build/submission owner,
+timestamps, monitoring screenshots/exports, privacy/payment smoke, support
+decision, and recovery signoff. A typed command in this document is not drill
+evidence.
 
 Every RC packet must name the release manager, hotfix owner, support owner,
-privacy owner, and the people allowed to publish EAS Update or App Store builds.
+privacy owner, and the people allowed to build and submit App Store binaries.
 No single unavailable person may be the only rollback authority.
 
-Primary references:
-
-- https://docs.expo.dev/eas-update/deployment/
-- https://docs.expo.dev/eas-update/runtime-versions/
-- https://docs.expo.dev/eas-update/rollbacks/
-- https://docs.expo.dev/eas-update/rollouts/
+Primary reference: `docs/UPDATE_DELIVERY_POLICY.md`.

@@ -28,6 +28,7 @@ import { auditIosReleaseCandidateCrossBinding } from './ios-release-candidate-cr
 import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
 import { auditIosPrivacySource } from './ios-privacy-contract.mjs';
 import {
+  auditStoreOnlyResolvedApp,
   auditStoreOnlyRelease,
   readStoreOnlyReleaseInputs,
 } from '../optimization/store-only-release-audit.mjs';
@@ -253,6 +254,15 @@ for (const variant of variants) {
       block(errors, false, message);
     }
     continue;
+  }
+  try {
+    auditStoreOnlyResolvedApp(config, variant);
+  } catch (error) {
+    block(
+      errors,
+      false,
+      `Store-only update-delivery policy: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
   block(
     errors,

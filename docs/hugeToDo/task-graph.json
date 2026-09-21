@@ -434,8 +434,8 @@
       "id": "IOS-06",
       "owner": "C",
       "prerequisites": ["IOS-05"],
-      "nextAction": "Complete and capture acceptance evidence: Link the EAS project, owner, project ID, channels, and development/preview/production environments",
-      "acceptance": "EAS project info and environment inventory match the launch contract"
+      "nextAction": "Complete and capture acceptance evidence: Link the EAS project, owner, project ID, and development/staging/production build environments without update channels",
+      "acceptance": "EAS project info and environment inventory match the store-only launch contract"
     },
     {
       "id": "IOS-07",
@@ -469,8 +469,8 @@
       "id": "IOS-11",
       "owner": "C",
       "prerequisites": ["IOS-10"],
-      "nextAction": "Complete and capture acceptance evidence: Create rollback-safe EAS Update/channel policy",
-      "acceptance": "Native changes require new binary; JS updates cannot cross native/privacy/feature-contract boundaries"
+      "nextAction": "Complete and capture acceptance evidence: Enforce store-bundled client delivery and rehearse halt, containment, and binary-hotfix recovery",
+      "acceptance": "No OTA channels or updates are enabled; affected flows and supported binaries pass hotfix drills"
     },
     {
       "id": "DB-01",

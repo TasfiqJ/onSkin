@@ -35,16 +35,26 @@ export function readStoreOnlyReleaseInputs() {
   };
 }
 
+export function auditStoreOnlyResolvedApp(app, variant) {
+  const updates = app?.updates;
+  requireCondition(
+    updates?.enabled === false,
+    `Resolved ${variant} config updates.enabled must be false.`,
+  );
+  requireCondition(
+    updates?.checkAutomatically === 'NEVER',
+    `Resolved ${variant} config updates.checkAutomatically must be NEVER.`,
+  );
+  requireCondition(
+    !hasOwn(updates, 'url'),
+    `Resolved ${variant} config must omit updates.url.`,
+  );
+}
+
 export function auditStoreOnlyRelease(inputs) {
   const { app, eas, mobilePackage, maintenanceContract, policyText, architectureText } =
     inputs;
-  const updates = app?.updates;
-  requireCondition(updates?.enabled === false, 'updates.enabled must be false.');
-  requireCondition(
-    updates?.checkAutomatically === 'NEVER',
-    'updates.checkAutomatically must be NEVER.',
-  );
-  requireCondition(!hasOwn(updates, 'url'), 'Store-only config must omit updates.url.');
+  auditStoreOnlyResolvedApp(app, 'base');
   requireCondition(
     app?.runtimeVersion?.policy === 'fingerprint',
     'runtimeVersion.policy must remain fingerprint for artifact compatibility.',

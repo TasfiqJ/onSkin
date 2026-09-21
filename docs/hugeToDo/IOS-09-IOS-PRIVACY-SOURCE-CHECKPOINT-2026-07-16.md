@@ -157,7 +157,7 @@ HEAD; ignored/untracked metadata outside the permitted raw evidence subtree,
 worktree drift, skip-worktree/assume-unchanged flags, later RC mutations, and
 changes outside the RC fail. The manifest repeats and
 must match the source SHA, EAS UUID, iOS version/build, bundle identifier, and
-production channel.
+store-only client-delivery declaration with no EAS Update channel.
 
 `scripts/phase9/ios-release-candidate-cross-binding.mjs` gives the store
 inspector a separately tested evidence-present contract. It matches the exact
