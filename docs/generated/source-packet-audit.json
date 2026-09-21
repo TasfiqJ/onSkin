@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T01:37:11.736Z",
+  "generatedAt": "2026-09-21T11:13:02.159Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -10,8 +10,8 @@
       "name": "README.md",
       "path": "04_repo_docs/README.md",
       "exists": true,
-      "bytes": 2928,
-      "sha256": "0dc3f7b6b077539cb34fc22b7d8f24f103b029febb93fe335bb48fbc37d9b46b",
+      "bytes": 2986,
+      "sha256": "40ed273c037f23232fd687f0cd9f933562b2c628f714172b49991523b570d75c",
       "title": "Layerwell"
     },
     {
@@ -32,8 +32,8 @@
     },
     {
       "path": "04_repo_docs/README.md",
-      "bytes": 2928,
-      "sha256": "0dc3f7b6b077539cb34fc22b7d8f24f103b029febb93fe335bb48fbc37d9b46b"
+      "bytes": 2986,
+      "sha256": "40ed273c037f23232fd687f0cd9f933562b2c628f714172b49991523b570d75c"
     },
     {
       "path": "04_repo_docs/docs/ARCHITECTURE.md",
@@ -52,8 +52,8 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 94119,
-      "sha256": "f2862262e79bff5df0a480f66510547745a765038a9e4bec4eec6a119edda7fb"
+      "bytes": 104991,
+      "sha256": "de226941b85c8540a0e04b22059008af3a7f4ae0f6932f10936c15c9abd72a0b"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
@@ -62,8 +62,8 @@
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
-      "bytes": 69870,
-      "sha256": "9cd41d4a19e5932677dc69cd077178316ce34b26a9f6921df02d578343996e99"
+      "bytes": 69706,
+      "sha256": "6e08011d1d7f4c5dd11cef4dec1fafdc26ab87aa0810a303bb266f64b3a5794b"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md",
@@ -131,10 +131,10 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 94119,
-      "activeBytes": 94119,
-      "sourceSha256": "f2862262e79bff5df0a480f66510547745a765038a9e4bec4eec6a119edda7fb",
-      "activeSha256": "f2862262e79bff5df0a480f66510547745a765038a9e4bec4eec6a119edda7fb",
+      "sourceBytes": 104991,
+      "activeBytes": 104991,
+      "sourceSha256": "de226941b85c8540a0e04b22059008af3a7f4ae0f6932f10936c15c9abd72a0b",
+      "activeSha256": "de226941b85c8540a0e04b22059008af3a7f4ae0f6932f10936c15c9abd72a0b",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -157,10 +157,10 @@
       "title": "Master Plan",
       "sourcePath": "04_repo_docs/docs/MASTER_PLAN.md",
       "activePath": "docs/MASTER_PLAN.md",
-      "sourceBytes": 69870,
-      "activeBytes": 69870,
-      "sourceSha256": "9cd41d4a19e5932677dc69cd077178316ce34b26a9f6921df02d578343996e99",
-      "activeSha256": "9cd41d4a19e5932677dc69cd077178316ce34b26a9f6921df02d578343996e99",
+      "sourceBytes": 69706,
+      "activeBytes": 69706,
+      "sourceSha256": "6e08011d1d7f4c5dd11cef4dec1fafdc26ab87aa0810a303bb266f64b3a5794b",
+      "activeSha256": "6e08011d1d7f4c5dd11cef4dec1fafdc26ab87aa0810a303bb266f64b3a5794b",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

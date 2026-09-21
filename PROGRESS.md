@@ -4,6 +4,27 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-09-21
+
+### Launch-verification integrity checkpoint
+
+Repaired the execution baseline after newer authentication and date-boundary
+coordinators were mistaken for persisted stores. The inventory now excludes
+three explicitly in-memory coordinators, includes the private SecureStore
+wrapper and previously omitted migration tables/routes, and passes its canonical
+check and omission smoke. The active decisions and required strategy-packet
+mirror are identical again, and the strict source-packet audit passes.
+
+Updated the Phase 9 policy linter to model the exact reviewed RPC permissions,
+service-only catalog search, terminal-only account-deletion completion
+capability, and restrictive photo-update policy without changing database
+grants or weakening owner RLS. Its new negative tests run in the regular and
+strict lint commands. This is source verification only: hosted RLS, device,
+professional, and App Store evidence remains open, and no hugeToDo item is
+marked complete by this checkpoint. Historical generated QA packets remain
+stale against later source revisions and must not be republished as current
+execution evidence.
+
 ## 2026-07-29
 
 ### COM-01A literal zero admission source checkpoint

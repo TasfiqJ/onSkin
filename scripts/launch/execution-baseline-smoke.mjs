@@ -29,6 +29,21 @@ assert(
 );
 
 const inventory = buildFeatureInventory();
+for (const path of [
+  'apps/mobile/src/lib/auth/sessionBoundaryQueue.ts',
+  'apps/mobile/src/lib/query/localDateBoundaryStore.ts',
+  'apps/mobile/src/lib/serialTaskQueue.ts',
+]) {
+  assert(
+    !inventory.items.some((entry) => entry.id === `data-store:local:${path}`),
+    `${path} is in-memory coordination, not persisted user data`,
+  );
+}
+const privateSecureStore = inventory.items.find(
+  (entry) => entry.id === 'data-store:local:apps/mobile/src/lib/storage/privateSecureStore.ts',
+);
+assert(privateSecureStore, 'the iOS private SecureStore wrapper must be inventoried');
+assert.deepEqual(privateSecureStore.featureIds, ['F-02']);
 const featureKeys = inventory.features.map(({ key }) => key);
 assert.equal(featureKeys.length, 20);
 assert(exactSetProblems('features', featureKeys, featureKeys.slice(1)).length > 0);
@@ -121,6 +136,8 @@ assert(
 );
 
 const deletionLifecycleTableFeatures = {
+  account_deletion_requests: ['F-02', 'F-20'],
+  account_deletion_click_tombstones: ['F-02', 'F-20'],
   account_deletion_operations: ['F-02', 'F-20'],
   account_deletion_barriers: ['F-02', 'F-20'],
   account_deletion_steps: ['F-02', 'F-20'],
@@ -137,6 +154,20 @@ for (const [table, expectedFeatureIds] of Object.entries(deletionLifecycleTableF
     expectedFeatureIds,
     `${table} must remain mapped to its account/privacy, payment, and/or operator launch features`,
   );
+}
+
+for (const [table, expectedFeatureIds] of Object.entries({
+  catalog_import_versions: ['F-04'],
+  catalog_import_staged_products: ['F-04'],
+  catalog_import_batch_receipts: ['F-04'],
+  catalog_active_imports: ['F-04'],
+  shelf_mirror_versions: ['F-03'],
+  mobile_outbox_receipts: ['F-03'],
+  conflict_choice_mirror_versions: ['F-05'],
+})) {
+  const tableItem = inventory.items.find((entry) => entry.id === `data-store:postgres:${table}`);
+  assert(tableItem, `missing launch data authority ${table}`);
+  assert.deepEqual(tableItem.featureIds, expectedFeatureIds);
 }
 
 for (const id of [

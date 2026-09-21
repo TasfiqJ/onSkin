@@ -127,7 +127,15 @@ block(
 
 const clientCallableDefiners = new Set([
   'account_access_allowed()',
+  'account_deletion_write_allowed()',
   'account_write_allowed()',
+  'apply_conflict_choice_outbox_batch(jsonb)',
+  'apply_notification_delivery_outbox_batch(jsonb)',
+  'apply_notification_preferences_outbox_batch(jsonb)',
+  'apply_photo_delete_outbox_batch(jsonb)',
+  'apply_recommendation_preferences_outbox_batch(jsonb)',
+  'apply_shelf_outbox_batch(jsonb)',
+  'apply_shelf_scan_outbox_batch(jsonb)',
   'begin_health_data_consent_withdrawal(bigint, text, text, text)',
   'decline_initial_health_data_consent(bigint, text, text)',
   'export_catalog_corrections_for_subject(uuid, timestamptz, uuid, integer)',
@@ -139,12 +147,14 @@ const clientCallableDefiners = new Set([
   'get_account_access_state()',
   'grant_health_data_consent(bigint, text, text)',
   'has_current_consent(text)',
+  'has_current_exact_consent(text, text, text)',
   'owns_ask_turn_audit(uuid)',
   'owns_consent(uuid)',
   'owns_cycle(uuid)',
   'owns_photo(uuid)',
   'owns_routine(uuid)',
   'owns_user_product(uuid)',
+  'photo_outbox_insert_allowed(uuid)',
   'read_entitlement_projections()',
   'record_routine_completion(text, text, text, text, text, integer, text, text, text)',
   'refresh_routine_adherence()',
@@ -155,12 +165,18 @@ const clientCallableDefiners = new Set([
   'begin_health_dependent_consent_withdrawal(bigint, bigint, text, text, text, text)',
 ]);
 const serviceCallableDefiners = new Set([
+  'account_deletion_begin_apple_attempt(uuid, uuid, uuid)',
+  'account_deletion_checkpoint(uuid, uuid, uuid, text, text)',
+  'account_deletion_claim(uuid, text, boolean, uuid, uuid, text)',
+  'account_deletion_preflight(uuid, text)',
+  'account_deletion_record_failure(uuid, uuid, uuid, text, text)',
   'account_write_allowed(uuid)',
   'activate_account_publication_lease(uuid, uuid, text)',
   'apply_apple_auth_server_event(text, text, text[], text[], text, text, text, timestamptz, text)',
   'begin_account_deletion(uuid, uuid, text, text, timestamptz, bytea, bytea, bytea)',
   'begin_apple_auth_capture(uuid, uuid, uuid, text, text[], text[], text, text)',
   'begin_catalog_import(text, text, text, date, text, text, text, text, jsonb, text, text, text, text, text, text, text, integer, integer, integer, text)',
+  'begin_catalog_import(text, text, text, text, text)',
   'claim_due_health_consent_withdrawals(text, integer)',
   'claim_due_health_dependent_consent_withdrawals(text, integer)',
   'claim_health_consent_withdrawal_for_owner(uuid, uuid, text)',
@@ -180,6 +196,7 @@ const serviceCallableDefiners = new Set([
   'defer_health_dependent_consent_withdrawal(uuid, text, text, integer)',
   'defer_apple_auth_validation(uuid, bigint, text, text, integer)',
   'defer_account_deletion_revenuecat_provider_capacity(uuid, text, text, timestamptz)',
+  'erase_account_database_state(uuid, uuid, uuid)',
   'establish_revenuecat_deletion_identity_barrier(uuid, text, smallint, text[], text[], timestamptz)',
   'expire_app_granted_reverse_trials()',
   'finalize_account_deletion(uuid, text, smallint, timestamptz)',
@@ -206,6 +223,7 @@ const serviceCallableDefiners = new Set([
   'purge_expired_edge_rate_limits(integer)',
   'purge_expired_revenuecat_identity_tombstones(integer)',
   'prepare_health_data_consent_withdrawal(uuid, text)',
+  'promote_catalog_import(uuid)',
   'reconcile_revenuecat_entitlement_snapshot(uuid, timestamptz, text, boolean, text, timestamptz, text, text, boolean, timestamptz, text, text, text, text)',
   'reap_expired_account_publication_leases(integer)',
   'record_account_deletion_step(uuid, text, text, text, text, timestamptz)',
@@ -216,7 +234,8 @@ const serviceCallableDefiners = new Set([
   'reserve_account_publication_lease(uuid, uuid, text)',
   'reset_account_deletion_revenuecat_absence_observations(uuid, text, text)',
   'scrub_account_service_rows(uuid)',
-  'search_catalog_products(text, integer)',
+  'ready_catalog_import(uuid, text, bigint, bigint, bigint, jsonb)',
+  'stage_catalog_import_batch(uuid, bigint, bigint, jsonb, int, text)',
   'stage_catalog_import_chunk(uuid, text, integer, integer, jsonb)',
   'submit_catalog_correction(uuid, bigint, uuid, uuid, text, text, text, jsonb, jsonb)',
   'record_catalog_lookup_event(uuid, bigint, text, text, integer, integer)',
@@ -224,6 +243,9 @@ const serviceCallableDefiners = new Set([
   'update_account_deletion_step_payload(uuid, text, text, bytea)',
   'verify_catalog_import(uuid, text, text, text)',
 ]);
+
+const terminalCompletionCapability = 'account_deletion_completion_status(text)';
+const serviceCallableInvokers = new Set(['search_catalog_products(text, integer)']);
 
 for (const [allowlistName, allowlist] of [
   ['client SECURITY DEFINER', clientCallableDefiners],
@@ -240,6 +262,69 @@ for (const [allowlistName, allowlist] of [
       );
     }
   }
+}
+
+for (const key of serviceCallableInvokers) {
+  const fn = latestFunctions.get(key);
+  block(errors, Boolean(fn), `service SECURITY INVOKER allowlist entry ${key} must exist.`);
+  if (fn) {
+    block(
+      errors,
+      /security\s+invoker/i.test(fn.definition) && !/security\s+definer/i.test(fn.definition),
+      `service SECURITY INVOKER allowlist entry ${key} must remain SECURITY INVOKER.`,
+    );
+    block(
+      errors,
+      /set\s+search_path\s*=\s*''/i.test(fn.definition),
+      `${key} must pin SECURITY INVOKER search_path to ''.`,
+    );
+    block(
+      errors,
+      ['public', 'anon', 'authenticated'].every((role) => !fn.effectiveGrantRoles.has(role)) &&
+        fn.effectiveGrantRoles.has('service_role'),
+      `${key} must grant execute only to service_role.`,
+    );
+  }
+}
+
+const completionFunction = latestFunctions.get(terminalCompletionCapability);
+block(
+  errors,
+  Boolean(completionFunction),
+  `${terminalCompletionCapability} must remain installed as the reviewed terminal capability.`,
+);
+if (completionFunction) {
+  block(
+    errors,
+    /security\s+definer/i.test(completionFunction.definition),
+    `${terminalCompletionCapability} must remain SECURITY DEFINER.`,
+  );
+  block(
+    errors,
+    /p_completion_token_hash\s*!~\s*'\^t_\[0-9a-f\]\{64\}\$'/i.test(
+      completionFunction.definition,
+    ) &&
+      /where\s+deletion\.completion_token_hash\s*=\s*p_completion_token_hash\s+and\s+deletion\.next_step\s*=\s*'complete'\s*;/i.test(
+        completionFunction.definition,
+      ),
+    `${terminalCompletionCapability} must validate a high-entropy capability and reveal complete receipts only.`,
+  );
+  block(
+    errors,
+    ['anon', 'authenticated', 'service_role'].every((role) =>
+      completionFunction.effectiveGrantRoles.has(role),
+    ) && !completionFunction.effectiveGrantRoles.has('public'),
+    `${terminalCompletionCapability} must grant execute exactly to anon, authenticated, and service_role.`,
+  );
+  block(
+    errors,
+    completionFunction.privilegeEventsAfterDefinition.some(
+      (event) =>
+        event.kind === 'revoke' &&
+        ['public', 'anon', 'authenticated'].every((role) => event.roles.includes(role)),
+    ),
+    `${terminalCompletionCapability} must revoke execute from public, anon, and authenticated before its narrow grant.`,
+  );
 }
 
 for (const fn of latestFunctions.values()) {
@@ -260,10 +345,11 @@ for (const fn of latestFunctions.values()) {
   );
 
   for (const grant of grantEvents) {
+    block(errors, !grant.roles.includes('public'), `${key} must not grant execute to public.`);
     block(
       errors,
-      !grant.roles.includes('public') && !grant.roles.includes('anon'),
-      `${key} must not grant execute to public or anon.`,
+      !grant.roles.includes('anon') || key === terminalCompletionCapability,
+      `${key} must not grant execute to anon unless it is an approved capability RPC.`,
     );
   }
 
@@ -272,14 +358,14 @@ for (const fn of latestFunctions.values()) {
   if (effectiveGrantRoles.has('authenticated')) {
     block(
       errors,
-      clientCallableDefiners.has(key),
+      clientCallableDefiners.has(key) || key === terminalCompletionCapability,
       `${key} grants execute to authenticated but is not an approved client RPC/helper.`,
     );
   }
   if (effectiveGrantRoles.has('service_role')) {
     block(
       errors,
-      serviceCallableDefiners.has(key),
+      serviceCallableDefiners.has(key) || key === terminalCompletionCapability,
       `${key} grants execute to service_role but is not an approved service RPC.`,
     );
   }
@@ -375,6 +461,18 @@ const publicCatalogTables = new Set([
   'products',
 ]);
 
+const photoOwnerUpdateEvents = [
+  ...combined.matchAll(
+    /(create|drop)\s+policy(?:\s+if\s+exists)?\s+"photos_update_own"\s+on\s+public\.photos([\s\S]*?);/gi,
+  ),
+];
+const latestPhotoOwnerUpdate = photoOwnerUpdateEvents.at(-1);
+const photoOwnerUpdateRemainsScoped =
+  latestPhotoOwnerUpdate?.[1].toLowerCase() === 'create' &&
+  /for\s+update\s+to\s+authenticated\s+using\s*\(\s*\(select\s+auth\.uid\(\)\)\s*=\s*user_id\s*\)\s+with\s+check\s*\(\s*\(select\s+auth\.uid\(\)\)\s*=\s*user_id\s*\)/i.test(
+    latestPhotoOwnerUpdate[2] ?? '',
+  );
+
 for (const match of combined.matchAll(
   /create\s+policy\s+"([^"]+)"\s+on\s+(public|storage)\.([a-z0-9_]+)([\s\S]*?);/gi,
 )) {
@@ -382,6 +480,22 @@ for (const match of combined.matchAll(
   const allowsAllRead = /using\s*\(\s*true\s*\)/i.test(body);
   const allowsAllWrite = /with\s+check\s*\(\s*true\s*\)/i.test(body);
   if (!allowsAllRead && !allowsAllWrite) continue;
+
+  const reviewedPhotoRewrite =
+    policyName === 'photos_no_outbox_delete_rewrite' &&
+    schema === 'public' &&
+    table === 'photos' &&
+    /^\s+as\s+restrictive\s+for\s+update\s+to\s+authenticated\s+using\s*\(\s*true\s*\)\s+with\s+check\s*\(\s*public\.photo_outbox_insert_allowed\(id\)\s*\)\s*$/i.test(
+      body,
+    );
+  if (reviewedPhotoRewrite) {
+    block(
+      errors,
+      photoOwnerUpdateRemainsScoped,
+      'photos_no_outbox_delete_rewrite requires the owner-scoped photos_update_own policy.',
+    );
+    continue;
+  }
 
   block(
     errors,

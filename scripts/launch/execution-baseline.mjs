@@ -244,6 +244,7 @@ function nativeFeatures(name) {
 
 function dataFeatures(name) {
   const value = name.toLowerCase();
+  if (value === 'apps/mobile/src/lib/storage/privatesecurestore.ts') return ['F-02'];
   const exactTableFeatures = {
     account_deletion_operations: ['F-02', 'F-20'],
     account_deletion_barriers: ['F-02', 'F-20'],
@@ -260,6 +261,8 @@ function dataFeatures(name) {
     health_consent_withdrawal_steps: ['F-02'],
   };
   if (exactTableFeatures[value]) return exactTableFeatures[value];
+  if (value.startsWith('account_deletion_')) return ['F-02', 'F-20'];
+  if (value === 'mobile_outbox_receipts') return ['F-03'];
   if (value.includes('/trend/')) return ['F-18'];
   if (/photo/.test(value)) return ['F-09', ...(value.includes('trend') ? ['F-18'] : [])];
   if (/community|moderation|reaction|topic|question/.test(value)) return ['F-17'];
@@ -445,8 +448,15 @@ export function buildFeatureInventory() {
     item('native-module', name, 'apps/mobile/package.json', nativeFeatures(name)),
   );
 
-  const localStores = walk('apps/mobile/src').filter((path) =>
-    /(?:store|storage|repository|database|queue)\.(?:ts|tsx)$/i.test(path),
+  const nonPersistentStores = new Set([
+    'apps/mobile/src/lib/auth/sessionBoundaryQueue.ts',
+    'apps/mobile/src/lib/query/localDateBoundaryStore.ts',
+    'apps/mobile/src/lib/serialTaskQueue.ts',
+  ]);
+  const localStores = walk('apps/mobile/src').filter(
+    (path) =>
+      /(?:store|storage|repository|database|queue)\.(?:ts|tsx)$/i.test(path) &&
+      !nonPersistentStores.has(path),
   );
   const storeItems = localStores.map((path) =>
     item('data-store', `local:${path}`, path, dataFeatures(path)),

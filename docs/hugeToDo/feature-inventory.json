@@ -226,12 +226,12 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 142,
+    "data-store": 152,
     "edge-function": 17,
     "feature-flag": 17,
     "generated-packet": 32,
     "native-module": 44,
-    "route": 91,
+    "route": 93,
     "vendor-call": 16
   },
   "items": [
@@ -418,6 +418,13 @@
       "readiness": "needs-device-verification"
     },
     {
+      "id": "data-store:local:apps/mobile/src/lib/storage/privateSecureStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/storage/privateSecureStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
       "id": "data-store:local:apps/mobile/src/lib/supabase/largeSecureStore.ts",
       "category": "data-store",
       "source": "apps/mobile/src/lib/supabase/largeSecureStore.ts",
@@ -428,6 +435,13 @@
       "id": "data-store:postgres:account_deletion_barriers",
       "category": "data-store",
       "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_click_tombstones",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000043_account_deletion_resumable.sql",
       "featureIds": ["F-02", "F-20"],
       "readiness": "implemented"
     },
@@ -449,6 +463,13 @@
       "id": "data-store:postgres:account_deletion_receipts",
       "category": "data-store",
       "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_requests",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000043_account_deletion_resumable.sql",
       "featureIds": ["F-02", "F-20"],
       "readiness": "implemented"
     },
@@ -530,6 +551,13 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:catalog_active_imports",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:catalog_corrections",
       "category": "data-store",
       "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
@@ -540,6 +568,13 @@
       "id": "data-store:postgres:catalog_import_batch_effects",
       "category": "data-store",
       "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_batch_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
       "featureIds": ["F-04"],
       "readiness": "implemented"
     },
@@ -586,9 +621,23 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:catalog_import_staged_products",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:catalog_import_staged_records",
       "category": "data-store",
       "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
       "featureIds": ["F-04"],
       "readiness": "implemented"
     },
@@ -831,6 +880,13 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:conflict_choice_mirror_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000051_conflict_choice_outbox_rpc.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:conflict_rules",
       "category": "data-store",
       "source": "supabase/migrations/20260612000003_catalog.sql",
@@ -989,6 +1045,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260612000003_catalog.sql",
       "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:mobile_outbox_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000046_shelf_outbox_rpc.sql",
+      "featureIds": ["F-03"],
       "readiness": "implemented"
     },
     {
@@ -1171,6 +1234,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260612000014_sequencing_rules.sql",
       "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:shelf_mirror_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000046_shelf_outbox_rpc.sql",
+      "featureIds": ["F-03"],
       "readiness": "implemented"
     },
     {
@@ -2133,6 +2203,13 @@
       "readiness": "stubbed"
     },
     {
+      "id": "route:conflict/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/conflict/_layout.tsx",
+      "featureIds": ["F-05"],
+      "readiness": "launch-blocked"
+    },
+    {
       "id": "route:conflict/[ruleId].tsx",
       "category": "route",
       "source": "apps/mobile/src/app/conflict/[ruleId].tsx",
@@ -2522,6 +2599,13 @@
       "category": "route",
       "source": "apps/mobile/src/app/settings/timing.tsx",
       "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:share/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/share/_layout.tsx",
+      "featureIds": ["F-15"],
       "readiness": "launch-blocked"
     },
     {
