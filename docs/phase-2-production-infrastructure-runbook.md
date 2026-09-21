@@ -3,6 +3,16 @@
 Date: 2026-07-15
 Updated: 2026-08-05 for the 71-migration chain through `0072`
 
+> 2026-09-21 source correction: the repository now has 89 migrations through
+> `0073`. The DB-06 staging runner is intentionally stopped before project
+> linking or mutation: pinned Supabase CLI `2.109.1` runs `db push` through a
+> transactional batch that cannot execute concurrent index statements. Its
+> `migration up` path also cannot handle `DROP INDEX CONCURRENTLY`, required by
+> migrations `0054` and `0059`. The 82-table expectation below is
+> historical `0072` evidence, not a verified `0073` count. Re-review the CLI
+> pin and exact table/type contract, then replay the complete current chain
+> locally before using this procedure for a fresh staging project.
+
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `Layerwell` until
 `docs/brand-decision-memo.md` records counsel/founder clearance.

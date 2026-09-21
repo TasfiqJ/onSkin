@@ -236,9 +236,18 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Criteria: bounded memory, deterministic provenance, safe restart after worker/process/transport failure, no partial visibility, exact replay semantics, curated-source precedence, and auditable rollback metadata.
 - Evidence: migration `20260718000045_catalog_import_pipeline.sql`; `catalog-import-core.mjs`; `import-obf-production.mjs`; deterministic restart/promotion smoke; and `docs/optimization/evidence/2026-07-18_restartable-catalog-ingestion-checkpoint.md`.
 - Risk: hosted migration syntax/RLS, full-scale import duration/storage, realistic search plans, and an operator rollback drill remain unverified until a production-like staging project and approved artifact are available.
-- Status: Accepted
+- Status: Superseded for serving promotion by the 2026-09-21 CAT-02/CAT-03 boundary decision below; restartable isolated staging remains useful.
 - Owner: Engineering and catalog operations
 - Review date: 2026-08-18
+
+### 2026-09-21 - Keep Bulk-Import Staging Separate From Reviewed Catalog Publication
+
+- Decision: The restartable bulk-import worker may stage and reconcile source rows, but it must not publish catalog rows through its one-argument service-role promotion routine. Remove that routine and reject the worker's `--promote` option before credentials or network access. Only the migration-owner-only, five-argument CAT-02 review and promotion path may establish source projections, and only an exact active CAT-03 campaign may make a product searchable. Preserve search index assets for a later plan-verified optimization without replacing the positive serving gate.
+- Alternatives: retain parallel service-role promotion for speed, admit active raw-product search, or make importer staging a substitute for reviewer receipts.
+- Criteria: no unreviewed publication path, exact catalog serving authority, retained bounded restartable staging, and fail-closed migration dependencies.
+- Evidence: forward migration `20260921000073_catalog_search_promotion_boundary.sql`, CAT-03 pgTAP source plan, the catalog policy lint and importer rejection smoke. No current-chain PostgreSQL replay or hosted promotion is claimed.
+- Risk: the full 89-migration chain, linked staging deployment, realistic search performance, and independent catalog readback remain unverified release gates.
+- Status: Accepted as a source-level corrective boundary; production rollout gated.
 
 ### 2026-07-11 - Make Shelf Freshness Provenance-Derived And Replenishment Opt-In
 

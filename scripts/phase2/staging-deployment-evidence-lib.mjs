@@ -17,9 +17,10 @@ import { summarizeDatabaseTypes } from './database-types-contract-lib.mjs';
 export const DB06_EVIDENCE_SCHEMA_VERSION = 1;
 export const DB06_RETENTION_CLASS = 'release-qa';
 export const DB06_CURRENT_SOURCE_CONTRACT = Object.freeze({
-  migrationCount: 71,
-  latestMigrationId: '20260729000072',
+  migrationCount: 89,
+  latestMigrationId: '20260921000073',
   functionCount: 17,
+  // Historical 0072 replay only; do not treat this as a verified 0073 count.
   publicTableCount: 82,
   storageBucketCount: 1,
 });
@@ -650,6 +651,25 @@ export function assertCurrentSourceContract(sourceInventory) {
   ) {
     fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
   }
+  return true;
+}
+
+// Supabase CLI 2.109.1 db push proxies to the Go transactional batch applier;
+// migration up has a separate TS applier that special-cases concurrent CREATE
+// but not concurrent DROP. Neither command safely replays this source chain.
+// Reject the known-incompatible statements before linking or mutating staging.
+export function assertPinnedMigrationRunnerCompatibility(repoRoot, cliVersion) {
+  if (cliVersion !== '2.109.1') fail('DB06_CLI_PIN_INVALID');
+  const migrationRoot = join(resolve(repoRoot), 'supabase', 'migrations');
+  const incompatible = readdirSync(migrationRoot)
+    .filter((name) => MIGRATION_FILE.test(name))
+    .some((name) => {
+      const sql = readFileSync(join(migrationRoot, name), 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//gu, '')
+        .replace(/--[^\r\n]*/gu, '');
+      return /\b(?:create\s+(?:unique\s+)?|drop\s+)index\s+concurrently\b/iu.test(sql);
+    });
+  if (incompatible) fail('DB06_PINNED_CLI_MIGRATION_UNSUPPORTED');
   return true;
 }
 

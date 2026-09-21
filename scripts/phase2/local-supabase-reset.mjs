@@ -35,8 +35,9 @@ import {
 } from './database-types-contract-lib.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 71;
-const EXPECTED_LATEST_MIGRATION = '20260729000072';
+const EXPECTED_MIGRATION_COUNT = 89;
+const EXPECTED_LATEST_MIGRATION = '20260921000073';
+const COMMERCE_UPGRADE_MIGRATION = '20260729000072';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
 // recomputes every sealed membership root. Keep ordinary CLI operations tightly
@@ -154,6 +155,32 @@ if (
 ) {
   throw new Error(
     `Expected ${EXPECTED_MIGRATION_COUNT} unique migrations through ${EXPECTED_LATEST_MIGRATION}; found ${migrationFiles.length} through ${expectedVersions.at(-1) ?? 'none'}.`,
+  );
+}
+const commerceMigrationName = migrationFiles.find((name) =>
+  name.startsWith(`${COMMERCE_UPGRADE_MIGRATION}_`),
+);
+if (!commerceMigrationName || commerceMigrationName === migrationFiles.at(-1)) {
+  throw new Error('The exact 0072 commerce upgrade migration must precede the current head.');
+}
+
+// The pinned 2.109.1 local migration applier handles CREATE INDEX CONCURRENTLY
+// specially, but not DROP INDEX CONCURRENTLY. Reject the exact-source DB05
+// replay before creating a stack instead of reporting a misleading migration
+// or schema-drift failure. Do not rewrite these files in the sandbox: that
+// would no longer prove that the checked-in chain is deployable as written.
+// Supabase's missing DROP classifier was fixed in v2.116.0 (PR #6276); a CLI
+// upgrade must review this guard and rerun the entire PostgreSQL gate.
+const unsupportedConcurrentDrops = [];
+for (const migrationFile of migrationFiles) {
+  const sql = await readFile(join(SOURCE_SUPABASE_DIR, 'migrations', migrationFile), 'utf8');
+  if (/^[\t ]*drop[\t ]+index[\t ]+concurrently\b/imu.test(sql)) {
+    unsupportedConcurrentDrops.push(migrationFile);
+  }
+}
+if (unsupportedConcurrentDrops.length > 0) {
+  throw new Error(
+    `DB05_PINNED_CLI_CONCURRENT_DROP_UNVERIFIED: Supabase CLI ${PINNED_CLI_VERSION} cannot faithfully reset migrations containing DROP INDEX CONCURRENTLY (${unsupportedConcurrentDrops.join(', ')}). Keep DB05 open until a reviewed CLI replay path and exact local PostgreSQL evidence exist.`,
   );
 }
 
@@ -400,6 +427,7 @@ try {
   );
 
   const sandboxHeadMigration = join(sandboxSupabaseDir, 'migrations', migrationFiles.at(-1));
+  const sandboxCommerceMigration = join(sandboxSupabaseDir, 'migrations', commerceMigrationName);
   const sandboxRecommendationMigration = join(
     sandboxSupabaseDir,
     'migrations',
@@ -421,6 +449,7 @@ try {
     migrationFiles.find((name) => name.startsWith('20260726000070_')),
   );
   const withheldHeadMigration = join(sandboxRoot, migrationFiles.at(-1));
+  const withheldCommerceMigration = join(sandboxRoot, commerceMigrationName);
   const withheldRecommendationMigration = join(
     sandboxRoot,
     migrationFiles.find((name) => name.startsWith('20260726000071_')),
@@ -439,6 +468,7 @@ try {
   );
   if (FULL_VERIFY) {
     await rename(sandboxHeadMigration, withheldHeadMigration);
+    await rename(sandboxCommerceMigration, withheldCommerceMigration);
     await rename(sandboxRecommendationMigration, withheldRecommendationMigration);
     await rename(sandboxConsentDraftMigration, withheldConsentDraftMigration);
     await rename(sandboxSyncMigration, withheldSyncMigration);
@@ -633,7 +663,7 @@ try {
       'reset',
       '--local',
     ]);
-    await rename(withheldHeadMigration, sandboxHeadMigration);
+    await rename(withheldCommerceMigration, sandboxCommerceMigration);
     const commerceUpgradeTemplatePath = join(
       sandboxSupabaseDir,
       'tests',
@@ -646,7 +676,7 @@ try {
     );
     const [commerceUpgradeTemplate, exactCommerceMigration] = await Promise.all([
       readFile(commerceUpgradeTemplatePath, 'utf8'),
-      readFile(sandboxHeadMigration, 'utf8'),
+      readFile(sandboxCommerceMigration, 'utf8'),
     ]);
     const commerceIncludeMarker = '-- @@INCLUDE_EXACT_0072_MIGRATION@@';
     if (commerceUpgradeTemplate.split(commerceIncludeMarker).length !== 2) {
@@ -671,6 +701,9 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
+    // The 0073 catalog boundary has no historical forward-upgrade fixture;
+    // restore it only after the exact 0072 rehearsal, for both clean head resets.
+    await rename(withheldHeadMigration, sandboxHeadMigration);
   }
   await runLocalCli('reset 1 of 2 (migrations plus seed)', ['db', 'reset', '--local']);
 

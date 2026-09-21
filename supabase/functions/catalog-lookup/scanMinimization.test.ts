@@ -311,7 +311,9 @@ Deno.test('catalog correction identity has one canonical barcode lane', async ()
     rehearsal.includes('for v_index in 1..96 loop') &&
       rehearsal.includes(String.raw`C:\\Users\\name\\photo.jpg`) &&
       rehearsal.includes("pg_catalog.repeat('D', 100000)") &&
-      rehearsal.includes('unbounded legacy correction text or JSON did not fail closed') &&
+      rehearsal.includes(
+        'unbounded legacy correction fields were not dropped while bounded allowlisted fields were preserved',
+      ) &&
       rehearsal.includes('deeply nested legacy correction was not minimized nonrecursively'),
     'PostgreSQL rehearsal must cover deep JSON and an embedded Windows-path legacy value',
   );

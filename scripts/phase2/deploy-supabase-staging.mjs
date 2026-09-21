@@ -12,6 +12,7 @@ import {
   DB06_PRE_MIGRATION_COMPLETION_BUDGET_MS,
   Db06EvidenceError,
   assertCurrentSourceContract,
+  assertPinnedMigrationRunnerCompatibility,
   assertEvidenceSafe,
   assertFreshStagingBoundary,
   assertFreshStagingTarget,
@@ -796,6 +797,7 @@ try {
 
   sourceInventory = buildSourceInventory(deploymentRoot);
   assertCurrentSourceContract(sourceInventory);
+  assertPinnedMigrationRunnerCompatibility(deploymentRoot, PINNED_CLI_VERSION);
   if (process.platform === 'win32') {
     const runnerOutputPath = join(runtimeRoot, 'db06-windows-job-runner.exe');
     await runCommand(

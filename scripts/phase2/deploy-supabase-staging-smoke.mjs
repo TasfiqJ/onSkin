@@ -95,6 +95,16 @@ assert(
   'A deployment must originate from a clean revision exactly matching origin/main.',
 );
 assert(
+  orchestrator.includes(
+    'assertPinnedMigrationRunnerCompatibility(deploymentRoot, PINNED_CLI_VERSION)',
+  ) &&
+    orchestrator.indexOf(
+      'assertPinnedMigrationRunnerCompatibility(deploymentRoot, PINNED_CLI_VERSION)',
+    ) < orchestrator.indexOf("'link-staging-project'") &&
+    evidenceLibrary.includes('DB06_PINNED_CLI_MIGRATION_UNSUPPORTED'),
+  'The pinned CLI must reject unsupported migration statements before staging is linked or mutated.',
+);
+assert(
   orchestrator.includes("'git-source-snapshot-archive'") &&
     orchestrator.includes('validateGitSnapshot(') &&
     orchestrator.includes("'source-snapshot-before-first-mutation'") &&

@@ -1,5 +1,13 @@
 # Phase 2 Status
 
+> 2026-09-21 DB-06 correction: the current 89-migration source chain through
+> `0073` cannot safely run with the pinned Supabase CLI `2.109.1`: `db push`
+> batches concurrent index statements transactionally, while the alternate
+> `migration up` path cannot handle the concurrent index drops in `0054` and
+> `0059`. The staging
+> runner now fails before project linking or remote mutation. Historical
+> 71-migration/82-table results below are not current deployment proof.
+
 Date: 2026-08-05
 
 ## Done In Repo

@@ -3,6 +3,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { hasExactPostgresRehearsalBinding } from './quality-rehearsal-bindings.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const errors = [];
@@ -51,6 +52,7 @@ const [
   commerceZeroAdmissionMigration,
   commerceZeroAdmissionTests,
   commerceZeroAdmissionUpgradeRehearsal,
+  catalogSearchPromotionBoundaryMigration,
   accountDeletionMigration,
   readme,
   workflow,
@@ -94,6 +96,7 @@ const [
   read('supabase/migrations/20260729000072_commerce_zero_admission.sql'),
   read('supabase/tests/database/commerce_zero_admission.test.sql'),
   read('supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql'),
+  read('supabase/migrations/20260921000073_catalog_search_promotion_boundary.sql'),
   read(
     'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
   ),
@@ -125,10 +128,21 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 71, `Expected 71 migration files; found ${migrations.length}.`);
+check(migrations.length === 89, `Expected 89 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260729000072_'),
-  'The latest migration must remain 20260729000072.',
+  migrations.at(-1)?.startsWith('20260921000073_'),
+  'The latest migration must remain 20260921000073.',
+);
+check(
+  /security definer/u.test(catalogSearchPromotionBoundaryMigration) &&
+    /from public\.catalog_servable_products as product/u.test(
+      catalogSearchPromotionBoundaryMigration,
+    ) &&
+    /drop function public\.promote_catalog_import\(uuid\);/u.test(
+      catalogSearchPromotionBoundaryMigration,
+    ) &&
+    !/cascade/u.test(catalogSearchPromotionBoundaryMigration.replace(/^--[^\n]*$/gmu, '')),
+  '0073 must restore governed CAT-03 search and remove the unreviewed one-argument promoter without CASCADE.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -309,7 +323,7 @@ check(
   'CAT-08 rehearsal must prove action-first and session-revocation-first commit order with real independent sessions.',
 );
 check(
-    /--types-check/u.test(runner) &&
+  /--types-check/u.test(runner) &&
     /--types-update/u.test(runner) &&
     /summarizeDatabaseTypes/u.test(runner) &&
     /mode === '--types-update' && repositoryBefore\.sha256 !== generated\.sha256/u.test(runner) &&
@@ -423,8 +437,10 @@ check(
     /CATALOG_0062_ROOT_MISMATCH_NOT_ROLLED_BACK/u.test(catalogCurationRehearsal) &&
     /CATALOG_0062_SET_VALIDATION_WRAPPER_INVALID/u.test(catalogCurationRehearsal) &&
     /catalog-curation-0062-upgrade-postgres-rehearsal: pass/u.test(catalogCurationRehearsal) &&
-    /database:\s*catalog_curation_upgrade_0062[\s\S]{0,160}script:\s*catalog-curation-0062-upgrade-postgres-rehearsal\.sql/u.test(
+    hasExactPostgresRehearsalBinding(
       workflow,
+      'catalog_curation_upgrade_0062',
+      'catalog-curation-0062-upgrade-postgres-rehearsal.sql',
     ),
   '0062 exact-byte PostgreSQL 15/17 rehearsal must cover indexed authority, statement boundaries, rollback, ACL, and trigger metadata.',
 );
@@ -441,8 +457,10 @@ check(
     /skin_profiles_quiz_v2_profile_coherent/u.test(skinProfileUpgradeRehearsal) &&
     /skin_profiles_quiz_supported_version/u.test(skinProfileUpgradeRehearsal) &&
     /skin-profile-0064-upgrade-postgres-rehearsal: pass/u.test(skinProfileUpgradeRehearsal) &&
-    /database:\s*skin_profile_upgrade_0064[\s\S]{0,160}script:\s*skin-profile-0064-upgrade-postgres-rehearsal\.sql/u.test(
+    hasExactPostgresRehearsalBinding(
       workflow,
+      'skin_profile_upgrade_0064',
+      'skin-profile-0064-upgrade-postgres-rehearsal.sql',
     ),
   '0064 exact-byte PostgreSQL 15/17 rehearsal must preserve a pre-existing v2 collision while enforcing every new check on later writes.',
 );
@@ -457,8 +475,10 @@ check(
     /catalog-operator-0065-upgrade-postgres-rehearsal: pass/u.test(
       catalogOperatorUpgradeRehearsal,
     ) &&
-    /database:\s*catalog_operator_upgrade_0065[\s\S]{0,160}script:\s*catalog-operator-0065-upgrade-postgres-rehearsal\.sql/u.test(
+    hasExactPostgresRehearsalBinding(
       workflow,
+      'catalog_operator_upgrade_0065',
+      'catalog-operator-0065-upgrade-postgres-rehearsal.sql',
     ),
   '0065 exact-byte PostgreSQL 15/17 rehearsal must repair both transition conflict targets while preserving the Edge ACL and fail-closed function defaults.',
 );
@@ -474,8 +494,10 @@ check(
     /clinical-content-0066-upgrade-postgres-rehearsal: pass/u.test(
       clinicalContentUpgradeRehearsal,
     ) &&
-    /database:\s*clinical_content_upgrade_0066[\s\S]{0,160}script:\s*clinical-content-0066-upgrade-postgres-rehearsal\.sql/u.test(
+    hasExactPostgresRehearsalBinding(
       workflow,
+      'clinical_content_upgrade_0066',
+      'clinical-content-0066-upgrade-postgres-rehearsal.sql',
     ),
   '0066 exact-byte PostgreSQL rehearsal must preserve the historical fixtures while sealing every API-role and migration-owner mutation path.',
 );
@@ -501,8 +523,10 @@ check(
     /catalog-release-0067-lint-contract-postgres-rehearsal: pass/u.test(
       catalogReleaseLintUpgradeRehearsal,
     ) &&
-    /database:\s*catalog_release_lint_contract_0067[\s\S]{0,160}script:\s*catalog-release-0067-lint-contract-postgres-rehearsal\.sql/u.test(
+    hasExactPostgresRehearsalBinding(
       workflow,
+      'catalog_release_lint_contract_0067',
+      'catalog-release-0067-lint-contract-postgres-rehearsal.sql',
     ),
   '0067 exact-byte PostgreSQL rehearsal must supply the checker-only runtime-temp-table shape while preserving the wrapper ACL and runtime path.',
 );
@@ -571,9 +595,7 @@ check(
       routineAdherenceTests,
     ) &&
     /exact 71-migration source history/u.test(routineAdherenceTests) &&
-    /retains adherence authority through commerce zero admission/u.test(
-      routineAdherenceTests,
-    ) &&
+    /retains adherence authority through commerce zero admission/u.test(routineAdherenceTests) &&
     /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
     /a partial step completion cannot affect adherence/u.test(routineAdherenceTests) &&
     /an authenticated owner cannot directly insert a freeze/u.test(routineAdherenceTests) &&
@@ -830,9 +852,7 @@ check(
     /token detachment cannot camouflage a business-field update/u.test(
       commerceZeroAdmissionTests,
     ) &&
-    /installed-base attribution deletion remains available/u.test(
-      commerceZeroAdmissionTests,
-    ),
+    /installed-base attribution deletion remains available/u.test(commerceZeroAdmissionTests),
   '0072 pgTAP must prove exact zero commerce admission, revoked publication ACLs, stale-poller closure, and retained cleanup.',
 );
 check(
@@ -862,21 +882,15 @@ check(
     /retains the legacy affiliate row without publishing it/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
-    /preserves deletion of an installed-base click/u.test(
-      commerceZeroAdmissionUpgradeRehearsal,
-    ) &&
+    /preserves deletion of an installed-base click/u.test(commerceZeroAdmissionUpgradeRehearsal) &&
     /leaves no permissive commerce publication policy/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
-    /post-upgrade attribution insert guard/u.test(
-      commerceZeroAdmissionUpgradeRehearsal,
-    ) &&
+    /post-upgrade attribution insert guard/u.test(commerceZeroAdmissionUpgradeRehearsal) &&
     /preserves exact installed-base attribution detachment/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
-    /preserves installed-base attribution deletion/u.test(
-      commerceZeroAdmissionUpgradeRehearsal,
-    ),
+    /preserves installed-base attribution deletion/u.test(commerceZeroAdmissionUpgradeRehearsal),
   '0072 must prove its exact 0071-to-0072 loss-averse commerce and stale-poller cutover from a schema-valid health-authority fixture.',
 );
 check(
@@ -913,7 +927,7 @@ check(
   'The legacy serving fixture must use a canonical GTIN and explicitly prove no-head fail-closed behavior without direct legacy-view reads.',
 );
 check(
-  /select plan\(99\)/u.test(catalogLaunchCurationTests) &&
+  /select plan\(102\)/u.test(catalogLaunchCurationTests) &&
     /exact migration-owner session consumes only its keyed transaction-local release cache/u.test(
       catalogLaunchCurationTests,
     ) &&

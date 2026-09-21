@@ -5,6 +5,12 @@ import { runCatalogImport } from './catalog-import-core.mjs';
 
 const MAX_RPC_RESPONSE_BYTES = 65_536;
 
+if (process.argv.includes('--promote')) {
+  throw new Error(
+    'CATALOG_IMPORT_PROMOTION_REQUIRES_CAT02: this worker only stages a restartable import; use the reviewed CAT-02 owner-only promotion workflow',
+  );
+}
+
 function argument(name, fallback = null) {
   const index = process.argv.indexOf(name);
   return index >= 0 ? (process.argv[index + 1] ?? fallback) : fallback;
@@ -90,9 +96,6 @@ function createRpcAdapter(url, secretKey) {
         p_manifest: input.manifest,
       });
     },
-    promote(input) {
-      return rpc('promote_catalog_import', { p_import_id: input.importId });
-    },
   };
 }
 
@@ -116,7 +119,6 @@ const checkpointPath = resolve(
 );
 const artifactUri = argument('--artifact-uri', inputPath);
 const batchSize = Number(argument('--batch-size', '250'));
-const promote = process.argv.includes('--promote');
 const supabaseUrl = process.env.CATALOG_SUPABASE_URL?.trim();
 const supabaseSecretKey = process.env.CATALOG_SUPABASE_SECRET_KEY?.trim();
 
@@ -135,7 +137,6 @@ const result = await runCatalogImport({
   batchSize,
   checkpointPath,
   inputPath,
-  promote,
   sourceRevision,
 });
 
@@ -149,7 +150,7 @@ console.log(
       acceptedRecords: result.acceptedRecords,
       rejectedRecords: result.rejectedRecords,
       stagedProducts: result.stagedProducts,
-      promoted: Boolean(result.promotion),
+      promoted: false,
       alreadyActive: result.alreadyActive,
     },
     null,

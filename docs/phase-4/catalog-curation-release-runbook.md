@@ -681,8 +681,9 @@ Source verification must include:
   rehearsal that includes the exact `0062` bytes and tests its three indexes,
   trigger/ACL metadata, zero/partial/exact/overflow/root/released-state guards,
   and rollback; this does not replace exact full-chain reset evidence;
-- a clean migration reset through exact current head `0071` and execution of the current
-  99-assertion CAT-03 pgTAP contract; and
+- a clean migration reset through exact current head `0073` and execution of
+  the current 102-assertion CAT-03 pgTAP contract; neither has been replayed
+  locally or hosted for this source revision; and
 - repository typecheck, lint, tests, and source-policy/worklist audits.
 
 Release verification additionally requires retained hosted evidence from the

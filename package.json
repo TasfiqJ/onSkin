@@ -21,7 +21,7 @@
     "phase2:check-env": "node scripts/phase2/check-env.mjs",
     "phase2:check-env-smoke": "node scripts/phase2/check-env-smoke.mjs",
     "phase2:check-env:strict": "node scripts/phase2/check-env.mjs --strict",
-    "phase2:db-local-contract": "node --test scripts/phase2/database-types-contract.test.mjs scripts/phase2/local-supabase-signal-cleanup.test.mjs scripts/phase2/local-supabase-target-guard.test.mjs && node scripts/phase2/local-supabase-contract.mjs",
+    "phase2:db-local-contract": "node --test scripts/phase2/database-types-contract.test.mjs scripts/phase2/local-supabase-reset-source.test.mjs scripts/phase2/local-supabase-signal-cleanup.test.mjs scripts/phase2/local-supabase-target-guard.test.mjs scripts/phase2/quality-rehearsal-bindings.test.mjs && node scripts/phase2/local-supabase-contract.mjs",
     "phase2:db-local-reset": "node scripts/phase2/local-supabase-reset.mjs --reset-only",
     "phase2:db-local-verify": "node scripts/phase2/local-supabase-reset.mjs --verify",
     "phase2:db-types:check": "node scripts/phase2/local-supabase-reset.mjs --types-check",

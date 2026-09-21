@@ -206,14 +206,14 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260729000072`; the current CAT-03 pgTAP source plan contains 99
+head `20260921000073`; the current CAT-03 pgTAP source plan contains 102
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, hosted
-governed full-chain evidence through `0072`, current signed database readback,
+governed full-chain evidence through `0073`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and
 no Apple, legal, product-quality, market, or revenue outcome is implied. The
 exact disposable local `0072` gate now passes, including CAT-03 99/99 within the
@@ -773,8 +773,9 @@ authority; and `0071` adds the CORE-06A database zero-admission boundary,
 purges the untrusted recommendation cache, keeps product eligibility closed,
 revokes unused runtime privileges, and exposes only the bounded owner preference
 writer. `0072` adds the literal-zero COM-01A commerce-admission boundary and
-retires the stale poller authority. The repository therefore contains 71
-migrations through `20260729000072`.
+retires the stale poller authority. The 2026-08-05 checkpoint contained 71
+migrations through `20260729000072`; the current source tree contains 89
+through `20260921000073` and has no clean full-chain replay evidence.
 
 On 2026-08-05, `npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at
 clean commit `57da25f63` against the complete 71-migration chain through

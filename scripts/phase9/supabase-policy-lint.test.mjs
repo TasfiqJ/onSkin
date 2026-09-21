@@ -10,7 +10,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const LINTER = join(ROOT, 'scripts/phase9/supabase-policy-lint.mjs');
 const MIGRATIONS = join(ROOT, 'supabase/migrations');
 const TARGET_MIGRATION = '20260713000043_account_deletion_resumable.sql';
-const SEARCH_MIGRATION = '20260718000052_catalog_search_bigram_index.sql';
+const SEARCH_BOUNDARY_MIGRATION = '20260921000073_catalog_search_promotion_boundary.sql';
 const OUTBOX_MIGRATION = '20260718000046_shelf_outbox_rpc.sql';
 const PHOTO_MIGRATION = '20260726000058_photo_delete_outbox_rpc.sql';
 const PHOTO_OWNER_MIGRATION = '20260612000008_photos.sql';
@@ -178,18 +178,39 @@ test('policy lint rejects a terminal capability predicate widened with OR', () =
   assert.match(output, /must validate a high-entropy capability and reveal complete receipts only/);
 });
 
-test('policy lint requires catalog search to stay service-only SECURITY INVOKER', () => {
+test('policy lint requires final catalog search to stay service-only SECURITY DEFINER', () => {
   const output = runFixture(
     (sql) =>
       replaceRequired(
         sql,
-        'stable\nsecurity invoker\nset search_path',
         'stable\nsecurity definer\nset search_path',
+        'stable\nsecurity invoker\nset search_path',
       ),
-    SEARCH_MIGRATION,
+    SEARCH_BOUNDARY_MIGRATION,
   );
 
-  assert.match(output, /search_catalog_products\(text, integer\) must remain SECURITY INVOKER/);
+  assert.match(output, /search_catalog_products\(text, integer\) must remain SECURITY DEFINER/);
+});
+
+test('policy lint rejects raw-product search replacing the final CAT-03 view', () => {
+  const output = runFixture(
+    (sql) =>
+      replaceRequired(
+        sql,
+        'from public.catalog_servable_products as product',
+        'from public.products as product',
+      ),
+    SEARCH_BOUNDARY_MIGRATION,
+  );
+  assert.match(output, /catalog search must read the exact current CAT-03 servable projection/);
+});
+
+test('policy lint rejects reinstating the service-role one-argument catalog promotion RPC', () => {
+  const output = runFixture(
+    (sql) => replaceRequired(sql, 'drop function public.promote_catalog_import(uuid);', ''),
+    SEARCH_BOUNDARY_MIGRATION,
+  );
+  assert.match(output, /one-argument catalog promotion RPC must remain retired/);
 });
 
 test('policy lint rejects an anonymous outbox RPC grant', () => {

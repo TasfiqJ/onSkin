@@ -33,6 +33,13 @@ more convenient. CAT-08 introduces distinct, auditable operator identities for
 recommendations but intentionally does not replace the migration-owner approval,
 promotion, rollback, or CAT-03 activation lane.
 
+The restartable OBF streaming worker (`scripts/phase4/import-obf-production.mjs`)
+is a staging aid only. It can begin, chunk-stage, and mark its isolated import
+ready, but `--promote` is rejected before credential or network setup. Its
+checkpoint, counts, and ready status are not CAT-01 approval or CAT-02 row-review
+evidence. Publication must use the separately reviewed CAT-02 batch and the
+migration-owner-only, five-argument `promote_catalog_import` operation below.
+
 ## Required Inputs
 
 Retain these exact, non-symlink files outside the checked-in generated fixture

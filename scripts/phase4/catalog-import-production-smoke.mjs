@@ -1,13 +1,10 @@
 #!/usr/bin/env node
+import { spawnSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import {
-  MAX_CATALOG_LINE_BYTES,
-  normalizeGtin,
-  runCatalogImport,
-} from './catalog-import-core.mjs';
+import { MAX_CATALOG_LINE_BYTES, normalizeGtin, runCatalogImport } from './catalog-import-core.mjs';
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -106,6 +103,22 @@ class FakeCatalogAdapter {
 
 const directory = mkdtempSync(join(tmpdir(), 'layerwell-catalog-production-smoke-'));
 try {
+  const rejectedPromotion = spawnSync(
+    process.execPath,
+    [join(process.cwd(), 'scripts/phase4/import-obf-production.mjs'), '--promote'],
+    {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: { ...process.env, CATALOG_SUPABASE_URL: '', CATALOG_SUPABASE_SECRET_KEY: '' },
+      timeout: 10_000,
+    },
+  );
+  assert(rejectedPromotion.status !== 0, 'production CLI accepted unsafe direct promotion');
+  assert(
+    rejectedPromotion.stderr.includes('CATALOG_IMPORT_PROMOTION_REQUIRES_CAT02'),
+    'production CLI did not reject promotion before credential or network setup',
+  );
+
   const migration = readFileSync(
     join(process.cwd(), 'supabase/migrations/20260718000045_catalog_import_pipeline.sql'),
     'utf8',
@@ -209,7 +222,10 @@ try {
   assert(interrupted.checkpointLine === 2, 'durable checkpoint did not stop at committed batch');
   assert(interrupted.acceptedRecords === 1, 'response-loss retry duplicated accepted count');
   assert(interrupted.rejectedRecords === 1, 'response-loss retry duplicated reject count');
-  assert(!JSON.stringify(interrupted).includes('Gentle Cleanser'), 'checkpoint leaked product data');
+  assert(
+    !JSON.stringify(interrupted).includes('Gentle Cleanser'),
+    'checkpoint leaked product data',
+  );
 
   // Prove the durable server receipt is sufficient on another worker/machine;
   // the stream reconstructs content-free reject reasons for already committed lines.
@@ -235,10 +251,7 @@ try {
   assert(completed.promotion?.status === 'active', 'complete import was not promoted');
   assert(adapter.manifest.rejectionReasons.invalid_json === 1, 'invalid JSON reject missing');
   assert(adapter.manifest.rejectionReasons.invalid_gtin === 1, 'GTIN reject missing');
-  assert(
-    adapter.manifest.rejectionReasons.not_skin_care_category === 1,
-    'category reject missing',
-  );
+  assert(adapter.manifest.rejectionReasons.not_skin_care_category === 1, 'category reject missing');
   assert(adapter.manifest.rejectionReasons.oversized_name === 1, 'oversize reject missing');
   assert(adapter.manifest.rejectionReasons.oversized_record === 1, 'raw oversize reject missing');
   assert(

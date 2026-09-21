@@ -223,7 +223,6 @@ const serviceCallableDefiners = new Set([
   'purge_expired_edge_rate_limits(integer)',
   'purge_expired_revenuecat_identity_tombstones(integer)',
   'prepare_health_data_consent_withdrawal(uuid, text)',
-  'promote_catalog_import(uuid)',
   'reconcile_revenuecat_entitlement_snapshot(uuid, timestamptz, text, boolean, text, timestamptz, text, text, boolean, timestamptz, text, text, text, text)',
   'reap_expired_account_publication_leases(integer)',
   'record_account_deletion_step(uuid, text, text, text, text, timestamptz)',
@@ -239,13 +238,28 @@ const serviceCallableDefiners = new Set([
   'stage_catalog_import_chunk(uuid, text, integer, integer, jsonb)',
   'submit_catalog_correction(uuid, bigint, uuid, uuid, text, text, text, jsonb, jsonb)',
   'record_catalog_lookup_event(uuid, bigint, text, text, integer, integer)',
+  'search_catalog_products(text, integer)',
   'mark_apple_auth_capture_exchange_started(uuid, uuid, uuid)',
   'update_account_deletion_step_payload(uuid, text, text, bytea)',
   'verify_catalog_import(uuid, text, text, text)',
 ]);
 
 const terminalCompletionCapability = 'account_deletion_completion_status(text)';
-const serviceCallableInvokers = new Set(['search_catalog_products(text, integer)']);
+
+block(
+  errors,
+  !latestFunctions.has('promote_catalog_import(uuid)'),
+  'the unreviewed one-argument catalog promotion RPC must remain retired.',
+);
+const finalSearch = latestFunctions.get('search_catalog_products(text, integer)');
+if (finalSearch) {
+  block(
+    errors,
+    /\bfrom\s+public\.catalog_servable_products\b/i.test(finalSearch.definition) &&
+      !/\bfrom\s+public\.products\b/i.test(finalSearch.definition),
+    'catalog search must read the exact current CAT-03 servable projection, not raw products.',
+  );
+}
 
 for (const [allowlistName, allowlist] of [
   ['client SECURITY DEFINER', clientCallableDefiners],
@@ -261,29 +275,6 @@ for (const [allowlistName, allowlist] of [
         `${allowlistName} allowlist entry ${key} must remain SECURITY DEFINER.`,
       );
     }
-  }
-}
-
-for (const key of serviceCallableInvokers) {
-  const fn = latestFunctions.get(key);
-  block(errors, Boolean(fn), `service SECURITY INVOKER allowlist entry ${key} must exist.`);
-  if (fn) {
-    block(
-      errors,
-      /security\s+invoker/i.test(fn.definition) && !/security\s+definer/i.test(fn.definition),
-      `service SECURITY INVOKER allowlist entry ${key} must remain SECURITY INVOKER.`,
-    );
-    block(
-      errors,
-      /set\s+search_path\s*=\s*''/i.test(fn.definition),
-      `${key} must pin SECURITY INVOKER search_path to ''.`,
-    );
-    block(
-      errors,
-      ['public', 'anon', 'authenticated'].every((role) => !fn.effectiveGrantRoles.has(role)) &&
-        fn.effectiveGrantRoles.has('service_role'),
-      `${key} must grant execute only to service_role.`,
-    );
   }
 }
 

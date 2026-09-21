@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(99);
+select plan(102);
 
 create temp table cat03_test_state (
   state_key text primary key,
@@ -3027,6 +3027,19 @@ select ok(
   'mutable reviewed product state is never serving authority before a campaign head'
 );
 
+select ok(
+  not pg_catalog.has_table_privilege('service_role', 'public.products', 'SELECT'),
+  'service-role search cannot fall back to direct raw-products table access'
+);
+
+select ok(
+  pg_catalog.to_regprocedure('public.promote_catalog_import(uuid)') is null
+    and pg_catalog.to_regprocedure(
+      'public.promote_catalog_import(uuid,text,text,text,text)'
+    ) is not null,
+  'the unreviewed one-argument promoter is absent while CAT-02 owner promotion remains'
+);
+
 set local role service_role;
 select is(
   pg_catalog.jsonb_build_object(
@@ -4259,6 +4272,12 @@ select is(
   ),
   '{"aliasLookup":0,"lookup":1,"search":1}'::jsonb,
   'bounded service reads expose only the exact live primary barcode after release'
+);
+
+select is(
+  (select count(*) from public.search_catalog_products('launch 2001', 20)),
+  0::bigint,
+  'the active but unreviewed holdout remains absent from service-role search after release'
 );
 
 select is(

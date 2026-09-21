@@ -14,6 +14,34 @@ const servingGateMigrationUrl = new URL(
   '../../migrations/20260717000056_catalog_serving_eligibility_gate.sql',
   import.meta.url,
 );
+const finalBoundaryMigrationUrl = new URL(
+  '../../migrations/20260921000073_catalog_search_promotion_boundary.sql',
+  import.meta.url,
+);
+
+Deno.test('current catalog search preserves the CAT-03 serving gate after index optimization', async () => {
+  const sql = compact(await Deno.readTextFile(finalBoundaryMigrationUrl));
+  assert(
+    sql.includes('create or replace function public.search_catalog_products(') &&
+      sql.includes('stable security definer') &&
+      sql.includes("set search_path = ''") &&
+      sql.includes('from public.catalog_servable_products as product') &&
+      !sql.includes('from public.products as product'),
+    'the final service search must read the current CAT-03 servable projection',
+  );
+  assert(
+    sql.includes(
+      'revoke all on function public.search_catalog_products(text, integer) from public, anon, authenticated, service_role',
+    ) &&
+      sql.includes('grant execute on function public.search_catalog_products(text, integer) to service_role'),
+    'only the service Edge lane may execute the final bounded search',
+  );
+  assert(
+    sql.includes('drop function public.promote_catalog_import(uuid)') &&
+      !sql.includes('drop function public.promote_catalog_import(uuid, text, text, text, text)'),
+    'the unreviewed one-argument promotion overload must be retired without removing CAT-02',
+  );
+});
 
 Deno.test('catalog search migration aligns substring predicates with trigram indexes', async () => {
   const sql = compact(await Deno.readTextFile(indexedMigrationUrl));
