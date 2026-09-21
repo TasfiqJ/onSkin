@@ -27,6 +27,10 @@ import {
 import { auditIosReleaseCandidateCrossBinding } from './ios-release-candidate-cross-binding.mjs';
 import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
 import { auditIosPrivacySource } from './ios-privacy-contract.mjs';
+import {
+  auditStoreOnlyRelease,
+  readStoreOnlyReleaseInputs,
+} from '../optimization/store-only-release-audit.mjs';
 
 const cliArguments = process.argv.slice(2);
 const allowedCliArguments = new Set(['--check', '--strict']);
@@ -73,6 +77,16 @@ const productionIdentityConfigErrorPatterns = [
   /BRAND_LEGAL_CLEARANCE=cleared/,
   /explicit final native identity env values/,
 ];
+
+try {
+  auditStoreOnlyRelease(readStoreOnlyReleaseInputs());
+} catch (error) {
+  block(
+    errors,
+    false,
+    `Store-only update-delivery policy: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 
 let iosPrivacySourceAudit = null;
 try {
@@ -128,7 +142,7 @@ block(errors, Boolean(app.version), 'App version is missing.');
 block(
   errors,
   app.runtimeVersion?.policy === 'fingerprint',
-  'runtimeVersion must use the fingerprint policy for native-compatible OTA updates.',
+  'runtimeVersion must retain the fingerprint policy for artifact compatibility.',
 );
 block(errors, Boolean(app.ios?.bundleIdentifier), 'iOS bundle identifier is missing.');
 if (androidReleaseRequired) {
@@ -149,11 +163,6 @@ block(
   errors,
   eas?.cli?.requireCommit === true,
   'EAS builds must require a committed Git source before upload.',
-);
-block(
-  errors,
-  eas?.build?.production?.channel === 'production',
-  'Production EAS build must use production channel.',
 );
 block(
   errors,
@@ -186,11 +195,6 @@ for (const variant of variants) {
   const profile = eas.build?.[variant];
   block(errors, Boolean(profile), `EAS build profile is missing: ${variant}.`);
   if (!profile) continue;
-  block(
-    errors,
-    profile.channel === variant,
-    `EAS ${variant} build must publish to ${variant} channel.`,
-  );
   block(
     errors,
     profile.env?.APP_VARIANT === variant,

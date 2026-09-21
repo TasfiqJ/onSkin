@@ -28,7 +28,7 @@ Repository enforcement now proves:
 
 ## Decision And Recovery Boundary
 
-`docs/UPDATE_DELIVERY_POLICY.md`, `docs/ARCHITECTURE.md` A-007, and
+`docs/UPDATE_DELIVERY_POLICY.md`, `docs/ARCHITECTURE.md` A-014, and
 `docs/DECISIONS.md` accept this launch posture. A client incident freezes store
 expansion and uses a reviewed hotfix binary. Matching server, provider, privacy,
 or feature-flag containment remains available when it addresses the actual

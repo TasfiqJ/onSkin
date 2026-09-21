@@ -10,6 +10,10 @@
     "runtimeVersion": {
       "policy": "fingerprint"
     },
+    "updates": {
+      "enabled": false,
+      "checkAutomatically": "NEVER"
+    },
     "ios": {
       "bundleIdentifier": "com.layerwell.app",
       "supportsTablet": false,

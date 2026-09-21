@@ -28,6 +28,10 @@ import { auditVerificationWiring } from './verification-wiring-contract.mjs';
 import { PHASE9_CAT07_BOUND_INPUT_PATHS } from './release-qa-integrity.mjs';
 import { GOVERNED_POST_F_COMMANDS } from '../launch/governed-publication-coverage.mjs';
 import {
+  auditStoreOnlyRelease,
+  readStoreOnlyReleaseInputs,
+} from '../optimization/store-only-release-audit.mjs';
+import {
   auditPhoto05aTrendAdmission,
   PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS,
 } from '../photo05/trend-admission-source-contract.mjs';
@@ -42,6 +46,16 @@ const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
 const launchContract = loadLaunchContract();
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
+
+try {
+  auditStoreOnlyRelease(readStoreOnlyReleaseInputs());
+} catch (error) {
+  block(
+    errors,
+    false,
+    `Store-only update-delivery policy: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 
 for (const error of auditPhoto05aTrendAdmission(process.cwd())) {
   block(errors, false, `PHOTO-05A Trend-admission source contract: ${error}`);
@@ -927,12 +941,6 @@ if (androidReleaseRequired) {
     'app.config.js must configure Android App Links.',
   );
 }
-block(
-  errors,
-  has('apps/mobile/eas.json', /"production"/) &&
-    has('apps/mobile/eas.json', /"channel":\s*"production"/),
-  'eas.json must define a production channel.',
-);
 block(
   errors,
   has('apps/mobile/app.config.js', /function readVariantEnv/) &&

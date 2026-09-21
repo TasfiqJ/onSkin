@@ -973,7 +973,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
   not bypass store-reviewed privacy/native changes; encrypted-storage and
   native migrations must remain binary-compatible; no unavailable capability
   may appear in launch, incident, or compliance claims.
-- Evidence: `docs/UPDATE_DELIVERY_POLICY.md`, `docs/ARCHITECTURE.md` A-007,
+- Evidence: `docs/UPDATE_DELIVERY_POLICY.md`, `docs/ARCHITECTURE.md` A-014,
   `apps/mobile/app.base.json`, `apps/mobile/eas.json`, and
   `scripts/optimization/store-only-release-audit.mjs`.
 - Risk: client fixes require a new binary and store rollout, so incident

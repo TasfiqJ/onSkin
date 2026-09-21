@@ -330,6 +330,25 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 - Risk: V1 does not yet define a clinically reviewed status-refresh interval or transactional server mirror; multi-device status reconciliation remains deferred. No production release may mark the starter exclusion/cadence data reviewed without the detached Phase 3 signoff process.
 - Status: active.
 
+### A-014: Ship Client Changes Only In Store-Bundled Binaries
+
+- Decision: V1 client JavaScript, assets, native code, plugins, permissions,
+  entitlements, privacy configuration, and app configuration ship in reviewed
+  App Store binaries only. EAS Build and Submit remain build/distribution
+  tools, but EAS Update is disabled and is not a delivery or rollback path.
+  The mobile app has no direct `expo-updates` dependency or update URL, and
+  EAS build profiles have no update `channel`. The runtime fingerprint is an
+  artifact and migration-compatibility identity, not evidence of OTA delivery.
+- Criteria: release claims match the installed configuration; client recovery
+  preserves store-reviewed native/privacy changes and compatibility with
+  encrypted-storage migrations; incident responders have one explicit path.
+- Risk: client hotfixes require a new reviewed binary and store rollout. A
+  future OTA path requires a new accepted decision and all reactivation gates
+  in `docs/UPDATE_DELIVERY_POLICY.md`; no channel, command, or rollback may be
+  inferred from the runtime fingerprint alone.
+- Status: accepted V1 release policy; signed-build and App Store evidence
+  remain separate launch gates.
+
 ## System Architecture
 
 ```text

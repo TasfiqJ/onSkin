@@ -125,7 +125,16 @@ if (exists(workflowPath)) {
       trufflehogSteps.every((step) => !/^\s+(?:base|head):\s*/m.test(step)),
     'TruffleHog must use event-derived base/head SHAs; hard-coded base/head inputs break pushes to main.',
   );
-  block(errors, /semgrep\/semgrep-action/.test(workflow), 'Security workflow must run Semgrep.');
+  block(
+    errors,
+    /pipx install semgrep==\d+\.\d+\.\d+/.test(workflow) &&
+      /\bsemgrep scan --error\b/.test(workflow) &&
+      ['p/owasp-top-ten', 'p/typescript', 'p/react', 'p/secrets'].every((ruleset) =>
+        workflow.includes(`--config ${ruleset}`),
+      ) &&
+      !/semgrep\/semgrep-action/.test(workflow),
+    'Security workflow must run a pinned Semgrep CLI with the OWASP, TypeScript, React, and secrets rulesets.',
+  );
   block(
     errors,
     /google\/osv-scanner-action/.test(workflow),

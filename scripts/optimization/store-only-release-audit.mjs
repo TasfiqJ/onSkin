@@ -89,7 +89,7 @@ export function auditStoreOnlyRelease(inputs) {
     'Accepted update-delivery policy must declare store-bundled releases.',
   );
   requireCondition(
-    /A-007[^\n]*Store-Bundled Client Update Delivery/i.test(architectureText),
+    /A-014[^\n]*Ship Client Changes Only In Store-Bundled Binaries/i.test(architectureText),
     'Architecture must record the accepted store-bundled delivery decision.',
   );
 

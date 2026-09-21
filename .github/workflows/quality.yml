@@ -187,6 +187,9 @@ jobs:
           npm run phase9:verification-wiring:test
           npm run phase9:store-build-inspect:check
 
+      - name: Verify store-only client delivery
+        run: node scripts/optimization/store-only-release-audit-smoke.mjs
+
       - name: Verify governed release provenance
         run: |
           npm run phase9:release-qa-integrity:test

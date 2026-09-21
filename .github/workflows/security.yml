@@ -184,14 +184,15 @@ jobs:
       - name: Semgrep OWASP/TypeScript/React/secrets
         id: semgrep
         continue-on-error: true
-        # semgrep/semgrep-action v1
-        uses: semgrep/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d
-        with:
-          config: >-
-            p/owasp-top-ten
-            p/typescript
-            p/react
-            p/secrets
+        # The archived semgrep-action bundles Semgrep 1.36.0, which cannot parse
+        # MEDIUM severity in current registry rules. Pin a maintained CLI instead.
+        run: |
+          pipx install semgrep==1.177.0
+          semgrep scan --error \
+            --config p/owasp-top-ten \
+            --config p/typescript \
+            --config p/react \
+            --config p/secrets .
 
       - name: OSV scanner
         id: osv

@@ -18,6 +18,11 @@ updateEnabled.app.updates.enabled = true;
 assert.throws(() => auditStoreOnlyRelease(updateEnabled), /updates.enabled must be false/);
 console.log('OK enabled Expo updates fail closed');
 
+const updateCheck = structuredClone(inputs);
+updateCheck.app.updates.checkAutomatically = 'ON_LOAD';
+assert.throws(() => auditStoreOnlyRelease(updateCheck), /checkAutomatically must be NEVER/);
+console.log('OK automatic update checks fail closed');
+
 const updateUrl = structuredClone(inputs);
 updateUrl.app.updates.url = 'https://u.expo.dev/synthetic';
 assert.throws(() => auditStoreOnlyRelease(updateUrl), /omit updates.url/);
@@ -32,6 +37,11 @@ const channel = structuredClone(inputs);
 channel.eas.build.production.channel = 'production';
 assert.throws(() => auditStoreOnlyRelease(channel), /must omit channel/);
 console.log('OK unexpected EAS channel fails closed');
+
+const stagingChannel = structuredClone(inputs);
+stagingChannel.eas.build.staging.channel = 'staging';
+assert.throws(() => auditStoreOnlyRelease(stagingChannel), /must omit channel/);
+console.log('OK unexpected staging EAS channel fails closed');
 
 const maintenanceMismatch = structuredClone(inputs);
 maintenanceMismatch.maintenanceContract.releasePolicy.easUpdateEnabled = true;
