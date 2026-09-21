@@ -729,6 +729,8 @@ function validateActiveIndexSet(container) {
          index_state.indisunique as is_unique,
          index_state.indisvalid as is_valid,
          index_state.indisready as is_ready,
+         operator_namespace.nspname as operator_class_schema,
+         operator_class.opcname as operator_class_name,
          pg_catalog.pg_get_indexdef(index_state.indexrelid) as definition
        from pg_catalog.pg_index as index_state
        join pg_catalog.pg_class as index_relation
@@ -737,6 +739,10 @@ function validateActiveIndexSet(container) {
          on index_namespace.oid = index_relation.relnamespace
        join pg_catalog.pg_am as access_method
          on access_method.oid = index_relation.relam
+       join pg_catalog.pg_opclass as operator_class
+         on operator_class.oid = index_state.indclass[0]
+       join pg_catalog.pg_namespace as operator_namespace
+         on operator_namespace.oid = operator_class.opcnamespace
        where index_namespace.nspname = 'public'
          and index_relation.relname in (
            'products_catalog_active_name_trgm_idx',
@@ -751,12 +757,14 @@ function validateActiveIndexSet(container) {
     products_catalog_active_name_trgm_idx: {
       accessMethod: 'gin',
       keyCount: 1,
-      fragments: ['lower(name) extensions.gin_trgm_ops'],
+      operatorClass: ['extensions', 'gin_trgm_ops'],
+      fragments: ['lower(name)'],
     },
     products_catalog_active_brand_trgm_idx: {
       accessMethod: 'gin',
       keyCount: 1,
-      fragments: ['lower(COALESCE(brand', 'extensions.gin_trgm_ops'],
+      operatorClass: ['extensions', 'gin_trgm_ops'],
+      fragments: ['lower(COALESCE(brand'],
     },
     products_catalog_active_bigram_idx: {
       accessMethod: 'gin',
@@ -778,6 +786,19 @@ function validateActiveIndexSet(container) {
     assert(index.is_valid && index.is_ready && !index.is_unique, `${index.name} state invalid`);
     assert(index.access_method === contract.accessMethod, `${index.name} access method invalid`);
     assert(Number(index.key_count) === contract.keyCount, `${index.name} key count invalid`);
+    if (contract.operatorClass) {
+      assert(
+        index.operator_class_schema === contract.operatorClass[0] &&
+          index.operator_class_name === contract.operatorClass[1],
+        `${index.name} operator class invalid`,
+      );
+    }
+    if (index.name === 'products_catalog_active_name_trgm_idx') {
+      assert(
+        /lower\(name\) (?:extensions\.)?gin_trgm_ops/.test(index.definition),
+        `${index.name} expression invalid`,
+      );
+    }
     assert(
       index.definition.includes("WHERE (status = 'active'::text)"),
       `${index.name} predicate invalid`,

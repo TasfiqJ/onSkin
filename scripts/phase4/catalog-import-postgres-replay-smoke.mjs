@@ -30,6 +30,9 @@ for (const required of [
   'products_catalog_active_brand_trgm_idx',
   'products_catalog_active_bigram_idx',
   'products_catalog_active_rank_idx',
+  'operator_class.oid = index_state.indclass[0]',
+  "v_index.operator_class_schema <> 'extensions'",
+  "v_index.operator_class_name <> 'gin_trgm_ops'",
   "status = ''active''",
   'drop index concurrently',
 ]) {
@@ -37,17 +40,19 @@ for (const required of [
 }
 
 assert(
-  lookup.includes('.eq(ACTIVE_CATALOG_PRODUCT_FILTER.column, ACTIVE_CATALOG_PRODUCT_FILTER.value)'),
-  'barcode lookup does not filter mapped products to active status',
+  lookup.includes('await admin.rpc(CATALOG_LOOKUP_RPC, {'),
+  'barcode lookup bypasses the guarded catalog RPC',
 );
 assert(
-  lookup.indexOf('shouldFetchExternalCatalogCandidate(Boolean(barcodeRow?.product_id))') <
-    lookup.indexOf('fetchOpenBeautyFacts(barcode)'),
-  'mapped inactive barcode is not fenced before the external fallback',
+  !lookup.includes('fetchOpenBeautyFacts') &&
+    !lookup.includes('shouldFetchExternalCatalogCandidate'),
+  'barcode lookup reintroduced a runtime external-catalog fallback',
 );
 assert(
-  contract.includes('return !hasCatalogBarcodeMapping'),
-  'catalog barcode tombstone policy is missing',
+  contract.includes("'lookup_catalog_product_by_barcode'") &&
+    lookup.includes('requireActiveHealthProcessing(') &&
+    lookup.includes('requireSameAccountAccess('),
+  'guarded catalog barcode contract or caller fences are missing',
 );
 
 for (const migrationName of [
@@ -74,6 +79,9 @@ for (const proof of [
   'two-character search exposed an inactive product',
   'active plan used a products sequential scan',
   'tested_source_sha256',
+  'index.operator_class_schema === contract.operatorClass[0]',
+  'index.operator_class_name === contract.operatorClass[1]',
+  'lower\\(name\\) (?:extensions\\.)?gin_trgm_ops',
 ]) {
   assert(harness.includes(proof), `Docker replay assertion missing: ${proof}`);
 }
