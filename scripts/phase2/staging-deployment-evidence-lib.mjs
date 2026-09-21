@@ -654,23 +654,13 @@ export function assertCurrentSourceContract(sourceInventory) {
   return true;
 }
 
-// Supabase CLI 2.109.1 db push proxies to the Go transactional batch applier;
-// migration up has a separate TS applier that special-cases concurrent CREATE
-// but not concurrent DROP. Neither command safely replays this source chain.
-// Reject the known-incompatible statements before linking or mutating staging.
-export function assertPinnedMigrationRunnerCompatibility(repoRoot, cliVersion) {
-  if (cliVersion !== '2.109.1') fail('DB06_CLI_PIN_INVALID');
-  const migrationRoot = join(resolve(repoRoot), 'supabase', 'migrations');
-  const incompatible = readdirSync(migrationRoot)
-    .filter((name) => MIGRATION_FILE.test(name))
-    .some((name) => {
-      const sql = readFileSync(join(migrationRoot, name), 'utf8')
-        .replace(/\/\*[\s\S]*?\*\//gu, '')
-        .replace(/--[^\r\n]*/gu, '');
-      return /\b(?:create\s+(?:unique\s+)?|drop\s+)index\s+concurrently\b/iu.test(sql);
-    });
-  if (incompatible) fail('DB06_PINNED_CLI_MIGRATION_UNSUPPORTED');
-  return true;
+// This CLI version is a local DB05 replay trial, not a staging approval.
+// The exact 89-migration schema count and repository types are not yet bound
+// to a clean current-chain PostgreSQL replay. Do not link or mutate staging
+// until that evidence is reviewed and this gate is explicitly replaced.
+export function assertPinnedMigrationRunnerCompatibility(_repoRoot, cliVersion) {
+  if (cliVersion !== '2.117.0') fail('DB06_CLI_PIN_INVALID');
+  fail('DB06_CURRENT_CHAIN_REPLAY_REQUIRED');
 }
 
 export function parseSchemaInventory(raw) {

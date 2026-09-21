@@ -775,7 +775,10 @@ revokes unused runtime privileges, and exposes only the bounded owner preference
 writer. `0072` adds the literal-zero COM-01A commerce-admission boundary and
 retires the stale poller authority. The 2026-08-05 checkpoint contained 71
 migrations through `20260729000072`; the current source tree contains 89
-through `20260921000073` and has no clean full-chain replay evidence.
+through `20260921000073` and has no clean full-chain replay evidence. Exact
+Supabase CLI `2.117.0` is pinned for a current-chain local replay trial after
+the old CLI's concurrent-index-drop incompatibility; it does not authorize
+staging deployment or establish current generated-type parity.
 
 On 2026-08-05, `npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at
 clean commit `57da25f63` against the complete 71-migration chain through

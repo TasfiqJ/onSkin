@@ -34,7 +34,7 @@ import {
   summarizeDatabaseTypes,
 } from './database-types-contract-lib.mjs';
 
-const PINNED_CLI_VERSION = '2.109.1';
+const PINNED_CLI_VERSION = '2.117.0';
 const EXPECTED_MIGRATION_COUNT = 89;
 const EXPECTED_LATEST_MIGRATION = '20260921000073';
 const COMMERCE_UPGRADE_MIGRATION = '20260729000072';
@@ -164,25 +164,11 @@ if (!commerceMigrationName || commerceMigrationName === migrationFiles.at(-1)) {
   throw new Error('The exact 0072 commerce upgrade migration must precede the current head.');
 }
 
-// The pinned 2.109.1 local migration applier handles CREATE INDEX CONCURRENTLY
-// specially, but not DROP INDEX CONCURRENTLY. Reject the exact-source DB05
-// replay before creating a stack instead of reporting a misleading migration
-// or schema-drift failure. Do not rewrite these files in the sandbox: that
-// would no longer prove that the checked-in chain is deployable as written.
-// Supabase's missing DROP classifier was fixed in v2.116.0 (PR #6276); a CLI
-// upgrade must review this guard and rerun the entire PostgreSQL gate.
-const unsupportedConcurrentDrops = [];
-for (const migrationFile of migrationFiles) {
-  const sql = await readFile(join(SOURCE_SUPABASE_DIR, 'migrations', migrationFile), 'utf8');
-  if (/^[\t ]*drop[\t ]+index[\t ]+concurrently\b/imu.test(sql)) {
-    unsupportedConcurrentDrops.push(migrationFile);
-  }
-}
-if (unsupportedConcurrentDrops.length > 0) {
-  throw new Error(
-    `DB05_PINNED_CLI_CONCURRENT_DROP_UNVERIFIED: Supabase CLI ${PINNED_CLI_VERSION} cannot faithfully reset migrations containing DROP INDEX CONCURRENTLY (${unsupportedConcurrentDrops.join(', ')}). Keep DB05 open until a reviewed CLI replay path and exact local PostgreSQL evidence exist.`,
-  );
-}
+// This pin is an unproven current-chain trial. The 2.116.0 concurrent DROP
+// fix is present, but 2.115.0–2.116.0 regressed LOCK TABLE in migration
+// pipelines; 2.117.0 has not been proven against this repository's complete
+// chain. Only a clean PostgreSQL replay and exact type/schema checks can
+// promote DB05. Never rewrite the checked-in migrations in this sandbox.
 
 const sandboxRoot = await mkdtemp(join(tmpdir(), 'layerwell-db05-local-'));
 const sandboxSupabaseDir = join(sandboxRoot, 'supabase');
@@ -835,6 +821,17 @@ select pg_catalog.set_config(
     process.stdout.write(
       `[db05-local] temporary types: PASS (${generated.lineCount} lines, sha256 ${generated.sha256})\n`,
     );
+
+    // Preserve the exact locally generated public-schema types when a CI
+    // parity failure follows. This is a diagnostic artifact, not an approval
+    // or a substitute for the clean replay and checked-in type comparison.
+    if (FULL_VERIFY && process.env.GITHUB_ACTIONS === 'true' && process.env.RUNNER_TEMP) {
+      const diagnosticTypesPath = join(process.env.RUNNER_TEMP, 'db05-generated-public-types.ts');
+      await writeFile(diagnosticTypesPath, generated.text, { encoding: 'utf8', flag: 'wx' });
+      process.stdout.write(
+        `[db05-local] CI diagnostic types: ${basename(diagnosticTypesPath)} sha256 ${generated.sha256}\n`,
+      );
+    }
 
     const repositoryTypesPath = join(REPO_ROOT, DATABASE_TYPES_RELATIVE_PATH);
     const repositoryBefore = summarizeCanonicalDatabaseTypes(

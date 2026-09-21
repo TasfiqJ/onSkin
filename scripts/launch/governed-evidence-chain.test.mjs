@@ -220,6 +220,9 @@ function fixture(
   });
   write(value.root, LEDGER, ledger);
   if (symlinkMode) {
+    // Keep the regular working file byte-identical to the staged link target.
+    // Otherwise Linux Git reports a dirty worktree before the tree-mode gate.
+    git(value.root, ['config', 'core.symlinks', 'false']);
     git(value.root, ['add', '--all']);
     const objectId = git(value.root, ['hash-object', '-w', '--stdin'], { input: manifestBytes });
     git(value.root, ['update-index', '--cacheinfo', `120000,${objectId},${MANIFEST}`]);

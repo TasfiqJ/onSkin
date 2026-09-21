@@ -196,6 +196,13 @@ describe('Expo app identity config', () => {
     expect(expo.extra.appEnvironment).toBe('development');
   });
 
+  it('uses the Layerwell launcher mark for the iOS icon', () => {
+    const expo = buildExpoConfig({});
+
+    expect(expo.icon).toBe('./assets/images/icon.png');
+    expect(expo.ios.icon).toBe(expo.icon);
+  });
+
   it('keeps the accepted launch support floor enforced in native config', () => {
     const expo = buildExpoConfig({});
     const buildProperties = pluginOptions(expo, 'expo-build-properties') as {
@@ -273,9 +280,9 @@ describe('Expo app identity config', () => {
   });
 
   it('applies camera-purpose display-name validation to the public identity fallback', () => {
-    expect(() =>
-      buildExpoConfig({ EXPO_PUBLIC_APP_DISPLAY_NAME: 'Layerwell\tCandidate' }),
-    ).toThrow(/resolved app display name used in camera permission copy must be non-empty/);
+    expect(() => buildExpoConfig({ EXPO_PUBLIC_APP_DISPLAY_NAME: 'Layerwell\tCandidate' })).toThrow(
+      /resolved app display name used in camera permission copy must be non-empty/,
+    );
   });
 
   it('derives reviewed camera copy when documented optional env assignments are blank', () => {
@@ -571,6 +578,32 @@ describe('Expo app identity config', () => {
         APP_ANDROID_PACKAGE: 'com.layerwell.app',
       }),
     ).toThrow(/requires BRAND_LEGAL_CLEARANCE=cleared/);
+  });
+
+  it.each([
+    ['APP_DISPLAY_NAME', 'OnSkin'],
+    ['EXPO_PUBLIC_APP_DISPLAY_NAME', 'OnSkin'],
+    ['APP_SLUG', 'onskin'],
+    ['APP_SCHEME', 'onskin'],
+    ['EXPO_PUBLIC_APP_SCHEME', 'onskin'],
+    ['APP_IOS_BUNDLE_IDENTIFIER', 'com.onskin.app'],
+    ['APP_ANDROID_PACKAGE', 'com.onskin.app'],
+    ['EXPO_PUBLIC_FINAL_BRAND_DOMAIN', 'onskin.app'],
+    ['EXPO_PUBLIC_APP_STORE_URL', 'https://apps.apple.com/app/onskin'],
+    ['EXPO_PUBLIC_SUPPORT_EMAIL', 'support@onskin.app'],
+  ] as const)('rejects legacy production %s even after brand clearance', (key, value) => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'Layerwell',
+        APP_SLUG: 'layerwell',
+        APP_SCHEME: 'layerwell',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+        [key]: value,
+      }),
+    ).toThrow(/rejected legacy brand/);
   });
 
   it('blocks cleared production builds that inherit base identity defaults', () => {

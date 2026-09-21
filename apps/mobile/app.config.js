@@ -318,10 +318,16 @@ function assertProductionIdentity(expo, permissionCopy) {
 
   const identityValues = {
     APP_DISPLAY_NAME: expo.name,
+    EXPO_PUBLIC_APP_DISPLAY_NAME: process.env.EXPO_PUBLIC_APP_DISPLAY_NAME,
     APP_SLUG: expo.slug,
     APP_SCHEME: expo.scheme,
+    EXPO_PUBLIC_APP_SCHEME: process.env.EXPO_PUBLIC_APP_SCHEME,
     APP_IOS_BUNDLE_IDENTIFIER: expo.ios?.bundleIdentifier,
-    ...(androidReleaseRequired ? { APP_ANDROID_PACKAGE: expo.android?.package } : {}),
+    APP_ANDROID_PACKAGE: expo.android?.package,
+    EXPO_PUBLIC_FINAL_BRAND_DOMAIN: process.env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN,
+    EXPO_PUBLIC_APP_STORE_URL: process.env.EXPO_PUBLIC_APP_STORE_URL,
+    EXPO_PUBLIC_PLAY_STORE_URL: process.env.EXPO_PUBLIC_PLAY_STORE_URL,
+    EXPO_PUBLIC_SUPPORT_EMAIL: process.env.EXPO_PUBLIC_SUPPORT_EMAIL,
     APP_CAMERA_USAGE_DESCRIPTION: permissionCopy.cameraUsageDescription,
     APP_FACE_ID_USAGE_DESCRIPTION: permissionCopy.faceIDUsageDescription,
     APP_CAMERA_PERMISSION: permissionCopy.cameraPermission,
@@ -331,11 +337,15 @@ function assertProductionIdentity(expo, permissionCopy) {
     .filter(([, value]) => legacyIdentityPattern.test(String(value ?? '')))
     .map(([key]) => key);
 
+  if (legacyKeys.length > 0) {
+    throw new Error(
+      `Production app identity contains the rejected legacy brand in: ${legacyKeys.join(', ')}.`,
+    );
+  }
+
   if (process.env.BRAND_LEGAL_CLEARANCE !== 'cleared') {
     throw new Error(
-      `Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve.${
-        legacyKeys.length > 0 ? ` Current resolved legacy keys: ${legacyKeys.join(', ')}.` : ''
-      }`,
+      'Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve.',
     );
   }
 

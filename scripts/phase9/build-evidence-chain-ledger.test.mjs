@@ -165,6 +165,9 @@ test('rejects non-normal index/mode, oversized, and hardlinked evidence', async 
   });
   await t.test('symlink-mode staged evidence', (child) => {
     const value = fixture(child);
+    // Exercise the staged mode check without an earlier dirty-worktree failure
+    // on Linux, where Git otherwise expects an actual working-tree symlink.
+    git(value.root, ['config', 'core.symlinks', 'false']);
     const objectId = git(value.root, ['hash-object', '-w', '--stdin'], { input: 'target.txt' });
     git(value.root, ['update-index', '--cacheinfo', `120000,${objectId},${MANIFEST}`]);
     write(value.root, MANIFEST, 'target.txt');

@@ -1,14 +1,13 @@
 # Phase 2 Status
 
-> 2026-09-21 DB-06 correction: the current 89-migration source chain through
-> `0073` cannot safely run with the pinned Supabase CLI `2.109.1`: `db push`
-> batches concurrent index statements transactionally, while the alternate
-> `migration up` path cannot handle the concurrent index drops in `0054` and
-> `0059`. The staging
-> runner now fails before project linking or remote mutation. Historical
-> 71-migration/82-table results below are not current deployment proof.
+> 2026-09-21 DB-05 trial: exact Supabase CLI `2.117.0` is pinned so the full
+> 89-migration source chain through `0073` can be attempted locally. Its
+> concurrent-index-drop fix is available. The repository also contains
+> migrations with `LOCK TABLE`, which may hit an upstream pipeline regression;
+> no current replay is claimed. DB-06 still fails before project linking or mutation.
+> Historical 71-migration/82-table results below are not current proof.
 
-Date: 2026-08-05
+Historical checkpoint: 2026-08-05
 
 ## Done In Repo
 
@@ -21,15 +20,14 @@ Date: 2026-08-05
 - Sentry initializes at app startup with privacy-conservative defaults.
 - Supabase Edge Functions prefer publishable/secret key env names.
 - Phase 2 env audit and Supabase RLS smoke test are added.
-- The DB-06 fresh-staging deploy path is source-complete: it binds a clean
+- The historical DB-06 fresh-staging source procedure binds a clean
   `origin/main` SHA and expected target, deploys only a Git-blob-verified
-  immutable snapshot through the native pinned Supabase CLI `2.109.1`, refuses
-  public/migration/function/Auth/Storage/all-Cron state, validates and retains a
-  full-target-bound cutover record, one traffic/provider-freeze artifact, and
-  five schema-v2 boundary files, predeploys all 17 functions before 71
-  migrations through `0072`, retains before/pre-migration/after
-  schema/migration/function/type evidence, and fails closed without retaining
-  raw CLI output or provider digests.
+  immutable snapshot, refuses pre-existing public/migration/function/Auth/
+  Storage/Cron state, and retains target-bound cutover, freeze, and
+  before/pre-migration/after evidence. Its 71-migration/`0072` and Supabase CLI
+  `2.109.1` contract is not deployable for the current 89-migration/`0073`
+  source. The runner now rejects the unproven current chain before project
+  linking or remote mutation; the `2.117.0` pin is a local DB-05 replay trial.
 - DB-06 actively closes ingress: the runner sets
   `DB06_TRAFFIC_FREEZE=frozen`; all 17 Edge handlers have a first-request freeze
   guard; and the exact eight `verifyJwt: false` functions must return HTTP 503,
@@ -37,10 +35,11 @@ Date: 2026-08-05
   hosted Auth gate requires signup, anonymous signup, all 26 reviewed external
   providers, seven reviewed hooks, SAML, OAuth server, custom OAuth, SSO, and
   third-party integrations to remain disabled.
-- Immediately before migration push, DB-06 revalidates the cutover bytes and
-  rereads the exact function inventory, public freeze responses, Auth freeze,
-  empty migration inventory, schema, Storage, and all Cron jobs. The final pass
-  contract rejects omitted proof, requires 82 public/82 RLS tables, one
+- In the historical procedure, immediately before migration push, DB-06
+  revalidates the cutover bytes and rereads the exact function inventory,
+  public freeze responses, Auth freeze, empty migration inventory, schema,
+  Storage, and all Cron jobs. That historical final-pass contract rejects
+  omitted proof, requires 82 public/82 RLS tables, one
   `photos` bucket, zero Auth cohort/Storage objects/Cron jobs, and revalidates
   the cutover artifacts at completion. DB-06 never unfreezes staging; release
   belongs to a separate recorded downstream live gate.
@@ -51,18 +50,17 @@ Date: 2026-08-05
   remote-state-unknown and, when safe, carries a best-effort read-only snapshot;
   no failure is mislabeled as contained.
 - DB-06 retains linked generated types only after exact local/linked hash parity
-  and never changes repository types during a hosted run. The later local DB-08
-  canonical replacement/drift gate is now complete: the authoritative clean
+  and never changes repository types during a hosted run. The historical local
+  DB-08 canonical replacement/drift gate passed: the authoritative clean
   verifier at commit `e5588ae69` exited 0 in 2,200.4 seconds and accepted the
   repository replacement with the exact raw CLI-generated
   `packages/types/src/database.types.ts` artifact at 6,770 lines with SHA-256
   `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
   Client write restrictions are not hand edits to that generated artifact;
-  they live in the separate client overlay. This closes the local canonical
-  replacement/drift gate only. DB-08 remains open until DB-06 produces the
-  reviewed hosted evidence packet and proves repository/local/linked parity
-  against the approved target.
-- The local DB gate now defines exact
+  they live in the separate client overlay. This proves only the historical
+  71-migration local parity; DB-08 remains open until the complete current
+  chain and reviewed hosted target prove repository/local/linked parity.
+- The historical local DB gate defined exact
   `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` forward rehearsals plus two
   clean 71-migration head resets. Those five
   transitions cover the adherence cutover, Shelf/completion replay bridge,
@@ -100,16 +98,17 @@ Date: 2026-08-05
 
 ## Current Go/No-Go
 
-DB-06 remains `in_progress` and `blockedBy: ["ACCT-03"]`. No approved hosted
-staging target was used and no live evidence directory was created.
+DB-06 remains `in_progress` and `blockedBy: ["DB-05", "ACCT-03"]`. Its current
+runner fails before project linking or mutation. No approved hosted staging
+target was used and no live evidence directory was created.
 
-The DB-08 local canonical replacement/drift gate is complete at clean commit
-`e5588ae69`, but DB-08 is not complete: the DB-06 hosted packet and exact
-repository/local/linked generated-type parity remain open. No staging parity is
-claimed.
+DB-08 local canonical replacement/drift passed for the historical 71-migration
+checkpoint at clean commit `e5588ae69`, but current-chain local parity and
+the DB-06 hosted packet remain open. No staging parity is claimed.
 
-No-go for public launch. The repo now has a reviewed source contract for a first
-empty staging deployment, but that contract is not a deployment. Launch
+No-go for public launch. The repository retains a historically reviewed first
+empty-staging procedure, but the current source chain has not passed its local
+gate and that procedure has not been executed against a hosted target. Launch
 readiness still depends on brand clearance, external accounts, a real hosted
 DB-06 packet and downstream live matrices, production secrets, physical-iPhone
 QA, legal/privacy/security/clinical review, catalog rights/data, and closed-beta

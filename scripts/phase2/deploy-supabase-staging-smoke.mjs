@@ -68,7 +68,7 @@ assert(
 );
 
 assert(
-  orchestrator.includes("const PINNED_CLI_VERSION = '2.109.1'") &&
+  orchestrator.includes("const PINNED_CLI_VERSION = '2.117.0'") &&
     orchestrator.includes('`@supabase/cli-${suffix}/package.json`') &&
     orchestrator.includes('const CLI_BINARY = resolvePinnedSupabaseBinary()') &&
     orchestrator.includes('const CLI_BINARY_SHA256 = sha256(readFileSync(CLI_BINARY))') &&
@@ -101,8 +101,8 @@ assert(
     orchestrator.indexOf(
       'assertPinnedMigrationRunnerCompatibility(deploymentRoot, PINNED_CLI_VERSION)',
     ) < orchestrator.indexOf("'link-staging-project'") &&
-    evidenceLibrary.includes('DB06_PINNED_CLI_MIGRATION_UNSUPPORTED'),
-  'The pinned CLI must reject unsupported migration statements before staging is linked or mutated.',
+    evidenceLibrary.includes('DB06_CURRENT_CHAIN_REPLAY_REQUIRED'),
+  'The unproven current migration chain must be rejected before staging is linked or mutated.',
 );
 assert(
   orchestrator.includes("'git-source-snapshot-archive'") &&

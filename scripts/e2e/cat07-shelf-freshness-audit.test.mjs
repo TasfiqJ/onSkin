@@ -87,6 +87,10 @@ import {
 } from './evidence-diagnostic-hygiene.mjs';
 
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
+const syntheticAwsAccessKeyId = () => ['AK', 'IA', 'ABCDEFGH', 'IJKLMNOP'].join('');
+const syntheticStripeSecretKey = () => ['sk', 'live', '1234567890abcdefghijklmnop'].join('_');
+const syntheticSlackBotToken = () =>
+  ['xoxb', '123456789012', '123456789012', 'abcdefghijklmnopqrstuvwx'].join('-');
 const runnerPath = fileURLToPath(new URL('./cat07-shelf-freshness-audit.mjs', import.meta.url));
 const humanManifestPath = fileURLToPath(new URL('./human-e2e-manifest.mjs', import.meta.url));
 const cat04RunnerPath = fileURLToPath(
@@ -544,8 +548,8 @@ test('CAT07 child-validator diagnostics are bounded and cannot leak host paths o
       `Authorization: Basic ${'b'.repeat(32)} NPM_TOKEN=${npmToken} ${pat} ${opaque}\n` +
       `${npmLiteral} ${githubLiteral} ${githubFineGrainedLiteral}\n` +
       `Cookie: session_id=cookie-secret Set-Cookie: session=server-cookie ` +
-      `AWS_ACCESS_KEY_ID=AKIAABCDEFGHIJKLMNOP AWS_SECRET_ACCESS_KEY=aws-secret ` +
-      `STRIPE_SECRET_KEY=sk_live_1234567890abcdefghijklmnop\n` +
+      `AWS_ACCESS_KEY_ID=${syntheticAwsAccessKeyId()} AWS_SECRET_ACCESS_KEY=aws-secret ` +
+      `STRIPE_SECRET_KEY=${syntheticStripeSecretKey()}\n` +
       `/Applications/Secret.app /Library/Secret /System/Secret\n` +
       `http://localhost:8720/failure?access_token=localhost-secret ` +
       `https://reviewer:web-password@example.com/failure` +
@@ -562,8 +566,9 @@ test('CAT07 child-validator diagnostics are bounded and cannot leak host paths o
   );
   assert.doesNotMatch(
     diagnostic,
-    /Authorization: Basic|npm-secret|npm_|ghp_|github_pat_|sbp_|sb_secret_|database-password|legacy-password|legacy-service-key|localhost-secret|web-password|cookie-secret|server-cookie|AKIAABCDEFGHIJKLMNOP|aws-secret|sk_live_/u,
+    /Authorization: Basic|npm-secret|npm_|ghp_|github_pat_|sbp_|sb_secret_|database-password|legacy-password|legacy-service-key|localhost-secret|web-password|cookie-secret|server-cookie|aws-secret|sk_live_/u,
   );
+  assert.doesNotMatch(diagnostic, new RegExp(syntheticAwsAccessKeyId(), 'u'));
   assert.doesNotMatch(diagnostic, /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/u);
   assert.ok(Buffer.byteLength(diagnostic, 'utf8') <= 2_050);
 });
@@ -594,7 +599,7 @@ test('CAT07 evidence hygiene bounds recursive nodes and never echoes invalid JSO
 
   const credentialFieldFailures = collectEvidenceDiagnosticValueFailures('fixture.json', {
     nested: {
-      accessKeyId: 'AKIAABCDEFGHIJKLMNOP',
+      accessKeyId: syntheticAwsAccessKeyId(),
       cookie: 'cookie-value',
       databaseUrl: 'legacy-database-value',
       pgpassword: 'legacy-pg-password',
@@ -621,8 +626,8 @@ test('CAT07 evidence hygiene bounds recursive nodes and never echoes invalid JSO
 test('CAT07 sanitizer removes credential families from raw and recursively encoded local URLs', () => {
   const secrets = [
     `sk_live_${'a'.repeat(24)}`,
-    'AKIAABCDEFGHIJKLMNOP',
-    'xoxb-123456789012-123456789012-abcdefghijklmnopqrstuvwx',
+    syntheticAwsAccessKeyId(),
+    syntheticSlackBotToken(),
     `sbp_${'a'.repeat(40)}`,
     `npm_${'n'.repeat(36)}`,
     `ghp_${'g'.repeat(36)}`,
@@ -733,7 +738,10 @@ test('CAT07 app environment is a minimal positive allowlist and never inherits h
   }
   if (process.platform === 'win32') {
     assert.equal(browserEnvironment.APPDATA, path.resolve(browserHostEnvironment.APPDATA));
-    assert.equal(browserEnvironment.LOCALAPPDATA, path.resolve(browserHostEnvironment.LOCALAPPDATA));
+    assert.equal(
+      browserEnvironment.LOCALAPPDATA,
+      path.resolve(browserHostEnvironment.LOCALAPPDATA),
+    );
     assert.equal(browserEnvironment.USERPROFILE, path.resolve(browserHostEnvironment.USERPROFILE));
   }
   const probePath = path.join(fixtureRoot, 'environment-probe.mjs');
@@ -786,11 +794,11 @@ test('CAT07 Expo launch attests its own exact loopback listener over inherited I
   writeFileSync(
     expoCliPath,
     [
-       "import { createServer } from 'node:http';",
-       "const portIndex = process.argv.indexOf('--port');",
-       'const port = Number(process.argv[portIndex + 1]);',
-       "process.send?.({ kind: 'expo-framework-message', value: 'ignored' });",
-       "createServer((_request, response) => response.end('ok')).listen(port, 'localhost');",
+      "import { createServer } from 'node:http';",
+      "const portIndex = process.argv.indexOf('--port');",
+      'const port = Number(process.argv[portIndex + 1]);',
+      "process.send?.({ kind: 'expo-framework-message', value: 'ignored' });",
+      "createServer((_request, response) => response.end('ok')).listen(port, 'localhost');",
       '',
     ].join('\n'),
   );
@@ -816,10 +824,7 @@ test('CAT07 Expo launch attests its own exact loopback listener over inherited I
   child.kill();
   await new Promise((resolve) => child.once('exit', resolve));
 
-  assert.throws(
-    () => buildCat07AttestedServerNodeArgs(expoCliPath, [], {}, 0),
-    /port is invalid/u,
-  );
+  assert.throws(() => buildCat07AttestedServerNodeArgs(expoCliPath, [], {}, 0), /port is invalid/u);
 });
 
 test('CAT07 runtime drift diagnostics are bounded to safe relative dependency paths', (t) => {
@@ -841,7 +846,10 @@ test('CAT07 runtime drift diagnostics are bounded to safe relative dependency pa
   assert.ok(drift.includes('created node_modules/fixture-package/created.txt'));
   assert.ok(drift.includes('removed node_modules/fixture-package/removed.txt'));
   assert.equal(collectCat07RuntimeDrift(before, after, { limit: 1 }).length, 1);
-  assert.equal(drift.some((entry) => entry.includes(fixtureRoot)), false);
+  assert.equal(
+    drift.some((entry) => entry.includes(fixtureRoot)),
+    false,
+  );
 });
 
 test('CAT07 pre-initializes and binds only the exact CSS interop runtime cache', (t) => {
@@ -866,10 +874,7 @@ test('CAT07 pre-initializes and binds only the exact CSS interop runtime cache',
   );
 
   writeFileSync(path.join(cacheRoot, 'unexpected.js'), 'undeclared');
-  assert.throws(
-    () => prepareCat07CssInteropRuntimeCache(fixtureRoot),
-    /undeclared runtime file/u,
-  );
+  assert.throws(() => prepareCat07CssInteropRuntimeCache(fixtureRoot), /undeclared runtime file/u);
 });
 
 test('CAT07 isolated npm install is offline, lockfile-bound, scrubbed, and has no fallback', (t) => {
@@ -1704,12 +1709,7 @@ test('CAT07 source monitor permits reviewed generated runtime paths and Windows 
 test('CAT07 source monitor rejects undeclared CSS interop cache entries', async (t) => {
   const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'cat07-css-interop-source-'));
   t.after(() => rmSync(fixtureRoot, { force: true, recursive: true }));
-  const cacheRoot = path.join(
-    fixtureRoot,
-    'node_modules',
-    'react-native-css-interop',
-    '.cache',
-  );
+  const cacheRoot = path.join(fixtureRoot, 'node_modules', 'react-native-css-interop', '.cache');
   mkdirSync(cacheRoot, { recursive: true });
   const monitor = createCat07SourceMutationMonitor({ rootPath: fixtureRoot });
   t.after(() => monitor.close());

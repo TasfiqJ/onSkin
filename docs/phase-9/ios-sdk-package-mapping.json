@@ -11,7 +11,7 @@
       "version": "16.1.2",
       "lockIntegrity": {
         "packageLockPath": "package-lock.json",
-        "packageLockSha256": "e973255bb1127047d08762e214f608836604db0511538b15758cb0a1b307d4e2",
+        "packageLockSha256": "fb042e29d9e942ae32ab7583128deb1d14e63565bba4296a49cd7f19400121fc",
         "entries": [
           {
             "path": "node_modules/@react-native-google-signin/google-signin",
@@ -70,15 +70,15 @@
     },
     {
       "packageName": "expo-image",
-    "version": "57.0.2",
+      "version": "57.0.2",
       "lockIntegrity": {
         "packageLockPath": "package-lock.json",
-        "packageLockSha256": "e973255bb1127047d08762e214f608836604db0511538b15758cb0a1b307d4e2",
+        "packageLockSha256": "fb042e29d9e942ae32ab7583128deb1d14e63565bba4296a49cd7f19400121fc",
         "entries": [
           {
             "path": "node_modules/expo-image",
-          "version": "57.0.2",
-          "integrity": "sha512-SAHDJiQ/Sf8JJ6NJ5/RbSewo8HtQtIGn4bDEgcvipwIw5lPURP0vXPzIOIrZ/ZroZ0abPgwTaWmkspoEO8Sxcw=="
+            "version": "57.0.2",
+            "integrity": "sha512-SAHDJiQ/Sf8JJ6NJ5/RbSewo8HtQtIGn4bDEgcvipwIw5lPURP0vXPzIOIrZ/ZroZ0abPgwTaWmkspoEO8Sxcw=="
           }
         ]
       },
@@ -100,7 +100,7 @@
           },
           {
             "path": "node_modules/expo-image/package.json",
-        "sha256": "6e0f1a34c434565b85672b1294e5ad3f01fa36b7bc704fbb1c2f52a312a94754"
+            "sha256": "6e0f1a34c434565b85672b1294e5ad3f01fa36b7bc704fbb1c2f52a312a94754"
           },
           {
             "path": "node_modules/expo-image/spm.config.json",
@@ -131,20 +131,20 @@
     },
     {
       "packageName": "react-native",
-    "version": "0.86.2",
+      "version": "0.86.2",
       "lockIntegrity": {
         "packageLockPath": "package-lock.json",
-        "packageLockSha256": "e973255bb1127047d08762e214f608836604db0511538b15758cb0a1b307d4e2",
+        "packageLockSha256": "fb042e29d9e942ae32ab7583128deb1d14e63565bba4296a49cd7f19400121fc",
         "entries": [
           {
-          "path": "node_modules/hermes-compiler",
-          "version": "250829098.0.16",
-          "integrity": "sha512-xsgzk+mUyvt9t1nUbF8USBlYxajTUtPJhVZ86q85s/SEoMKCF+52YZcudb0ENSnV3T3lV9mgB3s6R7+pH90zgw=="
+            "path": "node_modules/hermes-compiler",
+            "version": "250829098.0.16",
+            "integrity": "sha512-xsgzk+mUyvt9t1nUbF8USBlYxajTUtPJhVZ86q85s/SEoMKCF+52YZcudb0ENSnV3T3lV9mgB3s6R7+pH90zgw=="
           },
           {
-          "path": "node_modules/react-native",
-          "version": "0.86.2",
-          "integrity": "sha512-zbJXGZpwfZGA79Z9ob6Atvfx4nAQL8yJBa35s58E4Oo+khPykfQP2sTeumkKbjwajFYfVayg8pj7Il9nIfTk7A=="
+            "path": "node_modules/react-native",
+            "version": "0.86.2",
+            "integrity": "sha512-zbJXGZpwfZGA79Z9ob6Atvfx4nAQL8yJBa35s58E4Oo+khPykfQP2sTeumkKbjwajFYfVayg8pj7Il9nIfTk7A=="
           }
         ]
       },
@@ -166,24 +166,24 @@
         "repoAliases": ["hermes", "hermes-engine", "hermesvm"],
         "sourcePins": [
           {
-        "path": "node_modules/hermes-compiler/package.json",
-        "sha256": "3ab13a75115f48e6868df94c5f5a74b0d2c0a819dc61bc8a0a48b18c91569f26"
+            "path": "node_modules/hermes-compiler/package.json",
+            "sha256": "3ab13a75115f48e6868df94c5f5a74b0d2c0a819dc61bc8a0a48b18c91569f26"
           },
           {
-        "path": "node_modules/react-native/package.json",
-        "sha256": "f80aed8d307fd4500248552133067f3794e48cbd65ed4f44c5934c905a3bf6e0"
+            "path": "node_modules/react-native/package.json",
+            "sha256": "f80aed8d307fd4500248552133067f3794e48cbd65ed4f44c5934c905a3bf6e0"
           },
           {
-        "path": "node_modules/react-native/sdks/.hermesversion",
-        "sha256": "5bdde0c2a3bf8b9a6df20ed87130fdff5945f8f32d8152165b8af8b14ff0ebab"
+            "path": "node_modules/react-native/sdks/.hermesversion",
+            "sha256": "5bdde0c2a3bf8b9a6df20ed87130fdff5945f8f32d8152165b8af8b14ff0ebab"
           },
           {
-        "path": "node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec",
-        "sha256": "e21eb2dd5e9a57d5278a378d1fb2f0f3562fd098a3294207122a4afa83b5c749"
+            "path": "node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec",
+            "sha256": "e21eb2dd5e9a57d5278a378d1fb2f0f3562fd098a3294207122a4afa83b5c749"
           },
           {
-        "path": "node_modules/react-native/sdks/hermes-engine/version.properties",
-        "sha256": "8a9cdfd42cfc36587ca249ee501b5e877492b0adcc700b8993e501a888019304"
+            "path": "node_modules/react-native/sdks/hermes-engine/version.properties",
+            "sha256": "8a9cdfd42cfc36587ca249ee501b5e877492b0adcc700b8993e501a888019304"
           }
         ],
         "nativeInventory": {

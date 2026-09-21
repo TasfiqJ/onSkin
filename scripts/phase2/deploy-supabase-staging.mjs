@@ -52,7 +52,7 @@ import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(SCRIPT_DIR, '..', '..');
 const EVIDENCE_ROOT = join(REPO_ROOT, 'docs', 'hugeToDo', 'evidence', 'DB-06', 'staging');
-const PINNED_CLI_VERSION = '2.109.1';
+const PINNED_CLI_VERSION = '2.117.0';
 const PROJECT_REF = /^[a-z0-9]{20}$/u;
 const MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
 const DEFAULT_TIMEOUT_MS = 5 * 60_000;

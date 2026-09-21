@@ -137,6 +137,16 @@ jobs:
       - name: Reset twice, test, lint, and prove zero drift
         run: npm run phase2:db-local-verify
 
+      - name: Retain generated public types for parity diagnosis
+        if: ${{ failure() }}
+        # actions/upload-artifact v4.6.2
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: db05-current-chain-types-${{ github.run_id }}
+          path: ${{ runner.temp }}/db05-generated-public-types.ts
+          if-no-files-found: ignore
+          retention-days: 7
+
   checks:
     name: Repository quality gates
     runs-on: ubuntu-latest

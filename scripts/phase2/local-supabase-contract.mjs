@@ -123,9 +123,9 @@ function isCanonicalGtin(value) {
   return actualCheckDigit === (10 - (weightedSum % 10)) % 10;
 }
 
-check(packageJson.devDependencies?.supabase === '2.109.1', 'Pin Supabase CLI 2.109.1 exactly.');
+check(packageJson.devDependencies?.supabase === '2.117.0', 'Pin Supabase CLI 2.117.0 exactly.');
 check(
-  lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
+  lockJson.packages?.['node_modules/supabase']?.version === '2.117.0',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
 check(migrations.length === 89, `Expected 89 migration files; found ${migrations.length}.`);

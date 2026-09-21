@@ -268,13 +268,13 @@ test('current reviewed source inventory is deterministic and exact', () => {
   assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 89);
 });
 
-test('pinned CLI refuses concurrent index statements before any staging mutation', () => {
+test('candidate CLI cannot reach staging before current-chain replay and type parity', () => {
   errorCode(
-    () => assertPinnedMigrationRunnerCompatibility(repoRoot, '2.109.1'),
-    'DB06_PINNED_CLI_MIGRATION_UNSUPPORTED',
+    () => assertPinnedMigrationRunnerCompatibility(repoRoot, '2.117.0'),
+    'DB06_CURRENT_CHAIN_REPLAY_REQUIRED',
   );
   errorCode(
-    () => assertPinnedMigrationRunnerCompatibility(repoRoot, '2.109.0'),
+    () => assertPinnedMigrationRunnerCompatibility(repoRoot, '2.109.1'),
     'DB06_CLI_PIN_INVALID',
   );
 });

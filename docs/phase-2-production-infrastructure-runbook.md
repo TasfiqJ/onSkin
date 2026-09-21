@@ -3,15 +3,14 @@
 Date: 2026-07-15
 Updated: 2026-08-05 for the 71-migration chain through `0072`
 
-> 2026-09-21 source correction: the repository now has 89 migrations through
-> `0073`. The DB-06 staging runner is intentionally stopped before project
-> linking or mutation: pinned Supabase CLI `2.109.1` runs `db push` through a
-> transactional batch that cannot execute concurrent index statements. Its
-> `migration up` path also cannot handle `DROP INDEX CONCURRENTLY`, required by
-> migrations `0054` and `0059`. The 82-table expectation below is
-> historical `0072` evidence, not a verified `0073` count. Re-review the CLI
-> pin and exact table/type contract, then replay the complete current chain
-> locally before using this procedure for a fresh staging project.
+> 2026-09-21 source trial: the repository now has 89 migrations through `0073`.
+> Supabase CLI `2.117.0` is exactly pinned for a **local DB-05 replay trial**:
+> its upstream release includes the concurrent-index-drop fix, but the current
+> chain has not passed a complete replay, and the upstream migration-pipeline
+> `LOCK TABLE` regression requires direct verification. The DB-06 staging runner
+> remains stopped before project linking or mutation. The 82-table expectation
+> below is historical `0072` evidence, not a verified `0073` count. Rebind the
+> exact schema/type contract only after a clean current-chain PostgreSQL replay.
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `Layerwell` until
@@ -314,9 +313,11 @@ remote state is contained. Any post-mutation failure remains
   whose configured endpoint is an external ingress path and therefore must not
   target this fresh staging project during DB-06.
 - [Supabase CLI reference](https://supabase.com/docs/reference/cli/introduction)
-  and [pinned CLI source](https://github.com/supabase/cli/tree/v2.109.1) for
-  linked queries, migration push/dry-run, function/secret inventories, pgTAP,
-  lint, diff, and linked type generation.
+  and [historical `0072` CLI source](https://github.com/supabase/cli/tree/v2.109.1)
+  for the previously reviewed linked queries, migration push/dry-run,
+  function/secret inventories, pgTAP, lint, diff, and linked type generation.
+  The current `2.117.0` pin is a local replay trial, not a reviewed staging
+  deployment or CLI approval.
 
 These references support the source-controlled procedure; they do not establish
 legal compliance, security approval, provider acceptance, or App Store approval.

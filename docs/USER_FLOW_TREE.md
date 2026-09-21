@@ -566,18 +566,18 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
 - Persona: New or returning user using a build configured with the working rebrand candidate.
 - Entry state: Local Expo web build with `EXPO_PUBLIC_APP_DISPLAY_NAME=Layerwell` and `EXPO_PUBLIC_APP_SCHEME=layerwell`.
 - Start screen/URL/window: Direct routes `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`.
-- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `Layerwell` through runtime configuration; old public `Layerwell` copy is absent from the checked surfaces.
+- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `Layerwell` through runtime configuration; the rejected working identity is absent from the checked surfaces.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web smoke; iOS and Android after final native identifiers are cleared.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/runtime-brand-identity/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/runtime-brand-identity/`
+- Historical evidence reference (not present in this checkout): `test-results/human-e2e/2026-07-07/runtime-brand-identity/`. A fresh Layerwell pass is required.
 
 ### Path A: Configured Runtime Copy
 
 1. Action: Start Expo web with the working public display name, open `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`, then inspect visible page copy.
-   Expected result: `/ask` renders `Ask Layerwell`; the paywall/subscription surfaces render `Layerwell Pro`; no checked surface displays old public `Layerwell` labels.
-   Evidence: Screenshots, visible-text snapshots, and browser console logs. Current local evidence: 2026-07-07 Expo web at 320 x 568 renders `Ask Layerwell`, `Part of Layerwell Pro.`, and `Layerwell Pro` in subscription settings, with zero visible `Layerwell` labels and no browser console errors. This does not close final brand/legal clearance or native identifier QA.
+   Expected result: `/ask` renders `Ask Layerwell`; the paywall/subscription surfaces render `Layerwell Pro`; no checked surface displays the rejected working identity.
+   Evidence: Screenshots, visible-text snapshots, and browser console logs. Historical local evidence: 2026-07-07 Expo web at 320 x 568 rendered the then-configured working identity in Ask, paywall, and subscription settings, with no earlier-brand labels reported visible and no browser console errors. The recorded pass predates Layerwell, its evidence directory is not present in this checkout, and it cannot verify current branding. Final brand/legal clearance and native identifier QA also remain open.
 
 ### Branches
 
@@ -591,9 +591,9 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
   - Priority: Critical
   - Automate later: Yes
   - Action: Start Expo web with the working public display name, open `/onboarding/age`, `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local reverse-trial path before `/routine/widgets`.
-  - Expected result: Visible public copy on the age gate, catalog search, and timing lock-screen preview uses `Layerwell` and does not show legacy `Layerwell`; every `/s/[shareId]` path renders the same product-free `Public sharing is unavailable.` recovery without deriving content from the path; widgets remain the existing native-widget deferred surface until device QA enables them.
+  - Expected result: Visible public copy on the age gate, catalog search, and timing lock-screen preview uses `Layerwell` and does not show the rejected working identity; every `/s/[shareId]` path renders the same product-free `Public sharing is unavailable.` recovery without deriving content from the path; widgets remain the existing native-widget deferred surface until device QA enables them.
   - Evidence: Phone-width screenshots, visible-text snapshots, local reverse-trial route snapshot, and browser console logs.
-  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_APP_DISPLAY_NAME=Layerwell` verified the pre-CORE-07A `/s/sharecard01` surface alongside the age, catalog, timing, and widget surfaces. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; the former public-share behavior is superseded and is not current acceptance evidence. Final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with the previous working display name verified the pre-CORE-07A `/s/sharecard01` surface alongside the age, catalog, timing, and widget surfaces. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; the former public-share behavior and previous brand identity are superseded and are not current acceptance evidence. Final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
 - Branch: public share landing attribution
   - Priority: Critical
   - Automate later: Yes
@@ -606,9 +606,9 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
   - Priority: Critical
   - Automate later: Yes
   - Action: Serve `docs/phase-8/public-site` locally, open `index.html`, `share.html`, `support.html`, and `waitlist.html` at phone width, and inspect titles plus visible copy.
-  - Expected result: The branded launch pages use `Layerwell`, show no legacy `Layerwell`, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared. `share.html` instead remains a brand-neutral, inert `Public links are unavailable.` recovery that does not derive content from the address. `support.html` discloses the V1 support floor: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
+  - Expected result: The branded launch pages use `Layerwell`, show no rejected working identity, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared. `share.html` instead remains a brand-neutral, inert `Public links are unavailable.` recovery that does not derive content from the address. `support.html` discloses the V1 support floor: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
   - Evidence: Phone-width screenshots, visible-text snapshots, static-server transcript, and brand audit output.
-  - Current local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700, verified the visible support copy includes Layerwell's V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no visible legacy `Layerwell`, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`.
+  - Historical local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700. Its saved visible-text snapshot uses the previous working identity and verifies the V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`; it does not verify Layerwell branding.
 - Branch: Phase 8 public-site placeholder store links
   - Priority: Critical
   - Automate later: Yes

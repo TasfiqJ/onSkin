@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
-import { spawnSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
@@ -8,6 +7,10 @@ import { fileURLToPath } from 'node:url';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, '..', '..');
 const source = await readFile(join(scriptDir, 'local-supabase-reset.mjs'), 'utf8');
+const qualityWorkflow = await readFile(
+  join(repoRoot, '.github', 'workflows', 'quality.yml'),
+  'utf8',
+);
 const migrationsDir = join(repoRoot, 'supabase', 'migrations');
 const migrationNames = (await readdir(migrationsDir))
   .filter((name) => /^\d{14}_[a-z0-9_]+\.sql$/u.test(name))
@@ -31,18 +34,23 @@ test('0072 commerce rehearsal uses its exact migration, then restores 0073 for h
   assert.ok(commerceRehearsal > 0 && restoreHead > commerceRehearsal && finalReset > restoreHead);
 });
 
-test('the pinned CLI rejects exact concurrent DROP replay before starting a stack', () => {
-  const env = Object.fromEntries(
-    Object.entries(process.env).filter(([name]) => !name.toUpperCase().startsWith('DB05_')),
+test('the pinned trial CLI retains exact current-chain SQL for a local replay', () => {
+  assert.match(source, /const PINNED_CLI_VERSION = '2\.117\.0';/u);
+  assert.doesNotMatch(source, /DB05_PINNED_CLI_CONCURRENT_DROP_UNVERIFIED/u);
+  assert.match(source, /const SOURCE_SUPABASE_DIR = sourceSupabaseOverride/u);
+  assert.match(source, /await cp\(SOURCE_SUPABASE_DIR, sandboxSupabaseDir/u);
+});
+
+test('CI retains generated types only as a bounded parity diagnostic', () => {
+  assert.match(source, /FULL_VERIFY && process\.env\.GITHUB_ACTIONS === 'true'/u);
+  assert.match(source, /join\(process\.env\.RUNNER_TEMP, 'db05-generated-public-types\.ts'\)/u);
+  assert.match(
+    source,
+    /writeFile\(diagnosticTypesPath, generated\.text, \{ encoding: 'utf8', flag: 'wx' \}\)/u,
   );
-  const result = spawnSync(
-    process.execPath,
-    [join(scriptDir, 'local-supabase-reset.mjs'), '--reset-only'],
-    { cwd: repoRoot, env, encoding: 'utf8', timeout: 15_000 },
+  assert.match(
+    qualityWorkflow,
+    /if: \$\{\{ failure\(\) \}\}[\s\S]*?path: \$\{\{ runner\.temp \}\}\/db05-generated-public-types\.ts/u,
   );
-  assert.equal(result.status, 1, result.stderr);
-  assert.match(result.stderr, /DB05_PINNED_CLI_CONCURRENT_DROP_UNVERIFIED/u);
-  assert.match(result.stderr, /20260725000054_catalog_import_identity_and_visibility\.sql/u);
-  assert.match(result.stderr, /20260726000059_edge_rate_limit_cleanup_concurrent_index\.sql/u);
-  assert.doesNotMatch(result.stdout, /start isolated credential-free stack/u);
+  assert.match(qualityWorkflow, /if-no-files-found: ignore/u);
 });

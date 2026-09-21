@@ -777,7 +777,7 @@
       "id": "DB-05",
       "status": "in_progress",
       "blockedBy": [],
-      "nextAction": "The clean local verifier passed at historical commit e5588ae69 with 71 migrations through 20260729000072 and exact generated-type parity; that evidence does not cover the current 89-migration source through 20260921000073. The reset source now binds the current count/head and exact 0072 commerce rehearsal, but pinned Supabase CLI 2.109.1 cannot faithfully apply concurrent index drops in 0054/0059, so the runner fails before stack creation. Review a compatible pinned CLI, regenerate database types, then complete two clean full-chain resets, adversarial database tests, lint, and empty drift before restoring DB-05 complete. Docker/PostgreSQL is unavailable on this Windows host; no current-chain replay is claimed.",
+      "nextAction": "The clean local verifier passed at historical commit e5588ae69 with 71 migrations through 20260729000072 and exact generated-type parity; that evidence does not cover the current 89-migration source through 20260921000073. The reset source binds the current count/head and exact 0072 commerce rehearsal. Supabase CLI 2.117.0 is now pinned for a source-level local replay trial because its upstream migration applier addresses concurrent index drops; full-chain compatibility is still unproven. Complete two clean full-chain resets, adversarial database tests, lint, empty drift, and generated-type parity before restoring DB-05 complete. Docker/PostgreSQL is unavailable on this Windows host; CI diagnostic type output is not a successful replay or release approval.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "docs/hugeToDo/DB-05-LOCAL-RESET-2026-07-14.md",
@@ -821,7 +821,7 @@
       "id": "DB-06",
       "status": "in_progress",
       "blockedBy": ["DB-05", "ACCT-03"],
-      "nextAction": "The DB-06 source inventory now binds 89 migrations through 20260921000073, but pinned Supabase CLI 2.109.1 cannot faithfully apply the concurrent-index chain. The staging runner now fails before linking or mutation; the 82-table completion count and generated types remain historical. Review a compatible CLI and prove the exact schema/table count and clean DB-05 replay first. After ACCT-03 creates an approved empty staging project, use the reviewed target-bound cutover/freeze procedure and retain every before/immediate-pre-migration/after proof with linked types. Keep DB06_TRAFFIC_FREEZE=frozen pending the separate live gate. Historical e5588ae69 71-migration proof does not validate the current chain; no hosted link or live DB-06 packet exists.",
+      "nextAction": "The DB-06 source inventory binds 89 migrations through 20260921000073, and Supabase CLI 2.117.0 is pinned only for a local DB-05 replay trial. The staging runner still fails before linking or mutation until complete current-chain local proof, current schema/table counts, and generated-type parity are reviewed; the 82-table completion count and checked-in types remain historical. After ACCT-03 creates an approved empty staging project, use the reviewed target-bound cutover/freeze procedure and retain every before/immediate-pre-migration/after proof with linked types. Keep DB06_TRAFFIC_FREEZE=frozen pending the separate live gate. Historical e5588ae69 71-migration proof does not validate the current chain; no hosted link or live DB-06 packet exists.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase2/deploy-supabase-staging.ps1",
