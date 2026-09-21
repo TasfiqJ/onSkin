@@ -895,7 +895,7 @@ check(
     /alter table public\.order_attributions disable trigger user;\s*insert into public\.order_attributions\s*\([\s\S]{0,700}?\);\s*alter table public\.order_attributions enable trigger user;/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
-    /clean 0071 has dormant publication policies but no ambient client table ACL/u.test(
+    /clean 0071 retains affiliate and click publication policies but already sealed stacks/u.test(
       commerceZeroAdmissionUpgradeRehearsal,
     ) &&
     /grant select, insert, update, delete\s+on table public\.commerce_click_events\s+to authenticated, service_role;/u.test(

@@ -165,6 +165,7 @@ const evidenceGates = [
   },
 ];
 
+// Prettier may wrap a long flag call and add a trailing argument comma.
 const accessFor = (key) => String.raw`(?:process\.env|env)\.${key}`;
 
 for (const { file, keys } of evidenceGates) {
@@ -185,7 +186,7 @@ for (const { file, keys } of evidenceGates) {
     );
     block(
       errors,
-      /evidenceFlagEnabled\(env\[key\]\)/.test(source),
+      /evidenceFlagEnabled\(\s*env\[key\]\s*,?\s*\)/.test(source),
       `${file} must normalize dynamic evidence keys with evidenceFlagEnabled(env[key]).`,
     );
     block(
@@ -208,7 +209,7 @@ for (const { file, keys } of evidenceGates) {
     const access = accessFor(key);
     block(
       errors,
-      new RegExp(String.raw`evidenceFlagEnabled\(${access}\)`).test(source),
+      new RegExp(String.raw`evidenceFlagEnabled\(\s*${access}\s*,?\s*\)`).test(source),
       `${file} must normalize ${key} with evidenceFlagEnabled.`,
     );
     block(

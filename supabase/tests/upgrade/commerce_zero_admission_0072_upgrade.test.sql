@@ -127,22 +127,24 @@ select ok(
            'commerce_click_events_consent_insert'
          )
     ) = 2
-    and not pg_catalog.has_table_privilege(
-      'authenticated',
-      'public.affiliate_links',
-      'SELECT'
-    )
-    and not pg_catalog.has_table_privilege(
-      'authenticated',
-      'public.commerce_click_events',
-      'INSERT'
+    and not exists (
+      select 1
+        from pg_catalog.pg_policies as policies
+       where policies.schemaname = 'public'
+         and (
+           (policies.tablename = 'creator_stacks'
+             and policies.policyname = 'creator_stacks_select_active')
+           or (policies.tablename = 'creator_stack_items'
+             and policies.policyname = 'creator_stack_items_select_all')
+         )
     ),
-  'clean 0071 has dormant publication policies but no ambient client table ACL'
+  'clean 0071 retains affiliate and click publication policies but already sealed stacks'
 );
 
 -- Supabase historically granted Data API DML on every new public table. Model
 -- that installed-base exposure explicitly so 0072 must close both old and new
 -- project histories instead of inheriting the verifier project's defaults.
+-- Do not assert an ambient-grant baseline: Supabase project/CLI defaults vary.
 grant select, insert, update, delete
   on table public.affiliate_links,
     public.creator_stacks,
