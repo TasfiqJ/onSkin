@@ -261,6 +261,30 @@ test('pins and parses the installed react-native-view-shot privacy manifest', ()
   });
 });
 
+test('checked-in SDK mapping resolves hoisted lock entries and installed source pins', () => {
+  const mapping = JSON.parse(readFileSync(join(REPO_ROOT, ...IOS_PRIVACY_MAPPING_PATH.split('/'))));
+  const lock = JSON.parse(readFileSync(join(REPO_ROOT, 'package-lock.json')));
+  const reactNative = mapping.mappings.find(({ packageName }) => packageName === 'react-native');
+  assert.ok(reactNative);
+  assert.deepEqual(
+    reactNative.lockIntegrity.entries.map(({ path }) => path),
+    ['node_modules/hermes-compiler', 'node_modules/react-native'],
+  );
+  for (const entry of mapping.mappings) {
+    for (const expected of entry.lockIntegrity.entries) {
+      const actual = lock.packages[expected.path];
+      assert.ok(actual, `Missing mapped lock entry: ${expected.path}`);
+      assert.equal(actual.version, expected.version, expected.path);
+      assert.equal(actual.integrity, expected.integrity, expected.path);
+    }
+    for (const pin of entry.notes.sourcePins) {
+      const path = join(REPO_ROOT, ...pin.path.split('/'));
+      assert.equal(existsSync(path), true, `Missing mapped source pin: ${pin.path}`);
+      assert.equal(sha256(readFileSync(path)), pin.sha256, pin.path);
+    }
+  }
+});
+
 test('accepts a minimal dictionary and deterministically normalizes a complete valid manifest', () => {
   const minimal = validateManifest(plistDictionary());
   assert.deepEqual(minimal, {

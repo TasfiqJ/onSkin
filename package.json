@@ -288,7 +288,7 @@
   },
   "devDependencies": {
     "@expo/plist": "0.7.0",
-    "@xmldom/xmldom": "0.8.13",
+    "@xmldom/xmldom": "0.8.15",
     "bplist-parser": "0.3.2",
     "node-forge": "1.4.0",
     "pngjs": "3.4.0",
@@ -306,7 +306,16 @@
     "node": ">=20"
   },
   "overrides": {
-    "js-yaml": "4.3.1",
+    "@expo/metro": "56.0.2",
+    "@react-native/community-cli-plugin": {
+      "metro": "0.84.5",
+      "metro-config": "0.84.5",
+      "metro-core": "0.84.5"
+    },
+    "@react-native/metro-config": {
+      "metro-config": "0.84.5"
+    },
+    "js-yaml": "4.3.2",
     "minimatch@10.2.5": {
       "brace-expansion": "5.0.9"
     },
