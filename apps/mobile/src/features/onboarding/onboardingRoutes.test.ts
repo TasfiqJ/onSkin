@@ -282,7 +282,7 @@ describe('onboarding route contracts', () => {
     expect(products).not.toContain('placeholder="e.g. Retinol 0.3% Night Serum"');
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(products).toContain(
-      "const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();",
+      'const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();',
     );
     expect(products).toContain('if (!addedProductId || added.length === 0) return;');
     expect(products).toContain('scrollRef.current?.scrollToEnd({ animated: false })');
@@ -655,7 +655,11 @@ describe('onboarding route contracts', () => {
     );
     expect(source).toContain('getAccountUpgradeE2EFixture');
     expect(source).toContain("if (result === 'complete')");
-    expect(source).toContain('const result = await sendEmailOtp(email)');
+    expect(source).toContain('const result = await sendEmailOtp(normalizedEmail)');
+    expect(source).toContain('if (!accountUpgradeE2EFixture) await resendEmailOtp()');
+    expect(source).toContain('getEmailCodeChallengeState(challenge, Date.now()).expired');
+    expect(source).toContain('Resend code in ${codeState.resendSeconds}s');
+    expect(source).toContain("setCode('');");
     expect(source).toContain('if (!accountUpgradeE2EFixture) await verifyEmailOtp(email, code)');
   });
 

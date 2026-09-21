@@ -36,7 +36,7 @@ export type EmailAccountCodeRequest =
 
 export type AccountUpgradeAuthClient = Pick<
   SupabaseClient['auth'],
-  'linkIdentity' | 'signInWithIdToken' | 'signInWithOtp' | 'updateUser' | 'verifyOtp'
+  'linkIdentity' | 'resend' | 'signInWithIdToken' | 'signInWithOtp' | 'updateUser' | 'verifyOtp'
 >;
 
 const IDENTITY_CHANGED_ERROR = 'Account upgrade could not preserve the current authenticated user.';
@@ -234,6 +234,37 @@ export async function requestEmailAccountCode(
   );
   if (error) throw error;
   return { email, expectedUserId: null, kind: 'sign_in', otpType: 'email' };
+}
+
+/** Resend only for the exact pending owner and address; never sign in a new user on an upgrade. */
+export async function resendEmailAccountCode(
+  auth: AccountUpgradeAuthClient,
+  currentSession: Session | null,
+  pending: PendingEmailAccountCode,
+): Promise<void> {
+  if (pending.kind === 'anonymous_upgrade') {
+    if (
+      currentSession?.user.id !== pending.expectedUserId ||
+      currentSession.user.is_anonymous !== true
+    ) {
+      throw new Error(STALE_EMAIL_CODE_ERROR);
+    }
+    const binding = requireSupabaseRemoteSessionBinding(
+      currentSession.access_token,
+      pending.expectedUserId,
+    );
+    const { error } = await runWithSupabaseIdentityUpgradePermit(binding, () =>
+      auth.resend({ type: 'email_change', email: pending.email }),
+    );
+    if (error) throw error;
+    return;
+  }
+
+  if (currentSession !== null) throw new Error(STALE_EMAIL_CODE_ERROR);
+  const { error } = await runWithSupabaseFreshAuthPermit(() =>
+    auth.signInWithOtp({ email: pending.email, options: { shouldCreateUser: true } }),
+  );
+  if (error) throw error;
 }
 
 export async function verifyEmailAccountCode(

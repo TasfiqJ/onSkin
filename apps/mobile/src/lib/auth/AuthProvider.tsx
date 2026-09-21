@@ -99,6 +99,7 @@ import {
   authenticateWithAppleCredential,
   authenticateWithProviderToken,
   requestEmailAccountCode,
+  resendEmailAccountCode,
   verifyEmailAccountCode,
   type PendingEmailAccountCode,
 } from './accountUpgrade';
@@ -157,6 +158,7 @@ type AuthContextValue = {
   signInWithApple: () => Promise<boolean>;
   signInWithGoogle: () => Promise<boolean>;
   sendEmailOtp: (email: string) => Promise<'code_sent' | 'complete'>;
+  resendEmailOtp: () => Promise<void>;
   verifyEmailOtp: (email: string, token: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -2427,14 +2429,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
         // OTP code (not magic link) for mobile reliability (docs/01 §1).
-        pendingEmailCodeRef.current = null;
         const request = await runFreshAuthentication(() =>
           requestEmailAccountCode(supabase.auth, session, email),
         );
-        if (request.kind === 'anonymous_upgrade_complete') return 'complete';
+        if (request.kind === 'anonymous_upgrade_complete') {
+          pendingEmailCodeRef.current = null;
+          return 'complete';
+        }
         freshAuthenticationPendingRef.current = false;
         pendingEmailCodeRef.current = request;
         return 'code_sent';
+      },
+      async resendEmailOtp() {
+        if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
+
+        const pending = pendingEmailCodeRef.current;
+        if (!pending) throw new Error('Request a new email code before resending.');
+        await runFreshAuthentication(() => resendEmailAccountCode(supabase.auth, session, pending));
+        // A failed request retains the existing challenge for retry. The
+        // response does not grant or publish a different account session.
+        freshAuthenticationPendingRef.current = false;
       },
       async verifyEmailOtp(email: string, token: string) {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);

@@ -16,6 +16,11 @@ import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getAccountUpgradeE2EFixture } from '@/lib/auth/accountUpgradeE2E';
+import {
+  getEmailCodeChallengeState,
+  startEmailCodeChallenge,
+  type EmailCodeChallenge,
+} from '@/lib/auth/emailCodeRecovery';
 import { isAppleAuthAvailable } from '@/lib/auth/apple';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFacing';
@@ -26,10 +31,13 @@ import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFaci
 // user id; real-provider device proof remains BLOCKED: B-APPLE / B-GOOGLE.
 export default function AccountScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
-  const { signInWithApple, signInWithGoogle, sendEmailOtp, verifyEmailOtp } = useAuth();
+  const { signInWithApple, signInWithGoogle, sendEmailOtp, resendEmailOtp, verifyEmailOtp } =
+    useAuth();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [stage, setStage] = useState<'menu' | 'code'>('menu');
+  const [challenge, setChallenge] = useState<EmailCodeChallenge | null>(null);
+  const [nowMs, setNowMs] = useState(() => Date.now());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [appleAuthAvailable, setAppleAuthAvailable] = useState(false);
@@ -39,6 +47,13 @@ export default function AccountScreen() {
   const supportFloorTextPressurePhone =
     width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
+  const codeState = challenge ? getEmailCodeChallengeState(challenge, nowMs) : null;
+
+  useEffect(() => {
+    if (stage !== 'code') return;
+    const timer = setInterval(() => setNowMs(Date.now()), 1_000);
+    return () => clearInterval(timer);
+  }, [stage]);
 
   useEffect(() => {
     if (Platform.OS !== 'ios' || !authAvailable) return;
@@ -88,6 +103,26 @@ export default function AccountScreen() {
       operationPendingRef.current = false;
       setBusy(false);
     }
+  }
+
+  async function requestCode(resend = false) {
+    const normalizedEmail = email.trim();
+    if (resend) {
+      if (!challenge || getEmailCodeChallengeState(challenge, Date.now()).resendSeconds > 0) return;
+      if (!accountUpgradeE2EFixture) await resendEmailOtp();
+    } else if (!accountUpgradeE2EFixture) {
+      const result = await sendEmailOtp(normalizedEmail);
+      if (result === 'complete') {
+        await finish();
+        return;
+      }
+    }
+    const sentAtMs = Date.now();
+    setEmail(normalizedEmail);
+    setCode('');
+    setChallenge(startEmailCodeChallenge(sentAtMs));
+    setNowMs(sentAtMs);
+    setStage('code');
   }
 
   return (
@@ -167,18 +202,7 @@ export default function AccountScreen() {
                     className="mt-3"
                     label="Email me a code"
                     disabled={busy || !email.includes('@')}
-                    onPress={() =>
-                      run(async () => {
-                        if (!accountUpgradeE2EFixture) {
-                          const result = await sendEmailOtp(email);
-                          if (result === 'complete') {
-                            await finish();
-                            return;
-                          }
-                        }
-                        setStage('code');
-                      })
-                    }
+                    onPress={() => run(() => requestCode())}
                   />
                 </View>
               </View>
@@ -187,10 +211,15 @@ export default function AccountScreen() {
                 <Text variant="body" tone="muted">
                   Enter the 6-digit code we sent to {email}.
                 </Text>
+                {codeState?.expired ? (
+                  <Text variant="bodySm" tone="clay">
+                    This code may have expired. Request a new one to continue.
+                  </Text>
+                ) : null}
                 <TextInput
                   accessibilityLabel="Verification code"
                   value={code}
-                  onChangeText={setCode}
+                  onChangeText={(value) => setCode(value.replace(/\D/gu, '').slice(0, 6))}
                   placeholder="123456"
                   keyboardType="number-pad"
                   inputMode="numeric"
@@ -199,9 +228,12 @@ export default function AccountScreen() {
                 />
                 <Button
                   label="Verify"
-                  disabled={busy || code.length !== 6}
+                  disabled={busy || codeState?.expired !== false || !/^\d{6}$/u.test(code)}
                   onPress={() =>
                     run(async () => {
+                      if (!challenge || getEmailCodeChallengeState(challenge, Date.now()).expired) {
+                        throw new Error('Request a new email code before verifying.');
+                      }
                       if (
                         accountUpgradeE2EFixture &&
                         code.trim() !== accountUpgradeE2EFixture.emailCode
@@ -213,12 +245,25 @@ export default function AccountScreen() {
                     })
                   }
                 />
+                <Button
+                  label={
+                    codeState && codeState.resendSeconds > 0
+                      ? `Resend code in ${codeState.resendSeconds}s`
+                      : 'Resend code'
+                  }
+                  variant="ghost"
+                  className="min-h-[48px] py-2"
+                  disabled={busy || !challenge || (codeState?.resendSeconds ?? 0) > 0}
+                  onPress={() => run(() => requestCode(true))}
+                />
                 <Pressable
                   accessibilityRole="button"
                   className="min-h-[48px] items-center justify-center py-2"
                   disabled={busy}
                   onPress={() => {
                     if (operationPendingRef.current) return;
+                    setChallenge(null);
+                    setCode('');
                     setStage('menu');
                   }}
                 >

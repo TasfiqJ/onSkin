@@ -5,6 +5,7 @@ import {
   authenticateWithAppleCredential,
   authenticateWithProviderToken,
   requestEmailAccountCode,
+  resendEmailAccountCode,
   verifyEmailAccountCode,
   type AccountUpgradeAuthClient,
   type PendingEmailAccountCode,
@@ -87,6 +88,7 @@ function makeAuth(session: Session | null) {
   const spies = {
     getSession: vi.fn(async () => ({ data: { session }, error: null })),
     linkIdentity: vi.fn(),
+    resend: vi.fn(),
     signInWithIdToken: vi.fn(),
     signInWithOtp: vi.fn(),
     updateUser: vi.fn(),
@@ -391,6 +393,112 @@ describe('account upgrade', () => {
     expect(pending.kind).toBe('sign_in');
     if (pending.kind !== 'sign_in') throw new Error('Expected sign-in code request.');
     expect(pending.otpType).toBe('email');
+  });
+
+  it('resends a pending anonymous email change through the same-owner permit', async () => {
+    const { auth, spies } = makeAuth(makeSession(makeUser('anon-user', true)));
+    spies.resend.mockResolvedValue({ data: { user: null }, error: null });
+    const pending: PendingEmailAccountCode = {
+      email: 'tas@example.com',
+      expectedUserId: 'anon-user',
+      kind: 'anonymous_upgrade',
+      otpType: 'email_change',
+    };
+
+    await resendEmailAccountCode(auth, explicitSession(auth), pending);
+
+    expect(spies.resend).toHaveBeenCalledWith({ type: 'email_change', email: 'tas@example.com' });
+    expect(remoteGateMocks.runIdentityUpgrade).toHaveBeenCalledWith(
+      expect.objectContaining({ subject: 'anon-user' }),
+      expect.any(Function),
+    );
+    expect(spies.signInWithOtp).not.toHaveBeenCalled();
+    expect(spies.updateUser).not.toHaveBeenCalled();
+  });
+
+  it('refuses to resend after the anonymous owner changes', async () => {
+    const { auth, spies } = makeAuth(makeSession(makeUser('different-user', true)));
+    const pending: PendingEmailAccountCode = {
+      email: 'tas@example.com',
+      expectedUserId: 'anon-user',
+      kind: 'anonymous_upgrade',
+      otpType: 'email_change',
+    };
+
+    await expect(resendEmailAccountCode(auth, explicitSession(auth), pending)).rejects.toThrow(
+      'no longer valid for the current session',
+    );
+    expect(spies.resend).not.toHaveBeenCalled();
+    expect(spies.signInWithOtp).not.toHaveBeenCalled();
+  });
+
+  it('retains provider errors and never changes account lane after a rate-limited resend', async () => {
+    const { auth, spies } = makeAuth(makeSession(makeUser('anon-user', true)));
+    spies.resend.mockResolvedValue({ data: { user: null }, error: new Error('email rate limit') });
+    const pending: PendingEmailAccountCode = {
+      email: 'tas@example.com',
+      expectedUserId: 'anon-user',
+      kind: 'anonymous_upgrade',
+      otpType: 'email_change',
+    };
+
+    await expect(resendEmailAccountCode(auth, explicitSession(auth), pending)).rejects.toThrow(
+      'email rate limit',
+    );
+    expect(spies.signInWithOtp).not.toHaveBeenCalled();
+  });
+
+  it('resends a signed-out code only through the signed-out OTP lane', async () => {
+    const { auth, spies } = makeAuth(null);
+    spies.signInWithOtp.mockResolvedValue({ data: { messageId: 'resent' }, error: null });
+    const pending: PendingEmailAccountCode = {
+      email: 'tas@example.com',
+      expectedUserId: null,
+      kind: 'sign_in',
+      otpType: 'email',
+    };
+
+    await resendEmailAccountCode(auth, explicitSession(auth), pending);
+
+    expect(spies.signInWithOtp).toHaveBeenCalledWith({
+      email: 'tas@example.com',
+      options: { shouldCreateUser: true },
+    });
+    expect(spies.resend).not.toHaveBeenCalled();
+  });
+
+  it('does not resend a signed-out code after an account becomes active', async () => {
+    const { auth, spies } = makeAuth(makeSession(makeUser('another-user', false)));
+    const pending: PendingEmailAccountCode = {
+      email: 'tas@example.com',
+      expectedUserId: null,
+      kind: 'sign_in',
+      otpType: 'email',
+    };
+
+    await expect(resendEmailAccountCode(auth, explicitSession(auth), pending)).rejects.toThrow(
+      'no longer valid for the current session',
+    );
+    expect(spies.signInWithOtp).not.toHaveBeenCalled();
+    expect(spies.resend).not.toHaveBeenCalled();
+  });
+
+  it('does not dispatch an email-change resend when the owner permit is stale', async () => {
+    const { auth, spies } = makeAuth(makeSession(makeUser('anon-user', true)));
+    remoteGateMocks.requireBinding.mockImplementationOnce(() => {
+      throw new Error('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+    });
+    const pending: PendingEmailAccountCode = {
+      email: 'tas@example.com',
+      expectedUserId: 'anon-user',
+      kind: 'anonymous_upgrade',
+      otpType: 'email_change',
+    };
+
+    await expect(resendEmailAccountCode(auth, explicitSession(auth), pending)).rejects.toThrow(
+      'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED',
+    );
+    expect(spies.resend).not.toHaveBeenCalled();
   });
 
   it('never treats a permanent active session as a signed-out OTP request lane', async () => {

@@ -8,7 +8,9 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
 const today = new Date().toISOString().slice(0, 10);
+const accountCheckpointMode = process.argv.includes('--account-upgrade-checkpoint');
 const accountUpgradeMode =
+  accountCheckpointMode ||
   process.argv.includes('--account-upgrade') ||
   process.env.ONBOARDING_E2E_ACCOUNT_UPGRADE?.trim().toLowerCase() === 'email_same_user';
 const accountIsolationMode =
@@ -28,7 +30,9 @@ const evidenceDir =
     'human-e2e',
     today,
     accountUpgradeMode
-      ? 'onboarding-account-upgrade-current'
+      ? accountCheckpointMode
+        ? 'onboarding-account-upgrade-checkpoint-current'
+        : 'onboarding-account-upgrade-current'
       : accountIsolationMode
         ? 'onboarding-account-isolation-current'
         : 'onboarding-first-session-430-current',
@@ -804,7 +808,9 @@ function writeReport(summary) {
     '',
     '```bash',
     summary.accountUpgradeMode
-      ? 'npm run e2e:onboarding-account-upgrade'
+      ? summary.accountCheckpointMode
+        ? 'node scripts/e2e/onboarding-first-session.mjs --account-upgrade-checkpoint'
+        : 'npm run e2e:onboarding-account-upgrade'
       : summary.accountIsolationMode
         ? 'npm run e2e:onboarding-account-isolation'
         : 'npm run e2e:onboarding-first-session',
@@ -980,12 +986,25 @@ async function run() {
     }
 
     await waitForPath(client, '/onboarding/paywall');
-    await waitForText(client, 'Start free trial');
-    await waitForText(client, 'Explore first', 30_000);
+    await waitForText(
+      client,
+      accountCheckpointMode ? 'Continue with the free plan' : 'Explore first',
+      30_000,
+    );
     const paywall = await captureStep(client, '17-paywall-current');
     await screenshot(client, '17-paywall');
     writeJson('17-paywall.json', paywall);
-    assert(paywall.bodyText.includes('Explore first'), 'Paywall did not expose Explore first.');
+    assert(
+      paywall.bodyText.includes(
+        accountCheckpointMode ? 'Continue with the free plan' : 'Explore first',
+      ),
+      'Paywall did not expose the expected free path.',
+    );
+    assert(
+      paywall.bodyText.includes('Start free trial') ||
+        paywall.bodyText.includes('Subscribe to Pro'),
+      'Paywall did not expose a trial-eligible or non-trial paid CTA.',
+    );
     if (accountUpgradeMode) {
       assert(accountCodeEntry, 'Account upgrade did not reach code entry.');
       assert(
@@ -998,6 +1017,46 @@ async function run() {
         paywall.url.includes('/onboarding/paywall'),
         'Valid account-upgrade code did not reach the onboarding paywall.',
       );
+    }
+    if (accountCheckpointMode) {
+      const problemLogs = collectProblemLogs(client.events);
+      const disallowedLogs = problemLogs.filter(disallowedLog);
+      writeJson('browser-warn-error-logs.json', problemLogs);
+      assert(
+        disallowedLogs.length === 0,
+        `Unexpected browser warn/error logs: ${disallowedLogs.length}`,
+      );
+      const summary = {
+        accountCheckpointMode: true,
+        accountUpgradeMode: true,
+        accountIsolationMode: false,
+        date: today,
+        endUrl: paywall.url,
+        evidenceFiles: [
+          '16-account.png',
+          '16a-account-code-entry.png',
+          '16b-account-code-error.png',
+          '17-paywall-current.png',
+        ],
+        flowResult:
+          'A deterministic invalid code showed recovery copy; the valid code reached the current paywall with both free and paid paths visible.',
+        browserWarnErrorCount: problemLogs.length,
+        startCommand: shouldStartServer
+          ? `EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH=anonymous_owner EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
+          : `Existing Expo web at ${baseUrl}`,
+        surface: 'Headless Chrome Expo web',
+        verdict: 'pass',
+        viewport: {
+          ...viewport,
+          supportClass: isLaunchFloorViewport
+            ? 'supported phone geometry at or above the 375 x 667 launch floor'
+            : 'resilience stress viewport below the 375 x 667 launch floor',
+        },
+      };
+      writeJson('summary.json', summary);
+      writeReport(summary);
+      console.log(`Onboarding account checkpoint E2E passed. Evidence: ${evidenceDir}`);
+      return;
     }
 
     await scrollTextIntoView(client, 'Explore first', { exact: false });
