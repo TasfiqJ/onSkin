@@ -24,7 +24,9 @@ catalog seeding, and import QA clear.
 
 ## Credential-Free Local Reset (DB-05)
 
-The repository pins Supabase CLI `2.109.1` as an exact development dependency.
+The repository pins Supabase CLI `2.117.0` as an exact development dependency
+for a current-chain local replay trial; a full clean replay with this version
+has not yet passed.
 Use the checked-in scripts instead of a global or floating CLI:
 
 ```powershell
@@ -40,8 +42,8 @@ npm run phase2:db-types:check
 workdir, excludes `.temp`, `.branches`, every `.env` variant, inherited hosted
 credentials, and every linked-project input, allocates an isolated local port
 block, and uses explicit
-`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 71
-migrations through `20260729000072_commerce_zero_admission.sql` plus `seed.sql`
+`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 91
+migrations through `20260921000075_skin_profile_quiz_contract_successor.sql` plus `seed.sql`
 twice, verifies exact migration history, runs the
 structural pgTAP suite and database lint, requires an empty local-vs-migrations
 schema diff, generates canonical database types in the temporary workdir,
@@ -51,11 +53,13 @@ temporary files. It never links, pushes, or accepts a database URL.
 `phase2:db-types:update` performs the same credential-free isolated replay and
 atomically replaces `packages/types/src/database.types.ts` only after generated
 shape and hash validation. `phase2:db-types:check` performs the isolated replay
-without replacing the repository file and fails on any mismatch. At clean
-commit `e5588ae69`, the full `phase2:db-local-verify` gate exited 0 in 2,200.4
-seconds across the exact 71-migration/`0072` chain. The canonical local and
-repository artifact is 6,770 lines with SHA-256
+without replacing the repository file and fails on any mismatch. At historical
+clean commit `e5588ae69`, the full `phase2:db-local-verify` gate exited 0 in
+2,200.4 seconds across the then-current 71-migration/`0072` chain. That
+historical local and repository artifact is 6,770 lines with SHA-256
 `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+It does not prove the current 91-migration/`0075` chain or current generated-type
+parity.
 
 That raw generated file describes schema shape, not publishable-key authority.
 The mobile client separately imports the reviewed capability overlay from
@@ -110,6 +114,9 @@ ID, deployed function, Auth cohort, Storage bucket/object, or Cron job. It
 deploys the complete migration and default-function inventory from that
 snapshot. The historical 2026-07-15 source checkpoint covered 54 migrations
 through `0055` and 16 default functions; it is not current hosted evidence.
+The current source inventory is 91 migrations through `0075` and 17 default
+functions. The wrapper blocks before linking until current-chain local replay
+and generated-type parity are proven; no current hosted deployment is claimed.
 Before linking, the current wrapper requires repository/local canonical type
 parity. After deployment, it requires repository/local/linked hash parity,
 retains `database.types.linked.ts`, and does **not** replace the repository type
@@ -130,7 +137,7 @@ notifications, schedules, and Edge ingress. Retained traffic references accept
 only approved-prefix local non-secret ticket/artifact IDs; URLs, email-like
 values, and provider/account/project identifiers fail closed.
 
-The wrapper sets `DB06_TRAFFIC_FREEZE=frozen`, and every one of the 16 Edge
+The wrapper sets `DB06_TRAFFIC_FREEZE=frozen`, and every one of the 17 Edge
 entrypoints checks the shared freeze guard before request business logic. The
 exact eight `verifyJwt: false` functions must return HTTP `503`, exact
 `DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`. Immediately before
@@ -169,7 +176,7 @@ under the owner lock and returns `blocked` before the authorization code is
 marked or exchanged. This no-retry recovery path must remain intact during
 deployment; duplicate Apple delivery is opportunistic only.
 
-The current local 0055 gate passed two clean resets, exact 54-migration history,
+The historical local 0055 gate passed two clean resets, exact 54-migration history,
 the full structural pgTAP suite plus 114/114 Apple assertions, database lint,
 an empty migration shadow diff, temporary type generation, 20/20 focused
 event/lifecycle Edge tests, and the 47-test Apple auth work lane. Hosted

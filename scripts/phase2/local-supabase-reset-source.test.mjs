@@ -45,6 +45,18 @@ test('0072 commerce rehearsal uses its exact migration, then restores 0075 for h
   assert.ok(commerceRehearsal > 0 && restoreHead > commerceRehearsal && finalReset > restoreHead);
 });
 
+test('the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist', () => {
+  assert.match(source, /'20260921000073,20260921000074'/u);
+  assert.match(source, /laterRehearsalMigrationNames\.map\(\(name\) => name\.slice\(0, 14\)\)/u);
+  const withholdLater = source.indexOf('await rename(migration.installed, migration.withheld);');
+  const start = source.indexOf("await runLocalCli('start isolated credential-free stack'");
+  const commerceRehearsal = source.indexOf('run 0071 to 0072 commerce zero-admission rehearsal');
+  const restoreLater = source.indexOf('await rename(migration.withheld, migration.installed);');
+  const restoreHead = source.indexOf('await rename(withheldHeadMigration, sandboxHeadMigration);');
+  assert.ok(withholdLater > 0 && withholdLater < start);
+  assert.ok(restoreLater > commerceRehearsal && restoreLater < restoreHead);
+});
+
 test('the pinned trial CLI retains exact current-chain SQL for a local replay', () => {
   assert.match(source, /const PINNED_CLI_VERSION = '2\.117\.0';/u);
   assert.doesNotMatch(source, /DB05_PINNED_CLI_CONCURRENT_DROP_UNVERIFIED/u);

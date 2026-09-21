@@ -4,6 +4,10 @@ Date: 2026-07-17
 
 Status: `in_progress` source checkpoint; no production catalog is activated
 
+Current source contains 91 migrations through `0075`; no clean full-chain
+replay or hosted catalog release has been proved for this revision. Historical
+local proofs through `0072` do not clear this gate.
+
 ## 1. Purpose and decision boundary
 
 CAT-03 converts independently sourced and CAT-02-promoted catalog rows into a
@@ -516,8 +520,8 @@ operator lane may register, seal, review, verify, stage authorizations,
 atomically release, or retire a campaign. API roles cannot directly read or
 mutate sealed curation authority.
 
-The current CAT-03 artifact checkpoint ends at migration `0062`; the global
-deployment chain continues through migration `0067`. Migration `0063`
+The CAT-03 artifact checkpoint ends at migration `0062`; the global
+deployment chain now continues through migration `0075`. Migration `0063`
 establishes CAT-08 operator authority, `0064` adds exact output-only
 skin-profile quiz provenance without raw answers or answer hashes, and `0065`
 repairs the CAT-08 transition conflict targets plus the global function default
@@ -681,7 +685,7 @@ Source verification must include:
   rehearsal that includes the exact `0062` bytes and tests its three indexes,
   trigger/ACL metadata, zero/partial/exact/overflow/root/released-state guards,
   and rollback; this does not replace exact full-chain reset evidence;
-- a clean migration reset through exact current head `0073` and execution of
+- a clean migration reset through exact current head `0075` and execution of
   the current 102-assertion CAT-03 pgTAP contract; neither has been replayed
   locally or hosted for this source revision; and
 - repository typecheck, lint, tests, and source-policy/worklist audits.
@@ -749,7 +753,7 @@ CAT-03 stays `in_progress` until all are true:
   eligible records are present in the exact released campaign;
 - the holdout meets every predeclared confidence-bound and minimum-denominator
   gate, with zero open P0/P1 and zero below-usable recommendation exposure;
-- the complete migration chain through `0071`, with `0058` as its foundational
+- the complete current migration chain through `0075`, with `0058` as its foundational
   CAT-03 authority, passes clean local and hosted reset, pgTAP, race, serving,
   activation, retirement, and rollback verification; and
 - an independent database verifier signs the exact readback receipt after the

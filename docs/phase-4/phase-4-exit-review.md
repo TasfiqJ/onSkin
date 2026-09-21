@@ -2,6 +2,10 @@
 
 Date: 2026-07-17
 
+Current-source update (2026-09-21): this review still describes historical
+source evidence. The repository now has 91 migrations through `0075`; a clean
+full-chain replay and hosted catalog release remain unproved.
+
 ## Implementation Status
 
 Implemented locally:
@@ -66,8 +70,8 @@ Implemented locally:
   exact `0061`-schema, full-chain, or hosted equivalence proof.
   Partial governed inserts remain allowed. Current CAT-03 review/readback
   artifacts must bind exact CAT-03 migration `20260722000062`; deployment and
-  full-chain evidence must additionally attest repository head
-  `20260726000067`. The intervening `0064` migration adds exact output-only
+  full-chain evidence must additionally attest current repository migration
+  head `20260921000075`. The intervening `0064` migration adds exact output-only
   skin-profile quiz provenance without retaining raw answers or answer hashes;
   `0065` repairs both CAT-08 transition conflict targets and the global
   function default ACL. Migration `0066` additionally seals both explicitly
@@ -118,7 +122,7 @@ The implementation intentionally keeps production catalog use blocked until:
   sunscreen/OTC-adjacent review bind every applicable row;
 - the two-session hosted CAT-02 staging/promotion/serialization/rollback drill
   passes with complete redacted receipts and zero projection drift;
-- clean local and hosted full-chain reset through exact current head `0071`,
+- clean local and hosted full-chain reset through exact current head `0075`,
   current pgTAP, two-connection
   staging/release/supersession race, direct-service-role denial, serving,
   retirement, and rollback evidence passes;
@@ -178,7 +182,7 @@ clinical, Apple, or commercial approval.
   signed required-category floor, and at least 100 prioritized eligible rows.
 - Product recommendations use only active-curation, eligible, reviewed,
   dependency-complete products.
-- Hosted database evidence from the full current chain through `0071`, including
+- Hosted database evidence from the full current chain through `0075`, including
   `0061`, proves the import lifecycle, rollback/reference preservation, and barcode, search,
   recommendation, product, ingredient, synonym, and child reads fail closed
   for every held source/record.
@@ -188,7 +192,7 @@ clinical, Apple, or commercial approval.
   readback, exact lineage, replay/race handling, direct-table denial for
   `service_role`, authenticated RLS allow/deny proof, and immediate fail-closed
   serving after any retirement or dependency withdrawal.
-- Hosted database evidence through migration `0071`, with `0063` retained as
+- Hosted database evidence through current migration `0075`, with `0063` retained as
   the foundational CAT-08 authority, proves no raw API-role
   operator/correction/hold access, direct denial of all six RPCs to browser API
   roles, exact Edge-verified signed `aal2` subject/session admission,

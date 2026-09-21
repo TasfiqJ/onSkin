@@ -429,11 +429,12 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains a 71-migration source candidate through
-`20260729000072`, exact raw CLI-generated database types plus a separate
-client-restriction overlay, 17 deploy-by-default Edge Functions, a staging
+The repo contains a 91-migration source candidate through
+`20260921000075`; the checked-in raw CLI-generated database types still
+represent a historical 71-migration/`0072` reset, with a separate
+client-restriction overlay. There are 17 deploy-by-default Edge Functions, a staging
 deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
-current source inventory classifies all 82 RLS-enabled public tables: 36 directly
+historical `0072` source inventory classifies 82 RLS-enabled public tables: 36 directly
 queryable private tables, 32 read-sealed private/authority tables, and 14
 authenticated catalog/editorial tables. The 32 read-sealed tables comprise 24
 service-private authorities, four global clinical/editorial relations, and four
@@ -614,8 +615,8 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 17-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 71
-  migrations through `0072`, redeploys the manifest, retains linked types
+  immediately rereads the full empty-target boundary, applies all 91
+  migrations through `0075`, redeploys the manifest, retains linked types
   without changing repository types, and leaves
   `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
   approved hosted target;
@@ -628,7 +629,7 @@ Next action:
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
   signed-anonymous user, the no-session client, the regenerated exact `0062`
-  CAT-03 authority/readback plus the exact current-head (`0072`)
+  CAT-03 authority/readback plus the exact current-head (`0075`)
   private/read-sealed-table inventory, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
@@ -1280,13 +1281,14 @@ Exit criteria:
 - migration `0057` passes the hosted two-connection replay, conflict,
   correction, source-withdrawal, promotion, dependency-serving, and rollback
   drill for the exact reviewed batch;
-- the complete migration chain through `0072`, with `0058` as its foundational
+- the complete migration chain through `0075`, with `0058` as its foundational
   CAT-03 authority, `0064`/`0065` as forward-only profile-provenance and
   operator-transition/default-ACL repairs, `0066` as the legacy clinical-table
   seal, `0067` as the checker-only catalog-release lint contract, `0068`/`0069`
   as adherence/replay authorities, `0070` as draft-only consent staging, and
-  `0071` as recommendation zero admission, and `0072` as commerce zero
-  admission, passes
+  `0071` as recommendation zero admission, `0072` as commerce zero
+  admission, `0073` as the catalog promoter boundary, and `0074`/`0075` as
+  draft-consent/quiz-provenance successors, passes
   clean local and hosted pgTAP,
   two-connection replay/
   staging/release/supersession/retirement races, successor isolation, direct-

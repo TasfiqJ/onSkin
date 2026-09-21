@@ -163,6 +163,16 @@ const commerceMigrationName = migrationFiles.find((name) =>
 if (!commerceMigrationName || commerceMigrationName === migrationFiles.at(-1)) {
   throw new Error('The exact 0072 commerce upgrade migration must precede the current head.');
 }
+const laterRehearsalMigrationNames = migrationFiles.filter((name) => {
+  const version = name.slice(0, 14);
+  return version > COMMERCE_UPGRADE_MIGRATION && version < EXPECTED_LATEST_MIGRATION;
+});
+if (
+  laterRehearsalMigrationNames.map((name) => name.slice(0, 14)).join(',') !==
+  '20260921000073,20260921000074'
+) {
+  throw new Error('The post-0072 rehearsal migration inventory changed without review.');
+}
 
 // This pin is an unproven current-chain trial. The 2.116.0 concurrent DROP
 // fix is present, but 2.115.0–2.116.0 regressed LOCK TABLE in migration
@@ -434,6 +444,10 @@ try {
     'migrations',
     migrationFiles.find((name) => name.startsWith('20260726000070_')),
   );
+  const laterRehearsalMigrations = laterRehearsalMigrationNames.map((name) => ({
+    installed: join(sandboxSupabaseDir, 'migrations', name),
+    withheld: join(sandboxRoot, name),
+  }));
   const withheldHeadMigration = join(sandboxRoot, migrationFiles.at(-1));
   const withheldCommerceMigration = join(sandboxRoot, commerceMigrationName);
   const withheldRecommendationMigration = join(
@@ -454,6 +468,9 @@ try {
   );
   if (FULL_VERIFY) {
     await rename(sandboxHeadMigration, withheldHeadMigration);
+    for (const migration of laterRehearsalMigrations) {
+      await rename(migration.installed, migration.withheld);
+    }
     await rename(sandboxCommerceMigration, withheldCommerceMigration);
     await rename(sandboxRecommendationMigration, withheldRecommendationMigration);
     await rename(sandboxConsentDraftMigration, withheldConsentDraftMigration);
@@ -687,8 +704,12 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
-    // The 0073 catalog boundary has no historical forward-upgrade fixture;
-    // restore it only after the exact 0072 rehearsal, for both clean head resets.
+    // Preserve the exact 0067-to-0072 predecessor states. The 0073 catalog
+    // boundary and 0074 consent correction cannot run before 0070 exists;
+    // restore all later migrations only after the exact 0072 rehearsal.
+    for (const migration of laterRehearsalMigrations) {
+      await rename(migration.withheld, migration.installed);
+    }
     await rename(withheldHeadMigration, sandboxHeadMigration);
   }
   await runLocalCli('reset 1 of 2 (migrations plus seed)', ['db', 'reset', '--local']);

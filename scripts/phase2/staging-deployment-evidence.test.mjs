@@ -1007,7 +1007,7 @@ function passManifestInput(steps) {
       },
     },
     after: {
-      migrationCount: 89,
+      migrationCount: 91,
       migrationIds: source.migrations.map(({ id }) => id),
       functions,
       schema: afterSchema,

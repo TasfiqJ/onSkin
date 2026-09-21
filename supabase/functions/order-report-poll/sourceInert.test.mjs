@@ -56,7 +56,7 @@ test('migration 0072 revokes publication and stale-poller writes without revokin
     assert.match(
       migration,
       new RegExp(
-        `revoke all on table public\\.${table}\\s+from public, anon, authenticated;`,
+        `revoke all on table public\\.${table}\\s+from public, anon, authenticated, service_role;`,
         'u',
       ),
     );
@@ -66,21 +66,14 @@ test('migration 0072 revokes publication and stale-poller writes without revokin
   assert.match(migration, /drop policy if exists "commerce_click_events_consent_insert"/u);
   assert.match(
     migration,
-    /revoke all on table public\.commerce_click_events\s+from public, anon, authenticated;/u,
+    /revoke all on table public\.commerce_click_events\s+from public, anon, authenticated, service_role;/u,
   );
   assert.match(
     migration,
-    /grant select, delete on table public\.commerce_click_events\s+to authenticated;/u,
+    /grant select, delete on table public\.commerce_click_events\s+to authenticated, service_role;/u,
   );
-  assert.match(
-    migration,
-    /before insert or update\s+on public\.commerce_click_events/u,
-  );
+  assert.match(migration, /before insert or update\s+on public\.commerce_click_events/u);
   assert.match(migration, /raise exception 'COMMERCE_ADMISSION_CLOSED'/u);
-  assert.doesNotMatch(
-    migration,
-    /revoke all on table public\.commerce_click_events\s+from[\s\S]{0,80}service_role/u,
-  );
   assert.match(
     migration,
     /revoke all on table public\.order_attributions\s+from public, anon, authenticated, service_role;/u,
@@ -93,10 +86,7 @@ test('migration 0072 revokes publication and stale-poller writes without revokin
     migration,
     /grant update \(click_token\) on table public\.order_attributions\s+to service_role;/u,
   );
-  assert.match(
-    migration,
-    /before insert or update\s+on public\.order_attributions/u,
-  );
+  assert.match(migration, /before insert or update\s+on public\.order_attributions/u);
   assert.match(migration, /old\.click_token is not null/u);
   assert.match(migration, /new\.click_token is null/u);
   assert.match(migration, /pg_catalog\.to_jsonb\(new\) - 'click_token'/u);
@@ -106,7 +96,7 @@ test('migration 0072 revokes publication and stale-poller writes without revokin
 
 test('pgTAP contracts bind exact head and forward-only 0071 to 0072 cutover', () => {
   assert.match(databaseContract, /select plan\(23\)/u);
-  assert.match(databaseContract, /'20260729000072'::text/u);
+  assert.match(databaseContract, /'20260921000075'::text/u);
   assert.match(databaseContract, /COMMERCE_ADMISSION_CONTROL_MIGRATION_OWNED/u);
   assert.match(databaseContract, /COMMERCE_ADMISSION_CLOSED/u);
   assert.match(databaseContract, /COMMERCE_ORDER_ATTRIBUTION_PUBLICATION_CLOSED/u);

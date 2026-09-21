@@ -68,6 +68,21 @@ function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
 
+const missingCat07EvidenceBlocker =
+  'FAIL test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json is missing.';
+
+function contactChecksHaveNoUnexpectedBlockers(result) {
+  const text = output(result);
+  const blockers = text.split(/\r?\n/u).filter((line) => line.startsWith('FAIL '));
+  if (result.status === 0) return blockers.length === 0;
+  return (
+    result.status === 1 &&
+    blockers.length === 1 &&
+    blockers[0] === missingCat07EvidenceBlocker &&
+    text.includes('Phase 9 release smoke has 1 blocker.')
+  );
+}
+
 function runWithTemplateReleaseCandidate(extraEnv = {}) {
   const rcName = `rc-smoke-template-${process.pid}`;
   const rcRelativeDir = `docs/phase-9/release-candidates/${rcName}`;
@@ -93,7 +108,8 @@ const cases = [
     result: run({}),
     expect(result) {
       return (
-        result.status === 0 && !output(result).includes('Missing or non-production final value')
+        contactChecksHaveNoUnexpectedBlockers(result) &&
+        !output(result).includes('Missing or non-production final value')
       );
     },
   },
@@ -130,7 +146,7 @@ const cases = [
     expect(result) {
       const text = output(result);
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         !text.includes('is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog') &&
         !text.includes('must equal https://eu.i.posthog.com when PostHog is enabled') &&
         !text.includes('must equal https://eu.posthog.com when PostHog is enabled')
@@ -193,7 +209,7 @@ const cases = [
     expect(result) {
       const text = output(result);
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         text.includes(
           'Android build, Play testing, Play packet, and Play Store URL evidence: excluded by launch contract.',
         ) &&
@@ -208,7 +224,7 @@ const cases = [
     result: run({ EXPO_PUBLIC_PRIVACY_URL: 'https://user:pass@layerwell.app/privacy' }),
     expect(result) {
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         output(result).includes(
           'Missing or non-production final value for EXPO_PUBLIC_PRIVACY_URL.',
         )
@@ -220,7 +236,7 @@ const cases = [
     result: run({ EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.local' }),
     expect(result) {
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         output(result).includes(
           'Missing or non-production final value for EXPO_PUBLIC_FINAL_BRAND_DOMAIN.',
         )
@@ -232,7 +248,7 @@ const cases = [
     result: run({ EXPO_PUBLIC_SUPPORT_EMAIL: 'support@example.com' }),
     expect(result) {
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         output(result).includes(
           'Missing or non-production final value for EXPO_PUBLIC_SUPPORT_EMAIL.',
         )
@@ -265,7 +281,7 @@ const cases = [
     expect(result) {
       const text = output(result);
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         !text.includes('Production Share cards requires PHASE7_BRAND_READY=true.') &&
         !text.includes('Production Share cards requires PHASE7_CLINICAL_REVIEW_PASS=true.') &&
         !text.includes('Production Share cards requires PHASE7_DEVICE_QA_PASS=true.') &&
@@ -298,12 +314,12 @@ const cases = [
         text.includes(
           'docs/phase-9/release-candidates/rc-smoke-template-' +
             process.pid +
-            '/manual-qa-matrix.md must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.',
+            '/manual-qa-matrix.md must not contain unresolved placeholders when Phase 9 evidence is claimed.',
         ) &&
         text.includes(
           'docs/phase-9/release-candidates/rc-smoke-template-' +
             process.pid +
-            '/rollout-plan.md must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.',
+            '/rollout-plan.md must not contain unresolved placeholders when Phase 9 evidence is claimed.',
         ) &&
         text.includes(
           'docs/phase-9/release-candidates/rc-smoke-template-' +

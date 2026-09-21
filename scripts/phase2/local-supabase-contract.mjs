@@ -244,6 +244,9 @@ check(
     /rename\(withheldRecommendationMigration, sandboxRecommendationMigration\)/u.test(runner) &&
     /recommendation_zero_admission_0071_upgrade\.generated\.test\.sql/u.test(runner) &&
     /reset through 0071 for the 0072 commerce forward-upgrade rehearsal/u.test(runner) &&
+    /'20260921000073,20260921000074'/u.test(runner) &&
+    /rename\(migration\.installed, migration\.withheld\)/u.test(runner) &&
+    /rename\(migration\.withheld, migration\.installed\)/u.test(runner) &&
     /rename\(withheldHeadMigration, sandboxHeadMigration\)/u.test(runner) &&
     /commerce_zero_admission_0072_upgrade\.generated\.test\.sql/u.test(runner),
   'The full local DB gate must execute 0068 against 0067, 0069 against 0068, 0070 against 0069, 0071 against 0070, and 0072 against 0071.',
