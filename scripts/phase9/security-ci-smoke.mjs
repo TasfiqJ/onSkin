@@ -42,6 +42,9 @@ if (exists(workflowPath)) {
   const trufflehogSteps = workflowSteps.filter((step) =>
     /uses:\s*trufflesecurity\/trufflehog@[^\s#]+/i.test(step),
   );
+  const gitleaksSteps = workflowSteps.filter((step) =>
+    /uses:\s*gitleaks\/gitleaks-action@[^\s#]+/i.test(step),
+  );
   const runSteps = workflowSteps.filter((step) => /^\s*run:\s*/m.test(step));
   const actionUses = [...workflow.matchAll(/uses:\s*([^\s#]+)/g)].map((match) => match[1]);
   const unpinnedActions = actionUses.filter(
@@ -113,7 +116,14 @@ if (exists(workflowPath)) {
     /npm-audit-high\.json/.test(workflow),
     'Security workflow must archive high/critical npm audit JSON evidence.',
   );
-  block(errors, /gitleaks\/gitleaks-action/.test(workflow), 'Security workflow must run Gitleaks.');
+  block(
+    errors,
+    gitleaksSteps.length === 1 &&
+      /uses:\s*gitleaks\/gitleaks-action@[a-f0-9]{40}/i.test(gitleaksSteps[0]) &&
+      /GITHUB_TOKEN:\s*\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}/.test(gitleaksSteps[0]) &&
+      /GITLEAKS_ENABLE_COMMENTS:\s*'false'/.test(gitleaksSteps[0]),
+    'Security workflow must run one pinned Gitleaks action with authenticated read-only API access and no PR comments.',
+  );
   block(
     errors,
     /trufflesecurity\/trufflehog@[a-f0-9]{40}/i.test(workflow),

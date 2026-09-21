@@ -32,6 +32,7 @@ const [
   freshnessRehearsal,
   catalogCurationRehearsal,
   skinProfileUpgradeRehearsal,
+  skinProfileSuccessorUpgradeRehearsal,
   catalogOperatorUpgradeRehearsal,
   clinicalContentUpgradeRehearsal,
   clinicalContentLegacySealTests,
@@ -76,6 +77,7 @@ const [
   read('scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql'),
   read('scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql'),
   read('scripts/phase9/skin-profile-0064-upgrade-postgres-rehearsal.sql'),
+  read('scripts/phase9/skin-profile-0075-upgrade-postgres-rehearsal.sql'),
   read('scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql'),
   read('scripts/phase9/clinical-content-0066-upgrade-postgres-rehearsal.sql'),
   read('supabase/tests/database/clinical_content_legacy_seal.test.sql'),
@@ -128,10 +130,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.117.0',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 89, `Expected 89 migration files; found ${migrations.length}.`);
+check(migrations.length === 91, `Expected 91 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260921000073_'),
-  'The latest migration must remain 20260921000073.',
+  migrations.at(-1)?.startsWith('20260921000075_'),
+  'The latest migration must remain 20260921000075.',
 );
 check(
   /security definer/u.test(catalogSearchPromotionBoundaryMigration) &&
@@ -465,6 +467,26 @@ check(
   '0064 exact-byte PostgreSQL 15/17 rehearsal must preserve a pre-existing v2 collision while enforcing every new check on later writes.',
 );
 check(
+  /\\ir skin-profile-0064-upgrade-postgres-rehearsal\.sql/u.test(
+    skinProfileSuccessorUpgradeRehearsal,
+  ) &&
+    /\\ir \.\.\/\.\.\/supabase\/migrations\/20260921000075_skin_profile_quiz_contract_successor\.sql/u.test(
+      skinProfileSuccessorUpgradeRehearsal,
+    ) &&
+    /CORE01_0075_PRIOR_ROWS_CHANGED/u.test(skinProfileSuccessorUpgradeRehearsal) &&
+    /CORE01_0075_INCOHERENT_NEW_ROW_ADMITTED/u.test(skinProfileSuccessorUpgradeRehearsal) &&
+    /CORE01_0075_CURRENT_CLIENT_REJECTED/u.test(skinProfileSuccessorUpgradeRehearsal) &&
+    /skin-profile-0075-upgrade-postgres-rehearsal: pass/u.test(
+      skinProfileSuccessorUpgradeRehearsal,
+    ) &&
+    hasExactPostgresRehearsalBinding(
+      workflow,
+      'skin_profile_upgrade_0075',
+      'skin-profile-0075-upgrade-postgres-rehearsal.sql',
+    ),
+  '0075 exact-byte PostgreSQL 15/17 rehearsal must preserve old rows and admit only coherent quiz client tuples.',
+);
+check(
   /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000065_catalog_operator_transition_conflict_target\.sql/u.test(
     catalogOperatorUpgradeRehearsal,
   ) &&
@@ -503,16 +525,18 @@ check(
 );
 check(
   /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
-    /the clinical legacy seal runs against the exact 71-migration source history/u.test(
+    /91::bigint/u.test(clinicalContentLegacySealTests) &&
+    /['"]20260921000075['"]::text/u.test(clinicalContentLegacySealTests) &&
+    /the clinical legacy seal runs against the exact 91-migration source history/u.test(
       clinicalContentLegacySealTests,
     ) &&
-    /the migration history includes the legacy seal and reaches commerce zero admission/u.test(
+    /the migration history includes the legacy seal and reaches the current quiz-contract successor/u.test(
       clinicalContentLegacySealTests,
     ) &&
     /all historical rule rows survive every denied owner and API mutation probe/u.test(
       clinicalContentLegacySealTests,
     ),
-  '0066 pgTAP must bind the 71-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
+  '0066 pgTAP must bind the 91-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
 );
 check(
   /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000067_catalog_release_temp_table_lint_contract\.sql/u.test(
@@ -532,16 +556,18 @@ check(
 );
 check(
   /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
-    /the catalog release lint contract runs against the exact 71-migration source history/u.test(
+    /91::bigint/u.test(catalogReleaseLintContractTests) &&
+    /['"]20260921000075['"]::text/u.test(catalogReleaseLintContractTests) &&
+    /the catalog release lint contract runs against the exact 91-migration source history/u.test(
       catalogReleaseLintContractTests,
     ) &&
-    /the migration history retains the temporary-table lint contract through commerce zero admission/u.test(
+    /the migration history retains the temporary-table lint contract through the current quiz-contract successor/u.test(
       catalogReleaseLintContractTests,
     ) &&
     /only the exact temporary-table wrapper carries the checker shape/u.test(
       catalogReleaseLintContractTests,
     ),
-  '0067 pgTAP must bind the 71-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
+  '0067 pgTAP must bind the 91-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
 );
 check(
   /begin;/u.test(routineAdherenceMigration) &&
@@ -588,14 +614,16 @@ check(
 );
 check(
   /select plan\(78\)/u.test(routineAdherenceTests) &&
+    /91::bigint/u.test(routineAdherenceTests) &&
+    /['"]20260921000075['"]::text/u.test(routineAdherenceTests) &&
     /CORE05_PARITY_CORPUS_SHA256: cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00/u.test(
       routineAdherenceTests,
     ) &&
     /the hashed parity corpus matches the authoritative SQL projection/u.test(
       routineAdherenceTests,
     ) &&
-    /exact 71-migration source history/u.test(routineAdherenceTests) &&
-    /retains adherence authority through commerce zero admission/u.test(routineAdherenceTests) &&
+    /exact 91-migration source history/u.test(routineAdherenceTests) &&
+    /retains adherence authority through the current head/u.test(routineAdherenceTests) &&
     /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
     /a partial step completion cannot affect adherence/u.test(routineAdherenceTests) &&
     /an authenticated owner cannot directly insert a freeze/u.test(routineAdherenceTests) &&
@@ -642,7 +670,9 @@ check(
 );
 check(
   /select plan\(82\)/u.test(routineCompletionSyncTests) &&
-    /exact 71-migration source history/u.test(routineCompletionSyncTests) &&
+    /91::bigint/u.test(routineCompletionSyncTests) &&
+    /['"]20260921000075['"]::text/u.test(routineCompletionSyncTests) &&
+    /exact 91-migration source history/u.test(routineCompletionSyncTests) &&
     /Shelf sync rejects an exact draft-blocked health grant before retention/u.test(
       routineCompletionSyncTests,
     ) &&
@@ -698,7 +728,7 @@ check(
     ) &&
     /HEALTH_CONSENT_COPY_NOT_RELEASED/u.test(healthConsentDraftStagingMigration) &&
     /from public, anon, authenticated, service_role/u.test(healthConsentDraftStagingMigration),
-  '0070 must stage the exact mobile Ask tuple as an unreleased migration-owned draft without runtime authority.',
+  '0070 must retain the historical Ask staging tuple as an unreleased migration-owned draft without runtime authority.',
 );
 check(
   /select plan\(25\)/u.test(healthConsentDraftStagingTests) &&
@@ -717,9 +747,7 @@ check(
     /runtime service authority is not migration staging authority/u.test(
       healthConsentDraftStagingTests,
     ) &&
-    /exact newly current Ask draft still cannot authorize a grant/u.test(
-      healthConsentDraftStagingTests,
-    ),
+    /exact current Ask draft still cannot authorize a grant/u.test(healthConsentDraftStagingTests),
   '0070 pgTAP must prove exact retained history, immutable non-review evidence, runtime denial, and unreleased grant denial.',
 );
 check(

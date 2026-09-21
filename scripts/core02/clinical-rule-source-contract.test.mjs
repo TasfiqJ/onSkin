@@ -377,7 +377,7 @@ test('the corpus is pinned to the exact US-only Wave 1 legal-policy bytes', () =
 
   assert.equal(
     policySha256,
-    '34ce160c765e9d7bde2e1d5e55de54c63b8c896e5db61de746a1f6a971080bce',
+    '18d1f724a02f9abecd62411d18d923cd8988ba2e5adc6777aa7a6e1de9319f98',
     'the Wave 1 policy changed; re-review and deliberately re-pin the clinical corpus',
   );
   assert.match(
@@ -403,7 +403,7 @@ test('the corpus is pinned to the exact US-only Wave 1 legal-policy bytes', () =
   );
   assert.equal(
     quizContractSha256,
-    '2bbcbe2ab01b444fde4c0ffb132eef721a078a6f1118f044b5c4eb26303b9451',
+    'b22b1680f3efb2a038b672421d0e77f4fc274b440f0f52b7017acb43df56ac4c',
     'the quiz pregnancy-answer contract changed; re-review and deliberately re-pin the clinical corpus',
   );
   assertContainsAll(
@@ -886,12 +886,12 @@ test('migration 0066 seals legacy clinical tables and 0067 preserves the exact l
   );
 });
 
-test('the database contract is exactly 71 migrations through head 0072', () => {
+test('the database contract is exactly 91 migrations through head 0075', () => {
   const migrations = readdirSync(resolve(root, 'supabase/migrations'))
     .filter((name) => name.endsWith('.sql'))
     .sort();
-  assert.equal(migrations.length, 71);
-  assert.equal(migrations.at(-1), '20260729000072_commerce_zero_admission.sql');
+  assert.equal(migrations.length, 91);
+  assert.equal(migrations.at(-1), '20260921000075_skin_profile_quiz_contract_successor.sql');
   assert.match(read(paths.migration0068), /step_id IS NULL/u);
   assert.match(read(paths.migration0069), /public\.record_routine_completion/u);
   assert.match(read(paths.migration0070), /public\.stage_health_consent_copy_draft_successor/u);
@@ -900,10 +900,10 @@ test('the database contract is exactly 71 migrations through head 0072', () => {
 
   for (const path of [paths.schemaContract, paths.clinicalSealContract, paths.lintContract]) {
     const source = read(path);
-    assert.match(source, /\b71::bigint\b/u, `${path} must bind the exact migration count.`);
+    assert.match(source, /\b91::bigint\b/u, `${path} must bind the exact migration count.`);
     assert.match(
       source,
-      /['"]20260729000072['"]::text/u,
+      /['"]20260921000075['"]::text/u,
       `${path} must bind the exact migration head.`,
     );
   }

@@ -6,9 +6,10 @@ set local search_path = extensions, public, pg_catalog;
 select plan(25);
 
 select is(
-  (select max(version) from supabase_migrations.schema_migrations),
-  '20260729000072'::text,
-  'draft-successor staging remains intact through commerce zero admission'
+  (select count(*) from supabase_migrations.schema_migrations
+    where version in ('20260726000070', '20260921000074')),
+  2::bigint,
+  'historical and corrective draft-staging migrations are both installed'
 );
 
 select has_table(
@@ -47,8 +48,8 @@ select is(
        and registry.consent_text_hash =
          '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
   ),
-  '{"isCurrent": true, "reviewStatus": "draft_blocked"}'::jsonb,
-  'the exact mobile Ask tuple is the current unreleased draft'
+  '{"isCurrent": false, "reviewStatus": "draft_blocked"}'::jsonb,
+  'the 0070 Ask tuple remains noncurrent unreleased draft history'
 );
 
 select is(
@@ -70,8 +71,8 @@ select is(
      where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
   ),
-  2::bigint,
-  'Ask grant predecessor and successor history are both retained'
+  3::bigint,
+  'both Ask grant predecessors and the current successor are retained'
 );
 
 select is(
@@ -94,6 +95,7 @@ select is(
       from public.health_consent_copy_staging_events as events
      where events.consent_type = 'ask_layerwell'
        and events.action = 'grant'
+       and events.staged_by = 'migration:20260726000070'
   ),
   pg_catalog.jsonb_build_object(
     'previousVersion', 'ask-advisor-2026-06-14-placeholder',
@@ -111,7 +113,7 @@ select is(
     'changeReference', 'DB-MIGRATION-20260726000070-ASK-DRAFT-ALIGNMENT',
     'stagedBy', 'migration:20260726000070',
     'evidenceHash',
-      '32ccfdfeab34f099c63ccb3b5d6d53ddea955a978b020fdc18738b723a1a6649'
+      '4314f06805a15d98117914cca35a31d5bac6c6a21a2c5d122968975e9c2f7886'
   ),
   'staging retains exact immutable non-review evidence'
 );
@@ -127,7 +129,7 @@ select is(
     'DB-MIGRATION-20260726000070-ASK-DRAFT-ALIGNMENT',
     'migration:20260726000070'
   ),
-  '32ccfdfeab34f099c63ccb3b5d6d53ddea955a978b020fdc18738b723a1a6649'::text,
+  '4314f06805a15d98117914cca35a31d5bac6c6a21a2c5d122968975e9c2f7886'::text,
   'the database reproduces the exact length-prefixed UTF-8 staging digest'
 );
 
@@ -255,7 +257,7 @@ select throws_ok(
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
     'DB-MIGRATION-20260726000070-ASK-DRAFT-ALIGNMENT',
     'migration:20260726000070',
-    '32ccfdfeab34f099c63ccb3b5d6d53ddea955a978b020fdc18738b723a1a6649'
+    '4314f06805a15d98117914cca35a31d5bac6c6a21a2c5d122968975e9c2f7886'
   )$$,
   '42501',
   'permission denied for function stage_health_consent_copy_draft_successor',
@@ -273,7 +275,7 @@ select throws_ok(
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
     'DB-MIGRATION-20260726000070-ASK-DRAFT-ALIGNMENT',
     'migration:20260726000070',
-    '32ccfdfeab34f099c63ccb3b5d6d53ddea955a978b020fdc18738b723a1a6649'
+    '4314f06805a15d98117914cca35a31d5bac6c6a21a2c5d122968975e9c2f7886'
   )$$,
   '42501',
   'permission denied for function stage_health_consent_copy_draft_successor',
@@ -291,7 +293,7 @@ select throws_ok(
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
     'DB-MIGRATION-20260726000070-ASK-DRAFT-ALIGNMENT',
     'migration:20260726000070',
-    '32ccfdfeab34f099c63ccb3b5d6d53ddea955a978b020fdc18738b723a1a6649'
+    '4314f06805a15d98117914cca35a31d5bac6c6a21a2c5d122968975e9c2f7886'
   )$$,
   '42501',
   'permission denied for function stage_health_consent_copy_draft_successor',
@@ -355,25 +357,25 @@ select throws_ok(
     'ask_layerwell',
     'grant',
     'ask-advisor-2026-06-14-placeholder',
-    '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
+    '242f45399eb0fc3a792124b641f733feae9bf8321291d7e2c49e2799b8623303'
   )$$,
   '55000',
   'HEALTH_CONSENT_COPY_NOT_RELEASED',
-  'the exact newly current Ask draft still cannot authorize a grant'
+  'the exact current Ask draft still cannot authorize a grant'
 );
 
 select lives_ok(
   $$select * from public.stage_health_consent_copy_draft_successor(
     'ask_layerwell', 'grant',
     'ask-advisor-2026-06-14-placeholder',
-    '90cd7ec21799ed34a207bf1d6dc06220ff94f874af1cf9dbdce1a63db68f9e18',
-    'ask-advisor-2026-06-14-placeholder',
     '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
-    'DB-MIGRATION-20260726000070-ASK-DRAFT-ALIGNMENT',
-    'migration:20260726000070',
-    '32ccfdfeab34f099c63ccb3b5d6d53ddea955a978b020fdc18738b723a1a6649'
+    'ask-advisor-2026-06-14-placeholder',
+    '242f45399eb0fc3a792124b641f733feae9bf8321291d7e2c49e2799b8623303',
+    'DB-MIGRATION-20260921000074-ASK-GRANT-HASH-CORRECTION',
+    'migration:20260921000074',
+    '50f4ef320dd7511dced84061726410b77a9d355ee083b59431544dc9c6beecbc'
   )$$,
-  'an exact migration replay returns the original staging truth'
+  'an exact current migration replay returns the original staging truth'
 );
 
 select is(
@@ -382,7 +384,7 @@ select is(
       from public.health_consent_copy_staging_events
      where consent_type = 'ask_layerwell' and action = 'grant'
   ),
-  1::bigint,
+  3::bigint,
   'an exact replay appends no duplicate staging evidence'
 );
 

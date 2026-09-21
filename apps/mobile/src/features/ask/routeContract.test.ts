@@ -36,7 +36,7 @@ describe('Ask route launch contracts', () => {
 
     expect(consent).toContain('applyAskConsentChoice');
     expect(consent).toContain('savingRef.current');
-    expect(consent).toContain('disabled={saving}');
+    expect(consent).toContain('disabled={saving || !consented.isSuccess}');
     expect(consent).toContain('ASK_COPY.privacy.saveFailedTitle');
     expect(consent).toContain('const [saveFailed, setSaveFailed] = useState(false)');
     expect(consent).toContain('accessibilityRole="alert"');
@@ -59,6 +59,22 @@ describe('Ask route launch contracts', () => {
     expect(consent).not.toContain('import { Alert');
     expect(consent).not.toContain("qc.setQueryData(['ask_layerwell'], enabled);\n    try");
     expect(consent).not.toContain('<Switch');
+  });
+
+  it('shows the exact current receipt text before a choice and defers unapproved production grants', () => {
+    const consent = readAppRoute('ask/consent.tsx');
+
+    expect(consent).toContain(
+      "consentCopyFor('ask_layerwell', consented.data ? 'withdrawal' : 'grant').text",
+    );
+    expect(consent).toContain('Exact consent text for this choice');
+    expect(consent).toContain(
+      "HEALTH_DEPENDENT_CONSENT_COPY_REVIEW_STATUS.ask_layerwell.grant === 'approved'",
+    );
+    expect(consent).toContain("env.appEnvironment !== 'production'");
+    expect(consent).toContain('enabled: askConsentSurfaceEnabled');
+    expect(consent).toContain('if (!askConsentSurfaceEnabled)');
+    expect(consent).not.toContain('ASK_COPY.consentLedgerBody');
   });
 
   it('keeps direct-entry Ask exits touchable and routed to safe surfaces', () => {

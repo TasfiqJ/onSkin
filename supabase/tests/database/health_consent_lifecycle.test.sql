@@ -335,7 +335,7 @@ select throws_ok(
   $$select * from public.record_health_dependent_consent(
     1, 0, repeat('4', 64), 'ask_layerwell',
     'ask-advisor-2026-06-14-placeholder',
-    '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
+    '242f45399eb0fc3a792124b641f733feae9bf8321291d7e2c49e2799b8623303'
   )$$,
   '55000', 'HEALTH_CONSENT_COPY_NOT_RELEASED',
   'exact draft Ask copy cannot create a dependent grant'
@@ -514,7 +514,7 @@ select lives_ok(
         ('photo_trend_insights', 'photo-trend-insights-2026-06-13-placeholder',
           '58997d5c3ef5098edf6544aa2752e6878765065831ddbf42c24a364ab36cd1aa'),
         ('ask_layerwell', 'ask-advisor-2026-06-14-placeholder',
-          '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'),
+          '242f45399eb0fc3a792124b641f733feae9bf8321291d7e2c49e2799b8623303'),
         ('community_participation', 'community-participation-2026-06-13-placeholder',
           '416da3ba3cd3496c1008cff937b4d7ad0efa7093d40bcfed2636b480e603ca5e'),
         ('data_sharing', 'commerce-consent-2026-06-13-placeholder',
@@ -674,7 +674,7 @@ select throws_ok(
   $$select * from public.record_health_dependent_consent(
     1, 0, repeat('8', 64), 'ask_layerwell',
     'ask-advisor-2026-06-14-placeholder',
-    '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc'
+    '242f45399eb0fc3a792124b641f733feae9bf8321291d7e2c49e2799b8623303'
   )$$,
   '55000',
   'HEALTH_DEPENDENT_IDEMPOTENCY_KEY_REUSED',
@@ -896,7 +896,7 @@ select lives_ok(
   $$select * from public.begin_health_dependent_consent_withdrawal(
     1, 1, 'ask_layerwell', repeat('c', 64),
     'ask-advisor-2026-06-14-placeholder',
-    '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff'
+    '4d0b588ed43f4680adaf6e7699641c706e113bed7b9212b408532235e4fe1e57'
   )$$,
   'a granular Ask withdrawal begins before base withdrawal'
 );
@@ -981,7 +981,7 @@ select results_eq(
       from public.begin_health_dependent_consent_withdrawal(
         1, 1, 'ask_layerwell', repeat('c', 64),
         'ask-advisor-2026-06-14-placeholder',
-        '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff'
+        '4d0b588ed43f4680adaf6e7699641c706e113bed7b9212b408532235e4fe1e57'
       )$$,
   $$values (
     pg_catalog.current_setting('test.owner4_ask_operation')::uuid,
@@ -1290,12 +1290,12 @@ select lives_ok(
       'OSPW',
       5000, 5000, 5000, 5000,
       'urn:layerwell:onboarding:skin-profile',
-      'draft-2026-07-04',
-      'draft-1',
+      'draft-2026-09-21-layerwell',
+      'draft-2',
       1,
-      'be00ee6008ca03fbcb53e7256432cd044e6131e9aecd5bf90809b2a57cde39bb',
-      'ffd16579edad35b21377244c41af69419248faa3f8f2238183c58a5a8893c893',
-      '95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16',
+      'f5169de7f1985063f97efc70cd740de4be63cada27f2041de36e0c864aa310e0',
+      '7598479bfc4eff6e186e7aaafcb8959630ca4fbf7a49e65fe2c9554c7e8747ef',
+      '4ba91e7339b91aebd0592f73624064bba7e6f3e5eab0b29913d411e8ab60e72c',
       'launch-blocked',
       'raw_score_greater_than_or_equal_to_zero_uses_positive_pole'
     )$$,
@@ -1310,7 +1310,7 @@ select results_eq(
     2::integer,
     'OSPW'::text,
     5000::integer,
-    '95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16'::text,
+    '4ba91e7339b91aebd0592f73624064bba7e6f3e5eab0b29913d411e8ab60e72c'::text,
     'launch-blocked'::text
   )$$,
   'the owner reads the exact constrained v2 provenance row through real RLS and the health read fence'
@@ -1450,7 +1450,7 @@ select throws_ok(
     ) values (
       '70000000-0000-4000-8000-000000000001',
       'ask_layerwell', false, 'ask-advisor-2026-06-14-placeholder',
-      '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff', now()
+      '4d0b588ed43f4680adaf6e7699641c706e113bed7b9212b408532235e4fe1e57', now()
     )$$,
   '42501',
   'HEALTH_CONSENT_RECEIPT_CAPABILITY_REQUIRED',

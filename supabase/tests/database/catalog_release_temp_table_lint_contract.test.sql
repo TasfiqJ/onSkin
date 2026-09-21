@@ -7,14 +7,14 @@ select plan(7);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  71::bigint,
-  'the catalog release lint contract runs against the exact 71-migration source history'
+  91::bigint,
+  'the catalog release lint contract runs against the exact 91-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260729000072'::text,
-  'the migration history retains the temporary-table lint contract through commerce zero admission'
+  '20260921000075'::text,
+  'the migration history retains the temporary-table lint contract through the current quiz-contract successor'
 );
 
 select ok(

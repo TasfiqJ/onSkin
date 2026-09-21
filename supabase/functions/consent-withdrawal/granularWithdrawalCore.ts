@@ -69,7 +69,7 @@ export const CURRENT_GRANULAR_WITHDRAWAL_COPY_CONTRACT = Object.freeze({
   ask_layerwell: Object.freeze({
     version: 'ask-advisor-2026-06-14-placeholder',
     text: '[PLACEHOLDER ask_layerwell withdrawal. B-PRIVACY-COPY]',
-    hash: '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff',
+    hash: '4d0b588ed43f4680adaf6e7699641c706e113bed7b9212b408532235e4fe1e57',
     reviewStatus: 'draft_blocked',
   }),
   community_participation: Object.freeze({

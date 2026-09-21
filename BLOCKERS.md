@@ -919,6 +919,9 @@ Current implementation note:
 - `apps/mobile/src/features/onboarding/quizContract.ts` now freezes and hashes
   one exact draft content/scoring contract, and `quiz.ts` rejects any cloned,
   incomplete, extra-key, duplicate, invalid, or noncanonical answer set.
+- Migration `0075` is the current source authority for the versioned Layerwell
+  quiz tuple. The `0064` PostgreSQL 15/17 rehearsal covers its historical
+  RoutineKind boundary only; full `0075` replay and hosted parity remain open.
 - The current draft remains marked `launch-blocked`; deterministic source and
   database provenance are not professional IP, clinical, or legal approval.
 - `docs/phase-3/quiz-fto-summary.md` is the review packet entry point.

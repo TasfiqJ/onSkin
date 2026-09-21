@@ -7,14 +7,14 @@ select plan(48);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  71::bigint,
-  'CORE-01 runs against the exact 71-migration source history'
+  91::bigint,
+  'CORE-01 runs against the exact 91-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260729000072'::text,
-  'the migration history includes quiz provenance and reaches commerce zero admission'
+  '20260921000075'::text,
+  'the migration history includes the exact quiz-provenance successor'
 );
 
 select results_eq(
@@ -123,7 +123,7 @@ select ok(
      where constraint_row.conrelid = 'public.skin_profiles'::pg_catalog.regclass
        and constraint_row.conname = 'skin_profiles_quiz_v2_provenance_coherent'
   ) like '%raw_score_greater_than_or_equal_to_zero_uses_positive_pole%',
-  'the database pins every current quiz contract value without implying professional approval'
+  'the database retains the historical quiz tuple without implying professional approval'
 );
 
 select ok(
@@ -253,12 +253,12 @@ as $$
     p_pigmented_non_basis_points,
     p_wrinkled_tight_basis_points,
     'urn:layerwell:onboarding:skin-profile',
-    'draft-2026-07-04',
-    'draft-1',
+    'draft-2026-09-21-layerwell',
+    'draft-2',
     1,
-    'be00ee6008ca03fbcb53e7256432cd044e6131e9aecd5bf90809b2a57cde39bb',
-    'ffd16579edad35b21377244c41af69419248faa3f8f2238183c58a5a8893c893',
-    '95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16',
+    'f5169de7f1985063f97efc70cd740de4be63cada27f2041de36e0c864aa310e0',
+    '7598479bfc4eff6e186e7aaafcb8959630ca4fbf7a49e65fe2c9554c7e8747ef',
+    '4ba91e7339b91aebd0592f73624064bba7e6f3e5eab0b29913d411e8ab60e72c',
     'launch-blocked',
     'raw_score_greater_than_or_equal_to_zero_uses_positive_pole'
   );

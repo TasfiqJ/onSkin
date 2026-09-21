@@ -7834,6 +7834,17 @@ open, and no retained linked type artifact or hosted DB-06 packet exists.
 Accordingly, this source checkpoint does not prove hosted schema/history,
 deployment, live RLS, App Store acceptance, legal compliance, or revenue.
 
+## 2026-09-21 source correction checkpoint
+
+The current source tree has 91 database migrations through `0075`, not the
+historical 71 through `0072`. Forward migration `0074` stages exact current
+Layerwell Ask grant/withdraw hashes without granting production consent;
+`0075` admits the exact newly versioned Layerwell quiz tuple while retaining
+honest old tuples and quarantining incoherent rows. The historical PostgreSQL
+15/17 and canonical generated-type proofs do not cover this chain. Current
+full-chain replay, hosted parity, clinical/legal review, physical-iPhone
+testing, and App Review remain open.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

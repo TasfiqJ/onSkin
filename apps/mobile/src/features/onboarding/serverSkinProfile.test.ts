@@ -100,7 +100,7 @@ describe('current server skin-profile contract', () => {
     ['legacy version', { version: 1 }],
     ['future version', { version: 3 }],
     ['content mismatch', { quiz_content_sha256: '0'.repeat(64) }],
-    ['scoring mismatch', { quiz_scoring_version: 'draft-2' }],
+    ['scoring mismatch', { quiz_scoring_version: 'draft-other' }],
     ['review mismatch', { quiz_review_status: 'approved' }],
     ['tie mismatch', { quiz_pole_tie_rule: 'raw_score_greater_than_zero_uses_positive_pole' }],
     ['missing provenance', { quiz_contract_sha256: undefined }],
@@ -110,6 +110,33 @@ describe('current server skin-profile contract', () => {
       delete row.quiz_contract_sha256;
     }
     expect(parseCurrentServerSkinProfile(row)).toBeNull();
+  });
+
+  it('keeps exact historical client tuples outside the current server fallback', () => {
+    const oldHashes = {
+      quiz_content_version: 'draft-2026-07-04',
+      quiz_scoring_version: 'draft-1',
+      quiz_content_sha256: 'be00ee6008ca03fbcb53e7256432cd044e6131e9aecd5bf90809b2a57cde39bb',
+      quiz_scoring_sha256: 'ffd16579edad35b21377244c41af69419248faa3f8f2238183c58a5a8893c893',
+      quiz_contract_sha256: '95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16',
+    };
+    expect(
+      parseCurrentServerSkinProfile({
+        ...validRow(),
+        quiz_contract_id: 'urn:routinekind:onboarding:skin-profile',
+        ...oldHashes,
+      }),
+    ).toBeNull();
+    expect(
+      parseCurrentServerSkinProfile({
+        ...validRow(),
+        quiz_content_version: 'draft-2026-07-04',
+        quiz_scoring_version: 'draft-1',
+        quiz_content_sha256: '8398b025f7ebfa8cd823c180ba6d98475554b82651970b569c736d662c7c7f2f',
+        quiz_scoring_sha256: 'be3a05c5c9494d0976868c4d4e34c4c71fd01b8be19f9207e0198b930e1b982a',
+        quiz_contract_sha256: 'c434e4f031d2d9d18218a0ccddcecf3fff182e8208367375aee16c574c814007',
+      }),
+    ).toBeNull();
   });
 
   it('rejects missing and extra selected columns', () => {

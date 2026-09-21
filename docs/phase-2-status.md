@@ -1,7 +1,7 @@
 # Phase 2 Status
 
 > 2026-09-21 DB-05 trial: exact Supabase CLI `2.117.0` is pinned so the full
-> 89-migration source chain through `0073` can be attempted locally. Its
+> 91-migration source chain through `0075` can be attempted locally. Its
 > concurrent-index-drop fix is available. The repository also contains
 > migrations with `LOCK TABLE`, which may hit an upstream pipeline regression;
 > no current replay is claimed. DB-06 still fails before project linking or mutation.
@@ -25,7 +25,7 @@ Historical checkpoint: 2026-08-05
   immutable snapshot, refuses pre-existing public/migration/function/Auth/
   Storage/Cron state, and retains target-bound cutover, freeze, and
   before/pre-migration/after evidence. Its 71-migration/`0072` and Supabase CLI
-  `2.109.1` contract is not deployable for the current 89-migration/`0073`
+  `2.109.1` contract is not deployable for the current 91-migration/`0075`
   source. The runner now rejects the unproven current chain before project
   linking or remote mutation; the `2.117.0` pin is a local DB-05 replay trial.
 - DB-06 actively closes ingress: the runner sets

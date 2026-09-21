@@ -1,9 +1,9 @@
 # Phase 2 Production Infrastructure Runbook
 
 Date: 2026-07-15
-Updated: 2026-08-05 for the 71-migration chain through `0072`
+Updated: 2026-09-21 for the 91-migration source chain through `0075`
 
-> 2026-09-21 source trial: the repository now has 89 migrations through `0073`.
+> 2026-09-21 source trial: the repository now has 91 migrations through `0075`.
 > Supabase CLI `2.117.0` is exactly pinned for a **local DB-05 replay trial**:
 > its upstream release includes the concurrent-index-drop fix, but the current
 > chain has not passed a complete replay, and the upstream migration-pipeline
@@ -36,8 +36,8 @@ create irreversible production accounts under `Layerwell` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 71 migrations through
-  `0072` and all 17 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only source inventory of 91 migrations
+  through `0075` and all 17 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
@@ -61,10 +61,11 @@ create irreversible production accounts under `Layerwell` until
   purges the untrusted cache, and exposes only the bounded owner preference
   writer; and `0072` establishes literal-zero commerce admission, retires the
   stale poller authority, and deterministically converges legacy/current ACLs.
-  `npm run phase2:db-local-verify` rehearses each consecutive
-  `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` cutover with the relevant
-  legacy fixtures before two ordinary repeatable 71-migration head resets. The
-  exact 2026-08-05 clean-`57da25f63` run exited 0 through all phases, including
+  The current `npm run phase2:db-local-verify` source targets two clean resets of
+  the complete 91-migration chain; that replay has not passed. Its historical
+  2026-08-05 clean-`57da25f63` run rehearsed the consecutive
+  `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` cutovers and two
+  71-migration head resets and exited 0 through all phases, including
   commerce 21/21, focused 5 files/433 assertions, structural 16 files/1,222
   assertions, lint, empty drift, temporary types, CAT-08 10/10, and run-scoped
   teardown. Historical roots were excluded.
@@ -146,7 +147,8 @@ create irreversible production accounts under `Layerwell` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 17-function manifest before migrations `0048`-`0072`, and proves
+   compatible 17-function manifest before the current 91-migration chain through
+   `0075`, and proves
    all 17 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
@@ -155,8 +157,12 @@ create irreversible production accounts under `Layerwell` until
    rereads the exact function inventory, public freeze canaries, hosted Auth
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
-   the initial operator observations were recaptured. Only then does it apply
-   all 71 migrations through `0072` in source order, redeploy the same manifest, and retain
+   the initial operator observations were recaptured. This sequence is not
+   executable today: the runner fails before linking or mutation with
+   `DB06_CURRENT_CHAIN_REPLAY_REQUIRED` until DB-05 proves the current chain
+   and the schema/type contract is reviewed. Only after that gate is cleared
+   through a reviewed source change may it apply all 91 migrations through
+   `0075` in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and
@@ -177,9 +183,10 @@ create irreversible production accounts under `Layerwell` until
 13. Configure Apple, RevenueCat, PostHog, Sentry, Turnstile, and policy URLs
     under the cleared identity, then build the iOS staging candidate through
     EAS and run the physical-device QA matrix.
-14. Use a separately reviewed incremental/production DB-12 procedure for later
-    changes. Never mutate schema in the dashboard or reuse this fresh-only path
-    as a production authorization.
+14. Use the [DB-12 production database release procedure](phase-2-production-database-release-procedure.md)
+    only after its source-only draft receives independent review, an approved
+    runner and hosted recovery evidence. Never mutate schema in the dashboard
+    or reuse this fresh-only path as a production authorization.
 
 ## Commands
 
@@ -194,12 +201,13 @@ npm run phase2:rls-smoke
 The preparation helper requires a freshly fetched, clean `main` equal to
 `origin/main`. It reads the full 20-character project ref only from the
 environment and prints only its last four characters plus
-`sha256(utf8("db06-project-ref-v1\0" + fullProjectRef))`, the ordered 61
+`sha256(utf8("db06-project-ref-v1\0" + fullProjectRef))`, the current ordered 89
 migration IDs, `sha256(utf8(canonical-json(ordered-migration-id-array)))`, and,
 when `--evidence-dir` is supplied, SHA-256 values for the exact six external
 artifact bytes. It never prints the raw project ref.
 
-PowerShell staging deploy:
+PowerShell staging deploy (do not execute while the current-chain replay guard
+above remains active):
 
 ```powershell
 $env:APP_ENV = "staging"
@@ -217,9 +225,10 @@ Read `docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md`,
 `docs/phase-9/apple-auth-lifecycle-operations-runbook.md` first. The wrapper
 requires their zero-cohort ordering evidence and leaves repository DB types
 unchanged during the hosted operation. The independent local DB-08 canonical
-replacement is already recorded above; the wrapper must still retain linked
-types and prove repository/local/linked parity without overwriting the canonical
-raw generated artifact.
+replacement recorded above covers only the historical 71-migration chain;
+regenerate current types from a successful clean 91-migration replay before
+requiring repository/local/linked parity, without hand-editing the raw
+generated artifact.
 
 Expo config checks:
 
@@ -262,15 +271,16 @@ expected target is staging.
 
 ## DB-06 Evidence And Failure Semantics
 
-A successful live DB-06 directory retains the manifest, bounded structured log,
-linked generated types, checksums, the main cutover attestation, the
-traffic/provider-freeze artifact, and all five boundary artifacts. The expected
-post-migration inventory is 82 public tables with RLS on all 82, one `photos`
-bucket, zero Auth users/identities/sessions, zero Storage objects, and zero Cron
-jobs. Linked types are retained only after exact local/linked parity; this
-procedure does not replace repository types. Its reviewed packet must prove
-repository/local/linked parity against the canonical 6,770-line raw generated
-artifact; that hosted proof remains open.
+A successful live DB-06 directory must retain the manifest, bounded structured
+log, linked generated types, checksums, the main cutover attestation, the
+traffic/provider-freeze artifact, and all five boundary artifacts. The 82
+public-table/RLS count and 6,770-line generated type artifact belonged to the
+historical 71-migration `0072` chain; neither is a verified `0073` expectation.
+Derive and review the current schema/type inventory from a clean full-chain
+DB-05 replay before lifting the runner guard. The eventual hosted packet must
+prove the reviewed current count, one `photos` bucket, zero Auth
+users/identities/sessions, zero Storage objects and Cron jobs, and exact
+repository/local/linked type parity without overwriting repository types.
 
 On Windows, commands run in a job object whose confirmed settlement includes
 descendant shutdown. If containment cannot be confirmed, the procedure keeps

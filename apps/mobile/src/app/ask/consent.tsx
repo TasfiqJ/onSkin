@@ -13,6 +13,11 @@ import {
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
 import { BRAND } from '@/lib/brand';
+import {
+  consentCopyFor,
+  HEALTH_DEPENDENT_CONSENT_COPY_REVIEW_STATUS,
+} from '@/lib/consent/dependentConsentContract';
+import { env } from '@/lib/env';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -28,6 +33,11 @@ type AskConsentFailureModes = {
   ledgerLocalOnly: boolean;
   revokeOnce: boolean;
 };
+
+const askConsentSurfaceEnabled =
+  phase7Flags.cloudAsk &&
+  (env.appEnvironment !== 'production' ||
+    HEALTH_DEPENDENT_CONSENT_COPY_REVIEW_STATUS.ask_layerwell.grant === 'approved');
 
 function devAskConsentFailureModes(): AskConsentFailureModes {
   if (typeof __DEV__ === 'undefined' || !__DEV__) {
@@ -76,11 +86,11 @@ export default function AskConsentScreen() {
   const consented = useQuery({
     queryKey: ['ask_layerwell'],
     queryFn: isAskConsented,
-    enabled: phase7Flags.cloudAsk,
+    enabled: askConsentSurfaceEnabled,
     retry: 0,
   });
 
-  if (!phase7Flags.cloudAsk)
+  if (!askConsentSurfaceEnabled)
     return (
       <DeferredSurface
         surface="cloudAsk"
@@ -185,6 +195,14 @@ export default function AskConsentScreen() {
               {ASK_COPY.privacy.consentLine}
             </Text>
           </View>
+          <View className="mt-4 border-t pt-3.5" style={{ borderTopColor: colors.hairline }}>
+            <Text variant="bodySm" className="font-sans-semibold" tone="muted">
+              Exact consent text for this choice
+            </Text>
+            <Text variant="bodySm" className="mt-2" tone="muted">
+              {consentCopyFor('ask_layerwell', consented.data ? 'withdrawal' : 'grant').text}
+            </Text>
+          </View>
         </Card>
 
         <Card className="mt-4 flex-row items-center justify-between">
@@ -199,7 +217,7 @@ export default function AskConsentScreen() {
           <ToggleSwitch
             accessibilityLabel={ASK_COPY.privacy.toggleLabel}
             value={consented.data ?? false}
-            disabled={saving}
+            disabled={saving || !consented.isSuccess}
             inactiveTrackColor={colors.greigeDeep}
             onChange={(v) => void onToggle(v)}
           />

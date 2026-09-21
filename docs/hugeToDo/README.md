@@ -206,17 +206,17 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260921000073`; the current CAT-03 pgTAP source plan contains 102
+head `20260921000075`; the current CAT-03 pgTAP source plan contains 102
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, hosted
-governed full-chain evidence through `0073`, current signed database readback,
+governed full-chain evidence through `0075`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and
 no Apple, legal, product-quality, market, or revenue outcome is implied. The
-exact disposable local `0072` gate now passes, including CAT-03 99/99 within the
+exact disposable local `0072` gate historically passed, including CAT-03 99/99 within the
 16-file / 1,222-assertion pgTAP suite. That is local source evidence only, not a
 retained governed hosted packet, signed readback, real corpus, or active
 catalog.
@@ -412,8 +412,10 @@ outcome, or reason. Total storage-write failure remains closed for the live
 process but cannot truthfully prove durable revocation after process
 termination. The quiz content and scoring manifests are frozen and
 hash-pinned; scoring uses integer basis points and emits only canonical derived
-outputs. Local profile envelope v2 and migration `0064` bind the same versions,
-hashes, DSPT, reachable raw-score domains, basis-point equations, goals,
+outputs. Local profile envelope v2 and forward migration `0075` now bind the
+current Layerwell versions and hashes; `0064` remains the historical upgrade
+boundary for the earlier RoutineKind tuple. The database contract also binds
+DSPT, reachable raw-score domains, basis-point equations, goals,
 sensitivities, pregnancy state, review status, and tie rule without retaining
 raw quiz answers or an answer hash. Raw answers remain in memory only for a
 pending/failed local-save retry and are cleared after the durable derived
@@ -423,10 +425,11 @@ contract-mismatched data; a fresh explicit quiz may replace any unusable
 profile atomically, while storage failure preserves the prior bytes. Server
 fallback is permitted only when local authority is genuinely missing and only
 an exact current server tuple is accepted. Because the pre-0064 schema did not
-reserve version 2, all four new checks are intentionally `NOT VALID`: they
-enforce every new write while preserving any pre-existing malformed v2
-collision for explicit quarantine instead of aborting deployment. The exact
-migration-byte rehearsal proves that posture on PostgreSQL 15 and 17. The exact
+reserve version 2, its four checks and the `0075` provenance successor remain
+`NOT VALID`: they enforce new writes while preserving pre-existing malformed
+v2 collisions for explicit quarantine instead of aborting deployment. The
+historical `0064` migration-byte rehearsal passed PostgreSQL 15 and 17;
+current `0075` full-chain replay and upgrade rehearsal remain required. The exact
 final-code 390 x 844
 Expo-web first-session flow passes direct protected-route age fencing through
 the 12-question quiz, generated routine, and AM/PM check-offs, then proves a
@@ -774,8 +777,11 @@ purges the untrusted recommendation cache, keeps product eligibility closed,
 revokes unused runtime privileges, and exposes only the bounded owner preference
 writer. `0072` adds the literal-zero COM-01A commerce-admission boundary and
 retires the stale poller authority. The 2026-08-05 checkpoint contained 71
-migrations through `20260729000072`; the current source tree contains 89
-through `20260921000073` and has no clean full-chain replay evidence. Exact
+migrations through `20260729000072`. `0074` stages corrected draft-only Ask
+consent hashes without changing historical tuples; `0075` adds a versioned,
+launch-blocked quiz provenance successor. Neither supplies professional review
+or release approval. The current source tree contains 91 migrations through
+`20260921000075` and has no clean full-chain replay evidence. Exact
 Supabase CLI `2.117.0` is pinned for a current-chain local replay trial after
 the old CLI's concurrent-index-drop incompatibility; it does not authorize
 staging deployment or establish current generated-type parity.
@@ -806,16 +812,19 @@ Later on 2026-08-05, the authoritative DB-08 clean verifier at clean commit
 all 71 migrations through `20260729000072`. Canonical local generation and the
 checked-in repository artifact matched at 6,770 lines with SHA-256
 `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
-This closes the current repository-versus-clean-local generated-type drift, but
-DB-08 remains `in_progress`: no hosted project was linked, no staging evidence
-packet exists, and equality across repository, clean local, and reviewed linked
-staging output remains open.
+This closed repository-versus-clean-local generated-type drift only for that
+historical 71-migration chain. It does not cover current head `0075`; DB-08
+remains `in_progress` because current-chain generation and hosted three-way
+repository/local/linked parity are absent.
 
-DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only source procedure now binds all 71 migrations through
-`0072`, all 17 Edge functions, an active traffic/provider freeze, and an
-immediate pre-push reread of functions, public frozen responses, hosted Auth
-controls, migrations, schema, Storage, and all Cron jobs. It leaves
+DB-06 is also a source checkpoint and remains `in_progress`, blocked by DB-05
+and `ACCT-03`. Its current fresh-only source inventory binds all 91 migrations
+through `0075` and all 17 Edge functions. The runner stops before project
+linking or mutation with `DB06_CURRENT_CHAIN_REPLAY_REQUIRED` until clean
+current-chain DB-05 replay, schema inventory, and generated-type parity are
+reviewed. Its eventual hosted procedure requires an active traffic/provider
+freeze and an immediate pre-push reread of functions, public frozen responses,
+hosted Auth controls, migrations, schema, Storage, and all Cron jobs; it leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No
 approved hosted target was used and no live DB-06 evidence directory exists.
 

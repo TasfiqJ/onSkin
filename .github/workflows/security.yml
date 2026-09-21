@@ -117,9 +117,10 @@ jobs:
       - name: Gitleaks
         id: gitleaks
         continue-on-error: true
-        # gitleaks/gitleaks-action v2
-        uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc
+        # gitleaks/gitleaks-action v3.0.0 (Node 24); personal repositories need no license.
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_COMMENTS: 'false'
 
       - name: TruffleHog verified secrets

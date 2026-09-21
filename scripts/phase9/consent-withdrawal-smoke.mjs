@@ -103,7 +103,8 @@ const healthLifecycleMigration = read(
 );
 const healthConsentCopyMigrations =
   healthLifecycleMigration +
-  read('supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql');
+  read('supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql') +
+  read('supabase/migrations/20260921000074_ask_consent_rebrand_hash_alignment.sql');
 const routineAdherenceMigration = read(
   'supabase/migrations/20260726000068_routine_adherence_authority.sql',
 );
@@ -619,9 +620,7 @@ block(
 block(
   errors,
   /readExportHealthLifecycle\(supabase, userId\)/.test(dataExport) &&
-    /const healthReadEpoch = healthReadEpochForExport\(initialHealthLifecycle\)/.test(
-      dataExport,
-    ) &&
+    /const healthReadEpoch = healthReadEpochForExport\(initialHealthLifecycle\)/.test(dataExport) &&
     /const healthSupabase = createClient\(supabaseUrl, publishableKey,[\s\S]*'x-health-processing-epoch': String\(healthReadEpoch\)/.test(
       dataExport,
     ) &&
@@ -765,8 +764,8 @@ for (const [consentType, contract] of Object.entries(LIVE_HEALTH_CONSENT_COPY.de
       errors,
       dependentConsentCopy.includes(copy.version) &&
         dependentConsentCopy.includes(copy.hash) &&
-        healthConsentCopyMigrations.includes(
-          `'${consentType}', '${databaseAction}', '${copy.version}'`,
+        new RegExp(`'${consentType}'\\s*,\\s*'${databaseAction}'\\s*,\\s*'${copy.version}'`).test(
+          healthConsentCopyMigrations,
         ) &&
         healthConsentCopyMigrations.includes(`'${copy.hash}'`) &&
         (action === 'grant' ||

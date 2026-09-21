@@ -10,6 +10,7 @@ const workflow = await readFile(join(root, '.github/workflows/quality.yml'), 'ut
 const bindings = [
   ['catalog_curation_upgrade_0062', 'catalog-curation-0062-upgrade-postgres-rehearsal.sql'],
   ['skin_profile_upgrade_0064', 'skin-profile-0064-upgrade-postgres-rehearsal.sql'],
+  ['skin_profile_upgrade_0075', 'skin-profile-0075-upgrade-postgres-rehearsal.sql'],
   ['catalog_operator_upgrade_0065', 'catalog-operator-0065-upgrade-postgres-rehearsal.sql'],
   ['clinical_content_upgrade_0066', 'clinical-content-0066-upgrade-postgres-rehearsal.sql'],
   [

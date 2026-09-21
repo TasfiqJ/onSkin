@@ -118,7 +118,7 @@ select is(
     'changeReference', 'DB-MIGRATION-20260726000070-ASK-DRAFT-ALIGNMENT',
     'stagedBy', 'migration:20260726000070',
     'evidenceHash',
-      '32ccfdfeab34f099c63ccb3b5d6d53ddea955a978b020fdc18738b723a1a6649'
+      '4314f06805a15d98117914cca35a31d5bac6c6a21a2c5d122968975e9c2f7886'
   ),
   '0070 appends exact migration staging evidence distinct from review evidence'
 );

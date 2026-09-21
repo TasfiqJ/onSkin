@@ -60,11 +60,11 @@ export const LIVE_HEALTH_CONSENT_COPY = Object.freeze({
     ask_layerwell: Object.freeze({
       grant: Object.freeze({
         version: 'ask-advisor-2026-06-14-placeholder',
-        hash: '4bc7f130404b5d0d12aa52e0999efa72b1b68dd537fb90bbd708e60c561e1dcc',
+        hash: '242f45399eb0fc3a792124b641f733feae9bf8321291d7e2c49e2799b8623303',
       }),
       withdrawal: Object.freeze({
         version: 'ask-advisor-2026-06-14-placeholder',
-        hash: '5ef385c3e618e3a4167b7096b3d99ffe3d22468269f6d899a51527b7959c9aff',
+        hash: '4d0b588ed43f4680adaf6e7699641c706e113bed7b9212b408532235e4fe1e57',
       }),
     }),
     community_participation: Object.freeze({

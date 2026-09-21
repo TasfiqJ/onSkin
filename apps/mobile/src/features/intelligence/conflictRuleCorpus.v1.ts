@@ -613,7 +613,7 @@ export const CONFLICT_MARKET_SCOPE_POLICY = {
   legalGate: 'us_wave1_counsel_clearance_required',
   policyId: 'us-wave1-legal-market-gate-v1',
   sourceDocumentPath: 'docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md',
-  sourceDocumentSha256: '34ce160c765e9d7bde2e1d5e55de54c63b8c896e5db61de746a1f6a971080bce',
+  sourceDocumentSha256: '18d1f724a02f9abecd62411d18d923cd8988ba2e5adc6777aa7a6e1de9319f98',
   storefrontJurisdictions: ['US'],
 } as const;
 
@@ -621,7 +621,7 @@ export const CONFLICT_PROFILE_CONTEXT_CONTRACT = {
   storedValue: 'pregnant',
   semanticValue: 'pregnant_or_trying_combined',
   sourceDocumentPath: 'apps/mobile/src/features/onboarding/quizContract.ts',
-  sourceDocumentSha256: '42b2e71a6c5b4b5506dbc6ee7f16d767d56cf54e7bf23b8733407e317deaad26',
+  sourceDocumentSha256: 'b22b1680f3efb2a038b672421d0e77f4fc274b440f0f52b7017acb43df56ac4c',
 } as const;
 
 export const CONFLICT_RULE_CORPUS_CONTENT: ConflictRuleCorpusContent = {
@@ -630,7 +630,7 @@ export const CONFLICT_RULE_CORPUS_CONTENT: ConflictRuleCorpusContent = {
   // Wave 1 only. Canada/Quebec requires a future separately reviewed corpus.
   targetJurisdictions: ['US'],
   marketScopePolicyId: CONFLICT_MARKET_SCOPE_POLICY.policyId,
-  marketScopeSha256: '9d91895628425caa415b2874b0cd8e5ae49a738aae149954f4009a2e46024c51',
+  marketScopeSha256: '0c0ab0545aca891383efc86a58c3245571bbd686ca411593a89770ad47a06bb7',
   profileContextContract: CONFLICT_PROFILE_CONTEXT_CONTRACT,
   sources: SOURCE_REGISTRY,
   coverage: {

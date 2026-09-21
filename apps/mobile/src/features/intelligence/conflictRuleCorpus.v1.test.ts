@@ -4,6 +4,8 @@ import { readFileSync } from 'node:fs';
 
 import { describe, expect, it } from 'vitest';
 
+import { ONBOARDING_QUIZ } from '../onboarding/quizContract';
+
 import {
   CONFLICT_RULE_CORPUS,
   CONFLICT_RULE_REVIEW_RECEIPTS,
@@ -214,7 +216,7 @@ describe('canonical conflict corpus hashing', () => {
       'docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md',
     );
     expect(CONFLICT_MARKET_SCOPE_POLICY.sourceDocumentSha256).toBe(
-      '34ce160c765e9d7bde2e1d5e55de54c63b8c896e5db61de746a1f6a971080bce',
+      '18d1f724a02f9abecd62411d18d923cd8988ba2e5adc6777aa7a6e1de9319f98',
     );
     expect(CONFLICT_RULE_CORPUS.content.targetJurisdictions).toEqual(['US']);
     expect(CONFLICT_RULE_CORPUS.content.marketScopeSha256).toBe(
@@ -223,11 +225,20 @@ describe('canonical conflict corpus hashing', () => {
   });
 
   it('binds the stored pregnant value to the combined pregnant-or-trying quiz contract', () => {
+    const pregnancyQuestion = ONBOARDING_QUIZ.find((question) => question.id === 'q_pregnancy');
+    expect(pregnancyQuestion?.kind).toBe('pregnancy');
+    expect(pregnancyQuestion?.prompt).toBe(
+      'Are you pregnant, trying to become pregnant, or breastfeeding?',
+    );
+    expect(pregnancyQuestion?.options.find((option) => option.id === 'pregnant')).toMatchObject({
+      id: 'pregnant',
+      label: 'Pregnant or trying',
+    });
     expect(CONFLICT_PROFILE_CONTEXT_CONTRACT).toEqual({
       storedValue: 'pregnant',
       semanticValue: 'pregnant_or_trying_combined',
       sourceDocumentPath: 'apps/mobile/src/features/onboarding/quizContract.ts',
-      sourceDocumentSha256: '42b2e71a6c5b4b5506dbc6ee7f16d767d56cf54e7bf23b8733407e317deaad26',
+      sourceDocumentSha256: 'b22b1680f3efb2a038b672421d0e77f4fc274b440f0f52b7017acb43df56ac4c',
     });
     expect(CONFLICT_RULE_CORPUS.content.profileContextContract).toEqual(
       CONFLICT_PROFILE_CONTEXT_CONTRACT,
@@ -480,7 +491,7 @@ describe('fail-closed professional admission', () => {
       'apps/mobile/src/features/onboarding/quizContract.ts',
     );
     expect(body.profileContextSourceDocumentSha256).toBe(
-      '42b2e71a6c5b4b5506dbc6ee7f16d767d56cf54e7bf23b8733407e317deaad26',
+      'b22b1680f3efb2a038b672421d0e77f4fc274b440f0f52b7017acb43df56ac4c',
     );
     expect(body.receiptId).toBe(receipt.receiptId);
     expect(body.authorityId).toBe(receipt.authorityId);

@@ -2517,6 +2517,13 @@ Passing source tests does not satisfy any of those gates.
   - Evidence: Screenshot and visible-text snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask Layerwell is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
   - Current navigation evidence: 2026-07-08 system Chrome Expo web at 320 x 568 directly opens `/ask/consent`, verifies the cloud Ask deferred beta surface with a 272 x 56 `Back to Ask` CTA, then taps it and recovers to `/ask` with zero horizontal overflow and no browser errors. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
+- Branch: exact Ask grant and withdrawal disclosure in development/staging
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With the cloud Ask development flag enabled and a controlled authenticated staging fixture, open `/ask/consent` at 375 x 667 and 390 x 844. Before turning the switch on, read the complete canonical grant text; after an authoritative successful grant, read the complete canonical withdrawal text before turning it off. Retry with a failed status lookup, then direct-entry refresh. Repeat a production-mode build with the same flag and draft-blocked registry.
+  - Expected result: The exact text whose UTF-8 SHA-256 is recorded is visible and accessible before each explicit switch choice; pending or failed status cannot enable the switch; a failed mutation does not flip visible state; production remains on the deferred surface while the grant copy is draft-blocked. The older pre-rebrand hash tuples remain historical database records and are never relabeled as current approval.
+  - Evidence: Supported-phone screenshots, visible-text/accessibility snapshots, switch state and network/consent receipt, reload result, and production deferred-route screenshot. Source and unit tests alone are not human-simulated UI or hosted consent evidence.
+  - Current status: Source candidate only. Exact migration, Edge, and mobile hash tests pass; current-revision Expo web, native, hosted, and professional review evidence remains open.
 - Branch: cloud consent save or withdrawal failure
   - Priority: Critical
   - Automate later: Yes

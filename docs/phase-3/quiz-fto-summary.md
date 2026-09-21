@@ -1,28 +1,39 @@
 # Quiz FTO Summary
 
 Status: launch-blocked pending exact-hash IP/legal and clinical review
-Last updated: 2026-07-26
+Last updated: 2026-09-21
 
 ## Current Source Contract
 
 The app now has one deterministic draft quiz and scorer:
 
 - Contract ID: `urn:layerwell:onboarding:skin-profile`
-- Content version: `draft-2026-07-04`
-- Scoring version: `draft-1`
+- Content version: `draft-2026-09-21-layerwell`
+- Scoring version: `draft-2`
 - Output schema version: `1`
 - Content SHA-256:
-  `be00ee6008ca03fbcb53e7256432cd044e6131e9aecd5bf90809b2a57cde39bb`
+  `f5169de7f1985063f97efc70cd740de4be63cada27f2041de36e0c864aa310e0`
 - Scoring SHA-256:
-  `ffd16579edad35b21377244c41af69419248faa3f8f2238183c58a5a8893c893`
+  `7598479bfc4eff6e186e7aaafcb8959630ca4fbf7a49e65fe2c9554c7e8747ef`
 - Combined contract SHA-256:
-  `95022003f5dfa1fff5e95b846a9d48ef6ecc9dc97af341fb311afaa9aadd1c16`
+  `4ba91e7339b91aebd0592f73624064bba7e6f3e5eab0b29913d411e8ab60e72c`
 - Review status embedded in local/server receipts: `launch-blocked`
 
 Changing any semantic content or scoring byte requires a new version, new
 hashes, and a fresh review. Determinism and provenance do not constitute
 freedom-to-operate, clinical validation, legal approval, or App Review
 acceptance.
+
+Migration `20260921000075` admits this newly versioned exact tuple while
+retaining two prior exact client tuples for old-client writes: the pre-rebrand
+RoutineKind identity with `be00ee60`/`ffd16579`/`95022003`, and the interim
+Layerwell identity with `8398b025`/`be3a05c5`/`c434e4f0` under the previous
+draft version labels. Those historical tuples are **not** current reader
+authority. The incoherent Layerwell identity paired with the RoutineKind
+hashes in migration `0064` cannot be produced by an honest canonical manifest:
+preexisting rows, if any, remain untouched but quarantined by the unvalidated
+successor constraint, and new writes of that mixed tuple are rejected. No
+historical row is silently rewritten or professionally approved.
 
 The profile receipt stores derived axis values, integer basis points, DSPT,
 discrete tone outputs, sensitivities, pregnancy choice, and the exact

@@ -10,8 +10,11 @@ import type { SkinAxis } from '@layerwell/types';
  */
 export const QUIZ_CONTRACT_REVIEW_STATUS = 'launch-blocked' as const;
 export const QUIZ_CONTRACT_ID = 'urn:layerwell:onboarding:skin-profile' as const;
-export const QUIZ_CONTENT_VERSION = 'draft-2026-07-04' as const;
-export const QUIZ_SCORING_VERSION = 'draft-1' as const;
+// The Layerwell identity changes both canonical manifests. Keep the earlier
+// same-version tuples distinguishable so old receipts cannot masquerade as
+// this draft, even though the question and scoring behavior is unchanged.
+export const QUIZ_CONTENT_VERSION = 'draft-2026-09-21-layerwell' as const;
+export const QUIZ_SCORING_VERSION = 'draft-2' as const;
 export const QUIZ_OUTPUT_SCHEMA_VERSION = 1 as const;
 
 export const QUIZ_AXIS_ORDER = [
@@ -340,11 +343,11 @@ export const QUIZ_COMBINED_MANIFEST = {
 // Pinned by quizContract.test.ts. Changing any reviewed semantic byte requires
 // an explicit version/hash update and a fresh professional review.
 export const QUIZ_CONTENT_SHA256 =
-  '8398b025f7ebfa8cd823c180ba6d98475554b82651970b569c736d662c7c7f2f' as const;
+  'f5169de7f1985063f97efc70cd740de4be63cada27f2041de36e0c864aa310e0' as const;
 export const QUIZ_SCORING_SHA256 =
-  'be3a05c5c9494d0976868c4d4e34c4c71fd01b8be19f9207e0198b930e1b982a' as const;
+  '7598479bfc4eff6e186e7aaafcb8959630ca4fbf7a49e65fe2c9554c7e8747ef' as const;
 export const QUIZ_CONTRACT_SHA256 =
-  'c434e4f031d2d9d18218a0ccddcecf3fff182e8208367375aee16c574c814007' as const;
+  '4ba91e7339b91aebd0592f73624064bba7e6f3e5eab0b29913d411e8ab60e72c' as const;
 
 export const QUIZ_SCORING_PROVENANCE = Object.freeze({
   contractId: QUIZ_CONTRACT_ID,
