@@ -3,6 +3,7 @@
 Date: 2026-07-16
 Updated: 2026-08-08 for Expo SDK 57 and `expo-widgets` 57.0.9
 Updated: 2026-09-26 to harden first-use cross-process lock creation
+Updated: 2026-09-26 to bind every Live Activity surface to the signed deep link
 
 Status: `in_progress` native source candidate. The Layerwell lifecycle is
 implemented and statically/model-tested in source, but interactive publication
@@ -189,7 +190,10 @@ finding and requires a new hash review.
   authority-gated. The patched factory rejects every non-Layerwell start, and
   update/token APIs reject nonexact or inactive instances. End and privacy
   cleanup remain permissive so legacy aliases can be redacted and asked to
-  dismiss.
+  dismiss. Both the Lock Screen banner and Dynamic Island use the same guarded
+  destination lookup; the lookup rejects non-Layerwell names and accepts only
+  the URL that exactly matches the signed `LayerwellWidgetDeepLink` value, so a
+  legacy or modified shared-storage key cannot supply a tap destination.
 - **Signed-binary kill switches.** The app and generated extension Info.plists
   declare lifecycle version `1` while interactive publication and Live Activity
   start remain literal `false`. JavaScript/OTA configuration alone cannot

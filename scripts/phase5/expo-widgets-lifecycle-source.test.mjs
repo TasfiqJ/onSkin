@@ -306,6 +306,7 @@ test('Live Activity APIs globally gate Layerwell and destroy aliases or duplicat
   const factory = source('LiveActivityFactory.swift');
   const activity = source('LiveActivity.swift');
   const module = source('WidgetsModule.swift');
+  const utils = source('Utils.swift');
   const view = source('WidgetLiveActivity.swift');
 
   const decoder = section(
@@ -415,6 +416,13 @@ test('Live Activity APIs globally gate Layerwell and destroy aliases or duplicat
   assert.ok(reconcile.includes('activity.activityState == .active'));
   assert.ok(reconcile.includes('kept == 0'));
   assert.ok(view.includes('isSystemStale: context.isStale'));
+  assert.equal(
+    view.match(/\.widgetURL\(getLiveActivityUrl\(forName: context\.state\.name\)\)/g)?.length,
+    2,
+  );
+  assert.ok(utils.includes('guard name == LayerwellWidgetLifecycleStore.activityName'));
+  assert.ok(utils.includes('LayerwellWidgetLifecycleStore.authorizedDeepLink(candidate)'));
+  assert.equal(utils.includes('return URL(string: urlString)'), false);
 });
 
 test('signed flags remain literal false and cleanup does not consult them', () => {

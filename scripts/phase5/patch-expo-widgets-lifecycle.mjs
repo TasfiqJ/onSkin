@@ -91,13 +91,15 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
     target: 'node_modules/expo-widgets/ios/Widgets/Utils.swift',
     payload: 'Utils.swift',
     original: '3ff98e21d29d43d358fec29069795781e31961ad1ebd77d5cae13178e30cfd49',
-    patched: 'ee604723e5a8ffe531d01892a5e5cd4776ff920c5ab37520f19ba27a10da8074',
+    priorPatched: ['ee604723e5a8ffe531d01892a5e5cd4776ff920c5ab37520f19ba27a10da8074'],
+    patched: 'b093d8be695b9825ad98798bc69804f074ebd3ddce3c0aa202a584215afdef4c',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/WidgetLiveActivity.swift',
     payload: 'WidgetLiveActivity.swift',
     original: '36c7448b31a6791d996015859bea1e87cf8df884837c0b895c7963d8569efe3c',
-    patched: '01b0084d8dce0bd253007d936a6a5ea597159533913250d3daeba805b91d9256',
+    priorPatched: ['01b0084d8dce0bd253007d936a6a5ea597159533913250d3daeba805b91d9256'],
+    patched: 'df40ea1a2de0c319275fde4c9bc6c3ca2288b524bab4974d8429ca93a8383735',
   },
   {
     target: 'node_modules/expo-widgets/ios/WidgetObject.swift',

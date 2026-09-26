@@ -35,6 +35,7 @@ public struct WidgetLiveActivity: Widget {
         environment: environment
       )
       LiveActivityBannerView(context: context, nodes: nodes)
+        .widgetURL(getLiveActivityUrl(forName: context.state.name))
     } dynamicIsland: { context in
       let props = LayerwellWidgetLifecycleStore.sanitizedLiveActivityProps(
         name: context.state.name,

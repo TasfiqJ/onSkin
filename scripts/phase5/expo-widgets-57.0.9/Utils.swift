@@ -72,12 +72,14 @@ func getLiveActivityNodes(
 }
 
 func getLiveActivityUrl(forName name: String) -> URL? {
-  guard let urlString = WidgetsStorage.getString(
-    forKey: "__expo_widgets_live_activity_\(name)_url"
-  ) else {
+  guard name == LayerwellWidgetLifecycleStore.activityName,
+        let urlString = WidgetsStorage.getString(
+          forKey: "__expo_widgets_live_activity_\(name)_url"
+        ),
+        let candidate = URL(string: urlString) else {
     return nil
   }
-  return URL(string: urlString)
+  return try? LayerwellWidgetLifecycleStore.authorizedDeepLink(candidate)
 }
 
 public func getWidgetEnvironment(environment: EnvironmentValues) -> [String: Any] {
