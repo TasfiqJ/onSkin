@@ -29,12 +29,12 @@
     "mapping": {
       "path": "docs/phase-9/ios-sdk-package-mapping.json",
       "bytes": 8350,
-      "sha256": "27e94f3d6b830c11bc1f3e200fe77eadab48097e327def0fec392d21715aa598"
+      "sha256": "65966442f793977e3d0660b1d8c056f8b13070dd971e7dc015c64a26ce5dfb5e"
     },
     "packageLock": {
       "path": "package-lock.json",
-      "bytes": 586150,
-      "sha256": "fb042e29d9e942ae32ab7583128deb1d14e63565bba4296a49cd7f19400121fc"
+      "bytes": 589539,
+      "sha256": "f9c22d2c8571443e0a7b7b908cb01e32e31fefa369f93a41e90971f8432312aa"
     }
   },
   "summary": {
@@ -52,15 +52,37 @@
     "warningCount": 16
   },
   "ledgerHashes": {
-    "nativePackagesSha256": "8e3490e6a28be64dd0793cf8de7eeb63fa0f4b0b83f7bb45ab01f6c7ea1a747e",
+    "nativePackagesSha256": "f87e4ede03e685ebe63355e96033d89c1a6cbaaab23fb6ac888988067403e18d",
     "privacyManifestsSha256": "079a9873a342d30b93469e88304bff5063a6f77129df3f1bf758236c6729a01c",
-    "podspecsSha256": "5453b07ba85024be264d3c42392f569c27dfb0e572ec4c61da3c3fba01677d5e",
+    "podspecsSha256": "1ca4114f974b231f5d2c5915d9a32f42521cfb32a2b65c43b5704064ff13c9e1",
     "xcframeworksSha256": "a127fc04379d1fc25c7d85d6bc9acd99edf01f3117b3b6b245e93602c4ef4151",
     "frameworksSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "nativeBinaryFilesSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "appleSdkIntersectionsSha256": "cbc4a72368eff0ee118100d671777ff668e32dda5e034f362a6d993385b6df8c"
   },
   "nativePackages": [
+    {
+      "packageName": "expo-widgets",
+      "packagePath": "apps/mobile/node_modules/expo-widgets",
+      "version": "57.0.9",
+      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.9.tgz",
+      "integrity": "sha512-B0WcPQeY+hillPO0IGsX/MEVUpan5fAWgrBJV7ZVFbK9gcyZ0PsDtPE+2MOOd3XeNlnfyGvaQunW52/8A7FbZw==",
+      "packageJsonSha256": "9184c68093c8d62bd64b1e575abf72622a928882bb014e01429fc37b0f19f240",
+      "rootSignals": [
+        "ios",
+        "spm.config.json"
+      ],
+      "scannedEntryCount": 176,
+      "privacyManifestPaths": [],
+      "boundPrivacyManifestPaths": [],
+      "podspecPaths": [
+        "apps/mobile/node_modules/expo-widgets/ios/ExpoWidgets.podspec"
+      ],
+      "xcframeworkPaths": [],
+      "frameworkPaths": [],
+      "nativeBinaryFilePaths": [],
+      "status": "archive_required"
+    },
     {
       "packageName": "@expo/dom-webview",
       "packagePath": "node_modules/@expo/dom-webview",
@@ -1210,28 +1232,6 @@
       "status": "archive_required"
     },
     {
-      "packageName": "expo-widgets",
-      "packagePath": "node_modules/expo-widgets",
-      "version": "57.0.9",
-      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.9.tgz",
-      "integrity": "sha512-B0WcPQeY+hillPO0IGsX/MEVUpan5fAWgrBJV7ZVFbK9gcyZ0PsDtPE+2MOOd3XeNlnfyGvaQunW52/8A7FbZw==",
-      "packageJsonSha256": "9184c68093c8d62bd64b1e575abf72622a928882bb014e01429fc37b0f19f240",
-      "rootSignals": [
-        "ios",
-        "spm.config.json"
-      ],
-      "scannedEntryCount": 176,
-      "privacyManifestPaths": [],
-      "boundPrivacyManifestPaths": [],
-      "podspecPaths": [
-        "node_modules/expo-widgets/ios/ExpoWidgets.podspec"
-      ],
-      "xcframeworkPaths": [],
-      "frameworkPaths": [],
-      "nativeBinaryFilePaths": [],
-      "status": "archive_required"
-    },
-    {
       "packageName": "nanoid",
       "packagePath": "node_modules/nanoid",
       "version": "3.3.18",
@@ -2078,6 +2078,30 @@
     }
   ],
   "podspecs": [
+    {
+      "path": "apps/mobile/node_modules/expo-widgets/ios/ExpoWidgets.podspec",
+      "packageName": "expo-widgets",
+      "packageVersion": "57.0.9",
+      "packagePath": "apps/mobile/node_modules/expo-widgets",
+      "bytes": 1933,
+      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a",
+      "status": "source_valid",
+      "format": "ruby_source_text",
+      "dependencies": [
+        {
+          "name": "ExpoModulesCore",
+          "constraints": [],
+          "evidenceType": "source_text_podspec_dependency"
+        },
+        {
+          "name": "ExpoUI",
+          "constraints": [],
+          "evidenceType": "source_text_podspec_dependency"
+        }
+      ],
+      "privacyManifestResourceReferences": [],
+      "privacyManifestResourceBindings": []
+    },
     {
       "path": "node_modules/@expo/dom-webview/ios/ExpoDomWebView.podspec",
       "packageName": "@expo/dom-webview",
@@ -3439,30 +3463,6 @@
       "dependencies": [
         {
           "name": "ExpoModulesCore",
-          "constraints": [],
-          "evidenceType": "source_text_podspec_dependency"
-        }
-      ],
-      "privacyManifestResourceReferences": [],
-      "privacyManifestResourceBindings": []
-    },
-    {
-      "path": "node_modules/expo-widgets/ios/ExpoWidgets.podspec",
-      "packageName": "expo-widgets",
-      "packageVersion": "57.0.9",
-      "packagePath": "node_modules/expo-widgets",
-      "bytes": 1933,
-      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a",
-      "status": "source_valid",
-      "format": "ruby_source_text",
-      "dependencies": [
-        {
-          "name": "ExpoModulesCore",
-          "constraints": [],
-          "evidenceType": "source_text_podspec_dependency"
-        },
-        {
-          "name": "ExpoUI",
           "constraints": [],
           "evidenceType": "source_text_podspec_dependency"
         }

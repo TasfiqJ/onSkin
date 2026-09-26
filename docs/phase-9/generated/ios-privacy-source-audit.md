@@ -14,8 +14,8 @@ resolution, and the release archive require separate verification.
 ## Input bindings
 
 - Baseline: `docs/phase-9/apple-ios-privacy-baseline.json` - `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
-- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `27e94f3d6b830c11bc1f3e200fe77eadab48097e327def0fec392d21715aa598`
-- Package lock: `package-lock.json` - `fb042e29d9e942ae32ab7583128deb1d14e63565bba4296a49cd7f19400121fc`
+- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `65966442f793977e3d0660b1d8c056f8b13070dd971e7dc015c64a26ce5dfb5e`
+- Package lock: `package-lock.json` - `f9c22d2c8571443e0a7b7b908cb01e32e31fefa369f93a41e90971f8432312aa`
 
 ## Summary
 
@@ -32,6 +32,7 @@ resolution, and the release archive require separate verification.
 
 | Package                                        | Version | Status           | Manifests | Podspecs | XCFrameworks | Frameworks | Binary files |
 | ---------------------------------------------- | ------- | ---------------- | --------- | -------- | ------------ | ---------- | ------------ |
+| expo-widgets                                   | 57.0.9  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @expo/dom-webview                              | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @expo/expo-modules-macros-plugin               | 0.6.1   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | @expo/log-box                                  | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
@@ -83,7 +84,6 @@ resolution, and the release archive require separate verification.
 | expo-system-ui                                 | 57.0.2  | archive_required | 1         | 1        | 0            | 0          | 0            |
 | expo-updates-interface                         | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-web-browser                               | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-widgets                                   | 57.0.9  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | nanoid                                         | 3.3.18  | archive_required | 0         | 0        | 0            | 0          | 0            |
 | react-freeze                                   | 1.0.4   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | react-native                                   | 0.86.2  | archive_required | 6         | 81       | 0            | 0          | 0            |
