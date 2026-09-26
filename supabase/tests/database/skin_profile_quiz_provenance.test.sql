@@ -182,9 +182,8 @@ select results_eq(
     ('skin_profiles_delete_own', 'PERMISSIVE', 'DELETE'),
     ('skin_profiles_insert_current_health_consent', 'RESTRICTIVE', 'INSERT'),
     ('skin_profiles_insert_own', 'PERMISSIVE', 'INSERT'),
-    ('skin_profiles_select_own', 'PERMISSIVE', 'SELECT'),
-    ('skin_profiles_update_own', 'PERMISSIVE', 'UPDATE')$$,
-  '0064 preserves the exact owner, deletion, consent, and Apple-session policy set'
+    ('skin_profiles_select_own', 'PERMISSIVE', 'SELECT')$$,
+  'the current history preserves owner reads/inserts/deletes and keeps authenticated updates closed'
 );
 
 create temporary table core01_skin_profiles

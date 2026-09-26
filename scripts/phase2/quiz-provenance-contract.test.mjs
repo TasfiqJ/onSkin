@@ -7,6 +7,14 @@ const migration = readFileSync(
   'supabase/migrations/20260921000075_skin_profile_quiz_contract_successor.sql',
   'utf8',
 );
+const consentGateMigration = readFileSync(
+  'supabase/migrations/20260726000057_skin_profile_consent_gate.sql',
+  'utf8',
+);
+const databaseTest = readFileSync(
+  'supabase/tests/database/skin_profile_quiz_provenance.test.sql',
+  'utf8',
+);
 const review = readFileSync('docs/phase-3/quiz-fto-summary.md', 'utf8');
 
 function constant(name) {
@@ -88,4 +96,19 @@ test('forward constraint is non-validating, atomic, and never upgrades review st
     assert.ok(review.includes(value), `review packet must name ${value}`);
   }
   assert.match(review, /launch-blocked pending exact-hash IP\/legal and clinical review/u);
+});
+
+test('current policy contract keeps the unused authenticated update lane closed', () => {
+  assert.match(
+    consentGateMigration,
+    /drop policy if exists "skin_profiles_update_own" on public\.skin_profiles;[\s\S]*revoke update on table public\.skin_profiles from public, anon, authenticated;/u,
+  );
+  assert.doesNotMatch(
+    databaseTest,
+    /\('skin_profiles_update_own',\s*'PERMISSIVE',\s*'UPDATE'\)/u,
+  );
+  assert.match(
+    databaseTest,
+    /keeps authenticated updates closed/u,
+  );
 });
