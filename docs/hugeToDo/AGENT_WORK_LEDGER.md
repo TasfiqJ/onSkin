@@ -16,9 +16,9 @@ evidence passes.
 | Lane | Task | Owned file surface | State | Integration gate |
 | --- | --- | --- | --- | --- |
 | Root | DB-05 / OPS-07 | DB replay repair, package lock, Phase 9 dependency/privacy evidence | In progress | Full CI replay plus security and quality workflows |
-| auth02_email_change | AUTH-02 prerequisite | Email-change workflow, focused tests, and source evidence | In progress | Root diff review, auth tests, and user-flow verification |
 | native03_notifications | NATIVE-03 prerequisite | Notification lifecycle source, focused tests, and source evidence | In progress | Root diff review, notification tests; credentials/device evidence remains separate |
-| ios11_containment | IOS-11 prerequisite | Release-containment scripts, tests, and source evidence | In progress | Root diff review and containment validation; hosted drill remains separate |
+| share01_cards | SHARE-01 prerequisite | Share-card/share-sheet source, focused tests, and source evidence | In progress | Root diff review, privacy-boundary tests, and user-flow verification |
+| grow01_review_prompt | GROW-01 prerequisite | Review-prompt policy source, focused tests, and source evidence | In progress | Root diff review, policy tests, and user-flow verification |
 
 ## Reviewed integration queue
 
@@ -29,6 +29,8 @@ evidence passes.
 | native02_live_activity | NATIVE-02 prerequisite | `2ca6b0a49` | Root-reviewed; widget lifecycle, extension, and runtime suites passed | macOS/Xcode, signed archive, and physical-device evidence |
 | link01_universal_links | LINK-01 prerequisite | `e4edec404` | Root-reviewed; routing, AASA, CORE-07A, and Phase 8 checks passed | Final domain/AASA deployment, signing, and physical-device evidence |
 | Root | OPS-07 security repair | `ac803cc82` | Audit is clean locally; privacy/source checks passed | Replacement GitHub security and quality workflows after push |
+| auth02_email_change | AUTH-02 prerequisite | `63d82d3dc` | Root-reviewed; focused auth tests and source configuration checks passed | Hosted SMTP/template, delivery, and physical-device evidence |
+| ios11_containment | IOS-11 prerequisite | `f5e67459d` | Root-reviewed after fail-open inventory/identity fixes; 12 store-only and 7 evidence-contract checks passed | Signed staging containment and store-hotfix drill |
 
 ## Coordination rules
 
