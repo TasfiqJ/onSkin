@@ -43,6 +43,21 @@ directDependency.mobilePackage.dependencies['expo-updates'] = '0.0.0-synthetic';
 assert.throws(() => auditStoreOnlyRelease(directDependency), /must not directly depend/);
 console.log('OK direct expo-updates dependency fails closed');
 
+const rootDirectDependency = structuredClone(inputs);
+rootDirectDependency.rootPackage.devDependencies['expo-updates'] = '0.0.0-synthetic';
+assert.throws(() => auditStoreOnlyRelease(rootDirectDependency), /must not directly depend/);
+console.log('OK root expo-updates dependency fails closed');
+
+const dynamicOverride = structuredClone(inputs);
+dynamicOverride.dynamicAppConfigSource += '\nexpo.updates = { enabled: true };\n';
+assert.throws(() => auditStoreOnlyRelease(dynamicOverride), /must not mutate/);
+console.log('OK dynamic app-config updates mutation fails closed');
+
+const topLevelUpdatePolicy = structuredClone(inputs);
+topLevelUpdatePolicy.eas.update = { channel: 'production' };
+assert.throws(() => auditStoreOnlyRelease(topLevelUpdatePolicy), /top-level update policy/);
+console.log('OK top-level EAS update policy fails closed');
+
 const channel = structuredClone(inputs);
 channel.eas.build.production.channel = 'production';
 assert.throws(() => auditStoreOnlyRelease(channel), /must omit channel/);

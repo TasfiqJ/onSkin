@@ -89,6 +89,20 @@ Keep server and database changes backward-compatible with supported binaries.
 The runtime fingerprint is retained for build and migration identity, not OTA
 eligibility.
 
+### IOS-11 retained drill gate
+
+Before IOS-11 can close, copy
+`ios11-release-containment-evidence.template.json` into the selected release
+candidate folder, replace every placeholder from retained evidence, and run
+`node scripts/phase9/ios11-release-containment-contract.mjs --evidence <path>
+--expected-source-sha <S>` in the governed RC evidence chain. The validator
+requires `S` to exist and be an ancestor of the evidence commit. A local
+decision exercise or source audit is insufficient. The retained drill must bind
+the affected build and a distinct store-hotfix build, prove a fail-closed
+staging release halt, confirm the reviewed server containment through
+independent readback, and run the exact affected-flow set on every declared
+supported binary while containment is on.
+
 ## Recovery Paths
 
 - New App Store binary: JavaScript, asset, native, plugin, permission, privacy,

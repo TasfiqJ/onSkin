@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "status": "incomplete-template",
+  "releaseCandidate": {
+    "sourceGitSha": "TBD",
+    "easBuildId": "TBD",
+    "artifactSha256": "TBD",
+    "runtimeFingerprint": "TBD",
+    "appVersion": "TBD",
+    "buildNumber": "TBD"
+  },
+  "releaseHalt": {
+    "environment": "staging",
+    "incidentId": "TBD",
+    "declaredAt": "TBD",
+    "confirmedAt": "TBD",
+    "expansionFrozen": false,
+    "buildSelectionBlocked": false,
+    "submissionBlocked": false,
+    "marketingBlocked": false,
+    "independentReadback": false,
+    "receiptSha256": "TBD"
+  },
+  "serverContainment": {
+    "faultDomain": "TBD",
+    "mechanismId": "TBD",
+    "activatedAt": "TBD",
+    "confirmedAt": "TBD",
+    "reviewedBeforeDrill": false,
+    "failClosed": false,
+    "independentReadback": false,
+    "affectedFlows": ["TBD"],
+    "receiptSha256": "TBD"
+  },
+  "supportedBinaryPolicy": {
+    "inventoryComplete": false,
+    "minimumSupportedBuildNumber": "TBD",
+    "maximumSupportedBuildNumber": "TBD",
+    "supportedBuildNumbers": ["TBD"],
+    "capturedAt": "TBD"
+  },
+  "supportedBinaries": [
+    {
+      "buildNumber": "TBD",
+      "sourceGitSha": "TBD",
+      "easBuildId": "TBD",
+      "artifactSha256": "TBD",
+      "runtimeFingerprint": "TBD",
+      "role": "affected",
+      "containmentActive": false,
+      "noOtaPath": false,
+      "testedFlows": ["TBD"],
+      "result": "TBD",
+      "receiptSha256": "TBD"
+    },
+    {
+      "buildNumber": "TBD",
+      "sourceGitSha": "TBD",
+      "easBuildId": "TBD",
+      "artifactSha256": "TBD",
+      "runtimeFingerprint": "TBD",
+      "role": "hotfix",
+      "containmentActive": false,
+      "noOtaPath": false,
+      "testedFlows": ["TBD"],
+      "result": "TBD",
+      "receiptSha256": "TBD"
+    }
+  ],
+  "hotfix": {
+    "sourceGitSha": "TBD",
+    "easBuildId": "TBD",
+    "artifactSha256": "TBD",
+    "runtimeFingerprint": "TBD",
+    "buildNumber": "TBD",
+    "storeBinaryOnly": false,
+    "otaPublished": false,
+    "testedWithContainmentOn": false,
+    "testedWithContainmentOff": false,
+    "readyForStoreReview": false,
+    "receiptSha256": "TBD"
+  },
+  "review": {
+    "releaseManager": "TBD",
+    "serverOwner": "TBD",
+    "independentReviewer": "TBD",
+    "reviewedAt": "TBD"
+  }
+}
