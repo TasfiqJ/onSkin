@@ -6,7 +6,6 @@ import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'reac
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER } from '@/features/healthConsent/lifecycle';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
-import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ACCOUNT_DELETION_ERASURE_WINDOW_COPY } from '@/features/settings/accountDeletionCopy';
 import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
@@ -558,7 +557,6 @@ export default function YouScreen() {
         });
         return;
       }
-      void requestReviewAfterValue('data_export_success');
     },
     onError: () => {
       const message = dataRightsUserMessage();

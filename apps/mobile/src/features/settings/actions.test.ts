@@ -784,7 +784,7 @@ describe('settings data export', () => {
       'Progress photos stay encrypted here unless you share one. No ads. No data sales.',
     );
     expect(source).not.toContain('Photos stay on your device by default.');
-    expect(source).toContain('data_export_success');
+    expect(source).not.toContain('data_export_success');
     expect(source).not.toContain("Alert.alert('Export unavailable'");
     expect(source).not.toContain("Alert.alert('Export failed'");
   });

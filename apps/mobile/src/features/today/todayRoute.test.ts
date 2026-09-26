@@ -163,6 +163,13 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('completionInserted: result.inserted');
     expect(source).not.toContain('completedBefore: done');
     expect(source).toContain('if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {');
+    expect(source).toContain('reviewMomentEarned = true');
+    expect(source).toContain(
+      "void requestReviewAfterValue('seven_checkoff_days').catch(() => undefined)",
+    );
+    expect(source.indexOf('setCompletionPendingKey(null)')).toBeLessThan(
+      source.indexOf("requestReviewAfterValue('seven_checkoff_days')"),
+    );
     expect(source).toContain(
       'const result = await toggleCompletion(key, today, scheduled, remoteSync)',
     );

@@ -515,6 +515,7 @@ export default function TodayScreen() {
     setCompletionActionFailed(false);
     setCompletionPendingKey(key);
     let persistenceConfirmed = false;
+    let reviewMomentEarned = false;
     try {
       await runCurrentHealthDataOperation(async (lease) => {
         lease.assertCurrent();
@@ -563,8 +564,7 @@ export default function TodayScreen() {
         }
         lease.assertCurrent();
         if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {
-          await requestReviewAfterValue('seven_checkoff_days');
-          lease.assertCurrent();
+          reviewMomentEarned = true;
         }
         await qc.invalidateQueries({ queryKey: ['completions', today] });
         lease.assertCurrent();
@@ -587,6 +587,11 @@ export default function TodayScreen() {
       }
     } finally {
       setCompletionPendingKey(null);
+      // The native request owns a two-second settled-state delay. Do not keep
+      // the completed check-off pending or make progress depend on StoreKit.
+      if (reviewMomentEarned) {
+        void requestReviewAfterValue('seven_checkoff_days').catch(() => undefined);
+      }
     }
   }
 

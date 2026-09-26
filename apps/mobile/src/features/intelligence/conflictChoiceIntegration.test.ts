@@ -70,6 +70,21 @@ describe('conflict choice integration contracts', () => {
     expect(route).not.toContain('onConflict:');
   });
 
+  it('requests a nonblocking review only after an exact reviewed choice is durable and dismissed', () => {
+    const route = readSource('app/conflict/[ruleId].tsx');
+    const saveIndex = route.indexOf('const conflictChoices = await recordChoice(conflict, choice)');
+    const dismissIndex = route.indexOf('onDismiss()', saveIndex);
+    const reviewIndex = route.indexOf(
+      "void requestReviewAfterValue('first_reviewed_conflict').catch(() => undefined)",
+      dismissIndex,
+    );
+
+    expect(saveIndex).toBeGreaterThan(-1);
+    expect(dismissIndex).toBeGreaterThan(saveIndex);
+    expect(reviewIndex).toBeGreaterThan(dismissIndex);
+    expect(route).not.toContain("await requestReviewAfterValue('first_reviewed_conflict')");
+  });
+
   it('journals shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {
     const mutations = readSource('features/shelf/mutations.ts');
     const store = readSource('features/shelf/store.ts');

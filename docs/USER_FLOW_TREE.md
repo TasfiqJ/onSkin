@@ -703,6 +703,13 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
   - Action: Complete one AM step, then one of several PM steps, and open Streak & adherence.
   - Expected result: Step check-offs persist, but neither a partial AM nor partial PM routine creates a completed night, advances the streak, earns a cycle milestone, or triggers the seven-day review moment. The day qualifies exactly once only after every currently projected PM or recovery step is durably complete.
   - Evidence: Before/after Today screenshots, adherence screen snapshot, private completion-envelope snapshot, analytics/haptic log, and relaunch verification.
+- Branch: governed App Store review request after durable value
+  - Priority: Important
+  - Automate later: Yes
+  - Action: On a supported iPhone development build, reach the seventh durable completed routine day and separately save an exact reviewed conflict choice. Repeat with a partial or failed completion, failed conflict save, data export, payment, disabled flag, malformed or future prompt history, the same app version, cooldown/cap exhaustion, simultaneous qualifying outcomes, backgrounding, consent withdrawal, and account switch. Dismiss the system sheet where it appears and repeat with VoiceOver.
+  - Expected result: Only the two successful governed value moments may request StoreKit, after the saved action finishes and a two-second settled-state pause. At most one attempt is reserved per app version, no more than three in 365 days, and attempts remain at least 30 days apart. Every denial branch stays silent. StoreKit display or dismissal never blocks, reverses, gates, rewards, or pressures the completed product action, and focus returns safely when the system sheet closes.
+  - Evidence: Exact build/version, screen recording or screenshots, sanitized logs, encrypted attempt-state snapshots, simultaneous-call trace, account/consent-boundary trace, VoiceOver focus notes, and focused source tests. StoreKit nondisplay is an allowed system outcome and must not be misreported as proof that the request was never made.
+  - Open external evidence: Source tests pass, but Windows and Expo web cannot render the native StoreKit review sheet; signed iOS and physical-device verification remain required.
 - Branch: completion storage unreadable or write unconfirmed
   - Priority: Critical
   - Automate later: Yes

@@ -1,10 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { requestReviewAfterValue } from './prompt';
+import { REVIEW_PROMPT_SETTLE_DELAY_MS, requestReviewAfterValue } from './prompt';
 
 const mocks = vi.hoisted(() => ({
   healthGeneration: 1,
   healthOpen: true,
+  appState: 'active',
+  appVersion: '1.4.0',
+  backgroundDuringUpdate: false,
   storage: new Map<string, string>(),
   hasAction: vi.fn(async () => true),
   requestReview: vi.fn(async () => undefined),
@@ -46,6 +49,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
         const next = updater(mocks.storage.get(key) ?? null);
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
+        if (mocks.backgroundDuringUpdate) mocks.appState = 'background';
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -57,6 +61,20 @@ vi.mock('@/lib/storage/privateKV', () => ({
 vi.mock('expo-store-review', () => ({
   hasAction: mocks.hasAction,
   requestReview: mocks.requestReview,
+}));
+
+vi.mock('expo-application', () => ({
+  get nativeApplicationVersion() {
+    return mocks.appVersion;
+  },
+}));
+
+vi.mock('react-native', () => ({
+  AppState: {
+    get currentState() {
+      return mocks.appState;
+    },
+  },
 }));
 
 vi.mock('@/lib/analytics/track', () => ({
@@ -71,9 +89,14 @@ const KEY = 'layerwell.reviewPrompt.v1';
 const NOW = new Date('2026-07-04T12:00:00.000Z');
 
 describe('review prompt local history', () => {
+  let timerSpy: ReturnType<typeof vi.spyOn>;
+
   beforeEach(() => {
     mocks.healthGeneration = 1;
     mocks.healthOpen = true;
+    mocks.appState = 'active';
+    mocks.appVersion = '1.4.0';
+    mocks.backgroundDuringUpdate = false;
     mocks.storage.clear();
     mocks.hasAction.mockClear();
     mocks.hasAction.mockResolvedValue(true);
@@ -82,6 +105,14 @@ describe('review prompt local history', () => {
     mocks.setShouldReject = false;
     mocks.tails.clear();
     mocks.track.mockClear();
+    timerSpy = vi.spyOn(globalThis, 'setTimeout').mockImplementation((callback) => {
+      if (typeof callback === 'function') queueMicrotask(callback);
+      return 1 as unknown as ReturnType<typeof setTimeout>;
+    });
+  });
+
+  afterEach(() => {
+    timerSpy.mockRestore();
   });
 
   it('preserves unreadable local history and suppresses the native prompt', async () => {
@@ -153,8 +184,8 @@ describe('review prompt local history', () => {
       moment: 'first_reviewed_conflict',
     });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      version: 1,
-      state: { attemptedAt: [NOW.toISOString()] },
+      version: 2,
+      state: { attemptedAt: [NOW.toISOString()], lastVersionPrompted: '1.4.0' },
     });
   });
 
@@ -166,6 +197,46 @@ describe('review prompt local history', () => {
     expect(mocks.requestReview).not.toHaveBeenCalled();
     expect(mocks.track).not.toHaveBeenCalledWith('review_prompt_attempted', expect.anything());
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('migrates canonical legacy history without losing cooldown or cap evidence', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        version: 1,
+        state: { attemptedAt: ['2026-06-20T12:00:00.000Z'] },
+      }),
+    );
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.hasAction).not.toHaveBeenCalled();
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_skipped', {
+      moment: 'seven_checkoff_days',
+      reason: 'cooldown',
+    });
+  });
+
+  it('starts exact version history on the first eligible post-legacy attempt', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        version: 1,
+        state: { attemptedAt: ['2026-05-01T12:00:00.000Z'] },
+      }),
+    );
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.requestReview).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      version: 2,
+      state: {
+        attemptedAt: ['2026-05-01T12:00:00.000Z', NOW.toISOString()],
+        lastVersionPrompted: '1.4.0',
+      },
+    });
   });
 
   it('drops invalid, duplicate, and future-dated attempts before policy reads them', async () => {
@@ -183,10 +254,10 @@ describe('review prompt local history', () => {
 
     await requestReviewAfterValue('seven_checkoff_days', NOW);
 
-    expect(mocks.requestReview).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      version: 1,
-      state: { attemptedAt: ['2026-06-01T12:00:00.000Z', NOW.toISOString()] },
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toContain('not-a-date');
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
+      moment: 'seven_checkoff_days',
     });
   });
 
@@ -197,13 +268,16 @@ describe('review prompt local history', () => {
 
     expect(mocks.requestReview).toHaveBeenCalledTimes(1);
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      version: 1,
-      state: { attemptedAt: [NOW.toISOString()] },
+      version: 2,
+      state: { attemptedAt: [NOW.toISOString()], lastVersionPrompted: '1.4.0' },
     });
   });
 
   it('preserves future-version attempt history and never invokes native review', async () => {
-    const original = JSON.stringify({ version: 2, state: { attemptedAt: [] } });
+    const original = JSON.stringify({
+      version: 3,
+      state: { attemptedAt: [], lastVersionPrompted: null },
+    });
     mocks.storage.set(KEY, original);
 
     await requestReviewAfterValue('seven_checkoff_days', NOW);
@@ -211,6 +285,83 @@ describe('review prompt local history', () => {
     expect(mocks.hasAction).not.toHaveBeenCalled();
     expect(mocks.requestReview).not.toHaveBeenCalled();
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('preserves future-dated current history and never clears suppression evidence', async () => {
+    const original = JSON.stringify({
+      version: 2,
+      state: {
+        attemptedAt: ['2026-08-01T12:00:00.000Z'],
+        lastVersionPrompted: '1.3.0',
+      },
+    });
+    mocks.storage.set(KEY, original);
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.hasAction).not.toHaveBeenCalled();
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('suppresses repeats for the same app version before checking StoreKit', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        version: 2,
+        state: {
+          attemptedAt: ['2026-05-01T12:00:00.000Z'],
+          lastVersionPrompted: '1.4.0',
+        },
+      }),
+    );
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.hasAction).not.toHaveBeenCalled();
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_skipped', {
+      moment: 'seven_checkoff_days',
+      reason: 'already_prompted_for_version',
+    });
+  });
+
+  it('fails closed when the native app version is unavailable', async () => {
+    mocks.appVersion = '';
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.hasAction).not.toHaveBeenCalled();
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_skipped', {
+      moment: 'seven_checkoff_days',
+      reason: 'version_unavailable',
+    });
+  });
+
+  it('waits for a natural pause and stays quiet if the app backgrounds', async () => {
+    mocks.appState = 'background';
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(timerSpy).toHaveBeenCalledWith(expect.any(Function), REVIEW_PROMPT_SETTLE_DELAY_MS);
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('never invokes StoreKit if the app backgrounds while reserving the attempt', async () => {
+    mocks.backgroundDuringUpdate = true;
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      version: 2,
+      state: { attemptedAt: [NOW.toISOString()], lastVersionPrompted: '1.4.0' },
+    });
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
+      moment: 'seven_checkoff_days',
+    });
   });
 
   it('never invokes the native prompt when withdrawal lands during availability', async () => {

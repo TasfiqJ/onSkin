@@ -1,5 +1,7 @@
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import * as Application from 'expo-application';
 import * as StoreReview from 'expo-store-review';
+import { AppState } from 'react-native';
 
 import { track } from '@/lib/analytics/track';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
@@ -13,7 +15,12 @@ import {
 } from './policy';
 
 const REVIEW_PROMPT_KEY = 'layerwell.reviewPrompt.v1';
-const SCHEMA_VERSION = 1 as const;
+const SCHEMA_VERSION = 2 as const;
+const PREVIOUS_SCHEMA_VERSION = 1 as const;
+export const REVIEW_PROMPT_SETTLE_DELAY_MS = 2_000;
+const MAX_APP_VERSION_LENGTH = 128;
+const APP_VERSION_PATTERN = /^[\x21-\x7E]+$/u;
+const LEGACY_UNKNOWN_APP_VERSION = 'legacy-v1-unknown';
 
 export const REVIEW_PROMPT_STATE_INVALID = 'REVIEW_PROMPT_STATE_INVALID';
 export const REVIEW_PROMPT_STATE_UNSUPPORTED_VERSION = 'REVIEW_PROMPT_STATE_UNSUPPORTED_VERSION';
@@ -23,26 +30,29 @@ type ReviewPromptEnvelope = {
   state: ReviewPromptState;
 };
 
+type PreviousReviewPromptEnvelope = {
+  version: typeof PREVIOUS_SCHEMA_VERSION;
+  state: { attemptedAt: string[] };
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function normalizeState(value: unknown, now: Date): ReviewPromptState | null {
+function normalizedAttemptHistory(value: unknown, now: Date): string[] | null {
   if (!isRecord(value)) return null;
   const attemptedAt = Array.isArray(value.attemptedAt) ? value.attemptedAt : [];
   const nowMs = now.getTime();
-  return {
-    attemptedAt: [
-      ...new Set(
-        attemptedAt
-          .filter((item): item is string => typeof item === 'string')
-          .map((item) => new Date(item))
-          .filter((date) => !Number.isNaN(date.getTime()) && date.getTime() <= nowMs)
-          .sort((a, b) => a.getTime() - b.getTime())
-          .map((date) => date.toISOString()),
-      ),
-    ],
-  };
+  return [
+    ...new Set(
+      attemptedAt
+        .filter((item): item is string => typeof item === 'string')
+        .map((item) => new Date(item))
+        .filter((date) => !Number.isNaN(date.getTime()) && date.getTime() <= nowMs)
+        .sort((a, b) => a.getTime() - b.getTime())
+        .map((date) => date.toISOString()),
+    ),
+  ];
 }
 
 function hasOwn(value: Record<string, unknown>, key: string): boolean {
@@ -52,6 +62,34 @@ function hasOwn(value: Record<string, unknown>, key: string): boolean {
 function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
   const keys = Object.keys(value);
   return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
+}
+
+function currentAppVersion(): string | null {
+  const candidate = Application.nativeApplicationVersion?.trim() ?? '';
+  return candidate.length > 0 &&
+    candidate.length <= MAX_APP_VERSION_LENGTH &&
+    APP_VERSION_PATTERN.test(candidate)
+    ? candidate
+    : null;
+}
+
+function migratedState(value: unknown, now: Date): ReviewPromptState {
+  const attemptedAt = normalizedAttemptHistory(value, now);
+  if (
+    !attemptedAt ||
+    !isRecord(value) ||
+    !hasExactKeys(value, ['attemptedAt']) ||
+    JSON.stringify(attemptedAt) !== JSON.stringify(value.attemptedAt)
+  ) {
+    throw new Error(REVIEW_PROMPT_STATE_INVALID);
+  }
+  // Legacy attempts have no version metadata. Keep that uncertainty explicit;
+  // their timestamps still enforce cooldown/cap, while the next accepted
+  // attempt starts the exact per-version contract.
+  return {
+    attemptedAt,
+    lastVersionPrompted: attemptedAt.length > 0 ? LEGACY_UNKNOWN_APP_VERSION : null,
+  };
 }
 
 function decodeState(raw: string, now: Date): ReviewPromptState {
@@ -64,6 +102,12 @@ function decodeState(raw: string, now: Date): ReviewPromptState {
   if (!isRecord(parsed)) throw new Error(REVIEW_PROMPT_STATE_INVALID);
 
   if (hasOwn(parsed, 'version')) {
+    if (parsed.version === PREVIOUS_SCHEMA_VERSION) {
+      if (!hasExactKeys(parsed, ['version', 'state']) || !isRecord(parsed.state)) {
+        throw new Error(REVIEW_PROMPT_STATE_INVALID);
+      }
+      return migratedState((parsed as unknown as PreviousReviewPromptEnvelope).state, now);
+    }
     if (parsed.version !== SCHEMA_VERSION) {
       if (
         typeof parsed.version === 'number' &&
@@ -77,20 +121,26 @@ function decodeState(raw: string, now: Date): ReviewPromptState {
     if (!hasExactKeys(parsed, ['version', 'state']) || !isRecord(parsed.state)) {
       throw new Error(REVIEW_PROMPT_STATE_INVALID);
     }
-    const normalized = normalizeState(parsed.state, now);
+    const normalized = normalizedAttemptHistory(parsed.state, now);
+    const lastVersionPrompted = parsed.state.lastVersionPrompted;
     if (
       !normalized ||
-      !hasExactKeys(parsed.state, ['attemptedAt']) ||
-      JSON.stringify(normalized) !== JSON.stringify(parsed.state)
+      !hasExactKeys(parsed.state, ['attemptedAt', 'lastVersionPrompted']) ||
+      JSON.stringify(normalized) !== JSON.stringify(parsed.state.attemptedAt) ||
+      !(
+        lastVersionPrompted === null ||
+        (typeof lastVersionPrompted === 'string' &&
+          lastVersionPrompted.length > 0 &&
+          lastVersionPrompted.length <= MAX_APP_VERSION_LENGTH &&
+          APP_VERSION_PATTERN.test(lastVersionPrompted))
+      )
     ) {
       throw new Error(REVIEW_PROMPT_STATE_INVALID);
     }
-    return normalized;
+    return { attemptedAt: normalized, lastVersionPrompted };
   }
 
-  const normalized = normalizeState(parsed, now);
-  if (!normalized) throw new Error(REVIEW_PROMPT_STATE_INVALID);
-  return normalized;
+  return migratedState(parsed, now);
 }
 
 function encodeState(state: ReviewPromptState): string {
@@ -100,26 +150,36 @@ function encodeState(state: ReviewPromptState): string {
 async function loadState(now: Date): Promise<ReviewPromptState | null> {
   try {
     const raw = await getPrivateItem(REVIEW_PROMPT_KEY);
-    return raw === null ? { attemptedAt: [] } : decodeState(raw, now);
+    return raw === null
+      ? { attemptedAt: [], lastVersionPrompted: null }
+      : decodeState(raw, now);
   } catch {
     return null;
   }
 }
 
-async function reserveReviewAttempt(moment: ReviewValueMoment, now: Date): Promise<boolean> {
+async function reserveReviewAttempt(
+  moment: ReviewValueMoment,
+  appVersion: string,
+  now: Date,
+): Promise<boolean> {
   let reserved = false;
   try {
     await updatePrivateItem(REVIEW_PROMPT_KEY, (current) => {
-      const state = current === null ? { attemptedAt: [] } : decodeState(current, now);
+      const state =
+        current === null
+          ? { attemptedAt: [], lastVersionPrompted: null }
+          : decodeState(current, now);
       const decision = canRequestReviewPrompt({
         enabled: env.phase8ReviewPromptEnabled,
         moment,
+        appVersion,
         state,
         now,
       });
       if (!decision.ok) return current;
       reserved = true;
-      return encodeState(recordReviewAttempt(state, now));
+      return encodeState(recordReviewAttempt(state, appVersion, now));
     });
   } catch {
     return false;
@@ -132,6 +192,7 @@ export async function requestReviewAfterValue(
   now: Date = new Date(),
 ): Promise<void> {
   await runCurrentHealthDataOperation(async (lease) => {
+    const appVersion = currentAppVersion();
     const state = await loadState(now);
     lease.assertCurrent();
     if (!state) {
@@ -141,6 +202,7 @@ export async function requestReviewAfterValue(
     const decision = canRequestReviewPrompt({
       enabled: env.phase8ReviewPromptEnabled,
       moment,
+      appVersion,
       state,
       now,
     });
@@ -163,13 +225,27 @@ export async function requestReviewAfterValue(
       return;
     }
 
+    // Apple recommends a natural pause after a completed task rather than a
+    // prompt directly in response to the user's tap. Recheck account and app
+    // activity after the pause; backgrounded or withdrawn sessions stay quiet.
+    await new Promise<void>((resolve) => setTimeout(resolve, REVIEW_PROMPT_SETTLE_DELAY_MS));
+    lease.assertCurrent();
+    if (AppState.currentState !== 'active' || !appVersion) {
+      track('review_prompt_unavailable', { moment });
+      return;
+    }
+
     // Reserve the attempt durably before invoking the native prompt. This keeps
     // simultaneous callers and a crash after native handoff from double-prompting.
-    if (!(await reserveReviewAttempt(moment, now))) {
+    if (!(await reserveReviewAttempt(moment, appVersion, now))) {
       lease.assertCurrent();
       return;
     }
     lease.assertCurrent();
+    if (AppState.currentState !== 'active') {
+      track('review_prompt_unavailable', { moment });
+      return;
+    }
 
     track('review_prompt_attempted', { moment });
     lease.assertCurrent();

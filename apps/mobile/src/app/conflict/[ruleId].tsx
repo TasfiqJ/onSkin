@@ -27,6 +27,7 @@ import {
   useShelf,
   type ShelfData,
 } from '@/features/shelf/useShelf';
+import { requestReviewAfterValue } from '@/features/review/prompt';
 import {
   conflictCheckAccess,
   loadFreeConflictCheckRuleIds,
@@ -500,6 +501,10 @@ function StandardBody({
         current ? applyConflictChoicesToShelfData(current, conflictChoices) : current,
       );
       onDismiss();
+      // This is a genuine completed value moment: a reviewed, exact-hash
+      // conflict choice is durable and the user has returned to their shelf.
+      // StoreKit remains nonblocking and applies its own settled-state delay.
+      void requestReviewAfterValue('first_reviewed_conflict').catch(() => undefined);
     } catch {
       setSaveFailed(true);
     } finally {
