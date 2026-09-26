@@ -30,7 +30,7 @@ const migrationNames = (await readdir(migrationsDir))
 test('DB05 reset source count and latest version bind the current chain', () => {
   assert.equal(migrationNames.length, 93);
   assert.equal(migrationNames.at(-1)?.slice(0, 14), '20260926000077');
-  assert.match(source, /const EXPECTED_MIGRATION_COUNT = 92;/u);
+  assert.match(source, /const EXPECTED_MIGRATION_COUNT = 93;/u);
   assert.match(source, /const EXPECTED_LATEST_MIGRATION = '20260926000077';/u);
 });
 
@@ -46,7 +46,10 @@ test('0072 commerce rehearsal uses its exact migration, then restores 0077 for h
 });
 
 test('the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist', () => {
-  assert.match(source, /'20260921000073,20260921000074,20260921000075'/u);
+  assert.match(
+    source,
+    /'20260921000073,20260921000074,20260921000075,20260921000076'/u,
+  );
   assert.match(source, /laterRehearsalMigrationNames\.map\(\(name\) => name\.slice\(0, 14\)\)/u);
   const withholdLater = source.indexOf('await rename(migration.installed, migration.withheld);');
   const start = source.indexOf("await runLocalCli('start isolated credential-free stack'");

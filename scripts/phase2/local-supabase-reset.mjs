@@ -35,7 +35,7 @@ import {
 } from './database-types-contract-lib.mjs';
 
 const PINNED_CLI_VERSION = '2.117.0';
-const EXPECTED_MIGRATION_COUNT = 92;
+const EXPECTED_MIGRATION_COUNT = 93;
 const EXPECTED_LATEST_MIGRATION = '20260926000077';
 const COMMERCE_UPGRADE_MIGRATION = '20260729000072';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
@@ -169,7 +169,7 @@ const laterRehearsalMigrationNames = migrationFiles.filter((name) => {
 });
 if (
   laterRehearsalMigrationNames.map((name) => name.slice(0, 14)).join(',') !==
-  '20260921000073,20260921000074,20260921000075'
+  '20260921000073,20260921000074,20260921000075,20260921000076'
 ) {
   throw new Error('The post-0072 rehearsal migration inventory changed without review.');
 }
