@@ -2,6 +2,7 @@
 
 Date: 2026-07-16
 Updated: 2026-08-08 for Expo SDK 57 and `expo-widgets` 57.0.9
+Updated: 2026-09-26 to harden first-use cross-process lock creation
 
 Status: `in_progress` native source candidate. The Layerwell lifecycle is
 implemented and statically/model-tested in source, but interactive publication
@@ -97,7 +98,11 @@ finding and requires a new hash review.
   authority; it remains only for generic/derived presentation compatibility.
   Cross-process access uses a permanent coordination file with bounded
   nonblocking `flock`, SQLite `BEGIN IMMEDIATE`, full synchronous writes,
-  rollback journaling, secure deletion, and file protection.
+  rollback journaling, secure deletion, and file protection. First-use lock
+  creation tolerates the app and extension racing to create the same path; the
+  losing process proceeds to `flock` only after verifying that the winner's
+  non-directory path exists, avoiding a harmless initialization race
+  being misclassified as storage failure.
 - **ABA-resistant ownership.** A private opaque owner generation is paired with
   a rotating opaque authority nonce. Activation, publication, outbox reads,
   reconciliation, and cleanup use exact authority receipts rather than a

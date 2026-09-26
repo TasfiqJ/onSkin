@@ -77,8 +77,9 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
     priorPatched: [
       '486041f38b7b600b4d2e4b40be03cfa11994d85048ead09751d24735ccdea2a2',
       '47a9ffdfbc63c7ecaa477df6e3d7ff67c57572333d8b608d4e74a39e6884a83c',
+      'b688c74b340c6ec36a38602d5466e57f1723f8fee5f43abd12a45e78f24959c4',
     ],
-    patched: 'b688c74b340c6ec36a38602d5466e57f1723f8fee5f43abd12a45e78f24959c4',
+    patched: 'b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/TimelineProvider.swift',

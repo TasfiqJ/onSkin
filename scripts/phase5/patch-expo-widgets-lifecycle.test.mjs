@@ -197,7 +197,7 @@ test('classifies only explicitly reviewed prior patch generations as upgradeable
     assert.equal(classifyExpoWidgetsPatchTarget(descriptor, descriptor.patched), 'patched');
     assert.equal(classifyExpoWidgetsPatchTarget(descriptor, '0'.repeat(64)), null);
   }
-  assert.equal(upgradeable, 7);
+  assert.equal(upgradeable, 8);
 });
 
 test('rejects payload or installed target byte drift before mutation', async (t) => {

@@ -110,10 +110,19 @@ private final class LayerwellStoreLock {
   init(url: URL) throws {
     let manager = FileManager.default
     if !manager.fileExists(atPath: url.path) {
-      guard manager.createFile(
+      let created = manager.createFile(
         atPath: url.path,
         contents: Data(),
         attributes: [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication]
+      )
+      // The app and extension can both be the first process to initialize the
+      // permanent lock file. A losing createFile call is harmless when the
+      // winner's non-directory path is now present; the flock below is the actual
+      // cross-process authority.
+      var isDirectory: ObjCBool = false
+      guard created || (
+        manager.fileExists(atPath: url.path, isDirectory: &isDirectory) &&
+        !isDirectory.boolValue
       ) else {
         throw LayerwellWidgetLifecycleError.storage
       }
