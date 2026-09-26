@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  92::bigint,
-  'all 92 repository migrations are recorded'
+  93::bigint,
+  'all 93 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260921000076'::text,
-  'migration history reaches the current quiz-contract successor'
+  '20260926000077'::text,
+  'migration history reaches the current API-access fence repair'
 );
 
 select is(
@@ -49,8 +49,8 @@ select is(
     where namespace.nspname = 'public'
       and relation.relkind in ('r', 'p')
   ),
-  82::bigint,
-  'the migrated public schema has exactly 82 tables'
+  91::bigint,
+  'the migrated public schema has exactly 91 tables'
 );
 
 select is(
@@ -62,7 +62,7 @@ select is(
       and relation.relkind in ('r', 'p')
       and relation.relrowsecurity
   ),
-  82::bigint,
+  91::bigint,
   'row level security is enabled on every public table'
 );
 

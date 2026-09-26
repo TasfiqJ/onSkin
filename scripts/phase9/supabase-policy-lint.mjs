@@ -129,7 +129,6 @@ const clientCallableDefiners = new Set([
   'account_access_allowed()',
   'account_deletion_write_allowed()',
   'account_write_allowed()',
-  'apply_conflict_choice_outbox_batch(jsonb)',
   'apply_notification_delivery_outbox_batch(jsonb)',
   'apply_notification_preferences_outbox_batch(jsonb)',
   'apply_photo_delete_outbox_batch(jsonb)',

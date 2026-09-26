@@ -71,7 +71,7 @@ select is(
      where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
   ),
-  3::bigint,
+  2::bigint,
   'both Ask grant predecessors and the current successor are retained'
 );
 

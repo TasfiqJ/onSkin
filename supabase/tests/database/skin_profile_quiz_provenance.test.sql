@@ -7,13 +7,13 @@ select plan(48);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  92::bigint,
-  'CORE-01 runs against the exact 92-migration source history'
+  93::bigint,
+  'CORE-01 runs against the exact 93-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260921000076'::text,
+  '20260926000077'::text,
   'the migration history includes the exact quiz-provenance successor'
 );
 
@@ -180,6 +180,7 @@ select results_eq(
     ('apple_auth_read_barrier', 'RESTRICTIVE', 'SELECT'),
     ('health_processing_read_fence', 'RESTRICTIVE', 'SELECT'),
     ('skin_profiles_delete_own', 'PERMISSIVE', 'DELETE'),
+    ('skin_profiles_insert_current_health_consent', 'RESTRICTIVE', 'INSERT'),
     ('skin_profiles_insert_own', 'PERMISSIVE', 'INSERT'),
     ('skin_profiles_select_own', 'PERMISSIVE', 'SELECT'),
     ('skin_profiles_update_own', 'PERMISSIVE', 'UPDATE')$$,

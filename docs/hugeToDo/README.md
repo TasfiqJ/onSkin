@@ -206,14 +206,14 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260921000076`; the current CAT-03 pgTAP source plan contains 102
+head `20260926000077`; the current CAT-03 pgTAP source plan contains 102
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, hosted
-governed full-chain evidence through `0076`, current signed database readback,
+governed full-chain evidence through `0077`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and
 no Apple, legal, product-quality, market, or revenue outcome is implied. The
 exact disposable local `0072` gate historically passed, including CAT-03 99/99 within the
@@ -781,8 +781,12 @@ migrations through `20260729000072`. `0074` stages corrected draft-only Ask
 consent hashes without changing historical tuples; `0075` adds a versioned,
 launch-blocked quiz provenance successor; and `0076` repairs the statement-time
 comparison for current consent without relaxing the future-date boundary.
-None supplies professional review or release approval. The current source tree
-contains 92 migrations through `20260921000076` and has no clean full-chain
+Forward migration `0077` restores the exact Apple-session account fence on both
+consent helpers, removes runtime execution from the retired conflict-choice RPC,
+and reasserts that the catalog-operator login cannot execute functions outside
+its dedicated gateway schema. None supplies professional review or release
+approval. The current source tree contains 93 migrations through
+`20260926000077` and has no clean full-chain
 replay evidence. Exact
 Supabase CLI `2.117.0` is pinned for a current-chain local replay trial after
 the old CLI's concurrent-index-drop incompatibility; it does not authorize
@@ -790,12 +794,14 @@ staging deployment or establish current generated-type parity.
 
 The 2026-09-21 DB-05 CI run at clean commit `aabe182a7` applied the current
 92-migration chain, completed the forward-upgrade rehearsals and two resets,
-then failed nine assertions across seven files in the 18-file structural
-pgTAP suite. The consent-lifecycle and commerce-zero-admission files passed;
-Apple session fencing, catalog/clinical function access, schema and policy
-expectations, staging-evidence count, and a quiz test plan still require
-diagnosis or repair. This is diagnostic progress, not a passing current-chain
-DB-05, DB-08 type-parity, hosted, or release gate.
+then failed nine assertions across seven files in the 18-file structural pgTAP
+suite. The failures were reduced to four access-control defects and five stale
+contract expectations. Migration `0077` and the updated current-head contracts
+are the source-level repair candidate; focused source contracts, staging
+evidence tests, policy lint, and generated source-worklist checks pass. A clean
+93-migration PostgreSQL replay is still required before DB-05 can close. This is
+diagnostic and source-candidate progress, not a passing current-chain DB-05,
+DB-08 type-parity, hosted, or release gate.
 
 On 2026-08-05, `npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at
 clean commit `57da25f63` against the complete 71-migration chain through
@@ -824,13 +830,13 @@ all 71 migrations through `20260729000072`. Canonical local generation and the
 checked-in repository artifact matched at 6,770 lines with SHA-256
 `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
 This closed repository-versus-clean-local generated-type drift only for that
-historical 71-migration chain. It does not cover current head `0076`; DB-08
+historical 71-migration chain. It does not cover current head `0077`; DB-08
 remains `in_progress` because current-chain generation and hosted three-way
 repository/local/linked parity are absent.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by DB-05
-and `ACCT-03`. Its current fresh-only source inventory binds all 92 migrations
-through `0076` and all 17 Edge functions. The runner stops before project
+and `ACCT-03`. Its current fresh-only source inventory binds all 93 migrations
+through `0077` and all 17 Edge functions. The runner stops before project
 linking or mutation with `DB06_CURRENT_CHAIN_REPLAY_REQUIRED` until clean
 current-chain DB-05 replay, schema inventory, and generated-type parity are
 reviewed. Its eventual hosted procedure requires an active traffic/provider

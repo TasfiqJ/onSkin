@@ -28,13 +28,13 @@ const migrationNames = (await readdir(migrationsDir))
   .sort((a, b) => a.localeCompare(b));
 
 test('DB05 reset source count and latest version bind the current chain', () => {
-  assert.equal(migrationNames.length, 92);
-  assert.equal(migrationNames.at(-1)?.slice(0, 14), '20260921000076');
+  assert.equal(migrationNames.length, 93);
+  assert.equal(migrationNames.at(-1)?.slice(0, 14), '20260926000077');
   assert.match(source, /const EXPECTED_MIGRATION_COUNT = 92;/u);
-  assert.match(source, /const EXPECTED_LATEST_MIGRATION = '20260921000076';/u);
+  assert.match(source, /const EXPECTED_LATEST_MIGRATION = '20260926000077';/u);
 });
 
-test('0072 commerce rehearsal uses its exact migration, then restores 0076 for head resets', () => {
+test('0072 commerce rehearsal uses its exact migration, then restores 0077 for head resets', () => {
   assert.match(source, /const COMMERCE_UPGRADE_MIGRATION = '20260729000072';/u);
   assert.match(source, /await rename\(sandboxCommerceMigration, withheldCommerceMigration\);/u);
   assert.match(source, /await rename\(withheldCommerceMigration, sandboxCommerceMigration\);/u);

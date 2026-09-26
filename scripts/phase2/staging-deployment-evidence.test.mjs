@@ -260,12 +260,12 @@ function cutoverFixture(overrides = {}, trafficFreezeOverrides = {}) {
 test('current reviewed source inventory is deterministic and exact', () => {
   assertCurrentSourceContract(source);
   const second = buildSourceInventory(repoRoot);
-  assert.equal(source.migrationCount, 92);
-  assert.equal(source.latestMigrationId, '20260921000076');
+  assert.equal(source.migrationCount, 93);
+  assert.equal(source.latestMigrationId, '20260926000077');
   assert.equal(source.functionCount, 17);
   assert.equal(source.migrationSetSha256, second.migrationSetSha256);
   assert.equal(source.functionSetSha256, second.functionSetSha256);
-  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 92);
+  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 93);
 });
 
 test('candidate CLI cannot reach staging before current-chain replay and type parity', () => {
@@ -1007,7 +1007,7 @@ function passManifestInput(steps) {
       },
     },
     after: {
-      migrationCount: 92,
+      migrationCount: 93,
       migrationIds: source.migrations.map(({ id }) => id),
       functions,
       schema: afterSchema,
