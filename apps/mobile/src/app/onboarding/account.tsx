@@ -107,6 +107,9 @@ export default function AccountScreen() {
 
   async function requestCode(resend = false) {
     const normalizedEmail = email.trim();
+    // Start the client validity window when dispatch begins, not when a slow
+    // network response returns. The provider remains the final expiry authority.
+    const requestStartedAtMs = Date.now();
     if (resend) {
       if (!challenge || getEmailCodeChallengeState(challenge, Date.now()).resendSeconds > 0) return;
       if (!accountUpgradeE2EFixture) await resendEmailOtp();
@@ -117,11 +120,10 @@ export default function AccountScreen() {
         return;
       }
     }
-    const sentAtMs = Date.now();
     setEmail(normalizedEmail);
     setCode('');
-    setChallenge(startEmailCodeChallenge(sentAtMs));
-    setNowMs(sentAtMs);
+    setChallenge(startEmailCodeChallenge(requestStartedAtMs));
+    setNowMs(Date.now());
     setStage('code');
   }
 
@@ -276,7 +278,7 @@ export default function AccountScreen() {
           ) : null}
 
           {error ? (
-            <Text variant="bodySm" tone="clay" className="mt-4">
+            <Text accessibilityRole="alert" variant="bodySm" tone="clay" className="mt-4">
               {error}
             </Text>
           ) : null}

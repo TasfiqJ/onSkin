@@ -49,10 +49,18 @@ enable_manual_linking = true
 
 [auth.email]
 enable_signup = true
+# Keep ordinary email changes protected at both old and new mailboxes. Supabase
+# handles the documented anonymous conversion separately because no old email
+# identity exists; the app only enters that exact anonymous update path.
+double_confirm_changes = true
 # OTP codes over magic links for mobile reliability (docs/01 §1).
 enable_confirmations = false
 otp_length = 6
 otp_expiry = 3600
+
+[auth.email.template.email_change]
+subject = "Your Layerwell verification code"
+content_path = "./supabase/templates/email_change.html"
 
 # Social providers — enabled + configured with secrets in the dashboard.
 # BLOCKED: B-APPLE / B-GOOGLE.

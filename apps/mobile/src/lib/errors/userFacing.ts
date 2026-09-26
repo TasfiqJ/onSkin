@@ -21,7 +21,7 @@ const AUTH_PATTERNS: readonly KnownErrorPattern[] = [
     message: 'Too many attempts. Wait a moment, then try again.',
   },
   {
-    pattern: /(network|offline|timeout|timed out|fetch failed)/i,
+    pattern: /(network|offline|timeout|timed out|fetch failed|failed to fetch)/i,
     message: 'Connection problem. Check your network and try again.',
   },
   {
@@ -48,7 +48,38 @@ function rawMessage(error: unknown): string {
   return error instanceof Error ? error.message : typeof error === 'string' ? error : '';
 }
 
+function authErrorCode(error: unknown): string {
+  if (!error || typeof error !== 'object' || !('code' in error)) return '';
+  return typeof error.code === 'string' ? error.code : '';
+}
+
+function authErrorStatus(error: unknown): number | null {
+  if (!error || typeof error !== 'object' || !('status' in error)) return null;
+  return typeof error.status === 'number' ? error.status : null;
+}
+
 export function authUserMessage(error: unknown): string {
+  // Supabase documents `code` as the stable AuthApiError discriminator. Keep
+  // message matching only as a compatibility fallback for network/client errors.
+  switch (authErrorCode(error)) {
+    case 'otp_expired':
+    case 'flow_state_expired':
+    case 'flow_state_not_found':
+      return 'That code did not work. Request a new code and try again.';
+    case 'over_email_send_rate_limit':
+    case 'over_request_rate_limit':
+      return 'Too many attempts. Wait a moment, then try again.';
+    case 'email_exists':
+    case 'user_already_exists':
+    case 'identity_already_exists':
+      return "We couldn't attach that email without changing your current plan. Use another method or continue without an account.";
+    case 'email_address_invalid':
+    case 'validation_failed':
+      return 'Enter a valid email address and try again.';
+  }
+  if (authErrorStatus(error) === 429) {
+    return 'Too many attempts. Wait a moment, then try again.';
+  }
   const message = rawMessage(error);
   const known = AUTH_PATTERNS.find((entry) => entry.pattern.test(message));
   return known?.message ?? GENERIC_MESSAGE;
