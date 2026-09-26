@@ -35,7 +35,8 @@ describe('Shelf Conflict Card copy (docs/14 §3) is claim-safe and calm', () => 
   });
 
   it('uses only a normalized first-party public domain for share-card URLs', () => {
-    expect(resolveCardPublicDomain('https://Layerwell.app/share')).toBe('layerwell.app');
+    expect(resolveCardPublicDomain('https://Layerwell.app')).toBe('layerwell.app');
+    expect(resolveCardPublicDomain('https://Layerwell.app/share')).toBe('layerwell.example');
     expect(resolveCardPublicDomain('https://example.com')).toBe('layerwell.example');
     expect(resolveCardPublicDomain('http://localhost:19006')).toBe('layerwell.example');
     expect(resolveCardPublicDomain('https://layerwell.local')).toBe('layerwell.example');

@@ -1,3 +1,5 @@
+import { CARD_COPY } from './cardCopy';
+
 export const CONFLICT_SHARE_PROJECTION_KEYS = [
   'schemaVersion',
   'brandName',
@@ -26,6 +28,15 @@ export type ConflictShareProjection = Readonly<{
   tone: 'caution' | 'reassuring';
 }>;
 
+export const CONFLICT_SHARE_PUBLIC_COPY = Object.freeze({
+  brandName: CARD_COPY.brand,
+  eyebrow: CARD_COPY.eyebrow,
+  evidenceLabel: 'Reviewed guidance',
+  actionLabel: 'Check your own shelf',
+  attributionLabel: CARD_COPY.handle,
+  disclaimer: CARD_COPY.footnote,
+} as const);
+
 const STRING_LIMITS = Object.freeze({
   brandName: 80,
   eyebrow: 80,
@@ -51,7 +62,16 @@ function hasExactProjectionKeys(value: Record<string, unknown>): boolean {
 function parseRequiredString(value: unknown, maxLength: number): string | null {
   if (typeof value !== 'string') return null;
   const normalized = value.trim();
-  if (!normalized || normalized.length > maxLength) return null;
+  // Card text becomes a public image. Reject invisible control/formatting
+  // characters instead of allowing bidi overrides, zero-width text, line
+  // breaks, or terminal control bytes to disguise what the user reviews.
+  if (
+    !normalized ||
+    normalized.length > maxLength ||
+    /[\u0000-\u001f\u007f-\u009f\u200b-\u200f\u2028-\u202e\u2060-\u206f\ufeff]/u.test(normalized)
+  ) {
+    return null;
+  }
   return normalized;
 }
 
@@ -103,6 +123,21 @@ export function parseConflictShareProjection(value: unknown): ConflictShareProje
       !attributionLabel ||
       !disclaimer ||
       (fields.severityLabel !== null && !severityLabel)
+    ) {
+      return null;
+    }
+
+    // These fields are product-owned public copy, not caller-selected data.
+    // Requiring their exact values prevents a future caller from laundering a
+    // fake brand, watermark, review status, CTA, or disclaimer through an
+    // otherwise shape-valid projection.
+    if (
+      brandName !== CONFLICT_SHARE_PUBLIC_COPY.brandName ||
+      eyebrow !== CONFLICT_SHARE_PUBLIC_COPY.eyebrow ||
+      evidenceLabel !== CONFLICT_SHARE_PUBLIC_COPY.evidenceLabel ||
+      actionLabel !== CONFLICT_SHARE_PUBLIC_COPY.actionLabel ||
+      attributionLabel !== CONFLICT_SHARE_PUBLIC_COPY.attributionLabel ||
+      disclaimer !== CONFLICT_SHARE_PUBLIC_COPY.disclaimer
     ) {
       return null;
     }

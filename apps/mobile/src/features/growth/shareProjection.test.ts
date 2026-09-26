@@ -1,19 +1,23 @@
 import { describe, expect, it } from 'vitest';
 
-import { CONFLICT_SHARE_PROJECTION_KEYS, parseConflictShareProjection } from './shareProjection';
+import {
+  CONFLICT_SHARE_PROJECTION_KEYS,
+  CONFLICT_SHARE_PUBLIC_COPY,
+  parseConflictShareProjection,
+} from './shareProjection';
 
 function validProjection(): Record<string, unknown> {
   return {
     schemaVersion: 1,
-    brandName: 'Layerwell',
-    eyebrow: 'SHELF CHECK',
+    brandName: CONFLICT_SHARE_PUBLIC_COPY.brandName,
+    eyebrow: CONFLICT_SHARE_PUBLIC_COPY.eyebrow,
     title: 'Use on different nights',
     severityLabel: 'Timing note',
-    evidenceLabel: 'Reviewed guidance',
+    evidenceLabel: CONFLICT_SHARE_PUBLIC_COPY.evidenceLabel,
     claim: 'Spacing these cosmetic ingredients may make a routine easier to tolerate.',
-    actionLabel: 'Check your own shelf',
-    attributionLabel: 'layerwell.app',
-    disclaimer: 'General cosmetic information, not medical advice.',
+    actionLabel: CONFLICT_SHARE_PUBLIC_COPY.actionLabel,
+    attributionLabel: CONFLICT_SHARE_PUBLIC_COPY.attributionLabel,
+    disclaimer: CONFLICT_SHARE_PUBLIC_COPY.disclaimer,
     tone: 'caution',
   };
 }
@@ -70,6 +74,27 @@ describe('conflict share projection', () => {
     expect(parseConflictShareProjection({ ...validProjection(), schemaVersion: 2 })).toBeNull();
     expect(parseConflictShareProjection(null)).toBeNull();
     expect(parseConflictShareProjection([])).toBeNull();
+  });
+
+  it.each([
+    ['brand', { brandName: 'Trusted Skin Lab' }],
+    ['eyebrow', { eyebrow: 'CLINICALLY PROVEN' }],
+    ['review status', { evidenceLabel: 'Doctor approved' }],
+    ['CTA', { actionLabel: 'Buy this now' }],
+    ['watermark', { attributionLabel: 'trusted.example' }],
+    ['disclaimer', { disclaimer: 'Guaranteed results.' }],
+  ])('rejects caller-authored product-owned %s copy', (_label, replacement) => {
+    expect(parseConflictShareProjection({ ...validProjection(), ...replacement })).toBeNull();
+  });
+
+  it.each([
+    ['line break', 'Safe title\nPrivate suffix'],
+    ['carriage return', 'Safe title\rPrivate suffix'],
+    ['zero-width space', 'Safe\u200btitle'],
+    ['right-to-left override', 'Safe\u202etitle'],
+    ['word joiner', 'Safe\u2060title'],
+  ])('rejects %s characters that can disguise reviewed card text', (_label, title) => {
+    expect(parseConflictShareProjection({ ...validProjection(), title })).toBeNull();
   });
 
   it('rejects accessor-backed fields without invoking them', () => {
