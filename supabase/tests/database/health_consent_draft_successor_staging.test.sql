@@ -71,7 +71,7 @@ select is(
      where registry.consent_type = 'ask_layerwell'
        and registry.action = 'grant'
   ),
-  2::bigint,
+  3::bigint,
   'both Ask grant predecessors and the current successor are retained'
 );
 
@@ -384,7 +384,7 @@ select is(
       from public.health_consent_copy_staging_events
      where consent_type = 'ask_layerwell' and action = 'grant'
   ),
-  3::bigint,
+  2::bigint,
   'an exact replay appends no duplicate staging evidence'
 );
 
