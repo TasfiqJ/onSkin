@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
-import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
+import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
 import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
@@ -74,7 +74,7 @@ export async function clearLocalPrivateData(): Promise<void> {
       promise:
         Platform.OS === 'web'
           ? Promise.resolve()
-          : Notifications.cancelAllScheduledNotificationsAsync(),
+          : clearNativeNotificationsForAccountIsolation(),
     },
     { label: 'analytics_identity', promise: resetAnalyticsIdentity() },
     { label: 'revenuecat_identity', promise: resetRevenueCatIdentity() },

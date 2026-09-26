@@ -110,7 +110,15 @@ vi.mock('expo-crypto', () => ({
     return new Uint8Array(length).fill(h.state.capabilitySeed);
   }),
 }));
-vi.mock('expo-notifications', () => ({ cancelAllScheduledNotificationsAsync: vi.fn() }));
+vi.mock('expo-notifications', () => ({
+  cancelAllScheduledNotificationsAsync: vi.fn(async () => undefined),
+  cancelScheduledNotificationAsync: vi.fn(async () => undefined),
+  clearLastNotificationResponseAsync: vi.fn(async () => undefined),
+  dismissAllNotificationsAsync: vi.fn(async () => undefined),
+  dismissNotificationAsync: vi.fn(async () => undefined),
+  scheduleNotificationAsync: vi.fn(async () => 'notice'),
+  setBadgeCountAsync: vi.fn(async () => true),
+}));
 vi.mock('expo-router', () => ({ router: { replace: vi.fn() } }));
 vi.mock('@/features/subscription/store', () => ({
   clearStoreEntitlementIfRevenueCatVerifiedEmpty: h.clearStoreEntitlement,

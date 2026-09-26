@@ -77,6 +77,12 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('expo-notifications', () => ({
   cancelAllScheduledNotificationsAsync: mocks.cancelScheduledNotifications,
+  cancelScheduledNotificationAsync: vi.fn(async () => undefined),
+  clearLastNotificationResponseAsync: vi.fn(async () => undefined),
+  dismissAllNotificationsAsync: vi.fn(async () => undefined),
+  dismissNotificationAsync: vi.fn(async () => undefined),
+  scheduleNotificationAsync: vi.fn(async () => 'notice'),
+  setBadgeCountAsync: vi.fn(async () => true),
 }));
 
 vi.mock('@/features/photos/sensitiveImageMemory', () => ({

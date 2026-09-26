@@ -1,6 +1,6 @@
-import * as Notifications from 'expo-notifications';
 import type { Session } from '@supabase/supabase-js';
 
+import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { clearPendingHealthWithdrawalIntentByOwnerBinding } from '@/features/healthConsent/pendingIntent';
 import { clearRoutineWidgetActions } from '@/features/widgets/actionRegistry';
@@ -171,7 +171,7 @@ async function clearRecoverySupabaseSession(): Promise<void> {
 const clearDefaultAuthDerivedActivity = () =>
   clearAuthDerivedLocalActivity({
     cancelQueries: () => queryClient.cancelQueries(),
-    cancelScheduledNotifications: () => Notifications.cancelAllScheduledNotificationsAsync(),
+    cancelScheduledNotifications: clearNativeNotificationsForAccountIsolation,
     clearRoutineWidgetActions,
     clearRoutineWidgetNativeState: clearRoutineWidgetLifecycleForPrivacy,
     clearQueries: () => queryClient.clear(),

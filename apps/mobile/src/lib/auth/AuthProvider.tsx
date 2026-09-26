@@ -1,5 +1,4 @@
 import type { Session, User } from '@supabase/supabase-js';
-import * as Notifications from 'expo-notifications';
 import { router, type Href } from 'expo-router';
 import {
   createContext,
@@ -29,6 +28,7 @@ import {
 } from '@/features/photos/encryptedStorage';
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { rescheduleReminders } from '@/features/notifications/deliver';
+import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
 import { clearRoutineWidgetActions } from '@/features/widgets/actionRegistry';
 import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { isSupabaseConfigured } from '@/lib/env';
@@ -171,7 +171,7 @@ type AccountIsolationE2EGlobal = typeof globalThis & {
 
 const revokedCredentialActivityDependencies = {
   cancelQueries: () => queryClient.cancelQueries(),
-  cancelScheduledNotifications: () => Notifications.cancelAllScheduledNotificationsAsync(),
+  cancelScheduledNotifications: clearNativeNotificationsForAccountIsolation,
   clearRoutineWidgetActions,
   clearRoutineWidgetNativeState: clearRoutineWidgetLifecycleForPrivacy,
   clearQueries: () => queryClient.clear(),

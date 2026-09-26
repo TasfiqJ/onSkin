@@ -4,15 +4,21 @@ import { clearLocalPrivateData } from './localPrivateData';
 
 const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(),
+  cancelScheduledNotificationAsync: vi.fn(),
+  clearLastNotificationResponseAsync: vi.fn(),
   clearEncryptedPhotoStorage: vi.fn(),
   clearRoutineWidgetNativeState: vi.fn(),
   clearPrivateKVContentKey: vi.fn(),
   deleteAsync: vi.fn(),
+  dismissAllNotificationsAsync: vi.fn(),
+  dismissNotificationAsync: vi.fn(),
   multiRemove: vi.fn(),
   platformOS: 'ios',
   readDirectoryAsync: vi.fn(),
   resetAnalyticsIdentity: vi.fn(),
   resetRevenueCatIdentity: vi.fn(),
+  scheduleNotificationAsync: vi.fn(),
+  setBadgeCountAsync: vi.fn(),
 }));
 
 vi.mock('@react-native-async-storage/async-storage', () => ({
@@ -29,6 +35,12 @@ vi.mock('expo-file-system/legacy', () => ({
 
 vi.mock('expo-notifications', () => ({
   cancelAllScheduledNotificationsAsync: mocks.cancelAllScheduledNotificationsAsync,
+  cancelScheduledNotificationAsync: mocks.cancelScheduledNotificationAsync,
+  clearLastNotificationResponseAsync: mocks.clearLastNotificationResponseAsync,
+  dismissAllNotificationsAsync: mocks.dismissAllNotificationsAsync,
+  dismissNotificationAsync: mocks.dismissNotificationAsync,
+  scheduleNotificationAsync: mocks.scheduleNotificationAsync,
+  setBadgeCountAsync: mocks.setBadgeCountAsync,
 }));
 
 vi.mock('react-native', () => ({
@@ -62,21 +74,31 @@ vi.mock('@/lib/storage/privateKV', () => ({
 describe('local private data cleanup', () => {
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockReset();
+    mocks.cancelScheduledNotificationAsync.mockReset();
+    mocks.clearLastNotificationResponseAsync.mockReset();
     mocks.clearEncryptedPhotoStorage.mockReset();
     mocks.clearRoutineWidgetNativeState.mockReset();
     mocks.clearPrivateKVContentKey.mockReset();
     mocks.deleteAsync.mockReset();
+    mocks.dismissAllNotificationsAsync.mockReset();
+    mocks.dismissNotificationAsync.mockReset();
     mocks.multiRemove.mockReset();
     mocks.platformOS = 'ios';
     mocks.readDirectoryAsync.mockReset();
     mocks.resetAnalyticsIdentity.mockReset();
     mocks.resetRevenueCatIdentity.mockReset();
+    mocks.scheduleNotificationAsync.mockReset();
+    mocks.setBadgeCountAsync.mockReset();
 
     mocks.cancelAllScheduledNotificationsAsync.mockResolvedValue(undefined);
+    mocks.cancelScheduledNotificationAsync.mockResolvedValue(undefined);
+    mocks.clearLastNotificationResponseAsync.mockResolvedValue(undefined);
     mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
     mocks.clearRoutineWidgetNativeState.mockResolvedValue(undefined);
     mocks.clearPrivateKVContentKey.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
+    mocks.dismissAllNotificationsAsync.mockResolvedValue(undefined);
+    mocks.dismissNotificationAsync.mockResolvedValue(undefined);
     mocks.multiRemove.mockResolvedValue(undefined);
     mocks.readDirectoryAsync.mockResolvedValue([
       'layerwell-export-456.json',
@@ -87,6 +109,8 @@ describe('local private data cleanup', () => {
     ]);
     mocks.resetAnalyticsIdentity.mockResolvedValue(undefined);
     mocks.resetRevenueCatIdentity.mockResolvedValue(undefined);
+    mocks.scheduleNotificationAsync.mockResolvedValue('notice');
+    mocks.setBadgeCountAsync.mockResolvedValue(true);
   });
 
   it('clears local stores, cache files, notifications, and client vendor identities', async () => {
@@ -136,6 +160,9 @@ describe('local private data cleanup', () => {
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.dismissAllNotificationsAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.clearLastNotificationResponseAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.setBadgeCountAsync).toHaveBeenCalledExactlyOnceWith(0);
     expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/layerwell-export-123.json', {
       idempotent: true,
     });

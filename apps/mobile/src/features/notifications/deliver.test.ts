@@ -14,6 +14,9 @@ const mocks = vi.hoisted(() => ({
   canUseRoutineRecovery: vi.fn(),
   cancelAllScheduledNotificationsAsync: vi.fn(async () => {}),
   cancelScheduledNotificationAsync: vi.fn(async (_id: string) => {}),
+  configureNotifications: vi.fn(
+    async (): Promise<'ready' | 'unavailable'> => 'ready',
+  ),
   getPermissionsAsync: vi.fn(async () => ({
     status: 'granted',
     granted: true,
@@ -30,8 +33,9 @@ const mocks = vi.hoisted(() => ({
   loadNotifPrefs: vi.fn(),
   loadEntitlement: vi.fn(async (): Promise<unknown> => null),
   reserveNotificationSlotLocal: vi.fn(async () => true),
+  scheduleSignals: [] as AbortSignal[],
   captureHealthDataWriteLease: vi.fn(),
-  scheduleNotificationAsync: vi.fn(async () => 'notification-id'),
+  scheduleNotificationAsync: vi.fn(async (_request: unknown) => 'notification-id'),
   setNotificationChannelAsync: vi.fn(async () => {}),
   setNotificationHandler: vi.fn(),
 }));
@@ -57,6 +61,22 @@ vi.mock('expo-notifications', () => ({
   scheduleNotificationAsync: mocks.scheduleNotificationAsync,
   setNotificationChannelAsync: mocks.setNotificationChannelAsync,
   setNotificationHandler: mocks.setNotificationHandler,
+}));
+
+vi.mock('expo-crypto', () => ({ randomUUID: () => 'event-uuid' }));
+
+vi.mock('./nativeMutation', () => ({
+  cancelNativeScheduledNotificationExact: (identifier: string) =>
+    mocks.cancelScheduledNotificationAsync(identifier),
+  clearNativeNotificationsForAccountIsolation: () =>
+    mocks.cancelAllScheduledNotificationsAsync(),
+  scheduleNativeNotificationExact: (
+    signal: AbortSignal,
+    request: Parameters<typeof mocks.scheduleNotificationAsync>[0],
+  ) => {
+    mocks.scheduleSignals.push(signal);
+    return mocks.scheduleNotificationAsync(request);
+  },
 }));
 
 vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
@@ -93,6 +113,8 @@ vi.mock('./copy', () => ({
     title: 'Layerwell',
   })),
 }));
+
+vi.mock('./startup', () => ({ configureNotifications: mocks.configureNotifications }));
 
 vi.mock('@/features/subscription/copy', () => ({
   PAYWALL_COPY: {
@@ -148,6 +170,8 @@ beforeEach(() => {
   mocks.canUseRoutineCadence.mockReturnValue(true);
   mocks.canUseRoutineRecovery.mockReset();
   mocks.canUseRoutineRecovery.mockReturnValue(true);
+  mocks.configureNotifications.mockReset();
+  mocks.configureNotifications.mockResolvedValue('ready');
   mocks.assertHealthDataWriteLease.mockReset();
   mocks.captureHealthDataWriteLease.mockReset();
   mocks.captureHealthDataWriteLease.mockImplementation(() => {
@@ -173,6 +197,7 @@ beforeEach(() => {
   });
   mocks.reserveNotificationSlotLocal.mockReset();
   mocks.reserveNotificationSlotLocal.mockResolvedValue(true);
+  mocks.scheduleSignals = [];
 });
 
 describe('notification authorization', () => {
@@ -476,11 +501,58 @@ describe('scheduleTrialReminder', () => {
         expect.objectContaining({
           content: {
             body: 'Trial ends Jul 12 at CA$69.99/annual',
+            categoryIdentifier: 'layerwell.billing.v1',
+            data: {
+              destination: 'subscription',
+              kind: 'trial_ending',
+              layerwellNotificationVersion: 1,
+            },
             title: 'Your free trial ends in 2 days',
           },
         }),
       );
     } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('binds a delayed billing reminder schedule to the account-generation abort signal', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-05T12:00:00.000Z'));
+    let releaseSchedule!: () => void;
+    let scheduleStarted!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      releaseSchedule = resolve;
+    });
+    const started = new Promise<void>((resolve) => {
+      scheduleStarted = resolve;
+    });
+    mocks.loadEntitlement.mockResolvedValueOnce({
+      isActive: true,
+      periodType: 'trial',
+      expiresAt: '2026-07-12T12:00:00.000Z',
+      productId: 'layerwell_pro_annual_dev',
+      priceLabel: 'CA$69.99',
+    });
+    mocks.scheduleNotificationAsync.mockImplementationOnce(async () => {
+      scheduleStarted();
+      await gate;
+      return 'layerwell-trial-reminder';
+    });
+
+    const { scheduleTrialReminder } = await import('./deliver');
+    const scheduling = scheduleTrialReminder();
+    await started;
+    beginAccountGenerationBoundary();
+    try {
+      expect(mocks.scheduleSignals).toHaveLength(1);
+      expect(mocks.scheduleSignals[0]?.aborted).toBe(true);
+      releaseSchedule();
+      await expect(scheduling).resolves.toBeUndefined();
+      await waitForAccountGenerationOperationsToSettle();
+    } finally {
+      releaseSchedule();
+      endAccountGenerationBoundary();
       vi.useRealTimers();
     }
   });
@@ -529,7 +601,17 @@ describe('notifyBehavioural', () => {
     await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
 
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith({
-      content: { body: 'body:replenishment', title: 'Layerwell' },
+      identifier: 'layerwell-local-replenishment-event-uuid',
+      content: {
+        body: 'body:replenishment',
+        categoryIdentifier: 'layerwell.shelf.v1',
+        data: {
+          destination: 'shelf',
+          kind: 'replenishment',
+          layerwellNotificationVersion: 1,
+        },
+        title: 'Layerwell',
+      },
       trigger: null,
     });
     expect(mocks.reserveNotificationSlotLocal).toHaveBeenCalledWith(
@@ -581,6 +663,15 @@ describe('notifyBehavioural', () => {
 
     await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
 
+    expect(mocks.reserveNotificationSlotLocal).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it('does not reserve or schedule when native category or badge bootstrap is unavailable', async () => {
+    mocks.configureNotifications.mockResolvedValueOnce('unavailable');
+    const { notifyBehavioural } = await import('./deliver');
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
     expect(mocks.reserveNotificationSlotLocal).not.toHaveBeenCalled();
     expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
   });

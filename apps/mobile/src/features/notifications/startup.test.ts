@@ -8,6 +8,8 @@ const mocks = vi.hoisted(() => ({
   platform: { os: 'android' },
   secureStoreRead: vi.fn(),
   sentLogRead: vi.fn(),
+  setBadgeCountAsync: vi.fn(async () => true),
+  setNotificationCategoryAsync: vi.fn(async () => undefined),
   setNotificationChannelAsync: vi.fn(async () => undefined),
   setNotificationHandler: vi.fn(),
   supabaseRead: vi.fn(),
@@ -15,6 +17,8 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('expo-notifications', () => ({
   AndroidImportance: { DEFAULT: 3 },
+  setBadgeCountAsync: mocks.setBadgeCountAsync,
+  setNotificationCategoryAsync: mocks.setNotificationCategoryAsync,
   setNotificationChannelAsync: mocks.setNotificationChannelAsync,
   setNotificationHandler: mocks.setNotificationHandler,
 }));
@@ -55,6 +59,10 @@ describe('minimal notification startup', () => {
     mocks.loadNotifPrefs.mockReset();
     mocks.secureStoreRead.mockReset();
     mocks.sentLogRead.mockReset();
+    mocks.setBadgeCountAsync.mockReset();
+    mocks.setBadgeCountAsync.mockResolvedValue(true);
+    mocks.setNotificationCategoryAsync.mockReset();
+    mocks.setNotificationCategoryAsync.mockResolvedValue(undefined);
     mocks.setNotificationChannelAsync.mockReset();
     mocks.setNotificationChannelAsync.mockResolvedValue(undefined);
     mocks.setNotificationHandler.mockReset();
@@ -68,14 +76,16 @@ describe('minimal notification startup', () => {
     const concurrent = configureNotifications();
 
     expect(concurrent).toBe(first);
-    await expect(Promise.all([first, concurrent])).resolves.toEqual([undefined, undefined]);
-    await expect(configureNotifications()).resolves.toBeUndefined();
+    await expect(Promise.all([first, concurrent])).resolves.toEqual(['ready', 'ready']);
+    await expect(configureNotifications()).resolves.toBe('ready');
 
     expect(mocks.setNotificationHandler).toHaveBeenCalledTimes(1);
     expect(mocks.setNotificationChannelAsync).toHaveBeenCalledExactlyOnceWith('routine', {
       name: 'Routine reminders',
       importance: 3,
     });
+    expect(mocks.setBadgeCountAsync).toHaveBeenCalledExactlyOnceWith(0);
+    expect(mocks.setNotificationCategoryAsync).toHaveBeenCalledTimes(4);
     const handler = mocks.setNotificationHandler.mock.calls[0]?.[0] as {
       handleNotification: () => Promise<Record<string, boolean>>;
     };
@@ -95,11 +105,30 @@ describe('minimal notification startup', () => {
     });
     const { configureNotifications } = await import('./startup');
 
-    await expect(configureNotifications()).resolves.toBeUndefined();
-    await expect(configureNotifications()).resolves.toBeUndefined();
+    await expect(configureNotifications()).resolves.toBe('unavailable');
+    await expect(configureNotifications()).resolves.toBe('unavailable');
 
     expect(mocks.setNotificationHandler).toHaveBeenCalledTimes(1);
     expect(mocks.setNotificationChannelAsync).not.toHaveBeenCalled();
+    expectNoBusinessReads();
+  });
+
+  it('reports native bootstrap unavailable when badge clearing cannot be proven', async () => {
+    mocks.setBadgeCountAsync.mockResolvedValueOnce(false);
+    const { configureNotifications } = await import('./startup');
+
+    await expect(configureNotifications()).resolves.toBe('unavailable');
+    expect(mocks.setNotificationCategoryAsync).toHaveBeenCalledTimes(4);
+    expect(mocks.setNotificationChannelAsync).toHaveBeenCalledOnce();
+    expectNoBusinessReads();
+  });
+
+  it('reports native bootstrap unavailable when any exact category registration fails', async () => {
+    mocks.setNotificationCategoryAsync.mockRejectedValueOnce(new Error('category unavailable'));
+    const { configureNotifications } = await import('./startup');
+
+    await expect(configureNotifications()).resolves.toBe('unavailable');
+    expect(mocks.setNotificationCategoryAsync).toHaveBeenCalledTimes(4);
     expectNoBusinessReads();
   });
 
@@ -114,11 +143,20 @@ describe('minimal notification startup', () => {
       ...root.matchAll(/from\s+['"](@\/features\/notifications\/[^'"]+)['"]/g),
     ].map((match) => match[1]);
 
-    expect(directImports).toEqual(['expo-notifications', 'react-native']);
+    expect(directImports).toEqual(['expo-notifications', 'react-native', './contract']);
     expect(startup).not.toMatch(
       /subscription|supabase|loadNotifPrefs|sentStore|SecureStore|scheduleNotificationAsync|cancelScheduled/,
     );
-    expect(rootNotificationImports).toEqual(['@/features/notifications/startup']);
+    expect(rootNotificationImports).toEqual([
+      '@/features/notifications/startup',
+      '@/features/notifications/NotificationResponseHost',
+    ]);
+    expect(root.indexOf('<NotificationResponseHost />')).toBeGreaterThan(
+      root.indexOf('<HealthDataLifecycleGate>'),
+    );
+    expect(root.indexOf('<NotificationResponseHost />')).toBeLessThan(
+      root.indexOf('<OfflineSync />'),
+    );
     expect(deliver).toContain("export { configureNotifications } from './startup';");
     expect(deliver).not.toContain('setNotificationHandler');
     expect(deliver).not.toContain('setNotificationChannelAsync');

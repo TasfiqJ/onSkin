@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { randomUUID } from 'expo-crypto';
 import { Platform } from 'react-native';
 
 import type { NotificationKind } from '@layerwell/types';
@@ -21,9 +22,21 @@ import {
 } from '@/lib/consent/healthDataWriteAdmission';
 
 import { notificationContentForLockScreen } from './copy';
+import {
+  NOTIFICATION_CATEGORY,
+  notificationCategoryForKind,
+  notificationDataForKind,
+  trialEndingNotificationData,
+} from './contract';
 import { canSend, reminderTimeOutsideQuietHours, tierEnabled, toMinutes } from './policy';
+import {
+  cancelNativeScheduledNotificationExact,
+  clearNativeNotificationsForAccountIsolation,
+  scheduleNativeNotificationExact,
+} from './nativeMutation';
 import { reserveNotificationSlotLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
+import { configureNotifications } from './startup';
 
 export { configureNotifications } from './startup';
 
@@ -35,7 +48,7 @@ export type EventTriggeredNotificationKind = Extract<
 type HealthNotificationOperation = Readonly<{
   assertCurrent: () => void;
   schedule: (
-    request: Parameters<typeof Notifications.scheduleNotificationAsync>[0],
+    request: Parameters<typeof scheduleNativeNotificationExact>[1],
   ) => Promise<string>;
 }>;
 
@@ -51,9 +64,7 @@ function assertHealthNotificationOperationCurrent(
 }
 
 async function cancelCreatedHealthNotifications(ids: ReadonlySet<string>): Promise<void> {
-  await Promise.allSettled(
-    [...ids].map((id) => Notifications.cancelScheduledNotificationAsync(id)),
-  );
+  await Promise.allSettled([...ids].map((id) => cancelNativeScheduledNotificationExact(id)));
 }
 
 async function runHealthNotificationOperation<T>(
@@ -66,19 +77,19 @@ async function runHealthNotificationOperation<T>(
       const assertCurrent = () =>
         assertHealthNotificationOperationCurrent(accountLease, healthLease);
       const schedule = async (
-        request: Parameters<typeof Notifications.scheduleNotificationAsync>[0],
+        request: Parameters<typeof scheduleNativeNotificationExact>[1],
       ) => {
         assertCurrent();
         if (!isDeliverableAuthorizationState(await getPermissionStatus())) {
           throw new Error('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
         }
         assertCurrent();
-        const id = await Notifications.scheduleNotificationAsync(request);
+        const id = await scheduleNativeNotificationExact(accountLease.signal, request);
         createdIds.add(id);
         try {
           assertCurrent();
         } catch (error) {
-          await Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined);
+          await cancelNativeScheduledNotificationExact(id).catch(() => undefined);
           createdIds.delete(id);
           throw error;
         }
@@ -249,9 +260,11 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
       assertCurrent();
       const p = prefs ?? (await loadNotifPrefs());
       assertCurrent();
-      await Notifications.cancelAllScheduledNotificationsAsync();
+      await clearNativeNotificationsForAccountIsolation();
       assertCurrent();
       if (!isDeliverableAuthorizationState(await getPermissionStatus())) return;
+      assertCurrent();
+      if ((await configureNotifications()) !== 'ready') return;
       assertCurrent();
       const channelId = Platform.OS === 'android' ? 'routine' : undefined;
       const scheduleRoutine = async (kind: 'am_reminder' | 'pm_step', hm: string) => {
@@ -260,7 +273,12 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
         if (mins == null) return;
         assertCurrent();
         await schedule({
-          content: notificationContentForLockScreen(kind),
+          identifier: `layerwell-local-${kind}-v1`,
+          content: {
+            ...notificationContentForLockScreen(kind),
+            categoryIdentifier: notificationCategoryForKind(kind),
+            data: notificationDataForKind(kind),
+          },
           // channelId belongs on the trigger in expo-notifications (SDK 57), not on
           // content. So the calm 'routine' channel is actually applied on Android.
           trigger: {
@@ -283,7 +301,12 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
         if (mins != null) {
           assertCurrent();
           await schedule({
-            content: notificationContentForLockScreen('capture'),
+            identifier: 'layerwell-local-capture-v1',
+            content: {
+              ...notificationContentForLockScreen('capture'),
+              categoryIdentifier: notificationCategoryForKind('capture'),
+              data: notificationDataForKind('capture'),
+            },
             trigger: {
               type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
               weekday: 1, // Sunday, a calm weekly check-in cadence
@@ -323,30 +346,41 @@ function fmtShortDate(iso: string): string {
  */
 export async function scheduleTrialReminder(): Promise<void> {
   try {
-    await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID).catch(() => {});
-    const e = await loadEntitlement();
-    if (!e || !e.isActive || e.periodType !== 'trial' || !e.expiresAt) return;
-    const cadence = billingCadenceForProductId(e.productId);
-    const price = e.priceLabel?.trim() || null;
-    if (!cadence || !price) return;
-    const fireAt = new Date(e.expiresAt).getTime() - 2 * 86_400_000;
-    if (fireAt <= Date.now()) return; // already inside the final 2 days. Nothing to schedule
-    if (!isDeliverableAuthorizationState(await getPermissionStatus())) return;
-    await Notifications.scheduleNotificationAsync({
-      identifier: TRIAL_REMINDER_ID,
-      content: {
-        title: PAYWALL_COPY.trialReminder.title,
-        body: PAYWALL_COPY.trialReminder.bodyFor(
-          fmtShortDate(e.expiresAt),
-          price,
-          cadence,
-        ),
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.DATE,
-        date: fireAt,
-        ...(Platform.OS === 'android' ? { channelId: 'routine' } : {}),
-      },
+    await runAccountGenerationOperation(async (lease) => {
+      lease.assertCurrent();
+      await cancelNativeScheduledNotificationExact(TRIAL_REMINDER_ID).catch(() => {});
+      lease.assertCurrent();
+      const e = await loadEntitlement();
+      lease.assertCurrent();
+      if (!e || !e.isActive || e.periodType !== 'trial' || !e.expiresAt) return;
+      const cadence = billingCadenceForProductId(e.productId);
+      const price = e.priceLabel?.trim() || null;
+      if (!cadence || !price) return;
+      const fireAt = new Date(e.expiresAt).getTime() - 2 * 86_400_000;
+      if (fireAt <= Date.now()) return; // already inside the final 2 days. Nothing to schedule
+      if (!isDeliverableAuthorizationState(await getPermissionStatus())) return;
+      lease.assertCurrent();
+      if ((await configureNotifications()) !== 'ready') return;
+      lease.assertCurrent();
+      await scheduleNativeNotificationExact(lease.signal, {
+        identifier: TRIAL_REMINDER_ID,
+        content: {
+          title: PAYWALL_COPY.trialReminder.title,
+          body: PAYWALL_COPY.trialReminder.bodyFor(
+            fmtShortDate(e.expiresAt),
+            price,
+            cadence,
+          ),
+          categoryIdentifier: NOTIFICATION_CATEGORY.billing,
+          data: trialEndingNotificationData(),
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DATE,
+          date: fireAt,
+          ...(Platform.OS === 'android' ? { channelId: 'routine' } : {}),
+        },
+      });
+      lease.assertCurrent();
     });
   } catch {
     /* unsupported environment. No-op (B-NOTIF-VERIFY) */
@@ -356,7 +390,7 @@ export async function scheduleTrialReminder(): Promise<void> {
 /** Cancel the pre-charge reminder (on conversion or trial cancellation). */
 export async function cancelTrialReminder(): Promise<void> {
   try {
-    await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID);
+    await cancelNativeScheduledNotificationExact(TRIAL_REMINDER_ID);
   } catch {
     /* no-op */
   }
@@ -399,12 +433,19 @@ export async function notifyBehavioural(
       assertCurrent();
       if (!isDeliverableAuthorizationState(await getPermissionStatus())) return false;
       assertCurrent();
+      if ((await configureNotifications()) !== 'ready') return false;
+      assertCurrent();
       if (!(await reserveNotificationSlotLocal(kind, now))) return false;
       assertCurrent();
       try {
         assertCurrent();
         await schedule({
-          content: notificationContentForLockScreen(kind),
+          identifier: `layerwell-local-${kind}-${randomUUID()}`,
+          content: {
+            ...notificationContentForLockScreen(kind),
+            categoryIdentifier: notificationCategoryForKind(kind),
+            data: notificationDataForKind(kind),
+          },
           // Immediate, on the calm 'routine' channel (Android); channelId must be on the
           // trigger, not content (SDK 57). A bare { channelId } means deliver now.
           trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,

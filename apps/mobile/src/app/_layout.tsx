@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/startup';
+import { NotificationResponseHost } from '@/features/notifications/NotificationResponseHost';
 import { startLabelPhotoStartupScavenge } from '@/features/native/camera/labelPhotoStartup';
 import { HealthDataLifecycleGate } from '@/features/healthConsent/HealthDataLifecycleGate';
 import { AgePolicyGate } from '@/features/onboarding/AgePolicyGate';
@@ -78,6 +79,7 @@ export default function RootLayout() {
                       <HealthDataLifecycleGate>
                         <OnboardingProvider>
                           <IntakeProvider>
+                            <NotificationResponseHost />
                             <OfflineSync />
                             <StatusBar style="dark" />
                             <Stack screenOptions={{ headerShown: false }} />

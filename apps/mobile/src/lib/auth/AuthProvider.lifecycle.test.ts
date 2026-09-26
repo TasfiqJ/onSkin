@@ -158,7 +158,15 @@ function decodeClaim(token: string, claim: 'sub' | 'session_id'): string | null 
 
 vi.mock('react-native', () => ({ AppState: h.appState }));
 vi.mock('@tanstack/react-query', () => ({ onlineManager: h.onlineManager }));
-vi.mock('expo-notifications', () => ({ cancelAllScheduledNotificationsAsync: vi.fn() }));
+vi.mock('expo-notifications', () => ({
+  cancelAllScheduledNotificationsAsync: vi.fn(async () => undefined),
+  cancelScheduledNotificationAsync: vi.fn(async () => undefined),
+  clearLastNotificationResponseAsync: vi.fn(async () => undefined),
+  dismissAllNotificationsAsync: vi.fn(async () => undefined),
+  dismissNotificationAsync: vi.fn(async () => undefined),
+  scheduleNotificationAsync: vi.fn(async () => 'notice'),
+  setBadgeCountAsync: vi.fn(async () => true),
+}));
 vi.mock('expo-router', () => ({ router: { replace: vi.fn() } }));
 vi.mock('@/features/subscription/store', () => ({
   clearStoreEntitlementIfRevenueCatVerifiedEmpty: h.clearStoreEntitlement,
