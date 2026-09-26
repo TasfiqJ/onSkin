@@ -11,7 +11,9 @@ import {
 
 describe('Phase 8 growth attribution stays privacy-safe', () => {
   it('normalizes only real production domains', () => {
-    expect(normalizePublicDomain('https://Layerwell.app/share')).toBe('layerwell.app');
+    expect(normalizePublicDomain('https://Layerwell.app')).toBe('layerwell.app');
+    expect(normalizePublicDomain('https://layerwell.app/share')).toBeNull();
+    expect(normalizePublicDomain('http://layerwell.app')).toBeNull();
     expect(normalizePublicDomain('https://example.com')).toBeNull();
     expect(normalizePublicDomain('https://layerwell.local')).toBeNull();
     expect(normalizePublicDomain('https://layerwell.localhost')).toBeNull();

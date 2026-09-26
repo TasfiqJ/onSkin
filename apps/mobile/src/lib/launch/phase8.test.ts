@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { phase8Flags, productionUrlReady, supportEmailReady } from './phase8';
+import {
+  phase8Flags,
+  productionStoreUrlReady,
+  productionUrlReady,
+  supportEmailReady,
+} from './phase8';
 
 describe('Phase 8 production URL readiness', () => {
   it('keeps public conflict links independently closed', () => {
@@ -28,6 +33,36 @@ describe('Phase 8 production URL readiness', () => {
     expect(productionUrlReady('http://layerwell.app/support')).toBe(false);
     expect(productionUrlReady('not a url')).toBe(false);
     expect(productionUrlReady('')).toBe(false);
+  });
+
+  it('accepts only the matching official storefront host for store fallbacks', () => {
+    expect(productionStoreUrlReady('https://apps.apple.com/app/id123456789', 'app_store')).toBe(
+      true,
+    );
+    expect(
+      productionStoreUrlReady(
+        'https://play.google.com/store/apps/details?id=com.layerwell.app',
+        'play_store',
+      ),
+    ).toBe(true);
+    expect(productionStoreUrlReady('https://layerwell.app/app/id123456789', 'app_store')).toBe(
+      false,
+    );
+    expect(productionStoreUrlReady('https://apps.apple.com/app/id123456789', 'play_store')).toBe(
+      false,
+    );
+    expect(
+      productionStoreUrlReady(
+        'https://downloads.layerwell.app/store/apps/details?id=com.layerwell.app',
+        'play_store',
+      ),
+    ).toBe(false);
+    expect(
+      productionStoreUrlReady('https://apps.apple.com/search?term=layerwell', 'app_store'),
+    ).toBe(false);
+    expect(
+      productionStoreUrlReady('https://play.google.com/store/apps/details', 'play_store'),
+    ).toBe(false);
   });
 
   it('accepts only real production support emails', () => {

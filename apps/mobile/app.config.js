@@ -197,6 +197,7 @@ function normalizeDomain(value) {
     url.protocol !== 'https:' ||
     url.username ||
     url.password ||
+    url.pathname !== '/' ||
     url.search ||
     url.hash ||
     url.port
@@ -208,7 +209,7 @@ function normalizeDomain(value) {
   return productionHostname(hostname) ? hostname : '';
 }
 
-function productionUrl(value) {
+function productionStoreUrl(value, allowedHostname) {
   const trimmed = String(value ?? '').trim();
   if (
     placeholderEnvValue(trimmed) ||
@@ -225,8 +226,24 @@ function productionUrl(value) {
     return '';
   }
 
-  if (url.protocol !== 'https:' || !url.hostname || url.username || url.password) return '';
+  if (
+    url.protocol !== 'https:' ||
+    !url.hostname ||
+    url.username ||
+    url.password ||
+    url.hostname.toLowerCase() !== allowedHostname
+  ) {
+    return '';
+  }
   if (!productionHostname(url.hostname)) return '';
+  const validStoreDestination =
+    allowedHostname === 'apps.apple.com'
+      ? /^\/(?:[a-z]{2}\/)?app\/(?:[^/]+\/)?id\d+\/?$/i.test(url.pathname)
+      : url.pathname === '/store/apps/details' &&
+        /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$/.test(
+          url.searchParams.get('id') ?? '',
+        );
+  if (!validStoreDestination) return '';
   url.hash = '';
   return url.toString();
 }
@@ -458,8 +475,11 @@ module.exports = () => {
   const baseIosBundle = expo.ios.bundleIdentifier;
   const baseAndroidPackage = expo.android.package;
   const finalDomain = normalizeDomain(process.env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN);
-  const appStoreUrl = productionUrl(process.env.EXPO_PUBLIC_APP_STORE_URL);
-  const playStoreUrl = productionUrl(process.env.EXPO_PUBLIC_PLAY_STORE_URL);
+  const appStoreUrl = productionStoreUrl(process.env.EXPO_PUBLIC_APP_STORE_URL, 'apps.apple.com');
+  const playStoreUrl = productionStoreUrl(
+    process.env.EXPO_PUBLIC_PLAY_STORE_URL,
+    'play.google.com',
+  );
 
   expo.name = displayName(expo.name);
   const appName = expo.name;
@@ -504,12 +524,14 @@ module.exports = () => {
     expo.ios.associatedDomains = Array.from(
       new Set([...(expo.ios.associatedDomains ?? []), `applinks:${finalDomain}`]),
     );
+  }
+  if (finalDomain && androidReleaseRequired) {
     expo.android.intentFilters = [
       ...(expo.android.intentFilters ?? []),
       {
         action: 'VIEW',
         autoVerify: true,
-        data: [{ scheme: 'https', host: finalDomain, pathPrefix: '/' }],
+        data: [{ scheme: 'https', host: finalDomain, pathPrefix: '/s/' }],
         category: ['BROWSABLE', 'DEFAULT'],
       },
     ];

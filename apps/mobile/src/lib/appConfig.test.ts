@@ -828,14 +828,14 @@ describe('Expo app identity config', () => {
     expect(expo.android.package).toBe('com.layerwell.app.development');
   });
 
-  it('configures native app links only for normalized production domains', () => {
+  it('configures iOS Universal Links only for an exact normalized production domain', () => {
     const expo = buildExpoConfig({
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: ' https://Layerwell.app/share ',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: ' https://Layerwell.app ',
     });
 
     expect(expo.extra.publicLinkDomain).toBe('layerwell.app');
     expect(expo.ios.associatedDomains).toContain('applinks:layerwell.app');
-    expect(intentFilterText(expo)).toContain('"host":"layerwell.app"');
+    expect(intentFilterText(expo)).not.toContain('"host":');
   });
 
   it('keeps native app links inert for malformed, reserved, or placeholder domains', () => {
@@ -846,6 +846,7 @@ describe('Expo app identity config', () => {
       'https://layerwell.test',
       'https://layerwell.invalid',
       'https://layerwell.example',
+      'https://layerwell.app/share',
       'http://layerwell.app',
       'https://layerwell.app?redirect=https://evil.example',
       'https://layerwell.app:444',
@@ -900,6 +901,25 @@ describe('Expo app identity config', () => {
     expect(placeholder.android.playStoreUrl).toBeUndefined();
     expect(placeholder.extra.appStoreUrl).toBe('');
     expect(placeholder.extra.playStoreUrl).toBe('');
+
+    const wrongHosts = buildExpoConfig({
+      EXPO_PUBLIC_APP_STORE_URL: 'https://layerwell.app/app/id123456789',
+      EXPO_PUBLIC_PLAY_STORE_URL:
+        'https://downloads.layerwell.app/store/apps/details?id=com.layerwell.app',
+    });
+    expect(wrongHosts.ios.appStoreUrl).toBeUndefined();
+    expect(wrongHosts.android.playStoreUrl).toBeUndefined();
+    expect(wrongHosts.extra.appStoreUrl).toBe('');
+    expect(wrongHosts.extra.playStoreUrl).toBe('');
+
+    const wrongOfficialPaths = buildExpoConfig({
+      EXPO_PUBLIC_APP_STORE_URL: 'https://apps.apple.com/search?term=layerwell',
+      EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details',
+    });
+    expect(wrongOfficialPaths.ios.appStoreUrl).toBeUndefined();
+    expect(wrongOfficialPaths.android.playStoreUrl).toBeUndefined();
+    expect(wrongOfficialPaths.extra.appStoreUrl).toBe('');
+    expect(wrongOfficialPaths.extra.playStoreUrl).toBe('');
   });
 });
 

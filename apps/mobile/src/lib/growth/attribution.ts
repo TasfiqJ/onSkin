@@ -55,8 +55,15 @@ export function normalizePublicDomain(domain: string = env.finalBrandDomain): st
     return null;
   }
 
-  if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
-  if (parsed.username || parsed.password || parsed.search || parsed.hash || parsed.port)
+  if (parsed.protocol !== 'https:') return null;
+  if (
+    parsed.username ||
+    parsed.password ||
+    parsed.pathname !== '/' ||
+    parsed.search ||
+    parsed.hash ||
+    parsed.port
+  )
     return null;
 
   const hostname = parsed.hostname.toLowerCase();

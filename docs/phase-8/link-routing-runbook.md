@@ -44,11 +44,26 @@ The final domain must serve `/.well-known/apple-app-site-association` with:
 
 - No file extension
 - `application/json` content type
+- A direct HTTPS `200` response with no `301` or `302` redirect
 - Team ID from Apple Developer
 - Final bundle identifier
 - Paths covering `/s/*`
 
+The entitlement accepts only the exact fully qualified host. Do not put a path,
+query, port, wildcard, or trailing slash in `EXPO_PUBLIC_FINAL_BRAND_DOMAIN`.
+Every separately entitled subdomain needs its own matching association file.
+Apple fetches association files through its CDN on iOS 14 and later; after an
+AASA change, reinstall the test build rather than treating a cached device result
+as proof of the current file. See Apple's
+[Supporting associated domains](https://developer.apple.com/documentation/xcode/supporting-associated-domains)
+and [TN3155](https://developer.apple.com/documentation/technotes/tn3155-debugging-universal-links).
+
 Template: `docs/phase-8/public-site/.well-known/apple-app-site-association.template.json`.
+
+The template deliberately admits only `/s/*` and then excludes every other
+path. Invalid, unknown, expired, revoked, and deleted values still reach the same
+generic in-app unavailable route; path matching is not token or publication
+authority.
 
 ## Future Android App Links
 
@@ -125,3 +140,28 @@ Do not run this as current acceptance. After a positive successor is reviewed:
 7. If Android later re-enters scope, perform its separately reviewed App Link
    and signed-device matrix.
 8. Record governed exact-build evidence in the Phase 8 packet.
+
+For the iOS pass, retain the direct AASA response headers/body, the resolved
+`com.apple.developer.associated-domains` value from the signed archive, Apple
+CDN/device approval state, and cold/warm link results. A simulator, source test,
+Safari address-bar navigation, or an installed development build with a
+different application identifier is not sufficient acceptance evidence.
+
+## Domain-Independent Source Readiness
+
+The repository can prove the following before a domain is selected:
+
+- Native config rejects plaintext, credentialed, port-bearing, query-bearing,
+  fragment-bearing, placeholder, reserved, and path-bearing domain input.
+- The current iOS-only launch contract emits no Android App Link intent filter.
+- Store fallback configuration accepts only an App product path on
+  `apps.apple.com` and a package-bound app-details path on `play.google.com`.
+- The AASA template has a focused source contract proving exact app-ID
+  placeholders, `/s/*` inclusion, and catch-all exclusion.
+- The mobile route ignores the path value and performs no record lookup,
+  attribution, analytics, or network request while CORE-07A is closed.
+
+These checks are source readiness only. They do not satisfy LINK-01 without the
+final domain, DNS/TLS, Apple Team ID and bundle ID, deployed no-redirect AASA,
+signed entitlements, Apple CDN approval, exact store URL, and physical-device
+cold/warm and installed/uninstalled results.

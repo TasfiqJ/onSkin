@@ -19,6 +19,25 @@ export function productionUrlReady(value: string): boolean {
   );
 }
 
+export function productionStoreUrlReady(value: string, store: 'app_store' | 'play_store'): boolean {
+  if (!productionUrlReady(value)) return false;
+  const safeUrl = safeExternalHttpsUrl(value);
+  if (!safeUrl) return false;
+  const url = new URL(safeUrl);
+  const hostname = url.hostname.toLowerCase();
+  if (store === 'app_store') {
+    return (
+      hostname === 'apps.apple.com' &&
+      /^\/(?:[a-z]{2}\/)?app\/(?:[^/]+\/)?id\d+\/?$/i.test(url.pathname)
+    );
+  }
+  return (
+    hostname === 'play.google.com' &&
+    url.pathname === '/store/apps/details' &&
+    /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$/.test(url.searchParams.get('id') ?? '')
+  );
+}
+
 export function supportEmailReady(value: string): boolean {
   const trimmed = value.trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
@@ -36,8 +55,8 @@ export const phase8PublicIdentity = {
   brandName: BRAND.appName,
   finalDomain,
   marketingUrlReady: productionUrlReady(env.marketingUrl),
-  appStoreUrlReady: productionUrlReady(env.appStoreUrl),
-  playStoreUrlReady: productionUrlReady(env.playStoreUrl),
+  appStoreUrlReady: productionStoreUrlReady(env.appStoreUrl, 'app_store'),
+  playStoreUrlReady: productionStoreUrlReady(env.playStoreUrl, 'play_store'),
   supportEmailReady: supportEmailReady(env.supportEmail),
 } as const;
 
