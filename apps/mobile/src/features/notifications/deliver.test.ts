@@ -501,7 +501,7 @@ describe('scheduleTrialReminder', () => {
         expect.objectContaining({
           content: {
             body: 'Trial ends Jul 12 at CA$69.99/annual',
-            categoryIdentifier: 'layerwell.billing.v1',
+            categoryIdentifier: 'layerwell-notification-billing-v1',
             data: {
               destination: 'subscription',
               kind: 'trial_ending',
@@ -604,7 +604,7 @@ describe('notifyBehavioural', () => {
       identifier: 'layerwell-local-replenishment-event-uuid',
       content: {
         body: 'body:replenishment',
-        categoryIdentifier: 'layerwell.shelf.v1',
+        categoryIdentifier: 'layerwell-notification-shelf-v1',
         data: {
           destination: 'shelf',
           kind: 'replenishment',

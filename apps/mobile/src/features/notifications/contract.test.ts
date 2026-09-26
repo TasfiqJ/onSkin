@@ -9,6 +9,15 @@ import {
 } from './contract';
 
 describe('notification contract', () => {
+  it('keeps native category identifiers outside the private-storage namespace', () => {
+    const categories = Object.values(NOTIFICATION_CATEGORY);
+    expect(new Set(categories).size).toBe(categories.length);
+    for (const category of categories) {
+      expect(category).toMatch(/^layerwell-notification-[a-z]+-v1$/u);
+      expect(category).not.toMatch(/^(?:layerwell|onskin)\./u);
+    }
+  });
+
   it('maps every local purpose to a fixed category and bounded destination', () => {
     expect(notificationCategoryForKind('pm_step')).toBe(NOTIFICATION_CATEGORY.routine);
     expect(notificationCategoryForKind('capture')).toBe(NOTIFICATION_CATEGORY.progress);

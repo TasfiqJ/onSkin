@@ -3,10 +3,10 @@ import type { NotificationKind } from '@layerwell/types';
 export const NOTIFICATION_CONTRACT_VERSION = 1 as const;
 
 export const NOTIFICATION_CATEGORY = {
-  billing: 'layerwell.billing.v1',
-  progress: 'layerwell.progress.v1',
-  routine: 'layerwell.routine.v1',
-  shelf: 'layerwell.shelf.v1',
+  billing: 'layerwell-notification-billing-v1',
+  progress: 'layerwell-notification-progress-v1',
+  routine: 'layerwell-notification-routine-v1',
+  shelf: 'layerwell-notification-shelf-v1',
 } as const;
 
 export type NotificationDestination = 'progress' | 'shelf' | 'subscription' | 'today';
