@@ -15,7 +15,8 @@ evidence passes.
 
 | Lane | Task | Owned file surface | State | Integration gate |
 | --- | --- | --- | --- | --- |
-| Root | DB-05 / OPS-07 | DB replay repair, package lock, Phase 9 dependency/privacy evidence | In progress | Full CI replay plus security and quality workflows |
+| Root | DB-05 / OPS-07 | Current-chain replay evidence and replacement security/quality workflows | In progress | Fresh full CI replay after the bounded runner-retry checkpoint |
+| photo04_timelapse | PHOTO-04 prerequisite | Deterministic time-lapse controller, frame-readiness, privacy, and accessibility source lane | Audited; implementation queued after PHOTO-03 integration | Focused lifecycle/privacy suite, repository checks, then real-device evidence |
 
 ## Reviewed integration queue
 
@@ -34,6 +35,9 @@ evidence passes.
 | photo02_app_lock | PHOTO-02 prerequisite | `940aec249` | Root-reviewed after independent adversarial review; 113 focused checks, 4,800-test mobile suite, typecheck, and lint passed | Expo surface refresh plus physical-iPhone biometric, interruption, snapshot, and accessibility evidence |
 | optimization_fixtures | QA-08 prerequisite | `e246685c9` | Root-reviewed; deterministic fixture smoke passed and missing CI export restored | Replacement repository-quality workflow after push |
 | rls_probe_repair | DB-05 / QA-07 prerequisite | `77a08b9b4` | Root-reviewed after the first probe design was rejected; 77-table inventory, positive-control checks, exact sealed-table denials, policy lint, and source docs pass locally | Hosted staging/production execution with real credentials and operational rows |
+| Root | Layerwell deletion-domain repair | `835781b34` | Durable deletion smoke passed 260/260; fixes the exact CI type/domain mismatch and updated deterministic vectors | Replacement security and repository-quality workflows after push |
+| photo03_capture_analysis | PHOTO-03 prerequisite | `11421623e` | Root-reviewed after independent adversarial review and three follow-up repairs; 4,822-test mobile suite, focused race/privacy tests, typecheck, lint, and diff checks passed | Signed archive, supported physical-iPhone calibration, filesystem/no-egress, performance, and accessibility evidence |
+| db05_reset_retry | DB-05 CI resilience | `9b0257a6f` | Exact pre-migration Docker-exit-125 classifier, one bounded retry, 25/25 DB contract checks, and fail-closed non-retry cases passed | Fresh 94-migration two-reset CI replay and generated-type parity |
 
 ## Coordination rules
 
