@@ -15,7 +15,7 @@ export type FaceObservation = {
 
 export type FaceDetectionResult = {
   success: boolean;
-  faces: FaceObservation[];
+  faces: unknown[];
 };
 
 export type FramingState =
@@ -96,7 +96,51 @@ function finiteOrNull(value: number | null | undefined): number | null {
 export function validatedFaceObservations(
   result: FaceDetectionResult | null | undefined,
 ): FaceObservation[] | null {
-  return result?.success === true && Array.isArray(result.faces) ? result.faces : null;
+  if (result?.success !== true || !Array.isArray(result.faces)) return null;
+  const observations: FaceObservation[] = [];
+  for (const candidate of result.faces) {
+    if (typeof candidate !== 'object' || candidate === null || !('frame' in candidate)) return null;
+    const frame = candidate.frame;
+    if (
+      typeof frame !== 'object' ||
+      frame === null ||
+      !('origin' in frame) ||
+      !('size' in frame) ||
+      typeof frame.origin !== 'object' ||
+      frame.origin === null ||
+      typeof frame.size !== 'object' ||
+      frame.size === null
+    ) {
+      return null;
+    }
+    const origin = frame.origin as Record<string, unknown>;
+    const size = frame.size as Record<string, unknown>;
+    if (
+      ![origin.x, origin.y, size.x, size.y].every(
+        (value) => typeof value === 'number' && Number.isFinite(value),
+      )
+    ) {
+      return null;
+    }
+    const native = candidate as Record<string, unknown>;
+    const observation: FaceObservation = {
+      frame: {
+        origin: { x: origin.x as number, y: origin.y as number },
+        size: { x: size.x as number, y: size.y as number },
+      },
+    };
+    if (typeof native.headEulerAngleX === 'number' && Number.isFinite(native.headEulerAngleX)) {
+      observation.headEulerAngleX = native.headEulerAngleX;
+    }
+    if (typeof native.headEulerAngleY === 'number' && Number.isFinite(native.headEulerAngleY)) {
+      observation.headEulerAngleY = native.headEulerAngleY;
+    }
+    if (typeof native.headEulerAngleZ === 'number' && Number.isFinite(native.headEulerAngleZ)) {
+      observation.headEulerAngleZ = native.headEulerAngleZ;
+    }
+    observations.push(observation);
+  }
+  return observations;
 }
 
 function emptyFraming(state: FramingState): FramingAssessment {
@@ -174,6 +218,7 @@ export function assessFraming(
   const headRoll = finiteOrNull(face.headEulerAngleZ);
   const headYaw = finiteOrNull(face.headEulerAngleY);
   const headPitch = finiteOrNull(face.headEulerAngleX);
+  const poseSignalsPresent = headRoll !== null && headYaw !== null && headPitch !== null;
 
   const centerPenalty = clamp01(
     (centerOffsetX / t.maxCenterOffsetX + centerOffsetY / t.maxCenterOffsetY) / 2,
@@ -189,9 +234,10 @@ export function assessFraming(
   );
   const rawScore = clamp01(1 - centerPenalty * 0.45 - scalePenalty * 0.2 - posePenalty * 0.35);
   const poseWithinTolerance =
-    (headRoll == null || Math.abs(headRoll) <= t.maxRollDegrees) &&
-    (headYaw == null || Math.abs(headYaw) <= t.maxYawDegrees) &&
-    (headPitch == null || Math.abs(headPitch) <= t.maxPitchDegrees);
+    poseSignalsPresent &&
+    Math.abs(headRoll) <= t.maxRollDegrees &&
+    Math.abs(headYaw) <= t.maxYawDegrees &&
+    Math.abs(headPitch) <= t.maxPitchDegrees;
   const withinTolerance =
     centerOffsetX <= t.maxCenterOffsetX &&
     centerOffsetY <= t.maxCenterOffsetY &&

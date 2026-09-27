@@ -27,6 +27,11 @@ export type ProgressCaptureReviewLifecycle = Readonly<{
   uri: () => string | null;
 }>;
 
+export type ProgressCaptureAnalysisLifecycle = Readonly<{
+  abortAndDrain: () => Promise<void>;
+  hasPendingCleanup: () => boolean;
+}>;
+
 function childDirectory(directory: string, name: string): string {
   return `${directory.endsWith('/') ? directory : `${directory}/`}${name}/`;
 }
@@ -73,6 +78,7 @@ export function trustedProgressCaptureLocalDate(value: unknown): string | null {
 export function createProgressCaptureReviewLifecycle(
   fileSystem: ProgressCaptureFileSystem,
   source: ProgressCaptureSource | null,
+  analysis?: ProgressCaptureAnalysisLifecycle,
 ): ProgressCaptureReviewLifecycle {
   let sourceReleased = source === null || !source.disposable;
   let persisted = false;
@@ -101,6 +107,7 @@ export function createProgressCaptureReviewLifecycle(
     if (saveInFlight !== null) return saveInFlight;
 
     const operation = (async () => {
+      if (analysis) await analysis.abortAndDrain();
       if (persisted) {
         await deleteSource();
         return { persistedNow: false };
@@ -124,6 +131,7 @@ export function createProgressCaptureReviewLifecycle(
   };
 
   const discard = async (): Promise<void> => {
+    if (analysis) await analysis.abortAndDrain();
     const activeSave = saveInFlight;
     if (activeSave !== null) {
       try {
@@ -139,7 +147,8 @@ export function createProgressCaptureReviewLifecycle(
   return Object.freeze({
     discard,
     dispose: discard,
-    hasPendingCleanup: () => source !== null && !sourceReleased,
+    hasPendingCleanup: () =>
+      (source !== null && !sourceReleased) || (analysis?.hasPendingCleanup() ?? false),
     hasPersisted: () => persisted,
     save,
     uri: () => source?.uri ?? null,

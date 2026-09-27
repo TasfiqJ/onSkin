@@ -36,7 +36,7 @@ describe('measured photo review verdict', () => {
     });
   });
 
-  it('flags lighting variation from the frame or reference', () => {
+  it('flags measured lighting variation without inferring darkness from a composite reference score', () => {
     expect(
       reviewQuality({
         framing: MATCHED,
@@ -47,9 +47,8 @@ describe('measured photo review verdict', () => {
       reviewQuality({
         framing: MATCHED,
         lighting: { ...GOOD_LIGHT, score: 0.55 },
-        refLighting: 0.8,
       }).flag,
-    ).toBe('lighting_varies');
+    ).toBe('matched');
   });
 
   it('distinguishes framing-only and combined variation', () => {

@@ -16,7 +16,23 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 > with the Shelf camera routes; and keeps the exact raw still owned by an outer
 > route boundary until cleanup or atomic review handoff. Navigation and gate
 > replacement cannot silently orphan a disposable still; failed cleanup remains
-> visibly retryable. These are source controls, not signed-archive or
+> visibly retryable. A 2026-09-26 PHOTO-03 source hardening checkpoint now
+> allowlists native detector output to bounding-box coordinates plus finite
+> Euler angles, refuses a matched pose when any required angle is absent or
+> nonfinite, and runs detector/lighting work under one per-URI account-generation
+> coordinator. Timeout, URI replacement, navigation, save, and unmount abort
+> where possible and drain before the raw still can be persisted or deleted.
+> The 64 px ImageManipulator JPEG is reserved in the existing content-free
+> plaintext-staging journal before native generation, adopted into its owned
+> path, deleted strictly, retried visibly on failure, and recovered at startup;
+> unresolved derivative cleanup blocks save and user-triggered route removal without treating
+> low measured quality as a save blocker. Reference comparisons no longer infer
+> “darker” from the composite exposure/balance/clipping score. A gate/account-
+> forced review unmount transfers its exact analyzer and raw lifecycle to a
+> process owner; failed disposal remains retained and the next shutter retries
+> it before creating another still. Native detector state reasserts the account/
+> URI lease immediately after every native await, so an abort cannot publish a
+> late face result or fallback error. These are source controls, not signed-archive or
 > physical-iPhone proof. The retained CAT-04/CAT-05 web packets predate this
 > source and are stale until regenerated. See D-085, the CAT-06 source
 > checkpoint, and the Phase 5 exit review.
@@ -246,7 +262,7 @@ Design tokens (docs/00 §8, D-005, docs/02 §7): Instrument Serif (the "Progress
 
 ### 10. Engineering / implementation notes
 
-- **Current capture pipeline:** Expo Camera manual still with a static preview overlay; the captured local file is analyzed in review using transient ML Kit face framing/pose and a temporary downsampled luminance/balance sample. There is no real-time frame-processor guidance or auto-capture in the current source. CAT-06 owns permission/foreground/mount/shutter/raw-file cleanup; the target `react-native-vision-camera` frame processor and ghost-driven auto-capture described above remain unimplemented.
+- **Current capture pipeline:** Expo Camera manual still with a static preview overlay; the captured local file is analyzed in review using transient ML Kit face framing/pose and a journal-owned, strictly deleted downsampled luminance/balance sample. The analyzer retains only bounding-box coordinates and finite Euler angles in JavaScript; missing pose cannot match. One per-URI lease drains analysis before raw persistence/deletion, and unresolved derivative cleanup keeps review fail-closed with retry. There is no real-time frame-processor guidance or auto-capture in the current source. CAT-06 owns permission/foreground/mount/shutter/raw-file cleanup; the target `react-native-vision-camera` frame processor and ghost-driven auto-capture described above remain unimplemented. PHOTO-03 remains open pending physical-device calibration, zero-egress capture, and signed-build evidence.
 - **Comparison UI:** the **slider** as a Reanimated gesture with a Skia/clip-path reveal; the **film strip** as a virtualised list; the optional time-lapse as a frame sequence.
 - **Storage:** **on-device encrypted files** in the app sandbox (`local_uri`); compressed ~150–400KB each, ~50–200/user/year (docs/00). A future cloud implementation may use the private Supabase bucket on a Wi-Fi/charging queue, with Cloudflare R2/S3 behind signed URLs as a scale fallback, but current V1 exposes no backup path.
 - **Security:** client-side encryption; biometric app-lock (`expo-local-authentication`) on the gallery; owner-only RLS; signed URLs for any cloud photo.

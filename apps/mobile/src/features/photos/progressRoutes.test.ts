@@ -239,6 +239,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('cameraAccess.beginCameraOperation()');
     expect(source).toContain('cameraAccess.isCameraOperationCurrent(cameraOperation)');
     expect(source).toContain('createProgressCaptureReviewLifecycle(FileSystem, {');
+    expect(source).toContain('await retryPendingProgressReviewCleanup();');
     expect(source).toContain('createProgressCaptureRouteBoundary<NavigationAction>({');
     expect(source).toContain('useSyncExternalStore(');
     expect(source).toContain('captureBoundary.retryCleanup()');
@@ -292,6 +293,7 @@ describe('Progress route mobile contracts', () => {
     const nativeProvider = readSource('features/photos/CaptureAnalysisProvider.native.tsx');
     const fallbackProvider = readSource('features/photos/CaptureAnalysisProvider.tsx');
     const nativeDetector = readSource('features/photos/useDetectedFaces.native.ts');
+    const detectorOperation = readSource('features/photos/detectedFacesOperation.ts');
     const lighting = readSource('features/photos/analyzePhotoLighting.ts');
 
     expect(capture).toContain("signal_source: 'post_capture_measurement'");
@@ -310,7 +312,7 @@ describe('Progress route mobile contracts', () => {
     expect(review).toContain('lightingScore: analysis.lighting.score');
     expect(review).toContain("? ('post_capture_measurement' as const)");
     expect(review).toContain('qualitySource,');
-    expect(review).toContain("data?.reference?.qualitySource === 'post_capture_measurement'");
+    expect(review).not.toContain('refLighting');
     expect(review).toContain('await add.mutateAsync({');
     expect(review).toContain('await lifecycle.save(persist');
     expect(review).toContain('navigationInFlightRef.current = true;');
@@ -331,8 +333,13 @@ describe('Progress route mobile contracts', () => {
     expect(analysis).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_ANALYSIS');
     expect(analysis).toContain('ANALYSIS_TIMEOUT_MS');
     expect(analysis).toContain('const analysisTerminal =');
+    expect(analysis).toContain('activeCoordinator.activate(analysisUri ?? null);');
+    expect(analysis).toContain('useSyncExternalStore(');
+    expect(analysis).toContain('return () => activeCoordinator.abort();');
+    expect(analysis).not.toContain('useMemo(() => activeCoordinator.activate');
     expect(analysis).toContain('if (!analysisUri || analysisTerminal) return;');
-    expect(analysis).toContain('}, [analysisTerminal, analysisUri]);');
+    expect(analysis).toContain('activeCoordinator.abort();');
+    expect(analysis).toContain('}, [activeCoordinator, analysisTerminal, analysisUri]);');
     expect(analysis.indexOf('if (timedOutUri === analysisUri)')).toBeLessThan(
       analysis.indexOf("} else if (faceResult.status === 'done')"),
     );
@@ -344,11 +351,14 @@ describe('Progress route mobile contracts', () => {
     expect(nativeProvider).toContain("performanceMode: 'accurate'");
     expect(fallbackProvider).not.toContain('@infinitered/react-native-mlkit-face-detection');
     expect(nativeDetector).toContain('useFaceDetection');
-    expect(nativeDetector).toContain('await detector.initialize()');
-    expect(nativeDetector).toContain('validatedFaceObservations(await detector.detectFaces(uri))');
-    expect(nativeDetector).toContain('if (!faces)');
+    expect(nativeDetector).toContain('runDetectedFacesOperation({');
+    expect(nativeDetector).toContain('publish: (result) => setRun({ uri, ...result })');
+    expect(detectorOperation).toContain('await detector.initialize()');
+    expect(detectorOperation).toContain('control.assertActive();');
     expect(lighting).toContain('SAMPLE_WIDTH = 64');
-    expect(lighting).toContain('sampleFile.delete()');
+    expect(lighting).toContain("reservePlaintextStaging('photo_analysis_jpeg')");
+    expect(lighting).toContain('await deps.moveAsync({ from: generatedUri, to: handle.uri });');
+    expect(lighting).toContain('throw new PhotoAnalysisCleanupError(retryCleanup');
     expect(detail).toContain("photo.qualitySource === 'post_capture_measurement'");
     expect(detail).toContain("? 'Capture checks recorded'");
     expect(detail).toContain(": 'Quality not measured'");

@@ -30,6 +30,7 @@ import {
   trustedExpoCameraCaptureUri,
   trustedProgressCaptureSessionId,
 } from '@/features/photos/progressCapturePrivacy';
+import { retryPendingProgressReviewCleanup } from '@/features/photos/progressCaptureReviewCleanup';
 import {
   createProgressCaptureRouteBoundary,
   type ProgressCaptureReviewParams,
@@ -845,6 +846,9 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
       // App-boot cleanup owns one immutable snapshot of Expo Camera's raw
       // cache. No new camera photo may be created until that snapshot drains.
       await waitForLabelPhotoStartupScavenge();
+      // A prior review can be forcibly unmounted by an account/gate boundary.
+      // Drain its retained analyzer/raw cleanup before creating another still.
+      await retryPendingProgressReviewCleanup();
       if (
         !mountedRef.current ||
         captureLeaseGenerationRef.current !== captureLease ||

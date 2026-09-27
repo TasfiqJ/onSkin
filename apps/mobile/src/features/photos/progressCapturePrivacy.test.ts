@@ -180,7 +180,7 @@ describe('Progress raw capture trust boundary', () => {
     expect(source).toContain('localUri: trustedUri');
     expect(source).toContain('await lifecycle.save(persist');
     expect(source).toContain('await lifecycle.discard();');
-    expect(source).toContain('void lifecycle.dispose().catch(() => undefined);');
+    expect(source).toContain('void retainProgressReviewCleanup(lifecycle).catch(() => undefined);');
     expect(source).toContain(
       'source !== null && captureMetadata.nativeMetadataValid ? source.uri : null',
     );
@@ -197,6 +197,82 @@ describe('Progress raw capture trust boundary', () => {
 });
 
 describe('Progress capture review lifecycle', () => {
+  it('drains analyzer work before deleting the raw capture', async () => {
+    const analysisDrain = deferred<void>();
+    const events: string[] = [];
+    const analysis = {
+      abortAndDrain: vi.fn(async () => {
+        events.push('analysis:start');
+        await analysisDrain.promise;
+        events.push('analysis:end');
+      }),
+      hasPendingCleanup: vi.fn(() => false),
+    };
+    const fileSystem = {
+      deleteAsync: vi.fn(async () => {
+        events.push('delete');
+      }),
+    };
+    const lifecycle = createProgressCaptureReviewLifecycle(
+      fileSystem,
+      { uri: CAMERA_URI, disposable: true },
+      analysis,
+    );
+
+    const discard = lifecycle.discard();
+    await Promise.resolve();
+    expect(fileSystem.deleteAsync).not.toHaveBeenCalled();
+    analysisDrain.resolve();
+    await expect(discard).resolves.toBeUndefined();
+    expect(events).toEqual(['analysis:start', 'analysis:end', 'delete']);
+  });
+
+  it('retains the raw capture while analyzer plaintext cleanup needs retry', async () => {
+    const analysis = {
+      abortAndDrain: vi
+        .fn<() => Promise<void>>()
+        .mockRejectedValueOnce(new Error('sample cleanup failed'))
+        .mockResolvedValueOnce(undefined),
+      hasPendingCleanup: vi.fn<() => boolean>().mockReturnValueOnce(true).mockReturnValue(false),
+    };
+    const fileSystem = { deleteAsync: vi.fn(async () => undefined) };
+    const lifecycle = createProgressCaptureReviewLifecycle(
+      fileSystem,
+      { uri: CAMERA_URI, disposable: true },
+      analysis,
+    );
+
+    await expect(lifecycle.discard()).rejects.toThrow('sample cleanup failed');
+    expect(lifecycle.hasPendingCleanup()).toBe(true);
+    expect(fileSystem.deleteAsync).not.toHaveBeenCalled();
+    await expect(lifecycle.discard()).resolves.toBeUndefined();
+    expect(fileSystem.deleteAsync).toHaveBeenCalledOnce();
+  });
+
+  it('does not persist until analyzer plaintext cleanup retry succeeds', async () => {
+    const analysis = {
+      abortAndDrain: vi
+        .fn<() => Promise<void>>()
+        .mockRejectedValueOnce(new Error('sample cleanup failed'))
+        .mockResolvedValueOnce(undefined),
+      hasPendingCleanup: vi.fn(() => true),
+    };
+    const persist = vi.fn(async () => undefined);
+    const fileSystem = { deleteAsync: vi.fn(async () => undefined) };
+    const lifecycle = createProgressCaptureReviewLifecycle(
+      fileSystem,
+      { uri: CAMERA_URI, disposable: true },
+      analysis,
+    );
+
+    await expect(lifecycle.save(persist)).rejects.toThrow('sample cleanup failed');
+    expect(persist).not.toHaveBeenCalled();
+    expect(fileSystem.deleteAsync).not.toHaveBeenCalled();
+    await expect(lifecycle.save(persist)).resolves.toEqual({ persistedNow: true });
+    expect(persist).toHaveBeenCalledOnce();
+    expect(fileSystem.deleteAsync).toHaveBeenCalledOnce();
+  });
+
   it('deduplicates concurrent discard and releases only after deletion succeeds', async () => {
     const deletion = deferred<void>();
     const fileSystem = {

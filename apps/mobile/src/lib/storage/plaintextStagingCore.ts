@@ -9,8 +9,90 @@ const JOURNAL_VERSION = 1;
 const MAX_JOURNAL_ENTRIES = 128;
 const STAGING_DIRECTORY_NAME = 'private-plaintext-staging-v1/';
 const OPAQUE_OPERATION_ID = /^[0-9a-f]{32}$/;
+const IMAGE_MANIPULATOR_JPEG =
+  /^(?:[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}|[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\.jpg$/u;
 
-export type PlaintextStagingPurpose = 'data_export_json' | 'photo_share_jpeg' | 'photo_share_png';
+export function isCanonicalImageManipulatorJpegName(value: string): boolean {
+  return IMAGE_MANIPULATOR_JPEG.test(value);
+}
+
+export function createPlaintextStagingStartupRecovery(run: () => Promise<number>) {
+  let current: Promise<number> | null = null;
+  let rejected = false;
+  const launch = () => {
+    rejected = false;
+    current = Promise.resolve()
+      .then(run)
+      .catch((error: unknown) => {
+        rejected = true;
+        throw error;
+      });
+    return current;
+  };
+  return Object.freeze({
+    start: () => current ?? launch(),
+    retry: () => (current === null || rejected ? launch() : current),
+  });
+}
+
+export class ImageManipulatorPlaintextCleanupError extends Error {
+  readonly retryCleanup: () => Promise<void>;
+
+  constructor(retryCleanup: () => Promise<void>, cause?: unknown) {
+    super('IMAGE_MANIPULATOR_PLAINTEXT_CLEANUP_REQUIRED', { cause });
+    this.name = 'ImageManipulatorPlaintextCleanupError';
+    this.retryCleanup = retryCleanup;
+  }
+}
+
+export function isImageManipulatorPlaintextCleanupError(
+  error: unknown,
+): error is ImageManipulatorPlaintextCleanupError {
+  return error instanceof ImageManipulatorPlaintextCleanupError;
+}
+
+/** Serializes native generation through adoption so a failure rescan cannot delete another run. */
+export function createImageManipulatorPlaintextCoordinator(scavenge: () => Promise<number>) {
+  let tail: Promise<void> = Promise.resolve();
+
+  const serialize = <T>(operation: () => Promise<T>): Promise<T> => {
+    const pending = tail.then(operation, operation);
+    tail = pending.then(
+      () => undefined,
+      () => undefined,
+    );
+    return pending;
+  };
+
+  const scavengeSerialized = (): Promise<number> => serialize(scavenge);
+  const retryCleanup = (): Promise<void> =>
+    serialize(async () => {
+      await scavenge();
+    });
+
+  return Object.freeze({
+    run: <T>(operation: () => Promise<T>): Promise<T> =>
+      serialize(async () => {
+        try {
+          return await operation();
+        } catch (primaryError) {
+          try {
+            await scavenge();
+          } catch (cleanupError) {
+            throw new ImageManipulatorPlaintextCleanupError(retryCleanup, cleanupError);
+          }
+          throw primaryError;
+        }
+      }),
+    scavenge: scavengeSerialized,
+  });
+}
+
+export type PlaintextStagingPurpose =
+  | 'data_export_json'
+  | 'photo_analysis_jpeg'
+  | 'photo_share_jpeg'
+  | 'photo_share_png';
 
 export type PlaintextStagingState =
   | 'reserved'
@@ -68,7 +150,10 @@ function hasExactKeys(record: Record<string, unknown>, expected: readonly string
 
 function isPurpose(value: unknown): value is PlaintextStagingPurpose {
   return (
-    value === 'data_export_json' || value === 'photo_share_jpeg' || value === 'photo_share_png'
+    value === 'data_export_json' ||
+    value === 'photo_analysis_jpeg' ||
+    value === 'photo_share_jpeg' ||
+    value === 'photo_share_png'
   );
 }
 

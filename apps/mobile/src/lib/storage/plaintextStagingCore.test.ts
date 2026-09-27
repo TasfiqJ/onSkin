@@ -4,6 +4,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   createPlaintextStagingCoordinator,
+  createPlaintextStagingStartupRecovery,
+  createImageManipulatorPlaintextCoordinator,
+  isCanonicalImageManipulatorJpegName,
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
   PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
   PLAINTEXT_STAGING_ENTRY_UNOWNED,
@@ -16,6 +19,14 @@ const FIRST_ID = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const SECOND_ID = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 const STAGING_DIRECTORY = 'file://cache/private-plaintext-staging-v1/';
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+
+function deferred<T>() {
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  const promise = new Promise<T>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
 
 function createHarness(options: { cacheDirectory?: string | null; ids?: string[] } = {}) {
   const storage = new Map<string, string>();
@@ -387,18 +398,78 @@ describe('plaintext staging journal', () => {
 });
 
 describe('plaintext staging startup contract', () => {
+  it('rescans a failed manipulation before admitting the next operation', async () => {
+    const scan = deferred<void>();
+    const events: string[] = [];
+    const coordinator = createImageManipulatorPlaintextCoordinator(async () => {
+      events.push('scan:start');
+      await scan.promise;
+      events.push('scan:end');
+      return 1;
+    });
+
+    const first = coordinator.run(async () => {
+      events.push('first');
+      throw new Error('native failed after write');
+    });
+    const second = coordinator.run(async () => {
+      events.push('second');
+      return 2;
+    });
+    await vi.waitFor(() => expect(events).toEqual(['first', 'scan:start']));
+    scan.resolve();
+
+    await expect(first).rejects.toThrow('native failed after write');
+    await expect(second).resolves.toBe(2);
+    expect(events).toEqual(['first', 'scan:start', 'scan:end', 'second']);
+  });
+
+  it('recognizes only exact ImageManipulator UUIDv4 JPEG cache names', () => {
+    expect(isCanonicalImageManipulatorJpegName('00000000-0000-4000-8000-000000000001.jpg')).toBe(
+      true,
+    );
+    expect(isCanonicalImageManipulatorJpegName('00000000-0000-4000-8000-000000000001.png')).toBe(
+      false,
+    );
+    expect(isCanonicalImageManipulatorJpegName('../private.jpg')).toBe(false);
+  });
+
+  it('shares one startup drain and permits an exact retry after recovery failure', async () => {
+    const run = vi
+      .fn<() => Promise<number>>()
+      .mockRejectedValueOnce(new Error('cache unavailable'))
+      .mockResolvedValueOnce(2);
+    const recovery = createPlaintextStagingStartupRecovery(run);
+
+    const first = recovery.start();
+    expect(recovery.start()).toBe(first);
+    await expect(first).rejects.toThrow('cache unavailable');
+    await expect(recovery.retry()).resolves.toBe(2);
+    expect(run).toHaveBeenCalledTimes(2);
+  });
+
   it('starts one content-free scavenger before the root component can mount', () => {
     const rootLayout = readFileSync(`${SRC_DIR}/app/_layout.tsx`, 'utf8');
     const functionOffset = rootLayout.indexOf('export default function RootLayout()');
     const scavengeOffset = rootLayout.indexOf(
-      'void scavengePlaintextStaging().catch(() => undefined);',
+      'void startPlaintextStagingRecovery().catch(() => undefined);',
     );
 
     expect(rootLayout).toContain(
-      "import { scavengePlaintextStaging } from '@/lib/storage/plaintextStaging';",
+      "import { startPlaintextStagingRecovery } from '@/lib/storage/plaintextStaging';",
     );
     expect(scavengeOffset).toBeGreaterThan(-1);
     expect(scavengeOffset).toBeLessThan(functionOffset);
-    expect(rootLayout).not.toContain('console.log(scavengePlaintextStaging');
+    expect(rootLayout).not.toContain('console.log(startPlaintextStagingRecovery');
+  });
+
+  it('routes the exported retry through the startup coordinator before current rescanning', () => {
+    const source = readFileSync(`${SRC_DIR}/lib/storage/plaintextStaging.ts`, 'utf8');
+    const retry = source.slice(source.indexOf('export function retryPlaintextStagingRecovery'));
+
+    expect(retry).toMatch(/return startup\s*\.retry\(\)/u);
+    expect(retry.indexOf('return startup')).toBeLessThan(
+      retry.indexOf('imageManipulatorPlaintext'),
+    );
   });
 });

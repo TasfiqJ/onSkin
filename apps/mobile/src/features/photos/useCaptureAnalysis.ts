@@ -1,7 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Platform } from 'react-native';
 
 import { analyzePhotoLighting } from './analyzePhotoLighting';
+import {
+  createCaptureAnalysisCoordinator,
+  type CaptureAnalysisCoordinator,
+} from './captureAnalysisCoordinator';
 import {
   assessFraming,
   captureAnalysisStatus,
@@ -107,15 +111,29 @@ export function useCaptureAnalysis({
   width,
   height,
   fixtureName,
+  coordinator,
 }: {
   uri: string | null;
   width: number | null;
   height: number | null;
   fixtureName?: string;
+  coordinator?: CaptureAnalysisCoordinator;
 }): CaptureAnalysis {
   const fixture = useMemo(() => devCaptureAnalysisFixture(fixtureName), [fixtureName]);
   const analysisUri = Platform.OS !== 'web' && fixture == null && uri ? uri : undefined;
-  const faceResult = useDetectedFaces(analysisUri);
+  const fallbackCoordinator = useMemo(() => createCaptureAnalysisCoordinator(), []);
+  const activeCoordinator = coordinator ?? fallbackCoordinator;
+  const lease = useSyncExternalStore(
+    activeCoordinator.subscribe,
+    activeCoordinator.getActiveLease,
+    () => null,
+  );
+  useEffect(() => {
+    activeCoordinator.activate(analysisUri ?? null);
+    return () => activeCoordinator.abort();
+  }, [activeCoordinator, analysisUri]);
+  const committedLease = lease?.uri === analysisUri ? lease : null;
+  const faceResult = useDetectedFaces(analysisUri, committedLease);
   const [lightingRun, setLightingRun] = useState<LightingRun>({
     uri: null,
     assessment: unavailableLighting(),
@@ -130,7 +148,9 @@ export function useCaptureAnalysis({
   useEffect(() => {
     if (!analysisUri) return;
     let cancelled = false;
-    void analyzePhotoLighting(analysisUri)
+    if (!committedLease) return;
+    void committedLease
+      .run((control) => analyzePhotoLighting(analysisUri, control))
       .then((assessment) => {
         if (!cancelled) setLightingRun({ uri: analysisUri, assessment });
       })
@@ -142,13 +162,16 @@ export function useCaptureAnalysis({
     return () => {
       cancelled = true;
     };
-  }, [analysisUri]);
+  }, [analysisUri, committedLease]);
 
   useEffect(() => {
     if (!analysisUri || analysisTerminal) return;
-    const timer = setTimeout(() => setTimedOutUri(analysisUri), ANALYSIS_TIMEOUT_MS);
+    const timer = setTimeout(() => {
+      activeCoordinator.abort();
+      setTimedOutUri(analysisUri);
+    }, ANALYSIS_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, [analysisTerminal, analysisUri]);
+  }, [activeCoordinator, analysisTerminal, analysisUri]);
 
   if (fixture) return fixtureAnalysis(fixture);
   if (!analysisUri || width == null || height == null) {

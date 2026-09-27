@@ -9,7 +9,6 @@ import type { FramingAssessment, LightingAssessment } from './captureAnalysis';
 export function reviewQuality(input: {
   framing: FramingAssessment;
   lighting: LightingAssessment;
-  refLighting?: number | null;
 }): { flag: PhotoQualityFlag; aligned: boolean | null; wellLit: boolean | null } {
   const aligned =
     input.framing.state === 'matched' ? true : input.framing.state === 'adjust' ? false : null;
@@ -21,14 +20,12 @@ export function reviewQuality(input: {
           input.lighting.state === 'uneven'
         ? false
         : null;
-  const muchDarker =
-    input.refLighting != null &&
-    input.lighting.score != null &&
-    input.lighting.score < input.refLighting - 0.2;
   let flag: PhotoQualityFlag = 'unmeasured';
-  if (aligned === true && wellLit === true && !muchDarker) flag = 'matched';
+  // A composite score mixes exposure, clipping, and side balance, so it cannot
+  // truthfully establish that this capture is darker than the reference.
+  if (aligned === true && wellLit === true) flag = 'matched';
   else if (aligned === false && wellLit === false) flag = 'low';
   else if (aligned === false) flag = 'misaligned';
-  else if (wellLit === false || muchDarker) flag = 'lighting_varies';
+  else if (wellLit === false) flag = 'lighting_varies';
   return { flag, aligned, wellLit };
 }

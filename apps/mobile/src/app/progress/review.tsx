@@ -9,6 +9,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RouteIconButton, Text } from '@/components/ui';
 import { CaptureAnalysisProvider } from '@/features/photos/CaptureAnalysisProvider';
 import { PHOTO_COPY, QUALITY_NOTE } from '@/features/photos/copy';
+import {
+  createCaptureAnalysisCoordinator,
+  type CaptureAnalysisCoordinator,
+} from '@/features/photos/captureAnalysisCoordinator';
 import { localDay } from '@/features/photos/date';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
@@ -21,6 +25,7 @@ import {
   trustedProgressCaptureTimeOfDay,
   type ProgressCaptureSource,
 } from '@/features/photos/progressCapturePrivacy';
+import { retainProgressReviewCleanup } from '@/features/photos/progressCaptureReviewCleanup';
 import { reviewQuality } from '@/features/photos/quality';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { useCaptureAnalysis } from '@/features/photos/useCaptureAnalysis';
@@ -56,6 +61,7 @@ type SaveCaptureResult = 'navigating' | 'save_failed' | 'cleanup_failed' | 'busy
 
 type ReviewCaptureBoundaryState = Readonly<{
   actionBusy: boolean;
+  analysisCoordinator: CaptureAnalysisCoordinator;
   captureSessionId: string | null;
   capturePersisted: boolean;
   capturedUri: string | null;
@@ -186,6 +192,7 @@ function ReviewScreenContent({
   const photoHeight = compact ? Math.max(286, Math.min(330, Math.round(height * 0.54))) : 380;
   const {
     actionBusy,
+    analysisCoordinator,
     captureSessionId,
     capturePersisted,
     capturedUri,
@@ -201,19 +208,15 @@ function ReviewScreenContent({
     width: positiveNumber(params.photoWidth),
     height: positiveNumber(params.photoHeight),
     fixtureName: params.analysisFixture,
+    coordinator: analysisCoordinator,
   });
 
   const { data } = usePhotos('front');
   const { add } = usePhotoActions();
   const [saveFailed, setSaveFailed] = useState(false);
-  const refLighting =
-    data?.reference?.qualitySource === 'post_capture_measurement'
-      ? data.reference.lightingScore
-      : null;
   const verdict = reviewQuality({
     framing: analysis.framing,
     lighting: analysis.lighting,
-    refLighting,
   });
   const noteTone: ChipTone =
     analysis.status === 'checking' || verdict.flag === 'unmeasured'
@@ -596,7 +599,10 @@ export default function ReviewScreen() {
       timeOfDay,
     };
   });
-  const [lifecycle] = useState(() => createProgressCaptureReviewLifecycle(FileSystem, source));
+  const [analysisCoordinator] = useState(() => createCaptureAnalysisCoordinator());
+  const [lifecycle] = useState(() =>
+    createProgressCaptureReviewLifecycle(FileSystem, source, analysisCoordinator),
+  );
   const navigation = useNavigation();
   const mountedRef = useRef(false);
   const navigationInFlightRef = useRef(false);
@@ -610,7 +616,9 @@ export default function ReviewScreen() {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      void lifecycle.dispose().catch(() => undefined);
+      // A gate/account forced unmount has no route UI left to own retry. Move
+      // the exact lifecycle into the process owner before attempting cleanup.
+      void retainProgressReviewCleanup(lifecycle).catch(() => undefined);
     };
   }, [lifecycle]);
 
@@ -656,6 +664,7 @@ export default function ReviewScreen() {
 
   const boundary: ReviewCaptureBoundaryState = {
     actionBusy,
+    analysisCoordinator,
     captureSessionId: captureMetadata.captureSessionId,
     capturePersisted,
     capturedUri: source !== null && captureMetadata.nativeMetadataValid ? source.uri : null,
@@ -678,13 +687,14 @@ export default function ReviewScreen() {
         return 'navigating';
       } catch {
         const persisted = lifecycle.hasPersisted();
+        const cleanupPending = lifecycle.hasPendingCleanup();
         navigationInFlightRef.current = false;
         if (mountedRef.current) {
           setCapturePersisted(persisted);
-          setCleanupFailed(persisted);
+          setCleanupFailed(cleanupPending);
           setActionBusy(false);
         }
-        return persisted ? 'cleanup_failed' : 'save_failed';
+        return cleanupPending ? 'cleanup_failed' : 'save_failed';
       }
     },
     takenLocalDate: captureMetadata.takenLocalDate,
