@@ -15,9 +15,11 @@ describe('onboarding route contracts', () => {
   it('keeps semantic opened-date radios operable in the first-session E2E driver', () => {
     const source = readFileSync(ONBOARDING_E2E_SCRIPT, 'utf8');
 
-    expect(source).toContain('button,[role="button"],[role="checkbox"],[role="radio"],a,label');
     expect(source).toContain(
-      'button,[role="button"],[role="checkbox"],[role="radio"],a,input,textarea,select',
+      'button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label',
+    );
+    expect(source).toContain(
+      'button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,input,textarea,select',
     );
     expect(source.match(/\[role="radio"\]/g)).toHaveLength(3);
     expect(source).toContain(
@@ -35,6 +37,11 @@ describe('onboarding route contracts', () => {
     );
     expect(source).toContain("await waitForPath(client, '/today', 30_000)");
     expect(source).toContain("'Continuing with the free plan incorrectly exposed Pro authority.'");
+    expect(source).toContain("await clickByText(client, 'Shelf')");
+    expect(source).toContain("await clickByText(client, 'Progress', { exact: false })");
+    expect(source).toContain("await clickByText(client, 'You')");
+    expect(source).toContain("await clickByText(client, 'Today')");
+    expect(source).toContain('keyTabRoundTripPassed:');
     expect(source).not.toContain("clickByText(client, 'Explore first'");
     expect(source).not.toContain("waitForText(client, 'Start today'");
   });

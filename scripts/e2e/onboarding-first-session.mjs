@@ -401,7 +401,7 @@ function rectByTextExpression(label, exact) {
       return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const textMatches = (text) => exact ? text === label : text.includes(label);
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,label'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label'));
     const matches = [];
     for (const node of nodes) {
       if (!visible(node)) continue;
@@ -474,7 +474,7 @@ function scrollTextIntoViewExpression(label, exact) {
       return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const textMatches = (text) => exact ? text === label : text.includes(label);
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,label'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label'));
     const target = nodes.find((node) => {
       if (!visible(node)) return false;
       const values = [
@@ -569,7 +569,7 @@ function auditExpression() {
       const style = getComputedStyle(node);
       return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,input,textarea,select'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,input,textarea,select'));
     const controls = [];
     const issues = [];
 
@@ -1066,6 +1066,51 @@ async function run() {
       'Continuing with the free plan incorrectly exposed Pro authority.',
     );
 
+    await clickByText(client, 'Shelf');
+    await waitForPath(client, '/shelf', 30_000);
+    await waitForText(client, '3 products', 30_000);
+    await delay(750);
+    const shelfAfterOnboarding = await captureStep(client, '20-shelf-after-onboarding', {
+      assertClean: false,
+    });
+    assert(
+      productNames.every((product) => shelfAfterOnboarding.bodyText.includes(product.name)),
+      'Shelf did not retain every product added during onboarding.',
+    );
+
+    await clickByText(client, 'Progress', { exact: false });
+    await waitForPath(client, '/progress', 30_000);
+    await waitForText(client, 'Unlock your private photo timeline.', 30_000);
+    await delay(750);
+    const progressAfterOnboarding = await captureStep(client, '21-progress-after-onboarding', {
+      assertClean: false,
+    });
+    assert(
+      progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
+        progressAfterOnboarding.bodyText.includes('Part of Layerwell Pro.'),
+      'Progress tab did not render the truthful free-plan feature gate.',
+    );
+    await clickByText(client, 'Maybe later');
+    await delay(750);
+
+    await clickByText(client, 'You');
+    await waitForPath(client, '/you', 30_000);
+    await delay(750);
+    const youAfterOnboarding = await captureStep(client, '22-you-after-onboarding', {
+      assertClean: false,
+    });
+    assert(
+      youAfterOnboarding.bodyText.toLowerCase().includes('your data') &&
+        youAfterOnboarding.bodyText.includes('Manage subscription'),
+      'You tab did not render its account and settings surface.',
+    );
+
+    await clickByText(client, 'Today');
+    await waitForPath(client, '/today', 30_000);
+    const todayAfterTabRoundTrip = await captureStep(client, '23-today-after-tab-round-trip', {
+      assertClean: false,
+    });
+
     let ageReverificationBefore = null;
     let ageReverificationBlocked = null;
     let ageReverificationDirectToday = null;
@@ -1273,6 +1318,10 @@ async function run() {
         '17-paywall-current.png',
         '18-paywall-free-path-visible.png',
         '19-today-free-current.png',
+        '20-shelf-after-onboarding.png',
+        '21-progress-after-onboarding.png',
+        '22-you-after-onboarding.png',
+        '23-today-after-tab-round-trip.png',
         ...(!accountUpgradeMode && !accountIsolationMode
           ? [
               '25-age-reverification-before-submit.png',
@@ -1319,6 +1368,15 @@ async function run() {
         text: todayFree.bodyText,
         url: todayFree.url,
       },
+      keyTabs: {
+        progressUrl: progressAfterOnboarding.url,
+        shelfRetainedProducts: productNames.every((product) =>
+          shelfAfterOnboarding.bodyText.includes(product.name),
+        ),
+        shelfUrl: shelfAfterOnboarding.url,
+        todayRoundTripUrl: todayAfterTabRoundTrip.url,
+        youUrl: youAfterOnboarding.url,
+      },
       routeCheck: {
         accountLedToPaywall: paywall.url.includes('/onboarding/paywall'),
         accountUpgradeErrorRecovered:
@@ -1329,6 +1387,11 @@ async function run() {
         freePlanDidNotGrantPro:
           !todayFree.bodyText.includes('PRO ACTIVE') &&
           !todayFree.bodyText.includes('Your Pro plan is active'),
+        keyTabRoundTripPassed:
+          shelfAfterOnboarding.url.includes('/shelf') &&
+          progressAfterOnboarding.url.includes('/progress') &&
+          youAfterOnboarding.url.includes('/you') &&
+          todayAfterTabRoundTrip.url.includes('/today'),
         notificationSkipLedToAccount: true,
         ageReverificationClosedProtectedProviders:
           accountUpgradeMode ||
