@@ -16,6 +16,7 @@ evidence passes.
 | Lane | Task | Owned file surface | State | Integration gate |
 | --- | --- | --- | --- | --- |
 | Root | DB-05 / OPS-07 | DB replay repair, package lock, Phase 9 dependency/privacy evidence | In progress | Full CI replay plus security and quality workflows |
+| rls_probe_repair | DB-05 / QA-07 prerequisite | Phase 9 RLS classifications, live probes, and authoritative inventory docs | In progress after adversarial-review rejection | Positive-row/direct-denial proof plus Phase 9 gates and root review |
 
 ## Reviewed integration queue
 
@@ -31,6 +32,8 @@ evidence passes.
 | native03_notifications | NATIVE-03 prerequisite | `574e8e95c`, `58d0326b2` | Root-reviewed after owner-race, bootstrap, repo-wide token-boundary, and category/storage namespace hardening; focused and integration checks passed | Remote-push authorization, APNs/EAS, signed archive, and physical-device evidence |
 | share01_cards | SHARE-01 prerequisite | `3c8e135af` | Root-reviewed; complete growth suite passed after exact-domain integration correction | Publication authority, final domain, native share implementation, and physical-device evidence |
 | grow01_review_prompt | GROW-01 prerequisite | `c47f92921` | Root-reviewed; 107 focused checks plus full mobile suite passed | Signed iOS StoreKit and physical-device accessibility evidence |
+| photo02_app_lock | PHOTO-02 prerequisite | `940aec249` | Root-reviewed after independent adversarial review; 113 focused checks, 4,800-test mobile suite, typecheck, and lint passed | Expo surface refresh plus physical-iPhone biometric, interruption, snapshot, and accessibility evidence |
+| optimization_fixtures | QA-08 prerequisite | `e246685c9` | Root-reviewed; deterministic fixture smoke passed and missing CI export restored | Replacement repository-quality workflow after push |
 
 ## Coordination rules
 
