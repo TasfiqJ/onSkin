@@ -35,8 +35,8 @@ import {
 } from './database-types-contract-lib.mjs';
 
 const PINNED_CLI_VERSION = '2.117.0';
-const EXPECTED_MIGRATION_COUNT = 93;
-const EXPECTED_LATEST_MIGRATION = '20260926000077';
+const EXPECTED_MIGRATION_COUNT = 94;
+const EXPECTED_LATEST_MIGRATION = '20260926000078';
 const COMMERCE_UPGRADE_MIGRATION = '20260729000072';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and

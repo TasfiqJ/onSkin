@@ -92,6 +92,9 @@ test('generated type canonicalization is stable across line endings and rejects 
   assert.throws(() => summarizeDatabaseTypes('export type Database = {}\n'), {
     message: 'DB08_GENERATED_TYPES_INVALID',
   });
+  assert.throws(() => summarizeDatabaseTypes('export type SomethingElse = {}\n'), {
+    message: 'DB08_GENERATED_TYPES_INVALID',
+  });
   assert.throws(
     () =>
       summarizeDatabaseTypes(`export type Json = string

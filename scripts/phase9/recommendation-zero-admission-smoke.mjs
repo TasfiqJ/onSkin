@@ -68,12 +68,12 @@ const migrations = (await readdir(join(root, 'supabase', 'migrations')))
   .filter((name) => /^\d{14}_[a-z0-9_]+\.sql$/u.test(name))
   .sort((left, right) => left.localeCompare(right));
 
-check(migrations.length === 93, 'CORE-06A requires the exact 93-migration source set.');
+check(migrations.length === 94, 'CORE-06A requires the exact 94-migration source set.');
 check(
   migrations.includes('20260726000071_recommendation_zero_admission.sql') &&
     migrations.includes('20260729000072_commerce_zero_admission.sql') &&
-    migrations.at(-1) === '20260926000077_consent_and_api_access_fences.sql',
-  'Migrations 0071 and 0072 must remain in the exact source chain through current head 0077.',
+    migrations.at(-1) === '20260926000078_catalog_operator_public_execute_fence.sql',
+  'Migrations 0071 and 0072 must remain in the exact source chain through current head 0078.',
 );
 check(
   /^--[\s\S]*\nbegin;[\s\S]*\ncommit;\s*$/u.test(migration),

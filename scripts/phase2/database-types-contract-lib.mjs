@@ -48,7 +48,7 @@ export function summarizeDatabaseTypes(raw, { failureCode = 'DB08_GENERATED_TYPE
   const databaseAliases = aliasesNamed('Database');
   const jsonAliases = aliasesNamed('Json');
   const databaseType = databaseAliases[0]?.type;
-  const publicProperty = ts.isTypeLiteralNode(databaseType)
+  const publicProperty = databaseType && ts.isTypeLiteralNode(databaseType)
     ? propertyNamed(databaseType, 'public')
     : undefined;
   const publicType = publicProperty?.type;
@@ -58,8 +58,10 @@ export function summarizeDatabaseTypes(raw, { failureCode = 'DB08_GENERATED_TYPE
     source.parseDiagnostics.length !== 0 ||
     jsonAliases.length !== 1 ||
     databaseAliases.length !== 1 ||
+    !databaseType ||
     !ts.isTypeLiteralNode(databaseType) ||
     !publicProperty ||
+    !publicType ||
     !ts.isTypeLiteralNode(publicType) ||
     requiredPublicMembers.some((name) => {
       const member = propertyNamed(publicType, name);

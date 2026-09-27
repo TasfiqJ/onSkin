@@ -135,91 +135,180 @@ select ok(
   'the dedicated login is nonsuperuser, membership/ownership-free, connection-limited, and has no raw or Auth-schema lane'
 );
 
-select ok(
-  not exists (
-    select 1
+select is_empty(
+  $query$
+    select pg_catalog.format(
+      '%I.%I(%s) owner=%I acl=%s',
+      namespace.nspname,
+      procedure.proname,
+      pg_catalog.pg_get_function_identity_arguments(procedure.oid),
+      owner.rolname,
+      coalesce(procedure.proacl::text, '<default>')
+    )
     from pg_catalog.pg_proc as procedure
     join pg_catalog.pg_namespace as namespace
       on namespace.oid = procedure.pronamespace
+    join pg_catalog.pg_roles as owner
+      on owner.oid = procedure.proowner
     where namespace.nspname in ('public', 'private')
       and has_function_privilege(
         'catalog_operator_edge', procedure.oid, 'execute'
       )
-  )
-    and not exists (
-      select 1
-      from pg_catalog.pg_class as relation
-      join pg_catalog.pg_namespace as namespace
-        on namespace.oid = relation.relnamespace
-      where namespace.nspname in ('public', 'private', 'auth')
-        and relation.relkind in ('r', 'p', 'v', 'm', 'f')
-        and (
-          has_table_privilege('catalog_operator_edge', relation.oid, 'select')
-          or has_table_privilege('catalog_operator_edge', relation.oid, 'insert')
-          or has_table_privilege('catalog_operator_edge', relation.oid, 'update')
-          or has_table_privilege('catalog_operator_edge', relation.oid, 'delete')
-          or (
-            relation.relkind in ('r', 'p')
-            and (
-              has_table_privilege(
-                'catalog_operator_edge', relation.oid, 'truncate'
-              )
-              or has_table_privilege(
-                'catalog_operator_edge', relation.oid, 'references'
-              )
-              or has_table_privilege(
-                'catalog_operator_edge', relation.oid, 'trigger'
-              )
+    order by namespace.nspname, procedure.proname, procedure.oid
+  $query$,
+  'the dedicated login has no ambient public/private function lane'
+);
+
+select is_empty(
+  $query$
+    select pg_catalog.format(
+      '%I.%I kind=%s privileges=%s',
+      namespace.nspname,
+      relation.relname,
+      relation.relkind,
+      pg_catalog.array_to_string(
+        pg_catalog.array_remove(array[
+          case when has_table_privilege(
+            'catalog_operator_edge', relation.oid, 'select'
+          ) then 'select' end,
+          case when has_table_privilege(
+            'catalog_operator_edge', relation.oid, 'insert'
+          ) then 'insert' end,
+          case when has_table_privilege(
+            'catalog_operator_edge', relation.oid, 'update'
+          ) then 'update' end,
+          case when has_table_privilege(
+            'catalog_operator_edge', relation.oid, 'delete'
+          ) then 'delete' end,
+          case when relation.relkind in ('r', 'p') and has_table_privilege(
+            'catalog_operator_edge', relation.oid, 'truncate'
+          ) then 'truncate' end,
+          case when relation.relkind in ('r', 'p') and has_table_privilege(
+            'catalog_operator_edge', relation.oid, 'references'
+          ) then 'references' end,
+          case when relation.relkind in ('r', 'p') and has_table_privilege(
+            'catalog_operator_edge', relation.oid, 'trigger'
+          ) then 'trigger' end
+        ]::text[], null),
+        ','
+      )
+    )
+    from pg_catalog.pg_class as relation
+    join pg_catalog.pg_namespace as namespace
+      on namespace.oid = relation.relnamespace
+    where namespace.nspname in ('public', 'private', 'auth')
+      and relation.relkind in ('r', 'p', 'v', 'm', 'f')
+      and (
+        has_table_privilege('catalog_operator_edge', relation.oid, 'select')
+        or has_table_privilege('catalog_operator_edge', relation.oid, 'insert')
+        or has_table_privilege('catalog_operator_edge', relation.oid, 'update')
+        or has_table_privilege('catalog_operator_edge', relation.oid, 'delete')
+        or (
+          relation.relkind in ('r', 'p')
+          and (
+            has_table_privilege(
+              'catalog_operator_edge', relation.oid, 'truncate'
+            )
+            or has_table_privilege(
+              'catalog_operator_edge', relation.oid, 'references'
+            )
+            or has_table_privilege(
+              'catalog_operator_edge', relation.oid, 'trigger'
             )
           )
         )
-    )
-    and not exists (
-      select 1
-      from pg_catalog.pg_class as relation
-      join pg_catalog.pg_namespace as namespace
-        on namespace.oid = relation.relnamespace
-      where namespace.nspname in ('public', 'private', 'auth')
-        and relation.relkind = 'S'
-        and (
-          has_sequence_privilege(
+      )
+    order by namespace.nspname, relation.relname
+  $query$,
+  'the dedicated login has no ambient public/private/Auth relation lane'
+);
+
+select is_empty(
+  $query$
+    select pg_catalog.format(
+      '%I.%I privileges=%s',
+      namespace.nspname,
+      relation.relname,
+      pg_catalog.array_to_string(
+        pg_catalog.array_remove(array[
+          case when has_sequence_privilege(
             'catalog_operator_edge', relation.oid, 'usage'
-          )
-          or has_sequence_privilege(
+          ) then 'usage' end,
+          case when has_sequence_privilege(
             'catalog_operator_edge', relation.oid, 'select'
-          )
-          or has_sequence_privilege(
+          ) then 'select' end,
+          case when has_sequence_privilege(
             'catalog_operator_edge', relation.oid, 'update'
-          )
-        )
+          ) then 'update' end
+        ]::text[], null),
+        ','
+      )
     )
-    and exists (
-      select 1
-      from pg_catalog.pg_default_acl as default_acl
-      where default_acl.defaclrole = 'postgres'::regrole
-        and default_acl.defaclnamespace = 0
-        and default_acl.defaclobjtype = 'f'
-    )
-    and not exists (
-      select 1
-      from pg_catalog.pg_default_acl as default_acl
-      left join pg_catalog.pg_namespace as namespace
-        on namespace.oid = default_acl.defaclnamespace
-      cross join lateral pg_catalog.aclexplode(
-        default_acl.defaclacl
-      ) as privilege
-      where default_acl.defaclrole = 'postgres'::regrole
-        and (
-          default_acl.defaclnamespace = 0
-          or namespace.nspname in (
-            'public', 'private', 'catalog_operator_gateway'
-          )
+    from pg_catalog.pg_class as relation
+    join pg_catalog.pg_namespace as namespace
+      on namespace.oid = relation.relnamespace
+    where namespace.nspname in ('public', 'private', 'auth')
+      and relation.relkind = 'S'
+      and (
+        has_sequence_privilege(
+          'catalog_operator_edge', relation.oid, 'usage'
         )
-        and default_acl.defaclobjtype = 'f'
-        and privilege.grantee = 0
-        and privilege.privilege_type = 'EXECUTE'
-    ),
-  'the dedicated login has no ambient function/table lane and future functions default closed'
+        or has_sequence_privilege(
+          'catalog_operator_edge', relation.oid, 'select'
+        )
+        or has_sequence_privilege(
+          'catalog_operator_edge', relation.oid, 'update'
+        )
+      )
+    order by namespace.nspname, relation.relname
+  $query$,
+  'the dedicated login has no ambient public/private/Auth sequence lane'
+);
+
+select ok(
+  exists (
+    select 1
+    from pg_catalog.pg_default_acl as default_acl
+    where default_acl.defaclrole = 'postgres'::regrole
+      and default_acl.defaclnamespace = 0
+      and default_acl.defaclobjtype = 'f'
+  ),
+  'the migration owner has an explicit global function default ACL'
+);
+
+select is_empty(
+  $query$
+    select pg_catalog.format(
+      'owner=%I schema=%s object_type=%s grantee=PUBLIC privilege=%s',
+      owner.rolname,
+      case
+        when default_acl.defaclnamespace = 0 then '<global>'
+        else pg_catalog.quote_ident(namespace.nspname)
+      end,
+      default_acl.defaclobjtype,
+      privilege.privilege_type
+    )
+    from pg_catalog.pg_default_acl as default_acl
+    join pg_catalog.pg_roles as owner
+      on owner.oid = default_acl.defaclrole
+    left join pg_catalog.pg_namespace as namespace
+      on namespace.oid = default_acl.defaclnamespace
+    cross join lateral pg_catalog.aclexplode(
+      default_acl.defaclacl
+    ) as privilege
+    where default_acl.defaclrole = 'postgres'::regrole
+      and (
+        default_acl.defaclnamespace = 0
+        or namespace.nspname in (
+          'public', 'private', 'catalog_operator_gateway'
+        )
+      )
+      and default_acl.defaclobjtype = 'f'
+      and privilege.grantee = 0
+      and privilege.privilege_type = 'EXECUTE'
+    order by default_acl.defaclnamespace
+  $query$,
+  'future migration-owner functions default closed to PUBLIC'
 );
 
 select ok(

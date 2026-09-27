@@ -14,6 +14,9 @@ const readMany = (paths) => paths.map((path) => read(path)).join('\n');
 
 const sources = Object.freeze({
   migration: read('supabase/migrations/20260722000063_catalog_operator_authority.sql'),
+  authorityRepair: read(
+    'supabase/migrations/20260926000078_catalog_operator_public_execute_fence.sql',
+  ),
   databaseTest: read('supabase/tests/database/catalog_operator_authority.test.sql'),
   raceRehearsal: read(
     'supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql',
@@ -112,6 +115,49 @@ test('rejects an operator RPC grant to authenticated', () => {
       'grant execute on function catalog_operator_gateway.catalog_operator_session(\n  uuid, text, text, text, bigint, text\n) to authenticated;',
     ),
     /dedicated-gateway-role-only|unreviewed role/,
+  );
+});
+
+test('requires the forward repair to close current and future PUBLIC execution', () => {
+  const cases = [
+    [
+      'from public, catalog_operator_edge;',
+      'from catalog_operator_edge;',
+    ],
+    [
+      'from public, catalog_operator_edge;',
+      'from public;',
+    ],
+    [
+      'alter default privileges for role postgres\n  revoke execute on functions from public;',
+      'alter default privileges for role postgres\n  grant execute on functions to public;',
+    ],
+    [
+      'alter default privileges for role postgres in schema public\n  revoke execute on functions from public;',
+      'alter default privileges for role postgres in schema public\n  grant execute on functions to public;',
+    ],
+    [
+      'alter default privileges for role postgres in schema private\n  revoke execute on functions from public;',
+      'alter default privileges for role postgres in schema private\n  grant execute on functions to public;',
+    ],
+  ];
+
+  for (const [search, replacement] of cases) {
+    rejected(
+      mutate('authorityRepair', search, replacement),
+      /forward repair does not close current and future PUBLIC function execution/,
+    );
+  }
+});
+
+test('requires object-reporting database assertions for every ambient lane', () => {
+  rejected(
+    mutate(
+      'databaseTest',
+      'the dedicated login has no ambient public/private function lane',
+      'the dedicated login function lane is assumed closed',
+    ),
+    /Database test does not prove RPC ACLs/,
   );
 });
 

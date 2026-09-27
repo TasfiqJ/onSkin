@@ -206,14 +206,14 @@ the already-sealed complete root set; partial governed inserts remain allowed.
 It retains the exact per-row authority checks. Current CAT-03 review and database-readback artifacts
 must bind the exact CAT-03 statement-guard migration `20260722000062`, while
 deployment and full-chain database evidence must also attest current repository
-head `20260926000077`; the current CAT-03 pgTAP source plan contains 102
+head `20260926000078`; the current CAT-03 pgTAP source plan contains 102
 assertions. Beta demand
 prioritizes independently sourced rows; it never becomes a product fact. The
 planned self-selected beta cannot support a market-representative claim. The
 legacy beta coverage report and an offline-only approval are informational
 only. No real consented corpus, witnessed pre-outcome target/decision, qualified
 catalog or U.S. OTC-adjacent review, 2,000-record launch campaign, hosted
-governed full-chain evidence through `0077`, current signed database readback,
+governed full-chain evidence through `0078`, current signed database readback,
 sealed holdout result, or active catalog exists, so CAT-03 is not complete and
 no Apple, legal, product-quality, market, or revenue outcome is implied. The
 exact disposable local `0072` gate historically passed, including CAT-03 99/99 within the
@@ -429,7 +429,7 @@ reserve version 2, its four checks and the `0075` provenance successor remain
 `NOT VALID`: they enforce new writes while preserving pre-existing malformed
 v2 collisions for explicit quarantine instead of aborting deployment. The
 historical `0064` migration-byte rehearsal passed PostgreSQL 15 and 17;
-current `0076` full-chain replay and upgrade rehearsal remain required. The exact
+current `0078` full-chain replay and upgrade rehearsal remain required. The exact
 final-code 390 x 844
 Expo-web first-session flow passes direct protected-route age fencing through
 the 12-question quiz, generated routine, and AM/PM check-offs, then proves a
@@ -784,22 +784,27 @@ comparison for current consent without relaxing the future-date boundary.
 Forward migration `0077` restores the exact Apple-session account fence on both
 consent helpers, removes runtime execution from the retired conflict-choice RPC,
 and reasserts that the catalog-operator login cannot execute functions outside
-its dedicated gateway schema. None supplies professional review or release
-approval. The current source tree contains 93 migrations through
-`20260926000077` and has no clean full-chain
-replay evidence. Exact
+its dedicated gateway schema. Forward migration `0078` closes the inherited
+catalog-operator execution lane by revoking function execution from `PUBLIC`
+and the operator role across the `public` and `private` schemas, and by
+reasserting global and schema-specific default-ACL revocations for objects
+created by `postgres`. Neither migration supplies professional review or
+release approval. The current source tree contains 94 migrations through
+`20260926000078` and has no passing clean full-chain replay evidence. Exact
 Supabase CLI `2.117.0` is pinned for a current-chain local replay trial after
 the old CLI's concurrent-index-drop incompatibility; it does not authorize
 staging deployment or establish current generated-type parity.
 
-The 2026-09-21 DB-05 CI run at clean commit `aabe182a7` applied the current
-92-migration chain, completed the forward-upgrade rehearsals and two resets,
-then failed nine assertions across seven files in the 18-file structural pgTAP
-suite. The failures were reduced to four access-control defects and five stale
-contract expectations. Migration `0077` and the updated current-head contracts
-are the source-level repair candidate; focused source contracts, staging
-evidence tests, policy lint, and generated source-worklist checks pass. A clean
-93-migration PostgreSQL replay is still required before DB-05 can close. This is
+The latest DB-05 CI run from clean commit `b4cb12f661c3556ada1fc6ed22279c375c4645be`
+applied all 93 migrations through `0077`, completed all forward-upgrade
+rehearsals and both clean resets, and verified exact 93-version history before
+the 18-file structural pgTAP suite reported four failures. Two were stale
+health-consent successor cardinalities, one was a stale skin-profile policy
+name expectation, and one exposed a real inherited `PUBLIC` execution lane for
+the catalog-operator role. The three stale expectations are corrected locally,
+and migration `0078` plus strengthened source and pgTAP contracts close the
+inherited execution lane. These are source-level repairs only: a fresh clean
+94-migration PostgreSQL replay is still required before DB-05 can close. This is
 diagnostic and source-candidate progress, not a passing current-chain DB-05,
 DB-08 type-parity, hosted, or release gate.
 
@@ -830,13 +835,13 @@ all 71 migrations through `20260729000072`. Canonical local generation and the
 checked-in repository artifact matched at 6,770 lines with SHA-256
 `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
 This closed repository-versus-clean-local generated-type drift only for that
-historical 71-migration chain. It does not cover current head `0077`; DB-08
+historical 71-migration chain. It does not cover current head `0078`; DB-08
 remains `in_progress` because current-chain generation and hosted three-way
 repository/local/linked parity are absent.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by DB-05
-and `ACCT-03`. Its current fresh-only source inventory binds all 93 migrations
-through `0077` and all 17 Edge functions. The runner stops before project
+and `ACCT-03`. Its current fresh-only source inventory binds all 94 migrations
+through `0078` and all 17 Edge functions. The runner stops before project
 linking or mutation with `DB06_CURRENT_CHAIN_REPLAY_REQUIRED` until clean
 current-chain DB-05 replay, schema inventory, and generated-type parity are
 reviewed. Its eventual hosted procedure requires an active traffic/provider

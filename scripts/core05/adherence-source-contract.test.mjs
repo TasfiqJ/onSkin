@@ -601,7 +601,7 @@ test('notification opt-in is exact-time, authorization-aware, local-only, and ca
   assert.match(timing, /Trial billing reminders follow the date shown at checkout\./u);
 });
 
-test('database adherence and atomic Shelf/completion sync remain server-owned at head 0077', () => {
+test('database adherence and atomic Shelf/completion sync remain server-owned at head 0078', () => {
   const migration = read(paths.adherenceMigration);
   const dbTest = read(paths.adherenceDbTest);
   const syncBridgeMigration = read(paths.syncBridgeMigration);
@@ -646,7 +646,7 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
   assert.match(syncBridgeMigration, /create table public\.shelf_product_identities/u);
   assert.match(syncBridgeMigration, /COMPLETION_PRODUCT_RETRY_LATER/u);
   assert.doesNotMatch(syncBridgeMigration, /COMPLETION_DEPENDENCY_TERMINAL/u);
-  assert.match(syncBridgeDbTest, /exact 93-migration source history/u);
+  assert.match(syncBridgeDbTest, /exact 94-migration source history/u);
   assert.match(syncBridgeDbTest, /semantic-conflict rejection cannot mutate adherence authority/u);
   assert.match(
     syncBridgeDbTest,
@@ -664,8 +664,8 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
     syncBridgeDbTest,
     /zero-attestation proves stable identities and all relational health data erased/u,
   );
-  assert.match(schemaContract, /\b93::bigint\b/u);
-  assert.match(schemaContract, /'20260926000077'::text/u);
+  assert.match(schemaContract, /\b94::bigint\b/u);
+  assert.match(schemaContract, /'20260926000078'::text/u);
   assert.match(databaseTypes, /shelf_product_identities:\s*\{/u);
   const exportShelfIdentities = generatedFunctionBlock(
     databaseTypes,

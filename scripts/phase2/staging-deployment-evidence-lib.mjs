@@ -17,10 +17,10 @@ import { summarizeDatabaseTypes } from './database-types-contract-lib.mjs';
 export const DB06_EVIDENCE_SCHEMA_VERSION = 1;
 export const DB06_RETENTION_CLASS = 'release-qa';
 export const DB06_CURRENT_SOURCE_CONTRACT = Object.freeze({
-  migrationCount: 93,
-  latestMigrationId: '20260926000077',
+  migrationCount: 94,
+  latestMigrationId: '20260926000078',
   functionCount: 17,
-  // Historical 0072 replay only; do not treat this as a verified 0077 count.
+  // Historical 0072 replay only; do not treat this as a verified 0078 count.
   publicTableCount: 82,
   storageBucketCount: 1,
 });
@@ -655,7 +655,7 @@ export function assertCurrentSourceContract(sourceInventory) {
 }
 
 // This CLI version is a local DB05 replay trial, not a staging approval.
-// The exact 93-migration schema count and repository types are not yet bound
+// The exact 94-migration schema count and repository types are not yet bound
 // to a clean current-chain PostgreSQL replay. Do not link or mutate staging
 // until that evidence is reviewed and this gate is explicitly replaced.
 export function assertPinnedMigrationRunnerCompatibility(_repoRoot, cliVersion) {

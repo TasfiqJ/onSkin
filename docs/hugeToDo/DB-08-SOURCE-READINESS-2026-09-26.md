@@ -8,8 +8,8 @@ linked staging comparison, or launch readiness.
 
 The checked-in `packages/types/src/database.types.ts` is still the canonical
 artifact generated at commit `e5588ae69`, when the repository contained 71
-migrations through `20260729000072`. The current source contains 93 migrations
-through `20260926000077`. The generated artifact remains well-formed, but it is
+migrations through `20260729000072`. The current source contains 94 migrations
+through `20260926000078`. The generated artifact remains well-formed, but it is
 not current-head evidence and must not be represented as such.
 
 ## Provable source drift
@@ -61,7 +61,7 @@ The existing hash-equality gates remain authoritative:
 
 ## Remaining gates
 
-- Run the credential-stripped, isolated 93-migration local replay and
+- Run the credential-stripped, isolated 94-migration local replay and
   `--types-update`; never hand-edit the generated artifact.
 - Re-run package typecheck and the DB-08 source contract against the new file.
 - Complete DB-06 reviewed staging provisioning and retain linked type output.

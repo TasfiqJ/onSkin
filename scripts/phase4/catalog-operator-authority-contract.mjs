@@ -1,5 +1,6 @@
 const SOURCE_KEYS = Object.freeze([
   'migration',
+  'authorityRepair',
   'databaseTest',
   'raceRehearsal',
   'edge',
@@ -490,6 +491,23 @@ function auditMigration(migration, errors) {
   add(errors, /commit;\s*$/.test(migration), 'Migration is not a complete committed transaction.');
 }
 
+function auditAuthorityRepair(authorityRepair, errors) {
+  const compact = collapsed(authorityRepair);
+  add(
+    errors,
+    includesAll(compact, [
+      'begin;',
+      "set local lock_timeout = '5s';",
+      'revoke execute on all functions in schema public, private from public, catalog_operator_edge;',
+      'alter default privileges for role postgres revoke execute on functions from public;',
+      'alter default privileges for role postgres in schema public revoke execute on functions from public;',
+      'alter default privileges for role postgres in schema private revoke execute on functions from public;',
+      'commit;',
+    ]),
+    'CAT-08 forward repair does not close current and future PUBLIC function execution for the dedicated login.',
+  );
+}
+
 function auditDatabaseTest(databaseTest, errors) {
   add(
     errors,
@@ -500,6 +518,12 @@ function auditDatabaseTest(databaseTest, errors) {
     errors,
     includesAll(databaseTest, [
       'has_function_privilege',
+      'is_empty',
+      'pg_get_function_identity_arguments',
+      'the dedicated login has no ambient public/private function lane',
+      'the dedicated login has no ambient public/private/Auth relation lane',
+      'the dedicated login has no ambient public/private/Auth sequence lane',
+      'future migration-owner functions default closed to PUBLIC',
       'authenticated',
       'service_role',
       'catalog_operator_edge',
@@ -858,6 +882,7 @@ export function auditCatalogOperatorAuthorityContract(sources) {
   );
   const errors = [];
   auditMigration(active.migration, errors);
+  auditAuthorityRepair(active.authorityRepair, errors);
   auditDatabaseTest(active.databaseTest, errors);
   auditRaceRehearsal(active.raceRehearsal, errors);
   auditEdge(active.edge, active.edgeTests, errors);

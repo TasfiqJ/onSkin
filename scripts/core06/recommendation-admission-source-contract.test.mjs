@@ -655,7 +655,7 @@ test('database and forward-upgrade tests execute the checked-in 0071 boundary', 
   const runner = read(paths.databaseRunner);
 
   assert.match(database, /select plan\(\d+\)/u);
-  assert.match(database, /'20260926000077'::text/u);
+  assert.match(database, /'20260926000078'::text/u);
   assert.match(database, /recommendation_admission_control/u);
   assert.match(database, /recommendable_catalog_products/u);
   assert.match(database, /recommendations_catalog_product_closed/u);
