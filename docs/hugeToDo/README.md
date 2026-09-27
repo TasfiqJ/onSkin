@@ -790,23 +790,22 @@ and the operator role across the `public` and `private` schemas, and by
 reasserting global and schema-specific default-ACL revocations for objects
 created by `postgres`. Neither migration supplies professional review or
 release approval. The current source tree contains 94 migrations through
-`20260926000078` and has no passing clean full-chain replay evidence. Exact
-Supabase CLI `2.117.0` is pinned for a current-chain local replay trial after
-the old CLI's concurrent-index-drop incompatibility; it does not authorize
-staging deployment or establish current generated-type parity.
+`20260926000078`. Exact Supabase CLI `2.117.0` remains pinned for reproducible
+local verification after the old CLI's concurrent-index-drop incompatibility;
+it does not authorize staging deployment.
 
-The latest DB-05 CI run from clean commit `b4cb12f661c3556ada1fc6ed22279c375c4645be`
-applied all 93 migrations through `0077`, completed all forward-upgrade
-rehearsals and both clean resets, and verified exact 93-version history before
-the 18-file structural pgTAP suite reported four failures. Two were stale
-health-consent successor cardinalities, one was a stale skin-profile policy
-name expectation, and one exposed a real inherited `PUBLIC` execution lane for
-the catalog-operator role. The three stale expectations are corrected locally,
-and migration `0078` plus strengthened source and pgTAP contracts close the
-inherited execution lane. These are source-level repairs only: a fresh clean
-94-migration PostgreSQL replay is still required before DB-05 can close. This is
-diagnostic and source-candidate progress, not a passing current-chain DB-05,
-DB-08 type-parity, hosted, or release gate.
+DB-05 is complete on exact clean commit
+`d95aaa6bdb72dac94fe19736c3632e7f51a439b5`. GitHub job `108526397750`
+passed all five forward-upgrade rehearsals, seven reset invocations including
+both final clean resets, exact 94-version history through `0078`, focused and
+full structural pgTAP, public-schema lint, empty semantic drift, CAT-08
+two-connection revocation, and generated-type parity. The generated current
+types and checked-in artifact were identical at 7,381 lines with SHA-256
+`2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795`.
+The bounded transient-runner retry did not trigger. This closes only DB-05's
+credential-free fresh-local reconciliation acceptance. No project was linked
+or mutated; hosted DB-06 through DB-13, linked DB-08 parity, professional,
+release, and App Store gates remain open.
 
 On 2026-08-05, `npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at
 clean commit `57da25f63` against the complete 71-migration chain through
@@ -839,12 +838,12 @@ historical 71-migration chain. It does not cover current head `0078`; DB-08
 remains `in_progress` because current-chain generation and hosted three-way
 repository/local/linked parity are absent.
 
-DB-06 is also a source checkpoint and remains `in_progress`, blocked by DB-05
-and `ACCT-03`. Its current fresh-only source inventory binds all 94 migrations
+DB-06 is also a source checkpoint and remains `in_progress`, blocked by
+`ACCT-03`. Its current fresh-only source inventory binds all 94 migrations
 through `0078` and all 17 Edge functions. The runner stops before project
-linking or mutation with `DB06_CURRENT_CHAIN_REPLAY_REQUIRED` until clean
-current-chain DB-05 replay, schema inventory, and generated-type parity are
-reviewed. Its eventual hosted procedure requires an active traffic/provider
+linking or mutation when its reviewed local-precondition evidence is absent;
+the exact-head DB-05 replay, schema inventory, and generated-type parity are
+now reviewed. Its eventual hosted procedure requires an active traffic/provider
 freeze and an immediate pre-push reread of functions, public frozen responses,
 hosted Auth controls, migrations, schema, Storage, and all Cron jobs; it leaves
 `DB06_TRAFFIC_FREEZE=frozen` for a separate downstream live-gate release. No

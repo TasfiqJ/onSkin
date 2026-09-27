@@ -150,6 +150,28 @@ temporary-generation results above remain historical evidence. DB-08 remains
 Repository/local/linked equality still requires the reviewed linked-staging
 generation and retained comparison.
 
+## 2026-09-27 Exact-Head 94-Migration Acceptance
+
+GitHub job `108526397750` completed successfully against exact clean commit
+`d95aaa6bdb72dac94fe19736c3632e7f51a439b5` using the repository-pinned
+Supabase CLI `2.117.0`. The credential-free run passed:
+
+- all five forward-upgrade rehearsals;
+- seven reset invocations, including reset 1/2 and reset 2/2;
+- exact 94-migration history through `20260926000078`;
+- the focused CORE-05 regressions and full structural pgTAP suite;
+- public-schema lint and an empty semantic migration-shadow diff;
+- CAT-08 two-connection revocation rehearsal; and
+- clean-local versus checked-in generated-type parity at 7,381 lines and
+  SHA-256 `2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795`.
+
+The bounded pre-migration container-exit retry did not trigger. This exact-head
+evidence satisfies DB-05's acceptance: a clean local reset applies every
+migration with zero drift. It also closes the clean-local portion of DB-08,
+but it does not establish linked staging parity. No hosted project was linked
+or mutated, and DB-06 through DB-13 remain governed by their separate hosted,
+provider, operational, and release acceptance gates.
+
 ## Boundary And Remaining Gates
 
 No project was linked. No access token, project ref, database password,
