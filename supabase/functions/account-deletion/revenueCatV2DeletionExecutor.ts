@@ -2112,7 +2112,7 @@ export function createRevenueCatV2DeletionExecutor(
   if (!validOptions(options)) {
     throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_INPUT_INVALID');
   }
-  const credentialBinding = deriveRevenueCatV2CredentialBinding(options.secretApiKey);
+  let credentialBinding: Promise<string> | null = null;
   const stableOptions: RevenueCatV2DeletionExecutorOptions = {
     projectId: options.projectId,
     secretApiKey: options.secretApiKey,
@@ -2125,6 +2125,7 @@ export function createRevenueCatV2DeletionExecutor(
     deadlineReserveMs: options.deadlineReserveMs,
   };
   return async (claim, context) => {
+    credentialBinding ??= deriveRevenueCatV2CredentialBinding(stableOptions.secretApiKey);
     const resolved: ResolvedRevenueCatV2DeletionExecutorOptions = {
       ...stableOptions,
       credentialBinding: await credentialBinding,

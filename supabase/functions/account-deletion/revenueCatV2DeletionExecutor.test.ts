@@ -451,6 +451,11 @@ async function dispatchToReconciliation(status: 200 | 202 | 404 = 200): Promise<
   return harness;
 }
 
+Deno.test('executor construction starts no unobserved credential derivation', () => {
+  const harness = makeHarness();
+  createRevenueCatV2DeletionExecutor(harness.options);
+});
+
 Deno.test('credential binding is deterministic, domain-separated, and key-derived', async () => {
   const first = await deriveRevenueCatV2CredentialBinding(SECRET);
   const repeated = await deriveRevenueCatV2CredentialBinding(SECRET);
