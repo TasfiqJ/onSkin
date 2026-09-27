@@ -26,6 +26,19 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('if (!visible(node)) return false;');
   });
 
+  it('keeps the ordinary first-session E2E on the truthful free-plan path', () => {
+    const source = readFileSync(ONBOARDING_E2E_SCRIPT, 'utf8');
+
+    expect(source).toContain("await waitForText(client, 'Continue with the free plan', 30_000)");
+    expect(source).toContain(
+      "await clickByText(client, 'Continue with the free plan', { exact: false })",
+    );
+    expect(source).toContain("await waitForPath(client, '/today', 30_000)");
+    expect(source).toContain("'Continuing with the free plan incorrectly exposed Pro authority.'");
+    expect(source).not.toContain("clickByText(client, 'Explore first'");
+    expect(source).not.toContain("waitForText(client, 'Start today'");
+  });
+
   it('keeps first-run age gate copy free of mojibake punctuation', () => {
     const source = readAppRoute('onboarding/age.tsx');
 

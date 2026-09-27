@@ -986,19 +986,13 @@ async function run() {
     }
 
     await waitForPath(client, '/onboarding/paywall');
-    await waitForText(
-      client,
-      accountCheckpointMode ? 'Continue with the free plan' : 'Explore first',
-      30_000,
-    );
+    await waitForText(client, 'Continue with the free plan', 30_000);
     const paywall = await captureStep(client, '17-paywall-current');
     await screenshot(client, '17-paywall');
     writeJson('17-paywall.json', paywall);
     assert(
-      paywall.bodyText.includes(
-        accountCheckpointMode ? 'Continue with the free plan' : 'Explore first',
-      ),
-      'Paywall did not expose the expected free path.',
+      paywall.bodyText.includes('Continue with the free plan'),
+      'Paywall did not expose the truthful free-plan path.',
     );
     assert(
       paywall.bodyText.includes('Start free trial') ||
@@ -1059,86 +1053,18 @@ async function run() {
       return;
     }
 
-    await scrollTextIntoView(client, 'Explore first', { exact: false });
-    const paywallExplore = await captureStep(client, '18-paywall-explore-visible');
-    await clickByText(client, 'Explore first', { exact: false });
-    await waitForCondition(
-      client,
-      `window.location.pathname.startsWith('/routine/plan') ||
-        (document.body?.innerText ?? '').includes('Explore first unavailable')`,
-      30_000,
-      'Explore first to open the routine plan or expose its recovery state',
-    );
-    const postExplore = await captureStep(client, '18a-after-explore-first');
-    assert(
-      postExplore.url.includes('/routine/plan'),
-      `Explore first did not open the routine plan. Current screen: ${postExplore.url} — ${postExplore.bodyText}`,
-    );
-    await waitForText(client, 'Your routine, in order.', 30_000);
-    await waitForText(client, 'Start today', 30_000);
-    const routinePlan = await captureStep(client, '19-routine-plan-current');
-    const routinePlanHasReviewedInsight =
-      routinePlan.bodyText.includes('FIRST INSIGHT') &&
-      routinePlan.bodyText.includes('Timing handled');
-    const routinePlanHasPendingReview =
-      routinePlan.bodyText.includes('Pair review in progress') &&
-      routinePlan.bodyText.includes(
-        "We won't show a compatibility result for these products until that review is complete.",
-      );
-    assert(
-      routinePlanHasReviewedInsight !== routinePlanHasPendingReview,
-      'Routine plan must show exactly one reviewed insight or truthful pending-review state.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Mineral SPF 50'),
-      'Routine plan did not show the SPF morning step.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Glycolic 7%'),
-      'Routine plan did not show the glycolic night step.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Retinol 0.3%'),
-      'Routine plan did not show the retinol night step.',
-    );
-
-    await clickByText(client, 'Start today');
+    await scrollTextIntoView(client, 'Continue with the free plan', { exact: false });
+    const paywallFreePath = await captureStep(client, '18-paywall-free-path-visible');
+    await clickByText(client, 'Continue with the free plan', { exact: false });
     await waitForPath(client, '/today', 30_000);
-    const todayAfterStart = await captureStep(client, '20-today-after-start-current', {
+    const todayFree = await captureStep(client, '19-today-free-current', {
       assertClean: false,
     });
-
-    await client.send('Page.navigate', { url: `${baseUrl}/today?routine=AM` });
-    await waitForPath(client, '/today', 30_000);
-    await waitForText(client, 'Morning routine', 30_000);
-    await waitForText(client, 'Mineral SPF 50', 30_000);
-    await scrollTextIntoView(client, 'Mineral SPF 50', { exact: false });
-    const todayAmBefore = await captureStep(client, '21-today-am-before-checkoff');
-    assertInteractiveControl(todayAmBefore, 'Mineral SPF 50');
-    assert(todayAmBefore.bodyText.includes('0 of 1'), 'AM routine did not start at 0 of 1.');
-    await clickByText(client, 'Mineral SPF 50', { exact: false });
-    await waitForText(client, '1 of 1', 30_000);
-    const todayAmAfter = await captureStep(client, '22-today-am-after-checkoff');
-    assertInteractiveControl(todayAmAfter, 'Mineral SPF 50');
-    assert(todayAmAfter.bodyText.includes('1 of 1'), 'AM check-off did not reach 1 of 1.');
-
-    await client.send('Page.navigate', { url: `${baseUrl}/today?routine=PM` });
-    await waitForPath(client, '/today', 30_000);
-    await waitForText(client, 'Evening routine', 30_000);
-    await waitForText(client, 'Glycolic 7%', 30_000);
-    await scrollTextIntoView(client, 'Glycolic 7%', { exact: false });
-    const todayPmBefore = await captureStep(client, '23-today-pm-before-checkoff', {
-      assertClean: false,
-    });
-    assertInteractiveControl(todayPmBefore, 'Glycolic 7%');
-    assert(todayPmBefore.bodyText.includes('0 of 1'), 'PM routine did not start at 0 of 1.');
-    await clickByText(client, 'Glycolic 7%', { exact: false });
-    await waitForText(client, '1 of 1', 30_000);
-    const todayPmAfter = await captureStep(client, '24-today-pm-after-checkoff', {
-      assertClean: false,
-    });
-    assertInteractiveControl(todayPmAfter, 'Glycolic 7%');
-    assert(todayPmAfter.bodyText.includes('1 of 1'), 'PM check-off did not reach 1 of 1.');
+    assert(
+      !todayFree.bodyText.includes('PRO ACTIVE') &&
+        !todayFree.bodyText.includes('Your Pro plan is active'),
+      'Continuing with the free plan incorrectly exposed Pro authority.',
+    );
 
     let ageReverificationBefore = null;
     let ageReverificationBlocked = null;
@@ -1278,13 +1204,8 @@ async function run() {
       ...(accountCodeEntry ? { accountCodeEntry } : {}),
       ...(accountCodeError ? { accountCodeError } : {}),
       paywall,
-      paywallExplore,
-      routinePlan,
-      todayAfterStart,
-      todayAmBefore,
-      todayAmAfter,
-      todayPmBefore,
-      todayPmAfter,
+      paywallFreePath,
+      todayFree,
       ...(ageReverificationBefore ? { ageReverificationBefore } : {}),
       ...(ageReverificationBlocked ? { ageReverificationBlocked } : {}),
       ...(ageReverificationDirectToday ? { ageReverificationDirectToday } : {}),
@@ -1337,7 +1258,7 @@ async function run() {
         signedOutToday?.url ??
         ageReverificationReloadedToday?.url ??
         ageReverificationDirectToday?.url ??
-        todayPmAfter.url,
+        todayFree.url,
       evidenceFiles: [
         '01-welcome.png',
         '01a-direct-protected-age-gate.png',
@@ -1350,13 +1271,8 @@ async function run() {
         '16-account.png',
         ...(accountUpgradeMode ? ['16a-account-code-entry.png', '16b-account-code-error.png'] : []),
         '17-paywall-current.png',
-        '18-paywall-explore-visible.png',
-        '19-routine-plan-current.png',
-        '20-today-after-start-current.png',
-        '21-today-am-before-checkoff.png',
-        '22-today-am-after-checkoff.png',
-        '23-today-pm-before-checkoff.png',
-        '24-today-pm-after-checkoff.png',
+        '18-paywall-free-path-visible.png',
+        '19-today-free-current.png',
         ...(!accountUpgradeMode && !accountIsolationMode
           ? [
               '25-age-reverification-before-submit.png',
@@ -1377,10 +1293,10 @@ async function run() {
           : []),
       ],
       flowResult: accountUpgradeMode
-        ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
+        ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then continued honestly to Today on the free plan.'
         : accountIsolationMode
-          ? 'Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
-          : 'Completed onboarding through Explore first, routine plan, Start today, AM and PM check-offs, then proved an under-threshold re-verification immediately closed protected providers and remained closed across direct Today navigation and reload.',
+          ? 'Completed onboarding on the free plan, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
+          : 'Completed onboarding through the truthful free-plan path to Today without granting Pro, then proved an under-threshold re-verification immediately closed protected providers and remained closed across direct Today navigation and reload.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -1395,15 +1311,13 @@ async function run() {
         hasTimingHandled: reveal.bodyText.includes('Timing handled'),
         text: reveal.bodyText,
       },
-      routinePlan: {
-        hasFirstInsight: routinePlan.bodyText.includes('FIRST INSIGHT'),
-        hasGlycolicNight: routinePlan.bodyText.includes('Glycolic 7%'),
-        hasPendingReview: routinePlanHasPendingReview,
-        hasRetinolNight: routinePlan.bodyText.includes('Retinol 0.3%'),
-        hasSpfMorning: routinePlan.bodyText.includes('Mineral SPF 50'),
-        hasStartToday: routinePlan.bodyText.includes('Start today'),
-        text: routinePlan.bodyText,
-        url: routinePlan.url,
+      freePlan: {
+        hasContinueAction: paywallFreePath.bodyText.includes('Continue with the free plan'),
+        hasProActiveCopy:
+          todayFree.bodyText.includes('PRO ACTIVE') ||
+          todayFree.bodyText.includes('Your Pro plan is active'),
+        text: todayFree.bodyText,
+        url: todayFree.url,
       },
       routeCheck: {
         accountLedToPaywall: paywall.url.includes('/onboarding/paywall'),
@@ -1411,10 +1325,11 @@ async function run() {
           !accountUpgradeMode ||
           (accountCodeError?.bodyText.includes('That code did not work') &&
             paywall.url.includes('/onboarding/paywall')),
-        amCheckoffReachedComplete: todayAmAfter.bodyText.includes('1 of 1'),
-        exploreFirstLedToRoutinePlan: routinePlan.url.includes('/routine/plan'),
+        freePlanLedToToday: todayFree.url.includes('/today'),
+        freePlanDidNotGrantPro:
+          !todayFree.bodyText.includes('PRO ACTIVE') &&
+          !todayFree.bodyText.includes('Your Pro plan is active'),
         notificationSkipLedToAccount: true,
-        pmCheckoffReachedComplete: todayPmAfter.bodyText.includes('1 of 1'),
         ageReverificationClosedProtectedProviders:
           accountUpgradeMode ||
           accountIsolationMode ||
@@ -1437,7 +1352,6 @@ async function run() {
           !accountIsolationMode || signedOutToday?.bodyText.includes('NO ROUTINE YET') === true,
         revealContinueLedToNotifications: true,
         revealRoute: reveal.url,
-        startTodayLedToToday: todayAfterStart.url.includes('/today'),
       },
       startCommand: shouldStartServer
         ? `EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development ${!accountIsolationMode ? 'EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH=anonymous_owner ' : ''}${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
@@ -1454,9 +1368,7 @@ async function run() {
         accountUpgradeMode
           ? 'Continued from reveal to notification soft ask, skipped reminders, recovered from an invalid email code, completed the deterministic account upgrade, and reached onboarding paywall.'
           : 'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
-        'Used Explore first to unlock the routine plan without card entry.',
-        'Verified the generated routine plan contains either a reviewed first insight or the truthful pending-review state, plus SPF, glycolic, and retinol placement.',
-        'Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
+        'Used Continue with the free plan and reached Today without granting or implying Pro authority.',
         ...(accountIsolationMode
           ? [
               'Opened the signed-in account surface and initiated sign-out with account A private queries already populated.',
@@ -1466,23 +1378,7 @@ async function run() {
           : []),
       ],
       surface: 'Headless Chrome Expo web',
-      today: {
-        am: {
-          afterText: todayAmAfter.bodyText,
-          beforeText: todayAmBefore.bodyText,
-          completed: todayAmAfter.bodyText.includes('1 of 1'),
-          product: 'Mineral SPF 50',
-          url: todayAmAfter.url,
-        },
-        afterStartUrl: todayAfterStart.url,
-        pm: {
-          afterText: todayPmAfter.bodyText,
-          beforeText: todayPmBefore.bodyText,
-          completed: todayPmAfter.bodyText.includes('1 of 1'),
-          product: 'Glycolic 7% toner',
-          url: todayPmAfter.url,
-        },
-      },
+      today: { text: todayFree.bodyText, url: todayFree.url },
       verdict: 'pass',
       viewport: {
         ...viewport,

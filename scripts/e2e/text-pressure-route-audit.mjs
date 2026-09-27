@@ -27,6 +27,7 @@ const viewport = {
   width: Number(process.env.TEXT_PRESSURE_VIEWPORT_WIDTH ?? 360),
 };
 const entitlementLoadingText = 'Checking your access';
+const accountDeletionLoadingText = 'Checking account deletion...';
 const entitlementWaitMs = positiveNumber(process.env.TEXT_PRESSURE_ENTITLEMENT_WAIT_MS, 35_000);
 const httpAttemptTimeoutMs = positiveNumber(
   process.env.TEXT_PRESSURE_HTTP_ATTEMPT_TIMEOUT_MS,
@@ -584,6 +585,21 @@ async function waitForEntitlementSettled(client) {
   );
 }
 
+async function waitForAccountDeletionSettled(client) {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < entitlementWaitMs) {
+    const text = await evaluate(
+      client,
+      `document.body?.innerText?.replace(/\\s+/g, ' ').trim() ?? ''`,
+    );
+    if (!text.includes(accountDeletionLoadingText)) return true;
+    await delay(100);
+  }
+
+  return false;
+}
+
 async function waitForRoute(client, url) {
   const expected = new URL(url);
   const expectedPath = `${expected.pathname}${expected.search}`;
@@ -790,6 +806,7 @@ async function auditRoute(client, route) {
   await client.send('Page.navigate', { url });
   await waitForRoute(client, url);
   await waitForLoad(client);
+  const accountDeletionSettled = await waitForAccountDeletionSettled(client);
   await waitForEntitlementSettled(client);
   await delay(350);
   const scaledCount = await evaluate(client, pressureExpression());
@@ -800,6 +817,14 @@ async function auditRoute(client, route) {
   result.scaledCount = scaledCount;
   result.textScale = scale;
   result.url = url;
+
+  if (!accountDeletionSettled) {
+    result.issues.push({
+      message: `Route remained on "${accountDeletionLoadingText}" for ${entitlementWaitMs} ms.`,
+      type: 'accountDeletionLoadingTimeout',
+    });
+    result.issueCount = result.issues.length;
+  }
 
   if (result.horizontalOverflow > 1) {
     result.issues.push({
