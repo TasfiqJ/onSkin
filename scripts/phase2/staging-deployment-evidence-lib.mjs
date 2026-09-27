@@ -19,7 +19,7 @@ export const DB06_RETENTION_CLASS = 'release-qa';
 export const DB06_CURRENT_SOURCE_CONTRACT = Object.freeze({
   migrationCount: 94,
   latestMigrationId: '20260926000078',
-  functionCount: 17,
+  functionCount: 18,
   // Historical 0072 replay only; do not treat this as a verified 0078 count.
   publicTableCount: 82,
   storageBucketCount: 1,

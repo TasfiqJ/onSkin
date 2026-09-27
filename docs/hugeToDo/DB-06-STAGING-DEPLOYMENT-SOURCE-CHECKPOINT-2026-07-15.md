@@ -64,7 +64,7 @@ Node orchestrator. The orchestrator:
    cancellation signal and runtime root and emits a stable redacted recovery
    fingerprint;
 4. derives and hashes the exact 71 ordered migration files through
-   `20260729000072`, the 17 `deployByDefault` functions, each function's
+   `20260926000078`, the 18 `deployByDefault` functions, each function's
    transitive local source set, the function manifest, the Deno lockfile, and
    every deployment/evidence procedure input;
 5. runs the complete credential-free local DB-05 replay and retains its
@@ -99,9 +99,9 @@ Node orchestrator. The orchestrator:
    source review rather than being silently ignored;
 10. sets the two staging app-environment names and
     `DB06_TRAFFIC_FREEZE=frozen`, confirms every required hosted configuration
-    group by name only, and discards provider digests. Every one of the 17 Edge
+    group by name only, and discards provider digests. Every one of the 18 Edge
     entrypoints checks the shared freeze guard before request business logic;
-11. deploys the complete 17-function manifest before any migration, reads back
+11. deploys the complete 18-function manifest before any migration, reads back
     each hosted function's active status, version, `verify_jwt` posture, and
     hosted `ezbr_sha256`, and canaries the exact eight `verifyJwt: false`
     endpoints for HTTP `503`, exact JSON error code
@@ -283,13 +283,13 @@ repository/local/linked equality remains open.
 including real descendant process-tree settlement on normal, timeout, and
 output-limit paths, plus the static wrapper/orchestrator contract. The fixtures
 cover deterministic
-71-migration/17-function source hashing; partial and malformed schema output;
+94-migration/18-function source hashing; partial and malformed schema output;
 Git snapshot mutation/injection rejection; aggregate Auth/Storage/all-Cron
 parsing and forward-safe Auth configuration-field review;
 divergent migration history; non-empty-target rejection; missing, inactive,
 extra, wrong-JWT, or un-hashed functions; secret-digest minimization; strict
 zero-cohort cutover file/fingerprint/hash/expiry binding; active shared freeze
-guards across all 17 functions; exact frozen-response canaries across the eight
+guards across all 18 functions; exact frozen-response canaries across the eight
 public-gateway functions; type validation/parity; exact 82-table/RLS and
 one-bucket/no-cohort/no-Cron acceptance; evidence governance fields; redaction;
 traversal/overwrite denial; partial-finalization recovery; checksums; retained

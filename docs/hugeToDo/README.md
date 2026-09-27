@@ -840,7 +840,7 @@ repository/local/linked parity are absent.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
 `ACCT-03`. Its current fresh-only source inventory binds all 94 migrations
-through `0078` and all 17 Edge functions. The runner stops before project
+through `0078` and all 18 Edge functions. The runner stops before project
 linking or mutation when its reviewed local-precondition evidence is absent;
 the exact-head DB-05 replay, schema inventory, and generated-type parity are
 now reviewed. Its eventual hosted procedure requires an active traffic/provider

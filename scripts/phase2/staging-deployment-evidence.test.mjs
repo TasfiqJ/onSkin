@@ -262,7 +262,7 @@ test('current reviewed source inventory is deterministic and exact', () => {
   const second = buildSourceInventory(repoRoot);
   assert.equal(source.migrationCount, 94);
   assert.equal(source.latestMigrationId, '20260926000078');
-  assert.equal(source.functionCount, 17);
+  assert.equal(source.functionCount, 18);
   assert.equal(source.migrationSetSha256, second.migrationSetSha256);
   assert.equal(source.functionSetSha256, second.functionSetSha256);
   assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 94);
@@ -430,7 +430,7 @@ test('immediate pre-migration gate rejects changed schema or migration history',
 test('function inventory requires exact manifest slugs, active status, versions, JWT posture, and hosted hashes', () => {
   const rows = functionRows();
   const parsed = parseFunctionInventory(JSON.stringify(rows), source, { requireComplete: true });
-  assert.equal(parsed.length, 17);
+  assert.equal(parsed.length, 18);
   assert.equal(parsed[0].reviewedSourceSetSha256.length, 64);
 
   const missingHash = structuredClone(rows);
@@ -979,7 +979,7 @@ function passManifestInput(steps) {
       authIngressFreeze,
     },
     preMigration: {
-      functionCount: 17,
+      functionCount: 18,
       functions,
       trafficFreezeState: 'frozen-and-retained-through-downstream-release-gate',
       trafficFreezeCanary,
