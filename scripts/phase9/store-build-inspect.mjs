@@ -26,7 +26,7 @@ import {
 } from './ios-archive-privacy-evidence.mjs';
 import { auditIosReleaseCandidateCrossBinding } from './ios-release-candidate-cross-binding.mjs';
 import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
-import { auditIosPrivacySource } from './ios-privacy-contract.mjs';
+import { IosPrivacyContractError, auditIosPrivacySource } from './ios-privacy-contract.mjs';
 import {
   auditStoreOnlyResolvedApp,
   auditStoreOnlyRelease,
@@ -98,11 +98,13 @@ try {
     `Installed iOS privacy source audit is invalid (${iosPrivacySourceAudit.summary.errorCount} errors).`,
   );
 } catch (error) {
-  block(
-    errors,
-    false,
-    `Installed iOS privacy source audit could not run: ${error instanceof Error ? error.message : String(error)}`,
-  );
+  const diagnostic =
+    error instanceof IosPrivacyContractError
+      ? `${error.message} [${error.code} at ${error.path ?? '-'}]`
+      : error instanceof Error
+        ? error.message
+        : String(error);
+  block(errors, false, `Installed iOS privacy source audit could not run: ${diagnostic}`);
 }
 
 function appConfigForVariant(variant) {

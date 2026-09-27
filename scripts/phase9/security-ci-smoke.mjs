@@ -5,11 +5,27 @@ const errors = [];
 const warnings = [];
 
 const workflowPath = '.github/workflows/security.yml';
+const edgeFunctionsCheckPath = 'scripts/phase9/edge-functions-check.mjs';
 const liveEdgeAuthPath = 'scripts/phase9/live-edge-auth.mjs';
 const liveDataRightsPath = 'scripts/phase9/live-data-rights.mjs';
 block(errors, exists(workflowPath), 'Missing GitHub Actions security workflow.');
+block(errors, exists(edgeFunctionsCheckPath), 'Missing Deno Edge Function check.');
 block(errors, exists(liveEdgeAuthPath), 'Missing live Edge auth harness.');
 block(errors, exists(liveDataRightsPath), 'Missing live data-rights harness.');
+
+if (exists(edgeFunctionsCheckPath)) {
+  const edgeFunctionsCheck = read(edgeFunctionsCheckPath);
+  block(
+    errors,
+    edgeFunctionsCheck.includes("'--node-modules-dir=none'"),
+    'Deno Edge Function checking must resolve npm packages from its global cache.',
+  );
+  block(
+    errors,
+    !/--node-modules-dir=(?:auto|manual)/.test(edgeFunctionsCheck),
+    'Deno Edge Function checking must not create or reuse a local node_modules layout.',
+  );
+}
 
 if (exists(workflowPath)) {
   const workflow = read(workflowPath);
