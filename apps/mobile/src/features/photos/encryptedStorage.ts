@@ -592,7 +592,11 @@ function encryptedTextEnvelopeFromRaw(raw: string): EncryptedTextEnvelope | null
   return record ? textEnvelopeFromRecord(record) : null;
 }
 
-function decryptEnvelopeToUtf8(envelope: EncryptedTextEnvelope, key: Uint8Array): string | null {
+function decryptEnvelopeToUtf8(
+  envelope: EncryptedTextEnvelope | EncryptedPhotoEnvelope | EncryptedPhotoRenditionEnvelope,
+  key: Uint8Array,
+): string | null {
+  if ('mimeType' in envelope) return decryptPhotoEnvelopeToUtf8(envelope, key);
   try {
     return bytesToUtf8(decryptBytesWithKey(envelope, key));
   } catch {
@@ -804,7 +808,7 @@ export async function createPhotoShareFile(
     );
     try {
       assertHealthDataWriteLease(healthLease);
-      const base64 = decryptPhotoEnvelopeToUtf8(envelope, key);
+      const base64 = decryptEnvelopeToUtf8(envelope, key);
       if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
       const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
       assertHealthPhotoOperationCurrent(generation, healthLease);
