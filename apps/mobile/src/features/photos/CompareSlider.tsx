@@ -21,7 +21,7 @@ import { PhotoImage } from './PhotoImage';
 // the two photos and their dates. expo-image renders each encrypted on-device file;
 // the flat fallback appears only when a legacy or damaged record has no usable bytes.
 
-export type ComparePhoto = { id: string; uri: string | null; date: string; tone: string };
+export type ComparePhoto = { id: string; uri: string | null; date: string; tone: string; captureSessionId?: string | null };
 const HANDLE_SHADOW =
   Platform.OS === 'web'
     ? { boxShadow: '0 3px 12px rgba(0, 0, 0, 0.28)' }
@@ -39,6 +39,7 @@ function Panel({ photo, active }: { photo: ComparePhoto; active: boolean }) {
       <PhotoImage
         uri={photo.uri}
         photoId={photo.id}
+        captureSessionId={photo.captureSessionId}
         rendition="display"
         requestPriority="interactive"
         active={active}

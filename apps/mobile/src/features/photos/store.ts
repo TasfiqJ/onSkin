@@ -17,18 +17,24 @@ import { trustedProgressCaptureSessionId } from './progressCapturePrivacy';
 
 import {
   decryptPhotoNote,
+  beginPhotoRenditionPublication,
+  canonicalPhotoRenditionUri,
   clearEncryptedPhotoStorage,
   deleteCapturedPhotoSource,
   deleteQuarantinedPhoto,
-  encryptCapturedPhoto,
+  encryptPhotoRendition,
   encryptPhotoNote,
   isEncryptedPhotoUri,
+  markPhotoRenditionPublication,
   photoEncryptionInfo,
   quarantineEncryptedPhoto,
   reconcileEncryptedPhotoStorage,
+  recoverPhotoRenditionPublication,
   restoreQuarantinedPhoto,
+  settlePhotoRenditionPublication,
   type QuarantinedPhotoFile,
 } from './encryptedStorage';
+import { createEncryptedPhotoThumbnail } from './photoThumbnail';
 import type { PhotoMeta, PhotoQualitySource } from './timeline';
 
 /**
@@ -215,6 +221,22 @@ async function normalizeStoredRecord(
   const explicitEncryptedUri = stringOrNull(value.encryptedLocalUri);
   const encryptedLocalUri =
     explicitEncryptedUri ?? (localUri && isEncryptedPhotoUri(localUri) ? localUri : null);
+  const encryptionVersion = stringOrNull(value.encryptionVersion);
+  const thumbnailLocalUri = stringOrNull(value.thumbnailLocalUri);
+  if (encryptionVersion === 'xchacha20poly1305:photo-rendition:v1') {
+    let expectedOriginal: string;
+    let expectedThumbnail: string;
+    try {
+      expectedOriginal = canonicalPhotoRenditionUri({ photoId: id, captureSessionId, rendition: 'original' });
+      expectedThumbnail = canonicalPhotoRenditionUri({ photoId: id, captureSessionId, rendition: 'thumbnail' });
+    } catch {
+      throw new Error(PHOTO_METADATA_INVALID);
+    }
+    if (encryptedLocalUri !== expectedOriginal || localUri !== expectedOriginal ||
+        thumbnailLocalUri !== expectedThumbnail) {
+      throw new Error(PHOTO_METADATA_INVALID);
+    }
+  }
   const notesCiphertext = stringOrNull(value.notesCiphertext);
   guard.assertCurrent();
   const notes = notesCiphertext
@@ -247,9 +269,9 @@ async function normalizeStoredRecord(
     faceRegionRedacted: booleanOr(value.faceRegionRedacted, false),
     isEncrypted,
     encryptedLocalUri,
-    thumbnailLocalUri: stringOrNull(value.thumbnailLocalUri),
+    thumbnailLocalUri,
     encryptionVersion:
-      stringOrNull(value.encryptionVersion) ?? (encrypted ? photoEncryptionInfo.version : 'none'),
+      encryptionVersion ?? (encrypted ? photoEncryptionInfo.version : 'none'),
     keyId: stringOrNull(value.keyId) ?? (encrypted ? photoEncryptionInfo.keyId : null),
   };
 }
@@ -282,6 +304,8 @@ async function loadPhotosUnlocked(guard: PhotoOperationGuard): Promise<PhotoReco
   const raw = await getPrivateItem(KEY);
   guard.assertCurrent();
   if (raw === null) {
+    await recoverPhotoRenditionPublication(new Set());
+    guard.assertCurrent();
     guard.assertCurrent();
     await reconcileEncryptedPhotoStorage([], { removeUnreferencedFinals: false });
     guard.assertCurrent();
@@ -291,12 +315,12 @@ async function loadPhotosUnlocked(guard: PhotoOperationGuard): Promise<PhotoReco
   try {
     parsed = JSON.parse(raw) as unknown;
   } catch {
+    await recoverPhotoRenditionPublication(null);
     throw new Error(PHOTO_METADATA_INVALID);
   }
   const normalized = await normalizeStoredRecords(parsed, guard);
   guard.assertCurrent();
   if (!normalized) throw new Error(PHOTO_METADATA_INVALID);
-  guard.assertCurrent();
   await reconcileEncryptedPhotoStorage(
     normalized.flatMap((photo) =>
       [photo.encryptedLocalUri ?? photo.localUri, photo.thumbnailLocalUri].filter(
@@ -304,6 +328,8 @@ async function loadPhotosUnlocked(guard: PhotoOperationGuard): Promise<PhotoReco
       ),
     ),
   );
+  guard.assertCurrent();
+  await recoverPhotoRenditionPublication(new Set(normalized.map((photo) => photo.id)));
   guard.assertCurrent();
   return normalized;
 }
@@ -324,16 +350,6 @@ async function persist(items: PhotoRecord[], guard: PhotoOperationGuard): Promis
   guard.assertCurrent();
   await setPrivateItem(KEY, JSON.stringify(stored));
   guard.assertCurrent();
-}
-
-async function quarantineUncommittedEncryptedPhoto(
-  uri: string,
-  operationId: string,
-): Promise<void> {
-  // A storage write can reject after committing. Keep the encrypted envelope
-  // quarantined until a subsequent metadata read can prove whether to restore
-  // or delete it; the camera source also remains available for a retry.
-  await quarantineEncryptedPhoto(uri, operationId);
 }
 
 async function quarantinePhotoFiles(
@@ -385,7 +401,9 @@ async function restoreQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<v
 }
 
 async function finishQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<void> {
-  await Promise.allSettled(files.map((file) => deleteQuarantinedPhoto(file)));
+  const results = await Promise.allSettled(files.map((file) => deleteQuarantinedPhoto(file)));
+  const failures = results.filter((result) => result.status === 'rejected');
+  if (failures.length > 0) throw new Error(`PHOTO_DELETE_SETTLEMENT_REQUIRED:${failures.length}`);
 }
 
 function captureReplayMatches(existing: PhotoRecord, input: NewPhoto): boolean {
@@ -420,7 +438,7 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
         }
         if (sourceNeedsCleanup) {
           lease.assertCurrent();
-          await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+          await deleteCapturedPhotoSource(input.localUri);
           lease.assertCurrent();
         }
         return { photo: replay, createdNow: false };
@@ -431,16 +449,43 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
     const hasReference = items.some((p) => p.series === series);
     const id = randomUUID();
     lease.assertCurrent();
-    const encrypted =
-      input.localUri && !isEncryptedPhotoUri(input.localUri)
-        ? await encryptCapturedPhoto(input.localUri, id)
-        : input.localUri && isEncryptedPhotoUri(input.localUri)
-          ? {
-              encryptedLocalUri: input.localUri,
-              keyId: photoEncryptionInfo.keyId,
-              encryptionVersion: photoEncryptionInfo.version,
-            }
-          : null;
+    let thumbnail: Awaited<ReturnType<typeof createEncryptedPhotoThumbnail>> | null = null;
+    let encrypted: Awaited<ReturnType<typeof encryptPhotoRendition>> | null = null;
+    const publicationIdentity = { photoId: id, captureSessionId };
+    if (sourceNeedsCleanup) {
+      await beginPhotoRenditionPublication(publicationIdentity, input.localUri!);
+      lease.assertCurrent();
+    }
+    try {
+      encrypted =
+        input.localUri && !isEncryptedPhotoUri(input.localUri)
+          ? await encryptPhotoRendition(input.localUri, {
+              photoId: id,
+              captureSessionId,
+              rendition: 'original',
+            })
+          : input.localUri && isEncryptedPhotoUri(input.localUri)
+            ? {
+                encryptedLocalUri: input.localUri,
+                keyId: photoEncryptionInfo.keyId,
+                encryptionVersion: photoEncryptionInfo.version,
+              }
+            : null;
+      if (sourceNeedsCleanup) {
+        await markPhotoRenditionPublication(publicationIdentity, 'original_adopted');
+      }
+      if (input.localUri && !isEncryptedPhotoUri(input.localUri)) {
+        thumbnail = await createEncryptedPhotoThumbnail({
+          sourceUri: input.localUri,
+          photoId: id,
+          captureSessionId,
+        });
+        await markPhotoRenditionPublication(publicationIdentity, 'pair_adopted');
+      }
+    } catch (error) {
+      if (sourceNeedsCleanup) await recoverPhotoRenditionPublication(new Set());
+      throw error;
+    }
     lease.assertCurrent();
 
     const rec: PhotoRecord = {
@@ -465,18 +510,16 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
       faceRegionRedacted: false,
       isEncrypted: Boolean(encrypted),
       encryptedLocalUri: encrypted?.encryptedLocalUri ?? null,
-      thumbnailLocalUri: null,
+      thumbnailLocalUri: thumbnail?.encryptedLocalUri ?? null,
       encryptionVersion: encrypted?.encryptionVersion ?? 'none',
       keyId: encrypted?.keyId ?? null,
     };
     try {
       await persist([rec, ...items], lease);
-    } catch (error) {
-      if (encrypted && sourceNeedsCleanup) {
-        await quarantineUncommittedEncryptedPhoto(encrypted.encryptedLocalUri, `add-${id}`).catch(
-          () => undefined,
-        );
+      if (sourceNeedsCleanup) {
+        await markPhotoRenditionPublication(publicationIdentity, 'metadata_committed');
       }
+    } catch (error) {
       try {
         lease.assertCurrent();
       } catch (authorityError) {
@@ -490,7 +533,9 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
       throw error;
     }
     if (sourceNeedsCleanup) {
-      await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+      await deleteCapturedPhotoSource(input.localUri);
+      await markPhotoRenditionPublication(publicationIdentity, 'raw_cleaned');
+      await settlePhotoRenditionPublication(publicationIdentity);
     }
     lease.assertCurrent();
     return { photo: rec, createdNow: true };

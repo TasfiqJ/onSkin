@@ -191,6 +191,7 @@ describe('PhotoTimelapse runtime contract', () => {
       'newer:legacy-full:v1',
       'file://photos/newer.layerwellphoto',
       9,
+      expect.objectContaining({ photoId: 'newer', rendition: 'original' }),
       'interactive',
     );
     expect(mocks.network).not.toHaveBeenCalled();

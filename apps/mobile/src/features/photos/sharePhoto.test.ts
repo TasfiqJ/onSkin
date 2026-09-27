@@ -52,7 +52,10 @@ describe('progress photo sharing', () => {
       sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.layerwellphoto' }),
     ).resolves.toBe(true);
 
-    expect(mocks.createPhotoShareFile).toHaveBeenCalledWith('file://photos/photo-1.layerwellphoto');
+    expect(mocks.createPhotoShareFile).toHaveBeenCalledWith(
+      'file://photos/photo-1.layerwellphoto',
+      expect.objectContaining({ photoId: 'photo-1', rendition: 'original' }),
+    );
     expect(mocks.shareAsync).toHaveBeenCalledWith('file://cache/layerwell-share-photo-1.jpg');
     expect(mocks.deletePhotoShareFile).toHaveBeenCalledWith(
       'file://cache/layerwell-share-photo-1.jpg',

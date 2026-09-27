@@ -253,6 +253,7 @@ function PhotoDetailScreenContent() {
             <PhotoImage
               uri={photo.localUri}
               photoId={photo.id}
+              captureSessionId={photo.captureSessionId}
               rendition="display"
               requestPriority="interactive"
               style={{ flex: 1 }}

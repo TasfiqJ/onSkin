@@ -91,6 +91,7 @@ export function createImageManipulatorPlaintextCoordinator(scavenge: () => Promi
 export type PlaintextStagingPurpose =
   | 'data_export_json'
   | 'photo_analysis_jpeg'
+  | 'photo_thumbnail_jpeg'
   | 'photo_share_jpeg'
   | 'photo_share_png';
 
@@ -152,6 +153,7 @@ function isPurpose(value: unknown): value is PlaintextStagingPurpose {
   return (
     value === 'data_export_json' ||
     value === 'photo_analysis_jpeg' ||
+    value === 'photo_thumbnail_jpeg' ||
     value === 'photo_share_jpeg' ||
     value === 'photo_share_png'
   );

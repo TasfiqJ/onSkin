@@ -89,6 +89,9 @@ export const LOCAL_PRIVATE_CONTROL_KEYS = [
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
+  // Content-free crash recovery state. It must survive a partial cleanup so
+  // encrypted photo publication can settle before private state is mounted.
+  'layerwell.photo.publication_journal.v1',
   // Device-global purchase admission remains closed across sign-out/account
   // cleanup until the exact owner completes an authenticated Restore check.
   'layerwell.store_transaction_notice.v2',

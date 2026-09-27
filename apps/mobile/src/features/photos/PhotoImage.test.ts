@@ -20,7 +20,8 @@ describe('PhotoImage sensitive-memory contract', () => {
 
   it('uses the bounded in-flight coordinator and detaches off-screen demand', () => {
     expect(source).toContain('requestSensitiveImage(');
-    expect(source).toContain('ownerGeneration, requestPriority');
+    expect(source).toContain('photoId,');
+    expect(source).toContain('captureSessionId,');
     expect(source).toContain('request.cancel()');
     expect(source).toContain('if (!active)');
     expect(source).toContain('key={stateIdentity}');
@@ -56,7 +57,7 @@ describe('PhotoImage sensitive-memory contract', () => {
 
   it('reports every terminal pre-image failure so frame-gated playback cannot hang', () => {
     const lifecycleFallback = source.indexOf('if (!lifecycleActive)');
-    const identityFallback = source.indexOf('if (!canDisplaySensitivePhoto || identityUnavailable)');
+    const identityFallback = source.indexOf('if (!canDisplaySensitivePhoto || identityUnavailable || rejectedEncryptedLikeUri)');
     const diskMigrationFailure = source.indexOf('setDiskCacheFailed(true)');
 
     expect(lifecycleFallback).toBeGreaterThan(-1);

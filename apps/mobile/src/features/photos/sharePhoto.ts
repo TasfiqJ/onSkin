@@ -7,6 +7,7 @@ import { createPhotoShareFile, deletePhotoShareFile } from './encryptedStorage';
 type ShareablePhoto = {
   id: string;
   localUri?: string | null;
+  captureSessionId?: string | null;
 };
 
 function shouldForcePhotoShareFailure(): boolean {
@@ -32,7 +33,12 @@ export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promis
 
       let shareUri: string | null = null;
       try {
-        shareUri = await createPhotoShareFile(localUri);
+        shareUri = await createPhotoShareFile(localUri, {
+          photoId: photo!.id,
+          captureSessionId: photo!.captureSessionId ?? null,
+          rendition: 'original',
+          allowLegacyEnvelope: true,
+        });
         lease.assertCurrent();
         await Sharing.shareAsync(shareUri);
         lease.assertCurrent();

@@ -28,9 +28,11 @@ const mocks = vi.hoisted(() => ({
   clearEncryptedPhotoStorage: vi.fn(),
   storage: new Map<string, string>(),
   deleteCapturedPhotoSource: vi.fn(),
+  deleteEncryptedPhoto: vi.fn(),
   deleteQuarantinedPhoto: vi.fn(),
   encryptedFiles: new Set<string>(),
   encryptCapturedPhoto: vi.fn(),
+  createEncryptedPhotoThumbnail: vi.fn(),
   from: vi.fn(),
   getPrivateItemError: null as Error | null,
   getPrivateItemGate: null as Promise<void> | null,
@@ -39,6 +41,10 @@ const mocks = vi.hoisted(() => ({
   quarantineError: null as Error | null,
   randomIds: [] as string[],
   reconcileEncryptedPhotoStorage: vi.fn(),
+  beginPhotoRenditionPublication: vi.fn(),
+  markPhotoRenditionPublication: vi.fn(),
+  recoverPhotoRenditionPublication: vi.fn(),
+  settlePhotoRenditionPublication: vi.fn(),
   removePrivateItem: vi.fn(),
   restoreQuarantinedPhoto: vi.fn(),
   setPrivateItemCommitThenError: null as Error | null,
@@ -77,14 +83,20 @@ vi.mock('@/lib/supabase/client', () => ({
 }));
 
 vi.mock('./encryptedStorage', () => ({
+  beginPhotoRenditionPublication: mocks.beginPhotoRenditionPublication,
+  canonicalPhotoRenditionUri: vi.fn(({ photoId, rendition }) =>
+    `file:///captured.jpg.${photoId}${rendition === 'thumbnail' ? '-thumbnail' : ''}.layerwellphoto`,
+  ),
   clearEncryptedPhotoStorage: mocks.clearEncryptedPhotoStorage,
   decryptPhotoNote: vi.fn(async (ciphertext: string) => {
     if (mocks.decryptPhotoNoteError) throw mocks.decryptPhotoNoteError;
     return `note:${ciphertext}`;
   }),
   deleteCapturedPhotoSource: mocks.deleteCapturedPhotoSource,
+  deleteEncryptedPhoto: mocks.deleteEncryptedPhoto,
   deleteQuarantinedPhoto: mocks.deleteQuarantinedPhoto,
   encryptCapturedPhoto: mocks.encryptCapturedPhoto,
+  encryptPhotoRendition: mocks.encryptCapturedPhoto,
   encryptPhotoNote: vi.fn(async (note: string | null) => (note ? `enc:${note}` : null)),
   isPhotoEncryptionReadError: vi.fn(
     (error: unknown) => error instanceof Error && error.message.startsWith('PHOTO_'),
@@ -94,11 +106,18 @@ vi.mock('./encryptedStorage', () => ({
   ),
   quarantineEncryptedPhoto: mocks.quarantineEncryptedPhoto,
   reconcileEncryptedPhotoStorage: mocks.reconcileEncryptedPhotoStorage,
+  recoverPhotoRenditionPublication: mocks.recoverPhotoRenditionPublication,
+  markPhotoRenditionPublication: mocks.markPhotoRenditionPublication,
+  settlePhotoRenditionPublication: mocks.settlePhotoRenditionPublication,
   restoreQuarantinedPhoto: mocks.restoreQuarantinedPhoto,
   photoEncryptionInfo: {
     keyId: 'photo-key',
     version: 'photo-v1',
   },
+}));
+
+vi.mock('./photoThumbnail', () => ({
+  createEncryptedPhotoThumbnail: mocks.createEncryptedPhotoThumbnail,
 }));
 
 const KEY = 'layerwell.photos.v1';
@@ -111,9 +130,11 @@ describe('photo local store recovery', () => {
     mocks.clearEncryptedPhotoStorage.mockReset();
     mocks.storage.clear();
     mocks.deleteCapturedPhotoSource.mockReset();
+    mocks.deleteEncryptedPhoto.mockReset();
     mocks.deleteQuarantinedPhoto.mockReset();
     mocks.encryptedFiles.clear();
     mocks.encryptCapturedPhoto.mockReset();
+    mocks.createEncryptedPhotoThumbnail.mockReset();
     mocks.from.mockClear();
     mocks.getPrivateItemError = null;
     mocks.getPrivateItemGate = null;
@@ -122,6 +143,10 @@ describe('photo local store recovery', () => {
     mocks.quarantineError = null;
     mocks.randomIds = [];
     mocks.reconcileEncryptedPhotoStorage.mockReset();
+    mocks.beginPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.markPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.recoverPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.settlePhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
     mocks.removePrivateItem.mockReset();
     mocks.restoreQuarantinedPhoto.mockReset();
     mocks.setPrivateItemCommitThenError = null;
@@ -130,17 +155,34 @@ describe('photo local store recovery', () => {
     mocks.setPrivateItemStarted = null;
 
     mocks.deleteCapturedPhotoSource.mockResolvedValue(undefined);
+    mocks.deleteEncryptedPhoto.mockImplementation(async (uri: string) => {
+      mocks.encryptedFiles.delete(uri);
+    });
     mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
     mocks.deleteQuarantinedPhoto.mockResolvedValue(undefined);
-    mocks.encryptCapturedPhoto.mockImplementation(async (uri: string, id: string) => {
-      const encryptedLocalUri = `${uri}.${id}.layerwellphoto`;
-      mocks.encryptedFiles.add(encryptedLocalUri);
-      return {
-        encryptedLocalUri,
-        keyId: 'photo-key',
-        encryptionVersion: 'photo-v1',
-      };
-    });
+    mocks.encryptCapturedPhoto.mockImplementation(
+      async (uri: string, identity: string | { photoId: string }) => {
+        const id = typeof identity === 'string' ? identity : identity.photoId;
+        const encryptedLocalUri = `${uri}.${id}.layerwellphoto`;
+        mocks.encryptedFiles.add(encryptedLocalUri);
+        return {
+          encryptedLocalUri,
+          keyId: 'photo-key',
+          encryptionVersion: 'photo-v1',
+        };
+      },
+    );
+    mocks.createEncryptedPhotoThumbnail.mockImplementation(
+      async ({ sourceUri, photoId }: { sourceUri: string; photoId: string }) => {
+        const encryptedLocalUri = `${sourceUri}.${photoId}-thumbnail.layerwellphoto`;
+        mocks.encryptedFiles.add(encryptedLocalUri);
+        return {
+          encryptedLocalUri,
+          keyId: 'photo-key',
+          encryptionVersion: 'photo-v1',
+        };
+      },
+    );
     mocks.quarantineEncryptedPhoto.mockImplementation(
       async (uri: string | null, operationId: string) => {
         if (mocks.quarantineError) throw mocks.quarantineError;
@@ -271,7 +313,7 @@ describe('photo local store recovery', () => {
     expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledWith('file:///captured.jpg');
   });
 
-  it('keeps the capture source retryable and compensates the encrypted file when metadata fails', async () => {
+  it('keeps durable publication state and the capture source when metadata fails ambiguously', async () => {
     mocks.setPrivateItemError = new Error('metadata unavailable');
 
     await expect(
@@ -281,9 +323,12 @@ describe('photo local store recovery', () => {
       }),
     ).rejects.toThrow('metadata unavailable');
 
-    const encryptedUri = 'file:///captured.jpg.photo-id.layerwellphoto';
-    expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(encryptedUri, 'add-photo-id');
-    expect(mocks.deleteQuarantinedPhoto).not.toHaveBeenCalled();
+    expect(mocks.beginPhotoRenditionPublication).toHaveBeenCalledOnce();
+    expect(mocks.markPhotoRenditionPublication).toHaveBeenCalledWith(
+      expect.objectContaining({ photoId: 'photo-id' }),
+      'pair_adopted',
+    );
+    expect(mocks.settlePhotoRenditionPublication).not.toHaveBeenCalled();
     expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
     expect(mocks.storage.has(KEY)).toBe(false);
   });
@@ -327,6 +372,48 @@ describe('photo local store recovery', () => {
       ['file:///replayed.jpg'],
     ]);
     expect(mocks.randomIds).toEqual(['unused-photo-id']);
+  });
+
+  it('publishes an encrypted thumbnail bound to the canonical photo and capture session', async () => {
+    mocks.randomIds = ['photo-with-thumbnail'];
+
+    const result = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+
+    expect(mocks.createEncryptedPhotoThumbnail).toHaveBeenCalledWith({
+      sourceUri: 'file:///captured.jpg',
+      photoId: 'photo-with-thumbnail',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    expect(result.photo).toMatchObject({
+      id: 'photo-with-thumbnail',
+      encryptedLocalUri: 'file:///captured.jpg.photo-with-thumbnail.layerwellphoto',
+      thumbnailLocalUri: 'file:///captured.jpg.photo-with-thumbnail-thumbnail.layerwellphoto',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledAfter(
+      mocks.createEncryptedPhotoThumbnail,
+    );
+  });
+
+  it('deletes an uncommitted original and preserves the raw source when thumbnail creation fails', async () => {
+    mocks.randomIds = ['photo-thumbnail-failure'];
+    mocks.createEncryptedPhotoThumbnail.mockRejectedValueOnce(new Error('thumbnail failed'));
+
+    await expect(
+      addPhotoWithOutcome({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///captured.jpg',
+        captureSessionId: CAPTURE_SESSION_ID,
+      }),
+    ).rejects.toThrow('thumbnail failed');
+
+    expect(mocks.recoverPhotoRenditionPublication).toHaveBeenCalledWith(new Set());
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
   });
 
   it('serializes simultaneous retries for one capture session into one encrypted photo', async () => {
@@ -421,18 +508,8 @@ describe('photo local store recovery', () => {
 
     await expect(addPhotoWithOutcome(input)).rejects.toThrow('ambiguous private-store response');
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
-    expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(
-      'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto',
-      'add-photo-ambiguous',
-    );
-    expect(mocks.encryptedFiles.has('file:///ambiguous.jpg.photo-ambiguous.layerwellphoto')).toBe(
-      false,
-    );
-    expect(
-      mocks.encryptedFiles.has(
-        'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto.pending-delete-add-photo-ambiguous',
-      ),
-    ).toBe(true);
+    expect(mocks.beginPhotoRenditionPublication).toHaveBeenCalledOnce();
+    expect(mocks.settlePhotoRenditionPublication).not.toHaveBeenCalled();
     expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
 
     const replay = await addPhotoWithOutcome(input);
@@ -441,16 +518,18 @@ describe('photo local store recovery', () => {
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
     expect(mocks.reconcileEncryptedPhotoStorage).toHaveBeenLastCalledWith([
       'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto',
+      'file:///ambiguous.jpg.photo-ambiguous-thumbnail.layerwellphoto',
     ]);
-    expect(mocks.encryptedFiles).toEqual(
-      new Set(['file:///ambiguous.jpg.photo-ambiguous.layerwellphoto']),
-    );
+    expect(mocks.encryptedFiles).toEqual(new Set([
+      'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto',
+      'file:///ambiguous.jpg.photo-ambiguous-thumbnail.layerwellphoto',
+    ]));
     expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
     expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledOnce();
     expect(mocks.randomIds).toEqual(['unused-photo-id']);
   });
 
-  it('returns a committed replay when its best-effort source deletion fails', async () => {
+  it('keeps a committed replay fail-closed until its raw source deletion succeeds', async () => {
     await addPhotoWithOutcome({
       takenLocalDate: '2026-07-03',
       localUri: 'file:///first.jpg',
@@ -465,7 +544,7 @@ describe('photo local store recovery', () => {
         localUri: 'file:///retry.jpg',
         captureSessionId: CAPTURE_SESSION_ID,
       }),
-    ).resolves.toMatchObject({ createdNow: false, photo: { id: 'photo-id' } });
+    ).rejects.toThrow('source busy');
 
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
     expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();

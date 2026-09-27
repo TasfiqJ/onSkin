@@ -37,6 +37,13 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 > source and are stale until regenerated. See D-085, the CAT-06 source
 > checkpoint, and the Phase 5 exit review.
 
+> A 2026-09-26 bounded PHOTO-01 source checkpoint also creates a journaled,
+> bounded JPEG thumbnail before raw-source deletion and publishes it atomically
+> with the identity-bound encrypted original and metadata. Both encrypted
+> renditions participate in reconciliation, deletion, reset, account/consent
+> cleanup, and path-free export. This does not close PHOTO-01 without the
+> signed-build and physical-device evidence listed in the checkpoint.
+
 ---
 
 ## TL;DR

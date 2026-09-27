@@ -16,6 +16,7 @@ import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCor
 
 import {
   beginEncryptedPhotoAccountBoundary,
+  beginPhotoRenditionPublication,
   clearEncryptedPhotoStorage,
   createPhotoShareFile,
   decryptPhotoNote,
@@ -24,6 +25,7 @@ import {
   deleteQuarantinedPhoto,
   deletePhotoShareFile,
   encryptCapturedPhoto,
+  encryptPhotoRendition,
   encryptPhotoNote,
   endEncryptedPhotoAccountBoundary,
   PHOTO_CONTENT_KEY_INVALID,
@@ -32,6 +34,8 @@ import {
   PHOTO_DECRYPTION_FAILED,
   PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   quarantineEncryptedPhoto,
+  markPhotoRenditionPublication,
+  recoverPhotoRenditionPublication,
   reconcileEncryptedPhotoStorage,
   restoreQuarantinedPhoto,
   waitForEncryptedPhotoWritesToSettle,
@@ -341,6 +345,104 @@ describe('encrypted photo storage', () => {
     expect(photoPlaintext).toBeUndefined();
   });
 
+  it('authenticates photo, capture-session, and rendition identity for each distinct envelope', async () => {
+    const sourceUri = 'file://capture/identity-bound.jpg';
+    mocks.files.set(sourceUri, Buffer.from('private identity-bound image').toString('base64'));
+
+    const original = await encryptPhotoRendition(sourceUri, {
+      photoId: 'photo-identity',
+      captureSessionId: '123e4567-e89b-42d3-a456-426614174000',
+      rendition: 'original',
+    });
+    const thumbnail = await encryptPhotoRendition(sourceUri, {
+      photoId: 'photo-identity',
+      captureSessionId: '123e4567-e89b-42d3-a456-426614174000',
+      rendition: 'thumbnail',
+    });
+
+    expect(original.encryptedLocalUri).toBe(
+      'file://document/photos/v1/photo-identity.layerwellphoto',
+    );
+    expect(thumbnail.encryptedLocalUri).toBe(
+      'file://document/photos/v1/photo-identity-thumbnail.layerwellphoto',
+    );
+    const originalIdentity = {
+      photoId: 'photo-identity',
+      captureSessionId: '123e4567-e89b-42d3-a456-426614174000',
+      rendition: 'original' as const,
+    };
+    const thumbnailIdentity = { ...originalIdentity, rendition: 'thumbnail' as const };
+    await expect(decryptPhotoToDataUri(original.encryptedLocalUri, originalIdentity)).resolves.toContain(
+      'data:image/jpeg;base64,',
+    );
+    await expect(decryptPhotoToDataUri(thumbnail.encryptedLocalUri, thumbnailIdentity)).resolves.toContain(
+      'data:image/jpeg;base64,',
+    );
+
+    const tampered = JSON.parse(mocks.files.get(thumbnail.encryptedLocalUri)!) as Record<
+      string,
+      unknown
+    >;
+    tampered.photoId = 'other-photo';
+    mocks.files.set(thumbnail.encryptedLocalUri, JSON.stringify(tampered));
+    await expect(decryptPhotoToDataUri(thumbnail.encryptedLocalUri, thumbnailIdentity)).rejects.toThrow(
+      'PHOTO_RENDITION_IDENTITY_MISMATCH',
+    );
+  });
+
+  it('journals both canonical finals before adoption and removes uncommitted finals on restart', async () => {
+    const identity = { photoId: 'photo-crash', captureSessionId: null };
+    await beginPhotoRenditionPublication(identity, 'file://cache/camera/raw.jpg');
+    const journalRaw = mocks.asyncStorage.get('layerwell.photo.publication_journal.v1');
+    expect(journalRaw).toContain('photo-crash-thumbnail.layerwellphoto');
+    mocks.files.set('file://document/photos/v1/photo-crash.layerwellphoto', 'encrypted');
+    mocks.files.set('file://document/photos/v1/photo-crash-thumbnail.layerwellphoto', 'encrypted');
+    await markPhotoRenditionPublication(identity, 'pair_adopted');
+
+    await recoverPhotoRenditionPublication(new Set());
+
+    expect(mocks.files.has('file://document/photos/v1/photo-crash.layerwellphoto')).toBe(false);
+    expect(mocks.files.has('file://document/photos/v1/photo-crash-thumbnail.layerwellphoto')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.photo.publication_journal.v1')).toBe(false);
+  });
+
+  it('finishes committed raw cleanup on restart and refuses corrupt journal state', async () => {
+    const identity = { photoId: 'photo-committed', captureSessionId: null };
+    mocks.files.set('file://cache/camera/raw.jpg', 'raw');
+    mocks.files.set('file://document/photos/v1/photo-committed.layerwellphoto', 'encrypted');
+    mocks.files.set('file://document/photos/v1/photo-committed-thumbnail.layerwellphoto', 'encrypted');
+    mocks.getInfoAsync.mockImplementation(async (uri: string) => ({ exists: mocks.files.has(uri) }));
+    await beginPhotoRenditionPublication(identity, 'file://cache/camera/raw.jpg');
+    await markPhotoRenditionPublication(identity, 'metadata_committed');
+    await recoverPhotoRenditionPublication(new Set(['photo-committed']));
+    expect(mocks.files.has('file://cache/camera/raw.jpg')).toBe(false);
+    expect(mocks.asyncStorage.has('layerwell.photo.publication_journal.v1')).toBe(false);
+
+    mocks.asyncStorage.set('layerwell.photo.publication_journal.v1', '{bad');
+    await expect(recoverPhotoRenditionPublication(null)).rejects.toThrow(
+      'PHOTO_PUBLICATION_JOURNAL_INVALID',
+    );
+  });
+
+  it('rejects path-capable photo identity and noncanonical capture-session identity', async () => {
+    mocks.files.set('file://capture/untrusted.jpg', Buffer.from('image').toString('base64'));
+    await expect(
+      encryptPhotoRendition('file://capture/untrusted.jpg', {
+        photoId: '../other-account',
+        captureSessionId: null,
+        rendition: 'original',
+      }),
+    ).rejects.toThrow('PHOTO_RENDITION_IDENTITY_INVALID');
+    await expect(
+      encryptPhotoRendition('file://capture/untrusted.jpg', {
+        photoId: 'safe-photo',
+        captureSessionId: 'not-canonical',
+        rendition: 'thumbnail',
+      }),
+    ).rejects.toThrow('PHOTO_RENDITION_IDENTITY_INVALID');
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+  });
+
   it('purges plaintext share staging when its status lease expires during the file write', async () => {
     const sourceUri = 'file://capture/share-expiry.jpg';
     mocks.files.set(sourceUri, Buffer.from('private image').toString('base64'));
@@ -551,7 +653,9 @@ describe('encrypted photo storage', () => {
     ).rejects.toThrow('interrupted move');
 
     expect(mocks.files.has('file://capture/interrupted.jpg')).toBe(true);
-    expect(mocks.files.has('file://document/photos/v1/interrupted-photo.layerwellphoto')).toBe(false);
+    expect(mocks.files.has('file://document/photos/v1/interrupted-photo.layerwellphoto')).toBe(
+      false,
+    );
     expect(
       [...mocks.files.keys()].some((uri) => uri.includes('interrupted-photo.layerwellphoto.tmp-')),
     ).toBe(false);
@@ -665,7 +769,9 @@ describe('encrypted photo storage', () => {
       endAccountGenerationBoundary();
     }
 
-    mocks.readDirectoryAsync.mockResolvedValue(['account-a.layerwellphoto.pending-delete-delete-1']);
+    mocks.readDirectoryAsync.mockResolvedValue([
+      'account-a.layerwellphoto.pending-delete-delete-1',
+    ]);
     await runAccountGenerationOperation((accountLease) => {
       setActiveHealthProcessingEpoch(2, {
         ownerUserId: 'test-owner',
@@ -824,9 +930,9 @@ describe('encrypted photo storage', () => {
       }),
     );
 
-    await expect(createPhotoShareFile('file://document/photos/v1/gif.layerwellphoto')).rejects.toThrow(
-      'PHOTO_ENCRYPTION_ENVELOPE_INVALID',
-    );
+    await expect(
+      createPhotoShareFile('file://document/photos/v1/gif.layerwellphoto'),
+    ).rejects.toThrow('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
   });
 
   it('exports encrypted photos to owned cache files and only deletes those exports', async () => {

@@ -185,6 +185,8 @@ function PairPickerPhoto({
         <PhotoImage
           uri={photo.thumbnailLocalUri ?? photo.localUri}
           photoId={photo.id}
+          captureSessionId={photo.captureSessionId}
+          fallbackOriginalUri={photo.localUri}
           rendition="thumbnail"
           requestPriority="visible"
           active={active}
@@ -369,12 +371,14 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
           uri: before.localUri,
           date: short(before.takenLocalDate),
           tone: '#E7E0D5',
+          captureSessionId: before.captureSessionId,
         }}
         after={{
           id: after.id,
           uri: after.localUri,
           date: short(after.takenLocalDate),
           tone: '#DACFBE',
+          captureSessionId: after.captureSessionId,
         }}
         sideBySide={sideBySide}
         active={picking === null}
@@ -460,6 +464,8 @@ const TimelinePhotosRow = memo(function TimelinePhotosRow({
             <PhotoImage
               uri={photo.thumbnailLocalUri ?? photo.localUri}
               photoId={photo.id}
+              captureSessionId={photo.captureSessionId}
+              fallbackOriginalUri={photo.localUri}
               rendition="thumbnail"
               requestPriority="visible"
               active={active}

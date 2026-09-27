@@ -254,6 +254,7 @@ export function PhotoTimelapse({
                   key={`${current.id}:${playback.frameRevision}`}
                   uri={current.localUri}
                   photoId={current.id}
+                  captureSessionId={current.captureSessionId}
                   rendition="display"
                   requestPriority="interactive"
                   accessible={false}
