@@ -16,7 +16,7 @@ evidence passes.
 | Lane | Task | Owned file surface | State | Integration gate |
 | --- | --- | --- | --- | --- |
 | Root | DB-05 / OPS-07 | Current-chain replay evidence and replacement security/quality workflows | In progress | Fresh full CI replay after the bounded runner-retry checkpoint |
-| photo04_timelapse | PHOTO-04 prerequisite | Deterministic time-lapse controller, frame-readiness, privacy, and accessibility source lane | Audited; implementation queued after PHOTO-03 integration | Focused lifecycle/privacy suite, repository checks, then real-device evidence |
+| photo04_timelapse | PHOTO-04 prerequisite | Deterministic time-lapse controller, frame-readiness, privacy, and accessibility source lane | Source checkpoint root-reviewed after independent adversarial repair | Replacement CI, then signed physical-device lifecycle/privacy/accessibility evidence |
 
 ## Reviewed integration queue
 
@@ -38,6 +38,8 @@ evidence passes.
 | Root | Layerwell deletion-domain repair | `835781b34` | Durable deletion smoke passed 260/260; fixes the exact CI type/domain mismatch and updated deterministic vectors | Replacement security and repository-quality workflows after push |
 | photo03_capture_analysis | PHOTO-03 prerequisite | `11421623e` | Root-reviewed after independent adversarial review and three follow-up repairs; 4,822-test mobile suite, focused race/privacy tests, typecheck, lint, and diff checks passed | Signed archive, supported physical-iPhone calibration, filesystem/no-egress, performance, and accessibility evidence |
 | db05_reset_retry | DB-05 CI resilience | `9b0257a6f` | Exact pre-migration Docker-exit-125 classifier, one bounded retry, 25/25 DB contract checks, and fail-closed non-retry cases passed | Fresh 94-migration two-reset CI replay and generated-type parity |
+| Root | Quality/security harness repair | `4ac90ffce`, `64b16a452` | RevenueCat 20/20 permission-scoped command and expanded plaintext-startup privacy audit pass locally | Replacement quality and security workflows after the active DB replay reaches terminal state |
+| photo04_timelapse | PHOTO-04 prerequisite | `7e6aff964` | Root-reviewed after six independent race/evidence findings were repaired; 4,836-test mobile suite, typecheck, lint, focused lifecycle/privacy checks, and final read-only review passed | Current signed iPhone encrypted playback, background, VoiceOver, Dynamic Type, traffic, cache/filesystem, memory, and thermal evidence |
 
 ## Coordination rules
 
