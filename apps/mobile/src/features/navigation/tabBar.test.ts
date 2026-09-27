@@ -62,9 +62,17 @@ describe('tab bar treatment', () => {
     expect(source).toContain('backgroundColor: tabSceneBackground(route.name, todayRoutineType)');
     expect(source).toContain('paddingBottom: tabSceneClearance');
     expect(source).toContain('focused ? colors.paperRaised : colors.inkSoft');
-    expect(source).toContain("backgroundColor: 'rgba(255,255,255,0.96)'");
-    expect(source).toContain('borderColor: colors.hairlineStrong');
-    expect(source).toContain('borderColor: colors.hairlineStrong');
+    expect(source).toContain("from 'expo-glass-effect'");
+    expect(source).toContain("import * as Haptics from 'expo-haptics'");
+    expect(source).toContain('isGlassEffectAPIAvailable()');
+    expect(source).toContain('isLiquidGlassAvailable()');
+    expect(source).toContain('<GlassView');
+    expect(source).toContain("glassEffectStyle={nativeLiquidGlassAvailable ? 'regular' : 'none'}");
+    expect(source).toContain('isInteractive={nativeLiquidGlassAvailable}');
+    expect(source).toContain('Haptics.selectionAsync()');
+    expect(source).toContain('tintColor="rgba(250,247,242,0.70)"');
+    expect(source).toContain("backgroundColor: 'rgba(255,255,255,0.88)'");
+    expect(source).toContain("borderColor: 'rgba(255,255,255,0.72)'");
     expect(source).toContain('borderRadius: 33');
     expect(source).toContain("position: 'absolute'");
     expect(source).toContain('left: tabBarHorizontalInset');
@@ -72,8 +80,8 @@ describe('tab bar treatment', () => {
     expect(source).toContain('zIndex: 50');
     expect(source).toContain('height: FLOATING_TAB_BAR_HEIGHT');
     expect(source).toContain('tabItemActive: {');
-    expect(source).toContain('backgroundColor: colors.ink');
-    expect(source).toContain('borderColor: colors.ink');
+    expect(source).toContain("backgroundColor: 'rgba(32,27,21,0.94)'");
+    expect(source).toContain("borderColor: 'rgba(32,27,21,0.98)'");
     expect(source).toContain(
       '<View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>',
     );
@@ -106,7 +114,7 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('ACTIVE_TAB_SHADOW');
     expect(source).not.toContain('iconShellActive');
     expect(source).not.toContain('iconShellActive: {\n    backgroundColor: colors.ink');
-    expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
+    expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.96)'");
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
     expect(source).not.toContain('backgroundColor: colors.greigeChip');

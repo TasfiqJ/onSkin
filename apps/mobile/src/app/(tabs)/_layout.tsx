@@ -1,4 +1,6 @@
 import type { RoutineType } from '@layerwell/types';
+import * as Haptics from 'expo-haptics';
+import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { router, Tabs } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
 import { useEffect, useState } from 'react';
@@ -62,7 +64,7 @@ const TAB_BAR_SHADOW = Platform.select({
     shadowRadius: 24,
   },
   web: {
-    boxShadow: '0px 18px 34px rgba(32, 27, 21, 0.13), 0px 2px 10px rgba(32, 27, 21, 0.07)',
+    boxShadow: '0px 18px 42px rgba(32, 27, 21, 0.14), 0px 3px 12px rgba(32, 27, 21, 0.08)',
   } as ViewStyle,
   default: {},
 }) as ViewStyle;
@@ -194,6 +196,8 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
     (viewportWidth - tabBarWidth) / 2,
   );
   const compactProgressTabLabel = viewportWidth <= COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH;
+  const nativeLiquidGlassAvailable =
+    Platform.OS === 'ios' && isGlassEffectAPIAvailable() && isLiquidGlassAvailable();
   if (keyboardVisible) {
     return null;
   }
@@ -207,79 +211,93 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         TAB_BAR_SHADOW,
       ]}
     >
-      {state.routes.map((route, index) => {
-        const focused = state.index === index;
-        const { options } = descriptors[route.key];
-        const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
-        const displayLabel = label ?? route.name;
-        const visibleLabel =
-          compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel;
-        const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
-        const labelColor = focused ? colors.paperRaised : colors.inkSoft;
+      <GlassView
+        colorScheme="light"
+        glassEffectStyle={nativeLiquidGlassAvailable ? 'regular' : 'none'}
+        isInteractive={nativeLiquidGlassAvailable}
+        style={[
+          styles.glassSurface,
+          nativeLiquidGlassAvailable ? styles.nativeGlassSurface : styles.fallbackGlassSurface,
+        ]}
+        tintColor="rgba(250,247,242,0.70)"
+      >
+        <View pointerEvents="none" style={styles.glassHighlight} />
+        {state.routes.map((route, index) => {
+          const focused = state.index === index;
+          const { options } = descriptors[route.key];
+          const label =
+            typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
+          const displayLabel = label ?? route.name;
+          const visibleLabel =
+            compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel;
+          const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
+          const labelColor = focused ? colors.paperRaised : colors.inkSoft;
 
-        const onPress = () => {
-          const event = navigation.emit({
-            canPreventDefault: true,
-            target: route.key,
-            type: 'tabPress',
-          });
+          const onPress = () => {
+            const event = navigation.emit({
+              canPreventDefault: true,
+              target: route.key,
+              type: 'tabPress',
+            });
 
-          if (!focused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
-          }
-        };
-
-        const onLongPress = () => {
-          navigation.emit({
-            target: route.key,
-            type: 'tabLongPress',
-          });
-        };
-
-        return (
-          <Pressable
-            key={route.key}
-            aria-selected={focused}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: focused }}
-            hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}
-            onBlur={() =>
-              setFocusRingRouteKey((currentKey) => (currentKey === route.key ? null : currentKey))
+            if (!focused && !event.defaultPrevented) {
+              if (Platform.OS === 'ios') void Haptics.selectionAsync().catch(() => undefined);
+              navigation.navigate(route.name, route.params);
             }
-            onFocus={() => setFocusRingRouteKey(route.key)}
-            onLongPress={onLongPress}
-            onPress={onPress}
-            style={({ pressed }) => [
-              styles.tabItem,
-              WEB_TAB_ITEM_FOCUS_RESET,
-              focusRingRouteKey === route.key ? WEB_TAB_ITEM_FOCUS_RING : null,
-              pressed ? styles.tabItemPressed : null,
-            ]}
-            testID={`bottom-tab-${route.name}`}
-          >
-            <View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>
-              <View style={styles.tabItemContent}>
-                <TabBarIcon focused={focused} name={iconName} />
-                <Text
-                  ellipsizeMode="tail"
-                  adjustsFontSizeToFit
-                  maxFontSizeMultiplier={1.08}
-                  minimumFontScale={0.84}
-                  numberOfLines={1}
-                  style={[
-                    styles.tabLabel,
-                    focused ? styles.tabLabelActive : null,
-                    { color: labelColor },
-                  ]}
-                >
-                  {visibleLabel}
-                </Text>
+          };
+
+          const onLongPress = () => {
+            navigation.emit({
+              target: route.key,
+              type: 'tabLongPress',
+            });
+          };
+
+          return (
+            <Pressable
+              key={route.key}
+              aria-selected={focused}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: focused }}
+              hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}
+              onBlur={() =>
+                setFocusRingRouteKey((currentKey) => (currentKey === route.key ? null : currentKey))
+              }
+              onFocus={() => setFocusRingRouteKey(route.key)}
+              onLongPress={onLongPress}
+              onPress={onPress}
+              style={({ pressed }) => [
+                styles.tabItem,
+                WEB_TAB_ITEM_FOCUS_RESET,
+                focusRingRouteKey === route.key ? WEB_TAB_ITEM_FOCUS_RING : null,
+                pressed ? styles.tabItemPressed : null,
+              ]}
+              testID={`bottom-tab-${route.name}`}
+            >
+              <View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>
+                <View style={styles.tabItemContent}>
+                  <TabBarIcon focused={focused} name={iconName} />
+                  <Text
+                    ellipsizeMode="tail"
+                    adjustsFontSizeToFit
+                    maxFontSizeMultiplier={1.08}
+                    minimumFontScale={0.84}
+                    numberOfLines={1}
+                    style={[
+                      styles.tabLabel,
+                      focused ? styles.tabLabelActive : null,
+                      { color: labelColor },
+                    ]}
+                  >
+                    {visibleLabel}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </Pressable>
-        );
-      })}
+            </Pressable>
+          );
+        })}
+      </GlassView>
     </View>
   );
 }
@@ -389,18 +407,41 @@ const styles = StyleSheet.create({
   },
   floatingTabBar: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.96)',
-    borderColor: colors.hairlineStrong,
     borderRadius: 33,
-    borderWidth: StyleSheet.hairlineWidth,
-    flexDirection: 'row',
     height: FLOATING_TAB_BAR_HEIGHT,
     justifyContent: 'center',
+    overflow: 'visible',
+    position: 'absolute',
+    zIndex: 50,
+  },
+  fallbackGlassSurface: {
+    backgroundColor: 'rgba(255,255,255,0.88)',
+  },
+  glassHighlight: {
+    backgroundColor: 'rgba(255,255,255,0.28)',
+    borderRadius: 28,
+    height: 25,
+    left: 5,
+    position: 'absolute',
+    right: 5,
+    top: 4,
+  },
+  glassSurface: {
+    alignItems: 'center',
+    borderColor: 'rgba(255,255,255,0.72)',
+    borderRadius: 33,
+    borderWidth: StyleSheet.hairlineWidth,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    overflow: 'hidden',
     paddingBottom: 6,
     paddingHorizontal: FLOATING_TAB_BAR_HORIZONTAL_PADDING,
     paddingTop: 6,
-    position: 'absolute',
-    zIndex: 50,
+    width: '100%',
+  },
+  nativeGlassSurface: {
+    backgroundColor: 'rgba(250,247,242,0.18)',
   },
   tabLabel: {
     flexShrink: 1,
@@ -452,11 +493,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tabItemActive: {
-    backgroundColor: colors.ink,
-    borderColor: colors.ink,
+    backgroundColor: 'rgba(32,27,21,0.94)',
+    borderColor: 'rgba(32,27,21,0.98)',
+    shadowColor: colors.ink,
+    shadowOffset: { height: 3, width: 0 },
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
   },
   tabItemPressed: {
-    opacity: 0.72,
+    transform: [{ scale: 0.96 }],
   },
   tabScene: {
     paddingBottom: FLOATING_TAB_BAR_CLEARANCE,
