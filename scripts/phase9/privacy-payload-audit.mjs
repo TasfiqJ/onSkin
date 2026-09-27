@@ -427,9 +427,13 @@ block(
 );
 block(
   errors,
-  rootLayoutSource.indexOf('void scavengePlaintextStaging().catch(() => undefined);') !== -1 &&
-    rootLayoutSource.indexOf('void scavengePlaintextStaging().catch(() => undefined);') <
-      rootLayoutSource.indexOf('export default function RootLayout()'),
+  rootLayoutSource.indexOf('void startPlaintextStagingRecovery().catch(() => undefined);') !==
+    -1 &&
+    rootLayoutSource.indexOf('void startPlaintextStagingRecovery().catch(() => undefined);') <
+      rootLayoutSource.indexOf('export default function RootLayout()') &&
+    /createPlaintextStagingStartupRecovery/.test(plaintextStagingAdapterSource) &&
+    /imageManipulatorPlaintext\.scavenge\(\)/.test(plaintextStagingAdapterSource) &&
+    /coordinator\.scavenge\(\)/.test(plaintextStagingAdapterSource),
   'Plaintext staging recovery must start before the root component can mount after relaunch.',
 );
 block(
