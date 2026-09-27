@@ -17,6 +17,11 @@ export function timelapseFrames(photos: PhotoMeta[]): TimelapseFrame[] {
     .map(({ id, localUri, takenLocalDate }) => ({ id, localUri, takenLocalDate }));
 }
 
+/** In-memory controller identity. It is never persisted or emitted. */
+export function timelapseFrameSignature(frames: readonly TimelapseFrame[]): string {
+  return JSON.stringify(frames.map(({ id, localUri, takenLocalDate }) => [id, localUri, takenLocalDate]));
+}
+
 export function clampTimelapseIndex(index: number, frameCount: number): number {
   if (!Number.isSafeInteger(frameCount) || frameCount <= 0) return 0;
   if (!Number.isFinite(index)) return 0;

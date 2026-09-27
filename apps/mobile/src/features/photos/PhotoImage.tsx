@@ -38,6 +38,8 @@ type PhotoImageProps = {
   photoId?: string;
   rendition?: 'thumbnail' | 'display';
   requestPriority?: SensitiveImageRequestPriority;
+  onDisplayReady?: () => void;
+  onDisplayError?: () => void;
 };
 
 type PhotoStorageRendition = 'thumbnail:v1' | 'legacy-full:v1';
@@ -65,9 +67,17 @@ function PhotoFallback({
   accessible,
   accessibilityLabel,
   failed = false,
+  reportDisplayError = false,
+  onDisplayError,
 }: Pick<PhotoImageProps, 'style' | 'fallbackTone' | 'accessible' | 'accessibilityLabel'> & {
   failed?: boolean;
+  reportDisplayError?: boolean;
+  onDisplayError?: () => void;
 }) {
+  useEffect(() => {
+    if (reportDisplayError) onDisplayError?.();
+  }, [onDisplayError, reportDisplayError]);
+
   return (
     <View
       accessible={accessible}
@@ -96,6 +106,8 @@ function ActivePhotoImage({
   requestPriority = 'interactive',
   ownerGeneration,
   storageRendition,
+  onDisplayReady,
+  onDisplayError,
 }: ActivePhotoImageProps) {
   const encrypted = isEncryptedPhotoUri(uri);
   const recyclingKey =
@@ -105,6 +117,7 @@ function ActivePhotoImage({
   const [lifecycleRevision, setLifecycleRevision] = useState(0);
   const [lifecycleActive, setLifecycleActive] = useState(isSensitiveImageLifecycleActive);
   const [diskCacheReady, setDiskCacheReady] = useState(isSensitiveImageDiskCacheMigrationComplete);
+  const [diskCacheFailed, setDiskCacheFailed] = useState(false);
   const [resolved, setResolved] = useState<{
     source: string;
     uri: string | null;
@@ -129,7 +142,13 @@ function ActivePhotoImage({
     if (diskCacheReady || !encrypted) return;
     let alive = true;
     void prepareSensitiveImageDiskCacheMigration().then((ready) => {
-      if (alive && ready) setDiskCacheReady(true);
+      if (!alive) return;
+      if (ready) {
+        setDiskCacheFailed(false);
+        setDiskCacheReady(true);
+        return;
+      }
+      setDiskCacheFailed(true);
     });
     return () => {
       alive = false;
@@ -177,7 +196,7 @@ function ActivePhotoImage({
   ]);
 
   const resolvedForUri = resolved && resolved.source === uri ? resolved : null;
-  const failed = encrypted && Boolean(resolvedForUri?.failed);
+  const failed = encrypted && (diskCacheFailed || Boolean(resolvedForUri?.failed));
 
   if (!lifecycleActive) {
     return (
@@ -186,6 +205,9 @@ function ActivePhotoImage({
         fallbackTone={fallbackTone}
         accessible={accessible}
         accessibilityLabel={accessibilityLabel}
+        failed={encrypted}
+        reportDisplayError={encrypted}
+        onDisplayError={onDisplayError}
       />
     );
   }
@@ -203,6 +225,8 @@ function ActivePhotoImage({
         recyclingKey={recyclingKey ?? undefined}
         accessible={accessible}
         accessibilityLabel={accessibilityLabel}
+        onLoad={onDisplayReady}
+        onError={onDisplayError}
       />
     );
   }
@@ -214,6 +238,8 @@ function ActivePhotoImage({
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       failed={failed}
+      reportDisplayError={failed}
+      onDisplayError={onDisplayError}
     />
   );
 }
@@ -231,14 +257,27 @@ export function PhotoImage({ active = true, ...props }: PhotoImageProps) {
     void purgeSensitiveImageMemory();
   }, [canDisplaySensitivePhoto]);
 
-  if (!active || !canDisplaySensitivePhoto || identityUnavailable) {
+  if (!active) {
     return (
       <PhotoFallback
         style={props.style}
         fallbackTone={props.fallbackTone}
         accessible={props.accessible}
         accessibilityLabel={props.accessibilityLabel}
-        failed={identityUnavailable}
+      />
+    );
+  }
+
+  if (!canDisplaySensitivePhoto || identityUnavailable) {
+    return (
+      <PhotoFallback
+        style={props.style}
+        fallbackTone={props.fallbackTone}
+        accessible={props.accessible}
+        accessibilityLabel={props.accessibilityLabel}
+        failed
+        reportDisplayError
+        onDisplayError={props.onDisplayError}
       />
     );
   }

@@ -575,24 +575,31 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('<PhotoTimelapse');
     expect(source).not.toContain('TIMELAPSE_UNAVAILABLE');
 
-    expect(player).toContain('AccessibilityInfo.isReduceMotionEnabled()');
-    expect(player).toContain("AccessibilityInfo.addEventListener('reduceMotionChanged'");
+    expect(player).toContain('useReduceMotionPreference()');
+    expect(player).toContain('timelapsePlaybackReducer');
     expect(player).toContain("AppState.addEventListener('change'");
-    expect(player).toContain("if (state !== 'active') setPlaying(false);");
-    expect(player).toContain('reduceMotion !== false');
-    expect(player).toContain('if (reduceMotion !== false || frameCount < 2) return;');
+    expect(player).toContain("dispatch({ type: 'app-state', active: state === 'active' });");
+    expect(player).toContain("type: 'frame-ready', index: safeIndex, revision:");
+    expect(player).toContain("type: 'frame-error', index: safeIndex, revision:");
+    expect(player).toContain("playback.frameStatus !== 'ready'");
     expect(player).toContain('{reduceMotion === false ? (');
-    expect(player).toContain('if (next >= frameCount - 1) setPlaying(false);');
     expect(player).toContain('accessibilityRole="adjustable"');
     expect(player).toContain('animationType="none"');
     expect(player).toContain('accessibilityLabel="Quiet photo time-lapse"');
     expect(player).toContain('accessibilityViewIsModal');
+    expect(player).toContain('onAccessibilityEscape={close}');
+    expect(player).toContain('focusTimelapseElementAfterLayout');
+    expect(player).toContain('toLocaleDateString(undefined');
+    expect(source).toContain('ref={timelapseTriggerRef}');
+    expect(source).toContain('focusTimelapseElementAfterLayout');
     expect(player).not.toContain('role="dialog"');
     expect(player).not.toContain('aria-modal');
     expect(player).toContain("{ name: 'decrement', label: 'Previous photo' }");
     expect(player).toContain("{ name: 'increment', label: 'Next photo' }");
     expect(player).toContain('On this phone only. No scores or automatic judgments.');
     expect(player).not.toContain("track('");
+    expect(player).not.toContain('expo-sharing');
+    expect(player).not.toContain('expo-file-system');
     expect(source).not.toContain("Alert.alert('Quiet time-lapse'");
   });
 

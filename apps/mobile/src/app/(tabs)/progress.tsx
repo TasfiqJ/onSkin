@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   FlatList,
   Modal,
@@ -18,6 +18,7 @@ import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';
+import { focusTimelapseElementAfterLayout } from '@/features/photos/timelapseFocus';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { timelapseFrames } from '@/features/photos/timelapse';
@@ -43,7 +44,7 @@ function sameStringSet(left: ReadonlySet<string>, right: ReadonlySet<string>): b
 }
 
 function short(ymd: string): string {
-  return parseLocalDate(ymd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return parseLocalDate(ymd).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
 // ── Mode switch ──────────────────────────────────────────────────────────────
@@ -520,6 +521,7 @@ function TimelineView({
   header: ReactNode;
 }) {
   const [timelapseVisible, setTimelapseVisible] = useState(false);
+  const timelapseTriggerRef = useRef<View>(null);
   const [visibleRowKeys, setVisibleRowKeys] = useState<ReadonlySet<string>>(() => new Set());
   const frames = useMemo(() => timelapseFrames(data.series), [data.series]);
   const sections = useMemo(() => buildTimelineSections(data), [data]);
@@ -546,6 +548,10 @@ function TimelineView({
     },
     [],
   );
+  const closeTimelapse = useCallback(() => {
+    setTimelapseVisible(false);
+    focusTimelapseElementAfterLayout(() => timelapseTriggerRef.current);
+  }, []);
 
   return (
     <>
@@ -574,6 +580,7 @@ function TimelineView({
             {frames.length > 1 ? (
               <View className="mb-3 mt-2 flex-row justify-end">
                 <Pressable
+                  ref={timelapseTriggerRef}
                   accessibilityRole="button"
                   accessibilityLabel="Play a quiet time-lapse of your local photo series"
                   onPress={() => setTimelapseVisible(true)}
@@ -595,7 +602,7 @@ function TimelineView({
         }
       />
       {timelapseVisible ? (
-        <PhotoTimelapse frames={frames} onClose={() => setTimelapseVisible(false)} />
+        <PhotoTimelapse frames={frames} onClose={closeTimelapse} />
       ) : null}
     </>
   );
