@@ -10,21 +10,21 @@ function fixture(variant = 'development') {
   const appBundleIdentifier = `com.layerwell.app.${variant}`;
   return {
     packageJson: {
-      dependencies: { '@expo/ui': '~57.0.10', 'expo-widgets': '57.0.9' },
+      dependencies: { '@expo/ui': '~57.0.20', 'expo-widgets': '57.0.9' },
     },
     packageLock: {
       lockfileVersion: 3,
       packages: {
         'apps/mobile': {
-          dependencies: { '@expo/ui': '~57.0.10', 'expo-widgets': '57.0.9' },
+          dependencies: { '@expo/ui': '~57.0.20', 'expo-widgets': '57.0.9' },
         },
         'node_modules/@expo/ui': {
-          version: '57.0.10',
-          resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-57.0.10.tgz',
+          version: '57.0.20',
+          resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-57.0.20.tgz',
           integrity:
-            'sha512-cYVo6R6JmJgza2p1jyE1lGfNPWncHJGWRxhTyOi+pLRAAdiwo8Z2LcdaArewEXVUwJTQhczLRxeXGL0i99NUwQ==',
+            'sha512-0ChmuyWBwEy3JHMR5wDkJGyvkTR5zH3BTwjJrv3f2ymtamhpU9hD5uH4GsLoWuB6MJFOPTuchq4zByZbtgPyNw==',
         },
-        'node_modules/expo-widgets': {
+        'apps/mobile/node_modules/expo-widgets': {
           version: '57.0.9',
           resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.9.tgz',
           integrity:
@@ -109,7 +109,7 @@ for (const [name, mutate, pattern] of [
   [
     'rejects drift in the exact reviewed widget dependency lock',
     (value) => {
-      value.packageLock.packages['node_modules/expo-widgets'].version = '57.0.8';
+      value.packageLock.packages['apps/mobile/node_modules/expo-widgets'].version = '57.0.8';
     },
     /exact registry URL and integrity/,
   ],
