@@ -1,7 +1,13 @@
 import { Image } from 'expo-image';
-import { AppState, type AppStateStatus, type NativeEventSubscription } from 'react-native';
+import {
+  AppState,
+  Platform,
+  type AppStateStatus,
+  type NativeEventSubscription,
+} from 'react-native';
 
 import { shouldPurgeSensitiveImagesForAppState } from './sensitiveImagePolicy';
+import { purgeSensitiveImageCoordinator } from './sensitiveImageCoordinator';
 
 type SensitiveImageLifecycleEvent = 'purge' | 'resume';
 type SensitiveImageLifecycleListener = (event: SensitiveImageLifecycleEvent) => void;
@@ -10,11 +16,16 @@ const listeners = new Set<SensitiveImageLifecycleListener>();
 let appStateSubscription: NativeEventSubscription | null = null;
 let memoryWarningSubscription: NativeEventSubscription | null = null;
 let previousAppState: AppStateStatus = AppState.currentState;
+let lifecycleActive = previousAppState === 'active';
 let clearInFlight: Promise<boolean> | null = null;
+let purgeEpoch = 0;
+let latestPurge: { epoch: number; clear: Promise<boolean> } | null = null;
 
 function clearExpoImageMemory(): Promise<boolean> {
+  if (Platform.OS === 'web') return Promise.resolve(true);
   if (clearInFlight) return clearInFlight;
-  clearInFlight = Image.clearMemoryCache()
+  clearInFlight = Promise.resolve()
+    .then(() => Image.clearMemoryCache())
     .catch(() => false)
     .finally(() => {
       clearInFlight = null;
@@ -23,28 +34,51 @@ function clearExpoImageMemory(): Promise<boolean> {
 }
 
 function notify(event: SensitiveImageLifecycleEvent): void {
-  for (const listener of listeners) listener(event);
+  for (const listener of listeners) {
+    try {
+      listener(event);
+    } catch {
+      // A broken view subscriber cannot interrupt the privacy boundary.
+    }
+  }
+}
+
+function resumeAfterClear(epoch: number, clear: Promise<boolean>): void {
+  void clear.then((cleared) => {
+    if (!cleared) return;
+    if (latestPurge?.epoch === epoch) latestPurge = null;
+    if (purgeEpoch !== epoch || previousAppState !== 'active') return;
+    if (lifecycleActive) return;
+    lifecycleActive = true;
+    notify('resume');
+  });
 }
 
 function handleAppStateChange(nextState: AppStateStatus): void {
   const wasActive = previousAppState === 'active';
   previousAppState = nextState;
   if (shouldPurgeSensitiveImagesForAppState(nextState)) {
-    notify('purge');
-    void clearExpoImageMemory();
+    void purgeSensitiveImageMemory();
     return;
   }
-  if (!wasActive) notify('resume');
+  if (!wasActive || !lifecycleActive) {
+    const epoch = purgeEpoch;
+    const clear = latestPurge?.clear ?? Promise.resolve(true);
+    resumeAfterClear(epoch, clear);
+  }
 }
 
 function ensureAppStateSubscription(): void {
   if (appStateSubscription) return;
   previousAppState = AppState.currentState;
+  lifecycleActive = previousAppState === 'active' && latestPurge === null;
   appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
   memoryWarningSubscription = AppState.addEventListener('memoryWarning', () => {
-    notify('purge');
-    void clearExpoImageMemory();
+    void purgeSensitiveImageMemory();
   });
+  if (shouldPurgeSensitiveImagesForAppState(previousAppState)) {
+    void purgeSensitiveImageMemory();
+  }
 }
 
 function releaseAppStateSubscriptionIfUnused(): void {
@@ -67,10 +101,22 @@ export function subscribeToSensitiveImageLifecycle(
   };
 }
 
+export function isSensitiveImageLifecycleActive(): boolean {
+  if (AppState.currentState !== 'active') return false;
+  if (!appStateSubscription && latestPurge === null) return true;
+  return lifecycleActive && previousAppState === 'active' && latestPurge === null;
+}
+
 /** Drop resolved data URIs owned by mounted views and clear expo-image's shared
  * decoded-memory cache. This never creates or clears a disk cache; sensitive
  * PhotoImage instances use cachePolicy="none". */
 export function purgeSensitiveImageMemory(): Promise<boolean> {
+  const epoch = ++purgeEpoch;
+  lifecycleActive = false;
   notify('purge');
-  return clearExpoImageMemory();
+  purgeSensitiveImageCoordinator();
+  const clear = clearExpoImageMemory();
+  latestPurge = { epoch, clear };
+  resumeAfterClear(epoch, clear);
+  return clear;
 }

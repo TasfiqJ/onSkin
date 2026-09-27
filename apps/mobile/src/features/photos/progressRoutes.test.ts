@@ -527,9 +527,8 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(
       'className="flex-1"\n          accessibilityLabel="Dismiss photo picker"',
     );
-    expect(source).toContain(
-      "import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
-    );
+    expect(source).toContain('FlatList,');
+    expect(source).toContain('SectionList,');
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
     expect(source).toContain('const insets = useSafeAreaInsets();');
@@ -542,7 +541,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }');
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain(
-      'accessibilityLabel={`Choose ${short(p.takenLocalDate)} as the ${target} comparison photo`}',
+      'accessibilityLabel={`Choose ${short(photo.takenLocalDate)} as the ${target} comparison photo`}',
     );
     expect(source).not.toContain('role="dialog"');
     expect(source).not.toContain('aria-modal');
@@ -555,7 +554,9 @@ describe('Progress route mobile contracts', () => {
 
     expect(source).toContain("import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';");
     expect(source).toContain("import { timelapseFrames } from '@/features/photos/timelapse';");
-    expect(source).toContain('const frames = timelapseFrames(data.series);');
+    expect(source).toContain(
+      'const frames = useMemo(() => timelapseFrames(data.series), [data.series]);',
+    );
     expect(source).toContain('{frames.length > 1 ? (');
     expect(source).toContain(
       'accessibilityLabel="Play a quiet time-lapse of your local photo series"',

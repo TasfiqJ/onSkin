@@ -8,6 +8,7 @@ import { PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
+import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
@@ -184,6 +185,9 @@ function PhotoDetailScreenContent() {
     try {
       if (e2ePhotoDeleteFailure()) throw new Error('E2E_PHOTO_DELETE_FAILURE');
       await remove.mutateAsync(id);
+      // Do not leave the deleted-photo surface until the native decoded cache
+      // has answered. A failed clear remains fail-closed in the lifecycle gate.
+      await purgeSensitiveImageMemory();
       closeToProgress();
     } catch {
       setDeleteFeedback(PHOTO_COPY.detail.deleteUnavailable);
@@ -246,7 +250,13 @@ function PhotoDetailScreenContent() {
           }}
         >
           {photo.localUri ? (
-            <PhotoImage uri={photo.localUri} style={{ flex: 1 }} />
+            <PhotoImage
+              uri={photo.localUri}
+              photoId={photo.id}
+              rendition="display"
+              requestPriority="interactive"
+              style={{ flex: 1 }}
+            />
           ) : (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>

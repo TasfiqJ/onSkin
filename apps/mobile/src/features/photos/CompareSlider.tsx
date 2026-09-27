@@ -7,6 +7,12 @@ import { Text } from '@/components/ui';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
+import {
+  COMPARE_DIVIDER_DEFAULT_PERCENT,
+  compareDividerValueText,
+  moveCompareDividerPercent,
+  normalizeCompareDividerPercent,
+} from './compareAccessibility';
 import { PhotoImage } from './PhotoImage';
 
 // Before/after comparison (docs/06 §4, design screen 04). A draggable vertical
@@ -15,7 +21,7 @@ import { PhotoImage } from './PhotoImage';
 // the two photos and their dates. expo-image renders each encrypted on-device file;
 // the flat fallback appears only when a legacy or damaged record has no usable bytes.
 
-export type ComparePhoto = { uri: string | null; date: string; tone: string };
+export type ComparePhoto = { id: string; uri: string | null; date: string; tone: string };
 const HANDLE_SHADOW =
   Platform.OS === 'web'
     ? { boxShadow: '0 3px 12px rgba(0, 0, 0, 0.28)' }
@@ -27,11 +33,15 @@ const HANDLE_SHADOW =
         elevation: 4,
       };
 
-function Panel({ photo }: { photo: ComparePhoto }) {
+function Panel({ photo, active }: { photo: ComparePhoto; active: boolean }) {
   if (photo.uri) {
     return (
       <PhotoImage
         uri={photo.uri}
+        photoId={photo.id}
+        rendition="display"
+        requestPriority="interactive"
+        active={active}
         style={{ flex: 1 }}
         contentFit="cover"
         fallbackTone={photo.tone}
@@ -83,16 +93,19 @@ export function CompareSlider({
   before,
   after,
   sideBySide,
+  active = true,
   onPickBefore,
   onPickAfter,
 }: {
   before: ComparePhoto;
   after: ComparePhoto;
   sideBySide: boolean;
+  active?: boolean;
   onPickBefore?: () => void;
   onPickAfter?: () => void;
 }) {
   const [w, setW] = useState(0);
+  const [dividerPercent, setDividerPercent] = useState(COMPARE_DIVIDER_DEFAULT_PERCENT);
   const x = useSharedValue(0);
   const start = useSharedValue(0);
   const wsv = useSharedValue(0);
@@ -100,7 +113,18 @@ export function CompareSlider({
   function onLayout(width: number) {
     setW(width);
     wsv.value = width;
-    if (x.value === 0) x.value = width * 0.52;
+    x.value = width * (dividerPercent / 100);
+  }
+
+  function publishGesturePosition(value: number) {
+    setDividerPercent(normalizeCompareDividerPercent(value));
+  }
+
+  function adjustDivider(actionName: string) {
+    const next = moveCompareDividerPercent(dividerPercent, actionName);
+    if (next === dividerPercent) return;
+    setDividerPercent(next);
+    x.value = wsv.value * (next / 100);
   }
 
   const pan = Gesture.Pan()
@@ -112,6 +136,8 @@ export function CompareSlider({
       x.value = Math.max(0, Math.min(wsv.value, next));
     })
     .onEnd(() => {
+      const width = wsv.value;
+      if (width > 0) runOnJS(publishGesturePosition)((x.value / width) * 100);
       // a gentle endpoint tick (docs/06 §4 haptics)
       if (x.value <= 2 || x.value >= wsv.value - 2) runOnJS(haptics.select)();
     });
@@ -126,11 +152,11 @@ export function CompareSlider({
       <View className="flex-row gap-2">
         {[before, after].map((p, i) => (
           <View
-            key={i}
+            key={`${i}:${p.id}`}
             className="flex-1 overflow-hidden rounded-card"
             style={{ height: 368, borderWidth: 1, borderColor: colors.hairline }}
           >
-            <Panel photo={p} />
+            <Panel photo={p} active={active} />
             <View className="absolute left-2.5 top-2.5">
               <DateChip
                 date={p.date}
@@ -154,7 +180,7 @@ export function CompareSlider({
         <View style={{ flex: 1 }}>
           {/* base = after (right side) */}
           <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-            <Panel photo={after} />
+            <Panel photo={after} active={active} />
           </View>
           {/* before clipped to the left */}
           <Animated.View
@@ -164,7 +190,7 @@ export function CompareSlider({
             ]}
           >
             <View style={{ width: w, height: '100%' }}>
-              <Panel photo={before} />
+              <Panel photo={before} active={active} />
             </View>
           </Animated.View>
           {/* divider */}
@@ -182,8 +208,6 @@ export function CompareSlider({
           />
           {/* handle */}
           <Animated.View
-            accessibilityRole="adjustable"
-            accessibilityLabel="Drag to compare before and after"
             style={[
               {
                 position: 'absolute',
@@ -202,8 +226,38 @@ export function CompareSlider({
               handleStyle,
             ]}
           >
-            <Text style={{ color: colors.ink, fontSize: 13 }}>‹</Text>
-            <Text style={{ color: colors.ink, fontSize: 13 }}>›</Text>
+            <View
+              accessible
+              accessibilityRole="adjustable"
+              accessibilityLabel={`Before ${before.date} and after ${after.date} comparison divider`}
+              accessibilityHint="Swipe up or down to move the divider. Use Side by side for a non-gesture view."
+              accessibilityValue={{
+                min: 0,
+                max: 100,
+                now: dividerPercent,
+                text: compareDividerValueText(dividerPercent),
+              }}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={dividerPercent}
+              aria-valuetext={compareDividerValueText(dividerPercent)}
+              accessibilityActions={[
+                { name: 'decrement', label: 'Show less of the before photo' },
+                { name: 'increment', label: 'Show more of the before photo' },
+              ]}
+              onAccessibilityAction={(event) => adjustDivider(event.nativeEvent.actionName)}
+              style={{
+                width: '100%',
+                height: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                gap: 5,
+              }}
+            >
+              <Text style={{ color: colors.ink, fontSize: 13 }}>‹</Text>
+              <Text style={{ color: colors.ink, fontSize: 13 }}>›</Text>
+            </View>
           </Animated.View>
           {/* date chips. Tap to pick which two captures to compare (docs/06 §4) */}
           <View className="absolute left-3.5 top-3.5">

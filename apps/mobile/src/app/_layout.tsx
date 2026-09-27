@@ -15,6 +15,7 @@ import { HealthDataLifecycleGate } from '@/features/healthConsent/HealthDataLife
 import { AgePolicyGate } from '@/features/onboarding/AgePolicyGate';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
+import { prepareSensitiveImageDiskCacheMigration } from '@/features/photos/sensitiveImageDiskCache';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
 import { AccountDeletionRecoveryGate } from '@/features/settings/AccountDeletionRecoveryGate';
 import { StoreTransactionNoticeHost } from '@/features/subscription/StoreTransactionNoticeHost';
@@ -31,6 +32,9 @@ import { useFontDecision } from '@/theme/fontLoader';
 
 initSentry();
 markStartupPhase('javascript_started');
+// Scrub any sensitive image residue created by older cache defaults. PhotoImage
+// independently fails closed until this retry-safe per-process migration passes.
+void prepareSensitiveImageDiskCacheMigration();
 void SplashScreen.preventAutoHideAsync();
 void scavengePlaintextStaging().catch(() => undefined);
 void startLabelPhotoStartupScavenge().catch(() => undefined);

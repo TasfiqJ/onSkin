@@ -1,6 +1,15 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  FlatList,
+  Modal,
+  Pressable,
+  ScrollView,
+  SectionList,
+  useWindowDimensions,
+  View,
+  type ViewToken,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, Screen, Text } from '@/components/ui';
@@ -27,6 +36,12 @@ import { colors } from '@/theme/tokens';
 // reachable from Today + You). Local-only, no scores, app-locked, your own eyes.
 
 const SAGE = '#9DB18A';
+const PHOTO_VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 40 } as const;
+
+function sameStringSet(left: ReadonlySet<string>, right: ReadonlySet<string>): boolean {
+  return left.size === right.size && [...left].every((value) => right.has(value));
+}
+
 function short(ymd: string): string {
   return parseLocalDate(ymd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
@@ -141,6 +156,58 @@ function FirstRun({ compact = false }: { compact?: boolean }) {
 
 // ── Compare-pair picker (docs/06 §4: "tap a date to change") ─────────────────
 type PhotoLite = NonNullable<ReturnType<typeof usePhotos>['data']>['series'][number];
+
+function PairPickerPhoto({
+  photo,
+  target,
+  selected,
+  active,
+  onSelect,
+}: {
+  photo: PhotoLite;
+  target: 'first' | 'second';
+  selected: boolean;
+  active: boolean;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Choose ${short(photo.takenLocalDate)} as the ${target} comparison photo`}
+      accessibilityHint="Updates the side-by-side comparison pair"
+      accessibilityState={{ selected }}
+      onPress={() => onSelect(photo.id)}
+      style={{ width: 92, aspectRatio: 3 / 4 }}
+      className="overflow-hidden rounded-[12px]"
+    >
+      {(photo.thumbnailLocalUri ?? photo.localUri) ? (
+        <PhotoImage
+          uri={photo.thumbnailLocalUri ?? photo.localUri}
+          photoId={photo.id}
+          rendition="thumbnail"
+          requestPriority="visible"
+          active={active}
+          style={{ flex: 1 }}
+        />
+      ) : (
+        <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+      )}
+      <View
+        className="absolute inset-x-0 bottom-0 top-0 rounded-[12px]"
+        style={{ borderWidth: selected ? 2.5 : 0, borderColor: colors.clay }}
+      />
+      <View
+        className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
+        style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
+      >
+        <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
+          {short(photo.takenLocalDate)}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
+
 function PairPicker({
   which,
   photos,
@@ -161,6 +228,17 @@ function PairPicker({
   const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const title = which === 'before' ? 'Choose the first photo' : 'Choose the second photo';
   const target = which === 'before' ? 'first' : 'second';
+  const latestFirstPhotos = useMemo(() => photos.slice().reverse(), [photos]);
+  const [visiblePhotoIds, setVisiblePhotoIds] = useState<ReadonlySet<string>>(() => new Set());
+  const onPickerViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken<PhotoLite>[] }) => {
+      const next = new Set(
+        viewableItems.filter((item) => item.isViewable).map((item) => item.item.id),
+      );
+      setVisiblePhotoIds((current) => (sameStringSet(current, next) ? current : next));
+    },
+    [],
+  );
 
   return (
     <Modal
@@ -196,48 +274,30 @@ function PairPicker({
           <Text variant="bodySm" tone="muted" className="mb-4">
             Any two captures. You decide what to compare.
           </Text>
-          <ScrollView
+          <FlatList
+            nativeID="progress-comparison-picker-list"
             horizontal
+            data={latestFirstPhotos}
+            keyExtractor={(photo) => photo.id}
+            extraData={visiblePhotoIds}
+            initialNumToRender={4}
+            maxToRenderPerBatch={4}
+            windowSize={5}
+            getItemLayout={(_data, index) => ({ length: 102, offset: 102 * index, index })}
+            viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}
+            onViewableItemsChanged={onPickerViewableItemsChanged}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 10 }}
-          >
-            {photos
-              .slice()
-              .reverse()
-              .map((p) => {
-                const sel = p.id === selectedId;
-                return (
-                  <Pressable
-                    key={p.id}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Choose ${short(p.takenLocalDate)} as the ${target} comparison photo`}
-                    accessibilityHint="Updates the side-by-side comparison pair"
-                    accessibilityState={{ selected: sel }}
-                    onPress={() => onSelect(p.id)}
-                    style={{ width: 92, aspectRatio: 3 / 4 }}
-                    className="overflow-hidden rounded-[12px]"
-                  >
-                    {p.localUri ? (
-                      <PhotoImage uri={p.localUri} style={{ flex: 1 }} />
-                    ) : (
-                      <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
-                    )}
-                    <View
-                      className="absolute inset-x-0 bottom-0 top-0 rounded-[12px]"
-                      style={{ borderWidth: sel ? 2.5 : 0, borderColor: colors.clay }}
-                    />
-                    <View
-                      className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
-                      style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
-                    >
-                      <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
-                        {short(p.takenLocalDate)}
-                      </Text>
-                    </View>
-                  </Pressable>
-                );
-              })}
-          </ScrollView>
+            renderItem={({ item: photo }) => (
+              <PairPickerPhoto
+                photo={photo}
+                target={target}
+                selected={photo.id === selectedId}
+                active={which !== null && visiblePhotoIds.has(photo.id)}
+                onSelect={onSelect}
+              />
+            )}
+          />
         </View>
       </View>
     </Modal>
@@ -303,9 +363,20 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
         </Pressable>
       </View>
       <CompareSlider
-        before={{ uri: before.localUri, date: short(before.takenLocalDate), tone: '#E7E0D5' }}
-        after={{ uri: after.localUri, date: short(after.takenLocalDate), tone: '#DACFBE' }}
+        before={{
+          id: before.id,
+          uri: before.localUri,
+          date: short(before.takenLocalDate),
+          tone: '#E7E0D5',
+        }}
+        after={{
+          id: after.id,
+          uri: after.localUri,
+          date: short(after.takenLocalDate),
+          tone: '#DACFBE',
+        }}
         sideBySide={sideBySide}
+        active={picking === null}
         onPickBefore={() => setPicking('before')}
         onPickAfter={() => setPicking('after')}
       />
@@ -327,104 +398,206 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
 }
 
 // ── Timeline (design screen 05) ──────────────────────────────────────────────
-function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>['data']> }) {
+type PhotosData = NonNullable<ReturnType<typeof usePhotos>['data']>;
+type TimelineMilestone = PhotosData['milestones'][number];
+type TimelineRow =
+  | { kind: 'photos'; key: string; photos: readonly PhotoLite[] }
+  | { kind: 'milestone'; key: string; milestone: TimelineMilestone };
+type TimelineSection = { key: string; title: string; data: TimelineRow[] };
+
+function buildTimelineSections(data: PhotosData): TimelineSection[] {
+  const milestonesByPhoto = new Map<string, TimelineMilestone[]>();
+  for (const milestone of data.milestones) {
+    if (milestone.milestone === 'first') continue;
+    const rows = milestonesByPhoto.get(milestone.photo.id) ?? [];
+    rows.push(milestone);
+    milestonesByPhoto.set(milestone.photo.id, rows);
+  }
+
+  return data.monthGroups.map((group) => {
+    const rows: TimelineRow[] = [];
+    for (let index = 0; index < group.photos.length; index += 3) {
+      const photos = group.photos.slice(index, index + 3);
+      rows.push({
+        kind: 'photos',
+        key: `photos:${photos.map((photo) => photo.id).join(':')}`,
+        photos,
+      });
+      for (const photo of photos) {
+        for (const milestone of milestonesByPhoto.get(photo.id) ?? []) {
+          rows.push({
+            kind: 'milestone',
+            key: `milestone:${milestone.milestone}:${photo.id}`,
+            milestone,
+          });
+        }
+      }
+    }
+    return { key: group.key, title: group.label.toUpperCase(), data: rows };
+  });
+}
+
+const TimelinePhotosRow = memo(function TimelinePhotosRow({
+  photos,
+  active,
+}: {
+  photos: readonly PhotoLite[];
+  active: boolean;
+}) {
+  return (
+    <View className="mb-2 flex-row" style={{ gap: 8 }}>
+      {photos.map((photo) => (
+        <Pressable
+          key={photo.id}
+          accessibilityRole="button"
+          accessibilityLabel={`Photo ${short(photo.takenLocalDate)}`}
+          onPress={() => router.push(`/progress/${photo.id}`)}
+          style={{ width: '31.6%', aspectRatio: 3 / 4 }}
+          className="overflow-hidden rounded-[12px]"
+        >
+          {(photo.thumbnailLocalUri ?? photo.localUri) ? (
+            <PhotoImage
+              uri={photo.thumbnailLocalUri ?? photo.localUri}
+              photoId={photo.id}
+              rendition="thumbnail"
+              requestPriority="visible"
+              active={active}
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+          )}
+          <View
+            className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
+            style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
+          >
+            <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
+              {short(photo.takenLocalDate)}
+            </Text>
+          </View>
+          {photo.isReference ? (
+            <View
+              className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: SAGE }}
+            />
+          ) : null}
+        </Pressable>
+      ))}
+    </View>
+  );
+});
+
+const TimelineMilestoneCard = memo(function TimelineMilestoneCard({
+  milestone,
+}: {
+  milestone: TimelineMilestone;
+}) {
+  return (
+    <View
+      className="mb-2 mt-2 flex-row items-center gap-3 rounded-card p-3.5"
+      style={{ backgroundColor: colors.clayTint }}
+    >
+      <View
+        className="h-[30px] w-[30px] items-center justify-center rounded-full"
+        style={{ backgroundColor: colors.paperRaised }}
+      >
+        <View className="h-[11px] w-[11px] rounded-full" style={{ backgroundColor: colors.clay }} />
+      </View>
+      <Text variant="bodySm" className="flex-1" style={{ color: colors.clayDeep }}>
+        {MILESTONE_COPY[milestone.milestone]}
+      </Text>
+    </View>
+  );
+});
+
+function TimelineView({
+  compact,
+  data,
+  header,
+}: {
+  compact: boolean;
+  data: PhotosData;
+  header: ReactNode;
+}) {
   const [timelapseVisible, setTimelapseVisible] = useState(false);
-  const frames = timelapseFrames(data.series);
+  const [visibleRowKeys, setVisibleRowKeys] = useState<ReadonlySet<string>>(() => new Set());
+  const frames = useMemo(() => timelapseFrames(data.series), [data.series]);
+  const sections = useMemo(() => buildTimelineSections(data), [data]);
+  const renderTimelineRow = useCallback(
+    ({ item }: { item: TimelineRow }) =>
+      item.kind === 'photos' ? (
+        <TimelinePhotosRow
+          photos={item.photos}
+          active={!timelapseVisible && visibleRowKeys.has(item.key)}
+        />
+      ) : (
+        <TimelineMilestoneCard milestone={item.milestone} />
+      ),
+    [timelapseVisible, visibleRowKeys],
+  );
+  const onTimelineViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken<TimelineRow>[] }) => {
+      const next = new Set(
+        viewableItems
+          .filter((item) => item.isViewable && item.item.kind === 'photos')
+          .map((item) => item.item.key),
+      );
+      setVisibleRowKeys((current) => (sameStringSet(current, next) ? current : next));
+    },
+    [],
+  );
 
   return (
-    <View className="mt-2">
-      {frames.length > 1 ? (
-        <View className="mb-3 flex-row justify-end">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Play a quiet time-lapse of your local photo series"
-            onPress={() => setTimelapseVisible(true)}
-            className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
-            style={{
-              backgroundColor: colors.paperRaised,
-              borderWidth: 1,
-              borderColor: colors.hairlineStrong,
-            }}
-          >
-            <Text style={{ color: colors.clay, fontSize: 11 }}>▶</Text>
-            <Text variant="label" tone="muted">
-              Time-lapse
-            </Text>
-          </Pressable>
-        </View>
-      ) : null}
-      {data.monthGroups.map((group) => {
-        // Milestones whose crossing photo falls in this month group, so each marker
-        // shows inline at the photo that earned it and earlier markers don't vanish.
-        const ids = new Set(group.photos.map((p) => p.id));
-        const groupMilestones = data.milestones.filter(
-          (m) => m.milestone !== 'first' && ids.has(m.photo.id),
-        );
-        return (
-          <View key={group.key} className="mb-5">
-            <Text variant="label" tone="muted" className="mb-2.5" style={{ letterSpacing: 1 }}>
-              {group.label.toUpperCase()}
-            </Text>
-            <View className="flex-row flex-wrap" style={{ gap: 8 }}>
-              {group.photos.map((p) => (
+    <>
+      <SectionList
+        nativeID="progress-timeline-list"
+        sections={sections}
+        keyExtractor={(item) => item.key}
+        extraData={visibleRowKeys}
+        renderItem={renderTimelineRow}
+        viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}
+        onViewableItemsChanged={onTimelineViewableItemsChanged}
+        renderSectionHeader={({ section }) => (
+          <Text variant="label" tone="muted" className="mb-2.5 mt-3" style={{ letterSpacing: 1 }}>
+            {section.title}
+          </Text>
+        )}
+        stickySectionHeadersEnabled={false}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={6}
+        maxToRenderPerBatch={6}
+        windowSize={7}
+        contentContainerStyle={{ paddingBottom: compact ? 112 : 32 }}
+        ListHeaderComponent={
+          <>
+            {header}
+            {frames.length > 1 ? (
+              <View className="mb-3 mt-2 flex-row justify-end">
                 <Pressable
-                  key={p.id}
                   accessibilityRole="button"
-                  accessibilityLabel={`Photo ${short(p.takenLocalDate)}`}
-                  onPress={() => router.push(`/progress/${p.id}`)}
-                  style={{ width: '31.6%', aspectRatio: 3 / 4 }}
-                  className="overflow-hidden rounded-[12px]"
+                  accessibilityLabel="Play a quiet time-lapse of your local photo series"
+                  onPress={() => setTimelapseVisible(true)}
+                  className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
+                  style={{
+                    backgroundColor: colors.paperRaised,
+                    borderWidth: 1,
+                    borderColor: colors.hairlineStrong,
+                  }}
                 >
-                  {p.localUri ? (
-                    <PhotoImage uri={p.localUri} style={{ flex: 1 }} />
-                  ) : (
-                    <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
-                  )}
-                  <View
-                    className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
-                    style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
-                  >
-                    <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
-                      {short(p.takenLocalDate)}
-                    </Text>
-                  </View>
-                  {p.isReference ? (
-                    <View
-                      className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: SAGE }}
-                    />
-                  ) : null}
+                  <Text style={{ color: colors.clay, fontSize: 11 }}>▶</Text>
+                  <Text variant="label" tone="muted">
+                    Time-lapse
+                  </Text>
                 </Pressable>
-              ))}
-            </View>
-            {/* calm milestone markers, inline at the photo that crossed each (docs/06 §4) */}
-            {groupMilestones.map((m) => (
-              <View
-                key={m.milestone}
-                className="mt-4 flex-row items-center gap-3 rounded-card p-3.5"
-                style={{ backgroundColor: colors.clayTint }}
-              >
-                <View
-                  className="h-[30px] w-[30px] items-center justify-center rounded-full"
-                  style={{ backgroundColor: colors.paperRaised }}
-                >
-                  <View
-                    className="h-[11px] w-[11px] rounded-full"
-                    style={{ backgroundColor: colors.clay }}
-                  />
-                </View>
-                <Text variant="bodySm" className="flex-1" style={{ color: colors.clayDeep }}>
-                  {MILESTONE_COPY[m.milestone]}
-                </Text>
               </View>
-            ))}
-          </View>
-        );
-      })}
+            ) : null}
+          </>
+        }
+      />
       {timelapseVisible ? (
         <PhotoTimelapse frames={frames} onClose={() => setTimelapseVisible(false)} />
       ) : null}
-    </View>
+    </>
   );
 }
 
@@ -441,71 +614,81 @@ function PhotoProgressTab() {
 
   const count = data?.count ?? 0;
 
+  const header = (
+    <>
+      <View className="flex-row items-start justify-between">
+        <Text variant="title" className="mt-2" style={{ fontSize: 38 }}>
+          {PHOTO_COPY.tabTitle}
+        </Text>
+        {count > 0 ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Take a progress photo"
+            onPress={() => router.push('/progress/capture')}
+            className="mt-3 min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
+            style={{ backgroundColor: colors.clay }}
+          >
+            <Text style={{ color: colors.paper, fontSize: 14 }}>＋</Text>
+            <Text variant="label" style={{ color: colors.paper }}>
+              Photo
+            </Text>
+          </Pressable>
+        ) : null}
+      </View>
+      {count > 0 ? (
+        <>
+          <Text variant="bodySm" tone="muted" className="mt-1">
+            {data?.metadata.text}
+          </Text>
+          <Text variant="bodySm" tone="muted" italic className="mt-2" style={{ lineHeight: 19 }}>
+            {PHOTO_COPY.tagline}
+          </Text>
+          <View className="mt-4 gap-2.5">
+            <View className="flex-row items-center gap-2.5">
+              <ModeTab
+                label="Compare"
+                active={mode === 'compare'}
+                onPress={() => setMode('compare')}
+              />
+              <ModeTab
+                label="Timeline"
+                active={mode === 'timeline'}
+                onPress={() => setMode('timeline')}
+              />
+            </View>
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel="Why no AI score"
+              onPress={() => router.push('/progress/about')}
+              className="min-h-[48px] self-start items-center justify-center rounded-pill px-3"
+            >
+              <Text variant="label" tone="clay">
+                No scores ⓘ
+              </Text>
+            </Pressable>
+          </View>
+        </>
+      ) : null}
+    </>
+  );
+
+  if (count > 0 && mode === 'timeline') {
+    return (
+      <Screen edges={['top']}>
+        <TimelineView compact={compactFirstRun} data={data!} header={header} />
+      </Screen>
+    );
+  }
+
   return (
     <Screen edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}
       >
-        <View className="flex-row items-start justify-between">
-          <Text variant="title" className="mt-2" style={{ fontSize: 38 }}>
-            {PHOTO_COPY.tabTitle}
-          </Text>
-          {count > 0 ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Take a progress photo"
-              onPress={() => router.push('/progress/capture')}
-              className="mt-3 min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
-              style={{ backgroundColor: colors.clay }}
-            >
-              <Text style={{ color: colors.paper, fontSize: 14 }}>＋</Text>
-              <Text variant="label" style={{ color: colors.paper }}>
-                Photo
-              </Text>
-            </Pressable>
-          ) : null}
-        </View>
+        {header}
 
-        {count === 0 ? (
-          <FirstRun compact={compactFirstRun} />
-        ) : (
-          <>
-            <Text variant="bodySm" tone="muted" className="mt-1">
-              {data?.metadata.text}
-            </Text>
-            <Text variant="bodySm" tone="muted" italic className="mt-2" style={{ lineHeight: 19 }}>
-              {PHOTO_COPY.tagline}
-            </Text>
-
-            <View className="mt-4 gap-2.5">
-              <View className="flex-row items-center gap-2.5">
-                <ModeTab
-                  label="Compare"
-                  active={mode === 'compare'}
-                  onPress={() => setMode('compare')}
-                />
-                <ModeTab
-                  label="Timeline"
-                  active={mode === 'timeline'}
-                  onPress={() => setMode('timeline')}
-                />
-              </View>
-              <Pressable
-                accessibilityRole="link"
-                accessibilityLabel="Why no AI score"
-                onPress={() => router.push('/progress/about')}
-                className="min-h-[48px] self-start items-center justify-center rounded-pill px-3"
-              >
-                <Text variant="label" tone="clay">
-                  No scores ⓘ
-                </Text>
-              </Pressable>
-            </View>
-
-            {mode === 'compare' ? <CompareView data={data!} /> : <TimelineView data={data!} />}
-          </>
-        )}
+        {count === 0 ? <FirstRun compact={compactFirstRun} /> : <CompareView data={data!} />}
       </ScrollView>
     </Screen>
   );

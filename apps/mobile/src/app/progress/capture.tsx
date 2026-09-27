@@ -1033,7 +1033,14 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
               transform: [{ translateX: 8 }, { translateY: -6 }],
             }}
           >
-            <PhotoImage uri={referenceUri} style={{ flex: 1 }} />
+            <PhotoImage
+              uri={referenceUri}
+              photoId={data?.reference?.id}
+              rendition="display"
+              requestPriority="interactive"
+              active={cameraAccess.cameraActive}
+              style={{ flex: 1 }}
+            />
           </View>
         ) : (
           <View
