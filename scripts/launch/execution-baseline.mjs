@@ -292,6 +292,7 @@ function edgeFeatures(name) {
     'apple-account-events': ['F-02', 'F-20'],
     'apple-auth-lifecycle': ['F-02', 'F-20'],
     'apple-auth-worker': ['F-02', 'F-20'],
+    'ask-layerwell': ['F-14'],
     'catalog-lookup': ['F-03', 'F-04'],
     'catalog-operator': ['F-04', 'F-20'],
     'catalog-report': ['F-04'],

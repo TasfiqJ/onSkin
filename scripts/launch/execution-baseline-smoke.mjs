@@ -44,6 +44,15 @@ const privateSecureStore = inventory.items.find(
 );
 assert(privateSecureStore, 'the iOS private SecureStore wrapper must be inventoried');
 assert.deepEqual(privateSecureStore.featureIds, ['F-02']);
+const askLayerwellGateway = inventory.items.find(
+  (entry) => entry.id === 'edge-function:ask-layerwell',
+);
+assert(askLayerwellGateway, 'the Ask Layerwell gateway must be inventoried');
+assert.deepEqual(
+  askLayerwellGateway.featureIds,
+  ['F-14'],
+  'the Ask Layerwell gateway must remain mapped only to the Ask Layerwell assistant feature',
+);
 const featureKeys = inventory.features.map(({ key }) => key);
 assert.equal(featureKeys.length, 20);
 assert(exactSetProblems('features', featureKeys, featureKeys.slice(1)).length > 0);

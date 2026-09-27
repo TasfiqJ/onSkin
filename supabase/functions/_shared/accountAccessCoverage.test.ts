@@ -1,4 +1,5 @@
 const protectedAuthenticatedFunctions = [
+  'ask-layerwell',
   'catalog-lookup',
   'catalog-operator',
   'catalog-report',
@@ -10,6 +11,7 @@ const protectedAuthenticatedFunctions = [
 ] as const;
 
 const firstSensitiveOperation = {
+  'ask-layerwell': 'const gatewayResult = await runAskGateway(',
   'catalog-lookup': 'const admin = createClient(supabaseUrl, serviceKey',
   'catalog-operator': 'const rpcResult = await operatorGateway(',
   'catalog-report': 'const parsed = await requestBody(req)',

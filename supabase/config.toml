@@ -92,6 +92,10 @@ entrypoint = "./functions/apple-auth-lifecycle/index.ts"
 verify_jwt = false
 entrypoint = "./functions/apple-auth-worker/index.ts"
 
+[functions.ask-layerwell]
+verify_jwt = true
+entrypoint = "./functions/ask-layerwell/index.ts"
+
 [functions.catalog-lookup]
 verify_jwt = true
 entrypoint = "./functions/catalog-lookup/index.ts"

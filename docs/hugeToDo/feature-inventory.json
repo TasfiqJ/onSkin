@@ -227,7 +227,7 @@
   ],
   "categoryCounts": {
     "data-store": 152,
-    "edge-function": 17,
+    "edge-function": 18,
     "feature-flag": 17,
     "generated-packet": 32,
     "native-module": 44,
@@ -1325,6 +1325,13 @@
       "category": "edge-function",
       "source": "supabase/functions/apple-auth-worker/index.ts",
       "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:ask-layerwell",
+      "category": "edge-function",
+      "source": "supabase/functions/ask-layerwell/index.ts",
+      "featureIds": ["F-14"],
       "readiness": "launch-blocked"
     },
     {

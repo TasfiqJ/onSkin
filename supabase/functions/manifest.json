@@ -207,6 +207,36 @@
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
+    "ask-layerwell": {
+      "entrypoint": "supabase/functions/ask-layerwell/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt+health-consent",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
+      ],
+      "requiredSecrets": [],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
     "catalog-lookup": {
       "entrypoint": "supabase/functions/catalog-lookup/index.ts",
       "deployByDefault": true,
