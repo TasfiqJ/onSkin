@@ -300,7 +300,9 @@ check(
     /rename\(withheldRecommendationMigration, sandboxRecommendationMigration\)/u.test(runner) &&
     /recommendation_zero_admission_0071_upgrade\.generated\.test\.sql/u.test(runner) &&
     /reset through 0071 for the 0072 commerce forward-upgrade rehearsal/u.test(runner) &&
-    /'20260921000073,20260921000074,20260921000075,20260921000076'/u.test(runner) &&
+    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077'/u.test(
+      runner,
+    ) &&
     /rename\(migration\.installed, migration\.withheld\)/u.test(runner) &&
     /rename\(migration\.withheld, migration\.installed\)/u.test(runner) &&
     /rename\(withheldHeadMigration, sandboxHeadMigration\)/u.test(runner) &&

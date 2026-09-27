@@ -169,7 +169,7 @@ const laterRehearsalMigrationNames = migrationFiles.filter((name) => {
 });
 if (
   laterRehearsalMigrationNames.map((name) => name.slice(0, 14)).join(',') !==
-  '20260921000073,20260921000074,20260921000075,20260921000076'
+  '20260921000073,20260921000074,20260921000075,20260921000076,20260926000077'
 ) {
   throw new Error('The post-0072 rehearsal migration inventory changed without review.');
 }

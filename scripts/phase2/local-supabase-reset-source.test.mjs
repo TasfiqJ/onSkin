@@ -48,7 +48,7 @@ test('0072 commerce rehearsal uses its exact migration, then restores 0078 for h
 test('the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist', () => {
   assert.match(
     source,
-    /'20260921000073,20260921000074,20260921000075,20260921000076'/u,
+    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077'/u,
   );
   assert.match(source, /laterRehearsalMigrationNames\.map\(\(name\) => name\.slice\(0, 14\)\)/u);
   const withholdLater = source.indexOf('await rename(migration.installed, migration.withheld);');
