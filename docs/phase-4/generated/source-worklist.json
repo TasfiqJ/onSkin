@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-09-27T03:44:17.194Z",
+  "generatedAt": "2026-09-27T03:52:12.644Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "eda49e736022c1704d8cb8e51493401e05de29d5",
-  "gitStatus": "M apps/mobile/src/lib/applock/accountOperations.test.ts\n M apps/mobile/src/lib/applock/accountOperations.ts\n M package.json\n?? .codex-artifacts/db05-types-36282526727.zip\n?? .codex-artifacts/db05-types-36282526727/db05-generated-public-types.ts\n?? docs/hugeToDo/PHOTO-02-APP-LOCK-SOURCE-CHECKPOINT-2026-09-26.md\n?? scripts/photo02/photo02-source-contract.mjs\n?? scripts/photo02/photo02-source-contract.test.mjs",
+  "gitSha": "37c2bb167a2d00700388fb846c20648c97f53528",
+  "gitStatus": "",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -1186,8 +1186,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 45773,
-          "sha256": "e462cbadef199e66ebeb99adc2ec419f4a7beafc9db29899ec10e0ffd73cd912"
+          "bytes": 45913,
+          "sha256": "5b50005df6f57f15e9ff13e6c5fcda53797ce9fae32e5ba1bac0502da7553d6a"
         },
         {
           "path": ".github/workflows/quality.yml",
