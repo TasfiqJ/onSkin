@@ -41,7 +41,7 @@ test('0072 commerce rehearsal uses its exact migration, then restores 0078 for h
   assert.match(source, /readFile\(sandboxCommerceMigration, 'utf8'\)/u);
   const commerceRehearsal = source.indexOf('run 0071 to 0072 commerce zero-admission rehearsal');
   const restoreHead = source.indexOf('await rename(withheldHeadMigration, sandboxHeadMigration);');
-  const finalReset = source.indexOf("await runLocalCli('reset 1 of 2 (migrations plus seed)'");
+  const finalReset = source.indexOf("await runLocalReset('reset 1 of 2 (migrations plus seed)'");
   assert.ok(commerceRehearsal > 0 && restoreHead > commerceRehearsal && finalReset > restoreHead);
 });
 
@@ -65,6 +65,15 @@ test('the pinned trial CLI retains exact current-chain SQL for a local replay', 
   assert.doesNotMatch(source, /DB05_PINNED_CLI_CONCURRENT_DROP_UNVERIFIED/u);
   assert.match(source, /const SOURCE_SUPABASE_DIR = sourceSupabaseOverride/u);
   assert.match(source, /await cp\(SOURCE_SUPABASE_DIR, sandboxSupabaseDir/u);
+});
+
+test('every local reset uses the precise single-retry wrapper', () => {
+  const resetCalls = [...source.matchAll(/await runLocalReset\(/gu)];
+  assert.equal(resetCalls.length, 7);
+  assert.equal(source.split("runLocalCli(label, ['db', 'reset', '--local'], {").length - 1, 1);
+  assert.match(source, /retryPreMigrationContainerExit125: true/u);
+  assert.match(source, /runWithSinglePreMigrationContainerRetry/u);
+  assert.match(source, /transient pre-migration container exit 125; retrying once/u);
 });
 
 test('CI retains generated types only as a bounded parity diagnostic', () => {

@@ -21,6 +21,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
 import { installSignalCleanup } from './local-supabase-signal-cleanup.mjs';
+import { runWithSinglePreMigrationContainerRetry } from './local-supabase-reset-retry.mjs';
 import { assertLocalOnlyInvocation } from './local-supabase-target-guard.mjs';
 import {
   ContainedCommandError,
@@ -257,6 +258,7 @@ async function runLocalCli(
     failureDiagnosticProfile = 'tail',
     failureDiagnosticMaxBytes,
     failureDiagnosticMaxLines,
+    retryPreMigrationContainerExit125 = false,
   } = {},
 ) {
   assertLocalOnlyInvocation(label, args);
@@ -264,31 +266,47 @@ async function runLocalCli(
     !Number.isSafeInteger(timeoutMs) ||
     timeoutMs <= 0 ||
     !Number.isSafeInteger(maxOutputBytes) ||
-    maxOutputBytes <= 0
+    maxOutputBytes <= 0 ||
+    typeof retryPreMigrationContainerExit125 !== 'boolean'
   ) {
     throw new Error('Local Supabase CLI bounds are invalid.');
   }
 
   if (!quiet) process.stdout.write(`[db05-local] ${label}...\n`);
-  const controller = new AbortController();
-  const done = runContainedCommand({
-    command: CLI_COMMAND,
-    args: [...CLI_ARGUMENT_PREFIX, ...args, '--workdir', sandboxRoot, '--yes'],
-    cwd: sandboxRoot,
-    environment: childEnv,
-    timeoutMs,
-    maxOutputBytes,
-    signal: controller.signal,
-    inheritParentProcessGroup: INHERIT_PARENT_PROCESS_GROUP,
-    retainSanitizedFailureDiagnostic: true,
-    failureDiagnosticProfile,
-    ...(failureDiagnosticMaxBytes === undefined ? {} : { failureDiagnosticMaxBytes }),
-    ...(failureDiagnosticMaxLines === undefined ? {} : { failureDiagnosticMaxLines }),
-  });
-  activeCliProcess = { abort: () => controller.abort(), done };
+  const executeOnce = async () => {
+    const controller = new AbortController();
+    const done = runContainedCommand({
+      command: CLI_COMMAND,
+      args: [...CLI_ARGUMENT_PREFIX, ...args, '--workdir', sandboxRoot, '--yes'],
+      cwd: sandboxRoot,
+      environment: childEnv,
+      timeoutMs,
+      maxOutputBytes,
+      signal: controller.signal,
+      inheritParentProcessGroup: INHERIT_PARENT_PROCESS_GROUP,
+      retainSanitizedFailureDiagnostic: true,
+      failureDiagnosticProfile,
+      ...(failureDiagnosticMaxBytes === undefined ? {} : { failureDiagnosticMaxBytes }),
+      ...(failureDiagnosticMaxLines === undefined ? {} : { failureDiagnosticMaxLines }),
+    });
+    activeCliProcess = { abort: () => controller.abort(), done };
+    try {
+      return await done;
+    } finally {
+      if (activeCliProcess?.done === done) activeCliProcess = undefined;
+    }
+  };
   let result;
   try {
-    result = await done;
+    result = retryPreMigrationContainerExit125
+      ? await runWithSinglePreMigrationContainerRetry({
+          operation: executeOnce,
+          onRetry: () =>
+            process.stdout.write(
+              `[db05-local] ${label}: transient pre-migration container exit 125; retrying once...\n`,
+            ),
+        })
+      : await executeOnce();
   } catch (error) {
     if (error instanceof ContainedCommandError) {
       const diagnostic = error.diagnostic
@@ -297,13 +315,17 @@ async function runLocalCli(
       throw new Error(`Local Supabase CLI ${error.originReason}.${diagnostic}`);
     }
     throw error;
-  } finally {
-    if (activeCliProcess?.done === done) activeCliProcess = undefined;
   }
   const output = result.stdout;
   const errors = result.stderr;
   if (!quiet) process.stdout.write(`[db05-local] ${label}: PASS\n`);
   return { output, errors };
+}
+
+async function runLocalReset(label) {
+  return await runLocalCli(label, ['db', 'reset', '--local'], {
+    retryPreMigrationContainerExit125: true,
+  });
 }
 
 async function terminateActiveCliProcess() {
@@ -481,11 +503,7 @@ try {
   stackMayExist = true;
   await runLocalCli('start isolated credential-free stack', ['start']);
   if (FULL_VERIFY) {
-    await runLocalCli('reset through 0067 for the 0068 forward-upgrade rehearsal', [
-      'db',
-      'reset',
-      '--local',
-    ]);
+    await runLocalReset('reset through 0067 for the 0068 forward-upgrade rehearsal');
     await rename(withheldAdherenceMigration, sandboxAdherenceMigration);
     const adherenceUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -526,11 +544,7 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
-    await runLocalCli('reset through 0068 for the 0069 forward-upgrade rehearsal', [
-      'db',
-      'reset',
-      '--local',
-    ]);
+    await runLocalReset('reset through 0068 for the 0069 forward-upgrade rehearsal');
     await rename(withheldSyncMigration, sandboxSyncMigration);
     const syncUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -569,11 +583,7 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
-    await runLocalCli('reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal', [
-      'db',
-      'reset',
-      '--local',
-    ]);
+    await runLocalReset('reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal');
     await rename(withheldConsentDraftMigration, sandboxConsentDraftMigration);
     const consentDraftUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -615,11 +625,7 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
-    await runLocalCli('reset through 0070 for the 0071 recommendation forward-upgrade rehearsal', [
-      'db',
-      'reset',
-      '--local',
-    ]);
+    await runLocalReset('reset through 0070 for the 0071 recommendation forward-upgrade rehearsal');
     await rename(withheldRecommendationMigration, sandboxRecommendationMigration);
     const recommendationUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -661,11 +667,7 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
-    await runLocalCli('reset through 0071 for the 0072 commerce forward-upgrade rehearsal', [
-      'db',
-      'reset',
-      '--local',
-    ]);
+    await runLocalReset('reset through 0071 for the 0072 commerce forward-upgrade rehearsal');
     await rename(withheldCommerceMigration, sandboxCommerceMigration);
     const commerceUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -713,10 +715,10 @@ try {
     }
     await rename(withheldHeadMigration, sandboxHeadMigration);
   }
-  await runLocalCli('reset 1 of 2 (migrations plus seed)', ['db', 'reset', '--local']);
+  await runLocalReset('reset 1 of 2 (migrations plus seed)');
 
   if (FULL_VERIFY) {
-    await runLocalCli('reset 2 of 2 (repeatability)', ['db', 'reset', '--local']);
+    await runLocalReset('reset 2 of 2 (repeatability)');
   }
 
   if (FULL_VERIFY || TYPES_MODE) {
