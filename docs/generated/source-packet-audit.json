@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T11:53:51.459Z",
+  "generatedAt": "2026-09-27T03:19:02.868Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -37,8 +37,8 @@
     },
     {
       "path": "04_repo_docs/docs/ARCHITECTURE.md",
-      "bytes": 47479,
-      "sha256": "b7c5a3a2ced20b172b66e28a88a7293f05cc24bd8da93061a4edfca8a716d48a"
+      "bytes": 48840,
+      "sha256": "f5931e6760641bee189f866e79c80f30e9cb15d452ac826b125094c9414b4ef6"
     },
     {
       "path": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
@@ -92,10 +92,10 @@
       "title": "Architecture",
       "sourcePath": "04_repo_docs/docs/ARCHITECTURE.md",
       "activePath": "docs/ARCHITECTURE.md",
-      "sourceBytes": 47479,
-      "activeBytes": 47479,
-      "sourceSha256": "b7c5a3a2ced20b172b66e28a88a7293f05cc24bd8da93061a4edfca8a716d48a",
-      "activeSha256": "b7c5a3a2ced20b172b66e28a88a7293f05cc24bd8da93061a4edfca8a716d48a",
+      "sourceBytes": 48840,
+      "activeBytes": 48840,
+      "sourceSha256": "f5931e6760641bee189f866e79c80f30e9cb15d452ac826b125094c9414b4ef6",
+      "activeSha256": "f5931e6760641bee189f866e79c80f30e9cb15d452ac826b125094c9414b4ef6",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

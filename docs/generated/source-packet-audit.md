@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-09-21T11:53:51.459Z
+Generated: 2026-09-27T03:19:02.868Z
 Status: pass
 Strict mode: yes
 
@@ -25,7 +25,7 @@ the top-level packet markdown shape changes without updating the audit.
 
 | Packet doc                     | Active docs status | AGENTS.md | CLAUDE.md | Packet SHA-256 |
 | ------------------------------ | ------------------ | --------- | --------- | -------------- |
-| ARCHITECTURE.md                | identical          | yes       | yes       | b7c5a3a2ced2   |
+| ARCHITECTURE.md                | identical          | yes       | yes       | f5931e676064   |
 | CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | c18992815684   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
 | DECISIONS.md                   | identical          | yes       | yes       | cf155793b32e   |
@@ -49,7 +49,7 @@ the top-level packet markdown shape changes without updating the audit.
 | ------------------------------------------------ | ------ | ------------ |
 | 04_repo_docs/AGENTS.md                           | 3388   | da1897ba9f50 |
 | 04_repo_docs/README.md                           | 2986   | 40ed273c037f |
-| 04_repo_docs/docs/ARCHITECTURE.md                | 47479  | b7c5a3a2ced2 |
+| 04_repo_docs/docs/ARCHITECTURE.md                | 48840  | f5931e676064 |
 | 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 8697   | c18992815684 |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985   | 83db5ca6e5ad |
 | 04_repo_docs/docs/DECISIONS.md                   | 106572 | cf155793b32e |
