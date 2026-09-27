@@ -87,6 +87,11 @@ const WEB_TAB_ITEM_FOCUS_RING = Platform.select({
   default: {},
 }) as ViewStyle;
 
+function webKeyboardFocusIsVisible(): boolean {
+  if (Platform.OS !== 'web' || typeof document === 'undefined') return false;
+  return document.activeElement?.matches?.(':focus-visible') === true;
+}
+
 function IconPart({ style }: { style: StyleProp<ViewStyle> }) {
   return <View style={style} />;
 }
@@ -264,7 +269,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
               onBlur={() =>
                 setFocusRingRouteKey((currentKey) => (currentKey === route.key ? null : currentKey))
               }
-              onFocus={() => setFocusRingRouteKey(route.key)}
+              onFocus={() => setFocusRingRouteKey(webKeyboardFocusIsVisible() ? route.key : null)}
               onLongPress={onLongPress}
               onPress={onPress}
               style={({ pressed }) => [

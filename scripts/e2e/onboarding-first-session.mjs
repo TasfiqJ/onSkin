@@ -1087,7 +1087,7 @@ async function run() {
     });
     assert(
       progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
-        progressAfterOnboarding.bodyText.includes('Part of Layerwell Pro.'),
+        progressAfterOnboarding.bodyText.includes('Subscribe to Pro'),
       'Progress tab did not render the truthful free-plan feature gate.',
     );
     await clickByText(client, 'Maybe later');

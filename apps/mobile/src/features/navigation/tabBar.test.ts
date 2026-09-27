@@ -104,7 +104,11 @@ describe('tab bar treatment', () => {
     expect(source).toContain('width: 42');
     expect(source).toContain("outlineStyle: 'none'");
     expect(source).toContain('boxShadow: ');
-    expect(source).toContain('onFocus={() => setFocusRingRouteKey(route.key)}');
+    expect(source).toContain('function webKeyboardFocusIsVisible()');
+    expect(source).toContain("document.activeElement?.matches?.(':focus-visible') === true");
+    expect(source).toContain(
+      'setFocusRingRouteKey(webKeyboardFocusIsVisible() ? route.key : null)',
+    );
     expect(source).toContain('onBlur={() =>');
     expect(source).toContain('setFocusRingRouteKey((currentKey)');
     expect(source).not.toContain('function Dot');
