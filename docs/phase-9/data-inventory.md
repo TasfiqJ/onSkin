@@ -271,11 +271,14 @@ The exhaustive orphan audit also found launch-significant policy/data-model gaps
 
 ## RLS And Photo Storage Inventory
 
-The migration-derived public schema has 82 RLS-enabled tables: 36 directly
-queryable private tables, 32 read-sealed private/authority tables, and 14
-authenticated catalog/editorial tables. The 32 sealed relations comprise 24
-service-private lifecycle/authority tables, four global clinical/editorial
-tables, and four catalog-authority tables. Migrations `0057`-`0063` seal the
+The migration-derived public schema has 91 RLS-enabled tables: 43 row-positive
+private/service-operated tables, 34 read-sealed private/authority tables, and
+14 authenticated catalog/editorial tables. The 43 row-positive relations
+comprise 28 owner-client tables, eight service-only private tables, and seven
+service-operated internal lifecycle/import/sync tables. The 34 sealed
+relations comprise 24 service-private lifecycle/authority tables, two RPC-only
+outbox-coordination tables, four global clinical/editorial tables, and four
+catalog-authority tables. Migrations `0057`-`0063` seal the
 catalog source/import/curation/operator and unreviewed clinical/editorial
 authorities, minimize scan/contribution/lookup history, close legacy category
 PAO defaults, and allow only bounded product-specific PAO evidence.
@@ -289,18 +292,26 @@ recommendation zero admission, purges the untrusted recommendation cache,
 keeps catalog recommendation eligibility closed, and adds one immutable
 private admission control.
 
-The DB-09 hosted matrix must register all 68 private/read-sealed public tables
-exactly once, apply row-positive isolation probes to the 36 directly queryable
-tables, prove direct denial for every role on the 32 sealed tables, and
-distinguish cross-user permanent accounts, a real signed-anonymous account, and
-a publishable-key client with no session. It must separately prove every
-private-schema CAT-02, CAT-03, CAT-08, replay, and recommendation authority
-lane. Disposable PostgreSQL rehearsals and local pgTAP provide only their
-recorded source evidence; reviewed current-head hosted proof remains open.
+The DB-09 hosted matrix must register all 77 private/read-sealed public tables
+exactly once. It applies row-positive isolation probes to the 36
+owner-client/service-only tables; for the seven service-operated internal
+tables it must inspect a real positive-control row through `service_role` and
+prove that client roles cannot see that row. Production proof for the
+account-deletion and catalog-import relations may use only existing operational
+rows, never fabricated internal lifecycle state. Every one of the 34 sealed
+tables must return exact PostgreSQL `42501` to every API role, including
+`service_role`; the two RPC-only outbox tables use rows created by their normal
+owner-derived harness RPCs as positive controls before direct denial is tested.
+The matrix distinguishes cross-user permanent accounts, a real
+signed-anonymous account, and a publishable-key client with no session. It must
+separately prove every private-schema CAT-02, CAT-03, CAT-08, replay, and
+recommendation authority lane. Disposable PostgreSQL rehearsals and local
+pgTAP provide only their recorded source evidence; reviewed current-head
+hosted proof remains open.
 
 Photo metadata and `photos` bucket objects require an owner-prefixed path plus current `photo_cloud_backup` consent. Migration `20260713000045_anonymous_photo_storage_guard.sql` additionally denies insert/update of cloud photo bytes to signed-anonymous accounts, including an anonymous account that can create its own consent row. Owner-prefixed select/delete remains available so existing legacy objects can still be accessed or removed. This source posture is not release evidence until a reviewed reset and the hosted adversarial matrix pass with unchanged-object and residue-free-cleanup postconditions.
 
-The RLS-enabled `shelf_mirror_versions`, `conflict_choice_mirror_versions`, and `mobile_outbox_receipts` tables are service-only outbox coordination state. Authenticated clients have no direct table privileges; owner-derived RPCs use them for replay ordering, idempotency, response-loss recovery, and terminal owner/photo metadata tombstones. An indexed restrictive photo INSERT/UPDATE gate prevents an authenticated stale client from recreating a UUID after an applied photo-delete receipt, while account deletion removes the owner-linked receipt through `on delete cascade`. These coordination rows are explicitly excluded from account export because underlying user state is exported through its domain tables and pending client operations are included by the encrypted local-device collector.
+The RLS-enabled `shelf_mirror_versions`, `conflict_choice_mirror_versions`, and `mobile_outbox_receipts` tables are service-only outbox coordination state. `shelf_mirror_versions` and `mobile_outbox_receipts` are RPC-only and revoke every API role, including `service_role`; `conflict_choice_mirror_versions` retains a service inspection path but no client policy. Authenticated clients have no direct table privileges; owner-derived RPCs use the three relations for replay ordering, idempotency, response-loss recovery, and terminal owner/photo metadata tombstones. An indexed restrictive photo INSERT/UPDATE gate prevents an authenticated stale client from recreating a UUID after an applied photo-delete receipt, while account deletion removes the owner-linked receipt through `on delete cascade`. These coordination rows are explicitly excluded from account export because underlying user state is exported through its domain tables and pending client operations are included by the encrypted local-device collector.
 
 External handoffs are guarded before opening or caching: commerce retailer links, policy links, and subscription management URLs must normalize to HTTPS, cannot contain embedded credentials or control characters, and fragments are stripped. Unsafe commerce links are filtered before rendering and do not receive click tokens or write click events.
 

@@ -85,6 +85,25 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
   'edge_rate_limits',
 ]);
 
+// Internal lifecycle/import/sync state which is intentionally absent from the
+// subject data-export registries. The service-operated relations retain a
+// service_role inspection path; the RPC-only relations revoke every API role,
+// including service_role, and are reachable only through reviewed definer RPCs.
+export const SERVICE_OPERATED_INTERNAL_TABLES = Object.freeze([
+  'account_deletion_requests',
+  'account_deletion_click_tombstones',
+  'catalog_import_versions',
+  'catalog_import_staged_products',
+  'catalog_import_batch_receipts',
+  'catalog_active_imports',
+  'conflict_choice_mirror_versions',
+]);
+
+export const RPC_ONLY_INTERNAL_TABLES = Object.freeze([
+  'shelf_mirror_versions',
+  'mobile_outbox_receipts',
+]);
+
 // Owner-linked authority that remains sealed from direct PostgREST access but
 // has a reviewed, subject-facing projection in data-export. Source aliases are
 // deliberately distinct from the private ledger table names so the bundle
@@ -155,6 +174,7 @@ export const SEALED_CATALOG_AUTHORITY_TABLES = Object.freeze([
 
 export const SEALED_PUBLIC_TABLES = Object.freeze([
   ...SEALED_SERVICE_PRIVATE_TABLES,
+  ...RPC_ONLY_INTERNAL_TABLES,
   ...SEALED_GLOBAL_CONTENT_TABLES,
   ...SEALED_CATALOG_AUTHORITY_TABLES,
 ]);
@@ -179,6 +199,8 @@ export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([
 export const PRIVATE_PUBLIC_TABLES = Object.freeze([
   ...OWNER_LINKED_PRIVATE_TABLES,
   ...SERVICE_ONLY_PRIVATE_TABLES,
+  ...SERVICE_OPERATED_INTERNAL_TABLES,
+  ...RPC_ONLY_INTERNAL_TABLES,
   ...SEALED_SERVICE_PRIVATE_TABLES,
   ...SEALED_GLOBAL_CONTENT_TABLES,
   ...SEALED_CATALOG_AUTHORITY_TABLES,

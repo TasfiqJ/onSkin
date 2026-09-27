@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 import {
   PRIVATE_PUBLIC_TABLES,
   SEALED_PUBLIC_TABLES,
+  SERVICE_OPERATED_INTERNAL_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   HarnessAssertionError,
   authUserMissing,
@@ -305,6 +306,33 @@ function registerSealedPrivateTableProbe(table, column, value) {
   privateTableProbes.set(table, { sealed: true, column, value });
 }
 
+function registerServiceOperatedTableProbe(table, column, value) {
+  assert(
+    SERVICE_OPERATED_INTERNAL_TABLES.includes(table),
+    `Unknown service-operated internal-table probe: ${table}.`,
+  );
+  assert(!privateTableProbes.has(table), `Duplicate private-table probe: ${table}.`);
+  assert(typeof column === 'string' && column.length > 0, `Missing probe column for ${table}.`);
+  assert(value !== null && value !== undefined, `Missing probe value for ${table}.`);
+  privateTableProbes.set(table, { serviceOperated: true, column, value });
+}
+
+function phase9Digest(namespace, ...parts) {
+  return createHash('sha256')
+    .update([namespace, ...parts].join('\n'), 'utf8')
+    .digest('hex');
+}
+
+function conflictChoiceEntityId(ruleId, productAId, productBId) {
+  const digest = phase9Digest(
+    'layerwell:conflict-choice-identity:v1',
+    ruleId,
+    productAId,
+    productBId,
+  );
+  return `${digest.slice(0, 8)}-${digest.slice(8, 12)}-4${digest.slice(13, 16)}-8${digest.slice(17, 20)}-${digest.slice(20, 32)}`;
+}
+
 function trackServiceCleanup(table, column, value) {
   serviceCleanup.push({ table, column, value });
 }
@@ -449,6 +477,7 @@ async function main() {
     let routine;
     let step;
     let adherenceReferenceDay;
+    let conflictMirrorPositiveControl;
     await runCheck('skin profile, shelf, routine, and completion isolation', async () => {
       const skinProfile = await insertOne(userA.client, 'skin_profiles', {
         user_id: userA.id,
@@ -740,6 +769,54 @@ async function main() {
           computed_severity: 'mild',
         }),
       );
+
+      const conflictOperationId = randomUUID();
+      const conflictEntityId = conflictChoiceEntityId(
+        conflictRuleId,
+        canonicalProductAId,
+        canonicalProductBId,
+      );
+      const conflictPayloadHash = phase9Digest(
+        'layerwell:conflict-choice-payload:v1',
+        conflictRuleId,
+        canonicalProductAId,
+        canonicalProductBId,
+        'mild',
+        'accept_suggested_timing',
+        '1',
+      );
+      const conflictIdentityHash = phase9Digest(
+        'layerwell:conflict-choice-identity:v1',
+        conflictRuleId,
+        canonicalProductAId,
+        canonicalProductBId,
+      );
+      const conflictOutbox = await userA.client.rpc('apply_conflict_choice_outbox_batch', {
+        p_operations: [
+          {
+            operation_id: conflictOperationId,
+            entity_type: 'conflict_choice',
+            entity_id: conflictEntityId,
+            operation_kind: 'upsert',
+            payload: {
+              rule_id: conflictRuleId,
+              product_a_id: canonicalProductAId,
+              product_b_id: canonicalProductBId,
+              computed_severity: 'mild',
+              user_choice: 'accept_suggested_timing',
+              rule_version: 1,
+            },
+            client_revision: 1,
+            idempotency_key: `conflict_choice:${conflictOperationId}:${conflictIdentityHash}:${conflictPayloadHash}`,
+          },
+        ],
+      });
+      if (conflictOutbox.error) throw conflictOutbox.error;
+      assert(
+        Array.isArray(conflictOutbox.data) && conflictOutbox.data[0]?.status === 'applied',
+        'conflict-choice outbox RPC did not create the positive-control mirror row.',
+      );
+      conflictMirrorPositiveControl = { userId: userA.id, entityId: conflictEntityId };
 
       const ramp = await insertOne(userA.client, 'active_ramp', {
         user_id: userA.id,
@@ -2387,6 +2464,132 @@ async function main() {
     await runCheck('sealed and directly queryable private table controls', async () => {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
+
+      const shelfOperationId = randomUUID();
+      const shelfEntityId = randomUUID();
+      const shelfOutbox = await userA.client.rpc('apply_shelf_outbox_batch', {
+        p_operations: [
+          {
+            operation_id: shelfOperationId,
+            entity_type: 'shelf_product',
+            entity_id: shelfEntityId,
+            operation_kind: 'delete',
+            payload: null,
+            client_revision: 1,
+            idempotency_key: `shelf_product:${shelfEntityId}:1`,
+          },
+        ],
+      });
+      if (shelfOutbox.error) throw shelfOutbox.error;
+      assert(
+        Array.isArray(shelfOutbox.data) && shelfOutbox.data[0]?.status === 'applied',
+        'Shelf outbox RPC did not create the RPC-only positive-control rows.',
+      );
+
+      let accountRequestId;
+      let accountClickHash;
+      let catalogImportId;
+      let catalogActiveSourceId;
+      if (appEnv === 'production') {
+        const productionControls = await Promise.all([
+          admin.from('account_deletion_requests').select('request_id').limit(1).maybeSingle(),
+          admin
+            .from('account_deletion_click_tombstones')
+            .select('click_token_hash')
+            .limit(1)
+            .maybeSingle(),
+          admin.from('catalog_import_versions').select('id').limit(1).maybeSingle(),
+          admin.from('catalog_active_imports').select('source_id').limit(1).maybeSingle(),
+        ]);
+        for (const result of productionControls) {
+          if (result.error) throw result.error;
+        }
+        accountRequestId = productionControls[0].data?.request_id;
+        accountClickHash = productionControls[1].data?.click_token_hash;
+        catalogImportId = productionControls[2].data?.id;
+        catalogActiveSourceId = productionControls[3].data?.source_id;
+        assert(
+          accountRequestId && accountClickHash && catalogImportId && catalogActiveSourceId,
+          'Production positive controls must use existing lifecycle rows; synthetic internal lifecycle mutations are prohibited.',
+        );
+      } else {
+        const controlSeed = randomUUID().replaceAll('-', '');
+        const accountRequest = await insertOne(admin, 'account_deletion_requests', {
+          request_id: randomUUID(),
+          user_id: null,
+          initiating_session_id: null,
+          completion_token_hash: `t_${phase9Digest('phase9:account-delete-token', controlSeed)}`,
+          user_hash: `u_${phase9Digest('phase9:account-delete-user', controlSeed).slice(0, 32)}`,
+          user_lookup_hash: `d_${phase9Digest('phase9:account-delete-lookup', controlSeed).slice(0, 32)}`,
+          next_step: 'complete',
+          completed_at: new Date().toISOString(),
+        });
+        accountRequestId = accountRequest.request_id;
+        trackServiceCleanup('account_deletion_requests', 'request_id', accountRequestId);
+        accountClickHash = `c_${phase9Digest('phase9:account-delete-click', controlSeed).slice(0, 32)}`;
+        await insertOne(admin, 'account_deletion_click_tombstones', {
+          click_token_hash: accountClickHash,
+          request_id: accountRequestId,
+        });
+
+        const artifactSha256 = phase9Digest('phase9:catalog-import-artifact', controlSeed);
+        const catalogBegin = await admin.rpc('begin_catalog_import', {
+          p_source_key: 'open_beauty_facts',
+          p_source_revision: `phase9-live-adversarial-${controlSeed}`,
+          p_artifact_uri: null,
+          p_artifact_sha256: artifactSha256,
+          p_importer_version: 'phase9-live-adversarial-v1',
+        });
+        if (catalogBegin.error) throw catalogBegin.error;
+        catalogImportId = catalogBegin.data?.importId;
+        assert(catalogImportId, 'Catalog import RPC did not return a positive-control import ID.');
+        trackServiceCleanup('catalog_import_versions', 'id', catalogImportId);
+        const catalogBatch = await admin.rpc('stage_catalog_import_batch', {
+          p_import_id: catalogImportId,
+          p_expected_checkpoint: 0,
+          p_last_line: 1,
+          p_rows: [
+            {
+              canonical_identity: `phase9:${controlSeed}`,
+              line_number: 1,
+              barcode: '99999999',
+              name: 'Phase 9 access-control probe',
+              brand: null,
+              category: null,
+              ingredients_text: null,
+              source_ref: `phase9:${controlSeed}`,
+              source_url: null,
+              source_snapshot_date: null,
+              quality_grade: 'blocked',
+              payload_sha256: phase9Digest('phase9:catalog-import-row', controlSeed),
+            },
+          ],
+          p_rejected_count: 0,
+          p_batch_sha256: phase9Digest('phase9:catalog-import-batch', controlSeed),
+        });
+        if (catalogBatch.error) throw catalogBatch.error;
+        assert(
+          catalogBatch.data?.checkpointLine === 1 && catalogBatch.data?.stagedProducts === 1,
+          'Catalog staging RPC did not create both positive-control child rows.',
+        );
+
+        const activeImport = await admin
+          .from('catalog_active_imports')
+          .select('source_id')
+          .limit(1)
+          .maybeSingle();
+        if (activeImport.error) throw activeImport.error;
+        catalogActiveSourceId = activeImport.data?.source_id;
+        assert(
+          catalogActiveSourceId,
+          'catalog_active_imports has no existing positive-control row; the harness will not mutate the active catalog pointer.',
+        );
+      }
+
+      assert(
+        conflictMirrorPositiveControl,
+        'Conflict-choice RPC did not create its service-operated positive-control row.',
+      );
       registerSealedPrivateTableProbe('catalog_sources', 'id', absentUuid);
       registerSealedPrivateTableProbe('shelf_product_identities', 'id', absentUuid);
       registerSealedPrivateTableProbe('obf_contribution_queue', 'id', absentUuid);
@@ -2442,6 +2645,40 @@ async function main() {
       registerSealedPrivateTableProbe('ingredient_pao_defaults', 'category', '__phase9_absent__');
       registerSealedPrivateTableProbe('product_categories', 'id', '__phase9_absent__');
       registerSealedPrivateTableProbe('ingredient_tag_definitions', 'tag', '__phase9_absent__');
+      registerSealedPrivateTableProbe('shelf_mirror_versions', 'user_id', userA.id);
+      registerSealedPrivateTableProbe('mobile_outbox_receipts', 'user_id', userA.id);
+
+      registerServiceOperatedTableProbe(
+        'account_deletion_requests',
+        'request_id',
+        accountRequestId,
+      );
+      registerServiceOperatedTableProbe(
+        'account_deletion_click_tombstones',
+        'click_token_hash',
+        accountClickHash,
+      );
+      registerServiceOperatedTableProbe('catalog_import_versions', 'id', catalogImportId);
+      registerServiceOperatedTableProbe(
+        'catalog_import_staged_products',
+        'import_id',
+        catalogImportId,
+      );
+      registerServiceOperatedTableProbe(
+        'catalog_import_batch_receipts',
+        'import_id',
+        catalogImportId,
+      );
+      registerServiceOperatedTableProbe(
+        'catalog_active_imports',
+        'source_id',
+        catalogActiveSourceId,
+      );
+      registerServiceOperatedTableProbe(
+        'conflict_choice_mirror_versions',
+        'entity_id',
+        conflictMirrorPositiveControl.entityId,
+      );
 
       const subscriptionEvent = await insertOne(admin, 'subscriptions_events', {
         rc_event_id: `phase9-${randomUUID()}`,
@@ -2486,7 +2723,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 68 private tables have access-control probes', async () => {
+    await runCheck('all 77 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(
@@ -2523,12 +2760,37 @@ async function main() {
             [signedAnonymous.client, 'signed-anonymous client'],
             [unauthenticated, 'unauthenticated client'],
           ]) {
+            await expectPostgresCode(
+              `${table} ${label} direct table read`,
+              '42501',
+              client.from(table).select(probe.column).eq(probe.column, probe.value),
+            );
+          }
+          continue;
+        }
+        if (probe.serviceOperated === true) {
+          const adminResult = await admin
+            .from(table)
+            .select(probe.column)
+            .eq(probe.column, probe.value);
+          assert(
+            !adminResult.error && Array.isArray(adminResult.data) && adminResult.data.length > 0,
+            adminResult.error
+              ? `${table} service-role positive-control read failed: ${redactedErrorKind(adminResult.error)}.`
+              : `${table} service-role positive-control row was absent.`,
+          );
+          for (const [client, label] of [
+            [userA.client, 'owner client'],
+            [userB.client, 'cross-user client'],
+            [signedAnonymous.client, 'signed-anonymous client'],
+            [unauthenticated, 'unauthenticated client'],
+          ]) {
             await expectNotVisible(
               client,
               table,
               probe.column,
               probe.value,
-              `${table} ${label} direct table read`,
+              `${table} ${label} service-operated read`,
             );
           }
           continue;
@@ -2625,7 +2887,8 @@ async function main() {
       // Direct table privileges are intentionally absent for sealed tables,
       // including service_role. Their residue is attested through the narrow
       // lifecycle RPC/rehearsal lanes, not through an impossible admin read.
-      if (probe.sealed === true || probe.closed === true) continue;
+      if (probe.sealed === true || probe.closed === true || probe.serviceOperated === true)
+        continue;
       const remaining = await admin.from(table).select(probe.column).eq(probe.column, probe.value);
       if (remaining.error) {
         errors.push(

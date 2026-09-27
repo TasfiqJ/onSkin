@@ -187,13 +187,15 @@ substitute for the evidence.
 
 ## RLS Evidence Contract
 
-The current migration-derived public-schema inventory is 82 RLS-enabled
-tables: 36 directly queryable private tables, 32 read-sealed
+The current migration-derived public-schema inventory is 91 RLS-enabled
+tables: 43 row-positive private/service-operated tables, 34 read-sealed
 private/authority tables, and 14 authenticated catalog/editorial tables. The
-32 sealed tables comprise 24 service-private lifecycle/authority relations,
-four global clinical/editorial relations, and four catalog-authority
-relations. Every public table must be classified exactly once and have RLS
-enabled.
+34 sealed tables comprise 24 service-private lifecycle/authority relations,
+two RPC-only outbox-coordination relations, four global clinical/editorial
+relations, and four catalog-authority relations. The 43 row-positive relations
+comprise 28 owner-client tables, eight service-only private tables, and seven
+service-operated internal lifecycle/import/sync tables. Every public table
+must be classified exactly once and have RLS enabled.
 
 Migrations `0054` and `0055` add the sealed health-consent and Apple lifecycle
 relations. Migrations `0057`-`0063` seal catalog import, clinical/editorial,
@@ -220,15 +222,22 @@ poller authority, purges disallowed attribution state, and converges catalog,
 stack, click, and attribution ACLs across both legacy and current Supabase grant
 defaults.
 
-The current matrix source registers all 68 public-schema tables classified
-private/read-sealed exactly once: the 36 directly queryable tables receive
-row-positive owner/cross-user, real signed-anonymous, and
-publishable-key-with-no-session probes, while all 32 sealed public-schema
-tables deny direct access to every API role, including `service_role`. The
-regenerated hosted matrix must prove that 68-table posture and every separately
-sealed `private`-schema CAT-02, CAT-03, CAT-08, replay, and recommendation
-authority lane. Public-table identities and private-schema denial lanes are
-not interchangeable.
+The current matrix source registers all 77 public-schema tables classified
+private/read-sealed exactly once. The 36 owner-client/service-only relations
+retain row-positive owner/cross-user, real signed-anonymous, and
+publishable-key-with-no-session probes. The seven service-operated internal
+relations require a real service-created or safely synthetic positive-control
+row, a successful `service_role` inspection of that exact row, and denial or an
+exact empty RLS result for every client role. Synthetic account-deletion and
+catalog-import lifecycle rows are prohibited in production; production proof
+must inspect existing rows for those service-operated relations. The 34 sealed
+relations deny direct access with exact PostgreSQL `42501` for every API role,
+including `service_role`; the two RPC-only coordination relations use rows
+created through their normal owner-derived harness RPCs so an absent lookup
+cannot masquerade as denial. The regenerated hosted matrix must prove that
+77-table posture and every separately sealed `private`-schema CAT-02, CAT-03,
+CAT-08, replay, and recommendation authority lane. Public-table identities and
+private-schema denial lanes are not interchangeable.
 
 Negative database assertions accept only the exact expected PostgreSQL/PostgREST code, or exact empty rows for operations whose RLS semantics permit that result. Negative Storage assertions accept only typed authorization outcomes, with operation-specific not-found or empty-result allowances plus state-preserving owner/admin reads. Network failures, invalid requests or JWTs, missing buckets, and server failures must fail the harness. Cleanup must verify that synthetic database rows, Auth users, and Storage objects are gone.
 
@@ -254,7 +263,7 @@ RLS.
 DB-08 remains `in_progress` because hosted repository/local/linked parity has
 not been proven. No retained linked type artifact or hosted DB-06 packet exists.
 DB-09 and DB-10 remain live-blocked until reviewed hosted resets and the
-complete 82-public-table/68-public-schema-private/read-sealed classification
+complete 91-public-table/77-public-schema-private/read-sealed classification
 plus every private-schema authority lane produce redacted, clean-revision
 staging and production evidence. Evidence flags cannot substitute for those
 runs.

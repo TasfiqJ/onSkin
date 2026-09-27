@@ -8,12 +8,14 @@ import {
   HarnessAssertionError,
   OWNER_LINKED_PRIVATE_TABLES,
   PRIVATE_PUBLIC_TABLES,
+  RPC_ONLY_INTERNAL_TABLES,
   SEALED_CATALOG_AUTHORITY_TABLES,
   SEALED_GLOBAL_CONTENT_TABLES,
   SEALED_OWNER_RPC_EXPORT_SOURCES,
   SEALED_OWNER_RPC_EXPORT_TABLES,
   SEALED_PUBLIC_TABLES,
   SEALED_SERVICE_PRIVATE_TABLES,
+  SERVICE_OPERATED_INTERNAL_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   authUserMissing,
   deniedInsertResult,
@@ -43,6 +45,8 @@ function issueKeys(issues) {
 const canonicalClassifications = [
   ['owner-linked private', OWNER_LINKED_PRIVATE_TABLES],
   ['service-only private', SERVICE_ONLY_PRIVATE_TABLES],
+  ['service-operated internal', SERVICE_OPERATED_INTERNAL_TABLES],
+  ['RPC-only internal', RPC_ONLY_INTERNAL_TABLES],
   ['sealed service-only private', SEALED_SERVICE_PRIVATE_TABLES],
   ['sealed global clinical/editorial', SEALED_GLOBAL_CONTENT_TABLES],
   ['sealed catalog authority', SEALED_CATALOG_AUTHORITY_TABLES],
@@ -51,6 +55,8 @@ const canonicalClassifications = [
 const canonicalTables = [
   ...OWNER_LINKED_PRIVATE_TABLES,
   ...SERVICE_ONLY_PRIVATE_TABLES,
+  ...SERVICE_OPERATED_INTERNAL_TABLES,
+  ...RPC_ONLY_INTERNAL_TABLES,
   ...SEALED_SERVICE_PRIVATE_TABLES,
   ...SEALED_GLOBAL_CONTENT_TABLES,
   ...SEALED_CATALOG_AUTHORITY_TABLES,
@@ -58,7 +64,7 @@ const canonicalTables = [
 ];
 
 test('canonical table inventory is exhaustive and duplicate-free', () => {
-  assert.equal(canonicalTables.length, 82);
+  assert.equal(canonicalTables.length, 91);
   assert.equal(OWNER_LINKED_PRIVATE_TABLES.length, 28);
   assert.equal(HEALTH_PURPOSE_READ_FENCED_TABLES.length, 26);
   assert.equal(new Set(HEALTH_PURPOSE_READ_FENCED_TABLES).size, 26);
@@ -75,6 +81,8 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
     ),
   );
   assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 8);
+  assert.equal(SERVICE_OPERATED_INTERNAL_TABLES.length, 7);
+  assert.equal(RPC_ONLY_INTERNAL_TABLES.length, 2);
   assert.deepEqual(SEALED_OWNER_RPC_EXPORT_SOURCES, [
     'shelf_product_identities',
     'shelf_sync_receipts',
@@ -98,7 +106,7 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
   assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 24);
   assert.equal(SEALED_GLOBAL_CONTENT_TABLES.length, 4);
   assert.equal(SEALED_CATALOG_AUTHORITY_TABLES.length, 4);
-  assert.equal(SEALED_PUBLIC_TABLES.length, 32);
+  assert.equal(SEALED_PUBLIC_TABLES.length, 34);
   assert.equal(AUTHENTICATED_CATALOG_TABLES.length, 14);
   assert.deepEqual(
     [
@@ -117,18 +125,20 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
     ].filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table)),
     [],
   );
-  assert.equal(new Set(canonicalTables).size, 82);
+  assert.equal(new Set(canonicalTables).size, 91);
   assert.deepEqual(PRIVATE_PUBLIC_TABLES, [
     ...OWNER_LINKED_PRIVATE_TABLES,
     ...SERVICE_ONLY_PRIVATE_TABLES,
+    ...SERVICE_OPERATED_INTERNAL_TABLES,
+    ...RPC_ONLY_INTERNAL_TABLES,
     ...SEALED_SERVICE_PRIVATE_TABLES,
     ...SEALED_GLOBAL_CONTENT_TABLES,
     ...SEALED_CATALOG_AUTHORITY_TABLES,
   ]);
-  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 68);
+  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 77);
   assert.equal(
     PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length,
-    36,
+    43,
   );
   assert.deepEqual(
     tableClassificationIssues({

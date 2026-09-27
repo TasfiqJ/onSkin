@@ -3,12 +3,14 @@ import {
   AUTHENTICATED_CATALOG_TABLES,
   OWNER_LINKED_PRIVATE_TABLES,
   PRIVATE_PUBLIC_TABLES,
+  RPC_ONLY_INTERNAL_TABLES,
   SEALED_CATALOG_AUTHORITY_TABLES,
   SEALED_GLOBAL_CONTENT_TABLES,
   SEALED_OWNER_RPC_EXPORT_SOURCES,
   SEALED_OWNER_RPC_EXPORT_TABLES,
   SEALED_PUBLIC_TABLES,
   SEALED_SERVICE_PRIVATE_TABLES,
+  SERVICE_OPERATED_INTERNAL_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   block,
   evidenceFlagEnabled,
@@ -82,6 +84,8 @@ for (const match of migrations.matchAll(
 const tableClassifications = [
   ['owner-linked private', OWNER_LINKED_PRIVATE_TABLES],
   ['service-only private', SERVICE_ONLY_PRIVATE_TABLES],
+  ['service-operated internal', SERVICE_OPERATED_INTERNAL_TABLES],
+  ['RPC-only internal', RPC_ONLY_INTERNAL_TABLES],
   ['sealed service-only private', SEALED_SERVICE_PRIVATE_TABLES],
   ['sealed global clinical/editorial', SEALED_GLOBAL_CONTENT_TABLES],
   ['sealed catalog authority', SEALED_CATALOG_AUTHORITY_TABLES],
@@ -100,6 +104,16 @@ block(
 );
 block(
   errors,
+  SERVICE_OPERATED_INTERNAL_TABLES.length === 7,
+  `Service-operated internal-table inventory must contain 7 tables; found ${SERVICE_OPERATED_INTERNAL_TABLES.length}.`,
+);
+block(
+  errors,
+  RPC_ONLY_INTERNAL_TABLES.length === 2,
+  `RPC-only internal-table inventory must contain 2 tables; found ${RPC_ONLY_INTERNAL_TABLES.length}.`,
+);
+block(
+  errors,
   SEALED_SERVICE_PRIVATE_TABLES.length === 24,
   `Sealed service-only private-table inventory must contain 24 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
 );
@@ -115,8 +129,8 @@ block(
 );
 block(
   errors,
-  SEALED_PUBLIC_TABLES.length === 32,
-  `Combined sealed public-schema inventory must contain 32 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
+  SEALED_PUBLIC_TABLES.length === 34,
+  `Combined sealed public-schema inventory must contain 34 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
 );
 block(
   errors,
@@ -125,13 +139,13 @@ block(
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.length === 68,
-  `Combined private-table inventory must contain 68 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+  PRIVATE_PUBLIC_TABLES.length === 77,
+  `Combined private-table inventory must contain 77 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length === 36,
-  'Directly queryable private-table inventory must contain 36 tables.',
+  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length === 43,
+  'Directly queryable private-table inventory must contain 43 tables.',
 );
 block(
   errors,
@@ -189,6 +203,35 @@ for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
       migrations,
     ),
     `Sealed service-only table must revoke direct service_role access: ${table}.`,
+  );
+}
+
+for (const table of RPC_ONLY_INTERNAL_TABLES) {
+  block(
+    errors,
+    new RegExp(
+      `revoke all on table public\\.${table}[\\s\\S]{0,160}from public, anon, authenticated, service_role`,
+      'i',
+    ).test(migrations),
+    `RPC-only internal table must revoke every direct API role: ${table}.`,
+  );
+  block(
+    errors,
+    !new RegExp(`grant[^;]*on table public\\.${table}[^;]*;`, 'i').test(migrations),
+    `RPC-only internal table must not regain a direct table grant: ${table}.`,
+  );
+  block(
+    errors,
+    !new RegExp(`create policy[^;]*on public\\.${table}[^;]*;`, 'i').test(migrations),
+    `RPC-only internal table must not gain a direct RLS policy: ${table}.`,
+  );
+}
+
+for (const table of SERVICE_OPERATED_INTERNAL_TABLES) {
+  block(
+    errors,
+    !new RegExp(`create policy [\\s\\S]{0,160} on public\\.${table}`, 'i').test(migrations),
+    `Service-operated internal table must not expose a direct client RLS policy: ${table}.`,
   );
 }
 
@@ -302,9 +345,7 @@ for (const issue of tableClassificationIssues({
 for (const table of dynamicUserTables) {
   block(
     errors,
-    OWNER_LINKED_PRIVATE_TABLES.includes(table) ||
-      SERVICE_ONLY_PRIVATE_TABLES.includes(table) ||
-      SEALED_PUBLIC_TABLES.includes(table),
+    PRIVATE_PUBLIC_TABLES.includes(table),
     `Discovered auth.users-linked table without Phase 9 RLS classification: ${table}.`,
   );
 }
@@ -586,6 +627,11 @@ for (const match of liveHarness.matchAll(
 )) {
   staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
 }
+for (const match of liveHarness.matchAll(
+  /registerServiceOperatedTableProbe\(\s*['"]([a-z_]+)['"]/g,
+)) {
+  staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
+}
 
 for (const table of PRIVATE_PUBLIC_TABLES) {
   const count = staticProbeCounts.get(table) ?? 0;
@@ -593,6 +639,32 @@ for (const table of PRIVATE_PUBLIC_TABLES) {
     errors,
     count === 1,
     `Live Supabase adversarial harness must register exactly one access-control probe for ${table}; found ${count}.`,
+  );
+}
+
+for (const table of SERVICE_OPERATED_INTERNAL_TABLES) {
+  block(
+    errors,
+    !new RegExp(
+      `registerServiceOperatedTableProbe\\(\\s*['"]${table}['"][\\s\\S]{0,120}(?:absentUuid|__phase9_absent__)`,
+    ).test(liveHarness),
+    `Service-operated live probe must use a positive-control row, not an absent key: ${table}.`,
+  );
+}
+
+for (const requiredSource of [
+  "userA.client.rpc('apply_shelf_outbox_batch'",
+  "userA.client.rpc('apply_conflict_choice_outbox_batch'",
+  "admin.rpc('begin_catalog_import'",
+  "admin.rpc('stage_catalog_import_batch'",
+  "appEnv === 'production'",
+  'client.from(table).select(probe.column).eq(probe.column, probe.value)',
+  "'42501'",
+]) {
+  block(
+    errors,
+    liveHarness.includes(requiredSource),
+    `Live adversarial harness is missing the row-positive/direct-denial contract: ${requiredSource}.`,
   );
 }
 
@@ -660,7 +732,7 @@ block(
 );
 
 const requiredLiveHarnessChecks = [
-  'all 68 private tables have access-control probes',
+  'all 77 private tables have access-control probes',
   'recommendation preferences owner direct update',
   'recommendation preferences service-role direct insert',
   'recommendation cache service-role zero-admission read',
