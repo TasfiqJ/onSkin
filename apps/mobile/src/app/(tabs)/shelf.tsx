@@ -526,13 +526,29 @@ export default function ShelfScreen() {
         )
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
-          <View className="mt-2 flex-row items-baseline justify-between">
-            <Text variant="title" className="text-[38px] leading-[40px]">
-              Shelf
-            </Text>
-            <Text variant="label" tone="muted">
-              {items.length} product{items.length === 1 ? '' : 's'}
-            </Text>
+          <View className="mt-2 flex-row items-start justify-between gap-4">
+            <View className="flex-1">
+              <Text variant="title" className="text-[38px] leading-[40px]">
+                Shelf
+              </Text>
+              <Text variant="label" tone="muted" className="mt-1">
+                {items.length} product{items.length === 1 ? '' : 's'}
+              </Text>
+            </View>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Add a product to your shelf"
+              className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill bg-ink px-4 py-2.5"
+              style={({ pressed }) => (pressed ? { opacity: 0.86 } : undefined)}
+              onPress={() => {
+                haptics.select();
+                trackProductAddStarted('scan_inline');
+                router.push('/shelf/scan');
+              }}
+            >
+              <Text className="font-sans-semibold text-[16px] text-paper">＋</Text>
+              <Text className="font-sans-semibold text-[13px] text-paper">Add</Text>
+            </Pressable>
           </View>
 
           <View

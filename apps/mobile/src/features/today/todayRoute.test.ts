@@ -9,25 +9,29 @@ function readAppRoute(path: string): string {
 }
 
 describe('Today route mobile contracts', () => {
-  it('keeps the streak and adherence pill comfortably tappable on phones', () => {
+  it('keeps the home summary and streak control comfortably tappable on phones', () => {
     const source = readAppRoute('(tabs)/today.tsx');
+    const header = readFileSync(
+      fileURLToPath(new URL('../../components/ui/TodayFocusHeader.tsx', import.meta.url)),
+      'utf8',
+    );
 
-    expect(source).toContain('accessibilityLabel="View your streak and adherence"');
-    expect(source).toContain("router.push('/routine/streak')");
-    expect(source).toContain('function streakLabel(days: number): string');
-    expect(source).toContain("days === 1 ? 'day' : 'days'");
-    expect(source).toContain('{streakLabel(progress.streak)}');
-    expect(source).not.toContain('{progress.streak} days');
-    expect(source).toContain('min-h-[48px]');
-    expect(source).not.toContain('min-h-[44px]');
-    expect(source).toContain('px-4 py-2.5');
-    expect(source).not.toContain('px-3.5 py-1.5');
+    expect(source).toContain('<TodayFocusHeader');
+    expect(source).toContain('streakDays={progress?.streak ?? 0}');
+    expect(header).toContain('accessibilityLabel="View your streak and adherence"');
+    expect(header).toContain("router.push('/routine/streak')");
+    expect(header).toContain("streakDays === 1 ? 'day' : 'days'");
+    expect(header).toContain('min-h-[48px]');
+    expect(header).toContain('rounded-pill');
+    expect(header).toContain('accessibilityRole="progressbar"');
   });
 
-  it('keeps Today prompt actions clear of the floating tab bar on short phones', () => {
+  it('keeps Today actions clear while using the status-first home hierarchy', () => {
     const source = readAppRoute('(tabs)/today.tsx');
 
-    expect(source).toContain("import { Button, Screen, Text } from '@/components/ui';");
+    expect(source).toContain(
+      "import { Button, Screen, Text, TodayFocusHeader } from '@/components/ui';",
+    );
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPhone = height < 700');
     expect(source).toContain('const compactRecommendationPrompt = height < 860');
@@ -36,25 +40,9 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('const showTonightTeaser =');
     expect(source).toContain('(cadenceWithheldCount === 0 || height >= 932);');
     expect(source).toContain('function EmptyRoutineCard');
-    expect(source).toContain('short = false');
-    expect(source).toContain('const tight = compact && short;');
-    expect(source).toContain('No routine yet');
     expect(source).toContain('Build a routine from your shelf.');
     expect(source).toContain('label="Add products"');
     expect(source).toContain("router.push('/shelf/manual')");
-    expect(source).toContain("tight\n          ? 'mt-2 rounded-card px-4 py-3'");
-    expect(source).toContain("? 'mt-3 rounded-card px-5 py-4'");
-    expect(source).toContain(": 'mt-6 rounded-card p-6'");
-    expect(source).toContain("tight\n            ? 'mt-1.5 font-sans-semibold text-[16px]'");
-    expect(source).toContain("? 'mt-2 font-sans-semibold text-[18px]'");
-    expect(source).toContain('lineHeight: tight ? 20 : compact ? 22 : 25');
-    expect(source).toContain('{tight ? null : (');
-    expect(source).toContain("className={compact ? 'mt-1.5 text-[13px]' : 'mt-2.5 text-[14px]'}");
-    expect(source).toContain('lineHeight: compact ? 17 : 20');
-    expect(source).toContain(
-      "className={tight ? 'mt-2 min-h-[52px] py-3' : compact ? 'mt-3' : 'mt-5'}",
-    );
-    expect(source.match(/short=\{shortEmptyRoutine\}/g)).toHaveLength(2);
     expect(source).toContain(
       "import { projectTodayRoutine } from '@/features/today/routineProjection';",
     );
@@ -66,44 +54,25 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('safetyExclusionCount,');
     expect(source).toContain('cadenceWithheldCount,');
     expect(source).toContain('sequencingWithheldCount,');
-    expect(source).not.toContain('step.cyclingNight');
     expect(source).toContain('function CadenceWithheldNotice');
-    expect(source).toContain('Timing is not set for ${count} ${productLabel}.');
-    expect(source).toContain("router.push('/routine/plan')");
-    expect(source.match(/<CadenceWithheldNotice/g)).toHaveLength(2);
     expect(source).toContain('function SequencingWithheldNotice');
-    expect(source).toContain('Application order is not reviewed for ${count} ${productLabel}.');
-    expect(source.match(/<SequencingWithheldNotice/g)).toHaveLength(2);
     expect(source).toContain('Review pregnancy and breastfeeding setting');
-    expect(source).toContain("router.push('/settings/skin-profile?returnTo=today')");
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} tone="night" />');
-    expect(source).toContain("className={compactPhone ? 'mt-3' : 'mt-4'}");
-    expect(source).toContain("? 'mt-4 rounded-card bg-paper-raised'");
-    expect(source).toContain(": 'mt-6 rounded-card bg-paper-raised'");
-    expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
-    expect(source).toContain('paddingBottom: compactPhone ? 8 : 12');
-    expect(source).not.toContain('compactRoutineInstruction');
-    expect(source).not.toContain('pmDisplaySub');
+    expect(source.match(/<TodayFocusHeader/g)).toHaveLength(2);
+    expect(source).toContain('phase="AM"');
+    expect(source).toContain('phase="PM"');
+    expect(source).toContain('total={steps.length}');
+    expect(source).toContain('completed={doneCount}');
+    expect(source).toContain('total={pmSteps.length}');
+    expect(source).toContain('completed={donePm}');
     expect(source).toContain('const nameLineCount = compact ? 2 : undefined;');
     expect(source).toContain('const subLineCount = compact ? 2 : undefined;');
-    expect(source).toContain('{sub}');
-    expect(source).toContain('compact?: boolean;');
-    expect(source).toContain(
-      "className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}",
-    );
-    expect(source).toContain('numberOfLines={nameLineCount}');
-    expect(source).toContain('numberOfLines={subLineCount}');
-    expect(source).toContain('lineHeight: compact ? 18 : undefined');
-    expect(source).toContain('lineHeight: compact ? 16 : undefined');
-    expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
-    expect(source.match(/<CheckRow[\s\S]*?compact=\{compactPhone\}/g)).toHaveLength(2);
     expect(source).toContain(
       '<RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />',
     );
     expect(source).toContain('{showRecommendations ? (');
-    expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
     expect(source).toContain('{showTonightTeaser ? (');
   });

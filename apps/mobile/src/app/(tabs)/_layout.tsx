@@ -1,30 +1,16 @@
-import type { RoutineType } from '@layerwell/types';
-import * as Haptics from 'expo-haptics';
-import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { router, Tabs } from 'expo-router';
-import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
-import { useEffect, useState } from 'react';
-import {
-  Keyboard,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
 import { pendingLifecycleRoute } from '@/features/subscription/lifecycle';
-import { currentRoutineType } from '@/features/today/useToday';
 import { colors } from '@/theme/tokens';
 
-// On app entry, present the honest reverse-trial re-offer / graceful-downgrade once
-// when Pro has lapsed (docs/08 §6/§13). Pure local check, offline-safe, fires once
-// per expiry; gated taps surface the contextual upsell thereafter.
+// The iOS release uses the system tab bar instead of drawing a second navigation
+// system in JavaScript. On current iOS this picks up Liquid Glass, accessibility,
+// safe-area behavior and system interaction changes automatically. The app keeps
+// its own warm editorial palette in the content layer; glass stays navigation.
 function useExpiryReoffer() {
   useEffect(() => {
     void pendingLifecycleRoute(new Date().toISOString()).then((route) => {
@@ -33,502 +19,82 @@ function useExpiryReoffer() {
   }, []);
 }
 
-type TabIconName = 'today' | 'progress' | 'shelf' | 'you';
+export default function TabsLayout() {
+  useExpiryReoffer();
 
-const ICON_SIZE = 21;
-const FLOATING_TAB_BAR_HEIGHT = 66;
-const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 12, android: 12, web: 14, default: 12 });
-const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 36;
-const FLOATING_TAB_BAR_GAP = 24;
-const FLOATING_TAB_BAR_SIDE_MARGIN = 12;
-const FLOATING_TAB_BAR_MAX_WIDTH = 402;
-const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 0;
-const MIN_TAB_TOUCH_TARGET = 52;
-const TAB_ITEM_HEIGHT = 54;
-const COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 430;
-const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
-  progress: 'progress',
-  shelf: 'shelf',
-  today: 'today',
-  you: 'you',
-};
-
-const TAB_BAR_SHADOW = Platform.select({
-  android: {
-    elevation: 12,
-  },
-  ios: {
-    shadowColor: colors.ink,
-    shadowOffset: { height: 12, width: 0 },
-    shadowOpacity: 0.12,
-    shadowRadius: 24,
-  },
-  web: {
-    boxShadow: '0px 18px 42px rgba(32, 27, 21, 0.14), 0px 3px 12px rgba(32, 27, 21, 0.08)',
-  } as ViewStyle,
-  default: {},
-}) as ViewStyle;
-
-function tabSceneBackground(routeName: string, todayRoutineType: RoutineType) {
-  return routeName === 'today' && todayRoutineType === 'PM' ? colors.night : colors.paper;
-}
-
-const WEB_TAB_ITEM_FOCUS_RESET = Platform.select({
-  web: {
-    outlineStyle: 'none',
-  } as unknown as ViewStyle,
-  default: {},
-}) as ViewStyle;
-
-const WEB_TAB_ITEM_FOCUS_RING = Platform.select({
-  web: {
-    boxShadow: '0px 0px 0px 2px rgba(165, 105, 75, 0.24)',
-  } as ViewStyle,
-  default: {},
-}) as ViewStyle;
-
-function webKeyboardFocusIsVisible(): boolean {
-  if (Platform.OS !== 'web' || typeof document === 'undefined') return false;
-  return document.activeElement?.matches?.(':focus-visible') === true;
-}
-
-function IconPart({ style }: { style: StyleProp<ViewStyle> }) {
-  return <View style={style} />;
-}
-
-function TodayIcon({ color }: { color: string }) {
-  return (
-    <View style={styles.iconCanvas}>
-      {[0, 1, 2, 3].map((index) => (
-        <IconPart
-          key={index}
-          style={[
-            styles.gridDot,
-            {
-              backgroundColor: color,
-              left: index % 2 === 0 ? 4 : 13,
-              top: index < 2 ? 4 : 13,
+  if (Platform.OS === 'web') {
+    return (
+      <>
+        <BehaviouralTriggers />
+        <Tabs
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: colors.clay,
+            tabBarInactiveTintColor: colors.mutedStrong,
+            tabBarLabelStyle: {
+              fontFamily: 'HankenGrotesk-SemiBold',
+              fontSize: 13,
+              lineHeight: 18,
             },
-          ]}
-        />
-      ))}
-    </View>
-  );
-}
-
-function ProgressIcon({ color }: { color: string }) {
-  return (
-    <View style={styles.iconCanvas}>
-      <IconPart
-        style={[styles.progressBar, { backgroundColor: color, height: 8, left: 5, top: 10 }]}
-      />
-      <IconPart
-        style={[styles.progressBar, { backgroundColor: color, height: 15, left: 11, top: 3 }]}
-      />
-      <IconPart
-        style={[styles.progressBar, { backgroundColor: color, height: 11, left: 17, top: 7 }]}
-      />
-    </View>
-  );
-}
-
-function ShelfIcon({ color }: { color: string }) {
-  return (
-    <View style={styles.iconCanvas}>
-      <IconPart style={[styles.shelfLine, { backgroundColor: color, top: 6 }]} />
-      <IconPart style={[styles.shelfLine, { backgroundColor: color, top: 12 }]} />
-      <IconPart style={[styles.shelfLine, { backgroundColor: color, top: 18 }]} />
-      <IconPart style={[styles.shelfPost, { backgroundColor: color, left: 4 }]} />
-      <IconPart style={[styles.shelfPost, { backgroundColor: color, right: 4 }]} />
-    </View>
-  );
-}
-
-function YouIcon({ color }: { color: string }) {
-  return (
-    <View style={styles.iconCanvas}>
-      <IconPart style={[styles.userHead, { borderColor: color }]} />
-      <IconPart style={[styles.userShoulders, { borderColor: color }]} />
-    </View>
-  );
-}
-
-function TabBarIcon({ focused, name }: { focused: boolean; name: TabIconName }) {
-  const iconColor = focused ? colors.paperRaised : colors.mutedStrong;
-  const Icon =
-    name === 'today'
-      ? TodayIcon
-      : name === 'progress'
-        ? ProgressIcon
-        : name === 'shelf'
-          ? ShelfIcon
-          : YouIcon;
-
-  return (
-    <View style={styles.iconShell}>
-      <Icon color={iconColor} />
-    </View>
-  );
-}
-
-function useKeyboardVisible() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const showSub = Keyboard.addListener('keyboardDidShow', () => setVisible(true));
-    const hideSub = Keyboard.addListener('keyboardDidHide', () => setVisible(false));
-
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
-
-  return visible;
-}
-
-function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBarProps) {
-  const keyboardVisible = useKeyboardVisible();
-  const [focusRingRouteKey, setFocusRingRouteKey] = useState<string | null>(null);
-  const tabBarBottom = Math.max(insets.bottom, FLOATING_TAB_BAR_BOTTOM);
-  const { width: viewportWidth } = useWindowDimensions();
-  const tabBarWidth = Math.min(
-    viewportWidth - FLOATING_TAB_BAR_SIDE_MARGIN * 2,
-    FLOATING_TAB_BAR_MAX_WIDTH,
-  );
-  const tabBarHorizontalInset = Math.max(
-    FLOATING_TAB_BAR_SIDE_MARGIN,
-    (viewportWidth - tabBarWidth) / 2,
-  );
-  const compactProgressTabLabel = viewportWidth <= COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH;
-  const nativeLiquidGlassAvailable =
-    Platform.OS === 'ios' && isGlassEffectAPIAvailable() && isLiquidGlassAvailable();
-  if (keyboardVisible) {
-    return null;
+            tabBarItemStyle: { minHeight: 56 },
+            tabBarStyle: {
+              backgroundColor: colors.paperRaised,
+              borderTopColor: colors.hairlineStrong,
+              height: 84,
+              paddingBottom: 12,
+              paddingTop: 8,
+            },
+          }}
+        >
+          <Tabs.Screen name="today" options={{ title: 'Today', tabBarIcon: () => null }} />
+          <Tabs.Screen name="progress" options={{ title: 'Progress', tabBarIcon: () => null }} />
+          <Tabs.Screen name="shelf" options={{ title: 'Shelf', tabBarIcon: () => null }} />
+          <Tabs.Screen name="you" options={{ title: 'You', tabBarIcon: () => null }} />
+        </Tabs>
+      </>
+    );
   }
 
   return (
-    <View
-      accessibilityRole="tablist"
-      style={[
-        styles.floatingTabBar,
-        { bottom: tabBarBottom, left: tabBarHorizontalInset, right: tabBarHorizontalInset },
-        TAB_BAR_SHADOW,
-      ]}
-    >
-      <GlassView
-        colorScheme="light"
-        glassEffectStyle={nativeLiquidGlassAvailable ? 'regular' : 'none'}
-        isInteractive={nativeLiquidGlassAvailable}
-        style={[
-          styles.glassSurface,
-          nativeLiquidGlassAvailable ? styles.nativeGlassSurface : styles.fallbackGlassSurface,
-        ]}
-        tintColor="rgba(250,247,242,0.70)"
-      >
-        <View pointerEvents="none" style={styles.glassHighlight} />
-        {state.routes.map((route, index) => {
-          const focused = state.index === index;
-          const { options } = descriptors[route.key];
-          const label =
-            typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
-          const displayLabel = label ?? route.name;
-          const visibleLabel =
-            compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel;
-          const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
-          const labelColor = focused ? colors.paperRaised : colors.inkSoft;
-
-          const onPress = () => {
-            const event = navigation.emit({
-              canPreventDefault: true,
-              target: route.key,
-              type: 'tabPress',
-            });
-
-            if (!focused && !event.defaultPrevented) {
-              if (Platform.OS === 'ios') void Haptics.selectionAsync().catch(() => undefined);
-              navigation.navigate(route.name, route.params);
-            }
-          };
-
-          const onLongPress = () => {
-            navigation.emit({
-              target: route.key,
-              type: 'tabLongPress',
-            });
-          };
-
-          return (
-            <Pressable
-              key={route.key}
-              aria-selected={focused}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: focused }}
-              hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}
-              onBlur={() =>
-                setFocusRingRouteKey((currentKey) => (currentKey === route.key ? null : currentKey))
-              }
-              onFocus={() => setFocusRingRouteKey(webKeyboardFocusIsVisible() ? route.key : null)}
-              onLongPress={onLongPress}
-              onPress={onPress}
-              style={({ pressed }) => [
-                styles.tabItem,
-                WEB_TAB_ITEM_FOCUS_RESET,
-                focusRingRouteKey === route.key ? WEB_TAB_ITEM_FOCUS_RING : null,
-                pressed ? styles.tabItemPressed : null,
-              ]}
-              testID={`bottom-tab-${route.name}`}
-            >
-              <View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>
-                <View style={styles.tabItemContent}>
-                  <TabBarIcon focused={focused} name={iconName} />
-                  <Text
-                    ellipsizeMode="tail"
-                    adjustsFontSizeToFit
-                    maxFontSizeMultiplier={1.08}
-                    minimumFontScale={0.84}
-                    numberOfLines={1}
-                    style={[
-                      styles.tabLabel,
-                      focused ? styles.tabLabelActive : null,
-                      { color: labelColor },
-                    ]}
-                  >
-                    {visibleLabel}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-          );
-        })}
-      </GlassView>
-    </View>
-  );
-}
-
-export default function TabsLayout() {
-  const insets = useSafeAreaInsets();
-  const tabBarBottom = Math.max(insets.bottom, FLOATING_TAB_BAR_BOTTOM);
-  const tabSceneClearance = FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP;
-  const todayRoutineType = currentRoutineType();
-
-  useExpiryReoffer();
-  return (
     <>
-      {/* Evaluates the behavioural/promotional notification triggers on background. */}
       <BehaviouralTriggers />
-      <Tabs
-        tabBar={(props) => <FloatingTabBar {...props} />}
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          sceneStyle: [
-            styles.tabScene,
-            {
-              backgroundColor: tabSceneBackground(route.name, todayRoutineType),
-              paddingBottom: tabSceneClearance,
-            },
-          ],
-          tabBarActiveTintColor: colors.ink,
-          tabBarInactiveTintColor: colors.mutedStrong,
-          tabBarHideOnKeyboard: true,
-          tabBarShowLabel: false,
-        })}
+      <NativeTabs
+        disableTransparentOnScrollEdge
+        minimizeBehavior="onScrollDown"
+        tintColor={colors.clay}
       >
-        <Tabs.Screen
-          name="today"
-          options={{
-            title: 'Today',
-            tabBarAccessibilityLabel: 'Today tab',
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="today" />,
-          }}
-        />
-        <Tabs.Screen
-          name="progress"
-          options={{
-            title: 'Progress',
-            tabBarAccessibilityLabel: 'Progress tab',
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="progress" />,
-          }}
-        />
-        <Tabs.Screen
-          name="shelf"
-          options={{
-            title: 'Shelf',
-            tabBarAccessibilityLabel: 'Shelf tab',
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="shelf" />,
-          }}
-        />
-        <Tabs.Screen
-          name="you"
-          options={{
-            title: 'You',
-            tabBarAccessibilityLabel: 'You tab',
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="you" />,
-          }}
-        />
-      </Tabs>
+        <NativeTabs.Trigger name="today">
+          <NativeTabs.Trigger.Icon
+            sf={{ default: 'house', selected: 'house.fill' }}
+            md={{ default: 'home', selected: 'home' }}
+          />
+          <NativeTabs.Trigger.Label>Today</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+
+        <NativeTabs.Trigger name="progress">
+          <NativeTabs.Trigger.Icon
+            sf={{ default: 'chart.line.uptrend.xyaxis', selected: 'chart.line.uptrend.xyaxis' }}
+            md={{ default: 'trending_up', selected: 'trending_up' }}
+          />
+          <NativeTabs.Trigger.Label>Progress</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+
+        <NativeTabs.Trigger name="shelf">
+          <NativeTabs.Trigger.Icon
+            sf={{ default: 'square.grid.2x2', selected: 'square.grid.2x2.fill' }}
+            md={{ default: 'inventory_2', selected: 'inventory_2' }}
+          />
+          <NativeTabs.Trigger.Label>Shelf</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+
+        <NativeTabs.Trigger name="you">
+          <NativeTabs.Trigger.Icon
+            sf={{ default: 'person.crop.circle', selected: 'person.crop.circle.fill' }}
+            md={{ default: 'person', selected: 'person' }}
+          />
+          <NativeTabs.Trigger.Label>You</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+      </NativeTabs>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  gridDot: {
-    borderRadius: 2.5,
-    height: 5,
-    position: 'absolute',
-    width: 5,
-  },
-  iconCanvas: {
-    height: ICON_SIZE,
-    position: 'relative',
-    width: ICON_SIZE,
-  },
-  iconShell: {
-    alignItems: 'center',
-    height: 28,
-    justifyContent: 'center',
-    width: 42,
-  },
-  progressBar: {
-    borderRadius: 2,
-    bottom: 4,
-    position: 'absolute',
-    width: 3,
-  },
-  shelfLine: {
-    borderRadius: 1.5,
-    height: 2,
-    left: 4,
-    position: 'absolute',
-    width: 14,
-  },
-  shelfPost: {
-    borderRadius: 1,
-    height: 14,
-    position: 'absolute',
-    top: 5,
-    width: 2,
-  },
-  floatingTabBar: {
-    alignItems: 'center',
-    borderRadius: 33,
-    height: FLOATING_TAB_BAR_HEIGHT,
-    justifyContent: 'center',
-    overflow: 'visible',
-    position: 'absolute',
-    zIndex: 50,
-  },
-  fallbackGlassSurface: {
-    backgroundColor: 'rgba(255,255,255,0.88)',
-  },
-  glassHighlight: {
-    backgroundColor: 'rgba(255,255,255,0.28)',
-    borderRadius: 28,
-    height: 25,
-    left: 5,
-    position: 'absolute',
-    right: 5,
-    top: 4,
-  },
-  glassSurface: {
-    alignItems: 'center',
-    borderColor: 'rgba(255,255,255,0.72)',
-    borderRadius: 33,
-    borderWidth: StyleSheet.hairlineWidth,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    paddingBottom: 6,
-    paddingHorizontal: FLOATING_TAB_BAR_HORIZONTAL_PADDING,
-    paddingTop: 6,
-    width: '100%',
-  },
-  nativeGlassSurface: {
-    backgroundColor: 'rgba(250,247,242,0.18)',
-  },
-  tabLabel: {
-    flexShrink: 1,
-    fontFamily: 'HankenGrotesk-SemiBold',
-    fontSize: 12.5,
-    includeFontPadding: false,
-    letterSpacing: 0,
-    lineHeight: 17,
-    marginTop: 0,
-    minHeight: 19,
-    minWidth: 0,
-    overflow: 'visible',
-    paddingBottom: 1,
-    paddingTop: 1,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    width: '100%',
-  },
-  tabLabelActive: {
-    fontFamily: 'HankenGrotesk-Bold',
-  },
-  tabItem: {
-    alignItems: 'center',
-    borderColor: 'transparent',
-    borderRadius: 24,
-    borderWidth: StyleSheet.hairlineWidth,
-    flex: 1,
-    flexBasis: 0,
-    height: TAB_ITEM_HEIGHT,
-    justifyContent: 'center',
-    minHeight: MIN_TAB_TOUCH_TARGET,
-    minWidth: 0,
-    paddingBottom: 0,
-    paddingHorizontal: 1,
-    paddingTop: 0,
-  },
-  tabItemFrame: {
-    alignItems: 'center',
-    borderColor: 'transparent',
-    borderRadius: 25,
-    borderWidth: StyleSheet.hairlineWidth,
-    height: 50,
-    justifyContent: 'center',
-    width: '94%',
-  },
-  tabItemContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  tabItemActive: {
-    backgroundColor: 'rgba(32,27,21,0.94)',
-    borderColor: 'rgba(32,27,21,0.98)',
-    shadowColor: colors.ink,
-    shadowOffset: { height: 3, width: 0 },
-    shadowOpacity: 0.16,
-    shadowRadius: 8,
-  },
-  tabItemPressed: {
-    transform: [{ scale: 0.96 }],
-  },
-  tabScene: {
-    paddingBottom: FLOATING_TAB_BAR_CLEARANCE,
-  },
-  userHead: {
-    borderRadius: 5,
-    borderWidth: 2,
-    height: 9,
-    left: 6.5,
-    position: 'absolute',
-    top: 4,
-    width: 9,
-  },
-  userShoulders: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderWidth: 2,
-    borderBottomWidth: 0,
-    height: 7,
-    left: 4,
-    position: 'absolute',
-    top: 15,
-    width: 14,
-  },
-});

@@ -26,3 +26,5 @@ export type { SheetProps } from './Sheet';
 export { StripedThumb } from './StripedThumb';
 export { StateLoading, StateNotice } from './StateNotice';
 export type { StateNoticeProps } from './StateNotice';
+export { TodayFocusHeader } from './TodayFocusHeader';
+export type { TodayFocusHeaderProps } from './TodayFocusHeader';

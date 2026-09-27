@@ -569,6 +569,22 @@ function auditExpression() {
       const style = getComputedStyle(node);
       return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
+    const visibleBounds = (node, rect) => {
+      let left = Math.max(0, rect.left);
+      let right = Math.min(innerWidth, rect.right);
+      let top = Math.max(0, rect.top);
+      let bottom = Math.min(innerHeight, rect.bottom);
+      for (let ancestor = node.parentElement; ancestor; ancestor = ancestor.parentElement) {
+        const style = getComputedStyle(ancestor);
+        if (!/(auto|hidden|scroll|clip)/.test(style.overflow + style.overflowX + style.overflowY)) continue;
+        const bounds = ancestor.getBoundingClientRect();
+        left = Math.max(left, bounds.left);
+        right = Math.min(right, bounds.right);
+        top = Math.max(top, bounds.top);
+        bottom = Math.min(bottom, bounds.bottom);
+      }
+      return { bottom, left, right, top };
+    };
     const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,input,textarea,select'));
     const controls = [];
     const issues = [];
@@ -576,6 +592,8 @@ function auditExpression() {
     for (const node of nodes) {
       if (!visible(node)) continue;
       const rect = node.getBoundingClientRect();
+      const bounds = visibleBounds(node, rect);
+      if (bounds.right <= bounds.left || bounds.bottom <= bounds.top) continue;
       const label = normalize(
         node.getAttribute('aria-label') ||
           node.getAttribute('accessibilitylabel') ||
@@ -586,8 +604,8 @@ function auditExpression() {
       if (!label) continue;
       const disabled = Boolean(node.disabled) || node.getAttribute('aria-disabled') === 'true';
       const center = {
-        x: Math.max(0, Math.min(innerWidth - 1, rect.left + rect.width / 2)),
-        y: Math.max(0, Math.min(innerHeight - 1, rect.top + rect.height / 2)),
+        x: Math.max(0, Math.min(innerWidth - 1, bounds.left + (bounds.right - bounds.left) / 2)),
+        y: Math.max(0, Math.min(innerHeight - 1, bounds.top + (bounds.bottom - bounds.top) / 2)),
       };
       const hit = document.elementFromPoint(center.x, center.y);
       const hitOk = !hit || node === hit || node.contains(hit) || hit.contains(node);
@@ -597,12 +615,15 @@ function auditExpression() {
         hitOk,
         label,
         role: node.getAttribute('role') || node.tagName.toLowerCase(),
+        selected: node.getAttribute('aria-selected') === 'true',
         width: Number(rect.width.toFixed(2)),
         x: Number(rect.left.toFixed(2)),
         y: Number(rect.top.toFixed(2)),
       };
       controls.push(item);
-      if (rect.left < -1 || rect.right > innerWidth + 1 || rect.top < -1 || rect.bottom > innerHeight + 1) {
+      // Partial vertical controls are expected while a user scrolls a short
+      // viewport; horizontal clipping still indicates a responsive defect.
+      if (rect.left < -1 || rect.right > innerWidth + 1) {
         issues.push({ control: item, type: 'clippedVisibleControl' });
       }
       if ((rect.width < 44 || rect.height < 44) && !disabled) {
@@ -875,6 +896,7 @@ async function run() {
     await waitForPath(client, '/', 30_000);
     await waitForText(client, 'Begin', 30_000);
 
+    await scrollTextIntoView(client, 'Begin');
     await clickByText(client, 'Begin');
     await waitForText(client, 'First, your', 30_000);
     await captureStep(client, '02-age-empty');
@@ -896,9 +918,12 @@ async function run() {
     await waitForPath(client, '/onboarding/goals');
     await waitForText(client, 'What brings you here?');
     await captureStep(client, '05-goals');
+    await scrollTextIntoView(client, 'Clear skin', { exact: false });
     await clickByText(client, 'Clear skin', { exact: false });
+    await scrollTextIntoView(client, 'Barrier repair', { exact: false });
     await clickByText(client, 'Barrier repair', { exact: false });
     await captureStep(client, '06-goals-selected');
+    await scrollTextIntoView(client, 'Continue');
     await clickByText(client, 'Continue');
 
     await waitForPath(client, '/onboarding/quiz');

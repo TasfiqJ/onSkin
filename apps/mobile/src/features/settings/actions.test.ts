@@ -1673,6 +1673,7 @@ describe('settings account deletion and consent withdrawal', () => {
 
   it('keeps the Apple fallback completion surface explicit, scrollable, and accessible', () => {
     const source = readSource('app/index.tsx');
+    const button = readSource('components/ui/Button.tsx');
 
     expect(source).toContain('useState(peekAccountDeletionNotice)');
     expect(source).toContain('acknowledgeAccountDeletionNotice(accountDeletionNotice)');
@@ -1687,7 +1688,7 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('label="Open Apple instructions"');
     expect(source).toContain('Apple Support could not open. Use the iPhone Settings steps above.');
-    expect(source).toContain('min-h-[44px]');
+    expect(button).toContain("'min-h-[54px]");
     expect(source).not.toContain('useState(consumeAccountDeletionNotice)');
   });
 });

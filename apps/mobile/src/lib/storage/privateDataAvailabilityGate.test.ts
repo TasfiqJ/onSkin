@@ -54,7 +54,7 @@ describe('global private data availability gate', () => {
     expect(stateNotice).toContain("alert ? 'alert' : undefined");
     expect(gate).toContain('disabled={retrying}');
     expect(gate).toContain('className="mt-7"');
-    expect(button).toContain("'min-h-[56px]");
+    expect(button).toContain("'min-h-[54px]");
     expect(gate).toContain("title: 'Your private data could not open.'");
     expect(gate).not.toContain('E2E_PRIVATE_STORAGE_UNAVAILABLE}</');
   });

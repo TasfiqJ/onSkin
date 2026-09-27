@@ -13,9 +13,6 @@ function devProfileSaveFailureMode(): 'once' | null {
   return process.env.EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE === 'once' ? 'once' : null;
 }
 
-// 07a · Personalization theater. "Analyzing your skin profile…" (docs/01 §2/§8).
-// Uses a lightweight RN Animated pulse as a PLACEHOLDER for the recommended Rive
-// hero (BLOCKED: B-VERIFY-RIVE-LOTTIE). Persists the skin profile, then reveals.
 export default function AnalyzingScreen() {
   const { goals, persistSkinProfile, profileResult, quizAnswers } = useOnboarding();
   const quizCompletion = getQuizCompletionState(quizAnswers);
@@ -58,9 +55,6 @@ export default function AnalyzingScreen() {
 
     let revealTimer: ReturnType<typeof setTimeout> | null = null;
     let cancelled = false;
-
-    // Persist the local completion record before reveal. Without that durable
-    // signal, a cold start can force the user back through onboarding.
     const profileSave = profileResult
       ? Promise.resolve(profileResult)
       : profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
@@ -98,8 +92,8 @@ export default function AnalyzingScreen() {
     useNativeAnimationDriver,
   ]);
 
-  const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
-  const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });
+  const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.94, 1.08] });
+  const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.42, 0.82] });
 
   if (saveError) {
     return (
@@ -132,22 +126,34 @@ export default function AnalyzingScreen() {
 
   return (
     <Screen>
-      <View className="flex-1 items-center justify-center">
-        <Animated.View
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 60,
-            backgroundColor: colors.clayBright,
-            transform: [{ scale }],
-            opacity,
-          }}
-        />
-        <Text variant="title" className="mt-12 text-center">
-          Building your plan…
+      <View className="flex-1 items-center justify-center px-4">
+        <View className="h-[148px] w-[148px] items-center justify-center rounded-full bg-clay-tint">
+          <Animated.View
+            style={{
+              width: 104,
+              height: 104,
+              borderRadius: 52,
+              borderWidth: 1,
+              borderColor: 'rgba(165,105,75,0.28)',
+              backgroundColor: colors.paperRaised,
+              transform: [{ scale }],
+              opacity,
+            }}
+          />
+          <View
+            className="absolute h-7 w-7 rounded-[9px]"
+            style={{ backgroundColor: colors.clay }}
+          />
+        </View>
+        <Text variant="eyebrow" tone="clay" className="mt-10 text-center">
+          BUILDING YOUR PLAN
         </Text>
-        <Text variant="body" tone="muted" className="mt-2 text-center">
-          Reading your answers and shaping a routine around your skin.
+        <Text variant="title" className="mt-2 text-center">
+          Turning your answers into something useful.
+        </Text>
+        <Text variant="body" tone="muted" className="mt-3 max-w-[310px] text-center">
+          We&apos;re organizing your skin profile and the products you added into a simpler first
+          routine.
         </Text>
       </View>
     </Screen>

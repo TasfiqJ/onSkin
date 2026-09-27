@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, Screen, Text, TodayFocusHeader } from '@/components/ui';
 import { AskTeaser } from '@/features/ask/AskTeaser';
 import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
@@ -51,10 +51,6 @@ const ROUTINE_CARD_SHADOW =
         shadowRadius: 2,
         shadowOffset: { width: 0, height: 1 },
       };
-
-function streakLabel(days: number): string {
-  return `${days} ${days === 1 ? 'day' : 'days'}`;
-}
 
 function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
   if (!compact) return slotLabel(slot);
@@ -641,28 +637,14 @@ export default function TodayScreen() {
           contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
         >
           <ReverseTrialBanner compact={compactPhone} />
-          <View className="mt-1 flex-row items-start justify-between">
-            <Text variant="label" tone="muted" className="font-mono mt-1">
-              {dateLabel.toUpperCase()}
-            </Text>
-            {progress && progress.streak > 0 ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="View your streak and adherence"
-                onPress={() => router.push('/routine/streak')}
-                className="min-h-[48px] flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-4 py-2.5"
-              >
-                <View className="h-1.5 w-1.5 rounded-full bg-clay" />
-                <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
-                  {streakLabel(progress.streak)}
-                </Text>
-              </Pressable>
-            ) : null}
-          </View>
-
-          <Text variant="titleLg" className={compactPhone ? 'mt-3' : 'mt-4'}>
-            Good morning.
-          </Text>
+          <TodayFocusHeader
+            phase="AM"
+            dateLabel={dateLabel}
+            total={steps.length}
+            completed={doneCount}
+            hasRoutine={hasRealRoutine}
+            streakDays={progress?.streak ?? 0}
+          />
 
           {cadenceWithheldCount > 0 ? (
             <CadenceWithheldNotice
@@ -838,12 +820,15 @@ export default function TodayScreen() {
         contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
       >
         <ReverseTrialBanner compact={compactPhone} tone="night" />
-        <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
-          {dateLabel.toUpperCase()} · {clockLabel}
-        </Text>
-        <Text variant="titleLg" tone="inverse" className="mt-2">
-          Good evening.
-        </Text>
+        <TodayFocusHeader
+          phase="PM"
+          dateLabel={dateLabel}
+          clockLabel={clockLabel}
+          total={pmSteps.length}
+          completed={donePm}
+          hasRoutine={hasRealRoutine}
+          streakDays={progress?.streak ?? 0}
+        />
 
         {/* Recovery / pause banner. The scheduler's disruption state (docs/05 §7) */}
         {cycleData?.recovery.active ? (

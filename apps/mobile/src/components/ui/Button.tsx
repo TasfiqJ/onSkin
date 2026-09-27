@@ -5,15 +5,12 @@ import { haptics } from '@/theme/haptics';
 
 import { Text } from './Text';
 
-// Pill buttons (design spec). primary = ink (light screens), accent = clay (the
-// paywall CTA), inverse = paper (on dark "night" screens), and ghost variants
-// preserve secondary hierarchy on light and dark surfaces.
 type ButtonVariant = 'primary' | 'accent' | 'ghost' | 'inverse' | 'inverseGhost';
 
 const CONTAINER: Record<ButtonVariant, string> = {
   primary: 'bg-ink',
   accent: 'bg-clay',
-  inverse: 'bg-paper',
+  inverse: 'border border-hairline-strong bg-paper-raised',
   ghost: 'bg-transparent',
   inverseGhost: 'border border-cream/15 bg-cream/10',
 };
@@ -50,9 +47,12 @@ export function Button({
         haptics.select();
         onPress?.(e);
       }}
-      style={({ pressed }) => (pressed ? { opacity: 0.85 } : undefined)}
+      style={({ pressed }) => ({
+        opacity: pressed ? 0.92 : 1,
+        transform: [{ scale: pressed ? 0.985 : 1 }],
+      })}
       className={cn(
-        'min-h-[56px] items-center justify-center rounded-pill px-6 py-4',
+        'min-h-[54px] items-center justify-center rounded-pill px-6 py-3.5',
         CONTAINER[variant],
         fullWidth && 'w-full',
         disabled && 'opacity-40',
