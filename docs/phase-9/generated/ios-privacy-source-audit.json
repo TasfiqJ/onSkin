@@ -29,12 +29,12 @@
     "mapping": {
       "path": "docs/phase-9/ios-sdk-package-mapping.json",
       "bytes": 8350,
-      "sha256": "65966442f793977e3d0660b1d8c056f8b13070dd971e7dc015c64a26ce5dfb5e"
+      "sha256": "143027ba167123727af9cb7a5aae5798f8f0e06e70f7de8dec3c53648cf0a905"
     },
     "packageLock": {
       "path": "package-lock.json",
-      "bytes": 589539,
-      "sha256": "f9c22d2c8571443e0a7b7b908cb01e32e31fefa369f93a41e90971f8432312aa"
+      "bytes": 581806,
+      "sha256": "9e256b3aec6b27afdfddcb22d4c554f5946586100acc825fa3ca13b657f5476e"
     }
   },
   "summary": {
@@ -52,13 +52,13 @@
     "warningCount": 16
   },
   "ledgerHashes": {
-    "nativePackagesSha256": "f87e4ede03e685ebe63355e96033d89c1a6cbaaab23fb6ac888988067403e18d",
+    "nativePackagesSha256": "bb077b2e5b2d73bf3dc68de300d8d37a7bbbd244811c6d3b4db62732dbb5ac3a",
     "privacyManifestsSha256": "079a9873a342d30b93469e88304bff5063a6f77129df3f1bf758236c6729a01c",
-    "podspecsSha256": "1ca4114f974b231f5d2c5915d9a32f42521cfb32a2b65c43b5704064ff13c9e1",
-    "xcframeworksSha256": "a127fc04379d1fc25c7d85d6bc9acd99edf01f3117b3b6b245e93602c4ef4151",
+    "podspecsSha256": "8fa3457878d3ae031b1839c7ceea3edc68aacdec8187d5a7e73ec0fc733ec469",
+    "xcframeworksSha256": "57ff2df91b89eb911ebc2b405b56d663bb27530030dd76f9e9b0b0da6f76fcd8",
     "frameworksSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "nativeBinaryFilesSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-    "appleSdkIntersectionsSha256": "cbc4a72368eff0ee118100d671777ff668e32dda5e034f362a6d993385b6df8c"
+    "appleSdkIntersectionsSha256": "86a1640a26c1841177a4cf2ae6cdefd5245600438400843f4b1cb751891a3420"
   },
   "nativePackages": [
     {
@@ -126,10 +126,10 @@
     {
       "packageName": "@expo/log-box",
       "packagePath": "node_modules/@expo/log-box",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/@expo/log-box/-/log-box-57.0.2.tgz",
-      "integrity": "sha512-ZsFyfIR7YCbQAdVLzuTUmMHofZC7ZS9ywYCJNPlLc78x59cI8GwXFEIVbRjjC0uJERpNtXx/tsNNnkhexXlzMw==",
-      "packageJsonSha256": "53962a6bd0ed05896448f4cf7ead6488de794d76f725704747a14d551f9638fa",
+      "version": "57.0.4",
+      "resolved": "https://registry.npmjs.org/@expo/log-box/-/log-box-57.0.4.tgz",
+      "integrity": "sha512-IxwS9s1L2muj8mj8AQSuiy7u8OFJdc02NRFo2me/Tj6DiaeG5SREqmpBE4rQpR2cadqSg5jl8Qab8Cjie616dg==",
+      "packageJsonSha256": "689b2cb168a101752514eef15dde350523f93bae7c028ff04cdd2a8fc21a52ca",
       "rootSignals": [
         "ios",
         "podspec"
@@ -148,15 +148,15 @@
     {
       "packageName": "@expo/ui",
       "packagePath": "node_modules/@expo/ui",
-      "version": "57.0.10",
-      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.10.tgz",
-      "integrity": "sha512-cYVo6R6JmJgza2p1jyE1lGfNPWncHJGWRxhTyOi+pLRAAdiwo8Z2LcdaArewEXVUwJTQhczLRxeXGL0i99NUwQ==",
-      "packageJsonSha256": "0bdc387a8f231b49dc3778f2752b466b0eaa5763a9c641084f689acf047c3cf6",
+      "version": "57.0.20",
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.20.tgz",
+      "integrity": "sha512-0ChmuyWBwEy3JHMR5wDkJGyvkTR5zH3BTwjJrv3f2ymtamhpU9hD5uH4GsLoWuB6MJFOPTuchq4zByZbtgPyNw==",
+      "packageJsonSha256": "1cd9ca12a07d3e6dcd32ee39b33f3eec3d885a82ad7621d2e34cac369c0a22a1",
       "rootSignals": [
         "ios",
         "spm.config.json"
       ],
-      "scannedEntryCount": 1500,
+      "scannedEntryCount": 1586,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -381,15 +381,15 @@
     {
       "packageName": "expo",
       "packagePath": "node_modules/expo",
-      "version": "57.0.12",
-      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.12.tgz",
-      "integrity": "sha512-sVgXaMjh5uapBvBkik3QibxbKI2g1zNtNeHntjRfixWAI3tlQZbaK4ACdInY4+jUBVymkf8u9BXJUaSes9jdtA==",
-      "packageJsonSha256": "3dbc21e1aea8a6572ea9d1d9834ef27cc2fccd91b039181370753f80e1170a43",
+      "version": "57.0.25",
+      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.25.tgz",
+      "integrity": "sha512-oqtX4PekGgU+pBQfsbnbwxh5tKG58o27mN13wTmAhRPlQyK9SHICfCNHxBo+uQyT1BlI3OLhqTwu1qKmHYL5Ug==",
+      "packageJsonSha256": "0cf0374a9c4fa2ddd1a924d05268205c407a1ed787becf971deba9852e14a1a8",
       "rootSignals": [
         "ios",
         "podspec"
       ],
-      "scannedEntryCount": 479,
+      "scannedEntryCount": 486,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -403,10 +403,10 @@
     {
       "packageName": "expo-apple-authentication",
       "packagePath": "node_modules/expo-apple-authentication",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-apple-authentication/-/expo-apple-authentication-57.0.1.tgz",
-      "integrity": "sha512-pqAIaiTa/ycNl+XqNg5UMVT5TBgl6q6djTtoIcUmDItjVBA1IDHsQEs+leo+8+fG5hhuempZLSqBVVn+RJKKWA==",
-      "packageJsonSha256": "d37dfe09819cbd1a063a7972391e84d9600a023b56d71ba9ac3e97245620e920",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-apple-authentication/-/expo-apple-authentication-57.0.2.tgz",
+      "integrity": "sha512-00KnlyRceRKski+ljZz8q8JhJZ4D3ZScU+Y0RqS6ElJ8GaCWfd7Qh5tMr47yIU/dKDrOnkzkFUM+6vyHS5HI7Q==",
+      "packageJsonSha256": "b5fa503ebfa4512d1e325431a1d7e008339cb75b97db35e9bf2f7e41a1fd9a06",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -425,10 +425,10 @@
     {
       "packageName": "expo-application",
       "packagePath": "node_modules/expo-application",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-application/-/expo-application-57.0.2.tgz",
-      "integrity": "sha512-q31YwcXyymviAmdrtDfAg3Dld4VMxLCNAfgMHip7vZpPX4lzF/AfwsywqBJUAjQnJknzaNAkzqvMVjO5XmKYDA==",
-      "packageJsonSha256": "78e430709607a972f834f4a2b54ea3f54ebcebc0857b966052d50722441cecbf",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-application/-/expo-application-57.0.3.tgz",
+      "integrity": "sha512-t/CxeLio0NjY9/cOak1tQp62/hAUjzJxmhR4rVUR7K5bb9YoEtfl1ZekTn+Iuh+dYOMYzF0l72ODMSmY3CR1NA==",
+      "packageJsonSha256": "42a9ae6cde4c85860bd10ec69cea4aa1e74e67c7ea41b6605cc59de580ca51ba",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -449,10 +449,10 @@
     {
       "packageName": "expo-asset",
       "packagePath": "node_modules/expo-asset",
-      "version": "57.0.10",
-      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.10.tgz",
-      "integrity": "sha512-32QpNkWlb8ftxq3ClAriwFXcZlpzuP7Qx4z3Gc9vhbAm1QZzGsCN+PwYt3fN8W46HBw5qaI6DSXcAyBlYzeVqA==",
-      "packageJsonSha256": "eece57aedc0ec53868383544fafd633686012bf9e5ddb50b559fa04877ab86f7",
+      "version": "57.0.18",
+      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.18.tgz",
+      "integrity": "sha512-zDIQkUr0NM2S7YRj98Zohf/OBuM1q0o4ctxLz1C1oe4/33lHNLjp+2v3qUtBWVwn0zKka8UGADmS8M+83Wi6pw==",
+      "packageJsonSha256": "39a3accfa83784f2c13b8bb69c28ab8d6feb1f0296c72f073c73f9bdc31b70aa",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -471,10 +471,10 @@
     {
       "packageName": "expo-camera",
       "packagePath": "node_modules/expo-camera",
-      "version": "57.0.3",
-      "resolved": "https://registry.npmjs.org/expo-camera/-/expo-camera-57.0.3.tgz",
-      "integrity": "sha512-Q+3aZ63eQCkdB6/FZrO/lfacNAg/j8JCeKQL2nBdf6vBeOo1Y2PKYx1/vK+U5LaRnIo/0tMGmCOzZ1JGhTeMIw==",
-      "packageJsonSha256": "ccf1660b0274f52df878db73b9496fe702707602e951f5a5d998bffed3cb14aa",
+      "version": "57.0.5",
+      "resolved": "https://registry.npmjs.org/expo-camera/-/expo-camera-57.0.5.tgz",
+      "integrity": "sha512-0JaUXfDWMytmqm4pVKesZfLTSjAumfS2UGhnc1M4tqJ0qATCS0jxc7KjaoyKEzWJY+FEc8GlPCAGprS/7tNWZQ==",
+      "packageJsonSha256": "6118bbab84496e8a096a210bb1d5674b1abf0a2df179593f3848f0eb9b363bc5",
       "rootSignals": [
         "ios",
         "prebuilds",
@@ -498,10 +498,10 @@
     {
       "packageName": "expo-constants",
       "packagePath": "node_modules/expo-constants",
-      "version": "57.0.10",
-      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.10.tgz",
-      "integrity": "sha512-GCDXYEsloBfouMdT3BzoGhAkcLnYxEFNLQoSbNKIvIrD9FY5MmSeWuvRSveJdOiuydwQY2iH6hy020vTaQflCQ==",
-      "packageJsonSha256": "7ee4fad972c4f2113d62467518c7d9a1e08f0f22194d2285631c11f5239fd74e",
+      "version": "57.0.19",
+      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.19.tgz",
+      "integrity": "sha512-3eK1kZRwCdMizQLlM/PPlPwjaPnB5qKvdRDMBMnB1ZxmvWJBf9TB4uEO4DMMfIPaFUxYFs29dsR5fPr1gh3FTQ==",
+      "packageJsonSha256": "a31ced7de220b684cc976715bde82a0beac0eb4a162775f20c61abfbab1c4590",
       "rootSignals": [
         "ios"
       ],
@@ -521,10 +521,10 @@
     {
       "packageName": "expo-crypto",
       "packagePath": "node_modules/expo-crypto",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-57.0.1.tgz",
-      "integrity": "sha512-xwegXQw3ATgeL1ZuqbSNrGzOeG+zNeh6Z6DSJk825Qpa3TEQQ1kG3ioE1p3g/SNF373BAVz2iBKUTSytlIbBRA==",
-      "packageJsonSha256": "4fd82733fcaea535143ce3852fd3f838ff61e868d7e7f271fcaa6e7cd9738867",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-57.0.3.tgz",
+      "integrity": "sha512-SAWqEfF37nc8ot7bXsVmu9AFYwQdC2kGvH/eNAHiR3bmlcf1Vv8wu9AnGKT+a90r3T8YfwMpZP4QAYlo4vCn9w==",
+      "packageJsonSha256": "22468c899166220c9d2974cace8d31d55b3fd3ea8d042df8bd9dd2aaea07c101",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -543,10 +543,10 @@
     {
       "packageName": "expo-dev-client",
       "packagePath": "node_modules/expo-dev-client",
-      "version": "57.0.11",
-      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-57.0.11.tgz",
-      "integrity": "sha512-IHatS97Vl0eQT8IG1Tsc10qDoyItxwjOw9AXLAbub+3uU7KljcqnXiCWRlhsI5KTjWV9/Dboc8psgiRb7oXXQw==",
-      "packageJsonSha256": "63d3fc4e34ef5312711baa3a0b3f99d58ec4b170548a1fd585a3fd6976a0a6a6",
+      "version": "57.0.19",
+      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-57.0.19.tgz",
+      "integrity": "sha512-7giMK6BLL685GECHem2UAQvS473ImZLi5l+Q5tq+XSyv6I9UNVPs0p07mKwgBzq8z7DR3d4nTl702ziFxTjO3Q==",
+      "packageJsonSha256": "f6debddd96fb17648b100540955ea06116af68bd00373d8786c901ee30264037",
       "rootSignals": [
         "ios"
       ],
@@ -564,10 +564,10 @@
     {
       "packageName": "expo-dev-launcher",
       "packagePath": "node_modules/expo-dev-launcher",
-      "version": "57.0.11",
-      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-57.0.11.tgz",
-      "integrity": "sha512-PpYoSmtMkvLYG9xVVHv8ZDMMsHR0D5ax9lFTgy+e6WT98NLUTwTexlObOkjCB80cfiGaKfmOZEKyXRiec3Lgag==",
-      "packageJsonSha256": "4b234cec94274d5f7dce7e899521c9563edcc8f1da8e272639aa3ede4ee5365e",
+      "version": "57.0.20",
+      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-57.0.20.tgz",
+      "integrity": "sha512-F6oAHaDn9j3L/gyMGE+OalriX6PHZWnZLxpN5jc6crTrp8f6hSwGhmsHpAvdOzijfMjyi3R2UkcISFsCIIQYFA==",
+      "packageJsonSha256": "60832cef15b3bc9eb122f20c9ca8566109459dbdecddda9bd8a55b06feb7cf0f",
       "rootSignals": [
         "ios",
         "podspec"
@@ -586,10 +586,10 @@
     {
       "packageName": "expo-dev-menu",
       "packagePath": "node_modules/expo-dev-menu",
-      "version": "57.0.11",
-      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-57.0.11.tgz",
-      "integrity": "sha512-XY+rT7JALQAMBVYLLGfTwZ/E9igLDtUnyCPox1xxWaH6n7T3LJyxVb5unoORYhF4HzHQoxxeeHd6hg5P4AfyrQ==",
-      "packageJsonSha256": "aeb25439d4d3102a4c86ae9cc368003effc8b3888af89d17dab80a794f68fe18",
+      "version": "57.0.18",
+      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-57.0.18.tgz",
+      "integrity": "sha512-H7m9ENtVYz4FpJktQj+z/njIN1t7kOEaKCv8Qgv2SdAlyFTW8s2EnufxPoSlg2zUTanaauJ6wrR6XESHwW7kpw==",
+      "packageJsonSha256": "3003a2a3d2da0401da740ea647a2bcdc7142256a96a898158e307d93c6b98253",
       "rootSignals": [
         "ios",
         "podspec"
@@ -629,10 +629,10 @@
     {
       "packageName": "expo-device",
       "packagePath": "node_modules/expo-device",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-device/-/expo-device-57.0.1.tgz",
-      "integrity": "sha512-jyEMDUticH+dhcL3GHa2aiifOvGXJsmb3oVT2R2q4i8bN7Bddy61+NkpMmuS2VAZrvoLQwf0TJJ/1vi1ukvutA==",
-      "packageJsonSha256": "ba70631d6d0bac24e987855585634b9ec0472fc599d1bfffcffd1e1be3bc4ae0",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-device/-/expo-device-57.0.2.tgz",
+      "integrity": "sha512-1A0/FICR3CgrH43FeiDQP3l5eHDmiMoh4EjXfhfoHHkMgdBQdyD0kwDWskiGZlQ3E0Nd0LHkCFH6vJ1ofm/jow==",
+      "packageJsonSha256": "0b3b20fe2e7db65c79c15cc17fad3626aac96c14924b2ef62abb4e1a365d7bbf",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -653,16 +653,16 @@
     {
       "packageName": "expo-file-system",
       "packagePath": "node_modules/expo-file-system",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-file-system/-/expo-file-system-57.0.2.tgz",
-      "integrity": "sha512-bPgzpaOJ3NWHZxV++Osj/1QoFzFe/QOo1jBF4EODJdiZgrrxyi2dv+7PLhKuut5QqPBuihUOITRh3s5jhRtA5A==",
-      "packageJsonSha256": "4c1138a0e65655f23243413798a1693a60df0c17b3b76577273ef2ad10aba10d",
+      "version": "57.0.7",
+      "resolved": "https://registry.npmjs.org/expo-file-system/-/expo-file-system-57.0.7.tgz",
+      "integrity": "sha512-1vkZRadOsIputFDBcclqBa1pO3iXOO6iIsdqJipQWw4V5TSnWgmRTuOF7ro8IzrVue+PHbum++KCG3Tawem4cg==",
+      "packageJsonSha256": "db1d8ced7ce04e7daf4e55c3fd543bfbe42e32aa5e192bbb8ae4bda98de50069",
       "rootSignals": [
         "ios",
         "prebuilds",
         "spm.config.json"
       ],
-      "scannedEntryCount": 255,
+      "scannedEntryCount": 256,
       "privacyManifestPaths": [
         "node_modules/expo-file-system/ios/PrivacyInfo.xcprivacy"
       ],
@@ -678,10 +678,10 @@
     {
       "packageName": "expo-font",
       "packagePath": "node_modules/expo-font",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-57.0.1.tgz",
-      "integrity": "sha512-QyS9L1Kh9sKJg4gfU6rdbpxpmH+DyzBX8z6jVvXMUDoqLr1GqmkO/Wu379KCXjL///kWbhpNlbi7AgBuj4VdIQ==",
-      "packageJsonSha256": "9b8a60c69ccc8336af9713fc30be93cca84f758f1f35658590920ea150a7bb6f",
+      "version": "57.0.4",
+      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-57.0.4.tgz",
+      "integrity": "sha512-7WOMC2oA6xCfOm8bbofqWn2bIqyWFm7YLEnpc/gA1MJH0Ll0TfT/3+CqRkoW2eNRWMS8sxrz5WukUmSvmNquHA==",
+      "packageJsonSha256": "ad2dd07d792d6a6f3fd0f374e459356c2fbcc749645175743ab32bb4be56c5f7",
       "rootSignals": [
         "ios",
         "prebuilds",
@@ -701,10 +701,10 @@
     {
       "packageName": "expo-glass-effect",
       "packagePath": "node_modules/expo-glass-effect",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-57.0.1.tgz",
-      "integrity": "sha512-m/n8maxqNcHk6ZDhuqXBfD5Kt1Iz3M8xykVgdB0iSCIXvF70IqWXmQhX8Psswhrp8eZ+3r0mAD0Jh/2gFA3QaA==",
-      "packageJsonSha256": "cd7336a7975a35f274fdfecb27df47c1d4d501824e18bfd7d7e959acb78c620b",
+      "version": "57.0.4",
+      "resolved": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-57.0.4.tgz",
+      "integrity": "sha512-/AG2Kljbqfgxu+GchI2YFIbxiF9cPsIpCy4iNDzlRiZk9rvR6BwRfB6gfQVu3V2ExaoGf2h5IsEnqVI5MYNBAg==",
+      "packageJsonSha256": "c46c81fb7a89465298faf465f7f27ec2ff15270e8b9ae141b274a4fb8d725cca",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -723,10 +723,10 @@
     {
       "packageName": "expo-haptics",
       "packagePath": "node_modules/expo-haptics",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-haptics/-/expo-haptics-57.0.1.tgz",
-      "integrity": "sha512-8VhbnxlIrfXjP0syZr1JT197nafYicQu9119adOJnX62osU9Cw+PdDnAx/6LxuKJRzQdwxOMq7b7eWjhNL5zAQ==",
-      "packageJsonSha256": "c9a31b9ce71d7cdfb1674cb55908a37e14da1c4bf5382efba6e9813b22579423",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-haptics/-/expo-haptics-57.0.3.tgz",
+      "integrity": "sha512-qucUXtwtJdtECKSQK5D6TQBc/0SxKj7s5wQ4mrfSxhZsHrS9a4rcxINl/gbruMaY9spTXStco32ST4pV0vXmxw==",
+      "packageJsonSha256": "25df027b20e1889c5d7e8f4d261dead35d45cecf3c8a22e9da2df4aa2f7f336c",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -745,16 +745,16 @@
     {
       "packageName": "expo-image",
       "packagePath": "node_modules/expo-image",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-57.0.2.tgz",
-      "integrity": "sha512-SAHDJiQ/Sf8JJ6NJ5/RbSewo8HtQtIGn4bDEgcvipwIw5lPURP0vXPzIOIrZ/ZroZ0abPgwTaWmkspoEO8Sxcw==",
-      "packageJsonSha256": "6e0f1a34c434565b85672b1294e5ad3f01fa36b7bc704fbb1c2f52a312a94754",
+      "version": "57.0.5",
+      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-57.0.5.tgz",
+      "integrity": "sha512-jOm5lofaIKXhQ7i0Hz3I5JuNULw/aghmpIPZXddwQcEtw8+wUhlozq3M7LbsOrcsBEapcG4jFs85DsfuFoz1tQ==",
+      "packageJsonSha256": "49a7b898a180ab27ef94ebd9510db681c09a7a40f6cb9830632c8e9749038bdc",
       "rootSignals": [
         "ios",
         "prebuilds",
         "spm.config.json"
       ],
-      "scannedEntryCount": 875,
+      "scannedEntryCount": 876,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -779,10 +779,10 @@
     {
       "packageName": "expo-image-manipulator",
       "packagePath": "node_modules/expo-image-manipulator",
-      "version": "57.0.9",
-      "resolved": "https://registry.npmjs.org/expo-image-manipulator/-/expo-image-manipulator-57.0.9.tgz",
-      "integrity": "sha512-G/h0W9LM5Ju505rj2sQO7TdUi1Jz44ht0se66NB9VyZaSqAv+k3pP6eOAFNabf/LA8bAWO5c8p5Fpm1+CD49zg==",
-      "packageJsonSha256": "323b41535314fab27e26ae5cde96f3d5328319855cd82195d9e27249e500f6c6",
+      "version": "57.0.20",
+      "resolved": "https://registry.npmjs.org/expo-image-manipulator/-/expo-image-manipulator-57.0.20.tgz",
+      "integrity": "sha512-LyuoLOJVNWNVEOABqcNCHrAiTtaRQm3usJMK4veG1hnglmt85eSuQTgUaug2TdUyAwGDJbdee4Iif+toTQwNgA==",
+      "packageJsonSha256": "4c90a6c4044b440fac99327ab529539c8ac94bd1e20c61173e9f28883a904eeb",
       "rootSignals": [
         "ios",
         "prebuilds",
@@ -807,10 +807,10 @@
     {
       "packageName": "expo-json-utils",
       "packagePath": "node_modules/expo-json-utils",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-57.0.1.tgz",
-      "integrity": "sha512-cgTe1NqzQdYs/WN+3nIY5IZg8s0pb0xaTUbhYvxQDn137GbwRfHoGM2se3m3Vsl4Qu+B9G4RPEK5WJDEU2Do7g==",
-      "packageJsonSha256": "f0ec17e3e2dec2893de0cc212a07cd919564061803addfc4bcc59ffccd8e105e",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-57.0.2.tgz",
+      "integrity": "sha512-9kYZECLKE3pYZQs+kt3+ggY83Lfryog9/UEo3HJKGcHUZeKKtlFBIPFjI4LzREubsvjP7AsvG0FdEX9EquIoAQ==",
+      "packageJsonSha256": "b3db007eee0511e71fcf81055f9ecc26b28c3b62517414ee530948f0a2ea2231",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -829,10 +829,10 @@
     {
       "packageName": "expo-keep-awake",
       "packagePath": "node_modules/expo-keep-awake",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-57.0.1.tgz",
-      "integrity": "sha512-28lkFImeXTS+bhAjuCFV7w7tW5bXg27BJVrxv+nC/nyYa86qEa0oFeHwqol6ha5k4pdVDQgBF09GM4A1k76Ssg==",
-      "packageJsonSha256": "2c5326de18e192ef94634073372581908f88ce47dc50af5ac1a5793e45383318",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-57.0.2.tgz",
+      "integrity": "sha512-GqgH746wtJImmsbyHmCQoi7cOslKuWQBbJHXr53S35Bpf5UvxCAztvnitUEd7D0QvFN2rvkOhylbZpgZZfBLlQ==",
+      "packageJsonSha256": "4d5745b10c29e278ec976ca711c0a4fa9c07db0b3fe97108b765c1e72f840cf5",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -851,10 +851,10 @@
     {
       "packageName": "expo-linking",
       "packagePath": "node_modules/expo-linking",
-      "version": "57.0.5",
-      "resolved": "https://registry.npmjs.org/expo-linking/-/expo-linking-57.0.5.tgz",
-      "integrity": "sha512-SmJI3wr0EVfeKPGf+Qgr9gUbrXk8mM0ATqYLvAX/EAzawDjohPzMJ5pTt7TYMX0Wknj4XCtyCQrGhnERMXT6cQ==",
-      "packageJsonSha256": "0e76c958b587a051987f6482d1b52213d58af267fcbcee36d30db838e5cb7386",
+      "version": "57.0.11",
+      "resolved": "https://registry.npmjs.org/expo-linking/-/expo-linking-57.0.11.tgz",
+      "integrity": "sha512-bfTyiPb8szacs8XkGowXt5ssH/vbF26vFG8WUWQar8CcRpQcIzXY980ZkP7pK7Pcdy5MattwFdujrWOxwv5s3Q==",
+      "packageJsonSha256": "8f881baa1484ba69a5f958482a61a96fdc00e2833b49d143878fc9ffb12ac30f",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -873,10 +873,10 @@
     {
       "packageName": "expo-local-authentication",
       "packagePath": "node_modules/expo-local-authentication",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-local-authentication/-/expo-local-authentication-57.0.2.tgz",
-      "integrity": "sha512-8K4zcrQ5wZkRS1rwEWY8qHbeGVMNh35e9D1VTVKlMHz1O47itW+pW6iBVuqwGFLozN4fRBeEDQH8hu9Gt58YuQ==",
-      "packageJsonSha256": "672662b4909b93bbf9b882030eb1b7729321263fcefb63a35eba8bd9d1ad9029",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-local-authentication/-/expo-local-authentication-57.0.3.tgz",
+      "integrity": "sha512-1oQCBKz8JOpai+Zp+Z2RkBFIi2CHHWLSJk/pjvT9VEyf8nPFslo4kt1ZlQvtJ4rupbKNCmxqKfYr8Mlo8nJEug==",
+      "packageJsonSha256": "de48e2fe20b68b2c928f50af236696da9df49a2b58cda4f436309dfbf0fa3f59",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -895,10 +895,10 @@
     {
       "packageName": "expo-localization",
       "packagePath": "node_modules/expo-localization",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-localization/-/expo-localization-57.0.1.tgz",
-      "integrity": "sha512-8Ffl4UTbOsQeGT0v5fxMbyPHyPMPnhSPDFQJa8p9rjJrthFoAtNi+fL6Ssmrvf1/7dmPq1mVY52MEt0TMEfgjA==",
-      "packageJsonSha256": "d3938b4978917e4b9828ce6e3593a241c384d30c9741aec0332b1d37c0ec97cb",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-localization/-/expo-localization-57.0.2.tgz",
+      "integrity": "sha512-sIKYH3Ivddoge568WY6j+Kp2MAAZzWWqEnY2bokLkJFwX366tGL1mEnoY2WUi/qHatFFPop2yqDdurzbhnnimQ==",
+      "packageJsonSha256": "329ab906cfedfd0abdf4797789ca64e2487f357599adbef0a4faf199220e5c47",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -919,10 +919,10 @@
     {
       "packageName": "expo-manifests",
       "packagePath": "node_modules/expo-manifests",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-manifests/-/expo-manifests-57.0.1.tgz",
-      "integrity": "sha512-qB/mDG2dYdl+EvUeQuqP8KFYCFgFCQjJYdWIHo8SFBgDzMYmdF286DFY2M1M9Okr99wkb5M4tgA3aCcwv3aEQA==",
-      "packageJsonSha256": "aa362893e57bc4d539c39d65f337d02caa1913a68929f45020ee84ac763b8a87",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-manifests/-/expo-manifests-57.0.2.tgz",
+      "integrity": "sha512-pPIIcKR73OShwlWMg8H90WRzKUd2krDdKlKAwuQV1FtUwE7H3hQEFw0ePFQY9yFoGMF/77ryYwNKfI5umMcCog==",
+      "packageJsonSha256": "57777009fd93bad4ac36c5d61b217d01a1c943c6e0944c0c69898b65532b53e9",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -941,17 +941,17 @@
     {
       "packageName": "expo-modules-core",
       "packagePath": "node_modules/expo-modules-core",
-      "version": "57.0.10",
-      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.10.tgz",
-      "integrity": "sha512-aRi3G8OctoyZl8x9CLTVpbPljClfKm2eqKRgBzhcGsrH3gS1t5Y2ye7+PIZK4XK2VVP5iGqygN2b1vtqRo3xVQ==",
-      "packageJsonSha256": "78d1035ed981016ba8d08553e8a71d9f42b10ab6bb0accef92aba85e6595a50a",
+      "version": "57.0.19",
+      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.19.tgz",
+      "integrity": "sha512-eAJwa5u30r4BTT8cFAcrY3809qG1cPszmEci7//+RjWGA1OMXtwirhVY1H+YtCJPyVGs9MuwrIjqQDMReguG2g==",
+      "packageJsonSha256": "6ce323bdd38e6e0c5c8ad6a35aa52f869c86fa27e88fb140e3652c56cf5e0951",
       "rootSignals": [
         "ios",
         "podspec",
         "prebuilds",
         "spm.config.json"
       ],
-      "scannedEntryCount": 1084,
+      "scannedEntryCount": 1093,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -967,15 +967,15 @@
     {
       "packageName": "expo-modules-jsi",
       "packagePath": "node_modules/expo-modules-jsi",
-      "version": "57.0.4",
-      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.0.4.tgz",
-      "integrity": "sha512-vt7FyqUqqFXiRVnBqYD7y+GSPTgeua5Ocoy0+SYt+RSHkZEA2Fyop7If3g1TYDzQObYybPRo7TG2Rle1XLaWFw==",
-      "packageJsonSha256": "0933de9ac495b7d11507ea8b5dd3dcab7354ceaf2daddb1772a9aba91018e17f",
+      "version": "57.1.1",
+      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.1.1.tgz",
+      "integrity": "sha512-ssnwz3ZuIgCbZj5A3J6NlhQrXZojg+BjkeWrOWqVJhyMHlV/A/cRT7s986chKku97BFt6ucmDu6/BCzrV45Wcw==",
+      "packageJsonSha256": "8f3ec5ac6a948250d2f80e6056a2d3d85072430fb9a276f228d73989d935bf25",
       "rootSignals": [
         "apple",
         "spm.config.json"
       ],
-      "scannedEntryCount": 107,
+      "scannedEntryCount": 121,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -989,10 +989,10 @@
     {
       "packageName": "expo-network",
       "packagePath": "node_modules/expo-network",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-network/-/expo-network-57.0.1.tgz",
-      "integrity": "sha512-ndg+FbDDlz6XTpQ6aVuVgyvrYQwMkpcUAvZIXbwrGBbLTSWNzYC/gawYu1BAeDN7O6JTGY98GBVJBov/JH7LgQ==",
-      "packageJsonSha256": "42e56762bddb13d9a0d7c3b3c24d4c06c95c6ee00e4f8f0262e0ac149b29ddd3",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-network/-/expo-network-57.0.2.tgz",
+      "integrity": "sha512-BfK1kdftZcM6o9o1FAG7/y0l6vWX0n8td0M5lwkvaMeRXZ9LkRwOi9CQXwvsMTQGQiPwtQXgwiAze13cqjt75g==",
+      "packageJsonSha256": "5e162f03c47f3ad359b6cdee6d97708d935e4013452649a90559ed4870be9b74",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1011,10 +1011,10 @@
     {
       "packageName": "expo-notifications",
       "packagePath": "node_modules/expo-notifications",
-      "version": "57.0.10",
-      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.10.tgz",
-      "integrity": "sha512-Zrwwd2eGzSuk3LyD01P5QzhiE/oXNNWaUq/NLQnPoeo63Ek2R6sWA00b0o0rl47uIqdmMtuQUfWbXgJJyc3Uag==",
-      "packageJsonSha256": "d9330dacb4c8fed20167c2c96757d1124783d3dc5cb51af0e3598618f2657a6e",
+      "version": "57.0.21",
+      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.21.tgz",
+      "integrity": "sha512-CWBW6DxqRJ2MaYZW5+/WfEWwIwbiVk5UAPqx0kE676B4R1+PlAXARk/kuNeQBcVrcDNV6i9ihE9B0db8Cd2RXQ==",
+      "packageJsonSha256": "8255a343c7d22081f0fda0d07fe1dd6f6669482587a977b9101d801283517104",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1035,14 +1035,14 @@
     {
       "packageName": "expo-router",
       "packagePath": "node_modules/expo-router",
-      "version": "57.0.12",
-      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.12.tgz",
-      "integrity": "sha512-vA+RUSzMwHmWa/pQpoYqJoTbhIQaX/OzvMvOlWVBeMflF1RC40zCzqLiXMKimWfEUh/G6ITnz31EtpNKUghxQw==",
-      "packageJsonSha256": "4c805dfbd7920d1df1b0878d1f2b693b4dff5846a3430890a07763bc2e0481b0",
+      "version": "57.0.23",
+      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.23.tgz",
+      "integrity": "sha512-u/iWSdQovEma/owymgz8etxGAif5ZrC8YdXYeGQhDRZwXpAvraordYV0SWej1QWWbYoIkgXcoqHVkgsAff8P4w==",
+      "packageJsonSha256": "8fe63ce849fe9e13fd5bdbabec19f6d51a12276579a7a113c4aed1d006957c1e",
       "rootSignals": [
         "ios"
       ],
-      "scannedEntryCount": 2560,
+      "scannedEntryCount": 2570,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -1056,10 +1056,10 @@
     {
       "packageName": "expo-secure-store",
       "packagePath": "node_modules/expo-secure-store",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-57.0.1.tgz",
-      "integrity": "sha512-tLa1VmSadOq19mA/dwkl99RbHyjLE0T1qqBYMY3/OsguZTI+rlrDy/DDJjupqlVtmr95hD7o1pYqx5aL+B4YMA==",
-      "packageJsonSha256": "b0e229328f8389175825cd43dfdfe2aae482d9dce6dbca6bee480fdcdb7b81ec",
+      "version": "57.0.4",
+      "resolved": "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-57.0.4.tgz",
+      "integrity": "sha512-7zBA1RThURTXdP4w65kBzZNbcSsfArqVd+p+ETAnPRWXO8J296Qd0YaCVyRpJ0HSwlCnGdvOnqO+NgSreHsOhA==",
+      "packageJsonSha256": "de06e2429d623c0bc0120dedee1ce3285a9852a48cf3f70aa8ca6b47b1370a4b",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1078,10 +1078,10 @@
     {
       "packageName": "expo-sharing",
       "packagePath": "node_modules/expo-sharing",
-      "version": "57.0.11",
-      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.11.tgz",
-      "integrity": "sha512-Ukp6w/5bMnYkBAfNhINX6BgrcIoTZWArzUXiJZzvA22/hIPAGuQeSJLqrgeXHA0/2JP1A3PHH0Sls9OK7d4ecw==",
-      "packageJsonSha256": "97fd5e2961a1c92613198f149078a1311a6c8c643ad7691e41b8976cb935a294",
+      "version": "57.0.22",
+      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.22.tgz",
+      "integrity": "sha512-IWmiz0Dnjd7ifsZ2Gg5XODxb6DQoJ4/H6FofW9bTL9gDjfX2+va8SV1BYVkFvJ8vKQoKR4HgkMCKDCZlrrbKkg==",
+      "packageJsonSha256": "64f84d0b7208c437e9e1052c1af9b91fc3b604124770cf4825c299ae248bcc3d",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1100,10 +1100,10 @@
     {
       "packageName": "expo-splash-screen",
       "packagePath": "node_modules/expo-splash-screen",
-      "version": "57.0.6",
-      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-57.0.6.tgz",
-      "integrity": "sha512-FY0E7hMyXVAsNh18yGzIjdooPXdjafalEb6mk2EcqNPjXspHuu+pVEhUscEunw4wF8F/w6MOpT7UfOwHVWez9g==",
-      "packageJsonSha256": "02bf5f09c961449415d86a34886cac7e7c01e4bb6a20865eceff984f57c8369f",
+      "version": "57.0.9",
+      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-57.0.9.tgz",
+      "integrity": "sha512-7cKDn7uBwg0RkcmY015/5j9st4msWJ4zQiPmQdVZoppW3cFSbv05n7xhM6CjUU466Tx4VRTqDF21HuIHkmnEtA==",
+      "packageJsonSha256": "4a01662f6dea29f6d987bd071184d60630251c440d5465ad64689a0d4a7a3f42",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1122,10 +1122,10 @@
     {
       "packageName": "expo-store-review",
       "packagePath": "node_modules/expo-store-review",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-57.0.1.tgz",
-      "integrity": "sha512-OktDBfIEe4DQXVxz7umFyg+slkZo/nrr4GfwiFJlNjOXl+F+vNsaGBdEn1aE4W5DAnSVpLQsjaZt1dts2HJXlQ==",
-      "packageJsonSha256": "73be0d5d09e31d1330dda0c3dd5946e69a3fe289a7bae68ea437a0e759d6b74a",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-57.0.3.tgz",
+      "integrity": "sha512-++aTnzw0Dsudxx026aZPgrRUc96dxdJVCoi+LZWYbmyoXf76KNKtNWsv7vYWEDjuDU7Z67Z9mGpP+cxQRcBLpw==",
+      "packageJsonSha256": "b8dd236167eed11950505f887988bac42fbd4111d39112ec7226ae3d757c31cc",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1144,10 +1144,10 @@
     {
       "packageName": "expo-symbols",
       "packagePath": "node_modules/expo-symbols",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-symbols/-/expo-symbols-57.0.2.tgz",
-      "integrity": "sha512-qZ0iqOflm5lZGwRsQ5Y8sDksw3GAUKwHSX1bJBoocXf7gu14vafIXXYWte+JT9VfXAUGyKodJhLHP/GoOrcNWg==",
-      "packageJsonSha256": "88eb0a64a28d215dfd76fdbd21819a4e8b898caaa82217c159d98d463c3a0265",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-symbols/-/expo-symbols-57.0.3.tgz",
+      "integrity": "sha512-uuK5yHLVR7kExUCrO/ItBvp/kp1maQ9Nkb6KvNy5ZUQnN0NMKwuhJ4GvbfS9N3ACmvCjTT4gKvg4yH5UuKIYNA==",
+      "packageJsonSha256": "0a7275a38eba3613c7e527d1a6ca5f28d6def11fafc57d01a317a1f1f3613cc1",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1166,10 +1166,10 @@
     {
       "packageName": "expo-system-ui",
       "packagePath": "node_modules/expo-system-ui",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-system-ui/-/expo-system-ui-57.0.2.tgz",
-      "integrity": "sha512-zABCRqFSioDBAo/RtmS0dQiGgDtDPZUVk01Y3Ti4ducobNM4HTM2sNAtq+YPpEUhaVW3hccPVsEUH4LK/ADVhA==",
-      "packageJsonSha256": "30115a46cedea8917fac795c814f336a31e33c111dcad02d9a39a6a42d29716c",
+      "version": "57.0.4",
+      "resolved": "https://registry.npmjs.org/expo-system-ui/-/expo-system-ui-57.0.4.tgz",
+      "integrity": "sha512-z//rxQJzhTNA1PcKrUtWmrd21jAS3nEDu1b0n8B/7LTTR933OcsZYP1HnbaZifuo2ZH/h7nce2Ow61WZ1Ig2bg==",
+      "packageJsonSha256": "7e37b44953b3fd0443c4cd9c9ce824f6c34f4755d14d0194925394d8c46a9297",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1190,10 +1190,10 @@
     {
       "packageName": "expo-updates-interface",
       "packagePath": "node_modules/expo-updates-interface",
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-57.0.1.tgz",
-      "integrity": "sha512-+LUWwJ0gf/TEKMVdQAw/Gjih4dvrk+URgy24X9qEGKuuMDZqjBRm9T4yQyBVALGL5TTdPUaB6ILxx3lshm3pwQ==",
-      "packageJsonSha256": "77e67601ea9674727f4f0362b4dfaee4b4888236ce138bc352f2f535038a0c6e",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-57.0.2.tgz",
+      "integrity": "sha512-x3SA5toiHZEkW+5oeNdUM1Rvt6M3ExegQsSwS3Z1+S9gn9utGYTGBkb8MBQivhjIZiRlQYDIhauxA8kySQEWtQ==",
+      "packageJsonSha256": "ffd7e97f8233e875925b10fca1c00ea02c0b56658af5f28bed5e35c9c055470f",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1212,10 +1212,10 @@
     {
       "packageName": "expo-web-browser",
       "packagePath": "node_modules/expo-web-browser",
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-57.0.2.tgz",
-      "integrity": "sha512-3vl5kvd7PB48ub6PpNIJUuPxO8xVa6D8RnIgNba6SXRwqFprOfeEZgwTgtm41kz0AAtvMOztUVNEUkwrHKjqMQ==",
-      "packageJsonSha256": "aef8208ea10e37117d9f657d5fb040e594b6b4cef113e237860ae7d10427a8ab",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-57.0.3.tgz",
+      "integrity": "sha512-+ecvhyS/PdWkpv4ai6FF1Trd6Y/4kn/eQ3O86mie2ecU3w+I8bKZh13kppY/jw1uSL7yikt03L5W/iiHojrFwQ==",
+      "packageJsonSha256": "de9bdf86a6c1c290d193860b557ef0a6878396b5d6440df2949086655fe0273a",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1272,10 +1272,10 @@
     {
       "packageName": "react-native",
       "packagePath": "node_modules/react-native",
-      "version": "0.86.2",
-      "resolved": "https://registry.npmjs.org/react-native/-/react-native-0.86.2.tgz",
-      "integrity": "sha512-zbJXGZpwfZGA79Z9ob6Atvfx4nAQL8yJBa35s58E4Oo+khPykfQP2sTeumkKbjwajFYfVayg8pj7Il9nIfTk7A==",
-      "packageJsonSha256": "f80aed8d307fd4500248552133067f3794e48cbd65ed4f44c5934c905a3bf6e0",
+      "version": "0.86.3",
+      "resolved": "https://registry.npmjs.org/react-native/-/react-native-0.86.3.tgz",
+      "integrity": "sha512-JR5s3bM9ezud+Mw24GlNXNfthqPIKwrQgPPJcam+L97t2sKjjEavhCzBn+fyqZZRcM5+XlhYxpTxVkK7e1n38Q==",
+      "packageJsonSha256": "416224a4e7caf2ee1f8f9bead8508d0b608feed745371ce0a8f0e2cafa16d144",
       "rootSignals": [
         "React",
         "ReactCommon",
@@ -2124,7 +2124,7 @@
     {
       "path": "node_modules/@expo/log-box/ExpoLogBox.podspec",
       "packageName": "@expo/log-box",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.4",
       "packagePath": "node_modules/@expo/log-box",
       "bytes": 3364,
       "sha256": "53ae293b4b471d97da1f2b28c313b97cc866711a9800dcfe026438fa1d64d324",
@@ -2143,7 +2143,7 @@
     {
       "path": "node_modules/@expo/ui/ios/ExpoUI.podspec",
       "packageName": "@expo/ui",
-      "packageVersion": "57.0.10",
+      "packageVersion": "57.0.20",
       "packagePath": "node_modules/@expo/ui",
       "bytes": 833,
       "sha256": "40ccef94d3947a4b8c181459637f205c556f36ef028fa1cd6629b387f89aca6d",
@@ -2411,7 +2411,7 @@
     {
       "path": "node_modules/expo-apple-authentication/ios/ExpoAppleAuthentication.podspec",
       "packageName": "expo-apple-authentication",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-apple-authentication",
       "bytes": 795,
       "sha256": "541092863ad1008c3e7b6823a6dde1e88739213a271a9cce4d7f7eff568e59aa",
@@ -2430,7 +2430,7 @@
     {
       "path": "node_modules/expo-application/ios/EXApplication.podspec",
       "packageName": "expo-application",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.3",
       "packagePath": "node_modules/expo-application",
       "bytes": 888,
       "sha256": "efd775d5c67d7527e0a7b58e03341392a9b6d72e4d9ea54545bef7bd66e42c5a",
@@ -2459,7 +2459,7 @@
     {
       "path": "node_modules/expo-asset/ios/ExpoAsset.podspec",
       "packageName": "expo-asset",
-      "packageVersion": "57.0.10",
+      "packageVersion": "57.0.18",
       "packagePath": "node_modules/expo-asset",
       "bytes": 823,
       "sha256": "1718cbff56334111fd5fc9eda65bd8724bfc4ec7de39b46f260e41cc8db78d7b",
@@ -2478,7 +2478,7 @@
     {
       "path": "node_modules/expo-camera/ios/ExpoCamera.podspec",
       "packageName": "expo-camera",
-      "packageVersion": "57.0.3",
+      "packageVersion": "57.0.5",
       "packagePath": "node_modules/expo-camera",
       "bytes": 1088,
       "sha256": "fa2121da7bfe7d34d7b02628bbf30e02ccf452424bd7c8678945daf045157d23",
@@ -2497,7 +2497,7 @@
     {
       "path": "node_modules/expo-camera/ios/ExpoCameraBarcodeScanning.podspec",
       "packageName": "expo-camera",
-      "packageVersion": "57.0.3",
+      "packageVersion": "57.0.5",
       "packagePath": "node_modules/expo-camera",
       "bytes": 1023,
       "sha256": "ab000edaa39dea1a323ac8106b1b169cf119469265b0b7611b352fd51a0c482b",
@@ -2526,7 +2526,7 @@
     {
       "path": "node_modules/expo-constants/ios/EXConstants.podspec",
       "packageName": "expo-constants",
-      "packageVersion": "57.0.10",
+      "packageVersion": "57.0.19",
       "packagePath": "node_modules/expo-constants",
       "bytes": 1935,
       "sha256": "8f9047f6c2596015815155a81b5a218e0519dba6218bca2e900bfa1e6d82e70a",
@@ -2555,7 +2555,7 @@
     {
       "path": "node_modules/expo-crypto/ios/ExpoCrypto.podspec",
       "packageName": "expo-crypto",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.3",
       "packagePath": "node_modules/expo-crypto",
       "bytes": 787,
       "sha256": "4bad7960cae20fbb95ac78251ba991975975374c25827531f628bd4a17da1266",
@@ -2574,7 +2574,7 @@
     {
       "path": "node_modules/expo-dev-client/ios/expo-dev-client.podspec",
       "packageName": "expo-dev-client",
-      "packageVersion": "57.0.11",
+      "packageVersion": "57.0.19",
       "packagePath": "node_modules/expo-dev-client",
       "bytes": 869,
       "sha256": "237f95c423f2884af7bc6303b5f3c8d3580765ac7d26deefccaeb300bc9f33f8",
@@ -2613,7 +2613,7 @@
     {
       "path": "node_modules/expo-dev-launcher/expo-dev-launcher.podspec",
       "packageName": "expo-dev-launcher",
-      "packageVersion": "57.0.11",
+      "packageVersion": "57.0.20",
       "packagePath": "node_modules/expo-dev-launcher",
       "bytes": 6046,
       "sha256": "3df59ccd3d9c21dfd0f31d8b308ec9b17790e973e6d034f5811da90e18bf52ba",
@@ -2710,7 +2710,7 @@
     {
       "path": "node_modules/expo-dev-menu/expo-dev-menu.podspec",
       "packageName": "expo-dev-menu",
-      "packageVersion": "57.0.11",
+      "packageVersion": "57.0.18",
       "packagePath": "node_modules/expo-dev-menu",
       "bytes": 5648,
       "sha256": "0dc72c0b3e4e498b61eac18c649a04584a9827b16a6a8477a6516f3bcace3b35",
@@ -2774,7 +2774,7 @@
     {
       "path": "node_modules/expo-device/ios/ExpoDevice.podspec",
       "packageName": "expo-device",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-device",
       "bytes": 843,
       "sha256": "663bb3b4147adf2a4540aa059c56fba7cca9993aa631a8274b39a33ba0a0bdb0",
@@ -2803,7 +2803,7 @@
     {
       "path": "node_modules/expo-file-system/ios/ExpoFileSystem.podspec",
       "packageName": "expo-file-system",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.7",
       "packagePath": "node_modules/expo-file-system",
       "bytes": 865,
       "sha256": "c651c016d967b778b8ccd4dea4490454a10ef6c27488d0f05ee9896ca45172f7",
@@ -2832,7 +2832,7 @@
     {
       "path": "node_modules/expo-font/ios/ExpoFont.podspec",
       "packageName": "expo-font",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.4",
       "packagePath": "node_modules/expo-font",
       "bytes": 775,
       "sha256": "e9b906e51f162670d3364873ba9b0d4d4b281287b2482012f53bd9648172dfa0",
@@ -2851,7 +2851,7 @@
     {
       "path": "node_modules/expo-glass-effect/ios/ExpoGlassEffect.podspec",
       "packageName": "expo-glass-effect",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.4",
       "packagePath": "node_modules/expo-glass-effect",
       "bytes": 637,
       "sha256": "a5501bda5666520f89eb535a3bcdb3d38b013b650c2b6ac652dd9d3205183c8d",
@@ -2870,7 +2870,7 @@
     {
       "path": "node_modules/expo-haptics/ios/ExpoHaptics.podspec",
       "packageName": "expo-haptics",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.3",
       "packagePath": "node_modules/expo-haptics",
       "bytes": 747,
       "sha256": "105a626bf7ef749ec4ab808388be1d0dd88a61ef77831d4c32f8ec44d497a086",
@@ -2889,7 +2889,7 @@
     {
       "path": "node_modules/expo-image-manipulator/ios/ExpoImageManipulator.podspec",
       "packageName": "expo-image-manipulator",
-      "packageVersion": "57.0.9",
+      "packageVersion": "57.0.20",
       "packagePath": "node_modules/expo-image-manipulator",
       "bytes": 1137,
       "sha256": "ed3cf5b7d4b2cbcdd5b527da226948680883d60d55fd827b488bf75d01d1b258",
@@ -2913,7 +2913,7 @@
     {
       "path": "node_modules/expo-image/ios/ExpoImage.podspec",
       "packageName": "expo-image",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.5",
       "packagePath": "node_modules/expo-image",
       "bytes": 1561,
       "sha256": "de1c67fa42920094c4175f04a3900f6cdc9f260c49a35b7e3e33106c2e5963af",
@@ -2970,7 +2970,7 @@
     {
       "path": "node_modules/expo-json-utils/ios/EXJSONUtils.podspec",
       "packageName": "expo-json-utils",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-json-utils",
       "bytes": 951,
       "sha256": "9ff79abda2ae7d67d2fd998ffa21d3f920c3f2b76accb51523f00e6e6cfe45ee",
@@ -2983,7 +2983,7 @@
     {
       "path": "node_modules/expo-keep-awake/ios/ExpoKeepAwake.podspec",
       "packageName": "expo-keep-awake",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-keep-awake",
       "bytes": 791,
       "sha256": "01f9bed1472f12a454bb1c976cb52925f1d0cf71a87372646b2ceb24af8a55dc",
@@ -3002,7 +3002,7 @@
     {
       "path": "node_modules/expo-linking/ios/ExpoLinking.podspec",
       "packageName": "expo-linking",
-      "packageVersion": "57.0.5",
+      "packageVersion": "57.0.11",
       "packagePath": "node_modules/expo-linking",
       "bytes": 809,
       "sha256": "9ff9686452eb2ecede43c3af5751bc045f1286e1ef2366d8d8e9ee2af04be0c7",
@@ -3021,7 +3021,7 @@
     {
       "path": "node_modules/expo-local-authentication/ios/ExpoLocalAuthentication.podspec",
       "packageName": "expo-local-authentication",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.3",
       "packagePath": "node_modules/expo-local-authentication",
       "bytes": 774,
       "sha256": "fd075b9759612b5a22f060bea348c91a3adb923b0ad14f6fb52bd097f1cdc890",
@@ -3040,7 +3040,7 @@
     {
       "path": "node_modules/expo-localization/ios/ExpoLocalization.podspec",
       "packageName": "expo-localization",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-localization",
       "bytes": 855,
       "sha256": "12dae5a9b8667db0cc1a08c9f1eb94fbc00fee6168452aa89cf51096e992fdf4",
@@ -3069,7 +3069,7 @@
     {
       "path": "node_modules/expo-manifests/ios/EXManifests.podspec",
       "packageName": "expo-manifests",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-manifests",
       "bytes": 1282,
       "sha256": "6f128a33448a2d7f90df5db8446d0e1150c10d7d733d182face82d4d5ee56a43",
@@ -3093,7 +3093,7 @@
     {
       "path": "node_modules/expo-modules-core/ExpoModulesCore.podspec",
       "packageName": "expo-modules-core",
-      "packageVersion": "57.0.10",
+      "packageVersion": "57.0.19",
       "packagePath": "node_modules/expo-modules-core",
       "bytes": 6445,
       "sha256": "b8259e2770ded8730eec301be7ac22f1a8624c85dcd4bfeaeaf01a0bcd0c4887",
@@ -3147,7 +3147,7 @@
     {
       "path": "node_modules/expo-modules-core/ExpoModulesWorklets.podspec",
       "packageName": "expo-modules-core",
-      "packageVersion": "57.0.10",
+      "packageVersion": "57.0.19",
       "packagePath": "node_modules/expo-modules-core",
       "bytes": 1253,
       "sha256": "9e25c99d9193663d944fba43798c3b3c93823d67ebb5f6af7251a007067cc95a",
@@ -3176,7 +3176,7 @@
     {
       "path": "node_modules/expo-modules-core/ExpoModulesWorkletsAdapter.podspec",
       "packageName": "expo-modules-core",
-      "packageVersion": "57.0.10",
+      "packageVersion": "57.0.19",
       "packagePath": "node_modules/expo-modules-core",
       "bytes": 4611,
       "sha256": "b065cedc578cea814c2d0e8726431f4c4aeb1939a4e4b773f46fae2e6824d741",
@@ -3210,7 +3210,7 @@
     {
       "path": "node_modules/expo-modules-jsi/apple/ExpoModulesJSI.podspec",
       "packageName": "expo-modules-jsi",
-      "packageVersion": "57.0.4",
+      "packageVersion": "57.1.1",
       "packagePath": "node_modules/expo-modules-jsi",
       "bytes": 3871,
       "sha256": "ff84b90c5b7c9e5945deb3a9f140bf675e60eb7f4d7bdfb6ab8f3c320d0cc10b",
@@ -3234,7 +3234,7 @@
     {
       "path": "node_modules/expo-network/ios/ExpoNetwork.podspec",
       "packageName": "expo-network",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-network",
       "bytes": 761,
       "sha256": "70b95c3140930354a1c0479000be95358ace9893072d7279600ee53c32b733fb",
@@ -3253,10 +3253,10 @@
     {
       "path": "node_modules/expo-notifications/ios/ExpoNotifications.podspec",
       "packageName": "expo-notifications",
-      "packageVersion": "57.0.10",
+      "packageVersion": "57.0.21",
       "packagePath": "node_modules/expo-notifications",
-      "bytes": 995,
-      "sha256": "ab73ae5b13d3cd62c462be26cdd65a183f7736570281368326ed305e80645fdb",
+      "bytes": 1086,
+      "sha256": "20d85106721d50f113a0122969556134e06159643a05ccf087e4ed3183bc737c",
       "status": "source_valid",
       "format": "ruby_source_text",
       "dependencies": [
@@ -3287,7 +3287,7 @@
     {
       "path": "node_modules/expo-router/ios/ExpoRouter.podspec",
       "packageName": "expo-router",
-      "packageVersion": "57.0.12",
+      "packageVersion": "57.0.23",
       "packagePath": "node_modules/expo-router",
       "bytes": 1674,
       "sha256": "fff64d64e4f52538977dc0571c4df05d5d217424bf01d4d7d4571671610ca955",
@@ -3311,7 +3311,7 @@
     {
       "path": "node_modules/expo-secure-store/ios/ExpoSecureStore.podspec",
       "packageName": "expo-secure-store",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.4",
       "packagePath": "node_modules/expo-secure-store",
       "bytes": 773,
       "sha256": "e52caabb236489f0e2cfe8014272d30cb9ba0fac1ab97b53487c5fd4b84763ea",
@@ -3330,7 +3330,7 @@
     {
       "path": "node_modules/expo-sharing/ios/ExpoSharing.podspec",
       "packageName": "expo-sharing",
-      "packageVersion": "57.0.11",
+      "packageVersion": "57.0.22",
       "packagePath": "node_modules/expo-sharing",
       "bytes": 747,
       "sha256": "921d42ca9fa09e129074d0e379349b8492295e6fb207d55479d66ec9f43f4e7c",
@@ -3349,7 +3349,7 @@
     {
       "path": "node_modules/expo-splash-screen/ios/ExpoSplashScreen.podspec",
       "packageName": "expo-splash-screen",
-      "packageVersion": "57.0.6",
+      "packageVersion": "57.0.9",
       "packagePath": "node_modules/expo-splash-screen",
       "bytes": 730,
       "sha256": "08092955a1d0b2b4df2a02382e02b78159105eb25f10b77bcd58e06f8aaeea51",
@@ -3368,7 +3368,7 @@
     {
       "path": "node_modules/expo-store-review/ios/ExpoStoreReview.podspec",
       "packageName": "expo-store-review",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.3",
       "packagePath": "node_modules/expo-store-review",
       "bytes": 751,
       "sha256": "cad97e8a50a93c790321b90c9f70b28f1e7ef5ee05a5c63a06e3f4c83620d8d2",
@@ -3387,7 +3387,7 @@
     {
       "path": "node_modules/expo-symbols/ios/ExpoSymbols.podspec",
       "packageName": "expo-symbols",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.3",
       "packagePath": "node_modules/expo-symbols",
       "bytes": 741,
       "sha256": "17bb160eceea3471b4362d8d04434473e74cd9abda1bebc3102a5688a0e9a3b4",
@@ -3406,7 +3406,7 @@
     {
       "path": "node_modules/expo-system-ui/ios/ExpoSystemUI.podspec",
       "packageName": "expo-system-ui",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.4",
       "packagePath": "node_modules/expo-system-ui",
       "bytes": 810,
       "sha256": "b14fbdf7603a39ccf20c05b97ef524035bb30bde0986f342ef8ebbedf5146cdf",
@@ -3435,7 +3435,7 @@
     {
       "path": "node_modules/expo-updates-interface/ios/EXUpdatesInterface.podspec",
       "packageName": "expo-updates-interface",
-      "packageVersion": "57.0.1",
+      "packageVersion": "57.0.2",
       "packagePath": "node_modules/expo-updates-interface",
       "bytes": 1133,
       "sha256": "f8a9b28bf127c94c13aad775652b38055be4ce482caf9d18290d0e338e633620",
@@ -3454,7 +3454,7 @@
     {
       "path": "node_modules/expo-web-browser/ios/ExpoWebBrowser.podspec",
       "packageName": "expo-web-browser",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.3",
       "packagePath": "node_modules/expo-web-browser",
       "bytes": 770,
       "sha256": "cf6be6b18e7780214af9a3e81d016324e78355a3f3cd3c7ab79ec35c2dfff0d8",
@@ -3473,7 +3473,7 @@
     {
       "path": "node_modules/expo/Expo.podspec",
       "packageName": "expo",
-      "packageVersion": "57.0.12",
+      "packageVersion": "57.0.25",
       "packagePath": "node_modules/expo",
       "bytes": 5107,
       "sha256": "2798d70b69e8b3462421f5d96ea839b4ab2f0d49e7eb422cc6a6881066bd2f29",
@@ -3700,7 +3700,7 @@
     {
       "path": "node_modules/react-native/Libraries/ActionSheetIOS/React-RCTActionSheet.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1432,
       "sha256": "ae8f95831b9c5e67733b0745bce6ab14b9f614fe942730abf73433d5dd5aaa4c",
@@ -3719,7 +3719,7 @@
     {
       "path": "node_modules/react-native/Libraries/AppDelegate/React-RCTAppDelegate.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 3825,
       "sha256": "f2f9dfb16e1a610828ff9155e142f59b9689b34b2d84217064bed0a5fa8c6f9e",
@@ -3778,7 +3778,7 @@
     {
       "path": "node_modules/react-native/Libraries/Blob/React-RCTBlob.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2421,
       "sha256": "21dd1ca7570b52d61daa7827c7f6f4e3ece42722e56bfb1c48c1d9a5362d3f2b",
@@ -3817,7 +3817,7 @@
     {
       "path": "node_modules/react-native/Libraries/FBLazyVector/FBLazyVector.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1189,
       "sha256": "45eaa07214c2fa1aa5eaaa1786fac9315b76b196e11b6c57fcc9db0b962f84dd",
@@ -3830,7 +3830,7 @@
     {
       "path": "node_modules/react-native/Libraries/Image/React-RCTImage.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2405,
       "sha256": "85e0f8b9177d3a4a913a8e297054013d51c639ffbea6f0429fbbf0e3ba5fb11f",
@@ -3864,7 +3864,7 @@
     {
       "path": "node_modules/react-native/Libraries/LinkingIOS/React-RCTLinking.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2292,
       "sha256": "399f454e4f92f40c0ccb4a5937a86f7a3cc47062cb520fc440e5e1ae9b2495d1",
@@ -3893,7 +3893,7 @@
     {
       "path": "node_modules/react-native/Libraries/NativeAnimation/React-RCTAnimation.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2264,
       "sha256": "f0f67b5341fa206dbc8eb8c000bf89f23fc96c5a6f8460e19ed2ef6ac960f46a",
@@ -3922,7 +3922,7 @@
     {
       "path": "node_modules/react-native/Libraries/Network/React-RCTNetwork.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2577,
       "sha256": "686db3a99d7ebe76da07bf33faaf85be4539d0272d3d4551c3db04f1b7078c7c",
@@ -3951,7 +3951,7 @@
     {
       "path": "node_modules/react-native/Libraries/PushNotificationIOS/React-RCTPushNotification.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2310,
       "sha256": "df3ed318d73b91c4d621f060d713a869c514332cfba63a6e3d6ad3bf7da4da0c",
@@ -3980,7 +3980,7 @@
     {
       "path": "node_modules/react-native/Libraries/Required/RCTRequired.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1186,
       "sha256": "9092287ef4b1bb2ddef88bc60113055a4a587278273125ad51b8055d360b080e",
@@ -3993,7 +3993,7 @@
     {
       "path": "node_modules/react-native/Libraries/Settings/React-RCTSettings.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2308,
       "sha256": "c2e761d1163778acab786d717ef890dee2640a77aa55a742f52bbecdf4563e1b",
@@ -4022,7 +4022,7 @@
     {
       "path": "node_modules/react-native/Libraries/Text/React-RCTText.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1564,
       "sha256": "13f40286f24c7fd4e5c4a274675ab902ea4250e805a83baf455f5f0335681e7e",
@@ -4046,7 +4046,7 @@
     {
       "path": "node_modules/react-native/Libraries/TypeSafety/RCTTypeSafety.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1623,
       "sha256": "1813284bebc1095d08458f0c5958e8ec29ff656d5677e8c0d1b38e73ba30bfc7",
@@ -4075,7 +4075,7 @@
     {
       "path": "node_modules/react-native/Libraries/Vibration/React-RCTVibration.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2248,
       "sha256": "3975e69920a5d4a1db93d0f2b5b05b83189b289d90284a7917906e1b39cf38ae",
@@ -4099,7 +4099,7 @@
     {
       "path": "node_modules/react-native/React-Core-prebuilt.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 3064,
       "sha256": "75c94c85de947ed4cc0b63b6031d8a36876680b2ead00cac35263c3073d92e8a",
@@ -4112,7 +4112,7 @@
     {
       "path": "node_modules/react-native/React-Core.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 5478,
       "sha256": "191a0b160f9d9da8db97d46a22b9b3795b57cfb45008d9faedc0cb3e19b8a9a5",
@@ -4186,7 +4186,7 @@
     {
       "path": "node_modules/react-native/React.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2627,
       "sha256": "1e5caaa008449e5dcdb0a44b57684fcc90b94fc1511726790930cb11a1f42c41",
@@ -4260,7 +4260,7 @@
     {
       "path": "node_modules/react-native/React/CoreModules/React-CoreModules.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2992,
       "sha256": "654a2d85ffee5091377bda278c4583c8ce028f5949e35cb6468fd058adaf61d0",
@@ -4299,7 +4299,7 @@
     {
       "path": "node_modules/react-native/React/React-RCTFBReactNativeSpec.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 3803,
       "sha256": "8ff771cf918c94017b53171829ccc2f304a82a3556499ceb39284bc17295663e",
@@ -4343,7 +4343,7 @@
     {
       "path": "node_modules/react-native/React/React-RCTFabric.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 4814,
       "sha256": "9c9e78513d170f64bf3d5dbce73c810b2cc42e9effcf14a26164235a74b66fd7",
@@ -4387,7 +4387,7 @@
     {
       "path": "node_modules/react-native/React/Runtime/React-RCTRuntime.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2847,
       "sha256": "651da05b016101a7cfd6581b6be25da8f279b21ee107f36a4d2ee44ff29e26db",
@@ -4416,7 +4416,7 @@
     {
       "path": "node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation/RCTDeprecation.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1127,
       "sha256": "572fe3cb6685e2ccebb01e49f32282cc58f15da81b88002287593444035f9e09",
@@ -4429,7 +4429,7 @@
     {
       "path": "node_modules/react-native/ReactApple/RCTSwiftUI/RCTSwiftUI.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1402,
       "sha256": "651180ecc69e26a3370fa68ff532df9891071859de5178831c43a2608e9bd57b",
@@ -4442,7 +4442,7 @@
     {
       "path": "node_modules/react-native/ReactApple/RCTSwiftUIWrapper/RCTSwiftUIWrapper.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1385,
       "sha256": "0e1bbcbb77a846c3f92f3c61925a5408ea84e4d9de377b051ff3cf871e1b71df",
@@ -4461,7 +4461,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/React-Fabric.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 11338,
       "sha256": "dd725906d2f32d907c627ee307b2e40cf4d96cb7bf563bd9a9a3f1d41f337f08",
@@ -4580,7 +4580,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/React-FabricComponents.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 8675,
       "sha256": "8e27953501ff506ca325ab653433f9820d3fde47e6a9dfc8ad278433358985d1",
@@ -4664,7 +4664,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/React-FabricImage.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 3223,
       "sha256": "26457e6e29f759bca49f8a8cc56124c26259ad9be9384d0a26fb1c8297bd9145",
@@ -4718,7 +4718,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/React-Mapbuffer.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1739,
       "sha256": "384b9913ed26998748b4e2e107d6b19035d6ff939dcba3e1b3a9610267eb81f2",
@@ -4731,7 +4731,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/ReactCommon.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 3348,
       "sha256": "87efdbe16b8998bcc0522112a0bf9679443a3efe5a249eeec6002eafebc5f31f",
@@ -4790,7 +4790,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/callinvoker/React-callinvoker.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1185,
       "sha256": "0849a8edd2fdaf2ce6f31684dcf39f0243533b6af0b70d4f098425302c2fc7b9",
@@ -4803,7 +4803,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/cxxreact/React-cxxreact.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2395,
       "sha256": "48d45caa0b4bdae583328d91e83cfddee63add9a90bdf4e02b3441b673a8b596",
@@ -4862,7 +4862,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/hermes/React-hermes.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2526,
       "sha256": "c0769799009387eb61e32e751d1ebee1d10ccd74b2609338b4b138600cee9bfc",
@@ -4901,7 +4901,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/hermes/executor/React-jsitracing.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1636,
       "sha256": "5b788c2bdcd8c5b64a4b2c8b4ab7f8bb31dff314ec8887fece4bde2a6e18eea8",
@@ -4920,7 +4920,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jserrorhandler/React-jserrorhandler.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1815,
       "sha256": "a60b0f0990350ee4f59996a03fde90d7656305c65c26c938c7561b1969354e80",
@@ -4954,7 +4954,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jsi/React-jsi.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1806,
       "sha256": "d313670e82ed88dede6ef6f7673cfa0d11c7dda52ca0b4da0ce00055bd59be60",
@@ -4973,7 +4973,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jsiexecutor/React-jsiexecutor.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2140,
       "sha256": "c0aa98c8e265d326937a5fb6f0cb6ef06f076049033395054d79a1bf4292cd56",
@@ -5017,7 +5017,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jsinspector-modern/React-jsinspector.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2645,
       "sha256": "4be5e72336e03f32fd55cbad30722be909f82a783d42b17c109afa3c68ead764",
@@ -5051,7 +5051,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jsinspector-modern/cdp/React-jsinspectorcdp.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1782,
       "sha256": "35f306217b0c682b20cb61152f5ab138edc4a775219cc3a061357285bcf0da55",
@@ -5064,7 +5064,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jsinspector-modern/network/React-jsinspectornetwork.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1852,
       "sha256": "b7c8deb68c68ca03072ceee353a6af60d88786fefe6c04d3193bb8b48824e427",
@@ -5077,7 +5077,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jsinspector-modern/tracing/React-jsinspectortracing.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2117,
       "sha256": "79441a7056d27313322021a5ca1abacabf72d44afffc5b674a9668526d31ca78",
@@ -5111,7 +5111,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/jsitooling/React-jsitooling.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2118,
       "sha256": "7c03c8139e3cbb6b20f73fbfba8c970c19566d6c7abb981aa50d523779618015",
@@ -5140,7 +5140,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/logger/React-logger.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1250,
       "sha256": "72d25b4f44182ba1a5ce933653a24a9a287be4a22b6b5ba2467de601e600b3fb",
@@ -5153,7 +5153,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/oscompat/React-oscompat.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1275,
       "sha256": "ee362e43a51fb5d8b7c93fa3d14872cde4c3da7e39aee580226e89dfe0ccf320",
@@ -5166,7 +5166,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/debug/React-debug.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1643,
       "sha256": "691efcd70ea5f7f5c06e3a658f4cefaa0e97d1ca0c6127b7932bce5ea6805b36",
@@ -5179,7 +5179,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/featureflags/React-featureflags.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1798,
       "sha256": "77e7190a785a18caf543c8185d0753d520edb508acb84e90175b0f0aeff20a7e",
@@ -5192,7 +5192,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios/React-NativeModulesApple.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2560,
       "sha256": "af7d1f0b2aac2b059d9737fa1c01144abbb726d05e949002a2643c09a4cae65d",
@@ -5241,7 +5241,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/defaults/React-defaultsnativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2588,
       "sha256": "7d0c637a1860b4b5e95661d6fca3935f2ffdf77c3e4709c1a9945b3a75659c74",
@@ -5310,7 +5310,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/dom/React-domnativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2447,
       "sha256": "ac4afb3d18be45b8ede907d32c7f8fc919e504867cf97305187a23cb8b01d308",
@@ -5359,7 +5359,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/featureflags/React-featureflagsnativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2124,
       "sha256": "f0f05355381411c9f9dfb67daf3e43c38eb10b28de9648cbbb07e0afb9980ed3",
@@ -5398,7 +5398,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/idlecallbacks/React-idlecallbacksnativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2225,
       "sha256": "8060de6df4bfe3834ac6b5c287ed2a04d6859127b83f45e92b24e898518d6b0d",
@@ -5432,7 +5432,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/intersectionobserver/React-intersectionobservernativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2559,
       "sha256": "40c167df44c18a79a9c1d0611a9c085826354247c205480d8d717a5f75861dfe",
@@ -5486,7 +5486,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/microtasks/React-microtasksnativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2094,
       "sha256": "20ea373d4c882b1ff39afba5cdb1c5d1657b0c081470baa77fc355eace1022b7",
@@ -5515,7 +5515,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver/React-mutationobservernativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2477,
       "sha256": "e556b08b4936bacd20614efee59f54ab259a649d735b7ccb0d353ff983ff1608",
@@ -5574,7 +5574,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/samples/ReactCommon-Samples.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2405,
       "sha256": "42a67e6f5b763b86b114162cbf6a52c36567dc1b2e26599b4e8b7f06dd4d1eb0",
@@ -5608,7 +5608,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/viewtransition/React-viewtransitionnativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2350,
       "sha256": "f1e03c3c9877bbf971838dae09442d07d3f231d58503f87a9e7b1c39b09d138d",
@@ -5652,7 +5652,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/nativemodule/webperformance/React-webperformancenativemodule.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2299,
       "sha256": "dd436b07c4c1d019a74eaefe50a68c51ae1391cb10ea8545affac1f723f7bcb4",
@@ -5686,7 +5686,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/networking/React-networking.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2144,
       "sha256": "c746d41d3018a9c1d052a07fb47b592f990b6a2429d716f1340aa6d79f5a3d7e",
@@ -5710,7 +5710,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/performance/cdpmetrics/React-performancecdpmetrics.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2087,
       "sha256": "383d30666e276612d6040605e64aa3682b319c52f770b52413520a5d88c33df1",
@@ -5744,7 +5744,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/performance/timeline/React-performancetimeline.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2079,
       "sha256": "96004d39d66e9cb2cf448256fc840e215d92e558f0e527afa8e6ce23ac0c7ffb",
@@ -5773,7 +5773,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/renderer/consistency/React-rendererconsistency.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1732,
       "sha256": "b37debf97ed80a1cbcb0617111571e314b225ff607af614cd7ca1dd5d805b5a9",
@@ -5786,7 +5786,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/renderer/css/React-renderercss.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1806,
       "sha256": "d106d23ba18f67c62d05dad31e7c6c5f6aa6270a901227351d99bb5c50001c78",
@@ -5799,7 +5799,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/renderer/debug/React-rendererdebug.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1822,
       "sha256": "e3811e6d2674516c745fb9d3862caf05e774282076922136c9e89f5a2d2c4ec1",
@@ -5812,7 +5812,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/renderer/graphics/React-graphics.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2172,
       "sha256": "0d8dbdec5e7161ac7ab8b5a11d3300f9a5e76cc9d3dc6c03fc147fdac86f2480",
@@ -5851,7 +5851,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/renderer/imagemanager/platform/ios/React-ImageManager.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2059,
       "sha256": "0f0d8f7a2cf7c58d148c2d2e5eb2f99b02dd942a6da4e1e876d465de37210195",
@@ -5870,7 +5870,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/renderer/runtimescheduler/React-runtimescheduler.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2332,
       "sha256": "f8cacf1f410040da40f27995a4eef9dd3a22298f5e94e03bbabb1b2632ff1d50",
@@ -5929,7 +5929,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/runtime/React-RuntimeCore.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2374,
       "sha256": "2bc4eee8c4e438c162cd8e7326f5a95cbf720771699229dfc290673c1e1460c2",
@@ -5988,7 +5988,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/runtime/React-RuntimeHermes.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2394,
       "sha256": "239b1d4b3440ecfe79b2e5f64762e34bc94581d4d6cd0fc4398d4922a195ab7d",
@@ -6037,7 +6037,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2913,
       "sha256": "bceef980337797a2bb696ae01c87c6481c1052cd686536a0c8ba07f69dc60b1d",
@@ -6126,7 +6126,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/timing/React-timing.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1815,
       "sha256": "4675aa157ea8c09e19a9ecbd271367f504cfabf885672b7eb7072ccbed0d6ede",
@@ -6149,7 +6149,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/react/utils/React-utils.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2088,
       "sha256": "b6a8c0d5c4c381a93c296bb034c87343857fa5e57cd3481b8ec3039307e298f3",
@@ -6173,7 +6173,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/reactperflogger/React-perflogger.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1635,
       "sha256": "818c3b466e9ec5fc6c988cfe87872a4c979939698f9aff85603008b5536cc69c",
@@ -6186,7 +6186,7 @@
     {
       "path": "node_modules/react-native/ReactCommon/runtimeexecutor/React-runtimeexecutor.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 2145,
       "sha256": "8d578ebf93a0ea92dafe10bb894712383dccee4b5d0d648930d137fdb63b9a22",
@@ -6205,10 +6205,10 @@
     {
       "path": "node_modules/react-native/ReactCommon/yoga/Yoga.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
-      "bytes": 2730,
-      "sha256": "ca789e77d51cc93e4fec4656a899d35fd07932a297f37cbaff5b857d35f0964f",
+      "bytes": 2740,
+      "sha256": "64eb7b752d3d6eb02514d5763220453dbc3a6a0aa040f27614a4ba6371b4ba9f",
       "status": "source_valid",
       "format": "ruby_source_text",
       "dependencies": [],
@@ -6218,10 +6218,10 @@
     {
       "path": "node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
-      "bytes": 8626,
-      "sha256": "e21eb2dd5e9a57d5278a378d1fb2f0f3562fd098a3294207122a4afa83b5c749",
+      "bytes": 8851,
+      "sha256": "ddfe34594624ed40a6299fd00a7105bdef0967ed73aad256ae596963b439dbc0",
       "status": "source_valid",
       "format": "ruby_source_text",
       "dependencies": [],
@@ -6231,7 +6231,7 @@
     {
       "path": "node_modules/react-native/third-party-podspecs/DoubleConversion.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1300,
       "sha256": "807a5e38ab23d4c1bfdaf347c9a5440c943003f37e858a8484616a318af698e0",
@@ -6244,7 +6244,7 @@
     {
       "path": "node_modules/react-native/third-party-podspecs/RCT-Folly.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 6483,
       "sha256": "ecbf7ad60b38df783555f5c13eb7e1ccf4b906fc8bcf82fbbcdb515ad7dad795",
@@ -6297,7 +6297,7 @@
     {
       "path": "node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 3542,
       "sha256": "a487ac5c74d9aef1b3c6fa527e3cf929d62e031ebaf587f4948813b6717ee086",
@@ -6310,7 +6310,7 @@
     {
       "path": "node_modules/react-native/third-party-podspecs/boost.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1158,
       "sha256": "b2e45fe8e2ea15e9a6c9013bb9bf92c094ff0986de0420568a52523b009c177a",
@@ -6333,7 +6333,7 @@
     {
       "path": "node_modules/react-native/third-party-podspecs/fast_float.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1117,
       "sha256": "59294099215845fb148c7bc8ce189379504aabd4abf6d31f3da892bd2198fb34",
@@ -6346,7 +6346,7 @@
     {
       "path": "node_modules/react-native/third-party-podspecs/fmt.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1070,
       "sha256": "0131c09d7dbeec869a25c9089760d4fc3e0c3fbd1c53e6777c3628723fc6fa42",
@@ -6359,7 +6359,7 @@
     {
       "path": "node_modules/react-native/third-party-podspecs/glog.podspec",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "packagePath": "node_modules/react-native",
       "bytes": 1765,
       "sha256": "5a9bbbf879d1ad96374a3cb9769f5c22fc957a84ee37027cef0e93344ed55a9c",
@@ -6389,7 +6389,7 @@
       "artifactKind": "xcframework",
       "fileCount": 356,
       "totalBytes": 6143026,
-      "treeSha256": "290e41cf43c577c5bf29400d6e75659886990d5511ddda0336b6dd8c1399f02f",
+      "treeSha256": "1675668cf6810920cff037100cb0a15da9c81b4daa52f6e0dfe6155b11ff93a7",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6403,8 +6403,8 @@
       "artifactName": "ZXingObjC.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 363,
-      "totalBytes": 17138279,
-      "treeSha256": "b1d5288e4e713d1c742e460af5ded46a97cd34d1b1e81800374d541289e3734f",
+      "totalBytes": 17257446,
+      "treeSha256": "914e7f8aeb2b8c4003babe7ee02ad7bca54a618202a36e89189a71484d838c32",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6418,8 +6418,8 @@
       "artifactName": "SDWebImage.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 130,
-      "totalBytes": 3854054,
-      "treeSha256": "a8adc8f058d40cec61cbf1691e09f8ab43338aeccf026e36ce2ba583a1b46458",
+      "totalBytes": 3819688,
+      "treeSha256": "546f256071340fcdc78af1596ec6c849b8a49289eba0e75a51161e51bc101cc9",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6433,8 +6433,8 @@
       "artifactName": "SDWebImage.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 137,
-      "totalBytes": 11274813,
-      "treeSha256": "676ffbb76d6dc68c96f94e43ced3c610ec3e2aa5efe511145474abaa21687b5e",
+      "totalBytes": 11240447,
+      "treeSha256": "4346894d5622acf59acccde4464a43c28aefa98df022a5e924a59444c5522c4a",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6448,8 +6448,8 @@
       "artifactName": "SDWebImageWebPCoder.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 14,
-      "totalBytes": 3058006,
-      "treeSha256": "8f48e3783fba24caa5383b3cf3c2845243d105acd76e5afa6ec1de3bdf41b5bf",
+      "totalBytes": 3007256,
+      "treeSha256": "c646d285f038b85f22292e52f9fd35d029a8a3a5ccfe05b58fb4fe8063f8e7b4",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6463,8 +6463,8 @@
       "artifactName": "SDWebImageWebPCoder.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 21,
-      "totalBytes": 11385418,
-      "treeSha256": "ef152b870d338dab652660bc0436f73009a39240beda929cfafc10588f8eab07",
+      "totalBytes": 11334668,
+      "treeSha256": "a755ea30f040c6032c8c6913fcc638fc76f44eb053a6f05000065b719e3c8ee3",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6479,7 +6479,7 @@
       "artifactKind": "xcframework",
       "fileCount": 130,
       "totalBytes": 3855458,
-      "treeSha256": "2247a5e9bbe3e9e3dbade8aede3a939d75e976b94c5f7aae093782102e41d9f3",
+      "treeSha256": "e25ddedb4f56a958e9c5b95fe801ae4419d80327543c4fae0386deb2bee639a8",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6493,8 +6493,8 @@
       "artifactName": "SDWebImage.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 137,
-      "totalBytes": 11177473,
-      "treeSha256": "6d73e7cbc8b8acc22c670e55611b8c1c9788d42480bcc829b3635f031cdec737",
+      "totalBytes": 11267259,
+      "treeSha256": "71f2d2830647f2862c7642858ac56a5aa3ee1440a9718d162bda371815a558cb",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6509,7 +6509,7 @@
       "artifactKind": "xcframework",
       "fileCount": 10,
       "totalBytes": 356256,
-      "treeSha256": "b37af4cc200d3c53c1ee090b3ef436a8dc7f21c2010ab89511bea662aa897135",
+      "treeSha256": "822f9b72ab49d5c236286dca9638aa02d9c18545870fc2723e140f1b97bc9fab",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6523,8 +6523,8 @@
       "artifactName": "SDWebImageAVIFCoder.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 17,
-      "totalBytes": 4289375,
-      "treeSha256": "5d04e672a1592894cb8a41a336752f530080e75840084fb97fbc1119172af026",
+      "totalBytes": 4327013,
+      "treeSha256": "8577974162c68ee70c7e00cd792c14730daeb8db64a59357bb3bfdf067dcdd4b",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6539,7 +6539,7 @@
       "artifactKind": "xcframework",
       "fileCount": 12,
       "totalBytes": 231318,
-      "treeSha256": "0c11f01e017d9026e04c1372f1349cd82eb8de3c7ebfd10c8a5f1ac1459d52ac",
+      "treeSha256": "80665ecffb03951f9e747a10099e92ce652e96bb50fc8a313c5cf227e9a981bd",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6553,8 +6553,8 @@
       "artifactName": "SDWebImageSVGCoder.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 19,
-      "totalBytes": 3635296,
-      "treeSha256": "c557d27472b9c3098de97145d36a8f1cfd01733eb2574bb2b81ed9b541c76639",
+      "totalBytes": 3659184,
+      "treeSha256": "ad711f21d5b7a56c1b8ed23a3ad8fbdda8fb8e894c8f6405a93c1d400a174ced",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6569,7 +6569,7 @@
       "artifactKind": "xcframework",
       "fileCount": 14,
       "totalBytes": 3058542,
-      "treeSha256": "dd9aa1f7308eb32591147fffa262db9f775020e53a5dda3b1ce2ce97c4b49472",
+      "treeSha256": "37d2d723f6cec00193b77f12d441a4f4f4d30cae3081d19fecd5f2d66fbf456e",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6583,8 +6583,8 @@
       "artifactName": "SDWebImageWebPCoder.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 21,
-      "totalBytes": 11193839,
-      "treeSha256": "585512fef06825ebb24afc0291c5d05078ac4ad057f584f15e6089f16e8bcb75",
+      "totalBytes": 11390972,
+      "treeSha256": "2ff20742e0be3b2570b06daeaea137eb380b9140d54835b5f05774303b23c24c",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6599,7 +6599,7 @@
       "artifactKind": "xcframework",
       "fileCount": 12,
       "totalBytes": 29031030,
-      "treeSha256": "a7393e90cd10bf1771ddd0528796b9b2f2598f9a6f3f2908a13b47eb0d52737b",
+      "treeSha256": "f40ee297e997a94b7563c02cadc13ad9ae84e4978f245bea553baa354a4e3b25",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6613,8 +6613,8 @@
       "artifactName": "libavif.xcframework",
       "artifactKind": "xcframework",
       "fileCount": 19,
-      "totalBytes": 64183878,
-      "treeSha256": "a9dab8a8fe61ccd217191cd3d0b71fd83ab3e5af88c2a1e1a0cac96a8c20db8d",
+      "totalBytes": 65002658,
+      "treeSha256": "5994c850a0abee37ae35e66d88b3a2fcbdd5d1f2316a5dd53a58a5fc27007c0e",
       "privacyManifestPaths": [],
       "sourceCandidate": true,
       "archiveInclusionProven": false,
@@ -6661,7 +6661,7 @@
     {
       "canonicalName": "SDWebImage",
       "packageName": "expo-image",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.5",
       "matchType": "direct_source_candidate",
       "matchBasis": "The pinned ExpoImage podspec directly declares SDWebImage ~> 5.21.0; its SPM config also names the SDWebImage product.",
       "evidencePath": "node_modules/expo-image/ios/ExpoImage.podspec",
@@ -6694,7 +6694,7 @@
     {
       "canonicalName": "SDWebImage",
       "packageName": "expo-image",
-      "packageVersion": "57.0.2",
+      "packageVersion": "57.0.5",
       "matchType": "source_text_podspec_dependency",
       "matchBasis": "Case-sensitive dependency token SDWebImage in comment-stripped podspec source text node_modules/expo-image/ios/ExpoImage.podspec; Ruby evaluation and archive inclusion are not claimed.",
       "evidencePath": "node_modules/expo-image/ios/ExpoImage.podspec",
@@ -6727,7 +6727,7 @@
     {
       "canonicalName": "hermes",
       "packageName": "react-native",
-      "packageVersion": "0.86.2",
+      "packageVersion": "0.86.3",
       "matchType": "source_candidate",
       "matchBasis": "React Native pins Hermes and its hermes-engine podspec names vendored hermesvm framework/XCFramework candidates.",
       "evidencePath": "node_modules/hermes-compiler/package.json",
