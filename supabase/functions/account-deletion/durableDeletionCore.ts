@@ -3,8 +3,9 @@ export const DELETION_CAPABILITY_HEX_LENGTH = DELETION_CAPABILITY_BYTES * 2;
 export const MIN_DELETION_STATUS_POLL_SECONDS = 2;
 export const MAX_DELETION_STATUS_POLL_SECONDS = 60;
 export const DELETION_STATUS_CAPABILITY_DIGEST_CONTEXT =
-  'onskin-account-deletion-status-capability:v1:';
-export const DELETION_IDEMPOTENCY_DIGEST_CONTEXT = 'onskin-account-deletion-intake-idempotency:v1:';
+  'layerwell-account-deletion-status-capability:v1:';
+export const DELETION_IDEMPOTENCY_DIGEST_CONTEXT =
+  'layerwell-account-deletion-intake-idempotency:v1:';
 
 const OPERATION_STATES = ['pending', 'running', 'ready_to_finalize', 'action_required'] as const;
 const STEP_STATES = [

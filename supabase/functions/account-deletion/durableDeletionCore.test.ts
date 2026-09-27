@@ -109,7 +109,7 @@ Deno.test('capability and idempotency digests match schema domain separation', a
     'the same raw token must have different domain-separated digests.',
   );
   assert(
-    capabilityDigest === '45261e1c52312304b28a7c891e7e1c3254a28c87b58c28632e2134d3bc495ac7',
+    capabilityDigest === 'b5085ef8a5534caff50d6544b4e6095cf5643386da3aae7d4d1bc30ad346b86a',
     'capability hashing must match the fixed schema-compatible vector.',
   );
   assert(
@@ -117,7 +117,7 @@ Deno.test('capability and idempotency digests match schema domain separation', a
     'idempotency hashing must match schema48 exactly.',
   );
   assert(
-    idempotencyDigest === 'c5f8ebd5933348dfeda845e8834df5189ad53f8c34efb33d65b4a40c2ec139c0',
+    idempotencyDigest === 'c93acc14fd8905cda116d79db00260de2b63cabd3672ea28f23f9812dd510cd2',
     'idempotency hashing must match the fixed schema-compatible vector.',
   );
 });

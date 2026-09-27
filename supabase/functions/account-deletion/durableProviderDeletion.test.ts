@@ -1288,8 +1288,8 @@ Deno.test('PostHog lookup binds both current and legacy identities', async () =>
   });
   const currentIdentity = await pseudonymousUserId(USER_ID);
   assert(
-    currentIdentity === 'u_d8f0c9becb0d8f667f24e95cf3b1e32b',
-    'the current identity must match the pre-57c mobile pseudonym contract.',
+    currentIdentity === 'u_2ea5a67b3d02fe13d0e65c4b781195ed',
+    'the current identity must match the Layerwell mobile pseudonym contract.',
   );
   assertDeepEqual(
     JSON.parse(String(request.init.body)),
