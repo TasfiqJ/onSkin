@@ -242,7 +242,6 @@ jobs:
           npm run phase9:account-deletion-work-lane-smoke
           npm run phase9:apple-auth-work-lane-smoke
           npm run phase9:order-attribution-integrity-smoke
-          deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/revenuecat-webhook/webhookCore.test.ts
           npm run phase9:revenuecat-webhook-atomic-smoke
 
       - name: Check catalog promotion, curation, and receipt contracts

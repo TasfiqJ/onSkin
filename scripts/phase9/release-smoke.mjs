@@ -841,8 +841,13 @@ block(
 );
 block(
   errors,
-  /phase9:revenuecat-webhook-atomic-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
-  'phase9:verify must run the RevenueCat atomic webhook contract.',
+  /phase9:revenuecat-webhook-atomic-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    has('.github/workflows/quality.yml', /npm run phase9:revenuecat-webhook-atomic-smoke/) &&
+    !has(
+      '.github/workflows/quality.yml',
+      /deno test[^\n]*supabase\/functions\/revenuecat-webhook\/webhookCore\.test\.ts/,
+    ),
+  'Phase 9 and CI must run the permission-scoped RevenueCat atomic webhook contract without a duplicate raw Deno invocation.',
 );
 block(
   errors,
