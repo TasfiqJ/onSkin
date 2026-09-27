@@ -68,19 +68,10 @@ function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
 
-const missingCat07EvidenceBlocker =
-  'FAIL test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json is missing.';
-
 function contactChecksHaveNoUnexpectedBlockers(result) {
   const text = output(result);
   const blockers = text.split(/\r?\n/u).filter((line) => line.startsWith('FAIL '));
-  if (result.status === 0) return blockers.length === 0;
-  return (
-    result.status === 1 &&
-    blockers.length === 1 &&
-    blockers[0] === missingCat07EvidenceBlocker &&
-    text.includes('Phase 9 release smoke has 1 blocker.')
-  );
+  return result.status === 0 && blockers.length === 0;
 }
 
 function runWithTemplateReleaseCandidate(extraEnv = {}) {
